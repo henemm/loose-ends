@@ -4,6 +4,7 @@ import SwiftUI
 @main
 struct LooseEndsApp: App {
     let container: ModelContainer
+    let enrichment: EnrichmentCoordinator
 
     init() {
         do {
@@ -11,11 +12,12 @@ struct LooseEndsApp: App {
         } catch {
             fatalError("Could not open the Loose Ends store: \(error)")
         }
+        enrichment = EnrichmentCoordinator(enricher: FoundationModelsEnricher(), container: container)
     }
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(enrichment: enrichment)
         }
         .modelContainer(container)
     }

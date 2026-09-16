@@ -45,7 +45,9 @@ Unit tests for enrichment, view rules, repeat rules and revisions come first; UI
 ## Where things live
 
 - `Shared/Models` — SwiftData model, enums, `RepeatRule`, `ViewRules` (pure view computation)
-- `Shared/Persistence` — `ModelContainerFactory` (app group + private CloudKit)
+- `Shared/Persistence` — `ModelContainerFactory` (app group + private CloudKit), `ContextSeeder`
+- `Shared/Enrichment` — `TaskEnricher` protocol, `EnrichmentWriter` (threshold + revisions), `EnrichmentCoordinator`
+  (catch-up pass), `FoundationModelsEnricher` (on-device model, `#if canImport(FoundationModels)`)
 - `Shared/Intents` — App Intents shared by app, widgets and (later) the intents extension
 - `LooseEnds/` — app entry and views (iPhone, iPad, Mac); `LooseEndsWatch/`, `LooseEndsWidgets/` — platform targets
 - `Shared/` compiles into the watch and widget targets too: no SwiftUI that is unavailable on watchOS there

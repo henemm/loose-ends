@@ -1,12 +1,18 @@
+import OSLog
 import SwiftData
 import SwiftUI
 
 /// Views on the left, one list on the right. Placeholder navigation until the tile start screen
 /// from the design canvas is built. One code path for iPhone, iPad and Mac (ADR-1).
 struct ContentView: View {
+    @Environment(\.modelContext) private var modelContext
     @Query(sort: \TaskItem.capturedAt, order: .reverse) private var tasks: [TaskItem]
     @State private var selection: ViewKind?
     @State private var isCapturing = false
+    private static let logger = Logger(subsystem: "com.henning.looseends", category: "App")
+
+    /// Nil only in previews; the app always passes its coordinator.
+    var enrichment: EnrichmentCoordinator?
     private var captureRequest: CaptureRequest { .shared }
 
     var body: some View {
@@ -46,6 +52,10 @@ struct ContentView: View {
         .sheet(isPresented: $isCapturing) {
             CaptureView()
         }
+        .task { await startUp() }
+        .onChange(of: tasks.count) { _, _ in
+            Task { await enrichment?.processPending() }
+        }
         .onAppear(perform: consumeCaptureRequest)
         .onChange(of: captureRequest.pending) { _, _ in consumeCaptureRequest() }
     }
@@ -59,6 +69,16 @@ struct ContentView: View {
         }
     }
 
+    /// Seed the default contexts once, then run the catch-up enrichment pass (ADR-4).
+    private func startUp() async {
+        do {
+            try ContextSeeder.seedIfNeeded(in: modelContext)
+        } catch {
+            Self.logger.error("Seeding contexts failed: \(error, privacy: .public)")
+        }
+        await enrichment?.processPending()
+    }
+
     /// Control Center and the Action Button open the app straight into capture (ADR-9).
     private func consumeCaptureRequest() {
         guard captureRequest.pending else { return }
@@ -68,13 +88,24 @@ struct ContentView: View {
 }
 
 /// One row: the title, or the raw text while nothing better exists (raw text reads as raw text).
+/// The spark marks unseen AI changes (marker variant C).
 struct TaskRow: View {
     let task: TaskItem
 
     var body: some View {
-        Text(task.displayTitle)
-            .italic(task.title == nil || task.status == .unverified)
-            .accessibilityIdentifier("taskRow_\(task.id.uuidString)")
+        HStack(spacing: 6) {
+            Text(task.displayTitle)
+                .italic(task.title == nil || task.status == .unverified)
+            if task.hasUnseenAIRevisions {
+                Image(systemName: "sparkle")
+                    .imageScale(.small)
+                    .foregroundStyle(.tint)
+                    .accessibilityLabel("Changed by AI")
+                    .accessibilityIdentifier("aiMarker_\(task.id.uuidString)")
+            }
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("taskRow_\(task.id.uuidString)")
     }
 }
 
