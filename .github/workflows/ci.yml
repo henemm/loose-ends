@@ -45,13 +45,18 @@ jobs:
             -resultBundlePath TestResults.xcresult \
             CODE_SIGNING_ALLOWED=NO \
             DEVELOPMENT_TEAM= \
-            | xcbeautify
+            2>&1 | tee unit-tests.log | xcbeautify
+      - name: Show crash and failure details
+        if: failure()
+        run: grep -n -E -i "crash|fatal error|restarting after|failed|error:" unit-tests.log | grep -v -E "^\S+:\s*$" | head -120 || true
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: TestResults
-          path: TestResults.xcresult
+          path: |
+            TestResults.xcresult
+            unit-tests.log
           if-no-files-found: warn
 
   ios-build:
@@ -124,11 +129,16 @@ jobs:
             -resultBundlePath UITestResults.xcresult \
             CODE_SIGNING_ALLOWED=NO \
             DEVELOPMENT_TEAM= \
-            | xcbeautify
+            2>&1 | tee ui-smoke.log | xcbeautify
+      - name: Show crash and failure details
+        if: failure()
+        run: grep -n -E -i "crash|fatal error|restarting after|failed|error:" ui-smoke.log | head -120 || true
       - name: Upload UI test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: UITestResults
-          path: UITestResults.xcresult
+          path: |
+            UITestResults.xcresult
+            ui-smoke.log
           if-no-files-found: warn

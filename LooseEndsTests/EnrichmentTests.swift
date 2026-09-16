@@ -33,7 +33,7 @@ private func makeStore() throws -> (ModelContainer, ModelContext) {
 
 @Suite("EnrichmentWriter") struct EnrichmentWriterTests {
     @Test("Fields at or above the threshold are written with source, confidence and one AI revision each")
-    @MainActor func appliesFieldsAboveThreshold() throws {
+    @MainActor func appliesFieldsAboveThreshold() async throws {
         let (_, context) = try makeStore()
         let garden = TaskContext(name: "Garten", isSystemDefault: true, sortOrder: 3)
         let computer = TaskContext(name: "Computer", isSystemDefault: true, sortOrder: 0)
@@ -83,7 +83,7 @@ private func makeStore() throws -> (ModelContainer, ModelContext) {
     }
 
     @Test("A title below the threshold leaves the task unverified with the raw text on show")
-    @MainActor func titleBelowThresholdIsUnverified() throws {
+    @MainActor func titleBelowThresholdIsUnverified() async throws {
         let (_, context) = try makeStore()
         let task = TaskItem(rawText: "das Ding mit dem Zeug")
         context.insert(task)
@@ -102,7 +102,7 @@ private func makeStore() throws -> (ModelContainer, ModelContext) {
     }
 
     @Test("A project is assigned only when the name matches an existing project")
-    @MainActor func projectMatchesByName() throws {
+    @MainActor func projectMatchesByName() async throws {
         let (_, context) = try makeStore()
         let house = Project(name: "Haus")
         context.insert(house)
@@ -180,7 +180,7 @@ private func makeStore() throws -> (ModelContainer, ModelContext) {
     }
 
     @Test("Examples are the most recent completed tasks with their final attributes")
-    @MainActor func examplesComeFromDoneTasks() throws {
+    @MainActor func examplesComeFromDoneTasks() async throws {
         let (_, context) = try makeStore()
         let garden = TaskContext(name: "Garten")
         context.insert(garden)
@@ -230,7 +230,7 @@ private func makeStore() throws -> (ModelContainer, ModelContext) {
 
 @Suite("ContextSeeder") struct ContextSeederTests {
     @Test("The default contexts are seeded once and never re-added after deletion")
-    @MainActor func seedsOnce() throws {
+    @MainActor func seedsOnce() async throws {
         let (_, context) = try makeStore()
         let suite = "ContextSeederTests-\(UUID().uuidString)"
         let defaults = try #require(UserDefaults(suiteName: suite))
