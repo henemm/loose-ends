@@ -34,6 +34,12 @@ guarded with `#available` until then. The workflow selects Xcode 27 automaticall
 ## Process
 
 Plugin `henemm/agent-os-openspec`. Fast-track for scaffolding, standard workflow with the 250-LoC limit after that.
+It lives in Henning's own marketplace, not the official one, so register that first:
+
+```bash
+claude plugin marketplace add henemm/agent-os-openspec@main
+claude plugin install agent-os-openspec
+```
 Unit tests for enrichment, view rules, repeat rules and revisions come first; UI tests only after the design freeze, and only as smoke tests.
 
 ## Where things live
