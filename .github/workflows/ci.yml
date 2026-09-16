@@ -19,7 +19,14 @@ jobs:
       - name: Select newest Xcode (27 when the image has it)
         run: |
           latest=$(ls -d /Applications/Xcode_27*.app 2>/dev/null | sort -V | tail -1)
-          if [ -n "$latest" ]; then sudo xcode-select -s "$latest"; fi
+          if [ -n "$latest" ]; then
+            sudo xcode-select -s "$latest"
+            echo "DEPLOY_OVERRIDE=" >> "$GITHUB_ENV"
+          else
+            # Runner SDKs are still 26.x: build and test with a 26.0 floor until Xcode 27 lands on the image.
+            # iOS-27-only APIs must be guarded with #available until then (see CLAUDE.md).
+            echo "DEPLOY_OVERRIDE=MACOSX_DEPLOYMENT_TARGET=26.0 IPHONEOS_DEPLOYMENT_TARGET=26.0 WATCHOS_DEPLOYMENT_TARGET=26.0" >> "$GITHUB_ENV"
+          fi
           xcode-select -p && xcodebuild -version
       - name: Install XcodeGen
         run: brew install xcodegen
@@ -36,6 +43,7 @@ jobs:
             -resultBundlePath TestResults.xcresult \
             CODE_SIGNING_ALLOWED=NO \
             DEVELOPMENT_TEAM= \
+            $DEPLOY_OVERRIDE \
             | xcbeautify
       - name: Upload test results
         if: always()
@@ -53,7 +61,14 @@ jobs:
       - name: Select newest Xcode (27 when the image has it)
         run: |
           latest=$(ls -d /Applications/Xcode_27*.app 2>/dev/null | sort -V | tail -1)
-          if [ -n "$latest" ]; then sudo xcode-select -s "$latest"; fi
+          if [ -n "$latest" ]; then
+            sudo xcode-select -s "$latest"
+            echo "DEPLOY_OVERRIDE=" >> "$GITHUB_ENV"
+          else
+            # Runner SDKs are still 26.x: build and test with a 26.0 floor until Xcode 27 lands on the image.
+            # iOS-27-only APIs must be guarded with #available until then (see CLAUDE.md).
+            echo "DEPLOY_OVERRIDE=MACOSX_DEPLOYMENT_TARGET=26.0 IPHONEOS_DEPLOYMENT_TARGET=26.0 WATCHOS_DEPLOYMENT_TARGET=26.0" >> "$GITHUB_ENV"
+          fi
           xcode-select -p && xcodebuild -version
       - name: Install XcodeGen
         run: brew install xcodegen
@@ -68,4 +83,5 @@ jobs:
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO \
             DEVELOPMENT_TEAM= \
+            $DEPLOY_OVERRIDE \
             | xcbeautify
