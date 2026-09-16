@@ -26,6 +26,10 @@ xcodebuild test -project LooseEnds.xcodeproj -scheme LooseEnds -destination 'pla
 
 Set `DEVELOPMENT_TEAM` once in Xcode (Signing & Capabilities); it is intentionally empty in `project.yml`.
 
+CI runs on GitHub's `macos-26` image. Until that image ships Xcode 27, CI compiles against the iOS 26.5 SDK
+and warns about the 27.0 deployment target; iOS-27-only APIs (App Schemas, Private Cloud Compute model)
+must be guarded with `#available` or wait for the image. The workflow selects Xcode 27 automatically once present.
+
 ## Process
 
 Plugin `henemm/agent-os-openspec`. Fast-track for scaffolding, standard workflow with the 250-LoC limit after that.
