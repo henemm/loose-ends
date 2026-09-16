@@ -19,6 +19,11 @@ enum ModelContainerFactory {
         ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
     }
 
+    /// UI tests launch the app with this argument so they never touch real data.
+    static var isUITesting: Bool {
+        ProcessInfo.processInfo.arguments.contains("--ui-testing")
+    }
+
     /// Production container: app group store, private CloudKit database (ADR-2).
     ///
     /// Test hosts get an in-memory store so tests never touch real data. Builds without the
@@ -26,7 +31,7 @@ enum ModelContainerFactory {
     /// still launches; sync is simply off in that case.
     static func make(inMemory: Bool = false) throws -> ModelContainer {
         let schema = Schema(LooseEndsSchema.models)
-        if inMemory || isRunningTests {
+        if inMemory || isRunningTests || isUITesting {
             let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
             return try ModelContainer(for: schema, configurations: [configuration])
         }

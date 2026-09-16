@@ -123,12 +123,24 @@ targets:
         TEST_HOST[sdk=macosx*]: $(BUILT_PRODUCTS_DIR)/LooseEnds.app/Contents/MacOS/LooseEnds
         BUNDLE_LOADER[sdk=macosx*]: $(TEST_HOST)
 
+  LooseEndsUITests:
+    type: bundle.ui-testing
+    supportedDestinations: [iOS, macOS]
+    sources:
+      - LooseEndsUITests
+    dependencies:
+      - target: LooseEnds
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends.uitests
+
 schemes:
   LooseEnds:
     build:
       targets:
         LooseEnds: all
         LooseEndsTests: [test]
+        LooseEndsUITests: [test]
     test:
-      targets: [LooseEndsTests]
+      targets: [LooseEndsTests, LooseEndsUITests]
       gatherCoverageData: true

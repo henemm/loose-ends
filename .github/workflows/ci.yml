@@ -85,3 +85,52 @@ jobs:
             DEVELOPMENT_TEAM= \
             $DEPLOY_OVERRIDE \
             | xcbeautify
+
+  ui-smoke:
+    name: UI Smoke (iOS Simulator)
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select newest Xcode (27 when the image has it)
+        run: |
+          latest=$(ls -d /Applications/Xcode_27*.app 2>/dev/null | sort -V | tail -1)
+          if [ -n "$latest" ]; then
+            sudo xcode-select -s "$latest"
+            echo "DEPLOY_OVERRIDE=" >> "$GITHUB_ENV"
+          else
+            echo "DEPLOY_OVERRIDE=MACOSX_DEPLOYMENT_TARGET=26.0 IPHONEOS_DEPLOYMENT_TARGET=26.0 WATCHOS_DEPLOYMENT_TARGET=26.0" >> "$GITHUB_ENV"
+          fi
+          xcode-select -p && xcodebuild -version
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        run: xcodegen generate
+      - name: Pick a simulator
+        run: |
+          udid=$(xcrun simctl list devices available -j | python3 -c 'import json,sys
+          devs=[d for v in json.load(sys.stdin)["devices"].values() for d in v]
+          hit=next((d for d in devs if d["name"]=="iPhone 17"), None) or next((d for d in devs if d["name"].startswith("iPhone")), None)
+          print(hit["udid"] if hit else "")')
+          [ -n "$udid" ] || { echo "no iPhone simulator on this image"; xcrun simctl list devices available; exit 1; }
+          xcrun simctl boot "$udid" || true
+          echo "SIM_UDID=$udid" >> "$GITHUB_ENV"
+      - name: Run UI smoke tests
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project LooseEnds.xcodeproj \
+            -scheme LooseEnds \
+            -destination "platform=iOS Simulator,id=$SIM_UDID" \
+            -only-testing:LooseEndsUITests \
+            -resultBundlePath UITestResults.xcresult \
+            CODE_SIGNING_ALLOWED=NO \
+            DEVELOPMENT_TEAM= \
+            $DEPLOY_OVERRIDE \
+            | xcbeautify
+      - name: Upload UI test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: UITestResults
+          path: UITestResults.xcresult
+          if-no-files-found: warn
