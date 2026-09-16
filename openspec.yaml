@@ -1,0 +1,29 @@
+# agent-os-openspec project configuration for Loose Ends
+# Docs: https://github.com/henemm/agent-os-openspec
+
+framework:
+  enabled: true
+
+strict_code_gate:
+  code_extensions: [".swift"]
+  # Edits here never need an active workflow: tests, docs, tooling.
+  always_allowed_dirs: ["LooseEndsTests/", "LooseEndsUITests/", "docs/", "scripts/"]
+
+scope_guard:
+  max_loc_delta: 250
+  # Generated or declarative files do not count against the production-code budget.
+  loc_exclude_patterns:
+    - "\\.xcstrings$"
+    - "\\.xcassets/"
+    - "^docs/"
+    - "^project\\.yml$"
+    - "\\.entitlements$"
+    - "Info\\.plist$"
+    - "^\\.github/"
+  max_test_loc_delta: 500
+  test_path_patterns: ["^LooseEndsTests/", "^LooseEndsUITests/"]
+
+secrets_guard:
+  # SwiftUI uses `.environment` and `.environmentObject` everywhere; the bare `\.env` pattern
+  # blocks routine greps in Swift code. Word-boundary form until the plugin ships the same fix.
+  sensitive_patterns: ["\\.env(rc)?\\b", "credentials\\.json", "service[_-]?account.*\\.json", "private[_.]key", "[_.]secret\\.", "\\.pem$", "\\.key$"]
