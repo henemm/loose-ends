@@ -1,0 +1,32 @@
+{
+  "sourceLanguage" : "en",
+  "version" : "1.0",
+  "strings" : {
+    "Views" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ansichten" } } } },
+    "Pick a view" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ansicht wählen" } } } },
+    "Next up" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Als nächstes" } } } },
+    "New" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Neu" } } } },
+    "Due" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Fällig" } } } },
+    "Quick" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Schnell" } } } },
+    "Old" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Alt" } } } },
+    "Waiting" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Wartet" } } } },
+    "Repeating" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Wiederkehrend" } } } },
+    "Parked" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Geparkt" } } } },
+    "Done" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erledigt" } } } },
+    "Context" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Kontext" } } } },
+    "Project" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Projekt" } } } },
+    "Computer" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Computer" } } } },
+    "Phone" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Telefon" } } } },
+    "Home" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Haus" } } } },
+    "Garden" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Garten" } } } },
+    "Errands" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Besorgung" } } } },
+    "Out and about" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Unterwegs" } } } },
+    "Capture" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erfassen" } } } },
+    "Capture a task" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufgabe erfassen" } } } },
+    "What should I remember?" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Was soll ich aufnehmen?" } } } },
+    "Saved: %@" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Gespeichert: %@" } } } },
+    "Saved" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Gespeichert" } } } },
+    "I'm listening" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ich höre zu" } } } },
+    "Nothing lined up" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nichts vorgemerkt" } } } }
+  }
+}

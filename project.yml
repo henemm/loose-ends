@@ -1,0 +1,130 @@
+# Generate the Xcode project with: xcodegen generate
+# Never edit the generated .xcodeproj by hand; edit this file and regenerate.
+name: LooseEnds
+options:
+  bundleIdPrefix: com.henning
+  deploymentTarget:
+    iOS: "27.0"
+    macOS: "27.0"
+    watchOS: "27.0"
+  xcodeVersion: "26.0"
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    CODE_SIGN_STYLE: Automatic
+    DEVELOPMENT_TEAM: ""          # Set your team once locally; Xcode remembers it.
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: 1
+    SWIFT_EMIT_LOC_STRINGS: true
+    LOCALIZATION_PREFERS_STRING_CATALOGS: true
+
+targets:
+  LooseEnds:
+    type: application
+    supportedDestinations: [iOS, macOS]
+    sources:
+      - LooseEnds
+      - Shared
+    dependencies:
+      - target: LooseEndsWatch
+      - target: LooseEndsWidgets
+    entitlements:
+      path: LooseEnds/LooseEnds.entitlements
+      properties:
+        com.apple.developer.icloud-container-identifiers: [iCloud.com.henning.looseends]
+        com.apple.developer.icloud-services: [CloudKit]
+        com.apple.security.application-groups: [group.com.henning.looseends]
+        com.apple.security.app-sandbox: true
+        com.apple.security.network.client: true
+    info:
+      path: LooseEnds/Info.plist
+      properties:
+        CFBundleDisplayName: Loose Ends
+        CFBundleName: Loose Ends
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        NSMicrophoneUsageDescription: Loose Ends listens so you can say a task instead of typing it.
+        NSSpeechRecognitionUsageDescription: Speech is turned into text on your device to capture a task.
+        NSCalendarsWriteOnlyAccessUsageDescription: Only if you switch it on, a task with a due time is shown in your calendar.
+        NSUserActivityTypes: [com.henning.looseends.capture]
+        INAlternativeAppNames:
+          - INAlternativeAppName: Loose End
+            INAlternativeAppNamePronunciationHint: loose end
+          - INAlternativeAppName: LooseEnds
+            INAlternativeAppNamePronunciationHint: loose ends
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+
+  LooseEndsWatch:
+    type: application
+    platform: watchOS
+    sources:
+      - LooseEndsWatch
+      - Shared
+    entitlements:
+      path: LooseEndsWatch/LooseEndsWatch.entitlements
+      properties:
+        com.apple.developer.icloud-container-identifiers: [iCloud.com.henning.looseends]
+        com.apple.developer.icloud-services: [CloudKit]
+        com.apple.security.application-groups: [group.com.henning.looseends]
+    info:
+      path: LooseEndsWatch/Info.plist
+      properties:
+        CFBundleDisplayName: Loose Ends
+        WKApplication: true
+        WKCompanionAppBundleIdentifier: com.henning.looseends
+        WKRunsIndependentlyOfCompanionApp: true
+        NSMicrophoneUsageDescription: Loose Ends listens so you can say a task.
+        NSSpeechRecognitionUsageDescription: Speech is turned into text on your watch to capture a task.
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends.watchkitapp
+
+  LooseEndsWidgets:
+    type: app-extension
+    supportedDestinations: [iOS, macOS]
+    sources:
+      - LooseEndsWidgets
+      - Shared
+    entitlements:
+      path: LooseEndsWidgets/LooseEndsWidgets.entitlements
+      properties:
+        com.apple.security.application-groups: [group.com.henning.looseends]
+        com.apple.security.app-sandbox: true
+    info:
+      path: LooseEndsWidgets/Info.plist
+      properties:
+        CFBundleDisplayName: Loose Ends Widgets
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends.widgets
+
+  LooseEndsTests:
+    type: bundle.unit-test
+    supportedDestinations: [iOS, macOS]
+    sources:
+      - LooseEndsTests
+    dependencies:
+      - target: LooseEnds
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends.tests
+
+schemes:
+  LooseEnds:
+    build:
+      targets:
+        LooseEnds: all
+        LooseEndsTests: [test]
+    test:
+      targets: [LooseEndsTests]
+      gatherCoverageData: true
