@@ -25,16 +25,23 @@ final class StubEnricher: TaskEnricher, @unchecked Sendable {
 
 struct StubFailure: Error {}
 
+/// Holds the container for the whole test: a ModelContext does not retain its ModelContainer,
+/// and a context whose container was released crashes on the next save or fetch.
 @MainActor
-private func makeStore() throws -> (ModelContainer, ModelContext) {
-    let container = try ModelContainerFactory.make(inMemory: true)
-    return (container, container.mainContext)
+struct TestStore {
+    let container: ModelContainer
+    var context: ModelContext { container.mainContext }
+
+    init() throws {
+        container = try ModelContainerFactory.make(inMemory: true)
+    }
 }
 
 @Suite("EnrichmentWriter") struct EnrichmentWriterTests {
     @Test("Fields at or above the threshold are written with source, confidence and one AI revision each")
     @MainActor func appliesFieldsAboveThreshold() async throws {
-        let (_, context) = try makeStore()
+        let store = try TestStore()
+        let context = store.context
         let garden = TaskContext(name: "Garten", isSystemDefault: true, sortOrder: 3)
         let computer = TaskContext(name: "Computer", isSystemDefault: true, sortOrder: 0)
         context.insert(garden)
@@ -84,7 +91,8 @@ private func makeStore() throws -> (ModelContainer, ModelContext) {
 
     @Test("A title below the threshold leaves the task unverified with the raw text on show")
     @MainActor func titleBelowThresholdIsUnverified() async throws {
-        let (_, context) = try makeStore()
+        let store = try TestStore()
+        let context = store.context
         let task = TaskItem(rawText: "das Ding mit dem Zeug")
         context.insert(task)
         var draft = EnrichmentDraft()
@@ -103,7 +111,8 @@ private func makeStore() throws -> (ModelContainer, ModelContext) {
 
     @Test("A project is assigned only when the name matches an existing project")
     @MainActor func projectMatchesByName() async throws {
-        let (_, context) = try makeStore()
+        let store = try TestStore()
+        let context = store.context
         let house = Project(name: "Haus")
         context.insert(house)
         let task = TaskItem(rawText: "Dachrinne reinigen")
@@ -126,7 +135,9 @@ private func makeStore() throws -> (ModelContainer, ModelContext) {
 @Suite("EnrichmentCoordinator") struct EnrichmentCoordinatorTests {
     @Test("Every unprocessed task is enriched once; a second pass touches nothing")
     @MainActor func processesOnce() async throws {
-        let (container, context) = try makeStore()
+        let store = try TestStore()
+        let context = store.context
+        let container = store.container
         let first = TaskItem(rawText: "Erste")
         let second = TaskItem(rawText: "Zweite")
         let done = TaskItem(rawText: "Fertige")
@@ -152,7 +163,9 @@ private func makeStore() throws -> (ModelContainer, ModelContext) {
 
     @Test("A failing model leaves the task unprocessed for the next pass")
     @MainActor func failureLeavesTaskUnprocessed() async throws {
-        let (container, context) = try makeStore()
+        let store = try TestStore()
+        let context = store.context
+        let container = store.container
         let task = TaskItem(rawText: "Steuer abgeben")
         context.insert(task)
         try context.save()
@@ -169,7 +182,9 @@ private func makeStore() throws -> (ModelContainer, ModelContext) {
 
     @Test("An unavailable model is not called at all")
     @MainActor func unavailableModelIsSkipped() async throws {
-        let (container, context) = try makeStore()
+        let store = try TestStore()
+        let context = store.context
+        let container = store.container
         context.insert(TaskItem(rawText: "Irgendwas"))
         try context.save()
         let stub = StubEnricher(unavailableReason: "deviceNotEligible")
@@ -181,7 +196,8 @@ private func makeStore() throws -> (ModelContainer, ModelContext) {
 
     @Test("Examples are the most recent completed tasks with their final attributes")
     @MainActor func examplesComeFromDoneTasks() async throws {
-        let (_, context) = try makeStore()
+        let store = try TestStore()
+        let context = store.context
         let garden = TaskContext(name: "Garten")
         context.insert(garden)
         for index in 0..<7 {
@@ -231,7 +247,8 @@ private func makeStore() throws -> (ModelContainer, ModelContext) {
 @Suite("ContextSeeder") struct ContextSeederTests {
     @Test("The default contexts are seeded once and never re-added after deletion")
     @MainActor func seedsOnce() async throws {
-        let (_, context) = try makeStore()
+        let store = try TestStore()
+        let context = store.context
         let suite = "ContextSeederTests-\(UUID().uuidString)"
         let defaults = try #require(UserDefaults(suiteName: suite))
         defer { defaults.removePersistentDomain(forName: suite) }

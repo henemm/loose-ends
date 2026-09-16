@@ -13,6 +13,8 @@ Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, 
 - **Repeat without series.** `RepeatRule` on the task, roll forward on completion, `CompletionRecord` per cycle.
 - **Color budget.** Accent = tappable (incl. AI tint), red = time pressure, grey = hierarchy, green = the completion moment.
 - No `try?` that swallows errors, `Logger` not `print`, Swift 6 strict concurrency, deployment target 27.
+- A `ModelContext` does not retain its `ModelContainer`. Keep the container alive for as long as the context
+  is used (tests: hold it in a local or a helper struct), or the next save or fetch crashes the process.
 
 ## Build
 
