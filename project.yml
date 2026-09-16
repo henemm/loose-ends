@@ -31,6 +31,7 @@ targets:
       - Shared
     dependencies:
       - target: LooseEndsWatch
+        platformFilter: iOS      # a watch app can only be embedded in the iOS build
       - target: LooseEndsWidgets
     entitlements:
       path: LooseEnds/LooseEnds.entitlements
