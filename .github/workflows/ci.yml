@@ -10,6 +10,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# Until the macos-26 image ships Xcode 27, every job lowers the deployment targets in project.yml
+# to 26.0 before generating the project. A command-line override is not enough: xcodebuild filters
+# simulator destinations by the project's deployment target, so a 27.0 project sees no iOS 26 simulator.
+# iOS-27-only APIs must be guarded with #available until then (see CLAUDE.md).
+
 jobs:
   unit-tests:
     name: Unit Tests (macOS destination)
@@ -21,11 +26,9 @@ jobs:
           latest=$(ls -d /Applications/Xcode_27*.app 2>/dev/null | sort -V | tail -1)
           if [ -n "$latest" ]; then
             sudo xcode-select -s "$latest"
-            echo "DEPLOY_OVERRIDE=" >> "$GITHUB_ENV"
           else
-            # Runner SDKs are still 26.x: build and test with a 26.0 floor until Xcode 27 lands on the image.
-            # iOS-27-only APIs must be guarded with #available until then (see CLAUDE.md).
-            echo "DEPLOY_OVERRIDE=MACOSX_DEPLOYMENT_TARGET=26.0 IPHONEOS_DEPLOYMENT_TARGET=26.0 WATCHOS_DEPLOYMENT_TARGET=26.0" >> "$GITHUB_ENV"
+            sed -i '' 's/"27\.0"/"26.0"/g' project.yml
+            echo "No Xcode 27 on this image: deployment targets lowered to 26.0 for this run."
           fi
           xcode-select -p && xcodebuild -version
       - name: Install XcodeGen
@@ -43,7 +46,6 @@ jobs:
             -resultBundlePath TestResults.xcresult \
             CODE_SIGNING_ALLOWED=NO \
             DEVELOPMENT_TEAM= \
-            $DEPLOY_OVERRIDE \
             | xcbeautify
       - name: Upload test results
         if: always()
@@ -63,11 +65,9 @@ jobs:
           latest=$(ls -d /Applications/Xcode_27*.app 2>/dev/null | sort -V | tail -1)
           if [ -n "$latest" ]; then
             sudo xcode-select -s "$latest"
-            echo "DEPLOY_OVERRIDE=" >> "$GITHUB_ENV"
           else
-            # Runner SDKs are still 26.x: build and test with a 26.0 floor until Xcode 27 lands on the image.
-            # iOS-27-only APIs must be guarded with #available until then (see CLAUDE.md).
-            echo "DEPLOY_OVERRIDE=MACOSX_DEPLOYMENT_TARGET=26.0 IPHONEOS_DEPLOYMENT_TARGET=26.0 WATCHOS_DEPLOYMENT_TARGET=26.0" >> "$GITHUB_ENV"
+            sed -i '' 's/"27\.0"/"26.0"/g' project.yml
+            echo "No Xcode 27 on this image: deployment targets lowered to 26.0 for this run."
           fi
           xcode-select -p && xcodebuild -version
       - name: Install XcodeGen
@@ -83,7 +83,6 @@ jobs:
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO \
             DEVELOPMENT_TEAM= \
-            $DEPLOY_OVERRIDE \
             | xcbeautify
 
   ui-smoke:
@@ -96,9 +95,9 @@ jobs:
           latest=$(ls -d /Applications/Xcode_27*.app 2>/dev/null | sort -V | tail -1)
           if [ -n "$latest" ]; then
             sudo xcode-select -s "$latest"
-            echo "DEPLOY_OVERRIDE=" >> "$GITHUB_ENV"
           else
-            echo "DEPLOY_OVERRIDE=MACOSX_DEPLOYMENT_TARGET=26.0 IPHONEOS_DEPLOYMENT_TARGET=26.0 WATCHOS_DEPLOYMENT_TARGET=26.0" >> "$GITHUB_ENV"
+            sed -i '' 's/"27\.0"/"26.0"/g' project.yml
+            echo "No Xcode 27 on this image: deployment targets lowered to 26.0 for this run."
           fi
           xcode-select -p && xcodebuild -version
       - name: Install XcodeGen
@@ -112,6 +111,7 @@ jobs:
           hit=next((d for d in devs if d["name"]=="iPhone 17"), None) or next((d for d in devs if d["name"].startswith("iPhone")), None)
           print(hit["udid"] if hit else "")')
           [ -n "$udid" ] || { echo "no iPhone simulator on this image"; xcrun simctl list devices available; exit 1; }
+          xcrun simctl list devices available | grep "$udid"
           xcrun simctl boot "$udid" || true
           echo "SIM_UDID=$udid" >> "$GITHUB_ENV"
       - name: Run UI smoke tests
@@ -125,7 +125,6 @@ jobs:
             -resultBundlePath UITestResults.xcresult \
             CODE_SIGNING_ALLOWED=NO \
             DEVELOPMENT_TEAM= \
-            $DEPLOY_OVERRIDE \
             | xcbeautify
       - name: Upload UI test results
         if: always()
