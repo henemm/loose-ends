@@ -3,8 +3,7 @@ name: CI
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
+  pull_request:   # every PR, including stacked ones whose base is another feature branch
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
