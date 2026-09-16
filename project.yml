@@ -118,6 +118,9 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends.tests
+        # Multiplatform host app: the macOS bundle layout differs from iOS.
+        TEST_HOST[sdk=macosx*]: $(BUILT_PRODUCTS_DIR)/LooseEnds.app/Contents/MacOS/LooseEnds
+        BUNDLE_LOADER[sdk=macosx*]: $(TEST_HOST)
 
 schemes:
   LooseEnds:
