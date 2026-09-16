@@ -71,7 +71,8 @@ private func makeStore() throws -> (ModelContainer, ModelContext) {
 
         let revisions = try #require(task.revisions)
         #expect(revisions.count == 5)
-        #expect(revisions.allSatisfy { $0.author == .ai && $0.seenAt == nil && !($0.reason ?? "").isEmpty })
+        let allFromAI = revisions.allSatisfy { $0.author == .ai && $0.seenAt == nil && !($0.reason ?? "").isEmpty }
+        #expect(allFromAI, "every revision is unseen, by the AI, with a reason")
         #expect(Set(revisions.map(\.field)) == [.title, .dueDate, .importance, .duration, .contexts])
         #expect(task.hasUnseenAIRevisions)
         #expect(task.displayTitle == "Rasenmäher: Ölwechsel")
@@ -237,7 +238,8 @@ private func makeStore() throws -> (ModelContainer, ModelContext) {
 
         let created = try ContextSeeder.seedIfNeeded(in: context, defaults: defaults)
         #expect(created.count == 6)
-        #expect(created.allSatisfy(\.isSystemDefault))
+        let allDefaults = created.allSatisfy(\.isSystemDefault)
+        #expect(allDefaults)
 
         for item in created { context.delete(item) }
         try context.save()
