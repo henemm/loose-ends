@@ -7,6 +7,7 @@ final class CaptureSmokeTests: XCTestCase {
         continueAfterFailure = false
     }
 
+    @MainActor
     private func launch() -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = ["--ui-testing"]
@@ -15,6 +16,7 @@ final class CaptureSmokeTests: XCTestCase {
     }
 
     /// Any element carrying the identifier, whatever control SwiftUI backs it with.
+    @MainActor
     private func element(_ id: String, in app: XCUIApplication) -> XCUIElement {
         app.descendants(matching: .any).matching(identifier: id).firstMatch
     }

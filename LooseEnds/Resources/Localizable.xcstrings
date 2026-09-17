@@ -32,6 +32,7 @@
     "Cancel" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Abbrechen" } } } },
     "OK" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "OK" } } } },
     "Could not save" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Konnte nicht sichern" } } } },
-    "Nothing here" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nichts hier" } } } }
+    "Nothing here" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nichts hier" } } } },
+    "Changed by AI" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Von der KI geändert" } } } }
   }
 }
