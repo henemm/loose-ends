@@ -42,6 +42,18 @@ enum ViewRules {
         }
     }
 
+    /// Open top-level tasks carrying the context, urgency then importance.
+    static func tasks(inContext context: TaskContext, in all: [TaskItem]) -> [TaskItem] {
+        all.filter { $0.parent == nil && $0.isOpen && ($0.contexts ?? []).contains { $0.id == context.id } }
+            .sorted(by: byUrgencyThenImportance)
+    }
+
+    /// Open top-level tasks of the project, urgency then importance (manual order comes later).
+    static func tasks(inProject project: Project, in all: [TaskItem]) -> [TaskItem] {
+        all.filter { $0.parent == nil && $0.isOpen && $0.project?.id == project.id }
+            .sorted(by: byUrgencyThenImportance)
+    }
+
     static func byUrgencyThenImportance(_ a: TaskItem, _ b: TaskItem) -> Bool {
         func rank(_ u: Urgency?) -> Int { switch u { case .high: 0; case .medium: 1; case .low: 2; case nil: 3 } }
         func rank(_ i: Importance?) -> Int { switch i { case .high: 0; case .medium: 1; case .low: 2; case nil: 3 } }

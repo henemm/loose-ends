@@ -2,12 +2,11 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-/// Views on the left, one list on the right. Placeholder navigation until the tile start screen
-/// from the design canvas is built. One code path for iPhone, iPad and Mac (ADR-1).
+/// Start screen on the left, one list on the right. One code path for iPhone, iPad and Mac (ADR-1).
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \TaskItem.capturedAt, order: .reverse) private var tasks: [TaskItem]
-    @State private var selection: ViewKind?
+    @State private var selection: ViewSelection?
     @State private var isCapturing = false
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "App")
 
@@ -17,23 +16,13 @@ struct ContentView: View {
 
     var body: some View {
         NavigationSplitView {
-            List(ViewKind.allCases.filter(\.isSystem), id: \.self, selection: $selection) { kind in
-                HStack {
-                    Text(String(localized: kind.titleKey))
-                    Spacer()
-                    Text("\(ViewRules.tasks(for: kind, in: tasks).count)")
-                        .foregroundStyle(.secondary)
-                }
-                .accessibilityElement(children: .combine)
-                .accessibilityIdentifier("viewRow_\(kind.rawValue)")
-            }
-            .navigationTitle("Views")
-            .toolbar { captureToolbarItem }
+            SidebarView(selection: $selection, tasks: tasks)
+                .navigationTitle("Views")
+                .toolbar { captureToolbarItem }
         } detail: {
             if let selection {
                 NavigationStack {
-                    TaskListView(kind: selection, tasks: tasks)
-                        .navigationTitle(String(localized: selection.titleKey))
+                    TaskListView(selection: selection, tasks: tasks)
                         .toolbar { captureToolbarItem }
                 }
             } else {

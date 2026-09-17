@@ -78,6 +78,17 @@
     "Delete this task?" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Diese Aufgabe löschen?" } } } },
     "This cannot be undone." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Das lässt sich nicht rückgängig machen." } } } },
     "Important" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Wichtig" } } } },
-    "Urgent" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Dringend" } } } }
+    "Urgent" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Dringend" } } } },
+    "Projects" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Projekte" } } } },
+    "New project" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Neues Projekt" } } } },
+    "New context" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Neuer Kontext" } } } },
+    "Rename" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Umbenennen" } } } },
+    "Name" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Name" } } } },
+    "Add" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Hinzufügen" } } } },
+    "Save" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Sichern" } } } },
+    "Delete this project?" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Dieses Projekt löschen?" } } } },
+    "Its tasks stay and lose the project." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Die Aufgaben bleiben und verlieren das Projekt." } } } },
+    "Delete this context?" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Diesen Kontext löschen?" } } } },
+    "Its tasks stay and lose the context." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Die Aufgaben bleiben und verlieren den Kontext." } } } }
   }
 }

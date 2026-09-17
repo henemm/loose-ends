@@ -124,4 +124,30 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 5), "New should be empty after Done")
         XCTAssertTrue(row.waitForNonExistence(timeout: 5), "The finished task should leave New")
     }
+
+    @MainActor
+    func testNewProjectAppearsOnStartScreen() throws {
+        let app = launch()
+
+        let newProject = element("newProjectButton", in: app)
+        XCTAssertTrue(newProject.waitForExistence(timeout: 10), "Start screen should offer New project")
+        newProject.tap()
+
+        let nameField = app.textFields.firstMatch
+        XCTAssertTrue(nameField.waitForExistence(timeout: 5), "Name alert did not open")
+        nameField.tap()
+        nameField.typeText("Haus")
+
+        let add = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier == %@ OR label == %@", "nameSaveButton", "Add"))
+            .firstMatch
+        XCTAssertTrue(add.waitForExistence(timeout: 5))
+        add.tap()
+
+        let projectRow = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "projectRow_"))
+            .firstMatch
+        XCTAssertTrue(projectRow.waitForExistence(timeout: 5), "The new project should be listed")
+        XCTAssertTrue(projectRow.label.contains("Haus"), "Row label was \(projectRow.label)")
+    }
 }
