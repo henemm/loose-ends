@@ -221,7 +221,13 @@ nicht der Migration in die App-Datenbank.
 
 ## Offene Punkte für den Spike
 
-1. Erlaubt iOS 27 einem Control die Werteabfrage (Diktat ohne App-Start)?
+1. ~~Erlaubt iOS 27 einem Control die Werteabfrage (Diktat ohne App-Start)?~~ **Beantwortet
+   (2026-09-17, Issue #20): Nein.** Controls unter iOS 27 bleiben auf Button-/Toggle-Intents
+   beschränkt (`AppIntentControlConfiguration`, neu: `RunSystemShortcutIntent` fürs Starten von
+   Shortcuts/Apps aus einem Widget-Button) — keine freie Werteabfrage oder Diktat direkt im Control
+   Center. Die bestehende Lösung (Control öffnet die App in der schlanken Erfassungs-Szene,
+   `LooseEndsWidgets/CaptureControl.swift`) bleibt damit der richtige Weg, kein App-Start-Entfall
+   in Sicht.
 2. Läuft `SystemLanguageModel` verlässlich in der App-Intents-Extension und als Nachzügler in `BGAppRefreshTask`?
 3. Wie schnell ist der Kaltstart in die Erfassungs-Szene auf iPhone 15 Pro? Ziel unter einer Sekunde.
 4. Konfidenzschwelle mit dem FocusBlox-Korpus kalibrieren (Evaluations-Framework).
