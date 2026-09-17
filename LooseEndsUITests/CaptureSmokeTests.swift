@@ -116,9 +116,9 @@ final class CaptureSmokeTests: XCTestCase {
         row.press(forDuration: 1.0)
 
         let done = app.descendants(matching: .any)
-            .matching(NSPredicate(format: "identifier == %@ OR label == %@", "menuDone", "Done"))
+            .matching(NSPredicate(format: "identifier == %@ OR label == %@", "menuDone", "Complete"))
             .firstMatch
-        XCTAssertTrue(done.waitForExistence(timeout: 5), "Long press should open the menu with Done")
+        XCTAssertTrue(done.waitForExistence(timeout: 5), "Long press should open the menu with Complete")
         done.tap()
 
         XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 5), "New should be empty after Done")

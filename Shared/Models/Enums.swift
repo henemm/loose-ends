@@ -49,7 +49,7 @@ enum ViewKind: String, Codable, CaseIterable, Sendable {
         case .waiting: "Waiting"
         case .repeating: "Repeating"
         case .parked: "Parked"
-        case .done: "Done"
+        case .done: "Completed"
         case .context: "Context"
         case .project: "Project"
         }

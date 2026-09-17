@@ -1,3 +1,4 @@
+import Combine
 import OSLog
 import SwiftData
 import SwiftUI
@@ -10,8 +11,9 @@ struct ContentView: View {
     @State private var isCapturing = false
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "App")
 
-    /// Nil only in previews; the app always passes its coordinator.
+    /// Nil only in previews; the app always passes its coordinator and notification center.
     var enrichment: EnrichmentCoordinator?
+    var notifications: DueNotificationCenter?
     private var captureRequest: CaptureRequest { .shared }
 
     var body: some View {
@@ -39,6 +41,9 @@ struct ContentView: View {
         }
         .onAppear(perform: consumeCaptureRequest)
         .onChange(of: captureRequest.pending) { _, _ in consumeCaptureRequest() }
+        .onReceive(NotificationCenter.default.publisher(for: ModelContext.didSave)) { _ in
+            notifications?.rescheduleSoon()
+        }
     }
 
     /// The capture button sits in the same place on every screen (design briefing, screen 2).
@@ -50,7 +55,8 @@ struct ContentView: View {
         }
     }
 
-    /// Seed the default contexts once, then run the catch-up enrichment pass (ADR-4).
+    /// Seed the default contexts once, run the catch-up enrichment pass (ADR-4), then line up
+    /// the due reminders.
     private func startUp() async {
         do {
             try ContextSeeder.seedIfNeeded(in: modelContext)
@@ -58,6 +64,8 @@ struct ContentView: View {
             Self.logger.error("Seeding contexts failed: \(error, privacy: .public)")
         }
         await enrichment?.processPending()
+        await notifications?.requestAuthorization()
+        await notifications?.reschedule()
     }
 
     /// Control Center and the Action Button open the app straight into capture (ADR-9).
