@@ -41,6 +41,7 @@ targets:
         com.apple.security.application-groups: [group.com.henning.looseends]
         com.apple.security.app-sandbox: true
         com.apple.security.network.client: true
+        com.apple.security.device.audio-input: true
     info:
       path: LooseEnds/Info.plist
       properties:
