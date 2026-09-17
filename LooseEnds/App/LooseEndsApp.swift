@@ -5,6 +5,7 @@ import SwiftUI
 struct LooseEndsApp: App {
     let container: ModelContainer
     let enrichment: EnrichmentCoordinator
+    let notifications: DueNotificationCenter
 
     init() {
         do {
@@ -13,11 +14,13 @@ struct LooseEndsApp: App {
             fatalError("Could not open the Loose Ends store: \(error)")
         }
         enrichment = EnrichmentCoordinator(enricher: FoundationModelsEnricher(), container: container)
+        notifications = DueNotificationCenter(container: container)
+        notifications.activate()
     }
 
     var body: some Scene {
         WindowGroup {
-            ContentView(enrichment: enrichment)
+            ContentView(enrichment: enrichment, notifications: notifications)
         }
         .modelContainer(container)
     }

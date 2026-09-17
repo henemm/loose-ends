@@ -12,7 +12,6 @@
     "Waiting" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Wartet" } } } },
     "Repeating" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Wiederkehrend" } } } },
     "Parked" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Geparkt" } } } },
-    "Done" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erledigt" } } } },
     "Context" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Kontext" } } } },
     "Project" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Projekt" } } } },
     "Computer" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Computer" } } } },
@@ -97,6 +96,9 @@
     "Speech recognition is not available." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Spracherkennung ist nicht verfügbar." } } } },
     "Microphone or speech access was not allowed." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Mikrofon oder Spracherkennung wurde nicht erlaubt." } } } },
     "Stop listening" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nicht mehr zuhören" } } } },
-    "Listen" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Zuhören" } } } }
+    "Listen" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Zuhören" } } } },
+    "Due today" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute fällig" } } } },
+    "Completed" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erledigt" } } } },
+    "Complete" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erledigt" } } } }
   }
 }

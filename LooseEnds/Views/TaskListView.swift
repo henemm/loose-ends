@@ -88,7 +88,7 @@ struct TaskListView: View {
             Button("Activate", systemImage: "play") { activate(task) }
                 .tint(.accentColor)
         default:
-            Button("Done", systemImage: "checkmark") { complete(task) }
+            Button("Complete", systemImage: "checkmark") { complete(task) }
                 .tint(.green)
                 .accessibilityIdentifier("swipeDone_\(task.id.uuidString)")
         }
@@ -125,7 +125,7 @@ struct TaskListView: View {
             } else {
                 Button("Remove from Next up", systemImage: "star.slash") { toggleNext(task) }
             }
-            Button("Done", systemImage: "checkmark") { complete(task) }
+            Button("Complete", systemImage: "checkmark") { complete(task) }
                 .accessibilityIdentifier("menuDone")
             Menu("Move", systemImage: "calendar") {
                 Button("Tomorrow") { move(task, to: .tomorrow) }
