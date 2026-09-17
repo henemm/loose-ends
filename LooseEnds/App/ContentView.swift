@@ -32,18 +32,24 @@ struct ContentView: View {
         } detail: {
             if let selection {
                 let shown = ViewRules.tasks(for: selection, in: tasks)
-                List(shown) { task in
-                    TaskRow(task: task)
-                }
-                .overlay {
-                    if shown.isEmpty {
-                        Text("Nothing here")
-                            .foregroundStyle(.secondary)
-                            .accessibilityIdentifier("emptyViewLabel")
+                NavigationStack {
+                    List(shown) { task in
+                        NavigationLink {
+                            TaskDetailView(task: task)
+                        } label: {
+                            TaskRow(task: task)
+                        }
                     }
+                    .overlay {
+                        if shown.isEmpty {
+                            Text("Nothing here")
+                                .foregroundStyle(.secondary)
+                                .accessibilityIdentifier("emptyViewLabel")
+                        }
+                    }
+                    .navigationTitle(String(localized: selection.titleKey))
+                    .toolbar { captureToolbarItem }
                 }
-                .navigationTitle(String(localized: selection.titleKey))
-                .toolbar { captureToolbarItem }
             } else {
                 Text("Pick a view")
                     .foregroundStyle(.secondary)
