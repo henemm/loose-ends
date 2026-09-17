@@ -92,4 +92,36 @@ final class CaptureSmokeTests: XCTestCase {
         app.buttons["captureCancelButton"].tap()
         XCTAssertTrue(done.waitForNonExistence(timeout: 5), "Cancel should close the sheet")
     }
+
+    @MainActor
+    func testDoneFromMenuEmptiesNew() throws {
+        let app = launch()
+
+        let captureButton = app.buttons["captureButton"]
+        XCTAssertTrue(captureButton.waitForExistence(timeout: 10))
+        captureButton.tap()
+        let field = element("captureTextField", in: app)
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText("Fenster putzen")
+        app.buttons["captureDoneButton"].tap()
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5))
+
+        let newRow = element("viewRow_new", in: app)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
+        newRow.tap()
+
+        let row = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Fenster putzen")).firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "Task row should be listed in New")
+        row.press(forDuration: 1.0)
+
+        let done = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier == %@ OR label == %@", "menuDone", "Done"))
+            .firstMatch
+        XCTAssertTrue(done.waitForExistence(timeout: 5), "Long press should open the menu with Done")
+        done.tap()
+
+        XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 5), "New should be empty after Done")
+        XCTAssertTrue(row.waitForNonExistence(timeout: 5), "The finished task should leave New")
+    }
 }
