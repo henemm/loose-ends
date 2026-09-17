@@ -3,8 +3,9 @@ import SwiftData
 import SwiftUI
 
 /// Task detail (design briefing, screen 4): editable title, the raw text underneath, derived
-/// fields as compact rows. A field the AI set is accent-tinted with the spark; tapping it shows
-/// before, after, the reason and Reset. Opening the detail marks the AI changes as seen.
+/// fields as compact rows. Tapping a row opens its editor; a field the AI set is accent-tinted
+/// with the spark and its editor also shows before, after, the reason and Reset. Opening the
+/// detail marks the AI changes as seen.
 struct TaskDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \TaskContext.sortOrder) private var contexts: [TaskContext]
@@ -13,7 +14,6 @@ struct TaskDetailView: View {
 
     @State private var titleDraft = ""
     @FocusState private var titleFocused: Bool
-    @State private var inspected: Revision?
     @State private var showsRevisions = false
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Detail")
 
@@ -74,9 +74,6 @@ struct TaskDetailView: View {
         .onChange(of: titleFocused) { _, focused in
             if !focused { commitTitle() }
         }
-        .sheet(item: $inspected) { revision in
-            RevisionInspector(revision: revision, task: task, contexts: contexts, projects: projects)
-        }
         .sheet(isPresented: $showsRevisions) {
             RevisionsSheet(task: task, contexts: contexts, projects: projects)
         }
@@ -103,10 +100,9 @@ struct TaskDetailView: View {
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("field_\(field.rawValue)")
 
-        if fromAI, let revision = RevisionService.firstAIRevision(of: field, on: task) {
-            Button { inspected = revision } label: { row }
-                .buttonStyle(.plain)
-        } else {
+        NavigationLink {
+            FieldEditorView(task: task, field: field, contexts: contexts, projects: projects)
+        } label: {
             row
         }
     }
@@ -129,58 +125,6 @@ struct TaskDetailView: View {
             try modelContext.save()
         } catch {
             Self.logger.error("Saving \(what, privacy: .public) failed: \(error, privacy: .public)")
-        }
-    }
-}
-
-/// Before, after, reason, Reset: what one AI change did to one field (design briefing, screen 4).
-struct RevisionInspector: View {
-    @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) private var dismiss
-    let revision: Revision
-    let task: TaskItem
-    let contexts: [TaskContext]
-    let projects: [Project]
-    private static let logger = Logger(subsystem: "com.henning.looseends", category: "Detail")
-
-    var body: some View {
-        NavigationStack {
-            Form {
-                Section(FieldFormatting.label(revision.field)) {
-                    LabeledContent("Before", value: FieldFormatting.value(revision.oldValue, for: revision.field) ?? String(localized: "Empty"))
-                    LabeledContent("After", value: FieldFormatting.value(revision.newValue, for: revision.field) ?? String(localized: "Empty"))
-                    if let reason = revision.reason, !reason.isEmpty {
-                        Text(reason).foregroundStyle(.secondary)
-                    }
-                }
-                Section {
-                    Button("Reset", action: reset)
-                        .accessibilityIdentifier("resetRevisionButton")
-                }
-            }
-            .formStyle(.grouped)
-            .navigationTitle(FieldFormatting.author(revision.author))
-            #if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
-            #endif
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { dismiss() }
-                }
-            }
-        }
-        #if os(macOS)
-        .frame(minWidth: 420, minHeight: 280)
-        #endif
-    }
-
-    private func reset() {
-        RevisionService.revert(revision, on: task, contexts: contexts, projects: projects)
-        do {
-            try modelContext.save()
-            dismiss()
-        } catch {
-            Self.logger.error("Reset failed: \(error, privacy: .public)")
         }
     }
 }

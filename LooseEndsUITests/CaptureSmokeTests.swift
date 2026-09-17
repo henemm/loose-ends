@@ -150,4 +150,41 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(projectRow.waitForExistence(timeout: 5), "The new project should be listed")
         XCTAssertTrue(projectRow.label.contains("Haus"), "Row label was \(projectRow.label)")
     }
+
+    @MainActor
+    func testImportanceEditorUpdatesDetail() throws {
+        let app = launch()
+
+        let captureButton = app.buttons["captureButton"]
+        XCTAssertTrue(captureButton.waitForExistence(timeout: 10))
+        captureButton.tap()
+        let field = element("captureTextField", in: app)
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText("Reifen wechseln")
+        app.buttons["captureDoneButton"].tap()
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5))
+
+        let newRow = element("viewRow_new", in: app)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
+        newRow.tap()
+        let row = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Reifen wechseln")).firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        row.tap()
+
+        let importanceRow = element("field_importance", in: app)
+        XCTAssertTrue(importanceRow.waitForExistence(timeout: 5), "Detail should list Importance")
+        importanceRow.tap()
+
+        let high = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "High")).firstMatch
+        XCTAssertTrue(high.waitForExistence(timeout: 5), "Editor should offer High")
+        high.tap()
+
+        let back = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(back.waitForExistence(timeout: 5))
+        back.tap()
+
+        XCTAssertTrue(importanceRow.waitForExistence(timeout: 5))
+        XCTAssertTrue(importanceRow.label.contains("High"), "Row label was \(importanceRow.label)")
+    }
 }

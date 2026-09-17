@@ -89,6 +89,10 @@
     "Delete this project?" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Dieses Projekt löschen?" } } } },
     "Its tasks stay and lose the project." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Die Aufgaben bleiben und verlieren das Projekt." } } } },
     "Delete this context?" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Diesen Kontext löschen?" } } } },
-    "Its tasks stay and lose the context." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Die Aufgaben bleiben und verlieren den Kontext." } } } }
+    "Its tasks stay and lose the context." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Die Aufgaben bleiben und verlieren den Kontext." } } } },
+    "None" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Keine" } } } },
+    "Date" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Datum" } } } },
+    "Time" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Uhrzeit" } } } },
+    "Names, comma separated" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Namen, durch Komma getrennt" } } } }
   }
 }
