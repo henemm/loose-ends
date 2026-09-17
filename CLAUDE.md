@@ -49,6 +49,14 @@ claude plugin install agent-os-openspec
 ```
 Unit tests for enrichment, view rules, repeat rules and revisions come first; UI tests only after the design freeze, and only as smoke tests.
 
+**GitHub Issues is the one and only backlog.** Every open task — feature, bug, spike — is a GitHub
+issue with its own Definition of Done, not a bullet in a markdown file. `docs/project/04-stand.md`
+only holds the priority order and links to issue numbers; never re-list scope or DoD there, and never
+resurrect a status column in `docs/project/01-user-story.md` (it's a one-time snapshot from the
+briefing, not maintained). Opening a PR for an issue: reference it (`Closes #N`) so it auto-closes on
+merge; if it doesn't auto-close, close it by hand. New work discovered mid-task becomes a new issue,
+not scope creep on the current one.
+
 ## Where things live
 
 - `Shared/Models` — SwiftData model, enums, `RepeatRule`, `ViewRules` (pure view computation)
