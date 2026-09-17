@@ -54,6 +54,29 @@ enum ViewRules {
             .sorted(by: byUrgencyThenImportance)
     }
 
+    /// How often the user pushed the due date to a later day. The first due date, pulling a task
+    /// forward and the AI's guesses do not count (design briefing, screen 11).
+    static func postponeCount(_ task: TaskItem) -> Int {
+        let formatter = ISO8601DateFormatter()
+        return (task.revisions ?? []).filter { revision in
+            guard revision.field == .dueDate, revision.author == .user,
+                  let old = revision.oldValue.flatMap(formatter.date(from:)),
+                  let new = revision.newValue.flatMap(formatter.date(from:)) else { return false }
+            return new > old
+        }.count
+    }
+
+    struct DayGroup {
+        let day: Date
+        let tasks: [TaskItem]
+    }
+
+    /// Completed tasks by day, newest day first; the order within a day is the caller's.
+    static func groupedByCompletionDay(_ tasks: [TaskItem], calendar: Calendar = .current) -> [DayGroup] {
+        let groups = Dictionary(grouping: tasks) { calendar.startOfDay(for: $0.completedAt ?? .distantPast) }
+        return groups.keys.sorted(by: >).map { DayGroup(day: $0, tasks: groups[$0] ?? []) }
+    }
+
     static func byUrgencyThenImportance(_ a: TaskItem, _ b: TaskItem) -> Bool {
         func rank(_ u: Urgency?) -> Int { switch u { case .high: 0; case .medium: 1; case .low: 2; case nil: 3 } }
         func rank(_ i: Importance?) -> Int { switch i { case .high: 0; case .medium: 1; case .low: 2; case nil: 3 } }

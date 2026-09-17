@@ -8,6 +8,8 @@ struct TaskRow: View {
     let task: TaskItem
     /// In a context view the context itself is noise.
     var hidesContext = false
+    /// One extra line the view adds, such as the age and postponements in Old.
+    var note: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
@@ -48,6 +50,12 @@ struct TaskRow: View {
                 .font(.caption)
                 .imageScale(.small)
                 .lineLimit(1)
+            }
+            if let note {
+                Text(note)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
             }
         }
         .accessibilityElement(children: .combine)

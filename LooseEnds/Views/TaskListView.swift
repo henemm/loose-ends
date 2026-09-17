@@ -50,15 +50,12 @@ struct TaskListView: View {
     }
 
     var body: some View {
-        List(shown) { task in
-            NavigationLink {
-                TaskDetailView(task: task)
-            } label: {
-                TaskRow(task: task, hidesContext: context != nil)
+        List {
+            if kind == .done {
+                doneSections
+            } else {
+                openRows
             }
-            .swipeActions(edge: .leading, allowsFullSwipe: true) { leadingActions(task) }
-            .swipeActions(edge: .trailing, allowsFullSwipe: true) { trailingActions(task) }
-            .contextMenu { menu(task) }
         }
         .overlay {
             if shown.isEmpty {
@@ -74,6 +71,56 @@ struct TaskListView: View {
         } message: { _ in
             Text("This cannot be undone.")
         }
+    }
+
+    /// Completed, one section per day, newest day first.
+    private var doneSections: some View {
+        let groups = ViewRules.groupedByCompletionDay(shown)
+        return ForEach(groups, id: \.day) { group in
+            Section {
+                ForEach(group.tasks) { task in
+                    row(task)
+                }
+            } header: {
+                Text(group.day, format: .dateTime.weekday(.wide).day().month())
+            }
+        }
+    }
+
+    /// Every other view; only Next up lets the rows be dragged.
+    private var openRows: some View {
+        let move: ((IndexSet, Int) -> Void)? = kind == .next ? { moveNext(from: $0, to: $1) } : nil
+        return ForEach(shown) { task in
+            row(task)
+        }
+        .onMove(perform: move)
+    }
+
+    private func row(_ task: TaskItem) -> some View {
+        NavigationLink {
+            TaskDetailView(task: task)
+        } label: {
+            TaskRow(task: task, hidesContext: context != nil, note: note(for: task))
+        }
+        .swipeActions(edge: .leading, allowsFullSwipe: true) { leadingActions(task) }
+        .swipeActions(edge: .trailing, allowsFullSwipe: true) { trailingActions(task) }
+        .contextMenu { menu(task) }
+    }
+
+    /// Old shows the age and how often the task was pushed (design briefing, screen 11).
+    private func note(for task: TaskItem) -> String? {
+        guard kind == .old else { return nil }
+        var parts = [task.capturedAt.formatted(.relative(presentation: .named))]
+        let postponed = ViewRules.postponeCount(task)
+        if postponed > 0 {
+            parts.append(String(localized: "postponed \(postponed) times"))
+        }
+        return parts.joined(separator: " · ")
+    }
+
+    private func moveNext(from source: IndexSet, to destination: Int) {
+        TaskActions.moveNext(shown, from: source, to: destination)
+        save("reorder")
     }
 
     // MARK: - Swipes
