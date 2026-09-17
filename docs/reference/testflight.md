@@ -48,7 +48,10 @@ Unter https://appstoreconnect.apple.com/access/integrations/api:
 
 1. **Benutzer und Zugriff → Integrationen → App Store Connect API → Teamschlüssel**.
    Beim ersten Mal: **Zugriff anfordern** bestätigen.
-2. **+** (Schlüssel generieren): Name `GitHub TestFlight`, Zugriff **App-Manager** → Generieren.
+2. **+** (Schlüssel generieren): Name `GitHub TestFlight`, Zugriff **Admin** → Generieren.
+   **App-Manager reicht nicht:** Cloud-verwaltete Signierung (`-allowProvisioningUpdates`) braucht
+   Entwicklerportal-Zugriff (Zertifikate/Profile), den nur **Admin** hat. Mit App-Manager schlägt der
+   Export mit "Cloud signing permission error" fehl.
 3. **API-Schlüssel herunterladen**. Das geht **nur einmal**; die Datei heißt
    `AuthKey_XXXXXXXXXX.p8`. Sicher ablegen (zum Beispiel im Schlüsselbund als sichere Notiz).
 4. Auf derselben Seite stehen die **Aussteller-ID** (Issuer ID, eine lange UUID) und die
