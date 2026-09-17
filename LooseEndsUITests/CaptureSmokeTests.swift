@@ -262,4 +262,49 @@ final class CaptureSmokeTests: XCTestCase {
 
         XCTAssertTrue(row.waitForExistence(timeout: 5), "The finished task should be listed under Completed")
     }
+
+    @MainActor
+    func testSubtaskCanBeAddedAndChecked() throws {
+        let app = launch()
+
+        let captureButton = app.buttons["captureButton"]
+        XCTAssertTrue(captureButton.waitForExistence(timeout: 10))
+        captureButton.tap()
+        let field = element("captureTextField", in: app)
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText("Einkaufen")
+        app.buttons["captureDoneButton"].tap()
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5))
+
+        let newRow = element("viewRow_new", in: app)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
+        newRow.tap()
+        let row = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Einkaufen")).firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        row.tap()
+
+        let subtaskField = element("subtaskTextField", in: app)
+        if !subtaskField.waitForExistence(timeout: 3) {
+            app.swipeUp()
+        }
+        XCTAssertTrue(subtaskField.waitForExistence(timeout: 5), "Detail should offer a subtask field")
+        subtaskField.tap()
+        subtaskField.typeText("Milch")
+        let add = app.buttons["subtaskAddButton"]
+        XCTAssertTrue(add.waitForExistence(timeout: 5))
+        XCTAssertTrue(add.isEnabled, "Add must be enabled once there is text")
+        add.tap()
+
+        let line = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "subtaskRow_"))
+            .firstMatch
+        XCTAssertTrue(line.waitForExistence(timeout: 5), "The new subtask should be listed")
+        XCTAssertTrue(line.label.contains("Milch"), "Row label was \(line.label)")
+        line.tap()
+
+        let progress = element("subtaskProgress", in: app)
+        XCTAssertTrue(progress.waitForExistence(timeout: 5), "Checking a line off should show the progress")
+        XCTAssertEqual(progress.label, "1 of 1 done")
+    }
 }

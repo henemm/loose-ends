@@ -68,7 +68,7 @@ final class TaskItem {
     // Relationships (all optional: CloudKit requirement)
     var project: Project?
     var parent: TaskItem?
-    @Relationship(inverse: \TaskItem.parent) var subtasks: [TaskItem]?
+    @Relationship(deleteRule: .cascade, inverse: \TaskItem.parent) var subtasks: [TaskItem]?
     @Relationship(inverse: \TaskItem.blocks) var blockedBy: [TaskItem]?
     var blocks: [TaskItem]?
     var contexts: [TaskContext]?

@@ -45,6 +45,10 @@ struct TaskDetailView: View {
                 fieldRow(.repeatRule, value: FieldFormatting.value(FieldCodec.encode(.repeatRule, of: task), for: .repeatRule))
             }
 
+            if task.parent == nil {
+                SubtasksSection(task: task)
+            }
+
             if !aiFields.isEmpty {
                 Section {
                     HStack {
