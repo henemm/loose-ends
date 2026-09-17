@@ -51,7 +51,11 @@ targets:
         CFBundleName: Loose Ends
         UILaunchScreen: {}
         ITSAppUsesNonExemptEncryption: false   # no custom crypto: TestFlight skips the export-compliance question
-        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
         NSMicrophoneUsageDescription: Loose Ends listens so you can say a task instead of typing it.
         NSSpeechRecognitionUsageDescription: Speech is turned into text on your device to capture a task.
         NSCalendarsWriteOnlyAccessUsageDescription: Only if you switch it on, a task with a due time is shown in your calendar.
