@@ -221,8 +221,32 @@ nicht der Migration in die App-Datenbank.
 
 ## Offene Punkte für den Spike
 
-1. Erlaubt iOS 27 einem Control die Werteabfrage (Diktat ohne App-Start)?
-2. Läuft `SystemLanguageModel` verlässlich in der App-Intents-Extension und als Nachzügler in `BGAppRefreshTask`?
+1. ~~Erlaubt iOS 27 einem Control die Werteabfrage (Diktat ohne App-Start)?~~ **Beantwortet
+   (2026-09-17, Issue #20): Nein.** Controls unter iOS 27 bleiben auf Button-/Toggle-Intents
+   beschränkt (`AppIntentControlConfiguration`, neu: `RunSystemShortcutIntent` fürs Starten von
+   Shortcuts/Apps aus einem Widget-Button) — keine freie Werteabfrage oder Diktat direkt im Control
+   Center. Die bestehende Lösung (Control öffnet die App in der schlanken Erfassungs-Szene,
+   `LooseEndsWidgets/CaptureControl.swift`) bleibt damit der richtige Weg, kein App-Start-Entfall
+   in Sicht.
+2. ~~Läuft `SystemLanguageModel` verlässlich in der App-Intents-Extension und als Nachzügler in `BGAppRefreshTask`?~~
+   **Beantwortet (2026-09-17, Issue #21): Nein, nicht verlässlich.** Foundation Models unterliegen in
+   Extension-Prozessen einem strengen, nicht dokumentierten Rate Limit — ein Entwickler löste es
+   bereits nach vier Anfragen im 30-Sekunden-Abstand aus (Fehlermeldung irreführend: "Safety guardrail
+   was triggered", tatsächliche Ursache laut Systemlog Rate Limiting). Ein Apple-Frameworks-Engineer
+   bestätigte: Rate Limiting greift, wenn das Gerät im Akkubetrieb ist UND der Prozess im Hintergrund
+   läuft — der Entwickler berichtete Limits aber auch im Netzbetrieb. Offener Report bei Apple:
+   FB18332004. Apples Empfehlung (nicht streamen, `respond` statt `streamResponse` nutzen) ist im
+   Code bereits umgesetzt (`FoundationModelsEnricher.swift:19`).
+
+   **Konsequenz für ADR-4:** Die Veredelung im Intent-Prozess (Siri/Shortcut-Erfassung ohne App-Start)
+   darf nicht als verlässlich angenommen werden. Die bestehende Fehlerbehandlung der Pipeline (Schritt
+   7: Modell nicht verfügbar → Task bleibt `unprocessed`, Nachzügler-Lauf beim nächsten App-Start)
+   passt genau zu diesem Risiko und bleibt der Rettungsanker — keine Architekturänderung nötig, aber
+   das Rate Limit sollte beim Eval/Test bewusst mit einkalkuliert werden (nicht nur "Modell nicht
+   verfügbar auf altem Gerät" als Fehlerquelle testen, sondern auch "Rate Limit im Extension-Prozess").
+   Für `BGAppRefreshTask` (App-Prozess, nicht Extension) ist laut Engineer-Aussage kein Rate Limit zu
+   erwarten, solange das Gerät am Netz hängt — dort bleibt Verlässlichkeit ungetestet, aber das Risiko
+   ist geringer als im Extension-Prozess.
 3. Wie schnell ist der Kaltstart in die Erfassungs-Szene auf iPhone 15 Pro? Ziel unter einer Sekunde.
 4. Konfidenzschwelle mit dem FocusBlox-Korpus kalibrieren (Evaluations-Framework).
 5. Kann die Share-Extension aus Apple Mail die `message:`-URL zuverlässig erhalten?
