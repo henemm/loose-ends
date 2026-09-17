@@ -27,8 +27,9 @@ ausdrückliches "merge" gemerged.
    letzten fünf".
 3. **Abhängigkeiten über Private Cloud Compute** (ADR): `blockedBy` erkennen.
 4. **Projekt-Ansicht mit Unteraufgaben** eingerückt oder eingeklappt (Screen 6, offene Frage 3).
-5. **Onboarding** (Screen 12), **Mac-Teilen-Erweiterung**, **Kachel-Optik** nach dem Design-Freeze.
-6. **Drei Sekunden abbrechbares Erledigt**, "Datum" im Verschieben-Menü, "Neu analysieren" im Detail.
+5. **Logo und App-Icon** nach `docs/project/05-logo.md`: Platzhalter aus #17 ersetzen, Akzentfarbe setzen.
+6. **Onboarding** (Screen 12), **Mac-Teilen-Erweiterung**, **Kachel-Optik** nach dem Design-Freeze.
+7. **Drei Sekunden abbrechbares Erledigt**, "Datum" im Verschieben-Menü, "Neu analysieren" im Detail.
 
 ## Arbeitsweise, die sich bewährt hat
 
