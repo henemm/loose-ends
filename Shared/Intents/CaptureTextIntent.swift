@@ -14,9 +14,7 @@ struct CaptureTextIntent: AppIntent {
     func perform() async throws -> some IntentResult & ProvidesDialog {
         let container = try ModelContainerFactory.make()
         let context = ModelContext(container)
-        let item = TaskItem(rawText: text, capturedVia: .siri)
-        context.insert(item)
-        try context.save()
+        try CaptureService.save(text, via: .siri, in: context)
         return .result(dialog: "Saved: \(text)")
     }
 }

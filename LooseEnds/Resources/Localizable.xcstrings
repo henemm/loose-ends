@@ -27,6 +27,11 @@
     "Saved: %@" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Gespeichert: %@" } } } },
     "Saved" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Gespeichert" } } } },
     "I'm listening" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ich höre zu" } } } },
-    "Nothing lined up" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nichts vorgemerkt" } } } }
+    "Nothing lined up" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nichts vorgemerkt" } } } },
+    "Done" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Fertig" } } } },
+    "Cancel" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Abbrechen" } } } },
+    "OK" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "OK" } } } },
+    "Could not save" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Konnte nicht sichern" } } } },
+    "Nothing here" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nichts hier" } } } }
   }
 }

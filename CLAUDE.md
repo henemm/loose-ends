@@ -26,13 +26,20 @@ xcodebuild test -project LooseEnds.xcodeproj -scheme LooseEnds -destination 'pla
 
 Set `DEVELOPMENT_TEAM` once in Xcode (Signing & Capabilities); it is intentionally empty in `project.yml`.
 
-CI runs on GitHub's `macos-26` image. Until that image ships Xcode 27, CI compiles against the iOS 26.5 SDK
-and warns about the 27.0 deployment target; iOS-27-only APIs (App Schemas, Private Cloud Compute model)
-must be guarded with `#available` or wait for the image. The workflow selects Xcode 27 automatically once present.
+CI runs on GitHub's `macos-26` image. Until that image ships Xcode 27, each CI job lowers the deployment
+targets in `project.yml` to 26.0 before generating the project (Xcode only offers simulators that meet
+the project's deployment target). iOS-27-only APIs (App Schemas, Private Cloud Compute model) must be
+guarded with `#available` until then. The workflow selects Xcode 27 automatically once present.
 
 ## Process
 
 Plugin `henemm/agent-os-openspec`. Fast-track for scaffolding, standard workflow with the 250-LoC limit after that.
+It lives in Henning's own marketplace, not the official one, so register that first:
+
+```bash
+claude plugin marketplace add henemm/agent-os-openspec@main
+claude plugin install agent-os-openspec
+```
 Unit tests for enrichment, view rules, repeat rules and revisions come first; UI tests only after the design freeze, and only as smoke tests.
 
 ## Where things live
@@ -40,7 +47,9 @@ Unit tests for enrichment, view rules, repeat rules and revisions come first; UI
 - `Shared/Models` — SwiftData model, enums, `RepeatRule`, `ViewRules` (pure view computation)
 - `Shared/Persistence` — `ModelContainerFactory` (app group + private CloudKit)
 - `Shared/Intents` — App Intents shared by app, widgets and (later) the intents extension
-- `LooseEnds/` — app entry and views; `LooseEndsWatch/`, `LooseEndsWidgets/` — platform targets
+- `LooseEnds/` — app entry and views (iPhone, iPad, Mac); `LooseEndsWatch/`, `LooseEndsWidgets/` — platform targets
+- `Shared/` compiles into the watch and widget targets too: no SwiftUI that is unavailable on watchOS there
+  (keyboard shortcuts, navigation bar modifiers). App views belong in `LooseEnds/Views`.
 - `docs/project/` — decisions, user story, data model, design briefing; `docs/reference/` — learnings carried over from FocusBlox
 
 ## Naming

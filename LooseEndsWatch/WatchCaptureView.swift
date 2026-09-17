@@ -1,3 +1,4 @@
+import OSLog
 import SwiftData
 import SwiftUI
 
@@ -6,6 +7,8 @@ struct WatchCaptureView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var text = ""
     @State private var saved = false
+    @State private var saveFailed = false
+    private static let logger = Logger(subsystem: "com.henning.looseends", category: "Capture")
 
     var body: some View {
         VStack(spacing: 12) {
@@ -14,15 +17,24 @@ struct WatchCaptureView: View {
                 Text("Saved").font(.headline)
             } else {
                 TextField("I'm listening", text: $text)
-                Button("Done") {
-                    guard !text.trimmingCharacters(in: .whitespaces).isEmpty else { return }
-                    modelContext.insert(TaskItem(rawText: text, capturedVia: .watch))
-                    try? modelContext.save()
-                    saved = true
-                }
-                .buttonStyle(.borderedProminent)
+                Button("Done", action: save)
+                    .buttonStyle(.borderedProminent)
+                    .disabled(text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
         }
         .padding()
+        .alert("Could not save", isPresented: $saveFailed) {
+            Button("OK") {}
+        }
+    }
+
+    private func save() {
+        do {
+            try CaptureService.save(text, via: .watch, in: modelContext)
+            saved = true
+        } catch {
+            Self.logger.error("Capture failed: \(error, privacy: .public)")
+            saveFailed = true
+        }
     }
 }
