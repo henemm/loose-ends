@@ -2,13 +2,14 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-/// One system view as a list (design briefing, screen 3). Swipe right: Done (Restore in Done,
-/// Activate in Parked). Swipe left: Next up, or Park in Old. Long press: the full menu.
+/// One view as a list (design briefing, screen 3): a system view, a context or a project.
+/// Swipe right: Done (Restore in Done, Activate in Parked). Swipe left: Next up, or Park in Old.
+/// Long press: the full menu.
 struct TaskListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \TaskContext.sortOrder) private var contexts: [TaskContext]
     @Query(sort: \Project.sortOrder) private var projects: [Project]
-    let kind: ViewKind
+    let selection: ViewSelection
     /// Every task; the view applies its own rule.
     let tasks: [TaskItem]
 
@@ -16,14 +17,44 @@ struct TaskListView: View {
     @State private var confirmingDelete = false
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "List")
 
-    private var shown: [TaskItem] { ViewRules.tasks(for: kind, in: tasks) }
+    /// The system kind, nil for a context or project view.
+    private var kind: ViewKind? {
+        if case .system(let kind) = selection { return kind }
+        return nil
+    }
+
+    private var context: TaskContext? {
+        if case .context(let id) = selection { return contexts.first { $0.id == id } }
+        return nil
+    }
+
+    private var project: Project? {
+        if case .project(let id) = selection { return projects.first { $0.id == id } }
+        return nil
+    }
+
+    private var shown: [TaskItem] {
+        switch selection {
+        case .system(let kind): ViewRules.tasks(for: kind, in: tasks)
+        case .context: context.map { ViewRules.tasks(inContext: $0, in: tasks) } ?? []
+        case .project: project.map { ViewRules.tasks(inProject: $0, in: tasks) } ?? []
+        }
+    }
+
+    private var title: String {
+        switch selection {
+        case .system(let kind): String(localized: kind.titleKey)
+        case .context: context?.name ?? ""
+        case .project: project?.name ?? ""
+        }
+    }
 
     var body: some View {
         List(shown) { task in
             NavigationLink {
                 TaskDetailView(task: task)
             } label: {
-                TaskRow(task: task, hidesContext: kind == .context)
+                TaskRow(task: task, hidesContext: context != nil)
             }
             .swipeActions(edge: .leading, allowsFullSwipe: true) { leadingActions(task) }
             .swipeActions(edge: .trailing, allowsFullSwipe: true) { trailingActions(task) }
@@ -36,6 +67,7 @@ struct TaskListView: View {
                     .accessibilityIdentifier("emptyViewLabel")
             }
         }
+        .navigationTitle(title)
         .confirmationDialog("Delete this task?", isPresented: $confirmingDelete, titleVisibility: .visible, presenting: pendingDelete) { task in
             Button("Delete", role: .destructive) { delete(task) }
                 .accessibilityIdentifier("confirmDeleteButton")
@@ -49,10 +81,10 @@ struct TaskListView: View {
     @ViewBuilder
     private func leadingActions(_ task: TaskItem) -> some View {
         switch kind {
-        case .done:
+        case .done?:
             Button("Restore", systemImage: "arrow.uturn.backward") { restore(task) }
                 .tint(.accentColor)
-        case .parked:
+        case .parked?:
             Button("Activate", systemImage: "play") { activate(task) }
                 .tint(.accentColor)
         default:
@@ -65,9 +97,9 @@ struct TaskListView: View {
     @ViewBuilder
     private func trailingActions(_ task: TaskItem) -> some View {
         switch kind {
-        case .done, .parked:
+        case .done?, .parked?:
             EmptyView()
-        case .old:
+        case .old?:
             Button("Park", systemImage: "pause") { park(task) }
         default:
             if task.nextRank == nil {
