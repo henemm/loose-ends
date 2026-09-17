@@ -52,16 +52,9 @@ struct TaskListView: View {
     var body: some View {
         List {
             if kind == .done {
-                ForEach(ViewRules.groupedByCompletionDay(shown), id: \.day) { group in
-                    Section {
-                        ForEach(group.tasks) { task in row(task) }
-                    } header: {
-                        Text(group.day, format: .dateTime.weekday(.wide).day().month())
-                    }
-                }
+                doneSections
             } else {
-                ForEach(shown) { task in row(task) }
-                    .onMove(perform: kind == .next ? moveNext : nil)
+                openRows
             }
         }
         .overlay {
@@ -78,6 +71,29 @@ struct TaskListView: View {
         } message: { _ in
             Text("This cannot be undone.")
         }
+    }
+
+    /// Completed, one section per day, newest day first.
+    private var doneSections: some View {
+        let groups = ViewRules.groupedByCompletionDay(shown)
+        return ForEach(groups, id: \.day) { group in
+            Section {
+                ForEach(group.tasks) { task in
+                    row(task)
+                }
+            } header: {
+                Text(group.day, format: .dateTime.weekday(.wide).day().month())
+            }
+        }
+    }
+
+    /// Every other view; only Next up lets the rows be dragged.
+    private var openRows: some View {
+        let move: ((IndexSet, Int) -> Void)? = kind == .next ? { moveNext(from: $0, to: $1) } : nil
+        return ForEach(shown) { task in
+            row(task)
+        }
+        .onMove(perform: move)
     }
 
     private func row(_ task: TaskItem) -> some View {
