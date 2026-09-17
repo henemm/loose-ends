@@ -33,6 +33,11 @@ targets in `project.yml` to 26.0 before generating the project (Xcode only offer
 the project's deployment target). iOS-27-only APIs (App Schemas, Private Cloud Compute model) must be
 guarded with `#available` until then. The workflow selects Xcode 27 automatically once present.
 
+## Ship
+
+`.github/workflows/testflight.yml` archives the iOS app with cloud-managed signing and uploads it to
+TestFlight (manual run or a `v*` tag). Setup for the account owner: `docs/reference/testflight.md`.
+
 ## Process
 
 Plugin `henemm/agent-os-openspec`. Fast-track for scaffolding, standard workflow with the 250-LoC limit after that.
