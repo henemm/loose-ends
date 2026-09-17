@@ -112,6 +112,10 @@
     "Counting from" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Gezählt ab" } } } },
     "From due date" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ab Fälligkeit" } } } },
     "From completion" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ab Erledigung" } } } },
-    "postponed %lld times" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "%lld-mal verschoben" } } } }
+    "postponed %lld times" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "%lld-mal verschoben" } } } },
+    "Subtasks" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Unteraufgaben" } } } },
+    "Add a subtask" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Unteraufgabe hinzufügen" } } } },
+    "%lld of %lld done" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "%lld von %lld erledigt" } } } },
+    "Open" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Offen" } } } }
   }
 }

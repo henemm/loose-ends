@@ -76,7 +76,7 @@ struct TaskRow: View {
         }
     }
 
-    /// Ranked: waiting, due, duration, context, person. The first three win.
+    /// Ranked: waiting, due, duration, subtasks, context, person. The first three win.
     private var traits: [Trait] {
         let unseen = task.hasUnseenAIRevisions
         let ai = FieldSource.ai.rawValue
@@ -96,6 +96,10 @@ struct TaskRow: View {
         }
         if let duration = task.duration {
             all.append(Trait(id: "duration", text: FieldFormatting.duration(duration), symbol: "clock", tinted: unseen && task.durationSourceRaw == ai))
+        }
+        let progress = Subtasks.progress(of: task)
+        if progress.total > 0 {
+            all.append(Trait(id: "subtasks", text: "\(progress.done)/\(progress.total)", symbol: "checklist"))
         }
         if !hidesContext, let context = (task.contexts ?? []).sorted(by: { $0.sortOrder < $1.sortOrder }).first {
             all.append(Trait(id: "context", text: context.name, tinted: unseen && task.contextsSourceRaw == ai))

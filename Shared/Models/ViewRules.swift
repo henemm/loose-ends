@@ -35,7 +35,7 @@ enum ViewRules {
             return topLevel.filter { $0.status == .parked }
                 .sorted { ($0.parkedAt ?? .distantPast) > ($1.parkedAt ?? .distantPast) }
         case .done:
-            return all.filter { $0.status == .done }
+            return topLevel.filter { $0.status == .done }
                 .sorted { ($0.completedAt ?? .distantPast) > ($1.completedAt ?? .distantPast) }
         case .context, .project:
             return [] // resolved by the caller with the concrete context or project
