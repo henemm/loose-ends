@@ -3,7 +3,7 @@ import Testing
 @testable import LooseEnds
 
 @Suite("SharedContent") struct SharedContentTests {
-    private let mail = """
+    private let sampleMail = """
     From: Anna <anna@example.com>
     Subject: Angebot Dachrinne
      bis Freitag
@@ -15,7 +15,7 @@ import Testing
 
     @Test("A shared mail yields its subject, the message link and the mail channel")
     func mail() throws {
-        let content = SharedContent.make(texts: [], urls: [], mails: [mail])
+        let content = SharedContent.make(texts: [], urls: [], mails: [sampleMail])
         #expect(content.channel == .mail)
         #expect(content.prefill == "Angebot Dachrinne bis Freitag", "folded header lines are joined")
         #expect(content.sourceURL?.absoluteString == "message://%3Cabc123@example.com%3E")
