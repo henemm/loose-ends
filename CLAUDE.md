@@ -48,6 +48,8 @@ Unit tests for enrichment, view rules, repeat rules and revisions come first; UI
 
 - `Shared/Models` — SwiftData model, enums, `RepeatRule`, `ViewRules` (pure view computation)
 - `Shared/Persistence` — `ModelContainerFactory` (app group + private CloudKit), `ContextSeeder`
+- `Shared/Services` — `CaptureService`, `FieldCodec` (one encoding per field), `RevisionService` (reset = user revision),
+  `TaskActions` (done, next up, park, move, restore). All pure over the model objects; the caller saves.
 - `Shared/Enrichment` — `TaskEnricher` protocol, `EnrichmentWriter` (threshold + revisions), `EnrichmentCoordinator`
   (catch-up pass), `FoundationModelsEnricher` (on-device model, `#if canImport(FoundationModels)`)
 - `Shared/Intents` — App Intents shared by app, widgets and (later) the intents extension

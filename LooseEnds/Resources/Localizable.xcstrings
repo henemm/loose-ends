@@ -65,6 +65,19 @@
     "AI" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "KI" } } } },
     "You" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Du" } } } },
     "Empty" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Leer" } } } },
-    "Set by AI" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Von der KI gesetzt" } } } }
+    "Set by AI" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Von der KI gesetzt" } } } },
+    "Remove from Next up" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus „Als nächstes“ entfernen" } } } },
+    "Move" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Verschieben" } } } },
+    "Tomorrow" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Morgen" } } } },
+    "Weekend" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Wochenende" } } } },
+    "Next week" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nächste Woche" } } } },
+    "Park" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Parken" } } } },
+    "Activate" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aktivieren" } } } },
+    "Restore" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Zurückholen" } } } },
+    "Delete" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Löschen" } } } },
+    "Delete this task?" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Diese Aufgabe löschen?" } } } },
+    "This cannot be undone." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Das lässt sich nicht rückgängig machen." } } } },
+    "Important" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Wichtig" } } } },
+    "Urgent" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Dringend" } } } }
   }
 }

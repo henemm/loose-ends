@@ -31,24 +31,10 @@ struct ContentView: View {
             .toolbar { captureToolbarItem }
         } detail: {
             if let selection {
-                let shown = ViewRules.tasks(for: selection, in: tasks)
                 NavigationStack {
-                    List(shown) { task in
-                        NavigationLink {
-                            TaskDetailView(task: task)
-                        } label: {
-                            TaskRow(task: task)
-                        }
-                    }
-                    .overlay {
-                        if shown.isEmpty {
-                            Text("Nothing here")
-                                .foregroundStyle(.secondary)
-                                .accessibilityIdentifier("emptyViewLabel")
-                        }
-                    }
-                    .navigationTitle(String(localized: selection.titleKey))
-                    .toolbar { captureToolbarItem }
+                    TaskListView(kind: selection, tasks: tasks)
+                        .navigationTitle(String(localized: selection.titleKey))
+                        .toolbar { captureToolbarItem }
                 }
             } else {
                 Text("Pick a view")
@@ -90,28 +76,6 @@ struct ContentView: View {
         guard captureRequest.pending else { return }
         captureRequest.pending = false
         isCapturing = true
-    }
-}
-
-/// One row: the title, or the raw text while nothing better exists (raw text reads as raw text).
-/// The spark marks unseen AI changes (marker variant C).
-struct TaskRow: View {
-    let task: TaskItem
-
-    var body: some View {
-        HStack(spacing: 6) {
-            Text(task.displayTitle)
-                .italic(task.title == nil || task.status == .unverified)
-            if task.hasUnseenAIRevisions {
-                Image(systemName: "sparkle")
-                    .imageScale(.small)
-                    .foregroundStyle(.tint)
-                    .accessibilityLabel("Changed by AI")
-                    .accessibilityIdentifier("aiMarker_\(task.id.uuidString)")
-            }
-        }
-        .accessibilityElement(children: .combine)
-        .accessibilityIdentifier("taskRow_\(task.id.uuidString)")
     }
 }
 
