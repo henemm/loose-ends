@@ -225,4 +225,41 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(repeatRow.waitForExistence(timeout: 5))
         XCTAssertTrue(repeatRow.label.contains("Weekly"), "Row label was \(repeatRow.label)")
     }
+
+    @MainActor
+    func testCompletedTaskShowsUnderCompleted() throws {
+        let app = launch()
+
+        let captureButton = app.buttons["captureButton"]
+        XCTAssertTrue(captureButton.waitForExistence(timeout: 10))
+        captureButton.tap()
+        let field = element("captureTextField", in: app)
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText("Keller aufräumen")
+        app.buttons["captureDoneButton"].tap()
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5))
+
+        let newRow = element("viewRow_new", in: app)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
+        newRow.tap()
+        let row = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Keller aufräumen")).firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        row.press(forDuration: 1.0)
+        let complete = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier == %@ OR label == %@", "menuDone", "Complete"))
+            .firstMatch
+        XCTAssertTrue(complete.waitForExistence(timeout: 5))
+        complete.tap()
+        XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 5))
+
+        let back = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(back.waitForExistence(timeout: 5))
+        back.tap()
+        let doneRow = element("viewRow_done", in: app)
+        XCTAssertTrue(doneRow.waitForExistence(timeout: 5), "Start screen should show Completed")
+        doneRow.tap()
+
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "The finished task should be listed under Completed")
+    }
 }

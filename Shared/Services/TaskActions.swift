@@ -38,6 +38,15 @@ enum TaskActions {
         task.nextRank = highest + 1
     }
 
+    /// Drag in Next up: the rows land in their new place and every rank is renumbered 1...n.
+    static func moveNext(_ ordered: [TaskItem], from source: IndexSet, to destination: Int) {
+        var items = ordered
+        items.move(fromOffsets: source, toOffset: destination)
+        for (index, task) in items.enumerated() {
+            task.nextRank = Double(index + 1)
+        }
+    }
+
     static func park(_ task: TaskItem, now: Date = Date()) {
         task.status = .parked
         task.parkedAt = now
