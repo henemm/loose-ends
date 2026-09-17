@@ -49,6 +49,35 @@ final class CaptureSmokeTests: XCTestCase {
     }
 
     @MainActor
+    func testTaskDetailShowsRawText() throws {
+        let app = launch()
+
+        let captureButton = app.buttons["captureButton"]
+        XCTAssertTrue(captureButton.waitForExistence(timeout: 10))
+        captureButton.tap()
+        let field = element("captureTextField", in: app)
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText("Dachrinne reinigen")
+        app.buttons["captureDoneButton"].tap()
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5))
+
+        let newRow = element("viewRow_new", in: app)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
+        newRow.tap()
+
+        let row = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Dachrinne reinigen")).firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "Task row should be listed in New")
+        row.tap()
+
+        let rawText = element("detailRawText", in: app)
+        XCTAssertTrue(rawText.waitForExistence(timeout: 5), "Detail should show the raw text")
+        XCTAssertEqual(rawText.label, "Dachrinne reinigen")
+        let titleField = element("detailTitleField", in: app)
+        XCTAssertTrue(titleField.exists, "Detail should offer the title field")
+    }
+
+    @MainActor
     func testDoneIsDisabledWhileEmptyAndCancelCloses() throws {
         let app = launch()
 
