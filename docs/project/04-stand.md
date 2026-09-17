@@ -21,15 +21,30 @@ ausdrückliches "merge" gemerged.
 
 ## Offen, nach Priorität
 
-1. **Siri über das Reminders-App-Schema** (Must): braucht Xcode 27 in der CI. Bis dahin reichen die
-   Shortcut-Phrasen "Add to Loose Ends".
-2. **Retrieval per Embedding** (ADR-5): Beispiele für die Veredelung nach Ähnlichkeit statt "die
-   letzten fünf".
-3. **Abhängigkeiten über Private Cloud Compute** (ADR): `blockedBy` erkennen.
-4. **Projekt-Ansicht mit Unteraufgaben** eingerückt oder eingeklappt (Screen 6, offene Frage 3).
-5. **Logo und App-Icon** nach `docs/project/05-logo.md`: Platzhalter aus #17 ersetzen, Akzentfarbe setzen.
-6. **Onboarding** (Screen 12), **Mac-Teilen-Erweiterung**, **Kachel-Optik** nach dem Design-Freeze.
-7. **Drei Sekunden abbrechbares Erledigt**, "Datum" im Verschieben-Menü, "Neu analysieren" im Detail.
+Seit 2026-09-17 als GitHub Issues geführt, ticket-für-ticket mit eigener Definition of Done
+(`gh issue list --label enhancement` / `--label spike`). Diese Liste ist nur noch die
+Prioritätsreihenfolge; Details, Umfang und DoD stehen im jeweiligen Issue.
+
+**Spikes zuerst** (technisches Risiko, blockieren die Umsetzung der Must-Features):
+
+1. [#20](https://github.com/henemm/loose-ends/issues/20) Control-Center-Werteabfrage unter iOS 27?
+2. [#21](https://github.com/henemm/loose-ends/issues/21) SystemLanguageModel in Extension/BGAppRefreshTask verlässlich?
+3. [#22](https://github.com/henemm/loose-ends/issues/22) Kaltstart Erfassungs-Szene unter einer Sekunde?
+4. [#23](https://github.com/henemm/loose-ends/issues/23) FocusBlox-Korpus-Export und Konfidenzschwelle kalibrieren
+5. [#24](https://github.com/henemm/loose-ends/issues/24) Mail-Share-Extension: `message:`-URL zuverlässig?
+
+**Danach Features, nach Priorität:**
+
+6. [#25](https://github.com/henemm/loose-ends/issues/25) Siri über das Reminders-App-Schema (Must) — braucht Xcode 27 in der CI, bis dahin reicht die Shortcut-Phrase "Add to Loose Ends"
+7. [#26](https://github.com/henemm/loose-ends/issues/26) Retrieval per Embedding (ADR-5)
+8. [#27](https://github.com/henemm/loose-ends/issues/27) Abhängigkeiten über Private Cloud Compute (`blockedBy`)
+9. [#28](https://github.com/henemm/loose-ends/issues/28) Projekt-Ansicht mit Unteraufgaben eingerückt/eingeklappt
+10. [#29](https://github.com/henemm/loose-ends/issues/29) Onboarding-Screen (Screen 12)
+11. [#30](https://github.com/henemm/loose-ends/issues/30) Mac-Teilen-Erweiterung
+12. [#31](https://github.com/henemm/loose-ends/issues/31) Kachel-Optik verfeinern
+13. [#32](https://github.com/henemm/loose-ends/issues/32) Drei Sekunden abbrechbares Erledigt
+14. [#33](https://github.com/henemm/loose-ends/issues/33) "Datum" im Verschieben-Menü
+15. [#34](https://github.com/henemm/loose-ends/issues/34) "Neu analysieren" im Detail
 
 ## Arbeitsweise, die sich bewährt hat
 
