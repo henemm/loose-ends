@@ -4,7 +4,7 @@ import Foundation
 /// so a revision's old value can always be applied back to the task (ADR-6).
 ///
 /// Strings stay plain, dates are ISO 8601, enums use their raw value, lists are JSON arrays of
-/// names, a project is its name. `blockedBy` and `repeatRule` are not revisable in this slice.
+/// names, a project is its name, a repeat rule is JSON. `blockedBy` is not revisable yet.
 enum FieldCodec {
     static func encode(_ field: RevisedField, of task: TaskItem) -> String? {
         switch field {
@@ -18,7 +18,7 @@ enum FieldCodec {
         case .people: return encode(task.people)
         case .project: return task.project?.name
         case .blockedBy: return encode((task.blockedBy ?? []).map(\.id.uuidString))
-        case .repeatRule: return nil
+        case .repeatRule: return task.repeatRule.flatMap(encode)
         }
     }
 
@@ -70,9 +70,24 @@ enum FieldCodec {
             task.peopleConfidence = nil
         case .project:
             task.project = encoded.flatMap { name in projects.first { $0.name == name } }
-        case .blockedBy, .repeatRule:
+        case .repeatRule:
+            task.repeatRule = decodeRepeat(encoded)
+        case .blockedBy:
             break
         }
+    }
+
+    /// Sorted keys, so the same rule always encodes to the same text and unchanged edits write nothing.
+    static func encode(_ rule: RepeatRule) -> String? {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        guard let data = try? encoder.encode(rule) else { return nil }
+        return String(decoding: data, as: UTF8.self)
+    }
+
+    static func decodeRepeat(_ encoded: String?) -> RepeatRule? {
+        guard let encoded, let data = encoded.data(using: .utf8) else { return nil }
+        return try? JSONDecoder().decode(RepeatRule.self, from: data)
     }
 
     static func encode(_ names: [String]) -> String? {

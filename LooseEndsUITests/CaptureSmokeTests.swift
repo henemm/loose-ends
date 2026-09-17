@@ -187,4 +187,42 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(importanceRow.waitForExistence(timeout: 5))
         XCTAssertTrue(importanceRow.label.contains("High"), "Row label was \(importanceRow.label)")
     }
+
+    @MainActor
+    func testRepeatEditorUpdatesDetail() throws {
+        let app = launch()
+
+        let captureButton = app.buttons["captureButton"]
+        XCTAssertTrue(captureButton.waitForExistence(timeout: 10))
+        captureButton.tap()
+        let field = element("captureTextField", in: app)
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText("Rasen mähen")
+        app.buttons["captureDoneButton"].tap()
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5))
+
+        let newRow = element("viewRow_new", in: app)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
+        newRow.tap()
+        let row = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Rasen mähen")).firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        row.tap()
+
+        let repeatRow = element("field_repeatRule", in: app)
+        XCTAssertTrue(repeatRow.waitForExistence(timeout: 5), "Detail should list Repeat")
+        repeatRow.tap()
+
+        let weekly = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Weekly")).firstMatch
+        XCTAssertTrue(weekly.waitForExistence(timeout: 5), "Editor should offer Weekly")
+        weekly.tap()
+        XCTAssertTrue(element("repeatIntervalStepper", in: app).waitForExistence(timeout: 5), "A rule shows its interval")
+
+        let back = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(back.waitForExistence(timeout: 5))
+        back.tap()
+
+        XCTAssertTrue(repeatRow.waitForExistence(timeout: 5))
+        XCTAssertTrue(repeatRow.label.contains("Weekly"), "Row label was \(repeatRow.label)")
+    }
 }

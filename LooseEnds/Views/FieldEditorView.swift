@@ -59,7 +59,8 @@ struct FieldEditorView: View {
         case .contexts: contextsControl
         case .people: peopleControl
         case .project: projectPicker
-        case .title, .blockedBy, .repeatRule: EmptyView()
+        case .repeatRule: repeatControl
+        case .title, .blockedBy: EmptyView()
         }
     }
 
@@ -155,6 +156,79 @@ struct FieldEditorView: View {
         }
         .pickerStyle(.inline)
         .labelsHidden()
+    }
+
+    /// Frequency first; interval, weekdays and the counting basis appear once there is a rule (ADR-7).
+    @ViewBuilder
+    private var repeatControl: some View {
+        let rule = task.repeatRule
+        Picker(FieldFormatting.label(field), selection: Binding(
+            get: { rule?.frequency.rawValue ?? "" },
+            set: { raw in
+                guard let frequency = RepeatRule.Frequency(rawValue: raw) else { applyRepeat(nil); return }
+                var next = rule ?? RepeatRule(frequency: frequency)
+                next.frequency = frequency
+                if frequency != .weekly { next.weekdays = nil }
+                applyRepeat(next)
+            }
+        )) {
+            Text("None").tag("")
+            Text("Daily").tag(RepeatRule.Frequency.daily.rawValue)
+            Text("Weekly").tag(RepeatRule.Frequency.weekly.rawValue)
+            Text("Monthly").tag(RepeatRule.Frequency.monthly.rawValue)
+            Text("Yearly").tag(RepeatRule.Frequency.yearly.rawValue)
+        }
+        .pickerStyle(.inline)
+        .labelsHidden()
+
+        if let rule {
+            Stepper(value: Binding(
+                get: { rule.interval },
+                set: { var next = rule; next.interval = max(1, $0); applyRepeat(next) }
+            ), in: 1...52) {
+                Text(FieldFormatting.intervalDescription(rule))
+            }
+            .accessibilityIdentifier("repeatIntervalStepper")
+
+            if rule.frequency == .weekly {
+                weekdayRow(rule)
+            }
+
+            Picker("Counting from", selection: Binding(
+                get: { rule.basis.rawValue },
+                set: { var next = rule; next.basis = RepeatRule.Basis(rawValue: $0) ?? .fromDueDate; applyRepeat(next) }
+            )) {
+                Text("From due date").tag(RepeatRule.Basis.fromDueDate.rawValue)
+                Text("From completion").tag(RepeatRule.Basis.fromCompletion.rawValue)
+            }
+        }
+    }
+
+    /// Seven small toggles in the calendar's week order; an empty selection means every week.
+    private func weekdayRow(_ rule: RepeatRule) -> some View {
+        let calendar = Calendar.current
+        let order = (0..<7).map { (calendar.firstWeekday - 1 + $0) % 7 + 1 }
+        let selected = Set(rule.weekdays ?? [])
+        return HStack(spacing: 6) {
+            ForEach(order, id: \.self) { day in
+                let on = selected.contains(day)
+                Button(calendar.veryShortWeekdaySymbols[day - 1]) {
+                    var next = rule
+                    var days = selected
+                    if on { days.remove(day) } else { days.insert(day) }
+                    next.weekdays = days.isEmpty ? nil : days.sorted()
+                    applyRepeat(next)
+                }
+                .buttonStyle(.bordered)
+                .tint(on ? .accentColor : .secondary)
+                .accessibilityLabel(calendar.weekdaySymbols[day - 1])
+                .accessibilityAddTraits(on ? .isSelected : [])
+            }
+        }
+    }
+
+    private func applyRepeat(_ rule: RepeatRule?) {
+        apply(rule.flatMap(FieldCodec.encode))
     }
 
     // MARK: - Writes
