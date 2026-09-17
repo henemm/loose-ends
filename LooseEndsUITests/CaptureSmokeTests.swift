@@ -21,6 +21,14 @@ final class CaptureSmokeTests: XCTestCase {
         app.descendants(matching: .any).matching(identifier: id).firstMatch
     }
 
+    /// True once the element reports the value, so a switch is read after it moved, not before.
+    @MainActor
+    private func waitForValue(_ expected: String, of element: XCUIElement, timeout: TimeInterval = 5) -> Bool {
+        let predicate = NSPredicate(format: "value == %@", expected)
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
+        return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
+    }
+
     @MainActor
     func testCapturedTaskShowsUpInNew() throws {
         let app = launch()
@@ -306,5 +314,50 @@ final class CaptureSmokeTests: XCTestCase {
         let progress = element("subtaskProgress", in: app)
         XCTAssertTrue(progress.waitForExistence(timeout: 5), "Checking a line off should show the progress")
         XCTAssertEqual(progress.label, "1 of 1 done")
+    }
+
+    @MainActor
+    func testCalendarSwitchStaysOn() throws {
+        let app = launch()
+
+        let captureButton = app.buttons["captureButton"]
+        XCTAssertTrue(captureButton.waitForExistence(timeout: 10))
+        captureButton.tap()
+        let field = element("captureTextField", in: app)
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText("Zahnarzt anrufen")
+        app.buttons["captureDoneButton"].tap()
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5))
+
+        let newRow = element("viewRow_new", in: app)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
+        newRow.tap()
+        let row = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Zahnarzt anrufen")).firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        row.tap()
+
+        let toggle = app.switches["showInCalendarToggle"]
+        if !toggle.waitForExistence(timeout: 3) {
+            app.swipeUp()
+        }
+        XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Detail should offer Show in calendar")
+        XCTAssertTrue(waitForValue("0", of: toggle), "Value was \(String(describing: toggle.value))")
+        toggle.tap()
+        if !waitForValue("1", of: toggle, timeout: 2) {
+            // The element spans the row; the switch itself sits at the trailing edge.
+            toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
+        }
+        XCTAssertTrue(waitForValue("1", of: toggle), "Tapping should switch it on, value was \(String(describing: toggle.value))")
+        let note = app.staticTexts["Shows up once the task has a due date."]
+        XCTAssertTrue(note.waitForExistence(timeout: 5), "Without a due date the note explains why nothing shows")
+
+        let back = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(back.waitForExistence(timeout: 5))
+        back.tap()
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        row.tap()
+        XCTAssertTrue(toggle.waitForExistence(timeout: 5))
+        XCTAssertTrue(waitForValue("1", of: toggle), "The switch should be saved")
     }
 }

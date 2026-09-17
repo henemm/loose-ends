@@ -116,6 +116,9 @@
     "Subtasks" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Unteraufgaben" } } } },
     "Add a subtask" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Unteraufgabe hinzufügen" } } } },
     "%lld of %lld done" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "%lld von %lld erledigt" } } } },
-    "Open" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Offen" } } } }
+    "Open" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Offen" } } } },
+    "Show in calendar" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Im Kalender anzeigen" } } } },
+    "Shows up once the task has a due date." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erscheint, sobald die Aufgabe eine Fälligkeit hat." } } } },
+    "Calendar access is off in Settings." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Der Kalenderzugriff ist in den Einstellungen aus." } } } }
   }
 }

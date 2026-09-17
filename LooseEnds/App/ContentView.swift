@@ -14,6 +14,7 @@ struct ContentView: View {
     /// Nil only in previews; the app always passes its coordinator and notification center.
     var enrichment: EnrichmentCoordinator?
     var notifications: DueNotificationCenter?
+    var calendar: CalendarBridge?
     private var captureRequest: CaptureRequest { .shared }
 
     var body: some View {
@@ -43,6 +44,7 @@ struct ContentView: View {
         .onChange(of: captureRequest.pending) { _, _ in consumeCaptureRequest() }
         .onReceive(NotificationCenter.default.publisher(for: ModelContext.didSave)) { _ in
             notifications?.rescheduleSoon()
+            calendar?.syncSoon()
         }
     }
 
@@ -66,6 +68,7 @@ struct ContentView: View {
         await enrichment?.processPending()
         await notifications?.requestAuthorization()
         await notifications?.reschedule()
+        await calendar?.sync()
     }
 
     /// Control Center and the Action Button open the app straight into capture (ADR-9).

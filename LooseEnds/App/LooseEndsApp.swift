@@ -6,6 +6,7 @@ struct LooseEndsApp: App {
     let container: ModelContainer
     let enrichment: EnrichmentCoordinator
     let notifications: DueNotificationCenter
+    let calendar: CalendarBridge
 
     init() {
         do {
@@ -16,11 +17,13 @@ struct LooseEndsApp: App {
         enrichment = EnrichmentCoordinator(enricher: FoundationModelsEnricher(), container: container)
         notifications = DueNotificationCenter(container: container)
         notifications.activate()
+        calendar = CalendarBridge(container: container)
     }
 
     var body: some Scene {
         WindowGroup {
-            ContentView(enrichment: enrichment, notifications: notifications)
+            ContentView(enrichment: enrichment, notifications: notifications, calendar: calendar)
+                .environment(calendar)
         }
         .modelContainer(container)
     }
