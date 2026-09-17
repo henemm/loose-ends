@@ -11,6 +11,8 @@ struct TaskDetailView: View {
     @Query(sort: \TaskContext.sortOrder) private var contexts: [TaskContext]
     @Query(sort: \Project.sortOrder) private var projects: [Project]
     @Bindable var task: TaskItem
+    /// Nil in previews and tests; the app passes its bridge for the access note.
+    @Environment(CalendarBridge.self) private var calendar: CalendarBridge?
 
     @State private var titleDraft = ""
     @FocusState private var titleFocused: Bool
@@ -33,7 +35,7 @@ struct TaskDetailView: View {
                     .accessibilityIdentifier("detailRawText")
             }
 
-            Section("Details") {
+            Section {
                 fieldRow(.dueDate, value: FieldFormatting.value(FieldCodec.encode(.dueDate, of: task), for: .dueDate, hasTime: task.dueHasTime))
                 fieldRow(.importance, value: FieldFormatting.value(task.importanceRaw, for: .importance))
                 fieldRow(.urgency, value: FieldFormatting.value(task.urgencyRaw, for: .urgency))
@@ -43,6 +45,13 @@ struct TaskDetailView: View {
                 fieldRow(.people, value: FieldFormatting.value(FieldCodec.encode(.people, of: task), for: .people))
                 fieldRow(.project, value: task.project?.name)
                 fieldRow(.repeatRule, value: FieldFormatting.value(FieldCodec.encode(.repeatRule, of: task), for: .repeatRule))
+                Toggle("Show in calendar", isOn: $task.showInCalendar)
+                    .onChange(of: task.showInCalendar) { _, _ in save("calendar") }
+                    .accessibilityIdentifier("showInCalendarToggle")
+            } header: {
+                Text("Details")
+            } footer: {
+                calendarNote
             }
 
             if task.parent == nil {
@@ -81,6 +90,18 @@ struct TaskDetailView: View {
         }
         .sheet(isPresented: $showsRevisions) {
             RevisionsSheet(task: task, contexts: contexts, projects: projects)
+        }
+    }
+
+    /// Under the switch: why nothing shows yet (ADR-13). Silent while the switch is off.
+    @ViewBuilder
+    private var calendarNote: some View {
+        if task.showInCalendar {
+            if task.dueDate == nil {
+                Text("Shows up once the task has a due date.")
+            } else if calendar?.accessDenied == true {
+                Text("Calendar access is off in Settings.")
+            }
         }
     }
 

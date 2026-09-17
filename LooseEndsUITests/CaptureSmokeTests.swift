@@ -307,4 +307,45 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(progress.waitForExistence(timeout: 5), "Checking a line off should show the progress")
         XCTAssertEqual(progress.label, "1 of 1 done")
     }
+
+    @MainActor
+    func testCalendarSwitchStaysOn() throws {
+        let app = launch()
+
+        let captureButton = app.buttons["captureButton"]
+        XCTAssertTrue(captureButton.waitForExistence(timeout: 10))
+        captureButton.tap()
+        let field = element("captureTextField", in: app)
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText("Zahnarzt anrufen")
+        app.buttons["captureDoneButton"].tap()
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5))
+
+        let newRow = element("viewRow_new", in: app)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
+        newRow.tap()
+        let row = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Zahnarzt anrufen")).firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        row.tap()
+
+        let toggle = app.switches["showInCalendarToggle"]
+        if !toggle.waitForExistence(timeout: 3) {
+            app.swipeUp()
+        }
+        XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Detail should offer Show in calendar")
+        XCTAssertEqual(toggle.value as? String, "0")
+        toggle.tap()
+        XCTAssertEqual(toggle.value as? String, "1")
+        let note = app.staticTexts["Shows up once the task has a due date."]
+        XCTAssertTrue(note.waitForExistence(timeout: 5), "Without a due date the note explains why nothing shows")
+
+        let back = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(back.waitForExistence(timeout: 5))
+        back.tap()
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        row.tap()
+        XCTAssertTrue(toggle.waitForExistence(timeout: 5))
+        XCTAssertEqual(toggle.value as? String, "1", "The switch should be saved")
+    }
 }

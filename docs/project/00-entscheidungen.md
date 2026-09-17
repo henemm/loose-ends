@@ -120,8 +120,12 @@ FocusBlox-Korpus. UI-Tests erst nach Design-Freeze und nur als Smoke-Tests.
 Container. Danach Standard-Workflow mit 250-LoC-Grenze. Kein `try?` ohne Behandlung,
 `Logger` statt `print`, Swift 6 Strict Concurrency, Deployment Target iOS/macOS/watchOS 27.
 
-**ADR-13 Kalender.** EventKit nur schreibend: Aufgabe mit Fälligkeitszeit und Schalter
-"im Kalender anzeigen" erzeugt einen Termin in einem eigenen Kalender der App. Priorität Should, nicht Must.
+**ADR-13 Kalender.** EventKit: Aufgabe mit Fälligkeit und Schalter "im Kalender anzeigen"
+erzeugt einen Termin in einem eigenen Kalender der App ("Loose Ends"); mit Uhrzeit ein Block so lang
+wie die Dauer, ohne Uhrzeit ganztägig. Die App liest keine fremden Termine. Technisch braucht sie
+trotzdem den vollen Zugriff, weil nur der eigene Termine wiederfinden, aktualisieren und entfernen
+lässt (der reine Schreibzugriff seit iOS 17 kann das nicht). Gefragt wird erst, wenn die erste
+Aufgabe in den Kalender will. Priorität Should, nicht Must.
 
 **ADR-14 Farbbudget.** Jede Farbe hat genau eine Bedeutung, nie Farbe als einziger Unterschied:
 Akzent = tippbar (inklusive KI-Tönung), Rot = Zeitdruck (überfällig, heute fällig, immer mit Text),
