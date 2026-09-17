@@ -99,6 +99,18 @@
     "Listen" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Zuhören" } } } },
     "Due today" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute fällig" } } } },
     "Completed" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erledigt" } } } },
-    "Complete" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erledigt" } } } }
+    "Complete" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erledigt" } } } },
+    "Daily" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Täglich" } } } },
+    "Weekly" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Wöchentlich" } } } },
+    "Monthly" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Monatlich" } } } },
+    "Yearly" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Jährlich" } } } },
+    "Every %lld days" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Alle %lld Tage" } } } },
+    "Every %lld weeks" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Alle %lld Wochen" } } } },
+    "Every %lld months" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Alle %lld Monate" } } } },
+    "Every %lld years" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Alle %lld Jahre" } } } },
+    "after completion" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "nach Erledigung" } } } },
+    "Counting from" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Gezählt ab" } } } },
+    "From due date" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ab Fälligkeit" } } } },
+    "From completion" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ab Erledigung" } } } }
   }
 }

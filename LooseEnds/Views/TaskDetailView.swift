@@ -42,6 +42,7 @@ struct TaskDetailView: View {
                 fieldRow(.contexts, value: FieldFormatting.value(FieldCodec.encode(.contexts, of: task), for: .contexts))
                 fieldRow(.people, value: FieldFormatting.value(FieldCodec.encode(.people, of: task), for: .people))
                 fieldRow(.project, value: task.project?.name)
+                fieldRow(.repeatRule, value: FieldFormatting.value(FieldCodec.encode(.repeatRule, of: task), for: .repeatRule))
             }
 
             if !aiFields.isEmpty {

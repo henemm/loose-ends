@@ -35,7 +35,35 @@ enum FieldFormatting {
             let names = FieldCodec.decode(encoded)
             return names.isEmpty ? nil : names.joined(separator: ", ")
         case .repeatRule:
-            return encoded
+            return FieldCodec.decodeRepeat(encoded).map { repeatDescription($0) }
+        }
+    }
+
+    /// "Weekly · Mon, Sat", "Every 2 months · after completion". Weekday names follow the calendar.
+    static func repeatDescription(_ rule: RepeatRule, calendar: Calendar = .current) -> String {
+        var parts = [intervalDescription(rule)]
+        if rule.frequency == .weekly, let days = rule.weekdays, !days.isEmpty {
+            let symbols = calendar.shortWeekdaySymbols
+            let names = days.sorted().compactMap { day in symbols.indices.contains(day - 1) ? symbols[day - 1] : nil }
+            if !names.isEmpty { parts.append(names.joined(separator: ", ")) }
+        }
+        if rule.basis == .fromCompletion {
+            parts.append(String(localized: "after completion"))
+        }
+        return parts.joined(separator: " · ")
+    }
+
+    static func intervalDescription(_ rule: RepeatRule) -> String {
+        let n = max(rule.interval, 1)
+        switch (rule.frequency, n) {
+        case (.daily, 1): return String(localized: "Daily")
+        case (.weekly, 1): return String(localized: "Weekly")
+        case (.monthly, 1): return String(localized: "Monthly")
+        case (.yearly, 1): return String(localized: "Yearly")
+        case (.daily, _): return String(localized: "Every \(n) days")
+        case (.weekly, _): return String(localized: "Every \(n) weeks")
+        case (.monthly, _): return String(localized: "Every \(n) months")
+        case (.yearly, _): return String(localized: "Every \(n) years")
         }
     }
 
