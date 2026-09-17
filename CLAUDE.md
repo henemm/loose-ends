@@ -54,6 +54,7 @@ Unit tests for enrichment, view rules, repeat rules and revisions come first; UI
   (catch-up pass), `FoundationModelsEnricher` (on-device model, `#if canImport(FoundationModels)`)
 - `Shared/Intents` — App Intents shared by app, widgets and (later) the intents extension
 - `LooseEnds/` — app entry and views (iPhone, iPad, Mac); `LooseEndsWatch/`, `LooseEndsWidgets/` — platform targets
+- `LooseEnds/Speech` — `SpeechCapture` (live recognition for the capture scene, skipped under `--ui-testing`), `Waveform`
 - `Shared/` compiles into the watch and widget targets too: no SwiftUI that is unavailable on watchOS there
   (keyboard shortcuts, navigation bar modifiers). App views belong in `LooseEnds/Views`.
 - `docs/project/` — decisions, user story, data model, design briefing; `docs/reference/` — learnings carried over from FocusBlox

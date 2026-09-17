@@ -93,6 +93,10 @@
     "None" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Keine" } } } },
     "Date" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Datum" } } } },
     "Time" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Uhrzeit" } } } },
-    "Names, comma separated" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Namen, durch Komma getrennt" } } } }
+    "Names, comma separated" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Namen, durch Komma getrennt" } } } },
+    "Speech recognition is not available." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Spracherkennung ist nicht verfügbar." } } } },
+    "Microphone or speech access was not allowed." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Mikrofon oder Spracherkennung wurde nicht erlaubt." } } } },
+    "Stop listening" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nicht mehr zuhören" } } } },
+    "Listen" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Zuhören" } } } }
   }
 }
