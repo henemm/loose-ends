@@ -21,6 +21,14 @@ final class CaptureSmokeTests: XCTestCase {
         app.descendants(matching: .any).matching(identifier: id).firstMatch
     }
 
+    /// True once the element reports the value, so a switch is read after it moved, not before.
+    @MainActor
+    private func waitForValue(_ expected: String, of element: XCUIElement, timeout: TimeInterval = 5) -> Bool {
+        let predicate = NSPredicate(format: "value == %@", expected)
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
+        return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
+    }
+
     @MainActor
     func testCapturedTaskShowsUpInNew() throws {
         let app = launch()
@@ -334,9 +342,13 @@ final class CaptureSmokeTests: XCTestCase {
             app.swipeUp()
         }
         XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Detail should offer Show in calendar")
-        XCTAssertEqual(toggle.value as? String, "0")
+        XCTAssertTrue(waitForValue("0", of: toggle), "Value was \(String(describing: toggle.value))")
         toggle.tap()
-        XCTAssertEqual(toggle.value as? String, "1")
+        if !waitForValue("1", of: toggle, timeout: 2) {
+            // The element spans the row; the switch itself sits at the trailing edge.
+            toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
+        }
+        XCTAssertTrue(waitForValue("1", of: toggle), "Tapping should switch it on, value was \(String(describing: toggle.value))")
         let note = app.staticTexts["Shows up once the task has a due date."]
         XCTAssertTrue(note.waitForExistence(timeout: 5), "Without a due date the note explains why nothing shows")
 
@@ -346,6 +358,6 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
         XCTAssertTrue(toggle.waitForExistence(timeout: 5))
-        XCTAssertEqual(toggle.value as? String, "1", "The switch should be saved")
+        XCTAssertTrue(waitForValue("1", of: toggle), "The switch should be saved")
     }
 }
