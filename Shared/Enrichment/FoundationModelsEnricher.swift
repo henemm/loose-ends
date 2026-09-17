@@ -1,4 +1,4 @@
-#if canImport(FoundationModels)
+#if canImport(FoundationModels) && !os(watchOS)
 import Foundation
 import FoundationModels
 

@@ -35,6 +35,8 @@
 			<string>loose ends</string>
 		</dict>
 	</array>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSCalendarsWriteOnlyAccessUsageDescription</key>
 	<string>Only if you switch it on, a task with a due time is shown in your calendar.</string>
 	<key>NSMicrophoneUsageDescription</key>
