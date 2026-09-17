@@ -27,7 +27,8 @@ ausdrückliches "merge" gemerged.
    letzten fünf".
 3. **Abhängigkeiten über Private Cloud Compute** (ADR): `blockedBy` erkennen.
 4. **Projekt-Ansicht mit Unteraufgaben** eingerückt oder eingeklappt (Screen 6, offene Frage 3).
-5. **Logo und App-Icon** nach `docs/project/05-logo.md`: Platzhalter aus #17 ersetzen, Akzentfarbe setzen.
+5. **Icon-Composer-Paket** für das Logo auf dem Mac bauen (`docs/design/logo/README.md`), damit
+   Liquid Glass die Ebenen bekommt; die PNGs sind drin.
 6. **Onboarding** (Screen 12), **Mac-Teilen-Erweiterung**, **Kachel-Optik** nach dem Design-Freeze.
 7. **Drei Sekunden abbrechbares Erledigt**, "Datum" im Verschieben-Menü, "Neu analysieren" im Detail.
 
