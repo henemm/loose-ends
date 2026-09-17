@@ -53,7 +53,8 @@ Unit tests for enrichment, view rules, repeat rules and revisions come first; UI
 - `Shared/Enrichment` — `TaskEnricher` protocol, `EnrichmentWriter` (threshold + revisions), `EnrichmentCoordinator`
   (catch-up pass), `FoundationModelsEnricher` (on-device model, `#if canImport(FoundationModels)`)
 - `Shared/Intents` — App Intents shared by app, widgets and (later) the intents extension
-- `LooseEnds/` — app entry and views (iPhone, iPad, Mac); `LooseEndsWatch/`, `LooseEndsWidgets/` — platform targets
+- `LooseEnds/` — app entry and views (iPhone, iPad, Mac); `LooseEndsWatch/`, `LooseEndsWidgets/`, `LooseEndsShare/`
+  (iOS share sheet: text, links, mails via `SharedContent`) — platform targets
 - `LooseEnds/Speech` — `SpeechCapture` (live recognition for the capture scene, skipped under `--ui-testing`), `Waveform`
 - `Shared/Notifications` — `DueReminders` (pure plan and action handling); `LooseEnds/Notifications` —
   `DueNotificationCenter` (system wiring, silent under tests)

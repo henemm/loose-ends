@@ -33,6 +33,8 @@ targets:
       - target: LooseEndsWatch
         platformFilter: iOS      # a watch app can only be embedded in the iOS build
       - target: LooseEndsWidgets
+      - target: LooseEndsShare
+        platformFilter: iOS      # the Mac share extension is a later slice
     entitlements:
       path: LooseEnds/LooseEnds.entitlements
       properties:
@@ -109,6 +111,32 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends.widgets
+
+  LooseEndsShare:
+    type: app-extension
+    platform: iOS
+    sources:
+      - LooseEndsShare
+      - Shared
+    entitlements:
+      path: LooseEndsShare/LooseEndsShare.entitlements
+      properties:
+        com.apple.developer.icloud-container-identifiers: [iCloud.com.henning.looseends]
+        com.apple.developer.icloud-services: [CloudKit]
+        com.apple.security.application-groups: [group.com.henning.looseends]
+    info:
+      path: LooseEndsShare/Info.plist
+      properties:
+        CFBundleDisplayName: Loose Ends
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.share-services
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ShareViewController
+          NSExtensionAttributes:
+            # Text, links and mails (what Mail's share sheet hands over).
+            NSExtensionActivationRule: 'SUBQUERY(extensionItems, $item, SUBQUERY($item.attachments, $a, ANY $a.registeredTypeIdentifiers UTI-CONFORMS-TO "public.text" OR ANY $a.registeredTypeIdentifiers UTI-CONFORMS-TO "public.url" OR ANY $a.registeredTypeIdentifiers UTI-CONFORMS-TO "public.email-message").@count >= 1).@count >= 1'
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends.share
 
   LooseEndsTests:
     type: bundle.unit-test
