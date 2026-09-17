@@ -21,6 +21,19 @@ final class CaptureSmokeTests: XCTestCase {
         app.descendants(matching: .any).matching(identifier: id).firstMatch
     }
 
+    /// Opens the long-press menu on a row. The runner may still be animating the list, so wait
+    /// until the row is hittable and press once more if the menu did not open.
+    @MainActor
+    private func openMenu(on row: XCUIElement, expecting item: XCUIElement) {
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "Row should exist before opening its menu")
+        let hittable = NSPredicate(format: "isHittable == true")
+        _ = XCTWaiter().wait(for: [XCTNSPredicateExpectation(predicate: hittable, object: row)], timeout: 5)
+        row.press(forDuration: 1.2)
+        if !item.waitForExistence(timeout: 5) {
+            row.press(forDuration: 1.5)
+        }
+    }
+
     /// True once the element reports the value, so a switch is read after it moved, not before.
     @MainActor
     private func waitForValue(_ expected: String, of element: XCUIElement, timeout: TimeInterval = 5) -> Bool {
@@ -121,11 +134,10 @@ final class CaptureSmokeTests: XCTestCase {
 
         let row = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Fenster putzen")).firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 5), "Task row should be listed in New")
-        row.press(forDuration: 1.0)
-
         let done = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier == %@ OR label == %@", "menuDone", "Complete"))
             .firstMatch
+        openMenu(on: row, expecting: done)
         XCTAssertTrue(done.waitForExistence(timeout: 5), "Long press should open the menu with Complete")
         done.tap()
 
@@ -253,11 +265,11 @@ final class CaptureSmokeTests: XCTestCase {
         newRow.tap()
         let row = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Keller aufräumen")).firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 5))
-        row.press(forDuration: 1.0)
         let complete = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier == %@ OR label == %@", "menuDone", "Complete"))
             .firstMatch
-        XCTAssertTrue(complete.waitForExistence(timeout: 5))
+        openMenu(on: row, expecting: complete)
+        XCTAssertTrue(complete.waitForExistence(timeout: 5), "Long press should open the menu with Complete")
         complete.tap()
         XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 5))
 
