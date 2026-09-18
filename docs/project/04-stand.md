@@ -18,6 +18,7 @@ ausdrückliches "merge" gemerged.
 | Mitteilung | "Heute fällig" um 9 Uhr mit Erledigt, Als nächstes, Morgen | `Shared/Notifications`, `LooseEnds/Notifications` |
 | Kalender | Eigener Kalender "Loose Ends", ein Termin je Aufgabe mit Schalter und Fälligkeit, Abgleich nach jedem Speichern | `Shared/Services/CalendarSync.swift`, `LooseEnds/Calendar/CalendarBridge.swift` |
 | Auslieferung | CI (Unit, iOS-Build, UI-Smoke), TestFlight-Workflow, Anleitung | `.github/workflows`, `docs/reference/testflight.md` |
+| Logo | App-Icon "der Knoten" in Petrol: Hell, Dunkel, Getönt, Mac, Watch; Akzentfarbe Petrol; SVG-Quellen | `LooseEnds/Resources/Assets.xcassets`, `docs/design/logo/` |
 
 ## Offen, nach Priorität
 
@@ -45,6 +46,7 @@ Prioritätsreihenfolge; Details, Umfang und DoD stehen im jeweiligen Issue.
 13. [#32](https://github.com/henemm/loose-ends/issues/32) Drei Sekunden abbrechbares Erledigt
 14. [#33](https://github.com/henemm/loose-ends/issues/33) "Datum" im Verschieben-Menü
 15. [#34](https://github.com/henemm/loose-ends/issues/34) "Neu analysieren" im Detail
+16. [#40](https://github.com/henemm/loose-ends/issues/40) Icon-Composer-Paket für das App-Icon (Liquid Glass mit Ebenen)
 
 ## Arbeitsweise, die sich bewährt hat
 

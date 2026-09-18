@@ -1,0 +1,40 @@
+import math, os
+def troch(a, b, t0, t1, cx, cy, n=100):
+    return [(cx + a*t - b*math.sin(t), cy - b*math.cos(t)) for t in (t0 + (t1-t0)*i/n for i in range(n+1))]
+def d(pts):
+    return "M %.1f %.1f " % pts[0] + " ".join("L %.1f %.1f" % p for p in pts[1:])
+a, b = 90, 230
+raw = troch(a, b, -3.5, 3.0, 512, 512)
+xs = [p[0] for p in raw]; dx = 512 - (min(xs)+max(xs))/2
+A = [(x+dx, y) for x, y in raw]
+t = 2.0
+for _ in range(60): t -= (a*t - b*math.sin(t))/(a - b*math.cos(t))
+over = troch(a, b, t-0.55, t+0.55, 512+dx, 512, 30)
+W = 72
+def path(dd, stroke, w=W, cap="round"):
+    return '<path d="%s" fill="none" stroke="%s" stroke-width="%d" stroke-linecap="%s" stroke-linejoin="round"/>' % (dd, stroke, w, cap)
+def knot(fg, gap):
+    # the later segment passes over: a gap in the background color, then the segment again
+    return path(d(A), fg) + path(d(over), gap, 150, "butt") + path(d(over), fg)
+def svg(bg, fg, gap, opaque=True):
+    rect = '<rect width="1024" height="1024" fill="%s"/>' % bg if opaque else ""
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">%s%s</svg>' % (rect, knot(fg, gap))
+LIGHT_BG, PETROL, PETROL_LIGHT, GRAY_FG = "#F4F3EE", "#0F6E73", "#5FC4C9", "#D9D9D9"
+# gap color: on a transparent icon the gap must cut a real hole, so we draw it with the mask trick below
+variants = {
+  "light":  svg(LIGHT_BG, PETROL, LIGHT_BG, True),
+}
+# transparent variants: cut the gap with a mask instead of painting background color
+def svg_masked(fg):
+    return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">'
+            '<defs><mask id="m"><rect width="1024" height="1024" fill="white"/>%s</mask></defs>'
+            '%s%s</svg>') % (path(d(over), "black", 150, "butt"), '<g mask="url(#m)">%s</g>' % path(d(A), fg), path(d(over), fg))
+variants["dark"] = svg_masked(PETROL_LIGHT)
+variants["tinted"] = svg_masked(GRAY_FG)
+for name, s in variants.items():
+    open("out/%s.svg" % name, "w").write(s)
+    open("out/%s.html" % name, "w").write('<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;padding:0;background:transparent}svg{display:block}</style></head><body>%s</body></html>' % s)
+# source files for Icon Composer: background layer and thread layer, separately
+open("out/layer-background.svg","w").write('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024"><rect width="1024" height="1024" fill="%s"/></svg>' % LIGHT_BG)
+open("out/layer-thread.svg","w").write(svg_masked(PETROL))
+print("ok")
