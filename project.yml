@@ -50,6 +50,8 @@ targets:
       properties:
         CFBundleDisplayName: Loose Ends
         CFBundleName: Loose Ends
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UILaunchScreen: {}
         ITSAppUsesNonExemptEncryption: false   # no custom crypto: TestFlight skips the export-compliance question
         UISupportedInterfaceOrientations:
@@ -88,6 +90,8 @@ targets:
       path: LooseEndsWatch/Info.plist
       properties:
         CFBundleDisplayName: Loose Ends
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         WKApplication: true
         WKCompanionAppBundleIdentifier: com.henning.looseends
         WKRunsIndependentlyOfCompanionApp: true
@@ -112,6 +116,8 @@ targets:
       path: LooseEndsWidgets/Info.plist
       properties:
         CFBundleDisplayName: Loose Ends Widgets
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     settings:
@@ -134,6 +140,8 @@ targets:
       path: LooseEndsShare/Info.plist
       properties:
         CFBundleDisplayName: Loose Ends
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         NSExtension:
           NSExtensionPointIdentifier: com.apple.share-services
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ShareViewController
