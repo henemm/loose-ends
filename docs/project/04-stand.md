@@ -61,3 +61,9 @@ Prioritätsreihenfolge; Details, Umfang und DoD stehen im jeweiligen Issue.
   nach main jede Ebene erst mit main zusammenführen (Branch-Seite gewinnt, sie ist die Obermenge).
 - Ein `ModelContext` hält seinen `ModelContainer` nicht: in Tests `TestStore` benutzen.
 - Nichts mit `try?` verschlucken, `Logger` statt `print`, Berechtigungsabfragen unter Tests aus.
+- **Zwingend:** Jede Änderung zuerst selbst im Simulator laufen lassen (Build + Start + der
+  betroffene Ablauf), bevor Henning gebeten wird, etwas auf seinem eigenen Gerät zu testen.
+  Ursache: ein per Kommandozeile lokal signierter Build hatte eine fehlende App-Group-Berechtigung
+  (`SwiftData/DataUtilities.swift:1257: Fatal error: Unable to find App Group Container in
+  Entitlements`) — ungetestet an Henning weitergegeben, auf seinem Gerät reproduziert statt vorher
+  im Simulator gefunden.
