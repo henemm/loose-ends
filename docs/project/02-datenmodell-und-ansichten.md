@@ -209,6 +209,26 @@ Export aus `LocalTask` nach JSON mit Mapping:
 Der Export dient dem Retrieval (Startwissen) und dem Evaluations-Framework (Messung der Prompts),
 nicht der Migration in die App-Datenbank.
 
+Umgesetzt in `scripts/export-focusblox-corpus.swift` (Issue #23). Liest den SwiftData-Store von
+FocusBlox direkt (read-only, per SQLite), keine Abhängigkeit vom FocusBlox-Xcode-Projekt. Konkrete
+Zuordnungen, die in der Mapping-Tabelle offen waren:
+
+- `urgency`: FocusBlox kennt nur `urgent`/`not_urgent` → `high`/`low`. `medium` bleibt unbelegt, da
+  es dafür keine Quelle im Korpus gibt.
+- `estimatedDuration` (Minuten) → `DurationBucket`: ≤5 `minutes5`, ≤15 `minutes15`, ≤30 `minutes30`,
+  ≤60 `hour1`, sonst `hours2plus`.
+- `recurrencePattern` "custom" kodiert seine Basis-Frequenz in `recurrenceMonthDay`
+  (1001=täglich, 1002=wöchentlich, 1003=monatlich, 1004=jährlich — FocusBlox-interner Hack in
+  `RecurrenceService.nextDueDate`), `recurrenceInterval` ist der Multiplikator. `monthDay` selbst
+  (Tag im Monat) hat in `RepeatRule` keine Entsprechung und entfällt.
+- Wochentage: FocusBlox zählt 1=Montag…7=Sonntag, `RepeatRule.weekdays` nutzt die
+  `Calendar`-Zählung 1=Sonntag…7=Samstag — der Export rechnet um.
+- Export lief am 2026-09-18 gegen den echten Store: 287 Aufgaben, `blockerTaskID` bei keiner davon
+  gesetzt (Feld war in FocusBlox in der Praxis ungenutzt).
+
+Export-Ausgabe enthält echte private Aufgabentitel und wird nie committed
+(`docs/reference/focusblox-corpus.json` ist in `.gitignore`).
+
 ## App Intents und Spotlight
 
 - `TaskEntity` konform zu `AppEntity`, `IndexedEntity`, Reminders-App-Schema (`reminders.reminder`).
@@ -248,5 +268,17 @@ nicht der Migration in die App-Datenbank.
    erwarten, solange das Gerät am Netz hängt — dort bleibt Verlässlichkeit ungetestet, aber das Risiko
    ist geringer als im Extension-Prozess.
 3. Wie schnell ist der Kaltstart in die Erfassungs-Szene auf iPhone 15 Pro? Ziel unter einer Sekunde.
-4. Konfidenzschwelle mit dem FocusBlox-Korpus kalibrieren (Evaluations-Framework).
+4. ~~Konfidenzschwelle mit dem FocusBlox-Korpus kalibrieren (Evaluations-Framework).~~ **Beantwortet
+   (2026-09-18, Issue #23): Schwelle 0,6 bestätigt, keine Anpassung.** `FoundationModelsEnricher`
+   lief gegen eine Stichprobe von 60 der 287 exportierten FocusBlox-Aufgaben
+   (`LooseEndsTests/FocusBloxCalibrationTests.swift`, Report in
+   `docs/reference/focusblox-calibration-report.md`). Ergebnis für importance/urgency/duration/energy:
+   Precision und Recall bewegen sich zwischen Schwelle 0,3 und 0,7 kaum (z. B. duration konstant bei
+   51 % Precision), erst ab 0,8–0,9 sinkt die Trefferzahl ohne klaren Precision-Gewinn. Die
+   Konfidenz des Modells ist auf diesem Korpus also kein trennscharfes Signal in diesem Bereich —
+   eine andere Schwelle hätte keinen belegbaren Vorteil. Absolute Precision ist niedrig (25–53 % je
+   Feld), vermutlich auch, weil FocusBlox importance/urgency/energy interaktiv in der Eisenhower-Matrix
+   gesetzt hat statt aus dem Notiztext abzuleiten — der Kurztitel allein trägt diese Information oft
+   nicht. Duration (aus dem Text am ehesten ableitbar) schneidet mit ~50 % am besten ab. Keine
+   Schwellenänderung, daher kein Folge-PR an `EnrichmentWriter.confidenceThreshold` nötig.
 5. Kann die Share-Extension aus Apple Mail die `message:`-URL zuverlässig erhalten?
