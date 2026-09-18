@@ -209,6 +209,26 @@ Export aus `LocalTask` nach JSON mit Mapping:
 Der Export dient dem Retrieval (Startwissen) und dem Evaluations-Framework (Messung der Prompts),
 nicht der Migration in die App-Datenbank.
 
+Umgesetzt in `scripts/export-focusblox-corpus.swift` (Issue #23). Liest den SwiftData-Store von
+FocusBlox direkt (read-only, per SQLite), keine Abhängigkeit vom FocusBlox-Xcode-Projekt. Konkrete
+Zuordnungen, die in der Mapping-Tabelle offen waren:
+
+- `urgency`: FocusBlox kennt nur `urgent`/`not_urgent` → `high`/`low`. `medium` bleibt unbelegt, da
+  es dafür keine Quelle im Korpus gibt.
+- `estimatedDuration` (Minuten) → `DurationBucket`: ≤5 `minutes5`, ≤15 `minutes15`, ≤30 `minutes30`,
+  ≤60 `hour1`, sonst `hours2plus`.
+- `recurrencePattern` "custom" kodiert seine Basis-Frequenz in `recurrenceMonthDay`
+  (1001=täglich, 1002=wöchentlich, 1003=monatlich, 1004=jährlich — FocusBlox-interner Hack in
+  `RecurrenceService.nextDueDate`), `recurrenceInterval` ist der Multiplikator. `monthDay` selbst
+  (Tag im Monat) hat in `RepeatRule` keine Entsprechung und entfällt.
+- Wochentage: FocusBlox zählt 1=Montag…7=Sonntag, `RepeatRule.weekdays` nutzt die
+  `Calendar`-Zählung 1=Sonntag…7=Samstag — der Export rechnet um.
+- Export lief am 2026-09-18 gegen den echten Store: 287 Aufgaben, `blockerTaskID` bei keiner davon
+  gesetzt (Feld war in FocusBlox in der Praxis ungenutzt).
+
+Export-Ausgabe enthält echte private Aufgabentitel und wird nie committed
+(`docs/reference/focusblox-corpus.json` ist in `.gitignore`).
+
 ## App Intents und Spotlight
 
 - `TaskEntity` konform zu `AppEntity`, `IndexedEntity`, Reminders-App-Schema (`reminders.reminder`).

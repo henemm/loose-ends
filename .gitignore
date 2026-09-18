@@ -8,3 +8,6 @@ xcuserdata/
 *.xcresult
 .DS_Store
 .swiftpm/
+
+# Real personal task data — never commit (see scripts/export-focusblox-corpus.swift)
+docs/reference/focusblox-corpus.json
