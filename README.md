@@ -17,3 +17,7 @@ open LooseEnds.xcodeproj
 ```
 
 Requires Xcode 26 and a device with Apple Intelligence (iPhone 15 Pro or later) for enrichment.
+
+## License
+
+Apache License 2.0, see `LICENSE`. Copyright 2026 Henning Emmrich.
