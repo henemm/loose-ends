@@ -19,6 +19,7 @@ ausdrückliches "merge" gemerged.
 | Kalender | Eigener Kalender "Loose Ends", ein Termin je Aufgabe mit Schalter und Fälligkeit, Abgleich nach jedem Speichern | `Shared/Services/CalendarSync.swift`, `LooseEnds/Calendar/CalendarBridge.swift` |
 | Auslieferung | CI (Unit, iOS-Build, UI-Smoke), TestFlight-Workflow, Anleitung | `.github/workflows`, `docs/reference/testflight.md` |
 | Lernkorpus | FocusBlox-Export (287 Aufgaben), Konfidenzschwelle kalibriert und bestätigt (0,6) | `scripts/export-focusblox-corpus.swift`, `LooseEndsTests/FocusBloxCalibrationTests.swift` |
+| Logo | App-Icon "der Knoten" in Petrol: Hell, Dunkel, Getönt, Mac, Watch; Akzentfarbe Petrol; SVG-Quellen | `LooseEnds/Resources/Assets.xcassets`, `docs/design/logo/` |
 
 ## Offen, nach Priorität
 
@@ -31,21 +32,21 @@ Prioritätsreihenfolge; Details, Umfang und DoD stehen im jeweiligen Issue.
 1. [#20](https://github.com/henemm/loose-ends/issues/20) Control-Center-Werteabfrage unter iOS 27?
 2. [#21](https://github.com/henemm/loose-ends/issues/21) SystemLanguageModel in Extension/BGAppRefreshTask verlässlich?
 3. [#22](https://github.com/henemm/loose-ends/issues/22) Kaltstart Erfassungs-Szene unter einer Sekunde?
-4. [#23](https://github.com/henemm/loose-ends/issues/23) FocusBlox-Korpus-Export und Konfidenzschwelle kalibrieren
-5. [#24](https://github.com/henemm/loose-ends/issues/24) Mail-Share-Extension: `message:`-URL zuverlässig?
+4. [#24](https://github.com/henemm/loose-ends/issues/24) Mail-Share-Extension: `message:`-URL zuverlässig?
 
 **Danach Features, nach Priorität:**
 
-6. [#25](https://github.com/henemm/loose-ends/issues/25) Siri über das Reminders-App-Schema (Must) — braucht Xcode 27 in der CI, bis dahin reicht die Shortcut-Phrase "Add to Loose Ends"
-7. [#26](https://github.com/henemm/loose-ends/issues/26) Retrieval per Embedding (ADR-5)
-8. [#27](https://github.com/henemm/loose-ends/issues/27) Abhängigkeiten über Private Cloud Compute (`blockedBy`)
-9. [#28](https://github.com/henemm/loose-ends/issues/28) Projekt-Ansicht mit Unteraufgaben eingerückt/eingeklappt
-10. [#29](https://github.com/henemm/loose-ends/issues/29) Onboarding-Screen (Screen 12)
-11. [#30](https://github.com/henemm/loose-ends/issues/30) Mac-Teilen-Erweiterung
-12. [#31](https://github.com/henemm/loose-ends/issues/31) Kachel-Optik verfeinern
-13. [#32](https://github.com/henemm/loose-ends/issues/32) Drei Sekunden abbrechbares Erledigt
-14. [#33](https://github.com/henemm/loose-ends/issues/33) "Datum" im Verschieben-Menü
-15. [#34](https://github.com/henemm/loose-ends/issues/34) "Neu analysieren" im Detail
+5. [#25](https://github.com/henemm/loose-ends/issues/25) Siri über das Reminders-App-Schema (Must) — braucht Xcode 27 in der CI, bis dahin reicht die Shortcut-Phrase "Add to Loose Ends"
+6. [#26](https://github.com/henemm/loose-ends/issues/26) Retrieval per Embedding (ADR-5)
+7. [#27](https://github.com/henemm/loose-ends/issues/27) Abhängigkeiten über Private Cloud Compute (`blockedBy`)
+8. [#28](https://github.com/henemm/loose-ends/issues/28) Projekt-Ansicht mit Unteraufgaben eingerückt/eingeklappt
+9. [#29](https://github.com/henemm/loose-ends/issues/29) Onboarding-Screen (Screen 12)
+10. [#30](https://github.com/henemm/loose-ends/issues/30) Mac-Teilen-Erweiterung
+11. [#31](https://github.com/henemm/loose-ends/issues/31) Kachel-Optik verfeinern
+12. [#32](https://github.com/henemm/loose-ends/issues/32) Drei Sekunden abbrechbares Erledigt
+13. [#33](https://github.com/henemm/loose-ends/issues/33) "Datum" im Verschieben-Menü
+14. [#34](https://github.com/henemm/loose-ends/issues/34) "Neu analysieren" im Detail
+15. [#40](https://github.com/henemm/loose-ends/issues/40) Icon-Composer-Paket für das App-Icon (Liquid Glass mit Ebenen)
 
 ## Arbeitsweise, die sich bewährt hat
 
