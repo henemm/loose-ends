@@ -13,8 +13,7 @@ enum ModelContainerFactory {
     static let cloudContainer = "iCloud.com.henning.looseends"
 
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Persistence")
-    private static let lock = NSLock()
-    nonisolated(unsafe) private static var cachedContainer: ModelContainer?
+    private static let cache = ProcessCache<ModelContainer>()
 
     /// True while the process hosts a test bundle (xcodebuild test launches the app with this variable).
     static var isRunningTests: Bool {
@@ -44,24 +43,20 @@ enum ModelContainerFactory {
             let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
             return try ModelContainer(for: schema, configurations: [configuration])
         }
-        lock.lock()
-        defer { lock.unlock() }
-        if let cachedContainer { return cachedContainer }
-        let container: ModelContainer
-        do {
-            let configuration = ModelConfiguration(
-                "LooseEnds",
-                schema: schema,
-                groupContainer: .identifier(appGroup),
-                cloudKitDatabase: .private(cloudContainer)
-            )
-            container = try ModelContainer(for: schema, configurations: [configuration])
-        } catch {
-            logger.error("App-group store unavailable, using local store without sync: \(error, privacy: .public)")
-            let fallback = ModelConfiguration("LooseEnds", schema: schema, groupContainer: .none, cloudKitDatabase: .none)
-            container = try ModelContainer(for: schema, configurations: [fallback])
+        return try cache.value {
+            do {
+                let configuration = ModelConfiguration(
+                    "LooseEnds",
+                    schema: schema,
+                    groupContainer: .identifier(appGroup),
+                    cloudKitDatabase: .private(cloudContainer)
+                )
+                return try ModelContainer(for: schema, configurations: [configuration])
+            } catch {
+                logger.error("App-group store unavailable, using local store without sync: \(error, privacy: .public)")
+                let fallback = ModelConfiguration("LooseEnds", schema: schema, groupContainer: .none, cloudKitDatabase: .none)
+                return try ModelContainer(for: schema, configurations: [fallback])
+            }
         }
-        cachedContainer = container
-        return container
     }
 }
