@@ -37,6 +37,10 @@ enum ModelContainerFactory {
     /// Test hosts get an in-memory store so tests never touch real data. Builds without the
     /// app-group entitlement (unsigned CI builds) fall back to a plain local store so the app
     /// still launches; sync is simply off in that case.
+    ///
+    /// The entitlement check happens before touching SwiftData: `ModelContainer(for:configurations:)`
+    /// doesn't throw a catchable error when the app-group entitlement is missing, it hits a
+    /// `fatalError` deep inside SwiftData (#55) — a `do/catch` around it can't help.
     static func make(inMemory: Bool = false) throws -> ModelContainer {
         let schema = Schema(LooseEndsSchema.models)
         if inMemory || isRunningTests || isUITesting {
@@ -44,6 +48,11 @@ enum ModelContainerFactory {
             return try ModelContainer(for: schema, configurations: [configuration])
         }
         return try cache.value {
+            guard FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroup) != nil else {
+                logger.error("App-group entitlement unavailable, using local store without sync")
+                let fallback = ModelConfiguration("LooseEnds", schema: schema, groupContainer: .none, cloudKitDatabase: .none)
+                return try ModelContainer(for: schema, configurations: [fallback])
+            }
             do {
                 let configuration = ModelConfiguration(
                     "LooseEnds",
