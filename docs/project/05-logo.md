@@ -1,7 +1,7 @@
 # Logo und App-Icon: Plan
 
 > Erstellt: 2026-09-17
-> Status: Entwurf, wartet auf Hennings Entscheidung zu Motiv und Farbe
+> Status: Entschieden am 2026-09-17: Motiv B (Knoten), Petrol, heller Grund. Assets siehe `docs/design/logo/README.md`.
 
 ## Ausgangslage
 
@@ -71,10 +71,8 @@ die Tiefe von selbst.
 
 Aufwand: Schritte 2 bis 4 sind je ein kurzer Schnitt; Schritt 5 braucht ein Gerät.
 
-## Offene Fragen an Henning
+## Entscheidung
 
-1. Motiv A, B oder C? (Empfehlung A)
-2. Farbe: Indigo, Orange-Rot oder Petrol? (Empfehlung Indigo; Orange-Rot nur, wenn es klar
-   vom Rot für Zeitdruck getrennt ist)
-3. Heller oder dunkler Hintergrund als Grundzustand? (Empfehlung hell; Dunkel-Variante
-   liefert Icon Composer automatisch)
+Henning, 2026-09-17, auf der Design-Leinwand: **Motiv B (der Knoten) in Petrol**, heller Grund.
+Schritte 2 bis 4 sind damit erledigt (PNG-Fallbacks und Akzentfarbe im Projekt); Schritt 5,
+das Icon-Composer-Paket, läuft auf dem Mac nach `docs/design/logo/README.md`.
