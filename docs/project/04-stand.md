@@ -2,8 +2,13 @@
 
 Für jede neue Claude-Sitzung: erst `CLAUDE.md`, dann diese Datei, dann `docs/project/01-user-story.md`
 für die Prioritäten. Henning ist PO und kein Entwickler; Claude entscheidet als Tech Lead nach Best
-Practice, baut in kleinen Schnitten mit Tests und öffnet PRs. Nach main wird nur auf Hennings
-ausdrückliches "merge" gemerged.
+Practice, baut in kleinen Schnitten mit Tests und öffnet PRs.
+
+Claude merged PRs eigenständig nach main, sobald alle CI-Checks grün sind und keine offenen
+Rückfragen oder Zweifel bestehen. Nachfragen nur bei echtem Risiko: nicht eindeutig auflösbare
+Merge-Konflikte, Breaking Changes an Auth/Daten/Architektur, oder wenn Claude selbst unsicher ist.
+Henning hat als PO keine Grundlage, Merge-Bereitschaft technisch zu beurteilen — Rückfragen dazu
+sind daher meist nur Zeitverlust.
 
 ## Gebaut (auf main oder im offenen PR-Stapel)
 
