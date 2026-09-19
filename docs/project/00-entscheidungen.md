@@ -66,6 +66,10 @@ alles in `FocusBloxMac/`, alle UI-Tests.
 | R3-3 | Farbe | Sehr einfarbig ist gewollt, aber mit Farbbudget (ADR-14). FocusBlox war bunt, nicht unübersichtlich. |
 | R3-4 | Parken | Ja, in Version 1. |
 | R3-5 | Mitteilungs-Aktionen | Ja, in Version 1: Erledigt, Als nächstes, Morgen. |
+| R4-1 | Daten für Messungen (#74) | Nur Apples Cloud (Private Cloud Compute). Kein Fremdmodell. |
+| R4-2 | Messgerät (#74) | iPhone 16 Pro ist die Referenz. Der Mac bleibt auf macOS 26. |
+| R4-3 | Geräte (#74) | iPhone 16 Pro, iPad mit M-Chip, ein älteres iPad ohne Gerätemodell, Apple Watch. |
+| R4-4 | Rohtexte als Messkorpus (#74) | Ja, die echten Erfassungen aus Loose Ends. Lokal auf dem Mac, nie im Repository. |
 
 ## Tech-Lead-Entscheidungen (ADR-Kurzform)
 
