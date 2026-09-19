@@ -4,6 +4,12 @@
 framework:
   enabled: true
 
+workflow:
+  # Henning gibt mit „Go" frei — das ist seine natürliche Formulierung und war bisher nur als
+  # GREEN-Wort hinterlegt, nicht als Spec-Freigabe. Ihn ein anderes Wort tippen zu lassen wäre
+  # das Weiterreichen eines Werkzeugproblems; also lernt das Werkzeug sein Wort.
+  approval_phrases: ["go", "approved", "freigabe", "spec ok", "lgtm", "looks good", "genehmigt", "abgenommen", "passt"]
+
 strict_code_gate:
   code_extensions: [".swift"]
   # Edits here never need an active workflow: tests, docs, tooling.

@@ -80,21 +80,15 @@ final class SpeechCapture {
         if recognizer.supportsOnDeviceRecognition {
             request.requiresOnDeviceRecognition = true
         }
-        let box = RequestBox(request)
-        let input = engine.inputNode
-        input.installTap(onBus: 0, bufferSize: 1024, format: input.outputFormat(forBus: 0)) { buffer, _ in
-            box.request.append(buffer)
-            let level = Waveform.level(of: buffer)
-            Task { @MainActor in self.waveform.append(level) }
+        Self.installTap(on: engine.inputNode, feeding: request) { [weak self] level in
+            Task { @MainActor in self?.waveform.append(level) }
         }
         engine.prepare()
         try engine.start()
 
-        task = recognizer.recognitionTask(with: request) { result, error in
-            let text = result?.bestTranscription.formattedString
-            let message = error?.localizedDescription
+        task = Self.startRecognition(with: recognizer, request: request) { [weak self] text, message in
             Task { @MainActor in
-                if let text { self.transcript = text }
+                if let text { self?.transcript = text }
                 if let message, text == nil {
                     Self.logger.notice("Recognition ended: \(message, privacy: .public)")
                 }
@@ -104,8 +98,41 @@ final class SpeechCapture {
         self.request = request
     }
 
-    private static func requestSpeechAuthorization() async -> Bool {
-        await withCheckedContinuation { continuation in
+    /// Beide Rückrufe hier sind `nonisolated`, weil sie von fremden Strängen kommen: der Audio-Tap
+    /// vom Echtzeit-Strang des Audiosystems, die Erkennung von der Warteschlange des Speech-Dienstes.
+    /// Läge der Abschluss in der `@MainActor`-Klasse, erbte er deren Hauptstrang-Bindung, Swift
+    /// prüfte sie beim Aufruf und bräche den Prozess ab (`dispatch_assert_queue` → `brk #0x1`).
+    /// Als `@Sendable`-Parameter einer `nonisolated`-Funktion erben sie keine Bindung; der Sprung
+    /// zurück auf den Hauptstrang passiert ausdrücklich im `Task { @MainActor in … }` des Aufrufers.
+    private nonisolated static func installTap(
+        on input: AVAudioInputNode,
+        feeding request: SFSpeechAudioBufferRecognitionRequest,
+        onLevel: @escaping @Sendable (Float) -> Void
+    ) {
+        let box = RequestBox(request)
+        input.installTap(onBus: 0, bufferSize: 1024, format: input.outputFormat(forBus: 0)) { buffer, _ in
+            box.request.append(buffer)
+            onLevel(Waveform.level(of: buffer))
+        }
+    }
+
+    private nonisolated static func startRecognition(
+        with recognizer: SFSpeechRecognizer,
+        request: SFSpeechAudioBufferRecognitionRequest,
+        onUpdate: @escaping @Sendable (String?, String?) -> Void
+    ) -> SFSpeechRecognitionTask {
+        recognizer.recognitionTask(with: request) { result, error in
+            onUpdate(result?.bestTranscription.formattedString, error?.localizedDescription)
+        }
+    }
+
+    /// `nonisolated`, weil der TCC-Dienst seine Antwort auf einem Hintergrund-Strang zustellt
+    /// (`com.apple.root.default-qos`). In einer `@MainActor`-Klasse erbt der Abschluss sonst die
+    /// Hauptstrang-Bindung, Swift prüft sie beim Aufruf und bricht den Prozess ab
+    /// (`dispatch_assert_queue` → `brk #0x1`). Die App starb dadurch, sobald die Rechteabfrage
+    /// beantwortet war: der Erfassungs-Screen war danach tot, Abbrechen und Mikrofon eingeschlossen.
+    private nonisolated static func requestSpeechAuthorization() async -> Bool {
+        await withCheckedContinuation { (continuation: CheckedContinuation<Bool, Never>) in
             SFSpeechRecognizer.requestAuthorization { status in
                 continuation.resume(returning: status == .authorized)
             }
