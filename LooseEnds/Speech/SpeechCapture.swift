@@ -14,7 +14,13 @@ final class SpeechCapture {
         case idle
         case listening
         case unavailable(String)
+        /// Die Erkennung auf dem Gerät kam nicht hoch. Ob stattdessen Apples Server gefragt
+        /// werden dürfen, entscheidet der Nutzer einmal — die Aufnahme verlässt dann das Gerät.
+        case needsServerConsent
     }
+
+    /// Antwort auf die Einmal-Frage. `nil` = noch nie gefragt.
+    static let serverConsentKey = "speechServerRecognitionAllowed"
 
     private(set) var state: State = .idle
     private(set) var transcript = ""
@@ -23,13 +29,22 @@ final class SpeechCapture {
     private var engine: AVAudioEngine?
     private var request: SFSpeechAudioBufferRecognitionRequest?
     private var task: SFSpeechRecognitionTask?
-    private static let logger = Logger(subsystem: "com.henning.looseends", category: "Speech")
+    /// Verhindert eine Endlosschleife: pro Sitzung wird höchstens einmal auf Server umgestellt.
+    private var triedServerRecognition = false
+    /// `nonisolated`, weil auch die Rückrufe von fremden Strängen hierüber melden — und nicht
+    /// `private`, weil die Tonzählung im `RequestBox` denselben Kanal benutzt.
+    nonisolated static let logger = Logger(subsystem: "com.henning.looseends", category: "Speech")
 
     var isListening: Bool { state == .listening }
 
     func start() async {
         guard !isListening else { return }
-        guard let recognizer = SFSpeechRecognizer(locale: .current), recognizer.isAvailable else {
+        await Self.reportSpeechSupport()
+        // `isAvailable` ist direkt nach dem Start unzuverlässig: Henning bekam am 2026-09-19 beim
+        // ersten Versuch sofort „nicht verfügbar", beim nächsten lief dieselbe App. Ein einzelner
+        // Blick darauf darf also kein endgültiges Urteil sein — einmal kurz warten und erneut
+        // fragen, bevor die Spracherfassung aufgegeben wird.
+        guard let recognizer = await Self.availableRecognizer() else {
             state = .unavailable(String(localized: "Speech recognition is not available."))
             return
         }
@@ -77,25 +92,108 @@ final class SpeechCapture {
         let engine = AVAudioEngine()
         let request = SFSpeechAudioBufferRecognitionRequest()
         request.shouldReportPartialResults = true
-        if recognizer.supportsOnDeviceRecognition {
-            request.requiresOnDeviceRecognition = true
-        }
+        // Auf dem Gerät ist die Vorgabe (ADR: nichts verlässt das Gerät). Hat der Nutzer dem
+        // Ausweichen auf Apples Server einmal zugestimmt und ist die Erkennung auf dem Gerät
+        // vorher gescheitert, läuft dieser Versuch ohne die Einschränkung.
+        let onDevice = recognizer.supportsOnDeviceRecognition && !(triedServerRecognition && Self.serverConsent == true)
+        request.requiresOnDeviceRecognition = onDevice
         Self.installTap(on: engine.inputNode, feeding: request) { [weak self] level in
             Task { @MainActor in self?.waveform.append(level) }
         }
         engine.prepare()
         try engine.start()
 
+        Self.logger.notice("Erkennung startet: auf dem Gerät \(onDevice, privacy: .public), Sprache \(recognizer.locale.identifier, privacy: .public)")
         task = Self.startRecognition(with: recognizer, request: request) { [weak self] text, message in
             Task { @MainActor in
-                if let text { self?.transcript = text }
+                if let text {
+                    self?.transcript = text
+                    Self.logger.notice("Erkannt: \(text, privacy: .public)")
+                }
                 if let message, text == nil {
-                    Self.logger.notice("Recognition ended: \(message, privacy: .public)")
+                    Self.logger.notice("Erkennung abgebrochen: \(message, privacy: .public)")
+                    self?.recognitionFailed(wasOnDevice: onDevice)
                 }
             }
         }
         self.engine = engine
         self.request = request
+    }
+
+    /// Die Erkennung meldet einen Fehlschlag. Bisher wurde er nur protokolliert — die App blieb
+    /// äußerlich im Zuhör-Zustand, der Ton lief weiter, und für den Nutzer sah es aus, als würde
+    /// zugehört, während nichts ankam (2026-09-19). Jetzt endet das Zuhören sichtbar.
+    private func recognitionFailed(wasOnDevice: Bool) {
+        guard isListening, transcript.isEmpty else { return }
+        stop()
+
+        guard wasOnDevice else {
+            state = .unavailable(String(localized: "Speech recognition is not available. You can type instead."))
+            return
+        }
+        switch Self.serverConsent {
+        case .some(true):
+            // Zustimmung liegt vor: einmal ohne die Einschränkung erneut versuchen.
+            guard !triedServerRecognition else {
+                state = .unavailable(String(localized: "Speech recognition is not available. You can type instead."))
+                return
+            }
+            triedServerRecognition = true
+            Task { await start() }
+        case .some(false):
+            state = .unavailable(String(localized: "Speech recognition on this device is not available. You can type instead."))
+        case .none:
+            triedServerRecognition = true
+            state = .needsServerConsent
+        }
+    }
+
+    /// Stufe 0 aus `docs/context/spracherfassung-teststufen.md`, ausgeführt im echten App-Prozess:
+    /// Was bietet Apples Erkennung hier überhaupt an, und liegt das Modell auf dem Gerät? Die alte
+    /// Schnittstelle konnte das nicht beantworten — sie meldete „unterstützt" und scheiterte dann
+    /// am fehlenden Modell.
+    /// Wartet kurz, falls der Erkenner sich beim ersten Blick noch nicht als verfügbar meldet.
+    /// Drei Versuche über gut eine Sekunde — genug für den Systemdienst, kurz genug, dass niemand
+    /// vor einem eingefrorenen Bildschirm sitzt.
+    private static func availableRecognizer() async -> SFSpeechRecognizer? {
+        for versuch in 0..<3 {
+            if let recognizer = SFSpeechRecognizer(locale: .current), recognizer.isAvailable {
+                if versuch > 0 { logger.notice("Erkenner war erst im Versuch \(versuch + 1, privacy: .public) verfügbar") }
+                return recognizer
+            }
+            try? await Task.sleep(for: .milliseconds(400))
+        }
+        return nil
+    }
+
+    static func reportSpeechSupport() async {
+        let unterstützt = await SpeechTranscriber.supportedLocales.map { $0.identifier(.bcp47) }
+        let installiert = await SpeechTranscriber.installedLocales.map { $0.identifier(.bcp47) }
+        let alt = SFSpeechRecognizer(locale: .current)
+        logger.notice("""
+            Stufe 0 — Sprache \(Locale.current.identifier, privacy: .public): \
+            neu unterstützt \(unterstützt.count, privacy: .public), \
+            neu installiert \(installiert.joined(separator: ","), privacy: .public), \
+            alt verfügbar \(alt?.isAvailable ?? false, privacy: .public), \
+            alt auf dem Gerät möglich \(alt?.supportsOnDeviceRecognition ?? false, privacy: .public)
+            """)
+    }
+
+    /// Antwort auf die Einmal-Frage; wird dauerhaft gemerkt.
+    static var serverConsent: Bool? {
+        get { UserDefaults.standard.object(forKey: serverConsentKey) as? Bool }
+        set { UserDefaults.standard.set(newValue, forKey: serverConsentKey) }
+    }
+
+    /// Der Nutzer hat die Frage beantwortet.
+    func answerServerConsent(_ allowed: Bool) async {
+        Self.serverConsent = allowed
+        state = .idle
+        if allowed {
+            await start()
+        } else {
+            state = .unavailable(String(localized: "Speech recognition on this device is not available. You can type instead."))
+        }
     }
 
     /// Beide Rückrufe hier sind `nonisolated`, weil sie von fremden Strängen kommen: der Audio-Tap
@@ -110,8 +208,11 @@ final class SpeechCapture {
         onLevel: @escaping @Sendable (Float) -> Void
     ) {
         let box = RequestBox(request)
-        input.installTap(onBus: 0, bufferSize: 1024, format: input.outputFormat(forBus: 0)) { buffer, _ in
+        let format = input.outputFormat(forBus: 0)
+        logger.notice("Audio-Eingang: \(format.sampleRate, privacy: .public) Hz, \(format.channelCount, privacy: .public) Kanäle")
+        input.installTap(onBus: 0, bufferSize: 1024, format: format) { buffer, _ in
             box.request.append(buffer)
+            box.noteBuffer(frames: buffer.frameLength)
             onLevel(Waveform.level(of: buffer))
         }
     }
@@ -144,5 +245,21 @@ final class SpeechCapture {
 /// and torn down on the main actor after the tap is removed.
 private final class RequestBox: @unchecked Sendable {
     let request: SFSpeechAudioBufferRecognitionRequest
+    private let lock = NSLock()
+    private var buffers = 0
+
     init(_ request: SFSpeechAudioBufferRecognitionRequest) { self.request = request }
+
+    /// Belegt, dass überhaupt Ton ankommt: die erste Meldung sofort, danach alle 100 Puffer.
+    /// Ohne das lässt sich „Mikrofon hört zu" nicht von „es kommt nichts an" unterscheiden —
+    /// beides sieht auf dem Bildschirm gleich aus.
+    func noteBuffer(frames: AVAudioFrameCount) {
+        lock.lock()
+        buffers += 1
+        let count = buffers
+        lock.unlock()
+        if count == 1 || count % 100 == 0 {
+            SpeechCapture.logger.notice("Ton kommt an: \(count, privacy: .public) Puffer, zuletzt \(frames, privacy: .public) Bilder")
+        }
+    }
 }
