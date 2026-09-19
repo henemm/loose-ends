@@ -69,6 +69,44 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(captured.waitForExistence(timeout: 5), "Captured task should appear in New")
     }
 
+    /// Nur für den Nachweis an Henning: hält jeden Schritt des Capture-Wegs als Bild fest.
+    @MainActor
+    func testPlusButtonProof() throws {
+        func shot(_ app: XCUIApplication, _ name: String) {
+            let a = XCTAttachment(screenshot: app.screenshot())
+            a.name = name
+            a.lifetime = .keepAlways
+            add(a)
+        }
+
+        let app = launch()
+        let captureButton = app.buttons["captureButton"]
+        XCTAssertTrue(captureButton.waitForExistence(timeout: 10), "Kein Capture-Button auf dem Startbildschirm")
+        shot(app, "1-startbildschirm-mit-plus")
+
+        captureButton.tap()
+        let field = element("captureTextField", in: app)
+        XCTAssertTrue(field.waitForExistence(timeout: 5), "Capture-Blatt ging nach dem Tippen auf + nicht auf")
+        shot(app, "2-nach-tippen-auf-plus")
+
+        field.tap()
+        field.typeText("Reifen wechseln lassen")
+        shot(app, "3-aufgabe-eingetippt")
+
+        let done = app.buttons["captureDoneButton"]
+        XCTAssertTrue(done.waitForExistence(timeout: 5))
+        XCTAssertTrue(done.isEnabled, "Fertig muss anklickbar sein, sobald Text da ist")
+        done.tap()
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5), "Capture-Blatt schloss nach Fertig nicht")
+
+        let newRow = element("viewRow_new", in: app)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
+        newRow.tap()
+        let captured = app.staticTexts.matching(NSPredicate(format: "label == %@", "Reifen wechseln lassen")).firstMatch
+        XCTAssertTrue(captured.waitForExistence(timeout: 5), "Erfasste Aufgabe taucht nicht in Neu auf")
+        shot(app, "4-aufgabe-steht-in-neu")
+    }
+
     @MainActor
     func testTaskDetailShowsRawText() throws {
         let app = launch()

@@ -3,12 +3,18 @@ import SwiftData
 import Testing
 @testable import LooseEnds
 
+/// Its bundle has no `de` translations, so `String(localized:bundle:)` falls back to the (English) key —
+/// deterministic regardless of the host machine's system language.
+private final class UntranslatedBundleMarker {}
+
 @Suite("Repeat rule edits") struct RepeatEditTests {
     private func posix() -> Calendar {
         var calendar = Calendar(identifier: .gregorian)
         calendar.locale = Locale(identifier: "en_US_POSIX")
         return calendar
     }
+
+    private var untranslatedBundle: Bundle { Bundle(for: UntranslatedBundleMarker.self) }
 
     @Test("A rule survives the encode-decode round trip and encodes deterministically")
     func codecRoundTrip() throws {
@@ -51,10 +57,11 @@ import Testing
     @Test("Rules read as people say them")
     func descriptions() {
         let calendar = posix()
-        #expect(FieldFormatting.repeatDescription(RepeatRule(frequency: .daily), calendar: calendar) == "Daily")
-        #expect(FieldFormatting.repeatDescription(RepeatRule(frequency: .daily, interval: 3), calendar: calendar) == "Every 3 days")
-        #expect(FieldFormatting.repeatDescription(RepeatRule(frequency: .weekly, weekdays: [2, 7]), calendar: calendar) == "Weekly · Mon, Sat")
-        #expect(FieldFormatting.repeatDescription(RepeatRule(frequency: .monthly, interval: 2, basis: .fromCompletion), calendar: calendar) == "Every 2 months · after completion")
-        #expect(FieldFormatting.repeatDescription(RepeatRule(frequency: .yearly), calendar: calendar) == "Yearly")
+        let bundle = untranslatedBundle
+        #expect(FieldFormatting.repeatDescription(RepeatRule(frequency: .daily), calendar: calendar, bundle: bundle) == "Daily")
+        #expect(FieldFormatting.repeatDescription(RepeatRule(frequency: .daily, interval: 3), calendar: calendar, bundle: bundle) == "Every 3 days")
+        #expect(FieldFormatting.repeatDescription(RepeatRule(frequency: .weekly, weekdays: [2, 7]), calendar: calendar, bundle: bundle) == "Weekly · Mon, Sat")
+        #expect(FieldFormatting.repeatDescription(RepeatRule(frequency: .monthly, interval: 2, basis: .fromCompletion), calendar: calendar, bundle: bundle) == "Every 2 months · after completion")
+        #expect(FieldFormatting.repeatDescription(RepeatRule(frequency: .yearly), calendar: calendar, bundle: bundle) == "Yearly")
     }
 }
