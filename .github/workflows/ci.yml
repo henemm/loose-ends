@@ -19,7 +19,7 @@ jobs:
     name: Unit Tests (macOS destination)
     runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Select newest Xcode (27 when the image has it)
         run: |
           latest=$(ls -d /Applications/Xcode_27*.app 2>/dev/null | sort -V | tail -1)
@@ -63,7 +63,7 @@ jobs:
     name: Build (iOS Simulator)
     runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Select newest Xcode (27 when the image has it)
         run: |
           latest=$(ls -d /Applications/Xcode_27*.app 2>/dev/null | sort -V | tail -1)
@@ -93,7 +93,7 @@ jobs:
     name: UI Smoke (iOS Simulator)
     runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Select newest Xcode (27 when the image has it)
         run: |
           latest=$(ls -d /Applications/Xcode_27*.app 2>/dev/null | sort -V | tail -1)
