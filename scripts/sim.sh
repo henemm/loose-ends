@@ -66,14 +66,40 @@ acquire_lock() {
 release_lock() { [ -n "$LOCK_ACQUIRED" ] && rm -rf "$LOCK_DIR" 2>/dev/null; LOCK_ACQUIRED=""; return 0; }
 trap release_lock EXIT
 
-# --- Simulator per Name auflösen (erstes verfügbares Gerät mit diesem Namen) ---
+# --- Deployment Target aus project.yml lesen (eine Quelle der Wahrheit) ---
+deployment_target() {
+    python3 -c '
+import re, sys
+text = open(sys.argv[1]).read()
+block = re.search(r"deploymentTarget:(.*?)\n\s{0,2}\w+:", text, re.S)
+hit = re.search(sys.argv[2] + r":\s*\"?([\d.]+)", block.group(1) if block else text)
+print(hit.group(1) if hit else "")' "$PROJECT_DIR/project.yml" "$1"
+}
+
+# --- Simulator auflösen ---
+# Nur Laufzeiten, die das iOS-Deployment-Target erfüllen. Sonst landet man auf
+# einem Gerät, das Xcode als Ziel ablehnt ("doesn't match deployment target") —
+# daran scheiterte der Simulatorlauf am 2026-09-19: "iPhone 17" existiert
+# gleichzeitig unter iOS 26.5 und 27.0, und die 26.5er Version kam zuerst.
 sim_id() {
     $SIMCTL list devices available -j 2>/dev/null | python3 -c '
-import json, sys
-name = sys.argv[1]
-devs = [d for v in json.load(sys.stdin)["devices"].values() for d in v]
-hit = next((d for d in devs if d["name"] == name), None) or next((d for d in devs if d["name"].startswith("iPhone")), None)
-print(hit["udid"] if hit else "")' "$SIM_NAME"
+import json, re, sys
+name, minimum = sys.argv[1], sys.argv[2]
+def ver(s): return tuple(int(p) for p in re.findall(r"\d+", s)[:3])
+floor = ver(minimum) if minimum else (0,)
+cands = []
+for runtime, devs in json.load(sys.stdin)["devices"].items():
+    m = re.search(r"SimRuntime\.iOS-([\d-]+)$", runtime)
+    if not m: continue
+    v = ver(m.group(1).replace("-", "."))
+    if v < floor: continue
+    cands += [(v, d) for d in devs]
+if not cands: sys.exit(0)
+hit = next((d for _, d in cands if d["name"] == name), None)
+if hit is None:
+    pool = [c for c in cands if c[1]["name"].startswith("iPhone")] or cands
+    hit = max(pool, key=lambda c: c[0])[1]
+print(hit["udid"])' "$SIM_NAME" "$(deployment_target iOS)"
 }
 
 ensure_project() {
@@ -96,9 +122,26 @@ run_xcodebuild() {
     fi
 }
 
+# Der Mac kann die Tests nur hosten, wenn sein macOS das Deployment Target
+# erfüllt. Solange das Target über der installierten Version liegt (27.0 auf
+# einem 26er Mac), lehnt xcodebuild die Mac-Destination rundweg ab — dann
+# laufen dieselben Unit-Tests im iOS-Simulator statt gar nicht.
+mac_hosts_tests() {
+    local want; want=$(deployment_target macOS); [ -z "$want" ] && return 0
+    python3 -c '
+import re, sys
+def ver(s): return tuple(int(p) for p in re.findall(r"\d+", s)[:3])
+sys.exit(0 if ver(sys.argv[1]) >= ver(sys.argv[2]) else 1)' "$(sw_vers -productVersion)" "$want"
+}
+
 cmd_unit() {
     ensure_project
     local only="$UNIT_TARGET"; [ -n "${1:-}" ] && only="$UNIT_TARGET/$1"
+    if ! mac_hosts_tests; then
+        warn "macOS $(sw_vers -productVersion) < Deployment Target $(deployment_target macOS) — Unit-Tests laufen im Simulator."
+        cmd_sim_unit "$@"
+        return
+    fi
     info "Unit-Tests (macOS): $only"
     run_xcodebuild test -project "$PROJECT" -scheme "$SCHEME" -destination 'platform=macOS' -only-testing:"$only" -parallel-testing-enabled NO
     success "Unit-Tests bestanden."

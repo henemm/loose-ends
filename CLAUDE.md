@@ -22,9 +22,18 @@ The Xcode project is generated. Never edit `LooseEnds.xcodeproj` by hand.
 
 ```bash
 brew install xcodegen xcbeautify
-xcodegen generate
-xcodebuild test -project LooseEnds.xcodeproj -scheme LooseEnds -destination 'platform=macOS' | xcbeautify
+./scripts/sim.sh generate     # LooseEnds.xcodeproj aus project.yml
+./scripts/sim.sh unit         # Unit-Tests
+./scripts/sim.sh build        # iOS-App für den Simulator
 ```
+
+Immer über `scripts/sim.sh` gehen, nicht direkt über `xcodebuild`. Das Skript wählt Destinationen,
+die zum Deployment Target passen: Der Mac hostet die Tests nur, wenn sein macOS ≥ Target ist
+(sonst laufen sie im Simulator), und ein Simulator zählt nur mit Laufzeit ≥ iOS-Target — Gerätenamen
+wie „iPhone 17" gibt es unter mehreren iOS-Versionen, und die falsche lehnt Xcode als Ziel ab.
+
+Das Projekt ist generiert und nicht versioniert: Nach jedem neuen Stand muss `generate` laufen,
+sonst kennt Xcode die neu hinzugekommenen Dateien nicht und baut eine App ohne die neuen Views.
 
 Set `DEVELOPMENT_TEAM` once in Xcode (Signing & Capabilities); it is intentionally empty in `project.yml`.
 `scripts/sim.sh` passes the team explicitly for device builds (`LOOSEENDS_TEAM_ID`, default `XK87E2B3VR`).
