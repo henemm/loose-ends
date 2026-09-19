@@ -49,9 +49,9 @@ dem Text ableitbar. Das entschuldigt das Ergebnis nicht, es verschiebt die Frage
 - **Sprache.** Ob das Modell antwortet, hängt an der Sprache unter „Apple Intelligence & Siri", nicht an
   der Systemsprache. Deutsch wird unterstützt.
 - **Messumgebung.** Hennings Mac (M4, 16 GB, macOS 26.6.1) hat das Modell aktiv, Deutsch, Kontext 4096
-  Token. Er rechnet aber mit der Modellgeneration von 2025; der Simulator nutzt das Modell des Mac; das
-  iPhone rechnet mit dem neu gebauten 27er-Modell. Jede Messung auf dem Mac misst ein anderes Modell als
-  das im Produkt.
+  Token. Er rechnet aber mit der Modellgeneration von 2025; das iPhone rechnet mit dem neu gebauten
+  27er-Modell. Jede Messung auf dem Mac misst ein anderes Modell als das im Produkt. Die Annahme, der
+  Simulator nutze das Modell des Mac, hat sich nicht bestätigt — siehe „Die Messumgebung" weiter unten.
 - **Bekannte Ausfälle.** Verweigerungen durch Guardrails bei harmlosem Text (in iOS 27 reduziert, nicht
   beseitigt), Rate Limit in Erweiterungsprozessen (#21), Kaltstart ein bis zwei Sekunden, Typen und
   Verhalten wechseln zwischen Punktversionen.
@@ -70,7 +70,7 @@ warum diese Liste vor dem nächsten Feature steht: Vieles ist entschieden, aber 
 |---|---|---|---|---|---|
 | A1 | Das Modell weiß, wann es nicht weiß | Drei Ersatzsignale je Feld: Selbstkonsistenz über fünf Läufe, Enthaltung bei signalfreiem Text, Zweitmeinung eines stärkeren Modells. Kurve Trefferquote über Abdeckung | Kein Signal erreicht ≥ 85 % Trefferquote bei ≥ 30 % Abdeckung | Vorschlag statt Setzen (kippt „still" für dieses Feld); Feld aus Historie statt Text; Feld und Ansicht in v1 weglassen | #65 |
 | A2 | Die Information steht im Text | Obergrenze: starkes Modell, gleiche Eingaben, gleiche Wahrheit, mehrfach gesampelt | Starkes Modell unter 60 % je Feld | Feld nur aus Historie; Feld nie automatisch; Feld aus der Pipeline streichen | #66 |
-| A3 | Falsch kostet nur einen Handgriff | Datum: relative Ausdrücke DE/EN mit festem Erfassungsdatum plus Kontrolle ohne Datum. Titel: Entitäten erhalten, nichts erfunden | Datum < 95 % exakt oder > 2 % erfunden; Titel > 2 % Halluzination | Datum deterministisch parsen, Modell wählt nur; Titel = gekürzter Rohtext; Personen ohne Modell oder weglassen | #67 |
+| A3 | Falsch kostet nur einen Handgriff | Datum: relative Ausdrücke DE/EN gegen den Tag des Laufs plus Kontrolle ohne Datum, zusätzlich `NSDataDetector` als Vergleich. Titel: Entitäten erhalten, nichts erfunden | Datum < 95 % exakt oder > 2 % erfunden; Titel > 2 % Halluzination | Datum deterministisch parsen, Modell wählt nur; Titel = gekürzter Rohtext; Personen ohne Modell oder weglassen | #67 |
 | A4 | Das Modell ist da, wenn erfasst wird | Nachweis auf Geräten: Matrix Gerät × Prozess × Zustand, Wartezeit bis Veredelung | Kein Abbruch, Designfolge | Veredelung auf genau einem Gerät, Sperrfeld gegen Doppellauf; nur im Vordergrund, sichtbar „wird geprüft"; PCC-Fallback für Geräte ohne Modell | #68 |
 
 Zu A3 gehört eine Beobachtung, die kein Experiment löst: Ein falscher Kontext ist unsichtbar. Die Aufgabe
@@ -107,6 +107,39 @@ bis sie gesehen wurde.
 | Ein Prompt, ein Schema für alle Felder und Kanäle | `FoundationModelsEnricher` | Zwei Läufe; Parser für Datum; kanalspezifische Vorverarbeitung (#67, #70, #72) |
 | Apples Gerätemodell als einziges Modell | Antwort 8 | PCC als Fallback; Fremdmodell über die neue Schnittstelle; eigenes lokales Modell (#73, #74) |
 | Zehn abgeleitete Felder | Datenmodell | Weniger Felder in v1: nur die, deren Signal trägt. Ansichten folgen den Feldern, nicht umgekehrt |
+
+## Die Messumgebung, am 2026-09-19 auf dem Gerät nachgemessen
+
+Die Fragen aus #74 sind mit Runde 4 beantwortet (R4-1 bis R4-4). Beim Aufbau der ersten Messreihe
+(#67) kamen drei Befunde dazu, die jede weitere Messreihe betreffen:
+
+- **Der Simulator misst nichts.** Der iOS-27-Simulator meldet `SystemLanguageModel` als verfügbar,
+  jeder Aufruf scheitert aber auf einem macOS-26-Host an fehlenden Modelldateien („Model Catalog
+  error … no underlying assets"). Messreihen laufen deshalb ausschließlich auf dem iPhone.
+- **Ein echtes iPhone führt keinen Test ohne Träger-App aus.** Apple unterstützt reine Logiktests
+  nur im Simulator; auf dem Gerät braucht das Testbündel eine Host-App und eine eigene Info.plist
+  zum Signieren. Beides steht jetzt in `project.yml`, gefahren wird über `sim.sh device-measure`.
+- **Auf Akku drosselt Apple nach wenigen Aufrufen.** Der erste vollständige Lauf brach nach drei
+  Sätzen ab: „Client rate limit exceeded" aus der Guardrail-Prüfung. Apple nennt als Bedingung
+  Akkubetrieb und Hintergrundprozess; am Netzteil ist keine Drosselung zu erwarten. Messläufe
+  brauchen das iPhone am Strom, entsperrt und ohne automatische Sperre. Für das Produkt heißt
+  derselbe Befund: Ein Nachzügler-Lauf über viele Aufgaben im Hintergrund läuft in dieselbe Grenze
+  (#21, #72).
+
+**Daraus folgt der Aufbau jeder weiteren Messreihe.** Ein Testlauf belegt das Gerät am Stück und
+entsperrt, bis er fertig ist — Hennings iPhone ist ein Arbeitsgerät, kein Prüfstand. Gemessen wird
+deshalb in einer eigenen, wegwerfbaren Labor-App (`LooseEndsLab`), die in Scheiben misst: Er öffnet
+sie, wenn es ihm passt, jeder Satz wird sofort gesichert, ein Abbruch kostet nichts, beim nächsten
+Öffnen läuft sie weiter. Nach seinem Tippen darf sie über `BGContinuedProcessingTask` im
+Hintergrund weiterrechnen — sichtbar in der Dynamic Island, jederzeit abbrechbar; von selbst
+startet nichts (seine Entscheidung). Die Ergebnisse holt der Mac still aus dem App-Container
+(`sim.sh lab-fetch`), gerechnet wird dort.
+
+Weil sich eine Messreihe damit über Tage zieht, trägt **jeder einzelne Satz seinen eigenen Messtag
+und seine eigenen Bedingungen** (Vordergrund/Hintergrund, Akku/Strom, Akkustand, Stromsparmodus,
+Wärmezustand). Der Bericht weist die Trefferquote nach Bedingung getrennt aus. Damit ist die Frage
+„wurde unter realistischen Bedingungen gemessen?" nicht mehr Auslegungssache, sondern eine Zeile in
+der Tabelle.
 
 ## Was vorher geklärt werden muss (#74)
 

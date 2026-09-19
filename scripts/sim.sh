@@ -14,6 +14,11 @@
 #   ./scripts/sim.sh test <Class[/test]>      # UI-Test im iOS-Simulator
 #   ./scripts/sim.sh boot | status | launch | screenshot [pfad]
 #
+# Messreihen gegen das echte Modell (Spikes #65-#73), ohne das iPhone zu belegen:
+#   ./scripts/sim.sh lab                      # Labor-App aufs iPhone bringen
+#   ./scripts/sim.sh lab-fetch                # Ergebnisse vom iPhone holen (still, ohne Zutun)
+#   ./scripts/sim.sh report                   # Bericht aus den geholten Ergebnissen bauen
+#
 # Auf Hennings echtem iPhone — Stufe 2, erst nachdem der Simulator grün war:
 #   ./scripts/sim.sh device-status            # verbundenes Gerät und Verbindungsweg zeigen
 #   ./scripts/sim.sh device                   # signiert bauen, drahtlos installieren, starten
@@ -113,13 +118,33 @@ cmd_generate() {
     success "Projekt erzeugt."
 }
 
+BUILD_LOG=""
 run_xcodebuild() {
     cd "$PROJECT_DIR"
+    mkdir -p "$SESSION_DERIVED_DATA"
+    BUILD_LOG="$SESSION_DERIVED_DATA/xcodebuild.log"
+    # Die Rohausgabe geht ins Log, bevor xcbeautify sie kürzt: Messberichte stehen darin.
     if command -v xcbeautify >/dev/null; then
-        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | xcbeautify
+        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG" | xcbeautify
     else
-        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1
+        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG"
     fi
+}
+
+# Ein Messlauf druckt seinen Bericht zwischen Markern, weil ein Test auf dem iPhone nicht ins
+# Repository schreiben kann. Hier wird er wieder herausgeschnitten und abgelegt.
+extract_reports() {
+    local log="$1"
+    [ -f "$log" ] || return 0
+    python3 - "$log" "$PROJECT_DIR/docs/reference" <<'EOF'
+import re, sys, pathlib
+log, out = pathlib.Path(sys.argv[1]).read_text(errors="replace"), pathlib.Path(sys.argv[2])
+found = re.findall(r"<<<REPORT:([a-z0-9-]+)>>>\n(.*?)\n<<<END REPORT>>>", log, re.S)
+for name, body in found:
+    path = out / f"{name}.md"
+    path.write_text(body.rstrip() + "\n")
+    print(f"[sim] Bericht: {path.relative_to(out.parent.parent)}")
+EOF
 }
 
 # Der Mac kann die Tests nur hosten, wenn sein macOS das Deployment Target
@@ -294,13 +319,65 @@ cmd_device_console() {
     success "Konsole beendet."
 }
 
+# --- Messreihen gegen das echte Modell ----------------------------------------
+# Gemessen wird in der Labor-App auf dem iPhone, nicht in einem Testlauf: ein Testlauf belegt
+# das Gerät am Stück und entsperrt, bis er fertig ist. Henning benutzt sein iPhone den ganzen
+# Tag. Die Labor-App misst in Scheiben, sichert nach jedem Satz und macht später weiter.
+LAB_SCHEME="LooseEndsLab"
+LAB_BUNDLE="com.henning.looseends.lab"
+LAB_RESULTS="Measurement/results"
+
+cmd_lab() {
+    ensure_project
+    local id; id=$(require_device) || return 1
+    local dd; dd=$(device_derived_data)
+    info "Labor-App signiert bauen für $id"
+    cd "$PROJECT_DIR"
+    local args=(build -project "$PROJECT" -scheme "$LAB_SCHEME" -destination "id=$id"
+                -derivedDataPath "$dd" -allowProvisioningUpdates "DEVELOPMENT_TEAM=$TEAM_ID")
+    if command -v xcbeautify >/dev/null; then
+        xcodebuild "${args[@]}" 2>&1 | xcbeautify
+    else
+        xcodebuild "${args[@]}" 2>&1
+    fi
+    local app="$dd/Build/Products/Debug-iphoneos/LooseEndsLab.app"
+    [ -d "$app" ] || { error "Labor-App nicht gebaut"; return 1; }
+    $DEVICECTL device install app --device "$id" "$app" >/dev/null
+    success "Labor-App installiert."
+}
+
+# Holt die Ergebnisdatei aus dem App-Container. Braucht nur, dass das iPhone im WLAN ist:
+# kein Kabel, kein Xcode, kein Handgriff.
+cmd_lab_fetch() {
+    local id; id=$(require_device) || return 1
+    local name="${1:-date-title}"
+    mkdir -p "$PROJECT_DIR/$LAB_RESULTS"
+    info "Hole $name.json vom iPhone"
+    if ! $DEVICECTL device copy from --device "$id" --user mobile \
+            --domain-type appDataContainer --domain-identifier "$LAB_BUNDLE" \
+            --source "Documents/$name.json" \
+            --destination "$PROJECT_DIR/$LAB_RESULTS/$name.json" 2>&1 | tail -3; then
+        warn "Nichts abzuholen - die Labor-App hat noch nicht gemessen."
+        return 1
+    fi
+    python3 "$PROJECT_DIR/scripts/measurement-summary.py" "$PROJECT_DIR/$LAB_RESULTS/$name.json" || true
+    success "Ergebnisse in $LAB_RESULTS/$name.json"
+}
+
+cmd_report() {
+    ensure_project
+    info "Bericht aus den geholten Ergebnissen"
+    cmd_unit "DateTitleReportTests"
+    success "Bericht in docs/reference/."
+}
+
 cmd_screenshot() {
     local out="${1:-/tmp/sim_screenshot.png}"; local id; id=$(sim_id)
     rm -f "$out"; $SIMCTL io "$id" screenshot "$out" 2>/dev/null
     [ -f "$out" ] && success "Screenshot: $out" || { error "Screenshot fehlgeschlagen"; return 1; }
 }
 
-cmd_help() { sed -n '3,24p' "$0" | sed 's/^# \{0,1\}//'; }
+cmd_help() { sed -n '3,29p' "$0" | sed 's/^# \{0,1\}//'; }
 
 COMMAND="${1:-help}"; shift 2>/dev/null || true
 case "$COMMAND" in
@@ -320,6 +397,9 @@ case "$COMMAND" in
     device-launch)  cmd_device_launch ;;
     device-console) cmd_device_console "$@" ;;
     device)         cmd_device ;;
+    lab)            cmd_lab ;;
+    lab-fetch)      cmd_lab_fetch "$@" ;;
+    report)         cmd_report ;;
     help|--help|-h) cmd_help ;;
     *) error "Unbekannter Befehl: $COMMAND"; cmd_help; exit 1 ;;
 esac

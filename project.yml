@@ -165,30 +165,69 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends.share
 
+  # Messprogramm für die Spikes: eine eigene, wegwerfbare App auf Hennings iPhone. Sie misst in
+  # Scheiben, wann immer er sie öffnet, und rührt die echten Daten nicht an — keine App-Gruppe,
+  # kein CloudKit. Nur der Veredeler und die Aufzählungen, die er braucht.
+  LooseEndsLab:
+    type: application
+    platform: iOS
+    sources:
+      - LooseEndsLab
+      - Measurement
+      - path: Shared/Enrichment/EnrichmentDraft.swift
+      - path: Shared/Enrichment/FoundationModelsEnricher.swift
+      - path: Shared/Models/Enums.swift
+    info:
+      path: LooseEndsLab/Info.plist
+      properties:
+        CFBundleDisplayName: LE Labor
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen: {}
+        UIBackgroundModes: [processing]
+        # Wildcard-Kennung, wie der Scheduler sie für fortgesetzte Verarbeitung verlangt.
+        BGTaskSchedulerPermittedIdentifiers: [com.henning.looseends.lab.measure.*]
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends.lab
+
   LooseEndsTests:
     type: bundle.unit-test
     supportedDestinations: [iOS, macOS]
     sources:
       - LooseEndsTests
+      - Measurement
     dependencies:
       - target: LooseEnds
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends.tests
+        # Signing a test bundle for a real device needs an Info.plist; for the simulator,
+        # which never signs, the missing file went unnoticed.
+        GENERATE_INFOPLIST_FILE: YES
         # Multiplatform host app: the macOS bundle layout differs from iOS.
         TEST_HOST[sdk=macosx*]: $(BUILT_PRODUCTS_DIR)/LooseEnds.app/Contents/MacOS/LooseEnds
         BUNDLE_LOADER[sdk=macosx*]: $(TEST_HOST)
+        # A real iPhone runs no test without a host app ("Logic Testing Unavailable"); the
+        # simulator does, which is why this stayed unnoticed until the measurements of #67
+        # had to run on the reference device.
+        TEST_HOST[sdk=iphoneos*]: $(BUILT_PRODUCTS_DIR)/LooseEnds.app/LooseEnds
+        BUNDLE_LOADER[sdk=iphoneos*]: $(TEST_HOST)
 
   LooseEndsUITests:
     type: bundle.ui-testing
     supportedDestinations: [iOS, macOS]
     sources:
       - LooseEndsUITests
+      - Measurement   # the same corpus feeds the Reminders benchmark (#78)
     dependencies:
       - target: LooseEnds
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends.uitests
+        GENERATE_INFOPLIST_FILE: YES
 
 schemes:
   LooseEnds:
