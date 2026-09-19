@@ -92,3 +92,21 @@ Signierung, Provisioning und Entitlements hängt (siehe den App-Group-Absturz ob
 bis andere als Henning testen sollen. Als Entwicklungswerkzeug ist es untauglich: kein Debugger,
 keine Live-Logs, und Crash-Reports erreichen den Xcode Organizer erst mit bis zu einem Tag
 Verzögerung — und nur die häufigsten. Ein Bug, der nicht abstürzt, erzeugt dort gar nichts.
+
+## Der Hauptcheckout hält sich selbst aktuell
+
+Alle Sessions arbeiten in Worktrees, PRs werden auf GitHub gemergt — Hennings `main` blieb dabei
+zurück, ohne dass es jemandem auffiel. Am 2026-09-19 stand er 36 Commits hinter `origin/main` und
+baute noch das Grundgerüst ohne Capture-Button; Henning installierte das aufs iPhone und fand eine
+App ohne (+). Es dann geradezuziehen ist mühsam: Der Worktree-Zwang des Plugins sperrt schreibende
+Werkzeuge im Hauptverzeichnis, und aus einem Worktree heraus sind Git-Befehle auf den
+Hauptcheckout ebenfalls gesperrt.
+
+Deshalb erledigt das ein SessionStart-Hook, der vor allen Werkzeug-Sperren läuft:
+`~/.claude/scripts/loose-ends-sync-main.sh`, eingetragen in `~/.claude/settings.json`. Er springt
+nur an, wenn die Sitzung zu diesem Projekt gehört, holt `origin/main` und zieht `main` per
+Fast-Forward nach. Steht etwas im Weg — lokale Änderungen, ein anderer Branch, kein Netz —, bleibt
+alles unangetastet und der Grund steht in der Ausgabe.
+
+Das Skript liegt außerhalb des Repos, damit es nicht davon abhängt, wie alt der Checkout gerade
+ist. Auf einem neuen Rechner muss es einmal neu angelegt werden.
