@@ -16,7 +16,11 @@ settings:
     SWIFT_VERSION: "6.0"
     SWIFT_STRICT_CONCURRENCY: complete
     CODE_SIGN_STYLE: Automatic
-    DEVELOPMENT_TEAM: ""          # Set your team once locally; Xcode remembers it.
+    # Xcode merkt sich das Team NICHT: es steht in LooseEnds.xcodeproj, und die
+    # Datei wird bei jedem `xcodegen generate` neu geschrieben. Ein leerer Wert
+    # heißt deshalb: nach jedem neuen Stand verweigert Xcode den Start auf einem
+    # echten Gerät ("requires a development team"). Darum steht das Team hier.
+    DEVELOPMENT_TEAM: "XK87E2B3VR"
     MARKETING_VERSION: "0.1.0"
     CURRENT_PROJECT_VERSION: 1
     SWIFT_EMIT_LOC_STRINGS: true
