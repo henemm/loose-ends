@@ -67,3 +67,46 @@ Prioritätsreihenfolge; Details, Umfang und DoD stehen im jeweiligen Issue.
   (`SwiftData/DataUtilities.swift:1257: Fatal error: Unable to find App Group Container in
   Entitlements`) — ungetestet an Henning weitergegeben, auf seinem Gerät reproduziert statt vorher
   im Simulator gefunden.
+
+## Abnahme in drei Stufen
+
+Die Reihenfolge ist verbindlich. Keine Stufe wird übersprungen, keine vorgezogen.
+
+1. **Tests** — `./scripts/sim.sh unit` und der betroffene UI-Test müssen grün sein.
+2. **Simulator** — `./scripts/sim.sh build`, `launch`, `screenshot`: der betroffene Ablauf wird
+   selbst durchgespielt und belegt. Nichts geht auf das Gerät, was hier nicht bewiesen ist.
+3. **Hennings iPhone 16 Pro** — `./scripts/sim.sh device`. Erst danach gilt eine Änderung als
+   fertig.
+
+Stufe 3 ist keine Bitte an Henning, sondern läuft von hier aus: Das Gerät ist über das lokale
+Netzwerk gepairt, `xcrun devicectl` baut signiert, installiert drahtlos und startet. Installieren
+geht auch bei gesperrtem iPhone, Starten braucht ein entsperrtes. `device-console` liest stdout
+und stderr live mit — das ist der Grund, warum diese Stufe existiert und nicht durch TestFlight
+ersetzt werden kann.
+
+Was Stufe 3 findet und Stufe 2 prinzipiell nicht kann: Apple Intelligence auf dem Gerät,
+CloudKit-Sync zwischen Geräten, Watch, Action Button, Widgets, Mikrofon — und alles, was an
+Signierung, Provisioning und Entitlements hängt (siehe den App-Group-Absturz oben).
+
+**TestFlight ist keine Stufe dieser Kette.** Es ist ein Verteilungskanal an Menschen und ruht,
+bis andere als Henning testen sollen. Als Entwicklungswerkzeug ist es untauglich: kein Debugger,
+keine Live-Logs, und Crash-Reports erreichen den Xcode Organizer erst mit bis zu einem Tag
+Verzögerung — und nur die häufigsten. Ein Bug, der nicht abstürzt, erzeugt dort gar nichts.
+
+## Der Hauptcheckout hält sich selbst aktuell
+
+Alle Sessions arbeiten in Worktrees, PRs werden auf GitHub gemergt — Hennings `main` blieb dabei
+zurück, ohne dass es jemandem auffiel. Am 2026-09-19 stand er 36 Commits hinter `origin/main` und
+baute noch das Grundgerüst ohne Capture-Button; Henning installierte das aufs iPhone und fand eine
+App ohne (+). Es dann geradezuziehen ist mühsam: Der Worktree-Zwang des Plugins sperrt schreibende
+Werkzeuge im Hauptverzeichnis, und aus einem Worktree heraus sind Git-Befehle auf den
+Hauptcheckout ebenfalls gesperrt.
+
+Deshalb erledigt das ein SessionStart-Hook, der vor allen Werkzeug-Sperren läuft:
+`~/.claude/scripts/loose-ends-sync-main.sh`, eingetragen in `~/.claude/settings.json`. Er springt
+nur an, wenn die Sitzung zu diesem Projekt gehört, holt `origin/main` und zieht `main` per
+Fast-Forward nach. Steht etwas im Weg — lokale Änderungen, ein anderer Branch, kein Netz —, bleibt
+alles unangetastet und der Grund steht in der Ausgabe.
+
+Das Skript liegt außerhalb des Repos, damit es nicht davon abhängt, wie alt der Checkout gerade
+ist. Auf einem neuen Rechner muss es einmal neu angelegt werden.

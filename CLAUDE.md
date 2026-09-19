@@ -27,6 +27,13 @@ xcodebuild test -project LooseEnds.xcodeproj -scheme LooseEnds -destination 'pla
 ```
 
 Set `DEVELOPMENT_TEAM` once in Xcode (Signing & Capabilities); it is intentionally empty in `project.yml`.
+`scripts/sim.sh` passes the team explicitly for device builds (`LOOSEENDS_TEAM_ID`, default `XK87E2B3VR`).
+
+**Acceptance runs in three stages and none may be skipped** — tests, then Simulator, then Henning's
+iPhone 16 Pro (`./scripts/sim.sh device`, paired over the local network). A change is only done once
+it ran on the device. `docs/project/04-stand.md` has the reasoning and the commands. TestFlight is a
+distribution channel, not a stage: it gives no debugger and no live logs, so it stays dormant until
+people other than Henning test.
 
 CI runs on GitHub's `macos-26` image. Until that image ships Xcode 27, each CI job lowers the deployment
 targets in `project.yml` to 26.0 before generating the project (Xcode only offers simulators that meet
