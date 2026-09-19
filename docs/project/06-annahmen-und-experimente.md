@@ -114,10 +114,17 @@ bis sie gesehen wurde.
   (Hennings Arbeitsrechner, seine Entscheidung; misst dann Core Advanced, also wieder nicht das iPhone),
   oder die Messreihe läuft als Test auf dem iPhone (langsam, entsperrt). Empfehlung: iPhone als Referenz.
 - **Geräteinventar.** Welches iPad, welche Watch, und je Gerät die Sprache unter Apple Intelligence & Siri.
-- **Ein Rohtext-Korpus mit Wahrheit existiert nicht.** FocusBlox liefert gepflegte Titel. Für Datum und
-  Titel-Treue ist selbst geschriebene Wahrheit objektiv und erlaubt. Für Wichtigkeit, Energie, Kontext
-  ist sie zirkulär. Die einzige echte Quelle sind die Rohtexte, die Loose Ends seit dem Start auf dem
-  iPhone gespeichert hat, samt Hennings Korrekturen.
+- **Ein Rohtext-Korpus mit Wahrheit existiert nicht.** Die FocusBlox-Datenbank liegt auf dem Mac
+  (iCloud-Sync der macOS-App, kein USB nötig) und wurde am 2026-09-19 direkt geprüft: 287 Aufgaben,
+  alle mit Quelle `local`, keine aus Siri oder Mail. Titel im Schnitt 27 Zeichen; 108 Aufgaben haben
+  eine Beschreibung, die im Schnitt 38 Zeichen lang und meist eine Kopie des Titels ist. Rohe Sätze,
+  wie sie Loose Ends erfasst, gibt es dort nicht. Was es dort gibt und was die Spikes nutzen sollen:
+  Tags an allen 287 Aufgaben (Wahrheit für Kontexte, nach Zuordnung auf das neue Startset), 159
+  KI-Dauer-Vorschläge, von denen Henning 46 geändert hat, und 86 KI-Tag-Vorschläge. Das sind echte
+  Korrekturpaare, die einzigen im Bestand. Für Wichtigkeit, Dringlichkeit und Energie gab es keine
+  Vorschläge, nur Handwerte. Für Datum und Titel-Treue ist selbst geschriebene Wahrheit objektiv und
+  erlaubt. Die einzige Quelle für echte Rohtexte sind die Erfassungen, die Loose Ends seit dem Start
+  auf dem iPhone gespeichert hat, samt Hennings Korrekturen.
 - **Ob der Korpus das Gerät verlassen darf.** Für die Obergrenzen-Messung und für einen Modell-Richter.
   PCC oder Dritter, das ist ein Datenschutzentscheid.
 - **Hintergrund und Sperre.** Ob das Modell bei gesperrtem Gerät antwortet und ob der Nachzügler-Lauf im
