@@ -102,7 +102,7 @@ not scope creep on the current one.
   `DueNotificationCenter` (system wiring, silent under tests)
 - `Shared/` compiles into the watch and widget targets too: no SwiftUI that is unavailable on watchOS there
   (keyboard shortcuts, navigation bar modifiers). App views belong in `LooseEnds/Views`.
-- `docs/project/` — decisions, user story, data model, design briefing; `docs/reference/` — learnings carried over from FocusBlox
+- `docs/project/` — decisions, user story, data model, design briefing, load-bearing assumptions with their experiments and alternatives (`06-annahmen-und-experimente.md`); `docs/reference/` — learnings carried over from FocusBlox
 
 ## Naming
 

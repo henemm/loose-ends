@@ -281,4 +281,8 @@ Export-Ausgabe enthält echte private Aufgabentitel und wird nie committed
    gesetzt hat statt aus dem Notiztext abzuleiten — der Kurztitel allein trägt diese Information oft
    nicht. Duration (aus dem Text am ehesten ableitbar) schneidet mit ~50 % am besten ab. Keine
    Schwellenänderung, daher kein Folge-PR an `EnrichmentWriter.confidenceThreshold` nötig.
+   **Neu gelesen (2026-09-19, `06-annahmen-und-experimente.md`):** „Kein trennscharfes Signal" heißt
+   nicht „Schwelle bestätigt", sondern „der Mechanismus hinter ADR-3 hat kein Signal". Wichtigkeit,
+   Dringlichkeit und Energie liegen auf Zufallsniveau und werden trotzdem in über 90 % der Fälle
+   gesetzt. Ersatzsignale und Alternativen werden in #65 gemessen, bevor weitere Ansichten entstehen.
 5. Kann die Share-Extension aus Apple Mail die `message:`-URL zuverlässig erhalten?
