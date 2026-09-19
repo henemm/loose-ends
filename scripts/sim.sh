@@ -14,7 +14,14 @@
 #   ./scripts/sim.sh test <Class[/test]>      # UI-Test im iOS-Simulator
 #   ./scripts/sim.sh boot | status | launch | screenshot [pfad]
 #
+# Auf Hennings echtem iPhone — Stufe 2, erst nachdem der Simulator grün war:
+#   ./scripts/sim.sh device-status            # verbundenes Gerät und Verbindungsweg zeigen
+#   ./scripts/sim.sh device                   # signiert bauen, drahtlos installieren, starten
+#   ./scripts/sim.sh device-console [sek]     # dasselbe, aber Logausgabe live mitlesen (Vorgabe 30 s)
+#
 # Simulator per Name: LOOSEENDS_SIM="iPhone 17 Pro" ./scripts/sim.sh build
+# Gerät per UDID:     LOOSEENDS_DEVICE=00008140-... ./scripts/sim.sh device
+# Signier-Team:       LOOSEENDS_TEAM_ID=XK87E2B3VR (Vorgabe, project.yml lässt es leer)
 
 set -eo pipefail
 
@@ -25,6 +32,9 @@ UNIT_TARGET="LooseEndsTests"
 UI_TARGET="LooseEndsUITests"
 SIM_NAME="${LOOSEENDS_SIM:-iPhone 17}"
 SIMCTL="xcrun simctl"
+DEVICECTL="xcrun devicectl"
+TEAM_ID="${LOOSEENDS_TEAM_ID:-XK87E2B3VR}"
+DEVICE_DERIVED_DATA=""  # wird in device_derived_data() gesetzt
 DERIVED_DATA="$HOME/Library/Developer/Xcode/DerivedData"
 SESSION_ID="${CLAUDE_SESSION_ID:-default}"
 SESSION_DERIVED_DATA="$DERIVED_DATA/LooseEnds-session-${SESSION_ID}"
@@ -40,6 +50,8 @@ error()   { echo -e "${RED}[sim]${NC} $1" >&2; }
 # --- Simulator-Lock (mkdir ist atomar), serialisiert Sessions ---
 acquire_lock() {
     local waited=0
+    # Frische Worktrees haben kein .claude/, sonst scheitert mkdir bis zum Timeout.
+    mkdir -p "$(dirname "$LOCK_DIR")"
     while ! mkdir "$LOCK_DIR" 2>/dev/null; do
         if [ -f "$LOCK_DIR/info" ]; then
             local t; t=$(head -1 "$LOCK_DIR/info" 2>/dev/null || echo 0)
@@ -153,13 +165,99 @@ cmd_launch() {
     release_lock; success "App gestartet ($bundle)."
 }
 
+# --- Stufe 2: Hennings echtes iPhone ---------------------------------------
+# Was der Simulator prinzipiell nicht kann: Apple Intelligence auf dem Gerät,
+# CloudKit-Sync zwischen Geräten, Watch, Action Button, Widgets, Mikrofon. Und:
+# signierte Builds laufen durch Provisioning und Entitlements — genau dort lag
+# der App-Group-Absturz (#55), den der unsignierte Simulator-Build nicht zeigt.
+# Erst laufen lassen, wenn Unit-Tests, UI-Tests und der Simulator grün sind.
+
+# Erstes verbundenes physisches iOS-Gerät, oder LOOSEENDS_DEVICE.
+device_id() {
+    if [ -n "${LOOSEENDS_DEVICE:-}" ]; then echo "$LOOSEENDS_DEVICE"; return; fi
+    $DEVICECTL list devices 2>/dev/null | python3 -c '
+import re, sys
+for line in sys.stdin:
+    if "physical" not in line: continue
+    m = re.search(r"([0-9A-F]{8}-[0-9A-F]{16})\s+\(UDID\)\s+(\S+)", line)
+    if m and m.group(2) != "unavailable":
+        print(m.group(1)); break'
+}
+
+device_derived_data() { echo "$DERIVED_DATA/LooseEnds-device-${SESSION_ID}"; }
+
+require_device() {
+    local id; id=$(device_id)
+    [ -z "$id" ] && { error "Kein verbundenes iPhone. Gerät entsperren und im selben WLAN halten."; return 1; }
+    echo "$id"
+}
+
+cmd_device_status() {
+    local id; id=$(require_device) || return 1
+    info "Gerät: $id"
+    $DEVICECTL device info details --device "$id" 2>&1 |
+        grep -E "Device State|Transport Type|Marketing Name|Platform|OS Version" || true
+}
+
+cmd_device_build() {
+    ensure_project
+    local id; id=$(require_device) || return 1
+    local dd; dd=$(device_derived_data)
+    info "Signierter Build für das Gerät ($id), Team $TEAM_ID"
+    cd "$PROJECT_DIR"
+    local args=(build -project "$PROJECT" -scheme "$SCHEME" -destination "id=$id"
+                -derivedDataPath "$dd" -allowProvisioningUpdates "DEVELOPMENT_TEAM=$TEAM_ID")
+    if command -v xcbeautify >/dev/null; then
+        xcodebuild "${args[@]}" 2>&1 | xcbeautify
+    else
+        xcodebuild "${args[@]}" 2>&1
+    fi
+    success "Gerätebuild erfolgreich."
+}
+
+device_app_path() { echo "$(device_derived_data)/Build/Products/Debug-iphoneos/LooseEnds.app"; }
+
+# Installieren geht auch bei gesperrtem iPhone; Starten braucht ein entsperrtes.
+cmd_device_install() {
+    local id; id=$(require_device) || return 1
+    local app; app=$(device_app_path)
+    [ -d "$app" ] || { error "Erst bauen: ./scripts/sim.sh device-build"; return 1; }
+    info "Installiere drahtlos auf $id"
+    $DEVICECTL device install app --device "$id" "$app" >/dev/null
+    success "Installiert."
+}
+
+cmd_device_launch() {
+    local id; id=$(require_device) || return 1
+    local bundle; bundle=$(plutil -extract CFBundleIdentifier raw "$(device_app_path)/Info.plist")
+    if ! $DEVICECTL device process launch --terminate-existing --device "$id" "$bundle" 2>&1 | tail -3; then
+        error "Start abgelehnt — meist ist das iPhone gesperrt. Entsperren, dann erneut."
+        return 1
+    fi
+    success "Gestartet ($bundle)."
+}
+
+cmd_device() { cmd_device_build && cmd_device_install && cmd_device_launch; }
+
+# Live-Logausgabe vom echten Gerät: das, was bei einem TestFlight-Build fehlt.
+cmd_device_console() {
+    local seconds="${1:-30}"
+    cmd_device_build && cmd_device_install || return 1
+    local id; id=$(require_device) || return 1
+    local bundle; bundle=$(plutil -extract CFBundleIdentifier raw "$(device_app_path)/Info.plist")
+    info "Starte mit Konsole, lese ${seconds}s mit"
+    timeout "$seconds" $DEVICECTL device process launch \
+        --terminate-existing --console --device "$id" "$bundle" 2>&1 || true
+    success "Konsole beendet."
+}
+
 cmd_screenshot() {
     local out="${1:-/tmp/sim_screenshot.png}"; local id; id=$(sim_id)
     rm -f "$out"; $SIMCTL io "$id" screenshot "$out" 2>/dev/null
     [ -f "$out" ] && success "Screenshot: $out" || { error "Screenshot fehlgeschlagen"; return 1; }
 }
 
-cmd_help() { sed -n '3,17p' "$0" | sed 's/^# \{0,1\}//'; }
+cmd_help() { sed -n '3,24p' "$0" | sed 's/^# \{0,1\}//'; }
 
 COMMAND="${1:-help}"; shift 2>/dev/null || true
 case "$COMMAND" in
@@ -173,6 +271,12 @@ case "$COMMAND" in
     status)     cmd_status ;;
     launch)     cmd_launch "$@" ;;
     screenshot) cmd_screenshot "$@" ;;
+    device-status)  cmd_device_status ;;
+    device-build)   cmd_device_build ;;
+    device-install) cmd_device_install ;;
+    device-launch)  cmd_device_launch ;;
+    device-console) cmd_device_console "$@" ;;
+    device)         cmd_device ;;
     help|--help|-h) cmd_help ;;
     *) error "Unbekannter Befehl: $COMMAND"; cmd_help; exit 1 ;;
 esac
