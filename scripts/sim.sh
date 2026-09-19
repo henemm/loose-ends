@@ -14,6 +14,10 @@
 #   ./scripts/sim.sh test <Class[/test]>      # UI-Test im iOS-Simulator
 #   ./scripts/sim.sh boot | status | launch | screenshot [pfad]
 #
+# Messreihen gegen das echte Modell (Spikes #65-#73), Bericht landet in docs/reference/:
+#   ./scripts/sim.sh measure [Suite]          # im Simulator, also mit dem Modell des Mac
+#   ./scripts/sim.sh device-measure [Suite]   # auf dem iPhone, dem Referenzgerät (R4-2)
+#
 # Auf Hennings echtem iPhone — Stufe 2, erst nachdem der Simulator grün war:
 #   ./scripts/sim.sh device-status            # verbundenes Gerät und Verbindungsweg zeigen
 #   ./scripts/sim.sh device                   # signiert bauen, drahtlos installieren, starten
@@ -113,13 +117,33 @@ cmd_generate() {
     success "Projekt erzeugt."
 }
 
+BUILD_LOG=""
 run_xcodebuild() {
     cd "$PROJECT_DIR"
+    mkdir -p "$SESSION_DERIVED_DATA"
+    BUILD_LOG="$SESSION_DERIVED_DATA/xcodebuild.log"
+    # Die Rohausgabe geht ins Log, bevor xcbeautify sie kürzt: Messberichte stehen darin.
     if command -v xcbeautify >/dev/null; then
-        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | xcbeautify
+        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG" | xcbeautify
     else
-        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1
+        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG"
     fi
+}
+
+# Ein Messlauf druckt seinen Bericht zwischen Markern, weil ein Test auf dem iPhone nicht ins
+# Repository schreiben kann. Hier wird er wieder herausgeschnitten und abgelegt.
+extract_reports() {
+    local log="$1"
+    [ -f "$log" ] || return 0
+    python3 - "$log" "$PROJECT_DIR/docs/reference" <<'EOF'
+import re, sys, pathlib
+log, out = pathlib.Path(sys.argv[1]).read_text(errors="replace"), pathlib.Path(sys.argv[2])
+found = re.findall(r"<<<REPORT:([a-z0-9-]+)>>>\n(.*?)\n<<<END REPORT>>>", log, re.S)
+for name, body in found:
+    path = out / f"{name}.md"
+    path.write_text(body.rstrip() + "\n")
+    print(f"[sim] Bericht: {path.relative_to(out.parent.parent)}")
+EOF
 }
 
 # Der Mac kann die Tests nur hosten, wenn sein macOS das Deployment Target
@@ -294,13 +318,56 @@ cmd_device_console() {
     success "Konsole beendet."
 }
 
+# --- Messreihen gegen das echte Modell ----------------------------------------
+# LOOSEENDS_MEASURE schaltet die Messsuiten frei; xcodebuild reicht nur Variablen
+# mit dem Präfix TEST_RUNNER_ an den Testprozess weiter.
+MEASURE_SUITE_DEFAULT="DateTitleFidelityTests"
+
+cmd_measure() {
+    ensure_project; acquire_lock; cmd_boot
+    local id; id=$(sim_id)
+    local suite="${1:-$MEASURE_SUITE_DEFAULT}"
+    info "Messlauf im Simulator: $suite (dauert Minuten, ein Modellaufruf je Satz)"
+    # Gemessen am 2026-09-19: Der iOS-27-Simulator meldet das Modell als verfügbar, hat auf einem
+    # macOS-26-Host aber keine Modell-Assets ("Model Catalog error ... no underlying assets").
+    # Belastbare Zahlen liefert nur device-measure.
+    mac_hosts_tests || warn "macOS $(sw_vers -productVersion) hat für die iOS-Laufzeit kein Gerätemodell — dieser Lauf misst nichts. Nimm device-measure."
+
+    TEST_RUNNER_LOOSEENDS_MEASURE=1 LOOSEENDS_MEASURE=1 \
+        TEST_RUNNER_LOOSEENDS_MEASURE_LIMIT="${LOOSEENDS_MEASURE_LIMIT:-}" \
+        run_xcodebuild test -project "$PROJECT" -scheme "$SCHEME" \
+        -destination "platform=iOS Simulator,id=$id" -only-testing:"$UNIT_TARGET/$suite" \
+        -parallel-testing-enabled NO
+    extract_reports "$BUILD_LOG"
+    release_lock; success "Messlauf beendet."
+}
+
+cmd_device_measure() {
+    ensure_project
+    local id; id=$(require_device) || return 1
+    local suite="${1:-$MEASURE_SUITE_DEFAULT}"
+    local dd; dd=$(device_derived_data)
+    local log="$dd/xcodebuild.log"
+    mkdir -p "$dd"
+    info "Messlauf auf dem iPhone ($id): $suite — Gerät entsperrt lassen und am Strom halten"
+    cd "$PROJECT_DIR"
+    # Am Strom und im Vordergrund, sonst drosselt Apple das Modell (Rate Limit).
+    TEST_RUNNER_LOOSEENDS_MEASURE=1 TEST_RUNNER_LOOSEENDS_MEASURE_LIMIT="${LOOSEENDS_MEASURE_LIMIT:-}" \
+        xcodebuild test -project "$PROJECT" -scheme "$SCHEME" \
+        -destination "id=$id" -only-testing:"$UNIT_TARGET/$suite" \
+        -derivedDataPath "$dd" -allowProvisioningUpdates "DEVELOPMENT_TEAM=$TEAM_ID" \
+        -parallel-testing-enabled NO 2>&1 | tee "$log" | (command -v xcbeautify >/dev/null && xcbeautify || cat)
+    extract_reports "$log"
+    success "Messlauf auf dem Gerät beendet."
+}
+
 cmd_screenshot() {
     local out="${1:-/tmp/sim_screenshot.png}"; local id; id=$(sim_id)
     rm -f "$out"; $SIMCTL io "$id" screenshot "$out" 2>/dev/null
     [ -f "$out" ] && success "Screenshot: $out" || { error "Screenshot fehlgeschlagen"; return 1; }
 }
 
-cmd_help() { sed -n '3,24p' "$0" | sed 's/^# \{0,1\}//'; }
+cmd_help() { sed -n '3,29p' "$0" | sed 's/^# \{0,1\}//'; }
 
 COMMAND="${1:-help}"; shift 2>/dev/null || true
 case "$COMMAND" in
@@ -320,6 +387,8 @@ case "$COMMAND" in
     device-launch)  cmd_device_launch ;;
     device-console) cmd_device_console "$@" ;;
     device)         cmd_device ;;
+    measure)        cmd_measure "$@" ;;
+    device-measure) cmd_device_measure "$@" ;;
     help|--help|-h) cmd_help ;;
     *) error "Unbekannter Befehl: $COMMAND"; cmd_help; exit 1 ;;
 esac
