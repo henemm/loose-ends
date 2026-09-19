@@ -14,9 +14,10 @@
 #   ./scripts/sim.sh test <Class[/test]>      # UI-Test im iOS-Simulator
 #   ./scripts/sim.sh boot | status | launch | screenshot [pfad]
 #
-# Messreihen gegen das echte Modell (Spikes #65-#73), Bericht landet in docs/reference/:
-#   ./scripts/sim.sh measure [Suite]          # im Simulator, also mit dem Modell des Mac
-#   ./scripts/sim.sh device-measure [Suite]   # auf dem iPhone, dem Referenzgerät (R4-2)
+# Messreihen gegen das echte Modell (Spikes #65-#73), ohne das iPhone zu belegen:
+#   ./scripts/sim.sh lab                      # Labor-App aufs iPhone bringen
+#   ./scripts/sim.sh lab-fetch                # Ergebnisse vom iPhone holen (still, ohne Zutun)
+#   ./scripts/sim.sh report                   # Bericht aus den geholten Ergebnissen bauen
 #
 # Auf Hennings echtem iPhone — Stufe 2, erst nachdem der Simulator grün war:
 #   ./scripts/sim.sh device-status            # verbundenes Gerät und Verbindungsweg zeigen
@@ -319,46 +320,55 @@ cmd_device_console() {
 }
 
 # --- Messreihen gegen das echte Modell ----------------------------------------
-# LOOSEENDS_MEASURE schaltet die Messsuiten frei; xcodebuild reicht nur Variablen
-# mit dem Präfix TEST_RUNNER_ an den Testprozess weiter.
-MEASURE_SUITE_DEFAULT="DateTitleFidelityTests"
+# Gemessen wird in der Labor-App auf dem iPhone, nicht in einem Testlauf: ein Testlauf belegt
+# das Gerät am Stück und entsperrt, bis er fertig ist. Henning benutzt sein iPhone den ganzen
+# Tag. Die Labor-App misst in Scheiben, sichert nach jedem Satz und macht später weiter.
+LAB_SCHEME="LooseEndsLab"
+LAB_BUNDLE="com.henning.looseends.lab"
+LAB_RESULTS="Measurement/results"
 
-cmd_measure() {
-    ensure_project; acquire_lock; cmd_boot
-    local id; id=$(sim_id)
-    local suite="${1:-$MEASURE_SUITE_DEFAULT}"
-    info "Messlauf im Simulator: $suite (dauert Minuten, ein Modellaufruf je Satz)"
-    # Gemessen am 2026-09-19: Der iOS-27-Simulator meldet das Modell als verfügbar, hat auf einem
-    # macOS-26-Host aber keine Modell-Assets ("Model Catalog error ... no underlying assets").
-    # Belastbare Zahlen liefert nur device-measure.
-    mac_hosts_tests || warn "macOS $(sw_vers -productVersion) hat für die iOS-Laufzeit kein Gerätemodell — dieser Lauf misst nichts. Nimm device-measure."
-
-    TEST_RUNNER_LOOSEENDS_MEASURE=1 LOOSEENDS_MEASURE=1 \
-        TEST_RUNNER_LOOSEENDS_MEASURE_LIMIT="${LOOSEENDS_MEASURE_LIMIT:-}" \
-        run_xcodebuild test -project "$PROJECT" -scheme "$SCHEME" \
-        -destination "platform=iOS Simulator,id=$id" -only-testing:"$UNIT_TARGET/$suite" \
-        -parallel-testing-enabled NO
-    extract_reports "$BUILD_LOG"
-    release_lock; success "Messlauf beendet."
-}
-
-cmd_device_measure() {
+cmd_lab() {
     ensure_project
     local id; id=$(require_device) || return 1
-    local suite="${1:-$MEASURE_SUITE_DEFAULT}"
     local dd; dd=$(device_derived_data)
-    local log="$dd/xcodebuild.log"
-    mkdir -p "$dd"
-    info "Messlauf auf dem iPhone ($id): $suite — Gerät entsperrt lassen und am Strom halten"
+    info "Labor-App signiert bauen für $id"
     cd "$PROJECT_DIR"
-    # Am Strom und im Vordergrund, sonst drosselt Apple das Modell (Rate Limit).
-    TEST_RUNNER_LOOSEENDS_MEASURE=1 TEST_RUNNER_LOOSEENDS_MEASURE_LIMIT="${LOOSEENDS_MEASURE_LIMIT:-}" \
-        xcodebuild test -project "$PROJECT" -scheme "$SCHEME" \
-        -destination "id=$id" -only-testing:"$UNIT_TARGET/$suite" \
-        -derivedDataPath "$dd" -allowProvisioningUpdates "DEVELOPMENT_TEAM=$TEAM_ID" \
-        -parallel-testing-enabled NO 2>&1 | tee "$log" | (command -v xcbeautify >/dev/null && xcbeautify || cat)
-    extract_reports "$log"
-    success "Messlauf auf dem Gerät beendet."
+    local args=(build -project "$PROJECT" -scheme "$LAB_SCHEME" -destination "id=$id"
+                -derivedDataPath "$dd" -allowProvisioningUpdates "DEVELOPMENT_TEAM=$TEAM_ID")
+    if command -v xcbeautify >/dev/null; then
+        xcodebuild "${args[@]}" 2>&1 | xcbeautify
+    else
+        xcodebuild "${args[@]}" 2>&1
+    fi
+    local app="$dd/Build/Products/Debug-iphoneos/LooseEndsLab.app"
+    [ -d "$app" ] || { error "Labor-App nicht gebaut"; return 1; }
+    $DEVICECTL device install app --device "$id" "$app" >/dev/null
+    success "Labor-App installiert."
+}
+
+# Holt die Ergebnisdatei aus dem App-Container. Braucht nur, dass das iPhone im WLAN ist:
+# kein Kabel, kein Xcode, kein Handgriff.
+cmd_lab_fetch() {
+    local id; id=$(require_device) || return 1
+    local name="${1:-date-title}"
+    mkdir -p "$PROJECT_DIR/$LAB_RESULTS"
+    info "Hole $name.json vom iPhone"
+    if ! $DEVICECTL device copy from --device "$id" --user mobile \
+            --domain-type appDataContainer --domain-identifier "$LAB_BUNDLE" \
+            --source "Documents/$name.json" \
+            --destination "$PROJECT_DIR/$LAB_RESULTS/$name.json" 2>&1 | tail -3; then
+        warn "Nichts abzuholen - die Labor-App hat noch nicht gemessen."
+        return 1
+    fi
+    python3 "$PROJECT_DIR/scripts/measurement-summary.py" "$PROJECT_DIR/$LAB_RESULTS/$name.json" || true
+    success "Ergebnisse in $LAB_RESULTS/$name.json"
+}
+
+cmd_report() {
+    ensure_project
+    info "Bericht aus den geholten Ergebnissen"
+    cmd_unit "DateTitleReportTests"
+    success "Bericht in docs/reference/."
 }
 
 cmd_screenshot() {
@@ -387,8 +397,9 @@ case "$COMMAND" in
     device-launch)  cmd_device_launch ;;
     device-console) cmd_device_console "$@" ;;
     device)         cmd_device ;;
-    measure)        cmd_measure "$@" ;;
-    device-measure) cmd_device_measure "$@" ;;
+    lab)            cmd_lab ;;
+    lab-fetch)      cmd_lab_fetch "$@" ;;
+    report)         cmd_report ;;
     help|--help|-h) cmd_help ;;
     *) error "Unbekannter Befehl: $COMMAND"; cmd_help; exit 1 ;;
 esac

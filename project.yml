@@ -165,6 +165,34 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends.share
 
+  # Messprogramm für die Spikes: eine eigene, wegwerfbare App auf Hennings iPhone. Sie misst in
+  # Scheiben, wann immer er sie öffnet, und rührt die echten Daten nicht an — keine App-Gruppe,
+  # kein CloudKit. Nur der Veredeler und die Aufzählungen, die er braucht.
+  LooseEndsLab:
+    type: application
+    platform: iOS
+    sources:
+      - LooseEndsLab
+      - Measurement
+      - path: Shared/Enrichment/EnrichmentDraft.swift
+      - path: Shared/Enrichment/FoundationModelsEnricher.swift
+      - path: Shared/Models/Enums.swift
+    info:
+      path: LooseEndsLab/Info.plist
+      properties:
+        CFBundleDisplayName: LE Labor
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen: {}
+        UIBackgroundModes: [processing]
+        # Wildcard-Kennung, wie der Scheduler sie für fortgesetzte Verarbeitung verlangt.
+        BGTaskSchedulerPermittedIdentifiers: [com.henning.looseends.lab.measure.*]
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends.lab
+
   LooseEndsTests:
     type: bundle.unit-test
     supportedDestinations: [iOS, macOS]

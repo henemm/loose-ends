@@ -126,6 +126,21 @@ Die Fragen aus #74 sind mit Runde 4 beantwortet (R4-1 bis R4-4). Beim Aufbau der
   derselbe Befund: Ein Nachzügler-Lauf über viele Aufgaben im Hintergrund läuft in dieselbe Grenze
   (#21, #72).
 
+**Daraus folgt der Aufbau jeder weiteren Messreihe.** Ein Testlauf belegt das Gerät am Stück und
+entsperrt, bis er fertig ist — Hennings iPhone ist ein Arbeitsgerät, kein Prüfstand. Gemessen wird
+deshalb in einer eigenen, wegwerfbaren Labor-App (`LooseEndsLab`), die in Scheiben misst: Er öffnet
+sie, wenn es ihm passt, jeder Satz wird sofort gesichert, ein Abbruch kostet nichts, beim nächsten
+Öffnen läuft sie weiter. Nach seinem Tippen darf sie über `BGContinuedProcessingTask` im
+Hintergrund weiterrechnen — sichtbar in der Dynamic Island, jederzeit abbrechbar; von selbst
+startet nichts (seine Entscheidung). Die Ergebnisse holt der Mac still aus dem App-Container
+(`sim.sh lab-fetch`), gerechnet wird dort.
+
+Weil sich eine Messreihe damit über Tage zieht, trägt **jeder einzelne Satz seinen eigenen Messtag
+und seine eigenen Bedingungen** (Vordergrund/Hintergrund, Akku/Strom, Akkustand, Stromsparmodus,
+Wärmezustand). Der Bericht weist die Trefferquote nach Bedingung getrennt aus. Damit ist die Frage
+„wurde unter realistischen Bedingungen gemessen?" nicht mehr Auslegungssache, sondern eine Zeile in
+der Tabelle.
+
 ## Was vorher geklärt werden muss (#74)
 
 - **Welches Modell gemessen wird.** Mac = 26er-Generation, iPhone = 27er. Entweder macOS 27 auf dem Mac
