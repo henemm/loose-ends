@@ -119,6 +119,13 @@
     "Open" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Offen" } } } },
     "Show in calendar" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Im Kalender anzeigen" } } } },
     "Shows up once the task has a due date." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erscheint, sobald die Aufgabe eine Fälligkeit hat." } } } },
-    "Calendar access is off in Settings." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Der Kalenderzugriff ist in den Einstellungen aus." } } } }
+    "Calendar access is off in Settings." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Der Kalenderzugriff ist in den Einstellungen aus." } } } },
+    "Recognize speech via Apple?" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Spracherkennung über Apple?" } } } },
+    "Speech recognition on this device did not start. Loose Ends can let Apple recognize it instead — your recording leaves the device in that case. Typing always works." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Die Spracherkennung auf diesem Gerät ist nicht gestartet. Loose Ends kann sie stattdessen von Apple erledigen lassen — deine Aufnahme verlässt dann das Gerät. Tippen geht immer." } } } },
+    "Speech recognition on this device did not start." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Die Spracherkennung auf diesem Gerät ist nicht gestartet." } } } },
+    "Speech recognition is not available. You can type instead." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Spracherkennung ist nicht verfügbar. Du kannst stattdessen tippen." } } } },
+    "Speech recognition on this device is not available. You can type instead." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Spracherkennung auf diesem Gerät ist nicht verfügbar. Du kannst stattdessen tippen." } } } },
+    "Allow" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erlauben" } } } },
+    "Not now" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Jetzt nicht" } } } }
   }
 }

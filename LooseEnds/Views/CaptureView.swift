@@ -28,6 +28,12 @@ struct CaptureView: View {
         !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
+    /// Der Zustand gehört der Erfassung, nicht der Ansicht; die Ansicht darf ihn nur ablesen und
+    /// die Frage schließen, indem sie sie beantwortet.
+    private var needsConsentBinding: Binding<Bool> {
+        Binding(get: { speech.state == .needsServerConsent }, set: { _ in })
+    }
+
     /// UI tests run without a microphone; they get the keyboard straight away.
     private var speechWanted: Bool {
         !ModelContainerFactory.isUITesting
@@ -69,6 +75,18 @@ struct CaptureView: View {
             .alert("Could not save", isPresented: $saveFailed) {
                 Button("OK") {}
             }
+            // Einmal-Frage: Die Erkennung auf dem Gerät kam nicht hoch. Nur mit ausdrücklicher
+            // Zustimmung geht die Aufnahme zur Erkennung an Apple — die Antwort wird gemerkt.
+            .alert("Recognize speech via Apple?", isPresented: needsConsentBinding) {
+                Button("Not now", role: .cancel) {
+                    Task { await speech.answerServerConsent(false) }
+                }
+                Button("Allow") {
+                    Task { await speech.answerServerConsent(true) }
+                }
+            } message: {
+                Text("Speech recognition on this device did not start. Loose Ends can let Apple recognize it instead — your recording leaves the device in that case. Typing always works.")
+            }
         }
         .onAppear(perform: begin)
         .onDisappear { speech.stop() }
@@ -95,6 +113,11 @@ struct CaptureView: View {
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .accessibilityIdentifier("speechUnavailableLabel")
+        case .needsServerConsent:
+            Text("Speech recognition on this device did not start.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .accessibilityIdentifier("speechConsentLabel")
         case .idle, .listening:
             HStack(spacing: 12) {
                 WaveformView(levels: speech.waveform.levels)
