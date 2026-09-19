@@ -45,6 +45,9 @@ targets:
         com.apple.security.network.client: true
         com.apple.security.device.audio-input: true
         com.apple.security.personal-information.calendars: true
+        # CloudKit mirroring pushes silently; without this the device never hears about a change
+        # made elsewhere. Xcode swaps the value for "production" on an App Store export.
+        aps-environment: development
     info:
       path: LooseEnds/Info.plist
       properties:
@@ -53,6 +56,10 @@ targets:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UILaunchScreen: {}
+        # Required alongside aps-environment, or CloudKit logs
+        # "BUG IN CLIENT OF CLOUDKIT: CloudKit push notifications require the
+        # 'remote-notification' background mode" and sync only catches up on a cold start.
+        UIBackgroundModes: [remote-notification]
         ITSAppUsesNonExemptEncryption: false   # no custom crypto: TestFlight skips the export-compliance question
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
@@ -86,12 +93,14 @@ targets:
         com.apple.developer.icloud-container-identifiers: [iCloud.com.henning.looseends]
         com.apple.developer.icloud-services: [CloudKit]
         com.apple.security.application-groups: [group.com.henning.looseends]
+        aps-environment: development   # the watch mirrors the same store and needs its own pushes
     info:
       path: LooseEndsWatch/Info.plist
       properties:
         CFBundleDisplayName: Loose Ends
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UIBackgroundModes: [remote-notification]
         WKApplication: true
         WKCompanionAppBundleIdentifier: com.henning.looseends
         WKRunsIndependentlyOfCompanionApp: true

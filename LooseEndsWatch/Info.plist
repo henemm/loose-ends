@@ -24,6 +24,10 @@
 	<string>Loose Ends listens so you can say a task.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Speech is turned into text on your watch to capture a task.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>WKApplication</key>
 	<true/>
 	<key>WKCompanionAppBundleIdentifier</key>
