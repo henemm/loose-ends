@@ -23,7 +23,7 @@ sind daher meist nur Zeitverlust.
 | Mitteilung | "Heute fällig" um 9 Uhr mit Erledigt, Als nächstes, Morgen | `Shared/Notifications`, `LooseEnds/Notifications` |
 | Kalender | Eigener Kalender "Loose Ends", ein Termin je Aufgabe mit Schalter und Fälligkeit, Abgleich nach jedem Speichern | `Shared/Services/CalendarSync.swift`, `LooseEnds/Calendar/CalendarBridge.swift` |
 | Auslieferung | CI (Unit, iOS-Build, UI-Smoke), TestFlight-Workflow, Anleitung | `.github/workflows`, `docs/reference/testflight.md` |
-| Lernkorpus | FocusBlox-Export (287 Aufgaben), Konfidenzschwelle kalibriert und bestätigt (0,6) | `scripts/export-focusblox-corpus.swift`, `LooseEndsTests/FocusBloxCalibrationTests.swift` |
+| Lernkorpus | FocusBlox-Export (287 Aufgaben), Konfidenz-Kalibrierung gelaufen: Konfidenz trennt nicht (siehe `06-annahmen-und-experimente.md`, #65) | `scripts/export-focusblox-corpus.swift`, `LooseEndsTests/FocusBloxCalibrationTests.swift` |
 | Logo | App-Icon "der Knoten" in Petrol: Hell, Dunkel, Getönt, Mac, Watch; Akzentfarbe Petrol; SVG-Quellen | `LooseEnds/Resources/Assets.xcassets`, `docs/design/logo/` |
 
 ## Offen, nach Priorität
@@ -38,6 +38,21 @@ Prioritätsreihenfolge; Details, Umfang und DoD stehen im jeweiligen Issue.
 2. [#21](https://github.com/henemm/loose-ends/issues/21) SystemLanguageModel in Extension/BGAppRefreshTask verlässlich?
 3. [#22](https://github.com/henemm/loose-ends/issues/22) Kaltstart Erfassungs-Szene unter einer Sekunde?
 4. [#24](https://github.com/henemm/loose-ends/issues/24) Mail-Share-Extension: `message:`-URL zuverlässig?
+
+**Tragende Annahmen des Produkts** (`docs/project/06-annahmen-und-experimente.md`, 2026-09-19): Die
+Kalibrierung zu #23 zeigt, dass die Modell-Konfidenz richtig nicht von falsch trennt. Bevor weitere
+Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
+
+- [#74](https://github.com/henemm/loose-ends/issues/74) PO-Entscheidungen: Daten, Messgerät, Inventar
+- [#67](https://github.com/henemm/loose-ends/issues/67) Datum- und Titel-Treue (falsch ist hier nicht „ein Handgriff")
+- [#65](https://github.com/henemm/loose-ends/issues/65) Unsicherheitssignal, das richtig von falsch trennt
+- [#66](https://github.com/henemm/loose-ends/issues/66) Steht die Information überhaupt im Text?
+- [#68](https://github.com/henemm/loose-ends/issues/68) Nachweis: Modell je Gerät, Prozess, Zustand
+- [#69](https://github.com/henemm/loose-ends/issues/69) Wirken Retrieval-Beispiele? (vor #26)
+- [#70](https://github.com/henemm/loose-ends/issues/70) Textform: getippt, diktiert, Mail, Englisch
+- [#71](https://github.com/henemm/loose-ends/issues/71) Guardrail-Verweigerungsrate
+- [#72](https://github.com/henemm/loose-ends/issues/72) Token- und Latenzbudget
+- [#73](https://github.com/henemm/loose-ends/issues/73) Dauerlauf je OS-Stand
 
 **Danach Features, nach Priorität:**
 
