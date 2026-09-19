@@ -35,14 +35,27 @@ wie „iPhone 17" gibt es unter mehreren iOS-Versionen, und die falsche lehnt Xc
 Das Projekt ist generiert und nicht versioniert: Nach jedem neuen Stand muss `generate` laufen,
 sonst kennt Xcode die neu hinzugekommenen Dateien nicht und baut eine App ohne die neuen Views.
 
-Set `DEVELOPMENT_TEAM` once in Xcode (Signing & Capabilities); it is intentionally empty in `project.yml`.
-`scripts/sim.sh` passes the team explicitly for device builds (`LOOSEENDS_TEAM_ID`, default `XK87E2B3VR`).
+`DEVELOPMENT_TEAM` steht in `project.yml` (`XK87E2B3VR`) und darf dort nicht geleert werden: Xcode
+legt das Team in der erzeugten Projektdatei ab, die bei jedem `generate` neu geschrieben wird — ein
+leerer Wert heißt, dass Xcode nach dem nächsten Stand jeden Gerätestart verweigert.
 
 **Acceptance runs in three stages and none may be skipped** — tests, then Simulator, then Henning's
 iPhone 16 Pro (`./scripts/sim.sh device`, paired over the local network). A change is only done once
 it ran on the device. `docs/project/04-stand.md` has the reasoning and the commands. TestFlight is a
 distribution channel, not a stage: it gives no debugger and no live logs, so it stays dormant until
 people other than Henning test.
+
+**⛔ Ausliefern ist Teil jedes Tickets — der letzte Schritt vor Hennings eigenem Test.** Gearbeitet
+wird in einem Worktree, gebaut wird bei Henning aus `/Users/hem/Developer/loose-ends`. Nach dem Merge
+und bevor er selbst testet, muss dort beides stimmen:
+
+```bash
+bash ~/.claude/scripts/loose-ends-sync-main.sh   # main nachziehen + Projekt neu erzeugen
+```
+
+Ohne diesen Schritt startet Xcode bei ihm den Stand von vorher — am 2026-09-19 war das eine App ohne
+Erfassungs-Button, weil die erzeugte Projektdatei 70 neue Dateien nicht kannte. Ein Ticket ohne
+diesen Schritt ist nicht fertig, egal wie grün die Tests sind.
 
 CI runs on GitHub's `macos-26` image. Until that image ships Xcode 27, each CI job lowers the deployment
 targets in `project.yml` to 26.0 before generating the project (Xcode only offers simulators that meet
