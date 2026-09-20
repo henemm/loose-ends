@@ -1,0 +1,17 @@
+# RED-Lauf 2026-09-20 14:10 nach dem Befund des PO-Briefings: Diktat-Sätze ohne Füllwort,
+# Issue #82 verlangt "Diktat ohne Satzzeichen mit Füllwörtern".
+# ./scripts/sim.sh unit — 12 Erwartungen fehlgeschlagen, alle in corpusHasSentenceForms
+# (CorpusTests.swift:142, hasFiller), die übrigen 89 Tests grün.
+
+Suite "Korpus-Regelwerk" started
+    ✔ "Tagesversatz zählt vom Erfassungstag" (0.014 seconds)
+    ✔ "Wochentag meint den nächsten, am Tag selbst auch heute" (0.001 seconds)
+    ✔ "Nächste Woche meint die Folgewoche, nächster Freitag beides" (0.001 seconds)
+    ✔ "Monatsende, Tag im Monat, Wochenende" (0.009 seconds)
+    ✔ "Nächster Monat lässt jeden Tag des Folgemonats gelten" (0.002 seconds)
+    ✔ "Datum mit Monat rollt ins nächste Jahr, wenn es vorbei ist" (0.001 seconds)
+    ✔ "Am Sonntag meint 'am Wochenende' heute und das nächste Wochenende" (0.001 seconds)
+    ✔ "Monatsende im Februar und Jahreswechsel" (0.003 seconds)
+    ✔ "Der Korpus lädt, ist eindeutig und jede Entität steht im Rohtext" (0.020 seconds)
+    ⚠️  Test "Der Korpus kennt Hennings Bauformen, mindestens 100 Sätze außerhalb der Standardform" recorded an issue at CorpusTests.swift:142:17: Expectation failed: hasFiller
+    (… dieselbe Erwartung 12-mal: de-diktat-1…9, en-dictation-1…3 …)

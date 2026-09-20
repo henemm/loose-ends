@@ -1,31 +1,32 @@
 ---
 spec_file: docs/specs/measurement/issue-82-satzformen.md
-spec_sha256: c369a37e1cd08cfd48fc8587b1c2dc74d86eb1773fbcf998699e7774f38993df
+spec_sha256: 9da4dc0ce6c3ef37179601290f3606fc6aec03a4702f702b52fbe26412ea13bb
 ---
 
 # PO-Briefing: issue-82-satzformen
 
 - **Spec:** docs/specs/measurement/issue-82-satzformen.md
-- **Issue:** #82
+- **Issue:** #82 (Schnitt 1, #87)
 - **Erstellt:** 2026-09-20
 
 ## Was gebaut wird
 
-Die Testsätze für die Messung bekommen vielfältigere Formen (Stichwörter, Ich-Sätze, Fragen, Diktate), der Bericht zeigt Ergebnisse je Form.
+Der Testkorpus bekommt 114 neue, unterschiedlich aufgebaute Sätze und der Bericht wertet sie getrennt nach Satzform aus.
 
 ## Definition of Done
 
-Fertig ist es, wenn der Bericht die Trefferquote je Satzform zeigt und alle bisherigen Auswertungen weiter funktionieren.
+Der Korpus enthält mindestens 100 Sätze in neun geforderten Formen, und der Bericht zeigt die Trefferquote je Form.
 
 ## Wie geprüft wird
 
-Automatisierte Tests prüfen, ob jede Satzform korrekt erkannt und ausgewertet wird; eine echte Messung auf dem Gerät folgt separat.
+Automatisierte Tests prüfen Form und Menge der Sätze; ob das Modell an echten Sätzen besser abschneidet, zeigt erst Schnitt 2.
 
 ## Kritische Anmerkungen
 
-- Hennings 108 tatsächliche Rohsätze aus FocusBlox fehlen in diesem Schnitt; nur erfundene Sätze in seinem Stil werden gemessen.
-- Die neue Satzverteilung bildet Hennings reale Nutzung (nur 12 % mit Zeitangabe) nicht nach; Formen sind nur gleichmäßig aufgeteilt.
+- Nur der Testkorpus wächst; echte iPhone-Sätze und eine neue Messung folgen erst in Schnitt 2 (#88).
+- Noch nicht bei Henning angekommen: nicht übernommen, nicht auf seinem iPhone installiert, Prüfung noch offen.
+- Der Plan ergänzt zwei Satzformen (Präfix, Diktat-Namensfehler), die im Issue nicht ausdrücklich verlangt waren.
 
 ## Freigabe-Frage
 
-Reicht es, jetzt nur erfundene Sätze in vielfältigen Formen zu messen, während Ihre echten 108 Sätze in einem späteren Schritt folgen?
+Reicht dir ein vielfältigerer, aber weiterhin künstlicher Testkorpus mit Formen-Auswertung als Zwischenschritt, bevor echte iPhone-Sätze folgen?

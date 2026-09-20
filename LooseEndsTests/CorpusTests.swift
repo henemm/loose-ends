@@ -114,6 +114,10 @@ struct CorpusTests {
     /// Issue #82: the corpus must carry Henning's sentence forms, not only "time, object, verb".
     /// Every form is named, every named form is known, and each one is thick enough to give a
     /// rate of its own in the report.
+    /// Spoken filler words that mark a dictated sentence. Deliberately without "um", "so" or
+    /// "dann": those also carry meaning in ordinary sentences and would pass by accident.
+    static let dictationFillers: Set<String> = ["äh", "ähm", "also", "halt", "quasi", "irgendwie", "uh", "erm", "like", "okay"]
+
     @Test("Der Korpus kennt Hennings Bauformen, mindestens 100 Sätze außerhalb der Standardform")
     func corpusHasSentenceForms() throws {
         let entries = try Corpus.load()
@@ -132,7 +136,10 @@ struct CorpusTests {
             case "stichwort": #expect(words.count <= 3, "\(entry.id): Stichwort mit \(words.count) Wörtern")
             case "frage": #expect(entry.text.hasSuffix("?"), "\(entry.id): Frage ohne Fragezeichen")
             case "ich-satz": #expect(words.first?.lowercased() == "ich", "\(entry.id): Ich-Satz beginnt nicht mit „ich“")
-            case "diktat": #expect(entry.text == entry.text.lowercased() && !entry.text.contains(","), "\(entry.id): Diktat mit Großschreibung oder Satzzeichen")
+            case "diktat":
+                #expect(entry.text == entry.text.lowercased() && !entry.text.contains(","), "\(entry.id): Diktat mit Großschreibung oder Satzzeichen")
+                let hasFiller = words.contains { Self.dictationFillers.contains($0.lowercased()) }
+                #expect(hasFiller, "\(entry.id): Diktat ohne Füllwort (Issue #82 verlangt „äh also morgen dann …“)")
             default: break
             }
         }

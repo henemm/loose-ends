@@ -3,16 +3,16 @@ entity_id: issue-82-satzformen
 type: feature
 created: 2026-09-20
 updated: 2026-09-20
-status: draft
+status: implemented
 ---
 
 # Spec: #82 — Messkorpus in Hennings Satzformen (Schnitt 1: Bauformen und Bericht)
 
-**Status:** draft · **Workflow:** issue-82-satzformen · **Erstellt:** 2026-09-20 · **Aktualisiert:** 2026-09-20
+**Status:** implemented · **Workflow:** issue-82-satzformen · **Erstellt:** 2026-09-20 · **Aktualisiert:** 2026-09-20
 
 ## Freigabe
 
-- [ ] Freigegeben
+- [x] Freigegeben
 
 ## Problem
 Der Messkorpus für #67 (203 Sätze) ist in einer Form geschrieben: Zeitangabe vorn, Objekt, Verb
@@ -45,7 +45,8 @@ verwischen.
   Entitäten, Personen).
 - **AC-3 Formen sind echt:** Given ein Satz mit Bauform / When der Korpustest läuft / Then hält
   er die Form: Stichwort höchstens 3 Wörter, Frage endet mit „?", Ich-Satz beginnt mit „ich",
-  Diktat klein geschrieben und ohne Komma. Entitäten stehen wörtlich im Rohtext, auch bei
+  Diktat klein geschrieben, ohne Komma und mit mindestens einem gesprochenen Füllwort („äh",
+  „also", „halt", „uh", „like" …), wie im Issue verlangt. Entitäten stehen wörtlich im Rohtext, auch bei
   Tipp- und Diktatfehlern (der Fehler ist Teil des Satzes).
 - **AC-4 Bericht nach Bauform:** Given geholte Messläufe / When der Bericht gebaut wird / Then
   enthält er den Abschnitt „Nach Bauform" mit einer Zeile je Bauform: Sätze, Datum exakt (Anteil
@@ -96,8 +97,8 @@ Bauform als optionaler JSON-Schlüssel `form` nach dem bestehenden Muster für o
 auseinanderlaufen können — eine Form kann beim Datum gut und beim Titel schlecht abschneiden. Die
 neuen Sätze werden per Skript angehängt (Wahrheit als Regel, Entitäten wörtlich aus dem Rohtext);
 das Skript bleibt außerhalb des Repos, der Korpus selbst ist die Quelle. Formprüfungen im Test
-(Stichwort höchstens 3 Wörter, Frage endet mit „?", Ich-Satz beginnt mit „ich", Diktat klein und
-ohne Komma) verhindern, dass eine Form nur dem Namen nach existiert. Entitäten bei Tipp- und
+(Stichwort höchstens 3 Wörter, Frage endet mit „?", Ich-Satz beginnt mit „ich", Diktat klein,
+ohne Komma und mit Füllwort) verhindern, dass eine Form nur dem Namen nach existiert. Entitäten bei Tipp- und
 Diktatfehlern werden wie getippt geführt („Dativ", „Öz Demir") — korrigiert das Modell, zählt das
 als verlorene Entität; das ist der gewollte Befund. Namens-Tippfehler bekommen darum keinen
 `people`-Eintrag, sonst würde die Korrektur über `alteredNames` fälschlich als erfundener Fakt
@@ -106,14 +107,14 @@ gezählt.
 ## Testplan
 
 ### Automatisierte Tests (TDD RED)
-- [ ] `CorpusTests.corpusHasSentenceForms` (liegt vor, RED): GIVEN der Korpus / WHEN er geladen
+- [x] `CorpusTests.corpusHasSentenceForms` (liegt vor, RED): GIVEN der Korpus / WHEN er geladen
   wird / THEN trägt jeder Satz eine Bauform aus der festen Liste, stehen mindestens 100 Sätze
   außerhalb `standard` mit mindestens 6 Sätzen je Bauform, und hält jede Form ihre Formprüfung
   (AC-1, AC-2, AC-3).
-- [ ] `DateTitleReportTests.DateTitleFormSectionTests` (liegt vor, RED): GIVEN geholte Messläufe /
+- [x] `DateTitleReportTests.DateTitleFormSectionTests` (liegt vor, RED): GIVEN geholte Messläufe /
   WHEN der Bericht gebaut wird / THEN enthält er den Abschnitt „Nach Bauform" mit Datum exakt,
   Datum erfunden und Titel-Fakten je Bauform, und „–" statt 0 %/100 % bei leeren Kriterien (AC-4).
-- [ ] Bestehende Suiten (`corpusIsSound`, Messlauf-Datei-Tests, Report-Tests): GIVEN der erweiterte
+- [x] Bestehende Suiten (`corpusIsSound`, Messlauf-Datei-Tests, Report-Tests): GIVEN der erweiterte
   Korpus / WHEN bestehende Leser (Labor-App, Bericht, #78-Benchmark) ihn laden / THEN bleiben sie
   unverändert lauffähig, keine Regression (AC-5, AC-6).
 
@@ -122,12 +123,13 @@ installiert die Labor-App mit dem neuen Korpus; Hennings nächster Lauf zeigt �
 
 ## Definition of Done
 
-- [ ] AC-1 bis AC-6 erfüllt, belegt durch die genannten Tests
-- [ ] Alle Unit-Tests grün (`./scripts/sim.sh unit`), CI grün
-- [ ] Korpuszahl in `docs/project/04-stand.md` aktualisiert
-- [ ] PR mit `Closes` auf ein Sub-Issue von #82 (Schnitt 1) gemergt; Hennings Hauptordner nachgezogen und Projekt neu erzeugt
+- [x] AC-1 bis AC-6 erfüllt, belegt durch die genannten Tests
+- [x] Alle Unit-Tests grün (`./scripts/sim.sh unit`)
+- [ ] CI grün
+- [x] Korpuszahl in `docs/project/04-stand.md` aktualisiert
+- [ ] PR mit `Closes` auf ein Sub-Issue von #82 (Schnitt 1, #87) gemergt; Hennings Hauptordner nachgezogen und Projekt neu erzeugt
 - [ ] Labor-App mit dem neuen Korpus auf Hennings iPhone installiert (`./scripts/sim.sh lab`), kein Fernstart
-- [ ] Sub-Issue für Schnitt 2 (Hennings Rohsätze, Gewichtung) angelegt und in #82 verlinkt
+- [x] Sub-Issue für Schnitt 2 (Hennings Rohsätze, Gewichtung) angelegt und in #82 verlinkt (#88)
 
 ## Architektur-Entscheidung (ADR)
 
@@ -141,3 +143,8 @@ installiert die Labor-App mit dem neuen Korpus; Hennings nächster Lauf zeigt �
 - 2026-09-20: Spec aus dem Analyse-Kontext (`docs/context/issue-82-satzformen.md`) erstellt;
   Pflichtfelder (Status, Freigabe, Zweck, Quelle, Abhängigkeiten, Umfang-Tabelle, ADR, Changelog)
   gegenüber dem Entwurf ergänzt.
+- 2026-09-20: Implementiert und validiert: 90 Unit-Tests grün, Adversary VERIFIED, AC-1 bis AC-6
+  erfüllt.
+- 2026-09-20: Befund des PO-Briefings nachgezogen: Issue #82 verlangt Diktate „mit Füllwörtern",
+  die Spec hatte das Kriterium verloren. AC-3 ergänzt, Korpustest prüft ein Füllwort je Diktat,
+  alle zwölf Diktat-Sätze (keiner bisher gemessen) umformuliert.
