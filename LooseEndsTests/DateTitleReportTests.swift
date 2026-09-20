@@ -176,7 +176,7 @@ struct DateTitleReportTests {
             "|---|---|---|",
             "| Exakt getroffen | \(percent(report.model.share)) von \(report.model.total) | \(percent(report.parser.share)) von \(report.parser.total) |",
             "| Feld leer gelassen statt geraten | \(report.model.empty) | \(report.parser.empty) |",
-            "| Erfundene Daten bei Sätzen ohne Datum | \(percent(1 - report.invented.share)) von \(report.invented.total) | \(percent(1 - report.parserInvented.share)) von \(report.parserInvented.total) |",
+            "| Erfundene Daten bei Sätzen ohne Datum | \(inverse(report.invented)) | \(inverse(report.parserInvented)) |",
             "",
             "### Nach Art des Ausdrucks",
             "",
@@ -219,17 +219,21 @@ struct DateTitleReportTests {
     }
 
     static func verdictSection(_ report: Report) -> String {
-        let invented = 1 - report.invented.share
-        let hallucination = 1 - report.facts.share
-        func verdict(_ passed: Bool) -> String { passed ? "gehalten" : "**gerissen**" }
+        // A criterion nobody has measured yet is open, not held and not broken: a share of an
+        // empty tally is 0, and "1 - 0" would otherwise read as 100 % invented dates.
+        func row(_ name: String, _ limit: String, _ tally: Tally, passes: (Double) -> Bool, inverted: Bool = false) -> String {
+            guard tally.total > 0 else { return "| \(name) | \(limit) | noch nicht gemessen | offen |" }
+            let value = inverted ? 1 - tally.share : tally.share
+            return "| \(name) | \(limit) | \(percent(value)) | \(passes(value) ? "gehalten" : "**gerissen**") |"
+        }
         return """
         ## Abbruchkriterien aus #67
 
         | Kriterium | Grenze | Gemessen | Ergebnis |
         |---|---|---|---|
-        | Datum exakt | ≥ 95 % | \(percent(report.model.share)) | \(verdict(report.model.share >= 0.95)) |
-        | Erfundene Daten | ≤ 2 % | \(percent(invented)) | \(verdict(invented <= 0.02)) |
-        | Titel mit erfundenen Fakten | ≤ 2 % | \(percent(hallucination)) | \(verdict(hallucination <= 0.02)) |
+        \(row("Datum exakt", "≥ 95 %", report.model, passes: { $0 >= 0.95 }))
+        \(row("Erfundene Daten", "≤ 2 %", report.invented, passes: { $0 <= 0.02 }, inverted: true))
+        \(row("Titel mit erfundenen Fakten", "≤ 2 %", report.facts, passes: { $0 <= 0.02 }, inverted: true))
         """
     }
 
@@ -248,6 +252,11 @@ struct DateTitleReportTests {
     // MARK: - Helpers
 
     static func percent(_ value: Double) -> String { String(format: "%.1f %%", value * 100) }
+
+    /// The share of misses in a tally that counts hits, or a plain "not measured" for an empty one.
+    static func inverse(_ tally: Tally) -> String {
+        tally.total == 0 ? "noch nicht gemessen" : "\(percent(1 - tally.share)) von \(tally.total)"
+    }
 
     static func day(_ date: Date?, _ calendar: Calendar) -> String {
         guard let date else { return "–" }
