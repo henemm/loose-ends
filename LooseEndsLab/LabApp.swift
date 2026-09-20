@@ -1,4 +1,3 @@
-import BackgroundTasks
 import SwiftUI
 
 /// A separate, throwaway app for measuring the on-device model (Issue #67 and the spikes after it).
@@ -11,13 +10,9 @@ struct LabApp: App {
     @State private var runner: MeasurementRunner
 
     init() {
-        let runner = MeasurementRunner()
-        _runner = State(initialValue: runner)
-        // Wildcard identifier, as the scheduler requires for continued processing.
-        BGTaskScheduler.shared.register(forTaskWithIdentifier: "\(MeasurementRunner.taskIdentifierPrefix).*", using: nil) { task in
-            guard let task = task as? BGContinuedProcessingTask else { return }
-            Task { @MainActor in runner.adopt(task) }
-        }
+        // The background handler is registered per run by the runner itself, right before the
+        // request is submitted — a wildcard registration here is never matched by the scheduler.
+        _runner = State(initialValue: MeasurementRunner())
     }
 
     var body: some Scene {
@@ -65,6 +60,11 @@ struct LabView: View {
                 }
             }
             .navigationTitle("Loose Ends Labor")
+        }
+        .task {
+            // Only for a run driven from the Mac (simctl/devicectl launch). Henning's own copy is
+            // never launched with this argument, so nothing starts without his tap there.
+            if CommandLine.arguments.contains("--measure") { runner.start() }
         }
     }
 

@@ -57,7 +57,8 @@ final class MeasurementRunner {
     func start() {
         guard state != .running, !entries.isEmpty else { return }
         state = .running
-        submitBackgroundTask()
+        // When the scheduler itself launched the run (`adopt`), the task already exists.
+        if backgroundTask == nil { submitBackgroundTask() }
         task = Task { [weak self] in await self?.measureRemaining() }
     }
 
@@ -131,9 +132,26 @@ final class MeasurementRunner {
 
     /// Submitted only on his tap, and only from the foreground: the system shows the run in the
     /// Dynamic Island with a cancel button, so nothing ever measures unseen.
+    ///
+    /// The wildcard in Info.plist only *permits* identifiers under the prefix. A handler must still
+    /// be registered for the exact identifier right before it is submitted; registering the
+    /// wildcard itself and submitting a fresh identifier crashes with "No launch handler
+    /// registered" (Apple DTS, developer.apple.com/forums/thread/799126). That crash is what
+    /// killed the first version of this app on every tap of "Messen".
     private func submitBackgroundTask() {
+        let identifier = "\(Self.taskIdentifierPrefix).\(UUID().uuidString.prefix(8))"
+        // On the main queue: the scheduler otherwise calls the handler on its own queue, and a
+        // closure of this main-actor class traps there (dispatch_assert_queue, seen on device).
+        let registered = BGTaskScheduler.shared.register(forTaskWithIdentifier: identifier, using: .main) { [weak self] task in
+            guard let task = task as? BGContinuedProcessingTask else { return }
+            Task { @MainActor in self?.adopt(task) }
+        }
+        guard registered else {
+            logger.notice("Hintergrundlauf nicht registrierbar: \(identifier, privacy: .public)")
+            return
+        }
         let request = BGContinuedProcessingTaskRequest(
-            identifier: "\(Self.taskIdentifierPrefix).\(UUID().uuidString.prefix(8))",
+            identifier: identifier,
             title: "Messreihe Datum und Titel",
             subtitle: "\(done) von \(total) Sätzen")
         request.strategy = .queue
