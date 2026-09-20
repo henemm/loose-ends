@@ -1,0 +1,73 @@
+[1;33m[sim][0m macOS 26.6.1 < Deployment Target 27.0 — Unit-Tests laufen im Simulator.
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/MeasurementRunTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftConstValuesFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.LinkFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-OutputFileMap.json
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mCopying[0m date-title.json
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:24:21: [31mvalue of type 'MeasurementRun' has no member 'events'[0m
+22 |         let run = try MeasurementStore.coder.decoder.decode(MeasurementRun.self, from: Data(json.utf8))
+[36m23 |         #expect(run.results.count == 1)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:25:32: [31mvalue of type 'MeasurementResult' has no member 'errorKind'[0m
+23 |         #expect(run.results.count == 1)
+[36m24 |         #expect(run.events.isEmpty)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:31:13: [31mvalue of type 'MeasurementRun' has no member 'log'[0m
+29 |     func eventsRoundTrip() throws {
+[36m30 |         var run = MeasurementRun(name: "t", startedAt: Date(timeIntervalSince1970: 0))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:32:13: [31mvalue of type 'MeasurementRun' has no member 'log'[0m
+30 |         var run = MeasurementRun(name: "t", startedAt: Date(timeIntervalSince1970: 0))
+[36m31 |         run.log("app", "gestartet mit --measure", at: Date(timeIntervalSince1970: 1))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:37:16: [31mvalue of type 'MeasurementResult' has no member 'errorKind'[0m
+35 |                                                               lowPowerMode: false, thermal: "normal", device: "d", systemVersion: "27"))
+[36m36 |         result.error = "boom"[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:41:22: [31mvalue of type 'MeasurementRun' has no member 'events'[0m
+39 |         let data = try MeasurementStore.coder.encoder.encode(run)
+[36m40 |         let back = try MeasurementStore.coder.decoder.decode(MeasurementRun.self, from: data)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:41:33: [31mcannot infer key path type from context; consider explicitly specifying a root type[0m
+39 |         let data = try MeasurementStore.coder.encoder.encode(run)
+[36m40 |         let back = try MeasurementStore.coder.decoder.decode(MeasurementRun.self, from: data)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:42:22: [31mvalue of type 'MeasurementRun' has no member 'events'[0m
+40 |         let back = try MeasurementStore.coder.decoder.decode(MeasurementRun.self, from: data)
+[36m41 |         #expect(back.events.map(\.kind) == ["app", "scene"])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:43:33: [31mvalue of type 'MeasurementResult' has no member 'errorKind'[0m
+41 |         #expect(back.events.map(\.kind) == ["app", "scene"])
+[36m42 |         #expect(back.events[1].note == "hintergrund")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:49:17: [31mcannot find 'MeasurementPacing' in scope[0m
+47 |     @Test("Nach einem Fehlschlag wird gewartet, nach dreien angehalten")
+[36m48 |     func pacing() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:50:17: [31mcannot find 'MeasurementPacing' in scope[0m
+48 |     func pacing() {
+[36m49 |         #expect(MeasurementPacing.delayBeforeNext(consecutiveFailures: 0) == 0)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:51:17: [31mcannot find 'MeasurementPacing' in scope[0m
+49 |         #expect(MeasurementPacing.delayBeforeNext(consecutiveFailures: 0) == 0)
+[36m50 |         #expect(MeasurementPacing.delayBeforeNext(consecutiveFailures: 1) == 60)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:52:17: [31mcannot find 'MeasurementPacing' in scope[0m
+50 |         #expect(MeasurementPacing.delayBeforeNext(consecutiveFailures: 1) == 60)
+[36m51 |         #expect(MeasurementPacing.delayBeforeNext(consecutiveFailures: 2) == 60)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:69:17: [31mcannot find 'MeasurementErrorKind' in scope[0m
+67 |     @Test("Fehlerart wird typisiert erkannt, nicht per Textvergleich")
+[36m68 |     func errorKinds() {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:71:44: [33m'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration][0m
+69 |         #expect(MeasurementErrorKind.classify(NSError(domain: "x", code: 1)) == "andere")
+[32m70 |         #if canImport(FoundationModels)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:72:17: [31mcannot find 'MeasurementErrorKind' in scope[0m
+70 |         #if canImport(FoundationModels)
+[36m71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:73:17: [31mcannot find 'MeasurementErrorKind' in scope[0m
+71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")
+[36m72 |         #expect(MeasurementErrorKind.classify(LanguageModelSession.GenerationError.rateLimited(context)) == "rateLimited")[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRunTests.swift
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.09.20_08-36-37-+0200.xcresult
