@@ -110,6 +110,33 @@ struct CorpusTests {
         #expect(withDate.count >= 100)
         #expect(controls.count >= 80)
     }
+
+    /// Issue #82: the corpus must carry Henning's sentence forms, not only "time, object, verb".
+    /// Every form is named, every named form is known, and each one is thick enough to give a
+    /// rate of its own in the report.
+    @Test("Der Korpus kennt Hennings Bauformen, mindestens 100 Sätze außerhalb der Standardform")
+    func corpusHasSentenceForms() throws {
+        let entries = try Corpus.load()
+        for entry in entries {
+            #expect(Corpus.forms.contains(entry.form), "\(entry.id): unbekannte Bauform \(entry.form)")
+        }
+        let varied = entries.filter { $0.form != Corpus.standardForm }
+        #expect(varied.count >= 100)
+        let counts = Dictionary(grouping: varied, by: \.form).mapValues(\.count)
+        for form in Corpus.forms where form != Corpus.standardForm {
+            #expect((counts[form] ?? 0) >= 6, "Bauform \(form) hat nur \(counts[form] ?? 0) Sätze")
+        }
+        for entry in varied {
+            let words = TitleCheck.words(in: entry.text)
+            switch entry.form {
+            case "stichwort": #expect(words.count <= 3, "\(entry.id): Stichwort mit \(words.count) Wörtern")
+            case "frage": #expect(entry.text.hasSuffix("?"), "\(entry.id): Frage ohne Fragezeichen")
+            case "ich-satz": #expect(words.first?.lowercased() == "ich", "\(entry.id): Ich-Satz beginnt nicht mit „ich“")
+            case "diktat": #expect(entry.text == entry.text.lowercased() && !entry.text.contains(","), "\(entry.id): Diktat mit Großschreibung oder Satzzeichen")
+            default: break
+            }
+        }
+    }
 }
 
 @Suite("Titelprüfung")
