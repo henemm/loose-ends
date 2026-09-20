@@ -3,17 +3,17 @@ entity_id: feat-92-date-parser
 type: feature
 created: 2026-09-20
 updated: 2026-09-20
-status: draft
+status: validated
 workflow: feat-92-date-parser
 ---
 
 # Spec: #92 — Datum regelbasiert: Zeitausdruck-Parser DE/EN (Schnitt 1: Parser messen)
 
-**Status:** draft · **Workflow:** feat-92-date-parser · **Erstellt:** 2026-09-20 · **Aktualisiert:** 2026-09-20
+**Status:** validated · **Workflow:** feat-92-date-parser · **Erstellt:** 2026-09-20 · **Aktualisiert:** 2026-09-20
 
 ## Freigabe
 
-- [ ] Freigegeben
+- [x] Freigegeben
 
 ## Problem
 Das Datum kommt heute vom On-Device-Modell. Gemessen am 2026-09-20 (#67, #92): 50 % exakt, 96,5 %
@@ -220,27 +220,27 @@ erst relevant, wenn Schnitt 1 die 95 % zeigt und die App umgebaut wird:
 ## Testplan
 
 ### Automatisierte Tests (TDD RED)
-- [ ] `DateExpressionParserTests`, je Ausdrucksart mindestens ein DE- und ein EN-Fall: GIVEN ein Satz
+- [x] `DateExpressionParserTests`, je Ausdrucksart mindestens ein DE- und ein EN-Fall: GIVEN ein Satz
   mit einer der neun Ausdrucksarten und ein fester Referenztag (Do 12.3.2026) / WHEN
   `DateExpressionParser` ihn parst / THEN liefert er dieselbe Ausdrucksart und einen Tag aus
   `Corpus.DateExpectation.acceptedDays` (AC-1, AC-4).
-- [ ] `DateExpressionParserTests`, je Ausdrucksart eine Falle: GIVEN ein Kontrollsatz ohne Datum
+- [x] `DateExpressionParserTests`, je Ausdrucksart eine Falle: GIVEN ein Kontrollsatz ohne Datum
   (Zahlenfalle oder Wiederholung wie „Jeden Montag") / WHEN der Parser ihn verarbeitet / THEN liefert
   er kein Datum (AC-2, AC-4).
-- [ ] `TimeExpressionParserTests`, Kernfälle: GIVEN „um 20 Uhr", „18:45", „halb zwölf", „half past
+- [x] `TimeExpressionParserTests`, Kernfälle: GIVEN „um 20 Uhr", „18:45", „halb zwölf", „half past
   seven", „at 5pm" / WHEN `TimeExpressionParser` sie parst / THEN stimmt Stunde und Minute exakt mit
   der Korpus-Wahrheit überein (AC-3, AC-4).
-- [ ] `TimeExpressionParserTests`, Kontext-Fälle: GIVEN „um 12" nach „Mittag" vs. „Rechnung 4711" /
+- [x] `TimeExpressionParserTests`, Kontext-Fälle: GIVEN „um 12" nach „Mittag" vs. „Rechnung 4711" /
   WHEN der Parser beide verarbeitet / THEN liefert nur der erste eine Uhrzeit (AC-3, AC-4).
-- [ ] `DateParserCorpusTests` (ungated): GIVEN der volle Korpus (317 Sätze) und derselbe feste
+- [x] `DateParserCorpusTests` (ungated): GIVEN der volle Korpus (317 Sätze) und derselbe feste
   Referenztag / WHEN der Test über alle Sätze läuft / THEN hält er per `#expect` fest: Datum ≥ 95 %
   exakt auf den 139 Datumssätzen, 0 % erfunden auf den 178 Kontrollsätzen, Uhrzeit ≥ 95 % auf allen
   24 Uhrzeit-Sätzen — unabhängig von `MeasurementFiles.runs` (AC-1, AC-2, AC-3, AC-6).
-- [ ] `DateTitleReportTests`, neue Spalte: GIVEN vorhandene Messläufe / WHEN der Bericht gebaut wird
+- [x] `DateTitleReportTests`, neue Spalte: GIVEN vorhandene Messläufe / WHEN der Bericht gebaut wird
   / THEN enthält `dateSection` die Spalte „Regelparser" mit Aufschlüsselung nach Ausdrucksart, und
   `missesSection` einen Block „Regelparser danebenging" mit Satz, erwarteter Ausdrucksart und
   Parser-Ergebnis (AC-5).
-- [ ] Bestehende Suiten (`CorpusTests`, `DateTitleReportTests`-Bestand, `EnrichmentTests`): GIVEN der
+- [x] Bestehende Suiten (`CorpusTests`, `DateTitleReportTests`-Bestand, `EnrichmentTests`): GIVEN der
   neue Parser-Code / WHEN `./scripts/sim.sh unit` läuft / THEN bleiben alle unverändert grün, keine
   Regression (AC-7).
 
@@ -250,16 +250,16 @@ Bericht, nicht über die App oder den Simulator.
 
 ## Definition of Done
 
-- [ ] AC-1 bis AC-7 erfüllt, belegt durch die im Testplan genannten Tests
-- [ ] `./scripts/sim.sh unit` grün
+- [x] AC-1 bis AC-7 erfüllt, belegt durch die im Testplan genannten Tests
+- [x] `./scripts/sim.sh unit` grün
 - [ ] CI grün
-- [ ] `docs/reference/date-title-fidelity.md` neu erzeugt, zeigt die Spalte „Regelparser" mit
+- [x] `docs/reference/date-title-fidelity.md` neu erzeugt, zeigt die Spalte „Regelparser" mit
   gemessenen Werten
 - [ ] PR mit `Closes` auf ein neu anzulegendes Sub-Issue von #92 für Schnitt 1 gemergt
 - [ ] Hennings Hauptordner nachgezogen und Projekt neu erzeugt
   (`bash ~/.claude/scripts/loose-ends-sync-main.sh`)
 - [ ] Sub-Issue für Schnitt 2 (App-Umbau) angelegt und in #92 verlinkt
-- [ ] A3-Tabelle in `docs/project/06-annahmen-und-experimente.md` um die Regelparser-Spalte ergänzt
+- [x] A3-Tabelle in `docs/project/06-annahmen-und-experimente.md` um die Regelparser-Spalte ergänzt
 
 ## Architektur-Entscheidung (ADR)
 
@@ -276,3 +276,4 @@ Bericht, nicht über die App oder den Simulator.
 ## Changelog
 
 - 2026-09-20: Spec aus dem Analyse-Kontext (`docs/context/feat-92-date-parser.md`) erstellt.
+- 2026-09-20: Validiert — 138/139 Datum, 0/170 erfunden, 24/24 Uhrzeit; 119 Tests grün.

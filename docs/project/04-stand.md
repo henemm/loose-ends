@@ -49,7 +49,8 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
   - davor [#83](https://github.com/henemm/loose-ends/issues/83) Labor-App nur im Vordergrund, Lebenslauf mitschreiben
   - davor [#82](https://github.com/henemm/loose-ends/issues/82) Korpus in Hennings Satzformen (Stichwörter, Fragen, Diktat) samt seinen FocusBlox-Rohsätzen
   - gemessen 2026-09-20 über 317 Sätze: Titel hält (0,3 % erfunden), Datum reißt (50 % exakt, 96,5 % erfunden)
-  - daraus [#92](https://github.com/henemm/loose-ends/issues/92) Datum regelbasiert, ohne Modell (PO-Entscheidung: Regeln vor Modell)
+  - daraus [#92](https://github.com/henemm/loose-ends/issues/92) Datum regelbasiert, ohne Modell (PO-Entscheidung: Regeln vor Modell) —
+    Schnitt 1 gemessen: 99,3 % exakt, 0 % erfunden; Schnitt 2 (App-Umbau) offen
 - [#65](https://github.com/henemm/loose-ends/issues/65) Unsicherheitssignal, das richtig von falsch trennt
 - [#66](https://github.com/henemm/loose-ends/issues/66) Steht die Information überhaupt im Text?
 - [#68](https://github.com/henemm/loose-ends/issues/68) Nachweis: Modell je Gerät, Prozess, Zustand

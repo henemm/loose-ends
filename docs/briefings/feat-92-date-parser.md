@@ -1,6 +1,6 @@
 ---
 spec_file: docs/specs/measurement/feat-92-date-parser.md
-spec_sha256: f1027ddfcc15b5fe3cea234074cd59b814c7fa2c775843ce8da7a7ccf2c39d6a
+spec_sha256: e977e41b9eed56756fbe151ba4eb50cfb249fd9ec752e9c473c74745c4e759ac
 ---
 
 # PO-Briefing: feat-92-date-parser
@@ -11,22 +11,22 @@ spec_sha256: f1027ddfcc15b5fe3cea234074cd59b814c7fa2c775843ce8da7a7ccf2c39d6a
 
 ## Was gebaut wird
 
-Ein Mess-Nachweis, ob ein Regel-Erkenner das Modell beim Datum ersetzen kann — noch keine Änderung an der App.
+Ein Messbericht zeigt, wie zuverlässig eine Regel statt der KI Datum und Uhrzeit erkennt.
 
 ## Definition of Done
 
-Ein Bericht zeigt, dass der Regel-Erkenner mindestens 95 Prozent der Zeitangaben trifft und nie ein Datum erfindet.
+Der Bericht weist mindestens 95 Prozent korrekt erkannte Termine und null erfundene Termine auf den Testsätzen nach.
 
 ## Wie geprüft wird
 
-Automatisierte Tests rechnen den Erkenner gegen 317 Beispielsätze; geprüft wird nur am Computer, nicht in der laufenden App.
+Automatisierte Tests rechnen den Parser gegen einen festen Textkorpus; ein Nachweis im echten App-Gebrauch fehlt noch.
 
 ## Kritische Anmerkungen
 
-- Vier der sechs Ticket-Anforderungen — App-Umbau, iPhone-Nachweis, Eintrag in Ticket #67 — folgen erst später.
-- Nach dieser Lieferung setzt weiterhin das Modell das Datum — für Nutzer ändert sich nichts.
-- Fünf offene Fragen zur genauen Datumswahl (z. B. Tag bei „am Wochenende") werden erst später entschieden.
+- Die App nutzt den Parser noch nicht; das Datum kommt weiterhin von der KI.
+- Der geforderte Nachweis auf dem echten Gerät fehlt; geprüft wurde nur am Schreibtisch-Rechner.
+- Abschlussschritte offen: Zusammenführen, Übernahme bei Henning, Folgeauftrag für die App-Änderung.
 
 ## Freigabe-Frage
 
-Reicht dir dieser Mess-Nachweis als Zwischenschritt, obwohl die App das Datum weiterhin vom Modell setzen lässt?
+Reicht dir der Messnachweis, oder soll vor der Freigabe auch der Gerätetest und App-Umbau folgen?
