@@ -223,10 +223,15 @@ struct DateTitleReportTests {
         var lines = ["## Nach Bauform", "",
                      "| Bauform | Sätze | Datum exakt | Datum erfunden | Titel ohne erfundene Fakten |",
                      "|---|---|---|---|---|"]
-        for (form, tally) in report.byForm.sorted(by: { $0.key < $1.key }) {
+        // Every known form gets its row, measured or not: a missing row would read as "this form
+        // is fine". Unknown keys follow, so nothing is swallowed.
+        let unknown = report.byForm.keys.filter { !Corpus.forms.contains($0) }.sorted()
+        for form in Corpus.forms + unknown {
+            let tally = report.byForm[form] ?? FormTally()
             let date = tally.date.total == 0 ? "–" : "\(percent(tally.date.share)) von \(tally.date.total)"
             let facts = tally.facts.total == 0 ? "–" : percent(tally.facts.share)
-            lines.append("| \(form) | \(tally.sentences) | \(date) | \(inverse(tally.invented)) | \(facts) |")
+            let invented = tally.invented.total == 0 ? "–" : inverse(tally.invented)
+            lines.append("| \(form) | \(tally.sentences) | \(date) | \(invented) | \(facts) |")
         }
         lines += ["", "„standard“ ist die Form der ersten 203 Sätze (Zeitangabe, Objekt, Verb); die übrigen sind Hennings Formen aus seinen FocusBlox-Rohsätzen."]
         return lines.joined(separator: "\n")

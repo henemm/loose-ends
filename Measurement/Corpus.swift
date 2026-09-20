@@ -13,6 +13,17 @@ import Foundation
 enum Corpus {
     static let fileName = "date-title-corpus"
 
+    /// The sentence form of a note with no `form` key: "time, object, verb", the shape the first
+    /// 203 sentences were written in.
+    static let standardForm = "standard"
+
+    /// Every sentence form the corpus may use — Henning's shapes from his FocusBlox notes (#82).
+    /// A closed list, because the report gives one rate per form: a typo in the JSON would open a
+    /// row of one sentence and read like a finding.
+    static let forms = ["standard", "stichwort", "ich-satz", "nebensatz", "frage", "diktat",
+                        "zeit-hinten", "zwei-aufgaben", "denglisch", "tippfehler", "praefix",
+                        "diktat-name"]
+
     struct Entry: Decodable, Sendable, Identifiable {
         var id: String
         var lang: String
@@ -25,14 +36,20 @@ enum Corpus {
         /// not fall back to a property's default value when the key is missing.
         private var entityList: [String]?
         private var peopleList: [String]?
+        /// How the note is built (#82). Kept in the JSON instead of being guessed from the text: a
+        /// classifier inside the measuring instrument would be a second source of error, and the
+        /// form is what the report splits every rate by. A missing key means `standard`.
+        private var formName: String?
         var entities: [String] { entityList ?? [] }
         var people: [String] { peopleList ?? [] }
+        var form: String { formName ?? Corpus.standardForm }
 
         enum CodingKeys: String, CodingKey {
             case id, lang, text, date, time
             case entityList = "entities"
             case peopleList = "people"
             case repeatRule = "repeat"
+            case formName = "form"
         }
 
         /// A recurring note implies a first occurrence, so it can neither prove nor disprove an
