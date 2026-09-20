@@ -38,6 +38,15 @@ struct DateTitleReportTests {
         }
     }
 
+    /// One sentence form's share of every criterion (#82): a form may be fine on dates and still
+    /// lose entities, so each criterion gets its own tally.
+    struct FormTally {
+        var date = Tally()
+        var invented = Tally()
+        var facts = Tally()
+        var sentences: Int { date.total + invented.total }
+    }
+
     struct Report {
         var model = Tally()
         var parser = Tally()
@@ -49,6 +58,7 @@ struct DateTitleReportTests {
         var foreign = Tally()
         var byRule: [String: Tally] = [:]
         var byCondition: [String: Tally] = [:]
+        var byForm: [String: FormTally] = [:]
         var seconds: [Double] = []
         var failures = 0
         var throttled = 0
@@ -94,8 +104,10 @@ struct DateTitleReportTests {
             report.model.record(hit: hit, empty: got == nil, miss: miss)
             report.byRule[ruleName(expectation), default: Tally()].record(hit: hit, empty: got == nil)
             report.byCondition[result.conditions.summary, default: Tally()].record(hit: hit)
+            report.byForm[entry.form, default: FormTally()].date.record(hit: hit)
         } else {
             report.invented.record(hit: got == nil, miss: "`\(entry.text)` → \(day(got, calendar))")
+            report.byForm[entry.form, default: FormTally()].invented.record(hit: got == nil)
         }
         if let expected = entry.time {
             let got = result.dueHasTime ? result.dueDate.map { time($0, calendar) } : nil
@@ -113,6 +125,7 @@ struct DateTitleReportTests {
             + TitleCheck.alteredNames(title: title, rawText: entry.text, people: entry.people)
         report.facts.record(hit: invented.isEmpty,
                             miss: "`\(entry.text)` → „\(title)“ erfindet \(invented.joined(separator: ", "))")
+        report.byForm[entry.form, default: FormTally()].facts.record(hit: invented.isEmpty)
         report.foreign.record(hit: TitleCheck.foreignWords(title: title, rawText: entry.text).isEmpty)
     }
 
@@ -140,6 +153,7 @@ struct DateTitleReportTests {
         [head(report, runs: runs, corpus: corpus),
          dateSection(report),
          conditionSection(report),
+         formSection(report),
          titleSection(report),
          verdictSection(report),
          missesSection(report)].joined(separator: "\n\n")
@@ -200,6 +214,26 @@ struct DateTitleReportTests {
             lines.append("| \(condition) | \(tally.total) | \(percent(tally.share)) |")
         }
         lines += ["", "Laufen die Zeilen auseinander, hängt die Qualität an Vordergrund, Strom oder Wärme — dann gilt die Gesamtzahl oben nicht."]
+        return lines.joined(separator: "\n")
+    }
+
+    /// The answer to "does the model only work on my sentences?" (#82): every criterion, split by
+    /// the form the note was written in. A dash means the form has no sentence of that kind.
+    static func formSection(_ report: Report) -> String {
+        var lines = ["## Nach Bauform", "",
+                     "| Bauform | Sätze | Datum exakt | Datum erfunden | Titel ohne erfundene Fakten |",
+                     "|---|---|---|---|---|"]
+        // Every known form gets its row, measured or not: a missing row would read as "this form
+        // is fine". Unknown keys follow, so nothing is swallowed.
+        let unknown = report.byForm.keys.filter { !Corpus.forms.contains($0) }.sorted()
+        for form in Corpus.forms + unknown {
+            let tally = report.byForm[form] ?? FormTally()
+            let date = tally.date.total == 0 ? "–" : "\(percent(tally.date.share)) von \(tally.date.total)"
+            let facts = tally.facts.total == 0 ? "–" : percent(tally.facts.share)
+            let invented = tally.invented.total == 0 ? "–" : inverse(tally.invented)
+            lines.append("| \(form) | \(tally.sentences) | \(date) | \(invented) | \(facts) |")
+        }
+        lines += ["", "„standard“ ist die Form der ersten 203 Sätze (Zeitangabe, Objekt, Verb); die übrigen sind Hennings Formen aus seinen FocusBlox-Rohsätzen."]
         return lines.joined(separator: "\n")
     }
 
@@ -283,5 +317,27 @@ struct DateTitleReportTests {
         case .monthRange: return "nächster Monat"
         case .dayAndMonth: return "festes Datum"
         }
+    }
+}
+
+/// The report must split every rate by sentence form (#82), the way it splits dates by condition.
+/// Checked on a synthetic report, so it runs before any run was fetched.
+@Suite("Bericht nach Bauform")
+struct DateTitleFormSectionTests {
+    @Test("Jede Bauform bekommt eine Zeile mit Datum, erfundenem Datum und Titel")
+    func formSection() {
+        var report = DateTitleReportTests.Report()
+        report.byForm["stichwort", default: .init()].date.record(hit: true)
+        report.byForm["stichwort", default: .init()].date.record(hit: false)
+        report.byForm["stichwort", default: .init()].invented.record(hit: true)
+        report.byForm["stichwort", default: .init()].facts.record(hit: true)
+        report.byForm["frage", default: .init()].invented.record(hit: false)
+        report.byForm["frage", default: .init()].facts.record(hit: false)
+
+        let section = DateTitleReportTests.formSection(report)
+        #expect(section.hasPrefix("## Nach Bauform"))
+        #expect(section.contains("| stichwort | 3 | 50.0 % von 2 | 0.0 % von 1 | 100.0 % |"))
+        #expect(section.contains("| frage | 1 | – | 100.0 % von 1 | 0.0 % |"))
+        #expect(DateTitleReportTests.markdown(report, runs: [], corpus: []).contains("## Nach Bauform"))
     }
 }

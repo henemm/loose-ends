@@ -1,4 +1,46 @@
 {
+  "events" : [
+    {
+      "at" : "2026-09-20T07:43:47Z",
+      "kind" : "app",
+      "note" : "gestartet; Argumente: --measure; Korpus: 203 Sätze"
+    },
+    {
+      "at" : "2026-09-20T07:43:47Z",
+      "kind" : "model",
+      "note" : "verfügbar"
+    },
+    {
+      "at" : "2026-09-20T07:43:47Z",
+      "kind" : "start",
+      "note" : "--measure; 31 von 203 erledigt"
+    },
+    {
+      "at" : "2026-09-20T07:43:47Z",
+      "kind" : "scene",
+      "note" : "vordergrund"
+    },
+    {
+      "at" : "2026-09-20T07:43:49Z",
+      "kind" : "scene",
+      "note" : "inaktiv"
+    },
+    {
+      "at" : "2026-09-20T07:43:49Z",
+      "kind" : "stop",
+      "note" : "App verlassen — der Stand bleibt erhalten."
+    },
+    {
+      "at" : "2026-09-20T07:43:49Z",
+      "kind" : "failure",
+      "note" : "de-in-tagen-2: andere"
+    },
+    {
+      "at" : "2026-09-20T07:43:50Z",
+      "kind" : "scene",
+      "note" : "hintergrund"
+    }
+  ],
   "name" : "date-title",
   "results" : [
     {
@@ -144,6 +186,854 @@
 
       ],
       "seconds" : 0.033056020736694336
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 65,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-morgen-2",
+      "finishedAt" : "2026-09-20T05:34:05Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.856651067733765,
+      "title" : "Den Hund zum Tierarzt bringen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 65,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-morgen-3",
+      "finishedAt" : "2026-09-20T05:34:14Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.137885928153992,
+      "title" : "Morgen die Kita anrufen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 65,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-morgen-4",
+      "finishedAt" : "2026-09-20T05:34:21Z",
+      "people" : [
+        "Sven"
+      ],
+      "seconds" : 7.63587498664856,
+      "title" : "Präsentation für Sven fertigstellen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 65,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-21T12:00:00Z",
+      "dueHasTime" : true,
+      "entryID" : "de-morgen-5",
+      "finishedAt" : "2026-09-20T05:34:29Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.862020015716553,
+      "title" : "Rückruf um 14 Uhr"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 65,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-uebermorgen-1",
+      "finishedAt" : "2026-09-20T05:34:37Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.287177920341492,
+      "title" : "Rasen morgen mähen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 65,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-uebermorgen-2",
+      "finishedAt" : "2026-09-20T05:34:49Z",
+      "people" : [
+
+      ],
+      "seconds" : 11.271291971206665,
+      "title" : "Auto in Werkstatt bringen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "hintergrund",
+        "batteryPercent" : 65,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-uebermorgen-3",
+      "finishedAt" : "2026-09-20T05:35:02Z",
+      "people" : [
+
+      ],
+      "seconds" : 13.861737966537476,
+      "title" : "Zählerstände durchgeben"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "hintergrund",
+        "batteryPercent" : 65,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-wochentag-1",
+      "error" : "Error Domain=FoundationModels.LanguageModelError Code=-1 \"The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)\" UserInfo={NSLocalizedDescription=The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.), NSMultipleUnderlyingErrorsKey=(\n    \"Error Domain=FoundationModels.LanguageModelError Code=-1 \\\"(null)\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\n    \\\"Error Domain=FoundationModels.LanguageModelError Code=-1 \\\\\\\"(null)\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\n    \\\\\\\"Error Domain=com.apple.SensitiveContentAnalysisML Code=15 \\\\\\\\\\\\\\\"(null)\\\\\\\\\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\\\\\n    \\\\\\\\\\\\\\\"Error Domain=SensitiveContentAnalysisML.CombinedTextSanitizerBackend.BackendError Code=1 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"(null)\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\\\\\\\\\\\\\n    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Error Domain=ModelManagerServices.ModelManagerError Code=1043 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"(null)\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\n)}\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\\n)}\\\\\\\\\\\\\\\"\\\\\\\\n)}\\\\\\\"\\\\n)}\\\"\\n)}\"\n)}",
+      "finishedAt" : "2026-09-20T05:35:09Z",
+      "people" : [
+
+      ],
+      "seconds" : 6.480123996734619
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "hintergrund",
+        "batteryPercent" : 65,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-wochentag-2",
+      "error" : "Request has been rate limited. Please try again later.\n\nIf you are using streaming responses in a background request, consider using non-streaming requests in background activities to reduce the likelihood of rate limiting.",
+      "finishedAt" : "2026-09-20T05:35:09Z",
+      "people" : [
+
+      ],
+      "seconds" : 0.13842809200286865
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "hintergrund",
+        "batteryPercent" : 65,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-wochentag-3",
+      "error" : "Request has been rate limited. Please try again later.\n\nIf you are using streaming responses in a background request, consider using non-streaming requests in background activities to reduce the likelihood of rate limiting.",
+      "finishedAt" : "2026-09-20T05:35:09Z",
+      "people" : [
+
+      ],
+      "seconds" : 0.044216036796569824
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 65,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-23T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-wochentag-1",
+      "finishedAt" : "2026-09-20T05:38:15Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.137172937393188,
+      "title" : "Bewerbung am Montag senden"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "hintergrund",
+        "batteryPercent" : 65,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-wochentag-2",
+      "finishedAt" : "2026-09-20T05:38:23Z",
+      "people" : [
+        "Frau Kowalski"
+      ],
+      "seconds" : 7.994864106178284,
+      "title" : "Vertrag von Frau Kowalski unterzeichnen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "hintergrund",
+        "batteryPercent" : 65,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-wochentag-3",
+      "error" : "Error Domain=FoundationModels.LanguageModelError Code=-1 \"The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)\" UserInfo={NSMultipleUnderlyingErrorsKey=(\n    \"Error Domain=FoundationModels.LanguageModelError Code=-1 \\\"(null)\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\n    \\\"Error Domain=FoundationModels.LanguageModelError Code=-1 \\\\\\\"(null)\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\n    \\\\\\\"Error Domain=com.apple.SensitiveContentAnalysisML Code=15 \\\\\\\\\\\\\\\"(null)\\\\\\\\\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\\\\\n    \\\\\\\\\\\\\\\"Error Domain=SensitiveContentAnalysisML.CombinedTextSanitizerBackend.BackendError Code=1 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"(null)\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\\\\\\\\\\\\\n    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Error Domain=ModelManagerServices.ModelManagerError Code=1043 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"(null)\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\n)}\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\\n)}\\\\\\\\\\\\\\\"\\\\\\\\n)}\\\\\\\"\\\\n)}\\\"\\n)}\"\n), NSLocalizedDescription=The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)}",
+      "finishedAt" : "2026-09-20T05:38:26Z",
+      "people" : [
+
+      ],
+      "seconds" : 2.8354129791259766
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "hintergrund",
+        "batteryPercent" : 65,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-wochentag-4",
+      "error" : "Request has been rate limited. Please try again later.\n\nIf you are using streaming responses in a background request, consider using non-streaming requests in background activities to reduce the likelihood of rate limiting.",
+      "finishedAt" : "2026-09-20T05:38:26Z",
+      "people" : [
+
+      ],
+      "seconds" : 0.06869399547576904
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "hintergrund",
+        "batteryPercent" : 65,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-wochentag-5",
+      "error" : "Request has been rate limited. Please try again later.\n\nIf you are using streaming responses in a background request, consider using non-streaming requests in background activities to reduce the likelihood of rate limiting.",
+      "finishedAt" : "2026-09-20T05:38:26Z",
+      "people" : [
+
+      ],
+      "seconds" : 0.02209603786468506
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 65,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-23T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-wochentag-3",
+      "finishedAt" : "2026-09-20T05:46:36Z",
+      "people" : [
+        "Andrea"
+      ],
+      "seconds" : 11.5903000831604,
+      "title" : "Blumen für Andrea besorgen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "hintergrund",
+        "batteryPercent" : 65,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-wochentag-4",
+      "error" : "Error Domain=FoundationModels.LanguageModelError Code=-1 \"The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)\" UserInfo={NSMultipleUnderlyingErrorsKey=(\n    \"Error Domain=FoundationModels.LanguageModelError Code=-1 \\\"(null)\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\n    \\\"Error Domain=FoundationModels.LanguageModelError Code=-1 \\\\\\\"(null)\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\n    \\\\\\\"Error Domain=com.apple.SensitiveContentAnalysisML Code=15 \\\\\\\\\\\\\\\"(null)\\\\\\\\\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\\\\\n    \\\\\\\\\\\\\\\"Error Domain=SensitiveContentAnalysisML.CombinedTextSanitizerBackend.BackendError Code=1 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"(null)\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\\\\\\\\\\\\\n    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Error Domain=ModelManagerServices.ModelManagerError Code=1043 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"(null)\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\n)}\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\\n)}\\\\\\\\\\\\\\\"\\\\\\\\n)}\\\\\\\"\\\\n)}\\\"\\n)}\"\n), NSLocalizedDescription=The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)}",
+      "finishedAt" : "2026-09-20T05:46:43Z",
+      "people" : [
+
+      ],
+      "seconds" : 6.795740962028503
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "hintergrund",
+        "batteryPercent" : 65,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-wochentag-5",
+      "error" : "Request has been rate limited. Please try again later.\n\nIf you are using streaming responses in a background request, consider using non-streaming requests in background activities to reduce the likelihood of rate limiting.",
+      "finishedAt" : "2026-09-20T05:46:43Z",
+      "people" : [
+
+      ],
+      "seconds" : 0.22964096069335938
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "hintergrund",
+        "batteryPercent" : 65,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-wochentag-6",
+      "error" : "Request has been rate limited. Please try again later.\n\nIf you are using streaming responses in a background request, consider using non-streaming requests in background activities to reduce the likelihood of rate limiting.",
+      "finishedAt" : "2026-09-20T05:46:43Z",
+      "people" : [
+
+      ],
+      "seconds" : 0.032775044441223145
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 65,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-wochentag-4",
+      "finishedAt" : "2026-09-20T05:47:35Z",
+      "people" : [
+
+      ],
+      "seconds" : 21.40520203113556,
+      "title" : "Fahrräder zum Service bringen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "hintergrund",
+        "batteryPercent" : 60,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-wochentag-5",
+      "error" : "Request has been rate limited. Please try again later.\n\nIf you are using streaming responses in a background request, consider using non-streaming requests in background activities to reduce the likelihood of rate limiting.",
+      "finishedAt" : "2026-09-20T05:48:02Z",
+      "people" : [
+
+      ],
+      "seconds" : 27.20339000225067
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "hintergrund",
+        "batteryPercent" : 60,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-wochentag-6",
+      "error" : "Request has been rate limited. Please try again later.\n\nIf you are using streaming responses in a background request, consider using non-streaming requests in background activities to reduce the likelihood of rate limiting.",
+      "finishedAt" : "2026-09-20T05:48:02Z",
+      "people" : [
+
+      ],
+      "seconds" : 0.035623908042907715
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "hintergrund",
+        "batteryPercent" : 60,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-wochentag-7",
+      "error" : "Request has been rate limited. Please try again later.\n\nIf you are using streaming responses in a background request, consider using non-streaming requests in background activities to reduce the likelihood of rate limiting.",
+      "finishedAt" : "2026-09-20T05:48:03Z",
+      "people" : [
+
+      ],
+      "seconds" : 0.08769500255584717
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 60,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-wochentag-5",
+      "finishedAt" : "2026-09-20T05:57:49Z",
+      "people" : [
+
+      ],
+      "seconds" : 10.966248989105225,
+      "title" : "Bericht an Geschäftsführung geben"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 60,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-22T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-wochentag-6",
+      "finishedAt" : "2026-09-20T05:57:56Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.494073033332825,
+      "title" : "Keller aufräumen Samstag"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 60,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-wochentag-7",
+      "finishedAt" : "2026-09-20T05:58:04Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.650965929031372,
+      "title" : "Braten für 6 Personen vorbereiten"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 60,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-wochentag-8",
+      "finishedAt" : "2026-09-20T05:58:11Z",
+      "people" : [
+        "Dr. Behrens"
+      ],
+      "seconds" : 7.644162893295288,
+      "title" : "Rückruf bei Dr. Behrens"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 60,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-22T06:00:00Z",
+      "dueHasTime" : true,
+      "entryID" : "de-wochentag-9",
+      "finishedAt" : "2026-09-20T05:58:19Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.4984670877456665,
+      "title" : "Versenden um 8 Uhr"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 60,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-23T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-naechster-wt-1",
+      "finishedAt" : "2026-09-20T05:58:27Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.739000916481018,
+      "title" : "Reifen am Montag wechseln"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 60,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-23T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-naechster-wt-2",
+      "finishedAt" : "2026-09-20T05:58:34Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.459270000457764,
+      "title" : "Antrag bei der Stadt einreichen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 60,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-28T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-naechster-wt-3",
+      "finishedAt" : "2026-09-20T05:58:42Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.512246012687683,
+      "title" : "Zuschuss beantragen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 60,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-24T09:00:00Z",
+      "dueHasTime" : true,
+      "entryID" : "de-naechster-wt-4",
+      "finishedAt" : "2026-09-20T05:58:49Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.496649980545044,
+      "title" : "Physiotherapie bei 11 Uhr"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 60,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-naechste-woche-wt-1",
+      "finishedAt" : "2026-09-20T05:58:57Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.740301966667175,
+      "title" : "Steuererklärung morgen einreichen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 60,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-25T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-naechste-woche-wt-2",
+      "finishedAt" : "2026-09-20T05:59:05Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.244884967803955,
+      "title" : "Kundentermin bestätigen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 60,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-24T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-naechste-woche-wt-3",
+      "finishedAt" : "2026-09-20T05:59:13Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.891443967819214,
+      "title" : "Urlaubsantrag Montag stellen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 60,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-naechste-woche-wt-4",
+      "finishedAt" : "2026-09-20T05:59:21Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.707813024520874,
+      "title" : "Tickets für Hamburg buchen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 60,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kommender-wt-1",
+      "finishedAt" : "2026-09-20T05:59:28Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.612157940864563,
+      "title" : "Tonne an die Straße stellen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 60,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-23T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kommender-wt-2",
+      "finishedAt" : "2026-09-20T05:59:36Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.637427091598511,
+      "title" : "Das Protokoll verschicken"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 60,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-22T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-in-tagen-1",
+      "finishedAt" : "2026-09-20T05:59:49Z",
+      "people" : [
+
+      ],
+      "seconds" : 13.139590978622437,
+      "title" : "Rechnung bezahlen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "hintergrund",
+        "batteryPercent" : 60,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-in-tagen-2",
+      "error" : "CancellationError()",
+      "finishedAt" : "2026-09-20T06:08:53Z",
+      "people" : [
+
+      ],
+      "seconds" : 543.3207139968872
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "inaktiv",
+        "batteryPercent" : 40,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-in-tagen-2",
+      "error" : "CancellationError()",
+      "errorKind" : "andere",
+      "finishedAt" : "2026-09-20T07:43:49Z",
+      "people" : [
+
+      ],
+      "seconds" : 2.3505619764328003
     }
   ],
   "startedAt" : "2026-09-20T05:21:49Z"

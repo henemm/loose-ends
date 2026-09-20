@@ -26,6 +26,9 @@ scope_guard:
     - "\\.entitlements$"
     - "Info\\.plist$"
     - "^\\.github/"
+    # Data of the measuring instrument (#67): raw results fetched from the iPhone and the corpus itself.
+    - "^Measurement/results/"
+    - "^Measurement/date-title-corpus\\.json$"
   max_test_loc_delta: 500
   test_path_patterns: ["^LooseEndsTests/", "^LooseEndsUITests/"]
 
