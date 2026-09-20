@@ -1,0 +1,241 @@
+{
+  "events" : [
+    {
+      "at" : "2026-09-20T06:42:11Z",
+      "kind" : "app",
+      "note" : "gestartet; Argumente: --measure; Korpus: 203 Sätze"
+    },
+    {
+      "at" : "2026-09-20T06:42:11Z",
+      "kind" : "model",
+      "note" : "verfügbar"
+    },
+    {
+      "at" : "2026-09-20T06:42:11Z",
+      "kind" : "start",
+      "note" : "--measure; 0 von 203 erledigt"
+    },
+    {
+      "at" : "2026-09-20T06:42:11Z",
+      "kind" : "scene",
+      "note" : "vordergrund"
+    },
+    {
+      "at" : "2026-09-20T06:42:14Z",
+      "kind" : "failure",
+      "note" : "de-heute-1: andere"
+    },
+    {
+      "at" : "2026-09-20T06:42:14Z",
+      "kind" : "wait",
+      "note" : "60 s nach Fehlschlag"
+    },
+    {
+      "at" : "2026-09-20T06:43:18Z",
+      "kind" : "failure",
+      "note" : "de-heute-2: andere"
+    },
+    {
+      "at" : "2026-09-20T06:43:18Z",
+      "kind" : "wait",
+      "note" : "60 s nach Fehlschlag"
+    },
+    {
+      "at" : "2026-09-20T06:44:22Z",
+      "kind" : "failure",
+      "note" : "de-heute-3: andere"
+    },
+    {
+      "at" : "2026-09-20T06:44:23Z",
+      "kind" : "stop",
+      "note" : "Das Modell antwortet nicht (andere). Später weiter — der Stand bleibt erhalten."
+    }
+  ],
+  "name" : "date-title",
+  "results" : [
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "inaktiv",
+        "batteryPercent" : -1,
+        "device" : "arm64",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-heute-1",
+      "error" : "Error Domain=FoundationModels.LanguageModelError Code=-1 \"The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)\" UserInfo={NSMultipleUnderlyingErrorsKey=(\n    \"Error Domain=FoundationModels.LanguageModelError Code=-1 \\\"(null)\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\n    \\\"Error Domain=ModelManagerServices.ModelManagerError Code=1026 \\\\\\\"(null)\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\n)}\\\"\\n)}\"\n), NSLocalizedDescription=The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)}",
+      "finishedAt" : "2026-09-20T05:17:29Z",
+      "people" : [
+
+      ],
+      "seconds" : 2.3674780130386353
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : -1,
+        "device" : "arm64",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-heute-2",
+      "error" : "Error Domain=FoundationModels.LanguageModelError Code=-1 \"The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)\" UserInfo={NSMultipleUnderlyingErrorsKey=(\n    \"Error Domain=FoundationModels.LanguageModelError Code=-1 \\\"(null)\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\n    \\\"Error Domain=ModelManagerServices.ModelManagerError Code=1026 \\\\\\\"(null)\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\n)}\\\"\\n)}\"\n), NSLocalizedDescription=The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)}",
+      "finishedAt" : "2026-09-20T05:17:30Z",
+      "people" : [
+
+      ],
+      "seconds" : 0.13265395164489746
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : -1,
+        "device" : "arm64",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-heute-3",
+      "error" : "Error Domain=FoundationModels.LanguageModelError Code=-1 \"The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)\" UserInfo={NSMultipleUnderlyingErrorsKey=(\n    \"Error Domain=FoundationModels.LanguageModelError Code=-1 \\\"(null)\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\n    \\\"Error Domain=ModelManagerServices.ModelManagerError Code=1026 \\\\\\\"(null)\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\n)}\\\"\\n)}\"\n), NSLocalizedDescription=The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)}",
+      "finishedAt" : "2026-09-20T05:17:30Z",
+      "people" : [
+
+      ],
+      "seconds" : 0.12203598022460938
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "inaktiv",
+        "batteryPercent" : -1,
+        "device" : "arm64",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-heute-1",
+      "error" : "Error Domain=FoundationModels.LanguageModelError Code=-1 \"The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)\" UserInfo={NSMultipleUnderlyingErrorsKey=(\n    \"Error Domain=FoundationModels.LanguageModelError Code=-1 \\\"(null)\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\n    \\\"Error Domain=ModelManagerServices.ModelManagerError Code=1026 \\\\\\\"(null)\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\n)}\\\"\\n)}\"\n), NSLocalizedDescription=The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)}",
+      "finishedAt" : "2026-09-20T05:20:51Z",
+      "people" : [
+
+      ],
+      "seconds" : 0.9338229894638062
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : -1,
+        "device" : "arm64",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-heute-2",
+      "error" : "Error Domain=FoundationModels.LanguageModelError Code=-1 \"The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)\" UserInfo={NSLocalizedDescription=The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.), NSMultipleUnderlyingErrorsKey=(\n    \"Error Domain=FoundationModels.LanguageModelError Code=-1 \\\"(null)\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\n    \\\"Error Domain=ModelManagerServices.ModelManagerError Code=1026 \\\\\\\"(null)\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\n)}\\\"\\n)}\"\n)}",
+      "finishedAt" : "2026-09-20T05:20:51Z",
+      "people" : [
+
+      ],
+      "seconds" : 0.12223696708679199
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : -1,
+        "device" : "arm64",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-heute-3",
+      "error" : "Error Domain=FoundationModels.LanguageModelError Code=-1 \"The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)\" UserInfo={NSMultipleUnderlyingErrorsKey=(\n    \"Error Domain=FoundationModels.LanguageModelError Code=-1 \\\"(null)\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\n    \\\"Error Domain=ModelManagerServices.ModelManagerError Code=1026 \\\\\\\"(null)\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\n)}\\\"\\n)}\"\n), NSLocalizedDescription=The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)}",
+      "finishedAt" : "2026-09-20T05:20:51Z",
+      "people" : [
+
+      ],
+      "seconds" : 0.11661899089813232
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "inaktiv",
+        "batteryPercent" : -1,
+        "device" : "arm64",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-heute-1",
+      "error" : "Error Domain=FoundationModels.LanguageModelError Code=-1 \"The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)\" UserInfo={NSLocalizedDescription=The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.), NSMultipleUnderlyingErrorsKey=(\n    \"Error Domain=FoundationModels.LanguageModelError Code=-1 \\\"(null)\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\n    \\\"Error Domain=ModelManagerServices.ModelManagerError Code=1026 \\\\\\\"(null)\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\n)}\\\"\\n)}\"\n)}",
+      "errorKind" : "andere",
+      "finishedAt" : "2026-09-20T06:42:14Z",
+      "people" : [
+
+      ],
+      "seconds" : 2.261441946029663
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : -1,
+        "device" : "arm64",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-heute-2",
+      "error" : "Error Domain=FoundationModels.LanguageModelError Code=-1 \"The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)\" UserInfo={NSLocalizedDescription=The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.), NSMultipleUnderlyingErrorsKey=(\n    \"Error Domain=FoundationModels.LanguageModelError Code=-1 \\\"(null)\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\n    \\\"Error Domain=ModelManagerServices.ModelManagerError Code=1026 \\\\\\\"(null)\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\n)}\\\"\\n)}\"\n)}",
+      "errorKind" : "andere",
+      "finishedAt" : "2026-09-20T06:43:18Z",
+      "people" : [
+
+      ],
+      "seconds" : 0.5519089698791504
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : -1,
+        "device" : "arm64",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-heute-3",
+      "error" : "Error Domain=FoundationModels.LanguageModelError Code=-1 \"The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)\" UserInfo={NSMultipleUnderlyingErrorsKey=(\n    \"Error Domain=FoundationModels.LanguageModelError Code=-1 \\\"(null)\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\n    \\\"Error Domain=ModelManagerServices.ModelManagerError Code=1026 \\\\\\\"(null)\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\n)}\\\"\\n)}\"\n), NSLocalizedDescription=The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)}",
+      "errorKind" : "andere",
+      "finishedAt" : "2026-09-20T06:44:22Z",
+      "people" : [
+
+      ],
+      "seconds" : 0.4777190685272217
+    }
+  ],
+  "startedAt" : "2026-09-20T05:17:26Z"
+}

@@ -1,0 +1,8 @@
+2026-09-20T08:42:33+0200 start  --measure, 45s geplant
+2026-09-20T08:42:35+0200 abort  iPhone gesperrt, App nicht gestartet
+2026-09-20T08:45:51+0200 start  --measure, 45s geplant
+2026-09-20T08:46:01+0200 abort  iPhone gesperrt, App nicht gestartet
+2026-09-20T08:53:55+0200 start  --measure, 45s geplant
+2026-09-20T08:53:55+0200 error  Skript brach ab (set -e vor der Auswertung), Ausgang nicht protokolliert; Fehler behoben
+2026-09-20T08:54:27+0200 start  --measure, 45s geplant
+2026-09-20T08:54:38+0200 abort  iPhone gesperrt, App nicht gestartet
