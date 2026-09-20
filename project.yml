@@ -184,9 +184,8 @@ targets:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UILaunchScreen: {}
-        UIBackgroundModes: [processing]
-        # Wildcard-Kennung, wie der Scheduler sie für fortgesetzte Verarbeitung verlangt.
-        BGTaskSchedulerPermittedIdentifiers: [com.henning.looseends.lab.measure.*]
+        # Kein Hintergrundmodus (#83): am Akku drosselt Apple Hintergrundanfragen nach wenigen
+        # Aufrufen, gemessen wird deshalb nur im Vordergrund bei wachem Bildschirm.
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
     settings:

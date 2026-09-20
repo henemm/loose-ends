@@ -7,13 +7,7 @@ import SwiftUI
 /// group, no CloudKit, no shared store. Deleting this app deletes the whole measurement.
 @main
 struct LabApp: App {
-    @State private var runner: MeasurementRunner
-
-    init() {
-        // The background handler is registered per run by the runner itself, right before the
-        // request is submitted — a wildcard registration here is never matched by the scheduler.
-        _runner = State(initialValue: MeasurementRunner())
-    }
+    @State private var runner = MeasurementRunner()
 
     var body: some Scene {
         WindowGroup {
@@ -24,6 +18,7 @@ struct LabApp: App {
 
 struct LabView: View {
     @Bindable var runner: MeasurementRunner
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         NavigationStack {
@@ -51,20 +46,21 @@ struct LabView: View {
                 }
 
                 Section {
-                    Button(runner.done == 0 ? "Messen" : "Weitermessen") { runner.start() }
-                        .disabled(runner.state == .running || runner.state == .finished || runner.modelUnavailableReason != nil)
+                    Button(runner.done == 0 ? "Messen" : "Weitermessen") { runner.start(trigger: "Tipp") }
+                        .disabled(runner.isActive || runner.state == .finished || runner.modelUnavailableReason != nil)
                     Button("Anhalten") { runner.stop() }
-                        .disabled(runner.state != .running)
+                        .disabled(!runner.isActive)
                 } footer: {
-                    Text("Nach dem Tippen läuft die Messung weiter, auch wenn du die App verlässt — sichtbar in der Dynamic Island und dort jederzeit abbrechbar. Von selbst startet nichts. Jeder gemessene Satz ist sofort gesichert, ein Abbruch kostet nichts.")
+                    Text("Misst nur, solange die App offen ist; der Bildschirm bleibt dabei an. Am besten am Strom. Verlässt du die App oder sperrst das Gerät, hält die Messung an und macht beim nächsten Tippen weiter. Jeder gemessene Satz ist sofort gesichert.")
                 }
             }
             .navigationTitle("Loose Ends Labor")
         }
+        .onChange(of: scenePhase) { _, phase in runner.scene(phase) }
         .task {
             // Only for a run driven from the Mac (simctl/devicectl launch). Henning's own copy is
             // never launched with this argument, so nothing starts without his tap there.
-            if CommandLine.arguments.contains("--measure") { runner.start() }
+            if CommandLine.arguments.contains("--measure") { runner.start(trigger: "--measure") }
         }
     }
 
@@ -72,6 +68,7 @@ struct LabView: View {
         switch runner.state {
         case .idle: return "Bereit."
         case .running: return "Misst …"
+        case .waiting(let seconds): return "Wartet \(seconds) s nach einem Fehlschlag …"
         case .paused(let reason): return reason
         case .finished: return "Fertig. Die Ergebnisse werden beim nächsten Mal im selben WLAN abgeholt."
         }

@@ -16,6 +16,7 @@
 #
 # Messreihen gegen das echte Modell (Spikes #65-#73), ohne das iPhone zu belegen:
 #   ./scripts/sim.sh lab                      # Labor-App aufs iPhone bringen
+#   ./scripts/sim.sh lab-run [sekunden]       # Messlauf vom Mac starten (iPhone entsperrt), Start/Stopp protokolliert
 #   ./scripts/sim.sh lab-fetch                # Ergebnisse vom iPhone holen (still, ohne Zutun)
 #   ./scripts/sim.sh report                   # Bericht aus den geholten Ergebnissen bauen
 #
@@ -364,6 +365,41 @@ cmd_lab_fetch() {
     success "Ergebnisse in $LAB_RESULTS/$name.json"
 }
 
+# Startet den Messlauf vom Mac aus, für den Nachweis: das iPhone muss entsperrt sein und bleibt
+# es während der Messung (die App hält den Bildschirm wach). Start und Stopp stehen Mac-seitig
+# im Protokoll, damit ein Fehlversuch in der Ergebnisdatei gegen den Ablauf hier abgeglichen
+# werden kann statt geraten. Nach Ablauf wird die App beendet; jeder Satz ist bis dahin gesichert.
+cmd_lab_run() {
+    local id; id=$(require_device) || return 1
+    local seconds="${1:-40}"
+    command -v timeout >/dev/null || { error "timeout fehlt: brew install coreutils"; return 1; }
+    mkdir -p "$PROJECT_DIR/$LAB_RESULTS"
+    local log="$PROJECT_DIR/$LAB_RESULTS/lab-run.log"
+    echo "$(date '+%Y-%m-%dT%H:%M:%S%z') start  --measure, ${seconds}s geplant" >> "$log"
+    info "Messlauf auf dem iPhone, ${seconds}s"
+    # Der Ausgang steht im Protokoll, wie er war — nicht, wie er sein sollte: 124 heißt, die Zeit
+    # lief ab und das Signal ging an die App (devicectl reicht es weiter); 0 heißt, die App hat
+    # sich vorher selbst beendet; alles andere ist ein Fehler des Starts oder der Verbindung.
+    # `set -e` würde die Funktion bei einem Fehlschlag des Starts sofort verlassen, bevor der
+    # Ausgang im Protokoll steht — deshalb der Status über `&& … ||`.
+    local out status=0
+    out=$(timeout "$seconds" $DEVICECTL device process launch --terminate-existing --console \
+        --device "$id" "$LAB_BUNDLE" --measure 2>&1) || status=$?
+    local stamp; stamp=$(date '+%Y-%m-%dT%H:%M:%S%z')
+    if echo "$out" | grep -q "BSErrorCodeDescription = Locked"; then
+        echo "$stamp abort  iPhone gesperrt, App nicht gestartet" >> "$log"
+        warn "iPhone ist gesperrt - der Messlauf kann nur bei entsperrtem Gerät starten."
+        return 1
+    fi
+    case "$status" in
+        124) echo "$stamp stop   Zeit abgelaufen, App per Signal beendet" >> "$log" ;;
+        0)   echo "$stamp ended  App hat sich selbst beendet: $(echo "$out" | tail -1)" >> "$log" ;;
+        *)   echo "$stamp error  devicectl Exit $status: $(echo "$out" | tail -1)" >> "$log"
+             error "Start fehlgeschlagen (Exit $status)"; echo "$out" | tail -5; return 1 ;;
+    esac
+    cmd_lab_fetch
+}
+
 cmd_report() {
     ensure_project
     info "Bericht aus den geholten Ergebnissen"
@@ -398,6 +434,7 @@ case "$COMMAND" in
     device-console) cmd_device_console "$@" ;;
     device)         cmd_device ;;
     lab)            cmd_lab ;;
+    lab-run)        cmd_lab_run "$@" ;;
     lab-fetch)      cmd_lab_fetch "$@" ;;
     report)         cmd_report ;;
     help|--help|-h) cmd_help ;;

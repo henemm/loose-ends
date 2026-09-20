@@ -1,22 +1,29 @@
-import BackgroundTasks
 import Foundation
 import Observation
 import SwiftUI
 import UIKit
 import os
 
-/// Runs the corpus through the on-device model in slices.
+/// Runs the corpus through the on-device model, one note at a time, only while the app is open.
 ///
 /// The phone is Henning's everyday device, not a test bench: a run may be interrupted at any
-/// moment — he leaves the app, the system expires the background task, Apple throttles the model.
-/// So the runner owns exactly one rule: measure one note, write the file, then check whether it is
-/// still allowed to continue. Nothing is held in memory that would be lost.
+/// moment — he locks the phone, switches apps, Apple throttles the model. So the runner owns
+/// exactly one rule: measure one note, write the file, then check whether it is still allowed to
+/// continue. Nothing is held in memory that would be lost.
+///
+/// It never measures in the background (#83): on battery Apple rate-limits background requests
+/// after a handful of calls, so a background run only ever produced failures. Instead the screen
+/// is kept awake while measuring, and leaving the foreground pauses the run.
+///
+/// Everything the runner does goes into the same file as the results, as events with a
+/// timestamp — otherwise a bug in this class and a condition of the system look identical.
 @MainActor
 @Observable
 final class MeasurementRunner {
     enum State: Equatable {
         case idle
         case running
+        case waiting(Int)
         case paused(String)
         case finished
     }
@@ -30,43 +37,58 @@ final class MeasurementRunner {
     var total: Int { entries.count }
     var progress: Double { total == 0 ? 0 : Double(done) / Double(total) }
     var resultPath: String { store.url.lastPathComponent }
+    var isActive: Bool {
+        switch state {
+        case .running, .waiting: return true
+        default: return false
+        }
+    }
 
     private let store: MeasurementStore
     private let enricher = FoundationModelsEnricher()
     private let logger = Logger(subsystem: "com.henning.looseends.lab", category: "measurement")
     private var task: Task<Void, Never>?
-    private var backgroundTask: BGContinuedProcessingTask?
 
-    /// Apple throttles after a few calls on battery in the background. Three in a row means the
-    /// budget is gone; carrying on would only produce failures, so the run pauses and keeps what
-    /// it has.
-    private static let giveUpAfterConsecutiveFailures = 3
-    static let taskIdentifierPrefix = "com.henning.looseends.lab.measure"
-
-    init(name: String = "date-title") {
+    init(name: String = "date-title", arguments: [String] = CommandLine.arguments) {
         self.store = MeasurementStore(name: name, in: MeasurementStore.documents)
         self.run = store.load(name: name)
         self.entries = (try? Corpus.load()) ?? []
         if !entries.isEmpty && run.remaining(from: entries).isEmpty { state = .finished }
+        log("app", "gestartet; Argumente: \(arguments.dropFirst().joined(separator: " ")); Korpus: \(entries.count) Sätze")
+        log("model", enricher.unavailableReason.map { "nicht verfügbar: \($0)" } ?? "verfügbar")
     }
 
     var modelUnavailableReason: String? { enricher.unavailableReason }
 
     // MARK: - Starting and stopping
 
-    func start() {
-        guard state != .running, !entries.isEmpty else { return }
+    func start(trigger: String) {
+        guard !isActive, !entries.isEmpty else { return }
         state = .running
-        // When the scheduler itself launched the run (`adopt`), the task already exists.
-        if backgroundTask == nil { submitBackgroundTask() }
+        UIApplication.shared.isIdleTimerDisabled = true
+        log("start", "\(trigger); \(done) von \(total) erledigt")
         task = Task { [weak self] in await self?.measureRemaining() }
     }
 
     func stop(_ reason: String = "Angehalten") {
+        guard isActive else { return }
         task?.cancel()
         task = nil
-        finishBackgroundTask(success: false)
-        if case .finished = state {} else { state = .paused(reason) }
+        UIApplication.shared.isIdleTimerDisabled = false
+        state = .paused(reason)
+        log("stop", reason)
+    }
+
+    /// Every scene change is an event; leaving the foreground pauses the run and keeps its state.
+    func scene(_ phase: ScenePhase) {
+        let name: String
+        switch phase {
+        case .active: name = "vordergrund"
+        case .inactive: name = "inaktiv"
+        default: name = "hintergrund"
+        }
+        log("scene", name)
+        if phase != .active { stop("App verlassen — der Stand bleibt erhalten.") }
     }
 
     // MARK: - The loop
@@ -78,19 +100,27 @@ final class MeasurementRunner {
             lastNote = entry.text
             let result = await measure(entry)
             run.results.append(result)
+            if let kind = result.errorKind { run.log("failure", "\(entry.id): \(kind)") }
             save()
-            updateBackgroundProgress()
+            if Task.isCancelled { return }
 
             consecutiveFailures = result.succeeded ? 0 : consecutiveFailures + 1
-            if consecutiveFailures >= Self.giveUpAfterConsecutiveFailures {
-                let throttled = result.wasRateLimited
-                stop(throttled ? "Apple drosselt gerade. Später weiter — der Stand bleibt erhalten."
-                               : "Das Modell antwortet nicht. Später weiter — der Stand bleibt erhalten.")
+            guard let delay = MeasurementPacing.delayBeforeNext(consecutiveFailures: consecutiveFailures) else {
+                stop(result.wasRateLimited
+                     ? "Apple drosselt gerade. Später weiter — der Stand bleibt erhalten."
+                     : "Das Modell antwortet nicht (\(result.errorKind ?? MeasurementErrorKind.other)). Später weiter — der Stand bleibt erhalten.")
                 return
+            }
+            if delay > 0 {
+                state = .waiting(Int(delay))
+                log("wait", "\(Int(delay)) s nach Fehlschlag")
+                do { try await Task.sleep(for: .seconds(delay)) } catch { return }
+                state = .running
             }
         }
         state = .finished
-        finishBackgroundTask(success: true)
+        UIApplication.shared.isIdleTimerDisabled = false
+        log("finished", "\(done) von \(total)")
     }
 
     private func measure(_ entry: Corpus.Entry) async -> MeasurementResult {
@@ -112,11 +142,19 @@ final class MeasurementRunner {
             result.people = draft.people?.value ?? []
         } catch {
             result.error = "\(error)"
-            logger.error("Satz \(entry.id, privacy: .public) fehlgeschlagen: \(error, privacy: .public)")
+            result.errorKind = MeasurementErrorKind.classify(error)
+            logger.error("Satz \(entry.id, privacy: .public) fehlgeschlagen (\(result.errorKind ?? "", privacy: .public)): \(error, privacy: .public)")
         }
         result.finishedAt = Date()
         result.seconds = result.finishedAt.timeIntervalSince(started)
         return result
+    }
+
+    // MARK: - Persistence
+
+    private func log(_ kind: String, _ note: String = "") {
+        run.log(kind, note)
+        save()
     }
 
     private func save() {
@@ -124,64 +162,11 @@ final class MeasurementRunner {
             try store.save(run)
         } catch {
             logger.error("Ergebnisdatei nicht geschrieben: \(error, privacy: .public)")
-            stop("Ergebnisse lassen sich nicht sichern.")
+            task?.cancel()
+            task = nil
+            UIApplication.shared.isIdleTimerDisabled = false
+            state = .paused("Ergebnisse lassen sich nicht sichern.")
         }
-    }
-
-    // MARK: - Staying alive while he puts the phone away
-
-    /// Submitted only on his tap, and only from the foreground: the system shows the run in the
-    /// Dynamic Island with a cancel button, so nothing ever measures unseen.
-    ///
-    /// The wildcard in Info.plist only *permits* identifiers under the prefix. A handler must still
-    /// be registered for the exact identifier right before it is submitted; registering the
-    /// wildcard itself and submitting a fresh identifier crashes with "No launch handler
-    /// registered" (Apple DTS, developer.apple.com/forums/thread/799126). That crash is what
-    /// killed the first version of this app on every tap of "Messen".
-    private func submitBackgroundTask() {
-        let identifier = "\(Self.taskIdentifierPrefix).\(UUID().uuidString.prefix(8))"
-        // On the main queue: the scheduler otherwise calls the handler on its own queue, and a
-        // closure of this main-actor class traps there (dispatch_assert_queue, seen on device).
-        let registered = BGTaskScheduler.shared.register(forTaskWithIdentifier: identifier, using: .main) { [weak self] task in
-            guard let task = task as? BGContinuedProcessingTask else { return }
-            Task { @MainActor in self?.adopt(task) }
-        }
-        guard registered else {
-            logger.notice("Hintergrundlauf nicht registrierbar: \(identifier, privacy: .public)")
-            return
-        }
-        let request = BGContinuedProcessingTaskRequest(
-            identifier: identifier,
-            title: "Messreihe Datum und Titel",
-            subtitle: "\(done) von \(total) Sätzen")
-        request.strategy = .queue
-        Task {
-            do {
-                try await BGTaskScheduler.shared.submitTaskRequest(request)
-            } catch {
-                // Not fatal: the run then simply stops when he leaves the app and resumes later.
-                logger.notice("Hintergrundlauf abgelehnt: \(error, privacy: .public)")
-            }
-        }
-    }
-
-    func adopt(_ task: BGContinuedProcessingTask) {
-        backgroundTask = task
-        task.expirationHandler = { [weak self] in
-            Task { @MainActor in self?.stop("Das System hat die Messung beendet. Später weiter.") }
-        }
-        updateBackgroundProgress()
-        if state != .running { start() }
-    }
-
-    private func updateBackgroundProgress() {
-        backgroundTask?.progress.totalUnitCount = Int64(total)
-        backgroundTask?.progress.completedUnitCount = Int64(done)
-    }
-
-    private func finishBackgroundTask(success: Bool) {
-        backgroundTask?.setTaskCompleted(success: success)
-        backgroundTask = nil
     }
 }
 
