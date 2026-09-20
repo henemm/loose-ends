@@ -58,6 +58,29 @@ dem Text ableitbar. Das entschuldigt das Ergebnis nicht, es verschiebt die Frage
 - **Werkzeuge.** Apple liefert mit macOS 27 die `fm`-Kommandozeile und ein Evaluations-Framework mit
   Modell-Richter. Beides fehlt auf macOS 26. Für die Experimente reicht ein Swift-Skript (verifiziert).
 
+### A3 gemessen (2026-09-20, iPhone 16 Pro, 317 Sätze in zwölf Bauformen)
+
+Bericht: `docs/reference/date-title-fidelity.md`, Befund in #67.
+
+| Kriterium | Abbruch | Modell | `NSDataDetector` |
+|---|---|---|---|
+| Datum exakt | < 95 % | 50 % von 138 | 65 % |
+| Erfundene Daten bei Sätzen ohne Zeitangabe | > 2 % | 96,5 % von 170 | 0 % |
+| Titel mit erfundenen Fakten | > 2 % | 0,3 % von 308 | – |
+
+**Titel hält, Datum reißt.** Der Titel ist über alle Bauformen sauber, auch bei Diktaten,
+Stichwörtern und Tippfehlern; die Satzform spielt keine Rolle (stützt B2). Das Datum reißt
+doppelt: Wochentage rechnet das Modell falsch (0–22 % exakt, „morgen / in N Tagen" 78 %), und bei
+Sätzen ohne Zeitangabe setzt es fast immer den Erfassungstag aus dem Prompt. Das ist A1 am Datum:
+Das Modell weiß nicht, dass es nichts weiß. Im Produkt wäre das keine Korrektur per Handgriff,
+sondern eine Heute-Ansicht voller erfundener Fälligkeiten.
+
+**PO-Entscheidung (Henning):** „Warum willst du Dinge mit einem LLM lösen, die sich durch einfache
+Regel und RegEx lösen lassen?" Das Datum kommt aus einem deterministischen Parser (#92), das Modell
+verliert das Datumsfeld. Die Kalenderrechnung dafür existiert bereits als Regelwerk des Korpus.
+Dieselbe Frage gilt künftig für jedes Feld zuerst: Regeln, wo sie reichen; das Modell nur für
+Sprachverstehen. #86 und #90 sind damit geschlossen.
+
 ## Die Annahmen, nach Tödlichkeit
 
 Jede Annahme hat ein Experiment, das ohne App, ohne Oberfläche und ohne Henning läuft, ein
