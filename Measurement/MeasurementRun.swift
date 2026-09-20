@@ -143,6 +143,10 @@ enum MeasurementErrorKind {
             @unknown default: return other
             }
         }
+        // `LanguageModelError` replaces `GenerationError` in the iOS 27 SDK (Xcode 27, Swift 6.4).
+        // CI still builds with Xcode 26, where the type does not exist, so this is a compile-time
+        // guard, not `#available`.
+        #if compiler(>=6.4)
         if let model = error as? LanguageModelError {
             switch model {
             case .rateLimited: return rateLimited
@@ -155,6 +159,7 @@ enum MeasurementErrorKind {
             @unknown default: return other
             }
         }
+        #endif
         #endif
         return other
     }
