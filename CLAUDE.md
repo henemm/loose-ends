@@ -18,7 +18,8 @@ Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, 
   the line "Without the model this fails because …" with evidence from a measurement; without that line
   the rule path is the proposal. Every measurement report carries the rule-based column as baseline; if
   the rules beat the model, the rules win, and an existing ADR or schema is not a counter-argument.
-  Measured 2026-09-20: model 50 % exact dates, 96.5 % invented; `NSDataDetector` 65 %, 0 % (#67, #92).
+  Measured 2026-09-20: model 50 % exact dates, 96.5 % invented; `NSDataDetector` 65 %, 0 % (#67, #92);
+  own rule parser 99.3 %, 0 % (#92, Schnitt 1).
 - No `try?` that swallows errors, `Logger` not `print`, Swift 6 strict concurrency, deployment target 27.
 - A `ModelContext` does not retain its `ModelContainer`. Keep the container alive for as long as the context
   is used (tests: hold it in a local or a helper struct), or the next save or fetch crashes the process.
@@ -110,6 +111,9 @@ not scope creep on the current one.
 - `Shared/` compiles into the watch and widget targets too: no SwiftUI that is unavailable on watchOS there
   (keyboard shortcuts, navigation bar modifiers). App views belong in `LooseEnds/Views`.
 - `docs/project/` — decisions, user story, data model, design briefing, load-bearing assumptions with their experiments and alternatives (`06-annahmen-und-experimente.md`); `docs/reference/` — learnings carried over from FocusBlox
+- `Measurement/` — measurement-only code against the fidelity corpus: `DateExpressionParser`,
+  `TimeExpressionParser` (rule-based date/time extraction DE/EN); compiles into `LooseEndsTests` and
+  the lab app only, no product path
 
 ## Naming
 

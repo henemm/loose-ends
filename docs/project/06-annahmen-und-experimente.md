@@ -62,11 +62,12 @@ dem Text ableitbar. Das entschuldigt das Ergebnis nicht, es verschiebt die Frage
 
 Bericht: `docs/reference/date-title-fidelity.md`, Befund in #67.
 
-| Kriterium | Abbruch | Modell | `NSDataDetector` |
-|---|---|---|---|
-| Datum exakt | < 95 % | 50 % von 138 | 65 % |
-| Erfundene Daten bei Sätzen ohne Zeitangabe | > 2 % | 96,5 % von 170 | 0 % |
-| Titel mit erfundenen Fakten | > 2 % | 0,3 % von 308 | – |
+| Kriterium | Abbruch | Modell | `NSDataDetector` | Regelparser (#92) |
+|---|---|---|---|---|
+| Datum exakt | < 95 % | 50 % von 138 | 65 % | 99,3 % von 139 |
+| Erfundene Daten bei Sätzen ohne Zeitangabe | > 2 % | 96,5 % von 170 | 0 % | 0 % von 170 |
+| Uhrzeit exakt | – | 57,1 % von 21 | – | 100 % von 24 |
+| Titel mit erfundenen Fakten | > 2 % | 0,3 % von 308 | – | – |
 
 **Titel hält, Datum reißt.** Der Titel ist über alle Bauformen sauber, auch bei Diktaten,
 Stichwörtern und Tippfehlern; die Satzform spielt keine Rolle (stützt B2). Das Datum reißt
@@ -80,6 +81,15 @@ Regel und RegEx lösen lassen?" Das Datum kommt aus einem deterministischen Pars
 verliert das Datumsfeld. Die Kalenderrechnung dafür existiert bereits als Regelwerk des Korpus.
 Dieselbe Frage gilt künftig für jedes Feld zuerst: Regeln, wo sie reichen; das Modell nur für
 Sprachverstehen. #86 und #90 sind damit geschlossen.
+
+**Der Regelparser, gemessen (2026-09-20, #92 Schnitt 1).** Der eigene Zeitausdruck-Parser DE/EN
+(`Measurement/DateExpressionParser.swift`, `Measurement/TimeExpressionParser.swift`) trifft 138 der
+139 Datumssätze; der eine Fehlversuch ist der Tippfehler „Am Freitga den Zählerstand melden", und er
+lässt das Feld leer, statt zu raten. Auf den 170 Kontrollsätzen und den acht Wiederholungen erfindet
+er kein einziges Datum, die Uhrzeit trifft er auf allen 24 Sätzen. Gerechnet wurde auf dem Mac gegen
+einen festen Referenztag (Do 12.3.2026), ohne Modell und ohne Gerät — die Zahl ist in CI
+wiederholbar (`DateParserCorpusTests`). Die Grenze aus #67 hält damit für das Datum, aber ohne das
+Modell: Regeln 99,3 %, Modell 50 %. Der Umbau der App (Schnitt 2) ist damit freigegeben.
 
 ## Die Annahmen, nach Tödlichkeit
 

@@ -53,10 +53,15 @@ struct DateTitleReportTests {
         var invented = Tally()
         var parserInvented = Tally()
         var time = Tally()
+        /// The rule parser of #92, measured on the same sentences as the two columns above.
+        var ruleParser = Tally()
+        var ruleParserInvented = Tally()
+        var ruleParserTime = Tally()
         var entities = Tally()
         var facts = Tally()
         var foreign = Tally()
         var byRule: [String: Tally] = [:]
+        var ruleParserByRule: [String: Tally] = [:]
         var byCondition: [String: Tally] = [:]
         var byForm: [String: FormTally] = [:]
         var seconds: [Double] = []
@@ -86,6 +91,7 @@ struct DateTitleReportTests {
             Self.scoreTitle(entry, result, into: &report)
         }
         Self.scoreParser(corpus, calendar: calendar, into: &report)
+        Self.scoreRuleParser(corpus, calendar: calendar, reference: Date(), into: &report)
 
         let markdown = Self.markdown(report, runs: runs, corpus: corpus)
         let destination = MeasurementFiles.repositoryRoot.appendingPathComponent("docs/reference/date-title-fidelity.md")
@@ -147,6 +153,32 @@ struct DateTitleReportTests {
         }
     }
 
+    /// The rule parser from #92 on the whole corpus, scored like the `NSDataDetector` column:
+    /// against a reference day it never saw. Times are scored on every sentence that has one,
+    /// repetitions included — "jeden Tag um 7 Uhr" carries a time even though it carries no date.
+    static func scoreRuleParser(_ corpus: [Corpus.Entry], calendar: Calendar, reference: Date, into report: inout Report) {
+        let parser = DateExpressionParser(calendar: calendar)
+        let clock = TimeExpressionParser()
+        for entry in corpus {
+            if entry.countsForDateMeasurement {
+                let got = parser.date(in: entry.text, reference: reference)
+                if let expectation = entry.date {
+                    let accepted = expectation.acceptedDays(reference: reference, calendar: calendar)
+                    let hit = got.map(accepted.contains) ?? false
+                    let miss = "`\(entry.text)` \u{2192} \(day(got, calendar)) statt \(day(accepted.min(), calendar)) \u{b7} \(ruleName(expectation))"
+                    report.ruleParser.record(hit: hit, empty: got == nil, miss: miss)
+                    report.ruleParserByRule[ruleName(expectation), default: Tally()].record(hit: hit, empty: got == nil)
+                } else {
+                    report.ruleParserInvented.record(hit: got == nil, miss: "`\(entry.text)` \u{2192} \(day(got, calendar))")
+                }
+            }
+            guard let expected = entry.time else { continue }
+            let got = clock.time(in: entry.text).map { String(format: "%02d:%02d", $0.hour, $0.minute) }
+            report.ruleParserTime.record(hit: got == expected, empty: got == nil,
+                                         miss: "`\(entry.text)` \u{2192} \(got ?? "\u{2013}") statt \(expected)")
+        }
+    }
+
     // MARK: - Report
 
     static func markdown(_ report: Report, runs: [MeasurementRun], corpus: [Corpus.Entry]) -> String {
@@ -186,22 +218,31 @@ struct DateTitleReportTests {
         var lines = [
             "## Datum",
             "",
-            "| Messung | Modell | NSDataDetector |",
-            "|---|---|---|",
-            "| Exakt getroffen | \(percent(report.model.share)) von \(report.model.total) | \(percent(report.parser.share)) von \(report.parser.total) |",
-            "| Feld leer gelassen statt geraten | \(report.model.empty) | \(report.parser.empty) |",
-            "| Erfundene Daten bei Sätzen ohne Datum | \(inverse(report.invented)) | \(inverse(report.parserInvented)) |",
+            "| Messung | Modell | NSDataDetector | Regelparser |",
+            "|---|---|---|---|",
+            "| Exakt getroffen | \(percent(report.model.share)) von \(report.model.total) | \(percent(report.parser.share)) von \(report.parser.total) | \(percent(report.ruleParser.share)) von \(report.ruleParser.total) |",
+            "| Feld leer gelassen statt geraten | \(report.model.empty) | \(report.parser.empty) | \(report.ruleParser.empty) |",
+            "| Erfundene Daten bei Sätzen ohne Datum | \(inverse(report.invented)) | \(inverse(report.parserInvented)) | \(inverse(report.ruleParserInvented)) |",
             "",
             "### Nach Art des Ausdrucks",
             "",
-            "| Ausdruck | Sätze | Modell exakt | Leer gelassen |",
-            "|---|---|---|---|",
+            "| Ausdruck | Sätze | Modell exakt | Leer gelassen | Regelparser exakt |",
+            "|---|---|---|---|---|",
         ]
-        for (rule, tally) in report.byRule.sorted(by: { $0.value.share < $1.value.share }) {
-            lines.append("| \(rule) | \(tally.total) | \(percent(tally.share)) | \(tally.empty) |")
+        // Rules the model never answered still get their row from the rule parser, which runs over
+        // the whole corpus: a missing row would read as "nothing to see here".
+        let rules = Set(report.byRule.keys).union(report.ruleParserByRule.keys)
+        for rule in rules.sorted(by: { (report.byRule[$0]?.share ?? 0, $0) < (report.byRule[$1]?.share ?? 0, $1) }) {
+            let tally = report.byRule[rule] ?? Tally()
+            let ruleTally = report.ruleParserByRule[rule]
+            let parsed = ruleTally.map { percent($0.share) } ?? "–"
+            lines.append("| \(rule) | \(tally.total) | \(percent(tally.share)) | \(tally.empty) | \(parsed) |")
         }
         if report.time.total > 0 {
             lines += ["", "**Uhrzeit:** \(percent(report.time.share)) exakt bei \(report.time.total) Sätzen mit Uhrzeit."]
+        }
+        if report.ruleParserTime.total > 0 {
+            lines += ["", "**Uhrzeit Regelparser:** \(percent(report.ruleParserTime.share)) exakt bei \(report.ruleParserTime.total) Sätzen mit Uhrzeit."]
         }
         return lines.joined(separator: "\n")
     }
@@ -279,6 +320,9 @@ struct DateTitleReportTests {
                  block("Falsches Datum", report.model.misses),
                  block("Datum erfunden", report.invented.misses),
                  block("Falsche Uhrzeit", report.time.misses),
+                 block("Regelparser danebenging", report.ruleParser.misses),
+                 block("Regelparser erfand ein Datum", report.ruleParserInvented.misses),
+                 block("Regelparser falsche Uhrzeit", report.ruleParserTime.misses),
                  block("Entität verloren", report.entities.misses),
                  block("Fakt erfunden", report.facts.misses)].filter { !$0.isEmpty }).joined(separator: "\n\n")
     }
@@ -339,5 +383,69 @@ struct DateTitleFormSectionTests {
         #expect(section.contains("| stichwort | 3 | 50.0 % von 2 | 0.0 % von 1 | 100.0 % |"))
         #expect(section.contains("| frage | 1 | – | 100.0 % von 1 | 0.0 % |"))
         #expect(DateTitleReportTests.markdown(report, runs: [], corpus: []).contains("## Nach Bauform"))
+    }
+}
+
+/// The report carries the rule-based parser (#92) as a third column next to the model and
+/// `NSDataDetector`, split by kind of expression, with its own "what went wrong" block. Checked on
+/// a synthetic corpus and report, so it runs before any run was fetched.
+@Suite("Bericht: Regelparser-Spalte")
+struct DateTitleRuleParserSectionTests {
+    static func corpus(_ json: String) throws -> [Corpus.Entry] {
+        try JSONDecoder().decode([Corpus.Entry].self, from: Data(json.utf8))
+    }
+
+    @Test("Der Regelparser wird über Datum, Kontrolle und Uhrzeit gezählt, Wiederholungen nur bei der Uhrzeit")
+    func scoring() throws {
+        let corpus = try Self.corpus("""
+        [{"id": "a", "lang": "de", "text": "Morgen die Kita anrufen", "date": {"rule": "offsetDays", "value": 1}},
+         {"id": "b", "lang": "de", "text": "Rechnung 4711 reklamieren"},
+         {"id": "c", "lang": "de", "text": "Jeden Tag um 7 Uhr die Tabletten nehmen", "time": "07:00", "repeat": "daily"}]
+        """)
+        var report = DateTitleReportTests.Report()
+        DateTitleReportTests.scoreRuleParser(corpus, calendar: CorpusTests.calendar, reference: CorpusTests.reference, into: &report)
+        #expect(report.ruleParser.total == 1)
+        #expect(report.ruleParser.hit == 1)
+        #expect(report.ruleParserInvented.total == 1)
+        #expect(report.ruleParserInvented.hit == 1)
+        #expect(report.ruleParserTime.total == 1)
+        #expect(report.ruleParserTime.hit == 1)
+        #expect(report.ruleParserByRule["in N Tagen / morgen"]?.hit == 1)
+    }
+
+    @Test("Datumstabelle hat die Spalte Regelparser, auch nach Art des Ausdrucks")
+    func dateSection() {
+        var report = DateTitleReportTests.Report()
+        report.model.record(hit: true)
+        report.parser.record(hit: false, empty: true)
+        report.ruleParser.record(hit: true)
+        report.ruleParser.record(hit: false, empty: true)
+        report.ruleParserInvented.record(hit: true)
+        report.ruleParserTime.record(hit: true)
+        report.byRule["Wochentag", default: .init()].record(hit: true)
+        report.ruleParserByRule["Wochentag", default: .init()].record(hit: false)
+        report.ruleParserByRule["Wochentag", default: .init()].record(hit: true)
+
+        let section = DateTitleReportTests.dateSection(report)
+        #expect(section.contains("| Messung | Modell | NSDataDetector | Regelparser |"))
+        #expect(section.contains("| Exakt getroffen | 100.0 % von 1 | 0.0 % von 1 | 50.0 % von 2 |"))
+        #expect(section.contains("| Feld leer gelassen statt geraten | 0 | 1 | 1 |"))
+        #expect(section.contains("| Erfundene Daten bei Sätzen ohne Datum | noch nicht gemessen | noch nicht gemessen | 0.0 % von 1 |"))
+        #expect(section.contains("| Ausdruck | Sätze | Modell exakt | Leer gelassen | Regelparser exakt |"))
+        #expect(section.contains("| Wochentag | 1 | 100.0 % | 0 | 50.0 % |"))
+        #expect(section.contains("**Uhrzeit Regelparser:** 100.0 % exakt bei 1 Sätzen mit Uhrzeit."))
+    }
+
+    @Test("Was der Regelparser verfehlt, steht mit Ausdrucksart im Bericht")
+    func missesSection() {
+        var report = DateTitleReportTests.Report()
+        report.ruleParser.record(hit: false, miss: "`Am Freitga den Zählerstand melden` → – statt 2026-03-13 · Wochentag")
+        report.ruleParserTime.record(hit: false, miss: "`Um halb zwölf anrufen` → 12:30 statt 11:30")
+
+        let section = DateTitleReportTests.missesSection(report)
+        #expect(section.contains("### Regelparser danebenging (1)"))
+        #expect(section.contains("- `Am Freitga den Zählerstand melden` → – statt 2026-03-13 · Wochentag"))
+        #expect(section.contains("### Regelparser falsche Uhrzeit (1)"))
+        #expect(DateTitleReportTests.markdown(report, runs: [], corpus: []).contains("Regelparser danebenging"))
     }
 }
