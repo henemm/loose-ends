@@ -39,6 +39,316 @@
       "at" : "2026-09-20T07:43:50Z",
       "kind" : "scene",
       "note" : "hintergrund"
+    },
+    {
+      "at" : "2026-09-20T08:42:02Z",
+      "kind" : "app",
+      "note" : "gestartet; Argumente: ; Korpus: 203 Sätze"
+    },
+    {
+      "at" : "2026-09-20T08:42:02Z",
+      "kind" : "model",
+      "note" : "verfügbar"
+    },
+    {
+      "at" : "2026-09-20T08:42:02Z",
+      "kind" : "scene",
+      "note" : "vordergrund"
+    },
+    {
+      "at" : "2026-09-20T08:42:07Z",
+      "kind" : "scene",
+      "note" : "inaktiv"
+    },
+    {
+      "at" : "2026-09-20T08:42:09Z",
+      "kind" : "scene",
+      "note" : "hintergrund"
+    },
+    {
+      "at" : "2026-09-20T08:42:36Z",
+      "kind" : "scene",
+      "note" : "inaktiv"
+    },
+    {
+      "at" : "2026-09-20T08:42:36Z",
+      "kind" : "scene",
+      "note" : "vordergrund"
+    },
+    {
+      "at" : "2026-09-20T08:42:37Z",
+      "kind" : "start",
+      "note" : "Tipp; 31 von 203 erledigt"
+    },
+    {
+      "at" : "2026-09-20T08:46:25Z",
+      "kind" : "failure",
+      "note" : "de-zeit-1: guardrail"
+    },
+    {
+      "at" : "2026-09-20T08:46:25Z",
+      "kind" : "wait",
+      "note" : "60 s nach Fehlschlag"
+    },
+    {
+      "at" : "2026-09-20T09:00:49Z",
+      "kind" : "failure",
+      "note" : "de-name-5: guardrail"
+    },
+    {
+      "at" : "2026-09-20T09:00:49Z",
+      "kind" : "wait",
+      "note" : "60 s nach Fehlschlag"
+    },
+    {
+      "at" : "2026-09-20T09:01:42Z",
+      "kind" : "scene",
+      "note" : "inaktiv"
+    },
+    {
+      "at" : "2026-09-20T09:01:42Z",
+      "kind" : "stop",
+      "note" : "App verlassen — der Stand bleibt erhalten."
+    },
+    {
+      "at" : "2026-09-20T09:01:43Z",
+      "kind" : "scene",
+      "note" : "hintergrund"
+    },
+    {
+      "at" : "2026-09-20T09:19:50Z",
+      "kind" : "scene",
+      "note" : "inaktiv"
+    },
+    {
+      "at" : "2026-09-20T09:19:51Z",
+      "kind" : "scene",
+      "note" : "vordergrund"
+    },
+    {
+      "at" : "2026-09-20T09:19:52Z",
+      "kind" : "start",
+      "note" : "Tipp; 139 von 203 erledigt"
+    },
+    {
+      "at" : "2026-09-20T09:20:06Z",
+      "kind" : "failure",
+      "note" : "de-zeit-1: guardrail"
+    },
+    {
+      "at" : "2026-09-20T09:20:06Z",
+      "kind" : "wait",
+      "note" : "60 s nach Fehlschlag"
+    },
+    {
+      "at" : "2026-09-20T09:25:39Z",
+      "kind" : "scene",
+      "note" : "inaktiv"
+    },
+    {
+      "at" : "2026-09-20T09:25:39Z",
+      "kind" : "stop",
+      "note" : "App verlassen — der Stand bleibt erhalten."
+    },
+    {
+      "at" : "2026-09-20T09:25:39Z",
+      "kind" : "failure",
+      "note" : "en-number-4: andere"
+    },
+    {
+      "at" : "2026-09-20T09:25:40Z",
+      "kind" : "scene",
+      "note" : "hintergrund"
+    },
+    {
+      "at" : "2026-09-20T09:44:19Z",
+      "kind" : "app",
+      "note" : "gestartet; Argumente: ; Korpus: 203 Sätze"
+    },
+    {
+      "at" : "2026-09-20T09:44:19Z",
+      "kind" : "model",
+      "note" : "verfügbar"
+    },
+    {
+      "at" : "2026-09-20T09:44:19Z",
+      "kind" : "scene",
+      "note" : "vordergrund"
+    },
+    {
+      "at" : "2026-09-20T09:46:19Z",
+      "kind" : "scene",
+      "note" : "inaktiv"
+    },
+    {
+      "at" : "2026-09-20T09:46:21Z",
+      "kind" : "scene",
+      "note" : "vordergrund"
+    },
+    {
+      "at" : "2026-09-20T09:46:21Z",
+      "kind" : "scene",
+      "note" : "hintergrund"
+    },
+    {
+      "at" : "2026-09-20T10:05:10Z",
+      "kind" : "scene",
+      "note" : "inaktiv"
+    },
+    {
+      "at" : "2026-09-20T10:05:10Z",
+      "kind" : "scene",
+      "note" : "hintergrund"
+    },
+    {
+      "at" : "2026-09-20T11:21:12Z",
+      "kind" : "app",
+      "note" : "gestartet; Argumente: ; Korpus: 203 Sätze"
+    },
+    {
+      "at" : "2026-09-20T11:21:12Z",
+      "kind" : "model",
+      "note" : "verfügbar"
+    },
+    {
+      "at" : "2026-09-20T11:21:12Z",
+      "kind" : "scene",
+      "note" : "vordergrund"
+    },
+    {
+      "at" : "2026-09-20T11:21:16Z",
+      "kind" : "start",
+      "note" : "Tipp; 172 von 203 erledigt"
+    },
+    {
+      "at" : "2026-09-20T11:26:05Z",
+      "kind" : "finished",
+      "note" : "203 von 203"
+    },
+    {
+      "at" : "2026-09-20T11:28:05Z",
+      "kind" : "scene",
+      "note" : "inaktiv"
+    },
+    {
+      "at" : "2026-09-20T11:28:06Z",
+      "kind" : "scene",
+      "note" : "vordergrund"
+    },
+    {
+      "at" : "2026-09-20T11:28:06Z",
+      "kind" : "scene",
+      "note" : "hintergrund"
+    },
+    {
+      "at" : "2026-09-20T12:06:42Z",
+      "kind" : "scene",
+      "note" : "inaktiv"
+    },
+    {
+      "at" : "2026-09-20T12:06:43Z",
+      "kind" : "scene",
+      "note" : "vordergrund"
+    },
+    {
+      "at" : "2026-09-20T12:06:52Z",
+      "kind" : "scene",
+      "note" : "inaktiv"
+    },
+    {
+      "at" : "2026-09-20T12:06:53Z",
+      "kind" : "scene",
+      "note" : "vordergrund"
+    },
+    {
+      "at" : "2026-09-20T12:06:53Z",
+      "kind" : "scene",
+      "note" : "hintergrund"
+    },
+    {
+      "at" : "2026-09-20T12:06:56Z",
+      "kind" : "scene",
+      "note" : "inaktiv"
+    },
+    {
+      "at" : "2026-09-20T12:06:56Z",
+      "kind" : "scene",
+      "note" : "hintergrund"
+    },
+    {
+      "at" : "2026-09-20T13:05:42Z",
+      "kind" : "app",
+      "note" : "gestartet; Argumente: ; Korpus: 317 Sätze"
+    },
+    {
+      "at" : "2026-09-20T13:05:42Z",
+      "kind" : "model",
+      "note" : "verfügbar"
+    },
+    {
+      "at" : "2026-09-20T13:05:42Z",
+      "kind" : "scene",
+      "note" : "vordergrund"
+    },
+    {
+      "at" : "2026-09-20T13:05:44Z",
+      "kind" : "start",
+      "note" : "Tipp; 203 von 317 erledigt"
+    },
+    {
+      "at" : "2026-09-20T13:08:48Z",
+      "kind" : "scene",
+      "note" : "inaktiv"
+    },
+    {
+      "at" : "2026-09-20T13:08:48Z",
+      "kind" : "stop",
+      "note" : "App verlassen — der Stand bleibt erhalten."
+    },
+    {
+      "at" : "2026-09-20T13:08:48Z",
+      "kind" : "failure",
+      "note" : "de-ich-1: andere"
+    },
+    {
+      "at" : "2026-09-20T13:08:48Z",
+      "kind" : "scene",
+      "note" : "hintergrund"
+    },
+    {
+      "at" : "2026-09-20T13:10:04Z",
+      "kind" : "app",
+      "note" : "gestartet; Argumente: ; Korpus: 317 Sätze"
+    },
+    {
+      "at" : "2026-09-20T13:10:04Z",
+      "kind" : "model",
+      "note" : "verfügbar"
+    },
+    {
+      "at" : "2026-09-20T13:10:04Z",
+      "kind" : "scene",
+      "note" : "vordergrund"
+    },
+    {
+      "at" : "2026-09-20T13:10:05Z",
+      "kind" : "start",
+      "note" : "Tipp; 226 von 317 erledigt"
+    },
+    {
+      "at" : "2026-09-20T13:14:46Z",
+      "kind" : "failure",
+      "note" : "de-zeit-hinten-10: guardrail"
+    },
+    {
+      "at" : "2026-09-20T13:14:46Z",
+      "kind" : "wait",
+      "note" : "60 s nach Fehlschlag"
+    },
+    {
+      "at" : "2026-09-20T13:23:52Z",
+      "kind" : "finished",
+      "note" : "316 von 317"
     }
   ],
   "name" : "date-title",
@@ -1034,6 +1344,6108 @@
 
       ],
       "seconds" : 2.3505619764328003
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-29T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-in-tagen-2",
+      "finishedAt" : "2026-09-20T08:42:47Z",
+      "people" : [
+
+      ],
+      "seconds" : 10.381129026412964,
+      "title" : "Katze impfen lassen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-29T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-in-tagen-3",
+      "finishedAt" : "2026-09-20T08:42:55Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.870296955108643,
+      "title" : "Termin beim Amt bestätigen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-in-tagen-4",
+      "finishedAt" : "2026-09-20T08:43:03Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.615072011947632,
+      "title" : "21 Tagen Garantie belegen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-in-tagen-5",
+      "finishedAt" : "2026-09-20T08:43:10Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.402647972106934,
+      "title" : "Bestellung verfolgen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-26T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-in-woche-1",
+      "finishedAt" : "2026-09-20T08:43:18Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.925321936607361,
+      "title" : "Nach Vermieter fragen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-10-03T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-in-woche-2",
+      "finishedAt" : "2026-09-20T08:43:27Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.44755506515503,
+      "title" : "Überprüfung Zahlung 250 Euro"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-in-woche-3",
+      "finishedAt" : "2026-09-20T08:43:35Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.808215975761414,
+      "title" : "Vertrag in vier Wochen kündigen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-29T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-monatsende-1",
+      "finishedAt" : "2026-09-20T08:43:44Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.886690974235535,
+      "title" : "Miete bis Ende Monat zahlen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-29T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-monatsende-2",
+      "finishedAt" : "2026-09-20T08:43:53Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.124243021011353,
+      "title" : "Zählerstand ablesen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-29T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-monatsende-3",
+      "finishedAt" : "2026-09-20T08:44:03Z",
+      "people" : [
+        "Sven"
+      ],
+      "seconds" : 9.371810913085938,
+      "title" : "Abschicken Abrechnung Sven"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-22T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-tag-im-monat-1",
+      "finishedAt" : "2026-09-20T08:44:12Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.37247896194458,
+      "title" : "Vertrag bis zum 3. kündigen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-14T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-tag-im-monat-2",
+      "finishedAt" : "2026-09-20T08:44:21Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.219284057617188,
+      "title" : "Unterlagen bis zum 15. einreichen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-tag-im-monat-3",
+      "finishedAt" : "2026-09-20T08:44:30Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.127615928649902,
+      "title" : "Überweisung am 20. stellen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-27T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-tag-im-monat-4",
+      "finishedAt" : "2026-09-20T08:44:39Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.669149041175842,
+      "title" : "Bis zum 8. Zählerkarte abgeben"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-wochenende-1",
+      "finishedAt" : "2026-09-20T08:44:48Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.20166301727295,
+      "title" : "Garage aufräumen am Wochenende"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-22T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-wochenende-2",
+      "finishedAt" : "2026-09-20T08:44:58Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.495640993118286,
+      "title" : "Fotos von Kreta sortieren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-22T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-wochenende-3",
+      "finishedAt" : "2026-09-20T08:45:07Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.603201031684875,
+      "title" : "Grill sauber machen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-10-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-naechster-monat-1",
+      "finishedAt" : "2026-09-20T08:45:17Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.806616067886353,
+      "title" : "Versicherung nächste Monate prüfen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-10-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-naechster-monat-2",
+      "finishedAt" : "2026-09-20T08:45:27Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.316030025482178,
+      "title" : "Termin bei Fielmann vereinbaren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-30T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-naechster-monat-3",
+      "finishedAt" : "2026-09-20T08:45:36Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.257096886634827,
+      "title" : "Reise nach Rom planen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-05-03T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-datum-1",
+      "finishedAt" : "2026-09-20T08:45:45Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.689505100250244,
+      "title" : "Abschicken Anmeldung Kurs"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-12-23T23:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-datum-2",
+      "finishedAt" : "2026-09-20T08:45:53Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.623291015625,
+      "title" : "Geschenke für 24. Dezember einpacken"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-02-28T23:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-datum-3",
+      "finishedAt" : "2026-09-20T08:46:02Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.688365936279297,
+      "title" : "Bezahlt: Beitrag Verein"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-07-30T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-datum-4",
+      "finishedAt" : "2026-09-20T08:46:11Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.934846043586731,
+      "title" : "Zählerstände melden 31. Juli"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-zeit-1",
+      "error" : "Streamed response may contain sensitive or unsafe content",
+      "errorKind" : "guardrail",
+      "finishedAt" : "2026-09-20T08:46:25Z",
+      "people" : [
+
+      ],
+      "seconds" : 13.885424971580505
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T10:00:00Z",
+      "dueHasTime" : true,
+      "entryID" : "de-zeit-2",
+      "finishedAt" : "2026-09-20T08:47:36Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.4006829261779785,
+      "title" : "Arzt anrufen heute"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zeit-3",
+      "finishedAt" : "2026-09-20T08:47:43Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.714663982391357,
+      "title" : "Teamrunde vorbereiten"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-21T14:00:00Z",
+      "dueHasTime" : true,
+      "entryID" : "de-zeit-4",
+      "finishedAt" : "2026-09-20T08:47:51Z",
+      "people" : [
+        "Nachbarin"
+      ],
+      "seconds" : 7.608715891838074,
+      "title" : "Paket abholen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zeit-5",
+      "finishedAt" : "2026-09-20T08:47:59Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.594957947731018,
+      "title" : "Bestellung für 3 Kisten Wasser machen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-wdh-1",
+      "finishedAt" : "2026-09-20T08:48:06Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.612544059753418,
+      "title" : "Müll jeden Montag weg"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-wdh-2",
+      "finishedAt" : "2026-09-20T08:48:15Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.470350980758667,
+      "title" : "Tabletten um 7 Uhr nehmen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-24T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-wdh-3",
+      "finishedAt" : "2026-09-20T08:48:23Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.745763063430786,
+      "title" : "Check smoke detector first Monday"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-03-31T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-wdh-4",
+      "finishedAt" : "2026-09-20T08:48:32Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.942942023277283,
+      "title" : "Reifen im April wechseln"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-wdh-5",
+      "finishedAt" : "2026-09-20T08:48:42Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.39654791355133,
+      "title" : "Alarm um 6:30 stellen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueHasTime" : false,
+      "entryID" : "en-today-1",
+      "finishedAt" : "2026-09-20T08:48:51Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.042500972747803,
+      "title" : "Call insurance company now"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T15:00:00Z",
+      "dueHasTime" : true,
+      "entryID" : "en-today-2",
+      "finishedAt" : "2026-09-20T08:49:00Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.662079930305481,
+      "title" : "Send invoice at 5pm"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-tomorrow-1",
+      "finishedAt" : "2026-09-20T08:49:10Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.29455304145813,
+      "title" : "Call landlord about heating"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-21T07:00:00Z",
+      "dueHasTime" : true,
+      "entryID" : "en-tomorrow-2",
+      "finishedAt" : "2026-09-20T08:49:19Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.383908987045288,
+      "title" : "Drop keys at office"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-tomorrow-3",
+      "finishedAt" : "2026-09-20T08:49:28Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.337422013282776,
+      "title" : "Book flight to Lisbon"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-dayafter-1",
+      "finishedAt" : "2026-09-20T08:49:38Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.647534966468811,
+      "title" : "Return rental car tomorrow"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-dayafter-2",
+      "finishedAt" : "2026-09-20T08:49:47Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.8821439743042,
+      "title" : "Pick up suit tomorrow"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-weekday-1",
+      "finishedAt" : "2026-09-20T08:49:57Z",
+      "people" : [
+        "Miriam"
+      ],
+      "seconds" : 9.806004047393799,
+      "title" : "Send contract to Miriam"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-23T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-weekday-2",
+      "finishedAt" : "2026-09-20T08:50:07Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.73645806312561,
+      "title" : "Review budget on Wednesday"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-22T12:30:00Z",
+      "dueHasTime" : true,
+      "entryID" : "en-weekday-3",
+      "finishedAt" : "2026-09-20T08:50:16Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.593580961227417,
+      "title" : "Call clinic at 2:30 pm"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-22T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-weekday-4",
+      "finishedAt" : "2026-09-20T08:50:25Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.205217003822327,
+      "title" : "Clean gutters Saturday"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-26T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-next-weekday-1",
+      "finishedAt" : "2026-09-20T08:50:35Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.622437953948975,
+      "title" : "Submit application next Tuesday"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-28T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-next-weekday-2",
+      "finishedAt" : "2026-09-20T08:50:44Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.508120059967041,
+      "title" : "Submit form by Friday"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-24T08:00:00Z",
+      "dueHasTime" : true,
+      "entryID" : "en-next-weekday-3",
+      "finishedAt" : "2026-09-20T08:50:55Z",
+      "people" : [
+        "the accountant"
+      ],
+      "seconds" : 10.302852988243103,
+      "title" : "Meet accountant at 10am"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-22T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-in-days-1",
+      "finishedAt" : "2026-09-20T08:51:05Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.988924980163574,
+      "title" : "Check delivery in three days"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-10-08T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-in-days-2",
+      "finishedAt" : "2026-09-20T08:51:15Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.849890947341919,
+      "title" : "Renew domain in 10 days"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-10T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-in-days-3",
+      "finishedAt" : "2026-09-20T08:51:24Z",
+      "people" : [
+        "Paul"
+      ],
+      "seconds" : 9.522632956504822,
+      "title" : "Send reminder to Paul"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-26T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-in-days-4",
+      "finishedAt" : "2026-09-20T08:51:34Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.409677982330322,
+      "title" : "Cancel trial subscription"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-10-30T23:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-endofmonth-1",
+      "finishedAt" : "2026-09-20T08:51:43Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.170676946640015,
+      "title" : "Pay rent at month end"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-29T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-endofmonth-2",
+      "finishedAt" : "2026-09-20T08:51:52Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.694947004318237,
+      "title" : "Send report to the board"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-04T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-dayofmonth-1",
+      "finishedAt" : "2026-09-20T08:52:02Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.506265044212341,
+      "title" : "Transfer deposit by 5th"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-11T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-dayofmonth-2",
+      "finishedAt" : "2026-09-20T08:52:11Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.320894002914429,
+      "title" : "Collect parcel on 12th"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-22T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-weekend-1",
+      "finishedAt" : "2026-09-20T08:52:21Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.430176019668579,
+      "title" : "Fix bike this weekend"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-22T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-weekend-2",
+      "finishedAt" : "2026-09-20T08:52:30Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.197746992111206,
+      "title" : "Sort photos over weekend"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-30T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-nextmonth-1",
+      "finishedAt" : "2026-09-20T08:52:39Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.108040928840637,
+      "title" : "Renew passport next month"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-30T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-nextmonth-2",
+      "finishedAt" : "2026-09-20T08:52:48Z",
+      "people" : [
+        "Lea"
+      ],
+      "seconds" : 9.404388070106506,
+      "title" : "Book dentist for Lea"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-05-03T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-date-1",
+      "finishedAt" : "2026-09-20T08:52:58Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.261080026626587,
+      "title" : "Register for course May 4th"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-11-10T23:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-date-2",
+      "finishedAt" : "2026-09-20T08:53:07Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.524834990501404,
+      "title" : "Pay club fee on 11 November"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueHasTime" : false,
+      "entryID" : "en-repeat-1",
+      "finishedAt" : "2026-09-20T08:53:15Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.426084041595459,
+      "title" : "Water plants every Monday"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueHasTime" : false,
+      "entryID" : "en-repeat-2",
+      "finishedAt" : "2026-09-20T08:53:23Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.288997054100037,
+      "title" : "Take medication at 8pm"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-repeat-3",
+      "finishedAt" : "2026-09-20T08:53:32Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.240020990371704,
+      "title" : "Check smoke detector monthly"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-1",
+      "finishedAt" : "2026-09-20T08:53:41Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.216544032096863,
+      "title" : "Glühbirne im Flur wechseln"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-2",
+      "finishedAt" : "2026-09-20T08:53:51Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.890176057815552,
+      "title" : "Termin bei der Werkstatt vereinbaren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-3",
+      "finishedAt" : "2026-09-20T08:54:00Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.83964490890503,
+      "title" : "Neue Filter bestellen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-4",
+      "finishedAt" : "2026-09-20T08:54:10Z",
+      "people" : [
+        "Andrea"
+      ],
+      "seconds" : 9.537996053695679,
+      "title" : "Mit Andrea über Umzug sprechen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-5",
+      "finishedAt" : "2026-09-20T08:54:19Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.3383629322052,
+      "title" : "Gartenschlauch reparieren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-6",
+      "finishedAt" : "2026-09-20T08:54:28Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.202018976211548,
+      "title" : "Festplatte sichern sofort"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-7",
+      "finishedAt" : "2026-09-20T08:54:38Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.864274024963379,
+      "title" : "Passwort ändern sofort"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-8",
+      "finishedAt" : "2026-09-20T08:54:47Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.245173931121826,
+      "title" : "Entrümpeln Dachboden"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-9",
+      "finishedAt" : "2026-09-20T08:54:56Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.821444988250732,
+      "title" : "Bremsen prüfen lassen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-10",
+      "finishedAt" : "2026-09-20T08:55:06Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.811068058013916,
+      "title" : "Küche: Wasserfilter kaufen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-11",
+      "finishedAt" : "2026-09-20T08:55:16Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.738091945648193,
+      "title" : "Rezept für Linsensuppe schreiben"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-12",
+      "finishedAt" : "2026-09-20T08:55:25Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.586734056472778,
+      "title" : "Regal im Arbeitszimmer anbohren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-13",
+      "finishedAt" : "2026-09-20T08:55:35Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.641541957855225,
+      "title" : "Preise für Waschmaschine prüfen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-14",
+      "finishedAt" : "2026-09-20T08:55:44Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.174813985824585,
+      "title" : "Ölstand überprüfen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-15",
+      "finishedAt" : "2026-09-20T08:55:54Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.763728022575378,
+      "title" : "Schlüssel reparieren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-24T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-16",
+      "finishedAt" : "2026-09-20T08:56:04Z",
+      "people" : [
+        "Frau Kowalski"
+      ],
+      "seconds" : 9.969470977783203,
+      "title" : "Frau Kowalski um Kosten bitten"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-17",
+      "finishedAt" : "2026-09-20T08:56:16Z",
+      "people" : [
+
+      ],
+      "seconds" : 11.856805086135864,
+      "title" : "Sortieren Steuerbescheide"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-18",
+      "finishedAt" : "2026-09-20T08:56:25Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.32896101474762,
+      "title" : "Platz im Fitnessstudio beantragen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-19",
+      "finishedAt" : "2026-09-20T08:56:35Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.778210043907166,
+      "title" : "Papier einheften"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-20",
+      "finishedAt" : "2026-09-20T08:56:44Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.57463002204895,
+      "title" : "Nachbarn um Spionieren bitten"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-21",
+      "finishedAt" : "2026-09-20T08:56:54Z",
+      "people" : [
+        "Svens"
+      ],
+      "seconds" : 9.420842051506042,
+      "title" : "Geschenk für Svens besorgen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-22",
+      "finishedAt" : "2026-09-20T08:57:04Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.846987009048462,
+      "title" : "Fotos vom Handy auf die Festplatte kopieren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-23",
+      "finishedAt" : "2026-09-20T08:57:13Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.638695001602173,
+      "title" : "Nach Spanischkurs fragen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-24",
+      "finishedAt" : "2026-09-20T08:57:23Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.504755973815918,
+      "title" : "Rasenmäher zur Reparatur"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-kontrolle-25",
+      "finishedAt" : "2026-09-20T08:57:32Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.60637891292572,
+      "title" : "Dichtung kaufen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-control-1",
+      "finishedAt" : "2026-09-20T08:57:42Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.561959028244019,
+      "title" : "Replace doorbell batteries"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-control-2",
+      "finishedAt" : "2026-09-20T08:57:51Z",
+      "people" : [
+        "Paul"
+      ],
+      "seconds" : 9.444962978363037,
+      "title" : "Ask Paul about invoice"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-control-3",
+      "finishedAt" : "2026-09-20T08:58:01Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.332646012306213,
+      "title" : "Check dishwasher prices"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueHasTime" : false,
+      "entryID" : "en-control-4",
+      "finishedAt" : "2026-09-20T08:58:09Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.493438005447388,
+      "title" : "Backup laptop immediately"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-control-5",
+      "finishedAt" : "2026-09-20T08:58:20Z",
+      "people" : [
+
+      ],
+      "seconds" : 10.707445979118347,
+      "title" : "Clear attic now"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-control-6",
+      "finishedAt" : "2026-09-20T08:58:28Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.035909056663513,
+      "title" : "Buy water filter kitchen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-control-7",
+      "finishedAt" : "2026-09-20T08:58:37Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.246820092201233,
+      "title" : "Fix squeaking door hallway"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-control-8",
+      "finishedAt" : "2026-09-20T08:58:47Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.695006966590881,
+      "title" : "Write lentil soup recipe"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-control-9",
+      "finishedAt" : "2026-09-20T08:58:56Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.18247902393341,
+      "title" : "Ask neighbors about fence"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-control-10",
+      "finishedAt" : "2026-09-20T08:59:06Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.383196949958801,
+      "title" : "Check oil level car"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueHasTime" : false,
+      "entryID" : "en-control-11",
+      "finishedAt" : "2026-09-20T08:59:13Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.371158957481384,
+      "title" : "Find Spanish course nearby"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-control-12",
+      "finishedAt" : "2026-09-20T08:59:23Z",
+      "people" : [
+
+      ],
+      "seconds" : 10.146733045578003,
+      "title" : "Sort tax documents last years"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-control-13",
+      "finishedAt" : "2026-09-20T08:59:33Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.47576892375946,
+      "title" : "Order new filters vacuum"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-control-14",
+      "finishedAt" : "2026-09-20T08:59:42Z",
+      "people" : [
+        "Miriam"
+      ],
+      "seconds" : 9.656193017959595,
+      "title" : "Talk to Miriam"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-control-15",
+      "finishedAt" : "2026-09-20T08:59:52Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.586143970489502,
+      "title" : "Check printer paper issue"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-name-1",
+      "finishedAt" : "2026-09-20T09:00:02Z",
+      "people" : [
+        "Andrea"
+      ],
+      "seconds" : 10.13668406009674,
+      "title" : "Andrea anrufen wegen Abrechnung"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-name-2",
+      "finishedAt" : "2026-09-20T09:00:11Z",
+      "people" : [
+        "Andreas"
+      ],
+      "seconds" : 9.488481044769287,
+      "title" : "Andreas: Unterlagen zur Bank schicken"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-name-3",
+      "finishedAt" : "2026-09-20T09:00:21Z",
+      "people" : [
+        "Herrn Özdemir"
+      ],
+      "seconds" : 9.75699007511139,
+      "title" : "Mit Herrn Özdemir Termin vereinbaren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-name-4",
+      "finishedAt" : "2026-09-20T09:00:31Z",
+      "people" : [
+        "Dr. Reinhardt"
+      ],
+      "seconds" : 10.084220051765442,
+      "title" : "Frau Dr. Reinhardt Befunde faxen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-name-5",
+      "error" : "Streamed response may contain sensitive or unsafe content",
+      "errorKind" : "guardrail",
+      "finishedAt" : "2026-09-20T09:00:49Z",
+      "people" : [
+
+      ],
+      "seconds" : 17.27984607219696
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-zeit-1",
+      "error" : "Response may contain sensitive or unsafe content",
+      "errorKind" : "guardrail",
+      "finishedAt" : "2026-09-20T09:20:06Z",
+      "people" : [
+
+      ],
+      "seconds" : 14.58524203300476
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-name-5",
+      "finishedAt" : "2026-09-20T09:21:18Z",
+      "people" : [
+        "Katrin"
+      ],
+      "seconds" : 7.725242972373962,
+      "title" : "Katrin fragen, ob Kinder abholen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-name-6",
+      "finishedAt" : "2026-09-20T09:21:26Z",
+      "people" : [
+        "Jan-Philipp"
+      ],
+      "seconds" : 7.609545946121216,
+      "title" : "Jan-Philipp Zugangsdaten senden"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-name-7",
+      "finishedAt" : "2026-09-20T09:21:33Z",
+      "people" : [
+        "Schmitz"
+      ],
+      "seconds" : 7.858339905738831,
+      "title" : "Nach Schlüssel fragen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-name-8",
+      "finishedAt" : "2026-09-20T09:21:42Z",
+      "people" : [
+        "Thea"
+      ],
+      "seconds" : 8.174499988555908,
+      "title" : "Thea an die Impfung erinnern"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-name-9",
+      "finishedAt" : "2026-09-20T09:21:49Z",
+      "people" : [
+        "Bloch"
+      ],
+      "seconds" : 7.579500079154968,
+      "title" : "Mit Herrn Bloch sprechen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-name-10",
+      "finishedAt" : "2026-09-20T09:21:56Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.222265005111694,
+      "title" : "Merle das Buch zurückgeben"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 35,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zahl-1",
+      "finishedAt" : "2026-09-20T09:22:05Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.290621995925903,
+      "title" : "Rechnung 4711 reklamieren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zahl-2",
+      "finishedAt" : "2026-09-20T09:22:12Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.2311320304870605,
+      "title" : "250 Euro an Verein überweisen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zahl-3",
+      "finishedAt" : "2026-09-20T09:22:20Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.562150001525879,
+      "title" : "Zimmer 12 im Hotel Adler reservieren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zahl-4",
+      "finishedAt" : "2026-09-20T09:22:27Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.372586011886597,
+      "title" : "3 Kisten bestellen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zahl-5",
+      "finishedAt" : "2026-09-20T09:22:34Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.4044400453567505,
+      "title" : "Kundennummer 88342 bereitstehen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zahl-6",
+      "finishedAt" : "2026-09-20T09:22:42Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.297641038894653,
+      "title" : "7 Kartons in den Keller tragen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zahl-7",
+      "finishedAt" : "2026-09-20T09:22:49Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.401378035545349,
+      "title" : "Vertragsnummer A-2291 kündigen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zahl-8",
+      "finishedAt" : "2026-09-20T09:22:57Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.792708039283752,
+      "title" : "Farbe für das Treppenhaus kaufen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zahl-9",
+      "finishedAt" : "2026-09-20T09:23:04Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.3197340965271,
+      "title" : "Zwei Tickets umbuchen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zahl-10",
+      "finishedAt" : "2026-09-20T09:23:12Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.680975079536438,
+      "title" : "Adresse bei Polizei 30021988 ändern"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-eigenname-1",
+      "finishedAt" : "2026-09-20T09:23:19Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.23568594455719,
+      "title" : "Dauerauftrag bei Sparkasse ändern"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-eigenname-2",
+      "finishedAt" : "2026-09-20T09:23:27Z",
+      "people" : [
+        "Fielmann"
+      ],
+      "seconds" : 8.08163595199585,
+      "title" : "Termin bei Fielmann vereinbaren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-eigenname-3",
+      "finishedAt" : "2026-09-20T09:23:35Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.343201994895935,
+      "title" : "Betreuung anrufen Kita Sonnenschein"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-eigenname-4",
+      "finishedAt" : "2026-09-20T09:23:44Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.903717994689941,
+      "title" : "Nachteil bei Miele bestellen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-eigenname-5",
+      "finishedAt" : "2026-09-20T09:23:53Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.72813093662262,
+      "title" : "Bescheinigung anfordern"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-eigenname-6",
+      "finishedAt" : "2026-09-20T09:24:01Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.219915986061096,
+      "title" : "Bahn-Ticket stornieren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-eigenname-7",
+      "finishedAt" : "2026-09-20T09:24:09Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.914752960205078,
+      "title" : "Obi Schrauben holen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-eigenname-8",
+      "finishedAt" : "2026-09-20T09:24:18Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.26961600780487,
+      "title" : "Den Tesla zur Inspektion anmelden"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-eigenname-9",
+      "finishedAt" : "2026-09-20T09:24:26Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.888345003128052,
+      "title" : "Besichtigung Wohnung Wuppertal vereinbaren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-eigenname-10",
+      "finishedAt" : "2026-09-20T09:24:35Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.017385005950928,
+      "title" : "Neuer Tarif bei Bochum abschließen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-name-1",
+      "finishedAt" : "2026-09-20T09:24:43Z",
+      "people" : [
+        "Ravi"
+      ],
+      "seconds" : 8.0521320104599,
+      "title" : "Ask Ravi for floor plan"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-name-2",
+      "finishedAt" : "2026-09-20T09:24:52Z",
+      "people" : [
+        "Mrs. Hargreaves"
+      ],
+      "seconds" : 8.273191928863525,
+      "title" : "Send lease to Mrs. Hargreaves"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-name-3",
+      "finishedAt" : "2026-09-20T09:25:00Z",
+      "people" : [
+        "Tom"
+      ],
+      "seconds" : 8.561437010765076,
+      "title" : "Tell Tom about permit"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-name-4",
+      "finishedAt" : "2026-09-20T09:25:09Z",
+      "people" : [
+        "Yusuf"
+      ],
+      "seconds" : 8.975919961929321,
+      "title" : "Return drill to Yusuf"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-number-1",
+      "finishedAt" : "2026-09-20T09:25:18Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.439880013465881,
+      "title" : "Pay invoice 4711"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-number-2",
+      "finishedAt" : "2026-09-20T09:25:26Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.24606704711914,
+      "title" : "Transfer 250 euros to the club"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-number-3",
+      "finishedAt" : "2026-09-20T09:25:34Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.237807035446167,
+      "title" : "Reserve room 12 at Adler"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 30,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueHasTime" : false,
+      "entryID" : "en-number-4",
+      "error" : "CancellationError()",
+      "errorKind" : "andere",
+      "finishedAt" : "2026-09-20T09:25:39Z",
+      "people" : [
+
+      ],
+      "seconds" : 4.976190090179443
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 20,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zeit-1",
+      "finishedAt" : "2026-09-20T11:21:31Z",
+      "people" : [
+        "die Kinder"
+      ],
+      "seconds" : 14.833891034126282,
+      "title" : "Kinder vom Training abholen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 20,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : true,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-number-4",
+      "finishedAt" : "2026-09-20T11:21:48Z",
+      "people" : [
+
+      ],
+      "seconds" : 17.686667919158936,
+      "title" : "Prepare customer 88342"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 20,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-number-5",
+      "finishedAt" : "2026-09-20T11:21:56Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.450516104698181,
+      "title" : "Cancel contract A-2291"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 20,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-proper-1",
+      "finishedAt" : "2026-09-20T11:22:03Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.350720047950745,
+      "title" : "Change standing order Sparkasse"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 20,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-proper-2",
+      "finishedAt" : "2026-09-20T11:22:12Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.465924978256226,
+      "title" : "Order spare part from Miele"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 20,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-proper-3",
+      "finishedAt" : "2026-09-20T11:22:21Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.868156909942627,
+      "title" : "Book Tesla for service"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 20,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-proper-4",
+      "finishedAt" : "2026-09-20T11:22:31Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.310771942138672,
+      "title" : "Ask AOK for certificate"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 20,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-gemischt-1",
+      "finishedAt" : "2026-09-20T11:22:40Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.68329405784607,
+      "title" : "Rechnung 4711 reklamieren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-gemischt-2",
+      "finishedAt" : "2026-09-20T11:22:50Z",
+      "people" : [
+        "Andrea"
+      ],
+      "seconds" : 9.874873042106628,
+      "title" : "Andrea 250 Euro zurückgeben"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-24T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-gemischt-3",
+      "finishedAt" : "2026-09-20T11:23:00Z",
+      "people" : [
+        "Andreas"
+      ],
+      "seconds" : 9.95420503616333,
+      "title" : "Andreas anrufen wegen Zimmer 12"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-10-03T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-gemischt-4",
+      "finishedAt" : "2026-09-20T11:23:10Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.339377999305725,
+      "title" : "Das Ersatzteil bei Miele finden"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-29T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-gemischt-5",
+      "finishedAt" : "2026-09-20T11:23:18Z",
+      "people" : [
+        "Herrn Özdemir"
+      ],
+      "seconds" : 7.983483910560608,
+      "title" : "Rechnung Herrn Özdemir senden"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-21T07:15:00Z",
+      "dueHasTime" : true,
+      "entryID" : "de-gemischt-6",
+      "finishedAt" : "2026-09-20T11:23:27Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.057765007019043,
+      "title" : "Bescheinigung bei AOK holen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-gemischt-7",
+      "finishedAt" : "2026-09-20T11:23:38Z",
+      "people" : [
+        "Katrin"
+      ],
+      "seconds" : 11.50274395942688,
+      "title" : "Katrin helfen: 7 Kartons"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-14T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-gemischt-8",
+      "finishedAt" : "2026-09-20T11:23:47Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.800119996070862,
+      "title" : "Police 30021988 umschreiben"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-mixed-1",
+      "finishedAt" : "2026-09-20T11:23:55Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.398797988891602,
+      "title" : "Query invoice 4711 Sparkasse"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-mixed-2",
+      "finishedAt" : "2026-09-20T11:24:04Z",
+      "people" : [
+        "Tom"
+      ],
+      "seconds" : 8.63442599773407,
+      "title" : "Give Tom 250 euros back"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-24T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-mixed-3",
+      "finishedAt" : "2026-09-20T11:24:12Z",
+      "people" : [
+        "Ravi"
+      ],
+      "seconds" : 8.42517101764679,
+      "title" : "Call Ravi about room 12"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-10-30T23:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-mixed-4",
+      "finishedAt" : "2026-09-20T11:24:21Z",
+      "people" : [
+        "Mrs. Hargreaves"
+      ],
+      "seconds" : 8.37431001663208,
+      "title" : "Send Mrs. Hargreaves statement"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-lang-1",
+      "finishedAt" : "2026-09-20T11:24:29Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.630769968032837,
+      "title" : "Unterlagen bei Sparkasse einreichen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-29T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-lang-2",
+      "finishedAt" : "2026-09-20T11:24:39Z",
+      "people" : [
+        "Frau Kowalski"
+      ],
+      "seconds" : 9.131384015083313,
+      "title" : "Überprüfen Sie Nebenkostenabrechnung Kowalski"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-26T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-lang-3",
+      "finishedAt" : "2026-09-20T11:24:47Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.47266399860382,
+      "title" : "Rasenmäher zur Reparatur bringen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-lang-4",
+      "finishedAt" : "2026-09-20T11:24:56Z",
+      "people" : [
+        "Andreas"
+      ],
+      "seconds" : 9.424278020858765,
+      "title" : "Verkaufsvertrag prüfen Andreas"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-long-1",
+      "finishedAt" : "2026-09-20T11:25:05Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.317758917808533,
+      "title" : "Hand in financing papers"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-long-2",
+      "finishedAt" : "2026-09-20T11:25:14Z",
+      "people" : [
+        "Ravi"
+      ],
+      "seconds" : 9.100518941879272,
+      "title" : "Contact Ravi for contract A-2291"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-diktat-1",
+      "finishedAt" : "2026-09-20T11:25:22Z",
+      "people" : [
+        "Andrea"
+      ],
+      "seconds" : 8.328232049942017,
+      "title" : "kontaktieren Sie Andrea"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-diktat-2",
+      "finishedAt" : "2026-09-20T11:25:31Z",
+      "people" : [
+        "die kinder"
+      ],
+      "seconds" : 8.94080102443695,
+      "title" : "Kinder zur Schule bringen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-diktat-3",
+      "finishedAt" : "2026-09-20T11:25:39Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.254202961921692,
+      "title" : "termin verschieben"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-diktat-4",
+      "finishedAt" : "2026-09-20T11:25:48Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.454287052154541,
+      "title" : "Kundennummer 88342 notieren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-dictation-1",
+      "finishedAt" : "2026-09-20T11:25:56Z",
+      "people" : [
+        "Ravi"
+      ],
+      "seconds" : 8.342720985412598,
+      "title" : "call ravi about invoice"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 25,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "strom",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-21T05:30:00Z",
+      "dueHasTime" : true,
+      "entryID" : "en-dictation-2",
+      "finishedAt" : "2026-09-20T11:26:05Z",
+      "people" : [
+        "kids"
+      ],
+      "seconds" : 8.409752011299133,
+      "title" : "Take kids to school"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-stichwort-1",
+      "finishedAt" : "2026-09-20T13:05:54Z",
+      "people" : [
+
+      ],
+      "seconds" : 10.397278070449829,
+      "title" : "Müll rausstellen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-stichwort-2",
+      "finishedAt" : "2026-09-20T13:06:00Z",
+      "people" : [
+
+      ],
+      "seconds" : 5.928585052490234,
+      "title" : "Rechnung Meier senden"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-stichwort-3",
+      "finishedAt" : "2026-09-20T13:06:07Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.293789982795715,
+      "title" : "Zahnarzt anrufen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-stichwort-4",
+      "finishedAt" : "2026-09-20T13:06:14Z",
+      "people" : [
+
+      ],
+      "seconds" : 6.134396910667419,
+      "title" : "Reifen wechseln"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-stichwort-5",
+      "finishedAt" : "2026-09-20T13:06:21Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.517943024635315,
+      "title" : "Buchung Kita Ferienbetreuung"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-stichwort-6",
+      "finishedAt" : "2026-09-20T13:06:30Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.23878300189972,
+      "title" : "Steuern bearbeiten morgen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-stichwort-7",
+      "finishedAt" : "2026-09-20T13:06:36Z",
+      "people" : [
+
+      ],
+      "seconds" : 5.7101359367370605,
+      "title" : "Batterien kaufen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-stichwort-8",
+      "finishedAt" : "2026-09-20T13:06:43Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.085358023643494,
+      "title" : "Besprechung mit Özdemir"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-stichwort-9",
+      "finishedAt" : "2026-09-20T13:06:51Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.774143934249878,
+      "title" : "Passbilder vorbereiten"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-stichwort-10",
+      "finishedAt" : "2026-09-20T13:06:59Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.690190076828003,
+      "title" : "Laternenumzug organisieren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-stichwort-11",
+      "finishedAt" : "2026-09-20T13:07:05Z",
+      "people" : [
+
+      ],
+      "seconds" : 6.187915921211243,
+      "title" : "Werkstatt Termin vereinbaren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-stichwort-1",
+      "finishedAt" : "2026-09-20T13:07:11Z",
+      "people" : [
+
+      ],
+      "seconds" : 6.249691009521484,
+      "title" : "renew passport"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-frage-1",
+      "finishedAt" : "2026-09-20T13:07:19Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.694494009017944,
+      "title" : "Rechnung bezahlen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-frage-2",
+      "finishedAt" : "2026-09-20T13:07:27Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.7440749406814575,
+      "title" : "Bring Spielzeug für Kindergarten"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-frage-3",
+      "finishedAt" : "2026-09-20T13:07:34Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.7353339195251465,
+      "title" : "Frage stellen Telekomvertrag"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-frage-4",
+      "finishedAt" : "2026-09-20T13:07:42Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.5329350233078,
+      "title" : "Überprüfen Sie Rauchmelder"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-frage-5",
+      "finishedAt" : "2026-09-20T13:07:49Z",
+      "people" : [
+        "Sven"
+      ],
+      "seconds" : 7.609556078910828,
+      "title" : "Sven überprüfe Präsentation"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-frage-6",
+      "finishedAt" : "2026-09-20T13:07:59Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.073467016220093,
+      "title" : "Nachweisen für Steuererklärung suchen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-frage-7",
+      "finishedAt" : "2026-09-20T13:08:07Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.812745928764343,
+      "title" : "Termin bestätigen bitte"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-frage-8",
+      "finishedAt" : "2026-09-20T13:08:15Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.737076997756958,
+      "title" : "Reparieren Sie das Fahrrad."
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-frage-9",
+      "finishedAt" : "2026-09-20T13:08:23Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.16432797908783,
+      "title" : "Nachzahlung prüfen Sparkasse"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-frage-10",
+      "finishedAt" : "2026-09-20T13:08:32Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.434965014457703,
+      "title" : "Fertigstellung Bericht bis Freitag"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-frage-1",
+      "finishedAt" : "2026-09-20T13:08:40Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.0035719871521,
+      "title" : "Check gym membership cancellation"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-ich-1",
+      "error" : "CancellationError()",
+      "errorKind" : "andere",
+      "finishedAt" : "2026-09-20T13:08:48Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.237815976142883
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-ich-1",
+      "finishedAt" : "2026-09-20T13:10:15Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.853523015975952,
+      "title" : "Unterlagen für Finanzierung suchen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-ich-2",
+      "finishedAt" : "2026-09-20T13:10:23Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.958922028541565,
+      "title" : "Steuerberater kontaktieren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-22T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-ich-3",
+      "finishedAt" : "2026-09-20T13:10:30Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.277256011962891,
+      "title" : "Aufräumen Keller Wochenende"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-ich-4",
+      "finishedAt" : "2026-09-20T13:10:38Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.501272082328796,
+      "title" : "Termin beim Augenarzt vereinbaren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 80,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-ich-5",
+      "finishedAt" : "2026-09-20T13:10:46Z",
+      "people" : [
+        "Frau Kowalski"
+      ],
+      "seconds" : 8.065713047981262,
+      "title" : "Antwort an Frau Kowalski"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-ich-6",
+      "finishedAt" : "2026-09-20T13:10:53Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.622759938240051,
+      "title" : "Registrieren Vertragsnummer A-2291"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-14T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-ich-7",
+      "finishedAt" : "2026-09-20T13:11:01Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.439889907836914,
+      "title" : "Abschluss vor dem 15."
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-ich-8",
+      "finishedAt" : "2026-09-20T13:11:09Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.128422021865845,
+      "title" : "Öl für Rasenmäher besorgen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-ich-9",
+      "finishedAt" : "2026-09-20T13:11:17Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.760938048362732,
+      "title" : "Vergleichen Sie Angebot Özdemir"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-ich-10",
+      "finishedAt" : "2026-09-20T13:11:24Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.310216069221497,
+      "title" : "Reisekosten abrechnen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-ich-11",
+      "finishedAt" : "2026-09-20T13:11:32Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.887796998023987,
+      "title" : "Passbilder vorbereiten"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-nebensatz-5",
+      "finishedAt" : "2026-09-20T13:11:41Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.986150026321411,
+      "title" : "Reifen wechseln sofort"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-nebensatz-6",
+      "finishedAt" : "2026-09-20T13:11:50Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.653169989585876,
+      "title" : "Passbilder morgen abholen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-nebensatz-7",
+      "finishedAt" : "2026-09-20T13:11:58Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.634184002876282,
+      "title" : "Rechnung Özdemir bezahlen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-nebensatz-8",
+      "finishedAt" : "2026-09-20T13:12:07Z",
+      "people" : [
+        "Nachbarn"
+      ],
+      "seconds" : 8.429862976074219,
+      "title" : "Nachbarn wegen Blumen fragen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-nebensatz-9",
+      "finishedAt" : "2026-09-20T13:12:16Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.503711104393005,
+      "title" : "Zählerstand melden"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-29T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-nebensatz-10",
+      "finishedAt" : "2026-09-20T13:12:24Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.064283967018127,
+      "title" : "Nebenkosten prüfen Ende Monat"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-nebensatz-11",
+      "finishedAt" : "2026-09-20T13:12:32Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.617366075515747,
+      "title" : "Fahrzeug ersetzen sofort"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-nebensatz-1",
+      "finishedAt" : "2026-09-20T13:12:40Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.658539056777954,
+      "title" : "Renew car insurance now"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-diktat-5",
+      "finishedAt" : "2026-09-20T13:12:49Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.447731971740723,
+      "title" : "termin beim augenarzt machen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-diktat-6",
+      "finishedAt" : "2026-09-20T13:12:57Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.204620003700256,
+      "title" : "reifen morgen wechseln lassen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-diktat-7",
+      "finishedAt" : "2026-09-20T13:13:05Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.12788999080658,
+      "title" : "Reclamieren Rechnung 250 Euro"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-22T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-diktat-8",
+      "finishedAt" : "2026-09-20T13:13:14Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.484709978103638,
+      "title" : "melden zählerstand am Freitag"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-diktat-9",
+      "finishedAt" : "2026-09-20T13:13:22Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.467095971107483,
+      "title" : "Milch und Kaffee kaufen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-dictation-3",
+      "finishedAt" : "2026-09-20T13:13:30Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.111397981643677,
+      "title" : "Call landlord about heating"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zeit-hinten-1",
+      "finishedAt" : "2026-09-20T13:13:39Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.901293992996216,
+      "title" : "Steuerberater kontaktieren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zeit-hinten-2",
+      "finishedAt" : "2026-09-20T13:13:47Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.965882897377014,
+      "title" : "Müll rausstellen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-25T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zeit-hinten-3",
+      "finishedAt" : "2026-09-20T13:13:55Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.192091941833496,
+      "title" : "Reifen wechseln Dienstag"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-29T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zeit-hinten-4",
+      "finishedAt" : "2026-09-20T13:14:04Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.5225670337677,
+      "title" : "Nebenkosten prüfen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zeit-hinten-5",
+      "finishedAt" : "2026-09-20T13:14:12Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.80773401260376,
+      "title" : "Zahnarzt anrufen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-22T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zeit-hinten-6",
+      "finishedAt" : "2026-09-20T13:14:20Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.04134202003479,
+      "title" : "Keller aufräumen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zeit-hinten-7",
+      "finishedAt" : "2026-09-20T13:14:29Z",
+      "people" : [
+        "Özdemir"
+      ],
+      "seconds" : 8.829856991767883,
+      "title" : "Angebot an Özdemir senden"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-30T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zeit-hinten-8",
+      "finishedAt" : "2026-09-20T13:14:37Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.374705076217651,
+      "title" : "Vertrag kündigen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-21T12:00:00Z",
+      "dueHasTime" : true,
+      "entryID" : "de-zeit-hinten-9",
+      "finishedAt" : "2026-09-20T13:14:45Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.466210007667542,
+      "title" : "Sparkasse um 14 Uhr anrufen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-zeit-hinten-10",
+      "error" : "May contain unsafe content",
+      "errorKind" : "guardrail",
+      "finishedAt" : "2026-09-20T13:14:46Z",
+      "people" : [
+
+      ],
+      "seconds" : 0.4177130460739136
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-28T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-zeit-hinten-1",
+      "finishedAt" : "2026-09-20T13:15:57Z",
+      "people" : [
+        "Ravi"
+      ],
+      "seconds" : 7.448143005371094,
+      "title" : "Send invoice to Ravi"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zwei-1",
+      "finishedAt" : "2026-09-20T13:16:04Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.185050010681152,
+      "title" : "Müll raus Katze füttern"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zwei-2",
+      "finishedAt" : "2026-09-20T13:16:12Z",
+      "people" : [
+        "Meier"
+      ],
+      "seconds" : 8.167570948600769,
+      "title" : "Rechnung an Meier senden"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zwei-3",
+      "finishedAt" : "2026-09-20T13:16:20Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.2824729681015015,
+      "title" : "Zahnarzt anrufen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zwei-4",
+      "finishedAt" : "2026-09-20T13:16:27Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.7826069593429565,
+      "title" : "Kita morgen anrufen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zwei-5",
+      "finishedAt" : "2026-09-20T13:16:35Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.841085076332092,
+      "title" : "Batterien kaufen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zwei-6",
+      "finishedAt" : "2026-09-20T13:16:44Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.22444200515747,
+      "title" : "Steuerberater kontaktieren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zwei-7",
+      "finishedAt" : "2026-09-20T13:16:52Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.987354040145874,
+      "title" : "Zählerstand melden und Nebenkosten prüfen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zwei-8",
+      "finishedAt" : "2026-09-20T13:16:59Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.613281011581421,
+      "title" : "Öl nachfüllen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "fair"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zwei-9",
+      "finishedAt" : "2026-09-20T13:17:08Z",
+      "people" : [
+        "Özdemir"
+      ],
+      "seconds" : 8.538341999053955,
+      "title" : "Angebot prüfen und Antwort geben"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-zwei-10",
+      "finishedAt" : "2026-09-20T13:17:16Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.261327981948853,
+      "title" : "Fahrrad reparieren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-zwei-1",
+      "finishedAt" : "2026-09-20T13:17:24Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.107048034667969,
+      "title" : "cancel gym membership"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueHasTime" : false,
+      "entryID" : "de-denglisch-1",
+      "finishedAt" : "2026-09-20T13:17:32Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.772506952285767,
+      "title" : "Meeting mit Sales abbrechen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-denglisch-2",
+      "finishedAt" : "2026-09-20T13:17:40Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.304286003112793,
+      "title" : "Quarterly Review Slides fertig machen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-denglisch-3",
+      "finishedAt" : "2026-09-20T13:17:49Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.103711009025574,
+      "title" : "Verlegen Standup 10 Uhr"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-denglisch-4",
+      "finishedAt" : "2026-09-20T13:17:58Z",
+      "people" : [
+        "Sven"
+      ],
+      "seconds" : 8.81578505039215,
+      "title" : "Feedback an Sven senden"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-denglisch-5",
+      "finishedAt" : "2026-09-20T13:18:07Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.843945980072021,
+      "title" : "Onboarding für neue Kollegin planen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-denglisch-6",
+      "finishedAt" : "2026-09-20T13:18:16Z",
+      "people" : [
+        "Lead"
+      ],
+      "seconds" : 9.279307961463928,
+      "title" : "Budget-Freigabe vorbereiten"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-denglisch-7",
+      "finishedAt" : "2026-09-20T13:18:25Z",
+      "people" : [
+        "Özdemir"
+      ],
+      "seconds" : 8.883521914482117,
+      "title" : "Nachruf schreiben Özdemir"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-denglisch-8",
+      "finishedAt" : "2026-09-20T13:18:33Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.285338997840881,
+      "title" : "Rollout-Status prüfen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-denglisch-9",
+      "finishedAt" : "2026-09-20T13:18:41Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.038856983184814,
+      "title" : "Laptop-Backup erstellen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-denglisch-10",
+      "finishedAt" : "2026-09-20T13:18:51Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.438771963119507,
+      "title" : "Workshop-Einladung senden"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-denglisch-11",
+      "finishedAt" : "2026-09-20T13:19:00Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.87775707244873,
+      "title" : "Ticket im Support-System aktualisieren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-tippfehler-1",
+      "finishedAt" : "2026-09-20T13:19:08Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.579069972038269,
+      "title" : "Rechnug an Meier schicken"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-tippfehler-2",
+      "finishedAt" : "2026-09-20T13:19:17Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.667158961296082,
+      "title" : "Zahnarzt anrufen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-tippfehler-3",
+      "finishedAt" : "2026-09-20T13:19:26Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.712185025215149,
+      "title" : "Untelagen suchen morgen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-tippfehler-4",
+      "finishedAt" : "2026-09-20T13:19:34Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.421378016471863,
+      "title" : "Steuerbrater kontaktieren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-tippfehler-5",
+      "finishedAt" : "2026-09-20T13:19:42Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.241505980491638,
+      "title" : "Kita kontaktieren sofort"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-tippfehler-6",
+      "finishedAt" : "2026-09-20T13:19:51Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.209482073783875,
+      "title" : "Angebot an Özdemri senden"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-tippfehler-7",
+      "finishedAt" : "2026-09-20T13:19:59Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.550197005271912,
+      "title" : "Reifne wechseln lassen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-tippfehler-8",
+      "finishedAt" : "2026-09-20T13:20:08Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.429589033126831,
+      "title" : "Rauchmleder im Keller prüfen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-tippfehler-9",
+      "finishedAt" : "2026-09-20T13:20:17Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.3333899974823,
+      "title" : "Zählerstand melden"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-tippfehler-10",
+      "finishedAt" : "2026-09-20T13:20:26Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.9480299949646,
+      "title" : "Nebenkostenabrechnug prüfen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueHasTime" : false,
+      "entryID" : "en-tippfehler-1",
+      "finishedAt" : "2026-09-20T13:20:33Z",
+      "people" : [
+
+      ],
+      "seconds" : 7.209431052207947,
+      "title" : "cancel gym membership"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-praefix-1",
+      "finishedAt" : "2026-09-20T13:20:42Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.619063019752502,
+      "title" : "Mülltonne rausstellen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-praefix-2",
+      "finishedAt" : "2026-09-20T13:20:51Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.866002082824707,
+      "title" : "Termin beim Augenarzt vereinbaren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-praefix-3",
+      "finishedAt" : "2026-09-20T13:21:00Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.284765005111694,
+      "title" : "Büro Angebot fertigstellen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-praefix-4",
+      "finishedAt" : "2026-09-20T13:21:09Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.629125952720642,
+      "title" : "Steuerberater kontaktieren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-praefix-5",
+      "finishedAt" : "2026-09-20T13:21:17Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.547544956207275,
+      "title" : "Kaffee kaufen jetzt"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-praefix-6",
+      "finishedAt" : "2026-09-20T13:21:26Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.719918012619019,
+      "title" : "Zählerstand melden"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-praefix-7",
+      "finishedAt" : "2026-09-20T13:21:35Z",
+      "people" : [
+        "Sven"
+      ],
+      "seconds" : 8.764841914176941,
+      "title" : "Präsentation für Sven fertig machen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-praefix-8",
+      "finishedAt" : "2026-09-20T13:21:44Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.226338982582092,
+      "title" : "Öl für Rasenmäher besorgen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-praefix-9",
+      "finishedAt" : "2026-09-20T13:21:53Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.76966392993927,
+      "title" : "Passbilder abholen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-29T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-praefix-10",
+      "finishedAt" : "2026-09-20T13:22:02Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.05604898929596,
+      "title" : "Reisekosten abrechnen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-praefix-11",
+      "finishedAt" : "2026-09-20T13:22:11Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.930992007255554,
+      "title" : "Familie: Laternenumzug vorbereiten"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-diktat-name-1",
+      "finishedAt" : "2026-09-20T13:22:20Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.084692001342773,
+      "title" : "Unterlagen für Dativ vorbereiten"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-diktat-name-2",
+      "finishedAt" : "2026-09-20T13:22:28Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.834908962249756,
+      "title" : "anruf bei öz demir vereinbaren"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-diktat-name-3",
+      "finishedAt" : "2026-09-20T13:22:38Z",
+      "people" : [
+        "Frau Kowalsky"
+      ],
+      "seconds" : 9.773460030555725,
+      "title" : "Termin mit Frau Kowalsky bestätigen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-diktat-name-4",
+      "finishedAt" : "2026-09-20T13:22:48Z",
+      "people" : [
+        "Andreas"
+      ],
+      "seconds" : 9.685088992118835,
+      "title" : "Andreas anrufen morgen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-diktat-name-5",
+      "finishedAt" : "2026-09-20T13:22:57Z",
+      "people" : [
+        "sven maier"
+      ],
+      "seconds" : 8.963940978050232,
+      "title" : "rechnung von sven maier prüfen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-diktat-name-6",
+      "finishedAt" : "2026-09-20T13:23:06Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.254498958587646,
+      "title" : "Kontaktieren Sie Spar Kasse sofort"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-20T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-diktat-name-7",
+      "finishedAt" : "2026-09-20T13:23:15Z",
+      "people" : [
+
+      ],
+      "seconds" : 9.162109971046448,
+      "title" : "vertrag prüfen sofort"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-diktat-name-8",
+      "finishedAt" : "2026-09-20T13:23:24Z",
+      "people" : [
+
+      ],
+      "seconds" : 8.59027099609375,
+      "title" : "Rechnung an Debuecca senden"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-21T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-diktat-name-9",
+      "finishedAt" : "2026-09-20T13:23:33Z",
+      "people" : [
+        "Herrn Bier"
+      ],
+      "seconds" : 9.114757061004639,
+      "title" : "Telefonieren mit Herrn Bier"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "de-diktat-name-10",
+      "finishedAt" : "2026-09-20T13:23:43Z",
+      "people" : [
+
+      ],
+      "seconds" : 10.119410991668701,
+      "title" : "Steuererklärung über Elstar einreichen"
+    },
+    {
+      "capturedAt" : "2026-09-20T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 70,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "serious"
+      },
+      "dueDate" : "2026-09-19T22:00:00Z",
+      "dueHasTime" : false,
+      "entryID" : "en-dictation-name-1",
+      "finishedAt" : "2026-09-20T13:23:52Z",
+      "people" : [
+        "mister o brian"
+      ],
+      "seconds" : 8.893225908279419,
+      "title" : "call mister o brian"
     }
   ],
   "startedAt" : "2026-09-20T05:21:49Z"
