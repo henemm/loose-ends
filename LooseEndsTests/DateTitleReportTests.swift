@@ -341,3 +341,67 @@ struct DateTitleFormSectionTests {
         #expect(DateTitleReportTests.markdown(report, runs: [], corpus: []).contains("## Nach Bauform"))
     }
 }
+
+/// The report carries the rule-based parser (#92) as a third column next to the model and
+/// `NSDataDetector`, split by kind of expression, with its own "what went wrong" block. Checked on
+/// a synthetic corpus and report, so it runs before any run was fetched.
+@Suite("Bericht: Regelparser-Spalte")
+struct DateTitleRuleParserSectionTests {
+    static func corpus(_ json: String) throws -> [Corpus.Entry] {
+        try JSONDecoder().decode([Corpus.Entry].self, from: Data(json.utf8))
+    }
+
+    @Test("Der Regelparser wird über Datum, Kontrolle und Uhrzeit gezählt, Wiederholungen nur bei der Uhrzeit")
+    func scoring() throws {
+        let corpus = try Self.corpus("""
+        [{"id": "a", "lang": "de", "text": "Morgen die Kita anrufen", "date": {"rule": "offsetDays", "value": 1}},
+         {"id": "b", "lang": "de", "text": "Rechnung 4711 reklamieren"},
+         {"id": "c", "lang": "de", "text": "Jeden Tag um 7 Uhr die Tabletten nehmen", "time": "07:00", "repeat": "daily"}]
+        """)
+        var report = DateTitleReportTests.Report()
+        DateTitleReportTests.scoreRuleParser(corpus, calendar: CorpusTests.calendar, reference: CorpusTests.reference, into: &report)
+        #expect(report.ruleParser.total == 1)
+        #expect(report.ruleParser.hit == 1)
+        #expect(report.ruleParserInvented.total == 1)
+        #expect(report.ruleParserInvented.hit == 1)
+        #expect(report.ruleParserTime.total == 1)
+        #expect(report.ruleParserTime.hit == 1)
+        #expect(report.ruleParserByRule["in N Tagen / morgen"]?.hit == 1)
+    }
+
+    @Test("Datumstabelle hat die Spalte Regelparser, auch nach Art des Ausdrucks")
+    func dateSection() {
+        var report = DateTitleReportTests.Report()
+        report.model.record(hit: true)
+        report.parser.record(hit: false, empty: true)
+        report.ruleParser.record(hit: true)
+        report.ruleParser.record(hit: false, empty: true)
+        report.ruleParserInvented.record(hit: true)
+        report.ruleParserTime.record(hit: true)
+        report.byRule["Wochentag", default: .init()].record(hit: true)
+        report.ruleParserByRule["Wochentag", default: .init()].record(hit: false)
+        report.ruleParserByRule["Wochentag", default: .init()].record(hit: true)
+
+        let section = DateTitleReportTests.dateSection(report)
+        #expect(section.contains("| Messung | Modell | NSDataDetector | Regelparser |"))
+        #expect(section.contains("| Exakt getroffen | 100.0 % von 1 | 0.0 % von 1 | 50.0 % von 2 |"))
+        #expect(section.contains("| Feld leer gelassen statt geraten | 0 | 1 | 1 |"))
+        #expect(section.contains("| Erfundene Daten bei Sätzen ohne Datum | noch nicht gemessen | noch nicht gemessen | 0.0 % von 1 |"))
+        #expect(section.contains("| Ausdruck | Sätze | Modell exakt | Leer gelassen | Regelparser exakt |"))
+        #expect(section.contains("| Wochentag | 1 | 100.0 % | 0 | 50.0 % |"))
+        #expect(section.contains("**Uhrzeit Regelparser:** 100.0 % exakt bei 1 Sätzen mit Uhrzeit."))
+    }
+
+    @Test("Was der Regelparser verfehlt, steht mit Ausdrucksart im Bericht")
+    func missesSection() {
+        var report = DateTitleReportTests.Report()
+        report.ruleParser.record(hit: false, miss: "`Am Freitga den Zählerstand melden` → – statt 2026-03-13 · Wochentag")
+        report.ruleParserTime.record(hit: false, miss: "`Um halb zwölf anrufen` → 12:30 statt 11:30")
+
+        let section = DateTitleReportTests.missesSection(report)
+        #expect(section.contains("### Regelparser danebenging (1)"))
+        #expect(section.contains("- `Am Freitga den Zählerstand melden` → – statt 2026-03-13 · Wochentag"))
+        #expect(section.contains("### Regelparser falsche Uhrzeit (1)"))
+        #expect(DateTitleReportTests.markdown(report, runs: [], corpus: []).contains("Regelparser danebenging"))
+    }
+}

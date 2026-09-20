@@ -1,0 +1,78 @@
+[1;33m[sim][0m macOS 26.6.1 < Deployment Target 27.0 — Unit-Tests laufen im Simulator.
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/DateParserCorpusTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEndsShare[0m] [1mLinking[0m __preview.dylib
+[[36mLooseEndsWidgets[0m] [1mLinking[0m __preview.dylib
+[[36mLooseEndsWatch[0m] [1mLinking[0m __preview.dylib
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.LinkFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-OutputFileMap.json
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftConstValuesFileList
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mLinking[0m __preview.dylib
+[[36mLooseEndsWatch[0m] [1mCreate Universal Binary[0m __preview.dylib
+[[36mLooseEndsShare[0m] [1mLinking[0m LooseEndsShare.debug.dylib
+[[36mLooseEndsWidgets[0m] [1mLinking[0m LooseEndsWidgets.debug.dylib
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch.debug.dylib
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch.debug.dylib
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWatch' from project 'LooseEnds')
+[36;1mnote: [0mUsing stub executor library without Swift entry point. (in target 'LooseEndsShare' from project 'LooseEnds')
+[[36mLooseEndsShare[0m] [1mLinking[0m LooseEndsShare
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWidgets' from project 'LooseEnds')
+[[36mLooseEndsWidgets[0m] [1mLinking[0m LooseEndsWidgets
+[[36mLooseEndsWatch[0m] [1mCreate Universal Binary[0m LooseEndsWatch.debug.dylib
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWatch' from project 'LooseEnds')
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch
+[[36mLooseEndsShare[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsWidgets[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsWatch[0m] [1mCreate Universal Binary[0m LooseEndsWatch
+[[36mLooseEndsWatch[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mLinking[0m __preview.dylib
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds.debug.dylib
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/DateParserCorpusTests.swift:28:22: [31mcannot find 'DateExpressionParser' in scope[0m
+26 |     @Test("Datum: mindestens 95 % exakt, kein einziges erfunden")
+[36m27 |     func dates() throws {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/DateParserCorpusTests.swift:50:22: [31mcannot find 'TimeExpressionParser' in scope[0m
+48 |     @Test("Uhrzeit: mindestens 95 % exakt, Wiederholungen eingeschlossen")
+[36m49 |     func times() throws {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/DateParserCorpusTests.swift:63:22: [31mcannot find 'TimeExpressionParser' in scope[0m
+61 |     @Test("Uhrzeit: kein Satz ohne Uhrzeit bekommt eine")
+[36m62 |     func noInventedTimes() throws {[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateParserCorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TimeExpressionParserTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateExpressionParserTests.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/DateExpressionParserTests.swift:14:25: [31mcannot find 'DateExpressionParser' in scope[0m
+ 12 |     static let reference = CorpusTests.reference
+[36m 13 |     static let calendar = CorpusTests.calendar[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateTitleReportTests.swift
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEnds' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsShare.appex -> LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWidgets.appex
+[[36mLooseEndsTests[0m] [1mCopying[0m lab-run.log
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.09.20_18-40-47-+0200.xcresult
+
+===== RED-Beleg (2026-09-20, ./scripts/sim.sh unit DateParserCorpusTests, exit 65) =====
+Der Test-Target kompiliert nicht, weil die zu bauenden Typen fehlen:
+DateExpressionParserTests.swift:14:25: error: cannot find 'DateExpressionParser' in scope
+DateParserCorpusTests.swift:28:22: error: cannot find 'DateExpressionParser' in scope
+DateParserCorpusTests.swift:50:22: error: cannot find 'TimeExpressionParser' in scope
+DateParserCorpusTests.swift:63:22: error: cannot find 'TimeExpressionParser' in scope
+(TimeExpressionParserTests.swift und DateTitleRuleParserSectionTests scheitern aus demselben Grund; der Compiler bricht nach der ersten Datei-Gruppe ab.)
