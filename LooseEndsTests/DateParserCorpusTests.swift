@@ -28,7 +28,10 @@ struct DateParserCorpusTests {
         let parser = DateExpressionParser(calendar: Self.calendar)
         var exact = Score()
         var invented = Score()
-        for entry in try Corpus.load() where entry.countsForDateMeasurement {
+        // Every sentence, repetitions included: "Jeden Montag den Müll rausstellen" is exactly the
+        // kind of sentence a parser must not turn into a date, so it belongs in the control group
+        // (AC-2: 170 plain controls plus the 8 repetitions).
+        for entry in try Corpus.load() {
             let got = parser.date(in: entry.text, reference: Self.reference)
             let day = got.map { DateTitleReportTests.day($0, Self.calendar) } ?? "–"
             if let expectation = entry.date {
@@ -39,8 +42,8 @@ struct DateParserCorpusTests {
                 invented.record(got == nil, miss: "`\(entry.text)` → \(day)")
             }
         }
-        #expect(exact.total >= 130, "Korpus hat nur \(exact.total) Datumssätze")
-        #expect(invented.total >= 160, "Korpus hat nur \(invented.total) Kontrollsätze")
+        #expect(exact.total == 139, "Korpus hat \(exact.total) Datumssätze statt 139")
+        #expect(invented.total == 178, "Korpus hat \(invented.total) Kontrollsätze statt 178")
         #expect(exact.share >= 0.95, "Datum exakt: \(exact.summary)")
         #expect(invented.misses.isEmpty, "Datum erfunden: \(invented.summary)")
     }

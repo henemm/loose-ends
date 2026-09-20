@@ -15,27 +15,29 @@ deterministische Alternative aus dem Issue, auf denselben Sätzen.
 
 ## Datum
 
-| Messung | Modell | NSDataDetector |
-|---|---|---|
-| Exakt getroffen | 50.0 % von 138 | 65.5 % von 139 |
-| Feld leer gelassen statt geraten | 1 | 41 |
-| Erfundene Daten bei Sätzen ohne Datum | 96.5 % von 170 | 0.0 % von 170 |
+| Messung | Modell | NSDataDetector | Regelparser |
+|---|---|---|---|
+| Exakt getroffen | 50.0 % von 138 | 65.5 % von 139 | 99.3 % von 139 |
+| Feld leer gelassen statt geraten | 1 | 41 | 1 |
+| Erfundene Daten bei Sätzen ohne Datum | 96.5 % von 170 | 0.0 % von 170 | 0.0 % von 170 |
 
 ### Nach Art des Ausdrucks
 
-| Ausdruck | Sätze | Modell exakt | Leer gelassen |
-|---|---|---|---|
-| Wochenende | 8 | 0.0 % | 0 |
-| nächste Woche <Tag> | 7 | 0.0 % | 0 |
-| Wochentag | 27 | 18.5 % | 0 |
-| bis zum N. | 9 | 22.2 % | 0 |
-| nächster <Tag> | 9 | 22.2 % | 0 |
-| festes Datum | 6 | 33.3 % | 0 |
-| in N Tagen / morgen | 55 | 78.2 % | 1 |
-| Monatsende | 11 | 81.8 % | 0 |
-| nächster Monat | 6 | 100.0 % | 0 |
+| Ausdruck | Sätze | Modell exakt | Leer gelassen | Regelparser exakt |
+|---|---|---|---|---|
+| Wochenende | 8 | 0.0 % | 0 | 100.0 % |
+| nächste Woche <Tag> | 7 | 0.0 % | 0 | 100.0 % |
+| Wochentag | 27 | 18.5 % | 0 | 96.3 % |
+| bis zum N. | 9 | 22.2 % | 0 | 100.0 % |
+| nächster <Tag> | 9 | 22.2 % | 0 | 100.0 % |
+| festes Datum | 6 | 33.3 % | 0 | 100.0 % |
+| in N Tagen / morgen | 55 | 78.2 % | 1 | 100.0 % |
+| Monatsende | 11 | 81.8 % | 0 | 100.0 % |
+| nächster Monat | 6 | 100.0 % | 0 | 100.0 % |
 
 **Uhrzeit:** 57.1 % exakt bei 21 Sätzen mit Uhrzeit.
+
+**Uhrzeit Regelparser:** 100.0 % exakt bei 24 Sätzen mit Uhrzeit.
 
 ## Nach Bedingung gemessen
 
@@ -160,6 +162,10 @@ umformuliert; umformulieren ist erlaubt, solange nichts erfunden wird.
 - `Morgen 18:45 die Kinder vom Training abholen` → – statt 18:45
 - `also morgen um halb acht die kinder zur schule bringen` → – statt 07:30
 - `Morgen das Standup auf 10 Uhr verschieben` → – statt 10:00
+
+### Regelparser danebenging (1)
+
+- `Am Freitga den Zählerstand melden` → – statt 2026-09-25 · Wochentag
 
 ### Entität verloren (62)
 
