@@ -46,6 +46,8 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
 
 - [#74](https://github.com/henemm/loose-ends/issues/74) PO-Entscheidungen: Daten, Messgerät, Inventar
 - [#67](https://github.com/henemm/loose-ends/issues/67) Datum- und Titel-Treue (falsch ist hier nicht „ein Handgriff")
+  - davor [#83](https://github.com/henemm/loose-ends/issues/83) Labor-App nur im Vordergrund, Lebenslauf mitschreiben
+  - davor [#82](https://github.com/henemm/loose-ends/issues/82) Korpus in Hennings Satzformen (Stichwörter, Fragen, Diktat) samt seinen FocusBlox-Rohsätzen
 - [#65](https://github.com/henemm/loose-ends/issues/65) Unsicherheitssignal, das richtig von falsch trennt
 - [#66](https://github.com/henemm/loose-ends/issues/66) Steht die Information überhaupt im Text?
 - [#68](https://github.com/henemm/loose-ends/issues/68) Nachweis: Modell je Gerät, Prozess, Zustand
