@@ -12,6 +12,13 @@ Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, 
 - **Revisions, not undo.** Every AI or user change to a derived field is a `Revision`. Nothing is deleted.
 - **Repeat without series.** `RepeatRule` on the task, roll forward on completion, `CompletionRecord` per cycle.
 - **Color budget.** Accent = tappable (incl. AI tint), red = time pressure, grey = hierarchy, green = the completion moment.
+- **Rules before the model** (Henning, 2026-09-20). Every derived field is first attempted with rules,
+  regex, calendar, contacts or a word list. The on-device model only gets what needs language
+  understanding (the title). Every analysis and spec that proposes the model for a field must contain
+  the line "Without the model this fails because …" with evidence from a measurement; without that line
+  the rule path is the proposal. Every measurement report carries the rule-based column as baseline; if
+  the rules beat the model, the rules win, and an existing ADR or schema is not a counter-argument.
+  Measured 2026-09-20: model 50 % exact dates, 96.5 % invented; `NSDataDetector` 65 %, 0 % (#67, #92).
 - No `try?` that swallows errors, `Logger` not `print`, Swift 6 strict concurrency, deployment target 27.
 - A `ModelContext` does not retain its `ModelContainer`. Keep the container alive for as long as the context
   is used (tests: hold it in a local or a helper struct), or the next save or fetch crashes the process.
