@@ -55,6 +55,9 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
     Fälligkeitsdatum kommt aus `DueDateRule`, das Modell hat die vier Datumsfelder verloren
   - daraus [#98](https://github.com/henemm/loose-ends/issues/98) Katalog-Lücke aus #95 geschlossen:
     die neun `DueDateRule`-Begründungssätze fehlten auf Deutsch im String-Katalog, jetzt übersetzt
+  - Personen zurückgestellt (Henning, 2026-09-21): kein bekannter Use Case, nicht gemessen —
+    offene Frage, ob das Feld überhaupt bleibt, in [#105](https://github.com/henemm/loose-ends/issues/105)
+  - **#67 damit geschlossen:** alle drei zugesagten Feld-Entscheidungen getroffen (Datum, Titel, Personen)
 - [#65](https://github.com/henemm/loose-ends/issues/65) Unsicherheitssignal, das richtig von falsch trennt
 - [#66](https://github.com/henemm/loose-ends/issues/66) Steht die Information überhaupt im Text?
 - [#68](https://github.com/henemm/loose-ends/issues/68) Nachweis: Modell je Gerät, Prozess, Zustand
