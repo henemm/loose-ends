@@ -87,6 +87,9 @@ trägt Herkunft (KI oder Nutzer) und Konfidenz. Kein Feld ist Pflicht.
 **ADR-4 Veredelung genau einmal.** Bei der Erfassung, im Intent-Prozess (kein App-Start nötig),
 mit Nachzügler-Lauf beim nächsten App-Start für Aufgaben ohne `processedAt`.
 Erneute Analyse nur auf ausdrücklichen Nutzerwunsch.
+Seit #95 markiert `processedAt` nur noch den Modelllauf: Der Regelschritt für das Fälligkeitsdatum
+(`DueDateRule`) läuft unabhängig davon bei jeder Veredelung, weil er ohne Modell auskommt und
+deterministisch ist — „genau einmal" gilt für das Modell, nicht für die regelbasierten Felder.
 
 **ADR-5 Lernen ist Retrieval, kein Training.** Ähnliche alte Aufgaben (on-device Embeddings,
 NaturalLanguage-Framework) werden mit ihren endgültigen Attributen als Beispiele in den Prompt gegeben.
