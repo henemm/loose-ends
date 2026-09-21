@@ -219,6 +219,73 @@ struct TestStore {
         #expect(examples.first?.importance == .high)
         #expect(examples.first?.contexts == ["Garten"])
     }
+
+    /// „Regeln vor Modell" heißt nicht „Regeln nur, wenn das Modell kann" (#95, AC-7): der
+    /// Regelschritt läuft im Koordinator, unabhängig vom Modell-Gate. Auf einem Gerät ohne Apple
+    /// Intelligence, bei gesperrtem Gerät oder am Ratenlimit entsteht das Datum trotzdem.
+    @Test("Ohne verfügbares Modell schreibt die Regel trotzdem das Datum")
+    @MainActor func ruleWritesDueDateWithoutModel() async throws {
+        let store = try TestStore()
+        let context = store.context
+        let container = store.container
+        let task = TaskItem(rawText: "Nächsten Freitag die Miete überweisen")
+        // Donnerstag, 12. März 2026 — im Kalender des Testrechners, damit die Erwartung unten
+        // zeitzonenunabhängig bleibt.
+        task.capturedAt = try #require(Calendar.current.date(from: DateComponents(year: 2026, month: 3, day: 12, hour: 12)))
+        context.insert(task)
+        try context.save()
+        let stub = StubEnricher(unavailableReason: "deviceNotEligible")
+        let coordinator = EnrichmentCoordinator(enricher: stub, container: container)
+
+        await coordinator.processPending()
+
+        #expect(stub.calls == 0, "das Modell wird nicht befragt")
+        let due = try #require(task.dueDate, "die Regel muss ein Datum liefern")
+        #expect(Calendar.current.dateComponents([.year, .month, .day], from: due)
+                == DateComponents(year: 2026, month: 3, day: 20))
+        #expect(task.dueHasTime == false)
+        #expect(task.dueSourceRaw == FieldSource.ai.rawValue)
+        #expect(task.dueConfidence == 1.0)
+        let dueRevisions = (task.revisions ?? []).filter { $0.field == .dueDate }
+        #expect(dueRevisions.count == 1)
+        #expect(dueRevisions.first?.author == .ai)
+        #expect(dueRevisions.first?.reason?.isEmpty == false)
+        #expect(task.processedAt == nil, "Titel und Wichtigkeit stehen noch aus")
+    }
+
+    /// `processedAt` bleibt der Marker für „das Modell hat es gesehen" (ADR-4). Sonst verlöre eine
+    /// einmal ohne Apple Intelligence erfasste Aufgabe Titel und Wichtigkeit für immer. Beim
+    /// Nachhol-Durchgang darf die Regel aber keine zweite Revision auf dasselbe Feld legen
+    /// (#95, AC-8).
+    @Test("Der Nachhol-Durchgang holt den Titel, ohne die Regel-Revision zu verdoppeln")
+    @MainActor func catchUpPassDoesNotDuplicateRuleRevision() async throws {
+        let store = try TestStore()
+        let context = store.context
+        let container = store.container
+        let task = TaskItem(rawText: "Nächsten Freitag die Miete überweisen")
+        task.capturedAt = try #require(Calendar.current.date(from: DateComponents(year: 2026, month: 3, day: 12, hour: 12)))
+        context.insert(task)
+        try context.save()
+        let stub = StubEnricher(unavailableReason: "deviceNotEligible")
+        let coordinator = EnrichmentCoordinator(enricher: stub, container: container)
+
+        await coordinator.processPending()
+        let dueAfterRule = try #require(task.dueDate)
+
+        var draft = EnrichmentDraft()
+        draft.title = EnrichmentDraft.Guess("Miete überweisen", confidence: 0.9, reason: "Stub.")
+        stub.draft = draft
+        stub.unavailableReason = nil
+
+        await coordinator.processPending()
+
+        #expect(stub.calls == 1, "das Modell wird im Nachhol-Durchgang genau einmal befragt")
+        #expect(task.title == "Miete überweisen")
+        #expect(task.processedAt != nil, "jetzt hat das Modell die Aufgabe gesehen")
+        #expect(task.dueDate == dueAfterRule, "das Datum der Regel bleibt stehen")
+        #expect((task.revisions ?? []).filter { $0.field == .dueDate }.count == 1,
+                "die Regel legt beim zweiten Durchgang keine zweite Revision an")
+    }
 }
 
 @Suite("EnrichmentParsing") struct EnrichmentParsingTests {

@@ -76,15 +76,35 @@ struct DateExpressionParserTests {
         #expect(Self.accepted("Donnerstag die Fahrräder zum Service bringen", by: .weekday(5)))
     }
 
-    @Test("nächsten <Tag> / next <day> lässt beide Vorkommen gelten")
+    /// Erkennung bleibt `.weekdayEitherNext` — der Korpus lässt weiterhin beide Lesarten gelten.
+    /// Die *Auflösung* ist seit der PO-Entscheidung vom 2026-09-21 festgelegt: „nächsten Freitag"
+    /// meint den Freitag der Folgewoche, nicht das nächste Vorkommen (#95, AC-2).
+    @Test("nächsten <Tag> / next <day> löst auf die Folgewoche auf")
     func weekdayEitherNext() {
         #expect(Self.expression("Nächsten Montag die Reifen wechseln lassen") == .weekdayEitherNext(2))
         #expect(Self.expression("Nächsten Donnerstag um 11 Uhr zur Physiotherapie") == .weekdayEitherNext(5))
         #expect(Self.expression("Next Tuesday hand in the application") == .weekdayEitherNext(3))
         #expect(Self.expression("Submit the form by next Friday") == .weekdayEitherNext(6))
         #expect(Self.expression("send the invoice to Ravi next Friday") == .weekdayEitherNext(6))
+        // Referenztag ist Donnerstag, der 12.3.2026: die Folgewoche beginnt am Montag, dem 16.3.
+        #expect(Self.day("Nächsten Freitag den Zuschuss beantragen") == "2026-03-20")
+        #expect(Self.day("Submit the form by next Friday") == "2026-03-20")
+        #expect(Self.day("Nächsten Montag die Reifen wechseln lassen") == "2026-03-16")
+        #expect(Self.day("Nächsten Donnerstag um 11 Uhr zur Physiotherapie") == "2026-03-19")
+        #expect(Self.day("Next Tuesday hand in the application") == "2026-03-17")
+        // Der Korpus akzeptiert beide Lesarten, die Folgewoche ist eine davon: Messung bleibt gültig.
         #expect(Self.accepted("Nächsten Freitag den Zuschuss beantragen", by: .weekdayEitherNext(6)))
         #expect(Self.accepted("Next Monday call Ravi about room 12", by: .weekdayEitherNext(2)))
+    }
+
+    /// Der Regelparser gehört seit #95 in den Produktpfad (`Shared/Services`), nicht mehr in den
+    /// Messordner: nur von dort aus sehen ihn App, Watch, Widgets und Share-Erweiterung, und nur
+    /// so liegt der Typ genau einmal im Repository (#95, AC-1).
+    @Test("Der Regelparser liegt im Produktmodul, nicht im Testziel")
+    func parsersLiveInProductModule() {
+        #expect(String(reflecting: DateExpressionParser.self).hasPrefix("LooseEnds."))
+        #expect(String(reflecting: TimeExpressionParser.self).hasPrefix("LooseEnds."))
+        #expect(String(reflecting: DateExpression.self).hasPrefix("LooseEnds."))
     }
 
     @Test("nächste Woche <Tag> meint die Folgewoche, auch kleingeschrieben und hinten")
