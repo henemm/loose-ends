@@ -55,22 +55,8 @@ protocol TaskEnricher: Sendable {
 }
 
 /// Parsing shared by every model adapter, kept plain so it is unit-testable without a model.
+/// The due date no longer passes through here: it comes from `DueDateRule`, not from the model (#95).
 enum EnrichmentParsing {
-    /// "2026-09-19" plus optional "14:30" into a date in the given calendar. Empty or malformed → nil.
-    static func dueDate(day: String, time: String, calendar: Calendar = .current) -> (date: Date, hasTime: Bool)? {
-        let dayParts = day.split(separator: "-").compactMap { Int($0) }
-        guard dayParts.count == 3 else { return nil }
-        var components = DateComponents(year: dayParts[0], month: dayParts[1], day: dayParts[2])
-        let timeParts = time.split(separator: ":").compactMap { Int($0) }
-        let hasTime = timeParts.count == 2 && (0..<24).contains(timeParts[0]) && (0..<60).contains(timeParts[1])
-        if hasTime {
-            components.hour = timeParts[0]
-            components.minute = timeParts[1]
-        }
-        guard components.isValidDate(in: calendar), let date = calendar.date(from: components) else { return nil }
-        return (date, hasTime)
-    }
-
     static func clamp(_ confidence: Double) -> Double {
         min(max(confidence, 0), 1)
     }

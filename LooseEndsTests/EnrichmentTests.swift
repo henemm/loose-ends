@@ -289,25 +289,13 @@ struct TestStore {
 }
 
 @Suite("EnrichmentParsing") struct EnrichmentParsingTests {
-    @Test("Day and time strings become a date; malformed input becomes nil")
-    func parsesDueDate() throws {
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = try #require(TimeZone(identifier: "Europe/Berlin"))
-
-        let dateOnly = try #require(EnrichmentParsing.dueDate(day: "2026-09-19", time: "", calendar: calendar))
-        #expect(dateOnly.hasTime == false)
-        #expect(calendar.component(.day, from: dateOnly.date) == 19)
-
-        let withTime = try #require(EnrichmentParsing.dueDate(day: "2026-09-19", time: "14:30", calendar: calendar))
-        #expect(withTime.hasTime)
-        #expect(calendar.component(.hour, from: withTime.date) == 14)
-        #expect(calendar.component(.minute, from: withTime.date) == 30)
-
-        #expect(EnrichmentParsing.dueDate(day: "", time: "", calendar: calendar) == nil)
-        #expect(EnrichmentParsing.dueDate(day: "next week", time: "", calendar: calendar) == nil)
-        #expect(EnrichmentParsing.dueDate(day: "2026-13-40", time: "", calendar: calendar) == nil)
+    /// Was left over when the model schema lost its date fields (#95): a model may still answer
+    /// with a confidence outside 0…1, and the threshold check must not see it.
+    @Test("Confidences outside 0 to 1 are clamped")
+    func clampsConfidence() {
         #expect(EnrichmentParsing.clamp(1.7) == 1)
         #expect(EnrichmentParsing.clamp(-0.2) == 0)
+        #expect(EnrichmentParsing.clamp(0.65) == 0.65)
     }
 }
 
