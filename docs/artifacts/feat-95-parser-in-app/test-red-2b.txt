@@ -1,0 +1,40 @@
+[1;33m[sim][0m macOS 26.6.1 < Deployment Target 27.0 — Unit-Tests laufen im Simulator.
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftConstValuesFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-OutputFileMap.json
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.LinkFileList
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsTests[0m] [1mCompiling[0m EnrichmentTests.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/DueDateRuleTests.swift:15:42: [31mcannot find type 'DueDateRule' in scope[0m
+ 13 |     static let calendar = CorpusTests.calendar
+[36m 14 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/DueDateRuleTests.swift:16:9: [31mcannot find 'DueDateRule' in scope[0m
+ 14 | 
+[36m 15 |     static func match(_ text: String) -> DueDateRule.Match? {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/DueDateRuleTests.swift:25:21: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+ 23 |     @Test("Datum und Uhrzeit werden zu einem Zeitpunkt zusammengesetzt (AC-5)")
+[32m 24 |     func combinesDateAndTime() throws {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/DueDateRuleTests.swift:52:21: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+ 50 |     @Test("Ohne Uhrzeit bleibt es der Tagesbeginn und hasTime falsch (AC-5)")
+[32m 51 |     func dateWithoutTimeStaysAtStartOfDay() throws {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/DueDateRuleTests.swift:107:25: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+105 |         var reasons: [String] = []
+[32m106 |         for sentence in sentences {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/DueDateRuleTests.swift:120:36: [31mcannot find 'DueDateRule' in scope[0m
+118 |     @Test("Der Regelschritt liegt im Produktmodul")
+[36m119 |     func ruleLivesInProductModule() {[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueDateRuleTests.swift
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.09.21_07-49-23-+0200.xcresult

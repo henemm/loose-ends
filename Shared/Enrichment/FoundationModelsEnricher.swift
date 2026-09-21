@@ -25,7 +25,6 @@ struct FoundationModelsEnricher: TaskEnricher {
     static let instructions = """
     You turn one captured note into a task. The note may be German or English; answer in the note's language.
     Title: short and imperative, at most eight words, no trailing period. Keep names and numbers from the note.
-    Only set a due date the note states or clearly implies (relative dates count from the capture date). Never invent one.
     Importance and urgency are separate. Signals: words like urgent, immediately, by, deadline, reminder, cancellation, tax;
     people who wait for it; amounts of money and official language. Age of the note is not importance.
     Duration buckets: minutes5, minutes15, minutes30, hour1, hours2plus. Energy: low, medium, high.
@@ -65,10 +64,6 @@ struct FoundationModelsEnricher: TaskEnricher {
         if !title.isEmpty {
             draft.title = EnrichmentDraft.Guess(title, confidence: EnrichmentParsing.clamp(result.titleConfidence), reason: result.titleReason)
         }
-        if let due = EnrichmentParsing.dueDate(day: result.dueDate, time: result.dueTime, calendar: calendar) {
-            draft.dueDate = EnrichmentDraft.Guess(due.date, confidence: EnrichmentParsing.clamp(result.dueConfidence), reason: result.dueReason)
-            draft.dueHasTime = due.hasTime
-        }
         if let value = Importance(rawValue: result.importance) {
             draft.importance = EnrichmentDraft.Guess(value, confidence: EnrichmentParsing.clamp(result.importanceConfidence), reason: result.importanceReason)
         }
@@ -106,15 +101,6 @@ struct ModelEnrichment {
     var titleConfidence: Double
     @Guide(description: "One sentence why this title")
     var titleReason: String
-
-    @Guide(description: "Due date as YYYY-MM-DD if the note states or implies one, otherwise empty")
-    var dueDate: String
-    @Guide(description: "Due time as HH:mm if the note states one, otherwise empty")
-    var dueTime: String
-    @Guide(description: "Confidence 0 to 1 for the due date")
-    var dueConfidence: Double
-    @Guide(description: "One sentence why this due date")
-    var dueReason: String
 
     @Guide(description: "Importance: low, medium, high, or empty if the note gives no signal")
     var importance: String

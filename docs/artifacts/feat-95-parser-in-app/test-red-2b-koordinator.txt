@@ -1,0 +1,102 @@
+[1;33m[sim][0m macOS 26.6.1 < Deployment Target 27.0 — Unit-Tests laufen im Simulator.
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/EnrichmentCoordinatorTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-OutputFileMap.json
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftConstValuesFileList
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateExpressionParserTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateParserCorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateTitleReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m EnrichmentTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m FieldEditTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CalendarSyncTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CatalogServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SharedContentTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SubtaskTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TaskActionsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TimeExpressionParser.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/Measurement/MeasurementRun.swift:133:60: [33m'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration][0m
+131 |     static func classify(_ error: Error) -> String {
+[32m132 |         #if canImport(FoundationModels) && !os(watchOS)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:71:44: [33m'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration][0m
+69 |         #expect(MeasurementErrorKind.classify(NSError(domain: "x", code: 1)) == "andere")
+[32m70 |         #if canImport(FoundationModels)[0m
+⚠️  macro expansion #expect:1:83: [33m'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration][0m
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:72:123: note: expanded code originates here
+[32m70 |         #if canImport(FoundationModels)[0m
+⚠️  macro expansion #expect:1:99: [33m'rateLimited' was deprecated in iOS 27.0: Use ``LanguageModelError/rateLimited(_:)`` instead. [#DeprecatedDeclaration][0m
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:72:123: note: expanded code originates here
+[32m70 |         #if canImport(FoundationModels)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:72:68: [33m'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration][0m
+70 |         #if canImport(FoundationModels)
+[32m71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:72:84: [33m'rateLimited' was deprecated in iOS 27.0: Use ``LanguageModelError/rateLimited(_:)`` instead. [#DeprecatedDeclaration][0m
+70 |         #if canImport(FoundationModels)
+[32m71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")[0m
+⚠️  macro expansion #expect:1:83: [33m'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration][0m
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:73:128: note: expanded code originates here
+[32m71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")[0m
+⚠️  macro expansion #expect:1:99: [33m'guardrailViolation' was deprecated in iOS 27.0: Use ``LanguageModelError/guardrailViolation(_:)`` instead. [#DeprecatedDeclaration][0m
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:73:128: note: expanded code originates here
+[32m71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:73:68: [33m'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration][0m
+71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")
+[32m72 |         #expect(MeasurementErrorKind.classify(LanguageModelSession.GenerationError.rateLimited(context)) == "rateLimited")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:73:84: [33m'guardrailViolation' was deprecated in iOS 27.0: Use ``LanguageModelError/guardrailViolation(_:)`` instead. [#DeprecatedDeclaration][0m
+71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")
+[32m72 |         #expect(MeasurementErrorKind.classify(LanguageModelSession.GenerationError.rateLimited(context)) == "rateLimited")[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRun.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRunTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m FocusBloxCalibrationTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m IntentExecutionTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ListPolishTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TimeExpressionParserTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m WaveformTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m Corpus.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateExpressionParser.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProcessCacheTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatEditTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RevisionServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsTests.swiftsourceinfo
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsTests.swiftmodule
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEndsTests.swiftdoc
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsTests.abi.json
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.LinkFileList
+[[36mLooseEndsTests[0m] [1mLinking[0m LooseEndsTests
+[[36mLooseEndsTests[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[36;1mnote: [0mRemoved stale file '/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Intermediates.noindex/LooseEnds.build/Debug-iphonesimulator/LooseEndsTests.build/Objects-normal/arm64/DueDateRuleTests.swiftconstvalues'
+Test Suite 'Selected tests' started at 2026-09-21 07:50:05.826.
+Test Suite 'LooseEndsTests.xctest' started at 2026-09-21 07:50:05.827.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-09-21 07:50:05.827.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
+[1mTest run started.[0m
+Suite "EnrichmentCoordinator" started
+    [32m✔[0m "Every unprocessed task is enriched once; a second pass touches nothing" ([33m0.048[0m seconds)
+    [32m✔[0m "A failing model leaves the task unprocessed for the next pass" (0.005 seconds)
+    [32m✔[0m "An unavailable model is not called at all" (0.005 seconds)
+    [32m✔[0m "Examples are the most recent completed tasks with their final attributes" (0.015 seconds)
+    [33m⚠️[0m  Test "Ohne verfügbares Modell schreibt die Regel trotzdem das Datum" recorded an issue at EnrichmentTests.swift:243:23: Expectation failed: task.dueDate
+    [31m✖[0m [31m"Ohne verfügbares Modell schreibt die Regel trotzdem das Datum" (0.162 seconds) 1 issue(s)[0m
+    [33m⚠️[0m  Test "Der Nachhol-Durchgang holt den Titel, ohne die Regel-Revision zu verdoppeln" recorded an issue at EnrichmentTests.swift:273:32: Expectation failed: task.dueDate
+    [31m✖[0m [31m"Der Nachhol-Durchgang holt den Titel, ohne die Regel-Revision zu verdoppeln" (0.024 seconds) 1 issue(s)[0m
+Suite "EnrichmentCoordinator" failed after 0.263 seconds with 2 issue(s)
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.09.21_07-49-54-+0200.xcresult
+[36;1mTesting started[0m

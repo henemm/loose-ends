@@ -19,7 +19,8 @@ Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, 
   the rule path is the proposal. Every measurement report carries the rule-based column as baseline; if
   the rules beat the model, the rules win, and an existing ADR or schema is not a counter-argument.
   Measured 2026-09-20: model 50 % exact dates, 96.5 % invented; `NSDataDetector` 65 %, 0 % (#67, #92);
-  own rule parser 99.3 %, 0 % (#92, Schnitt 1).
+  own rule parser 99.3 %, 0 % (#92, Schnitt 1). Since #95 the rule parser sets the due date in the
+  product path; the model schema lost the four due-date fields.
 - No `try?` that swallows errors, `Logger` not `print`, Swift 6 strict concurrency, deployment target 27.
 - A `ModelContext` does not retain its `ModelContainer`. Keep the container alive for as long as the context
   is used (tests: hold it in a local or a helper struct), or the next save or fetch crashes the process.
@@ -99,9 +100,11 @@ not scope creep on the current one.
 - `Shared/Models` — SwiftData model, enums, `RepeatRule`, `ViewRules` (pure view computation)
 - `Shared/Persistence` — `ModelContainerFactory` (app group + private CloudKit), `ContextSeeder`
 - `Shared/Services` — `CaptureService`, `FieldCodec` (one encoding per field), `RevisionService` (reset = user revision),
-  `TaskActions` (done, next up, park, move, restore). All pure over the model objects; the caller saves.
+  `TaskActions` (done, next up, park, move, restore), `DateExpressionParser`/`TimeExpressionParser` (rule-based
+  date/time extraction DE/EN, moved from `Measurement/` in #95). All pure over the model objects; the caller saves.
 - `Shared/Enrichment` — `TaskEnricher` protocol, `EnrichmentWriter` (threshold + revisions), `EnrichmentCoordinator`
-  (catch-up pass), `FoundationModelsEnricher` (on-device model, `#if canImport(FoundationModels)`)
+  (catch-up pass), `FoundationModelsEnricher` (on-device model, `#if canImport(FoundationModels)`), `DueDateRule`
+  (combines the rule parsers into the due date, confidence 1.0, #95)
 - `Shared/Intents` — App Intents shared by app, widgets and (later) the intents extension
 - `LooseEnds/` — app entry and views (iPhone, iPad, Mac); `LooseEndsWatch/`, `LooseEndsWidgets/`, `LooseEndsShare/`
   (iOS share sheet: text, links, mails via `SharedContent`) — platform targets
@@ -111,8 +114,7 @@ not scope creep on the current one.
 - `Shared/` compiles into the watch and widget targets too: no SwiftUI that is unavailable on watchOS there
   (keyboard shortcuts, navigation bar modifiers). App views belong in `LooseEnds/Views`.
 - `docs/project/` — decisions, user story, data model, design briefing, load-bearing assumptions with their experiments and alternatives (`06-annahmen-und-experimente.md`); `docs/reference/` — learnings carried over from FocusBlox
-- `Measurement/` — measurement-only code against the fidelity corpus: `DateExpressionParser`,
-  `TimeExpressionParser` (rule-based date/time extraction DE/EN); compiles into `LooseEndsTests` and
+- `Measurement/` — measurement-only code against the fidelity corpus; compiles into `LooseEndsTests` and
   the lab app only, no product path
 
 ## Naming
