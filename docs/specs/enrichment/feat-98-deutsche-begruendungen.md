@@ -133,11 +133,14 @@ vorhandenen Sätze wird ergänzt.
   Wert mit der Tabelle im Abschnitt „Implementation Details" verglichen wird / Then stimmt jeder der
   neun Werte wörtlich überein.
 - **AC-5 `extractionState` steht auf `translated`:** Given die neun neuen Katalog-Einträge / When das
-  Katalog-JSON inspiziert wird / Then trägt jeder neue `de`-Eintrag `"extractionState" : "translated"`,
-  konsistent mit den 125 vorhandenen Einträgen.
-- **AC-6 Kein Produktcode geändert:** Given der fertige Stand / When `git diff main...HEAD` außerhalb
-  von `LooseEnds/Resources/Localizable.xcstrings` und `LooseEndsTests/DueDateRuleTests.swift` geprüft
-  wird / Then ist der Diff leer.
+  Katalog-JSON inspiziert wird / Then trägt jeder neue `de`-Eintrag `"extractionState" : "translated"` —
+  abweichend von den 125 vorhandenen Einträgen, die kein `extractionState`-Feld tragen (siehe
+  Changelog 2026-09-21).
+- **AC-6 Kein Produktcode geändert:** Given der fertige Stand / When der Versionsvergleich außerhalb
+  von `LooseEnds/Resources/Localizable.xcstrings`, `LooseEndsTests/DueDateRuleTests.swift` und den
+  Standard-Workflow-Dokumenten (`docs/specs`, `docs/briefings`, `docs/context`, `docs/artifacts`)
+  geprüft wird / Then ist außer diesen Dateien kein Swift-Produktcode unter `Shared/` oder
+  `LooseEnds/` verändert (siehe Changelog 2026-09-21).
 
 ## Test Plan
 
@@ -201,3 +204,11 @@ werden — dann würde sich die Abwägung ändern.
 
 - 2026-09-21: Spec aus dem Analyse-Kontext (`docs/context/feat-98-deutsche-begruendungen.md`)
   erstellt.
+- 2026-09-21: Umsetzung VERIFIED (Adversary-Protokoll
+  `docs/artifacts/feat-98-deutsche-begruendungen/adversary-dialog.md`), AC-1 bis AC-4 ohne
+  Einschränkung. AC-5- und AC-6-Wortlaut redaktionell korrigiert (Findings F001, F002 aus dem
+  Adversary-Protokoll, nicht blockierend): Keiner der 125 vorhandenen Katalog-Einträge trägt ein
+  `extractionState`-Feld — die neun neuen Einträge sind darin die einzige Ausnahme, nicht
+  „konsistent" mit dem Bestand. AC-6 zählte ursprünglich auch die zwingenden Workflow-Artefakte
+  (Spec, Briefing, Kontext, RED-Testlauf-Bericht) zum Diff und war damit nie wörtlich erfüllbar;
+  gemeint war „kein Swift-Produktcode geändert" — das ist geprüft und zutreffend.

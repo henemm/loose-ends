@@ -1,6 +1,6 @@
 ---
 spec_file: docs/specs/enrichment/feat-98-deutsche-begruendungen.md
-spec_sha256: 42d927f65d6db162a6e8491c113111ec454f08d674330b1ae0c0e26337934ffc
+spec_sha256: 2963f2ea584b7b40f52af4caa4f812a34291fe3de40585a7504719db0f67b2c4
 ---
 
 # PO-Briefing: feat-98-deutsche-begruendungen
@@ -11,21 +11,22 @@ spec_sha256: 42d927f65d6db162a6e8491c113111ec454f08d674330b1ae0c0e26337934ffc
 
 ## Was gebaut wird
 
-Die Begründungssätze für automatisch erkannte Fälligkeitsdaten erscheinen auf Deutsch statt Englisch.
+Die Begründungssätze zu automatisch erkannten Terminen erscheinen künftig auf Deutsch statt auf Englisch.
 
 ## Definition of Done
 
-Alle neun Begründungssätze sind in einem Testlauf nachweislich auf Deutsch hinterlegt und kein bestehender Code hat sich geändert.
+Ein Test bestätigt, dass alle neun Begründungssätze im deutschen Sprachpaket vom englischen Text abweichen.
 
 ## Wie geprüft wird
 
-Ein automatisierter Test liest die deutschen Übersetzungen direkt aus der gebauten App; ob sie auf einem echten Gerät angezeigt werden, prüft kein Test.
+Ein Test prüft im gebauten App-Paket, dass jeder der neun Sätze vom englischen Original abweicht — nicht, ob er korrekt ist.
 
 ## Kritische Anmerkungen
 
-- Anfrage verlangt Beweis auf einem deutschen Gerät; Spec beweist es nur im gehosteten Testlauf, kein Gerätetest mit umgeschalteter Sprache.
-- Drei von sechs Kriterien (Anführungszeichen, Wortlaut, Status-Markierung) werden nur manuell per Skript geprüft, nicht automatisiert getestet.
+- Die Tests zeigen keinen deutschen Text auf einem echten Gerät, nur den Katalogeintrag — abweichend von der Ursprungsanfrage.
+- Für drei von sechs Kriterien (Wortlaut, Kennzeichnung, unveränderter Code) fehlt eine automatisierte Prüfmethode im Plan.
+- Der Test prüft nur Abweichung vom englischen Satz — ein falscher deutscher Text bestünde ihn ebenfalls.
 
 ## Freigabe-Frage
 
-Genügt dir der Nachweis aus dem Testlauf, oder brauchst du zusätzlich den sichtbaren deutschen Text auf deinem iPhone?
+Reicht der Nachweis, dass die deutschen Sätze existieren und anders klingen als die englischen, oder muss der genaue Wortlaut zusätzlich geprüft werden?
