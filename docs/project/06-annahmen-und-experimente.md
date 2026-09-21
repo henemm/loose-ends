@@ -127,7 +127,10 @@ bis sie gesehen wurde.
 - **Abhängigkeiten über PCC** (#27): online, Tageslimit, und im Korpus gibt es keine Wahrheit dafür,
   weil `blockerTaskID` in FocusBlox nie gesetzt war. Unprüfbar, bis echte Daten existieren.
   Alternative: Abhängigkeit nur per Nutzergeste, keine Erkennung in v1.
-- **Personen ohne Kontakte:** Diktat macht aus Andrea einen Andreas. Messbar wie Titel-Treue (#67).
+- **Personen ohne Kontakte:** Diktat macht aus Andrea einen Andreas. Messbar wie Titel-Treue (#67) —
+  **zurückgestellt (Henning, 2026-09-21):** kein bekannter Use Case, deshalb nicht gemessen. Das
+  Feld (`TaskItem.people`) bleibt vorerst im Produkt (Merkmalzeile, Detail, Signal für Wichtigkeit/
+  Dringlichkeit), aber ohne Qualitätsnachweis. Offene Frage, ob es überhaupt bleiben soll: #105.
 - **Projektzuordnung** nur aus der Namensliste, bei null Projekten leer. Harmlos.
 
 ## Was bereits festgelegt ist, und welche Alternative jede Festlegung hat
