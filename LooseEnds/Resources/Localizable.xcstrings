@@ -126,6 +126,15 @@
     "Speech recognition is not available. You can type instead." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Spracherkennung ist nicht verfügbar. Du kannst stattdessen tippen." } } } },
     "Speech recognition on this device is not available. You can type instead." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Spracherkennung auf diesem Gerät ist nicht verfügbar. Du kannst stattdessen tippen." } } } },
     "Allow" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erlauben" } } } },
-    "Not now" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Jetzt nicht" } } } }
+    "Not now" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Jetzt nicht" } } } },
+    "From a day count in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus einer Tagesangabe in der Notiz." } } } },
+    "From the weekday named in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus dem Wochentag in der Notiz." } } } },
+    "From a weekday of next week in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus einem Wochentag der nächsten Woche in der Notiz." } } } },
+    "From “next” plus a weekday in the note: the following week." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus „nächsten“ plus Wochentag in der Notiz: die Folgewoche." } } } },
+    "From “end of the month” in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus „Ende des Monats“ in der Notiz." } } } },
+    "From the day of the month in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus dem Tag des Monats in der Notiz." } } } },
+    "From “weekend” in the note: Saturday." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus „Wochenende“ in der Notiz: Samstag." } } } },
+    "From “next month” in the note: the first of that month." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus „nächsten Monat“ in der Notiz: der Erste des Monats." } } } },
+    "From the day and month in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus Tag und Monat in der Notiz." } } } }
   }
 }
