@@ -119,4 +119,35 @@ struct DueDateRuleTests {
     func ruleLivesInProductModule() {
         #expect(String(reflecting: DueDateRule.self).hasPrefix("LooseEnds."))
     }
+
+    /// Der Begründungssatz erscheint im Aufgaben-Detail und im Feld-Editor (`TaskDetailView`,
+    /// `FieldEditorView`) über `revision.reason`. Bisher fehlten die deutschen Übersetzungen im
+    /// Katalog komplett — auf einem deutschen Gerät fiel die Anzeige auf den englischen
+    /// Schlüsseltext zurück (#98). `LooseEndsTests` läuft mit `TEST_HOST` gegen `LooseEnds.app`,
+    /// `Bundle.main` im Testprozess ist damit der App-Bundle — der Test liest die deutsche
+    /// Übersetzung direkt aus dem gebauten `de.lproj`-Bundle, unabhängig von der
+    /// Simulator-/Geräte-Systemsprache. Die Schlüssel sind wörtlich aus `DueDateRule.swift`
+    /// kopiert (Anführungszeichen exakt), sonst prüft der Test den falschen Katalogeintrag.
+    @Test("Alle neun Begründungssätze sind im deutschen Bundle übersetzt (#98, AC-1)")
+    func reasonsAreTranslatedToGerman() throws {
+        let path = try #require(Bundle.main.path(forResource: "de", ofType: "lproj"))
+        let germanBundle = try #require(Bundle(path: path))
+
+        let expressionKinds: [(name: String, key: String)] = [
+            ("offsetDays", "From a day count in the note."),
+            ("weekday", "From the weekday named in the note."),
+            ("weekdayNextWeek", "From a weekday of next week in the note."),
+            ("weekdayEitherNext", "From “next” plus a weekday in the note: the following week."),
+            ("endOfMonth", "From “end of the month” in the note."),
+            ("dayOfMonth", "From the day of the month in the note."),
+            ("weekend", "From “weekend” in the note: Saturday."),
+            ("monthRange", "From “next month” in the note: the first of that month."),
+            ("dayAndMonth", "From the day and month in the note."),
+        ]
+
+        for (name, key) in expressionKinds {
+            let translated = germanBundle.localizedString(forKey: key, value: key, table: nil)
+            #expect(translated != key, "\(name): \(key)")
+        }
+    }
 }
