@@ -96,7 +96,7 @@ struct DateExpressionParser: Sendable {
     }
 
     /// The one day the parser stands behind. Ambiguous wording still resolves to a single day:
-    /// weekend = Saturday, "nächsten Freitag" = the coming one, "nächsten Monat" = the first.
+    /// weekend = Saturday, "nächsten Freitag" = the following week, "nächsten Monat" = the first.
     func date(in text: String, reference: Date) -> Date? {
         expression(in: text).flatMap { resolve($0, reference: reference) }
     }
@@ -106,7 +106,7 @@ struct DateExpressionParser: Sendable {
         switch expression {
         case .offsetDays(let value): return shift(day, days: value)
         case .weekday(let weekday): return next(weekday, from: day, includingToday: true)
-        case .weekdayEitherNext(let weekday): return next(weekday, from: day, includingToday: false)
+        case .weekdayEitherNext(let weekday): return inFollowingWeek(weekday, from: day)
         case .weekdayNextWeek(let weekday): return inFollowingWeek(weekday, from: day)
         case .endOfMonth: return endOfMonth(day)
         case .dayOfMonth(let value): return dayOfMonth(value, from: day)
