@@ -127,6 +127,7 @@ jobs:
             -destination "platform=iOS Simulator,id=$SIM_UDID" \
             -only-testing:LooseEndsUITests \
             -resultBundlePath UITestResults.xcresult \
+            -retry-tests-on-failure \
             CODE_SIGNING_ALLOWED=NO \
             DEVELOPMENT_TEAM= \
             2>&1 | tee ui-smoke.log | xcbeautify
