@@ -1,0 +1,92 @@
+RED-Beleg für Spike #108 (Spike #65, Schnitt 2) — Selbstkonsistenz-Signal
+==========================================================================
+
+Alle neuen Tests referenzieren Felder/Typen, die es in der Produktion noch nicht gibt
+(Corpus.Entry.*Truth, Corpus.runsPerEntry, MeasurementResult.importance/urgency/duration/energy/
+contexts, EnrichmentDraft.selfConsistencyValues, das enum SelfConsistency). Der Beleg läuft über
+zwei separate saubere Läufe (DerivedData vollständig geleert: `rm -rf
+~/Library/Developer/Xcode/DerivedData/LooseEnds-session-default`), weil xcodebuild beim ersten
+Compile-Fehler weitere, noch nicht gestartete Compile-Jobs abbricht — ein einzelner kombinierter
+Lauf hätte je nach Scheduling nur einen Teil der neuen Dateien tatsächlich compiliert und wäre
+darum kein vollständiger Beleg gewesen. Befehl jeweils: `./scripts/sim.sh unit` (Xcode 27,
+iPhone-17-Simulator, iOS 27.0).
+
+Lauf 1 — CorpusTests.swift + MeasurementRunTests.swift (AC-1 bis AC-4)
+------------------------------------------------------------------------
+
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/CorpusTests.swift:181:28: error: value of type 'Corpus.Entry' has no member 'importanceTruth'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/CorpusTests.swift:182:28: error: value of type 'Corpus.Entry' has no member 'urgencyTruth'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/CorpusTests.swift:183:28: error: value of type 'Corpus.Entry' has no member 'durationTruth'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/CorpusTests.swift:184:28: error: value of type 'Corpus.Entry' has no member 'energyTruth'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/CorpusTests.swift:185:28: error: value of type 'Corpus.Entry' has no member 'contextsTruth'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/CorpusTests.swift:191:28: error: value of type 'Corpus.Entry' has no member 'importanceTruth'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/CorpusTests.swift:192:28: error: value of type 'Corpus.Entry' has no member 'urgencyTruth'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/CorpusTests.swift:193:28: error: value of type 'Corpus.Entry' has no member 'durationTruth'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/CorpusTests.swift:194:28: error: value of type 'Corpus.Entry' has no member 'energyTruth'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/CorpusTests.swift:195:28: error: value of type 'Corpus.Entry' has no member 'contextsTruth'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/CorpusTests.swift:200:24: error: type 'Corpus' has no member 'runsPerEntry'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/CorpusTests.swift:201:24: error: type 'Corpus' has no member 'runsPerEntry'
+
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:161:24: error: value of type 'MeasurementResult' has no member 'importance'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:162:24: error: value of type 'MeasurementResult' has no member 'urgency'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:163:24: error: value of type 'MeasurementResult' has no member 'duration'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:164:24: error: value of type 'MeasurementResult' has no member 'energy'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:165:24: error: value of type 'MeasurementResult' has no member 'contexts'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:171:16: error: value of type 'MeasurementResult' has no member 'importance'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:172:16: error: value of type 'MeasurementResult' has no member 'urgency'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:173:16: error: value of type 'MeasurementResult' has no member 'duration'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:174:16: error: value of type 'MeasurementResult' has no member 'energy'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:175:16: error: value of type 'MeasurementResult' has no member 'contexts'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:180:33: error: value of type 'MeasurementResult' has no member 'importance'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:181:33: error: value of type 'MeasurementResult' has no member 'urgency'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:182:33: error: value of type 'MeasurementResult' has no member 'duration'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:183:33: error: value of type 'MeasurementResult' has no member 'energy'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:184:33: error: value of type 'MeasurementResult' has no member 'contexts'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:196:28: error: value of type 'EnrichmentDraft' has no member 'selfConsistencyValues'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/MeasurementRunTests.swift:206:40: error: value of type 'EnrichmentDraft' has no member 'selfConsistencyValues'
+
+** TEST FAILED ** — Testing cancelled because the build failed.
+
+Lauf 2 — SelfConsistencyTests.swift + SelfConsistencyReportTests.swift (AC-5, AC-6, AC-7, AC-9)
+--------------------------------------------------------------------------------------------------
+
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyTests.swift:13:17: error: cannot find 'SelfConsistency' in scope
+    #expect(SelfConsistency.majority(values) == "high")
+            `- error: cannot find 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyTests.swift:14:17: error: cannot find 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyTests.swift:20:17: error: cannot find 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyTests.swift:21:17: error: cannot find 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyTests.swift:27:24: error: cannot find 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyTests.swift:34:13: error: cannot find 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyTests.swift:35:13: error: cannot find 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyTests.swift:36:13: error: cannot find 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyTests.swift:37:13: error: cannot find 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyTests.swift:38:13: error: cannot find 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyTests.swift:40:21: error: cannot find 'SelfConsistency' in scope
+
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyReportTests.swift:31:102: error: cannot find type 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyReportTests.swift:35:38: error: cannot find 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyReportTests.swift:36:24: error: cannot find 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyReportTests.swift:36:59: error: cannot find 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyReportTests.swift:41:13: error: cannot find 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyReportTests.swift:42:13: error: cannot find 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyReportTests.swift:43:13: error: cannot find 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyReportTests.swift:44:13: error: cannot find 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyReportTests.swift:47:32: error: cannot find type 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyReportTests.swift:48:72: error: value of type 'Corpus.Entry' has no member 'contextsTruth'
+    guard let entry = entryByID[entryID], let expected = entry.contextsTruth else { return nil }
+                                                                 `- error: value of type 'Corpus.Entry' has no member 'contextsTruth'
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyReportTests.swift:50:34: error: cannot find 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyReportTests.swift:51:20: error: cannot find 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyReportTests.swift:51:55: error: cannot find 'SelfConsistency' in scope
+/Users/hem/Developer/loose-ends/.claude/worktrees/issue-67-messbericht/LooseEndsTests/SelfConsistencyReportTests.swift:53:25: error: cannot find 'SelfConsistency' in scope
+
+** TEST FAILED ** — Testing cancelled because the build failed.
+
+AC-8 (Export-Skript, scripts/export-focusblox-corpus.swift)
+---------------------------------------------------------------
+Wie im Testplan der Spec festgehalten und im PO-Briefing offen benannt: Das Skript hat kein
+Xcode-Test-Target (`#!/usr/bin/env swift`-Einzeldatei, kein Ziel in project.yml). Der Nachweis für
+AC-8 läuft über einen lokalen Probe-Lauf des Skripts gegen Testdaten während der Implementierung,
+nicht über einen kompilierten RED/GREEN-Test — diese Einschränkung wurde vor der Freigabe genannt
+und akzeptiert.
