@@ -144,6 +144,30 @@ struct CorpusTests {
             }
         }
     }
+
+    // MARK: - Spike #65 Schritt 1: Korpus per Namen laden (AC-1, AC-6)
+
+    @Test("Ausdrücklich genannter Dateiname lädt dieselben Einträge wie der Default (AC-1)")
+    func loadByExplicitFileName() throws {
+        let byDefault = try Corpus.load()
+        let byName = try Corpus.load(fileName: "date-title-corpus")
+        #expect(byName.count == byDefault.count)
+        #expect(Set(byName.map(\.id)) == Set(byDefault.map(\.id)))
+    }
+
+    @Test("Unbekannter Dateiname wirft denselben Fehler wie eine fehlende Standarddatei (AC-1)")
+    func loadUnknownFileNameThrows() {
+        #expect(throws: CocoaError.self) {
+            _ = try Corpus.load(fileName: "does-not-exist-corpus")
+        }
+    }
+
+    @Test("--corpus liest den Korpusnamen aus den Startargumenten (AC-6)")
+    func corpusFileNameFromArguments() {
+        #expect(Corpus.corpusFileName(from: ["LooseEndsLab", "--corpus", "focusblox-corpus"]) == "focusblox-corpus")
+        #expect(Corpus.corpusFileName(from: ["LooseEndsLab"]) == Corpus.fileName)
+        #expect(Corpus.corpusFileName(from: ["LooseEndsLab", "--measure"]) == Corpus.fileName)
+    }
 }
 
 @Suite("Titelprüfung")
