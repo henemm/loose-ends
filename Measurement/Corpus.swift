@@ -110,13 +110,23 @@ enum Corpus {
 
     /// Bundled as a test resource on device; on the Mac the file next to this source also works,
     /// which keeps the corpus usable from a plain script run.
-    static func load(calendar: Calendar = .current) throws -> [Entry] {
+    static func load(fileName: String = Corpus.fileName, calendar: Calendar = .current) throws -> [Entry] {
         let bundled = Bundle(for: CorpusAnchor.self).url(forResource: fileName, withExtension: "json")
         let onDisk = URL(fileURLWithPath: #filePath).deletingLastPathComponent().appendingPathComponent("\(fileName).json")
         guard let url = bundled ?? (FileManager.default.fileExists(atPath: onDisk.path) ? onDisk : nil) else {
             throw CocoaError(.fileNoSuchFile)
         }
         return try JSONDecoder().decode([Entry].self, from: Data(contentsOf: url))
+    }
+
+    /// Which corpus a run measures against, taken from the launch arguments (`--corpus <name>`).
+    /// Without the flag the date/title corpus stays the default, so Henning's own copy of the lab
+    /// app is unaffected.
+    static func corpusFileName(from arguments: [String], flag: String = "--corpus") -> String {
+        guard let index = arguments.firstIndex(of: flag), arguments.indices.contains(index + 1) else {
+            return Corpus.fileName
+        }
+        return arguments[index + 1]
     }
 }
 

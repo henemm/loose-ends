@@ -33,9 +33,9 @@ final class MeasurementRunner {
     private(set) var entries: [Corpus.Entry] = []
     private(set) var lastNote: String = ""
 
-    var done: Int { run.doneIDs.count }
-    var total: Int { entries.count }
-    var progress: Double { total == 0 ? 0 : Double(done) / Double(total) }
+    var done: Int { MeasurementProgress.done(in: run) }
+    var total: Int { MeasurementProgress.total(entries: entries.count, runsPerEntry: runsPerEntry) }
+    var progress: Double { MeasurementProgress.progress(done: done, total: total) }
     var resultPath: String { store.url.lastPathComponent }
     var isActive: Bool {
         switch state {
@@ -45,15 +45,18 @@ final class MeasurementRunner {
     }
 
     private let store: MeasurementStore
+    private let runsPerEntry: Int
     private let enricher = FoundationModelsEnricher()
     private let logger = Logger(subsystem: "com.henning.looseends.lab", category: "measurement")
     private var task: Task<Void, Never>?
 
-    init(name: String = "date-title", arguments: [String] = CommandLine.arguments) {
+    init(name: String = "date-title", arguments: [String] = CommandLine.arguments,
+         corpusFileName: String = Corpus.fileName, runsPerEntry: Int = 1) {
         self.store = MeasurementStore(name: name, in: MeasurementStore.documents)
         self.run = store.load(name: name)
-        self.entries = (try? Corpus.load()) ?? []
-        if !entries.isEmpty && run.remaining(from: entries).isEmpty { state = .finished }
+        self.runsPerEntry = runsPerEntry
+        self.entries = (try? Corpus.load(fileName: corpusFileName)) ?? []
+        if !entries.isEmpty && run.remaining(from: entries, runsPerEntry: runsPerEntry).isEmpty { state = .finished }
         log("app", "gestartet; Argumente: \(arguments.dropFirst().joined(separator: " ")); Korpus: \(entries.count) Sätze")
         log("model", enricher.unavailableReason.map { "nicht verfügbar: \($0)" } ?? "verfügbar")
     }
@@ -95,10 +98,10 @@ final class MeasurementRunner {
 
     private func measureRemaining() async {
         var consecutiveFailures = 0
-        for entry in run.remaining(from: entries) {
+        for (entry, runIndex) in run.remaining(from: entries, runsPerEntry: runsPerEntry) {
             if Task.isCancelled { return }
             lastNote = entry.text
-            let result = await measure(entry)
+            let result = await measure(entry, runIndex: runIndex)
             run.results.append(result)
             if let kind = result.errorKind { run.log("failure", "\(entry.id): \(kind)") }
             save()
@@ -123,7 +126,7 @@ final class MeasurementRunner {
         log("finished", "\(done) von \(total)")
     }
 
-    private func measure(_ entry: Corpus.Entry) async -> MeasurementResult {
+    private func measure(_ entry: Corpus.Entry, runIndex: Int) async -> MeasurementResult {
         // Nine in the morning of today: the note is measured as if captured today, which is what
         // every relative date in the corpus is resolved against.
         let calendar = Calendar.current
@@ -133,7 +136,7 @@ final class MeasurementRunner {
         let input = EnrichmentInput(rawText: entry.text, capturedAt: capturedAt,
                                     contextVocabulary: [], projectNames: [], examples: [])
         var result = MeasurementResult(entryID: entry.id, capturedAt: capturedAt, finishedAt: started,
-                                       seconds: 0, conditions: conditions)
+                                       seconds: 0, conditions: conditions, runIndex: runIndex)
         do {
             let draft = try await enricher.enrich(input)
             result.title = draft.title?.value
