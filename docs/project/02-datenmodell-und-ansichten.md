@@ -277,10 +277,18 @@ Export-Ausgabe enthält echte private Aufgabentitel und wird nie committed
    51 % Precision), erst ab 0,8–0,9 sinkt die Trefferzahl ohne klaren Precision-Gewinn. Die
    Konfidenz des Modells ist auf diesem Korpus also kein trennscharfes Signal in diesem Bereich —
    eine andere Schwelle hätte keinen belegbaren Vorteil. Absolute Precision ist niedrig (25–53 % je
-   Feld), vermutlich auch, weil FocusBlox importance/urgency/energy interaktiv in der Eisenhower-Matrix
-   gesetzt hat statt aus dem Notiztext abzuleiten — der Kurztitel allein trägt diese Information oft
-   nicht. Duration (aus dem Text am ehesten ableitbar) schneidet mit ~50 % am besten ab. Keine
+   Feld). Duration (aus dem Text am ehesten ableitbar) schneidet mit ~50 % am besten ab. Keine
    Schwellenänderung, daher kein Folge-PR an `EnrichmentWriter.confidenceThreshold` nötig.
+   **Korrektur (2026-09-22, #111):** Die Annahme „FocusBlox hat importance/urgency/energy interaktiv
+   in der Eisenhower-Matrix gesetzt" war eine ungeprüfte Vermutung und ist falsch. Direkt im
+   FocusBlox-Quellcode nachgeprüft: `importance`/`urgency` setzt dort nie ein Modell (Code-Kommentar
+   „AI darf diese NICHT setzen"), nur ein Text-Schlüsselwort hebt den Wert an, sonst harter
+   Standardwert. `aiEnergyLevel` wiederum wird von keiner einzigen SwiftUI-View referenziert — Henning
+   hat diesen Wert nie gesehen oder gesetzt, er kam ausschließlich aus einem internen KI-Prompt
+   („kognitive Tiefe", nicht „gibt/nimmt Energie"). Die niedrige Precision dieser drei Felder erklärt
+   sich also nicht durch fehlenden Text-Kontext, sondern dadurch, dass die „Wahrheit" selbst großteils
+   Fallback-Standardwerte bzw. das Urteil eines anderen, älteren Modells ist, nicht menschliches
+   Feedback. Details und Zahlen in #111.
    **Neu gelesen (2026-09-19, `06-annahmen-und-experimente.md`):** „Kein trennscharfes Signal" heißt
    nicht „Schwelle bestätigt", sondern „der Mechanismus hinter ADR-3 hat kein Signal". Wichtigkeit,
    Dringlichkeit und Energie liegen auf Zufallsniveau und werden trotzdem in über 90 % der Fälle

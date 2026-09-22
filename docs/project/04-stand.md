@@ -71,9 +71,17 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
     (`docs/specs/measurement/spike-108-selbstkonsistenz-signal.md`). Liefert noch kein Messergebnis —
     der mehrtägige Lauf auf Hennings Gerät (5 Läufe × 287 FocusBlox-Sätze) steht aus, ebenso die
     daraus folgende Entscheidung zu `EnrichmentWriter.confidenceThreshold`.
+  - **Vor dem Messlauf zu klären (2026-09-22):** [#111](https://github.com/henemm/loose-ends/issues/111)
+    — FocusBlox-„Wahrheit" für importance/urgency/energy ist kein verlässlicher Maßstab (geprüft
+    gegen Quellcode und Datenbank: importance/urgency sind reine Fallback-Standardwerte, energy stammt
+    von einem anderen, älteren Modell, nie von Henning bestätigt). Daraus Redesign-Vorschlag
+    [#112](https://github.com/henemm/loose-ends/issues/112): Wichtigkeit/Dringlichkeit regelbasiert,
+    Energie subjektiv (Skala −3…3) und Dauer per Retrieval-Beispielen geschärft statt gemessener
+    Selbstkonsistenz — hängt an #69.
 - [#66](https://github.com/henemm/loose-ends/issues/66) Steht die Information überhaupt im Text?
 - [#68](https://github.com/henemm/loose-ends/issues/68) Nachweis: Modell je Gerät, Prozess, Zustand
-- [#69](https://github.com/henemm/loose-ends/issues/69) Wirken Retrieval-Beispiele? (vor #26)
+- [#69](https://github.com/henemm/loose-ends/issues/69) Wirken Retrieval-Beispiele? (vor #26, jetzt auch
+  Voraussetzung für [#112](https://github.com/henemm/loose-ends/issues/112))
 - [#70](https://github.com/henemm/loose-ends/issues/70) Textform: getippt, diktiert, Mail, Englisch
 - [#71](https://github.com/henemm/loose-ends/issues/71) Guardrail-Verweigerungsrate
 - [#72](https://github.com/henemm/loose-ends/issues/72) Token- und Latenzbudget
