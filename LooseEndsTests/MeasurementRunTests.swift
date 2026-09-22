@@ -144,4 +144,70 @@ struct MeasurementRunTests {
         run.results.append(Self.result(entryID: "x", runIndex: second.first!.runIndex))
         #expect(run.remaining(from: entries, runsPerEntry: 2).isEmpty)
     }
+
+    // MARK: - Spike #65 Schritt 2 (#108): Selbstkonsistenz-Rohwerte (AC-2, AC-3)
+
+    @Test("Ergebnisdatei ohne die fünf neuen Schlüssel dekodiert sie als nil/leer (AC-2)")
+    func oldResultWithoutSelfConsistencyFieldsDecodes() throws {
+        let json = """
+        {"name":"focusblox","startedAt":"2026-09-22T05:21:00Z","results":[
+          {"entryID":"fb-1","capturedAt":"2026-09-22T07:00:00Z","finishedAt":"2026-09-22T05:22:01Z",
+           "seconds":12.1,"conditions":{"appState":"inaktiv","power":"akku","batteryPercent":75,
+           "lowPowerMode":false,"thermal":"normal","device":"iPhone17,1","systemVersion":"27.0"},
+           "dueHasTime":false,"people":[],"title":"Rechnung prüfen"}]}
+        """
+        let run = try MeasurementStore.coder.decoder.decode(MeasurementRun.self, from: Data(json.utf8))
+        let result = run.results[0]
+        #expect(result.importance == nil)
+        #expect(result.urgency == nil)
+        #expect(result.duration == nil)
+        #expect(result.energy == nil)
+        #expect(result.contexts == [])
+    }
+
+    @Test("Alle fünf neuen Rohwerte überleben Schreiben und Lesen (AC-2)")
+    func selfConsistencyFieldsRoundTrip() throws {
+        var result = Self.result(entryID: "fb-1", runIndex: 0)
+        result.importance = "high"
+        result.urgency = "low"
+        result.duration = "minutes15"
+        result.energy = "high"
+        result.contexts = ["zuhause", "telefon"]
+        var run = MeasurementRun(name: "t", startedAt: Date())
+        run.results = [result]
+        let data = try MeasurementStore.coder.encoder.encode(run)
+        let back = try MeasurementStore.coder.decoder.decode(MeasurementRun.self, from: data)
+        #expect(back.results[0].importance == "high")
+        #expect(back.results[0].urgency == "low")
+        #expect(back.results[0].duration == "minutes15")
+        #expect(back.results[0].energy == "high")
+        #expect(back.results[0].contexts == ["zuhause", "telefon"])
+    }
+
+    @Test("Der Selbstkonsistenz-Auszug eines EnrichmentDraft reicht alle fünf Werte unverändert durch (AC-3)")
+    func draftSelfConsistencyValuesPassThrough() {
+        let draft = EnrichmentDraft(
+            importance: .init(.high, confidence: 0.9, reason: "x"),
+            urgency: .init(.low, confidence: 0.9, reason: "x"),
+            duration: .init(.minutes15, confidence: 0.9, reason: "x"),
+            energy: .init(.high, confidence: 0.9, reason: "x"),
+            contexts: .init(["zuhause", "telefon"], confidence: 0.9, reason: "x")
+        )
+        let fields = draft.selfConsistencyValues
+        #expect(fields.importance == "high")
+        #expect(fields.urgency == "low")
+        #expect(fields.duration == "minutes15")
+        #expect(fields.energy == "high")
+        #expect(fields.contexts == ["zuhause", "telefon"])
+    }
+
+    @Test("Fehlende Guesses ergeben nil/leer, kein Absturz (AC-3)")
+    func draftSelfConsistencyValuesWithMissingGuesses() {
+        let fields = EnrichmentDraft().selfConsistencyValues
+        #expect(fields.importance == nil)
+        #expect(fields.urgency == nil)
+        #expect(fields.duration == nil)
+        #expect(fields.energy == nil)
+        #expect(fields.contexts == [])
+    }
 }

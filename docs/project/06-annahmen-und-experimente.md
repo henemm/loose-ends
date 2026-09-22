@@ -91,6 +91,18 @@ einen festen Referenztag (Do 12.3.2026), ohne Modell und ohne Gerät — die Zah
 wiederholbar (`DateParserCorpusTests`). Die Grenze aus #67 hält damit für das Datum, aber ohne das
 Modell: Regeln 99,3 %, Modell 50 %. Der Umbau der App (Schnitt 2) ist damit freigegeben.
 
+### A1, Mechanismus steht (2026-09-22, #107, #108)
+
+Zwei Schnitte haben bislang nur den Mess-Mechanismus für die Selbstkonsistenz gebaut, noch kein
+Ergebnis geliefert: #107 die Infrastruktur für Mehrfachläufe je Satz, #108 die Auswertung selbst —
+`Measurement/SelfConsistency.swift` bildet Mehrheitswert und Einstimmigkeit über fünf Läufe je Satz
+(Einzelwert- und Mengenfelder) sowie eine Trefferquote-über-Abdeckung-Tabelle, für die fünf Felder
+mit echter Wahrheit im FocusBlox-Export (`importance`, `urgency`, `duration`, `energy`, `contexts`;
+`people`/`project` bleiben ohne Wahrheit außen vor, siehe unten). 150 von 150 Unit-Tests grün, alle
+neun Acceptance Criteria erfüllt (`docs/specs/measurement/spike-108-selbstkonsistenz-signal.md`).
+Der eigentliche mehrtägige Lauf auf Hennings iPhone (5 Läufe × 287 FocusBlox-Sätze) und damit das
+Abbruchkriterium selbst (≥ 85 % Trefferquote bei ≥ 30 % Abdeckung) stehen noch aus.
+
 ## Die Annahmen, nach Tödlichkeit
 
 Jede Annahme hat ein Experiment, das ohne App, ohne Oberfläche und ohne Henning läuft, ein

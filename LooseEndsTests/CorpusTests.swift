@@ -168,6 +168,39 @@ struct CorpusTests {
         #expect(Corpus.corpusFileName(from: ["LooseEndsLab"]) == Corpus.fileName)
         #expect(Corpus.corpusFileName(from: ["LooseEndsLab", "--measure"]) == Corpus.fileName)
     }
+
+    // MARK: - Spike #65 Schritt 2 (#108): FocusBlox-Wahrheitsfelder, --runs (AC-1, AC-4)
+
+    @Test("FocusBlox-Wahrheitsfelder dekodieren additiv aus dem Korpus-Eintrag (AC-1)")
+    func focusBloxTruthFieldsDecode() throws {
+        let json = """
+        [{"id":"fb-1","lang":"de","text":"Rechnung prüfen","importanceTruth":"high","urgencyTruth":"low",
+          "durationTruth":"minutes15","energyTruth":"high","contextsTruth":["zuhause","telefon"]}]
+        """
+        let entries = try JSONDecoder().decode([Corpus.Entry].self, from: Data(json.utf8))
+        #expect(entries[0].importanceTruth == "high")
+        #expect(entries[0].urgencyTruth == "low")
+        #expect(entries[0].durationTruth == "minutes15")
+        #expect(entries[0].energyTruth == "high")
+        #expect(entries[0].contextsTruth == ["zuhause", "telefon"])
+    }
+
+    @Test("Ein Eintrag der bestehenden date-title-corpus-Datei ohne die neuen Schlüssel dekodiert sie als nil (AC-1)")
+    func focusBloxTruthFieldsDefaultToNilForDateTitleCorpus() throws {
+        let entries = try Corpus.load()
+        #expect(entries[0].importanceTruth == nil)
+        #expect(entries[0].urgencyTruth == nil)
+        #expect(entries[0].durationTruth == nil)
+        #expect(entries[0].energyTruth == nil)
+        #expect(entries[0].contextsTruth == nil)
+    }
+
+    @Test("--runs liest die Laufzahl aus den Startargumenten, Default bleibt 1 (AC-4)")
+    func runsPerEntryFromArguments() {
+        #expect(Corpus.runsPerEntry(from: ["LooseEndsLab", "--runs", "5"]) == 5)
+        #expect(Corpus.runsPerEntry(from: ["LooseEndsLab"]) == 1)
+        #expect(Corpus.runsPerEntry(from: ["LooseEndsLab", "--corpus", "focusblox-corpus"]) == 1)
+    }
 }
 
 @Suite("Titelprüfung")

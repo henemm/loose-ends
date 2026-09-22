@@ -10,7 +10,9 @@ struct LabApp: App {
     @State private var runner: MeasurementRunner
 
     init() {
-        _runner = State(initialValue: MeasurementRunner(corpusFileName: Corpus.corpusFileName(from: CommandLine.arguments)))
+        _runner = State(initialValue: MeasurementRunner(
+            corpusFileName: Corpus.corpusFileName(from: CommandLine.arguments),
+            runsPerEntry: Corpus.runsPerEntry(from: CommandLine.arguments)))
     }
 
     var body: some Scene {

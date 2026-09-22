@@ -40,6 +40,13 @@ enum Corpus {
         /// classifier inside the measuring instrument would be a second source of error, and the
         /// form is what the report splits every rate by. A missing key means `standard`.
         private var formName: String?
+        /// The real values a note carried in FocusBlox (#108). Only the FocusBlox export writes
+        /// them; for the date/title corpus they stay nil, which is why every one is optional.
+        var importanceTruth: String?
+        var urgencyTruth: String?
+        var durationTruth: String?
+        var energyTruth: String?
+        var contextsTruth: [String]?
         var entities: [String] { entityList ?? [] }
         var people: [String] { peopleList ?? [] }
         var form: String { formName ?? Corpus.standardForm }
@@ -50,6 +57,7 @@ enum Corpus {
             case peopleList = "people"
             case repeatRule = "repeat"
             case formName = "form"
+            case importanceTruth, urgencyTruth, durationTruth, energyTruth, contextsTruth
         }
 
         /// A recurring note implies a first occurrence, so it can neither prove nor disprove an
@@ -127,6 +135,17 @@ enum Corpus {
             return Corpus.fileName
         }
         return arguments[index + 1]
+    }
+
+    /// How often every note is measured (`--runs <n>`, #108). Without the flag — or with a value
+    /// that is not a number — it stays at one run per note, so Henning's own copy of the lab app
+    /// behaves exactly as before.
+    static func runsPerEntry(from arguments: [String], flag: String = "--runs") -> Int {
+        guard let index = arguments.firstIndex(of: flag), arguments.indices.contains(index + 1),
+              let runs = Int(arguments[index + 1]) else {
+            return 1
+        }
+        return runs
     }
 }
 

@@ -25,6 +25,17 @@ struct EnrichmentDraft: Equatable, Sendable {
     var contexts: Guess<[String]>?
     var people: Guess<[String]>?
     var project: Guess<String>?
+
+    /// The five fields the FocusBlox export knows the truth for, as plain strings (#108). Pure
+    /// pass-through for the measurement code: it lives here and not in the lab app because
+    /// `Measurement/MeasurementRun.swift` compiles into three targets that see `EnrichmentDraft`
+    /// differently, and only here is the unwrapping visible — and testable — from all of them.
+    /// No product code calls it.
+    var selfConsistencyValues: (importance: String?, urgency: String?, duration: String?,
+                                energy: String?, contexts: [String]) {
+        (importance?.value.rawValue, urgency?.value.rawValue, duration?.value.rawValue,
+         energy?.value.rawValue, contexts?.value ?? [])
+    }
 }
 
 /// Everything the model gets to see. The coordinator builds it, so an enricher stays stateless.

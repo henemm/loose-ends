@@ -24,7 +24,7 @@ sind daher meist nur Zeitverlust.
 | Kalender | Eigener Kalender "Loose Ends", ein Termin je Aufgabe mit Schalter und Fälligkeit, Abgleich nach jedem Speichern | `Shared/Services/CalendarSync.swift`, `LooseEnds/Calendar/CalendarBridge.swift` |
 | Auslieferung | CI (Unit, iOS-Build, UI-Smoke), TestFlight-Workflow, Anleitung | `.github/workflows`, `docs/reference/testflight.md` |
 | Lernkorpus | FocusBlox-Export (287 Aufgaben), Konfidenz-Kalibrierung gelaufen: Konfidenz trennt nicht (siehe `06-annahmen-und-experimente.md`, #65) | `scripts/export-focusblox-corpus.swift`, `LooseEndsTests/FocusBloxCalibrationTests.swift` |
-| Messstrecke | Treue-Korpus (317 Sätze in Hennings Bauformen, Wahrheit als Regel gegen den Messtag), Labor-App auf dem iPhone, die in Scheiben misst und nach jedem Satz sichert, Abholung per `sim.sh lab-fetch`, Auswertung und Bericht auf dem Mac | `Measurement/`, `LooseEndsLab/`, `LooseEndsTests/DateTitleReportTests.swift`, `scripts/sim.sh` |
+| Messstrecke | Treue-Korpus (317 Sätze in Hennings Bauformen, Wahrheit als Regel gegen den Messtag), Labor-App auf dem iPhone, die in Scheiben misst und nach jedem Satz sichert, Abholung per `sim.sh lab-fetch`, Auswertung und Bericht auf dem Mac; Mehrfachlauf-Infrastruktur (#107) und Selbstkonsistenz-Auswertung (#108, Mechanismus fertig, Messlauf steht aus) | `Measurement/`, `LooseEndsLab/`, `LooseEndsTests/DateTitleReportTests.swift`, `scripts/sim.sh` |
 | Logo | App-Icon "der Knoten" in Petrol: Hell, Dunkel, Getönt, Mac, Watch; Akzentfarbe Petrol; SVG-Quellen | `LooseEnds/Resources/Assets.xcassets`, `docs/design/logo/` |
 
 ## Offen, nach Priorität
@@ -63,8 +63,14 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
     Mess-Infrastruktur für Mehrfachläufe je Satz — Korpus per Namen wählbar, `runIndex` je Ergebnis,
     Läufe statt Sätze gezählt; reines Fundament, kein neues Signal
     (`docs/specs/measurement/spike-65-mehrfachlauf-infrastruktur.md`)
-  - Schritt 2 (Selbstkonsistenz-Signal, FocusBlox-Korpus, 5 Läufe je Satz):
-    [#108](https://github.com/henemm/loose-ends/issues/108), baut auf Schritt 1 auf
+  - Schritt 2 gemergt (2026-09-22, [#108](https://github.com/henemm/loose-ends/issues/108)):
+    Mechanismus für das Selbstkonsistenz-Signal — Schema-Erweiterung (`Corpus.Entry`,
+    `MeasurementResult`) um die fünf FocusBlox-Wahrheitsfelder, `Measurement/SelfConsistency.swift`
+    (Mehrheitswert + Einstimmigkeit je Feld, Trefferquote-über-Abdeckung-Tabelle), `--runs <n>` für
+    die Labor-App; 150/150 Unit-Tests grün, alle 9 Acceptance Criteria erfüllt
+    (`docs/specs/measurement/spike-108-selbstkonsistenz-signal.md`). Liefert noch kein Messergebnis —
+    der mehrtägige Lauf auf Hennings Gerät (5 Läufe × 287 FocusBlox-Sätze) steht aus, ebenso die
+    daraus folgende Entscheidung zu `EnrichmentWriter.confidenceThreshold`.
 - [#66](https://github.com/henemm/loose-ends/issues/66) Steht die Information überhaupt im Text?
 - [#68](https://github.com/henemm/loose-ends/issues/68) Nachweis: Modell je Gerät, Prozess, Zustand
 - [#69](https://github.com/henemm/loose-ends/issues/69) Wirken Retrieval-Beispiele? (vor #26)
