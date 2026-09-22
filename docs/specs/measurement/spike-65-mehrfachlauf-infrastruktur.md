@@ -55,6 +55,20 @@ FocusBlox-Korpus, 5 Läufe je Satz) baut darauf auf und ist **nicht** Teil diese
   **Bezeichner:** `final class MeasurementRunner` (neue Init-Parameter `corpusFileName`, `runsPerEntry`; `func measure(_ entry: Corpus.Entry, runIndex: Int) async -> MeasurementResult`)
 - **Datei:** `LooseEndsLab/LabApp.swift`
   **Bezeichner:** `struct LabApp` (`init()` liest `--corpus <name>` aus `CommandLine.arguments`)
+- **Datei:** `Measurement/MeasurementRun.swift`
+  **Bezeichner:** `enum MeasurementProgress` (neu) — `static func total(entries: Int, runsPerEntry: Int) -> Int`,
+  `static func done(in run: MeasurementRun) -> Int`, `static func progress(done: Int, total: Int) -> Double`
+- **Datei:** `Measurement/Corpus.swift`
+  **Bezeichner:** `static func corpusFileName(from arguments: [String], flag: String = "--corpus") -> String` (neu)
+
+**Nachtrag aus der RED-Phase (2026-09-22):** `MeasurementRunner` (`LooseEndsLab/MeasurementRunner.swift`)
+importiert `UIKit` unbedingt und `LabApp`/`LabView` `SwiftUI`; `LooseEndsLab` ist `platform: iOS`
+und wird von `LooseEndsTests` (`supportedDestinations: [iOS, macOS]`) nicht kompiliert. AC-4, AC-5
+und AC-6 lassen sich deshalb nicht durch Instanziieren von `MeasurementRunner`/`LabApp` selbst am Mac
+testen — der Testplan unten prüft stattdessen die beiden oben genannten neuen, plattformunabhängigen
+Bausteine (`MeasurementProgress`, `Corpus.corpusFileName(from:)`), auf die `MeasurementRunner`/`LabApp`
+in der Implementierung dünn delegieren. Die Acceptance Criteria selbst (Verhalten) bleiben unverändert
+erfüllt; nur der Ort der Prüfung verschiebt sich von der Klasse auf die extrahierte, reine Logik.
 
 ## Acceptance Criteria
 

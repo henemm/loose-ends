@@ -26,6 +26,49 @@ struct MeasurementResult: Codable, Sendable {
     /// The typed class of the failure (`MeasurementErrorKind`), so the report never has to guess
     /// from the message what went wrong. Missing in files written before #83.
     var errorKind: String?
+    /// Which of the repeated runs of that note this result is (#65). Missing in files written
+    /// before #65.
+    var runIndex: Int = 0
+
+    init(entryID: String, capturedAt: Date, finishedAt: Date, seconds: Double, conditions: Conditions,
+         title: String? = nil, dueDate: Date? = nil, dueHasTime: Bool = false, people: [String] = [],
+         error: String? = nil, errorKind: String? = nil, runIndex: Int = 0) {
+        self.entryID = entryID
+        self.capturedAt = capturedAt
+        self.finishedAt = finishedAt
+        self.seconds = seconds
+        self.conditions = conditions
+        self.title = title
+        self.dueDate = dueDate
+        self.dueHasTime = dueHasTime
+        self.people = people
+        self.error = error
+        self.errorKind = errorKind
+        self.runIndex = runIndex
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case entryID, capturedAt, finishedAt, seconds, conditions
+        case title, dueDate, dueHasTime, people, error, errorKind, runIndex
+    }
+
+    /// Files from before #65 have no `runIndex`; they must stay readable, or a multi-day run
+    /// cannot be resumed after this change.
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        entryID = try container.decode(String.self, forKey: .entryID)
+        capturedAt = try container.decode(Date.self, forKey: .capturedAt)
+        finishedAt = try container.decode(Date.self, forKey: .finishedAt)
+        seconds = try container.decode(Double.self, forKey: .seconds)
+        conditions = try container.decode(Conditions.self, forKey: .conditions)
+        title = try container.decodeIfPresent(String.self, forKey: .title)
+        dueDate = try container.decodeIfPresent(Date.self, forKey: .dueDate)
+        dueHasTime = try container.decodeIfPresent(Bool.self, forKey: .dueHasTime) ?? false
+        people = try container.decodeIfPresent([String].self, forKey: .people) ?? []
+        error = try container.decodeIfPresent(String.self, forKey: .error)
+        errorKind = try container.decodeIfPresent(String.self, forKey: .errorKind)
+        runIndex = try container.decodeIfPresent(Int.self, forKey: .runIndex) ?? 0
+    }
 
     var succeeded: Bool { error == nil }
     var wasRateLimited: Bool {
@@ -90,15 +133,21 @@ struct MeasurementRun: Codable, Sendable {
     }
 
     var succeeded: [MeasurementResult] { results.filter(\.succeeded) }
-    var doneIDs: Set<String> { Set(succeeded.map(\.entryID)) }
     var failedAttempts: Int { results.count - succeeded.count }
     var rateLimitedAttempts: Int { results.filter(\.wasRateLimited).count }
 
-    /// Notes still to do — a note that only ever failed stays on the list and is tried again in a
-    /// later slice, which is exactly how a throttled run finishes itself over time.
-    func remaining(from entries: [Corpus.Entry]) -> [Corpus.Entry] {
-        let done = doneIDs
-        return entries.filter { !done.contains($0.id) }
+    /// The next run still to do per note, with the index it carries — a note that only ever failed
+    /// stays on the list and is tried again in a later slice, which is exactly how a throttled run
+    /// finishes itself over time. Counting successes per note instead of mere membership is what
+    /// allows several runs of the same note (#65); with `runsPerEntry = 1` nothing changes.
+    func remaining(from entries: [Corpus.Entry], runsPerEntry: Int = 1) -> [(entry: Corpus.Entry, runIndex: Int)] {
+        let done = succeeded
+        var open: [(entry: Corpus.Entry, runIndex: Int)] = []
+        for entry in entries {
+            let runs = done.filter { $0.entryID == entry.id }.count
+            if runs < runsPerEntry { open.append((entry: entry, runIndex: runs)) }
+        }
+        return open
     }
 }
 
@@ -113,6 +162,14 @@ enum MeasurementPacing {
         if consecutiveFailures >= giveUpAfterConsecutiveFailures { return nil }
         return consecutiveFailures == 0 ? 0 : waitAfterFailure
     }
+}
+
+/// How far a run has come, counted in runs rather than notes: with several runs per note the
+/// number of finished notes is no longer the number of finished measurements (#65).
+enum MeasurementProgress {
+    static func total(entries: Int, runsPerEntry: Int) -> Int { entries * runsPerEntry }
+    static func done(in run: MeasurementRun) -> Int { run.succeeded.count }
+    static func progress(done: Int, total: Int) -> Double { total == 0 ? 0 : Double(done) / Double(total) }
 }
 
 /// The typed class of a model failure, as a stable string for the file.

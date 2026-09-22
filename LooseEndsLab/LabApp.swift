@@ -7,7 +7,11 @@ import SwiftUI
 /// group, no CloudKit, no shared store. Deleting this app deletes the whole measurement.
 @main
 struct LabApp: App {
-    @State private var runner = MeasurementRunner()
+    @State private var runner: MeasurementRunner
+
+    init() {
+        _runner = State(initialValue: MeasurementRunner(corpusFileName: Corpus.corpusFileName(from: CommandLine.arguments)))
+    }
 
     var body: some Scene {
         WindowGroup {

@@ -1,12 +1,12 @@
 ---
 spec_file: docs/specs/measurement/spike-65-mehrfachlauf-infrastruktur.md
-spec_sha256: 0393ce6662b2108b9619873596443bf4c3c79217ae7ab7c115afb8f2215d9962
+spec_sha256: 17b01c2a497565240ec968ccd13dd466c52b5e6d413db52d8844490ae115ac61
 ---
 
 # PO-Briefing: spike-65-unsicherheitssignal
 
 - **Spec:** docs/specs/measurement/spike-65-mehrfachlauf-infrastruktur.md
-- **Issue:** #65
+- **Issue:** keine (Analyse-Kontext: docs/context/spike-65-unsicherheitssignal.md, Issue #65)
 - **Erstellt:** 2026-09-22
 
 ## Was gebaut wird
@@ -19,14 +19,14 @@ Alle sechs Prüfpunkte sind durch automatisierte Tests belegt, bestehende Tests 
 
 ## Wie geprüft wird
 
-Automatisierte Tests am Mac zeigen korrektes Zählen und Laden; kein Test ruft dabei Modell oder Gerät auf.
+Automatisierte Tests am Mac zeigen korrektes Zählen und Laden; bei drei von sechs Punkten indirekt über ausgelagerte Bausteine, nicht direkt an der App.
 
 ## Kritische Anmerkungen
 
+- Bei drei von sechs Prüfpunkten testen die Tests nur ausgelagerte Bausteine, nicht die tatsächliche App direkt.
 - Beantwortet die Ausgangsfrage aus #65 noch nicht: kein Signal gemessen, kein Report, keine Empfehlung — nur Vorbereitung.
 - Sub-Issues für diesen und den nächsten Schritt fehlen noch, werden erst nach Freigabe angelegt.
-- Das Issue verlangt Gerätetests; diese Lieferung testet nur am Mac, Gerätemessung folgt in Schritt 2.
 
 ## Freigabe-Frage
 
-Ist es in Ordnung, dass diese Freigabe nur Vorbereitung liefert und die eigentliche Signal-Frage aus #65 offen bleibt?
+Ist es in Ordnung, dass diese reine Vorbereitung freigegeben wird, obwohl ein Teil der Prüfung nur indirekt über Hilfsbausteine läuft?
