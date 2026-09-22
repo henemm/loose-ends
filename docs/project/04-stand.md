@@ -59,6 +59,12 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
     offene Frage, ob das Feld überhaupt bleibt, in [#105](https://github.com/henemm/loose-ends/issues/105)
   - **#67 damit geschlossen:** alle drei zugesagten Feld-Entscheidungen getroffen (Datum, Titel, Personen)
 - [#65](https://github.com/henemm/loose-ends/issues/65) Unsicherheitssignal, das richtig von falsch trennt
+  - Schritt 1 gemergt (2026-09-22, [#107](https://github.com/henemm/loose-ends/issues/107)):
+    Mess-Infrastruktur für Mehrfachläufe je Satz — Korpus per Namen wählbar, `runIndex` je Ergebnis,
+    Läufe statt Sätze gezählt; reines Fundament, kein neues Signal
+    (`docs/specs/measurement/spike-65-mehrfachlauf-infrastruktur.md`)
+  - Schritt 2 (Selbstkonsistenz-Signal, FocusBlox-Korpus, 5 Läufe je Satz):
+    [#108](https://github.com/henemm/loose-ends/issues/108), baut auf Schritt 1 auf
 - [#66](https://github.com/henemm/loose-ends/issues/66) Steht die Information überhaupt im Text?
 - [#68](https://github.com/henemm/loose-ends/issues/68) Nachweis: Modell je Gerät, Prozess, Zustand
 - [#69](https://github.com/henemm/loose-ends/issues/69) Wirken Retrieval-Beispiele? (vor #26)
