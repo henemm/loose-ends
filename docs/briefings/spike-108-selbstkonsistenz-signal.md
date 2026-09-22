@@ -1,32 +1,32 @@
 ---
 spec_file: docs/specs/measurement/spike-108-selbstkonsistenz-signal.md
-spec_sha256: c1283db668de3cdf48242fb2facf0339d3a2deaf9b099f6ea521671a68809149
+spec_sha256: 9f19752a89ce516676c70b829d81f15fe798b6eade68df01cf8df23ca9f6df3e
 ---
 
 # PO-Briefing: spike-108-selbstkonsistenz-signal
 
 - **Spec:** docs/specs/measurement/spike-108-selbstkonsistenz-signal.md
-- **Issue:** #108 (Kontext-Dokument als Ursprungsanfrage-Ersatz genutzt)
+- **Issue:** #108
 - **Erstellt:** 2026-09-22
 
 ## Was gebaut wird
 
-Baut das Werkzeug, um zu prüfen, ob wiederholte Modellantworten Unsicherheit zuverlässig anzeigen.
+Ein Mess-Werkzeug zählt, wie einstimmig das Modell fünf Aufgaben-Eigenschaften über mehrere Wiederholungen beantwortet — ohne eigenes Messergebnis.
 
 ## Definition of Done
 
-Alle Testfälle sind grün, die Prüfungen laufen automatisch durch, und eine leere Berichtsvorlage für das spätere Messergebnis existiert.
+Fertig ist es, wenn die Prüfwerkzeuge fehlerfrei laufen und ein leeres Berichts-Gerüst besteht — der tatsächliche Gerätelauf folgt später.
 
 ## Wie geprüft wird
 
-Automatisierte Tests prüfen Rechenlogik und Datenformate mit Beispielwerten; der eigentliche mehrtägige Messlauf mit echten Daten läuft erst später.
+Automatisierte Prüfungen zeigen, dass Zählung und Mehrheitsermittlung rechnerisch stimmen; sie belegen keine echte Modell-Einstimmigkeit, weil kein Gerätelauf stattfindet.
 
 ## Kritische Anmerkungen
 
-- Der eigentliche Messlauf, der zeigt ob das Signal taugt, ist nicht Teil dieses Schnitts — nur das Werkzeug.
-- Ursprünglich sollten auch Personen und Projekt gemessen werden; fehlen hier mangels Wahrheitsdaten im Export.
-- Der Test für das Export-Skript ist kein automatisierter Test, nur eine manuelle Probe.
+- Ursprünglich sieben Aufgaben-Eigenschaften angefragt, Spec deckt nur fünf ab — zwei fehlen mangels Vergleichsdaten.
+- Eine zusätzliche Datei liegt jetzt im Bereich, der auch in die echte App einfließt, nicht nur im Messbereich.
+- Ein Prüfpunkt läuft nicht automatisiert mit, sondern nur über einen manuellen Probe-Lauf des Export-Skripts.
 
 ## Freigabe-Frage
 
-Reicht dir, dass dieser Schnitt nur das Messwerkzeug liefert — die Antwort auf die eigentliche Frage folgt in einem späteren Schritt?
+Ist es für Sie in Ordnung, das Mess-Werkzeug ohne die beiden fehlenden Eigenschaften und mit der Datei im App-Bereich freizugeben?

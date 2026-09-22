@@ -383,13 +383,18 @@ Nachweis läuft über den Mac-Testlauf.
 ## Architektur-Entscheidung (ADR)
 
 - **ADR-Nr.:** keine
-- **Rationale:** Der geänderte Code liegt vollständig in `Measurement/`, `LooseEndsLab/`,
-  `LooseEndsTests/` und `scripts/` — Messcode, kein Produktpfad, keine neue Abhängigkeit, kein
-  Eingriff in `Shared/`. Es entsteht kein neuer Architekturbaustein, nur additive Schema- und
-  Zähl-Erweiterungen bestehender Typen. Die Projektregel „Regeln vor Modell" ist nicht einschlägig:
-  Dieser Schnitt ersetzt oder ergänzt kein Modell, sondern misst nur, wie einstimmig ein bereits
-  bestehender Modellaufruf über mehrere Läufe ist — reine Zähl- und Vergleichslogik ohne
-  Sprachverstehens-Bezug.
+- **Rationale:** Der geänderte Code liegt größtenteils in `Measurement/`, `LooseEndsLab/`,
+  `LooseEndsTests/` und `scripts/` — Messcode, kein Produktpfad, keine neue Abhängigkeit. Einzige
+  Ausnahme (Nachtrag aus der RED-Phase): `Shared/Enrichment/EnrichmentDraft.swift`, dort **eine**
+  zusätzliche, rein berechnende Eigenschaft (`selfConsistencyValues`, keine gespeicherten Felder,
+  kein `Codable`-Einfluss, kein Eingriff in `FoundationModelsEnricher` oder `EnrichmentWriter`) — nur
+  aus Testbarkeits-Gründen dort statt in `LooseEndsLab/MeasurementRunner.swift` platziert (Nachtrag
+  oben). Der Produktpfad selbst (App, Enrichment-Pipeline, Schreib-Schwelle) ändert sich dadurch
+  nicht: Die neue Eigenschaft wird von keinem Produktcode aufgerufen, nur vom Messcode. Es entsteht
+  sonst kein neuer Architekturbaustein, nur additive Schema- und Zähl-Erweiterungen bestehender
+  Typen. Die Projektregel „Regeln vor Modell" ist nicht einschlägig: Dieser Schnitt ersetzt oder
+  ergänzt kein Modell, sondern misst nur, wie einstimmig ein bereits bestehender Modellaufruf über
+  mehrere Läufe ist — reine Zähl- und Vergleichslogik ohne Sprachverstehens-Bezug.
 
 ## Changelog
 
