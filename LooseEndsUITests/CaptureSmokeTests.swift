@@ -22,15 +22,18 @@ final class CaptureSmokeTests: XCTestCase {
     }
 
     /// Opens the long-press menu on a row. The runner may still be animating the list, so wait
-    /// until the row is hittable and press once more if the menu did not open.
+    /// until the row is hittable and retry with a longer press if the menu did not open — a slow
+    /// CI runner can miss the first one or two attempts (#114).
     @MainActor
     private func openMenu(on row: XCUIElement, expecting item: XCUIElement) {
         XCTAssertTrue(row.waitForExistence(timeout: 5), "Row should exist before opening its menu")
         let hittable = NSPredicate(format: "isHittable == true")
         _ = XCTWaiter().wait(for: [XCTNSPredicateExpectation(predicate: hittable, object: row)], timeout: 5)
-        row.press(forDuration: 1.2)
-        if !item.waitForExistence(timeout: 5) {
-            row.press(forDuration: 1.5)
+        for duration in [1.2, 1.5, 2.0] {
+            row.press(forDuration: duration)
+            if item.waitForExistence(timeout: 5) {
+                return
+            }
         }
     }
 
