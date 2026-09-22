@@ -143,6 +143,12 @@ final class MeasurementRunner {
             result.dueDate = draft.dueDate?.value
             result.dueHasTime = draft.dueHasTime
             result.people = draft.people?.value ?? []
+            let fields = draft.selfConsistencyValues
+            result.importance = fields.importance
+            result.urgency = fields.urgency
+            result.duration = fields.duration
+            result.energy = fields.energy
+            result.contexts = fields.contexts
         } catch {
             result.error = "\(error)"
             result.errorKind = MeasurementErrorKind.classify(error)

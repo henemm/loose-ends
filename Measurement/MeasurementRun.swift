@@ -29,10 +29,20 @@ struct MeasurementResult: Codable, Sendable {
     /// Which of the repeated runs of that note this result is (#65). Missing in files written
     /// before #65.
     var runIndex: Int = 0
+    /// The raw model answer for the five fields the FocusBlox export knows the truth for (#108).
+    /// Plain strings, like `Conditions`: written on the phone, read on the Mac, and they must
+    /// survive a change of enum cases in between. Missing in files written before #108.
+    var importance: String?
+    var urgency: String?
+    var duration: String?
+    var energy: String?
+    var contexts: [String] = []
 
     init(entryID: String, capturedAt: Date, finishedAt: Date, seconds: Double, conditions: Conditions,
          title: String? = nil, dueDate: Date? = nil, dueHasTime: Bool = false, people: [String] = [],
-         error: String? = nil, errorKind: String? = nil, runIndex: Int = 0) {
+         error: String? = nil, errorKind: String? = nil, runIndex: Int = 0,
+         importance: String? = nil, urgency: String? = nil, duration: String? = nil,
+         energy: String? = nil, contexts: [String] = []) {
         self.entryID = entryID
         self.capturedAt = capturedAt
         self.finishedAt = finishedAt
@@ -45,15 +55,22 @@ struct MeasurementResult: Codable, Sendable {
         self.error = error
         self.errorKind = errorKind
         self.runIndex = runIndex
+        self.importance = importance
+        self.urgency = urgency
+        self.duration = duration
+        self.energy = energy
+        self.contexts = contexts
     }
 
     private enum CodingKeys: String, CodingKey {
         case entryID, capturedAt, finishedAt, seconds, conditions
         case title, dueDate, dueHasTime, people, error, errorKind, runIndex
+        case importance, urgency, duration, energy, contexts
     }
 
-    /// Files from before #65 have no `runIndex`; they must stay readable, or a multi-day run
-    /// cannot be resumed after this change.
+    /// Files from before #65 have no `runIndex` and files from before #108 none of the five
+    /// self-consistency fields; they must stay readable, or a multi-day run cannot be resumed
+    /// after this change.
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         entryID = try container.decode(String.self, forKey: .entryID)
@@ -68,6 +85,11 @@ struct MeasurementResult: Codable, Sendable {
         error = try container.decodeIfPresent(String.self, forKey: .error)
         errorKind = try container.decodeIfPresent(String.self, forKey: .errorKind)
         runIndex = try container.decodeIfPresent(Int.self, forKey: .runIndex) ?? 0
+        importance = try container.decodeIfPresent(String.self, forKey: .importance)
+        urgency = try container.decodeIfPresent(String.self, forKey: .urgency)
+        duration = try container.decodeIfPresent(String.self, forKey: .duration)
+        energy = try container.decodeIfPresent(String.self, forKey: .energy)
+        contexts = try container.decodeIfPresent([String].self, forKey: .contexts) ?? []
     }
 
     var succeeded: Bool { error == nil }

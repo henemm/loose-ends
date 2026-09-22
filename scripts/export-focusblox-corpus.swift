@@ -39,6 +39,16 @@ struct CorpusTask: Codable {
     var id: String
     var rawText: String
     var title: String
+    /// Additive keys so `Corpus.load(fileName:)` can read this export unchanged (#108): `lang`
+    /// and `text` are what `Corpus.Entry` requires, the `*Truth` fields are the real values a
+    /// note carried in FocusBlox, measured against the model's repeated answers.
+    var lang: String
+    var text: String
+    var importanceTruth: String?
+    var urgencyTruth: String?
+    var durationTruth: String?
+    var energyTruth: String?
+    var contextsTruth: [String]?
     var contexts: [String]
     var importance: String?
     var urgency: String?
@@ -191,16 +201,28 @@ while sqlite3_step(stmt) == SQLITE_ROW {
         : UUID().uuidString
     let title = columnText(stmt, 1) ?? ""
     let pattern = columnText(stmt, 12) ?? "none"
+    let contexts = decodeStringArray(columnBlob(stmt, 2))
+    let importance = mapImportance(columnOptionalInt(stmt, 3))
+    let urgency = mapUrgency(columnText(stmt, 4))
+    let durationBucket = mapDurationBucket(columnOptionalInt(stmt, 5))
+    let energy = mapEnergy(columnText(stmt, 6))
 
     let task = CorpusTask(
         id: uuidString,
         rawText: title,
         title: title,
-        contexts: decodeStringArray(columnBlob(stmt, 2)),
-        importance: mapImportance(columnOptionalInt(stmt, 3)),
-        urgency: mapUrgency(columnText(stmt, 4)),
-        durationBucket: mapDurationBucket(columnOptionalInt(stmt, 5)),
-        energy: mapEnergy(columnText(stmt, 6)),
+        lang: "de",
+        text: title,
+        importanceTruth: importance,
+        urgencyTruth: urgency,
+        durationTruth: durationBucket,
+        energyTruth: energy,
+        contextsTruth: contexts,
+        contexts: contexts,
+        importance: importance,
+        urgency: urgency,
+        durationBucket: durationBucket,
+        energy: energy,
         dueDate: columnDate(stmt, 7),
         capturedAt: columnDate(stmt, 8) ?? Date(),
         completedAt: columnDate(stmt, 9),
