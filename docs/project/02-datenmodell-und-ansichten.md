@@ -189,15 +189,20 @@ für KI-Verarbeitung.
 7. **Fehler:** Modell nicht verfügbar (kein Apple Intelligence, Gerät gesperrt, Limit): Task bleibt
    `unprocessed`, Nachzügler-Lauf beim nächsten Start. Keine stillen `try?`.
 
-### Signale für Wichtigkeit und Dringlichkeit (Prompt-Anweisung)
+### Signale für Wichtigkeit und Dringlichkeit (regelbasiert, #117)
 
-- Explizite Wörter: dringend, sofort, bis, spätestens, Frist, Mahnung, Kündigung, Steuer
-- Personen im Text: jemand wartet darauf
-- Geldbeträge und Behördensprache
-- Ähnliche Aufgaben der Vergangenheit: wie wurden sie bewertet, wie schnell erledigt
-- Herkunft: Mail von bestimmten Absendern, Erfassung unterwegs
-- Wichtigkeit und Dringlichkeit bleiben getrennte Felder.
-- Alter ist keine Wichtigkeit, sondern eine eigene Ansicht.
+Seit #117 regelbasiert bestimmt (`Shared/Enrichment/ImportanceUrgencyRule.swift`), analog zu
+`DueDateRule` für das Fälligkeitsdatum (#95) — kein Modellaufruf mehr für diese beiden Felder,
+Konfidenz immer 1.0, kein Treffer bleibt `nil` statt eines Fallback-Standardwerts (Grund: #111).
+
+*Wichtigkeit* (`matchImportance`), je → `.high`: Geldbeträge/Zahlungsbezug (money), Amts- und
+Rechtssprache (official), jemand wartet darauf (peopleWaiting).
+*Dringlichkeit* (`matchUrgency`), je → `.high`: unmittelbarer Zeitdruck (immediacy), Fristbezug
+(deadline).
+
+- Wichtigkeit und Dringlichkeit bleiben getrennte, unabhängige Felder.
+- Alter ist keine Wichtigkeit, sondern eine eigene Ansicht — die Regelfunktionen erhalten deshalb
+  gar keinen Referenzzeitpunkt.
 
 ## Lernkorpus aus FocusBlox
 
