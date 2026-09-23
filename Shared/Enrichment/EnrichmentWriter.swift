@@ -44,20 +44,6 @@ enum EnrichmentWriter {
             task.dueConfidence = due.confidence
         }
 
-        if let importance = draft.importance, importance.confidence >= threshold {
-            record(.importance, old: task.importanceRaw, new: importance.value.rawValue, reason: importance.reason)
-            task.importance = importance.value
-            task.importanceSourceRaw = ai
-            task.importanceConfidence = importance.confidence
-        }
-
-        if let urgency = draft.urgency, urgency.confidence >= threshold {
-            record(.urgency, old: task.urgencyRaw, new: urgency.value.rawValue, reason: urgency.reason)
-            task.urgency = urgency.value
-            task.urgencySourceRaw = ai
-            task.urgencyConfidence = urgency.confidence
-        }
-
         if let duration = draft.duration, duration.confidence >= threshold {
             record(.duration, old: task.durationRaw, new: duration.value.rawValue, reason: duration.reason)
             task.duration = duration.value

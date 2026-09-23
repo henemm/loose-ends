@@ -4,7 +4,7 @@ import Testing
 @testable import LooseEnds
 
 @Suite("RevisionService") struct RevisionServiceTests {
-    /// A task the AI just enriched: title, due date, importance and one context, one revision each.
+    /// A task the AI just enriched: title, due date, duration and one context, one revision each.
     @MainActor
     private func enrichedTask(in store: TestStore) throws -> (TaskItem, TaskContext, Date) {
         let context = store.context
@@ -16,7 +16,7 @@ import Testing
         var draft = EnrichmentDraft()
         draft.title = EnrichmentDraft.Guess("Rasenmäher: Ölwechsel", confidence: 0.9, reason: "Names the job.")
         draft.dueDate = EnrichmentDraft.Guess(saturday, confidence: 0.8, reason: "Saturday.")
-        draft.importance = EnrichmentDraft.Guess(.medium, confidence: 0.7, reason: "Maintenance.")
+        draft.duration = EnrichmentDraft.Guess(.minutes30, confidence: 0.7, reason: "Maintenance.")
         draft.contexts = EnrichmentDraft.Guess(["Garten"], confidence: 0.9, reason: "Garden tool.")
         EnrichmentWriter.apply(draft, to: task, contexts: [garden], projects: [])
         try context.save()
@@ -59,7 +59,7 @@ import Testing
         #expect(task.dueSourceRaw == nil)
         #expect((task.contexts ?? []).isEmpty)
         #expect(task.contextsSourceRaw == nil)
-        #expect(task.importance == .medium, "untouched fields keep their AI value")
+        #expect(task.duration == .minutes30, "untouched fields keep their AI value")
     }
 
     @Test("Reset all clears every AI field in one go and writes one user revision per field")
@@ -72,7 +72,7 @@ import Testing
 
         #expect(written.count == 4)
         #expect(RevisionService.aiSetFields(on: task).isEmpty)
-        #expect(task.title == nil && task.dueDate == nil && task.importance == nil)
+        #expect(task.title == nil && task.dueDate == nil && task.duration == nil)
         #expect((task.contexts ?? []).isEmpty)
         let userRevisions = (task.revisions ?? []).filter { $0.author == .user }
         #expect(userRevisions.count == 4)

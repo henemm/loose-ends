@@ -63,24 +63,24 @@ struct TestStore {
         let written = EnrichmentWriter.apply(draft, to: task, contexts: [computer, garden], projects: [], now: now)
         try context.save()
 
-        #expect(written == 5)
+        #expect(written == 4)
         #expect(task.title == "Rasenmäher: Ölwechsel")
         #expect(task.titleSourceRaw == "ai")
         #expect(task.titleConfidence == 0.9)
         #expect(task.status == .active)
         #expect(task.dueDate == saturday)
         #expect(task.dueHasTime == false)
-        #expect(task.importance == .medium)
-        #expect(task.urgency == nil, "below threshold stays empty")
+        #expect(task.importance == nil, "die Regel setzt Wichtigkeit, nicht mehr der Modell-Draft (#117, AC-7)")
+        #expect(task.urgency == nil, "die Regel setzt Dringlichkeit, nicht mehr der Modell-Draft (#117, AC-7)")
         #expect(task.duration == .minutes15)
         #expect((task.contexts ?? []).map(\.name) == ["Garten"], "matched case-insensitively, unknown names dropped")
         #expect(task.processedAt == now)
 
         let revisions = try #require(task.revisions)
-        #expect(revisions.count == 5)
+        #expect(revisions.count == 4)
         let allFromAI = revisions.allSatisfy { $0.author == .ai && $0.seenAt == nil && !($0.reason ?? "").isEmpty }
         #expect(allFromAI, "every revision is unseen, by the AI, with a reason")
-        #expect(Set(revisions.map(\.field)) == [.title, .dueDate, .importance, .duration, .contexts])
+        #expect(Set(revisions.map(\.field)) == [.title, .dueDate, .duration, .contexts])
         #expect(task.hasUnseenAIRevisions)
         #expect(task.displayTitle == "Rasenmäher: Ölwechsel")
 
@@ -166,7 +166,9 @@ struct TestStore {
         let store = try TestStore()
         let context = store.context
         let container = store.container
-        let task = TaskItem(rawText: "Steuer abgeben")
+        // Eine Notiz ohne Regel-Signal (kein Datum, keine Wichtigkeit, keine Dringlichkeit): geprüft
+        // wird hier der Modellpfad, und der schreibt bei einem Fehlschlag nichts (#117).
+        let task = TaskItem(rawText: "Zettel sortieren")
         context.insert(task)
         try context.save()
         let stub = StubEnricher(failure: StubFailure())
