@@ -25,8 +25,6 @@ struct FoundationModelsEnricher: TaskEnricher {
     static let instructions = """
     You turn one captured note into a task. The note may be German or English; answer in the note's language.
     Title: short and imperative, at most eight words, no trailing period. Keep names and numbers from the note.
-    Importance and urgency are separate. Signals: words like urgent, immediately, by, deadline, reminder, cancellation, tax;
-    people who wait for it; amounts of money and official language. Age of the note is not importance.
     Duration buckets: minutes5, minutes15, minutes30, hour1, hours2plus. Energy: low, medium, high.
     Contexts and project must come from the allowed lists; otherwise leave them empty.
     Every confidence is between 0 and 1 and honest: use low confidence when the note does not say.
@@ -44,8 +42,6 @@ struct FoundationModelsEnricher: TaskEnricher {
             for example in input.examples {
                 var attributes: [String] = []
                 if let title = example.title { attributes.append("title \"\(title)\"") }
-                if let importance = example.importance { attributes.append("importance \(importance.rawValue)") }
-                if let urgency = example.urgency { attributes.append("urgency \(urgency.rawValue)") }
                 if let duration = example.duration { attributes.append("duration \(duration.rawValue)") }
                 if let energy = example.energy { attributes.append("energy \(energy.rawValue)") }
                 if !example.contexts.isEmpty { attributes.append("contexts \(example.contexts.joined(separator: ", "))") }
@@ -63,12 +59,6 @@ struct FoundationModelsEnricher: TaskEnricher {
         let title = result.title.trimmingCharacters(in: .whitespacesAndNewlines)
         if !title.isEmpty {
             draft.title = EnrichmentDraft.Guess(title, confidence: EnrichmentParsing.clamp(result.titleConfidence), reason: result.titleReason)
-        }
-        if let value = Importance(rawValue: result.importance) {
-            draft.importance = EnrichmentDraft.Guess(value, confidence: EnrichmentParsing.clamp(result.importanceConfidence), reason: result.importanceReason)
-        }
-        if let value = Urgency(rawValue: result.urgency) {
-            draft.urgency = EnrichmentDraft.Guess(value, confidence: EnrichmentParsing.clamp(result.urgencyConfidence), reason: result.urgencyReason)
         }
         if let value = DurationBucket(rawValue: result.duration) {
             draft.duration = EnrichmentDraft.Guess(value, confidence: EnrichmentParsing.clamp(result.durationConfidence), reason: result.durationReason)
@@ -101,20 +91,6 @@ struct ModelEnrichment {
     var titleConfidence: Double
     @Guide(description: "One sentence why this title")
     var titleReason: String
-
-    @Guide(description: "Importance: low, medium, high, or empty if the note gives no signal")
-    var importance: String
-    @Guide(description: "Confidence 0 to 1 for the importance")
-    var importanceConfidence: Double
-    @Guide(description: "One sentence why this importance")
-    var importanceReason: String
-
-    @Guide(description: "Urgency: low, medium, high, or empty if the note gives no signal")
-    var urgency: String
-    @Guide(description: "Confidence 0 to 1 for the urgency")
-    var urgencyConfidence: Double
-    @Guide(description: "One sentence why this urgency")
-    var urgencyReason: String
 
     @Guide(description: "Duration bucket: minutes5, minutes15, minutes30, hour1, hours2plus, or empty")
     var duration: String

@@ -78,6 +78,10 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
     [#112](https://github.com/henemm/loose-ends/issues/112): Wichtigkeit/Dringlichkeit regelbasiert,
     Energie subjektiv (Skala −3…3) und Dauer per Retrieval-Beispielen geschärft statt gemessener
     Selbstkonsistenz — hängt an #69.
+    - daraus [#117](https://github.com/henemm/loose-ends/issues/117) umgesetzt (2026-09-23):
+      Wichtigkeit/Dringlichkeit regelbasiert über `ImportanceUrgencyRule` (analog `DueDateRule`
+      aus #95), Modell liefert diese beiden Felder nicht mehr. Energie und Dauer aus #112 bleiben
+      offen, weiter abhängig von #69.
 - [#66](https://github.com/henemm/loose-ends/issues/66) Steht die Information überhaupt im Text?
 - [#68](https://github.com/henemm/loose-ends/issues/68) Nachweis: Modell je Gerät, Prozess, Zustand
 - [#69](https://github.com/henemm/loose-ends/issues/69) Wirken Retrieval-Beispiele? (vor #26, jetzt auch

@@ -135,6 +135,11 @@
     "From the day of the month in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus dem Tag des Monats in der Notiz." } } } },
     "From “weekend” in the note: Saturday." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus „Wochenende“ in der Notiz: Samstag." } } } },
     "From “next month” in the note: the first of that month." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus „nächsten Monat“ in der Notiz: der Erste des Monats." } } } },
-    "From the day and month in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus Tag und Monat in der Notiz." } } } }
+    "From the day and month in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus Tag und Monat in der Notiz." } } } },
+    "From an amount of money in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus einem Geldbetrag in der Notiz." } } } },
+    "From official or legal language in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus amtlicher oder rechtlicher Sprache in der Notiz." } } } },
+    "From someone waiting for this in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Weil jemand in der Notiz darauf wartet." } } } },
+    "From an urgency word in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus einem Dringlichkeits-Wort in der Notiz." } } } },
+    "From a deadline reference in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus einem Fristbezug in der Notiz." } } } }
   }
 }

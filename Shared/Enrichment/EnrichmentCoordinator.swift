@@ -76,11 +76,18 @@ final class EnrichmentCoordinator {
         }
     }
 
-    /// The rule step, before and independent of the model (#95): it writes the due date the way
-    /// `EnrichmentWriter` writes a model value — same field source, same revision — but leaves
-    /// `processedAt` alone, because that marker means "the model has seen this task" (ADR-4).
-    /// Only while `dueDate` is still empty, so the catch-up pass adds no second revision (AC-8).
+    /// The rule step, before and independent of the model (#95, #117): it writes due date,
+    /// importance and urgency the way `EnrichmentWriter` writes a model value — same field source,
+    /// same revision — but leaves `processedAt` alone, because that marker means "the model has seen
+    /// this task" (ADR-4). Each field only while it is still empty, so the catch-up pass adds no
+    /// second revision (#95 AC-8, #117 AC-6). The three fields are independent of each other.
     private func applyRules(to task: TaskItem) {
+        applyDueDateRule(to: task)
+        applyImportanceRule(to: task)
+        applyUrgencyRule(to: task)
+    }
+
+    private func applyDueDateRule(to task: TaskItem) {
         guard task.dueDate == nil,
               let match = DueDateRule.match(in: task.rawText, reference: task.capturedAt) else { return }
         let revision = Revision(
@@ -97,6 +104,42 @@ final class EnrichmentCoordinator {
         task.dueSourceRaw = FieldSource.ai.rawValue
         task.dueConfidence = match.guess.confidence
         logger.info("Rule set due date for \(task.id, privacy: .public)")
+    }
+
+    private func applyImportanceRule(to task: TaskItem) {
+        guard task.importance == nil,
+              let guess = ImportanceUrgencyRule.matchImportance(in: task.rawText) else { return }
+        let revision = Revision(
+            task: task,
+            field: .importance,
+            oldValue: nil,
+            newValue: guess.value.rawValue,
+            author: .ai,
+            reason: guess.reason
+        )
+        task.revisions = (task.revisions ?? []) + [revision]
+        task.importance = guess.value
+        task.importanceSourceRaw = FieldSource.ai.rawValue
+        task.importanceConfidence = guess.confidence
+        logger.info("Rule set importance for \(task.id, privacy: .public)")
+    }
+
+    private func applyUrgencyRule(to task: TaskItem) {
+        guard task.urgency == nil,
+              let guess = ImportanceUrgencyRule.matchUrgency(in: task.rawText) else { return }
+        let revision = Revision(
+            task: task,
+            field: .urgency,
+            oldValue: nil,
+            newValue: guess.value.rawValue,
+            author: .ai,
+            reason: guess.reason
+        )
+        task.revisions = (task.revisions ?? []) + [revision]
+        task.urgency = guess.value
+        task.urgencySourceRaw = FieldSource.ai.rawValue
+        task.urgencyConfidence = guess.confidence
+        logger.info("Rule set urgency for \(task.id, privacy: .public)")
     }
 
     /// The most recent completed tasks with their final attributes. Similarity-based retrieval

@@ -104,7 +104,8 @@ not scope creep on the current one.
   date/time extraction DE/EN, moved from `Measurement/` in #95). All pure over the model objects; the caller saves.
 - `Shared/Enrichment` — `TaskEnricher` protocol, `EnrichmentWriter` (threshold + revisions), `EnrichmentCoordinator`
   (catch-up pass), `FoundationModelsEnricher` (on-device model, `#if canImport(FoundationModels)`), `DueDateRule`
-  (combines the rule parsers into the due date, confidence 1.0, #95)
+  (combines the rule parsers into the due date, confidence 1.0, #95), `ImportanceUrgencyRule` (keyword
+  match for importance/urgency, confidence 1.0, no default on miss, #117)
 - `Shared/Intents` — App Intents shared by app, widgets and (later) the intents extension
 - `LooseEnds/` — app entry and views (iPhone, iPad, Mac); `LooseEndsWatch/`, `LooseEndsWidgets/`, `LooseEndsShare/`
   (iOS share sheet: text, links, mails via `SharedContent`) — platform targets

@@ -63,24 +63,24 @@ struct TestStore {
         let written = EnrichmentWriter.apply(draft, to: task, contexts: [computer, garden], projects: [], now: now)
         try context.save()
 
-        #expect(written == 5)
+        #expect(written == 4)
         #expect(task.title == "Rasenmäher: Ölwechsel")
         #expect(task.titleSourceRaw == "ai")
         #expect(task.titleConfidence == 0.9)
         #expect(task.status == .active)
         #expect(task.dueDate == saturday)
         #expect(task.dueHasTime == false)
-        #expect(task.importance == .medium)
-        #expect(task.urgency == nil, "below threshold stays empty")
+        #expect(task.importance == nil, "die Regel setzt Wichtigkeit, nicht mehr der Modell-Draft (#117, AC-7)")
+        #expect(task.urgency == nil, "die Regel setzt Dringlichkeit, nicht mehr der Modell-Draft (#117, AC-7)")
         #expect(task.duration == .minutes15)
         #expect((task.contexts ?? []).map(\.name) == ["Garten"], "matched case-insensitively, unknown names dropped")
         #expect(task.processedAt == now)
 
         let revisions = try #require(task.revisions)
-        #expect(revisions.count == 5)
+        #expect(revisions.count == 4)
         let allFromAI = revisions.allSatisfy { $0.author == .ai && $0.seenAt == nil && !($0.reason ?? "").isEmpty }
         #expect(allFromAI, "every revision is unseen, by the AI, with a reason")
-        #expect(Set(revisions.map(\.field)) == [.title, .dueDate, .importance, .duration, .contexts])
+        #expect(Set(revisions.map(\.field)) == [.title, .dueDate, .duration, .contexts])
         #expect(task.hasUnseenAIRevisions)
         #expect(task.displayTitle == "Rasenmäher: Ölwechsel")
 
@@ -166,7 +166,9 @@ struct TestStore {
         let store = try TestStore()
         let context = store.context
         let container = store.container
-        let task = TaskItem(rawText: "Steuer abgeben")
+        // Eine Notiz ohne Regel-Signal (kein Datum, keine Wichtigkeit, keine Dringlichkeit): geprüft
+        // wird hier der Modellpfad, und der schreibt bei einem Fehlschlag nichts (#117).
+        let task = TaskItem(rawText: "Zettel sortieren")
         context.insert(task)
         try context.save()
         let stub = StubEnricher(failure: StubFailure())
@@ -285,6 +287,60 @@ struct TestStore {
         #expect(task.dueDate == dueAfterRule, "das Datum der Regel bleibt stehen")
         #expect((task.revisions ?? []).filter { $0.field == .dueDate }.count == 1,
                 "die Regel legt beim zweiten Durchgang keine zweite Revision an")
+    }
+
+    /// #117, AC-5: `matchImportance(in:)`/`matchUrgency(in:)` nehmen bewusst keinen Referenz-
+    /// zeitpunkt entgegen — das Alter der Notiz ist kein Wichtigkeits-Signal. Zwei stark
+    /// unterschiedliche `capturedAt`-Zeitpunkte müssen deshalb dasselbe Ergebnis liefern.
+    @Test("Wichtigkeit ist unabhängig vom Erfassungszeitpunkt (AC-5)")
+    @MainActor func ruleIgnoresCapturedAt() async throws {
+        let store = try TestStore()
+        let context = store.context
+        let container = store.container
+        let stub = StubEnricher(unavailableReason: "deviceNotEligible")
+        let coordinator = EnrichmentCoordinator(enricher: stub, container: container)
+
+        let recent = TaskItem(rawText: "250 Euro an den Verein überweisen")
+        recent.capturedAt = Date()
+        let old = TaskItem(rawText: "250 Euro an den Verein überweisen")
+        old.capturedAt = try #require(Calendar.current.date(byAdding: .year, value: -2, to: Date()))
+        context.insert(recent)
+        context.insert(old)
+        try context.save()
+
+        await coordinator.processPending()
+
+        #expect(recent.importance == .high)
+        #expect(old.importance == .high, "das Alter der Notiz darf das Ergebnis nicht ändern")
+    }
+
+    /// #117, AC-6: Wie beim Fälligkeitsdatum darf der Nachhol-Durchgang keine zweite Revision auf
+    /// ein bereits gesetztes Feld legen — getrennt für Wichtigkeit und Dringlichkeit geprüft, weil
+    /// beide unabhängige Guard-Blöcke sind.
+    @Test("Der Nachhol-Durchgang verdoppelt keine Wichtigkeits-/Dringlichkeits-Revision (AC-6)")
+    @MainActor func catchUpPassDoesNotDuplicateImportanceOrUrgencyRevision() async throws {
+        let store = try TestStore()
+        let context = store.context
+        let container = store.container
+        let task = TaskItem(rawText: "Dringend 250 Euro an den Verein überweisen")
+        context.insert(task)
+        try context.save()
+        let stub = StubEnricher(unavailableReason: "deviceNotEligible")
+        let coordinator = EnrichmentCoordinator(enricher: stub, container: container)
+
+        await coordinator.processPending()
+        let importanceAfterRule = task.importance
+        let urgencyAfterRule = task.urgency
+
+        stub.unavailableReason = nil
+        await coordinator.processPending()
+
+        #expect(task.importance == importanceAfterRule)
+        #expect(task.urgency == urgencyAfterRule)
+        #expect((task.revisions ?? []).filter { $0.field == .importance }.count == 1,
+                "die Regel legt beim zweiten Durchgang keine zweite Wichtigkeits-Revision an")
+        #expect((task.revisions ?? []).filter { $0.field == .urgency }.count == 1,
+                "die Regel legt beim zweiten Durchgang keine zweite Dringlichkeits-Revision an")
     }
 }
 
