@@ -9,7 +9,7 @@ import Foundation
 /// file access. The grouping by `entryID` and the truth lookup stay with the caller (the gated
 /// report test), so this file has no dependency on `Corpus.Entry` either.
 enum SelfConsistency {
-    // MARK: - Single-value fields (importance, urgency, duration, energy)
+    // MARK: - Single-value fields (duration, energy)
 
     /// The most frequent non-nil answer across the runs of one note, or nil when no run answered.
     /// A run that returned nothing does not outvote the ones that did — it only lowers agreement.
