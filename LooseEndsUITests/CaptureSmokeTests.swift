@@ -7,10 +7,14 @@ final class CaptureSmokeTests: XCTestCase {
         continueAfterFailure = false
     }
 
+    /// English regardless of the host Mac's system language: these tests match several visible
+    /// labels literally ("Weekly", "Complete", …), so the run must not depend on the machine's
+    /// locale (found while reproducing #121 — a German-language Mac otherwise renders "Täglich"
+    /// and every such match silently fails).
     @MainActor
     private func launch() -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["--ui-testing"]
+        app.launchArguments = ["--ui-testing", "-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
         app.launch()
         return app
     }
@@ -285,6 +289,77 @@ final class CaptureSmokeTests: XCTestCase {
 
         XCTAssertTrue(repeatRow.waitForExistence(timeout: 5))
         XCTAssertTrue(repeatRow.label.contains("Weekly"), "Row label was \(repeatRow.label)")
+    }
+
+    /// #121: a repeating task gains a `CompletionRecord` on every completed cycle
+    /// (`TaskActions.complete`). Deleting it afterward detaches a SwiftData object that still has
+    /// a populated relationship — the same ordering FocusBlox's own postmortem (BUG_112) names as
+    /// the cause of a "backing data was detached" crash. Reproduces with the app itself alive to
+    /// prove it, not just that the row vanished.
+    @MainActor
+    func testDeletingRecurringTaskAfterCompletionDoesNotCrash() throws {
+        let app = launch()
+
+        let captureButton = app.buttons["captureButton"]
+        XCTAssertTrue(captureButton.waitForExistence(timeout: 10))
+        captureButton.tap()
+        let field = element("captureTextField", in: app)
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText("Tabletten nehmen")
+        app.buttons["captureDoneButton"].tap()
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5))
+
+        let newRow = element("viewRow_new", in: app)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
+        newRow.tap()
+        let row = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Tabletten nehmen")).firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        row.tap()
+
+        let repeatRow = element("field_repeatRule", in: app)
+        XCTAssertTrue(repeatRow.waitForExistence(timeout: 5), "Detail should list Repeat")
+        repeatRow.tap()
+
+        let daily = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Daily")).firstMatch
+        XCTAssertTrue(daily.waitForExistence(timeout: 5), "Editor should offer Daily")
+        daily.tap()
+        XCTAssertTrue(element("repeatIntervalStepper", in: app).waitForExistence(timeout: 5), "A rule shows its interval")
+
+        let backToDetail = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(backToDetail.waitForExistence(timeout: 5))
+        backToDetail.tap()
+
+        let backToList = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(backToList.waitForExistence(timeout: 5))
+        backToList.tap()
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "Should be back at the list with the task visible")
+
+        let complete = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier == %@ OR label == %@", "menuDone", "Complete"))
+            .firstMatch
+        openMenu(on: row, expecting: complete)
+        XCTAssertTrue(complete.waitForExistence(timeout: 5), "Long press should open the menu with Complete")
+        complete.tap()
+
+        // A repeating task rolls forward instead of leaving the list — same row, new due date,
+        // and now a populated `completions` relationship (the crash precondition).
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "A repeating task stays listed after completion")
+
+        let delete = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier == %@ OR label == %@", "menuDelete", "Delete"))
+            .firstMatch
+        openMenu(on: row, expecting: delete)
+        XCTAssertTrue(delete.waitForExistence(timeout: 5), "Long press should open the menu with Delete")
+        delete.tap()
+
+        let confirm = app.buttons["confirmDeleteButton"].firstMatch
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
+        confirm.tap()
+
+        XCTAssertTrue(row.waitForNonExistence(timeout: 5), "The deleted recurring task should leave the list")
+        // Proof the app is still alive and responsive, not just that this one element vanished.
+        XCTAssertTrue(captureButton.waitForExistence(timeout: 5), "App should still respond after deleting a recurring task")
     }
 
     @MainActor
