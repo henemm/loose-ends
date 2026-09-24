@@ -77,5 +77,20 @@ import Testing
         #expect(changes.create.map(\.rawText) == ["Neu im Kalender"])
         #expect(changes.update.map(\.rawText) == ["Schon drin"])
         #expect(changes.remove.map(\.rawText) == ["Erledigt"])
+        #expect(changes.removeOrphaned.isEmpty)
+    }
+
+    @Test("A deleted task's event has no task left to carry it, but still counts as an orphan (#122)")
+    @MainActor func orphanedEvents() async throws {
+        let store = try TestStore()
+        let due = Date(timeIntervalSince1970: 1_800_000_000)
+        let known = TaskItem(rawText: "Schon drin"); known.status = .active; known.dueDate = due; known.showInCalendar = true; known.calendarEventID = "evt-1"
+        let switchedOff = TaskItem(rawText: "Erledigt"); switchedOff.status = .done; switchedOff.dueDate = due; switchedOff.showInCalendar = true; switchedOff.calendarEventID = "evt-2"
+        for item in [known, switchedOff] { store.context.insert(item) }
+
+        // "evt-3" belongs to a task that no longer exists at all — deleted outright, not completed.
+        let changes = CalendarSync.changes(in: [known, switchedOff], knownEventIDs: ["evt-1", "evt-2", "evt-3"])
+        #expect(changes.removeOrphaned == ["evt-3"], "Only the event with no task left at all is an orphan")
+        #expect(changes.remove.map(\.rawText) == ["Erledigt"], "A task that still exists keeps its own removal path")
     }
 }

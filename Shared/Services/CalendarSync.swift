@@ -41,23 +41,30 @@ enum CalendarSync {
         var create: [TaskItem] = []
         var update: [TaskItem] = []
         var remove: [TaskItem] = []
-        var isEmpty: Bool { create.isEmpty && update.isEmpty && remove.isEmpty }
+        /// Event ids that belong to no task at all any more (#122): the task was deleted outright,
+        /// so there is no `TaskItem` left to carry the id or to clear it from.
+        var removeOrphaned: [String] = []
+        var isEmpty: Bool { create.isEmpty && update.isEmpty && remove.isEmpty && removeOrphaned.isEmpty }
     }
 
     /// What the calendar needs so it matches the tasks: a task wanting an event it does not have,
-    /// one that has an event to refresh, one whose event has to go. Nothing else is touched, so
-    /// the calendar is never asked for until a task asks for it.
-    static func changes(in tasks: [TaskItem], calendar: Calendar = .current) -> Changes {
+    /// one that has an event to refresh, one whose event has to go, or one nobody's task claims any
+    /// more. Nothing else is touched, so the calendar is never asked for until a task asks for it —
+    /// `knownEventIDs` (the app's own calendar, read only once access is already established) is
+    /// how a deleted task's leftover event is still found without keeping a history of ids.
+    static func changes(in tasks: [TaskItem], knownEventIDs: Set<String> = [], calendar: Calendar = .current) -> Changes {
         var changes = Changes()
+        var accountedFor: Set<String> = []
         for task in tasks {
             let wanted = plan(for: task, calendar: calendar) != nil
             switch (wanted, task.calendarEventID) {
             case (true, nil): changes.create.append(task)
-            case (true, .some): changes.update.append(task)
-            case (false, .some): changes.remove.append(task)
+            case (true, .some(let id)): changes.update.append(task); accountedFor.insert(id)
+            case (false, .some(let id)): changes.remove.append(task); accountedFor.insert(id)
             case (false, nil): break
             }
         }
+        changes.removeOrphaned = knownEventIDs.subtracting(accountedFor).sorted()
         return changes
     }
 }
