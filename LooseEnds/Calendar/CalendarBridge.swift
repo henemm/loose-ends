@@ -40,16 +40,26 @@ final class CalendarBridge {
         }
     }
 
-    /// Brings the app's calendar in line with the tasks and writes the event ids back.
+    /// Brings the app's calendar in line with the tasks and writes the event ids back. A task
+    /// deleted outright (not just switched off) leaves no `TaskItem` behind to ask for its event's
+    /// removal — once access is already granted, every sync also checks the calendar itself for
+    /// such orphans (#122), without ever requesting access on their account alone.
     func sync() async {
         guard !Self.suppressed else { return }
         let context = container.mainContext
         do {
             let tasks = try context.fetch(FetchDescriptor<TaskItem>())
-            let changes = CalendarSync.changes(in: tasks)
-            guard !changes.isEmpty, await ensureAccess() else { return }
+            let alreadyAuthorized = EKEventStore.authorizationStatus(for: .event) == .fullAccess
+            let quickChanges = CalendarSync.changes(in: tasks)
+            guard !quickChanges.isEmpty || alreadyAuthorized, await ensureAccess() else { return }
             let calendar = try appCalendar()
+            let changes = CalendarSync.changes(in: tasks, knownEventIDs: knownEventIDs(in: calendar))
 
+            for id in changes.removeOrphaned {
+                if let event = store.event(withIdentifier: id), event.calendar == calendar {
+                    try store.remove(event, span: .thisEvent, commit: false)
+                }
+            }
             for task in changes.remove {
                 if let id = task.calendarEventID, let event = store.event(withIdentifier: id), event.calendar == calendar {
                     try store.remove(event, span: .thisEvent, commit: false)
@@ -124,6 +134,18 @@ final class CalendarBridge {
         try store.saveCalendar(calendar, commit: true)
         defaults.set(calendar.calendarIdentifier, forKey: Self.calendarKey)
         return calendar
+    }
+
+    /// The ids of every event already sitting in the app's own calendar, so a task deleted outright
+    /// (not just switched off) still gets its leftover event found (#122). EventKit refuses an
+    /// unbounded range, so this looks a year either side of now — comfortably past any due date a
+    /// personal task list actually carries.
+    private func knownEventIDs(in calendar: EKCalendar) -> Set<String> {
+        let now = Date()
+        let start = Calendar.current.date(byAdding: .year, value: -1, to: now) ?? now
+        let end = Calendar.current.date(byAdding: .year, value: 1, to: now) ?? now
+        let predicate = store.predicateForEvents(withStart: start, end: end, calendars: [calendar])
+        return Set(store.events(matching: predicate).compactMap(\.eventIdentifier))
     }
 
     /// EventKit keeps whole seconds, so dates match within a second.
