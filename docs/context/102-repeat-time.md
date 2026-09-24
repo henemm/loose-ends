@@ -176,3 +176,51 @@ Code läuft über einen komplett anderen Typ und Aufrufpfad (View statt Enrichme
 - [x] UI-Umfang — geklärt: nur `FieldEditorView`-Prefill, keine neue Zeit-UI
 - [x] DueReminders — geklärt: bewusst außen vor, Folge-Issue vormerken
 - [ ] Feld-Naming `hour`/`minute` vs. anderer Name — technische Entscheidung, keine Rückfrage nötig
+
+### Implementierungshinweis aus TDD RED (Phase 5, nicht mehr Teil der freigegebenen Spec-Bindung)
+
+Die freigegebene Spec (`docs/specs/enrichment/rule-102-repeat-time.md`, Implementation Details)
+zeigt die Prefill-Logik inline in der Picker-Closure von `FieldEditorView.repeatControl`. Diese
+Closure ist `private` und Teil einer SwiftUI-View — ohne ViewInspector (im Projekt nicht vorhanden)
+nicht direkt unit-testbar, und das Projekt schreibt UI-Tests erst nach dem Design-Freeze und nur als
+Smoke-Tests (CLAUDE.md). Damit AC-2/AC-3 mit echten Unit-Tests bewiesen werden können statt nur
+behauptet, zieht die TDD-RED-Implementierung die Auswahl-Logik als reine, statische Funktion auf
+`RepeatRule`, nach demselben Muster wie `FieldFormatting.repeatDescription` (ebenfalls eine reine
+Funktion, die die View aufruft und direkt, ohne View-Rendering, getestet wird):
+
+```swift
+extension RepeatRule {
+    static func timeGuess(from rawText: String) -> (hour: Int, minute: Int)? {
+        TimeExpressionParser().time(in: rawText)
+    }
+
+    /// Was das Wählen einer Frequenz im Editor ergibt. Eine bestehende Regel behält ihre Uhrzeit —
+    /// der Rohtext wird nur einmal befragt, beim Entstehen der Regel (AC-3).
+    static func selecting(_ frequency: Frequency, existing: RepeatRule?, rawText: String) -> RepeatRule {
+        var next = existing ?? {
+            var created = RepeatRule(frequency: frequency)
+            if let guess = timeGuess(from: rawText) {
+                created.hour = guess.hour
+                created.minute = guess.minute
+            }
+            return created
+        }()
+        next.frequency = frequency
+        if frequency != .weekly { next.weekdays = nil }
+        return next
+    }
+}
+```
+
+`FieldEditorView.repeatControl` ruft in der Picker-Closure nur noch
+`applyRepeat(RepeatRule.selecting(frequency, existing: rule, rawText: task.rawText))` auf — die
+bisherige Inline-Logik (Frequenz setzen, Wochentage bei Nicht-`.weekly` zurücksetzen) wandert
+unverändert in `selecting`, kein Verhaltensunterschied gegenüber der Spec, nur ein anderer Ort.
+Purpose, Scope, Acceptance Criteria und Definition of Done der Spec sind davon nicht berührt — reine
+Code-Organisation für Testbarkeit, eine technische Entscheidung (CLAUDE.md: "Technische
+Entscheidungen trifft Claude"), keine Änderung am WAS. Bewusst **nicht** in die freigegebene Spec
+zurückgeschrieben, um die SHA-256-Bindung an das PO-Briefing nicht zu invalidieren — dieser Hinweis
+hier ist die maßgebliche Quelle für `/50-implement`.
+
+Die bereits in TDD RED geschriebenen Tests (`LooseEndsTests/RepeatRuleTests.swift`,
+`LooseEndsTests/RepeatEditTests.swift`) testen exakt diese Signatur.

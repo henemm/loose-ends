@@ -39,7 +39,9 @@ import Testing
     }
 }
 
-@Suite("RepeatRule") struct RepeatRuleTests {
+/// Renamed from `RepeatRuleTests` in #102: that name now belongs to the suite around
+/// `timeGuess`/`selecting` in `RepeatRuleTests.swift`. Test bodies unchanged.
+@Suite("RepeatRule roll-forward") struct RepeatRuleRollForwardTests {
     @Test("Weekly on Saturday from due date rolls to the next Saturday")
     func weeklySaturday() throws {
         var calendar = Calendar(identifier: .gregorian)
