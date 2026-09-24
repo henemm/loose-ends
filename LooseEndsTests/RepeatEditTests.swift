@@ -54,6 +54,49 @@ private final class UntranslatedBundleMarker {}
         #expect(task.revisions?.count == 2)
     }
 
+    /// Nachstellung des Editor-Ablaufs (#102): Der User wählt zum ersten Mal eine Frequenz, die
+    /// Aufgabe hat noch keine `repeatRule`. `RepeatRule.selecting` ist die reine Fassung dessen,
+    /// was `FieldEditorView.repeatControl` in der Picker-Closure tut — direkt an
+    /// `RevisionService.set` gereicht wie im Editor auch.
+    @Test("Erstmaliges Wählen einer Frequenz übernimmt die im Rohtext erkannte Uhrzeit (AC-2)")
+    @MainActor func firstFrequencyPickPrefillsTime() throws {
+        let store = try TestStore()
+        let task = TaskItem(rawText: "Jeden Tag um 7 Uhr die Tabletten nehmen")
+        task.status = .active
+        store.context.insert(task)
+
+        let chosen = RepeatRule.selecting(.daily, existing: task.repeatRule, rawText: task.rawText)
+        _ = RevisionService.set(.repeatRule, to: FieldCodec.encode(chosen), on: task, contexts: [], projects: [])
+        try store.context.save()
+
+        #expect(task.repeatRule?.hour == 7)
+        #expect(task.repeatRule?.minute == 0)
+    }
+
+    /// Ändert der User danach die Frequenz einer bereits bestehenden Regel, wird der Rohtext nicht
+    /// erneut befragt — die Uhrzeit bleibt, wie sie war (AC-3).
+    @Test("Ändern der Frequenz einer bestehenden Regel lässt die Uhrzeit unverändert (AC-3)")
+    @MainActor func changingFrequencyKeepsStoredTime() throws {
+        let store = try TestStore()
+        let task = TaskItem(rawText: "Jeden Tag um 7 Uhr die Tabletten nehmen")
+        task.status = .active
+        store.context.insert(task)
+
+        var existing = RepeatRule(frequency: .daily)
+        existing.hour = 7
+        existing.minute = 0
+        _ = RevisionService.set(.repeatRule, to: FieldCodec.encode(existing), on: task, contexts: [], projects: [])
+        try store.context.save()
+
+        let changed = RepeatRule.selecting(.weekly, existing: task.repeatRule, rawText: task.rawText)
+        _ = RevisionService.set(.repeatRule, to: FieldCodec.encode(changed), on: task, contexts: [], projects: [])
+        try store.context.save()
+
+        #expect(task.repeatRule?.frequency == .weekly)
+        #expect(task.repeatRule?.hour == 7)
+        #expect(task.repeatRule?.minute == 0)
+    }
+
     @Test("Rules read as people say them")
     func descriptions() {
         let calendar = posix()

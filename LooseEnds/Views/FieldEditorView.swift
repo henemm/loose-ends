@@ -166,10 +166,7 @@ struct FieldEditorView: View {
             get: { rule?.frequency.rawValue ?? "" },
             set: { raw in
                 guard let frequency = RepeatRule.Frequency(rawValue: raw) else { applyRepeat(nil); return }
-                var next = rule ?? RepeatRule(frequency: frequency)
-                next.frequency = frequency
-                if frequency != .weekly { next.weekdays = nil }
-                applyRepeat(next)
+                applyRepeat(RepeatRule.selecting(frequency, existing: rule, rawText: task.rawText))
             }
         )) {
             Text("None").tag("")

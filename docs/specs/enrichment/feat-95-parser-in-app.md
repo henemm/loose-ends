@@ -83,7 +83,8 @@ Muss **ein** Stand sein: Move und Löschung der Quelle gehören in denselben Com
 - **Freistehende Uhrzeit für Wiederholungsregeln** („jeden Tag um 7 Uhr"): `TimeExpressionParser`
   erkennt die Uhrzeit, aber `TaskItem.dueHasTime` ist ein Flag neben `dueDate`, kein eigener
   Zeit-Slot. Gehört in ein Folge-Issue zur Wiederholungsregel, sobald die dafür nötige Modellierung
-  ansteht.
+  ansteht. Umgesetzt in #102 (2026-09-24): `RepeatRule` bekommt eigene `hour`/`minute`-Felder,
+  siehe `docs/specs/enrichment/rule-102-repeat-time.md`.
 - **Zweiter Enricher / Dekorator-Architektur** (`RuleFirstEnricher(wrapping:)`): architektonisch
   sauberer für mehrere Enricher, aber ohne einen zweiten Enricher heute unbegründet. Siehe
   „Alternativen".
@@ -298,3 +299,5 @@ nur als Smoke-Tests (CLAUDE.md).
 
 - 2026-09-21: Spec aus dem Analyse-Kontext (`docs/context/feat-95-parser-in-app.md`, Phase 1+2)
   erstellt.
+- 2026-09-24: Nicht-Scope-Punkt „Freistehende Uhrzeit für Wiederholungsregeln" als umgesetzt markiert
+  (#102, siehe `docs/specs/enrichment/rule-102-repeat-time.md`).
