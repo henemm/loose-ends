@@ -38,8 +38,6 @@ struct SelfConsistencyReportTests {
         }
 
         var sections = [
-            SelfConsistency.table(field: "importance", outcomes: outcomes({ $0.importance }, truth: { $0.importanceTruth })),
-            SelfConsistency.table(field: "urgency", outcomes: outcomes({ $0.urgency }, truth: { $0.urgencyTruth })),
             SelfConsistency.table(field: "duration", outcomes: outcomes({ $0.duration }, truth: { $0.durationTruth })),
             SelfConsistency.table(field: "energy", outcomes: outcomes({ $0.energy }, truth: { $0.energyTruth })),
         ]
@@ -55,8 +53,8 @@ struct SelfConsistencyReportTests {
         let report = """
         # Selbstkonsistenz-Signal (Spike #65 Schritt 2, #108)
 
-        Einstimmigkeit über 5 Läufe je Satz gegen die tatsächliche FocusBlox-Wahrheit, für die fünf \
-        Felder mit bekanntem Wert im Export.
+        Einstimmigkeit über 5 Läufe je Satz gegen die tatsächliche FocusBlox-Wahrheit, für die drei \
+        Modellfelder mit bekanntem Wert im Export.
 
         \(sections.joined(separator: "\n\n"))
         """

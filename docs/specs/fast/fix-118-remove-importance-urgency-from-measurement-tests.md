@@ -10,6 +10,11 @@
   urgency, duration, energy)` auf `(duration, energy)` verkürzen — der Code selbst ist feldneutral
   und bleibt unverändert.
 
+## Acceptance Criteria
+- **AC-1:** `LooseEndsTests/FocusBloxCalibrationTests.swift` wertet importance/urgency nicht mehr aus (keine Sammlung, keine Tabellenausgabe, kein hartes `#expect(!importanceOutcomes.isEmpty, ...)`); Bericht und Test decken nur noch duration/energy ab.
+- **AC-2:** `LooseEndsTests/SelfConsistencyReportTests.swift` enthält in `sections` keine Tabellen-Zeilen mehr für "importance" und "urgency"; Bericht deckt nur noch duration/energy/contexts ab.
+- **AC-3:** `Measurement/SelfConsistency.swift` — der Kommentar `// MARK: - Single-value fields (importance, urgency, duration, energy)` ist auf `(duration, energy)` verkürzt; der Code selbst bleibt unverändert.
+
 ## Was sich nicht ändern darf
 - `Measurement/MeasurementRun.swift` und `Measurement/Corpus.swift` bleiben unverändert (Rohdaten-
   Speicher, analog zu `dueDate` nach #95 — die Felder existieren dort weiter, nur die Auswertung in

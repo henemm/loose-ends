@@ -25,8 +25,6 @@ struct FocusBloxCalibrationTests {
     struct CorpusTask: Decodable {
         var rawText: String
         var title: String
-        var importance: String?
-        var urgency: String?
         var durationBucket: String?
         var energy: String?
         var capturedAt: Date
@@ -58,7 +56,7 @@ struct FocusBloxCalibrationTests {
         return lines.joined(separator: "\n")
     }
 
-    @Test("Precision/Recall je Schwelle für importance, urgency, duration, energy")
+    @Test("Precision/Recall je Schwelle für duration, energy")
     func calibrate() async throws {
         let data = try Data(contentsOf: focusBloxCorpusURL)
         let decoder = JSONDecoder()
@@ -69,14 +67,12 @@ struct FocusBloxCalibrationTests {
         try #require(enricher.unavailableReason == nil, "Modell nicht verfügbar: \(enricher.unavailableReason ?? "-")")
 
         let examples = corpus
-            .filter { $0.isCompleted && $0.importance != nil }
+            .filter { $0.isCompleted && $0.durationBucket != nil }
             .prefix(5)
             .map { task in
                 EnrichmentExample(
                     rawText: task.rawText,
                     title: task.title,
-                    importance: task.importance.flatMap(Importance.init(rawValue:)),
-                    urgency: task.urgency.flatMap(Urgency.init(rawValue:)),
                     duration: task.durationBucket.flatMap(DurationBucket.init(rawValue:)),
                     energy: task.energy.flatMap(Energy.init(rawValue:)),
                     contexts: []
@@ -84,8 +80,6 @@ struct FocusBloxCalibrationTests {
             }
         let sample = corpus.sorted { $0.rawText < $1.rawText }.prefix(Self.sampleSize)
 
-        var importanceOutcomes: [Outcome] = []
-        var urgencyOutcomes: [Outcome] = []
         var durationOutcomes: [Outcome] = []
         var energyOutcomes: [Outcome] = []
         var modelErrors = 0
@@ -105,8 +99,6 @@ struct FocusBloxCalibrationTests {
                 modelErrors += 1
                 continue
             }
-            if let outcome = Self.outcome(guess: draft.importance, truth: task.importance) { importanceOutcomes.append(outcome) }
-            if let outcome = Self.outcome(guess: draft.urgency, truth: task.urgency) { urgencyOutcomes.append(outcome) }
             if let outcome = Self.outcome(guess: draft.duration, truth: task.durationBucket) { durationOutcomes.append(outcome) }
             if let outcome = Self.outcome(guess: draft.energy, truth: task.energy) { energyOutcomes.append(outcome) }
         }
@@ -118,16 +110,11 @@ struct FocusBloxCalibrationTests {
         tatsächlich in FocusBlox bestätigten Werte. Aktuelle Schreib-Schwelle: \(EnrichmentWriter.confidenceThreshold). \
         Modellfehler (z. B. Guardrail-Fehlalarm), übersprungen: \(modelErrors).
 
-        \(Self.table(field: "importance", outcomes: importanceOutcomes))
-
-        \(Self.table(field: "urgency", outcomes: urgencyOutcomes))
-
         \(Self.table(field: "duration", outcomes: durationOutcomes))
 
         \(Self.table(field: "energy", outcomes: energyOutcomes))
         """
         try report.write(to: focusBloxCalibrationReportURL, atomically: true, encoding: .utf8)
-        #expect(!importanceOutcomes.isEmpty, "corpus must have at least one task with known importance")
     }
 }
 #endif
