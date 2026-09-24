@@ -1,0 +1,122 @@
+    [32m✔[0m "The default contexts are seeded once and never re-added after deletion" (0.008 seconds)
+Suite "ContextSeeder" passed after 0.008 seconds
+Suite "Field edits" started
+    [32m✔[0m "Setting importance writes a user revision from empty to high" (0.003 seconds)
+    [32m✔[0m "Clearing the due date records the old value and drops the source" (0.003 seconds)
+    [32m✔[0m "Contexts are set by name from the available ones; unknown names are ignored" (0.003 seconds)
+    [32m✔[0m "A project is set by name and cleared with nil; the same value again writes nothing" (0.002 seconds)
+Suite "Field edits" passed after 0.012 seconds
+    [32m✔[0m "Wichtigkeits-Treffer je Kategorie (AC-1)" (0.018 seconds)
+    [32m✔[0m "Dringlichkeits-Treffer je Kategorie (AC-2)" (0.005 seconds)
+    [32m✔[0m "Kein Treffer bleibt nil, kein Default (AC-3)" (0.021 seconds)
+    [32m✔[0m "Wichtigkeit und Dringlichkeit sind unabhängig (AC-4)" ([33m0.026[0m seconds)
+    [32m✔[0m "Alle fünf Begründungssätze sind im deutschen Bundle übersetzt (AC-8)" (0.001 seconds)
+    [32m✔[0m "Der Regelschritt liegt im Produktmodul" (0.001 seconds)
+Suite "Regelschritt: Wichtigkeit und Dringlichkeit" passed after 0.073 seconds
+Suite "ModelEnrichment ohne Wichtigkeit/Dringlichkeit (AC-7)" started
+    [32m✔[0m "Das Schema trägt keine importance/urgency-Eigenschaften mehr" (0.001 seconds)
+Suite "ModelEnrichment ohne Wichtigkeit/Dringlichkeit (AC-7)" passed after 0.001 seconds
+Suite IntentExecutionTests started
+    [32m✔[0m "Aufgabe erfassen läuft ohne Fehler durch" (0.011 seconds)
+    [32m✔[0m "Erfassung öffnen meldet der App, dass sie die Erfassung zeigen soll" (0.001 seconds)
+Suite IntentExecutionTests passed after 0.011 seconds
+Suite "Next up order, Old and Completed details" started
+    [32m✔[0m "Dragging a row renumbers every rank in the new order" (0.015 seconds)
+    [32m✔[0m "Postponed counts only the user's moves to a later date" ([31m0.240[0m seconds)
+    [32m✔[0m "Completed tasks group by day, newest day first, newest task first within a day" (0.006 seconds)
+Suite "Next up order, Old and Completed details" passed after 0.262 seconds
+Suite MeasurementFieldScopeTests started
+    [32m✔[0m "FocusBloxCalibrationTests wertet importance/urgency nicht mehr aus (#118)" (0.001 seconds)
+    [32m✔[0m "SelfConsistencyReportTests wertet importance/urgency nicht mehr aus (#118)" (0.001 seconds)
+Suite MeasurementFieldScopeTests passed after 0.001 seconds
+Suite "Messlauf-Datei und Taktung" started
+    [32m✔[0m "Alte Ergebnisdatei ohne Ereignisse bleibt lesbar" (0.001 seconds)
+    [32m✔[0m "Ereignisse und Fehlerart überleben Schreiben und Lesen" (0.001 seconds)
+    [32m✔[0m "Nach einem Fehlschlag wird gewartet, nach dreien angehalten" (0.001 seconds)
+    [32m✔[0m "Die Labor-App meldet keine Hintergrundmodi mehr an" (0.001 seconds)
+    [32m✔[0m "Fehlerart wird typisiert erkannt, nicht per Textvergleich" (0.005 seconds)
+    [32m✔[0m "Zwei erfolgreiche Läufe: der dritte Lauf ist noch offen, mit aufsteigendem Index (AC-2)" (0.001 seconds)
+    [32m✔[0m "Drei erfolgreiche Läufe bei runsPerEntry 3: der Satz ist vollständig erledigt (AC-2)" (0.001 seconds)
+    [32m✔[0m "Alte Ergebnisdatei ohne runIndex-Feld dekodiert als 0 und gilt einlaufig als erledigt (AC-3)" (0.001 seconds)
+    [32m✔[0m "Gesamtzahl, erledigte und Fortschritt rechnen über Läufe, nicht über Sätze (AC-4)" (0.001 seconds)
+    [32m✔[0m "Aufeinanderfolgende Läufe desselben Satzes bekommen aufsteigende Indizes (AC-5)" (0.002 seconds)
+    [32m✔[0m "Ergebnisdatei ohne die fünf neuen Schlüssel dekodiert sie als nil/leer (AC-2)" (0.001 seconds)
+    [32m✔[0m "Alle fünf neuen Rohwerte überleben Schreiben und Lesen (AC-2)" (0.001 seconds)
+    [32m✔[0m "Der Selbstkonsistenz-Auszug eines EnrichmentDraft reicht alle fünf Werte unverändert durch (AC-3)" (0.001 seconds)
+    [32m✔[0m "Fehlende Guesses ergeben nil/leer, kein Absturz (AC-3)" (0.001 seconds)
+Suite "Messlauf-Datei und Taktung" passed after 0.009 seconds
+Suite "Model" started
+    [32m✔[0m "A captured task round-trips through the store as unprocessed" (0.004 seconds)
+    [32m✔[0m "Blocked tasks stay out of Next up and show up in Waiting" (0.004 seconds)
+Suite "Model" passed after 0.008 seconds
+Suite "RepeatRule" started
+    [32m✔[0m "Weekly on Saturday from due date rolls to the next Saturday" (0.001 seconds)
+    [32m✔[0m "Monthly from completion anchors on the completion date" (0.001 seconds)
+Suite "RepeatRule" passed after 0.001 seconds
+Suite "Process cache" started
+    [32m✔[0m "Builds once, then returns the same instance without building again" (0.001 seconds)
+Suite "Process cache" passed after 0.001 seconds
+Suite "Repeat rule edits" started
+    [32m✔[0m "A rule survives the encode-decode round trip and encodes deterministically" (0.001 seconds)
+    [32m✔[0m "Setting a rule writes a user revision, the same rule again writes nothing, nil clears it" (0.011 seconds)
+    [32m✔[0m "Rules read as people say them" (0.014 seconds)
+Suite "Repeat rule edits" passed after 0.027 seconds
+Suite "RevisionService" started
+    [32m✔[0m "Resetting the AI title puts the raw text back and records a user revision" (0.009 seconds)
+    [32m✔[0m "Resetting due date and contexts restores the pre-AI state" (0.005 seconds)
+    [32m✔[0m "Reset all clears every AI field in one go and writes one user revision per field" (0.005 seconds)
+    [32m✔[0m "A user title edit writes a user revision; the same value again writes nothing" (0.004 seconds)
+    [32m✔[0m "Marking seen clears the marker and takes an active task out of New" (0.005 seconds)
+    [32m✔[0m "Project resets match by name; an unknown name leaves the project empty" (0.002 seconds)
+Suite "RevisionService" passed after 0.033 seconds
+Suite "FieldCodec" started
+    [32m✔[0m "Every revisable field survives an encode-apply round trip" (0.002 seconds)
+    [32m✔[0m "Malformed lists read as empty instead of throwing" (0.001 seconds)
+Suite "FieldCodec" passed after 0.003 seconds
+    [32m✔[0m "Mehrheitswert und Einstimmigkeit für ein Einzelwert-Feld (AC-5)" (0.001 seconds)
+    [32m✔[0m "Mehrheitswert und Einstimmigkeit für ein Mengenfeld, Reihenfolge ist irrelevant (AC-6)" (0.001 seconds)
+    [32m✔[0m "Die Mehrheitsantwort eines Mengenfelds gilt nur bei exakter Mengengleichheit als richtig (AC-6)" (0.001 seconds)
+    [32m✔[0m "Die Trefferquote-über-Abdeckung-Tabelle rechnet Abdeckung und Trefferquote je Schwelle (AC-7)" (0.001 seconds)
+Suite "Selbstkonsistenz über mehrere Läufe (#108)" passed after 0.001 seconds
+Suite "SharedContent" started
+    [32m✔[0m "A shared mail yields its subject, the message link and the mail channel" (0.002 seconds)
+    [32m✔[0m "Encoded subjects are decoded, base64 and quoted-printable alike" (0.001 seconds)
+    [32m✔[0m "A link with text keeps the text and attaches the link; a bare link becomes the text" (0.001 seconds)
+    [32m✔[0m "A message link without the mail body still counts as mail" (0.001 seconds)
+    [32m✔[0m "Nothing shared is empty, not a crash" (0.001 seconds)
+Suite "SharedContent" passed after 0.002 seconds
+Suite "Subtasks, one level" started
+    [32m✔[0m "A line is trimmed, linked to its parent, active and inherits the project; empty and nested lines are refused" (0.011 seconds)
+    [32m✔[0m "Checking a line off and reopening it moves the progress and keeps the order" (0.005 seconds)
+    [32m✔[0m "A subtask never shows in a view of its own, open or done" (0.004 seconds)
+    [32m✔[0m "Deleting the parent takes its subtasks with it" (0.005 seconds)
+Suite "Subtasks, one level" passed after 0.026 seconds
+Suite "TaskActions" started
+    [32m✔[0m "Done moves a plain task to Done and out of Next up" (0.003 seconds)
+    [32m✔[0m "Done on a repeating task records the cycle and rolls the due date forward" (0.004 seconds)
+    [32m✔[0m "Restore takes a task back from Done and keeps its completion records" (0.002 seconds)
+    [32m✔[0m "Next up appends after the highest rank; a second toggle removes the task again" (0.002 seconds)
+    [32m✔[0m "Park and activate flip the status and the parked timestamp" (0.002 seconds)
+    [32m✔[0m "Move targets resolve from a Wednesday to tomorrow, Saturday and Monday" (0.001 seconds)
+    [32m✔[0m "Weekend from a Saturday means the next Saturday, not today" (0.001 seconds)
+    [32m✔[0m "Move writes a user revision and marks the due date as set by the user" (0.003 seconds)
+Suite "TaskActions" passed after 0.020 seconds
+Suite "Regelparser: Uhrzeit" started
+    [32m✔[0m "um H Uhr, H:MM, H Uhr ohne um, auf H Uhr" (0.001 seconds)
+    [32m✔[0m "at 5pm, at 9am, at 2:30 pm, at 10am" (0.001 seconds)
+    [32m✔[0m "halb zwölf ist 11:30, half past seven ist 07:30" (0.001 seconds)
+    [32m✔[0m "Nackte Zahl nur nach einem Zeitwort wie Mittag" (0.001 seconds)
+    [32m✔[0m "Wiederholungen tragen trotzdem eine Uhrzeit" (0.001 seconds)
+    [32m✔[0m "Zahlen ohne Zeitkontext sind keine Uhrzeit" (0.001 seconds)
+    [32m✔[0m "Uhrzeit ist im Bereich 0–23 Stunden, 0–59 Minuten" (0.001 seconds)
+Suite "Regelparser: Uhrzeit" passed after 0.001 seconds
+Suite "Waveform" started
+    [32m✔[0m "Silence is zero, a loud signal saturates at one, speech sits in between" (0.001 seconds)
+    [32m✔[0m "The waveform keeps only the newest levels and clamps them to 0...1" (0.001 seconds)
+Suite "Waveform" passed after 0.001 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.09.24_07-14-22-+0200.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+
+[exited with code 0]
