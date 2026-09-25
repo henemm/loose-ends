@@ -123,3 +123,20 @@ Entwurf entsprechend ergänzt: `docs/artifacts/fix-125-titel-treue/entwurf.html`
 
 ### Open Questions
 Keine mehr offen.
+
+### RED-Phase (2026-09-25) — tatsächliche Testdateien
+- **Test 1** (Spec-Testplan) ist bereits durch den bestehenden Test `RevisionServiceTests.revertTitle`
+  (`LooseEndsTests/RevisionServiceTests.swift:26`) abgedeckt — identisches Szenario. Kein Duplikat
+  angelegt; Test bleibt unverändert grün, dient als Regressions-Absicherung für den Reset-Button.
+- **Test 2** ist neu: `RevisionServiceTests.aiSetFieldsExcludesUserTitle`
+  (`LooseEndsTests/RevisionServiceTests.swift`). Lief sofort grün — bestätigt, dass `aiSetFields`
+  den Reset-Button für AC-3 bereits korrekt verbirgt, ohne dass dafür neuer Code nötig ist.
+- **Test 3** ist neu: `TitleFidelityPromptTests.instructionsPreserveObjectAndPurpose`
+  (`LooseEndsTests/TitleFidelityPromptTests.swift`). RED bestätigt (3 fehlgeschlagene Assertions,
+  siehe `docs/artifacts/fix-125-titel-treue/test-red-output.txt`): prüft `FoundationModelsEnricher.instructions`
+  als reinen String-Inhalt (kein Modellaufruf) auf das neue Wortlimit („twelve words") und die
+  explizite Zweck/Objekt-Schutzklausel. Wird durch die Prompt-Änderung in Implementation Details grün.
+- **Korpus-Messung (AC-5)** läuft NICHT als Xcode-Test: braucht Apple Intelligence, nicht
+  deterministisch reproduzierbar in CI/Simulator. Läuft wie jede Korpus-Messung dieses Projekts in
+  der Labor-App (`LooseEndsLab`), in Scheiben, vor dem Merge — manueller Mess-Schritt während
+  `/50-implement`, kein automatisierter Unit-Test.
