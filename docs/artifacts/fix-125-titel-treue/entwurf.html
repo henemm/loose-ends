@@ -1,0 +1,548 @@
+<title>Titel-Treue Entwurf</title>
+<style>
+  :root {
+    --accent: #0F6E73;
+    --bg: #F2F2F7;
+    --cell: #FFFFFF;
+    --label: #000000;
+    --label-secondary: #6C6C70;
+    --separator: #C6C6C8;
+    --page-bg: #FBFAF7;
+    --page-ink: #1C1C1E;
+    --page-ink-soft: #6E6E73;
+    --card-border: #E4E2DC;
+    --badge-good-bg: #E4F3EE;
+    --badge-good-fg: #1C6B4F;
+    --badge-warn-bg: #FBEAE6;
+    --badge-warn-fg: #B33F22;
+    --chip-bg: #EFEEE9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --accent: #5FC4C9;
+      --bg: #000000;
+      --cell: #1C1C1E;
+      --label: #FFFFFF;
+      --label-secondary: #98989D;
+      --separator: #38383A;
+      --page-bg: #15140F;
+      --page-ink: #F2F0EA;
+      --page-ink-soft: #A8A69E;
+      --card-border: #322F27;
+      --badge-good-bg: #123326;
+      --badge-good-fg: #6FD8AE;
+      --badge-warn-bg: #3A1F16;
+      --badge-warn-fg: #F0977A;
+      --chip-bg: #221F19;
+    }
+  }
+  :root[data-theme="dark"] {
+    --accent: #5FC4C9;
+    --bg: #000000;
+    --cell: #1C1C1E;
+    --label: #FFFFFF;
+    --label-secondary: #98989D;
+    --separator: #38383A;
+    --page-bg: #15140F;
+    --page-ink: #F2F0EA;
+    --page-ink-soft: #A8A69E;
+    --card-border: #322F27;
+    --badge-good-bg: #123326;
+    --badge-good-fg: #6FD8AE;
+    --badge-warn-bg: #3A1F16;
+    --badge-warn-fg: #F0977A;
+    --chip-bg: #221F19;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page-bg);
+    color: var(--page-ink);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    padding-inline: 20px;
+    padding-block: max(28px, env(safe-area-inset-top, 0px)) 48px;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; }
+
+  header.page {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+  .eyebrow {
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--page-ink-soft);
+    font-weight: 600;
+    margin: 0 0 6px;
+  }
+  h1 {
+    font-size: 26px;
+    margin: 0 0 10px;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  .lede {
+    max-width: 62ch;
+    color: var(--page-ink-soft);
+    font-size: 14.5px;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  button.theme-toggle {
+    border: 1px solid var(--card-border);
+    background: var(--cell);
+    color: var(--page-ink);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  button.theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  section.block { margin-top: 40px; }
+  .block-head { margin-bottom: 16px; }
+  .block-head h2 {
+    font-size: 18.5px;
+    margin: 0 0 4px;
+    letter-spacing: -0.005em;
+  }
+  .block-head p {
+    margin: 0;
+    color: var(--page-ink-soft);
+    font-size: 13.5px;
+    line-height: 1.5;
+    max-width: 68ch;
+  }
+
+  .row-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 18px;
+    align-items: start;
+  }
+
+  figure.frame {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .frame-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--page-ink);
+  }
+  .badge {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+  .badge.good { background: var(--badge-good-bg); color: var(--badge-good-fg); }
+  .badge.warn { background: var(--badge-warn-bg); color: var(--badge-warn-fg); }
+
+  .screen {
+    background: var(--bg);
+    border-radius: 22px;
+    border: 1px solid var(--card-border);
+    padding: 10px 0 16px;
+    overflow: hidden;
+  }
+  .status {
+    font-size: 11px;
+    color: var(--label-secondary);
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 16px 8px;
+  }
+  .navbar {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--label);
+    text-align: center;
+    padding: 2px 16px 10px;
+    border-bottom: 1px solid var(--separator);
+  }
+
+  .list {
+    padding: 10px 12px 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .cell {
+    background: var(--cell);
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+  .cell.tight { padding: 9px 12px; }
+  .title-line {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14.5px;
+    color: var(--label);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .title-line.wrap2 {
+    white-space: normal;
+    text-overflow: initial;
+    overflow: visible;
+    line-height: 1.28;
+  }
+  .trait-line {
+    margin-top: 3px;
+    font-size: 11.5px;
+    color: var(--label-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sparkle {
+    width: 11px;
+    height: 11px;
+    flex: none;
+    fill: var(--accent);
+  }
+
+  .detail-cell {
+    background: var(--cell);
+    border-radius: 10px;
+    padding: 12px 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .title-field-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .title-field {
+    font-size: 16.5px;
+    font-weight: 600;
+    color: var(--label);
+    flex: 1;
+    min-width: 0;
+  }
+  .reset-btn {
+    flex: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--accent) 16%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    font-size: 14px;
+  }
+  .raw-text {
+    font-size: 12px;
+    color: var(--label-secondary);
+    line-height: 1.4;
+  }
+  .subhead {
+    font-size: 12.5px;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .path-hint {
+    font-size: 11px;
+    color: var(--label-secondary);
+    border-top: 1px solid var(--separator);
+    padding-top: 8px;
+    margin-top: 2px;
+    line-height: 1.45;
+  }
+
+  .caption {
+    font-size: 12.5px;
+    color: var(--page-ink-soft);
+    line-height: 1.5;
+    max-width: 46ch;
+  }
+  code.field {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11px;
+    background: var(--chip-bg);
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: var(--page-ink);
+  }
+
+  .compare {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 18px;
+  }
+
+  .verdict {
+    margin-top: 22px;
+    border: 1px solid var(--card-border);
+    background: var(--cell);
+    border-radius: 14px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+  .verdict h3 {
+    margin: 0 0 6px;
+    font-size: 13.5px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--page-ink-soft);
+  }
+  .verdict p { margin: 0 0 8px; }
+  .verdict p:last-child { margin-bottom: 0; }
+
+  footer.page {
+    margin-top: 44px;
+    padding-top: 16px;
+    border-top: 1px solid var(--card-border);
+    font-size: 12px;
+    color: var(--page-ink-soft);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 22px; }
+  }
+</style>
+
+<div class="wrap">
+  <header class="page">
+    <div>
+      <p class="eyebrow">Entwurf · Issue #125</p>
+      <h1>Titel-Treue: Zurücksetzen &amp; Inhaltsverlust</h1>
+      <p class="lede">
+        Nachgebaut 1:1 aus Farben, Schrift und Abständen von <code class="field">TaskRow.swift</code>
+        und <code class="field">TaskDetailView.swift</code> — kein Simulator-Screenshot, sondern ein
+        maßstabsgetreuer Entwurf. Zwei getrennte Fragen: (1) wie kommt eine KI-Überschrift mit einem
+        Tipp zurück auf den Originaltext, (2) was tun gegen Inhalte, die die KI beim Kürzen wegwirft.
+      </p>
+    </div>
+    <button class="theme-toggle" id="themeToggle" type="button">
+      <span id="themeIcon">☾</span><span id="themeLabel">Dunkel anzeigen</span>
+    </button>
+  </header>
+
+  <!-- ===================== PUNKT 1 ===================== -->
+  <section class="block">
+    <div class="block-head">
+      <h2>1 · Titel in einem Tipp zurücksetzen</h2>
+      <p>
+        Heute nur über Details → „Show" → in der Liste aller Änderungen die passende Titel-Revision
+        suchen → „Reset". Entwurf: ein Rücksetz-Symbol direkt neben dem Titelfeld, nur sichtbar, wenn
+        die KI den Titel gesetzt hat — nutzt die vorhandenen Bausteine
+        <code class="field">RevisionService.firstAIRevision</code> und
+        <code class="field">.revert</code> unverändert.
+      </p>
+    </div>
+    <div class="compare">
+      <figure class="frame">
+        <div class="frame-label">Heute</div>
+        <div class="screen">
+          <div class="status"><span>9:41</span><span>●●●●</span></div>
+          <div class="navbar">Aufgabe</div>
+          <div class="list">
+            <div class="detail-cell">
+              <div class="title-field-row">
+                <div class="title-field">Termin bei Auto Senger machen</div>
+              </div>
+              <div class="raw-text">Termin bei Auto Senger machen für Inspektion und Reifenwechsel</div>
+            </div>
+            <div class="path-hint">
+              Zurücksetzen: „1 Feld von KI gesetzt" → Show → Eintrag „Titel" suchen → Reset.
+              4 Schritte.
+            </div>
+          </div>
+        </div>
+        <p class="caption">Reset ist vorhanden, aber hinter drei Umwegen versteckt.</p>
+      </figure>
+
+      <figure class="frame">
+        <div class="frame-label">Entwurf <span class="badge good">Empfehlung</span></div>
+        <div class="screen">
+          <div class="status"><span>9:41</span><span>●●●●</span></div>
+          <div class="navbar">Aufgabe</div>
+          <div class="list">
+            <div class="detail-cell">
+              <div class="title-field-row">
+                <div class="title-field">Termin bei Auto Senger machen</div>
+                <div class="reset-btn" aria-hidden="true">↺</div>
+              </div>
+              <div class="raw-text">Termin bei Auto Senger machen für Inspektion und Reifenwechsel</div>
+            </div>
+            <div class="path-hint">
+              Zurücksetzen: Symbol neben dem Titel tippen. 1 Schritt.
+            </div>
+          </div>
+        </div>
+        <p class="caption">Erscheint nur, wenn <code class="field">titleSourceRaw == .ai</code> ist. Kein neues Feld, kein Schema-Wechsel.</p>
+      </figure>
+    </div>
+    <div class="verdict">
+      <h3>Umfang</h3>
+      <p>1 Datei (<code class="field">TaskDetailView.swift</code>), ~20 Zeilen, 1 UI-Test. Kein ADR-Konflikt, keine offene Frage — wird so gebaut.</p>
+    </div>
+  </section>
+
+  <!-- ===================== PUNKT 2 ===================== -->
+  <section class="block">
+    <div class="block-head">
+      <h2>2 · Titel darf nichts wortlos verschlucken</h2>
+      <p>
+        Ursache liegt nicht in der Anzeige, sondern im Prompt: die KI wird angewiesen, auf
+        <b>höchstens acht Wörter</b> zu kürzen (<code class="field">FoundationModelsEnricher.swift:27</code>).
+        Der volle Rohtext steht zwar schon heute klein im Detail — aber der Titel selbst verliert
+        seine Bedeutung. Drei Wege, verglichen an Hennings eigenem Beispiel.
+      </p>
+    </div>
+
+    <div class="row-grid">
+      <figure class="frame">
+        <div class="frame-label">Heute <span class="badge warn">Bug</span></div>
+        <div class="screen">
+          <div class="status"><span>9:41</span><span>●●●●</span></div>
+          <div class="list">
+            <div class="cell tight">
+              <div class="title-line">
+                <span>Termin bei Auto Senger machen</span>
+                <svg class="sparkle" viewBox="0 0 24 24"><path d="M12 0c1 5 3 7 8 8-5 1-7 3-8 8-1-5-3-7-8-8 5-1 7-3 8-8z"/></svg>
+              </div>
+              <div class="trait-line">📅 Mo. 09:00</div>
+            </div>
+          </div>
+        </div>
+        <p class="caption">„für Inspektion und Reifenwechsel" ist weg — nur über Detail → Rohtext wiederzufinden.</p>
+      </figure>
+
+      <figure class="frame">
+        <div class="frame-label">Entwurf A <span class="badge good">Empfehlung</span></div>
+        <div class="screen">
+          <div class="status"><span>9:41</span><span>●●●●</span></div>
+          <div class="list">
+            <div class="cell tight">
+              <div class="title-line">
+                <span>Termin Auto Senger: Inspektion, Reife…</span>
+                <svg class="sparkle" viewBox="0 0 24 24"><path d="M12 0c1 5 3 7 8 8-5 1-7 3-8 8-1-5-3-7-8-8 5-1 7-3 8-8z"/></svg>
+              </div>
+              <div class="trait-line">📅 Mo. 09:00</div>
+            </div>
+          </div>
+          <div class="list" style="padding-top:0;">
+            <div class="detail-cell" style="gap:2px;">
+              <div class="title-field-row"><div class="title-field" style="font-size:13px; white-space:normal;">Termin bei Auto Senger für Inspektion und Reifenwechsel machen</div></div>
+              <div class="path-hint" style="border:none; padding-top:2px; margin-top:0;">Beim Öffnen: vollständig, ohne Kürzung — nichts geht verloren.</div>
+            </div>
+          </div>
+        </div>
+        <p class="caption">Prompt gelockert (mehr Wörter erlaubt, Zweck/Objekt darf nicht wegfallen). In der Liste kürzt iOS die eine Zeile wie bei jedem langen Titel schon heute — beim Öffnen steht der volle Titel unverkürzt da. Kein neues Bedienelement, kein Antippen zum Nachschauen nötig.</p>
+      </figure>
+
+      <figure class="frame">
+        <div class="frame-label">Entwurf B <span class="badge warn">kippt ADR</span></div>
+        <div class="screen">
+          <div class="status"><span>9:41</span><span>●●●●</span></div>
+          <div class="list">
+            <div class="cell tight">
+              <div class="title-line wrap2">
+                <span>Termin bei Auto Senger für Inspektion und Reifenwechsel</span>
+                <svg class="sparkle" viewBox="0 0 24 24"><path d="M12 0c1 5 3 7 8 8-5 1-7 3-8 8-1-5-3-7-8-8 5-1 7-3 8-8z"/></svg>
+              </div>
+              <div class="trait-line">📅 Mo. 09:00</div>
+            </div>
+          </div>
+        </div>
+        <p class="caption">Titel zweizeilig in der ganzen Liste. Widerspricht direkt „Zeile nie höher als Titel + eine Merkmalzeile" (Design-Briefing, ADR-14) — müsste bewusst gekippt werden.</p>
+      </figure>
+
+      <figure class="frame">
+        <div class="frame-label">Entwurf C <span class="badge warn">redundant / mehr Modell</span></div>
+        <div class="screen">
+          <div class="status"><span>9:41</span><span>●●●●</span></div>
+          <div class="list">
+            <div class="cell tight">
+              <div class="title-line">
+                <span>Termin bei Auto Senger machen</span>
+                <svg class="sparkle" viewBox="0 0 24 24"><path d="M12 0c1 5 3 7 8 8-5 1-7 3-8 8-1-5-3-7-8-8 5-1 7-3 8-8z"/></svg>
+              </div>
+              <div class="trait-line">📅 Mo. 09:00</div>
+            </div>
+          </div>
+          <div class="list" style="padding-top:0;">
+            <div class="detail-cell" style="gap:4px;">
+              <div class="title-field-row"><div class="title-field" style="font-size:14.5px;">Termin bei Auto Senger machen</div></div>
+              <div class="subhead">für Inspektion und Reifenwechsel</div>
+            </div>
+          </div>
+        </div>
+        <p class="caption">Liste bleibt gleich, Detail bekommt feste Unterzeile. Entweder identisch zum bereits sichtbaren Rohtext darunter, oder ein neues KI-Feld — beides ohne klaren Zusatznutzen zu A.</p>
+      </figure>
+    </div>
+
+    <div class="verdict">
+      <h3>Empfehlung</h3>
+      <p><b>A</b> — den Prompt lockern, statt die Anzeige umzubauen. Behebt die Ursache dort, wo der Inhalt tatsächlich verloren geht, ohne ADR-14 („Zeile nie höher als Titel + eine Merkmalzeile") anzutasten. Titelerzeugung bleibt zu Recht Modellsache: freien Text sinnvoll zu einem Titel zu verdichten ist keine regelbasierte Aufgabe, „Regeln vor Modell" verlangt hier keine Regel.</p>
+      <h3 style="margin-top:14px;">Alternativen, die dafür verworfen würden</h3>
+      <p><b>B</b> kippt eine bestehende ADR-Festlegung zur Zeilenhöhe der Liste — nur mit ausdrücklicher Freigabe. <b>C</b> ist entweder eine Dopplung des ohnehin sichtbaren Rohtexts oder verlangt ein zusätzliches Modellfeld — ein Rückschritt gegen „Regeln vor Modell", nicht dafür.</p>
+    </div>
+  </section>
+
+  <footer class="page">
+    Entwurf aus Farb-/Schrift-/Abstandswerten der aktuellen Views gebaut, kein Simulator-Screenshot.
+    Auf Wunsch folgt vor der Umsetzung ein echter Gerätevergleich.
+  </footer>
+</div>
+
+<script>
+(function () {
+  try {
+    var root = document.documentElement;
+    var btn = document.getElementById('themeToggle');
+    var icon = document.getElementById('themeIcon');
+    var label = document.getElementById('themeLabel');
+    function apply(mode) {
+      if (mode === 'dark') {
+        root.setAttribute('data-theme', 'dark');
+        icon.textContent = '☀︎';
+        label.textContent = 'Hell anzeigen';
+      } else {
+        root.setAttribute('data-theme', 'light');
+        icon.textContent = '☾';
+        label.textContent = 'Dunkel anzeigen';
+      }
+    }
+    var current = 'light';
+    try {
+      var saved = localStorage.getItem('titel-treue-theme');
+      if (saved === 'dark' || saved === 'light') current = saved;
+    } catch (e) {}
+    apply(current);
+    btn.addEventListener('click', function () {
+      current = current === 'dark' ? 'light' : 'dark';
+      apply(current);
+      try { localStorage.setItem('titel-treue-theme', current); } catch (e) {}
+    });
+  } catch (e) {}
+})();
+</script>

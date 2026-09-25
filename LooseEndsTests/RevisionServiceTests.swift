@@ -97,6 +97,22 @@ import Testing
         #expect(task.titleConfidence == nil)
     }
 
+    @Test("A user-authored title never shows the AI reset affordance (Bug #125, AC-3)")
+    @MainActor func aiSetFieldsExcludesUserTitle() async throws {
+        let store = try TestStore()
+        let garden = TaskContext(name: "Garten")
+        store.context.insert(garden)
+        let task = TaskItem(rawText: "Rasen mähen")
+        store.context.insert(task)
+
+        RevisionService.set(.title, to: "Rasen mähen", on: task, contexts: [garden], projects: [])
+        try store.context.save()
+
+        #expect(task.title == "Rasen mähen")
+        #expect(task.titleSourceRaw == "user")
+        #expect(!RevisionService.aiSetFields(on: task).contains(.title))
+    }
+
     @Test("Marking seen clears the marker and takes an active task out of New")
     @MainActor func markSeen() async throws {
         let store = try TestStore()
