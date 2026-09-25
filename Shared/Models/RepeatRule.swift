@@ -41,6 +41,15 @@ struct RepeatRule: Codable, Hashable, Sendable {
             return calendar.date(byAdding: .year, value: step, to: anchor) ?? anchor
         }
     }
+
+    /// First due date for a freshly created rule (#127). No date logic of its own: it takes the next
+    /// period from `nextDueDate` (no previous due date, so `now` is the anchor) and puts the rule's
+    /// time on it, or falls back to the start of that day when the rule carries no time.
+    func firstDueDate(now: Date = .now, calendar: Calendar = .current) -> Date {
+        let next = nextDueDate(previousDue: nil, completedOn: now, calendar: calendar)
+        guard let hour, let minute else { return calendar.startOfDay(for: next) }
+        return calendar.date(bySettingHour: hour, minute: minute, second: 0, of: next) ?? next
+    }
 }
 
 extension RepeatRule {

@@ -224,8 +224,14 @@ struct FieldEditorView: View {
         }
     }
 
+    /// A brand new rule without a due date gets an implicit first one, so the task reaches
+    /// `DueReminders.plan` at all (#127). An existing due date is never overwritten.
     private func applyRepeat(_ rule: RepeatRule?) {
+        let isNewRule = task.repeatRule == nil && rule != nil
         apply(rule.flatMap(FieldCodec.encode))
+        if isNewRule, let rule, task.dueDate == nil {
+            setDue(rule.firstDueDate(), hasTime: rule.hour != nil)
+        }
     }
 
     // MARK: - Writes

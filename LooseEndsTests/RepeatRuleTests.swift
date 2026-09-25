@@ -13,6 +13,16 @@ import Testing
 /// aufgerufen und direkt getestet wird).
 @Suite("Regelschritt: Wiederholungs-Uhrzeit")
 struct RepeatRuleTests {
+    private func berlin() throws -> Calendar {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = try #require(TimeZone(identifier: "Europe/Berlin"))
+        return calendar
+    }
+
+    private func date(_ day: Int, hour: Int, minute: Int = 0, in calendar: Calendar) throws -> Date {
+        try #require(calendar.date(from: DateComponents(year: 2026, month: 9, day: day, hour: hour, minute: minute)))
+    }
+
     @Test("Eine im Rohtext erkannte Uhrzeit wird geliefert (AC-1)")
     func timeGuessFindsTime() {
         let guess = RepeatRule.timeGuess(from: "Jeden Tag um 7 Uhr die Tabletten nehmen")
@@ -82,5 +92,46 @@ struct RepeatRuleTests {
     @Test("Der Regelschritt liegt im Produktmodul")
     func ruleLivesInProductModule() {
         #expect(String(reflecting: RepeatRule.self).hasPrefix("LooseEnds."))
+    }
+
+    // MARK: - #127: implizites erstes Fälligkeitsdatum
+
+    @Test("firstDueDate kombiniert den nächsten Termin mit der gespeicherten Uhrzeit (AC-1)")
+    func firstDueDateUsesStoredTime() throws {
+        let calendar = try berlin()
+        var rule = RepeatRule(frequency: .daily)
+        rule.hour = 19
+        rule.minute = 0
+        let now = try date(24, hour: 8, in: calendar)
+
+        let due = rule.firstDueDate(now: now, calendar: calendar)
+
+        #expect(due == (try date(25, hour: 19, in: calendar)))
+    }
+
+    @Test("firstDueDate faellt ohne gespeicherte Uhrzeit auf den Tagesbeginn zurueck (AC-1)")
+    func firstDueDateWithoutTimeFallsBackToStartOfDay() throws {
+        let calendar = try berlin()
+        let rule = RepeatRule(frequency: .weekly, weekdays: [2, 4])
+        let now = try date(24, hour: 8, in: calendar)
+
+        let due = rule.firstDueDate(now: now, calendar: calendar)
+        let expectedNext = rule.nextDueDate(previousDue: nil, completedOn: now, calendar: calendar)
+
+        #expect(due == calendar.startOfDay(for: expectedNext))
+    }
+
+    @Test("firstDueDate reicht den bestehenden Wochentag-losen Ruecksprung von nextDueDate unveraendert durch (AC-1, Risiko 3)")
+    func firstDueDateWeeklyWithoutWeekdaysReusesFallback() throws {
+        let calendar = try berlin()
+        var rule = RepeatRule(frequency: .weekly)
+        rule.hour = 8
+        rule.minute = 0
+        let now = try date(24, hour: 8, in: calendar)
+
+        let due = rule.firstDueDate(now: now, calendar: calendar)
+        let expectedNext = rule.nextDueDate(previousDue: nil, completedOn: now, calendar: calendar)
+
+        #expect(due == expectedNext, "gleiche Uhrzeit wie der Anker macht das Setzen der Stunde zum No-Op — belegt den unveraenderten +7x-Ruecksprung")
     }
 }
