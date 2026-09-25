@@ -1,0 +1,16 @@
+[0;34m[sim][0m iOS-Build für iPhone 17 (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1), DerivedData default
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (4 targets)
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[32;1mBuild Succeeded[0m
+[0;32m[sim][0m Build erfolgreich.
+EXIT=0
