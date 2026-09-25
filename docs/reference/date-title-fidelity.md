@@ -3,8 +3,8 @@
 | | |
 |---|---|
 | Gerät | iPhone17,1, iOS 27.0 |
-| Messtage | 2026-09-20 |
-| Korpus | 317 Sätze; ausgewertet: 138 mit Datum, 170 ohne Datum als Kontrolle |
+| Messtage | 2026-09-20, 2026-09-25 |
+| Korpus | 319 Sätze; ausgewertet: 139 mit Datum, 172 ohne Datum als Kontrolle |
 | Fehlversuche | 23, davon gedrosselt: 11 |
 | Sekunden je Satz | 8.8 |
 
@@ -17,9 +17,9 @@ deterministische Alternative aus dem Issue, auf denselben Sätzen.
 
 | Messung | Modell | NSDataDetector | Regelparser |
 |---|---|---|---|
-| Exakt getroffen | 50.0 % von 138 | 65.5 % von 139 | 99.3 % von 139 |
-| Feld leer gelassen statt geraten | 1 | 41 | 1 |
-| Erfundene Daten bei Sätzen ohne Datum | 96.5 % von 170 | 0.0 % von 170 | 0.0 % von 170 |
+| Exakt getroffen | 49.6 % von 139 | 67.6 % von 139 | 99.3 % von 139 |
+| Feld leer gelassen statt geraten | 2 | 41 | 1 |
+| Erfundene Daten bei Sätzen ohne Datum | 95.3 % von 172 | 0.0 % von 172 | 0.0 % von 172 |
 
 ### Nach Art des Ausdrucks
 
@@ -31,7 +31,7 @@ deterministische Alternative aus dem Issue, auf denselben Sätzen.
 | bis zum N. | 9 | 22.2 % | 0 | 100.0 % |
 | nächster <Tag> | 9 | 22.2 % | 0 | 100.0 % |
 | festes Datum | 6 | 33.3 % | 0 | 100.0 % |
-| in N Tagen / morgen | 55 | 78.2 % | 1 | 100.0 % |
+| in N Tagen / morgen | 56 | 76.8 % | 2 | 100.0 % |
 | Monatsende | 11 | 81.8 % | 0 | 100.0 % |
 | nächster Monat | 6 | 100.0 % | 0 | 100.0 % |
 
@@ -46,7 +46,7 @@ deterministische Alternative aus dem Issue, auf denselben Sätzen.
 | hintergrund, akku | 1 | 100.0 % |
 | hintergrund, akku, fair | 2 | 50.0 % |
 | inaktiv, akku | 2 | 100.0 % |
-| vordergrund, akku | 19 | 31.6 % |
+| vordergrund, akku | 20 | 30.0 % |
 | vordergrund, akku, fair | 30 | 56.7 % |
 | vordergrund, akku, serious | 10 | 60.0 % |
 | vordergrund, strom | 2 | 50.0 % |
@@ -59,13 +59,13 @@ Laufen die Zeilen auseinander, hängt die Qualität an Vordergrund, Strom oder W
 
 | Bauform | Sätze | Datum exakt | Datum erfunden | Titel ohne erfundene Fakten |
 |---|---|---|---|---|
-| standard | 186 | 47.1 % von 102 | 97.6 % von 84 | 100.0 % |
+| standard | 188 | 47.1 % von 102 | 95.3 % von 86 | 100.0 % |
 | stichwort | 12 | 50.0 % von 2 | 100.0 % von 10 | 100.0 % |
 | ich-satz | 11 | 33.3 % von 3 | 100.0 % von 8 | 100.0 % |
 | nebensatz | 11 | 100.0 % von 3 | 87.5 % von 8 | 100.0 % |
 | frage | 11 | 0.0 % von 1 | 90.0 % von 10 | 100.0 % |
 | diktat | 12 | 60.0 % von 5 | 100.0 % von 7 | 91.7 % |
-| zeit-hinten | 10 | 60.0 % von 10 | – | 100.0 % |
+| zeit-hinten | 11 | 54.5 % von 11 | – | 100.0 % |
 | zwei-aufgaben | 11 | 50.0 % von 2 | 100.0 % von 9 | 100.0 % |
 | denglisch | 11 | 50.0 % von 2 | 88.9 % von 9 | 100.0 % |
 | tippfehler | 11 | 50.0 % von 2 | 88.9 % von 9 | 100.0 % |
@@ -78,8 +78,8 @@ Laufen die Zeilen auseinander, hängt die Qualität an Vordergrund, Strom oder W
 
 | Messung | Anteil |
 |---|---|
-| Entitäten aus dem Rohtext erhalten (396 geprüft) | 84.3 % |
-| Titel ohne erfundene Fakten (Zahlen, verdrehte Namen) | 99.7 % von 308 |
+| Entitäten aus dem Rohtext erhalten (404 geprüft) | 84.7 % |
+| Titel ohne erfundene Fakten (Zahlen, verdrehte Namen) | 99.7 % von 311 |
 | Titel ganz ohne Fremdwörter | 62.7 % |
 
 Erfundene Fakten sind das Abbruchkriterium. Fremdwörter zeigen nur, wie stark das Modell
@@ -89,13 +89,13 @@ umformuliert; umformulieren ist erlaubt, solange nichts erfunden wird.
 
 | Kriterium | Grenze | Gemessen | Ergebnis |
 |---|---|---|---|
-| Datum exakt | ≥ 95 % | 50.0 % | **gerissen** |
-| Erfundene Daten | ≤ 2 % | 96.5 % | **gerissen** |
+| Datum exakt | ≥ 95 % | 49.6 % | **gerissen** |
+| Erfundene Daten | ≤ 2 % | 95.3 % | **gerissen** |
 | Titel mit erfundenen Fakten | ≤ 2 % | 0.3 % | gehalten |
 
 ## Was danebenging
 
-### Falsches Datum (69)
+### Falsches Datum (70)
 
 - `Übermorgen das Auto in die Werkstatt bringen` → 2026-09-21 statt 2026-09-22
 - `Übermorgen um 9 Uhr die Zählerstände durchgeben` → 2026-09-21 statt 2026-09-22

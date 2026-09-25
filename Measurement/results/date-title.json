@@ -349,6 +349,81 @@
       "at" : "2026-09-20T13:23:52Z",
       "kind" : "finished",
       "note" : "316 von 317"
+    },
+    {
+      "at" : "2026-09-20T13:25:52Z",
+      "kind" : "scene",
+      "note" : "inaktiv"
+    },
+    {
+      "at" : "2026-09-20T13:25:54Z",
+      "kind" : "scene",
+      "note" : "vordergrund"
+    },
+    {
+      "at" : "2026-09-20T13:25:54Z",
+      "kind" : "scene",
+      "note" : "hintergrund"
+    },
+    {
+      "at" : "2026-09-20T13:37:53Z",
+      "kind" : "scene",
+      "note" : "inaktiv"
+    },
+    {
+      "at" : "2026-09-20T13:37:54Z",
+      "kind" : "scene",
+      "note" : "vordergrund"
+    },
+    {
+      "at" : "2026-09-20T13:37:54Z",
+      "kind" : "scene",
+      "note" : "inaktiv"
+    },
+    {
+      "at" : "2026-09-20T13:37:54Z",
+      "kind" : "scene",
+      "note" : "hintergrund"
+    },
+    {
+      "at" : "2026-09-25T12:22:14Z",
+      "kind" : "app",
+      "note" : "gestartet; Argumente: --measure; Korpus: 319 Sätze"
+    },
+    {
+      "at" : "2026-09-25T12:22:14Z",
+      "kind" : "model",
+      "note" : "verfügbar"
+    },
+    {
+      "at" : "2026-09-25T12:22:15Z",
+      "kind" : "start",
+      "note" : "--measure; 316 von 319 erledigt"
+    },
+    {
+      "at" : "2026-09-25T12:22:15Z",
+      "kind" : "scene",
+      "note" : "vordergrund"
+    },
+    {
+      "at" : "2026-09-25T12:22:32Z",
+      "kind" : "finished",
+      "note" : "319 von 319"
+    },
+    {
+      "at" : "2026-09-25T12:24:39Z",
+      "kind" : "scene",
+      "note" : "inaktiv"
+    },
+    {
+      "at" : "2026-09-25T12:24:41Z",
+      "kind" : "scene",
+      "note" : "vordergrund"
+    },
+    {
+      "at" : "2026-09-25T12:24:41Z",
+      "kind" : "scene",
+      "note" : "hintergrund"
     }
   ],
   "name" : "date-title",
@@ -364,6 +439,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-heute-1",
@@ -371,6 +449,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 12.141085982322693,
       "title" : "Mülltonne rausstellen"
     },
@@ -385,6 +464,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T18:00:00Z",
       "dueHasTime" : true,
       "entryID" : "de-heute-2",
@@ -392,6 +474,7 @@
       "people" : [
         "Oma"
       ],
+      "runIndex" : 0,
       "seconds" : 8.9170480966568,
       "title" : "Oma anrufen"
     },
@@ -406,6 +489,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-heute-3",
@@ -413,6 +499,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.63054895401001,
       "title" : "Paket zur Post bringen"
     },
@@ -427,6 +514,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-morgen-1",
@@ -434,6 +524,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.23914897441864,
       "title" : "Termin beim Zahnarzt vereinbaren"
     },
@@ -448,6 +539,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-morgen-2",
       "error" : "Error Domain=FoundationModels.LanguageModelError Code=-1 \"The operation couldn’t be completed. (com.apple.SensitiveContentAnalysisML error 15.)\" UserInfo={NSLocalizedDescription=The operation couldn’t be completed. (com.apple.SensitiveContentAnalysisML error 15.), NSMultipleUnderlyingErrorsKey=(\n    \"Error Domain=com.apple.SensitiveContentAnalysisML Code=15 \\\"(null)\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\n    \\\"Error Domain=SensitiveContentAnalysisML.CombinedTextSanitizerBackend.BackendError Code=1 \\\\\\\"(null)\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\n    \\\\\\\"Error Domain=ModelManagerServices.ModelManagerError Code=1043 \\\\\\\\\\\\\\\"(null)\\\\\\\\\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\\\\\n)}\\\\\\\"\\\\n)}\\\"\\n)}\"\n)}",
@@ -455,6 +549,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 0.42699694633483887
     },
     {
@@ -468,6 +563,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-morgen-3",
       "error" : "Request has been rate limited. Please try again later.\n\nIf you are using streaming responses in a background request, consider using non-streaming requests in background activities to reduce the likelihood of rate limiting.",
@@ -475,6 +573,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 0.05640411376953125
     },
     {
@@ -488,6 +587,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-morgen-4",
       "error" : "Request has been rate limited. Please try again later.\n\nIf you are using streaming responses in a background request, consider using non-streaming requests in background activities to reduce the likelihood of rate limiting.",
@@ -495,6 +597,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 0.033056020736694336
     },
     {
@@ -508,6 +611,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-morgen-2",
@@ -515,6 +621,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.856651067733765,
       "title" : "Den Hund zum Tierarzt bringen"
     },
@@ -529,6 +636,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-morgen-3",
@@ -536,6 +646,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.137885928153992,
       "title" : "Morgen die Kita anrufen"
     },
@@ -550,6 +661,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-morgen-4",
@@ -557,6 +671,7 @@
       "people" : [
         "Sven"
       ],
+      "runIndex" : 0,
       "seconds" : 7.63587498664856,
       "title" : "Präsentation für Sven fertigstellen"
     },
@@ -571,6 +686,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T12:00:00Z",
       "dueHasTime" : true,
       "entryID" : "de-morgen-5",
@@ -578,6 +696,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.862020015716553,
       "title" : "Rückruf um 14 Uhr"
     },
@@ -592,6 +711,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-uebermorgen-1",
@@ -599,6 +721,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.287177920341492,
       "title" : "Rasen morgen mähen"
     },
@@ -613,6 +736,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-uebermorgen-2",
@@ -620,6 +746,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 11.271291971206665,
       "title" : "Auto in Werkstatt bringen"
     },
@@ -634,6 +761,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-uebermorgen-3",
@@ -641,6 +771,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 13.861737966537476,
       "title" : "Zählerstände durchgeben"
     },
@@ -655,6 +786,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-wochentag-1",
       "error" : "Error Domain=FoundationModels.LanguageModelError Code=-1 \"The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)\" UserInfo={NSLocalizedDescription=The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.), NSMultipleUnderlyingErrorsKey=(\n    \"Error Domain=FoundationModels.LanguageModelError Code=-1 \\\"(null)\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\n    \\\"Error Domain=FoundationModels.LanguageModelError Code=-1 \\\\\\\"(null)\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\n    \\\\\\\"Error Domain=com.apple.SensitiveContentAnalysisML Code=15 \\\\\\\\\\\\\\\"(null)\\\\\\\\\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\\\\\n    \\\\\\\\\\\\\\\"Error Domain=SensitiveContentAnalysisML.CombinedTextSanitizerBackend.BackendError Code=1 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"(null)\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\\\\\\\\\\\\\n    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Error Domain=ModelManagerServices.ModelManagerError Code=1043 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"(null)\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\n)}\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\\n)}\\\\\\\\\\\\\\\"\\\\\\\\n)}\\\\\\\"\\\\n)}\\\"\\n)}\"\n)}",
@@ -662,6 +796,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 6.480123996734619
     },
     {
@@ -675,6 +810,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-wochentag-2",
       "error" : "Request has been rate limited. Please try again later.\n\nIf you are using streaming responses in a background request, consider using non-streaming requests in background activities to reduce the likelihood of rate limiting.",
@@ -682,6 +820,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 0.13842809200286865
     },
     {
@@ -695,6 +834,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-wochentag-3",
       "error" : "Request has been rate limited. Please try again later.\n\nIf you are using streaming responses in a background request, consider using non-streaming requests in background activities to reduce the likelihood of rate limiting.",
@@ -702,6 +844,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 0.044216036796569824
     },
     {
@@ -715,6 +858,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-23T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-wochentag-1",
@@ -722,6 +868,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.137172937393188,
       "title" : "Bewerbung am Montag senden"
     },
@@ -736,6 +883,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-wochentag-2",
@@ -743,6 +893,7 @@
       "people" : [
         "Frau Kowalski"
       ],
+      "runIndex" : 0,
       "seconds" : 7.994864106178284,
       "title" : "Vertrag von Frau Kowalski unterzeichnen"
     },
@@ -757,6 +908,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-wochentag-3",
       "error" : "Error Domain=FoundationModels.LanguageModelError Code=-1 \"The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)\" UserInfo={NSMultipleUnderlyingErrorsKey=(\n    \"Error Domain=FoundationModels.LanguageModelError Code=-1 \\\"(null)\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\n    \\\"Error Domain=FoundationModels.LanguageModelError Code=-1 \\\\\\\"(null)\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\n    \\\\\\\"Error Domain=com.apple.SensitiveContentAnalysisML Code=15 \\\\\\\\\\\\\\\"(null)\\\\\\\\\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\\\\\n    \\\\\\\\\\\\\\\"Error Domain=SensitiveContentAnalysisML.CombinedTextSanitizerBackend.BackendError Code=1 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"(null)\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\\\\\\\\\\\\\n    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Error Domain=ModelManagerServices.ModelManagerError Code=1043 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"(null)\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\n)}\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\\n)}\\\\\\\\\\\\\\\"\\\\\\\\n)}\\\\\\\"\\\\n)}\\\"\\n)}\"\n), NSLocalizedDescription=The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)}",
@@ -764,6 +918,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 2.8354129791259766
     },
     {
@@ -777,6 +932,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-wochentag-4",
       "error" : "Request has been rate limited. Please try again later.\n\nIf you are using streaming responses in a background request, consider using non-streaming requests in background activities to reduce the likelihood of rate limiting.",
@@ -784,6 +942,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 0.06869399547576904
     },
     {
@@ -797,6 +956,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-wochentag-5",
       "error" : "Request has been rate limited. Please try again later.\n\nIf you are using streaming responses in a background request, consider using non-streaming requests in background activities to reduce the likelihood of rate limiting.",
@@ -804,6 +966,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 0.02209603786468506
     },
     {
@@ -817,6 +980,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-23T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-wochentag-3",
@@ -824,6 +990,7 @@
       "people" : [
         "Andrea"
       ],
+      "runIndex" : 0,
       "seconds" : 11.5903000831604,
       "title" : "Blumen für Andrea besorgen"
     },
@@ -838,6 +1005,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-wochentag-4",
       "error" : "Error Domain=FoundationModels.LanguageModelError Code=-1 \"The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)\" UserInfo={NSMultipleUnderlyingErrorsKey=(\n    \"Error Domain=FoundationModels.LanguageModelError Code=-1 \\\"(null)\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\n    \\\"Error Domain=FoundationModels.LanguageModelError Code=-1 \\\\\\\"(null)\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\n    \\\\\\\"Error Domain=com.apple.SensitiveContentAnalysisML Code=15 \\\\\\\\\\\\\\\"(null)\\\\\\\\\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\\\\\n    \\\\\\\\\\\\\\\"Error Domain=SensitiveContentAnalysisML.CombinedTextSanitizerBackend.BackendError Code=1 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"(null)\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\\\\\\\\\\\\\n    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Error Domain=ModelManagerServices.ModelManagerError Code=1043 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"(null)\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\" UserInfo={NSMultipleUnderlyingErrorsKey=(\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\n)}\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\\n)}\\\\\\\\\\\\\\\"\\\\\\\\n)}\\\\\\\"\\\\n)}\\\"\\n)}\"\n), NSLocalizedDescription=The operation couldn’t be completed. (FoundationModels.LanguageModelError error -1.)}",
@@ -845,6 +1015,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 6.795740962028503
     },
     {
@@ -858,6 +1029,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-wochentag-5",
       "error" : "Request has been rate limited. Please try again later.\n\nIf you are using streaming responses in a background request, consider using non-streaming requests in background activities to reduce the likelihood of rate limiting.",
@@ -865,6 +1039,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 0.22964096069335938
     },
     {
@@ -878,6 +1053,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-wochentag-6",
       "error" : "Request has been rate limited. Please try again later.\n\nIf you are using streaming responses in a background request, consider using non-streaming requests in background activities to reduce the likelihood of rate limiting.",
@@ -885,6 +1063,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 0.032775044441223145
     },
     {
@@ -898,6 +1077,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-wochentag-4",
@@ -905,6 +1087,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 21.40520203113556,
       "title" : "Fahrräder zum Service bringen"
     },
@@ -919,6 +1102,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-wochentag-5",
       "error" : "Request has been rate limited. Please try again later.\n\nIf you are using streaming responses in a background request, consider using non-streaming requests in background activities to reduce the likelihood of rate limiting.",
@@ -926,6 +1112,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 27.20339000225067
     },
     {
@@ -939,6 +1126,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-wochentag-6",
       "error" : "Request has been rate limited. Please try again later.\n\nIf you are using streaming responses in a background request, consider using non-streaming requests in background activities to reduce the likelihood of rate limiting.",
@@ -946,6 +1136,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 0.035623908042907715
     },
     {
@@ -959,6 +1150,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-wochentag-7",
       "error" : "Request has been rate limited. Please try again later.\n\nIf you are using streaming responses in a background request, consider using non-streaming requests in background activities to reduce the likelihood of rate limiting.",
@@ -966,6 +1160,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 0.08769500255584717
     },
     {
@@ -979,6 +1174,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-wochentag-5",
@@ -986,6 +1184,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 10.966248989105225,
       "title" : "Bericht an Geschäftsführung geben"
     },
@@ -1000,6 +1199,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-22T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-wochentag-6",
@@ -1007,6 +1209,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.494073033332825,
       "title" : "Keller aufräumen Samstag"
     },
@@ -1021,6 +1224,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-wochentag-7",
@@ -1028,6 +1234,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.650965929031372,
       "title" : "Braten für 6 Personen vorbereiten"
     },
@@ -1042,6 +1249,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-wochentag-8",
@@ -1049,6 +1259,7 @@
       "people" : [
         "Dr. Behrens"
       ],
+      "runIndex" : 0,
       "seconds" : 7.644162893295288,
       "title" : "Rückruf bei Dr. Behrens"
     },
@@ -1063,6 +1274,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-22T06:00:00Z",
       "dueHasTime" : true,
       "entryID" : "de-wochentag-9",
@@ -1070,6 +1284,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.4984670877456665,
       "title" : "Versenden um 8 Uhr"
     },
@@ -1084,6 +1299,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-23T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-naechster-wt-1",
@@ -1091,6 +1309,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.739000916481018,
       "title" : "Reifen am Montag wechseln"
     },
@@ -1105,6 +1324,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-23T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-naechster-wt-2",
@@ -1112,6 +1334,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.459270000457764,
       "title" : "Antrag bei der Stadt einreichen"
     },
@@ -1126,6 +1349,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-28T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-naechster-wt-3",
@@ -1133,6 +1359,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.512246012687683,
       "title" : "Zuschuss beantragen"
     },
@@ -1147,6 +1374,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-24T09:00:00Z",
       "dueHasTime" : true,
       "entryID" : "de-naechster-wt-4",
@@ -1154,6 +1384,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.496649980545044,
       "title" : "Physiotherapie bei 11 Uhr"
     },
@@ -1168,6 +1399,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-naechste-woche-wt-1",
@@ -1175,6 +1409,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.740301966667175,
       "title" : "Steuererklärung morgen einreichen"
     },
@@ -1189,6 +1424,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-25T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-naechste-woche-wt-2",
@@ -1196,6 +1434,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.244884967803955,
       "title" : "Kundentermin bestätigen"
     },
@@ -1210,6 +1449,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-24T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-naechste-woche-wt-3",
@@ -1217,6 +1459,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.891443967819214,
       "title" : "Urlaubsantrag Montag stellen"
     },
@@ -1231,6 +1474,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-naechste-woche-wt-4",
@@ -1238,6 +1484,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.707813024520874,
       "title" : "Tickets für Hamburg buchen"
     },
@@ -1252,6 +1499,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kommender-wt-1",
@@ -1259,6 +1509,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.612157940864563,
       "title" : "Tonne an die Straße stellen"
     },
@@ -1273,6 +1524,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-23T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kommender-wt-2",
@@ -1280,6 +1534,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.637427091598511,
       "title" : "Das Protokoll verschicken"
     },
@@ -1294,6 +1549,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-22T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-in-tagen-1",
@@ -1301,6 +1559,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 13.139590978622437,
       "title" : "Rechnung bezahlen"
     },
@@ -1315,6 +1574,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-in-tagen-2",
       "error" : "CancellationError()",
@@ -1322,6 +1584,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 543.3207139968872
     },
     {
@@ -1335,6 +1598,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-in-tagen-2",
       "error" : "CancellationError()",
@@ -1343,6 +1609,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 2.3505619764328003
     },
     {
@@ -1356,6 +1623,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-29T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-in-tagen-2",
@@ -1363,6 +1633,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 10.381129026412964,
       "title" : "Katze impfen lassen"
     },
@@ -1377,6 +1648,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-29T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-in-tagen-3",
@@ -1384,6 +1658,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.870296955108643,
       "title" : "Termin beim Amt bestätigen"
     },
@@ -1398,6 +1673,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-in-tagen-4",
@@ -1405,6 +1683,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.615072011947632,
       "title" : "21 Tagen Garantie belegen"
     },
@@ -1419,6 +1698,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-in-tagen-5",
@@ -1426,6 +1708,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.402647972106934,
       "title" : "Bestellung verfolgen"
     },
@@ -1440,6 +1723,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-26T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-in-woche-1",
@@ -1447,6 +1733,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.925321936607361,
       "title" : "Nach Vermieter fragen"
     },
@@ -1461,6 +1748,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-10-03T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-in-woche-2",
@@ -1468,6 +1758,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.44755506515503,
       "title" : "Überprüfung Zahlung 250 Euro"
     },
@@ -1482,6 +1773,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-in-woche-3",
@@ -1489,6 +1783,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.808215975761414,
       "title" : "Vertrag in vier Wochen kündigen"
     },
@@ -1503,6 +1798,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-29T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-monatsende-1",
@@ -1510,6 +1808,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.886690974235535,
       "title" : "Miete bis Ende Monat zahlen"
     },
@@ -1524,6 +1823,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-29T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-monatsende-2",
@@ -1531,6 +1833,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.124243021011353,
       "title" : "Zählerstand ablesen"
     },
@@ -1545,6 +1848,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-29T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-monatsende-3",
@@ -1552,6 +1858,7 @@
       "people" : [
         "Sven"
       ],
+      "runIndex" : 0,
       "seconds" : 9.371810913085938,
       "title" : "Abschicken Abrechnung Sven"
     },
@@ -1566,6 +1873,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-22T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-tag-im-monat-1",
@@ -1573,6 +1883,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.37247896194458,
       "title" : "Vertrag bis zum 3. kündigen"
     },
@@ -1587,6 +1898,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-14T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-tag-im-monat-2",
@@ -1594,6 +1908,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.219284057617188,
       "title" : "Unterlagen bis zum 15. einreichen"
     },
@@ -1608,6 +1923,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-tag-im-monat-3",
@@ -1615,6 +1933,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.127615928649902,
       "title" : "Überweisung am 20. stellen"
     },
@@ -1629,6 +1948,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-27T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-tag-im-monat-4",
@@ -1636,6 +1958,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.669149041175842,
       "title" : "Bis zum 8. Zählerkarte abgeben"
     },
@@ -1650,6 +1973,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-wochenende-1",
@@ -1657,6 +1983,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.20166301727295,
       "title" : "Garage aufräumen am Wochenende"
     },
@@ -1671,6 +1998,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-22T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-wochenende-2",
@@ -1678,6 +2008,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.495640993118286,
       "title" : "Fotos von Kreta sortieren"
     },
@@ -1692,6 +2023,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-22T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-wochenende-3",
@@ -1699,6 +2033,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.603201031684875,
       "title" : "Grill sauber machen"
     },
@@ -1713,6 +2048,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-10-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-naechster-monat-1",
@@ -1720,6 +2058,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.806616067886353,
       "title" : "Versicherung nächste Monate prüfen"
     },
@@ -1734,6 +2073,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-10-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-naechster-monat-2",
@@ -1741,6 +2083,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.316030025482178,
       "title" : "Termin bei Fielmann vereinbaren"
     },
@@ -1755,6 +2098,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-30T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-naechster-monat-3",
@@ -1762,6 +2108,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.257096886634827,
       "title" : "Reise nach Rom planen"
     },
@@ -1776,6 +2123,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-05-03T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-datum-1",
@@ -1783,6 +2133,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.689505100250244,
       "title" : "Abschicken Anmeldung Kurs"
     },
@@ -1797,6 +2148,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-12-23T23:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-datum-2",
@@ -1804,6 +2158,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.623291015625,
       "title" : "Geschenke für 24. Dezember einpacken"
     },
@@ -1818,6 +2173,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-02-28T23:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-datum-3",
@@ -1825,6 +2183,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.688365936279297,
       "title" : "Bezahlt: Beitrag Verein"
     },
@@ -1839,6 +2198,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-07-30T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-datum-4",
@@ -1846,6 +2208,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.934846043586731,
       "title" : "Zählerstände melden 31. Juli"
     },
@@ -1860,6 +2223,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-zeit-1",
       "error" : "Streamed response may contain sensitive or unsafe content",
@@ -1868,6 +2234,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 13.885424971580505
     },
     {
@@ -1881,6 +2248,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T10:00:00Z",
       "dueHasTime" : true,
       "entryID" : "de-zeit-2",
@@ -1888,6 +2258,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.4006829261779785,
       "title" : "Arzt anrufen heute"
     },
@@ -1902,6 +2273,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zeit-3",
@@ -1909,6 +2283,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.714663982391357,
       "title" : "Teamrunde vorbereiten"
     },
@@ -1923,6 +2298,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T14:00:00Z",
       "dueHasTime" : true,
       "entryID" : "de-zeit-4",
@@ -1930,6 +2308,7 @@
       "people" : [
         "Nachbarin"
       ],
+      "runIndex" : 0,
       "seconds" : 7.608715891838074,
       "title" : "Paket abholen"
     },
@@ -1944,6 +2323,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zeit-5",
@@ -1951,6 +2333,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.594957947731018,
       "title" : "Bestellung für 3 Kisten Wasser machen"
     },
@@ -1965,6 +2348,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-wdh-1",
@@ -1972,6 +2358,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.612544059753418,
       "title" : "Müll jeden Montag weg"
     },
@@ -1986,6 +2373,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-wdh-2",
@@ -1993,6 +2383,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.470350980758667,
       "title" : "Tabletten um 7 Uhr nehmen"
     },
@@ -2007,6 +2398,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-24T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-wdh-3",
@@ -2014,6 +2408,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.745763063430786,
       "title" : "Check smoke detector first Monday"
     },
@@ -2028,6 +2423,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-03-31T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-wdh-4",
@@ -2035,6 +2433,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.942942023277283,
       "title" : "Reifen im April wechseln"
     },
@@ -2049,6 +2448,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-wdh-5",
@@ -2056,6 +2458,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.39654791355133,
       "title" : "Alarm um 6:30 stellen"
     },
@@ -2070,12 +2473,16 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "en-today-1",
       "finishedAt" : "2026-09-20T08:48:51Z",
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.042500972747803,
       "title" : "Call insurance company now"
     },
@@ -2090,6 +2497,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T15:00:00Z",
       "dueHasTime" : true,
       "entryID" : "en-today-2",
@@ -2097,6 +2507,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.662079930305481,
       "title" : "Send invoice at 5pm"
     },
@@ -2111,6 +2522,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-tomorrow-1",
@@ -2118,6 +2532,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.29455304145813,
       "title" : "Call landlord about heating"
     },
@@ -2132,6 +2547,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T07:00:00Z",
       "dueHasTime" : true,
       "entryID" : "en-tomorrow-2",
@@ -2139,6 +2557,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.383908987045288,
       "title" : "Drop keys at office"
     },
@@ -2153,6 +2572,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-tomorrow-3",
@@ -2160,6 +2582,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.337422013282776,
       "title" : "Book flight to Lisbon"
     },
@@ -2174,6 +2597,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-dayafter-1",
@@ -2181,6 +2607,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.647534966468811,
       "title" : "Return rental car tomorrow"
     },
@@ -2195,6 +2622,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-dayafter-2",
@@ -2202,6 +2632,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.8821439743042,
       "title" : "Pick up suit tomorrow"
     },
@@ -2216,6 +2647,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-weekday-1",
@@ -2223,6 +2657,7 @@
       "people" : [
         "Miriam"
       ],
+      "runIndex" : 0,
       "seconds" : 9.806004047393799,
       "title" : "Send contract to Miriam"
     },
@@ -2237,6 +2672,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-23T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-weekday-2",
@@ -2244,6 +2682,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.73645806312561,
       "title" : "Review budget on Wednesday"
     },
@@ -2258,6 +2697,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-22T12:30:00Z",
       "dueHasTime" : true,
       "entryID" : "en-weekday-3",
@@ -2265,6 +2707,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.593580961227417,
       "title" : "Call clinic at 2:30 pm"
     },
@@ -2279,6 +2722,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-22T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-weekday-4",
@@ -2286,6 +2732,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.205217003822327,
       "title" : "Clean gutters Saturday"
     },
@@ -2300,6 +2747,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-26T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-next-weekday-1",
@@ -2307,6 +2757,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.622437953948975,
       "title" : "Submit application next Tuesday"
     },
@@ -2321,6 +2772,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-28T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-next-weekday-2",
@@ -2328,6 +2782,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.508120059967041,
       "title" : "Submit form by Friday"
     },
@@ -2342,6 +2797,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-24T08:00:00Z",
       "dueHasTime" : true,
       "entryID" : "en-next-weekday-3",
@@ -2349,6 +2807,7 @@
       "people" : [
         "the accountant"
       ],
+      "runIndex" : 0,
       "seconds" : 10.302852988243103,
       "title" : "Meet accountant at 10am"
     },
@@ -2363,6 +2822,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-22T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-in-days-1",
@@ -2370,6 +2832,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.988924980163574,
       "title" : "Check delivery in three days"
     },
@@ -2384,6 +2847,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-10-08T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-in-days-2",
@@ -2391,6 +2857,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.849890947341919,
       "title" : "Renew domain in 10 days"
     },
@@ -2405,6 +2872,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-10T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-in-days-3",
@@ -2412,6 +2882,7 @@
       "people" : [
         "Paul"
       ],
+      "runIndex" : 0,
       "seconds" : 9.522632956504822,
       "title" : "Send reminder to Paul"
     },
@@ -2426,6 +2897,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-26T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-in-days-4",
@@ -2433,6 +2907,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.409677982330322,
       "title" : "Cancel trial subscription"
     },
@@ -2447,6 +2922,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-10-30T23:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-endofmonth-1",
@@ -2454,6 +2932,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.170676946640015,
       "title" : "Pay rent at month end"
     },
@@ -2468,6 +2947,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-29T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-endofmonth-2",
@@ -2475,6 +2957,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.694947004318237,
       "title" : "Send report to the board"
     },
@@ -2489,6 +2972,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-04T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-dayofmonth-1",
@@ -2496,6 +2982,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.506265044212341,
       "title" : "Transfer deposit by 5th"
     },
@@ -2510,6 +2997,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-11T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-dayofmonth-2",
@@ -2517,6 +3007,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.320894002914429,
       "title" : "Collect parcel on 12th"
     },
@@ -2531,6 +3022,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-22T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-weekend-1",
@@ -2538,6 +3032,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.430176019668579,
       "title" : "Fix bike this weekend"
     },
@@ -2552,6 +3047,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-22T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-weekend-2",
@@ -2559,6 +3057,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.197746992111206,
       "title" : "Sort photos over weekend"
     },
@@ -2573,6 +3072,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-30T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-nextmonth-1",
@@ -2580,6 +3082,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.108040928840637,
       "title" : "Renew passport next month"
     },
@@ -2594,6 +3097,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-30T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-nextmonth-2",
@@ -2601,6 +3107,7 @@
       "people" : [
         "Lea"
       ],
+      "runIndex" : 0,
       "seconds" : 9.404388070106506,
       "title" : "Book dentist for Lea"
     },
@@ -2615,6 +3122,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-05-03T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-date-1",
@@ -2622,6 +3132,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.261080026626587,
       "title" : "Register for course May 4th"
     },
@@ -2636,6 +3147,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-11-10T23:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-date-2",
@@ -2643,6 +3157,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.524834990501404,
       "title" : "Pay club fee on 11 November"
     },
@@ -2657,12 +3172,16 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "en-repeat-1",
       "finishedAt" : "2026-09-20T08:53:15Z",
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.426084041595459,
       "title" : "Water plants every Monday"
     },
@@ -2677,12 +3196,16 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "en-repeat-2",
       "finishedAt" : "2026-09-20T08:53:23Z",
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.288997054100037,
       "title" : "Take medication at 8pm"
     },
@@ -2697,6 +3220,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-repeat-3",
@@ -2704,6 +3230,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.240020990371704,
       "title" : "Check smoke detector monthly"
     },
@@ -2718,6 +3245,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-1",
@@ -2725,6 +3255,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.216544032096863,
       "title" : "Glühbirne im Flur wechseln"
     },
@@ -2739,6 +3270,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-2",
@@ -2746,6 +3280,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.890176057815552,
       "title" : "Termin bei der Werkstatt vereinbaren"
     },
@@ -2760,6 +3295,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-3",
@@ -2767,6 +3305,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.83964490890503,
       "title" : "Neue Filter bestellen"
     },
@@ -2781,6 +3320,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-4",
@@ -2788,6 +3330,7 @@
       "people" : [
         "Andrea"
       ],
+      "runIndex" : 0,
       "seconds" : 9.537996053695679,
       "title" : "Mit Andrea über Umzug sprechen"
     },
@@ -2802,6 +3345,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-5",
@@ -2809,6 +3355,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.3383629322052,
       "title" : "Gartenschlauch reparieren"
     },
@@ -2823,6 +3370,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-6",
@@ -2830,6 +3380,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.202018976211548,
       "title" : "Festplatte sichern sofort"
     },
@@ -2844,6 +3395,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-7",
@@ -2851,6 +3405,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.864274024963379,
       "title" : "Passwort ändern sofort"
     },
@@ -2865,6 +3420,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-8",
@@ -2872,6 +3430,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.245173931121826,
       "title" : "Entrümpeln Dachboden"
     },
@@ -2886,6 +3445,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-9",
@@ -2893,6 +3455,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.821444988250732,
       "title" : "Bremsen prüfen lassen"
     },
@@ -2907,6 +3470,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-10",
@@ -2914,6 +3480,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.811068058013916,
       "title" : "Küche: Wasserfilter kaufen"
     },
@@ -2928,6 +3495,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-11",
@@ -2935,6 +3505,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.738091945648193,
       "title" : "Rezept für Linsensuppe schreiben"
     },
@@ -2949,6 +3520,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-12",
@@ -2956,6 +3530,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.586734056472778,
       "title" : "Regal im Arbeitszimmer anbohren"
     },
@@ -2970,6 +3545,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-13",
@@ -2977,6 +3555,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.641541957855225,
       "title" : "Preise für Waschmaschine prüfen"
     },
@@ -2991,6 +3570,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-14",
@@ -2998,6 +3580,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.174813985824585,
       "title" : "Ölstand überprüfen"
     },
@@ -3012,6 +3595,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-15",
@@ -3019,6 +3605,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.763728022575378,
       "title" : "Schlüssel reparieren"
     },
@@ -3033,6 +3620,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-24T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-16",
@@ -3040,6 +3630,7 @@
       "people" : [
         "Frau Kowalski"
       ],
+      "runIndex" : 0,
       "seconds" : 9.969470977783203,
       "title" : "Frau Kowalski um Kosten bitten"
     },
@@ -3054,6 +3645,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-17",
@@ -3061,6 +3655,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 11.856805086135864,
       "title" : "Sortieren Steuerbescheide"
     },
@@ -3075,6 +3670,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-18",
@@ -3082,6 +3680,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.32896101474762,
       "title" : "Platz im Fitnessstudio beantragen"
     },
@@ -3096,6 +3695,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-19",
@@ -3103,6 +3705,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.778210043907166,
       "title" : "Papier einheften"
     },
@@ -3117,6 +3720,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-20",
@@ -3124,6 +3730,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.57463002204895,
       "title" : "Nachbarn um Spionieren bitten"
     },
@@ -3138,6 +3745,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-21",
@@ -3145,6 +3755,7 @@
       "people" : [
         "Svens"
       ],
+      "runIndex" : 0,
       "seconds" : 9.420842051506042,
       "title" : "Geschenk für Svens besorgen"
     },
@@ -3159,6 +3770,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-22",
@@ -3166,6 +3780,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.846987009048462,
       "title" : "Fotos vom Handy auf die Festplatte kopieren"
     },
@@ -3180,6 +3795,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-23",
@@ -3187,6 +3805,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.638695001602173,
       "title" : "Nach Spanischkurs fragen"
     },
@@ -3201,6 +3820,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-24",
@@ -3208,6 +3830,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.504755973815918,
       "title" : "Rasenmäher zur Reparatur"
     },
@@ -3222,6 +3845,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-kontrolle-25",
@@ -3229,6 +3855,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.60637891292572,
       "title" : "Dichtung kaufen"
     },
@@ -3243,6 +3870,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-control-1",
@@ -3250,6 +3880,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.561959028244019,
       "title" : "Replace doorbell batteries"
     },
@@ -3264,6 +3895,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-control-2",
@@ -3271,6 +3905,7 @@
       "people" : [
         "Paul"
       ],
+      "runIndex" : 0,
       "seconds" : 9.444962978363037,
       "title" : "Ask Paul about invoice"
     },
@@ -3285,6 +3920,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-control-3",
@@ -3292,6 +3930,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.332646012306213,
       "title" : "Check dishwasher prices"
     },
@@ -3306,12 +3945,16 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "en-control-4",
       "finishedAt" : "2026-09-20T08:58:09Z",
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.493438005447388,
       "title" : "Backup laptop immediately"
     },
@@ -3326,6 +3969,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-control-5",
@@ -3333,6 +3979,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 10.707445979118347,
       "title" : "Clear attic now"
     },
@@ -3347,6 +3994,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-control-6",
@@ -3354,6 +4004,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.035909056663513,
       "title" : "Buy water filter kitchen"
     },
@@ -3368,6 +4019,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-control-7",
@@ -3375,6 +4029,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.246820092201233,
       "title" : "Fix squeaking door hallway"
     },
@@ -3389,6 +4044,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-control-8",
@@ -3396,6 +4054,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.695006966590881,
       "title" : "Write lentil soup recipe"
     },
@@ -3410,6 +4069,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-control-9",
@@ -3417,6 +4079,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.18247902393341,
       "title" : "Ask neighbors about fence"
     },
@@ -3431,6 +4094,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-control-10",
@@ -3438,6 +4104,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.383196949958801,
       "title" : "Check oil level car"
     },
@@ -3452,12 +4119,16 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "en-control-11",
       "finishedAt" : "2026-09-20T08:59:13Z",
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.371158957481384,
       "title" : "Find Spanish course nearby"
     },
@@ -3472,6 +4143,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-control-12",
@@ -3479,6 +4153,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 10.146733045578003,
       "title" : "Sort tax documents last years"
     },
@@ -3493,6 +4168,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-control-13",
@@ -3500,6 +4178,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.47576892375946,
       "title" : "Order new filters vacuum"
     },
@@ -3514,6 +4193,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-control-14",
@@ -3521,6 +4203,7 @@
       "people" : [
         "Miriam"
       ],
+      "runIndex" : 0,
       "seconds" : 9.656193017959595,
       "title" : "Talk to Miriam"
     },
@@ -3535,6 +4218,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-control-15",
@@ -3542,6 +4228,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.586143970489502,
       "title" : "Check printer paper issue"
     },
@@ -3556,6 +4243,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-name-1",
@@ -3563,6 +4253,7 @@
       "people" : [
         "Andrea"
       ],
+      "runIndex" : 0,
       "seconds" : 10.13668406009674,
       "title" : "Andrea anrufen wegen Abrechnung"
     },
@@ -3577,6 +4268,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-name-2",
@@ -3584,6 +4278,7 @@
       "people" : [
         "Andreas"
       ],
+      "runIndex" : 0,
       "seconds" : 9.488481044769287,
       "title" : "Andreas: Unterlagen zur Bank schicken"
     },
@@ -3598,6 +4293,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-name-3",
@@ -3605,6 +4303,7 @@
       "people" : [
         "Herrn Özdemir"
       ],
+      "runIndex" : 0,
       "seconds" : 9.75699007511139,
       "title" : "Mit Herrn Özdemir Termin vereinbaren"
     },
@@ -3619,6 +4318,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-name-4",
@@ -3626,6 +4328,7 @@
       "people" : [
         "Dr. Reinhardt"
       ],
+      "runIndex" : 0,
       "seconds" : 10.084220051765442,
       "title" : "Frau Dr. Reinhardt Befunde faxen"
     },
@@ -3640,6 +4343,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-name-5",
       "error" : "Streamed response may contain sensitive or unsafe content",
@@ -3648,6 +4354,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 17.27984607219696
     },
     {
@@ -3661,6 +4368,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-zeit-1",
       "error" : "Response may contain sensitive or unsafe content",
@@ -3669,6 +4379,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 14.58524203300476
     },
     {
@@ -3682,6 +4393,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-name-5",
@@ -3689,6 +4403,7 @@
       "people" : [
         "Katrin"
       ],
+      "runIndex" : 0,
       "seconds" : 7.725242972373962,
       "title" : "Katrin fragen, ob Kinder abholen"
     },
@@ -3703,6 +4418,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-name-6",
@@ -3710,6 +4428,7 @@
       "people" : [
         "Jan-Philipp"
       ],
+      "runIndex" : 0,
       "seconds" : 7.609545946121216,
       "title" : "Jan-Philipp Zugangsdaten senden"
     },
@@ -3724,6 +4443,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-name-7",
@@ -3731,6 +4453,7 @@
       "people" : [
         "Schmitz"
       ],
+      "runIndex" : 0,
       "seconds" : 7.858339905738831,
       "title" : "Nach Schlüssel fragen"
     },
@@ -3745,6 +4468,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-name-8",
@@ -3752,6 +4478,7 @@
       "people" : [
         "Thea"
       ],
+      "runIndex" : 0,
       "seconds" : 8.174499988555908,
       "title" : "Thea an die Impfung erinnern"
     },
@@ -3766,6 +4493,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-name-9",
@@ -3773,6 +4503,7 @@
       "people" : [
         "Bloch"
       ],
+      "runIndex" : 0,
       "seconds" : 7.579500079154968,
       "title" : "Mit Herrn Bloch sprechen"
     },
@@ -3787,6 +4518,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-name-10",
@@ -3794,6 +4528,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.222265005111694,
       "title" : "Merle das Buch zurückgeben"
     },
@@ -3808,6 +4543,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zahl-1",
@@ -3815,6 +4553,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.290621995925903,
       "title" : "Rechnung 4711 reklamieren"
     },
@@ -3829,6 +4568,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zahl-2",
@@ -3836,6 +4578,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.2311320304870605,
       "title" : "250 Euro an Verein überweisen"
     },
@@ -3850,6 +4593,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zahl-3",
@@ -3857,6 +4603,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.562150001525879,
       "title" : "Zimmer 12 im Hotel Adler reservieren"
     },
@@ -3871,6 +4618,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zahl-4",
@@ -3878,6 +4628,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.372586011886597,
       "title" : "3 Kisten bestellen"
     },
@@ -3892,6 +4643,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zahl-5",
@@ -3899,6 +4653,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.4044400453567505,
       "title" : "Kundennummer 88342 bereitstehen"
     },
@@ -3913,6 +4668,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zahl-6",
@@ -3920,6 +4678,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.297641038894653,
       "title" : "7 Kartons in den Keller tragen"
     },
@@ -3934,6 +4693,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zahl-7",
@@ -3941,6 +4703,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.401378035545349,
       "title" : "Vertragsnummer A-2291 kündigen"
     },
@@ -3955,6 +4718,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zahl-8",
@@ -3962,6 +4728,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.792708039283752,
       "title" : "Farbe für das Treppenhaus kaufen"
     },
@@ -3976,6 +4743,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zahl-9",
@@ -3983,6 +4753,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.3197340965271,
       "title" : "Zwei Tickets umbuchen"
     },
@@ -3997,6 +4768,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zahl-10",
@@ -4004,6 +4778,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.680975079536438,
       "title" : "Adresse bei Polizei 30021988 ändern"
     },
@@ -4018,6 +4793,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-eigenname-1",
@@ -4025,6 +4803,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.23568594455719,
       "title" : "Dauerauftrag bei Sparkasse ändern"
     },
@@ -4039,6 +4818,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-eigenname-2",
@@ -4046,6 +4828,7 @@
       "people" : [
         "Fielmann"
       ],
+      "runIndex" : 0,
       "seconds" : 8.08163595199585,
       "title" : "Termin bei Fielmann vereinbaren"
     },
@@ -4060,6 +4843,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-eigenname-3",
@@ -4067,6 +4853,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.343201994895935,
       "title" : "Betreuung anrufen Kita Sonnenschein"
     },
@@ -4081,6 +4868,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-eigenname-4",
@@ -4088,6 +4878,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.903717994689941,
       "title" : "Nachteil bei Miele bestellen"
     },
@@ -4102,6 +4893,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-eigenname-5",
@@ -4109,6 +4903,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.72813093662262,
       "title" : "Bescheinigung anfordern"
     },
@@ -4123,6 +4918,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-eigenname-6",
@@ -4130,6 +4928,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.219915986061096,
       "title" : "Bahn-Ticket stornieren"
     },
@@ -4144,6 +4943,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-eigenname-7",
@@ -4151,6 +4953,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.914752960205078,
       "title" : "Obi Schrauben holen"
     },
@@ -4165,6 +4968,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-eigenname-8",
@@ -4172,6 +4978,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.26961600780487,
       "title" : "Den Tesla zur Inspektion anmelden"
     },
@@ -4186,6 +4993,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-eigenname-9",
@@ -4193,6 +5003,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.888345003128052,
       "title" : "Besichtigung Wohnung Wuppertal vereinbaren"
     },
@@ -4207,6 +5018,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-eigenname-10",
@@ -4214,6 +5028,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.017385005950928,
       "title" : "Neuer Tarif bei Bochum abschließen"
     },
@@ -4228,6 +5043,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-name-1",
@@ -4235,6 +5053,7 @@
       "people" : [
         "Ravi"
       ],
+      "runIndex" : 0,
       "seconds" : 8.0521320104599,
       "title" : "Ask Ravi for floor plan"
     },
@@ -4249,6 +5068,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-name-2",
@@ -4256,6 +5078,7 @@
       "people" : [
         "Mrs. Hargreaves"
       ],
+      "runIndex" : 0,
       "seconds" : 8.273191928863525,
       "title" : "Send lease to Mrs. Hargreaves"
     },
@@ -4270,6 +5093,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-name-3",
@@ -4277,6 +5103,7 @@
       "people" : [
         "Tom"
       ],
+      "runIndex" : 0,
       "seconds" : 8.561437010765076,
       "title" : "Tell Tom about permit"
     },
@@ -4291,6 +5118,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-name-4",
@@ -4298,6 +5128,7 @@
       "people" : [
         "Yusuf"
       ],
+      "runIndex" : 0,
       "seconds" : 8.975919961929321,
       "title" : "Return drill to Yusuf"
     },
@@ -4312,6 +5143,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-number-1",
@@ -4319,6 +5153,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.439880013465881,
       "title" : "Pay invoice 4711"
     },
@@ -4333,6 +5168,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-number-2",
@@ -4340,6 +5178,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.24606704711914,
       "title" : "Transfer 250 euros to the club"
     },
@@ -4354,6 +5193,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-number-3",
@@ -4361,6 +5203,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.237807035446167,
       "title" : "Reserve room 12 at Adler"
     },
@@ -4375,6 +5218,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "en-number-4",
       "error" : "CancellationError()",
@@ -4383,6 +5229,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 4.976190090179443
     },
     {
@@ -4396,6 +5243,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zeit-1",
@@ -4403,6 +5253,7 @@
       "people" : [
         "die Kinder"
       ],
+      "runIndex" : 0,
       "seconds" : 14.833891034126282,
       "title" : "Kinder vom Training abholen"
     },
@@ -4417,6 +5268,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-number-4",
@@ -4424,6 +5278,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 17.686667919158936,
       "title" : "Prepare customer 88342"
     },
@@ -4438,6 +5293,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-number-5",
@@ -4445,6 +5303,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.450516104698181,
       "title" : "Cancel contract A-2291"
     },
@@ -4459,6 +5318,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-proper-1",
@@ -4466,6 +5328,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.350720047950745,
       "title" : "Change standing order Sparkasse"
     },
@@ -4480,6 +5343,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-proper-2",
@@ -4487,6 +5353,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.465924978256226,
       "title" : "Order spare part from Miele"
     },
@@ -4501,6 +5368,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-proper-3",
@@ -4508,6 +5378,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.868156909942627,
       "title" : "Book Tesla for service"
     },
@@ -4522,6 +5393,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-proper-4",
@@ -4529,6 +5403,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.310771942138672,
       "title" : "Ask AOK for certificate"
     },
@@ -4543,6 +5418,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-gemischt-1",
@@ -4550,6 +5428,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.68329405784607,
       "title" : "Rechnung 4711 reklamieren"
     },
@@ -4564,6 +5443,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-gemischt-2",
@@ -4571,6 +5453,7 @@
       "people" : [
         "Andrea"
       ],
+      "runIndex" : 0,
       "seconds" : 9.874873042106628,
       "title" : "Andrea 250 Euro zurückgeben"
     },
@@ -4585,6 +5468,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-24T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-gemischt-3",
@@ -4592,6 +5478,7 @@
       "people" : [
         "Andreas"
       ],
+      "runIndex" : 0,
       "seconds" : 9.95420503616333,
       "title" : "Andreas anrufen wegen Zimmer 12"
     },
@@ -4606,6 +5493,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-10-03T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-gemischt-4",
@@ -4613,6 +5503,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.339377999305725,
       "title" : "Das Ersatzteil bei Miele finden"
     },
@@ -4627,6 +5518,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-29T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-gemischt-5",
@@ -4634,6 +5528,7 @@
       "people" : [
         "Herrn Özdemir"
       ],
+      "runIndex" : 0,
       "seconds" : 7.983483910560608,
       "title" : "Rechnung Herrn Özdemir senden"
     },
@@ -4648,6 +5543,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T07:15:00Z",
       "dueHasTime" : true,
       "entryID" : "de-gemischt-6",
@@ -4655,6 +5553,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.057765007019043,
       "title" : "Bescheinigung bei AOK holen"
     },
@@ -4669,6 +5568,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-gemischt-7",
@@ -4676,6 +5578,7 @@
       "people" : [
         "Katrin"
       ],
+      "runIndex" : 0,
       "seconds" : 11.50274395942688,
       "title" : "Katrin helfen: 7 Kartons"
     },
@@ -4690,6 +5593,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-14T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-gemischt-8",
@@ -4697,6 +5603,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.800119996070862,
       "title" : "Police 30021988 umschreiben"
     },
@@ -4711,6 +5618,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-mixed-1",
@@ -4718,6 +5628,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.398797988891602,
       "title" : "Query invoice 4711 Sparkasse"
     },
@@ -4732,6 +5643,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-mixed-2",
@@ -4739,6 +5653,7 @@
       "people" : [
         "Tom"
       ],
+      "runIndex" : 0,
       "seconds" : 8.63442599773407,
       "title" : "Give Tom 250 euros back"
     },
@@ -4753,6 +5668,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-24T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-mixed-3",
@@ -4760,6 +5678,7 @@
       "people" : [
         "Ravi"
       ],
+      "runIndex" : 0,
       "seconds" : 8.42517101764679,
       "title" : "Call Ravi about room 12"
     },
@@ -4774,6 +5693,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-10-30T23:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-mixed-4",
@@ -4781,6 +5703,7 @@
       "people" : [
         "Mrs. Hargreaves"
       ],
+      "runIndex" : 0,
       "seconds" : 8.37431001663208,
       "title" : "Send Mrs. Hargreaves statement"
     },
@@ -4795,6 +5718,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-lang-1",
@@ -4802,6 +5728,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.630769968032837,
       "title" : "Unterlagen bei Sparkasse einreichen"
     },
@@ -4816,6 +5743,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-29T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-lang-2",
@@ -4823,6 +5753,7 @@
       "people" : [
         "Frau Kowalski"
       ],
+      "runIndex" : 0,
       "seconds" : 9.131384015083313,
       "title" : "Überprüfen Sie Nebenkostenabrechnung Kowalski"
     },
@@ -4837,6 +5768,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-26T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-lang-3",
@@ -4844,6 +5778,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.47266399860382,
       "title" : "Rasenmäher zur Reparatur bringen"
     },
@@ -4858,6 +5793,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-lang-4",
@@ -4865,6 +5803,7 @@
       "people" : [
         "Andreas"
       ],
+      "runIndex" : 0,
       "seconds" : 9.424278020858765,
       "title" : "Verkaufsvertrag prüfen Andreas"
     },
@@ -4879,6 +5818,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-long-1",
@@ -4886,6 +5828,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.317758917808533,
       "title" : "Hand in financing papers"
     },
@@ -4900,6 +5843,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-long-2",
@@ -4907,6 +5853,7 @@
       "people" : [
         "Ravi"
       ],
+      "runIndex" : 0,
       "seconds" : 9.100518941879272,
       "title" : "Contact Ravi for contract A-2291"
     },
@@ -4921,6 +5868,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-diktat-1",
@@ -4928,6 +5878,7 @@
       "people" : [
         "Andrea"
       ],
+      "runIndex" : 0,
       "seconds" : 8.328232049942017,
       "title" : "kontaktieren Sie Andrea"
     },
@@ -4942,6 +5893,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-diktat-2",
@@ -4949,6 +5903,7 @@
       "people" : [
         "die kinder"
       ],
+      "runIndex" : 0,
       "seconds" : 8.94080102443695,
       "title" : "Kinder zur Schule bringen"
     },
@@ -4963,6 +5918,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-diktat-3",
@@ -4970,6 +5928,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.254202961921692,
       "title" : "termin verschieben"
     },
@@ -4984,6 +5943,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-diktat-4",
@@ -4991,6 +5953,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.454287052154541,
       "title" : "Kundennummer 88342 notieren"
     },
@@ -5005,6 +5968,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-dictation-1",
@@ -5012,6 +5978,7 @@
       "people" : [
         "Ravi"
       ],
+      "runIndex" : 0,
       "seconds" : 8.342720985412598,
       "title" : "call ravi about invoice"
     },
@@ -5026,6 +5993,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T05:30:00Z",
       "dueHasTime" : true,
       "entryID" : "en-dictation-2",
@@ -5033,6 +6003,7 @@
       "people" : [
         "kids"
       ],
+      "runIndex" : 0,
       "seconds" : 8.409752011299133,
       "title" : "Take kids to school"
     },
@@ -5047,6 +6018,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-stichwort-1",
@@ -5054,6 +6028,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 10.397278070449829,
       "title" : "Müll rausstellen"
     },
@@ -5068,6 +6043,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-stichwort-2",
@@ -5075,6 +6053,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 5.928585052490234,
       "title" : "Rechnung Meier senden"
     },
@@ -5089,6 +6068,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-stichwort-3",
@@ -5096,6 +6078,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.293789982795715,
       "title" : "Zahnarzt anrufen"
     },
@@ -5110,6 +6093,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-stichwort-4",
@@ -5117,6 +6103,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 6.134396910667419,
       "title" : "Reifen wechseln"
     },
@@ -5131,6 +6118,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-stichwort-5",
@@ -5138,6 +6128,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.517943024635315,
       "title" : "Buchung Kita Ferienbetreuung"
     },
@@ -5152,6 +6143,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-stichwort-6",
@@ -5159,6 +6153,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.23878300189972,
       "title" : "Steuern bearbeiten morgen"
     },
@@ -5173,6 +6168,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-stichwort-7",
@@ -5180,6 +6178,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 5.7101359367370605,
       "title" : "Batterien kaufen"
     },
@@ -5194,6 +6193,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-stichwort-8",
@@ -5201,6 +6203,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.085358023643494,
       "title" : "Besprechung mit Özdemir"
     },
@@ -5215,6 +6218,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-stichwort-9",
@@ -5222,6 +6228,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.774143934249878,
       "title" : "Passbilder vorbereiten"
     },
@@ -5236,6 +6243,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-stichwort-10",
@@ -5243,6 +6253,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.690190076828003,
       "title" : "Laternenumzug organisieren"
     },
@@ -5257,6 +6268,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-stichwort-11",
@@ -5264,6 +6278,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 6.187915921211243,
       "title" : "Werkstatt Termin vereinbaren"
     },
@@ -5278,6 +6293,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-stichwort-1",
@@ -5285,6 +6303,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 6.249691009521484,
       "title" : "renew passport"
     },
@@ -5299,6 +6318,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-frage-1",
@@ -5306,6 +6328,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.694494009017944,
       "title" : "Rechnung bezahlen"
     },
@@ -5320,6 +6343,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-frage-2",
@@ -5327,6 +6353,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.7440749406814575,
       "title" : "Bring Spielzeug für Kindergarten"
     },
@@ -5341,6 +6368,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-frage-3",
@@ -5348,6 +6378,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.7353339195251465,
       "title" : "Frage stellen Telekomvertrag"
     },
@@ -5362,6 +6393,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-frage-4",
@@ -5369,6 +6403,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.5329350233078,
       "title" : "Überprüfen Sie Rauchmelder"
     },
@@ -5383,6 +6418,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-frage-5",
@@ -5390,6 +6428,7 @@
       "people" : [
         "Sven"
       ],
+      "runIndex" : 0,
       "seconds" : 7.609556078910828,
       "title" : "Sven überprüfe Präsentation"
     },
@@ -5404,6 +6443,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-frage-6",
@@ -5411,6 +6453,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.073467016220093,
       "title" : "Nachweisen für Steuererklärung suchen"
     },
@@ -5425,6 +6468,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-frage-7",
@@ -5432,6 +6478,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.812745928764343,
       "title" : "Termin bestätigen bitte"
     },
@@ -5446,12 +6493,16 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-frage-8",
       "finishedAt" : "2026-09-20T13:08:15Z",
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.737076997756958,
       "title" : "Reparieren Sie das Fahrrad."
     },
@@ -5466,6 +6517,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-frage-9",
@@ -5473,6 +6527,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.16432797908783,
       "title" : "Nachzahlung prüfen Sparkasse"
     },
@@ -5487,6 +6542,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-frage-10",
@@ -5494,6 +6552,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.434965014457703,
       "title" : "Fertigstellung Bericht bis Freitag"
     },
@@ -5508,6 +6567,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-frage-1",
@@ -5515,6 +6577,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.0035719871521,
       "title" : "Check gym membership cancellation"
     },
@@ -5529,6 +6592,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-ich-1",
       "error" : "CancellationError()",
@@ -5537,6 +6603,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.237815976142883
     },
     {
@@ -5550,6 +6617,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-ich-1",
@@ -5557,6 +6627,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.853523015975952,
       "title" : "Unterlagen für Finanzierung suchen"
     },
@@ -5571,6 +6642,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-ich-2",
@@ -5578,6 +6652,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.958922028541565,
       "title" : "Steuerberater kontaktieren"
     },
@@ -5592,6 +6667,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-22T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-ich-3",
@@ -5599,6 +6677,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.277256011962891,
       "title" : "Aufräumen Keller Wochenende"
     },
@@ -5613,6 +6692,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-ich-4",
@@ -5620,6 +6702,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.501272082328796,
       "title" : "Termin beim Augenarzt vereinbaren"
     },
@@ -5634,6 +6717,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-ich-5",
@@ -5641,6 +6727,7 @@
       "people" : [
         "Frau Kowalski"
       ],
+      "runIndex" : 0,
       "seconds" : 8.065713047981262,
       "title" : "Antwort an Frau Kowalski"
     },
@@ -5655,6 +6742,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-ich-6",
@@ -5662,6 +6752,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.622759938240051,
       "title" : "Registrieren Vertragsnummer A-2291"
     },
@@ -5676,6 +6767,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-14T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-ich-7",
@@ -5683,6 +6777,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.439889907836914,
       "title" : "Abschluss vor dem 15."
     },
@@ -5697,6 +6792,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-ich-8",
@@ -5704,6 +6802,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.128422021865845,
       "title" : "Öl für Rasenmäher besorgen"
     },
@@ -5718,6 +6817,9 @@
         "systemVersion" : "27.0",
         "thermal" : "normal"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-ich-9",
@@ -5725,6 +6827,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.760938048362732,
       "title" : "Vergleichen Sie Angebot Özdemir"
     },
@@ -5739,6 +6842,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-ich-10",
@@ -5746,6 +6852,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.310216069221497,
       "title" : "Reisekosten abrechnen"
     },
@@ -5760,6 +6867,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-ich-11",
@@ -5767,6 +6877,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.887796998023987,
       "title" : "Passbilder vorbereiten"
     },
@@ -5781,6 +6892,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-nebensatz-5",
@@ -5788,6 +6902,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.986150026321411,
       "title" : "Reifen wechseln sofort"
     },
@@ -5802,6 +6917,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-nebensatz-6",
@@ -5809,6 +6927,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.653169989585876,
       "title" : "Passbilder morgen abholen"
     },
@@ -5823,6 +6942,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-nebensatz-7",
@@ -5830,6 +6952,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.634184002876282,
       "title" : "Rechnung Özdemir bezahlen"
     },
@@ -5844,6 +6967,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-nebensatz-8",
@@ -5851,6 +6977,7 @@
       "people" : [
         "Nachbarn"
       ],
+      "runIndex" : 0,
       "seconds" : 8.429862976074219,
       "title" : "Nachbarn wegen Blumen fragen"
     },
@@ -5865,6 +6992,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-nebensatz-9",
@@ -5872,6 +7002,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.503711104393005,
       "title" : "Zählerstand melden"
     },
@@ -5886,6 +7017,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-29T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-nebensatz-10",
@@ -5893,6 +7027,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.064283967018127,
       "title" : "Nebenkosten prüfen Ende Monat"
     },
@@ -5907,12 +7042,16 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-nebensatz-11",
       "finishedAt" : "2026-09-20T13:12:32Z",
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.617366075515747,
       "title" : "Fahrzeug ersetzen sofort"
     },
@@ -5927,6 +7066,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-nebensatz-1",
@@ -5934,6 +7076,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.658539056777954,
       "title" : "Renew car insurance now"
     },
@@ -5948,6 +7091,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-diktat-5",
@@ -5955,6 +7101,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.447731971740723,
       "title" : "termin beim augenarzt machen"
     },
@@ -5969,6 +7116,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-diktat-6",
@@ -5976,6 +7126,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.204620003700256,
       "title" : "reifen morgen wechseln lassen"
     },
@@ -5990,6 +7141,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-diktat-7",
@@ -5997,6 +7151,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.12788999080658,
       "title" : "Reclamieren Rechnung 250 Euro"
     },
@@ -6011,6 +7166,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-22T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-diktat-8",
@@ -6018,6 +7176,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.484709978103638,
       "title" : "melden zählerstand am Freitag"
     },
@@ -6032,6 +7191,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-diktat-9",
@@ -6039,6 +7201,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.467095971107483,
       "title" : "Milch und Kaffee kaufen"
     },
@@ -6053,6 +7216,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-dictation-3",
@@ -6060,6 +7226,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.111397981643677,
       "title" : "Call landlord about heating"
     },
@@ -6074,6 +7241,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zeit-hinten-1",
@@ -6081,6 +7251,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.901293992996216,
       "title" : "Steuerberater kontaktieren"
     },
@@ -6095,6 +7266,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zeit-hinten-2",
@@ -6102,6 +7276,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.965882897377014,
       "title" : "Müll rausstellen"
     },
@@ -6116,6 +7291,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-25T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zeit-hinten-3",
@@ -6123,6 +7301,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.192091941833496,
       "title" : "Reifen wechseln Dienstag"
     },
@@ -6137,6 +7316,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-29T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zeit-hinten-4",
@@ -6144,6 +7326,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.5225670337677,
       "title" : "Nebenkosten prüfen"
     },
@@ -6158,6 +7341,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zeit-hinten-5",
@@ -6165,6 +7351,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.80773401260376,
       "title" : "Zahnarzt anrufen"
     },
@@ -6179,6 +7366,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-22T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zeit-hinten-6",
@@ -6186,6 +7376,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.04134202003479,
       "title" : "Keller aufräumen"
     },
@@ -6200,6 +7391,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zeit-hinten-7",
@@ -6207,6 +7401,7 @@
       "people" : [
         "Özdemir"
       ],
+      "runIndex" : 0,
       "seconds" : 8.829856991767883,
       "title" : "Angebot an Özdemir senden"
     },
@@ -6221,6 +7416,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-30T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zeit-hinten-8",
@@ -6228,6 +7426,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.374705076217651,
       "title" : "Vertrag kündigen"
     },
@@ -6242,6 +7441,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T12:00:00Z",
       "dueHasTime" : true,
       "entryID" : "de-zeit-hinten-9",
@@ -6249,6 +7451,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.466210007667542,
       "title" : "Sparkasse um 14 Uhr anrufen"
     },
@@ -6263,6 +7466,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-zeit-hinten-10",
       "error" : "May contain unsafe content",
@@ -6271,6 +7477,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 0.4177130460739136
     },
     {
@@ -6284,6 +7491,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-28T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-zeit-hinten-1",
@@ -6291,6 +7501,7 @@
       "people" : [
         "Ravi"
       ],
+      "runIndex" : 0,
       "seconds" : 7.448143005371094,
       "title" : "Send invoice to Ravi"
     },
@@ -6305,6 +7516,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zwei-1",
@@ -6312,6 +7526,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.185050010681152,
       "title" : "Müll raus Katze füttern"
     },
@@ -6326,6 +7541,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zwei-2",
@@ -6333,6 +7551,7 @@
       "people" : [
         "Meier"
       ],
+      "runIndex" : 0,
       "seconds" : 8.167570948600769,
       "title" : "Rechnung an Meier senden"
     },
@@ -6347,6 +7566,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zwei-3",
@@ -6354,6 +7576,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.2824729681015015,
       "title" : "Zahnarzt anrufen"
     },
@@ -6368,6 +7591,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zwei-4",
@@ -6375,6 +7601,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.7826069593429565,
       "title" : "Kita morgen anrufen"
     },
@@ -6389,6 +7616,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zwei-5",
@@ -6396,6 +7626,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.841085076332092,
       "title" : "Batterien kaufen"
     },
@@ -6410,6 +7641,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zwei-6",
@@ -6417,6 +7651,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.22444200515747,
       "title" : "Steuerberater kontaktieren"
     },
@@ -6431,6 +7666,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zwei-7",
@@ -6438,6 +7676,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.987354040145874,
       "title" : "Zählerstand melden und Nebenkosten prüfen"
     },
@@ -6452,6 +7691,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zwei-8",
@@ -6459,6 +7701,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.613281011581421,
       "title" : "Öl nachfüllen"
     },
@@ -6473,6 +7716,9 @@
         "systemVersion" : "27.0",
         "thermal" : "fair"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zwei-9",
@@ -6480,6 +7726,7 @@
       "people" : [
         "Özdemir"
       ],
+      "runIndex" : 0,
       "seconds" : 8.538341999053955,
       "title" : "Angebot prüfen und Antwort geben"
     },
@@ -6494,6 +7741,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-zwei-10",
@@ -6501,6 +7751,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.261327981948853,
       "title" : "Fahrrad reparieren"
     },
@@ -6515,6 +7766,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-zwei-1",
@@ -6522,6 +7776,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.107048034667969,
       "title" : "cancel gym membership"
     },
@@ -6536,12 +7791,16 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "de-denglisch-1",
       "finishedAt" : "2026-09-20T13:17:32Z",
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.772506952285767,
       "title" : "Meeting mit Sales abbrechen"
     },
@@ -6556,6 +7815,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-denglisch-2",
@@ -6563,6 +7825,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.304286003112793,
       "title" : "Quarterly Review Slides fertig machen"
     },
@@ -6577,6 +7840,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-denglisch-3",
@@ -6584,6 +7850,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.103711009025574,
       "title" : "Verlegen Standup 10 Uhr"
     },
@@ -6598,6 +7865,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-denglisch-4",
@@ -6605,6 +7875,7 @@
       "people" : [
         "Sven"
       ],
+      "runIndex" : 0,
       "seconds" : 8.81578505039215,
       "title" : "Feedback an Sven senden"
     },
@@ -6619,6 +7890,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-denglisch-5",
@@ -6626,6 +7900,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.843945980072021,
       "title" : "Onboarding für neue Kollegin planen"
     },
@@ -6640,6 +7915,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-denglisch-6",
@@ -6647,6 +7925,7 @@
       "people" : [
         "Lead"
       ],
+      "runIndex" : 0,
       "seconds" : 9.279307961463928,
       "title" : "Budget-Freigabe vorbereiten"
     },
@@ -6661,6 +7940,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-denglisch-7",
@@ -6668,6 +7950,7 @@
       "people" : [
         "Özdemir"
       ],
+      "runIndex" : 0,
       "seconds" : 8.883521914482117,
       "title" : "Nachruf schreiben Özdemir"
     },
@@ -6682,6 +7965,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-denglisch-8",
@@ -6689,6 +7975,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.285338997840881,
       "title" : "Rollout-Status prüfen"
     },
@@ -6703,6 +7990,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-denglisch-9",
@@ -6710,6 +8000,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.038856983184814,
       "title" : "Laptop-Backup erstellen"
     },
@@ -6724,6 +8015,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-denglisch-10",
@@ -6731,6 +8025,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.438771963119507,
       "title" : "Workshop-Einladung senden"
     },
@@ -6745,6 +8040,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-denglisch-11",
@@ -6752,6 +8050,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.87775707244873,
       "title" : "Ticket im Support-System aktualisieren"
     },
@@ -6766,6 +8065,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-tippfehler-1",
@@ -6773,6 +8075,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.579069972038269,
       "title" : "Rechnug an Meier schicken"
     },
@@ -6787,6 +8090,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-tippfehler-2",
@@ -6794,6 +8100,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.667158961296082,
       "title" : "Zahnarzt anrufen"
     },
@@ -6808,6 +8115,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-tippfehler-3",
@@ -6815,6 +8125,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.712185025215149,
       "title" : "Untelagen suchen morgen"
     },
@@ -6829,6 +8140,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-tippfehler-4",
@@ -6836,6 +8150,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.421378016471863,
       "title" : "Steuerbrater kontaktieren"
     },
@@ -6850,6 +8165,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-tippfehler-5",
@@ -6857,6 +8175,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.241505980491638,
       "title" : "Kita kontaktieren sofort"
     },
@@ -6871,6 +8190,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-tippfehler-6",
@@ -6878,6 +8200,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.209482073783875,
       "title" : "Angebot an Özdemri senden"
     },
@@ -6892,6 +8215,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-tippfehler-7",
@@ -6899,6 +8225,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.550197005271912,
       "title" : "Reifne wechseln lassen"
     },
@@ -6913,6 +8240,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-tippfehler-8",
@@ -6920,6 +8250,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.429589033126831,
       "title" : "Rauchmleder im Keller prüfen"
     },
@@ -6934,6 +8265,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-tippfehler-9",
@@ -6941,6 +8275,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.3333899974823,
       "title" : "Zählerstand melden"
     },
@@ -6955,6 +8290,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-tippfehler-10",
@@ -6962,6 +8300,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.9480299949646,
       "title" : "Nebenkostenabrechnug prüfen"
     },
@@ -6976,12 +8315,16 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueHasTime" : false,
       "entryID" : "en-tippfehler-1",
       "finishedAt" : "2026-09-20T13:20:33Z",
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 7.209431052207947,
       "title" : "cancel gym membership"
     },
@@ -6996,6 +8339,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-praefix-1",
@@ -7003,6 +8349,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.619063019752502,
       "title" : "Mülltonne rausstellen"
     },
@@ -7017,6 +8364,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-praefix-2",
@@ -7024,6 +8374,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.866002082824707,
       "title" : "Termin beim Augenarzt vereinbaren"
     },
@@ -7038,6 +8389,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-praefix-3",
@@ -7045,6 +8399,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.284765005111694,
       "title" : "Büro Angebot fertigstellen"
     },
@@ -7059,6 +8414,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-praefix-4",
@@ -7066,6 +8424,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.629125952720642,
       "title" : "Steuerberater kontaktieren"
     },
@@ -7080,6 +8439,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-praefix-5",
@@ -7087,6 +8449,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.547544956207275,
       "title" : "Kaffee kaufen jetzt"
     },
@@ -7101,6 +8464,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-praefix-6",
@@ -7108,6 +8474,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.719918012619019,
       "title" : "Zählerstand melden"
     },
@@ -7122,6 +8489,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-praefix-7",
@@ -7129,6 +8499,7 @@
       "people" : [
         "Sven"
       ],
+      "runIndex" : 0,
       "seconds" : 8.764841914176941,
       "title" : "Präsentation für Sven fertig machen"
     },
@@ -7143,6 +8514,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-praefix-8",
@@ -7150,6 +8524,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.226338982582092,
       "title" : "Öl für Rasenmäher besorgen"
     },
@@ -7164,6 +8539,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-praefix-9",
@@ -7171,6 +8549,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.76966392993927,
       "title" : "Passbilder abholen"
     },
@@ -7185,6 +8564,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-29T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-praefix-10",
@@ -7192,6 +8574,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.05604898929596,
       "title" : "Reisekosten abrechnen"
     },
@@ -7206,6 +8589,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-praefix-11",
@@ -7213,6 +8599,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.930992007255554,
       "title" : "Familie: Laternenumzug vorbereiten"
     },
@@ -7227,6 +8614,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-diktat-name-1",
@@ -7234,6 +8624,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.084692001342773,
       "title" : "Unterlagen für Dativ vorbereiten"
     },
@@ -7248,6 +8639,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-diktat-name-2",
@@ -7255,6 +8649,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.834908962249756,
       "title" : "anruf bei öz demir vereinbaren"
     },
@@ -7269,6 +8664,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-diktat-name-3",
@@ -7276,6 +8674,7 @@
       "people" : [
         "Frau Kowalsky"
       ],
+      "runIndex" : 0,
       "seconds" : 9.773460030555725,
       "title" : "Termin mit Frau Kowalsky bestätigen"
     },
@@ -7290,6 +8689,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-diktat-name-4",
@@ -7297,6 +8699,7 @@
       "people" : [
         "Andreas"
       ],
+      "runIndex" : 0,
       "seconds" : 9.685088992118835,
       "title" : "Andreas anrufen morgen"
     },
@@ -7311,6 +8714,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-diktat-name-5",
@@ -7318,6 +8724,7 @@
       "people" : [
         "sven maier"
       ],
+      "runIndex" : 0,
       "seconds" : 8.963940978050232,
       "title" : "rechnung von sven maier prüfen"
     },
@@ -7332,6 +8739,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-diktat-name-6",
@@ -7339,6 +8749,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.254498958587646,
       "title" : "Kontaktieren Sie Spar Kasse sofort"
     },
@@ -7353,6 +8764,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-20T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-diktat-name-7",
@@ -7360,6 +8774,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 9.162109971046448,
       "title" : "vertrag prüfen sofort"
     },
@@ -7374,6 +8789,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-diktat-name-8",
@@ -7381,6 +8799,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 8.59027099609375,
       "title" : "Rechnung an Debuecca senden"
     },
@@ -7395,6 +8814,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-21T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-diktat-name-9",
@@ -7402,6 +8824,7 @@
       "people" : [
         "Herrn Bier"
       ],
+      "runIndex" : 0,
       "seconds" : 9.114757061004639,
       "title" : "Telefonieren mit Herrn Bier"
     },
@@ -7416,6 +8839,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "de-diktat-name-10",
@@ -7423,6 +8849,7 @@
       "people" : [
 
       ],
+      "runIndex" : 0,
       "seconds" : 10.119410991668701,
       "title" : "Steuererklärung über Elstar einreichen"
     },
@@ -7437,6 +8864,9 @@
         "systemVersion" : "27.0",
         "thermal" : "serious"
       },
+      "contexts" : [
+
+      ],
       "dueDate" : "2026-09-19T22:00:00Z",
       "dueHasTime" : false,
       "entryID" : "en-dictation-name-1",
@@ -7444,8 +8874,87 @@
       "people" : [
         "mister o brian"
       ],
+      "runIndex" : 0,
       "seconds" : 8.893225908279419,
       "title" : "call mister o brian"
+    },
+    {
+      "capturedAt" : "2026-09-25T07:00:00Z",
+      "conditions" : {
+        "appState" : "inaktiv",
+        "batteryPercent" : 40,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "energy" : "medium",
+      "entryID" : "de-zweck-1",
+      "finishedAt" : "2026-09-25T12:22:23Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 7.823234915733337,
+      "title" : "Termin bei Auto Senger für Inspektion und Reifenwechsel vereinbaren"
+    },
+    {
+      "capturedAt" : "2026-09-25T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 40,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "energy" : "medium",
+      "entryID" : "de-zweck-2",
+      "finishedAt" : "2026-09-25T12:22:27Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.7039231061935425,
+      "title" : "Bei der Hausverwaltung anrufen wegen Heizungsablesung und Kellerschlüssel"
+    },
+    {
+      "capturedAt" : "2026-09-25T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 40,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0",
+        "thermal" : "normal"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes5",
+      "energy" : "medium",
+      "entryID" : "de-zeit-hinten-10",
+      "finishedAt" : "2026-09-25T12:22:32Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.617195010185242,
+      "title" : "Kinder zur Schule bringen übermorgen"
     }
   ],
   "startedAt" : "2026-09-20T05:21:49Z"
