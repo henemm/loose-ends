@@ -1,0 +1,28 @@
+RED-Beleg für Spike #69, Ticket A — Regel-Baseline für den Konventionstest
+============================================================================
+
+`LooseEndsTests/ConventionBaselineTests.swift` (sechs Tests für AC-1 bis AC-6) referenziert die
+Typen `ConventionCorpus` und `RuleBaseline`, die noch nicht existieren — sie sind erst Teil der
+Implementierung in Phase 6. Befehl: `./scripts/sim.sh unit` (macOS 26.6.1 < Deployment Target
+27.0, deshalb automatisch im iOS-17-Simulator, wie von `sim.sh` selbst gemeldet).
+
+Ergebnis: Build bricht mit Compile-Fehlern ab, `set -eo pipefail` in `scripts/sim.sh` lässt das
+Skript vor der Erfolgsmeldung „Unit-Tests bestanden." abbrechen — diese Meldung fehlt im
+vollständigen Lauf, was den Abbruch bestätigt.
+
+Compiler-Ausgabe (xcbeautify), Auszug aus `docs/artifacts/spike-69-retrieval-beispiele/_raw-unit-run.log`:
+------------------------------------------------------------------------------------------------------------
+
+❌ LooseEndsTests/ConventionBaselineTests.swift:24:10: cannot find type 'ConventionCorpus' in scope
+ 22 |         probeText: String,
+ 23 |         expectedContext: String
+
+❌ LooseEndsTests/ConventionBaselineTests.swift:21:23: cannot find type 'ConventionCorpus' in scope
+ 19 |     static func pattern(
+ 20 |         id: String = "test",
+
+Kein „Unit-Tests bestanden." am Ende des Laufs (Skript bricht laut `set -eo pipefail` vor dieser
+Zeile ab, sobald `xcodebuild` einen von Null verschiedenen Exit-Code liefert).
+
+Damit ist belegt: Weder `ConventionCorpus` noch `RuleBaseline` existieren in der Produktion. Die
+sechs Tests in `ConventionBaselineTests.swift` sind rot, bevor Phase 6 sie grün macht.
