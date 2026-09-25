@@ -43,7 +43,7 @@ struct DateParserCorpusTests {
             }
         }
         #expect(exact.total == 139, "Korpus hat \(exact.total) Datumssätze statt 139")
-        #expect(invented.total == 178, "Korpus hat \(invented.total) Kontrollsätze statt 178")
+        #expect(invented.total == 180, "Korpus hat \(invented.total) Kontrollsätze statt 180")
         #expect(exact.share >= 0.95, "Datum exakt: \(exact.summary)")
         #expect(invented.misses.isEmpty, "Datum erfunden: \(invented.summary)")
     }

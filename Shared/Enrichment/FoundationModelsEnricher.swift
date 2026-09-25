@@ -24,7 +24,8 @@ struct FoundationModelsEnricher: TaskEnricher {
 
     static let instructions = """
     You turn one captured note into a task. The note may be German or English; answer in the note's language.
-    Title: short and imperative, at most eight words, no trailing period. Keep names and numbers from the note.
+    Title: imperative, up to twelve words, no trailing period. Keep names and numbers from the note.
+    Never drop the object or purpose of the task, even if that means using more words.
     Duration buckets: minutes5, minutes15, minutes30, hour1, hours2plus. Energy: low, medium, high.
     Contexts and project must come from the allowed lists; otherwise leave them empty.
     Every confidence is between 0 and 1 and honest: use low confidence when the note does not say.
@@ -85,7 +86,7 @@ struct FoundationModelsEnricher: TaskEnricher {
 /// Flat schema for guided generation. Empty strings mean "not set"; the mapping above drops them.
 @Generable
 struct ModelEnrichment {
-    @Guide(description: "Short imperative title, at most eight words, in the language of the note")
+    @Guide(description: "Imperative title, up to twelve words, in the language of the note, keeping the object and purpose of the task")
     var title: String
     @Guide(description: "Confidence 0 to 1 that the title is right")
     var titleConfidence: Double

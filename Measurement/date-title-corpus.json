@@ -165,6 +165,8 @@
 {"id":"de-eigenname-8","lang":"de","text":"Den Tesla zur Inspektion anmelden","entities":["Tesla","Inspektion"]},
 {"id":"de-eigenname-9","lang":"de","text":"Die Wohnung in Wuppertal zur Besichtigung anmelden","entities":["Wuppertal"]},
 {"id":"de-eigenname-10","lang":"de","text":"Bei der Stadtwerke Bochum den Tarif wechseln","entities":["Bochum","Tarif"]},
+{"id":"de-zweck-1","lang":"de","text":"Termin bei Auto Senger machen für Inspektion und Reifenwechsel","entities":["Auto Senger","Inspektion","Reifenwechsel"]},
+{"id":"de-zweck-2","lang":"de","text":"Bei der Hausverwaltung anrufen wegen Heizungsablesung und Kellerschlüssel","entities":["Hausverwaltung","Heizungsablesung","Kellerschlüssel"]},
 {"id":"en-name-1","lang":"en","text":"Ask Ravi for the updated floor plan","entities":["floor plan"],"people":["Ravi"]},
 {"id":"en-name-2","lang":"en","text":"Send Mrs. Hargreaves the signed lease","entities":["lease"],"people":["Hargreaves"]},
 {"id":"en-name-3","lang":"en","text":"Remind Tom about the parking permit","entities":["parking permit"],"people":["Tom"]},

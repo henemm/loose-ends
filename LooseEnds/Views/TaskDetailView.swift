@@ -24,11 +24,23 @@ struct TaskDetailView: View {
     var body: some View {
         Form {
             Section {
-                TextField("Title", text: $titleDraft)
-                    .font(.title3.weight(.semibold))
-                    .focused($titleFocused)
-                    .onSubmit(commitTitle)
-                    .accessibilityIdentifier("detailTitleField")
+                HStack {
+                    TextField("Title", text: $titleDraft)
+                        .font(.title3.weight(.semibold))
+                        .focused($titleFocused)
+                        .onSubmit(commitTitle)
+                        .accessibilityIdentifier("detailTitleField")
+                    if aiFields.contains(.title) {
+                        Button(action: resetTitle) {
+                            Image(systemName: "arrow.uturn.backward")
+                                .imageScale(.medium)
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundStyle(.tint)
+                        .accessibilityLabel("Reset the title")
+                        .accessibilityIdentifier("resetTitleButton")
+                    }
+                }
                 Text(task.rawText)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -139,6 +151,15 @@ struct TaskDetailView: View {
         RevisionService.set(.title, to: trimmed.isEmpty ? nil : trimmed, on: task, contexts: contexts, projects: projects)
         if task.status == .unverified, !trimmed.isEmpty { task.status = .active }
         save("title")
+    }
+
+    /// One tap back to the value before the AI touched the title (Bug #125). `titleDraft` only
+    /// follows `task.title` in `.onAppear`, so it is pulled along here.
+    private func resetTitle() {
+        guard let revision = RevisionService.firstAIRevision(of: .title, on: task) else { return }
+        RevisionService.revert(revision, on: task, contexts: contexts, projects: projects)
+        titleDraft = task.title ?? ""
+        save("title reset")
     }
 
     private func markSeen() {

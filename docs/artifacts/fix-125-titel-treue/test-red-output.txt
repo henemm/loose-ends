@@ -1,0 +1,50 @@
+=== RevisionService Suite (Punkt 1, Regressions-/Neuabdeckung - alle GRUEN) ===
+◇ Suite "RevisionService" started.
+◇ Test "Resetting the AI title puts the raw text back and records a user revision" started.
+✔ Test "Resetting the AI title puts the raw text back and records a user revision" passed after 0.006 seconds.
+◇ Test "Resetting due date and contexts restores the pre-AI state" started.
+✔ Test "Resetting due date and contexts restores the pre-AI state" passed after 0.005 seconds.
+◇ Test "Reset all clears every AI field in one go and writes one user revision per field" started.
+✔ Test "Reset all clears every AI field in one go and writes one user revision per field" passed after 0.007 seconds.
+◇ Test "A user title edit writes a user revision; the same value again writes nothing" started.
+✔ Test "A user title edit writes a user revision; the same value again writes nothing" passed after 0.004 seconds.
+◇ Test "A user-authored title never shows the AI reset affordance (Bug #125, AC-3)" started.
+✔ Test "A user-authored title never shows the AI reset affordance (Bug #125, AC-3)" passed after 0.003 seconds.
+◇ Test "Marking seen clears the marker and takes an active task out of New" started.
+✔ Test "Marking seen clears the marker and takes an active task out of New" passed after 0.006 seconds.
+◇ Test "Project resets match by name; an unknown name leaves the project empty" started.
+✔ Test "Project resets match by name; an unknown name leaves the project empty" passed after 0.002 seconds.
+✔ Suite "RevisionService" passed after 0.036 seconds.
+
+=== FoundationModelsEnricher title prompt (Bug #125, Punkt 2 - RED, wie erwartet) ===
+◇ Suite "FoundationModelsEnricher title prompt (Bug #125)" started.
+◇ Test "The instructions raise the word limit and forbid dropping object or purpose" started.
+✘ Test "The instructions raise the word limit and forbid dropping object or purpose" recorded an issue at TitleFidelityPromptTests.swift:17:9: Expectation failed: !instructions.contains("at most eight words")
+↳ the old, too-strict word limit must be gone
+↳ !instructions.contains("at most eight words") → true
+↳   instructions.contains("at most eight words") → false
+↳     instructions → "You turn one captured note into a task. The note may be German or English; answer in the note's language.
+      Title: short and imperative, at most eight words, no trailing period. Keep names and numbers from the note.
+      Duration buckets: minutes5, minutes15, minutes30, hour1, hours2plus. Energy: low, medium, high.
+      Contexts and project must come from the allowed lists; otherwise leave them empty.
+      Every confidence is between 0 and 1 and honest: use low confidence when the note does not say.
+      Each reason is one short sentence."
+✘ Test "The instructions raise the word limit and forbid dropping object or purpose" recorded an issue at TitleFidelityPromptTests.swift:18:9: Expectation failed: instructions.contains("twelve words")
+↳ the loosened word limit must be stated
+↳ instructions.contains("twelve words") → false
+↳   instructions → "You turn one captured note into a task. The note may be German or English; answer in the note's language.
+    Title: short and imperative, at most eight words, no trailing period. Keep names and numbers from the note.
+    Duration buckets: minutes5, minutes15, minutes30, hour1, hours2plus. Energy: low, medium, high.
+    Contexts and project must come from the allowed lists; otherwise leave them empty.
+    Every confidence is between 0 and 1 and honest: use low confidence when the note does not say.
+    Each reason is one short sentence."
+✘ Test "The instructions raise the word limit and forbid dropping object or purpose" recorded an issue at TitleFidelityPromptTests.swift:19:9: Expectation failed: instructions.localizedCaseInsensitiveContains("purpose") || instructions.localizedCaseInsensitiveContains("object")
+↳ the instructions must explicitly protect the task's object or purpose
+↳ instructions.localizedCaseInsensitiveContains("purpose") || instructions.localizedCaseInsensitiveContains("object") → false
+↳   instructions.localizedCaseInsensitiveContains("purpose") → false
+↳   instructions.localizedCaseInsensitiveContains("object") → false
+✘ Test "The instructions raise the word limit and forbid dropping object or purpose" failed after 0.005 seconds with 3 issues.
+✘ Suite "FoundationModelsEnricher title prompt (Bug #125)" failed after 0.006 seconds with 3 issues.
+
+=== Gesamtergebnis ===
+✘ Test run with 181 tests in 40 suites failed after 1.945 seconds with 3 issues.
