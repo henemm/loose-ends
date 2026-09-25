@@ -86,4 +86,28 @@ import Testing
 
         #expect(DueReminders.handle(.done, taskID: UUID(), in: [task], contexts: [], projects: []) == false)
     }
+
+    /// #127: `plan` liest nur `task.dueDate` — egal ob es von Hand oder implizit über
+    /// `RepeatRule.firstDueDate` gesetzt wurde. Kein individueller Reminder zur
+    /// `repeatRule.hour`-Zeit, sondern derselbe 9-Uhr-Sammel-Push wie für jede andere Aufgabe (AC-5).
+    @Test("Eine über firstDueDate implizit gesetzte Fälligkeit landet im Sammel-Push (AC-5)")
+    @MainActor func planIncludesImplicitRepeatDueDate() async throws {
+        let store = try TestStore()
+        let calendar = try berlin()
+        let now = try date(16, hour: 8, in: calendar)
+
+        var rule = RepeatRule(frequency: .daily)
+        rule.hour = 19
+        rule.minute = 0
+        let task = TaskItem(rawText: "Jeden Tag um 19 Uhr Medikament nehmen")
+        task.status = .active
+        task.repeatRule = rule
+        task.dueDate = rule.firstDueDate(now: now, calendar: calendar)
+        store.context.insert(task)
+
+        let reminders = DueReminders.plan(for: [task], now: now, calendar: calendar)
+
+        #expect(reminders.map(\.taskID) == [task.id])
+        #expect(reminders.first?.fireDate == (try date(17, hour: 9, in: calendar)), "Sammel-Push um 9 Uhr, nicht um die in der Regel gespeicherten 19 Uhr")
+    }
 }

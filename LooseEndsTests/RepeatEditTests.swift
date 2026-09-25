@@ -97,6 +97,80 @@ private final class UntranslatedBundleMarker {}
         #expect(task.repeatRule?.minute == 0)
     }
 
+    // MARK: - #127: implizites erstes Fälligkeitsdatum
+
+    /// Nachstellung des Schreibablaufs aus `FieldEditorView.applyRepeat`: Guard `isNewRule &&
+    /// task.dueDate == nil` auswerten, `repeatRule` schreiben, bei erfülltem Guard zusätzlich
+    /// `dueDate` über denselben Weg wie `setDue` schreiben (`RevisionService.set(.dueDate, …)`
+    /// plus `dueHasTime`).
+    private func applyRepeat(_ rule: RepeatRule?, on task: TaskItem) {
+        let isNewRule = task.repeatRule == nil && rule != nil
+        _ = RevisionService.set(.repeatRule, to: rule.flatMap(FieldCodec.encode), on: task, contexts: [], projects: [])
+        if isNewRule, let rule, task.dueDate == nil {
+            let due = rule.firstDueDate()
+            _ = RevisionService.set(.dueDate, to: due.ISO8601Format(), on: task, contexts: [], projects: [])
+            task.dueHasTime = rule.hour != nil
+        }
+    }
+
+    @Test("Erstmaliges Anlegen einer Regel setzt implizit ein Fälligkeitsdatum (AC-2)")
+    @MainActor func firstRuleImplicitlySetsDueDate() throws {
+        let store = try TestStore()
+        let task = TaskItem(rawText: "Jeden Tag um 7 Uhr die Tabletten nehmen")
+        task.status = .active
+        store.context.insert(task)
+
+        let rule = RepeatRule.selecting(.daily, existing: task.repeatRule, rawText: task.rawText)
+        applyRepeat(rule, on: task)
+        try store.context.save()
+
+        #expect(task.dueDate != nil)
+        #expect(task.dueHasTime == true)
+        let dueRevision = try #require(task.revisions?.first { $0.field == .dueDate })
+        #expect(dueRevision.author == .user)
+    }
+
+    @Test("Ein bereits manuell gesetztes Fälligkeitsdatum bleibt beim Anlegen einer Regel unverändert (AC-3)")
+    @MainActor func existingDueDateIsNotOverwritten() throws {
+        let store = try TestStore()
+        let task = TaskItem(rawText: "Rasen mähen")
+        task.status = .active
+        store.context.insert(task)
+
+        let manualDue = try #require(Calendar.current.date(byAdding: .day, value: 3, to: Date()))
+        _ = RevisionService.set(.dueDate, to: manualDue.ISO8601Format(), on: task, contexts: [], projects: [])
+        try store.context.save()
+        let dueDateBefore = task.dueDate
+
+        let rule = RepeatRule.selecting(.weekly, existing: task.repeatRule, rawText: task.rawText)
+        applyRepeat(rule, on: task)
+        try store.context.save()
+
+        #expect(task.dueDate == dueDateBefore)
+        #expect(task.revisions?.filter { $0.field == .dueDate }.count == 1)
+    }
+
+    @Test("Ändern einer bestehenden Regel setzt kein erneutes implizites Fälligkeitsdatum (AC-4)")
+    @MainActor func changingExistingRuleDoesNotRewriteDueDate() throws {
+        let store = try TestStore()
+        let task = TaskItem(rawText: "Jeden Tag um 7 Uhr die Tabletten nehmen")
+        task.status = .active
+        store.context.insert(task)
+
+        let existing = RepeatRule.selecting(.daily, existing: task.repeatRule, rawText: task.rawText)
+        applyRepeat(existing, on: task)
+        try store.context.save()
+        let dueDateBefore = task.dueDate
+        #expect(dueDateBefore != nil)
+
+        let changed = RepeatRule.selecting(.weekly, existing: task.repeatRule, rawText: task.rawText)
+        applyRepeat(changed, on: task)
+        try store.context.save()
+
+        #expect(task.dueDate == dueDateBefore)
+        #expect(task.revisions?.filter { $0.field == .dueDate }.count == 1)
+    }
+
     @Test("Rules read as people say them")
     func descriptions() {
         let calendar = posix()
