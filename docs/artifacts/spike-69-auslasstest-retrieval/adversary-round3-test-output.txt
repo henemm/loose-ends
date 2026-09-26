@@ -1,0 +1,768 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test -project LooseEnds.xcodeproj -scheme LooseEnds -destination "platform=iOS Simulator,id=3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1" "-only-testing:LooseEndsTests" -parallel-testing-enabled NO -derivedDataPath /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default CODE_SIGNING_ALLOWED=NO
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (6 targets)
+    Target 'LooseEndsUITests' in project 'LooseEnds'
+        ➜ Explicit dependency on target 'LooseEnds' in project 'LooseEnds'
+    Target 'LooseEndsTests' in project 'LooseEnds'
+        ➜ Explicit dependency on target 'LooseEnds' in project 'LooseEnds'
+    Target 'LooseEnds' in project 'LooseEnds'
+        ➜ Explicit dependency on target 'LooseEndsWatch' in project 'LooseEnds'
+        ➜ Explicit dependency on target 'LooseEndsWidgets' in project 'LooseEnds'
+        ➜ Explicit dependency on target 'LooseEndsShare' in project 'LooseEnds'
+    Target 'LooseEndsShare' in project 'LooseEnds' (no dependencies)
+    Target 'LooseEndsWidgets' in project 'LooseEnds' (no dependencies)
+    Target 'LooseEndsWatch' in project 'LooseEnds' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache
+    cd /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEnds.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -o /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache
+
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/WatchSimulator.platform/Developer/SDKs/WatchSimulator27.0.sdk /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/SDKStatCaches.noindex/watchsimulator27.0-24R360-c50668d93734557a32a78b937f5ceaf1.sdkstatcache
+    cd /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEnds.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/WatchSimulator.platform/Developer/SDKs/WatchSimulator27.0.sdk -o /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/SDKStatCaches.noindex/watchsimulator27.0-24R360-c50668d93734557a32a78b937f5ceaf1.sdkstatcache
+
+PruneExplicitPrecompiledModules /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/SDKExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+2026-09-26 18:25:46.992557+0200 LooseEnds[57587:76351998] [API] cannot add handler to 0 from 0 - dropping
+2026-09-26 18:25:47.006305+0200 LooseEnds[57587:76351998] [XPCErrors] non-launching port is incompatible with service identifier "com.apple.PointerUI.pointeruid.default-service"
+2026-09-26 18:25:47.009460+0200 LooseEnds[57587:76351998] [API] cannot add handler to 0 from 0 - dropping
+2026-09-26 18:25:47.009501+0200 LooseEnds[57587:76351998] [API] cannot add handler to 0 from 0 - dropping
+Test Suite 'All tests' started at 2026-09-26 18:25:47.573.
+Test Suite 'All tests' passed at 2026-09-26 18:25:47.575.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64-apple-ios17.0-simulator
+◇ Suite "Show in calendar" started.
+◇ Test "Only an open task with the switch on and a due date gets an event" started.
+✔ Test "Only an open task with the switch on and a due date gets an event" passed after 0.005 seconds.
+◇ Test "A due time gives a block as long as the duration, a bare day gives an all-day event" started.
+✔ Test "A due time gives a block as long as the duration, a bare day gives an all-day event" passed after 0.002 seconds.
+◇ Test "Changes sort tasks into create, update and remove, and are empty while nobody asks" started.
+✔ Test "Changes sort tasks into create, update and remove, and are empty while nobody asks" passed after 0.002 seconds.
+◇ Test "A deleted task's event has no task left to carry it, but still counts as an orphan (#122)" started.
+✔ Test "A deleted task's event has no task left to carry it, but still counts as an orphan (#122)" passed after 0.003 seconds.
+✔ Suite "Show in calendar" passed after 0.028 seconds.
+◇ Suite "CaptureService" started.
+◇ Test "Saves trimmed raw text with channel and source, unprocessed, visible in New" started.
+2026-09-26 18:25:47.640775+0200 LooseEnds[57587:76352138] [SwiftUI] Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+✔ Test "Saves trimmed raw text with channel and source, unprocessed, visible in New" passed after 0.032 seconds.
+◇ Test "Blank text is rejected and nothing is stored" started.
+◇ Test case passing 1 argument input → "" to "Blank text is rejected and nothing is stored" started.
+​◇ Test case passing 1 argument input → "   " to "Blank text is rejected and nothing is stored" started.
+​◇ Test case passing 1 argument input → "
+	 " to "Blank text is rejected and nothing is stored" started.
+​✔ Test "Blank text is rejected and nothing is stored" with 3 test cases passed after 0.015 seconds.
+◇ Test "Newest capture comes first in New" started.
+2026-09-26 18:25:47.680331+0200 LooseEnds[57587:76352138] [SwiftUI] Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+2026-09-26 18:25:47.681075+0200 LooseEnds[57587:76352138] [SwiftUI] Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+2026-09-26 18:25:47.681813+0200 LooseEnds[57587:76352138] [SwiftUI] Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+✔ Test "Newest capture comes first in New" passed after 0.021 seconds.
+✔ Suite "CaptureService" passed after 0.069 seconds.
+◇ Suite "CatalogService" started.
+◇ Test "A new project trims its name and sorts after the existing ones" started.
+✔ Test "A new project trims its name and sorts after the existing ones" passed after 0.008 seconds.
+◇ Test "A blank name is rejected and nothing is inserted" started.
+✔ Test "A blank name is rejected and nothing is inserted" passed after 0.002 seconds.
+◇ Test "Renaming a context keeps its identity" started.
+✔ Test "Renaming a context keeps its identity" passed after 0.002 seconds.
+◇ Test "Deleting a project keeps its tasks, which lose the project" started.
+✔ Test "Deleting a project keeps its tasks, which lose the project" passed after 0.007 seconds.
+◇ Test "Deleting a context removes the tag from its tasks and keeps the other tags" started.
+✔ Test "Deleting a context removes the tag from its tasks and keeps the other tags" passed after 0.006 seconds.
+✔ Suite "CatalogService" passed after 0.027 seconds.
+◇ Suite "ViewRules for contexts and projects" started.
+◇ Test "A context view lists open top-level tasks with that tag only" started.
+✔ Test "A context view lists open top-level tasks with that tag only" passed after 0.004 seconds.
+◇ Test "A project view lists open top-level tasks of that project, urgent first" started.
+✔ Test "A project view lists open top-level tasks of that project, urgent first" passed after 0.003 seconds.
+✔ Suite "ViewRules for contexts and projects" passed after 0.008 seconds.
+◇ Suite "Regel-Baseline für den Konventionstest (Spike #69, Ticket A)" started.
+◇ Test "Lädt zehn Wort→Kontext-Muster, je drei Korrekturen und eine Sonde (AC-1)" started.
+✔ Test "Lädt zehn Wort→Kontext-Muster, je drei Korrekturen und eine Sonde (AC-1)" passed after 0.001 seconds.
+◇ Test "Kernwort, das in drei Korrekturen und der Sonde vorkommt, liefert deren Kontext (AC-2)" started.
+✔ Test "Kernwort, das in drei Korrekturen und der Sonde vorkommt, liefert deren Kontext (AC-2)" passed after 0.001 seconds.
+◇ Test "Mehrheitsentscheid gewinnt, nicht der zuletzt gesehene Wert (AC-3)" started.
+✔ Test "Mehrheitsentscheid gewinnt, nicht der zuletzt gesehene Wert (AC-3)" passed after 0.001 seconds.
+◇ Test "Kein gemeinsames Wort liefert nil, keinen erzwungenen Kontext (AC-4)" started.
+✔ Test "Kein gemeinsames Wort liefert nil, keinen erzwungenen Kontext (AC-4)" passed after 0.001 seconds.
+◇ Test "Auswertung über mehrere Muster liefert eine Trefferquote (AC-5)" started.
+✔ Test "Auswertung über mehrere Muster liefert eine Trefferquote (AC-5)" passed after 0.001 seconds.
+◇ Test "Bericht wird aus dem eingebetteten Korpus geschrieben, ohne Modell- oder Geräteaufruf (AC-6)" started.
+✔ Test "Bericht wird aus dem eingebetteten Korpus geschrieben, ohne Modell- oder Geräteaufruf (AC-6)" passed after 0.003 seconds.
+✔ Suite "Regel-Baseline für den Konventionstest (Spike #69, Ticket A)" passed after 0.006 seconds.
+◇ Suite "Korpus-Regelwerk" started.
+◇ Test "Tagesversatz zählt vom Erfassungstag" started.
+✔ Test "Tagesversatz zählt vom Erfassungstag" passed after 0.001 seconds.
+◇ Test "Wochentag meint den nächsten, am Tag selbst auch heute" started.
+✔ Test "Wochentag meint den nächsten, am Tag selbst auch heute" passed after 0.001 seconds.
+◇ Test "Nächste Woche meint die Folgewoche, nächster Freitag beides" started.
+✔ Test "Nächste Woche meint die Folgewoche, nächster Freitag beides" passed after 0.001 seconds.
+◇ Test "Monatsende, Tag im Monat, Wochenende" started.
+✔ Test "Monatsende, Tag im Monat, Wochenende" passed after 0.001 seconds.
+◇ Test "Nächster Monat lässt jeden Tag des Folgemonats gelten" started.
+✔ Test "Nächster Monat lässt jeden Tag des Folgemonats gelten" passed after 0.001 seconds.
+◇ Test "Datum mit Monat rollt ins nächste Jahr, wenn es vorbei ist" started.
+✔ Test "Datum mit Monat rollt ins nächste Jahr, wenn es vorbei ist" passed after 0.001 seconds.
+◇ Test "Am Sonntag meint 'am Wochenende' heute und das nächste Wochenende" started.
+✔ Test "Am Sonntag meint 'am Wochenende' heute und das nächste Wochenende" passed after 0.001 seconds.
+◇ Test "Monatsende im Februar und Jahreswechsel" started.
+✔ Test "Monatsende im Februar und Jahreswechsel" passed after 0.001 seconds.
+◇ Test "Der Korpus lädt, ist eindeutig und jede Entität steht im Rohtext" started.
+✔ Test "Der Korpus lädt, ist eindeutig und jede Entität steht im Rohtext" passed after 0.004 seconds.
+◇ Test "Der Korpus kennt Hennings Bauformen, mindestens 100 Sätze außerhalb der Standardform" started.
+✔ Test "Der Korpus kennt Hennings Bauformen, mindestens 100 Sätze außerhalb der Standardform" passed after 0.002 seconds.
+◇ Test "Ausdrücklich genannter Dateiname lädt dieselben Einträge wie der Default (AC-1)" started.
+✔ Test "Ausdrücklich genannter Dateiname lädt dieselben Einträge wie der Default (AC-1)" passed after 0.002 seconds.
+◇ Test "Unbekannter Dateiname wirft denselben Fehler wie eine fehlende Standarddatei (AC-1)" started.
+✔ Test "Unbekannter Dateiname wirft denselben Fehler wie eine fehlende Standarddatei (AC-1)" passed after 0.002 seconds.
+◇ Test "--corpus liest den Korpusnamen aus den Startargumenten (AC-6)" started.
+✔ Test "--corpus liest den Korpusnamen aus den Startargumenten (AC-6)" passed after 0.001 seconds.
+◇ Test "FocusBlox-Wahrheitsfelder dekodieren additiv aus dem Korpus-Eintrag (AC-1)" started.
+✔ Test "FocusBlox-Wahrheitsfelder dekodieren additiv aus dem Korpus-Eintrag (AC-1)" passed after 0.001 seconds.
+◇ Test "Ein Eintrag der bestehenden date-title-corpus-Datei ohne die neuen Schlüssel dekodiert sie als nil (AC-1)" started.
+✔ Test "Ein Eintrag der bestehenden date-title-corpus-Datei ohne die neuen Schlüssel dekodiert sie als nil (AC-1)" passed after 0.001 seconds.
+◇ Test "--runs liest die Laufzahl aus den Startargumenten, Default bleibt 1 (AC-4)" started.
+✔ Test "--runs liest die Laufzahl aus den Startargumenten, Default bleibt 1 (AC-4)" passed after 0.001 seconds.
+✔ Suite "Korpus-Regelwerk" passed after 0.016 seconds.
+◇ Suite "Titelprüfung" started.
+◇ Test "Entität bleibt erhalten, unabhängig von Groß- und Kleinschreibung" started.
+✔ Test "Entität bleibt erhalten, unabhängig von Groß- und Kleinschreibung" passed after 0.001 seconds.
+◇ Test "Eine Zahl im Titel, die der Rohtext nicht nennt, ist erfunden" started.
+✔ Test "Eine Zahl im Titel, die der Rohtext nicht nennt, ist erfunden" passed after 0.001 seconds.
+◇ Test "Andrea darf im Titel nicht zu Andreas werden" started.
+✔ Test "Andrea darf im Titel nicht zu Andreas werden" passed after 0.001 seconds.
+◇ Test "Umformulierungen zeigen sich als Fremdwörter im Titel" started.
+✔ Test "Umformulierungen zeigen sich als Fremdwörter im Titel" passed after 0.001 seconds.
+◇ Test "Editierabstand misst kleine Namensverdreher" started.
+✔ Test "Editierabstand misst kleine Namensverdreher" passed after 0.001 seconds.
+✔ Suite "Titelprüfung" passed after 0.001 seconds.
+◇ Suite "Regelparser: Datum" started.
+◇ Test "heute, morgen, übermorgen, in N Tagen / Wochen — Deutsch" started.
+✔ Test "heute, morgen, übermorgen, in N Tagen / Wochen — Deutsch" passed after 0.002 seconds.
+◇ Test "today, tomorrow, the day after tomorrow, in N days / weeks — English" started.
+✔ Test "today, tomorrow, the day after tomorrow, in N days / weeks — English" passed after 0.001 seconds.
+◇ Test "Wochentag mit und ohne Präposition, am Anfang, in der Mitte, am Ende" started.
+✔ Test "Wochentag mit und ohne Präposition, am Anfang, in der Mitte, am Ende" passed after 0.001 seconds.
+◇ Test "nächsten <Tag> / next <day> löst auf die Folgewoche auf" started.
+✔ Test "nächsten <Tag> / next <day> löst auf die Folgewoche auf" passed after 0.001 seconds.
+◇ Test "Der Regelparser liegt im Produktmodul, nicht im Testziel" started.
+✔ Test "Der Regelparser liegt im Produktmodul, nicht im Testziel" passed after 0.002 seconds.
+◇ Test "nächste Woche <Tag> meint die Folgewoche, auch kleingeschrieben und hinten" started.
+✔ Test "nächste Woche <Tag> meint die Folgewoche, auch kleingeschrieben und hinten" passed after 0.001 seconds.
+◇ Test "Monatsende in allen Schreibweisen" started.
+✔ Test "Monatsende in allen Schreibweisen" passed after 0.001 seconds.
+◇ Test "Tag im Monat nur mit Ordnungszeichen und Präposition" started.
+✔ Test "Tag im Monat nur mit Ordnungszeichen und Präposition" passed after 0.001 seconds.
+◇ Test "Wochenende, dieses Wochenende, over the weekend" started.
+✔ Test "Wochenende, dieses Wochenende, over the weekend" passed after 0.001 seconds.
+◇ Test "nächsten Monat / next month" started.
+✔ Test "nächsten Monat / next month" passed after 0.001 seconds.
+◇ Test "Festes Datum mit Monatsname, Deutsch und Englisch" started.
+✔ Test "Festes Datum mit Monatsname, Deutsch und Englisch" passed after 0.001 seconds.
+◇ Test "Zahlen ohne Zeitkontext ergeben kein Datum" started.
+✔ Test "Zahlen ohne Zeitkontext ergeben kein Datum" passed after 0.001 seconds.
+◇ Test "Wiederholungen sind kein Datum: jeden, every, werktags" started.
+✔ Test "Wiederholungen sind kein Datum: jeden, every, werktags" passed after 0.001 seconds.
+◇ Test "Zwei Ausdrücke im Satz: der erste gewinnt" started.
+✔ Test "Zwei Ausdrücke im Satz: der erste gewinnt" passed after 0.001 seconds.
+◇ Test "Uhrzeiten lösen keinen Tagesversatz aus" started.
+✔ Test "Uhrzeiten lösen keinen Tagesversatz aus" passed after 0.001 seconds.
+✔ Suite "Regelparser: Datum" passed after 0.011 seconds.
+◇ Suite "Regelparser: Abnahme über den Korpus" started.
+◇ Test "Datum: mindestens 95 % exakt, kein einziges erfunden" started.
+✔ Test "Datum: mindestens 95 % exakt, kein einziges erfunden" passed after 0.026 seconds.
+◇ Test "Uhrzeit: mindestens 95 % exakt, Wiederholungen eingeschlossen" started.
+✔ Test "Uhrzeit: mindestens 95 % exakt, Wiederholungen eingeschlossen" passed after 0.001 seconds.
+◇ Test "Uhrzeit: kein Satz ohne Uhrzeit bekommt eine" started.
+✔ Test "Uhrzeit: kein Satz ohne Uhrzeit bekommt eine" passed after 0.003 seconds.
+✔ Suite "Regelparser: Abnahme über den Korpus" passed after 0.030 seconds.
+◇ Suite DateTitleReportTests started.
+◇ Test "Bericht aus den Messläufen des iPhones" started.
+✔ Test "Bericht aus den Messläufen des iPhones" passed after 0.346 seconds.
+✔ Suite DateTitleReportTests passed after 0.346 seconds.
+◇ Suite "Bericht nach Bauform" started.
+◇ Test "Jede Bauform bekommt eine Zeile mit Datum, erfundenem Datum und Titel" started.
+✔ Test "Jede Bauform bekommt eine Zeile mit Datum, erfundenem Datum und Titel" passed after 0.001 seconds.
+✔ Suite "Bericht nach Bauform" passed after 0.001 seconds.
+◇ Suite "Bericht: Regelparser-Spalte" started.
+◇ Test "Der Regelparser wird über Datum, Kontrolle und Uhrzeit gezählt, Wiederholungen nur bei der Uhrzeit" started.
+✔ Test "Der Regelparser wird über Datum, Kontrolle und Uhrzeit gezählt, Wiederholungen nur bei der Uhrzeit" passed after 0.001 seconds.
+◇ Test "Datumstabelle hat die Spalte Regelparser, auch nach Art des Ausdrucks" started.
+✔ Test "Datumstabelle hat die Spalte Regelparser, auch nach Art des Ausdrucks" passed after 0.001 seconds.
+◇ Test "Was der Regelparser verfehlt, steht mit Ausdrucksart im Bericht" started.
+✔ Test "Was der Regelparser verfehlt, steht mit Ausdrucksart im Bericht" passed after 0.001 seconds.
+✔ Suite "Bericht: Regelparser-Spalte" passed after 0.001 seconds.
+◇ Suite "Regelschritt: Fälligkeitsdatum" started.
+◇ Test "Datum und Uhrzeit werden zu einem Zeitpunkt zusammengesetzt (AC-5)" started.
+✔ Test "Datum und Uhrzeit werden zu einem Zeitpunkt zusammengesetzt (AC-5)" passed after 0.002 seconds.
+◇ Test "Ein Regel-Treffer trägt immer die Konfidenz 1.0 (AC-9)" started.
+✔ Test "Ein Regel-Treffer trägt immer die Konfidenz 1.0 (AC-9)" passed after 0.001 seconds.
+◇ Test "Ohne Uhrzeit bleibt es der Tagesbeginn und hasTime falsch (AC-5)" started.
+✔ Test "Ohne Uhrzeit bleibt es der Tagesbeginn und hasTime falsch (AC-5)" passed after 0.001 seconds.
+◇ Test "Uhrzeit ohne erkanntes Datum liefert kein Ergebnis (AC-6)" started.
+✔ Test "Uhrzeit ohne erkanntes Datum liefert kein Ergebnis (AC-6)" passed after 0.001 seconds.
+◇ Test "Ein Satz ohne Zeitausdruck liefert kein Ergebnis (AC-6)" started.
+✔ Test "Ein Satz ohne Zeitausdruck liefert kein Ergebnis (AC-6)" passed after 0.001 seconds.
+◇ Test "Jede Ausdrucksart bekommt einen eigenen, nicht-leeren Grund (AC-5)" started.
+✔ Test "Jede Ausdrucksart bekommt einen eigenen, nicht-leeren Grund (AC-5)" passed after 0.001 seconds.
+◇ Test "Der Regelschritt liegt im Produktmodul" started.
+✔ Test "Der Regelschritt liegt im Produktmodul" passed after 0.005 seconds.
+◇ Test "Alle neun Begründungssätze sind im deutschen Bundle übersetzt (#98, AC-1)" started.
+✔ Test "Alle neun Begründungssätze sind im deutschen Bundle übersetzt (#98, AC-1)" passed after 0.001 seconds.
+✔ Suite "Regelschritt: Fälligkeitsdatum" passed after 0.009 seconds.
+◇ Suite "DueReminders" started.
+◇ Test "Only active tasks with a reminder time still ahead get a reminder, at the reminder hour" started.
+✔ Test "Only active tasks with a reminder time still ahead get a reminder, at the reminder hour" passed after 0.003 seconds.
+◇ Test "A task due today after the reminder hour has passed is not reminded again" started.
+✔ Test "A task due today after the reminder hour has passed is not reminded again" passed after 0.002 seconds.
+◇ Test "Done, Next up and Tomorrow apply from the notification; an unknown task is reported" started.
+✔ Test "Done, Next up and Tomorrow apply from the notification; an unknown task is reported" passed after 0.014 seconds.
+◇ Test "Eine über firstDueDate implizit gesetzte Fälligkeit landet im Sammel-Push (AC-5)" started.
+✔ Test "Eine über firstDueDate implizit gesetzte Fälligkeit landet im Sammel-Push (AC-5)" passed after 0.002 seconds.
+✔ Suite "DueReminders" passed after 0.023 seconds.
+◇ Suite "EnrichmentWriter" started.
+◇ Test "Fields at or above the threshold are written with source, confidence and one AI revision each" started.
+✔ Test "Fields at or above the threshold are written with source, confidence and one AI revision each" passed after 0.008 seconds.
+◇ Test "A title below the threshold leaves the task unverified with the raw text on show" started.
+✔ Test "A title below the threshold leaves the task unverified with the raw text on show" passed after 0.002 seconds.
+◇ Test "A project is assigned only when the name matches an existing project" started.
+✔ Test "A project is assigned only when the name matches an existing project" passed after 0.003 seconds.
+✔ Suite "EnrichmentWriter" passed after 0.014 seconds.
+◇ Suite "EnrichmentCoordinator" started.
+◇ Test "Every unprocessed task is enriched once; a second pass touches nothing" started.
+2026-09-26 18:25:48.213307+0200 LooseEnds[57587:76351998] [Enrichment] Enriched 178D66CE-FF75-43A0-959F-04538BF19DD1: 1 fields
+2026-09-26 18:25:48.236968+0200 LooseEnds[57587:76351998] [Enrichment] Enriched 01DCE970-875B-482B-9A9C-7880A4CA7B8E: 1 fields
+✔ Test "Every unprocessed task is enriched once; a second pass touches nothing" passed after 0.056 seconds.
+◇ Test "A failing model leaves the task unprocessed for the next pass" started.
+2026-09-26 18:25:48.265672+0200 LooseEnds[57587:76351998] [Enrichment] Enrichment failed for C2282E4E-06BB-4CC1-875E-7375EFADA46B: LooseEndsTests.StubFailure()
+✔ Test "A failing model leaves the task unprocessed for the next pass" passed after 0.027 seconds.
+◇ Test "An unavailable model is not called at all" started.
+2026-09-26 18:25:48.269151+0200 LooseEnds[57587:76351998] [Enrichment] Model unavailable, rules only: deviceNotEligible
+✔ Test "An unavailable model is not called at all" passed after 0.025 seconds.
+◇ Test "Examples are the most recent completed tasks with their final attributes" started.
+✔ Test "Examples are the most recent completed tasks with their final attributes" passed after 0.005 seconds.
+◇ Test "Ohne verfügbares Modell schreibt die Regel trotzdem das Datum" started.
+2026-09-26 18:25:48.300006+0200 LooseEnds[57587:76351998] [Enrichment] Model unavailable, rules only: deviceNotEligible
+2026-09-26 18:25:48.300731+0200 LooseEnds[57587:76351998] [Enrichment] Rule set due date for 14CF1C61-457E-420D-8CA8-705F1387F081
+✔ Test "Ohne verfügbares Modell schreibt die Regel trotzdem das Datum" passed after 0.026 seconds.
+◇ Test "Der Nachhol-Durchgang holt den Titel, ohne die Regel-Revision zu verdoppeln" started.
+2026-09-26 18:25:48.327177+0200 LooseEnds[57587:76351998] [Enrichment] Model unavailable, rules only: deviceNotEligible
+2026-09-26 18:25:48.327899+0200 LooseEnds[57587:76351998] [Enrichment] Rule set due date for 853B73C8-FA59-428A-99D1-990280E87C21
+2026-09-26 18:25:48.373390+0200 LooseEnds[57587:76351998] [Enrichment] Enriched 853B73C8-FA59-428A-99D1-990280E87C21: 1 fields
+✔ Test "Der Nachhol-Durchgang holt den Titel, ohne die Regel-Revision zu verdoppeln" passed after 0.050 seconds.
+◇ Test "Wichtigkeit ist unabhängig vom Erfassungszeitpunkt (AC-5)" started.
+2026-09-26 18:25:48.377839+0200 LooseEnds[57587:76351998] [Enrichment] Model unavailable, rules only: deviceNotEligible
+2026-09-26 18:25:48.379123+0200 LooseEnds[57587:76351998] [Enrichment] Rule set importance for 865277DB-B37C-4F3C-BC8E-BE51F0DAA292
+2026-09-26 18:25:48.388449+0200 LooseEnds[57587:76351998] [Enrichment] Rule set importance for 5DABE6CE-D1F8-4A0C-9D9C-B1B76FBAA905
+✔ Test "Wichtigkeit ist unabhängig vom Erfassungszeitpunkt (AC-5)" passed after 0.022 seconds.
+◇ Test "Der Nachhol-Durchgang verdoppelt keine Wichtigkeits-/Dringlichkeits-Revision (AC-6)" started.
+2026-09-26 18:25:48.399658+0200 LooseEnds[57587:76351998] [Enrichment] Model unavailable, rules only: deviceNotEligible
+2026-09-26 18:25:48.400798+0200 LooseEnds[57587:76351998] [Enrichment] Rule set importance for 60162919-1ABD-4255-9193-C42A27F1CAC1
+2026-09-26 18:25:48.404739+0200 LooseEnds[57587:76351998] [Enrichment] Rule set urgency for 60162919-1ABD-4255-9193-C42A27F1CAC1
+2026-09-26 18:25:48.406256+0200 LooseEnds[57587:76351998] [Enrichment] Enriched 60162919-1ABD-4255-9193-C42A27F1CAC1: 0 fields
+✔ Test "Der Nachhol-Durchgang verdoppelt keine Wichtigkeits-/Dringlichkeits-Revision (AC-6)" passed after 0.010 seconds.
+✔ Suite "EnrichmentCoordinator" passed after 0.225 seconds.
+◇ Suite "EnrichmentParsing" started.
+◇ Test "Confidences outside 0 to 1 are clamped" started.
+✔ Test "Confidences outside 0 to 1 are clamped" passed after 0.001 seconds.
+✔ Suite "EnrichmentParsing" passed after 0.001 seconds.
+◇ Suite "ContextSeeder" started.
+◇ Test "The default contexts are seeded once and never re-added after deletion" started.
+✔ Test "The default contexts are seeded once and never re-added after deletion" passed after 0.007 seconds.
+✔ Suite "ContextSeeder" passed after 0.007 seconds.
+◇ Suite "Field edits" started.
+◇ Test "Setting importance writes a user revision from empty to high" started.
+✔ Test "Setting importance writes a user revision from empty to high" passed after 0.003 seconds.
+◇ Test "Clearing the due date records the old value and drops the source" started.
+✔ Test "Clearing the due date records the old value and drops the source" passed after 0.003 seconds.
+◇ Test "Contexts are set by name from the available ones; unknown names are ignored" started.
+✔ Test "Contexts are set by name from the available ones; unknown names are ignored" passed after 0.002 seconds.
+◇ Test "A project is set by name and cleared with nil; the same value again writes nothing" started.
+✔ Test "A project is set by name and cleared with nil; the same value again writes nothing" passed after 0.002 seconds.
+✔ Suite "Field edits" passed after 0.012 seconds.
+◇ Suite FocusBloxCalibrationTests started.
+◇ Test "Precision/Recall je Schwelle für duration, energy" started.
+2026-09-26 18:25:49.576063+0200 LooseEnds[57587:76352138] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:49.870325+0200 LooseEnds[57587:76352137] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:49.870502+0200 LooseEnds[57587:76352137] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:49.932029+0200 LooseEnds[57587:76352192] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:50.032531+0200 LooseEnds[57587:76352192] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:50.032615+0200 LooseEnds[57587:76352192] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:50.090682+0200 LooseEnds[57587:76352166] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:50.192338+0200 LooseEnds[57587:76352192] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:50.192430+0200 LooseEnds[57587:76352192] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:50.230804+0200 LooseEnds[57587:76352139] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:50.341186+0200 LooseEnds[57587:76352137] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:50.341282+0200 LooseEnds[57587:76352137] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:50.382083+0200 LooseEnds[57587:76352166] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:50.492812+0200 LooseEnds[57587:76352192] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:50.492909+0200 LooseEnds[57587:76352192] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:50.535239+0200 LooseEnds[57587:76352166] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:50.645746+0200 LooseEnds[57587:76352192] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:50.645844+0200 LooseEnds[57587:76352192] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:50.692482+0200 LooseEnds[57587:76352138] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:50.801122+0200 LooseEnds[57587:76352138] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:50.801216+0200 LooseEnds[57587:76352138] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:50.842157+0200 LooseEnds[57587:76352166] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:50.975833+0200 LooseEnds[57587:76352137] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:50.975945+0200 LooseEnds[57587:76352137] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:51.019121+0200 LooseEnds[57587:76352137] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:51.127044+0200 LooseEnds[57587:76352138] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:51.127130+0200 LooseEnds[57587:76352138] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:51.163927+0200 LooseEnds[57587:76352192] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:51.264874+0200 LooseEnds[57587:76352192] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:51.264954+0200 LooseEnds[57587:76352192] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:51.304476+0200 LooseEnds[57587:76352137] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:51.413587+0200 LooseEnds[57587:76352137] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:51.413715+0200 LooseEnds[57587:76352137] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:51.451867+0200 LooseEnds[57587:76352166] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:51.552040+0200 LooseEnds[57587:76352138] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:51.552121+0200 LooseEnds[57587:76352138] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:51.583457+0200 LooseEnds[57587:76352192] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:51.685121+0200 LooseEnds[57587:76352139] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:51.685218+0200 LooseEnds[57587:76352139] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:51.728403+0200 LooseEnds[57587:76352166] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:51.827204+0200 LooseEnds[57587:76352166] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:51.827283+0200 LooseEnds[57587:76352166] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:51.860439+0200 LooseEnds[57587:76352166] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:51.959523+0200 LooseEnds[57587:76352137] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:51.959599+0200 LooseEnds[57587:76352137] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:51.992229+0200 LooseEnds[57587:76352192] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:52.112292+0200 LooseEnds[57587:76352166] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:52.112372+0200 LooseEnds[57587:76352166] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:52.156431+0200 LooseEnds[57587:76352194] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:52.271164+0200 LooseEnds[57587:76352165] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:52.271255+0200 LooseEnds[57587:76352165] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:52.304771+0200 LooseEnds[57587:76352166] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:52.444465+0200 LooseEnds[57587:76352166] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:52.444765+0200 LooseEnds[57587:76352166] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:52.515759+0200 LooseEnds[57587:76352167] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:52.683014+0200 LooseEnds[57587:76352131] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:52.683108+0200 LooseEnds[57587:76352131] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:52.744665+0200 LooseEnds[57587:76352138] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:52.904374+0200 LooseEnds[57587:76352138] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:52.904481+0200 LooseEnds[57587:76352138] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:52.974776+0200 LooseEnds[57587:76352138] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:53.125980+0200 LooseEnds[57587:76352138] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:53.126067+0200 LooseEnds[57587:76352138] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:53.175934+0200 LooseEnds[57587:76352166] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:53.326519+0200 LooseEnds[57587:76352166] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:53.326627+0200 LooseEnds[57587:76352166] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:53.373938+0200 LooseEnds[57587:76352138] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:53.498446+0200 LooseEnds[57587:76352167] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:53.498561+0200 LooseEnds[57587:76352167] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:53.540539+0200 LooseEnds[57587:76352131] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:53.643577+0200 LooseEnds[57587:76352166] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:53.643656+0200 LooseEnds[57587:76352166] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:53.677652+0200 LooseEnds[57587:76352131] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:53.787861+0200 LooseEnds[57587:76352165] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:53.787941+0200 LooseEnds[57587:76352165] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:53.825885+0200 LooseEnds[57587:76352138] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:53.926294+0200 LooseEnds[57587:76352166] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:53.926380+0200 LooseEnds[57587:76352166] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:53.958983+0200 LooseEnds[57587:76352167] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:54.059106+0200 LooseEnds[57587:76352166] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:54.059181+0200 LooseEnds[57587:76352166] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:54.096035+0200 LooseEnds[57587:76352166] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:54.197575+0200 LooseEnds[57587:76352138] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:54.197650+0200 LooseEnds[57587:76352138] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:54.230850+0200 LooseEnds[57587:76352131] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:54.329390+0200 LooseEnds[57587:76352131] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:54.329468+0200 LooseEnds[57587:76352131] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:54.362002+0200 LooseEnds[57587:76352166] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:54.461113+0200 LooseEnds[57587:76352138] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:54.461196+0200 LooseEnds[57587:76352138] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:54.496768+0200 LooseEnds[57587:76352138] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:54.594913+0200 LooseEnds[57587:76352167] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:54.595001+0200 LooseEnds[57587:76352167] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:54.628117+0200 LooseEnds[57587:76352131] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:54.725512+0200 LooseEnds[57587:76352138] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:54.725606+0200 LooseEnds[57587:76352138] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:54.755913+0200 LooseEnds[57587:76352131] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:54.858380+0200 LooseEnds[57587:76352131] [FoundationModels] Safety guardrails were triggered. If this is unexpected, please use `LanguageModelSession.logFeedbackAttachment(sentiment:issues:desiredOutput:)` to export the feedback attachment and file a feedback report at https://feedbackassistant.apple.com.
+2026-09-26 18:25:54.891786+0200 LooseEnds[57587:76352166] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:54.989648+0200 LooseEnds[57587:76352138] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:54.989725+0200 LooseEnds[57587:76352138] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:55.023469+0200 LooseEnds[57587:76352167] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:55.129262+0200 LooseEnds[57587:76352167] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:55.129339+0200 LooseEnds[57587:76352167] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:55.160722+0200 LooseEnds[57587:76352138] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:55.266324+0200 LooseEnds[57587:76352137] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:55.266405+0200 LooseEnds[57587:76352137] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:55.301049+0200 LooseEnds[57587:76352165] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:55.399783+0200 LooseEnds[57587:76352138] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:55.399865+0200 LooseEnds[57587:76352138] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:55.434395+0200 LooseEnds[57587:76352166] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:55.538177+0200 LooseEnds[57587:76352137] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:55.538263+0200 LooseEnds[57587:76352137] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:55.573489+0200 LooseEnds[57587:76352138] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:55.682020+0200 LooseEnds[57587:76352165] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:55.682098+0200 LooseEnds[57587:76352165] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:55.717655+0200 LooseEnds[57587:76352137] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:55.823895+0200 LooseEnds[57587:76352138] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:55.823972+0200 LooseEnds[57587:76352138] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:55.855217+0200 LooseEnds[57587:76352165] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:55.953984+0200 LooseEnds[57587:76352167] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:55.954061+0200 LooseEnds[57587:76352167] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:55.984910+0200 LooseEnds[57587:76352165] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:56.082739+0200 LooseEnds[57587:76352167] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:56.082816+0200 LooseEnds[57587:76352167] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:56.115205+0200 LooseEnds[57587:76352137] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:56.213928+0200 LooseEnds[57587:76352138] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:56.214066+0200 LooseEnds[57587:76352138] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:56.246135+0200 LooseEnds[57587:76352166] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:56.343985+0200 LooseEnds[57587:76352167] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:56.344062+0200 LooseEnds[57587:76352167] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:56.376019+0200 LooseEnds[57587:76352138] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:56.473436+0200 LooseEnds[57587:76352165] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:56.473508+0200 LooseEnds[57587:76352165] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:56.504437+0200 LooseEnds[57587:76352137] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:56.601536+0200 LooseEnds[57587:76352165] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:56.601613+0200 LooseEnds[57587:76352165] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:56.637803+0200 LooseEnds[57587:76352167] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:56.735722+0200 LooseEnds[57587:76352167] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:56.735797+0200 LooseEnds[57587:76352167] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:56.768831+0200 LooseEnds[57587:76352138] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:56.862509+0200 LooseEnds[57587:76352167] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:56.862592+0200 LooseEnds[57587:76352167] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:56.894700+0200 LooseEnds[57587:76352138] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:56.992411+0200 LooseEnds[57587:76352167] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:56.992490+0200 LooseEnds[57587:76352167] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:57.026701+0200 LooseEnds[57587:76352137] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:57.132895+0200 LooseEnds[57587:76352138] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:57.132977+0200 LooseEnds[57587:76352138] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:57.165976+0200 LooseEnds[57587:76352166] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:57.264224+0200 LooseEnds[57587:76352166] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:57.264300+0200 LooseEnds[57587:76352166] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:57.295751+0200 LooseEnds[57587:76352137] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:57.398873+0200 LooseEnds[57587:76352167] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:57.398948+0200 LooseEnds[57587:76352167] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:57.431868+0200 LooseEnds[57587:76352136] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:57.531425+0200 LooseEnds[57587:76352136] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:57.531518+0200 LooseEnds[57587:76352136] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:57.563457+0200 LooseEnds[57587:76352136] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:57.662648+0200 LooseEnds[57587:76352136] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:57.662724+0200 LooseEnds[57587:76352136] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:57.699017+0200 LooseEnds[57587:76352167] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:57.795855+0200 LooseEnds[57587:76352137] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:57.795930+0200 LooseEnds[57587:76352137] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:57.826772+0200 LooseEnds[57587:76352138] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:57.923259+0200 LooseEnds[57587:76352167] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:57.923333+0200 LooseEnds[57587:76352167] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:57.956917+0200 LooseEnds[57587:76352167] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:58.054639+0200 LooseEnds[57587:76352167] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:58.054721+0200 LooseEnds[57587:76352167] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:58.087092+0200 LooseEnds[57587:76352136] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:58.184761+0200 LooseEnds[57587:76352167] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:58.184847+0200 LooseEnds[57587:76352167] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:58.216907+0200 LooseEnds[57587:76352167] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:58.314314+0200 LooseEnds[57587:76352138] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:58.314400+0200 LooseEnds[57587:76352138] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+2026-09-26 18:25:58.350828+0200 LooseEnds[57587:76352138] [IPC] Passing along InferenceError::hostFailed::InferenceError::inferenceFailed::Encountered an unknown special token: com.apple.fm.language.safety_guardrail. in response to ExecuteRequest
+2026-09-26 18:25:58.448804+0200 LooseEnds[57587:76352167] [IPC] Passing along Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog} in response to ExecuteRequest
+2026-09-26 18:25:58.448879+0200 LooseEnds[57587:76352167] [TokenGenerator] Received ModelManagerError that couldn't be converted to a TokenGenerationError: Model Catalog error: Error Domain=com.apple.UnifiedAssetFramework Code=5000 "There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog" UserInfo={NSLocalizedFailureReason=There are no underlying assets (neither atomic instance nor asset roots) for consistency token for asset set com.apple.modelcatalog}
+✔ Test "Precision/Recall je Schwelle für duration, energy" passed after 10.022 seconds.
+✔ Suite FocusBloxCalibrationTests passed after 10.023 seconds.
+◇ Suite "Regelschritt: Wichtigkeit und Dringlichkeit" started.
+◇ Test "Wichtigkeits-Treffer je Kategorie (AC-1)" started.
+✔ Test "Wichtigkeits-Treffer je Kategorie (AC-1)" passed after 0.018 seconds.
+◇ Test "Dringlichkeits-Treffer je Kategorie (AC-2)" started.
+✔ Test "Dringlichkeits-Treffer je Kategorie (AC-2)" passed after 0.005 seconds.
+◇ Test "Kein Treffer bleibt nil, kein Default (AC-3)" started.
+✔ Test "Kein Treffer bleibt nil, kein Default (AC-3)" passed after 0.022 seconds.
+◇ Test "Wichtigkeit und Dringlichkeit sind unabhängig (AC-4)" started.
+✔ Test "Wichtigkeit und Dringlichkeit sind unabhängig (AC-4)" passed after 0.025 seconds.
+◇ Test "Alle fünf Begründungssätze sind im deutschen Bundle übersetzt (AC-8)" started.
+✔ Test "Alle fünf Begründungssätze sind im deutschen Bundle übersetzt (AC-8)" passed after 0.001 seconds.
+◇ Test "Der Regelschritt liegt im Produktmodul" started.
+✔ Test "Der Regelschritt liegt im Produktmodul" passed after 0.001 seconds.
+✔ Suite "Regelschritt: Wichtigkeit und Dringlichkeit" passed after 0.073 seconds.
+◇ Suite "ModelEnrichment ohne Wichtigkeit/Dringlichkeit (AC-7)" started.
+◇ Test "Das Schema trägt keine importance/urgency-Eigenschaften mehr" started.
+✔ Test "Das Schema trägt keine importance/urgency-Eigenschaften mehr" passed after 0.001 seconds.
+✔ Suite "ModelEnrichment ohne Wichtigkeit/Dringlichkeit (AC-7)" passed after 0.001 seconds.
+◇ Suite IntentExecutionTests started.
+◇ Test "Aufgabe erfassen läuft ohne Fehler durch" started.
+✔ Test "Aufgabe erfassen läuft ohne Fehler durch" passed after 0.026 seconds.
+◇ Test "Erfassung öffnen meldet der App, dass sie die Erfassung zeigen soll" started.
+✔ Test "Erfassung öffnen meldet der App, dass sie die Erfassung zeigen soll" passed after 0.004 seconds.
+✔ Suite IntentExecutionTests passed after 0.031 seconds.
+◇ Suite "Next up order, Old and Completed details" started.
+◇ Test "Dragging a row renumbers every rank in the new order" started.
+2026-09-26 18:25:58.933406+0200 LooseEnds[57587:76351998] [API] cannot add handler to 0 from 0 - dropping
+2026-09-26 18:25:58.933588+0200 LooseEnds[57587:76351998] [API] cannot add handler to 0 from 0 - dropping
+2026-09-26 18:25:58.933624+0200 LooseEnds[57587:76351998] [API] cannot add handler to 0 from 0 - dropping
+✔ Test "Dragging a row renumbers every rank in the new order" passed after 0.393 seconds.
+◇ Test "Postponed counts only the user's moves to a later date" started.
+✔ Test "Postponed counts only the user's moves to a later date" passed after 0.016 seconds.
+◇ Test "Completed tasks group by day, newest day first, newest task first within a day" started.
+✔ Test "Completed tasks group by day, newest day first, newest task first within a day" passed after 0.005 seconds.
+✔ Suite "Next up order, Old and Completed details" passed after 0.415 seconds.
+◇ Suite MeasurementFieldScopeTests started.
+◇ Test "FocusBloxCalibrationTests wertet importance/urgency nicht mehr aus (#118)" started.
+✔ Test "FocusBloxCalibrationTests wertet importance/urgency nicht mehr aus (#118)" passed after 0.001 seconds.
+◇ Test "SelfConsistencyReportTests wertet importance/urgency nicht mehr aus (#118)" started.
+✔ Test "SelfConsistencyReportTests wertet importance/urgency nicht mehr aus (#118)" passed after 0.001 seconds.
+◇ Test "RuleLeaveOneOutTests wertet importance/urgency nicht aus (#118, #131)" started.
+✔ Test "RuleLeaveOneOutTests wertet importance/urgency nicht aus (#118, #131)" passed after 0.001 seconds.
+✔ Suite MeasurementFieldScopeTests passed after 0.003 seconds.
+◇ Suite "Messlauf-Datei und Taktung" started.
+◇ Test "Alte Ergebnisdatei ohne Ereignisse bleibt lesbar" started.
+✔ Test "Alte Ergebnisdatei ohne Ereignisse bleibt lesbar" passed after 0.001 seconds.
+◇ Test "Ereignisse und Fehlerart überleben Schreiben und Lesen" started.
+✔ Test "Ereignisse und Fehlerart überleben Schreiben und Lesen" passed after 0.001 seconds.
+◇ Test "Nach einem Fehlschlag wird gewartet, nach dreien angehalten" started.
+✔ Test "Nach einem Fehlschlag wird gewartet, nach dreien angehalten" passed after 0.001 seconds.
+◇ Test "Die Labor-App meldet keine Hintergrundmodi mehr an" started.
+✔ Test "Die Labor-App meldet keine Hintergrundmodi mehr an" passed after 0.001 seconds.
+◇ Test "Fehlerart wird typisiert erkannt, nicht per Textvergleich" started.
+✔ Test "Fehlerart wird typisiert erkannt, nicht per Textvergleich" passed after 0.001 seconds.
+◇ Test "Zwei erfolgreiche Läufe: der dritte Lauf ist noch offen, mit aufsteigendem Index (AC-2)" started.
+✔ Test "Zwei erfolgreiche Läufe: der dritte Lauf ist noch offen, mit aufsteigendem Index (AC-2)" passed after 0.001 seconds.
+◇ Test "Drei erfolgreiche Läufe bei runsPerEntry 3: der Satz ist vollständig erledigt (AC-2)" started.
+✔ Test "Drei erfolgreiche Läufe bei runsPerEntry 3: der Satz ist vollständig erledigt (AC-2)" passed after 0.001 seconds.
+◇ Test "Alte Ergebnisdatei ohne runIndex-Feld dekodiert als 0 und gilt einlaufig als erledigt (AC-3)" started.
+✔ Test "Alte Ergebnisdatei ohne runIndex-Feld dekodiert als 0 und gilt einlaufig als erledigt (AC-3)" passed after 0.001 seconds.
+◇ Test "Gesamtzahl, erledigte und Fortschritt rechnen über Läufe, nicht über Sätze (AC-4)" started.
+✔ Test "Gesamtzahl, erledigte und Fortschritt rechnen über Läufe, nicht über Sätze (AC-4)" passed after 0.001 seconds.
+◇ Test "Aufeinanderfolgende Läufe desselben Satzes bekommen aufsteigende Indizes (AC-5)" started.
+✔ Test "Aufeinanderfolgende Läufe desselben Satzes bekommen aufsteigende Indizes (AC-5)" passed after 0.001 seconds.
+◇ Test "Ergebnisdatei ohne die fünf neuen Schlüssel dekodiert sie als nil/leer (AC-2)" started.
+✔ Test "Ergebnisdatei ohne die fünf neuen Schlüssel dekodiert sie als nil/leer (AC-2)" passed after 0.003 seconds.
+◇ Test "Alle fünf neuen Rohwerte überleben Schreiben und Lesen (AC-2)" started.
+✔ Test "Alle fünf neuen Rohwerte überleben Schreiben und Lesen (AC-2)" passed after 0.001 seconds.
+◇ Test "Der Selbstkonsistenz-Auszug eines EnrichmentDraft reicht alle fünf Werte unverändert durch (AC-3)" started.
+✔ Test "Der Selbstkonsistenz-Auszug eines EnrichmentDraft reicht alle fünf Werte unverändert durch (AC-3)" passed after 0.001 seconds.
+◇ Test "Fehlende Guesses ergeben nil/leer, kein Absturz (AC-3)" started.
+✔ Test "Fehlende Guesses ergeben nil/leer, kein Absturz (AC-3)" passed after 0.001 seconds.
+✔ Suite "Messlauf-Datei und Taktung" passed after 0.006 seconds.
+◇ Suite "Model" started.
+◇ Test "A captured task round-trips through the store as unprocessed" started.
+2026-09-26 18:25:58.992173+0200 LooseEnds[57587:76352167] [SwiftUI] Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+✔ Test "A captured task round-trips through the store as unprocessed" passed after 0.013 seconds.
+◇ Test "Blocked tasks stay out of Next up and show up in Waiting" started.
+2026-09-26 18:25:59.007163+0200 LooseEnds[57587:76352167] [SwiftUI] Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+✔ Test "Blocked tasks stay out of Next up and show up in Waiting" passed after 0.016 seconds.
+✔ Suite "Model" passed after 0.030 seconds.
+◇ Suite "RepeatRule roll-forward" started.
+◇ Test "Weekly on Saturday from due date rolls to the next Saturday" started.
+✔ Test "Weekly on Saturday from due date rolls to the next Saturday" passed after 0.001 seconds.
+◇ Test "Monthly from completion anchors on the completion date" started.
+✔ Test "Monthly from completion anchors on the completion date" passed after 0.001 seconds.
+✔ Suite "RepeatRule roll-forward" passed after 0.005 seconds.
+◇ Suite "Process cache" started.
+◇ Test "Builds once, then returns the same instance without building again" started.
+✔ Test "Builds once, then returns the same instance without building again" passed after 0.001 seconds.
+✔ Suite "Process cache" passed after 0.001 seconds.
+◇ Suite "Repeat rule edits" started.
+◇ Test "A rule survives the encode-decode round trip and encodes deterministically" started.
+✔ Test "A rule survives the encode-decode round trip and encodes deterministically" passed after 0.002 seconds.
+◇ Test "Setting a rule writes a user revision, the same rule again writes nothing, nil clears it" started.
+✔ Test "Setting a rule writes a user revision, the same rule again writes nothing, nil clears it" passed after 0.015 seconds.
+◇ Test "Erstmaliges Wählen einer Frequenz übernimmt die im Rohtext erkannte Uhrzeit (AC-2)" started.
+✔ Test "Erstmaliges Wählen einer Frequenz übernimmt die im Rohtext erkannte Uhrzeit (AC-2)" passed after 0.003 seconds.
+◇ Test "Ändern der Frequenz einer bestehenden Regel lässt die Uhrzeit unverändert (AC-3)" started.
+✔ Test "Ändern der Frequenz einer bestehenden Regel lässt die Uhrzeit unverändert (AC-3)" passed after 0.004 seconds.
+◇ Test "Erstmaliges Anlegen einer Regel setzt implizit ein Fälligkeitsdatum (AC-2)" started.
+✔ Test "Erstmaliges Anlegen einer Regel setzt implizit ein Fälligkeitsdatum (AC-2)" passed after 0.004 seconds.
+◇ Test "Ein bereits manuell gesetztes Fälligkeitsdatum bleibt beim Anlegen einer Regel unverändert (AC-3)" started.
+✔ Test "Ein bereits manuell gesetztes Fälligkeitsdatum bleibt beim Anlegen einer Regel unverändert (AC-3)" passed after 0.004 seconds.
+◇ Test "Ändern einer bestehenden Regel setzt kein erneutes implizites Fälligkeitsdatum (AC-4)" started.
+✔ Test "Ändern einer bestehenden Regel setzt kein erneutes implizites Fälligkeitsdatum (AC-4)" passed after 0.005 seconds.
+◇ Test "Rules read as people say them" started.
+✔ Test "Rules read as people say them" passed after 0.006 seconds.
+✔ Suite "Repeat rule edits" passed after 0.046 seconds.
+◇ Suite "Regelschritt: Wiederholungs-Uhrzeit" started.
+◇ Test "Eine im Rohtext erkannte Uhrzeit wird geliefert (AC-1)" started.
+✔ Test "Eine im Rohtext erkannte Uhrzeit wird geliefert (AC-1)" passed after 0.001 seconds.
+◇ Test "Ohne erkennbares Zeit-Signal liefert timeGuess nichts (AC-1)" started.
+✔ Test "Ohne erkennbares Zeit-Signal liefert timeGuess nichts (AC-1)" passed after 0.001 seconds.
+◇ Test "Eine neu gewählte Frequenz übernimmt die erkannte Uhrzeit (AC-2)" started.
+✔ Test "Eine neu gewählte Frequenz übernimmt die erkannte Uhrzeit (AC-2)" passed after 0.001 seconds.
+◇ Test "Eine neu gewählte Frequenz ohne Zeit-Signal bleibt ohne Uhrzeit (AC-2)" started.
+✔ Test "Eine neu gewählte Frequenz ohne Zeit-Signal bleibt ohne Uhrzeit (AC-2)" passed after 0.001 seconds.
+◇ Test "Eine bestehende Regel behält ihre Uhrzeit beim Wechsel der Frequenz (AC-3)" started.
+✔ Test "Eine bestehende Regel behält ihre Uhrzeit beim Wechsel der Frequenz (AC-3)" passed after 0.001 seconds.
+◇ Test "Eine RepeatRule mit gesetzter Uhrzeit läuft verlustfrei durch den Codec (AC-4)" started.
+✔ Test "Eine RepeatRule mit gesetzter Uhrzeit läuft verlustfrei durch den Codec (AC-4)" passed after 0.001 seconds.
+◇ Test "Eine RepeatRule ohne Uhrzeit bleibt nach dem Codec-Round-Trip ohne Uhrzeit (AC-4)" started.
+✔ Test "Eine RepeatRule ohne Uhrzeit bleibt nach dem Codec-Round-Trip ohne Uhrzeit (AC-4)" passed after 0.001 seconds.
+◇ Test "Der Regelschritt liegt im Produktmodul" started.
+✔ Test "Der Regelschritt liegt im Produktmodul" passed after 0.001 seconds.
+◇ Test "firstDueDate kombiniert den nächsten Termin mit der gespeicherten Uhrzeit (AC-1)" started.
+✔ Test "firstDueDate kombiniert den nächsten Termin mit der gespeicherten Uhrzeit (AC-1)" passed after 0.001 seconds.
+◇ Test "firstDueDate faellt ohne gespeicherte Uhrzeit auf den Tagesbeginn zurueck (AC-1)" started.
+✔ Test "firstDueDate faellt ohne gespeicherte Uhrzeit auf den Tagesbeginn zurueck (AC-1)" passed after 0.001 seconds.
+◇ Test "firstDueDate reicht den bestehenden Wochentag-losen Ruecksprung von nextDueDate unveraendert durch (AC-1, Risiko 3)" started.
+✔ Test "firstDueDate reicht den bestehenden Wochentag-losen Ruecksprung von nextDueDate unveraendert durch (AC-1, Risiko 3)" passed after 0.001 seconds.
+✔ Suite "Regelschritt: Wiederholungs-Uhrzeit" passed after 0.002 seconds.
+◇ Suite "RevisionService" started.
+◇ Test "Resetting the AI title puts the raw text back and records a user revision" started.
+✔ Test "Resetting the AI title puts the raw text back and records a user revision" passed after 0.005 seconds.
+◇ Test "Resetting due date and contexts restores the pre-AI state" started.
+✔ Test "Resetting due date and contexts restores the pre-AI state" passed after 0.005 seconds.
+◇ Test "Reset all clears every AI field in one go and writes one user revision per field" started.
+✔ Test "Reset all clears every AI field in one go and writes one user revision per field" passed after 0.005 seconds.
+◇ Test "A user title edit writes a user revision; the same value again writes nothing" started.
+✔ Test "A user title edit writes a user revision; the same value again writes nothing" passed after 0.004 seconds.
+◇ Test "A user-authored title never shows the AI reset affordance (Bug #125, AC-3)" started.
+✔ Test "A user-authored title never shows the AI reset affordance (Bug #125, AC-3)" passed after 0.003 seconds.
+◇ Test "Marking seen clears the marker and takes an active task out of New" started.
+✔ Test "Marking seen clears the marker and takes an active task out of New" passed after 0.005 seconds.
+◇ Test "Project resets match by name; an unknown name leaves the project empty" started.
+✔ Test "Project resets match by name; an unknown name leaves the project empty" passed after 0.002 seconds.
+✔ Suite "RevisionService" passed after 0.033 seconds.
+◇ Suite "FieldCodec" started.
+◇ Test "Every revisable field survives an encode-apply round trip" started.
+✔ Test "Every revisable field survives an encode-apply round trip" passed after 0.002 seconds.
+◇ Test "Malformed lists read as empty instead of throwing" started.
+✔ Test "Malformed lists read as empty instead of throwing" passed after 0.001 seconds.
+✔ Suite "FieldCodec" passed after 0.002 seconds.
+◇ Suite "Regel-Auslass-Test: Logik (Spike #69, #131)" started.
+◇ Test "Die Zielaufgabe ist nie ihr eigener Nachbar (AC-1)" started.
+✔ Test "Die Zielaufgabe ist nie ihr eigener Nachbar (AC-1)" passed after 0.001 seconds.
+◇ Test "Rangfolge nach Jaccard, Gleichstand nach id — immer dieselbe Reihenfolge (AC-2)" started.
+✔ Test "Rangfolge nach Jaccard, Gleichstand nach id — immer dieselbe Reihenfolge (AC-2)" passed after 0.001 seconds.
+◇ Test "Wörter unter vier Zeichen tragen keine Ähnlichkeit (AC-3)" started.
+✔ Test "Wörter unter vier Zeichen tragen keine Ähnlichkeit (AC-3)" passed after 0.001 seconds.
+◇ Test "Bei Stimmengleichstand gewinnt der nähere Nachbar, nicht der zuletzt gesehene (AC-4)" started.
+✔ Test "Bei Stimmengleichstand gewinnt der nähere Nachbar, nicht der zuletzt gesehene (AC-4)" passed after 0.001 seconds.
+◇ Test "Ohne Nachbarn keine Vorhersage — und der Satz zählt als Fehltreffer (AC-5)" started.
+✔ Test "Ohne Nachbarn keine Vorhersage — und der Satz zählt als Fehltreffer (AC-5)" passed after 0.001 seconds.
+◇ Test "Die Nulllinie wird aus dem Pool gerechnet, nicht hartkodiert (AC-6)" started.
+✔ Test "Die Nulllinie wird aus dem Pool gerechnet, nicht hartkodiert (AC-6)" passed after 0.001 seconds.
+◇ Test "Kontextmengen sind unabhängig von Schreibweise und Reihenfolge dieselbe Klasse (AC-7)" started.
+✔ Test "Kontextmengen sind unabhängig von Schreibweise und Reihenfolge dieselbe Klasse (AC-7)" passed after 0.001 seconds.
+◇ Test "Eine leere Kontextliste trägt keine Wahrheit und liefert keinen Wert" started.
+✔ Test "Eine leere Kontextliste trägt keine Wahrheit und liefert keinen Wert" passed after 0.001 seconds.
+◇ Test "McNemar: keine Diskordanz heißt p = 1, und die Formel trifft die nachgerechneten Werte (AC-8)" started.
+✔ Test "McNemar: keine Diskordanz heißt p = 1, und die Formel trifft die nachgerechneten Werte (AC-8)" passed after 0.001 seconds.
+✔ Suite "Regel-Auslass-Test: Logik (Spike #69, #131)" passed after 0.001 seconds.
+◇ Suite RuleLeaveOneOutReportTests started.
+◇ Test "Schreibt den Regel-Auslass-Bericht mit allen Pflichtspalten, ohne Modell- oder Geräteaufruf (AC-9)" started.
+2026-09-26 18:25:59.455378+0200 LooseEnds[57587:76351998] [Speech] Stufe 0 — Sprache de_DE: neu unterstützt 0, neu installiert , alt verfügbar true, alt auf dem Gerät möglich true
+2026-09-26 18:25:59.578501+0200 LooseEnds[57587:76351998] [plugin] AddInstanceForFactory: No factory registered for id <CFUUID 0x1103130c0> F8BB1C28-BAE8-11D6-9C31-00039315CD46
+2026-09-26 18:25:59.621682+0200 LooseEnds[57587:76351998] [AVAudioSession Hang Risk]     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.
+2026-09-26 18:25:59.842361+0200 LooseEnds[57587:76352138] [EnhanceDialogueProcessor] EnhanceDialogueProcessor.cpp:658   EnhanceDialogueProcessor has no tuning for unrecognized device type
+2026-09-26 18:25:59.842419+0200 LooseEnds[57587:76352138] [EnhanceDialogueProcessor] EnhanceDialogueProcessor.cpp:268   EnhanceDialogueProcessor() - Product does not have valid tuning at ''
+2026-09-26 18:25:59.842467+0200 LooseEnds[57587:76352138] [EnhanceDialogueProcessor] EnhanceDialogueProcessor.cpp:658   EnhanceDialogueProcessor has no tuning for unrecognized device type
+2026-09-26 18:25:59.842497+0200 LooseEnds[57587:76352138] [EnhanceDialogueProcessor] EnhanceDialogueProcessor.cpp:268   EnhanceDialogueProcessor() - Product does not have valid tuning at ''
+2026-09-26 18:25:59.924917+0200 LooseEnds[57587:76351998] [Speech] Audio-Eingang: 48000.000000 Hz, 1 Kanäle
+2026-09-26 18:25:59.956447+0200 LooseEnds[57587:76352138] [AMCP]          HALC_ProxyIOContext.cpp:1676  HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload
+2026-09-26 18:25:59.956769+0200 LooseEnds[57587:76351998] [Speech] Erkennung startet: auf dem Gerät true, Sprache de_DE
+2026-09-26 18:25:59.987319+0200 LooseEnds[57587:76352131] [AMCP]          HALC_ProxyIOContext.cpp:1676  HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload
+2026-09-26 18:26:00.007708+0200 LooseEnds[57587:76351998] [API] cannot add handler to 0 from 0 - dropping
+2026-09-26 18:26:00.007820+0200 LooseEnds[57587:76351998] [API] cannot add handler to 0 from 0 - dropping
+2026-09-26 18:26:00.062251+0200 LooseEnds[57587:76352131] [Speech] Ton kommt an: 1 Puffer, zuletzt 4800 Bilder
+IOSurfaceClientSetSurfaceNotify failed e00002c7
+2026-09-26 18:26:00.251636+0200 LooseEnds[57587:76351998] [Speech] Erkennung abgebrochen: Failed to initialize recognizer
+2026-09-26 18:26:00.254326+0200 LooseEnds[57587:76351998] [AVAudioSession Hang Risk]     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.
+2026-09-26 18:26:00.329253+0200 LooseEnds[57587:76353003]             HALSystem.cpp:2278   AudioObjectPropertiesChanged: no such object
+2026-09-26 18:26:00.376985+0200 LooseEnds[57587:76351998] [aqme]            AQMEIO_HAL.cpp:3092  Waiting for Stop to be signaled timed out. Forcing Stop. Timeout 0.106667 s
+2026-09-26 18:26:00.377100+0200 LooseEnds[57587:76351998] AudioHardware-mac-imp.cpp:2906   AudioDeviceStop: no device with given ID
+✔ Test "Schreibt den Regel-Auslass-Bericht mit allen Pflichtspalten, ohne Modell- oder Geräteaufruf (AC-9)" passed after 4.109 seconds.
+✔ Suite RuleLeaveOneOutReportTests passed after 4.111 seconds.
+​➜ Suite SelfConsistencyReportTests skipped.
+​​➜ Test "Schreibt den Selbstkonsistenz-Bericht aus zwei bereits vorhandenen Dateien, ohne Modellaufruf (AC-9)" skipped.
+​◇ Suite "Selbstkonsistenz über mehrere Läufe (#108)" started.
+◇ Test "Mehrheitswert und Einstimmigkeit für ein Einzelwert-Feld (AC-5)" started.
+✔ Test "Mehrheitswert und Einstimmigkeit für ein Einzelwert-Feld (AC-5)" passed after 0.001 seconds.
+◇ Test "Mehrheitswert und Einstimmigkeit für ein Mengenfeld, Reihenfolge ist irrelevant (AC-6)" started.
+✔ Test "Mehrheitswert und Einstimmigkeit für ein Mengenfeld, Reihenfolge ist irrelevant (AC-6)" passed after 0.001 seconds.
+◇ Test "Die Mehrheitsantwort eines Mengenfelds gilt nur bei exakter Mengengleichheit als richtig (AC-6)" started.
+✔ Test "Die Mehrheitsantwort eines Mengenfelds gilt nur bei exakter Mengengleichheit als richtig (AC-6)" passed after 0.001 seconds.
+◇ Test "Die Trefferquote-über-Abdeckung-Tabelle rechnet Abdeckung und Trefferquote je Schwelle (AC-7)" started.
+✔ Test "Die Trefferquote-über-Abdeckung-Tabelle rechnet Abdeckung und Trefferquote je Schwelle (AC-7)" passed after 0.009 seconds.
+✔ Suite "Selbstkonsistenz über mehrere Läufe (#108)" passed after 0.009 seconds.
+◇ Suite "SharedContent" started.
+◇ Test "A shared mail yields its subject, the message link and the mail channel" started.
+✔ Test "A shared mail yields its subject, the message link and the mail channel" passed after 0.001 seconds.
+◇ Test "Encoded subjects are decoded, base64 and quoted-printable alike" started.
+✔ Test "Encoded subjects are decoded, base64 and quoted-printable alike" passed after 0.001 seconds.
+◇ Test "A link with text keeps the text and attaches the link; a bare link becomes the text" started.
+✔ Test "A link with text keeps the text and attaches the link; a bare link becomes the text" passed after 0.001 seconds.
+◇ Test "A message link without the mail body still counts as mail" started.
+✔ Test "A message link without the mail body still counts as mail" passed after 0.001 seconds.
+◇ Test "Nothing shared is empty, not a crash" started.
+✔ Test "Nothing shared is empty, not a crash" passed after 0.001 seconds.
+✔ Suite "SharedContent" passed after 0.002 seconds.
+◇ Suite "Subtasks, one level" started.
+◇ Test "A line is trimmed, linked to its parent, active and inherits the project; empty and nested lines are refused" started.
+✔ Test "A line is trimmed, linked to its parent, active and inherits the project; empty and nested lines are refused" passed after 0.025 seconds.
+◇ Test "Checking a line off and reopening it moves the progress and keeps the order" started.
+✔ Test "Checking a line off and reopening it moves the progress and keeps the order" passed after 0.009 seconds.
+◇ Test "A subtask never shows in a view of its own, open or done" started.
+✔ Test "A subtask never shows in a view of its own, open or done" passed after 0.004 seconds.
+◇ Test "Deleting the parent takes its subtasks with it" started.
+✔ Test "Deleting the parent takes its subtasks with it" passed after 0.009 seconds.
+✔ Suite "Subtasks, one level" passed after 0.049 seconds.
+◇ Suite "TaskActions" started.
+◇ Test "Done moves a plain task to Done and out of Next up" started.
+✔ Test "Done moves a plain task to Done and out of Next up" passed after 0.003 seconds.
+◇ Test "Done on a repeating task records the cycle and rolls the due date forward" started.
+✔ Test "Done on a repeating task records the cycle and rolls the due date forward" passed after 0.010 seconds.
+◇ Test "Restore takes a task back from Done and keeps its completion records" started.
+✔ Test "Restore takes a task back from Done and keeps its completion records" passed after 0.003 seconds.
+◇ Test "Next up appends after the highest rank; a second toggle removes the task again" started.
+✔ Test "Next up appends after the highest rank; a second toggle removes the task again" passed after 0.003 seconds.
+◇ Test "Park and activate flip the status and the parked timestamp" started.
+✔ Test "Park and activate flip the status and the parked timestamp" passed after 0.002 seconds.
+◇ Test "Move targets resolve from a Wednesday to tomorrow, Saturday and Monday" started.
+✔ Test "Move targets resolve from a Wednesday to tomorrow, Saturday and Monday" passed after 0.001 seconds.
+◇ Test "Weekend from a Saturday means the next Saturday, not today" started.
+✔ Test "Weekend from a Saturday means the next Saturday, not today" passed after 0.001 seconds.
+◇ Test "Move writes a user revision and marks the due date as set by the user" started.
+✔ Test "Move writes a user revision and marks the due date as set by the user" passed after 0.003 seconds.
+✔ Suite "TaskActions" passed after 0.027 seconds.
+◇ Suite "Regelparser: Uhrzeit" started.
+◇ Test "um H Uhr, H:MM, H Uhr ohne um, auf H Uhr" started.
+✔ Test "um H Uhr, H:MM, H Uhr ohne um, auf H Uhr" passed after 0.001 seconds.
+◇ Test "at 5pm, at 9am, at 2:30 pm, at 10am" started.
+✔ Test "at 5pm, at 9am, at 2:30 pm, at 10am" passed after 0.001 seconds.
+◇ Test "halb zwölf ist 11:30, half past seven ist 07:30" started.
+✔ Test "halb zwölf ist 11:30, half past seven ist 07:30" passed after 0.001 seconds.
+◇ Test "Nackte Zahl nur nach einem Zeitwort wie Mittag" started.
+✔ Test "Nackte Zahl nur nach einem Zeitwort wie Mittag" passed after 0.001 seconds.
+◇ Test "Wiederholungen tragen trotzdem eine Uhrzeit" started.
+✔ Test "Wiederholungen tragen trotzdem eine Uhrzeit" passed after 0.001 seconds.
+◇ Test "Zahlen ohne Zeitkontext sind keine Uhrzeit" started.
+✔ Test "Zahlen ohne Zeitkontext sind keine Uhrzeit" passed after 0.001 seconds.
+◇ Test "Uhrzeit ist im Bereich 0–23 Stunden, 0–59 Minuten" started.
+✔ Test "Uhrzeit ist im Bereich 0–23 Stunden, 0–59 Minuten" passed after 0.001 seconds.
+✔ Suite "Regelparser: Uhrzeit" passed after 0.001 seconds.
+◇ Suite "FoundationModelsEnricher title prompt (Bug #125)" started.
+◇ Test "The instructions raise the word limit and forbid dropping object or purpose" started.
+✔ Test "The instructions raise the word limit and forbid dropping object or purpose" passed after 0.001 seconds.
+✔ Suite "FoundationModelsEnricher title prompt (Bug #125)" passed after 0.001 seconds.
+◇ Suite "Waveform" started.
+◇ Test "Silence is zero, a loud signal saturates at one, speech sits in between" started.
+✔ Test "Silence is zero, a loud signal saturates at one, speech sits in between" passed after 0.001 seconds.
+◇ Test "The waveform keeps only the newest levels and clamps them to 0...1" started.
+✔ Test "The waveform keeps only the newest levels and clamps them to 0...1" passed after 0.001 seconds.
+✔ Suite "Waveform" passed after 0.001 seconds.
+✔ Test run with 198 tests in 43 suites passed after 15.724 seconds.

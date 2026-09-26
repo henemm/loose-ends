@@ -1,0 +1,47 @@
+=== Adversary-Lauf 1: ./scripts/sim.sh unit (voller Lauf), 2026-09-26 17:26:41 - 17:27:09 ===
+[sim] macOS 26.6.1 < Deployment Target 27.0 — Unit-Tests laufen im Simulator.
+[sim] Simulator bereit (iPhone 17).
+[sim] Unit-Tests (iOS-Simulator): LooseEndsTests
+
+--- Zusammenfassung (aus DerivedData/LooseEnds-session-default/xcodebuild.log, vor Lauf 2 gelesen) ---
+Test run with 198 tests in 43 suites passed after 27.716 seconds.
+
+--- Die beiden Suiten dieses Schnitts, vollstaendig ---
+    ✔ "Die Zielaufgabe ist nie ihr eigener Nachbar (AC-1)" (0.001 seconds)
+    ✔ "Rangfolge nach Jaccard, Gleichstand nach id — immer dieselbe Reihenfolge (AC-2)" (0.001 seconds)
+    ✔ "Wörter unter vier Zeichen tragen keine Ähnlichkeit (AC-3)" (0.001 seconds)
+    ✔ "Bei Stimmengleichstand gewinnt der nähere Nachbar, nicht der zuletzt gesehene (AC-4)" (0.001 seconds)
+    ✔ "Ohne Nachbarn keine Vorhersage — und der Satz zählt als Fehltreffer (AC-5)" (0.001 seconds)
+    ✔ "Die Nulllinie wird aus dem Pool gerechnet, nicht hartkodiert (AC-6)" (0.001 seconds)
+    ✔ "Kontextmengen sind unabhängig von Schreibweise und Reihenfolge dieselbe Klasse (AC-7)" (0.001 seconds)
+    ✔ "Eine leere Kontextliste trägt keine Wahrheit und liefert keinen Wert" (0.001 seconds)
+    ✔ "McNemar: keine Diskordanz heißt p = 1, und die Formel trifft die nachgerechneten Werte (AC-8)" (0.001 seconds)
+Suite "Regel-Auslass-Test: Logik (Spike #69, #131)" passed after 0.002 seconds
+Suite RuleLeaveOneOutReportTests started
+    ✔ "Schreibt den Regel-Auslass-Bericht mit allen Pflichtspalten, ohne Modell- oder Geräteaufruf (AC-9)" (4.709 seconds)
+Suite RuleLeaveOneOutReportTests passed after 4.711 seconds
+    ✔ "Mehrheitswert und Einstimmigkeit für ein Einzelwert-Feld (AC-5)" (0.001 seconds)
+
+--- Modellaufrufe im vollen Lauf: Zeilenlage im Rohlog (waehrend Lauf 1 ausgelesen) ---
+Model-Catalog-Fehlerzeilen: erste Zeile 311, letzte Zeile 488, 59 Stueck
+Suite FocusBloxCalibrationTests: Zeile 308 (started) bis Zeile 490 (passed after 19.329 s), 17:26:47-17:27:03
+Suite RuleLeaveOneOutReportTests: Zeile 666 (started) bis Zeile 696 (passed after 4.711 s), ab 17:27:04
+=> ALLE Modellzeilen liegen innerhalb von FocusBloxCalibrationTests (vorbestehende, gegatete Suite aus #23/#41,
+   ruft FoundationModelsEnricher.enrich in LooseEndsTests/FocusBloxCalibrationTests.swift:98).
+   Keine einzige innerhalb von RuleLeaveOneOutReportTests.
+
+=== Adversary-Lauf 2: ./scripts/sim.sh unit RuleLeaveOneOutReportTests ===
+Zweck: (a) Determinismus-Gegenprobe in einem zweiten Prozess, (b) Gegenprobe auf Modellaufrufe.
+Suite RuleLeaveOneOutReportTests started
+    ✔ "Schreibt den Regel-Auslass-Bericht mit allen Pflichtspalten, ohne Modell- oder Geräteaufruf (AC-9)" (3.020 seconds)
+Suite RuleLeaveOneOutReportTests passed after 3.021 seconds
+Test Succeeded
+[sim] Unit-Tests bestanden.
+✔ Test run with 1 test in 1 suite passed after 3.021 seconds.
+
+Rohlog dieses Laufs: 0 Zeilen 'Model Catalog', 0 'TokenGenerator', 0 'ModelManagerError', 1 Suite.
+
+--- Determinismus ---
+SHA-256 des Berichts nach Lauf 1: 4624fcdc2905a826e790281bf0961c7d508b048090376f3b9354fbce3bbe5e0f
+SHA-256 des Berichts nach Lauf 2: 4624fcdc2905a826e790281bf0961c7d508b048090376f3b9354fbce3bbe5e0f
+byte-identisch: True  (zwei getrennte Prozesse, also zwei verschiedene Set-Hash-Seeds)
