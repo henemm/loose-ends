@@ -1,0 +1,112 @@
+[1;33m[sim][0m macOS 26.6.1 < Deployment Target 27.0 — Unit-Tests laufen im Simulator.
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftConstValuesFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.LinkFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-OutputFileMap.json
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementFieldScopeTests.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:55:25: [31mcannot find 'LeaveOneOut' in scope[0m
+ 53 |         let pool = [target, other]
+[36m 54 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:58:31: [31mcannot infer key path type from context; consider explicitly specifying a root type[0m
+ 56 | 
+[36m 57 |         #expect(!neighbors.contains { $0.id == "t" })[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:71:25: [31mcannot find 'LeaveOneOut' in scope[0m
+ 69 |         let pool = [target, tiedB, closest, tiedA]
+[36m 70 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:73:31: [31mcannot infer key path type from context; consider explicitly specifying a root type[0m
+ 71 |         let neighbors = LeaveOneOut.neighbors(of: target, in: pool, k: 3)
+[36m 72 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:79:21: [31mcannot find 'LeaveOneOut' in scope[0m
+ 77 |     func similarityWordsDropShortFunctionWords() {
+[36m 78 |         // "Das", "ist", "da", "für", "uns" sind Funktionswörter unter vier Zeichen.[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:89:22: [31mcannot find 'LeaveOneOut' in scope[0m
+ 87 |         let further = try makeEntry(id: "b", text: "Rasen düngen", duration: "minutes30")
+[36m 88 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:101:17: [31mcannot find 'LeaveOneOut' in scope[0m
+ 99 |         let pool = [alone, pair1, pair2]
+[36m100 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:102:17: [31mcannot find 'LeaveOneOut' in scope[0m
+100 | 
+[36m101 |         #expect(LeaveOneOut.neighbors(of: alone, in: pool, k: 3).isEmpty)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:104:26: [31mcannot find 'LeaveOneOut' in scope[0m
+102 |         #expect(LeaveOneOut.majority(among: []) { $0.durationTruth } == nil)
+[36m103 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:128:17: [31mcannot find 'LeaveOneOut' in scope[0m
+126 |         pool.append(try makeEntry(id: "l0", text: "Lang", duration: "minutes60"))
+[36m127 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:133:21: [31mcannot find 'LeaveOneOut' in scope[0m
+131 |     @Test("Kontextmengen sind unabhängig von Schreibweise und Reihenfolge dieselbe Klasse (AC-7)")
+[36m132 |     func contextClassNormalisesCaseAndOrder() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:134:22: [31mcannot find 'LeaveOneOut' in scope[0m
+132 |     func contextClassNormalisesCaseAndOrder() {
+[36m133 |         let first = LeaveOneOut.contextClass(["Computer", "Learning"])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:143:29: [31mcannot find 'LeaveOneOut' in scope[0m
+141 |     func mcNemarMatchesHandCalculatedValues() {
+[36m142 |         let identical = [true, false, true, true][0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:149:20: [31mcannot find 'LeaveOneOut' in scope[0m
+147 | 
+[36m148 |         // b = 9, c = 1 → 2 · (C(10,0) + C(10,1)) / 2^10 = 22/1024[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:161:21: [31mcannot find 'LeaveOneOut' in scope[0m
+159 |         // steht hier, damit die Schwelle aus dem Abbruchkriterium später nicht großzügiger
+[36m160 |         // gelesen wird, als sie bei n = 10 tatsächlich ist.[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:214:28: [31mcannot find 'LeaveOneOut' in scope[0m
+212 |             var text = ""
+[36m213 |             var met = false[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:220:34: [31mcannot find 'LeaveOneOut' in scope[0m
+218 | 
+[36m219 |             for k in kValues {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:221:28: [31mcannot find 'LeaveOneOut' in scope[0m
+219 |             for k in kValues {
+[36m220 |                 let evaluation = LeaveOneOut.evaluate(pool: pool, k: k, value: value)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:227:27: [31mthe compiler is unable to type-check this expression in reasonable time; try breaking up the expression into distinct sub-expressions[0m
+225 |                 met = met || passes
+[36m226 |                 text += "| \(name) | \(k) "[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:241:37: [31mcannot find 'LeaveOneOut' in scope[0m
+239 | 
+[36m240 |         let contexts = line("Kontexte", pool: contextPool) { entry in[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:240:24: [31mgeneric parameter 'Value' could not be inferred[0m
+205 |         """
+[36m206 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:241:33: [31mgeneric parameter 'E' could not be inferred[0m
+239 | 
+[36m240 |         let contexts = line("Kontexte", pool: contextPool) { entry in[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:262:59: [31mcannot find 'LeaveOneOut' in scope[0m
+260 |             var jaccardSum = 0.0
+[36m261 |             for entry in contextPool {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:262:71: [31mconverting non-escaping value to '([String]) throws(E) -> U' may allow it to escape[0m
+260 |             var jaccardSum = 0.0
+[36m261 |             for entry in contextPool {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:262:55: [31mgeneric parameter 'E' could not be inferred[0m
+260 |             var jaccardSum = 0.0
+[36m261 |             for entry in contextPool {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:262:55: [31mgeneric parameter 'U' could not be inferred[0m
+260 |             var jaccardSum = 0.0
+[36m261 |             for entry in contextPool {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:263:33: [31mcannot find 'LeaveOneOut' in scope[0m
+261 |             for entry in contextPool {
+[36m262 |                 guard let truth = entry.contextsTruth.map(LeaveOneOut.contextClass) else { continue }[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:264:33: [31mcannot find 'LeaveOneOut' in scope[0m
+262 |                 guard let truth = entry.contextsTruth.map(LeaveOneOut.contextClass) else { continue }
+[36m263 |                 let neighbors = LeaveOneOut.neighbors(of: entry, in: contextPool, k: k)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/wiggly-munching-kay/LooseEndsTests/RuleLeaveOneOutTests.swift:265:49: [31mcannot find 'LeaveOneOut' in scope[0m
+263 |                 let neighbors = LeaveOneOut.neighbors(of: entry, in: contextPool, k: k)
+[36m264 |                 let predicted = LeaveOneOut.majority(among: neighbors) { candidate in[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleLeaveOneOutTests.swift
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsTests.swiftmodule
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEndsTests.swiftdoc
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsTests.abi.json
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsTests.swiftsourceinfo
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.09.26_16-08-23-+0200.xcresult
