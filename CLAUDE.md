@@ -115,8 +115,9 @@ not scope creep on the current one.
 - `Shared/` compiles into the watch and widget targets too: no SwiftUI that is unavailable on watchOS there
   (keyboard shortcuts, navigation bar modifiers). App views belong in `LooseEnds/Views`.
 - `docs/project/` — decisions, user story, data model, design briefing, load-bearing assumptions with their experiments and alternatives (`06-annahmen-und-experimente.md`); `docs/reference/` — learnings carried over from FocusBlox
-- `Measurement/` — measurement-only code against the fidelity corpus; compiles into `LooseEndsTests` and
-  the lab app only, no product path
+- `Measurement/` — measurement-only code against the fidelity, self-consistency and convention corpora
+  (e.g. `RuleBaseline` for the word→context convention test, spike #69); compiles into `LooseEndsTests`
+  and the lab app only, no product path
 
 ## Naming
 

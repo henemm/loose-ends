@@ -1,0 +1,61 @@
+[
+{"id":"Rasen","corrections":[
+  {"text":"Rasen mähen, bevor die Nachbarn sich beschweren","context":"Garten"},
+  {"text":"Rasen düngen am Samstagmorgen","context":"Garten"},
+  {"text":"Rasen nachsäen, wo er kahl ist","context":"Garten"}],
+ "probe":{"text":"Rasen wässern, bevor es zu heiß wird","expectedContext":"Garten"}},
+
+{"id":"Heizung","corrections":[
+  {"text":"Heizung entlüften, bevor es kalt wird","context":"Keller"},
+  {"text":"Heizung für die Abrechnung ablesen","context":"Keller"},
+  {"text":"Heizung auf Sommerbetrieb stellen","context":"Keller"}],
+ "probe":{"text":"Heizung nachfüllen, der Druck ist zu niedrig","expectedContext":"Keller"}},
+
+{"id":"Rechnung","corrections":[
+  {"text":"Rechnung von der Werkstatt bezahlen","context":"Finanzen"},
+  {"text":"Rechnung einscannen und ablegen","context":"Finanzen"},
+  {"text":"Rechnung reklamieren, der Betrag stimmt nicht","context":"Finanzen"}],
+ "probe":{"text":"Rechnung noch heute überweisen","expectedContext":"Finanzen"}},
+
+{"id":"Reifen","corrections":[
+  {"text":"Reifen wechseln, bevor der Schnee kommt","context":"Auto"},
+  {"text":"Reifen an der Tankstelle aufpumpen","context":"Auto"},
+  {"text":"Reifen einlagern lassen","context":"Auto"}],
+ "probe":{"text":"Reifen prüfen vor der langen Fahrt","expectedContext":"Auto"}},
+
+{"id":"Angebot","corrections":[
+  {"text":"Angebot für den Kunden schreiben","context":"Büro"},
+  {"text":"Angebot noch einmal durchrechnen","context":"Büro"},
+  {"text":"Angebot nachfassen, es kam keine Antwort","context":"Büro"}],
+ "probe":{"text":"Angebot bis Freitag rausschicken","expectedContext":"Büro"}},
+
+{"id":"Spülmaschine","corrections":[
+  {"text":"Spülmaschine ausräumen","context":"Küche"},
+  {"text":"Spülmaschine einmal leer durchlaufen lassen","context":"Küche"},
+  {"text":"Spülmaschine Sieb säubern","context":"Küche"}],
+ "probe":{"text":"Spülmaschine Salz nachfüllen","expectedContext":"Küche"}},
+
+{"id":"Katze","corrections":[
+  {"text":"Katze zur Impfung bringen","context":"Haustier"},
+  {"text":"Katze entwurmen","context":"Haustier"},
+  {"text":"Katze Krallen schneiden lassen","context":"Haustier"}],
+ "probe":{"text":"Katze beim Tierarzt anmelden","expectedContext":"Haustier"}},
+
+{"id":"Koffer","corrections":[
+  {"text":"Koffer aus der Abstellkammer holen","context":"Urlaub"},
+  {"text":"Koffer packen, es geht früh los","context":"Urlaub"},
+  {"text":"Koffer wiegen, sonst wird es am Schalter teuer","context":"Urlaub"}],
+ "probe":{"text":"Koffer noch beschriften","expectedContext":"Urlaub"}},
+
+{"id":"Blutdruck","corrections":[
+  {"text":"Blutdruck morgens messen","context":"Gesundheit"},
+  {"text":"Blutdruck Werte in die Liste eintragen","context":"Gesundheit"},
+  {"text":"Blutdruck beim Hausarzt kontrollieren lassen","context":"Gesundheit"}],
+ "probe":{"text":"Blutdruck Tabletten nachbestellen","expectedContext":"Gesundheit"}},
+
+{"id":"Fenster","corrections":[
+  {"text":"Fenster putzen, solange es trocken ist","context":"Wohnung"},
+  {"text":"Fenster Dichtungen erneuern","context":"Wohnung"},
+  {"text":"Fenster im Bad reparieren lassen","context":"Wohnung"}],
+ "probe":{"text":"Fenster abdichten vor dem Winter","expectedContext":"Wohnung"}}
+]

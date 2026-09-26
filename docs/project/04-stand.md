@@ -86,6 +86,11 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
 - [#68](https://github.com/henemm/loose-ends/issues/68) Nachweis: Modell je Gerät, Prozess, Zustand
 - [#69](https://github.com/henemm/loose-ends/issues/69) Wirken Retrieval-Beispiele? (vor #26, jetzt auch
   Voraussetzung für [#112](https://github.com/henemm/loose-ends/issues/112))
+  - Ticket A gemessen (2026-09-26): Regel-Baseline für den Konventionstest aus B1 trifft 10 von 10
+    Wort→Kontext-Mustern, klar über der Abbruchschwelle (< 8/10) — Ticket B (Embedding-Auslass-Test)
+    entfällt (`docs/reference/retrieval-convention-spike.md`,
+    `docs/specs/measurement/spike-69-regel-baseline-konventionstest.md`). Der Auslass-Test mit/ohne
+    k Nachbarn (der andere Teil von B1) steht weiterhin aus.
 - [#70](https://github.com/henemm/loose-ends/issues/70) Textform: getippt, diktiert, Mail, Englisch
 - [#71](https://github.com/henemm/loose-ends/issues/71) Guardrail-Verweigerungsrate
 - [#72](https://github.com/henemm/loose-ends/issues/72) Token- und Latenzbudget

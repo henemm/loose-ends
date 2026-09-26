@@ -103,6 +103,19 @@ neun Acceptance Criteria erfüllt (`docs/specs/measurement/spike-108-selbstkonsi
 Der eigentliche mehrtägige Lauf auf Hennings iPhone (5 Läufe × 287 FocusBlox-Sätze) und damit das
 Abbruchkriterium selbst (≥ 85 % Trefferquote bei ≥ 30 % Abdeckung) stehen noch aus.
 
+### B1, Regel-Baseline gemessen (2026-09-26, #69, Ticket A)
+
+Bericht: `docs/reference/retrieval-convention-spike.md`, Spec:
+`docs/specs/measurement/spike-69-regel-baseline-konventionstest.md`.
+
+Der Konventionstest aus B1 prüft per Mehrheitsentscheid über drei frühere Korrekturen
+(Wort → Kontext), ohne Modell und ohne Embedding, ob sich Hennings Konventionen aus der Historie
+ableiten lassen: zehn Wort-Muster (z. B. „Rasen" → Garten, „Heizung" → Keller), je drei Korrekturen
+als Beispiele, die vierte Aufgabe als Testfall. Ergebnis: 10 von 10 Treffern, klar über der
+Abbruchschwelle aus B1 (< 8/10). Ticket B (Embedding-Auslass-Test) ist damit nicht nötig — die
+Alternative aus B1, „Regeln aus Korrekturen ohne Modell", trägt bereits ohne Embedding-Vergleich.
+Der Auslass-Test mit/ohne k Nachbarn (der andere Teil des B1-Experiments) steht weiterhin aus.
+
 ## Die Annahmen, nach Tödlichkeit
 
 Jede Annahme hat ein Experiment, das ohne App, ohne Oberfläche und ohne Henning läuft, ein
