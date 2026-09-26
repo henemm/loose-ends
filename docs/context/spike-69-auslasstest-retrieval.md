@@ -109,9 +109,10 @@ Quellen: [NLContextualEmbedding](https://developer.apple.com/documentation/natur
    nicht ein Rauschband der Trefferquote. Die Kennzahl „Differenz gegen das Rauschen" existiert nicht.
    Nebenbefund: Der #108-Wiederholungslauf wurde auf dem Gerät nie gefahren — dieser Spike wäre der
    erste echte Nutzer von `--runs`.
-6. **Das heutige Güteniveau ist niedrig.** Dauer 51 %, Energie 25 % Precision; Kontexte nie gemessen.
-   Ein Effekt von Beispielen muss sich gegen dieses Niveau abheben, und bei 25 % ist die Frage, ob
-   überhaupt genug Spielraum nach oben existiert, um eine Differenz vom Rauschen zu trennen.
+6. **Das heutige Güteniveau liegt unter der Nulllinie.** Dauer 51 % gegen Nulllinie 51,1 %, Energie
+   25 % gegen 77,3 %; Kontexte nie gemessen. Siehe die Tabelle „Der Befund, der die Fragestellung
+   verschiebt" — ein Beispiel-Effekt in der nachweisbaren Größenordnung (9 bis 15 Punkte) ändert an
+   diesem Bild nichts.
 7. **Labor-App-Installation fehlt.** Ergebnisdateiname ist hart verdrahtet, `lab-run` reicht
    `--corpus`/`--runs` nicht durch, und `MeasurementResult` hat kein Feld für den Arm (mit/ohne
    Beispiele). Drei kleine, aber unvermeidliche Änderungen.
@@ -132,23 +133,46 @@ Quellen: [NLContextualEmbedding](https://developer.apple.com/documentation/natur
 `contextVocabulary` kommt (Risiko 1): computer, garten, haus, besorgen, learning, musik, draußen,
 telefon, familie, energie.
 
-**Die Verteilung ist stark schief, und das ist der wichtigste Befund für den Messaufbau:**
-computer 63, garten 17, haus 11, besorgen 5, learning 4, musik 4, draußen 3, telefon 1, familie 1,
-energie 1. Daraus folgt zweierlei:
+**Die Verteilung ist stark schief, und das ist der wichtigste Befund für den Messaufbau.** Gezählt
+wird je Aufgabe die exakte Kontextmenge als eine Klasse (`('computer','learning')` ist eine eigene
+Klasse, nicht zwei Nennungen): 11 Klassen, die häufigste ist `('computer')` mit 59 von 104.
 
-- **Die Nulllinie liegt bei 61 %.** „Immer computer antworten" trifft 63 von 104 Sätzen — ohne
+- **Die Nulllinie liegt bei 56,7 %.** „Immer computer antworten" trifft 59 von 104 Sätzen — ohne
   Modell, ohne Beispiele, ohne irgendetwas. Der Bericht muss diese Spalte führen (Regel „Die
-  Nulllinie zählt", `CLAUDE.md`), sonst sieht ein Modellergebnis von 65 % nach Erfolg aus.
-  Der Spielraum nach oben ist klein, und eine Differenz zwischen zwei Armen muss sich in diesem
-  engen Band gegen das Rauschen behaupten.
-- **Für sieben der zehn Kontexte gibt es zu wenig Material.** Bei 1 bis 5 Beispielen kann ein
-  Auslass-Test gar keine k Nachbarn desselben Kontexts bilden. Entweder die Messung beschränkt sich
-  auf die drei tragenden Kontexte (computer, garten, haus: 91 von 104 Sätzen), oder sie akzeptiert,
-  dass der Schwanz strukturell nicht lernbar ist — und sagt das im Bericht.
+  Nulllinie zählt", `CLAUDE.md`), sonst sieht ein Modellergebnis von 60 % nach Erfolg aus.
+  *(Korrektur vom 2026-09-26: eine frühere Fassung nannte 61 %. Das waren Kontext-Nennungen
+  — „computer" kommt 63-mal vor — statt exakter Treffer je Aufgabe.)*
+- **Nachbarn sind reichlich vorhanden, anders als zuerst befürchtet.** Weil die großen Klassen die
+  Masse tragen, haben bei k=3 noch 97 von 104 Sätzen genug Nachbarn derselben Klasse, bei k=5 sind es
+  84. Die Schwanzklassen mit 1 bis 5 Vertretern fallen zahlenmäßig kaum ins Gewicht.
 
-**Aufwandsrechnung als Eingabe für den Schnitt:** 104 Sätze × 2 Arme × 3 Wiederholungen = 624
-Modellaufrufe, bei 8,8 s je Aufruf rund 1,5 Stunden reine Rechenzeit, zuzüglich Fehlversuche mit
-60 s Wartezeit. Das ist in Scheiben machbar; alle drei Felder mit voller Stichprobe wären es nicht.
+### Nachweisbare Differenz und Aufwand
+
+Gepaart gerechnet (McNemar, α 0,05, Power 80 %), je nach Anteil diskordanter Paare (10/20/30 %):
+
+| Feld | n | nachweisbare Differenz | Aufwand 2 Arme × 3 Läufe |
+|---|---|---|---|
+| Kontexte | 104 | 9 / 12 / 15 Prozentpunkte | 624 Aufrufe ≈ 1,5 h |
+| Dauer | 276 | 5 / 8 / 9 Prozentpunkte | 1656 Aufrufe ≈ 4,0 h |
+| Energie | 211 | 6 / 9 / 11 Prozentpunkte | 1266 Aufrufe ≈ 3,1 h |
+
+Bei 8,8 s je Aufruf (gemessen in #67), zuzüglich Fehlversuche mit 60 s Wartezeit. In Scheiben
+machbar; alle drei Felder mit voller Stichprobe nicht.
+
+### Der Befund, der die Fragestellung verschiebt
+
+Stellt man die heutige Modellgüte neben die Nulllinie desselben Feldes, ist das Modell auf **keinem**
+der beiden Felder, auf die #112 wartet, besser als eine Konstante:
+
+| Feld | Nulllinie | Modell heute | Abstand |
+|---|---|---|---|
+| Dauer | 51,1 % | 51 % | ±0 — das Modell liefert nichts über „immer minutes15" hinaus |
+| Energie | 77,3 % | 25 % | **−52 Punkte** — „immer low" ist massiv besser als das Modell |
+| Kontexte | 56,7 % | nie gemessen | unbekannt, weil das Vokabular leer übergeben wird |
+
+Damit lautet die eigentliche Frage nicht mehr „helfen Beispiele dem Modell", sondern „kann das Modell
+auf diesen Feldern überhaupt eine Konstante schlagen". Ein Retrieval-Effekt von 9 Punkten auf Energie
+wäre immer noch 43 Punkte schlechter als eine einzige Regelzeile.
 
 ## Offene Fragen für `/20-analyse`
 
