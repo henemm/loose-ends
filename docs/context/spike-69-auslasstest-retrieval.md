@@ -174,18 +174,156 @@ Damit lautet die eigentliche Frage nicht mehr „helfen Beispiele dem Modell", s
 auf diesen Feldern überhaupt eine Konstante schlagen". Ein Retrieval-Effekt von 9 Punkten auf Energie
 wäre immer noch 43 Punkte schlechter als eine einzige Regelzeile.
 
-## Offene Fragen für `/20-analyse`
+## Analysis
 
-- Welche Felder werden gemessen: alle drei (Kontexte, Dauer, Energie) oder nur Kontexte als
-  Erfolgskriterium aus B1? Das bestimmt, ob der FocusBlox-Korpus reicht oder erweitert werden muss.
-- Welcher Mechanismus wählt die Nachbarn im Messlauf — Wortüberlappung als Nulllinie, oder direkt
-  Embeddings? Und wird der Mechanismus überhaupt variiert, oder ist er festgehalten, um die Frage
-  „wirken Beispiele?" sauber zu isolieren?
-- Wie groß ist die Stichprobe, damit zwei Arme × k Wiederholungen in vertretbarer Zeit durchlaufen,
-  und reicht diese Größe statistisch, um eine Differenz vom Rauschen zu trennen? Bei Kontexten stehen
-  104 Sätze zur Verfügung, die Nulllinie liegt aber bei 61 % — die Analyse muss begründen, welcher
-  Effekt in diesem Band überhaupt nachweisbar ist, sonst ist der Spike vor dem Start entschieden.
-- Beschränkt sich die Kontextmessung auf die drei tragenden Kontexte (91 von 104 Sätzen), weil der
-  Schwanz keine k Nachbarn hergibt?
-- Lohnt sich Dauer (276 Sätze) oder Energie (211 Sätze) als zusätzliches oder alternatives Feld?
-  Beide haben mehr Material als Kontext, und #112 wartet genau auf diese zwei.
+### Type
+
+Feature (Mess-Schnitt für einen Spike, kein Produktpfad).
+
+### Was die adversarische Prüfung an meiner ersten Empfehlung zerlegt hat
+
+Mein erster Vorschlag war: erst das Modell ohne Beispiele gegen die Nulllinie messen, und bei einem
+Ergebnis auf oder unter der Nulllinie B1 für Kontexte als negativ abhaken. **Dieser Schluss ist
+falsch und wird verworfen.** Er unterstellt, dass ein Modell, das ohne Beispiele nicht besser als eine
+Konstante ist, auch mit Beispielen nicht besser werden kann. Dafür gibt es keinen Beleg — im Gegenteil
+ist ein großer Abstand nach unten oft ein Zeichen falscher Vorannahmen, und genau die korrigieren
+wenige Beispiele leicht. Ein einarmiger Lauf gegen eine Konstante beantwortet außerdem nicht B1,
+sondern eine Machbarkeitsfrage im Sinne von A2. Ihn „Stufe 1 des Auslass-Tests" zu nennen, hätte eine
+andere Frage unter dem Namen des Experiments verkauft.
+
+Zwei weitere Einwände sind nachgeprüft und zutreffend:
+
+- **Der Korpus enthält keinen Rohtext.** `scripts/export-focusblox-corpus.swift:212` setzt
+  `rawText: title` — gemessen würde also auf gepflegten Titeln, nicht auf dem, was im Produkt
+  ankommt. `docs/project/06-annahmen-und-experimente.md:37-38` sagt das bereits. Das trifft Regel und
+  Modell gleichermaßen, der Vergleich bleibt also fair, aber die absoluten Zahlen übertragen sich
+  nicht auf den Produktpfad. Gehört als Grenze in jede Spec und in jeden Bericht.
+- **Rauschen und Diskordanz sind zwei verschiedene Größen.** Die Streuung über Wiederholungsläufe
+  desselben Arms (Selbstkonsistenz) ist nicht dasselbe wie der Anteil der Sätze, bei denen zwei Arme
+  unterschiedlich urteilen. B1 formuliert das Abbruchkriterium als „Differenz ≤ Rauschen", aber eine
+  Umrechnung von Selbstkonsistenz in eine Diskordanzrate gibt es nicht. Die Spec muss beide Zahlen
+  getrennt führen und offenlegen, dass die Brücke dazwischen fehlt.
+
+Die Wahl der Kontext-Metrik verschiebt die Nulllinie nur leicht: exakte Mengengleichheit 56,7 %,
+„enthält den häufigsten Kontext" 60,6 %, Jaccard-Mittel 58,7 %. Nur 6 von 104 Aufgaben haben mehr als
+einen Kontext. Die Metrik muss trotzdem in der Spec definiert sein, sonst ist der Bericht nicht lesbar.
+
+### Der Weg, der daraus folgt: erst die Regel auf echten Daten
+
+Ticket A hat den Regelweg auf **zehn gebauten Mustern** belegt (10/10). Das ist ein synthetischer,
+wohlwollender Aufbau — es sagt nicht, wie gut eine Regel auf Hennings echten 104 Aufgaben trifft.
+Diese Zahl existiert nirgends, und sie ist ohne Modell, ohne Gerät und ohne Labor-App zu bekommen:
+
+**Der Auslass-Test wird zuerst mit der Regel gefahren, nicht mit dem Modell.** Für jede der 104
+Aufgaben werden die k ähnlichsten *anderen* Aufgaben über Wortüberlappung gesucht
+(`Measurement/RuleBaseline.swift` aus Ticket A), deren Kontexte entscheiden per Mehrheit, das Ergebnis
+wird gegen die Wahrheit gestellt. Das läuft als Unit-Test auf dem Mac in Sekunden.
+
+Damit ist es derselbe Auslass-Test, den B1 verlangt — nur mit der Regel als Mechanismus statt des
+Modells. Er liefert drei Dinge auf einmal:
+
+1. die echte Trefferquote des Regelwegs auf realen Daten, gegen die Konstante von 56,7 %
+2. die Messlatte, die das Modell mit Beispielen überhaupt überspringen muss, um das Produkt zu ändern
+3. die Antwort auf die Frage, ob #112 (Dauer, Energie) und #26 (Lernen) überhaupt ein Modell brauchen
+
+Nachbarn sind dafür vorhanden: 99 von 104 Aufgaben haben bei k=3 mindestens drei Aufgaben, die
+mindestens einen Kontext mit ihnen teilen.
+
+**Erst nach dieser Zahl entscheidet sich, ob die 1,5 Stunden Gerätezeit für den Modell-Auslass-Test
+eine Frage beantworten, die das Produkt ändert.** Nach `CLAUDE.md` („Die einfachste Lösung wird zuerst
+gebaut oder zuerst widerlegt", „Ohne Modell geht es nicht, weil … mit Beleg") ist das die Reihenfolge.
+
+### Die Grenze dieses Schnitts, offen benannt
+
+Ein Nullergebnis des Regel-Auslass-Tests widerlegt „Wortüberlappung als Nachbarsuche für Kontexte",
+nicht B1 insgesamt — es wird nur ein Mechanismus geprüft. Und weil der Korpus gepflegte Titel enthält,
+gilt jede Zahl für Titel, nicht für Rohtext.
+
+### Affected Files (with changes) — Regel-Auslass-Test, alle drei Merkmale
+
+| Datei | Change Type | Beschreibung |
+|---|---|---|
+| `Measurement/LeaveOneOut.swift` | CREATE | k nächste Nachbarn über Wortüberlappung aus einem Pool, Mehrheitsentscheid über ein Merkmal, `nil` bei Nichttreffer. Verallgemeinert die Stimmlogik aus `RuleBaseline` (die an `ConventionCorpus.Pattern` gebunden ist) auf `Corpus.Entry`. ~80 LoC |
+| `LooseEndsTests/RuleLeaveOneOutTests.swift` | CREATE | Lädt den FocusBlox-Korpus über den vorhandenen `repoFile`-Helfer, fährt Kontexte/Dauer/Energie bei k=1,3,5, prüft die Nulllinien-Vergleiche, schreibt den Bericht. `@Suite(.enabled(if:))`, damit CI ohne die gitignorierte Datei grün bleibt. ~110 LoC |
+| `docs/reference/retrieval-leave-one-out-rules.md` | CREATE | Bericht: je Merkmal und k die Trefferquote der Regel, daneben die Konstante als Nulllinie, dazu die Zahl der Sätze ohne Nachbarn. Wird vom Test geschrieben, nicht von Hand gepflegt. |
+
+### Scope Assessment
+
+- Dateien: 3 (2 Code, 1 erzeugter Bericht)
+- Geschätzte LoC: +190 / −0
+- Risiko: **niedrig** — kein Produktpfad, kein Gerät, keine Änderung an der Messstrecke aus #67,
+  keine Änderung an `project.yml`. Das Test-Ziel compiliert `Measurement/` bereits.
+- Laufzeit: Sekunden auf dem Mac, keine Gerätezeit
+
+Der Ladepfad ist erprobt: `LooseEndsTests/FocusBloxCalibrationTests.swift:14` und
+`SelfConsistencyReportTests.swift:17` lesen dieselbe Datei bereits über `repoFile(...)`.
+
+### Was dieser Schnitt NICHT anfasst
+
+Die Installationslücken der Labor-App bleiben unberührt. Sie werden erst gebraucht, wenn nach dem
+Regelergebnis entschieden ist, dass das Modell überhaupt noch gemessen wird.
+
+### Vorarbeit für den späteren Modell-Schnitt (geprüft, damit sie nicht neu erarbeitet werden muss)
+
+Ein Plan für die Gerätemessung liegt vor (ca. 5 Dateien, ~145 LoC) und hat vier Dinge geklärt, die
+dort sonst Zeit kosten würden:
+
+- **Der Korpus kommt nur über das App-Bundle aufs Gerät.** `Measurement/Corpus.swift:121-128` hat zwei
+  Wege, Bundle-Resource oder Datei neben der Quelle über `#filePath`; auf dem Gerät trägt nur der
+  Bundle-Weg, weil `#filePath` auf den Mac des Bauenden zeigt. Die gitignorierte Datei muss deshalb als
+  Resource des Ziels `LooseEndsLab` eingetragen werden, und zwar mit `optional: true`, sonst bricht
+  `xcodegen generate` in CI und auf jedem frischen Klon ab. **Für den jetzigen Mac-Schnitt ist das
+  irrelevant** — der Test liest über `repoFile(...)` direkt aus dem Repo.
+- **Das Kontextvokabular muss aus dem Korpus abgeleitet werden**, nicht hartkodiert, und der Filter
+  muss für den #67-Korpus inert bleiben (dort gibt es kein `contextsTruth`, also leeres Vokabular und
+  kein Filter — sonst messen #67-Nachläufe null Sätze).
+- **Das Modell wird nicht gegen das Vokabular validiert.** `FoundationModelsEnricher.swift:70-72`
+  übernimmt Kontexte ungeprüft, auch erfundene und in beliebiger Schreibweise. Ein Bericht muss
+  normalisieren und Antworten außerhalb des Vokabulars als eigene Spalte führen, nicht stillschweigend
+  als Fehltreffer verbuchen.
+- **Eine Landmine für jeden künftigen Messlauf:** `LooseEndsTests/DateTitleReportTests.swift:12-16`
+  liest über `MeasurementFiles.runs` **jede** `.json` in `Measurement/results/` und mischt sie in den
+  veröffentlichten #67-Bericht. Eine dort abgelegte neue Laufdatei verfälscht
+  `docs/reference/date-title-fidelity.md`. Neue Läufe gehören deshalb nach `docs/reference/`
+  (Präzedenz: `selfconsistency-run.json`), nicht nach `Measurement/results/`.
+
+### Alternativen zu diesem Schnitt
+
+- **Direkt den Modell-Auslass-Test bauen** (beide Arme, Kontexte, 1,5 h Gerätezeit plus den Umbau der
+  Labor-App). Beantwortet B1 wörtlich, kostet aber Gerätezeit für eine Frage, deren Produktrelevanz
+  von der noch fehlenden Regel-Zahl abhängt.
+- **Spike schließen, Regelweg ausliefern.** Ticket A gilt als ausreichender Beleg, Kontexte gehen
+  regelbasiert ins Produkt, ADR-5 wird auf „Regeln plus Retrieval" umgeschrieben und #26 entsprechend
+  verkleinert. Spart alles — nimmt aber in Kauf, dass die 10/10 aus zehn gebauten Mustern stammen und
+  die Zahl auf echten Daten unbekannt bleibt.
+- **Auf Dauer und Energie ausweichen** (276 bzw. 211 Sätze, bessere Nachweisbarkeit). Diese zwei
+  blockieren #112 unmittelbar. Erfordert aber, die Nulllinien-Ausschlusslogik nicht anzuwenden, die die
+  Prüfung gerade zerlegt hat — hier muss der Regel-Auslass-Test genauso zuerst laufen.
+
+## Entscheidung des PO (Henning, 2026-09-26)
+
+**„Erst die Regel, dann entscheiden."** Der Regel-Auslass-Test über alle drei Merkmale läuft auf dem
+Mac, ohne Gerätezeit. Mit dieser Zahl entscheidet Henning anschließend, ob der Modell-Auslass-Test
+(1,5 h auf dem iPhone plus Umbau der Labor-App) noch eine Frage beantwortet, die das Produkt ändert.
+
+Damit sind die offenen Fragen aus Phase 1 beantwortet:
+
+- **Felder:** alle drei (Kontexte 104, Dauer 276, Energie 211) — auf dem Mac kostet das nichts extra,
+  und #112 wartet auf Dauer und Energie.
+- **Mechanismus:** Wortüberlappung, der Regelweg aus Ticket A. Embeddings und `SpotlightSearchTool`
+  bleiben Alternativen für den Fall, dass die Regel die Konstante nicht schlägt.
+- **Stichprobe:** die volle Wahrheitsmenge je Merkmal, kein Zuschnitt auf die tragenden Klassen —
+  bei Teilmengen-Zählung haben 99 von 104 Sätzen bei k=3 genug Nachbarn.
+- **Kontextvokabular in der Labor-App:** verschoben, wird im Mac-Schnitt nicht gebraucht.
+
+## Offene Fragen für `/30-write-spec`
+
+- [ ] Welche Kontext-Metrik wird verbindlich: exakte Mengengleichheit (Nulllinie 56,7 %) oder
+      „enthält den erwarteten Kontext" (60,6 %)? Empfehlung: exakte Mengengleichheit, weil das
+      Produkt eine Menge setzt und nicht teilweise recht haben kann. Beide Zahlen gehören trotzdem in
+      den Bericht.
+- [ ] Wie wird k festgelegt — ein Wert oder eine Kurve über k=1,3,5? Empfehlung: Kurve, sie kostet auf
+      dem Mac nichts und zeigt, ob mehr Nachbarn helfen oder schaden.
+- [ ] Welche Abbruchschwelle gilt für den Regelweg? B1 nennt „< 8/10" für den Konventionstest; für den
+      Auslass-Test auf echten Daten braucht es eine eigene, vorab festgelegte Schwelle gegen die
+      Konstante — sonst wird das Ergebnis nachträglich interpretiert.
