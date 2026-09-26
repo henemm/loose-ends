@@ -89,8 +89,12 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
   - Ticket A gemessen (2026-09-26): Regel-Baseline für den Konventionstest aus B1 trifft 10 von 10
     Wort→Kontext-Mustern, klar über der Abbruchschwelle (< 8/10) — Ticket B (Embedding-Auslass-Test)
     entfällt (`docs/reference/retrieval-convention-spike.md`,
-    `docs/specs/measurement/spike-69-regel-baseline-konventionstest.md`). Der Auslass-Test mit/ohne
-    k Nachbarn (der andere Teil von B1) steht weiterhin aus.
+    `docs/specs/measurement/spike-69-regel-baseline-konventionstest.md`).
+  - [#131](https://github.com/henemm/loose-ends/issues/131) gemessen (2026-09-26): Regel-Auslass-Test
+    (Wortüberlappung als Nachbarsuche) — gemischtes Ergebnis, siehe
+    `docs/project/06-annahmen-und-experimente.md` (B1) und
+    `docs/reference/retrieval-leave-one-out-rules.md`. Welche Lesart fürs Produkt gilt, ist offene
+    PO-Frage.
 - [#70](https://github.com/henemm/loose-ends/issues/70) Textform: getippt, diktiert, Mail, Englisch
 - [#71](https://github.com/henemm/loose-ends/issues/71) Guardrail-Verweigerungsrate
 - [#72](https://github.com/henemm/loose-ends/issues/72) Token- und Latenzbudget

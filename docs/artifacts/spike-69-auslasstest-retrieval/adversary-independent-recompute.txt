@@ -1,0 +1,69 @@
+Unabhaengige Nachrechnung des Regel-Auslass-Tests (Adversary, Python, eigene Implementierung
+der Spec-Regeln: Tokenisierung nach TitleCheck.words, Diakritika-Faltung wie
+TitleCheck.normalized (inkl. ss-Faltung, in Swift nachgemessen), Laengenfilter >= 4,
+Jaccard, Nachbarsuche mit id-Auslass und id-Tiebreak, Mehrheit mit Rangfolge-Tiebreak,
+Nulllinie aus dem Pool, exakter zweiseitiger McNemar.)
+
+=== Hauptzahlen je Merkmal und k (loo.py) ===
+== Kontexte pool=104 baseline=frozenset({'computer'}) baserate=56.7%
+  k=1 rate=72.1% (75/104) answered=85 ansrate=88.2% (75/85) without=19 margin=15.4 b=25 c=9 p=0.0090
+  k=3 rate=72.1% (75/104) answered=85 ansrate=88.2% (75/85) without=19 margin=15.4 b=25 c=9 p=0.0090
+  k=5 rate=72.1% (75/104) answered=85 ansrate=88.2% (75/85) without=19 margin=15.4 b=25 c=9 p=0.0090
+== Dauer pool=276 baseline='minutes15' baserate=51.1%
+  k=1 rate=73.9% (204/276) answered=248 ansrate=82.3% (204/248) without=28 margin=22.8 b=101 c=38 p=0.0000
+  k=3 rate=72.1% (199/276) answered=248 ansrate=80.2% (199/248) without=28 margin=21.0 b=98 c=40 p=0.0000
+  k=5 rate=72.1% (199/276) answered=248 ansrate=80.2% (199/248) without=28 margin=21.0 b=97 c=39 p=0.0000
+== Energie pool=211 baseline='low' baserate=77.3%
+  k=1 rate=60.2% (127/211) answered=183 ansrate=69.4% (127/183) without=28 margin=-17.1 b=2 c=38 p=0.0000
+  k=3 rate=59.7% (126/211) answered=183 ansrate=68.9% (126/183) without=28 margin=-17.5 b=0 c=37 p=0.0000
+  k=5 rate=59.2% (125/211) answered=183 ansrate=68.3% (125/183) without=28 margin=-18.0 b=16 c=54 p=0.0000
+
+=== Nebenspalten Kontexte (side.py) ===
+1 contains=73.1% jaccardMean=72.6%
+3 contains=73.1% jaccardMean=72.6%
+5 contains=73.1% jaccardMean=72.6%
+
+=== Wirkt k? Nachbarzahl-Verteilung und Vorhersagewechsel (Kontexte) (kcheck.py) ===
+neighbor-count distribution (k=5 cap): {0: 19, 1: 8, 2: 15, 3: 7, 4: 7, 5: 48}
+entries whose prediction changes k1->k3: 0  k3->k5: 0
+entries with >=2 neighbours: 77
+entries with >=3 neighbours: 62
+
+=== Saetze ohne Nachbarn je Merkmal + Mehrheits-Kontrollfaelle (ac5.py) ===
+Kontexte pool 104 ohne Nachbarn 19 => 1 - z/pool answered 85
+Dauer pool 276 ohne Nachbarn 28 => 1 - z/pool answered 248
+Energie pool 211 ohne Nachbarn 28 => 1 - z/pool answered 183
+A,B,B -> Y
+A,B,A -> X
+leer  -> None
+
+=== Textgleiche Gruppen im Korpus (groups.py) ===
+43 ['beantworten', 'linkedin', 'nachrichten'] | {'LinkedIn Nachrichten beantworten'} | Kontexte: {('computer',)}
+4 ['fehlerbehebung', 'focusblox'] | {'Fehlerbehebung FocusBlox'} | Kontexte: {('computer', 'learning')}
+4 ['klavier', 'spielen'] | {'Klavier spielen'} | Kontexte: {('musik',)}
+3 ['fahrradkette', 'reinigen'] | {'Fahrradkette reinigen'} | Kontexte: {('draußen',)}
+3 ['behandel', 'zehnagel'] | {'Zehnagel behandel'} | Kontexte: {('haus',)}
+2 ['energie-abrechnung', 'erstellen'] | {'Energie-Abrechnung erstellen'} | Kontexte: {('haus',)}
+2 ['blink', 'lesen'] | {'1 Blink lesen'} | Kontexte: {('computer',)}
+
+=== Anteil der Treffer aus Jaccard-1.0-Nachbarn (dup.py) ===
+Kontexte: pool=104 exakt-textgleiche Gruppen=7 Mitglieder=61 | naechster Nachbar Jaccard=1.0 bei 61 Saetzen, davon Treffer 61 | Gesamttreffer k=1 75
+   Trefferquote ohne die Jaccard-1.0-Faelle: 14/43 = 32.6%  (Nulllinie 56.7%)
+Dauer: pool=276 exakt-textgleiche Gruppen=8 Mitglieder=169 | naechster Nachbar Jaccard=1.0 bei 169 Saetzen, davon Treffer 169 | Gesamttreffer k=1 204
+   Trefferquote ohne die Jaccard-1.0-Faelle: 35/107 = 32.7%  (Nulllinie 51.1%)
+Energie: pool=211 exakt-textgleiche Gruppen=9 Mitglieder=101 | naechster Nachbar Jaccard=1.0 bei 101 Saetzen, davon Treffer 73 | Gesamttreffer k=1 127
+   Trefferquote ohne die Jaccard-1.0-Faelle: 54/110 = 49.1%  (Nulllinie 77.3%)
+
+=== Dieselbe Rechnung auf dem entduplizierten Pool (dedup.py) ===
+Kontexte: b-Faelle (k=1) mit Jaccard-1.0-Nachbar: 16, ohne: 9
+  DEDUPED Kontexte k=1: n=50 rate=30.0% base=32.0% margin=-2.0 b=6 c=7 p=1.0000
+  DEDUPED Kontexte k=3: n=50 rate=30.0% base=32.0% margin=-2.0 b=6 c=7 p=1.0000
+  DEDUPED Kontexte k=5: n=50 rate=30.0% base=32.0% margin=-2.0 b=6 c=7 p=1.0000
+Dauer: b-Faelle (k=1) mit Jaccard-1.0-Nachbar: 89, ohne: 12
+  DEDUPED Dauer k=1: n=115 rate=32.2% base=56.5% margin=-24.3 b=12 c=40 p=0.0001
+  DEDUPED Dauer k=3: n=115 rate=31.3% base=56.5% margin=-25.2 b=12 c=41 p=0.0001
+  DEDUPED Dauer k=5: n=115 rate=29.6% base=56.5% margin=-27.0 b=10 c=41 p=0.0000
+Energie: b-Faelle (k=1) mit Jaccard-1.0-Nachbar: 0, ohne: 2
+  DEDUPED Energie k=1: n=119 rate=49.6% base=83.2% margin=-33.6 b=2 c=42 p=0.0000
+  DEDUPED Energie k=3: n=119 rate=51.3% base=83.2% margin=-31.9 b=0 c=38 p=0.0000
+  DEDUPED Energie k=5: n=119 rate=52.9% base=83.2% margin=-30.3 b=0 c=36 p=0.0000

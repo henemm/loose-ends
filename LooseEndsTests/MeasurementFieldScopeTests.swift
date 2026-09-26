@@ -28,4 +28,11 @@ struct MeasurementFieldScopeTests {
         #expect(!text.contains(#"field: "importance""#))
         #expect(!text.contains(#"field: "urgency""#))
     }
+
+    @Test("RuleLeaveOneOutTests wertet importance/urgency nicht aus (#118, #131)")
+    func ruleLeaveOneOutDropsImportanceUrgency() throws {
+        let text = try Self.source("RuleLeaveOneOutTests.swift")
+        #expect(!text.contains("importanceTruth"))
+        #expect(!text.contains("urgencyTruth"))
+    }
 }

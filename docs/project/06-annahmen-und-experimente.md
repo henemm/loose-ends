@@ -114,7 +114,42 @@ ableiten lassen: zehn Wort-Muster (z. B. „Rasen" → Garten, „Heizung" → K
 als Beispiele, die vierte Aufgabe als Testfall. Ergebnis: 10 von 10 Treffern, klar über der
 Abbruchschwelle aus B1 (< 8/10). Ticket B (Embedding-Auslass-Test) ist damit nicht nötig — die
 Alternative aus B1, „Regeln aus Korrekturen ohne Modell", trägt bereits ohne Embedding-Vergleich.
-Der Auslass-Test mit/ohne k Nachbarn (der andere Teil des B1-Experiments) steht weiterhin aus.
+Der Auslass-Test mit/ohne k Nachbarn (der andere Teil des B1-Experiments) ist seit 2026-09-26
+gemessen, siehe unten.
+
+### B1, Regel-Auslass-Test gemessen (2026-09-26, #131, Nachfolger von #69) — zweischneidig
+
+Bericht: `docs/reference/retrieval-leave-one-out-rules.md`, Spec:
+`docs/specs/measurement/spike-69-regel-auslasstest.md`.
+
+Der zweite Teil von B1 sucht für jede Aufgabe im FocusBlox-Korpus die k ähnlichsten *anderen*
+Aufgaben über Jaccard-Wortüberlappung (Wörter ab vier Zeichen) und lässt sie per Mehrheit über
+Kontexte, Dauer oder Energie entscheiden — gegen eine aus dem Pool gerechnete Konstante
+(Nulllinie). Urteil nach der vorab festgelegten Schwelle: Trefferquote ≥ Nulllinie + 10
+Prozentpunkte **und** McNemar-Exakttest p < 0,05. Zwei Lesarten, je nach Pool:
+
+- **Voller Pool** (alle Aufgaben mit Wahrheit für das Merkmal): Kontexte 72,1 % gegen Nulllinie
+  56,7 % (Abstand +15,4, p = 0,0090) → erfüllt. Dauer 73,9 % gegen 51,1 % (Abstand +22,8,
+  p < 0,0001) → erfüllt. Energie 60,2 % gegen 77,3 % (Abstand −17,1) → nicht erfüllt — die
+  Konstante „immer low" ist deutlich besser als die Nachbarsuche.
+- **Gegenprobe ohne Textdubletten** (ein Vertreter je textgleicher Gruppe, k = 1; n sinkt von
+  104/276/211 auf 50/115/119): Kontexte 30,0 % gegen 32,0 % → nicht erfüllt. Dauer 32,2 % gegen
+  56,5 % → nicht erfüllt. Energie 49,6 % gegen 83,2 % → nicht erfüllt.
+
+Grund für die Kluft zwischen beiden Lesarten: 58,7 % der Kontext-, 61,2 % der Dauer- und 47,9 %
+der Energie-Sätze haben einen Nachbarn mit Jaccard 1,0 — identischer Wortmenge. Für sie ist die
+„Nachbarsuche" Wiedererkennung desselben Titels, keine Ähnlichkeitsaussage. Die Haupttabelle zeigt
+den Nutzen bei **wiederkehrenden** Erfassungen, die Gegenprobe den bei **neu formulierten**
+Aufgaben. Zusätzliche Einschränkung wie bei den anderen Spikes: Der Korpus trägt gepflegte Titel
+als Rohtext, nicht diktierten Rohtext, wie das Produkt ihn verarbeitet.
+
+**B1 ist damit nicht abschließend geklärt.** Der Mechanismus „Wortüberlappung als Nachbarsuche"
+ist auf neu formulierten Aufgaben widerlegt, auf wiederkehrenden Erfassungen belegt. Welche
+Lesart fürs Produkt zählt — wie oft Henning wortidentische oder sehr ähnliche Aufgaben erneut
+erfasst — ist eine offene PO-Frage, hier nicht entschieden. Davon hängt ab, ob ADR-5 zur
+Disposition steht (Spec, Abschnitt „Architektur-Entscheidung"): Ein Nullergebnis auf allen drei
+Merkmalen hätte nur den Mechanismus widerlegt, nicht B1 insgesamt; das gemischte Ergebnis
+verschiebt die Frage stattdessen auf die Produktfrage oben.
 
 ## Die Annahmen, nach Tödlichkeit
 
@@ -141,7 +176,7 @@ bis sie gesehen wurde.
 
 | # | Annahme | Experiment | Abbruch | Alternative | Issue |
 |---|---|---|---|---|---|
-| B1 | Retrieval lernt wirklich | Auslass-Test mit/ohne k Nachbarn gegen Rauschen; Konventionstest (drei Korrekturen, vierte Aufgabe) | Differenz ≤ Rauschen, oder Konventionstest < 8/10 | Regeln aus Korrekturen ohne Modell; Retrieval-Mehrheit statt Prompt-Beispiel; ADR-5 auf „Regeln plus Retrieval" | #69 |
+| B1 | Retrieval lernt wirklich | Auslass-Test mit/ohne k Nachbarn gegen Rauschen; Konventionstest (drei Korrekturen, vierte Aufgabe) | Differenz ≤ Rauschen, oder Konventionstest < 8/10 | Regeln aus Korrekturen ohne Modell; Retrieval-Mehrheit statt Prompt-Beispiel; ADR-5 auf „Regeln plus Retrieval" | #69, #131 |
 | B2 | Die Textform ist egal | Gleicher Inhalt in vier Formen: getippt, diktiert, Mail-Auszug, Englisch | < 80 % Übereinstimmung getippt/diktiert; Mail setzt Felder aus Signatur | Vorverarbeitung ohne Modell (kürzen, Signatur weg, Diktat normalisieren); kanalspezifische Prompts | #70 |
 | B3 | Guardrails lassen Alltag durch | Korpus plus 100 heikle Alltagstexte, Mac und iPhone getrennt | > 1 % Verweigerung | Verweigerung als sichtbarer Zustand; zweiter Versuch gekürzt; Parser-Fallback | #71 |
 | B4 | Der Lauf ist bezahlbar | Token je Prompt/Antwort, Sekunden je Aufgabe, Nachzügler mit 50 Aufgaben | > 2500 Token oder > 10 s je Aufgabe | Schema ohne Begründungen und ohne Konfidenz; zwei Läufe (Titel/Datum zuerst, weiche Felder später); Beispiele als Kurzform | #72 |
