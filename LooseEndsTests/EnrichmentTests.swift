@@ -376,3 +376,240 @@ struct TestStore {
         #expect(try context.fetchCount(FetchDescriptor<TaskContext>()) == 0)
     }
 }
+
+/// Wiedererkennung bekannter Rohtexte (#136, Folge der B1-Entscheidung vom 2026-09-27): Wird eine
+/// Aufgabe wortgleich erneut erfasst, übernimmt sie Kontexte und Dauer der früheren — still, mit
+/// Konfidenz 1.0, KI-Marker und je einer `Revision`. Energie ausdrücklich nicht: Nachbarn schlagen
+/// dort die Konstante auf keiner Lesart (#112).
+///
+/// „Wortgleich" heißt: gleiche normalisierte Wortmenge. Groß-/Kleinschreibung, Satzzeichen und
+/// Wortstellung sind egal, ein anderes Wort nicht — auf dem Korpus gemessen 100 % exakt auf beiden
+/// Feldern, gegen 100 %/97,2 % bei der ursprünglich vorgesehenen Ähnlichkeitsschwelle 0,34.
+@Suite("Wiedererkennung im Coordinator (#136)")
+struct RecognitionCoordinatorTests {
+
+    /// Baut eine bereits veredelte Aufgabe: `processedAt` gesetzt, also nie wieder im Pending-Fetch,
+    /// und genau deshalb als Vergleichsmenge zulässig (die Regel kann sich nicht selbst füttern).
+    @MainActor
+    private func makeProcessed(
+        _ rawText: String,
+        duration: DurationBucket?,
+        durationSource: FieldSource = .ai,
+        contexts: [TaskContext] = [],
+        contextsSource: FieldSource = .ai,
+        in context: ModelContext
+    ) -> TaskItem {
+        let task = TaskItem(rawText: rawText)
+        task.status = .active
+        task.processedAt = Date(timeIntervalSince1970: 1_700_000_000)
+        if let duration {
+            task.duration = duration
+            task.durationSourceRaw = durationSource.rawValue
+            task.durationConfidence = 1.0
+        }
+        if !contexts.isEmpty {
+            task.contexts = contexts
+            task.contextsSourceRaw = contextsSource.rawValue
+            task.contextsConfidence = 1.0
+        }
+        context.insert(task)
+        return task
+    }
+
+    /// Ein Stub-Modell, das für Dauer und Kontexte nichts liefert: geprüft wird hier der Regelpfad.
+    private func silentStub() -> StubEnricher {
+        var draft = EnrichmentDraft()
+        draft.title = EnrichmentDraft.Guess("Titel", confidence: 0.9, reason: "Stub.")
+        return StubEnricher(draft: draft)
+    }
+
+    @Test("Wortgleiche Wiedererfassung übernimmt Dauer und Kontexte der früheren Aufgabe (AC-1)")
+    @MainActor func adoptsDurationAndContextsFromIdenticalRawText() async throws {
+        let store = try TestStore()
+        let context = store.context
+        let garden = TaskContext(name: "Garten", isSystemDefault: true, sortOrder: 3)
+        context.insert(garden)
+        _ = makeProcessed("Rasen mähen", duration: .minutes30, contexts: [garden], in: context)
+        let fresh = TaskItem(rawText: "Rasen mähen")
+        context.insert(fresh)
+        try context.save()
+
+        let coordinator = EnrichmentCoordinator(enricher: silentStub(), container: store.container)
+        await coordinator.processPending()
+
+        #expect(fresh.duration == .minutes30)
+        #expect(fresh.durationSourceRaw == FieldSource.ai.rawValue)
+        #expect(fresh.durationConfidence == 1.0)
+        #expect((fresh.contexts ?? []).map(\.name) == ["Garten"])
+        #expect(fresh.contextsSourceRaw == FieldSource.ai.rawValue)
+        #expect(fresh.contextsConfidence == 1.0)
+
+        let revisions = fresh.revisions ?? []
+        let durationRevision = try #require(revisions.first { $0.field == .duration })
+        #expect(durationRevision.author == .ai)
+        #expect(durationRevision.newValue == DurationBucket.minutes30.rawValue)
+        #expect(!(durationRevision.reason ?? "").isEmpty)
+        let contextsRevision = try #require(revisions.first { $0.field == .contexts })
+        #expect(contextsRevision.author == .ai)
+        #expect(contextsRevision.newValue == EnrichmentWriter.encode(["Garten"]))
+    }
+
+    @Test("Groß-/Kleinschreibung, Satzzeichen und Wortstellung verhindern die Wiedererkennung nicht (AC-3)")
+    @MainActor func normalisationDoesNotBlockRecognition() async throws {
+        let store = try TestStore()
+        let context = store.context
+        _ = makeProcessed("LinkedIn Nachrichten beantworten.", duration: .minutes15, in: context)
+        let fresh = TaskItem(rawText: "nachrichten  linkedin beantworten")
+        context.insert(fresh)
+        try context.save()
+
+        let coordinator = EnrichmentCoordinator(enricher: silentStub(), container: store.container)
+        await coordinator.processPending()
+
+        #expect(fresh.duration == .minutes15)
+    }
+
+    /// Der Negativtest gegen den Vier-Zeichen-Filter aus der Messung: „Tee" und „Bad" fielen dort
+    /// heraus, beide Texte wären zu `{holen}` verschmolzen. Ein falsch gesetzter Kontext ist für den
+    /// Nutzer unsichtbar, deshalb entscheidet die Regel hier zugunsten der Strenge.
+    @Test("Ein anderes Wort verhindert die Übernahme (AC-2, AC-4)")
+    @MainActor func differentWordBlocksAdoption() async throws {
+        let store = try TestStore()
+        let context = store.context
+        _ = makeProcessed("Bad holen", duration: .minutes30, in: context)
+        _ = makeProcessed("60 Minuten Sport", duration: .hour1, in: context)
+        let tea = TaskItem(rawText: "Tee holen")
+        let sport = TaskItem(rawText: "30 Minuten Sport")
+        let unrelated = TaskItem(rawText: "Zettel sortieren")
+        context.insert(tea)
+        context.insert(sport)
+        context.insert(unrelated)
+        try context.save()
+
+        let coordinator = EnrichmentCoordinator(enricher: silentStub(), container: store.container)
+        await coordinator.processPending()
+
+        #expect(tea.duration == nil, "Tee holen ist nicht Bad holen")
+        #expect(sport.duration == nil, "30 Minuten Sport ist nicht 60 Minuten Sport")
+        #expect(unrelated.duration == nil)
+    }
+
+    @Test("Energie wird nie übernommen (AC-5)")
+    @MainActor func energyIsNeverAdopted() async throws {
+        let store = try TestStore()
+        let context = store.context
+        let source = makeProcessed("Klavier spielen", duration: .hour1, in: context)
+        source.energyRaw = Energy.high.rawValue
+        source.energySourceRaw = FieldSource.user.rawValue
+        source.energyConfidence = 1.0
+        let fresh = TaskItem(rawText: "Klavier spielen")
+        context.insert(fresh)
+        try context.save()
+
+        let coordinator = EnrichmentCoordinator(enricher: silentStub(), container: store.container)
+        await coordinator.processPending()
+
+        #expect(fresh.duration == .hour1, "Dauer ja")
+        #expect(fresh.energyRaw == nil, "Energie nein — bleibt manuell (#112)")
+        #expect(!(fresh.revisions ?? []).contains { $0.field == .energy })
+    }
+
+    /// ADR-5: „Korrekturen des Nutzers bleiben Beispiele erster Klasse." Eine Nutzerkorrektur soll
+    /// sich auf künftige Wiedererfassungen fortpflanzen, nicht ein KI-Fehler.
+    @Test("Ein nutzergesetzter Wert schlägt einen KI-gesetzten (AC-6)")
+    @MainActor func userSetValueWinsOverAISetValue() async throws {
+        let store = try TestStore()
+        let context = store.context
+        _ = makeProcessed("Steuer sortieren", duration: .minutes15, durationSource: .ai, in: context)
+        _ = makeProcessed("Steuer sortieren", duration: .hours2plus, durationSource: .user, in: context)
+        let fresh = TaskItem(rawText: "Steuer sortieren")
+        context.insert(fresh)
+        try context.save()
+
+        let coordinator = EnrichmentCoordinator(enricher: silentStub(), container: store.container)
+        await coordinator.processPending()
+
+        #expect(fresh.duration == .hours2plus, "die Korrektur des Nutzers gewinnt, nicht der KI-Wert")
+    }
+
+    /// Die Vergleichsmenge besteht nur aus bereits veredelten Aufgaben. Damit kann eine Aufgabe aus
+    /// demselben Nachzügler-Lauf strukturell nie Quelle für eine andere sein — ein Fehler
+    /// vervielfältigt sich nicht still.
+    @Test("Zwei unverarbeitete Aufgaben im selben Lauf befruchten sich nicht (AC-7)")
+    @MainActor func unprocessedTasksAreNotPartOfThePool() async throws {
+        let store = try TestStore()
+        let context = store.context
+        let first = TaskItem(rawText: "Fahrrad reparieren")
+        first.duration = .hour1
+        first.durationSourceRaw = FieldSource.user.rawValue
+        let second = TaskItem(rawText: "Fahrrad reparieren")
+        context.insert(first)
+        context.insert(second)
+        try context.save()
+
+        let coordinator = EnrichmentCoordinator(enricher: silentStub(), container: store.container)
+        await coordinator.processPending()
+
+        #expect(second.duration == nil, "die erste Aufgabe war beim Lauf noch nicht veredelt")
+    }
+
+    @Test("Der Nachzügler-Lauf hängt keine zweite Revision an (AC-8)")
+    @MainActor func catchUpPassAddsNoSecondRevision() async throws {
+        let store = try TestStore()
+        let context = store.context
+        _ = makeProcessed("Fenster putzen", duration: .minutes30, in: context)
+        let fresh = TaskItem(rawText: "Fenster putzen")
+        context.insert(fresh)
+        try context.save()
+
+        // Erster Lauf ohne Modell: die Regel greift, `processedAt` bleibt leer (ADR-4).
+        let unavailable = silentStub()
+        unavailable.unavailableReason = "Kein Apple Intelligence"
+        await EnrichmentCoordinator(enricher: unavailable, container: store.container).processPending()
+        #expect(fresh.duration == .minutes30)
+        #expect(fresh.processedAt == nil)
+
+        // Zweiter Lauf, Modell jetzt verfügbar: kein zweiter Regelschritt auf dasselbe Feld.
+        await EnrichmentCoordinator(enricher: silentStub(), container: store.container).processPending()
+
+        let durationRevisions = (fresh.revisions ?? []).filter { $0.field == .duration }
+        #expect(durationRevisions.count == 1)
+        #expect(fresh.duration == .minutes30)
+    }
+
+    /// Die Lücke, die die Analyse im heutigen Code gefunden hat: `EnrichmentWriter.apply` schreibt
+    /// `duration` und `contexts` ohne `== nil`-Guard und läuft im Coordinator **nach** dem
+    /// Regelschritt. Ohne diesen Test überschreibt das Modell den Regelwert still und hängt eine
+    /// zweite Revision an dasselbe Feld.
+    @Test("Der Modellwert überschreibt einen gesetzten Wert nicht mehr (AC-9)")
+    @MainActor func modelDoesNotOverwriteAnExistingValue() async throws {
+        let store = try TestStore()
+        let context = store.context
+        let garden = TaskContext(name: "Garten", isSystemDefault: true, sortOrder: 3)
+        let computer = TaskContext(name: "Computer", isSystemDefault: true, sortOrder: 0)
+        context.insert(garden)
+        context.insert(computer)
+        let task = TaskItem(rawText: "Hecke schneiden")
+        task.duration = .minutes30
+        task.durationSourceRaw = FieldSource.ai.rawValue
+        task.durationConfidence = 1.0
+        task.contexts = [garden]
+        task.contextsSourceRaw = FieldSource.ai.rawValue
+        task.contextsConfidence = 1.0
+        context.insert(task)
+        try context.save()
+
+        var draft = EnrichmentDraft()
+        draft.duration = EnrichmentDraft.Guess(.hour1, confidence: 0.9, reason: "Modellschätzung.")
+        draft.contexts = EnrichmentDraft.Guess(["Computer"], confidence: 0.9, reason: "Modellschätzung.")
+
+        EnrichmentWriter.apply(draft, to: task, contexts: [computer, garden], projects: [])
+        try context.save()
+
+        #expect(task.duration == .minutes30, "der bereits gesetzte Wert bleibt stehen")
+        #expect(task.durationConfidence == 1.0)
+        #expect((task.contexts ?? []).map(\.name) == ["Garten"], "der bereits gesetzte Wert bleibt stehen")
+        #expect((task.revisions ?? []).filter { $0.field == .duration }.isEmpty)
+        #expect((task.revisions ?? []).filter { $0.field == .contexts }.isEmpty)
+    }
+}
