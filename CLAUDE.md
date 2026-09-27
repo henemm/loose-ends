@@ -8,7 +8,14 @@ Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, 
   There is no separate Mac UI. Layout adapts via `NavigationSplitView` and size classes.
 - **Raw text is immutable.** Every derived field is optional and carries `*SourceRaw` and `*Confidence`.
 - **Enrichment runs once** per task (`processedAt`). A second run only on explicit user request.
-- **Learning is retrieval, not training.** Similar past tasks and user corrections are prompt examples.
+- **Learning is recognition, not training** (ADR-5, rewritten 2026-09-27 after #69/#131). A raw text
+  that was captured before sets that entry's contexts and duration again, silently, with the AI marker
+  and a `Revision` like any enrichment. Similarity-picked prompt examples are gone: measured on 287 real
+  tasks, word overlap only carries where the text recurs almost verbatim (contexts 100 %, duration 97.2 %
+  at ~60 % coverage) and drops to chance (55 %) on partial overlap; for energy it stays below the constant.
+  Evidence: `docs/reference/retrieval-leave-one-out-rules.md`, decision in
+  `docs/project/06-annahmen-und-experimente.md` (B1). User corrections remain first-class examples and
+  completed tasks are never deleted.
 - **Revisions, not undo.** Every AI or user change to a derived field is a `Revision`. Nothing is deleted.
 - **Repeat without series.** `RepeatRule` on the task, roll forward on completion, `CompletionRecord` per cycle.
 - **Color budget.** Accent = tappable (incl. AI tint), red = time pressure, grey = hierarchy, green = the completion moment.
