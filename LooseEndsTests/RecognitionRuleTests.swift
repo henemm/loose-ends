@@ -70,8 +70,8 @@ struct RecognitionRuleTests {
             "  LINKEDIN   nachrichten,beantworten  ",
         ]
         for variant in variants {
-            let match = try #require(RecognitionRule.match(rawText: variant, in: [source]), variant)
-            #expect(match.duration?.guess.value == .minutes15, variant)
+            let match = try #require(RecognitionRule.match(rawText: variant, in: [source]), "\(variant)")
+            #expect(match.duration?.guess.value == .minutes15, "\(variant)")
         }
     }
 
@@ -162,16 +162,25 @@ struct RecognitionRuleTests {
                 "zwei wortlose Texte sind nicht dieselbe Aufgabe")
     }
 
+    /// Nachgeschlagen wird der **englische Schlüssel**, nicht der zur Laufzeit gelieferte Satz: der
+    /// Testläufer spricht Deutsch (`AppleLanguages = de-DE` im Simulator), `String(localized:)` gibt
+    /// dort schon die Übersetzung zurück, und die als Schlüssel nachzuschlagen schlägt immer fehl —
+    /// unabhängig von der Implementierung. Die zweite Erwartung bindet den Laufzeitsatz an genau
+    /// diesen Schlüssel, damit der Test nicht an einem beliebigen Satz vorbeiläuft. Muster wie
+    /// `ImportanceUrgencyRuleTests.reasonsAreTranslatedToGerman()` (AC-8 dort).
     @Test("Der Begründungssatz ist ins Deutsche übersetzt (AC-11)")
     func reasonIsTranslatedToGerman() throws {
         let source = candidate("Rasen mähen", duration: .minutes30)
         let match = try #require(RecognitionRule.match(rawText: "Rasen mähen", in: [source]))
         let reason = try #require(match.duration).guess.reason
 
+        let key = "From a raw text captured before, word for word."
         let german = try #require(Bundle.main.path(forResource: "de", ofType: "lproj"))
         let bundle = try #require(Bundle(path: german))
-        let translated = bundle.localizedString(forKey: reason, value: nil, table: nil)
-        #expect(translated != reason, "kein Rückfall auf den englischen Schlüsseltext: \(reason)")
+        let translated = bundle.localizedString(forKey: key, value: key, table: nil)
+        #expect(translated != key, "kein Rückfall auf den englischen Schlüsseltext: \(key)")
+        #expect(reason == key || reason == translated,
+                "die Regel nennt genau diesen Satz, englisch oder deutsch: \(reason)")
     }
 }
 
@@ -202,7 +211,7 @@ struct RawTextWordsTests {
         ]
         for text in texts {
             let expected = Set(RawTextWords.words(in: text).map(RawTextWords.normalized).filter { $0.count >= 4 })
-            #expect(LeaveOneOut.similarityWords(text) == expected, text)
+            #expect(LeaveOneOut.similarityWords(text) == expected, "\(text)")
         }
     }
 

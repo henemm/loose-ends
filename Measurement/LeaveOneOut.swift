@@ -10,15 +10,18 @@ import Foundation
 /// report shows is computed from the data that was passed in.
 enum LeaveOneOut {
 
-    /// The word set similarity is measured over: tokenised with `TitleCheck.words(in:)`, normalised
-    /// with `TitleCheck.normalized(_:)`, filtered to words of four characters or more.
+    /// The word set similarity is measured over: tokenised and normalised with the shared
+    /// `RawTextWords` (#136, the same one `RecognitionRule` uses in the product), filtered to words of
+    /// four characters or more.
     ///
-    /// The length filter is the point. `TitleCheck.words(in:)` filters nothing, so without it German
-    /// function words ("eine", "für", "mit", "der") would carry the similarity and every task would
-    /// look like every other — the neighbours would be noise. Four is the same threshold
-    /// `TitleCheck.foreignWords` already uses, not a new value invented here.
+    /// The length filter is the point *here*. `RawTextWords.words(in:)` filters nothing, so without it
+    /// German function words ("eine", "für", "mit", "der") would carry the similarity and every task
+    /// would look like every other — the neighbours would be noise. Four is the same threshold
+    /// `TitleCheck.foreignWords` already uses, not a new value invented here. `RecognitionRule` does
+    /// **not** filter, because it compares for equality, where the filter would merge "Tee holen" with
+    /// "Bad holen".
     static func similarityWords(_ text: String) -> Set<String> {
-        Set(TitleCheck.words(in: text).map(TitleCheck.normalized).filter { $0.count >= 4 })
+        Set(RawTextWords.words(in: text).map(RawTextWords.normalized).filter { $0.count >= 4 })
     }
 
     /// |a ∩ b| / |a ∪ b|, and `0` for an empty union — such a pair shares no words anyway, so the

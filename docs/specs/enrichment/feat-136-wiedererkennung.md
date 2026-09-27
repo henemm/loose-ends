@@ -543,6 +543,13 @@ Design-Freeze und nur als Smoke-Tests (CLAUDE.md).
       (`bash ~/.claude/scripts/loose-ends-sync-main.sh`)
 - [ ] PR schließt #136 (`Closes #136`) — #26 ist bereits geschlossen (B1-Entscheidung), kein
       zusätzlicher Schritt nötig
+- [ ] Nutzerkorrekturen sind gegen Wiederbefüllung geschützt (Befund F002 der Adversary-Prüfung,
+      Changelog 2026-09-27): ein per `RevisionService`-Reset geleertes Feld wird im nächsten
+      Nachzügler-Lauf nicht wieder gesetzt — belegt durch die Regressionstests „Eine vom Nutzer
+      zurückgesetzte Dauer wird nicht wieder gesetzt" und „Vom Nutzer entfernte Kontexte werden nicht
+      wieder gesetzt", je für `duration` und `contexts`. Dieser Schutz ist keine der zwölf Acceptance
+      Criteria und wäre über „AC-1 bis AC-12 erfüllt" allein nicht mitgeprüft (Befund des zweiten
+      unabhängigen PO-Briefings) — deshalb steht er hier als eigener Punkt.
 - [ ] Kein manueller Testhinweis an Henning — jede Acceptance Criterion ist automatisiert bewiesen
 - [ ] CI grün
 
@@ -578,3 +585,24 @@ Design-Freeze und nur als Smoke-Tests (CLAUDE.md).
   Dauern („Termin für Reifenwechsel machen" gegen „Termin für Hautkrebs-Früherkennungsuntersuchung
   machen"), und die Schwelle 0,34 schneidet sie nicht weg, weil die Dauer-Fehltreffer bei 0,5 und
   0,667 liegen.
+- 2026-09-27: Guard in Implementation Details 4 und 5 verschärft (Befund F002 der Adversary-Prüfung,
+  vom Orchestrator auf beide Felder erweitert). Die skizzierten Bedingungen `task.duration == nil`
+  und `task.contexts == nil` allein reichen nicht: `FieldCodec` kollabiert beim Leeren eines Feldes
+  auch dessen `*SourceRaw` (Zeile 56 für `duration`, Zeile 65 für `contexts`), sodass ein per
+  `RevisionService`-Reset vom Nutzer zurückgenommener Wert nicht mehr von „nie gesetzt" zu
+  unterscheiden ist — der nächste Nachzügler-Lauf hätte ihn stumm wieder gesetzt und damit AC-6 und
+  ADR-5 verletzt. Beide Guards prüfen zusätzlich, dass für das Feld **keine `Revision` mit
+  `author == .user`** existiert; Revisionen werden nie gelöscht und sind damit der einzige tragfähige
+  Marker. Die zwölf Acceptance Criteria bleiben unberührt. Belege: der Befund war in beiden Feldern
+  reproduzierbar (`docs/artifacts/feat-136-wiedererkennung/test-red-f002-nutzerkorrektur.txt`, vier
+  Fehlschläge, je zwei pro Feld) und ist durch zwei Regressionstests geschlossen. Die Einschätzung
+  des Prüfers, der Defekt betreffe nur `contexts`, war falsch; sein angenommener Auslöser
+  (Kontext-Bearbeitung in einer View) existiert in der App nicht — der reale Auslöser ist der
+  Revisions-Reset.
+- 2026-09-27: Definition of Done um einen eigenen Punkt für den F002-Schutz ergänzt (Befund des
+  zweiten unabhängigen PO-Briefings). Der Schutz gegen Wiederbefüllung einer Nutzerkorrektur war
+  automatisiert getestet, stand aber nur in den Implementation Details und im Changelog — über die
+  formale Abnahme „AC-1 bis AC-12 erfüllt" wäre er nicht sichtbar mitgeprüft worden. Bewusst kein
+  AC-13: die zwölf Acceptance Criteria sind freigegeben und die Adversary-Prüfung hat gegen genau
+  diese zwölf geprüft; ein nachgeschobenes AC hätte den Prüfstand verschoben, ohne etwas zu belegen,
+  was die beiden Regressionstests nicht schon belegen.

@@ -15,12 +15,12 @@ enum RuleBaseline {
     /// happen to overlap, so two corrections for "Garten" beat one wordier one for "Keller" (AC-3).
     /// A tie falls to the context seen first, so the answer never depends on dictionary order.
     static func predict(pattern: ConventionCorpus.Pattern) -> String? {
-        let probeWords = Set(TitleCheck.words(in: pattern.probe.text).map(TitleCheck.normalized))
+        let probeWords = Set(RawTextWords.words(in: pattern.probe.text).map(RawTextWords.normalized))
         var contextsInOrder: [String] = []
         var votes: [String: Int] = [:]
 
         for correction in pattern.corrections {
-            let words = Set(TitleCheck.words(in: correction.text).map(TitleCheck.normalized))
+            let words = Set(RawTextWords.words(in: correction.text).map(RawTextWords.normalized))
             guard !words.intersection(probeWords).isEmpty else { continue }
             if votes[correction.context] == nil { contextsInOrder.append(correction.context) }
             votes[correction.context, default: 0] += 1   // one correction, one vote (AC-3)

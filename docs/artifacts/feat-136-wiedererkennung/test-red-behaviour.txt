@@ -672,4 +672,25 @@ Suite "TaskActions" started
     [32m✔[0m "Restore takes a task back from Done and keeps its completion records" (0.016 seconds)
     [32m✔[0m "Next up appends after the highest rank; a second toggle removes the task again" (0.010 seconds)
     [32m✔[0m "Park and activate flip the status and the parked timestamp" (0.006 seconds)
-    [32m✔[0m
+    [32m✔[0m "Move targets resolve from a Wednesday to tomorrow, Saturday and Monday" (0.001 seconds)
+    [32m✔[0m "Weekend from a Saturday means the next Saturday, not today" (0.001 seconds)
+    [32m✔[0m "Move writes a user revision and marks the due date as set by the user" (0.015 seconds)
+Suite "TaskActions" passed after 0.141 seconds
+Suite "Regelparser: Uhrzeit" started
+    [32m✔[0m "um H Uhr, H:MM, H Uhr ohne um, auf H Uhr" (0.002 seconds)
+    [32m✔[0m "at 5pm, at 9am, at 2:30 pm, at 10am" (0.001 seconds)
+    [32m✔[0m "halb zwölf ist 11:30, half past seven ist 07:30" (0.001 seconds)
+    [32m✔[0m "Nackte Zahl nur nach einem Zeitwort wie Mittag" (0.001 seconds)
+    [32m✔[0m "Wiederholungen tragen trotzdem eine Uhrzeit" (0.001 seconds)
+    [32m✔[0m "Zahlen ohne Zeitkontext sind keine Uhrzeit" (0.001 seconds)
+    [32m✔[0m "Uhrzeit ist im Bereich 0–23 Stunden, 0–59 Minuten" (0.009 seconds)
+Suite "Regelparser: Uhrzeit" passed after 0.023 seconds
+Suite "FoundationModelsEnricher title prompt (Bug #125)" started
+    [32m✔[0m "The instructions raise the word limit and forbid dropping object or purpose" (0.001 seconds)
+Suite "FoundationModelsEnricher title prompt (Bug #125)" passed after 0.001 seconds
+Suite "Waveform" started
+    [32m✔[0m "Silence is zero, a loud signal saturates at one, speech sits in between" (0.001 seconds)
+    [32m✔[0m "The waveform keeps only the newest levels and clamps them to 0...1" (0.008 seconds)
+Suite "Waveform" passed after 0.008 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.09.27_13-47-53-+0200.xcresult
+[36;1mTesting started[0m

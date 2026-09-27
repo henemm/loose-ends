@@ -603,13 +603,82 @@ struct RecognitionCoordinatorTests {
         draft.duration = EnrichmentDraft.Guess(.hour1, confidence: 0.9, reason: "Modellschätzung.")
         draft.contexts = EnrichmentDraft.Guess(["Computer"], confidence: 0.9, reason: "Modellschätzung.")
 
-        EnrichmentWriter.apply(draft, to: task, contexts: [computer, garden], projects: [])
+        let written = EnrichmentWriter.apply(draft, to: task, contexts: [computer, garden], projects: [])
         try context.save()
 
+        #expect(written == 0, "der Rückgabewert zählt die übersprungenen Felder nicht mit")
         #expect(task.duration == .minutes30, "der bereits gesetzte Wert bleibt stehen")
         #expect(task.durationConfidence == 1.0)
         #expect((task.contexts ?? []).map(\.name) == ["Garten"], "der bereits gesetzte Wert bleibt stehen")
         #expect((task.revisions ?? []).filter { $0.field == .duration }.isEmpty)
         #expect((task.revisions ?? []).filter { $0.field == .contexts }.isEmpty)
+    }
+
+    /// Ein vom Nutzer geleertes Feld ist am Herkunftsvermerk nicht zu erkennen: `FieldCodec` setzt
+    /// beim Leeren `durationSourceRaw` auf `nil` (`FieldCodec.swift:56`) — genau der Zustand einer nie
+    /// berührten Aufgabe. Nur die Nutzer-`Revision` bleibt, weil Revisionen nie gelöscht werden
+    /// („Revisions, not undo"); sie ist deshalb der verlässliche Marker.
+    @Test("Eine vom Nutzer zurückgesetzte Dauer wird nicht wieder gesetzt")
+    @MainActor func userResetOfDurationIsNotUndone() async throws {
+        let store = try TestStore()
+        let context = store.context
+        _ = makeProcessed("Rechnungen sortieren", duration: .minutes30, in: context)
+        let fresh = TaskItem(rawText: "Rechnungen sortieren")
+        context.insert(fresh)
+        try context.save()
+
+        // Erster Lauf ohne Modell: die Regel setzt die Dauer, `processedAt` bleibt leer (ADR-4) —
+        // die Aufgabe bleibt damit Kandidat für jeden weiteren Nachzügler-Lauf.
+        let unavailable = silentStub()
+        unavailable.unavailableReason = "Kein Apple Intelligence"
+        await EnrichmentCoordinator(enricher: unavailable, container: store.container).processPending()
+        #expect(fresh.duration == .minutes30)
+        #expect(fresh.processedAt == nil)
+
+        // Der Nutzer setzt das Feld über eine Revision auf den Stand vor der KI zurück: leer.
+        let aiRevision = try #require(RevisionService.firstAIRevision(of: .duration, on: fresh))
+        RevisionService.revert(aiRevision, on: fresh, contexts: [], projects: [])
+        try context.save()
+        #expect(fresh.duration == nil)
+        #expect(fresh.durationSourceRaw == nil, "der Herkunftsvermerk fällt beim Leeren mit weg")
+
+        await EnrichmentCoordinator(enricher: unavailable, container: store.container).processPending()
+
+        #expect(fresh.duration == nil, "der Nutzerentscheid bleibt stehen")
+        let aiRevisions = (fresh.revisions ?? []).filter { $0.field == .duration && $0.author == .ai }
+        #expect(aiRevisions.count == 1, "keine zweite KI-Revision auf dasselbe Feld")
+    }
+
+    /// Dasselbe für Kontexte: `FieldCodec` setzt beim Leeren `contextsSourceRaw` auf `nil`
+    /// (`FieldCodec.swift:65`), und ein geleertes Relationship ist ein leeres Array wie ein nie
+    /// gesetztes. Die Nutzer-`Revision` unterscheidet beide Fälle.
+    @Test("Vom Nutzer entfernte Kontexte werden nicht wieder gesetzt")
+    @MainActor func userResetOfContextsIsNotUndone() async throws {
+        let store = try TestStore()
+        let context = store.context
+        let garden = TaskContext(name: "Garten", isSystemDefault: true, sortOrder: 3)
+        context.insert(garden)
+        _ = makeProcessed("Beete jäten", duration: nil, contexts: [garden], in: context)
+        let fresh = TaskItem(rawText: "Beete jäten")
+        context.insert(fresh)
+        try context.save()
+
+        let unavailable = silentStub()
+        unavailable.unavailableReason = "Kein Apple Intelligence"
+        await EnrichmentCoordinator(enricher: unavailable, container: store.container).processPending()
+        #expect((fresh.contexts ?? []).map(\.name) == ["Garten"])
+        #expect(fresh.processedAt == nil)
+
+        let aiRevision = try #require(RevisionService.firstAIRevision(of: .contexts, on: fresh))
+        RevisionService.revert(aiRevision, on: fresh, contexts: [garden], projects: [])
+        try context.save()
+        #expect((fresh.contexts ?? []).isEmpty)
+        #expect(fresh.contextsSourceRaw == nil, "der Herkunftsvermerk fällt beim Leeren mit weg")
+
+        await EnrichmentCoordinator(enricher: unavailable, container: store.container).processPending()
+
+        #expect((fresh.contexts ?? []).isEmpty, "der Nutzerentscheid bleibt stehen")
+        let aiRevisions = (fresh.revisions ?? []).filter { $0.field == .contexts && $0.author == .ai }
+        #expect(aiRevisions.count == 1, "keine zweite KI-Revision auf dasselbe Feld")
     }
 }

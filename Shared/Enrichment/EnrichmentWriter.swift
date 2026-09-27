@@ -44,7 +44,12 @@ enum EnrichmentWriter {
             task.dueConfidence = due.confidence
         }
 
-        if let duration = draft.duration, duration.confidence >= threshold {
+        // Only while the field is still empty and the user never touched it (#136 AC-9): the rule step
+        // runs before the model in the same pass, and without this guard the model would silently
+        // overwrite a recognised value and hang a second revision on the same field. Due date,
+        // importance and urgency need no guard — they left the model schema with #95/#117.
+        if let duration = draft.duration, duration.confidence >= threshold, task.duration == nil,
+           !userHasTouched(.duration, on: task) {
             record(.duration, old: task.durationRaw, new: duration.value.rawValue, reason: duration.reason)
             task.duration = duration.value
             task.durationSourceRaw = ai
@@ -58,7 +63,10 @@ enum EnrichmentWriter {
             task.energyConfidence = energy.confidence
         }
 
-        if let contexts = draft.contexts, contexts.confidence >= threshold {
+        // Same guard, and an empty relationship counts as unset: SwiftData hands a to-many
+        // relationship back as an empty array as readily as `nil`.
+        if let contexts = draft.contexts, contexts.confidence >= threshold, (task.contexts ?? []).isEmpty,
+           !userHasTouched(.contexts, on: task) {
             let matched = available.filter { context in
                 contexts.value.contains { $0.compare(context.name, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame }
             }
@@ -85,6 +93,15 @@ enum EnrichmentWriter {
 
         task.processedAt = now
         return written
+    }
+
+    /// Whether the user ever set this field himself — including setting it to empty. The origin marker
+    /// cannot answer that: `FieldCodec` clears `durationSourceRaw` (`FieldCodec.swift:56`) and
+    /// `contextsSourceRaw` (`FieldCodec.swift:65`) whenever the value becomes empty, so a field the
+    /// user deliberately emptied looks exactly like one that was never set. A user `Revision` is the
+    /// reliable marker, because revisions are never deleted ("Revisions, not undo").
+    static func userHasTouched(_ field: RevisedField, on task: TaskItem) -> Bool {
+        (task.revisions ?? []).contains { $0.field == field && $0.author == .user }
     }
 
     /// Revisions store values as JSON strings so arrays and scalars share one column.

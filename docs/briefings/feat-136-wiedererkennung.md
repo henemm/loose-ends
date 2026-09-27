@@ -1,6 +1,6 @@
 ---
 spec_file: docs/specs/enrichment/feat-136-wiedererkennung.md
-spec_sha256: fc648b91cbbf8e8d47c1f5b83f747a177e77044cd0bb3c55078ae1b29ada0735
+spec_sha256: 85bf97c77a02e8f7070fd51c904a95c2604c0c286c5c87e281f97dfe17c3604d
 ---
 
 # PO-Briefing: feat-136-wiedererkennung
@@ -11,22 +11,22 @@ spec_sha256: fc648b91cbbf8e8d47c1f5b83f747a177e77044cd0bb3c55078ae1b29ada0735
 
 ## Was gebaut wird
 
-Wird eine Aufgabe wortgleich erneut erfasst, übernimmt die App automatisch Kontexte und Dauer der ersten.
+Eine Aufgabe mit bereits erfasstem Wortlaut übernimmt automatisch Dauer und Kontext der früheren Aufgabe.
 
 ## Definition of Done
 
-Fertig ist es, wenn eine Wiederholung automatisch dieselben Kontexte und Dauer trägt, sichtbar als KI-Hinweis in der Historie.
+Fertig, wenn wortgleich wiederkehrende Aufgaben automatisch Dauer und Kontext übernehmen, Nutzerkorrekturen aber nie überschrieben werden.
 
 ## Wie geprüft wird
 
-Tests bestätigen dies an alten, sauber betitelten Aufgaben; ob es bei live diktiertem Text genauso trifft, bleibt ungemessen.
+222 automatisierte Tests plus eine Messung an 287 echten Aufgaben belegen Treffer und Schutz vor Wiederbefüllung; Diktat ist ungeprüft.
 
 ## Kritische Anmerkungen
 
-- Statt der bestellten Ähnlichkeitsschwelle (Jaccard 0,34) verlangt die Spec exakte Wortgleichheit — trifft dadurch seltener, aber nie falsch.
-- Alle Zahlen stammen aus sauberen Altdaten, nicht aus gesprochenem Text — wie gut es im Alltag trifft, bleibt offen.
-- Nebenbei behebt die Spec einen Fehler: die App hätte KI-Werte sonst kurz danach unbemerkt überschrieben.
+- Ein falsch gesetzter Kontext bleibt unsichtbar — bewusst akzeptiertes, strukturelles Risiko dieser Automatik.
+- Statt der verlangten Toleranzschwelle gilt Gleichheit: weniger Treffer, aber laut Messung keine falschen mehr.
+- Umfang liegt über der Richtgröße (13 Dateien statt 4–5) — als Ausnahme bereits freigegeben.
 
 ## Freigabe-Frage
 
-Sind Sie einverstanden, dass die App nur wortgleiche Wiederholungen erkennt, nicht auch ähnlich formulierte?
+Sollen wortgleich wiederkehrende Aufgaben künftig automatisch Dauer und Kontext übernehmen, mit diesem Umfang und diesen Risiken?
