@@ -162,7 +162,7 @@ final class EnrichmentCoordinator {
                 Dictionary(processed.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first }))
     }
 
-    static func recognitionCandidates(in tasks: [TaskItem]) -> [RecognitionRule.Candidate] {
+    private static func recognitionCandidates(in tasks: [TaskItem]) -> [RecognitionRule.Candidate] {
         tasks.map { task in
             RecognitionRule.Candidate(
                 id: task.id,
