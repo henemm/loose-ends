@@ -77,24 +77,33 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
     von einem anderen, älteren Modell, nie von Henning bestätigt). Daraus Redesign-Vorschlag
     [#112](https://github.com/henemm/loose-ends/issues/112): Wichtigkeit/Dringlichkeit regelbasiert,
     Energie subjektiv (Skala −3…3) und Dauer per Retrieval-Beispielen geschärft statt gemessener
-    Selbstkonsistenz — hängt an #69.
+    Selbstkonsistenz — seit der B1-Entscheidung vom 2026-09-27 nicht mehr an #69 gebunden.
     - daraus [#117](https://github.com/henemm/loose-ends/issues/117) umgesetzt (2026-09-23):
       Wichtigkeit/Dringlichkeit regelbasiert über `ImportanceUrgencyRule` (analog `DueDateRule`
-      aus #95), Modell liefert diese beiden Felder nicht mehr. Energie und Dauer aus #112 bleiben
-      offen, weiter abhängig von #69.
+      aus #95), Modell liefert diese beiden Felder nicht mehr. Energie und Dauer sind seit
+      2026-09-27 entschieden: Energie bleibt manuell (Retrieval schlägt dort die Konstante auf
+      keiner Lesart), Dauer wird über Wiedererkennung geschärft
+      ([#136](https://github.com/henemm/loose-ends/issues/136)).
 - [#66](https://github.com/henemm/loose-ends/issues/66) Steht die Information überhaupt im Text?
 - [#68](https://github.com/henemm/loose-ends/issues/68) Nachweis: Modell je Gerät, Prozess, Zustand
-- [#69](https://github.com/henemm/loose-ends/issues/69) Wirken Retrieval-Beispiele? (vor #26, jetzt auch
-  Voraussetzung für [#112](https://github.com/henemm/loose-ends/issues/112))
+- [#69](https://github.com/henemm/loose-ends/issues/69) Wirken Retrieval-Beispiele? — **abgeschlossen 2026-09-27**
   - Ticket A gemessen (2026-09-26): Regel-Baseline für den Konventionstest aus B1 trifft 10 von 10
     Wort→Kontext-Mustern, klar über der Abbruchschwelle (< 8/10) — Ticket B (Embedding-Auslass-Test)
     entfällt (`docs/reference/retrieval-convention-spike.md`,
     `docs/specs/measurement/spike-69-regel-baseline-konventionstest.md`).
   - [#131](https://github.com/henemm/loose-ends/issues/131) gemessen (2026-09-26): Regel-Auslass-Test
-    (Wortüberlappung als Nachbarsuche) — gemischtes Ergebnis, siehe
-    `docs/project/06-annahmen-und-experimente.md` (B1) und
-    `docs/reference/retrieval-leave-one-out-rules.md`. Welche Lesart fürs Produkt gilt, ist offene
-    PO-Frage.
+    (Wortüberlappung als Nachbarsuche), siehe `docs/reference/retrieval-leave-one-out-rules.md`.
+  - **B1 entschieden (2026-09-27, Henning): Wiedererkennung ja, Lernen nein.** Aufgeschlüsselt nach
+    Ähnlichkeit trägt die Nachbarsuche nur bei fast wortgleichem Text (Kontexte 100 %, Dauer 97,2 %
+    bei ~60 % Abdeckung), bei teilweiser Ähnlichkeit fällt sie auf 55 %. Der Modell-Auslass-Test
+    wird **nicht** gebaut — er würde die Beispiele mit derselben Nachbarsuche wählen und wäre auf
+    diesem Korpus nicht sauber auswertbar. Begründung und verworfene Alternativen in
+    `docs/project/06-annahmen-und-experimente.md` (B1). Folgen: ADR-5 neu gefasst,
+    [#26](https://github.com/henemm/loose-ends/issues/26) geschlossen,
+    [#136](https://github.com/henemm/loose-ends/issues/136) (Textabgleich setzt die früheren Werte)
+    und [#137](https://github.com/henemm/loose-ends/issues/137) (Beleg im Bericht) angelegt,
+    [#112](https://github.com/henemm/loose-ends/issues/112) entblockt.
+  - **#69 damit abgeschlossen.**
 - [#70](https://github.com/henemm/loose-ends/issues/70) Textform: getippt, diktiert, Mail, Englisch
 - [#71](https://github.com/henemm/loose-ends/issues/71) Guardrail-Verweigerungsrate
 - [#72](https://github.com/henemm/loose-ends/issues/72) Token- und Latenzbudget
@@ -103,7 +112,7 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
 **Danach Features, nach Priorität:**
 
 5. [#25](https://github.com/henemm/loose-ends/issues/25) Siri über das Reminders-App-Schema (Must) — braucht Xcode 27 in der CI, bis dahin reicht die Shortcut-Phrase "Add to Loose Ends"
-6. [#26](https://github.com/henemm/loose-ends/issues/26) Retrieval per Embedding (ADR-5)
+6. [#136](https://github.com/henemm/loose-ends/issues/136) Bekannter Rohtext setzt die früheren Werte (ADR-5 neu; ersetzt das geschlossene #26)
 7. [#27](https://github.com/henemm/loose-ends/issues/27) Abhängigkeiten über Private Cloud Compute (`blockedBy`)
 8. [#28](https://github.com/henemm/loose-ends/issues/28) Projekt-Ansicht mit Unteraufgaben eingerückt/eingeklappt
 9. [#29](https://github.com/henemm/loose-ends/issues/29) Onboarding-Screen (Screen 12)
