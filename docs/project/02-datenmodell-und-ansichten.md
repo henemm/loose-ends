@@ -173,9 +173,13 @@ für KI-Verarbeitung.
 
 1. **Auslöser:** Erfassung (im Intent-Prozess oder in der App). Nachzügler: beim App-Start alle
    Tasks mit `processedAt == nil`.
-2. **Retrieval:** Embedding des Rohtexts (NaturalLanguage-Framework, on-device). Die fünf ähnlichsten
-   Tasks mit `status == done` oder mit mindestens einer Revision `author == user` werden geladen.
-   Ihre endgültigen Attribute gehen als Beispiele in den Prompt.
+2. **Wiedererkennung** (ADR-5, neu gefasst 2026-09-27 nach #69/#131; ersetzt das geplante
+   Embedding-Retrieval): Der Rohtext wird per Wortüberlappung gegen die Rohtexte bestehender
+   Aufgaben gestellt. Ab einer Ähnlichkeit von 0,34 setzt der beste Treffer Kontexte und Dauer
+   still, mit Konfidenz 1.0, KI-Marker und Revision — das Modell wird für diese beiden Felder
+   nicht mehr gefragt. Darunter passiert nichts. Prompt-Beispiele nach Ähnlichkeit gibt es nicht:
+   auf 287 echten Aufgaben gemessen trägt die Nachbarsuche nur bei fast wortgleichem Text
+   (`docs/reference/retrieval-leave-one-out-rules.md`). Umsetzung: #136.
 3. **Modell:** `SystemLanguageModel` (on-device) mit `@Generable`-Ergebnisstruktur: alle abgeleiteten
    Felder je mit Konfidenz und einer Begründung in einem Satz. Kontextvokabular und Projektnamen
    werden als erlaubte Werte mitgegeben. Deutsche und englische Eingaben.
@@ -211,8 +215,8 @@ Export aus `LocalTask` nach JSON mit Mapping:
 `urgency` → Urgency, `estimatedDuration` → Duration-Bucket, `aiEnergyLevel` → Energy,
 `dueDate`, `createdAt` → capturedAt, `completedAt`, `blockerTaskID` → blockedBy,
 `recurrencePattern` → RepeatRule wo abbildbar. Aufgabentyp und Fokusblock-Felder entfallen.
-Der Export dient dem Retrieval (Startwissen) und dem Evaluations-Framework (Messung der Prompts),
-nicht der Migration in die App-Datenbank.
+Der Export dient dem Startwissen für die Wiedererkennung und dem Evaluations-Framework (Messung
+der Prompts), nicht der Migration in die App-Datenbank.
 
 Umgesetzt in `scripts/export-focusblox-corpus.swift` (Issue #23). Liest den SwiftData-Store von
 FocusBlox direkt (read-only, per SQLite), keine Abhängigkeit vom FocusBlox-Xcode-Projekt. Konkrete
