@@ -174,12 +174,16 @@ für KI-Verarbeitung.
 1. **Auslöser:** Erfassung (im Intent-Prozess oder in der App). Nachzügler: beim App-Start alle
    Tasks mit `processedAt == nil`.
 2. **Wiedererkennung** (ADR-5, neu gefasst 2026-09-27 nach #69/#131; ersetzt das geplante
-   Embedding-Retrieval): Der Rohtext wird per Wortüberlappung gegen die Rohtexte bestehender
-   Aufgaben gestellt. Ab einer Ähnlichkeit von 0,34 setzt der beste Treffer Kontexte und Dauer
-   still, mit Konfidenz 1.0, KI-Marker und Revision — das Modell wird für diese beiden Felder
-   nicht mehr gefragt. Darunter passiert nichts. Prompt-Beispiele nach Ähnlichkeit gibt es nicht:
-   auf 287 echten Aufgaben gemessen trägt die Nachbarsuche nur bei fast wortgleichem Text
-   (`docs/reference/retrieval-leave-one-out-rules.md`). Umsetzung: #136.
+   Embedding-Retrieval): Der Rohtext wird gegen die Rohtexte bereits verarbeiteter Aufgaben
+   gestellt — **Gleichheit der normalisierten Wortmenge**, keine Ähnlichkeitsschwelle. Trägt eine
+   frühere Aufgabe dieselbe Wortmenge, setzt sie Kontexte und Dauer still, mit Konfidenz 1.0,
+   KI-Marker und Revision; ein einziges abweichendes Wort verhindert die Übernahme. Das Modell wird
+   für Dauer und Kontexte weiter gefragt (Entscheidung Henning, 2026-09-27: neu formulierte Aufgaben
+   brauchen die Schätzung), sein Wert greift aber nur auf ein noch leeres Feld — die Wiedererkennung
+   läuft vorher und `EnrichmentWriter` überschreibt einen gesetzten Wert nicht. Prompt-Beispiele nach
+   Ähnlichkeit gibt es nicht: auf 287 echten Aufgaben gemessen trägt die Nachbarsuche nur bei fast
+   wortgleichem Text (`docs/reference/retrieval-leave-one-out-rules.md`). Umsetzung: #136
+   (`Shared/Enrichment/RecognitionRule.swift`).
 3. **Modell:** `SystemLanguageModel` (on-device) mit `@Generable`-Ergebnisstruktur: alle abgeleiteten
    Felder je mit Konfidenz und einer Begründung in einem Satz. Kontextvokabular und Projektnamen
    werden als erlaubte Werte mitgegeben. Deutsche und englische Eingaben.

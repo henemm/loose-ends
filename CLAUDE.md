@@ -108,11 +108,14 @@ not scope creep on the current one.
 - `Shared/Persistence` — `ModelContainerFactory` (app group + private CloudKit), `ContextSeeder`
 - `Shared/Services` — `CaptureService`, `FieldCodec` (one encoding per field), `RevisionService` (reset = user revision),
   `TaskActions` (done, next up, park, move, restore), `DateExpressionParser`/`TimeExpressionParser` (rule-based
-  date/time extraction DE/EN, moved from `Measurement/` in #95). All pure over the model objects; the caller saves.
+  date/time extraction DE/EN, moved from `Measurement/` in #95), `RawTextWords` (the one tokenizer for word-set
+  equality, shared with `Measurement/`, moved from `TitleCheck` in #136). All pure over the model objects; the
+  caller saves.
 - `Shared/Enrichment` — `TaskEnricher` protocol, `EnrichmentWriter` (threshold + revisions), `EnrichmentCoordinator`
   (catch-up pass), `FoundationModelsEnricher` (on-device model, `#if canImport(FoundationModels)`), `DueDateRule`
   (combines the rule parsers into the due date, confidence 1.0, #95), `ImportanceUrgencyRule` (keyword
-  match for importance/urgency, confidence 1.0, no default on miss, #117)
+  match for importance/urgency, confidence 1.0, no default on miss, #117), `RecognitionRule` (equality of
+  `RawTextWords` sets contexts and duration from an earlier task, confidence 1.0, no energy, #136)
 - `Shared/Intents` — App Intents shared by app, widgets and (later) the intents extension
 - `LooseEnds/` — app entry and views (iPhone, iPad, Mac); `LooseEndsWatch/`, `LooseEndsWidgets/`, `LooseEndsShare/`
   (iOS share sheet: text, links, mails via `SharedContent`) — platform targets

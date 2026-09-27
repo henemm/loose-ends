@@ -232,15 +232,13 @@ extension Corpus.DateExpectation {
 
 /// Title fidelity is checked without a model and without judgement: what the note states must
 /// survive, and no fact may appear that the note does not carry.
+///
+/// Splitting and folding of a text is **not** declared here: it lives in
+/// `Shared/Services/RawTextWords.swift` since #136, so the measurement and the product break the same
+/// text apart the same way. A second copy here would let the two drift apart unnoticed.
 enum TitleCheck {
-    /// Lowercased and stripped of diacritics, so "Özdemir" matches "özdemir" and "Muell" is still
-    /// not "Müll" (a real change of the text, which should count).
-    static func normalized(_ text: String) -> String {
-        text.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: Locale(identifier: "de_DE"))
-    }
-
     static func preserves(entity: String, in title: String) -> Bool {
-        normalized(title).contains(normalized(entity))
+        RawTextWords.normalized(title).contains(RawTextWords.normalized(entity))
     }
 
     /// Digit groups the title states but the note does not — the hardest kind of wrong: a number
@@ -256,10 +254,11 @@ enum TitleCheck {
     /// "Andrea" dictated and written back as "Andreas": a name close to one in the note but not
     /// the same. One or two edits apart, and not present in the note itself.
     static func alteredNames(title: String, rawText: String, people: [String]) -> [String] {
-        let rawWords = Set(words(in: rawText).map(normalized))
-        let expected = people.flatMap { words(in: $0) }.map(normalized).filter { $0.count >= 3 }
-        return words(in: title).filter { word in
-            let candidate = normalized(word)
+        let rawWords = Set(RawTextWords.words(in: rawText).map(RawTextWords.normalized))
+        let expected = people.flatMap { RawTextWords.words(in: $0) }
+            .map(RawTextWords.normalized).filter { $0.count >= 3 }
+        return RawTextWords.words(in: title).filter { word in
+            let candidate = RawTextWords.normalized(word)
             guard !rawWords.contains(candidate) else { return false }
             return expected.contains { (1...2).contains(editDistance(candidate, $0)) }
         }
@@ -268,15 +267,11 @@ enum TitleCheck {
     /// Weak, broad signal: content words in the title that the note never used. Rephrasing shows
     /// up here too, so this is reported for context and never used as a threshold.
     static func foreignWords(title: String, rawText: String) -> [String] {
-        let rawWords = Set(words(in: rawText).map(normalized))
-        return words(in: title).filter { word in
-            let candidate = normalized(word)
+        let rawWords = Set(RawTextWords.words(in: rawText).map(RawTextWords.normalized))
+        return RawTextWords.words(in: title).filter { word in
+            let candidate = RawTextWords.normalized(word)
             return candidate.count >= 4 && !rawWords.contains { $0.hasPrefix(candidate) || candidate.hasPrefix($0) }
         }
-    }
-
-    static func words(in text: String) -> [String] {
-        text.split(whereSeparator: { !$0.isLetter && !$0.isNumber && $0 != "-" }).map(String.init)
     }
 
     static func editDistance(_ lhs: String, _ rhs: String) -> Int {

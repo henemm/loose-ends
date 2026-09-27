@@ -1,0 +1,172 @@
+[1;33m[sim][0m macOS 26.6.1 < Deployment Target 27.0 — Unit-Tests laufen im Simulator.
+[1;33m[sim][0m Stale Lock entfernt
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftConstValuesFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.LinkFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-OutputFileMap.json
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:27:10: [31mcannot find type 'RecognitionRule' in scope[0m
+ 25 |         contexts: [String] = [],
+[36m 26 |         contextsSource: FieldSource? = nil[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:249:57: [31mcannot find type 'RecognitionRule' in scope[0m
+247 | struct RecognitionRuleCorpusTests {
+[36m248 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:28:9: [31mcannot find 'RecognitionRule' in scope[0m
+ 26 |         contextsSource: FieldSource? = nil
+[36m 27 |     ) -> RecognitionRule.Candidate {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:41:34: [31mcannot find 'RecognitionRule' in scope[0m
+ 39 |     func identicalWordSetAdoptsBothFields() throws {
+[36m 40 |         let source = candidate("Rasen mähen", duration: .minutes30, contexts: ["Garten"])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:45:42: [31mcannot infer contextual base in reference to member 'minutes30'[0m
+ 43 |         let duration = try #require(match.duration)
+[36m 44 |         #expect(duration.sourceID == source.id)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:46:46: [31mcannot find 'RecognitionRule' in scope[0m
+ 44 |         #expect(duration.sourceID == source.id)
+[36m 45 |         #expect(duration.guess.value == .minutes30)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:41:21: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+ 39 |     func identicalWordSetAdoptsBothFields() throws {
+[32m 40 |         let source = candidate("Rasen mähen", duration: .minutes30, contexts: ["Garten"])[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:43:24: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+ 41 |         let match = try #require(RecognitionRule.match(rawText: "Rasen mähen", in: [source]))
+[32m 42 | [0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:50:24: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+ 48 |         #expect(!duration.guess.reason.isEmpty)
+[32m 49 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:59:17: [31mcannot find 'RecognitionRule' in scope[0m
+ 57 |     func differentTextYieldsNothing() {
+[36m 58 |         let source = candidate("Zettel sortieren", duration: .minutes15, contexts: ["Büro"])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:73:38: [31mcannot find 'RecognitionRule' in scope[0m
+ 71 |         ]
+[36m 72 |         for variant in variants {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:73:93: [31mcannot convert value of type 'String' to expected argument type 'Comment?'[0m
+ 71 |         ]
+[36m 72 |         for variant in variants {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:74:64: [31mcannot convert value of type 'String' to expected argument type 'Comment?'[0m
+ 72 |         for variant in variants {
+[36m 73 |             let match = try #require(RecognitionRule.match(rawText: variant, in: [source]), variant)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:74:53: [31mcannot infer contextual base in reference to member 'minutes15'[0m
+ 72 |         for variant in variants {
+[36m 73 |             let match = try #require(RecognitionRule.match(rawText: variant, in: [source]), variant)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:73:25: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+ 71 |         ]
+[32m 72 |         for variant in variants {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:84:17: [31mcannot find 'RecognitionRule' in scope[0m
+ 82 |     func shortWordsAreNotDropped() {
+[36m 83 |         let bath = candidate("Bad holen", duration: .minutes30)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:87:17: [31mcannot find 'RecognitionRule' in scope[0m
+ 85 | 
+[36m 86 |         let sixty = candidate("60 Minuten Sport", duration: .hour1)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:96:34: [31mcannot find 'RecognitionRule' in scope[0m
+ 94 |     func energyIsStructurallyAbsent() throws {
+[36m 95 |         let source = candidate("Klavier spielen", duration: .hour1, contexts: ["Zuhause"])[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:96:21: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+ 94 |     func energyIsStructurallyAbsent() throws {
+[32m 95 |         let source = candidate("Klavier spielen", duration: .hour1, contexts: ["Zuhause"])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:118:38: [31mcannot find 'RecognitionRule' in scope[0m
+116 | 
+[36m117 |         for pool in [[byAI, byUser], [byUser, byAI]] {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:119:53: [31mcannot infer contextual base in reference to member 'hours2plus'[0m
+117 |         for pool in [[byAI, byUser], [byUser, byAI]] {
+[36m118 |             let match = try #require(RecognitionRule.match(rawText: "Steuer sortieren", in: pool))[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:118:25: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+116 | 
+[32m117 |         for pool in [[byAI, byUser], [byUser, byAI]] {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:136:38: [31mcannot find 'RecognitionRule' in scope[0m
+134 | 
+[36m135 |         for pool in [[lower, higher], [higher, lower]] {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:138:53: [31mcannot infer contextual base in reference to member 'minutes15'[0m
+136 |             let match = try #require(RecognitionRule.match(rawText: "Fenster putzen", in: pool))
+[36m137 |             #expect(match.duration?.sourceID == lower.id)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:136:25: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+134 | 
+[32m135 |         for pool in [[lower, higher], [higher, lower]] {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:145:34: [31mcannot find 'RecognitionRule' in scope[0m
+143 |     func candidateWithoutFieldYieldsNothingForIt() throws {
+[36m144 |         let source = candidate("Müll rausbringen", duration: nil, contexts: ["Zuhause"])[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:145:21: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+143 |     func candidateWithoutFieldYieldsNothingForIt() throws {
+[32m144 |         let source = candidate("Müll rausbringen", duration: nil, contexts: ["Zuhause"])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:153:17: [31mcannot find 'RecognitionRule' in scope[0m
+151 |     func matchWithoutAnyFieldIsNil() {
+[36m152 |         let source = candidate("Müll rausbringen")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:158:17: [31mcannot find 'RecognitionRule' in scope[0m
+156 |     @Test("Leerer Pool und wortloser Rohtext stürzen nicht ab und treffen nichts")
+[36m157 |     func emptyPoolAndWordlessTextAreSafe() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:161:17: [31mcannot find 'RecognitionRule' in scope[0m
+159 | 
+[36m160 |         let wordless = candidate("!!! ???", duration: .minutes5)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:168:34: [31mcannot find 'RecognitionRule' in scope[0m
+166 |     func reasonIsTranslatedToGerman() throws {
+[36m167 |         let source = candidate("Rasen mähen", duration: .minutes30)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:168:21: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+166 |     func reasonIsTranslatedToGerman() throws {
+[32m167 |         let source = candidate("Rasen mähen", duration: .minutes30)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:169:22: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+167 |         let source = candidate("Rasen mähen", duration: .minutes30)
+[32m168 |         let match = try #require(RecognitionRule.match(rawText: "Rasen mähen", in: [source]))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:187:17: [31mcannot find 'RawTextWords' in scope[0m
+185 |     @Test("Faltet Groß-/Kleinschreibung und Diakritika, erhält Bindestriche")
+[36m186 |     func normalisesAndKeepsHyphens() {[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m RecognitionRuleTests.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:187:56: [31mcannot find 'RawTextWords' in scope[0m
+185 |     @Test("Faltet Groß-/Kleinschreibung und Diakritika, erhält Bindestriche")
+[36m186 |     func normalisesAndKeepsHyphens() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:188:17: [31mcannot find 'RawTextWords' in scope[0m
+186 |     func normalisesAndKeepsHyphens() {
+[36m187 |         #expect(RawTextWords.normalized("Özdemir") == RawTextWords.normalized("özdemir"))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:188:53: [31mcannot find 'RawTextWords' in scope[0m
+186 |     func normalisesAndKeepsHyphens() {
+[36m187 |         #expect(RawTextWords.normalized("Özdemir") == RawTextWords.normalized("özdemir"))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:190:17: [31mcannot find 'RawTextWords' in scope[0m
+188 |         #expect(RawTextWords.normalized("Muell") != RawTextWords.normalized("Müll"),
+[36m189 |                 "eine echte Textänderung bleibt eine")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:191:17: [31mcannot find 'RawTextWords' in scope[0m
+189 |                 "eine echte Textänderung bleibt eine")
+[36m190 |         #expect(RawTextWords.words(in: "Mutter-Kind-Kur beantragen") == ["Mutter-Kind-Kur", "beantragen"])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:204:32: [31mcannot find 'RawTextWords' in scope[0m
+202 |         ]
+[36m203 |         for text in texts {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:204:65: [31mcannot find 'RawTextWords' in scope[0m
+202 |         ]
+[36m203 |         for text in texts {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:205:68: [31mcannot convert value of type 'String' to expected argument type 'Comment?'[0m
+203 |         for text in texts {
+[36m204 |             let expected = Set(RawTextWords.words(in: text).map(RawTextWords.normalized).filter { $0.count >= 4 })[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:251:13: [31mcannot find 'RecognitionRule' in scope[0m
+249 |     private func pool(from entries: [Corpus.Entry]) -> [RecognitionRule.Candidate] {
+[36m250 |         entries.map { entry in[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:283:34: [31mcannot find 'RecognitionRule' in scope[0m
+281 |         for entry in contextEntries {
+[36m282 |             let others = pool(from: contextEntries.filter { $0.id != entry.id })[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:294:34: [31mcannot find 'RecognitionRule' in scope[0m
+292 |         for entry in durationEntries {
+[36m293 |             let others = pool(from: durationEntries.filter { $0.id != entry.id })[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:312:13: [31mcannot find 'RecognitionRule' in scope[0m
+310 | 
+[36m311 |         let contextHits = contextEntries.filter { entry in[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:311:49: [31mtrailing closure passed to parameter of type 'Predicate<Corpus.Entry>' that does not accept a closure[0m
+309 |         #expect(durationEntries.count == 115)
+[36m310 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:316:13: [31mcannot find 'RecognitionRule' in scope[0m
+314 |         }.count
+[36m315 |         let durationHits = durationEntries.filter { entry in[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:27:10: [31mcannot find type 'RecognitionRule' in scope[0m
+ 25 |         contexts: [String] = [],
+[36m 26 |         contextsSource: FieldSource? = nil[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-136/LooseEndsTests/RecognitionRuleTests.swift:249:57: [31mcannot find type 'RecognitionRule' in scope[0m
+247 | struct RecognitionRuleCorpusTests {
+[36m248 | [0m
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.09.27_13-59-49-+0200.xcresult

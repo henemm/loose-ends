@@ -82,8 +82,10 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
       Wichtigkeit/Dringlichkeit regelbasiert über `ImportanceUrgencyRule` (analog `DueDateRule`
       aus #95), Modell liefert diese beiden Felder nicht mehr. Energie und Dauer sind seit
       2026-09-27 entschieden: Energie bleibt manuell (Retrieval schlägt dort die Konstante auf
-      keiner Lesart), Dauer wird über Wiedererkennung geschärft
-      ([#136](https://github.com/henemm/loose-ends/issues/136)).
+      keiner Lesart), Dauer und Kontexte kommen bei **wortgleich wiederkehrendem Rohtext** aus der
+      früheren Aufgabe — Gleichheit der normalisierten Wortmenge, keine Ähnlichkeitsschwelle; das
+      Modell schätzt sie weiterhin für neu formulierte Aufgaben, überschreibt aber keinen gesetzten
+      Wert ([#136](https://github.com/henemm/loose-ends/issues/136), umgesetzt 2026-09-27).
 - [#66](https://github.com/henemm/loose-ends/issues/66) Steht die Information überhaupt im Text?
 - [#68](https://github.com/henemm/loose-ends/issues/68) Nachweis: Modell je Gerät, Prozess, Zustand
 - [#69](https://github.com/henemm/loose-ends/issues/69) Wirken Retrieval-Beispiele? — **abgeschlossen 2026-09-27**
@@ -112,16 +114,15 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
 **Danach Features, nach Priorität:**
 
 5. [#25](https://github.com/henemm/loose-ends/issues/25) Siri über das Reminders-App-Schema (Must) — braucht Xcode 27 in der CI, bis dahin reicht die Shortcut-Phrase "Add to Loose Ends"
-6. [#136](https://github.com/henemm/loose-ends/issues/136) Bekannter Rohtext setzt die früheren Werte (ADR-5 neu; ersetzt das geschlossene #26)
-7. [#27](https://github.com/henemm/loose-ends/issues/27) Abhängigkeiten über Private Cloud Compute (`blockedBy`)
-8. [#28](https://github.com/henemm/loose-ends/issues/28) Projekt-Ansicht mit Unteraufgaben eingerückt/eingeklappt
-9. [#29](https://github.com/henemm/loose-ends/issues/29) Onboarding-Screen (Screen 12)
-10. [#30](https://github.com/henemm/loose-ends/issues/30) Mac-Teilen-Erweiterung
-11. [#31](https://github.com/henemm/loose-ends/issues/31) Kachel-Optik verfeinern
-12. [#32](https://github.com/henemm/loose-ends/issues/32) Drei Sekunden abbrechbares Erledigt
-13. [#33](https://github.com/henemm/loose-ends/issues/33) "Datum" im Verschieben-Menü
-14. [#34](https://github.com/henemm/loose-ends/issues/34) "Neu analysieren" im Detail
-15. [#40](https://github.com/henemm/loose-ends/issues/40) Icon-Composer-Paket für das App-Icon (Liquid Glass mit Ebenen)
+6. [#27](https://github.com/henemm/loose-ends/issues/27) Abhängigkeiten über Private Cloud Compute (`blockedBy`)
+7. [#28](https://github.com/henemm/loose-ends/issues/28) Projekt-Ansicht mit Unteraufgaben eingerückt/eingeklappt
+8. [#29](https://github.com/henemm/loose-ends/issues/29) Onboarding-Screen (Screen 12)
+9. [#30](https://github.com/henemm/loose-ends/issues/30) Mac-Teilen-Erweiterung
+10. [#31](https://github.com/henemm/loose-ends/issues/31) Kachel-Optik verfeinern
+11. [#32](https://github.com/henemm/loose-ends/issues/32) Drei Sekunden abbrechbares Erledigt
+12. [#33](https://github.com/henemm/loose-ends/issues/33) "Datum" im Verschieben-Menü
+13. [#34](https://github.com/henemm/loose-ends/issues/34) "Neu analysieren" im Detail
+14. [#40](https://github.com/henemm/loose-ends/issues/40) Icon-Composer-Paket für das App-Icon (Liquid Glass mit Ebenen)
 
 ## Arbeitsweise, die sich bewährt hat
 

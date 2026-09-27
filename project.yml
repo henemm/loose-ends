@@ -177,6 +177,9 @@ targets:
       - path: Shared/Enrichment/EnrichmentDraft.swift
       - path: Shared/Enrichment/FoundationModelsEnricher.swift
       - path: Shared/Models/Enums.swift
+      # Der geteilte Tokenizer (#136): Measurement/ trägt bewusst kein `import LooseEnds`, ruft aber
+      # RawTextWords auf — die Datei muss deshalb in jedes Ziel, das Measurement/ als Quelle listet.
+      - path: Shared/Services/RawTextWords.swift
     info:
       path: LooseEndsLab/Info.plist
       properties:
@@ -198,6 +201,7 @@ targets:
     sources:
       - LooseEndsTests
       - Measurement
+      - path: Shared/Services/RawTextWords.swift   # s. LooseEndsLab (#136)
     dependencies:
       - target: LooseEnds
     settings:
@@ -221,6 +225,7 @@ targets:
     sources:
       - LooseEndsUITests
       - Measurement   # the same corpus feeds the Reminders benchmark (#78)
+      - path: Shared/Services/RawTextWords.swift   # s. LooseEndsLab (#136)
     dependencies:
       - target: LooseEnds
     settings:

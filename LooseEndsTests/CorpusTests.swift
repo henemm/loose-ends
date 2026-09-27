@@ -131,7 +131,7 @@ struct CorpusTests {
             #expect((counts[form] ?? 0) >= 6, "Bauform \(form) hat nur \(counts[form] ?? 0) Sätze")
         }
         for entry in varied {
-            let words = TitleCheck.words(in: entry.text)
+            let words = RawTextWords.words(in: entry.text)
             switch entry.form {
             case "stichwort": #expect(words.count <= 3, "\(entry.id): Stichwort mit \(words.count) Wörtern")
             case "frage": #expect(entry.text.hasSuffix("?"), "\(entry.id): Frage ohne Fragezeichen")

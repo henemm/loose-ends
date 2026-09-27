@@ -148,11 +148,21 @@ als Rohtext, nicht diktierten Rohtext, wie das Produkt ihn verarbeitet.
 Die beiden Lesarten oben lösen sich auf, wenn man nicht nach Pool trennt, sondern nach der
 Ähnlichkeit des gefundenen Nachbarn. Gerechnet auf demselben Korpus, k = 1:
 
-| Merkmal | Nachbar fast wortgleich (Jaccard ≥ 0,34) | nur teilweise ähnlich (0 < Jaccard < 0,99) |
-|---|---|---|
-| Kontexte | 63 von 104, **100 %** | 2 Fälle — keine Aussage |
-| Dauer | 180 von 276, **97,2 %** | 11 Fälle, **55 %** |
-| Energie | 113 von 211, 69,9 % — unter der Konstante (77,3 %) | 13 Fälle, 54 % |
+Je Zelle steht die **Zahl der Fälle im Band** (also die Abdeckung) und dahinter die **Trefferquote
+innerhalb dieses Bandes** — nicht bezogen auf den ganzen Pool. Die erste Fassung dieser Tabelle hat
+beides vermischt und das Band unter 0,34 ganz weggelassen; korrigiert am 2026-09-27 mit #136.
+
+| Merkmal | Jaccard = 1,0 (gleiche Wortmenge) | 0,34 ≤ Jaccard < 1,0 | 0 < Jaccard < 0,34 | ohne Nachbarn |
+|---|---|---|---|---|
+| Kontexte (Pool 104) | 61 Fälle, **100 %** | 2 Fälle, 100 % — zu wenige für eine Aussage | 22 Fälle, 54,5 % | 19 Fälle |
+| Dauer (Pool 276) | 169 Fälle, **100 %** | 9 Fälle, 44,4 % | 70 Fälle, 44,3 % | 28 Fälle |
+| Energie (Pool 211) | 101 Fälle, 72,3 % — unter der Konstante (77,3 %) | 10 Fälle, 60,0 % | 72 Fälle, 66,7 % | 28 Fälle |
+
+Herkunft der Zahlen: `docs/artifacts/feat-136-wiedererkennung/schwellen-nachrechnung.py` auf
+`docs/reference/focusblox-corpus.json`; die beiden Spalten links sind in Swift bestätigt (61/104 und
+169/276 bei 100 %, `LooseEndsTests/RecognitionRuleTests.swift`). Zwischen Python-Nachrechnung und
+Swift-Lauf können bei Dauer und Energie zwei Einträge abweichen (`ß`-Faltung, README im
+Artefaktordner).
 
 Die Wortüberlappung kann genau eine Sache: wortgleiche Wiedererfassungen wiedererkennen. Sobald
 die Wörter nur teilweise übereinstimmen, fällt sie auf Rateniveau. Das ist kein Lernen, sondern
