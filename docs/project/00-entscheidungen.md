@@ -91,10 +91,16 @@ Seit #95 markiert `processedAt` nur noch den Modelllauf: Der Regelschritt für d
 (`DueDateRule`) läuft unabhängig davon bei jeder Veredelung, weil er ohne Modell auskommt und
 deterministisch ist — „genau einmal" gilt für das Modell, nicht für die regelbasierten Felder.
 
-**ADR-5 Lernen ist Retrieval, kein Training.** Ähnliche alte Aufgaben (on-device Embeddings,
-NaturalLanguage-Framework) werden mit ihren endgültigen Attributen als Beispiele in den Prompt gegeben.
-Korrekturen des Nutzers sind Beispiele erster Klasse. Erledigte Aufgaben werden nie gelöscht.
-Die FocusBlox-Historie wird als Startkorpus und als Evaluations-Datensatz exportiert.
+**ADR-5 Lernen ist Wiedererkennung, kein Training** (geändert 2026-09-27, Henning, nach #69/#131).
+Ursprünglich: ähnliche alte Aufgaben über Embeddings als Prompt-Beispiele. Die Messung hat das
+gekippt — auf Hennings 287 echten Aufgaben trägt die Ähnlichkeitssuche nur dort, wo der Text fast
+wortgleich wiederkehrt (Kontexte 100 %, Dauer 97,2 % bei ~60 % Abdeckung); bei bloß teilweise
+ähnlichem Text fällt sie auf Rateniveau (55 %), bei Energie unter die Konstante. Deshalb gilt:
+Ein bekannter Rohtext setzt die damaligen Werte still, mit KI-Marker und Revision wie jede
+Anreicherung. Alles andere wird nicht aus Nachbarn abgeleitet. Korrekturen des Nutzers bleiben
+Beispiele erster Klasse, erledigte Aufgaben werden nie gelöscht, die FocusBlox-Historie bleibt
+Startkorpus und Evaluations-Datensatz. Prompt-Beispiele nach Ähnlichkeit sind damit gestrichen,
+nicht verschoben — Beleg: `docs/reference/retrieval-leave-one-out-rules.md`.
 
 **ADR-6 Revisionen statt Undo-Stack.** Jede KI- oder Nutzeränderung an einem abgeleiteten Feld
 ist ein Revisions-Eintrag. Rückgängig pro Feld. Ein Rückgängig ist eine Korrektur und damit ein Lernbeispiel.

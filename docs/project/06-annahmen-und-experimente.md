@@ -143,13 +143,37 @@ den Nutzen bei **wiederkehrenden** Erfassungen, die Gegenprobe den bei **neu for
 Aufgaben. Zusätzliche Einschränkung wie bei den anderen Spikes: Der Korpus trägt gepflegte Titel
 als Rohtext, nicht diktierten Rohtext, wie das Produkt ihn verarbeitet.
 
-**B1 ist damit nicht abschließend geklärt.** Der Mechanismus „Wortüberlappung als Nachbarsuche"
-ist auf neu formulierten Aufgaben widerlegt, auf wiederkehrenden Erfassungen belegt. Welche
-Lesart fürs Produkt zählt — wie oft Henning wortidentische oder sehr ähnliche Aufgaben erneut
-erfasst — ist eine offene PO-Frage, hier nicht entschieden. Davon hängt ab, ob ADR-5 zur
-Disposition steht (Spec, Abschnitt „Architektur-Entscheidung"): Ein Nullergebnis auf allen drei
-Merkmalen hätte nur den Mechanismus widerlegt, nicht B1 insgesamt; das gemischte Ergebnis
-verschiebt die Frage stattdessen auf die Produktfrage oben.
+### B1 entschieden (2026-09-27, Henning): Wiedererkennung statt Lernen
+
+Die beiden Lesarten oben lösen sich auf, wenn man nicht nach Pool trennt, sondern nach der
+Ähnlichkeit des gefundenen Nachbarn. Gerechnet auf demselben Korpus, k = 1:
+
+| Merkmal | Nachbar fast wortgleich (Jaccard ≥ 0,34) | nur teilweise ähnlich (0 < Jaccard < 0,99) |
+|---|---|---|
+| Kontexte | 63 von 104, **100 %** | 2 Fälle — keine Aussage |
+| Dauer | 180 von 276, **97,2 %** | 11 Fälle, **55 %** |
+| Energie | 113 von 211, 69,9 % — unter der Konstante (77,3 %) | 13 Fälle, 54 % |
+
+Die Wortüberlappung kann genau eine Sache: wortgleiche Wiedererfassungen wiedererkennen. Sobald
+die Wörter nur teilweise übereinstimmen, fällt sie auf Rateniveau. Das ist kein Lernen, sondern
+ein Textabgleich — und der braucht weder Modell noch Beispiele.
+
+**Der Modell-Auslass-Test wird nicht gebaut** (Entscheidung Henning, 2026-09-27). Begründung: Er
+würde die Prompt-Beispiele mit derselben Nachbarsuche auswählen, also stünde bei 59 % der
+Kontext- und 61 % der Dauer-Sätze die richtige Antwort wörtlich im Beispiel — ein gemessener
+Beispiel-Effekt wäre nicht von „das Modell liest ab" zu unterscheiden. Auf der entduplizierten
+Teilmenge (n = 50, davon 23 ohne Nachbarn) ist ein Effekt von 9 bis 15 Punkten nicht nachweisbar.
+Auf diesem Korpus ist die Frage nicht sauber messbar, unabhängig von der Gerätezeit. Der Engpass
+ist die Datenbasis (gepflegte Titel, gut die Hälfte Dubletten, kein diktierter Rohtext, #82/#88),
+nicht der Mechanismus.
+
+Folgen: ADR-5 heißt jetzt „Lernen ist Wiedererkennung, kein Training"; Prompt-Beispiele nach
+Ähnlichkeit sind gestrichen. #26 schrumpft vom Embedding-Retrieval auf den Textabgleich (#136).
+Für Energie ist die Sache entschieden — Nachbarn schlagen die Konstante auf keiner Lesart, das
+Feld bleibt manuell (#112). Verworfene Alternativen: Modell-Auslass-Test auf Kontexte (~2 Tage
+inkl. 1,5 h Gerätezeit, Ergebnis doppeldeutig); Embedding-Nachbarsuche auf dem Mac (~1 Tag, ohne
+entduplizierten Korpus zu kleine Stichprobe) — beide bleiben möglich, sobald #82/#88 echte
+diktierte Sätze liefern.
 
 ## Die Annahmen, nach Tödlichkeit
 
@@ -176,7 +200,7 @@ bis sie gesehen wurde.
 
 | # | Annahme | Experiment | Abbruch | Alternative | Issue |
 |---|---|---|---|---|---|
-| B1 | Retrieval lernt wirklich | Auslass-Test mit/ohne k Nachbarn gegen Rauschen; Konventionstest (drei Korrekturen, vierte Aufgabe) | Differenz ≤ Rauschen, oder Konventionstest < 8/10 | Regeln aus Korrekturen ohne Modell; Retrieval-Mehrheit statt Prompt-Beispiel; ADR-5 auf „Regeln plus Retrieval" | #69, #131 |
+| B1 | ~~Retrieval lernt wirklich~~ **entschieden 2026-09-27: Wiedererkennung ja, Lernen nein** | Regel-Auslass-Test über Wortüberlappung, drei Merkmale, k = 1/3/5, gegen die Konstante | — (gelaufen) | umgesetzt wird die Alternative „Regeln ohne Modell": Textabgleich setzt die früheren Werte, Prompt-Beispiele nach Ähnlichkeit gestrichen | #69, #131, #136 |
 | B2 | Die Textform ist egal | Gleicher Inhalt in vier Formen: getippt, diktiert, Mail-Auszug, Englisch | < 80 % Übereinstimmung getippt/diktiert; Mail setzt Felder aus Signatur | Vorverarbeitung ohne Modell (kürzen, Signatur weg, Diktat normalisieren); kanalspezifische Prompts | #70 |
 | B3 | Guardrails lassen Alltag durch | Korpus plus 100 heikle Alltagstexte, Mac und iPhone getrennt | > 1 % Verweigerung | Verweigerung als sichtbarer Zustand; zweiter Versuch gekürzt; Parser-Fallback | #71 |
 | B4 | Der Lauf ist bezahlbar | Token je Prompt/Antwort, Sekunden je Aufgabe, Nachzügler mit 50 Aufgaben | > 2500 Token oder > 10 s je Aufgabe | Schema ohne Begründungen und ohne Konfidenz; zwei Läufe (Titel/Datum zuerst, weiche Felder später); Beispiele als Kurzform | #72 |
