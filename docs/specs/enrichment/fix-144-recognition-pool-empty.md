@@ -193,12 +193,28 @@ erhalten. Titel und Beschreibung des Tests werden von „bekommt … einen Verar
 ### Korpus-Messung als Nulllinie (Ticket-DoD: „Korpus-Messung echt gelaufen")
 
 Die Wiedererkennungs-Regel hat eine eigene Messstrecke gegen die 287 echten Aufgaben:
-`LooseEndsTests/RecognitionRuleTests.swift`, Suite `RecognitionRuleCorpusTests` (#136, AC-12), dazu
-`RuleLeaveOneOutTests`, `FocusBloxCalibrationTests` und `SelfConsistencyReportTests`. Alle vier
-Suiten sind per `.enabled(if: FileManager.default.fileExists(…))` an
-`docs/reference/focusblox-corpus.json` gegattert — persönliche, gitignorierte Daten, die in der CI
-nie existieren. Der Kommentar in `RecognitionRuleTests.swift:246` sagt es selbst:
+`LooseEndsTests/RecognitionRuleTests.swift`, Suite `RecognitionRuleCorpusTests` (#136, AC-12).
+Korpusgegattert per `.enabled(if: FileManager.default.fileExists(…))` sind außerdem
+`RuleLeaveOneOutReportTests` (`RuleLeaveOneOutTests.swift:197`) und `FocusBloxCalibrationTests`.
+Gegattert wird gegen `docs/reference/focusblox-corpus.json` — persönliche, gitignorierte Daten, die
+in der CI nie existieren. Der Kommentar in `RecognitionRuleTests.swift:246` sagt es selbst:
 **„grün ohne Korpus" heißt „Messung übersprungen", nicht „bestanden".**
+
+**Korrigiert am 2026-09-28 durch den Messlauf selbst.** Dieser Abschnitt nannte ursprünglich vier
+korpusgegatterte Suiten. Zwei der vier Namen waren falsch, und erst der echte Lauf hat es gezeigt:
+
+- `RuleLeaveOneOutTests` (`RuleLeaveOneOutTests.swift:57`) trägt gar kein Gatter und läuft immer.
+  Gemeint war `RuleLeaveOneOutReportTests` (Z. 197) — die lief im Korpus-Lauf zusätzlich.
+- `SelfConsistencyReportTests` hängt an **zwei** Dateien (`SelfConsistencyReportTests.swift:21-22`):
+  am Korpus und an `docs/reference/selfconsistency-run.json`. Die zweite entsteht nur aus einem
+  Messlauf auf dem Gerät (Spike #108) und existiert derzeit nirgends. Die Suite ist deshalb im
+  Rahmen von #144 nicht lauffähig zu machen, und sie misst Selbstkonsistenz des Modells, nicht die
+  Wiedererkennung. Sie zählt nicht zur Abnahme von #144; dass sie unprüfbar ist, ist ein eigener
+  Befund und gehört zu #108, nicht hierher.
+
+Die Korrektur schwächt AC-10 nicht ab: Die für diese Änderung zuständige Messstrecke
+(`RecognitionRuleCorpusTests`) ist und bleibt die Bedingung. Sie beschreibt nur richtig, welche
+Suiten es tatsächlich gibt.
 
 Geprüft am 2026-09-28: Die Datei liegt in Hennings Hauptordner
 (`/Users/hem/Developer/loose-ends/docs/reference/focusblox-corpus.json`, 200 315 Byte), **nicht** in
@@ -295,13 +311,15 @@ per `typeText` befüllen.
   im UI-Test durchläuft / Then zeigt die Detailansicht der zweiten Aufgabe dieselbe Dauer und
   denselben Kontext wie die erste, belegt durch Screenshots.
 - **AC-10 Korpus-Messung echt gelaufen und unverändert:** Given `docs/reference/focusblox-corpus.json`
-  liegt in diesem Arbeitsstand / When `./scripts/sim.sh unit` läuft / Then werden die vier
-  korpusgegatterten Suiten (`RecognitionRuleCorpusTests`, `RuleLeaveOneOutTests`,
-  `FocusBloxCalibrationTests`, `SelfConsistencyReportTests`) ausgeführt statt übersprungen — belegt
-  durch eine gegenüber dem Lauf ohne Korpus höhere Zahl ausgeführter Tests — und die Messzahlen der
-  Wiedererkennung sind mit denen vor der Änderung identisch. Der Beleg liegt als registriertes
-  Artefakt vor (`add-artifact test_output`, Pfad und Inhalt siehe „Korpus-Messung als Nulllinie");
-  ohne dieses Artefakt gilt AC-10 als nicht erfüllt.
+  liegt in diesem Arbeitsstand / When `./scripts/sim.sh unit` läuft / Then werden die drei
+  korpusgegatterten Suiten (`RecognitionRuleCorpusTests`, `RuleLeaveOneOutReportTests`,
+  `FocusBloxCalibrationTests`) ausgeführt statt übersprungen — belegt durch eine gegenüber dem Lauf
+  ohne Korpus höhere Zahl ausgeführter Tests — und die Messzahlen der Wiedererkennung sind mit denen
+  vor der Änderung identisch. Der Beleg liegt als registriertes Artefakt vor
+  (`add-artifact test_output`, Pfad und Inhalt siehe „Korpus-Messung als Nulllinie"); ohne dieses
+  Artefakt gilt AC-10 als nicht erfüllt. (Die ursprüngliche Fassung nannte vier Suiten, zwei davon
+  unter falschem Namen bzw. strukturell nicht lauffähig — korrigiert am 2026-09-28, Begründung im
+  Abschnitt „Korpus-Messung als Nulllinie".)
 
 ## Risiken
 
@@ -411,6 +429,13 @@ per `typeText` befüllen.
   `docs/artifacts/fix-144-recognition-pool-empty/korpus-messung.md`, Registrierung per
   `add-artifact test_output` als Bedingung für AC-10, entsprechender Punkt in der Abnahmeliste.
   Damit ist die Auflage des Briefings in der Spec verankert statt der Umsetzung überlassen.
+- 2026-09-28: **Nach dem echten Messlauf korrigiert.** AC-10 nannte vier korpusgegatterte Suiten;
+  zwei Namen waren falsch. `RuleLeaveOneOutTests` ist ungegattert (gemeint war
+  `RuleLeaveOneOutReportTests`), und `SelfConsistencyReportTests` hängt zusätzlich an einer Datei aus
+  einem Gerätelauf (#108), die nirgends existiert — sie ist im Rahmen von #144 nicht lauffähig zu
+  machen. Der Fehler war durch bloßes Lesen nicht zu sehen und fiel erst auf, weil die Messung
+  tatsächlich lief: genau der Nutzen, für den AC-10 geschrieben wurde. Die Bedingung selbst bleibt
+  unverändert — `RecognitionRuleCorpusTests` muss laufen und dieselben Zahlen zeigen.
 - 2026-09-28: Dritte Briefing-Runde — das Registrierwerkzeug prüft Artefakt-Inhalte nicht, die
   Registrierung allein erzwingt also keine Wahrheit. Neu: Die Belegdatei wird maschinell aus dem Lauf
   erzeugt (Zeitstempel, `git rev-parse HEAD`, Testzahlen aus `xcodebuild.log`), kein Wert von Hand.

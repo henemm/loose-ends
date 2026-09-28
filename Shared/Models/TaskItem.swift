@@ -17,6 +17,9 @@ final class TaskItem {
     // Lifecycle
     var statusRaw: String = TaskStatus.unprocessed.rawValue
     var processedAt: Date?
+    /// "Der Regelschritt lief" — unabhängig davon, ob das Modell verfügbar war oder sein Aufruf
+    /// glückte (#144). `processedAt` bleibt der Modell-Vermerk (ADR-4).
+    var rulesAppliedAt: Date?
     var nextRank: Double?
     var completedAt: Date?
     var parkedAt: Date?

@@ -47,6 +47,9 @@ final class EnrichmentCoordinator {
 
             for task in pending {
                 applyRules(to: task, recognitionPool: recognition.pool, tasksByID: recognition.tasksByID)
+                // Outside the model block and outside its `do`/`catch` on purpose: the rule step ran,
+                // whether or not the model was there and whether or not its call threw (#144).
+                task.rulesAppliedAt = Date()
                 if modelUnavailable == nil {
                     let input = EnrichmentInput(
                         rawText: task.rawText,
@@ -149,17 +152,23 @@ final class EnrichmentCoordinator {
         logger.info("Rule set urgency for \(task.id, privacy: .public)")
     }
 
-    /// The comparison set for the recognition, fetched once per pass and from **already processed**
-    /// tasks only (#136): a task of this very catch-up pass can structurally never feed another one,
-    /// so an AI mistake cannot multiply — no runtime filter needed, it follows from the fetch. No
-    /// `done` filter either: a re-capture should take the values of a still open task too, unlike
-    /// `examples`. The map resolves a hit back to its `TaskContext` objects.
-    private static func recognitionInputs(
+    /// The comparison set for the recognition, fetched once per pass and from tasks whose rule or
+    /// model step already ran (#136, #144): a task of this very catch-up pass can structurally never
+    /// feed another one, so an AI mistake cannot multiply — no runtime filter needed, it follows from
+    /// the fetch time. No `done` filter either: a re-capture should take the values of a still open
+    /// task too, unlike `examples`. The map resolves a hit back to its `TaskContext` objects.
+    ///
+    /// Two fetches instead of one `#Predicate` with `||`: no such predicate exists anywhere in this
+    /// project, and whether SwiftData translates an OR predicate correctly against the CloudKit store
+    /// is unproven. `uniquingKeysWith` deduplicates a task that carries both markers, and a task
+    /// enriched before #144 (`processedAt != nil`, `rulesAppliedAt == nil`) stays reachable.
+    static func recognitionInputs(
         in context: ModelContext
     ) throws -> (pool: [RecognitionRule.Candidate], tasksByID: [UUID: TaskItem]) {
-        let processed = try context.fetch(FetchDescriptor<TaskItem>(predicate: #Predicate { $0.processedAt != nil }))
-        return (recognitionCandidates(in: processed),
-                Dictionary(processed.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first }))
+        let byModel = try context.fetch(FetchDescriptor<TaskItem>(predicate: #Predicate { $0.processedAt != nil }))
+        let byRules = try context.fetch(FetchDescriptor<TaskItem>(predicate: #Predicate { $0.rulesAppliedAt != nil }))
+        let merged = Dictionary((byModel + byRules).map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        return (recognitionCandidates(in: Array(merged.values)), merged)
     }
 
     private static func recognitionCandidates(in tasks: [TaskItem]) -> [RecognitionRule.Candidate] {
