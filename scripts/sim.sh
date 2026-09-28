@@ -276,11 +276,18 @@ cmd_device_build() {
     cd "$PROJECT_DIR"
     local args=(build -project "$PROJECT" -scheme "$SCHEME" -destination "id=$id"
                 -derivedDataPath "$dd" -allowProvisioningUpdates "DEVELOPMENT_TEAM=$TEAM_ID")
+    # Der Rückgabewert muss von xcodebuild kommen, nicht von xcbeautify: ohne
+    # PIPESTATUS meldete die Stufe am 2026-09-28 „Gerätebuild erfolgreich“,
+    # während xcodebuild „Unable to find a destination“ ausgab (#144-Abnahme).
+    local rc
     if command -v xcbeautify >/dev/null; then
         xcodebuild "${args[@]}" 2>&1 | xcbeautify
+        rc=${PIPESTATUS[0]}
     else
         xcodebuild "${args[@]}" 2>&1
+        rc=$?
     fi
+    [ "$rc" -eq 0 ] || { error "Gerätebuild fehlgeschlagen (xcodebuild $rc)."; return 1; }
     success "Gerätebuild erfolgreich."
 }
 
@@ -292,17 +299,23 @@ cmd_device_install() {
     local app; app=$(device_app_path)
     [ -d "$app" ] || { error "Erst bauen: ./scripts/sim.sh device-build"; return 1; }
     info "Installiere drahtlos auf $id"
-    $DEVICECTL device install app --device "$id" "$app" >/dev/null
+    $DEVICECTL device install app --device "$id" "$app" >/dev/null || {
+        error "Installation fehlgeschlagen — iPhone entsperren und ins selbe WLAN holen."
+        return 1
+    }
     success "Installiert."
 }
 
 cmd_device_launch() {
     local id; id=$(require_device) || return 1
     local bundle; bundle=$(plutil -extract CFBundleIdentifier raw "$(device_app_path)/Info.plist")
-    if ! $DEVICECTL device process launch --terminate-existing --device "$id" "$bundle" 2>&1 | tail -3; then
+    # `| tail -3` lieferte den Rückgabewert von tail, nie den von devicectl —
+    # der Fehlerzweig war damit unerreichbar (#144-Abnahme, 2026-09-28).
+    $DEVICECTL device process launch --terminate-existing --device "$id" "$bundle" 2>&1 | tail -3
+    [ "${PIPESTATUS[0]}" -eq 0 ] || {
         error "Start abgelehnt — meist ist das iPhone gesperrt. Entsperren, dann erneut."
         return 1
-    fi
+    }
     success "Gestartet ($bundle)."
 }
 
@@ -316,8 +329,14 @@ cmd_device_console() {
     local bundle; bundle=$(plutil -extract CFBundleIdentifier raw "$(device_app_path)/Info.plist")
     info "Starte mit Konsole, lese ${seconds}s mit"
     timeout "$seconds" $DEVICECTL device process launch \
-        --terminate-existing --console --device "$id" "$bundle" 2>&1 || true
-    success "Konsole beendet."
+        --terminate-existing --console --device "$id" "$bundle" 2>&1
+    # 124 heißt: timeout hat die Konsole planmäßig beendet — das ist der Normalfall.
+    # Jeder andere Wert ist ein abgelehnter Start und darf nicht als Erfolg durchgehen.
+    local rc=$?
+    case "$rc" in
+        0|124) success "Konsole beendet." ;;
+        *) error "Start mit Konsole fehlgeschlagen (devicectl $rc) — iPhone entsperren und ins selbe WLAN holen."; return 1 ;;
+    esac
 }
 
 # --- Messreihen gegen das echte Modell ----------------------------------------
