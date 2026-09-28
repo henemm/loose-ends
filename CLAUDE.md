@@ -7,7 +7,8 @@ Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, 
 - **One multiplatform target.** iOS, iPadOS and macOS share every view in `LooseEnds/` and `Shared/`.
   There is no separate Mac UI. Layout adapts via `NavigationSplitView` and size classes.
 - **Raw text is immutable.** Every derived field is optional and carries `*SourceRaw` and `*Confidence`.
-- **Enrichment runs once** per task (`processedAt`). A second run only on explicit user request.
+- **Enrichment runs once** per task. `processedAt` marks the model step, `rulesAppliedAt` the rule step
+  (independent of it, #144); a second run only on explicit user request.
 - **Learning is recognition, not training** (ADR-5, rewritten 2026-09-27 after #69/#131). A raw text
   that was captured before sets that entry's contexts and duration again, silently, with the AI marker
   and a `Revision` like any enrichment. Similarity-picked prompt examples are gone: measured on 287 real

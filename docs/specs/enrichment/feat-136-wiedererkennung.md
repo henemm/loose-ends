@@ -207,6 +207,19 @@ folgt aus der Fetch-Reihenfolge selbst. Kein Status-Filter auf `done`: eine Wied
 die Werte einer noch offenen Aufgabe übernehmen (anders als `examples`, das nur erledigte Aufgaben
 liefert, `EnrichmentCoordinator.swift:147-165`).
 
+**Nachgezogen mit #144:** `processedAt` allein war das falsche Lesekriterium — der Vermerk wird nur
+in `EnrichmentWriter.apply` gesetzt, also ausschließlich nach einem geglückten Modelllauf. Ohne
+Apple Intelligence (Simulator, nicht berechtigtes Gerät, abgeschaltete Funktion) und bei einem
+fehlgeschlagenen Modellaufruf blieb die Vergleichsmenge dauerhaft leer, und ein Regelmechanismus,
+der ausdrücklich kein Modell braucht, griff faktisch nie. Seit #144 trägt der Regelschritt seinen
+eigenen Vermerk `rulesAppliedAt` (gesetzt in `processPending()` direkt nach `applyRules`, außerhalb
+des Modellblocks und außerhalb von dessen `try`/`catch`), und `recognitionInputs(in:)` liest die
+Vergleichsmenge über **zwei** `FetchDescriptor` — `processedAt != nil` und `rulesAppliedAt != nil` —
+zusammengeführt per `id` mit `uniquingKeysWith: { first, _ in first }`. Kein `#Predicate` mit `||`:
+ein solches existiert nirgends im Projekt, und ob SwiftData es gegen den CloudKit-Store korrekt
+übersetzt, ist unbelegt. Die Zusammenführung hält Aufgaben erreichbar, die vor #144 veredelt wurden
+(`processedAt != nil`, `rulesAppliedAt == nil`), und entdoppelt Aufgaben mit beiden Vermerken.
+
 ```swift
 private static func recognitionCandidates(from tasks: [TaskItem]) -> [RecognitionRule.Candidate] {
     tasks.map { task in
@@ -430,9 +443,18 @@ Design-Freeze und nur als Smoke-Tests (CLAUDE.md).
   für dasselbe Feld, einer nutzergesetzt / When `match` läuft / Then gewinnt der nutzergesetzte Wert,
   unabhängig von der Pool-Reihenfolge; bei zwei KI-gesetzten Werten gewinnt deterministisch derselbe
   Kandidat (aufsteigend nach `id`).
-- **AC-7 Pool enthält nur bereits verarbeitete Aufgaben:** Given zwei unverarbeitete Aufgaben mit
-  identischem Rohtext im selben Nachzügler-Lauf, ohne eine dritte bereits verarbeitete Aufgabe / When
-  `processPending()` läuft / Then setzt keine der beiden Aufgaben Dauer oder Kontexte bei der anderen.
+- **AC-7 Pool enthält nur Aufgaben, deren Regelschritt bereits lief** (umformuliert mit #144, vorher
+  „nur bereits verarbeitete Aufgaben"): Given zwei Aufgaben mit identischem Rohtext, deren
+  Regelschritt noch nicht lief (`rulesAppliedAt == nil`, `processedAt == nil`), im selben
+  Nachzügler-Lauf und ohne eine dritte bereits verarbeitete Aufgabe / When `processPending()` läuft /
+  Then setzt keine der beiden Aufgaben Dauer oder Kontexte bei der anderen. Die Garantie folgt
+  unverändert aus dem **Zeitpunkt des Fetches** (Pool einmal vor der Schleife), nicht aus dem
+  Feldnamen: Im selben Durchgang trägt keine der beiden einen der beiden Vermerke. Ab dem zweiten
+  Durchgang kann eine Aufgabe mit `rulesAppliedAt != nil` Quelle sein — das ist kein aufgeweichter
+  Schutz, denn ohne Modell können Dauer und Kontexte nur aus einer Nutzereingabe oder aus der
+  Wiedererkennung selbst stammen (das Saatkorn ist immer ein Nutzerwert, und `RecognitionRule.winner`
+  bevorzugt nutzergesetzte Werte), und ein Selbsttreffer ist durch die Guards `Feld == nil` und
+  `!EnrichmentWriter.userHasTouched(…)` wirkungslos.
 - **AC-8 Keine doppelte Revision im Nachzügler-Lauf:** Given eine Aufgabe, deren Dauer/Kontexte bereits
   durch die Regel gesetzt sind / When `processPending()` erneut läuft / Then entstehen keine zweiten
   `.duration`-/`.contexts`-Revisionen, die Werte bleiben unverändert.

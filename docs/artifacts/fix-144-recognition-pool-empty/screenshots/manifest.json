@@ -1,0 +1,44 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "1E1D45E4-DB3F-4E2D-BC72-ABE5DBB55D16.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "4-zweite-aufgabe-mit-uebernommenen-werten_0_EE91AB66-F9DB-4E00-B4B6-35629B4E5EAA.png",
+        "timestamp" : 1790606606.014
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "4DBB198B-9CD2-40A8-99B8-30C2CC0C117F.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "3-wortgleich-erneut-erfasst_0_A7D60F81-8AEB-4B3C-9DEB-E33916EABE86.png",
+        "timestamp" : 1790606598.565
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "5D6BA977-8D5B-4F28-AEF0-19409F6A13A5.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "2-werte-von-hand-gesetzt_0_269025F3-EA66-42AE-AB6C-BEFFE212757B.png",
+        "timestamp" : 1790606587.09
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "BE9D8A0A-F80B-4609-A27B-6D44786F16BF.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "1-erste-aufgabe-erfasst_0_2971F819-2547-441F-8946-062C5A1E6FEB.png",
+        "timestamp" : 1790606572.319
+      }
+    ],
+    "testIdentifier" : "RecognitionWalkthroughTests/testWordEqualRecaptureTakesOverDurationAndContext()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/RecognitionWalkthroughTests/testWordEqualRecaptureTakesOverDurationAndContext"
+  }
+]

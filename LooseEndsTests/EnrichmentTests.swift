@@ -682,3 +682,232 @@ struct RecognitionCoordinatorTests {
         #expect(aiRevisions.count == 1, "keine zweite KI-Revision auf dasselbe Feld")
     }
 }
+
+/// Folgebefund zu #136, ausgelöst durch Hennings Frage vom 2026-09-27, ob die modellfreien Teile
+/// im Simulator geprüft werden. Alle Tests oben setzen `processedAt` per `makeProcessed` von Hand
+/// und prüfen damit nur die Regel selbst — nicht, ob eine Aufgabe auf dem echten Weg je in die
+/// Vergleichsmenge gelangt. Genau das steht hier zur Prüfung.
+@Suite("Vergleichsmenge auf dem echten Weg (#136 Folgebefund)")
+struct RecognitionPoolReachabilityTests {
+
+    /// Der Ablauf, den jemand ohne Apple Intelligence erlebt (Simulator, nicht berechtigtes Gerät,
+    /// abgeschaltete Funktion): erfassen, Werte selbst setzen, dasselbe erneut erfassen.
+    /// Die Regel braucht kein Modell — also muss sie hier greifen.
+    @Test("Ohne Modell übernimmt die zweite wortgleiche Erfassung die Werte der ersten")
+    @MainActor func recognitionWorksWithoutTheModel() async throws {
+        let store = try TestStore()
+        let context = store.context
+        let garden = TaskContext(name: "Garten")
+        context.insert(garden)
+
+        let noModel = StubEnricher(unavailableReason: "Kein Apple Intelligence")
+
+        // Erste Erfassung, danach der Veredelungs-Durchgang wie in der App.
+        let first = TaskItem(rawText: "Rasen mähen")
+        context.insert(first)
+        try context.save()
+        await EnrichmentCoordinator(enricher: noModel, container: store.container).processPending()
+
+        // Der Nutzer setzt Dauer und Kontext selbst — der Normalfall, wenn kein Modell da ist.
+        first.duration = .minutes30
+        first.durationSourceRaw = FieldSource.user.rawValue
+        first.contexts = [garden]
+        first.contextsSourceRaw = FieldSource.user.rawValue
+        try context.save()
+
+        // Zweite Erfassung, wortgleich.
+        let second = TaskItem(rawText: "Rasen mähen")
+        context.insert(second)
+        try context.save()
+        await EnrichmentCoordinator(enricher: noModel, container: store.container).processPending()
+
+        #expect(second.duration == .minutes30, "die Dauer von vorhin muss übernommen werden")
+        #expect((second.contexts ?? []).map(\.name) == ["Garten"], "die Kontexte von vorhin auch")
+    }
+
+    /// Der Grund, isoliert: `processedAt` wird ausschließlich in `EnrichmentWriter.apply` gesetzt,
+    /// und das läuft nur, wenn das Modell verfügbar ist. `processedAt` behält diese Bedeutung
+    /// (ADR-4) — die Vergleichsmenge darf deshalb nicht daran hängen, sondern an einem eigenen
+    /// Vermerk des Regelschritts (`rulesAppliedAt`, #144). Die Aussage dieses Tests ist unverändert
+    /// dieselbe wie im RED-Stand: wer die Regeln durchlaufen hat, gehört in die Vergleichsmenge —
+    /// nur das geprüfte Feld wechselt vom falschen auf das tatsächliche Lesekriterium.
+    @Test("Ohne Modell bekommt jede Aufgabe den Regel-Vermerk (AC-2)")
+    @MainActor func ruleMarkerFillsThePoolWithoutTheModel() async throws {
+        let store = try TestStore()
+        let context = store.context
+        let noModel = StubEnricher(unavailableReason: "Kein Apple Intelligence")
+
+        for index in 0..<3 {
+            context.insert(TaskItem(rawText: "Aufgabe \(index)"))
+        }
+        try context.save()
+        await EnrichmentCoordinator(enricher: noModel, container: store.container).processPending()
+
+        let pool = try context.fetch(FetchDescriptor<TaskItem>(predicate: #Predicate { $0.rulesAppliedAt != nil }))
+        #expect(pool.count == 3, "wer die Regeln durchlaufen hat, gehört in die Vergleichsmenge")
+        let unseenByModel = try context.fetch(FetchDescriptor<TaskItem>(predicate: #Predicate { $0.processedAt == nil }))
+        #expect(unseenByModel.count == 3, "`processedAt` behält seine Bedeutung: das Modell war nicht da")
+    }
+
+    /// Der zweite Fehlerpfad aus der Analyse, der auch Hennings iPhone 16 Pro trifft und nicht nur
+    /// den Simulator: Das Modell ist verfügbar, aber der Aufruf scheitert. Dann läuft
+    /// `EnrichmentWriter.apply` nicht, also bleibt `processedAt` leer — der Regelschritt lief aber
+    /// trotzdem und muss seinen eigenen Vermerk behalten.
+    @Test("Ein fehlgeschlagener Modellaufruf nimmt dem Regelschritt den Vermerk nicht (AC-3)")
+    @MainActor func ruleMarkerSurvivesAFailingModelCall() async throws {
+        let store = try TestStore()
+        let context = store.context
+        let failing = StubEnricher(failure: StubFailure())
+        let task = TaskItem(rawText: "Reifen wechseln lassen")
+        context.insert(task)
+        try context.save()
+
+        await EnrichmentCoordinator(enricher: failing, container: store.container).processPending()
+
+        #expect(failing.calls == 1, "das Modell wurde befragt")
+        #expect(task.processedAt == nil, "ein gescheiterter Aufruf ist kein Modelllauf (ADR-4)")
+        #expect(task.rulesAppliedAt != nil, "der Regelschritt lief und vermerkt das selbst")
+    }
+
+    /// Die Bestandsdaten-Lücke: Aufgaben, die vor #144 veredelt wurden — lokal oder per CloudKit von
+    /// einem Gerät mit Apple Intelligence — tragen `processedAt`, aber nie `rulesAppliedAt`. Sie
+    /// müssen Quelle bleiben, sonst tauscht die Änderung eine leere Vergleichsmenge gegen eine
+    /// halbe. Ohne die Zusammenführung beider Vermerke schlägt dieser Test an.
+    @Test("Eine vor dieser Änderung veredelte Aufgabe bleibt Quelle (AC-4)")
+    @MainActor func legacyProcessedTaskStaysReachable() async throws {
+        let store = try TestStore()
+        let context = store.context
+        let garden = TaskContext(name: "Garten")
+        context.insert(garden)
+
+        let legacy = TaskItem(rawText: "Hecke schneiden")
+        legacy.status = .active
+        legacy.processedAt = Date(timeIntervalSince1970: 1_700_000_000)
+        legacy.rulesAppliedAt = nil            // genau der Bestandszustand
+        legacy.duration = .hour1
+        legacy.durationSourceRaw = FieldSource.user.rawValue
+        legacy.durationConfidence = 1.0
+        legacy.contexts = [garden]
+        legacy.contextsSourceRaw = FieldSource.user.rawValue
+        legacy.contextsConfidence = 1.0
+        context.insert(legacy)
+
+        let fresh = TaskItem(rawText: "Hecke schneiden")
+        context.insert(fresh)
+        try context.save()
+
+        await EnrichmentCoordinator(
+            enricher: StubEnricher(unavailableReason: "Kein Apple Intelligence"),
+            container: store.container
+        ).processPending()
+
+        #expect(fresh.duration == .hour1, "die Bestandsaufgabe muss erreichbar bleiben")
+        #expect((fresh.contexts ?? []).map(\.name) == ["Garten"])
+    }
+
+    /// Zwei Vermerke, zwei Fetches — also muss die Zusammenführung entdoppeln. Geprüft direkt an der
+    /// Vergleichsmenge, nicht nur am Ergebnis: Eine Dublette im Pool bliebe am geschriebenen Wert
+    /// unsichtbar, weil `applyRecognitionRule` pro Feld ohnehin nur einmal schreibt. Genau deshalb
+    /// steht hier der Pool selbst zur Prüfung.
+    @Test("Eine Aufgabe mit beiden Vermerken steht genau einmal in der Vergleichsmenge (AC-5)")
+    @MainActor func aTaskWithBothMarkersAppearsOnceInThePool() async throws {
+        let store = try TestStore()
+        let context = store.context
+        let both = TaskItem(rawText: "Steuer sortieren")
+        both.status = .active
+        both.processedAt = Date(timeIntervalSince1970: 1_700_000_000)
+        both.rulesAppliedAt = Date(timeIntervalSince1970: 1_700_000_100)
+        both.duration = .hours2plus
+        both.durationSourceRaw = FieldSource.user.rawValue
+        both.durationConfidence = 1.0
+        context.insert(both)
+        try context.save()
+
+        let inputs = try EnrichmentCoordinator.recognitionInputs(in: context)
+
+        #expect(inputs.pool.filter { $0.id == both.id }.count == 1, "beide Vermerke, ein Eintrag")
+        #expect(inputs.pool.count == 1)
+        #expect(inputs.tasksByID.count == 1)
+
+        // Und keine doppelte Revision auf einer wortgleichen dritten Aufgabe.
+        let fresh = TaskItem(rawText: "Steuer sortieren")
+        context.insert(fresh)
+        try context.save()
+        await EnrichmentCoordinator(
+            enricher: StubEnricher(unavailableReason: "Kein Apple Intelligence"),
+            container: store.container
+        ).processPending()
+
+        #expect(fresh.duration == .hours2plus)
+        #expect((fresh.revisions ?? []).filter { $0.field == .duration }.count == 1)
+    }
+
+    /// Der Fehler, den #95 schon einmal behoben hat, darf nicht zurückkommen: Würde der
+    /// Nachzügler-Fetch um `rulesAppliedAt == nil` verengt, verlöre eine ohne Apple Intelligence
+    /// erfasste Aufgabe für immer Titel, Energie, Personen und Projekt.
+    @Test("Der Regel-Vermerk verengt den Nachzügler-Lauf nicht (AC-6)")
+    @MainActor func ruleMarkerDoesNotHideATaskFromTheModelPass() async throws {
+        let store = try TestStore()
+        let context = store.context
+        let task = TaskItem(rawText: "Dachrinne reinigen")
+        context.insert(task)
+        try context.save()
+
+        let stub = StubEnricher(unavailableReason: "Kein Apple Intelligence")
+        let coordinator = EnrichmentCoordinator(enricher: stub, container: store.container)
+        await coordinator.processPending()
+        #expect(task.rulesAppliedAt != nil, "der Regelschritt lief")
+        #expect(task.processedAt == nil, "das Modell nicht")
+
+        var draft = EnrichmentDraft()
+        draft.title = EnrichmentDraft.Guess("Dachrinne reinigen", confidence: 0.9, reason: "Stub.")
+        draft.energy = EnrichmentDraft.Guess(.high, confidence: 0.9, reason: "Stub.")
+        stub.draft = draft
+        stub.unavailableReason = nil
+
+        await coordinator.processPending()
+
+        #expect(stub.calls == 1, "die Aufgabe wird beim Nachzügler-Lauf weiterhin gefunden")
+        #expect(task.title == "Dachrinne reinigen")
+        #expect(task.energy == .high)
+        #expect(task.processedAt != nil, "jetzt hat das Modell sie gesehen")
+    }
+
+    /// AC-8 aus #136 und #95 unter der neuen Lesart: Ab dem zweiten Durchgang steht eine Aufgabe mit
+    /// Regel-Vermerk selbst in der Vergleichsmenge — auch in der eigenen. Ein Selbsttreffer darf
+    /// nichts bewirken, die Guards `Feld == nil` müssen tragen.
+    @Test("Mehrere Regelläufe ohne Modell legen keine zweite Revision an (AC-7)")
+    @MainActor func repeatedRulePassesAddNoSecondRevision() async throws {
+        let store = try TestStore()
+        let context = store.context
+        let garden = TaskContext(name: "Garten")
+        context.insert(garden)
+
+        let source = TaskItem(rawText: "Fenster putzen")
+        source.status = .active
+        source.processedAt = Date(timeIntervalSince1970: 1_700_000_000)
+        source.duration = .minutes30
+        source.durationSourceRaw = FieldSource.user.rawValue
+        source.durationConfidence = 1.0
+        source.contexts = [garden]
+        source.contextsSourceRaw = FieldSource.user.rawValue
+        source.contextsConfidence = 1.0
+        context.insert(source)
+
+        let fresh = TaskItem(rawText: "Fenster putzen")
+        context.insert(fresh)
+        try context.save()
+
+        let noModel = StubEnricher(unavailableReason: "Kein Apple Intelligence")
+        for _ in 0..<3 {
+            await EnrichmentCoordinator(enricher: noModel, container: store.container).processPending()
+        }
+
+        #expect(fresh.duration == .minutes30)
+        #expect((fresh.contexts ?? []).map(\.name) == ["Garten"])
+        #expect((fresh.revisions ?? []).filter { $0.field == .duration }.count == 1,
+                "drei Durchgänge, eine Revision")
+        #expect((fresh.revisions ?? []).filter { $0.field == .contexts }.count == 1,
+                "drei Durchgänge, eine Revision")
+    }
+}

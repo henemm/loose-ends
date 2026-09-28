@@ -1,0 +1,26 @@
+RED-Beleg 3 — die fuenf neuen Faelle: der Vermerk des Regelschritts existiert nicht
+==================================================================================
+
+Stand:   302b453c331e751b920c5613d50006a854a62eb5 (Produktivcode unveraendert)
+Lauf:    2026-09-28 15:29:29 +0200
+Befehl:  ./scripts/sim.sh unit RecognitionPoolReachabilityTests
+Ziel:    iOS-Simulator (macOS 26.6.1 < Deployment Target 27.0)
+
+AC-2 bis AC-7 lesen und setzen 'rulesAppliedAt' und die Vergleichsmenge. Beides gibt es
+heute nicht — der Testlauf scheitert an der Uebersetzung und nennt genau die Luecken, die
+die Umsetzung schliessen muss. Das ist das RED dieser Faelle.
+
+LooseEndsTests/EnrichmentTests.swift:746:91: error: value of type 'TaskItem' has no member 'rulesAppliedAt'
+LooseEndsTests/EnrichmentTests.swift:769:22: error: value of type 'TaskItem' has no member 'rulesAppliedAt'
+LooseEndsTests/EnrichmentTests.swift:786:16: error: value of type 'TaskItem' has no member 'rulesAppliedAt'
+LooseEndsTests/EnrichmentTests.swift:819:14: error: value of type 'TaskItem' has no member 'rulesAppliedAt'
+LooseEndsTests/EnrichmentTests.swift:826:48: error: 'recognitionInputs' is inaccessible due to 'private' protection level
+LooseEndsTests/EnrichmentTests.swift:859:22: error: value of type 'TaskItem' has no member 'rulesAppliedAt'
+
+** TEST FAILED **
+
+Daraus folgt fuer die Umsetzung, ohne Auslegungsspielraum:
+  1. TaskItem braucht 'var rulesAppliedAt: Date?' (6 Fundstellen).
+  2. EnrichmentCoordinator.recognitionInputs(in:) muss ohne 'private' erreichbar sein,
+     weil AC-5 (keine Dublette) nur an der Vergleichsmenge selbst pruefbar ist: eine
+     Dublette im Pool bliebe am geschriebenen Wert unsichtbar.

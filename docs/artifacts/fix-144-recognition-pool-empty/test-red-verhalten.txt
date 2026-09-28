@@ -1,0 +1,21 @@
+RED-Beleg 1 — Verhalten: ohne Modell greift die Wiedererkennung nicht
+=====================================================================
+
+Stand:   302b453c331e751b920c5613d50006a854a62eb5
+Lauf:    2026-09-28 15:17:21 +0200
+Befehl:  ./scripts/sim.sh unit RecognitionPoolReachabilityTests
+Ziel:    iOS-Simulator (macOS 26.6.1 < Deployment Target 27.0)
+
+Die beiden in 50fcb8c committeten Tests laufen und schlagen fehl. Das ist der
+Fehler aus #144, am echten Weg ausgeloest — nicht behauptet.
+
+Test Suite 'Selected tests' started at 2026-09-28 15:04:50.919.
+Test Suite 'LooseEndsTests.xctest' started at 2026-09-28 15:04:50.929.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-09-28 15:04:50.930.
+Suite "Vergleichsmenge auf dem echten Weg (#136 Folgebefund)" started
+    ⚠️  Test "Ohne Modell übernimmt die zweite wortgleiche Erfassung die Werte der ersten" recorded an issue at EnrichmentTests.swift:724:9: Expectation failed: second.duration == .minutes30
+    ⚠️  Test "Ohne Modell übernimmt die zweite wortgleiche Erfassung die Werte der ersten" recorded an issue at EnrichmentTests.swift:725:9: Expectation failed: (second.contexts ?? []).map(\.name) == ["Garten"]
+    ✖ "Ohne Modell übernimmt die zweite wortgleiche Erfassung die Werte der ersten" (0.545 seconds) 2 issue(s)
+    ⚠️  Test "Ohne Modell bekommt keine Aufgabe je einen Verarbeitungs-Vermerk" recorded an issue at EnrichmentTests.swift:744:9: Expectation failed: pool.count == 3
+    ✖ "Ohne Modell bekommt keine Aufgabe je einen Verarbeitungs-Vermerk" (0.280 seconds) 1 issue(s)
+Suite "Vergleichsmenge auf dem echten Weg (#136 Folgebefund)" failed after 1.040 seconds with 3 issue(s)

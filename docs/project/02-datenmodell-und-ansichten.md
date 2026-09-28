@@ -26,7 +26,8 @@
 | sourceURL | URL? | System | `message:` bei Mail, sonst Share-URL |
 | status | enum TaskStatus | System/Nutzer | unprocessed, unverified, active, parked, done |
 | parkedAt | Date? | Nutzer | gesetzt bei Parken, gelöscht bei Aktivieren |
-| processedAt | Date? | System | genau einmal gesetzt (ADR-4) |
+| processedAt | Date? | System | Modell hat die Aufgabe gesehen, genau einmal gesetzt (ADR-4) |
+| rulesAppliedAt | Date? | System | Regelschritt gelaufen, unabhängig vom Modell gesetzt (ADR-4, #144) |
 | nextRank | Double? | Nutzer | nur gesetzt, wenn in "Als nächstes" |
 | completedAt | Date? | Nutzer | bei Wiederholung: siehe CompletionRecord |
 | project | Project? | KI/Nutzer | |
@@ -175,8 +176,10 @@ für KI-Verarbeitung.
    Tasks mit `processedAt == nil`.
 2. **Wiedererkennung** (ADR-5, neu gefasst 2026-09-27 nach #69/#131; ersetzt das geplante
    Embedding-Retrieval): Der Rohtext wird gegen die Rohtexte bereits verarbeiteter Aufgaben
-   gestellt — **Gleichheit der normalisierten Wortmenge**, keine Ähnlichkeitsschwelle. Trägt eine
-   frühere Aufgabe dieselbe Wortmenge, setzt sie Kontexte und Dauer still, mit Konfidenz 1.0,
+   gestellt — **Gleichheit der normalisierten Wortmenge**, keine Ähnlichkeitsschwelle. Die
+   Vergleichsmenge liest seit #144 `processedAt` und `rulesAppliedAt` gemeinsam, damit sie auch auf
+   einem Gerät ohne Apple Intelligence gefüllt ist (ADR-4). Trägt eine frühere Aufgabe dieselbe
+   Wortmenge, setzt sie Kontexte und Dauer still, mit Konfidenz 1.0,
    KI-Marker und Revision; ein einziges abweichendes Wort verhindert die Übernahme. Das Modell wird
    für Dauer und Kontexte weiter gefragt (Entscheidung Henning, 2026-09-27: neu formulierte Aufgaben
    brauchen die Schätzung), sein Wert greift aber nur auf ein noch leeres Feld — die Wiedererkennung

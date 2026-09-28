@@ -90,6 +90,11 @@ Erneute Analyse nur auf ausdrücklichen Nutzerwunsch.
 Seit #95 markiert `processedAt` nur noch den Modelllauf: Der Regelschritt für das Fälligkeitsdatum
 (`DueDateRule`) läuft unabhängig davon bei jeder Veredelung, weil er ohne Modell auskommt und
 deterministisch ist — „genau einmal" gilt für das Modell, nicht für die regelbasierten Felder.
+Seit #144 markiert `rulesAppliedAt` unabhängig davon, ob das Modell verfügbar war oder der
+Modellaufruf glückte, dass der Regelschritt (Fälligkeitsdatum, Wichtigkeit, Dringlichkeit,
+Wiedererkennung) für diese Aufgabe gelaufen ist; die Vergleichsmenge der Wiedererkennung
+(`RecognitionRule`) liest `processedAt` und `rulesAppliedAt` gemeinsam, damit sie nicht am
+Modell hängt.
 
 **ADR-5 Lernen ist Wiedererkennung, kein Training** (geändert 2026-09-27, Henning, nach #69/#131).
 Ursprünglich: ähnliche alte Aufgaben über Embeddings als Prompt-Beispiele. Die Messung hat das

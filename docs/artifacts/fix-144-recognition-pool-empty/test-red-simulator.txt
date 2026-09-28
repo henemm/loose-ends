@@ -1,0 +1,26 @@
+RED-Beleg 2 — Bedienablauf im Simulator: die Werte werden nicht uebernommen
+==========================================================================
+
+Stand:   302b453c331e751b920c5613d50006a854a62eb5 (Produktivcode unveraendert)
+Lauf:    2026-09-28 15:24:18 +0200
+Befehl:  ./scripts/sim.sh test RecognitionWalkthroughTests
+Ziel:    iPhone 17 Simulator, --ui-testing (In-Memory-Store, echter FoundationModelsEnricher)
+
+Der Ablauf aus AC-9, in der App durchgespielt statt in einem Testaufbau, der sich seinen
+Ausgangszustand selbst herstellt: erfassen -> Dauer und Kontext von Hand setzen -> wortgleich
+erneut erfassen ("maehen Rasen" statt "Rasen maehen") -> nachsehen. Schritt 1 bis 4 laufen
+durch, die Zeile 'Duration' der zweiten Aufgabe bleibt leer. Vier Screenshots liegen im
+.xcresult des Laufs.
+
+Test Case '-[LooseEndsUITests.RecognitionWalkthroughTests testWordEqualRecaptureTakesOverDurationAndContext]' started.
+/Users/hem/Developer/loose-ends/.claude/worktrees/piped-wiggling-boole/LooseEndsUITests/RecognitionWalkthroughTests.swift:150: error: -[LooseEndsUITests.RecognitionWalkthroughTests testWordEqualRecaptureTakesOverDurationAndContext] : XCTAssertTrue failed - Die Dauer der ersten Aufgabe wurde nicht übernommen, Beschriftung war Duration
+Test Case '-[LooseEndsUITests.RecognitionWalkthroughTests testWordEqualRecaptureTakesOverDurationAndContext]' failed (73.812 seconds).
+	 Executed 1 test, with 1 failure (0 unexpected) in 73.812 (73.845) seconds
+	 Executed 1 test, with 1 failure (0 unexpected) in 73.812 (73.851) seconds
+	 Executed 1 test, with 1 failure (0 unexpected) in 73.812 (73.859) seconds
+
+Nebenbefund aus dem ersten Anlauf (15:20), im Test abgefangen, kein Produktivcode betroffen:
+ContextSeeder merkt sich das einmalige Saeen in den Nutzereinstellungen, die einen Lauf
+ueberleben — ein zweiter UI-Lauf auf demselben Simulator bekam deshalb einen In-Memory-Store
+ohne jeden Kontext, und der Test scheiterte am Aufbau statt an der Sache. Der Lauf setzt den
+Merker jetzt per Startargument '-contextsSeeded NO' zurueck.
