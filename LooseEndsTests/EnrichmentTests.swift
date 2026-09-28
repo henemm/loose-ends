@@ -682,3 +682,65 @@ struct RecognitionCoordinatorTests {
         #expect(aiRevisions.count == 1, "keine zweite KI-Revision auf dasselbe Feld")
     }
 }
+
+/// Folgebefund zu #136, ausgelöst durch Hennings Frage vom 2026-09-27, ob die modellfreien Teile
+/// im Simulator geprüft werden. Alle Tests oben setzen `processedAt` per `makeProcessed` von Hand
+/// und prüfen damit nur die Regel selbst — nicht, ob eine Aufgabe auf dem echten Weg je in die
+/// Vergleichsmenge gelangt. Genau das steht hier zur Prüfung.
+@Suite("Vergleichsmenge auf dem echten Weg (#136 Folgebefund)")
+struct RecognitionPoolReachabilityTests {
+
+    /// Der Ablauf, den jemand ohne Apple Intelligence erlebt (Simulator, nicht berechtigtes Gerät,
+    /// abgeschaltete Funktion): erfassen, Werte selbst setzen, dasselbe erneut erfassen.
+    /// Die Regel braucht kein Modell — also muss sie hier greifen.
+    @Test("Ohne Modell übernimmt die zweite wortgleiche Erfassung die Werte der ersten")
+    @MainActor func recognitionWorksWithoutTheModel() async throws {
+        let store = try TestStore()
+        let context = store.context
+        let garden = TaskContext(name: "Garten")
+        context.insert(garden)
+
+        let noModel = StubEnricher(unavailableReason: "Kein Apple Intelligence")
+
+        // Erste Erfassung, danach der Veredelungs-Durchgang wie in der App.
+        let first = TaskItem(rawText: "Rasen mähen")
+        context.insert(first)
+        try context.save()
+        await EnrichmentCoordinator(enricher: noModel, container: store.container).processPending()
+
+        // Der Nutzer setzt Dauer und Kontext selbst — der Normalfall, wenn kein Modell da ist.
+        first.duration = .minutes30
+        first.durationSourceRaw = FieldSource.user.rawValue
+        first.contexts = [garden]
+        first.contextsSourceRaw = FieldSource.user.rawValue
+        try context.save()
+
+        // Zweite Erfassung, wortgleich.
+        let second = TaskItem(rawText: "Rasen mähen")
+        context.insert(second)
+        try context.save()
+        await EnrichmentCoordinator(enricher: noModel, container: store.container).processPending()
+
+        #expect(second.duration == .minutes30, "die Dauer von vorhin muss übernommen werden")
+        #expect((second.contexts ?? []).map(\.name) == ["Garten"], "die Kontexte von vorhin auch")
+    }
+
+    /// Der Grund, isoliert: `processedAt` wird ausschließlich in `EnrichmentWriter.apply` gesetzt,
+    /// und das läuft nur, wenn das Modell verfügbar ist. Ohne Modell bleibt die Vergleichsmenge
+    /// (`processedAt != nil`) für immer leer, egal wie oft erfasst wird.
+    @Test("Ohne Modell bekommt keine Aufgabe je einen Verarbeitungs-Vermerk")
+    @MainActor func poolNeverFillsWithoutTheModel() async throws {
+        let store = try TestStore()
+        let context = store.context
+        let noModel = StubEnricher(unavailableReason: "Kein Apple Intelligence")
+
+        for index in 0..<3 {
+            context.insert(TaskItem(rawText: "Aufgabe \(index)"))
+        }
+        try context.save()
+        await EnrichmentCoordinator(enricher: noModel, container: store.container).processPending()
+
+        let pool = try context.fetch(FetchDescriptor<TaskItem>(predicate: #Predicate { $0.processedAt != nil }))
+        #expect(pool.count == 3, "wer die Regeln durchlaufen hat, gehört in die Vergleichsmenge")
+    }
+}

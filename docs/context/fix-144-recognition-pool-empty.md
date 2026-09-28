@@ -125,3 +125,144 @@ bekommt sie nur nie zu sehen.
 8. **Scope-Grenze:** Änderung an 2-4 Dateien erwartet (`EnrichmentCoordinator`, evtl. `TaskItem` +
    `EnrichmentWriter`, Tests, plus ADR/Spec-Text). Das Feld `energy` bleibt außerhalb (ADR-5), die
    Titel-Frage bleibt außerhalb (das Modell bleibt für Sprachverstehen zuständig).
+
+---
+
+## Analysis
+
+### Type
+
+Bug.
+
+### Reproduktion — selbst erbracht, nicht zitiert
+
+Lauf vom 2026-09-28 in diesem Worktree, `./scripts/sim.sh unit` nach `generate`, mit dem aus dem
+Untersuchungszweig `issue-144-pool-erreichbarkeit` (aa24b04) übernommenen RED-Test. Wörtlich:
+
+```
+✘ "Ohne Modell übernimmt die zweite wortgleiche Erfassung die Werte der ersten"
+    EnrichmentTests.swift:724: Expectation failed: second.duration == .minutes30
+    EnrichmentTests.swift:725: Expectation failed: (second.contexts ?? []).map(\.name) == ["Garten"]
+✘ "Ohne Modell bekommt keine Aufgabe je einen Verarbeitungs-Vermerk"
+    EnrichmentTests.swift:744: Expectation failed: pool.count == 3
+✘ Test run with 226 tests in 48 suites failed after 2.947 seconds with 3 issues.
+```
+
+Die Vergleichsmenge enthielt 0 statt 3 Aufgaben; die übrigen 223 Tests blieben grün. Der Test ist
+auf diesem Zweig committet, damit der Beleg einen `/clear` überlebt. Zusätzlich liegt der
+Bedienablauf im Simulator als Bildstrecke vor (`5700c6c`, Zweig `issue-144-pool-erreichbarkeit`):
+Bild 2 zeigt `Duration · 30 min`, Bild 4 bei wortgleichem Rohtext nur `Duration`.
+
+### Root Cause — im Code bestätigt, zwei Pfade zum selben Fehler
+
+Beide Pfade laufen über dieselbe Stelle: `task.processedAt = now` steht am Ende von
+`EnrichmentWriter.apply` (`EnrichmentWriter.swift:94`), der einzigen Schreibstelle im Produktpfad,
+und dieser Aufruf (`EnrichmentCoordinator.swift:60`) steht doppelt eingeschränkt:
+
+1. **Kein Modell** — umschlossen von `if modelUnavailable == nil` (Z. 50).
+2. **Fehlgeschlagener Modellaufruf** — nur im `try`-Erfolgsfall; ein Fehlschlag landet im `catch`
+   (Z. 62-64) und `apply` läuft nicht. Das trifft auch Hennings iPhone 16 Pro, nicht nur den
+   Simulator: eine Aufgabe, deren Modellaufruf einmal scheitert, fällt dauerhaft aus der
+   Vergleichsmenge.
+
+Die Vergleichsmenge ist `#Predicate { $0.processedAt != nil }` (Z. 160). Damit ist die Vorbedingung
+der Regel nicht *Verfügbarkeit* des Modells, sondern ein *erfolgreicher Modelllauf* — für eine
+Regel, die kein Modell braucht. Das widerspricht der Grundregel „Rules before the model".
+
+### Bewertung der drei Alternativen aus dem Issue
+
+| | Bricht bestehende Tests | Bricht Zusagen | Migration | Urteil |
+|---|---|---|---|---|
+| **1** `processedAt` nach dem Regelschritt setzen | **6 Tests hart** (Z. 181, 255, 284/285, 570, 636, 670), 2 weitere sinnentleert | ADR-4 (00-entscheidungen.md:90-92) und feat-95 AC-7/AC-8 **wörtlich** | keine | verworfen |
+| **2** eigener Vermerk `rulesAppliedAt` | keiner | ADR-4 wird ergänzt, feat-136 AC-7 umformuliert — additiv | additiv, optional, Lightweight | **empfohlen** |
+| **3** Pool über „hat einen Wert mit Herkunft" | 1 Test (Z. 538-554, AC-7) | feat-136 AC-7 wörtlich | keine | verworfen |
+
+**Warum Alternative 1 teurer ist, als sie aussieht:** Der Nachzügler-Fetch ist
+`processedAt == nil && statusRaw == unprocessed` (Z. 38). `processedAt` ohne Modell zu setzen heißt,
+dass eine ohne Apple Intelligence erfasste Aufgabe **nie mehr** Titel, Energie, Personen oder Projekt
+bekommt, auch wenn das Modell später verfügbar wird. Genau dieses Problem hat #95 bewusst gelöst;
+Alternative 1 führt es wieder ein. ADR-4 sagt dazu wörtlich: „Seit #95 markiert `processedAt` nur
+noch den Modelllauf … ‚genau einmal' gilt für das Modell, nicht für die regelbasierten Felder."
+
+**Warum Alternative 3 die falsche Zusage kippt:** Der Test „Zwei unverarbeitete Aufgaben im selben
+Lauf befruchten sich nicht (AC-7)" (Z. 538-554) baut zwei gleichzeitig unverarbeitete Aufgaben, von
+denen die erste eine nutzergesetzte Dauer trägt, und fordert, dass die zweite sie nicht übernimmt.
+Unter Alternative 3 wäre die erste im Pool. Zudem braucht Alternative 3 einen Laufzeitfilter, den
+der Code (Z. 152-156) ausdrücklich für unnötig erklärt, weil die Abgrenzung aus dem Fetch-Zeitpunkt
+folgt.
+
+**Eine vierte Alternative, geprüft und widerlegt:** „Pool = alle Aufgaben außer denen des laufenden
+Durchgangs" — kein neues Feld, keine Migration, AC-7 wörtlich erhalten. Trägt nicht: ohne Modell
+bleibt `status` dauerhaft `.unprocessed` (nur `EnrichmentWriter` setzt ihn, Z. 34-37), die erste
+Aufgabe steht also bei **jedem** Durchgang wieder im Pending-Fetch und wäre damit immer
+ausgeschlossen. Der Fehler bliebe bestehen.
+
+### Empfehlung
+
+**Alternative 2:** ein zweiter, optionaler Vermerk `rulesAppliedAt: Date?` auf `TaskItem`, gesetzt
+unmittelbar nach `applyRules` und unabhängig davon, ob ein Modell lief oder der Lauf glückte. Die
+Vergleichsmenge liest beide Vermerke.
+
+Sie ist die einzige Alternative, die keine der vier belegten Zusagen (ADR-4, feat-95 AC-7/AC-8,
+feat-136 AC-7) umstößt, keinen der 226 Tests bricht und beide Fehlerpfade zugleich schließt: Der
+Vermerk steht vor dem Modellaufruf, also greift er auch nach einem Fehlschlag. Sie ist zugleich die
+Alternative, die „Rules before the model" wörtlich umsetzt — der Regelpfad bekommt seinen eigenen
+Zustand statt beim Modell mitzumieten.
+
+**Pool ohne ODER-Prädikat.** Im gesamten Projekt existiert kein einziges `#Predicate` mit `||`
+(vier Prädikate insgesamt, alle `==`/`&&`). Ob SwiftData mit CloudKit-Store ein ODER übersetzt, ist
+hier unbelegt — deshalb zwei getrennte `FetchDescriptor` (`processedAt != nil`,
+`rulesAppliedAt != nil`) und Zusammenführung per `id` in Swift. Das Dedupe-Muster steht schon in
+`recognitionInputs` (Z. 162). Damit ist zugleich die Bestandsdaten-Lücke geschlossen: Aufgaben, die
+vor der Änderung veredelt wurden oder per CloudKit von einem Gerät mit Apple Intelligence kommen,
+tragen `processedAt` und bleiben im Pool.
+
+### Bewusste Folge, die in die Spec gehört
+
+Ab dem **zweiten** Durchgang kann eine noch unverarbeitete Aufgabe Quelle für eine andere noch
+unverarbeitete Aufgabe sein — beide tragen dann `rulesAppliedAt`. Der bestehende AC-7-Test bleibt
+grün (im ersten Durchgang trägt noch keine den Vermerk), aber die **Formulierung** von AC-7
+(„unverarbeitet") muss auf „der Regelschritt lief noch nicht" umgestellt werden.
+
+Sachlich ist das genau die gewollte Wirkung und kein aufgeweichter Schutz: Ohne Modell können Dauer
+und Kontexte überhaupt nur aus einer Nutzereingabe oder aus der Wiedererkennung selbst stammen. Das
+Saatkorn ist also immer ein Nutzerwert — und `RecognitionRule.winner` (Z. 85-90) bevorzugt
+nutzergesetzte Werte ausdrücklich. Der Schutzzweck von AC-7 („ein KI-Fehler vervielfältigt sich
+nicht still") bleibt erhalten, weil es ohne Modell keinen KI-Fehler gibt, der sich vervielfältigen
+könnte. Ein Selbsttreffer (eine Aufgabe liegt gleichzeitig im Pool und im Pending-Fetch) ist
+wirkungslos: die Guards `Feld == nil` und `!userHasTouched(…)` blockieren jedes Schreiben.
+
+### Affected Files
+
+| File | Change Type | Description |
+|------|-------------|-------------|
+| `Shared/Models/TaskItem.swift` | MODIFY | `var rulesAppliedAt: Date?` neben `processedAt`, optional (CloudKit) |
+| `Shared/Enrichment/EnrichmentCoordinator.swift` | MODIFY | Vermerk nach `applyRules` setzen; `recognitionInputs` auf zwei Fetches + Dedupe |
+| `LooseEndsTests/EnrichmentTests.swift` | MODIFY | RED-Tests liegen vor; dazu: Fehlschlag-Pfad, Bestandsdaten, Dedupe, Modellfreiheit nach Muster `ruleWritesDueDateWithoutModel` |
+| `LooseEndsUITests/RecognitionWalkthroughTests.swift` | CREATE | Bedienablauf im Simulator (aus `5700c6c` übernehmen), DoD-Pflicht |
+| `docs/project/00-entscheidungen.md` | MODIFY | ADR-4 um einen Satz zu `rulesAppliedAt` ergänzen |
+| `docs/specs/enrichment/feat-136-wiedererkennung.md` | MODIFY | AC-7 umformulieren, Implementierungsnotiz zur Vergleichsmenge nachziehen |
+
+### Scope Assessment
+
+- Dateien: 6 (davon 2 Produktivcode) — Grenze „4-5 Dateien" gilt für Produktivcode, Tests und Doku
+  zählen gesondert; der Produktivanteil liegt bei 2.
+- Geschätzte LoC: Produktivcode **+25/-8**, Tests **+120**, Doku **+20** — zusammen unter 250.
+- Risiko: **niedrig**. Additives optionales Feld ohne Migrationsplan (Muster wie `showInCalendar`,
+  `repeatRule`); `processedAt` behält seine Bedeutung; keine View, keine `ViewRules`, kein Widget
+  liest die berührten Felder (Volltextsuche negativ).
+
+### Kein Entwurf nötig
+
+Es entsteht kein neues Layout und keine neue Zeile. Sichtbar wird nur, dass eine bestehende
+Darstellung endlich Werte trägt — Bild 2 des Simulator-Durchlaufs zeigt den Zielzustand bereits.
+
+### Nebenbefund
+
+Der beim Simulator-Durchlauf gefundene `ContextSeeder`-Fehler ist bereits als **#146** erfasst und
+bleibt außerhalb dieses Vorgangs.
+
+### Open Questions
+
+Keine. Die Alternativenwahl ist eine technische Entscheidung und ist oben belegt getroffen; die
+Umformulierung von AC-7 ist ihre dokumentarische Folge, nicht eine zweite Entscheidung.
