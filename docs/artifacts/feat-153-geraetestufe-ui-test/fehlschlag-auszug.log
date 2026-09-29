@@ -1,0 +1,98 @@
+    t =    27.06s Tap "field_contexts" Any
+    t =    27.06s     Wait for com.henning.looseends to idle
+    t =    27.06s     Find the "field_contexts" Any
+    t =    27.06s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    27.15s     Check for interrupting elements affecting "field_contexts" Button
+    t =    27.17s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    27.23s         Find: Descendants matching predicate identifier == "NotificationShortLookView" OR elementType == 7
+    t =    27.27s     Synthesize event
+    t =    27.57s     Wait for com.henning.looseends to idle
+    t =    27.95s Waiting 5.0s for Any (First Match) to exist
+    t =    28.98s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =    28.98s         Checking existence of `Any (First Match)`
+    t =    28.99s             Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    29.10s Tap Any (First Match)
+    t =    29.10s     Wait for com.henning.looseends to idle
+    t =    29.10s     Find the Any (First Match)
+    t =    29.10s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    29.20s     Check for interrupting elements affecting "contextOption_AB22345C-B8C6-4B60-9E09-C8EA07372AC1" Button
+    t =    29.22s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    29.29s         Find: Descendants matching predicate identifier == "NotificationShortLookView" OR elementType == 7
+    t =    29.34s     Synthesize event
+    t =    29.63s     Wait for com.henning.looseends to idle
+    t =    29.93s Waiting 5.0s for Button (First Match) to exist
+    t =    30.95s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    30.95s         Checking existence of `Button (First Match)`
+    t =    30.95s             Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    31.01s Tap Button (First Match)
+    t =    31.01s     Wait for com.henning.looseends to idle
+    t =    31.02s     Find the Button (First Match)
+    t =    31.02s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    31.09s     Check for interrupting elements affecting "BackButton" Button
+    t =    31.11s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    31.19s         Find: Descendants matching predicate identifier == "NotificationShortLookView" OR elementType == 7
+    t =    31.19s     Synthesize event
+    t =    31.52s     Wait for com.henning.looseends to idle
+    t =    32.88s Checking `Expect predicate `label CONTAINS "Garden"` for object "field_contexts" Button`
+    t =    32.88s     Find the "field_contexts" Button
+    t =    32.89s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    33.00s     Capturing element debug description
+    t =    33.14s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    33.26s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    33.36s         Find: Descendants matching type Any
+    t =    33.36s         Find: Elements matching predicate '"field_contexts" IN identifiers'
+    t =    33.37s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    33.45s         Find: Descendants matching type Any
+    t =    33.46s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    34.93s Checking `Expect predicate `label CONTAINS "Garden"` for object "field_contexts" Button`
+    t =    34.93s     Find the "field_contexts" Button
+    t =    34.94s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    35.05s     Capturing element debug description
+    t =    35.20s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    35.31s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    35.42s         Find: Descendants matching type Any
+    t =    35.42s         Find: Elements matching predicate '"field_contexts" IN identifiers'
+    t =    35.42s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    35.53s         Find: Descendants matching type Any
+    t =    35.53s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    36.95s Checking `Expect predicate `label CONTAINS "Garden"` for object "field_contexts" Button`
+    t =    36.95s     Find the "field_contexts" Button
+    t =    36.95s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    37.07s     Capturing element debug description
+    t =    37.17s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    37.27s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    37.37s         Find: Descendants matching type Any
+    t =    37.37s         Find: Elements matching predicate '"field_contexts" IN identifiers'
+    t =    37.38s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    37.47s         Find: Descendants matching type Any
+    t =    37.47s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    38.95s Checking `Expect predicate `label CONTAINS "Garden"` for object "field_contexts" Button`
+    t =    38.95s     Find the "field_contexts" Button
+    t =    38.95s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    39.05s     Capturing element debug description
+    t =    39.18s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    39.30s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    39.40s         Find: Descendants matching type Any
+    t =    39.40s         Find: Elements matching predicate '"field_contexts" IN identifiers'
+    t =    39.41s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    39.51s         Find: Descendants matching type Any
+    t =    39.52s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    40.88s Checking `Expect predicate `label CONTAINS "Garden"` for object "field_contexts" Button`
+    t =    40.88s     Find the "field_contexts" Button
+    t =    40.89s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    41.00s     Capturing element debug description
+    t =    41.11s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    41.22s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    41.32s         Find: Descendants matching type Any
+    t =    41.32s         Find: Elements matching predicate '"field_contexts" IN identifiers'
+    t =    41.32s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    41.42s         Find: Descendants matching type Any
+    t =    41.43s         Requesting snapshot of accessibility hierarchy for app with pid 69933
+    t =    42.06s Find the "field_contexts" Button
+    t =    42.06s     Requesting snapshot of accessibility hierarchy for app with pid 69933
+/Users/hem/Developer/loose-ends/.claude/worktrees/piped-wiggling-boole/LooseEndsUITests/RecognitionWalkthroughTests.swift:133: error: -[LooseEndsUITests.RecognitionWalkthroughTests testWordEqualRecaptureTakesOverDurationAndContext] : XCTAssertTrue failed - Der Kontext steht nicht in der Detailansicht, Beschriftung war Contexts
+    t =    42.18s Tear Down
+Test Case '-[LooseEndsUITests.RecognitionWalkthroughTests testWordEqualRecaptureTakesOverDurationAndContext]' failed (42.313 seconds).
+Test Suite 'RecognitionWalkthroughTests' failed at 2026-09-29 07:37:23.747.
+	 Executed 1 test, with 1 failure (0 unexpected) in 42.313 (42.314) seconds
+Test Suite 'LooseEndsUITests.xctest' failed at 2026-09-29 07:37:23.748.
