@@ -141,7 +141,8 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
 
 ## Abnahme in drei Stufen
 
-Die Reihenfolge ist verbindlich. Keine Stufe wird übersprungen, keine vorgezogen.
+Die Reihenfolge ist verbindlich, keine Stufe wird vorgezogen. Stufe 1 und 2 werden nie
+übersprungen; Stufe 3 nur, wenn der Schnitt einen Pfad der Geräteliste berührt (`CLAUDE.md`).
 
 1. **Tests** — `./scripts/sim.sh unit` und der betroffene UI-Test müssen grün sein.
 2. **Simulator** — `./scripts/sim.sh build`, `launch`, `screenshot`: der betroffene Ablauf wird

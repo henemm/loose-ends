@@ -262,3 +262,109 @@ Nach dem zweiten Stempellauf (nötig, weil die F001-Korrektur eine der gehashten
 stand er doppelt in der Datei; das Duplikat wurde entfernt. Die Prüfsummen oben sind der Stand nach
 der F001-Korrektur — `LooseEndsUITests/RecognitionWalkthroughTests.swift` trägt sha256:92a6ccf2…,
 nicht mehr den Stand von vor der Korrektur.
+
+### Runde 4 - Nachpruefung der Doku-Korrektur aus Phase 7
+
+Geprueft wurde ausschliesslich die nach dem Stempellauf vorgenommene Aenderung an
+docs/project/04-stand.md (git status zeigt sie als einzige Modifikation: `M docs/project/04-stand.md`,
+sonst nur ungetrackte `.claude/` und `docs/artifacts/.../validierung/`).
+
+1. Widerspruch echt? `git show 92c9455 -- CLAUDE.md` (Commit zu #154, 2026-09-29) zeigt: CLAUDE.md
+   traegt seit #154 die Pfadtabelle und den Satz "Berührt der Schnitt keinen dieser Pfade, endet die
+   Abnahme nach Stufe 2 ... Berührt er einen, läuft [Stufe 3]". docs/project/04-stand.md:144 (Stand
+   vor der Runde-4-Aenderung) sagte dagegen unveraendert "Keine Stufe wird übersprungen, keine
+   vorgezogen." Das ist ein echter Widerspruch, kein eingebildeter, und er ist sogar in der
+   Commit-Message von 92c9455 selbst dokumentiert: "#154 zieht docs/project/04-stand.md nach".
+2. AC-10 lebt weiter: `grep -q "device-status" docs/project/04-stand.md && ! grep -q
+   "3\..*device-test" docs/project/04-stand.md` selbst ausgefuehrt -> exit 0 (PASS). Die
+   Runde-4-Aenderung liegt oberhalb der von AC-10 geprueften Zeilen (149-176) und veraendert dort
+   nichts.
+3. Neuer Widerspruch? Volltext von docs/project/04-stand.md:142-185 gelesen. Die Ueberschrift
+   "Abnahme in drei Stufen" bleibt zutreffend: Es gibt weiterhin genau drei nummerierte Stufen
+   (Tests, Simulator, iPhone), nur Stufe 3 ist jetzt bedingt - das deckt sich mit den bereits
+   bestehenden Zeilen 153/165 ("Stufe 3 fährt seit #153 keinen nachgespielten Bedienablauf mehr",
+   "device-status zeigt nur..."), die schon vor Runde 4 im Dokument standen. docs/project/
+   00-entscheidungen.md per grep nach "Stufe"/"Abnahme"/"Geräteliste" durchsucht: keine Treffer,
+   also kein Gegensatz dort. Kein weiterer Fund im Rest von 04-stand.md ("immer"/"jede Änderung"
+   ergab 0 Treffer ausserhalb der bekannten Stellen).
+4. Verweis "(`CLAUDE.md`)" tragfaehig? CLAUDE.md:64-73 (gelesen) enthaelt die Pfadtabelle unter der
+   fett gesetzten Ueberschrift "Stage 3 ... is mandatory exactly when...", und CLAUDE.md:78 nutzt
+   selbst woertlich die Formulierung "Kein Pfad der Geräteliste berührt." Der Begriff "Geräteliste"
+   ist also bereits etablierter CLAUDE.md-Wortlaut, kein neu erfundener Verweis - der Rueckverweis
+   trifft eine real vorhandene, eindeutig auffindbare Tabelle.
+5. Scope-Einschaetzung: Der Mangel stammt nicht aus #153, sondern aus #154. Beleg: `gh issue view
+   154` ist weiterhin OPEN und listet als ERSTEN (nicht abgehakten) DoD-Punkt woertlich:
+   "docs/project/04-stand.md, Abschnitt 'Abnahme in drei Stufen', trägt die Liste und die
+   Entscheidungsregel (heute steht dort noch 'keine Stufe wird übersprungen')" - das ist exakt der
+   in Runde 4 geaenderte Satz. Gleichzeitig liegt dieser Satz mitten in dem Absatz (Z. 142-176), den
+   #153 selbst schon regulaer umschreibt (AC-10/11/12 decken genau diesen Bereich ab) - die
+   Korrektur an derselben Stelle mit demselben Edit zu erledigen ist daher vertretbar und kein
+   Griff in fremdes Terrain. Nicht vertretbar ist, dass Issue #154 dadurch teilweise (DoD-Punkt 1)
+   erledigt wird, ohne dass die Issue-DoD-Liste das vermerkt - die uebrigen drei DoD-Punkte von
+   #154 (Erzwingungsmechanismus, Widerspruchsfreiheits-Pruefung, Beispiel-Abweisung) bleiben davon
+   unberuehrt und offen.
+6. Gegenprobe sonstige Dateien: `git status --porcelain` zeigt nur `M docs/project/04-stand.md`
+   als Modifikation (plus ungetrackte `.claude/` und `docs/artifacts/.../validierung/`, beides keine
+   gestempelten Dateien). Die fuenf uebrigen gestempelten Dateien wurden einzeln mit `shasum -a 256`
+   neu gehasht und stimmen zeichengleich mit den im Protokoll hinterlegten Werten ueberein:
+   CLAUDE.md 72a3a368..., LooseEndsUITests/RecognitionWalkthroughTests.swift 92a6ccf2...,
+   docs/project/00-entscheidungen.md c30797b0..., docs/specs/tooling/feat-153-geraetestufe-ui-test.md
+   55cd502c..., scripts/sim.sh 6dab304e... - keine davon veraendert.
+
+Finding:
+  ID: F003
+  Severity: LOW
+  Category: anti_pattern
+  Code reference: docs/project/04-stand.md:144-145
+  Description: Die Aenderung behebt DoD-Punkt 1 von Issue #154 woertlich ("heute steht dort noch
+    'keine Stufe wird übersprungen'"), waehrend #154 als Issue weiterhin OPEN bleibt und seine
+    DoD-Liste diesen Punkt nicht als erledigt fuehrt.
+  Spec requirement: Kein AC von #153 verlangt diese Aenderung; sie ist eine im Rahmen der
+    Phase-7-Konsistenzpruefung zusaetzlich vorgenommene Korrektur.
+  Conflict: Kein funktionaler Konflikt - die Aenderung ist inhaltlich korrekt und wurde unter
+    Punkt 1-4 oben als widerspruchsfrei bestaetigt. Der Konflikt ist rein Prozess/Tracking: die
+    Issue-Buchhaltung von #154 divergiert von der tatsaechlich schon erledigten Teilarbeit.
+  Remediation: Beim Schliessen von #153 (oder als eigener kleiner Schritt) DoD-Punkt 1 von #154
+    abhaken mit Verweis auf den #153-Commit, der ihn erledigt hat. Kein Code- oder Dokumenten-Fix
+    noetig, nur Issue-Pflege - analog zu F002 aus Runde 2/3.
+
+- [x] Punkt 1 Widerspruch echt: `git show 92c9455 -- CLAUDE.md` und der Vor-Runde-4-Wortlaut von
+      04-stand.md:144 belegen einen echten, in der Commit-Message von 92c9455 selbst benannten
+      Widerspruch.
+- [x] Punkt 2 AC-10 haelt: `grep -q "device-status" docs/project/04-stand.md && ! grep -q
+      "3\..*device-test" docs/project/04-stand.md` selbst ausgefuehrt, exit 0.
+- [x] Punkt 3 kein neuer Widerspruch: docs/project/04-stand.md:142-185 und
+      docs/project/00-entscheidungen.md (grep) gelesen, Ueberschrift "Abnahme in drei Stufen"
+      bleibt zutreffend (weiterhin drei nummerierte Stufen, Stufe 3 bedingt), keine widersprechende
+      Stelle gefunden.
+- [x] Punkt 4 Verweis traegt: CLAUDE.md:64-78 gelesen, Pfadtabelle und woertliche Formulierung
+      "Geräteliste" dort vorhanden.
+- [x] Punkt 5 Scope benannt: `gh issue view 154` zeigt OPEN mit passendem, unabgehaktem DoD-Punkt 1
+      - Einschaetzung: inhaltlich am richtigen Ort (selber Absatz, den #153 ohnehin umschreibt),
+      Tracking-Luecke als F003 (LOW) vermerkt statt verschwiegen.
+- [x] Punkt 6 keine weitere gestempelte Datei veraendert: `git status --porcelain` plus
+      `shasum -a 256` auf allen fuenf uebrigen gestempelten Dateien bestaetigen Uebereinstimmung mit
+      dem Protokoll.
+
+===========================================
+VERDICT: VERIFIED
+===========================================
+Die Runde-4-Aenderung an docs/project/04-stand.md haelt der Nachpruefung stand: der behobene
+Widerspruch war real und ist mit Quelle belegt, AC-10 bleibt gruen, kein neuer Widerspruch entsteht,
+der Verweis auf die CLAUDE.md-Geraeteliste ist tragfaehig, und ausser dieser einen Datei wurde keine
+der sechs gestempelten Dateien veraendert.
+Tests: keine neuen Testlaeufe noetig (reine Doku-Aenderung ohne Codepfad); AC-10-Regex-Pruefung
+selbst ausgefuehrt und gruen.
+Edge cases: alle sechs geforderten Pruefpunkte einzeln nachvollzogen, keiner gebrochen.
+Regressions: keine - Aenderung betrifft nur Fliesstext in einem Markdown-Dokument.
+Checklist: 6/6 Pruefpunkte dieser Runde bewiesen; ein neuer, nicht blockierender Fund F003 (LOW,
+Issue-Tracking-Luecke zu #154) ergaenzt, analog zu F002 kein Codemangel.
+
+## Geprüfte Dateien
+
+- sha256:72a3a368935c42ab6ab9899c78a6c8f21ed0a10c04714c474004a664bf037442  CLAUDE.md
+- sha256:92a6ccf2b8e8880dedaa485c4be3ad1e401c6b5e22693ab7feb95379dc44a0d3  LooseEndsUITests/RecognitionWalkthroughTests.swift
+- sha256:c30797b07e2d5adecc5e6ce9c4b8e3f334679e143f2329461d318ed4611af1f0  docs/project/00-entscheidungen.md
+- sha256:22edd207a46fb6fc97f5e2c848e037b87c7681d9950ae62327ccec6a8c9f24f2  docs/project/04-stand.md
+- sha256:55cd502ccf6dd41e4fd63be0a64e4b414432d6b40933d3f694b6c456ec895fb5  docs/specs/tooling/feat-153-geraetestufe-ui-test.md
+- sha256:6dab304eb5793ce63804d00cc1ed6d73ce045a3bd8b69b2ae88870da9e5c9d4f  scripts/sim.sh
