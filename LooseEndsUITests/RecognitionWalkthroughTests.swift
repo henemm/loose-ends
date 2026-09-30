@@ -5,10 +5,15 @@ import XCTest
 /// Testaufbau, der sich seinen Ausgangszustand selbst herstellt (die Lehre aus #136).
 ///
 /// `--ui-testing` schaltet auf einen In-Memory-Store, lässt aber den echten
-/// `FoundationModelsEnricher` laufen: im Simulator praktisch immer ohne Apple Intelligence — genau
-/// der Zielpfad dieser Änderung. Die zweite Erfassung ist bewusst **wortgleich, nicht
-/// zeichengleich** ("mähen Rasen" statt "Rasen mähen"): `RecognitionRule` vergleicht Wortmengen,
-/// und so bleiben die beiden Zeilen in der Liste unterscheidbar.
+/// `FoundationModelsEnricher` laufen: im Simulator praktisch immer ohne Apple Intelligence. Die
+/// Zusicherungen prüfen trotzdem das **Ergebnis** (steht der Wert dran?) und nie den Bedienweg
+/// (habe ich ihn angetippt?) — robuster gegenüber einem Umschalter, den ein Modell schon gesetzt
+/// haben könnte, und einem Rohtext, den es geglättet hat. Die Verschärfung der Zusicherungen auf
+/// Wertgleichheit statt Teilzeichenfolgen ist #158.
+///
+/// Die zweite Erfassung ist bewusst **wortgleich, nicht zeichengleich** ("mähen Rasen" statt
+/// "Rasen mähen"): `RecognitionRule` vergleicht Wortmengen, und so bleiben die beiden Zeilen in
+/// der Liste unterscheidbar.
 final class RecognitionWalkthroughTests: XCTestCase {
     private static let firstText = "Rasen mähen"
     private static let secondText = "mähen Rasen"
@@ -51,6 +56,26 @@ final class RecognitionWalkthroughTests: XCTestCase {
         app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH %@ AND label CONTAINS %@", "taskRow_", text))
             .firstMatch
+    }
+
+    /// Oberste Zeile der „Neu"-Liste. `ViewRules` sortiert absteigend nach Erfassungszeit, die
+    /// jüngste Erfassung steht also immer oben — unabhängig davon, ob das Modell ihren Titel
+    /// inzwischen geglättet hat und eine Suche nach dem Rohtext damit ins Leere liefe.
+    @MainActor
+    private func topRow(in app: XCUIApplication) -> XCUIElement {
+        app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "taskRow_"))
+            .firstMatch
+    }
+
+    /// Hält den in Schritt 3 genommenen Zweig als benannten Textanhang fest: ohne diesen Vermerk
+    /// beweist ein grüner Gerätelauf nicht, dass der bedingte Zweig überhaupt gelaufen ist.
+    @MainActor
+    private func note(_ text: String, in app: XCUIApplication) {
+        let attachment = XCTAttachment(string: text)
+        attachment.name = "schritt3-zweig"
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 
     @MainActor
@@ -128,23 +153,38 @@ final class RecognitionWalkthroughTests: XCTestCase {
         let garden = app.descendants(matching: .any)
             .matching(NSPredicate(format: "label == %@", Self.contextLabel)).firstMatch
         XCTAssertTrue(garden.waitForExistence(timeout: 5), "Der Editor bietet \(Self.contextLabel) nicht an")
-        garden.tap()
+        // Mit Apple Intelligence kann der Kontext schon stehen (`.isSelected` aus FieldEditorView);
+        // ein unbedingtes Antippen würde ihn dann abwählen und den Test aus dem falschen Grund rot
+        // machen. Welcher Zweig lief, steht als Anhang im Ergebnisbündel.
+        let alreadySet = garden.isSelected
+        note(alreadySet ? "Schritt 3: Kontext war bereits gesetzt (Modell) — nicht angetippt"
+                        : "Schritt 3: Kontext war nicht gesetzt — angetippt", in: app)
+        if !alreadySet {
+            garden.tap()
+        }
         back(in: app)
         XCTAssertTrue(waitForLabel(Self.contextLabel, of: contextsRow),
                       "Der Kontext steht nicht in der Detailansicht, Beschriftung war \(contextsRow.label)")
         shot(app, "2-werte-von-hand-gesetzt")
 
         // 4. Zurück in die Liste und wortgleich erneut erfassen.
+        // Geprüft wird, dass die Liste wieder da ist — nicht, dass die erste Zeile noch steht: hat
+        // das Modell ihren Titel gesetzt, verlässt sie „Neu", sobald ihre KI-Vermerke gesehen sind.
         back(in: app)
-        XCTAssertTrue(first.waitForExistence(timeout: 5), "Nicht zurück in der Liste")
+        let captureButton = app.buttons["captureButton"]
+        XCTAssertTrue(captureButton.waitForExistence(timeout: 5), "Nicht zurück in der Liste")
         capture(Self.secondText, in: app)
-        let second = row(containing: Self.secondText, in: app)
+        // Die zweite Aufgabe wird über die oberste Zeile gefunden und über ihren unveränderlichen
+        // Rohtext bestätigt: eine Labelsuche nach „mähen Rasen" bricht, sobald das Modell glättet.
+        let second = topRow(in: app)
         XCTAssertTrue(second.waitForExistence(timeout: 10), "Die zweite Aufgabe steht nicht in Neu")
         shot(app, "3-wortgleich-erneut-erfasst")
 
         // 5. Der Nachweis: die zweite Aufgabe trägt Dauer und Kontext der ersten.
-        XCTAssertTrue(second.waitForExistence(timeout: 5))
         second.tap()
+        let secondRawText = element("detailRawText", in: app)
+        XCTAssertTrue(waitForLabel(Self.secondText, of: secondRawText),
+                      "Die geöffnete Detailansicht zeigt nicht den zweiten Rohtext")
         let secondDuration = element("field_duration", in: app)
         XCTAssertTrue(secondDuration.waitForExistence(timeout: 5), "Die Detailansicht listet keine Dauer")
         XCTAssertTrue(waitForLabel(Self.durationLabel, of: secondDuration),

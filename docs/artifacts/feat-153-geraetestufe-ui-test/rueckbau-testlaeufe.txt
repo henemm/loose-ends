@@ -1,0 +1,54 @@
+=== Testläufe zum Rückbau #153 — 2026-09-30 09:48 ===
+Commit: bb3170a (Arbeitsstand, Rückbau noch nicht committet)
+Projekt vor den Läufen neu erzeugt: ./scripts/sim.sh generate → "Projekt erzeugt."
+
+--- AC-7: ./scripts/sim.sh unit ---
+bestandene Fälle: 229, keine fehlgeschlagen
+Test session results: Test-LooseEnds-2026.09.30_09-45-35-+0200.xcresult
+Test Succeeded
+[sim] Unit-Tests bestanden.
+Exit-Code 0.
+
+Nachbemerkung: Der Lauf hat wie immer die drei Messberichte unter docs/reference/
+überschrieben (date-title-fidelity.md, focusblox-calibration-report.md,
+retrieval-leave-one-out-rules.md). Sie wurden per `git checkout -- docs/reference/`
+zurückgesetzt, bevor irgendetwas committet wurde; `git status docs/reference/` ist danach leer.
+
+--- AC-8: ./scripts/sim.sh test RecognitionWalkthroughTests (iPhone 17, Simulator) ---
+Test Suite 'RecognitionWalkthroughTests' started at 2026-09-30 09:47:00.659
+  ✔ testWordEqualRecaptureTakesOverDurationAndContext (61.959 seconds)
+Executed 1 test, with 0 failures (0 unexpected) in 61.959 seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-09-30 09:48:02.626.
+Test session results: Test-LooseEnds-2026.09.30_09-46-47-+0200.xcresult
+Test Succeeded
+[sim] UI-Test bestanden.
+Exit-Code 0.
+
+Damit ist belegt: Die drei Testeingriffe aus #153 (bedingtes garden.tap() über .isSelected,
+topRow(in:) mit detailRawText-Abgleich, Rückkehr über captureButton) bleiben ohne den
+Gerätelauf funktionsfähig — sie waren, wie die Spec begründet, unabhängig von der
+Abnahmestufe richtig.
+
+--- AC-8, zweiter Lauf nach der F001-Korrektur (Kopfkommentar Absatz 1) ---
+Grund für den erneuten Lauf: Der Prüfdialog fand, dass auch der erste Absatz des
+Kopfkommentars beim #153-Aufbau umformuliert worden war. Er wurde zurückgesetzt. Eine
+Änderung an einer Testdatei gilt erst als bewiesen, wenn der Test danach wieder läuft —
+auch bei einem reinen Kommentar.
+
+Test Suite 'RecognitionWalkthroughTests' started at 2026-09-30 11:16
+  ✔ testWordEqualRecaptureTakesOverDurationAndContext (98.493 seconds)
+Executed 1 test, with 0 failures (0 unexpected) in 98.493 seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-09-30 11:17:57.356.
+Test session results: Test-LooseEnds-2026.09.30_11-16-01-+0200.xcresult
+Test Succeeded
+[sim] UI-Test bestanden.
+Exit-Code 0.
+
+AC-7 wurde nicht erneut gefahren: Die korrigierte Datei liegt ausschließlich im
+UI-Test-Target, keines der Unit-Test-Ziele enthält sie. Der Prüf-Agent hat den
+Unit-Lauf im Rahmen seiner eigenen Prüfung zusätzlich unabhängig wiederholt, ebenfalls grün.
+
+--- Kein Gerätekontakt in diesem Lauf ---
+Weder `devicectl` noch eine Geräte-Destination wurde aufgerufen. Der Befehl
+`./scripts/sim.sh device-test` wurde erst nach dem Entfernen der Dispatch-Zeile aufgerufen
+und trifft seither den Fehlerzweig ("Unbekannter Befehl: device-test", Exit 1).

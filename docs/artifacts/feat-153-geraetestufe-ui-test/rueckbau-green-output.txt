@@ -1,0 +1,24 @@
+=== Rückbau-Prüfung #153 — Stand: 2026-09-30 11:15:11 ===
+Commit: bb3170a
+
+PASS  AC-1   device-test wird abgewiesen (Exit 1, 'Unbekannter Befehl')
+PASS  AC-2   cmd_device_test: 0 Treffer
+PASS  AC-2   device_probe_locked: 0 Treffer
+PASS  AC-2   acquire_device_lock: 0 Treffer
+PASS  AC-2   release_device_lock: 0 Treffer
+PASS  AC-2   cleanup_locks: 0 Treffer
+PASS  AC-2   MAIN_BUNDLE_ID: 0 Treffer
+PASS  AC-2   DEVICE_LOCK_DIR: 0 Treffer
+PASS  AC-2   DEVICE_LOCK_ACQUIRED: 0 Treffer
+PASS  AC-3   trap release_lock EXIT steht genau einmal
+PASS  AC-4   scripts/tests/device-test.sh ist weg und unversioniert
+PASS  AC-5   scripts/tests/ ohne versionierten Eintrag
+PASS  AC-6   keine Nennung in scripts/CLAUDE.md/docs-project/UITests
+PASS  AC-6   Gegenprobe: 2 Begründungsdokumente nennen ihn weiterhin
+PASS  AC-9   cmd_device_status liest nur (device info details)
+PASS  AC-10  04-stand.md nennt device-status, nicht mehr device-test
+PASS  AC-11  ADR-11-Zusatz ist ersetzt
+PASS  AC-12  CLAUDE.md verweist auf device-status
+PASS  AC-13  kein Produktpfad im Diff gegen main
+
+ERGEBNIS: alle geprüften Kriterien erfüllt (GREEN).

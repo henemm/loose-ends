@@ -80,8 +80,12 @@ touches any of these paths:
 
 Berührt der Schnitt keinen dieser Pfade, endet die Abnahme nach Stufe 2, und das wird im
 Abschlussbericht mit genau diesem Satz begründet: „Kein Pfad der Geräteliste berührt." Berührt er
-einen, läuft der volle Bedienablauf über `./scripts/sim.sh device-test <Klasse>` — nicht der bloße
-Start. Im Zweifel läuft die Stufe.
+einen, läuft `./scripts/sim.sh device-status` (liest nur, installiert und startet nichts) — für
+Apple Intelligence zusätzlich die Labor-App, die Henning selbst antippt. Einen nachgespielten
+Bedienablauf auf dem Gerät gibt es seit dem Rückbau von #153 nicht mehr: Der Versuch dazu
+überschrieb Hennings produktive Installation und bewies nicht, wofür er gebaut war. Für Watch,
+Widgets, Share, Mikrofon und Mitteilungen bleibt der automatisierte Nachweis auf echter Hardware
+damit offen (`docs/project/04-stand.md`, #156, #143, #160). Im Zweifel läuft die Stufe.
 
 **⛔ Ausliefern ist Teil jedes Tickets — der letzte Schritt vor Hennings eigenem Test.** Gearbeitet
 wird in einem Worktree, gebaut wird bei Henning aus `/Users/hem/Developer/loose-ends`. Nach dem Merge
