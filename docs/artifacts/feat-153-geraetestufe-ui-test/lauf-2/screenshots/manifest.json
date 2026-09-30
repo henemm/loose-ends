@@ -1,0 +1,53 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008140-00111D582681801C",
+        "deviceName" : "Hennings iPhone 16 Pro",
+        "exportedFileName" : "7FBFFDEB-3923-499D-B1C3-C51174CF45A4.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "4-zweite-aufgabe-mit-uebernommenen-werten_0_8178FC0A-434E-408B-B36B-6237FDD0A8FC.png",
+        "timestamp" : 1790742128.704
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008140-00111D582681801C",
+        "deviceName" : "Hennings iPhone 16 Pro",
+        "exportedFileName" : "6EA0B814-86DD-4D82-B26B-0B166F05C81D.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "3-wortgleich-erneut-erfasst_0_53D6D7AF-76A6-4302-B5CF-72D0CB6479F5.png",
+        "timestamp" : 1790742121.016
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008140-00111D582681801C",
+        "deviceName" : "Hennings iPhone 16 Pro",
+        "exportedFileName" : "4066B4A0-08C6-4575-9B8C-65F3B47B55BE.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "2-werte-von-hand-gesetzt_0_A8BFA46E-98A0-42AD-B2E0-04190DFB779D.png",
+        "timestamp" : 1790742108.891
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008140-00111D582681801C",
+        "deviceName" : "Hennings iPhone 16 Pro",
+        "exportedFileName" : "89A14954-89E0-4C0C-A02F-ABEEAFECAADB.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "schritt3-zweig_0_CE14EC8A-AE7B-4BBD-B792-B038FF9F53D3.txt",
+        "timestamp" : 1790742105.691
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008140-00111D582681801C",
+        "deviceName" : "Hennings iPhone 16 Pro",
+        "exportedFileName" : "758C4C15-E833-4668-8D31-F41039C05E50.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "1-erste-aufgabe-erfasst_0_7AA313F4-6281-443D-9C75-012414E2D1BA.png",
+        "timestamp" : 1790742093.823
+      }
+    ],
+    "testIdentifier" : "RecognitionWalkthroughTests/testWordEqualRecaptureTakesOverDurationAndContext()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/RecognitionWalkthroughTests/testWordEqualRecaptureTakesOverDurationAndContext"
+  }
+]

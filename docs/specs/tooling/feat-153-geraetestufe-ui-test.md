@@ -2,12 +2,12 @@
 entity_id: feat-153-geraetestufe-ui-test
 type: feature
 created: 2026-09-29
-updated: 2026-09-29
+updated: 2026-09-30
 status: draft
 workflow: feat-153-geraetestufe-ui-test
 ---
 
-# Spec: #153 — Die Gerätestufe fährt den Bedien-Ablauf, statt nur den Start zu belegen
+# Spec: #153 — Rückbau: Die Gerätestufe fährt keine Bedienabläufe mehr
 
 ## Approval
 
@@ -15,48 +15,111 @@ workflow: feat-153-geraetestufe-ui-test
 
 ## Purpose
 
-Stufe 3 der Abnahme (`./scripts/sim.sh device`) belegt heute nur, dass die App auf Hennings iPhone
-16 Pro startet und nicht abstürzt — nicht, dass das geänderte Feature funktioniert
-(`feedback-device-stage-is-ceremony`, #153). Diese Spec gibt der Gerätestufe einen neuen Befehl,
-`./scripts/sim.sh device-test <Klasse[/test]>`, der einen benannten UI-Test signiert auf dem Gerät
-ausführt, gesperrte oder während des Laufs gesperrte Hardware mit einer eindeutigen Meldung meldet
-statt endlos zu warten, und Screenshots automatisch als Artefakt ablegt. Der als Nachweis
-vorgesehene Ablauf, `RecognitionWalkthroughTests` (#144), wird dabei **modellfest** gemacht: Auf dem
-Gerät läuft Apple Intelligence mit, und der unveränderte Test wird nachweislich aus einem falschen
-Grund rot (Befund 1) — nicht, weil das Feature kaputt ist, sondern weil der Test einen Umschalter
-für einen Setzer hält. Der letzte Punkt aus der ursprünglichen Aufgabenbeschreibung — ein
-automatischer Prüfpunkt, der diesen Lauf als Nachweis annimmt — ist von Henning am 2026-09-29 nach
-#145 verschoben und **nicht** Teil dieser Spec.
+Stufe 3 der Abnahme trägt aktuell (staged, noch nicht gemergt) den Befehl
+`./scripts/sim.sh device-test <Klasse[/test]>`, gebaut nach der ursprünglichen Spec vom 2026-09-29.
+Der erste echte Lauf damit — `RecognitionWalkthroughTests` auf Hennings iPhone,
+2026-09-30 06:19–06:20, Exit 0, „Test Suite … passed" — hat die Prämisse des Tickets widerlegt,
+obwohl er grün war. Drei Befunde aus diesem Lauf
+(`docs/context/feat-153-geraetestufe-ui-test.md`, Abschnitt „Analysis — Neuschnitt nach dem echten
+Gerätelauf", „Was der echte Lauf gezeigt hat"):
+
+1. **Er ist invasiv.** Er überschrieb die produktive Installation (gleiche Kennung
+   `com.henning.looseends`), installierte zusätzlich `com.henning.looseends.uitests.xctrunner`, die
+   neu gebaute Sperr-Vorprüfung startete die App im Vordergrund, und das Gerät war 5–10 Minuten
+   exklusiv belegt und musste entsperrt bleiben.
+2. **Er beweist nicht, wofür er gebaut wurde.** Auf
+   `docs/artifacts/feat-153-geraetestufe-ui-test/screenshots/4-zweite-aufgabe-mit-uebernommenen-werten.png`
+   ist das Titelfeld leer — Apple Intelligence hat im Testlauf nichts gesetzt. Der neue bedingte
+   Zweig aus Schritt 3 (Eingriff 1, unten) wurde nie betreten; der Anhang `schritt3-zweig` zeigt
+   auch auf dem Gerät „Kontext war nicht gesetzt — angetippt". Der Lauf prüfte damit dasselbe wie
+   der Simulator, nur invasiver.
+3. **Er verletzt eine bestehende, nie gekippte Entscheidung.** In `scripts/sim.sh`, im Kommentar
+   über `cmd_lab_run`, steht wörtlich: „Gemessen wird in der Labor-App auf dem iPhone, nicht in
+   einem Testlauf: ein Testlauf belegt das Gerät am Stück und entsperrt, bis er fertig ist. Henning
+   benutzt sein iPhone den ganzen Tag." Dazu die Festlegung seit 2026-09-20: „kein Fernstart einer
+   App auf seinem iPhone, nie." Beides wurde beim Bau von #153 übersehen, nicht widerlegt.
+
+**Folge:** Die Gerätestufe fährt keine nachgespielten Bedienabläufe. Der gebaute Befehl kommt
+vollständig wieder heraus. Stufe 3 steht wieder auf dem, was unstrittig und nicht invasiv ist:
+`./scripts/sim.sh device-status` (rein lesend, `cmd_device_status`, `scripts/sim.sh:287–292` —
+liest nur `devicectl device info details`, baut, installiert und startet nichts) plus die Labor-App
+(`./scripts/sim.sh lab`), die Henning selbst antippt. Begründung in einem Satz: Ohne Fernstart und
+ohne Installation gibt es keinen Bedienablauf auf diesem Gerät — und beides ist aus gutem Grund
+ausgeschlossen.
+
+Eine geprüfte Alternative — passiv mitlesen statt aktiv bedienen (`xctrace record --template
+Logging`) — trägt in der am 2026-09-30 durchdachten Form nicht (Begründung unten, Abschnitt
+„Alternativen"). Sie bleibt als Spike bei #143 offen, ist aber kein Ersatz für diesen Rückbau.
+
+### Abweichung vom Tech-Lead-Kommentar zu #153 (2026-09-30T04:41:35Z) — offen benannt
+
+Issue #153 trägt inzwischen den Titel „Gerätestufe: gezielte Sonden statt nachgespielter
+Bedienabläufe", aber Body und DoD-Liste des Issues beschreiben weiterhin unverändert den Aufbau,
+den diese Spec entfernt. Der einzige Kommentar auf dem Issue (04:41:35Z, Tech Lead) entscheidet sich
+für einen Mittelweg: Die nachgespielten Bedienabläufe und die invasive Sperr-Vorprüfung sollen
+raus, aber die handwerklich soliden Teile — Zeitschranke, Rückgabewert über `PIPESTATUS`,
+`deviceprep`-Erkennung, Belegausgabe, Gerätelock — sollen als Grundlage für künftige „gezielte
+Sonden" bestehen bleiben, mit der Vorbedingung „#156 zuerst" (Kennungstrennung, damit Prüfbauten
+nicht mehr die Produktivkennung tragen).
+
+**Diese Spec folgt stattdessen der jüngeren Analyse in
+`docs/context/feat-153-geraetestufe-ui-test.md`** (Abschnitt „Analysis — Neuschnitt …", entstanden
+nach dem Kommentar, am selben Tag): vollständiger Rückbau, nicht Teilerhalt. Begründung für die
+Abweichung: Ohne die eigentliche Testausführung hat keiner der „soliden Teile" mehr einen Aufrufer —
+`device_probe_locked` probiert den Start der Haupt-App, `cmd_device_test` ruft `xcodebuild test`;
+beides ist ohne einen tatsächlich gefahrenen Bedienablauf zwecklos. Ein Befehl, der im Code bleibt,
+aber laut Kommentar „nicht vor #156 benutzt werden darf", ist genau die Art Falle, vor der die
+Grundregel schützen soll: er ist da, er ist aufrufbar, und nichts im Skript selbst verhindert einen
+erneuten Fernstart auf Hennings Gerät vor #156. Es gibt hier **keine vereinbarte Einigkeit** — nur
+eine spätere, weitergehende Entscheidung, die die frühere überstimmt. Teil der Definition of Done
+ist deshalb, Titel, Body und DoD-Liste von #153 beim Abschluss auf den tatsächlichen Rückbau
+nachzuziehen, statt die Diskrepanz stehen zu lassen.
 
 ## Source
 
+Rückzubauende Bezeichner, mit den Zeilen im aktuellen (gebauten, noch ungemergten) Arbeitsstand:
+
 - **Datei:** `scripts/sim.sh`
-- **Bezeichner (Vorbilder):** `cmd_device_build` (Z. 271–292, signierter Aufruf mit eigener
-  Aufrufstelle und `PIPESTATUS`-Auswertung), `cmd_lab_run` (Z. 391–420, einzige heute belegte
-  Sperr-Erkennung über `BSErrorCodeDescription = Locked` sowie Start/Stopp-Protokollierung),
-  `cmd_test` (Z. 216–223, reiner UI-Test-Aufruf im Simulator), `acquire_lock`/`release_lock`
-  (Z. 57–73, Vorbild für das neue Gerätelock)
+- **Bezeichner:** Hilfetext-Zeile `device-test` (Z. 27); `MAIN_BUNDLE_ID`, `DEVICE_LOCK_DIR`,
+  `DEVICE_LOCK_ACQUIRED` (Z. 50–52); `acquire_device_lock`/`release_device_lock`/`cleanup_locks`
+  und `trap cleanup_locks EXIT` (Z. 78–96, ersetzt den ursprünglichen `trap release_lock EXIT`);
+  `device_probe_locked` und `cmd_device_test` (Z. 365–439); Dispatch-Zeile `device-test)` (Z. 553);
+  `cmd_help`-Bereich `sed -n '3,30p'` (Z. 534, zurück auf `'3,29p'`, weil eine Hilfetext-Zeile
+  entfällt). `cmd_device_status` (Z. 287–292) bleibt unverändert — sie ist bereits rein lesend.
+- **Datei:** `scripts/tests/device-test.sh` (216 Zeilen, zuletzt in Commit `bdab40a`
+  „test: RED fuer den Geraete-Testbefehl — 7 Faelle, 0 bestanden (#153)" versioniert, seither weiter
+  bearbeitet) — wird vollständig gelöscht.
 - **Datei:** `LooseEndsUITests/RecognitionWalkthroughTests.swift`
-- **Bezeichner:** `testWordEqualRecaptureTakesOverDurationAndContext` (Z. 97–158, der zu ändernde
-  Ablauf), `row(containing:in:)` (Z. 50–54, wird für die Identitätsprüfung der zweiten Zeile nicht
-  mehr benutzt), `launch()` (Z. 33–42, unverändert)
+- **Bezeichner:** nur der Kopfkommentar-Absatz Z. 7–13 („Seit #153 läuft derselbe Ablauf auf beiden
+  Abnahmestufen … `device-test RecognitionWalkthroughTests` …"). Die drei Testeingriffe —
+  `garden.isSelected`-Bedingung (Z. 157–165), `topRow(in:)` (Z. 62–70) mit `detailRawText`-Abgleich
+  (Z. 178–188), Rückkehr über `app.buttons["captureButton"]` (Z. 172–176) — bleiben unverändert; sie
+  sind unabhängig vom Gerätelauf richtig, weil ein Simulator mit künftigem Apple-Intelligence-Zugriff
+  oder ein anderer Modellzustand dieselbe Robustheit braucht.
 - **Datei:** `docs/project/04-stand.md`
-- **Abschnitt:** „Abnahme in drei Stufen" (Z. 142–165)
+- **Abschnitt:** „Abnahme in drei Stufen", Stufe-3-Absätze Z. 149–168.
+- **Datei:** `docs/project/00-entscheidungen.md`
+- **Abschnitt:** ADR-11-Zusatz Z. 136–140 (angehängt am 2026-09-29, wird jetzt ersetzt, nicht neu
+  nummeriert).
+- **Datei:** `CLAUDE.md`
+- **Abschnitt:** Absatz zur Pfadliste, Z. 81–84 (Satz „Berührt er einen, läuft der volle
+  Bedienablauf über `./scripts/sim.sh device-test <Klasse>` …"). **Fehlte in der Affected-Files-
+  Tabelle der Analyse** (`docs/context/feat-153-geraetestufe-ui-test.md:313–321`) — dort wurde die
+  Konsequenz für diese Datei nicht gezogen, obwohl sie denselben jetzt ungültigen Befehl nennt. Wird
+  hier ergänzt und im Changelog vermerkt.
 
 ## Dependencies
 
 | Baustein | Art | Zweck |
 |---|---|---|
-| `xcodebuild test -destination "id=<UDID>"` | Werkzeug | Signierter Testlauf auf dem Gerät; wartet bei gesperrtem Telefon unbegrenzt (Befund 2), statt abzubrechen |
-| `xcrun devicectl` | Werkzeug | Probestart vor dem Bau (`device_probe_locked`) und Geräteermittlung (`require_device`, unverändert) |
-| `xcrun xcresulttool export attachments` | Werkzeug | Exportiert Screenshots und die Bildschirmaufzeichnung aus dem `.xcresult` (Befund 4) — ersetzt das manuelle Auslesen aus #144 |
-| `FieldEditorView.contextsControl` (Z. 120–139) | Produktcode, unverändert | Liefert das Merkmal `.isSelected` (Z. 136), auf das der modellfeste Test sich stützt |
-| `TaskDetailView.detailRawText` (Z. 47) | Produktcode, unverändert | Liefert die unveränderliche Rohtext-Beschriftung, über die die zweite Zeile identifiziert wird |
-| `ViewRules.tasks(for: .new, …)` (Z. 16–17) | Produktcode, unverändert | Sortiert „Neu" absteigend nach Erfassungszeit — Grundlage dafür, dass die oberste Zeile immer die jüngste Erfassung ist |
-| `TaskItem.displayTitle` (Z. 118–121) | Produktcode, unverändert | Zeigt mit Modell den geglätteten Titel statt des Rohtexts — der Grund, warum die alte Rohtextsuche (Befund 1, Zeile 141) bricht |
-| Team `XK87E2B3VR`, Gerät `00008140-00111D582681801C` (iOS 27.0, kabelgebunden) | Umgebung | Provisioning und Zieldestination für den echten Nachweislauf |
-| `docs/project/04-stand.md`, globale und Projekt-`CLAUDE.md` (dreistufige Abnahme) | Doku | Beschreiben die Kette, in die Stufe 3 neu eingeordnet wird |
-| #145 (offen) | Nachfolge-Ticket | Übernimmt den automatischen Prüfpunkt, der diesen Lauf als Nachweis erzwingt — bewusst nicht Teil dieser Spec |
+| `scripts/sim.sh` (`acquire_lock`/`release_lock`, Z. 60–76) | Werkzeug, unverändert | Bleibt das einzige Lock-Muster im Skript, nachdem das Gerätelock-Duplikat entfernt ist |
+| `scripts/sim.sh` (`cmd_device_status`, Z. 287–292; `cmd_lab`/`cmd_lab_run`) | Werkzeug, unverändert | Trägt Stufe 3 künftig allein: Statusblick plus der von Henning selbst bediente Labor-Lauf |
+| `git rm`, `git grep`, `git ls-files` | Werkzeug | Belegen die Abwesenheit der entfernten Bezeichner (siehe Test Plan/Acceptance Criteria) |
+| `docs/artifacts/feat-153-geraetestufe-ui-test/` (bereits vorhanden) | Historie, unverändert | Enthält die Belege des gescheiterten Versuchs — Adversary-Dialog, Mutationstests, Screenshots, `test-green-output.txt`. Bleibt als Beleg liegen, warum zurückgebaut wurde; wird beim Aufräumen **nicht** gelöscht. |
+| #156 (offen) | Vorbedingung für jede künftige Wiederaufnahme | Kennungstrennung für Prüfbauten — ohne sie darf laut Tech-Lead-Kommentar nichts auf dem Gerät laufen; #153 zieht daraus die Konsequenz, jetzt ganz zurückzubauen statt auf #156 zu warten |
+| #143 (offen), #160 (offen) | Folgeticket | Spike zu `xctrace record` als Beobachtungskanal (#143) und Klärung, dass `device-console` die falsche Quelle liest (#160) — beide schließen die durch den Rückbau offene Nachweislücke nicht in diesem Ticket |
+| #154 (offen) | Unverändert von diesem Schnitt | Die Pfadliste in `CLAUDE.md` bleibt bestehen; nur der Satz, was bei einem Treffer läuft, ändert sich. #154 gilt dadurch nicht als erledigt und nicht als gekippt. |
+| #155 (offen) | Wird gegenstandslos | „Prüfstand des Gerätetest-Befehls läuft in keinem CI-Job" — der Prüfstand existiert nach diesem Rückbau nicht mehr; #155 wird mit Begründung geschlossen, nicht bearbeitet. |
 
 ## Scope
 
@@ -64,627 +127,459 @@ automatischer Prüfpunkt, der diesen Lauf als Nachweis annimmt — ist von Henni
 
 | Datei | Change Type | Beschreibung |
 |---|---|---|
-| `scripts/sim.sh` | MODIFY | Neue Funktionen `device_probe_locked`, `acquire_device_lock`/`release_device_lock`, `cmd_device_test`; Erweiterung des bestehenden `trap release_lock EXIT` auf eine gemeinsame Aufräumfunktion; Dispatch-Zeile und Hilfetext um `device-test` ergänzt |
-| `LooseEndsUITests/RecognitionWalkthroughTests.swift` | MODIFY | Die drei Eingriffe aus dem Technical Approach (bedingtes Antippen, Identität über `detailRawText`, Rückkehr-Prüfung ohne erste Zeile); Kopfkommentar von „Simulator, also kein Apple Intelligence" auf „beide Stufen, mit und ohne Modell" |
-| `scripts/tests/device-test.sh` | CREATE | Stub-basierte Prüfung der vier Verzweigungen aus `cmd_device_test` (Sperre vorab, `PIPESTATUS`, Zeitschranke/`deviceprep`, Screenshot-Export) ohne echtes iPhone — läuft auch in CI |
-| `docs/project/04-stand.md` (Z. 142–165) | MODIFY | Abschnitt „Abnahme in drei Stufen" neu: Befehl, was er belegt, was er voraussetzt; Begründung nicht mehr über `device-console` |
-| `docs/project/00-entscheidungen.md` (Z. 133–135) | MODIFY | ADR-11 („Tests") um den Ergänzungssatz zur Gerätestufe erweitert (siehe Abschnitt „Architektur-Entscheidung") — drei Zeilen, keine neue ADR-Nummer |
-| `docs/artifacts/feat-153-geraetestufe-ui-test/` | CREATE (bereits angelegt) | Enthält die Belege der Analyse; nach dem echten Lauf zusätzlich `screenshots/` mit den vier benannten Aufnahmen |
+| `scripts/sim.sh` | MODIFY | `cmd_device_test`, `device_probe_locked`, `acquire_device_lock`, `release_device_lock`, `cleanup_locks` entfernen; `trap cleanup_locks EXIT` → `trap release_lock EXIT`; `MAIN_BUNDLE_ID`, `DEVICE_LOCK_DIR`, `DEVICE_LOCK_ACQUIRED` entfernen; Dispatch-Zeile und Hilfetext-Zeile entfernen; `cmd_help`-Bereich zurück auf `'3,29p'` |
+| `scripts/tests/device-test.sh` | DELETE | Prüfstand des entfernten Befehls (`git rm`); `scripts/tests/` bleibt danach ohne Inhalt (Git kennt keine leeren Verzeichnisse, verschwindet also aus jeder `git ls-files`-Auflistung von selbst) |
+| `docs/project/04-stand.md` | MODIFY | Stufe 3 neu: `device-status` (rein lesend) plus Labor-App; Begründung, warum kein Bedienablauf mehr läuft; `device-console`-Begründung ausdrücklich für hinfällig erklärt (#160); Verweis auf die offene Nachweislücke und die Folgetickets #156/#143/#160 |
+| `docs/project/00-entscheidungen.md` | MODIFY | ADR-11-Zusatz ersetzt (keine neue ADR-Nummer): kein Testlauf, kein Fernstart auf Hennings Gerät; Hardware-Only-Sachverhalte werden gemessen oder beobachtet, nicht bedient |
+| `CLAUDE.md` | MODIFY | Satz zur Pfadliste (Z. 81–84) auf `device-status` + Labor-App umgeschrieben, Nachweislücke für Watch/Widgets/Share/Mikrofon/Mitteilungen benannt. **Ergänzt gegenüber der Analyse** (siehe Changelog). |
+| `LooseEndsUITests/RecognitionWalkthroughTests.swift` | MODIFY | Nur der Kopfkommentar-Absatz Z. 7–13 zurück auf „läuft im Simulator"; die drei Testeingriffe (Endzustand statt Bedienweg) bleiben unverändert, mit Verweis auf #158 (Verschärfung auf Wertgleichheit) |
+| `docs/artifacts/feat-153-geraetestufe-ui-test/` | KEEP (unverändert) | Historie des gescheiterten Versuchs bleibt liegen — kein Aufräumen, kein Löschen |
 
-Die neue Datei `scripts/tests/device-test.sh` steht nicht in der ursprünglichen Analyse (dort waren
-drei geänderte Dateien plus ein neues Verzeichnis vorgesehen). Sie wird hier ergänzt, weil die
-Skriptlogik in `cmd_device_test` sonst nur durch einen echten, teuren Gerätelauf geprüft werden
-könnte — mit vier geänderten/neuen Dateien bleibt der Schnitt innerhalb der 4–5-Dateien-Grenze aus
-CLAUDE.md.
+Sechs Dateien werden geändert oder gelöscht, eine bleibt bewusst unangetastet. Das reißt die
+Scoping-Grenze aus der globalen `CLAUDE.md` („Max 4–5 Dateien"). Siehe Begründung unter „Estimated
+Changes".
 
 ### Estimated Changes
 
-- Dateien: 5 geändert/neu (`scripts/sim.sh`, `RecognitionWalkthroughTests.swift`,
-  `scripts/tests/device-test.sh`, `docs/project/04-stand.md`, `docs/project/00-entscheidungen.md`)
-  plus 1 bereits bestehendes Artefakt-Verzeichnis — an der Obergrenze von 4–5, nicht darüber
-- LoC: `scripts/sim.sh` +115/−3, `scripts/tests/device-test.sh` +85/−0,
-  `RecognitionWalkthroughTests.swift` +26/−9, `docs/project/04-stand.md` +18/−11,
-  `docs/project/00-entscheidungen.md` +3/−0 — zusammen +247/−23 = 270 LoC. **Das liegt 20 LoC über
-  der 250er-Grenze aus CLAUDE.md.** Der Überhang ist vollständig Prüfcode ohne Produktwirkung: das
-  Testskript mit sieben statt fünf Fällen (damit AC-1 und AC-7 nicht unbelegt bleiben) und der
-  Zweig-Vermerk im Walkthrough (damit AC-9 prüfbar statt bloß plausibel ist). CLAUDE.md verlangt bei
-  Überschreitung Stopp und Rückfrage — deshalb geht die Entscheidung an Henning, nicht an eine
-  Selbstermächtigung beim Umsetzen. **Der vorgeschlagene Schnitt, falls geteilt wird:**
-  `scripts/tests/device-test.sh` wandert mit AC-1 bis AC-7 in ein Folge-Ticket (−85 LoC, macht
-  185 LoC), #153 liefert dann Befehl, Walkthrough-Umbau, Doku und den echten Gerätelauf
-  (AC-8 bis AC-13). Der Preis dieser Teilung: Die Verzweigungen des neuen Befehls sind bis zum
-  Folge-Ticket nur durch echte Geräteläufe prüfbar.
-- Risiko: **Mittel**, wie in der Analyse festgestellt — kein Produktpfad wird geändert, aber der
-  Nachweis hängt von fremder Hardware und einem entsperrten Telefon ab.
+Gemessen, nicht geschätzt — jede Zahl stammt aus `git diff HEAD --numstat` für das bereits Gebaute
+bzw. aus `wc -l` gegen die tatsächlich formulierten Ersatztexte dieser Spec:
+
+| Datei | entfernt | hinzugefügt | Netto |
+|---|---:|---:|---:|
+| `scripts/sim.sh` | 99 | 1 (`trap release_lock EXIT`) | −98 |
+| `scripts/tests/device-test.sh` | 216 | 0 | −216 |
+| `docs/project/04-stand.md` | 20 | 27 | +7 |
+| `docs/project/00-entscheidungen.md` | 5 | 4 | −1 |
+| `CLAUDE.md` | 4 | 8 | +4 |
+| `LooseEndsUITests/RecognitionWalkthroughTests.swift` | 7 | 6 | −1 |
+| **Summe** | **351** | **46** | **−305** |
+
+`scripts/sim.sh` (99 entfernte Zeilen: 1 Hilfetext + 3 Variablen + 19 Gerätelock-Block + 75
+`device_probe_locked`/`cmd_device_test` + 1 Dispatch-Zeile) und `scripts/tests/device-test.sh` (216
+Zeilen komplett) tragen den Rückbau; die drei Dokumente und der Testkommentar sind Korrekturen im
+einstelligen bis niedrigen zweistelligen Bereich.
+
+**Additionen + Deletionen zusammen: 397 LoC — 147 über der 250er-Grenze aus `CLAUDE.md`. Dazu
+6 statt 4–5 Dateien.** Beide Grenzen sind gerissen; das wird hier offen benannt, nicht
+stillschweigend überschritten. Kein Pfad unter `Shared/` oder `LooseEnds/Views/` ist betroffen
+(siehe AC-13).
+
+**Das ist eine eigene Entscheidung des PO, nicht eine Folge der Spec-Freigabe.** `CLAUDE.md`
+verlangt bei Überschreitung ausdrücklich „STOP und nachfragen mit konkreter Schätzung" — diese Spec
+darf sich die Überschreitung deshalb nicht selbst genehmigen. Die beiden Wege stehen offen, mit
+ihrem jeweiligen Preis:
+
+| Weg | Preis |
+|---|---|
+| **A — in einem Zug zurückbauen** (Empfehlung) | Reißt die Grenzen einmalig um 1 Datei und 147 LoC. Dafür ist der invasive Befehl nach einem Schritt vollständig weg. |
+| **B — in zwei Tickets teilen** (etwa: Skript und Prüfstand jetzt, die vier Dokumente später) | Hält beide Grenzen ein. Preis: Zwischen den beiden Tickets steht entweder ein Befehl im Skript, den die Dokumentation schon für abgeschafft erklärt, oder eine Dokumentation, die auf einen entfernten Befehl verweist. Beides ist genau die Falle, die den Vorfall vom 30.09. ermöglicht hat: etwas, das aufrufbar ist und dessen einzige Schranke ein Satz in einer Datei ist. |
+
+**Empfehlung: Weg A.** Der Überhang ist zu über 90 % (315 von 351 entfernten Zeilen) reiner Abbau
+von Code, der in diesem selben, noch ungemergten Arbeitsstand erst entstanden ist — nicht neue
+Logik, sondern die Rücknahme einer bereits vollständig geschriebenen und bereits einmal (fälschlich)
+für fertig befundenen Änderung. Das Risiko, das die 250er-Grenze abwehren soll (zu viel neue,
+ungeprüfte Logik auf einmal), entsteht hier nicht. Wählt der PO Weg B, wird die Spec entsprechend
+geteilt, bevor die Umsetzung beginnt.
+
+Zur Dateizahl trägt dieselbe Begründung: Fünf der sechs Änderungen sind mechanische Entfernungen
+oder Ein-Satz-Korrekturen ohne neue Entscheidungen; nur `docs/project/04-stand.md` bekommt einen
+inhaltlich neuen Absatz (die offene Nachweislücke).
+
+- Risiko: **Niedrig** — es wird nur entfernt, was in diesem Arbeitsstand entstanden und noch nicht
+  gemergt ist, plus vier kleine Dokument-Korrekturen. Kein Produktpfad wird berührt.
 
 ## Implementation Details
 
-### 1. `cmd_device_test` — der neue Befehl
+### 1. `scripts/sim.sh` — Rückbau in der Reihenfolge des Bauens, rückwärts
 
-Signierter Aufruf wie `cmd_device_build`, weil `run_xcodebuild` (Z. 123–133) hart
-`CODE_SIGNING_ALLOWED=NO` setzt und damit für das Gerät unbrauchbar ist. Drei neue Bausteine
-kommen dazu, die es bei `cmd_device_build` nicht braucht: ein Vorab-Sperr-Check, eine Zeitschranke
-mit `deviceprep`-Auswertung, und der Screenshot-Export.
+**Hilfetext (Z. 27).** Zeile
+`#   ./scripts/sim.sh device-test <Class[/test]> # UI-Test signiert auf dem Gerät, Screenshots als Artefakt`
+entfällt ersatzlos. `cmd_help` (Z. 534) zeigt `sed -n '3,30p'` — zurück auf `'3,29p'`, weil eine
+Kopfkommentarzeile weniger existiert.
 
-```bash
-MAIN_BUNDLE_ID="com.henning.looseends"
-DEVICE_LOCK_DIR="$PROJECT_DIR/.claude/device_lock.d"
-DEVICE_LOCK_ACQUIRED=""
+**Variablen (Z. 50–52).** `MAIN_BUNDLE_ID`, `DEVICE_LOCK_DIR`, `DEVICE_LOCK_ACQUIRED` entfallen; sie
+werden nach dem Rückbau von keiner Funktion mehr gelesen.
 
-acquire_device_lock() {
-    local waited=0
-    mkdir -p "$(dirname "$DEVICE_LOCK_DIR")"
-    while ! mkdir "$DEVICE_LOCK_DIR" 2>/dev/null; do
-        if [ -f "$DEVICE_LOCK_DIR/info" ]; then
-            local t; t=$(head -1 "$DEVICE_LOCK_DIR/info" 2>/dev/null || echo 0)
-            if [ $(( $(date +%s) - t )) -gt 600 ]; then warn "Stale Gerätelock entfernt"; rm -rf "$DEVICE_LOCK_DIR"; continue; fi
-        fi
-        [ $waited -ge 300 ] && { error "Gerätelock-Timeout — ein anderer Lauf belegt das iPhone."; return 1; }
-        sleep 5; waited=$((waited + 5))
-    done
-    date +%s > "$DEVICE_LOCK_DIR/info"; echo "$SESSION_ID" >> "$DEVICE_LOCK_DIR/info"; DEVICE_LOCK_ACQUIRED=1
-}
-release_device_lock() { [ -n "$DEVICE_LOCK_ACQUIRED" ] && rm -rf "$DEVICE_LOCK_DIR" 2>/dev/null; DEVICE_LOCK_ACQUIRED=""; return 0; }
-cleanup_locks() { release_lock; release_device_lock; }
-trap cleanup_locks EXIT   # ersetzt "trap release_lock EXIT" (Z. 73)
-
-# Schneller Sperr-Check vor dem Bau (Befund 2, Punkt 3): ein xcodebuild-Preflight meldet denselben
-# Zustand erst nach dem vollständigen Bau (~3 Minuten). devicectl probiert einen Start der Haupt-App
-# und meldet "Locked" in Sekunden — derselbe Weg wie in cmd_lab_run (Z. 408). Ist die App noch nicht
-# installiert, meldet devicectl einen anderen Fehler; die Funktion liefert dann "nicht gesperrt",
-# und die Auswertung während des Baus (unten) bleibt die eigentliche Absicherung (Befund 2, Punkt 1).
-device_probe_locked() {
-    local id="$1"
-    local out
-    out=$($DEVICECTL device process launch --terminate-existing --device "$id" "$MAIN_BUNDLE_ID" 2>&1) || true
-    echo "$out" | grep -q "BSErrorCodeDescription = Locked"
-}
-
-cmd_device_test() {
-    [ -z "${1:-}" ] && { error "Usage: ./scripts/sim.sh device-test Class[/test]"; return 1; }
-    command -v timeout >/dev/null || { error "timeout fehlt: brew install coreutils"; return 1; }
-    ensure_project
-    local id; id=$(require_device) || return 1
-
-    if device_probe_locked "$id"; then
-        error "iPhone ist gesperrt — entsperren und erneut versuchen."
-        return 1
-    fi
-
-    acquire_device_lock || return 1
-    local dd; dd=$(device_derived_data)
-    local xcresult="$dd/device-test.xcresult"
-    local log="$dd/device-test.log"
-    rm -rf "$xcresult"; mkdir -p "$dd"
-    local timeout_s="${LOOSEENDS_DEVICE_TEST_TIMEOUT:-600}"
-    info "Gerätetest ($1) auf $id, Zeitschranke ${timeout_s}s"
-    cd "$PROJECT_DIR"
-    local args=(test -project "$PROJECT" -scheme "$SCHEME" -destination "id=$id"
-                -only-testing:"$UI_TARGET/$1" -derivedDataPath "$dd"
-                -resultBundlePath "$xcresult" -allowProvisioningUpdates "DEVELOPMENT_TEAM=$TEAM_ID")
-    # Zeitschranke, weil xcodebuild bei gesperrtem Gerät nicht abbricht, sondern unbegrenzt wartet
-    # (Befund 2, Punkt 2). Rückgabewert über PIPESTATUS, nie über die Pipe (Lehre aus #151).
-    local rc
-    if command -v xcbeautify >/dev/null; then
-        timeout "$timeout_s" xcodebuild "${args[@]}" 2>&1 | tee "$log" | xcbeautify
-        rc=${PIPESTATUS[0]}
-    else
-        timeout "$timeout_s" xcodebuild "${args[@]}" 2>&1 | tee "$log"
-        rc=${PIPESTATUS[0]}
-    fi
-    release_device_lock
-
-    if [ "$rc" -ne 0 ]; then
-        if [ "$rc" -eq 124 ] || grep -q "com.apple.dt.deviceprep Code=-3\|because the device is locked" "$log"; then
-            error "Gerätetest abgebrochen — iPhone ist gesperrt oder wurde während des Laufs gesperrt."
-        else
-            error "Gerätetest fehlgeschlagen (xcodebuild $rc)."
-        fi
-        return 1
-    fi
-
-    local shots_rel="${LOOSEENDS_ARTIFACT_DIR:-docs/artifacts/device-test-$(date +%Y%m%d-%H%M%S)}/screenshots"
-    mkdir -p "$PROJECT_DIR/$shots_rel"
-    xcrun xcresulttool export attachments --path "$xcresult" --output-path "$PROJECT_DIR/$shots_rel" >/dev/null
-    success "Gerätetest bestanden. Screenshots: $shots_rel"
-}
-```
-
-Dispatch (nach `device-console)` Z. 453) und Hilfetext (Kopfkommentar Z. 23–26) bekommen je eine
-Zeile für `device-test`.
-
-**Bewusst kein Refactoring von `acquire_lock`/`release_lock` zu einer gemeinsamen, parametrisierten
-Funktion.** Die beiden Lock-Paare sind fast identisch, aber `acquire_lock` wird von sieben
-bestehenden Befehlen benutzt; ein Umbau auf eine gemeinsame Funktion wäre ein Drive-by-Refactoring
-außerhalb dieses Tickets (CLAUDE.md, Scoping Limits) und ein Seiteneffekt-Risiko für Befehle, die mit
-#153 nichts zu tun haben. Die Duplikation ist der Preis dafür.
-
-**`LOOSEENDS_ARTIFACT_DIR` ist eine neue Umgebungsvariable, kein zweites Kommandozeilenargument.**
-Die Aufgabenbeschreibung legt die Signatur auf genau ein Argument fest (`<Klasse[/test]>`). Der
-Zielordner `docs/artifacts/<workflow>/` aus der Analyse setzt aber voraus, dass das Skript den
-„aktuellen Workflow" kennt — dafür gibt es im Repository keinen etablierten Mechanismus (kein
-Umgebungsvariable, kein Statusfile, das `sim.sh` lesen dürfte). Der Git-Zweigname ist dafür
-nachweislich untauglich: Dieser Arbeitsstand trägt aktuell `fix-sim-device-false-green`, obwohl er
-an #153 arbeitet (`loose-ends-worktree-branch-wiederverwendet`). Deshalb: `LOOSEENDS_ARTIFACT_DIR`
-nach demselben Muster wie `LOOSEENDS_SIM`/`LOOSEENDS_DEVICE`/`LOOSEENDS_TEAM_ID` (Z. 39–42), von der
-aufrufenden Workflow-Phase gesetzt (z. B.
-`LOOSEENDS_ARTIFACT_DIR=docs/artifacts/feat-153-geraetestufe-ui-test`); ohne Vorgabe fällt der Befehl
-auf einen zeitgestempelten Ordner zurück, der nie überschrieben wird, aber auch nicht automatisch im
-richtigen Analyse-Ordner landet — das ist beim Fehlen der Variable bewusst so und wird im DoD als
-manueller Schritt für den Nachweislauf benannt.
-
-### 2. Der Walkthrough wird modellfest (drei Eingriffe in `RecognitionWalkthroughTests.swift`)
-
-**Eingriff 1 — Schritt 3 wird bedingt (Z. 127–132).** Ersetzt das unbedingte `garden.tap()`:
-
-```swift
-let garden = app.descendants(matching: .any)
-    .matching(NSPredicate(format: "label == %@", Self.contextLabel)).firstMatch
-XCTAssertTrue(garden.waitForExistence(timeout: 5), "Der Editor bietet \(Self.contextLabel) nicht an")
-let alreadySet = garden.isSelected
-note(alreadySet ? "Schritt 3: Kontext war bereits gesetzt (Modell) — nicht angetippt"
-                : "Schritt 3: Kontext war nicht gesetzt — angetippt", in: app)
-if !alreadySet {
-    garden.tap()
-}
-back(in: app)
-```
-
-`note(_:in:)` ist eine neue private Hilfsfunktion, die den genommenen Zweig als benannten Textanhang
-in das Ergebnisbündel schreibt:
-
-```swift
-private func note(_ text: String, in app: XCUIApplication) {
-    let attachment = XCTAttachment(string: text)
-    attachment.name = "schritt3-zweig"
-    attachment.lifetime = .keepAlways
-    add(attachment)
-}
-```
-
-**Warum das nötig ist:** Ohne diesen Vermerk beweist ein grüner Gerätelauf nicht, dass der neue
-bedingte Zweig je genommen wurde — Apple Intelligence könnte den Kontext erst nach Schritt 3 setzen,
-und der Test wäre grün wie vorher, ohne die Änderung überhaupt zu berühren. Der Anhang landet über
-denselben `xcresulttool export attachments`-Aufruf wie die Screenshots im Artefaktordner und macht
-AC-9 damit prüfbar statt bloß plausibel.
-
-`garden.isSelected` liest den Trait, den `FieldEditorView.swift:136`
-(`accessibilityAddTraits(selected ? .isSelected : [])`) setzt. Hat Apple Intelligence den Kontext
-schon gesetzt (Befund 1, Screenshot `geraet-garden-schon-gesetzt.png`), bleibt der Zustand
-unangetastet statt abgewählt zu werden; ohne Modell tippt der Test wie bisher an.
-
-**Eingriff 2 — Identität über `detailRawText`, nicht über die Zeilenbeschriftung (Z. 140–143).**
-Ersetzt `row(containing: Self.secondText, in: app)`:
-
-```swift
-capture(Self.secondText, in: app)
-let second = topRow(in: app)
-XCTAssertTrue(second.waitForExistence(timeout: 10), "Die zweite Aufgabe steht nicht in Neu")
-shot(app, "3-wortgleich-erneut-erfasst")
-second.tap()
-let secondRawText = element("detailRawText", in: app)
-XCTAssertTrue(waitForLabel(Self.secondText, of: secondRawText),
-              "Die geöffnete Detailansicht zeigt nicht den zweiten Rohtext")
-```
-
-Neue private Hilfsfunktion `topRow(in:)` liefert die oberste Zeile der (absteigend nach
-`capturedAt` sortierten, `ViewRules.swift:17`) „Neu"-Liste:
-
-```swift
-@MainActor
-private func topRow(in app: XCUIApplication) -> XCUIElement {
-    app.descendants(matching: .any)
-        .matching(NSPredicate(format: "identifier BEGINSWITH %@", "taskRow_"))
-        .firstMatch
-}
-```
-
-`row(containing:in:)` (Z. 50–54) bleibt für Schritt 1 (`first`, Z. 106) unverändert bestehen: Der
-erste Erfassungstext „Rasen mähen" ist bereits die vom Modell bevorzugte Wortreihenfolge (siehe
-Kopfkommentar der Datei) und damit als Suchtext stabil; nur die zweite, absichtlich unnatürliche
-Formulierung „mähen Rasen" (Befund 1, Tabelle) ist von einer Modell-Glättung betroffen.
-
-**Eingriff 3 — Rückkehr prüft die Liste, nicht die erste Zeile (Z. 138–139).** Ersetzt
-`XCTAssertTrue(first.waitForExistence(timeout: 5), "Nicht zurück in der Liste")`:
-
-```swift
-back(in: app)
-let captureButton = app.buttons["captureButton"]
-XCTAssertTrue(captureButton.waitForExistence(timeout: 5), "Nicht zurück in der Liste")
-```
-
-Grund (Befund 1, Tabelle, zweite Zeile): Das Öffnen der Detailansicht markiert die KI-Vermerke der
-ersten Aufgabe als gesehen (`TaskDetailView.swift:98`, `markSeen()`); hat das Modell inzwischen den
-Titel gesetzt, verlässt sie über `hasUnseenAIRevisions` (`ViewRules.swift:16`) die „Neu"-Liste — ein
-legitimes, gewolltes Verhalten, kein Fehler. Die Zusicherung prüft deshalb nur noch, dass die
-Erfassungsfläche wieder sichtbar ist.
-
-**Kopfkommentar (Z. 1–11).** Der Satz „Simulator, also kein Apple Intelligence" wird ersetzt durch
-einen Hinweis, dass der Ablauf seit #153 auf beiden Stufen läuft — mit Modell auf dem Gerät, ohne im
-Simulator — und deshalb sein Ergebnis, nicht den Weg dorthin, prüft.
-
-### 3. `scripts/tests/device-test.sh` — Stub-basierte Prüfung der Skriptlogik
-
-Ein eigenständiges, abhängigkeitsfreies Bash-Skript (kein `bats`, keine neue Abhängigkeit). Es legt
-für jeden Testfall ein leeres Verzeichnis an, stellt darin Stub-Programme namens `xcrun` und
-`xcodebuild` bereit (as ausführbare Shell-Skripte), setzt `PATH="<Stub-Verzeichnis>:$PATH"` (damit
-die echten `/usr/bin/xcrun`, `/usr/bin/xcodebuild` verdrängt werden, `xcbeautify` aus der
-ursprünglichen `PATH` aber real durchläuft) sowie `LOOSEENDS_DEVICE=FAKE-0000` (umgeht
-`require_device`, kein echtes Gerät nötig — die Tests laufen damit auch in CI), und ruft
-`bash scripts/sim.sh device-test SomeClass` auf:
+**Gerätelock-Block (Z. 78–96).** Der komplette Kommentar plus `acquire_device_lock`,
+`release_device_lock`, `cleanup_locks` und `trap cleanup_locks EXIT` entfallen. An ihrer Stelle
+steht wieder, was vor dem Bau von #153 dort stand:
 
 ```bash
-#!/bin/bash
-# Prüft die Verzweigungen von cmd_device_test ohne echtes iPhone: Sperre vorab, PIPESTATUS,
-# Zeitschranke/deviceprep, Screenshot-Export. Was das hier NICHT beweist: das tatsächliche Verhalten
-# von devicectl/xcodebuild auf echter Hardware, den realen Inhalt der Screenshots, und ob "Enable UI
-# Automation" gesetzt ist — das beweist ausschließlich der echte Lauf auf Hennings iPhone (AC-8).
-set -euo pipefail
-cd "$(dirname "$0")/../.."
-FAILED=0
-
-make_stub_dir() { mktemp -d "${TMPDIR:-/tmp}/device-test-stub.XXXXXX"; }
-
-# xcodebuild-Stub: druckt $XCODEBUILD_STDOUT (falls gesetzt), schläft $XCODEBUILD_SLEEP Sekunden,
-# beendet sich mit $XCODEBUILD_EXIT. Legt bei jedem Aufruf eine Markerdatei an, damit ein Testfall
-# beweisen kann, dass xcodebuild NICHT aufgerufen wurde (Sperr-Vorabprüfung).
-write_xcodebuild_stub() {
-    local dir="$1"
-    cat > "$dir/xcodebuild" <<'STUB'
-#!/bin/bash
-touch "$STUB_MARKER"
-[ -n "${XCODEBUILD_STDOUT:-}" ] && echo "$XCODEBUILD_STDOUT"
-[ -n "${XCODEBUILD_SLEEP:-}" ] && sleep "$XCODEBUILD_SLEEP"
-exit "${XCODEBUILD_EXIT:-0}"
-STUB
-    chmod +x "$dir/xcodebuild"
-}
-
-# xrun-Stub: dispatcht nach devicectl (Probestart: $DEVICECTL_PROBE_LOCKED) und xcresulttool
-# (Export: legt eine Datei im --output-path an, damit der Export-Test etwas vorfindet).
-write_xcrun_stub() {
-    local dir="$1"
-    cat > "$dir/xcrun" <<'STUB'
-#!/bin/bash
-if [ "$1" = "devicectl" ]; then
-    if [ "${DEVICECTL_PROBE_LOCKED:-0}" = "1" ]; then
-        echo 'BSErrorCodeDescription = Locked'; exit 3
-    fi
-    echo "process launched"; exit 0
-elif [ "$1" = "xcresulttool" ]; then
-    for ((i=1; i<=$#; i++)); do [ "${!i}" = "--output-path" ]; j=$((i+1)); [ -n "${!j:-}" ] && mkdir -p "${!j}" && touch "${!j}/manifest.json"; done
-    exit 0
-fi
-exit 1
-STUB
-    chmod +x "$dir/xcrun"
-}
-
-assert_contains() { echo "$1" | grep -qF "$2" || { echo "FAIL: '$2' fehlt in: $1"; FAILED=1; return 1; }; }
-
-test_sperrvorabpruefung_verhindert_bau() {
-    local dir; dir=$(make_stub_dir); write_xcodebuild_stub "$dir"; write_xcrun_stub "$dir"
-    local marker; marker=$(mktemp -u)
-    local out
-    out=$(PATH="$dir:$PATH" STUB_MARKER="$marker" DEVICECTL_PROBE_LOCKED=1 LOOSEENDS_DEVICE=FAKE-0000 \
-        bash scripts/sim.sh device-test SomeClass 2>&1) && { echo "FAIL: sollte scheitern"; FAILED=1; return; }
-    assert_contains "$out" "iPhone ist gesperrt"
-    [ -f "$marker" ] && { echo "FAIL: xcodebuild wurde trotz Sperre aufgerufen"; FAILED=1; }
-}
-
-test_pipestatus_kommt_von_xcodebuild() {
-    local dir; dir=$(make_stub_dir); write_xcodebuild_stub "$dir"; write_xcrun_stub "$dir"
-    local out
-    out=$(PATH="$dir:$PATH" STUB_MARKER=/dev/null XCODEBUILD_EXIT=3 DEVICECTL_PROBE_LOCKED=0 \
-        LOOSEENDS_DEVICE=FAKE-0000 bash scripts/sim.sh device-test SomeClass 2>&1) && { echo "FAIL"; FAILED=1; return; }
-    assert_contains "$out" "xcodebuild 3"
-}
-
-test_zeitschranke_bricht_haengenden_bau_ab() {
-    local dir; dir=$(make_stub_dir); write_xcodebuild_stub "$dir"; write_xcrun_stub "$dir"
-    local start=$SECONDS out
-    out=$(PATH="$dir:$PATH" STUB_MARKER=/dev/null XCODEBUILD_SLEEP=30 DEVICECTL_PROBE_LOCKED=0 \
-        LOOSEENDS_DEVICE=FAKE-0000 LOOSEENDS_DEVICE_TEST_TIMEOUT=2 \
-        bash scripts/sim.sh device-test SomeClass 2>&1) && { echo "FAIL"; FAILED=1; return; }
-    [ $((SECONDS - start)) -le 5 ] || { echo "FAIL: dauerte länger als die Zeitschranke"; FAILED=1; }
-    assert_contains "$out" "gesperrt oder wurde während des Laufs gesperrt"
-}
-
-test_deviceprep_code_minus3_wird_erkannt() {
-    local dir; dir=$(make_stub_dir); write_xcodebuild_stub "$dir"; write_xcrun_stub "$dir"
-    local out
-    out=$(PATH="$dir:$PATH" STUB_MARKER=/dev/null DEVICECTL_PROBE_LOCKED=0 XCODEBUILD_EXIT=65 \
-        XCODEBUILD_STDOUT='Error Domain=com.apple.dt.deviceprep Code=-3 "Unlock … because the device is locked."' \
-        LOOSEENDS_DEVICE=FAKE-0000 bash scripts/sim.sh device-test SomeClass 2>&1) && { echo "FAIL"; FAILED=1; return; }
-    assert_contains "$out" "gesperrt oder wurde während des Laufs gesperrt"
-}
-
-test_erfolg_exportiert_screenshots() {
-    local dir; dir=$(make_stub_dir); write_xcodebuild_stub "$dir"; write_xcrun_stub "$dir"
-    local shots; shots=$(mktemp -d)
-    PATH="$dir:$PATH" STUB_MARKER=/dev/null DEVICECTL_PROBE_LOCKED=0 XCODEBUILD_EXIT=0 \
-        LOOSEENDS_DEVICE=FAKE-0000 LOOSEENDS_ARTIFACT_DIR="$shots" \
-        bash scripts/sim.sh device-test SomeClass >/dev/null 2>&1 || { echo "FAIL: sollte gelingen"; FAILED=1; return; }
-    [ -f "$shots/screenshots/manifest.json" ] || { echo "FAIL: kein Export gefunden"; FAILED=1; }
-}
-
-test_ohne_argument_nutzungsmeldung() {
-    local dir; dir=$(make_stub_dir); write_xcodebuild_stub "$dir"; write_xcrun_stub "$dir"
-    local marker; marker=$(mktemp -u)
-    local out
-    out=$(PATH="$dir:$PATH" STUB_MARKER="$marker" LOOSEENDS_DEVICE=FAKE-0000 \
-        bash scripts/sim.sh device-test 2>&1) && { echo "FAIL: sollte scheitern"; FAILED=1; return; }
-    assert_contains "$out" "Usage: ./scripts/sim.sh device-test Class[/test]"
-    [ -f "$marker" ] && { echo "FAIL: xcodebuild ohne Argument aufgerufen"; FAILED=1; }
-}
-
-test_verwaistes_geraetelock_wird_entfernt() {
-    local dir; dir=$(make_stub_dir); write_xcodebuild_stub "$dir"; write_xcrun_stub "$dir"
-    mkdir -p .claude/device_lock.d; echo $(( $(date +%s) - 900 )) > .claude/device_lock.d/info
-    local shots; shots=$(mktemp -d)
-    PATH="$dir:$PATH" STUB_MARKER=/dev/null DEVICECTL_PROBE_LOCKED=0 XCODEBUILD_EXIT=0 \
-        LOOSEENDS_DEVICE=FAKE-0000 LOOSEENDS_ARTIFACT_DIR="$shots" \
-        bash scripts/sim.sh device-test SomeClass >/dev/null 2>&1 \
-        || { echo "FAIL: verwaistes Lock hat den Lauf blockiert"; FAILED=1; }
-    [ -d .claude/device_lock.d ] && { echo "FAIL: Lock nach dem Lauf nicht freigegeben"; FAILED=1; rm -rf .claude/device_lock.d; }
-}
-
-for t in test_ohne_argument_nutzungsmeldung test_sperrvorabpruefung_verhindert_bau \
-         test_pipestatus_kommt_von_xcodebuild \
-         test_zeitschranke_bricht_haengenden_bau_ab test_deviceprep_code_minus3_wird_erkannt \
-         test_erfolg_exportiert_screenshots test_verwaistes_geraetelock_wird_entfernt; do
-    "$t"
-done
-[ "$FAILED" -eq 0 ] && echo "Alle Verzweigungen geprüft." || { echo "Mindestens ein Fall gescheitert."; exit 1; }
+release_lock() { [ -n "$LOCK_ACQUIRED" ] && rm -rf "$LOCK_DIR" 2>/dev/null; LOCK_ACQUIRED=""; return 0; }
+trap release_lock EXIT
 ```
 
-`LOOSEENDS_ARTIFACT_DIR` wird hier direkt als Zielpfad benutzt (nicht als übergeordneter
-Workflow-Ordner), weil der Stub-Test kein `docs/artifacts/<workflow>/`-Layout braucht — nur den
-Beweis, dass der Export überhaupt aufgerufen wird.
+**`device_probe_locked` und `cmd_device_test` (Z. 365–439).** Beide Funktionen entfallen vollständig,
+einschließlich aller Kommentare (Begründung der 30-Sekunden-Zeitschranke im Probestart, Begründung
+der `PIPESTATUS`-Auswertung, Begründung des `LOOSEENDS_ARTIFACT_DIR`-Fallbacks). Diese Kommentare
+sind Wissen, nicht Code — ihr Inhalt landet, soweit er über den Anlass dieses Rückbaus hinaus
+trägt, nicht in einer neuen Datei, sondern bleibt in der Git-Historie dieses Reverts auffindbar
+(`git log -p -- scripts/sim.sh`) und im ADR-11-Zusatz zusammengefasst (siehe unten).
+
+**Dispatch-Zeile (Z. 553).** `device-test)    cmd_device_test "$@" ;;` entfällt.
+
+### 2. `scripts/tests/device-test.sh` — Löschen
+
+```bash
+git rm scripts/tests/device-test.sh
+```
+
+Die Datei ist versioniert (zuletzt Commit `bdab40a`); ein einfaches `rm` würde sie als „deleted,
+not staged" zurücklassen. Kein Ersatz, keine Verschiebung in ein Folgeticket — der Prüfstand prüft
+einen Befehl, der nicht mehr existiert, und ist damit gegenstandslos, nicht aufhebenswert (siehe
+„Was mit #155 passiert" unten).
+
+### 3. `LooseEndsUITests/RecognitionWalkthroughTests.swift` — nur der Kopfkommentar
+
+Ersetzt Z. 7–13:
+
+```swift
+/// `--ui-testing` schaltet auf einen In-Memory-Store, lässt aber den echten
+/// `FoundationModelsEnricher` laufen: im Simulator praktisch immer ohne Apple Intelligence. Die
+/// Zusicherungen prüfen trotzdem das **Ergebnis** (steht der Wert dran?) und nie den Bedienweg
+/// (habe ich ihn angetippt?) — robuster gegenüber einem Umschalter, den ein Modell schon gesetzt
+/// haben könnte, und einem Rohtext, den es geglättet hat. Die Verschärfung der Zusicherungen auf
+/// Wertgleichheit statt Teilzeichenfolgen ist #158.
+```
+
+Die drei Eingriffe im Testkörper selbst (bedingtes `garden.tap()` über `.isSelected`, Z. 157–165;
+`topRow(in:)` + `detailRawText` statt Labelsuche, Z. 62–70 und 178–188; Rückkehr über
+`captureButton` statt der ersten Zeile, Z. 172–176) bleiben zeichengleich stehen. Sie sind unabhängig vom Gerätelauf gerechtfertigt: Der
+Simulator kann in einer künftigen iOS-Version ebenfalls Modell-Zugriff bekommen, und ein robusterer
+Test ist in jedem Fall besser als ein fragiler — die Rückbau-Entscheidung betrifft nur, **wo** der
+Test läuft, nicht, wie er prüft.
+
+### 4. `docs/project/04-stand.md` — Stufe 3 neu
+
+Ersetzt Z. 149–168 (Punkt 3 der Liste plus die vier folgenden Absätze):
+
+```markdown
+3. **Hennings iPhone 16 Pro** — `./scripts/sim.sh device-status` (liest nur) und die Labor-App
+   (`./scripts/sim.sh lab`), die Henning selbst antippt. Erst danach gilt eine Änderung als fertig.
+
+Stufe 3 fährt seit #153 keinen nachgespielten Bedienablauf mehr. Der erste echte Versuch dafür —
+derselbe UI-Test wie im Simulator, aber signiert auf dem Gerät — lief am 2026-09-30 zwar grün, war
+dabei aber invasiv: Er überschrieb Hennings produktive Installation (gleiche Kennung
+`com.henning.looseends`), die Sperr-Vorprüfung startete die App im Vordergrund und verdrängte, was
+gerade lief, und das Telefon war 5–10 Minuten exklusiv belegt und musste entsperrt bleiben. Belegt
+hat er dabei nichts von dem, wofür er gebaut wurde: Auf dem Beweisbild
+(`docs/artifacts/feat-153-geraetestufe-ui-test/screenshots/`) hatte Apple Intelligence im Testlauf
+nichts gesetzt — der Lauf prüfte damit dasselbe wie der Simulator, nur invasiver. Das verletzte eine
+bestehende Entscheidung, die nie gekippt, sondern beim Bauen übersehen wurde (siehe die Begründung
+zu `cmd_lab_run` unten in dieser Datei) und die Festlegung, nie eine App auf Hennings Gerät
+fernzustarten.
+
+`device-status` zeigt nur, ob und wie das Gerät verbunden ist — es baut, installiert und startet
+nichts. Die frühere Begründung dieser Stufe über `device-console` ist hinfällig, nicht nur ersetzt:
+Das Kommando liest die Standardausgabe (`--console`), die App schreibt aber ausschließlich über
+`Logger`, nie über `print` (#160) — es hat nie gelesen, was sein Kommentar behauptete.
+
+**Die dadurch entstehende Lücke wird hier benannt, nicht versteckt.** Für Apple Intelligence bleibt
+die Labor-App der Messweg. Für Watch, Widgets, Share, Mikrofon und Mitteilungen gibt es auf echter
+Hardware aktuell **keinen** automatisierten Nachweis mehr, nur den lesenden Statusblick. Folgeticket
+für den Verschluss: #156 (eigene Kennung für Prüfbauten — Vorbedingung für alles Weitere auf dem
+Gerät, weil Prüfbauten heute noch unter der Produktivkennung installieren), #143 (Spike: trägt
+`xctrace record --template Logging` als Beobachtungskanal, ohne die App zu starten?), #160
+(`device-console` klären oder ersetzen).
+```
+
+Die anschließenden Absätze „Was Stufe 3 findet und Stufe 2 prinzipiell nicht kann …" (unverändert
+gültig — Apple Intelligence, CloudKit, Watch, Widgets, Mikrofon bleiben Dinge, die nur echte
+Hardware zeigt, auch wenn kein Bedienablauf mehr dafür läuft) und der TestFlight-Absatz bleiben
+zeichengleich stehen.
+
+### 5. `docs/project/00-entscheidungen.md` — ADR-11-Zusatz ersetzen
+
+Ersetzt Z. 136–140 (den am 2026-09-29 angehängten #153-Zusatz):
+
+```markdown
+Auf Hennings Gerät läuft kein Testlauf und kein Fernstart einer App. Was sich nur auf echter
+Hardware zeigt, wird gemessen (Labor-App) oder beobachtet, nie bedient. Bedienabläufe — auch
+UI-Tests — bleiben im Simulator; ein Versuch, sie signiert auf dem Gerät zu fahren, überschrieb
+2026-09-30 Hennings produktive Installation und bewies dabei nicht, wofür er gebaut war (#153).
+```
+
+Keine neue ADR-Nummer — ADR-11 bleibt „Tests", nur ihr Zusatz ändert sich zum zweiten Mal
+(einmal angehängt am 2026-09-29, jetzt ersetzt am 2026-09-30).
+
+### 6. `CLAUDE.md` — Satz zur Pfadliste umschreiben
+
+Ersetzt Z. 81–84:
+
+```markdown
+Berührt der Schnitt keinen dieser Pfade, endet die Abnahme nach Stufe 2, und das wird im
+Abschlussbericht mit genau diesem Satz begründet: „Kein Pfad der Geräteliste berührt." Berührt er
+einen, läuft `./scripts/sim.sh device-status` (liest nur, installiert und startet nichts) — für
+Apple Intelligence zusätzlich die Labor-App, die Henning selbst antippt. Einen nachgespielten
+Bedienablauf auf dem Gerät gibt es seit dem Rückbau von #153 nicht mehr: Der Versuch dazu
+überschrieb Hennings produktive Installation und bewies nicht, wofür er gebaut war. Für Watch,
+Widgets, Share, Mikrofon und Mitteilungen bleibt der automatisierte Nachweis auf echter Hardware
+damit offen (`docs/project/04-stand.md`, #156, #143, #160). Im Zweifel läuft die Stufe.
+```
+
+Die Pfadliste selbst (Zeilen davor und danach, Tabelle mit den acht Pfaden aus #154) bleibt
+zeichengleich stehen — sie wird durch diesen Rückbau weder erweitert noch verkleinert, nur die
+Aussage, was ein Treffer auslöst, ändert sich.
 
 ## Test Plan
 
-### Automatisiert, ohne echtes Gerät (TDD RED, läuft auch in CI)
+### TDD RED — wie sieht Rot vor dem Rückbau aus?
 
-- **`scripts/tests/device-test.sh`** (neu, siehe Implementation Details Abschnitt 3): sieben
-  Testfälle gegen `cmd_device_test` — je einer für AC-1 bis AC-7 —, jeweils über gefälschte
-  `xcrun`/`xcodebuild`-Programme im `PATH` und `LOOSEENDS_DEVICE=FAKE-0000` statt echter Hardware.
-  Geprüft werden Exit-Code und die wörtliche Fehlermeldung auf `stderr`, nicht Zeitverhalten der
-  echten Werkzeuge. RED-Zustand: Vor der Implementierung existiert `cmd_device_test` nicht — `bash
-  scripts/sim.sh device-test SomeClass` scheitert mit „Unbekannter Befehl", alle sieben Fälle
-  schlagen fehl.
-- **`./scripts/sim.sh test RecognitionWalkthroughTests`** (Simulator, ohne Modell): Regressionstest
-  für die drei Eingriffe. Muss vor und nach der Änderung grün bleiben — ohne Modell ist
-  `garden.isSelected` beim Betreten immer `false`, `first`/`topRow` liefern dieselbe Zeile, und die
-  Rückkehr-Prüfung ist eine reine Abschwächung der bisherigen Zusicherung (jede grüne alte Zusage
-  bleibt grün).
-- **Statische Prüfung des Diffs** (AC-12): `git diff --stat` gegen `main` zeigt ausschließlich Pfade
-  unter `scripts/`, `LooseEndsUITests/` und `docs/`.
+Jede Abwesenheits-Prüfung unten schlägt **heute**, vor der Umsetzung dieser Spec, mit dem
+gegenteiligen Befund fehl, weil `cmd_device_test` und sein Prüfstand im aktuellen Arbeitsstand
+existieren:
 
-### Nur durch den echten Gerätelauf belegbar
+```bash
+# heute: device-test ist ein bekannter Befehl (bricht NICHT mit "Unbekannter Befehl" ab)
+./scripts/sim.sh device-test RecognitionWalkthroughTests --help 2>&1 | head -1
+# → heute: "iPhone ist gesperrt …" oder ein Baufehler, NIE "Unbekannter Befehl: device-test"
 
-- **Ob der modellfeste Test auf echtem Silizium mit Apple Intelligence tatsächlich grün wird**
-  (AC-8, AC-9): Die Stub-Tests simulieren `xcodebuild`/`devicectl`, nicht das Modellverhalten selbst.
-  Ob Apple Intelligence den Kontext „Garden" wirklich vor Schritt 3 setzt und der bedingte Tap greift,
-  zeigt ausschließlich `./scripts/sim.sh device-test RecognitionWalkthroughTests` auf Hennings
-  iPhone.
-- **Das tatsächliche Wortlaut- und Zeitverhalten von `devicectl`/`xcodebuild`** bei einem wirklich
-  gesperrten oder während des Laufs gesperrten Telefon — die Stub-Programme bilden die aus Befund 2
-  gemessenen Meldungen nach, garantieren aber nicht, dass Apple sie in einer künftigen Xcode-Version
-  unverändert lässt.
-- **Der reale Inhalt der exportierten Screenshots** (vier benannte Aufnahmen mit den richtigen
-  Bildschirmzuständen) — der Stub-`xcresulttool` legt nur eine leere `manifest.json` an.
-- **Ob „Enable UI Automation" weiterhin ohne Rückfrage läuft** (Befund 3) — das lässt sich nicht
-  stellen, nur beobachten.
+# heute: jeder Bezeichner ist mindestens einmal vorhanden
+for sym in cmd_device_test device_probe_locked acquire_device_lock release_device_lock \
+           cleanup_locks MAIN_BUNDLE_ID DEVICE_LOCK_DIR DEVICE_LOCK_ACQUIRED; do
+    echo "$sym: $(grep -c "$sym" scripts/sim.sh)"   # → heute jeweils ≥ 1
+done
 
-Der Nachweis für AC-8 ist eine Belegdatei aus dem echten Lauf: das `xcodebuild`-Log mit der
-Zeile „Test Suite 'RecognitionWalkthroughTests' passed" und die vier Screenshots unter
-`docs/artifacts/feat-153-geraetestufe-ui-test/screenshots/`.
+# heute: die Datei existiert
+test -f scripts/tests/device-test.sh && echo VORHANDEN   # → heute VORHANDEN
+
+# heute: die Dokumente nennen den Befehl
+grep -c "device-test" docs/project/04-stand.md docs/project/00-entscheidungen.md CLAUDE.md
+# → heute jeweils ≥ 1
+```
+
+Das ist der RED-Zustand: Ein Rückbau, der noch nicht stattgefunden hat, kann per Definition keine
+Abwesenheit zeigen. Nach der Umsetzung (Implementation Details, oben) kippen alle Befunde ins
+Gegenteil — das ist GREEN, geprüft in den Acceptance Criteria unten.
+
+### Automatisiert, ohne echtes Gerät
+
+- **`./scripts/sim.sh unit`** — Regressionsschutz, dass der Rückbau in `scripts/sim.sh` nichts
+  anderes mitreißt (kein Produktpfad betroffen, aber das Skript wird von Tests aufgerufen).
+- **`./scripts/sim.sh test RecognitionWalkthroughTests`** (Simulator) — Regressionstest für die drei
+  unverändert bleibenden Testeingriffe. Muss grün bleiben, weil sich am Testkörper nichts ändert.
+- **`git grep`/`grep -c`/`git ls-files`** wie oben — belegen die Abwesenheit der entfernten
+  Bezeichner und Dateien repoweit.
+- **`git diff --stat main...HEAD -- Shared/ LooseEnds/Views/`** — belegt, dass kein Produktpfad
+  angefasst wurde (AC-13).
+
+### Kein neues Prüfskript — bewusste Entscheidung, mit Begründung
+
+Die Abwesenheits-Prüfungen werden **nicht** in einer neuen Skriptdatei (etwa
+`scripts/tests/no-device-test.sh`) verankert, sondern als literale Befehle in dieser Spec und im
+Abschlussbericht geführt. Drei Gründe:
+
+1. **Widersprüchliches Bild.** Dieselbe Änderung löscht `scripts/tests/device-test.sh`, weil ein
+   Prüfstand für einen nicht mehr existierenden Befehl gegenstandslos ist. Im selben Zug ein neues
+   Prüfskript anzulegen, das einen anderen nicht mehr existierenden Zustand dauerhaft bewacht, wäre
+   dieselbe Art Ballast — nur mit umgekehrtem Vorzeichen.
+2. **Der Wert einer Abwesenheits-Prüfung verfällt schnell.** Sie beweist etwas über den heutigen
+   Stand. Kommt `device-test` in einem späteren, bewusst neu aufgesetzten Ticket zurück (z. B. nach
+   #156, als gezielte Sonde), müsste das Skript im selben Commit wieder entfernt oder umgeschrieben
+   werden — es hätte nie eigenständigen Bestand.
+3. **`feedback-device-stage-is-ceremony`** (Hennings Feedback vom 2026-09-28, im Gedächtnis
+   verankert): ein Prüfschritt, der nur eine Formalie belegt und kein Feature, ist selbst Zeremonie.
+   Ein dauerhaftes Skript, dessen einzige Aussage „dieser Befehl existiert noch nicht wieder" ist,
+   fiele in genau diese Kategorie.
+
+**Empfehlung:** Die Befehle oben werden während der Umsetzung ausgeführt, ihre Ausgabe wird im
+Abschlussbericht wörtlich zitiert (wie bei jedem anderen Nachweis in diesem Projekt), und sie
+verschwinden mit dem Abschluss des Tickets aus der aktiven Prüfkette — dieselbe Behandlung wie die
+Messberichte unter `Measurement/`, die laut Memory bei jedem Lauf überschrieben und vor dem Commit
+zurückgesetzt werden, nicht als Dauereinrichtung geführt.
+
+### Was diese Prüfungen NICHT belegen
+
+- **Dass niemand den Befehl in einem künftigen, unabhängig entstehenden Patch versehentlich wieder
+  einführt.** Grep-Abwesenheit heute sagt nichts über morgen. Schutz dagegen ist Sache von
+  Codereview und der ADR-11/CLAUDE.md-Begründung, nicht dieser Spec.
+- **Dass CI nach dem Rückbau tatsächlich grün bleibt.** Das zeigt ausschließlich ein echter
+  CI-Lauf, nicht die lokale Grep-Prüfung.
+- **Dass Hennings Gerät durch den Rückbau selbst unangetastet bleibt.** Das lässt sich nicht
+  positiv nachweisen, ohne genau das zu tun, was jetzt verboten ist (das Gerät ansprechen) — die
+  einzig zulässige „Prüfung" ist, dass der Code, der es angesprochen hätte, nicht mehr existiert.
+- **Dass die Nachweislücke (Watch, Widgets, Share, Mikrofon, Mitteilungen) durch diesen Rückbau
+  irgendwie geschlossen wird.** Sie wird größer, nicht kleiner — siehe Risiken.
 
 ## Acceptance Criteria
 
-- **AC-1 Neuer Befehl mit Nutzungsmeldung:** Given kein Klassenname übergeben / When
-  `./scripts/sim.sh device-test` läuft / Then bricht der Befehl mit Exit-Code 1 und der Meldung
-  „Usage: ./scripts/sim.sh device-test Class[/test]" ab, ohne ein Gerät anzusprechen — geprüft in
-  `test_ohne_argument_nutzungsmeldung`.
-- **AC-2 Sperr-Vorabprüfung verhindert den Bau:** Given der `devicectl`-Probestart gegen die
-  Haupt-App liefert `BSErrorCodeDescription = Locked` / When `cmd_device_test` läuft / Then meldet
-  der Befehl „iPhone ist gesperrt — entsperren und erneut versuchen." mit Exit-Code 1, und
-  `xcodebuild` wird nicht aufgerufen — geprüft in `test_sperrvorabpruefung_verhindert_bau`.
-- **AC-3 Rückgabewert kommt aus `xcodebuild`, nicht aus der Pipe:** Given der `xcodebuild`-Stub
-  beendet sich mit Exit 3, während `xcbeautify` real durchläuft / When `cmd_device_test` läuft /
-  Then meldet der Befehl „Gerätetest fehlgeschlagen (xcodebuild 3)." mit Exit-Code 1 — geprüft in
-  `test_pipestatus_kommt_von_xcodebuild`.
-- **AC-4 Zeitschranke bricht ein hängendes `xcodebuild` ab:** Given der `xcodebuild`-Stub schläft
-  30 Sekunden und `LOOSEENDS_DEVICE_TEST_TIMEOUT=2` / When `cmd_device_test` läuft / Then bricht der
-  Lauf innerhalb von 5 Sekunden ab, nicht nach 30 — geprüft in
-  `test_zeitschranke_bricht_haengenden_bau_ab`.
-- **AC-5 Sperrung während des Laufs wird erkannt und benannt:** Given der `xcodebuild`-Stub druckt
-  `Error Domain=com.apple.dt.deviceprep Code=-3 "… because the device is locked."` und beendet sich
-  mit Exit 65 / When `cmd_device_test` läuft / Then lautet die Meldung „Gerätetest abgebrochen —
-  iPhone ist gesperrt oder wurde während des Laufs gesperrt." statt der generischen
-  Fehlschlag-Meldung — geprüft in `test_deviceprep_code_minus3_wird_erkannt`.
-- **AC-6 Screenshots werden automatisch exportiert:** Given der `xcodebuild`-Stub meldet Erfolg
-  (Exit 0) / When `cmd_device_test` mit `LOOSEENDS_ARTIFACT_DIR=<Scratch-Verzeichnis>` läuft / Then
-  existiert `<Scratch-Verzeichnis>/screenshots/manifest.json` danach — geprüft in
-  `test_erfolg_exportiert_screenshots`.
-- **AC-7 Nur ein Gerätelauf zur Zeit, verwaistes Lock blockiert nicht dauerhaft:** Given ein
-  Gerätelock-Verzeichnis `.claude/device_lock.d` mit einem 900 Sekunden alten Zeitstempel (also
-  verwaist, Schwelle 600 s) / When `cmd_device_test` startet / Then entfernt der Befehl das
-  verwaiste Lock, läuft durch und gibt das Lock danach wieder frei (`.claude/device_lock.d`
-  existiert nach dem Lauf nicht mehr) — geprüft in `test_verwaistes_geraetelock_wird_entfernt`.
-  Die Gegenrichtung (ein **frisches** Lock lässt einen zweiten Aufruf warten) wird bewusst **nicht**
-  automatisiert geprüft: Der Testfall müsste fünf Minuten auf den Lock-Timeout warten oder einen
-  zweiten Prozess nebenherlaufen lassen; beides ist in CI unruhig. Die Wartelogik ist Zeile für
-  Zeile aus `acquire_lock` (Z. 57–73) übernommen, das sich seit Projektbeginn bewährt hat.
-- **AC-8 Echter Nachweis auf Hennings iPhone (nur durch den realen Lauf belegbar):** Given Hennings
-  entsperrtes iPhone 16 Pro im selben Netz / When
-  `./scripts/sim.sh device-test RecognitionWalkthroughTests` läuft / Then endet der Lauf mit
-  Exit-Code 0, das Log enthält wörtlich „Test Suite 'RecognitionWalkthroughTests' passed", und
-  `docs/artifacts/feat-153-geraetestufe-ui-test/screenshots/` enthält die vier benannten Aufnahmen
-  (`1-erste-aufgabe-erfasst`, `2-werte-von-hand-gesetzt`, `3-wortgleich-erneut-erfasst`,
-  `4-zweite-aufgabe-mit-uebernommenen-werten`).
-- **AC-9 Der Walkthrough bleibt modellfest, und welcher Zweig lief, ist belegt:** Given derselbe
-  Testcode läuft einmal mit Modell (Gerät) und einmal ohne (Simulator) / When Schritt 3 den Kontext
-  „Garden" behandelt / Then liegt im Artefaktordner jedes Laufs ein Textanhang `schritt3-zweig`, der
-  wörtlich benennt, welcher der beiden Zweige genommen wurde, und beide Läufe sind grün. Der
-  Simulator-Lauf muss „Kontext war nicht gesetzt — angetippt" zeigen (kein Modell vorhanden); der
-  Gerätelauf zeigt je nach Zeitverhalten des Modells den einen oder den anderen Zweig — zeigt er
-  „nicht angetippt", ist der neue bedingte Zweig damit auf echter Hardware nachweislich gelaufen.
-  Zeigt er über drei aufeinanderfolgende Läufe ausschließlich „angetippt", greift Apple Intelligence
-  später als in Befund 1 gemessen; dann ist der bedingte Zweig auf dem Gerät unbelegt, und das ist
-  im Abschlussbericht so zu benennen statt als grün durchzuwinken.
-- **AC-10 Identität über den Rohtext, nicht über die Zeilenbeschriftung:** Given das Modell glättet
-  den zweiten Erfassungstext zu einem anderen Titel / When der Test die zweite Zeile identifiziert /
-  Then geschieht das über die oberste Zeile der absteigend nach Erfassungszeit sortierten
-  „Neu"-Liste (`topRow`) und den Abgleich mit `detailRawText`, nicht über eine Labelsuche nach dem
-  Rohtext — belegt durch den geänderten Testcode und den grünen Gerätelauf (AC-8).
-- **AC-11 Rückkehr in die Liste prüft die Liste, nicht die erste Zeile:** Given die erste Aufgabe
-  verliert nach dem Öffnen ihren Sichtbarkeits-Filter, weil das Modell den Titel gesetzt hat
-  (`hasUnseenAIRevisions` wird `false`) / When Schritt 4 „zurück" tippt / Then prüft die Zusicherung,
-  dass die Erfassungsfläche (`captureButton`) wieder sichtbar ist, nicht dass die erste Zeile noch
-  existiert — belegt durch den geänderten Testcode und AC-8.
-- **AC-12 Kein Produktpfad angefasst:** Given der fertige Diff gegen `main` / When
-  `git diff --stat main...HEAD` geprüft wird / Then liegen alle geänderten Dateien unter `scripts/`,
-  `LooseEndsUITests/` oder `docs/` — kein Pfad unter `Shared/` oder `LooseEnds/Views/`.
-- **AC-13 Dokumentation der dritten Stufe aktualisiert:** Given `docs/project/04-stand.md` / When
-  der Abschnitt „Abnahme in drei Stufen" gelesen wird / Then nennt er
-  `./scripts/sim.sh device-test <Klasse[/test]>` als Stufe 3, begründet ihre Existenz mit dem
-  gefahrenen Ablauf statt mit `device-console`, und benennt die Meldung, die ein gesperrtes Telefon
-  liefert.
+- **AC-1 Befehl unbekannt, kein Gerätekontakt:** Given der Rückbau ist umgesetzt / When
+  `./scripts/sim.sh device-test RecognitionWalkthroughTests` läuft / Then meldet der Befehl
+  „Unbekannter Befehl: device-test", Exit-Code ≠ 0, und es wird weder `devicectl` noch `xcodebuild`
+  mit einer Geräte-Destination aufgerufen (belegt durch Lesen von `cmd_help`/`case "$COMMAND"`, kein
+  passender Zweig mehr vorhanden). Befehl: `./scripts/sim.sh device-test X; echo "exit=$?"`.
+- **AC-2 Alle acht Bezeichner aus `scripts/sim.sh` entfernt:** Given der Rückbau ist umgesetzt /
+  When jeder der acht Bezeichner gezählt wird / Then liefert jeder Zähler 0. Befehl:
+  `for sym in cmd_device_test device_probe_locked acquire_device_lock release_device_lock cleanup_locks MAIN_BUNDLE_ID DEVICE_LOCK_DIR DEVICE_LOCK_ACQUIRED; do grep -c "$sym" scripts/sim.sh; done`
+  → jede Zeile `0`.
+- **AC-3 Ursprünglicher Trap wiederhergestellt:** Given der Rückbau ist umgesetzt / When
+  `scripts/sim.sh` gelesen wird / Then steht `trap release_lock EXIT` wieder da, `cleanup_locks`
+  kommt nirgends mehr vor. Befehl: `grep -n "trap release_lock EXIT" scripts/sim.sh` liefert genau
+  eine Zeile; `grep -c cleanup_locks scripts/sim.sh` → `0`.
+- **AC-4 Prüfstand gelöscht und aus dem Index entfernt:** Given der Rückbau ist umgesetzt / When
+  `scripts/tests/device-test.sh` gesucht wird / Then existiert die Datei nicht mehr und `git
+  ls-files` kennt sie nicht. Befehl: `test -f scripts/tests/device-test.sh && echo VORHANDEN ||
+  echo WEG` → `WEG`; `git ls-files scripts/tests/device-test.sh` → leer.
+- **AC-5 `scripts/tests/` trägt keinen Eintrag mehr:** Given der Rückbau ist umgesetzt / When das
+  Verzeichnis über Git abgefragt wird / Then liefert `git ls-files scripts/tests/` keine Zeile.
+- **AC-6 Gegenprobe über alle Pfade, die einen Befehl behaupten könnten:** Given der Rückbau ist
+  umgesetzt / When die Pfade durchsucht werden, in denen `device-test` als *aufrufbarer Befehl*
+  stehen würde — Werkzeuge, Projektregeln, Projektdokumentation, Testcode / Then gibt es keinen
+  Treffer mehr. Befehl:
+  `git grep -n "device-test" -- scripts CLAUDE.md docs/project LooseEndsUITests` → leer.
+  **Bewusst ausgenommen, mit Begründung je Pfad:** `docs/artifacts/…` (Screenshots, Protokolle,
+  Adversary-Dialog — Beweismaterial des gescheiterten Versuchs), `docs/context/…` (die Analyse, die
+  den Rückbau begründet), `docs/specs/…` (diese Spec selbst) und `docs/briefings/…` (das PO-Briefing
+  dazu). Diese vier Pfade **müssen** den Befehl weiterhin nennen — sie sind die Begründung des
+  Rückbaus; ein AC, das sie einschließt, wäre nur erfüllbar, indem man die eigene Beweislage löscht.
+  Gegenprobe dazu, damit die Ausnahme nichts verdeckt:
+  `git grep -l "device-test" -- docs/context docs/specs` → liefert mindestens zwei Dateien.
+- **AC-7 Unit-Tests grün:** Given der Rückbau ist umgesetzt / When `./scripts/sim.sh unit` läuft /
+  Then endet der Lauf grün.
+- **AC-8 Simulator-Regressionstest grün:** Given der Rückbau ist umgesetzt / When
+  `./scripts/sim.sh test RecognitionWalkthroughTests` im Simulator läuft / Then endet der Lauf grün
+  — die drei Eingriffe aus #153 (Endzustand statt Bedienweg) bleiben nachweislich funktionsfähig.
+- **AC-9 `device-status` bleibt rein lesend:** Given `cmd_device_status` (Z. 287–292) / When der
+  Code gelesen wird / Then ruft er ausschließlich `devicectl device info details` auf — kein
+  `install`, kein `launch`, kein `xcodebuild`. Befehl: `grep -n "cmd_device_status" -A 6
+  scripts/sim.sh` → enthält `device info details`, nicht `install|launch|xcodebuild`.
+- **AC-10 `docs/project/04-stand.md` trägt den neuen Text, nicht mehr den alten:** Given der
+  Rückbau ist umgesetzt / When die Datei gelesen wird / Then enthält sie „device-status (liest
+  nur)" und die Nachweislücken-Nennung, aber nicht mehr „./scripts/sim.sh device-test <Klasse[/test]>"
+  als Stufe-3-Befehl. Befehl: `grep -q "device-status" docs/project/04-stand.md &&
+  ! grep -q "3\..*device-test" docs/project/04-stand.md`.
+- **AC-11 `docs/project/00-entscheidungen.md` trägt den neuen ADR-11-Zusatz:** Given der Rückbau
+  ist umgesetzt / When ADR-11 gelesen wird / Then enthält sie „kein Testlauf und kein Fernstart",
+  aber nicht mehr „läuft mindestens ein Smoke-Test zusätzlich auf dem angeschlossenen iPhone".
+  Befehl: `grep -q "kein Fernstart" docs/project/00-entscheidungen.md &&
+  ! grep -q "Smoke-Test zusätzlich auf dem angeschlossenen iPhone" docs/project/00-entscheidungen.md`.
+- **AC-12 `CLAUDE.md` trägt den neuen Satz zur Pfadliste:** Given der Rückbau ist umgesetzt / When
+  der Absatz zur Pfadliste gelesen wird / Then verweist er auf `device-status` und die
+  Nachweislücke, nicht mehr auf „der volle Bedienablauf über `./scripts/sim.sh device-test
+  <Klasse>`". Befehl: `grep -q "device-status" CLAUDE.md && ! grep -q "der volle Bedienablauf über"
+  CLAUDE.md`.
+- **AC-13 Kein Produktpfad angefasst:** Given der fertige Diff gegen `main` / When `git diff --stat
+  main...HEAD -- Shared/ LooseEnds/Views/` geprüft wird / Then ist die Ausgabe leer.
 
 ## Risiken
 
-1. **Der modellfeste Test kann trotzdem unruhig werden**, wenn Apple Intelligence den Kontext
-   manchmal setzt und manchmal nicht (zeitliches Wettrennen zwischen Veredelung und Testschritt).
-   Gegenmaßnahme: `waitForLabel` wartet bereits auf das Ergebnis, nicht auf einen festen Zeitpunkt;
-   bleibt der Lauf trotzdem unruhig, ist die in der Analyse genannte Alternative „Modell per
-   Startargument abschalten" (`--no-model`) der dokumentierte Rückfall — kein neuer Weg, sondern der
-   bereits geprüfte und bewusst nicht gewählte.
-2. **Der Sperr-Vorabcheck startet die Haupt-App auf Hennings iPhone als Seiteneffekt** (Befund 2,
-   Ansatz „derselbe Weg wie `cmd_lab_run`"), auch wenn das Telefon entsperrt ist — verdrängt eine
-   andere gerade offene App in den Vordergrund. Vertretbar, weil ein Gerätetestlauf das Telefon
-   ohnehin exklusiv belegt (Risiko 5 aus der Analyse), aber ein spürbarer Unterschied zu
-   `cmd_device_build`, das nichts startet.
-3. **Ist die Haupt-App auf dem Gerät noch nicht installiert, erkennt der Vorabcheck keine Sperre**
-   (er sieht einen anderen `devicectl`-Fehler, keinen „Locked"-Treffer) und der Bau läuft trotzdem
-   an. Die während des Baus laufende `deviceprep`-Auswertung bleibt in diesem Fall die einzige
-   Absicherung — dokumentiert im Code-Kommentar zu `device_probe_locked`, kein stiller Blindspot.
-4. **`LOOSEENDS_ARTIFACT_DIR` ist neu und wird von keinem bestehenden Aufrufer gesetzt.** Ohne
-   diese Variable legt der Befehl Screenshots in einem zeitgestempelten Ordner statt im
-   Analyse-Ordner des Tickets ab. Für den in AC-8 verlangten Nachweis muss die Variable beim realen
-   Lauf explizit gesetzt werden — als Schritt in der Definition of Done festgehalten, nicht der
-   Erinnerung überlassen.
-5. **`-resultBundlePath` kollidiert, wenn ein vorheriger Lauf im selben `DEVICE_DERIVED_DATA`
-   abgebrochen wurde und die `.xcresult`-Datei stehen blieb.** Gegenmaßnahme: `rm -rf "$xcresult"`
-   direkt vor jedem Lauf.
-6. **`xcrun xcresulttool export attachments` ist kein von Apple vertraglich stabil dokumentiertes
-   Format** — eine künftige Xcode-Version könnte die `manifest.json`-Struktur ändern. Nur der echte
-   Lauf zeigt, ob der Export weiterhin die erwarteten Dateien liefert; die Stub-Tests prüfen nur,
-   dass der Aufruf mit den richtigen Argumenten geschieht.
-7. **Ein abgebrochener Gerätetestlauf könnte das neue Gerätelock verwaist zurücklassen**, wenn der
-   Prozess zwischen `acquire_device_lock` und `release_device_lock` hart beendet wird (z. B. Ctrl-C).
-   Gegenmaßnahme: derselbe Stale-Lock-Mechanismus wie beim Simulator-Lock (600 Sekunden), plus der
-   gemeinsame `trap cleanup_locks EXIT`.
-8. **Duplizierte Lock-Logik statt einer gemeinsamen Funktion** (bewusste Entscheidung, siehe
-   Implementation Details) bedeutet: eine künftige Änderung an der Lock-Semantik (z. B. andere
-   Zeitschranke) muss an zwei Stellen gepflegt werden. Akzeptiert, um kein Drive-by-Refactoring
-   einzuführen.
-9. **Der Nebenbefund der doppelten Kontextliste** (Englisch/Deutsch nebeneinander im
-   Beweis-Screenshot) ist nicht Teil dieser Spec und bleibt in künftigen Screenshots sichtbar; er
-   wird laut Analyse als eigenes Issue verfolgt, sobald außerhalb des Testlaufs bestätigt.
+1. **Nachweislücke auf echter Hardware.** Nach dem Rückbau gibt es für Apple Intelligence, Watch,
+   Widgets, Share, Mikrofon und Mitteilungen keinen automatisierten Beleg auf echtem Gerät mehr,
+   nur die Labor-App (nur Modell) und den lesenden `device-status`-Blick. Laut Deckungsanalyse in
+   `docs/context/feat-153-geraetestufe-ui-test.md` („Deckung der acht Bereiche durch passives
+   Zuhören") wäre selbst ein funktionierender passiver Kanal nur bei App-Gruppe/CloudKit und Share
+   gut, bei Apple Intelligence und Mikrofon nur teilweise, bei Watch und Mitteilungen eingeschränkt
+   und bei **Widgets gar nicht** — die Lücke ist also größer als „ein Feature fehlt", sie betrifft
+   mehrere der acht Pfade aus #154 fast vollständig.
+2. **Rückfall in eine bereits widerlegte Begründung.** Ohne den ausdrücklichen Hinweis in
+   `docs/project/04-stand.md`, dass `device-console` die Standardausgabe liest statt `os_log` (#160),
+   liegt es nahe, die alte, jetzt falsche Begründung „Stufe 3 existiert wegen `device-console`"
+   wiederherzustellen, sobald jemand den Abschnitt erneut umschreibt. Deshalb wird die Widerlegung
+   explizit im Text verankert, nicht nur weggelassen.
+3. **#154 wird durch diesen Rückbau schwächer, als am 29.09. zugesagt.** Die Zusage lautete: „Berührt
+   er einen [Pfad], läuft der volle Bedienablauf." Nach diesem Rückbau läuft bei einem Treffer nur
+   noch ein lesender Check plus, für Modellthemen, die Labor-App — kein Bedienablauf mehr. Das ist
+   eine reale Abschwächung der Abnahmekette, nicht nur eine Umformulierung, und wird hier als solche
+   benannt statt beschönigt.
+4. **Der gute handwerkliche Teil geht mit unter und müsste bei #156 neu entstehen.** Zeitschranke,
+   `PIPESTATUS`-Auswertung statt Pipe-Status, `deviceprep`-Code-Erkennung und die
+   Belegausgabe-Konvention (`LOOSEENDS_ARTIFACT_DIR`) waren sauber gebaut und sind durch reale
+   Läufe geprüft (Befund 2, Phase-2-Analyse). Ein künftiger #156-Nachfolgeversuch muss sie neu
+   schreiben oder aus der Git-Historie dieses Reverts wiederherstellen (`git show
+   bdab40a^..HEAD -- scripts/sim.sh` bleibt dafür auffindbar) — das ist Mehraufwand, aber kein
+   Wissensverlust, weil nichts aus der Historie gelöscht wird.
+5. **Die Titel/Body/DoD-Diskrepanz auf Issue #153 bleibt bis zum Abschluss bestehen**, wenn sie
+   nicht nachgezogen wird (siehe „Abweichung vom Tech-Lead-Kommentar" und Definition of Done) —
+   ein künftiger Leser des Issues sähe sonst „gezielte Sonden" im Titel, aber einen Rückbau ohne
+   jede Sonde in der Umsetzung.
 
 ## Alternativen
 
-- **Modell per Startargument abschalten** (`--no-model`, `FoundationModelsEnricher` meldet „nicht
-  verfügbar"): deterministisch und billig, aber die Gerätestufe belegt dann genau das nicht mehr,
-  wofür sie laut Aufgabenbeschreibung existiert — Verhalten mit vorhandenem Apple Intelligence. Sie
-  wäre ein zweiter Simulator auf teurer Hardware. **Bleibt als Rückfall**, falls der modellfeste
-  Ablauf sich als unruhig erweist (siehe Risiko 1).
-- **Eigener Gerätetest, der das Modell erwartet** (z. B. „nach dem Erfassen steht ein Kontext
-  dran"): verworfen. Misst das Modell statt das Feature; das Modell ist nicht deterministisch, der
-  Test würde sporadisch rot und damit wertlos. „Regeln vor Modell" gilt auch für Zusicherungen.
-- **Denselben Test unverändert fahren:** verworfen, gemessen rot (Befund 1) — falsches Rot bei
-  funktionierendem Feature, ebenso wertlos wie das falsche Grün, das die alte Gerätestufe erzeugte.
-- **`bats-core` als Test-Framework für die Skriptlogik statt eines eigenen Bash-Skripts:** verworfen.
-  Sauberere Testsyntax, aber eine neue Abhängigkeit (CLAUDE.md: „Keine neuen Dependencies ohne
-  explizite Freigabe") mit einem zusätzlichen `brew install`-Schritt an vier bereits duplizierten
-  Stellen in `.github/workflows/ci.yml`. Der Nutzen rechtfertigt diesen Eingriff nicht.
-- **Gar keine automatisierten Tests für die Skriptlogik, nur der reale Gerätelauf:** verworfen. Die
-  vier Verzweigungen (Sperre vorab, `PIPESTATUS`, Zeitschranke/`deviceprep`, Export) wären dann nie
-  ohne Hennings iPhone prüfbar — jede künftige Änderung an `cmd_device_test` bräuchte zwingend einen
-  Gerätelauf, nur um zu sehen, ob sie überhaupt die richtige Verzweigung trifft.
+- **Den Befehl behalten, aber nur nach #156 benutzen** (die Sonden-Variante aus dem
+  Tech-Lead-Kommentar vom 30.09., 04:41Z): **verworfen für diesen Schnitt.** Die handwerklich guten
+  Teile blieben nutzbar, aber ohne eine tatsächliche Testausführung hat keiner von ihnen einen
+  Aufrufer — `device_probe_locked` und `cmd_device_test` existierten als toter, aber aufrufbarer
+  Code, dessen einzige Absicherung ein Kommentar wäre („nicht vor #156 benutzen"). Genau das ist die
+  Art Falle, die ein späterer, unter Zeitdruck arbeitender Aufruf übersieht — wie am 30.09. selbst
+  geschehen. Wird #156 abgeschlossen, ist ein Neubau mit dem dann echten Kennungs-Kontext ohnehin
+  sauberer als ein Wiederbeleben alten, nie in Produktion gelaufenen Codes.
+- **Passiv zuhören statt aktiv bedienen** (`xcrun xctrace record --template Logging
+  --all-processes --device <UDID>`): **verworfen für diesen Schnitt, bleibt Spike bei #143.** Am
+  Werkzeug nachgeprüft (`docs/context/feat-153-geraetestufe-ui-test.md`, Abschnitt „Geprüfte
+  Alternative"): `devicectl` hat kein Log-Subkommando (`device info` kennt nur `appIcon, appResize,
+  appearance, apps, audio, authListing, ddiServices, details, displays, files, lockState, processes,
+  voiceover`), `device-console`/`--console` liest die Standardausgabe statt `os_log`, und die App
+  schreibt ausschließlich über `Logger` — der vermeintliche Kanal existiert nicht. Der tatsächlich
+  funktionierende Weg über `xctrace` wurde im Projekt nie benutzt, ist schwerer zu skripten, und
+  sein Zustimmungsverhalten am Gerät ist ungeklärt. Zusätzlich strukturell schwächer als ein aktiver
+  Test: Abwesenheit einer Logzeile ist mehrdeutig (kaputt? nie ausgelöst? Verbindung abgerissen?
+  redigiert?), und ohne Installation fehlt der Bezug zum aktuell geprüften Stand.
+- **Alles so lassen und nur die Dokumentation entschärfen** (Befehl bleibt im Skript, nur
+  `docs/project/04-stand.md` verliert die Empfehlung, ihn zu benutzen): **verworfen, schlechteste
+  Option.** Ein Befehl, den niemand benutzen soll, aber jeder benutzen kann, bleibt benutzbar — die
+  Dokumentation ist keine technische Schranke. Das ADR-11-Zusatz und der CLAUDE.md-Satz blieben
+  falsch (sie behaupten weiterhin einen Smoke-Test auf dem Gerät), und der nächste Versuch, Stufe 3
+  „endlich richtig" zu machen, träfe exakt denselben Fehler wie am 30.09. — nur mit noch mehr
+  scheinbar fertigem Code, der zum Weiterbauen einlädt.
 
 ## Architektur-Entscheidung (ADR)
 
-- **ADR-Nr.:** ADR-11 (Ergänzung, keine neue Nummer)
-- **Rationale:** ADR-11 („Tests", `docs/project/00-entscheidungen.md` Z. 133–135) legt heute fest:
-  „UI-Tests erst nach Design-Freeze und nur als Smoke-Tests." Die Aussage bleibt gültig — der
-  Umfang der UI-Tests wächst mit #153 nicht, es kommt kein einziger neuer Testfall dazu. Was sich
-  ändert, ist allein der **Ort**, an dem ein bereits bestehender Smoke-Test läuft: zusätzlich zum
-  Simulator auch auf echter Hardware, als dritte Abnahmestufe. Das ist kein neuer
-  Architekturbaustein, sondern eine zweite Destination für denselben Test, und es zieht eine
-  Zusage nach sich, die bisher nirgends stand: Ein UI-Test, der als Gerätestufe taugt, muss sein
-  **Ergebnis** prüfen, nicht den Weg dorthin — auf dem Gerät läuft Apple Intelligence mit und setzt
-  Felder, die im Simulator leer bleiben. Ergänzungssatz für `docs/project/00-entscheidungen.md`,
-  direkt im Anschluss an den bestehenden Text zu ADR-11 (Z. 135): „Seit #153 läuft mindestens ein
-  Smoke-Test zusätzlich auf dem angeschlossenen iPhone (`./scripts/sim.sh device-test <Klasse>`) und
-  bildet dort die dritte Abnahmestufe. Weil auf dem Gerät Apple Intelligence mitläuft, prüfen
-  Zusicherungen dieser Tests den Endzustand (steht der Kontext dran?) und nie den Bedienweg (habe
-  ich ihn angetippt?) — ein Umschalter, den das Modell schon gesetzt hat, würde sonst abgewählt."
-  Kein Ersatz für ADR-11, keine neue Nummer.
+- **ADR-Nr.:** ADR-11 (Ersatz des zweiten Zusatzes, keine neue Nummer)
+- **Rationale:** ADR-11 („Tests") legt fest: „UI-Tests erst nach Design-Freeze und nur als
+  Smoke-Tests." Das bleibt unverändert gültig. Der am 2026-09-29 angehängte Zusatz („Seit #153
+  läuft mindestens ein Smoke-Test zusätzlich auf dem angeschlossenen iPhone …") wird durch diesen
+  Rückbau **falsch**, nicht nur veraltet — der beschriebene Smoke-Test-Lauf auf dem Gerät existiert
+  nach dieser Spec nicht mehr. Ersatztext für `docs/project/00-entscheidungen.md`, direkt im
+  Anschluss an den bestehenden ADR-11-Text (Z. 135): „Auf Hennings Gerät läuft kein Testlauf und
+  kein Fernstart einer App. Was sich nur auf echter Hardware zeigt, wird gemessen (Labor-App) oder
+  beobachtet, nie bedient. Bedienabläufe — auch UI-Tests — bleiben im Simulator; ein Versuch, sie
+  signiert auf dem Gerät zu fahren, überschrieb 2026-09-30 Hennings produktive Installation und
+  bewies dabei nicht, wofür er gebaut war (#153)." Kein Ersatz für ADR-11 selbst, keine neue Nummer
+  — nur ihr zweiter Zusatz wechselt zum zweiten Mal den Inhalt.
 
 ## Definition of Done
 
-- [ ] AC-1 bis AC-13 erfüllt, belegt durch die im Test Plan genannten Tests bzw. den echten Lauf
-- [ ] `docs/project/00-entscheidungen.md`, ADR-11, um den Ergänzungssatz erweitert
-- [ ] Der Textanhang `schritt3-zweig` liegt im Artefaktordner beider Läufe (Simulator und Gerät) und
-      wird im Abschlussbericht wörtlich zitiert — auch dann, wenn er auf dem Gerät „angetippt" zeigt
-      und der bedingte Zweig damit unbelegt bleibt (AC-9)
-- [ ] `scripts/tests/device-test.sh` grün, ohne echtes iPhone, auch in CI lauffähig
-- [ ] `./scripts/sim.sh unit` und `./scripts/sim.sh build` weiterhin grün (kein Produktpfad
-      geändert, aber die Bauzeit muss stehen bleiben)
-- [ ] `./scripts/sim.sh test RecognitionWalkthroughTests` im Simulator grün (Regressionstest ohne
-      Modell)
-- [ ] Echter Lauf auf Hennings iPhone: `LOOSEENDS_ARTIFACT_DIR=docs/artifacts/feat-153-geraetestufe-ui-test
-      ./scripts/sim.sh device-test RecognitionWalkthroughTests` endet mit Exit-Code 0, die vier
-      Screenshots liegen unter `docs/artifacts/feat-153-geraetestufe-ui-test/screenshots/`
-- [ ] `docs/project/04-stand.md`, Abschnitt „Abnahme in drei Stufen", auf den neuen Befehl
-      umgeschrieben (AC-13)
-- [ ] Kein Produktpfad geändert (`Shared/`, `LooseEnds/Views/` unberührt) — geprüft per `git diff --stat`
+- [ ] AC-1 bis AC-13 erfüllt, jeder Befehl ausgeführt und seine Ausgabe im Abschlussbericht wörtlich
+      zitiert
+- [ ] `docs/project/00-entscheidungen.md`, ADR-11-Zusatz, durch den oben formulierten Ersatztext
+      ersetzt
+- [ ] `scripts/tests/device-test.sh` per `git rm` entfernt, `scripts/tests/` trägt keinen Eintrag
+      mehr in `git ls-files`
+- [ ] `./scripts/sim.sh unit` grün
+- [ ] `./scripts/sim.sh test RecognitionWalkthroughTests` im Simulator grün
+- [ ] `docs/project/04-stand.md`, Abschnitt „Abnahme in drei Stufen", auf `device-status` + Labor-App
+      umgeschrieben, mit ausdrücklicher Nennung der Nachweislücke und der Folgetickets #156/#143/#160
+- [ ] `CLAUDE.md`, Absatz zur Pfadliste, auf denselben Stand umgeschrieben (Pfadliste selbst
+      unverändert)
+- [ ] `docs/artifacts/feat-153-geraetestufe-ui-test/` bleibt vollständig erhalten (Belege des
+      gescheiterten Versuchs, nicht Teil des Aufräumens)
+- [ ] Kein Produktpfad geändert (`Shared/`, `LooseEnds/Views/` unberührt) — geprüft per `git diff
+      --stat main...HEAD`
 - [ ] Jeder Commit kompiliert
 - [ ] Nach dem Zusammenführen: Hennings Hauptordner nachgezogen und Projekt neu erzeugt
       (`bash ~/.claude/scripts/loose-ends-sync-main.sh`)
 - [ ] PR schließt #153 (`Closes #153`)
-- [ ] Der letzte Punkt aus der ursprünglichen Aufgabenbeschreibung (automatischer Prüfpunkt, der
-      diesen Lauf als Nachweis annimmt) ist **nicht** Teil dieser Abnahme — er ist als Schnitt bei
-      #145 vermerkt
+- [ ] Issue #153: Titel, Body und DoD-Liste werden beim Abschluss auf den tatsächlichen Rückbau
+      nachgezogen (sie beschreiben heute noch den entfernten Aufbau bzw. „gezielte Sonden", die
+      dieser Schnitt nicht liefert) — siehe „Abweichung vom Tech-Lead-Kommentar"
+- [ ] #155 („Prüfstand des Gerätetest-Befehls läuft in keinem CI-Job") mit Begründung geschlossen —
+      der Prüfstand, den #155 meint, existiert nach diesem Rückbau nicht mehr
+- [ ] #154 bleibt offen und unverändert in seinem Anspruch; nur die Formulierung in `CLAUDE.md`, was
+      bei einem Pfadtreffer läuft, ist an diesen Rückbau angepasst
 - [ ] Kein manueller Testhinweis an Henning — jede Acceptance Criterion ist automatisiert oder durch
-      einen registrierten Lauf bewiesen
+      einen protokollierten Befehl belegt
 - [ ] CI grün
 
 ## Changelog
 
-- 2026-09-29: Spec aus der Analyse-Zusammenfassung (Phase 2, #153) erstellt. Ergänzt gegenüber der
-  Analyse: eine vierte Datei, `scripts/tests/device-test.sh`, für die stub-basierte Prüfung der
-  Skriptlogik ohne echtes Gerät (die Analyse hatte nur den echten Lauf als Nachweisweg benannt); die
-  neue Umgebungsvariable `LOOSEENDS_ARTIFACT_DIR`, weil die Befehlssignatur auf ein Argument
-  festgelegt ist, das Skript den „aktuellen Workflow" für den Zielordner aber sonst nicht kennen
-  kann.
-- 2026-09-29: Abschnitt „Architektur-Entscheidung (ADR)" nachgetragen (Befund der Spec-Validierung).
-  ADR-11 („Tests") wird ergänzt statt ersetzt: Der Umfang der UI-Tests wächst nicht, nur ihr
-  Laufort, und die Zusicherungen prüfen künftig den Endzustand statt den Bedienweg. Dadurch fünfte
-  geänderte Datei (`docs/project/00-entscheidungen.md`, +3 Zeilen), Schätzung 233 → 236 LoC.
-- 2026-09-29: AC-1 und AC-7 hatten keinen benannten Testfall, obwohl die Definition of Done für alle
-  ACs einen Beleg behauptete (Befund des PO-Briefings). Zwei Testfälle ergänzt
-  (`test_ohne_argument_nutzungsmeldung`, `test_verwaistes_geraetelock_wird_entfernt`); AC-7
-  umformuliert, weil nur die Verwaist-Richtung sinnvoll automatisierbar ist und die Warte-Richtung
-  fünf Minuten Laufzeit kosten würde — die Einschränkung steht jetzt offen im AC statt verdeckt.
-  Schätzung dadurch 236 → 256 LoC.
-- 2026-09-29: AC-9 war nicht prüfbar (Befund des PO-Briefings): Ein grüner Gerätelauf hätte nicht
-  gezeigt, ob der neue bedingte Zweig überhaupt genommen wurde — setzt Apple Intelligence den
-  Kontext erst nach Schritt 3, wäre der Test grün wie vorher, ohne die Änderung zu berühren. Der
-  Test schreibt den genommenen Zweig jetzt als Textanhang `schritt3-zweig` ins Ergebnisbündel; AC-9
-  fordert diesen Anhang und benennt ausdrücklich den Fall, in dem der Zweig auf dem Gerät unbelegt
-  bleibt. Schätzung 256 → 270 LoC, damit 20 LoC über der Grenze — Entscheidung über Teilen oder
-  Überziehen liegt beim PO, Schnittvorschlag in „Estimated Changes".
+- 2026-09-30: Spec aus der Analyse „Neuschnitt nach dem echten Gerätelauf" (Phase 2,
+  `docs/context/feat-153-geraetestufe-ui-test.md`) neu geschrieben und die Vorgänger-Spec vom
+  2026-09-29 vollständig ersetzt — Vorzeichenwechsel von Aufbau zu Rückbau. `CLAUDE.md` als
+  sechste betroffene Datei ergänzt: Sie war in der Affected-Files-Tabelle der Analyse
+  (`docs/context/feat-153-geraetestufe-ui-test.md:313–321`) nicht enthalten, obwohl ihr Satz zur
+  Pfadliste (Z. 81–84) denselben, jetzt entfernten Befehl `device-test` nennt — ohne diese Änderung
+  verwiese die Projektregel auf einen nicht mehr existierenden Befehl. Die Abweichung vom
+  Tech-Lead-Kommentar zu #153 (04:41:35Z, „gezielte Sonden statt Rückbau") wird als eigener
+  Unterabschnitt unter „Purpose" offen benannt, nicht stillschweigend übergangen. Scope-Grenzen
+  (4–5 Dateien, 250 LoC) werden beide gerissen (6 Dateien, 397 LoC brutto) und mit gemessenen, nicht
+  geschätzten Zahlen begründet.

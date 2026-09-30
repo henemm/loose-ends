@@ -1,0 +1,18 @@
+test_ohne_argument_nutzungsmeldung
+  ok
+test_sperrvorabpruefung_verhindert_bau
+  ok
+test_pipestatus_kommt_von_xcodebuild
+  ok
+test_zeitschranke_bricht_haengenden_bau_ab
+  ok
+test_deviceprep_code_minus3_wird_erkannt
+  ok
+test_erfolg_exportiert_screenshots
+  ok
+test_verwaistes_geraetelock_wird_entfernt
+  ok
+test_pruefstand_wird_rot
+  ok
+
+Alle 8 Verzweigungen geprueft.

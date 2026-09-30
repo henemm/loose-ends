@@ -1,0 +1,62 @@
+Unabhaengige Gegenprobe zum Mutationstest des Pruefstands scripts/tests/device-test.sh
+Datum: 2026-09-29, gefahren vom Orchestrator, nicht vom umsetzenden Agenten
+
+Zweck: pruefstand-mutationstest.txt belegt die Wirkung des Fixes an EINER mutierten Stelle
+(device_probe_locked, AC-2). Diese Gegenprobe mutiert eine ANDERE Stelle, damit der Beleg
+nicht an einem Einzelfall haengt — und zwar bewusst die Nutzungsmeldung (AC-1), deren Fall
+ausschliesslich ueber den primaeren Zweig 'fail "..."; return' anschlaegt. Genau dieser Zweig
+wurde vor dem Fix verschluckt.
+
+Vorher: shasum scripts/sim.sh -> de75f2fc14ba49c446df6f6996ad44dc60194445
+
+==============================================================================
+LAUF 1 - MIT MUTATION
+
+Mutiert: scripts/sim.sh Zeile 385. Der Abbruch ohne Argument liefert Erfolg statt Fehler:
+    [ -z "${1:-}" ] && { error "Usage: ./scripts/sim.sh device-test Class[/test]"; return 1; }
+wird zu
+    [ -z "${1:-}" ] && { error "Usage: ./scripts/sim.sh device-test Class[/test]"; return 0; }
+
+Die Meldung wird also weiterhin gedruckt — nur der Rueckgabewert ist falsch. Die
+Sekundaerpruefung (assert_contains auf "Usage: ...") kann das nicht fangen, weil der Text
+unveraendert erscheint. Allein der primaere Zweig schlaegt an. Vor dem Fix waere dieser Lauf
+gruen gewesen.
+
+$ bash scripts/tests/device-test.sh
+test_ohne_argument_nutzungsmeldung
+  FAIL: haette scheitern muessen
+  FAIL: Fall endete ohne Abschluss — finish wurde nicht erreicht
+test_sperrvorabpruefung_verhindert_bau
+  ok
+test_pipestatus_kommt_von_xcodebuild
+  ok
+test_zeitschranke_bricht_haengenden_bau_ab
+  ok
+test_deviceprep_code_minus3_wird_erkannt
+  ok
+test_erfolg_exportiert_screenshots
+  ok
+test_verwaistes_geraetelock_wird_entfernt
+  ok
+test_pruefstand_wird_rot
+  ok
+
+Mindestens ein Fall gescheitert (7 von 8 bestanden).
+EXIT=1
+
+Beide neuen Schutzmechanismen greifen unabhaengig voneinander:
+  1. fail() setzt jetzt auch das globale FAILED  -> "FAIL: haette scheitern muessen"
+  2. die finish-Marke faengt den uebersprungenen Abschluss ab
+     -> "FAIL: Fall endete ohne Abschluss"
+
+==============================================================================
+LAUF 2 - MUTATION ZURUECKGENOMMEN
+
+$ shasum scripts/sim.sh
+de75f2fc14ba49c446df6f6996ad44dc60194445   <- identisch mit dem Stand vor der Mutation
+
+$ bash scripts/tests/device-test.sh
+EXIT=0   (alle 8 Faelle ok)
+
+Keine Mutationsreste: grep -c MUTATION ueber scripts/sim.sh und scripts/tests/device-test.sh
+liefert jeweils 0; git status zeigt keine unerwarteten Dateien.

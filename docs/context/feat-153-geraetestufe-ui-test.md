@@ -223,6 +223,127 @@ Startkontexte zweimal da. Das ist nicht Gegenstand dieser Aufgabe und wird als e
 angelegt, sobald es außerhalb des Testlaufs bestätigt ist — im Testaufbau könnte es an der
 erzwungenen Sprache liegen.
 
+## Analysis — Neuschnitt nach dem echten Gerätelauf (2026-09-30)
+
+Die erste Analyse führte zu einer Spec, die umgesetzt und gefahren wurde. Der erste echte Lauf auf
+Hennings iPhone hat ihre Prämisse widerlegt. Dieser Abschnitt ersetzt die Bewertung oben; die
+Faktensammlung darüber bleibt gültig.
+
+### Type
+
+Feature — aber mit umgekehrtem Vorzeichen: **Rückbau statt Aufbau.**
+
+### Was der echte Lauf gezeigt hat
+
+Lauf vom 2026-09-30, 06:19–06:20, `RecognitionWalkthroughTests` auf `00008140-00111D582681801C`,
+Exit 0, Test bestanden. Belege unter `docs/artifacts/feat-153-geraetestufe-ui-test/screenshots/`.
+
+1. **Der Lauf ist invasiv.** Er überschrieb die produktive App (gleiche Kennung
+   `com.henning.looseends`), installierte zusätzlich `com.henning.looseends.uitests.xctrunner`, und
+   die neu gebaute Sperr-Vorprüfung startet die App im Vordergrund. Das Gerät war 5–10 Minuten
+   exklusiv belegt und musste entsperrt bleiben.
+2. **Er beweist nicht, wofür er gebaut wurde.** Auf `4-zweite-aufgabe-mit-uebernommenen-werten.png`
+   ist das Titelfeld leer — Apple Intelligence hat im Testlauf nichts gesetzt. Der Lauf prüfte
+   damit dasselbe wie der Simulator, nur invasiver. Der neue bedingte Zweig in Schritt 3 wurde nie
+   betreten; der Anhang `schritt3-zweig` zeigt auch auf dem Gerät „Kontext war nicht gesetzt —
+   angetippt".
+3. **Er ist blind gegen sichtbare Fehler.** Auf demselben Bild steht „Garden, Garten, Garden" statt
+   „Garden". Der Test prüft `label CONTAINS "Garden"` und ist grün. → #157, #158.
+4. **Er verletzt eine bestehende Entscheidung.** In `scripts/sim.sh` steht als Begründung für die
+   Labor-App wörtlich: „Gemessen wird in der Labor-App auf dem iPhone, nicht in einem Testlauf: ein
+   Testlauf belegt das Gerät am Stück und entsperrt, bis er fertig ist. Henning benutzt sein iPhone
+   den ganzen Tag." Dazu im Gedächtnis seit 2026-09-20: „kein Fernstart einer App auf seinem iPhone,
+   nie." Beides wurde beim Bau übersehen, nicht gekippt.
+
+### Geprüfte Alternative: passiv zuhören statt aktiv drücken
+
+Naheliegender Ausweg: Die App schreibt bereits unter 11 `Logger`-Kategorien
+(`com.henning.looseends`: App, Calendar, Notifications, Speech, Capture, Detail, Sidebar, List,
+Share, Enrichment, Persistence). `EnrichmentCoordinator` protokolliert Modellverfügbarkeit,
+Aufrufzahl, geschriebene Felder und Fehler; alle interpolierten Werte sind bereits mit
+`privacy: .public` annotiert. Statt einen Ablauf nachzuspielen, könnte man mitlesen, während Henning
+die App ohnehin benutzt.
+
+**Diese Alternative trägt in der gedachten Form nicht.** Am Werkzeug nachgeprüft:
+
+- **`devicectl` hat kein Log-Subkommando.** Die vollständige Liste von `device info` lautet
+  `appIcon, appResize, appearance, apps, audio, authListing, ddiServices, details, displays, files,
+  lockState, processes, voiceover`. Nichts davon liest das Systemprotokoll.
+- **`--console` liest die Standardausgabe, nicht `os_log`.** Apples Hilfe: „--console bridges the
+  app's stdout to devicectl's stdout." Die App schreibt aber ausschließlich über `Logger`, nie über
+  `print` (Projektregel). **Damit liest `cmd_device_console` (`sim.sh:348–363`) nicht, was sein
+  Kommentar behauptet** — eigener Befund, als #160 erfasst. #143 baut auf der Annahme auf, hier
+  existiere ein Kanal; der existiert nicht.
+- **Ein funktionierender Weg existiert woanders:** `xcrun xctrace record --template Logging
+  --all-processes --device <UDID>` zeichnet über Instruments auf, ohne die App zu starten. Es gibt
+  sogar ein Instrument **„Foundation Models"** (auf dieser Maschine vorhanden). Das ist im Projekt
+  nie benutzt worden, schwerer zu skripten als `devicectl`, und sein Zustimmungsverhalten am Gerät
+  ist ungeklärt (`--no-prompt` legt einen Dialog nahe). Gehört in einen Spike, nicht in eine
+  Umsetzung.
+
+**Drei tragende Einwände gegen den passiven Ansatz, unabhängig vom Werkzeug:**
+
+1. **Abwesenheit ist mehrdeutig.** Fehlt eine erwartete Logzeile, ist unklar, ob das Feature kaputt
+   ist, der Codepfad nie ausgelöst wurde, die Verbindung abriss oder der Wert redigiert wurde. Ein
+   aktiver Test liefert Ja/Nein, ein Zuhörer bestenfalls „nicht gesehen" — strukturell schwächer und
+   genau die Richtung des falschen Grüns aus #151.
+2. **Kein Bezug zum geprüften Stand.** Ohne Installation reagiert die Beobachtung auf irgendeine
+   früher installierte Fassung. Eine Zuordnung zum aktuellen Stand bräuchte erst eine Build-Kennung
+   in einer Startzeile des Protokolls — neue Arbeit, keine Fußnote.
+3. **Es ist bereits ein anderes Ticket.** #143 („sim.sh liest das Unified Log des iPhones nicht")
+   deckt genau das ab, und der Abschnitt „Verhältnis zu anderen Tickets" oben hält ausdrücklich
+   fest, dass #143 nicht ersetzt wird. Die Idee jetzt hierher zu ziehen wäre erneut Scope-Wachstum.
+
+Deckung der acht Bereiche durch passives Zuhören, falls der Spike trägt: App-Gruppe/CloudKit gut
+(`ModelContainerFactory` protokolliert fehlendes Entitlement und CloudKit-Rückfall bei jedem Start),
+Share gut, Apple Intelligence und Mikrofon nur teilweise (protokolliert wird *dass*, nie *ob
+sinnvoll*), Watch eingeschränkt (teilt sich die Kategorie „Capture" mit dem iPhone), Mitteilungen
+eingeschränkt (Zustellung liegt Stunden später), **Widgets gar nicht** (kein einziger `Logger` unter
+`LooseEndsWidgets/`), Signierung gar nicht (Fehler treten beim Installieren auf, nicht zur Laufzeit).
+
+### Entscheidung
+
+**#153 wird zum Rückbau.** Die Gerätestufe fährt keine Bedienabläufe. Der gebaute Befehl kommt
+wieder heraus, und die dritte Stufe steht wieder auf dem, was unstrittig und nicht invasiv ist:
+`device-status` (rein lesend) plus die Labor-App, die Henning selbst antippt.
+
+Begründung in einem Satz: Ohne Fernstart und ohne Installation gibt es keinen Bedienablauf auf
+diesem Gerät — und beides ist aus gutem Grund ausgeschlossen.
+
+### Affected Files
+
+| Datei | Change Type | Beschreibung |
+|---|---|---|
+| `scripts/sim.sh` | MODIFY | `cmd_device_test`, `device_probe_locked`, `acquire_device_lock`/`release_device_lock`, Dispatch-Zeile und Hilfetext wieder entfernen; `trap cleanup_locks EXIT` zurück auf `trap release_lock EXIT`; `MAIN_BUNDLE_ID`, `DEVICE_LOCK_DIR` entfallen |
+| `scripts/tests/device-test.sh` | DELETE | Prüfstand des entfernten Befehls; die Lehre daraus (Aggregation, Selbsttest) wandert in die ADR, nicht in totes Prüfgerüst |
+| `docs/project/04-stand.md` | MODIFY | Abschnitt „Abnahme in drei Stufen": Stufe 3 ist `device-status` plus Labor-App, mit dem Satz, warum kein Bedienablauf darauf läuft |
+| `docs/project/00-entscheidungen.md` | MODIFY | ADR-11-Zusatz ersetzen: nicht „ein Smoke-Test läuft zusätzlich auf dem iPhone", sondern „auf Hennings Gerät läuft kein Testlauf und kein Fernstart; was nur Hardware zeigt, wird gemessen (Labor-App) oder beobachtet, nicht bedient" |
+| `LooseEndsUITests/RecognitionWalkthroughTests.swift` | KEEP | Die drei Eingriffe (Endzustand statt Bedienweg) sind unabhängig richtig und bleiben — der Test läuft künftig nur im Simulator. Die Verschärfung auf Wertgleichheit ist #158. |
+
+### Scope Assessment
+
+- Dateien: 4 geändert, 1 gelöscht
+- Geschätzte Zeilen: −165 / +35 (Netto-Rückbau)
+- Risiko: **Niedrig** — es wird nur entfernt, was noch nirgends benutzt wird, und kein Produktpfad berührt
+
+### Reihenfolge der Folgearbeit
+
+1. **#153** (dieser Rückbau)
+2. **#156** Kennungs-Trennung — durch den Vorfall dringlicher, nicht optional: `device`,
+   `device-build`, `device-install` und `lab` installieren weiterhin unter der Produktivkennung.
+   Aufwand höher als gedacht: App-Gruppe und iCloud-Container sind in
+   `ModelContainerFactory.swift:12–13` hart verdrahtet, und `WKCompanionAppBundleIdentifier`
+   (`LooseEndsWatch/Info.plist:34`, `project.yml:109`) verweist fest auf die Haupt-Kennung — ein
+   Zusatz bricht die Watch-Kopplung.
+3. **#160** `device-console` klären (liest die falsche Quelle)
+4. **#143** Spike: trägt `xctrace record` als Beobachtungskanal? Erst danach ein Befehl.
+5. **#158** Walkthrough auf Wertgleichheit verschärfen · **#157** dreifacher Kontext · **#159**
+   warum das Modell im Prüfbetrieb keinen Titel setzt
+
+### Open Questions
+
+- Keine für diesen Schnitt. Die offenen Fragen hängen alle an Folge-Tickets und sind dort benannt.
+
 ## Quellen
 
 - [Running XCTests from the Command Line (Tauk Blog)](https://medium.com/tauk-blog/running-xctests-from-the-command-line-f2e5ce0b4bfd) — `-destination 'platform=iOS,id=<UDID>'`
@@ -231,3 +352,9 @@ erzwungenen Sprache liegen.
 - [Xcode „Device Locked“ trotz entsperrtem iPhone (Repeato)](https://www.repeato.app/blog/xcode/resolving-the-device-locked-error-in-xcode-when-your-iphone-is-unlocked/) — Fehlerbild und Fehlalarme
 - [`lockState` meldet `passcodeRequired: false` bei gesperrtem Telefon (callstack/agent-device #2861)](https://github.com/callstack/agent-device/issues/2861) — kein validierter Sperr-Diskriminator
 - [devicectl — The Apple Wiki](https://theapplewiki.com/wiki/Devicectl) — Befehlsumfang
+- [Apple DTS zu automatisiertem Testen mit Foundation Models](https://developer.apple.com/forums/thread/794408) — Apple empfiehlt ein eigenes Auswertungswerkzeug mit Datensätzen, keinen UI-Test; Drosselung nur bei Akku UND Hintergrund
+- [Run Your iOS App Without Overwriting The App Store Version (Xebia)](https://xebia.com/blog/run-your-ios-app-without-overwriting-the-app-store-version/) — Kennungs-Zusatz je Build-Konfiguration
+- [Build Customizations (Kodeco)](https://www.kodeco.com/books/ios-app-distribution-best-practices/v1.0.ea1/chapters/10-build-customizations) — `BUNDLE_ID_SUFFIX` als benutzerdefinierte Build-Einstellung
+- [Mobile Testing Best Practices (Pie)](https://pie.inc/blog/mobile-testing-best-practices/) — „Conflicts are inevitable when your test environment is also someone's manual playground"
+- [On-device smoke test: install, launch, trust, App Groups (StillMotions #44)](https://github.com/Brian-Egan/StillMotions/issues/44) — Gerätestufe prüft benannte Einzelpunkte, nicht einen nachgespielten Ablauf
+- [Debug iOS Device Bugs With Xcode 27 Device Hub (The Swift Dev)](https://www.theswift.dev/posts/debug-ios-device-bugs-with-xcode-27-device-hub/) — Beobachtung ohne XCUITest: Protokolle, Absturzberichte, App-Datencontainer
