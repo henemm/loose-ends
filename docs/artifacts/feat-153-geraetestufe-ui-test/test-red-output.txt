@@ -1,0 +1,41 @@
+test_ohne_argument_nutzungsmeldung
+  FAIL: erwartet 'Usage: ./scripts/sim.sh device-test' in der Ausgabe, bekam:
+          ./scripts/sim.sh device                   # signiert bauen, drahtlos installieren, starten
+          ./scripts/sim.sh device-console [sek]     # dasselbe, aber Logausgabe live mitlesen (Vorgabe 30 s)
+        
+        Simulator per Name: LOOSEENDS_SIM="iPhone 17 Pro" ./scripts/sim.sh build
+        Gerät per UDID:     LOOSEENDS_DEVICE=00008140-... ./scripts/sim.sh device
+test_sperrvorabpruefung_verhindert_bau
+  FAIL: erwartet 'iPhone ist gesperrt' in der Ausgabe, bekam:
+          ./scripts/sim.sh device                   # signiert bauen, drahtlos installieren, starten
+          ./scripts/sim.sh device-console [sek]     # dasselbe, aber Logausgabe live mitlesen (Vorgabe 30 s)
+        
+        Simulator per Name: LOOSEENDS_SIM="iPhone 17 Pro" ./scripts/sim.sh build
+        Gerät per UDID:     LOOSEENDS_DEVICE=00008140-... ./scripts/sim.sh device
+test_pipestatus_kommt_von_xcodebuild
+  FAIL: erwartet 'xcodebuild 3' in der Ausgabe, bekam:
+          ./scripts/sim.sh device                   # signiert bauen, drahtlos installieren, starten
+          ./scripts/sim.sh device-console [sek]     # dasselbe, aber Logausgabe live mitlesen (Vorgabe 30 s)
+        
+        Simulator per Name: LOOSEENDS_SIM="iPhone 17 Pro" ./scripts/sim.sh build
+        Gerät per UDID:     LOOSEENDS_DEVICE=00008140-... ./scripts/sim.sh device
+test_zeitschranke_bricht_haengenden_bau_ab
+  FAIL: erwartet 'gesperrt' in der Ausgabe, bekam:
+          ./scripts/sim.sh device                   # signiert bauen, drahtlos installieren, starten
+          ./scripts/sim.sh device-console [sek]     # dasselbe, aber Logausgabe live mitlesen (Vorgabe 30 s)
+        
+        Simulator per Name: LOOSEENDS_SIM="iPhone 17 Pro" ./scripts/sim.sh build
+        Gerät per UDID:     LOOSEENDS_DEVICE=00008140-... ./scripts/sim.sh device
+test_deviceprep_code_minus3_wird_erkannt
+  FAIL: erwartet 'gesperrt oder wurde waehrend des Laufs gesperrt' in der Ausgabe, bekam:
+          ./scripts/sim.sh device                   # signiert bauen, drahtlos installieren, starten
+          ./scripts/sim.sh device-console [sek]     # dasselbe, aber Logausgabe live mitlesen (Vorgabe 30 s)
+        
+        Simulator per Name: LOOSEENDS_SIM="iPhone 17 Pro" ./scripts/sim.sh build
+        Gerät per UDID:     LOOSEENDS_DEVICE=00008140-... ./scripts/sim.sh device
+test_erfolg_exportiert_screenshots
+  FAIL: haette gelingen muessen
+test_verwaistes_geraetelock_wird_entfernt
+  FAIL: verwaistes Lock hat den Lauf blockiert
+
+Mindestens ein Fall gescheitert (0 von 7 bestanden).

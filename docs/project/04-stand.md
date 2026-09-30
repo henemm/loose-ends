@@ -141,19 +141,39 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
 
 ## Abnahme in drei Stufen
 
-Die Reihenfolge ist verbindlich. Keine Stufe wird übersprungen, keine vorgezogen.
+Die Reihenfolge ist verbindlich, keine Stufe wird vorgezogen. Stufe 1 und 2 werden nie
+übersprungen; Stufe 3 nur, wenn der Schnitt einen Pfad der Geräteliste berührt (`CLAUDE.md`).
 
 1. **Tests** — `./scripts/sim.sh unit` und der betroffene UI-Test müssen grün sein.
 2. **Simulator** — `./scripts/sim.sh build`, `launch`, `screenshot`: der betroffene Ablauf wird
    selbst durchgespielt und belegt. Nichts geht auf das Gerät, was hier nicht bewiesen ist.
-3. **Hennings iPhone 16 Pro** — `./scripts/sim.sh device`. Erst danach gilt eine Änderung als
-   fertig.
+3. **Hennings iPhone 16 Pro** — `./scripts/sim.sh device-status` (liest nur) und die Labor-App
+   (`./scripts/sim.sh lab`), die Henning selbst antippt. Erst danach gilt eine Änderung als fertig.
 
-Stufe 3 ist keine Bitte an Henning, sondern läuft von hier aus: Das Gerät ist über das lokale
-Netzwerk gepairt, `xcrun devicectl` baut signiert, installiert drahtlos und startet. Installieren
-geht auch bei gesperrtem iPhone, Starten braucht ein entsperrtes. `device-console` liest stdout
-und stderr live mit — das ist der Grund, warum diese Stufe existiert und nicht durch TestFlight
-ersetzt werden kann.
+Stufe 3 fährt seit #153 keinen nachgespielten Bedienablauf mehr. Der erste echte Versuch dafür —
+derselbe UI-Test wie im Simulator, aber signiert auf dem Gerät — lief am 2026-09-30 zwar grün, war
+dabei aber invasiv: Er überschrieb Hennings produktive Installation (gleiche Kennung
+`com.henning.looseends`), die Sperr-Vorprüfung startete die App im Vordergrund und verdrängte, was
+gerade lief, und das Telefon war 5–10 Minuten exklusiv belegt und musste entsperrt bleiben. Belegt
+hat er dabei nichts von dem, wofür er gebaut wurde: Auf dem Beweisbild
+(`docs/artifacts/feat-153-geraetestufe-ui-test/screenshots/`) hatte Apple Intelligence im Testlauf
+nichts gesetzt — der Lauf prüfte damit dasselbe wie der Simulator, nur invasiver. Das verletzte eine
+bestehende Entscheidung, die nie gekippt, sondern beim Bauen übersehen wurde (siehe die Begründung
+zu `cmd_lab_run` unten in dieser Datei) und die Festlegung, nie eine App auf Hennings Gerät
+fernzustarten.
+
+`device-status` zeigt nur, ob und wie das Gerät verbunden ist — es baut, installiert und startet
+nichts. Die frühere Begründung dieser Stufe über `device-console` ist hinfällig, nicht nur ersetzt:
+Das Kommando liest die Standardausgabe (`--console`), die App schreibt aber ausschließlich über
+`Logger`, nie über `print` (#160) — es hat nie gelesen, was sein Kommentar behauptete.
+
+**Die dadurch entstehende Lücke wird hier benannt, nicht versteckt.** Für Apple Intelligence bleibt
+die Labor-App der Messweg. Für Watch, Widgets, Share, Mikrofon und Mitteilungen gibt es auf echter
+Hardware aktuell **keinen** automatisierten Nachweis mehr, nur den lesenden Statusblick. Folgeticket
+für den Verschluss: #156 (eigene Kennung für Prüfbauten — Vorbedingung für alles Weitere auf dem
+Gerät, weil Prüfbauten heute noch unter der Produktivkennung installieren), #143 (Spike: trägt
+`xctrace record --template Logging` als Beobachtungskanal, ohne die App zu starten?), #160
+(`device-console` klären oder ersetzen).
 
 Was Stufe 3 findet und Stufe 2 prinzipiell nicht kann: Apple Intelligence auf dem Gerät,
 CloudKit-Sync zwischen Geräten, Watch, Action Button, Widgets, Mikrofon — und alles, was an

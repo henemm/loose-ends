@@ -1,0 +1,24 @@
+=== Rückbau-Prüfung #153 — Stand: 2026-09-30 09:31:29 ===
+Commit: bdab40a
+
+FAIL  AC-1   Dispatch-Zeile 'device-test)' steht noch in scripts/sim.sh — nicht aufgerufen (Gerätekontakt vermieden)
+FAIL  AC-2   cmd_device_test: noch 3 Treffer in scripts/sim.sh
+FAIL  AC-2   device_probe_locked: noch 2 Treffer in scripts/sim.sh
+FAIL  AC-2   acquire_device_lock: noch 2 Treffer in scripts/sim.sh
+FAIL  AC-2   release_device_lock: noch 3 Treffer in scripts/sim.sh
+FAIL  AC-2   cleanup_locks: noch 2 Treffer in scripts/sim.sh
+FAIL  AC-2   MAIN_BUNDLE_ID: noch 2 Treffer in scripts/sim.sh
+FAIL  AC-2   DEVICE_LOCK_DIR: noch 8 Treffer in scripts/sim.sh
+FAIL  AC-2   DEVICE_LOCK_ACQUIRED: noch 3 Treffer in scripts/sim.sh
+FAIL  AC-3   trap release_lock EXIT: 0 Treffer (erwartet 1)
+FAIL  AC-4   scripts/tests/device-test.sh existiert noch (Datei: ja, versioniert: ja)
+FAIL  AC-5   scripts/tests/ hat noch 1 versionierte Datei(en)
+FAIL  AC-6   noch 21 Nennung(en): CLAUDE.md:83:einen, läuft der volle Bedienablauf über `./scripts/sim.sh device-test <Klasse>` — nicht der bloße LooseEndsUITests/RecognitionWalkthroughTests.swift:10:/// (`./scripts/sim.sh device-test RecognitionWalkthroughTests`). Deshalb prüfen die Zusicherungen docs/project/00-entscheidungen.md:137:(`./scripts/sim.sh device-test <Klasse>`) und bildet dort die dritte Abnahmestufe. Weil auf dem 
+PASS  AC-6   Gegenprobe: 2 Begründungsdokumente nennen ihn weiterhin
+PASS  AC-9   cmd_device_status liest nur (device info details)
+FAIL  AC-10  04-stand.md nennt device-test noch bzw. device-status nicht
+FAIL  AC-11  ADR-11 trägt noch den alten Zusatz bzw. nicht den neuen
+FAIL  AC-12  CLAUDE.md verweist noch auf den vollen Bedienablauf
+PASS  AC-13  kein Produktpfad im Diff gegen main
+
+ERGEBNIS: mindestens ein Kriterium nicht erfüllt (RED).

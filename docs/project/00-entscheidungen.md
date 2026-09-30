@@ -133,6 +133,10 @@ Prompts an das Modell in der Sprache des Nutzers, Ergebnisstruktur sprachunabhä
 **ADR-11 Tests.** Unit-Tests für Veredelung (mit Fake-Modell über das `LanguageModel`-Protokoll),
 Ansichtsberechnung, Wiederholungsregel, Revisionen. Evaluations-Framework für Prompts mit dem
 FocusBlox-Korpus. UI-Tests erst nach Design-Freeze und nur als Smoke-Tests.
+Auf Hennings Gerät läuft kein Testlauf und kein Fernstart einer App. Was sich nur auf echter
+Hardware zeigt, wird gemessen (Labor-App) oder beobachtet, nie bedient. Bedienabläufe — auch
+UI-Tests — bleiben im Simulator; ein Versuch, sie signiert auf dem Gerät zu fahren, überschrieb
+2026-09-30 Hennings produktive Installation und bewies dabei nicht, wofür er gebaut war (#153).
 
 **ADR-12 Prozess.** Plugin `agent-os-openspec`. Fast-Track für Projektgerüst, Modell, Targets,
 Container. Danach Standard-Workflow mit 250-LoC-Grenze. Kein `try?` ohne Behandlung,

@@ -56,11 +56,36 @@ sonst kennt Xcode die neu hinzugekommenen Dateien nicht und baut eine App ohne d
 legt das Team in der erzeugten Projektdatei ab, die bei jedem `generate` neu geschrieben wird — ein
 leerer Wert heißt, dass Xcode nach dem nächsten Stand jeden Gerätestart verweigert.
 
-**Acceptance runs in three stages and none may be skipped** — tests, then Simulator, then Henning's
-iPhone 16 Pro (`./scripts/sim.sh device`, paired over the local network). A change is only done once
-it ran on the device. `docs/project/04-stand.md` has the reasoning and the commands. TestFlight is a
-distribution channel, not a stage: it gives no debugger and no live logs, so it stays dormant until
-people other than Henning test.
+**Acceptance runs in stages, and the first two are never skipped** — tests, then Simulator
+(`./scripts/sim.sh build`, `launch`, `screenshot`: the changed flow is played through and evidenced).
+`docs/project/04-stand.md` has the reasoning and the commands. TestFlight is a distribution channel,
+not a stage: it gives no debugger and no live logs, so it stays dormant until people other than
+Henning test.
+
+**Stage 3 — Henning's iPhone 16 Pro — is mandatory exactly when the change touches something the
+Simulator cannot show** (Henning, 2026-09-29). Not a judgement call: the trigger is a file list, so
+that it can be checked from the diff and never argued away. A device run is required when the change
+touches any of these paths:
+
+| Pfad | Was nur das Gerät zeigt |
+|---|---|
+| `Shared/Enrichment/FoundationModelsEnricher.swift`, `Shared/Enrichment/EnrichmentCoordinator.swift` | Apple Intelligence — der Simulator hat keine Modell-Assets |
+| `Shared/Persistence/` | App-Gruppe und CloudKit-Abgleich zwischen Geräten |
+| `LooseEndsWatch/` | Apple Watch |
+| `LooseEndsWidgets/` | Widgets, Aktionstaste, Kurzbefehle |
+| `LooseEndsShare/`, `Shared/Intents/` | Erfassung von außerhalb der App |
+| `LooseEnds/Speech/` | Mikrofon und Spracherkennung |
+| `LooseEnds/Notifications/` | Zustellung echter Mitteilungen |
+| `project.yml`, jede `*.entitlements`, jede `Info.plist` | Signierung, Berechtigungen, Targets — die Klasse des App-Group-Absturzes |
+
+Berührt der Schnitt keinen dieser Pfade, endet die Abnahme nach Stufe 2, und das wird im
+Abschlussbericht mit genau diesem Satz begründet: „Kein Pfad der Geräteliste berührt." Berührt er
+einen, läuft `./scripts/sim.sh device-status` (liest nur, installiert und startet nichts) — für
+Apple Intelligence zusätzlich die Labor-App, die Henning selbst antippt. Einen nachgespielten
+Bedienablauf auf dem Gerät gibt es seit dem Rückbau von #153 nicht mehr: Der Versuch dazu
+überschrieb Hennings produktive Installation und bewies nicht, wofür er gebaut war. Für Watch,
+Widgets, Share, Mikrofon und Mitteilungen bleibt der automatisierte Nachweis auf echter Hardware
+damit offen (`docs/project/04-stand.md`, #156, #143, #160). Im Zweifel läuft die Stufe.
 
 **⛔ Ausliefern ist Teil jedes Tickets — der letzte Schritt vor Hennings eigenem Test.** Gearbeitet
 wird in einem Worktree, gebaut wird bei Henning aus `/Users/hem/Developer/loose-ends`. Nach dem Merge

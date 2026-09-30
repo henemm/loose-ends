@@ -1,0 +1,83 @@
+Mutationstest des Pruefstands scripts/tests/device-test.sh
+Datum: 2026-09-29T21:20:28+0200   Basis-Commit: bdab40a
+
+Zweck: Belegen, dass der Pruefstand nach dem Fix zu Befund F001 wirklich rot werden KANN.
+Vor dem Fix meldete er Exit 0, obwohl er "FAIL:" druckte: fail() setzte nur den lokalen
+Zustand T_FAIL, das globale FAILED trug erst finish() nach — und alle sieben Faelle
+verliessen die Funktion im primaeren Fehlschlag-Zweig mit 'fail "..."; return', also VOR
+finish(). Genau dieser Zweig schlaegt unten in Lauf 1 an.
+
+==============================================================================
+LAUF 1 - MIT MUTATION
+Mutiert: scripts/sim.sh, Funktion device_probe_locked. Die Sperr-Vorabpruefung liefert
+statt des grep-Treffers auf 'BSErrorCodeDescription = Locked' immer 'false' - AC-2
+(gesperrtes Telefon verhindert den Bau) greift damit nicht mehr.
+
+$ diff sim.sh.original scripts/sim.sh
+378c378
+<     echo "$out" | grep -q "BSErrorCodeDescription = Locked"
+---
+>     false  # MUTATION: Sperr-Vorabpruefung liefert immer "nicht gesperrt"
+------------------------------------------------------------------------------
+$ bash scripts/tests/device-test.sh
+test_ohne_argument_nutzungsmeldung
+  ok
+test_sperrvorabpruefung_verhindert_bau
+  FAIL: haette scheitern muessen
+  FAIL: Fall endete ohne Abschluss — finish wurde nicht erreicht
+test_pipestatus_kommt_von_xcodebuild
+  ok
+test_zeitschranke_bricht_haengenden_bau_ab
+  ok
+test_deviceprep_code_minus3_wird_erkannt
+  ok
+test_erfolg_exportiert_screenshots
+  ok
+test_verwaistes_geraetelock_wird_entfernt
+  ok
+test_pruefstand_wird_rot
+  ok
+
+Mindestens ein Fall gescheitert (7 von 8 bestanden).
+
+EXIT-CODE LAUF 1: 1
+
+==============================================================================
+LAUF 2 - MUTATION ZURUECKGENOMMEN
+scripts/sim.sh ist wieder die gewollte Implementierung.
+SHA1 vor der Mutation : de75f2fc14ba49c446df6f6996ad44dc60194445
+SHA1 nach Ruecknahme  : de75f2fc14ba49c446df6f6996ad44dc60194445
+$ diff sim.sh.original scripts/sim.sh
+(leer - identisch)
+------------------------------------------------------------------------------
+$ bash scripts/tests/device-test.sh
+test_ohne_argument_nutzungsmeldung
+  ok
+test_sperrvorabpruefung_verhindert_bau
+  ok
+test_pipestatus_kommt_von_xcodebuild
+  ok
+test_zeitschranke_bricht_haengenden_bau_ab
+  ok
+test_deviceprep_code_minus3_wird_erkannt
+  ok
+test_erfolg_exportiert_screenshots
+  ok
+test_verwaistes_geraetelock_wird_entfernt
+  ok
+test_pruefstand_wird_rot
+  ok
+
+Alle 8 Verzweigungen geprueft.
+
+EXIT-CODE LAUF 2: 0
+
+==============================================================================
+ERGEBNIS
+Mit Mutation   : Exit 1 - test_sperrvorabpruefung_verhindert_bau schlaegt an.
+Ohne Mutation  : Exit 0 - alle acht Faelle ok.
+Der Pruefstand kann damit nachweislich rot werden. Vor dem Fix haette Lauf 1 ebenfalls
+Exit 0 gemeldet, obwohl er "FAIL:" druckte - das war Befund F001.
+
+Hinweis: Der mutierte Lauf laesst einen zeitgestempelten Ordner docs/artifacts/device-test-*
+zurueck (der Erfolgspfad ohne LOOSEENDS_ARTIFACT_DIR); er wurde nach dem Lauf entfernt.

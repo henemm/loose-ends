@@ -1,0 +1,25 @@
+[sim] Simulator bereit (iPhone 17).
+[sim] UI-Test: RecognitionWalkthroughTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+note: Building targets in dependency order
+note: Target dependency graph (6 targets)
+Test Suite 'Selected tests' started at 2026-09-30 12:09:46.515.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-09-30 12:09:46.521.
+Test Suite 'RecognitionWalkthroughTests' started at 2026-09-30 12:09:46.521.
+⚠️  <unknown>:0: -[LooseEndsUITests.RecognitionWalkthroughTests testWordEqualRecaptureTakesOverDurationAndContext] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.
+    t =    39.61s Waiting 5.0s for "captureTextField" Any to exist
+    t =    40.74s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`
+    ✔ testWordEqualRecaptureTakesOverDurationAndContext (100.571 seconds)
+Executed 1 test, with 0 failures (0 unexpected) in 100.571 (100.598) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-09-30 12:11:27.122.
+Executed 1 test, with 0 failures (0 unexpected) in 100.571 (100.601) seconds
+Executed 1 test, with 0 failures (0 unexpected) in 100.571 (100.607) seconds
+Test session results: /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.09.30_12-09-27-+0200.xcresult
+Test Succeeded
+Testing started
+[sim] UI-Test bestanden.
+UITEST_EXIT=0
