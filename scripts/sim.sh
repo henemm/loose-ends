@@ -268,53 +268,41 @@ cmd_device_status() {
         grep -E "Device State|Transport Type|Marketing Name|Platform|OS Version" || true
 }
 
-# Signierte Gerätebauten entstehen auf GitHub (.github/workflows/probe-build.yml), nicht hier:
-# das lokale xcodebuild 27.0 lehnt den gültigen App-Store-Connect-Schlüssel ab (#156), und
-# Hennings Xcode-Anmeldung wird nie benutzt. Gebaut wird der gesicherte Stand (HEAD) über einen
-# Prüfzweig probe/<kind>/<sha>; das Ergebnis landet in $dd/export/<scheme>/unpacked/Payload/<app>.app.
-ci_device_app() {
-    local kind="$1" app="$2" scheme
-    case "$kind" in app) scheme="$SCHEME" ;; lab) scheme="$LAB_SCHEME" ;; *) error "Unbekannte Art $kind"; return 1 ;; esac
+# Signierte Gerätebauten nutzen nur die gespeicherten Profile (#156). Kein -allowProvisioningUpdates:
+# es meldet seit Xcode 16 die Anmeldung in Xcode ab (Apple-Forum 765741, 765893). Kein API-Schlüssel:
+# er kann keine neuen Entwicklungsprofile anlegen (Forum 763225, Lauf 36822132719). Neue Kennungen,
+# Fähigkeiten oder abgelaufene Profile: einmal LOOSEENDS_REGISTER=1 (benutzt die Xcode-Anmeldung).
+signed_build() {
+    local id="$1" scheme="$2"; shift 2
     cd "$PROJECT_DIR"
-    # .claude/ trägt Workflow-Zustand (active_workflow, sim_lock.d), nie Teil des Baus.
-    [ -z "$(git status --porcelain -- . ':!.claude')" ] || { error "Ungesicherte Änderungen — der Gerätebau baut den gesicherten Stand. Erst sichern."; return 1; }
-    local branch; branch="probe/$kind/$(git rev-parse --short HEAD)"
-    info "Prüfbau auf GitHub: $branch"
-    git push origin "HEAD:refs/heads/$branch" || { error "Prüfzweig $branch nicht hochgeladen."; return 1; }
-    local rc=0; ci_fetch_app "$branch" "$scheme" "$app" || rc=1
-    # Auch nach einem Fehlschlag löschen: sonst fände der nächste Versuch mit demselben Stand
-    # nur den alten, gescheiterten Lauf wieder (ein Push ohne Änderung startet keinen neuen).
-    git push origin --delete "$branch" >/dev/null 2>&1 || warn "Prüfzweig $branch nicht gelöscht."
-    return "$rc"
-}
-
-ci_fetch_app() {
-    local branch="$1" scheme="$2" app="$3" run="" i
-    for i in $(seq 12); do
-        run=$(gh run list --workflow probe-build.yml --branch "$branch" --json databaseId --jq '.[0].databaseId' 2>/dev/null) || run=""
-        [ -n "$run" ] && break; sleep 5
-    done
-    [ -n "$run" ] || { error "Kein Prüfbau-Lauf für $branch gefunden (60 s gewartet)."; return 1; }
-    local url; url=$(gh run view "$run" --json url --jq .url 2>/dev/null) || url="Lauf $run"
-    info "Warte auf $url"
-    gh run watch "$run" --exit-status >&2 || { error "Prüfbau fehlgeschlagen: $url"; return 1; }
-    local out; out="$(device_derived_data)/export/$scheme"
-    rm -rf "$out"; mkdir -p "$out"
-    gh run download "$run" -n "probe-$scheme" -D "$out" || { error "Artefakt probe-$scheme nicht geladen: $url"; return 1; }
-    local ipa; ipa=$(find "$out" -maxdepth 1 -name '*.ipa' | head -1)
-    [ -n "$ipa" ] || { error "Keine .ipa in $out"; return 1; }
-    ditto -x -k "$ipa" "$out/unpacked"
-    [ -d "$out/unpacked/Payload/$app.app" ] || { error "$app.app fehlt im Artefakt"; return 1; }
+    local args=(build -project "$PROJECT" -scheme "$scheme" -destination "id=$id"
+                -derivedDataPath "$(device_derived_data)" "DEVELOPMENT_TEAM=$TEAM_ID" "$@")
+    if [ "${LOOSEENDS_REGISTER:-}" = 1 ]; then
+        warn "Registrierungslauf: benutzt die Anmeldung in Xcode (einmalig für neue Kennungen/Profile, #156)"
+        args+=(-allowProvisioningUpdates)
+    fi
+    info "Signierter Build für das Gerät ($id), $scheme, Team $TEAM_ID"
+    # Der Rückgabewert muss von xcodebuild kommen, nicht von xcbeautify: ohne
+    # PIPESTATUS meldete die Stufe am 2026-09-28 „Gerätebuild erfolgreich“,
+    # während xcodebuild „Unable to find a destination“ ausgab (#144-Abnahme).
+    local rc=0
+    if command -v xcbeautify >/dev/null; then
+        xcodebuild "${args[@]}" 2>&1 | xcbeautify || rc=${PIPESTATUS[0]}
+    else
+        xcodebuild "${args[@]}" 2>&1 || rc=$?
+    fi
+    [ "$rc" -eq 0 ] || { error "Gerätebuild fehlgeschlagen ($scheme, xcodebuild $rc)."; return 1; }
 }
 
 cmd_device_build() {
-    require_device >/dev/null || return 1
+    local id; id=$(require_device) || return 1
+    ensure_project
     # Prüfkennung (#156, ADR-18): der Gerätebau installiert nie unter Hennings Kennung.
-    ci_device_app app LooseEnds || { error "Gerätebuild fehlgeschlagen."; return 1; }
+    signed_build "$id" "$SCHEME" "BUNDLE_ID_SUFFIX=.probe" "LE_DISPLAY_NAME=LE Prüfbau" || return 1
     success "Gerätebuild erfolgreich."
 }
 
-device_app_path() { echo "$(device_derived_data)/export/$SCHEME/unpacked/Payload/LooseEnds.app"; }
+device_app_path() { echo "$(device_derived_data)/Build/Products/Debug-iphoneos/LooseEnds.app"; }
 
 # Installieren geht auch bei gesperrtem iPhone; Starten braucht ein entsperrtes.
 cmd_device_install() {
@@ -372,8 +360,10 @@ LAB_RESULTS="Measurement/results"
 
 cmd_lab() {
     local id; id=$(require_device) || return 1
-    ci_device_app lab LooseEndsLab || { error "Labor-App nicht gebaut"; return 1; }
-    local app; app="$(device_derived_data)/export/$LAB_SCHEME/unpacked/Payload/LooseEndsLab.app"
+    ensure_project
+    signed_build "$id" "$LAB_SCHEME" || { error "Labor-App nicht gebaut"; return 1; }
+    local app="$(device_derived_data)/Build/Products/Debug-iphoneos/LooseEndsLab.app"
+    [ -d "$app" ] || { error "Labor-App nicht gebaut"; return 1; }
     $DEVICECTL device install app --device "$id" "$app" >/dev/null
     success "Labor-App installiert."
 }

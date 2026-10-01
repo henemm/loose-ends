@@ -110,10 +110,9 @@ Die Mac-App kommt in einem späteren Schritt dazu (eigenes Archiv, eigener TestF
 
 ## Prüfbauten fürs iPhone (#156)
 
-Signierte Gerätebauten entstehen auf GitHub (`.github/workflows/probe-build.yml`, „Prüfbau"), mit
-denselben vier Secrets wie oben — nie auf dem Mac und nie über Hennings Anmeldung in Xcode, weil
-das lokale xcodebuild den gültigen API-Schlüssel ablehnt, während derselbe Weg in GitHub Actions
-funktioniert. `./scripts/sim.sh device-build` und `./scripts/sim.sh lab` laden den gesicherten
-Stand als Zweig `probe/app/<sha>` bzw. `probe/lab/<sha>` hoch, warten auf den Lauf, holen die
-signierte `.ipa` (Artefakt `probe-<scheme>`, 3 Tage aufbewahrt) und löschen den Zweig wieder.
-Ungesicherte Änderungen im Arbeitsbaum brechen den Gerätebau ab.
+`./scripts/sim.sh device-build` und `./scripts/sim.sh lab` signieren nur mit den Profilen, die auf
+dem Mac schon gespeichert sind, und sprechen dabei nicht mit Apple. So kann der Bau die Anmeldung in
+Xcode nicht abmelden. Für eine neue Kennung, eine neue Fähigkeit oder nach Ablauf eines Profils läuft
+einmal `LOOSEENDS_REGISTER=1 ./scripts/sim.sh device-build` (bzw. `… lab`): Dieser Lauf benutzt die
+Anmeldung in Xcode und legt Kennungen und Profile an. Der API-Schlüssel reicht dafür nicht, weil
+xcodebuild mit ihm keine neuen Entwicklungsprofile anlegen kann.

@@ -1,9 +1,8 @@
 ---
 spec_file: docs/specs/tooling/fix-156-pruefkennung.md
-spec_sha256: 3b766e35b9836ac6c22f5543173d9f209e3e9a596b980160c31e7392543d652e
+spec_sha256: 4471a6ed34a28296cd098c1c5eda7a26acf96d70cd52dce9d024a6be697bbdc5
 ---
 
----
 # PO-Briefing: bundle-id-debug-156
 
 - **Spec:** docs/specs/tooling/fix-156-pruefkennung.md
@@ -12,22 +11,22 @@ spec_sha256: 3b766e35b9836ac6c22f5543173d9f209e3e9a596b980160c31e7392543d652e
 
 ## Was gebaut wird
 
-Prüf-Testbauten auf deinem iPhone bekommen eine eigene App-Kennung und überschreiben deine echte App nicht mehr.
+Prüfbauten auf dem iPhone bekommen eine eigene Kennung, damit sie Hennings echte App-Daten nie überschreiben.
 
 ## Definition of Done
 
-Nach einem Prüfbau sind auf deinem iPhone zwei getrennte Apps sichtbar, deine bisherige bleibt unverändert.
+Ein Testlauf zeigt beide Apps gleichzeitig installiert, Hennings Version unverändert, Prüf-Version mit eigenem Namen und Speicherbereich.
 
 ## Wie geprüft wird
 
-Automatisierte Tests prüfen die Technik; ob beide Apps wirklich getrennt bleiben, wird einmalig am Gerät abgelesen.
+Automatisierte Prüfungen sichern den normalen Programmstart ab; der Gerätetest beweist nur die Installation, keinen Bedienablauf.
 
 ## Kritische Anmerkungen
 
-- Spec wurde nach deiner ersten Freigabe nochmal stark erweitert – du gibst jetzt die neue Fassung frei.
-- Umfang hat sich verdreifacht: statt 5 nun 16 Dateien, deutlich über dem sonst üblichen Rahmen.
-- Deine normale App ändert sich nicht – Lösung betrifft nur den Testweg, anders als ursprünglich verlangt.
+- Weicht vom Ticket ab: nur der Prüfweg, nicht die normale App, bekommt die neue Kennung — von Henning entschieden.
+- Für künftige Prüfbauten muss Henning sich gelegentlich neu bei Xcode anmelden, sonst scheitert die Registrierung.
+- Ob der eigene Cloud-Speicher entsteht, ist offen — misslingt es, läuft der Prüfbau nur lokal.
 
 ## Freigabe-Frage
 
-Gibst du diese deutlich erweiterte Lösung frei, obwohl sie den Umfang und die Kennung anders löst als ursprünglich gemeldet?
+Sollen Prüfbauten künftig getrennt von Hennings eigener App laufen, auch wenn das gelegentlich erneute Anmeldung braucht?

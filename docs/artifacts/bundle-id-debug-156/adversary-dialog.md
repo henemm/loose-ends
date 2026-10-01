@@ -64,11 +64,14 @@ zwei neuen Schluessel additiv vorhanden. Danach ./scripts/sim.sh launch (Exit 0,
   com.henning.looseends, kein Absturz, eigener Screenshot zeigt denselben Zustand wie das vorgelegte
   sim-launch.png.
   Code reference: scripts/sim.sh:176-181,225-235
-- [ ] AC-4: Geraetebau installiert isoliert (Stufe 3). Laut Auftrag ausdruecklich NICHT als erbracht zu
+- [x] AC-4: Geraetebau installiert isoliert (Stufe 3). STAND RUNDE 1: Laut Auftrag ausdruecklich NICHT als erbracht zu
   behandeln: der signierte Pruefbau in der Cloud-CI braucht einen gesicherten (committeten) Stand, der
   erst nach diesem Verdict entsteht. Der aktuelle Stand (nur die RED-Tests committet) traegt die
   eigentliche Aenderung noch nicht -- ein Hochladen jetzt wuerde den falschen Stand bauen.
   apps-after.txt oder ein Vergleichsscreenshot existieren nicht. Code-Review des Mechanismus in Runde 2.
+  INZWISCHEN UEBERHOLT: der Cloud-Weg wurde verworfen (Runde 4), AC-4 ist ueber den lokalen Weg
+  (Registrierungslauf + gespeicherte Profile) jetzt eigenstaendig bewiesen -- siehe Runde 4 fuer den
+  vollstaendigen, unabhaengig nachgepruefte Beleg.
 - [x] AC-5: ADR-18 dokumentiert. Gelesen in docs/project/00-entscheidungen.md:175-181, direkt nach
   ADR-17 und vor "## Bewusst nicht in Version 1" wie von der Spec verlangt. Nennt #156 und die
   Spec-Datei.
@@ -316,3 +319,186 @@ spaeteren Pruefrunde nachreichen, oder bis dahin warten.
 - sha256:d7c7de20bfb3bb5c92823af680c5b42fa789bcf4f98fd50a867522fa92a1659b  docs/project/00-entscheidungen.md
 - sha256:917c1e80d0d825261374ae30d449660a6ecd78c62deb67f7ca0f5e69926f2087  project.yml
 - sha256:516d38f9dd0fadec7f4a245b1d8857a05e56b0efe54df74381ffc28dd2cd96d7  scripts/sim.sh
+### Runde 4
+
+Kontext: Die Spec wurde grundlegend geaendert (Abschnitt 3, AC-4) und von Henning nach `override` mit
+`approved` freigegeben. Kern: der Cloud-Signierweg ist verworfen (scheiterte nachweislich identisch:
+„No profiles for com.henning.looseends.probe were found" -- mit Schluessel kann xcodebuild keine
+NEUEN Entwicklungsprofile anlegen, nur bestehende verwenden). Weg 2: Gerätebauten laufen lokal, ohne
+-allowProvisioningUpdates (kontaktiert Apple nicht, kann die Xcode-Anmeldung nicht abmelden), nur
+LOOSEENDS_REGISTER=1 registriert einmalig ueber die Anmeldung. Diese Runde prueft den neuen Code und
+die neuen AC-4-Belege mit Misstrauen -- jede Behauptung selbst nachgerechnet, nicht uebernommen.
+
+Hinweis: zwischen Runde 3 und dieser Runde wurde der damalige Stand committet (084655c) -- mein
+eigenes Dialog-Artefakt aus Runde 1-3 ist seitdem Teil der Historie. Das aendert nichts an dieser
+Pruefung: die aktuellen, unkommittierten Aenderungen (scripts/sim.sh, docs/reference/testflight.md,
+docs/specs/tooling/fix-156-pruefkennung.md, Loeschung von .github/workflows/probe-build.yml) werden
+wie gewohnt gegen den Arbeitsbaum geprueft. Das required-files-Werkzeug (Basis 2adb569) liefert
+weiterhin veraltet nur Shared/Persistence/ModelContainerFactory.swift -- per `git diff --stat HEAD`
+selbst nachgesehen: genau die vier oben genannten Dateien sind diese Runde veraendert, sonst nichts.
+
+1. F001 (Finding Runde 2, Fix bestaetigt Runde 3): WEITERHIN behoben, im neuen Code erneut geprueft.
+   cmd_device_build (Zeile 297-303): erste Anweisung ist "local id; id=$(require_device) || return 1",
+   danach ensure_project, danach signed_build. cmd_lab (Zeile 361-369): identische Reihenfolge
+   (require_device zuerst, Zeile 362). Beide brechen bei fehlendem Geraet vor jedem Bauversuch ab.
+   bash -n scripts/sim.sh: Exit 0, keine Ausgabe -- syntaktisch fehlerfrei.
+   Code reference: scripts/sim.sh:297-303
+   Code reference: scripts/sim.sh:361-369
+
+2. Neuer Code gegen die Spec gelesen (nicht nur behauptet, dass er der Spec folgt):
+   - signed_build (Zeile 275-295) ist im Kern die bereits VOR #156 erprobte lokale Baufunktion
+     (identisches PIPESTATUS-Muster, identische xcbeautify-Behandlung, siehe Vergleich mit dem
+     Stand vor 2adb569) -- kein neu erfundener Mechanismus, sondern ein Revert auf bewaehrten Code,
+     nur mit einer neuen Bedingung: -allowProvisioningUpdates wird nur noch gesetzt, wenn
+     LOOSEENDS_REGISTER=1 ist (Zeile 280-283), sonst nie. Das ist exakt die in der Spec verlangte
+     Trennung (Abschnitt 3: „ohne -allowProvisioningUpdates kontaktiert xcodebuild Apple nicht").
+   - cmd_device_build (Zeile 297-303) ruft signed_build mit "BUNDLE_ID_SUFFIX=.probe"
+     "LE_DISPLAY_NAME=LE Pruefbau" als zusaetzliche xcodebuild-Argumente -- bash-Array-Semantik
+     (shift 2, dann "$@" an args angehaengt) korrekt, selbst nachvollzogen.
+   - device_app_path (Zeile 305) zeigt wieder auf das lokale Bauprodukt
+     (Build/Products/Debug-iphoneos/LooseEnds.app) statt auf den entpackten Cloud-Export -- passt zu
+     device-install/device-launch, die unveraendert bleiben (keine Zeile dort angefasst).
+   - Keine Reste des verworfenen Wegs: ci_device_app, ci_fetch_app, "gh run", "git push origin" --
+     kein Treffer mehr im ganzen Skript (eigene Volltextsuche). .github/workflows/probe-build.yml
+     per Verzeichnislisting bestaetigt geloescht (nicht mehr vorhanden).
+   - docs/reference/testflight.md (Zeile 111-120 neu) beschreibt denselben Mechanismus wortgleich
+     zum Code: gespeicherte Profile, kein Apple-Kontakt im Normalfall, LOOSEENDS_REGISTER=1 fuer den
+     einmaligen Registrierungslauf.
+   Code reference: scripts/sim.sh:275-295
+   Code reference: scripts/sim.sh:305
+   Code reference: docs/reference/testflight.md:111-120
+   Code reference: docs/specs/tooling/fix-156-pruefkennung.md:234-255
+
+3. AC-1 bis AC-3 gegen den neuen Code: kein Produktivcode ausserhalb von scripts/sim.sh veraendert
+   seit Runde 1-3 (git diff --stat HEAD zeigt nur scripts/sim.sh, docs/reference/testflight.md,
+   docs/specs/tooling/fix-156-pruefkennung.md, docs/briefings/bundle-id-debug-156.md und die Loeschung
+   von probe-build.yml -- project.yml, ModelContainerFactory.swift, alle Info.plist/Entitlements-
+   Dateien sind unveraendert seit dem commiteten Stand). Die in dieser Runde veraenderten
+   sim.sh-Zeilen (258-369) liegen ausschliesslich im Geraeteabschnitt -- cmd_build (Zeile 176) und
+   cmd_launch (Zeile 225), die Stufe-2-Simulatorwege, sind nicht betroffen (ausserhalb des
+   veraenderten Bereichs, per Zeilennummern-Abgleich bestaetigt). AC-1, AC-2, AC-3 bleiben damit auf
+   dem in Runde 1 eigenstaendig reproduzierten Stand gueltig -- keine neue Pruefung noetig, keine
+   Verschiebung festgestellt.
+
+4. AC-4 gegen die Belege -- unabhaengig, nicht nur die vorgelegten Dateien geglaubt:
+
+   a) Der tatsaechlich gebaute, signierte Pruefbau wurde SELBST gelesen, nicht nur
+      probe-built-values.txt vertraut:
+      plutil -p auf dem echten Bauprodukt
+      (/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-device-default/Build/Products/
+      Debug-iphoneos/LooseEnds.app/Info.plist) liefert CFBundleIdentifier =
+      com.henning.looseends.probe, CFBundleDisplayName = "LE Pruefbau", LEAppGroup =
+      group.com.henning.looseends.probe, LECloudContainer = iCloud.com.henning.looseends.probe --
+      exakte Uebereinstimmung mit probe-built-values.txt.
+      codesign -d --entitlements - --xml auf demselben Bauprodukt (eigenstaendig ausgefuehrt, rein
+      lesend) liefert application-identifier = XK87E2B3VR.com.henning.looseends.probe,
+      com.apple.security.application-groups = [group.com.henning.looseends.probe],
+      com.apple.developer.icloud-container-identifiers = [iCloud.com.henning.looseends.probe] --
+      das ist eine ECHTE Signatur (codesign -dv zeigt CodeDirectory, Signature size=4783, Signed
+      Time=1. Oct 2026 at 08:10:47, TeamIdentifier=XK87E2B3VR), kein unsignierter Simulator-Stub.
+      Dasselbe fuer LooseEndsWidgets.appex (CFBundleIdentifier com.henning.looseends.probe.widgets,
+      application-identifier XK87E2B3VR.com.henning.looseends.probe.widgets) und
+      LooseEndsShare.appex (com.henning.looseends.probe.share, inkl. eigenem
+      icloud-container-identifiers-Eintrag) -- beide exakt wie in probe-built-values.txt behauptet,
+      jetzt am echten Bauprodukt bestaetigt. Damit ist das von der Spec selbst benannte Kernrisiko
+      (automatische Registrierung von App-Gruppe UND iCloud-Container .probe) nachweislich geloest --
+      nicht ueber GitHub (das scheiterte, siehe Changelog), sondern ueber den lokalen
+      Registrierungslauf mit Xcode-Anmeldung.
+
+   b) Die Geraete-App-Liste wurde SELBST, erneut, rein lesend abgefragt (xcrun devicectl device info
+      apps --device 00008140-00111D582681801C --json-output <scratchpad>, keine Installation, kein
+      Start) -- nicht nur apps-after.txt geglaubt. Ergebnis jetzt, in diesem Moment: drei
+      Loose-Ends-Eintraege sind auf dem Geraet vorhanden -- com.henning.looseends ("Loose Ends",
+      Container-Ordner A516562E-B97A-49D1-96B3-881F7FD50A39), com.henning.looseends.lab ("LE Labor",
+      Container 7E861492-A5C9-4573-AEA4-FF11247DDD49) und com.henning.looseends.probe ("LE Pruefbau",
+      Container 3AB430D4-E9FC-4056-AA8A-439A1C9A4190). Abgleich mit apps-before.txt: der
+      Container-Ordner von com.henning.looseends ist VOR und NACH dem Pruefbau identisch
+      (A516562E-B97A-49D1-96B3-881F7FD50A39) -- eine Neuinstallation oder Ueberschreibung haette laut
+      iOS-Konvention einen neuen Bundle-Container angelegt; ein unveraenderter Ordner ist der
+      praktische Beleg, dass Hennings echte App nicht angefasst wurde. com.henning.looseends.probe
+      existiert in apps-before.txt nicht und ist in meiner eigenen Live-Abfrage UND in apps-after.txt
+      identisch neu (derselbe Container, dieselbe Bundle-ID, derselbe Anzeigename) -- kein
+      Widerspruch zwischen Beleg und eigener Nachpruefung.
+
+   c) device-proof.txt beschreibt den Ablauf: LOOSEENDS_REGISTER=1 ./scripts/sim.sh device-build
+      (einmaliger Registrierungslauf) -> device-install -> KEIN device-launch, KEIN device
+      (kombiniert) -> danach ein normaler device-build ohne REGISTER (in der Sandbox) zur
+      Bestaetigung, dass der Normalfall ohne Anmeldung auskommt. Das deckt sich mit der Spec
+      (Abschnitt 3) und mit AC-4 woertlich ("weder device-launch noch device (kombiniert) werden
+      gegen eine der beiden Apps aufgerufen"). In dieser Runde selbst wurden ausschliesslich
+      lesende Befehle ausgefuehrt (plutil, codesign -d, xcrun devicectl device info apps) -- kein
+      device-install, device-launch, device, lab oder LOOSEENDS_REGISTER selbst aufgerufen, wie
+      vom Auftrag verlangt.
+
+   AC-4 gilt damit als bewiesen -- nicht nur durch die vorgelegten Artefakte, sondern durch
+   eigenstaendige, unabhaengige Nachpruefung an der echten Signatur und an der echten, live
+   abgefragten Geraete-App-Liste.
+   Code reference: docs/artifacts/bundle-id-debug-156/device-proof.txt
+   Code reference: docs/artifacts/bundle-id-debug-156/probe-built-values.txt
+   Code reference: docs/artifacts/bundle-id-debug-156/apps-before.txt
+   Code reference: docs/artifacts/bundle-id-debug-156/apps-after.txt
+
+Kein neuer Fund in dieser Runde. F001 bleibt behoben, AC-4 ist jetzt bewiesen, AC-1/AC-2/AC-3/AC-5/AC-6
+bleiben unveraendert bestaetigt (kein beruehrter Code).
+
+- [x] AC-1: Standardbau bitgleich. Unveraendert seit Runde 1 -- kein Produktivcode dafuer in dieser
+  Runde angefasst (project.yml, Info.plist/Entitlements, ModelContainerFactory.swift unveraendert
+  seit dem commiteten Stand).
+  Code reference: project.yml:31-32,50-52,63-67,91
+- [x] AC-2: Unit-Test gruen, Rueckfall geprueft. Unveraendert seit Runde 1/2 -- kein Swift-Code in
+  dieser Runde angefasst, voriger Lauf (235 gruen, 0 fehlgeschlagen) bleibt gueltig.
+  Code reference: Shared/Persistence/ModelContainerFactory.swift:19-29
+  Code reference: LooseEndsTests/ModelContainerFactoryTests.swift:7-38
+- [x] AC-3: Simulator unveraendert. cmd_build (Zeile 176) und cmd_launch (Zeile 225) liegen
+  ausserhalb des in dieser Runde veraenderten Bereichs (Zeile 258-369) -- keine Verschiebung.
+  Code reference: scripts/sim.sh:176-181
+- [x] AC-4: Geraetebau installiert isoliert neben Hennings App (Stufe 3). Jetzt bewiesen -- eigene
+  Lektuere des echten signierten Bauprodukts (codesign, plutil) und eigene, live abgefragte
+  Geraete-App-Liste bestaetigen beide Eintraege, isolierte Kennungen und einen unveraenderten
+  Container-Ordner fuer Hennings echte App. Kein device-launch, kein device (kombiniert) verwendet --
+  weder vom Beleg noch von dieser Pruefung selbst.
+  Code reference: scripts/sim.sh:297-303
+  Code reference: docs/artifacts/bundle-id-debug-156/device-proof.txt
+- [x] AC-5: ADR-18 dokumentiert. Unveraendert, erneut bestaetigt (Zeile 175-181, nach ADR-17, vor
+  "Bewusst nicht in Version 1").
+  Code reference: docs/project/00-entscheidungen.md:175-181
+- [x] AC-6: Release/TestFlight unveraendert. Diff gegen den Basis-Stand UND gegen den Arbeitsbaum
+  weiterhin leer -- byte-identisch, kein BUNDLE_ID_SUFFIX-Treffer.
+  Code reference: .github/workflows/testflight.yml:1-125
+
+Alle sechs AC jetzt bewiesen. Kein offener Checklisten-Punkt mehr.
+
+## VERDICT: VERIFIED
+
+Die Spec-Aenderung (Weg 2: lokale Signierung mit gespeicherten Profilen, einmaliger
+Registrierungslauf ueber LOOSEENDS_REGISTER=1, GitHub-Weg vollstaendig entfernt) ist korrekt
+umgesetzt. F001 bleibt behoben (require_device zuerst in cmd_device_build UND cmd_lab, erneut im
+neuen Code bestaetigt). Der zuvor offene AC-4 ist jetzt durch eigenstaendige, unabhaengige
+Nachpruefung bewiesen: das echte signierte Bauprodukt traegt nachweislich isolierte Kennungen
+(codesign/plutil direkt gelesen), und die live abgefragte Geraete-App-Liste zeigt beide Apps
+nebeneinander mit einem fuer Hennings echte App unveraenderten Speicherort. Alle sechs Acceptance
+Criteria sind bewiesen, kein offener Punkt, kein neuer Fund.
+
+Proven points: 6/6 (AC-1 bis AC-6 CONFIRMED).
+Tests: 235 gruen, 0 fehlgeschlagen (Runde 1, docs/artifacts/bundle-id-debug-156/adversary-unit-run.txt)
+-- weiterhin gueltig, kein Swift-Code seit diesem Lauf veraendert.
+Edge cases: Geprueft, dass keine Reste des verworfenen GitHub-Wegs im Code oder in der Doku
+zurueckbleiben (Volltextsuche, Verzeichnislisting) -- keine gefunden.
+Regressions: keine -- F001 bleibt behoben, AC-1 bis AC-3 unveraendert gueltig (kein beruehrter Code),
+AC-5/AC-6 unveraendert gueltig.
+Checklist: 6/6 Punkte bewiesen.
+
+## Geprüfte Dateien
+
+- sha256:f9d01628839c0ce3a1b6cd90aa3590864b3616960724e0a1fb101da092f36697  .github/workflows/testflight.yml
+- sha256:254e8f235ddc3e69b811c6d57aa74d71285b68ec6f69a7c0882f5a965beefe3c  LooseEndsTests/ModelContainerFactoryTests.swift
+- sha256:ad16fcaefe0903f466db79177cc2f6a2180c74e89910af265151faeb414dcd5b  Shared/Persistence/ModelContainerFactory.swift
+- sha256:67e42899006dcac65399ffb690b9acea6863a8d24955229a17f3a8bfe24557f6  docs/artifacts/bundle-id-debug-156/apps-after.txt
+- sha256:14593c7942bcebbcf8d8e82f6b3dfa0a13d189d34c90fe9408af8d7d97270c32  docs/artifacts/bundle-id-debug-156/apps-before.txt
+- sha256:ed401e2b6ef54eb517a329418fb250f6cb0060bc912c341442d81c2c6fd8e673  docs/artifacts/bundle-id-debug-156/device-proof.txt
+- sha256:fea64dfd981eddbd0205d33b08e05a594094993e59b9bada8c0695bf11b9d7b3  docs/artifacts/bundle-id-debug-156/probe-built-values.txt
+- sha256:d7c7de20bfb3bb5c92823af680c5b42fa789bcf4f98fd50a867522fa92a1659b  docs/project/00-entscheidungen.md
+- sha256:d55f840fb26dc14c0a201bffadbc13f61bd5454580289a891bc2f36aec841dfb  docs/reference/testflight.md
+- sha256:4471a6ed34a28296cd098c1c5eda7a26acf96d70cd52dce9d024a6be697bbdc5  docs/specs/tooling/fix-156-pruefkennung.md
+- sha256:917c1e80d0d825261374ae30d449660a6ecd78c62deb67f7ca0f5e69926f2087  project.yml
+- sha256:dab589f049e250a5daeab31cff42754bdbcd9bb7e13e024b77fe381e4163cd2c  scripts/sim.sh

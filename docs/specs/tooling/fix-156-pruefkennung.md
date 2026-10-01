@@ -82,8 +82,8 @@ festgehalten, nicht als offene Frage.
 |---|---|---|
 | `project.yml` | MODIFY | `BUNDLE_ID_SUFFIX: ""` und `LE_DISPLAY_NAME: Loose Ends` einmal projektweit in `settings.base` (Zeile 14–27); `PRODUCT_BUNDLE_IDENTIFIER` in App/Watch/Widgets/Share auf `$(BUNDLE_ID_SUFFIX)` erweitert; Entitlements-Werte (`group.…`, `iCloud.…`) und `WKCompanionAppBundleIdentifier` mit derselben Variable; `CFBundleDisplayName` in allen vier Zielen auf `$(LE_DISPLAY_NAME)`; neue Info.plist-Schlüssel `LEAppGroup`/`LECloudContainer` in App, Watch, Widgets, Share |
 | `Shared/Persistence/ModelContainerFactory.swift` | MODIFY | `appGroup`/`cloudContainer` werden aus `Bundle.main.infoDictionary` über eine reine Funktion `resolveIdentifiers(from:fallbackGroup:fallbackContainer:)` aufgelöst; Rückfall auf die heutigen Konstanten nur bei fehlendem Schlüssel, mit `Logger`-Fehler statt stillem Rückfall |
-| `scripts/sim.sh` | MODIFY | `device-build` und `lab` bauen über GitHub (Prüfzweig, Artefakt holen, entpacken) statt lokal signiert — siehe Implementation Details 3 |
-| `.github/workflows/probe-build.yml` | CREATE | Signierter Prüfbau (archive + export `debugging`) mit den TestFlight-Secrets, ausgelöst durch Push auf `probe/**` |
+| `scripts/sim.sh` | MODIFY | `device-build` und `lab` bauen lokal mit gespeicherten Profilen, ohne `-allowProvisioningUpdates`; nur `LOOSEENDS_REGISTER=1` registriert einmalig über die Xcode-Anmeldung. Siehe Implementation Details 3 |
+| `.github/workflows/probe-build.yml` | DELETE | Verworfener GitHub-Weg, nachweislich wirkungslos |
 | `docs/reference/testflight.md` | MODIFY | Abschnitt „Prüfbauten fürs iPhone (#156)" |
 | `*/Info.plist`, `*/*.entitlements` (App, Watch, Widgets, Share) | MODIFY (generiert) | Von `xcodegen` aus `project.yml` erzeugt, versioniert |
 | `LooseEndsTests/ModelContainerFactoryTests.swift` | CREATE (geprüft: existiert nicht — `ls LooseEndsTests/` enthält keine Datei zu `ModelContainerFactory` oder `Persistence`) | Unit-Tests für `resolveIdentifiers`: Schlüssel vorhanden → gelesene Werte; Schlüssel fehlt → heutige Konstanten |
@@ -92,8 +92,8 @@ festgehalten, nicht als offene Frage.
 ### Estimated Changes
 
 - **Nachtrag 2026-10-01:** Durch das Signieren auf GitHub wird die Grenze überschritten, von Henning
-  in Kauf genommen („hier weitergraben", `override`). Handgeschrieben sind es 8 Dateien, dazu 8
-  generierte, und rund +330/-80 Zeilen, davon etwa 140 für den Workflow.
+  in Kauf genommen („hier weitergraben", `override`). Nach dem Entfernen des GitHub-Wegs sind es
+  7 handgeschriebene Dateien (dazu 8 generierte), geschätzt rund +200/-50 Zeilen.
 - Ursprüngliche Schätzung: Files 5, LoC ~+70/-15
   - `project.yml`: ~+30/-10 (zwei neue globale Einstellungen, vier Bundle-IDs, sechs
     Entitlement-Werte, ein Companion-Bezeichner, vier Anzeigenamen, acht neue Info.plist-Zeilen
@@ -225,22 +225,34 @@ Schritt 0 hat gezeigt, dass lokales Signieren nicht geht, und zwar anders als er
 - Derselbe Weg (archive + exportArchive mit Schlüssel) läuft in GitHub Actions seit dem 2026-09-17
   für TestFlight.
 
-Henning hat entschieden: Prüfbauten werden auf GitHub signiert (Aufnahme in diese Spec per
-`override`, 2026-10-01).
+Erster Versuch (verworfen): Signieren auf GitHub (`probe-build.yml`). Er scheiterte identisch:
+„Authentication failed …“ plus „No profiles for 'com.henning.looseends.probe' were found“ (Lauf
+36822132719). Mit Schlüssel kann xcodebuild keine **neuen** Entwicklungsprofile anlegen.
+TestFlight läuft nur, weil die Produktivkennungen schon Profile haben (Apple-DTS, Forum 763225:
+Schlüssel nur für `-exportArchive`).
 
-- **NEU `.github/workflows/probe-build.yml`:** Trigger ist ein Push auf `probe/app/<sha>` (Scheme
-  LooseEnds, `BUNDLE_ID_SUFFIX=.probe`, `LE_DISPLAY_NAME=LE Prüfbau`) oder `probe/lab/<sha>`
-  (LooseEndsLab). Die Schritte entsprechen `testflight.yml`: `archive -configuration Debug` und
-  `-exportArchive` mit Methode `debugging`, beides mit Schlüssel. Die `.ipa` wird als Artefakt
-  hochgeladen.
-- **`scripts/sim.sh`:** `device-build` und `lab` laden den gesicherten Stand auf einen Prüfzweig,
-  warten auf den Lauf (`gh run watch`), holen das Artefakt und entpacken die `.app`. Danach wird der
-  Prüfzweig gelöscht. Ungesicherte Änderungen brechen ab. `device_app_path` zeigt auf die entpackte
-  App; `device-install` und `device-launch` sind unverändert. Die Simulatorwege sind unberührt.
-- **`docs/reference/testflight.md`:** Abschnitt „Prüfbauten fürs iPhone (#156)".
+**Henning hat entschieden (Weg 2, `override` 2026-10-01): einmal registrieren über seine
+Xcode-Anmeldung, danach nur gespeicherte Profile.**
 
-Einschränkung: Bis das GitHub-Image Xcode 27 hat, baut der Job wie die CI mit Deployment-Target 26.
-Der lokale Schlüssel „Mac Prüfbau" wird damit nicht mehr gebraucht.
+- **`scripts/sim.sh device-build`:** baut lokal signiert für das Gerät (`build`, Scheme
+  LooseEnds, `BUNDLE_ID_SUFFIX=.probe`, `LE_DISPLAY_NAME=LE Prüfbau`), **ohne**
+  `-allowProvisioningUpdates`. Damit kontaktiert xcodebuild Apple nicht und kann die
+  Xcode-Anmeldung nicht abmelden; es nutzt nur die gespeicherten Profile.
+- **Einmaliger Registrierungslauf:** `LOOSEENDS_REGISTER=1 ./scripts/sim.sh device-build` setzt
+  zusätzlich `-allowProvisioningUpdates`. Nur dieser Lauf braucht Hennings Anmeldung in Xcode; er
+  legt App-IDs, App-Gruppe, iCloud-Container und Profile für `.probe` an. Das Skript schreibt vor
+  dem Lauf ausdrücklich hin, dass dabei die Anmeldung benutzt wird.
+- **`cmd_lab`:** baut genauso lokal ohne `-allowProvisioningUpdates` (Profile für
+  `com.henning.looseends.lab` liegen vor), mit `LOOSEENDS_REGISTER=1` wie oben.
+- **Entfernt:** `.github/workflows/probe-build.yml` und die GitHub-Abholung in `sim.sh`, weil
+  nachweislich wirkungslos. `device_app_path` zeigt wieder auf das lokale Bauprodukt
+  (`Debug-iphoneos/LooseEnds.app`); `device-install` und `device-launch` bleiben unverändert.
+- **`docs/reference/testflight.md`:** Abschnitt „Prüfbauten fürs iPhone (#156)“ beschreibt das:
+  einmal registrieren, danach gespeicherte Profile, und warum der Schlüssel dafür nicht reicht.
+
+Folge: Läuft ein Entwicklungsprofil ab (etwa nach einem Jahr) oder kommt eine neue Fähigkeit dazu,
+ist erneut ein Registrierungslauf mit Anmeldung nötig. Der Schlüssel „Mac Prüfbau“ wird nicht
+gebraucht.
 
 ### 4. `docs/project/00-entscheidungen.md` — neuer Eintrag
 
@@ -299,7 +311,8 @@ Smoke-Tests; hier gibt es kein Design und keinen Bedienablauf, der einen rechtfe
   `./scripts/sim.sh build && ./scripts/sim.sh launch` läuft / Then startet die App unverändert mit
   Bundle-ID `com.henning.looseends`, kein Absturz, kein neues Verhalten.
 - **AC-4:** Gerätebau installiert isoliert neben Hennings App (Stufe 3): Given
-  `./scripts/sim.sh device-build` (signiert auf GitHub mit `BUNDLE_ID_SUFFIX=.probe`) gefolgt von
+  `./scripts/sim.sh device-build` (lokal signiert mit `BUNDLE_ID_SUFFIX=.probe`, nach einmaligem
+  Registrierungslauf) gefolgt von
   `./scripts/sim.sh device-install` / When `devicectl device info apps --device <id>` gelesen wird /
   Then erscheinen **beide** Einträge — „Loose Ends" (`com.henning.looseends`) und „LE Prüfbau"
   (`com.henning.looseends.probe`); Version/Installationsstand (Build-Zeitstempel,
@@ -385,3 +398,7 @@ verpflichtend — genau der Nachweis, den diese Spec selbst als AC-4 fordert.
   (kein Xcode-Konto, das lokale xcodebuild lehnt den gültigen Schlüssel ab). Henning entschied:
   Signieren auf GitHub. Abschnitt 3, Affected Files, Umfang und AC-4 sind nachgezogen; der
   Rückfall „Prüfbau ohne iCloud" hätte nicht geholfen.
+- 2026-10-01 (zweites `override`): Der GitHub-Weg scheiterte identisch (Lauf 36822132719): Mit
+  Schlüssel legt xcodebuild keine neuen Entwicklungsprofile an. Henning wählte Weg 2: einmal
+  registrieren über seine Xcode-Anmeldung (`LOOSEENDS_REGISTER=1`), danach lokal nur mit
+  gespeicherten Profilen und ohne `-allowProvisioningUpdates`. Der GitHub-Workflow wird entfernt.
