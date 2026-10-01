@@ -107,3 +107,13 @@ Apple-verwalteter Signatur (`-allowProvisioningUpdates` plus API-Schlüssel) arc
 `-exportArchive` direkt zu App Store Connect hochladen. Die Build-Nummer ist die laufende
 Nummer des Workflow-Laufs; die Versionsnummer steht in `project.yml` (`MARKETING_VERSION`).
 Die Mac-App kommt in einem späteren Schritt dazu (eigenes Archiv, eigener TestFlight-Eintrag).
+
+## Prüfbauten fürs iPhone (#156)
+
+Signierte Gerätebauten entstehen auf GitHub (`.github/workflows/probe-build.yml`, „Prüfbau"), mit
+denselben vier Secrets wie oben — nie auf dem Mac und nie über Hennings Anmeldung in Xcode, weil
+das lokale xcodebuild den gültigen API-Schlüssel ablehnt, während derselbe Weg in GitHub Actions
+funktioniert. `./scripts/sim.sh device-build` und `./scripts/sim.sh lab` laden den gesicherten
+Stand als Zweig `probe/app/<sha>` bzw. `probe/lab/<sha>` hoch, warten auf den Lauf, holen die
+signierte `.ipa` (Artefakt `probe-<scheme>`, 3 Tage aufbewahrt) und löschen den Zweig wieder.
+Ungesicherte Änderungen im Arbeitsbaum brechen den Gerätebau ab.

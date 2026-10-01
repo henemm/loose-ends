@@ -1,32 +1,33 @@
 ---
 spec_file: docs/specs/tooling/fix-156-pruefkennung.md
-spec_sha256: 5b1c524d547170ea3e13c2139a5831fd3e693c6cddfdbbaa97f61a41a1b7a253
+spec_sha256: 3b766e35b9836ac6c22f5543173d9f209e3e9a596b980160c31e7392543d652e
 ---
 
+---
 # PO-Briefing: bundle-id-debug-156
 
 - **Spec:** docs/specs/tooling/fix-156-pruefkennung.md
 - **Issue:** #156
-- **Erstellt:** 2026-09-30
+- **Erstellt:** 2026-10-01
 
 ## Was gebaut wird
 
-Prüfbauten fürs Testen auf dem Gerät bekommen eine eigene Kennung, damit sie Hennings echte App nie überschreiben.
+Prüf-Testbauten auf deinem iPhone bekommen eine eigene App-Kennung und überschreiben deine echte App nicht mehr.
 
 ## Definition of Done
 
-Auf dem Gerät sind Prüfbau und Hennings echte App gleichzeitig sichtbar, und Hennings Installation bleibt beim Testen unverändert erhalten.
+Nach einem Prüfbau sind auf deinem iPhone zwei getrennte Apps sichtbar, deine bisherige bleibt unverändert.
 
 ## Wie geprüft wird
 
-Automatisierte Tests prüfen die Kennungslogik und den unveränderten Alltagsbau; die Gerätetrennung wird per Lesebefehl belegt, nicht per Test.
+Automatisierte Tests prüfen die Technik; ob beide Apps wirklich getrennt bleiben, wird einmalig am Gerät abgelesen.
 
 ## Kritische Anmerkungen
 
-- Ursprungsanfrage verlangte Kennung an der Debug-Einstellung; Umsetzung setzt sie stattdessen am Prüfweg an, mit Hennings Zustimmung.
-- Ob der Cloud-Abgleich im Prüfbau tatsächlich getestet wird, steht noch nicht fest, hängt vom ersten Testlauf ab.
-- Ein Teil der Nachweise erfolgt per manuell ausgeführtem Prüfbefehl, nicht per automatisiertem Test.
+- Spec wurde nach deiner ersten Freigabe nochmal stark erweitert – du gibst jetzt die neue Fassung frei.
+- Umfang hat sich verdreifacht: statt 5 nun 16 Dateien, deutlich über dem sonst üblichen Rahmen.
+- Deine normale App ändert sich nicht – Lösung betrifft nur den Testweg, anders als ursprünglich verlangt.
 
 ## Freigabe-Frage
 
-Ist es in Ordnung, dass die Kennung am Testweg statt an der Debug-Einstellung hängt, wie ursprünglich verlangt?
+Gibst du diese deutlich erweiterte Lösung frei, obwohl sie den Umfang und die Kennung anders löst als ursprünglich gemeldet?

@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>$(LE_DISPLAY_NAME)</string>
+	<string>Loose Ends</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -37,10 +37,6 @@
 	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
-	<key>LEAppGroup</key>
-	<string>group.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
-	<key>LECloudContainer</key>
-	<string>iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
 	<key>NSCalendarsFullAccessUsageDescription</key>
 	<string>Only if you switch it on, a task with a due date is shown in a "Loose Ends" calendar. The app never reads your other events.</string>
 	<key>NSMicrophoneUsageDescription</key>

@@ -25,6 +25,11 @@ settings:
     CURRENT_PROJECT_VERSION: 1
     SWIFT_EMIT_LOC_STRINGS: true
     LOCALIZATION_PREFERS_STRING_CATALOGS: true
+    # Prüfkennung (#156, ADR-18): leer für jeden normalen Bau (Xcode-„Run", Simulator, CI,
+    # Release). Nur `sim.sh device-build` überschreibt beides auf der Kommandozeile, damit ein
+    # Gerätebau nie unter Hennings Kennung, App-Gruppe oder iCloud-Container installiert.
+    BUNDLE_ID_SUFFIX: ""
+    LE_DISPLAY_NAME: Loose Ends
 
 targets:
   LooseEnds:
@@ -42,9 +47,9 @@ targets:
     entitlements:
       path: LooseEnds/LooseEnds.entitlements
       properties:
-        com.apple.developer.icloud-container-identifiers: [iCloud.com.henning.looseends]
+        com.apple.developer.icloud-container-identifiers: [iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)]
         com.apple.developer.icloud-services: [CloudKit]
-        com.apple.security.application-groups: [group.com.henning.looseends]
+        com.apple.security.application-groups: [group.com.henning.looseends$(BUNDLE_ID_SUFFIX)]
         com.apple.security.app-sandbox: true
         com.apple.security.network.client: true
         com.apple.security.device.audio-input: true
@@ -55,9 +60,11 @@ targets:
     info:
       path: LooseEnds/Info.plist
       properties:
-        CFBundleDisplayName: Loose Ends
+        CFBundleDisplayName: $(LE_DISPLAY_NAME)
         CFBundleName: Loose Ends
         CFBundleShortVersionString: $(MARKETING_VERSION)
+        LEAppGroup: group.com.henning.looseends$(BUNDLE_ID_SUFFIX)
+        LECloudContainer: iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UILaunchScreen: {}
         # Required alongside aps-environment, or CloudKit logs
@@ -81,7 +88,7 @@ targets:
             INAlternativeAppNamePronunciationHint: loose ends
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends
+        PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends$(BUNDLE_ID_SUFFIX)
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
 
@@ -94,25 +101,27 @@ targets:
     entitlements:
       path: LooseEndsWatch/LooseEndsWatch.entitlements
       properties:
-        com.apple.developer.icloud-container-identifiers: [iCloud.com.henning.looseends]
+        com.apple.developer.icloud-container-identifiers: [iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)]
         com.apple.developer.icloud-services: [CloudKit]
-        com.apple.security.application-groups: [group.com.henning.looseends]
+        com.apple.security.application-groups: [group.com.henning.looseends$(BUNDLE_ID_SUFFIX)]
         aps-environment: development   # the watch mirrors the same store and needs its own pushes
     info:
       path: LooseEndsWatch/Info.plist
       properties:
-        CFBundleDisplayName: Loose Ends
+        CFBundleDisplayName: $(LE_DISPLAY_NAME)
         CFBundleShortVersionString: $(MARKETING_VERSION)
+        LEAppGroup: group.com.henning.looseends$(BUNDLE_ID_SUFFIX)
+        LECloudContainer: iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UIBackgroundModes: [remote-notification]
         WKApplication: true
-        WKCompanionAppBundleIdentifier: com.henning.looseends
+        WKCompanionAppBundleIdentifier: com.henning.looseends$(BUNDLE_ID_SUFFIX)
         WKRunsIndependentlyOfCompanionApp: true
         NSMicrophoneUsageDescription: Loose Ends listens so you can say a task.
         NSSpeechRecognitionUsageDescription: Speech is turned into text on your watch to capture a task.
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends.watchkitapp
+        PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends$(BUNDLE_ID_SUFFIX).watchkitapp
 
   LooseEndsWidgets:
     type: app-extension
@@ -123,19 +132,21 @@ targets:
     entitlements:
       path: LooseEndsWidgets/LooseEndsWidgets.entitlements
       properties:
-        com.apple.security.application-groups: [group.com.henning.looseends]
+        com.apple.security.application-groups: [group.com.henning.looseends$(BUNDLE_ID_SUFFIX)]
         com.apple.security.app-sandbox: true
     info:
       path: LooseEndsWidgets/Info.plist
       properties:
         CFBundleDisplayName: Loose Ends Widgets
         CFBundleShortVersionString: $(MARKETING_VERSION)
+        LEAppGroup: group.com.henning.looseends$(BUNDLE_ID_SUFFIX)
+        LECloudContainer: iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends.widgets
+        PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends$(BUNDLE_ID_SUFFIX).widgets
 
   LooseEndsShare:
     type: app-extension
@@ -146,14 +157,16 @@ targets:
     entitlements:
       path: LooseEndsShare/LooseEndsShare.entitlements
       properties:
-        com.apple.developer.icloud-container-identifiers: [iCloud.com.henning.looseends]
+        com.apple.developer.icloud-container-identifiers: [iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)]
         com.apple.developer.icloud-services: [CloudKit]
-        com.apple.security.application-groups: [group.com.henning.looseends]
+        com.apple.security.application-groups: [group.com.henning.looseends$(BUNDLE_ID_SUFFIX)]
     info:
       path: LooseEndsShare/Info.plist
       properties:
-        CFBundleDisplayName: Loose Ends
+        CFBundleDisplayName: $(LE_DISPLAY_NAME)
         CFBundleShortVersionString: $(MARKETING_VERSION)
+        LEAppGroup: group.com.henning.looseends$(BUNDLE_ID_SUFFIX)
+        LECloudContainer: iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         NSExtension:
           NSExtensionPointIdentifier: com.apple.share-services
@@ -163,7 +176,7 @@ targets:
             NSExtensionActivationRule: 'SUBQUERY(extensionItems, $item, SUBQUERY($item.attachments, $a, ANY $a.registeredTypeIdentifiers UTI-CONFORMS-TO "public.text" OR ANY $a.registeredTypeIdentifiers UTI-CONFORMS-TO "public.url" OR ANY $a.registeredTypeIdentifiers UTI-CONFORMS-TO "public.email-message").@count >= 1).@count >= 1'
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends.share
+        PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends$(BUNDLE_ID_SUFFIX).share
 
   # Messprogramm für die Spikes: eine eigene, wegwerfbare App auf Hennings iPhone. Sie misst in
   # Scheiben, wann immer er sie öffnet, und rührt die echten Daten nicht an — keine App-Gruppe,

@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Loose Ends</string>
+	<string>$(LE_DISPLAY_NAME)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -20,6 +20,10 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LEAppGroup</key>
+	<string>group.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
+	<key>LECloudContainer</key>
+	<string>iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Loose Ends listens so you can say a task.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
@@ -31,7 +35,7 @@
 	<key>WKApplication</key>
 	<true/>
 	<key>WKCompanionAppBundleIdentifier</key>
-	<string>com.henning.looseends</string>
+	<string>com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
 	<key>WKRunsIndependentlyOfCompanionApp</key>
 	<true/>
 </dict>

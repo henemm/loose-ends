@@ -1,0 +1,17 @@
+Voller Unit-Lauf: ./scripts/sim.sh unit (macOS-Host), 2026-09-30, Ende 15:58 CEST, Exit 0
+
+Aus xcodebuild.log (Swift Testing):
+✔ Test run with 235 tests in 49 suites passed after 4.379 seconds.
+✔ Suite "Model container identifiers" passed (4 von 4)
+
+Übersprungen (Korpus fehlt in diesem Worktree, keine Fehlschläge):
+- Suite FocusBloxCalibrationTests
+- Suite RecognitionRuleCorpusTests (2 Tests)
+- Suite RuleLeaveOneOutReportTests
+- Suite SelfConsistencyReportTests
+
+Fehlgeschlagen: 0
+xcbeautify: "Test Succeeded", sim.sh: "Unit-Tests bestanden."
+
+Nach dem Lauf: docs/reference/date-title-fidelity.md war vom Lauf überschrieben und wurde per
+git restore zurückgesetzt. Andere Berichtsdateien waren nicht verändert.

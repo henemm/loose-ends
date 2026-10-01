@@ -1,0 +1,150 @@
+name: Prüfbau
+
+# Signs a probe build for Henning's iPhone (#156, ADR-18) and hands back the .ipa as an artifact.
+# Signing runs here, not on the Mac: the local xcodebuild 27.0 rejects the valid App Store Connect
+# key ("Authentication failed … bearer token"), and Henning's Xcode login is never used.
+# Same secrets as testflight.yml. Triggered by `./scripts/sim.sh device-build` or `lab`, which push
+#   probe/app/<sha>  → scheme LooseEnds, bundle id suffix .probe, display name "LE Prüfbau"
+#   probe/lab/<sha>  → scheme LooseEndsLab, no extras
+# and download the artifact probe-<scheme> afterwards.
+
+on:
+  push:
+    branches: ['probe/**']
+
+concurrency:
+  group: probe-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    name: Archive and export (iOS, debugging)
+    runs-on: macos-26
+    timeout-minutes: 60
+    env:
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Pick the target from the branch name
+        run: |
+          kind=$(echo "$GITHUB_REF_NAME" | cut -d/ -f2)
+          case "$kind" in
+            app) scheme=LooseEnds ;;
+            lab) scheme=LooseEndsLab ;;
+            *) echo "::error::Branch $GITHUB_REF_NAME is neither probe/app/<sha> nor probe/lab/<sha>"; exit 1 ;;
+          esac
+          echo "KIND=$kind" >> "$GITHUB_ENV"
+          echo "SCHEME=$scheme" >> "$GITHUB_ENV"
+
+      - name: Check the secrets are in place
+        run: |
+          missing=0
+          for name in APPLE_TEAM_ID ASC_KEY_ID ASC_ISSUER_ID; do
+            if [ -z "${!name}" ]; then echo "::error::Repository secret $name is missing"; missing=1; fi
+          done
+          if [ -z "${{ secrets.ASC_PRIVATE_KEY }}" ]; then echo "::error::Repository secret ASC_PRIVATE_KEY is missing"; missing=1; fi
+          [ "$missing" = 0 ] || { echo "See docs/reference/testflight.md"; exit 1; }
+
+      - name: Select newest Xcode (27 when the image has it)
+        run: |
+          latest=$(ls -d /Applications/Xcode_27*.app 2>/dev/null | sort -V | tail -1)
+          if [ -n "$latest" ]; then
+            sudo xcode-select -s "$latest"
+          else
+            sed -i '' 's/"27\.0"/"26.0"/g' project.yml
+            echo "No Xcode 27 on this image: deployment targets lowered to 26.0 for this build."
+          fi
+          xcode-select -p && xcodebuild -version
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate project
+        run: xcodegen generate
+
+      - name: Store the App Store Connect API key
+        run: |
+          mkdir -p "$HOME/private_keys"
+          printf '%s\n' "${{ secrets.ASC_PRIVATE_KEY }}" > "$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8"
+          chmod 600 "$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8"
+
+      - name: Archive
+        run: |
+          set -o pipefail
+          extras=()
+          if [ "$KIND" = app ]; then extras=("BUNDLE_ID_SUFFIX=.probe" "LE_DISPLAY_NAME=LE Prüfbau"); fi
+          xcodebuild archive \
+            -project LooseEnds.xcodeproj \
+            -scheme "$SCHEME" \
+            -configuration Debug \
+            -destination 'generic/platform=iOS' \
+            -archivePath "build/$SCHEME.xcarchive" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
+            CODE_SIGN_STYLE=Automatic \
+            "${extras[@]}" \
+            2>&1 | tee archive.log | xcbeautify
+
+      - name: Write export options
+        run: |
+          # "debugging" replaced "development" (Xcode 15.3); fall back if this Xcode doesn't list it.
+          xcodebuild -help 2>&1 | grep -A 2 -E '^\s*method : String' || true
+          if xcodebuild -help 2>&1 | grep -q 'debugging'; then method=debugging; else method=development; fi
+          echo "Export method: $method"
+          cat > ExportOptions.plist <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key><string>${method}</string>
+            <key>signingStyle</key><string>automatic</string>
+            <key>teamID</key><string>${APPLE_TEAM_ID}</string>
+          </dict>
+          </plist>
+          EOF
+
+      - name: Export
+        run: |
+          set -o pipefail
+          xcodebuild -exportArchive \
+            -archivePath "build/$SCHEME.xcarchive" \
+            -exportOptionsPlist ExportOptions.plist \
+            -exportPath build/export \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            2>&1 | tee export.log | xcbeautify
+
+      - name: Upload the .ipa
+        uses: actions/upload-artifact@v7
+        with:
+          name: probe-${{ env.SCHEME }}
+          path: build/export/*.ipa
+          if-no-files-found: error
+          retention-days: 3
+
+      - name: Show what went wrong
+        if: failure()
+        run: grep -n -E -i "error|failed|provisioning|entitlement" archive.log export.log 2>/dev/null | head -80 || true
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: probe-logs
+          path: |
+            archive.log
+            export.log
+          if-no-files-found: warn
+          retention-days: 3
+
+      - name: Remove the key
+        if: always()
+        run: rm -f "$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8"

@@ -9,8 +9,29 @@ enum LooseEndsSchema {
 }
 
 enum ModelContainerFactory {
-    static let appGroup = "group.com.henning.looseends"
-    static let cloudContainer = "iCloud.com.henning.looseends"
+    // Internal, not private: Swift forbids a private value as the default argument of an internal function.
+    static let fallbackAppGroup = "group.com.henning.looseends"
+    static let fallbackCloudContainer = "iCloud.com.henning.looseends"
+
+    /// Reads app group and CloudKit container from the bundle (`LEAppGroup`, `LECloudContainer`),
+    /// so a probe build (#156, ADR-18) carries its own and never reaches the production data.
+    /// A missing key falls back to the production identifier and is logged, never silent.
+    static func resolveIdentifiers(
+        from infoDictionary: [String: Any]?,
+        fallbackGroup: String = fallbackAppGroup,
+        fallbackContainer: String = fallbackCloudContainer
+    ) -> (group: String, container: String) {
+        let group = infoDictionary?["LEAppGroup"] as? String
+        let container = infoDictionary?["LECloudContainer"] as? String
+        if group == nil { logger.error("LEAppGroup fehlt im Info-Dictionary, Rückfall auf Konstante") }
+        if container == nil { logger.error("LECloudContainer fehlt im Info-Dictionary, Rückfall auf Konstante") }
+        return (group ?? fallbackGroup, container ?? fallbackContainer)
+    }
+
+    /// Resolved once per process: the bundle does not change at runtime.
+    private static let identifiers = resolveIdentifiers(from: Bundle.main.infoDictionary)
+    static let appGroup = identifiers.group
+    static let cloudContainer = identifiers.container
 
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Persistence")
     private static let cache = ProcessCache<ModelContainer>()

@@ -1,0 +1,5 @@
+$ grep -n "BUNDLE_ID_SUFFIX" .github/workflows/testflight.yml; echo "grep-exit=$?"
+grep-exit=1
+
+Kein Treffer (Exit 1): Der TestFlight-Workflow übergibt kein BUNDLE_ID_SUFFIX, das Release-Archiv
+bleibt beim Default aus project.yml (leer) und damit bei com.henning.looseends. (2026-09-30)

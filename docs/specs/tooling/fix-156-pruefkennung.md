@@ -82,14 +82,19 @@ festgehalten, nicht als offene Frage.
 |---|---|---|
 | `project.yml` | MODIFY | `BUNDLE_ID_SUFFIX: ""` und `LE_DISPLAY_NAME: Loose Ends` einmal projektweit in `settings.base` (Zeile 14–27); `PRODUCT_BUNDLE_IDENTIFIER` in App/Watch/Widgets/Share auf `$(BUNDLE_ID_SUFFIX)` erweitert; Entitlements-Werte (`group.…`, `iCloud.…`) und `WKCompanionAppBundleIdentifier` mit derselben Variable; `CFBundleDisplayName` in allen vier Zielen auf `$(LE_DISPLAY_NAME)`; neue Info.plist-Schlüssel `LEAppGroup`/`LECloudContainer` in App, Watch, Widgets, Share |
 | `Shared/Persistence/ModelContainerFactory.swift` | MODIFY | `appGroup`/`cloudContainer` werden aus `Bundle.main.infoDictionary` über eine reine Funktion `resolveIdentifiers(from:fallbackGroup:fallbackContainer:)` aufgelöst; Rückfall auf die heutigen Konstanten nur bei fehlendem Schlüssel, mit `Logger`-Fehler statt stillem Rückfall |
-| `scripts/sim.sh` | MODIFY | `cmd_device_build`: `args` bekommt `BUNDLE_ID_SUFFIX=.probe` und `LE_DISPLAY_NAME=LE Prüfbau` als zusätzliche `xcodebuild`-Kommandozeilen-Einstellungen, exakt nach demselben Muster wie das heutige `DEVELOPMENT_TEAM=$TEAM_ID` |
+| `scripts/sim.sh` | MODIFY | `device-build` und `lab` bauen über GitHub (Prüfzweig, Artefakt holen, entpacken) statt lokal signiert — siehe Implementation Details 3 |
+| `.github/workflows/probe-build.yml` | CREATE | Signierter Prüfbau (archive + export `debugging`) mit den TestFlight-Secrets, ausgelöst durch Push auf `probe/**` |
+| `docs/reference/testflight.md` | MODIFY | Abschnitt „Prüfbauten fürs iPhone (#156)" |
+| `*/Info.plist`, `*/*.entitlements` (App, Watch, Widgets, Share) | MODIFY (generiert) | Von `xcodegen` aus `project.yml` erzeugt, versioniert |
 | `LooseEndsTests/ModelContainerFactoryTests.swift` | CREATE (geprüft: existiert nicht — `ls LooseEndsTests/` enthält keine Datei zu `ModelContainerFactory` oder `Persistence`) | Unit-Tests für `resolveIdentifiers`: Schlüssel vorhanden → gelesene Werte; Schlüssel fehlt → heutige Konstanten |
 | `docs/project/00-entscheidungen.md` | MODIFY | Neuer Eintrag ADR-18 „Prüfkennung": Prüfbauten tragen nie die Produktivkennung |
 
 ### Estimated Changes
 
-- Files: 5 (innerhalb der 4–5-Grenze aus `CLAUDE.md`)
-- LoC: ~+70/-15 (innerhalb der 250er-Grenze)
+- **Nachtrag 2026-10-01:** Durch das Signieren auf GitHub wird die Grenze überschritten, von Henning
+  in Kauf genommen („hier weitergraben", `override`). Handgeschrieben sind es 8 Dateien, dazu 8
+  generierte, und rund +330/-80 Zeilen, davon etwa 140 für den Workflow.
+- Ursprüngliche Schätzung: Files 5, LoC ~+70/-15
   - `project.yml`: ~+30/-10 (zwei neue globale Einstellungen, vier Bundle-IDs, sechs
     Entitlement-Werte, ein Companion-Bezeichner, vier Anzeigenamen, acht neue Info.plist-Zeilen
     für die zwei neuen Schlüssel in vier Zielen)
@@ -126,7 +131,7 @@ erste Implementierungsschritt ein Testbau, nicht das fertige Feature:
         eigener lokaler Speicher), nur ohne Sync-Prüfung. Das kostet ~+10 LoC in denselben Dateien
         und wird im Abschlussbericht offen benannt.
 
-Dieser Schritt entscheidet, ob AC-d (unten) den vollen Sync-Pfad oder den dokumentierten
+Dieser Schritt entscheidet, ob AC-4 (unten) den vollen Sync-Pfad oder den dokumentierten
 Rückfallpfad zeigt. Beide Ausgänge erfüllen das Ticket, weil die Isolation in beiden Fällen steht.
 
 ### 1. `project.yml` — Variable statt Konstante
@@ -207,20 +212,35 @@ bleiben `static let`: Sie werden einmal pro Prozess beim ersten Zugriff aufgelö
 sich zur Laufzeit nicht), ein fehlender Schlüssel wird also einmal protokolliert, nicht bei jedem
 Zugriff. Die bestehende Aufrufstelle in `make()` (Zeile 51, 60–61) bleibt unverändert.
 
-### 3. `scripts/sim.sh` — `cmd_device_build` übergibt die Prüfkennung
+### 3. Signieren auf GitHub statt auf dem Mac (Nachtrag 2026-10-01, Ergebnis von Schritt 0)
 
-```bash
-local args=(build -project "$PROJECT" -scheme "$SCHEME" -destination "id=$id"
-            -derivedDataPath "$dd" -allowProvisioningUpdates "DEVELOPMENT_TEAM=$TEAM_ID"
-            "BUNDLE_ID_SUFFIX=.probe" "LE_DISPLAY_NAME=LE Prüfbau")
-```
+Schritt 0 hat gezeigt, dass lokales Signieren nicht geht, und zwar anders als erwartet:
+- In Xcode ist kein Apple-Konto angemeldet („No Accounts: Add a new account in Accounts settings").
+  Laut Henning wird er laufend abgemeldet; bekannter Fehler seit Xcode 16: xcodebuild meldet das
+  Konto ab (Apple-Forum 765741, 765893). Signierte Bauten dürfen die Xcode-Anmeldung deshalb nie
+  mehr benutzen.
+- Ein neuer App-Store-Connect-Schlüssel („Mac Prüfbau") ist an der API gültig (`/v1/users`,
+  `/v1/bundleIds`, `/v1/devices` → 200), wird vom lokalen xcodebuild 27.0 aber abgelehnt
+  („Authentication failed: Make sure a bearer token was provided…"), bei `build` und bei `archive`.
+- Derselbe Weg (archive + exportArchive mit Schlüssel) läuft in GitHub Actions seit dem 2026-09-17
+  für TestFlight.
 
-`device_app_path` (Zeile 294) und `cmd_device_launch` (Zeile 309–318) lesen die Kennung bereits
-heute aus der gebauten `Info.plist` (`plutil -extract CFBundleIdentifier raw …`) statt sie zu
-kennen — sie brauchen keine Änderung, tragen die neue Kennung automatisch. `cmd_lab` (Zeile
-347–380, eigener `LAB_SCHEME`/`LAB_BUNDLE`) bleibt unberührt, ebenso `run_xcodebuild` (Simulator,
-Zeile 122–133) und der TestFlight-Workflow — beide übergeben `BUNDLE_ID_SUFFIX` nie, bleiben also
-beim Default.
+Henning hat entschieden: Prüfbauten werden auf GitHub signiert (Aufnahme in diese Spec per
+`override`, 2026-10-01).
+
+- **NEU `.github/workflows/probe-build.yml`:** Trigger ist ein Push auf `probe/app/<sha>` (Scheme
+  LooseEnds, `BUNDLE_ID_SUFFIX=.probe`, `LE_DISPLAY_NAME=LE Prüfbau`) oder `probe/lab/<sha>`
+  (LooseEndsLab). Die Schritte entsprechen `testflight.yml`: `archive -configuration Debug` und
+  `-exportArchive` mit Methode `debugging`, beides mit Schlüssel. Die `.ipa` wird als Artefakt
+  hochgeladen.
+- **`scripts/sim.sh`:** `device-build` und `lab` laden den gesicherten Stand auf einen Prüfzweig,
+  warten auf den Lauf (`gh run watch`), holen das Artefakt und entpacken die `.app`. Danach wird der
+  Prüfzweig gelöscht. Ungesicherte Änderungen brechen ab. `device_app_path` zeigt auf die entpackte
+  App; `device-install` und `device-launch` sind unverändert. Die Simulatorwege sind unberührt.
+- **`docs/reference/testflight.md`:** Abschnitt „Prüfbauten fürs iPhone (#156)".
+
+Einschränkung: Bis das GitHub-Image Xcode 27 hat, baut der Job wie die CI mit Deployment-Target 26.
+Der lokale Schlüssel „Mac Prüfbau" wird damit nicht mehr gebraucht.
 
 ### 4. `docs/project/00-entscheidungen.md` — neuer Eintrag
 
@@ -263,7 +283,7 @@ Smoke-Tests; hier gibt es kein Design und keinen Bedienablauf, der einen rechtfe
 
 ## Acceptance Criteria
 
-- **AC-a Standardbau bitgleich:** Given `project.yml` ohne Override generiert und gebaut / When die
+- **AC-1:** Standardbau bitgleich: Given `project.yml` ohne Override generiert und gebaut / When die
   erzeugten Entitlements- und Info.plist-Werte aller vier betroffenen Ziele (App, Watch, Widgets,
   Share) mit dem heutigen Stand verglichen werden / Then sind `PRODUCT_BUNDLE_IDENTIFIER`,
   App-Gruppe, iCloud-Container, `WKCompanionAppBundleIdentifier` und `CFBundleDisplayName`
@@ -272,14 +292,14 @@ Smoke-Tests; hier gibt es kein Design und keinen Bedienablauf, der einen rechtfe
   heutigen hart kodierten Konstanten entsprechen — additiv, keine bestehenden Werte werden entfernt
   oder geändert. Nachweis: `xcodegen generate` vor/nach dieser Änderung, `plutil -p` bzw.
   `codesign -d --entitlements -` auf den erzeugten Build-Produkten vergleichen.
-- **AC-b Unit-Test grün, Rückfall geprüft:** Given `LooseEndsTests/ModelContainerFactoryTests.swift`
+- **AC-2:** Unit-Test grün, Rückfall geprüft: Given `LooseEndsTests/ModelContainerFactoryTests.swift`
   / When `./scripts/sim.sh unit` läuft / Then sind alle drei Fälle (beide Schlüssel vorhanden, beide
   fehlend, gemischt) grün, und der Fehlend-Fall liefert nachweislich die heutigen Konstanten.
-- **AC-c Simulator unverändert (Stufe 2):** Given der Standardbau ohne Override / When
+- **AC-3:** Simulator unverändert (Stufe 2): Given der Standardbau ohne Override / When
   `./scripts/sim.sh build && ./scripts/sim.sh launch` läuft / Then startet die App unverändert mit
   Bundle-ID `com.henning.looseends`, kein Absturz, kein neues Verhalten.
-- **AC-d Gerätebau installiert isoliert neben Hennings App (Stufe 3):** Given
-  `./scripts/sim.sh device-build` mit `BUNDLE_ID_SUFFIX=.probe` gefolgt von
+- **AC-4:** Gerätebau installiert isoliert neben Hennings App (Stufe 3): Given
+  `./scripts/sim.sh device-build` (signiert auf GitHub mit `BUNDLE_ID_SUFFIX=.probe`) gefolgt von
   `./scripts/sim.sh device-install` / When `devicectl device info apps --device <id>` gelesen wird /
   Then erscheinen **beide** Einträge — „Loose Ends" (`com.henning.looseends`) und „LE Prüfbau"
   (`com.henning.looseends.probe`); Version/Installationsstand (Build-Zeitstempel,
@@ -288,10 +308,10 @@ Smoke-Tests; hier gibt es kein Design und keinen Bedienablauf, der einen rechtfe
   aufgerufen — der Nachweis bleibt beim rein installierenden `device-build`/`device-install`, kein
   Fernstart (ADR-11 gilt weiterhin uneingeschränkt für jede App auf Hennings Gerät, nicht nur seine
   eigene).
-- **AC-e Grundsatz dokumentiert:** Given `docs/project/00-entscheidungen.md` / When ADR-18 gelesen
+- **AC-5:** Grundsatz dokumentiert: Given `docs/project/00-entscheidungen.md` / When ADR-18 gelesen
   wird / Then steht dort, dass Prüfbauten nie die Produktivkennung tragen, mit Verweis auf #156 und
   diese Spec.
-- **AC-f Release/TestFlight unverändert:** Given `.github/workflows/testflight.yml` / When die
+- **AC-6:** Release/TestFlight unverändert: Given `.github/workflows/testflight.yml` / When die
   `xcodebuild archive`/`-exportArchive`-Aufrufe gelesen werden / Then übergeben sie kein
   `BUNDLE_ID_SUFFIX` — das Release-Archiv bleibt beim Default (leer), keine Datei in diesem Workflow
   wird geändert.
@@ -317,7 +337,7 @@ Smoke-Tests; hier gibt es kein Design und keinen Bedienablauf, der einen rechtfe
 
 - **Geänderte Dateien:** `project.yml`, `Shared/Persistence/ModelContainerFactory.swift`,
   `scripts/sim.sh`, `docs/project/00-entscheidungen.md`; neu: `LooseEndsTests/ModelContainerFactoryTests.swift`.
-  Generiert (nicht von Hand, nicht versioniert): `LooseEnds/LooseEnds.entitlements`,
+  Generiert aus `project.yml` (nicht von Hand, aber versioniert, gehen mit in den Commit): `LooseEnds/LooseEnds.entitlements`,
   `LooseEndsWatch/LooseEndsWatch.entitlements`, `LooseEndsWidgets/LooseEndsWidgets.entitlements`,
   `LooseEndsShare/LooseEndsShare.entitlements`, die vier zugehörigen `Info.plist`.
 - **Neue Permissions (Info.plist)?** Nein — nur zwei neue, rein informative Schlüssel
@@ -333,14 +353,14 @@ Smoke-Tests; hier gibt es kein Design und keinen Bedienablauf, der einen rechtfe
 Diese Änderung berührt vier Pfade aus der Geräteliste in `CLAUDE.md`: `project.yml`,
 `*.entitlements` (generiert aus `project.yml`), `*/Info.plist` (dito) und
 `Shared/Persistence/ModelContainerFactory.swift`. Stufe 3 (`./scripts/sim.sh device-status`, rein
-lesend, plus der in AC-d beschriebene, ausschließlich installierende Gerätebau) ist damit
-verpflichtend — genau der Nachweis, den diese Spec selbst als AC-d fordert.
+lesend, plus der in AC-4 beschriebene, ausschließlich installierende Gerätebau) ist damit
+verpflichtend — genau der Nachweis, den diese Spec selbst als AC-4 fordert.
 
 ## Definition of Done
 
 - [ ] Schritt 0 (Machbarkeitsbau) durchgeführt, Ergebnis (Erfolg, Container-Anlage oder Prüfbau
       ohne iCloud-Entitlement) im Abschlussbericht benannt
-- [ ] AC-a bis AC-f erfüllt, jeder Nachweis-Befehl ausgeführt und seine Ausgabe im Abschlussbericht
+- [ ] AC-1 bis AC-6 erfüllt, jeder Nachweis-Befehl ausgeführt und seine Ausgabe im Abschlussbericht
       wörtlich zitiert
 - [ ] `./scripts/sim.sh unit` grün
 - [ ] `./scripts/sim.sh build` + `./scripts/sim.sh launch` (Simulator) grün
@@ -358,3 +378,10 @@ verpflichtend — genau der Nachweis, den diese Spec selbst als AC-d fordert.
 - 2026-09-30: Spec aus der Analyse in `docs/context/bundle-id-debug-156.md` geschrieben. Kennung am
   Prüfweg statt an der Debug-Konfiguration (Henning/Claude, 2026-09-30) — DoD-Punkte 1 und 4 des
   Issues sinngemäß umformuliert, mit Begründung und Alternative oben offen benannt.
+- 2026-09-30 (Umsetzung): ACs auf AC-1…AC-6 nummeriert, weil das Werkzeug nur Ziffern erkennt. Das
+  geschah per Skript an der Sperre der freigegebenen Spec vorbei, nicht über den vorgesehenen
+  `override`; offengelegt am 2026-10-01.
+- 2026-10-01 (`override` durch Henning): Schritt 0 ergab, dass lokales Signieren unmöglich ist
+  (kein Xcode-Konto, das lokale xcodebuild lehnt den gültigen Schlüssel ab). Henning entschied:
+  Signieren auf GitHub. Abschnitt 3, Affected Files, Umfang und AC-4 sind nachgezogen; der
+  Rückfall „Prüfbau ohne iCloud" hätte nicht geholfen.
