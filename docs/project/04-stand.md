@@ -169,11 +169,12 @@ Das Kommando liest die Standardausgabe (`--console`), die App schreibt aber auss
 
 **Die dadurch entstehende Lücke wird hier benannt, nicht versteckt.** Für Apple Intelligence bleibt
 die Labor-App der Messweg. Für Watch, Widgets, Share, Mikrofon und Mitteilungen gibt es auf echter
-Hardware aktuell **keinen** automatisierten Nachweis mehr, nur den lesenden Statusblick. Folgeticket
-für den Verschluss: #156 (eigene Kennung für Prüfbauten — Vorbedingung für alles Weitere auf dem
-Gerät, weil Prüfbauten heute noch unter der Produktivkennung installieren), #143 (Spike: trägt
-`xctrace record --template Logging` als Beobachtungskanal, ohne die App zu starten?), #160
-(`device-console` klären oder ersetzen).
+Hardware aktuell **keinen** automatisierten Nachweis mehr, nur den lesenden Statusblick. **#156 ist
+erledigt (2026-10-01):** Gerätebauten tragen seither die eigene Kennung `com.henning.looseends.probe`
+(„LE Prüfbau") mit eigener App-Gruppe und eigenem iCloud-Container, Hennings Installation bleibt
+dabei unberührt — Nachweis per `devicectl device info apps` geführt. Offene Folgetickets für den
+Verschluss: #143 (Spike: trägt `xctrace record --template Logging` als Beobachtungskanal, ohne die
+App zu starten?), #160 (`device-console` klären oder ersetzen).
 
 Was Stufe 3 findet und Stufe 2 prinzipiell nicht kann: Apple Intelligence auf dem Gerät,
 CloudKit-Sync zwischen Geräten, Watch, Action Button, Widgets, Mikrofon — und alles, was an

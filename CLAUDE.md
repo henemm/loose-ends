@@ -85,7 +85,12 @@ Apple Intelligence zusätzlich die Labor-App, die Henning selbst antippt. Einen 
 Bedienablauf auf dem Gerät gibt es seit dem Rückbau von #153 nicht mehr: Der Versuch dazu
 überschrieb Hennings produktive Installation und bewies nicht, wofür er gebaut war. Für Watch,
 Widgets, Share, Mikrofon und Mitteilungen bleibt der automatisierte Nachweis auf echter Hardware
-damit offen (`docs/project/04-stand.md`, #156, #143, #160). Im Zweifel läuft die Stufe.
+damit offen (`docs/project/04-stand.md`, #143, #160). Seit #156 installieren Gerätebauten
+(`device-build`, `lab`) unter einer eigenen Kennung (`com.henning.looseends.probe`, Anzeigename
+„LE Prüfbau") mit eigener App-Gruppe und eigenem iCloud-Container — nie unter Hennings eigener
+Installation. Ein Registrierungslauf (`LOOSEENDS_REGISTER=1 ./scripts/sim.sh device-build`) ist
+nur nötig bei neuer Kennung, neuer Fähigkeit oder abgelaufenem Profil; nur er benutzt Hennings
+Xcode-Anmeldung, der normale Bau spricht nicht mit Apple. Im Zweifel läuft die Stufe.
 
 **⛔ Ausliefern ist Teil jedes Tickets — der letzte Schritt vor Hennings eigenem Test.** Gearbeitet
 wird in einem Worktree, gebaut wird bei Henning aus `/Users/hem/Developer/loose-ends`. Nach dem Merge
@@ -131,7 +136,9 @@ not scope creep on the current one.
 ## Where things live
 
 - `Shared/Models` — SwiftData model, enums, `RepeatRule`, `ViewRules` (pure view computation)
-- `Shared/Persistence` — `ModelContainerFactory` (app group + private CloudKit), `ContextSeeder`
+- `Shared/Persistence` — `ModelContainerFactory` (app group + private CloudKit; identifiers read from
+  `Info.plist`, keys `LEAppGroup`/`LECloudContainer`, with the production constants as fallback —
+  device builds carry their own via `BUNDLE_ID_SUFFIX`, #156), `ContextSeeder`
 - `Shared/Services` — `CaptureService`, `FieldCodec` (one encoding per field), `RevisionService` (reset = user revision),
   `TaskActions` (done, next up, park, move, restore), `DateExpressionParser`/`TimeExpressionParser` (rule-based
   date/time extraction DE/EN, moved from `Measurement/` in #95), `RawTextWords` (the one tokenizer for word-set
