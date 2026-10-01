@@ -57,13 +57,20 @@ struct ContentView: View {
         }
     }
 
-    /// Seed the default contexts once, run the catch-up enrichment pass (ADR-4), then line up
+    /// Seed the default contexts once, fold same-named contexts into one (#157), run the catch-up enrichment pass (ADR-4), then line up
     /// the due reminders.
     private func startUp() async {
         do {
             try ContextSeeder.seedIfNeeded(in: modelContext)
         } catch {
             Self.logger.error("Seeding contexts failed: \(error, privacy: .public)")
+        }
+        do {
+            let merged = try CatalogService.mergeDuplicateContexts(in: modelContext)
+            try modelContext.save()
+            if merged > 0 { Self.logger.info("Merged \(merged) duplicate contexts") }
+        } catch {
+            Self.logger.error("Merging duplicate contexts failed: \(error, privacy: .public)")
         }
         await enrichment?.processPending()
         await notifications?.requestAuthorization()
