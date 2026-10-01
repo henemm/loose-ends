@@ -29,6 +29,12 @@ Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, 
   Measured 2026-09-20: model 50 % exact dates, 96.5 % invented; `NSDataDetector` 65 %, 0 % (#67, #92);
   own rule parser 99.3 %, 0 % (#92, Schnitt 1). Since #95 the rule parser sets the due date in the
   product path; the model schema lost the four due-date fields.
+- **Context names are unique** (Henning, 2026-10-01, #157). Contexts are matched by name
+  (`FieldCodec`), so two contexts named alike put both on a task ("Garden, Garden"). `CatalogService`
+  rejects a taken name (trimmed, case- and accent-insensitive) when adding or renaming, and
+  `mergeDuplicateContexts` folds existing duplicates at every start (CloudKit can deliver them later);
+  the survivor is deterministic (system default, smallest `sortOrder`, smallest id) so all devices agree.
+  Projects are not covered yet.
 - No `try?` that swallows errors, `Logger` not `print`, Swift 6 strict concurrency, deployment target 27.
 - A `ModelContext` does not retain its `ModelContainer`. Keep the container alive for as long as the context
   is used (tests: hold it in a local or a helper struct), or the next save or fetch crashes the process.

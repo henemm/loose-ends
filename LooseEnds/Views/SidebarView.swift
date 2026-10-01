@@ -17,6 +17,7 @@ struct SidebarView: View {
     @State private var editName = ""
     @State private var pendingDelete: NameEdit.Target?
     @State private var confirmingDelete = false
+    @State private var duplicateRejected = false
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Sidebar")
 
     private static let systemKinds: [ViewKind] = [.next, .new, .due, .quick, .old, .waiting, .repeating, .parked]
@@ -64,6 +65,10 @@ struct SidebarView: View {
                 .accessibilityIdentifier("nameSaveButton")
             Button("Cancel", role: .cancel) {}
         }
+        .alert("A context with this name already exists.", isPresented: $duplicateRejected) {
+            Button("OK", role: .cancel) {}
+                .accessibilityIdentifier("duplicateNameOKButton")
+        }
         .confirmationDialog(Text(pendingDelete?.deleteTitle ?? ""), isPresented: $confirmingDelete, titleVisibility: .visible, presenting: pendingDelete) { target in
             Button("Delete", role: .destructive) { delete(target) }
                 .accessibilityIdentifier("confirmDeleteButton")
@@ -104,7 +109,7 @@ struct SidebarView: View {
         isEditing = true
     }
 
-    /// A blank name is a cancel, not an error worth showing.
+    /// A blank name is a cancel, not an error worth showing. A taken context name is (#157).
     private func commit(_ edit: NameEdit) {
         do {
             switch edit.target {
@@ -115,11 +120,13 @@ struct SidebarView: View {
             case .project(let project):
                 try CatalogService.rename(project, to: editName)
             case .context(let context):
-                try CatalogService.rename(context, to: editName)
+                try CatalogService.rename(context, to: editName, among: contexts)
             }
             try modelContext.save()
         } catch CatalogError.emptyName {
             return
+        } catch CatalogError.duplicateName {
+            duplicateRejected = true
         } catch {
             Self.logger.error("Saving the name failed: \(error, privacy: .public)")
         }
