@@ -12,6 +12,7 @@
 #   ./scripts/sim.sh mac-build                # macOS-App bauen
 #   ./scripts/sim.sh sim-unit [Suite[/test]]  # Unit-Tests im iOS-Simulator
 #   ./scripts/sim.sh test <Class[/test]>      # UI-Test im iOS-Simulator
+#   ./scripts/sim.sh test-proof <Class[/test]> # UI-Test + Simulator-Beleg in docs/artifacts/<workflow>/ (#145)
 #   ./scripts/sim.sh boot | status | launch | screenshot [pfad]
 #
 # Messreihen gegen das echte Modell (Spikes #65-#73), ohne das iPhone zu belegen:
@@ -220,6 +221,35 @@ cmd_test() {
     info "UI-Test: $1"
     run_xcodebuild test -project "$PROJECT" -scheme "$SCHEME" -destination "platform=iOS Simulator,id=$id" -only-testing:"$UI_TARGET/$1" -parallel-testing-enabled NO -disable-concurrent-destination-testing
     release_lock; success "UI-Test bestanden."
+}
+
+# UI-Test mit maschinellem Beleg (#145): Beleg, summary.json und Screenshots entstehen aus diesem
+# Lauf (Ergebnisbündel + xcodebuild-Rückgabewert), nie aus Handkopie. Prüfungen vor jedem Werkzeug.
+cmd_test_proof() {
+    [ -z "${1:-}" ] && { error "Usage: ./scripts/sim.sh test-proof <Testklasse>[/<test>]"; return 1; }
+    local wf="" wf_file="$PROJECT_DIR/.claude/active_workflow"
+    [ -f "$wf_file" ] && wf=$(tr -d '[:space:]' < "$wf_file")
+    [ -z "$wf" ] && { error "Kein aktiver Workflow (.claude/active_workflow), Beleg hätte keinen Ablageort"; return 1; }
+    local art="docs/artifacts/$wf"; local run="$art/simulator-run"
+    cd "$PROJECT_DIR"
+    rm -rf "$art/simulator-run.txt" "$run"   # ein alter grüner Beleg darf keinen roten Lauf überleben
+    mkdir -p "$run"
+    cmd_generate; acquire_lock; cmd_boot
+    local id; id=$(sim_id)
+    info "UI-Test mit Beleg: $1 → $art/simulator-run.txt"
+    # Rückgabewert aus diesem Lauf festhalten (pipefail, Lehre #144); `|| rc=` hält set -e auf.
+    local rc=0
+    run_xcodebuild test -project "$PROJECT" -scheme "$SCHEME" -destination "platform=iOS Simulator,id=$id" \
+        -only-testing:"$UI_TARGET/$1" -parallel-testing-enabled NO -disable-concurrent-destination-testing \
+        -resultBundlePath "$run/run.xcresult" || rc=$?
+    local endline; endline=$(grep -E '^\*\* TEST (SUCCEEDED|FAILED) \*\*' "$BUILD_LOG" | tail -1 || true)
+    release_lock
+    local prc=0
+    python3 scripts/sim_proof.py "$wf" "$1" "$run/run.xcresult" "${endline:-unbekannt}" \
+        "scripts/sim.sh test-proof $1" "$rc" || prc=$?
+    [ "$rc" -ne 0 ] && { error "UI-Test fehlgeschlagen (xcodebuild $rc), Beleg: $art/simulator-run.txt"; return "$rc"; }
+    [ "$prc" -ne 0 ] && { error "Beleg ungültig (sim_proof $prc): $art/simulator-run.txt"; return "$prc"; }
+    success "UI-Test bestanden, Beleg: $art/simulator-run.txt"
 }
 
 cmd_launch() {
@@ -434,7 +464,7 @@ cmd_screenshot() {
     [ -f "$out" ] && success "Screenshot: $out" || { error "Screenshot fehlgeschlagen"; return 1; }
 }
 
-cmd_help() { sed -n '3,29p' "$0" | sed 's/^# \{0,1\}//'; }
+cmd_help() { sed -n '3,30p' "$0" | sed 's/^# \{0,1\}//'; }
 
 COMMAND="${1:-help}"; shift 2>/dev/null || true
 case "$COMMAND" in
@@ -444,6 +474,7 @@ case "$COMMAND" in
     mac-build)  cmd_mac_build ;;
     sim-unit)   cmd_sim_unit "$@" ;;
     test)       cmd_test "$@" ;;
+    test-proof) cmd_test_proof "$@" ;;
     boot)       cmd_boot ;;
     status)     cmd_status ;;
     launch)     cmd_launch "$@" ;;

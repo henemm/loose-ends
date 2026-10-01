@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-10-01T15:37:47+0200
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: feat-145-simulator-beleg
+head: 087e8291b48fc255f98a59ef69f1b79cbdbd58c4
+basis: dcca68cbdd4342275cb7c8f3ed382710d46383f5 (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Failed
+xcodebuild: ** TEST FAILED **
+tests: 12 gesamt, 11 bestanden, 1 fehlgeschlagen, 0 übersprungen
+start: 1790860920.49  ende: 1790861866.307
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/feat-145-simulator-beleg/simulator-run/summary.json  sha256:d76170e480d49a07d5dd72bae86e392c051dc24fcba077baf326239caf0a1e46
+xcresult: docs/artifacts/feat-145-simulator-beleg/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-145-simulator-beleg/simulator-run/*.png (4 Stück)
+
+## Geprüfte Dateien
+(keine Code-Dateien geändert)

@@ -1,0 +1,104 @@
+FFFFFFFFFFF
+======================================================================
+FAIL: test_config_docs_and_scripts_do_not_count (scripts.test_sim_proof.CodeFilterTests.test_config_docs_and_scripts_do_not_count)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/glowing-yawning-milner/scripts/test_sim_proof.py", line 37, in setUp
+    self.fail("scripts/sim_proof.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/sim_proof.py fehlt
+
+======================================================================
+FAIL: test_product_and_test_sources_count_as_code (scripts.test_sim_proof.CodeFilterTests.test_product_and_test_sources_count_as_code)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/glowing-yawning-milner/scripts/test_sim_proof.py", line 37, in setUp
+    self.fail("scripts/sim_proof.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/sim_proof.py fehlt
+
+======================================================================
+FAIL: test_empty_file_set_is_explicit_and_matches_nothing (scripts.test_sim_proof.ProofFormatTests.test_empty_file_set_is_explicit_and_matches_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/glowing-yawning-milner/scripts/test_sim_proof.py", line 37, in setUp
+    self.fail("scripts/sim_proof.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/sim_proof.py fehlt
+
+======================================================================
+FAIL: test_roundtrip_through_plugin_regex (scripts.test_sim_proof.ProofFormatTests.test_roundtrip_through_plugin_regex)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/glowing-yawning-milner/scripts/test_sim_proof.py", line 37, in setUp
+    self.fail("scripts/sim_proof.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/sim_proof.py fehlt
+
+======================================================================
+FAIL: test_failed_summary_is_failed (scripts.test_sim_proof.SummaryParsingTests.test_failed_summary_is_failed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/glowing-yawning-milner/scripts/test_sim_proof.py", line 37, in setUp
+    self.fail("scripts/sim_proof.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/sim_proof.py fehlt
+
+======================================================================
+FAIL: test_missing_fields_do_not_crash_and_invent_nothing (scripts.test_sim_proof.SummaryParsingTests.test_missing_fields_do_not_crash_and_invent_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/glowing-yawning-milner/scripts/test_sim_proof.py", line 37, in setUp
+    self.fail("scripts/sim_proof.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/sim_proof.py fehlt
+
+======================================================================
+FAIL: test_passed_summary_gives_counts_device_and_times (scripts.test_sim_proof.SummaryParsingTests.test_passed_summary_gives_counts_device_and_times)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/glowing-yawning-milner/scripts/test_sim_proof.py", line 37, in setUp
+    self.fail("scripts/sim_proof.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/sim_proof.py fehlt
+
+======================================================================
+FAIL: test_passed_with_failing_xcodebuild_is_not_passed (scripts.test_sim_proof.SummaryParsingTests.test_passed_with_failing_xcodebuild_is_not_passed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/glowing-yawning-milner/scripts/test_sim_proof.py", line 37, in setUp
+    self.fail("scripts/sim_proof.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/sim_proof.py fehlt
+
+======================================================================
+FAIL: test_passed_without_tests_is_not_passed (scripts.test_sim_proof.SummaryParsingTests.test_passed_without_tests_is_not_passed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/glowing-yawning-milner/scripts/test_sim_proof.py", line 37, in setUp
+    self.fail("scripts/sim_proof.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/sim_proof.py fehlt
+
+======================================================================
+FAIL: test_missing_class_fails_with_usage_and_keeps_old_proof (scripts.test_sim_proof.TestProofCommandErrorTests.test_missing_class_fails_with_usage_and_keeps_old_proof)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/glowing-yawning-milner/scripts/test_sim_proof.py", line 125, in test_missing_class_fails_with_usage_and_keeps_old_proof
+    self.assertIn("test-proof <Testklasse", r.stderr)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'test-proof <Testklasse' not found in '\x1b[0;31m[sim]\x1b[0m Unbekannter Befehl: test-proof\n'
+
+======================================================================
+FAIL: test_missing_workflow_fails_before_any_run (scripts.test_sim_proof.TestProofCommandErrorTests.test_missing_workflow_fails_before_any_run)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/glowing-yawning-milner/scripts/test_sim_proof.py", line 132, in test_missing_workflow_fails_before_any_run
+    self.assertIn("Kein aktiver Workflow", r.stderr)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'Kein aktiver Workflow' not found in '\x1b[0;31m[sim]\x1b[0m Unbekannter Befehl: test-proof\n'
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.017s
+
+FAILED (failures=11)

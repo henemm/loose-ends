@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-10-01T15:56:23+0200
+befehl: scripts/sim.sh test-proof CaptureSmokeTests/testPlusButtonProof
+workflow: feat-145-simulator-beleg
+head: 087e8291b48fc255f98a59ef69f1b79cbdbd58c4
+basis: dcca68cbdd4342275cb7c8f3ed382710d46383f5 (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests/testPlusButtonProof
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1790862354.472  ende: 1790862982.238
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/feat-145-simulator-beleg/simulator-run/summary.json  sha256:a194edc3631f11dc5feb11f6843ff31eba9c5190f5a0d1c529e72703cf65353e
+xcresult: docs/artifacts/feat-145-simulator-beleg/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-145-simulator-beleg/simulator-run/*.png (4 Stück)
+
+## Geprüfte Dateien
+(keine Code-Dateien geändert)

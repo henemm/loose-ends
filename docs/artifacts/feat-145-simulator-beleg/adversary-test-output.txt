@@ -1,0 +1,160 @@
+test_config_docs_and_scripts_do_not_count (scripts.test_sim_proof.CodeFilterTests.test_config_docs_and_scripts_do_not_count) ... ok
+test_product_and_test_sources_count_as_code (scripts.test_sim_proof.CodeFilterTests.test_product_and_test_sources_count_as_code) ... ok
+test_empty_file_set_is_explicit_and_matches_nothing (scripts.test_sim_proof.ProofFormatTests.test_empty_file_set_is_explicit_and_matches_nothing) ... ok
+test_roundtrip_through_plugin_regex (scripts.test_sim_proof.ProofFormatTests.test_roundtrip_through_plugin_regex) ... ok
+test_failed_summary_is_failed (scripts.test_sim_proof.SummaryParsingTests.test_failed_summary_is_failed) ... ok
+test_missing_fields_do_not_crash_and_invent_nothing (scripts.test_sim_proof.SummaryParsingTests.test_missing_fields_do_not_crash_and_invent_nothing) ... ok
+test_passed_summary_gives_counts_device_and_times (scripts.test_sim_proof.SummaryParsingTests.test_passed_summary_gives_counts_device_and_times) ... ok
+test_passed_with_failing_xcodebuild_is_not_passed (scripts.test_sim_proof.SummaryParsingTests.test_passed_with_failing_xcodebuild_is_not_passed) ... ok
+test_passed_without_tests_is_not_passed (scripts.test_sim_proof.SummaryParsingTests.test_passed_without_tests_is_not_passed) ... ok
+test_missing_class_fails_with_usage_and_keeps_old_proof (scripts.test_sim_proof.TestProofCommandErrorTests.test_missing_class_fails_with_usage_and_keeps_old_proof) ... ok
+test_missing_workflow_fails_before_any_run (scripts.test_sim_proof.TestProofCommandErrorTests.test_missing_workflow_fails_before_any_run) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.021s
+
+OK
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test -project LooseEnds.xcodeproj -scheme LooseEnds -destination "platform=iOS Simulator,id=3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1" "-only-testing:LooseEndsUITests/CaptureSmokeTests/testPlusButtonProof" -parallel-testing-enabled NO -disable-concurrent-destination-testing -resultBundlePath docs/artifacts/feat-145-simulator-beleg/simulator-run/run.xcresult -derivedDataPath /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default CODE_SIGNING_ALLOWED=NO
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+
+Writing result bundle at path:
+	/Users/hem/Developer/loose-ends/.claude/worktrees/glowing-yawning-milner/docs/artifacts/feat-145-simulator-beleg/simulator-run/run.xcresult
+
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (6 targets)
+    Target 'LooseEndsUITests' in project 'LooseEnds'
+        ➜ Explicit dependency on target 'LooseEnds' in project 'LooseEnds'
+    Target 'LooseEndsTests' in project 'LooseEnds'
+        ➜ Explicit dependency on target 'LooseEnds' in project 'LooseEnds'
+    Target 'LooseEnds' in project 'LooseEnds'
+        ➜ Explicit dependency on target 'LooseEndsWatch' in project 'LooseEnds'
+        ➜ Explicit dependency on target 'LooseEndsWidgets' in project 'LooseEnds'
+        ➜ Explicit dependency on target 'LooseEndsShare' in project 'LooseEnds'
+    Target 'LooseEndsShare' in project 'LooseEnds' (no dependencies)
+    Target 'LooseEndsWidgets' in project 'LooseEnds' (no dependencies)
+    Target 'LooseEndsWatch' in project 'LooseEnds' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/WatchSimulator.platform/Developer/SDKs/WatchSimulator27.0.sdk /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/SDKStatCaches.noindex/watchsimulator27.0-24R360-c50668d93734557a32a78b937f5ceaf1.sdkstatcache
+    cd /Users/hem/Developer/loose-ends/.claude/worktrees/glowing-yawning-milner/LooseEnds.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/WatchSimulator.platform/Developer/SDKs/WatchSimulator27.0.sdk -o /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/SDKStatCaches.noindex/watchsimulator27.0-24R360-c50668d93734557a32a78b937f5ceaf1.sdkstatcache
+
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache
+    cd /Users/hem/Developer/loose-ends/.claude/worktrees/glowing-yawning-milner/LooseEnds.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -o /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache
+
+PruneExplicitPrecompiledModules /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/SDKExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+2026-10-01 15:45:57.782691+0200 LooseEndsUITests-Runner[92689:1200042] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-10-01 15:46:01.589.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-01 15:46:01.592.
+Test Suite 'CaptureSmokeTests' started at 2026-10-01 15:46:01.592.
+Test Case '-[LooseEndsUITests.CaptureSmokeTests testPlusButtonProof]' started.
+    t =     0.01s Start Test at 2026-10-01 15:46:01.605
+    t =     0.09s Set Up
+    t =     0.12s Open com.henning.looseends
+    t =     0.12s     Launch com.henning.looseends
+2026-10-01 15:46:02.042 xcodebuild[92657:1199572] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-01 15:46:02.042 xcodebuild[92657:1199572] [MT] IDELaunchParametersSnapshot: no debugger version
+objc[92689]: Class UIAccessibilityLoaderWebShared is implemented in both /Library/Developer/CoreSimulator/Volumes/iOS_24A434/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x1034f0398) and /Library/Developer/CoreSimulator/Volumes/iOS_24A434/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x1035e4310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     1.92s         Setting up automation session
+    t =     4.39s         Wait for com.henning.looseends to idle
+    t =     6.91s Waiting 10.0s for "captureButton" Button to exist
+    t =     7.93s     Checking `Expect predicate `existsNoRetry == 1` for object "captureButton" Button`
+    t =     7.93s         Checking existence of `"captureButton" Button`
+    t =     8.12s Find the Target Application 'com.henning.looseends'
+    t =     8.24s Added attachment named '1-startbildschirm-mit-plus'
+    t =     8.24s Tap "captureButton" Button
+    t =     8.24s     Wait for com.henning.looseends to idle
+    t =     8.25s     Find the "captureButton" Button
+    t =     8.28s     Check for interrupting elements affecting "captureButton" Button
+    t =     8.34s     Synthesize event
+    t =     8.70s     Wait for com.henning.looseends to idle
+<unknown>:0: warning: -[LooseEndsUITests.CaptureSmokeTests testPlusButtonProof] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.
+    t =     9.94s Waiting 5.0s for "captureTextField" Any to exist
+    t =    10.97s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`
+    t =    10.97s         Checking existence of `"captureTextField" Any`
+    t =    11.12s Find the Target Application 'com.henning.looseends'
+    t =    11.24s Added attachment named '2-nach-tippen-auf-plus'
+    t =    11.24s Tap "captureTextField" Any
+    t =    11.24s     Wait for com.henning.looseends to idle
+    t =    11.25s     Find the "captureTextField" Any
+    t =    11.33s     Check for interrupting elements affecting "captureTextField" TextField
+    t =    11.38s     Synthesize event
+    t =    11.67s     Wait for com.henning.looseends to idle
+    t =    12.18s Type 'Reifen wechseln la...' into "captureTextField" TextField
+    t =    12.19s     Wait for com.henning.looseends to idle
+    t =    12.19s     Find the "captureTextField" TextField
+    t =    12.29s     Check for interrupting elements affecting "captureTextField" TextField
+    t =    12.35s     Synthesize event
+    t =    12.93s     Wait for com.henning.looseends to idle
+    t =    12.94s Find the Target Application 'com.henning.looseends'
+    t =    13.07s Added attachment named '3-aufgabe-eingetippt'
+    t =    13.07s Waiting 5.0s for "captureDoneButton" Button to exist
+    t =    14.09s     Checking `Expect predicate `existsNoRetry == 1` for object "captureDoneButton" Button`
+    t =    14.10s         Checking existence of `"captureDoneButton" Button`
+    t =    14.18s Find the "captureDoneButton" Button
+    t =    14.22s Tap "captureDoneButton" Button
+    t =    14.23s     Wait for com.henning.looseends to idle
+    t =    14.23s     Find the "captureDoneButton" Button
+    t =    14.28s     Check for interrupting elements affecting "captureDoneButton" Button
+    t =    14.32s     Synthesize event
+    t =    14.61s     Wait for com.henning.looseends to idle
+    t =    15.13s Waiting 5.0s for "captureTextField" TextField to not exist
+    t =    16.15s     Checking `Expect predicate `existsNoRetry == 0` for object "captureTextField" TextField`
+    t =    16.15s         Checking existence of `"captureTextField" TextField`
+    t =    16.29s Waiting 5.0s for "viewRow_new" Any to exist
+    t =    17.32s     Checking `Expect predicate `existsNoRetry == 1` for object "viewRow_new" Any`
+    t =    17.32s         Checking existence of `"viewRow_new" Any`
+    t =    17.41s Tap "viewRow_new" Any
+    t =    17.41s     Wait for com.henning.looseends to idle
+    t =    17.42s     Find the "viewRow_new" Any
+    t =    17.52s     Check for interrupting elements affecting "viewRow_new" StaticText
+    t =    17.57s     Synthesize event
+    t =    17.87s     Wait for com.henning.looseends to idle
+    t =    18.39s Waiting 5.0s for StaticText (First Match) to exist
+    t =    19.43s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    19.43s         Checking existence of `StaticText (First Match)`
+    t =    19.56s Find the Target Application 'com.henning.looseends'
+    t =    19.69s Added attachment named '4-aufgabe-steht-in-neu'
+    t =    19.70s Tear Down
+Test Case '-[LooseEndsUITests.CaptureSmokeTests testPlusButtonProof]' passed (20.015 seconds).
+Test Suite 'CaptureSmokeTests' passed at 2026-10-01 15:46:21.619.
+	 Executed 1 test, with 0 failures (0 unexpected) in 20.015 (20.027) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-01 15:46:21.627.
+	 Executed 1 test, with 0 failures (0 unexpected) in 20.015 (20.035) seconds
+Test Suite 'Selected tests' passed at 2026-10-01 15:46:21.636.
+	 Executed 1 test, with 0 failures (0 unexpected) in 20.015 (20.047) seconds
+2026-10-01 15:56:22.143 xcodebuild[92657:1199655]  IDETestOperationsObserverDebug: Failure collecting diagnostics from simulator: Timed out after 600.0 seconds while waiting for a response from the invoked process
+2026-10-01 15:56:22.216 xcodebuild[92657:1199572] [MT] IDETestOperationsObserverDebug: 627.154 elapsed -- Testing started completed.
+2026-10-01 15:56:22.216 xcodebuild[92657:1199572] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 15:56:22.216 xcodebuild[92657:1199572] [MT] IDETestOperationsObserverDebug: 627.154 sec, +627.154 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/hem/Developer/loose-ends/.claude/worktrees/glowing-yawning-milner/docs/artifacts/feat-145-simulator-beleg/simulator-run/run.xcresult
+
+** TEST SUCCEEDED **
+
+Testing started

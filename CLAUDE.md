@@ -48,6 +48,7 @@ brew install xcodegen xcbeautify
 ./scripts/sim.sh generate     # LooseEnds.xcodeproj aus project.yml
 ./scripts/sim.sh unit         # Unit-Tests
 ./scripts/sim.sh build        # iOS-App für den Simulator
+./scripts/sim.sh test-proof <Klasse>  # UI-Test + maschineller Simulator-Beleg (#145)
 ```
 
 Immer über `scripts/sim.sh` gehen, nicht direkt über `xcodebuild`. Das Skript wählt Destinationen,
