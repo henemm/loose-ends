@@ -1,0 +1,30 @@
+Prüfbau nach Registrierungslauf, 2026-10-01
+== LooseEnds.app
+CFBundleIdentifier = com.henning.looseends.probe
+CFBundleDisplayName = LE Prüfbau
+LEAppGroup / LECloudContainer = group.com.henning.looseends.probe / iCloud.com.henning.looseends.probe
+entitlement application-identifier = XK87E2B3VR.com.henning.looseends.probe
+entitlement com.apple.security.application-groups = ['group.com.henning.looseends.probe']
+entitlement com.apple.developer.icloud-container-identifiers = ['iCloud.com.henning.looseends.probe']
+entitlement aps-environment = development
+== LooseEndsWatch.app
+CFBundleIdentifier = com.henning.looseends.probe.watchkitapp
+CFBundleDisplayName = LE Prüfbau
+LEAppGroup / LECloudContainer = group.com.henning.looseends.probe / iCloud.com.henning.looseends.probe
+entitlement application-identifier = XK87E2B3VR.com.henning.looseends.probe.watchkitapp
+entitlement com.apple.security.application-groups = ['group.com.henning.looseends.probe']
+entitlement com.apple.developer.icloud-container-identifiers = ['iCloud.com.henning.looseends.probe']
+entitlement aps-environment = development
+== LooseEndsWidgets.appex
+CFBundleIdentifier = com.henning.looseends.probe.widgets
+CFBundleDisplayName = Loose Ends Widgets
+LEAppGroup / LECloudContainer = group.com.henning.looseends.probe / iCloud.com.henning.looseends.probe
+entitlement application-identifier = XK87E2B3VR.com.henning.looseends.probe.widgets
+entitlement com.apple.security.application-groups = ['group.com.henning.looseends.probe']
+== LooseEndsShare.appex
+CFBundleIdentifier = com.henning.looseends.probe.share
+CFBundleDisplayName = LE Prüfbau
+LEAppGroup / LECloudContainer = group.com.henning.looseends.probe / iCloud.com.henning.looseends.probe
+entitlement application-identifier = XK87E2B3VR.com.henning.looseends.probe.share
+entitlement com.apple.security.application-groups = ['group.com.henning.looseends.probe']
+entitlement com.apple.developer.icloud-container-identifiers = ['iCloud.com.henning.looseends.probe']

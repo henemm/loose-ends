@@ -172,6 +172,14 @@ Aus FocusBlox übernommen: verzögertes Erledigen mit Abbrechen durch erneuten T
 Suche, Wiederherstellen aus Erledigt. Nicht übernommen: tippbare Badges in der Zeile, Kategoriefarben,
 Prioritäts-Score, Hygiene-Kartenstapel, Sprint-Button.
 
+**ADR-18 Prüfkennung.** Jeder signierte Gerätebau (`./scripts/sim.sh device-build` und jeder
+künftige Geräte-Testweg) trägt die Kennung `com.henning.looseends.probe` samt eigener App-Gruppe
+und eigenem iCloud-Container, Anzeigename „LE Prüfbau". Debug (Hennings Xcode-„Run") und Release
+bleiben beim Standard-Suffix (leer) und damit bitgleich zu heute. Anlass: Der Gerätelauf von #153
+installierte 2026-09-30 unter Hennings Produktivkennung und überschrieb seine Installation. Die
+Kennung hängt am Prüfweg, nicht an der Build-Konfiguration — Begründung und Alternative in
+`docs/specs/tooling/fix-156-pruefkennung.md` (#156).
+
 ## Bewusst nicht in Version 1
 
 Fokusblöcke, Timer, Coaching, Tagesreview, Disziplin-Statistiken, Aufgabentyp (Einkommen,

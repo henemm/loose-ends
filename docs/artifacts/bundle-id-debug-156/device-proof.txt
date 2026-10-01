@@ -1,0 +1,13 @@
+Gerätenachweis AC-4, #156, 2026-10-01 (iPhone 16 Pro 00008140-00111D582681801C)
+
+1. Henning in Xcode angemeldet (DVTDeveloperAccountManagerAppleIDLists: 1 Eintrag, Team XK87E2B3VR).
+2. LOOSEENDS_REGISTER=1 ./scripts/sim.sh device-build  -> exit 0, "Build Succeeded" (einmaliger Registrierungslauf,
+   ohne Sandbox, damit xcodebuild an den Schlüsselbund kommt).
+3. Prüfbau-Inhalt: probe-built-values.txt (alle vier Teile .probe, eigene App-Gruppe, eigener iCloud-Container, signiert).
+4. ./scripts/sim.sh device-install -> "Installiert." Kein device-launch, kein device (kombiniert).
+5. Vorher: apps-before.txt, nachher: apps-after.txt.
+   - com.henning.looseends "Loose Ends" 0.1.0 (1): Installationsordner vorher und nachher A516562E-B97A-49D1-96B3-881F7FD50A39
+     -> nicht ersetzt, nicht neu installiert.
+   - com.henning.looseends.probe "LE Prüfbau" 0.1.0 (1): neu, Ordner 3AB430D4-E9FC-4056-AA8A-439A1C9A4190.
+6. Normaler Gerätebau danach: ./scripts/sim.sh device-build (ohne REGISTER, in der Sandbox) -> exit 0, "Build Succeeded",
+   nur gespeicherte Profile. Xcode-Anmeldung danach weiterhin vorhanden (1 Eintrag).

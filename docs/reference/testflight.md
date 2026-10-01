@@ -107,3 +107,12 @@ Apple-verwalteter Signatur (`-allowProvisioningUpdates` plus API-Schlüssel) arc
 `-exportArchive` direkt zu App Store Connect hochladen. Die Build-Nummer ist die laufende
 Nummer des Workflow-Laufs; die Versionsnummer steht in `project.yml` (`MARKETING_VERSION`).
 Die Mac-App kommt in einem späteren Schritt dazu (eigenes Archiv, eigener TestFlight-Eintrag).
+
+## Prüfbauten fürs iPhone (#156)
+
+`./scripts/sim.sh device-build` und `./scripts/sim.sh lab` signieren nur mit den Profilen, die auf
+dem Mac schon gespeichert sind, und sprechen dabei nicht mit Apple. So kann der Bau die Anmeldung in
+Xcode nicht abmelden. Für eine neue Kennung, eine neue Fähigkeit oder nach Ablauf eines Profils läuft
+einmal `LOOSEENDS_REGISTER=1 ./scripts/sim.sh device-build` (bzw. `… lab`): Dieser Lauf benutzt die
+Anmeldung in Xcode und legt Kennungen und Profile an. Der API-Schlüssel reicht dafür nicht, weil
+xcodebuild mit ihm keine neuen Entwicklungsprofile anlegen kann.

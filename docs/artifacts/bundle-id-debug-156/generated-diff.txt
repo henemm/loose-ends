@@ -1,0 +1,159 @@
+--- docs/artifacts/bundle-id-debug-156/before/LooseEnds/LooseEnds.entitlements	2026-09-30 15:43:16
++++ LooseEnds/LooseEnds.entitlements	2026-09-30 15:44:11
+@@ -6,7 +6,7 @@
+ 	<string>development</string>
+ 	<key>com.apple.developer.icloud-container-identifiers</key>
+ 	<array>
+-		<string>iCloud.com.henning.looseends</string>
++		<string>iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
+ 	</array>
+ 	<key>com.apple.developer.icloud-services</key>
+ 	<array>
+@@ -16,7 +16,7 @@
+ 	<true/>
+ 	<key>com.apple.security.application-groups</key>
+ 	<array>
+-		<string>group.com.henning.looseends</string>
++		<string>group.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
+ 	</array>
+ 	<key>com.apple.security.device.audio-input</key>
+ 	<true/>
+--- docs/artifacts/bundle-id-debug-156/before/LooseEnds/Info.plist	2026-09-30 15:43:16
++++ LooseEnds/Info.plist	2026-09-30 15:44:11
+@@ -5,7 +5,7 @@
+ 	<key>CFBundleDevelopmentRegion</key>
+ 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+ 	<key>CFBundleDisplayName</key>
+-	<string>Loose Ends</string>
++	<string>$(LE_DISPLAY_NAME)</string>
+ 	<key>CFBundleExecutable</key>
+ 	<string>$(EXECUTABLE_NAME)</string>
+ 	<key>CFBundleIdentifier</key>
+@@ -37,6 +37,10 @@
+ 	</array>
+ 	<key>ITSAppUsesNonExemptEncryption</key>
+ 	<false/>
++	<key>LEAppGroup</key>
++	<string>group.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
++	<key>LECloudContainer</key>
++	<string>iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
+ 	<key>NSCalendarsFullAccessUsageDescription</key>
+ 	<string>Only if you switch it on, a task with a due date is shown in a "Loose Ends" calendar. The app never reads your other events.</string>
+ 	<key>NSMicrophoneUsageDescription</key>
+--- docs/artifacts/bundle-id-debug-156/before/LooseEndsWatch/LooseEndsWatch.entitlements	2026-09-30 15:43:16
++++ LooseEndsWatch/LooseEndsWatch.entitlements	2026-09-30 15:44:11
+@@ -6,7 +6,7 @@
+ 	<string>development</string>
+ 	<key>com.apple.developer.icloud-container-identifiers</key>
+ 	<array>
+-		<string>iCloud.com.henning.looseends</string>
++		<string>iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
+ 	</array>
+ 	<key>com.apple.developer.icloud-services</key>
+ 	<array>
+@@ -14,7 +14,7 @@
+ 	</array>
+ 	<key>com.apple.security.application-groups</key>
+ 	<array>
+-		<string>group.com.henning.looseends</string>
++		<string>group.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
+ 	</array>
+ </dict>
+ </plist>
+--- docs/artifacts/bundle-id-debug-156/before/LooseEndsWatch/Info.plist	2026-09-30 15:43:16
++++ LooseEndsWatch/Info.plist	2026-09-30 15:44:11
+@@ -5,7 +5,7 @@
+ 	<key>CFBundleDevelopmentRegion</key>
+ 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+ 	<key>CFBundleDisplayName</key>
+-	<string>Loose Ends</string>
++	<string>$(LE_DISPLAY_NAME)</string>
+ 	<key>CFBundleExecutable</key>
+ 	<string>$(EXECUTABLE_NAME)</string>
+ 	<key>CFBundleIdentifier</key>
+@@ -20,6 +20,10 @@
+ 	<string>$(MARKETING_VERSION)</string>
+ 	<key>CFBundleVersion</key>
+ 	<string>$(CURRENT_PROJECT_VERSION)</string>
++	<key>LEAppGroup</key>
++	<string>group.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
++	<key>LECloudContainer</key>
++	<string>iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
+ 	<key>NSMicrophoneUsageDescription</key>
+ 	<string>Loose Ends listens so you can say a task.</string>
+ 	<key>NSSpeechRecognitionUsageDescription</key>
+@@ -31,7 +35,7 @@
+ 	<key>WKApplication</key>
+ 	<true/>
+ 	<key>WKCompanionAppBundleIdentifier</key>
+-	<string>com.henning.looseends</string>
++	<string>com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
+ 	<key>WKRunsIndependentlyOfCompanionApp</key>
+ 	<true/>
+ </dict>
+--- docs/artifacts/bundle-id-debug-156/before/LooseEndsWidgets/LooseEndsWidgets.entitlements	2026-09-30 15:43:16
++++ LooseEndsWidgets/LooseEndsWidgets.entitlements	2026-09-30 15:44:11
+@@ -6,7 +6,7 @@
+ 	<true/>
+ 	<key>com.apple.security.application-groups</key>
+ 	<array>
+-		<string>group.com.henning.looseends</string>
++		<string>group.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
+ 	</array>
+ </dict>
+ </plist>
+--- docs/artifacts/bundle-id-debug-156/before/LooseEndsWidgets/Info.plist	2026-09-30 15:43:16
++++ LooseEndsWidgets/Info.plist	2026-09-30 15:44:11
+@@ -20,6 +20,10 @@
+ 	<string>$(MARKETING_VERSION)</string>
+ 	<key>CFBundleVersion</key>
+ 	<string>$(CURRENT_PROJECT_VERSION)</string>
++	<key>LEAppGroup</key>
++	<string>group.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
++	<key>LECloudContainer</key>
++	<string>iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
+ 	<key>NSExtension</key>
+ 	<dict>
+ 		<key>NSExtensionPointIdentifier</key>
+--- docs/artifacts/bundle-id-debug-156/before/LooseEndsShare/LooseEndsShare.entitlements	2026-09-30 15:43:16
++++ LooseEndsShare/LooseEndsShare.entitlements	2026-09-30 15:44:11
+@@ -4,7 +4,7 @@
+ <dict>
+ 	<key>com.apple.developer.icloud-container-identifiers</key>
+ 	<array>
+-		<string>iCloud.com.henning.looseends</string>
++		<string>iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
+ 	</array>
+ 	<key>com.apple.developer.icloud-services</key>
+ 	<array>
+@@ -12,7 +12,7 @@
+ 	</array>
+ 	<key>com.apple.security.application-groups</key>
+ 	<array>
+-		<string>group.com.henning.looseends</string>
++		<string>group.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
+ 	</array>
+ </dict>
+ </plist>
+--- docs/artifacts/bundle-id-debug-156/before/LooseEndsShare/Info.plist	2026-09-30 15:43:16
++++ LooseEndsShare/Info.plist	2026-09-30 15:44:11
+@@ -5,7 +5,7 @@
+ 	<key>CFBundleDevelopmentRegion</key>
+ 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+ 	<key>CFBundleDisplayName</key>
+-	<string>Loose Ends</string>
++	<string>$(LE_DISPLAY_NAME)</string>
+ 	<key>CFBundleExecutable</key>
+ 	<string>$(EXECUTABLE_NAME)</string>
+ 	<key>CFBundleIdentifier</key>
+@@ -20,6 +20,10 @@
+ 	<string>$(MARKETING_VERSION)</string>
+ 	<key>CFBundleVersion</key>
+ 	<string>$(CURRENT_PROJECT_VERSION)</string>
++	<key>LEAppGroup</key>
++	<string>group.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
++	<key>LECloudContainer</key>
++	<string>iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
+ 	<key>NSExtension</key>
+ 	<dict>
+ 		<key>NSExtensionAttributes</key>

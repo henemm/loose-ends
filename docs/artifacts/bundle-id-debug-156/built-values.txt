@@ -1,0 +1,25 @@
+# Simulator-Standardbau (./scripts/sim.sh build, ohne Override), 2026-09-30 15:44
+## Debug-iphonesimulator/LooseEnds.app
+CFBundleIdentifier = com.henning.looseends
+CFBundleDisplayName = Loose Ends
+LEAppGroup = group.com.henning.looseends
+LECloudContainer = iCloud.com.henning.looseends
+## Debug-iphonesimulator/LooseEnds.app/Watch/LooseEndsWatch.app
+CFBundleIdentifier = com.henning.looseends.watchkitapp
+CFBundleDisplayName = Loose Ends
+LEAppGroup = group.com.henning.looseends
+LECloudContainer = iCloud.com.henning.looseends
+WKCompanionAppBundleIdentifier = com.henning.looseends
+## Debug-iphonesimulator/LooseEnds.app/PlugIns/LooseEndsWidgets.appex
+CFBundleIdentifier = com.henning.looseends.widgets
+CFBundleDisplayName = Loose Ends Widgets
+LEAppGroup = group.com.henning.looseends
+LECloudContainer = iCloud.com.henning.looseends
+## Debug-iphonesimulator/LooseEnds.app/PlugIns/LooseEndsShare.appex
+CFBundleIdentifier = com.henning.looseends.share
+CFBundleDisplayName = Loose Ends
+LEAppGroup = group.com.henning.looseends
+LECloudContainer = iCloud.com.henning.looseends
+
+# Aufgelöste Entitlements aus Intermediates (*.xcent; Simulator-Bau läuft mit CODE_SIGNING_ALLOWED=NO)
+(keine: ohne Signierung schreibt Xcode keine .xcent-Datei. Aufgelöste Entitlements belegt erst ein signierter Bau, z. B. der Machbarkeitsbau device-build per codesign -d --entitlements -.)

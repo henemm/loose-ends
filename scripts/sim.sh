@@ -268,26 +268,37 @@ cmd_device_status() {
         grep -E "Device State|Transport Type|Marketing Name|Platform|OS Version" || true
 }
 
-cmd_device_build() {
-    ensure_project
-    local id; id=$(require_device) || return 1
-    local dd; dd=$(device_derived_data)
-    info "Signierter Build für das Gerät ($id), Team $TEAM_ID"
+# Signierte Gerätebauten nutzen nur die gespeicherten Profile (#156). Kein -allowProvisioningUpdates:
+# es meldet seit Xcode 16 die Anmeldung in Xcode ab (Apple-Forum 765741, 765893). Kein API-Schlüssel:
+# er kann keine neuen Entwicklungsprofile anlegen (Forum 763225, Lauf 36822132719). Neue Kennungen,
+# Fähigkeiten oder abgelaufene Profile: einmal LOOSEENDS_REGISTER=1 (benutzt die Xcode-Anmeldung).
+signed_build() {
+    local id="$1" scheme="$2"; shift 2
     cd "$PROJECT_DIR"
-    local args=(build -project "$PROJECT" -scheme "$SCHEME" -destination "id=$id"
-                -derivedDataPath "$dd" -allowProvisioningUpdates "DEVELOPMENT_TEAM=$TEAM_ID")
+    local args=(build -project "$PROJECT" -scheme "$scheme" -destination "id=$id"
+                -derivedDataPath "$(device_derived_data)" "DEVELOPMENT_TEAM=$TEAM_ID" "$@")
+    if [ "${LOOSEENDS_REGISTER:-}" = 1 ]; then
+        warn "Registrierungslauf: benutzt die Anmeldung in Xcode (einmalig für neue Kennungen/Profile, #156)"
+        args+=(-allowProvisioningUpdates)
+    fi
+    info "Signierter Build für das Gerät ($id), $scheme, Team $TEAM_ID"
     # Der Rückgabewert muss von xcodebuild kommen, nicht von xcbeautify: ohne
     # PIPESTATUS meldete die Stufe am 2026-09-28 „Gerätebuild erfolgreich“,
     # während xcodebuild „Unable to find a destination“ ausgab (#144-Abnahme).
-    local rc
+    local rc=0
     if command -v xcbeautify >/dev/null; then
-        xcodebuild "${args[@]}" 2>&1 | xcbeautify
-        rc=${PIPESTATUS[0]}
+        xcodebuild "${args[@]}" 2>&1 | xcbeautify || rc=${PIPESTATUS[0]}
     else
-        xcodebuild "${args[@]}" 2>&1
-        rc=$?
+        xcodebuild "${args[@]}" 2>&1 || rc=$?
     fi
-    [ "$rc" -eq 0 ] || { error "Gerätebuild fehlgeschlagen (xcodebuild $rc)."; return 1; }
+    [ "$rc" -eq 0 ] || { error "Gerätebuild fehlgeschlagen ($scheme, xcodebuild $rc)."; return 1; }
+}
+
+cmd_device_build() {
+    local id; id=$(require_device) || return 1
+    ensure_project
+    # Prüfkennung (#156, ADR-18): der Gerätebau installiert nie unter Hennings Kennung.
+    signed_build "$id" "$SCHEME" "BUNDLE_ID_SUFFIX=.probe" "LE_DISPLAY_NAME=LE Prüfbau" || return 1
     success "Gerätebuild erfolgreich."
 }
 
@@ -348,19 +359,10 @@ LAB_BUNDLE="com.henning.looseends.lab"
 LAB_RESULTS="Measurement/results"
 
 cmd_lab() {
-    ensure_project
     local id; id=$(require_device) || return 1
-    local dd; dd=$(device_derived_data)
-    info "Labor-App signiert bauen für $id"
-    cd "$PROJECT_DIR"
-    local args=(build -project "$PROJECT" -scheme "$LAB_SCHEME" -destination "id=$id"
-                -derivedDataPath "$dd" -allowProvisioningUpdates "DEVELOPMENT_TEAM=$TEAM_ID")
-    if command -v xcbeautify >/dev/null; then
-        xcodebuild "${args[@]}" 2>&1 | xcbeautify
-    else
-        xcodebuild "${args[@]}" 2>&1
-    fi
-    local app="$dd/Build/Products/Debug-iphoneos/LooseEndsLab.app"
+    ensure_project
+    signed_build "$id" "$LAB_SCHEME" || { error "Labor-App nicht gebaut"; return 1; }
+    local app="$(device_derived_data)/Build/Products/Debug-iphoneos/LooseEndsLab.app"
     [ -d "$app" ] || { error "Labor-App nicht gebaut"; return 1; }
     $DEVICECTL device install app --device "$id" "$app" >/dev/null
     success "Labor-App installiert."
