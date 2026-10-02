@@ -1,0 +1,83 @@
+# #165 GREEN: ./scripts/sim.sh test-proof CaptureSmokeTests, 3 Laeufe ohne Codeaenderung dazwischen (2026-10-02)
+# testDeletingRecurringTaskAfterCompletionDoesNotCrash: 49 Zeilen (deleteFromMenu ausgelagert)
+
+Lauf 1 exit 0
+Lauf 2 exit 0
+Lauf 3 exit 0
+
+== Lauf 1
+[sim] UI-Test mit Beleg: CaptureSmokeTests → docs/artifacts/bug-165-wiederholend-test/simulator-run.txt
+    ✔ testCalendarSwitchStaysOn (39.433 seconds)
+    ✔ testCapturedTaskShowsUpInNew (19.753 seconds)
+    ✔ testCompletedTaskShowsUnderCompleted (32.546 seconds)
+    ✔ testDeletingRecurringTaskAfterCompletionDoesNotCrash (57.901 seconds)
+    ✔ testDoneFromMenuEmptiesNew (27.896 seconds)
+    ✔ testDoneIsDisabledWhileEmptyAndCancelCloses (12.243 seconds)
+    ✔ testImportanceEditorUpdatesDetail (23.256 seconds)
+    ✔ testNewProjectAppearsOnStartScreen (15.664 seconds)
+    ✔ testPlusButtonProof (20.635 seconds)
+    ✔ testRepeatEditorUpdatesDetail (27.219 seconds)
+    ✔ testSubtaskCanBeAddedAndChecked (34.542 seconds)
+    ✔ testTaskDetailShowsRawText (24.344 seconds)
+Executed 12 tests, with 0 failures (0 unexpected) in 335.430 (335.453) seconds
+Executed 12 tests, with 0 failures (0 unexpected) in 335.430 (335.463) seconds
+Executed 12 tests, with 0 failures (0 unexpected) in 335.430 (335.485) seconds
+[sim] UI-Test bestanden, Beleg: docs/artifacts/bug-165-wiederholend-test/simulator-run.txt
+
+== Lauf 2
+[sim] UI-Test mit Beleg: CaptureSmokeTests → docs/artifacts/bug-165-wiederholend-test/simulator-run.txt
+    ✔ testCalendarSwitchStaysOn (37.406 seconds)
+    ✔ testCapturedTaskShowsUpInNew (22.521 seconds)
+    ✔ testCompletedTaskShowsUnderCompleted (32.907 seconds)
+    ✔ testDeletingRecurringTaskAfterCompletionDoesNotCrash (56.873 seconds)
+    ✔ testDoneFromMenuEmptiesNew (26.566 seconds)
+    ✔ testDoneIsDisabledWhileEmptyAndCancelCloses (12.162 seconds)
+    ✔ testImportanceEditorUpdatesDetail (23.952 seconds)
+    ✔ testNewProjectAppearsOnStartScreen (16.589 seconds)
+    ✔ testPlusButtonProof (23.892 seconds)
+    ✔ testRepeatEditorUpdatesDetail (27.371 seconds)
+    ✔ testSubtaskCanBeAddedAndChecked (35.148 seconds)
+    ✔ testTaskDetailShowsRawText (20.942 seconds)
+Executed 12 tests, with 0 failures (0 unexpected) in 336.328 (336.357) seconds
+Executed 12 tests, with 0 failures (0 unexpected) in 336.328 (336.363) seconds
+Executed 12 tests, with 0 failures (0 unexpected) in 336.328 (336.368) seconds
+[sim] UI-Test bestanden, Beleg: docs/artifacts/bug-165-wiederholend-test/simulator-run.txt
+
+== Lauf 3
+[sim] UI-Test mit Beleg: CaptureSmokeTests → docs/artifacts/bug-165-wiederholend-test/simulator-run.txt
+    ✔ testCalendarSwitchStaysOn (35.760 seconds)
+    ✔ testCapturedTaskShowsUpInNew (20.301 seconds)
+    ✔ testCompletedTaskShowsUnderCompleted (35.349 seconds)
+    ✔ testDeletingRecurringTaskAfterCompletionDoesNotCrash (61.822 seconds)
+    ✔ testDoneFromMenuEmptiesNew (28.501 seconds)
+    ✔ testDoneIsDisabledWhileEmptyAndCancelCloses (13.128 seconds)
+    ✔ testImportanceEditorUpdatesDetail (23.933 seconds)
+    ✔ testNewProjectAppearsOnStartScreen (14.623 seconds)
+    ✔ testPlusButtonProof (18.601 seconds)
+    ✔ testRepeatEditorUpdatesDetail (27.880 seconds)
+    ✔ testSubtaskCanBeAddedAndChecked (30.769 seconds)
+    ✔ testTaskDetailShowsRawText (21.619 seconds)
+Executed 12 tests, with 0 failures (0 unexpected) in 332.287 (332.314) seconds
+Executed 12 tests, with 0 failures (0 unexpected) in 332.287 (332.324) seconds
+Executed 12 tests, with 0 failures (0 unexpected) in 332.287 (332.325) seconds
+[sim] UI-Test bestanden, Beleg: docs/artifacts/bug-165-wiederholend-test/simulator-run.txt
+
+== Beleg aus Lauf 3 (simulator-run.txt)
+# Simulator-Beleg
+erzeugt: 2026-10-02T10:10:02+0200
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: bug-165-wiederholend-test
+head: b0b39451544fade64163c8a2e05aac1ba6ada12d
+basis: e4404b74babed41242f3a503ab14814b2072f112 (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 12 gesamt, 12 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1790928244.706  ende: 1790928600.853
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/bug-165-wiederholend-test/simulator-run/summary.json  sha256:084a64a75ccd9ec6a1dc5a1b4338d3ad9166ff280fdd0228ea811cd57452a5c9
+xcresult: docs/artifacts/bug-165-wiederholend-test/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/bug-165-wiederholend-test/simulator-run/*.png (4 Stück)
+
+## Geprüfte Dateien
+- sha256:2e3f12802826189246a9573192a2ae977c048b017ea517c41b53a015738aca99  LooseEndsUITests/CaptureSmokeTests.swift

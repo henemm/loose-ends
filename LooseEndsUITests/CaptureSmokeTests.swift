@@ -25,20 +25,93 @@ final class CaptureSmokeTests: XCTestCase {
         app.descendants(matching: .any).matching(identifier: id).firstMatch
     }
 
+    /// The captured task's row, found by identifier: the model may rewrite the title (#165). The
+    /// in-memory store of `--ui-testing` starts empty and each test captures one task, so the first
+    /// `taskRow_*` is the one just captured.
+    @MainActor
+    private func taskRow(in app: XCUIApplication) -> XCUIElement {
+        app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH 'taskRow_'"))
+            .firstMatch
+    }
+
+    /// The open detail belongs to the captured task: its raw text is immutable, unlike the title.
+    @MainActor
+    private func assertDetailRawText(_ text: String, in app: XCUIApplication) {
+        let rawText = element("detailRawText", in: app)
+        XCTAssertTrue(rawText.waitForExistence(timeout: 5), "Detail should show the raw text")
+        XCTAssertEqual(rawText.label, text, "Detail should belong to the captured task")
+    }
+
     /// Opens the long-press menu on a row. The runner may still be animating the list, so wait
     /// until the row is hittable and retry with a longer press if the menu did not open — a slow
-    /// CI runner can miss the first one or two attempts (#114).
+    /// CI runner can miss the first one or two attempts (#114). On a slow runner the press can
+    /// also arrive as a tap: the row is a `NavigationLink` and opens the detail instead. Then the
+    /// row is gone, so go back to the list before the next, longer press (#165). The detail is
+    /// also recognised by `detailRawText`: a row looked up by label matches the title shown there.
     @MainActor
     private func openMenu(on row: XCUIElement, expecting item: XCUIElement) {
         XCTAssertTrue(row.waitForExistence(timeout: 5), "Row should exist before opening its menu")
         let hittable = NSPredicate(format: "isHittable == true")
         _ = XCTWaiter().wait(for: [XCTNSPredicateExpectation(predicate: hittable, object: row)], timeout: 5)
+        let detailRawText = element("detailRawText", in: XCUIApplication())
         for duration in [1.2, 1.5, 2.0] {
             row.press(forDuration: duration)
             if item.waitForExistence(timeout: 5) {
                 return
             }
+            if !row.exists || detailRawText.exists {
+                let back = XCUIApplication().navigationBars.buttons.firstMatch
+                if back.waitForExistence(timeout: 5) {
+                    back.tap()
+                }
+                XCTAssertTrue(detailRawText.waitForNonExistence(timeout: 5), "Should have left the detail")
+                XCTAssertTrue(row.waitForExistence(timeout: 5), "Row should be back after leaving the detail")
+                _ = XCTWaiter().wait(for: [XCTNSPredicateExpectation(predicate: hittable, object: row)], timeout: 5)
+            }
         }
+    }
+
+    /// Editor → detail → list → sidebar, then "Repeating"; returns the task row found there.
+    /// With the model active the enriched task leaves "New" once the detail is seen again (#165),
+    /// so the row is looked up under "Repeating", where its rule keeps it regardless of enrichment.
+    @MainActor
+    private func openRepeatingFromEditor(in app: XCUIApplication, detailMarker: XCUIElement) -> XCUIElement {
+        let backToDetail = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(backToDetail.waitForExistence(timeout: 5))
+        backToDetail.tap()
+        XCTAssertTrue(detailMarker.waitForExistence(timeout: 5), "Should be back at the detail")
+
+        let backToList = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(backToList.waitForExistence(timeout: 5))
+        backToList.tap()
+        XCTAssertTrue(detailMarker.waitForNonExistence(timeout: 5), "Should have left the detail")
+
+        let backToSidebar = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(backToSidebar.waitForExistence(timeout: 5))
+        backToSidebar.tap()
+        let repeatingRow = element("viewRow_repeating", in: app)
+        XCTAssertTrue(repeatingRow.waitForExistence(timeout: 5), "Start screen should show Repeating")
+        repeatingRow.tap()
+
+        let row = taskRow(in: app)
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "The task should be listed under Repeating")
+        return row
+    }
+
+    /// Long press → Delete → confirm. The caller checks that the row left the list.
+    @MainActor
+    private func deleteFromMenu(_ row: XCUIElement, in app: XCUIApplication) {
+        let delete = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier == %@ OR label == %@", "menuDelete", "Delete"))
+            .firstMatch
+        openMenu(on: row, expecting: delete)
+        XCTAssertTrue(delete.waitForExistence(timeout: 5), "Long press should open the menu with Delete")
+        delete.tap()
+
+        let confirm = app.buttons["confirmDeleteButton"].firstMatch
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
+        confirm.tap()
     }
 
     /// True once the element reports the value, so a switch is read after it moved, not before.
@@ -72,8 +145,10 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(newRow.waitForExistence(timeout: 5), "View list should show New")
         newRow.tap()
 
-        let captured = app.staticTexts.matching(NSPredicate(format: "label == %@", "Rasenmäher Ölwechsel")).firstMatch
+        let captured = taskRow(in: app)
         XCTAssertTrue(captured.waitForExistence(timeout: 5), "Captured task should appear in New")
+        captured.tap()
+        assertDetailRawText("Rasenmäher Ölwechsel", in: app)
     }
 
     /// Nur für den Nachweis an Henning: hält jeden Schritt des Capture-Wegs als Bild fest.
@@ -109,9 +184,11 @@ final class CaptureSmokeTests: XCTestCase {
         let newRow = element("viewRow_new", in: app)
         XCTAssertTrue(newRow.waitForExistence(timeout: 5))
         newRow.tap()
-        let captured = app.staticTexts.matching(NSPredicate(format: "label == %@", "Reifen wechseln lassen")).firstMatch
+        let captured = taskRow(in: app)
         XCTAssertTrue(captured.waitForExistence(timeout: 5), "Erfasste Aufgabe taucht nicht in Neu auf")
         shot(app, "4-aufgabe-steht-in-neu")
+        captured.tap()
+        assertDetailRawText("Reifen wechseln lassen", in: app)
     }
 
     @MainActor
@@ -132,7 +209,7 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(newRow.waitForExistence(timeout: 5))
         newRow.tap()
 
-        let row = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Dachrinne reinigen")).firstMatch
+        let row = taskRow(in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5), "Task row should be listed in New")
         row.tap()
 
@@ -177,7 +254,7 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(newRow.waitForExistence(timeout: 5))
         newRow.tap()
 
-        let row = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Fenster putzen")).firstMatch
+        let row = taskRow(in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5), "Task row should be listed in New")
         let done = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier == %@ OR label == %@", "menuDone", "Complete"))
@@ -233,9 +310,10 @@ final class CaptureSmokeTests: XCTestCase {
         let newRow = element("viewRow_new", in: app)
         XCTAssertTrue(newRow.waitForExistence(timeout: 5))
         newRow.tap()
-        let row = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Reifen wechseln")).firstMatch
+        let row = taskRow(in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
+        assertDetailRawText("Reifen wechseln", in: app)
 
         let importanceRow = element("field_importance", in: app)
         XCTAssertTrue(importanceRow.waitForExistence(timeout: 5), "Detail should list Importance")
@@ -270,9 +348,10 @@ final class CaptureSmokeTests: XCTestCase {
         let newRow = element("viewRow_new", in: app)
         XCTAssertTrue(newRow.waitForExistence(timeout: 5))
         newRow.tap()
-        let row = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Rasen mähen")).firstMatch
+        let row = taskRow(in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
+        assertDetailRawText("Rasen mähen", in: app)
 
         let repeatRow = element("field_repeatRule", in: app)
         XCTAssertTrue(repeatRow.waitForExistence(timeout: 5), "Detail should list Repeat")
@@ -313,9 +392,10 @@ final class CaptureSmokeTests: XCTestCase {
         let newRow = element("viewRow_new", in: app)
         XCTAssertTrue(newRow.waitForExistence(timeout: 5))
         newRow.tap()
-        let row = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Tabletten nehmen")).firstMatch
+        let row = taskRow(in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
+        assertDetailRawText("Tabletten nehmen", in: app)
 
         let repeatRow = element("field_repeatRule", in: app)
         XCTAssertTrue(repeatRow.waitForExistence(timeout: 5), "Detail should list Repeat")
@@ -326,38 +406,22 @@ final class CaptureSmokeTests: XCTestCase {
         daily.tap()
         XCTAssertTrue(element("repeatIntervalStepper", in: app).waitForExistence(timeout: 5), "A rule shows its interval")
 
-        let backToDetail = app.navigationBars.buttons.firstMatch
-        XCTAssertTrue(backToDetail.waitForExistence(timeout: 5))
-        backToDetail.tap()
-
-        let backToList = app.navigationBars.buttons.firstMatch
-        XCTAssertTrue(backToList.waitForExistence(timeout: 5))
-        backToList.tap()
-        XCTAssertTrue(row.waitForExistence(timeout: 5), "Should be back at the list with the task visible")
+        let repeating = openRepeatingFromEditor(in: app, detailMarker: repeatRow)
 
         let complete = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier == %@ OR label == %@", "menuDone", "Complete"))
             .firstMatch
-        openMenu(on: row, expecting: complete)
+        openMenu(on: repeating, expecting: complete)
         XCTAssertTrue(complete.waitForExistence(timeout: 5), "Long press should open the menu with Complete")
         complete.tap()
 
         // A repeating task rolls forward instead of leaving the list — same row, new due date,
         // and now a populated `completions` relationship (the crash precondition).
-        XCTAssertTrue(row.waitForExistence(timeout: 5), "A repeating task stays listed after completion")
+        XCTAssertTrue(repeating.waitForExistence(timeout: 5), "A repeating task stays listed after completion")
 
-        let delete = app.descendants(matching: .any)
-            .matching(NSPredicate(format: "identifier == %@ OR label == %@", "menuDelete", "Delete"))
-            .firstMatch
-        openMenu(on: row, expecting: delete)
-        XCTAssertTrue(delete.waitForExistence(timeout: 5), "Long press should open the menu with Delete")
-        delete.tap()
+        deleteFromMenu(repeating, in: app)
 
-        let confirm = app.buttons["confirmDeleteButton"].firstMatch
-        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
-        confirm.tap()
-
-        XCTAssertTrue(row.waitForNonExistence(timeout: 5), "The deleted recurring task should leave the list")
+        XCTAssertTrue(repeating.waitForNonExistence(timeout: 5), "The deleted recurring task should leave the list")
         // Proof the app is still alive and responsive, not just that this one element vanished.
         XCTAssertTrue(captureButton.waitForExistence(timeout: 5), "App should still respond after deleting a recurring task")
     }
@@ -379,7 +443,7 @@ final class CaptureSmokeTests: XCTestCase {
         let newRow = element("viewRow_new", in: app)
         XCTAssertTrue(newRow.waitForExistence(timeout: 5))
         newRow.tap()
-        let row = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Keller aufräumen")).firstMatch
+        let row = taskRow(in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         let complete = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier == %@ OR label == %@", "menuDone", "Complete"))
@@ -397,6 +461,8 @@ final class CaptureSmokeTests: XCTestCase {
         doneRow.tap()
 
         XCTAssertTrue(row.waitForExistence(timeout: 5), "The finished task should be listed under Completed")
+        row.tap()
+        assertDetailRawText("Keller aufräumen", in: app)
     }
 
     @MainActor
@@ -416,9 +482,10 @@ final class CaptureSmokeTests: XCTestCase {
         let newRow = element("viewRow_new", in: app)
         XCTAssertTrue(newRow.waitForExistence(timeout: 5))
         newRow.tap()
-        let row = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Einkaufen")).firstMatch
+        let row = taskRow(in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
+        assertDetailRawText("Einkaufen", in: app)
 
         let subtaskField = element("subtaskTextField", in: app)
         if !subtaskField.waitForExistence(timeout: 3) {
@@ -461,9 +528,10 @@ final class CaptureSmokeTests: XCTestCase {
         let newRow = element("viewRow_new", in: app)
         XCTAssertTrue(newRow.waitForExistence(timeout: 5))
         newRow.tap()
-        let row = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Zahnarzt anrufen")).firstMatch
+        let row = taskRow(in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
+        assertDetailRawText("Zahnarzt anrufen", in: app)
 
         let toggle = app.switches["showInCalendarToggle"]
         if !toggle.waitForExistence(timeout: 3) {
