@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-10-02T17:23:32+0200
+befehl: scripts/sim.sh test-proof CaptureSmokeTests/testCalendarSwitchStaysOn
+workflow: fix-172-ui-tests-first-try
+head: 247070f6291b82cf5696cbdcae0118ec8275eac5
+basis: 247070f6291b82cf5696cbdcae0118ec8275eac5 (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests/testCalendarSwitchStaysOn
+ergebnis: Failed
+xcodebuild: ** TEST FAILED **
+tests: 1 gesamt, 0 bestanden, 1 fehlgeschlagen, 0 übersprungen
+start: 1790953977.914  ende: 1790954611.497
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/fix-172-ui-tests-first-try/simulator-run/summary.json  sha256:6d6b97b91de6ea576e3607bac6c4f464a232e6084453a0f2dd38ddc68a3a94ac
+xcresult: docs/artifacts/fix-172-ui-tests-first-try/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-172-ui-tests-first-try/simulator-run/*.png (0 Stück)
+
+## Geprüfte Dateien
+- sha256:ae49ecca4d28a64ca14d3ce09336f3aabd043ad8a5d937d35fbd0f442e1e5b8c  LooseEndsUITests/CaptureSmokeTests.swift
