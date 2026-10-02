@@ -1,16 +1,16 @@
 # Simulator-Beleg
-erzeugt: 2026-10-02T10:10:02+0200
+erzeugt: 2026-10-02T10:42:38+0200
 befehl: scripts/sim.sh test-proof CaptureSmokeTests
 workflow: bug-165-wiederholend-test
-head: b0b39451544fade64163c8a2e05aac1ba6ada12d
+head: 9ba25515e57b2c35bbb92e05c813d01ae90aab3d
 basis: e4404b74babed41242f3a503ab14814b2072f112 (merge-base origin/main HEAD)
 testklasse: CaptureSmokeTests
 ergebnis: Passed
 xcodebuild: ** TEST SUCCEEDED **
 tests: 12 gesamt, 12 bestanden, 0 fehlgeschlagen, 0 übersprungen
-start: 1790928244.706  ende: 1790928600.853
+start: 1790930048.573  ende: 1790930556.454
 geraet: iPhone 17, iOS 27.0
-summary: docs/artifacts/bug-165-wiederholend-test/simulator-run/summary.json  sha256:084a64a75ccd9ec6a1dc5a1b4338d3ad9166ff280fdd0228ea811cd57452a5c9
+summary: docs/artifacts/bug-165-wiederholend-test/simulator-run/summary.json  sha256:57835e2abb6c9086261fd0519a7b5ebc0c42a7e2b256f2595e0b06fcd9522c70
 xcresult: docs/artifacts/bug-165-wiederholend-test/simulator-run/run.xcresult  (gitignored)
 screenshots: docs/artifacts/bug-165-wiederholend-test/simulator-run/*.png (4 Stück)
 
