@@ -35,16 +35,13 @@ Prioritätsreihenfolge; Details, Umfang und DoD stehen im jeweiligen Issue.
 
 **Spikes zuerst** (technisches Risiko, blockieren die Umsetzung der Must-Features):
 
-1. [#20](https://github.com/henemm/loose-ends/issues/20) Control-Center-Werteabfrage unter iOS 27?
-2. [#21](https://github.com/henemm/loose-ends/issues/21) SystemLanguageModel in Extension/BGAppRefreshTask verlässlich?
-3. [#22](https://github.com/henemm/loose-ends/issues/22) Kaltstart Erfassungs-Szene unter einer Sekunde?
-4. [#24](https://github.com/henemm/loose-ends/issues/24) Mail-Share-Extension: `message:`-URL zuverlässig?
+1. [#22](https://github.com/henemm/loose-ends/issues/22) Kaltstart Erfassungs-Szene unter einer Sekunde?
+2. [#24](https://github.com/henemm/loose-ends/issues/24) Mail-Share-Extension: `message:`-URL zuverlässig?
 
 **Tragende Annahmen des Produkts** (`docs/project/06-annahmen-und-experimente.md`, 2026-09-19): Die
 Kalibrierung zu #23 zeigt, dass die Modell-Konfidenz richtig nicht von falsch trennt. Bevor weitere
 Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
 
-- [#74](https://github.com/henemm/loose-ends/issues/74) PO-Entscheidungen: Daten, Messgerät, Inventar
 - [#67](https://github.com/henemm/loose-ends/issues/67) Datum- und Titel-Treue (falsch ist hier nicht „ein Handgriff")
   - davor [#83](https://github.com/henemm/loose-ends/issues/83) Labor-App nur im Vordergrund, Lebenslauf mitschreiben
   - davor [#82](https://github.com/henemm/loose-ends/issues/82) Korpus in Hennings Satzformen (Stichwörter, Fragen, Diktat) samt seinen FocusBlox-Rohsätzen

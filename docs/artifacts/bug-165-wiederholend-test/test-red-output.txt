@@ -1,0 +1,28 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: CaptureSmokeTests/testDeletingRecurringTaskAfterCompletionDoesNotCrash
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-10-01 21:33:41.045.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-01 21:33:41.047.
+Test Suite 'CaptureSmokeTests' started at 2026-10-01 21:33:41.048.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CaptureSmokeTests testDeletingRecurringTaskAfterCompletionDoesNotCrash] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    13.25s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    14.28s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [31m✖[0m testDeletingRecurringTaskAfterCompletionDoesNotCrash, XCTAssertTrue failed - Should be back at the list with the task visible
+Executed 1 test, with 1 failure (0 unexpected) in 37.375 (37.380) seconds
+Test Suite 'LooseEndsUITests.xctest' failed at 2026-10-01 21:34:18.431.
+Executed 1 test, with 1 failure (0 unexpected) in 37.375 (37.384) seconds
+Executed 1 test, with 1 failure (0 unexpected) in 37.375 (37.387) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.10.01_21-33-23-+0200.xcresult
+[36;1mTesting started[0m
