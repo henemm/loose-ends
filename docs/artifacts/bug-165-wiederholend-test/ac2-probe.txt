@@ -1,0 +1,222 @@
+# AC-2 Probe (#165) - Wegwerf-Eingriff in openMenu, 2026-10-02
+# Eingriff: erste Dauer 1.2 -> 0.05 s, NSLog-Marker '#165-probe' in openMenu. Danach Datei aus Backup zurueckgesetzt (diff leer).
+# Simulator: iPhone 17, iOS 27.0, ./scripts/sim.sh test <Test>; Auszuege aus xcodebuild.log
+
+== Lauf 1: testDoneFromMenuEmptiesNew, Rueckweg aktiv (Code wie im Ticket) -> ROT ==
+# Befund: Zeile wird per label == 'Fenster putzen' gesucht; nach dem Tippen passt dieselbe Abfrage auf
+# detailRawText im Detail. row.exists bleibt 1, der Rueckweg greift nie, Druck 2 und 3 landen im Detail.
+Test Case '-[LooseEndsUITests.CaptureSmokeTests testDoneFromMenuEmptiesNew]' started.
+    t =     8.32s     Check for interrupting elements affecting "captureButton" Button
+    t =    11.19s     Check for interrupting elements affecting "captureTextField" TextField
+    t =    11.66s     Check for interrupting elements affecting "captureTextField" TextField
+    t =    12.41s     Check for interrupting elements affecting "captureDoneButton" Button
+    t =    15.75s     Check for interrupting elements affecting "viewRow_new" StaticText
+2026-10-02 06:24:01.651508+0200 LooseEndsUITests-Runner[52939:3180548] #165-probe press 0.05
+    t =    20.24s Press "taskRow_6AD7CEFA-A992-46DE-A7CF-446BCE1FC9F5" Button for 0.1 seconds
+    t =    20.28s     Check for interrupting elements affecting "taskRow_6AD7CEFA-A992-46DE-A7CF-446BCE1FC9F5" Button
+2026-10-02 06:24:08.217252+0200 LooseEndsUITests-Runner[52939:3180548] #165-probe no menu after 0.05, row.exists=1
+2026-10-02 06:24:08.264255+0200 LooseEndsUITests-Runner[52939:3180548] #165-probe press 1.50
+    t =    26.85s Press "taskRow_6AD7CEFA-A992-46DE-A7CF-446BCE1FC9F5" Button for 1.5 seconds
+    t =    26.91s     Check for interrupting elements affecting "detailRawText" StaticText
+2026-10-02 06:24:15.405354+0200 LooseEndsUITests-Runner[52939:3180548] #165-probe no menu after 1.50, row.exists=1
+2026-10-02 06:24:15.452937+0200 LooseEndsUITests-Runner[52939:3180548] #165-probe press 2.00
+    t =    34.04s Press "detailRawText" StaticText for 2.0 seconds
+    t =    34.09s     Check for interrupting elements affecting "detailRawText" StaticText
+2026-10-02 06:24:23.061473+0200 LooseEndsUITests-Runner[52939:3180548] #165-probe no menu after 2.00, row.exists=1
+/Users/hem/Developer/loose-ends/.claude/worktrees/glowing-yawning-milner/LooseEndsUITests/CaptureSmokeTests.swift:233: error: -[LooseEndsUITests.CaptureSmokeTests testDoneFromMenuEmptiesNew] : XCTAssertTrue failed - Long press should open the menu with Complete
+Test Case '-[LooseEndsUITests.CaptureSmokeTests testDoneFromMenuEmptiesNew]' failed (47.476 seconds).
+	 Executed 1 test, with 1 failure (0 unexpected) in 47.476 (47.477) seconds
+	 Executed 1 test, with 1 failure (0 unexpected) in 47.476 (47.483) seconds
+	 Executed 1 test, with 1 failure (0 unexpected) in 47.476 (47.485) seconds
+
+== Lauf 2: testDeletingRecurringTaskAfterCompletionDoesNotCrash, Rueckweg aktiv -> GRUEN ==
+# Zeile per identifier BEGINSWITH 'taskRow_'; Rueckweg greift zweimal (beide openMenu-Aufrufe).
+Test Case '-[LooseEndsUITests.CaptureSmokeTests testDeletingRecurringTaskAfterCompletionDoesNotCrash]' started.
+    t =    11.07s     Check for interrupting elements affecting "captureButton" Button
+    t =    14.69s     Check for interrupting elements affecting "captureTextField" TextField
+    t =    15.27s     Check for interrupting elements affecting "captureTextField" TextField
+    t =    16.23s     Check for interrupting elements affecting "captureDoneButton" Button
+    t =    20.13s     Check for interrupting elements affecting "viewRow_new" StaticText
+    t =    32.56s     Check for interrupting elements affecting "Tabletten nehmen" StaticText
+    t =    35.22s     Check for interrupting elements affecting "field_repeatRule" Button
+    t =    37.02s     Check for interrupting elements affecting "Daily" Button
+    t =    39.90s Tap Button (First Match)
+    t =    39.92s     Check for interrupting elements affecting "BackButton" Button
+    t =    42.88s Tap Button (First Match)
+    t =    42.91s     Check for interrupting elements affecting "BackButton" Button
+    t =    45.72s Tap Button (First Match)
+    t =    45.75s     Check for interrupting elements affecting "BackButton" Button
+    t =    47.65s     Check for interrupting elements affecting "viewRow_repeating" StaticText
+2026-10-02 06:35:30.634882+0200 LooseEndsUITests-Runner[72301:3288515] #165-probe press 0.05
+    t =    51.69s Press "taskRow_6912F148-8AB7-4461-B7A6-2B72D73A2FEE" Button for 0.1 seconds
+    t =    51.71s     Check for interrupting elements affecting "taskRow_6912F148-8AB7-4461-B7A6-2B72D73A2FEE" Button
+2026-10-02 06:35:36.925357+0200 LooseEndsUITests-Runner[72301:3288515] #165-probe no menu after 0.05, row.exists=0
+2026-10-02 06:35:37.002495+0200 LooseEndsUITests-Runner[72301:3288515] #165-probe fallback
+2026-10-02 06:35:38.094778+0200 LooseEndsUITests-Runner[72301:3288515] #165-probe back tap
+    t =    59.14s Tap Button (First Match)
+    t =    59.16s     Check for interrupting elements affecting "BackButton" Button
+2026-10-02 06:35:39.935096+0200 LooseEndsUITests-Runner[72301:3288515] #165-probe row back
+2026-10-02 06:35:41.049168+0200 LooseEndsUITests-Runner[72301:3288515] #165-probe press 1.50
+    t =    62.10s Press "taskRow_6912F148-8AB7-4461-B7A6-2B72D73A2FEE" Button for 1.5 seconds
+    t =    62.13s     Check for interrupting elements affecting "taskRow_6912F148-8AB7-4461-B7A6-2B72D73A2FEE" Button
+2026-10-02 06:35:44.249200+0200 LooseEndsUITests-Runner[72301:3288515] #165-probe menu open after 1.50
+    t =    66.42s     Check for interrupting elements affecting "menuDone" Button
+2026-10-02 06:35:49.967793+0200 LooseEndsUITests-Runner[72301:3288515] #165-probe press 0.05
+    t =    71.02s Press "taskRow_6912F148-8AB7-4461-B7A6-2B72D73A2FEE" Button for 0.1 seconds
+    t =    71.05s     Check for interrupting elements affecting "taskRow_6912F148-8AB7-4461-B7A6-2B72D73A2FEE" Button
+2026-10-02 06:35:56.067697+0200 LooseEndsUITests-Runner[72301:3288515] #165-probe no menu after 0.05, row.exists=0
+2026-10-02 06:35:56.128060+0200 LooseEndsUITests-Runner[72301:3288515] #165-probe fallback
+2026-10-02 06:35:57.194618+0200 LooseEndsUITests-Runner[72301:3288515] #165-probe back tap
+    t =    78.24s Tap Button (First Match)
+    t =    78.27s     Check for interrupting elements affecting "BackButton" Button
+2026-10-02 06:35:59.078829+0200 LooseEndsUITests-Runner[72301:3288515] #165-probe row back
+2026-10-02 06:36:00.175812+0200 LooseEndsUITests-Runner[72301:3288515] #165-probe press 1.50
+    t =    81.23s Press "taskRow_6912F148-8AB7-4461-B7A6-2B72D73A2FEE" Button for 1.5 seconds
+    t =    81.26s     Check for interrupting elements affecting "taskRow_6912F148-8AB7-4461-B7A6-2B72D73A2FEE" Button
+2026-10-02 06:36:03.152826+0200 LooseEndsUITests-Runner[72301:3288515] #165-probe menu open after 1.50
+    t =    85.36s     Check for interrupting elements affecting "menuDelete" Button
+    t =    87.80s     Check for interrupting elements affecting "confirmDeleteButton" Button
+Test Case '-[LooseEndsUITests.CaptureSmokeTests testDeletingRecurringTaskAfterCompletionDoesNotCrash]' passed (91.061 seconds).
+	 Executed 1 test, with 0 failures (0 unexpected) in 91.061 (91.066) seconds
+	 Executed 1 test, with 0 failures (0 unexpected) in 91.061 (91.073) seconds
+	 Executed 1 test, with 0 failures (0 unexpected) in 91.061 (91.075) seconds
+
+== Lauf 3 (Gegenprobe RED): testDeletingRecurringTaskAfterCompletionDoesNotCrash, Rueckweg abgeschaltet -> ROT ==
+Test Case '-[LooseEndsUITests.CaptureSmokeTests testDeletingRecurringTaskAfterCompletionDoesNotCrash]' started.
+    t =    12.30s     Check for interrupting elements affecting "captureButton" Button
+    t =    15.60s     Check for interrupting elements affecting "captureTextField" TextField
+    t =    16.57s     Check for interrupting elements affecting "captureTextField" TextField
+    t =    17.49s     Check for interrupting elements affecting "captureDoneButton" Button
+    t =    22.11s     Check for interrupting elements affecting "viewRow_new" StaticText
+    t =    26.61s     Check for interrupting elements affecting "taskRow_3763BAE0-DD81-42B0-B1CD-0B038AAAB7D6" Button
+    t =    29.77s     Check for interrupting elements affecting "field_repeatRule" Button
+    t =    33.56s     Check for interrupting elements affecting "Daily" Button
+    t =    36.81s Tap Button (First Match)
+    t =    36.85s     Check for interrupting elements affecting "BackButton" Button
+    t =    40.03s Tap Button (First Match)
+    t =    40.05s     Check for interrupting elements affecting "BackButton" Button
+    t =    43.05s Tap Button (First Match)
+    t =    43.08s     Check for interrupting elements affecting "BackButton" Button
+    t =    45.03s     Check for interrupting elements affecting "viewRow_repeating" StaticText
+2026-10-02 06:37:56.203392+0200 LooseEndsUITests-Runner[73203:3297644] #165-probe press 0.05
+    t =    49.05s Press "taskRow_3763BAE0-DD81-42B0-B1CD-0B038AAAB7D6" Button for 0.1 seconds
+    t =    49.08s     Check for interrupting elements affecting "taskRow_3763BAE0-DD81-42B0-B1CD-0B038AAAB7D6" Button
+2026-10-02 06:38:02.478269+0200 LooseEndsUITests-Runner[73203:3297644] #165-probe no menu after 0.05, row.exists=0
+2026-10-02 06:38:02.478347+0200 LooseEndsUITests-Runner[73203:3297644] #165-probe press 1.50
+    t =    55.32s Press "taskRow_3763BAE0-DD81-42B0-B1CD-0B038AAAB7D6" Button for 1.5 seconds
+/Users/hem/Developer/loose-ends/.claude/worktrees/glowing-yawning-milner/LooseEndsUITests/CaptureSmokeTests.swift:40: error: -[LooseEndsUITests.CaptureSmokeTests testDeletingRecurringTaskAfterCompletionDoesNotCrash] : Failed to press "taskRow_3763BAE0-DD81-42B0-B1CD-0B038AAAB7D6" Button for 1.5 seconds: No matches found for first query match sequence: `Descendants matching type Any` -> `Elements matching predicate 'identifier BEGINSWITH "taskRow_"'`, given input App element pid: 73266
+Test Case '-[LooseEndsUITests.CaptureSmokeTests testDeletingRecurringTaskAfterCompletionDoesNotCrash]' failed (58.414 seconds).
+	 Executed 1 test, with 1 failure (0 unexpected) in 58.414 (58.420) seconds
+	 Executed 1 test, with 1 failure (0 unexpected) in 58.414 (58.424) seconds
+	 Executed 1 test, with 1 failure (0 unexpected) in 58.414 (58.427) seconds
+
+########## Nach Fix ##########
+# Fix: openMenu erkennt das Detail zusaetzlich ueber detailRawText (!row.exists || detailRawText.exists)
+# und wartet nach dem Zuruecktippen auf detailRawText.waitForNonExistence. Probe-Eingriff wie oben (erste Dauer 0.05 s,
+# NSLog-Marker, zusaetzlich detail=<detailRawText.exists>); Backup NACH dem Fix, danach exakt zurueckgesetzt (diff leer, Marker 0).
+
+== Nach Fix 1: testDoneFromMenuEmptiesNew -> GRUEN (row.exists=1, aber detail=1: Rueckweg greift) ==
+Test Case '-[LooseEndsUITests.CaptureSmokeTests testDoneFromMenuEmptiesNew]' started.
+    t =     9.48s     Check for interrupting elements affecting "captureButton" Button
+    t =    12.86s     Check for interrupting elements affecting "captureTextField" TextField
+    t =    13.81s     Check for interrupting elements affecting "captureTextField" TextField
+    t =    14.65s     Check for interrupting elements affecting "captureDoneButton" Button
+    t =    18.83s     Check for interrupting elements affecting "viewRow_new" StaticText
+2026-10-02 06:41:47.608123+0200 LooseEndsUITests-Runner[75135:3313871] #165-probe press 0.05
+    t =    23.29s Press "taskRow_27291F74-6222-4F93-B167-A05441E94E2A" Button for 0.1 seconds
+    t =    23.32s     Check for interrupting elements affecting "taskRow_27291F74-6222-4F93-B167-A05441E94E2A" Button
+2026-10-02 06:41:54.189991+0200 LooseEndsUITests-Runner[75135:3313871] #165-probe no menu after 0.05, row.exists=1 detail=1
+2026-10-02 06:41:54.328771+0200 LooseEndsUITests-Runner[75135:3313871] #165-probe fallback
+2026-10-02 06:41:55.383932+0200 LooseEndsUITests-Runner[75135:3313871] #165-probe back tap
+    t =    31.06s Tap Button (First Match)
+    t =    31.08s     Check for interrupting elements affecting "BackButton" Button
+2026-10-02 06:41:58.358870+0200 LooseEndsUITests-Runner[75135:3313871] #165-probe row back
+2026-10-02 06:41:59.467663+0200 LooseEndsUITests-Runner[75135:3313871] #165-probe press 1.50
+    t =    35.14s Press "Fenster putzen" StaticText for 1.5 seconds
+    t =    35.17s     Check for interrupting elements affecting "Fenster putzen" StaticText
+2026-10-02 06:42:02.625747+0200 LooseEndsUITests-Runner[75135:3313871] #165-probe menu open after 1.50
+    t =    39.44s     Check for interrupting elements affecting "menuDone" Button
+Test Case '-[LooseEndsUITests.CaptureSmokeTests testDoneFromMenuEmptiesNew]' passed (43.025 seconds).
+	 Executed 1 test, with 0 failures (0 unexpected) in 43.025 (43.028) seconds
+	 Executed 1 test, with 0 failures (0 unexpected) in 43.025 (43.036) seconds
+	 Executed 1 test, with 0 failures (0 unexpected) in 43.025 (43.037) seconds
+
+== Nach Fix 2: testCompletedTaskShowsUnderCompleted -> GRUEN ==
+Test Case '-[LooseEndsUITests.CaptureSmokeTests testCompletedTaskShowsUnderCompleted]' started.
+    t =     8.03s     Check for interrupting elements affecting "captureButton" Button
+    t =    11.25s     Check for interrupting elements affecting "captureTextField" TextField
+    t =    12.56s     Check for interrupting elements affecting "captureTextField" TextField
+    t =    13.27s     Check for interrupting elements affecting "captureDoneButton" Button
+    t =    17.15s     Check for interrupting elements affecting "viewRow_new" StaticText
+2026-10-02 06:42:56.885940+0200 LooseEndsUITests-Runner[75539:3318024] #165-probe press 0.05
+    t =    21.65s Press "taskRow_88D2A60B-FC7E-4F6E-AFE2-304BD8FB1F7C" Button for 0.1 seconds
+    t =    21.69s     Check for interrupting elements affecting "taskRow_88D2A60B-FC7E-4F6E-AFE2-304BD8FB1F7C" Button
+2026-10-02 06:43:03.404598+0200 LooseEndsUITests-Runner[75539:3318024] #165-probe no menu after 0.05, row.exists=1 detail=1
+2026-10-02 06:43:03.619228+0200 LooseEndsUITests-Runner[75539:3318024] #165-probe fallback
+2026-10-02 06:43:04.704864+0200 LooseEndsUITests-Runner[75539:3318024] #165-probe back tap
+    t =    29.47s Tap Button (First Match)
+    t =    29.49s     Check for interrupting elements affecting "BackButton" Button
+2026-10-02 06:43:07.770700+0200 LooseEndsUITests-Runner[75539:3318024] #165-probe row back
+2026-10-02 06:43:08.876522+0200 LooseEndsUITests-Runner[75539:3318024] #165-probe press 1.50
+    t =    33.64s Press "Keller aufräumen" StaticText for 1.5 seconds
+    t =    33.67s     Check for interrupting elements affecting "Keller aufräumen" StaticText
+2026-10-02 06:43:12.096672+0200 LooseEndsUITests-Runner[75539:3318024] #165-probe menu open after 1.50
+    t =    37.95s     Check for interrupting elements affecting "menuDone" Button
+    t =    41.39s Tap Button (First Match)
+    t =    41.42s     Check for interrupting elements affecting "BackButton" Button
+    t =    43.35s     Check for interrupting elements affecting "viewRow_done" StaticText
+Test Case '-[LooseEndsUITests.CaptureSmokeTests testCompletedTaskShowsUnderCompleted]' passed (45.093 seconds).
+	 Executed 1 test, with 0 failures (0 unexpected) in 45.093 (45.097) seconds
+	 Executed 1 test, with 0 failures (0 unexpected) in 45.093 (45.105) seconds
+	 Executed 1 test, with 0 failures (0 unexpected) in 45.093 (45.107) seconds
+
+== Nach Fix 3: testDeletingRecurringTaskAfterCompletionDoesNotCrash -> GRUEN (Rueckweg in beiden Aufrufen) ==
+Test Case '-[LooseEndsUITests.CaptureSmokeTests testDeletingRecurringTaskAfterCompletionDoesNotCrash]' started.
+    t =     9.89s     Check for interrupting elements affecting "captureButton" Button
+    t =    13.31s     Check for interrupting elements affecting "captureTextField" TextField
+    t =    14.16s     Check for interrupting elements affecting "captureTextField" TextField
+    t =    14.84s     Check for interrupting elements affecting "captureDoneButton" Button
+    t =    18.61s     Check for interrupting elements affecting "viewRow_new" StaticText
+    t =    21.86s     Check for interrupting elements affecting "taskRow_2184AE67-D3E5-4828-857F-13CE6BF50412" Button
+    t =    24.49s     Check for interrupting elements affecting "field_repeatRule" Button
+    t =    26.53s     Check for interrupting elements affecting "Daily" Button
+    t =    29.27s Tap Button (First Match)
+    t =    29.29s     Check for interrupting elements affecting "BackButton" Button
+    t =    32.27s Tap Button (First Match)
+    t =    32.29s     Check for interrupting elements affecting "BackButton" Button
+    t =    35.11s Tap Button (First Match)
+    t =    35.13s     Check for interrupting elements affecting "BackButton" Button
+    t =    37.05s     Check for interrupting elements affecting "viewRow_repeating" StaticText
+2026-10-02 06:44:23.806513+0200 LooseEndsUITests-Runner[75938:3321522] #165-probe press 0.05
+    t =    40.99s Press "taskRow_2184AE67-D3E5-4828-857F-13CE6BF50412" Button for 0.1 seconds
+    t =    41.02s     Check for interrupting elements affecting "taskRow_2184AE67-D3E5-4828-857F-13CE6BF50412" Button
+2026-10-02 06:44:30.426849+0200 LooseEndsUITests-Runner[75938:3321522] #165-probe no menu after 0.05, row.exists=0 detail=1
+2026-10-02 06:44:30.493083+0200 LooseEndsUITests-Runner[75938:3321522] #165-probe fallback
+2026-10-02 06:44:31.578190+0200 LooseEndsUITests-Runner[75938:3321522] #165-probe back tap
+    t =    48.76s Tap Button (First Match)
+    t =    48.78s     Check for interrupting elements affecting "BackButton" Button
+2026-10-02 06:44:34.391158+0200 LooseEndsUITests-Runner[75938:3321522] #165-probe row back
+2026-10-02 06:44:35.455185+0200 LooseEndsUITests-Runner[75938:3321522] #165-probe press 1.50
+    t =    52.64s Press "taskRow_2184AE67-D3E5-4828-857F-13CE6BF50412" Button for 1.5 seconds
+    t =    52.66s     Check for interrupting elements affecting "taskRow_2184AE67-D3E5-4828-857F-13CE6BF50412" Button
+2026-10-02 06:44:38.522764+0200 LooseEndsUITests-Runner[75938:3321522] #165-probe menu open after 1.50
+    t =    56.82s     Check for interrupting elements affecting "menuDone" Button
+2026-10-02 06:44:44.075948+0200 LooseEndsUITests-Runner[75938:3321522] #165-probe press 0.05
+    t =    61.26s Press "taskRow_2184AE67-D3E5-4828-857F-13CE6BF50412" Button for 0.1 seconds
+    t =    61.29s     Check for interrupting elements affecting "taskRow_2184AE67-D3E5-4828-857F-13CE6BF50412" Button
+2026-10-02 06:44:50.182962+0200 LooseEndsUITests-Runner[75938:3321522] #165-probe no menu after 0.05, row.exists=0 detail=1
+2026-10-02 06:44:50.252440+0200 LooseEndsUITests-Runner[75938:3321522] #165-probe fallback
+2026-10-02 06:44:51.327770+0200 LooseEndsUITests-Runner[75938:3321522] #165-probe back tap
+    t =    68.51s Tap Button (First Match)
+    t =    68.53s     Check for interrupting elements affecting "BackButton" Button
+2026-10-02 06:44:54.156827+0200 LooseEndsUITests-Runner[75938:3321522] #165-probe row back
+2026-10-02 06:44:55.272546+0200 LooseEndsUITests-Runner[75938:3321522] #165-probe press 1.50
+    t =    72.46s Press "taskRow_2184AE67-D3E5-4828-857F-13CE6BF50412" Button for 1.5 seconds
+    t =    72.48s     Check for interrupting elements affecting "taskRow_2184AE67-D3E5-4828-857F-13CE6BF50412" Button
+2026-10-02 06:44:58.196790+0200 LooseEndsUITests-Runner[75938:3321522] #165-probe menu open after 1.50
+    t =    76.48s     Check for interrupting elements affecting "menuDelete" Button
+    t =    79.17s     Check for interrupting elements affecting "confirmDeleteButton" Button
+Test Case '-[LooseEndsUITests.CaptureSmokeTests testDeletingRecurringTaskAfterCompletionDoesNotCrash]' passed (82.276 seconds).
+	 Executed 1 test, with 0 failures (0 unexpected) in 82.276 (82.281) seconds
+	 Executed 1 test, with 0 failures (0 unexpected) in 82.276 (82.287) seconds
+	 Executed 1 test, with 0 failures (0 unexpected) in 82.276 (82.288) seconds

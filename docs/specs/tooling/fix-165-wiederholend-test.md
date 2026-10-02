@@ -2,7 +2,7 @@
 entity_id: fix-165-wiederholend-test
 type: bugfix
 created: 2026-10-01
-updated: 2026-10-01
+updated: 2026-10-02
 status: draft
 workflow: bug-165-wiederholend-test
 ---
@@ -30,6 +30,8 @@ Regeln vor Modell: nicht einschlägig. Es wird kein Modellfeld abgeleitet, nur e
   - `openMenu` (Zeile 32-42): erkennt künftig, wenn das Drücken ins Detail navigiert hat
   - `testDeletingRecurringTaskAfterCompletionDoesNotCrash` (ab ca. Zeile 300): sucht die Aufgabe nach
     dem Setzen von „Daily“ über „Repeating“ und die Kennung `taskRow_*`
+  - alle übrigen Tests der Klasse, die eine erfasste Aufgabe über ihren Titel suchen (Erweiterung vom
+    2026-10-02, siehe Ursache 3): suchen die Zeile künftig über `taskRow_*`
 - **Datei:** `docs/project/04-stand.md` — geschlossene #20, #21, #74 aus der Prioritätsliste entfernen
 
 ### Ursachenkette
@@ -46,6 +48,17 @@ Regeln vor Modell: nicht einschlägig. Es wird kein Modellfeld abgeleitet, nur e
    `press(forDuration:)` als Tippen an. Die Zeile ist ein `NavigationLink` (`LooseEnds/Views/TaskListView.swift:100-108`)
    und öffnet das Detail statt des Kontextmenüs. `openMenu` erkennt das nicht und drückt weitere Male ins
    Leere. Beleg: Bildschirmaufnahme im Artefakt `UITestResults` von CI-Lauf 36860656065.
+   Lokal nachgestellt am 2026-10-02 mit einer Wegwerf-Probe (erster Druck 0,05 s), Protokoll in
+   `docs/artifacts/bug-165-wiederholend-test/ac2-probe.txt`. Die Probe zeigte außerdem, dass `!row.exists`
+   allein das offene Detail nicht erkennt: Eine Zeile, die über ihre Beschriftung gesucht wird, trifft
+   im Detail den dort angezeigten Titel. Deshalb erkennt `openMenu` das Detail zusätzlich über
+   `detailRawText`.
+3. **Lokal, weitere Tests der Klasse (Befund vom 2026-10-02):** Das Modell schreibt den Titel
+   gelegentlich um („Reifen wechseln lassen“ → „Reifen wechseln“, „Dachrinne reinigen“ → „reinigen
+   Dachrinne“). Rund zehn Tests der Klasse suchen ihre Aufgabe über den ursprünglichen Titel und
+   scheitern dann zufällig. Beleg: zwei von drei `test-proof`-Läufen rot, `testPlusButtonProof`
+   (Z. 157) und `testTaskDetailShowsRawText` (Z. 181), UI-Hierarchie zeigt die umbenannte Zeile.
+   Ohne diese Korrektur ist AC-5 nicht erreichbar.
 
 ## Dependencies
 
@@ -60,14 +73,15 @@ Regeln vor Modell: nicht einschlägig. Es wird kein Modellfeld abgeleitet, nur e
 
 ## Scope
 
-Dateien (2), geschätzt +30/-10 LoC.
+Dateien (2), geschätzt +80/-35 LoC (nach der Erweiterung vom 2026-10-02).
 
 Out of Scope:
 
 - Kein Produktcode (`LooseEnds/`, `Shared/` bleiben unberührt).
 - Keine Änderung am Wiederholungslauf in `.github/workflows/ci.yml` (Zeile 130). Ob er danach
   entfernt wird, ist ein eigenes Issue und wird nach Abschluss dieses Tickets angelegt.
-- Keine Änderung an anderen UI-Tests, kein Abschalten des Modells unter `--ui-testing`.
+- Keine Änderung an UI-Tests außerhalb von `CaptureSmokeTests`, kein Abschalten des Modells unter
+  `--ui-testing`. Andere Testklassen mit Titelsuche bekommen ein eigenes Issue.
 
 ## Implementation Details
 
@@ -75,9 +89,14 @@ Out of Scope:
    `app.navigationBars.buttons.firstMatch`, wie in `testCompletedTaskShowsUnderCompleted`, dann
    `viewRow_repeating` antippen.
 2. Die Zeile dort über `identifier BEGINSWITH "taskRow_"` suchen, nicht über den Titel.
-3. `openMenu`: Bleibt das Menüelement nach einem Drücken aus und ist die Zeile verschwunden (Detail
-   offen), tippt es auf die Zurück-Taste, wartet auf die Zeile und drückt mit der nächsten Dauer der
-   bestehenden Folge 1,2/1,5/2,0 s erneut. Öffnet das Menü beim ersten Drücken, ändert sich nichts.
+3. `openMenu`: Bleibt das Menüelement nach einem Drücken aus und ist das Detail offen (Zeile
+   verschwunden oder `detailRawText` sichtbar), tippt es auf die Zurück-Taste, wartet, bis das Detail
+   weg und die Zeile antippbar ist, und drückt mit der nächsten Dauer der bestehenden Folge
+   1,2/1,5/2,0 s erneut. Öffnet das Menü beim ersten Drücken, ändert sich nichts.
+4. Alle übrigen Tests der Klasse suchen die erfasste Aufgabe über `identifier BEGINSWITH "taskRow_"`
+   (der Datenbestand unter `--ui-testing` ist frisch, die Ansicht enthält nur diese Aufgabe). Wo ein
+   Test den Inhalt prüft, prüft er den unveränderlichen Rohtext (`detailRawText`), nicht den Titel.
+   Was ein Test fachlich zusichert, bleibt gleich.
 
 ## Test Plan
 
@@ -102,8 +121,8 @@ Der geänderte Test ist der Nachweis.
   offen. When `openMenu` das erkennt. Then tippt es auf die Zurück-Taste, wartet auf die Zeile und
   drückt erneut, ohne die Versuchsfolge 1,2/1,5/2,0 s zu verlängern.
 - **AC-3 (Aufrufer unverändert):** Given das Menü öffnet beim ersten Drücken. Then ändert der neue Pfad
-  nichts. `testDoneFromMenuEmptiesNew` und `testCompletedTaskShowsUnderCompleted` bleiben im Quelltext
-  unverändert und grün.
+  nichts. Die `openMenu`-Aufrufe in `testDoneFromMenuEmptiesNew` und `testCompletedTaskShowsUnderCompleted`
+  bleiben unverändert und grün (deren Zeilensuche ändert sich nur nach AC-8).
 - **AC-4 (Ablauf des Tests):** Then führt der Test weiter: Abschließen über `menuDone`, Zeile bleibt
   gelistet, Löschen über `menuDelete` und `confirmDeleteButton`, Zeile verschwindet, `captureButton`
   antwortet (die App ist nicht abgestürzt).
@@ -113,6 +132,10 @@ Der geänderte Test ist der Nachweis.
   Test wiederholt hat.
 - **AC-7 (Stand-Dokument):** `docs/project/04-stand.md` führt #20, #21 und #74 nicht mehr in der
   Prioritätsliste. Die übrigen Einträge und ihre Reihenfolge bleiben.
+- **AC-8 (Umbenennung durch das Modell):** Given das Modell hat den Titel einer erfassten Aufgabe
+  umgeschrieben. Then findet jeder Test in `CaptureSmokeTests` die Aufgabe trotzdem, über `taskRow_*`.
+  Kein Test der Klasse sucht eine erfasste Aufgabe mehr über ihren Titel. Inhaltsprüfungen laufen über
+  den Rohtext.
 
 ## Architektur-Entscheidung (ADR)
 
@@ -136,7 +159,8 @@ Kann als eigenes Ticket folgen.
 ## Definition of Done
 
 - [ ] RED vor der Änderung erneut festgehalten (Zeile 336)
-- [ ] AC-1 bis AC-7 erfüllt
+- [ ] AC-1 bis AC-8 erfüllt
+- [ ] Issue für Titelsuche in anderen UI-Testklassen angelegt, falls es dort welche gibt
 - [ ] `./scripts/sim.sh test-proof CaptureSmokeTests` dreimal hintereinander grün, Screenshots angesehen und beschrieben
 - [ ] Erster CI-Versuch grün ohne Wiederholung, im Protokoll geprüft
 - [ ] Issue zur Entfernung von `-retry-tests-on-failure` angelegt
@@ -145,3 +169,6 @@ Kann als eigenes Ticket folgen.
 ## Changelog
 
 - 2026-10-01: Spec aus der Analyse in `docs/context/bug-165-wiederholend-test.md` geschrieben.
+- 2026-10-02: Erweitert nach Befund in Phase 6 (Henning: „#165 erweitern“). `openMenu` erkennt das
+  Detail zusätzlich über `detailRawText` (Probe-Befund), und alle Tests der Klasse suchen die
+  erfasste Aufgabe über `taskRow_*` statt über den Titel (AC-8), weil das Modell Titel umschreibt.
