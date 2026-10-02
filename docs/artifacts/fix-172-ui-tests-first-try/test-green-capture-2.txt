@@ -1,0 +1,73 @@
+18:05  up 1 day, 7 hrs, 6 users, load averages: 2,98 4,96 10,21
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/hem/Developer/loose-ends/.claude/worktrees/graceful-mapping-rabin/LooseEnds.xcodeproj
+[0;32m[sim][0m Projekt erzeugt.
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test mit Beleg: CaptureSmokeTests → docs/artifacts/fix-172-ui-tests-first-try/simulator-run.txt
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+Test Suite 'Selected tests' started at 2026-10-02 18:05:23.860.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-02 18:05:23.861.
+Test Suite 'CaptureSmokeTests' started at 2026-10-02 18:05:23.861.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CaptureSmokeTests testCalendarSwitchStaysOn] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =     7.98s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =     9.00s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testCalendarSwitchStaysOn ([31m31.005[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CaptureSmokeTests testCapturedTaskShowsUpInNew] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =     9.21s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    10.23s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testCapturedTaskShowsUpInNew ([31m20.546[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CaptureSmokeTests testCompletedTaskShowsUnderCompleted] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =     9.13s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    10.15s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testCompletedTaskShowsUnderCompleted ([31m33.054[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CaptureSmokeTests testDeletingRecurringTaskAfterCompletionDoesNotCrash] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =     8.75s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =     9.77s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testDeletingRecurringTaskAfterCompletionDoesNotCrash ([31m55.814[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CaptureSmokeTests testDoneFromMenuEmptiesNew] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =     8.78s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =     9.80s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testDoneFromMenuEmptiesNew ([31m26.474[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CaptureSmokeTests testDoneIsDisabledWhileEmptyAndCancelCloses] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =     9.87s Waiting 5.0s for "captureDoneButton" Button to exist
+[32m    t =    10.90s     Checking `Expect predicate `existsNoRetry == 1` for object "captureDoneButton" Button`[0m
+    [32m✔[0m testDoneIsDisabledWhileEmptyAndCancelCloses ([31m13.225[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CaptureSmokeTests testImportanceEditorUpdatesDetail] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =     8.55s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =     9.58s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testImportanceEditorUpdatesDetail ([31m33.398[0m seconds)
+    [32m✔[0m testNewProjectAppearsOnStartScreen ([31m26.752[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CaptureSmokeTests testPlusButtonProof] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    19.57s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    20.60s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testPlusButtonProof ([31m41.567[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CaptureSmokeTests testRepeatEditorUpdatesDetail] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    45.15s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    46.18s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testRepeatEditorUpdatesDetail ([31m83.405[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CaptureSmokeTests testSubtaskCanBeAddedAndChecked] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    12.40s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    13.43s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testSubtaskCanBeAddedAndChecked ([31m50.987[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CaptureSmokeTests testTaskDetailShowsRawText] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    12.96s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    13.99s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testTaskDetailShowsRawText ([31m29.394[0m seconds)
+Executed 12 tests, with 0 failures (0 unexpected) in 445.620 (445.640) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-02 18:12:49.509.
+Executed 12 tests, with 0 failures (0 unexpected) in 445.620 (445.649) seconds
+Executed 12 tests, with 0 failures (0 unexpected) in 445.620 (445.650) seconds
+[1mTest session results:[0m /Users/hem/Developer/loose-ends/.claude/worktrees/graceful-mapping-rabin/docs/artifacts/fix-172-ui-tests-first-try/simulator-run/run.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden, Beleg: docs/artifacts/fix-172-ui-tests-first-try/simulator-run.txt
+EXIT 0
+18:22  up 1 day,  7:17, 6 users, load averages: 121,71 168,59 129,24

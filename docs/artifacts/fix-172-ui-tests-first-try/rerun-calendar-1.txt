@@ -1,0 +1,32 @@
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/hem/Developer/loose-ends/.claude/worktrees/graceful-mapping-rabin/LooseEnds.xcodeproj
+[0;32m[sim][0m Projekt erzeugt.
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test mit Beleg: CaptureSmokeTests/testCalendarSwitchStaysOn → docs/artifacts/fix-172-ui-tests-first-try/simulator-run.txt
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+Test Suite 'Selected tests' started at 2026-10-02 17:54:08.277.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-02 17:54:08.287.
+Test Suite 'CaptureSmokeTests' started at 2026-10-02 17:54:08.287.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CaptureSmokeTests testCalendarSwitchStaysOn] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    24.13s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    25.18s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testCalendarSwitchStaysOn ([31m54.102[0m seconds)
+Executed 1 test, with 0 failures (0 unexpected) in 54.102 (54.112) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-02 17:55:02.408.
+Executed 1 test, with 0 failures (0 unexpected) in 54.102 (54.121) seconds
+Executed 1 test, with 0 failures (0 unexpected) in 54.102 (54.151) seconds
+[1mTest session results:[0m /Users/hem/Developer/loose-ends/.claude/worktrees/graceful-mapping-rabin/docs/artifacts/fix-172-ui-tests-first-try/simulator-run/run.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[sim_proof] Testklasse liefert keinen Screenshot, Beleg ungültig
+[0;31m[sim][0m Beleg ungültig (sim_proof 1): docs/artifacts/fix-172-ui-tests-first-try/simulator-run.txt
+EXIT 1
+18:05  up 1 day,  6:59, 6 users, load averages: 3,06 5,05 10,30

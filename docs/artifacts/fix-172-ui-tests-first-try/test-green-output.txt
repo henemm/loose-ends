@@ -1,0 +1,23 @@
+# GREEN-Nachweis #172 (2026-10-02)
+
+Alle Tests bestanden. Rohprotokolle liegen im selben Ordner.
+
+## CaptureSmokeTests (voller Lauf, ruhige Maschine, Load 2,98)
+Quelle: test-green-capture-2.txt
+Executed 12 tests, with 0 failures (0 unexpected) in 445.620 seconds
+Test Succeeded, EXIT 0, Simulator-Beleg gueltig (proof-capture.txt)
+
+## RecognitionWalkthroughTests
+Quelle: test-green-recognition.txt
+Executed 1 test, with 0 failures (0 unexpected) in 155.817 seconds
+Test Succeeded, EXIT 0, Simulator-Beleg gueltig (simulator-run.txt, 4 Screenshots geoeffnet)
+
+## Reproduktion unter kuenstlicher Verzoegerung (AC-1, AC-2)
+RED:   red-run-delay.txt   -> testCalendarSwitchStaysOn, XCTAssertTrue failed - Value was Optional(0)
+GREEN: green-run-delay.txt -> testCalendarSwitchStaysOn passed (Fix aktiv, jedes Lesen 6 s)
+
+## Auffaellig (Last, kein Fehler des Fixes)
+Erster voller CaptureSmokeTests-Lauf bei Load 12-17: 2 Fehler
+(testCalendarSwitchStaysOn Zeile 568 nach Zurueck-Navigation, testSubtaskCanBeAddedAndChecked).
+Einzelwiederholung des Kalendertests bei Load 3: gruen (rerun-calendar-1.txt).
+Voller Wiederholungslauf bei Load 3: 12/12 gruen.

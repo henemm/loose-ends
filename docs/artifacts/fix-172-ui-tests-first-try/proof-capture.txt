@@ -1,16 +1,16 @@
 # Simulator-Beleg
-erzeugt: 2026-10-02T18:26:56+0200
-befehl: scripts/sim.sh test-proof RecognitionWalkthroughTests
+erzeugt: 2026-10-02T18:22:53+0200
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
 workflow: fix-172-ui-tests-first-try
 head: da0476e0595a4679d40888625fce7f16f62fbcf2
 basis: 247070f6291b82cf5696cbdcae0118ec8275eac5 (merge-base origin/main HEAD)
-testklasse: RecognitionWalkthroughTests
+testklasse: CaptureSmokeTests
 ergebnis: Passed
 xcodebuild: ** TEST SUCCEEDED **
-tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
-start: 1790958196.704  ende: 1790958414.865
+tests: 12 gesamt, 12 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1790957116.341  ende: 1790958170.342
 geraet: iPhone 17, iOS 27.0
-summary: docs/artifacts/fix-172-ui-tests-first-try/simulator-run/summary.json  sha256:4aa42f8cabfbf2eaa704c83268de9640183b02ad8fff95ac76fdb5e5570f5daf
+summary: docs/artifacts/fix-172-ui-tests-first-try/simulator-run/summary.json  sha256:7ba1ec154d3f1b5362ced235a5c75d7ffc13579685ec45dd922de31f3dfa8627
 xcresult: docs/artifacts/fix-172-ui-tests-first-try/simulator-run/run.xcresult  (gitignored)
 screenshots: docs/artifacts/fix-172-ui-tests-first-try/simulator-run/*.png (4 Stück)
 
