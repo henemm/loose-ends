@@ -20,6 +20,8 @@ SCRIPTS = Path(__file__).resolve().parent
 SCRIPT = SCRIPTS / "asc_wait_build.py"
 WORKFLOW = SCRIPTS.parent / ".github" / "workflows" / "testflight.yml"
 BUILD = "42"
+sys.path.insert(0, str(SCRIPTS))
+import asc_wait_build  # noqa: E402
 
 
 def b64d(part):
@@ -56,12 +58,21 @@ def build(version=BUILD, state="VALID"):
         "version": version, "processingState": state, "uploadedDate": "2026-10-03T10:00:00+00:00"}}
 
 
-class FakeASC:
-    """Antwortet auf /v1/apps und /v1/builds; Builds-Antworten laufen als Skript, die letzte wiederholt sich."""
+class Raw:
+    """Rohantwort im Skript: Status und Rumpf werden unverändert gesendet."""
 
-    def __init__(self, directory, pub, builds_script, apps=None):
+    def __init__(self, status, body):
+        self.status, self.body = status, body
+
+
+class FakeASC:
+    """Antwortet auf /v1/apps und /v1/builds; Builds-Antworten laufen als Skript, die letzte wiederholt sich.
+    Ein Raw-Eintrag wird wörtlich gesendet; apps_raw wird vor der Apps-Antwort abgearbeitet."""
+
+    def __init__(self, directory, pub, builds_script, apps=None, apps_raw=()):
         self.tokens, self.builds_script, self.paths = [], list(builds_script), []
         self.apps = [{"id": "APP1"}] if apps is None else apps
+        self.apps_raw = list(apps_raw)
         fake = self
 
         class Handler(BaseHTTPRequestHandler):
@@ -74,13 +85,18 @@ class FakeASC:
                 if not fake.valid(token, directory, pub):
                     return self.reply(401, {"errors": [{"status": "401"}]})
                 if self.path.startswith("/v1/apps"):
+                    if fake.apps_raw:
+                        return self.reply(None, fake.apps_raw.pop(0))
                     return self.reply(200, {"data": fake.apps})
                 fake.tokens.append(token)
                 data = fake.builds_script.pop(0) if len(fake.builds_script) > 1 else fake.builds_script[0]
-                self.reply(200, {"data": data})
+                self.reply(200, data if isinstance(data, Raw) else {"data": data})
 
             def reply(self, status, body):
-                raw = json.dumps(body).encode()
+                if isinstance(body, Raw):
+                    status, raw = body.status, body.body
+                else:
+                    raw = json.dumps(body).encode()
                 self.send_response(status)
                 self.send_header("Content-Length", str(len(raw)))
                 self.end_headers()
@@ -120,12 +136,16 @@ class ScriptTests(unittest.TestCase):
         self.p8, self.pub = make_key(self.dir, "asc")
         self.addCleanup(self.tmp.cleanup)
 
-    def run_script(self, builds_script, timeout="5", pub=None, apps=None, build_no=BUILD):
-        fake = FakeASC(self.dir, pub or self.pub, builds_script, apps)
+    def run_script(self, builds_script, timeout="5", pub=None, apps=None, build_no=BUILD, apps_raw=()):
+        fake = FakeASC(self.dir, pub or self.pub, builds_script, apps, apps_raw)
         self.addCleanup(fake.close)
         env = dict(os.environ, ASC_KEY_ID="KEYID123", ASC_ISSUER_ID="ISSUER-UUID", ASC_KEY_FILE=self.p8,
                    ASC_API_BASE=fake.url, ASC_POLL_SECONDS="0.05", ASC_TIMEOUT_SECONDS=timeout)
-        result = subprocess.run([sys.executable, str(SCRIPT), build_no], env=env, capture_output=True, text=True)
+        try:
+            result = subprocess.run([sys.executable, str(SCRIPT), build_no], env=env, capture_output=True,
+                                    text=True, timeout=30)
+        except subprocess.TimeoutExpired:
+            self.fail("asc_wait_build.py lief länger als 30 s")
         return result, fake
 
     def test_2_valid_at_once(self):
@@ -190,6 +210,48 @@ class ScriptTests(unittest.TestCase):
                     self.assertNotIn(token, output)
                     self.assertNotIn(token.split(".")[2], output)
 
+    def test_9b_malformed_200_bodies_mean_retry(self):
+        for name, raw in (("html", Raw(200, b"<html>busy</html>")), ("empty", Raw(200, b"")),
+                          ("list", Raw(200, b"[1, 2]")), ("data-object", Raw(200, b'{"data": {"id": "x"}}')),
+                          ("data-strings", Raw(200, b'{"data": ["x"]}'))):
+            with self.subTest(body=name):
+                result, _ = self.run_script([raw, [build()]], apps_raw=[raw])
+                output = result.stdout + result.stderr
+                self.assertEqual(result.returncode, 0, output)
+                self.assertNotIn("Traceback", output)
+                self.assertNotIn("busy", output)
+
+    def test_9c_408_and_429_mean_retry(self):
+        for status in (408, 429):
+            with self.subTest(status=status):
+                raw = Raw(status, b'{"errors": []}')
+                result, _ = self.run_script([raw, [build()]], apps_raw=[raw])
+                output = result.stdout + result.stderr
+                self.assertEqual(result.returncode, 0, output)
+                self.assertIn(str(status), output)
+                self.assertNotIn("Traceback", output)
+
+    def test_9d_other_4xx_still_fatal(self):
+        result, _ = self.run_script([Raw(404, b"{}")])
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("::error::", result.stdout)
+
+
+class DerTests(unittest.TestCase):
+    def test_der_to_rs_fixed_bytes(self):
+        s = bytes(range(1, 33))
+        high = b"\x80" + bytes(31)
+        cases = {
+            "r=1 kurz": (b"\x30\x25\x02\x01\x01\x02\x20" + s, bytes(31) + b"\x01" + s),
+            "r mit 0x00 und High-Bit": (b"\x30\x45\x02\x21\x00" + high + b"\x02\x20" + s, high + s),
+            "Langform 0x81": (b"\x30\x81\x46\x02\x21\x00" + high + b"\x02\x21\x00" + high, high + high),
+        }
+        for name, (der, expected) in cases.items():
+            with self.subTest(case=name):
+                rs = asc_wait_build.der_to_rs(der)
+                self.assertEqual(len(rs), 64)
+                self.assertEqual(rs, expected)
+
 
 class WorkflowTests(unittest.TestCase):
     def setUp(self):
@@ -206,6 +268,13 @@ class WorkflowTests(unittest.TestCase):
         self.assertRegex(confirm, r"(?m)^    runs-on: ubuntu-latest$")
         self.assertGreaterEqual(int(re.search(r"(?m)^    timeout-minutes: (\d+)$", confirm).group(1)), 50)
         self.assertIn("scripts/asc_wait_build.py", confirm)
+        self.assertIn("""trap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT""", confirm)
+        umask, printf = confirm.find("umask 077"), confirm.find("printf '%s\\n'")
+        self.assertNotEqual(umask, -1)
+        self.assertNotEqual(printf, -1)
+        self.assertLess(umask, printf)
+        self.assertRegex(confirm, r'ASC_KEY_FILE="\$RUNNER_TEMP/[^"]+\.p8"')
+        self.assertRegex(confirm, r'> "\$RUNNER_TEMP/[^"]+\.p8"')
 
     def test_10_upload_job_keeps_every_step(self):
         steps = re.findall(r"(?m)^      - (?:name: (.+)|uses: .+)$", self.job("upload"))
