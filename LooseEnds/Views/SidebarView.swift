@@ -40,6 +40,7 @@ struct SidebarView: View {
                 }
                 Button("New project", systemImage: "plus") { begin(NameEdit(target: .newProject)) }
                     .accessibilityIdentifier("newProjectButton")
+                    .paperRow()
             }
 
             Section("Contexts") {
@@ -51,6 +52,7 @@ struct SidebarView: View {
                 }
                 Button("New context", systemImage: "plus") { begin(NameEdit(target: .newContext)) }
                     .accessibilityIdentifier("newContextButton")
+                    .paperRow()
             }
 
             Section {
@@ -58,6 +60,7 @@ struct SidebarView: View {
                     .tag(ViewSelection.system(.done))
             }
         }
+        .paperList()
         .alert(Text(edit?.title ?? ""), isPresented: $isEditing, presenting: edit) { edit in
             TextField("Name", text: $editName)
                 .accessibilityIdentifier("nameField")
@@ -86,6 +89,7 @@ struct SidebarView: View {
         }
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier(id)
+        .paperRow()
     }
 
     @ViewBuilder

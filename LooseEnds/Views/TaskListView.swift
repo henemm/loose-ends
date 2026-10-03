@@ -57,6 +57,7 @@ struct TaskListView: View {
                 openRows
             }
         }
+        .paperList()
         .overlay {
             if shown.isEmpty {
                 Text("Nothing here")
@@ -105,6 +106,7 @@ struct TaskListView: View {
         .swipeActions(edge: .leading, allowsFullSwipe: true) { leadingActions(task) }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) { trailingActions(task) }
         .contextMenu { menu(task) }
+        .paperRow()
     }
 
     /// Old shows the age and how often the task was pushed (design briefing, screen 11).

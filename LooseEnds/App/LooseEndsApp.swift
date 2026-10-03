@@ -20,10 +20,17 @@ struct LooseEndsApp: App {
         calendar = CalendarBridge(container: container)
     }
 
+    /// The design gallery (#182) asks for dark mode by launch argument: the device-wide switch
+    /// from XCUITest did not reach the app on the CI simulator. Nil follows the system.
+    private static var uiTestColorScheme: ColorScheme? {
+        ProcessInfo.processInfo.arguments.contains("--ui-testing-dark") ? .dark : nil
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView(enrichment: enrichment, notifications: notifications, calendar: calendar)
                 .environment(calendar)
+                .preferredColorScheme(Self.uiTestColorScheme)
         }
         .modelContainer(container)
     }
