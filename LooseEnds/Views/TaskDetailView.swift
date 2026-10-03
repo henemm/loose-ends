@@ -89,6 +89,7 @@ struct TaskDetailView: View {
             }
         }
         .formStyle(.grouped)
+        .paperGround()
         .navigationTitle("")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
