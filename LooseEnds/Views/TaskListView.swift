@@ -55,6 +55,8 @@ struct TaskListView: View {
         List {
             if kind == .done {
                 doneSections
+            } else if kind == .new {
+                reviewSections
             } else {
                 openRows
             }
@@ -90,6 +92,26 @@ struct TaskListView: View {
         }
     }
 
+    /// "New" as the review tray (#188): on top what only needs a nod ("Looks right" by swipe),
+    /// below what needs opening: no title vouched for, or nothing sorted yet.
+    @ViewBuilder
+    private var reviewSections: some View {
+        let confirm = shown.filter { !ViewRules.needsLook($0) }
+        let look = shown.filter(ViewRules.needsLook)
+        if !confirm.isEmpty {
+            Section {
+                ForEach(confirm) { row($0) }
+            }
+        }
+        if !look.isEmpty {
+            Section {
+                ForEach(look) { row($0) }
+            } header: {
+                Text("Needs a look")
+            }
+        }
+    }
+
     /// Every other view; only Next up lets the rows be dragged.
     private var openRows: some View {
         let move: ((IndexSet, Int) -> Void)? = kind == .next ? { moveNext(from: $0, to: $1) } : nil
@@ -113,6 +135,14 @@ struct TaskListView: View {
 
     /// Old shows the age and how often the task was pushed (design briefing, screen 11).
     private func note(for task: TaskItem) -> String? {
+        if kind == .new {
+            switch ViewRules.reviewReason(of: task) {
+            case .titleChanged(let raw): return String(localized: "was: \(raw)")
+            case .sortedByAI: return nil
+            case .titleNotChecked: return String(localized: "Title not checked")
+            case .notSortedYet: return String(localized: "Not sorted yet")
+            }
+        }
         guard kind == .old else { return nil }
         var parts = [task.capturedAt.formatted(.relative(presentation: .named))]
         let postponed = ViewRules.postponeCount(task)
@@ -153,6 +183,12 @@ struct TaskListView: View {
         case .old?:
             Button("Park", systemImage: "pause") { park(task) }
         default:
+            // In "New" the full swipe confirms what the AI sorted (#188); Next up moves second.
+            if kind == .new, !ViewRules.needsLook(task) {
+                Button("Looks right", systemImage: "checkmark.circle") { confirm(task) }
+                    .tint(.accentColor)
+                    .accessibilityIdentifier("swipeConfirm_\(task.id.uuidString)")
+            }
             if task.nextRank == nil {
                 Button("Next up", systemImage: "star") { toggleNext(task) }
                     .tint(.accentColor)
@@ -203,6 +239,12 @@ struct TaskListView: View {
     private func restore(_ task: TaskItem) {
         TaskActions.restore(task)
         save("restore")
+    }
+
+    /// Marks the AI's changes as seen; the task leaves "New", its revisions stay.
+    private func confirm(_ task: TaskItem) {
+        _ = RevisionService.markSeen(task)
+        save("confirm")
     }
 
     private func toggleNext(_ task: TaskItem) {
