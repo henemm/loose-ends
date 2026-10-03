@@ -133,6 +133,31 @@ jobs:
       - name: Show crash and failure details
         if: failure()
         run: grep -n -E -i "crash|fatal error|restarting after|failed|error:" ui-smoke.log | head -120 || true
+      - name: Export design gallery
+        if: always()
+        continue-on-error: true
+        run: |
+          # #182: the screenshots DesignGalleryTests attaches, under their attachment names.
+          mkdir -p gallery-raw DesignGallery
+          xcrun xcresulttool export attachments --path UITestResults.xcresult --output-path gallery-raw
+          python3 - <<'PY'
+          import json, pathlib, shutil
+          raw, out = pathlib.Path("gallery-raw"), pathlib.Path("DesignGallery")
+          for test in json.loads((raw / "manifest.json").read_text()):
+              for a in test.get("attachments", []):
+                  name = a.get("suggestedHumanReadableName", "")
+                  if name.startswith("gallery-"):
+                      stem = name.split("_")[0]
+                      shutil.copy(raw / a["exportedFileName"], out / f"{stem}.png")
+          print("\n".join(sorted(p.name for p in out.iterdir())) or "no gallery screenshots")
+          PY
+      - name: Upload design gallery
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: DesignGallery
+          path: DesignGallery
+          if-no-files-found: warn
       - name: Upload UI test results
         if: always()
         uses: actions/upload-artifact@v7
