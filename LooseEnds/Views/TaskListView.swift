@@ -7,6 +7,7 @@ import SwiftUI
 /// Long press: the full menu.
 struct TaskListView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(CompletionPulse.self) private var completionPulse: CompletionPulse?
     @Query(sort: \TaskContext.sortOrder) private var contexts: [TaskContext]
     @Query(sort: \Project.sortOrder) private var projects: [Project]
     let selection: ViewSelection
@@ -64,9 +65,7 @@ struct TaskListView: View {
         .paperList()
         .overlay {
             if shown.isEmpty {
-                Text("Nothing here")
-                    .foregroundStyle(.secondary)
-                    .accessibilityIdentifier("emptyViewLabel")
+                emptyState
             }
         }
         .navigationTitle(title)
@@ -75,6 +74,37 @@ struct TaskListView: View {
                 .accessibilityIdentifier("confirmDeleteButton")
         } message: { _ in
             Text("This cannot be undone.")
+        }
+    }
+
+    /// The loose thread, third place of the knot (#180, rule 1), over one sentence per view.
+    private var emptyState: some View {
+        VStack(spacing: 14) {
+            ThreadGlyph(form: .loose, lineWidth: 2.5)
+                .frame(width: 96, height: 28)
+                .foregroundStyle(.tertiary)
+            Text(emptySentence)
+                .font(.title3)
+                .fontDesign(.serif)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .accessibilityIdentifier("emptyViewLabel")
+        }
+        .padding(32)
+    }
+
+    private var emptySentence: LocalizedStringKey {
+        switch kind {
+        case .new: "Nothing to look over."
+        case .next: "Nothing lined up yet."
+        case .due: "Nothing due this week."
+        case .quick: "No quick ones right now."
+        case .old: "Nothing has been lying around."
+        case .waiting: "Not waiting on anyone."
+        case .repeating: "Nothing comes back."
+        case .parked: "Nothing parked."
+        case .done: "Nothing finished yet."
+        case .context, .project, nil: "Nothing here yet."
         }
     }
 
@@ -234,6 +264,7 @@ struct TaskListView: View {
     private func complete(_ task: TaskItem) {
         TaskActions.complete(task)
         save("done")
+        completionPulse?.fire()
     }
 
     private func restore(_ task: TaskItem) {

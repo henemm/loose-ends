@@ -74,7 +74,7 @@ final class DesignGalleryTests: XCTestCase {
         back.tap()
     }
 
-    /// Start screen (top and scrolled, for the section headers), the New list and a detail.
+    /// Start screen (top and scrolled, for the section headers), an empty view, the New list and a detail.
     @MainActor
     private func photograph(dark: Bool) {
         let label = dark ? "dark" : "light"
@@ -90,6 +90,16 @@ final class DesignGalleryTests: XCTestCase {
         app.swipeUp()
         shot(app, "gallery-\(label)-2-start-scrolled")
         app.swipeDown()
+
+        // An empty view: the loose thread over its sentence (#180, step 3).
+        let waitingRow = element("viewRow_waiting", in: app)
+        XCTAssertTrue(waitingRow.waitForExistence(timeout: 5), "Start screen shows no Waiting")
+        waitingRow.tap()
+        XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 5), "Waiting is not empty")
+        shot(app, "gallery-\(label)-5-empty")
+        let back = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(back.waitForExistence(timeout: 5), "No back button")
+        back.tap()
 
         XCTAssertTrue(newRow.waitForExistence(timeout: 5))
         newRow.tap()

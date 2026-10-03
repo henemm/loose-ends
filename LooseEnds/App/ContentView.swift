@@ -9,6 +9,7 @@ struct ContentView: View {
     @Query(sort: \TaskItem.capturedAt, order: .reverse) private var tasks: [TaskItem]
     @State private var selection: ViewSelection?
     @State private var isCapturing = false
+    @State private var completionPulse = CompletionPulse()
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "App")
 
     /// Nil only in previews; the app always passes its coordinator and notification center.
@@ -35,6 +36,10 @@ struct ContentView: View {
                 Text("Pick a view")
                     .foregroundStyle(.secondary)
             }
+        }
+        .environment(completionPulse)
+        .overlay {
+            CompletionKnot(trigger: completionPulse.count)
         }
         .sheet(isPresented: $isCapturing) {
             CaptureView()
