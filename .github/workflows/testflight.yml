@@ -85,14 +85,13 @@ jobs:
           ARCHIVE="${ARCHIVE:-build/LooseEnds.xcarchive}"
           BUILD="${BUILD:?BUILD (build number) must be set}"
           MARKETING="0.1.0"
-          SUMMARY="${GITHUB_STEP_SUMMARY:-/dev/stdout}"
+          SUMMARY="${GITHUB_STEP_SUMMARY:-/dev/null}"
+          row() { printf '%s\n' "$1" | tee -a "$SUMMARY"; }   # Protokoll und Zusammenfassung (#183)
           APPS="$ARCHIVE/Products/Applications"
           [ -d "$APPS" ] || { echo "::error::No Products/Applications in $ARCHIVE"; exit 1; }
           fail=0
-          {
-            echo "| Ziel | Bundle | DTSDKName | Minimum | Version | dSYM | Ergebnis |"
-            echo "|------|--------|-----------|---------|---------|------|----------|"
-          } >> "$SUMMARY"
+          row "| Ziel | Bundle | DTSDKName | Minimum | Version | dSYM | Ergebnis |"
+          row "|------|--------|-----------|---------|---------|------|----------|"
           get() { plutil -extract "$1" raw "$2" 2>/dev/null || true; }
           check() { # Bundle-Kennung, SDK-Präfix, Pflichtschlüssel (Schlüssel oder Schlüssel=Wert) ...
             local id="$1" sdk="$2" p found="" name mini ver dsym res=OK key want have
@@ -101,7 +100,7 @@ jobs:
               [ "$(get CFBundleIdentifier "$bundle/Info.plist")" = "$id" ] && { found="$bundle"; break; }
             done < <(find "$APPS" \( -name '*.app' -o -name '*.appex' \))
             if [ -z "$found" ]; then
-              echo "| $id | fehlt im Archiv | - | - | - | - | FEHLER |" >> "$SUMMARY"
+              row "| $id | fehlt im Archiv | - | - | - | - | FEHLER |"
               echo "::error::Target $id not found in the archive"; fail=1; return
             fi
             p="$found/Info.plist"
@@ -119,7 +118,7 @@ jobs:
                 res=FEHLER; echo "::error::$id: $key is '$have'${want:+, expected $want}"
               fi
             done
-            echo "| $id | ${found#$APPS/} | $name | $mini | $ver | $dsym | $res |" >> "$SUMMARY"
+            row "| $id | ${found#$APPS/} | $name | $mini | $ver | $dsym | $res |"
             [ "$res" = OK ] || fail=1
           }
           check com.henning.looseends iphoneos27. NSMicrophoneUsageDescription NSSpeechRecognitionUsageDescription \
@@ -176,3 +175,24 @@ jobs:
       - name: Remove the key
         if: always()
         run: rm -f "$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8"
+
+  # "Upload succeeded" only means Apple received the package. This job waits on ubuntu (no macOS
+  # minutes) until App Store Connect reports the build as VALID; only this job turns red (#183).
+  confirm:
+    name: Confirm Apple processed the build
+    needs: upload
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Wait until App Store Connect reports the build as VALID
+        env:
+          BUILD: ${{ github.run_number }}
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT
+          umask 077
+          printf '%s\n' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"
+          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_wait_build.py "$BUILD"
