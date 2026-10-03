@@ -2,7 +2,7 @@
 
 Aufruf: asc_cleanup_certs.py [--dry-run]
 Umgebung: ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_FILE (Pfad zur .p8), ASC_API_BASE, GITHUB_STEP_SUMMARY (optional).
-Gewählt wird nur certificateType DEVELOPMENT/IOS_DEVELOPMENT mit Anzeigename genau „Created via API“.
+Gewählt wird nur certificateType DEVELOPMENT/IOS_DEVELOPMENT mit Anzeigename genau „Apple Development: Created via API“.
 Nur Standardbibliothek plus `openssl`. Schlüssel, Token, Signatur und Zertifikatsinhalt werden nie ausgegeben.
 """
 import json
@@ -15,7 +15,7 @@ import urllib.request
 from asc_wait_build import Fatal, make_token
 
 TYPES = ("DEVELOPMENT", "IOS_DEVELOPMENT")
-NAME = "Created via API"
+NAME = "Apple Development: Created via API"
 
 
 def request(config, method, url):
@@ -63,7 +63,7 @@ def display_name(cert):
 
 
 def chosen(cert):
-    """Enge Regel: Entwicklungs-Typ und Anzeigename genau „Created via API“; fehlt etwas, nie."""
+    """Enge Regel: Entwicklungs-Typ und Anzeigename genau „Apple Development: Created via API“; fehlt etwas, nie."""
     return attributes(cert).get("certificateType") in TYPES and display_name(cert) == NAME and bool(cert.get("id"))
 
 

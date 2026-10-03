@@ -27,7 +27,7 @@ CLEAR_BEFORE = "Clear leftover development certificates"
 CLEAR_AFTER = "Clear the development certificates of this run"
 
 
-def cert(cid, type_="DEVELOPMENT", name="Created via API", key="name"):
+def cert(cid, type_="DEVELOPMENT", name="Apple Development: Created via API", key="name"):
     attributes = {"certificateType": type_, "expirationDate": "2027-10-03T10:00:00.000+0000"}
     if key:
         attributes[key] = name
@@ -171,7 +171,10 @@ class ScriptTests(unittest.TestCase):
                    "other name": cert("S22222", name="Henning's Mac"),
                    "other type": cert("S33333", "MAC_DEVELOPMENT"),
                    "no name field": cert("S44444", key=None),
-                   "name with other case": cert("S55555", name="created via api")}
+                   "name with other case": cert("S55555", name="created via api"),
+                   "name without Apple prefix": cert("S66666", name="Created via API"),
+                   "own cert from probe run": cert("S77777", name="Apple Development: HENNING EMMRICH"),
+                   "other person from probe run": cert("S88888", name="Apple Development: Johannes Emmrich")}
         for label, single in singles.items():
             with self.subTest(case=label):
                 result, fake = self.run_script([single])

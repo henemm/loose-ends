@@ -161,7 +161,8 @@ Zwei Aufräum-Schritte halten das Zertifikatskonto klein (#191): „Clear leftov
 certificates" vor dem Archiv (räumt, was frühere Läufe hinterlassen haben) und „Clear the development
 certificates of this run" am Ende, auch wenn vorher etwas fehlschlug. Beide rufen
 `scripts/asc_cleanup_certs.py` auf. Widerrufen wird nur, was den Typ Entwicklung (`DEVELOPMENT`,
-`IOS_DEVELOPMENT`) und genau den Namen „Created via API" trägt; Distribution-Zertifikate und Hennings
+`IOS_DEVELOPMENT`) und genau den Namen „Apple Development: Created via API" trägt (so nennt ihn Apple im Konto, belegt im
+Probelauf 37136927454); Distribution-Zertifikate und Hennings
 eigene Zertifikate aus Xcode bleiben. Das Protokoll listet jedes Zertifikat mit Typ, Name, Ablauf,
 gekürzter ID und `aktion=widerruf`/`bleibt` und endet mit
 `zertifikate vorher=<n> nachher=<m> widerrufen=<k>` (auch in der Zusammenfassung des Laufs). Mit dem

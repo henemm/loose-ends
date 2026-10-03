@@ -91,7 +91,7 @@ für Tests überschreibbar). Nur Standardbibliothek und `openssl`; `make_token` 
   mit `Fatal` ab, bevor ein Token dorthin geschickt wird.
 - **Auswahlregel (eng, ohne Ausnahme):** Ein Zertifikat wird nur dann zum Widerruf gewählt, wenn
   `attributes.certificateType` genau `DEVELOPMENT` oder `IOS_DEVELOPMENT` ist **und** der Anzeigename
-  genau `Created via API` lautet (verglichen wird `attributes.name`, ersatzweise `attributes.displayName`;
+  genau `Apple Development: Created via API` lautet (verglichen wird `attributes.name`, ersatzweise `attributes.displayName`;
   getrimmt, Groß-/Kleinschreibung relevant). Fehlen Typ oder Name, wird nicht gewählt. Distribution,
   andere Namen, andere Typen und Zertifikate von Hennings eigenem Xcode (sein Name) bleiben unberührt.
 - **Ausgabe der Liste (immer, auch ohne `--dry-run`):** je Zertifikat eine Zeile
@@ -295,7 +295,7 @@ Workflow mit Struktur- und Syntaxprüfung; die Wirkung im echten Konto nur durch
 
 ## Acceptance Criteria
 
-- [ ] AC-1 Auswahl: `scripts/asc_cleanup_certs.py` widerruft nur Zertifikate mit `certificateType` `DEVELOPMENT` oder `IOS_DEVELOPMENT` und Anzeigename genau „Created via API“; Test 2 und 3 grün.
+- [ ] AC-1 Auswahl: `scripts/asc_cleanup_certs.py` widerruft nur Zertifikate mit `certificateType` `DEVELOPMENT` oder `IOS_DEVELOPMENT` und Anzeigename genau „Apple Development: Created via API“; Test 2 und 3 grün.
 - [ ] AC-2 Nichts anderes: Zertifikate vom Typ Distribution, mit anderem Namen, mit anderem Typ oder ohne Namensfeld werden nie gelöscht (DELETE-Zähler 0); Test 4 grün.
 - [ ] AC-3 Dry-run: Mit `--dry-run` wird kein DELETE gesendet; die Ausgabe listet je Zertifikat Typ, Name, Ablauf, gekürzte ID und Aktion `widerruf`/`bleibt`; Test 5 grün.
 - [ ] AC-4 Zählung: Das Skript gibt `zertifikate vorher=<n> nachher=<m> widerrufen=<k>` aus (Probelauf zusätzlich `wuerde-widerrufen=<k>`) und hängt die Zeile an `$GITHUB_STEP_SUMMARY` an, wenn gesetzt; „nachher“ stammt aus einer erneuten Abfrage; Test 6 grün.
@@ -318,5 +318,12 @@ Workflow mit Struktur- und Syntaxprüfung; die Wirkung im echten Konto nur durch
 - **Rationale:** Ein Skript gegen die ASC-API mit enger Regel ist die kleinste Lösung, die das volle Konto heilt und Wachstum verhindert, ohne neues Geheimnis und ohne Wartung eines ablaufenden Zertifikats. Das Risiko (Widerruf ist nicht umkehrbar) wird durch eng gefasste Auswahl, Probelauf vor dem ersten Widerruf und ein benanntes Rückfallkriterium (Alternative A) begrenzt, nicht durch Vertrauen.
 
 ## Changelog
+
+- 2026-10-03 (Nachbesserung nach Probelauf 37136927454, Henning: „override“): Der Anzeigename im Konto lautet
+  `Apple Development: Created via API`, nicht `Created via API`. Die Auswahlregel in „Änderung 1“ (Anzeigename genau …),
+  AC-1 und AC-13 lesen sich ab jetzt mit diesem vollen Namen. Trennschärfe am echten Konto belegt: vier Zertifikate
+  `Apple Development: Created via API`, dazu `Apple Development: HENNING EMMRICH` (2×) und `Apple Development: Johannes Emmrich`
+  bleiben. Feldnamen: `certificateType`, `name`, `displayName`. Export legt kein Zertifikat an (6 → 7 durch das Archiv allein).
+  Beleg: `docs/artifacts/fix-191-testflight-zertifikat/probelauf-37136927454.txt`.
 
 - 2026-10-03: Initial spec created (Analyse in `docs/context/fix-191-testflight-zertifikat.md`).
