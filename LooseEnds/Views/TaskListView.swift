@@ -38,6 +38,7 @@ struct TaskListView: View {
         case .system(let kind): ViewRules.tasks(for: kind, in: tasks)
         case .context: context.map { ViewRules.tasks(inContext: $0, in: tasks) } ?? []
         case .project: project.map { ViewRules.tasks(inProject: $0, in: tasks) } ?? []
+        case .task: []
         }
     }
 
@@ -46,6 +47,7 @@ struct TaskListView: View {
         case .system(let kind): String(localized: kind.titleKey)
         case .context: context?.name ?? ""
         case .project: project?.name ?? ""
+        case .task: ""
         }
     }
 

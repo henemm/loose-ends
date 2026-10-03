@@ -4,13 +4,17 @@ import SwiftUI
 
 /// The start screen (design briefing, screen 2): system views with counts, then projects,
 /// then contexts, Done last. Projects and contexts are created, renamed and deleted right here
-/// (screen 7). Tile styling waits for the design freeze; the structure is final.
+/// (screen 7). On iPhone it opens with the two reasons to open the app at all (#180): a sentence
+/// on what is left to look over and what is lined up, then the first three of "Next up".
 struct SidebarView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \TaskContext.sortOrder) private var contexts: [TaskContext]
     @Query(sort: \Project.sortOrder) private var projects: [Project]
     @Binding var selection: ViewSelection?
     let tasks: [TaskItem]
+    #if os(iOS)
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    #endif
 
     @State private var edit: NameEdit?
     @State private var isEditing = false
@@ -22,11 +26,25 @@ struct SidebarView: View {
 
     private static let systemKinds: [ViewKind] = [.next, .new, .due, .quick, .old, .waiting, .repeating, .parked]
 
+    /// iPhone: the sentence and the preview replace the big "Views" title. iPad and Mac keep the
+    /// plain sidebar, where the list sits right next to it anyway.
+    private var isCompact: Bool {
+        #if os(iOS)
+        sizeClass == .compact
+        #else
+        false
+        #endif
+    }
+
     var body: some View {
         List(selection: $selection) {
+            if isCompact {
+                Section { header }
+                nextUpPreview
+            }
             Section {
                 ForEach(Self.systemKinds, id: \.self) { kind in
-                    countRow(String(localized: kind.titleKey), count: ViewRules.tasks(for: kind, in: tasks).count, id: "viewRow_\(kind.rawValue)")
+                    countRow(String(localized: kind.titleKey), symbol: kind.symbol, count: ViewRules.tasks(for: kind, in: tasks).count, id: "viewRow_\(kind.rawValue)")
                         .tag(ViewSelection.system(kind))
                 }
             }
@@ -56,11 +74,15 @@ struct SidebarView: View {
             }
 
             Section {
-                countRow(String(localized: ViewKind.done.titleKey), count: ViewRules.tasks(for: .done, in: tasks).count, id: "viewRow_done")
+                countRow(String(localized: ViewKind.done.titleKey), symbol: ViewKind.done.symbol, count: ViewRules.tasks(for: .done, in: tasks).count, id: "viewRow_done")
                     .tag(ViewSelection.system(.done))
             }
         }
         .paperList()
+        .navigationTitle(isCompact ? Text(verbatim: "") : Text("Views"))
+        #if os(iOS)
+        .navigationBarTitleDisplayMode(isCompact ? .inline : .automatic)
+        #endif
         .alert(Text(edit?.title ?? ""), isPresented: $isEditing, presenting: edit) { edit in
             TextField("Name", text: $editName)
                 .accessibilityIdentifier("nameField")
@@ -80,16 +102,86 @@ struct SidebarView: View {
         }
     }
 
-    private func countRow(_ title: String, count: Int, id: String) -> some View {
-        HStack {
-            Text(title)
-            Spacer()
-            Text("\(count)")
-                .foregroundStyle(.secondary)
+    /// A view, project or context with its count. `.badge` leaves a zero out (#180).
+    @ViewBuilder
+    private func countRow(_ title: String, symbol: String? = nil, count: Int, id: String) -> some View {
+        Group {
+            if let symbol {
+                Label {
+                    Text(title)
+                } icon: {
+                    // Grey, not the list's accent: accent means tappable (ADR-14).
+                    Image(systemName: symbol)
+                        .foregroundStyle(.secondary)
+                }
+            } else {
+                Text(title)
+            }
         }
+        .badge(count)
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier(id)
         .paperRow()
+    }
+
+    // MARK: - Start (iPhone)
+
+    /// The date, then one sentence in serif. Tapping it opens "New" while anything waits there.
+    @ViewBuilder
+    private var header: some View {
+        let review = ViewRules.tasks(for: .new, in: tasks).count
+        let content = VStack(alignment: .leading, spacing: 6) {
+            Text(Date.now, format: .dateTime.weekday(.wide).day().month(.wide))
+                .font(.caption.weight(.semibold))
+                .textCase(.uppercase)
+                .tracking(1)
+                .foregroundStyle(.secondary)
+            lead(review: review, next: ViewRules.tasks(for: .next, in: tasks).count)
+                .font(.title2.weight(.medium))
+                .fontDesign(.serif)
+        }
+        .padding(.vertical, 6)
+        .listRowSeparator(.hidden)
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("startHeader")
+        .paperRow()
+        if review > 0 {
+            content.tag(ViewSelection.system(.new))
+        } else {
+            content
+        }
+    }
+
+    /// The count to look over is accent-tinted: it is the tappable part (ADR-14).
+    private func lead(review: Int, next: Int) -> Text {
+        let reviewCount = Text(verbatim: "\(review)").foregroundStyle(.tint)
+        switch (review, next) {
+        case (0, 0): return Text("All tied up.")
+        case (0, _): return Text("Nothing to look over, \(next) lined up.")
+        case (_, 0): return Text("\(reviewCount) to look over, nothing lined up.")
+        default: return Text("\(reviewCount) to look over, \(next) lined up.")
+        }
+    }
+
+    /// The first three of "Next up"; a tap opens the task. Empty: one line on how to fill it.
+    private var nextUpPreview: some View {
+        let next = ViewRules.tasks(for: .next, in: tasks)
+        return Section {
+            if next.isEmpty {
+                Text("Swipe left on any task to line it up here.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .paperRow()
+            } else {
+                ForEach(next.prefix(3)) { task in
+                    TaskRow(task: task, identifierPrefix: "nextUpPreview_")
+                        .tag(ViewSelection.task(task.id))
+                        .paperRow()
+                }
+            }
+        } header: {
+            Text("Next up")
+        }
     }
 
     @ViewBuilder

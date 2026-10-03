@@ -54,4 +54,21 @@ enum ViewKind: String, Codable, CaseIterable, Sendable {
         case .project: "Project"
         }
     }
+
+    /// The start screen's glyph for a view (#180). Grey, like every hierarchy sign (ADR-14).
+    var symbol: String {
+        switch self {
+        case .next: "star"
+        case .new: "tray"
+        case .due: "calendar"
+        case .quick: "hare"
+        case .old: "hourglass"
+        case .waiting: "clock"
+        case .repeating: "repeat"
+        case .parked: "moon.zzz"
+        case .done: "checkmark.circle"
+        case .context: "tag"
+        case .project: "folder"
+        }
+    }
 }

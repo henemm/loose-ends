@@ -4,6 +4,11 @@
   "strings" : {
     "Views" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ansichten" } } } },
     "Pick a view" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ansicht wählen" } } } },
+    "All tied up." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Alles erledigt." } } } },
+    "Nothing to look over, %lld lined up." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nichts zum Durchsehen, %lld vorgemerkt." } } } },
+    "%@ to look over, nothing lined up." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "%@ zum Durchsehen, nichts vorgemerkt." } } } },
+    "%@ to look over, %lld lined up." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "%@ zum Durchsehen, %lld vorgemerkt." } } } },
+    "Swipe left on any task to line it up here." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Wisch eine Aufgabe nach links, um sie hier vorzumerken." } } } },
     "Next up" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Als nächstes" } } } },
     "New" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Neu" } } } },
     "Due" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Fällig" } } } },
