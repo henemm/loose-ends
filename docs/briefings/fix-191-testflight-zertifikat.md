@@ -1,6 +1,6 @@
 ---
 spec_file: docs/specs/tooling/fix-191-testflight-zertifikat.md
-spec_sha256: 362314c53a2e96d8bd4dfd941543e1d318ad41f7520c4e7875fc40754c33b8bd
+spec_sha256: 7aa6fdbd5ced67ef4dac01378841d4bf0bcfbc2b713837751ee1187c7f86869a
 ---
 
 # PO-Briefing: fix-191-testflight-zertifikat
@@ -11,22 +11,22 @@ spec_sha256: 362314c53a2e96d8bd4dfd941543e1d318ad41f7520c4e7875fc40754c33b8bd
 
 ## Was gebaut wird
 
-Der TestFlight-Lauf räumt seine eigenen Signier-Zertifikate weg und scheitert nicht mehr am Konto-Limit.
+Der TestFlight-Lauf widerruft seine eigenen Signier-Zertifikate selbst und scheitert nicht mehr am Konto-Limit.
 
 ## Definition of Done
 
-Zwei TestFlight-Läufe hintereinander laufen grün, die Zertifikatszahl im Konto bleibt gleich, die Anleitung beschreibt den Weg.
+Zwei scharfe TestFlight-Läufe hintereinander laufen grün, die Zertifikatszahl im Konto wächst nicht.
 
 ## Wie geprüft wird
 
-Skripttests belegen die enge Auswahl gegen einen Fake-Server; ob sie echte Konto-Zertifikate richtig trifft, zeigt nur ein Probelauf.
+Skripttests prüfen die Auswahl gegen einen Fake-Server; der Probelauf bestätigte sie am echten Konto, die zwei scharfen Läufe stehen aus.
 
 ## Kritische Anmerkungen
 
-- Widerruf ist unumkehrbar; ob "Created via API" Hennings eigene Zertifikate sicher verschont, ist unbelegt, Probelauf entscheidet.
-- Ob der Export selbst Zertifikate verbraucht, ist offen; dann bliebe die Zahl nicht gleich.
-- Ticket-Alternative dauerhaftes Zertifikat wurde nicht gewählt, nur Rückfall bei schlechtem Probelauf.
+- Probelauf: Hennings eigene Zertifikate bleiben verschont; Spec auf vollen Namen „Apple Development: Created via API“ korrigiert.
+- Widerruf ist unumkehrbar; ob das Archiv danach ohne Profilfehler läuft, zeigt erst der erste scharfe Lauf.
+- Export verbraucht laut Probelauf kein Zertifikat; „Zahl bleibt gleich“ ist erst nach beiden scharfen Läufen bewiesen.
 
 ## Freigabe-Frage
 
-Darf der Lauf nach vorherigem Probelauf per Schnittstelle Entwicklungs-Zertifikate namens "Created via API" widerrufen?
+Dürfen zwei scharfe Läufe die vier Zertifikate „Apple Development: Created via API“ widerrufen, Hennings eigene bleiben unberührt?

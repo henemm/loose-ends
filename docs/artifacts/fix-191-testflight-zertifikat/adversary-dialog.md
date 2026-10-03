@@ -58,12 +58,32 @@ Befunde:
 
 Kein Befund verletzt eine geforderte AC.
 
+### Runde 3
+
+Anlass: Probelauf 37136927454 zeigte den echten Namen `Apple Development: Created via API`; Nachbesserung in Commit 7ab1dd7 (Spec-Override durch Henning).
+
+Tests: test_asc_cleanup_certs.py 19 OK, test_asc_wait_build.py 17 OK.
+
+Mutationen in Wegwerf-Kopien:
+- M6 NAME zurueck auf "Created via API": GEFANGEN (9 rot: test_2, 3, 3b, 4 Fall "name without Apple prefix", 5, 6, 7, 9, 10b)
+- M7 endswith("Created via API"): GEFANGEN (test_4, Fall "name without Apple prefix")
+- M8 Namenspruefung entfernt: GEFANGEN (8 rot, darunter die Faelle eigenes Zertifikat und andere Person aus dem Probelauf)
+
+Echte Kontodaten (Beleg probelauf-37136927454.txt) durch chosen(): [True, True, True, True, False, False, False]; die vier Aufraeum-Zertifikate werden gewaehlt, die drei eigenen nie.
+
+- [x] AC-13: Auswahl an echten Daten bestaetigt (Felder certificateType, name, displayName; Trennung sauber)
+  Code reference: scripts/asc_cleanup_certs.py
+- [x] AC-1: Auswahl nur Typ DEVELOPMENT/IOS_DEVELOPMENT und Name genau "Apple Development: Created via API"
+  Code reference: scripts/asc_cleanup_certs.py
+
+Befund F3 LOW (Spec-Konsistenz): Testfaelle der Spec nennen teils die Kurzform "Created via API"; Kurzschreibweise, Regel und Pruefung unberuehrt. Kein Code-Befund.
+
 ## Verdict
 **VERIFIED**
 
 ## Geprüfte Dateien
 
 - sha256:be61a9eef5ab446b9fc1a3ed66d2fb6c470df4747dffb21c5d11684e54b006d6  .github/workflows/testflight.yml
-- sha256:03f882cdeee167969cfef9dcb915e94f84b2d66f6e0adb5732c54c1ab850eb9e  docs/reference/testflight.md
-- sha256:848266c901cadd5a29c811df66cb82c544f4fbfcabe86a4f373eda90b726e541  scripts/asc_cleanup_certs.py
-- sha256:ad6fcbe208f5f30b05a893cbd1a86dab7e3ff3b7c4cee7446700a3e09c182689  scripts/test_asc_cleanup_certs.py
+- sha256:7f1f3d03128ad5f505541f619ecce5e5d775191b13755aa0d6bc621efe40dacb  docs/reference/testflight.md
+- sha256:291dafac5e3c5afd8402ee5d94f10837ecd56d0cbcfc28d1ba4a2255d19aae11  scripts/asc_cleanup_certs.py
+- sha256:fb22e98d100653a09abec5e2f56c9459b7af8cdcb86f15550e5d2cee0bb4ea89  scripts/test_asc_cleanup_certs.py
