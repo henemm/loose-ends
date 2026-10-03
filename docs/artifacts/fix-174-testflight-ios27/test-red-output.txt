@@ -1,0 +1,9 @@
+FAIL: Test 5 runs-on is xcode-27
+      runs-on: macos-26
+FAIL: Test 5 no sed lowering, no 26.0 in workflow
+FAIL: Test 5 step 'Select Xcode 27.0' pins /Applications/Xcode_27.app
+FAIL: Test 5 verify step sits between Archive and Upload
+FAIL: step 'Verify the archive is built against the iOS 27 SDK' exists in testflight.yml
+      step not found
+
+RESULT: FAILED (5 failing)
