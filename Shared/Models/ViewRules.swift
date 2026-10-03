@@ -6,6 +6,36 @@ enum ViewRules {
     static let oldAfterDays = 30
     static let dueWithinDays = 7
 
+    /// Why a task sits in "New", the review tray (#188).
+    enum ReviewReason: Equatable {
+        /// The model rewrote the title; the raw text is the value before.
+        case titleChanged(from: String)
+        /// The model or a rule set fields the user has not seen yet.
+        case sortedByAI
+        /// Enrichment ran, the title stayed below the confidence threshold.
+        case titleNotChecked
+        /// Enrichment has not run yet.
+        case notSortedYet
+    }
+
+    /// Needs a look rather than a nod: nothing sorted yet, or a title nobody vouched for. Only
+    /// the other tasks can be confirmed with one swipe, so an unchecked title never slips through.
+    static func needsLook(_ task: TaskItem) -> Bool {
+        task.status == .unprocessed || task.status == .unverified
+    }
+
+    static func reviewReason(of task: TaskItem) -> ReviewReason {
+        switch task.status {
+        case .unprocessed: return .notSortedYet
+        case .unverified: return .titleNotChecked
+        default:
+            if task.titleSourceRaw == FieldSource.ai.rawValue, let title = task.title, title != task.rawText {
+                return .titleChanged(from: task.rawText)
+            }
+            return .sortedByAI
+        }
+    }
+
     static func tasks(for kind: ViewKind, in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [TaskItem] {
         let topLevel = all.filter { $0.parent == nil }
         switch kind {

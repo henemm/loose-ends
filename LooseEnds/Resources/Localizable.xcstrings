@@ -4,6 +4,11 @@
   "strings" : {
     "Views" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ansichten" } } } },
     "Pick a view" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ansicht wählen" } } } },
+    "Needs a look" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Bitte ansehen" } } } },
+    "Looks right" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Passt" } } } },
+    "was: %@" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "vorher: %@" } } } },
+    "Title not checked" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Titel nicht geprüft" } } } },
+    "Not sorted yet" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Noch nicht sortiert" } } } },
     "Add detail" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Detail hinzufügen" } } } },
     "You said:" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Du hast gesagt:" } } } },
     "More" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Mehr" } } } },
