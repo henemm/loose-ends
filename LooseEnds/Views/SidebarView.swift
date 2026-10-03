@@ -81,6 +81,7 @@ struct SidebarView: View {
         .paperList()
         .navigationTitle(isCompact ? Text(verbatim: "") : Text("Views"))
         #if os(iOS)
+        .listSectionSpacing(.compact)
         .navigationBarTitleDisplayMode(isCompact ? .inline : .automatic)
         #endif
         .alert(Text(edit?.title ?? ""), isPresented: $isEditing, presenting: edit) { edit in
@@ -110,9 +111,11 @@ struct SidebarView: View {
                 Label {
                     Text(title)
                 } icon: {
-                    // Grey, not the list's accent: accent means tappable (ADR-14).
+                    // Grey, not the list's accent: accent means tappable (ADR-14). A fixed column,
+                    // so a wide glyph (the hare) does not push past the margin.
                     Image(systemName: symbol)
                         .foregroundStyle(.secondary)
+                        .frame(width: 28)
                 }
             } else {
                 Text(title)

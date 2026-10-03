@@ -4,6 +4,9 @@
   "strings" : {
     "Views" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ansichten" } } } },
     "Pick a view" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ansicht wählen" } } } },
+    "Add detail" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Detail hinzufügen" } } } },
+    "You said:" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Du hast gesagt:" } } } },
+    "More" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Mehr" } } } },
     "All tied up." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Alles erledigt." } } } },
     "Nothing to look over, %lld lined up." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nichts zum Durchsehen, %lld vorgemerkt." } } } },
     "%@ to look over, nothing lined up." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "%@ zum Durchsehen, nichts vorgemerkt." } } } },
@@ -39,7 +42,6 @@
     "Nothing here" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nichts hier" } } } },
     "Changed by AI" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Von der KI geändert" } } } },
     "Title" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Titel" } } } },
-    "Details" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Details" } } } },
     "Importance" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Wichtigkeit" } } } },
     "Urgency" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Dringlichkeit" } } } },
     "Duration" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Dauer" } } } },
