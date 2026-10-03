@@ -15,6 +15,17 @@ final class ContextUniquenessTests: XCTestCase {
         app.descendants(matching: .any).matching(identifier: id).firstMatch
     }
 
+    /// Empty fields wait behind "Add detail" (#187): open it if the row is not there yet.
+    @MainActor
+    private func revealField(_ id: String, in app: XCUIApplication) -> XCUIElement {
+        let row = element(id, in: app)
+        if !row.waitForExistence(timeout: 2) {
+            let add = element("addDetailRow", in: app)
+            if add.waitForExistence(timeout: 3) { add.tap() }
+        }
+        return row
+    }
+
     @MainActor
     private func shot(_ app: XCUIApplication, _ name: String) {
         let attachment = XCTAttachment(screenshot: app.screenshot())
@@ -82,7 +93,7 @@ final class ContextUniquenessTests: XCTestCase {
         XCTAssertTrue(row.waitForExistence(timeout: 5), "Keine Aufgabe in Neu")
         row.tap()
 
-        let contextsRow = element("field_contexts", in: app)
+        let contextsRow = revealField("field_contexts", in: app)
         if !contextsRow.waitForExistence(timeout: 3) { app.swipeUp() }
         XCTAssertTrue(contextsRow.waitForExistence(timeout: 5))
         contextsRow.tap()

@@ -51,6 +51,17 @@ final class RecognitionWalkthroughTests: XCTestCase {
         app.descendants(matching: .any).matching(identifier: id).firstMatch
     }
 
+    /// Empty fields wait behind "Add detail" (#187): open it if the row is not there yet.
+    @MainActor
+    private func revealField(_ id: String, in app: XCUIApplication) -> XCUIElement {
+        let row = element(id, in: app)
+        if !row.waitForExistence(timeout: 2) {
+            let add = element("addDetailRow", in: app)
+            if add.waitForExistence(timeout: 3) { add.tap() }
+        }
+        return row
+    }
+
     /// Oberste Zeile der „Neu"-Liste. `ViewRules` sortiert absteigend nach Erfassungszeit, die
     /// jüngste Erfassung steht also immer oben — unabhängig davon, ob das Modell ihren Titel
     /// inzwischen geglättet hat und eine Suche nach dem Rohtext damit ins Leere liefe.
@@ -132,7 +143,7 @@ final class RecognitionWalkthroughTests: XCTestCase {
                       "Die geöffnete Detailansicht zeigt nicht den ersten Rohtext")
 
         // 2. Dauer selbst setzen — der Normalfall, wenn kein Modell da ist.
-        let durationRow = element("field_duration", in: app)
+        let durationRow = revealField("field_duration", in: app)
         XCTAssertTrue(durationRow.waitForExistence(timeout: 5), "Die Detailansicht listet keine Dauer")
         durationRow.tap()
         let thirtyMinutes = app.descendants(matching: .any)
@@ -144,7 +155,7 @@ final class RecognitionWalkthroughTests: XCTestCase {
                       "Die Dauer steht nicht in der Detailansicht, Beschriftung war \(durationRow.label)")
 
         // 3. Kontext selbst setzen.
-        let contextsRow = element("field_contexts", in: app)
+        let contextsRow = revealField("field_contexts", in: app)
         if !contextsRow.waitForExistence(timeout: 3) { app.swipeUp() }
         XCTAssertTrue(contextsRow.waitForExistence(timeout: 5), "Die Detailansicht listet keine Kontexte")
         contextsRow.tap()

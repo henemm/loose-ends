@@ -2,12 +2,16 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-/// Task detail (design briefing, screen 4): editable title, the raw text underneath, derived
-/// fields as compact rows. Tapping a row opens its editor; a field the AI set is accent-tinted
-/// with the spark and its editor also shows before, after, the reason and Reset. Opening the
-/// detail marks the AI changes as seen.
+/// Task detail (design briefing, screen 4): editable title, the raw text underneath while it says
+/// more than the title, then the fields that are set; empty ones wait behind "Add detail" (#187).
+/// Tapping a row opens its editor; a field the AI set is accent-tinted with the spark and its
+/// editor also shows before, after, the reason and Reset. Opening the detail marks the AI changes
+/// as seen. The bar carries Complete and the briefing's menu (Next up, Park).
 struct TaskDetailView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+    /// Every task, for the "Next up" rank.
+    @Query private var allTasks: [TaskItem]
     @Query(sort: \TaskContext.sortOrder) private var contexts: [TaskContext]
     @Query(sort: \Project.sortOrder) private var projects: [Project]
     @Bindable var task: TaskItem
@@ -17,6 +21,7 @@ struct TaskDetailView: View {
     @State private var titleDraft = ""
     @FocusState private var titleFocused: Bool
     @State private var showsRevisions = false
+    @State private var showsEmptyFields = false
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Detail")
 
     private var aiFields: [RevisedField] { RevisionService.aiSetFields(on: task) }
@@ -25,6 +30,7 @@ struct TaskDetailView: View {
         Form {
             Section {
                 HStack {
+                    // Serif is the content, SF is the app (#180, rule 2).
                     TextField("Title", text: $titleDraft)
                         .font(.title3.weight(.semibold))
                         .fontDesign(.serif)
@@ -42,33 +48,55 @@ struct TaskDetailView: View {
                         .accessibilityIdentifier("resetTitleButton")
                     }
                 }
-                Text(task.rawText)
+                if DetailLayout.showsRawText(task.rawText, title: task.title) {
+                    // The raw text as a quote: what was said, in the words it was said (#180).
+                    HStack(alignment: .firstTextBaseline, spacing: 4) {
+                        Text("You said:")
+                        Text(task.rawText)
+                            .accessibilityIdentifier("detailRawText")
+                    }
                     .font(.footnote)
+                    .italic()
+                    .fontDesign(.serif)
                     .foregroundStyle(.secondary)
-                    .accessibilityIdentifier("detailRawText")
+                }
+            }
+            .paperRow()
+
+            let layout = DetailLayout.split(fieldEntries)
+            if !layout.set.isEmpty {
+                Section {
+                    ForEach(layout.set, id: \.field) { fieldRow($0.field, value: $0.value) }
+                }
+                .paperRow()
+            }
+            if !layout.empty.isEmpty {
+                Section {
+                    // Opens once and stays open while the detail is shown: a second tap never
+                    // hides a row someone is about to reach.
+                    if showsEmptyFields {
+                        ForEach(layout.empty, id: \.field) { fieldRow($0.field, value: nil) }
+                    } else {
+                        Button("Add detail", systemImage: "plus") { showsEmptyFields = true }
+                            .accessibilityIdentifier("addDetailRow")
+                    }
+                }
+                .paperRow()
             }
 
             Section {
-                fieldRow(.dueDate, value: FieldFormatting.value(FieldCodec.encode(.dueDate, of: task), for: .dueDate, hasTime: task.dueHasTime))
-                fieldRow(.importance, value: FieldFormatting.value(task.importanceRaw, for: .importance))
-                fieldRow(.urgency, value: FieldFormatting.value(task.urgencyRaw, for: .urgency))
-                fieldRow(.duration, value: FieldFormatting.value(task.durationRaw, for: .duration))
-                fieldRow(.energy, value: FieldFormatting.value(task.energyRaw, for: .energy))
-                fieldRow(.contexts, value: FieldFormatting.value(FieldCodec.encode(.contexts, of: task), for: .contexts))
-                fieldRow(.people, value: FieldFormatting.value(FieldCodec.encode(.people, of: task), for: .people))
-                fieldRow(.project, value: task.project?.name)
-                fieldRow(.repeatRule, value: FieldFormatting.value(FieldCodec.encode(.repeatRule, of: task), for: .repeatRule))
+                // Stays visible without a due date: it can be switched on first (see the note).
                 Toggle("Show in calendar", isOn: $task.showInCalendar)
                     .onChange(of: task.showInCalendar) { _, _ in save("calendar") }
                     .accessibilityIdentifier("showInCalendarToggle")
-            } header: {
-                Text("Details")
             } footer: {
                 calendarNote
             }
+            .paperRow()
 
             if task.parent == nil {
                 SubtasksSection(task: task)
+                    .paperRow()
             }
 
             if !aiFields.isEmpty {
@@ -81,12 +109,14 @@ struct TaskDetailView: View {
                             .accessibilityIdentifier("revisionsButton")
                     }
                 }
+                .paperRow()
             }
 
             if let url = task.sourceURL {
                 Section("Source") {
                     Link("Open the source", destination: url)
                 }
+                .paperRow()
             }
         }
         .formStyle(.grouped)
@@ -95,6 +125,7 @@ struct TaskDetailView: View {
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
+        .toolbar { actions }
         .onAppear {
             titleDraft = task.title ?? ""
             markSeen()
@@ -105,6 +136,59 @@ struct TaskDetailView: View {
         .sheet(isPresented: $showsRevisions) {
             RevisionsSheet(task: task, contexts: contexts, projects: projects)
         }
+    }
+
+    /// Every derived field in its fixed order, with its display value or nil.
+    private var fieldEntries: [DetailLayout.Entry] {
+        [
+            .init(field: .dueDate, value: FieldFormatting.value(FieldCodec.encode(.dueDate, of: task), for: .dueDate, hasTime: task.dueHasTime)),
+            .init(field: .importance, value: FieldFormatting.value(task.importanceRaw, for: .importance)),
+            .init(field: .urgency, value: FieldFormatting.value(task.urgencyRaw, for: .urgency)),
+            .init(field: .duration, value: FieldFormatting.value(task.durationRaw, for: .duration)),
+            .init(field: .energy, value: FieldFormatting.value(task.energyRaw, for: .energy)),
+            .init(field: .contexts, value: FieldFormatting.value(FieldCodec.encode(.contexts, of: task), for: .contexts)),
+            .init(field: .people, value: FieldFormatting.value(FieldCodec.encode(.people, of: task), for: .people)),
+            .init(field: .project, value: task.project?.name),
+            .init(field: .repeatRule, value: FieldFormatting.value(FieldCodec.encode(.repeatRule, of: task), for: .repeatRule)),
+        ]
+    }
+
+    /// Complete, and the briefing's "…" menu (screen 4). Completing leaves the detail.
+    @ToolbarContentBuilder
+    private var actions: some ToolbarContent {
+        // Deleting stays in the list's long-press menu: deleting from inside the open detail would
+        // leave the view on a destroyed model until it is gone.
+        if task.isOpen {
+            ToolbarItem(placement: .primaryAction) {
+                Button("Complete", systemImage: "checkmark", action: complete)
+                    .accessibilityIdentifier("detailCompleteButton")
+            }
+            ToolbarItem(placement: .primaryAction) {
+                Menu("More", systemImage: "ellipsis") {
+                    if task.nextRank == nil {
+                        Button("Next up", systemImage: "star", action: toggleNext)
+                    } else {
+                        Button("Remove from Next up", systemImage: "star.slash", action: toggleNext)
+                    }
+                    Button("Park", systemImage: "pause") {
+                        TaskActions.park(task)
+                        save("park")
+                    }
+                }
+                .accessibilityIdentifier("detailMoreMenu")
+            }
+        }
+    }
+
+    private func toggleNext() {
+        TaskActions.toggleNext(task, among: allTasks)
+        save("next")
+    }
+
+    private func complete() {
+        TaskActions.complete(task)
+        save("done")
+        dismiss()
     }
 
     /// Under the switch: why nothing shows yet (ADR-13). Silent while the switch is off.

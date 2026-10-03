@@ -25,6 +25,17 @@ final class CaptureSmokeTests: XCTestCase {
         app.descendants(matching: .any).matching(identifier: id).firstMatch
     }
 
+    /// Empty fields wait behind "Add detail" (#187): open it if the row is not there yet.
+    @MainActor
+    private func revealField(_ id: String, in app: XCUIApplication) -> XCUIElement {
+        let row = element(id, in: app)
+        if !row.waitForExistence(timeout: 2) {
+            let add = element("addDetailRow", in: app)
+            if add.waitForExistence(timeout: 3) { add.tap() }
+        }
+        return row
+    }
+
     /// The captured task's row, found by identifier: the model may rewrite the title (#165). The
     /// in-memory store of `--ui-testing` starts empty and each test captures one task, so the first
     /// `taskRow_*` is the one just captured.
@@ -326,7 +337,7 @@ final class CaptureSmokeTests: XCTestCase {
         row.tap()
         assertDetailRawText("Reifen wechseln", in: app)
 
-        let importanceRow = element("field_importance", in: app)
+        let importanceRow = revealField("field_importance", in: app)
         XCTAssertTrue(importanceRow.waitForExistence(timeout: 5), "Detail should list Importance")
         importanceRow.tap()
 
@@ -364,7 +375,7 @@ final class CaptureSmokeTests: XCTestCase {
         row.tap()
         assertDetailRawText("Rasen mähen", in: app)
 
-        let repeatRow = element("field_repeatRule", in: app)
+        let repeatRow = revealField("field_repeatRule", in: app)
         XCTAssertTrue(repeatRow.waitForExistence(timeout: 5), "Detail should list Repeat")
         repeatRow.tap()
 
@@ -408,7 +419,7 @@ final class CaptureSmokeTests: XCTestCase {
         row.tap()
         assertDetailRawText("Tabletten nehmen", in: app)
 
-        let repeatRow = element("field_repeatRule", in: app)
+        let repeatRow = revealField("field_repeatRule", in: app)
         XCTAssertTrue(repeatRow.waitForExistence(timeout: 5), "Detail should list Repeat")
         repeatRow.tap()
 
