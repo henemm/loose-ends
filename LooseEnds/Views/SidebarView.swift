@@ -15,6 +15,9 @@ struct SidebarView: View {
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var sizeClass
     #endif
+    /// One size for every view glyph, growing with Dynamic Type: SF Symbols differ in width
+    /// (the hare is wide), and a bare frame lets a wide one spill past the margin.
+    @ScaledMetric(relativeTo: .body) private var glyphSize: CGFloat = 20
 
     @State private var edit: NameEdit?
     @State private var isEditing = false
@@ -39,8 +42,11 @@ struct SidebarView: View {
     var body: some View {
         List(selection: $selection) {
             if isCompact {
-                Section { header }
-                nextUpPreview
+                // One section: a plain list puts a tall gap above every section header.
+                Section {
+                    header
+                    nextUpPreview
+                }
             }
             Section {
                 ForEach(Self.systemKinds, id: \.self) { kind in
@@ -114,8 +120,10 @@ struct SidebarView: View {
                     // Grey, not the list's accent: accent means tappable (ADR-14). A fixed column,
                     // so a wide glyph (the hare) does not push past the margin.
                     Image(systemName: symbol)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: glyphSize, height: glyphSize)
                         .foregroundStyle(.secondary)
-                        .frame(width: 28)
                 }
             } else {
                 Text(title)
@@ -166,10 +174,19 @@ struct SidebarView: View {
         }
     }
 
-    /// The first three of "Next up"; a tap opens the task. Empty: one line on how to fill it.
+    /// The first three of "Next up" under a small caption; a tap opens the task. Empty: one line
+    /// on how to fill it.
+    @ViewBuilder
     private var nextUpPreview: some View {
         let next = ViewRules.tasks(for: .next, in: tasks)
-        return Section {
+        Text("Next up")
+            .font(.caption.weight(.semibold))
+            .textCase(.uppercase)
+            .tracking(1)
+            .foregroundStyle(.secondary)
+            .listRowSeparator(.hidden)
+            .paperRow()
+        Group {
             if next.isEmpty {
                 Text("Swipe left on any task to line it up here.")
                     .font(.footnote)
@@ -182,8 +199,6 @@ struct SidebarView: View {
                         .paperRow()
                 }
             }
-        } header: {
-            Text("Next up")
         }
     }
 
