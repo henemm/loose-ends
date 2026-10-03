@@ -18,7 +18,7 @@ struct SidebarView: View {
     /// One size for every view glyph, growing with Dynamic Type: SF Symbols differ in width
     /// (the hare is wide), and a bare frame lets a wide one spill past the margin.
     @ScaledMetric(relativeTo: .body) private var glyphSize: CGFloat = 20
-    @ScaledMetric(relativeTo: .caption) private var knotHeight: CGFloat = 13
+    @ScaledMetric(relativeTo: .caption) private var knotHeight: CGFloat = 16
 
     @State private var edit: NameEdit?
     @State private var isEditing = false

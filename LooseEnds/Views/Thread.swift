@@ -14,8 +14,8 @@ struct ThreadShape: Shape {
 
     func path(in rect: CGRect) -> Path {
         let a = 90.0
-        let b = form == .knot ? 230.0 : 70.0
-        let range = form == .knot ? -3.5...3.0 : -4.2...4.2
+        let b = form == .knot ? 230.0 : 50.0
+        let range = form == .knot ? -3.5...3.0 : -6.8...6.0
         let steps = 120
         let points = (0...steps).map { i -> CGPoint in
             let t = range.lowerBound + (range.upperBound - range.lowerBound) * Double(i) / Double(steps)

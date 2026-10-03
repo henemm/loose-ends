@@ -81,7 +81,7 @@ struct TaskListView: View {
     private var emptyState: some View {
         VStack(spacing: 14) {
             ThreadGlyph(form: .loose, lineWidth: 2.5)
-                .frame(width: 96, height: 28)
+                .frame(width: 120, height: 24)
                 .foregroundStyle(.tertiary)
             Text(emptySentence)
                 .font(.title3)
