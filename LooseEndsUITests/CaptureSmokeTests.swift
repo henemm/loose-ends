@@ -468,6 +468,11 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(back.waitForExistence(timeout: 5))
         back.tap()
         let doneRow = element("viewRow_done", in: app)
+        // Completed sits last on the start screen; below the sentence and the Next up preview
+        // (#180) it starts out of sight on an iPhone.
+        if !doneRow.waitForExistence(timeout: 3) {
+            app.swipeUp()
+        }
         XCTAssertTrue(doneRow.waitForExistence(timeout: 5), "Start screen should show Completed")
         doneRow.tap()
 
