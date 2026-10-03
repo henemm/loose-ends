@@ -1,0 +1,36 @@
+PASS: Test 5 runs-on is xcode-27
+      runs-on: xcode-27
+PASS: Test 5 no sed lowering, no 26.0 in workflow
+PASS: Test 5 step 'Select Xcode 27.0' pins /Applications/Xcode_27.app
+PASS: Test 5 verify step sits between Archive and Upload
+PASS: Test 2 (a) old SDK 26.6 / minimum 26.0
+      exit 1; ::error::com.henning.looseends linked against 'iphoneos26.6', expected iphoneos27.*; ::error::com.henning.looseends minimum '26.0', expected 27.0; ::error::com.henning.looseends.watchkitapp linked against 'watchos26.6', expected watchos27.*; ::error::com.henning.looseends.watchkitapp minimum '26.0', expected 27.0; ::error::com.henning.looseends.widgets linked against 'iphoneos26.6', expected iphoneos27.*; ::error::com.henning.looseends.widgets minimum '26.0', expected 27.0; ::error::com.henning.looseends.share linked against 'iphoneos26.6', expected iphoneos27.*; ::error::com.henning.looseends.share minimum '26.0', expected 27.0
+PASS: Test 3 (b) share extension missing
+      exit 1; ::error::Target com.henning.looseends.share not found in the archive
+PASS: Test 3b (c) widgets build number differs
+      exit 1; ::error::com.henning.looseends.widgets version '0.1.0 (1)', expected 0.1.0 (4242)
+PASS: Test 3b (d) watch dSYM missing
+      exit 1; ::error::com.henning.looseends.watchkitapp has no dSYM in the archive
+PASS: Test 3b (e) app without microphone text
+      exit 1; ::error::com.henning.looseends: NSMicrophoneUsageDescription is ''
+PASS: Test 3b (f) encryption flag true
+      exit 1; ::error::com.henning.looseends: ITSAppUsesNonExemptEncryption is 'true', expected false
+PASS: Test 4 correct fixture passes
+      exit 0
+      | Ziel | Bundle | DTSDKName | Minimum | Version | dSYM | Ergebnis |
+      |------|--------|-----------|---------|---------|------|----------|
+      | com.henning.looseends | LooseEnds.app | iphoneos27.0 | 27.0 | 0.1.0 (4242) | da | OK |
+      | com.henning.looseends.watchkitapp | LooseEnds.app/Watch/LooseEndsWatch.app | watchos27.0 | 27.0 | 0.1.0 (4242) | da | OK |
+      | com.henning.looseends.widgets | LooseEnds.app/PlugIns/LooseEndsWidgets.appex | iphoneos27.0 | 27.0 | 0.1.0 (4242) | da | OK |
+      | com.henning.looseends.share | LooseEnds.app/PlugIns/LooseEndsShare.appex | iphoneos27.0 | 27.0 | 0.1.0 (4242) | da | OK |
+PASS: Test 4b real Xcode 27.0 archive passes
+      exit 0
+      | Ziel | Bundle | DTSDKName | Minimum | Version | dSYM | Ergebnis |
+      |------|--------|-----------|---------|---------|------|----------|
+      | com.henning.looseends | LooseEnds.app | iphoneos27.0 | 27.0 | 0.1.0 (9999) | da | OK |
+      | com.henning.looseends.watchkitapp | LooseEnds.app/Watch/LooseEndsWatch.app | watchos27.0 | 27.0 | 0.1.0 (9999) | da | OK |
+      | com.henning.looseends.widgets | LooseEnds.app/PlugIns/LooseEndsWidgets.appex | iphoneos27.0 | 27.0 | 0.1.0 (9999) | da | OK |
+      | com.henning.looseends.share | LooseEnds.app/PlugIns/LooseEndsShare.appex | iphoneos27.0 | 27.0 | 0.1.0 (9999) | da | OK |
+
+RESULT: PASSED (12/12 passing)
+===== 12 passed, 0 failed in 0.87s =====

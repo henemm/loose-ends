@@ -1,0 +1,45 @@
+== Products/Applications/LooseEnds.app
+  CFBundleIdentifier=com.henning.looseends
+  DTSDKName=iphoneos27.0
+  MinimumOSVersion=27.0
+  CFBundleShortVersionString=0.1.0
+  CFBundleVersion=9999
+  ITSAppUsesNonExemptEncryption=false
+  NSMicrophoneUsageDescription=Loose Ends listens so you can say a task instead of typing it.
+  NSSpeechRecognitionUsageDescription=Speech is turned into text on your device to capture a task.
+  NSCalendarsFullAccessUsageDescription=Only if you switch it on, a task with a due date is shown in a "Loose Ends" calendar. The app never reads your other events.
+== Products/Applications/LooseEnds.app/PlugIns/LooseEndsWidgets.appex
+  CFBundleIdentifier=com.henning.looseends.widgets
+  DTSDKName=iphoneos27.0
+  MinimumOSVersion=27.0
+  CFBundleShortVersionString=0.1.0
+  CFBundleVersion=9999
+  ITSAppUsesNonExemptEncryption=
+  NSMicrophoneUsageDescription=
+  NSSpeechRecognitionUsageDescription=
+  NSCalendarsFullAccessUsageDescription=
+== Products/Applications/LooseEnds.app/PlugIns/LooseEndsShare.appex
+  CFBundleIdentifier=com.henning.looseends.share
+  DTSDKName=iphoneos27.0
+  MinimumOSVersion=27.0
+  CFBundleShortVersionString=0.1.0
+  CFBundleVersion=9999
+  ITSAppUsesNonExemptEncryption=
+  NSMicrophoneUsageDescription=
+  NSSpeechRecognitionUsageDescription=
+  NSCalendarsFullAccessUsageDescription=
+== Products/Applications/LooseEnds.app/Watch/LooseEndsWatch.app
+  CFBundleIdentifier=com.henning.looseends.watchkitapp
+  DTSDKName=watchos27.0
+  MinimumOSVersion=27.0
+  CFBundleShortVersionString=0.1.0
+  CFBundleVersion=9999
+  ITSAppUsesNonExemptEncryption=
+  NSMicrophoneUsageDescription=Loose Ends listens so you can say a task.
+  NSSpeechRecognitionUsageDescription=Speech is turned into text on your watch to capture a task.
+  NSCalendarsFullAccessUsageDescription=
+== dSYMs
+LooseEnds.app.dSYM
+LooseEndsShare.appex.dSYM
+LooseEndsWatch.app.dSYM
+LooseEndsWidgets.appex.dSYM

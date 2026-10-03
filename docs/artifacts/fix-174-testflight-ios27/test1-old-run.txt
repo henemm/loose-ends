@@ -1,0 +1,9 @@
+# Test 1 (RED, alter Zustand) — TestFlight-Lauf 35434941080 (2026-09-19)
+# Quelle: gh run view 35434941080 --log, abgerufen 2026-10-03, Schritt "Select newest Xcode"
+
+2026-09-19T09:31:53.4657650Z No Xcode 27 on this image: deployment targets lowered to 26.0 for this build.
+2026-09-19T09:31:53.6895310Z Xcode 26.6
+2026-09-19T09:31:53.6907890Z Build version 17F113
+
+FAIL: Der letzte TestFlight-Build senkte die Deployment-Ziele auf 26.0 und baute mit Xcode 26.6
+(iOS-26.6-SDK) — keine iOS-27-Fassung.

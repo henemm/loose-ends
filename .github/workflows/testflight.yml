@@ -4,6 +4,8 @@ name: TestFlight
 # Needs four repository secrets (docs/reference/testflight.md walks through creating them):
 #   APPLE_TEAM_ID, ASC_KEY_ID, ASC_ISSUER_ID, ASC_PRIVATE_KEY
 # Run it by hand from the Actions tab, or push a tag like v0.1.0.
+# Builds on the xcode-27 preview image with Xcode 27.0 pinned; stops instead of building with
+# another toolchain (#174).
 
 on:
   workflow_dispatch:
@@ -17,7 +19,7 @@ concurrency:
 jobs:
   upload:
     name: Archive and upload (iOS)
-    runs-on: macos-26
+    runs-on: xcode-27
     timeout-minutes: 60
     env:
       APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
@@ -35,16 +37,15 @@ jobs:
           if [ -z "${{ secrets.ASC_PRIVATE_KEY }}" ]; then echo "::error::Repository secret ASC_PRIVATE_KEY is missing"; missing=1; fi
           [ "$missing" = 0 ] || { echo "See docs/reference/testflight.md"; exit 1; }
 
-      - name: Select newest Xcode (27 when the image has it)
+      - name: Select Xcode 27.0
         run: |
-          latest=$(ls -d /Applications/Xcode_27*.app 2>/dev/null | sort -V | tail -1)
-          if [ -n "$latest" ]; then
-            sudo xcode-select -s "$latest"
-          else
-            sed -i '' 's/"27\.0"/"26.0"/g' project.yml
-            echo "No Xcode 27 on this image: deployment targets lowered to 26.0 for this build."
+          sudo xcode-select -s /Applications/Xcode_27.app
+          xcodebuild -version
+          version=$(xcodebuild -version | sed -n 1p)   # sed liest bis zum Ende: kein SIGPIPE unter pipefail
+          if [ "$version" != "Xcode 27.0" ]; then
+            echo "::error::Expected Xcode 27.0 at /Applications/Xcode_27.app, got: $version. Not building an older or beta toolchain. See docs/reference/testflight.md"
+            exit 1
           fi
-          xcode-select -p && xcodebuild -version
 
       - name: Install XcodeGen
         run: brew install xcodegen
@@ -74,6 +75,59 @@ jobs:
             CODE_SIGN_STYLE=Automatic \
             CURRENT_PROJECT_VERSION="${{ github.run_number }}" \
             2>&1 | tee archive.log | xcbeautify
+
+      # Proves every target links against the 27 SDKs with the run's build number, dSYMs and
+      # privacy strings. Runs locally too: ARCHIVE=<path> BUILD=<number> (docs/reference/testflight.md).
+      - name: Verify the archive is built against the iOS 27 SDK
+        env:
+          BUILD: ${{ github.run_number }}
+        run: |
+          ARCHIVE="${ARCHIVE:-build/LooseEnds.xcarchive}"
+          BUILD="${BUILD:?BUILD (build number) must be set}"
+          MARKETING="0.1.0"
+          SUMMARY="${GITHUB_STEP_SUMMARY:-/dev/stdout}"
+          APPS="$ARCHIVE/Products/Applications"
+          [ -d "$APPS" ] || { echo "::error::No Products/Applications in $ARCHIVE"; exit 1; }
+          fail=0
+          {
+            echo "| Ziel | Bundle | DTSDKName | Minimum | Version | dSYM | Ergebnis |"
+            echo "|------|--------|-----------|---------|---------|------|----------|"
+          } >> "$SUMMARY"
+          get() { plutil -extract "$1" raw "$2" 2>/dev/null || true; }
+          check() { # Bundle-Kennung, SDK-Präfix, Pflichtschlüssel (Schlüssel oder Schlüssel=Wert) ...
+            local id="$1" sdk="$2" p found="" name mini ver dsym res=OK key want have
+            shift 2
+            while IFS= read -r bundle; do
+              [ "$(get CFBundleIdentifier "$bundle/Info.plist")" = "$id" ] && { found="$bundle"; break; }
+            done < <(find "$APPS" \( -name '*.app' -o -name '*.appex' \))
+            if [ -z "$found" ]; then
+              echo "| $id | fehlt im Archiv | - | - | - | - | FEHLER |" >> "$SUMMARY"
+              echo "::error::Target $id not found in the archive"; fail=1; return
+            fi
+            p="$found/Info.plist"
+            name=$(get DTSDKName "$p"); mini=$(get MinimumOSVersion "$p")
+            ver="$(get CFBundleShortVersionString "$p") ($(get CFBundleVersion "$p"))"
+            dsym=da; [ -d "$ARCHIVE/dSYMs/$(basename "$found").dSYM" ] || dsym=fehlt
+            case "$name" in "$sdk"*) ;; *) res=FEHLER; echo "::error::$id linked against '$name', expected $sdk*" ;; esac
+            [ "$mini" = "27.0" ] || { res=FEHLER; echo "::error::$id minimum '$mini', expected 27.0"; }
+            [ "$ver" = "$MARKETING ($BUILD)" ] || { res=FEHLER; echo "::error::$id version '$ver', expected $MARKETING ($BUILD)"; }
+            [ "$dsym" = da ] || { res=FEHLER; echo "::error::$id has no dSYM in the archive"; }
+            for key in "$@"; do
+              want=""; [ "${key#*=}" != "$key" ] && { want="${key#*=}"; key="${key%%=*}"; }
+              have=$(get "$key" "$p")
+              if [ -z "$have" ] || { [ -n "$want" ] && [ "$have" != "$want" ]; }; then
+                res=FEHLER; echo "::error::$id: $key is '$have'${want:+, expected $want}"
+              fi
+            done
+            echo "| $id | ${found#$APPS/} | $name | $mini | $ver | $dsym | $res |" >> "$SUMMARY"
+            [ "$res" = OK ] || fail=1
+          }
+          check com.henning.looseends iphoneos27. NSMicrophoneUsageDescription NSSpeechRecognitionUsageDescription \
+            NSCalendarsFullAccessUsageDescription ITSAppUsesNonExemptEncryption=false
+          check com.henning.looseends.watchkitapp watchos27. NSMicrophoneUsageDescription NSSpeechRecognitionUsageDescription
+          check com.henning.looseends.widgets iphoneos27.
+          check com.henning.looseends.share iphoneos27.
+          [ "$fail" = 0 ]
 
       - name: Write export options
         run: |
