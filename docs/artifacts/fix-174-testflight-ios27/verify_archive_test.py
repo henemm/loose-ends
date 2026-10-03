@@ -10,8 +10,11 @@ import plistlib
 import subprocess
 import sys
 import tempfile
+import time
 
 import yaml
+
+STARTED = time.monotonic()
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 WORKFLOW = os.path.join(ROOT, ".github", "workflows", "testflight.yml")
@@ -187,6 +190,8 @@ def main():
               proc.returncode == 0 and table.count("| OK |") == 4, f"exit {proc.returncode}\n{table}{proc.stdout}{proc.stderr}")
     failing = results.count(False)
     print(f"\nRESULT: {'PASSED' if failing == 0 else 'FAILED'} ({len(results) - failing}/{len(results)} passing)")
+    # pytest-style summary line, the one the openspec QA gate reads
+    print(f"===== {len(results) - failing} passed, {failing} failed in {time.monotonic() - STARTED:.2f}s =====")
     return 0 if failing == 0 else 1
 
 
