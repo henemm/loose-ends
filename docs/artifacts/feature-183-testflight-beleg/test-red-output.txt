@@ -1,0 +1,155 @@
+test_2_valid_at_once (__main__.ScriptTests.test_2_valid_at_once) ... FAIL
+test_3_processing_then_valid_uses_a_new_token_per_round (__main__.ScriptTests.test_3_processing_then_valid_uses_a_new_token_per_round) ... FAIL
+test_4_invalid_and_failed_exit_nonzero (__main__.ScriptTests.test_4_invalid_and_failed_exit_nonzero) ... 
+  test_4_invalid_and_failed_exit_nonzero (__main__.ScriptTests.test_4_invalid_and_failed_exit_nonzero) (state='INVALID') ... FAIL
+  test_4_invalid_and_failed_exit_nonzero (__main__.ScriptTests.test_4_invalid_and_failed_exit_nonzero) (state='FAILED') ... FAIL
+test_5_timeout_while_processing (__main__.ScriptTests.test_5_timeout_while_processing) ... FAIL
+test_6_empty_list_means_wait (__main__.ScriptTests.test_6_empty_list_means_wait) ... FAIL
+test_7_record_with_wrong_version_is_ignored (__main__.ScriptTests.test_7_record_with_wrong_version_is_ignored) ... FAIL
+test_8_wrong_signature_is_rejected_and_fails (__main__.ScriptTests.test_8_wrong_signature_is_rejected_and_fails) ... FAIL
+test_8b_unknown_app_fails (__main__.ScriptTests.test_8b_unknown_app_fails) ... FAIL
+test_9_no_secrets_in_output (__main__.ScriptTests.test_9_no_secrets_in_output) ... 
+  test_9_no_secrets_in_output (__main__.ScriptTests.test_9_no_secrets_in_output) (state='VALID') ... FAIL
+  test_9_no_secrets_in_output (__main__.ScriptTests.test_9_no_secrets_in_output) (state='INVALID') ... FAIL
+test_10_confirm_job_shape (__main__.WorkflowTests.test_10_confirm_job_shape) ... FAIL
+test_10_run_blocks_are_valid_bash (__main__.WorkflowTests.test_10_run_blocks_are_valid_bash) ... FAIL
+test_10_upload_job_keeps_every_step (__main__.WorkflowTests.test_10_upload_job_keeps_every_step) ... ok
+test_1_table_goes_to_the_log_too (__main__.WorkflowTests.test_1_table_goes_to_the_log_too) ... FAIL
+
+======================================================================
+FAIL: test_2_valid_at_once (__main__.ScriptTests.test_2_valid_at_once)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_wait_build.py", line 133, in test_2_valid_at_once
+    self.assertEqual(result.returncode, 0, result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/asc_wait_build.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_3_processing_then_valid_uses_a_new_token_per_round (__main__.ScriptTests.test_3_processing_then_valid_uses_a_new_token_per_round)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_wait_build.py", line 139, in test_3_processing_then_valid_uses_a_new_token_per_round
+    self.assertEqual(result.returncode, 0, result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/asc_wait_build.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_4_invalid_and_failed_exit_nonzero (__main__.ScriptTests.test_4_invalid_and_failed_exit_nonzero) (state='INVALID')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_wait_build.py", line 147, in test_4_invalid_and_failed_exit_nonzero
+    self.assertEqual(result.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_4_invalid_and_failed_exit_nonzero (__main__.ScriptTests.test_4_invalid_and_failed_exit_nonzero) (state='FAILED')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_wait_build.py", line 147, in test_4_invalid_and_failed_exit_nonzero
+    self.assertEqual(result.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_5_timeout_while_processing (__main__.ScriptTests.test_5_timeout_while_processing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_wait_build.py", line 153, in test_5_timeout_while_processing
+    self.assertEqual(result.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_6_empty_list_means_wait (__main__.ScriptTests.test_6_empty_list_means_wait)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_wait_build.py", line 158, in test_6_empty_list_means_wait
+    self.assertEqual(result.returncode, 0, result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/asc_wait_build.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_7_record_with_wrong_version_is_ignored (__main__.ScriptTests.test_7_record_with_wrong_version_is_ignored)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_wait_build.py", line 164, in test_7_record_with_wrong_version_is_ignored
+    self.assertEqual(result.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_8_wrong_signature_is_rejected_and_fails (__main__.ScriptTests.test_8_wrong_signature_is_rejected_and_fails)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_wait_build.py", line 170, in test_8_wrong_signature_is_rejected_and_fails
+    self.assertEqual(result.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_8b_unknown_app_fails (__main__.ScriptTests.test_8b_unknown_app_fails)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_wait_build.py", line 175, in test_8b_unknown_app_fails
+    self.assertEqual(result.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_9_no_secrets_in_output (__main__.ScriptTests.test_9_no_secrets_in_output) (state='VALID')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_wait_build.py", line 184, in test_9_no_secrets_in_output
+    self.assertEqual(result.returncode, code, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/asc_wait_build.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_9_no_secrets_in_output (__main__.ScriptTests.test_9_no_secrets_in_output) (state='INVALID')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_wait_build.py", line 184, in test_9_no_secrets_in_output
+    self.assertEqual(result.returncode, code, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1 : /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/asc_wait_build.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_10_confirm_job_shape (__main__.WorkflowTests.test_10_confirm_job_shape)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_wait_build.py", line 204, in test_10_confirm_job_shape
+    confirm = self.job("confirm")
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_wait_build.py", line 200, in job
+    self.assertIsNotNone(match, f"Job {name} fehlt in testflight.yml")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Job confirm fehlt in testflight.yml
+
+======================================================================
+FAIL: test_10_run_blocks_are_valid_bash (__main__.WorkflowTests.test_10_run_blocks_are_valid_bash)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_wait_build.py", line 231, in test_10_run_blocks_are_valid_bash
+    self.assertGreaterEqual(len(blocks), 8)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+AssertionError: 7 not greater than or equal to 8
+
+======================================================================
+FAIL: test_1_table_goes_to_the_log_too (__main__.WorkflowTests.test_1_table_goes_to_the_log_too)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_wait_build.py", line 239, in test_1_table_goes_to_the_log_too
+    self.assertNotIn('>> "$SUMMARY"', verify)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '>> "$SUMMARY"' unexpectedly found in '- name: Verify the archive is built against the iOS 27 SDK\n        env:\n          BUILD: ${{ github.run_number }}\n        run: |\n          ARCHIVE="${ARCHIVE:-build/LooseEnds.xcarchive}"\n          BUILD="${BUILD:?BUILD (build number) must be set}"\n          MARKETING="0.1.0"\n          SUMMARY="${GITHUB_STEP_SUMMARY:-/dev/stdout}"\n          APPS="$ARCHIVE/Products/Applications"\n          [ -d "$APPS" ] || { echo "::error::No Products/Applications in $ARCHIVE"; exit 1; }\n          fail=0\n          {\n            echo "| Ziel | Bundle | DTSDKName | Minimum | Version | dSYM | Ergebnis |"\n            echo "|------|--------|-----------|---------|---------|------|----------|"\n          } >> "$SUMMARY"\n          get() { plutil -extract "$1" raw "$2" 2>/dev/null || true; }\n          check() { # Bundle-Kennung, SDK-Präfix, Pflichtschlüssel (Schlüssel oder Schlüssel=Wert) ...\n            local id="$1" sdk="$2" p found="" name mini ver dsym res=OK key want have\n            shift 2\n            while IFS= read -r bundle; do\n              [ "$(get CFBundleIdentifier "$bundle/Info.plist")" = "$id" ] && { found="$bundle"; break; }\n            done < <(find "$APPS" \\( -name \'*.app\' -o -name \'*.appex\' \\))\n            if [ -z "$found" ]; then\n              echo "| $id | fehlt im Archiv | - | - | - | - | FEHLER |" >> "$SUMMARY"\n              echo "::error::Target $id not found in the archive"; fail=1; return\n            fi\n            p="$found/Info.plist"\n            name=$(get DTSDKName "$p"); mini=$(get MinimumOSVersion "$p")\n            ver="$(get CFBundleShortVersionString "$p") ($(get CFBundleVersion "$p"))"\n            dsym=da; [ -d "$ARCHIVE/dSYMs/$(basename "$found").dSYM" ] || dsym=fehlt\n            case "$name" in "$sdk"*) ;; *) res=FEHLER; echo "::error::$id linked against \'$name\', expected $sdk*" ;; esac\n            [ "$mini" = "27.0" ] || { res=FEHLER; echo "::error::$id minimum \'$mini\', expected 27.0"; }\n            [ "$ver" = "$MARKETING ($BUILD)" ] || { res=FEHLER; echo "::error::$id version \'$ver\', expected $MARKETING ($BUILD)"; }\n            [ "$dsym" = da ] || { res=FEHLER; echo "::error::$id has no dSYM in the archive"; }\n            for key in "$@"; do\n              want=""; [ "${key#*=}" != "$key" ] && { want="${key#*=}"; key="${key%%=*}"; }\n              have=$(get "$key" "$p")\n              if [ -z "$have" ] || { [ -n "$want" ] && [ "$have" != "$want" ]; }; then\n                res=FEHLER; echo "::error::$id: $key is \'$have\'${want:+, expected $want}"\n              fi\n            done\n            echo "| $id | ${found#$APPS/} | $name | $mini | $ver | $dsym | $res |" >> "$SUMMARY"\n            [ "$res" = OK ] || fail=1\n          }\n          check com.henning.looseends iphoneos27. NSMicrophoneUsageDescription NSSpeechRecognitionUsageDescription \\\n            NSCalendarsFullAccessUsageDescription ITSAppUsesNonExemptEncryption=false\n          check com.henning.looseends.watchkitapp watchos27. NSMicrophoneUsageDescription NSSpeechRecognitionUsageDescription\n          check com.henning.looseends.widgets iphoneos27.\n          check com.henning.looseends.share iphoneos27.\n          [ "$fail" = 0 ]\n'
+
+----------------------------------------------------------------------
+Ran 13 tests in 5.893s
+
+FAILED (failures=14)

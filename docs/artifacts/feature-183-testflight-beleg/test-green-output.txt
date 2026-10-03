@@ -1,0 +1,23 @@
+test_der_to_rs_fixed_bytes (__main__.DerTests.test_der_to_rs_fixed_bytes) ... ok
+test_2_valid_at_once (__main__.ScriptTests.test_2_valid_at_once) ... ok
+test_3_processing_then_valid_uses_a_new_token_per_round (__main__.ScriptTests.test_3_processing_then_valid_uses_a_new_token_per_round) ... ok
+test_4_invalid_and_failed_exit_nonzero (__main__.ScriptTests.test_4_invalid_and_failed_exit_nonzero) ... ok
+test_5_timeout_while_processing (__main__.ScriptTests.test_5_timeout_while_processing) ... ok
+test_6_empty_list_means_wait (__main__.ScriptTests.test_6_empty_list_means_wait) ... ok
+test_7_record_with_wrong_version_is_ignored (__main__.ScriptTests.test_7_record_with_wrong_version_is_ignored) ... ok
+test_8_wrong_signature_is_rejected_and_fails (__main__.ScriptTests.test_8_wrong_signature_is_rejected_and_fails) ... ok
+test_8b_unknown_app_fails (__main__.ScriptTests.test_8b_unknown_app_fails) ... ok
+test_9_no_secrets_in_output (__main__.ScriptTests.test_9_no_secrets_in_output) ... ok
+test_9b_malformed_200_bodies_mean_retry (__main__.ScriptTests.test_9b_malformed_200_bodies_mean_retry) ... ok
+test_9c_408_and_429_mean_retry (__main__.ScriptTests.test_9c_408_and_429_mean_retry) ... ok
+test_9d_other_4xx_still_fatal (__main__.ScriptTests.test_9d_other_4xx_still_fatal) ... ok
+test_10_confirm_job_shape (__main__.WorkflowTests.test_10_confirm_job_shape) ... ok
+test_10_run_blocks_are_valid_bash (__main__.WorkflowTests.test_10_run_blocks_are_valid_bash) ... ok
+test_10_upload_job_keeps_every_step (__main__.WorkflowTests.test_10_upload_job_keeps_every_step) ... ok
+test_1_table_goes_to_the_log_too (__main__.WorkflowTests.test_1_table_goes_to_the_log_too) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 13.590s
+
+OK
+TEST SUCCEEDED

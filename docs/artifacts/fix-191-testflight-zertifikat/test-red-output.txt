@@ -1,0 +1,264 @@
+test_10_wrong_signature_is_rejected_and_fails (__main__.ScriptTests.test_10_wrong_signature_is_rejected_and_fails) ... FAIL
+test_10b_a_new_valid_token_is_sent_with_every_request (__main__.ScriptTests.test_10b_a_new_valid_token_is_sent_with_every_request) ... FAIL
+test_11_no_secrets_in_output (__main__.ScriptTests.test_11_no_secrets_in_output) ... 
+  test_11_no_secrets_in_output (__main__.ScriptTests.test_11_no_secrets_in_output) (case='ok') ... FAIL
+  test_11_no_secrets_in_output (__main__.ScriptTests.test_11_no_secrets_in_output) (case='401') ... FAIL
+test_2_mixed_list_deletes_exactly_the_two_chosen (__main__.ScriptTests.test_2_mixed_list_deletes_exactly_the_two_chosen) ... FAIL
+test_3_both_development_types_are_chosen (__main__.ScriptTests.test_3_both_development_types_are_chosen) ... FAIL
+test_3b_display_name_is_the_fallback_for_name (__main__.ScriptTests.test_3b_display_name_is_the_fallback_for_name) ... FAIL
+test_4_nothing_else_is_ever_deleted (__main__.ScriptTests.test_4_nothing_else_is_ever_deleted) ... 
+  test_4_nothing_else_is_ever_deleted (__main__.ScriptTests.test_4_nothing_else_is_ever_deleted) (case='distribution') ... FAIL
+  test_4_nothing_else_is_ever_deleted (__main__.ScriptTests.test_4_nothing_else_is_ever_deleted) (case='other name') ... FAIL
+  test_4_nothing_else_is_ever_deleted (__main__.ScriptTests.test_4_nothing_else_is_ever_deleted) (case='other type') ... FAIL
+  test_4_nothing_else_is_ever_deleted (__main__.ScriptTests.test_4_nothing_else_is_ever_deleted) (case='no name field') ... FAIL
+  test_4_nothing_else_is_ever_deleted (__main__.ScriptTests.test_4_nothing_else_is_ever_deleted) (case='name with other case') ... FAIL
+test_5_dry_run_deletes_nothing_and_lists (__main__.ScriptTests.test_5_dry_run_deletes_nothing_and_lists) ... FAIL
+test_6_count_line_matches_the_list_and_goes_to_the_summary (__main__.ScriptTests.test_6_count_line_matches_the_list_and_goes_to_the_summary) ... FAIL
+test_7_pagination_reads_links_next (__main__.ScriptTests.test_7_pagination_reads_links_next) ... FAIL
+test_7b_foreign_host_in_links_next_aborts_before_a_token_goes_there (__main__.ScriptTests.test_7b_foreign_host_in_links_next_aborts_before_a_token_goes_there) ... FAIL
+test_8_401_and_403_on_listing_exit_1_without_delete (__main__.ScriptTests.test_8_401_and_403_on_listing_exit_1_without_delete) ... 
+  test_8_401_and_403_on_listing_exit_1_without_delete (__main__.ScriptTests.test_8_401_and_403_on_listing_exit_1_without_delete) (status=401) ... FAIL
+  test_8_401_and_403_on_listing_exit_1_without_delete (__main__.ScriptTests.test_8_401_and_403_on_listing_exit_1_without_delete) (status=403) ... FAIL
+test_9_failed_revoke_does_not_stop_the_rest_and_is_loud (__main__.ScriptTests.test_9_failed_revoke_does_not_stop_the_rest_and_is_loud) ... FAIL
+test_missing_environment_exits_1 (__main__.ScriptTests.test_missing_environment_exits_1) ... FAIL
+test_12_cleanup_steps_sit_in_the_right_order (__main__.WorkflowTests.test_12_cleanup_steps_sit_in_the_right_order) ... FAIL
+test_12_old_steps_and_confirm_stay (__main__.WorkflowTests.test_12_old_steps_and_confirm_stay) ... ok
+test_12_run_blocks_are_valid_bash (__main__.WorkflowTests.test_12_run_blocks_are_valid_bash) ... FAIL
+test_13_dry_run_input_is_passed_on (__main__.WorkflowTests.test_13_dry_run_input_is_passed_on) ... FAIL
+test_14_doc_describes_the_way (__main__.WorkflowTests.test_14_doc_describes_the_way) ... FAIL
+
+======================================================================
+FAIL: test_10_wrong_signature_is_rejected_and_fails (__main__.ScriptTests.test_10_wrong_signature_is_rejected_and_fails)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 245, in test_10_wrong_signature_is_rejected_and_fails
+    self.assertEqual(result.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_10b_a_new_valid_token_is_sent_with_every_request (__main__.ScriptTests.test_10b_a_new_valid_token_is_sent_with_every_request)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 251, in test_10b_a_new_valid_token_is_sent_with_every_request
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/asc_cleanup_certs.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_11_no_secrets_in_output (__main__.ScriptTests.test_11_no_secrets_in_output) (case='ok')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 264, in test_11_no_secrets_in_output
+    self.assertEqual(result.returncode, code, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/asc_cleanup_certs.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_11_no_secrets_in_output (__main__.ScriptTests.test_11_no_secrets_in_output) (case='401')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 264, in test_11_no_secrets_in_output
+    self.assertEqual(result.returncode, code, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1 : /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/asc_cleanup_certs.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_2_mixed_list_deletes_exactly_the_two_chosen (__main__.ScriptTests.test_2_mixed_list_deletes_exactly_the_two_chosen)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 156, in test_2_mixed_list_deletes_exactly_the_two_chosen
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/asc_cleanup_certs.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_3_both_development_types_are_chosen (__main__.ScriptTests.test_3_both_development_types_are_chosen)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 161, in test_3_both_development_types_are_chosen
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/asc_cleanup_certs.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_3b_display_name_is_the_fallback_for_name (__main__.ScriptTests.test_3b_display_name_is_the_fallback_for_name)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 166, in test_3b_display_name_is_the_fallback_for_name
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/asc_cleanup_certs.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_4_nothing_else_is_ever_deleted (__main__.ScriptTests.test_4_nothing_else_is_ever_deleted) (case='distribution')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 178, in test_4_nothing_else_is_ever_deleted
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/asc_cleanup_certs.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_4_nothing_else_is_ever_deleted (__main__.ScriptTests.test_4_nothing_else_is_ever_deleted) (case='other name')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 178, in test_4_nothing_else_is_ever_deleted
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/asc_cleanup_certs.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_4_nothing_else_is_ever_deleted (__main__.ScriptTests.test_4_nothing_else_is_ever_deleted) (case='other type')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 178, in test_4_nothing_else_is_ever_deleted
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/asc_cleanup_certs.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_4_nothing_else_is_ever_deleted (__main__.ScriptTests.test_4_nothing_else_is_ever_deleted) (case='no name field')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 178, in test_4_nothing_else_is_ever_deleted
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/asc_cleanup_certs.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_4_nothing_else_is_ever_deleted (__main__.ScriptTests.test_4_nothing_else_is_ever_deleted) (case='name with other case')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 178, in test_4_nothing_else_is_ever_deleted
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/asc_cleanup_certs.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_5_dry_run_deletes_nothing_and_lists (__main__.ScriptTests.test_5_dry_run_deletes_nothing_and_lists)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 184, in test_5_dry_run_deletes_nothing_and_lists
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/asc_cleanup_certs.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_6_count_line_matches_the_list_and_goes_to_the_summary (__main__.ScriptTests.test_6_count_line_matches_the_list_and_goes_to_the_summary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 197, in test_6_count_line_matches_the_list_and_goes_to_the_summary
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/asc_cleanup_certs.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_7_pagination_reads_links_next (__main__.ScriptTests.test_7_pagination_reads_links_next)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 205, in test_7_pagination_reads_links_next
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/asc_cleanup_certs.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_7b_foreign_host_in_links_next_aborts_before_a_token_goes_there (__main__.ScriptTests.test_7b_foreign_host_in_links_next_aborts_before_a_token_goes_there)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 212, in test_7b_foreign_host_in_links_next_aborts_before_a_token_goes_there
+    self.assertEqual(result.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_8_401_and_403_on_listing_exit_1_without_delete (__main__.ScriptTests.test_8_401_and_403_on_listing_exit_1_without_delete) (status=401)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 221, in test_8_401_and_403_on_listing_exit_1_without_delete
+    self.assertEqual(result.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_8_401_and_403_on_listing_exit_1_without_delete (__main__.ScriptTests.test_8_401_and_403_on_listing_exit_1_without_delete) (status=403)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 221, in test_8_401_and_403_on_listing_exit_1_without_delete
+    self.assertEqual(result.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_9_failed_revoke_does_not_stop_the_rest_and_is_loud (__main__.ScriptTests.test_9_failed_revoke_does_not_stop_the_rest_and_is_loud)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 236, in test_9_failed_revoke_does_not_stop_the_rest_and_is_loud
+    self.assertEqual(result.returncode, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1 : /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/asc_cleanup_certs.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_missing_environment_exits_1 (__main__.ScriptTests.test_missing_environment_exits_1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 276, in test_missing_environment_exits_1
+    self.assertEqual(result.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_12_cleanup_steps_sit_in_the_right_order (__main__.WorkflowTests.test_12_cleanup_steps_sit_in_the_right_order)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 296, in test_12_cleanup_steps_sit_in_the_right_order
+    self.assertNotIn(-1, positions, dict(zip(names, positions)))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: -1 unexpectedly found in [1397, -1, 1674, 6464, -1, 7415] : {'Store the App Store Connect API key': 1397, 'Clear leftover development certificates': -1, 'Archive': 1674, 'Upload to TestFlight': 6464, 'Clear the development certificates of this run': -1, 'Remove the key': 7415}
+
+======================================================================
+FAIL: test_12_run_blocks_are_valid_bash (__main__.WorkflowTests.test_12_run_blocks_are_valid_bash)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 328, in test_12_run_blocks_are_valid_bash
+    self.assertGreaterEqual(len(blocks), 10)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 8 not greater than or equal to 10
+
+======================================================================
+FAIL: test_13_dry_run_input_is_passed_on (__main__.WorkflowTests.test_13_dry_run_input_is_passed_on)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 338, in test_13_dry_run_input_is_passed_on
+    self.assertIsNotNone(match, "Eingabe cleanup_dry_run fehlt")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Eingabe cleanup_dry_run fehlt
+
+======================================================================
+FAIL: test_14_doc_describes_the_way (__main__.WorkflowTests.test_14_doc_describes_the_way)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_cleanup_certs.py", line 349, in test_14_doc_describes_the_way
+    self.assertIn(term, text)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: 'Created via API' not found in '# Loose Ends auf dem iPhone: TestFlight einrichten\n\nEinmalige Einrichtung, etwa 30 Minuten. Danach bringt ein Klick in GitHub jede neue Version\naufs iPhone. Die Schritte 1 bis 4 kann nur der Inhaber des Apple-Developer-Accounts machen.\n\nWas am Ende passiert: GitHub baut die App, signiert sie mit einem von Apple verwalteten\nZertifikat und lädt sie zu TestFlight hoch. Du installierst sie über die TestFlight-App.\n\n## 1. Apple Developer Program\n\n- Mitgliedschaft unter https://developer.apple.com/programs/ (99 € pro Jahr).\n- Unter https://developer.apple.com/account → **Membership details** steht die **Team ID**\n  (zehn Zeichen, zum Beispiel `AB12CD34EF`). Notieren.\n\n## 2. App-Kennung und App-Eintrag anlegen\n\nUnter https://developer.apple.com/account/resources/identifiers/list:\n\n1. **Identifiers → +** → **App IDs** → **App** → Continue.\n   - Description: `Loose Ends`\n   - Bundle ID: **Explicit**, `com.henning.looseends`\n   - Capabilities anhaken: **App Groups**, **iCloud** (mit CloudKit), **Siri**.\n   - Continue → Register.\n2. **Identifiers → +** → **App Groups**: Description `Loose Ends`, Identifier\n   `group.com.henning.looseends` → Register.\n3. **Identifiers → +** → **iCloud Containers**: Description `Loose Ends`, Identifier\n   `iCloud.com.henning.looseends` → Register.\n4. Die App ID `com.henning.looseends` öffnen → bei **App Groups** und **iCloud** auf\n   **Configure** → die beiden gerade angelegten Einträge auswählen → Save.\n\nUnter https://appstoreconnect.apple.com/apps:\n\n5. **Meine Apps → +** → **Neue App**:\n   - Plattformen: **iOS**\n   - Name: `Loose Ends`\n   - Hauptsprache: Deutsch\n   - Bundle-ID: `com.henning.looseends` (aus der Liste)\n   - SKU: `looseends`\n   - Zugriff: Vollzugriff\n   - Erstellen.\n\nDie Kennungen für Watch-App, Widgets und Teilen-Erweiterung legt der Build beim ersten\nLauf selbst an.\n\n## 3. API-Schlüssel für GitHub\n\nUnter https://appstoreconnect.apple.com/access/integrations/api:\n\n1. **Benutzer und Zugriff → Integrationen → App Store Connect API → Teamschlüssel**.\n   Beim ersten Mal: **Zugriff anfordern** bestätigen.\n2. **+** (Schlüssel generieren): Name `GitHub TestFlight`, Zugriff **Admin** → Generieren.\n   **App-Manager reicht nicht:** Cloud-verwaltete Signierung (`-allowProvisioningUpdates`) braucht\n   Entwicklerportal-Zugriff (Zertifikate/Profile), den nur **Admin** hat. Mit App-Manager schlägt der\n   Export mit "Cloud signing permission error" fehl.\n3. **API-Schlüssel herunterladen**. Das geht **nur einmal**; die Datei heißt\n   `AuthKey_XXXXXXXXXX.p8`. Sicher ablegen (zum Beispiel im Schlüsselbund als sichere Notiz).\n4. Auf derselben Seite stehen die **Aussteller-ID** (Issuer ID, eine lange UUID) und die\n   **Schlüssel-ID** (Key ID, zehn Zeichen). Beide notieren.\n\n## 4. Vier Secrets in GitHub eintragen\n\nUnter https://github.com/henemm/loose-ends/settings/secrets/actions → **New repository secret**,\nviermal:\n\n| Name | Wert |\n|------|------|\n| `APPLE_TEAM_ID` | die Team ID aus Schritt 1 |\n| `ASC_KEY_ID` | die Schlüssel-ID aus Schritt 3 |\n| `ASC_ISSUER_ID` | die Aussteller-ID aus Schritt 3 |\n| `ASC_PRIVATE_KEY` | der komplette Inhalt der `.p8`-Datei, inklusive der Zeilen `-----BEGIN PRIVATE KEY-----` und `-----END PRIVATE KEY-----` |\n\nDie `.p8`-Datei mit einem Texteditor öffnen (nicht mit Xcode), alles markieren, kopieren,\neinfügen. Die Datei selbst kommt **nie** ins Repository.\n\n## 5. Build starten\n\n1. https://github.com/henemm/loose-ends/actions → links **TestFlight** → rechts **Run workflow**\n   → Branch `main` → **Run workflow**.\n2. Etwa 15 Minuten bis zum Upload, danach bis zu 45 Minuten Wartezeit im zweiten Job. Der Lauf hat zwei\n   Jobs: „Archive and upload (iOS)" grün heißt nur hochgeladen. „Confirm Apple processed the build"\n   wartet danach bis zu 45 Minuten und ist erst grün, wenn App Store Connect den Build als `VALID`\n   meldet; sein Protokoll nennt `build=<Nummer> processingState=… uploadedDate=…`.\n3. Zur Kontrolle in der Oberfläche: Unter https://appstoreconnect.apple.com → **Loose Ends → TestFlight** erscheint der Build,\n   erst mit "Wird verarbeitet", nach 10 bis 30 Minuten bereit. Die Export-Compliance-Frage\n   stellt Apple nicht, das steht schon in der App (keine eigene Verschlüsselung).\n\nFehlt auf dem Runner Xcode 27.0, bricht der Lauf gleich am Anfang mit klarer Meldung ab, statt\nstill mit einer älteren oder Beta-Version zu bauen (siehe „Wenn es hakt").\n\n## 6. Auf dem iPhone installieren\n\n1. In App Store Connect → **TestFlight → Interne Tests → +** → Gruppe `Familie` anlegen,\n   dich selbst als Tester hinzufügen (deine Apple-ID muss in **Benutzer und Zugriff** stehen).\n2. Auf dem iPhone die App **TestFlight** aus dem App Store laden, mit derselben Apple-ID\n   anmelden, Einladung annehmen, **Loose Ends** installieren.\n3. Jeder weitere Build aus Schritt 5 landet automatisch bei den internen Testern.\n\n## Wenn es hakt\n\n- **"No profiles for \'com.henning.looseends\' were found"** oder ein Fehler mit\n  *entitlement*: Schritt 2 prüfen, vor allem ob App Group und iCloud-Container an der App ID\n  hängen. Dann den Workflow erneut starten.\n- **"Unable to authenticate"**: eines der vier Secrets stimmt nicht. Am häufigsten fehlt beim\n  privaten Schlüssel eine der BEGIN/END-Zeilen.\n- **Build erscheint nicht in TestFlight**: unter App Store Connect → Loose Ends → TestFlight →\n  nach "Wird verarbeitet" schauen; eine E-Mail von Apple nennt sonst den Grund.\n- **Lauf bricht mit „Expected Xcode 27.0" ab**: Das Image liefert unter\n  `/Applications/Xcode_27.app` nicht mehr Xcode 27.0 (Image-Update oder anderes Label). Im Readme\n  des Images nachsehen, wo 27.0 jetzt liegt, und Pfad oder `runs-on` in `testflight.yml` anpassen.\n  Nicht auf eine Beta oder ältere Version ausweichen.\n- **Nachweisschritt rot**: Die Tabelle nennt Ziel und Abweichung (SDK, Mindestversion,\n  Versionsnummer, dSYM, Datenschutztext). Sie steht in der Zusammenfassung des Laufs und im\n  Protokoll des Schritts (`gh run view <id> --log`). Der Upload ist dann nicht gelaufen.\n- **Job „Confirm Apple processed the build" rot mit `INVALID` oder `FAILED`**: Apple hat den Build\n  angenommen, aber nicht verarbeitet. Den Grund nennen die E-Mail von Apple und App Store Connect\n  unter dem Build. Der Upload-Job war trotzdem grün.\n- **Job „Confirm …" rot mit „not VALID after 45 min"**: Die Verarbeitung dauerte länger als\n  45 Minuten. In App Store Connect nachsehen; den Job neu zu starten ist nicht nötig, der Build\n  kommt gegebenenfalls später an.\n- **Job „Confirm …" rot mit HTTP 401 oder 403**: Schlüssel-ID, Aussteller-ID oder privater\n  Schlüssel stimmen nicht, oder die Rolle des Schlüssels darf keine Builds lesen.\n- Die Logs jedes Laufs liegen als `testflight-logs` unter dem Lauf in GitHub Actions.\n\n## Was der Workflow tut\n\n`.github/workflows/testflight.yml` läuft auf dem Runner-Label `xcode-27` (Vorschau-Image von\nGitHub) und wählt dort fest Xcode 27.0 (`/Applications/Xcode_27.app`), nicht die neueste Version;\ndie Build-Kennung wird nur protokolliert. Die Deployment-Ziele aus `project.yml` werden nicht mehr\nabgesenkt. Dann: Projekt generieren, mit `xcodebuild archive` und Apple-verwalteter Signatur\n(`-allowProvisioningUpdates` plus API-Schlüssel) archivieren, mit `-exportArchive` direkt zu App\nStore Connect hochladen. Die Build-Nummer ist die laufende Nummer des Workflow-Laufs; die\nVersionsnummer steht in `project.yml` (`MARKETING_VERSION`).\n\nZwischen Archiv und Upload prüft der Schritt „Verify the archive is built against the iOS 27 SDK"\nApp, Watch-App, Widgets und Teilen-Erweiterung (gefunden über ihre Bundle-Kennung): SDK\n(`iphoneos27.`/`watchos27.`), Mindestversion 27.0, Version `0.1.0 (<Lauf-Nummer>)`, dSYM im\nArchiv, Datenschutz-Zweckbeschreibungen nicht leer, `ITSAppUsesNonExemptEncryption` = `false`. Das\nErgebnis steht als Tabelle in der Zusammenfassung des Laufs und im Protokoll des Schritts (abrufbar\nmit `gh run view <id> --log`); jede Abweichung stoppt den Upload.\n\nNach dem Upload läuft der Job `confirm` („Confirm Apple processed the build") auf `ubuntu-latest`.\nEr ruft `scripts/asc_wait_build.py` mit der Lauf-Nummer auf: Das Skript ermittelt über die App\nStore Connect API die App zur Bundle-Kennung, fragt alle 30 Sekunden den Build mit dieser Nummer ab\nund schreibt je Runde `build=<Nummer> processingState=<…> uploadedDate=<…>` ins Protokoll\n(`processingState=nicht-gelistet`, solange Apple ihn noch nicht führt). Grün nur bei `VALID`; rot bei\n`INVALID`, `FAILED`, nach 45 Minuten ohne `VALID` und bei abgelehntem Schlüssel. Schlägt nur dieser\nJob fehl, bleibt der Upload-Job grün, der Lauf insgesamt wird rot. Lokal ist die Abfrage nicht\nmöglich (der Schlüssel liegt nur in den Secrets); lokal laufen nur die Tests\n`python3 scripts/test_asc_wait_build.py`.\n\nDie Mac-App kommt in einem späteren Schritt dazu (eigenes Archiv, eigener TestFlight-Eintrag).\n\n## Wenn das Vorschau-Image wegfällt oder umbenannt wird\n\nDas Label `xcode-27` ist eine Vorschau. Fällt es weg oder wird es umbenannt, startet der Lauf nicht\n(kein passender Runner). Dann im README der Runner-Images\n(https://github.com/actions/runner-images, Abschnitt Xcode 27) das aktuelle Label nachschlagen,\n`runs-on` in `testflight.yml` anpassen, Lauf neu starten. Hat `macos-26` oder ein Nachfolger\nXcode 27.0 als Standard, wechselt das Label dorthin. Versionsprüfung und Nachweisschritt bleiben.\n\n## Notweg: lokaler Archiv-Lauf\n\nNur wenn kein Runner Xcode 27.0 liefert. Auf Hennings Mac mit Xcode 27.0, dieselben Befehle wie im\nWorkflow (`archive`, dann `-exportArchive`), **ausschließlich mit eigenem ASC-Schlüssel**\n(`-authenticationKeyPath`, `-authenticationKeyID`, `-authenticationKeyIssuerID`), nie mit der\nAnmeldung in Xcode (#156). `CURRENT_PROJECT_VERSION` muss über der letzten Build-Nummer der CI\nliegen, sonst lehnt App Store Connect den Upload als Dublette ab. Vor dem Export den Block des\nNachweisschritts aus `testflight.yml` lokal gegen das Archiv laufen lassen, mit\n`ARCHIVE=<Pfad zum .xcarchive> BUILD=<Nummer>`; erst bei vier Zeilen „OK" hochladen.\n\n## Prüfbauten fürs iPhone (#156)\n\n`./scripts/sim.sh device-build` und `./scripts/sim.sh lab` signieren nur mit den Profilen, die auf\ndem Mac schon gespeichert sind, und sprechen dabei nicht mit Apple. So kann der Bau die Anmeldung in\nXcode nicht abmelden. Für eine neue Kennung, eine neue Fähigkeit oder nach Ablauf eines Profils läuft\neinmal `LOOSEENDS_REGISTER=1 ./scripts/sim.sh device-build` (bzw. `… lab`): Dieser Lauf benutzt die\nAnmeldung in Xcode und legt Kennungen und Profile an. Der API-Schlüssel reicht dafür nicht, weil\nxcodebuild mit ihm keine neuen Entwicklungsprofile anlegen kann.\n'
+
+----------------------------------------------------------------------
+Ran 19 tests in 10.595s
+
+FAILED (failures=24)

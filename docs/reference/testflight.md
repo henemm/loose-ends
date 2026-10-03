@@ -76,8 +76,11 @@ einfügen. Die Datei selbst kommt **nie** ins Repository.
 
 1. https://github.com/henemm/loose-ends/actions → links **TestFlight** → rechts **Run workflow**
    → Branch `main` → **Run workflow**.
-2. Etwa 15 Minuten warten. Grün heißt: hochgeladen.
-3. Unter https://appstoreconnect.apple.com → **Loose Ends → TestFlight** erscheint der Build,
+2. Etwa 15 Minuten bis zum Upload, danach bis zu 45 Minuten Wartezeit im zweiten Job. Der Lauf hat zwei
+   Jobs: „Archive and upload (iOS)" grün heißt nur hochgeladen. „Confirm Apple processed the build"
+   wartet danach bis zu 45 Minuten und ist erst grün, wenn App Store Connect den Build als `VALID`
+   meldet; sein Protokoll nennt `build=<Nummer> processingState=… uploadedDate=…`.
+3. Zur Kontrolle in der Oberfläche: Unter https://appstoreconnect.apple.com → **Loose Ends → TestFlight** erscheint der Build,
    erst mit "Wird verarbeitet", nach 10 bis 30 Minuten bereit. Die Export-Compliance-Frage
    stellt Apple nicht, das steht schon in der App (keine eigene Verschlüsselung).
 
@@ -105,8 +108,26 @@ still mit einer älteren oder Beta-Version zu bauen (siehe „Wenn es hakt").
   `/Applications/Xcode_27.app` nicht mehr Xcode 27.0 (Image-Update oder anderes Label). Im Readme
   des Images nachsehen, wo 27.0 jetzt liegt, und Pfad oder `runs-on` in `testflight.yml` anpassen.
   Nicht auf eine Beta oder ältere Version ausweichen.
-- **Nachweisschritt rot**: Die Tabelle in der Zusammenfassung des Laufs nennt Ziel und Abweichung
-  (SDK, Mindestversion, Versionsnummer, dSYM, Datenschutztext). Der Upload ist dann nicht gelaufen.
+- **Nachweisschritt rot**: Die Tabelle nennt Ziel und Abweichung (SDK, Mindestversion,
+  Versionsnummer, dSYM, Datenschutztext). Sie steht in der Zusammenfassung des Laufs und im
+  Protokoll des Schritts (`gh run view <id> --log`). Der Upload ist dann nicht gelaufen.
+- **Job „Confirm Apple processed the build" rot mit `INVALID` oder `FAILED`**: Apple hat den Build
+  angenommen, aber nicht verarbeitet. Den Grund nennen die E-Mail von Apple und App Store Connect
+  unter dem Build. Der Upload-Job war trotzdem grün.
+- **Job „Confirm …" rot mit „not VALID after 45 min"**: Die Verarbeitung dauerte länger als
+  45 Minuten. In App Store Connect nachsehen; den Job neu zu starten ist nicht nötig, der Build
+  kommt gegebenenfalls später an.
+- **Job „Confirm …" rot mit HTTP 401 oder 403**: Schlüssel-ID, Aussteller-ID oder privater
+  Schlüssel stimmen nicht, oder die Rolle des Schlüssels darf keine Builds lesen.
+- **„Your account has reached the maximum number of certificates" / „Choose a certificate to
+  revoke"** im Schritt „Archive": Jeder Lauf startet auf einem leeren Runner, Xcode legt dort ein
+  Entwicklungs-Zertifikat „Created via API" an, dessen privater Schlüssel mit dem Runner verloren
+  geht. Der Workflow widerruft diese Zertifikate jetzt selbst (#191, siehe „Was der Workflow tut").
+  Ist ein Schritt „Clear …" rot: sein Protokoll lesen (je Zertifikat `aktion=widerruf` oder
+  `bleibt`, Fehler als `::error::`), dann den Lauf einfach neu starten; der Schritt vor dem Archiv
+  räumt nach. Nie von Hand im Entwicklerportal widerrufen.
+- **Schritt „Clear …" rot mit HTTP 401 oder 403**: Schlüssel-ID, Aussteller-ID oder privater
+  Schlüssel stimmen nicht, oder der Schlüssel hat nicht die Rolle **Admin** (nötig zum Widerrufen).
 - Die Logs jedes Laufs liegen als `testflight-logs` unter dem Lauf in GitHub Actions.
 
 ## Was der Workflow tut
@@ -123,7 +144,33 @@ Zwischen Archiv und Upload prüft der Schritt „Verify the archive is built aga
 App, Watch-App, Widgets und Teilen-Erweiterung (gefunden über ihre Bundle-Kennung): SDK
 (`iphoneos27.`/`watchos27.`), Mindestversion 27.0, Version `0.1.0 (<Lauf-Nummer>)`, dSYM im
 Archiv, Datenschutz-Zweckbeschreibungen nicht leer, `ITSAppUsesNonExemptEncryption` = `false`. Das
-Ergebnis steht als Tabelle in der Zusammenfassung des Laufs; jede Abweichung stoppt den Upload.
+Ergebnis steht als Tabelle in der Zusammenfassung des Laufs und im Protokoll des Schritts (abrufbar
+mit `gh run view <id> --log`); jede Abweichung stoppt den Upload.
+
+Nach dem Upload läuft der Job `confirm` („Confirm Apple processed the build") auf `ubuntu-latest`.
+Er ruft `scripts/asc_wait_build.py` mit der Lauf-Nummer auf: Das Skript ermittelt über die App
+Store Connect API die App zur Bundle-Kennung, fragt alle 30 Sekunden den Build mit dieser Nummer ab
+und schreibt je Runde `build=<Nummer> processingState=<…> uploadedDate=<…>` ins Protokoll
+(`processingState=nicht-gelistet`, solange Apple ihn noch nicht führt). Grün nur bei `VALID`; rot bei
+`INVALID`, `FAILED`, nach 45 Minuten ohne `VALID` und bei abgelehntem Schlüssel. Schlägt nur dieser
+Job fehl, bleibt der Upload-Job grün, der Lauf insgesamt wird rot. Lokal ist die Abfrage nicht
+möglich (der Schlüssel liegt nur in den Secrets); lokal laufen nur die Tests
+`python3 scripts/test_asc_wait_build.py`.
+
+Zwei Aufräum-Schritte halten das Zertifikatskonto klein (#191): „Clear leftover development
+certificates" vor dem Archiv (räumt, was frühere Läufe hinterlassen haben) und „Clear the development
+certificates of this run" am Ende, auch wenn vorher etwas fehlschlug. Beide rufen
+`scripts/asc_cleanup_certs.py` auf. Widerrufen wird nur, was den Typ Entwicklung (`DEVELOPMENT`,
+`IOS_DEVELOPMENT`) und genau den Namen „Apple Development: Created via API" trägt (so nennt ihn Apple im Konto, belegt im
+Probelauf 37136927454); Distribution-Zertifikate und Hennings
+eigene Zertifikate aus Xcode bleiben. Das Protokoll listet jedes Zertifikat mit Typ, Name, Ablauf,
+gekürzter ID und `aktion=widerruf`/`bleibt` und endet mit
+`zertifikate vorher=<n> nachher=<m> widerrufen=<k>` (auch in der Zusammenfassung des Laufs). Mit dem
+Schalter `cleanup_dry_run` (Run workflow → Haken „Zertifikate nur auflisten, nichts widerrufen") wird
+nur aufgelistet, die Zeile endet dann mit `wuerde-widerrufen=<k>`. Gerätebauten (#156) signieren mit
+gespeicherten Profilen und sind davon nicht berührt. Lokal laufen nur die Tests
+`python3 scripts/test_asc_cleanup_certs.py` (der Schlüssel liegt nur in den Secrets).
+
 Die Mac-App kommt in einem späteren Schritt dazu (eigenes Archiv, eigener TestFlight-Eintrag).
 
 ## Wenn das Vorschau-Image wegfällt oder umbenannt wird
@@ -142,7 +189,8 @@ Workflow (`archive`, dann `-exportArchive`), **ausschließlich mit eigenem ASC-S
 Anmeldung in Xcode (#156). `CURRENT_PROJECT_VERSION` muss über der letzten Build-Nummer der CI
 liegen, sonst lehnt App Store Connect den Upload als Dublette ab. Vor dem Export den Block des
 Nachweisschritts aus `testflight.yml` lokal gegen das Archiv laufen lassen, mit
-`ARCHIVE=<Pfad zum .xcarchive> BUILD=<Nummer>`; erst bei vier Zeilen „OK" hochladen.
+`ARCHIVE=<Pfad zum .xcarchive> BUILD=<Nummer>`; erst bei vier Zeilen „OK" hochladen. Auch dieser
+Weg legt ein Zertifikat „Created via API" an; der nächste CI-Lauf widerruft es.
 
 ## Prüfbauten fürs iPhone (#156)
 
