@@ -1,0 +1,43 @@
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/hem/Developer/loose-ends/.claude/worktrees/graceful-mapping-rabin/LooseEnds.xcodeproj
+[0;32m[sim][0m Projekt erzeugt.
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test mit Beleg: CaptureSmokeTests/testCalendarSwitchStaysOn → docs/artifacts/fix-172-ui-tests-first-try/simulator-run.txt
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsShare.appex -> LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-10-02 16:44:50.858.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-02 16:44:50.869.
+Test Suite 'CaptureSmokeTests' started at 2026-10-02 16:44:50.869.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CaptureSmokeTests testCalendarSwitchStaysOn] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =   872.65s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =   873.74s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testCalendarSwitchStaysOn ([31m909.991[0m seconds)
+Executed 1 test, with 0 failures (0 unexpected) in 909.991 (909.999) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-02 17:00:00.874.
+Executed 1 test, with 0 failures (0 unexpected) in 909.991 (910.005) seconds
+Executed 1 test, with 0 failures (0 unexpected) in 909.991 (910.017) seconds
+[1mTest session results:[0m /Users/hem/Developer/loose-ends/.claude/worktrees/graceful-mapping-rabin/docs/artifacts/fix-172-ui-tests-first-try/simulator-run/run.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[sim_proof] Testklasse liefert keinen Screenshot, Beleg ungültig
+[0;31m[sim][0m Beleg ungültig (sim_proof 1): docs/artifacts/fix-172-ui-tests-first-try/simulator-run.txt
+EXIT 1

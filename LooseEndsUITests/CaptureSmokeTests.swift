@@ -117,9 +117,20 @@ final class CaptureSmokeTests: XCTestCase {
     /// True once the element reports the value, so a switch is read after it moved, not before.
     @MainActor
     private func waitForValue(_ expected: String, of element: XCUIElement, timeout: TimeInterval = 5) -> Bool {
-        let predicate = NSPredicate(format: "value == %@", expected)
-        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
-        return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
+        valueAfterWaiting(for: expected, of: element, timeout: timeout) == expected
+    }
+
+    /// The value once it matches, otherwise the value of one last read after the deadline. The
+    /// deadline runs on the clock: a single lookup slower than the timeout (4 s on the CI runner,
+    /// #172) can no longer end the wait without the element having been read after it.
+    @MainActor
+    private func valueAfterWaiting(for expected: String, of element: XCUIElement, timeout: TimeInterval) -> String? {
+        let deadline = Date().addingTimeInterval(timeout)
+        while Date() < deadline {
+            if (element.value as? String) == expected { return expected }
+            RunLoop.current.run(until: Date().addingTimeInterval(0.2))
+        }
+        return element.value as? String
     }
 
     @MainActor
@@ -538,9 +549,12 @@ final class CaptureSmokeTests: XCTestCase {
             app.swipeUp()
         }
         XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Detail should offer Show in calendar")
-        XCTAssertTrue(waitForValue("0", of: toggle), "Value was \(String(describing: toggle.value))")
+        // Not model-derived, so a new task always starts off: read it, nothing to wait for.
+        let initial = toggle.value as? String
+        XCTAssertEqual(initial, "0", "Value was \(String(describing: initial))")
         toggle.tap()
-        if !waitForValue("1", of: toggle, timeout: 2) {
+        // Tap again only if the switch is still off after the last read; at "1" a second tap would turn it off.
+        if valueAfterWaiting(for: "1", of: toggle, timeout: 2) == "0" {
             // The element spans the row; the switch itself sits at the trailing edge.
             toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
         }

@@ -1,0 +1,41 @@
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/hem/Developer/loose-ends/.claude/worktrees/graceful-mapping-rabin/LooseEnds.xcodeproj
+[0;32m[sim][0m Projekt erzeugt.
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test mit Beleg: CaptureSmokeTests/testCalendarSwitchStaysOn → docs/artifacts/fix-172-ui-tests-first-try/simulator-run.txt
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+[[36mLooseEndsUITests[0m] [1mCompiling[0m CaptureSmokeTests.swift
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsUITests.abi.json
+[[36mLooseEndsUITests[0m] [1mLinking[0m LooseEndsUITests
+[[36mLooseEndsUITests[0m] [1mExtract App Intents Metadata[0m
+Test Suite 'Selected tests' started at 2026-10-02 17:13:04.699.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-02 17:13:04.700.
+Test Suite 'CaptureSmokeTests' started at 2026-10-02 17:13:04.700.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CaptureSmokeTests testCalendarSwitchStaysOn] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =     8.20s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =     9.26s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [31m✖[0m testCalendarSwitchStaysOn, XCTAssertTrue failed - Value was Optional(0)
+Executed 1 test, with 1 failure (0 unexpected) in 26.189 (26.195) seconds
+Test Suite 'LooseEndsUITests.xctest' failed at 2026-10-02 17:13:30.900.
+Executed 1 test, with 1 failure (0 unexpected) in 26.189 (26.200) seconds
+Executed 1 test, with 1 failure (0 unexpected) in 26.189 (26.201) seconds
+[1mTest session results:[0m /Users/hem/Developer/loose-ends/.claude/worktrees/graceful-mapping-rabin/docs/artifacts/fix-172-ui-tests-first-try/simulator-run/run.xcresult
+[36;1mTesting started[0m
+[sim_proof] ergebnis: Failed
+[0;31m[sim][0m UI-Test fehlgeschlagen (xcodebuild 65), Beleg: docs/artifacts/fix-172-ui-tests-first-try/simulator-run.txt
+EXIT 65

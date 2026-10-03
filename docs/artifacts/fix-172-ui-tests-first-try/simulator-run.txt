@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-10-02T18:26:56+0200
+befehl: scripts/sim.sh test-proof RecognitionWalkthroughTests
+workflow: fix-172-ui-tests-first-try
+head: da0476e0595a4679d40888625fce7f16f62fbcf2
+basis: 247070f6291b82cf5696cbdcae0118ec8275eac5 (merge-base origin/main HEAD)
+testklasse: RecognitionWalkthroughTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1790958196.704  ende: 1790958414.865
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/fix-172-ui-tests-first-try/simulator-run/summary.json  sha256:4aa42f8cabfbf2eaa704c83268de9640183b02ad8fff95ac76fdb5e5570f5daf
+xcresult: docs/artifacts/fix-172-ui-tests-first-try/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-172-ui-tests-first-try/simulator-run/*.png (4 Stück)
+
+## Geprüfte Dateien
+- sha256:96be9c62f8f17e306c9454abcd5452d5d56e6c1a155144ebdc84546c1637244b  LooseEndsUITests/CaptureSmokeTests.swift
+- sha256:e0c67332c26134bf3a61fdf4eac053442be9aa6bc554d8b591dddadd9e260785  LooseEndsUITests/RecognitionWalkthroughTests.swift

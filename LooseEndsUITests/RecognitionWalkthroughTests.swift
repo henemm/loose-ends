@@ -51,13 +51,6 @@ final class RecognitionWalkthroughTests: XCTestCase {
         app.descendants(matching: .any).matching(identifier: id).firstMatch
     }
 
-    @MainActor
-    private func row(containing text: String, in app: XCUIApplication) -> XCUIElement {
-        app.descendants(matching: .any)
-            .matching(NSPredicate(format: "identifier BEGINSWITH %@ AND label CONTAINS %@", "taskRow_", text))
-            .firstMatch
-    }
-
     /// Oberste Zeile der „Neu"-Liste. `ViewRules` sortiert absteigend nach Erfassungszeit, die
     /// jüngste Erfassung steht also immer oben — unabhängig davon, ob das Modell ihren Titel
     /// inzwischen geglättet hat und eine Suche nach dem Rohtext damit ins Leere liefe.
@@ -128,10 +121,15 @@ final class RecognitionWalkthroughTests: XCTestCase {
         let newRow = element("viewRow_new", in: app)
         XCTAssertTrue(newRow.waitForExistence(timeout: 5), "Die Ansichtsliste zeigt kein Neu")
         newRow.tap()
-        let first = row(containing: Self.firstText, in: app)
+        // Wie bei der zweiten Aufgabe: oberste Zeile, bestätigt über den unveränderlichen Rohtext,
+        // weil eine Titelsuche ins Leere läuft, sobald das Modell den Titel glättet.
+        let first = topRow(in: app)
         XCTAssertTrue(first.waitForExistence(timeout: 5), "Die erste Aufgabe steht nicht in Neu")
         shot(app, "1-erste-aufgabe-erfasst")
         first.tap()
+        let firstRawText = element("detailRawText", in: app)
+        XCTAssertTrue(waitForLabel(Self.firstText, of: firstRawText),
+                      "Die geöffnete Detailansicht zeigt nicht den ersten Rohtext")
 
         // 2. Dauer selbst setzen — der Normalfall, wenn kein Modell da ist.
         let durationRow = element("field_duration", in: app)
