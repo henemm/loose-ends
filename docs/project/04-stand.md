@@ -22,7 +22,7 @@ sind daher meist nur Zeitverlust.
 | Startscreen | Systemansichten mit Zähler, Projekte und Kontexte anlegen, umbenennen, löschen | `LooseEnds/Views/SidebarView.swift`, `Shared/Services/CatalogService.swift` |
 | Mitteilung | "Heute fällig" um 9 Uhr mit Erledigt, Als nächstes, Morgen | `Shared/Notifications`, `LooseEnds/Notifications` |
 | Kalender | Eigener Kalender "Loose Ends", ein Termin je Aufgabe mit Schalter und Fälligkeit, Abgleich nach jedem Speichern | `Shared/Services/CalendarSync.swift`, `LooseEnds/Calendar/CalendarBridge.swift` |
-| Auslieferung | CI (Unit, iOS-Build, UI-Smoke), TestFlight-Workflow, Anleitung | `.github/workflows`, `docs/reference/testflight.md` |
+| Auslieferung | CI (Unit, iOS-Build, UI-Smoke, Design-Galerie hell/dunkel als Artefakt `DesignGallery`, #182), TestFlight-Workflow, Anleitung | `.github/workflows`, `docs/reference/testflight.md` |
 | Lernkorpus | FocusBlox-Export (287 Aufgaben), Konfidenz-Kalibrierung gelaufen: Konfidenz trennt nicht (siehe `06-annahmen-und-experimente.md`, #65) | `scripts/export-focusblox-corpus.swift`, `LooseEndsTests/FocusBloxCalibrationTests.swift` |
 | Messstrecke | Treue-Korpus (317 Sätze in Hennings Bauformen, Wahrheit als Regel gegen den Messtag), Labor-App auf dem iPhone, die in Scheiben misst und nach jedem Satz sichert, Abholung per `sim.sh lab-fetch`, Auswertung und Bericht auf dem Mac; Mehrfachlauf-Infrastruktur (#107) und Selbstkonsistenz-Auswertung (#108, Mechanismus fertig, Messlauf steht aus) | `Measurement/`, `LooseEndsLab/`, `LooseEndsTests/DateTitleReportTests.swift`, `scripts/sim.sh` |
 | Logo | App-Icon "der Knoten" in Petrol: Hell, Dunkel, Getönt, Mac, Watch; Akzentfarbe Petrol; SVG-Quellen | `LooseEnds/Resources/Assets.xcassets`, `docs/design/logo/` |
@@ -32,6 +32,12 @@ sind daher meist nur Zeitverlust.
 Seit 2026-09-17 als GitHub Issues geführt, ticket-für-ticket mit eigener Definition of Done
 (`gh issue list --label enhancement` / `--label spike`). Diese Liste ist nur noch die
 Prioritätsreihenfolge; Details, Umfang und DoD stehen im jeweiligen Issue.
+
+**Stabilität vor allem anderen** (Tech Lead, 2026-10-03): Ein Absturz in der Erfassung blockiert
+jede Einladung externer Tester über TestFlight.
+
+- [#184](https://github.com/henemm/loose-ends/issues/184) Absturz in `SpeechCapture.startEngine`, wenn
+  der Audio-Dienst nicht rechtzeitig antwortet (gesehen im CI-Simulator, Gerätestufe Pflicht)
 
 **Spikes zuerst** (technisches Risiko, blockieren die Umsetzung der Must-Features):
 
@@ -109,6 +115,10 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
 - [#73](https://github.com/henemm/loose-ends/issues/73) Dauerlauf je OS-Stand
 
 **Danach Features, nach Priorität:**
+
+- [#180](https://github.com/henemm/loose-ends/issues/180) Eigener Charakter (Faden + Briefpapier):
+  Schritt 1 (Papiergrund, Haarlinien) in #181; Schritt 2 (Serif, Kopfsatz statt „Views") vor der
+  ersten Einladung externer Tester, Schritt 3 (Knoten-Zeichen) danach
 
 5. [#25](https://github.com/henemm/loose-ends/issues/25) Siri über das Reminders-App-Schema (Must) — braucht Xcode 27 in der CI, bis dahin reicht die Shortcut-Phrase "Add to Loose Ends"
 6. [#27](https://github.com/henemm/loose-ends/issues/27) Abhängigkeiten über Private Cloud Compute (`blockedBy`)
