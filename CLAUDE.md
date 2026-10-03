@@ -120,6 +120,9 @@ guarded with `#available` until then. The workflow selects Xcode 27 automaticall
 
 `.github/workflows/testflight.yml` archives the iOS app with cloud-managed signing and uploads it to
 TestFlight (manual run or a `v*` tag). Setup for the account owner: `docs/reference/testflight.md`.
+Since #174 it runs on the `xcode-27` preview image with Xcode 27.0 pinned and never lowers the
+deployment targets; a step before the upload checks every target in the archive (27 SDK, minimum 27.0,
+version, dSYM, privacy strings) and stops the upload on any mismatch.
 
 ## Process
 
