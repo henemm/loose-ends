@@ -9,6 +9,7 @@ import SwiftUI
 /// as seen. The bar carries Complete and the briefing's menu (Next up, Park).
 struct TaskDetailView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(CompletionPulse.self) private var completionPulse: CompletionPulse?
     @Environment(\.dismiss) private var dismiss
     /// Every task, for the "Next up" rank.
     @Query private var allTasks: [TaskItem]
@@ -188,6 +189,7 @@ struct TaskDetailView: View {
     private func complete() {
         TaskActions.complete(task)
         save("done")
+        completionPulse?.fire()
         dismiss()
     }
 

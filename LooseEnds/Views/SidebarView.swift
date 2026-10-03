@@ -18,6 +18,7 @@ struct SidebarView: View {
     /// One size for every view glyph, growing with Dynamic Type: SF Symbols differ in width
     /// (the hare is wide), and a bare frame lets a wide one spill past the margin.
     @ScaledMetric(relativeTo: .body) private var glyphSize: CGFloat = 20
+    @ScaledMetric(relativeTo: .caption) private var knotHeight: CGFloat = 16
 
     @State private var edit: NameEdit?
     @State private var isEditing = false
@@ -142,11 +143,17 @@ struct SidebarView: View {
     private var header: some View {
         let review = ViewRules.tasks(for: .new, in: tasks).count
         let content = VStack(alignment: .leading, spacing: 6) {
-            Text(Date.now, format: .dateTime.weekday(.wide).day().month(.wide))
-                .font(.caption.weight(.semibold))
-                .textCase(.uppercase)
-                .tracking(1)
-                .foregroundStyle(.secondary)
+            HStack(spacing: 8) {
+                // The knot, first of its three places (#180, rule 1). Grey like the date: it is
+                // the mark, not something to tap (ADR-14).
+                ThreadGlyph(form: .knot, lineWidth: 1.5)
+                    .frame(width: knotHeight * 1.6, height: knotHeight)
+                Text(Date.now, format: .dateTime.weekday(.wide).day().month(.wide))
+                    .font(.caption.weight(.semibold))
+                    .textCase(.uppercase)
+                    .tracking(1)
+            }
+            .foregroundStyle(.secondary)
             lead(review: review, next: ViewRules.tasks(for: .next, in: tasks).count)
                 .font(.title2.weight(.medium))
                 .fontDesign(.serif)
