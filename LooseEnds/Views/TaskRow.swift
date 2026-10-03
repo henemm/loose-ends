@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 
 /// One row (design briefing, screen 3): the title, or the raw text while nothing better exists,
@@ -14,7 +15,18 @@ struct TaskRow: View {
     /// `taskRow_*` unique for the UI tests.
     var identifierPrefix = "taskRow_"
 
+    /// A deleted task can still be drawn once while the list animates it out; reading any of its
+    /// properties then traps inside SwiftData (#194: delete from Repeating with New still on the
+    /// navigation stack). Saved deletions lose their context, unsaved ones carry `isDeleted`.
     var body: some View {
+        if task.isDeleted || task.modelContext == nil {
+            EmptyView()
+        } else {
+            content
+        }
+    }
+
+    private var content: some View {
         VStack(alignment: .leading, spacing: 2) {
             HStack(spacing: 6) {
                 // Serif is the content, SF is the app (#180, rule 2).
