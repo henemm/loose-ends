@@ -27,6 +27,7 @@ struct TaskDetailView: View {
                 HStack {
                     TextField("Title", text: $titleDraft)
                         .font(.title3.weight(.semibold))
+                        .fontDesign(.serif)
                         .focused($titleFocused)
                         .onSubmit(commitTitle)
                         .accessibilityIdentifier("detailTitleField")

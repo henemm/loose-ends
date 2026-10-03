@@ -55,6 +55,25 @@ final class DesignGalleryTests: XCTestCase {
         XCTAssertTrue(field.waitForNonExistence(timeout: 5), "Capture sheet did not close")
     }
 
+    /// One task into "Next up", so the start screen's preview (#180) has something to show. Best
+    /// effort: if the swipe does not reveal the button, the start screen shows its empty line instead.
+    @MainActor
+    private func lineUpFirstTask(in app: XCUIApplication, from newRow: XCUIElement) {
+        newRow.tap()
+        let row = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "taskRow_"))
+            .firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "New shows no task")
+        row.swipeLeft()
+        let nextUp = app.buttons["Next up"]
+        if nextUp.waitForExistence(timeout: 3) {
+            nextUp.tap()
+        }
+        let back = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(back.waitForExistence(timeout: 5), "No back button")
+        back.tap()
+    }
+
     /// Start screen (top and scrolled, for the section headers), the New list and a detail.
     @MainActor
     private func photograph(dark: Bool) {
@@ -65,6 +84,8 @@ final class DesignGalleryTests: XCTestCase {
         }
         let newRow = element("viewRow_new", in: app)
         XCTAssertTrue(newRow.waitForExistence(timeout: 5), "Start screen shows no New")
+        lineUpFirstTask(in: app, from: newRow)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5), "Not back on the start screen")
         shot(app, "gallery-\(label)-1-start")
         app.swipeUp()
         shot(app, "gallery-\(label)-2-start-scrolled")

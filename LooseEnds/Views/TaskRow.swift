@@ -10,11 +10,16 @@ struct TaskRow: View {
     var hidesContext = false
     /// One extra line the view adds, such as the age and postponements in Old.
     var note: String?
+    /// The start screen's "Next up" preview shows the same task as the list; its own prefix keeps
+    /// `taskRow_*` unique for the UI tests.
+    var identifierPrefix = "taskRow_"
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
             HStack(spacing: 6) {
+                // Serif is the content, SF is the app (#180, rule 2).
                 Text(task.displayTitle)
+                    .fontDesign(.serif)
                     .italic(task.title == nil || task.status == .unverified)
                     .lineLimit(1)
                 if task.hasUnseenAIRevisions, task.titleSourceRaw == FieldSource.ai.rawValue {
@@ -59,7 +64,7 @@ struct TaskRow: View {
             }
         }
         .accessibilityElement(children: .combine)
-        .accessibilityIdentifier("taskRow_\(task.id.uuidString)")
+        .accessibilityIdentifier("\(identifierPrefix)\(task.id.uuidString)")
     }
 
     private struct Trait: Identifiable {

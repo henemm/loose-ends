@@ -20,10 +20,13 @@ struct ContentView: View {
     var body: some View {
         NavigationSplitView {
             SidebarView(selection: $selection, tasks: tasks)
-                .navigationTitle("Views")
                 .toolbar { captureToolbarItem }
         } detail: {
-            if let selection {
+            if case .task(let id) = selection, let task = tasks.first(where: { $0.id == id }) {
+                NavigationStack {
+                    TaskDetailView(task: task)
+                }
+            } else if let selection {
                 NavigationStack {
                     TaskListView(selection: selection, tasks: tasks)
                         .toolbar { captureToolbarItem }
