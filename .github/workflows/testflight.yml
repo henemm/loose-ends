@@ -9,6 +9,11 @@ name: TestFlight
 
 on:
   workflow_dispatch:
+    inputs:
+      cleanup_dry_run:
+        description: Zertifikate nur auflisten, nichts widerrufen
+        type: boolean
+        default: false
   push:
     tags: ['v*']
 
@@ -58,6 +63,14 @@ jobs:
           mkdir -p "$HOME/private_keys"
           printf '%s\n' "${{ secrets.ASC_PRIVATE_KEY }}" > "$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8"
           chmod 600 "$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8"
+
+      # Every run on a fresh runner makes Xcode create an Apple Development certificate "Created via
+      # API" whose private key is lost with the runner. Revoke what earlier runs left behind (#191).
+      - name: Clear leftover development certificates
+        env:
+          DRY: ${{ inputs.cleanup_dry_run == true && '--dry-run' || '' }}
+        run: |
+          ASC_KEY_FILE="$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8" python3 scripts/asc_cleanup_certs.py $DRY
 
       - name: Archive
         run: |
@@ -171,6 +184,16 @@ jobs:
             archive.log
             upload.log
           if-no-files-found: warn
+
+      # Revokes what this run created, also when archive, proof or export failed (#191).
+      - name: Clear the development certificates of this run
+        if: always()
+        env:
+          DRY: ${{ inputs.cleanup_dry_run == true && '--dry-run' || '' }}
+        run: |
+          KEY="$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8"
+          [ -f "$KEY" ] || { echo "No API key stored, nothing to clear"; exit 0; }
+          ASC_KEY_FILE="$KEY" python3 scripts/asc_cleanup_certs.py $DRY
 
       - name: Remove the key
         if: always()

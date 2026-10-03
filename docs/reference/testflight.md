@@ -119,6 +119,15 @@ still mit einer älteren oder Beta-Version zu bauen (siehe „Wenn es hakt").
   kommt gegebenenfalls später an.
 - **Job „Confirm …" rot mit HTTP 401 oder 403**: Schlüssel-ID, Aussteller-ID oder privater
   Schlüssel stimmen nicht, oder die Rolle des Schlüssels darf keine Builds lesen.
+- **„Your account has reached the maximum number of certificates" / „Choose a certificate to
+  revoke"** im Schritt „Archive": Jeder Lauf startet auf einem leeren Runner, Xcode legt dort ein
+  Entwicklungs-Zertifikat „Created via API" an, dessen privater Schlüssel mit dem Runner verloren
+  geht. Der Workflow widerruft diese Zertifikate jetzt selbst (#191, siehe „Was der Workflow tut").
+  Ist ein Schritt „Clear …" rot: sein Protokoll lesen (je Zertifikat `aktion=widerruf` oder
+  `bleibt`, Fehler als `::error::`), dann den Lauf einfach neu starten; der Schritt vor dem Archiv
+  räumt nach. Nie von Hand im Entwicklerportal widerrufen.
+- **Schritt „Clear …" rot mit HTTP 401 oder 403**: Schlüssel-ID, Aussteller-ID oder privater
+  Schlüssel stimmen nicht, oder der Schlüssel hat nicht die Rolle **Admin** (nötig zum Widerrufen).
 - Die Logs jedes Laufs liegen als `testflight-logs` unter dem Lauf in GitHub Actions.
 
 ## Was der Workflow tut
@@ -148,6 +157,19 @@ Job fehl, bleibt der Upload-Job grün, der Lauf insgesamt wird rot. Lokal ist di
 möglich (der Schlüssel liegt nur in den Secrets); lokal laufen nur die Tests
 `python3 scripts/test_asc_wait_build.py`.
 
+Zwei Aufräum-Schritte halten das Zertifikatskonto klein (#191): „Clear leftover development
+certificates" vor dem Archiv (räumt, was frühere Läufe hinterlassen haben) und „Clear the development
+certificates of this run" am Ende, auch wenn vorher etwas fehlschlug. Beide rufen
+`scripts/asc_cleanup_certs.py` auf. Widerrufen wird nur, was den Typ Entwicklung (`DEVELOPMENT`,
+`IOS_DEVELOPMENT`) und genau den Namen „Created via API" trägt; Distribution-Zertifikate und Hennings
+eigene Zertifikate aus Xcode bleiben. Das Protokoll listet jedes Zertifikat mit Typ, Name, Ablauf,
+gekürzter ID und `aktion=widerruf`/`bleibt` und endet mit
+`zertifikate vorher=<n> nachher=<m> widerrufen=<k>` (auch in der Zusammenfassung des Laufs). Mit dem
+Schalter `cleanup_dry_run` (Run workflow → Haken „Zertifikate nur auflisten, nichts widerrufen") wird
+nur aufgelistet, die Zeile endet dann mit `wuerde-widerrufen=<k>`. Gerätebauten (#156) signieren mit
+gespeicherten Profilen und sind davon nicht berührt. Lokal laufen nur die Tests
+`python3 scripts/test_asc_cleanup_certs.py` (der Schlüssel liegt nur in den Secrets).
+
 Die Mac-App kommt in einem späteren Schritt dazu (eigenes Archiv, eigener TestFlight-Eintrag).
 
 ## Wenn das Vorschau-Image wegfällt oder umbenannt wird
@@ -166,7 +188,8 @@ Workflow (`archive`, dann `-exportArchive`), **ausschließlich mit eigenem ASC-S
 Anmeldung in Xcode (#156). `CURRENT_PROJECT_VERSION` muss über der letzten Build-Nummer der CI
 liegen, sonst lehnt App Store Connect den Upload als Dublette ab. Vor dem Export den Block des
 Nachweisschritts aus `testflight.yml` lokal gegen das Archiv laufen lassen, mit
-`ARCHIVE=<Pfad zum .xcarchive> BUILD=<Nummer>`; erst bei vier Zeilen „OK" hochladen.
+`ARCHIVE=<Pfad zum .xcarchive> BUILD=<Nummer>`; erst bei vier Zeilen „OK" hochladen. Auch dieser
+Weg legt ein Zertifikat „Created via API" an; der nächste CI-Lauf widerruft es.
 
 ## Prüfbauten fürs iPhone (#156)
 
