@@ -1,0 +1,120 @@
+name: Speech Stress
+
+# #184: the capture crash (AVAudioEngine.inputNode aborting on an audio RPC timeout) shows up in
+# some CI runs only, so one green run proves nothing. This job runs CaptureCancelCrashTests N times
+# in a row and reports how many died. Before every run after the first it resets the app's privacy
+# grants, so each run passes through the moment the crash was seen in: permissions just granted,
+# then the engine starts. It runs on every PR that touches speech capture, and on demand.
+
+on:
+  workflow_dispatch:
+    inputs:
+      iterations:
+        description: How many runs of CaptureCancelCrashTests
+        default: "10"
+  pull_request:
+    paths:
+      - LooseEnds/Speech/**
+      - LooseEnds/Views/CaptureView.swift
+      - LooseEndsUITests/CaptureCancelCrashTests.swift
+      - .github/workflows/speech-stress.yml
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  stress:
+    name: Speech Stress (CaptureCancelCrashTests × N)
+    runs-on: macos-26
+    timeout-minutes: 75
+    env:
+      ITERATIONS: ${{ github.event.inputs.iterations || '10' }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Select newest Xcode (27 when the image has it)
+        run: |
+          latest=$(ls -d /Applications/Xcode_27*.app 2>/dev/null | sort -V | tail -1)
+          if [ -n "$latest" ]; then
+            sudo xcode-select -s "$latest"
+          else
+            sed -i '' 's/"27\.0"/"26.0"/g' project.yml
+            echo "No Xcode 27 on this image: deployment targets lowered to 26.0 for this run."
+          fi
+          xcode-select -p && xcodebuild -version
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        run: xcodegen generate
+      - name: Pick a simulator
+        run: |
+          udid=$(xcrun simctl list devices available -j | python3 -c 'import json,sys
+          devs=[d for v in json.load(sys.stdin)["devices"].values() for d in v]
+          hit=next((d for d in devs if d["name"]=="iPhone 17"), None) or next((d for d in devs if d["name"].startswith("iPhone")), None)
+          print(hit["udid"] if hit else "")')
+          [ -n "$udid" ] || { echo "no iPhone simulator on this image"; xcrun simctl list devices available; exit 1; }
+          xcrun simctl list devices available | grep "$udid"
+          xcrun simctl boot "$udid" || true
+          echo "SIM_UDID=$udid" >> "$GITHUB_ENV"
+      - name: Build for testing
+        run: |
+          set -o pipefail
+          xcodebuild build-for-testing \
+            -project LooseEnds.xcodeproj \
+            -scheme LooseEnds \
+            -destination "platform=iOS Simulator,id=$SIM_UDID" \
+            CODE_SIGNING_ALLOWED=NO \
+            DEVELOPMENT_TEAM= \
+            2>&1 | xcbeautify
+      - name: Run CaptureCancelCrashTests N times
+        run: |
+          mkdir -p stress
+          passed=0; failed=0
+          for i in $(seq 1 "$ITERATIONS"); do
+            # The app is installed from the first run on; from then on the grants can be reset.
+            if [ "$i" -gt 1 ]; then
+              xcrun simctl privacy "$SIM_UDID" reset all com.henning.looseends
+            fi
+            start=$(date +%s)
+            if xcodebuild test-without-building \
+                -project LooseEnds.xcodeproj \
+                -scheme LooseEnds \
+                -destination "platform=iOS Simulator,id=$SIM_UDID" \
+                -only-testing:LooseEndsUITests/CaptureCancelCrashTests \
+                -resultBundlePath "stress/run-$i.xcresult" \
+                CODE_SIGNING_ALLOWED=NO DEVELOPMENT_TEAM= \
+                > "stress/run-$i.log" 2>&1; then
+              passed=$((passed + 1)); verdict=passed
+            else
+              failed=$((failed + 1)); verdict=FAILED
+              grep -E "error:|Lost connection" "stress/run-$i.log" | head -5
+            fi
+            echo "run $i: $verdict ($(( $(date +%s) - start )) s)" | tee -a stress/summary.txt
+          done
+          echo "passed $passed, failed $failed of $ITERATIONS" | tee -a stress/summary.txt
+          {
+            echo "### Speech stress: $failed of $ITERATIONS runs failed"
+            echo '```'
+            cat stress/summary.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          [ "$failed" -eq 0 ]
+      - name: Export crash reports
+        if: failure()
+        continue-on-error: true
+        run: |
+          for bundle in stress/run-*.xcresult; do
+            log="${bundle%.xcresult}.log"
+            grep -q "TEST SUCCEEDED" "$log" && continue
+            xcrun xcresulttool export attachments --path "$bundle" --output-path "${bundle%.xcresult}-attachments"
+          done
+      - name: Upload stress results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: SpeechStress
+          path: |
+            stress/summary.txt
+            stress/*.log
+            stress/*-attachments
+          if-no-files-found: warn

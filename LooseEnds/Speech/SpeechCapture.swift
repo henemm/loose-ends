@@ -31,6 +31,9 @@ final class SpeechCapture {
     private var task: SFSpeechRecognitionTask?
     /// Verhindert eine Endlosschleife: pro Sitzung wird höchstens einmal auf Server umgestellt.
     private var triedServerRecognition = false
+    /// Zählt jedes `stop()`. `start()` wartet auf Erkenner und Rechte; kam in der Zeit ein `stop()`
+    /// (Abbrechen, Fertig, Tippen ins Textfeld), darf es danach kein Mikrofon mehr öffnen (#184).
+    private var stopCount = 0
     /// `nonisolated`, weil auch die Rückrufe von fremden Strängen hierüber melden — und nicht
     /// `private`, weil die Tonzählung im `RequestBox` denselben Kanal benutzt.
     nonisolated static let logger = Logger(subsystem: "com.henning.looseends", category: "Speech")
@@ -39,6 +42,7 @@ final class SpeechCapture {
 
     func start() async {
         guard !isListening else { return }
+        let ticket = stopCount
         await Self.reportSpeechSupport()
         // `isAvailable` ist direkt nach dem Start unzuverlässig: Henning bekam am 2026-09-19 beim
         // ersten Versuch sofort „nicht verfügbar", beim nächsten lief dieselbe App. Ein einzelner
@@ -54,6 +58,10 @@ final class SpeechCapture {
             state = .unavailable(String(localized: "Microphone or speech access was not allowed."))
             return
         }
+        guard ticket == stopCount else {
+            Self.logger.notice("Erfassung wurde während der Vorbereitung beendet, Mikrofon bleibt zu")
+            return
+        }
         do {
             try startEngine(with: recognizer)
             transcript = ""
@@ -65,6 +73,7 @@ final class SpeechCapture {
     }
 
     func stop() {
+        stopCount += 1
         engine?.inputNode.removeTap(onBus: 0)
         engine?.stop()
         request?.endAudio()
@@ -82,11 +91,18 @@ final class SpeechCapture {
         if isListening { state = .idle }
     }
 
+    private enum StartError: Error {
+        case noAudioInput
+    }
+
     private func startEngine(with recognizer: SFSpeechRecognizer) throws {
         #if os(iOS)
         let session = AVAudioSession.sharedInstance()
         try session.setCategory(.record, mode: .measurement, options: .duckOthers)
         try session.setActive(true, options: .notifyOthersOnDeactivation)
+        // Ohne Eingang baut `inputNode` die Audio-Ein-/Ausgabe trotzdem auf und fragt den
+        // Audio-Dienst; dann lieber gleich auf Tippen ausweichen (#184).
+        guard session.isInputAvailable else { throw StartError.noAudioInput }
         #endif
 
         let engine = AVAudioEngine()
