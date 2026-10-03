@@ -1,10 +1,9 @@
 import XCTest
 
-#if os(iOS)
 /// #182: photographs the main screens, light and dark, so the look of a change can be seen from
 /// CI without a local simulator (first use: #180, paper ground). Asserts only that each screen is
 /// reached; the pictures are the point. CI exports the attachments named `gallery-*` as the
-/// `DesignGallery` artifact. iOS only: `XCUIDevice` and its appearance do not exist on macOS.
+/// `DesignGallery` artifact.
 final class DesignGalleryTests: XCTestCase {
     private static let tasks = ["Steuerbescheid morgen prüfen", "Anna wegen Sonntag anrufen", "Rasen mähen"]
 
@@ -12,23 +11,18 @@ final class DesignGalleryTests: XCTestCase {
         continueAfterFailure = false
     }
 
-    /// The appearance is device-wide and outlives the test; the other UI tests expect light.
-    override func tearDown() {
-        MainActor.assumeIsolated {
-            XCUIDevice.shared.appearance = .light
-        }
-    }
-
     /// English and freshly seeded contexts, as in `RecognitionWalkthroughTests`: the seeding flag
     /// lives in the user defaults and would leave the in-memory store without contexts otherwise.
+    /// Dark mode comes from `--ui-testing-dark`, read by the app itself: setting
+    /// `XCUIDevice.shared.appearance` left the CI simulator light (first gallery run, #182).
     @MainActor
-    private func launch() -> XCUIApplication {
+    private func launch(dark: Bool) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = [
             "--ui-testing",
             "-AppleLanguages", "(en)", "-AppleLocale", "en_US",
             "-contextsSeeded", "NO",
-        ]
+        ] + (dark ? ["--ui-testing-dark"] : [])
         app.launch()
         return app
     }
@@ -63,9 +57,9 @@ final class DesignGalleryTests: XCTestCase {
 
     /// Start screen (top and scrolled, for the section headers), the New list and a detail.
     @MainActor
-    private func photograph(_ appearance: XCUIDevice.Appearance, as label: String) {
-        XCUIDevice.shared.appearance = appearance
-        let app = launch()
+    private func photograph(dark: Bool) {
+        let label = dark ? "dark" : "light"
+        let app = launch(dark: dark)
         for text in Self.tasks {
             capture(text, in: app)
         }
@@ -92,8 +86,7 @@ final class DesignGalleryTests: XCTestCase {
 
     @MainActor
     func testPhotographMainScreens() throws {
-        photograph(.light, as: "light")
-        photograph(.dark, as: "dark")
+        photograph(dark: false)
+        photograph(dark: true)
     }
 }
-#endif
