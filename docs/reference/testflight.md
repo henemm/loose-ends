@@ -79,7 +79,7 @@ einfügen. Die Datei selbst kommt **nie** ins Repository.
 2. Etwa 15 Minuten bis zum Upload, danach bis zu 45 Minuten Wartezeit im zweiten Job. Der Lauf hat zwei
    Jobs: „Archive and upload (iOS)" grün heißt nur hochgeladen. „Confirm Apple processed the build"
    wartet danach bis zu 45 Minuten und ist erst grün, wenn App Store Connect den Build als `VALID`
-   meldet; sein Protokoll nennt `build=<Nummer> processingState=… uploadedDate=…`.
+   meldet; sein Protokoll nennt `build=<Nummer> processingState=… uploadedDate=… treffer=<k>`.
 3. Zur Kontrolle in der Oberfläche: Unter https://appstoreconnect.apple.com → **Loose Ends → TestFlight** erscheint der Build,
    erst mit "Wird verarbeitet", nach 10 bis 30 Minuten bereit. Die Export-Compliance-Frage
    stellt Apple nicht, das steht schon in der App (keine eigene Verschlüsselung).
@@ -124,10 +124,15 @@ still mit einer älteren oder Beta-Version zu bauen (siehe „Wenn es hakt").
   Entwicklungs-Zertifikat „Created via API" an, dessen privater Schlüssel mit dem Runner verloren
   geht. Der Workflow widerruft diese Zertifikate jetzt selbst (#191, siehe „Was der Workflow tut").
   Ist ein Schritt „Clear …" rot: sein Protokoll lesen (je Zertifikat `aktion=widerruf` oder
-  `bleibt`, Fehler als `::error::`), dann den Lauf einfach neu starten; der Schritt vor dem Archiv
-  räumt nach. Nie von Hand im Entwicklerportal widerrufen.
+  `bleibt`, Fehler als `::error::`). Rot vor dem Archiv („Clear leftover …"): Lauf neu starten,
+  hochgeladen wurde nichts. Rot am Ende („Clear … of this run"): nur ein Hinweis, der Upload-Job
+  bleibt grün und `confirm` prüft den Build trotzdem (#183); der nächste Lauf räumt vor dem Archiv
+  nach. Scheitert das Aufräumen dauerhaft (etwa Schlüssel ohne Admin-Rolle, 401/403), scheitert im
+  nächsten Lauf das Aufräumen vor dem Archiv hart und stoppt den Lauf; dann gilt der folgende Eintrag
+  zu 401/403. Nie von Hand im Entwicklerportal widerrufen.
 - **Schritt „Clear …" rot mit HTTP 401 oder 403**: Schlüssel-ID, Aussteller-ID oder privater
   Schlüssel stimmen nicht, oder der Schlüssel hat nicht die Rolle **Admin** (nötig zum Widerrufen).
+  Das betrifft beide Aufräum-Schritte, also auch einen roten Schritt am Ende eines sonst grünen Laufs.
 - Die Logs jedes Laufs liegen als `testflight-logs` unter dem Lauf in GitHub Actions.
 
 ## Was der Workflow tut
@@ -150,8 +155,13 @@ mit `gh run view <id> --log`); jede Abweichung stoppt den Upload.
 Nach dem Upload läuft der Job `confirm` („Confirm Apple processed the build") auf `ubuntu-latest`.
 Er ruft `scripts/asc_wait_build.py` mit der Lauf-Nummer auf: Das Skript ermittelt über die App
 Store Connect API die App zur Bundle-Kennung, fragt alle 30 Sekunden den Build mit dieser Nummer ab
-und schreibt je Runde `build=<Nummer> processingState=<…> uploadedDate=<…>` ins Protokoll
-(`processingState=nicht-gelistet`, solange Apple ihn noch nicht führt). Grün nur bei `VALID`; rot bei
+und schreibt je Runde `build=<Nummer> processingState=<…> uploadedDate=<…> treffer=<k>` ins Protokoll
+(`processingState=nicht-gelistet treffer=<k>`, solange Apple ihn noch nicht führt). `treffer` ist
+die Zahl der Datensätze, die Apple auf die Abfrage mit `filter[version]` liefert, vor dem eigenen
+Abgleich der Nummer. `k=1` ist bei gesetztem Filter der erwartete Normalfall; `k>1` ist auffällig
+und der Anlass, die Antwort zu prüfen (der Filter greift dann möglicherweise nicht serverseitig, oder
+dieselbe Build-Nummer existiert unter mehreren Versionsnummern). Das Skript gleicht in jedem Fall
+selbst auf `attributes.version` ab. Grün nur bei `VALID`; rot bei
 `INVALID`, `FAILED`, nach 45 Minuten ohne `VALID` und bei abgelehntem Schlüssel. Schlägt nur dieser
 Job fehl, bleibt der Upload-Job grün, der Lauf insgesamt wird rot. Lokal ist die Abfrage nicht
 möglich (der Schlüssel liegt nur in den Secrets); lokal laufen nur die Tests
@@ -159,7 +169,10 @@ möglich (der Schlüssel liegt nur in den Secrets); lokal laufen nur die Tests
 
 Zwei Aufräum-Schritte halten das Zertifikatskonto klein (#191): „Clear leftover development
 certificates" vor dem Archiv (räumt, was frühere Läufe hinterlassen haben) und „Clear the development
-certificates of this run" am Ende, auch wenn vorher etwas fehlschlug. Beide rufen
+certificates of this run" am Ende, auch wenn vorher etwas fehlschlug. Scheitert das Aufräumen am
+Ende, wird nur dieser Schritt als fehlgeschlagen markiert (Fehlermeldung im Protokoll), der
+Upload-Job bleibt grün und `confirm` läuft trotzdem; übrig gebliebene Zertifikate räumt der nächste
+Lauf vor dem Archiv (#183). Scheitert das Aufräumen vor dem Archiv, bricht der Lauf ab. Beide rufen
 `scripts/asc_cleanup_certs.py` auf. Widerrufen wird nur, was den Typ Entwicklung (`DEVELOPMENT`,
 `IOS_DEVELOPMENT`) und genau den Namen „Apple Development: Created via API" trägt (so nennt ihn Apple im Konto, belegt im
 Probelauf 37136927454); Distribution-Zertifikate und Hennings

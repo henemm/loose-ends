@@ -231,6 +231,24 @@ class ScriptTests(unittest.TestCase):
                 self.assertIn(str(status), output)
                 self.assertNotIn("Traceback", output)
 
+    def test_9e_line_counts_records_before_own_filter(self):
+        """AC-9: treffer=<k> ist die Zahl der Datensätze in Apples Antwort, vor dem Filtern auf version."""
+        # Fälle mit Exit 0 enden beim ersten VALID, das Timeout ist nur Obergrenze unter Last;
+        # nur „nur-fremd" wartet das Timeout ab und bleibt deshalb kurz.
+        cases = (("einer", [[build()]], 0, "10",
+                  rf"(?m)^build={BUILD} processingState=VALID uploadedDate=\S+ treffer=1$"),
+                 ("zwei", [[build(version="999"), build()]], 0, "10",
+                  rf"(?m)^build={BUILD} processingState=VALID uploadedDate=\S+ treffer=2$"),
+                 ("leer", [[], [build()]], 0, "10",
+                  rf"(?m)^build={BUILD} processingState=nicht-gelistet treffer=0$"),
+                 ("nur-fremd", [[build(version="999")]], 1, "2",
+                  rf"(?m)^build={BUILD} processingState=nicht-gelistet treffer=1$"))
+        for name, script, code, timeout, line in cases:
+            with self.subTest(case=name):
+                result, _ = self.run_script(script, timeout=timeout)
+                self.assertEqual(result.returncode, code, result.stdout + result.stderr)
+                self.assertRegex(result.stdout, line)
+
     def test_9d_other_4xx_still_fatal(self):
         result, _ = self.run_script([Raw(404, b"{}")])
         self.assertEqual(result.returncode, 1)
@@ -275,6 +293,23 @@ class WorkflowTests(unittest.TestCase):
         self.assertLess(umask, printf)
         self.assertRegex(confirm, r'ASC_KEY_FILE="\$RUNNER_TEMP/[^"]+\.p8"')
         self.assertRegex(confirm, r'> "\$RUNNER_TEMP/[^"]+\.p8"')
+
+    def step(self, job, name):
+        match = re.search(rf"(?m)^      - name: {re.escape(name)}\n((?:(?:        .*)?\n)+)", self.job(job))
+        self.assertIsNotNone(match, f"Schritt {name} fehlt im Job {job}")
+        return match.group(1)
+
+    def test_10_failed_final_cleanup_keeps_upload_green(self):
+        """AC-2/F009: Scheitert das Aufräumen am Ende, bleibt upload grün und confirm läuft trotzdem;
+        das Aufräumen vor dem Archiv bricht weiter ab (nichts hochgeladen)."""
+        final = self.step("upload", "Clear the development certificates of this run")
+        self.assertRegex(final, r"(?m)^        continue-on-error: true$")
+        self.assertRegex(final, r"(?m)^        if: always\(\)$")
+        before = self.step("upload", "Clear leftover development certificates")
+        self.assertNotIn("continue-on-error", before)
+        upload = self.job("upload")
+        self.assertLess(upload.find("- name: Clear leftover development certificates"), upload.find("- name: Archive"))
+        self.assertEqual(len(re.findall(r"(?m)^\s+continue-on-error:", upload)), 1)
 
     def test_10_upload_job_keeps_every_step(self):
         steps = re.findall(r"(?m)^      - (?:name: (.+)|uses: .+)$", self.job("upload"))

@@ -103,6 +103,12 @@ def find_app_id(config):
         time.sleep(config["poll"])
 
 
+def record_count(body):
+    """Zahl der Datensätze in Apples Antwort, vor dem eigenen Filtern auf version (AC-9)."""
+    data = (body or {}).get("data")
+    return len(data) if isinstance(data, list) else 0
+
+
 def build_state(body, number):
     """(processingState, uploadedDate) des Datensatzes mit version == number, sonst None."""
     data = (body or {}).get("data")
@@ -125,12 +131,13 @@ def wait_for_build(config, app_id, number):
     deadline = time.monotonic() + config["timeout"]
     last = "nicht-gelistet"
     while True:
-        found = build_state(get_json(config, path), number)
+        body = get_json(config, path)
+        found, hits = build_state(body, number), record_count(body)
         if found is None:
-            print(f"build={number} processingState=nicht-gelistet", flush=True)
+            print(f"build={number} processingState=nicht-gelistet treffer={hits}", flush=True)
         else:
             last = found[0]
-            print(f"build={number} processingState={found[0]} uploadedDate={found[1]}", flush=True)
+            print(f"build={number} processingState={found[0]} uploadedDate={found[1]} treffer={hits}", flush=True)
             if last == "VALID":
                 return 0
             if last in DONE_BAD:
