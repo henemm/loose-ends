@@ -186,8 +186,12 @@ jobs:
           if-no-files-found: warn
 
       # Revokes what this run created, also when archive, proof or export failed (#191).
+      # continue-on-error: a failed revoke (401/403/5xx, network) marks only this step, so the job
+      # stays green and `confirm` still checks the uploaded build (#183). Leftovers are cleared by
+      # the next run before its archive. The cleanup before the archive keeps failing fast.
       - name: Clear the development certificates of this run
         if: always()
+        continue-on-error: true
         env:
           DRY: ${{ inputs.cleanup_dry_run == true && '--dry-run' || '' }}
         run: |

@@ -1,0 +1,55 @@
+.............FFFF.F...
+======================================================================
+FAIL: test_9e_line_counts_records_before_own_filter (__main__.ScriptTests.test_9e_line_counts_records_before_own_filter) (case='einer')
+AC-9: treffer=<k> ist die Zahl der Datensätze in Apples Antwort, vor dem Filtern auf version.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_wait_build.py", line 246, in test_9e_line_counts_records_before_own_filter
+    self.assertRegex(result.stdout, line)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Regex didn't match: '(?m)^build=42 processingState=VALID uploadedDate=\\S+ treffer=1$' not found in 'build=42 processingState=VALID uploadedDate=2026-10-03T10:00:00+00:00\n'
+
+======================================================================
+FAIL: test_9e_line_counts_records_before_own_filter (__main__.ScriptTests.test_9e_line_counts_records_before_own_filter) (case='zwei')
+AC-9: treffer=<k> ist die Zahl der Datensätze in Apples Antwort, vor dem Filtern auf version.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_wait_build.py", line 246, in test_9e_line_counts_records_before_own_filter
+    self.assertRegex(result.stdout, line)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Regex didn't match: '(?m)^build=42 processingState=VALID uploadedDate=\\S+ treffer=2$' not found in 'build=42 processingState=VALID uploadedDate=2026-10-03T10:00:00+00:00\n'
+
+======================================================================
+FAIL: test_9e_line_counts_records_before_own_filter (__main__.ScriptTests.test_9e_line_counts_records_before_own_filter) (case='leer')
+AC-9: treffer=<k> ist die Zahl der Datensätze in Apples Antwort, vor dem Filtern auf version.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_wait_build.py", line 246, in test_9e_line_counts_records_before_own_filter
+    self.assertRegex(result.stdout, line)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Regex didn't match: '(?m)^build=42 processingState=nicht-gelistet treffer=0$' not found in 'build=42 processingState=nicht-gelistet\nbuild=42 processingState=VALID uploadedDate=2026-10-03T10:00:00+00:00\n'
+
+======================================================================
+FAIL: test_9e_line_counts_records_before_own_filter (__main__.ScriptTests.test_9e_line_counts_records_before_own_filter) (case='nur-fremd')
+AC-9: treffer=<k> ist die Zahl der Datensätze in Apples Antwort, vor dem Filtern auf version.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_wait_build.py", line 246, in test_9e_line_counts_records_before_own_filter
+    self.assertRegex(result.stdout, line)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Regex didn't match: '(?m)^build=42 processingState=nicht-gelistet treffer=1$' not found in 'build=42 processingState=nicht-gelistet\nbuild=42 processingState=nicht-gelistet\nbuild=42 processingState=nicht-gelistet\nbuild=42 processingState=nicht-gelistet\nbuild=42 processingState=nicht-gelistet\nbuild=42 processingState=nicht-gelistet\n::error::Build 42 not VALID after 1 s, last state: nicht-gelistet\n'
+
+======================================================================
+FAIL: test_10_failed_final_cleanup_keeps_upload_green (__main__.WorkflowTests.test_10_failed_final_cleanup_keeps_upload_green)
+AC-2/F009: Scheitert das Aufräumen am Ende, bleibt upload grün und confirm läuft trotzdem;
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/scripts/test_asc_wait_build.py", line 302, in test_10_failed_final_cleanup_keeps_upload_green
+    self.assertRegex(final, r"(?m)^        continue-on-error: true$")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Regex didn't match: '(?m)^        continue-on-error: true$' not found in '        if: always()\n        env:\n          DRY: ${{ inputs.cleanup_dry_run == true && \'--dry-run\' || \'\' }}\n        run: |\n          KEY="$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8"\n          [ -f "$KEY" ] || { echo "No API key stored, nothing to clear"; exit 0; }\n          ASC_KEY_FILE="$KEY" python3 scripts/asc_cleanup_certs.py $DRY\n\n'
+
+----------------------------------------------------------------------
+Ran 19 tests in 52.090s
+
+FAILED (failures=5)
