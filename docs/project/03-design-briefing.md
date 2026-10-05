@@ -101,6 +101,9 @@ Nach dem Öffnen gilt der Marker als gesehen.
 Projekte sind Listen und später die Einheit fürs Teilen. Zeigt Aufgaben des Projekts,
 optional manuell sortiert, mit Unteraufgaben eingerückt oder eingeklappt.
 Hier entscheidet sich, ob Hierarchie gut aussieht (offene Frage 3).
+**Entschieden (Henning, 2026-10-05, #28):** eingeklappt. Eine Aufgabe mit Unteraufgaben trägt vorn
+einen Pfeil und in der Merkmalzeile ihren Fortschritt („2/5“); der Pfeil klappt die Unteraufgaben
+eingerückt darunter auf, ein Tipp hakt eine ab wie im Detail.
 
 ### 7. Kontexte und Projekte verwalten
 
@@ -164,6 +167,7 @@ Sharing-Flows, freie Suche in natürlicher Sprache.
    in der Zeile und am einzelnen Feld funktioniert?
 3. **Hierarchie.** Wie zeigen wir Unteraufgaben und Projekte so, dass es eine Ebene bleibt,
    aber sich nicht nach Checkliste anfühlt? Das war die Bedingung des PO für Hierarchie überhaupt.
+   **Beantwortet (2026-10-05, #28):** eingeklappt, per Pfeil aufklappbar — siehe Screen 6.
 4. **Ungeprüft.** Wie unterscheidet sich Rohtext von Titel, ohne dass die Zeile hässlich wird?
 5. **Mac.** Reicht NavigationSplitView mit Sidebar, oder braucht die Erfassung ein eigenes Panel-Design?
 
