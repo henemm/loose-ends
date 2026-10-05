@@ -87,6 +87,80 @@ import Testing
         #expect((task.contexts ?? []).map(\.name) == ["Telefon"])
     }
 
+    // MARK: - #140: deleting from the catalog leaves a revision
+
+    private func names(_ encoded: String?) throws -> Set<String> {
+        let data = try #require(encoded?.data(using: .utf8))
+        return Set(try JSONDecoder().decode([String].self, from: data))
+    }
+
+    @Test("Deleting a context records a user revision on every task that carried it (#140)")
+    @MainActor func deleteContextWritesRevision() async throws {
+        let store = try TestStore()
+        let garden = TaskContext(name: "Garten")
+        let phone = TaskContext(name: "Telefon")
+        let task = TaskItem(rawText: "Gärtner anrufen")
+        store.context.insert(garden)
+        store.context.insert(phone)
+        store.context.insert(task)
+        task.contexts = [garden, phone]
+        task.contextsSourceRaw = FieldSource.ai.rawValue
+        try store.context.save()
+
+        CatalogService.delete(garden, in: store.context)
+        try store.context.save()
+
+        #expect((task.contexts ?? []).map(\.name) == ["Telefon"], "the other tag stays")
+        let revision = try #require(task.revisions?.first { $0.field == .contexts })
+        #expect(revision.author == .user)
+        #expect(try names(revision.oldValue) == ["Garten", "Telefon"], "the removed tag is kept in the history")
+        #expect(try names(revision.newValue) == ["Telefon"])
+        #expect(EnrichmentWriter.userHasTouched(.contexts, on: task), "the field now counts as the user's")
+    }
+
+    @Test("A task losing its only context records the emptying as a user revision (#140)")
+    @MainActor func deleteOnlyContextWritesRevision() async throws {
+        let store = try TestStore()
+        let garden = TaskContext(name: "Garten")
+        let task = TaskItem(rawText: "Rasen mähen")
+        store.context.insert(garden)
+        store.context.insert(task)
+        task.contexts = [garden]
+        try store.context.save()
+
+        CatalogService.delete(garden, in: store.context)
+        try store.context.save()
+
+        #expect((task.contexts ?? []).isEmpty)
+        #expect(task.contextsSourceRaw == nil)
+        let revision = try #require(task.revisions?.first { $0.field == .contexts })
+        #expect(try names(revision.oldValue) == ["Garten"])
+        #expect(try names(revision.newValue).isEmpty)
+        #expect(EnrichmentWriter.userHasTouched(.contexts, on: task))
+    }
+
+    @Test("Deleting a project records a user revision on every task in it (#140)")
+    @MainActor func deleteProjectWritesRevision() async throws {
+        let store = try TestStore()
+        let house = Project(name: "Haus")
+        let task = TaskItem(rawText: "Dachrinne reinigen")
+        let untouched = TaskItem(rawText: "Steuer")
+        store.context.insert(house)
+        store.context.insert(task)
+        store.context.insert(untouched)
+        task.project = house
+        try store.context.save()
+
+        CatalogService.delete(house, in: store.context)
+        try store.context.save()
+
+        let revision = try #require(task.revisions?.first { $0.field == .project })
+        #expect(revision.author == .user)
+        #expect(revision.oldValue == "Haus")
+        #expect(revision.newValue == nil)
+        #expect((untouched.revisions ?? []).isEmpty, "a task outside the project gets no revision")
+    }
+
     // MARK: - #157: context names are unique
 
     private func thrownError(_ body: () throws -> Void) -> CatalogError? {
