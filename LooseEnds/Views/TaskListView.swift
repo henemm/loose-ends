@@ -16,6 +16,10 @@ struct TaskListView: View {
 
     @State private var pendingDelete: TaskItem?
     @State private var confirmingDelete = false
+    /// Parents whose subtasks are folded out in the project view (#28); folded by default.
+    @State private var unfolded: Set<UUID> = []
+    /// The disclosure arrow's width, so titles line up with and without one.
+    @ScaledMetric(relativeTo: .body) private var disclosureWidth: CGFloat = 22
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "List")
 
     /// The system kind, nil for a context or project view.
@@ -56,6 +60,8 @@ struct TaskListView: View {
         List {
             if kind == .done {
                 doneSections
+            } else if project != nil {
+                projectRows
             } else if kind == .new {
                 reviewSections
             } else {
@@ -149,6 +155,97 @@ struct TaskListView: View {
             row(task)
         }
         .onMove(perform: move)
+    }
+
+    /// A project: its tasks, each with an arrow when it has subtasks; the arrow folds them out
+    /// indented below (#28). Subtasks are plain lines here as in the detail: a tap checks one off.
+    @ViewBuilder
+    private var projectRows: some View {
+        if let project {
+            ForEach(ViewRules.lines(inProject: project, in: tasks, unfolded: unfolded)) { line in
+                switch line {
+                case .task(let task): projectTaskRow(task)
+                case .subtask(let subtask, _): subtaskRow(subtask)
+                }
+            }
+        }
+    }
+
+    private func projectTaskRow(_ task: TaskItem) -> some View {
+        HStack(spacing: 4) {
+            disclosure(task)
+            NavigationLink {
+                TaskDetailView(task: task)
+            } label: {
+                TaskRow(task: task, note: note(for: task))
+            }
+        }
+        .swipeActions(edge: .leading, allowsFullSwipe: true) { leadingActions(task) }
+        .swipeActions(edge: .trailing, allowsFullSwipe: true) { trailingActions(task) }
+        .contextMenu { menu(task) }
+        .paperRow()
+    }
+
+    /// The arrow, or its empty width for a task without subtasks. A deleted task can be drawn once
+    /// more while the list animates it out, and reading it then traps (#194, see `TaskRow`).
+    @ViewBuilder
+    private func disclosure(_ task: TaskItem) -> some View {
+        if task.isDeleted || task.modelContext == nil || (task.subtasks ?? []).isEmpty {
+            Color.clear.frame(width: disclosureWidth, height: 1)
+        } else {
+            let open = unfolded.contains(task.id)
+            Button {
+                withAnimation(.snappy) {
+                    if open { unfolded.remove(task.id) } else { unfolded.insert(task.id) }
+                }
+            } label: {
+                Image(systemName: "chevron.right")
+                    .rotationEffect(.degrees(open ? 90 : 0))
+                    .imageScale(.small)
+                    .frame(width: disclosureWidth, height: disclosureWidth)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.borderless)
+            .accessibilityLabel(open ? Text("Hide subtasks") : Text("Show subtasks"))
+            .accessibilityIdentifier("disclosure_\(task.id.uuidString)")
+        }
+    }
+
+    @ViewBuilder
+    private func subtaskRow(_ subtask: TaskItem) -> some View {
+        // Same guard as `TaskRow`: a line deleted with its parent can still be drawn once (#194).
+        if subtask.isDeleted || subtask.modelContext == nil {
+            EmptyView()
+        } else {
+            subtaskLine(subtask)
+        }
+    }
+
+    private func subtaskLine(_ subtask: TaskItem) -> some View {
+        let done = subtask.status == .done
+        return Button {
+            Subtasks.toggle(subtask)
+            save("toggle subtask")
+        } label: {
+            HStack(spacing: 10) {
+                Image(systemName: done ? "checkmark.circle.fill" : "circle")
+                    .foregroundStyle(done ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
+                    .accessibilityHidden(true)
+                Text(subtask.displayTitle)
+                    .fontDesign(.serif)
+                    .strikethrough(done)
+                    .foregroundStyle(done ? AnyShapeStyle(.secondary) : AnyShapeStyle(.primary))
+                    .lineLimit(1)
+                Spacer()
+            }
+            .padding(.leading, disclosureWidth + 4)
+            .contentShape(Rectangle())
+            .accessibilityElement(children: .combine)
+        }
+        .buttonStyle(.plain)
+        .accessibilityValue(done ? Text("Completed") : Text("Open"))
+        .accessibilityIdentifier("projectSubtask_\(subtask.id.uuidString)")
+        .paperRow()
     }
 
     private func row(_ task: TaskItem) -> some View {

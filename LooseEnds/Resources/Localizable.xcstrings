@@ -176,6 +176,8 @@
     "These contexts come with the app. Rename, delete or add your own on the start screen." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Diese Kontexte bringt die App mit. Auf dem Startbildschirm kannst du sie umbenennen, löschen oder eigene hinzufügen." } } } },
     "Apple Intelligence is off. Turn it on in Settings so new tasks get a title and a duration." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Apple Intelligence ist aus. Schalte es in den Einstellungen ein, damit neue Aufgaben Titel und Dauer bekommen." } } } },
     "Apple Intelligence is still getting ready. Tasks captured meanwhile are sorted once it is." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Apple Intelligence wird noch vorbereitet. Was du bis dahin erfasst, wird danach sortiert." } } } },
-    "This device has no Apple Intelligence. Tasks keep the words you said; due dates, importance and urgency are still found." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Dieses Gerät hat kein Apple Intelligence. Aufgaben behalten deine Worte; Fälligkeit, Wichtigkeit und Dringlichkeit werden trotzdem erkannt." } } } }
+    "This device has no Apple Intelligence. Tasks keep the words you said; due dates, importance and urgency are still found." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Dieses Gerät hat kein Apple Intelligence. Aufgaben behalten deine Worte; Fälligkeit, Wichtigkeit und Dringlichkeit werden trotzdem erkannt." } } } },
+    "Show subtasks" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Unteraufgaben zeigen" } } } },
+    "Hide subtasks" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Unteraufgaben ausblenden" } } } }
   }
 }

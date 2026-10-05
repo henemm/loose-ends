@@ -84,6 +84,29 @@ enum ViewRules {
             .sorted(by: byUrgencyThenImportance)
     }
 
+    /// One line of the project view (#28): a task, or one of its subtasks folded out below it.
+    enum ProjectLine: Identifiable {
+        case task(TaskItem)
+        case subtask(TaskItem, parent: TaskItem)
+
+        var id: UUID {
+            switch self {
+            case .task(let task): task.id
+            case .subtask(let subtask, _): subtask.id
+            }
+        }
+    }
+
+    /// The project view with its subtasks (#28, design briefing open question 3): folded by default,
+    /// so the list stays one level and does not read as a checklist. An unfolded parent shows its
+    /// subtasks right below it, in capture order and checked ones included, as in the detail.
+    static func lines(inProject project: Project, in all: [TaskItem], unfolded: Set<UUID>) -> [ProjectLine] {
+        tasks(inProject: project, in: all).flatMap { task -> [ProjectLine] in
+            guard unfolded.contains(task.id) else { return [.task(task)] }
+            return [.task(task)] + Subtasks.ordered(of: task).map { .subtask($0, parent: task) }
+        }
+    }
+
     /// How often the user pushed the due date to a later day. The first due date, pulling a task
     /// forward and the AI's guesses do not count (design briefing, screen 11).
     static func postponeCount(_ task: TaskItem) -> Int {
