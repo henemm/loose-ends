@@ -31,6 +31,21 @@ enum ImportanceUrgencyRule {
         return EnrichmentDraft.Guess(.high, confidence: confidence, reason: signal.reason)
     }
 
+    /// Where the keyword behind `matchImportance` stands, for marking it in the field editor (#101).
+    static func importanceTrigger(in text: String) -> Range<String.Index>? {
+        ImportanceSignal.allCases.lazy.compactMap { firstRange(of: $0.keywords, in: text) }.first
+    }
+
+    /// Where the keyword behind `matchUrgency` stands (#101).
+    static func urgencyTrigger(in text: String) -> Range<String.Index>? {
+        UrgencySignal.allCases.lazy.compactMap { firstRange(of: $0.keywords, in: text) }.first
+    }
+
+    /// The keyword of this signal that stands earliest in the text.
+    private static func firstRange(of keywords: [String], in text: String) -> Range<String.Index>? {
+        keywords.compactMap { range(of: $0, in: text) }.min { $0.lowerBound < $1.lowerBound }
+    }
+
     /// Declaration order is the priority order when a note carries several signals of one field, so
     /// the same text always yields the same reason.
     private enum ImportanceSignal: CaseIterable {
@@ -90,6 +105,10 @@ enum ImportanceUrgencyRule {
     /// keyword that starts or ends with a symbol ("€") gets no boundary on that side — "250€" is
     /// one word to the regex engine.
     private static func contains(_ keyword: String, in text: String) -> Bool {
+        range(of: keyword, in: text) != nil
+    }
+
+    private static func range(of keyword: String, in text: String) -> Range<String.Index>? {
         var pattern = NSRegularExpression.escapedPattern(for: keyword)
         if keyword.first?.isLetter == true || keyword.first?.isNumber == true {
             pattern = "(?<![\\p{L}\\p{N}])" + pattern
@@ -97,6 +116,6 @@ enum ImportanceUrgencyRule {
         if keyword.last?.isLetter == true || keyword.last?.isNumber == true {
             pattern += "(?![\\p{L}\\p{N}])"
         }
-        return text.range(of: pattern, options: [.regularExpression, .caseInsensitive]) != nil
+        return text.range(of: pattern, options: [.regularExpression, .caseInsensitive])
     }
 }

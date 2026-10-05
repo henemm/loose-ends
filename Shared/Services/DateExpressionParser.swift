@@ -49,6 +49,24 @@ enum ExpressionText {
         return words
     }
 
+    /// Where each word of `words(in:)` stands in the original, unfolded text (#101). Same split
+    /// rule; folding keeps letters letters, so the indices line up.
+    static func wordRanges(in text: String) -> [Range<String.Index>] {
+        var ranges: [Range<String.Index>] = []
+        var start: String.Index?
+        for index in text.indices {
+            let character = text[index]
+            if character.isLetter || character.isNumber {
+                if start == nil { start = index }
+            } else if let begin = start {
+                ranges.append(begin..<index)
+                start = nil
+            }
+        }
+        if let begin = start { ranges.append(begin..<text.endIndex) }
+        return ranges
+    }
+
     static func word(_ words: [ExpressionWord], _ index: Int) -> String {
         words.indices.contains(index) ? words[index].text : ""
     }
@@ -80,19 +98,28 @@ struct DateExpressionParser: Sendable {
     /// The earliest expression in the text; on a tie the more specific rule wins
     /// (dayAndMonth > dayOfMonth > weekdayNextWeek > weekdayEitherNext > weekday).
     func expression(in text: String) -> DateExpression? {
-        let words = ExpressionText.words(in: text)
+        Self.best(in: ExpressionText.words(in: text))?.expression
+    }
+
+    /// The word indices of the expression `expression(in:)` picks, for marking the trigger in the
+    /// field editor (#101). Indices into `ExpressionText.words`, which `ExpressionText.wordRanges`
+    /// maps back onto the original text.
+    func span(in text: String) -> Range<Int>? {
+        Self.best(in: ExpressionText.words(in: text)).map { $0.index..<($0.index + $0.count) }
+    }
+
+    private static func best(in words: [ExpressionWord]) -> Candidate? {
         var candidates: [Candidate] = []
         for index in words.indices {
-            candidates += [Self.offsetMatch(at: index, in: words),
-                           Self.weekdayMatch(at: index, in: words),
-                           Self.monthMatch(at: index, in: words),
-                           Self.numberMatch(at: index, in: words),
-                           Self.weekendMatch(at: index, in: words)].compactMap { $0 }
+            candidates += [offsetMatch(at: index, in: words),
+                           weekdayMatch(at: index, in: words),
+                           monthMatch(at: index, in: words),
+                           numberMatch(at: index, in: words),
+                           weekendMatch(at: index, in: words)].compactMap { $0 }
         }
         return candidates
-            .filter { !Self.isRepetition(before: $0.index, in: words) }
-            .min { ($0.index, -$0.priority) < ($1.index, -$1.priority) }?
-            .expression
+            .filter { !isRepetition(before: $0.index, in: words) }
+            .min { ($0.index, -$0.priority) < ($1.index, -$1.priority) }
     }
 
     /// The one day the parser stands behind. Ambiguous wording still resolves to a single day:
@@ -122,6 +149,8 @@ struct DateExpressionParser: Sendable {
         let index: Int
         let priority: Int
         let expression: DateExpression
+        /// How many words the expression spans from `index`; only the trigger marking reads it (#101).
+        var count = 1
     }
 
     private static let weekdays: [String: Int] = [
@@ -157,15 +186,15 @@ struct DateExpressionParser: Sendable {
         let text = ExpressionText.word(words, index)
         if text == "day", ExpressionText.word(words, index + 1) == "after",
            ExpressionText.word(words, index + 2) == "tomorrow" {
-            return Candidate(index: index, priority: 4, expression: .offsetDays(2))
+            return Candidate(index: index, priority: 4, expression: .offsetDays(2), count: 3)
         }
         if let days = relativeDays[text] {
             return Candidate(index: index, priority: 4, expression: .offsetDays(days))
         }
         guard text == "in", let count = ExpressionText.number(ExpressionText.word(words, index + 1)) else { return nil }
         let unit = ExpressionText.word(words, index + 2)
-        if dayUnits.contains(unit) { return Candidate(index: index, priority: 4, expression: .offsetDays(count)) }
-        if weekUnits.contains(unit) { return Candidate(index: index, priority: 4, expression: .offsetDays(count * 7)) }
+        if dayUnits.contains(unit) { return Candidate(index: index, priority: 4, expression: .offsetDays(count), count: 3) }
+        if weekUnits.contains(unit) { return Candidate(index: index, priority: 4, expression: .offsetDays(count * 7), count: 3) }
         return nil
     }
 
@@ -175,10 +204,10 @@ struct DateExpressionParser: Sendable {
         guard let weekday = weekdays[ExpressionText.word(words, index)] else { return nil }
         let previous = ExpressionText.word(words, index - 1)
         if previous == "woche", nextWords.contains(ExpressionText.word(words, index - 2)) {
-            return Candidate(index: index - 2, priority: 3, expression: .weekdayNextWeek(weekday))
+            return Candidate(index: index - 2, priority: 3, expression: .weekdayNextWeek(weekday), count: 3)
         }
         if nextWords.contains(previous) {
-            return Candidate(index: index - 1, priority: 2, expression: .weekdayEitherNext(weekday))
+            return Candidate(index: index - 1, priority: 2, expression: .weekdayEitherNext(weekday), count: 2)
         }
         return Candidate(index: index, priority: 1, expression: .weekday(weekday))
     }
@@ -188,19 +217,19 @@ struct DateExpressionParser: Sendable {
         let following = ExpressionText.word(words, index + 1)
         if text == "monatsende" { return Candidate(index: index, priority: 4, expression: .endOfMonth) }
         if text == "ende", following == "des", ExpressionText.word(words, index + 2) == "monats" {
-            return Candidate(index: index, priority: 4, expression: .endOfMonth)
+            return Candidate(index: index, priority: 4, expression: .endOfMonth, count: 3)
         }
         if text == "end", following == "of" {
             let rest = ExpressionText.word(words, index + 2) == "the" ? index + 3 : index + 2
             if ExpressionText.word(words, rest) == "month" {
-                return Candidate(index: index, priority: 4, expression: .endOfMonth)
+                return Candidate(index: index, priority: 4, expression: .endOfMonth, count: rest - index + 1)
             }
         }
         if nextWords.contains(text), ["monat", "monats", "month"].contains(following) {
-            return Candidate(index: index, priority: 4, expression: .monthRange(1))
+            return Candidate(index: index, priority: 4, expression: .monthRange(1), count: 2)
         }
         if let month = months[text], let day = ordinal(following), (1...31).contains(day) {
-            return Candidate(index: index, priority: 5, expression: .dayAndMonth(day: day, month: month))
+            return Candidate(index: index, priority: 5, expression: .dayAndMonth(day: day, month: month), count: 2)
         }
         return nil
     }
@@ -211,7 +240,7 @@ struct DateExpressionParser: Sendable {
         guard words.indices.contains(index) else { return nil }
         guard let value = ordinal(words[index]), (1...31).contains(value) else { return nil }
         if let month = months[ExpressionText.word(words, index + 1)] {
-            return Candidate(index: index, priority: 5, expression: .dayAndMonth(day: value, month: month))
+            return Candidate(index: index, priority: 5, expression: .dayAndMonth(day: value, month: month), count: 2)
         }
         let previous = ExpressionText.word(words, index - 1)
         let english = previous == "the" && ["by", "on"].contains(ExpressionText.word(words, index - 2))

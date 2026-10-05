@@ -4,8 +4,9 @@ import SwiftUI
 
 /// Task detail (design briefing, screen 4): editable title, the raw text underneath while it says
 /// more than the title, then the fields that are set; empty ones wait behind "Add detail" (#187).
-/// Tapping a row opens its editor; a field the AI set is accent-tinted with the spark and its
-/// editor also shows before, after, the reason and Reset. Opening the detail marks the AI changes
+/// Tapping a row opens its editor; a field a rule read from the raw text carries »«, one the AI
+/// estimated the spark (#101), both accent-tinted, and its editor also shows before, after, the
+/// reason and Reset. Opening the detail marks the AI changes
 /// as seen. The bar carries Complete and the briefing's menu (Next up, Park, Analyze again).
 struct TaskDetailView: View {
     @Environment(\.modelContext) private var modelContext
@@ -119,8 +120,9 @@ struct TaskDetailView: View {
             if !aiFields.isEmpty {
                 Section {
                     HStack {
-                        Text(aiFields.count == 1 ? String(localized: "One field set by AI") : String(localized: "\(aiFields.count) fields set by AI"))
+                        Text(originSummary)
                             .foregroundStyle(.secondary)
+                            .accessibilityIdentifier("originSummary")
                         Spacer()
                         Button("Show") { showsRevisions = true }
                             .accessibilityIdentifier("revisionsButton")
@@ -153,6 +155,16 @@ struct TaskDetailView: View {
         .sheet(isPresented: $showsRevisions) {
             RevisionsSheet(task: task, contexts: contexts, projects: projects)
         }
+    }
+
+    /// "2 from your words · 2 from AI" (#101); a part with nothing in it is left out.
+    private var originSummary: String {
+        let read = aiFields.filter { RevisionService.origin(of: $0, on: task) == .rule }.count
+        let estimated = aiFields.count - read
+        var parts: [String] = []
+        if read > 0 { parts.append(String(localized: "\(read) from your words")) }
+        if estimated > 0 { parts.append(String(localized: "\(estimated) from AI")) }
+        return parts.joined(separator: " · ")
     }
 
     /// Every derived field in its fixed order, with its display value or nil.
@@ -278,19 +290,27 @@ struct TaskDetailView: View {
     /// Label left, value right. Empty fields stay empty (no placeholder nudging for input).
     @ViewBuilder
     private func fieldRow(_ field: RevisedField, value: String?) -> some View {
-        let fromAI = aiFields.contains(field)
+        let origin = aiFields.contains(field) ? RevisionService.origin(of: field, on: task) : nil
         let row = HStack {
             Text(FieldFormatting.label(field))
             Spacer()
             if let value {
                 Text(value)
-                    .foregroundStyle(fromAI ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
+                    .foregroundStyle(origin != nil ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
             }
-            if fromAI {
+            switch origin {
+            case .rule:
+                Text(verbatim: "»«")
+                    .font(.footnote)
+                    .foregroundStyle(.tint)
+                    .accessibilityLabel("From your words")
+            case .ai:
                 Image(systemName: "sparkle")
                     .imageScale(.small)
                     .foregroundStyle(.tint)
-                    .accessibilityLabel("Set by AI")
+                    .accessibilityLabel("Estimated by AI")
+            case .user, nil:
+                EmptyView()
             }
         }
         .accessibilityElement(children: .combine)

@@ -3,8 +3,9 @@ import SwiftData
 import SwiftUI
 
 /// One field, one screen (design briefing, screen 4, "Ändern"): the control for the value and,
-/// when the AI set this field, what it changed plus "Reset". Every change is a user revision and
-/// therefore a learning example (ADR-5, ADR-6).
+/// when a rule or the AI set this field, what it changed plus "Reset" — "From your words" with the
+/// trigger marked in the raw text, or "Estimated by Apple Intelligence" (#101). Every change is a
+/// user revision and therefore a learning example (ADR-5, ADR-6).
 struct FieldEditorView: View {
     @Environment(\.modelContext) private var modelContext
     @Bindable var task: TaskItem
@@ -18,7 +19,7 @@ struct FieldEditorView: View {
     @State private var energyDragging = false
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Detail")
 
-    private var aiRevision: Revision? {
+    private var automaticRevision: Revision? {
         guard RevisionService.automaticFields(on: task).contains(field) else { return nil }
         return RevisionService.firstAutomaticRevision(of: field, on: task)
     }
@@ -28,15 +29,11 @@ struct FieldEditorView: View {
             Section {
                 control
             }
-            if let revision = aiRevision {
-                Section("Set by AI") {
-                    LabeledContent("Before", value: FieldFormatting.value(revision.oldValue, for: field) ?? String(localized: "Empty"))
-                    LabeledContent("After", value: FieldFormatting.value(revision.newValue, for: field) ?? String(localized: "Empty"))
-                    if let reason = revision.reason, !reason.isEmpty {
-                        Text(reason).foregroundStyle(.secondary)
-                    }
-                    Button("Reset") { reset(revision) }
-                        .accessibilityIdentifier("resetRevisionButton")
+            if let revision = automaticRevision {
+                if RevisionService.origin(of: field, on: task) == .rule {
+                    fromYourWords(revision)
+                } else {
+                    estimated(revision)
                 }
             }
         }
@@ -50,6 +47,61 @@ struct FieldEditorView: View {
             energyPosition = Double(task.energy?.rawValue ?? 0)
         }
         .onDisappear { if field == .people { commitPeople() } }
+    }
+
+    // MARK: - Origin (#101)
+
+    /// Read, not guessed: the raw text with the trigger marked, before and after, the rule's sentence.
+    private func fromYourWords(_ revision: Revision) -> some View {
+        Section {
+            Text(Self.marked(task.rawText, trigger: RuleTrigger.range(of: field, in: task.rawText)))
+                .italic()
+                .fontDesign(.serif)
+                .accessibilityIdentifier("originRawText")
+            beforeAfter(revision)
+            Button("Reset") { reset(revision) }
+                .accessibilityIdentifier("resetRevisionButton")
+        } header: {
+            Label { Text("From your words") } icon: { Text(verbatim: "»«") }
+                .foregroundStyle(.tint)
+                .accessibilityIdentifier("originRuleHeader")
+        } footer: {
+            if let reason = revision.reason, !reason.isEmpty { Text(reason) }
+        }
+    }
+
+    private func estimated(_ revision: Revision) -> some View {
+        Section {
+            beforeAfter(revision)
+            if let reason = revision.reason, !reason.isEmpty {
+                Text(reason).foregroundStyle(.secondary)
+            }
+            Button("Reset") { reset(revision) }
+                .accessibilityIdentifier("resetRevisionButton")
+        } header: {
+            Label("Estimated by Apple Intelligence", systemImage: "sparkle")
+                .foregroundStyle(.tint)
+                .accessibilityIdentifier("originAIHeader")
+        } footer: {
+            Text("Estimated, not read – worth a look.")
+        }
+    }
+
+    @ViewBuilder
+    private func beforeAfter(_ revision: Revision) -> some View {
+        LabeledContent("Before", value: FieldFormatting.value(revision.oldValue, for: field) ?? String(localized: "Empty"))
+        LabeledContent("After", value: FieldFormatting.value(revision.newValue, for: field) ?? String(localized: "Empty"))
+    }
+
+    /// The trigger in the primary colour on a light accent wash, the rest as the raw text stands.
+    private static func marked(_ text: String, trigger: Range<String.Index>?) -> AttributedString {
+        var attributed = AttributedString(text)
+        guard let trigger,
+              let lower = AttributedString.Index(trigger.lowerBound, within: attributed),
+              let upper = AttributedString.Index(trigger.upperBound, within: attributed) else { return attributed }
+        attributed[lower..<upper].backgroundColor = Color.accentColor.opacity(0.16)
+        attributed[lower..<upper].inlinePresentationIntent = .stronglyEmphasized
+        return attributed
     }
 
     // MARK: - Controls
