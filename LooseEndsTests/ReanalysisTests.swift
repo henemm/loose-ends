@@ -111,7 +111,8 @@ import Testing
 
         #expect(result == .finished(changed: 1, modelRan: true))
         #expect((task.contexts ?? []).map(\.name) == ["Garten"])
-        #expect(revisions(of: .contexts, on: task).last?.oldValue == nil)
+        // The writer encodes an empty list as "[]", the first run included; the rule step writes nil.
+        #expect(revisions(of: .contexts, on: task).last?.oldValue == EnrichmentWriter.encode([]))
         #expect(task.title == "Zettel sortieren")
         #expect(task.duration == .minutes15)
     }
