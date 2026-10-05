@@ -20,6 +20,7 @@ sind daher meist nur Zeitverlust.
 | Liste | Wisch rechts/links, Halten-Menü mit Verschieben, Parken, Löschen; Merkmalzeile; Drag-Sortierung in Als nächstes; Alt mit Alter und Verschiebungen; Erledigt nach Tagen; Projekt mit eingeklappten Unteraufgaben, per Pfeil aufklappbar und abhakbar (#28) | `LooseEnds/Views/TaskListView.swift`, `TaskRow.swift`, `Shared/Services/TaskActions.swift` |
 | Detail | Titel, Rohtext, Felder mit Editor, KI-Vorher/Nachher, Zurücksetzen, Änderungen-Sheet, Wiederholung, Unteraufgaben (eine Ebene, abhakbar), Im Kalender anzeigen | `LooseEnds/Views/TaskDetailView.swift`, `FieldEditorView.swift`, `SubtasksSection.swift`, `Shared/Services/RevisionService.swift`, `FieldCodec.swift`, `Subtasks.swift` |
 | Startscreen | Systemansichten mit Zähler, Projekte und Kontexte anlegen, umbenennen, löschen | `LooseEnds/Views/SidebarView.swift`, `Shared/Services/CatalogService.swift` |
+| Onboarding | Drei überspringbare Schritte beim ersten Start je Gerät: Siri-Satz, Mitteilungen erlauben, Startset der Kontexte; Hinweis, wenn Apple Intelligence fehlt (#29) | `LooseEnds/Views/OnboardingView.swift`, `OnboardingFlow.swift` |
 | Mitteilung | "Heute fällig" um 9 Uhr mit Erledigt, Als nächstes, Morgen | `Shared/Notifications`, `LooseEnds/Notifications` |
 | Kalender | Eigener Kalender "Loose Ends", ein Termin je Aufgabe mit Schalter und Fälligkeit, Abgleich nach jedem Speichern | `Shared/Services/CalendarSync.swift`, `LooseEnds/Calendar/CalendarBridge.swift` |
 | Auslieferung | CI (Unit, iOS-Build, UI-Smoke, Design-Galerie hell/dunkel als Artefakt `DesignGallery`, #182), TestFlight-Workflow, Anleitung | `.github/workflows`, `docs/reference/testflight.md` |
@@ -122,7 +123,6 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
 
 5. [#25](https://github.com/henemm/loose-ends/issues/25) Siri über das Reminders-App-Schema (Must) — braucht Xcode 27 in der CI, bis dahin reicht die Shortcut-Phrase "Add to Loose Ends"
 6. [#27](https://github.com/henemm/loose-ends/issues/27) Abhängigkeiten über Private Cloud Compute (`blockedBy`)
-8. [#29](https://github.com/henemm/loose-ends/issues/29) Onboarding-Screen (Screen 12)
 9. [#30](https://github.com/henemm/loose-ends/issues/30) Mac-Teilen-Erweiterung
 10. [#31](https://github.com/henemm/loose-ends/issues/31) Kachel-Optik verfeinern
 11. [#32](https://github.com/henemm/loose-ends/issues/32) Drei Sekunden abbrechbares Erledigt
