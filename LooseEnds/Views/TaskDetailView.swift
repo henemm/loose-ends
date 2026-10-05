@@ -30,7 +30,7 @@ struct TaskDetailView: View {
     @State private var reanalysis: Reanalysis?
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Detail")
 
-    private var aiFields: [RevisedField] { RevisionService.aiSetFields(on: task) }
+    private var aiFields: [RevisedField] { RevisionService.automaticFields(on: task) }
 
     var body: some View {
         Form {
@@ -314,7 +314,7 @@ struct TaskDetailView: View {
     /// One tap back to the value before the AI touched the title (Bug #125). `titleDraft` only
     /// follows `task.title` in `.onAppear`, so it is pulled along here.
     private func resetTitle() {
-        guard let revision = RevisionService.firstAIRevision(of: .title, on: task) else { return }
+        guard let revision = RevisionService.firstAutomaticRevision(of: .title, on: task) else { return }
         RevisionService.revert(revision, on: task, contexts: contexts, projects: projects)
         titleDraft = task.title ?? ""
         save("title reset")
@@ -356,7 +356,7 @@ struct RevisionsSheet: View {
                         Spacer()
                         Text(FieldFormatting.author(revision.author))
                             .font(.caption)
-                            .foregroundStyle(revision.author == .ai ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
+                            .foregroundStyle(revision.author.isAutomatic ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
                     }
                     Text("\(FieldFormatting.value(revision.oldValue, for: revision.field) ?? String(localized: "Empty")) → \(FieldFormatting.value(revision.newValue, for: revision.field) ?? String(localized: "Empty"))")
                     if let reason = revision.reason, !reason.isEmpty {
@@ -367,7 +367,7 @@ struct RevisionsSheet: View {
                             .font(.caption2)
                             .foregroundStyle(.secondary)
                         Spacer()
-                        if revision.author == .ai {
+                        if revision.author.isAutomatic {
                             Button("Reset") { revert(revision) }
                                 .font(.caption)
                                 .accessibilityIdentifier("resetRevision_\(revision.id.uuidString)")
@@ -385,7 +385,7 @@ struct RevisionsSheet: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Reset all", action: revertAll)
-                        .disabled(RevisionService.aiSetFields(on: task).isEmpty)
+                        .disabled(RevisionService.automaticFields(on: task).isEmpty)
                         .accessibilityIdentifier("resetAllButton")
                 }
                 ToolbarItem(placement: .confirmationAction) {

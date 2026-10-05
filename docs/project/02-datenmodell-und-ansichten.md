@@ -39,7 +39,7 @@
 
 ### Abgeleitete Felder auf Task
 
-Jedes dieser Felder existiert dreifach: Wert, `…Source` (enum FieldSource: ai, user), `…Confidence` (Double 0…1).
+Jedes dieser Felder existiert dreifach: Wert, `…Source` (enum FieldSource: ai, user, rule — `rule` = aus den Worten des Nutzers gelesen, `ai` = vom Modell geschätzt; vor #101 trugen Regelwerte `ai`), `…Confidence` (Double 0…1).
 Leerer Wert bedeutet: nicht gesetzt oder unter Schwelle.
 
 | Feld | Typ | Werte |
@@ -83,7 +83,7 @@ Startset: Computer, Telefon, Haus, Garten, Unterwegs, Besorgung. Alle löschbar 
 | field | enum RevisedField | title, dueDate, importance, urgency, duration, energy, contexts, people, project, blockedBy, repeatRule |
 | oldValue | String? | JSON-kodiert |
 | newValue | String? | JSON-kodiert |
-| author | enum FieldSource | ai, user |
+| author | enum FieldSource | ai, user, rule (#101) |
 | reason | String? | Modellbegründung, ein Satz |
 | createdAt | Date | |
 

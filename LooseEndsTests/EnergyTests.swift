@@ -30,7 +30,7 @@ private final class EnergyBundleMarker {}
             #expect(task.energy == nil)
             #expect(FieldCodec.encode(.energy, of: task) == nil)
             #expect(FieldFormatting.value(task.energyRaw, for: .energy) == nil)
-            #expect(!RevisionService.aiSetFields(on: task).contains(.energy), "no spark on an empty field")
+            #expect(!RevisionService.automaticFields(on: task).contains(.energy), "no spark on an empty field")
         }
     }
 

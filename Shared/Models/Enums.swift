@@ -13,9 +13,19 @@ enum CaptureChannel: String, Codable, CaseIterable, Sendable {
     case siri, watch, control, share, mail, app, actionButton
 }
 
-/// Who set a derived field last.
+/// Who set a derived field last. `rule` is read from the user's own words (`DueDateRule`,
+/// `ImportanceUrgencyRule`, `RecognitionRule`), `ai` is guessed by the model (#101). Values a rule
+/// set before #101 carry `ai` and stay readable as such.
 enum FieldSource: String, Codable, Sendable {
-    case ai, user
+    case ai, user, rule
+
+    /// Set without the user: what the detail marks and the user can reset.
+    var isAutomatic: Bool { self != .user }
+
+    /// For the raw `*SourceRaw` columns; nil and unknown text are not automatic.
+    static func isAutomatic(_ raw: String?) -> Bool {
+        raw.flatMap(FieldSource.init(rawValue:))?.isAutomatic ?? false
+    }
 }
 
 enum Importance: String, Codable, CaseIterable, Sendable { case low, medium, high }

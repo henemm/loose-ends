@@ -2,8 +2,8 @@ import Foundation
 
 /// Recognising a raw text that was captured before (#136, ADR-5 as rewritten on 2026-09-27):
 /// learning is recognition, not training. A task whose raw text carries the same normalised word set
-/// as an earlier one takes over that one's **contexts and duration** — silently, confidence 1.0, AI
-/// marker, one `Revision` per field, written by `EnrichmentCoordinator`.
+/// as an earlier one takes over that one's **contexts and duration** — silently, confidence 1.0, rule
+/// marker (#101), one `Revision` per field, written by `EnrichmentCoordinator`.
 ///
 /// **Energy deliberately not** (#112): neighbours beat the constant on no reading there. The field is
 /// structurally absent from `Candidate` and `Match`, so the rule cannot set it at all.
@@ -62,6 +62,12 @@ enum RecognitionRule {
                              reason: reason)
         )
         return match.duration == nil && match.contexts == nil ? nil : match
+    }
+
+    /// The revision's reason, naming the earlier task (#101): "Like “Rasen mähen” from 12 Sep."
+    static func reason(rawText: String, capturedAt: Date) -> String {
+        let day = capturedAt.formatted(.dateTime.day().month(.abbreviated))
+        return String(localized: "Like “\(rawText)” from \(day).")
     }
 
     /// The word set a raw text is recognised by. Case, diacritics, punctuation and word order do not

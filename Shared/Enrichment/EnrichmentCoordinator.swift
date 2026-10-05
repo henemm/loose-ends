@@ -147,7 +147,8 @@ final class EnrichmentCoordinator {
 
     /// The rule step, before and independent of the model (#95, #117, #136): it writes due date,
     /// importance, urgency and — from a raw text captured before — duration and contexts the way
-    /// `EnrichmentWriter` writes a model value — same field source, same revision — but leaves
+    /// `EnrichmentWriter` writes a model value — one revision per field — but with the origin `rule`
+    /// instead of `ai`, read from the user's words rather than guessed (#101), and leaves
     /// `processedAt` alone, because that marker means "the model has seen this task" (ADR-4). Each
     /// field only while it is still empty, so the catch-up pass adds no second revision (#95 AC-8,
     /// #117 AC-6, #136 AC-8). The four steps are independent of each other. In a re-analysis (#34)
@@ -180,13 +181,13 @@ final class EnrichmentCoordinator {
             field: .dueDate,
             oldValue: task.dueDate?.ISO8601Format(),
             newValue: match.guess.value.ISO8601Format(),
-            author: .ai,
+            author: .rule,
             reason: match.guess.reason
         )
         task.revisions = (task.revisions ?? []) + [revision]
         task.dueDate = match.guess.value
         task.dueHasTime = match.hasTime
-        task.dueSourceRaw = FieldSource.ai.rawValue
+        task.dueSourceRaw = FieldSource.rule.rawValue
         task.dueConfidence = match.guess.confidence
         logger.info("Rule set due date for \(task.id, privacy: .public)")
         return true
@@ -202,12 +203,12 @@ final class EnrichmentCoordinator {
             field: .importance,
             oldValue: task.importanceRaw,
             newValue: guess.value.rawValue,
-            author: .ai,
+            author: .rule,
             reason: guess.reason
         )
         task.revisions = (task.revisions ?? []) + [revision]
         task.importance = guess.value
-        task.importanceSourceRaw = FieldSource.ai.rawValue
+        task.importanceSourceRaw = FieldSource.rule.rawValue
         task.importanceConfidence = guess.confidence
         logger.info("Rule set importance for \(task.id, privacy: .public)")
         return true
@@ -223,12 +224,12 @@ final class EnrichmentCoordinator {
             field: .urgency,
             oldValue: task.urgencyRaw,
             newValue: guess.value.rawValue,
-            author: .ai,
+            author: .rule,
             reason: guess.reason
         )
         task.revisions = (task.revisions ?? []) + [revision]
         task.urgency = guess.value
-        task.urgencySourceRaw = FieldSource.ai.rawValue
+        task.urgencySourceRaw = FieldSource.rule.rawValue
         task.urgencyConfidence = guess.confidence
         logger.info("Rule set urgency for \(task.id, privacy: .public)")
         return true
@@ -273,6 +274,12 @@ final class EnrichmentCoordinator {
         to task: TaskItem, mode: EnrichmentWriter.Mode, pool: [RecognitionRule.Candidate], tasksByID: [UUID: TaskItem]
     ) -> Set<RevisedField> {
         guard let match = RecognitionRule.match(rawText: task.rawText, in: pool) else { return [] }
+        // Names the earlier task (#101): "Like “Rasen mähen” from 12 Sep." Falls back to the rule's
+        // own sentence if the task is gone from the map.
+        func reason(recognising id: UUID) -> String {
+            guard let source = tasksByID[id] else { return String(localized: "From a raw text captured before, word for word.") }
+            return RecognitionRule.reason(rawText: source.rawText, capturedAt: source.capturedAt)
+        }
         var matched = Set<RevisedField>()
         if match.duration != nil { matched.insert(.duration) }
         if match.contexts != nil { matched.insert(.contexts) }
@@ -289,11 +296,11 @@ final class EnrichmentCoordinator {
            ) {
             let revision = Revision(
                 task: task, field: .duration, oldValue: task.durationRaw,
-                newValue: hit.guess.value.rawValue, author: .ai, reason: hit.guess.reason
+                newValue: hit.guess.value.rawValue, author: .rule, reason: reason(recognising: hit.sourceID)
             )
             task.revisions = (task.revisions ?? []) + [revision]
             task.duration = hit.guess.value
-            task.durationSourceRaw = FieldSource.ai.rawValue
+            task.durationSourceRaw = FieldSource.rule.rawValue
             task.durationConfidence = hit.guess.confidence
             logger.info("Recognition set duration for \(task.id, privacy: .public)")
         }
@@ -312,11 +319,11 @@ final class EnrichmentCoordinator {
             let revision = Revision(
                 task: task, field: .contexts,
                 oldValue: current.isEmpty ? nil : EnrichmentWriter.encode((task.contexts ?? []).map(\.name)),
-                newValue: EnrichmentWriter.encode(hit.guess.value), author: .ai, reason: hit.guess.reason
+                newValue: EnrichmentWriter.encode(hit.guess.value), author: .rule, reason: reason(recognising: hit.sourceID)
             )
             task.revisions = (task.revisions ?? []) + [revision]
             task.contexts = source.contexts
-            task.contextsSourceRaw = FieldSource.ai.rawValue
+            task.contextsSourceRaw = FieldSource.rule.rawValue
             task.contextsConfidence = hit.guess.confidence
             logger.info("Recognition set contexts for \(task.id, privacy: .public)")
         }

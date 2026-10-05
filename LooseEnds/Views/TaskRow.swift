@@ -34,7 +34,7 @@ struct TaskRow: View {
                     .fontDesign(.serif)
                     .italic(task.title == nil || task.status == .unverified)
                     .lineLimit(1)
-                if task.hasUnseenAIRevisions, task.titleSourceRaw == FieldSource.ai.rawValue {
+                if task.hasUnseenAutomaticRevisions, task.titleSourceRaw == FieldSource.ai.rawValue {
                     Image(systemName: "sparkle")
                         .imageScale(.small)
                         .foregroundStyle(.tint)
@@ -95,8 +95,7 @@ struct TaskRow: View {
 
     /// Ranked: waiting, due, duration, subtasks, context, person. The first three win.
     private var traits: [Trait] {
-        let unseen = task.hasUnseenAIRevisions
-        let ai = FieldSource.ai.rawValue
+        let unseen = task.hasUnseenAutomaticRevisions
         var all: [Trait] = []
         if task.isBlocked {
             all.append(Trait(id: "waiting", text: String(localized: "Waiting"), symbol: "lock"))
@@ -107,22 +106,22 @@ struct TaskRow: View {
                 id: "due",
                 text: due.formatted(date: .abbreviated, time: task.dueHasTime ? .shortened : .omitted),
                 symbol: "calendar",
-                tinted: unseen && task.dueSourceRaw == ai,
+                tinted: unseen && FieldSource.isAutomatic(task.dueSourceRaw),
                 red: task.isOpen && due < tomorrow
             ))
         }
         if let duration = task.duration {
-            all.append(Trait(id: "duration", text: FieldFormatting.duration(duration), symbol: "clock", tinted: unseen && task.durationSourceRaw == ai))
+            all.append(Trait(id: "duration", text: FieldFormatting.duration(duration), symbol: "clock", tinted: unseen && FieldSource.isAutomatic(task.durationSourceRaw)))
         }
         let progress = Subtasks.progress(of: task)
         if progress.total > 0 {
             all.append(Trait(id: "subtasks", text: "\(progress.done)/\(progress.total)", symbol: "checklist"))
         }
         if !hidesContext, let context = (task.contexts ?? []).sorted(by: { $0.sortOrder < $1.sortOrder }).first {
-            all.append(Trait(id: "context", text: context.name, tinted: unseen && task.contextsSourceRaw == ai))
+            all.append(Trait(id: "context", text: context.name, tinted: unseen && FieldSource.isAutomatic(task.contextsSourceRaw)))
         }
         if let person = task.people.first {
-            all.append(Trait(id: "person", text: person, symbol: "person", tinted: unseen && task.peopleSourceRaw == ai))
+            all.append(Trait(id: "person", text: person, symbol: "person", tinted: unseen && FieldSource.isAutomatic(task.peopleSourceRaw)))
         }
         return Array(all.prefix(3))
     }

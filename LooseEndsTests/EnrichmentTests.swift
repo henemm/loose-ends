@@ -81,7 +81,7 @@ struct TestStore {
         let allFromAI = revisions.allSatisfy { $0.author == .ai && $0.seenAt == nil && !($0.reason ?? "").isEmpty }
         #expect(allFromAI, "every revision is unseen, by the AI, with a reason")
         #expect(Set(revisions.map(\.field)) == [.title, .dueDate, .duration, .contexts])
-        #expect(task.hasUnseenAIRevisions)
+        #expect(task.hasUnseenAutomaticRevisions)
         #expect(task.displayTitle == "Rasenmäher: Ölwechsel")
 
         let all = try context.fetch(FetchDescriptor<TaskItem>())
@@ -246,11 +246,11 @@ struct TestStore {
         #expect(Calendar.current.dateComponents([.year, .month, .day], from: due)
                 == DateComponents(year: 2026, month: 3, day: 20))
         #expect(task.dueHasTime == false)
-        #expect(task.dueSourceRaw == FieldSource.ai.rawValue)
+        #expect(task.dueSourceRaw == FieldSource.rule.rawValue, "aus deinen Worten, nicht geraten (#101)")
         #expect(task.dueConfidence == 1.0)
         let dueRevisions = (task.revisions ?? []).filter { $0.field == .dueDate }
         #expect(dueRevisions.count == 1)
-        #expect(dueRevisions.first?.author == .ai)
+        #expect(dueRevisions.first?.author == .rule)
         #expect(dueRevisions.first?.reason?.isEmpty == false)
         #expect(task.processedAt == nil, "Titel und Wichtigkeit stehen noch aus")
     }
@@ -496,19 +496,19 @@ struct RecognitionCoordinatorTests {
         await coordinator.processPending()
 
         #expect(fresh.duration == .minutes30)
-        #expect(fresh.durationSourceRaw == FieldSource.ai.rawValue)
+        #expect(fresh.durationSourceRaw == FieldSource.rule.rawValue)
         #expect(fresh.durationConfidence == 1.0)
         #expect((fresh.contexts ?? []).map(\.name) == ["Garten"])
-        #expect(fresh.contextsSourceRaw == FieldSource.ai.rawValue)
+        #expect(fresh.contextsSourceRaw == FieldSource.rule.rawValue)
         #expect(fresh.contextsConfidence == 1.0)
 
         let revisions = fresh.revisions ?? []
         let durationRevision = try #require(revisions.first { $0.field == .duration })
-        #expect(durationRevision.author == .ai)
+        #expect(durationRevision.author == .rule)
         #expect(durationRevision.newValue == DurationBucket.minutes30.rawValue)
         #expect(!(durationRevision.reason ?? "").isEmpty)
         let contextsRevision = try #require(revisions.first { $0.field == .contexts })
-        #expect(contextsRevision.author == .ai)
+        #expect(contextsRevision.author == .rule)
         #expect(contextsRevision.newValue == EnrichmentWriter.encode(["Garten"]))
     }
 
@@ -694,7 +694,7 @@ struct RecognitionCoordinatorTests {
         #expect(fresh.processedAt == nil)
 
         // Der Nutzer setzt das Feld über eine Revision auf den Stand vor der KI zurück: leer.
-        let aiRevision = try #require(RevisionService.firstAIRevision(of: .duration, on: fresh))
+        let aiRevision = try #require(RevisionService.firstAutomaticRevision(of: .duration, on: fresh))
         RevisionService.revert(aiRevision, on: fresh, contexts: [], projects: [])
         try context.save()
         #expect(fresh.duration == nil)
@@ -703,7 +703,7 @@ struct RecognitionCoordinatorTests {
         await EnrichmentCoordinator(enricher: unavailable, container: store.container).processPending()
 
         #expect(fresh.duration == nil, "der Nutzerentscheid bleibt stehen")
-        let aiRevisions = (fresh.revisions ?? []).filter { $0.field == .duration && $0.author == .ai }
+        let aiRevisions = (fresh.revisions ?? []).filter { $0.field == .duration && $0.author == .rule }
         #expect(aiRevisions.count == 1, "keine zweite KI-Revision auf dasselbe Feld")
     }
 
@@ -727,7 +727,7 @@ struct RecognitionCoordinatorTests {
         #expect((fresh.contexts ?? []).map(\.name) == ["Garten"])
         #expect(fresh.processedAt == nil)
 
-        let aiRevision = try #require(RevisionService.firstAIRevision(of: .contexts, on: fresh))
+        let aiRevision = try #require(RevisionService.firstAutomaticRevision(of: .contexts, on: fresh))
         RevisionService.revert(aiRevision, on: fresh, contexts: [garden], projects: [])
         try context.save()
         #expect((fresh.contexts ?? []).isEmpty)
@@ -736,7 +736,7 @@ struct RecognitionCoordinatorTests {
         await EnrichmentCoordinator(enricher: unavailable, container: store.container).processPending()
 
         #expect((fresh.contexts ?? []).isEmpty, "der Nutzerentscheid bleibt stehen")
-        let aiRevisions = (fresh.revisions ?? []).filter { $0.field == .contexts && $0.author == .ai }
+        let aiRevisions = (fresh.revisions ?? []).filter { $0.field == .contexts && $0.author == .rule }
         #expect(aiRevisions.count == 1, "keine zweite KI-Revision auf dasselbe Feld")
     }
 }
