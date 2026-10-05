@@ -114,9 +114,9 @@ extension TaskItem {
         set { energyRaw = newValue?.rawValue }
     }
 
-    /// What the list shows: the title, or the raw text while unverified.
+    /// What the list shows: the title, or the raw text when there is none (#202).
     var displayTitle: String {
-        if let title, !title.isEmpty, status != .unverified { return title }
+        if let title, !title.isEmpty { return title }
         return rawText
     }
 

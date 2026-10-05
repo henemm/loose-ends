@@ -121,7 +121,7 @@ final class DesignGalleryTests: XCTestCase {
         shot(app, "gallery-\(label)-3-list-new")
 
         row.tap()
-        XCTAssertTrue(element("detailRawText", in: app).waitForExistence(timeout: 5), "Detail did not open")
+        XCTAssertTrue(element("detailRawTextMarker", in: app).waitForExistence(timeout: 5), "Detail did not open")
         shot(app, "gallery-\(label)-4-detail")
         app.terminate()
     }

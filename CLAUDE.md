@@ -22,7 +22,8 @@ Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, 
 - **Color budget.** Accent = tappable (incl. AI tint), red = time pressure, grey = hierarchy, green = the completion moment.
 - **Rules before the model** (Henning, 2026-09-20). Every derived field is first attempted with rules,
   regex, calendar, contacts or a word list. The on-device model only gets what needs language
-  understanding (the title). Every analysis and spec that proposes the model for a field must contain
+  understanding (refining the title: since #202 `TitleRule` sets it at capture from the cleaned raw
+  text, at most 12 words — 312 of 319 raw sentences have ≤ 12 words; the model may refine it). Every analysis and spec that proposes the model for a field must contain
   the line "Without the model this fails because …" with evidence from a measurement; without that line
   the rule path is the proposal. Every measurement report carries the rule-based column as baseline; if
   the rules beat the model, the rules win, and an existing ADR or schema is not a counter-argument.
@@ -152,7 +153,8 @@ not scope creep on the current one.
 - `Shared/Services` — `CaptureService`, `FieldCodec` (one encoding per field), `RevisionService` (reset = user revision),
   `TaskActions` (done, next up, park, move, restore), `DateExpressionParser`/`TimeExpressionParser` (rule-based
   date/time extraction DE/EN, moved from `Measurement/` in #95), `RawTextWords` (the one tokenizer for word-set
-  equality, shared with `Measurement/`, moved from `TitleCheck` in #136). All pure over the model objects; the
+  equality, shared with `Measurement/`, moved from `TitleCheck` in #136), `TitleRule` (the title at capture: raw text
+  cleaned, first 12 words, #202). All pure over the model objects; the
   caller saves.
 - `Shared/Enrichment` — `TaskEnricher` protocol, `EnrichmentWriter` (threshold + revisions), `EnrichmentCoordinator`
   (catch-up pass), `FoundationModelsEnricher` (on-device model, `#if canImport(FoundationModels)`), `DueDateRule`

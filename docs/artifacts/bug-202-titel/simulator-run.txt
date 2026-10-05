@@ -1,0 +1,28 @@
+# Simulator-Beleg
+erzeugt: 2026-10-05T16:26:01+0200
+befehl: scripts/sim.sh test-proof CaptureSmokeTests/testCapturedTaskHasTitleInDetail
+workflow: bug-202-titel
+head: 061830f00c446abc1da76c60822af2ea87111ff2
+basis: 48117590581b524e36f21f7dd0bf6fab07b3725d (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests/testCapturedTaskHasTitleInDetail
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1791210298.025  ende: 1791210360.323
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/bug-202-titel/simulator-run/summary.json  sha256:80b2026413db4b1b57506bdfee7923a540b9cfe62abc27b3e8597a696ff89c46
+xcresult: docs/artifacts/bug-202-titel/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/bug-202-titel/simulator-run/*.png (1 Stück)
+
+## Geprüfte Dateien
+- sha256:cb83a3de87d86d6c4c25b49724d368b00cd07e378d4581d63387926c7c7311d5  LooseEnds/Views/TaskDetailView.swift
+- sha256:f9925e4742785678932257b68a3cb2fb0ad284136c63dd57594a9b08449391d4  LooseEndsTests/CaptureServiceTests.swift
+- sha256:29bb891aca3fcfd610652fe32314b21158246fd4923f6f7d08c4eff5ad772975  LooseEndsTests/RevisionServiceTests.swift
+- sha256:80b0343d979ade6aefdad55c5ee548bc75f646aead8962d5250c71979827e0cf  LooseEndsTests/TitleRuleTests.swift
+- sha256:63e56daefacd59dab90bc0c740773c298dfea08b832f46edb9cc26ef6abb194d  LooseEndsUITests/CaptureSmokeTests.swift
+- sha256:0a6220c3c0b156ac13fe1f00f86dd60111aad8ef1a65c4d1856a1476890285ca  LooseEndsUITests/DesignGalleryTests.swift
+- sha256:224084b1c0b48ef087b59a3c3080394c8f7ddce411b87505d405c401fc40a0b7  LooseEndsUITests/RecognitionWalkthroughTests.swift
+- sha256:39aba68e4a758b58900d137e499d46256ed69308683cf79b921d7f4e0edb7f8d  Shared/Models/TaskItem.swift
+- sha256:3ec08f6ab1e1cde70405cb4ddfbf47566f96e6dd91d2a0f6e3c429e33789bf2a  Shared/Services/CaptureService.swift
+- sha256:0d033742eb750e3cfc261b653b3f18c8872470027708e71251342f33dfce9aeb  Shared/Services/RevisionService.swift
+- sha256:1765d090b27b15f5d5003cee9a915c3904dbc264147993f046837c5b5cb8c738  Shared/Services/TitleRule.swift
