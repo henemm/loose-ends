@@ -371,7 +371,9 @@ struct TestStore {
 
         let created = try ContextSeeder.seedIfNeeded(in: store.context, defaults: defaults)
         #expect(created.count == 6)
-        #expect(created.allSatisfy(\.isSystemDefault))
+        // `allSatisfy` rethrows; inside `#expect` the macro cannot see that the key path never throws.
+        let allDefaults = created.allSatisfy(\.isSystemDefault)
+        #expect(allDefaults)
 
         let again = try ContextSeeder.seedIfNeeded(in: store.context, defaults: defaults)
         #expect(again.isEmpty, "contexts are there, nothing to seed")
