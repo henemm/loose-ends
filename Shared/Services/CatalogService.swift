@@ -80,18 +80,26 @@ enum CatalogService {
             .folding(options: [.caseInsensitive, .diacriticInsensitive], locale: nil)
     }
 
-    /// The project's tasks stay and lose the project.
-    static func delete(_ project: Project, in context: ModelContext) {
+    /// The project's tasks stay and lose the project. Each loss is a user revision carrying the
+    /// project's name (#140, "Revisions, not undo"): the task shows it was there, and the field
+    /// counts as touched by the user.
+    static func delete(_ project: Project, in context: ModelContext, now: Date = Date()) {
         for task in project.tasks ?? [] {
-            task.project = nil
+            RevisionService.set(.project, to: nil, on: task, contexts: [], projects: [], now: now)
         }
         context.delete(project)
     }
 
-    /// The context's tasks stay and lose the tag.
-    static func delete(_ taskContext: TaskContext, in context: ModelContext) {
+    /// The context's tasks stay and lose the tag, each as a user revision from the old list to
+    /// the remaining one (#140). The remaining contexts are passed as the vocabulary, so the
+    /// codec keeps exactly them.
+    static func delete(_ taskContext: TaskContext, in context: ModelContext, now: Date = Date()) {
         for task in taskContext.tasks ?? [] {
-            task.contexts = (task.contexts ?? []).filter { $0.id != taskContext.id }
+            let remaining = (task.contexts ?? []).filter { $0.id != taskContext.id }
+            RevisionService.set(
+                .contexts, to: FieldCodec.encode(remaining.map(\.name)), on: task,
+                contexts: remaining, projects: [], now: now
+            )
         }
         context.delete(taskContext)
     }
