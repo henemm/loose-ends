@@ -163,7 +163,7 @@ import Testing
         source.importance = .high
         source.urgency = .low
         source.duration = .hour1
-        source.energy = .medium
+        source.energy = .takesClearly
         source.contexts = [garden, phone]
         source.people = ["Anna", "Ben"]
 

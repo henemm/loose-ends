@@ -340,7 +340,6 @@ final class EnrichmentCoordinator {
                 importance: task.importance,
                 urgency: task.urgency,
                 duration: task.duration,
-                energy: task.energy,
                 contexts: (task.contexts ?? []).map(\.name)
             )
         }

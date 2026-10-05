@@ -20,7 +20,23 @@ enum FieldSource: String, Codable, Sendable {
 
 enum Importance: String, Codable, CaseIterable, Sendable { case low, medium, high }
 enum Urgency: String, Codable, CaseIterable, Sendable { case low, medium, high }
-enum Energy: String, Codable, CaseIterable, Sendable { case low, medium, high }
+
+/// Whether a task gives or takes energy, −3 … +3, set by hand only (#112). Stored as the number's
+/// text ("-3" … "3") in the existing string field, so CloudKit sees no schema change. The old
+/// values "low", "medium" and "high" answered another question (how much energy a task needs) and
+/// read as empty (Henning, 2026-10-05).
+enum Energy: Int, Codable, CaseIterable, Sendable {
+    case takesVery = -3, takesClearly, takesLittle, neither, givesLittle, givesClearly, givesVery
+
+    /// The text kept in `TaskItem.energyRaw` and in revisions.
+    var stored: String { String(rawValue) }
+
+    /// Nil for anything that is not a number from −3 to 3, the legacy words included.
+    init?(stored: String) {
+        guard let number = Int(stored) else { return nil }
+        self.init(rawValue: number)
+    }
+}
 
 enum DurationBucket: String, Codable, CaseIterable, Sendable {
     case minutes5, minutes15, minutes30, hour1, hours2plus

@@ -21,20 +21,21 @@ struct EnrichmentDraft: Equatable, Sendable {
     var importance: Guess<Importance>?
     var urgency: Guess<Urgency>?
     var duration: Guess<DurationBucket>?
-    var energy: Guess<Energy>?
+    // No energy: it is set by hand only (#112).
     var contexts: Guess<[String]>?
     var people: Guess<[String]>?
     var project: Guess<String>?
 
-    /// The five fields the FocusBlox export knows the truth for, as plain strings (#108). Pure
+    /// Four of the five fields the FocusBlox export knows the truth for, as plain strings (#108);
+    /// energy left the model with #112. Pure
     /// pass-through for the measurement code: it lives here and not in the lab app because
     /// `Measurement/MeasurementRun.swift` compiles into three targets that see `EnrichmentDraft`
     /// differently, and only here is the unwrapping visible — and testable — from all of them.
     /// No product code calls it.
     var selfConsistencyValues: (importance: String?, urgency: String?, duration: String?,
-                                energy: String?, contexts: [String]) {
+                                contexts: [String]) {
         (importance?.value.rawValue, urgency?.value.rawValue, duration?.value.rawValue,
-         energy?.value.rawValue, contexts?.value ?? [])
+         contexts?.value ?? [])
     }
 }
 
@@ -57,7 +58,6 @@ struct EnrichmentExample: Sendable {
     var importance: Importance?
     var urgency: Urgency?
     var duration: DurationBucket?
-    var energy: Energy?
     var contexts: [String]
 }
 

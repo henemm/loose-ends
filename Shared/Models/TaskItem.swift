@@ -109,9 +109,10 @@ extension TaskItem {
         get { durationRaw.flatMap(DurationBucket.init(rawValue:)) }
         set { durationRaw = newValue?.rawValue }
     }
+    /// A legacy "low"/"medium"/"high" reads as nil (#112).
     var energy: Energy? {
-        get { energyRaw.flatMap(Energy.init(rawValue:)) }
-        set { energyRaw = newValue?.rawValue }
+        get { energyRaw.flatMap(Energy.init(stored:)) }
+        set { energyRaw = newValue?.stored }
     }
 
     /// What the list shows: the title, or the raw text while unverified.

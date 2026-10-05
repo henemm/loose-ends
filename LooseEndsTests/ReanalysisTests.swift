@@ -8,13 +8,11 @@ import Testing
     private func draft(
         title: String? = nil,
         duration: DurationBucket? = nil,
-        energy: Energy? = nil,
         contexts: [String]? = nil
     ) -> EnrichmentDraft {
         var draft = EnrichmentDraft()
         draft.title = title.map { EnrichmentDraft.Guess($0, confidence: 0.9, reason: "Stub.") }
         draft.duration = duration.map { EnrichmentDraft.Guess($0, confidence: 0.9, reason: "Stub.") }
-        draft.energy = energy.map { EnrichmentDraft.Guess($0, confidence: 0.9, reason: "Stub.") }
         draft.contexts = contexts.map { EnrichmentDraft.Guess($0, confidence: 0.9, reason: "Stub.") }
         return draft
     }
@@ -83,7 +81,7 @@ import Testing
         let task = TaskItem(rawText: "Zettel sortieren")
         store.context.insert(task)
         try store.context.save()
-        let stub = StubEnricher(draft: draft(title: "Zettel sortieren", duration: .minutes15, energy: .low))
+        let stub = StubEnricher(draft: draft(title: "Zettel sortieren", duration: .minutes15))
         let coordinator = EnrichmentCoordinator(enricher: stub, container: store.container)
         await coordinator.processPending()
         let before = task.revisions?.count

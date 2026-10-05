@@ -147,7 +147,6 @@ final class MeasurementRunner {
             result.importance = fields.importance
             result.urgency = fields.urgency
             result.duration = fields.duration
-            result.energy = fields.energy
             result.contexts = fields.contexts
         } catch {
             result.error = "\(error)"

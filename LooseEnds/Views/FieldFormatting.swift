@@ -27,8 +27,10 @@ enum FieldFormatting {
         case .dueDate:
             guard let date = ISO8601DateFormatter().date(from: encoded) else { return nil }
             return date.formatted(date: .abbreviated, time: hasTime ? .shortened : .omitted)
-        case .importance, .urgency, .energy:
+        case .importance, .urgency:
             return level(encoded)
+        case .energy:
+            return Energy(stored: encoded).map { energy($0) }
         case .duration:
             return DurationBucket(rawValue: encoded).map(duration)
         case .contexts, .people, .blockedBy:
@@ -75,6 +77,19 @@ enum FieldFormatting {
         case "medium": String(localized: "Medium")
         case "high": String(localized: "High")
         default: nil
+        }
+    }
+
+    /// Only words, never the number (#112, variant D): a little = 1, clearly = 2, very = 3.
+    static func energy(_ energy: Energy, bundle: Bundle = .main) -> String {
+        switch energy {
+        case .takesVery: String(localized: "takes a lot of energy", bundle: bundle)
+        case .takesClearly: String(localized: "takes a fair amount of energy", bundle: bundle)
+        case .takesLittle: String(localized: "takes a little energy", bundle: bundle)
+        case .neither: String(localized: "neither gives nor takes energy", bundle: bundle)
+        case .givesLittle: String(localized: "gives a little energy", bundle: bundle)
+        case .givesClearly: String(localized: "gives a fair amount of energy", bundle: bundle)
+        case .givesVery: String(localized: "gives a lot of energy", bundle: bundle)
         }
     }
 

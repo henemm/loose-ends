@@ -65,7 +65,8 @@ enum EnrichmentWriter {
         // Only while the field is still empty and the user never touched it (#136 AC-9): the rule step
         // runs before the model in the same pass, and without this guard the model would silently
         // overwrite a recognised value and hang a second revision on the same field. Due date,
-        // importance and urgency need no guard — they left the model schema with #95/#117.
+        // importance and urgency need no guard — they left the model schema with #95/#117, energy
+        // with #112.
         if let duration = draft.duration, duration.confidence >= threshold,
            may(.duration, firstRun: task.duration == nil && !userHasTouched(.duration, on: task),
                changes: duration.value != task.duration) {
@@ -73,14 +74,6 @@ enum EnrichmentWriter {
             task.duration = duration.value
             task.durationSourceRaw = ai
             task.durationConfidence = duration.confidence
-        }
-
-        if let energy = draft.energy, energy.confidence >= threshold,
-           may(.energy, firstRun: true, changes: energy.value != task.energy) {
-            record(.energy, old: task.energyRaw, new: energy.value.rawValue, reason: energy.reason)
-            task.energy = energy.value
-            task.energySourceRaw = ai
-            task.energyConfidence = energy.confidence
         }
 
         // Same guard, and an empty relationship counts as unset: SwiftData hands a to-many

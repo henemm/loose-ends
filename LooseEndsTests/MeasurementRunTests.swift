@@ -184,20 +184,18 @@ struct MeasurementRunTests {
         #expect(back.results[0].contexts == ["zuhause", "telefon"])
     }
 
-    @Test("Der Selbstkonsistenz-Auszug eines EnrichmentDraft reicht alle fünf Werte unverändert durch (AC-3)")
+    @Test("Der Selbstkonsistenz-Auszug eines EnrichmentDraft reicht alle vier Werte unverändert durch (Energie seit #112 nicht mehr) (AC-3)")
     func draftSelfConsistencyValuesPassThrough() {
         let draft = EnrichmentDraft(
             importance: .init(.high, confidence: 0.9, reason: "x"),
             urgency: .init(.low, confidence: 0.9, reason: "x"),
             duration: .init(.minutes15, confidence: 0.9, reason: "x"),
-            energy: .init(.high, confidence: 0.9, reason: "x"),
             contexts: .init(["zuhause", "telefon"], confidence: 0.9, reason: "x")
         )
         let fields = draft.selfConsistencyValues
         #expect(fields.importance == "high")
         #expect(fields.urgency == "low")
         #expect(fields.duration == "minutes15")
-        #expect(fields.energy == "high")
         #expect(fields.contexts == ["zuhause", "telefon"])
     }
 
@@ -207,7 +205,6 @@ struct MeasurementRunTests {
         #expect(fields.importance == nil)
         #expect(fields.urgency == nil)
         #expect(fields.duration == nil)
-        #expect(fields.energy == nil)
         #expect(fields.contexts == [])
     }
 }
