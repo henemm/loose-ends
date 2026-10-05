@@ -88,5 +88,6 @@ Bug (zwei Teile, eine Ursache: der Titel hängt vollständig am Modell, und es g
 
 ### Open Questions
 - [x] **Entwurf A von Henning freigegeben (2026-10-05).** Entwurf A, B oder C (Vorschau: https://claude.ai/artifact/5AjgtobfgP4Z5uFtnFbEw3, Datei `docs/artifacts/bug-202-titel/entwurf.html`).
+- [x] **Lücke in der Spec, gefunden in /40-tdd-red (2026-10-05), von Henning entschieden:** Zehn bestehende UI-Tests erkennen das offene Detail an `detailRawText` („You said:"). AC-3 blendet die Zeile bei kurzen Texten aus. Entscheidung: `TaskDetailView` bekommt eine unsichtbare Kennung `detailRawTextMarker` (Accessibility-Element, Label = Rohtext, immer vorhanden); `CaptureSmokeTests`, `DesignGalleryTests`, `RecognitionWalkthroughTests` nutzen sie. Spec-Datei bleibt gesperrt, die Abweichung steht hier: Dateien 13 statt 9 (+ `TaskDetailView.swift`, `DesignGalleryTests.swift`, `RecognitionWalkthroughTests.swift`), ca. +30 Zeilen. Verworfen: „You said:" immer zeigen (kippt AC-3), Tests auf Titelfeld umstellen (fragil, Modell ändert den Titel).
 - [ ] Status bleibt bis zum Modelllauf „unprocessed“ (Empfehlung: ja, nur der Titel ist schon da).
 - [ ] Altbestand ohne Titel: bleibt leer, bis „Zurücksetzen“ gedrückt wird (Empfehlung: nicht nachziehen, eigenes Ticket nur falls gewünscht).
