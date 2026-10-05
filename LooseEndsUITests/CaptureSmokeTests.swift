@@ -443,6 +443,8 @@ final class CaptureSmokeTests: XCTestCase {
         let undo = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH 'undoComplete_'"))
             .firstMatch
+        // Not asserted: on a slow runner the window may be over before the first lookup returns.
+        _ = undo.waitForExistence(timeout: 2)
         XCTAssertTrue(undo.waitForNonExistence(timeout: 10), "The Done window should run out")
 
         // A repeating task rolls forward instead of leaving the list — same row, new due date,
@@ -672,5 +674,28 @@ final class CaptureSmokeTests: XCTestCase {
         // The task is still open and listed.
         XCTAssertFalse(element("emptyViewLabel", in: app).waitForExistence(timeout: 5), "New must not empty after Undo")
         XCTAssertTrue(row.exists, "The task should stay in New after Undo")
+    }
+
+    /// #34: "Analyze again" in the detail's menu runs the pipeline once more and says what it found.
+    /// The CI simulator has no Apple Intelligence, so this proves the path and the report, not the model.
+    @MainActor
+    func testAnalyzeAgainReportsBack() throws {
+        let app = launch()
+        let row = captureIntoNew("Steuererklärung morgen abgeben", in: app)
+        row.tap()
+        assertDetailRawText("Steuererklärung morgen abgeben", in: app)
+
+        let more = element("detailMoreMenu", in: app)
+        XCTAssertTrue(more.waitForExistence(timeout: 5), "Detail should offer the More menu")
+        more.tap()
+        let analyze = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier == %@ OR label == %@", "analyzeAgainButton", "Analyze again"))
+            .firstMatch
+        XCTAssertTrue(analyze.waitForExistence(timeout: 5), "More should offer Analyze again")
+        analyze.tap()
+
+        let note = element("reanalysisNote", in: app)
+        XCTAssertTrue(note.waitForExistence(timeout: 10), "The detail should report what the second run found")
+        XCTAssertTrue(element("detailRawText", in: app).exists, "The raw text stays as it was")
     }
 }

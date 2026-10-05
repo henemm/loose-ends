@@ -9,6 +9,16 @@ import SwiftData
 final class EnrichmentCoordinator {
     static let exampleLimit = 5
 
+    /// What "Analyze again" (#34) reports back to the detail.
+    enum ReanalysisResult: Equatable, Sendable {
+        /// Another pass is running; nothing was done.
+        case busy
+        /// `changed` fields got a new value; `modelRan` is false when only the rules ran.
+        case finished(changed: Int, modelRan: Bool)
+        /// Reading or saving the store failed (logged).
+        case failed
+    }
+
     private let enricher: any TaskEnricher
     private let container: ModelContainer
     private let logger = Logger(subsystem: "com.henning.looseends", category: "Enrichment")
@@ -46,7 +56,7 @@ final class EnrichmentCoordinator {
             let recognition = try Self.recognitionInputs(in: context)   // once before the loop (#136)
 
             for task in pending {
-                applyRules(to: task, recognitionPool: recognition.pool, tasksByID: recognition.tasksByID)
+                applyRules(to: task, mode: .firstRun, recognitionPool: recognition.pool, tasksByID: recognition.tasksByID)
                 // Outside the model block and outside its `do`/`catch` on purpose: the rule step ran,
                 // whether or not the model was there and whether or not its call threw (#144).
                 task.rulesAppliedAt = Date()
@@ -80,30 +90,95 @@ final class EnrichmentCoordinator {
         }
     }
 
+    /// The second analysis, only on the user's explicit request (ADR-4, #34): the same rule step and
+    /// model call as the first run, in `EnrichmentWriter.Mode.reanalysis`. Every field the user never
+    /// touched may change — AI-set or still empty —, each change is a new AI revision; a field the
+    /// user set stays as it is, and a value found again unchanged adds nothing. A missing value in
+    /// the new result never clears an existing one.
+    func reanalyze(_ task: TaskItem) async -> ReanalysisResult {
+        guard !isRunning else { return .busy }
+        isRunning = true
+        defer { isRunning = false }
+
+        let context = container.mainContext
+        let before = task.revisions?.count ?? 0
+        let modelUnavailable = enricher.unavailableReason
+        if let modelUnavailable {
+            logger.notice("Model unavailable, re-analysis with rules only: \(modelUnavailable, privacy: .public)")
+        }
+        var modelRan = false
+        do {
+            let contexts = try context.fetch(FetchDescriptor<TaskContext>(sortBy: [SortDescriptor(\.sortOrder)]))
+            let projects = try context.fetch(FetchDescriptor<Project>(sortBy: [SortDescriptor(\.sortOrder)]))
+            let recognition = try Self.recognitionInputs(in: context)
+            // The task's own rule step ran before, so it sits in the pool: it must not recognise itself.
+            let pool = recognition.pool.filter { $0.id != task.id }
+            let ruleFields = applyRules(to: task, mode: .reanalysis, recognitionPool: pool, tasksByID: recognition.tasksByID)
+            task.rulesAppliedAt = Date()
+
+            if modelUnavailable == nil {
+                let examples = try Self.examples(in: context)
+                let input = EnrichmentInput(
+                    rawText: task.rawText,
+                    capturedAt: task.capturedAt,
+                    contextVocabulary: contexts.map(\.name),
+                    projectNames: projects.map(\.name),
+                    examples: examples
+                )
+                do {
+                    let draft = try await enricher.enrich(input)
+                    EnrichmentWriter.apply(
+                        draft, to: task, contexts: contexts, projects: projects, mode: .reanalysis, ruleFields: ruleFields
+                    )
+                    modelRan = true
+                } catch {
+                    logger.error("Re-analysis model call failed for \(task.id, privacy: .public): \(error, privacy: .public)")
+                }
+            }
+            try context.save()
+        } catch {
+            logger.error("Re-analysis failed for \(task.id, privacy: .public): \(error, privacy: .public)")
+            return .failed
+        }
+        let changed = (task.revisions?.count ?? 0) - before
+        logger.info("Re-analysed \(task.id, privacy: .public): \(changed) fields")
+        return .finished(changed: changed, modelRan: modelRan)
+    }
+
     /// The rule step, before and independent of the model (#95, #117, #136): it writes due date,
     /// importance, urgency and — from a raw text captured before — duration and contexts the way
     /// `EnrichmentWriter` writes a model value — same field source, same revision — but leaves
     /// `processedAt` alone, because that marker means "the model has seen this task" (ADR-4). Each
     /// field only while it is still empty, so the catch-up pass adds no second revision (#95 AC-8,
-    /// #117 AC-6, #136 AC-8). The four steps are independent of each other.
+    /// #117 AC-6, #136 AC-8). The four steps are independent of each other. In a re-analysis (#34)
+    /// `EnrichmentWriter.mayWrite` decides instead: any field the user never touched, to a new value.
+    /// Returns the fields a rule matched, written or not: the model leaves them alone (#34).
+    @discardableResult
     private func applyRules(
         to task: TaskItem,
+        mode: EnrichmentWriter.Mode,
         recognitionPool: [RecognitionRule.Candidate],
         tasksByID: [UUID: TaskItem]
-    ) {
-        applyDueDateRule(to: task)
-        applyImportanceRule(to: task)
-        applyUrgencyRule(to: task)
-        applyRecognitionRule(to: task, pool: recognitionPool, tasksByID: tasksByID)
+    ) -> Set<RevisedField> {
+        var matched = Set<RevisedField>()
+        if applyDueDateRule(to: task, mode: mode) { matched.insert(.dueDate) }
+        if applyImportanceRule(to: task, mode: mode) { matched.insert(.importance) }
+        if applyUrgencyRule(to: task, mode: mode) { matched.insert(.urgency) }
+        matched.formUnion(applyRecognitionRule(to: task, mode: mode, pool: recognitionPool, tasksByID: tasksByID))
+        return matched
     }
 
-    private func applyDueDateRule(to task: TaskItem) {
-        guard task.dueDate == nil,
-              let match = DueDateRule.match(in: task.rawText, reference: task.capturedAt) else { return }
+    /// Each rule returns whether it matched, whether or not it wrote.
+    private func applyDueDateRule(to task: TaskItem, mode: EnrichmentWriter.Mode) -> Bool {
+        guard let match = DueDateRule.match(in: task.rawText, reference: task.capturedAt) else { return false }
+        guard EnrichmentWriter.mayWrite(
+            .dueDate, on: task, mode: mode, firstRun: task.dueDate == nil,
+            changes: match.guess.value != task.dueDate || match.hasTime != task.dueHasTime
+        ) else { return true }
         let revision = Revision(
             task: task,
             field: .dueDate,
-            oldValue: nil,
+            oldValue: task.dueDate?.ISO8601Format(),
             newValue: match.guess.value.ISO8601Format(),
             author: .ai,
             reason: match.guess.reason
@@ -114,15 +189,18 @@ final class EnrichmentCoordinator {
         task.dueSourceRaw = FieldSource.ai.rawValue
         task.dueConfidence = match.guess.confidence
         logger.info("Rule set due date for \(task.id, privacy: .public)")
+        return true
     }
 
-    private func applyImportanceRule(to task: TaskItem) {
-        guard task.importance == nil,
-              let guess = ImportanceUrgencyRule.matchImportance(in: task.rawText) else { return }
+    private func applyImportanceRule(to task: TaskItem, mode: EnrichmentWriter.Mode) -> Bool {
+        guard let guess = ImportanceUrgencyRule.matchImportance(in: task.rawText) else { return false }
+        guard EnrichmentWriter.mayWrite(
+            .importance, on: task, mode: mode, firstRun: task.importance == nil, changes: guess.value != task.importance
+        ) else { return true }
         let revision = Revision(
             task: task,
             field: .importance,
-            oldValue: nil,
+            oldValue: task.importanceRaw,
             newValue: guess.value.rawValue,
             author: .ai,
             reason: guess.reason
@@ -132,15 +210,18 @@ final class EnrichmentCoordinator {
         task.importanceSourceRaw = FieldSource.ai.rawValue
         task.importanceConfidence = guess.confidence
         logger.info("Rule set importance for \(task.id, privacy: .public)")
+        return true
     }
 
-    private func applyUrgencyRule(to task: TaskItem) {
-        guard task.urgency == nil,
-              let guess = ImportanceUrgencyRule.matchUrgency(in: task.rawText) else { return }
+    private func applyUrgencyRule(to task: TaskItem, mode: EnrichmentWriter.Mode) -> Bool {
+        guard let guess = ImportanceUrgencyRule.matchUrgency(in: task.rawText) else { return false }
+        guard EnrichmentWriter.mayWrite(
+            .urgency, on: task, mode: mode, firstRun: task.urgency == nil, changes: guess.value != task.urgency
+        ) else { return true }
         let revision = Revision(
             task: task,
             field: .urgency,
-            oldValue: nil,
+            oldValue: task.urgencyRaw,
             newValue: guess.value.rawValue,
             author: .ai,
             reason: guess.reason
@@ -150,6 +231,7 @@ final class EnrichmentCoordinator {
         task.urgencySourceRaw = FieldSource.ai.rawValue
         task.urgencyConfidence = guess.confidence
         logger.info("Rule set urgency for \(task.id, privacy: .public)")
+        return true
     }
 
     /// The comparison set for the recognition, fetched once per pass and from tasks whose rule or
@@ -188,18 +270,25 @@ final class EnrichmentCoordinator {
     /// Contexts come over as the neighbour's `TaskContext` objects — same store, so no name can drift,
     /// unlike the name match in `EnrichmentWriter`. Energy stays untouched: the rule does not know it.
     private func applyRecognitionRule(
-        to task: TaskItem, pool: [RecognitionRule.Candidate], tasksByID: [UUID: TaskItem]
-    ) {
-        guard let match = RecognitionRule.match(rawText: task.rawText, in: pool) else { return }
+        to task: TaskItem, mode: EnrichmentWriter.Mode, pool: [RecognitionRule.Candidate], tasksByID: [UUID: TaskItem]
+    ) -> Set<RevisedField> {
+        guard let match = RecognitionRule.match(rawText: task.rawText, in: pool) else { return [] }
+        var matched = Set<RevisedField>()
+        if match.duration != nil { matched.insert(.duration) }
+        if match.contexts != nil { matched.insert(.contexts) }
 
         // Empty is not the same as emptied by the user: `FieldCodec` clears `durationSourceRaw` along
         // with the value (`FieldCodec.swift:56`), so the origin marker cannot tell a field the user
         // reset (`RevisionService`) from one that was never set — only the user `Revision` can, and
         // revisions are never deleted (ADR-5: "corrections by the user stay first-class examples").
-        if task.duration == nil, !EnrichmentWriter.userHasTouched(.duration, on: task),
-           let hit = match.duration {
+        if let hit = match.duration,
+           EnrichmentWriter.mayWrite(
+            .duration, on: task, mode: mode,
+            firstRun: task.duration == nil && !EnrichmentWriter.userHasTouched(.duration, on: task),
+            changes: hit.guess.value != task.duration
+           ) {
             let revision = Revision(
-                task: task, field: .duration, oldValue: nil,
+                task: task, field: .duration, oldValue: task.durationRaw,
                 newValue: hit.guess.value.rawValue, author: .ai, reason: hit.guess.reason
             )
             task.revisions = (task.revisions ?? []) + [revision]
@@ -213,10 +302,16 @@ final class EnrichmentCoordinator {
         // empty array as readily as `nil`, and both mean "no context yet". Same second condition as
         // above, for the same reason: `FieldCodec` clears `contextsSourceRaw` when the list becomes
         // empty (`FieldCodec.swift:65`), so only a user `Revision` marks a list the user cleared.
-        if (task.contexts ?? []).isEmpty, !EnrichmentWriter.userHasTouched(.contexts, on: task),
-           let hit = match.contexts, let source = tasksByID[hit.sourceID] {
+        let current = Set((task.contexts ?? []).map(\.id))
+        if let hit = match.contexts, let source = tasksByID[hit.sourceID],
+           EnrichmentWriter.mayWrite(
+            .contexts, on: task, mode: mode,
+            firstRun: current.isEmpty && !EnrichmentWriter.userHasTouched(.contexts, on: task),
+            changes: Set((source.contexts ?? []).map(\.id)) != current
+           ) {
             let revision = Revision(
-                task: task, field: .contexts, oldValue: nil,
+                task: task, field: .contexts,
+                oldValue: current.isEmpty ? nil : EnrichmentWriter.encode((task.contexts ?? []).map(\.name)),
                 newValue: EnrichmentWriter.encode(hit.guess.value), author: .ai, reason: hit.guess.reason
             )
             task.revisions = (task.revisions ?? []) + [revision]
@@ -225,6 +320,7 @@ final class EnrichmentCoordinator {
             task.contextsConfidence = hit.guess.confidence
             logger.info("Recognition set contexts for \(task.id, privacy: .public)")
         }
+        return matched
     }
 
     /// The most recent completed tasks with their final attributes, by recency. The similarity-picked

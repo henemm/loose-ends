@@ -6,7 +6,7 @@ import SwiftUI
 /// more than the title, then the fields that are set; empty ones wait behind "Add detail" (#187).
 /// Tapping a row opens its editor; a field the AI set is accent-tinted with the spark and its
 /// editor also shows before, after, the reason and Reset. Opening the detail marks the AI changes
-/// as seen. The bar carries Complete and the briefing's menu (Next up, Park).
+/// as seen. The bar carries Complete and the briefing's menu (Next up, Park, Analyze again).
 struct TaskDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(CompletionPulse.self) private var completionPulse: CompletionPulse?
@@ -19,11 +19,15 @@ struct TaskDetailView: View {
     @Bindable var task: TaskItem
     /// Nil in previews and tests; the app passes its bridge for the access note.
     @Environment(CalendarBridge.self) private var calendar: CalendarBridge?
+    /// Nil in previews; then "Analyze again" is not offered.
+    @Environment(\.enrichment) private var enrichment: EnrichmentCoordinator?
 
     @State private var titleDraft = ""
     @FocusState private var titleFocused: Bool
     @State private var showsRevisions = false
     @State private var showsEmptyFields = false
+    /// "Analyze again" (#34): running, or what it found, until the detail closes.
+    @State private var reanalysis: Reanalysis?
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Detail")
 
     private var aiFields: [RevisedField] { RevisionService.aiSetFields(on: task) }
@@ -64,6 +68,17 @@ struct TaskDetailView: View {
                 }
             }
             .paperRow()
+
+            if let reanalysis {
+                Section {
+                    reanalysisNote(reanalysis)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .accessibilityElement(children: .combine)
+                        .accessibilityIdentifier("reanalysisNote")
+                }
+                .paperRow()
+            }
 
             let layout = DetailLayout.split(fieldEntries)
             if !layout.set.isEmpty {
@@ -176,8 +191,56 @@ struct TaskDetailView: View {
                         TaskActions.park(task)
                         save("park")
                     }
+                    if enrichment != nil {
+                        Button("Analyze again", systemImage: "sparkles", action: analyzeAgain)
+                            .disabled(reanalysis == .running)
+                            .accessibilityIdentifier("analyzeAgainButton")
+                    }
                 }
                 .accessibilityIdentifier("detailMoreMenu")
+            }
+        }
+    }
+
+    private enum Reanalysis: Equatable {
+        case running
+        case done(EnrichmentCoordinator.ReanalysisResult)
+    }
+
+    /// The second analysis, only because the user asked (ADR-4, #34). Changed fields come back
+    /// accent-tinted with the spark, like after the first run; the title field follows the task.
+    private func analyzeAgain() {
+        guard let enrichment else { return }
+        reanalysis = .running
+        Task {
+            let result = await enrichment.reanalyze(task)
+            titleDraft = task.title ?? ""
+            reanalysis = .done(result)
+        }
+    }
+
+    @ViewBuilder
+    private func reanalysisNote(_ state: Reanalysis) -> some View {
+        switch state {
+        case .running:
+            HStack(spacing: 8) {
+                ProgressView()
+                Text("Analyzing again…")
+            }
+        case .done(.busy):
+            Text("Still sorting other tasks. Try again in a moment.")
+        case .done(.failed):
+            Text("Could not analyze again.")
+        case .done(.finished(let changed, let modelRan)):
+            VStack(alignment: .leading, spacing: 2) {
+                switch changed {
+                case 0: Text("Nothing new found.")
+                case 1: Text("One field updated.")
+                default: Text("\(changed) fields updated.")
+                }
+                if !modelRan {
+                    Text("Apple Intelligence did not run, only the rules.")
+                }
             }
         }
     }

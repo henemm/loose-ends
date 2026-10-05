@@ -47,6 +47,7 @@ struct ContentView: View {
         }
         .environment(completionPulse)
         .environment(pendingCompletions)
+        .environment(\.enrichment, enrichment)
         .overlay {
             CompletionKnot(trigger: completionPulse.count)
         }
@@ -136,6 +137,11 @@ struct ContentView: View {
         captureRequest.pending = false
         isCapturing = true
     }
+}
+
+extension EnvironmentValues {
+    /// The enrichment pipeline for "Analyze again" in the detail (#34); nil in previews.
+    @Entry var enrichment: EnrichmentCoordinator? = nil
 }
 
 #Preview {
