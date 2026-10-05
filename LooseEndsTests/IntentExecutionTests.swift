@@ -25,6 +25,23 @@ struct IntentExecutionTests {
         _ = try await intent.perform()
     }
 
+    @Test("Erinnerung über das Reminders-Schema anlegen liefert die neue Erinnerung zurück (#25)")
+    func createReminderIntentPerforms() async throws {
+        let intent = CreateReminderIntent()
+        intent.title = "Heckenschere schärfen lassen"
+        intent.dueDate = DateComponents(year: 2026, month: 10, day: 6)
+        intent.list = ListEntity.inbox
+
+        let result = try await intent.perform()
+        let reminder = try #require(result.value)
+
+        #expect(reminder.title == "Heckenschere schärfen lassen")
+        #expect(reminder.list.id == ListEntity.inboxID)
+        #expect(reminder.dueDate?.year == 2026)
+        #expect(reminder.dueDate?.month == 10)
+        #expect(reminder.dueDate?.day == 6)
+    }
+
     @Test("Erfassung öffnen meldet der App, dass sie die Erfassung zeigen soll")
     func openCaptureIntentSignalsTheApp() async throws {
         CaptureRequest.shared.pending = false
