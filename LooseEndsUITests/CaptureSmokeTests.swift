@@ -295,7 +295,13 @@ final class CaptureSmokeTests: XCTestCase {
         let app = launch()
 
         let newProject = element("newProjectButton", in: app)
-        XCTAssertTrue(newProject.waitForExistence(timeout: 10), "Start screen should offer New project")
+        // Projects start folded on the start screen; an earlier run may have left them open.
+        if !newProject.waitForExistence(timeout: 5) {
+            let toggle = element("projectsToggle", in: app)
+            XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Start screen should offer the Projects group")
+            toggle.tap()
+        }
+        XCTAssertTrue(newProject.waitForExistence(timeout: 5), "Start screen should offer New project")
         newProject.tap()
 
         let nameField = app.textFields.firstMatch

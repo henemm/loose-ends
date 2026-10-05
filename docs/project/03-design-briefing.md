@@ -59,6 +59,12 @@ Darunter Projekte (mit „Neues Projekt“), dann Kontexte, zuletzt eine Zeile �
 Darunter Kontexte (Startset: Computer, Telefon, Haus, Garten, Unterwegs, Besorgung, alle löschbar)
 und Projekte. Erfassungs-Button ist auf jedem Screen an derselben Stelle erreichbar.
 
+**Nachgeschärft (Henning, 2026-10-05):** Der Bildschirm öffnete auf einer Spalte meist leerer
+Einträge. Seitdem stehen Als nächstes, Neu und Fällig immer da; Schnell, Alt, Wartet,
+Wiederkehrend und Geparkt nur, solange sie eine Aufgabe haben. Projekte und Kontexte sind
+einklappbare Gruppen, eingeklappt per Vorgabe; eingeklappt zeigen sie, wie viele es sind.
+Anlegen, Umbenennen und Löschen bleiben in der aufgeklappten Gruppe.
+
 Berechnungsregeln der Ansichten stehen in `02-datenmodell-und-ansichten.md`.
 
 ### 3. Ansicht (Aufgabenliste)

@@ -26,9 +26,11 @@ struct SidebarView: View {
     @State private var pendingDelete: NameEdit.Target?
     @State private var confirmingDelete = false
     @State private var duplicateRejected = false
+    /// Projects and contexts start folded (Henning, 2026-10-05): most days need neither, and their
+    /// rows and "New …" buttons pushed the views off the screen. Per device, a view setting only.
+    @AppStorage("startShowsProjects") private var showsProjects = false
+    @AppStorage("startShowsContexts") private var showsContexts = false
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Sidebar")
-
-    private static let systemKinds: [ViewKind] = [.next, .new, .due, .quick, .old, .waiting, .repeating, .parked]
 
     /// iPhone: the sentence and the preview replace the big "Views" title. iPad and Mac keep the
     /// plain sidebar, where the list sits right next to it anyway.
@@ -50,34 +52,43 @@ struct SidebarView: View {
                 }
             }
             Section {
-                ForEach(Self.systemKinds, id: \.self) { kind in
+                // The daily three always, the others only with a task in them.
+                ForEach(ViewRules.startViews(in: tasks), id: \.self) { kind in
                     countRow(String(localized: kind.titleKey), symbol: kind.symbol, count: ViewRules.tasks(for: kind, in: tasks).count, id: "viewRow_\(kind.rawValue)")
                         .tag(ViewSelection.system(kind))
                 }
             }
 
-            Section("Projects") {
-                ForEach(projects) { project in
-                    countRow(project.name, count: ViewRules.tasks(inProject: project, in: tasks).count, id: "projectRow_\(project.id.uuidString)")
-                        .tag(ViewSelection.project(project.id))
-                        .contextMenu { catalogMenu(.project(project)) }
-                        .swipeActions { deleteButton(.project(project)) }
+            Section {
+                if showsProjects {
+                    ForEach(projects) { project in
+                        countRow(project.name, count: ViewRules.tasks(inProject: project, in: tasks).count, id: "projectRow_\(project.id.uuidString)")
+                            .tag(ViewSelection.project(project.id))
+                            .contextMenu { catalogMenu(.project(project)) }
+                            .swipeActions { deleteButton(.project(project)) }
+                    }
+                    Button("New project", systemImage: "plus") { begin(NameEdit(target: .newProject)) }
+                        .accessibilityIdentifier("newProjectButton")
+                        .paperRow()
                 }
-                Button("New project", systemImage: "plus") { begin(NameEdit(target: .newProject)) }
-                    .accessibilityIdentifier("newProjectButton")
-                    .paperRow()
+            } header: {
+                foldHeader("Projects", count: projects.count, isOpen: $showsProjects, id: "projectsToggle")
             }
 
-            Section("Contexts") {
-                ForEach(contexts) { context in
-                    countRow(context.name, count: ViewRules.tasks(inContext: context, in: tasks).count, id: "contextRow_\(context.id.uuidString)")
-                        .tag(ViewSelection.context(context.id))
-                        .contextMenu { catalogMenu(.context(context)) }
-                        .swipeActions { deleteButton(.context(context)) }
+            Section {
+                if showsContexts {
+                    ForEach(contexts) { context in
+                        countRow(context.name, count: ViewRules.tasks(inContext: context, in: tasks).count, id: "contextRow_\(context.id.uuidString)")
+                            .tag(ViewSelection.context(context.id))
+                            .contextMenu { catalogMenu(.context(context)) }
+                            .swipeActions { deleteButton(.context(context)) }
+                    }
+                    Button("New context", systemImage: "plus") { begin(NameEdit(target: .newContext)) }
+                        .accessibilityIdentifier("newContextButton")
+                        .paperRow()
                 }
-                Button("New context", systemImage: "plus") { begin(NameEdit(target: .newContext)) }
-                    .accessibilityIdentifier("newContextButton")
-                    .paperRow()
+            } header: {
+                foldHeader("Contexts", count: contexts.count, isOpen: $showsContexts, id: "contextsToggle")
             }
 
             Section {
@@ -108,6 +119,30 @@ struct SidebarView: View {
         } message: { target in
             Text(target.deleteMessage)
         }
+    }
+
+    /// The header of a foldable group: its name, how many it holds while folded, and the arrow.
+    /// The whole line is the button.
+    private func foldHeader(_ title: LocalizedStringKey, count: Int, isOpen: Binding<Bool>, id: String) -> some View {
+        Button {
+            withAnimation(.snappy) { isOpen.wrappedValue.toggle() }
+        } label: {
+            HStack {
+                Text(title)
+                Spacer()
+                if !isOpen.wrappedValue, count > 0 {
+                    Text(verbatim: "\(count)")
+                        .monospacedDigit()
+                }
+                Image(systemName: "chevron.right")
+                    .imageScale(.small)
+                    .rotationEffect(.degrees(isOpen.wrappedValue ? 90 : 0))
+            }
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityValue(isOpen.wrappedValue ? Text("Shown") : Text("Hidden"))
+        .accessibilityIdentifier(id)
     }
 
     /// A view, project or context with its count. `.badge` leaves a zero out (#180).
