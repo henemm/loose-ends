@@ -7,6 +7,7 @@ import Testing
 /// the model keeps `ai`, and everything written before stays readable.
 @Suite("Field origin") struct FieldOriginTests {
     /// A Wednesday at noon, so "bis Freitag" resolves to a fixed day in any time zone.
+    @MainActor
     private func capture(_ rawText: String, in store: TestStore) throws -> TaskItem {
         let task = TaskItem(rawText: rawText)
         task.capturedAt = try #require(Calendar.current.date(from: DateComponents(year: 2026, month: 10, day: 7, hour: 12)))
