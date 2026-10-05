@@ -162,4 +162,52 @@ import Testing
         #expect(revision.oldValue == nil)
         #expect(revision.newValue == due.ISO8601Format())
     }
+
+    @Test("Move to a chosen date lands on that day, drops the time and is a user revision (#33)")
+    @MainActor func moveToChosenDate() async throws {
+        let store = try TestStore()
+        let calendar = try berlin()
+        let task = TaskItem(rawText: "Zahnarzt anrufen")
+        let wednesday = try day(2026, 9, 16, in: calendar)
+        task.dueDate = try #require(calendar.date(byAdding: .hour, value: 5, to: wednesday))
+        task.dueHasTime = true
+        store.context.insert(task)
+        let chosen = try #require(calendar.date(from: DateComponents(year: 2026, month: 10, day: 7, hour: 18, minute: 30)))
+
+        let due = TaskActions.move(task, to: .date(chosen), contexts: [], projects: [], now: wednesday, calendar: calendar)
+        try store.context.save()
+
+        #expect(due == calendar.startOfDay(for: chosen))
+        #expect(task.dueDate == due)
+        #expect(task.dueHasTime == false, "a moved task keeps the day, not the time")
+        #expect(task.dueSourceRaw == FieldSource.user.rawValue)
+        let revision = try #require(task.revisions?.first)
+        #expect(revision.author == .user)
+        #expect(revision.field == .dueDate)
+        #expect(revision.newValue == due.ISO8601Format())
+    }
+
+    @Test("The date picker starts on a due day ahead, otherwise on tomorrow (#33)")
+    @MainActor func suggestedMoveDate() async throws {
+        let calendar = try berlin()
+        let wednesday = try day(2026, 9, 16, in: calendar)
+        let thursday = try calendar.startOfDay(for: day(2026, 9, 17, in: calendar))
+        let nextMonday = try day(2026, 9, 21, in: calendar)
+
+        let undated = TaskItem(rawText: "Ohne Datum")
+        #expect(TaskActions.suggestedMoveDate(for: undated, now: wednesday, calendar: calendar) == thursday)
+
+        let ahead = TaskItem(rawText: "Später")
+        ahead.dueDate = nextMonday
+        #expect(TaskActions.suggestedMoveDate(for: ahead, now: wednesday, calendar: calendar) == calendar.startOfDay(for: nextMonday))
+
+        let overdue = TaskItem(rawText: "Überfällig")
+        overdue.dueDate = try day(2026, 9, 10, in: calendar)
+        #expect(TaskActions.suggestedMoveDate(for: overdue, now: wednesday, calendar: calendar) == thursday)
+
+        let today = TaskItem(rawText: "Heute")
+        today.dueDate = wednesday
+        #expect(TaskActions.suggestedMoveDate(for: today, now: wednesday, calendar: calendar) == thursday,
+                "moving to the day it is already due is no move")
+    }
 }

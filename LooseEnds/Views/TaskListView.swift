@@ -16,6 +16,8 @@ struct TaskListView: View {
 
     @State private var pendingDelete: TaskItem?
     @State private var confirmingDelete = false
+    /// The task whose "Move → Date…" sheet is open (#33).
+    @State private var datingTask: TaskItem?
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "List")
 
     /// The system kind, nil for a context or project view.
@@ -74,6 +76,11 @@ struct TaskListView: View {
                 .accessibilityIdentifier("confirmDeleteButton")
         } message: { _ in
             Text("This cannot be undone.")
+        }
+        .sheet(item: $datingTask) { task in
+            MoveDateSheet(start: TaskActions.suggestedMoveDate(for: task)) { day in
+                move(task, to: .date(day))
+            }
         }
     }
 
@@ -248,6 +255,8 @@ struct TaskListView: View {
                 Button("Tomorrow") { move(task, to: .tomorrow) }
                 Button("Weekend") { move(task, to: .weekend) }
                 Button("Next week") { move(task, to: .nextWeek) }
+                Button("Date…") { datingTask = task }
+                    .accessibilityIdentifier("menuMoveDate")
             }
             Button("Park", systemImage: "pause") { park(task) }
         }

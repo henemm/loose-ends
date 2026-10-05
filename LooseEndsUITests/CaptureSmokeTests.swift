@@ -586,4 +586,57 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(toggle.waitForExistence(timeout: 5))
         XCTAssertTrue(waitForValue("1", of: toggle), "The switch should be saved")
     }
+
+    /// Captures one task and opens "New"; returns its row there.
+    @MainActor
+    private func captureIntoNew(_ text: String, in app: XCUIApplication) -> XCUIElement {
+        let captureButton = app.buttons["captureButton"]
+        XCTAssertTrue(captureButton.waitForExistence(timeout: 10))
+        captureButton.tap()
+        let field = element("captureTextField", in: app)
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText(text)
+        app.buttons["captureDoneButton"].tap()
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5))
+
+        let newRow = element("viewRow_new", in: app)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
+        newRow.tap()
+        let row = taskRow(in: app)
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "Task row should be listed in New")
+        return row
+    }
+
+    /// #33: "Move → Date…" opens a calendar and sets the chosen day as the due date.
+    @MainActor
+    func testMoveToChosenDateSetsDueDate() throws {
+        let app = launch()
+        let row = captureIntoNew("Garage aufräumen", in: app)
+
+        let move = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "label == %@", "Move"))
+            .firstMatch
+        openMenu(on: row, expecting: move)
+        XCTAssertTrue(move.waitForExistence(timeout: 5), "Long press should open the menu with Move")
+        move.tap()
+
+        let chooseDate = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier == %@ OR label == %@", "menuMoveDate", "Date…"))
+            .firstMatch
+        XCTAssertTrue(chooseDate.waitForExistence(timeout: 5), "Move should offer Date…")
+        chooseDate.tap()
+
+        let confirm = app.buttons["moveDateConfirm"]
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5), "Date… should open the calendar sheet")
+        XCTAssertTrue(element("moveDatePicker", in: app).exists, "The sheet should show the calendar")
+        confirm.tap()
+        XCTAssertTrue(confirm.waitForNonExistence(timeout: 5), "Move should close the sheet")
+
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        row.tap()
+        assertDetailRawText("Garage aufräumen", in: app)
+        // Empty fields wait behind "Add detail" (#187): a due date row without opening it proves the move.
+        XCTAssertTrue(element("field_dueDate", in: app).waitForExistence(timeout: 5), "The moved task should show its due date")
+    }
 }

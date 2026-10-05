@@ -163,6 +163,8 @@
     "From someone waiting for this in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Weil jemand in der Notiz darauf wartet." } } } },
     "From an urgency word in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus einem Dringlichkeits-Wort in der Notiz." } } } },
     "From a deadline reference in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus einem Fristbezug in der Notiz." } } } },
-    "From a raw text captured before, word for word." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus einem schon einmal erfassten Text, wortgleich." } } } }
+    "From a raw text captured before, word for word." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus einem schon einmal erfassten Text, wortgleich." } } } },
+    "Date…" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Datum …" } } } },
+    "Move to" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Verschieben auf" } } } }
   }
 }
