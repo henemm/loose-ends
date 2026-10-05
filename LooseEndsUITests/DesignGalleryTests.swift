@@ -21,7 +21,7 @@ final class DesignGalleryTests: XCTestCase {
         app.launchArguments = [
             "--ui-testing",
             "-AppleLanguages", "(en)", "-AppleLocale", "en_US",
-            "-contextsSeeded", "NO",
+            "-contextsEmptiedByUser", "NO",
         ] + (dark ? ["--ui-testing-dark"] : [])
         app.launch()
         return app

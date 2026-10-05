@@ -28,19 +28,19 @@ final class RecognitionWalkthroughTests: XCTestCase {
     /// Beschriftungen wörtlich ("30 min", "Garden"), der Lauf darf also nicht an der Sprache des
     /// Rechners hängen (dieselbe Falle wie in `CaptureSmokeTests`, gefunden bei #121).
     ///
-    /// `-contextsSeeded NO` ist nicht Kosmetik, sondern nötig: `--ui-testing` gibt einen frischen
-    /// In-Memory-Store, `ContextSeeder` merkt sich sein einmaliges Säen aber in den
-    /// Nutzereinstellungen — und die überleben den Lauf. Ab dem zweiten UI-Lauf auf demselben
-    /// Simulator stünde der Store sonst ohne einen einzigen Kontext da, und dieser Test würde am
-    /// Aufbau scheitern statt an der Sache (beim RED-Lauf am 2026-09-28 genau so passiert). Ein
-    /// Startargument `-key value` landet in der Argument-Domäne und schlägt den gespeicherten Wert.
+    /// `-contextsEmptiedByUser NO`: `--ui-testing` gibt einen frischen In-Memory-Store, und
+    /// `ContextSeeder` sät, solange der Nutzer den Katalog nicht selbst geleert hat (#146). Dieses
+    /// Merkzeichen liegt in den Nutzereinstellungen und überlebt den Lauf; hätte ein früherer Lauf
+    /// den letzten Kontext gelöscht, stünde der Store ohne Kontext da, und der Test scheiterte am
+    /// Aufbau statt an der Sache (vor #146 mit `-contextsSeeded` so passiert, RED-Lauf 2026-09-28).
+    /// Ein Startargument `-key value` landet in der Argument-Domäne und schlägt den gespeicherten Wert.
     @MainActor
     private func launch() -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = [
             "--ui-testing",
             "-AppleLanguages", "(en)", "-AppleLocale", "en_US",
-            "-contextsSeeded", "NO",
+            "-contextsEmptiedByUser", "NO",
         ]
         app.launch()
         return app

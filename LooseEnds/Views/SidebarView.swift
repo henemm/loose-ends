@@ -260,7 +260,7 @@ struct SidebarView: View {
             CatalogService.delete(project, in: modelContext)
         case .context(let context):
             if selection == .context(context.id) { selection = nil }
-            CatalogService.delete(context, in: modelContext)
+            CatalogService.delete(context, in: modelContext, among: contexts)
         case .newProject, .newContext:
             return
         }
