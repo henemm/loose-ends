@@ -27,12 +27,12 @@ import Testing
 
     @Test("At most twelve words, no ellipsis, a comma on the twelfth word goes")
     func twelveWords() {
-        let words = (1...30).map { "w\($0)" }
+        let words = (1...30).map { "W\($0)" } // upper case: the rule raises the first letter (test 6)
         let twelve = words.prefix(12).joined(separator: " ")
         #expect(TitleRule.title(from: twelve) == twelve)
         #expect(TitleRule.title(from: words.prefix(13).joined(separator: " ")) == twelve)
         #expect(TitleRule.title(from: words.joined(separator: " ")) == twelve)
-        let comma = (Array(words.prefix(11)) + ["w12,", "w13"]).joined(separator: " ")
+        let comma = (Array(words.prefix(11)) + ["W12,", "W13"]).joined(separator: " ")
         #expect(TitleRule.title(from: comma) == twelve)
     }
 

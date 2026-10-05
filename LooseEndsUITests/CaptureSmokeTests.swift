@@ -205,13 +205,15 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(waitForValue("Termin bei Auto Senger machen für Inspektion und Reifenwechsel", of: titleField),
                       "Title field should hold the cleaned title, was \(String(describing: titleField.value))")
         XCTAssertFalse(element("detailRawText", in: app).exists, "Same words as the title: no \"You said:\" line")
+        attachScreenshot(app, "202-detail-regeltitel")
 
-        // Back to the list: the row carries the same title.
+        // Back to the list: the row carries the same title. The simulator has a model that may replace
+        // it meanwhile with the same words in lower case, so the row check ignores case (#202).
         let back = app.navigationBars.buttons.firstMatch
         if back.waitForExistence(timeout: 5) { back.tap() }
         let row = taskRow(in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5))
-        XCTAssertTrue(row.label.contains("Termin bei Auto Senger machen für Inspektion und Reifenwechsel"),
+        XCTAssertTrue(row.label.lowercased().contains("Termin bei Auto Senger machen für Inspektion und Reifenwechsel".lowercased()),
                       "Row should show the title, was \(row.label)")
     }
 
@@ -227,6 +229,16 @@ final class CaptureSmokeTests: XCTestCase {
         let rawText = element("detailRawText", in: app)
         XCTAssertTrue(rawText.waitForExistence(timeout: 5), "Different words: \"You said:\" shows the full text")
         XCTAssertEqual(rawText.label, words)
+        attachScreenshot(app, "202-detail-zwoelf-woerter")
+    }
+
+    /// Keeps a screenshot in the result bundle as evidence (#202).
+    @MainActor
+    private func attachScreenshot(_ app: XCUIApplication, _ name: String) {
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 
     /// Nur für den Nachweis an Henning: hält jeden Schritt des Capture-Wegs als Bild fest.

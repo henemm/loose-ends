@@ -1,18 +1,28 @@
 # Simulator-Beleg
-erzeugt: 2026-10-05T12:47:21+0200
-befehl: scripts/sim.sh test-proof Repro202Tests
+erzeugt: 2026-10-05T14:53:49+0200
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
 workflow: bug-202-titel
-head: 723f3cd3c29f2b0eb36133dde16d6fc56181f186
-basis: 723f3cd3c29f2b0eb36133dde16d6fc56181f186 (merge-base origin/main HEAD)
-testklasse: Repro202Tests
-ergebnis: Passed
-xcodebuild: ** TEST SUCCEEDED **
-tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
-start: 1791196591.709  ende: 1791197240.41
+head: 57a4f28e2e9312486868876f50b2b32bfc7e1252
+basis: a261caf4fbc0552e2501762c7492597d2ba045fd (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Failed
+xcodebuild: ** TEST FAILED **
+tests: 17 gesamt, 15 bestanden, 2 fehlgeschlagen, 0 übersprungen
+start: 1791204340.053  ende: 1791204828.446
 geraet: iPhone 17, iOS 27.0
-summary: docs/artifacts/bug-202-titel/simulator-run/summary.json  sha256:f66c43d4126683469d8dc2586ff655e60c13fa4e78ab12e9bd9d7356461cb207
+summary: docs/artifacts/bug-202-titel/simulator-run/summary.json  sha256:eecb0575c3e5d9f3cb1ce0fbd5e9fed440f4e3e66a4c00dbb9c902bae35eb2ae
 xcresult: docs/artifacts/bug-202-titel/simulator-run/run.xcresult  (gitignored)
-screenshots: docs/artifacts/bug-202-titel/simulator-run/*.png (2 Stück)
+screenshots: docs/artifacts/bug-202-titel/simulator-run/*.png (6 Stück)
 
 ## Geprüfte Dateien
-- sha256:67b56879093a3230aed0143e50af7d607620b6f9b5f0e60506cf2216ba958ea0  LooseEndsUITests/Repro202Tests.swift
+- sha256:cb83a3de87d86d6c4c25b49724d368b00cd07e378d4581d63387926c7c7311d5  LooseEnds/Views/TaskDetailView.swift
+- sha256:f9925e4742785678932257b68a3cb2fb0ad284136c63dd57594a9b08449391d4  LooseEndsTests/CaptureServiceTests.swift
+- sha256:29bb891aca3fcfd610652fe32314b21158246fd4923f6f7d08c4eff5ad772975  LooseEndsTests/RevisionServiceTests.swift
+- sha256:80b0343d979ade6aefdad55c5ee548bc75f646aead8962d5250c71979827e0cf  LooseEndsTests/TitleRuleTests.swift
+- sha256:63e56daefacd59dab90bc0c740773c298dfea08b832f46edb9cc26ef6abb194d  LooseEndsUITests/CaptureSmokeTests.swift
+- sha256:1d5c2889f0b36db57c68b6443d36a4134ef135106d639bd408eb097b20bc41a7  LooseEndsUITests/DesignGalleryTests.swift
+- sha256:9e80ad37a582c8094257a5adc1aec159cd6eb83f2f1f1bd692ee33fbe7db3acb  LooseEndsUITests/RecognitionWalkthroughTests.swift
+- sha256:39aba68e4a758b58900d137e499d46256ed69308683cf79b921d7f4e0edb7f8d  Shared/Models/TaskItem.swift
+- sha256:3ec08f6ab1e1cde70405cb4ddfbf47566f96e6dd91d2a0f6e3c429e33789bf2a  Shared/Services/CaptureService.swift
+- sha256:0d033742eb750e3cfc261b653b3f18c8872470027708e71251342f33dfce9aeb  Shared/Services/RevisionService.swift
+- sha256:1765d090b27b15f5d5003cee9a915c3904dbc264147993f046837c5b5cb8c738  Shared/Services/TitleRule.swift

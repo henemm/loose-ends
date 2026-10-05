@@ -25,7 +25,8 @@ enum RevisionService {
         projects: [Project],
         now: Date = Date()
     ) -> Revision {
-        set(revision.field, to: revision.oldValue, on: task, contexts: contexts, projects: projects, now: now, force: true)
+        set(revision.field, to: restoreValue(of: revision, on: task), on: task,
+            contexts: contexts, projects: projects, now: now, force: true)
             ?? revision
     }
 
@@ -40,11 +41,19 @@ enum RevisionService {
         var written: [Revision] = []
         for field in RevisedField.allCases {
             guard let first = firstAIRevision(of: field, on: task) else { continue }
-            if let revision = set(field, to: first.oldValue, on: task, contexts: contexts, projects: projects, now: now, force: false) {
+            if let revision = set(field, to: restoreValue(of: first, on: task), on: task,
+                                  contexts: contexts, projects: projects, now: now, force: false) {
                 written.append(revision)
             }
         }
         return written
+    }
+
+    /// The value a reset puts back. A title from before the AI that was empty (tasks captured before
+    /// #202) becomes the rule title of the raw text, so a reset never leaves the title field empty.
+    private static func restoreValue(of revision: Revision, on task: TaskItem) -> String? {
+        if revision.field == .title, revision.oldValue == nil { return TitleRule.title(from: task.rawText) }
+        return revision.oldValue
     }
 
     /// A user change to one field. Returns nil when the value did not change (no revision written).
