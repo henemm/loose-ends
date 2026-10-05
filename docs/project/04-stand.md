@@ -37,8 +37,12 @@ Prioritätsreihenfolge; Details, Umfang und DoD stehen im jeweiligen Issue.
 **Stabilität vor allem anderen** (Tech Lead, 2026-10-03): Ein Absturz in der Erfassung blockiert
 jede Einladung externer Tester über TestFlight.
 
-- [#184](https://github.com/henemm/loose-ends/issues/184) Absturz in `SpeechCapture.startEngine`, wenn
-  der Audio-Dienst nicht rechtzeitig antwortet (gesehen im CI-Simulator, Gerätestufe Pflicht)
+- ~~[#184](https://github.com/henemm/loose-ends/issues/184) Absturz in `SpeechCapture.startEngine`~~ —
+  geschlossen 2026-10-05 als nicht reproduzierbar: 0 Abstürze in 70 Stressläufen, gesehen nur einmal
+  auf einem auffällig langsamen CI-Runner. Überwacht durch `speech-stress.yml` bei jeder PR, die die
+  Spracherfassung berührt; taucht er dort auf, wird das Ticket wieder geöffnet.
+- [#193](https://github.com/henemm/loose-ends/issues/193) Zustimmungs-Dialog nach „Not now“ — nicht
+  reproduzierbar (17 Läufe), bleibt nach Hennings Entscheidung vom 2026-10-05 ohne Code offen.
 
 **Spikes zuerst** (technisches Risiko, blockieren die Umsetzung der Must-Features):
 
