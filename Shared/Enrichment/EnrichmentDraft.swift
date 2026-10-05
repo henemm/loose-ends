@@ -47,7 +47,10 @@ struct EnrichmentInput: Sendable {
     var examples: [EnrichmentExample]
 }
 
-/// A past task with its final attributes: learning by retrieval, not training (ADR-5).
+/// A recently completed task with its final attributes, shown to the model as an example of how
+/// tasks get sorted here. Picked by recency (`EnrichmentCoordinator.examples`), not by similarity:
+/// the similarity-picked examples are gone since B1 (2026-09-27); learning is recognition of a raw
+/// text captured before, which `RecognitionRule` does without the model (ADR-5, #136).
 struct EnrichmentExample: Sendable {
     var rawText: String
     var title: String?
