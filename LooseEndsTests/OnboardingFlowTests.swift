@@ -16,12 +16,16 @@ import Testing
         var flow = OnboardingFlow()
         #expect(flow.step == .siri)
         #expect(!flow.isLastStep)
-        #expect(flow.advance())
+        // `advance` mutates, and `#expect` cannot take a mutating call: take the result first.
+        let toNotifications = flow.advance()
+        #expect(toNotifications)
         #expect(flow.step == .notifications)
-        #expect(flow.advance())
+        let toContexts = flow.advance()
+        #expect(toContexts)
         #expect(flow.step == .contexts)
         #expect(flow.isLastStep)
-        #expect(!flow.advance(), "after the last step the caller finishes")
+        let beyondLast = flow.advance()
+        #expect(!beyondLast, "after the last step the caller finishes")
         #expect(flow.step == .contexts)
     }
 
