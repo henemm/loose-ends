@@ -1,0 +1,12 @@
+Build (iOS Simulator)	UNKNOWN STEP	2026-10-03T07:58:06.5515230Z ^[[36;1m  echo "No Xcode 27 on this image: deployment targets lowered to 26.0 for this run."^[[0m
+Build (iOS Simulator)	UNKNOWN STEP	2026-10-03T07:58:06.6261900Z No Xcode 27 on this image: deployment targets lowered to 26.0 for this run.
+Build (iOS Simulator)	UNKNOWN STEP	2026-10-03T07:58:06.9245730Z Xcode 26.6
+Build (iOS Simulator)	UNKNOWN STEP	2026-10-03T07:58:06.9261580Z Build version 17F113
+UI Smoke (iOS Simulator)	Select newest Xcode (27 when the image has it)	2026-10-03T07:58:02.8371390Z ^[[36;1m  echo "No Xcode 27 on this image: deployment targets lowered to 26.0 for this run."^[[0m
+UI Smoke (iOS Simulator)	Select newest Xcode (27 when the image has it)	2026-10-03T07:58:02.8755640Z No Xcode 27 on this image: deployment targets lowered to 26.0 for this run.
+UI Smoke (iOS Simulator)	Select newest Xcode (27 when the image has it)	2026-10-03T07:58:03.1522160Z Xcode 26.6
+UI Smoke (iOS Simulator)	Select newest Xcode (27 when the image has it)	2026-10-03T07:58:03.1530590Z Build version 17F113
+Unit Tests (macOS destination)	UNKNOWN STEP	2026-10-03T07:58:03.0639910Z ^[[36;1m  echo "No Xcode 27 on this image: deployment targets lowered to 26.0 for this run."^[[0m
+Unit Tests (macOS destination)	UNKNOWN STEP	2026-10-03T07:58:03.1062400Z No Xcode 27 on this image: deployment targets lowered to 26.0 for this run.
+Unit Tests (macOS destination)	UNKNOWN STEP	2026-10-03T07:58:03.3807850Z Xcode 26.6
+Unit Tests (macOS destination)	UNKNOWN STEP	2026-10-03T07:58:03.3818210Z Build version 17F113
