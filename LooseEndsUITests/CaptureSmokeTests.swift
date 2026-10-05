@@ -173,6 +173,62 @@ final class CaptureSmokeTests: XCTestCase {
         assertDetailRawText("Rasenmäher Ölwechsel", in: app)
     }
 
+    /// Captures `text`, opens New and returns the detail's title field (#202).
+    @MainActor
+    private func captureAndOpenDetail(_ text: String, in app: XCUIApplication) -> XCUIElement {
+        let captureButton = app.buttons["captureButton"]
+        XCTAssertTrue(captureButton.waitForExistence(timeout: 10))
+        captureButton.tap()
+        let field = element("captureTextField", in: app)
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText(text)
+        app.buttons["captureDoneButton"].tap()
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5))
+        let newRow = element("viewRow_new", in: app)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
+        newRow.tap()
+        let row = taskRow(in: app)
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "Captured task should appear in New")
+        row.tap()
+        let titleField = element("detailTitleField", in: app)
+        XCTAssertTrue(titleField.waitForExistence(timeout: 5), "Detail should offer the title field")
+        return titleField
+    }
+
+    /// #202: a task has a title from the moment it is captured, without the model (the simulator has none).
+    @MainActor
+    func testCapturedTaskHasTitleInDetail() throws {
+        let app = launch()
+        let titleField = captureAndOpenDetail("termin bei Auto Senger machen für Inspektion und Reifenwechsel.", in: app)
+
+        XCTAssertTrue(waitForValue("Termin bei Auto Senger machen für Inspektion und Reifenwechsel", of: titleField),
+                      "Title field should hold the cleaned title, was \(String(describing: titleField.value))")
+        XCTAssertFalse(element("detailRawText", in: app).exists, "Same words as the title: no \"You said:\" line")
+
+        // Back to the list: the row carries the same title.
+        let back = app.navigationBars.buttons.firstMatch
+        if back.waitForExistence(timeout: 5) { back.tap() }
+        let row = taskRow(in: app)
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        XCTAssertTrue(row.label.contains("Termin bei Auto Senger machen für Inspektion und Reifenwechsel"),
+                      "Row should show the title, was \(row.label)")
+    }
+
+    /// #202: a long dictation gets its first twelve words as title; the full text stays below.
+    @MainActor
+    func testLongCaptureKeepsFullTextBelowTwelveWordTitle() throws {
+        let app = launch()
+        let words = "eins zwei drei vier fünf sechs sieben acht neun zehn elf zwölf dreizehn vierzehn"
+        let titleField = captureAndOpenDetail(words, in: app)
+
+        XCTAssertTrue(waitForValue("Eins zwei drei vier fünf sechs sieben acht neun zehn elf zwölf", of: titleField),
+                      "Title should hold the first twelve words, was \(String(describing: titleField.value))")
+        let rawText = element("detailRawText", in: app)
+        XCTAssertTrue(rawText.waitForExistence(timeout: 5), "Different words: \"You said:\" shows the full text")
+        XCTAssertEqual(rawText.label, words)
+    }
+
     /// Nur für den Nachweis an Henning: hält jeden Schritt des Capture-Wegs als Bild fest.
     @MainActor
     func testPlusButtonProof() throws {

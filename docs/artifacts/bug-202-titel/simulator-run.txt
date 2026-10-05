@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-10-05T12:47:21+0200
+befehl: scripts/sim.sh test-proof Repro202Tests
+workflow: bug-202-titel
+head: 723f3cd3c29f2b0eb36133dde16d6fc56181f186
+basis: 723f3cd3c29f2b0eb36133dde16d6fc56181f186 (merge-base origin/main HEAD)
+testklasse: Repro202Tests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1791196591.709  ende: 1791197240.41
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/bug-202-titel/simulator-run/summary.json  sha256:f66c43d4126683469d8dc2586ff655e60c13fa4e78ab12e9bd9d7356461cb207
+xcresult: docs/artifacts/bug-202-titel/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/bug-202-titel/simulator-run/*.png (2 Stück)
+
+## Geprüfte Dateien
+- sha256:67b56879093a3230aed0143e50af7d607620b6f9b5f0e60506cf2216ba958ea0  LooseEndsUITests/Repro202Tests.swift

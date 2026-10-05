@@ -1,0 +1,26 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "E19F33E4-C032-44ED-9EEE-F943FE9D2279.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "2-detail_0_D711270D-07E6-4613-AEC7-5597A58396BF.png",
+        "timestamp" : 1791196639.361
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "EF75F55F-5193-45EC-9A21-F0D6F43FA686.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "1-liste-neu_0_832CB97B-F70E-4F63-B886-D1C8708813A6.png",
+        "timestamp" : 1791196637.432
+      }
+    ],
+    "testIdentifier" : "Repro202Tests/testReproTitle()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/Repro202Tests/testReproTitle"
+  }
+]
