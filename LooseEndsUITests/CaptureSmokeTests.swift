@@ -49,7 +49,7 @@ final class CaptureSmokeTests: XCTestCase {
     /// The open detail belongs to the captured task: its raw text is immutable, unlike the title.
     @MainActor
     private func assertDetailRawText(_ text: String, in app: XCUIApplication) {
-        let rawText = element("detailRawText", in: app)
+        let rawText = element("detailRawTextMarker", in: app)
         XCTAssertTrue(rawText.waitForExistence(timeout: 5), "Detail should show the raw text")
         XCTAssertEqual(rawText.label, text, "Detail should belong to the captured task")
     }
@@ -65,7 +65,7 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(row.waitForExistence(timeout: 5), "Row should exist before opening its menu")
         let hittable = NSPredicate(format: "isHittable == true")
         _ = XCTWaiter().wait(for: [XCTNSPredicateExpectation(predicate: hittable, object: row)], timeout: 5)
-        let detailRawText = element("detailRawText", in: XCUIApplication())
+        let detailRawText = element("detailRawTextMarker", in: XCUIApplication())
         for duration in [1.2, 1.5, 2.0] {
             row.press(forDuration: duration)
             if item.waitForExistence(timeout: 5) {
@@ -291,7 +291,7 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(row.waitForExistence(timeout: 5), "Task row should be listed in New")
         row.tap()
 
-        let rawText = element("detailRawText", in: app)
+        let rawText = element("detailRawTextMarker", in: app)
         XCTAssertTrue(rawText.waitForExistence(timeout: 5), "Detail should show the raw text")
         XCTAssertEqual(rawText.label, "Dachrinne reinigen")
         let titleField = element("detailTitleField", in: app)
@@ -752,6 +752,6 @@ final class CaptureSmokeTests: XCTestCase {
 
         let note = element("reanalysisNote", in: app)
         XCTAssertTrue(note.waitForExistence(timeout: 10), "The detail should report what the second run found")
-        XCTAssertTrue(element("detailRawText", in: app).exists, "The raw text stays as it was")
+        XCTAssertTrue(element("detailRawTextMarker", in: app).exists, "The raw text stays as it was")
     }
 }

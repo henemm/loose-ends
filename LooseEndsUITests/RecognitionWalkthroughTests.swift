@@ -138,7 +138,7 @@ final class RecognitionWalkthroughTests: XCTestCase {
         XCTAssertTrue(first.waitForExistence(timeout: 5), "Die erste Aufgabe steht nicht in Neu")
         shot(app, "1-erste-aufgabe-erfasst")
         first.tap()
-        let firstRawText = element("detailRawText", in: app)
+        let firstRawText = element("detailRawTextMarker", in: app)
         XCTAssertTrue(waitForLabel(Self.firstText, of: firstRawText),
                       "Die geöffnete Detailansicht zeigt nicht den ersten Rohtext")
 
@@ -191,7 +191,7 @@ final class RecognitionWalkthroughTests: XCTestCase {
 
         // 5. Der Nachweis: die zweite Aufgabe trägt Dauer und Kontext der ersten.
         second.tap()
-        let secondRawText = element("detailRawText", in: app)
+        let secondRawText = element("detailRawTextMarker", in: app)
         XCTAssertTrue(waitForLabel(Self.secondText, of: secondRawText),
                       "Die geöffnete Detailansicht zeigt nicht den zweiten Rohtext")
         let secondDuration = element("field_duration", in: app)
