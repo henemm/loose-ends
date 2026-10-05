@@ -189,6 +189,8 @@
     "Apple Intelligence is still getting ready. Tasks captured meanwhile are sorted once it is." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Apple Intelligence wird noch vorbereitet. Was du bis dahin erfasst, wird danach sortiert." } } } },
     "This device has no Apple Intelligence. Tasks keep the words you said; due dates, importance and urgency are still found." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Dieses Gerät hat kein Apple Intelligence. Aufgaben behalten deine Worte; Fälligkeit, Wichtigkeit und Dringlichkeit werden trotzdem erkannt." } } } },
     "Show subtasks" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Unteraufgaben zeigen" } } } },
-    "Hide subtasks" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Unteraufgaben ausblenden" } } } }
+    "Hide subtasks" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Unteraufgaben ausblenden" } } } },
+    "Shown" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Angezeigt" } } } },
+    "Hidden" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ausgeblendet" } } } }
   }
 }

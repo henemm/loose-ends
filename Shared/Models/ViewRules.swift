@@ -36,6 +36,17 @@ enum ViewRules {
         }
     }
 
+    /// The three views a day starts from; the start screen shows them even when empty.
+    static let dailyViews: [ViewKind] = [.next, .new, .due]
+    /// Every other view of the start screen, in its order; Done sits apart at the bottom.
+    static let occasionalViews: [ViewKind] = [.quick, .old, .waiting, .repeating, .parked]
+
+    /// The system views of the start screen (Henning, 2026-10-05): the daily three always, the
+    /// others only while they hold a task, so the screen does not open on a column of empty rows.
+    static func startViews(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [ViewKind] {
+        dailyViews + occasionalViews.filter { !tasks(for: $0, in: all, now: now, calendar: calendar).isEmpty }
+    }
+
     static func tasks(for kind: ViewKind, in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [TaskItem] {
         let topLevel = all.filter { $0.parent == nil }
         switch kind {

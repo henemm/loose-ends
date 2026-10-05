@@ -22,6 +22,8 @@ final class DesignGalleryTests: XCTestCase {
             "--ui-testing",
             "-AppleLanguages", "(en)", "-AppleLocale", "en_US",
             "-contextsEmptiedByUser", "NO",
+            // The start screen as it opens by default: projects and contexts folded.
+            "-startShowsProjects", "NO", "-startShowsContexts", "NO",
         ] + (dark ? ["--ui-testing-dark"] : [])
         app.launch()
         return app
@@ -92,15 +94,24 @@ final class DesignGalleryTests: XCTestCase {
         app.swipeDown()
 
         // An empty view: the loose thread over its sentence (#180, step 3).
-        let waitingRow = element("viewRow_waiting", in: app)
-        XCTAssertTrue(waitingRow.waitForExistence(timeout: 5), "Start screen shows no Waiting")
-        waitingRow.tap()
-        XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 5), "Waiting is not empty")
+        // Completed: nothing is finished in the gallery, and unlike the occasional views it is
+        // always on the start screen (empty ones like Waiting are hidden since 2026-10-05).
+        let doneRow = element("viewRow_done", in: app)
+        for _ in 0..<3 where !doneRow.waitForExistence(timeout: 2) {
+            app.swipeUp()
+        }
+        XCTAssertTrue(doneRow.waitForExistence(timeout: 5), "Start screen shows no Completed")
+        doneRow.tap()
+        XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 5), "Completed is not empty")
         shot(app, "gallery-\(label)-5-empty")
         let back = app.navigationBars.buttons.firstMatch
         XCTAssertTrue(back.waitForExistence(timeout: 5), "No back button")
         back.tap()
 
+        // Completed sits at the bottom; New is back at the top.
+        for _ in 0..<3 where !newRow.waitForExistence(timeout: 2) {
+            app.swipeDown()
+        }
         XCTAssertTrue(newRow.waitForExistence(timeout: 5))
         newRow.tap()
         let row = app.descendants(matching: .any)
