@@ -356,24 +356,80 @@ struct TestStore {
 }
 
 @Suite("ContextSeeder") struct ContextSeederTests {
-    @Test("The default contexts are seeded once and never re-added after deletion")
-    @MainActor func seedsOnce() async throws {
+    /// A suite of its own per test, so no test reads or writes the real defaults.
+    private func scratchDefaults() throws -> UserDefaults {
+        let name = "ContextSeederTests-\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: name))
+        defaults.removePersistentDomain(forName: name)
+        return defaults
+    }
+
+    @Test("An empty store gets the default contexts; a store with contexts gets none")
+    @MainActor func seedsEmptyStoreOnly() async throws {
         let store = try TestStore()
-        let context = store.context
-        let suite = "ContextSeederTests-\(UUID().uuidString)"
-        let defaults = try #require(UserDefaults(suiteName: suite))
-        defer { defaults.removePersistentDomain(forName: suite) }
+        let defaults = try scratchDefaults()
 
-        let created = try ContextSeeder.seedIfNeeded(in: context, defaults: defaults)
+        let created = try ContextSeeder.seedIfNeeded(in: store.context, defaults: defaults)
         #expect(created.count == 6)
-        let allDefaults = created.allSatisfy(\.isSystemDefault)
-        #expect(allDefaults)
+        #expect(created.allSatisfy(\.isSystemDefault))
 
-        for item in created { context.delete(item) }
-        try context.save()
-        let again = try ContextSeeder.seedIfNeeded(in: context, defaults: defaults)
+        let again = try ContextSeeder.seedIfNeeded(in: store.context, defaults: defaults)
+        #expect(again.isEmpty, "contexts are there, nothing to seed")
+        #expect(try store.context.fetchCount(FetchDescriptor<TaskContext>()) == 6)
+    }
+
+    @Test("A lost store is seeded again even though this device seeded before (#146)")
+    @MainActor func lostStoreIsSeededAgain() async throws {
+        let defaults = try scratchDefaults()
+        // The marker of the old seeder, as a device that ran an earlier version carries it.
+        defaults.set(true, forKey: "contextsSeeded")
+        let first = try TestStore()
+        try ContextSeeder.seedIfNeeded(in: first.context, defaults: defaults)
+
+        // A fresh store with the same defaults: restored backup, rebuilt store, `--ui-testing`.
+        let rebuilt = try TestStore()
+        let created = try ContextSeeder.seedIfNeeded(in: rebuilt.context, defaults: defaults)
+
+        #expect(created.count == 6)
+        #expect(try rebuilt.context.fetchCount(FetchDescriptor<TaskContext>()) == 6)
+    }
+
+    @Test("Deleting one context never brings the defaults back")
+    @MainActor func deletingOneKeepsItGone() async throws {
+        let store = try TestStore()
+        let defaults = try scratchDefaults()
+        let created = try ContextSeeder.seedIfNeeded(in: store.context, defaults: defaults)
+        let garden = try #require(created.first)
+
+        CatalogService.delete(garden, in: store.context, among: created, defaults: defaults)
+        try store.context.save()
+        let again = try ContextSeeder.seedIfNeeded(in: store.context, defaults: defaults)
+
         #expect(again.isEmpty)
-        #expect(try context.fetchCount(FetchDescriptor<TaskContext>()) == 0)
+        #expect(try store.context.fetchCount(FetchDescriptor<TaskContext>()) == 5)
+    }
+
+    @Test("A catalog the user emptied stays empty; adding one context lifts that again (#146)")
+    @MainActor func emptiedByUserStaysEmpty() async throws {
+        let store = try TestStore()
+        let defaults = try scratchDefaults()
+        var remaining = try ContextSeeder.seedIfNeeded(in: store.context, defaults: defaults)
+        while let item = remaining.first {
+            CatalogService.delete(item, in: store.context, among: remaining, defaults: defaults)
+            remaining.removeFirst()
+        }
+        try store.context.save()
+
+        let afterEmptying = try ContextSeeder.seedIfNeeded(in: store.context, defaults: defaults)
+        #expect(afterEmptying.isEmpty, "a deliberately emptied catalog is not refilled")
+        #expect(try store.context.fetchCount(FetchDescriptor<TaskContext>()) == 0)
+
+        let own = try CatalogService.addContext(named: "Werkstatt", in: store.context, existing: [], defaults: defaults)
+        try store.context.save()
+        #expect(!defaults.bool(forKey: ContextSeeder.emptiedByUserKey))
+        CatalogService.delete(own, in: store.context, among: [own], defaults: defaults)
+        try store.context.save()
+        #expect(defaults.bool(forKey: ContextSeeder.emptiedByUserKey), "emptied again by the user")
     }
 }
 

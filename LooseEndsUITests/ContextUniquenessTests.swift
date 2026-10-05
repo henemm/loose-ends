@@ -56,7 +56,7 @@ final class ContextUniquenessTests: XCTestCase {
         app.launchArguments = [
             "--ui-testing",
             "-AppleLanguages", "(en)", "-AppleLocale", "en_US",
-            "-contextsSeeded", "NO",
+            "-contextsEmptiedByUser", "NO",
         ]
         app.launch()
 

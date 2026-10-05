@@ -18,11 +18,14 @@ enum CatalogService {
     }
 
     @discardableResult
-    static func addContext(named raw: String, in context: ModelContext, existing: [TaskContext]) throws -> TaskContext {
+    static func addContext(
+        named raw: String, in context: ModelContext, existing: [TaskContext], defaults: UserDefaults = .standard
+    ) throws -> TaskContext {
         let name = try cleaned(raw)
         guard !existing.contains(where: { sameName($0.name, name) }) else { throw CatalogError.duplicateName }
         let item = TaskContext(name: name, sortOrder: nextSortOrder(after: existing.map(\.sortOrder)))
         context.insert(item)
+        ContextSeeder.noteCatalog(remaining: existing.count + 1, defaults: defaults)
         return item
     }
 
@@ -92,8 +95,16 @@ enum CatalogService {
 
     /// The context's tasks stay and lose the tag, each as a user revision from the old list to
     /// the remaining one (#140). The remaining contexts are passed as the vocabulary, so the
-    /// codec keeps exactly them.
-    static func delete(_ taskContext: TaskContext, in context: ModelContext, now: Date = Date()) {
+    /// codec keeps exactly them. `contexts` are all contexts: deleting the last one tells the
+    /// seeder the catalog was emptied on purpose (#146).
+    static func delete(
+        _ taskContext: TaskContext,
+        in context: ModelContext,
+        among contexts: [TaskContext],
+        defaults: UserDefaults = .standard,
+        now: Date = Date()
+    ) {
+        ContextSeeder.noteCatalog(remaining: contexts.filter { $0.id != taskContext.id }.count, defaults: defaults)
         for task in taskContext.tasks ?? [] {
             let remaining = (task.contexts ?? []).filter { $0.id != taskContext.id }
             RevisionService.set(

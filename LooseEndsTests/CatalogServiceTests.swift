@@ -4,6 +4,14 @@ import Testing
 @testable import LooseEnds
 
 @Suite("CatalogService") struct CatalogServiceTests {
+    /// A suite of its own per test: deleting the last context writes a marker (#146).
+    private func scratchDefaults() throws -> UserDefaults {
+        let name = "CatalogServiceTests.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: name))
+        defaults.removePersistentDomain(forName: name)
+        return defaults
+    }
+
     @Test("A new project trims its name and sorts after the existing ones")
     @MainActor func addProject() async throws {
         let store = try TestStore()
@@ -79,7 +87,7 @@ import Testing
         task.contexts = [garden, phone]
         try store.context.save()
 
-        CatalogService.delete(garden, in: store.context)
+        CatalogService.delete(garden, in: store.context, among: [garden, phone], defaults: try scratchDefaults())
         try store.context.save()
 
         let contextCount = try store.context.fetchCount(FetchDescriptor<TaskContext>())
@@ -107,7 +115,7 @@ import Testing
         task.contextsSourceRaw = FieldSource.ai.rawValue
         try store.context.save()
 
-        CatalogService.delete(garden, in: store.context)
+        CatalogService.delete(garden, in: store.context, among: [garden, phone], defaults: try scratchDefaults())
         try store.context.save()
 
         #expect((task.contexts ?? []).map(\.name) == ["Telefon"], "the other tag stays")
@@ -128,7 +136,7 @@ import Testing
         task.contexts = [garden]
         try store.context.save()
 
-        CatalogService.delete(garden, in: store.context)
+        CatalogService.delete(garden, in: store.context, among: [garden], defaults: try scratchDefaults())
         try store.context.save()
 
         #expect((task.contexts ?? []).isEmpty)
@@ -196,7 +204,7 @@ import Testing
         let garden = TaskContext(name: "Garden", sortOrder: 0)
         store.context.insert(garden)
 
-        let garten = try CatalogService.addContext(named: "Garten", in: store.context, existing: [garden])
+        let garten = try CatalogService.addContext(named: "Garten", in: store.context, existing: [garden], defaults: scratchDefaults())
         try store.context.save()
 
         #expect(garten.name == "Garten")
