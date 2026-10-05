@@ -95,6 +95,12 @@ Modellaufruf glückte, dass der Regelschritt (Fälligkeitsdatum, Wichtigkeit, Dr
 Wiedererkennung) für diese Aufgabe gelaufen ist; die Vergleichsmenge der Wiedererkennung
 (`RecognitionRule`) liest `processedAt` und `rulesAppliedAt` gemeinsam, damit sie nicht am
 Modell hängt.
+Seit #34 ist die erneute Analyse „Neu analysieren" im Detail-Menü: derselbe Regelschritt und
+derselbe Modellaufruf wie beim ersten Mal (`EnrichmentCoordinator.reanalyze`). Sie darf jedes
+Feld neu setzen, das der Nutzer nie angefasst hat — von der KI gesetzt oder noch leer —, jede
+Änderung als neue KI-Revision vom alten Wert aus. Was der Nutzer gesetzt hat, bleibt; ein gleicher
+Wert erzeugt keine Revision; fehlt ein Feld im neuen Ergebnis, wird nichts gelöscht. Regeln vor dem
+Modell gilt auch hier: Ein Feld, das eine Regel trifft, überschreibt das Modell nicht.
 
 **ADR-5 Lernen ist Wiedererkennung, kein Training** (geändert 2026-09-27, Henning, nach #69/#131).
 Ursprünglich: ähnliche alte Aufgaben über Embeddings als Prompt-Beispiele. Die Messung hat das

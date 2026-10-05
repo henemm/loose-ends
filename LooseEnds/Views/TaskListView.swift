@@ -8,6 +8,7 @@ import SwiftUI
 struct TaskListView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(CompletionPulse.self) private var completionPulse: CompletionPulse?
+    @Environment(PendingCompletions.self) private var pendingCompletions: PendingCompletions?
     @Query(sort: \TaskContext.sortOrder) private var contexts: [TaskContext]
     @Query(sort: \Project.sortOrder) private var projects: [Project]
     let selection: ViewSelection
@@ -16,6 +17,8 @@ struct TaskListView: View {
 
     @State private var pendingDelete: TaskItem?
     @State private var confirmingDelete = false
+    /// The task whose "Move → Date…" sheet is open (#33).
+    @State private var datingTask: TaskItem?
     /// Parents whose subtasks are folded out in the project view (#28); folded by default.
     @State private var unfolded: Set<UUID> = []
     /// The disclosure arrow's width, so titles line up with and without one.
@@ -80,6 +83,11 @@ struct TaskListView: View {
                 .accessibilityIdentifier("confirmDeleteButton")
         } message: { _ in
             Text("This cannot be undone.")
+        }
+        .sheet(item: $datingTask) { task in
+            MoveDateSheet(start: TaskActions.suggestedMoveDate(for: task)) { day in
+                move(task, to: .date(day))
+            }
         }
     }
 
@@ -164,7 +172,13 @@ struct TaskListView: View {
         if let project {
             ForEach(ViewRules.lines(inProject: project, in: tasks, unfolded: unfolded)) { line in
                 switch line {
-                case .task(let task): projectTaskRow(task)
+                case .task(let task):
+                    // The Done window (#32) holds here too: struck through with Undo for three seconds.
+                    if pendingCompletions?.isPending(task.id) == true {
+                        pendingRow(task)
+                    } else {
+                        projectTaskRow(task)
+                    }
                 case .subtask(let subtask, _): subtaskRow(subtask)
                 }
             }
@@ -248,7 +262,35 @@ struct TaskListView: View {
         .paperRow()
     }
 
+    @ViewBuilder
     private func row(_ task: TaskItem) -> some View {
+        if pendingCompletions?.isPending(task.id) == true {
+            pendingRow(task)
+        } else {
+            openRow(task)
+        }
+    }
+
+    /// Done, waiting out its three seconds (#32): struck through, no link, no swipes. A second tap
+    /// anywhere on the row takes it back; "Undo" says so. The long-press menu stays for Delete.
+    private func pendingRow(_ task: TaskItem) -> some View {
+        HStack {
+            TaskRow(task: task, hidesContext: context != nil, note: note(for: task))
+                .strikethrough()
+                .foregroundStyle(.secondary)
+            Spacer(minLength: 8)
+            Button("Undo") { undoComplete(task) }
+                .buttonStyle(.borderless)
+                .font(.callout)
+                .accessibilityIdentifier("undoComplete_\(task.id.uuidString)")
+        }
+        .contentShape(Rectangle())
+        .onTapGesture { undoComplete(task) }
+        .contextMenu { menu(task) }
+        .paperRow()
+    }
+
+    private func openRow(_ task: TaskItem) -> some View {
         NavigationLink {
             TaskDetailView(task: task)
         } label: {
@@ -339,12 +381,18 @@ struct TaskListView: View {
             } else {
                 Button("Remove from Next up", systemImage: "star.slash") { toggleNext(task) }
             }
-            Button("Complete", systemImage: "checkmark") { complete(task) }
-                .accessibilityIdentifier("menuDone")
+            if pendingCompletions?.isPending(task.id) == true {
+                Button("Undo", systemImage: "arrow.uturn.backward") { undoComplete(task) }
+            } else {
+                Button("Complete", systemImage: "checkmark") { complete(task) }
+                    .accessibilityIdentifier("menuDone")
+            }
             Menu("Move", systemImage: "calendar") {
                 Button("Tomorrow") { move(task, to: .tomorrow) }
                 Button("Weekend") { move(task, to: .weekend) }
                 Button("Next week") { move(task, to: .nextWeek) }
+                Button("Date…") { datingTask = task }
+                    .accessibilityIdentifier("menuMoveDate")
             }
             Button("Park", systemImage: "pause") { park(task) }
         }
@@ -358,10 +406,20 @@ struct TaskListView: View {
 
     // MARK: - Actions
 
+    /// Starts the three-second window (#32); `ContentView` completes once it ran out. Without the
+    /// window (previews) Done lands at once.
     private func complete(_ task: TaskItem) {
+        if let pendingCompletions {
+            pendingCompletions.schedule(task.id)
+            return
+        }
         TaskActions.complete(task)
         save("done")
         completionPulse?.fire()
+    }
+
+    private func undoComplete(_ task: TaskItem) {
+        pendingCompletions?.cancel(task.id)
     }
 
     private func restore(_ task: TaskItem) {
@@ -396,6 +454,7 @@ struct TaskListView: View {
     }
 
     private func delete(_ task: TaskItem) {
+        pendingCompletions?.cancel(task.id)
         modelContext.delete(task)
         pendingDelete = nil
         save("delete")

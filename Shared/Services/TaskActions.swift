@@ -75,6 +75,15 @@ enum TaskActions {
         return day
     }
 
+    /// Where the date picker of "Move → Date…" starts (#33): the current due day while it lies
+    /// ahead, otherwise tomorrow — moving to today or into the past is never the likely intent.
+    static func suggestedMoveDate(for task: TaskItem, now: Date = Date(), calendar: Calendar = .current) -> Date {
+        let tomorrow = dueDate(for: .tomorrow, now: now, calendar: calendar)
+        guard let due = task.dueDate else { return tomorrow }
+        let day = calendar.startOfDay(for: due)
+        return day >= tomorrow ? day : tomorrow
+    }
+
     /// Tomorrow, the coming Saturday, the coming Monday, or a chosen day; always at start of day.
     static func dueDate(for target: MoveTarget, now: Date, calendar: Calendar) -> Date {
         let today = calendar.startOfDay(for: now)
