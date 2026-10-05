@@ -29,6 +29,9 @@ final class CaptureCancelCrashTests: XCTestCase {
     @MainActor
     func testCancelAfterCaptureOpensLeavesAppAlive() throws {
         let app = XCUIApplication()
+        // Ohne --ui-testing kommt beim ersten Start das Onboarding (#29); das Merkzeichen über die
+        // Argument-Domain setzen, als wäre es durchlaufen.
+        app.launchArguments = ["-onboardingDone", "YES"]
         app.launch()   // bewusst ohne --ui-testing: die Spracherfassung läuft mit
         allowSystemAlerts(in: app)
 

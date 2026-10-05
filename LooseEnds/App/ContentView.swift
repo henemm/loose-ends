@@ -12,6 +12,7 @@ struct ContentView: View {
     @State private var isCapturing = false
     @State private var completionPulse = CompletionPulse()
     @State private var pendingCompletions = PendingCompletions(window: Self.doneWindow)
+    @State private var showsOnboarding = OnboardingFlow.shouldShow()
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "App")
 
     /// The Undo UI test asks for a long window: on the CI runner a single element lookup has taken
@@ -54,6 +55,11 @@ struct ContentView: View {
         .sheet(isPresented: $isCapturing) {
             CaptureView()
         }
+        #if os(iOS)
+        .fullScreenCover(isPresented: $showsOnboarding) { onboarding }
+        #else
+        .sheet(isPresented: $showsOnboarding) { onboarding }
+        #endif
         .task { await startUp() }
         // Restarts whenever the earliest deadline changes: a new Done, an Undo, a commit.
         .task(id: pendingCompletions.nextDeadline) { await commitPendingCompletions() }
@@ -81,6 +87,20 @@ struct ContentView: View {
         }
     }
 
+    /// Screen 12 (#29), once per device. The model is asked directly: the coordinator only knows
+    /// whether it is there when a pass runs.
+    private var onboarding: some View {
+        OnboardingView(
+            modelUnavailableReason: FoundationModelsEnricher().unavailableReason,
+            requestNotifications: { await notifications?.requestAuthorization() },
+            onFinish: {
+                OnboardingFlow.finish()
+                showsOnboarding = false
+            }
+        )
+        .interactiveDismissDisabled()
+    }
+
     /// Seed the default contexts once, fold same-named contexts into one (#157), run the catch-up enrichment pass (ADR-4), then line up
     /// the due reminders.
     private func startUp() async {
@@ -97,7 +117,10 @@ struct ContentView: View {
             Self.logger.error("Merging duplicate contexts failed: \(error, privacy: .public)")
         }
         await enrichment?.processPending()
-        await notifications?.requestAuthorization()
+        // The onboarding asks first (#29); after it, a launch asks only if the system has not yet.
+        if OnboardingFlow.isDone() {
+            await notifications?.requestAuthorization()
+        }
         await notifications?.reschedule()
         await calendar?.sync()
     }
