@@ -10,6 +10,7 @@ import SwiftUI
 struct TaskDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(CompletionPulse.self) private var completionPulse: CompletionPulse?
+    @Environment(PendingCompletions.self) private var pendingCompletions: PendingCompletions?
     @Environment(\.dismiss) private var dismiss
     /// Every task, for the "Next up" rank.
     @Query private var allTasks: [TaskItem]
@@ -186,10 +187,16 @@ struct TaskDetailView: View {
         save("next")
     }
 
+    /// Back to the list, where the row waits out its three seconds with Undo (#32). Without the
+    /// window (previews) Done lands at once.
     private func complete() {
-        TaskActions.complete(task)
-        save("done")
-        completionPulse?.fire()
+        if let pendingCompletions {
+            pendingCompletions.schedule(task.id)
+        } else {
+            TaskActions.complete(task)
+            save("done")
+            completionPulse?.fire()
+        }
         dismiss()
     }
 

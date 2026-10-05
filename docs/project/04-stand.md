@@ -17,7 +17,7 @@ sind daher meist nur Zeitverlust.
 | Erfassung | Textfeld, Live-Spracherkennung mit Wellenform, Control Center, Siri-Intent, Watch-Diktat, Teilen-Menü (iOS) | `LooseEnds/Views/CaptureView.swift`, `LooseEnds/Speech`, `Shared/Intents`, `LooseEndsShare` |
 | Veredelung | Foundation Models auf dem Gerät, Schwelle 0,6, je Feld eine KI-Revision, Nachzügler-Lauf | `Shared/Enrichment` |
 | Ansichten | Als nächstes, Neu, Fällig, Schnell, Alt, Wartet, Wiederkehrend, Geparkt, Erledigt, Kontext, Projekt | `Shared/Models/ViewRules.swift`, `LooseEnds/Views/SidebarView.swift` |
-| Liste | Wisch rechts/links, Halten-Menü mit Verschieben (Morgen, Wochenende, nächste Woche, frei gewähltes Datum, #33), Parken, Löschen; Merkmalzeile; Drag-Sortierung in Als nächstes; Alt mit Alter und Verschiebungen; Erledigt nach Tagen | `LooseEnds/Views/TaskListView.swift`, `TaskRow.swift`, `Shared/Services/TaskActions.swift` |
+| Liste | Wisch rechts/links, Erledigt drei Sekunden abbrechbar per Tipp auf die Zeile („Undo“, #32), Halten-Menü mit Verschieben (Morgen, Wochenende, nächste Woche, frei gewähltes Datum, #33), Parken, Löschen; Merkmalzeile; Drag-Sortierung in Als nächstes; Alt mit Alter und Verschiebungen; Erledigt nach Tagen | `LooseEnds/Views/TaskListView.swift`, `TaskRow.swift`, `Shared/Services/TaskActions.swift`, `PendingCompletions.swift` |
 | Detail | Titel, Rohtext, Felder mit Editor, KI-Vorher/Nachher, Zurücksetzen, Änderungen-Sheet, Wiederholung, Unteraufgaben (eine Ebene, abhakbar), Im Kalender anzeigen | `LooseEnds/Views/TaskDetailView.swift`, `FieldEditorView.swift`, `SubtasksSection.swift`, `Shared/Services/RevisionService.swift`, `FieldCodec.swift`, `Subtasks.swift` |
 | Startscreen | Systemansichten mit Zähler, Projekte und Kontexte anlegen, umbenennen, löschen | `LooseEnds/Views/SidebarView.swift`, `Shared/Services/CatalogService.swift` |
 | Mitteilung | "Heute fällig" um 9 Uhr mit Erledigt, Als nächstes, Morgen | `Shared/Notifications`, `LooseEnds/Notifications` |
@@ -126,7 +126,6 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
 8. [#29](https://github.com/henemm/loose-ends/issues/29) Onboarding-Screen (Screen 12)
 9. [#30](https://github.com/henemm/loose-ends/issues/30) Mac-Teilen-Erweiterung
 10. [#31](https://github.com/henemm/loose-ends/issues/31) Kachel-Optik verfeinern
-11. [#32](https://github.com/henemm/loose-ends/issues/32) Drei Sekunden abbrechbares Erledigt
 13. [#34](https://github.com/henemm/loose-ends/issues/34) "Neu analysieren" im Detail
 14. [#40](https://github.com/henemm/loose-ends/issues/40) Icon-Composer-Paket für das App-Icon (Liquid Glass mit Ebenen)
 

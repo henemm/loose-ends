@@ -6,11 +6,19 @@ import SwiftUI
 /// Start screen on the left, one list on the right. One code path for iPhone, iPad and Mac (ADR-1).
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.scenePhase) private var scenePhase
     @Query(sort: \TaskItem.capturedAt, order: .reverse) private var tasks: [TaskItem]
     @State private var selection: ViewSelection?
     @State private var isCapturing = false
     @State private var completionPulse = CompletionPulse()
+    @State private var pendingCompletions = PendingCompletions(window: Self.doneWindow)
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "App")
+
+    /// The Undo UI test asks for a long window: on the CI runner a single element lookup has taken
+    /// longer than the three seconds (#172). Every other run uses the real window.
+    private static var doneWindow: TimeInterval {
+        ProcessInfo.processInfo.arguments.contains("--ui-testing-long-done-window") ? 20 : PendingCompletions.defaultWindow
+    }
 
     /// Nil only in previews; the app always passes its coordinator and notification center.
     var enrichment: EnrichmentCoordinator?
@@ -38,6 +46,7 @@ struct ContentView: View {
             }
         }
         .environment(completionPulse)
+        .environment(pendingCompletions)
         .overlay {
             CompletionKnot(trigger: completionPulse.count)
         }
@@ -45,6 +54,12 @@ struct ContentView: View {
             CaptureView()
         }
         .task { await startUp() }
+        // Restarts whenever the earliest deadline changes: a new Done, an Undo, a commit.
+        .task(id: pendingCompletions.nextDeadline) { await commitPendingCompletions() }
+        .onChange(of: scenePhase) { _, phase in
+            // Leaving the foreground ends every window: a Done must not hang in memory.
+            if phase != .active { commitCompletions(all: true) }
+        }
         .onChange(of: tasks.count) { _, _ in
             Task { await enrichment?.processPending() }
         }
@@ -84,6 +99,35 @@ struct ContentView: View {
         await notifications?.requestAuthorization()
         await notifications?.reschedule()
         await calendar?.sync()
+    }
+
+    /// Sleeps until the earliest Done window runs out, then completes what is due (#32). A loop,
+    /// not one sleep: should the clock wake a hair early, nothing is due yet and the deadline is
+    /// unchanged, so no restart would come.
+    private func commitPendingCompletions() async {
+        while let deadline = pendingCompletions.nextDeadline {
+            let wait = deadline.timeIntervalSinceNow
+            if wait > 0 {
+                do {
+                    try await Task.sleep(for: .seconds(wait))
+                } catch {
+                    // Cancelled because the earliest deadline changed; the restarted task takes over.
+                    return
+                }
+            }
+            commitCompletions(all: false)
+        }
+    }
+
+    private func commitCompletions(all: Bool) {
+        let completed = pendingCompletions.commitDue(in: tasks, all: all)
+        guard !completed.isEmpty else { return }
+        do {
+            try modelContext.save()
+        } catch {
+            Self.logger.error("Saving completions failed: \(error, privacy: .public)")
+        }
+        completionPulse.fire()
     }
 
     /// Control Center and the Action Button open the app straight into capture (ADR-9).

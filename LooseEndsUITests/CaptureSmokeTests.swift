@@ -12,9 +12,9 @@ final class CaptureSmokeTests: XCTestCase {
     /// locale (found while reproducing #121 — a German-language Mac otherwise renders "Täglich"
     /// and every such match silently fails).
     @MainActor
-    private func launch() -> XCUIApplication {
+    private func launch(extra: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["--ui-testing", "-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+        app.launchArguments = ["--ui-testing", "-AppleLanguages", "(en)", "-AppleLocale", "en_US"] + extra
         app.launch()
         return app
     }
@@ -285,7 +285,8 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(done.waitForExistence(timeout: 5), "Long press should open the menu with Complete")
         done.tap()
 
-        XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 5), "New should be empty after Done")
+        // Done waits out its three seconds with Undo before the task leaves (#32).
+        XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 10), "New should be empty after Done")
         XCTAssertTrue(row.waitForNonExistence(timeout: 5), "The finished task should leave New")
     }
 
@@ -437,6 +438,13 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(complete.waitForExistence(timeout: 5), "Long press should open the menu with Complete")
         complete.tap()
 
+        // Done lands once its three seconds with Undo have run out (#32); only then does the
+        // task carry the completion record this test is about.
+        let undo = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH 'undoComplete_'"))
+            .firstMatch
+        XCTAssertTrue(undo.waitForNonExistence(timeout: 10), "The Done window should run out")
+
         // A repeating task rolls forward instead of leaving the list — same row, new due date,
         // and now a populated `completions` relationship (the crash precondition).
         XCTAssertTrue(repeating.waitForExistence(timeout: 5), "A repeating task stays listed after completion")
@@ -473,7 +481,7 @@ final class CaptureSmokeTests: XCTestCase {
         openMenu(on: row, expecting: complete)
         XCTAssertTrue(complete.waitForExistence(timeout: 5), "Long press should open the menu with Complete")
         complete.tap()
-        XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 5))
+        XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 10))
 
         let back = app.navigationBars.buttons.firstMatch
         XCTAssertTrue(back.waitForExistence(timeout: 5))
@@ -638,5 +646,31 @@ final class CaptureSmokeTests: XCTestCase {
         assertDetailRawText("Garage aufräumen", in: app)
         // Empty fields wait behind "Add detail" (#187): a due date row without opening it proves the move.
         XCTAssertTrue(element("field_dueDate", in: app).waitForExistence(timeout: 5), "The moved task should show its due date")
+    }
+
+    /// #32: Done waits three seconds; a second tap on the row takes it back and the task stays.
+    @MainActor
+    func testUndoInsideTheDoneWindowKeepsTheTask() throws {
+        // 20 s instead of 3: the tap must land inside the window even on a slow runner (#172).
+        let app = launch(extra: ["--ui-testing-long-done-window"])
+        let row = captureIntoNew("Briefkasten leeren", in: app)
+
+        let complete = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier == %@ OR label == %@", "menuDone", "Complete"))
+            .firstMatch
+        openMenu(on: row, expecting: complete)
+        XCTAssertTrue(complete.waitForExistence(timeout: 5), "Long press should open the menu with Complete")
+        complete.tap()
+
+        let undo = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH 'undoComplete_'"))
+            .firstMatch
+        XCTAssertTrue(undo.waitForExistence(timeout: 5), "Done should first wait with Undo")
+        undo.tap()
+        XCTAssertTrue(undo.waitForNonExistence(timeout: 5), "Undo should end the window")
+
+        // The task is still open and listed.
+        XCTAssertFalse(element("emptyViewLabel", in: app).waitForExistence(timeout: 5), "New must not empty after Undo")
+        XCTAssertTrue(row.exists, "The task should stay in New after Undo")
     }
 }
