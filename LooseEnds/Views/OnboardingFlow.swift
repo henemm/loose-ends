@@ -14,6 +14,8 @@ struct OnboardingFlow: Equatable {
         case turnedOff, notReady, notEligible
     }
 
+    /// UI tests that start without `--ui-testing` pass `-onboardingDone YES` (argument domain):
+    /// renaming the key means renaming it there too.
     static let doneKey = "onboardingDone"
     /// UI tests start on the start screen; only this argument brings the onboarding up under them.
     static let uiTestArgument = "--ui-testing-onboarding"
