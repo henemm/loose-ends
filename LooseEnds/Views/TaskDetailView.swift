@@ -36,13 +36,17 @@ struct TaskDetailView: View {
     var body: some View {
         Form {
             Section {
-                HStack {
-                    // Serif is the content, SF is the app (#180, rule 2).
-                    TextField("Title", text: $titleDraft)
+                HStack(alignment: .firstTextBaseline) {
+                    // Serif is the content, SF is the app (#180, rule 2). Wraps instead of cutting the
+                    // title off with "…" (#216); Return still ends the edit, as in the capture field.
+                    TextField("Title", text: $titleDraft, axis: .vertical)
                         .font(.title3.weight(.semibold))
                         .fontDesign(.serif)
+                        .lineLimit(1...4)
                         .focused($titleFocused)
+                        .submitLabel(.done)
                         .onSubmit(commitTitle)
+                        .onChange(of: titleDraft) { _, newValue in endEditOnReturn(newValue) }
                         .accessibilityIdentifier("detailTitleField")
                     if aiFields.contains(.title) {
                         Button(action: resetTitle) {
@@ -328,6 +332,15 @@ struct TaskDetailView: View {
         } label: {
             row
         }
+    }
+
+    /// A vertical text field turns Return into a line break instead of a submit. A title has no
+    /// line breaks: they become spaces, and a trailing Return ends the edit, which commits (#216).
+    private func endEditOnReturn(_ newValue: String) {
+        guard newValue.contains("\n") else { return }
+        let endedWithReturn = newValue.hasSuffix("\n")
+        titleDraft = newValue.replacingOccurrences(of: "\n", with: " ")
+        if endedWithReturn { titleFocused = false }
     }
 
     private func commitTitle() {

@@ -229,7 +229,23 @@ final class CaptureSmokeTests: XCTestCase {
         let rawText = element("detailRawText", in: app)
         XCTAssertTrue(rawText.waitForExistence(timeout: 5), "Different words: \"You said:\" shows the full text")
         XCTAssertEqual(rawText.label, words)
+        // #216: twelve words do not fit one line; the field wraps instead of ending in "…". One line
+        // of the title font is about 25 pt high, so a wrapped field is clearly taller than 40 pt.
+        XCTAssertGreaterThan(titleField.frame.height, 40, "Long title should wrap, field was \(titleField.frame)")
         attachScreenshot(app, "202-detail-zwoelf-woerter")
+
+        // Return still ends the edit and saves, and leaves no line break in the title (#216). The tap
+        // lands at the end of the last line, so the word is appended.
+        titleField.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: 0.9)).tap()
+        titleField.typeText(" neu\n")
+        let edited = "Eins zwei drei vier fünf sechs sieben acht neun zehn elf zwölf neu"
+        XCTAssertTrue(waitForValue(edited, of: titleField),
+                      "Return must save without a line break, was \(String(describing: titleField.value))")
+        let back = app.navigationBars.buttons.firstMatch
+        if back.waitForExistence(timeout: 5) { back.tap() }
+        let row = taskRow(in: app)
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        XCTAssertTrue(row.label.lowercased().contains(edited.lowercased()), "The list should carry the saved title, was \(row.label)")
     }
 
     /// Keeps a screenshot in the result bundle as evidence (#202).
