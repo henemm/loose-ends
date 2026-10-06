@@ -1,137 +1,132 @@
 # Adversary Dialog — ci-178-xcode27
-Spec: docs/specs/tooling/fix-178-ci-xcode27.md
+Spec: docs/specs/tooling/fix-178-ci-xcode27.md (inkl. Nachtrag 2026-10-06, Änderung 5, AC-15, AC-16)
 Datum: 2026-10-06
 
 ## Checkliste
 
-- [x] AC-1 Xcode-Version 27.0 aus xcodebuild -version: Quelltext + Attrappe (27.0 ok, 26.6/27.2/27.0.1 Exit 1) belegt — offen: echte Protokollzeile je Job im PR-Lauf vor dem Merge
-- [x] AC-2 Abbruch mit ::error::Expected Xcode 27.0 und Exit 1 bei anderer Version (Test 5, Attrappe)
-- [x] AC-3 Keine Absenkung: 0 Treffer für sed -i, 26.0, macos-26, project.yml im Workflow-Ordner
-- [x] AC-4 Strenge Simulatorwahl iPhone 17 / iOS-27-0, sonst ::error:: + Geräteliste, kein Rückfall (Quelltext + 4 Attrappenfälle je Schritt) — offen: Protokollzeile im PR-Lauf
-- [x] AC-5 Diagnoseschritt: Version, Laufzeiten, Gerät, Modellverfügbarkeit mit --info (F002 behoben), "nicht erhebbar"-Zeile, bricht nie ab (continue-on-error + || true) — offen: echte Zeilen im PR-Lauf vor dem Merge
-- [x] AC-6 Check-Namen unverändert (Quelltext, Test) — offen: gh pr checks im PR
-- [x] AC-7 Deployment-Ziel 27.0, kein Schritt ändert die Projektdatei (Quelltext, AC-3) — offen: Build-Protokollzeile im PR-Lauf
-- [x] AC-11 Compiler-Schalter entfernt (0 Treffer, #if/#endif balanciert, unit-green.txt) — offen: CI-Übersetzung im PR-Lauf
+- [x] AC-2 Abbruch mit ::error::Expected Xcode 27.0 und Exit 1 bei anderer Version (Quelltext der Action, Test 5, Attrappe)
+- [x] AC-3 Keine Absenkung: grep -rnE "sed -i|26\.0|macos-26" .github und grep -rn "project.yml" .github ohne Treffer (adversary-test-output.txt)
+- [x] AC-4 (Quelltext) Strenge Simulatorwahl iPhone 17 / iOS-27-0, sonst ::error:: + Geräteliste, kein Rückfall
+- [x] AC-5 (Quelltext) Diagnoseschritt mit Version, Laufzeiten, Gerät, Modellverfügbarkeit, bricht nie ab
+- [x] AC-6 Check-Namen unverändert (Quelltext, Test)
+- [x] AC-7 (Quelltext) Deployment-Ziel 27.0, kein Schritt ändert die Projektdatei
+- [x] AC-11 Compiler-Schalter entfernt: grep ohne Treffer, #if/#endif balanciert, unit-green.txt
 - [x] AC-12 CLAUDE.md-CI-Abschnitt nachgezogen (Test grün)
-- [x] AC-13 Kein Pfad der Geräteliste berührt
+- [x] AC-13 Abnahmestufe: Diff nur in erlaubter Dateimenge, kein Pfad der Geräteliste (LooseEnds/Speech, Persistence, project.yml, Info.plist unberührt)
+- [x] AC-15 (lokal belegbarer Teil) -collect-test-diagnostics never steht am xcodebuild test-without-building; Option existiert in Xcode 27 (xcodebuild -help: on-failure|never); Quelltext-Test grün
+- [x] AC-16 (lokal belegbarer Teil) Startargument -speechServerRecognitionAllowed <false/> gesetzt; Gegenprobe: wird als echter Bool false gelesen (NO bleibt String, as? Bool = nil); lokaler UI-Lauf grün (ui-cancel-local.txt)
+- [x] Testlauf scripts/test_ci_xcode27.py: 13/13 grün (adversary-test-output.txt)
 
 ## Abnahme im PR-Lauf (NICHT belegt — Pflicht in Phase 7/8 vor dem Merge)
 
-Diese Punkte setzen einen hochgeladenen Stand voraus; Commit und Push sind bis zum Verdict gesperrt.
-Sie sind hier bewusst nicht abgehakt und bleiben Abnahmekriterien der Spec, die `/60-validate`
-mit Lauf-ID belegt. Ohne sie wird nicht gemergt.
+Diese Punkte setzen einen hochgeladenen Stand voraus. Sie sind bewusst nicht abgehakt und bleiben
+Abnahmekriterien der Spec, die `/60-validate` mit Lauf-ID belegt. Ohne sie wird nicht gemergt.
 
 - offen: AC-8 Alle drei CI-Jobs grün ohne Wiederholung
 - offen: AC-9 speech-stress per workflow_dispatch (Iterations 3) grün
 - offen: AC-10 Zeiten gegen Ausgangswerte in der PR-Beschreibung
 - offen: AC-14 Ausliefern nach dem Merge (Phase 8)
+- offen: AC-15 speech-stress im PR-Lauf: jeder Durchlauf unter 300 s (summary.txt), kein „Timed out after 600.0 seconds“ in run-*.log
+- offen: AC-16 speech-stress im PR-Lauf mit 10 Durchläufen: alle grün, in keinem Protokoll „Recognize speech via Apple?“ und kein „Computed hit point {-1, -1}“
 - offen: echte Protokollzeilen zu AC-1, AC-4, AC-5, AC-6, AC-7, AC-11
 
 ## Dialog
 
 ### Runde 1
-**Adversary:** Korrekturen selbst geprüft. scripts/test_ci_xcode27.py: 11/11 ok. log help show lokal: "only default level messages unless --info and/or --debug" — das --info im Schritt "Diagnose model availability" (ci.yml:124) ist also nötig und jetzt gesetzt; Prädikat passt zu Logger(subsystem com.henning.looseends, category Enrichment) in EnrichmentCoordinator.swift:24, "Enriched" ist info (:74), "Model unavailable" notice (:41). Diagnose-Attrappe: xcrun, das nur bei --info "Enriched ABC: 3 fields" liefert -> Ausgabe "Enriched: 1 lines", also erhebbar (F002 behoben). Leere Ausgabe, fehlschlagender spawn und leere SIM_UDID -> "Modellverfügbarkeit nicht erhebbar", Exit 0. Pick-Schritte (ci.yml:90 und speech-stress.yml:44), je 4 Fälle mit nachgebautem xcrun unter bash -e -o pipefail: leeres Objekt -> ::error:: + Geräteliste, Exit 1 (F003 behoben); iPhone 17 nur unter iOS-27-1 -> ::error::, Exit 1, kein Rückfall; korrekter Treffer -> Exit 0, SIM_UDID=GOOD; kaputtes JSON -> Traceback, Exit 1, ohne ::error::-Zeile (Rest von F003, Schritt bleibt rot, kein stiller Durchlauf). Greps: keine Absenkung, kein Compiler-Schalter. MeasurementRun.swift: #if/#endif balanciert.
-**Implementierer:** F002 und F003 korrigiert (--info; .get("devices", {})). Quelltext und Attrappen decken AC-2/3/4/5(Logik)/6/7/11/12/13 vor dem Push; AC-1/5/8/9/10/14 nur im PR-Lauf beweisbar.
+**Adversary:** Ursachenanalyse nachgeprüft statt übernommen. summary.txt aus Lauf 37415827670: 712/703/680 s je Durchlauf, der Test selbst 53,8/61,3/46,4 s; alle drei Protokolle enthalten „Failure collecting diagnostics from simulator: Timed out after 600.0 seconds“ — die 600 s sind belegt und gehören nicht zum Test. run-1.log: bei t=41,03 s „Computed hit point {-1, -1} after scrolling to visible“ direkt nach dem Systemdialog-Handling; run-2.log: bei t=40,5 s steht der Alert „Recognize speech via Apple?“ in der Hierarchie, in Lauf 2 ging der Test trotzdem grün, also echter Wettlauf, kein Dauerfehler. Die Analyse trägt. `xcodebuild -help` (Xcode 27): „-collect-test-diagnostics on-failure|never“ — Option existiert, steht in speech-stress.yml:83 als Argument von test-without-building (vor CODE_SIGNING_ALLOWED, kein Build-Setting), Quelltext-Test prüft das. Gegenprobe selbst gebaut (swiftc, UserDefaults.object(forKey:) as? Bool): `<false/>` ergibt __NSCFBoolean, as? Bool = false; `NO` ergibt NSTaggedPointerString, as? Bool = nil (die Spec-Behauptung stimmt); `<true/>` = true; ohne Argument nil. SpeechCapture.swift:200 liest genau so. Andere Leser des Schlüssels: grep über LooseEnds, Shared, Watch, Widgets, Share, Tests: nur SpeechCapture.swift:23/200/206; kein @AppStorage, kein bool(forKey:) — nichts reagiert anders auf <false/>. Schwächt es den Test? recognitionFailed (SpeechCapture.swift:142) wird erst NACH engine.start() und Erkennungsstart (Z. 116–134) erreicht; Mikrofon, Tap und Engine laufen unverändert, nur der Endzustand ist .unavailable (Z. 160) statt .needsServerConsent (Z. 163). Das Abbrechen-Blatt (captureCancelButton) steht in beiden Zuständen. Der Absturz-Pfad aus #184 (Abbrechen nach frischer Berechtigung, laufende Engine) bleibt erhalten. Lücke: Der Zustimmungsdialog-Pfad (needsServerConsent) wird in LooseEndsUITests/ und LooseEndsTests/ von keinem Test geprüft (grep ohne Treffer) — er war vorher auch nicht deterministisch geprüft, nur zufällig durchlaufen. Kein Rückschritt, aber ein Befund (F002).
+**Implementierer:** Ursache und Wert bestätigt, Gegenprobe deckt sich. Der Dialog-Pfad war nie Zweck dieses Tests; ein eigener Test dafür wäre ein eigenes Ticket (Zustand vorgeben, Dialog erwarten, Antwort tippen). Keine Codeänderung.
 
 ### Runde 2
-**Adversary:** Frühe-Einigkeit-Skepsis: Ich habe die Begründungen nicht übernommen, sondern geprüft. F001 (exakter Vergleich "Xcode 27.0"): Die Begründung trägt. Henning baut mit genau 27.0; ein Image mit 27.0.1 ist eine andere Toolchain als seine, und bei testflight.yml gilt dieselbe Logik (#174). Rot statt still abweichend ist die sichere Richtung, der Fehlertext nennt Soll und Ist. Der Spec-Satz "damit ein Image-Update auf 27.0.x nicht bricht" widerspricht dem eigenen Codeblock der Spec (Vergleich der ganzen Zeile); er ist als Widerspruch im Abschlussbericht zu benennen, der Codeblock ist maßgeblich. Kosten: ein Patch-Update des Labels färbt alle Jobs rot, bis jemand die Prüfung bewusst anpasst — gewollt und laut. Kein offener Defekt. F004 (speech-stress ohne Auslöser bei Änderung der Action): Die Begründung trägt. Die Action läuft bei jeder PR in allen drei CI-Jobs (ci.yml hat pull_request ohne Pfadfilter), ein Fehler in ihr wird dort sofort sichtbar; der Stress-Lauf ist auf Spracherfassung gezielt, AC-9 verlangt nur den workflow_dispatch-Lauf, kein Spec-Punkt verlangt einen weiteren Auslöser. Gegenprobe zu den Korrekturen: der Diagnose-Schritt kann nach --info "Model unavailable" und "Enriched" trennen; ob die Log-Persistenz im echten Simulator Info-Zeilen hält, ist lokal nicht belegbar und bleibt PR-Lauf-Punkt (AC-5), die Rückfallzeile "nicht erhebbar" ist spezifiziert. Kein neuer Befund oberhalb LOW.
-**Implementierer:** Keine weitere Nachbesserung. Offen sind nur die Beweise, die einen echten Lauf brauchen (AC-1/5 Zeilen, AC-8, AC-9, AC-10, AC-14); CI muss vor dem Merge grün sein.
+**Adversary:** Frühe-Einigkeit-Skepsis: Ich habe Runde 1 nicht auf Zustimmung beendet, sondern die Gegenstellen gesucht. (a) -collect-test-diagnostics never entfernt bei Fehlschlag die Sysdiagnose; was bleibt, ist der Export der Anhänge per xcresulttool (Schritt „Export crash reports“ nutzt xcresult und Log, nicht die Sysdiagnose) — Verlust nur der Simulator-Sysdiagnose, die ohnehin nie ankam (Timeout 600 s). (b) Die Option gilt nur für speech-stress; ci.yml (UI Smoke) bleibt unberührt, dort zeigte sich die Wartezeit laut Spec nicht. (c) Das Argument liegt in der Argument-Domain, wird nicht dauerhaft gespeichert und gilt bei jedem Start, auch nach `simctl privacy reset`; die Zustimmung wird nie geschrieben (Schreibstelle nur SpeechCapture.swift:206 über den Dialog). (d) Offener Rest-Wettlauf: allowSystemAlerts im Test tippt weiter auf Systemdialoge; der Befund „Alert“ in Lauf 1 war der App-Dialog, nicht das System. Ob nach der Änderung kein weiterer Wettlauf bleibt, zeigt nur der 10er-Lauf — deshalb AC-16 offen. (e) Die zwei neuen Python-Tests prüfen nur Quelltextstellen (assertIn); sie belegen Konfiguration, nicht Wirkung. Die Wirkung ist ausdrücklich nur im PR-Lauf belegbar und so ausgewiesen, nicht abgehakt. (f) Python-Suite 13/13 selbst ausgeführt (adversary-test-output.txt); die zwei neuen Fälle waren laut test-red-output-nachtrag.txt vorher rot. (g) Alle seit Basis geänderten Codedateien gelesen und unten per Code reference gedeckt.
+**Implementierer:** Keine weitere Nachbesserung. Offen bleiben ausschließlich die PR-Lauf-Belege (AC-8, 9, 10, 14, 15, 16 und echte Protokollzeilen); der 10er-Lauf entscheidet über AC-16.
 
 ## Findings
 
 Finding:
   ID: F001
   Severity: LOW
-  Category: spec_violation
-  Code reference: .github/actions/select-xcode-27/action.yml:13
-  Description: Vergleich der ganzen Zeile mit "Xcode 27.0"; "Xcode 27.0.1" bricht. Bewusst unverändert (Tech-Lead-Entscheidung, gleiche Logik wie testflight.yml aus #174; Henning baut mit genau 27.0).
-  Spec requirement: Spec Änderung 1 — Satz "damit ein Image-Update auf 27.0.x nicht bricht" widerspricht dem Codeblock der Spec.
-  Conflict: Widerspruch liegt in der Spec, nicht im Code; Verhalten ist fail-safe und laut. Im Abschlussbericht zu benennen.
-  Remediation: Keine Codeänderung; Spec-Satz bei Gelegenheit streichen. Status: akzeptiert.
+  Category: edge_case
+  Code reference: .github/workflows/speech-stress.yml:83
+  Description: -collect-test-diagnostics never schaltet die Sysdiagnose auch bei echtem Fehlschlag ab; für Fehlersuche bleiben nur Log, xcresult-Anhänge und Absturzberichte.
+  Spec requirement: AC-15 — keine Diagnose-Wartezeit.
+  Conflict: Verlust von Diagnosedaten bei Fehlschlag; die Sysdiagnose kam in Lauf 37415827670 ohnehin nicht an (Timeout 600 s). Kein Verstoß.
+  Remediation: Keine. Status: akzeptiert.
 
 Finding:
   ID: F002
-  Severity: MEDIUM
-  Category: edge_case
-  Code reference: .github/workflows/ci.yml:124
-  Description: Ursprünglich fehlte --info, "Enriched" (info) war unsichtbar. Behoben: log show --info; Attrappenprobe zeigt "Enriched: 1 lines".
-  Spec requirement: AC-5 — Modellverfügbarkeit oder Zeile "nicht erhebbar".
-  Conflict: keiner mehr.
-  Remediation: erledigt. Status: BEHOBEN.
-
-Finding:
-  ID: F003
   Severity: LOW
   Category: edge_case
-  Code reference: .github/workflows/speech-stress.yml:44
-  Description: .get("devices", {}) in beiden Pick-Schritten (auch ci.yml:90); leeres Objekt ergibt ::error:: + Geräteliste. Kaputtes JSON bricht weiter mit Traceback (Exit 1), ohne ::error::-Zeile; praktisch irrelevant, da simctl gültiges JSON liefert.
-  Spec requirement: AC-4 — Abbruch mit ::error::.
-  Conflict: nur Meldungsqualität im Extremfall; Abbruch ist gegeben.
-  Remediation: erledigt für den realistischen Fall. Status: BEHOBEN.
-
-Finding:
-  ID: F004
-  Severity: LOW
-  Category: anti_pattern
-  Code reference: .github/workflows/speech-stress.yml:20
-  Description: paths-Filter enthält nicht die Action-Datei. Bewusst unverändert: die Action läuft bei jeder PR in allen drei CI-Jobs; der Stress-Lauf ist auf Spracherfassung gezielt.
-  Spec requirement: keine (Befund)
-  Conflict: keiner.
-  Remediation: keine. Status: akzeptiert.
+  Code reference: LooseEnds/Speech/SpeechCapture.swift:163
+  Description: Der Zweig .needsServerConsent und der Zustimmungsdialog (CaptureView.swift:34/116) werden von keinem UI- oder Unit-Test in LooseEndsUITests/ oder LooseEndsTests/ geprüft; der Abbrechen-Test hat ihn bisher nur zufällig durchlaufen und umgeht ihn jetzt bewusst.
+  Spec requirement: AC-16 — Abbrechen-Test ohne Zustimmungsdialog.
+  Conflict: Keine Regression (vorher ebenfalls nicht deterministisch geprüft), aber eine Prüflücke für #63.
+  Remediation: Eigenes Folgeticket: Test mit vorgegebenem Zustand und Dialog-Erwartung (nicht in dieses Ticket, Scoping). Status: akzeptiert, im Abschlussbericht zu nennen.
 
 ## Bestätigungen
 
 Confirmation:
-  AC: AC-1, AC-2
-  Code reference: .github/actions/select-xcode-27/action.yml:12
-  Evidence: xcode-select auf Xcode_27.app, Vergleich der Zeile 1 von xcodebuild -version mit "Xcode 27.0"; Falsch -> ::error::Expected Xcode 27.0, exit 1 (Tests test_rejects_other_version, test_accepts_xcode_27_0). Echte Zeile im PR-Lauf offen.
+  AC: AC-2, AC-3, AC-6, AC-7
+  Code reference: .github/actions/select-xcode-27/action.yml:13
+  Evidence: Vergleich der Zeile 1 von xcodebuild -version mit "Xcode 27.0"; sonst ::error::Expected Xcode 27.0, exit 1 (Z. 14–15); grep auf Absenkung ohne Treffer.
   Status: CONFIRMED
 
 Confirmation:
-  AC: AC-3, AC-6, AC-7, AC-5, AC-4
-  Code reference: .github/workflows/ci.yml:124
-  Evidence: Drei Jobs xcode-27 mit Action, Namen unverändert, keine Absenkung; Pick-Schritt Z. 90 strikt; Diagnose-Schritt mit --info, continue-on-error, nicht-erhebbar-Zeile (Attrappenläufe in adversary-test-output.txt).
+  AC: AC-3, AC-4, AC-5, AC-6, AC-7
+  Code reference: .github/workflows/ci.yml:20
+  Evidence: Drei Jobs runs-on xcode-27 (Z. 20, 56, 78) mit der Action (Z. 24, 60, 82), strenger Pick-Schritt Z. 90, Namen unverändert.
   Status: CONFIRMED
 
 Confirmation:
-  AC: AC-4
-  Code reference: .github/workflows/speech-stress.yml:44
-  Evidence: Nur Laufzeit iOS-27-0 und Name iPhone 17; leer, falsche Laufzeit -> ::error::, Exit 1; Treffer -> SIM_UDID gesetzt.
+  AC: AC-4, AC-15
+  Code reference: .github/workflows/speech-stress.yml:83
+  Evidence: iOS-27-0-Auswahl Z. 44; -collect-test-diagnostics never am test-without-building (Z. 83) samt Kommentar Z. 75; Option laut xcodebuild -help vorhanden. Wirkung nur im PR-Lauf belegbar (offen).
+  Status: CONFIRMED
+
+Confirmation:
+  AC: AC-16
+  Code reference: LooseEndsUITests/CaptureCancelCrashTests.swift:37
+  Evidence: launchArguments enthält "-speechServerRecognitionAllowed", "<false/>"; Gegenprobe: <false/> wird als Bool false gelesen (as? Bool), NO nicht; SpeechCapture.swift:200 liest per object(forKey:) as? Bool; Mikrofon/Engine laufen vor recognitionFailed weiter (Z. 116–134). Wirkung im 10er-Lauf offen.
   Status: CONFIRMED
 
 Confirmation:
   AC: AC-11
-  Code reference: Measurement/MeasurementRun.swift:226
-  Evidence: Schalter weg, LanguageModelError-Zweig unbedingt, #if/#endif balanciert (2/4, 211/238), unit-green.txt grün.
+  Code reference: Measurement/MeasurementRun.swift:211
+  Evidence: Kein compiler(>=6.4) mehr, nur #if canImport(FoundationModels) && !os(watchOS) balanciert; unit-green.txt grün.
   Status: CONFIRMED
 
 Confirmation:
-  AC: AC-12, AC-13
-  Code reference: scripts/test_ci_xcode27.py:147
-  Evidence: test_claude_md_describes_the_new_ci und alle 11 Tests grün; required-files nennt nur Measurement/MeasurementRun.swift, Diff nur in erlaubter Dateimenge.
+  AC: AC-12, AC-13, AC-15, AC-16
+  Code reference: scripts/test_ci_xcode27.py:143
+  Evidence: 13/13 grün (adversary-test-output.txt), darunter test_stress_runs_skip_the_600_second_diagnostics (Z. 143) und test_cancel_test_declines_server_recognition_up_front (Z. 148); RED-Beleg test-red-output-nachtrag.txt.
   Status: CONFIRMED
 
 ## Herkunft der Vorbedingungen
 
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 
+Hinweis zum Feld `speechServerRecognitionAllowed`: Produktionscode schreibt es an genau einer Stelle (SpeechCapture.swift:206, `answerServerConsent`), und zwar nur nach Antwort im Zustimmungsdialog. Ein Test für genau diesen Weg gibt es nicht (siehe F002); der geänderte Test setzt den Wert stattdessen als Startargument.
+
 ## Verdict
 
-VERDICT: VERIFIED — alles vor dem Push Belegbare ist belegt (11/11 Tests, Gegenproben beider Pick-Schritte und des Diagnose-Schritts, Korrekturen F002/F003 wirksam), keine offenen CRITICAL/HIGH/MEDIUM-Defekte; F001/F004 sind begründet akzeptiert (LOW). Offen: Beleg im PR-Lauf vor dem Merge für AC-8, AC-9, AC-10 (und echte Protokollzeilen zu AC-1/4/5/6/7/11), AC-14 nach dem Merge.
+VERDICT: VERIFIED — alles vor dem Push Belegbare ist belegt (Python-Suite 13/13, Ursachenanalyse aus den Rohprotokollen bestätigt, Option und Startwert per Gegenprobe geprüft, keine anderen Leser des Schlüssels, Testzweck bleibt erhalten); nur LOW-Findings. Die Wirkung von AC-15 und AC-16 sowie AC-8, 9, 10, 14 ist ausdrücklich nur im PR-Lauf belegbar und steht als offen im Protokoll.
 
 ## Geprüfte Dateien
 
 - sha256:2464bd2f3a0b4502f5a351fdd7c2103b610b0b73318da2741412cf82c27e4d9f  .github/actions/select-xcode-27/action.yml
 - sha256:dccd8a7e762bd78eb233c088fe0bf0d787707287149b0a0200911159be16b0bb  .github/workflows/ci.yml
-- sha256:2c5a78e5cd384a6ec5598572d2d5f62d5ede9766e2238a80b99321782f68ac35  .github/workflows/speech-stress.yml
+- sha256:75ebaea8de7fc9c9a2ea5f120fe3bbdb7cf195f482a75365cad1da60b5fe4c1f  .github/workflows/speech-stress.yml
+- sha256:e869f4df4a1476639f69d25a250b3ef5318557add028ece533492723c582490f  LooseEnds/Speech/SpeechCapture.swift
+- sha256:b75b24d67107a76efa2b1bd81023bf300e18a2d7756e8c9f5db785278942e94f  LooseEndsUITests/CaptureCancelCrashTests.swift
 - sha256:63d7b8e6d9f8f5faa9119d56cf6e8789b6aadb1c838a727dfae5a8ec12f8ec50  Measurement/MeasurementRun.swift
-- sha256:529cf492624c203d92877458f3ec47d8a783abea8fe237857342d73afd32b22d  scripts/test_ci_xcode27.py
+- sha256:20a133a776abbe93bcaf233c5eb596e38f201897390c83b3ca75727d74c7d1a6  scripts/test_ci_xcode27.py
 
 ## Prüfbasis
 
-- base: 54f6ef1e276e9a8729e7d3a50ae34f8e8d96b205
+- base: 10207fd5e28f171729573379ed916b714d947a4a
 - blob:a27cbc67317a136303d901cc15e45c116636f73b  .github/actions/select-xcode-27/action.yml
 - blob:78c4727718603310aaeefcad97f8f1fa4a4cfed5  .github/workflows/ci.yml
-- blob:7ac87a791e8bee3b519477be68942771a7ad84dd  .github/workflows/speech-stress.yml
+- blob:735d3ad4821fc81d779f68a7905bfef1c967d23a  .github/workflows/speech-stress.yml
+- blob:84135dbe78cb6dd58d64230b5e48700335f39eb4  LooseEnds/Speech/SpeechCapture.swift
+- blob:80b2dbefaa5a72142014d2978ca42cb8051cd563  LooseEndsUITests/CaptureCancelCrashTests.swift
 - blob:0ac2ef2625589a73e90e620450320b7f8d6ada3b  Measurement/MeasurementRun.swift
-- blob:02afbb14d565cf7d5f93a1017a828c38b010a673  scripts/test_ci_xcode27.py
+- blob:0e97e2ea1281e4d095b52073c233670cb4dda945  scripts/test_ci_xcode27.py

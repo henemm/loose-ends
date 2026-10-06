@@ -5,12 +5,14 @@ test_rejects_other_version (__main__.SelectXcodeAction.test_rejects_other_versio
 test_selects_fixed_xcode_27_app (__main__.SelectXcodeAction.test_selects_fixed_xcode_27_app) ... ok
 test_claude_md_describes_the_new_ci (__main__.Sources.test_claude_md_describes_the_new_ci) ... ok
 test_no_compiler_switch_left (__main__.Sources.test_no_compiler_switch_left) ... ok
+test_cancel_test_declines_server_recognition_up_front (__main__.SpeechStressOnXcode27.test_cancel_test_declines_server_recognition_up_front) ... ok
+test_stress_runs_skip_the_600_second_diagnostics (__main__.SpeechStressOnXcode27.test_stress_runs_skip_the_600_second_diagnostics) ... ok
 test_check_names_unchanged (__main__.Workflows.test_check_names_unchanged) ... ok
 test_every_job_runs_on_xcode_27_with_the_action (__main__.Workflows.test_every_job_runs_on_xcode_27_with_the_action) ... ok
 test_no_lowering_anywhere_in_github (__main__.Workflows.test_no_lowering_anywhere_in_github) ... ok
 test_ui_smoke_has_a_diagnosis_step_that_never_fails (__main__.Workflows.test_ui_smoke_has_a_diagnosis_step_that_never_fails) ... ok
 
 ----------------------------------------------------------------------
-Ran 11 tests in 2.712s
+Ran 13 tests in 0.820s
 
 OK

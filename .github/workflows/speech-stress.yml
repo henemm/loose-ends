@@ -72,12 +72,15 @@ jobs:
               xcrun simctl privacy "$SIM_UDID" reset all com.henning.looseends
             fi
             start=$(date +%s)
+            # #178: without -collect-test-diagnostics never, Xcode waits 600 s after every run for a
+            # simulator diagnosis that never arrives (run 37415827670).
             if xcodebuild test-without-building \
                 -project LooseEnds.xcodeproj \
                 -scheme LooseEnds \
                 -destination "platform=iOS Simulator,id=$SIM_UDID" \
                 -only-testing:LooseEndsUITests/CaptureCancelCrashTests \
                 -resultBundlePath "stress/run-$i.xcresult" \
+                -collect-test-diagnostics never \
                 CODE_SIGNING_ALLOWED=NO DEVELOPMENT_TEAM= \
                 > "stress/run-$i.log" 2>&1; then
               passed=$((passed + 1)); verdict=passed
