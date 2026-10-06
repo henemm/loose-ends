@@ -20,6 +20,16 @@ enum DetailLayout {
         return words(raw) != words(title)
     }
 
+    /// The title field wraps (#216), and a wrapping field turns Return into a line break. A title has
+    /// no line breaks: they become spaces. `ended` says the edit ended with Return; then the text is
+    /// also trimmed, so no stray space stays in the field. Nil while there is no line break.
+    static func titleAfterReturn(_ draft: String) -> (text: String, ended: Bool)? {
+        guard draft.contains("\n") else { return nil }
+        let ended = draft.hasSuffix("\n")
+        let joined = draft.replacingOccurrences(of: "\n", with: " ")
+        return (ended ? joined.trimmingCharacters(in: .whitespaces) : joined, ended)
+    }
+
     private static func words(_ text: String) -> Set<String> {
         Set(RawTextWords.words(in: RawTextWords.normalized(text)))
     }
