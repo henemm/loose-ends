@@ -334,13 +334,11 @@ struct TaskDetailView: View {
         }
     }
 
-    /// A vertical text field turns Return into a line break instead of a submit. A title has no
-    /// line breaks: they become spaces, and a trailing Return ends the edit, which commits (#216).
+    /// Return in the wrapping title field ends the edit, which commits (#216).
     private func endEditOnReturn(_ newValue: String) {
-        guard newValue.contains("\n") else { return }
-        let endedWithReturn = newValue.hasSuffix("\n")
-        titleDraft = newValue.replacingOccurrences(of: "\n", with: " ")
-        if endedWithReturn { titleFocused = false }
+        guard let result = DetailLayout.titleAfterReturn(newValue) else { return }
+        titleDraft = result.text
+        if result.ended { titleFocused = false }
     }
 
     private func commitTitle() {
