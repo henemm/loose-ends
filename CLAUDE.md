@@ -100,17 +100,31 @@ Installation. Ein Registrierungslauf (`LOOSEENDS_REGISTER=1 ./scripts/sim.sh dev
 nur nötig bei neuer Kennung, neuer Fähigkeit oder abgelaufenem Profil; nur er benutzt Hennings
 Xcode-Anmeldung, der normale Bau spricht nicht mit Apple. Im Zweifel läuft die Stufe.
 
-**⛔ Ausliefern ist Teil jedes Tickets — der letzte Schritt vor Hennings eigenem Test.** Gearbeitet
-wird in einem Worktree, gebaut wird bei Henning aus `/Users/hem/Developer/loose-ends`. Nach dem Merge
-und bevor er selbst testet, muss dort beides stimmen:
+**⛔ Ausliefern ist Teil jedes Tickets.** Gearbeitet wird in einem Worktree, gebaut wird bei Henning aus
+`/Users/hem/Developer/loose-ends`. Den Checkout hält der SessionStart-Hook
+`~/.claude/scripts/loose-ends-sync-main.sh` aktuell (`main` nachziehen, Projekt neu erzeugen) — ohne ihn
+läuft bei Henning der Stand von vorher (2026-09-19: eine App ohne Erfassungs-Button, weil die erzeugte
+Projektdatei 70 neue Dateien nicht kannte).
+
+Henning bekommt nur dann etwas zu tun, wenn **Stufe 3** (Geräteliste oben) greift. Dann, nach dem Merge,
+genau diese eine Zeile zum Kopieren, immer dieselbe:
 
 ```bash
-bash ~/.claude/scripts/loose-ends-sync-main.sh   # main nachziehen + Projekt neu erzeugen
+cd /Users/hem/Developer/loose-ends && bash ~/.claude/scripts/loose-ends-sync-main.sh && ./scripts/sim.sh device
 ```
 
-Ohne diesen Schritt startet Xcode bei ihm den Stand von vorher — am 2026-09-19 war das eine App ohne
-Erfassungs-Button, weil die erzeugte Projektdatei 70 neue Dateien nicht kannte. Ein Ticket ohne
-diesen Schritt ist nicht fertig, egal wie grün die Tests sind.
+Sie zieht `main` nach, erzeugt das Projekt neu und baut, installiert und startet „LE Prüfbau“ auf seinem
+iPhone (entsperrt, im selben WLAN) — ohne Xcode, neben seiner eigenen Installation. Dazu ein Satz, was
+er ausprobieren soll und was er sehen muss. Greift Stufe 3 nicht, endet die Abnahme nach Stufe 2 und
+Henning bekommt keine Zeile, nur den Satz „Kein Pfad der Geräteliste berührt.“
+
+**Henning ist PO, nicht Entwickler** (Henning, 2026-10-06). Claude handelt als sein Tech Lead und
+entscheidet Technisches selbst nach Best Practice: Git, Branches, Merges, Konflikte, Build. Henning
+bekommt keine Git-Befehle, keine Diagnoseschritte und keine Rückfragen zu Technik — nur Produktfragen
+und die eine Zeile oben. Befehle für ihn sind ein einziger Copy-Paste-Block ohne `#`-Kommentare (zsh
+liest sie interaktiv als Argumente). Die Labor-App (`./scripts/sim.sh lab`) ist nur für Messungen gegen
+Apple Intelligence, nicht für den Test eines Tickets. Eine Cloud-Session erreicht seinen Mac und sein
+iPhone nicht; das sagt sie, statt Schritte zu verteilen.
 
 CI runs on GitHub's preview label `xcode-27` with Xcode 27.0 pinned: every job uses the composite action
 `.github/actions/select-xcode-27`, which selects `/Applications/Xcode_27.app` and stops the run if it

@@ -41,9 +41,12 @@ enum EnrichmentWriter {
         }
 
         if let title = draft.title, title.confidence >= threshold, !title.value.isEmpty {
-            if may(.title, firstRun: true, changes: title.value != task.title) {
-                record(.title, old: task.title, new: title.value, reason: title.reason)
-                task.title = title.value
+            // The model may refine the rule title, but not bring back what the rules struck (#217):
+            // its title goes through the same rule. Equal to the rule title means nothing to write.
+            let value = TitleRule.title(from: title.value, reference: task.capturedAt) ?? title.value
+            if value != task.title, may(.title, firstRun: true, changes: true) {
+                record(.title, old: task.title, new: value, reason: title.reason)
+                task.title = value
                 task.titleSourceRaw = ai
                 task.titleConfidence = title.confidence
             }
