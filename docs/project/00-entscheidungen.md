@@ -42,7 +42,7 @@ alles in `FocusBloxMac/`, alle UI-Tests.
 | 11 | Abhängigkeiten | Nur innerhalb der App. |
 | 12 | Lernen aus Korrekturen | Ja. |
 | 13 | Ansichten | Feste Dimensionen. Natürliche Sprache später als Experiment. |
-| 14 | Standort | Keine Standort-Berechtigung. "Garten" ist Kontext (Tag), nicht Ort. |
+| 14 | Standort | ~~Keine Standort-Berechtigung.~~ Neu gefasst 2026-10-06 (#226): Eine Aufgabe kann einen Ort tragen und erinnert beim Ankommen oder Verlassen. Gefragt wird „Beim Verwenden der App“, erst beim ersten Ort. Anlass: Siri liefert im Reminders-Schema einen Ort (#25), und ohne Feld ginge er verloren. "Garten" bleibt Kontext (Tag), nicht Ort. |
 | 15 | Heute-Ansicht | Nein. "Als nächstes" mit manueller Sortierung. |
 | 16 | Plattformen | iPhone, Mac, Watch (nur Sprache rein). Maximales Code-Sharing. |
 | 17 | Erinnerungen-Sync | Nein. |
@@ -189,5 +189,5 @@ Kennung hängt am Prüfweg, nicht an der Build-Konfiguration — Begründung und
 ## Bewusst nicht in Version 1
 
 Fokusblöcke, Timer, Coaching, Tagesreview, Disziplin-Statistiken, Aufgabentyp (Einkommen,
-Wartung, Erholung), Standort, Erinnerungen-Sync, Teilen, freie Fragen in natürlicher Sprache,
+Wartung, Erholung), Erinnerungen-Sync, Teilen, freie Fragen in natürlicher Sprache,
 Kalender-Verschieben, Watch-Lesen, Projektfarben, Mehrfachauswahl.

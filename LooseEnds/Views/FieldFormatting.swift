@@ -15,6 +15,7 @@ enum FieldFormatting {
         case .project: String(localized: "Project")
         case .blockedBy: String(localized: "Blocked by")
         case .repeatRule: String(localized: "Repeat")
+        case .place: String(localized: "Place")
         }
     }
 
@@ -38,6 +39,8 @@ enum FieldFormatting {
             return names.isEmpty ? nil : names.joined(separator: ", ")
         case .repeatRule:
             return FieldCodec.decodeRepeat(encoded).map { repeatDescription($0) }
+        case .place:
+            return FieldCodec.decodePlace(encoded)?.name
         }
     }
 

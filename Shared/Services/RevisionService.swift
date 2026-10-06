@@ -102,6 +102,7 @@ enum RevisionService {
         case .energy: task.energy == nil ? nil : task.energySourceRaw
         case .contexts: task.contextsSourceRaw
         case .people: task.peopleSourceRaw
+        case .place: task.placeSourceRaw
         case .project, .blockedBy, .repeatRule: nil
         }
         return raw.flatMap(FieldSource.init(rawValue:))

@@ -56,7 +56,7 @@ enum DurationBucket: String, Codable, CaseIterable, Sendable {
 
 /// Fields that can carry a revision entry.
 enum RevisedField: String, Codable, CaseIterable, Sendable {
-    case title, dueDate, importance, urgency, duration, energy, contexts, people, project, blockedBy, repeatRule
+    case title, dueDate, importance, urgency, duration, energy, contexts, people, project, blockedBy, repeatRule, place
 }
 
 /// System and user views. Rules live in ViewRules.

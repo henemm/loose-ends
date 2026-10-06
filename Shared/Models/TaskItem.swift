@@ -31,6 +31,10 @@ final class TaskItem {
     // Repeat (ADR-7)
     var repeatRule: RepeatRule?
 
+    // Place (#226): set by the user or Siri, never guessed
+    var place: TaskPlace?
+    var placeSourceRaw: String?
+
     // Derived: title
     var title: String?
     var titleSourceRaw: String?

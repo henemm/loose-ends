@@ -162,7 +162,8 @@ Texte in Englisch (Basis) und Deutsch. Keine Ausrufezeichen, keine Gamification,
 
 ## Nicht gestalten
 
-Timer, Fokusmodus, Kalender-Raster, Tagesplanung, Charts, Coach, Standortkarten,
+Timer, Fokusmodus, Kalender-Raster, Tagesplanung, Charts, Coach, Standortkarten (ein Ort wird über die
+Suche gewählt, ohne Karte, #226),
 Sharing-Flows, freie Suche in natürlicher Sprache.
 
 ## Offene Fragen an Claude Design

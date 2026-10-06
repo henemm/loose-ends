@@ -119,7 +119,7 @@ struct FieldEditorView: View {
         case .people: peopleControl
         case .project: projectPicker
         case .repeatRule: repeatControl
-        case .title, .blockedBy: EmptyView()
+        case .title, .blockedBy, .place: EmptyView()
         }
     }
 
