@@ -67,7 +67,7 @@ enum CatalogService {
     }
 
     /// System default first, then the smallest sort order, then the smallest id string.
-    private static func survivesBefore(_ lhs: TaskContext, _ rhs: TaskContext) -> Bool {
+    static func survivesBefore(_ lhs: TaskContext, _ rhs: TaskContext) -> Bool {
         if lhs.isSystemDefault != rhs.isSystemDefault { return lhs.isSystemDefault }
         if lhs.sortOrder != rhs.sortOrder { return lhs.sortOrder < rhs.sortOrder }
         return lhs.id.uuidString < rhs.id.uuidString
@@ -78,7 +78,7 @@ enum CatalogService {
     }
 
     /// Trimmed, case- and accent-insensitive: "garden " and "Gärden" are "Garden", "Garten" is not.
-    private static func nameKey(_ name: String) -> String {
+    static func nameKey(_ name: String) -> String {
         name.trimmingCharacters(in: .whitespacesAndNewlines)
             .folding(options: [.caseInsensitive, .diacriticInsensitive], locale: nil)
     }
