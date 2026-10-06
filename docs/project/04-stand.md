@@ -126,6 +126,8 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
   ersten Einladung externer Tester, Schritt 3 (Knoten-Zeichen) danach
 
 5. [#25](https://github.com/henemm/loose-ends/issues/25) Siri über das Reminders-App-Schema (Must) — Voraussetzung erfüllt: die CI prüft seit [#178](https://github.com/henemm/loose-ends/issues/178) mit Xcode 27.0 und Ziel 27.0; bis zur Umsetzung reicht die Shortcut-Phrase "Add to Loose Ends"
+   - Vorbedingung [#224](https://github.com/henemm/loose-ends/issues/224): Siris Wiederholung → `RepeatRule`
+     (`Shared/Services/SiriRepeatMapping.swift`), Nicht-Abbildbares wird benannt statt gekürzt
 6. [#27](https://github.com/henemm/loose-ends/issues/27) Abhängigkeiten über Private Cloud Compute (`blockedBy`)
 9. [#30](https://github.com/henemm/loose-ends/issues/30) Mac-Teilen-Erweiterung
 14. [#40](https://github.com/henemm/loose-ends/issues/40) Icon-Composer-Paket für das App-Icon (Liquid Glass mit Ebenen)

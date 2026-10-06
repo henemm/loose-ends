@@ -175,6 +175,7 @@
     "From an amount of money in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus einem Geldbetrag in der Notiz." } } } },
     "From official or legal language in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus amtlicher oder rechtlicher Sprache in der Notiz." } } } },
     "From someone waiting for this in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Weil jemand in der Notiz darauf wartet." } } } },
+    "From Siri." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Von Siri." } } } },
     "From the word “important” in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus dem Wort „wichtig“ in der Notiz." } } } },
     "From an urgency word in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus einem Dringlichkeits-Wort in der Notiz." } } } },
     "From a deadline reference in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus einem Fristbezug in der Notiz." } } } },
