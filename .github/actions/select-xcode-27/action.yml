@@ -1,0 +1,16 @@
+name: Select Xcode 27.0
+description: Selects /Applications/Xcode_27.app and fails unless it is Xcode 27.0.
+# #178: one place for the toolchain choice of every CI job. The image also carries beta versions
+# of Xcode 27, which are never picked. Only the version line is compared, not the build number.
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        sudo xcode-select -s /Applications/Xcode_27.app
+        xcodebuild -version
+        version=$(xcodebuild -version | sed -n 1p)   # sed liest bis zum Ende: kein SIGPIPE unter pipefail
+        if [ "$version" != "Xcode 27.0" ]; then
+          echo "::error::Expected Xcode 27.0 at /Applications/Xcode_27.app, got: $version. Not building an older or beta toolchain. See docs/reference/testflight.md"
+          exit 1
+        fi

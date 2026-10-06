@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-10-06T08:47:07+0200
+befehl: scripts/sim.sh test-proof CaptureCancelCrashTests
+workflow: ci-178-xcode27
+head: 43ca33168499c4b5c3f4e7ecdb3ae1a931fb1ddb
+basis: 10207fd5e28f171729573379ed916b714d947a4a (merge-base origin/main HEAD)
+testklasse: CaptureCancelCrashTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1791268565.552  ende: 1791269225.587
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/ci-178-xcode27/simulator-run/summary.json  sha256:b2bed8eeb9c3025e70002568dd40c086792e4093284bea704786aa8766d46981
+xcresult: docs/artifacts/ci-178-xcode27/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/ci-178-xcode27/simulator-run/*.png (0 Stück)
+
+## Geprüfte Dateien
+- sha256:b75b24d67107a76efa2b1bd81023bf300e18a2d7756e8c9f5db785278942e94f  LooseEndsUITests/CaptureCancelCrashTests.swift
+- sha256:63d7b8e6d9f8f5faa9119d56cf6e8789b6aadb1c838a727dfae5a8ec12f8ec50  Measurement/MeasurementRun.swift

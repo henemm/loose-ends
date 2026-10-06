@@ -30,8 +30,11 @@ final class CaptureCancelCrashTests: XCTestCase {
     func testCancelAfterCaptureOpensLeavesAppAlive() throws {
         let app = XCUIApplication()
         // Ohne --ui-testing kommt beim ersten Start das Onboarding (#29); das Merkzeichen über die
-        // Argument-Domain setzen, als wäre es durchlaufen.
-        app.launchArguments = ["-onboardingDone", "YES"]
+        // Argument-Domain setzen, als wäre es durchlaufen. Die Server-Zustimmung gilt als abgelehnt,
+        // damit eine auf dem Gerät gescheiterte Erkennung (CI-Simulator ohne Sprachmodell) nicht den
+        // Dialog „Recognize speech via Apple?“ zeigt, der den Abbrechen-Tipp schlucken kann; `<false/>`
+        // statt `NO`, weil `serverConsent` den Wert per `as? Bool` liest und „NO“ dort Text bleibt (#178).
+        app.launchArguments = ["-onboardingDone", "YES", "-speechServerRecognitionAllowed", "<false/>"]
         app.launch()   // bewusst ohne --ui-testing: die Spracherfassung läuft mit
         allowSystemAlerts(in: app)
 

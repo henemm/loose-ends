@@ -1,0 +1,149 @@
+test_fails_without_iphone_17_on_ios_27_0 (__main__.PickSimulator.test_fails_without_iphone_17_on_ios_27_0) ... FAIL
+test_picks_iphone_17_on_ios_27_0 (__main__.PickSimulator.test_picks_iphone_17_on_ios_27_0) ... FAIL
+test_accepts_xcode_27_0 (__main__.SelectXcodeAction.test_accepts_xcode_27_0) ... ERROR
+test_rejects_other_version (__main__.SelectXcodeAction.test_rejects_other_version) ... ERROR
+test_selects_fixed_xcode_27_app (__main__.SelectXcodeAction.test_selects_fixed_xcode_27_app) ... ERROR
+test_claude_md_describes_the_new_ci (__main__.Sources.test_claude_md_describes_the_new_ci) ... FAIL
+test_no_compiler_switch_left (__main__.Sources.test_no_compiler_switch_left) ... FAIL
+test_check_names_unchanged (__main__.Workflows.test_check_names_unchanged) ... ok
+test_every_job_runs_on_xcode_27_with_the_action (__main__.Workflows.test_every_job_runs_on_xcode_27_with_the_action) ... FAIL
+test_no_lowering_anywhere_in_github (__main__.Workflows.test_no_lowering_anywhere_in_github) ... FAIL
+test_ui_smoke_has_a_diagnosis_step_that_never_fails (__main__.Workflows.test_ui_smoke_has_a_diagnosis_step_that_never_fails) ... ERROR
+
+======================================================================
+ERROR: test_accepts_xcode_27_0 (__main__.SelectXcodeAction.test_accepts_xcode_27_0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ci-178-xcode27/scripts/test_ci_xcode27.py", line 69, in test_accepts_xcode_27_0
+    result, _ = self.run_check("Xcode 27.0")
+                ~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ci-178-xcode27/scripts/test_ci_xcode27.py", line 54, in run_check
+    script = load(ACTION)["runs"]["steps"][0]["run"]
+             ~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ci-178-xcode27/scripts/test_ci_xcode27.py", line 28, in load
+    return yaml.safe_load(path.read_text())
+                          ~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 787, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/ci-178-xcode27/.github/actions/select-xcode-27/action.yml'
+
+======================================================================
+ERROR: test_rejects_other_version (__main__.SelectXcodeAction.test_rejects_other_version)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ci-178-xcode27/scripts/test_ci_xcode27.py", line 74, in test_rejects_other_version
+    result, _ = self.run_check(reported)
+                ~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ci-178-xcode27/scripts/test_ci_xcode27.py", line 54, in run_check
+    script = load(ACTION)["runs"]["steps"][0]["run"]
+             ~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ci-178-xcode27/scripts/test_ci_xcode27.py", line 28, in load
+    return yaml.safe_load(path.read_text())
+                          ~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 787, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/ci-178-xcode27/.github/actions/select-xcode-27/action.yml'
+
+======================================================================
+ERROR: test_selects_fixed_xcode_27_app (__main__.SelectXcodeAction.test_selects_fixed_xcode_27_app)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ci-178-xcode27/scripts/test_ci_xcode27.py", line 65, in test_selects_fixed_xcode_27_app
+    _, calls = self.run_check("Xcode 27.0")
+               ~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ci-178-xcode27/scripts/test_ci_xcode27.py", line 54, in run_check
+    script = load(ACTION)["runs"]["steps"][0]["run"]
+             ~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ci-178-xcode27/scripts/test_ci_xcode27.py", line 28, in load
+    return yaml.safe_load(path.read_text())
+                          ~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 787, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/ci-178-xcode27/.github/actions/select-xcode-27/action.yml'
+
+======================================================================
+ERROR: test_ui_smoke_has_a_diagnosis_step_that_never_fails (__main__.Workflows.test_ui_smoke_has_a_diagnosis_step_that_never_fails)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ci-178-xcode27/scripts/test_ci_xcode27.py", line 98, in test_ui_smoke_has_a_diagnosis_step_that_never_fails
+    step = step_named(job, "Diagnose")
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ci-178-xcode27/scripts/test_ci_xcode27.py", line 37, in step_named
+    return next(s for s in job["steps"] if s.get("name", "").startswith(prefix))
+StopIteration
+
+======================================================================
+FAIL: test_fails_without_iphone_17_on_ios_27_0 (__main__.PickSimulator.test_fails_without_iphone_17_on_ios_27_0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ci-178-xcode27/scripts/test_ci_xcode27.py", line 135, in test_fails_without_iphone_17_on_ios_27_0
+    self.assertNotEqual(result.returncode, 0, workflow.name)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : ci.yml
+
+======================================================================
+FAIL: test_picks_iphone_17_on_ios_27_0 (__main__.PickSimulator.test_picks_iphone_17_on_ios_27_0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ci-178-xcode27/scripts/test_ci_xcode27.py", line 129, in test_picks_iphone_17_on_ios_27_0
+    self.assertIn("SIM_UDID=NEW", env, workflow.name)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'SIM_UDID=NEW' not found in 'SIM_UDID=OLD\n' : ci.yml
+
+======================================================================
+FAIL: test_claude_md_describes_the_new_ci (__main__.Sources.test_claude_md_describes_the_new_ci)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ci-178-xcode27/scripts/test_ci_xcode27.py", line 149, in test_claude_md_describes_the_new_ci
+    self.assertIn("xcode-27", text.split("## Ship")[0])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'xcode-27' not found in '# CLAUDE.md — Loose Ends\n\nSay it, it\'s sorted. Task capture with on-device Apple Intelligence for iPhone, iPad, Mac and Watch.\n\n## Ground rules (from docs/project/00-entscheidungen.md)\n\n- **One multiplatform target.** iOS, iPadOS and macOS share every view in `LooseEnds/` and `Shared/`.\n  There is no separate Mac UI. Layout adapts via `NavigationSplitView` and size classes.\n- **Raw text is immutable.** Every derived field is optional and carries `*SourceRaw` and `*Confidence`.\n- **Enrichment runs once** per task. `processedAt` marks the model step, `rulesAppliedAt` the rule step\n  (independent of it, #144); a second run only on explicit user request.\n- **Learning is recognition, not training** (ADR-5, rewritten 2026-09-27 after #69/#131). A raw text\n  that was captured before sets that entry\'s contexts and duration again, silently, with the AI marker\n  and a `Revision` like any enrichment. Similarity-picked prompt examples are gone: measured on 287 real\n  tasks, word overlap only carries where the text recurs almost verbatim (contexts 100 %, duration 97.2 %\n  at ~60 % coverage) and drops to chance (55 %) on partial overlap; for energy it stays below the constant.\n  Evidence: `docs/reference/retrieval-leave-one-out-rules.md`, decision in\n  `docs/project/06-annahmen-und-experimente.md` (B1). User corrections remain first-class examples and\n  completed tasks are never deleted.\n- **Revisions, not undo.** Every AI or user change to a derived field is a `Revision`. Nothing is deleted.\n- **Repeat without series.** `RepeatRule` on the task, roll forward on completion, `CompletionRecord` per cycle.\n- **Color budget.** Accent = tappable (incl. AI tint), red = time pressure, grey = hierarchy, green = the completion moment.\n- **Rules before the model** (Henning, 2026-09-20). Every derived field is first attempted with rules,\n  regex, calendar, contacts or a word list. The on-device model only gets what needs language\n  understanding (refining the title: since #202 `TitleRule` sets it at capture from the cleaned raw\n  text, at most 12 words — 312 of 319 raw sentences have ≤ 12 words; the model may refine it). Every analysis and spec that proposes the model for a field must contain\n  the line "Without the model this fails because …" with evidence from a measurement; without that line\n  the rule path is the proposal. Every measurement report carries the rule-based column as baseline; if\n  the rules beat the model, the rules win, and an existing ADR or schema is not a counter-argument.\n  Measured 2026-09-20: model 50 % exact dates, 96.5 % invented; `NSDataDetector` 65 %, 0 % (#67, #92);\n  own rule parser 99.3 %, 0 % (#92, Schnitt 1). Since #95 the rule parser sets the due date in the\n  product path; the model schema lost the four due-date fields.\n- **Context names are unique** (Henning, 2026-10-01, #157). Contexts are matched by name\n  (`FieldCodec`), so two contexts named alike put both on a task ("Garden, Garden"). `CatalogService`\n  rejects a taken name (trimmed, case- and accent-insensitive) when adding or renaming, and\n  `mergeDuplicateContexts` folds existing duplicates at every start (CloudKit can deliver them later);\n  the survivor is deterministic (system default, smallest `sortOrder`, smallest id) so all devices agree.\n  Projects are not covered yet.\n- No `try?` that swallows errors, `Logger` not `print`, Swift 6 strict concurrency, deployment target 27.\n- A `ModelContext` does not retain its `ModelContainer`. Keep the container alive for as long as the context\n  is used (tests: hold it in a local or a helper struct), or the next save or fetch crashes the process.\n\n## Build\n\nThe Xcode project is generated. Never edit `LooseEnds.xcodeproj` by hand.\n\n```bash\nbrew install xcodegen xcbeautify\n./scripts/sim.sh generate     # LooseEnds.xcodeproj aus project.yml\n./scripts/sim.sh unit         # Unit-Tests\n./scripts/sim.sh build        # iOS-App für den Simulator\n./scripts/sim.sh test-proof <Klasse>  # UI-Test + maschineller Simulator-Beleg (#145)\n```\n\nImmer über `scripts/sim.sh` gehen, nicht direkt über `xcodebuild`. Das Skript wählt Destinationen,\ndie zum Deployment Target passen: Der Mac hostet die Tests nur, wenn sein macOS ≥ Target ist\n(sonst laufen sie im Simulator), und ein Simulator zählt nur mit Laufzeit ≥ iOS-Target — Gerätenamen\nwie „iPhone 17" gibt es unter mehreren iOS-Versionen, und die falsche lehnt Xcode als Ziel ab.\n\nDas Projekt ist generiert und nicht versioniert: Nach jedem neuen Stand muss `generate` laufen,\nsonst kennt Xcode die neu hinzugekommenen Dateien nicht und baut eine App ohne die neuen Views.\n\n`DEVELOPMENT_TEAM` steht in `project.yml` (`XK87E2B3VR`) und darf dort nicht geleert werden: Xcode\nlegt das Team in der erzeugten Projektdatei ab, die bei jedem `generate` neu geschrieben wird — ein\nleerer Wert heißt, dass Xcode nach dem nächsten Stand jeden Gerätestart verweigert.\n\n**Acceptance runs in stages, and the first two are never skipped** — tests, then Simulator\n(`./scripts/sim.sh build`, `launch`, `screenshot`: the changed flow is played through and evidenced).\n`docs/project/04-stand.md` has the reasoning and the commands. TestFlight is a distribution channel,\nnot a stage: it gives no debugger and no live logs, so it stays dormant until people other than\nHenning test.\n\n**Stage 3 — Henning\'s iPhone 16 Pro — is mandatory exactly when the change touches something the\nSimulator cannot show** (Henning, 2026-09-29). Not a judgement call: the trigger is a file list, so\nthat it can be checked from the diff and never argued away. A device run is required when the change\ntouches any of these paths:\n\n| Pfad | Was nur das Gerät zeigt |\n|---|---|\n| `Shared/Enrichment/FoundationModelsEnricher.swift`, `Shared/Enrichment/EnrichmentCoordinator.swift` | Apple Intelligence — der Simulator hat keine Modell-Assets |\n| `Shared/Persistence/` | App-Gruppe und CloudKit-Abgleich zwischen Geräten |\n| `LooseEndsWatch/` | Apple Watch |\n| `LooseEndsWidgets/` | Widgets, Aktionstaste, Kurzbefehle |\n| `LooseEndsShare/`, `Shared/Intents/` | Erfassung von außerhalb der App |\n| `LooseEnds/Speech/` | Mikrofon und Spracherkennung |\n| `LooseEnds/Notifications/` | Zustellung echter Mitteilungen |\n| `project.yml`, jede `*.entitlements`, jede `Info.plist` | Signierung, Berechtigungen, Targets — die Klasse des App-Group-Absturzes |\n\nBerührt der Schnitt keinen dieser Pfade, endet die Abnahme nach Stufe 2, und das wird im\nAbschlussbericht mit genau diesem Satz begründet: „Kein Pfad der Geräteliste berührt." Berührt er\neinen, läuft `./scripts/sim.sh device-status` (liest nur, installiert und startet nichts) — für\nApple Intelligence zusätzlich die Labor-App, die Henning selbst antippt. Einen nachgespielten\nBedienablauf auf dem Gerät gibt es seit dem Rückbau von #153 nicht mehr: Der Versuch dazu\nüberschrieb Hennings produktive Installation und bewies nicht, wofür er gebaut war. Für Watch,\nWidgets, Share, Mikrofon und Mitteilungen bleibt der automatisierte Nachweis auf echter Hardware\ndamit offen (`docs/project/04-stand.md`, #143, #160). Seit #156 installieren Gerätebauten\n(`device-build`, `lab`) unter einer eigenen Kennung (`com.henning.looseends.probe`, Anzeigename\n„LE Prüfbau") mit eigener App-Gruppe und eigenem iCloud-Container — nie unter Hennings eigener\nInstallation. Ein Registrierungslauf (`LOOSEENDS_REGISTER=1 ./scripts/sim.sh device-build`) ist\nnur nötig bei neuer Kennung, neuer Fähigkeit oder abgelaufenem Profil; nur er benutzt Hennings\nXcode-Anmeldung, der normale Bau spricht nicht mit Apple. Im Zweifel läuft die Stufe.\n\n**⛔ Ausliefern ist Teil jedes Tickets — der letzte Schritt vor Hennings eigenem Test.** Gearbeitet\nwird in einem Worktree, gebaut wird bei Henning aus `/Users/hem/Developer/loose-ends`. Nach dem Merge\nund bevor er selbst testet, muss dort beides stimmen:\n\n```bash\nbash ~/.claude/scripts/loose-ends-sync-main.sh   # main nachziehen + Projekt neu erzeugen\n```\n\nOhne diesen Schritt startet Xcode bei ihm den Stand von vorher — am 2026-09-19 war das eine App ohne\nErfassungs-Button, weil die erzeugte Projektdatei 70 neue Dateien nicht kannte. Ein Ticket ohne\ndiesen Schritt ist nicht fertig, egal wie grün die Tests sind.\n\nCI runs on GitHub\'s `macos-26` image. Until that image ships Xcode 27, each CI job lowers the deployment\ntargets in `project.yml` to 26.0 before generating the project (Xcode only offers simulators that meet\nthe project\'s deployment target). iOS-27-only APIs (App Schemas, Private Cloud Compute model) must be\nguarded with `#available` until then. The workflow selects Xcode 27 automatically once present.\n\n'
+
+======================================================================
+FAIL: test_no_compiler_switch_left (__main__.Sources.test_no_compiler_switch_left)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ci-178-xcode27/scripts/test_ci_xcode27.py", line 145, in test_no_compiler_switch_left
+    self.assertEqual(result.stdout, "")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: '/Users/hem/Developer/loose-ends/.claude/w[86 chars]4)\n' != ''
+- /Users/hem/Developer/loose-ends/.claude/worktrees/ci-178-xcode27/Measurement/MeasurementRun.swift:228:        #if compiler(>=6.4)
+
+
+======================================================================
+FAIL: test_every_job_runs_on_xcode_27_with_the_action (__main__.Workflows.test_every_job_runs_on_xcode_27_with_the_action)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ci-178-xcode27/scripts/test_ci_xcode27.py", line 82, in test_every_job_runs_on_xcode_27_with_the_action
+    self.assertEqual(job["runs-on"], "xcode-27", f"{name}:{key}")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'macos-26' != 'xcode-27'
+- macos-26
++ xcode-27
+ : ci.yml:unit-tests
+
+======================================================================
+FAIL: test_no_lowering_anywhere_in_github (__main__.Workflows.test_no_lowering_anywhere_in_github)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ci-178-xcode27/scripts/test_ci_xcode27.py", line 89, in test_no_lowering_anywhere_in_github
+    self.assertEqual(result.stdout, "", "Absenkung noch vorhanden")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '/Users/hem/Developer/loose-ends/.claude/w[2211 chars]."\n' != ''
+Diff is 2251 characters long. Set self.maxDiff to None to see it. : Absenkung noch vorhanden
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.310s
+
+FAILED (failures=6, errors=4)
