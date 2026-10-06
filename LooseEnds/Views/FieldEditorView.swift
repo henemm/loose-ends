@@ -54,7 +54,8 @@ struct FieldEditorView: View {
     /// Read, not guessed: the raw text with the trigger marked, before and after, the rule's sentence.
     private func fromYourWords(_ revision: Revision) -> some View {
         Section {
-            Text(Self.marked(task.rawText, trigger: RuleTrigger.range(of: field, in: task.rawText)))
+            Text(Self.marked(task.rawText, trigger: RuleTrigger.range(
+                of: field, in: task.rawText, contexts: (task.contexts ?? []).map(\.name))))
                 .italic()
                 .fontDesign(.serif)
                 .accessibilityIdentifier("originRawText")
