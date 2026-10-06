@@ -1,3 +1,4 @@
+FAILED (Soll laut Spec #178): AC-1 verlangt Xcode 27.0, der Lauf zeigt Xcode 26.6; AC-3/AC-7 verbieten die Absenkung, der Lauf senkt in allen drei Jobs auf 26.0 ab. Auszug aus 'gh run view 37108095080 --log':
 Build (iOS Simulator)	UNKNOWN STEP	2026-10-03T07:58:06.5515230Z ^[[36;1m  echo "No Xcode 27 on this image: deployment targets lowered to 26.0 for this run."^[[0m
 Build (iOS Simulator)	UNKNOWN STEP	2026-10-03T07:58:06.6261900Z No Xcode 27 on this image: deployment targets lowered to 26.0 for this run.
 Build (iOS Simulator)	UNKNOWN STEP	2026-10-03T07:58:06.9245730Z Xcode 26.6

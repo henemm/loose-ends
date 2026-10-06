@@ -1,0 +1,40 @@
+test_fails_without_iphone_17_on_ios_27_0 (__main__.PickSimulator.test_fails_without_iphone_17_on_ios_27_0) ... ok
+test_picks_iphone_17_on_ios_27_0 (__main__.PickSimulator.test_picks_iphone_17_on_ios_27_0) ... ok
+test_accepts_xcode_27_0 (__main__.SelectXcodeAction.test_accepts_xcode_27_0) ... ok
+test_rejects_other_version (__main__.SelectXcodeAction.test_rejects_other_version) ... ok
+test_selects_fixed_xcode_27_app (__main__.SelectXcodeAction.test_selects_fixed_xcode_27_app) ... ok
+test_claude_md_describes_the_new_ci (__main__.Sources.test_claude_md_describes_the_new_ci) ... ok
+test_no_compiler_switch_left (__main__.Sources.test_no_compiler_switch_left) ... ok
+test_check_names_unchanged (__main__.Workflows.test_check_names_unchanged) ... ok
+test_every_job_runs_on_xcode_27_with_the_action (__main__.Workflows.test_every_job_runs_on_xcode_27_with_the_action) ... ok
+test_no_lowering_anywhere_in_github (__main__.Workflows.test_no_lowering_anywhere_in_github) ... ok
+test_ui_smoke_has_a_diagnosis_step_that_never_fails (__main__.Workflows.test_ui_smoke_has_a_diagnosis_step_that_never_fails) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 1.561s
+
+OK
+
+## Gegenproben 2026-10-06 (nachgebautes xcrun, beide Pick-Schritte und Diagnose-Schritt, bash -e -o pipefail)
+(Format: Datei Job Fall => (Exit, Ausgabe, Umgebungsdatei))
+ci.yml ui-smoke empty obj => (1, '::error::No iPhone 17 simulator with iOS 27.0 on this image. Available devices: | list: {}', '')
+ci.yml ui-smoke broken JSON => (1, 'Traceback (most recent call last): |   File "<string>", line 2, in <module> |     devs=json.load(sys.stdin).get("devices", {}).get("com.apple.CoreSimulator.SimRuntime.iOS-27-0", []) |          ~~~~~~~~~^^^^^^^^^^^ |   File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/li', '')
+ci.yml ui-smoke iPhone17 on iOS-27-1 => (1, '::error::No iPhone 17 simulator with iOS 27.0 on this image. Available devices: | list: {"devices": {"com.apple.CoreSimulator.SimRuntime.iOS-27-1": [{"name": "iPhone 17", "udid": "X1", "state": "Shutdown", "isAvailable": true}]}}', '')
+ci.yml ui-smoke correct hit => (0, 'list: {"devices": {"com.apple.CoreSimulator.SimRuntime.iOS-27-0": [{"name": "iPhone 17", "udid": "GOOD", "state": "Shutdown", "isAvailable": true}]}}', 'SIM_UDID=GOOD')
+speech-stress.yml stress empty obj => (1, '::error::No iPhone 17 simulator with iOS 27.0 on this image. Available devices: | list: {}', '')
+speech-stress.yml stress broken JSON => (1, 'Traceback (most recent call last): |   File "<string>", line 2, in <module> |     devs=json.load(sys.stdin).get("devices", {}).get("com.apple.CoreSimulator.SimRuntime.iOS-27-0", []) |          ~~~~~~~~~^^^^^^^^^^^ |   File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/li', '')
+speech-stress.yml stress iPhone17 on iOS-27-1 => (1, '::error::No iPhone 17 simulator with iOS 27.0 on this image. Available devices: | list: {"devices": {"com.apple.CoreSimulator.SimRuntime.iOS-27-1": [{"name": "iPhone 17", "udid": "X1", "state": "Shutdown", "isAvailable": true}]}}', '')
+speech-stress.yml stress correct hit => (0, 'list: {"devices": {"com.apple.CoreSimulator.SimRuntime.iOS-27-0": [{"name": "iPhone 17", "udid": "GOOD", "state": "Shutdown", "isAvailable": true}]}}', 'SIM_UDID=GOOD')
+diag info yields Enriched => (0, 'Model unavailable: 0 lines, Enriched: 1 lines | Enriched ABC: 3 fields', '')
+diag empty output => (0, 'Model unavailable: 0 lines, Enriched: 0 lines | Modellverfügbarkeit nicht erhebbar', '')
+diag spawn fails => (0, 'Model unavailable: 0 lines, Enriched: 0 lines | Modellverfügbarkeit nicht erhebbar', '')
+diag Model unavailable line => (0, 'Model unavailable: 1 lines, Enriched: 0 lines | Model unavailable, rules only: x', '')
+diag empty SIM_UDID => (0, 'Model unavailable: 0 lines, Enriched: 0 lines | Modellverfügbarkeit nicht erhebbar', '')
+
+## Weitere Prüfungen
+- log help show (lokal): "Output contains only default level messages unless --info and/or --debug are specified." -> --info im Schritt ist nötig und gesetzt (ci.yml:124).
+- Suche nach "sed -i", "26.0", "macos-26", "project.yml" in allen Dateien des Workflow-Ordners: 0 Treffer (Python-Suche, plus Test test_no_lowering_anywhere_in_github).
+- Suche nach "compiler(>=6.4)" in Shared, LooseEnds, Measurement: 0 Treffer.
+- Measurement/MeasurementRun.swift: #if/#endif balanciert (Zeilen 2/4 und 211/238).
+- EnrichmentCoordinator.swift:24 Logger(subsystem "com.henning.looseends", category "Enrichment") passt zum Prädikat; :41 notice "Model unavailable", :74 info "Enriched".
+- Befund-Rest: kaputtes JSON liefert weiter Python-Traceback ohne ::error:: (Exit 1, Schritt rot) — akzeptiert, siehe Protokoll.

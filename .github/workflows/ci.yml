@@ -9,27 +9,19 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-# Until the macos-26 image ships Xcode 27, every job lowers the deployment targets in project.yml
-# to 26.0 before generating the project. A command-line override is not enough: xcodebuild filters
-# simulator destinations by the project's deployment target, so a 27.0 project sees no iOS 26 simulator.
-# iOS-27-only APIs must be guarded with #available until then (see CLAUDE.md).
+# #178: every job runs on the preview image xcode-27 and pins Xcode 27.0 through the composite action
+# .github/actions/select-xcode-27, which stops the run on any other version. The deployment targets
+# are built as checked in; nothing lowers them. If the xcode-27 label goes away or is renamed, follow
+# docs/reference/testflight.md and adjust runs-on here, in speech-stress.yml and in testflight.yml.
 
 jobs:
   unit-tests:
     name: Unit Tests (macOS destination)
-    runs-on: macos-26
+    runs-on: xcode-27
     steps:
       - uses: actions/checkout@v7
-      - name: Select newest Xcode (27 when the image has it)
-        run: |
-          latest=$(ls -d /Applications/Xcode_27*.app 2>/dev/null | sort -V | tail -1)
-          if [ -n "$latest" ]; then
-            sudo xcode-select -s "$latest"
-          else
-            sed -i '' 's/"27\.0"/"26.0"/g' project.yml
-            echo "No Xcode 27 on this image: deployment targets lowered to 26.0 for this run."
-          fi
-          xcode-select -p && xcodebuild -version
+      - name: Select Xcode 27.0
+        uses: ./.github/actions/select-xcode-27
       - name: Install XcodeGen
         run: brew install xcodegen
       - name: Generate project
@@ -61,19 +53,11 @@ jobs:
 
   ios-build:
     name: Build (iOS Simulator)
-    runs-on: macos-26
+    runs-on: xcode-27
     steps:
       - uses: actions/checkout@v7
-      - name: Select newest Xcode (27 when the image has it)
-        run: |
-          latest=$(ls -d /Applications/Xcode_27*.app 2>/dev/null | sort -V | tail -1)
-          if [ -n "$latest" ]; then
-            sudo xcode-select -s "$latest"
-          else
-            sed -i '' 's/"27\.0"/"26.0"/g' project.yml
-            echo "No Xcode 27 on this image: deployment targets lowered to 26.0 for this run."
-          fi
-          xcode-select -p && xcodebuild -version
+      - name: Select Xcode 27.0
+        uses: ./.github/actions/select-xcode-27
       - name: Install XcodeGen
         run: brew install xcodegen
       - name: Generate project
@@ -91,33 +75,35 @@ jobs:
 
   ui-smoke:
     name: UI Smoke (iOS Simulator)
-    runs-on: macos-26
+    runs-on: xcode-27
     steps:
       - uses: actions/checkout@v7
-      - name: Select newest Xcode (27 when the image has it)
-        run: |
-          latest=$(ls -d /Applications/Xcode_27*.app 2>/dev/null | sort -V | tail -1)
-          if [ -n "$latest" ]; then
-            sudo xcode-select -s "$latest"
-          else
-            sed -i '' 's/"27\.0"/"26.0"/g' project.yml
-            echo "No Xcode 27 on this image: deployment targets lowered to 26.0 for this run."
-          fi
-          xcode-select -p && xcodebuild -version
+      - name: Select Xcode 27.0
+        uses: ./.github/actions/select-xcode-27
       - name: Install XcodeGen
         run: brew install xcodegen
       - name: Generate project
         run: xcodegen generate
-      - name: Pick a simulator
+      - name: Pick a simulator (iPhone 17, iOS 27.0 only)
         run: |
           udid=$(xcrun simctl list devices available -j | python3 -c 'import json,sys
-          devs=[d for v in json.load(sys.stdin)["devices"].values() for d in v]
-          hit=next((d for d in devs if d["name"]=="iPhone 17"), None) or next((d for d in devs if d["name"].startswith("iPhone")), None)
+          devs=json.load(sys.stdin).get("devices", {}).get("com.apple.CoreSimulator.SimRuntime.iOS-27-0", [])
+          hit=next((d for d in devs if d["name"]=="iPhone 17"), None)
           print(hit["udid"] if hit else "")')
-          [ -n "$udid" ] || { echo "no iPhone simulator on this image"; xcrun simctl list devices available; exit 1; }
+          if [ -z "$udid" ]; then
+            echo "::error::No iPhone 17 simulator with iOS 27.0 on this image. Available devices:"
+            xcrun simctl list devices available
+            exit 1
+          fi
           xcrun simctl list devices available | grep "$udid"
           xcrun simctl boot "$udid" || true
           echo "SIM_UDID=$udid" >> "$GITHUB_ENV"
+      - name: Diagnose toolchain and simulator
+        continue-on-error: true
+        run: |
+          xcodebuild -version || true
+          xcrun simctl list runtimes || true
+          xcrun simctl list devices available | grep "$SIM_UDID" || true
       - name: Run UI smoke tests
         run: |
           set -o pipefail
@@ -130,6 +116,21 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             DEVELOPMENT_TEAM= \
             2>&1 | tee ui-smoke.log | xcbeautify
+      - name: Diagnose model availability
+        if: always()
+        continue-on-error: true
+        run: |
+          # EnrichmentCoordinator logs "Model unavailable, rules only: <reason>" or "Enriched <id>: N fields".
+          xcrun simctl spawn "$SIM_UDID" log show --info --style compact --last 2h \
+            --predicate 'subsystem == "com.henning.looseends" AND category == "Enrichment"' \
+            > enrichment.log 2>&1 || true
+          unavailable=$(grep -c "Model unavailable" enrichment.log || true)
+          enriched=$(grep -c "Enriched " enrichment.log || true)
+          echo "Model unavailable: ${unavailable:-0} lines, Enriched: ${enriched:-0} lines"
+          grep -E "Model unavailable|Enriched " enrichment.log | head -20 || true
+          if [ "${unavailable:-0}" -eq 0 ] && [ "${enriched:-0}" -eq 0 ]; then
+            echo "Modellverfügbarkeit nicht erhebbar"
+          fi
       - name: Show crash and failure details
         if: failure()
         run: grep -n -E -i "crash|fatal error|restarting after|failed|error:" ui-smoke.log | head -120 || true

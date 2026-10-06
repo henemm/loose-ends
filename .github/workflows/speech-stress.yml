@@ -26,33 +26,29 @@ concurrency:
 jobs:
   stress:
     name: Speech Stress (CaptureCancelCrashTests × N)
-    runs-on: macos-26
+    runs-on: xcode-27
     timeout-minutes: 75
     env:
       ITERATIONS: ${{ github.event.inputs.iterations || '10' }}
     steps:
       - uses: actions/checkout@v7
-      - name: Select newest Xcode (27 when the image has it)
-        run: |
-          latest=$(ls -d /Applications/Xcode_27*.app 2>/dev/null | sort -V | tail -1)
-          if [ -n "$latest" ]; then
-            sudo xcode-select -s "$latest"
-          else
-            sed -i '' 's/"27\.0"/"26.0"/g' project.yml
-            echo "No Xcode 27 on this image: deployment targets lowered to 26.0 for this run."
-          fi
-          xcode-select -p && xcodebuild -version
+      - name: Select Xcode 27.0
+        uses: ./.github/actions/select-xcode-27
       - name: Install XcodeGen
         run: brew install xcodegen
       - name: Generate project
         run: xcodegen generate
-      - name: Pick a simulator
+      - name: Pick a simulator (iPhone 17, iOS 27.0 only)
         run: |
           udid=$(xcrun simctl list devices available -j | python3 -c 'import json,sys
-          devs=[d for v in json.load(sys.stdin)["devices"].values() for d in v]
-          hit=next((d for d in devs if d["name"]=="iPhone 17"), None) or next((d for d in devs if d["name"].startswith("iPhone")), None)
+          devs=json.load(sys.stdin).get("devices", {}).get("com.apple.CoreSimulator.SimRuntime.iOS-27-0", [])
+          hit=next((d for d in devs if d["name"]=="iPhone 17"), None)
           print(hit["udid"] if hit else "")')
-          [ -n "$udid" ] || { echo "no iPhone simulator on this image"; xcrun simctl list devices available; exit 1; }
+          if [ -z "$udid" ]; then
+            echo "::error::No iPhone 17 simulator with iOS 27.0 on this image. Available devices:"
+            xcrun simctl list devices available
+            exit 1
+          fi
           xcrun simctl list devices available | grep "$udid"
           xcrun simctl boot "$udid" || true
           echo "SIM_UDID=$udid" >> "$GITHUB_ENV"

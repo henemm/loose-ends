@@ -112,10 +112,12 @@ Ohne diesen Schritt startet Xcode bei ihm den Stand von vorher — am 2026-09-19
 Erfassungs-Button, weil die erzeugte Projektdatei 70 neue Dateien nicht kannte. Ein Ticket ohne
 diesen Schritt ist nicht fertig, egal wie grün die Tests sind.
 
-CI runs on GitHub's `macos-26` image. Until that image ships Xcode 27, each CI job lowers the deployment
-targets in `project.yml` to 26.0 before generating the project (Xcode only offers simulators that meet
-the project's deployment target). iOS-27-only APIs (App Schemas, Private Cloud Compute model) must be
-guarded with `#available` until then. The workflow selects Xcode 27 automatically once present.
+CI runs on GitHub's preview label `xcode-27` with Xcode 27.0 pinned: every job uses the composite action
+`.github/actions/select-xcode-27`, which selects `/Applications/Xcode_27.app` and stops the run if it
+reports any other version. The deployment target stays at 27.0, nothing in `project.yml` is changed, and
+UI Smoke and Speech Stress run only on an iPhone 17 simulator with iOS 27.0 (otherwise the step stops).
+If the label goes away or is renamed, follow `docs/reference/testflight.md` and adjust `runs-on` in
+`ci.yml`, `speech-stress.yml` and `testflight.yml`.
 
 ## Ship
 
