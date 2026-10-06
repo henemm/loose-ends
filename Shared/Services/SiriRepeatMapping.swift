@@ -89,16 +89,18 @@ enum SiriRepeatMapping {
         return .rule(rule)
     }
 
-    /// Sets the mapped rule on the task the way a rule sets a derived field: the value, plus one
-    /// revision with the rule as author and Siri as the reason (#101). The caller saves.
+    /// Sets the mapped rule on the task as the user's own input: what Siri hands over is what the
+    /// user said (Henning, 2026-10-06, #25). One revision with the user as author and Siri as the
+    /// reason, already seen like every user change. The caller saves.
     @discardableResult
     static func apply(_ rule: RepeatRule, to task: TaskItem, now: Date = Date()) -> Revision? {
         let old = FieldCodec.encode(.repeatRule, of: task)
         let new = FieldCodec.encode(rule)
         guard old != new else { return nil }
-        FieldCodec.apply(new, to: .repeatRule, of: task, as: .rule, contexts: [], projects: [])
-        let revision = Revision(task: task, field: .repeatRule, oldValue: old, newValue: new, author: .rule, reason: reason)
+        FieldCodec.apply(new, to: .repeatRule, of: task, as: .user, contexts: [], projects: [])
+        let revision = Revision(task: task, field: .repeatRule, oldValue: old, newValue: new, author: .user, reason: reason)
         revision.createdAt = now
+        revision.seenAt = now
         task.revisions = (task.revisions ?? []) + [revision]
         return revision
     }
