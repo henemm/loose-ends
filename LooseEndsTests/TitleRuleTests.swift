@@ -82,7 +82,7 @@ import Testing
         #expect((task.revisions ?? []).isEmpty)
         #expect(task.status == .unprocessed)
         #expect(task.rawText == raw)
-        #expect(!RevisionService.aiSetFields(on: task).contains(.title))
+        #expect(!RevisionService.automaticFields(on: task).contains(.title))
     }
 
     // MARK: Reset
@@ -100,9 +100,9 @@ import Testing
         let task = try CaptureService.save("termin bei Auto Senger machen für Inspektion und Reifenwechsel.", via: .app, in: store.context)
         let ruleTitle = try #require(task.title)
         modelTitle("Auto Senger: Inspektion", on: task)
-        let first = try #require(RevisionService.firstAIRevision(of: .title, on: task))
+        let first = try #require(RevisionService.firstAutomaticRevision(of: .title, on: task))
         #expect(first.oldValue == ruleTitle)
-        #expect(RevisionService.aiSetFields(on: task).contains(.title))
+        #expect(RevisionService.automaticFields(on: task).contains(.title))
 
         let written = RevisionService.revert(first, on: task, contexts: [], projects: [])
 
@@ -110,7 +110,7 @@ import Testing
         #expect(task.titleSourceRaw == FieldSource.user.rawValue)
         #expect(written.author == .user)
         #expect(written.newValue == ruleTitle)
-        #expect(!RevisionService.aiSetFields(on: task).contains(.title))
+        #expect(!RevisionService.automaticFields(on: task).contains(.title))
     }
 
     @Test("Reset of an old task without a title leads to the cleaned raw text, via revert and via revertAll")
@@ -122,7 +122,7 @@ import Testing
         store.context.insert(two)
         modelTitle("Rasen mähen", on: one)
         modelTitle("Rasen mähen", on: two)
-        let first = try #require(RevisionService.firstAIRevision(of: .title, on: one))
+        let first = try #require(RevisionService.firstAutomaticRevision(of: .title, on: one))
         #expect(first.oldValue == nil)
 
         RevisionService.revert(first, on: one, contexts: [], projects: [])

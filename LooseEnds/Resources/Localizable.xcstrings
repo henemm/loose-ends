@@ -2,6 +2,8 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "Your words" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Deine Worte" } } } },
+    "Like “%@” from %@." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Wie bei ›%1$@‹ vom %2$@." } } } },
     "Not set" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nicht gesetzt" } } } },
     "Remove value" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Wert entfernen" } } } },
     "takes a lot of energy" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "nimmt sehr viel Energie" } } } },

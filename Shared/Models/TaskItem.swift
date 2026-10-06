@@ -130,8 +130,8 @@ extension TaskItem {
         (blockedBy ?? []).contains { $0.isOpen }
     }
 
-    /// Unseen AI revisions drive the marker in the list (Variante C).
-    var hasUnseenAIRevisions: Bool {
-        (revisions ?? []).contains { $0.author == .ai && $0.seenAt == nil }
+    /// Unseen revisions by the model or a rule drive the marker in the list (Variante C, #101).
+    var hasUnseenAutomaticRevisions: Bool {
+        (revisions ?? []).contains { $0.author.isAutomatic && $0.seenAt == nil }
     }
 }

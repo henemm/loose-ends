@@ -54,7 +54,7 @@ enum ViewRules {
             return topLevel.filter { $0.isOpen && $0.nextRank != nil && !$0.isBlocked }
                 .sorted { ($0.nextRank ?? 0) < ($1.nextRank ?? 0) }
         case .new:
-            return topLevel.filter { $0.isOpen && ($0.status == .unprocessed || $0.status == .unverified || $0.hasUnseenAIRevisions) }
+            return topLevel.filter { $0.isOpen && ($0.status == .unprocessed || $0.status == .unverified || $0.hasUnseenAutomaticRevisions) }
                 .sorted { $0.capturedAt > $1.capturedAt }
         case .due:
             let limit = calendar.date(byAdding: .day, value: dueWithinDays, to: now) ?? now

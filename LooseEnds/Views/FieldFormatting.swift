@@ -107,6 +107,7 @@ enum FieldFormatting {
         switch source {
         case .ai: String(localized: "AI")
         case .user: String(localized: "You")
+        case .rule: String(localized: "Your words")
         }
     }
 }

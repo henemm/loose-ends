@@ -27,7 +27,7 @@ import Testing
     @MainActor func revertTitle() async throws {
         let store = try TestStore()
         let (task, garden, _) = try enrichedTask(in: store)
-        let aiTitle = try #require(RevisionService.firstAIRevision(of: .title, on: task))
+        let aiTitle = try #require(RevisionService.firstAutomaticRevision(of: .title, on: task))
 
         let written = RevisionService.revert(aiTitle, on: task, contexts: [garden], projects: [])
         try store.context.save()
@@ -40,15 +40,15 @@ import Testing
         #expect(written.oldValue == "Rasenmäher: Ölwechsel")
         #expect(written.newValue == "Rasenmäher Ölwechsel am Samstag")
         #expect((task.revisions ?? []).count == 5, "four AI revisions plus one user revision, nothing deleted")
-        #expect(!RevisionService.aiSetFields(on: task).contains(.title))
+        #expect(!RevisionService.automaticFields(on: task).contains(.title))
     }
 
     @Test("Resetting due date and contexts restores the pre-AI state")
     @MainActor func revertDueAndContexts() async throws {
         let store = try TestStore()
         let (task, garden, _) = try enrichedTask(in: store)
-        let due = try #require(RevisionService.firstAIRevision(of: .dueDate, on: task))
-        let contexts = try #require(RevisionService.firstAIRevision(of: .contexts, on: task))
+        let due = try #require(RevisionService.firstAutomaticRevision(of: .dueDate, on: task))
+        let contexts = try #require(RevisionService.firstAutomaticRevision(of: .contexts, on: task))
 
         RevisionService.revert(due, on: task, contexts: [garden], projects: [])
         RevisionService.revert(contexts, on: task, contexts: [garden], projects: [])
@@ -70,7 +70,7 @@ import Testing
         try store.context.save()
 
         #expect(written.count == 4)
-        #expect(RevisionService.aiSetFields(on: task).isEmpty)
+        #expect(RevisionService.automaticFields(on: task).isEmpty)
         #expect(task.title == "Rasenmäher Ölwechsel am Samstag" && task.dueDate == nil && task.duration == nil)
         #expect((task.contexts ?? []).isEmpty)
         let userRevisions = (task.revisions ?? []).filter { $0.author == .user }
@@ -109,14 +109,14 @@ import Testing
 
         #expect(task.title == "Rasen mähen")
         #expect(task.titleSourceRaw == "user")
-        #expect(!RevisionService.aiSetFields(on: task).contains(.title))
+        #expect(!RevisionService.automaticFields(on: task).contains(.title))
     }
 
     @Test("Marking seen clears the marker and takes an active task out of New")
     @MainActor func markSeen() async throws {
         let store = try TestStore()
         let (task, _, _) = try enrichedTask(in: store)
-        #expect(task.hasUnseenAIRevisions)
+        #expect(task.hasUnseenAutomaticRevisions)
         let before = try store.context.fetch(FetchDescriptor<TaskItem>())
         #expect(ViewRules.tasks(for: .new, in: before).map(\.id) == [task.id])
 
@@ -124,7 +124,7 @@ import Testing
         try store.context.save()
 
         #expect(marked == 4)
-        #expect(!task.hasUnseenAIRevisions)
+        #expect(!task.hasUnseenAutomaticRevisions)
         #expect(RevisionService.markSeen(task) == 0, "second pass finds nothing")
         let after = try store.context.fetch(FetchDescriptor<TaskItem>())
         #expect(ViewRules.tasks(for: .new, in: after).isEmpty)

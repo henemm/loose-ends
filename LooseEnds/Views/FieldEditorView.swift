@@ -19,8 +19,8 @@ struct FieldEditorView: View {
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Detail")
 
     private var aiRevision: Revision? {
-        guard RevisionService.aiSetFields(on: task).contains(field) else { return nil }
-        return RevisionService.firstAIRevision(of: field, on: task)
+        guard RevisionService.automaticFields(on: task).contains(field) else { return nil }
+        return RevisionService.firstAutomaticRevision(of: field, on: task)
     }
 
     var body: some View {
