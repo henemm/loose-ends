@@ -1,0 +1,37 @@
+[0;34m[sim][0m Unit-Tests (macOS): LooseEndsTests/CalendarSyncTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (4 targets)
+[[36mLooseEnds[0m] [1mCompiling[0m CalendarBridge.swift
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-macos.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-macos.abi.json -> LooseEnds.abi.json
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWidgets.appex
+Test Suite 'Selected tests' started at 2026-10-06 19:19:32.257.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-06 19:19:32.257.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-06 19:19:32.257.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+[1mTest run started.[0m
+Suite "Show in calendar" started
+    [32m✔[0m "Only an open task with the switch on and a due date gets an event" (0.003 seconds)
+    [32m✔[0m "A due time gives a block as long as the duration, a bare day gives an all-day event" (0.002 seconds)
+    [32m✔[0m "Changes sort tasks into create, update and remove, and are empty while nobody asks" (0.002 seconds)
+    [32m✔[0m "A deleted task's event has no task left to carry it, but still counts as an orphan (#122)" (0.002 seconds)
+    [32m✔[0m "Google as the default does not win over iCloud: iCloud first, Google after it (#203)" (0.001 seconds)
+    [32m✔[0m "Only the device itself: the local source (#203)" (0.001 seconds)
+    [32m✔[0m "Exchange, subscriptions and birthdays never host the app's calendar (#203)" (0.001 seconds)
+    [32m✔[0m "Every source is tried at most once, local comes before a foreign CalDAV default (#203)" (0.001 seconds)
+    [32m✔[0m "The note under the switch says why nothing shows, and is silent while all is well (#203)" (0.006 seconds)
+Suite "Show in calendar" passed after 0.017 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.10.06_19-19-26-+0200.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+EXIT 0
