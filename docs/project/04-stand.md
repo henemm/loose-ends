@@ -129,7 +129,7 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
    - Vorbedingung [#224](https://github.com/henemm/loose-ends/issues/224): Siris Wiederholung → `RepeatRule`
      (`Shared/Services/SiriRepeatMapping.swift`), Nicht-Abbildbares wird benannt statt gekürzt
    - Vorbedingung [#226](https://github.com/henemm/loose-ends/issues/226) Ortserinnerungen: User Story,
-     Analyse und Entwurf in `docs/specs/feat-226-ortserinnerungen.md`, Produktfragen beantwortet; Spec Schnitt 1 in `docs/specs/feat-226-schnitt-1-ortsfeld.md` freigegeben
+     Analyse und Entwurf in `docs/specs/feat-226-ortserinnerungen.md`, Produktfragen beantwortet; Schnitt 1 (Ort an der Aufgabe, `PlaceReminders.plan`) gebaut nach `docs/specs/feat-226-schnitt-1-ortsfeld.md`
 6. [#27](https://github.com/henemm/loose-ends/issues/27) Abhängigkeiten über Private Cloud Compute (`blockedBy`)
 9. [#30](https://github.com/henemm/loose-ends/issues/30) Mac-Teilen-Erweiterung
 14. [#40](https://github.com/henemm/loose-ends/issues/40) Icon-Composer-Paket für das App-Icon (Liquid Glass mit Ebenen)

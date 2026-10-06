@@ -20,6 +20,7 @@ enum FieldCodec {
         case .project: return task.project?.name
         case .blockedBy: return encode((task.blockedBy ?? []).map(\.id.uuidString))
         case .repeatRule: return task.repeatRule.flatMap(encode)
+        case .place: return task.place.flatMap(encode)
         }
     }
 
@@ -73,6 +74,9 @@ enum FieldCodec {
             task.project = encoded.flatMap { name in projects.first { $0.name == name } }
         case .repeatRule:
             task.repeatRule = decodeRepeat(encoded)
+        case .place:
+            task.place = decodePlace(encoded)
+            task.placeSourceRaw = task.place == nil ? nil : sourceRaw
         case .blockedBy:
             break
         }
@@ -89,6 +93,19 @@ enum FieldCodec {
     static func decodeRepeat(_ encoded: String?) -> RepeatRule? {
         guard let encoded, let data = encoded.data(using: .utf8) else { return nil }
         return try? JSONDecoder().decode(RepeatRule.self, from: data)
+    }
+
+    /// Sorted keys, like the repeat rule: the same place always encodes to the same text.
+    static func encode(_ place: TaskPlace) -> String? {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        guard let data = try? encoder.encode(place) else { return nil }
+        return String(decoding: data, as: UTF8.self)
+    }
+
+    static func decodePlace(_ encoded: String?) -> TaskPlace? {
+        guard let encoded, let data = encoded.data(using: .utf8) else { return nil }
+        return try? JSONDecoder().decode(TaskPlace.self, from: data)
     }
 
     static func encode(_ names: [String]) -> String? {
