@@ -177,7 +177,7 @@ not scope creep on the current one.
   (catch-up pass), `FoundationModelsEnricher` (on-device model, `#if canImport(FoundationModels)`), `DueDateRule`
   (combines the rule parsers into the due date, confidence 1.0, #95), `ImportanceUrgencyRule` (keyword
   match for importance/urgency, confidence 1.0, no default on miss, #117), `RecognitionRule` (equality of
-  `RawTextWords` sets contexts and duration from an earlier task, confidence 1.0, no energy, #136, `ContextWordRule`
+  `RawTextWords` sets contexts and duration from an earlier task, confidence 1.0, no energy, #136), `ContextWordRule`
   (a short word list per default context plus each context's own name sets the contexts; no hit stays empty, #232)
 - `Shared/Intents` — App Intents shared by app, widgets and (later) the intents extension
 - `LooseEnds/` — app entry and views (iPhone, iPad, Mac); `LooseEndsWatch/`, `LooseEndsWidgets/`, `LooseEndsShare/`
