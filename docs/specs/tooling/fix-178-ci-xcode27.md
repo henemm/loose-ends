@@ -59,7 +59,7 @@ entfernt den Compiler-Schalter. Es ändert sich kein Produktverhalten und nichts
 | `.github/workflows/speech-stress.yml` | MODIFY | Gleiche Umstellung (Runner, Composite Action, `sed` raus, strenge Simulatorwahl) |
 | `Measurement/MeasurementRun.swift` | MODIFY | `#if compiler(>=6.4)`/`#endif` und veralteten Kommentar entfernen |
 | `CLAUDE.md` | MODIFY | CI-Abschnitt: `xcode-27`, fest 27.0, keine Absenkung, Vorgehen bei Wegfall des Labels (Verweis auf `docs/reference/testflight.md`); `#available`-Satz zur CI streichen |
-| `LooseEndsUITests/CaptureCancelCrashTests.swift` | MODIFY | Nachtrag 2026-10-06 (Änderung 5): Startargument `-speechServerRecognitionAllowed NO`, damit der App-Dialog „Recognize speech via Apple?“ den Abbrechen-Tipp nicht mehr zufällig schluckt |
+| `LooseEndsUITests/CaptureCancelCrashTests.swift` | MODIFY | Nachtrag 2026-10-06 (Änderung 5): Startargument `-speechServerRecognitionAllowed <false/>`, damit der App-Dialog „Recognize speech via Apple?“ den Abbrechen-Tipp nicht mehr zufällig schluckt |
 
 `testflight.yml` und `project.yml` bleiben unverändert.
 
@@ -173,8 +173,11 @@ Durchläufe) wurde nach 75 Minuten abgebrochen. Zwei belegte Ursachen:
 
 **Änderung 5:**
 - `speech-stress.yml`: `-collect-test-diagnostics never` an `xcodebuild test-without-building`.
-- `CaptureCancelCrashTests.swift`: Startargument `-speechServerRecognitionAllowed NO` (Argument-Domain wie
-  `-onboardingDone`). Damit endet eine gescheiterte Erkennung ohne Dialog im Zustand „nicht verfügbar“.
+- `CaptureCancelCrashTests.swift`: Startargument `-speechServerRecognitionAllowed <false/>` (Argument-Domain wie
+  `-onboardingDone`). Der Wert muss `<false/>` sein, nicht `NO`: `SpeechCapture.serverConsent` liest
+  `object(forKey:) as? Bool`, und das Startargument `NO` kommt dort als Text an (`as? Bool` = `nil`, also
+  „nicht entschieden“, und der Dialog erscheint doch). `<false/>` ergibt einen echten Wahrheitswert `false`.
+  Lokal am 2026-10-06 mit einem Swift-Programm über denselben Ausdruck geprüft. Damit endet eine gescheiterte Erkennung ohne Dialog im Zustand „nicht verfügbar“.
   Mikrofon, Erkennung und Abbrechen laufen weiter wie bisher. Regelweg statt Unterbrechungs-Monitor: Der
   Zustand ist von vornherein festgelegt, statt einen Dialog abzufangen, der irgendwann erscheint.
 
@@ -252,7 +255,7 @@ lokale Prüfungen und der CI-Lauf selbst als Abnahme.
 - [ ] Test 5 (lokal, Versionsprüfung): GIVEN der Prüfblock der Composite Action mit einer Attrappe, die „Xcode 26.6" meldet WHEN er läuft THEN endet er mit Exit-Code 1 und einer `::error::`-Zeile; mit „Xcode 27.0" endet er mit Exit-Code 0.
 - [ ] Test 6 (CI, echter Lauf): GIVEN die PR WHEN `CI` läuft THEN sind alle drei Jobs grün (Details in den Acceptance Criteria).
 - [ ] Test 7 (CI, speech-stress): GIVEN der Branch WHEN `speech-stress` per `workflow_dispatch` mit Iterations 3 läuft THEN ist der Lauf grün.
-- [ ] Test 8 (lokal, Nachtrag): GIVEN `scripts/test_ci_xcode27.py` WHEN die Tests laufen THEN prüfen zwei neue Fälle, dass der `xcodebuild test-without-building`-Aufruf in `speech-stress.yml` `-collect-test-diagnostics never` enthält und dass `CaptureCancelCrashTests` mit `-speechServerRecognitionAllowed NO` startet. Beide sind vor der Änderung rot (RED), danach grün.
+- [ ] Test 8 (lokal, Nachtrag): GIVEN `scripts/test_ci_xcode27.py` WHEN die Tests laufen THEN prüfen zwei neue Fälle, dass der `xcodebuild test-without-building`-Aufruf in `speech-stress.yml` `-collect-test-diagnostics never` enthält und dass `CaptureCancelCrashTests` mit `-speechServerRecognitionAllowed <false/>` startet. Beide sind vor der Änderung rot (RED), danach grün.
 - [ ] Test 9 (CI, Nachtrag): GIVEN der Branch WHEN `speech-stress` durch die PR mit 10 Durchläufen läuft THEN ist er grün, jeder Durchlauf dauert unter 300 s, und kein Protokoll enthält „Timed out after 600.0 seconds“ oder „Recognize speech via Apple?“ (AC-15, AC-16). Für den Wettlauf gibt es keinen lokalen Test: Er tritt nur auf, wenn die Erkennung auf dem Gerät scheitert, und das passiert im lokalen Simulator mit installierten Sprachmodellen nicht. Der Beleg ist deshalb der Lauf mit 10 Durchläufen.
 
 ## Acceptance Criteria
@@ -272,7 +275,7 @@ lokale Prüfungen und der CI-Lauf selbst als Abnahme.
 - [ ] AC-13 Abnahmestufe: Kein Pfad der Geräteliste berührt. Das Diff berührt nur `.github/`, `Measurement/MeasurementRun.swift`, `CLAUDE.md`, `LooseEndsUITests/CaptureCancelCrashTests.swift` und `scripts/test_ci_xcode27.py` (plus Workflow-Artefakte unter `docs/`); `project.yml`, Entitlements, Info.plist, `Shared/Persistence/`, Enrichment, Speech, Notifications, Intents, Watch, Widgets und Share bleiben unberührt. Keine sichtbare UI-Änderung, daher keine Entwurfsvorschau. Beleg: `git diff --name-only` im Bericht.
 - [ ] AC-14 Ausliefern: Nach dem Merge ist `bash ~/.claude/scripts/loose-ends-sync-main.sh` gelaufen.
 - [ ] AC-15 Keine Diagnose-Wartezeit: GIVEN `speech-stress` auf `xcode-27` WHEN ein Durchlauf endet THEN enthält das Protokoll kein „Timed out after 600.0 seconds“, und ein Durchlauf dauert unter 300 s. Beleg: Lauf-ID, `summary.txt` mit Sekunden je Durchlauf.
-- [ ] AC-16 Kein Zustimmungsdialog im Abbrechen-Test: GIVEN `CaptureCancelCrashTests` startet mit `-speechServerRecognitionAllowed NO` WHEN die Erkennung auf dem Gerät scheitert THEN erscheint kein „Recognize speech via Apple?“-Alert, und `speech-stress` mit 10 Durchläufen (PR-Auslöser) ist grün. Beleg: Lauf-ID, keine Alert-Zeile im Protokoll der Durchläufe.
+- [ ] AC-16 Kein Zustimmungsdialog im Abbrechen-Test: GIVEN `CaptureCancelCrashTests` startet mit `-speechServerRecognitionAllowed <false/>` WHEN die Erkennung auf dem Gerät scheitert THEN erscheint kein „Recognize speech via Apple?“-Alert, und `speech-stress` mit 10 Durchläufen (PR-Auslöser) ist grün. Beleg: Lauf-ID, keine Alert-Zeile im Protokoll der Durchläufe.
 
 ## Architektur-Entscheidung (ADR)
 
@@ -283,3 +286,4 @@ lokale Prüfungen und der CI-Lauf selbst als Abnahme.
 
 - 2026-10-05: Initial spec created (Analyse in `docs/context/ci-178-xcode27.md`).
 - 2026-10-06: Nachtrag nach dem ersten `xcode-27`-Lauf: Änderung 5 (`-collect-test-diagnostics never`, Startargument im Abbrechen-Test), sechste Datei, AC-15/AC-16. PO-Freigabe des Umfangs am 2026-10-06, Spec-Sperre per „override“ geöffnet.
+- 2026-10-06: Startargument korrigiert, `NO` → `<false/>`. `NO` hätte als Text keine Wirkung gehabt (Fund des Entwickler-Agenten, nachgeprüft).

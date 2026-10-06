@@ -1,6 +1,6 @@
 ---
 spec_file: docs/specs/tooling/fix-178-ci-xcode27.md
-spec_sha256: ea01027fb78db817d161b8d21d7ab2072567f2ab754e51b750d667301e49e9e6
+spec_sha256: 9f3aeaf187848a1f351a11c9ecf40b66b4708296ff0ae6d548521934f057398d
 ---
 
 # PO-Briefing: ci-178-xcode27
@@ -11,22 +11,22 @@ spec_sha256: ea01027fb78db817d161b8d21d7ab2072567f2ab754e51b750d667301e49e9e6
 
 ## Was gebaut wird
 
-Die automatische Prüfung läuft mit exakt derselben Xcode-Version und demselben Zielsystem wie bei dir, und der Sprachtest wird stabil.
+Die automatische Prüfung nutzt dieselbe Xcode-Version wie Henning; der Sprach-Belastungstest wird stabil und deutlich schneller.
 
 ## Definition of Done
 
-Alle drei Prüfläufe sind mit Xcode 27.0 grün, der Sprach-Belastungstest läuft zehnmal grün, jeweils unter fünf Minuten, ohne Absenkung auf 26.
+Alle drei Prüfjobs laufen grün mit Xcode 27.0, der Belastungstest besteht zehn Durchläufe je unter fünf Minuten, ohne Absenkung auf 26.
 
 ## Wie geprüft wird
 
-Echte Prüfläufe auf GitHub belegen es; für den Dialog-Wettlauf gibt es keinen lokalen Test, nur den Zehnfach-Lauf.
+Echte Läufe in der Cloud-Prüfung und kleine lokale Skripttests belegen es; für den Dialog-Zufall gibt es keinen lokalen Test.
 
 ## Kritische Anmerkungen
 
-- Ein Testskript fehlt in der Dateiliste: tatsächlich sieben Dateien, nicht sechs.
-- Wird die Oberfläche-Prüfung wegen des Sprachmodells rot, gibt es keine Wiederholung; das Ticket hängt dann an #208.
-- Zeitvergleich ohne Schwelle: „mit Bewertung" lässt offen, wann die längere oder kürzere Laufzeit akzeptabel ist.
+- Rote Oberflächentests durch aktives KI-Modell im Simulator würden nicht wiederholt, sondern das Ticket bliebe offen (#208).
+- Der Dialog-Zufall hat keinen lokalen Test; nur der Zehn-Durchläufe-Lauf beweist die Behebung.
+- Sechs statt höchstens fünf Dateien, von Henning erlaubt; läuft zudem auf Vorschau-Runner, der wegfallen kann.
 
 ## Freigabe-Frage
 
-Gibst du die Umstellung auf die Vorschau-Prüfumgebung samt Sprachtest-Korrektur frei, obwohl Rot durch das Sprachmodell möglich bleibt?
+Soll die CI auf Xcode 27.0 umgestellt und der Belastungstest repariert werden?

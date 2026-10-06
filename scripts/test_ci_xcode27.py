@@ -147,7 +147,8 @@ class SpeechStressOnXcode27(unittest.TestCase):
 
     def test_cancel_test_declines_server_recognition_up_front(self):
         source = (ROOT / "LooseEndsUITests" / "CaptureCancelCrashTests.swift").read_text()
-        self.assertIn('"-speechServerRecognitionAllowed", "NO"', source)
+        # `<false/>`, not `NO`: SpeechCapture reads `object(forKey:) as? Bool`, and `NO` arrives as a string.
+        self.assertIn('"-speechServerRecognitionAllowed", "<false/>"', source)
 
 
 class Sources(unittest.TestCase):
