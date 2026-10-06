@@ -10,6 +10,15 @@ final class CalendarTargetTests: XCTestCase {
 
     @MainActor
     func testSwitchOnShowsTargetCalendar() throws {
+        // XCTest's own handling taps the cancel button of a system prompt in the way of a gesture,
+        // which turned access off on CI (#203). This one allows it instead.
+        addUIInterruptionMonitor(withDescription: "Calendar access") { alert in
+            for label in ["Allow Full Access", "Vollen Zugriff erlauben"] where alert.buttons[label].exists {
+                alert.buttons[label].tap()
+                return true
+            }
+            return false
+        }
         let app = XCUIApplication()
         app.launchArguments = ["--ui-testing", "--ui-testing-calendar", "-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
         app.launch()
@@ -39,9 +48,9 @@ final class CalendarTargetTests: XCTestCase {
         // The element spans the row; the switch itself sits at the trailing edge.
         toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
 
-        allowCalendarAccessIfAsked()
-
         let target = app.descendants(matching: .any).matching(identifier: "calendarTargetRow").firstMatch
+        allowCalendarAccessIfAsked(until: target)
+
         if !target.waitForExistence(timeout: 10) { app.swipeUp() }
         XCTAssertTrue(target.waitForExistence(timeout: 5), "The detail should name the calendar the event goes to")
         XCTAssertTrue(target.label.contains("Loose Ends"), "Target calendar label was \(target.label)")
@@ -51,17 +60,19 @@ final class CalendarTargetTests: XCTestCase {
         add(shot)
     }
 
-    /// The system asks once per install, in the simulator's own language. A simulator that already
-    /// granted access shows nothing, which is fine.
+    /// The system asks once per install, in the simulator's own language. On a slow CI runner the
+    /// prompt came only after about eight seconds (#203), so this watches for it until the target row
+    /// shows up, for at most 30 seconds. A simulator that already granted access shows no prompt.
     @MainActor
-    private func allowCalendarAccessIfAsked() {
+    private func allowCalendarAccessIfAsked(until target: XCUIElement) {
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        for label in ["Allow Full Access", "Vollen Zugriff erlauben"] {
-            let button = springboard.buttons[label]
-            if button.waitForExistence(timeout: label == "Allow Full Access" ? 5 : 1) {
-                button.tap()
+        let deadline = Date().addingTimeInterval(30)
+        while Date() < deadline {
+            for label in ["Allow Full Access", "Vollen Zugriff erlauben"] where springboard.buttons[label].exists {
+                springboard.buttons[label].tap()
                 return
             }
+            if target.waitForExistence(timeout: 1) { return }
         }
     }
 }
