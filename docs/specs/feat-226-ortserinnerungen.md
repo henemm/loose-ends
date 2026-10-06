@@ -9,13 +9,13 @@ workflow: feat-226-ortserinnerungen
 
 # #226 Ortserinnerungen: User Story, Analyse, Entwurf
 
-Vorbereitung für die Spec. Nichts davon ist gebaut. Am Ende stehen die offenen Produktfragen an
-Henning. Erst wenn sie beantwortet sind, wird daraus die Spec für Schnitt 1.
+Vorbereitung für die Spec. Nichts davon ist gebaut. Henning hat die Produktfragen am 2026-10-06
+beantwortet (letzter Abschnitt). Daraus wird als Nächstes die Spec für Schnitt 1.
 
 ## Approval
 
 - [ ] User Story und Entwurf freigegeben (Henning)
-- [ ] Produktfragen F1–F7 beantwortet
+- [x] Produktfragen F1–F7 beantwortet (Henning, 2026-10-06)
 
 ## User Story
 
@@ -45,7 +45,7 @@ Drei Stellen im Projekt schließen genau dieses Feature aus:
 
 Die Entscheidung vom 2026-10-06 hebt das auf. Die Spec ändert alle drei Stellen und nennt den Grund.
 **„Garten“ bleibt ein Kontext.** Ein Ort ist etwas anderes: ein Punkt auf der Karte, an dem
-erinnert wird. Ein Kontext ist ein Etikett, nach dem gefiltert wird. → Frage F1.
+erinnert wird. Ein Kontext ist ein Etikett, nach dem gefiltert wird. Henning hat zugestimmt (F1).
 
 ## Was die Plattform hergibt (mit Quellen)
 
@@ -61,7 +61,9 @@ erinnert wird. Ein Kontext ist ein Etikett, nach dem gefiltert wird. → Frage F
 
 **Regeln vor dem Modell:** Ein Ort wird nie geraten. Er kommt von Henning (Auswahl im Detail) oder
 von Siri. Einen Ort aus dem Rohtext erkennen („wenn ich beim Bauhaus bin“) ist nicht Teil dieses
-Tickets → Frage F5.
+Tickets. Henning, 2026-10-06 (F5): eigenes Ticket. Gemessen auf 319 erfassten Sätzen (Treue-Korpus
+samt FocusBlox-Rohsätzen): genau einer nennt eine Ortsbedingung („Wenn ich morgen in der Stadt bin …“),
+und „in der Stadt“ ist kein Punkt auf der Karte.
 
 ## Entwurf: so sieht es aus
 
@@ -86,11 +88,18 @@ Ohne Ort zeigt die Zeile nur „Ort hinzufügen“. Ein Tipp öffnet ein Blatt:
 │ Abbrechen        Ort                   │
 │ 🔍 Adresse oder Name                   │
 │ ➤  Aktueller Ort                       │
+│ ⌂  Zuhause                             │   ← gemerkte Orte, falls festgelegt
+│ ▣  Arbeit                              │
 │ ───────────────────────────────────    │
 │ Bauhaus  · Hamburg-Altona              │   ← Treffer der Kartensuche
 │ Bauhaus  · Hamburg-Wandsbek            │
 └────────────────────────────────────────┘
 ```
+
+**Zuhause und Arbeit** (Henning, 2026-10-06): Ohne Zugriff auf Kontakte kennt die App sie nicht.
+Henning legt sie einmal selbst fest: Bei jedem Treffer und bei „Aktueller Ort“ gibt es „Als Zuhause
+merken“ und „Als Arbeit merken“. Danach stehen sie oben im Blatt. Ändern lassen sie sich auf dem
+gleichen Weg.
 
 Ein Wischen nach links auf die Ortszeile entfernt den Ort. Jede Änderung ist eine Revision mit
 Autor `.user`, wie bei jedem anderen Feld.
@@ -102,10 +111,10 @@ Autor `.user`, wie bei jedem anderen Feld.
 - Auf dem Mac: „Erinnert auf iPhone und Watch.“
 
 **Liste:** Ein kleines Ortszeichen (grau, `location`) in der Merkmalzeile, wie das Zeichen für
-Wiederholung. → Frage F7.
+Wiederholung (F7).
 
 **Karte:** Es gibt keine Karte. Das Briefing schließt Standortkarten aus, und für die Auswahl reicht
-die Suche. Der Radius ist fest (Vorschlag: 150 m) und wird nicht angezeigt. → Frage F6.
+die Suche. Der Radius ist fest 150 m und wird nicht angezeigt (F6).
 
 ### Die Mitteilung
 
@@ -116,7 +125,7 @@ Du bist bei Bauhaus.
 [ Erledigt ]  [ Als nächstes ]
 ```
 
-„Morgen“ aus der Fällig-Mitteilung entfällt, denn ein Ort hat keinen Tag. → Frage F4.
+„Morgen“ aus der Fällig-Mitteilung entfällt, denn ein Ort hat keinen Tag (F4).
 
 ### Berechtigung
 
@@ -126,12 +135,12 @@ zeigt den Hinweis oben. Der Text in `Info.plist` (`NSLocationWhenInUseUsageDescr
 „Only for tasks you give a place: your iPhone reminds you when you arrive or leave. Loose Ends
 never tracks where you go.“
 
-## Verhalten, das die Spec festlegt (Vorschläge)
+## Verhalten, das die Spec festlegt
 
 1. **Fälligkeit und Ort zugleich:** Beide erinnern, jede für sich, wie in Apples Erinnerungen.
 2. **Erledigt, geparkt, gelöscht:** Die Ortsüberwachung endet. Wiederhergestellt: Sie beginnt wieder.
 3. **Wiederkehrende Aufgabe mit Ort:** Nach dem Abhaken rückt sie weiter und erinnert am Ort wieder.
-   Ohne Abhaken erinnert sie nur einmal (`repeats: false`). → Frage F3.
+   Ohne Abhaken erinnert sie nur einmal (`repeats: false`) (F3).
 4. **Mehr als 20 Orte:** Überwacht werden die 20 wichtigsten. Die Reihenfolge ist „Als nächstes“
    zuerst, dann nach Fälligkeit, dann die neuesten. Die übrigen zeigen den Hinweis. Nichts fällt
    still weg.
@@ -140,7 +149,7 @@ never tracks where you go.“
    keine Aufgabe. So hält es #25 auch bei den anderen Angaben.
 6. **Sync:** Der Ort reist über CloudKit mit. Jedes iPhone plant seine Ortserinnerungen selbst.
 
-## Datenmodell (Vorschlag)
+## Datenmodell
 
 Neue optionale Felder am `TaskItem`. Das ist eine additive CloudKit-Änderung, die Produktion ist
 noch nicht ausgerollt (#175):
@@ -153,6 +162,10 @@ noch nicht ausgerollt (#175):
 | `placeEventRaw` | `String?` | `arrive` / `depart` |
 | `placeSourceRaw` | `String?` | `.user` oder `.rule` (Siri), wie bei jedem abgeleiteten Feld |
 
+Für Zuhause und Arbeit kommt ein eigenes kleines Modell `SavedPlace` dazu (Art `home`/`work`, Name,
+Koordinate). Es reist über CloudKit mit. Gibt es von einer Art mehrere (CloudKit kann Doppel spät
+liefern), gewinnt der älteste Eintrag auf allen Geräten gleich, wie bei den Kontexten (#157).
+
 Dazu kommt `RevisedField.place`, codiert als JSON in `FieldCodec`, wie die Wiederholregel. Der Ort
 wird dabei als **ein** Feld revidiert, denn Name, Koordinate und Ereignis gehören zusammen.
 
@@ -162,25 +175,23 @@ Das Ticket ist für die 250-Zeilen-Grenze zu groß. Vorschlag in vier Schnitten,
 
 | # | Inhalt | Geräteliste? | Wo baubar |
 |---|---|---|---|
-| 1 | Datenfelder, `RevisedField.place`, Codec, reine Planung `PlaceReminders.plan` (20er-Grenze, Reihenfolge, Ausschluss erledigt/geparkt) samt Unit-Tests | nein (`Shared/Models`, `Shared/Services`, `Shared/Notifications`) | Cloud |
+| 1 | Datenfelder, `SavedPlace`, `RevisedField.place`, Codec, reine Planung `PlaceReminders.plan` (20er-Grenze, Reihenfolge, Ausschluss erledigt/geparkt) samt Unit-Tests | nein (`Shared/Models`, `Shared/Services`, `Shared/Notifications`) | Cloud |
 | 2 | Abbildung Siri-`locationTrigger` → Ortsfeld (rein, wie #224) samt Unit-Tests | nein | Cloud |
-| 3 | Detail: Ortszeile, Suchblatt, Segment, Hinweise; Berechtigungstext | **ja** (`project.yml`, `Info.plist`) | Mac + Gerät |
+| 3 | Detail: Ortszeile, Suchblatt mit Zuhause/Arbeit, Segment, Hinweise, Ortszeichen in der Liste; Berechtigungstext | **ja** (`project.yml`, `Info.plist`) | Mac + Gerät |
 | 4 | Zustellung: `UNLocationNotificationTrigger` in `LooseEnds/Notifications`, Aktionen Erledigt/Als nächstes | **ja** (`LooseEnds/Notifications/`) | Mac + Gerät |
 
 Die DoD des Tickets („auf dem Gerät nachgewiesen“) erfüllen erst die Schnitte 3 und 4. Der Nachweis
 verlangt einen echten Ortswechsel mit „LE Prüfbau“, denn der Simulator kann einen Ort nur
 vortäuschen.
 
-## Offene Produktfragen an Henning
+## Antworten von Henning (2026-10-06)
 
-- **F1** ADR 14 („Keine Standort-Berechtigung“) wird aufgehoben. Loose Ends fragt einmal nach dem
-  Standort „Beim Verwenden der App“, sobald du den ersten Ort setzt. Einverstanden?
-- **F2** Ort wählen über **Suche (Adresse oder Geschäft) und „Aktueller Ort“**: reicht das? „Zuhause“
-  und „Arbeit“ aus deiner Kontaktkarte bräuchten zusätzlich Zugriff auf Kontakte.
-- **F3** Wiederkehrende Aufgabe mit Ort: **einmal erinnern bis zum Abhaken** (Vorschlag) oder bei
-  jedem Ankommen erneut?
-- **F4** Knöpfe in der Ortsmitteilung: **Erledigt und Als nächstes** (Vorschlag), oder noch etwas?
-- **F5** Ort aus dem gesprochenen Satz erkennen („wenn ich beim Bauhaus bin“): **später als eigenes
-  Ticket** (Vorschlag) oder Teil von #226?
-- **F6** Radius **fest 150 m** (Vorschlag) oder je Aufgabe einstellbar?
-- **F7** Ortszeichen an der Zeile in der Liste: **ja** (Vorschlag) oder nur im Detail?
+| # | Frage | Antwort |
+|---|---|---|
+| F1 | Standort-Berechtigung | Ja, „Beim Verwenden der App“, gefragt beim ersten Ort, nicht im Onboarding. ADR 14 wird in der Spec neu gefasst. |
+| F2 | Ort wählen | Suche (Adresse oder Geschäft) und „Aktueller Ort“, ohne Kontakte. Zuhause und Arbeit legt Henning einmal selbst fest. |
+| F3 | Wiederkehrend mit Ort | Einmal erinnern bis zum Abhaken; nach dem Abhaken erinnert sie dort wieder. |
+| F4 | Knöpfe der Mitteilung | Erledigt und Als nächstes. |
+| F5 | Ort aus dem Rohtext | Eigenes Folgeticket, nicht Teil von #226 (Messung: 1 von 319 Sätzen). |
+| F6 | Radius | Fest 150 m. |
+| F7 | Ortszeichen in der Liste | Ja, grau. |
