@@ -192,6 +192,6 @@ vortäuschen.
 | F2 | Ort wählen | Suche (Adresse oder Geschäft) und „Aktueller Ort“, ohne Kontakte. Zuhause und Arbeit legt Henning einmal selbst fest. |
 | F3 | Wiederkehrend mit Ort | Einmal erinnern bis zum Abhaken; nach dem Abhaken erinnert sie dort wieder. |
 | F4 | Knöpfe der Mitteilung | Erledigt und Als nächstes. |
-| F5 | Ort aus dem Rohtext | Eigenes Folgeticket, nicht Teil von #226 (Messung: 1 von 319 Sätzen). |
+| F5 | Ort aus dem Rohtext | Eigenes Folgeticket #237, nicht Teil von #226 (Messung: 1 von 319 Sätzen). |
 | F6 | Radius | Fest 150 m. |
 | F7 | Ortszeichen in der Liste | Ja, grau. |
