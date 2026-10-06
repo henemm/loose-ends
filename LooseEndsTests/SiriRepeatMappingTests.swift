@@ -160,7 +160,7 @@ import Testing
 
     // MARK: Applying
 
-    @Test("Applying sets the rule with one revision by the rule, reason Siri; the same rule again writes nothing")
+    @Test("Applying sets the rule with one revision by the user, reason Siri, already seen; the same rule again writes nothing")
     @MainActor func apply() throws {
         let store = try TestStore()
         let task = TaskItem(rawText: "Blumen gießen")
@@ -171,7 +171,8 @@ import Testing
 
         #expect(task.repeatRule == rule)
         #expect(revision.field == .repeatRule)
-        #expect(revision.author == .rule)
+        #expect(revision.author == .user)
+        #expect(revision.seenAt != nil)
         #expect(revision.reason == SiriRepeatMapping.reason)
         #expect(revision.oldValue == nil)
         #expect(revision.newValue == FieldCodec.encode(rule))

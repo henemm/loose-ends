@@ -11,7 +11,7 @@ workflow: feat-226-ortserinnerungen
 
 ## Approval
 
-- [ ] Approved (Henning)
+- [x] Approved (Henning, 2026-10-06)
 
 ## Purpose
 
