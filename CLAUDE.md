@@ -11,7 +11,8 @@ Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, 
   (independent of it, #144); a second run only on explicit user request.
 - **Learning is recognition, not training** (ADR-5, rewritten 2026-09-27 after #69/#131). A raw text
   that was captured before sets that entry's contexts and duration again, silently, with the rule marker (#101)
-  and a `Revision` like any enrichment. Similarity-picked prompt examples are gone: measured on 287 real
+  and a `Revision` like any enrichment — only values the user or a rule set, never a model guess (#215).
+  The model never sets contexts (#215: it guessed differently on every run; empty beats a guess). Similarity-picked prompt examples are gone: measured on 287 real
   tasks, word overlap only carries where the text recurs almost verbatim (contexts 100 %, duration 97.2 %
   at ~60 % coverage) and drops to chance (55 %) on partial overlap; for energy it stays below the constant.
   Evidence: `docs/reference/retrieval-leave-one-out-rules.md`, decision in

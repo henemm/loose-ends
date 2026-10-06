@@ -76,17 +76,20 @@ enum RecognitionRule {
         Set(RawTextWords.words(in: text).map(RawTextWords.normalized))
     }
 
-    /// A user-set value beats an AI-set one, per field separately (ADR-5: "corrections by the user
-    /// stay first-class examples"), then ascending `id.uuidString` — so the result never depends on
-    /// the fetch order.
+    /// An AI-set value is no source at all (#215). Among the rest a user-set value beats any other,
+    /// per field separately (ADR-5: "corrections by the user stay first-class examples"), then
+    /// ascending `id.uuidString` — so the result never depends on the fetch order.
     private static func winner<Value: Equatable & Sendable>(
         among hits: [Candidate],
         source: (Candidate) -> String?,
         value: (Candidate) -> Value?,
         reason: String
     ) -> FieldMatch<Value>? {
+        // A model guess is no source (#215): taken over, it would come back with the rule marker,
+        // "from your words", and look surer than it is.
         let withValue = hits.compactMap { candidate -> (candidate: Candidate, value: Value)? in
-            value(candidate).map { (candidate, $0) }
+            guard source(candidate) != FieldSource.ai.rawValue else { return nil }
+            return value(candidate).map { (candidate, $0) }
         }
         let best = withValue.min { lhs, rhs in
             let lhsByUser = source(lhs.candidate) == FieldSource.user.rawValue

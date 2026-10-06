@@ -63,7 +63,7 @@ struct TestStore {
         let written = EnrichmentWriter.apply(draft, to: task, contexts: [computer, garden], projects: [], now: now)
         try context.save()
 
-        #expect(written == 4)
+        #expect(written == 3, "contexts are never the model's (#215)")
         #expect(task.title == "Rasenmäher: Ölwechsel")
         #expect(task.titleSourceRaw == "ai")
         #expect(task.titleConfidence == 0.9)
@@ -73,14 +73,14 @@ struct TestStore {
         #expect(task.importance == nil, "die Regel setzt Wichtigkeit, nicht mehr der Modell-Draft (#117, AC-7)")
         #expect(task.urgency == nil, "die Regel setzt Dringlichkeit, nicht mehr der Modell-Draft (#117, AC-7)")
         #expect(task.duration == .minutes15)
-        #expect((task.contexts ?? []).map(\.name) == ["Garten"], "matched case-insensitively, unknown names dropped")
+        #expect((task.contexts ?? []).isEmpty, "the model's contexts are not written (#215)")
         #expect(task.processedAt == now)
 
         let revisions = try #require(task.revisions)
-        #expect(revisions.count == 4)
+        #expect(revisions.count == 3)
         let allFromAI = revisions.allSatisfy { $0.author == .ai && $0.seenAt == nil && !($0.reason ?? "").isEmpty }
         #expect(allFromAI, "every revision is unseen, by the AI, with a reason")
-        #expect(Set(revisions.map(\.field)) == [.title, .dueDate, .duration, .contexts])
+        #expect(Set(revisions.map(\.field)) == [.title, .dueDate, .duration])
         #expect(task.hasUnseenAutomaticRevisions)
         #expect(task.displayTitle == "Rasenmäher: Ölwechsel")
 
@@ -452,9 +452,9 @@ struct RecognitionCoordinatorTests {
     private func makeProcessed(
         _ rawText: String,
         duration: DurationBucket?,
-        durationSource: FieldSource = .ai,
+        durationSource: FieldSource = .user,
         contexts: [TaskContext] = [],
-        contextsSource: FieldSource = .ai,
+        contextsSource: FieldSource = .user,
         in context: ModelContext
     ) -> TaskItem {
         let task = TaskItem(rawText: rawText)

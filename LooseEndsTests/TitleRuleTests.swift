@@ -103,6 +103,7 @@ import Testing
         "Jeden Montag Blumen gießen",  // a repetition, no due date
         "Treffen um 15 Uhr",           // a time without a day sets no due date
         "Nicht wichtig: Keller aufräumen",
+        "Keller aufräumen, nicht dringend",  // negated: no urgency, so nothing is struck (#220)
     ])
     func unreadWordsStay(raw: String) {
         #expect(TitleRule.title(from: raw, reference: Self.wednesday) == raw)

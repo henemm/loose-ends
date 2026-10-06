@@ -59,8 +59,8 @@ enum ImportanceUrgencyRule {
         keywords.compactMap { range(of: $0, in: text) }.min { $0.lowerBound < $1.lowerBound }
     }
 
-    /// Like `firstRange`, but an occurrence the note negates does not count (#214): "nicht wichtig",
-    /// "not so important". "unwichtig" never gets here — the word boundary keeps it out.
+    /// Like `firstRange`, but an occurrence the note negates does not count (#214, #220): "nicht
+    /// wichtig", "not so important", "nicht dringend". "unwichtig" never gets here — the word boundary keeps it out.
     private static func firstUnnegatedRange(of keywords: [String], in text: String) -> Range<String.Index>? {
         var found: [Range<String.Index>] = []
         for keyword in keywords {
@@ -156,7 +156,13 @@ enum ImportanceUrgencyRule {
             }
         }
 
-        func range(in text: String) -> Range<String.Index>? { ImportanceUrgencyRule.firstRange(of: keywords, in: text) }
+        /// Where this signal stands earliest; the outright word only where the note does not negate
+        /// it ("nicht dringend", #220). A deadline word stays as it is: "keine Frist" is rare.
+        func range(in text: String) -> Range<String.Index>? {
+            self == .immediacy
+                ? ImportanceUrgencyRule.firstUnnegatedRange(of: keywords, in: text)
+                : ImportanceUrgencyRule.firstRange(of: keywords, in: text)
+        }
 
         func matches(_ text: String) -> Bool { range(in: text) != nil }
     }

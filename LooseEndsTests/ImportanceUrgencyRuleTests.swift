@@ -92,6 +92,19 @@ struct ImportanceUrgencyRuleTests {
         #expect(range.lowerBound > text.startIndex)
     }
 
+    @Test("Verneinte Dringlichkeit setzt nichts (#220)",
+          arguments: ["Keller aufräumen, nicht dringend", "Nicht so dringend: Keller aufräumen",
+                      "Tidy the cellar, not urgent", "Nicht sofort, erst nächste Woche"])
+    func negatedUrgencyIsNoHit(sentence: String) {
+        #expect(ImportanceUrgencyRule.matchUrgency(in: sentence) == nil)
+        #expect(ImportanceUrgencyRule.urgencyTrigger(in: sentence) == nil)
+    }
+
+    @Test("Eine Frist bleibt ein Treffer, auch neben verneinter Eile (#220)")
+    func deadlineStaysAHit() {
+        #expect(ImportanceUrgencyRule.matchUrgency(in: "Nicht dringend, aber Frist beachten")?.value == .high)
+    }
+
     /// Kein Treffer heißt `nil`, nicht „.low" oder „.medium" — genau die Eigenschaft, die #111 an
     /// der alten FocusBlox-„Wahrheit" fehlte.
     @Test("Kein Treffer bleibt nil, kein Default (AC-3)")

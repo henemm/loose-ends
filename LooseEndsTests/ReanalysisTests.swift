@@ -39,11 +39,11 @@ import Testing
         stub.draft = draft(title: "Zettel ordnen", duration: .minutes30, contexts: ["Büro"])
         let result = await coordinator.reanalyze(task)
 
-        #expect(result == .finished(changed: 3, modelRan: true))
+        #expect(result == .finished(changed: 2, modelRan: true))
         #expect(stub.calls == 2)
         #expect(task.title == "Zettel ordnen")
         #expect(task.duration == .minutes30)
-        #expect((task.contexts ?? []).map(\.name) == ["Büro"])
+        #expect((task.contexts ?? []).isEmpty, "the model never sets contexts, not even on a re-analysis (#215)")
         let titles = revisions(of: .title, on: task)
         #expect(titles.count == 2, "the first run's revision stays, nothing is deleted")
         #expect(titles.last?.oldValue == "Zettel sortieren")
@@ -51,7 +51,7 @@ import Testing
         #expect(titles.last?.author == .ai)
         #expect(titles.last?.seenAt == nil, "the change is unseen until looked at")
         #expect(revisions(of: .duration, on: task).last?.oldValue == DurationBucket.minutes15.rawValue)
-        #expect(revisions(of: .contexts, on: task).last?.oldValue == EnrichmentWriter.encode(["Garten"]))
+        #expect(revisions(of: .contexts, on: task).isEmpty)
     }
 
     @Test("A field the user set stays; the AI-set ones beside it still change")
@@ -100,19 +100,18 @@ import Testing
         let task = TaskItem(rawText: "Zettel sortieren")
         store.context.insert(task)
         try store.context.save()
-        let stub = StubEnricher(draft: draft(title: "Zettel sortieren", duration: .minutes15))
+        let stub = StubEnricher(draft: draft(title: "Zettel sortieren"))
         let coordinator = EnrichmentCoordinator(enricher: stub, container: store.container)
         await coordinator.processPending()
+        #expect(task.duration == nil)
 
-        stub.draft = draft(contexts: ["Garten"])
+        stub.draft = draft(duration: .minutes15)
         let result = await coordinator.reanalyze(task)
 
         #expect(result == .finished(changed: 1, modelRan: true))
-        #expect((task.contexts ?? []).map(\.name) == ["Garten"])
-        // The writer encodes an empty list as "[]", the first run included; the rule step writes nil.
-        #expect(revisions(of: .contexts, on: task).last?.oldValue == EnrichmentWriter.encode([]))
-        #expect(task.title == "Zettel sortieren")
         #expect(task.duration == .minutes15)
+        #expect(revisions(of: .duration, on: task).count == 1)
+        #expect(task.title == "Zettel sortieren")
     }
 
     @Test("An unverified task becomes active once the re-analysis finds a title")

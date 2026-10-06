@@ -105,8 +105,8 @@ struct RecognitionRuleTests {
     }
 
     /// ADR-5: „Korrekturen des Nutzers bleiben Beispiele erster Klasse." Bei mehreren Treffern
-    /// gewinnt deshalb ein nutzergesetztes Feld vor einem KI-gesetzten — je Feld einzeln, weil Dauer
-    /// und Kontexte von verschiedenen Nachbarn stammen dürfen.
+    /// gewinnt deshalb ein nutzergesetztes Feld — je Feld einzeln, weil Dauer und Kontexte von
+    /// verschiedenen Nachbarn stammen dürfen. Ein KI-gesetztes zählt seit #215 gar nicht.
     @Test("Nutzergesetzte Werte schlagen KI-gesetzte, je Feld einzeln (AC-6)")
     func userSetValuesWin() throws {
         let byAI = candidate("Steuer sortieren", duration: .minutes15, durationSource: .ai,
@@ -128,15 +128,27 @@ struct RecognitionRuleTests {
     @Test("Bei gleichrangigen Treffern entscheidet die id, nicht die Pool-Reihenfolge (AC-6)")
     func tiesBreakByIdNotByPoolOrder() throws {
         let lower = candidate("Fenster putzen", id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!,
-                              duration: .minutes15, durationSource: .ai)
+                              duration: .minutes15, durationSource: .user)
         let higher = candidate("Fenster putzen", id: UUID(uuidString: "FFFFFFFF-0000-0000-0000-000000000001")!,
-                               duration: .hour1, durationSource: .ai)
+                               duration: .hour1, durationSource: .user)
 
         for pool in [[lower, higher], [higher, lower]] {
             let match = try #require(RecognitionRule.match(rawText: "Fenster putzen", in: pool))
             #expect(match.duration?.sourceID == lower.id)
             #expect(match.duration?.guess.value == .minutes15)
         }
+    }
+
+    /// #215: Henning erfasste „Morgen wichtig Steuerbescheid prüfen“ zweimal. Der zweite Lauf übernahm
+    /// den geratenen Kontext „Haus“ des ersten mit dem Regelzeichen » «.
+    @Test("Ein von der KI geratener Wert ist keine Quelle (#215)")
+    func aiGuessIsNoSource() {
+        let guessed = candidate("Steuerbescheid prüfen", duration: .minutes15, durationSource: .ai,
+                                contexts: ["Haus"], contextsSource: .ai)
+        #expect(RecognitionRule.match(rawText: "Steuerbescheid prüfen", in: [guessed]) == nil)
+
+        let ruled = candidate("Steuerbescheid prüfen", duration: .minutes30, durationSource: .rule)
+        #expect(RecognitionRule.match(rawText: "Steuerbescheid prüfen", in: [guessed, ruled])?.duration?.guess.value == .minutes30)
     }
 
     @Test("Ein Kandidat ohne gesetztes Feld liefert für dieses Feld nichts")

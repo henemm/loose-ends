@@ -17,8 +17,14 @@ import Testing
         draft.title = EnrichmentDraft.Guess("Rasenmäher: Ölwechsel", confidence: 0.9, reason: "Names the job.")
         draft.dueDate = EnrichmentDraft.Guess(saturday, confidence: 0.8, reason: "Saturday.")
         draft.duration = EnrichmentDraft.Guess(.minutes30, confidence: 0.7, reason: "Maintenance.")
-        draft.contexts = EnrichmentDraft.Guess(["Garten"], confidence: 0.9, reason: "Garden tool.")
         EnrichmentWriter.apply(draft, to: task, contexts: [garden], projects: [])
+        // Contexts from the model as written before #215: old data keeps them, and they still reset.
+        let legacyContexts = Revision(task: task, field: .contexts, oldValue: EnrichmentWriter.encode([]),
+                                      newValue: EnrichmentWriter.encode(["Garten"]), author: .ai, reason: "Garden tool.")
+        task.revisions = (task.revisions ?? []) + [legacyContexts]
+        task.contexts = [garden]
+        task.contextsSourceRaw = FieldSource.ai.rawValue
+        task.contextsConfidence = 0.9
         try context.save()
         return (task, garden, saturday)
     }
