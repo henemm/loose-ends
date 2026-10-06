@@ -229,6 +229,9 @@ final class CaptureSmokeTests: XCTestCase {
         let rawText = element("detailRawText", in: app)
         XCTAssertTrue(rawText.waitForExistence(timeout: 5), "Different words: \"You said:\" shows the full text")
         XCTAssertEqual(rawText.label, words)
+        // #216: twelve words do not fit one line; the field wraps instead of ending in "…". One line
+        // of the title font is about 25 pt high, so a wrapped field is clearly taller than 40 pt.
+        XCTAssertGreaterThan(titleField.frame.height, 40, "Long title should wrap, field was \(titleField.frame)")
         attachScreenshot(app, "202-detail-zwoelf-woerter")
     }
 
