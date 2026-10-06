@@ -79,22 +79,10 @@ enum EnrichmentWriter {
             task.durationConfidence = duration.confidence
         }
 
-        // Same guard, and an empty relationship counts as unset: SwiftData hands a to-many
-        // relationship back as an empty array as readily as `nil`.
-        if let contexts = draft.contexts, contexts.confidence >= threshold {
-            let matched = available.filter { context in
-                contexts.value.contains { $0.compare(context.name, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame }
-            }
-            let current = Set((task.contexts ?? []).map(\.id))
-            if !matched.isEmpty,
-               may(.contexts, firstRun: current.isEmpty && !userHasTouched(.contexts, on: task),
-                   changes: Set(matched.map(\.id)) != current) {
-                record(.contexts, old: encode((task.contexts ?? []).map(\.name)), new: encode(matched.map(\.name)), reason: contexts.reason)
-                task.contexts = matched
-                task.contextsSourceRaw = ai
-                task.contextsConfidence = contexts.confidence
-            }
-        }
+        // Contexts are never the model's (#215): it guessed "Unterwegs" for a tax letter and "Haus"
+        // on the re-analysis of the same text, and its confidence does not separate right from
+        // wrong (#65). Empty beats a guess (Henning). Contexts come from the user and from the
+        // recognition of a raw text captured before; `draft.contexts` stays for the measurements.
 
         if let people = draft.people, people.confidence >= threshold, !people.value.isEmpty,
            may(.people, firstRun: true, changes: people.value != task.people) {
