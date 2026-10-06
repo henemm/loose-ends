@@ -67,6 +67,72 @@ import Testing
         }
     }
 
+    // MARK: Rule words leave the title (#217)
+
+    /// A Wednesday at noon, so every date below resolves in any time zone.
+    private static let wednesday = Calendar.current.date(from: DateComponents(year: 2026, month: 10, day: 7, hour: 12))!
+
+    /// The example table of the spec (#217): German and English, everything recognised, nothing
+    /// recognised, the date in the middle, content words that stay.
+    @Test("Words the rules read leave the title", arguments: [
+        ("Morgen wichtig Steuerbescheid prüfen", "Steuerbescheid prüfen"),
+        ("Geschenk für Anna bis Freitag besorgen", "Geschenk für Anna besorgen"),
+        ("Bis zum 15. die Miete überweisen", "Die Miete überweisen"),
+        ("Morgen um 15 Uhr Zahnarzt anrufen", "Zahnarzt anrufen"),
+        ("Halb zwölf morgen Anna abholen", "Anna abholen"),
+        ("Zahnarzt anrufen, dringend", "Zahnarzt anrufen"),
+        ("Dringend und wichtig: Vertrag kündigen", "Vertrag kündigen"),
+        ("Mit Anna am Samstag ins Kino gehen", "Mit Anna ins Kino gehen"),
+        ("Steuererklärung nächsten Freitag abgeben", "Steuererklärung abgeben"),
+        ("In 3 Tagen Reifen wechseln", "Reifen wechseln"),
+        ("Am Wochenende Rasenmäher Ölwechsel", "Rasenmäher Ölwechsel"),
+        ("Morgen: „Projekt X“ abgeben", "„Projekt X“ abgeben"),
+        ("Call the bank tomorrow at 9am", "Call the bank"),
+        ("Important: renew passport by Friday", "Renew passport"),
+        ("Pay rent on the 12th", "Pay rent"),
+        ("Urgent: call back the plumber", "Call back the plumber"),
+    ])
+    func ruleWordsLeave(raw: String, title: String) {
+        #expect(TitleRule.title(from: raw, reference: Self.wednesday) == title)
+    }
+
+    @Test("What no rule reads stays, word for word", arguments: [
+        "Rasen mähen",
+        "Rechnung bezahlen",           // sets the importance, but is what the task is about
+        "Kündigungsfrist prüfen",      // sets the urgency, same
+        "Jeden Montag Blumen gießen",  // a repetition, no due date
+        "Treffen um 15 Uhr",           // a time without a day sets no due date
+        "Nicht wichtig: Keller aufräumen",
+    ])
+    func unreadWordsStay(raw: String) {
+        #expect(TitleRule.title(from: raw, reference: Self.wednesday) == raw)
+    }
+
+    @Test("Nothing left after striking: the title keeps every word")
+    func nothingLeftKeepsAll() {
+        #expect(TitleRule.title(from: "Morgen wichtig", reference: Self.wednesday) == "Morgen wichtig")
+        #expect(TitleRule.title(from: "Dringend!", reference: Self.wednesday) == "Dringend")
+    }
+
+    @Test("The twelve words count after striking")
+    func twelveAfterStriking() {
+        let words = (1...13).map { "W\($0)" }
+        let raw = "Morgen " + words.joined(separator: " ")
+        #expect(TitleRule.title(from: raw, reference: Self.wednesday) == words.prefix(12).joined(separator: " "))
+    }
+
+    @Test("Capture strikes the rule words; the raw text stays as said")
+    @MainActor func captureStrikes() throws {
+        let store = try TestStore()
+        let raw = "Morgen wichtig Steuerbescheid prüfen"
+
+        let task = try CaptureService.save(raw, via: .app, in: store.context)
+
+        #expect(task.title == "Steuerbescheid prüfen")
+        #expect(task.rawText == raw)
+        #expect(task.titleSourceRaw == nil)
+    }
+
     // MARK: Capture
 
     @Test("Capture sets the title from the rule: no AI marker, no revision, status unprocessed, raw text untouched")
