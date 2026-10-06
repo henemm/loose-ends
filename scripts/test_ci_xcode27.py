@@ -137,6 +137,19 @@ else echo "unexpected xcrun $*" >&2; exit 2; fi
             self.assertNotIn("SIM_UDID", env, workflow.name)
 
 
+class SpeechStressOnXcode27(unittest.TestCase):
+    """Nachtrag 2026-10-06: Befunde aus Lauf 37415827670."""
+
+    def test_stress_runs_skip_the_600_second_diagnostics(self):
+        script = step_named(load(STRESS)["jobs"]["stress"], "Run CaptureCancelCrashTests")["run"]
+        self.assertIn("test-without-building", script)
+        self.assertIn("-collect-test-diagnostics never", script)
+
+    def test_cancel_test_declines_server_recognition_up_front(self):
+        source = (ROOT / "LooseEndsUITests" / "CaptureCancelCrashTests.swift").read_text()
+        self.assertIn('"-speechServerRecognitionAllowed", "NO"', source)
+
+
 class Sources(unittest.TestCase):
     def test_no_compiler_switch_left(self):
         result = subprocess.run(["grep", "-rn", "--include=*.swift", "compiler(>=6.4)",

@@ -59,13 +59,14 @@ entfernt den Compiler-Schalter. Es ändert sich kein Produktverhalten und nichts
 | `.github/workflows/speech-stress.yml` | MODIFY | Gleiche Umstellung (Runner, Composite Action, `sed` raus, strenge Simulatorwahl) |
 | `Measurement/MeasurementRun.swift` | MODIFY | `#if compiler(>=6.4)`/`#endif` und veralteten Kommentar entfernen |
 | `CLAUDE.md` | MODIFY | CI-Abschnitt: `xcode-27`, fest 27.0, keine Absenkung, Vorgehen bei Wegfall des Labels (Verweis auf `docs/reference/testflight.md`); `#available`-Satz zur CI streichen |
+| `LooseEndsUITests/CaptureCancelCrashTests.swift` | MODIFY | Nachtrag 2026-10-06 (Änderung 5): Startargument `-speechServerRecognitionAllowed NO`, damit der App-Dialog „Recognize speech via Apple?“ den Abbrechen-Tipp nicht mehr zufällig schluckt |
 
 `testflight.yml` und `project.yml` bleiben unverändert.
 
 ### Estimated Changes
 
-- Files: 5 (1 neu), innerhalb der Grenze von 4–5 Dateien
-- LoC: ca. +40/−60, innerhalb von ±250
+- Files: 6 (1 neu) — eine Datei über der Grenze von 4–5, vom PO am 2026-10-06 ausdrücklich freigegeben (Nachtrag unten)
+- LoC: ca. +45/−60, innerhalb von ±250
 - Kein Produktcode außer dem Entfernen eines Compiler-Schalters. Keine neuen Abhängigkeiten, keine neuen Berechtigungen, keine AppStorage-Schlüssel, keine Audiodateien, keine Änderung an `project.yml`, Entitlements oder Info.plist.
 
 ## Definition of Done
@@ -78,6 +79,8 @@ entfernt den Compiler-Schalter. Es ändert sich kein Produktverhalten und nichts
 - [ ] Lauf- und Wartezeit gegen die bisherige CI verglichen und in der PR-Beschreibung (AC-10)
 - [ ] `speech-stress` per `workflow_dispatch` (Iterations 3) grün (AC-9)
 - [ ] `MeasurementRun.swift` ohne Compiler-Schalter übersetzt (AC-11)
+- [ ] `speech-stress` ohne 600-s-Diagnose-Wartezeit, Durchlauf unter 300 s (AC-15)
+- [ ] Abbrechen-Test ohne Zustimmungsdialog, `speech-stress` mit 10 Durchläufen grün (AC-16)
 
 ## Implementation Details
 
@@ -147,6 +150,36 @@ gewähltem Xcode 27.0 (Composite Action `.github/actions/select-xcode-27`), Depl
 Absenkung, Simulator nur iPhone 17 / iOS 27.0; fällt das Label weg oder wird es umbenannt, gilt das
 Vorgehen in `docs/reference/testflight.md` (Label nachschlagen, `runs-on` in `ci.yml`,
 `speech-stress.yml` und `testflight.yml` anpassen). Der Satz zu `#available`-Guards wegen CI entfällt.
+
+### Nachtrag 2026-10-06 — Befund aus dem ersten Lauf auf `xcode-27`
+
+CI-Lauf 37415824465 war in allen drei Jobs grün. `speech-stress` aber nicht: Lauf 37415827670
+(`workflow_dispatch`, 3 Durchläufe) endete mit „passed 2, failed 1 of 3“, und Lauf 37415824453 (PR, 10
+Durchläufe) wurde nach 75 Minuten abgebrochen. Zwei belegte Ursachen:
+
+1. **600 s Diagnose je Durchlauf.** Der Test selbst dauert 61 s wie bisher. Danach meldet `xcodebuild`
+   „Failure collecting diagnostics from simulator: Timed out after 600.0 seconds“. Jeder Durchlauf dauert so
+   ~700 s statt ~60 s (Vergleich: Lauf 37297700749 auf `macos-26`, 30/30 grün, 53–216 s). Das ist ein
+   bekanntes Verhalten seit Xcode 26 (`simctl diagnose --timeout=600`). Abhilfe ist
+   `-collect-test-diagnostics never` (in Xcode 27 lokal geprüft: `on-failure|never`). Quellen:
+   https://github.com/bitomule/simpool/pull/32, https://github.com/cad0p/vvterm/issues/251,
+   https://github.com/actions/runner-images/issues/8693. Die Haupt-CI zeigte die Wartezeit nicht.
+2. **Wettlauf mit dem Zustimmungsdialog.** Im iOS-27-Simulator auf GitHub scheitert die Erkennung auf dem
+   Gerät. Dann zeigt die App wie vorgesehen (#63, `CaptureView.swift:80`) „Recognize speech via Apple?“.
+   In Durchlauf 1 erschien der Dialog genau beim Abbrechen-Tipp. XCTest meldete „Computed hit point
+   {-1, -1}“, der Tipp ging ins Leere, und die UI-Hierarchie beim Fehlschlag zeigt das Alert über dem
+   Blatt. Die App verhält sich richtig. Der Test prüft den Absturz beim Abbrechen (#184), nicht die
+   Server-Zustimmung.
+
+**Änderung 5:**
+- `speech-stress.yml`: `-collect-test-diagnostics never` an `xcodebuild test-without-building`.
+- `CaptureCancelCrashTests.swift`: Startargument `-speechServerRecognitionAllowed NO` (Argument-Domain wie
+  `-onboardingDone`). Damit endet eine gescheiterte Erkennung ohne Dialog im Zustand „nicht verfügbar“.
+  Mikrofon, Erkennung und Abbrechen laufen weiter wie bisher. Regelweg statt Unterbrechungs-Monitor: Der
+  Zustand ist von vornherein festgelegt, statt einen Dialog abzufangen, der irgendwann erscheint.
+
+**Alternative (verworfen):** `addUIInterruptionMonitor` für das Alert. Das würde den Wettlauf nur verlagern
+(XCTest prüft Unterbrechungen nur vor einer Aktion), deshalb nicht deterministisch.
 
 ### Vorgehen: Reproduktion zuerst
 
@@ -219,6 +252,8 @@ lokale Prüfungen und der CI-Lauf selbst als Abnahme.
 - [ ] Test 5 (lokal, Versionsprüfung): GIVEN der Prüfblock der Composite Action mit einer Attrappe, die „Xcode 26.6" meldet WHEN er läuft THEN endet er mit Exit-Code 1 und einer `::error::`-Zeile; mit „Xcode 27.0" endet er mit Exit-Code 0.
 - [ ] Test 6 (CI, echter Lauf): GIVEN die PR WHEN `CI` läuft THEN sind alle drei Jobs grün (Details in den Acceptance Criteria).
 - [ ] Test 7 (CI, speech-stress): GIVEN der Branch WHEN `speech-stress` per `workflow_dispatch` mit Iterations 3 läuft THEN ist der Lauf grün.
+- [ ] Test 8 (lokal, Nachtrag): GIVEN `scripts/test_ci_xcode27.py` WHEN die Tests laufen THEN prüfen zwei neue Fälle, dass der `xcodebuild test-without-building`-Aufruf in `speech-stress.yml` `-collect-test-diagnostics never` enthält und dass `CaptureCancelCrashTests` mit `-speechServerRecognitionAllowed NO` startet. Beide sind vor der Änderung rot (RED), danach grün.
+- [ ] Test 9 (CI, Nachtrag): GIVEN der Branch WHEN `speech-stress` durch die PR mit 10 Durchläufen läuft THEN ist er grün, jeder Durchlauf dauert unter 300 s, und kein Protokoll enthält „Timed out after 600.0 seconds“ oder „Recognize speech via Apple?“ (AC-15, AC-16). Für den Wettlauf gibt es keinen lokalen Test: Er tritt nur auf, wenn die Erkennung auf dem Gerät scheitert, und das passiert im lokalen Simulator mit installierten Sprachmodellen nicht. Der Beleg ist deshalb der Lauf mit 10 Durchläufen.
 
 ## Acceptance Criteria
 
@@ -234,8 +269,10 @@ lokale Prüfungen und der CI-Lauf selbst als Abnahme.
 - [ ] AC-10 Zeiten verglichen: GIVEN der erste grüne Lauf auf `xcode-27` WHEN Wartezeit bis Start und Laufzeit je Job gemessen werden THEN stehen sie neben den Ausgangswerten (Unit 2,3–3,0 Min., Build 1,3–1,7 Min., UI Smoke 30,2–34,5 Min.; Läufe 37330631849, 37321457390) in der PR-Beschreibung, mit Bewertung. Beleg: PR-Beschreibung.
 - [ ] AC-11 Schalter entfernt: GIVEN `Measurement/MeasurementRun.swift` WHEN `grep -rn "compiler(>=6.4)" . --include=*.swift` läuft THEN gibt es keinen Treffer, `./scripts/sim.sh unit` ist lokal grün, und der CI-Build übersetzt die Datei ohne Compiler-Schalter. Beleg: grep-Ausgabe, Unit-Ergebnis, CI-Lauf.
 - [ ] AC-12 Dokumentation: GIVEN `CLAUDE.md` WHEN der CI-Abschnitt gelesen wird THEN nennt er `xcode-27`, fest 27.0, keine Absenkung, den Verweis auf `docs/reference/testflight.md` für den Wegfall des Labels, und enthält keinen `#available`-Satz zur CI mehr. Beleg: Diff.
-- [ ] AC-13 Abnahmestufe: Kein Pfad der Geräteliste berührt. Das Diff berührt nur `.github/`, `Measurement/MeasurementRun.swift` und `CLAUDE.md` (plus Workflow-Artefakte unter `docs/`); `project.yml`, Entitlements, Info.plist, `Shared/Persistence/`, Enrichment, Speech, Notifications, Intents, Watch, Widgets und Share bleiben unberührt. Keine sichtbare UI-Änderung, daher keine Entwurfsvorschau. Beleg: `git diff --name-only` im Bericht.
+- [ ] AC-13 Abnahmestufe: Kein Pfad der Geräteliste berührt. Das Diff berührt nur `.github/`, `Measurement/MeasurementRun.swift`, `CLAUDE.md`, `LooseEndsUITests/CaptureCancelCrashTests.swift` und `scripts/test_ci_xcode27.py` (plus Workflow-Artefakte unter `docs/`); `project.yml`, Entitlements, Info.plist, `Shared/Persistence/`, Enrichment, Speech, Notifications, Intents, Watch, Widgets und Share bleiben unberührt. Keine sichtbare UI-Änderung, daher keine Entwurfsvorschau. Beleg: `git diff --name-only` im Bericht.
 - [ ] AC-14 Ausliefern: Nach dem Merge ist `bash ~/.claude/scripts/loose-ends-sync-main.sh` gelaufen.
+- [ ] AC-15 Keine Diagnose-Wartezeit: GIVEN `speech-stress` auf `xcode-27` WHEN ein Durchlauf endet THEN enthält das Protokoll kein „Timed out after 600.0 seconds“, und ein Durchlauf dauert unter 300 s. Beleg: Lauf-ID, `summary.txt` mit Sekunden je Durchlauf.
+- [ ] AC-16 Kein Zustimmungsdialog im Abbrechen-Test: GIVEN `CaptureCancelCrashTests` startet mit `-speechServerRecognitionAllowed NO` WHEN die Erkennung auf dem Gerät scheitert THEN erscheint kein „Recognize speech via Apple?“-Alert, und `speech-stress` mit 10 Durchläufen (PR-Auslöser) ist grün. Beleg: Lauf-ID, keine Alert-Zeile im Protokoll der Durchläufe.
 
 ## Architektur-Entscheidung (ADR)
 
@@ -245,3 +282,4 @@ lokale Prüfungen und der CI-Lauf selbst als Abnahme.
 ## Changelog
 
 - 2026-10-05: Initial spec created (Analyse in `docs/context/ci-178-xcode27.md`).
+- 2026-10-06: Nachtrag nach dem ersten `xcode-27`-Lauf: Änderung 5 (`-collect-test-diagnostics never`, Startargument im Abbrechen-Test), sechste Datei, AC-15/AC-16. PO-Freigabe des Umfangs am 2026-10-06, Spec-Sperre per „override“ geöffnet.
