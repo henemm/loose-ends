@@ -55,6 +55,13 @@ struct TaskDetailView: View {
                         .accessibilityIdentifier("resetTitleButton")
                     }
                 }
+                // Invisible marker: the raw text identifies the open detail even when "You said:" is hidden (#202).
+                .background {
+                    Color.clear
+                        .accessibilityElement()
+                        .accessibilityLabel(task.rawText)
+                        .accessibilityIdentifier("detailRawTextMarker")
+                }
                 if DetailLayout.showsRawText(task.rawText, title: task.title) {
                     // The raw text as a quote: what was said, in the words it was said (#180).
                     HStack(alignment: .firstTextBaseline, spacing: 4) {

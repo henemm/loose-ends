@@ -38,6 +38,13 @@ final class ContextUniquenessTests: XCTestCase {
     @MainActor
     private func addContext(_ name: String, in app: XCUIApplication) {
         let button = element("newContextButton", in: app)
+        // Contexts start folded on the start screen; an earlier run may have left them open.
+        if !button.waitForExistence(timeout: 3) {
+            let toggle = element("contextsToggle", in: app)
+            if !toggle.waitForExistence(timeout: 3) { app.swipeUp() }
+            XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Start screen should offer the Contexts group")
+            toggle.tap()
+        }
         if !button.waitForExistence(timeout: 3) { app.swipeUp() }
         XCTAssertTrue(button.waitForExistence(timeout: 5), "Kein Neuer-Kontext-Knopf")
         button.tap()

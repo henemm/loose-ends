@@ -1,0 +1,257 @@
+[0;34m[sim][0m Unit-Tests (macOS): LooseEndsTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (4 targets)
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWidgets.SwiftFileList
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWidgets-OutputFileMap.json
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.SwiftConstValuesFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.LinkFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests-OutputFileMap.json
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.SwiftFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftConstValuesFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.LinkFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-OutputFileMap.json
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds.SwiftFileList
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds.SwiftConstValuesFileList
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds.LinkFileList
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds-OutputFileMap.json
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ProcessCache.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m Project.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m RecognitionRule.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m SavedView.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m SharedContent.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m Subtasks.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CatalogService.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CompletionRecord.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ContextSeeder.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m DateExpressionParser.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m EnrichmentWriter.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m Enums.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m FieldCodec.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m FoundationModelsEnricher.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CalendarSync.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CaptureControl.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CaptureService.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CaptureTextIntent.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ImportanceUrgencyRule.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m LooseEndsWidgetsBundle.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ModelContainerFactory.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m NextUpWidget.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TaskActions.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TaskContext.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TaskItem.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TimeExpressionParser.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ViewSelection.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m RepeatRule.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m Revision.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m RevisionService.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m DueDateRule.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m DueReminders.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m EnrichmentCoordinator.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m EnrichmentDraft.swift
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-macos.swiftsourceinfo -> LooseEndsWidgets.swiftsourceinfo
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-macos.abi.json -> LooseEndsWidgets.abi.json
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-macos.swiftdoc -> LooseEndsWidgets.swiftdoc
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-macos.swiftmodule -> LooseEndsWidgets.swiftmodule
+[[36mLooseEnds[0m] [1mGenerate Asset Symbols[0m Assets.xcassets
+[[36mLooseEnds[0m] [1mCompiling[0m CalendarBridge.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CalendarSync.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CaptureService.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CaptureTextIntent.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CaptureView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CatalogService.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CompletionRecord.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ContentView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ContextSeeder.swift
+[[36mLooseEnds[0m] [1mCompiling[0m DateExpressionParser.swift
+[[36mLooseEnds[0m] [1mCompiling[0m DetailLayout.swift
+[[36mLooseEnds[0m] [1mCompiling[0m FoundationModelsEnricher.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ImportanceUrgencyRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m LooseEndsApp.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ModelContainerFactory.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Paper.swift
+[[36mLooseEnds[0m] [1mCompiling[0m EnrichmentWriter.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Enums.swift
+[[36mLooseEnds[0m] [1mCompiling[0m FieldCodec.swift
+[[36mLooseEnds[0m] [1mCompiling[0m FieldEditorView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m FieldFormatting.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ProcessCache.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Project.swift
+[[36mLooseEnds[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEnds[0m] [1mCompiling[0m RecognitionRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m RepeatRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Revision.swift
+[[36mLooseEnds[0m] [1mCompiling[0m RevisionService.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SavedView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SharedContent.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SidebarView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TimeExpressionParser.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ViewSelection.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Waveform.swift
+[[36mLooseEnds[0m] [1mCompiling[0m GeneratedAssetSymbols.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEnds/Speech/SpeechCapture.swift:229:15: [33m'installTap(onBus:bufferSize:format:block:)' was deprecated in macOS 27.0 [#DeprecatedDeclaration][0m
+227 |         let format = input.outputFormat(forBus: 0)
+[32m228 |         logger.notice("Audio-Eingang: \(format.sampleRate, privacy: .public) Hz, \(format.channelCount, privacy: .public) Kanäle")[0m
+[[36mLooseEnds[0m] [1mCompiling[0m SpeechCapture.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Subtasks.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SubtasksSection.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskActions.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskContext.swift
+[[36mLooseEnds[0m] [1mCompiling[0m DueDateRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m DueNotificationCenter.swift
+[[36mLooseEnds[0m] [1mCompiling[0m DueReminders.swift
+[[36mLooseEnds[0m] [1mCompiling[0m EnrichmentCoordinator.swift
+[[36mLooseEnds[0m] [1mCompiling[0m EnrichmentDraft.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskDetailView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskItem.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskListView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskRow.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Thread.swift
+[[36mLooseEndsWidgets[0m] [1mLinking[0m LooseEndsWidgets.debug.dylib
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-macos.swiftdoc -> LooseEnds.swiftdoc
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-macos.swiftmodule -> LooseEnds.swiftmodule
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-macos.abi.json -> LooseEnds.abi.json
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-macos.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Products/Debug/LooseEnds.app/Contents/Resources/AppIcon.icns (in target 'LooseEnds' from project 'LooseEnds')
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Products/Debug/LooseEnds.app/Contents/Resources/Assets.car (in target 'LooseEnds' from project 'LooseEnds')
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWidgets' from project 'LooseEnds')
+[[36mLooseEndsWidgets[0m] [1mLinking[0m LooseEndsWidgets
+[[36mLooseEndsWidgets[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RuleBaseline.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m Corpus.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m DesignGalleryTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SelfConsistency.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsUITests/SpeechListeningTests.swift:19:47: [33mcall to main actor-isolated instance method 'screenshot()' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+16 |     }
+[32m17 | [0m
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SpeechListeningTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RecognitionWalkthroughTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m CaptureCancelCrashTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m CaptureSmokeTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/Measurement/MeasurementRun.swift:212:60: [33m'GenerationError' was deprecated in macOS 27.0 [#DeprecatedDeclaration][0m
+210 |     static func classify(_ error: Error) -> String {
+[32m211 |         #if canImport(FoundationModels) && !os(watchOS)[0m
+[[36mLooseEndsUITests[0m] [1mCompiling[0m MeasurementRun.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m LeaveOneOut.swift
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-macos.swiftmodule -> LooseEndsUITests.swiftmodule
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-macos.swiftdoc -> LooseEndsUITests.swiftdoc
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-macos.abi.json -> LooseEndsUITests.abi.json
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-macos.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
+[[36mLooseEndsUITests[0m] [1mCompiling[0m ContextUniquenessTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m ConventionCorpus.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m Corpus.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateExpressionParserTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateParserCorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateTitleReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReviewTrayTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RevisionServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleBaseline.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m FocusBloxCalibrationTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ImportanceUrgencyRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m IntentExecutionTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m LeaveOneOut.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ListPolishTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProcessCacheTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RecognitionRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatEditTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DetailLayoutTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueDateRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m EnrichmentTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m FieldEditTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleLeaveOneOutTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistency.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistencyReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistencyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CalendarSyncTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CatalogServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ConventionBaselineTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ConventionCorpus.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsTests/TitleRuleTests.swift:11:17: [31mcannot find 'TitleRule' in scope[0m
+  9 |     @Test("Trims surrounding whitespace")
+[36m 10 |     func trims() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsTests/TitleRuleTests.swift:16:17: [31mcannot find 'TitleRule' in scope[0m
+ 14 |     @Test("Nothing left means no title", arguments: ["", "   ", "\n\t ", "...", "?!"])
+[36m 15 |     func emptyIsNil(input: String) {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsTests/TitleRuleTests.swift:21:17: [31mcannot find 'TitleRule' in scope[0m
+ 19 |     @Test("Closing punctuation goes, also repeated and after a gap")
+[36m 20 |     func closingPunctuation() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsTests/TitleRuleTests.swift:22:17: [31mcannot find 'TitleRule' in scope[0m
+ 20 |     func closingPunctuation() {
+[36m 21 |         #expect(TitleRule.title(from: "Zahnarzt anrufen.") == "Zahnarzt anrufen")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsTests/TitleRuleTests.swift:23:17: [31mcannot find 'TitleRule' in scope[0m
+ 21 |         #expect(TitleRule.title(from: "Zahnarzt anrufen.") == "Zahnarzt anrufen")
+[36m 22 |         #expect(TitleRule.title(from: "Zahnarzt anrufen…") == "Zahnarzt anrufen")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsTests/TitleRuleTests.swift:24:17: [31mcannot find 'TitleRule' in scope[0m
+ 22 |         #expect(TitleRule.title(from: "Zahnarzt anrufen…") == "Zahnarzt anrufen")
+[36m 23 |         #expect(TitleRule.title(from: "Zahnarzt anrufen. .") == "Zahnarzt anrufen")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsTests/TitleRuleTests.swift:25:17: [31mcannot find 'TitleRule' in scope[0m
+ 23 |         #expect(TitleRule.title(from: "Zahnarzt anrufen. .") == "Zahnarzt anrufen")
+[36m 24 |         #expect(TitleRule.title(from: "Wann kommt der Handwerker?") == "Wann kommt der Handwerker")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsTests/TitleRuleTests.swift:32:17: [31mcannot find 'TitleRule' in scope[0m
+ 30 |         let words = (1...30).map { "w\($0)" }
+[36m 31 |         let twelve = words.prefix(12).joined(separator: " ")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsTests/TitleRuleTests.swift:33:17: [31mcannot find 'TitleRule' in scope[0m
+ 31 |         let twelve = words.prefix(12).joined(separator: " ")
+[36m 32 |         #expect(TitleRule.title(from: twelve) == twelve)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsTests/TitleRuleTests.swift:34:17: [31mcannot find 'TitleRule' in scope[0m
+ 32 |         #expect(TitleRule.title(from: twelve) == twelve)
+[36m 33 |         #expect(TitleRule.title(from: words.prefix(13).joined(separator: " ")) == twelve)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsTests/TitleRuleTests.swift:36:17: [31mcannot find 'TitleRule' in scope[0m
+ 34 |         #expect(TitleRule.title(from: words.joined(separator: " ")) == twelve)
+[36m 35 |         let comma = (Array(words.prefix(11)) + ["w12,", "w13"]).joined(separator: " ")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsTests/TitleRuleTests.swift:41:17: [31mcannot find 'TitleRule' in scope[0m
+ 39 |     @Test("First letter upper case, also umlauts; ß stays")
+[36m 40 |     func firstLetter() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsTests/TitleRuleTests.swift:42:17: [31mcannot find 'TitleRule' in scope[0m
+ 40 |     func firstLetter() {
+[36m 41 |         #expect(TitleRule.title(from: "ärgerlich: Steuer abgeben") == "Ärgerlich: Steuer abgeben")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsTests/TitleRuleTests.swift:43:17: [31mcannot find 'TitleRule' in scope[0m
+ 41 |         #expect(TitleRule.title(from: "ärgerlich: Steuer abgeben") == "Ärgerlich: Steuer abgeben")
+[36m 42 |         #expect(TitleRule.title(from: "überweisen") == "Überweisen")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsTests/TitleRuleTests.swift:48:17: [31mcannot find 'TitleRule' in scope[0m
+ 46 |     @Test("A first character that is no letter leaves the text alone; only the first letter is raised")
+[36m 47 |     func nonLetterStart() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsTests/TitleRuleTests.swift:49:17: [31mcannot find 'TitleRule' in scope[0m
+ 47 |     func nonLetterStart() {
+[36m 48 |         #expect(TitleRule.title(from: "3 Pakete abholen") == "3 Pakete abholen")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsTests/TitleRuleTests.swift:50:17: [31mcannot find 'TitleRule' in scope[0m
+ 48 |         #expect(TitleRule.title(from: "3 Pakete abholen") == "3 Pakete abholen")
+[36m 49 |         #expect(TitleRule.title(from: "„Brief“ senden") == "„Brief“ senden")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsTests/TitleRuleTests.swift:51:17: [31mcannot find 'TitleRule' in scope[0m
+ 49 |         #expect(TitleRule.title(from: "„Brief“ senden") == "„Brief“ senden")
+[36m 50 |         #expect(TitleRule.title(from: "#Steuer prüfen") == "#Steuer prüfen")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsTests/TitleRuleTests.swift:56:17: [31mcannot find 'TitleRule' in scope[0m
+ 54 |     @Test("Runs of blanks and line breaks become one space")
+[36m 55 |     func collapsesWhitespace() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsTests/TitleRuleTests.swift:64:24: [31mcannot find 'TitleRule' in scope[0m
+ 62 |                       (1...20).map { "w\($0)" }.joined(separator: " "), "iPhone laden"]
+[36m 63 |         for input in inputs {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/zazzy-toasting-candy/LooseEndsTests/TitleRuleTests.swift:66:36: [31mcannot find 'TitleRule' in scope[0m
+ 64 |             let once = TitleRule.title(from: input)
+[36m 65 |             #expect(once != nil)[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m TimeExpressionParserTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TitleFidelityPromptTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TitleRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m WaveformTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementFieldScopeTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRun.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRunTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelContainerFactoryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelTests.swift
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-macos.swiftmodule -> LooseEndsTests.swiftmodule
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.10.05_13-35-21-+0200.xcresult
