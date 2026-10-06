@@ -93,4 +93,68 @@ import Testing
         #expect(changes.removeOrphaned == ["evt-3"], "Only the event with no task left at all is an orphan")
         #expect(changes.remove.map(\.rawText) == ["Erledigt"], "A task that still exists keeps its own removal path")
     }
+
+    // MARK: Where the app's own calendar is created (#203)
+
+    private typealias Source = CalendarSync.SourceCandidate
+
+    @Test("Google as the default does not win over iCloud: iCloud first, Google after it (#203)")
+    func iCloudBeforeGoogleDefault() {
+        let sources = [
+            Source(id: "google", title: "henning@gmail.com", kind: .calDAV),
+            Source(id: "icloud", title: "iCloud", kind: .calDAV),
+            Source(id: "holidays", title: "Abonniert", kind: .subscribed),
+        ]
+        #expect(CalendarSync.sourceOrder(sources, defaultSourceID: "google") == ["icloud", "google"])
+    }
+
+    @Test("Only the device itself: the local source (#203)")
+    func onlyLocal() {
+        let sources = [Source(id: "local", title: "Auf meinem iPhone", kind: .local)]
+        #expect(CalendarSync.sourceOrder(sources, defaultSourceID: "local") == ["local"])
+    }
+
+    @Test("Exchange, subscriptions and birthdays never host the app's calendar (#203)")
+    func refusedKindsNeverTried() {
+        let sources = [
+            Source(id: "work", title: "Exchange", kind: .exchange),
+            Source(id: "holidays", title: "Abonniert", kind: .subscribed),
+            Source(id: "birthdays", title: "Andere", kind: .birthdays),
+        ]
+        #expect(CalendarSync.sourceOrder(sources, defaultSourceID: "work").isEmpty)
+    }
+
+    @Test("Every source is tried at most once, local comes before a foreign CalDAV default (#203)")
+    func eachSourceOnceLocalBeforeForeignDefault() {
+        let iCloudDefault = [
+            Source(id: "icloud", title: "iCloud", kind: .calDAV),
+            Source(id: "local", title: "Auf meinem iPhone", kind: .local),
+        ]
+        #expect(CalendarSync.sourceOrder(iCloudDefault, defaultSourceID: "icloud") == ["icloud", "local"])
+
+        let googleDefault = [
+            Source(id: "other", title: "Fastmail", kind: .calDAV),
+            Source(id: "google", title: "henning@gmail.com", kind: .calDAV),
+            Source(id: "local", title: "Auf meinem iPhone", kind: .local),
+        ]
+        #expect(CalendarSync.sourceOrder(googleDefault, defaultSourceID: "google") == ["local", "google", "other"])
+    }
+
+    @Test("The note under the switch says why nothing shows, and is silent while all is well (#203)")
+    @MainActor func noteUnderTheSwitch() async throws {
+        let store = try TestStore()
+        let task = TaskItem(rawText: "Zahnarzt anrufen")
+        task.status = .active
+        store.context.insert(task)
+        #expect(CalendarSync.note(for: task, problem: .noWritableSource) == nil, "switch off: silent")
+
+        task.showInCalendar = true
+        #expect(CalendarSync.note(for: task, problem: nil) == .needsDueDate)
+
+        task.dueDate = Date(timeIntervalSince1970: 1_800_000_000)
+        #expect(CalendarSync.note(for: task, problem: nil) == nil)
+        #expect(CalendarSync.note(for: task, problem: .accessDenied) == .accessOff)
+        #expect(CalendarSync.note(for: task, problem: .noWritableSource) == .noWritableSource)
+        #expect(CalendarSync.note(for: task, problem: .syncFailed) == .syncFailed)
+    }
 }
