@@ -142,6 +142,25 @@ final class DesignGalleryTests: XCTestCase {
         backToDetail.tap()
         XCTAssertTrue(energyRow.waitForExistence(timeout: 5), "Not back in the detail")
         shot(app, "gallery-\(label)-7-detail-energy")
+
+        // Field origin (#101): "morgen" is read from the words, so the due date carries »« and its
+        // editor shows "From your words" with the word marked. The simulator has no model, so
+        // nothing here carries the spark.
+        let backToList = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(backToList.waitForExistence(timeout: 5), "No back button")
+        backToList.tap()
+        let taxRow = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@ AND label CONTAINS %@", "taskRow_", "Steuerbescheid"))
+            .firstMatch
+        XCTAssertTrue(taxRow.waitForExistence(timeout: 10), "New shows no Steuerbescheid")
+        taxRow.tap()
+        XCTAssertTrue(element("originSummary", in: app).waitForExistence(timeout: 5), "Detail shows no origin summary")
+        shot(app, "gallery-\(label)-8-detail-origin")
+        let dueRow = element("field_dueDate", in: app)
+        XCTAssertTrue(dueRow.waitForExistence(timeout: 5), "Detail shows no due date")
+        dueRow.tap()
+        XCTAssertTrue(element("originRuleHeader", in: app).waitForExistence(timeout: 5), "Editor shows no From your words")
+        shot(app, "gallery-\(label)-9-origin-rule")
         app.terminate()
     }
 

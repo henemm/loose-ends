@@ -105,7 +105,7 @@ final class ContextUniquenessTests: XCTestCase {
         XCTAssertTrue(contextsRow.waitForExistence(timeout: 5))
         contextsRow.tap()
 
-        // Nur die wählbaren Zeilen zählen: „Garden" steht auch als Wert in „Set by AI → After".
+        // Nur die wählbaren Zeilen zählen: „Garden" steht auch als Wert unter „Nachher" (#101).
         let gardens = app.buttons.matching(NSPredicate(format: "label == %@", "Garden"))
         XCTAssertTrue(gardens.firstMatch.waitForExistence(timeout: 5), "Der Editor bietet Garden nicht an")
         let garten = app.descendants(matching: .any)
@@ -118,10 +118,11 @@ final class ContextUniquenessTests: XCTestCase {
         app.navigationBars.buttons.firstMatch.tap()
         _ = XCTWaiter().wait(for: [expectation(description: "settle")], timeout: 1.5)
         shot(app, "4-detail-nach-antippen")
-        // Der KI-Vermerk („Set by AI") hängt hinten an, wenn die Erschließung „Garden" gesetzt hat.
+        // Der Herkunftsvermerk (#101) hängt hinten an, wenn die Erschließung „Garden" gesetzt hat.
         let shown = contextsRow.label
             .replacingOccurrences(of: "Contexts, ", with: "")
-            .replacingOccurrences(of: ", Set by AI", with: "")
+            .replacingOccurrences(of: ", From your words", with: "")
+            .replacingOccurrences(of: ", Estimated by AI", with: "")
         XCTAssertEqual(shown, "Garden", "Beschriftung war \(contextsRow.label)")
     }
 }
