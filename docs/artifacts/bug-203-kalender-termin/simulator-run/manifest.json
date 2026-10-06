@@ -1,0 +1,17 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "39C81472-9EF3-4AEE-AE2B-E727F0B675C7.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "detail-target-calendar_0_95C5457F-3326-4314-B37C-EF38F045259A.png",
+        "timestamp" : 1791309218.6
+      }
+    ],
+    "testIdentifier" : "CalendarTargetTests/testSwitchOnShowsTargetCalendar()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/CalendarTargetTests/testSwitchOnShowsTargetCalendar"
+  }
+]

@@ -1,0 +1,22 @@
+# Simulator-Beleg
+erzeugt: 2026-10-06T19:53:58+0200
+befehl: scripts/sim.sh test-proof CalendarTargetTests
+workflow: bug-203-kalender-termin
+head: f15892c6b2eba50b2397b83fcca2eea2c55ecc75
+basis: aa00942d60f31ab5f153c58e963529a1686ff4b1 (merge-base origin/main HEAD)
+testklasse: CalendarTargetTests
+ergebnis: Passed
+xcodebuild: Binary file /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/xcodebuild.log matches
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1791309167.473  ende: 1791309236.747
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/bug-203-kalender-termin/simulator-run/summary.json  sha256:6ba9e223f15ab9d5a42d9f573c6f1dafab026dd48f338dcde365e273a9793d17
+xcresult: docs/artifacts/bug-203-kalender-termin/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/bug-203-kalender-termin/simulator-run/*.png (1 Stück)
+
+## Geprüfte Dateien
+- sha256:8346665d1d333de6b4dcd000da73c7f595ea1726aaaf8443e532c60067d9f3a0  LooseEnds/Calendar/CalendarBridge.swift
+- sha256:7d14ec181412f409d74852be71421a293c313d0d263ef17e28e7664ef2717d6e  LooseEnds/Views/TaskDetailView.swift
+- sha256:166a37d1ede8fb3739a1db21a7d34266c02467e7fe38e53e831d1c6a65fe7611  LooseEndsTests/CalendarSyncTests.swift
+- sha256:414a30aaf48ab25a4b31bb6d63ba72adb76fa7fe4badbdd98a8b9ffc8697bf28  LooseEndsUITests/CalendarTargetTests.swift
+- sha256:1100f7b6f2daf035598c04fb8374a70847bc1fedbb31d0eb4b632ce7aca94e6e  Shared/Services/CalendarSync.swift
