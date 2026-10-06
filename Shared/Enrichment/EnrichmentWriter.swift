@@ -81,8 +81,9 @@ enum EnrichmentWriter {
 
         // Contexts are never the model's (#215): it guessed "Unterwegs" for a tax letter and "Haus"
         // on the re-analysis of the same text, and its confidence does not separate right from
-        // wrong (#65). Empty beats a guess (Henning). Contexts come from the user and from the
-        // recognition of a raw text captured before; `draft.contexts` stays for the measurements.
+        // wrong (#65). Empty beats a guess (Henning). Contexts come from the user, from the
+        // recognition of a raw text captured before and from the word list (#232); `draft.contexts`
+        // stays for the measurements (#234).
 
         if let people = draft.people, people.confidence >= threshold, !people.value.isEmpty,
            may(.people, firstRun: true, changes: people.value != task.people) {

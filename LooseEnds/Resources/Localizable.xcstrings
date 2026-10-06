@@ -9,6 +9,7 @@
     "%lld from your words" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "%lld aus deinen Worten" } } } },
     "%lld from AI" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "%lld von der KI" } } } },
     "Your words" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Deine Worte" } } } },
+    "From “%@” in the note." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus „%@“ in der Notiz." } } } },
     "Like “%@” from %@." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Wie bei ›%1$@‹ vom %2$@." } } } },
     "Not set" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nicht gesetzt" } } } },
     "Remove value" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Wert entfernen" } } } },

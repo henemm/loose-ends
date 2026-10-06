@@ -5,7 +5,10 @@ import Foundation
 /// shows what the rule saw. Recognition (#136) has no single trigger — the whole text matched —
 /// and gets nil, as does every field no rule sets.
 enum RuleTrigger {
-    static func range(of field: RevisedField, in rawText: String, calendar: Calendar = .current) -> Range<String.Index>? {
+    /// `contexts` are the names the task carries: only their words are marked (#232).
+    static func range(
+        of field: RevisedField, in rawText: String, contexts: [String] = [], calendar: Calendar = .current
+    ) -> Range<String.Index>? {
         switch field {
         case .dueDate:
             guard let span = DateExpressionParser(calendar: calendar).span(in: rawText) else { return nil }
@@ -16,6 +19,8 @@ enum RuleTrigger {
             return ImportanceUrgencyRule.importanceTrigger(in: rawText)
         case .urgency:
             return ImportanceUrgencyRule.urgencyTrigger(in: rawText)
+        case .contexts:
+            return ContextWordRule.trigger(in: rawText, contexts: contexts)
         default:
             return nil
         }
