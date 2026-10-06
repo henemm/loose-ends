@@ -14,7 +14,8 @@ struct LooseEndsApp: App {
         } catch {
             fatalError("Could not open the Loose Ends store: \(error)")
         }
-        enrichment = EnrichmentCoordinator(enricher: FoundationModelsEnricher(), container: container)
+        let enricher: any TaskEnricher = ModelContainerFactory.isUITesting ? ModelOffEnricher() : FoundationModelsEnricher()
+        enrichment = EnrichmentCoordinator(enricher: enricher, container: container)
         notifications = DueNotificationCenter(container: container)
         notifications.activate()
         calendar = CalendarBridge(container: container)
@@ -34,4 +35,19 @@ struct LooseEndsApp: App {
         }
         .modelContainer(container)
     }
+}
+
+/// The model as UI tests see it: absent (#228). The iOS 27 simulator carries an on-device model;
+/// its runs race the tests (#208) and load the CI runner until XCTest gets no accessibility
+/// snapshot ("Timed out while evaluating UI query"). The UI tests were written for a simulator
+/// without Apple Intelligence, which is also what a device without it shows: the rules run, the
+/// model step reports itself unavailable. The app itself never uses this.
+private struct ModelOffEnricher: TaskEnricher {
+    var unavailableReason: String? { "Apple Intelligence is off under UI testing." }
+
+    func enrich(_ input: EnrichmentInput) async throws -> EnrichmentDraft {
+        throw ModelOff()
+    }
+
+    private struct ModelOff: Error {}
 }
