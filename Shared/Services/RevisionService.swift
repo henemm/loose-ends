@@ -52,7 +52,7 @@ enum RevisionService {
     /// The value a reset puts back. A title from before the AI that was empty (tasks captured before
     /// #202) becomes the rule title of the raw text, so a reset never leaves the title field empty.
     private static func restoreValue(of revision: Revision, on task: TaskItem) -> String? {
-        if revision.field == .title, revision.oldValue == nil { return TitleRule.title(from: task.rawText) }
+        if revision.field == .title, revision.oldValue == nil { return TitleRule.title(from: task.rawText, reference: task.capturedAt) }
         return revision.oldValue
     }
 

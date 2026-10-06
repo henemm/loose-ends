@@ -33,12 +33,25 @@ enum ImportanceUrgencyRule {
 
     /// Where the keyword behind `matchImportance` stands, for marking it in the field editor (#101).
     static func importanceTrigger(in text: String) -> Range<String.Index>? {
-        ImportanceSignal.allCases.lazy.compactMap { firstRange(of: $0.keywords, in: text) }.first
+        ImportanceSignal.allCases.lazy.compactMap { $0.range(in: text) }.first
     }
 
     /// Where the keyword behind `matchUrgency` stands (#101).
     static func urgencyTrigger(in text: String) -> Range<String.Index>? {
-        UrgencySignal.allCases.lazy.compactMap { firstRange(of: $0.keywords, in: text) }.first
+        UrgencySignal.allCases.lazy.compactMap { $0.range(in: text) }.first
+    }
+
+    /// Where the word stands that says the importance outright ("wichtig"), for striking it from the
+    /// title (#217). Only that word: "Rechnung" or "Finanzamt" also set the importance, but they are
+    /// what the task is about and stay in the title.
+    static func importanceMarker(in text: String) -> Range<String.Index>? {
+        ImportanceSignal.explicit.range(in: text)
+    }
+
+    /// Where the word stands that says the urgency outright ("dringend", "sofort"), for the title
+    /// (#217). A deadline word ("Frist", "Mahnung") is content and stays.
+    static func urgencyMarker(in text: String) -> Range<String.Index>? {
+        UrgencySignal.immediacy.range(in: text)
     }
 
     /// The keyword of this signal that stands earliest in the text.
@@ -46,13 +59,50 @@ enum ImportanceUrgencyRule {
         keywords.compactMap { range(of: $0, in: text) }.min { $0.lowerBound < $1.lowerBound }
     }
 
+    /// Like `firstRange`, but an occurrence the note negates does not count (#214): "nicht wichtig",
+    /// "not so important". "unwichtig" never gets here — the word boundary keeps it out.
+    private static func firstUnnegatedRange(of keywords: [String], in text: String) -> Range<String.Index>? {
+        var found: [Range<String.Index>] = []
+        for keyword in keywords {
+            var start = text.startIndex
+            while let hit = range(of: keyword, in: text, from: start) {
+                if !isNegated(hit, in: text) {
+                    found.append(hit)
+                    break
+                }
+                start = hit.upperBound
+            }
+        }
+        return found.min { $0.lowerBound < $1.lowerBound }
+    }
+
+    private static let negations: Set<String> = [
+        "nicht", "kein", "keine", "nie", "not", "never", "isnt", "arent", "wasnt", "dont", "doesnt",
+    ]
+    private static let intensifiers: Set<String> = ["so", "sehr", "besonders", "ganz", "too", "very", "that"]
+
+    /// A negation right before the keyword, or before an intensifier right before it ("nicht so
+    /// wichtig"). Two words back without the intensifier is too far: "Nicht vergessen: wichtig".
+    private static func isNegated(_ hit: Range<String.Index>, in text: String) -> Bool {
+        let before = text[..<hit.lowerBound]
+            .split(whereSeparator: { $0.isWhitespace })
+            .suffix(2)
+            .map { String($0.lowercased().filter(\.isLetter)) }
+        guard let last = before.last else { return false }
+        if negations.contains(last) { return true }
+        return before.count == 2 && intensifiers.contains(last) && negations.contains(before[0])
+    }
+
     /// Declaration order is the priority order when a note carries several signals of one field, so
     /// the same text always yields the same reason.
     private enum ImportanceSignal: CaseIterable {
-        case money, official, peopleWaiting
+        case explicit, money, official, peopleWaiting
 
         var keywords: [String] {
             switch self {
+            case .explicit:
+                ["sehr wichtig", "wichtig", "wichtige", "wichtiger", "wichtiges", "wichtigen", "wichtigem",
+                 "very important", "important"]
             case .money:
                 ["euro", "eur", "€", "betrag", "rechnung", "rechnungen", "kredit", "gehalt", "zahlung",
                  "überweisung", "invoice", "amount", "payment", "salary", "loan"]
@@ -68,13 +118,21 @@ enum ImportanceUrgencyRule {
         /// Shown to the user in the task detail and the field editor, one sentence per category.
         var reason: String {
             switch self {
+            case .explicit: String(localized: "From the word “important” in the note.")
             case .money: String(localized: "From an amount of money in the note.")
             case .official: String(localized: "From official or legal language in the note.")
             case .peopleWaiting: String(localized: "From someone waiting for this in the note.")
             }
         }
 
-        func matches(_ text: String) -> Bool { keywords.contains { ImportanceUrgencyRule.contains($0, in: text) } }
+        /// Where this signal stands earliest; the outright word only where the note does not negate it.
+        func range(in text: String) -> Range<String.Index>? {
+            self == .explicit
+                ? ImportanceUrgencyRule.firstUnnegatedRange(of: keywords, in: text)
+                : ImportanceUrgencyRule.firstRange(of: keywords, in: text)
+        }
+
+        func matches(_ text: String) -> Bool { range(in: text) != nil }
     }
 
     private enum UrgencySignal: CaseIterable {
@@ -98,17 +156,15 @@ enum ImportanceUrgencyRule {
             }
         }
 
-        func matches(_ text: String) -> Bool { keywords.contains { ImportanceUrgencyRule.contains($0, in: text) } }
+        func range(in text: String) -> Range<String.Index>? { ImportanceUrgencyRule.firstRange(of: keywords, in: text) }
+
+        func matches(_ text: String) -> Bool { range(in: text) != nil }
     }
 
     /// Case-insensitive and at word boundaries, so "Amt" does not fire inside "Beamtenrecht". A
     /// keyword that starts or ends with a symbol ("€") gets no boundary on that side — "250€" is
     /// one word to the regex engine.
-    private static func contains(_ keyword: String, in text: String) -> Bool {
-        range(of: keyword, in: text) != nil
-    }
-
-    private static func range(of keyword: String, in text: String) -> Range<String.Index>? {
+    private static func range(of keyword: String, in text: String, from start: String.Index? = nil) -> Range<String.Index>? {
         var pattern = NSRegularExpression.escapedPattern(for: keyword)
         if keyword.first?.isLetter == true || keyword.first?.isNumber == true {
             pattern = "(?<![\\p{L}\\p{N}])" + pattern
@@ -116,6 +172,7 @@ enum ImportanceUrgencyRule {
         if keyword.last?.isLetter == true || keyword.last?.isNumber == true {
             pattern += "(?![\\p{L}\\p{N}])"
         }
-        return text.range(of: pattern, options: [.regularExpression, .caseInsensitive])
+        return text.range(of: pattern, options: [.regularExpression, .caseInsensitive],
+                          range: (start ?? text.startIndex)..<text.endIndex)
     }
 }

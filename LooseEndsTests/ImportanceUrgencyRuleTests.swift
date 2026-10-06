@@ -49,6 +49,49 @@ struct ImportanceUrgencyRuleTests {
         #expect(Set(reasons).count == cases.count, "jede Kategorie begründet sich anders")
     }
 
+    /// #214: Das ausdrückliche Wort „wichtig" setzt die Wichtigkeit, vor allen indirekten Signalen.
+    /// „Steuerbescheid" trifft das Amtssignal „steuer" nicht (Wortgrenze) — ohne das neue Signal
+    /// blieb die Wichtigkeit hier leer.
+    @Test("„wichtig“ setzt hohe Wichtigkeit, mit eigener Begründung (#214)")
+    func explicitWordSetsImportance() throws {
+        let match = try #require(ImportanceUrgencyRule.matchImportance(in: "Morgen wichtig Steuerbescheid prüfen"))
+        #expect(match.value == .high)
+        #expect(match.confidence == 1.0)
+        #expect(match.reason == String(localized: "From the word “important” in the note."))
+
+        for sentence in ["Sehr wichtig: Anna anrufen", "Wichtige Unterlagen kopieren", "Important: call the bank",
+                         "Ein wichtiges Gespräch vorbereiten"] {
+            #expect(ImportanceUrgencyRule.matchImportance(in: sentence)?.value == .high, "\(sentence)")
+        }
+    }
+
+    @Test("Das ausdrückliche Wort geht den indirekten Signalen vor (#214)")
+    func explicitWordComesFirst() {
+        let match = ImportanceUrgencyRule.matchImportance(in: "Rechnung bezahlen, wichtig")
+        #expect(match?.reason == String(localized: "From the word “important” in the note."))
+    }
+
+    @Test("Kein Fehltreffer bei „unwichtig“ und verneintem „wichtig“ (#214)",
+          arguments: ["Unwichtig: Keller aufräumen", "Nicht wichtig, Keller aufräumen", "Keller aufräumen, nicht so wichtig",
+                      "Keller aufräumen, ist nicht sehr wichtig", "Not important: tidy the cellar", "Tidy the cellar, not very important"])
+    func negatedWordIsNoHit(sentence: String) {
+        #expect(ImportanceUrgencyRule.matchImportance(in: sentence) == nil)
+        #expect(ImportanceUrgencyRule.importanceTrigger(in: sentence) == nil)
+    }
+
+    @Test("Eine Verneinung zwei Wörter vorher ohne Verstärker zählt nicht (#214)")
+    func distantNegationDoesNotCount() {
+        #expect(ImportanceUrgencyRule.matchImportance(in: "Nicht vergessen: wichtig Steuer prüfen")?.value == .high)
+    }
+
+    @Test("Ein verneintes und ein bejahtes „wichtig“: das bejahte zählt (#214)")
+    func laterUnnegatedWordCounts() throws {
+        let text = "Nicht wichtig: Keller. Wichtig: Steuer"
+        let range = try #require(ImportanceUrgencyRule.importanceTrigger(in: text))
+        #expect(text[range] == "Wichtig")
+        #expect(range.lowerBound > text.startIndex)
+    }
+
     /// Kein Treffer heißt `nil`, nicht „.low" oder „.medium" — genau die Eigenschaft, die #111 an
     /// der alten FocusBlox-„Wahrheit" fehlte.
     @Test("Kein Treffer bleibt nil, kein Default (AC-3)")
@@ -71,12 +114,13 @@ struct ImportanceUrgencyRuleTests {
     /// Der Begründungssatz erscheint im Aufgaben-Detail und im Feld-Editor über `revision.reason`.
     /// Anders als bei #98 (nachträglich übersetzt) ist die deutsche Übersetzung von Anfang an Teil
     /// dieser Spec (AC-8). Testaufbau wie `DueDateRuleTests.reasonsAreTranslatedToGerman()`.
-    @Test("Alle fünf Begründungssätze sind im deutschen Bundle übersetzt (AC-8)")
+    @Test("Alle sechs Begründungssätze sind im deutschen Bundle übersetzt (AC-8, #214)")
     func reasonsAreTranslatedToGerman() throws {
         let path = try #require(Bundle.main.path(forResource: "de", ofType: "lproj"))
         let germanBundle = try #require(Bundle(path: path))
 
         let keys = [
+            "From the word “important” in the note.",
             "From an amount of money in the note.",
             "From official or legal language in the note.",
             "From someone waiting for this in the note.",

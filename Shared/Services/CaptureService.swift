@@ -18,8 +18,9 @@ enum CaptureService {
         let text = rawText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !text.isEmpty else { throw CaptureError.emptyText }
         let item = TaskItem(rawText: text, capturedVia: channel, sourceURL: sourceURL)
-        // A title from the moment of capture, by rule: no AI marker, no revision (#202).
-        item.title = TitleRule.title(from: text)
+        // A title from the moment of capture, by rule: no AI marker, no revision (#202). Without the
+        // words the rule step reads into due date, importance and urgency (#217).
+        item.title = TitleRule.title(from: text, reference: item.capturedAt)
         context.insert(item)
         try context.save()
         return item
