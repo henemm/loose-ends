@@ -109,7 +109,6 @@ struct ModelEnrichmentSchemaTests {
         let sample = ModelEnrichment(
             title: "x", titleConfidence: 1, titleReason: "x",
             duration: "x", durationConfidence: 1, durationReason: "x",
-            energy: "x", energyConfidence: 1, energyReason: "x",
             contexts: [], contextsConfidence: 1, contextsReason: "x",
             people: [], peopleConfidence: 1, peopleReason: "x",
             project: "x", projectConfidence: 1, projectReason: "x"

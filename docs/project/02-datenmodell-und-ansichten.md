@@ -49,7 +49,7 @@ Leerer Wert bedeutet: nicht gesetzt oder unter Schwelle.
 | importance | enum Importance? | low, medium, high |
 | urgency | enum Urgency? | low, medium, high |
 | duration | enum Duration? | minutes5, minutes15, minutes30, hour1, hours2plus |
-| energy | enum Energy? | low, medium, high |
+| energy | enum Energy? | −3 … +3: gibt oder nimmt die Aufgabe Energie; nur von Hand, gespeichert als Text "-3" … "3"; alte Werte low/medium/high lesen sich als leer (#112) |
 | contexts | [Context] | 0…n, Startset löschbar |
 | people | [String] | Namen aus dem Text, keine Kontakte-Berechtigung in v1 |
 

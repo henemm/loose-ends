@@ -123,6 +123,25 @@ final class DesignGalleryTests: XCTestCase {
         row.tap()
         XCTAssertTrue(element("detailRawTextMarker", in: app).waitForExistence(timeout: 5), "Detail did not open")
         shot(app, "gallery-\(label)-4-detail")
+
+        // Energy (#112): the slider between the batteries, then the words in the detail.
+        let addDetail = element("addDetailRow", in: app)
+        if addDetail.waitForExistence(timeout: 3) {
+            addDetail.tap()
+        }
+        let energyRow = element("field_energy", in: app)
+        XCTAssertTrue(energyRow.waitForExistence(timeout: 5), "Detail offers no energy")
+        energyRow.tap()
+        let slider = app.sliders["energySlider"]
+        XCTAssertTrue(slider.waitForExistence(timeout: 5), "Energy editor shows no slider")
+        slider.adjust(toNormalizedSliderPosition: 1.0 / 6.0)
+        XCTAssertTrue(app.buttons["energyRemoveButton"].waitForExistence(timeout: 5), "The slider set no value")
+        shot(app, "gallery-\(label)-6-energy")
+        let backToDetail = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(backToDetail.waitForExistence(timeout: 5), "No back button")
+        backToDetail.tap()
+        XCTAssertTrue(energyRow.waitForExistence(timeout: 5), "Not back in the detail")
+        shot(app, "gallery-\(label)-7-detail-energy")
         app.terminate()
     }
 

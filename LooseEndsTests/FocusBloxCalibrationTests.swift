@@ -56,7 +56,7 @@ struct FocusBloxCalibrationTests {
         return lines.joined(separator: "\n")
     }
 
-    @Test("Precision/Recall je Schwelle für duration, energy")
+    @Test("Precision/Recall je Schwelle für duration (Energie verließ das Modell mit #112)")
     func calibrate() async throws {
         let data = try Data(contentsOf: focusBloxCorpusURL)
         let decoder = JSONDecoder()
@@ -74,14 +74,12 @@ struct FocusBloxCalibrationTests {
                     rawText: task.rawText,
                     title: task.title,
                     duration: task.durationBucket.flatMap(DurationBucket.init(rawValue:)),
-                    energy: task.energy.flatMap(Energy.init(rawValue:)),
                     contexts: []
                 )
             }
         let sample = corpus.sorted { $0.rawText < $1.rawText }.prefix(Self.sampleSize)
 
         var durationOutcomes: [Outcome] = []
-        var energyOutcomes: [Outcome] = []
         var modelErrors = 0
 
         for task in sample {
@@ -100,7 +98,6 @@ struct FocusBloxCalibrationTests {
                 continue
             }
             if let outcome = Self.outcome(guess: draft.duration, truth: task.durationBucket) { durationOutcomes.append(outcome) }
-            if let outcome = Self.outcome(guess: draft.energy, truth: task.energy) { energyOutcomes.append(outcome) }
         }
 
         let report = """
@@ -111,8 +108,6 @@ struct FocusBloxCalibrationTests {
         Modellfehler (z. B. Guardrail-Fehlalarm), übersprungen: \(modelErrors).
 
         \(Self.table(field: "duration", outcomes: durationOutcomes))
-
-        \(Self.table(field: "energy", outcomes: energyOutcomes))
         """
         try report.write(to: focusBloxCalibrationReportURL, atomically: true, encoding: .utf8)
     }

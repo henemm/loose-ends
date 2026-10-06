@@ -3,8 +3,9 @@ import Foundation
 /// One encoding for every derived field, shared by the enrichment writer and the revision service,
 /// so a revision's old value can always be applied back to the task (ADR-6).
 ///
-/// Strings stay plain, dates are ISO 8601, enums use their raw value, lists are JSON arrays of
-/// names, a project is its name, a repeat rule is JSON. `blockedBy` is not revisable yet.
+/// Strings stay plain, dates are ISO 8601, enums use their raw value (energy its number, #112),
+/// lists are JSON arrays of names, a project is its name, a repeat rule is JSON. `blockedBy` is
+/// not revisable yet.
 enum FieldCodec {
     static func encode(_ field: RevisedField, of task: TaskItem) -> String? {
         switch field {
@@ -13,7 +14,7 @@ enum FieldCodec {
         case .importance: return task.importanceRaw
         case .urgency: return task.urgencyRaw
         case .duration: return task.durationRaw
-        case .energy: return task.energyRaw
+        case .energy: return task.energy?.stored
         case .contexts: return encode((task.contexts ?? []).map(\.name))
         case .people: return encode(task.people)
         case .project: return task.project?.name
@@ -56,7 +57,7 @@ enum FieldCodec {
             task.durationSourceRaw = task.duration == nil ? nil : sourceRaw
             task.durationConfidence = nil
         case .energy:
-            task.energy = encoded.flatMap(Energy.init(rawValue:))
+            task.energy = encoded.flatMap(Energy.init(stored:))
             task.energySourceRaw = task.energy == nil ? nil : sourceRaw
             task.energyConfidence = nil
         case .contexts:

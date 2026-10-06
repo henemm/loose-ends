@@ -557,7 +557,7 @@ struct RecognitionCoordinatorTests {
         let store = try TestStore()
         let context = store.context
         let source = makeProcessed("Klavier spielen", duration: .hour1, in: context)
-        source.energyRaw = Energy.high.rawValue
+        source.energy = .givesClearly
         source.energySourceRaw = FieldSource.user.rawValue
         source.energyConfidence = 1.0
         let fresh = TaskItem(rawText: "Klavier spielen")
@@ -919,7 +919,7 @@ struct RecognitionPoolReachabilityTests {
 
         var draft = EnrichmentDraft()
         draft.title = EnrichmentDraft.Guess("Dachrinne reinigen", confidence: 0.9, reason: "Stub.")
-        draft.energy = EnrichmentDraft.Guess(.high, confidence: 0.9, reason: "Stub.")
+        draft.duration = EnrichmentDraft.Guess(.hour1, confidence: 0.9, reason: "Stub.")
         stub.draft = draft
         stub.unavailableReason = nil
 
@@ -927,7 +927,7 @@ struct RecognitionPoolReachabilityTests {
 
         #expect(stub.calls == 1, "die Aufgabe wird beim Nachzügler-Lauf weiterhin gefunden")
         #expect(task.title == "Dachrinne reinigen")
-        #expect(task.energy == .high)
+        #expect(task.duration == .hour1)
         #expect(task.processedAt != nil, "jetzt hat das Modell sie gesehen")
     }
 

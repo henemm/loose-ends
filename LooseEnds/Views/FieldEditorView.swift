@@ -13,6 +13,9 @@ struct FieldEditorView: View {
     let projects: [Project]
 
     @State private var peopleText = ""
+    /// The energy slider's position (−3 … 3) and whether a finger is on it: written once on release (#112).
+    @State private var energyPosition = 0.0
+    @State private var energyDragging = false
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Detail")
 
     private var aiRevision: Revision? {
@@ -42,7 +45,10 @@ struct FieldEditorView: View {
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
-        .onAppear { peopleText = task.people.joined(separator: ", ") }
+        .onAppear {
+            peopleText = task.people.joined(separator: ", ")
+            energyPosition = Double(task.energy?.rawValue ?? 0)
+        }
         .onDisappear { if field == .people { commitPeople() } }
     }
 
@@ -54,7 +60,7 @@ struct FieldEditorView: View {
         case .dueDate: dueControl
         case .importance: levelPicker(current: task.importanceRaw)
         case .urgency: levelPicker(current: task.urgencyRaw)
-        case .energy: levelPicker(current: task.energyRaw)
+        case .energy: energyControl
         case .duration: durationPicker
         case .contexts: contextsControl
         case .people: peopleControl
@@ -101,6 +107,54 @@ struct FieldEditorView: View {
         }
         .pickerStyle(.inline)
         .labelsHidden()
+    }
+
+    /// Variant D (#112): a slider between an empty and a full battery that snaps at seven stops,
+    /// only words above it, "Remove value" below. Set by hand only, so there is no AI section.
+    @ViewBuilder
+    private var energyControl: some View {
+        let shown = energyDragging ? Energy(rawValue: Int(energyPosition.rounded())) : task.energy
+        let words = shown.map { FieldFormatting.energy($0) } ?? String(localized: "Not set")
+        VStack(spacing: 18) {
+            Text(words)
+                .font(.title3)
+                .fontDesign(.serif)
+                .foregroundStyle(shown == nil ? .secondary : .primary)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
+                .accessibilityHidden(true)
+                .accessibilityIdentifier("energyWords")
+            Slider(value: $energyPosition, in: -3...3, step: 1) {
+                Text(FieldFormatting.label(field))
+            } minimumValueLabel: {
+                Image(systemName: "battery.0percent")
+                    .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
+            } maximumValueLabel: {
+                Image(systemName: "battery.100percent")
+                    .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
+            } onEditingChanged: { editing in
+                energyDragging = editing
+                if !editing { commitEnergy() }
+            }
+            .accessibilityValue(words)
+            .accessibilityIdentifier("energySlider")
+            // VoiceOver adjusts without a drag, so no editing callback fires there.
+            .onChange(of: energyPosition) { _, position in
+                guard !energyDragging, Int(position.rounded()) != task.energy?.rawValue else { return }
+                commitEnergy()
+            }
+        }
+        .padding(.vertical, 8)
+        if task.energy != nil {
+            Button("Remove value") { apply(nil) }
+                .accessibilityIdentifier("energyRemoveButton")
+        }
+    }
+
+    private func commitEnergy() {
+        apply(Energy(rawValue: Int(energyPosition.rounded()))?.stored)
     }
 
     private var durationPicker: some View {

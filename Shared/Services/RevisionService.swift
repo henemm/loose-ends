@@ -93,7 +93,7 @@ enum RevisionService {
         if task.importanceSourceRaw == ai { fields.append(.importance) }
         if task.urgencySourceRaw == ai { fields.append(.urgency) }
         if task.durationSourceRaw == ai { fields.append(.duration) }
-        if task.energySourceRaw == ai { fields.append(.energy) }
+        // Energy never: set by hand only; a legacy AI "low"/"medium"/"high" reads as empty (#112).
         if task.contextsSourceRaw == ai { fields.append(.contexts) }
         if task.peopleSourceRaw == ai { fields.append(.people) }
         return fields

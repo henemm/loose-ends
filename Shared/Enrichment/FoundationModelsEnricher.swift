@@ -26,7 +26,7 @@ struct FoundationModelsEnricher: TaskEnricher {
     You turn one captured note into a task. The note may be German or English; answer in the note's language.
     Title: imperative, up to twelve words, no trailing period. Keep names and numbers from the note.
     Never drop the object or purpose of the task, even if that means using more words.
-    Duration buckets: minutes5, minutes15, minutes30, hour1, hours2plus. Energy: low, medium, high.
+    Duration buckets: minutes5, minutes15, minutes30, hour1, hours2plus.
     Contexts and project must come from the allowed lists; otherwise leave them empty.
     Every confidence is between 0 and 1 and honest: use low confidence when the note does not say.
     Each reason is one short sentence.
@@ -44,7 +44,6 @@ struct FoundationModelsEnricher: TaskEnricher {
                 var attributes: [String] = []
                 if let title = example.title { attributes.append("title \"\(title)\"") }
                 if let duration = example.duration { attributes.append("duration \(duration.rawValue)") }
-                if let energy = example.energy { attributes.append("energy \(energy.rawValue)") }
                 if !example.contexts.isEmpty { attributes.append("contexts \(example.contexts.joined(separator: ", "))") }
                 lines.append("- \"\(example.rawText)\" → " + (attributes.isEmpty ? "no attributes" : attributes.joined(separator: "; ")))
             }
@@ -64,9 +63,6 @@ struct FoundationModelsEnricher: TaskEnricher {
         if let value = DurationBucket(rawValue: result.duration) {
             draft.duration = EnrichmentDraft.Guess(value, confidence: EnrichmentParsing.clamp(result.durationConfidence), reason: result.durationReason)
         }
-        if let value = Energy(rawValue: result.energy) {
-            draft.energy = EnrichmentDraft.Guess(value, confidence: EnrichmentParsing.clamp(result.energyConfidence), reason: result.energyReason)
-        }
         let contexts = result.contexts.map { $0.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty }
         if !contexts.isEmpty {
             draft.contexts = EnrichmentDraft.Guess(contexts, confidence: EnrichmentParsing.clamp(result.contextsConfidence), reason: result.contextsReason)
@@ -84,6 +80,7 @@ struct FoundationModelsEnricher: TaskEnricher {
 }
 
 /// Flat schema for guided generation. Empty strings mean "not set"; the mapping above drops them.
+/// No energy: it is set by hand only (#112).
 @Generable
 struct ModelEnrichment {
     @Guide(description: "Imperative title, up to twelve words, in the language of the note, keeping the object and purpose of the task")
@@ -99,13 +96,6 @@ struct ModelEnrichment {
     var durationConfidence: Double
     @Guide(description: "One sentence why this duration")
     var durationReason: String
-
-    @Guide(description: "Energy needed: low, medium, high, or empty")
-    var energy: String
-    @Guide(description: "Confidence 0 to 1 for the energy")
-    var energyConfidence: Double
-    @Guide(description: "One sentence why this energy")
-    var energyReason: String
 
     @Guide(description: "Names from the allowed contexts that fit, empty list otherwise")
     var contexts: [String]
