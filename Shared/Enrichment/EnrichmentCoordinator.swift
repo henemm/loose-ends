@@ -56,7 +56,8 @@ final class EnrichmentCoordinator {
             let recognition = try Self.recognitionInputs(in: context)   // once before the loop (#136)
 
             for task in pending {
-                applyRules(to: task, mode: .firstRun, recognitionPool: recognition.pool, tasksByID: recognition.tasksByID)
+                applyRules(to: task, mode: .firstRun, catalog: contexts,
+                           recognitionPool: recognition.pool, tasksByID: recognition.tasksByID)
                 // Outside the model block and outside its `do`/`catch` on purpose: the rule step ran,
                 // whether or not the model was there and whether or not its call threw (#144).
                 task.rulesAppliedAt = Date()
@@ -113,7 +114,8 @@ final class EnrichmentCoordinator {
             let recognition = try Self.recognitionInputs(in: context)
             // The task's own rule step ran before, so it sits in the pool: it must not recognise itself.
             let pool = recognition.pool.filter { $0.id != task.id }
-            let ruleFields = applyRules(to: task, mode: .reanalysis, recognitionPool: pool, tasksByID: recognition.tasksByID)
+            let ruleFields = applyRules(to: task, mode: .reanalysis, catalog: contexts,
+                                        recognitionPool: pool, tasksByID: recognition.tasksByID)
             task.rulesAppliedAt = Date()
 
             if modelUnavailable == nil {
@@ -158,6 +160,7 @@ final class EnrichmentCoordinator {
     private func applyRules(
         to task: TaskItem,
         mode: EnrichmentWriter.Mode,
+        catalog: [TaskContext],
         recognitionPool: [RecognitionRule.Candidate],
         tasksByID: [UUID: TaskItem]
     ) -> Set<RevisedField> {
@@ -166,7 +169,36 @@ final class EnrichmentCoordinator {
         if applyImportanceRule(to: task, mode: mode) { matched.insert(.importance) }
         if applyUrgencyRule(to: task, mode: mode) { matched.insert(.urgency) }
         matched.formUnion(applyRecognitionRule(to: task, mode: mode, pool: recognitionPool, tasksByID: tasksByID))
+        // The word list only where recognition found nothing: a text captured before carries what
+        // the user decided then, which beats a word list (#232).
+        if !matched.contains(.contexts), applyContextWordRule(to: task, mode: mode, catalog: catalog) {
+            matched.insert(.contexts)
+        }
         return matched
+    }
+
+    /// Contexts from words of the note (#232). Same guards as the recognition: only while the user
+    /// has not set or cleared the contexts, and in a re-analysis only to a new value.
+    private func applyContextWordRule(to task: TaskItem, mode: EnrichmentWriter.Mode, catalog: [TaskContext]) -> Bool {
+        guard let guess = ContextWordRule.match(in: task.rawText, available: catalog.map(\.name)) else { return false }
+        let hits = catalog.filter { guess.value.contains($0.name) }
+        let current = Set((task.contexts ?? []).map(\.id))
+        guard EnrichmentWriter.mayWrite(
+            .contexts, on: task, mode: mode,
+            firstRun: current.isEmpty && !EnrichmentWriter.userHasTouched(.contexts, on: task),
+            changes: Set(hits.map(\.id)) != current
+        ) else { return true }
+        let revision = Revision(
+            task: task, field: .contexts,
+            oldValue: current.isEmpty ? nil : EnrichmentWriter.encode((task.contexts ?? []).map(\.name)),
+            newValue: EnrichmentWriter.encode(hits.map(\.name)), author: .rule, reason: guess.reason
+        )
+        task.revisions = (task.revisions ?? []) + [revision]
+        task.contexts = hits
+        task.contextsSourceRaw = FieldSource.rule.rawValue
+        task.contextsConfidence = guess.confidence
+        logger.info("Rule set contexts for \(task.id, privacy: .public)")
+        return true
     }
 
     /// Each rule returns whether it matched, whether or not it wrote.
