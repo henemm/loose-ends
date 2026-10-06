@@ -171,7 +171,8 @@ not scope creep on the current one.
   `TaskActions` (done, next up, park, move, restore), `DateExpressionParser`/`TimeExpressionParser` (rule-based
   date/time extraction DE/EN, moved from `Measurement/` in #95), `RawTextWords` (the one tokenizer for word-set
   equality, shared with `Measurement/`, moved from `TitleCheck` in #136), `TitleRule` (the title at capture: raw text
-  cleaned, first 12 words, #202). All pure over the model objects; the
+  cleaned, first 12 words, #202), `SiriFields` (Siri's link, flag, tags onto a new task: `resolve` checks before
+  saving, `apply` writes after; not in the product path until #25, #225). All pure over the model objects; the
   caller saves.
 - `Shared/Enrichment` — `TaskEnricher` protocol, `EnrichmentWriter` (threshold + revisions), `EnrichmentCoordinator`
   (catch-up pass), `FoundationModelsEnricher` (on-device model, `#if canImport(FoundationModels)`), `DueDateRule`
