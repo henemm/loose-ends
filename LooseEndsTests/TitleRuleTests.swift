@@ -133,6 +133,23 @@ import Testing
         #expect(task.titleSourceRaw == nil)
     }
 
+    @Test("A model title that brings the struck words back is cut the same way; equal to the rule title, nothing is written")
+    @MainActor func modelTitleIsStruckToo() throws {
+        let store = try TestStore()
+        let task = try CaptureService.save("Morgen wichtig Steuerbescheid prüfen", via: .app, in: store.context)
+
+        modelTitle("Morgen wichtig Steuerbescheid prüfen", on: task)
+
+        #expect(task.title == "Steuerbescheid prüfen")
+        #expect(task.titleSourceRaw == nil, "the rule title stays, no AI marker")
+        #expect(!(task.revisions ?? []).contains { $0.field == .title })
+
+        modelTitle("Wichtig: Steuerbescheid vom Finanzamt prüfen", on: task)
+
+        #expect(task.title == "Steuerbescheid vom Finanzamt prüfen")
+        #expect(task.titleSourceRaw == FieldSource.ai.rawValue)
+    }
+
     // MARK: Capture
 
     @Test("Capture sets the title from the rule: no AI marker, no revision, status unprocessed, raw text untouched")
