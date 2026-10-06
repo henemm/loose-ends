@@ -60,6 +60,20 @@ import Testing
         #expect(!task.hasUnseenAutomaticRevisions)
     }
 
+    @Test("„wichtig“ sets high importance from the rule, with the word as trigger (#214)")
+    @MainActor func explicitImportanceWord() async throws {
+        let store = try TestStore()
+        let task = try capture("Morgen wichtig Steuerbescheid prüfen", in: store)
+
+        await EnrichmentCoordinator(enricher: titleOnly("Steuerbescheid prüfen"), container: store.container).processPending()
+
+        #expect(task.importance == .high)
+        #expect(task.importanceSourceRaw == FieldSource.rule.rawValue)
+        #expect(RevisionService.origin(of: .importance, on: task) == .rule)
+        let trigger = try #require(RuleTrigger.range(of: .importance, in: task.rawText))
+        #expect(task.rawText[trigger] == "wichtig")
+    }
+
     @Test("A rule value resets like an AI value, as a user revision (AC-3)")
     @MainActor func ruleValueResets() async throws {
         let store = try TestStore()
