@@ -124,6 +124,7 @@ jobs:
             [ "$mini" = "27.0" ] || { res=FEHLER; echo "::error::$id minimum '$mini', expected 27.0"; }
             [ "$ver" = "$MARKETING ($BUILD)" ] || { res=FEHLER; echo "::error::$id version '$ver', expected $MARKETING ($BUILD)"; }
             [ "$dsym" = da ] || { res=FEHLER; echo "::error::$id has no dSYM in the archive"; }
+            [ -f "$found/PrivacyInfo.xcprivacy" ] || { res=FEHLER; echo "::error::$id has no PrivacyInfo.xcprivacy in the archive (#177)"; }
             for key in "$@"; do
               want=""; [ "${key#*=}" != "$key" ] && { want="${key#*=}"; key="${key%%=*}"; }
               have=$(get "$key" "$p")
