@@ -155,7 +155,8 @@ class ScriptTests(unittest.TestCase):
         self.assertIn("filter[app]=APP1", fake.paths[-1])
 
     def test_3_processing_then_valid_uses_a_new_token_per_round(self):
-        result, fake = self.run_script([[build(state="PROCESSING")], [build(state="PROCESSING")], [build()]])
+        # Ends at the first VALID; the timeout is only the ceiling under load (#185, as test_9e in #183).
+        result, fake = self.run_script([[build(state="PROCESSING")], [build(state="PROCESSING")], [build()]], timeout="15")
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(len(fake.tokens), 3)
         self.assertEqual(len(set(fake.tokens)), 3)

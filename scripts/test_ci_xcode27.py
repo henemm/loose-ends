@@ -88,6 +88,14 @@ class Workflows(unittest.TestCase):
                                 capture_output=True, text=True)
         self.assertEqual(result.stdout, "", "Absenkung noch vorhanden")
 
+    def test_unit_job_runs_every_script_test(self):
+        """#185: every scripts/test_*.py runs in CI, in one step, before Xcode."""
+        steps = load(CI)["jobs"]["unit-tests"]["steps"]
+        step = step_named(load(CI)["jobs"]["unit-tests"], "Script tests")
+        self.assertIn("unittest discover -s scripts -p 'test_*.py'", step["run"])
+        names = [s.get("name") for s in steps]
+        self.assertLess(names.index("Script tests"), names.index("Build and test"))
+
     def test_check_names_unchanged(self):
         names = {job["name"] for _, _, job in jobs()}
         for expected in ("Unit Tests (macOS destination)", "Build (iOS Simulator)", "UI Smoke (iOS Simulator)"):
