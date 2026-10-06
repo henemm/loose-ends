@@ -22,6 +22,15 @@ jobs:
       - uses: actions/checkout@v7
       - name: Select Xcode 27.0
         uses: ./.github/actions/select-xcode-27
+      # #185: the Python tests of the scripts in scripts/ (sim.sh proof, App Store Connect, CI),
+      # first and cheap, so a broken script turns the run red before Xcode starts. PyYAML is the
+      # one package they need beyond the standard library (test_ci_xcode27 reads the workflows);
+      # it goes into a throwaway venv, the runner's own Python stays untouched.
+      - name: Script tests
+        run: |
+          python3 -m venv "$RUNNER_TEMP/script-tests"
+          "$RUNNER_TEMP/script-tests/bin/pip" install --quiet 'pyyaml~=6.0'
+          "$RUNNER_TEMP/script-tests/bin/python" -m unittest discover -s scripts -p 'test_*.py' -v
       - name: Install XcodeGen
         run: brew install xcodegen
       - name: Generate project
