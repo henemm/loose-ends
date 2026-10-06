@@ -32,14 +32,13 @@ import Testing
         let written = RevisionService.revert(aiTitle, on: task, contexts: [garden], projects: [])
         try store.context.save()
 
-        #expect(task.title == nil)
-        #expect(task.titleSourceRaw == nil)
-        #expect(task.titleConfidence == nil)
+        #expect(task.title == "Rasenmäher Ölwechsel am Samstag")
+        #expect(task.titleSourceRaw == FieldSource.user.rawValue)
         #expect(task.displayTitle == "Rasenmäher Ölwechsel am Samstag")
         #expect(written.author == .user)
         #expect(written.field == .title)
         #expect(written.oldValue == "Rasenmäher: Ölwechsel")
-        #expect(written.newValue == nil)
+        #expect(written.newValue == "Rasenmäher Ölwechsel am Samstag")
         #expect((task.revisions ?? []).count == 5, "four AI revisions plus one user revision, nothing deleted")
         #expect(!RevisionService.automaticFields(on: task).contains(.title))
     }
@@ -72,7 +71,7 @@ import Testing
 
         #expect(written.count == 4)
         #expect(RevisionService.automaticFields(on: task).isEmpty)
-        #expect(task.title == nil && task.dueDate == nil && task.duration == nil)
+        #expect(task.title == "Rasenmäher Ölwechsel am Samstag" && task.dueDate == nil && task.duration == nil)
         #expect((task.contexts ?? []).isEmpty)
         let userRevisions = (task.revisions ?? []).filter { $0.author == .user }
         #expect(userRevisions.count == 4)

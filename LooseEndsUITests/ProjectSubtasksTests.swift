@@ -40,7 +40,13 @@ final class ProjectSubtasksTests: XCTestCase {
 
         // A project to put the task in.
         let newProject = element("newProjectButton", in: app)
-        XCTAssertTrue(newProject.waitForExistence(timeout: 10))
+        // Projects start folded on the start screen; an earlier run may have left them open.
+        if !newProject.waitForExistence(timeout: 5) {
+            let toggle = element("projectsToggle", in: app)
+            XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Start screen should offer the Projects group")
+            toggle.tap()
+        }
+        XCTAssertTrue(newProject.waitForExistence(timeout: 5))
         newProject.tap()
         let nameField = app.textFields.firstMatch
         XCTAssertTrue(nameField.waitForExistence(timeout: 5))

@@ -20,7 +20,7 @@ import Testing
         #expect(stored.capturedVia == .share)
         #expect(stored.sourceURL == link)
         #expect(stored.status == .unprocessed)
-        #expect(stored.title == nil)
+        #expect(stored.title == "Rasenmäher Ölwechsel am Wochenende")
         #expect(ViewRules.tasks(for: .new, in: fetched).map(\.id) == [saved.id])
     }
 
