@@ -68,8 +68,8 @@ final class SpeechListeningTests: XCTestCase {
                 ergebnis = "Hinweis: Spracherkennung nicht verfügbar"
                 break
             }
-            if app.descendants(matching: .any).matching(identifier: "speechConsentLabel").firstMatch.exists {
-                ergebnis = "Hinweis: Erkennung auf dem Gerät nicht gestartet"
+            if app.descendants(matching: .any).matching(identifier: "speechLoadModelButton").firstMatch.exists {
+                ergebnis = "Hinweis: Sprachmodell fehlt, Knopf „Laden“"
                 break
             }
             usleep(500_000)
