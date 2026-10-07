@@ -15,6 +15,7 @@ enum TaskActions {
             let record = CompletionRecord(task: task, completedAt: now, dueDateAtCompletion: task.dueDate)
             task.completions = (task.completions ?? []) + [record]
             task.dueDate = rule.nextDueDate(previousDue: task.dueDate, completedOn: now, calendar: calendar)
+            task.placeRemindedAt = nil   // the place is armed again for the next round (#226)
             return
         }
         task.status = .done

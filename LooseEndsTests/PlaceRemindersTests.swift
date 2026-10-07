@@ -105,4 +105,71 @@ import Testing
 
         #expect(PlaceReminders.plan(for: [weekly, once]).watched.map(\.title) == ["Pfand wegbringen"])
     }
+
+    // MARK: - Reminded once (#226, Schnitt 4)
+
+    @Test("A place that reminded is in no later plan, neither watched nor named")
+    @MainActor func remindedLeavesThePlan() throws {
+        let store = try TestStore()
+        let reminded = try task("schon erinnert")
+        let waiting = try task("wartet")
+        store.context.insert(reminded)
+        store.context.insert(waiting)
+
+        #expect(PlaceReminders.markDelivered(taskID: reminded.id, in: [reminded, waiting], now: start))
+
+        let plan = PlaceReminders.plan(for: [reminded, waiting])
+        #expect(plan.watched.map(\.title) == ["wartet"])
+        #expect(plan.unwatched.isEmpty)
+    }
+
+    @Test("Marking twice keeps the first time; an unknown task reports false")
+    @MainActor func markDeliveredIsIdempotent() throws {
+        let store = try TestStore()
+        let item = try task("Dübel")
+        store.context.insert(item)
+        let later = start.addingTimeInterval(600)
+
+        #expect(PlaceReminders.markDelivered(taskID: item.id, in: [item], now: start))
+        #expect(PlaceReminders.markDelivered(taskID: item.id, in: [item], now: later))
+        #expect(item.placeRemindedAt == start)
+        #expect(PlaceReminders.markDelivered(taskID: UUID(), in: [item], now: start) == false)
+    }
+
+    @Test("A repeating task that reminded is armed again when it is completed, a one-off stays out")
+    @MainActor func completionArmsARepeatAgain() throws {
+        let store = try TestStore()
+        let weekly = try task("Pfand wegbringen")
+        weekly.repeatRule = RepeatRule(frequency: .weekly)
+        weekly.dueDate = start
+        let once = try task("Einmal")
+        store.context.insert(weekly)
+        store.context.insert(once)
+        PlaceReminders.markDelivered(taskID: weekly.id, in: [weekly, once], now: start)
+        PlaceReminders.markDelivered(taskID: once.id, in: [weekly, once], now: start)
+        #expect(PlaceReminders.plan(for: [weekly, once]).watched.isEmpty)
+
+        TaskActions.complete(weekly, now: start)
+        TaskActions.complete(once, now: start)
+
+        #expect(weekly.placeRemindedAt == nil)
+        #expect(PlaceReminders.plan(for: [weekly, once]).watched.map(\.title) == ["Pfand wegbringen"])
+    }
+
+    @Test("A changed place is a new reminder; parking does not arm it")
+    @MainActor func newPlaceArmsAgain() throws {
+        let store = try TestStore()
+        let item = try task("Dübel")
+        store.context.insert(item)
+        PlaceReminders.markDelivered(taskID: item.id, in: [item], now: start)
+        let elsewhere = try #require(TaskPlace(name: "Baumarkt Nord", latitude: 53.6, longitude: 10.0, event: .depart))
+
+        TaskActions.park(item, now: start)
+        #expect(item.placeRemindedAt == start)
+
+        RevisionService.set(.place, to: FieldCodec.encode(elsewhere), on: item, contexts: [], projects: [])
+        #expect(item.placeRemindedAt == nil)
+        TaskActions.activate(item)
+        #expect(PlaceReminders.plan(for: [item]).watched.map(\.title) == ["Dübel"])
+    }
 }

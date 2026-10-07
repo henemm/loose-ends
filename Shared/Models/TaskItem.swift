@@ -34,6 +34,10 @@ final class TaskItem {
     // Place (#226): set by the user or Siri, never guessed
     var place: TaskPlace?
     var placeSourceRaw: String?
+    /// Set when the place reminded (#226, Schnitt 4): a one-shot system trigger is gone after it fired,
+    /// and every save re-plans, so without this the same place would be armed again. A state, not a
+    /// derived field: no source, no revision.
+    var placeRemindedAt: Date?
 
     // Derived: title
     var title: String?
