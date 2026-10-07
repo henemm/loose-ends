@@ -55,7 +55,12 @@ enum ModelContainerFactory {
     /// app's own container for the exact same store and crashed the sync every time (#50). So the
     /// real (non-test) container is built once per process and reused.
     ///
-    /// Test hosts get an in-memory store so tests never touch real data. Builds without the
+    /// Test hosts get an in-memory store so tests never touch real data, and it never syncs: the
+    /// configuration's default `cloudKitDatabase` is `.automatic`, which mirrors even an in-memory
+    /// store into the iCloud container of the entitlements. A signed device run under `--ui-testing`
+    /// (2026-09-30, #153, then still under the production identifier) did exactly that: it pulled the
+    /// user's German contexts into the test and pushed the English defaults into the user's iCloud
+    /// ("Garden, Garten, Garden", #163). Builds without the
     /// app-group entitlement (unsigned CI builds) fall back to a plain local store so the app
     /// still launches; sync is simply off in that case.
     ///
@@ -65,7 +70,7 @@ enum ModelContainerFactory {
     static func make(inMemory: Bool = false) throws -> ModelContainer {
         let schema = Schema(LooseEndsSchema.models)
         if inMemory || isRunningTests || isUITesting {
-            let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+            let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
             return try ModelContainer(for: schema, configurations: [configuration])
         }
         return try cache.value {
