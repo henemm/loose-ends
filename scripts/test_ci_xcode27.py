@@ -107,6 +107,16 @@ class Workflows(unittest.TestCase):
         self.assertTrue(step.get("continue-on-error"), "Diagnose darf den Lauf nie abbrechen")
         self.assertIn("xcodebuild -version", step["run"])
 
+    def test_workflows_wait_for_the_simulator_to_finish_booting(self):
+        for workflow, key, first_use in ((CI, "ui-smoke", "Run UI smoke tests"), (STRESS, "stress", "Build for testing")):
+            steps = load(workflow)["jobs"][key]["steps"]
+            names = [s.get("name") for s in steps]
+            wait = step_named(load(workflow)["jobs"][key], "Wait until the simulator")
+            self.assertIn('simctl bootstatus "$SIM_UDID" -b', wait["run"], workflow.name)
+            self.assertLess(names.index(wait["name"]), names.index(first_use), workflow.name)
+            self.assertLess(names.index(step_named(load(workflow)["jobs"][key], "Pick a simulator")["name"]),
+                            names.index(wait["name"]), workflow.name)
+
 
 class PickSimulator(unittest.TestCase):
     def pick(self, workflow, key, devices):

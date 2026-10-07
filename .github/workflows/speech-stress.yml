@@ -52,6 +52,11 @@ jobs:
           xcrun simctl list devices available | grep "$udid"
           xcrun simctl boot "$udid" || true
           echo "SIM_UDID=$udid" >> "$GITHUB_ENV"
+      - name: Wait until the simulator has finished booting
+        timeout-minutes: 10
+        # #228: `simctl boot` returns before SpringBoard and the accessibility services are up; the
+        # first UI queries then wait for a reply that comes late or not at all.
+        run: xcrun simctl bootstatus "$SIM_UDID" -b
       - name: Build for testing
         run: |
           set -o pipefail
