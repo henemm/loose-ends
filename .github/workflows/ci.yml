@@ -122,8 +122,10 @@ jobs:
         run: |
           # Every 20 s the busiest processes on the runner, one line per sample. The simulator's
           # daemons run as host processes, so a hog inside the simulator shows up here too.
+          # mem[…]: free memory in percent, free and compressed pages (16 KB) and swap-outs, since a
+          # JetsamEvent on the runner pointed at memory pressure during a hang (#228, 2026-10-07).
           nohup bash -c 'while true; do
-            echo "$(date -u +%H:%M:%S) $(ps -A -o pcpu=,comm= | sort -rn | head -5 | sed -E "s#^ *([0-9.]+) .*/#\1% #" | tr "\n" " ")"
+            echo "$(date -u +%H:%M:%S) $(ps -A -o pcpu=,comm= | sort -rn | head -5 | sed -E "s#^ *([0-9.]+) .*/#\1% #" | tr "\n" " ") mem[$(memory_pressure -Q | sed -nE "s/.*percentage: ([0-9]+%).*/free \1/p") $(vm_stat | sed -nE "s/^Pages free: *([0-9]+)\./freepg=\1/p; s/^Pages occupied by compressor: *([0-9]+)\./comprpg=\1/p; s/^Swapouts: *([0-9]+)\./swapouts=\1/p" | tr "\n" " ")]"
             sleep 20
           done' > host-load.log 2>&1 &
       - name: Run UI smoke tests
