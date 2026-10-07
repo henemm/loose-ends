@@ -2,6 +2,12 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "Appointment" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Termin" } } } },
+    "all day" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "ganztägig" } } } },
+    "All day" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ganztägig" } } } },
+    "At a time" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Zu einer Uhrzeit" } } } },
+    "Add to calendar" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "In den Kalender" } } } },
+    "Add event" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Eintragen" } } } },
     "Waiting on" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Wartet auf" } } } },
     "Choose a task" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufgabe wählen" } } } },
     "Loosen" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Lösen" } } } },

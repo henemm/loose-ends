@@ -656,14 +656,21 @@ final class CaptureSmokeTests: XCTestCase {
         let initial = toggle.value as? String
         XCTAssertEqual(initial, "0", "Value was \(String(describing: initial))")
         toggle.tap()
-        // Tap again only if the switch is still off after the last read; at "1" a second tap would turn it off.
-        if valueAfterWaiting(for: "1", of: toggle, timeout: 2) == "0" {
+        // Without a date the switch asks first (#203, Teil B) and stays off until the sheet is answered.
+        let allDay = element("calendarAskAllDay", in: app)
+        if !allDay.waitForExistence(timeout: 2) {
             // The element spans the row; the switch itself sits at the trailing edge.
             toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
         }
-        XCTAssertTrue(waitForValue("1", of: toggle), "Tapping should switch it on, value was \(String(describing: toggle.value))")
-        let note = app.staticTexts["Shows up once the task has a due date."]
-        XCTAssertTrue(note.waitForExistence(timeout: 5), "Without a due date the note explains why nothing shows")
+        XCTAssertTrue(allDay.waitForExistence(timeout: 5), "Without a due date the switch should ask first")
+        allDay.tap()
+        let add = app.buttons["calendarAskConfirm"]
+        XCTAssertTrue(add.waitForExistence(timeout: 5))
+        add.tap()
+        XCTAssertTrue(waitForValue("1", of: toggle), "Answering should switch it on, value was \(String(describing: toggle.value))")
+        let appointment = element("calendarAppointmentRow", in: app)
+        if !appointment.waitForExistence(timeout: 3) { app.swipeUp() }
+        XCTAssertTrue(appointment.waitForExistence(timeout: 5), "The detail should show the appointment")
 
         let back = app.navigationBars.buttons.firstMatch
         XCTAssertTrue(back.waitForExistence(timeout: 5))

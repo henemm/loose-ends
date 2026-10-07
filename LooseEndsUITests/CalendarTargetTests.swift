@@ -48,6 +48,13 @@ final class CalendarTargetTests: XCTestCase {
         // The element spans the row; the switch itself sits at the trailing edge.
         toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
 
+        // A time without a duration asks for the duration first (#203, Teil B).
+        let hour = app.descendants(matching: .any).matching(identifier: "calendarAskDuration_hour1").firstMatch
+        if hour.waitForExistence(timeout: 5) {
+            hour.tap()
+            app.buttons["calendarAskConfirm"].tap()
+        }
+
         let target = app.descendants(matching: .any).matching(identifier: "calendarTargetRow").firstMatch
         allowCalendarAccessIfAsked(until: target)
 
