@@ -163,10 +163,14 @@ class SpeechStressOnXcode27(unittest.TestCase):
         self.assertIn("test-without-building", script)
         self.assertIn("-collect-test-diagnostics never", script)
 
-    def test_cancel_test_declines_server_recognition_up_front(self):
+    def test_no_server_recognition_dialog_left_to_decline(self):
+        # #64: recognition runs on the device only, so the dialog that could swallow the cancel tap
+        # is gone, and with it the launch argument that declined it.
+        capture = (ROOT / "LooseEnds" / "Speech" / "SpeechCapture.swift").read_text()
+        self.assertNotIn("serverConsent", capture)
+        self.assertNotIn("requiresOnDeviceRecognition", capture)
         source = (ROOT / "LooseEndsUITests" / "CaptureCancelCrashTests.swift").read_text()
-        # `<false/>`, not `NO`: SpeechCapture reads `object(forKey:) as? Bool`, and `NO` arrives as a string.
-        self.assertIn('"-speechServerRecognitionAllowed", "<false/>"', source)
+        self.assertNotIn("-speechServerRecognitionAllowed", source)
 
 
 class Sources(unittest.TestCase):
