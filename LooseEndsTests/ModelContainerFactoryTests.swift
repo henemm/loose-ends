@@ -1,4 +1,5 @@
 import Foundation
+import SwiftData
 import Testing
 @testable import LooseEnds
 
@@ -35,5 +36,15 @@ import Testing
         #expect(info?["LECloudContainer"] as? String == "iCloud.com.henning.looseends")
         #expect(ModelContainerFactory.appGroup == "group.com.henning.looseends")
         #expect(ModelContainerFactory.cloudContainer == "iCloud.com.henning.looseends")
+    }
+
+    @Test("The in-memory store of tests and UI tests never syncs with iCloud (#163)")
+    func inMemoryStoreHasNoCloudKit() throws {
+        let container = try ModelContainerFactory.make(inMemory: true)
+        let configuration = try #require(container.configurations.first)
+        #expect(configuration.isStoredInMemoryOnly)
+        #expect(String(describing: configuration.cloudKitDatabase) == String(describing: ModelConfiguration.CloudKitDatabase.none))
+        #expect(String(describing: ModelConfiguration.CloudKitDatabase.none) != String(describing: ModelConfiguration.CloudKitDatabase.automatic),
+                "the check above must be able to tell the two apart")
     }
 }
