@@ -117,6 +117,16 @@ class Workflows(unittest.TestCase):
             self.assertLess(names.index(step_named(load(workflow)["jobs"][key], "Pick a simulator")["name"]),
                             names.index(wait["name"]), workflow.name)
 
+    def test_ui_smoke_lets_the_simulator_settle_and_runs_without_parallel_clones(self):
+        job = load(CI)["jobs"]["ui-smoke"]
+        names = [s.get("name") for s in job["steps"]]
+        settle = step_named(job, "Let the simulator settle")
+        self.assertTrue(settle.get("continue-on-error"), "Das Abwarten darf den Lauf nie abbrechen")
+        self.assertLessEqual(settle.get("timeout-minutes", 999), 5)
+        self.assertGreater(names.index(settle["name"]), names.index(step_named(job, "Wait until the simulator")["name"]))
+        self.assertLess(names.index(settle["name"]), names.index("Run UI smoke tests"))
+        self.assertIn("-parallel-testing-enabled NO", step_named(job, "Run UI smoke tests")["run"])
+
 
 class PickSimulator(unittest.TestCase):
     def pick(self, workflow, key, devices):
