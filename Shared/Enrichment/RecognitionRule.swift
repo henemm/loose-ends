@@ -2,7 +2,8 @@ import Foundation
 
 /// Recognising a raw text that was captured before (#136, ADR-5 as rewritten on 2026-09-27):
 /// learning is recognition, not training. A task whose raw text carries the same normalised word set
-/// as an earlier one takes over that one's **contexts and duration** — silently, confidence 1.0, rule
+/// as an earlier one takes over that one's **contexts and duration**, if the user set them there
+/// (#244) — silently, confidence 1.0, rule
 /// marker (#101), one `Revision` per field, written by `EnrichmentCoordinator`.
 ///
 /// **Energy deliberately not** (#112): neighbours beat the constant on no reading there. The field is
@@ -76,9 +77,9 @@ enum RecognitionRule {
         Set(RawTextWords.words(in: text).map(RawTextWords.normalized))
     }
 
-    /// An AI-set value is no source at all (#215). Among the rest a user-set value beats any other,
-    /// per field separately (ADR-5: "corrections by the user stay first-class examples"), then
-    /// ascending `id.uuidString` — so the result never depends on the fetch order.
+    /// Only a value the user set is a source (#215, #244), per field separately (ADR-5: "corrections
+    /// by the user stay first-class examples"); among several, ascending `id.uuidString` decides — so
+    /// the result never depends on the fetch order.
     private static func winner<Value: Equatable & Sendable>(
         among hits: [Candidate],
         source: (Candidate) -> String?,
@@ -86,17 +87,16 @@ enum RecognitionRule {
         reason: String
     ) -> FieldMatch<Value>? {
         // A model guess is no source (#215): taken over, it would come back with the rule marker,
-        // "from your words", and look surer than it is.
+        // "from your words", and look surer than it is. A `rule` value is none either (#244): it may
+        // be a guess an earlier recognition already copied — Henning's "Haus" on a tax letter went
+        // from the model to the rule marker that way and passed itself on from there. A word rule's
+        // value needs no copy: the same words make the same rule hit on the new task. A value without
+        // an origin cannot say where it came from and counts as no source either.
         let withValue = hits.compactMap { candidate -> (candidate: Candidate, value: Value)? in
-            guard source(candidate) != FieldSource.ai.rawValue else { return nil }
+            guard source(candidate) == FieldSource.user.rawValue else { return nil }
             return value(candidate).map { (candidate, $0) }
         }
-        let best = withValue.min { lhs, rhs in
-            let lhsByUser = source(lhs.candidate) == FieldSource.user.rawValue
-            let rhsByUser = source(rhs.candidate) == FieldSource.user.rawValue
-            if lhsByUser != rhsByUser { return lhsByUser }
-            return lhs.candidate.id.uuidString < rhs.candidate.id.uuidString
-        }
+        let best = withValue.min { $0.candidate.id.uuidString < $1.candidate.id.uuidString }
         guard let best else { return nil }
         return FieldMatch(sourceID: best.candidate.id,
                           guess: EnrichmentDraft.Guess(best.value, confidence: confidence, reason: reason))

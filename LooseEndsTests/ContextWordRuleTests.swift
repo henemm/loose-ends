@@ -126,6 +126,31 @@ struct ContextWordRuleTests {
         #expect(!(task.revisions ?? []).contains { $0.field == .contexts })
     }
 
+    /// Der Gerätetest aus #244: Die frühere, wortgleiche Aufgabe trug „Haus“ mit Regel-Herkunft —
+    /// eine Modell-Vermutung, die eine frühere Wiedererkennung schon kopiert hatte. Die neue Aufgabe
+    /// bleibt trotzdem leer, weil die Wortliste nicht trifft und ein Regelwert keine Quelle ist.
+    @Test("Eine kopierte Vermutung pflanzt sich nicht fort (#244)")
+    @MainActor func copiedGuessDoesNotPropagate() async throws {
+        let store = try TestStore()
+        let home = TaskContext(name: "Haus", isSystemDefault: true, sortOrder: 2)
+        store.context.insert(home)
+        let earlier = TaskItem(rawText: "Morgen wichtig Steuerbescheid prüfen")
+        earlier.status = .active
+        earlier.rulesAppliedAt = Date(timeIntervalSince1970: 1_700_000_000)
+        earlier.contexts = [home]
+        earlier.contextsSourceRaw = FieldSource.rule.rawValue
+        earlier.contextsConfidence = 1.0
+        store.context.insert(earlier)
+        let fresh = TaskItem(rawText: "Morgen wichtig Steuerbescheid prüfen")
+        store.context.insert(fresh)
+        try store.context.save()
+
+        await EnrichmentCoordinator(enricher: StubEnricher(unavailableReason: "Kein Modell"), container: store.container).processPending()
+
+        #expect((fresh.contexts ?? []).isEmpty)
+        #expect(!(fresh.revisions ?? []).contains { $0.field == .contexts })
+    }
+
     @Test("Ein vom Nutzer gesetzter Kontext wird nicht überschrieben, auch nicht beim Neu-Analysieren")
     @MainActor func userContextStays() async throws {
         let store = try TestStore()

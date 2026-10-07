@@ -21,9 +21,9 @@ struct RecognitionRuleTests {
         _ rawText: String,
         id: UUID = UUID(),
         duration: DurationBucket? = nil,
-        durationSource: FieldSource? = nil,
+        durationSource: FieldSource? = .user,
         contexts: [String] = [],
-        contextsSource: FieldSource? = nil
+        contextsSource: FieldSource? = .user
     ) -> RecognitionRule.Candidate {
         RecognitionRule.Candidate(
             id: id,
@@ -104,15 +104,15 @@ struct RecognitionRuleTests {
                 "RecognitionRule.Candidate hat kein Energiefeld: \(candidateLabels)")
     }
 
-    /// ADR-5: „Korrekturen des Nutzers bleiben Beispiele erster Klasse." Bei mehreren Treffern
-    /// gewinnt deshalb ein nutzergesetztes Feld — je Feld einzeln, weil Dauer und Kontexte von
-    /// verschiedenen Nachbarn stammen dürfen. Ein KI-gesetztes zählt seit #215 gar nicht.
-    @Test("Nutzergesetzte Werte schlagen KI-gesetzte, je Feld einzeln (AC-6)")
+    /// ADR-5: „Korrekturen des Nutzers bleiben Beispiele erster Klasse." Seit #244 sind sie die
+    /// einzige Quelle — je Feld einzeln, weil Dauer und Kontexte von verschiedenen Nachbarn stammen
+    /// dürfen.
+    @Test("Nur nutzergesetzte Werte sind Quelle, je Feld einzeln (AC-6, #244)")
     func userSetValuesWin() throws {
         let byAI = candidate("Steuer sortieren", duration: .minutes15, durationSource: .ai,
                              contexts: ["Büro"], contextsSource: .user)
         let byUser = candidate("Steuer sortieren", duration: .hours2plus, durationSource: .user,
-                               contexts: ["Garten"], contextsSource: .ai)
+                               contexts: ["Garten"], contextsSource: .rule)
 
         for pool in [[byAI, byUser], [byUser, byAI]] {
             let match = try #require(RecognitionRule.match(rawText: "Steuer sortieren", in: pool))
@@ -146,9 +146,24 @@ struct RecognitionRuleTests {
         let guessed = candidate("Steuerbescheid prüfen", duration: .minutes15, durationSource: .ai,
                                 contexts: ["Haus"], contextsSource: .ai)
         #expect(RecognitionRule.match(rawText: "Steuerbescheid prüfen", in: [guessed]) == nil)
+    }
 
-        let ruled = candidate("Steuerbescheid prüfen", duration: .minutes30, durationSource: .rule)
-        #expect(RecognitionRule.match(rawText: "Steuerbescheid prüfen", in: [guessed, ruled])?.duration?.guess.value == .minutes30)
+    /// #244: Dieselbe Vermutung kam beim dritten Mal trotzdem — eine frühere Wiedererkennung hatte sie
+    /// schon übernommen und mit Herkunft `rule` gespeichert. Ein Regelwert ist deshalb keine Quelle
+    /// (ein Wortregel-Treffer braucht keine Kopie, dieselben Wörter treffen dieselbe Regel), und ein
+    /// Wert ohne Herkunft auch nicht.
+    @Test("Ein Regelwert und ein Wert ohne Herkunft sind keine Quelle (#244)")
+    func ruleOrUnknownValueIsNoSource() {
+        let copied = candidate("Morgen wichtig Steuerbescheid prüfen", duration: .minutes30, durationSource: .rule,
+                               contexts: ["Haus"], contextsSource: .rule)
+        let unknown = candidate("Morgen wichtig Steuerbescheid prüfen", duration: .hour1, durationSource: nil,
+                                contexts: ["Büro"], contextsSource: nil)
+        #expect(RecognitionRule.match(rawText: "Morgen wichtig Steuerbescheid prüfen", in: [copied, unknown]) == nil)
+
+        let byUser = candidate("Morgen wichtig Steuerbescheid prüfen", contexts: ["Büro"])
+        let match = RecognitionRule.match(rawText: "Morgen wichtig Steuerbescheid prüfen", in: [copied, byUser, unknown])
+        #expect(match?.contexts?.guess.value == ["Büro"])
+        #expect(match?.duration == nil, "der Nutzer hat keine Dauer gesetzt")
     }
 
     @Test("Ein Kandidat ohne gesetztes Feld liefert für dieses Feld nichts")
