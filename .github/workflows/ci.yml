@@ -183,6 +183,42 @@ jobs:
               --predicate 'process == "testmanagerd" OR subsystem BEGINSWITH "com.apple.accessibility"' \
               > system-ui.log 2>&1 || true
             grep -i -E "timed out|timeout|snapshot|unresponsive|hang" system-ui.log | tail -80 || true
+            # The hang reports the system writes when it notices one (spindump): what the app's
+            # main thread was doing while XCTest got no snapshot.
+            python3 - <<'PY' || true
+          import os, pathlib, shutil, time
+          udid = os.environ.get("SIM_UDID", "")
+          home = pathlib.Path.home()
+          places = [
+              home / "Library/Logs/DiagnosticReports",
+              pathlib.Path("/Library/Logs/DiagnosticReports"),
+              home / f"Library/Developer/CoreSimulator/Devices/{udid}/data/Library/Logs/DiagnosticReports",
+          ]
+          out = pathlib.Path("hang-reports"); out.mkdir(exist_ok=True)
+          since = time.time() - 3 * 3600
+          found = []
+          for place in places:
+              if not place.is_dir():
+                  continue
+              for root, _, names in os.walk(place, onerror=lambda e: None):
+                  for name in names:
+                      f = pathlib.Path(root) / name
+                      try:
+                          if f.stat().st_mtime < since:
+                              continue
+                          text = f.read_text(errors="replace")
+                      except OSError:
+                          continue
+                      if "LooseEnds" in text:
+                          found.append(f)
+                          shutil.copy(f, out / f.name)
+          print(f"Hang/crash reports mentioning LooseEnds: {len(found)}")
+          for f in found:
+              text = f.read_text(errors="replace")
+              print(f"===== {f} ({len(text)} chars)")
+              at = text.find("com.apple.main-thread")
+              print(text[max(at - 200, 0):at + 6000] if at >= 0 else text[:6000])
+          PY
           fi
       - name: Export design gallery
         if: always()
@@ -220,4 +256,5 @@ jobs:
             watchdog.log
             system-ui.log
             host-load.log
+            hang-reports
           if-no-files-found: warn
