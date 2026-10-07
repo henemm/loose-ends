@@ -131,7 +131,8 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
    - Vorbedingung [#225](https://github.com/henemm/loose-ends/issues/225): Siris Link, Markierung und Tags
      (`Shared/Services/SiriFields.swift`), mehrere Links oder ein unbekanntes Tag werden vor dem Speichern abgelehnt
    - Vorbedingung [#226](https://github.com/henemm/loose-ends/issues/226) Ortserinnerungen: User Story,
-     Analyse und Entwurf in `docs/specs/feat-226-ortserinnerungen.md`, Produktfragen beantwortet; Schnitt 1 (Ort an der Aufgabe, `PlaceReminders.plan`) gebaut nach `docs/specs/feat-226-schnitt-1-ortsfeld.md`
+     Analyse und Entwurf in `docs/specs/feat-226-ortserinnerungen.md`, Produktfragen beantwortet; Schnitt 1 (Ort an der Aufgabe, `PlaceReminders.plan`) gebaut nach `docs/specs/feat-226-schnitt-1-ortsfeld.md`;
+     Schnitt 2a (Planung der Übergabe gegen doppelte Erinnerung, `PlaceDelivery.diff`, nur Unit-Nachweis, nichts Sichtbares) gebaut nach `docs/specs/feat-226-schnitt-2a-uebergabe.md`; nächster Schritt: Schnitt 2b (Systemanschluss, eigene Spec)
 6. [#27](https://github.com/henemm/loose-ends/issues/27) Abhängigkeiten über Private Cloud Compute (`blockedBy`)
 9. [#30](https://github.com/henemm/loose-ends/issues/30) Mac-Teilen-Erweiterung
 14. [#40](https://github.com/henemm/loose-ends/issues/40) Icon-Composer-Paket für das App-Icon (Liquid Glass mit Ebenen)
