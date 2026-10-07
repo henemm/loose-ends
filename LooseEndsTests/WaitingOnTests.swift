@@ -61,7 +61,9 @@ struct WaitingOnTests {
         #expect((hedge.blockedBy ?? []).map(\.id) == [gloves.id])
         #expect(shears.isOpen, "die andere Aufgabe bleibt bestehen")
         #expect(try store.context.fetch(FetchDescriptor<TaskItem>()).count == 3)
-        #expect(FieldCodec.decode(revision.oldValue) == ["Heckenschere holen", "Handschuhe kaufen"])
+        // Titelreihenfolge, nicht Verknüpfungsreihenfolge: SwiftData liefert die Beziehung nach dem
+        // Speichern in beliebiger Folge (main, Lauf 37616537324).
+        #expect(FieldCodec.decode(revision.oldValue) == ["Handschuhe kaufen", "Heckenschere holen"])
         #expect(FieldCodec.decode(revision.newValue) == ["Handschuhe kaufen"])
         #expect(WaitingOn.loosen(shears, from: hedge) == nil, "schon gelöst")
     }
