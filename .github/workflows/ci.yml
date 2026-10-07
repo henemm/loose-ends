@@ -113,6 +113,14 @@ jobs:
           xcodebuild -version || true
           xcrun simctl list runtimes || true
           xcrun simctl list devices available | grep "$SIM_UDID" || true
+      - name: Sample host load during the UI tests (#228)
+        run: |
+          # Every 20 s the busiest processes on the runner, one line per sample. The simulator's
+          # daemons run as host processes, so a hog inside the simulator shows up here too.
+          nohup bash -c 'while true; do
+            echo "$(date -u +%H:%M:%S) $(ps -A -o pcpu=,comm= | sort -rn | head -5 | awk "{n=split(\$2,p,\"/\"); printf \"%s%%:%s  \", \$1, p[n]}")"
+            sleep 20
+          done' > host-load.log 2>&1 &
       - name: Run UI smoke tests
         run: |
           set -o pipefail
@@ -160,8 +168,12 @@ jobs:
             echo "----- ui-smoke.log lines $start-$line"
             sed -n "${start},${line}p" ui-smoke.log
           done
-          # The system side of a timeout: test manager and accessibility on the simulator.
-          if grep -q "Timed out while evaluating UI query" ui-smoke.log; then
+          # Runner load around each failure (host-load.log, sampled every 20 s during the tests).
+          grep -n -E "error: -\[LooseEndsUITests" ui-smoke.log | cut -c1-220 || true
+          echo "----- host load (top 5 processes, %CPU), whole run"
+          cat host-load.log || true
+          # The system side of a timeout or a launch that never got a process.
+          if grep -q -E "Timed out while evaluating UI query|does not have a process ID" ui-smoke.log; then
             xcrun simctl spawn "$SIM_UDID" log show --style compact --last 3h \
               --predicate 'process == "testmanagerd" OR subsystem BEGINSWITH "com.apple.accessibility"' \
               > system-ui.log 2>&1 || true
@@ -202,4 +214,5 @@ jobs:
             ui-smoke.log
             watchdog.log
             system-ui.log
+            host-load.log
           if-no-files-found: warn
