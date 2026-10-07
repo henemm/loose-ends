@@ -102,36 +102,47 @@ private struct PlaceSearchSheet: View {
     let choose: (PlaceHit) -> Void
 
     @State private var query = ""
+    @FocusState private var searchFocused: Bool
     @State private var hits: [PlaceHit] = []
+    /// The query the current hits answer; "No places found." only shows once the search came back.
+    @State private var answered = ""
     @State private var failed = false
     private let search = PlaceSearch.current
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Place")
 
     var body: some View {
         NavigationStack {
-            List(hits) { hit in
-                Button {
-                    choose(hit)
-                    dismiss()
-                } label: {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(hit.name)
-                            .foregroundStyle(.primary)
-                        if let locality = hit.locality {
-                            Text(locality)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+            List {
+                // A plain field, not `.searchable`: it stays visible and focused from the start, and
+                // UI tests find it by identifier on every OS layout of the search bar.
+                TextField("Address or name", text: $query)
+                    .focused($searchFocused)
+                    .autocorrectionDisabled()
+                    .accessibilityIdentifier("placeSearchField")
+                ForEach(hits) { hit in
+                    Button {
+                        choose(hit)
+                        dismiss()
+                    } label: {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(hit.name)
+                                .foregroundStyle(.primary)
+                            if let locality = hit.locality {
+                                Text(locality)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
                         }
                     }
+                    .accessibilityIdentifier("placeHit_\(hit.id)")
                 }
-                .accessibilityIdentifier("placeHit_\(hit.id)")
-            }
-            .overlay {
-                if failed || (hits.isEmpty && query.count >= 2) {
-                    ContentUnavailableView("No places found.", systemImage: "mappin.slash")
+                if failed || (hits.isEmpty && !answered.isEmpty && answered == query.trimmingCharacters(in: .whitespacesAndNewlines)) {
+                    Text("No places found.")
+                        .foregroundStyle(.secondary)
+                        .accessibilityIdentifier("placeSearchEmpty")
                 }
             }
-            .searchable(text: $query, prompt: Text("Address or name"))
+            .onAppear { searchFocused = true }
             .task(id: query) { await run(query) }
             .navigationTitle("Place")
             #if os(iOS)
@@ -153,6 +164,7 @@ private struct PlaceSearchSheet: View {
         let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
         guard trimmed.count >= 2 else {
             hits = []
+            answered = ""
             failed = false
             return
         }
@@ -163,12 +175,14 @@ private struct PlaceSearchSheet: View {
         }
         do {
             hits = try await search.places(matching: trimmed)
+            answered = trimmed
             failed = false
         } catch is CancellationError {
             return
         } catch {
             Self.logger.error("Place search failed: \(error, privacy: .public)")
             hits = []
+            answered = trimmed
             failed = true
         }
     }

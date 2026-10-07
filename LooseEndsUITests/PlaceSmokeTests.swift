@@ -57,8 +57,9 @@ final class PlaceSmokeTests: XCTestCase {
         XCTAssertTrue(add.exists, "Detail should offer Add place")
         add.tap()
 
-        let search = app.searchFields.firstMatch
-        XCTAssertTrue(search.waitForExistence(timeout: 5), "The place sheet should open with a search field")
+        let search = element("placeSearchField", in: app)
+        if !search.waitForExistence(timeout: 5) { shot(app, "0-no-search-field") }
+        XCTAssertTrue(search.exists, "The place sheet should open with a search field")
         search.tap()
         search.typeText("Bau")
         let hit = element("placeHit_altona", in: app)

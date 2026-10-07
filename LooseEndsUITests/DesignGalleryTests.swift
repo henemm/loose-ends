@@ -154,7 +154,10 @@ final class DesignGalleryTests: XCTestCase {
             .firstMatch
         XCTAssertTrue(taxRow.waitForExistence(timeout: 10), "New shows no Steuerbescheid")
         taxRow.tap()
-        XCTAssertTrue(element("originSummary", in: app).waitForExistence(timeout: 5), "Detail shows no origin summary")
+        // Below the place section (#241) the summary can sit under the fold.
+        let summary = element("originSummary", in: app)
+        if !summary.waitForExistence(timeout: 3) { app.swipeUp() }
+        XCTAssertTrue(summary.waitForExistence(timeout: 5), "Detail shows no origin summary")
         shot(app, "gallery-\(label)-8-detail-origin")
         let dueRow = element("field_dueDate", in: app)
         XCTAssertTrue(dueRow.waitForExistence(timeout: 5), "Detail shows no due date")
