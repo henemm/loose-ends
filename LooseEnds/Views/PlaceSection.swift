@@ -3,16 +3,16 @@ import SwiftData
 import SwiftUI
 
 /// "Place" in the detail (#241, Schnitt 3a): one row with the place, arrive or leave, a grey line
-/// that says when it reminds, and a note when it cannot. Tapping the row searches for a place;
-/// swiping removes it. Every change is a user revision (`PlaceEditing`). Reminding itself comes
-/// with Schnitt 4; "current location", home and work with Schnitt 3b.
+/// that says when it reminds, and a note when it cannot. Tapping the row asks the detail for the
+/// place search; swiping removes it. Every change is a user revision (`PlaceEditing`). Reminding
+/// itself comes with Schnitt 4; "current location", home and work with Schnitt 3b.
 struct PlaceSection: View {
     @Environment(\.modelContext) private var modelContext
     /// Every task, for the 20-place ranking behind the "not watched" note.
     @Query private var allTasks: [TaskItem]
     let task: TaskItem
-
-    @State private var searching = false
+    /// The detail presents the search sheet; this section only asks for it.
+    @Binding var searching: Bool
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Detail")
 
     private static var isMac: Bool {
@@ -49,13 +49,6 @@ struct PlaceSection: View {
             Text("Place")
         } footer: {
             footer
-        }
-        .sheet(isPresented: $searching) {
-            PlaceSearchSheet { hit in
-                guard let place = hit.place(task.place?.event ?? .arrive) else { return }
-                PlaceEditing.set(place, on: task)
-                save("place")
-            }
         }
     }
 
@@ -97,7 +90,7 @@ struct PlaceSection: View {
 
 /// Search for an address or a business; one tap sets it and closes the sheet. Searches after 0.3 s
 /// of quiet and from two characters on, so typing does not fire a request per key.
-private struct PlaceSearchSheet: View {
+struct PlaceSearchSheet: View {
     @Environment(\.dismiss) private var dismiss
     let choose: (PlaceHit) -> Void
 

@@ -59,7 +59,7 @@ final class PlaceSmokeTests: XCTestCase {
 
         let search = element("placeSearchField", in: app)
         if !search.waitForExistence(timeout: 5) { shot(app, "0-no-search-field") }
-        XCTAssertTrue(search.exists, "The place sheet should open with a search field")
+        XCTAssertTrue(search.exists, "The place sheet should open with a search field. Screen: \(app.debugDescription.prefix(2500))")
         search.tap()
         search.typeText("Bau")
         let hit = element("placeHit_altona", in: app)

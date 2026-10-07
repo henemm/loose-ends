@@ -26,6 +26,8 @@ struct TaskDetailView: View {
     @State private var titleDraft = ""
     @FocusState private var titleFocused: Bool
     @State private var showsRevisions = false
+    /// Owned here, not by `PlaceSection`: a sheet on a section inside the list did not present (#241).
+    @State private var searchesPlace = false
     @State private var showsEmptyFields = false
     /// "Analyze again" (#34): running, or what it found, until the detail closes.
     @State private var reanalysis: Reanalysis?
@@ -137,7 +139,7 @@ struct TaskDetailView: View {
             }
             .paperRow()
 
-            PlaceSection(task: task)
+            PlaceSection(task: task, searching: $searchesPlace)
                 .paperRow()
 
             if task.parent == nil {
@@ -184,6 +186,13 @@ struct TaskDetailView: View {
         }
         .sheet(isPresented: $showsRevisions) {
             RevisionsSheet(task: task, contexts: contexts, projects: projects)
+        }
+        .sheet(isPresented: $searchesPlace) {
+            PlaceSearchSheet { hit in
+                guard let place = hit.place(task.place?.event ?? .arrive) else { return }
+                PlaceEditing.set(place, on: task)
+                save("place")
+            }
         }
     }
 
