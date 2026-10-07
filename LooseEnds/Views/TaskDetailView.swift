@@ -26,6 +26,8 @@ struct TaskDetailView: View {
     @State private var titleDraft = ""
     @FocusState private var titleFocused: Bool
     @State private var showsRevisions = false
+    /// Owned here, not by `PlaceSection`: a sheet on a section inside the list did not present (#241).
+    @State private var searchesPlace = false
     @State private var showsEmptyFields = false
     /// "Add to calendar" (#203): what the sheet still asks, nil while closed.
     @State private var calendarGaps: CalendarAsk.Gaps?
@@ -160,6 +162,9 @@ struct TaskDetailView: View {
             }
             .paperRow()
 
+            PlaceSection(task: task, searching: $searchesPlace)
+                .paperRow()
+
             if task.parent == nil {
                 SubtasksSection(task: task)
                     .paperRow()
@@ -204,6 +209,13 @@ struct TaskDetailView: View {
         }
         .sheet(isPresented: $showsRevisions) {
             RevisionsSheet(task: task, contexts: contexts, projects: projects)
+        }
+        .sheet(isPresented: $searchesPlace) {
+            PlaceSearchSheet { hit in
+                guard let place = hit.place(task.place?.event ?? .arrive) else { return }
+                PlaceEditing.set(place, on: task)
+                save("place")
+            }
         }
         .sheet(item: $calendarGaps) { gaps in
             CalendarAskSheet(gaps: gaps, existingStart: task.dueHasTime ? task.dueDate : nil) { answer in
