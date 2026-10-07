@@ -77,6 +77,7 @@ enum FieldCodec {
         case .place:
             task.place = decodePlace(encoded)
             task.placeSourceRaw = task.place == nil ? nil : sourceRaw
+            task.placeRemindedAt = nil   // a new place is a new reminder (#226)
         case .blockedBy:
             break
         }

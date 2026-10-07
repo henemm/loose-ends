@@ -11,7 +11,8 @@ workflow: feat-226-ortserinnerungen
 
 ## Approval
 
-- [ ] Approved (Henning)
+- [ ] Approved (Henning), gilt für Teil B (Gerätestufe)
+- [x] Teil A: Tech-Lead-Entscheidung 2026-10-07 (Henning: technische Fragen entscheidet der Tech Lead; die Produktvorgabe „einmal, dann nicht mehr“ steht in F3)
 
 ## Purpose
 

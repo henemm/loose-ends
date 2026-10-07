@@ -22,11 +22,21 @@ enum PlaceReminders {
         let unwatched: [UUID]
     }
 
+    /// Records that the place reminded, so the next plan leaves it out (once, then not again). Returns
+    /// false when the task no longer exists. A second call keeps the first time.
+    @discardableResult
+    static func markDelivered(taskID: UUID, in tasks: [TaskItem], now: Date = Date()) -> Bool {
+        guard let task = tasks.first(where: { $0.id == taskID }) else { return false }
+        if task.placeRemindedAt == nil { task.placeRemindedAt = now }
+        return true
+    }
+
     /// Next up first (by its order), then by due date, then the newest; the id breaks ties so every
-    /// run yields the same list. Parked and completed tasks do not remind.
+    /// run yields the same list. Parked and completed tasks do not remind, nor do places that already
+    /// reminded (`placeRemindedAt`).
     static func plan(for tasks: [TaskItem]) -> Plan {
         let ranked = tasks
-            .filter { $0.isOpen && $0.place != nil }
+            .filter { $0.isOpen && $0.place != nil && $0.placeRemindedAt == nil }
             .sorted(by: ranksBefore)
         let watched = ranked.prefix(limit).compactMap { task in
             task.place.map { Reminder(taskID: task.id, title: task.displayTitle, place: $0) }
