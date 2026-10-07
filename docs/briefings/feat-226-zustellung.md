@@ -1,6 +1,6 @@
 ---
 spec_file: docs/specs/feat-226-schnitt-2a-uebergabe.md
-spec_sha256: d96e83f9890e1e668eb5a4161faf6feee26d44018bfeb1b4662684edf3b02d04
+spec_sha256: ccacfcc340d65b6617ff7d3b5e755f8446b8cb630c4513803fce6271774a4adb
 ---
 
 # PO-Briefing: feat-226-zustellung
@@ -11,22 +11,22 @@ spec_sha256: d96e83f9890e1e668eb5a4161faf6feee26d44018bfeb1b4662684edf3b02d04
 
 ## Was gebaut wird
 
-Intern wird geplant, welche Ortserinnerungen dem System übergeben werden, damit keine doppelt erinnert; nichts Sichtbares.
+Die App merkt sich je Gerät übergebene Ortserinnerungen, damit keine Aufgabe doppelt erinnert.
 
 ## Definition of Done
 
-Neue Planungsfunktion samt Tests läuft grün, bestehende Tests bleiben grün; in der App ändert sich nichts.
+Neue Tests zu allen Planungsregeln und alle bisherigen Tests sind grün; in der App ändert sich nichts Sichtbares.
 
 ## Wie geprüft wird
 
-Unit-Tests belegen die Rechenregeln, nicht dass das iPhone wirklich erinnert; Systemanschluss und Gerätenachweis folgen erst in 2b.
+Tests belegen die Planungsregeln mit echten Aufgaben; ob das System wirklich erinnert, zeigt erst Schnitt 2b.
 
 ## Kritische Anmerkungen
 
-- Ticket-DoD (Erinnerung auf dem Gerät nachgewiesen) erst mit 2b erfüllbar; 2a allein bringt Nutzern nichts.
+- Widerspruch: Entwurf #242 braucht einen Zustellvermerk an der Aufgabe, den das System laut Recherche nicht meldet.
 - Annahme „nicht mehr offen heißt ausgelöst“ ist unbelegt; verliert das System eine Anfrage, bleibt die Aufgabe stumm.
-- Aufgabe über Rang 20 hinaus erinnert nach Rückkehr erneut; zwei Kriterien haben keinen eigenen Test.
+- Ticket-Ziel „auf dem Gerät nachgewiesen“ bleibt offen; Nutzen entsteht erst mit Schnitt 2b.
 
 ## Freigabe-Frage
 
-Gibst du den unsichtbaren Zwischenschritt 2a frei, obwohl Ortserinnerungen erst nach Schnitt 2b wirklich funktionieren?
+Gibst du den unsichtbaren Schnitt 2a frei, obwohl Entwurf #242 danach neu geschrieben werden muss?

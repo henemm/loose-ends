@@ -189,55 +189,55 @@ was das System danach tut.
   Fingerabdrucks): Wer nur den Anzeigenamen ändert, bekommt die Erinnerung erneut. Das ist harmlos und
   einfacher als zwei Fingerabdrücke.
 
-## Akzeptanzkriterien
+## Acceptance Criteria
 
 Jedes Kriterium ist ein Unit-Test mit echten `TaskItem` und `PlaceReminders.plan` als Eingabe.
 
-1. **Neue Ortsaufgabe wird übergeben:** Given eine aktive Aufgabe mit Ort, leere Merkliste, keine offene
+- **AC-1:** **Neue Ortsaufgabe wird übergeben:** Given eine aktive Aufgabe mit Ort, leere Merkliste, keine offene
    Anfrage, Freigabe da / When `diff` läuft / Then enthält `add` genau diese Aufgabe, und die neue Merkliste
    hat einen Eintrag mit Fingerabdruck und Titel.
-2. **Zweite Änderung erzeugt keine zweite Erinnerung:** Given derselbe Stand wie in 1, die Anfrage ist
+- **AC-2:** **Zweite Änderung erzeugt keine zweite Erinnerung:** Given derselbe Stand wie in 1, die Anfrage ist
    inzwischen nicht mehr offen (ausgelöst), der Eintrag steht in der Merkliste / When die Aufgabe geändert
    wurde (z. B. eine Notiz) und `diff` läuft / Then ist `add` leer, und der Eintrag bleibt.
-3. **Offene Anfrage bleibt in Ruhe:** Given Eintrag mit gleichem Fingerabdruck und gleichem Titel, Anfrage
+- **AC-3:** **Offene Anfrage bleibt in Ruhe:** Given Eintrag mit gleichem Fingerabdruck und gleichem Titel, Anfrage
    offen / When `diff` läuft / Then sind `add`, `remove` und `updateContent` leer und die Merkliste
    unverändert.
-4. **Anderer Ort ersetzt die Anfrage:** Given offene Anfrage und Eintrag / When Koordinate oder Ereignis
+- **AC-4:** **Anderer Ort ersetzt die Anfrage:** Given offene Anfrage und Eintrag / When Koordinate oder Ereignis
    geändert werden (und einmal nur der Name) / Then steht der Bezeichner in `remove` **und** die Aufgabe
    in `add`, und der Eintrag trägt den neuen Fingerabdruck. War die Anfrage nicht mehr offen, entsteht
    nur `add`.
-5. **Wiederkehrende Aufgabe ist nach dem Abhaken wieder scharf:** Given wiederkehrende Aufgabe (wöchentlich)
+- **AC-5:** **Wiederkehrende Aufgabe ist nach dem Abhaken wieder scharf:** Given wiederkehrende Aufgabe (wöchentlich)
    mit Ort, ausgelöste Anfrage, Eintrag / When `TaskActions.complete` das `dueDate` weitergerückt hat /
    Then enthält `add` die Aufgabe. Given eine **nicht** wiederkehrende Aufgabe, deren `dueDate` sich ändert
    / Then bleibt der Fingerabdruck gleich und `add` ist leer.
-6. **Ausgefallene Aufgabe wird zurückgenommen, zurückgekehrte erinnert wieder:** Given Eintrag und offene
+- **AC-6:** **Ausgefallene Aufgabe wird zurückgenommen, zurückgekehrte erinnert wieder:** Given Eintrag und offene
    Anfrage / When die Aufgabe erledigt, geparkt oder ihr Ort entfernt wird, oder sie bei 21 offenen
    Aufgaben auf Rang 21 fällt / Then steht ihr Bezeichner in `remove` (nur wenn offen) und der Eintrag
    fehlt in der neuen Merkliste. When sie wiederhergestellt wird / Then steht sie wieder in `add`.
-7. **Titeländerung ersetzt nur den Inhalt:** Given Eintrag, Anfrage offen / When der Titel sich ändert /
+- **AC-7:** **Titeländerung ersetzt nur den Inhalt:** Given Eintrag, Anfrage offen / When der Titel sich ändert /
    Then steht die Aufgabe in `updateContent`, `add` und `remove` sind leer, der Eintrag trägt den neuen
    Titel. Given die Anfrage ist nicht mehr offen / Then sind alle drei Listen leer und der Eintrag bleibt
    unverändert.
-8. **Ohne Freigabe kommt nichts an, geht nichts verloren:** Given `authorized == false`, Aufgabe mit Ort,
+- **AC-8:** **Ohne Freigabe kommt nichts an, geht nichts verloren:** Given `authorized == false`, Aufgabe mit Ort,
    keine Anfrage / When `diff` läuft / Then sind `add` und `updateContent` leer und kein Eintrag wurde
    hinzugefügt. When danach `authorized == true` / Then steht die Aufgabe in `add`. Given `authorized ==
    false` und eine erledigte Aufgabe mit offener Anfrage / Then steht ihr Bezeichner trotzdem in `remove`.
-9. **Bezeichner bleibt `place_<uuid>`:** Given eine Aufgabe im Plan / When `diff` läuft / Then entspricht
+- **AC-9:** **Bezeichner bleibt `place_<uuid>`:** Given eine Aufgabe im Plan / When `diff` läuft / Then entspricht
    jeder Bezeichner in `add` und `remove` `"place_" + id.uuidString`, und `git diff` zeigt keine Änderung
    an `Shared/Notifications/PlaceReminders.swift`.
-10. **Verwaiste Anfragen verschwinden:** Given eine offene Anfrage `place_<uuid>` ohne Aufgabe im Plan und
+- **AC-10:** **Verwaiste Anfragen verschwinden:** Given eine offene Anfrage `place_<uuid>` ohne Aufgabe im Plan und
     ohne Eintrag, und eine offene Anfrage `due_<uuid>` / When `diff` läuft / Then steht nur die
     `place_`-Anfrage in `remove`.
-11. **Neuinstallation erzeugt keine Doppelanlage:** Given Merkliste leer, Aufgabe im Plan, ihre Anfrage ist
+- **AC-11:** **Neuinstallation erzeugt keine Doppelanlage:** Given Merkliste leer, Aufgabe im Plan, ihre Anfrage ist
     offen / When `diff` läuft / Then ist `add` leer und die neue Merkliste hat den Eintrag. Given dieselbe
     Aufgabe ohne offene Anfrage / Then steht sie in `add`.
-12. **Stabil:** Given dieselbe Eingabe / When `diff` zweimal läuft, und einmal mit umgekehrter
+- **AC-12:** **Stabil:** Given dieselbe Eingabe / When `diff` zweimal läuft, und einmal mit umgekehrter
     Reihenfolge der Aufgaben / Then sind alle Ergebnisse gleich (alle Listen sortiert), und der
     `Handover` kodiert zu byte-gleichem JSON.
-13. **Fingerabdruck ohne Kollision:** Given zwei Orte, die sich in der sechsten Nachkommastelle
+- **AC-13:** **Fingerabdruck ohne Kollision:** Given zwei Orte, die sich in der sechsten Nachkommastelle
     unterscheiden / Then gleicher Fingerabdruck; Given ein Name mit `|` darin / Then bleibt der
     Fingerabdruck von einem Ort mit anderen Feldern verschieden.
-14. **Regression:** Given `./scripts/sim.sh unit` / Then bleiben alle bestehenden Tests grün
+- **AC-14:** **Regression:** Given `./scripts/sim.sh unit` / Then bleiben alle bestehenden Tests grün
     (`PlaceReminders`, `DueReminders` unverändert).
 
 ## Tests
@@ -350,3 +350,5 @@ um. Eine ADR entstünde erst, wenn Alternative C (ADR-Antwort 14) gekippt würde
 
 - 2026-10-07: Entwurf. Schnitt 2a der Zustellung aus `docs/context/feat-226-zustellung.md`
   (Alternative A: Merkliste je Gerät); Systemanschluss als Schnitt 2b ausgegliedert.
+- 2026-10-07: Abschnitt „Akzeptanzkriterien“ in `## Acceptance Criteria` mit `AC-N`-Einträgen umgestellt
+  (Format, das die Schreibsperre verlangt). Inhalt unverändert.

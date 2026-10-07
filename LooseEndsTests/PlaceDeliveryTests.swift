@@ -7,8 +7,8 @@ import Testing
 @Suite("PlaceDelivery (#226)") struct PlaceDeliveryTests {
     private let start = Date(timeIntervalSince1970: 1_790_000_000)
 
-    private func place(_ name: String = "Bauhaus", latitude: Double = 53.55, event: TaskPlace.Event = .arrive) throws -> TaskPlace {
-        try #require(TaskPlace(name: name, latitude: latitude, longitude: 9.93, event: event))
+    private func place(_ name: String = "Bauhaus", latitude: Double = 53.55, longitude: Double = 9.93, event: TaskPlace.Event = .arrive) throws -> TaskPlace {
+        try #require(TaskPlace(name: name, latitude: latitude, longitude: longitude, event: event))
     }
 
     private func task(_ raw: String = "Dübel kaufen", minutesAfterStart: Double = 0) throws -> TaskItem {
@@ -135,7 +135,7 @@ import Testing
     @MainActor func droppedTaskIsWithdrawn() throws {
         let store = try TestStore()
         let task = try task()
-        let other = try task("Anderes", minutesAfterStart: 1)
+        let other = try self.task("Anderes", minutesAfterStart: 1)
         store.context.insert(task)
         store.context.insert(other)
         let first = handedOver([task, other])
@@ -297,6 +297,10 @@ import Testing
         let base = try place(latitude: 53.550001)
         let near = try place(latitude: 53.550004)
         #expect(fingerprint(base) == fingerprint(near))
+
+        // F001: values that round to zero must not keep their sign (prime meridian, equator).
+        #expect(fingerprint(try place(longitude: -0.000001)) == fingerprint(try place(longitude: 0.000001)))
+        #expect(fingerprint(try place(latitude: -0.000004)) == fingerprint(try place(latitude: 0.000004)))
 
         let tricky = try place("arrive|53.55000|9.93000|-|Bauhaus")
         #expect(fingerprint(tricky) != fingerprint(try place("Bauhaus")))

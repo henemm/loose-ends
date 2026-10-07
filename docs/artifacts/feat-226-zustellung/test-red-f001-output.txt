@@ -1,0 +1,41 @@
+[0;34m[sim][0m Unit-Tests (macOS): LooseEndsTests/PlaceDeliveryTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (4 targets)
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceDeliveryTests.swift
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-macos.swiftsourceinfo -> LooseEndsTests.swiftsourceinfo
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-macos.swiftmodule -> LooseEndsTests.swiftmodule
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-macos.abi.json -> LooseEndsTests.abi.json
+[[36mLooseEndsTests[0m] [1mLinking[0m LooseEndsTests
+[[36mLooseEndsTests[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+Test Suite 'Selected tests' started at 2026-10-07 09:50:02.636.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-07 09:50:02.636.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-07 09:50:02.636.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+[1mTest run started.[0m
+Suite "PlaceDelivery (#226)" started
+    [32m✔[0m "A new task with a place is handed over and noted" (0.003 seconds)
+    [32m✔[0m "A second change to a task that already reminded does not remind again" (0.002 seconds)
+    [32m✔[0m "An open request stays untouched" (0.002 seconds)
+    [32m✔[0m "A different place or event replaces the request, a different name too; a fired one is only handed over again" (0.002 seconds)
+    [32m✔[0m "A repeating task is armed again once ticking it off has moved it on; a one-off ignores its due date" (0.002 seconds)
+    [32m✔[0m "A task that drops out of the plan is withdrawn; one that comes back reminds again" (0.002 seconds)
+    [32m✔[0m "Rank 21 drops out of the watched places, the entry and the request go with it" (0.003 seconds)
+    [32m✔[0m "A changed title only replaces the content of an open request; a fired one is left alone" (0.002 seconds)
+    [32m✔[0m "Without authorization nothing is handed over or noted, so it arrives once granted; withdrawing still runs" (0.002 seconds)
+    [32m✔[0m "Identifiers keep the place_ prefix and the task id" (0.002 seconds)
+    [32m✔[0m "Orphaned place requests disappear, other kinds are never touched" (0.001 seconds)
+    [32m✔[0m "A reinstall with an empty list does not create the request twice" (0.002 seconds)
+    [32m✔[0m "The same input yields the same changes whatever the order, and the list encodes byte-identical" (0.002 seconds)
+    [33m⚠️[0m  Test "The fingerprint ignores the sixth decimal and cannot be fooled by a separator in the name" recorded an issue at PlaceDeliveryTests.swift:302:9: Expectation failed: fingerprint(try place(longitude: -0.000001)) == fingerprint(try place(longitude: 0.000001))
+    [33m⚠️[0m  Test "The fingerprint ignores the sixth decimal and cannot be fooled by a separator in the name" recorded an issue at PlaceDeliveryTests.swift:303:9: Expectation failed: fingerprint(try place(latitude: -0.000004)) == fingerprint(try place(latitude: 0.000004))
+    [31m✖[0m [31m"The fingerprint ignores the sixth decimal and cannot be fooled by a separator in the name" (0.002 seconds) 2 issue(s)[0m
+Suite "PlaceDelivery (#226)" failed after 0.034 seconds with 2 issue(s)
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.10.07_09-49-57-+0200.xcresult
+[36;1mTesting started[0m
