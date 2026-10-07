@@ -14,7 +14,7 @@ sind daher meist nur Zeitverlust.
 
 | Bereich | Was | Wo |
 |---------|-----|----|
-| Erfassung | Textfeld, Live-Spracherkennung mit Wellenform, Control Center, Siri-Intent, Watch-Diktat, Teilen-Menü (iOS) | `LooseEnds/Views/CaptureView.swift`, `LooseEnds/Speech`, `Shared/Intents`, `LooseEndsShare` |
+| Erfassung | Textfeld, Live-Spracherkennung mit Wellenform (nur auf dem Gerät über `SpeechAnalyzer`, fehlendes Sprachmodell auf Tipp „Laden“ mit Fortschritt, #64), Control Center, Siri-Intent, Watch-Diktat, Teilen-Menü (iOS) | `LooseEnds/Views/CaptureView.swift`, `LooseEnds/Speech`, `Shared/Intents`, `LooseEndsShare` |
 | Veredelung | Foundation Models auf dem Gerät, Schwelle 0,6, je Feld eine KI-Revision, Nachzügler-Lauf | `Shared/Enrichment` |
 | Ansichten | Als nächstes, Neu, Fällig, Schnell, Alt, Wartet, Wiederkehrend, Geparkt, Erledigt, Kontext, Projekt | `Shared/Models/ViewRules.swift`, `LooseEnds/Views/SidebarView.swift` |
 | Liste | Wisch rechts/links, Erledigt drei Sekunden abbrechbar per Tipp auf die Zeile („Undo“, #32), Halten-Menü mit Verschieben (Morgen, Wochenende, nächste Woche, frei gewähltes Datum, #33), Parken, Löschen; Merkmalzeile; Drag-Sortierung in Als nächstes; Alt mit Alter und Verschiebungen; Erledigt nach Tagen; Projekt mit eingeklappten Unteraufgaben, per Pfeil aufklappbar und abhakbar (#28) | `LooseEnds/Views/TaskListView.swift`, `TaskRow.swift`, `Shared/Services/TaskActions.swift`, `PendingCompletions.swift` |
@@ -131,7 +131,8 @@ Ansichten gebaut werden, laufen diese Spikes, in dieser Reihenfolge:
    - Vorbedingung [#225](https://github.com/henemm/loose-ends/issues/225): Siris Link, Markierung und Tags
      (`Shared/Services/SiriFields.swift`), mehrere Links oder ein unbekanntes Tag werden vor dem Speichern abgelehnt
    - Vorbedingung [#226](https://github.com/henemm/loose-ends/issues/226) Ortserinnerungen: User Story,
-     Analyse und Entwurf in `docs/specs/feat-226-ortserinnerungen.md`, Produktfragen beantwortet; Schnitt 1 (Ort an der Aufgabe, `PlaceReminders.plan`) gebaut nach `docs/specs/feat-226-schnitt-1-ortsfeld.md`
+     Analyse und Entwurf in `docs/specs/feat-226-ortserinnerungen.md`, Produktfragen beantwortet; Schnitt 1 (Ort an der Aufgabe, `PlaceReminders.plan`) gebaut nach `docs/specs/feat-226-schnitt-1-ortsfeld.md`;
+     Schnitt 2a (Planung der Übergabe gegen doppelte Erinnerung, `PlaceDelivery.diff`, nur Unit-Nachweis, nichts Sichtbares) gebaut nach `docs/specs/feat-226-schnitt-2a-uebergabe.md`; nächster Schritt: Schnitt 2b (Systemanschluss, eigene Spec)
 6. [#27](https://github.com/henemm/loose-ends/issues/27) Abhängigkeiten über Private Cloud Compute (`blockedBy`)
 9. [#30](https://github.com/henemm/loose-ends/issues/30) Mac-Teilen-Erweiterung
 14. [#40](https://github.com/henemm/loose-ends/issues/40) Icon-Composer-Paket für das App-Icon (Liquid Glass mit Ebenen)

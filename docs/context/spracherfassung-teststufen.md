@@ -18,7 +18,9 @@ Am 2026-09-19 im App-Prozess gemessen:
 
 Im Simulator liegen **für keine Sprache** Erkennungsmodelle. Die alte Schnittstelle behauptet
 trotzdem „verfügbar" und „auf dem Gerät möglich" — beides unwahr — und scheitert dann beim Start
-mit `kLSRErrorDomain 300`. Die neue meldet ehrlich null Sprachen.
+mit `kLSRErrorDomain 300`. Die neue meldet ehrlich null Sprachen. Seit #64 benutzt die App nur noch
+die neue: Im Simulator zeigt die Erfassung deshalb sofort „Spracherkennung gibt es für diese Sprache
+nicht“.
 
 **Folge für dieses Konzept:** Die Stufen 0 bis 4 sind im Simulator nicht aussagekräftig. Sie
 gehören auf ein echtes Gerät. Was im Simulator bleibt, ist alles, was ohne Erkennung prüfbar ist:
@@ -58,6 +60,9 @@ genügt; es geht nicht um Inhalt, sondern darum, dass überhaupt Puffer fließen
 Ton ankommt — die Erkennung aber nicht lief.
 **Falle aus der Recherche:** Ein Format-Fehler gibt *keinen* Fehler, sondern stumm nichts. Deshalb
 wird die Umwandlung hier eigens geprüft.
+**Seit #64 (iOS 27):** Die Umwandlung macht `AnalyzerInputConverter` aus dem SDK, und der wirft bei
+falschem Format. Die App beendet das Zuhören dann sichtbar; das Protokoll `Speech` meldet
+„Stufe 3 — Umwandlung gescheitert“ oder „Ton kommt an: … umgewandelt“.
 
 ## Stufe 4 — Erkennung mit Datei (der eigentliche Beweis)
 Eine mitgelieferte Audiodatei mit bekanntem Satz durch den Analyzer schicken und den Text
