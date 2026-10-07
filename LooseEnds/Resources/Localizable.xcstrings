@@ -218,6 +218,17 @@
     "Loading speech model … %@" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Sprachmodell wird geladen … %@" } } } },
     "Speech recognition is not available for this language. You can type instead." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Spracherkennung gibt es für diese Sprache nicht. Du kannst stattdessen tippen." } } } },
     "The speech model could not be loaded. You can type instead." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Das Sprachmodell ließ sich nicht laden. Du kannst stattdessen tippen." } } } },
+    "Add place" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ort hinzufügen" } } } },
+    "Remove" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Entfernen" } } } },
+    "Remind" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erinnern" } } } },
+    "Arrive" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ankommen" } } } },
+    "Leave" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Verlassen" } } } },
+    "Reminds you when you arrive." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erinnert, wenn du ankommst." } } } },
+    "Reminds you when you leave." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erinnert, wenn du gehst." } } } },
+    "Not watched right now: more than 20 places are open." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Wird gerade nicht überwacht: mehr als 20 Orte offen." } } } },
+    "Reminds you on iPhone and Watch." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erinnert auf iPhone und Watch." } } } },
+    "No places found." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Keine Orte gefunden." } } } },
+    "Address or name" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Adresse oder Name" } } } },
     "Shown" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Angezeigt" } } } },
     "Hidden" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ausgeblendet" } } } }
   }

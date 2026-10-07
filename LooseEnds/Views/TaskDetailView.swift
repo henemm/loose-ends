@@ -137,6 +137,9 @@ struct TaskDetailView: View {
             }
             .paperRow()
 
+            PlaceSection(task: task)
+                .paperRow()
+
             if task.parent == nil {
                 SubtasksSection(task: task)
                     .paperRow()

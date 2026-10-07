@@ -93,7 +93,7 @@ struct TaskRow: View {
         }
     }
 
-    /// Ranked: waiting, due, duration, subtasks, context, person. The first three win.
+    /// Ranked: waiting, due, place, duration, subtasks, context, person. The first three win.
     private var traits: [Trait] {
         let unseen = task.hasUnseenAutomaticRevisions
         var all: [Trait] = []
@@ -109,6 +109,9 @@ struct TaskRow: View {
                 tinted: unseen && FieldSource.isAutomatic(task.dueSourceRaw),
                 red: task.isOpen && due < tomorrow
             ))
+        }
+        if let place = task.place {
+            all.append(Trait(id: "place", text: place.name, symbol: "location"))
         }
         if let duration = task.duration {
             all.append(Trait(id: "duration", text: FieldFormatting.duration(duration), symbol: "clock", tinted: unseen && FieldSource.isAutomatic(task.durationSourceRaw)))
