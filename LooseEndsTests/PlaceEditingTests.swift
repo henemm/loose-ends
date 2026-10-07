@@ -21,13 +21,14 @@ import Testing
         let task = TaskItem(rawText: "Dübel kaufen")
         store.context.insert(task)
 
-        let revision = try #require(PlaceEditing.set(try place(), on: task))
+        let bauhaus = try place()
+        let revision = try #require(PlaceEditing.set(bauhaus, on: task))
 
-        #expect(task.place == (try place()))
+        #expect(task.place == bauhaus)
         #expect(task.placeSourceRaw == FieldSource.user.rawValue)
         #expect(revision.author == .user)
         #expect(revision.oldValue == nil)
-        #expect(PlaceEditing.set(try place(), on: task) == nil)
+        #expect(PlaceEditing.set(bauhaus, on: task) == nil)
         #expect(revisions(task).count == 1)
     }
 
@@ -40,9 +41,10 @@ import Testing
 
         PlaceEditing.set(try place(), on: task)
         let revision = try #require(PlaceEditing.setEvent(.depart, on: task))
+        let leaving = try place(event: .depart)
 
-        #expect(task.place == (try place(event: .depart)))
-        #expect(revision.newValue == FieldCodec.encode(try place(event: .depart)))
+        #expect(task.place == leaving)
+        #expect(revision.newValue == FieldCodec.encode(leaving))
         #expect(PlaceEditing.setEvent(.depart, on: task) == nil)
         #expect(revisions(task).count == 2)
     }
@@ -54,13 +56,14 @@ import Testing
         store.context.insert(task)
         #expect(PlaceEditing.remove(from: task) == nil)
 
-        PlaceEditing.set(try place(), on: task)
+        let bauhaus = try place()
+        PlaceEditing.set(bauhaus, on: task)
         let revision = try #require(PlaceEditing.remove(from: task))
 
         #expect(task.place == nil)
         #expect(task.placeSourceRaw == nil)
         #expect(revision.newValue == nil)
-        #expect(revision.oldValue == FieldCodec.encode(try place()))
+        #expect(revision.oldValue == FieldCodec.encode(bauhaus))
         #expect(revisions(task).count == 2)
     }
 
