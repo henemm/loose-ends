@@ -126,6 +126,8 @@ class Workflows(unittest.TestCase):
         self.assertGreater(names.index(settle["name"]), names.index(step_named(job, "Wait until the simulator")["name"]))
         self.assertLess(names.index(settle["name"]), names.index("Run UI smoke tests"))
         self.assertIn("-parallel-testing-enabled NO", step_named(job, "Run UI smoke tests")["run"])
+        self.assertIn("com.apple.PosterBoard", settle["run"])
+        self.assertIn("|| true", settle["run"], "Jeder Abschaltversuch darf scheitern")
 
 
 class PickSimulator(unittest.TestCase):
