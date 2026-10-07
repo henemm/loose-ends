@@ -19,6 +19,7 @@ struct LooseEndsApp: App {
         notifications = DueNotificationCenter(container: container)
         notifications.activate()
         calendar = CalendarBridge(container: container)
+        if ModelContainerFactory.isUITesting { MainThreadWatchdog.start() }
     }
 
     /// The design gallery (#182) asks for dark mode by launch argument: the device-wide switch
