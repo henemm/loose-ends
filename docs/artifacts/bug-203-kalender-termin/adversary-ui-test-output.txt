@@ -1,0 +1,46 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: CalendarTargetTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEnds[0m] [1mCompiling[0m CalendarBridge.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ContentView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskListView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CaptureView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m LooseEndsApp.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskDetailView.swift
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEnds.abi.json
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEnds.swiftmodule
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+[[36mLooseEndsUITests[0m] [1mCompiling[0m CalendarTargetTests.swift
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsUITests.abi.json
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds.debug.dylib
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEnds' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds
+[[36mLooseEnds[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsTests.abi.json
+[[36mLooseEndsTests[0m] [1mLinking[0m LooseEndsTests
+[[36mLooseEndsTests[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEndsUITests[0m] [1mLinking[0m LooseEndsUITests
+[[36mLooseEndsUITests[0m] [1mExtract App Intents Metadata[0m
+Test Suite 'Selected tests' started at 2026-10-06 19:34:41.240.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-06 19:34:41.242.
+Test Suite 'CalendarTargetTests' started at 2026-10-06 19:34:41.243.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CalendarTargetTests testSwitchOnShowsTargetCalendar] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    10.49s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    11.51s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testSwitchOnShowsTargetCalendar ([31m34.932[0m seconds)
+Executed 1 test, with 0 failures (0 unexpected) in 34.932 (34.941) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-06 19:35:16.192.
+Executed 1 test, with 0 failures (0 unexpected) in 34.932 (34.950) seconds
+Executed 1 test, with 0 failures (0 unexpected) in 34.932 (34.960) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.10.06_19-34-27-+0200.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden.

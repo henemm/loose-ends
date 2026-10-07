@@ -1,0 +1,31 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: CalendarTargetTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEndsTests[0m] [1mCompiling[0m CalendarSyncTests.swift
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsTests.swiftsourceinfo
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsTests.abi.json
+[[36mLooseEndsTests[0m] [1mLinking[0m LooseEndsTests
+[[36mLooseEndsTests[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEndsUITests[0m] [1mLinking[0m LooseEndsUITests
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+[[36mLooseEndsUITests[0m] [1mExtract App Intents Metadata[0m
+Test Suite 'Selected tests' started at 2026-10-06 18:01:57.184.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-06 18:01:57.187.
+Test Suite 'CalendarTargetTests' started at 2026-10-06 18:01:57.187.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CalendarTargetTests testSwitchOnShowsTargetCalendar] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    11.47s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    12.50s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [31m✖[0m testSwitchOnShowsTargetCalendar, XCTAssertTrue failed - The detail should name the calendar the event goes to
+Executed 1 test, with 1 failure (0 unexpected) in 49.695 (49.700) seconds
+Test Suite 'LooseEndsUITests.xctest' failed at 2026-10-06 18:02:46.896.
+Executed 1 test, with 1 failure (0 unexpected) in 49.695 (49.709) seconds
+Executed 1 test, with 1 failure (0 unexpected) in 49.695 (49.712) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.10.06_18-01-44-+0200.xcresult
+[36;1mTesting started[0m

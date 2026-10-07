@@ -1,16 +1,26 @@
+import CoreGraphics
 import EventKit
 import Foundation
 import OSLog
 import SwiftData
 
-/// EventKit for `CalendarSync`: one event per task in the app's own "Loose Ends" calendar. The
-/// app never reads or touches other calendars; full access is only needed so it can refresh and
-/// remove its own events. Asks for access the first time a task wants to be shown, and stays
-/// silent under tests, where a permission prompt would block the run.
+/// EventKit for `CalendarSync`: one event per task in the app's own "Loose Ends" calendar, created
+/// in the first account that allows it (#203). The app never reads or touches other calendars;
+/// full access is only needed so it can refresh and remove its own events. Asks for access the
+/// first time a task wants to be shown, and stays silent under tests, where a permission prompt
+/// would block the run.
 @Observable
 @MainActor
 final class CalendarBridge {
-    private(set) var accessDenied = false
+    /// What went wrong on the last sync; cleared by the next one that succeeds.
+    private(set) var problem: CalendarSync.Problem?
+    /// The calendar events go to, once a sync has found or created it.
+    private(set) var target: Target?
+
+    struct Target {
+        let title: String
+        let color: CGColor
+    }
 
     @ObservationIgnored private let container: ModelContainer
     @ObservationIgnored private let store = EKEventStore()
@@ -18,8 +28,11 @@ final class CalendarBridge {
     private static let calendarKey = "calendarIdentifier"
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Calendar")
 
+    /// The calendar UI test (#203) lets the bridge run against the simulator's calendar while the
+    /// store stays in memory.
     private static var suppressed: Bool {
-        ModelContainerFactory.isRunningTests || ModelContainerFactory.isUITesting
+        ModelContainerFactory.isRunningTests
+            || (ModelContainerFactory.isUITesting && !ProcessInfo.processInfo.arguments.contains("--ui-testing-calendar"))
     }
 
     init(container: ModelContainer) {
@@ -53,6 +66,7 @@ final class CalendarBridge {
             let quickChanges = CalendarSync.changes(in: tasks)
             guard !quickChanges.isEmpty || alreadyAuthorized, await ensureAccess() else { return }
             let calendar = try appCalendar()
+            target = Target(title: calendar.title, color: calendar.cgColor)
             let changes = CalendarSync.changes(in: tasks, knownEventIDs: knownEventIDs(in: calendar))
 
             for id in changes.removeOrphaned {
@@ -86,34 +100,40 @@ final class CalendarBridge {
             if context.hasChanges {
                 try context.save()
             }
+            problem = nil
         } catch {
             Self.logger.error("Calendar sync failed: \(error, privacy: .public)")
+            problem = (error as? CalendarError) == .noWritableSource ? .noWritableSource : .syncFailed
         }
     }
 
     private func ensureAccess() async -> Bool {
         switch EKEventStore.authorizationStatus(for: .event) {
         case .fullAccess:
-            accessDenied = false
+            clearAccessProblem()
             return true
         case .notDetermined:
             do {
                 let granted = try await store.requestFullAccessToEvents()
-                accessDenied = !granted
+                if granted { clearAccessProblem() } else { problem = .accessDenied }
                 return granted
             } catch {
                 Self.logger.error("Calendar access request failed: \(error, privacy: .public)")
-                accessDenied = true
+                problem = .accessDenied
                 return false
             }
         default:
-            accessDenied = true
+            problem = .accessDenied
             return false
         }
     }
 
-    /// The app's own calendar, found by its remembered id or its title, else created next to the
-    /// user's default calendar.
+    /// Only the access problem goes away with access; a failed sync stays until one succeeds.
+    private func clearAccessProblem() {
+        if problem == .accessDenied { problem = nil }
+    }
+
+    /// The app's own calendar, found by its remembered id or its title, else created.
     private func appCalendar() throws -> EKCalendar {
         let defaults = UserDefaults.standard
         if let id = defaults.string(forKey: Self.calendarKey), let known = store.calendar(withIdentifier: id) {
@@ -123,17 +143,43 @@ final class CalendarBridge {
             defaults.set(found.calendarIdentifier, forKey: Self.calendarKey)
             return found
         }
-        let calendar = EKCalendar(for: .event, eventStore: store)
-        calendar.title = CalendarSync.calendarTitle
-        guard let source = store.defaultCalendarForNewEvents?.source
-                ?? store.sources.first(where: { $0.sourceType == .calDAV })
-                ?? store.sources.first(where: { $0.sourceType == .local }) else {
-            throw CalendarError.noSource
+        return try createCalendar()
+    }
+
+    /// Creates the app's calendar in the first account that accepts it, in `CalendarSync.sourceOrder`.
+    /// An account that refuses (Google, #203) is logged and the next one tried.
+    private func createCalendar() throws -> EKCalendar {
+        let sources = store.sources
+        let order = CalendarSync.sourceOrder(
+            sources.map(Self.candidate),
+            defaultSourceID: store.defaultCalendarForNewEvents?.source.sourceIdentifier
+        )
+        for id in order {
+            guard let source = sources.first(where: { $0.sourceIdentifier == id }) else { continue }
+            let calendar = EKCalendar(for: .event, eventStore: store)
+            calendar.title = CalendarSync.calendarTitle
+            calendar.source = source
+            do {
+                try store.saveCalendar(calendar, commit: true)
+                UserDefaults.standard.set(calendar.calendarIdentifier, forKey: Self.calendarKey)
+                return calendar
+            } catch {
+                Self.logger.error("Creating the calendar in \(source.title, privacy: .public) failed: \(error, privacy: .public)")
+            }
         }
-        calendar.source = source
-        try store.saveCalendar(calendar, commit: true)
-        defaults.set(calendar.calendarIdentifier, forKey: Self.calendarKey)
-        return calendar
+        throw CalendarError.noWritableSource
+    }
+
+    private static func candidate(_ source: EKSource) -> CalendarSync.SourceCandidate {
+        let kind: CalendarSync.SourceCandidate.Kind = switch source.sourceType {
+        case .calDAV, .mobileMe: .calDAV
+        case .local: .local
+        case .exchange: .exchange
+        case .subscribed: .subscribed
+        case .birthdays: .birthdays
+        @unknown default: .other
+        }
+        return CalendarSync.SourceCandidate(id: source.sourceIdentifier, title: source.title, kind: kind)
     }
 
     /// The ids of every event already sitting in the app's own calendar, so a task deleted outright
@@ -158,7 +204,7 @@ final class CalendarBridge {
             && (event.notes ?? "") == (plan.notes ?? "")
     }
 
-    enum CalendarError: Error {
-        case noSource
+    enum CalendarError: Error, Equatable {
+        case noWritableSource
     }
 }

@@ -67,4 +67,45 @@ enum CalendarSync {
         changes.removeOrphaned = knownEventIDs.subtracting(accountedFor).sorted()
         return changes
     }
+
+    // MARK: Where the app's own calendar is created (#203)
+
+    struct SourceCandidate: Equatable {
+        enum Kind { case calDAV, local, exchange, subscribed, birthdays, other }
+        let id: String
+        let title: String
+        let kind: Kind
+    }
+
+    /// The accounts to try, in order, when the app's calendar does not exist yet: iCloud, the
+    /// device itself, the default calendar's account, then any other CalDAV account. Google is
+    /// CalDAV too and refuses new calendars from apps, so a Google default must not come before
+    /// iCloud (#203). Exchange, subscriptions and birthdays are never tried.
+    static func sourceOrder(_ sources: [SourceCandidate], defaultSourceID: String?) -> [String] {
+        let usable = sources.filter { $0.kind == .calDAV || $0.kind == .local }
+        let iCloud = usable.filter { $0.kind == .calDAV && $0.title == "iCloud" }
+        let local = usable.filter { $0.kind == .local }
+        let fallback = usable.filter { $0.id == defaultSourceID }
+        let others = usable.filter { $0.kind == .calDAV }
+        var seen: Set<String> = []
+        return (iCloud + local + fallback + others).map(\.id).filter { seen.insert($0).inserted }
+    }
+
+    /// What went wrong on the last sync, as `CalendarBridge` saw it.
+    enum Problem: Equatable { case accessDenied, noWritableSource, syncFailed }
+
+    /// The note under the switch.
+    enum Note: Equatable { case needsDueDate, accessOff, noWritableSource, syncFailed }
+
+    /// Why nothing shows in the calendar, or nil while the switch is off or all is well.
+    static func note(for task: TaskItem, problem: Problem?) -> Note? {
+        guard task.showInCalendar else { return nil }
+        guard task.dueDate != nil else { return .needsDueDate }
+        switch problem {
+        case .accessDenied: return .accessOff
+        case .noWritableSource: return .noWritableSource
+        case .syncFailed: return .syncFailed
+        case nil: return nil
+        }
+    }
 }

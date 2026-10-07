@@ -118,6 +118,20 @@ struct TaskDetailView: View {
                 Toggle("Show in calendar", isOn: $task.showInCalendar)
                     .onChange(of: task.showInCalendar) { _, _ in save("calendar") }
                     .accessibilityIdentifier("showInCalendarToggle")
+                if task.showInCalendar, task.dueDate != nil, let target = calendar?.target {
+                    HStack {
+                        Text("Calendar")
+                        Spacer()
+                        Image(systemName: "circle.fill")
+                            .imageScale(.small)
+                            .foregroundStyle(Color(cgColor: target.color))
+                            .accessibilityHidden(true)
+                        Text(target.title)
+                            .foregroundStyle(.secondary)
+                    }
+                    .accessibilityElement(children: .combine)
+                    .accessibilityIdentifier("calendarTargetRow")
+                }
             } footer: {
                 calendarNote
             }
@@ -286,15 +300,16 @@ struct TaskDetailView: View {
         dismiss()
     }
 
-    /// Under the switch: why nothing shows yet (ADR-13). Silent while the switch is off.
+    /// Under the switch: why nothing shows (ADR-13, #203). Silent while the switch is off or the
+    /// last sync went through.
     @ViewBuilder
     private var calendarNote: some View {
-        if task.showInCalendar {
-            if task.dueDate == nil {
-                Text("Shows up once the task has a due date.")
-            } else if calendar?.accessDenied == true {
-                Text("Calendar access is off in Settings.")
-            }
+        switch CalendarSync.note(for: task, problem: calendar?.problem) {
+        case .needsDueDate: Text("Shows up once the task has a due date.")
+        case .accessOff: Text("Calendar access is off in Settings.")
+        case .noWritableSource: Text("Couldn't create the Loose Ends calendar in any of your accounts.")
+        case .syncFailed: Text("The calendar couldn't be updated.")
+        case nil: EmptyView()
         }
     }
 
