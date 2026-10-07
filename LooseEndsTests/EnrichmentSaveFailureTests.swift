@@ -9,10 +9,19 @@ import Testing
 ///
 /// The in-memory store of the other tests has no constraint a save could break, so this test puts
 /// the store on a real SQLite file, past `ModelContainerFactory`, and lets SQLite itself refuse one
-/// task: a trigger aborts every update of that task's row. Nothing in the product code is injected.
+/// task: a trigger aborts every revision written for it. Nothing in the product code is injected.
 @Suite("Enrichment: save failure (#100)") @MainActor struct EnrichmentSaveFailureTests {
-    private static let blockedText = "Steuerbescheid prüfen"
+    private static let blockedText = "Steuerbescheid morgen prüfen"
     private static let laterText = "Rasen mähen morgen"
+
+    /// Refuses every revision of the blocked task. Its due-date rule writes one, so its save fails.
+    /// An insert, not an update: Core Data reads a refused update as an optimistic-locking conflict,
+    /// retries it and ends the process instead of throwing (first CI run of #247).
+    private static let refuseBlocked = """
+        CREATE TRIGGER refuse_blocked BEFORE INSERT ON ZREVISION
+        WHEN NEW.ZTASK = (SELECT Z_PK FROM ZTASKITEM WHERE ZRAWTEXT = '\(blockedText)')
+        BEGIN SELECT RAISE(ABORT, 'refused by test'); END;
+        """
 
     /// The container on a file of its own; the URL so SQLite can open the same file.
     private func fileStore() throws -> (container: ModelContainer, url: URL) {
@@ -60,11 +69,7 @@ import Testing
         context.insert(later)
         try context.save()
 
-        try execute("""
-            CREATE TRIGGER refuse_blocked BEFORE UPDATE ON ZTASKITEM
-            WHEN OLD.ZRAWTEXT = '\(Self.blockedText)'
-            BEGIN SELECT RAISE(ABORT, 'refused by test'); END;
-            """, on: store.url)
+        try execute(Self.refuseBlocked, on: store.url)
 
         let coordinator = EnrichmentCoordinator(enricher: StubEnricher(unavailableReason: "Kein Modell"), container: store.container)
         await coordinator.processPending()
@@ -83,11 +88,7 @@ import Testing
         let blocked = TaskItem(rawText: Self.blockedText)
         context.insert(blocked)
         try context.save()
-        try execute("""
-            CREATE TRIGGER refuse_blocked BEFORE UPDATE ON ZTASKITEM
-            WHEN OLD.ZRAWTEXT = '\(Self.blockedText)'
-            BEGIN SELECT RAISE(ABORT, 'refused by test'); END;
-            """, on: store.url)
+        try execute(Self.refuseBlocked, on: store.url)
         let coordinator = EnrichmentCoordinator(enricher: StubEnricher(unavailableReason: "Kein Modell"), container: store.container)
         await coordinator.processPending()
         #expect(try #require(try persisted(Self.blockedText, in: store.container)).rulesAppliedAt == nil)
