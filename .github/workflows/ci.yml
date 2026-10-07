@@ -124,6 +124,18 @@ jobs:
           echo "poster services in the simulator:"
           xcrun simctl spawn "$SIM_UDID" launchctl list 2>/dev/null | grep -i poster || echo "(none listed)"
           vm_stat | head -4
+          # The runner starts the UI tests with about 70 MB of free memory, and the lock-screen poster
+          # services (PosterBoard and what it spawns) are the first thing that eats more (#228). The
+          # tests never look at the lock screen: switch the services off for this simulator. Each
+          # command may fail on this image; what is left running is listed afterwards.
+          for svc in com.apple.PosterBoard com.apple.contacts.postersyncd; do
+            xcrun simctl spawn "$SIM_UDID" launchctl disable "system/$svc" 2>&1 || true
+            xcrun simctl spawn "$SIM_UDID" launchctl bootout "system/$svc" 2>&1 \
+              || xcrun simctl spawn "$SIM_UDID" launchctl stop "$svc" 2>&1 || true
+          done
+          sleep 3
+          echo "after switching off:"
+          xcrun simctl spawn "$SIM_UDID" launchctl list 2>/dev/null | grep -i -E "poster|SpringBoard" || true
           quiet=0
           waited=0
           while [ "$waited" -lt 180 ]; do
