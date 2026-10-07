@@ -19,3 +19,4 @@ docs/reference/focusblox-corpus.json
 .env
 .env.*
 .claude/staging
+__pycache__/

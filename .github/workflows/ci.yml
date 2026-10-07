@@ -118,6 +118,14 @@ jobs:
           xcodebuild -version || true
           xcrun simctl list runtimes || true
           xcrun simctl list devices available | grep "$SIM_UDID" || true
+      - name: Sample host load during the UI tests (#228)
+        run: |
+          # Every 20 s the busiest processes on the runner, one line per sample. The simulator's
+          # daemons run as host processes, so a hog inside the simulator shows up here too.
+          nohup bash -c 'while true; do
+            echo "$(date -u +%H:%M:%S) $(ps -A -o pcpu=,comm= | sort -rn | head -5 | sed -E "s#^ *([0-9.]+) .*/#\1% #" | tr "\n" " ")"
+            sleep 20
+          done' > host-load.log 2>&1 &
       - name: Run UI smoke tests
         run: |
           set -o pipefail
@@ -148,6 +156,34 @@ jobs:
       - name: Show crash and failure details
         if: failure()
         run: grep -n -E -i "crash|fatal error|restarting after|failed|error:" ui-smoke.log | head -120 || true
+      - name: Diagnose UI query timeouts (#228)
+        if: always()
+        continue-on-error: true
+        run: |
+          # The app's watchdog (UI tests only): was its main thread blocked, and for how long?
+          xcrun simctl spawn "$SIM_UDID" log show --style compact --last 3h \
+            --predicate 'subsystem == "com.henning.looseends" AND category == "Watchdog"' \
+            > watchdog.log 2>&1 || true
+          echo "Watchdog starts: $(grep -c 'Watchdog started' watchdog.log || true)," \
+            "blocks over 1 s: $(grep -c 'blocked for more than' watchdog.log || true)"
+          grep -E "Main thread blocked for [0-9]" watchdog.log | tail -60 || true
+          # The XCTest activity lines (t = …s) before each timeout: which query hung, since when.
+          grep -n "Timed out while evaluating UI query" ui-smoke.log | cut -d: -f1 | while read -r line; do
+            start=$(( line > 60 ? line - 60 : 1 ))
+            echo "----- ui-smoke.log lines $start-$line"
+            sed -n "${start},${line}p" ui-smoke.log
+          done
+          # Runner load around each failure (host-load.log, sampled every 20 s during the tests).
+          grep -n -E "error: -\[LooseEndsUITests" ui-smoke.log | cut -c1-220 || true
+          echo "----- host load (top 5 processes, %CPU), whole run"
+          cat host-load.log || true
+          # The system side of a timeout or a launch that never got a process.
+          if grep -q -E "Timed out while evaluating UI query|does not have a process ID" ui-smoke.log; then
+            xcrun simctl spawn "$SIM_UDID" log show --style compact --last 3h \
+              --predicate 'process == "testmanagerd" OR subsystem BEGINSWITH "com.apple.accessibility"' \
+              > system-ui.log 2>&1 || true
+            grep -i -E "timed out|timeout|snapshot|unresponsive|hang" system-ui.log | tail -80 || true
+          fi
       - name: Export design gallery
         if: always()
         continue-on-error: true
@@ -181,4 +217,7 @@ jobs:
           path: |
             UITestResults.xcresult
             ui-smoke.log
+            watchdog.log
+            system-ui.log
+            host-load.log
           if-no-files-found: warn
