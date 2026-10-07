@@ -118,7 +118,7 @@ jobs:
           # Every 20 s the busiest processes on the runner, one line per sample. The simulator's
           # daemons run as host processes, so a hog inside the simulator shows up here too.
           nohup bash -c 'while true; do
-            echo "$(date -u +%H:%M:%S) $(ps -A -o pcpu=,comm= | sort -rn | head -5 | awk "{n=split(\$2,p,\"/\"); printf \"%s%%:%s  \", \$1, p[n]}")"
+            echo "$(date -u +%H:%M:%S) $(ps -A -o pcpu=,comm= | sort -rn | head -5 | sed -E "s#^ *([0-9.]+) .*/#\1% #" | tr "\n" " ")"
             sleep 20
           done' > host-load.log 2>&1 &
       - name: Run UI smoke tests
