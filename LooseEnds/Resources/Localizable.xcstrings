@@ -2,6 +2,12 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "Appointment" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Termin" } } } },
+    "all day" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "ganztägig" } } } },
+    "All day" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ganztägig" } } } },
+    "At a time" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Zu einer Uhrzeit" } } } },
+    "Add to calendar" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "In den Kalender" } } } },
+    "Add event" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Eintragen" } } } },
     "From your words" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus deinen Worten" } } } },
     "Estimated by AI" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Von der KI geschätzt" } } } },
     "Estimated by Apple Intelligence" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Von Apple Intelligence geschätzt" } } } },

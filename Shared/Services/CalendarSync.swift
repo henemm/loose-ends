@@ -27,6 +27,18 @@ enum CalendarSync {
         return EventPlan(title: task.displayTitle, start: day, end: next, isAllDay: true, notes: notes)
     }
 
+    /// "14:00–15:00" in the reader's own time format.
+    static func timeRange(start: Date, end: Date) -> String {
+        "\(start.formatted(date: .omitted, time: .shortened))–\(end.formatted(date: .omitted, time: .shortened))"
+    }
+
+    /// The line under the switch: the day, then the block or "all day" ("Tue, Oct 6 · 14:00–15:00").
+    static func appointment(_ plan: EventPlan) -> String {
+        let day = plan.start.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))
+        let when = plan.isAllDay ? String(localized: "all day") : timeRange(start: plan.start, end: plan.end)
+        return "\(day) · \(when)"
+    }
+
     /// Minutes of the block. Nothing shorter than a quarter hour, an hour when nothing is known.
     static func length(of duration: DurationBucket?) -> Int {
         switch duration {

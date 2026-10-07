@@ -27,6 +27,8 @@ struct TaskDetailView: View {
     @FocusState private var titleFocused: Bool
     @State private var showsRevisions = false
     @State private var showsEmptyFields = false
+    /// "Add to calendar" (#203): what the sheet still asks, nil while closed.
+    @State private var calendarGaps: CalendarAsk.Gaps?
     /// "Analyze again" (#34): running, or what it found, until the detail closes.
     @State private var reanalysis: Reanalysis?
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Detail")
@@ -115,9 +117,30 @@ struct TaskDetailView: View {
 
             Section {
                 // Stays visible without a due date: it can be switched on first (see the note).
-                Toggle("Show in calendar", isOn: $task.showInCalendar)
-                    .onChange(of: task.showInCalendar) { _, _ in save("calendar") }
-                    .accessibilityIdentifier("showInCalendarToggle")
+                // Switching on asks for what the event still lacks (#203): the switch stays off until the
+                // sheet is answered, and Cancel leaves it off.
+                Toggle("Show in calendar", isOn: Binding(
+                    get: { task.showInCalendar },
+                    set: { on in
+                        if on, let gaps = CalendarAsk.gaps(for: task) {
+                            calendarGaps = gaps
+                        } else {
+                            task.showInCalendar = on
+                            save("calendar")
+                        }
+                    }
+                ))
+                .accessibilityIdentifier("showInCalendarToggle")
+                if task.showInCalendar, let plan = CalendarSync.plan(for: task) {
+                    HStack {
+                        Text("Appointment")
+                        Spacer()
+                        Text(CalendarSync.appointment(plan))
+                            .foregroundStyle(.secondary)
+                    }
+                    .accessibilityElement(children: .combine)
+                    .accessibilityIdentifier("calendarAppointmentRow")
+                }
                 if task.showInCalendar, task.dueDate != nil, let target = calendar?.target {
                     HStack {
                         Text("Calendar")
@@ -179,6 +202,12 @@ struct TaskDetailView: View {
         }
         .sheet(isPresented: $showsRevisions) {
             RevisionsSheet(task: task, contexts: contexts, projects: projects)
+        }
+        .sheet(item: $calendarGaps) { gaps in
+            CalendarAskSheet(gaps: gaps, existingStart: task.dueHasTime ? task.dueDate : nil) { answer in
+                CalendarAsk.apply(answer, gaps: gaps, to: task, contexts: contexts, projects: projects)
+                save("calendar")
+            }
         }
     }
 
