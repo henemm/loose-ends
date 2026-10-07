@@ -140,6 +140,8 @@ struct TaskDetailView: View {
             if task.parent == nil {
                 SubtasksSection(task: task)
                     .paperRow()
+                WaitingOnSection(task: task)
+                    .paperRow()
             }
 
             if !aiFields.isEmpty {

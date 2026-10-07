@@ -97,8 +97,8 @@ struct TaskRow: View {
     private var traits: [Trait] {
         let unseen = task.hasUnseenAutomaticRevisions
         var all: [Trait] = []
-        if task.isBlocked {
-            all.append(Trait(id: "waiting", text: String(localized: "Waiting"), symbol: "lock"))
+        if let waitingOn = WaitingOn.rowLabel(for: task) {
+            all.append(Trait(id: "waiting", text: String(localized: "Waiting on: \(waitingOn)"), symbol: "lock"))
         }
         if let due = task.dueDate {
             let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Calendar.current.startOfDay(for: Date())) ?? Date()
