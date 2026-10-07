@@ -72,6 +72,8 @@ enum WaitingOn {
 
     /// The revision carries the titles, not the ids `FieldCodec` uses: the "Changes" sheet shows
     /// them as they are, and a user revision is never reset, so nothing has to resolve them.
+    /// Sorted, because a to-many relationship has no order: after a save SwiftData may hand the
+    /// blockers back in any order, and the same set must always read the same.
     private static func change(_ task: TaskItem, to blockers: [TaskItem], now: Date) -> Revision {
         let before = titles(task.blockedBy ?? [])
         let revision = Revision(task: task, field: .blockedBy, oldValue: before, newValue: titles(blockers), author: .user)
@@ -82,7 +84,7 @@ enum WaitingOn {
     }
 
     private static func titles(_ tasks: [TaskItem]) -> String? {
-        tasks.isEmpty ? nil : FieldCodec.encode(tasks.map(\.displayTitle))
+        tasks.isEmpty ? nil : FieldCodec.encode(tasks.map(\.displayTitle).sorted { $0.localizedStandardCompare($1) == .orderedAscending })
     }
 
     private static func matches(_ task: TaskItem, _ needle: String) -> Bool {
