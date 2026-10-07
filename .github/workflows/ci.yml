@@ -112,6 +112,29 @@ jobs:
         # #228: `simctl boot` returns before SpringBoard and the accessibility services are up; the
         # first UI queries then wait for a reply that comes late or not at all.
         run: xcrun simctl bootstatus "$SIM_UDID" -b
+      - name: Let the simulator settle (#228)
+        timeout-minutes: 5
+        continue-on-error: true
+        # After the boot the lock-screen poster extensions (Emoji, Gradient, Weather, Unity …) load for
+        # a while at 66-100 % CPU, and in the red runs the host went into the memory compressor at the
+        # same time (JetsamEvent, main thread 78-99 s, #228). The first tests started right into that.
+        # Waits, for at most three minutes, until no poster process is busy in three samples (5 s apart) in a row; it never
+        # fails the run, and it logs how long it took and the free memory before and after.
+        run: |
+          echo "poster services in the simulator:"
+          xcrun simctl spawn "$SIM_UDID" launchctl list 2>/dev/null | grep -i poster || echo "(none listed)"
+          vm_stat | head -4
+          quiet=0
+          waited=0
+          while [ "$waited" -lt 180 ]; do
+            busy=$(ps -A -o pcpu=,comm= | grep -i poster | awk '$1 > 5' | wc -l | tr -d ' ')
+            if [ "$busy" = 0 ]; then quiet=$((quiet + 1)); else quiet=0; fi
+            [ "$quiet" -ge 3 ] && break
+            sleep 5
+            waited=$((waited + 5))
+          done
+          echo "settled after about ${waited} s (quiet samples in a row: ${quiet})"
+          vm_stat | head -4
       - name: Diagnose toolchain and simulator
         continue-on-error: true
         run: |
@@ -134,6 +157,7 @@ jobs:
             -scheme LooseEnds \
             -destination "platform=iOS Simulator,id=$SIM_UDID" \
             -only-testing:LooseEndsUITests \
+            -parallel-testing-enabled NO \
             -resultBundlePath UITestResults.xcresult \
             CODE_SIGNING_ALLOWED=NO \
             DEVELOPMENT_TEAM= \
