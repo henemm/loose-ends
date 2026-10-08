@@ -50,6 +50,13 @@ jobs:
       - name: Show crash and failure details
         if: failure()
         run: grep -n -E -i "crash|fatal error|restarting after|failed|error:" unit-tests.log | grep -v -E "^\S+:\s*$" | head -120 || true
+      - name: Print measurement reports
+        if: always()
+        continue-on-error: true
+        # Measurement tests (Measurement/, e.g. #70) print their report to stdout between
+        # `<NAME>-REPORT BEGIN` and `<NAME>-REPORT END`. xcbeautify swallows test output, and the raw
+        # log is only an artifact, so the blocks are copied into this job's own log.
+        run: sed -n '/-REPORT BEGIN/,/-REPORT END/p' unit-tests.log | sed -E 's/^[0-9T:.Z-]+ //'
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v7
