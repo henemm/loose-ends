@@ -21,6 +21,12 @@ enum MeasurementFiles {
 /// Scoring happens here, on the Mac, and never on the phone: the phone only records what the
 /// model answered. So the numbers can be recomputed, and the rules sharpened, without asking
 /// Henning for his device again. Disabled until a run has actually been fetched.
+///
+/// The report is reproducible (#99, #148): a fixed calendar (Europe/Berlin) and the fixed reference
+/// day of `CorpusTests` instead of today, so CI (UTC) and the Mac write the same file on any day. A
+/// report that differs from the checked-in one fails the run: the numbers changed, and that has to
+/// be looked at and committed, not discovered by chance in the next diff. The fresh report goes to
+/// stdout between `DATE-TITLE-REPORT BEGIN` and `END`, which CI copies into its log.
 @Suite(.enabled(if: !MeasurementFiles.runs.isEmpty))
 struct DateTitleReportTests {
 
@@ -49,9 +55,7 @@ struct DateTitleReportTests {
 
     struct Report {
         var model = Tally()
-        var parser = Tally()
         var invented = Tally()
-        var parserInvented = Tally()
         var time = Tally()
         /// The rule parser of #92, measured on the same sentences as the two columns above.
         var ruleParser = Tally()
@@ -77,7 +81,7 @@ struct DateTitleReportTests {
             try MeasurementStore.coder.decoder.decode(MeasurementRun.self, from: Data(contentsOf: url))
         }
         var report = Report()
-        let calendar = Calendar.current
+        let calendar = CorpusTests.calendar
 
         for result in runs.flatMap(\.results) {
             guard let entry = byID[result.entryID], entry.countsForDateMeasurement else { continue }
@@ -90,13 +94,16 @@ struct DateTitleReportTests {
             Self.scoreDate(entry, result, calendar: calendar, into: &report)
             Self.scoreTitle(entry, result, into: &report)
         }
-        Self.scoreParser(corpus, calendar: calendar, into: &report)
-        Self.scoreRuleParser(corpus, calendar: calendar, reference: Date(), into: &report)
+        Self.scoreRuleParser(corpus, calendar: calendar, reference: CorpusTests.reference, into: &report)
 
         let markdown = Self.markdown(report, runs: runs, corpus: corpus)
+        print(["DATE-TITLE-REPORT BEGIN", "", markdown, "", "DATE-TITLE-REPORT END"].joined(separator: "\n"))
         let destination = MeasurementFiles.repositoryRoot.appendingPathComponent("docs/reference/date-title-fidelity.md")
+        let committed = try String(contentsOf: destination, encoding: .utf8)
         try markdown.write(to: destination, atomically: true, encoding: .utf8)
         #expect(report.model.total + report.invented.total > 0, "kein einziger auswertbarer Satz")
+        #expect(committed == markdown,
+                "Der Bericht weicht vom eingecheckten ab: Die Zahlen haben sich geändert. Neuen Stand prüfen und date-title-fidelity.md mitcommitten.")
     }
 
     // MARK: - Scoring
@@ -135,26 +142,20 @@ struct DateTitleReportTests {
         report.foreign.record(hit: TitleCheck.foreignWords(title: title, rawText: entry.text).isEmpty)
     }
 
-    /// The deterministic alternative from the issue, on the same sentences. `NSDataDetector` always
-    /// resolves against the current day, so it is scored against today — which is as valid as any
-    /// other day, because it never sees a capture date.
-    static func scoreParser(_ corpus: [Corpus.Entry], calendar: Calendar, into report: inout Report) {
-        let today = calendar.startOfDay(for: Date())
-        let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.date.rawValue)
-        for entry in corpus where entry.countsForDateMeasurement {
-            let match = detector?.firstMatch(in: entry.text, range: NSRange(entry.text.startIndex..., in: entry.text))
-            let got = match?.date.map { calendar.startOfDay(for: $0) }
-            if let expectation = entry.date {
-                let accepted = expectation.acceptedDays(reference: today, calendar: calendar)
-                report.parser.record(hit: got.map(accepted.contains) ?? false, empty: got == nil)
-            } else {
-                report.parserInvented.record(hit: got == nil, miss: "`\(entry.text)` → \(day(got, calendar))")
-            }
-        }
+    /// `NSDataDetector`, the deterministic alternative from #67, resolves against the real clock and
+    /// takes no reference day, so its column cannot be reproduced (#99, #148): on the same sentences
+    /// it scored between 65.5 % and 68.3 % exact, depending on the weekday of the run. The column is
+    /// frozen at the last checked-in run and no longer recomputed; since #95 the rule parser sets the
+    /// due date, the detector is a historical comparison only.
+    enum FrozenDetector {
+        static let measured = "2026-09-25"
+        static let exact = "67.6 % von 139"
+        static let empty = "41"
+        static let invented = "0.0 % von 172"
     }
 
     /// The rule parser from #92 on the whole corpus, scored like the `NSDataDetector` column:
-    /// against a reference day it never saw. Times are scored on every sentence that has one,
+    /// against the fixed reference day of `CorpusTests` (#148). Times are scored on every sentence that has one,
     /// repetitions included — "jeden Tag um 7 Uhr" carries a time even though it carries no date.
     static func scoreRuleParser(_ corpus: [Corpus.Entry], calendar: Calendar, reference: Date, into report: inout Report) {
         let parser = DateExpressionParser(calendar: calendar)
@@ -195,7 +196,7 @@ struct DateTitleReportTests {
         let seconds = report.seconds.isEmpty ? 0 : report.seconds.reduce(0, +) / Double(report.seconds.count)
         let devices = Set(runs.flatMap { $0.results.map(\.conditions.device) }).sorted().joined(separator: ", ")
         let systems = Set(runs.flatMap { $0.results.map(\.conditions.systemVersion) }).sorted().joined(separator: ", ")
-        let days = Set(runs.flatMap { $0.results.map { day($0.capturedAt, Calendar.current) } }).sorted()
+        let days = Set(runs.flatMap { $0.results.map { day($0.capturedAt, CorpusTests.calendar) } }).sorted()
         return """
         # Treue von Datum und Titel (Issue #67)
 
@@ -209,8 +210,11 @@ struct DateTitleReportTests {
 
         Gemessen hat die Labor-App auf dem iPhone, in Scheiben über mehrere Sitzungen. Jeder Satz
         wird gegen den Tag ausgewertet, an dem er gemessen wurde; mehrdeutige Formulierungen
-        („am Wochenende", „nächsten Freitag") lassen mehrere Tage gelten. `NSDataDetector` ist die
-        deterministische Alternative aus dem Issue, auf denselben Sätzen.
+        („am Wochenende", „nächsten Freitag") lassen mehrere Tage gelten. Der Regelparser rechnet
+        gegen den festen Bezugstag Do 12.03.2026 (Europe/Berlin), damit der Bericht an jedem Tag
+        gleich ausfällt (#99, #148); bis dahin rechnete er gegen den Tag des Laufs, daher die
+        anderen Daten unter „Was danebenging“. `NSDataDetector` ist die deterministische
+        Alternative aus dem Issue, auf denselben Sätzen.
         """
     }
 
@@ -220,9 +224,11 @@ struct DateTitleReportTests {
             "",
             "| Messung | Modell | NSDataDetector | Regelparser |",
             "|---|---|---|---|",
-            "| Exakt getroffen | \(percent(report.model.share)) von \(report.model.total) | \(percent(report.parser.share)) von \(report.parser.total) | \(percent(report.ruleParser.share)) von \(report.ruleParser.total) |",
-            "| Feld leer gelassen statt geraten | \(report.model.empty) | \(report.parser.empty) | \(report.ruleParser.empty) |",
-            "| Erfundene Daten bei Sätzen ohne Datum | \(inverse(report.invented)) | \(inverse(report.parserInvented)) | \(inverse(report.ruleParserInvented)) |",
+            "| Exakt getroffen | \(percent(report.model.share)) von \(report.model.total) | \(FrozenDetector.exact) | \(percent(report.ruleParser.share)) von \(report.ruleParser.total) |",
+            "| Feld leer gelassen statt geraten | \(report.model.empty) | \(FrozenDetector.empty) | \(report.ruleParser.empty) |",
+            "| Erfundene Daten bei Sätzen ohne Datum | \(inverse(report.invented)) | \(FrozenDetector.invented) | \(inverse(report.ruleParserInvented)) |",
+            "",
+            "`NSDataDetector` rechnet immer gegen die echte Uhr und lässt sich auf keinen Bezugstag festlegen; je nach Wochentag des Laufs traf er 65.5 % bis 68.3 %. Die Spalte ist der eingefrorene Stand vom \(FrozenDetector.measured) und wird nicht neu berechnet (#148).",
             "",
             "### Nach Art des Ausdrucks",
             "",
@@ -386,8 +392,8 @@ struct DateTitleFormSectionTests {
     }
 }
 
-/// The report carries the rule-based parser (#92) as a third column next to the model and
-/// `NSDataDetector`, split by kind of expression, with its own "what went wrong" block. Checked on
+/// The report carries the rule-based parser (#92) as a third column next to the model and the frozen
+/// `NSDataDetector` column (#148), split by kind of expression, with its own "what went wrong" block. Checked on
 /// a synthetic corpus and report, so it runs before any run was fetched.
 @Suite("Bericht: Regelparser-Spalte")
 struct DateTitleRuleParserSectionTests {
@@ -417,7 +423,6 @@ struct DateTitleRuleParserSectionTests {
     func dateSection() {
         var report = DateTitleReportTests.Report()
         report.model.record(hit: true)
-        report.parser.record(hit: false, empty: true)
         report.ruleParser.record(hit: true)
         report.ruleParser.record(hit: false, empty: true)
         report.ruleParserInvented.record(hit: true)
@@ -428,9 +433,10 @@ struct DateTitleRuleParserSectionTests {
 
         let section = DateTitleReportTests.dateSection(report)
         #expect(section.contains("| Messung | Modell | NSDataDetector | Regelparser |"))
-        #expect(section.contains("| Exakt getroffen | 100.0 % von 1 | 0.0 % von 1 | 50.0 % von 2 |"))
-        #expect(section.contains("| Feld leer gelassen statt geraten | 0 | 1 | 1 |"))
-        #expect(section.contains("| Erfundene Daten bei Sätzen ohne Datum | noch nicht gemessen | noch nicht gemessen | 0.0 % von 1 |"))
+        #expect(section.contains("| Exakt getroffen | 100.0 % von 1 | 67.6 % von 139 | 50.0 % von 2 |"))
+        #expect(section.contains("| Feld leer gelassen statt geraten | 0 | 41 | 1 |"))
+        #expect(section.contains("| Erfundene Daten bei Sätzen ohne Datum | noch nicht gemessen | 0.0 % von 172 | 0.0 % von 1 |"))
+        #expect(section.contains("eingefrorene Stand vom 2026-09-25"), "NSDataDetector carries its frozen date (#148)")
         #expect(section.contains("| Ausdruck | Sätze | Modell exakt | Leer gelassen | Regelparser exakt |"))
         #expect(section.contains("| Wochentag | 1 | 100.0 % | 0 | 50.0 % |"))
         #expect(section.contains("**Uhrzeit Regelparser:** 100.0 % exakt bei 1 Sätzen mit Uhrzeit."))

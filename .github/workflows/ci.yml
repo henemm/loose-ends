@@ -56,7 +56,9 @@ jobs:
         # Measurement tests (Measurement/, e.g. #70) print their report to stdout between
         # `<NAME>-REPORT BEGIN` and `<NAME>-REPORT END`. xcbeautify swallows test output, and the raw
         # log is only an artifact, so the blocks are copied into this job's own log.
-        run: sed -n '/-REPORT BEGIN/,/-REPORT END/p' unit-tests.log | sed -E 's/^[0-9T:.Z-]+ //'
+        # Only a real timestamp is cut: the old class `[0-9T:.Z-]+` also ate the "- " of every
+        # list line, so a report copied from the log lost its bullets (#148).
+        run: sed -n '/-REPORT BEGIN/,/-REPORT END/p' unit-tests.log | sed -E 's/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9:.]+Z //'
       - name: Report skipped measurements
         if: always()
         # Measurement suites gated on personal data are skipped here and still read as passed
