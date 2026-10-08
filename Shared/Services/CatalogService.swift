@@ -54,16 +54,51 @@ enum CatalogService {
             let ordered = group.sorted(by: survivesBefore)
             let survivor = ordered[0]
             for duplicate in ordered.dropFirst() {
-                for task in duplicate.tasks ?? [] {
-                    var tags = (task.contexts ?? []).filter { $0.id != duplicate.id }
-                    if !tags.contains(where: { $0.id == survivor.id }) { tags.append(survivor) }
-                    task.contexts = tags
-                }
-                context.delete(duplicate)
+                fold(duplicate, into: survivor, in: context)
                 removed += 1
             }
         }
         return removed
+    }
+
+    /// The English default names with their German translation (`TaskContext.defaultNameKeys`,
+    /// `Localizable.xcstrings`). Fixed here, not localized at run time: every device must reach the
+    /// same result whatever its language. "Computer" is the same in both and falls under #157.
+    static let englishDefaultsToGerman: [String: String] = [
+        "Phone": "Telefon", "Home": "Haus", "Garden": "Garten", "Errands": "Besorgung",
+        "Out and about": "Unterwegs",
+    ]
+
+    /// Folds the English seeded defaults into their German counterparts (#267): until #250 the
+    /// tests synced their English seeds into the user's iCloud. Only a system default with an English
+    /// default name counts — a context the user added is never one — and only while the German one
+    /// exists; without it the English one stays. Tasks move along, the English one is deleted.
+    /// Returns how many were deleted. The caller saves.
+    @discardableResult
+    static func mergeEnglishDefaults(in context: ModelContext) throws -> Int {
+        let all = try context.fetch(FetchDescriptor<TaskContext>())
+        let germanFor = Dictionary(
+            uniqueKeysWithValues: englishDefaultsToGerman.map { (nameKey($0.key), nameKey($0.value)) }
+        )
+        var removed = 0
+        for english in all where english.isSystemDefault {
+            guard let german = germanFor[nameKey(english.name)],
+                  let target = all.filter({ nameKey($0.name) == german }).sorted(by: survivesBefore).first
+            else { continue }
+            fold(english, into: target, in: context)
+            removed += 1
+        }
+        return removed
+    }
+
+    /// Moves every task of `duplicate` to `survivor` (once per task) and deletes `duplicate`.
+    private static func fold(_ duplicate: TaskContext, into survivor: TaskContext, in context: ModelContext) {
+        for task in duplicate.tasks ?? [] {
+            var tags = (task.contexts ?? []).filter { $0.id != duplicate.id }
+            if !tags.contains(where: { $0.id == survivor.id }) { tags.append(survivor) }
+            task.contexts = tags
+        }
+        context.delete(duplicate)
     }
 
     /// System default first, then the smallest sort order, then the smallest id string.

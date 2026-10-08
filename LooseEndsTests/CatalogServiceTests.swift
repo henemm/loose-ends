@@ -351,6 +351,97 @@ import Testing
         let left = try store.context.fetch(FetchDescriptor<TaskContext>())
         #expect(left.map(\.id.uuidString) == ["00000000-0000-0000-0000-00000000000A"])
     }
+
+    @Test("English seeded defaults fold into their German counterparts with their tasks (#267)")
+    @MainActor func mergeEnglishDefaults() async throws {
+        let store = try TestStore()
+        let garten = TaskContext(name: "Garten", isSystemDefault: true, sortOrder: 3)
+        let telefon = TaskContext(name: "Telefon", sortOrder: 1)
+        let garden = TaskContext(name: "Garden", isSystemDefault: true, sortOrder: 9)
+        let phone = TaskContext(name: " phone", isSystemDefault: true, sortOrder: 7)
+        let computer = TaskContext(name: "Computer", isSystemDefault: true, sortOrder: 0)
+        let lawn = TaskItem(rawText: "Rasen mähen")
+        let both = TaskItem(rawText: "Gärtner anrufen")
+        let mixed = TaskItem(rawText: "Hecke schneiden")
+        for item in [garten, telefon, garden, phone, computer] { store.context.insert(item) }
+        for item in [lawn, both, mixed] { store.context.insert(item) }
+        lawn.contexts = [garden]
+        both.contexts = [garden, garten, phone]
+        mixed.contexts = [computer, garden]
+        try store.context.save()
+
+        let removed = try CatalogService.mergeEnglishDefaults(in: store.context)
+        try store.context.save()
+
+        #expect(removed == 2)
+        let left = try store.context.fetch(FetchDescriptor<TaskContext>(sortBy: [SortDescriptor(\.sortOrder)]))
+        #expect(left.map(\.name) == ["Computer", "Telefon", "Garten"])
+        #expect((lawn.contexts ?? []).map(\.name) == ["Garten"])
+        #expect(Set((both.contexts ?? []).map(\.name)) == ["Garten", "Telefon"])
+        #expect((both.contexts ?? []).count == 2)
+        #expect(Set((mixed.contexts ?? []).map(\.name)) == ["Computer", "Garten"])
+        #expect(try store.context.fetchCount(FetchDescriptor<TaskItem>()) == 3)
+    }
+
+    @Test("A second English merge and a clean catalog change nothing (#267)")
+    @MainActor func mergeEnglishDefaultsIsIdempotent() async throws {
+        let store = try TestStore()
+        let garten = TaskContext(name: "Garten", isSystemDefault: true, sortOrder: 0)
+        let garden = TaskContext(name: "Garden", isSystemDefault: true, sortOrder: 1)
+        let task = TaskItem(rawText: "Rasen mähen")
+        store.context.insert(garten)
+        store.context.insert(garden)
+        store.context.insert(task)
+        task.contexts = [garden]
+        try store.context.save()
+
+        #expect(try CatalogService.mergeEnglishDefaults(in: store.context) == 1)
+        try store.context.save()
+        #expect(try CatalogService.mergeEnglishDefaults(in: store.context) == 0)
+        try store.context.save()
+
+        #expect(try store.context.fetch(FetchDescriptor<TaskContext>()).map(\.name) == ["Garten"])
+        #expect((task.contexts ?? []).map(\.name) == ["Garten"])
+    }
+
+    @Test("An English context the user added stays, and so does an English default without its German pair (#267)")
+    @MainActor func mergeEnglishDefaultsKeepsOwnAndUnpaired() async throws {
+        let store = try TestStore()
+        let garten = TaskContext(name: "Garten", isSystemDefault: true, sortOrder: 0)
+        let ownGarden = TaskContext(name: "Garden", sortOrder: 1)
+        let errands = TaskContext(name: "Errands", isSystemDefault: true, sortOrder: 2)
+        let task = TaskItem(rawText: "Rasen mähen")
+        for item in [garten, ownGarden, errands] { store.context.insert(item) }
+        store.context.insert(task)
+        task.contexts = [ownGarden, errands]
+        try store.context.save()
+
+        #expect(try CatalogService.mergeEnglishDefaults(in: store.context) == 0)
+        try store.context.save()
+
+        let left = try store.context.fetch(FetchDescriptor<TaskContext>(sortBy: [SortDescriptor(\.sortOrder)]))
+        #expect(left.map(\.name) == ["Garten", "Garden", "Errands"])
+        #expect(Set((task.contexts ?? []).map(\.name)) == ["Garden", "Errands"])
+    }
+
+    @Test("With two German candidates the English default folds into the one that survives first (#267)")
+    @MainActor func mergeEnglishDefaultsPicksDeterministicTarget() async throws {
+        let store = try TestStore()
+        let own = TaskContext(name: "Garten", sortOrder: 0)
+        let seeded = TaskContext(name: "garten", isSystemDefault: true, sortOrder: 5)
+        let garden = TaskContext(name: "Garden", isSystemDefault: true, sortOrder: 1)
+        let task = TaskItem(rawText: "Rasen mähen")
+        for item in [own, seeded, garden] { store.context.insert(item) }
+        store.context.insert(task)
+        task.contexts = [garden]
+        try store.context.save()
+        let seededID = seeded.id
+
+        try CatalogService.mergeEnglishDefaults(in: store.context)
+        try store.context.save()
+
+        #expect((task.contexts ?? []).map(\.id) == [seededID])
+    }
 }
 
 @Suite("ViewRules for contexts and projects") struct ContextProjectViewTests {
