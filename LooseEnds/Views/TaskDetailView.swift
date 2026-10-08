@@ -364,7 +364,7 @@ struct TaskDetailView: View {
             Text(FieldFormatting.label(field))
             Spacer()
             if let value {
-                Text(value)
+                Text(field == .contexts ? "\(value), \(value)" : value)   // GEGENPROBE #158, wird zurückgenommen
                     .foregroundStyle(origin != nil ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
             }
             switch origin {
