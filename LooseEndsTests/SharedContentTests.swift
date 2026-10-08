@@ -59,4 +59,16 @@ import Testing
     func nothing() {
         #expect(SharedContent.make(texts: [], urls: [], mails: []) == .empty)
     }
+
+    // #24 AC-1: the measuring line names types only, never what was shared.
+    @Test("The probe line lists the type identifiers and the loaded kind, nothing else")
+    func probeLine() {
+        let line = SharedContent.probeLine(typeIdentifiers: ["public.url", "public.plain-text"], loaded: "url")
+        #expect(line == "types=[public.url, public.plain-text] loaded=url")
+    }
+
+    @Test("The probe line states an attachment without types or a failed load plainly")
+    func probeLineEmpty() {
+        #expect(SharedContent.probeLine(typeIdentifiers: [], loaded: nil) == "types=[] loaded=none")
+    }
 }
