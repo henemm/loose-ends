@@ -127,6 +127,10 @@ liest sie interaktiv als Argumente). Die Labor-App (`./scripts/sim.sh lab`) ist 
 Apple Intelligence, nicht für den Test eines Tickets. Eine Cloud-Session erreicht seinen Mac und sein
 iPhone nicht; das sagt sie, statt Schritte zu verteilen.
 
+**Fragen an Henning immer über das AskUserQuestion-Tool** (Henning, 2026-10-08): jede Produktfrage,
+jede Auswahl zwischen nächsten Schritten, jede Bitte um Freigabe — als Auswahl mit Empfehlung zuerst,
+nie als Frage im Fließtext am Ende einer Antwort.
+
 CI runs on GitHub's preview label `xcode-27` with Xcode 27.0 pinned: every job uses the composite action
 `.github/actions/select-xcode-27`, which selects `/Applications/Xcode_27.app` and stops the run if it
 reports any other version. The deployment target stays at 27.0, nothing in `project.yml` is changed, and
