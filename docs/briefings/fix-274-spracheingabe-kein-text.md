@@ -1,6 +1,6 @@
 ---
 spec_file: docs/specs/fix-274-sichtbare-spracheingabe-diagnose.md
-spec_sha256: 92140878749e26d3f7333949ca4a8f3f10cb80e60a7a061a4f1206c37da63d24
+spec_sha256: dba554cb7264ec9de100d20acc5ddb9a1e27e41091a7018d05d6f533345f8e3c
 ---
 
 # PO-Briefing: fix-274-spracheingabe-kein-text
@@ -11,22 +11,22 @@ spec_sha256: 92140878749e26d3f7333949ca4a8f3f10cb80e60a7a061a4f1206c37da63d24
 
 ## Was gebaut wird
 
-Bei Ton ohne erkannten Text zeigt die Spracheingabe nach 6 Sekunden eine graue Diagnosezeile, repariert aber nichts.
+Bei Ton ohne erkannten Text zeigt die Spracherfassung nach 6 Sekunden eine graue Diagnosezeile, damit die Ursache sichtbar wird.
 
 ## Definition of Done
 
-Auf iPhone und iPad zeigt die TestFlight-App bei Ton ohne Text die Diagnosezeile; Henning sendet sie, Ursache bleibt offen.
+Auf Hennings iPhone erscheint die Zeile nach 6 Sekunden ohne Text und verschwindet beim ersten Ergebnis; Text kommt dadurch nicht zurück.
 
 ## Wie geprüft wird
 
-Tests belegen Schwellenregel und Zeilentext im Simulator; Zähler, Verschwinden und Neustart prüft nur ein Lauf auf dem iPhone, nicht das iPad.
+Unit- und Oberflächentests belegen Schwelle, Text und festen Anzeigezustand; Neustart, Aussehen, Modellgrund-Fälle und unveränderte Erkennung haben keinen automatischen Test.
 
 ## Kritische Anmerkungen
 
-- Ziel „Text wieder da" wird verfehlt; #274 bleibt offen, der eigentliche Fix folgt erst nach Hennings Rückmeldung.
-- Leere Ergebnisse unterdrücken die Zeile: „Kein Text" ohne Zeile bleibt möglich.
-- Sechs statt fünf Dateien, begründet; Wirkung auf dem iPad nur über TestFlight prüfbar.
+- Ziel „Text wieder da“ wird nicht erreicht; Ticket #274 bleibt offen, bis Hennings Zeile ausgewertet und ein Fix gebaut ist.
+- Am Gerät belegt sind nur Erscheinen, Verschwinden, Inhalt (Hennings Beobachtung); Neustart nur durch Code-Lesen, von Henning akzeptiert.
+- Sechs statt fünf Dateien; Grenze überschritten, begründet.
 
 ## Freigabe-Frage
 
-Soll diese reine Diagnose-Version ausgeliefert werden, obwohl die Spracheingabe danach noch keinen Text liefert?
+Gibst du diese reine Diagnose frei, obwohl #274 offen bleibt?

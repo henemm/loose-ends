@@ -41,6 +41,11 @@ jede Einladung externer Tester über TestFlight.
   geschlossen 2026-10-05 als nicht reproduzierbar: 0 Abstürze in 70 Stressläufen, gesehen nur einmal
   auf einem auffällig langsamen CI-Runner. Überwacht durch `speech-stress.yml` bei jeder PR, die die
   Spracherfassung berührt; taucht er dort auf, wird das Ticket wieder geöffnet.
+- [#274](https://github.com/henemm/loose-ends/issues/274) Spracheingabe zeigt Wellenform, aber keinen Text
+  (TestFlight Build 19) — nicht reproduzierbar (Prüfbau, Release, iPhone: Text kommt). Geliefert: graue
+  Diagnosezeile nach 6 s Ton ohne Ergebnis; bleibt offen, bis Henning in der TestFlight-Fassung sendet, was
+  die Zeile zeigt. Verwandt: [#279](https://github.com/henemm/loose-ends/issues/279) (Verzögerung,
+  stoßweise Ergebnisse, Pegelanzeige, Mikrofon-Symbol — möglicher Zusammenhang).
 - [#193](https://github.com/henemm/loose-ends/issues/193) Zustimmungs-Dialog nach „Not now“ — nicht
   reproduzierbar (17 Läufe), bleibt nach Hennings Entscheidung vom 2026-10-05 ohne Code offen.
 - ~~[#267](https://github.com/henemm/loose-ends/issues/267) Englische Test-Kontexte aus iCloud~~ —

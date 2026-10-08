@@ -145,7 +145,7 @@ wie `--ui-testing-dark`) gelesen; ohne es ändert sich unter `--ui-testing` nich
 - `testTextCarriesAllFacts`: Hinweis mit Status `installed`, Mikrofon ja, Sprache nein, Puffer 62, Ergebnisse 0 → Text
   enthält jede der fünf Angaben (Wert „62“, „0“, „installed“ und die beiden Ja/Nein-Wörter in der Reihenfolge Mikrofon, Sprache).
 - `testRestartStartsFresh`: Der Aufrufer ruft die Regel mit zurückgesetzten Zählern (0 s, 0 Puffer, 0 Ergebnisse) → `nil`.
-  (Das Zurücksetzen selbst in `SpeechCapture` belegt der Durchlauf auf dem Gerät, siehe unten.)
+  (Das Zurücksetzen selbst in `SpeechCapture` ist nur durch Code-Lesen belegt, siehe AC-11.)
 
 `SpeechDiagnosisLineTests` (UI-Smoke, Simulator, Englisch erzwungen):
 
@@ -164,8 +164,9 @@ nicht die Zähler.
 1. **Prüfbau** (`./scripts/sim.sh device-build` auf dem Stand, vorher `generate`) auf Hennings iPhone: Erfassung öffnen,
    Sprache ins Mikrofon, Text erscheint, die Zeile erscheint **nicht** (gesunder Fall, wie Lauf 3–5).
 2. Zeile hervorrufen: Mikrofon läuft, aber es wird nicht gesprochen und kein Ergebnis eintrifft → nach 6 s steht die Zeile
-   mit Puffern > 0 und Ergebnissen 0 da; ein Ergebnis (Sprechen) lässt sie verschwinden; Abbrechen und erneutes Öffnen
-   beginnt ohne Zeile. Ablauf mit dem Messkanal `xctrace --launch` im Protokoll gegengelesen (Zähler = „Ton kommt an“, „Erkannt“).
+   mit Puffern > 0 und Ergebnissen 0 da; ein Ergebnis (Sprechen) lässt sie verschwinden. Belegt durch Hennings Beobachtung
+   am Bildschirm; ein Mac-Protokoll gibt es nicht (der Messkanal `xctrace --launch` erreichte das Gerät nicht). Abbrechen
+   und erneutes Öffnen ohne Zeile wurde am Gerät nicht beobachtet, nur durch Code-Lesen belegt (siehe AC-11).
 3. **Neue TestFlight-Fassung** mit der Änderung ausliefern. Henning öffnet die Erfassung in seiner Alltags-App auf iPhone
    und iPad, spricht, und **sendet, was die Zeile zeigt** (Foto oder vorgelesen). Erst daraus folgt die Ursache und der
    Fix in einem eigenen Schnitt. Eine Fassung mit Hennings Hauptkennung wird nicht über seine TestFlight-App gelegt.
@@ -180,7 +181,7 @@ nicht die Zähler.
 - **AC-4 Ergebnis löscht:** Given die Zeile steht / When ein Teil- oder Endergebnis eintrifft / Then verschwindet die Zeile
   spätestens eine Sekunde danach und kommt im selben Lauf nicht wieder.
 - **AC-5 Neustart:** Given eine Zeile stand / When die Erfassung geschlossen und neu geöffnet wird / Then beginnen Puffer-
-  und Ergebniszähler und Uhr bei 0, und die Zeile erscheint erst wieder nach AC-1.
+  und Ergebniszähler und Uhr bei 0, und die Zeile erscheint erst wieder nach AC-1. (Beleg: nur Code-Lesen, siehe AC-11.)
 - **AC-6 Inhalt:** Die Zeile nennt Modellstatus, Mikrofonrecht, Spracherkennungsrecht, Anzahl Puffer, Anzahl Ergebnisse, auf
   Deutsch und Englisch nach der Gerätesprache.
 - **AC-7 Aussehen:** Grau (`.secondary`), `.footnote`, keine Farbe, keine Schaltfläche. Abbrechen, Tippen ins Feld und
@@ -190,8 +191,12 @@ nicht die Zähler.
   (Text kommt) sieht aus wie vorher, ohne zusätzliche Zeile.
 - **AC-10 Festzustand:** Mit `--ui-testing` und `--ui-testing-speech-diagnosis` zeigt die Erfassung die Zeile mit dem festen
   Text aus „Testen“; ohne das zweite Argument bleibt `--ui-testing` unverändert.
-- **AC-11 Gerät:** Prüfbau auf dem iPhone belegt AC-1, AC-4, AC-5 (Protokoll gegengelesen); in der neuen TestFlight-Fassung
-  sendet Henning, was die Zeile zeigt.
+- **AC-11 Gerät:** Prüfbau auf dem iPhone belegt AC-1, AC-4 und AC-6 (Hennings Beobachtung am Bildschirm; der Messkanal
+  `xctrace --launch` erreichte das Gerät nicht, ein Mac-Protokoll gibt es deshalb nicht). AC-5 (Neustart) ist am Gerät
+  nicht beobachtet und ist nur durch Lesen des Codes belegt (Zurücksetzen in `stop()` und `begin()`, Lauf-Kennung); ein
+  automatischer Test dafür besteht nicht (`testRestartStartsFresh` prüft nur die Regel mit Nullwerten, der UI-Test einen
+  festen Zustand). Henning hat diese Lücke am 2026-10-08 ausdrücklich akzeptiert. In der neuen TestFlight-Fassung sendet Henning, was die Zeile zeigt, und
+  meldet, falls sie nach dem Wiederöffnen Altwerte trägt.
 - **AC-12 Regression:** Unit, Build, UI-Smoke und Speech Stress (10×, weil `LooseEnds/Speech/**` berührt) grün.
 
 ## Dependencies
@@ -234,7 +239,8 @@ nicht die Zähler.
 
 - AC-1 bis AC-12 erfüllt; `SpeechDiagnosisTests` und `SpeechDiagnosisLineTests` grün, alle bestehenden Tests grün.
 - Der Durchlauf im Simulator mit `--ui-testing-speech-diagnosis` ist als Screenshot belegt und angesehen.
-- Prüfbau-Durchlauf auf dem iPhone mit Protokoll belegt; neue TestFlight-Fassung ausgeliefert.
+- Prüfbau-Durchlauf auf dem iPhone durch Hennings Beobachtung belegt (Erscheinen, Verschwinden, Inhalt; kein Mac-Protokoll,
+  siehe AC-11); neue TestFlight-Fassung ausgeliefert.
 - `docs/project/04-stand.md` nennt die Zeile und dass #274 offen bleibt, bis Hennings Antwort vorliegt.
 - Abschlussbericht ohne Git-Vokabular: was sich im Produkt ändert, und was Henning in der TestFlight-Fassung tun soll
   (Erfassung öffnen, sprechen, die graue Zeile senden).
@@ -242,3 +248,8 @@ nicht die Zähler.
 ## Changelog
 
 - 2026-10-08: Initiale Spec für #274 (Entwurf A freigegeben): sichtbare Kurzdiagnose bei Ton ohne Text.
+- 2026-10-08: AC-11 auf das am Gerät tatsächlich Belegte zusammengezogen (Erscheinen, Verschwinden, Inhalt); Neustart (AC-5)
+  ist nur durch Code belegt (kein automatischer Test), Entscheidung Henning nach dem Gerätelauf (Messkanal erreichte das
+  Gerät nicht). Definition of Done entsprechend nachgezogen.
+- 2026-10-08: Drei veraltete Formulierungen an AC-11 angeglichen (Testplan zu `testRestartStartsFresh`, Geräteablauf
+  Schritt 2, AC-5): kein „Protokoll gegengelesen“, Neustart nur durch Code-Lesen belegt. Inhaltlich keine Änderung.

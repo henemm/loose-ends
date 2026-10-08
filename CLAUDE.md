@@ -206,7 +206,9 @@ not scope creep on the current one.
   (iOS share sheet: text, links, mails via `SharedContent`) — platform targets
 - `LooseEnds/App/LaunchTimings.swift` — cold-start measuring points (#22): signposts always, `Documents/launch-timings.json`
   only in the probe build (`.probe`); launch argument `-measureLaunch` opens the capture scene
-- `LooseEnds/Speech` — `SpeechCapture` (live recognition for the capture scene, skipped under `--ui-testing`), `Waveform`
+- `LooseEnds/Speech` — `SpeechCapture` (live recognition for the capture scene, skipped under `--ui-testing`), `Waveform`,
+  `SpeechDiagnosis` (pure rule: after 6 s of audio without any result the capture shows a grey line with model status,
+  permissions, buffer and result counts, #274; `--ui-testing-speech-diagnosis` fixes that state for the UI smoke test)
 - `Shared/Notifications` — `DueReminders` (pure plan and action handling); `PlaceReminders` (which ≤ 20 places
   to watch, #226) and `PlaceDelivery` (what to hand to the system, replace or withdraw, from a per-device
   handover list; the system never reports delivery, #226 Schnitt 2a); `LooseEnds/Notifications` —

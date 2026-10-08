@@ -13,7 +13,7 @@ Datum: 2026-10-08 14:12
 - [x] **AC-8 Keine neue Zeile bei Grund:** Bei `unavailable`, `needsModel` und `loadingModel` erscheint die Zeile nie.
 - [x] **AC-9 Erkennung unverändert:** Keine Änderung an Transcriber, Analyzer, Tap, Wandler, Rechteabfrage; der gesunde Fall (Text kommt) sieht aus wie vorher, ohne zusätzliche Zeile.
 - [x] **AC-10 Festzustand:** Mit `--ui-testing` und `--ui-testing-speech-diagnosis` zeigt die Erfassung die Zeile mit dem festen Text aus „Testen“; ohne das zweite Argument bleibt `--ui-testing` unverändert.
-- [ ] **AC-11 Gerät (teilweise: AC-1/AC-4/AC-6 am iPhone belegt, AC-5 nur per Code, kein Mac-Protokoll):** Prüfbau auf dem iPhone belegt AC-1, AC-4, AC-5 (Protokoll gegengelesen); in der neuen TestFlight-Fassung sendet Henning, was die Zeile zeigt.
+- [x] **AC-11 Gerät (laut geänderter Spec: AC-1/AC-4/AC-6 am iPhone belegt, AC-5 nur per Code, kein Mac-Protokoll):** Prüfbau auf dem iPhone belegt Erscheinen, Verschwinden und Inhalt der Zeile durch Hennings Beobachtung; der Neustart ist nur durch Code-Lesen belegt, von Henning akzeptiert.
 - [x] **AC-12 Regression:** Unit, Build, UI-Smoke und Speech Stress (10×, weil `LooseEnds/Speech/**` berührt) grün.
 
 ## Dialog
@@ -191,6 +191,58 @@ Finding:
 F001-F004: behoben (siehe oben).
 **Implementierer:**
 
+### Runde 4
+**Adversary:** Die Spec wurde nach Runde 3 geändert (AC-11 auf das am Gerät Belegte reduziert, von Henning freigegeben). Bewertung von AC-11 gegen die geänderte Spec; Code seit Runde 3 unverändert (`git diff d7b4ce7 -- LooseEnds LooseEndsTests LooseEndsUITests` leer).
+
+Confirmation:
+  AC: AC-11
+  Code reference: LooseEnds/Speech/SpeechCapture.swift:113
+  Evidence: AC-11 verlangt nur noch Erscheinen, Verschwinden, Inhalt (AC-1, AC-4, AC-6) als Hennings Beobachtung am Bildschirm; geraetelauf-beleg.md belegt genau diese drei, nennt AC-5 "am Gerät nicht beobachtet" und kein Mac-Protokoll. AC-5 ist durch Code-Lesen belegt: stop() setzt resultCount und diagnosis zurück (SpeechCapture.swift:113-115), begin() setzt sie erneut (233-234), Lauf-Kennung in collect (269). Henning hat die Lücke am 2026-10-08 akzeptiert. Offen bleibt Hennings Rückmeldung der TestFlight-Fassung; sie ist Folgearbeit nach der Auslieferung, kein Teil dieser Abnahme.
+  Status: CONFIRMED
+
+Finding:
+  ID: F006
+  Severity: MEDIUM
+  Category: spec_violation
+  Code reference: LooseEnds/Speech/SpeechCapture.swift:113
+  Description: Die Spec behauptete an zwei Stellen noch mehr als belegt: Geräteablauf Schritt 2 ("Ablauf im Protokoll gegengelesen", Neustart als Teil des Geräteablaufs) und Testplan zu `testRestartStartsFresh` ("belegt der Durchlauf auf dem Gerät"). Dazu fehlte bei AC-5 der Verweis auf die Beleglage.
+  Spec requirement: AC-11
+  Conflict: Spec widersprach sich selbst und überbehauptete den Beleg.
+  Remediation: Formulierungen angleichen. Behoben: Spec geändert unter Hennings `override`, Änderungsverlauf ergänzt, Briefing neu erstellt und von Henning freigegeben. Per Nachlesen geprüft: kein "gegengelesen" mehr als Belegbehauptung.
+
+### Runde 5
+**Adversary:** Nach dem Aufsetzen auf main (#280, Zustand `.accessDenied`) wurde `SpeechCapture.swift` von Hand zusammengeführt (Commit a8886b3). Prüfung nur über Code, Diff und die frischen Läufe.
+
+Confirmation:
+  AC: AC-8
+  Code reference: LooseEnds/Speech/SpeechCapture.swift:86
+  Evidence: Konflikt korrekt gelöst: `microphoneGranted`/`speechGranted` werden vor `SpeechAccess.missing(...)` gesetzt (86-90), bei Treffer `state = .accessDenied(missing)` und `return` vor `begin()`; dort gibt es keinen Ton, keinen Puffer, keinen `check`-Task, `updateDiagnosis` hat zusätzlich `isListening && box != nil`. Die Zeile steht nur im Zweig `.idle/.listening` (LooseEnds/Views/CaptureView.swift:113 trennt `.accessDenied` in einen eigenen Fall). Nichts aus #280 verloren (SpeechAccess.swift unverändert), nichts aus #274 verloren.
+  Status: CONFIRMED
+
+Confirmation:
+  AC: AC-9
+  Code reference: LooseEnds/Speech/SpeechDiagnosis.swift:20
+  Evidence: Im Erkennungspfad nur Zähler und Lesezugriff unter bestehender Sperre; Transcriber, Analyzer, Konverter unangetastet. Localizable.xcstrings: Diagnose-Schlüssel und #280-Einträge beide vorhanden (LooseEnds/Resources/Localizable.xcstrings:242).
+  Status: CONFIRMED
+
+Confirmation:
+  AC: AC-12
+  Code reference: LooseEndsUITests/SpeechDiagnosisLineTests.swift:36
+  Evidence: Auf dem zusammengeführten Stand neu gelaufen: Unit grün inkl. Suiten "Speech diagnosis (#274)" und "Erfassung: fehlende Rechte (#280)" (test-green-output.txt), UI SpeechDiagnosisLineTests 2 Tests, 0 Failures (adversary-test-output.txt), Screenshot angesehen: graue Zeile unter türkisem Mikrofon.
+  Status: CONFIRMED
+
+Finding:
+  ID: F007
+  Severity: LOW
+  Category: test_gap
+  Code reference: LooseEnds/Views/CaptureView.swift:113
+  Description: Kein UI-Test belegt, dass im Zustand `.accessDenied` keine Diagnosezeile steht; der Beleg ist nur strukturell (eigener `case`, kein Audio). Kein Blocker.
+  Spec requirement: AC-8
+  Conflict: keiner
+  Remediation: keine nötig; bei Gelegenheit ein UI-Test.
+
+**Implementierer:**
+
 ## Herkunft der Vorbedingungen
 
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
@@ -198,28 +250,25 @@ kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 ## Verdict
 
 ═══════════════════════════════════════
-VERDICT: AMBIGUOUS
+VERDICT: VERIFIED
 ═══════════════════════════════════════
-Ambiguous findings (require human review):
-  AC-11: Am iPhone beobachtet sind AC-1 (Zeile erscheint), AC-4 (verschwindet beim Sprechen) und AC-6 (Inhalt sinnvoll), aber nur als Hennings Beobachtung, ohne Mac-Protokoll (Messkanal erreichte das Gerät nicht). AC-5 (Neustart beginnt bei 0) ist am Gerät nicht beobachtet, nur per Code belegt; die Spec verlangt "Protokoll gegengelesen" und AC-5. Außerdem fehlt noch Hennings Rückmeldung der TestFlight-Fassung.
-
-Proven points: 11/12 plus AC-11 teilweise (F001-F004 behoben, kein neuer Defekt; AC-9 gewahrt)
-Tests: UI SpeechDiagnosisLineTests 2 passed, 0 failed, 0 übersprungen (eigener Lauf, neu); Unit-Lauf 468 grün aus test-green-output.txt (älter als CaptureView.swift, nur dort relevant)
-Recommendation: Entweder AC-11 in der Spec auf das tatsächlich Belegte reduzieren (Neustart per Code und Unit-Test) und akzeptieren, oder einen Neustart am Gerät kurz beobachten lassen. Danach VERIFIED vertretbar.
+Proven points: 12/12 (nach Aufsetzen auf main; #280 und #274 vollständig erhalten; F001-F004, F006 behoben, F007 LOW offen ohne Handlungsbedarf)
+Tests: UI SpeechDiagnosisLineTests 2 passed, 0 failed, 0 übersprungen (adversary-test-output.txt); Unit-Lauf grün auf dem zusammengeführten Stand (test-green-output.txt)
+Hinweis: Neustart (AC-5) nur durch Code-Lesen belegt, von Henning akzeptiert; Speech Stress 10x läuft in der CI.
 
 ## Geprüfte Dateien
 
-- sha256:e3d0718d3375b57724af86c939f05f693fd50de13cc9be146f101b0f4c0862cb  LooseEnds/Resources/Localizable.xcstrings
-- sha256:50ffd7920e836c045d12e31ffbe6ce76faec930d506bb73a673c92bed557102d  LooseEnds/Speech/SpeechCapture.swift
+- sha256:99141e8704510efa51d92c63cef478e8b5602426aa42789d0facaba1cf5f09d4  LooseEnds/Resources/Localizable.xcstrings
+- sha256:43659fea1033ba4f58124665435689e84e278736b7fe42024a914c442ef47fe1  LooseEnds/Speech/SpeechCapture.swift
 - sha256:d5b0d236f081f083bfbce05d6e147956729e5507f7d073802462cfdea1570893  LooseEnds/Speech/SpeechDiagnosis.swift
-- sha256:d83a1dff9e2212ee89e7b7c5ef7d6cefcd5acf1353782cfd861b3fe598494480  LooseEnds/Views/CaptureView.swift
+- sha256:0a015ecb99f1e78f3b98f2ea29a0498112877881af8df9df44c843cfeb682ba5  LooseEnds/Views/CaptureView.swift
 - sha256:27a4548d7e22959d0c329698c72255ddded9d0735085abaa4d7e6a58d9009079  LooseEndsUITests/SpeechDiagnosisLineTests.swift
 
 ## Prüfbasis
 
-- base: c03dcf40dff737447cd6de3a2379312a0539f197
-- blob:0becde34d02fac8895a7e689474280cd0c3a2544  LooseEnds/Resources/Localizable.xcstrings
-- blob:f80ef3d59c709456c4f000b79154676c9bd97170  LooseEnds/Speech/SpeechCapture.swift
+- base: 5f7f3ec6f81dd58debe728175a4015e0e92d1f21
+- blob:5dc12060fdb99fddfd428bc8cd72b1b43bef57b6  LooseEnds/Resources/Localizable.xcstrings
+- blob:0588f35e95038ca051a788ea9594aa4f3c6ca94a  LooseEnds/Speech/SpeechCapture.swift
 - blob:0e63dd826c20f86ba7dd44c38e3e5bda7a4daf0a  LooseEnds/Speech/SpeechDiagnosis.swift
-- blob:9ff6b1b0ba3321c8bc4e30a771f3f30291d7f3aa  LooseEnds/Views/CaptureView.swift
+- blob:edf58dca257cb300287f48f1ccba9c01bf8cb352  LooseEnds/Views/CaptureView.swift
 - blob:66b1971137c7429e21d25ce40801ac8fd4154b2c  LooseEndsUITests/SpeechDiagnosisLineTests.swift
