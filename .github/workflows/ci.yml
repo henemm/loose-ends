@@ -59,6 +59,11 @@ jobs:
         # Only a real timestamp is cut: the old class `[0-9T:.Z-]+` also ate the "- " of every
         # list line, so a report copied from the log lost its bullets (#148).
         run: sed -n '/-REPORT BEGIN/,/-REPORT END/p' unit-tests.log | sed -E 's/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9:.]+Z //'
+      - name: Report skipped measurements
+        if: always()
+        # Measurement suites gated on personal data are skipped here and still read as passed
+        # (#149); the job summary says which ones did not measure.
+        run: python3 scripts/measurement_status.py --markdown >> "$GITHUB_STEP_SUMMARY"
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v7

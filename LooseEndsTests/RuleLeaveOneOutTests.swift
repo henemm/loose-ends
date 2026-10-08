@@ -18,7 +18,7 @@ private func repoFile(_ relativePath: String) -> URL {
         .deletingLastPathComponent()
         .appendingPathComponent(relativePath)
 }
-private let focusBloxTruthURL = repoFile("docs/reference/focusblox-corpus.json")
+private let focusBloxTruthURL = MeasurementData.focusBloxCorpus
 private let leaveOneOutReportURL = repoFile("docs/reference/retrieval-leave-one-out-rules.md")
 
 private func percent(_ value: Double) -> String {
@@ -194,7 +194,7 @@ struct RuleLeaveOneOutTests {
 /// Writes the leave-one-out report from the local FocusBlox truth export. Gated on that file:
 /// it is personal, gitignored data and never exists in CI. Calls no model and touches no device —
 /// plain in-memory string handling over a corpus already on disk.
-@Suite(.enabled(if: FileManager.default.fileExists(atPath: focusBloxTruthURL.path)))
+@Suite(.enabled(if: MeasurementData.exists(focusBloxTruthURL), MeasurementData.corpusMissing))
 struct RuleLeaveOneOutReportTests {
 
     @Test("Schreibt den Regel-Auslass-Bericht mit allen Pflichtspalten, ohne Modell- oder Geräteaufruf (AC-9)")
