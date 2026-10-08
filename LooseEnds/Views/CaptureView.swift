@@ -8,6 +8,7 @@ import SwiftUI
 struct CaptureView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.openURL) private var openURL
     @FocusState private var isFocused: Bool
     @State private var text: String
     @State private var saveFailed = false
@@ -76,7 +77,10 @@ struct CaptureView: View {
             if speech.isListening { text = transcript }
         }
         .onChange(of: speech.state) { _, state in
-            if case .unavailable = state { isFocused = true }
+            switch state {
+            case .unavailable, .accessDenied: isFocused = true
+            default: break
+            }
         }
         .onChange(of: isFocused) { _, focused in
             if focused { speech.stop() }
@@ -95,6 +99,20 @@ struct CaptureView: View {
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .accessibilityIdentifier("speechUnavailableLabel")
+        case .accessDenied(let access):
+            // Nach einem „Nicht erlauben“ fragt das System nie wieder; nur die Einstellungen helfen (#280).
+            HStack(spacing: 12) {
+                Text(access.message)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .accessibilityIdentifier("speechUnavailableLabel")
+                Spacer()
+                if let url = access.settingsURL {
+                    Button("Open Settings") { openURL(url) }
+                        .font(.footnote)
+                        .accessibilityIdentifier("speechOpenSettingsButton")
+                }
+            }
         case .needsModel:
             // Erst fragen, dann laden (Henning, 2026-10-07, #64): das Modell ist groß.
             HStack(spacing: 12) {

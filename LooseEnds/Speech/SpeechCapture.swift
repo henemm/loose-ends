@@ -15,6 +15,8 @@ final class SpeechCapture {
         case idle
         case listening
         case unavailable(String)
+        /// A right is missing; the scene names it and offers Settings (#280).
+        case accessDenied(SpeechAccess)
         /// The language is supported, the model is not on the device. Loaded only on a tap (Henning, 2026-10-07).
         case needsModel
         /// 0...1
@@ -68,8 +70,8 @@ final class SpeechCapture {
         let speech = await Self.requestSpeechAuthorization()
         // Ob SpeechAnalyzer das Spracherkennungsrecht braucht, ist nicht dokumentiert; Stufe 7 liest es hier ab.
         Self.logger.notice("Rechte: Mikrofon \(microphone, privacy: .public), Spracherkennung \(speech, privacy: .public)")
-        guard microphone, speech else {
-            state = .unavailable(String(localized: "Microphone or speech access was not allowed."))
+        if let missing = SpeechAccess.missing(microphone: microphone, speech: speech) {
+            state = .accessDenied(missing)
             return
         }
         guard ticket == stopCount else {
