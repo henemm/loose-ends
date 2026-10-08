@@ -2,6 +2,10 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "Microphone access is off. Type instead, or allow it in Settings." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Mikrofonzugriff ist aus. Tippe stattdessen oder erlaube ihn in den Einstellungen." } } } },
+    "Speech recognition is off. Type instead, or allow it in Settings." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Spracherkennung ist aus. Tippe stattdessen oder erlaube sie in den Einstellungen." } } } },
+    "Microphone and speech recognition are off. Type instead, or allow them in Settings." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Mikrofon und Spracherkennung sind aus. Tippe stattdessen oder erlaube beides in den Einstellungen." } } } },
+    "Open Settings" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Einstellungen öffnen" } } } },
     "Appointment" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Termin" } } } },
     "all day" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "ganztägig" } } } },
     "All day" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ganztägig" } } } },
@@ -145,7 +149,6 @@
     "Time" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Uhrzeit" } } } },
     "Names, comma separated" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Namen, durch Komma getrennt" } } } },
     "Speech recognition is not available." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Spracherkennung ist nicht verfügbar." } } } },
-    "Microphone or speech access was not allowed." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Mikrofon oder Spracherkennung wurde nicht erlaubt." } } } },
     "Stop listening" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nicht mehr zuhören" } } } },
     "Listen" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Zuhören" } } } },
     "Due today" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute fällig" } } } },
