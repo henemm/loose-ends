@@ -62,7 +62,7 @@ final class SpeechCapture {
             state = .needsModel
             return
         case .ready:
-            break
+            LaunchTimings.mark(.modelReady)
         }
         let microphone = await AVAudioApplication.requestRecordPermission()
         let speech = await Self.requestSpeechAuthorization()
@@ -174,6 +174,7 @@ final class SpeechCapture {
         let (stream, continuation) = AsyncStream<AnalyzerInput>.makeStream()
         let analyzer = SpeechAnalyzer(modules: [transcriber])
         try await analyzer.start(inputSequence: stream)
+        LaunchTimings.mark(.analyzerStarted)
         guard ticket == stopCount else {
             continuation.finish()
             await analyzer.cancelAndFinishNow()
@@ -202,10 +203,12 @@ final class SpeechCapture {
         self.engine = engine
         engine.prepare()
         try engine.start()
+        LaunchTimings.mark(.engineStarted)
 
         Self.logger.notice("Erkennung startet auf dem Gerät, Sprache \(Locale.current.identifier, privacy: .public)")
         transcript = ""
         state = .listening
+        LaunchTimings.mark(.listening)
         results = Task { [weak self] in await self?.collect(from: transcriber) }
     }
 
@@ -316,6 +319,7 @@ private final class ConverterBox: @unchecked Sendable {
         }
         for input in inputs { continuation.yield(input) }
         buffers += 1
+        if buffers == 1 { LaunchTimings.mark(.firstBuffer) }
         if buffers == 1 || buffers % 100 == 0 {
             SpeechCapture.logger.notice("Ton kommt an: \(self.buffers, privacy: .public) Puffer, zuletzt \(buffer.frameLength, privacy: .public) Bilder, \(inputs.count, privacy: .public) umgewandelt")
         }

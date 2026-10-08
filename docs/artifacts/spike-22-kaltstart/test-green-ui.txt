@@ -1,0 +1,490 @@
+[sim] Simulator bereit (iPhone 17).
+[sim] UI-Test: LaunchArgumentTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+note: Building targets in dependency order
+note: Target dependency graph (6 targets)
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch.SwiftFileList
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch.SwiftFileList
+[LooseEndsShare] Compile XCStrings Localizable.xcstrings
+[LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets.SwiftFileList
+[LooseEndsShare] Write Auxiliary File LooseEndsShare.SwiftFileList
+[LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-OutputFileMap.json
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch-OutputFileMap.json
+[LooseEndsShare] Write Auxiliary File LooseEndsShare-OutputFileMap.json
+[LooseEndsWidgets] Processing Info.plist
+[LooseEndsWidgets] Copying PrivacyInfo.xcprivacy
+[LooseEndsShare] Processing Info.plist
+[LooseEndsTests] Write Auxiliary File LooseEndsTests.SwiftFileList
+[LooseEndsTests] Write Auxiliary File LooseEndsTests.LinkFileList
+[LooseEndsTests] Write Auxiliary File LooseEndsTests.SwiftConstValuesFileList
+[LooseEndsTests] Write Auxiliary File LooseEndsTests-OutputFileMap.json
+[LooseEnds] Write Auxiliary File LooseEnds.SwiftFileList
+[LooseEnds] Write Auxiliary File LooseEnds.SwiftConstValuesFileList
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch-OutputFileMap.json
+[LooseEnds] Write Auxiliary File LooseEnds.LinkFileList
+[LooseEnds] Write Auxiliary File LooseEnds-OutputFileMap.json
+[LooseEndsShare] Copying PrivacyInfo.xcprivacy
+[LooseEndsShare] Copying Localizable.strings
+note: Emplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Products/Debug-watchsimulator/LooseEndsWatch.app/Assets.car (in target 'LooseEndsWatch' from project 'LooseEnds')
+[LooseEndsWatch] Copying PrivacyInfo.xcprivacy
+[LooseEndsWatch] Processing Info.plist
+[LooseEndsWidgets] Compiling CalendarAsk.swift
+[LooseEndsWidgets] Compiling CalendarSync.swift
+[LooseEndsWidgets] Compiling CaptureControl.swift
+[LooseEndsWidgets] Compiling CaptureService.swift
+[LooseEndsWidgets] Compiling CaptureTextIntent.swift
+[LooseEndsWidgets] Compiling EnrichmentDraft.swift
+[LooseEndsWidgets] Compiling EnrichmentWriter.swift
+[LooseEndsWidgets] Compiling Enums.swift
+[LooseEndsWidgets] Compiling FieldCodec.swift
+[LooseEndsWidgets] Compiling FoundationModelsEnricher.swift
+[LooseEndsWidgets] Compiling TimeExpressionParser.swift
+[LooseEndsWidgets] Compiling TitleRule.swift
+[LooseEndsWidgets] Compiling ViewRules.swift
+[LooseEndsWidgets] Compiling ViewSelection.swift
+[LooseEndsWidgets] Compiling WaitingOn.swift
+[LooseEndsWidgets] Compiling ImportanceUrgencyRule.swift
+[LooseEndsWidgets] Compiling LooseEndsWidgetsBundle.swift
+[LooseEndsWidgets] Compiling ModelContainerFactory.swift
+[LooseEndsWidgets] Compiling NextUpWidget.swift
+[LooseEndsWidgets] Compiling PendingCompletions.swift
+[LooseEndsWidgets] Compiling RuleTrigger.swift
+[LooseEndsWidgets] Compiling SavedView.swift
+[LooseEndsWidgets] Compiling SharedContent.swift
+[LooseEndsWidgets] Compiling SiriFields.swift
+[LooseEndsWidgets] Compiling SiriRepeatMapping.swift
+[LooseEndsWidgets] Compiling CatalogService.swift
+[LooseEndsWidgets] Compiling CloudKitSchemaInitializer.swift
+[LooseEndsWidgets] Compiling CompletionRecord.swift
+[LooseEndsWidgets] Compiling ContextSeeder.swift
+[LooseEndsWidgets] Compiling ContextWordLearning.swift
+[LooseEndsWidgets] Compiling Subtasks.swift
+[LooseEndsWidgets] Compiling TaskActions.swift
+[LooseEndsWidgets] Compiling TaskContext.swift
+[LooseEndsWidgets] Compiling TaskItem.swift
+[LooseEndsWidgets] Compiling TaskPlace.swift
+[LooseEndsWidgets] Compiling PlaceDelivery.swift
+[LooseEndsWidgets] Compiling PlaceEditing.swift
+[LooseEndsWidgets] Compiling PlaceReminders.swift
+[LooseEndsWidgets] Compiling ProcessCache.swift
+[LooseEndsWidgets] Compiling Project.swift
+[LooseEndsWidgets] Compiling ContextWordRule.swift
+[LooseEndsWidgets] Compiling DateExpressionParser.swift
+[LooseEndsWidgets] Compiling DueDateRule.swift
+[LooseEndsWidgets] Compiling DueReminders.swift
+[LooseEndsWidgets] Compiling EnrichmentCoordinator.swift
+[LooseEndsWidgets] Compiling RawTextWords.swift
+[LooseEndsWidgets] Compiling RecognitionRule.swift
+[LooseEndsWidgets] Compiling RepeatRule.swift
+[LooseEndsWidgets] Compiling Revision.swift
+[LooseEndsWidgets] Compiling RevisionService.swift
+[LooseEndsWatch] Compiling TaskContext.swift
+[LooseEndsWatch] Compiling TaskItem.swift
+[LooseEndsWatch] Compiling TaskPlace.swift
+[LooseEndsWatch] Compiling TimeExpressionParser.swift
+[LooseEndsWatch] Compiling TitleRule.swift
+[LooseEndsWidgets] Copy arm64-apple-ios-simulator.swiftmodule -> LooseEndsWidgets.swiftmodule
+[LooseEndsWidgets] Copy arm64-apple-ios-simulator.abi.json -> LooseEndsWidgets.abi.json
+[LooseEndsWidgets] Copy arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsWidgets.swiftsourceinfo
+[LooseEndsWatch] Copy arm64-apple-watchos-simulator.swiftmodule -> LooseEndsWatch.swiftmodule
+[LooseEndsWatch] Copy arm64-apple-watchos-simulator.abi.json -> LooseEndsWatch.abi.json
+[LooseEndsWatch] Copy arm64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatch.swiftsourceinfo
+[LooseEndsShare] Copy arm64-apple-ios-simulator.swiftmodule -> LooseEndsShare.swiftmodule
+[LooseEndsShare] Copy arm64-apple-ios-simulator.abi.json -> LooseEndsShare.abi.json
+[LooseEndsWatch] Copy x86_64-apple-watchos-simulator.swiftmodule -> LooseEndsWatch.swiftmodule
+[LooseEndsWatch] Copy x86_64-apple-watchos-simulator.abi.json -> LooseEndsWatch.abi.json
+[LooseEndsWatch] Copy x86_64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatch.swiftsourceinfo
+[LooseEndsShare] Copy arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsShare.swiftsourceinfo
+[LooseEndsWatch] Compiling EnrichmentWriter.swift
+[LooseEndsWatch] Compiling Enums.swift
+[LooseEndsWatch] Compiling FieldCodec.swift
+[LooseEndsWatch] Compiling FoundationModelsEnricher.swift
+[LooseEndsWatch] Compiling ImportanceUrgencyRule.swift
+[LooseEndsWatch] Compiling ViewRules.swift
+[LooseEndsWatch] Compiling ViewSelection.swift
+[LooseEndsWatch] Compiling WaitingOn.swift
+[LooseEndsWatch] Compiling WatchCaptureView.swift
+[LooseEndsWatch] Compiling GeneratedAssetSymbols.swift
+[LooseEndsWatch] Compiling CalendarAsk.swift
+[LooseEndsWatch] Compiling CalendarSync.swift
+[LooseEndsWatch] Compiling CaptureService.swift
+[LooseEndsWatch] Compiling CaptureTextIntent.swift
+[LooseEndsWatch] Compiling CatalogService.swift
+[LooseEndsWatch] Compiling SharedContent.swift
+[LooseEndsWatch] Compiling SiriFields.swift
+[LooseEndsWatch] Compiling SiriRepeatMapping.swift
+[LooseEndsWatch] Compiling Subtasks.swift
+[LooseEndsWatch] Compiling TaskActions.swift
+[LooseEndsWatch] Compiling RepeatRule.swift
+[LooseEndsWatch] Compiling Revision.swift
+[LooseEndsWatch] Compiling RevisionService.swift
+[LooseEndsWatch] Compiling RuleTrigger.swift
+[LooseEndsWatch] Compiling SavedView.swift
+[LooseEndsWatch] Compiling CloudKitSchemaInitializer.swift
+[LooseEndsWatch] Compiling CompletionRecord.swift
+[LooseEndsWatch] Compiling ContextSeeder.swift
+[LooseEndsWatch] Compiling ContextWordLearning.swift
+[LooseEndsWatch] Compiling ContextWordRule.swift
+[LooseEndsWatch] Compiling PlaceReminders.swift
+[LooseEndsWatch] Compiling ProcessCache.swift
+[LooseEndsWatch] Compiling Project.swift
+[LooseEndsWatch] Compiling RawTextWords.swift
+[LooseEndsWatch] Compiling RecognitionRule.swift
+[LooseEndsWatch] Compiling TaskContext.swift
+[LooseEndsWatch] Compiling TaskItem.swift
+[LooseEndsWatch] Compiling TaskPlace.swift
+[LooseEndsWatch] Compiling TimeExpressionParser.swift
+[LooseEndsWatch] Compiling TitleRule.swift
+[LooseEndsWatch] Compiling LooseEndsWatchApp.swift
+[LooseEndsWatch] Compiling ModelContainerFactory.swift
+[LooseEndsWatch] Compiling PendingCompletions.swift
+[LooseEndsWatch] Compiling PlaceDelivery.swift
+[LooseEndsWatch] Compiling PlaceEditing.swift
+[LooseEndsWatch] Compiling DateExpressionParser.swift
+[LooseEndsWatch] Compiling DueDateRule.swift
+[LooseEndsWatch] Compiling DueReminders.swift
+[LooseEndsWatch] Compiling EnrichmentCoordinator.swift
+[LooseEndsWatch] Compiling EnrichmentDraft.swift
+[LooseEndsWatch] Compiling EnrichmentWriter.swift
+[LooseEndsWatch] Compiling Enums.swift
+[LooseEndsWatch] Compiling FieldCodec.swift
+[LooseEndsWatch] Compiling FoundationModelsEnricher.swift
+[LooseEndsWatch] Compiling ImportanceUrgencyRule.swift
+[LooseEndsWatch] Compiling SharedContent.swift
+[LooseEndsWatch] Compiling SiriFields.swift
+[LooseEndsWatch] Compiling SiriRepeatMapping.swift
+[LooseEndsWatch] Compiling Subtasks.swift
+[LooseEndsWatch] Compiling TaskActions.swift
+[LooseEndsWatch] Compiling CloudKitSchemaInitializer.swift
+[LooseEndsWatch] Compiling CompletionRecord.swift
+[LooseEndsWatch] Compiling ContextSeeder.swift
+[LooseEndsWatch] Compiling ContextWordLearning.swift
+[LooseEndsWatch] Compiling ContextWordRule.swift
+[LooseEndsWatch] Compiling ViewRules.swift
+[LooseEndsWatch] Compiling ViewSelection.swift
+[LooseEndsWatch] Compiling WaitingOn.swift
+[LooseEndsWatch] Compiling WatchCaptureView.swift
+[LooseEndsWatch] Compiling GeneratedAssetSymbols.swift
+[LooseEndsWatch] Compiling PlaceReminders.swift
+[LooseEndsWatch] Compiling ProcessCache.swift
+[LooseEndsWatch] Compiling Project.swift
+[LooseEndsWatch] Compiling RawTextWords.swift
+[LooseEndsWatch] Compiling RecognitionRule.swift
+[LooseEndsWatch] Compiling DateExpressionParser.swift
+[LooseEndsWatch] Compiling DueDateRule.swift
+[LooseEndsWatch] Compiling DueReminders.swift
+[LooseEndsWatch] Compiling EnrichmentCoordinator.swift
+[LooseEndsWatch] Compiling EnrichmentDraft.swift
+[LooseEndsWatch] Compiling RepeatRule.swift
+[LooseEndsWatch] Compiling Revision.swift
+[LooseEndsWatch] Compiling RevisionService.swift
+[LooseEndsWatch] Compiling RuleTrigger.swift
+[LooseEndsWatch] Compiling SavedView.swift
+[LooseEndsWatch] Compiling LooseEndsWatchApp.swift
+[LooseEndsWatch] Compiling ModelContainerFactory.swift
+[LooseEndsWatch] Compiling PendingCompletions.swift
+[LooseEndsWatch] Compiling PlaceDelivery.swift
+[LooseEndsWatch] Compiling PlaceEditing.swift
+[LooseEndsWatch] Compiling CalendarAsk.swift
+[LooseEndsWatch] Compiling CalendarSync.swift
+[LooseEndsWatch] Compiling CaptureService.swift
+[LooseEndsWatch] Compiling CaptureTextIntent.swift
+[LooseEndsWatch] Compiling CatalogService.swift
+[LooseEndsShare] Compiling DateExpressionParser.swift
+[LooseEndsShare] Compiling DueDateRule.swift
+[LooseEndsShare] Compiling DueReminders.swift
+[LooseEndsShare] Compiling EnrichmentCoordinator.swift
+[LooseEndsShare] Compiling EnrichmentDraft.swift
+[LooseEndsShare] Compiling TaskActions.swift
+[LooseEndsShare] Compiling TaskContext.swift
+[LooseEndsShare] Compiling TaskItem.swift
+[LooseEndsShare] Compiling TaskPlace.swift
+[LooseEndsShare] Compiling TimeExpressionParser.swift
+[LooseEndsShare] Compiling Revision.swift
+[LooseEndsShare] Compiling RevisionService.swift
+[LooseEndsShare] Compiling RuleTrigger.swift
+[LooseEndsShare] Compiling SavedView.swift
+[LooseEndsShare] Compiling ShareCaptureView.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsShare/ShareViewController.swift:47:57: 'loadItem(forTypeIdentifier:options:)' was deprecated in iOS 27.0: Use loadObjectOfClass:completionHandler: instead. [#DeprecatedDeclaration]
+45 |                 do {
+46 |                     if provider.hasItemConformingToTypeIdentifier(UTType.emailMessage.identifier) {
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsShare/ShareViewController.swift:50:57: 'loadItem(forTypeIdentifier:options:)' was deprecated in iOS 27.0: Use loadObjectOfClass:completionHandler: instead. [#DeprecatedDeclaration]
+48 |                         if let raw = string(from: loaded) { mails.append(raw) }
+49 |                     } else if provider.hasItemConformingToTypeIdentifier(UTType.url.identifier) {
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsShare/ShareViewController.swift:53:57: 'loadItem(forTypeIdentifier:options:)' was deprecated in iOS 27.0: Use loadObjectOfClass:completionHandler: instead. [#DeprecatedDeclaration]
+51 |                         if let url = loaded as? URL { urls.append(url) }
+52 |                     } else if provider.hasItemConformingToTypeIdentifier(UTType.plainText.identifier) {
+[LooseEndsShare] Compiling ShareViewController.swift
+[LooseEndsShare] Compiling SharedContent.swift
+[LooseEndsShare] Compiling SiriFields.swift
+[LooseEndsShare] Compiling SiriRepeatMapping.swift
+[LooseEndsShare] Compiling Subtasks.swift
+[LooseEndsShare] Compiling CloudKitSchemaInitializer.swift
+[LooseEndsShare] Compiling CompletionRecord.swift
+[LooseEndsShare] Compiling ContextSeeder.swift
+[LooseEndsShare] Compiling ContextWordLearning.swift
+[LooseEndsShare] Compiling ContextWordRule.swift
+[LooseEndsShare] Compiling CalendarAsk.swift
+[LooseEndsShare] Compiling CalendarSync.swift
+[LooseEndsShare] Compiling CaptureService.swift
+[LooseEndsShare] Compiling CaptureTextIntent.swift
+[LooseEndsShare] Compiling CatalogService.swift
+[LooseEndsShare] Compiling EnrichmentWriter.swift
+[LooseEndsShare] Compiling Enums.swift
+[LooseEndsShare] Compiling FieldCodec.swift
+[LooseEndsShare] Compiling FoundationModelsEnricher.swift
+[LooseEndsShare] Compiling ImportanceUrgencyRule.swift
+[LooseEndsShare] Compiling ModelContainerFactory.swift
+[LooseEndsShare] Compiling PendingCompletions.swift
+[LooseEndsShare] Compiling PlaceDelivery.swift
+[LooseEndsShare] Compiling PlaceEditing.swift
+[LooseEndsShare] Compiling PlaceReminders.swift
+[LooseEndsShare] Compiling TitleRule.swift
+[LooseEndsShare] Compiling ViewRules.swift
+[LooseEndsShare] Compiling ViewSelection.swift
+[LooseEndsShare] Compiling WaitingOn.swift
+[LooseEndsShare] Compiling ProcessCache.swift
+[LooseEndsShare] Compiling Project.swift
+[LooseEndsShare] Compiling RawTextWords.swift
+[LooseEndsShare] Compiling RecognitionRule.swift
+[LooseEndsShare] Compiling RepeatRule.swift
+[LooseEndsWidgets] Linking LooseEndsWidgets.debug.dylib
+[LooseEndsWatch] Linking LooseEndsWatch.debug.dylib
+[LooseEndsWatch] Linking LooseEndsWatch.debug.dylib
+note: Using stub executor library with Swift entry point. (in target 'LooseEndsWidgets' from project 'LooseEnds')
+[LooseEnds] Generate Asset Symbols Assets.xcassets
+[LooseEndsWidgets] Linking LooseEndsWidgets
+[LooseEndsWidgets] Extract App Intents Metadata
+note: Using stub executor library with Swift entry point. (in target 'LooseEndsWatch' from project 'LooseEnds')
+note: Using stub executor library with Swift entry point. (in target 'LooseEndsWatch' from project 'LooseEnds')
+[LooseEndsWatch] Create Universal Binary LooseEndsWatch.debug.dylib
+[LooseEndsWatch] Linking LooseEndsWatch
+[LooseEndsWatch] Linking LooseEndsWatch
+[LooseEndsWatch] Create Universal Binary LooseEndsWatch
+[LooseEndsWatch] Extract App Intents Metadata
+[LooseEnds] Compiling CalendarAsk.swift
+[LooseEnds] Compiling CalendarAskSheet.swift
+[LooseEnds] Compiling CalendarBridge.swift
+[LooseEnds] Compiling CalendarSync.swift
+[LooseEnds] Compiling CaptureService.swift
+[LooseEnds] Compiling CaptureTextIntent.swift
+[LooseEnds] Compiling CaptureView.swift
+[LooseEnds] Compiling CatalogService.swift
+[LooseEnds] Compiling PlaceSearch.swift
+[LooseEnds] Compiling PlaceSection.swift
+[LooseEnds] Compiling ProcessCache.swift
+[LooseEnds] Compiling Project.swift
+[LooseEnds] Compiling RawTextWords.swift
+[LooseEnds] Compiling RecognitionRule.swift
+[LooseEnds] Compiling RepeatRule.swift
+[LooseEnds] Compiling Revision.swift
+[LooseEnds] Compiling RevisionService.swift
+[LooseEnds] Compiling RuleTrigger.swift
+[LooseEnds] Compiling SavedView.swift
+[LooseEnds] Compiling SharedContent.swift
+[LooseEnds] Compiling SidebarView.swift
+[LooseEnds] Compiling SiriFields.swift
+[LooseEnds] Compiling DueDateRule.swift
+[LooseEnds] Compiling DueNotificationCenter.swift
+[LooseEnds] Compiling DueReminders.swift
+[LooseEnds] Compiling EnrichmentCoordinator.swift
+[LooseEnds] Compiling EnrichmentDraft.swift
+[LooseEnds] Compiling EnrichmentWriter.swift
+[LooseEnds] Compiling Enums.swift
+[LooseEnds] Compiling FieldCodec.swift
+[LooseEnds] Compiling FieldEditorView.swift
+[LooseEnds] Compiling FieldFormatting.swift
+[LooseEnds] Compiling FoundationModelsEnricher.swift
+[LooseEnds] Compiling ImportanceUrgencyRule.swift
+[LooseEnds] Compiling LaunchTimings.swift
+[LooseEnds] Compiling LooseEndsApp.swift
+[LooseEnds] Compiling MainThreadWatchdog.swift
+[LooseEnds] Compiling ModelContainerFactory.swift
+[LooseEnds] Compiling MoveDateSheet.swift
+[LooseEnds] Compiling OnboardingFlow.swift
+[LooseEnds] Compiling OnboardingView.swift
+[LooseEnds] Compiling Paper.swift
+[LooseEnds] Compiling PendingCompletions.swift
+[LooseEnds] Compiling PlaceDelivery.swift
+[LooseEnds] Compiling PlaceEditing.swift
+[LooseEnds] Compiling PlaceReminders.swift
+[LooseEnds] Compiling TitleRule.swift
+[LooseEnds] Compiling ViewRules.swift
+[LooseEnds] Compiling ViewSelection.swift
+[LooseEnds] Compiling WaitingOn.swift
+[LooseEnds] Compiling WaitingOnSection.swift
+[LooseEnds] Compiling Waveform.swift
+[LooseEnds] Compiling GeneratedAssetSymbols.swift
+[LooseEnds] Compiling TaskDetailView.swift
+[LooseEnds] Compiling TaskItem.swift
+[LooseEnds] Compiling TaskListView.swift
+[LooseEnds] Compiling TaskPlace.swift
+[LooseEnds] Compiling TaskRow.swift
+[LooseEnds] Compiling Thread.swift
+[LooseEnds] Compiling TimeExpressionParser.swift
+[LooseEndsShare] Linking LooseEndsShare.debug.dylib
+note: Emplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Products/Debug-iphonesimulator/LooseEnds.app/Assets.car (in target 'LooseEnds' from project 'LooseEnds')
+note: Emplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Products/Debug-iphonesimulator/LooseEnds.app/AppIcon76x76@2x~ipad.png (in target 'LooseEnds' from project 'LooseEnds')
+note: Emplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Products/Debug-iphonesimulator/LooseEnds.app/AppIcon60x60@2x.png (in target 'LooseEnds' from project 'LooseEnds')
+note: Using stub executor library without Swift entry point. (in target 'LooseEndsShare' from project 'LooseEnds')
+[LooseEnds] Compiling SiriRepeatMapping.swift
+[LooseEnds] Compiling SpeechCapture.swift
+[LooseEnds] Compiling SpeechReadiness.swift
+[LooseEnds] Compiling Subtasks.swift
+[LooseEnds] Compiling SubtasksSection.swift
+[LooseEnds] Compiling TaskActions.swift
+[LooseEnds] Compiling TaskContext.swift
+[LooseEndsShare] Linking LooseEndsShare
+[LooseEnds] Compiling CloudKitSchemaInitializer.swift
+[LooseEnds] Compiling CompletionRecord.swift
+[LooseEnds] Compiling ContentView.swift
+[LooseEnds] Compiling ContextSeeder.swift
+[LooseEnds] Compiling ContextWordLearning.swift
+[LooseEnds] Compiling ContextWordRule.swift
+[LooseEnds] Compiling DateExpressionParser.swift
+[LooseEnds] Compiling DetailLayout.swift
+[LooseEndsShare] Extract App Intents Metadata
+[LooseEnds] Compile XCStrings Localizable.xcstrings
+[LooseEnds] Copying PrivacyInfo.xcprivacy
+[LooseEnds] Copying Localizable.strings
+[LooseEnds] Copy arm64-apple-ios-simulator.swiftmodule -> LooseEnds.swiftmodule
+[LooseEnds] Copy arm64-apple-ios-simulator.swiftdoc -> LooseEnds.swiftdoc
+[LooseEnds] Copy arm64-apple-ios-simulator.abi.json -> LooseEnds.abi.json
+[LooseEnds] Copy arm64-apple-ios-simulator.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+[LooseEndsTests] Compiling FocusBloxCalibrationTests.swift
+[LooseEndsTests] Compiling ImportanceUrgencyRuleTests.swift
+[LooseEndsTests] Compiling IntentExecutionTests.swift
+[LooseEndsTests] Compiling LaunchTimingsTests.swift
+[LooseEndsTests] Compiling LeaveOneOut.swift
+[LooseEndsTests] Compiling ListPolishTests.swift
+[LooseEndsTests] Compiling MeasurementFieldScopeTests.swift
+[LooseEndsTests] Compiling DetailLayoutTests.swift
+[LooseEndsTests] Compiling DueDateRuleTests.swift
+[LooseEndsTests] Compiling DueRemindersTests.swift
+[LooseEndsTests] Compiling EnergyTests.swift
+[LooseEndsTests] Compiling EnrichmentTests.swift
+[LooseEndsTests] Compiling FieldEditTests.swift
+[LooseEndsTests] Compiling FieldOriginTests.swift
+[LooseEndsTests] Compiling ContextWordRuleTests.swift
+[LooseEndsTests] Compiling ConventionBaselineTests.swift
+[LooseEndsTests] Compiling Corpus.swift
+[LooseEndsTests] Compiling CorpusTests.swift
+[LooseEndsTests] Compiling DateExpressionParserTests.swift
+[LooseEndsTests] Compiling DateParserCorpusTests.swift
+[LooseEndsTests] Compiling DateTitleReportTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/MeasurementRunTests.swift:71:44: 'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration]
+ 69 |         #expect(MeasurementErrorKind.classify(NSError(domain: "x", code: 1)) == "andere")
+ 70 |         #if canImport(FoundationModels)
+⚠️  macro expansion #expect:1:83: 'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration]
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/MeasurementRunTests.swift:72:123: note: expanded code originates here
+ 70 |         #if canImport(FoundationModels)
+⚠️  macro expansion #expect:1:99: 'rateLimited' was deprecated in iOS 27.0: Use ``LanguageModelError/rateLimited(_:)`` instead. [#DeprecatedDeclaration]
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/MeasurementRunTests.swift:72:123: note: expanded code originates here
+ 70 |         #if canImport(FoundationModels)
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/MeasurementRunTests.swift:72:68: 'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration]
+ 70 |         #if canImport(FoundationModels)
+ 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/MeasurementRunTests.swift:72:84: 'rateLimited' was deprecated in iOS 27.0: Use ``LanguageModelError/rateLimited(_:)`` instead. [#DeprecatedDeclaration]
+ 70 |         #if canImport(FoundationModels)
+ 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")
+⚠️  macro expansion #expect:1:83: 'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration]
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/MeasurementRunTests.swift:73:128: note: expanded code originates here
+ 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")
+⚠️  macro expansion #expect:1:99: 'guardrailViolation' was deprecated in iOS 27.0: Use ``LanguageModelError/guardrailViolation(_:)`` instead. [#DeprecatedDeclaration]
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/MeasurementRunTests.swift:73:128: note: expanded code originates here
+ 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/MeasurementRunTests.swift:73:68: 'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration]
+ 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")
+ 72 |         #expect(MeasurementErrorKind.classify(LanguageModelSession.GenerationError.rateLimited(context)) == "rateLimited")
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/MeasurementRunTests.swift:73:84: 'guardrailViolation' was deprecated in iOS 27.0: Use ``LanguageModelError/guardrailViolation(_:)`` instead. [#DeprecatedDeclaration]
+ 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")
+ 72 |         #expect(MeasurementErrorKind.classify(LanguageModelSession.GenerationError.rateLimited(context)) == "rateLimited")
+[LooseEndsTests] Compiling MeasurementRunTests.swift
+[LooseEndsTests] Compiling ModelContainerFactoryTests.swift
+[LooseEndsTests] Compiling ModelTests.swift
+[LooseEndsTests] Compiling OnboardingFlowTests.swift
+[LooseEndsTests] Compiling PendingCompletionsTests.swift
+[LooseEndsTests] Compiling PlaceDeliveryTests.swift
+[LooseEndsTests] Compiling PlaceEditingTests.swift
+[LooseEndsTests] Compiling CalendarAskTests.swift
+[LooseEndsTests] Compiling CalendarSyncTests.swift
+[LooseEndsTests] Compiling CaptureServiceTests.swift
+[LooseEndsTests] Compiling CatalogServiceTests.swift
+[LooseEndsTests] Compiling CloudKitSchemaInitializerTests.swift
+[LooseEndsTests] Compiling ContextWordLearningReportTests.swift
+[LooseEndsTests] Compiling ContextWordLearningTests.swift
+[LooseEndsTests] Compiling RuleTriggerTests.swift
+[LooseEndsTests] Compiling SelfConsistencyReportTests.swift
+[LooseEndsTests] Compiling SelfConsistencyTests.swift
+[LooseEndsTests] Compiling SharedContentTests.swift
+[LooseEndsTests] Compiling SiriFieldsTests.swift
+[LooseEndsTests] Compiling SiriRepeatMappingTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/TaskActionsTests.swift:172:37: '#require(_:_:)' is redundant because 'calendar.date(byAdding: .hour, value: 5, to: wednesday)' never equals 'nil' (from macro 'require')
+170 |         let task = TaskItem(rawText: "Zahnarzt anrufen")
+171 |         let wednesday = try day(2026, 9, 16, in: calendar)
+[LooseEndsTests] Compiling SpeechReadinessTests.swift
+[LooseEndsTests] Compiling StartViewsTests.swift
+[LooseEndsTests] Compiling SubtaskTests.swift
+[LooseEndsTests] Compiling TaskActionsTests.swift
+[LooseEndsTests] Compiling TaskPlaceTests.swift
+[LooseEndsTests] Compiling TextFormRuleReportTests.swift
+[LooseEndsTests] Compiling PlaceRemindersTests.swift
+[LooseEndsTests] Compiling ProcessCacheTests.swift
+[LooseEndsTests] Compiling ProjectLinesTests.swift
+[LooseEndsTests] Compiling RawTextWords.swift
+[LooseEndsTests] Compiling ReanalysisTests.swift
+[LooseEndsTests] Compiling RecognitionRuleTests.swift
+[LooseEndsTests] Compiling ThreadShapeTests.swift
+[LooseEndsTests] Compiling TimeExpressionParserTests.swift
+[LooseEndsTests] Compiling TitleFidelityPromptTests.swift
+[LooseEndsTests] Compiling TitleRuleTests.swift
+[LooseEndsTests] Compiling WaitingOnTests.swift
+[LooseEndsTests] Compiling WaveformTests.swift
+[LooseEndsTests] Compiling RepeatEditTests.swift
+[LooseEndsTests] Compiling RepeatRuleTests.swift
+[LooseEndsTests] Compiling ReviewTrayTests.swift
+[LooseEndsTests] Compiling RevisionServiceTests.swift
+[LooseEndsTests] Compiling RuleBaseline.swift
+[LooseEndsTests] Compiling RuleLeaveOneOutTests.swift
+[LooseEnds] Linking LooseEnds.debug.dylib
+[LooseEndsTests] Copy arm64-apple-ios-simulator.swiftmodule -> LooseEndsTests.swiftmodule
+[LooseEndsTests] Copy arm64-apple-ios-simulator.swiftdoc -> LooseEndsTests.swiftdoc
+[LooseEndsTests] Copy arm64-apple-ios-simulator.abi.json -> LooseEndsTests.abi.json
+[LooseEndsTests] Copy arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsTests.swiftsourceinfo
+note: Using stub executor library with Swift entry point. (in target 'LooseEnds' from project 'LooseEnds')
+[LooseEnds] Linking LooseEnds
+[LooseEnds] Copy LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[LooseEnds] Copy LooseEndsShare.appex -> LooseEndsShare.appex
+[LooseEnds] Copy LooseEndsWatch.app -> LooseEndsWatch.app
+[LooseEnds] Processing Info.plist
+[LooseEnds] Extract App Intents Metadata
+[LooseEnds] Validate Embedded Binary LooseEndsWatch.app
+[LooseEnds] Validate Embedded Binary LooseEndsWidgets.appex
+[LooseEnds] Validate Embedded Binary LooseEndsShare.appex
+[LooseEndsTests] Processing empty-LooseEndsTests.plist
+[LooseEndsTests] Copying textform-corpus.json
+[LooseEndsTests] Linking LooseEndsTests
+[LooseEndsTests] Extract App Intents Metadata
+[LooseEnds] Validate LooseEnds.app
+[LooseEndsUITests] Processing empty-LooseEndsUITests.plist
+[LooseEndsUITests] Copying textform-corpus.json
+Test Suite 'Selected tests' started at 2026-10-08 12:31:12.244.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-08 12:31:12.250.
+Test Suite 'LaunchArgumentTests' started at 2026-10-08 12:31:12.251.
+⚠️  <unknown>:0: -[LooseEndsUITests.LaunchArgumentTests testMeasureArgumentOpensCaptureWithoutTap] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.
+    t =    26.10s Waiting 15.0s for "captureTextField" Any to exist
+    t =    27.17s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`
+    ✔ testMeasureArgumentOpensCaptureWithoutTap (29.607 seconds)
+    ✔ testWithoutArgumentAppStartsUnchanged (21.539 seconds)
+Executed 2 tests, with 0 failures (0 unexpected) in 51.147 (51.154) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-08 12:32:03.413.
+Executed 2 tests, with 0 failures (0 unexpected) in 51.147 (51.162) seconds
+Executed 2 tests, with 0 failures (0 unexpected) in 51.147 (51.169) seconds
+Test session results: /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.10.08_12-29-16-+0200.xcresult
+Test Succeeded
+Testing started
+[sim] UI-Test bestanden.

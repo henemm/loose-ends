@@ -1,0 +1,380 @@
+[0;34m[sim][0m Unit-Tests (macOS): LooseEndsTests/LaunchTimingsTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (4 targets)
+[36;1mnote: [0mRemoved stale file '/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Intermediates.noindex/LooseEnds.build/Debug/LooseEnds.build/Objects-normal/arm64/CloudKitSchemaInitializer.o'
+[36;1mnote: [0mRemoved stale file '/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Intermediates.noindex/LooseEnds.build/Debug/LooseEnds.build/Objects-normal/arm64/CloudKitSchemaInitializer.stringsdata'
+[36;1mnote: [0mRemoved stale file '/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Intermediates.noindex/LooseEnds.build/Debug/LooseEnds.build/Objects-normal/arm64/CloudKitSchemaInitializer.swiftconstvalues'
+[36;1mnote: [0mRemoved stale file '/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Intermediates.noindex/LooseEnds.build/Debug/LooseEndsTests.build/Objects-normal/arm64/CloudKitSchemaInitializerTests.o'
+[36;1mnote: [0mRemoved stale file '/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Intermediates.noindex/LooseEnds.build/Debug/LooseEndsTests.build/Objects-normal/arm64/CloudKitSchemaInitializerTests.stringsdata'
+[36;1mnote: [0mRemoved stale file '/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Intermediates.noindex/LooseEnds.build/Debug/LooseEndsTests.build/Objects-normal/arm64/CloudKitSchemaInitializerTests.swiftconstvalues'
+[36;1mnote: [0mRemoved stale file '/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Intermediates.noindex/LooseEnds.build/Debug/LooseEndsWidgets.build/Objects-normal/arm64/CloudKitSchemaInitializer.o'
+[36;1mnote: [0mRemoved stale file '/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Intermediates.noindex/LooseEnds.build/Debug/LooseEndsWidgets.build/Objects-normal/arm64/CloudKitSchemaInitializer.stringsdata'
+[36;1mnote: [0mRemoved stale file '/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Intermediates.noindex/LooseEnds.build/Debug/LooseEndsWidgets.build/Objects-normal/arm64/CloudKitSchemaInitializer.swiftconstvalues'
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWidgets.LinkFileList
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWidgets-OutputFileMap.json
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWidgets.SwiftFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.SwiftFileList
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWidgets.SwiftConstValuesFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftConstValuesFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.LinkFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests-OutputFileMap.json
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.SwiftConstValuesFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.LinkFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-OutputFileMap.json
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds.SwiftFileList
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds.SwiftConstValuesFileList
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds-OutputFileMap.json
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds.LinkFileList
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mCopying[0m PrivacyInfo.xcprivacy
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CatalogService.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CompletionRecord.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ContextSeeder.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ContextWordLearning.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ContextWordRule.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m EnrichmentWriter.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m Enums.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m FieldCodec.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m FoundationModelsEnricher.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ImportanceUrgencyRule.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CalendarAsk.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CalendarSync.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CaptureControl.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CaptureService.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CaptureTextIntent.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m DateExpressionParser.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m DueDateRule.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m DueReminders.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m EnrichmentCoordinator.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m EnrichmentDraft.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TaskActions.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TaskContext.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TaskItem.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TaskPlace.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TimeExpressionParser.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m RecognitionRule.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m RepeatRule.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m Revision.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m RevisionService.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m RuleTrigger.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m LooseEndsWidgetsBundle.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ModelContainerFactory.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m NextUpWidget.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m PendingCompletions.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m PlaceDelivery.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TitleRule.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ViewSelection.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m WaitingOn.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m SavedView.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m SharedContent.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m SiriFields.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m SiriRepeatMapping.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m Subtasks.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m PlaceEditing.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m PlaceReminders.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ProcessCache.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m Project.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-macos.swiftmodule -> LooseEndsWidgets.swiftmodule
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-macos.abi.json -> LooseEndsWidgets.abi.json
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-macos.swiftdoc -> LooseEndsWidgets.swiftdoc
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-macos.swiftsourceinfo -> LooseEndsWidgets.swiftsourceinfo
+[[36mLooseEnds[0m] [1mGenerate Asset Symbols[0m Assets.xcassets
+[[36mLooseEndsWidgets[0m] [1mLinking[0m LooseEndsWidgets.debug.dylib
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWidgets' from project 'LooseEnds')
+[[36mLooseEndsWidgets[0m] [1mLinking[0m LooseEndsWidgets
+[[36mLooseEndsWidgets[0m] [1mExtract App Intents Metadata[0m
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Products/Debug/LooseEnds.app/Contents/Resources/AppIcon.icns (in target 'LooseEnds' from project 'LooseEnds')
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Products/Debug/LooseEnds.app/Contents/Resources/Assets.car (in target 'LooseEnds' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mCompile XCStrings[0m Localizable.xcstrings
+[[36mLooseEnds[0m] [1mCopying[0m PrivacyInfo.xcprivacy
+[[36mLooseEnds[0m] [1mCopying[0m Localizable.strings
+[[36mLooseEnds[0m] [1mCompiling[0m TitleRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ViewSelection.swift
+[[36mLooseEnds[0m] [1mCompiling[0m WaitingOn.swift
+[[36mLooseEnds[0m] [1mCompiling[0m WaitingOnSection.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Waveform.swift
+[[36mLooseEnds[0m] [1mCompiling[0m GeneratedAssetSymbols.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SiriRepeatMapping.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SpeechCapture.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SpeechReadiness.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Subtasks.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SubtasksSection.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskActions.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskContext.swift
+[[36mLooseEnds[0m] [1mCompiling[0m OnboardingFlow.swift
+[[36mLooseEnds[0m] [1mCompiling[0m OnboardingView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Paper.swift
+[[36mLooseEnds[0m] [1mCompiling[0m PendingCompletions.swift
+[[36mLooseEnds[0m] [1mCompiling[0m PlaceDelivery.swift
+[[36mLooseEnds[0m] [1mCompiling[0m PlaceEditing.swift
+[[36mLooseEnds[0m] [1mCompiling[0m PlaceReminders.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CompletionRecord.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ContentView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ContextSeeder.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ContextWordLearning.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ContextWordRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m DateExpressionParser.swift
+[[36mLooseEnds[0m] [1mCompiling[0m DetailLayout.swift
+[[36mLooseEnds[0m] [1mCompiling[0m DueDateRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m PlaceSearch.swift
+[[36mLooseEnds[0m] [1mCompiling[0m PlaceSection.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ProcessCache.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Project.swift
+[[36mLooseEnds[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEnds[0m] [1mCompiling[0m RecognitionRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m RepeatRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskDetailView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskItem.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskListView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskPlace.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskRow.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Thread.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TimeExpressionParser.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Revision.swift
+[[36mLooseEnds[0m] [1mCompiling[0m RevisionService.swift
+[[36mLooseEnds[0m] [1mCompiling[0m RuleTrigger.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SavedView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SharedContent.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SidebarView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SiriFields.swift
+[[36mLooseEnds[0m] [1mCompiling[0m DueNotificationCenter.swift
+[[36mLooseEnds[0m] [1mCompiling[0m DueReminders.swift
+[[36mLooseEnds[0m] [1mCompiling[0m EnrichmentCoordinator.swift
+[[36mLooseEnds[0m] [1mCompiling[0m EnrichmentDraft.swift
+[[36mLooseEnds[0m] [1mCompiling[0m EnrichmentWriter.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Enums.swift
+[[36mLooseEnds[0m] [1mCompiling[0m FieldCodec.swift
+[[36mLooseEnds[0m] [1mCompiling[0m FieldEditorView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m FieldFormatting.swift
+[[36mLooseEnds[0m] [1mCompiling[0m FoundationModelsEnricher.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ImportanceUrgencyRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m LooseEndsApp.swift
+[[36mLooseEnds[0m] [1mCompiling[0m MainThreadWatchdog.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ModelContainerFactory.swift
+[[36mLooseEnds[0m] [1mCompiling[0m MoveDateSheet.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CalendarAsk.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CalendarAskSheet.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CalendarBridge.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CalendarSync.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CaptureService.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CaptureTextIntent.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CaptureView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CatalogService.swift
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-macos.swiftmodule -> LooseEnds.swiftmodule
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-macos.swiftdoc -> LooseEnds.swiftdoc
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-macos.abi.json -> LooseEnds.abi.json
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-macos.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+[[36mLooseEndsUITests[0m] [1mCompiling[0m ConventionCorpus.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m Corpus.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m CalendarTargetTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m CaptureCancelCrashTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m CaptureSmokeTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m ContextUniquenessTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m DesignGalleryTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m LaunchArgumentTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RecognitionWalkthroughTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RuleBaseline.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m ProjectSubtasksTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RawTextWords.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:8:33: [31mcannot find type 'LaunchPoint' in scope[0m
+  6 | /// process, appended runs, and no file outside the probe build.
+[36m  7 | @Suite("Launch timings (#22)") struct LaunchTimingsTests {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:14:93: [31mcannot find type 'LaunchRun' in scope[0m
+ 12 |     ]
+[36m 13 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:14:37: [31mcannot find type 'LaunchRun' in scope[0m
+ 12 |     ]
+[36m 13 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:138:26: [31mcannot find type 'LaunchRun' in scope[0m
+136 | private final class WrittenRuns: @unchecked Sendable {
+[36m137 |     private let lock = NSLock()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:139:16: [31mcannot find type 'LaunchRun' in scope[0m
+137 |     private let lock = NSLock()
+[36m138 |     private var stored: [LaunchRun] = [][0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/Measurement/MeasurementRun.swift:212:60: [33m'GenerationError' was deprecated in macOS 27.0 [#DeprecatedDeclaration][0m
+210 |     static func classify(_ error: Error) -> String {
+[32m211 |         #if canImport(FoundationModels) && !os(watchOS)[0m
+[[36mLooseEndsUITests[0m] [1mCompiling[0m LeaveOneOut.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m MeasurementRun.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m OnboardingTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m PlaceSmokeTests.swift
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-macos.swiftmodule -> LooseEndsUITests.swiftmodule
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-macos.swiftdoc -> LooseEndsUITests.swiftdoc
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-macos.abi.json -> LooseEndsUITests.abi.json
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-macos.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SelfConsistency.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsUITests/SpeechListeningTests.swift:19:47: [33mcall to main actor-isolated instance method 'screenshot()' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+16 |     }
+[32m17 | [0m
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SpeechListeningTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CalendarAskTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CalendarSyncTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CatalogServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordLearningReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordLearningTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SiriRepeatMappingTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechReadinessTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m StartViewsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SubtaskTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TaskActionsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TaskPlaceTests.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:8:33: [31mcannot find type 'LaunchPoint' in scope[0m
+  6 | /// process, appended runs, and no file outside the probe build.
+[36m  7 | @Suite("Launch timings (#22)") struct LaunchTimingsTests {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:14:93: [31mcannot find type 'LaunchRun' in scope[0m
+ 12 |     ]
+[36m 13 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:14:37: [31mcannot find type 'LaunchRun' in scope[0m
+ 12 |     ]
+[36m 13 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:138:26: [31mcannot find type 'LaunchRun' in scope[0m
+136 | private final class WrittenRuns: @unchecked Sendable {
+[36m137 |     private let lock = NSLock()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:139:16: [31mcannot find type 'LaunchRun' in scope[0m
+137 |     private let lock = NSLock()
+[36m138 |     private var stored: [LaunchRun] = [][0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:140:24: [31mcannot find type 'LaunchRun' in scope[0m
+138 |     private var stored: [LaunchRun] = []
+[36m139 |     var runs: [LaunchRun] { lock.withLock { stored } }[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:17:16: [31mcannot find 'LaunchRun' in scope[0m
+ 15 |         var points = Self.points
+[36m 16 |         points[.firstBuffer] = firstBuffer[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:23:24: [31mcannot find 'LaunchTimings' in scope[0m
+ 21 |     @Test("Sections are exact differences between points")
+[36m 22 |     func sections() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:39:24: [31mcannot find 'LaunchTimings' in scope[0m
+ 37 |         var points = Self.points
+[36m 38 |         points[.modelReady] = nil[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:48:25: [31mcannot find 'LaunchTimings' in scope[0m
+ 46 |     @Test("Appending keeps earlier runs unchanged")
+[36m 47 |     func append() throws {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:50:26: [31mcannot find 'LaunchTimings' in scope[0m
+ 48 |         let first = try LaunchTimings.append(Self.run(.automated), to: nil)
+[36m 49 |         #expect(!first.existingWasCorrupt)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:51:25: [31mcannot find 'LaunchTimings' in scope[0m
+ 49 |         #expect(!first.existingWasCorrupt)
+[36m 50 |         let second = try LaunchTimings.append(Self.run(.press, firstBuffer: 760), to: first.data)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:52:46: [31mcannot find 'LaunchRun' in scope[0m
+ 50 |         let second = try LaunchTimings.append(Self.run(.press, firstBuffer: 760), to: first.data)
+[36m 51 |         let third = try LaunchTimings.append(Self.run(), to: second.data)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:52:38: [31mfailed to produce diagnostic for expression; please submit a bug report (https://swift.org/contributing/#reporting-bugs)[0m
+ 50 |         let second = try LaunchTimings.append(Self.run(.press, firstBuffer: 760), to: first.data)
+[36m 51 |         let third = try LaunchTimings.append(Self.run(), to: second.data)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:60:26: [31mcannot find 'LaunchTimings' in scope[0m
+ 58 |     @Test("A corrupt file is reported and the new run starts a fresh one")
+[36m 59 |     func corrupt() throws {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:62:46: [31mcannot find 'LaunchRun' in scope[0m
+ 60 |         let result = try LaunchTimings.append(Self.run(), to: Data("not json".utf8))
+[36m 61 |         #expect(result.existingWasCorrupt)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:62:38: [31mfailed to produce diagnostic for expression; please submit a bug report (https://swift.org/contributing/#reporting-bugs)[0m
+ 60 |         let result = try LaunchTimings.append(Self.run(), to: Data("not json".utf8))
+[36m 61 |         #expect(result.existingWasCorrupt)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:68:18: [31mcannot find 'LaunchTimings' in scope[0m
+ 66 |     @Test("Only the probe build counts as probe")
+[36m 67 |     func probe() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:69:17: [31mcannot find 'LaunchTimings' in scope[0m
+ 67 |     func probe() {
+[36m 68 |         #expect(!LaunchTimings.isProbeBuild(bundleID: "com.henning.looseends"))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:70:18: [31mcannot find 'LaunchTimings' in scope[0m
+ 68 |         #expect(!LaunchTimings.isProbeBuild(bundleID: "com.henning.looseends"))
+[36m 69 |         #expect(LaunchTimings.isProbeBuild(bundleID: "com.henning.looseends.probe"))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:75:17: [31mcannot find 'LaunchTimings' in scope[0m
+ 73 |     @Test("The launch argument marks a run as automated")
+[36m 74 |     func kind() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:75:61: [31mcannot find 'LaunchTimings' in scope[0m
+ 73 |     @Test("The launch argument marks a run as automated")
+[36m 74 |     func kind() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:76:17: [31mcannot find 'LaunchTimings' in scope[0m
+ 74 |     func kind() {
+[36m 75 |         #expect(LaunchTimings.kind(arguments: ["LooseEnds", LaunchTimings.measureArgument]) == .automated)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:86:53: [31mcannot find 'LaunchTimings' in scope[0m
+ 84 |             do { try FileManager.default.removeItem(at: directory) } catch { Issue.record(error) }
+[36m 85 |         }[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:88:13: [31mcannot find 'LaunchTimings' in scope[0m
+ 86 |         let file = directory.appendingPathComponent(LaunchTimings.fileName)
+[36m 87 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:91:13: [31mcannot find 'LaunchTimings' in scope[0m
+ 89 |         #expect(!FileManager.default.fileExists(atPath: file.path))
+[36m 90 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:92:13: [31mcannot find 'LaunchTimings' in scope[0m
+ 90 | 
+[36m 91 |         try LaunchTimings.persist(Self.run(), bundleID: "com.henning.looseends.probe", directory: directory)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:93:46: [31mcannot find 'LaunchRun' in scope[0m
+ 91 |         try LaunchTimings.persist(Self.run(), bundleID: "com.henning.looseends.probe", directory: directory)
+[36m 92 |         try LaunchTimings.persist(Self.run(), bundleID: "com.henning.looseends.probe", directory: directory)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:93:38: [31mfailed to produce diagnostic for expression; please submit a bug report (https://swift.org/contributing/#reporting-bugs)[0m
+ 91 |         try LaunchTimings.persist(Self.run(), bundleID: "com.henning.looseends.probe", directory: directory)
+[36m 92 |         try LaunchTimings.persist(Self.run(), bundleID: "com.henning.looseends.probe", directory: directory)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:100:24: [31mcannot find 'LaunchRecorder' in scope[0m
+ 98 |     func writeOnFirstBuffer() {
+[36m 99 |         let written = WrittenRuns()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:115:24: [31mcannot find 'LaunchRecorder' in scope[0m
+113 |     func writeOnTimeout() {
+[36m114 |         let written = WrittenRuns()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:117:43: [31mcannot find 'LaunchRecorder' in scope[0m
+115 |         let recorder = LaunchRecorder(template: Self.run(), write: written.append)
+[36m116 |         for (point, ms) in Self.points { recorder.mark(point, at: ms) }[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:119:43: [31mcannot find 'LaunchRecorder' in scope[0m
+117 |         recorder.timeoutElapsed(at: 720 + LaunchRecorder.bufferTimeout - 1)
+[36m118 |         #expect(written.runs.isEmpty)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsTests/LaunchTimingsTests.swift:128:24: [31mcannot find 'LaunchRecorder' in scope[0m
+126 |     func timeoutBeforeListening() {
+[36m127 |         let written = WrittenRuns()[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m FocusBloxCalibrationTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ImportanceUrgencyRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m IntentExecutionTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m LaunchTimingsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m LeaveOneOut.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ListPolishTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementFieldScopeTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceEditingTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProcessCacheTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProjectLinesTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReanalysisTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RecognitionRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ConventionBaselineTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ConventionCorpus.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m Corpus.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateExpressionParserTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateParserCorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateTitleReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleTriggerTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistency.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistencyReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistencyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SharedContentTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SiriFieldsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ThreadShapeTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TimeExpressionParserTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TitleFidelityPromptTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TitleRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m WaitingOnTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m WaveformTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRun.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRunTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelContainerFactoryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m OnboardingFlowTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PendingCompletionsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceDeliveryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatEditTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReviewTrayTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RevisionServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleBaseline.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleLeaveOneOutTests.swift
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.10.08_11-49-54-+0200.xcresult

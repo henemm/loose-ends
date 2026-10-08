@@ -283,7 +283,13 @@ Export-Ausgabe enthält echte private Aufgabentitel und wird nie committed
    Für `BGAppRefreshTask` (App-Prozess, nicht Extension) ist laut Engineer-Aussage kein Rate Limit zu
    erwarten, solange das Gerät am Netz hängt — dort bleibt Verlässlichkeit ungetestet, aber das Risiko
    ist geringer als im Extension-Prozess.
-3. Wie schnell ist der Kaltstart in die Erfassungs-Szene auf iPhone 15 Pro? Ziel unter einer Sekunde.
+3. ~~Wie schnell ist der Kaltstart in die Erfassungs-Szene auf iPhone 15 Pro? Ziel unter einer Sekunde.~~
+   **Beantwortet (2026-10-08, Issue #22): 558 ms im Mittel** vom Prozessstart bis „Mikrofon hört“
+   (Median 556 ms, Maximum 590 ms), 10 Kaltstarts per `devicectl`, Release-Prüfbau, iPhone 16 Pro
+   (Näherung für das iPhone 15 Pro), iOS 27.0. Größte Posten: Oberfläche bis zur Erfassung 224 ms,
+   Mikrofon anwerfen 149 ms; die Datenbank mit CloudKit nur 24 ms. Nicht gemessen ist der Systemanteil
+   vom Druck auf das Control bis zum Prozessstart (Reihe mit echten Drücken von Henning abgewählt).
+   Bericht: `docs/reference/kaltstart-messung.md`.
 4. ~~Konfidenzschwelle mit dem FocusBlox-Korpus kalibrieren (Evaluations-Framework).~~ **Beantwortet
    (2026-09-18, Issue #23): Schwelle 0,6 bestätigt, keine Anpassung.** `FoundationModelsEnricher`
    lief gegen eine Stichprobe von 60 der 287 exportierten FocusBlox-Aufgaben

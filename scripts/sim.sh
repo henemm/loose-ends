@@ -26,6 +26,8 @@
 #   ./scripts/sim.sh device-status            # verbundenes Gerät und Verbindungsweg zeigen
 #   ./scripts/sim.sh device                   # signiert bauen, drahtlos installieren, starten
 #   ./scripts/sim.sh device-console [sek]     # dasselbe, aber Logausgabe live mitlesen (Vorgabe 30 s)
+#   ./scripts/sim.sh device-build-release     # Prüfbau in Release (für Startzeiten, #22)
+#   ./scripts/sim.sh launch-measure <n>       # n Kaltstarts des Release-Prüfbaus, Zeiten nach build/launch-timings/
 #
 # Simulator per Name: LOOSEENDS_SIM="iPhone 17 Pro" ./scripts/sim.sh build
 # Gerät per UDID:     LOOSEENDS_DEVICE=00008140-... ./scripts/sim.sh device
@@ -370,7 +372,65 @@ cmd_device_build() {
     success "Gerätebuild erfolgreich."
 }
 
-device_app_path() { echo "$(device_derived_data)/Build/Products/Debug-iphoneos/LooseEnds.app"; }
+device_app_path() { echo "$(device_derived_data)/Build/Products/${1:-Debug}-iphoneos/LooseEnds.app"; }
+
+# Startzeiten taugen nur aus Release (#22): Debug ist unoptimiert und lädt eine Debug-Dylib.
+cmd_device_build_release() {
+    local id; id=$(require_device) || return 1
+    ensure_project
+    signed_build "$id" "$SCHEME" -configuration Release "BUNDLE_ID_SUFFIX=.probe" "LE_DISPLAY_NAME=LE Prüfbau" || return 1
+    $DEVICECTL device install app --device "$id" "$(device_app_path Release)" >/dev/null || {
+        error "Installation fehlgeschlagen — iPhone entsperren und ins selbe WLAN holen."; return 1; }
+    success "Release-Prüfbau installiert."
+}
+
+# Zahl der Läufe in der Messdatei des Prüfbaus. Nur lesend. 0 nur, wenn die Auflistung gelingt und
+# die Datei fehlt; scheitert Auflistung oder Abruf (gesperrt, nicht erreichbar), Abbruch mit Fehler.
+launch_runs_on_device() {
+    local id="$1" bundle="$2" dest="$3" list="$3.list.json"
+    local where=(--device "$id" --domain-type appDataContainer --domain-identifier "$bundle")
+    rm -f "$dest" "$list"
+    $DEVICECTL device info files "${where[@]}" --username mobile --subdirectory Documents --no-recurse \
+        -q --json-output "$list" >/dev/null 2>&1 || { error "Messdatei nicht abrufbar (Auflistung) — iPhone entsperren."; return 1; }
+    local has; has=$(python3 -c 'import json,sys; print(int(any(f["name"] == "launch-timings.json" for f in json.load(open(sys.argv[1]))["result"]["files"])))' "$list") \
+        || { error "Auflistung der Messdatei unlesbar ($list)."; return 1; }
+    [ "$has" = 1 ] || { echo 0; return; }
+    $DEVICECTL device copy from "${where[@]}" --user mobile --source "Documents/launch-timings.json" \
+        --destination "$dest" >/dev/null 2>&1 || { error "Messdatei nicht abrufbar (Kopie) — iPhone entsperren."; return 1; }
+    python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1]))))' "$dest"
+}
+
+# n Kaltstarts per devicectl mit -measureLaunch (#22). Ausschließlich die Prüfkennung.
+cmd_launch_measure() {
+    local n="${1:?Anzahl der Läufe fehlt}"
+    local id; id=$(require_device) || return 1
+    # Gemessen wird genau dieser Stand: sonst startete ein zuvor installierter Debug-Prüfbau (F001).
+    cmd_device_build_release || return 1
+    local app; app=$(device_app_path Release)
+    local bundle; bundle=$(plutil -extract CFBundleIdentifier raw "$app/Info.plist")
+    [[ "$bundle" == *.probe ]] || { error "$bundle ist nicht die Prüfkennung — Abbruch."; return 1; }
+    local out="$PROJECT_DIR/build/launch-timings"; mkdir -p "$out"
+    local file="$out/launch-timings.json"
+    info "Konfiguration: Release ($app)"
+    local count; count=$(launch_runs_on_device "$id" "$bundle" "$file") || return 1
+    for ((i = 1; i <= n; i++)); do
+        info "Kaltstart $i/$n ($bundle, bisher $count Läufe)"
+        local rc=0
+        $DEVICECTL device process launch --terminate-existing --device "$id" "$bundle" -measureLaunch 2>&1 | tail -3 || rc=${PIPESTATUS[0]}
+        [ "$rc" -eq 0 ] || { error "Start abgelehnt (devicectl $rc) — iPhone entsperren, dann erneut."; return 1; }
+        local waited=0 now="$count"
+        while [ "$now" -le "$count" ]; do
+            [ "$waited" -lt 30 ] || { error "Lauf $i: nach 30 s kein neuer Eintrag in der Messdatei."; return 1; }
+            sleep 2; waited=$((waited + 2))
+            now=$(launch_runs_on_device "$id" "$bundle" "$file") || return 1
+        done
+        count="$now"
+    done
+    python3 -c 'import json,sys
+for r in json.load(open(sys.argv[1])):
+    print(r["kind"], r["zeroPoint"], "total", r["sections"].get("total"), "firstBuffer", r["points"].get("firstBuffer"))' "$file"
+    success "$count Läufe (Release) in build/launch-timings/launch-timings.json"
+}
 
 # Installieren geht auch bei gesperrtem iPhone; Starten braucht ein entsperrtes.
 cmd_device_install() {
@@ -502,7 +562,7 @@ cmd_screenshot() {
     [ -f "$out" ] && success "Screenshot: $out" || { error "Screenshot fehlgeschlagen"; return 1; }
 }
 
-cmd_help() { sed -n '3,31p' "$0" | sed 's/^# \{0,1\}//'; }
+cmd_help() { sed -n '3,33p' "$0" | sed 's/^# \{0,1\}//'; }
 
 COMMAND="${1:-help}"; shift 2>/dev/null || true
 case "$COMMAND" in
@@ -520,6 +580,8 @@ case "$COMMAND" in
     screenshot) cmd_screenshot "$@" ;;
     device-status)  cmd_device_status ;;
     device-build)   cmd_device_build ;;
+    device-build-release) cmd_device_build_release ;;
+    launch-measure) cmd_launch_measure "$@" ;;
     device-install) cmd_device_install ;;
     device-launch)  cmd_device_launch ;;
     device-console) cmd_device_console "$@" ;;

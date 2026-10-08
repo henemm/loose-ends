@@ -51,7 +51,11 @@ brew install xcodegen xcbeautify
 ./scripts/sim.sh unit         # Unit-Tests
 ./scripts/sim.sh build        # iOS-App für den Simulator
 ./scripts/sim.sh test-proof <Klasse>  # UI-Test + maschineller Simulator-Beleg (#145)
+./scripts/sim.sh launch-measure <n>   # Kaltstart-Messung, n Starts auf dem Gerät (#22)
 ```
+
+`launch-measure` baut einen Release-Prüfbau und startet ihn per devicectl; es läuft nur nach Hennings
+ausdrücklichem „jetzt ist ein Test möglich“ (Regel im Stufe-3-Absatz unten, nicht umgehen).
 
 Immer über `scripts/sim.sh` gehen, nicht direkt über `xcodebuild`. Das Skript wählt Destinationen,
 die zum Deployment Target passen: Der Mac hostet die Tests nur, wenn sein macOS ≥ Target ist
@@ -88,8 +92,10 @@ touches any of these paths:
 | `project.yml`, jede `*.entitlements`, jede `Info.plist` | Signierung, Berechtigungen, Targets — die Klasse des App-Group-Absturzes |
 
 Berührt der Schnitt keinen dieser Pfade, endet die Abnahme nach Stufe 2, und das wird im
-Abschlussbericht mit genau diesem Satz begründet: „Kein Pfad der Geräteliste berührt." Berührt er
-einen, läuft `./scripts/sim.sh device-status` (liest nur, installiert und startet nichts) — für
+Abschlussbericht mit genau diesem Satz begründet: „Kein Pfad der Geräteliste berührt." **⛔ Nichts
+auf Hennings Geräten, auch nichts Lesendes, bevor er wörtlich „jetzt ist ein Test möglich“ geschrieben
+hat** (Henning, 2026-10-08) — eine Ankündigung ist keine Frage, die Stufe ist keine Dauererlaubnis.
+Erst dann, und nur für diesen einen Durchgang, läuft `./scripts/sim.sh device-status` (liest nur, installiert und startet nichts) — für
 Apple Intelligence zusätzlich die Labor-App, die Henning selbst antippt. Einen nachgespielten
 Bedienablauf auf dem Gerät gibt es seit dem Rückbau von #153 nicht mehr: Der Versuch dazu
 überschrieb Hennings produktive Installation und bewies nicht, wofür er gebaut war. Für Watch,
@@ -198,6 +204,8 @@ not scope creep on the current one.
 - `Shared/Intents` — App Intents shared by app, widgets and (later) the intents extension
 - `LooseEnds/` — app entry and views (iPhone, iPad, Mac); `LooseEndsWatch/`, `LooseEndsWidgets/`, `LooseEndsShare/`
   (iOS share sheet: text, links, mails via `SharedContent`) — platform targets
+- `LooseEnds/App/LaunchTimings.swift` — cold-start measuring points (#22): signposts always, `Documents/launch-timings.json`
+  only in the probe build (`.probe`); launch argument `-measureLaunch` opens the capture scene
 - `LooseEnds/Speech` — `SpeechCapture` (live recognition for the capture scene, skipped under `--ui-testing`), `Waveform`
 - `Shared/Notifications` — `DueReminders` (pure plan and action handling); `PlaceReminders` (which ≤ 20 places
   to watch, #226) and `PlaceDelivery` (what to hand to the system, replace or withdraw, from a per-device

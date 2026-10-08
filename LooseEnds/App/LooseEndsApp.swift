@@ -10,20 +10,28 @@ struct LooseEndsApp: App {
     let calendar: CalendarBridge
 
     init() {
+        LaunchTimings.mark(.initStart)
+        // Startargument der Kaltstart-Messung (#22): öffnet die Erfassung wie das Control.
+        if LaunchTimings.kind(arguments: ProcessInfo.processInfo.arguments) == .automated {
+            CaptureRequest.shared.pending = true
+        }
         #if DEBUG
         Self.initializeCloudKitSchemaIfAsked()
         #endif
+        LaunchTimings.mark(.containerStart)
         do {
             container = try ModelContainerFactory.make()
         } catch {
             fatalError("Could not open the Loose Ends store: \(error)")
         }
+        LaunchTimings.mark(.containerEnd)
         let enricher: any TaskEnricher = ModelContainerFactory.isUITesting ? ModelOffEnricher() : FoundationModelsEnricher()
         enrichment = EnrichmentCoordinator(enricher: enricher, container: container)
         notifications = DueNotificationCenter(container: container)
         notifications.activate()
         calendar = CalendarBridge(container: container)
         if ModelContainerFactory.isUITesting { MainThreadWatchdog.start() }
+        LaunchTimings.mark(.initEnd)
     }
 
     #if DEBUG

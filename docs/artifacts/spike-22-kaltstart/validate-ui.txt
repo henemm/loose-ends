@@ -1,0 +1,5 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: LaunchArgumentTests
+./scripts/sim.sh: line 76: 18992 Terminated: 15          xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1
+     18993                       | tee "$BUILD_LOG"
+     18994                       | xcbeautify
