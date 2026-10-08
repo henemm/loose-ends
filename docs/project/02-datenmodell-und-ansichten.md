@@ -318,4 +318,9 @@ die deshalb nicht gemessen hat (`scripts/measurement_status.py`, #149).
    nicht „Schwelle bestätigt", sondern „der Mechanismus hinter ADR-3 hat kein Signal". Wichtigkeit,
    Dringlichkeit und Energie liegen auf Zufallsniveau und werden trotzdem in über 90 % der Fälle
    gesetzt. Ersatzsignale und Alternativen werden in #65 gemessen, bevor weitere Ansichten entstehen.
-5. Kann die Share-Extension aus Apple Mail die `message:`-URL zuverlässig erhalten?
+5. ~~Kann die Share-Extension aus Apple Mail die `message:`-URL zuverlässig erhalten?~~ — beantwortet
+   2026-10-08 (#24): **Nein.** Auf iOS 27.0 gibt es keinen Teilen-Knopf für eine ganze Mail; markierter Text
+   kommt ohne Quelle an; „Drucken → Teilen“ liefert eine PDF-Datei, keine `message:`-URL. Fallback: Datei-Links
+   werden nicht als `sourceURL` gespeichert, „Source“ erscheint nur bei echter URL. Für einen echten
+   Rücksprung bleiben Ziehen aus Mail in die App und der Siri-Weg (#25). Bericht:
+   `docs/reference/mail-ruecksprung-messung.md`.

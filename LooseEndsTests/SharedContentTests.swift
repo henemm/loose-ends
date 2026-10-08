@@ -55,8 +55,54 @@ import Testing
         #expect(content.prefill == "Rechnung")
     }
 
+    // #24 AC-5: Mail's "Print → Share" hands over a PDF in the extension's temporary folder.
+    @Test("A shared file link is neither the source nor the title")
+    func fileLinkDropped() {
+        let file = URL(fileURLWithPath: "/private/var/mobile/tmp/Mail-Druck.pdf")
+        let content = SharedContent.make(texts: [], urls: [file], mails: [])
+        #expect(content == SharedContent(prefill: "", sourceURL: nil, channel: .share))
+    }
+
+    @Test("A shared file link next to text keeps the text and no source")
+    func fileLinkWithText() {
+        let file = URL(fileURLWithPath: "/private/var/mobile/tmp/Mail-Druck.pdf")
+        let content = SharedContent.make(texts: ["Rechnung"], urls: [file], mails: [])
+        #expect(content.prefill == "Rechnung")
+        #expect(content.sourceURL == nil)
+    }
+
+    @Test("A file link next to a message link leaves the message link as source")
+    func fileLinkNextToMessageLink() throws {
+        let file = URL(fileURLWithPath: "/private/var/mobile/tmp/Mail-Druck.pdf")
+        let message = try #require(URL(string: "message://%3Cxyz@example.com%3E"))
+        let content = SharedContent.make(texts: ["Rechnung"], urls: [file, message], mails: [])
+        #expect(content.sourceURL == message)
+        #expect(content.channel == .mail)
+        #expect(content.prefill == "Rechnung")
+    }
+
+    @Test("A web link still becomes the source")
+    func webLinkStaysSource() throws {
+        let url = try #require(URL(string: "https://example.com/rechnung"))
+        let content = SharedContent.make(texts: ["Rechnung"], urls: [url], mails: [])
+        #expect(content.sourceURL == url)
+        #expect(content.channel == .share)
+    }
+
     @Test("Nothing shared is empty, not a crash")
     func nothing() {
         #expect(SharedContent.make(texts: [], urls: [], mails: []) == .empty)
+    }
+
+    // #24 AC-1: the measuring line names types only, never what was shared.
+    @Test("The probe line lists the type identifiers and the loaded kind, nothing else")
+    func probeLine() {
+        let line = SharedContent.probeLine(typeIdentifiers: ["public.url", "public.plain-text"], loaded: "url")
+        #expect(line == "types=[public.url, public.plain-text] loaded=url")
+    }
+
+    @Test("The probe line states an attachment without types or a failed load plainly")
+    func probeLineEmpty() {
+        #expect(SharedContent.probeLine(typeIdentifiers: [], loaded: nil) == "types=[] loaded=none")
     }
 }
