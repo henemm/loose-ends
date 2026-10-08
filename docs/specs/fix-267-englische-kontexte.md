@@ -59,9 +59,10 @@ iPhone, weil nur dort die verschmutzten iCloud-Daten liegen.
 Nach #271 sah Henning auf seinem iPhone alle englischen Doppel verschwunden, nur „Out and about“ stand
 weiter neben „Unterwegs“, auch nach einem Neustart der App. Später stellte sich heraus: Seine App kommt
 über TestFlight, und der letzte Build stammte von vor #271 — die Regel lief dort also noch gar nicht.
-Warum die übrigen Doppel trotzdem weg waren, ist offen. Henning hat es nie selbst angelegt oder umbenannt (Entscheidung: trotzdem zusammenführen).
-Woran die Regel scheitert, ist ohne Zugriff auf seine Daten nicht belegbar. In Frage kommen eine fehlende
-Systemstandard-Markierung und ein Leerzeichen-Unterschied im Namen. Beides wird abgedeckt:
+Warum die übrigen Doppel trotzdem weg waren, ist offen. Henning hat „Out and about“ nie selbst angelegt
+oder umbenannt (Entscheidung: trotzdem zusammenführen). Vor dieser Erkenntnis wurden zwei mögliche Gründe
+abgesichert, an denen die Regel scheitern könnte — eine fehlende Systemstandard-Markierung und ein
+Leerzeichen-Unterschied im Namen:
 
 - **AC-7:** „Out and about“ wird auch ohne `isSystemDefault` mit „Unterwegs“ zusammengeführt
   (`CatalogService.englishDefaultsFoldedUnmarked`). Für die übrigen Paare bleibt AC-3.
