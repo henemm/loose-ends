@@ -1,0 +1,602 @@
+[
+ {
+  "id": "gr-001",
+  "lang": "de",
+  "text": "Kündigung für den Handyvertrag per Einschreiben verschicken",
+  "form": "kuendigung"
+ },
+ {
+  "id": "gr-002",
+  "lang": "de",
+  "text": "Fitnessstudio zum Jahresende kündigen und Bestätigung aufheben",
+  "form": "kuendigung"
+ },
+ {
+  "id": "gr-003",
+  "lang": "de",
+  "text": "Kündigungsschreiben für die Wohnung an die Hausverwaltung aufsetzen",
+  "form": "kuendigung"
+ },
+ {
+  "id": "gr-004",
+  "lang": "de",
+  "text": "Zeitungsabo kündigen, bevor es sich verlängert",
+  "form": "kuendigung"
+ },
+ {
+  "id": "gr-005",
+  "lang": "de",
+  "text": "Mit dem Chef über meine eigene Kündigung zum Quartalsende sprechen",
+  "form": "kuendigung"
+ },
+ {
+  "id": "gr-006",
+  "lang": "de",
+  "text": "Aufhebungsvertrag vom Arbeitgeber vom Anwalt prüfen lassen",
+  "form": "kuendigung"
+ },
+ {
+  "id": "gr-007",
+  "lang": "de",
+  "text": "Stromvertrag kündigen und zum günstigeren Anbieter wechseln",
+  "form": "kuendigung"
+ },
+ {
+  "id": "gr-008",
+  "lang": "de",
+  "text": "Kündigung der Probezeit-Stelle mit dem Betriebsrat besprechen",
+  "form": "kuendigung"
+ },
+ {
+  "id": "gr-009",
+  "lang": "de",
+  "text": "Vereinsmitgliedschaft schriftlich kündigen",
+  "form": "kuendigung"
+ },
+ {
+  "id": "gr-010",
+  "lang": "de",
+  "text": "Termin bei der Arbeitsagentur nach der Kündigung vereinbaren",
+  "form": "kuendigung"
+ },
+ {
+  "id": "gr-011",
+  "lang": "de",
+  "text": "Steuererklärung 2025 abgeben, Belege für Handwerker raussuchen",
+  "form": "steuer"
+ },
+ {
+  "id": "gr-012",
+  "lang": "de",
+  "text": "Umsatzsteuer-Voranmeldung für das dritte Quartal erledigen",
+  "form": "steuer"
+ },
+ {
+  "id": "gr-013",
+  "lang": "de",
+  "text": "Einspruch gegen den Steuerbescheid beim Finanzamt einlegen",
+  "form": "steuer"
+ },
+ {
+  "id": "gr-014",
+  "lang": "de",
+  "text": "Spendenquittungen für die Steuer sortieren",
+  "form": "steuer"
+ },
+ {
+  "id": "gr-015",
+  "lang": "de",
+  "text": "Steuerberater nach der Abschreibung vom Laptop fragen",
+  "form": "steuer"
+ },
+ {
+  "id": "gr-016",
+  "lang": "de",
+  "text": "Nachzahlung ans Finanzamt überweisen, Frist beachten",
+  "form": "steuer"
+ },
+ {
+  "id": "gr-017",
+  "lang": "de",
+  "text": "Kirchensteuer-Austritt beim Standesamt klären",
+  "form": "steuer"
+ },
+ {
+  "id": "gr-018",
+  "lang": "de",
+  "text": "Belege für das Homeoffice-Arbeitszimmer zusammenstellen",
+  "form": "steuer"
+ },
+ {
+  "id": "gr-019",
+  "lang": "de",
+  "text": "Kapitalerträge in die Steuererklärung eintragen",
+  "form": "steuer"
+ },
+ {
+  "id": "gr-020",
+  "lang": "de",
+  "text": "Fristverlängerung für die Einkommensteuer beantragen",
+  "form": "steuer"
+ },
+ {
+  "id": "gr-021",
+  "lang": "de",
+  "text": "Termin beim Hautarzt wegen des auffälligen Muttermals ausmachen",
+  "form": "arzt_krankheit"
+ },
+ {
+  "id": "gr-022",
+  "lang": "de",
+  "text": "Krankmeldung für die Arbeit beim Hausarzt abholen",
+  "form": "arzt_krankheit"
+ },
+ {
+  "id": "gr-023",
+  "lang": "de",
+  "text": "Blutwerte nach der Untersuchung mit dem Arzt besprechen",
+  "form": "arzt_krankheit"
+ },
+ {
+  "id": "gr-024",
+  "lang": "de",
+  "text": "Überweisung zum Orthopäden wegen der Rückenschmerzen holen",
+  "form": "arzt_krankheit"
+ },
+ {
+  "id": "gr-025",
+  "lang": "de",
+  "text": "Krebsvorsorge beim Urologen nicht vergessen",
+  "form": "arzt_krankheit"
+ },
+ {
+  "id": "gr-026",
+  "lang": "de",
+  "text": "Ergebnis vom Corona-Test an das Gesundheitsamt melden",
+  "form": "arzt_krankheit"
+ },
+ {
+  "id": "gr-027",
+  "lang": "de",
+  "text": "Zweite Meinung zur Knie-Operation einholen",
+  "form": "arzt_krankheit"
+ },
+ {
+  "id": "gr-028",
+  "lang": "de",
+  "text": "Physiotherapie nach dem Bandscheibenvorfall verlängern lassen",
+  "form": "arzt_krankheit"
+ },
+ {
+  "id": "gr-029",
+  "lang": "de",
+  "text": "Pflegegrad für Papa beim Medizinischen Dienst beantragen",
+  "form": "arzt_krankheit"
+ },
+ {
+  "id": "gr-030",
+  "lang": "de",
+  "text": "Diabetes-Kontrolle: Langzeitwert messen lassen",
+  "form": "arzt_krankheit"
+ },
+ {
+  "id": "gr-031",
+  "lang": "de",
+  "text": "Blutdrucktabletten nachbestellen, Rezept vom Hausarzt holen",
+  "form": "medikamente"
+ },
+ {
+  "id": "gr-032",
+  "lang": "de",
+  "text": "Antibiotikum zu Ende nehmen, nicht vergessen",
+  "form": "medikamente"
+ },
+ {
+  "id": "gr-033",
+  "lang": "de",
+  "text": "Insulin-Vorrat für den Urlaub prüfen",
+  "form": "medikamente"
+ },
+ {
+  "id": "gr-034",
+  "lang": "de",
+  "text": "Schmerzmittel mit dem Apotheker auf Wechselwirkungen prüfen",
+  "form": "medikamente"
+ },
+ {
+  "id": "gr-035",
+  "lang": "de",
+  "text": "Betäubungsmittelrezept für Oma in der Apotheke abholen",
+  "form": "medikamente"
+ },
+ {
+  "id": "gr-036",
+  "lang": "de",
+  "text": "Pille zum Frauenarzt-Termin nachverschreiben lassen",
+  "form": "medikamente"
+ },
+ {
+  "id": "gr-037",
+  "lang": "de",
+  "text": "Antidepressiva nicht eigenmächtig absetzen, mit der Ärztin reden",
+  "form": "medikamente"
+ },
+ {
+  "id": "gr-038",
+  "lang": "de",
+  "text": "Hustensaft für die Kinder besorgen",
+  "form": "medikamente"
+ },
+ {
+  "id": "gr-039",
+  "lang": "de",
+  "text": "Asthmaspray ersetzen, ist bald abgelaufen",
+  "form": "medikamente"
+ },
+ {
+  "id": "gr-040",
+  "lang": "de",
+  "text": "Medikamentenplan für Mama aktualisieren",
+  "form": "medikamente"
+ },
+ {
+  "id": "gr-041",
+  "lang": "de",
+  "text": "Kinderarzt-Termin für die U7 beim Sohn ausmachen",
+  "form": "kinder"
+ },
+ {
+  "id": "gr-042",
+  "lang": "de",
+  "text": "Elterngespräch wegen Mobbing in der Klasse vorbereiten",
+  "form": "kinder"
+ },
+ {
+  "id": "gr-043",
+  "lang": "de",
+  "text": "Schulpsychologin wegen der Prüfungsangst von Lena anrufen",
+  "form": "kinder"
+ },
+ {
+  "id": "gr-044",
+  "lang": "de",
+  "text": "Kita-Platz für das Baby anmelden",
+  "form": "kinder"
+ },
+ {
+  "id": "gr-045",
+  "lang": "de",
+  "text": "Impfpass der Kinder vor der Einschulung prüfen",
+  "form": "kinder"
+ },
+ {
+  "id": "gr-046",
+  "lang": "de",
+  "text": "Mit Jonas über seine schlechten Noten sprechen",
+  "form": "kinder"
+ },
+ {
+  "id": "gr-047",
+  "lang": "de",
+  "text": "Kindergeld-Antrag nach der Geburt abschicken",
+  "form": "kinder"
+ },
+ {
+  "id": "gr-048",
+  "lang": "de",
+  "text": "Sorgerechtsvereinbarung mit der Ex-Partnerin vom Anwalt prüfen lassen",
+  "form": "kinder"
+ },
+ {
+  "id": "gr-049",
+  "lang": "de",
+  "text": "Kinderschutz-App für das Tablet einrichten",
+  "form": "kinder"
+ },
+ {
+  "id": "gr-050",
+  "lang": "de",
+  "text": "Aufsichtsplan für den Kindergeburtstag schreiben",
+  "form": "kinder"
+ },
+ {
+  "id": "gr-051",
+  "lang": "de",
+  "text": "Jagdschein verlängern, Termin bei der Unteren Jagdbehörde machen",
+  "form": "jagd_waffen"
+ },
+ {
+  "id": "gr-052",
+  "lang": "de",
+  "text": "Waffenschein bei der Waffenbehörde beantragen",
+  "form": "jagd_waffen"
+ },
+ {
+  "id": "gr-053",
+  "lang": "de",
+  "text": "Jagdgewehr im Waffenschrank prüfen und Munition zählen",
+  "form": "jagd_waffen"
+ },
+ {
+  "id": "gr-054",
+  "lang": "de",
+  "text": "Schießnachweis für den Schützenverein einholen",
+  "form": "jagd_waffen"
+ },
+ {
+  "id": "gr-055",
+  "lang": "de",
+  "text": "Zuverlässigkeitsprüfung für die Waffenbesitzkarte vorbereiten",
+  "form": "jagd_waffen"
+ },
+ {
+  "id": "gr-056",
+  "lang": "de",
+  "text": "Wildschaden beim Landwirt melden",
+  "form": "jagd_waffen"
+ },
+ {
+  "id": "gr-057",
+  "lang": "de",
+  "text": "Hochsitz an der Waldkante reparieren",
+  "form": "jagd_waffen"
+ },
+ {
+  "id": "gr-058",
+  "lang": "de",
+  "text": "Revierbegehung mit dem Jagdpächter am Samstag",
+  "form": "jagd_waffen"
+ },
+ {
+  "id": "gr-059",
+  "lang": "de",
+  "text": "Sportschützen-Bedürfnisbescheinigung vom Verein abholen",
+  "form": "jagd_waffen"
+ },
+ {
+  "id": "gr-060",
+  "lang": "de",
+  "text": "Waffenschrank vom Sachverständigen abnehmen lassen",
+  "form": "jagd_waffen"
+ },
+ {
+  "id": "gr-061",
+  "lang": "de",
+  "text": "Anzeige wegen des Fahrraddiebstahls bei der Polizei nachreichen",
+  "form": "recht_polizei_schulden"
+ },
+ {
+  "id": "gr-062",
+  "lang": "de",
+  "text": "Mahnung vom Inkassobüro mit dem Anwalt klären",
+  "form": "recht_polizei_schulden"
+ },
+ {
+  "id": "gr-063",
+  "lang": "de",
+  "text": "Schuldnerberatung wegen der Kreditraten anrufen",
+  "form": "recht_polizei_schulden"
+ },
+ {
+  "id": "gr-064",
+  "lang": "de",
+  "text": "Strafzettel anfechten, Widerspruch an die Behörde schreiben",
+  "form": "recht_polizei_schulden"
+ },
+ {
+  "id": "gr-065",
+  "lang": "de",
+  "text": "Zeugenaussage beim Amtsgericht vorbereiten",
+  "form": "recht_polizei_schulden"
+ },
+ {
+  "id": "gr-066",
+  "lang": "de",
+  "text": "Verkehrsunfall der Versicherung melden, Fotos der Schäden sichern",
+  "form": "recht_polizei_schulden"
+ },
+ {
+  "id": "gr-067",
+  "lang": "de",
+  "text": "Räumungsklage vom Vermieter mit dem Mieterbund besprechen",
+  "form": "recht_polizei_schulden"
+ },
+ {
+  "id": "gr-068",
+  "lang": "de",
+  "text": "Insolvenzverwalter die Unterlagen schicken",
+  "form": "recht_polizei_schulden"
+ },
+ {
+  "id": "gr-069",
+  "lang": "de",
+  "text": "Führungszeugnis für die neue Stelle beantragen",
+  "form": "recht_polizei_schulden"
+ },
+ {
+  "id": "gr-070",
+  "lang": "de",
+  "text": "Rechtsschutzversicherung wegen der Nachbarstreitigkeit prüfen",
+  "form": "recht_polizei_schulden"
+ },
+ {
+  "id": "gr-071",
+  "lang": "de",
+  "text": "Beerdigung von Opa organisieren, Bestatter anrufen",
+  "form": "leben_tod_seele"
+ },
+ {
+  "id": "gr-072",
+  "lang": "de",
+  "text": "Testament mit dem Notar durchgehen",
+  "form": "leben_tod_seele"
+ },
+ {
+  "id": "gr-073",
+  "lang": "de",
+  "text": "Patientenverfügung für Mama aktualisieren",
+  "form": "leben_tod_seele"
+ },
+ {
+  "id": "gr-074",
+  "lang": "de",
+  "text": "Therapeutin wegen der Panikattacken anrufen",
+  "form": "leben_tod_seele"
+ },
+ {
+  "id": "gr-075",
+  "lang": "de",
+  "text": "Trauerkarte für die Nachbarin schreiben",
+  "form": "leben_tod_seele"
+ },
+ {
+  "id": "gr-076",
+  "lang": "de",
+  "text": "Erbschein beim Nachlassgericht beantragen",
+  "form": "leben_tod_seele"
+ },
+ {
+  "id": "gr-077",
+  "lang": "de",
+  "text": "Termin bei der Eheberatung ausmachen",
+  "form": "leben_tod_seele"
+ },
+ {
+  "id": "gr-078",
+  "lang": "de",
+  "text": "Scheidungsanwalt nach den Kosten fragen",
+  "form": "leben_tod_seele"
+ },
+ {
+  "id": "gr-079",
+  "lang": "de",
+  "text": "Hospiz für Tante besuchen, Besuchszeiten klären",
+  "form": "leben_tod_seele"
+ },
+ {
+  "id": "gr-080",
+  "lang": "de",
+  "text": "Selbsthilfegruppe für Angehörige von Suchtkranken heraussuchen",
+  "form": "leben_tod_seele"
+ },
+ {
+  "id": "gr-081",
+  "lang": "de",
+  "text": "Frauenarzt-Termin zur Verhütungsberatung buchen",
+  "form": "koerper_intim_alkohol"
+ },
+ {
+  "id": "gr-082",
+  "lang": "de",
+  "text": "Schwangerschaftstest besorgen und Hebamme anrufen",
+  "form": "koerper_intim_alkohol"
+ },
+ {
+  "id": "gr-083",
+  "lang": "de",
+  "text": "HIV-Test beim Gesundheitsamt anonym machen",
+  "form": "koerper_intim_alkohol"
+ },
+ {
+  "id": "gr-084",
+  "lang": "de",
+  "text": "Alkoholtest-Gerät für die Party besorgen, damit keiner fährt",
+  "form": "koerper_intim_alkohol"
+ },
+ {
+  "id": "gr-085",
+  "lang": "de",
+  "text": "Suchtberatung für den Bruder anrufen, er trinkt zu viel",
+  "form": "koerper_intim_alkohol"
+ },
+ {
+  "id": "gr-086",
+  "lang": "de",
+  "text": "Entzugsklinik für Papa recherchieren",
+  "form": "koerper_intim_alkohol"
+ },
+ {
+  "id": "gr-087",
+  "lang": "de",
+  "text": "Raucherentwöhnung bei der Krankenkasse anmelden",
+  "form": "koerper_intim_alkohol"
+ },
+ {
+  "id": "gr-088",
+  "lang": "de",
+  "text": "Notfallnummer der Giftinformation ins Handy speichern",
+  "form": "koerper_intim_alkohol"
+ },
+ {
+  "id": "gr-089",
+  "lang": "de",
+  "text": "Termin zur Darmspiegelung nicht verschieben",
+  "form": "koerper_intim_alkohol"
+ },
+ {
+  "id": "gr-090",
+  "lang": "de",
+  "text": "Kondome und Erste-Hilfe-Kasten für die Reise einpacken",
+  "form": "koerper_intim_alkohol"
+ },
+ {
+  "id": "gr-091",
+  "lang": "en",
+  "text": "Send the termination letter for the gym contract",
+  "form": "english"
+ },
+ {
+  "id": "gr-092",
+  "lang": "en",
+  "text": "Book a dermatologist appointment about the mole",
+  "form": "english"
+ },
+ {
+  "id": "gr-093",
+  "lang": "en",
+  "text": "Refill my blood pressure prescription",
+  "form": "english"
+ },
+ {
+  "id": "gr-094",
+  "lang": "en",
+  "text": "Ask the lawyer about the divorce settlement",
+  "form": "english"
+ },
+ {
+  "id": "gr-095",
+  "lang": "en",
+  "text": "Call the debt counselling service about the loan",
+  "form": "english"
+ },
+ {
+  "id": "gr-096",
+  "lang": "en",
+  "text": "Renew my hunting licence at the authority",
+  "form": "english"
+ },
+ {
+  "id": "gr-097",
+  "lang": "en",
+  "text": "File the tax return before the deadline",
+  "form": "english"
+ },
+ {
+  "id": "gr-098",
+  "lang": "en",
+  "text": "Arrange the funeral with the undertaker",
+  "form": "english"
+ },
+ {
+  "id": "gr-099",
+  "lang": "en",
+  "text": "Pick up the antibiotics for the kids",
+  "form": "english"
+ },
+ {
+  "id": "gr-100",
+  "lang": "en",
+  "text": "Report the stolen bike to the police",
+  "form": "english"
+ }
+]
