@@ -50,10 +50,11 @@ private struct Reading: Equatable {
     var urgency: String?
     var contexts: String?
 
-    static let fields: [(name: String, value: KeyPath<Reading, String?>)] = [
-        ("Tag", \.due), ("Uhrzeit", \.time), ("Wichtigkeit", \.importance),
-        ("Dringlichkeit", \.urgency), ("Kontexte", \.contexts),
-    ]
+    /// Berechnet statt gespeichert: Ein statisches `let` mit KeyPaths ist unter Swift 6 nicht nebenläufigkeitssicher.
+    static var fields: [(name: String, value: KeyPath<Reading, String?>)] {
+        [("Tag", \.due), ("Uhrzeit", \.time), ("Wichtigkeit", \.importance),
+         ("Dringlichkeit", \.urgency), ("Kontexte", \.contexts)]
+    }
 }
 
 private struct Measurer {
