@@ -1,0 +1,38 @@
+[0;34m[sim][0m Signierter macOS-Debug-Bau der Hauptkennung, Team XK87E2B3VR
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (2 targets)
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CloudKitSchemaInitializer.swift
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-macos.swiftsourceinfo -> LooseEndsWidgets.swiftsourceinfo
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-macos.abi.json -> LooseEndsWidgets.abi.json
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-macos.swiftmodule -> LooseEndsWidgets.swiftmodule
+[[36mLooseEndsWidgets[0m] [1mLinking[0m LooseEndsWidgets.debug.dylib
+[[36mLooseEnds[0m] [1mCompiling[0m CloudKitSchemaInitializer.swift
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWidgets' from project 'LooseEnds')
+[[36mLooseEndsWidgets[0m] [1mLinking[0m LooseEndsWidgets
+[[36mLooseEndsWidgets[0m] [1mExtract App Intents Metadata[0m
+[1mSigning[0m LooseEndsWidgets.debug.dylib (in target 'LooseEndsWidgets' from project 'LooseEnds')
+[1mSigning[0m __preview.dylib (in target 'LooseEndsWidgets' from project 'LooseEnds')
+[1mSigning[0m LooseEndsWidgets.appex (in target 'LooseEndsWidgets' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mCompiling[0m LooseEndsApp.swift
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-macos.swiftmodule -> LooseEnds.swiftmodule
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds.debug.dylib
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-macos.abi.json -> LooseEnds.abi.json
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-macos.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEnds' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[1mSigning[0m LooseEnds.debug.dylib (in target 'LooseEnds' from project 'LooseEnds')
+[1mSigning[0m __preview.dylib (in target 'LooseEnds' from project 'LooseEnds')
+[1mSigning[0m LooseEnds.app (in target 'LooseEnds' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWidgets.appex
+[32;1mBuild Succeeded[0m
+[0;34m[sim][0m Starte Schema-Initialisierung: /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-device-default-mac/Build/Products/Debug/LooseEnds.app/Contents/MacOS/LooseEnds -LEInitializeCloudKitSchema
+[0;32m[sim][0m Schema-Initialisierung erfolgreich (Exit 0).

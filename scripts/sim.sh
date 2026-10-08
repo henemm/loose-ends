@@ -10,6 +10,7 @@
 #   ./scripts/sim.sh unit [Suite[/test]]      # Unit-Tests, macOS-Destination (schnell, kein Simulator)
 #   ./scripts/sim.sh build                    # iOS-App für den Simulator bauen
 #   ./scripts/sim.sh mac-build                # macOS-App bauen
+#   ./scripts/sim.sh mac-schema-init          # CloudKit-Schema in Development anlegen (#175, schreibt in iCloud)
 #   ./scripts/sim.sh sim-unit [Suite[/test]]  # Unit-Tests im iOS-Simulator
 #   ./scripts/sim.sh test <Class[/test]>      # UI-Test im iOS-Simulator
 #   ./scripts/sim.sh test-proof <Class[/test]> # UI-Test + Simulator-Beleg in docs/artifacts/<workflow>/ (#145)
@@ -187,6 +188,38 @@ cmd_mac_build() {
     info "macOS-Build"
     run_xcodebuild build -project "$PROJECT" -scheme "$SCHEME" -destination 'platform=macOS'
     success "macOS-Build erfolgreich."
+}
+
+# Schreibt das volle CloudKit-Schema in Development der Hauptkennung (#175): signierter
+# macOS-Debug-Bau, gestartet mit -LEInitializeCloudKitSchema. Schreibt in Hennings iCloud-Konto,
+# nur nach Freigabe laufen lassen. Erstes Profil: einmal LOOSEENDS_REGISTER=1 (wie signed_build).
+cmd_mac_schema_init() {
+    ensure_project
+    cd "$PROJECT_DIR"
+    local dd; dd="$(device_derived_data)-mac"
+    local args=(build -project "$PROJECT" -scheme "$SCHEME" -destination 'platform=macOS'
+                -configuration Debug -derivedDataPath "$dd" "DEVELOPMENT_TEAM=$TEAM_ID")
+    if [ "${LOOSEENDS_REGISTER:-}" = 1 ]; then
+        warn "Registrierungslauf: benutzt die Anmeldung in Xcode (einmalig für neue Kennungen/Profile, #156)"
+        args+=(-allowProvisioningUpdates)
+    fi
+    info "Signierter macOS-Debug-Bau der Hauptkennung, Team $TEAM_ID"
+    # Rückgabewert von xcodebuild, nicht von xcbeautify (Lehre #144).
+    local rc=0
+    if command -v xcbeautify >/dev/null; then
+        xcodebuild "${args[@]}" 2>&1 | xcbeautify || rc=${PIPESTATUS[0]}
+    else
+        xcodebuild "${args[@]}" 2>&1 || rc=$?
+    fi
+    [ "$rc" -eq 0 ] || { error "macOS-Bau fehlgeschlagen (xcodebuild $rc)."; return 1; }
+    local bin="$dd/Build/Products/Debug/LooseEnds.app/Contents/MacOS/LooseEnds"
+    [ -x "$bin" ] || { error "Programm fehlt: $bin"; return 1; }
+    info "Starte Schema-Initialisierung: $bin -LEInitializeCloudKitSchema"
+    # Der Exit-Code kommt vom Programm selbst, nicht von einer Pipe.
+    local prc=0
+    "$bin" -LEInitializeCloudKitSchema || prc=$?
+    [ "$prc" -eq 0 ] || { error "Schema-Initialisierung fehlgeschlagen (Exit $prc)."; return "$prc"; }
+    success "Schema-Initialisierung erfolgreich (Exit 0)."
 }
 
 cmd_boot() {
@@ -469,7 +502,7 @@ cmd_screenshot() {
     [ -f "$out" ] && success "Screenshot: $out" || { error "Screenshot fehlgeschlagen"; return 1; }
 }
 
-cmd_help() { sed -n '3,30p' "$0" | sed 's/^# \{0,1\}//'; }
+cmd_help() { sed -n '3,31p' "$0" | sed 's/^# \{0,1\}//'; }
 
 COMMAND="${1:-help}"; shift 2>/dev/null || true
 case "$COMMAND" in
@@ -477,6 +510,7 @@ case "$COMMAND" in
     unit)       cmd_unit "$@" ;;
     build)      cmd_build ;;
     mac-build)  cmd_mac_build ;;
+    mac-schema-init) cmd_mac_schema_init ;;
     sim-unit)   cmd_sim_unit "$@" ;;
     test)       cmd_test "$@" ;;
     test-proof) cmd_test_proof "$@" ;;

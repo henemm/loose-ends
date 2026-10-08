@@ -72,6 +72,29 @@ viermal:
 Die `.p8`-Datei mit einem Texteditor öffnen (nicht mit Xcode), alles markieren, kopieren,
 einfügen. Die Datei selbst kommt **nie** ins Repository.
 
+## 5a. CloudKit-Schema vor jedem Build mit Modelländerung (#175)
+
+TestFlight spricht mit der CloudKit-Umgebung **Production**, Xcode-Läufe mit **Development**. Production legt kein
+Schema von selbst an. Fehlt dort ein Typ oder ein Feld, scheitert der Abgleich der TestFlight-Fassung, sobald dieses
+Feld zum ersten Mal einen Wert hat. Development legt Felder nur an, wenn ein Datensatz sie mit Wert schreibt, und ist
+deshalb fast immer lückenhaft.
+
+Bei jeder Änderung an `Shared/Models` (neues Feld, neuer Typ), **bevor** ein TestFlight-Build gestartet wird:
+
+1. `./scripts/sim.sh mac-schema-init`: signierter Mac-Debug-Bau der Hauptkennung, der mit
+   `-LEInitializeCloudKitSchema` startet. Er legt das volle Schema aus dem Modell in Development an
+   (`initializeCloudKitSchema`) und beendet sich mit 0. Der App-Gruppen-Speicher wird dabei nicht geöffnet. Beim
+   ersten Mal oder wenn das Profil abgelaufen ist, läuft er mit `LOOSEENDS_REGISTER=1`.
+   Rückfallweg, falls die Mac-Signierung scheitert: der Prüfbau (`.probe`) mit demselben Argument auf dem iPhone,
+   danach mit `cktool export-schema` aus Probe-Development und `cktool import-schema` nach Haupt-Development.
+2. In der CloudKit Console (Container `iCloud.com.henning.looseends`, Development) die Typen und Felder ansehen.
+3. **Deploy Schema Changes** in der Console. Das ist ein Vorgang an Hennings Konto und wird von ihm freigegeben.
+4. Danach Production gegen Development vergleichen. Erst dann den Build starten.
+
+**Production ist ab dem ersten Deploy nur noch additiv:** Neue Felder und neue Typen gehen, Löschen und Umbenennen
+nicht. Ein Feld, das im Modell umbenannt wird, bleibt in Production als totes Feld stehen. Modelländerungen werden
+deshalb als Zusatz geplant, nie als Umbau.
+
 ## 5. Build starten
 
 1. https://github.com/henemm/loose-ends/actions → links **TestFlight** → rechts **Run workflow**
