@@ -20,6 +20,11 @@ private let focusBloxCalibrationReportURL = repoFile("docs/reference/focusblox-c
 /// present on disk — never in CI, which has no personal FocusBlox data to export. Writes its
 /// report to `docs/reference/focusblox-calibration-report.md` (aggregate numbers only, safe to
 /// commit; the corpus itself stays gitignored because it holds real task titles).
+///
+/// A run that could not measure writes nothing (#133, #147): the checked-in report is the device
+/// measurement from #23, and a Mac or Simulator without a usable model used to replace it with
+/// "skipped: 60" and empty tables — green, and only noticed when someone read the diff. Such a run
+/// now fails and leaves the file as it is (`CalibrationGate`).
 @Suite(.enabled(if: FileManager.default.fileExists(atPath: focusBloxCorpusURL.path)))
 struct FocusBloxCalibrationTests {
     struct CorpusTask: Decodable {
@@ -81,6 +86,7 @@ struct FocusBloxCalibrationTests {
 
         var durationOutcomes: [Outcome] = []
         var modelErrors = 0
+        var errorKinds: Set<String> = []
 
         for task in sample {
             let input = EnrichmentInput(
@@ -93,8 +99,12 @@ struct FocusBloxCalibrationTests {
             // A guardrail false-positive or transient failure on one note must not lose every
             // other measurement already gathered — skip it like the app's own pipeline would
             // (task stays unprocessed, next run tries again).
-            guard let draft = try? await enricher.enrich(input) else {
+            let draft: EnrichmentDraft
+            do {
+                draft = try await enricher.enrich(input)
+            } catch {
                 modelErrors += 1
+                errorKinds.insert(String(describing: type(of: error)))
                 continue
             }
             if let outcome = Self.outcome(guess: draft.duration, truth: task.durationBucket) { durationOutcomes.append(outcome) }
@@ -109,7 +119,40 @@ struct FocusBloxCalibrationTests {
 
         \(Self.table(field: "duration", outcomes: durationOutcomes))
         """
+        guard CalibrationGate.measured(sample: sample.count, modelErrors: modelErrors) else {
+            Issue.record("""
+            Nicht gemessen: \(modelErrors) von \(sample.count) Stichproben scheiterten am Modell \
+            (\(errorKinds.sorted().joined(separator: ", "))). Der Bericht bleibt unverändert.
+            """)
+            return
+        }
         try report.write(to: focusBloxCalibrationReportURL, atomically: true, encoding: .utf8)
+    }
+}
+
+/// When a calibration run counts as a measurement (#133, #147): at least half of the sample got an
+/// answer from the model. Below that the tables would describe the failures, not the model, and
+/// would overwrite the device measurement with them.
+enum CalibrationGate {
+    static func measured(sample: Int, modelErrors: Int) -> Bool {
+        sample > 0 && (sample - modelErrors) * 2 >= sample
+    }
+}
+
+/// Runs without the corpus, so it also runs in CI, where the gated suite above never does.
+@Suite("Kalibrierbericht: nur echte Messungen")
+struct CalibrationGateTests {
+    @Test("Ein Lauf ohne Modell überschreibt den Bericht nicht")
+    func withoutModelNothingIsWritten() {
+        #expect(!CalibrationGate.measured(sample: 60, modelErrors: 60), "der Fall aus #133 und #147")
+        #expect(!CalibrationGate.measured(sample: 0, modelErrors: 0), "ohne Stichprobe gibt es nichts zu berichten")
+    }
+
+    @Test("Ein Lauf mit Antworten schreibt, auch mit einzelnen Fehlschlägen")
+    func measurementIsWritten() {
+        #expect(CalibrationGate.measured(sample: 60, modelErrors: 1), "der Stand aus #23")
+        #expect(CalibrationGate.measured(sample: 60, modelErrors: 30))
+        #expect(!CalibrationGate.measured(sample: 60, modelErrors: 31))
     }
 }
 #endif
