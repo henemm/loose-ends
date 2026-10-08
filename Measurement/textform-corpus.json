@@ -1,0 +1,859 @@
+{
+ "reference": "2026-10-07T09:00:00+02:00",
+ "timeZone": "Europe/Berlin",
+ "entries": [
+  {
+   "id": "tf-01",
+   "forms": {
+    "typed": "Morgen um 14 Uhr Zahnarzt",
+    "dictated": "ähm morgen um 14 uhr muss ich zum zahnarzt",
+    "mail": "Hallo Henning,\n\nwegen des Termins beim Zahnarzt: Bitte bestätige mir kurz, dass es morgen um 14 Uhr klappt.\n\nViele Grüße\nSabine Krüger\nLeitung Kundenservice\nMustermann GmbH · Gartenstraße 12 · 20095 Hamburg\nTel. 040 123456-0 · Sprechzeiten Mo–Fr 8–16 Uhr\nwww.mustermann-gmbh.example\n\nDiese E-Mail enthält vertrauliche Informationen. Wenn Sie nicht der richtige Adressat sind, löschen Sie die Nachricht bitte umgehend und informieren Sie den Absender sofort.\n\n------\nVon: Sabine Krüger\nGesendet: Mittwoch, 7. Oktober 2026 09:02\nAn: Henning\nBetreff: AW: Rückfrage\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine",
+    "english": "Dentist tomorrow at 2 pm"
+   },
+   "dictatedNumbers": "digits",
+   "truth": {
+    "due": "2026-10-08",
+    "time": "14:00",
+    "importance": null,
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "zahnarzt"
+    ]
+   }
+  },
+  {
+   "id": "tf-02",
+   "forms": {
+    "typed": "Freitag um 19 Uhr Elternabend Grundschule",
+    "dictated": "also am freitag um neunzehn uhr ist elternabend in der grundschule",
+    "mail": "Hallo Henning,\n\nzur Erinnerung an den Elternabend der Grundschule: Er findet am Freitag um 19 Uhr in der Aula statt.\n\nViele Grüße\nThomas Weber\nGeschäftsführer\nWeber & Söhne KG · Amtsgericht Hamburg HRB 12345\nTelefon 040 987654-0, erreichbar Montag bis Donnerstag von 9 bis 17 Uhr\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas",
+    "english": "Parents' evening at primary school Friday at 7 pm"
+   },
+   "dictatedNumbers": "words",
+   "truth": {
+    "due": "2026-10-09",
+    "time": "19:00",
+    "importance": null,
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "elternabend"
+    ]
+   }
+  },
+  {
+   "id": "tf-03",
+   "forms": {
+    "typed": "Samstag um 10 Uhr Auto in die Werkstatt bringen",
+    "dictated": "samstag um 10 uhr muss das auto in die werkstatt ich darf das nicht vergessen",
+    "mail": "Hallo Henning,\n\ndas Auto kann am Samstag um 10 Uhr in die Werkstatt gebracht werden, wir haben dann Zeit dafür.\n\nViele Grüße\nAnna Schulz\nTeamassistenz\nDigitalwerk AG · Hauptstraße 5 · 22765 Hamburg\nTel. 040 555000-12 · Büro: Dienstag und Donnerstag\n\nDiese E-Mail enthält vertrauliche Informationen. Wenn Sie nicht der richtige Adressat sind, löschen Sie die Nachricht bitte umgehend und informieren Sie den Absender sofort.\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna",
+    "english": "Take the car to the garage Saturday at 10 am"
+   },
+   "dictatedNumbers": "digits",
+   "truth": {
+    "due": "2026-10-10",
+    "time": "10:00",
+    "importance": null,
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "auto",
+     "werkstatt"
+    ]
+   }
+  },
+  {
+   "id": "tf-04",
+   "forms": {
+    "typed": "Heute um 16 Uhr Videocall mit Frau Lenz",
+    "dictated": "heute um sechzehn uhr hab ich noch einen videocall mit frau lenz",
+    "mail": "Hallo Henning,\n\nwir hatten einen Videocall mit Frau Lenz vereinbart, heute um 16 Uhr, den Link schicke ich dir noch.\n\nViele Grüße\nSabine Krüger\nLeitung Kundenservice\nMustermann GmbH · Gartenstraße 12 · 20095 Hamburg\nTel. 040 123456-0 · Sprechzeiten Mo–Fr 8–16 Uhr\nwww.mustermann-gmbh.example\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine",
+    "english": "Video call with Ms Lenz today at 4 pm"
+   },
+   "dictatedNumbers": "words",
+   "truth": {
+    "due": "2026-10-07",
+    "time": "16:00",
+    "importance": null,
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "videocall",
+     "lenz"
+    ]
+   }
+  },
+  {
+   "id": "tf-05",
+   "forms": {
+    "typed": "Übermorgen um 11:30 Friseur",
+    "dictated": "übermorgen um 11 uhr 30 bin ich beim friseur",
+    "mail": "Hallo Henning,\n\nfür den Friseur habe ich dir einen Termin übermorgen um 11:30 Uhr gebucht.\n\nViele Grüße\nThomas Weber\nGeschäftsführer\nWeber & Söhne KG · Amtsgericht Hamburg HRB 12345\nTelefon 040 987654-0, erreichbar Montag bis Donnerstag von 9 bis 17 Uhr\n\nDiese E-Mail enthält vertrauliche Informationen. Wenn Sie nicht der richtige Adressat sind, löschen Sie die Nachricht bitte umgehend und informieren Sie den Absender sofort.\n\n------\nVon: Sabine Krüger\nGesendet: Mittwoch, 7. Oktober 2026 09:02\nAn: Henning\nBetreff: AW: Rückfrage\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas",
+    "english": "Hairdresser the day after tomorrow at 11:30"
+   },
+   "dictatedNumbers": "digits",
+   "truth": {
+    "due": "2026-10-09",
+    "time": "11:30",
+    "importance": null,
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "friseur"
+    ]
+   }
+  },
+  {
+   "id": "tf-06",
+   "forms": {
+    "typed": "Montag um 18 Uhr Yoga-Kurs",
+    "dictated": "am montag um 18 uhr ist wieder der yoga kurs",
+    "mail": "Hallo Henning,\n\nder Yoga-Kurs startet am Montag um 18 Uhr im Studio, bring bitte eine Matte mit.\n\nViele Grüße\nAnna Schulz\nTeamassistenz\nDigitalwerk AG · Hauptstraße 5 · 22765 Hamburg\nTel. 040 555000-12 · Büro: Dienstag und Donnerstag\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna",
+    "english": "Yoga class Monday at 6 pm"
+   },
+   "dictatedNumbers": "digits",
+   "truth": {
+    "due": "2026-10-12",
+    "time": "18:00",
+    "importance": null,
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "yoga"
+    ]
+   }
+  },
+  {
+   "id": "tf-07",
+   "forms": {
+    "typed": "Morgen um 9 Uhr Paket abholen",
+    "dictated": "morgen um neun uhr kann ich das paket abholen",
+    "mail": "Hallo Henning,\n\ndein Paket liegt bereit und kann morgen um 9 Uhr abgeholt werden.\n\nViele Grüße\nSabine Krüger\nLeitung Kundenservice\nMustermann GmbH · Gartenstraße 12 · 20095 Hamburg\nTel. 040 123456-0 · Sprechzeiten Mo–Fr 8–16 Uhr\nwww.mustermann-gmbh.example\n\nDiese E-Mail enthält vertrauliche Informationen. Wenn Sie nicht der richtige Adressat sind, löschen Sie die Nachricht bitte umgehend und informieren Sie den Absender sofort.\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine",
+    "english": "Pick up the parcel tomorrow at 9 am"
+   },
+   "dictatedNumbers": "words",
+   "truth": {
+    "due": "2026-10-08",
+    "time": "09:00",
+    "importance": null,
+    "urgency": null,
+    "contexts": [
+     "Errands"
+    ],
+    "titleWords": [
+     "paket"
+    ]
+   }
+  },
+  {
+   "id": "tf-08",
+   "forms": {
+    "typed": "Am 15. Oktober Oma zum Geburtstag anrufen",
+    "dictated": "am fünfzehnten oktober hat oma geburtstag da muss ich anrufen",
+    "mail": "Hallo Henning,\n\ndenk bitte daran, dass Oma am 15. Oktober Geburtstag hat und sich über einen Anruf freut.\n\nViele Grüße\nThomas Weber\nGeschäftsführer\nWeber & Söhne KG · Amtsgericht Hamburg HRB 12345\nTelefon 040 987654-0, erreichbar Montag bis Donnerstag von 9 bis 17 Uhr\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas",
+    "english": "Call Grandma for her birthday on October 15"
+   },
+   "dictatedNumbers": "words",
+   "truth": {
+    "due": "2026-10-15",
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [
+     "Phone"
+    ],
+    "titleWords": [
+     "oma",
+     "geburtstag"
+    ]
+   }
+  },
+  {
+   "id": "tf-09",
+   "forms": {
+    "typed": "Am Freitag Altglas wegbringen",
+    "dictated": "am freitag muss das altglas weg ähm die flaschen",
+    "mail": "Hallo Henning,\n\ndas Altglas muss am Freitag weggebracht werden, die Container werden danach geleert.\n\nViele Grüße\nAnna Schulz\nTeamassistenz\nDigitalwerk AG · Hauptstraße 5 · 22765 Hamburg\nTel. 040 555000-12 · Büro: Dienstag und Donnerstag\n\nDiese E-Mail enthält vertrauliche Informationen. Wenn Sie nicht der richtige Adressat sind, löschen Sie die Nachricht bitte umgehend und informieren Sie den Absender sofort.\n\n------\nVon: Sabine Krüger\nGesendet: Mittwoch, 7. Oktober 2026 09:02\nAn: Henning\nBetreff: AW: Rückfrage\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna",
+    "english": "Take the glass to the bottle bank on Friday"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": "2026-10-09",
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "altglas"
+    ]
+   }
+  },
+  {
+   "id": "tf-10",
+   "forms": {
+    "typed": "Übermorgen Mülltonne rausstellen",
+    "dictated": "übermorgen nicht vergessen die mülltonne rauszustellen",
+    "mail": "Hallo Henning,\n\ndie Mülltonne bitte übermorgen rausstellen, die Abholung ist früh am Morgen.\n\nViele Grüße\nSabine Krüger\nLeitung Kundenservice\nMustermann GmbH · Gartenstraße 12 · 20095 Hamburg\nTel. 040 123456-0 · Sprechzeiten Mo–Fr 8–16 Uhr\nwww.mustermann-gmbh.example\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine",
+    "english": "Put the bin out the day after tomorrow"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": "2026-10-09",
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "mülltonne"
+    ]
+   }
+  },
+  {
+   "id": "tf-11",
+   "forms": {
+    "typed": "In drei Tagen Reifenwechsel vereinbaren",
+    "dictated": "in drei tagen sollte ich einen reifenwechsel vereinbaren",
+    "mail": "Hallo Henning,\n\nwegen des Reifenwechsels: In drei Tagen sollte der Termin stehen, sonst sind die Werkstätten voll.\n\nViele Grüße\nThomas Weber\nGeschäftsführer\nWeber & Söhne KG · Amtsgericht Hamburg HRB 12345\nTelefon 040 987654-0, erreichbar Montag bis Donnerstag von 9 bis 17 Uhr\n\nDiese E-Mail enthält vertrauliche Informationen. Wenn Sie nicht der richtige Adressat sind, löschen Sie die Nachricht bitte umgehend und informieren Sie den Absender sofort.\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas",
+    "english": "Book the tyre change in three days"
+   },
+   "dictatedNumbers": "words",
+   "truth": {
+    "due": "2026-10-10",
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "reifenwechsel"
+    ]
+   }
+  },
+  {
+   "id": "tf-12",
+   "forms": {
+    "typed": "Ende des Monats Bibliotheksbücher zurückbringen",
+    "dictated": "ende des monats muss ich die bücher in die bibliothek zurückbringen",
+    "mail": "Hallo Henning,\n\ndie entliehenen Bibliotheksbücher bitte bis Ende des Monats zurückbringen.\n\nViele Grüße\nAnna Schulz\nTeamassistenz\nDigitalwerk AG · Hauptstraße 5 · 22765 Hamburg\nTel. 040 555000-12 · Büro: Dienstag und Donnerstag\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna",
+    "english": "Return the library books at the end of the month"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": "2026-10-31",
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "bücher",
+     "bibliothek"
+    ]
+   }
+  },
+  {
+   "id": "tf-13",
+   "forms": {
+    "typed": "Samstag Geburtstagsgeschenk für Jonas besorgen",
+    "dictated": "am samstag muss ich noch ein geburtstagsgeschenk für jonas besorgen",
+    "mail": "Hallo Henning,\n\nfür Jonas fehlt noch ein Geburtstagsgeschenk, das solltest du am Samstag besorgen.\n\nViele Grüße\nSabine Krüger\nLeitung Kundenservice\nMustermann GmbH · Gartenstraße 12 · 20095 Hamburg\nTel. 040 123456-0 · Sprechzeiten Mo–Fr 8–16 Uhr\nwww.mustermann-gmbh.example\n\nDiese E-Mail enthält vertrauliche Informationen. Wenn Sie nicht der richtige Adressat sind, löschen Sie die Nachricht bitte umgehend und informieren Sie den Absender sofort.\n\n------\nVon: Sabine Krüger\nGesendet: Mittwoch, 7. Oktober 2026 09:02\nAn: Henning\nBetreff: AW: Rückfrage\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine",
+    "english": "Get a birthday present for Jonas on Saturday"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": "2026-10-10",
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [
+     "Errands"
+    ],
+    "titleWords": [
+     "geburtstagsgeschenk",
+     "jonas"
+    ]
+   }
+  },
+  {
+   "id": "tf-14",
+   "forms": {
+    "typed": "Morgen Blumen gießen",
+    "dictated": "morgen die blumen gießen nicht vergessen",
+    "mail": "Hallo Henning,\n\ndie Blumen bei den Nachbarn bitte morgen gießen, sie sind noch bis Sonntag weg.\n\nViele Grüße\nThomas Weber\nGeschäftsführer\nWeber & Söhne KG · Amtsgericht Hamburg HRB 12345\nTelefon 040 987654-0, erreichbar Montag bis Donnerstag von 9 bis 17 Uhr\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas",
+    "english": "Water the flowers tomorrow"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": "2026-10-08",
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "blumen"
+    ]
+   }
+  },
+  {
+   "id": "tf-15",
+   "forms": {
+    "typed": "Wichtig: Steuererklärung 2025 fertig machen",
+    "dictated": "ganz wichtig ich muss die steuererklärung für 2025 fertig machen",
+    "mail": "Hallo Henning,\n\ndie Steuererklärung für 2025 ist sehr wichtig und sollte bald abgeschlossen werden.\n\nViele Grüße\nAnna Schulz\nTeamassistenz\nDigitalwerk AG · Hauptstraße 5 · 22765 Hamburg\nTel. 040 555000-12 · Büro: Dienstag und Donnerstag\n\nDiese E-Mail enthält vertrauliche Informationen. Wenn Sie nicht der richtige Adressat sind, löschen Sie die Nachricht bitte umgehend und informieren Sie den Absender sofort.\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna",
+    "english": "Important: finish the 2025 tax return"
+   },
+   "dictatedNumbers": "digits",
+   "truth": {
+    "due": null,
+    "time": null,
+    "importance": "high",
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "steuererklärung"
+    ]
+   }
+  },
+  {
+   "id": "tf-16",
+   "forms": {
+    "typed": "Dringend Rezept beim Hausarzt abholen",
+    "dictated": "ich muss dringend das rezept beim hausarzt abholen",
+    "mail": "Hallo Henning,\n\ndas Rezept liegt beim Hausarzt und muss dringend abgeholt werden.\n\nViele Grüße\nSabine Krüger\nLeitung Kundenservice\nMustermann GmbH · Gartenstraße 12 · 20095 Hamburg\nTel. 040 123456-0 · Sprechzeiten Mo–Fr 8–16 Uhr\nwww.mustermann-gmbh.example\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine",
+    "english": "Urgently pick up the prescription at the GP"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": null,
+    "time": null,
+    "importance": null,
+    "urgency": "high",
+    "contexts": [
+     "Errands"
+    ],
+    "titleWords": [
+     "rezept",
+     "hausarzt"
+    ]
+   }
+  },
+  {
+   "id": "tf-17",
+   "forms": {
+    "typed": "Rechnung vom Elektriker prüfen und bezahlen",
+    "dictated": "die rechnung vom elektriker muss ich noch prüfen und dann bezahlen",
+    "mail": "Hallo Henning,\n\ndie Rechnung des Elektrikers ist eingegangen, bitte prüfen und bezahlen.\n\nViele Grüße\nThomas Weber\nGeschäftsführer\nWeber & Söhne KG · Amtsgericht Hamburg HRB 12345\nTelefon 040 987654-0, erreichbar Montag bis Donnerstag von 9 bis 17 Uhr\n\nDiese E-Mail enthält vertrauliche Informationen. Wenn Sie nicht der richtige Adressat sind, löschen Sie die Nachricht bitte umgehend und informieren Sie den Absender sofort.\n\n------\nVon: Sabine Krüger\nGesendet: Mittwoch, 7. Oktober 2026 09:02\nAn: Henning\nBetreff: AW: Rückfrage\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas",
+    "english": "Check and pay the electrician's invoice"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": null,
+    "time": null,
+    "importance": "high",
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "rechnung",
+     "elektriker"
+    ]
+   }
+  },
+  {
+   "id": "tf-18",
+   "forms": {
+    "typed": "Kündigungsfrist Fitnessstudio nicht verpassen",
+    "dictated": "ich darf die kündigungsfrist vom fitnessstudio nicht verpassen",
+    "mail": "Hallo Henning,\n\ndie Kündigungsfrist für das Fitnessstudio läuft aus, daran solltest du denken.\n\nViele Grüße\nAnna Schulz\nTeamassistenz\nDigitalwerk AG · Hauptstraße 5 · 22765 Hamburg\nTel. 040 555000-12 · Büro: Dienstag und Donnerstag\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna",
+    "english": "Do not miss the gym cancellation deadline"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": null,
+    "time": null,
+    "importance": null,
+    "urgency": "high",
+    "contexts": [],
+    "titleWords": [
+     "kündigungsfrist",
+     "fitnessstudio"
+    ]
+   }
+  },
+  {
+   "id": "tf-19",
+   "forms": {
+    "typed": "Anwalt wegen Mietvertrag zurückrufen",
+    "dictated": "ich muss den anwalt wegen dem mietvertrag zurückrufen",
+    "mail": "Hallo Henning,\n\nder Anwalt hat wegen des Mietvertrags angerufen, du sollst ihn zurückrufen.\n\nViele Grüße\nSabine Krüger\nLeitung Kundenservice\nMustermann GmbH · Gartenstraße 12 · 20095 Hamburg\nTel. 040 123456-0 · Sprechzeiten Mo–Fr 8–16 Uhr\nwww.mustermann-gmbh.example\n\nDiese E-Mail enthält vertrauliche Informationen. Wenn Sie nicht der richtige Adressat sind, löschen Sie die Nachricht bitte umgehend und informieren Sie den Absender sofort.\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine",
+    "english": "Call the lawyer back about the lease"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": null,
+    "time": null,
+    "importance": "high",
+    "urgency": null,
+    "contexts": [
+     "Phone"
+    ],
+    "titleWords": [
+     "anwalt",
+     "mietvertrag"
+    ]
+   }
+  },
+  {
+   "id": "tf-20",
+   "forms": {
+    "typed": "Sofort Passwort beim Bankkonto ändern",
+    "dictated": "ich muss sofort das passwort fürs bankkonto ändern",
+    "mail": "Hallo Henning,\n\ndas Passwort für das Bankkonto sollte sofort geändert werden, es war in der Presse.\n\nViele Grüße\nThomas Weber\nGeschäftsführer\nWeber & Söhne KG · Amtsgericht Hamburg HRB 12345\nTelefon 040 987654-0, erreichbar Montag bis Donnerstag von 9 bis 17 Uhr\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas",
+    "english": "Change the bank account password right away"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": null,
+    "time": null,
+    "importance": null,
+    "urgency": "high",
+    "contexts": [],
+    "titleWords": [
+     "passwort",
+     "bankkonto"
+    ]
+   }
+  },
+  {
+   "id": "tf-21",
+   "forms": {
+    "typed": "Rasen mähen",
+    "dictated": "ähm den rasen muss ich mal wieder mähen",
+    "mail": "Hallo Henning,\n\nder Rasen müsste mal wieder gemäht werden, das Gras steht schon hoch.\n\nViele Grüße\nAnna Schulz\nTeamassistenz\nDigitalwerk AG · Hauptstraße 5 · 22765 Hamburg\nTel. 040 555000-12 · Büro: Dienstag und Donnerstag\n\nDiese E-Mail enthält vertrauliche Informationen. Wenn Sie nicht der richtige Adressat sind, löschen Sie die Nachricht bitte umgehend und informieren Sie den Absender sofort.\n\n------\nVon: Sabine Krüger\nGesendet: Mittwoch, 7. Oktober 2026 09:02\nAn: Henning\nBetreff: AW: Rückfrage\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna",
+    "english": "Mow the lawn"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": null,
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [
+     "Garden"
+    ],
+    "titleWords": [
+     "rasen"
+    ]
+   }
+  },
+  {
+   "id": "tf-22",
+   "forms": {
+    "typed": "Wäsche aufhängen",
+    "dictated": "die wäsche muss noch aufgehängt werden",
+    "mail": "Hallo Henning,\n\ndie Wäsche liegt noch in der Maschine und muss aufgehängt werden.\n\nViele Grüße\nSabine Krüger\nLeitung Kundenservice\nMustermann GmbH · Gartenstraße 12 · 20095 Hamburg\nTel. 040 123456-0 · Sprechzeiten Mo–Fr 8–16 Uhr\nwww.mustermann-gmbh.example\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine",
+    "english": "Hang up the laundry"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": null,
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [
+     "Home"
+    ],
+    "titleWords": [
+     "wäsche"
+    ]
+   }
+  },
+  {
+   "id": "tf-23",
+   "forms": {
+    "typed": "Drucker-Patrone bestellen",
+    "dictated": "ich muss eine neue patrone für den drucker bestellen",
+    "mail": "Hallo Henning,\n\nfür den Drucker ist keine Patrone mehr da, bitte eine neue bestellen.\n\nViele Grüße\nThomas Weber\nGeschäftsführer\nWeber & Söhne KG · Amtsgericht Hamburg HRB 12345\nTelefon 040 987654-0, erreichbar Montag bis Donnerstag von 9 bis 17 Uhr\n\nDiese E-Mail enthält vertrauliche Informationen. Wenn Sie nicht der richtige Adressat sind, löschen Sie die Nachricht bitte umgehend und informieren Sie den Absender sofort.\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas",
+    "english": "Order a new cartridge for the printer"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": null,
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [
+     "Computer"
+    ],
+    "titleWords": [
+     "patrone",
+     "drucker"
+    ]
+   }
+  },
+  {
+   "id": "tf-24",
+   "forms": {
+    "typed": "Beim Baumarkt eine Glühbirne kaufen",
+    "dictated": "ich muss im baumarkt eine glühbirne kaufen",
+    "mail": "Hallo Henning,\n\nim Flur ist die Glühbirne kaputt, kannst du im Baumarkt eine kaufen?\n\nViele Grüße\nAnna Schulz\nTeamassistenz\nDigitalwerk AG · Hauptstraße 5 · 22765 Hamburg\nTel. 040 555000-12 · Büro: Dienstag und Donnerstag\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna",
+    "english": "Buy a light bulb at the DIY store"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": null,
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [
+     "Errands",
+     "Home"
+    ],
+    "titleWords": [
+     "glühbirne",
+     "baumarkt"
+    ]
+   }
+  },
+  {
+   "id": "tf-25",
+   "forms": {
+    "typed": "Auf dem Rückweg tanken",
+    "dictated": "auf dem rückweg müsste ich noch tanken",
+    "mail": "Hallo Henning,\n\nauf dem Rückweg bitte noch tanken, der Tank ist fast leer.\n\nViele Grüße\nSabine Krüger\nLeitung Kundenservice\nMustermann GmbH · Gartenstraße 12 · 20095 Hamburg\nTel. 040 123456-0 · Sprechzeiten Mo–Fr 8–16 Uhr\nwww.mustermann-gmbh.example\n\nDiese E-Mail enthält vertrauliche Informationen. Wenn Sie nicht der richtige Adressat sind, löschen Sie die Nachricht bitte umgehend und informieren Sie den Absender sofort.\n\n------\nVon: Sabine Krüger\nGesendet: Mittwoch, 7. Oktober 2026 09:02\nAn: Henning\nBetreff: AW: Rückfrage\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine",
+    "english": "Get gas on the way back"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": null,
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [
+     "Out and about"
+    ],
+    "titleWords": [
+     "rückweg",
+     "tanken"
+    ]
+   }
+  },
+  {
+   "id": "tf-26",
+   "forms": {
+    "typed": "Backup der Fotos prüfen",
+    "dictated": "ich sollte mal das backup von den fotos prüfen",
+    "mail": "Hallo Henning,\n\ndas Backup der Fotos sollte einmal geprüft werden, damit nichts verloren geht.\n\nViele Grüße\nThomas Weber\nGeschäftsführer\nWeber & Söhne KG · Amtsgericht Hamburg HRB 12345\nTelefon 040 987654-0, erreichbar Montag bis Donnerstag von 9 bis 17 Uhr\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas",
+    "english": "Check the photo backup"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": null,
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [
+     "Computer"
+    ],
+    "titleWords": [
+     "backup",
+     "fotos"
+    ]
+   }
+  },
+  {
+   "id": "tf-27",
+   "forms": {
+    "typed": "Morgen dringend Mama anrufen",
+    "dictated": "morgen muss ich dringend die mama anrufen",
+    "mail": "Hallo Henning,\n\nruf bitte morgen deine Mama an, es ist dringend.\n\nViele Grüße\nAnna Schulz\nTeamassistenz\nDigitalwerk AG · Hauptstraße 5 · 22765 Hamburg\nTel. 040 555000-12 · Büro: Dienstag und Donnerstag\n\nDiese E-Mail enthält vertrauliche Informationen. Wenn Sie nicht der richtige Adressat sind, löschen Sie die Nachricht bitte umgehend und informieren Sie den Absender sofort.\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna",
+    "english": "Urgently call Mum tomorrow"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": "2026-10-08",
+    "time": null,
+    "importance": null,
+    "urgency": "high",
+    "contexts": [
+     "Phone"
+    ],
+    "titleWords": [
+     "mama"
+    ]
+   }
+  },
+  {
+   "id": "tf-28",
+   "forms": {
+    "typed": "Freitag um 8 Uhr Rechnung fürs Dach überweisen",
+    "dictated": "am freitag um acht uhr muss ich die rechnung fürs dach überweisen",
+    "mail": "Hallo Henning,\n\ndie Rechnung für das Dach bitte am Freitag um 8 Uhr überweisen, der Dachdecker wartet nicht.\n\nViele Grüße\nSabine Krüger\nLeitung Kundenservice\nMustermann GmbH · Gartenstraße 12 · 20095 Hamburg\nTel. 040 123456-0 · Sprechzeiten Mo–Fr 8–16 Uhr\nwww.mustermann-gmbh.example\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine",
+    "english": "Pay the roof invoice Friday at 8 am"
+   },
+   "dictatedNumbers": "words",
+   "truth": {
+    "due": "2026-10-09",
+    "time": "08:00",
+    "importance": "high",
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "rechnung",
+     "dach"
+    ]
+   }
+  },
+  {
+   "id": "tf-29",
+   "forms": {
+    "typed": "Heute noch Rasen mähen, spätestens bis 18 Uhr",
+    "dictated": "heute noch den rasen mähen spätestens bis 18 uhr",
+    "mail": "Hallo Henning,\n\nder Rasen sollte heute noch gemäht werden, spätestens bis 18 Uhr, danach sind die Nachbarn zuhause.\n\nViele Grüße\nThomas Weber\nGeschäftsführer\nWeber & Söhne KG · Amtsgericht Hamburg HRB 12345\nTelefon 040 987654-0, erreichbar Montag bis Donnerstag von 9 bis 17 Uhr\n\nDiese E-Mail enthält vertrauliche Informationen. Wenn Sie nicht der richtige Adressat sind, löschen Sie die Nachricht bitte umgehend und informieren Sie den Absender sofort.\n\n------\nVon: Sabine Krüger\nGesendet: Mittwoch, 7. Oktober 2026 09:02\nAn: Henning\nBetreff: AW: Rückfrage\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas",
+    "english": "Mow the lawn today, by 6 pm at the latest"
+   },
+   "dictatedNumbers": "digits",
+   "truth": {
+    "due": "2026-10-07",
+    "time": "18:00",
+    "importance": null,
+    "urgency": "high",
+    "contexts": [
+     "Garden"
+    ],
+    "titleWords": [
+     "rasen"
+    ]
+   }
+  },
+  {
+   "id": "tf-30",
+   "forms": {
+    "typed": "Samstag Hecke schneiden und Laub zusammenkehren",
+    "dictated": "am samstag muss die hecke geschnitten werden und das laub zusammengekehrt",
+    "mail": "Hallo Henning,\n\nam Samstag steht die Hecke an: schneiden und danach das Laub zusammenkehren.\n\nViele Grüße\nAnna Schulz\nTeamassistenz\nDigitalwerk AG · Hauptstraße 5 · 22765 Hamburg\nTel. 040 555000-12 · Büro: Dienstag und Donnerstag\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna",
+    "english": "Trim the hedge and sweep up the leaves on Saturday"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": "2026-10-10",
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [
+     "Garden"
+    ],
+    "titleWords": [
+     "hecke",
+     "laub"
+    ]
+   }
+  },
+  {
+   "id": "tf-31",
+   "forms": {
+    "typed": "Übermorgen um 15 Uhr wichtiger Termin beim Notar",
+    "dictated": "übermorgen um 15 uhr hab ich einen wichtigen termin beim notar",
+    "mail": "Hallo Henning,\n\nder Termin beim Notar übermorgen um 15 Uhr ist wichtig, bitte bring den Ausweis mit.\n\nViele Grüße\nSabine Krüger\nLeitung Kundenservice\nMustermann GmbH · Gartenstraße 12 · 20095 Hamburg\nTel. 040 123456-0 · Sprechzeiten Mo–Fr 8–16 Uhr\nwww.mustermann-gmbh.example\n\nDiese E-Mail enthält vertrauliche Informationen. Wenn Sie nicht der richtige Adressat sind, löschen Sie die Nachricht bitte umgehend und informieren Sie den Absender sofort.\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine",
+    "english": "Important appointment at the notary the day after tomorrow at 3 pm"
+   },
+   "dictatedNumbers": "digits",
+   "truth": {
+    "due": "2026-10-09",
+    "time": "15:00",
+    "importance": "high",
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "notar",
+     "termin"
+    ]
+   }
+  },
+  {
+   "id": "tf-32",
+   "forms": {
+    "typed": "Montag Wäsche waschen und Wohnung putzen",
+    "dictated": "am montag muss ich die wäsche waschen und die wohnung putzen",
+    "mail": "Hallo Henning,\n\nam Montag steht die Wäsche an und die Wohnung wird geputzt.\n\nViele Grüße\nThomas Weber\nGeschäftsführer\nWeber & Söhne KG · Amtsgericht Hamburg HRB 12345\nTelefon 040 987654-0, erreichbar Montag bis Donnerstag von 9 bis 17 Uhr\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas",
+    "english": "Do the laundry and clean the flat on Monday"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": "2026-10-12",
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [
+     "Home"
+    ],
+    "titleWords": [
+     "wäsche",
+     "wohnung"
+    ]
+   }
+  },
+  {
+   "id": "tf-33",
+   "forms": {
+    "typed": "Buch über Bienen lesen",
+    "dictated": "ich wollte mal ein buch über bienen lesen",
+    "mail": "Hallo Henning,\n\ndas Buch über Bienen, von dem ich dir erzählt habe, solltest du lesen.\n\nViele Grüße\nAnna Schulz\nTeamassistenz\nDigitalwerk AG · Hauptstraße 5 · 22765 Hamburg\nTel. 040 555000-12 · Büro: Dienstag und Donnerstag\n\nDiese E-Mail enthält vertrauliche Informationen. Wenn Sie nicht der richtige Adressat sind, löschen Sie die Nachricht bitte umgehend und informieren Sie den Absender sofort.\n\n------\nVon: Sabine Krüger\nGesendet: Mittwoch, 7. Oktober 2026 09:02\nAn: Henning\nBetreff: AW: Rückfrage\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna",
+    "english": "Read a book about bees"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": null,
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "buch",
+     "bienen"
+    ]
+   }
+  },
+  {
+   "id": "tf-34",
+   "forms": {
+    "typed": "Idee für Lenas Geburtstag überlegen",
+    "dictated": "ich muss mir noch eine idee für lenas geburtstag überlegen",
+    "mail": "Hallo Henning,\n\nfür Lenas Geburtstag fehlt noch eine Idee, überlege dir etwas.\n\nViele Grüße\nSabine Krüger\nLeitung Kundenservice\nMustermann GmbH · Gartenstraße 12 · 20095 Hamburg\nTel. 040 123456-0 · Sprechzeiten Mo–Fr 8–16 Uhr\nwww.mustermann-gmbh.example\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine",
+    "english": "Think of an idea for Lena's birthday"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": null,
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "idee",
+     "lena"
+    ]
+   }
+  },
+  {
+   "id": "tf-35",
+   "forms": {
+    "typed": "Gitarre neu stimmen",
+    "dictated": "ähm die gitarre müsste mal neu gestimmt werden",
+    "mail": "Hallo Henning,\n\ndie Gitarre klingt schief und müsste neu gestimmt werden.\n\nViele Grüße\nThomas Weber\nGeschäftsführer\nWeber & Söhne KG · Amtsgericht Hamburg HRB 12345\nTelefon 040 987654-0, erreichbar Montag bis Donnerstag von 9 bis 17 Uhr\n\nDiese E-Mail enthält vertrauliche Informationen. Wenn Sie nicht der richtige Adressat sind, löschen Sie die Nachricht bitte umgehend und informieren Sie den Absender sofort.\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas",
+    "english": "Retune the guitar"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": null,
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "gitarre"
+    ]
+   }
+  },
+  {
+   "id": "tf-36",
+   "forms": {
+    "typed": "Urlaubsfotos sortieren",
+    "dictated": "ich will die urlaubsfotos endlich sortieren",
+    "mail": "Hallo Henning,\n\ndie Urlaubsfotos liegen noch unsortiert herum, sortiere sie doch mal.\n\nViele Grüße\nAnna Schulz\nTeamassistenz\nDigitalwerk AG · Hauptstraße 5 · 22765 Hamburg\nTel. 040 555000-12 · Büro: Dienstag und Donnerstag\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna",
+    "english": "Sort the holiday photos"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": null,
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "urlaubsfotos"
+    ]
+   }
+  },
+  {
+   "id": "tf-37",
+   "forms": {
+    "typed": "Neue Wanderschuhe ausprobieren",
+    "dictated": "ich wollte die neuen wanderschuhe mal ausprobieren",
+    "mail": "Hallo Henning,\n\ndie neuen Wanderschuhe musst du noch einlaufen, probiere sie aus.\n\nViele Grüße\nSabine Krüger\nLeitung Kundenservice\nMustermann GmbH · Gartenstraße 12 · 20095 Hamburg\nTel. 040 123456-0 · Sprechzeiten Mo–Fr 8–16 Uhr\nwww.mustermann-gmbh.example\n\nDiese E-Mail enthält vertrauliche Informationen. Wenn Sie nicht der richtige Adressat sind, löschen Sie die Nachricht bitte umgehend und informieren Sie den Absender sofort.\n\n------\nVon: Sabine Krüger\nGesendet: Mittwoch, 7. Oktober 2026 09:02\nAn: Henning\nBetreff: AW: Rückfrage\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine",
+    "english": "Try out the new hiking boots"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": null,
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "wanderschuhe"
+    ]
+   }
+  },
+  {
+   "id": "tf-38",
+   "forms": {
+    "typed": "Rezept für Linsensuppe raussuchen",
+    "dictated": "ich such mal das rezept für die linsensuppe raus",
+    "mail": "Hallo Henning,\n\ndas Rezept für die Linsensuppe von Tante Gerda, such es doch mal raus.\n\nViele Grüße\nThomas Weber\nGeschäftsführer\nWeber & Söhne KG · Amtsgericht Hamburg HRB 12345\nTelefon 040 987654-0, erreichbar Montag bis Donnerstag von 9 bis 17 Uhr\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas",
+    "english": "Look up the lentil soup recipe"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": null,
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "rezept",
+     "linsensuppe"
+    ]
+   }
+  },
+  {
+   "id": "tf-39",
+   "forms": {
+    "typed": "Spanisch Vokabeln wiederholen",
+    "dictated": "ich sollte die spanisch vokabeln wiederholen",
+    "mail": "Hallo Henning,\n\ndie spanischen Vokabeln solltest du mal wiederholen, sonst vergisst du sie.\n\nViele Grüße\nAnna Schulz\nTeamassistenz\nDigitalwerk AG · Hauptstraße 5 · 22765 Hamburg\nTel. 040 555000-12 · Büro: Dienstag und Donnerstag\n\nDiese E-Mail enthält vertrauliche Informationen. Wenn Sie nicht der richtige Adressat sind, löschen Sie die Nachricht bitte umgehend und informieren Sie den Absender sofort.\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 2. Oktober 2026 um 09:14 schrieb Thomas Weber:\n> Bitte antworte mir bis spätestens Freitag, die Frist läuft sonst ab.\n> Gruß Thomas\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna",
+    "english": "Review the Spanish vocabulary"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": null,
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "spanisch",
+     "vokabeln"
+    ]
+   }
+  },
+  {
+   "id": "tf-40",
+   "forms": {
+    "typed": "Balkon neu gestalten",
+    "dictated": "ich möchte den balkon neu gestalten",
+    "mail": "Hallo Henning,\n\nder Balkon sieht trist aus, gestalte ihn doch einmal neu.\n\nViele Grüße\nSabine Krüger\nLeitung Kundenservice\nMustermann GmbH · Gartenstraße 12 · 20095 Hamburg\nTel. 040 123456-0 · Sprechzeiten Mo–Fr 8–16 Uhr\nwww.mustermann-gmbh.example\n\nHinweis zum Datenschutz: Wir verarbeiten Ihre Daten gemäß Art. 6 DSGVO. Details finden Sie auf unserer Webseite unter Datenschutz.\n\nAm 1. Oktober 2026 um 17:40 schrieb Anna Schulz:\n> Die Rechnung Nr. 4711 über 250 Euro ist offen, bitte kümmere dich darum.\n> Danke, Anna\n\nAm 30. September 2026 um 11:05 schrieb Sabine Krüger:\n> Rufst du mich am Montag um 9 Uhr kurz an? Es ist wichtig.\n> Sabine",
+    "english": "Redesign the balcony"
+   },
+   "dictatedNumbers": "none",
+   "truth": {
+    "due": null,
+    "time": null,
+    "importance": null,
+    "urgency": null,
+    "contexts": [],
+    "titleWords": [
+     "balkon"
+    ]
+   }
+  }
+ ]
+}
