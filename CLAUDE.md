@@ -28,7 +28,7 @@ Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, 
   the line "Without the model this fails because …" with evidence from a measurement; without that line
   the rule path is the proposal. Every measurement report carries the rule-based column as baseline; if
   the rules beat the model, the rules win, and an existing ADR or schema is not a counter-argument.
-  Measured 2026-09-20: model 50 % exact dates, 96.5 % invented; `NSDataDetector` 65 %, 0 % (#67, #92);
+  Measured 2026-09-20: model 50 % exact dates, 96.5 % invented; `NSDataDetector` 65–68 % depending on the weekday of the run (it takes no reference day, so its column is frozen, #148), 0 % (#67, #92);
   own rule parser 99.3 %, 0 % (#92, Schnitt 1). Since #95 the rule parser sets the due date in the
   product path; the model schema lost the four due-date fields.
 - **Context names are unique** (Henning, 2026-10-01, #157). Contexts are matched by name
