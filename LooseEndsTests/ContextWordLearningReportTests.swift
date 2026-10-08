@@ -11,7 +11,7 @@ private func repoFile(_ relativePath: String) -> URL {
         .deletingLastPathComponent()
         .appendingPathComponent(relativePath)
 }
-private let focusBloxURL = repoFile("docs/reference/focusblox-corpus.json")
+private let focusBloxURL = MeasurementData.focusBloxCorpus
 private let reportURL = repoFile("docs/reference/context-word-learning.md")
 
 /// Eine Spalte des Berichts: wie oft der Arm die Kontextmenge exakt trifft, wie oft er überhaupt
@@ -36,7 +36,7 @@ private func percent(_ part: Int, of total: Int) -> String {
     String(format: "%.1f %%", total == 0 ? 0 : Double(part) / Double(total) * 100)
 }
 
-@Suite(.enabled(if: FileManager.default.fileExists(atPath: focusBloxURL.path)))
+@Suite(.enabled(if: MeasurementData.exists(focusBloxURL), MeasurementData.corpusMissing))
 struct ContextWordLearningReportTests {
     private static let nValues = [1, 2, 3, 4, 5]
 

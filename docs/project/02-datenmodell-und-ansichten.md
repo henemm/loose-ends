@@ -243,7 +243,10 @@ Zuordnungen, die in der Mapping-Tabelle offen waren:
   gesetzt (Feld war in FocusBlox in der Praxis ungenutzt).
 
 Export-Ausgabe enthält echte private Aufgabentitel und wird nie committed
-(`docs/reference/focusblox-corpus.json` ist in `.gitignore`).
+(`docs/reference/focusblox-corpus.json` ist in `.gitignore`). Die Datei liegt einmal, im Hauptordner;
+ein Worktree unter `.claude/worktrees/` liest sie von dort, ohne Kopie (`LooseEndsTests/MeasurementData.swift`,
+#135). Fehlt sie, nennt `sim.sh unit` nach dem Lauf und die CI in ihrer Zusammenfassung jede Messstrecke,
+die deshalb nicht gemessen hat (`scripts/measurement_status.py`, #149).
 
 ## App Intents und Spotlight
 

@@ -164,6 +164,12 @@ def ver(s): return tuple(int(p) for p in re.findall(r"\d+", s)[:3])
 sys.exit(0 if ver(sys.argv[1]) >= ver(sys.argv[2]) else 1)' "$(sw_vers -productVersion)" "$want"
 }
 
+# Welche Messstrecken mangels Daten übersprungen wurden (#149): ein übersprungener Lauf meldet
+# sonst „Test Succeeded" wie ein gemessener.
+measurement_status() {
+    python3 "$PROJECT_DIR/scripts/measurement_status.py" >&2 || warn "Messstrecken-Status nicht lesbar."
+}
+
 cmd_unit() {
     ensure_project
     local only="$UNIT_TARGET"; [ -n "${1:-}" ] && only="$UNIT_TARGET/$1"
@@ -175,6 +181,7 @@ cmd_unit() {
     info "Unit-Tests (macOS): $only"
     run_xcodebuild test -project "$PROJECT" -scheme "$SCHEME" -destination 'platform=macOS' -only-testing:"$only" -parallel-testing-enabled NO
     success "Unit-Tests bestanden."
+    measurement_status
 }
 
 cmd_build() {
@@ -247,6 +254,7 @@ cmd_sim_unit() {
     info "Unit-Tests (iOS-Simulator): $only"
     run_xcodebuild test -project "$PROJECT" -scheme "$SCHEME" -destination "platform=iOS Simulator,id=$id" -only-testing:"$only" -parallel-testing-enabled NO
     release_lock; success "Unit-Tests bestanden."
+    measurement_status
 }
 
 cmd_test() {
