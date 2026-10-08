@@ -41,6 +41,18 @@ final class SpeechDiagnosisLineTests: XCTestCase {
         shot.name = "diagnosezeile"
         shot.lifetime = .keepAlways
         add(shot)
+
+        // AC-10: Im Festzustand startet auch der Mikrofonknopf nichts. Ein Start würde den Zustand
+        // ändern (Zuhören, Rechteabfrage oder Grund statt Wellenform), und die Zeile verschwände.
+        let mic = app.buttons["micButton"]
+        XCTAssertTrue(mic.waitForExistence(timeout: 5), "Mikrofonknopf fehlt")
+        mic.tap()
+        let listening = NSPredicate(format: "label == %@", "Stop listening")
+        let started = XCTNSPredicateExpectation(predicate: listening, object: mic)
+        let result = XCTWaiter.wait(for: [started], timeout: 3)
+        XCTAssertEqual(result, .timedOut, "Mikrofonknopf hat im Festzustand das Zuhören gestartet")
+        XCTAssertEqual(mic.label, "Listen")
+        XCTAssertTrue(line.exists, "Diagnosezeile nach Tipp auf das Mikrofon verschwunden")
     }
 
     @MainActor

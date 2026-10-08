@@ -1,0 +1,22 @@
+# Simulator-Beleg
+erzeugt: 2026-10-08T17:03:21+0200
+befehl: scripts/sim.sh test-proof SpeechDiagnosisLineTests
+workflow: fix-274-spracheingabe-kein-text
+head: 2d8c45565b9a116711e6469e3aeb259a9d032ea0
+basis: f0d6ac91ce043c305135f9100a7c3d0ee6c2680e (merge-base origin/main HEAD)
+testklasse: SpeechDiagnosisLineTests
+ergebnis: Passed
+xcodebuild: ** TEST FAILED **
+tests: 2 gesamt, 2 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1791471138.408  ende: 1791471799.887
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/fix-274-spracheingabe-kein-text/simulator-run/summary.json  sha256:2aa2d4c8c916cea0e2dce5b4dcf1cc87e4b499ed187efd4808f8412e98516179
+xcresult: docs/artifacts/fix-274-spracheingabe-kein-text/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-274-spracheingabe-kein-text/simulator-run/*.png (1 Stück)
+
+## Geprüfte Dateien
+- sha256:6821adab9a4d86ce9f45403e672507ad0d53a364525b2a276c0445ae84a050c3  LooseEnds/Speech/SpeechCapture.swift
+- sha256:d5b0d236f081f083bfbce05d6e147956729e5507f7d073802462cfdea1570893  LooseEnds/Speech/SpeechDiagnosis.swift
+- sha256:bc7efee714a019c8e48a3d62159da414cb221790c409c43cf7a6e28c87437a48  LooseEnds/Views/CaptureView.swift
+- sha256:6361089cd3b22470c1cbe164aac397a97795155fac6cc146a033a7073725ea41  LooseEndsTests/SpeechDiagnosisTests.swift
+- sha256:27a4548d7e22959d0c329698c72255ddded9d0735085abaa4d7e6a58d9009079  LooseEndsUITests/SpeechDiagnosisLineTests.swift
