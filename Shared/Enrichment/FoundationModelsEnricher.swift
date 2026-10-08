@@ -26,6 +26,7 @@ struct FoundationModelsEnricher: TaskEnricher {
     You turn one captured note into a task. The note may be German or English; answer in the note's language.
     Title: imperative, up to twelve words, no trailing period. Keep names and numbers from the note.
     Never drop the object or purpose of the task, even if that means using more words.
+    The title comes from the note alone; never reuse the wording of a past task unless the note says it.
     Duration buckets: minutes5, minutes15, minutes30, hour1, hours2plus.
     Contexts and project must come from the allowed lists; otherwise leave them empty.
     Every confidence is between 0 and 1 and honest: use low confidence when the note does not say.
@@ -39,10 +40,10 @@ struct FoundationModelsEnricher: TaskEnricher {
         lines.append("Allowed contexts: " + (input.contextVocabulary.isEmpty ? "none" : input.contextVocabulary.joined(separator: ", ")) + ".")
         lines.append("Allowed projects: " + (input.projectNames.isEmpty ? "none" : input.projectNames.joined(separator: ", ")) + ".")
         if !input.examples.isEmpty {
-            lines.append("Past tasks and how they ended up:")
+            lines.append("Past tasks and how they ended up (their wording is not for the title):")
             for example in input.examples {
                 var attributes: [String] = []
-                if let title = example.title { attributes.append("title \"\(title)\"") }
+                // No titles here (#272): the model copied a past title onto an unrelated note.
                 if let duration = example.duration { attributes.append("duration \(duration.rawValue)") }
                 if !example.contexts.isEmpty { attributes.append("contexts \(example.contexts.joined(separator: ", "))") }
                 lines.append("- \"\(example.rawText)\" → " + (attributes.isEmpty ? "no attributes" : attributes.joined(separator: "; ")))

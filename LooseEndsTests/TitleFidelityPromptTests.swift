@@ -22,5 +22,20 @@ struct TitleFidelityPromptTests {
             "the instructions must explicitly protect the task's object or purpose"
         )
     }
+
+    @Test("Past tasks never hand their title to the prompt (#272)")
+    func examplesCarryNoTitles() {
+        let input = EnrichmentInput(
+            rawText: "Rechnung der Werkstatt bezahlen",
+            capturedAt: Date(timeIntervalSince1970: 0),
+            contextVocabulary: [],
+            projectNames: [],
+            examples: [EnrichmentExample(rawText: "Rasen mähen am Samstag", title: "Rasen mähen", importance: nil, urgency: nil, duration: .hour1, contexts: ["Garten"])]
+        )
+        let prompt = FoundationModelsEnricher.prompt(for: input)
+        #expect(!prompt.contains("title \"Rasen mähen\""))
+        #expect(prompt.contains("duration"))
+        #expect(FoundationModelsEnricher.instructions.contains("from the note alone"))
+    }
 }
 #endif

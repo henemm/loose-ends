@@ -129,6 +129,17 @@ class Workflows(unittest.TestCase):
         self.assertIn("com.apple.PosterBoard", settle["run"])
         self.assertIn("|| true", settle["run"], "Jeder Abschaltversuch darf scheitern")
 
+    def test_unit_job_prints_measurement_reports_into_its_own_log(self):
+        job = load(CI)["jobs"]["unit-tests"]
+        names = [s.get("name") for s in job["steps"]]
+        step = step_named(job, "Print measurement reports")
+        self.assertTrue(step.get("continue-on-error"), "Der Bericht darf den Lauf nie abbrechen")
+        self.assertEqual(step.get("if"), "always()")
+        self.assertIn("-REPORT BEGIN", step["run"])
+        self.assertIn("-REPORT END", step["run"])
+        self.assertGreater(names.index(step["name"]), names.index("Build and test"))
+        self.assertLess(names.index(step["name"]), names.index("Upload test results"))
+
 
 class PickSimulator(unittest.TestCase):
     def pick(self, workflow, key, devices):
