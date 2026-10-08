@@ -179,7 +179,8 @@ not scope creep on the current one.
 - `Shared/Models` — SwiftData model, enums, `RepeatRule`, `ViewRules` (pure view computation)
 - `Shared/Persistence` — `ModelContainerFactory` (app group + private CloudKit; identifiers read from
   `Info.plist`, keys `LEAppGroup`/`LECloudContainer`, with the production constants as fallback —
-  device builds carry their own via `BUNDLE_ID_SUFFIX`, #156), `ContextSeeder`
+  device builds carry their own via `BUNDLE_ID_SUFFIX`, #156), `ContextSeeder`,
+  `CloudKitSchemaInitializer` (Debug only: writes the full CloudKit schema into Development, never opens the app-group store, #175)
 - `Shared/Services` — `CaptureService`, `FieldCodec` (one encoding per field), `RevisionService` (reset = user revision),
   `TaskActions` (done, next up, park, move, restore), `DateExpressionParser`/`TimeExpressionParser` (rule-based
   date/time extraction DE/EN, moved from `Measurement/` in #95), `RawTextWords` (the one tokenizer for word-set
