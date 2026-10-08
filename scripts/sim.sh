@@ -11,6 +11,7 @@
 #   ./scripts/sim.sh build                    # iOS-App für den Simulator bauen
 #   ./scripts/sim.sh mac-build                # macOS-App bauen
 #   ./scripts/sim.sh mac-schema-init          # CloudKit-Schema in Development anlegen (#175, schreibt in iCloud)
+#   ./scripts/sim.sh mac                      # „LE Prüfbau“ auf dem Mac: signiert bauen, nach ~/Applications, starten (#287)
 #   ./scripts/sim.sh sim-unit [Suite[/test]]  # Unit-Tests im iOS-Simulator
 #   ./scripts/sim.sh test <Class[/test]>      # UI-Test im iOS-Simulator
 #   ./scripts/sim.sh test-proof <Class[/test]> # UI-Test + Simulator-Beleg in docs/artifacts/<workflow>/ (#145)
@@ -222,6 +223,46 @@ cmd_mac_schema_init() {
     "$bin" -LEInitializeCloudKitSchema || prc=$?
     [ "$prc" -eq 0 ] || { error "Schema-Initialisierung fehlgeschlagen (Exit $prc)."; return "$prc"; }
     success "Schema-Initialisierung erfolgreich (Exit 0)."
+}
+
+# „LE Prüfbau“ auf dem Mac (#287), das Gegenstück zu `device`: Prüfkennung (.probe), eigene
+# App-Gruppe und eigener iCloud-Container, nie Hennings normale Mac-App (Henning, 2026-10-08).
+# Ersetzt die vorige Fassung in ~/Applications und startet sie. Die erste Mac-Fassung der
+# Prüfkennung braucht einmal LOOSEENDS_REGISTER=1 (Mac-Profil, benutzt die Xcode-Anmeldung).
+cmd_mac() {
+    ensure_project
+    cd "$PROJECT_DIR"
+    local dd; dd="$(device_derived_data)-mac-probe"
+    local args=(build -project "$PROJECT" -scheme "$SCHEME" -destination 'platform=macOS'
+                -configuration Debug -derivedDataPath "$dd" "DEVELOPMENT_TEAM=$TEAM_ID"
+                "BUNDLE_ID_SUFFIX=.probe" "LE_DISPLAY_NAME=LE Prüfbau")
+    if [ "${LOOSEENDS_REGISTER:-}" = 1 ]; then
+        warn "Registrierungslauf: benutzt die Anmeldung in Xcode (einmalig für neue Kennungen/Profile, #156)"
+        args+=(-allowProvisioningUpdates)
+    fi
+    info "Signierter macOS-Prüfbau, Team $TEAM_ID"
+    local rc=0
+    if command -v xcbeautify >/dev/null; then
+        xcodebuild "${args[@]}" 2>&1 | xcbeautify || rc=${PIPESTATUS[0]}
+    else
+        xcodebuild "${args[@]}" 2>&1 || rc=$?
+    fi
+    if [ "$rc" -ne 0 ]; then
+        error "macOS-Prüfbau fehlgeschlagen (xcodebuild $rc)."
+        warn "Erster Mac-Bau der Prüfkennung? Dann einmal: LOOSEENDS_REGISTER=1 ./scripts/sim.sh mac"
+        return 1
+    fi
+    local built="$dd/Build/Products/Debug/LooseEnds.app"
+    local bundle; bundle=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$built/Contents/Info.plist")
+    [[ "$bundle" == *.probe ]] || { error "$bundle ist nicht die Prüfkennung — Abbruch."; return 1; }
+    local target="$HOME/Applications/LE Prüfbau.app"
+    mkdir -p "$HOME/Applications"
+    # Eine laufende Fassung beenden, sonst startet `open` die alte weiter.
+    osascript -e "tell application id \"$bundle\" to quit" >/dev/null 2>&1 || true
+    rm -rf "$target"
+    ditto "$built" "$target"
+    open "$target"
+    success "LE Prüfbau läuft auf dem Mac ($bundle, $target)."
 }
 
 cmd_boot() {
@@ -562,7 +603,7 @@ cmd_screenshot() {
     [ -f "$out" ] && success "Screenshot: $out" || { error "Screenshot fehlgeschlagen"; return 1; }
 }
 
-cmd_help() { sed -n '3,33p' "$0" | sed 's/^# \{0,1\}//'; }
+cmd_help() { sed -n '3,34p' "$0" | sed 's/^# \{0,1\}//'; }
 
 COMMAND="${1:-help}"; shift 2>/dev/null || true
 case "$COMMAND" in
@@ -571,6 +612,7 @@ case "$COMMAND" in
     build)      cmd_build ;;
     mac-build)  cmd_mac_build ;;
     mac-schema-init) cmd_mac_schema_init ;;
+    mac)        cmd_mac ;;
     sim-unit)   cmd_sim_unit "$@" ;;
     test)       cmd_test "$@" ;;
     test-proof) cmd_test_proof "$@" ;;

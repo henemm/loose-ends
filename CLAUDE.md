@@ -122,7 +122,17 @@ cd /Users/hem/Developer/loose-ends && bash ~/.claude/scripts/loose-ends-sync-mai
 
 Sie zieht `main` nach, erzeugt das Projekt neu und baut, installiert und startet „LE Prüfbau“ auf seinem
 iPhone (entsperrt, im selben WLAN) — ohne Xcode, neben seiner eigenen Installation. Dazu ein Satz, was
-er ausprobieren soll und was er sehen muss. Greift Stufe 3 nicht, endet die Abnahme nach Stufe 2 und
+er ausprobieren soll und was er sehen muss.
+
+Zeigt sich der Schnitt auf dem Mac (macOS-Verhalten, Mac-Rechte, Mac-Layout), bekommt er stattdessen oder
+zusätzlich die Mac-Zeile (#287). Sie baut „LE Prüfbau“ für den Mac (Prüfkennung, eigene Daten), legt ihn
+nach `~/Applications` und startet ihn — nie seine normale Mac-App (Henning, 2026-10-08):
+
+```bash
+cd /Users/hem/Developer/loose-ends && bash ~/.claude/scripts/loose-ends-sync-main.sh && ./scripts/sim.sh mac
+```
+
+Beim allerersten Mal (noch kein Mac-Profil der Prüfkennung) steht `LOOSEENDS_REGISTER=1` vor `./scripts/sim.sh mac`. Greift Stufe 3 nicht, endet die Abnahme nach Stufe 2 und
 Henning bekommt keine Zeile, nur den Satz „Kein Pfad der Geräteliste berührt.“
 
 **Henning ist PO, nicht Entwickler** (Henning, 2026-10-06). Claude handelt als sein Tech Lead und
