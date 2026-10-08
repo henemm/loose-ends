@@ -11,7 +11,7 @@ private func repoFile(_ relativePath: String) -> URL {
         .deletingLastPathComponent()
         .appendingPathComponent(relativePath)
 }
-private let focusBloxCorpusURL = repoFile("docs/reference/focusblox-corpus.json")
+private let focusBloxCorpusURL = MeasurementData.focusBloxCorpus
 private let focusBloxCalibrationReportURL = repoFile("docs/reference/focusblox-calibration-report.md")
 
 /// One-time calibration for Issue #23: how well does `FoundationModelsEnricher`'s own confidence
@@ -20,7 +20,7 @@ private let focusBloxCalibrationReportURL = repoFile("docs/reference/focusblox-c
 /// present on disk — never in CI, which has no personal FocusBlox data to export. Writes its
 /// report to `docs/reference/focusblox-calibration-report.md` (aggregate numbers only, safe to
 /// commit; the corpus itself stays gitignored because it holds real task titles).
-@Suite(.enabled(if: FileManager.default.fileExists(atPath: focusBloxCorpusURL.path)))
+@Suite(.enabled(if: MeasurementData.exists(focusBloxCorpusURL), MeasurementData.corpusMissing))
 struct FocusBloxCalibrationTests {
     struct CorpusTask: Decodable {
         var rawText: String
