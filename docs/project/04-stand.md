@@ -43,10 +43,10 @@ jede Einladung externer Tester über TestFlight.
   Spracherfassung berührt; taucht er dort auf, wird das Ticket wieder geöffnet.
 - [#193](https://github.com/henemm/loose-ends/issues/193) Zustimmungs-Dialog nach „Not now“ — nicht
   reproduzierbar (17 Läufe), bleibt nach Hennings Entscheidung vom 2026-10-05 ohne Code offen.
-- [#267](https://github.com/henemm/loose-ends/issues/267) Englische Test-Kontexte aus iCloud (Folge
-  #163): jeder Start faltet englische Standardkontexte in ihr deutsches Gegenstück
-  (`CatalogService.mergeEnglishDefaults`, `docs/specs/fix-267-englische-kontexte.md`); offen bis zum
-  Blick auf Hennings iPhone.
+- ~~[#267](https://github.com/henemm/loose-ends/issues/267) Englische Test-Kontexte aus iCloud~~ —
+  geschlossen 2026-10-08: jeder Start faltet englische Standardkontexte in ihr deutsches Gegenstück
+  (`CatalogService.mergeEnglishDefaults`, `docs/specs/fix-267-englische-kontexte.md`). Auf Hennings
+  iPhone belegt mit dem TestFlight-Build vom 2026-10-08 (Stand `c03dcf4`).
 
 **Spikes zuerst** (technisches Risiko, blockieren die Umsetzung der Must-Features):
 
