@@ -141,7 +141,7 @@ neu entschieden (Alternative B). Kippt keine ADR.
 - Ein zweites Gerät mit derselben Apple-ID.
 
 ### Open Questions
-- [ ] Welches zweite Gerät für den Abgleich-Nachweis? (iPad aus TestFlight; der Mac bekommt aus `testflight.yml` keine
-      eigene Fassung)
-- [ ] Darf ich in Hennings angemeldetem Chrome die CloudKit Console öffnen, einen Management-Token anlegen und die
-      Schemata lesen? Der Deploy-Knopf folgt erst nach eigener Freigabe.
+- [x] Zweites Gerät für den Abgleich-Nachweis: **iPad** (Henning, 2026-10-08), dieselbe TestFlight-Fassung, kein Mac-Bau.
+- [x] CloudKit Console: Henning erlaubt (2026-10-08), dass ich in seinem angemeldeten Chrome einen Management-Token
+      anlege und beide Schemata lese. S0 läuft als erster Schritt von `/30-write-spec`, weil die Spec davon abhängt
+      (S1 ja/nein). Der Deploy-Knopf (S2) wird **getrennt** freigegeben.
