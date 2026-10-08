@@ -11,7 +11,7 @@ private func repoFile(_ relativePath: String) -> URL {
         .deletingLastPathComponent()
         .appendingPathComponent(relativePath)
 }
-private let focusBloxCorpusURL = repoFile("docs/reference/focusblox-corpus.json")
+private let focusBloxCorpusURL = MeasurementData.focusBloxCorpus
 private let focusBloxCalibrationReportURL = repoFile("docs/reference/focusblox-calibration-report.md")
 
 /// One-time calibration for Issue #23: how well does `FoundationModelsEnricher`'s own confidence
@@ -25,7 +25,7 @@ private let focusBloxCalibrationReportURL = repoFile("docs/reference/focusblox-c
 /// measurement from #23, and a Mac or Simulator without a usable model used to replace it with
 /// "skipped: 60" and empty tables — green, and only noticed when someone read the diff. Such a run
 /// now fails and leaves the file as it is (`CalibrationGate`).
-@Suite(.enabled(if: FileManager.default.fileExists(atPath: focusBloxCorpusURL.path)))
+@Suite(.enabled(if: MeasurementData.exists(focusBloxCorpusURL), MeasurementData.corpusMissing))
 struct FocusBloxCalibrationTests {
     struct CorpusTask: Decodable {
         var rawText: String
