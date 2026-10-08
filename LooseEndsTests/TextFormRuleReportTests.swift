@@ -115,6 +115,24 @@ private struct Measurer {
     func title(_ text: String) -> String {
         TitleRule.title(from: text, reference: reference, calendar: calendar) ?? ""
     }
+
+    /// Der einfachste Zuschnitt einer Mail ohne Modell, nur zum Messen (#70, kein Produktcode): die
+    /// Anrede fällt weg, und der Text endet vor dem Gruß, der Trennlinie, einem Zitat ("> …") oder einer
+    /// Zeile "Am … schrieb …". Zeigt, ob Vorverarbeitung die Mail-Form rettet.
+    func cutMail(_ text: String) -> String {
+        var lines = text.components(separatedBy: "\n")
+        if let first = lines.first, first.hasSuffix(","), first.split(separator: " ").count <= 3 { lines.removeFirst() }
+        var kept: [String] = []
+        for line in lines {
+            let lowered = line.lowercased().trimmingCharacters(in: .whitespaces)
+            let isStop = lowered.hasPrefix("viele grüße") || lowered.hasPrefix("mit freundlichen grüßen")
+                || lowered.hasPrefix("------") || lowered.hasPrefix(">")
+                || (lowered.hasPrefix("am ") && lowered.contains(" schrieb "))
+            if isStop { break }
+            kept.append(line)
+        }
+        return kept.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
+    }
 }
 
 private func percent(_ part: Int, of total: Int) -> String {
@@ -147,9 +165,13 @@ struct TextFormRuleReportTests {
     func printsReport() throws {
         let corpus = try TextFormCorpus.load()
         let measurer = try Measurer(corpus: corpus)
-        let forms = TextFormCorpus.formNames
+        // Die vier Formen des Korpus plus der Zuschnitt der Mail als fünfte Spalte.
+        let forms = ["typed", "dictated", "mail", "mailCut", "english"]
+        func text(_ entry: TextFormCorpus.Entry, _ form: String) -> String {
+            form == "mailCut" ? measurer.cutMail(entry.forms["mail"] ?? "") : (entry.forms[form] ?? "")
+        }
         let readings: [String: [Reading]] = Dictionary(uniqueKeysWithValues: forms.map { form in
-            (form, corpus.entries.map { measurer.read($0.forms[form] ?? "") })
+            (form, corpus.entries.map { measurer.read(text($0, form)) })
         })
         let truths = corpus.entries.map { measurer.truth($0.truth) }
         let typed = try #require(readings["typed"])
@@ -176,11 +198,11 @@ struct TextFormRuleReportTests {
         }
 
         lines += ["", "### Übereinstimmung mit dem getippten Satz (gleiche Lesung, auch gleich leer)", ""]
-        lines.append("| Feld | dictated | mail | english |")
-        lines.append("|---|---|---|---|")
+        lines.append("| Feld | dictated | mail | mailCut | english |")
+        lines.append("|---|---|---|---|---|")
         for (name, path) in Reading.fields {
             var cells: [String] = []
-            for form in ["dictated", "mail", "english"] {
+            for form in ["dictated", "mail", "mailCut", "english"] {
                 let same = zip(readings[form] ?? [], typed).filter { $0.0[keyPath: path] == $0.1[keyPath: path] }.count
                 cells.append("\(same)/\(corpus.entries.count) (\(percent(same, of: corpus.entries.count)))")
             }
@@ -197,11 +219,11 @@ struct TextFormRuleReportTests {
             lines.append("- \(numbers): \(rows.count) Inhalte, Tag richtig \(dueRight), Uhrzeit richtig \(timeRight)")
         }
 
-        lines += ["", "### Titel (Anteil der Schlüsselwörter im Titel; beginnt mit Gruß)", ""]
-        for form in forms {
-            let coverage = corpus.entries.map { measurer.titleCoverage($0.truth.titleWords, text: $0.forms[form] ?? "") }
+        lines += ["", "### Titel (Anteil der Schlüsselwörter im Titel; beginnt mit Gruß; nur deutsche Formen, die Schlüsselwörter sind deutsch)", ""]
+        for form in ["typed", "dictated", "mail", "mailCut"] {
+            let coverage = corpus.entries.map { measurer.titleCoverage($0.truth.titleWords, text: text($0, form)) }
             let mean = coverage.reduce(0, +) / Double(coverage.count)
-            let greeting = corpus.entries.filter { measurer.title($0.forms[form] ?? "").lowercased().hasPrefix("hallo") }.count
+            let greeting = corpus.entries.filter { measurer.title(text($0, form)).lowercased().hasPrefix("hallo") }.count
             lines.append("- \(form): \(String(format: "%.0f", mean * 100)) % der Schlüsselwörter, \(greeting) Titel beginnen mit „Hallo“")
         }
 
@@ -213,6 +235,18 @@ struct TextFormRuleReportTests {
                 lines.append("- \(entry.id) \(name): \(reading[keyPath: path] ?? "")")
             }
         }
+
+        lines += ["", "### Mail nach dem Zuschnitt: Felder aus dem Rauschen", ""]
+        let cutReadings = readings["mailCut"] ?? []
+        var leftover = 0
+        for (entry, reading) in zip(corpus.entries, cutReadings) {
+            let truth = measurer.truth(entry.truth)
+            for (name, path) in Reading.fields where truth[keyPath: path] == nil && reading[keyPath: path] != nil {
+                leftover += 1
+                lines.append("- \(entry.id) \(name): \(reading[keyPath: path] ?? "")")
+            }
+        }
+        lines.append("Zusammen \(leftover) erfundene Felder nach dem Zuschnitt.")
 
         lines += ["", "### Abweichungen im getippten Satz (Prüfung der Wahrheit)", ""]
         for (entry, reading) in zip(corpus.entries, typed) {
