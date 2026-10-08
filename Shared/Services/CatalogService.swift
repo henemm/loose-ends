@@ -69,26 +69,39 @@ enum CatalogService {
         "Out and about": "Unterwegs",
     ]
 
+    /// English default names folded even without the system-default mark (Henning, 2026-10-08):
+    /// after #271 "Out and about" stayed next to "Unterwegs" on his iPhone, and he never created it.
+    static let englishDefaultsFoldedUnmarked: Set<String> = ["Out and about"]
+
     /// Folds the English seeded defaults into their German counterparts (#267): until #250 the
-    /// tests synced their English seeds into the user's iCloud. Only a system default with an English
-    /// default name counts — a context the user added is never one — and only while the German one
-    /// exists; without it the English one stays. Tasks move along, the English one is deleted.
-    /// Returns how many were deleted. The caller saves.
+    /// tests synced their English seeds into the user's iCloud. A system default with an English
+    /// default name counts — a context the user added is never one — and so does every name in
+    /// `englishDefaultsFoldedUnmarked`; only while the German one exists, without it the English one
+    /// stays. Names compare with any run of whitespace as one space. Tasks move along, the English one
+    /// is deleted. Returns how many were deleted. The caller saves.
     @discardableResult
     static func mergeEnglishDefaults(in context: ModelContext) throws -> Int {
         let all = try context.fetch(FetchDescriptor<TaskContext>())
         let germanFor = Dictionary(
-            uniqueKeysWithValues: englishDefaultsToGerman.map { (nameKey($0.key), nameKey($0.value)) }
+            uniqueKeysWithValues: englishDefaultsToGerman.map { (spacedKey($0.key), spacedKey($0.value)) }
         )
+        let unmarked = Set(englishDefaultsFoldedUnmarked.map(spacedKey))
         var removed = 0
-        for english in all where english.isSystemDefault {
-            guard let german = germanFor[nameKey(english.name)],
-                  let target = all.filter({ nameKey($0.name) == german }).sorted(by: survivesBefore).first
+        for english in all {
+            let key = spacedKey(english.name)
+            guard english.isSystemDefault || unmarked.contains(key),
+                  let german = germanFor[key],
+                  let target = all.filter({ spacedKey($0.name) == german }).sorted(by: survivesBefore).first
             else { continue }
             fold(english, into: target, in: context)
             removed += 1
         }
         return removed
+    }
+
+    /// `nameKey` with every run of whitespace, a non-breaking space too, as one plain space.
+    private static func spacedKey(_ name: String) -> String {
+        nameKey(name.split(whereSeparator: \.isWhitespace).joined(separator: " "))
     }
 
     /// Moves every task of `duplicate` to `survivor` (once per task) and deletes `duplicate`.

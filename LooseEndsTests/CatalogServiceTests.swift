@@ -424,6 +424,42 @@ import Testing
         #expect(Set((task.contexts ?? []).map(\.name)) == ["Garden", "Errands"])
     }
 
+    @Test("\"Out and about\" folds into \"Unterwegs\" even without the system-default mark (#267)")
+    @MainActor func mergeEnglishDefaultsFoldsUnmarkedOutAndAbout() async throws {
+        let store = try TestStore()
+        let unterwegs = TaskContext(name: "Unterwegs", isSystemDefault: true, sortOrder: 0)
+        let outAndAbout = TaskContext(name: "Out and about", sortOrder: 1)
+        let ownGarden = TaskContext(name: "Garden", sortOrder: 2)
+        let garten = TaskContext(name: "Garten", isSystemDefault: true, sortOrder: 3)
+        let task = TaskItem(rawText: "Tanken")
+        for item in [unterwegs, outAndAbout, ownGarden, garten] { store.context.insert(item) }
+        store.context.insert(task)
+        task.contexts = [outAndAbout]
+        try store.context.save()
+
+        #expect(try CatalogService.mergeEnglishDefaults(in: store.context) == 1)
+        try store.context.save()
+
+        let left = try store.context.fetch(FetchDescriptor<TaskContext>(sortBy: [SortDescriptor(\.sortOrder)]))
+        #expect(left.map(\.name) == ["Unterwegs", "Garden", "Garten"])
+        #expect((task.contexts ?? []).map(\.name) == ["Unterwegs"])
+    }
+
+    @Test("A name with a non-breaking or doubled space still counts as the English default (#267)")
+    @MainActor func mergeEnglishDefaultsIgnoresSpaceVariants() async throws {
+        let store = try TestStore()
+        let unterwegs = TaskContext(name: "Unterwegs", isSystemDefault: true, sortOrder: 0)
+        let variant = TaskContext(name: "Out\u{00A0}and  about", isSystemDefault: true, sortOrder: 1)
+        store.context.insert(unterwegs)
+        store.context.insert(variant)
+        try store.context.save()
+
+        #expect(try CatalogService.mergeEnglishDefaults(in: store.context) == 1)
+        try store.context.save()
+
+        #expect(try store.context.fetch(FetchDescriptor<TaskContext>()).map(\.name) == ["Unterwegs"])
+    }
+
     @Test("With two German candidates the English default folds into the one that survives first (#267)")
     @MainActor func mergeEnglishDefaultsPicksDeterministicTarget() async throws {
         let store = try TestStore()

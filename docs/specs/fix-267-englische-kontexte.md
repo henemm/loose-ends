@@ -53,3 +53,16 @@ iPhone, weil nur dort die verschmutzten iCloud-Daten liegen.
   Aufgaben gehen beim Zusammenführen ohnehin nicht verloren (Henning: trotzdem zusammenführen).
 - Englisches Doppel ohne Partner umbenennen: brächte einen gelöschten deutschen Kontext dem Sinn nach
   zurück (Henning: unverändert lassen).
+
+## Nachtrag 2026-10-08: „Out and about“ blieb auf Hennings iPhone
+
+Nach #271 waren auf Hennings iPhone alle englischen Doppel weg, nur „Out and about“ stand weiter neben
+„Unterwegs“. Auch nach einem Neustart der App blieb es, eine verspätete Lieferung aus iCloud scheidet
+damit aus. Henning hat es nie selbst angelegt oder umbenannt (Entscheidung: trotzdem zusammenführen).
+Woran die Regel scheitert, ist ohne Zugriff auf seine Daten nicht belegbar. In Frage kommen eine fehlende
+Systemstandard-Markierung und ein Leerzeichen-Unterschied im Namen. Beides wird abgedeckt:
+
+- **AC-7:** „Out and about“ wird auch ohne `isSystemDefault` mit „Unterwegs“ zusammengeführt
+  (`CatalogService.englishDefaultsFoldedUnmarked`). Für die übrigen Paare bleibt AC-3.
+- **AC-8:** Beim Namensvergleich dieser Regel zählt jede Folge von Leerraum, auch ein geschütztes
+  Leerzeichen, als ein Leerzeichen.
