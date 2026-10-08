@@ -1,0 +1,22 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: LaunchArgumentTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEnds.abi.json
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsUITests.abi.json
+Test Suite 'Selected tests' started at 2026-10-08 12:08:38.189.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-08 12:08:38.220.
+Test Suite 'LaunchArgumentTests' started at 2026-10-08 12:08:38.221.
+    [31m✖[0m testMeasureArgumentOpensCaptureWithoutTap, XCTAssertTrue failed - Capture should be open without a tap
+    [32m✔[0m testWithoutArgumentAppStartsUnchanged ([31m31.538[0m seconds)
+Executed 2 tests, with 1 failure (0 unexpected) in 123.645 (123.669) seconds
+Test Suite 'LooseEndsUITests.xctest' failed at 2026-10-08 12:10:41.895.
+Executed 2 tests, with 1 failure (0 unexpected) in 123.645 (123.675) seconds
+Executed 2 tests, with 1 failure (0 unexpected) in 123.645 (123.707) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.10.08_12-07-59-+0200.xcresult
+[36;1mTesting started[0m
