@@ -53,8 +53,8 @@ bleibt Regel; es gibt kein Feld, für das ein Sprachmodell vorgeschlagen wird.
 | Datei | Änderung | Beschreibung |
 |---|---|---|
 | `LooseEndsShare/ShareViewController.swift` | MODIFY (+~12) | Typkennungen je Anhang ins Log (AC-1) |
-| `LooseEnds/Views/TaskDetailView.swift` | MODIFY (nur falls die Messung `message:` bestätigt, ~3) | Beschriftung „Open in Mail“ (AC-5) |
-| `LooseEndsTests/SharedContentTests.swift` | MODIFY (nur falls der Fallback Code braucht) | Test Absender-Text |
+| `Shared/Services/SharedContent.swift` | MODIFY (+~10) | `probeLine` (AC-1), Datei-Links verwerfen (AC-5) |
+| `LooseEndsTests/SharedContentTests.swift` | MODIFY (+~35) | Tests zu `probeLine` und Datei-Links |
 | `docs/reference/mail-ruecksprung-messung.md` | CREATE | Messbericht je Konto und Weg (AC-2, AC-3) |
 | `docs/project/02-datenmodell-und-ansichten.md`, `docs/project/04-stand.md` | MODIFY | Ergebnis (AC-4, AC-7) |
 
@@ -86,10 +86,9 @@ Modellfelder (kein CloudKit-Schemaeintrag nötig).
 - Unit: `SharedContentTests` bleiben grün (AC-8); neue Tests nur, falls Code für den Fallback entsteht.
 - Simulator (Stufe 2): Erweiterung mit Text und URL teilen, das Log zeigt die Typkennungen (AC-1);
   die Aufgabe zeigt „Source“ nur mit URL.
-- Gerät (Stufe 3, Pflicht, `LooseEndsShare/` steht auf der Geräteliste): Messreihe AC-2/AC-3. Läuft
-  erst, wenn Henning wörtlich „jetzt ist ein Test möglich“ schreibt; die Anfrage nennt Ablauf und
-  Dauer (ca. 15 Min., Prüfbau, vier Mails aus zwei Konten). Henning teilt und tippt, ich lese das
-  Log aus und werte aus.
+- Gerät (Stufe 3, `LooseEndsShare/` steht auf der Geräteliste): Henning gab den Lauf am 2026-10-08
+  frei („jetzt ist ein Test möglich“), probierte die drei Wege von Hand aus und beendete den Lauf
+  danach (override: AC-2/AC-3 geändert). Der Prüfbau lief neben seiner Alltags-App.
 
 ## Acceptance Criteria
 
@@ -97,25 +96,29 @@ Modellfelder (kein CloudKit-Schemaeintrag nötig).
   werden / Then steht je Anhang die Liste seiner Typkennungen (`registeredTypeIdentifiers`) und je
   Eintrag der geladene Typ im Log (`Logger`, Kategorie `Share`), ohne Inhalte (kein Betreff, kein
   Text, keine Adressen). Das Verhalten der Erweiterung ändert sich nicht.
-- **AC-2 Messreihe:** Given der Prüfbau „LE Prüfbau“ auf dem iPhone / When aus Mail mindestens vier
-  Nachrichten aus mindestens zwei Konten auf allen erreichbaren Wegen geteilt werden (markierter
-  Text, Drucken → Teilen, Teilen-Knopf falls vorhanden) / Then liegt je Vorgang eine Zeile „Konto,
-  Weg, Typkennungen, ob `message:`-URL oder Message-ID ankam“ im Bericht.
-- **AC-3 Rücksprung:** Given eine gespeicherte oder von Hand gesetzte `message:`-URL / When sie
-  geöffnet wird / Then ist im Bericht festgehalten, ob die richtige Mail erscheint — für Mail im
-  Postfach, gelöschte Mail und entferntes Konto, je mit Beobachtung.
+- **AC-2 Messreihe (geändert per override 2026-10-08):** Given der Prüfbau „LE Prüfbau“ auf dem
+  iPhone / When Henning in Mail jeden erreichbaren Weg einmal ausprobiert (ganze Mail teilen, Text
+  markieren und teilen, Drucken → Teilen) / Then liegt je Weg eine Zeile „Weg, was ankam, ob
+  `message:`-URL oder Message-ID ankam“ im Bericht, aus Hennings Beobachtung und der Recherche. Die
+  Typkennungen aus dem Log und die Vorgabe „vier Mails, zwei Konten“ entfallen: Henning beendete den
+  Gerätelauf, und auf keinem Weg kam eine `message:`-URL an.
+- **AC-3 Rücksprung (geändert per override 2026-10-08):** Given der Bericht / When der Rücksprung
+  gewertet wird / Then steht dort, dass er mangels `message:`-URL nicht gemessen werden konnte, mit
+  dem Stand der Recherche (öffnet auf iOS, wenn die Mail im Postfach liegt; gelöschte Mail und
+  entferntes Konto unbelegt). Die Frage geht an das Folgeticket (AC-6).
 - **AC-4 Ergebnis:** Given die Messreihe / When sie ausgewertet ist / Then steht in
   `docs/project/02-datenmodell-und-ansichten.md` (Frage 5) „zuverlässig“ oder „unzuverlässig“ mit den
   Einschränkungen und den Belegen aus dem Bericht.
-- **AC-5 Fallback:** Given das Ergebnis / When Mail keine verwendbare URL liefert / Then ist der
-  Fallback entschieden und dokumentiert. Vorbehaltlich der Messung: Betreff (Titelvorschlag) und
-  Absender bleiben als Text in der Aufgabe; „Source“ erscheint nur bei gesetzter `sourceURL` (bereits
-  so) und heißt bei einer `message:`-URL „Open in Mail“; kein Ausblenden nach Verdacht, weil die App
-  nicht wissen kann, ob die Mail noch existiert.
+- **AC-5 Fallback (geändert per override 2026-10-08):** Given Mail liefert keine verwendbare URL /
+  When geteilt wird / Then ist der Fallback entschieden und dokumentiert: Datei-Links (Drucken →
+  Teilen liefert eine PDF) werden weder `sourceURL` noch Titelvorschlag (`SharedContent.make`, Tests
+  `fileLinkDropped`, `fileLinkWithText`, Regression `webLinkStaysSource`); „Source“ erscheint nur bei
+  gesetzter `sourceURL`. Die Beschriftung „Open in Mail“ entfällt, weil nie eine `message:`-URL
+  ankommt.
 - **AC-6 Folgeentscheidung:** Given das Ergebnis / When Teilen als Weg unbrauchbar ist / Then ist für
-  Drag & Drop (Alternative A) und Siri-Bildschirminhalt (#25, Alternative B) je ein GitHub-Issue
-  angelegt oder ein bestehendes verlinkt; ADR-9 und das User-Story-Muss „Rücksprung“ sind angepasst
-  oder ausdrücklich bestätigt.
+  Drag & Drop (Alternative A) und Siri-Bildschirminhalt (#25, Alternative B) ein gemeinsames
+  GitHub-Issue angelegt (erledigt: #289); ADR-9 und das User-Story-Muss „Rücksprung“ bleiben bis
+  dahin unverändert und sind dort zur Entscheidung gestellt.
 - **AC-7 Stand:** Given der Spike ist fertig / When `docs/project/04-stand.md` gelesen wird / Then
   ist Spike-Punkt 2 mit Ergebnis und Link zum Bericht aktualisiert.
 - **AC-8 Bestehende Tests:** Given der Funktionsumfang / When Unit-Tests laufen / Then bleiben alle
@@ -152,7 +155,7 @@ Linking“, Apple-Forum 705696). Für iOS 26/27 ist nichts belegt; das klärt nu
 ## Definition of Done
 
 - [ ] AC-1 bis AC-8 erfüllt; alle Unit-Tests grün.
-- [ ] Stufe 2 (Simulator) mit angesehenen Screenshots; Stufe 3 (Gerät) als Messreihe nach Hennings „jetzt ist ein Test möglich“.
+- [ ] Stufe 3 (Gerät): drei Wege von Hand durch Henning, im Bericht festgehalten; Stufe 2: Unit-Tests für die Link-Regel (kein Teilen-Fenster im Simulator ohne Mail-Konto).
 - [ ] `docs/reference/mail-ruecksprung-messung.md`, Frage 5 in `02-datenmodell-und-ansichten.md` und `04-stand.md` aktualisiert.
 - [ ] Fallback entschieden und dokumentiert; Folge-Issues angelegt oder verlinkt.
 - [ ] Issue #24 mit `Closes #24` im PR; Hennings Alltags-App unverändert.
@@ -160,3 +163,6 @@ Linking“, Apple-Forum 705696). Für iOS 26/27 ist nichts belegt; das klärt nu
 ## Changelog
 
 - 2026-10-08: Spec aus der Analyse in `docs/context/spike-24-mail-ruecksprung.md` geschrieben.
+- 2026-10-08 (override durch Henning): AC-2, AC-3, AC-5, AC-6, Scope und Test Plan an die tatsächliche
+  Messung angepasst. Auf keinem Weg kam eine `message:`-URL an; Datei-Links werden verworfen; Henning
+  beendete den Gerätelauf nach Handbeobachtung.

@@ -1,6 +1,6 @@
 ---
 spec_file: docs/specs/measurement/spike-24-mail-ruecksprung.md
-spec_sha256: 55754c3e6372306e65b6601fd8415d8e33f87f66f8e2442a291c59034b2649a1
+spec_sha256: 99322f08dec4dae96ef96bbcf7b17f8664ad6b83e9bb900427b9d5c1a7529adc
 ---
 
 # PO-Briefing: spike-24-mail-ruecksprung
@@ -11,22 +11,22 @@ spec_sha256: 55754c3e6372306e65b6601fd8415d8e33f87f66f8e2442a291c59034b2649a1
 
 ## Was gebaut wird
 
-Messen, ob Apple Mail beim Teilen einen Rücksprung-Link zur Quell-Mail liefert, und einen Ersatzweg festlegen.
+Aus Mail geteilte Datei-Links werden nicht mehr als tote Quelle gespeichert; das Messergebnis steht im Bericht.
 
 ## Definition of Done
 
-Ein Bericht belegt je Konto und Weg, ob der Rücksprung die richtige Mail öffnet; der Ersatzweg ist dokumentiert.
+Teilen aus Mail ergibt keinen toten Quell-Link mehr, und Bericht, Frage 5 sowie Stand-Dokument nennen Ergebnis und Fallback.
 
 ## Wie geprüft wird
 
-Tests belegen nur das Protokollieren; das eigentliche Ergebnis stammt aus deinem Handtest mit vier Mails auf dem iPhone.
+Automatische Tests belegen nur die Link-Regel; ob Mail je eine Mail-Adresse liefert, beruht allein auf deiner Handbeobachtung.
 
 ## Kritische Anmerkungen
 
-- Kein Schwellenwert für „zuverlässig"; die Gerätemessung hat keinen automatisierten Test, das Urteil bleibt Ermessen.
-- Messung läuft erst nach deinem wörtlichen „jetzt ist ein Test möglich"; bis dahin bleibt der Spike offen.
-- Zusatz: Beschriftung „Open in Mail" ist im Ticket nicht verlangt; nur bei bestätigtem Ergebnis.
+- Ticket verlangte vier Mails, zwei Konten, Rücksprung und Randfälle; geliefert sind drei Handversuche, Rücksprung ungemessen, Randfälle unbelegt.
+- Kein Log der Typkennungen vorhanden; "Datei-Link" ist Deutung, nicht Messung.
+- Rücksprung bleibt offen: Muss und ADR-9 unverändert, Lösung nur im Folgeticket #289.
 
 ## Freigabe-Frage
 
-Freigeben, inklusive eines späteren etwa 15-minütigen Gerätetests mit vier Mails aus zwei Konten?
+Genügt dir ein unvollständig gemessenes "Teilen liefert keinen Rücksprung", mit Klärung der Alternativen in #289, zum Schließen von #24?

@@ -12,6 +12,9 @@ struct SharedContent: Equatable, Sendable {
 
     /// `mails` are raw RFC 822 messages (what Mail shares); `texts` and `urls` come as they are.
     static func make(texts: [String], urls: [URL], mails: [String]) -> SharedContent {
+        // File links are dropped (#24): Mail's "Print → Share" hands over a PDF in the extension's
+        // temporary folder, a dead link once the extension ends and a path as title.
+        let urls = urls.filter { !$0.isFileURL }
         let text = texts.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.first { !$0.isEmpty }
         let messageLink = urls.first { $0.scheme?.lowercased() == "message" }
 
@@ -30,6 +33,12 @@ struct SharedContent: Equatable, Sendable {
             return SharedContent(prefill: text ?? url.absoluteString, sourceURL: url, channel: .share)
         }
         return SharedContent(prefill: text ?? "", sourceURL: nil, channel: .share)
+    }
+
+    /// One log line per shared attachment (#24): its type identifiers and the kind of value read
+    /// from it (`nil` when nothing was read). Never the content itself.
+    static func probeLine(typeIdentifiers: [String], loaded: String?) -> String {
+        "types=[\(typeIdentifiers.joined(separator: ", "))] loaded=\(loaded ?? "none")"
     }
 
     // MARK: - Mail headers

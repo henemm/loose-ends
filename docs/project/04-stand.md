@@ -53,7 +53,9 @@ jede Einladung externer Tester über TestFlight.
 1. ~~[#22](https://github.com/henemm/loose-ends/issues/22) Kaltstart Erfassungs-Szene unter einer Sekunde?~~ —
    erledigt 2026-10-08: 558 ms bis „Mikrofon hört“, Budget hält, kein Folge-Ticket
    (`docs/reference/kaltstart-messung.md`).
-2. [#24](https://github.com/henemm/loose-ends/issues/24) Mail-Share-Extension: `message:`-URL zuverlässig?
+2. ~~[#24](https://github.com/henemm/loose-ends/issues/24) Mail-Share-Extension: `message:`-URL zuverlässig?~~ —
+   erledigt 2026-10-08: nein, Teilen aus Mail liefert nie eine `message:`-URL; Datei-Links werden verworfen
+   (`docs/reference/mail-ruecksprung-messung.md`). Weg zum Rücksprung: [#289](https://github.com/henemm/loose-ends/issues/289).
 
 **Tragende Annahmen des Produkts** (`docs/project/06-annahmen-und-experimente.md`, 2026-09-19): Die
 Kalibrierung zu #23 zeigt, dass die Modell-Konfidenz richtig nicht von falsch trennt. Bevor weitere
