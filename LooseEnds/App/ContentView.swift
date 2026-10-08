@@ -101,7 +101,8 @@ struct ContentView: View {
         .interactiveDismissDisabled()
     }
 
-    /// Seed the default contexts once, fold same-named contexts into one (#157), run the catch-up enrichment pass (ADR-4), then line up
+    /// Seed the default contexts once, fold same-named contexts into one (#157) and
+    /// English seeded defaults into German ones (#267), run the catch-up enrichment pass (ADR-4), then line up
     /// the due reminders.
     private func startUp() async {
         do {
@@ -111,8 +112,10 @@ struct ContentView: View {
         }
         do {
             let merged = try CatalogService.mergeDuplicateContexts(in: modelContext)
+            let english = try CatalogService.mergeEnglishDefaults(in: modelContext)
             try modelContext.save()
             if merged > 0 { Self.logger.info("Merged \(merged) duplicate contexts") }
+            if english > 0 { Self.logger.info("Merged \(english) English default contexts into German") }
         } catch {
             Self.logger.error("Merging duplicate contexts failed: \(error, privacy: .public)")
         }
