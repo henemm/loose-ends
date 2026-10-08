@@ -132,6 +132,31 @@ class TestProofCommandErrorTests(unittest.TestCase):
         self.assertIn("Kein aktiver Workflow", r.stderr)
         self.assertFalse(self.marker.exists(), "Werkzeug lief trotz fehlendem Workflow")
 
+    def test_workflow_name_with_path_parts_is_refused_before_anything_is_touched(self):
+        """#166: `../x` oder `a/b` dürfen nichts außerhalb von docs/artifacts/ löschen oder anlegen."""
+        victim = self.root / "docs" / "x"            # was `docs/artifacts/../x` träfe
+        victim.mkdir(parents=True)
+        (victim / "simulator-run.txt").write_text("darf bleiben\n")
+        for name in ("../x", "a/b", "..", ".hidden/..", "x y/z"):
+            with self.subTest(name=name):
+                (self.root / ".claude").mkdir(exist_ok=True)
+                (self.root / ".claude" / "active_workflow").write_text(name + "\n")
+                r = self.run_sim("CaptureSmokeTests")
+                self.assertNotEqual(r.returncode, 0)
+                self.assertIn("Workflow-Name", r.stderr)
+                self.assertFalse(self.marker.exists(), "Werkzeug lief trotz ungültigem Namen")
+                self.assertEqual((victim / "simulator-run.txt").read_text(), "darf bleiben\n")
+                self.assertFalse((self.root / "docs" / "artifacts" / "a").exists())
+
+    def test_ordinary_workflow_names_are_accepted(self):
+        """Der Check lehnt nur Pfadteile ab: Namen wie `bug-203-kalender-termin` oder `fix_1.2` laufen bis zum Werkzeug."""
+        for name in ("bug-203-kalender-termin", "fix_1.2", "Feat-9"):
+            with self.subTest(name=name):
+                (self.root / ".claude").mkdir(exist_ok=True)
+                (self.root / ".claude" / "active_workflow").write_text(name + "\n")
+                r = self.run_sim("CaptureSmokeTests")
+                self.assertNotIn("Workflow-Name", r.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()

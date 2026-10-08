@@ -230,6 +230,11 @@ cmd_test_proof() {
     local wf="" wf_file="$PROJECT_DIR/.claude/active_workflow"
     [ -f "$wf_file" ] && wf=$(tr -d '[:space:]' < "$wf_file")
     [ -z "$wf" ] && { error "Kein aktiver Workflow (.claude/active_workflow), Beleg hätte keinen Ablageort"; return 1; }
+    # Der Name wird Pfadbestandteil und landet in `rm -rf`: nur ein einzelner Ordnername ist erlaubt (#166).
+    if ! [[ "$wf" =~ ^[A-Za-z0-9._-]+$ ]] || [[ "$wf" == "." || "$wf" == ".." || "$wf" == *..* ]]; then
+        error "Ungültiger Workflow-Name '$wf' (.claude/active_workflow): erlaubt sind Buchstaben, Ziffern, . _ -, ohne '..'"
+        return 1
+    fi
     local art="docs/artifacts/$wf"; local run="$art/simulator-run"
     cd "$PROJECT_DIR"
     rm -rf "$art/simulator-run.txt" "$run"   # ein alter grüner Beleg darf keinen roten Lauf überleben
