@@ -34,6 +34,17 @@ struct CaptureView: View {
         !ModelContainerFactory.isUITesting
     }
 
+    /// UI-Test der Diagnosezeile (#274): zeigt die Zeile mit festem Zustand, ohne Mikrofon und Erkennung.
+    private var diagnosisFixture: Bool {
+        ModelContainerFactory.isUITesting
+            && ProcessInfo.processInfo.arguments.contains("--ui-testing-speech-diagnosis")
+    }
+
+    private var diagnosis: SpeechDiagnosis? {
+        guard diagnosisFixture else { return speech.diagnosis }
+        return SpeechDiagnosis(modelStatus: "installed", microphone: true, speech: true, buffers: 62, results: 0)
+    }
+
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 12) {
@@ -45,7 +56,7 @@ struct CaptureView: View {
                     .onSubmit(save)
                     .onChange(of: text) { _, newValue in submitOnReturn(newValue) }
                     .accessibilityIdentifier("captureTextField")
-                if speechWanted {
+                if speechWanted || diagnosisFixture {
                     listeningRow
                 }
                 Spacer()
@@ -135,16 +146,28 @@ struct CaptureView: View {
             .accessibilityElement(children: .combine)
             .accessibilityIdentifier("speechLoadingLabel")
         case .idle, .listening:
-            HStack(spacing: 12) {
-                WaveformView(levels: speech.waveform.levels)
-                Button {
-                    toggleListening()
-                } label: {
-                    Image(systemName: speech.isListening ? "mic.fill" : "mic")
-                        .font(.title2)
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(spacing: 12) {
+                    WaveformView(levels: speech.waveform.levels)
+                    Button {
+                        toggleListening()
+                    } label: {
+                        Image(systemName: speech.isListening ? "mic.fill" : "mic")
+                            .font(.title2)
+                    }
+                    .accessibilityLabel(speech.isListening ? "Stop listening" : "Listen")
+                    .accessibilityIdentifier("micButton")
                 }
-                .accessibilityLabel(speech.isListening ? "Stop listening" : "Listen")
-                .accessibilityIdentifier("micButton")
+                if let diagnosis {
+                    // Ton ohne Text (#274): grau, reiner Text, darf umbrechen.
+                    Text(diagnosis.text)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel(diagnosis.text)
+                        .accessibilityIdentifier("speechDiagnosisLabel")
+                }
             }
         }
     }
@@ -162,6 +185,8 @@ struct CaptureView: View {
     }
 
     private func toggleListening() {
+        // Festzustand der Diagnosezeile (#274, AC-10): kein Mikrofon, auch nicht auf Tipp.
+        guard !diagnosisFixture else { return }
         if speech.isListening {
             speech.stop()
         } else {

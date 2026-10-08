@@ -239,6 +239,9 @@
     "No places found." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Keine Orte gefunden." } } } },
     "Address or name" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Adresse oder Name" } } } },
     "Shown" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Angezeigt" } } } },
-    "Hidden" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ausgeblendet" } } } }
+    "Hidden" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ausgeblendet" } } } },
+    "No text yet — model: %@ · microphone: %@ · speech: %@ · buffers: %lld · results: %lld" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Noch kein Text — Modell: %@ · Mikrofon: %@ · Sprache: %@ · Puffer: %lld · Ergebnisse: %lld" } } } },
+    "Speech diagnosis yes" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "yes" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "ja" } } } },
+    "Speech diagnosis no" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "no" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "nein" } } } }
   }
 }

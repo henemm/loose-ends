@@ -32,6 +32,17 @@ final class SpeechCapture {
     private var analyzer: SpeechAnalyzer?
     private var results: Task<Void, Never>?
     private var loading: Task<Void, Never>?
+    /// Kurzdiagnose „Ton ohne Text“ (#274): steht nur, solange `SpeechDiagnosis.hint` sie liefert.
+    private(set) var diagnosis: SpeechDiagnosis?
+    private var box: ConverterBox?
+    private var check: Task<Void, Never>?
+    private var resultCount = 0
+    /// Kennung des laufenden Zuhörens: `collect` zählt nur, solange seine Kennung die aktuelle ist (#274).
+    private var run = 0
+    private var listeningSince: ContinuousClock.Instant?
+    private var modelStatus = ""
+    private var microphoneGranted = false
+    private var speechGranted = false
     /// Zählt jedes `stop()`. `start()` wartet auf Modell, Rechte und Analyzer; kam in der Zeit ein
     /// `stop()` (Abbrechen, Fertig, Tippen ins Textfeld), darf es danach kein Mikrofon mehr öffnen (#184).
     private var stopCount = 0
@@ -56,6 +67,7 @@ final class SpeechCapture {
         }
         let status = await AssetInventory.status(forModules: [transcriber])
         Self.logger.notice("Stufe 0 — Sprache \(Locale.current.identifier, privacy: .public): Modell \(String(describing: status), privacy: .public)")
+        modelStatus = String(describing: status)
         switch SpeechReadiness.from(status) {
         case .unsupported:
             state = .unavailable(String(localized: "Speech recognition is not available for this language. You can type instead."))
@@ -70,6 +82,8 @@ final class SpeechCapture {
         let speech = await Self.requestSpeechAuthorization()
         // Ob SpeechAnalyzer das Spracherkennungsrecht braucht, ist nicht dokumentiert; Stufe 7 liest es hier ab.
         Self.logger.notice("Rechte: Mikrofon \(microphone, privacy: .public), Spracherkennung \(speech, privacy: .public)")
+        microphoneGranted = microphone
+        speechGranted = speech
         if let missing = SpeechAccess.missing(microphone: microphone, speech: speech) {
             state = .accessDenied(missing)
             return
@@ -95,6 +109,12 @@ final class SpeechCapture {
         engine?.stop()
         input?.finish()
         results?.cancel()
+        check?.cancel()
+        check = nil
+        box = nil
+        resultCount = 0
+        listeningSince = nil
+        diagnosis = nil
         if let analyzer {
             Task { await analyzer.cancelAndFinishNow() }
         }
@@ -203,6 +223,7 @@ final class SpeechCapture {
             Task { @MainActor in self?.waveform.append(level) }
         }
         self.engine = engine
+        self.box = box
         engine.prepare()
         try engine.start()
         LaunchTimings.mark(.engineStarted)
@@ -211,14 +232,43 @@ final class SpeechCapture {
         transcript = ""
         state = .listening
         LaunchTimings.mark(.listening)
-        results = Task { [weak self] in await self?.collect(from: transcriber) }
+        resultCount = 0
+        diagnosis = nil
+        listeningSince = ContinuousClock.now
+        run += 1
+        let current = run
+        results = Task { [weak self] in await self?.collect(from: transcriber, run: current) }
+        check?.cancel()
+        check = Task { [weak self] in
+            while !Task.isCancelled {
+                do { try await Task.sleep(for: .seconds(1)) } catch { return }
+                guard let self, !Task.isCancelled else { return }
+                self.updateDiagnosis()
+            }
+        }
+    }
+
+    /// Jede Sekunde: Zähler und Uhr gegen die Regel (#274). Nur beim Zuhören, sonst steht ein Grund da.
+    private func updateDiagnosis() {
+        guard isListening, let listeningSince, let box else {
+            diagnosis = nil
+            return
+        }
+        let elapsed = ContinuousClock.now - listeningSince
+        let seconds = Double(elapsed.components.seconds) + Double(elapsed.components.attoseconds) / 1e18
+        diagnosis = SpeechDiagnosis.hint(
+            buffers: box.bufferCount, results: resultCount,
+            secondsListening: seconds,
+            modelStatus: modelStatus, microphone: microphoneGranted, speech: speechGranted
+        )
     }
 
     /// Fixed results are kept, the volatile one replaces the previous volatile one.
-    private func collect(from transcriber: SpeechTranscriber) async {
+    private func collect(from transcriber: SpeechTranscriber, run: Int) async {
         var fixed = ""
         do {
             for try await result in transcriber.results {
+                if run == self.run { resultCount += 1 }
                 let text = String(result.text.characters)
                 if result.isFinal {
                     fixed += text
@@ -292,6 +342,13 @@ private final class ConverterBox: @unchecked Sendable {
     private let lock = NSLock()
     private var buffers = 0
     private var failed = false
+
+    /// Der Zählerstand für die Kurzdiagnose (#274), unter derselben Sperre wie `feed`.
+    var bufferCount: Int {
+        lock.lock()
+        defer { lock.unlock() }
+        return buffers
+    }
 
     init(
         _ converter: AnalyzerInputConverter,
