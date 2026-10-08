@@ -1,3 +1,4 @@
+import OSLog
 import SwiftData
 import SwiftUI
 
@@ -9,6 +10,9 @@ struct LooseEndsApp: App {
     let calendar: CalendarBridge
 
     init() {
+        #if DEBUG
+        Self.initializeCloudKitSchemaIfAsked()
+        #endif
         do {
             container = try ModelContainerFactory.make()
         } catch {
@@ -21,6 +25,25 @@ struct LooseEndsApp: App {
         calendar = CalendarBridge(container: container)
         if ModelContainerFactory.isUITesting { MainThreadWatchdog.start() }
     }
+
+    #if DEBUG
+    /// With `-LEInitializeCloudKitSchema` the process only writes the CloudKit schema and exits
+    /// (0 success, 1 failure, #175) — before the factory, so the app-group store is never opened.
+    private static func initializeCloudKitSchemaIfAsked() {
+        let isTestRun = ModelContainerFactory.isRunningTests || ModelContainerFactory.isUITesting
+        guard CloudKitSchemaInitializer.shouldRun(
+            arguments: ProcessInfo.processInfo.arguments, isDebugBuild: true, isTestRun: isTestRun
+        ) else { return }
+        do {
+            try CloudKitSchemaInitializer.run()
+            exit(0)
+        } catch {
+            Logger(subsystem: "com.henning.looseends", category: "Persistence")
+                .error("Schema-Initialisierung fehlgeschlagen: \(error, privacy: .public)")
+            exit(1)
+        }
+    }
+    #endif
 
     /// The design gallery (#182) asks for dark mode by launch argument: the device-wide switch
     /// from XCUITest did not reach the app on the CI simulator. Nil follows the system.

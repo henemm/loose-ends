@@ -146,6 +146,15 @@ Since #174 it runs on the `xcode-27` preview image with Xcode 27.0 pinned and ne
 deployment targets; a step before the upload checks every target in the archive (27 SDK, minimum 27.0,
 version, dSYM, privacy strings) and stops the upload on any mismatch.
 
+**CloudKit schema before every TestFlight build that changes the model (#175).** TestFlight talks to the
+CloudKit environment Production, Xcode runs to Development. Production never creates a schema by itself, and
+Development only knows fields some record wrote with a value. So after any change in `Shared/Models`, before
+the build: `./scripts/sim.sh mac-schema-init` (signed Mac debug build of the main bundle id, starts with
+`-LEInitializeCloudKitSchema`, writes the full schema into Development via `initializeCloudKitSchema`, never
+opens the app-group store; `LOOSEENDS_REGISTER=1` on the first run), then Henning deploys in the CloudKit
+Console. **Production is additive only from the first deploy:** new fields and types work, deleting or renaming
+does not — plan model changes as additions. Steps and fallback: `docs/reference/testflight.md` (5a).
+
 ## Process
 
 Plugin `henemm/agent-os-openspec`. Fast-track for scaffolding, standard workflow with the 250-LoC limit after that.
