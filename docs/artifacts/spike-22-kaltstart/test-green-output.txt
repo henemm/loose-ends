@@ -1,0 +1,620 @@
+[sim] Unit-Tests (macOS): LooseEndsTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+note: Building targets in dependency order
+note: Target dependency graph (4 targets)
+[LooseEnds] Copy LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[LooseEnds] Processing Info.plist
+[LooseEnds] Validate Embedded Binary LooseEndsWidgets.appex
+Test Suite 'All tests' started at 2026-10-08 12:43:45.977.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-08 12:43:45.978.
+Test Suite 'DetailLayoutTests' started at 2026-10-08 12:43:45.978.
+    ✔ testLineBreakInsidePastedTextBecomesASpace (0.001 seconds)
+    ✔ testRawTextHidesWhenTitleHasTheSameWords (0.001 seconds)
+    ✔ testRawTextShowsWhenTitleSaysSomethingElse (0.000 seconds)
+    ✔ testRawTextShowsWithoutTitle (0.000 seconds)
+    ✔ testReturnAtTheEndEndsTheEditWithoutStraySpace (0.000 seconds)
+    ✔ testSetFieldsComeFirstInTheirOrderAndEmptyOnesAreSeparate (0.001 seconds)
+    ✔ testTitleWithoutLineBreakIsLeftAlone (0.000 seconds)
+Executed 7 tests, with 0 failures (0 unexpected) in 0.003 (0.035) seconds
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-08 12:43:46.013.
+Executed 7 tests, with 0 failures (0 unexpected) in 0.003 (0.035) seconds
+Test Suite 'All tests' passed at 2026-10-08 12:43:46.013.
+Executed 7 tests, with 0 failures (0 unexpected) in 0.003 (0.036) seconds
+Test run started.
+Suite "CalendarAsk (#203)" started
+    ✔ "Nothing set: date, time kind and no duration yet; a day without time: time kind only; a time without duration: duration only; all set: no question" (0.001 seconds)
+    ✔ "Add stays off until every open question is answered" (0.001 seconds)
+    ✔ "A time and a duration become the user's own revisions and switch the calendar on" (0.005 seconds)
+    ✔ "All day sets only a missing day and keeps an existing one as it is" (0.002 seconds)
+    ✔ "A time that is already set only asks for the duration, and keeps the time" (0.002 seconds)
+    ✔ "An incomplete answer changes nothing" (0.002 seconds)
+Suite "CalendarAsk (#203)" passed after 0.014 seconds
+Suite "Show in calendar" started
+    ✔ "Only an open task with the switch on and a due date gets an event" (0.002 seconds)
+    ✔ "A due time gives a block as long as the duration, a bare day gives an all-day event" (0.003 seconds)
+    ✔ "Changes sort tasks into create, update and remove, and are empty while nobody asks" (0.002 seconds)
+    ✔ "A deleted task's event has no task left to carry it, but still counts as an orphan (#122)" (0.002 seconds)
+    ✔ "Google as the default does not win over iCloud: iCloud first, Google after it (#203)" (0.001 seconds)
+    ✔ "Only the device itself: the local source (#203)" (0.001 seconds)
+    ✔ "Exchange, subscriptions and birthdays never host the app's calendar (#203)" (0.001 seconds)
+    ✔ "Every source is tried at most once, local comes before a foreign CalDAV default (#203)" (0.001 seconds)
+    ✔ "The note under the switch says why nothing shows, and is silent while all is well (#203)" (0.002 seconds)
+Suite "Show in calendar" passed after 0.013 seconds
+Suite "CaptureService" started
+    ✔ "Saves trimmed raw text with channel and source, unprocessed, visible in New" (0.017 seconds)
+    ✔ "Newest capture comes first in New" (0.022 seconds)
+Suite "CaptureService" passed after 0.049 seconds
+Suite "CatalogService" started
+    ✔ "A new project trims its name and sorts after the existing ones" (0.003 seconds)
+    ✔ "A blank name is rejected and nothing is inserted" (0.002 seconds)
+    ✔ "Renaming a context keeps its identity" (0.003 seconds)
+    ✔ "Deleting a project keeps its tasks, which lose the project" (0.006 seconds)
+    ✔ "Deleting a context removes the tag from its tasks and keeps the other tags" (0.008 seconds)
+    ✔ "Deleting a context records a user revision on every task that carried it (#140)" (0.007 seconds)
+    ✔ "A task losing its only context records the emptying as a user revision (#140)" (0.006 seconds)
+    ✔ "Deleting a project records a user revision on every task in it (#140)" (0.004 seconds)
+    ✔ "Garden and Garten are different names" (0.005 seconds)
+    ✔ "Renaming a context to its own name in other casing is allowed" (0.002 seconds)
+    ✔ "Renaming a context to another context's name is rejected and keeps the old name" (0.001 seconds)
+    ✔ "Merging moves every task of the duplicates to the survivor once and deletes the duplicates" (0.006 seconds)
+    ✔ "Merging without duplicates changes nothing, and a second merge is a no-op" (0.004 seconds)
+    ✔ "The system default survives, even with a larger sort order" (0.003 seconds)
+    ✔ "Without a system default the smallest sort order survives" (0.003 seconds)
+    ✔ "With equal flag and sort order the smallest id string survives" (0.003 seconds)
+    ✔ "English seeded defaults fold into their German counterparts with their tasks (#267)" (0.005 seconds)
+    ✔ "A second English merge and a clean catalog change nothing (#267)" (0.005 seconds)
+    ✔ "An English context the user added stays, and so does an English default without its German pair (#267)" (0.003 seconds)
+    ✔ ""Out and about" folds into "Unterwegs" even without the system-default mark (#267)" (0.005 seconds)
+    ✔ "A name with a non-breaking or doubled space still counts as the English default (#267)" (0.003 seconds)
+    ✔ "With two German candidates the English default folds into the one that survives first (#267)" (0.004 seconds)
+Suite "CatalogService" passed after 0.115 seconds
+Suite "ViewRules for contexts and projects" started
+    ✔ "A context view lists open top-level tasks with that tag only" (0.003 seconds)
+    ✔ "A project view lists open top-level tasks of that project, urgent first" (0.003 seconds)
+Suite "ViewRules for contexts and projects" passed after 0.007 seconds
+Suite "CloudKit schema initializer (#175)" started
+    ✔ "The model handed to CloudKit holds all six entities" (0.001 seconds)
+    ✔ "The task entity carries the fields Development was missing" (0.001 seconds)
+    ✔ "The scratch store lives in the temporary directory, never in the app group or the factory's place" (0.007 seconds)
+    ✔ "Each run gets its own scratch place" (0.001 seconds)
+    ✔ "The argument has the name the operation docs use" (0.001 seconds)
+Suite "CloudKit schema initializer (#175)" passed after 0.008 seconds
+    ✔ "Ein Wort kommt in die Liste, sobald es N-mal beim selben Kontext steht" (0.001 seconds)
+    ✔ "Derselbe Rohtext zehnmal ist eine Zuordnung, nicht zehn" (0.001 seconds)
+    ✔ "Konflikt: ein Wort bei zwei Kontexten gehört keinem" (0.001 seconds)
+    ✔ "Eine Aufgabe mit zwei Kontexten macht ihre Wörter zum Konflikt" (0.001 seconds)
+    ✔ "Ein gelöschtes Wort wird für diesen Kontext nie wieder gelernt" (0.001 seconds)
+    ✔ "Füllwörter, Zahlen und kurze Wörter werden nie gelernt" (0.001 seconds)
+    ✔ "Gelernte Wörter treffen ganze Wörter, groß, klein und mit Umlaut" (0.001 seconds)
+Suite "Regelschritt: Wortliste lernt aus eigenen Zuordnungen" passed after 0.001 seconds
+Suite "Regelschritt: Kontexte aus der Wortliste" started
+    ✔ "Je Startkontext ein deutscher Treffer" (0.111 seconds)
+    ✔ "Je Startkontext ein englischer Treffer" (0.120 seconds)
+    ✔ "Der Gerätetest aus #215 bleibt leer" (0.037 seconds)
+    ✔ "Ein deutsches Kompositum trifft über seinen Anfang" (0.036 seconds)
+    ✔ "Kurze Wörter treffen nur als ganzes Wort" (0.056 seconds)
+    ✔ "Ein selbst angelegter Kontext trifft mit seinem Namen" (0.001 seconds)
+    ✔ "Mehrere Treffer kommen in Katalogreihenfolge, die Begründung nennt das erste Wort" (0.019 seconds)
+    ✔ "Eine Wortliste gehört nur dem ersten passenden Kontext: kein „Garden, Garten“ (#157)" (0.007 seconds)
+    ✔ "Ein Wort für einen Kontext, den es im Katalog nicht gibt, trifft nicht" (0.003 seconds)
+    ✔ "Markiert wird nur das Wort des gesetzten Kontexts (#101)" (0.005 seconds)
+    ✔ "Der Regelschritt setzt den Kontext mit Regel-Herkunft und einer Revision" (0.036 seconds)
+    ✔ "Ohne Treffer bleibt der Kontext leer, auch wenn das Modell einen vorschlägt" (0.020 seconds)
+    ✔ "Eine kopierte Vermutung pflanzt sich nicht fort (#244)" (0.022 seconds)
+    ✔ "Ein vom Nutzer gesetzter Kontext wird nicht überschrieben, auch nicht beim Neu-Analysieren" (0.073 seconds)
+Suite "Regelschritt: Kontexte aus der Wortliste" passed after 0.553 seconds
+Suite "Regel-Baseline für den Konventionstest (Spike #69, Ticket A)" started
+    ✔ "Lädt zehn Wort→Kontext-Muster, je drei Korrekturen und eine Sonde (AC-1)" (0.001 seconds)
+    ✔ "Kernwort, das in drei Korrekturen und der Sonde vorkommt, liefert deren Kontext (AC-2)" (0.001 seconds)
+    ✔ "Mehrheitsentscheid gewinnt, nicht der zuletzt gesehene Wert (AC-3)" (0.001 seconds)
+    ✔ "Kein gemeinsames Wort liefert nil, keinen erzwungenen Kontext (AC-4)" (0.001 seconds)
+    ✔ "Auswertung über mehrere Muster liefert eine Trefferquote (AC-5)" (0.001 seconds)
+    ✔ "Bericht wird aus dem eingebetteten Korpus geschrieben, ohne Modell- oder Geräteaufruf (AC-6)" (0.001 seconds)
+Suite "Regel-Baseline für den Konventionstest (Spike #69, Ticket A)" passed after 0.002 seconds
+Suite "Korpus-Regelwerk" started
+    ✔ "Tagesversatz zählt vom Erfassungstag" (0.001 seconds)
+    ✔ "Wochentag meint den nächsten, am Tag selbst auch heute" (0.001 seconds)
+    ✔ "Nächste Woche meint die Folgewoche, nächster Freitag beides" (0.001 seconds)
+    ✔ "Monatsende, Tag im Monat, Wochenende" (0.001 seconds)
+    ✔ "Nächster Monat lässt jeden Tag des Folgemonats gelten" (0.001 seconds)
+    ✔ "Datum mit Monat rollt ins nächste Jahr, wenn es vorbei ist" (0.001 seconds)
+    ✔ "Am Sonntag meint 'am Wochenende' heute und das nächste Wochenende" (0.001 seconds)
+    ✔ "Monatsende im Februar und Jahreswechsel" (0.001 seconds)
+    ✔ "Der Korpus lädt, ist eindeutig und jede Entität steht im Rohtext" (0.004 seconds)
+    ✔ "Der Korpus kennt Hennings Bauformen, mindestens 100 Sätze außerhalb der Standardform" (0.002 seconds)
+    ✔ "Ausdrücklich genannter Dateiname lädt dieselben Einträge wie der Default (AC-1)" (0.003 seconds)
+    ✔ "Unbekannter Dateiname wirft denselben Fehler wie eine fehlende Standarddatei (AC-1)" (0.002 seconds)
+    ✔ "--corpus liest den Korpusnamen aus den Startargumenten (AC-6)" (0.001 seconds)
+    ✔ "FocusBlox-Wahrheitsfelder dekodieren additiv aus dem Korpus-Eintrag (AC-1)" (0.001 seconds)
+    ✔ "Ein Eintrag der bestehenden date-title-corpus-Datei ohne die neuen Schlüssel dekodiert sie als nil (AC-1)" (0.001 seconds)
+    ✔ "--runs liest die Laufzahl aus den Startargumenten, Default bleibt 1 (AC-4)" (0.001 seconds)
+Suite "Korpus-Regelwerk" passed after 0.021 seconds
+Suite "Titelprüfung" started
+    ✔ "Entität bleibt erhalten, unabhängig von Groß- und Kleinschreibung" (0.001 seconds)
+    ✔ "Eine Zahl im Titel, die der Rohtext nicht nennt, ist erfunden" (0.001 seconds)
+    ✔ "Andrea darf im Titel nicht zu Andreas werden" (0.001 seconds)
+    ✔ "Umformulierungen zeigen sich als Fremdwörter im Titel" (0.001 seconds)
+    ✔ "Editierabstand misst kleine Namensverdreher" (0.001 seconds)
+Suite "Titelprüfung" passed after 0.002 seconds
+Suite "Regelparser: Datum" started
+    ✔ "heute, morgen, übermorgen, in N Tagen / Wochen — Deutsch" (0.001 seconds)
+    ✔ "today, tomorrow, the day after tomorrow, in N days / weeks — English" (0.001 seconds)
+    ✔ "Wochentag mit und ohne Präposition, am Anfang, in der Mitte, am Ende" (0.001 seconds)
+    ✔ "nächsten <Tag> / next <day> löst auf die Folgewoche auf" (0.001 seconds)
+    ✔ "Der Regelparser liegt im Produktmodul, nicht im Testziel" (0.001 seconds)
+    ✔ "nächste Woche <Tag> meint die Folgewoche, auch kleingeschrieben und hinten" (0.001 seconds)
+    ✔ "Monatsende in allen Schreibweisen" (0.001 seconds)
+    ✔ "Tag im Monat nur mit Ordnungszeichen und Präposition" (0.001 seconds)
+    ✔ "Wochenende, dieses Wochenende, over the weekend" (0.001 seconds)
+    ✔ "nächsten Monat / next month" (0.001 seconds)
+    ✔ "Festes Datum mit Monatsname, Deutsch und Englisch" (0.001 seconds)
+    ✔ "Zahlen ohne Zeitkontext ergeben kein Datum" (0.001 seconds)
+    ✔ "Wiederholungen sind kein Datum: jeden, every, werktags" (0.001 seconds)
+    ✔ "Zwei Ausdrücke im Satz: der erste gewinnt" (0.001 seconds)
+    ✔ "Uhrzeiten lösen keinen Tagesversatz aus" (0.001 seconds)
+Suite "Regelparser: Datum" passed after 0.013 seconds
+Suite "Regelparser: Abnahme über den Korpus" started
+    ✔ "Datum: mindestens 95 % exakt, kein einziges erfunden" (0.036 seconds)
+    ✔ "Uhrzeit: mindestens 95 % exakt, Wiederholungen eingeschlossen" (0.001 seconds)
+    ✔ "Uhrzeit: kein Satz ohne Uhrzeit bekommt eine" (0.003 seconds)
+Suite "Regelparser: Abnahme über den Korpus" passed after 0.041 seconds
+Suite DateTitleReportTests started
+    ✔ "Bericht aus den Messläufen des iPhones" (0.414 seconds)
+Suite DateTitleReportTests passed after 0.414 seconds
+Suite "Bericht nach Bauform" started
+    ✔ "Jede Bauform bekommt eine Zeile mit Datum, erfundenem Datum und Titel" (0.001 seconds)
+Suite "Bericht nach Bauform" passed after 0.001 seconds
+Suite "Bericht: Regelparser-Spalte" started
+    ✔ "Der Regelparser wird über Datum, Kontrolle und Uhrzeit gezählt, Wiederholungen nur bei der Uhrzeit" (0.001 seconds)
+    ✔ "Datumstabelle hat die Spalte Regelparser, auch nach Art des Ausdrucks" (0.001 seconds)
+    ✔ "Was der Regelparser verfehlt, steht mit Ausdrucksart im Bericht" (0.001 seconds)
+Suite "Bericht: Regelparser-Spalte" passed after 0.001 seconds
+Suite "Regelschritt: Fälligkeitsdatum" started
+    ✔ "Datum und Uhrzeit werden zu einem Zeitpunkt zusammengesetzt (AC-5)" (0.001 seconds)
+    ✔ "Ein Regel-Treffer trägt immer die Konfidenz 1.0 (AC-9)" (0.001 seconds)
+    ✔ "Ohne Uhrzeit bleibt es der Tagesbeginn und hasTime falsch (AC-5)" (0.001 seconds)
+    ✔ "Uhrzeit ohne erkanntes Datum liefert kein Ergebnis (AC-6)" (0.001 seconds)
+    ✔ "Ein Satz ohne Zeitausdruck liefert kein Ergebnis (AC-6)" (0.001 seconds)
+    ✔ "Jede Ausdrucksart bekommt einen eigenen, nicht-leeren Grund (AC-5)" (0.001 seconds)
+    ✔ "Der Regelschritt liegt im Produktmodul" (0.001 seconds)
+    ✔ "Alle neun Begründungssätze sind im deutschen Bundle übersetzt (#98, AC-1)" (0.001 seconds)
+Suite "Regelschritt: Fälligkeitsdatum" passed after 0.003 seconds
+Suite "DueReminders" started
+    ✔ "Only active tasks with a reminder time still ahead get a reminder, at the reminder hour" (0.004 seconds)
+    ✔ "A task due today after the reminder hour has passed is not reminded again" (0.003 seconds)
+    ✔ "Done, Next up and Tomorrow apply from the notification; an unknown task is reported" (0.004 seconds)
+    ✔ "Eine über firstDueDate implizit gesetzte Fälligkeit landet im Sammel-Push (AC-5)" (0.003 seconds)
+Suite "DueReminders" passed after 0.016 seconds
+Suite "Energy" started
+    ✔ "Seven stops, stored as the number's text (AC-1)" (0.001 seconds)
+    ✔ "The old low/medium/high read as empty (AC-2)" (0.003 seconds)
+    ✔ "A slider position is a user revision; Remove value is another (AC-3)" (0.002 seconds)
+    ✔ "Only words, never the number (AC-4)" (0.001 seconds)
+    ✔ "The model run leaves energy alone (AC-5)" (0.042 seconds)
+Suite "Energy" passed after 0.049 seconds
+Suite "ModelEnrichment ohne Energie (#112, AC-5)" started
+    ✔ "Das Schema trägt keine energy-Eigenschaften mehr" (0.001 seconds)
+Suite "ModelEnrichment ohne Energie (#112, AC-5)" passed after 0.001 seconds
+Suite "EnrichmentWriter" started
+    ✔ "Fields at or above the threshold are written with source, confidence and one AI revision each" (0.016 seconds)
+    ✔ "A title below the threshold leaves the task unverified with the raw text on show" (0.003 seconds)
+    ✔ "A project is assigned only when the name matches an existing project" (0.004 seconds)
+Suite "EnrichmentWriter" passed after 0.025 seconds
+Suite "EnrichmentCoordinator" started
+    ✔ "Every unprocessed task is enriched once; a second pass touches nothing" (0.079 seconds)
+    ✔ "A failing model leaves the task unprocessed for the next pass" (0.032 seconds)
+    ✔ "An unavailable model is not called at all" (0.032 seconds)
+    ✔ "Examples are the most recent completed tasks with their final attributes" (0.007 seconds)
+    ✔ "Ohne verfügbares Modell schreibt die Regel trotzdem das Datum" (0.032 seconds)
+    ✔ "Der Nachhol-Durchgang holt den Titel, ohne die Regel-Revision zu verdoppeln" (0.070 seconds)
+    ✔ "Wichtigkeit ist unabhängig vom Erfassungszeitpunkt (AC-5)" (0.040 seconds)
+    ✔ "Der Nachhol-Durchgang verdoppelt keine Wichtigkeits-/Dringlichkeits-Revision (AC-6)" (0.040 seconds)
+Suite "EnrichmentCoordinator" passed after 0.336 seconds
+Suite "EnrichmentParsing" started
+    ✔ "Confidences outside 0 to 1 are clamped" (0.001 seconds)
+Suite "EnrichmentParsing" passed after 0.001 seconds
+Suite "ContextSeeder" started
+    ✔ "An empty store gets the default contexts; a store with contexts gets none" (0.003 seconds)
+    ✔ "A lost store is seeded again even though this device seeded before (#146)" (0.006 seconds)
+    ✔ "Deleting one context never brings the defaults back" (0.004 seconds)
+    ✔ "A catalog the user emptied stays empty; adding one context lifts that again (#146)" (0.005 seconds)
+Suite "ContextSeeder" passed after 0.020 seconds
+Suite "Wiedererkennung im Coordinator (#136)" started
+    ✔ "Wortgleiche Wiedererfassung übernimmt Dauer und Kontexte der früheren Aufgabe (AC-1)" (0.042 seconds)
+    ✔ "Groß-/Kleinschreibung, Satzzeichen und Wortstellung verhindern die Wiedererkennung nicht (AC-3)" (0.038 seconds)
+    ✔ "Ein anderes Wort verhindert die Übernahme (AC-2, AC-4)" (0.107 seconds)
+    ✔ "Energie wird nie übernommen (AC-5)" (0.036 seconds)
+    ✔ "Ein nutzergesetzter Wert schlägt einen KI-gesetzten (AC-6)" (0.033 seconds)
+    ✔ "Zwei unverarbeitete Aufgaben im selben Lauf befruchten sich nicht (AC-7)" (0.067 seconds)
+    ✔ "Der Nachzügler-Lauf hängt keine zweite Revision an (AC-8)" (0.074 seconds)
+    ✔ "Der Modellwert überschreibt einen gesetzten Wert nicht mehr (AC-9)" (0.004 seconds)
+    ✔ "Eine vom Nutzer zurückgesetzte Dauer wird nicht wieder gesetzt" (0.042 seconds)
+    ✔ "Vom Nutzer entfernte Kontexte werden nicht wieder gesetzt" (0.060 seconds)
+Suite "Wiedererkennung im Coordinator (#136)" passed after 0.508 seconds
+Suite "Vergleichsmenge auf dem echten Weg (#136 Folgebefund)" started
+    ✔ "Ohne Modell übernimmt die zweite wortgleiche Erfassung die Werte der ersten" (0.090 seconds)
+    ✔ "Ohne Modell bekommt jede Aufgabe den Regel-Vermerk (AC-2)" (0.086 seconds)
+    ✔ "Ein fehlgeschlagener Modellaufruf nimmt dem Regelschritt den Vermerk nicht (AC-3)" (0.030 seconds)
+    ✔ "Eine vor dieser Änderung veredelte Aufgabe bleibt Quelle (AC-4)" (0.031 seconds)
+    ✔ "Eine Aufgabe mit beiden Vermerken steht genau einmal in der Vergleichsmenge (AC-5)" (0.028 seconds)
+    ✔ "Der Regel-Vermerk verengt den Nachzügler-Lauf nicht (AC-6)" (0.060 seconds)
+    ✔ "Mehrere Regelläufe ohne Modell legen keine zweite Revision an (AC-7)" (0.081 seconds)
+Suite "Vergleichsmenge auf dem echten Weg (#136 Folgebefund)" passed after 0.409 seconds
+Suite "Field edits" started
+    ✔ "Setting importance writes a user revision from empty to high" (0.003 seconds)
+    ✔ "Clearing the due date records the old value and drops the source" (0.004 seconds)
+    ✔ "Contexts are set by name from the available ones; unknown names are ignored" (0.003 seconds)
+    ✔ "A project is set by name and cleared with nil; the same value again writes nothing" (0.003 seconds)
+Suite "Field edits" passed after 0.015 seconds
+Suite "Field origin" started
+    ✔ "Old records stay readable; unknown text reads as AI, as before (AC-1)" (0.001 seconds)
+    ✔ "Due date, importance and urgency from a rule carry the rule origin; the title stays AI (AC-2)" (0.036 seconds)
+    ✔ "„wichtig“ sets high importance from the rule, with the word as trigger (#214)" (0.029 seconds)
+    ✔ "A rule value resets like an AI value, as a user revision (AC-3)" (0.033 seconds)
+    ✔ "A field a rule set before #101 still counts as automatic, as AI (AC-1)" (0.001 seconds)
+    ✔ "Recognition names the earlier task and carries the rule origin (AC-4)" (0.036 seconds)
+Suite "Field origin" passed after 0.136 seconds
+    ✔ "Wichtigkeits-Treffer je Kategorie (AC-1)" (0.035 seconds)
+    ✔ "Dringlichkeits-Treffer je Kategorie (AC-2)" (0.011 seconds)
+    ✔ "„wichtig“ setzt hohe Wichtigkeit, mit eigener Begründung (#214)" (0.002 seconds)
+    ✔ "Das ausdrückliche Wort geht den indirekten Signalen vor (#214)" (0.001 seconds)
+    ✔ "Eine Verneinung zwei Wörter vorher ohne Verstärker zählt nicht (#214)" (0.001 seconds)
+    ✔ "Ein verneintes und ein bejahtes „wichtig“: das bejahte zählt (#214)" (0.001 seconds)
+    ✔ "Eine Frist bleibt ein Treffer, auch neben verneinter Eile (#220)" (0.003 seconds)
+    ✔ "Kein Treffer bleibt nil, kein Default (AC-3)" (0.023 seconds)
+    ✔ "Wichtigkeit und Dringlichkeit sind unabhängig (AC-4)" (0.038 seconds)
+    ✔ "Alle sechs Begründungssätze sind im deutschen Bundle übersetzt (AC-8, #214)" (0.001 seconds)
+    ✔ "Der Regelschritt liegt im Produktmodul" (0.001 seconds)
+Suite "Regelschritt: Wichtigkeit und Dringlichkeit" passed after 0.363 seconds
+Suite "ModelEnrichment ohne Wichtigkeit/Dringlichkeit (AC-7)" started
+    ✔ "Das Schema trägt keine importance/urgency-Eigenschaften mehr" (0.001 seconds)
+Suite "ModelEnrichment ohne Wichtigkeit/Dringlichkeit (AC-7)" passed after 0.001 seconds
+Suite IntentExecutionTests started
+    ✔ "Aufgabe erfassen läuft ohne Fehler durch" (0.014 seconds)
+    ✔ "Erfassung öffnen meldet der App, dass sie die Erfassung zeigen soll" (0.001 seconds)
+Suite IntentExecutionTests passed after 0.014 seconds
+Suite "Launch timings (#22)" started
+    ✔ "Sections are exact differences between points" (0.001 seconds)
+    ✔ "A missing point drops exactly its adjacent sections, nothing is guessed" (0.001 seconds)
+    ✔ "Appending keeps earlier runs unchanged" (0.001 seconds)
+    ✔ "A corrupt file is reported and the new run starts a fresh one" (0.001 seconds)
+    ✔ "Only the probe build counts as probe" (0.001 seconds)
+    ✔ "The launch argument marks a run as automated" (0.001 seconds)
+    ✔ "Persisting under the product id creates no file; the probe id does" (0.002 seconds)
+    ✔ "Listening alone does not write; the first buffer after it writes once" (0.001 seconds)
+    ✔ "Without a buffer the timeout writes once with no first buffer" (0.001 seconds)
+    ✔ "A timeout before listening writes nothing" (0.001 seconds)
+Suite "Launch timings (#22)" passed after 0.005 seconds
+Suite "Next up order, Old and Completed details" started
+    ✔ "Dragging a row renumbers every rank in the new order" (0.660 seconds)
+    ✔ "Postponed counts only the user's moves to a later date" (0.085 seconds)
+    ✔ "Completed tasks group by day, newest day first, newest task first within a day" (0.002 seconds)
+Suite "Next up order, Old and Completed details" passed after 0.749 seconds
+Suite MeasurementFieldScopeTests started
+    ✔ "FocusBloxCalibrationTests wertet importance/urgency nicht mehr aus (#118)" (0.001 seconds)
+    ✔ "SelfConsistencyReportTests wertet importance/urgency nicht mehr aus (#118)" (0.001 seconds)
+    ✔ "RuleLeaveOneOutTests wertet importance/urgency nicht aus (#118, #131)" (0.001 seconds)
+Suite MeasurementFieldScopeTests passed after 0.002 seconds
+Suite "Messlauf-Datei und Taktung" started
+    ✔ "Alte Ergebnisdatei ohne Ereignisse bleibt lesbar" (0.001 seconds)
+    ✔ "Ereignisse und Fehlerart überleben Schreiben und Lesen" (0.001 seconds)
+    ✔ "Nach einem Fehlschlag wird gewartet, nach dreien angehalten" (0.001 seconds)
+    ✔ "Die Labor-App meldet keine Hintergrundmodi mehr an" (0.001 seconds)
+    ✔ "Fehlerart wird typisiert erkannt, nicht per Textvergleich" (0.001 seconds)
+    ✔ "Zwei erfolgreiche Läufe: der dritte Lauf ist noch offen, mit aufsteigendem Index (AC-2)" (0.001 seconds)
+    ✔ "Drei erfolgreiche Läufe bei runsPerEntry 3: der Satz ist vollständig erledigt (AC-2)" (0.001 seconds)
+    ✔ "Alte Ergebnisdatei ohne runIndex-Feld dekodiert als 0 und gilt einlaufig als erledigt (AC-3)" (0.001 seconds)
+    ✔ "Gesamtzahl, erledigte und Fortschritt rechnen über Läufe, nicht über Sätze (AC-4)" (0.001 seconds)
+    ✔ "Aufeinanderfolgende Läufe desselben Satzes bekommen aufsteigende Indizes (AC-5)" (0.001 seconds)
+    ✔ "Ergebnisdatei ohne die fünf neuen Schlüssel dekodiert sie als nil/leer (AC-2)" (0.001 seconds)
+    ✔ "Alle fünf neuen Rohwerte überleben Schreiben und Lesen (AC-2)" (0.001 seconds)
+    ✔ "Der Selbstkonsistenz-Auszug eines EnrichmentDraft reicht alle vier Werte unverändert durch (Energie seit #112 nicht mehr) (AC-3)" (0.001 seconds)
+    ✔ "Fehlende Guesses ergeben nil/leer, kein Absturz (AC-3)" (0.001 seconds)
+Suite "Messlauf-Datei und Taktung" passed after 0.007 seconds
+Suite "Model container identifiers" started
+    ✔ "Both keys present: the bundle's values are used" (0.001 seconds)
+    ✔ "No info dictionary: today's production identifiers" (0.001 seconds)
+    ✔ "One key missing: that one falls back, the other is read" (0.001 seconds)
+    ✔ "The standard build carries the production identifiers in its Info.plist" (0.001 seconds)
+    ✔ "The in-memory store of tests and UI tests never syncs with iCloud (#163)" (0.010 seconds)
+Suite "Model container identifiers" passed after 0.011 seconds
+Suite "Model" started
+    ✔ "A captured task round-trips through the store as unprocessed" (0.005 seconds)
+    ✔ "Blocked tasks stay out of Next up and show up in Waiting" (0.004 seconds)
+Suite "Model" passed after 0.011 seconds
+Suite "RepeatRule roll-forward" started
+    ✔ "Weekly on Saturday from due date rolls to the next Saturday" (0.001 seconds)
+    ✔ "Monthly from completion anchors on the completion date" (0.001 seconds)
+Suite "RepeatRule roll-forward" passed after 0.001 seconds
+Suite "Onboarding (#29)" started
+    ✔ "Three steps in order: Siri, notifications, contexts; then it is over" (0.001 seconds)
+    ✔ "Shown on a fresh device, never again once finished or skipped" (0.001 seconds)
+    ✔ "UI tests start on the start screen unless they ask for the onboarding" (0.001 seconds)
+    ✔ "The model note follows the reason the system gives; none while the model is there" (0.001 seconds)
+Suite "Onboarding (#29)" passed after 0.003 seconds
+Suite "PendingCompletions" started
+    ✔ "Within the three seconds nothing is completed; after them the task is done (#32)" (0.004 seconds)
+    ✔ "A second tap inside the window takes Done back; the task never completes (#32)" (0.002 seconds)
+    ✔ "A tap after the window has nothing left to take back (#32)" (0.002 seconds)
+    ✔ "Scheduling twice does not stretch the window" (0.002 seconds)
+    ✔ "Each task has its own window; the earliest deadline drives the next commit" (0.003 seconds)
+    ✔ "Leaving the foreground ends every window at once" (0.002 seconds)
+    ✔ "A task gone or finished elsewhere meanwhile is dropped, not completed twice" (0.010 seconds)
+    ✔ "A repeating task rolls forward once the window has run out" (0.004 seconds)
+Suite "PendingCompletions" passed after 0.034 seconds
+Suite "PlaceDelivery (#226)" started
+    ✔ "A new task with a place is handed over and noted" (0.004 seconds)
+    ✔ "A second change to a task that already reminded does not remind again" (0.002 seconds)
+    ✔ "An open request stays untouched" (0.003 seconds)
+    ✔ "A different place or event replaces the request, a different name too; a fired one is only handed over again" (0.003 seconds)
+    ✔ "A repeating task is armed again once ticking it off has moved it on; a one-off ignores its due date" (0.002 seconds)
+    ✔ "A task that drops out of the plan is withdrawn; one that comes back reminds again" (0.002 seconds)
+    ✔ "Rank 21 drops out of the watched places, the entry and the request go with it" (0.004 seconds)
+    ✔ "A changed title only replaces the content of an open request; a fired one is left alone" (0.002 seconds)
+    ✔ "Without authorization nothing is handed over or noted, so it arrives once granted; withdrawing still runs" (0.002 seconds)
+    ✔ "Identifiers keep the place_ prefix and the task id" (0.002 seconds)
+    ✔ "Orphaned place requests disappear, other kinds are never touched" (0.001 seconds)
+    ✔ "A reinstall with an empty list does not create the request twice" (0.002 seconds)
+    ✔ "The same input yields the same changes whatever the order, and the list encodes byte-identical" (0.003 seconds)
+    ✔ "The fingerprint ignores the sixth decimal and cannot be fooled by a separator in the name" (0.002 seconds)
+Suite "PlaceDelivery (#226)" passed after 0.041 seconds
+Suite "PlaceEditing (#241)" started
+    ✔ "Setting writes the place with one user revision; the same place again writes nothing" (0.002 seconds)
+    ✔ "Switching to leave keeps name and coordinate; without a place it does nothing" (0.003 seconds)
+    ✔ "Removing clears the place with one revision; without a place it does nothing" (0.002 seconds)
+    ✔ "Beyond 20 places the lowest-ranked task is named not watched; on the Mac the others say so" (0.005 seconds)
+Suite "PlaceEditing (#241)" passed after 0.014 seconds
+Suite "PlaceReminders (#226)" started
+    ✔ "Only open tasks with a place remind: unprocessed, unverified and active, not parked or completed" (0.002 seconds)
+    ✔ "Next up first by its order, then by due date, then the newest" (0.002 seconds)
+    ✔ "A full tie is broken by the id, so every run yields the same list" (0.002 seconds)
+    ✔ "25 open places: the 20 ranked highest are watched, the other 5 are named" (0.003 seconds)
+    ✔ "A repeating task is back in the plan after it is completed" (0.002 seconds)
+    ✔ "A place that reminded is in no later plan, neither watched nor named" (0.002 seconds)
+    ✔ "Marking twice keeps the first time; an unknown task reports false" (0.002 seconds)
+    ✔ "A repeating task that reminded is armed again when it is completed, a one-off stays out" (0.003 seconds)
+    ✔ "A changed place is a new reminder; parking does not arm it" (0.002 seconds)
+Suite "PlaceReminders (#226)" passed after 0.025 seconds
+Suite "Process cache" started
+    ✔ "Builds once, then returns the same instance without building again" (0.001 seconds)
+Suite "Process cache" passed after 0.001 seconds
+Suite "Project view with subtasks (#28)" started
+    ✔ "Folded by default: only top-level tasks, subtasks never on their own" (0.004 seconds)
+    ✔ "An unfolded parent shows its subtasks right below it, in capture order" (0.004 seconds)
+    ✔ "A checked subtask stays in place, as in the detail" (0.006 seconds)
+    ✔ "Unfolding a task without subtasks, or a finished parent, adds nothing" (0.006 seconds)
+Suite "Project view with subtasks (#28)" passed after 0.022 seconds
+Suite "Re-analysis" started
+    ✔ "AI-set fields take the new values, each change as a new AI revision from the old value" (0.074 seconds)
+    ✔ "A field the user set stays; the AI-set ones beside it still change" (0.063 seconds)
+    ✔ "The same result again adds no revision" (0.063 seconds)
+    ✔ "An empty field is filled; a field the new result leaves out is not cleared" (0.064 seconds)
+    ✔ "An unverified task becomes active once the re-analysis finds a title" (0.057 seconds)
+    ✔ "Without the model the rules still run, and the result says so" (0.045 seconds)
+    ✔ "A failing model call keeps the rule step and reports that the model did not run" (0.072 seconds)
+    ✔ "Rules before the model: a recognised duration is not overwritten by the model's estimate" (0.078 seconds)
+    ✔ "A task never recognises itself: its own AI value is no source for a re-analysis" (0.063 seconds)
+    ✔ "The first run is unchanged: the model still only fills an empty duration" (0.003 seconds)
+Suite "Re-analysis" passed after 0.587 seconds
+Suite "Wiedererkennung: Regel (#136)" started
+    ✔ "Gleiche Wortmenge übernimmt Dauer und Kontexte mit Konfidenz 1.0 (AC-1)" (0.001 seconds)
+    ✔ "Ein anderer Text liefert nichts — kein Standardwert (AC-2)" (0.001 seconds)
+    ✔ "Groß-/Kleinschreibung, Satzzeichen, Wortstellung und Umlaute sind egal (AC-3)" (0.001 seconds)
+    ✔ "Kurze Wörter zählen mit — keine Falschverschmelzung (AC-4)" (0.001 seconds)
+    ✔ "Weder Treffer noch Kandidat kennen Energie (AC-5)" (0.001 seconds)
+    ✔ "Nur nutzergesetzte Werte sind Quelle, je Feld einzeln (AC-6, #244)" (0.001 seconds)
+    ✔ "Bei gleichrangigen Treffern entscheidet die id, nicht die Pool-Reihenfolge (AC-6)" (0.001 seconds)
+    ✔ "Ein von der KI geratener Wert ist keine Quelle (#215)" (0.001 seconds)
+    ✔ "Ein Regelwert und ein Wert ohne Herkunft sind keine Quelle (#244)" (0.001 seconds)
+    ✔ "Ein Kandidat ohne gesetztes Feld liefert für dieses Feld nichts" (0.001 seconds)
+    ✔ "Ein Treffer ohne jedes gesetzte Feld ist kein Treffer" (0.001 seconds)
+    ✔ "Leerer Pool und wortloser Rohtext stürzen nicht ab und treffen nichts" (0.001 seconds)
+    ✔ "Der Begründungssatz ist ins Deutsche übersetzt (AC-11)" (0.001 seconds)
+Suite "Wiedererkennung: Regel (#136)" passed after 0.002 seconds
+Suite "Geteilter Tokenizer (#136)" started
+    ✔ "Faltet Groß-/Kleinschreibung und Diakritika, erhält Bindestriche" (0.001 seconds)
+    ✔ "Die Messung baut auf demselben Tokenizer auf (AC-10)" (0.001 seconds)
+    ✔ "Measurement/Corpus.swift deklariert keinen eigenen Tokenizer mehr (AC-10)" (0.001 seconds)
+Suite "Geteilter Tokenizer (#136)" passed after 0.001 seconds
+    ✔ "A rule survives the encode-decode round trip and encodes deterministically" (0.001 seconds)
+    ✔ "Setting a rule writes a user revision, the same rule again writes nothing, nil clears it" (0.008 seconds)
+    ✔ "Erstmaliges Wählen einer Frequenz übernimmt die im Rohtext erkannte Uhrzeit (AC-2)" (0.004 seconds)
+    ✔ "Ändern der Frequenz einer bestehenden Regel lässt die Uhrzeit unverändert (AC-3)" (0.004 seconds)
+    ✔ "Erstmaliges Anlegen einer Regel setzt implizit ein Fälligkeitsdatum (AC-2)" (0.004 seconds)
+    ✔ "Ein bereits manuell gesetztes Fälligkeitsdatum bleibt beim Anlegen einer Regel unverändert (AC-3)" (0.007 seconds)
+    ✔ "Ändern einer bestehenden Regel setzt kein erneutes implizites Fälligkeitsdatum (AC-4)" (0.006 seconds)
+    ✔ "Rules read as people say them" (0.001 seconds)
+Suite "Repeat rule edits" passed after 0.037 seconds
+Suite "Regelschritt: Wiederholungs-Uhrzeit" started
+    ✔ "Eine im Rohtext erkannte Uhrzeit wird geliefert (AC-1)" (0.001 seconds)
+    ✔ "Ohne erkennbares Zeit-Signal liefert timeGuess nichts (AC-1)" (0.001 seconds)
+    ✔ "Eine neu gewählte Frequenz übernimmt die erkannte Uhrzeit (AC-2)" (0.001 seconds)
+    ✔ "Eine neu gewählte Frequenz ohne Zeit-Signal bleibt ohne Uhrzeit (AC-2)" (0.001 seconds)
+    ✔ "Eine bestehende Regel behält ihre Uhrzeit beim Wechsel der Frequenz (AC-3)" (0.001 seconds)
+    ✔ "Eine RepeatRule mit gesetzter Uhrzeit läuft verlustfrei durch den Codec (AC-4)" (0.001 seconds)
+    ✔ "Eine RepeatRule ohne Uhrzeit bleibt nach dem Codec-Round-Trip ohne Uhrzeit (AC-4)" (0.001 seconds)
+    ✔ "Der Regelschritt liegt im Produktmodul" (0.001 seconds)
+    ✔ "firstDueDate kombiniert den nächsten Termin mit der gespeicherten Uhrzeit (AC-1)" (0.001 seconds)
+    ✔ "firstDueDate faellt ohne gespeicherte Uhrzeit auf den Tagesbeginn zurueck (AC-1)" (0.001 seconds)
+    ✔ "firstDueDate reicht den bestehenden Wochentag-losen Ruecksprung von nextDueDate unveraendert durch (AC-1, Risiko 3)" (0.001 seconds)
+Suite "Regelschritt: Wiederholungs-Uhrzeit" passed after 0.002 seconds
+Suite "New as the review tray (#188)" started
+    ✔ "Unsorted and unchecked tasks need a look; sorted ones only a nod" (0.003 seconds)
+    ✔ "A title the AI rewrote shows the raw text as the value before" (0.003 seconds)
+    ✔ "A title the user typed is not reported as the AI's change" (0.006 seconds)
+    ✔ "Looks right marks the AI's changes as seen: the task leaves New, the revision stays" (0.005 seconds)
+Suite "New as the review tray (#188)" passed after 0.018 seconds
+Suite "RevisionService" started
+    ✔ "Resetting the AI title puts the raw text back and records a user revision" (0.028 seconds)
+    ✔ "Resetting due date and contexts restores the pre-AI state" (0.014 seconds)
+    ✔ "Reset all clears every AI field in one go and writes one user revision per field" (0.020 seconds)
+    ✔ "A user title edit writes a user revision; the same value again writes nothing" (0.011 seconds)
+    ✔ "A user-authored title never shows the AI reset affordance (Bug #125, AC-3)" (0.004 seconds)
+    ✔ "Marking seen clears the marker and takes an active task out of New" (0.013 seconds)
+    ✔ "Project resets match by name; an unknown name leaves the project empty" (0.003 seconds)
+Suite "RevisionService" passed after 0.098 seconds
+Suite "FieldCodec" started
+    ✔ "Every revisable field survives an encode-apply round trip" (0.003 seconds)
+    ✔ "Malformed lists read as empty instead of throwing" (0.001 seconds)
+Suite "FieldCodec" passed after 0.004 seconds
+Suite "Regel-Auslass-Test: Logik (Spike #69, #131)" started
+    ✔ "Die Zielaufgabe ist nie ihr eigener Nachbar (AC-1)" (0.001 seconds)
+    ✔ "Rangfolge nach Jaccard, Gleichstand nach id — immer dieselbe Reihenfolge (AC-2)" (0.001 seconds)
+    ✔ "Wörter unter vier Zeichen tragen keine Ähnlichkeit (AC-3)" (0.001 seconds)
+    ✔ "Bei Stimmengleichstand gewinnt der nähere Nachbar, nicht der zuletzt gesehene (AC-4)" (0.001 seconds)
+    ✔ "Ohne Nachbarn keine Vorhersage — und der Satz zählt als Fehltreffer (AC-5)" (0.001 seconds)
+    ✔ "Die Nulllinie wird aus dem Pool gerechnet, nicht hartkodiert (AC-6)" (0.001 seconds)
+    ✔ "Kontextmengen sind unabhängig von Schreibweise und Reihenfolge dieselbe Klasse (AC-7)" (0.001 seconds)
+    ✔ "Eine leere Kontextliste trägt keine Wahrheit und liefert keinen Wert" (0.001 seconds)
+    ✔ "McNemar: keine Diskordanz heißt p = 1, und die Formel trifft die nachgerechneten Werte (AC-8)" (0.001 seconds)
+Suite "Regel-Auslass-Test: Logik (Spike #69, #131)" passed after 0.005 seconds
+    ✔ "The due date marks the words of its expression, in the original spelling" (0.001 seconds)
+    ✔ "Umlauts and ß before the expression keep the words aligned" (0.001 seconds)
+    ✔ "No expression, no mark; a repetition is no date" (0.001 seconds)
+    ✔ "Importance and urgency mark their keyword, the earliest of the winning signal" (0.075 seconds)
+    ✔ "Fields without a single trigger get no mark" (0.001 seconds)
+    ✔ "The span never changes which expression the parser picks" (0.001 seconds)
+Suite "Rule trigger" passed after 0.077 seconds
+    ✔ "Mehrheitswert und Einstimmigkeit für ein Einzelwert-Feld (AC-5)" (0.001 seconds)
+    ✔ "Mehrheitswert und Einstimmigkeit für ein Mengenfeld, Reihenfolge ist irrelevant (AC-6)" (0.001 seconds)
+    ✔ "Die Mehrheitsantwort eines Mengenfelds gilt nur bei exakter Mengengleichheit als richtig (AC-6)" (0.001 seconds)
+    ✔ "Die Trefferquote-über-Abdeckung-Tabelle rechnet Abdeckung und Trefferquote je Schwelle (AC-7)" (0.001 seconds)
+Suite "Selbstkonsistenz über mehrere Läufe (#108)" passed after 0.002 seconds
+Suite "SharedContent" started
+    ✔ "A shared mail yields its subject, the message link and the mail channel" (0.001 seconds)
+    ✔ "Encoded subjects are decoded, base64 and quoted-printable alike" (0.001 seconds)
+    ✔ "A link with text keeps the text and attaches the link; a bare link becomes the text" (0.001 seconds)
+    ✔ "A message link without the mail body still counts as mail" (0.001 seconds)
+    ✔ "Nothing shared is empty, not a crash" (0.001 seconds)
+Suite "SharedContent" passed after 0.002 seconds
+Suite "Siri-Angaben (#225)" started
+    ✔ "Ein Link wird zur Quelle, ohne Revision (AC-1)" (0.012 seconds)
+    ✔ "Derselbe Link zweimal zählt einmal (AC-2)" (0.003 seconds)
+    ✔ "Mehrere verschiedene Links werden abgelehnt, bevor etwas geschrieben wird (AC-2, AC-11)" (0.008 seconds)
+    ✔ "Ohne Link bleibt die Quelle leer (AC-3)" (0.012 seconds)
+    ✔ "Markierung setzt Wichtigkeit hoch als Nutzerangabe (AC-4)" (0.011 seconds)
+    ✔ "Die Revision trägt die vorherige Wichtigkeit (AC-4)" (0.009 seconds)
+    ✔ "Tags treffen Kontexte ohne Rücksicht auf Groß/Klein, Akzente und Leerraum (AC-6)" (0.015 seconds)
+    ✔ "Tags werden als Nutzerangabe mit Revision geschrieben (AC-6)" (0.014 seconds)
+    ✔ "Ein unbekanntes Tag lehnt alles ab und nennt seinen Namen (AC-7, AC-11)" (0.005 seconds)
+    ✔ "Zwei Tags, die gleich falten, ergeben einen Kontext (AC-8)" (0.015 seconds)
+    ✔ "Bei Dubletten gilt der Überlebende der Zusammenführung (AC-8, #157)" (0.004 seconds)
+    ✔ "Ohne Tags bleiben die Kontexte leer, keine Revision (AC-9)" (0.011 seconds)
+    ✔ "„Neu analysieren“ lässt Siri-Markierung und -Tags stehen (AC-10)" (0.070 seconds)
+    ✔ "Der erste Durchlauf nach dem Erfassen lässt Siri-Markierung und -Tags stehen (AC-10)" (0.039 seconds)
+    ✔ "Prüfen, Speichern, Anwenden: die Aufgabe trägt alle drei Angaben nach dem Neuladen" (0.012 seconds)
+Suite "Siri-Angaben (#225)" passed after 0.276 seconds
+Suite "Siri repetition → RepeatRule (#224)" started
+    ✔ "Daily, weekly, monthly and yearly keep frequency and interval, from the due date" (0.001 seconds)
+    ✔ "Weekly on several weekdays keeps them, numbered 1 = Sunday … 7 = Saturday, sorted, once each" (0.001 seconds)
+    ✔ "„Every weekday“ arrives as daily on Monday to Friday and becomes weekly on those days" (0.001 seconds)
+    ✔ "One time of day is kept; an hour alone means on the hour" (0.001 seconds)
+    ✔ "Hourly and minutely are not mappable" (0.001 seconds)
+    ✔ "An end after a date or a number of times is not mappable" (0.001 seconds)
+    ✔ "„The second Monday“ is not mappable" (0.001 seconds)
+    ✔ "Weekdays on a monthly or yearly rule, or on every second day, are not mappable" (0.001 seconds)
+    ✔ "Days of the month or year, months, weeks and set positions are not mappable" (0.001 seconds)
+    ✔ "Several times a day, or minutes without an hour, are not mappable" (0.001 seconds)
+    ✔ "A calendar other than the Gregorian one is not mappable" (0.001 seconds)
+    ✔ "Every problem of a rule is named, not just the first" (0.001 seconds)
+    ✔ "Applying sets the rule with one revision by the user, reason Siri, already seen; the same rule again writes nothing" (0.003 seconds)
+    ✔ "The reason is translated into German" (0.001 seconds)
+Suite "Siri repetition → RepeatRule (#224)" passed after 0.005 seconds
+Suite "Speech readiness (#64)" started
+    ✔ "Each model status maps to what the capture scene shows" (0.001 seconds)
+    ✔ "Progress is 0...1 and never NaN" (0.001 seconds)
+    ✔ "Progress is read from Foundation's Progress" (0.001 seconds)
+Suite "Speech readiness (#64)" passed after 0.001 seconds
+Suite "Start screen views" started
+    ✔ "With no task at all only the daily three remain" (0.001 seconds)
+    ✔ "An occasional view appears once it holds a task, in its fixed place" (0.004 seconds)
+    ✔ "Daily and occasional views together cover every list view except Done" (0.001 seconds)
+Suite "Start screen views" passed after 0.005 seconds
+Suite "Subtasks, one level" started
+    ✔ "A line is trimmed, linked to its parent, active and inherits the project; empty and nested lines are refused" (0.005 seconds)
+    ✔ "Checking a line off and reopening it moves the progress and keeps the order" (0.005 seconds)
+    ✔ "A subtask never shows in a view of its own, open or done" (0.004 seconds)
+    ✔ "Deleting the parent takes its subtasks with it" (0.006 seconds)
+Suite "Subtasks, one level" passed after 0.021 seconds
+Suite "TaskActions" started
+    ✔ "Done moves a plain task to Done and out of Next up" (0.003 seconds)
+    ✔ "Done on a repeating task records the cycle and rolls the due date forward" (0.003 seconds)
+    ✔ "Restore takes a task back from Done and keeps its completion records" (0.003 seconds)
+    ✔ "Next up appends after the highest rank; a second toggle removes the task again" (0.003 seconds)
+    ✔ "Park and activate flip the status and the parked timestamp" (0.003 seconds)
+    ✔ "Move targets resolve from a Wednesday to tomorrow, Saturday and Monday" (0.001 seconds)
+    ✔ "Weekend from a Saturday means the next Saturday, not today" (0.001 seconds)
+    ✔ "Move writes a user revision and marks the due date as set by the user" (0.004 seconds)
+    ✔ "Move to a chosen date lands on that day, drops the time and is a user revision (#33)" (0.004 seconds)
+    ✔ "The date picker starts on a due day ahead, otherwise on tomorrow (#33)" (0.001 seconds)
+Suite "TaskActions" passed after 0.026 seconds
+Suite "TaskPlace (#226)" started
+    ✔ "A valid place keeps its trimmed name; an empty name or an impossible coordinate is no place" (0.001 seconds)
+    ✔ "Encoding round-trips and the same place always encodes to the same text" (0.001 seconds)
+    ✔ "A stored value that fails the checks, or garbage, reads as no place" (0.001 seconds)
+    ✔ "Applying an empty or broken value clears place and origin" (0.002 seconds)
+    ✔ "A user change writes one revision; the same place again writes nothing" (0.002 seconds)
+    ✔ "Resetting restores the state before a place a rule set" (0.002 seconds)
+    ✔ "The label reads „Ort“ in German, the value is the place's name" (0.001 seconds)
+Suite "TaskPlace (#226)" passed after 0.008 seconds
+Suite TextFormRuleReportTests started
+    ✔ "Der Korpus hat 40 Inhalte in je vier Formen, gültige Wahrheit und eine Mail mit Rauschen" (0.005 seconds)
+    ✔ "Misst die Regelspalte über die vier Formen und schreibt den Bericht nach stdout" (9.438 seconds)
+Suite TextFormRuleReportTests passed after 9.443 seconds
+Suite "Thread from the logo curve (#180, step 3)" started
+    ✔ "The knot is taller for its width than the loose thread: only the knot loops" (0.001 seconds)
+Suite "Thread from the logo curve (#180, step 3)" passed after 0.001 seconds
+Suite "Regelparser: Uhrzeit" started
+    ✔ "um H Uhr, H:MM, H Uhr ohne um, auf H Uhr" (0.001 seconds)
+    ✔ "at 5pm, at 9am, at 2:30 pm, at 10am" (0.001 seconds)
+    ✔ "halb zwölf ist 11:30, half past seven ist 07:30" (0.001 seconds)
+    ✔ "Nackte Zahl nur nach einem Zeitwort wie Mittag" (0.001 seconds)
+    ✔ "Wiederholungen tragen trotzdem eine Uhrzeit" (0.001 seconds)
+    ✔ "Zahlen ohne Zeitkontext sind keine Uhrzeit" (0.001 seconds)
+    ✔ "Uhrzeit ist im Bereich 0–23 Stunden, 0–59 Minuten" (0.001 seconds)
+Suite "Regelparser: Uhrzeit" passed after 0.001 seconds
+Suite "FoundationModelsEnricher title prompt (Bug #125)" started
+    ✔ "The instructions raise the word limit and forbid dropping object or purpose" (0.001 seconds)
+    ✔ "Past tasks never hand their title to the prompt (#272)" (0.003 seconds)
+Suite "FoundationModelsEnricher title prompt (Bug #125)" passed after 0.004 seconds
+Suite "TitleRule (#202)" started
+    ✔ "Trims surrounding whitespace" (0.006 seconds)
+    ✔ "Closing punctuation goes, also repeated and after a gap" (0.028 seconds)
+    ✔ "At most twelve words, no ellipsis, a comma on the twelfth word goes" (0.022 seconds)
+    ✔ "First letter upper case, also umlauts; ß stays" (0.016 seconds)
+    ✔ "A first character that is no letter leaves the text alone; only the first letter is raised" (0.021 seconds)
+    ✔ "Runs of blanks and line breaks become one space" (0.005 seconds)
+    ✔ "The rule is idempotent and gives a real title for each of these inputs" (0.062 seconds)
+    ✔ "Nothing left after striking: the title keeps every word" (0.011 seconds)
+    ✔ "The twelve words count after striking" (0.005 seconds)
+    ✔ "Capture strikes the rule words; the raw text stays as said" (0.012 seconds)
+    ✔ "A model title that brings the struck words back is cut the same way; equal to the rule title, nothing is written" (0.020 seconds)
+    ✔ "Capture sets the title from the rule: no AI marker, no revision, status unprocessed, raw text untouched" (0.008 seconds)
+    ✔ "Reset after the model title leads back to the rule title" (0.014 seconds)
+    ✔ "Reset of an old task without a title leads to the cleaned raw text, via revert and via revertAll" (0.024 seconds)
+    ✔ "The legacy rule applies to the title only: a date with no earlier value stays empty" (0.002 seconds)
+    ✔ "displayTitle shows the title whatever the status, the raw text only without a title" (0.001 seconds)
+    ✔ "A title the user emptied stays empty" (0.009 seconds)
+Suite "TitleRule (#202)" passed after 0.425 seconds
+Suite "Wartet auf: Verweise von Hand (#251)" started
+    ✔ "Verbinden setzt den Verweis und schreibt eine Nutzer-Revision mit Titeln" (0.004 seconds)
+    ✔ "Ein zweites Verbinden derselben Aufgabe ändert nichts" (0.002 seconds)
+    ✔ "Lösen entfernt nur die Verbindung, beide Aufgaben bleiben" (0.007 seconds)
+    ✔ "Ist die andere Aufgabe erledigt, wartet die Aufgabe nicht mehr; der Verweis bleibt sichtbar" (0.002 seconds)
+    ✔ "Die Auswahl bietet nur offene, fremde, noch nicht verbundene Aufgaben der obersten Ebene an" (0.004 seconds)
+    ✔ "Eine Aufgabe, die (auch über andere) auf diese wartet, wird nicht angeboten: kein Kreis" (0.004 seconds)
+    ✔ "Die Suche findet Titel und Rohtext, ohne Rücksicht auf Groß- und Kleinschreibung oder Akzente" (0.004 seconds)
+    ✔ "Die Listenzeile nennt die erste offene Aufgabe, gekürzt, und zählt weitere" (0.002 seconds)
+Suite "Wartet auf: Verweise von Hand (#251)" passed after 0.034 seconds
+Suite "Waveform" started
+    ✔ "Silence is zero, a loud signal saturates at one, speech sits in between" (0.001 seconds)
+    ✔ "The waveform keeps only the newest levels and clamps them to 0...1" (0.001 seconds)
+Suite "Waveform" passed after 0.001 seconds
+Test session results: /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.10.08_12-43-42-+0200.xcresult
+Test Succeeded
+Testing started
+[sim] Unit-Tests bestanden.

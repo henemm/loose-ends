@@ -50,7 +50,9 @@ jede Einladung externer Tester über TestFlight.
 
 **Spikes zuerst** (technisches Risiko, blockieren die Umsetzung der Must-Features):
 
-1. [#22](https://github.com/henemm/loose-ends/issues/22) Kaltstart Erfassungs-Szene unter einer Sekunde?
+1. ~~[#22](https://github.com/henemm/loose-ends/issues/22) Kaltstart Erfassungs-Szene unter einer Sekunde?~~ —
+   erledigt 2026-10-08: 558 ms bis „Mikrofon hört“, Budget hält, kein Folge-Ticket
+   (`docs/reference/kaltstart-messung.md`).
 2. [#24](https://github.com/henemm/loose-ends/issues/24) Mail-Share-Extension: `message:`-URL zuverlässig?
 
 **Tragende Annahmen des Produkts** (`docs/project/06-annahmen-und-experimente.md`, 2026-09-19): Die

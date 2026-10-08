@@ -88,8 +88,10 @@ touches any of these paths:
 | `project.yml`, jede `*.entitlements`, jede `Info.plist` | Signierung, Berechtigungen, Targets — die Klasse des App-Group-Absturzes |
 
 Berührt der Schnitt keinen dieser Pfade, endet die Abnahme nach Stufe 2, und das wird im
-Abschlussbericht mit genau diesem Satz begründet: „Kein Pfad der Geräteliste berührt." Berührt er
-einen, läuft `./scripts/sim.sh device-status` (liest nur, installiert und startet nichts) — für
+Abschlussbericht mit genau diesem Satz begründet: „Kein Pfad der Geräteliste berührt." **⛔ Nichts
+auf Hennings Geräten, auch nichts Lesendes, bevor er wörtlich „jetzt ist ein Test möglich“ geschrieben
+hat** (Henning, 2026-10-08) — eine Ankündigung ist keine Frage, die Stufe ist keine Dauererlaubnis.
+Erst dann, und nur für diesen einen Durchgang, läuft `./scripts/sim.sh device-status` (liest nur, installiert und startet nichts) — für
 Apple Intelligence zusätzlich die Labor-App, die Henning selbst antippt. Einen nachgespielten
 Bedienablauf auf dem Gerät gibt es seit dem Rückbau von #153 nicht mehr: Der Versuch dazu
 überschrieb Hennings produktive Installation und bewies nicht, wofür er gebaut war. Für Watch,

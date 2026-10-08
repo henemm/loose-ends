@@ -105,3 +105,12 @@ Reihenfolge: Messpunkte + Debug-Trockenlauf → Release-Variante → Reihe 1 →
 
 ### Open Questions
 - [x] PO: Übernimmt Henning Reihe 2? **Ja (2026-10-08): 10 Drücke auf das Control des Prüfbaus, Aktionstaste vorübergehend umbelegt, danach zurück.** Claude stellt das Control bereit und sagt pro Lauf an, wann gedrückt wird; nach jedem Druck App im App-Umschalter schließen.
+
+## Umfang (Henning, 2026-10-08)
+Umsetzung ergab ~440 LoC (LaunchTimings ~220, sim.sh ~60, Tests ~150) statt ±250. Henning hat entschieden:
+„So lassen" — ein Ticket, kein Abspalten des Messbefehls.
+
+## Reihe 2 und 3 entfallen (Henning, 2026-10-08)
+Auf die Bitte um zehn Drücke auf das Control des Prüfbaus antwortete Henning: „schließe das ab, das brauche ich
+nicht“. Abgeschlossen mit Reihe 1 (558 ms, `docs/reference/kaltstart-messung.md`); AC-8 entfällt per PO-Entscheidung,
+der Systemanteil vor dem Prozessstart bleibt ungemessen und steht so im Bericht.

@@ -1,0 +1,176 @@
+[0;34m[sim][0m Signierter Build für das Gerät (00008140-00111D582681801C), LooseEnds, Team XK87E2B3VR
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (4 targets)
+[[36mLooseEndsShare[0m] [1mWrite Auxiliary File[0m LooseEndsShare.LinkFileList
+[[36mLooseEndsShare[0m] [1mWrite Auxiliary File[0m LooseEndsShare-OutputFileMap.json
+[[36mLooseEndsShare[0m] [1mWrite Auxiliary File[0m LooseEndsShare.SwiftFileList
+[[36mLooseEndsShare[0m] [1mWrite Auxiliary File[0m LooseEndsShare.SwiftConstValuesFileList
+[[36mLooseEndsShare[0m] [1mWrite Auxiliary File[0m LooseEndsShare_const_extract_protocols.json
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWidgets.hmap
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWidgets.SwiftFileList
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWidgets_const_extract_protocols.json
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWidgets.LinkFileList
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWidgets.SwiftConstValuesFileList
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWidgets-OutputFileMap.json
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWidgets.DependencyStaticMetadataFileList
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWidgets-project-headers.hmap
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWidgets.DependencyMetadataFileList
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWidgets-own-target-headers.hmap
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWidgets-generated-files.hmap
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWidgets-all-non-framework-target-headers.hmap
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWidgets-all-target-headers.hmap
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m Entitlements.plist
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch_const_extract_protocols.json
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch.SwiftFileList
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch.SwiftConstValuesFileList
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch.LinkFileList
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch-OutputFileMap.json
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch.hmap
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch.DependencyMetadataFileList
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch.DependencyStaticMetadataFileList
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch-project-headers.hmap
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch-own-target-headers.hmap
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch-generated-files.hmap
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch-all-target-headers.hmap
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch-all-non-framework-target-headers.hmap
+[[36mLooseEndsShare[0m] [1mWrite Auxiliary File[0m LooseEndsShare.hmap
+[[36mLooseEndsShare[0m] [1mWrite Auxiliary File[0m LooseEndsShare.DependencyStaticMetadataFileList
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m Entitlements.plist
+[[36mLooseEndsShare[0m] [1mWrite Auxiliary File[0m LooseEndsShare.DependencyMetadataFileList
+[[36mLooseEndsShare[0m] [1mWrite Auxiliary File[0m LooseEndsShare-project-headers.hmap
+[[36mLooseEndsShare[0m] [1mWrite Auxiliary File[0m LooseEndsShare-own-target-headers.hmap
+[[36mLooseEndsShare[0m] [1mWrite Auxiliary File[0m LooseEndsShare-generated-files.hmap
+[[36mLooseEndsShare[0m] [1mWrite Auxiliary File[0m LooseEndsShare-all-target-headers.hmap
+[[36mLooseEndsShare[0m] [1mWrite Auxiliary File[0m LooseEndsShare-all-non-framework-target-headers.hmap
+[[36mLooseEndsShare[0m] [1mWrite Auxiliary File[0m Entitlements.plist
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds_const_extract_protocols.json
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds.SwiftFileList
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds.SwiftConstValuesFileList
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds.LinkFileList
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds-OutputFileMap.json
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds.hmap
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds.DependencyStaticMetadataFileList
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds.DependencyMetadataFileList
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds-project-headers.hmap
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds-own-target-headers.hmap
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds-generated-files.hmap
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds-all-target-headers.hmap
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds-all-non-framework-target-headers.hmap
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m Entitlements.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mCopying[0m PrivacyInfo.xcprivacy
+[[36mLooseEndsWidgets[0m] [1mCopying[0m PrivacyInfo.xcprivacy
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mCompile XCStrings[0m Localizable.xcstrings
+[[36mLooseEndsWatch[0m] [1mGenerate Asset Symbols[0m Assets.xcassets
+[[36mLooseEndsWatch[0m] [1mCopying[0m PrivacyInfo.xcprivacy
+[[36mLooseEndsShare[0m] [1mCopying[0m Localizable.strings
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-device-default/Build/Products/Release-watchos/LooseEndsWatch.app/Assets.car (in target 'LooseEndsWatch' from project 'LooseEnds')
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsShare/ShareViewController.swift:47:57: [33m'loadItem(forTypeIdentifier:options:)' was deprecated in iOS 27.0: Use loadObjectOfClass:completionHandler: instead. [#DeprecatedDeclaration][0m
+45 |                 do {
+[32m46 |                     if provider.hasItemConformingToTypeIdentifier(UTType.emailMessage.identifier) {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsShare/ShareViewController.swift:50:57: [33m'loadItem(forTypeIdentifier:options:)' was deprecated in iOS 27.0: Use loadObjectOfClass:completionHandler: instead. [#DeprecatedDeclaration][0m
+48 |                         if let raw = string(from: loaded) { mails.append(raw) }
+[32m49 |                     } else if provider.hasItemConformingToTypeIdentifier(UTType.url.identifier) {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/spike-22-kaltstart/LooseEndsShare/ShareViewController.swift:53:57: [33m'loadItem(forTypeIdentifier:options:)' was deprecated in iOS 27.0: Use loadObjectOfClass:completionHandler: instead. [#DeprecatedDeclaration][0m
+51 |                         if let url = loaded as? URL { urls.append(url) }
+[32m52 |                     } else if provider.hasItemConformingToTypeIdentifier(UTType.plainText.identifier) {[0m
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos.abi.json -> LooseEndsWatch.abi.json
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos.swiftmodule -> LooseEndsWatch.swiftmodule
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos.swiftdoc -> LooseEndsWatch.swiftdoc
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos.swiftsourceinfo -> LooseEndsWatch.swiftsourceinfo
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch
+[[36mLooseEndsWatch[0m] [1mGenerating[0m LooseEndsWatch.app.dSYM
+[[36mLooseEndsWatch[0m] [1mExtract App Intents Metadata[0m
+[1mSigning[0m LooseEndsWatch.app (in target 'LooseEndsWatch' from project 'LooseEnds')
+[[36mLooseEndsShare[0m] [1mCopy[0m arm64-apple-ios.abi.json -> LooseEndsShare.abi.json
+[[36mLooseEndsShare[0m] [1mCopy[0m arm64-apple-ios.swiftmodule -> LooseEndsShare.swiftmodule
+[[36mLooseEndsShare[0m] [1mCopy[0m arm64-apple-ios.swiftdoc -> LooseEndsShare.swiftdoc
+[[36mLooseEndsShare[0m] [1mCopy[0m arm64-apple-ios.swiftsourceinfo -> LooseEndsShare.swiftsourceinfo
+[[36mLooseEndsShare[0m] [1mLinking[0m LooseEndsShare
+[[36mLooseEndsWatch[0m] [1mRegisterExecutionPolicyException[0m LooseEndsWatch.app
+[[36mLooseEndsWatch[0m] [1mValidate[0m LooseEndsWatch.app
+[[36mLooseEndsWatch[0m] [1mTouching[0m LooseEndsWatch.app
+[[36mLooseEndsShare[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsShare[0m] [1mGenerating[0m LooseEndsShare.appex.dSYM
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-ios.abi.json -> LooseEndsWidgets.abi.json
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-ios.swiftdoc -> LooseEndsWidgets.swiftdoc
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-ios.swiftmodule -> LooseEndsWidgets.swiftmodule
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-ios.swiftsourceinfo -> LooseEndsWidgets.swiftsourceinfo
+[[36mLooseEndsWidgets[0m] [1mLinking[0m LooseEndsWidgets
+[[36mLooseEnds[0m] [1mGenerate Asset Symbols[0m Assets.xcassets
+[1mSigning[0m LooseEndsShare.appex (in target 'LooseEndsShare' from project 'LooseEnds')
+[[36mLooseEndsShare[0m] [1mRegisterExecutionPolicyException[0m LooseEndsShare.appex
+[[36mLooseEndsShare[0m] [1mTouching[0m LooseEndsShare.appex
+[[36mLooseEndsWidgets[0m] [1mGenerating[0m LooseEndsWidgets.appex.dSYM
+[[36mLooseEndsWidgets[0m] [1mExtract App Intents Metadata[0m
+[1mSigning[0m LooseEndsWidgets.appex (in target 'LooseEndsWidgets' from project 'LooseEnds')
+[[36mLooseEndsWidgets[0m] [1mRegisterExecutionPolicyException[0m LooseEndsWidgets.appex
+[[36mLooseEndsWidgets[0m] [1mTouching[0m LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopying[0m PrivacyInfo.xcprivacy
+[[36mLooseEnds[0m] [1mCompile XCStrings[0m Localizable.xcstrings
+[[36mLooseEnds[0m] [1mCopying[0m Localizable.strings
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-device-default/Build/Products/Release-iphoneos/LooseEnds.app/AppIcon76x76@2x~ipad.png (in target 'LooseEnds' from project 'LooseEnds')
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-device-default/Build/Products/Release-iphoneos/LooseEnds.app/Assets.car (in target 'LooseEnds' from project 'LooseEnds')
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-device-default/Build/Products/Release-iphoneos/LooseEnds.app/AppIcon60x60@2x.png (in target 'LooseEnds' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios.swiftdoc -> LooseEnds.swiftdoc
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios.abi.json -> LooseEnds.abi.json
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios.swiftmodule -> LooseEnds.swiftmodule
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsShare.appex -> LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mGenerating[0m LooseEnds.app.dSYM
+[1mSigning[0m LooseEnds.app (in target 'LooseEnds' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mRegisterExecutionPolicyException[0m LooseEnds.app
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEnds[0m] [1mTouching[0m LooseEnds.app
+[32;1mBuild Succeeded[0m
+[0;32m[sim][0m Release-Prüfbau installiert.
+[0;34m[sim][0m Konfiguration: Release (/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-device-default/Build/Products/Release-iphoneos/LooseEnds.app)
+[0;34m[sim][0m Kaltstart 1/11 (com.henning.looseends.probe, bisher 0 Läufe)
+Launched application with com.henning.looseends.probe bundle identifier.
+[0;34m[sim][0m Kaltstart 2/11 (com.henning.looseends.probe, bisher 1 Läufe)
+Launched application with com.henning.looseends.probe bundle identifier.
+[0;34m[sim][0m Kaltstart 3/11 (com.henning.looseends.probe, bisher 2 Läufe)
+Launched application with com.henning.looseends.probe bundle identifier.
+[0;34m[sim][0m Kaltstart 4/11 (com.henning.looseends.probe, bisher 3 Läufe)
+Launched application with com.henning.looseends.probe bundle identifier.
+[0;34m[sim][0m Kaltstart 5/11 (com.henning.looseends.probe, bisher 4 Läufe)
+Launched application with com.henning.looseends.probe bundle identifier.
+[0;34m[sim][0m Kaltstart 6/11 (com.henning.looseends.probe, bisher 5 Läufe)
+Launched application with com.henning.looseends.probe bundle identifier.
+[0;34m[sim][0m Kaltstart 7/11 (com.henning.looseends.probe, bisher 6 Läufe)
+Launched application with com.henning.looseends.probe bundle identifier.
+[0;34m[sim][0m Kaltstart 8/11 (com.henning.looseends.probe, bisher 7 Läufe)
+Launched application with com.henning.looseends.probe bundle identifier.
+[0;34m[sim][0m Kaltstart 9/11 (com.henning.looseends.probe, bisher 8 Läufe)
+Launched application with com.henning.looseends.probe bundle identifier.
+[0;34m[sim][0m Kaltstart 10/11 (com.henning.looseends.probe, bisher 9 Läufe)
+Launched application with com.henning.looseends.probe bundle identifier.
+[0;34m[sim][0m Kaltstart 11/11 (com.henning.looseends.probe, bisher 10 Läufe)
+Launched application with com.henning.looseends.probe bundle identifier.
+automated processStart total 712.699381 firstBuffer 804.661381
+automated processStart total 571.445015 firstBuffer 663.08814
+automated processStart total 560.109843 firstBuffer 651.852926
+automated processStart total 548.738639 firstBuffer 640.649972
+automated processStart total 564.142558 firstBuffer 655.718266
+automated processStart total 567.034091 firstBuffer 658.840091
+automated processStart total 589.842172 firstBuffer 681.905964
+automated processStart total 551.371273 firstBuffer 643.054606
+automated processStart total 539.308629 firstBuffer 630.322463
+automated processStart total 542.453184 firstBuffer 634.654642
+automated processStart total 546.033303 firstBuffer 635.29822
+[0;32m[sim][0m 11 Läufe (Release) in build/launch-timings/launch-timings.json

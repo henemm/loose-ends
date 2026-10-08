@@ -1,0 +1,24 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: SpeechListeningTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+Test Suite 'Selected tests' started at 2026-10-08 13:03:08.266.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-08 13:03:08.272.
+Test Suite 'SpeechListeningTests' started at 2026-10-08 13:03:08.272.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.SpeechListeningTests testCaptureNeverPretendsToListen] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    12.16s Waiting 3.0s for Button (First Match) to exist
+[32m    t =    13.17s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`[0m
+    [32m✔[0m testCaptureNeverPretendsToListen ([31m17.211[0m seconds)
+Executed 1 test, with 0 failures (0 unexpected) in 17.211 (17.214) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-08 13:03:25.489.
+Executed 1 test, with 0 failures (0 unexpected) in 17.211 (17.217) seconds
+Executed 1 test, with 0 failures (0 unexpected) in 17.211 (17.223) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.10.08_13-03-00-+0200.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden.

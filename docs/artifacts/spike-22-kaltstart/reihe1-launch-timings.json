@@ -1,0 +1,343 @@
+[
+  {
+    "build" : "0.1.0 (1)",
+    "device" : "iPhone17,1",
+    "kind" : "automated",
+    "os" : "Version 27.0 (Build 24A437)",
+    "points" : {
+      "analyzerStarted" : 528.337631,
+      "captureAppeared" : 387.46709,
+      "containerEnd" : 129.440215,
+      "containerStart" : 109.823131,
+      "engineStarted" : 712.624965,
+      "firstBuffer" : 804.661381,
+      "initEnd" : 132.957423,
+      "initStart" : 106.86709,
+      "listening" : 712.699381,
+      "modelReady" : 521.670215,
+      "speechStartCalled" : 435.866215
+    },
+    "sections" : {
+      "analyzer" : 6.667416000000003,
+      "captureToSpeechStart" : 48.399125000000026,
+      "container" : 19.61708399999999,
+      "engine" : 184.287334,
+      "initToCapture" : 254.50966699999998,
+      "initialization" : 26.090333,
+      "modelCheck" : 85.80399999999997,
+      "processToInit" : 106.86709,
+      "total" : 712.699381
+    },
+    "zeroPoint" : "processStart"
+  },
+  {
+    "build" : "0.1.0 (1)",
+    "device" : "iPhone17,1",
+    "kind" : "automated",
+    "os" : "Version 27.0 (Build 24A437)",
+    "points" : {
+      "analyzerStarted" : 419.851848,
+      "captureAppeared" : 276.535848,
+      "containerEnd" : 35.30789,
+      "containerStart" : 13.179723,
+      "engineStarted" : 571.310807,
+      "firstBuffer" : 663.08814,
+      "initEnd" : 38.496432,
+      "initStart" : 8.886515,
+      "listening" : 571.445015,
+      "modelReady" : 405.36964,
+      "speechStartCalled" : 334.414765
+    },
+    "sections" : {
+      "analyzer" : 14.482208000000014,
+      "captureToSpeechStart" : 57.878917,
+      "container" : 22.128167,
+      "engine" : 151.45895899999994,
+      "initToCapture" : 238.039416,
+      "initialization" : 29.609917,
+      "modelCheck" : 70.95487500000002,
+      "processToInit" : 8.886515,
+      "total" : 571.445015
+    },
+    "zeroPoint" : "processStart"
+  },
+  {
+    "build" : "0.1.0 (1)",
+    "device" : "iPhone17,1",
+    "kind" : "automated",
+    "os" : "Version 27.0 (Build 24A437)",
+    "points" : {
+      "analyzerStarted" : 410.958426,
+      "captureAppeared" : 267.610259,
+      "containerEnd" : 40.025801,
+      "containerStart" : 14.323093,
+      "engineStarted" : 560.047926,
+      "firstBuffer" : 651.852926,
+      "initEnd" : 43.430301,
+      "initStart" : 9.819301,
+      "listening" : 560.109843,
+      "modelReady" : 395.572259,
+      "speechStartCalled" : 322.381676
+    },
+    "sections" : {
+      "analyzer" : 15.386167,
+      "captureToSpeechStart" : 54.77141700000004,
+      "container" : 25.702708,
+      "engine" : 149.0895,
+      "initToCapture" : 224.179958,
+      "initialization" : 33.611000000000004,
+      "modelCheck" : 73.19058299999995,
+      "processToInit" : 9.819301,
+      "total" : 560.109843
+    },
+    "zeroPoint" : "processStart"
+  },
+  {
+    "build" : "0.1.0 (1)",
+    "device" : "iPhone17,1",
+    "kind" : "automated",
+    "os" : "Version 27.0 (Build 24A437)",
+    "points" : {
+      "analyzerStarted" : 400.711264,
+      "captureAppeared" : 263.909389,
+      "containerEnd" : 40.661764,
+      "containerStart" : 14.958139,
+      "engineStarted" : 548.652764,
+      "firstBuffer" : 640.649972,
+      "initEnd" : 46.756805,
+      "initStart" : 11.21468,
+      "listening" : 548.738639,
+      "modelReady" : 387.389764,
+      "speechStartCalled" : 319.420639
+    },
+    "sections" : {
+      "analyzer" : 13.321500000000015,
+      "captureToSpeechStart" : 55.51125000000002,
+      "container" : 25.703625,
+      "engine" : 147.94150000000002,
+      "initToCapture" : 217.152584,
+      "initialization" : 35.542125,
+      "modelCheck" : 67.96912500000002,
+      "processToInit" : 11.21468,
+      "total" : 548.738639
+    },
+    "zeroPoint" : "processStart"
+  },
+  {
+    "build" : "0.1.0 (1)",
+    "device" : "iPhone17,1",
+    "kind" : "automated",
+    "os" : "Version 27.0 (Build 24A437)",
+    "points" : {
+      "analyzerStarted" : 416.682975,
+      "captureAppeared" : 266.6271,
+      "containerEnd" : 39.969891,
+      "containerStart" : 14.650058,
+      "engineStarted" : 564.066641,
+      "firstBuffer" : 655.718266,
+      "initEnd" : 45.100516,
+      "initStart" : 9.615266,
+      "listening" : 564.142558,
+      "modelReady" : 402.398975,
+      "speechStartCalled" : 325.276933
+    },
+    "sections" : {
+      "analyzer" : 14.283999999999992,
+      "captureToSpeechStart" : 58.649833,
+      "container" : 25.319832999999996,
+      "engine" : 147.383666,
+      "initToCapture" : 221.52658399999999,
+      "initialization" : 35.48525,
+      "modelCheck" : 77.12204200000002,
+      "processToInit" : 9.615266,
+      "total" : 564.142558
+    },
+    "zeroPoint" : "processStart"
+  },
+  {
+    "build" : "0.1.0 (1)",
+    "device" : "iPhone17,1",
+    "kind" : "automated",
+    "os" : "Version 27.0 (Build 24A437)",
+    "points" : {
+      "analyzerStarted" : 417.839341,
+      "captureAppeared" : 257.044133,
+      "containerEnd" : 40.103966,
+      "containerStart" : 16.283966,
+      "engineStarted" : 566.864008,
+      "firstBuffer" : 658.840091,
+      "initEnd" : 43.507299,
+      "initStart" : 12.213799,
+      "listening" : 567.034091,
+      "modelReady" : 404.329633,
+      "speechStartCalled" : 331.253341
+    },
+    "sections" : {
+      "analyzer" : 13.50970799999999,
+      "captureToSpeechStart" : 74.20920799999999,
+      "container" : 23.82,
+      "engine" : 149.02466700000002,
+      "initToCapture" : 213.536834,
+      "initialization" : 31.2935,
+      "modelCheck" : 73.07629200000002,
+      "processToInit" : 12.213799,
+      "total" : 567.034091
+    },
+    "zeroPoint" : "processStart"
+  },
+  {
+    "build" : "0.1.0 (1)",
+    "device" : "iPhone17,1",
+    "kind" : "automated",
+    "os" : "Version 27.0 (Build 24A437)",
+    "points" : {
+      "analyzerStarted" : 444.982214,
+      "captureAppeared" : 283.476589,
+      "containerEnd" : 37.192922,
+      "containerStart" : 14.767589,
+      "engineStarted" : 589.70538,
+      "firstBuffer" : 681.905964,
+      "initEnd" : 41.221089,
+      "initStart" : 10.162922,
+      "listening" : 589.842172,
+      "modelReady" : 431.416589,
+      "speechStartCalled" : 344.181797
+    },
+    "sections" : {
+      "analyzer" : 13.565625000000011,
+      "captureToSpeechStart" : 60.70520800000003,
+      "container" : 22.425333000000002,
+      "engine" : 144.723166,
+      "initToCapture" : 242.25549999999998,
+      "initialization" : 31.058166999999997,
+      "modelCheck" : 87.23479199999997,
+      "processToInit" : 10.162922,
+      "total" : 589.842172
+    },
+    "zeroPoint" : "processStart"
+  },
+  {
+    "build" : "0.1.0 (1)",
+    "device" : "iPhone17,1",
+    "kind" : "automated",
+    "os" : "Version 27.0 (Build 24A437)",
+    "points" : {
+      "analyzerStarted" : 399.845898,
+      "captureAppeared" : 265.732273,
+      "containerEnd" : 39.260273,
+      "containerStart" : 16.420981,
+      "engineStarted" : 551.268606,
+      "firstBuffer" : 643.054606,
+      "initEnd" : 44.286731,
+      "initStart" : 12.46944,
+      "listening" : 551.371273,
+      "modelReady" : 387.31594,
+      "speechStartCalled" : 319.182856
+    },
+    "sections" : {
+      "analyzer" : 12.529957999999965,
+      "captureToSpeechStart" : 53.450582999999995,
+      "container" : 22.839291999999997,
+      "engine" : 151.422708,
+      "initToCapture" : 221.44554200000002,
+      "initialization" : 31.817291000000004,
+      "modelCheck" : 68.133084,
+      "processToInit" : 12.46944,
+      "total" : 551.371273
+    },
+    "zeroPoint" : "processStart"
+  },
+  {
+    "build" : "0.1.0 (1)",
+    "device" : "iPhone17,1",
+    "kind" : "automated",
+    "os" : "Version 27.0 (Build 24A437)",
+    "points" : {
+      "analyzerStarted" : 387.524046,
+      "captureAppeared" : 260.646004,
+      "containerEnd" : 37.438046,
+      "containerStart" : 14.195129,
+      "engineStarted" : 538.311171,
+      "firstBuffer" : 630.322463,
+      "initEnd" : 40.822463,
+      "initStart" : 10.302171,
+      "listening" : 539.308629,
+      "modelReady" : 376.190754,
+      "speechStartCalled" : 313.819296
+    },
+    "sections" : {
+      "analyzer" : 11.333291999999972,
+      "captureToSpeechStart" : 53.173292000000004,
+      "container" : 23.242917,
+      "engine" : 150.78712499999995,
+      "initToCapture" : 219.823541,
+      "initialization" : 30.520291999999998,
+      "modelCheck" : 62.37145800000002,
+      "processToInit" : 10.302171,
+      "total" : 539.308629
+    },
+    "zeroPoint" : "processStart"
+  },
+  {
+    "build" : "0.1.0 (1)",
+    "device" : "iPhone17,1",
+    "kind" : "automated",
+    "os" : "Version 27.0 (Build 24A437)",
+    "points" : {
+      "analyzerStarted" : 395.843142,
+      "captureAppeared" : 259.888601,
+      "containerEnd" : 37.288434,
+      "containerStart" : 13.743517,
+      "engineStarted" : 542.402809,
+      "firstBuffer" : 634.654642,
+      "initEnd" : 40.117934,
+      "initStart" : 9.812601,
+      "listening" : 542.453184,
+      "modelReady" : 381.488517,
+      "speechStartCalled" : 313.915851
+    },
+    "sections" : {
+      "analyzer" : 14.354624999999999,
+      "captureToSpeechStart" : 54.02724999999998,
+      "container" : 23.544917,
+      "engine" : 146.55966700000005,
+      "initToCapture" : 219.770667,
+      "initialization" : 30.305332999999997,
+      "modelCheck" : 67.57266600000003,
+      "processToInit" : 9.812601,
+      "total" : 542.453184
+    },
+    "zeroPoint" : "processStart"
+  },
+  {
+    "build" : "0.1.0 (1)",
+    "device" : "iPhone17,1",
+    "kind" : "automated",
+    "os" : "Version 27.0 (Build 24A437)",
+    "points" : {
+      "analyzerStarted" : 395.384553,
+      "captureAppeared" : 261.55872,
+      "containerEnd" : 39.911178,
+      "containerStart" : 15.371553,
+      "engineStarted" : 543.319928,
+      "firstBuffer" : 635.29822,
+      "initEnd" : 42.78997,
+      "initStart" : 11.41347,
+      "listening" : 546.033303,
+      "modelReady" : 383.566303,
+      "speechStartCalled" : 317.255428
+    },
+    "sections" : {
+      "analyzer" : 11.818249999999978,
+      "captureToSpeechStart" : 55.696708,
+      "container" : 24.539625,
+      "engine" : 147.93537500000002,
+      "initToCapture" : 218.76875,
+      "initialization" : 31.376499999999997,
+      "modelCheck" : 66.31087500000001,
+      "processToInit" : 11.41347,
+      "total" : 546.033303
+    },
+    "zeroPoint" : "processStart"
+  }
+]
