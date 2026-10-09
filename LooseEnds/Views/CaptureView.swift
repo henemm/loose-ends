@@ -175,6 +175,7 @@ struct CaptureView: View {
     private func begin() {
         LaunchTimings.mark(.captureAppeared)
         if speechWanted {
+            speech.noteOpened()
             Task {
                 LaunchTimings.mark(.speechStartCalled)
                 await speech.start()

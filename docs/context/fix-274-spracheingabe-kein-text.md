@@ -139,3 +139,114 @@ Danach erscheint die Zeile mit der Kurzdiagnose. Ablauf zum Beleg: Prüfbau auf 
 ### Open Questions
 - [ ] Muss die Zeile auch bei `unavailable`/`needsModel` etwas Neues zeigen? Nein: dort steht heute schon ein Grund.
 - [ ] Wartezeit 6 s: in der Spec festschreiben (Konferenzmessung: erstes Wort kam nach 0,6 s, also genügt 6 s mit Reserve).
+
+## Nachtrag 2026-10-09 (Phase 1, Schnitt 2: Verzögerung, zusammen mit #279 Teil A)
+
+### Neue Lage
+Die Diagnosezeile (PR #290, TestFlight Build 21) hat geliefert. Henning, iPhone, wörtlich: „es dauert sehr lange bis die
+Erfassung startet und dann kommt sie sehr verzögert. Vorher steht da ein grauer Text: ‚Noch kein Text – Modell: installed ·
+Mikrofon: ja · Sprache: ja · Puffer: 71 · Ergebnisse: 0‘“. Damit gilt: Modell da, Rechte da, Ton kommt an (71 Puffer ≈ 7 s),
+Ergebnisse kommen später doch. „Kein Text“ ist also **Verzögerung**, kein Ausfall. #274 und #279 Teil A sind ein Symptom.
+
+### Hat es bisher funktioniert?
+Ja, in Xcode-Fassung auf dem iPhone (Ticket). Die Verzögerung wurde im Prüfbau bisher nicht als solche gemessen:
+Läufe 2–5 oben meldeten 13–14 s „bis zum ersten Text“, der Erklärversuch (erstes Wort im Raum bei 13,08 s) hing an einer
+Konferenz als Tonquelle und ist **kein Beleg** gegen eine Verzögerung auf Hennings Weg.
+
+### Zwei getrennte Zeiten (so gemessen werden sie nie vermischt)
+1. **Tippen/Öffnen → `state == .listening`** („Erfassung startet lange“). Messpunkte existieren: `LaunchTimings`
+   (`captureAppeared`, `speechStartCalled`, `modelReady`, `analyzerStarted`, `engineStarted`, `listening`, `firstBuffer`),
+   Abschnitte `modelCheck`, `analyzer`, `engine`. Kaltstart-Messung #22: 558 ms per `devicectl` im Prüfbau, also **nicht**
+   das, was Henning in TestFlight erlebt. Unterschiede: Distributionsbau, Hennings Datenbestand (`startUp` auf dem MainActor),
+   Weg über Plus/Aktionstaste, Rechte-Abfragen (`requestRecordPermission`, `requestAuthorization`) vor jedem Start.
+2. **`.listening` → erstes Ergebnis** („Text kommt verzögert, stoßweise“). Kein Messpunkt im Code: `collect(from:)` zählt nur
+   `resultCount`, loggt aber keinen Zeitpunkt des ersten Ergebnisses; `LaunchTimings` endet bei `firstBuffer`.
+
+### Code-Befund (SpeechCapture.swift, gelesen, keine Ursache)
+- `transcriber()` (Z. 182–188): nur `.volatileResults`, kein `.fastResults`.
+- Kein `prepareToAnalyze`; `AnalyzerInputConverter.converter(...)` und `analyzer.start` laufen erst nach den Rechte-Abfragen
+  (Z. 81–96, 194–199) und damit auf dem Weg zwischen Tippen und Zuhören.
+- Ergebnisse werden erst nach `engine.start()` gelesen (Z. 240), der Eingabestrom puffert bis dahin.
+- `AVAudioSession` `.record`/`.measurement` (Z. 211): Modus `.measurement` schaltet Eingangsverarbeitung ab; ob das die
+  Erkennung beeinflusst, ist nicht belegt.
+- Bereits widerlegt als Hebel (Lauf 5): `prepareToAnalyze` allein ohne messbaren Unterschied — im Prüfbau mit Konferenzton.
+
+### Alternativen zum bisherigen Weg
+- `.fastResults` + `prepareToAnalyze` beim Öffnen der Erfassung (Analyzer vorwärmen, Rechte vorher abfragen).
+- Rückbau auf `SFSpeechRecognizer` mit On-Device-Erkennung (kippt ADR zu #64); nur, wenn die Messung zeigt, dass
+  SpeechAnalyzer selbst zu langsam ist.
+- Anzeige statt Beschleunigung: „Zuhören beginnt …“-Zustand mit Fortschritt, bis `.listening` wirklich steht.
+
+### Risiken
+- Reproduktion der Verzögerung braucht das Gerät (Simulator hat keine Sprachmodelle). Gerätezugriff **nur** nach Hennings
+  wörtlichem „jetzt ist ein Test möglich“; bis dahin nur Simulator und Code.
+- Der Messkanal `xctrace --launch` erreichte das iPhone zuletzt nicht (#279, #160). Eine Zeitzeile in der Diagnose selbst
+  (sichtbar in TestFlight) umgeht das.
+- Scoping: Messpunkte + Diagnoseerweiterung + Fix müssen in 4–5 Dateien / ±250 LoC passen, sonst Schnitt teilen.
+
+## Analysis (Stand 2026-10-09, Phase 2, Schnitt 2: Verzögerung; Ursache NICHT bewiesen)
+
+### Type
+Bug (Verschlechterung/Verzögerung, nicht reproduziert). Gilt zusammen für #274 und #279 Teil A.
+
+### Recherche (zuerst, Quellen)
+- Apple-Forum, „SpeechTranscriber extremely slow (14+ seconds)“ (iOS 26 Beta, iPhone 16 Pro): Apple nennt als Ursache „approachable
+  concurrency“, bei der Verarbeitung und Anzeige auf dem Hauptstrang laufen; Abhilfe: abschalten oder Methoden `@concurrent`.
+  https://developer.apple.com/forums/thread/795924
+  Prüfung gegen unser Projekt: `project.yml` setzt nur `SWIFT_VERSION 6.0` und `SWIFT_STRICT_CONCURRENCY complete`, keine Standard-Hauptstrang-
+  Isolation. Der Fall passt **nicht ohne Weiteres**; die effektiven Build-Einstellungen unter Xcode 27 sind aber nicht geprüft (offen).
+- Apple-Forum, „SpeechAnalyzer latency“: `prepareToAnalyze()` ca. 0,75 s gewonnen, `.fastResults`, 16-kHz-Format am Tap vermeidet ca. 200 ms
+  Umwandlung; warm 0,3–0,5 s bis zum ersten Teilergebnis. https://developer.apple.com/forums/thread/794720
+- `AVAudioSession`-Modus `.measurement` „minimiert Signalverarbeitung, schaltet Dynamikverarbeitung ab“ (Apple-Doku, über Suche). Unser Code
+  setzt `.record/.measurement` (SpeechCapture.swift:211). **Hypothese, nicht belegt:** passt zu Hennings zweiter Beobachtung (Pegel sehr gering,
+  #279 B) und könnte die Erkennung bremsen. Eine Quelle, die das für SpeechAnalyzer belegt, wurde nicht gefunden.
+
+### Was feststeht
+- Henning (Build 21, iPhone): Modell installed, beide Rechte ja, 71 Puffer, 0 Ergebnisse nach 6 s; Text kommt später. Also Verzögerung, kein Ausfall.
+- Zwei getrennte Zeiten, bisher beide ohne Messwert aus der Produktionsfassung: (1) Öffnen → `.listening` („Start dauert lange“),
+  (2) `.listening` → erstes Ergebnis und Abstand der Ergebnisse („stoßweise“). Für (2) fehlt jeder Messpunkt im Code.
+- Prüfbau-Läufe 2–5 (Konferenzton) zeigen die Verzögerung nicht eindeutig; Kaltstart-Messung #22: 558 ms bis Zuhören im Prüfbau.
+  Damit unterscheidet sich Hennings Erlebnis vom Prüfbau (Distributionsbau, Datenbestand, Weg über Plus/Aktionstaste).
+
+### Mögliche Ursachen (alle ungeprüft, nach Aufwand zum Prüfen)
+1. `.measurement`-Modus (leises Signal → Erkennung wartet) — ein Schalter, im Prüfbau mit festem Satz vergleichbar.
+2. Kein `prepareToAnalyze`/`.fastResults` (Lauf 5: ohne Wirkung im Prüfbau).
+3. Hauptstrang-Belastung in Hennings Fassung (`startUp`, Datenbestand) verzögert Start und Ergebnisverarbeitung; `collect` läuft auf dem MainActor.
+4. Format-Umwandlung 48 kHz → Modellformat.
+5. Distributionssignierung/Profil (nur über TestFlight prüfbar).
+
+### Ohne-Modell-Hinweis
+Die Spracherkennung selbst braucht das System-Framework; alle Hebel hier sind Regeln/Konfiguration/Messung. Kein Sprachmodell-Weg im Spiel.
+
+### Alternativen zum bisherigen Weg
+- **Messen statt ändern (empfohlen, Schnitt 1):** Zeiten Öffnen→Zuhören und Zuhören→erstes Ergebnis sowie größter Abstand zwischen
+  Ergebnissen in die Diagnosezeile aufnehmen (sichtbar in TestFlight, umgeht #160). Kein Verhalten ändert sich.
+- **Gleich Hebel ziehen:** `.fastResults` + `prepareToAnalyze` + Modus `.default` auf Verdacht. Verstößt gegen Analysis-First.
+- **Anzeige statt Beschleunigung:** „Zuhören beginnt …“ bis `.listening` steht. Kippt nichts, behebt nichts; nur falls Messung zeigt, dass die Zeit nicht zu senken ist.
+- **Rückbau auf `SFSpeechRecognizer`:** kippt ADR aus #64; nur bei Beleg, dass SpeechAnalyzer selbst zu langsam ist.
+
+### Technical Approach
+Schnitt 1 (Messung, Spec in `/30-write-spec`): reine Regel/Zählung, keine neue Abhängigkeit.
+- `SpeechCapture`: Zeitpunkte `listening`, erstes Ergebnis, größter Ergebnisabstand; Start-Dauer Öffnen→Zuhören.
+- `SpeechDiagnosis`: Kurztext um diese Zeiten erweitern (rein, unit-testbar).
+- Tests: Unit für die Regel (RED zuerst). UI-Smoke vorhanden (#274), Text prüfen.
+Schnitt 2 (Fix) erst nach Messwerten von Hennings Gerät; Hebel 1–4 einzeln im Prüfbau mit festem Satz, dann Beleg in TestFlight.
+
+### Affected Files
+| File | Change Type | Description |
+|------|-------------|-------------|
+| `LooseEnds/Speech/SpeechCapture.swift` | MODIFY | Zeitmarken erstes Ergebnis/Abstand, Startdauer |
+| `LooseEnds/Speech/SpeechDiagnosis.swift` | MODIFY | Zeiten im Kurztext |
+| `LooseEndsTests/SpeechDiagnosisTests.swift` | MODIFY | Regel mit Zeiten |
+| `LooseEnds/Resources/Localizable.xcstrings` | MODIFY | ggf. Textbausteine |
+
+### Scope Assessment
+- Files: 4, ca. +80/−10 LoC, Risiko NIEDRIG–MITTEL (berührt `LooseEnds/Speech/` → Gerätestufe 3 Pflicht, aber nur Zählung/Anzeige).
+
+### Gerät
+Reproduktion/Messung der Verzögerung braucht das iPhone (Simulator hat keine Sprachmodelle). Nichts darauf, auch nichts Lesendes,
+bevor Henning wörtlich „jetzt ist ein Test möglich“ schreibt. Zuerst vorgesehen: TestFlight-Build mit Schnitt 1, den Henning ohnehin nutzt.
+
+### Open Questions
+- [ ] Effektive Build-Einstellungen (approachable concurrency / Standard-Isolation) unter Xcode 27 ablesen: reine Dateilesung, ohne Gerät.
+- [ ] Beobachtet Henning die Verzögerung auch auf dem iPad? (Nachweis nur über seine Rückmeldung.)

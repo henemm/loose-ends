@@ -44,7 +44,11 @@ jede Einladung externer Tester über TestFlight.
 - [#274](https://github.com/henemm/loose-ends/issues/274) Spracheingabe zeigt Wellenform, aber keinen Text
   (TestFlight Build 19) — nicht reproduzierbar (Prüfbau, Release, iPhone: Text kommt). Geliefert: graue
   Diagnosezeile nach 6 s Ton ohne Ergebnis; bleibt offen, bis Henning in der TestFlight-Fassung sendet, was
-  die Zeile zeigt. Verwandt: [#279](https://github.com/henemm/loose-ends/issues/279) (Verzögerung,
+  die Zeile zeigt. Henning meldete aus Build 21: Modell da, Rechte da, 71 Puffer, 0 Ergebnisse, Text kommt
+  später — also Verzögerung, kein Ausfall. Schnitt 1 (Spec `fix-274-sprache-latenz-messung.md`): dieselbe Zeile
+  zeigt Startdauer in fünf Strecken (Öffnen, Modell, Rechte, Analyzer, Mikrofon) und die Zeit bis zum ersten
+  Text; sie bleibt als Bericht stehen, wenn der Start ≥ 3 s oder der erste Text ≥ 6 s braucht. Kein Fix;
+  Schnitt 2 folgt nach Hennings Zahlen aus der TestFlight-Fassung. Verwandt: [#279](https://github.com/henemm/loose-ends/issues/279) (Verzögerung,
   stoßweise Ergebnisse, Pegelanzeige, Mikrofon-Symbol — möglicher Zusammenhang).
 - [#193](https://github.com/henemm/loose-ends/issues/193) Zustimmungs-Dialog nach „Not now“ — nicht
   reproduzierbar (17 Läufe), bleibt nach Hennings Entscheidung vom 2026-10-05 ohne Code offen.

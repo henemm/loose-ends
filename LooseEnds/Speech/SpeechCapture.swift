@@ -40,6 +40,9 @@ final class SpeechCapture {
     /// Kennung des laufenden Zuhörens: `collect` zählt nur, solange seine Kennung die aktuelle ist (#274).
     private var run = 0
     private var listeningSince: ContinuousClock.Instant?
+    /// Startzeiten (#274 / #279 A): `openedAt` meldet `CaptureView`, `timings` steht ab dem Zuhören bis `stop()`.
+    private(set) var openedAt: ContinuousClock.Instant?
+    private var timings: SpeechTimings?
     private var modelStatus = ""
     private var microphoneGranted = false
     private var speechGranted = false
@@ -58,14 +61,25 @@ final class SpeechCapture {
         return Locale.current.localizedString(forLanguageCode: code) ?? code
     }
 
+    /// Die Erfassung ist erschienen (#274): Anfang der Strecke „Öffnen“ für den nächsten Start.
+    func noteOpened() {
+        openedAt = ContinuousClock.now
+    }
+
     func start() async {
         guard !isListening else { return }
         let ticket = stopCount
+        // Jeder Start misst neu; ohne `noteOpened()` (Start nach Modellladen, Mikrofon-Taste) ist „Öffnen“ 0.
+        let t0 = ContinuousClock.now
+        let open = openedAt.map { Self.seconds(t0 - $0) } ?? 0
+        openedAt = nil
+        timings = nil
         guard let transcriber = await Self.transcriber() else {
             state = .unavailable(String(localized: "Speech recognition is not available for this language. You can type instead."))
             return
         }
         let status = await AssetInventory.status(forModules: [transcriber])
+        let tModel = ContinuousClock.now
         Self.logger.notice("Stufe 0 — Sprache \(Locale.current.identifier, privacy: .public): Modell \(String(describing: status), privacy: .public)")
         modelStatus = String(describing: status)
         switch SpeechReadiness.from(status) {
@@ -80,6 +94,7 @@ final class SpeechCapture {
         }
         let microphone = await AVAudioApplication.requestRecordPermission()
         let speech = await Self.requestSpeechAuthorization()
+        let tRights = ContinuousClock.now
         // Ob SpeechAnalyzer das Spracherkennungsrecht braucht, ist nicht dokumentiert; Stufe 7 liest es hier ab.
         Self.logger.notice("Rechte: Mikrofon \(microphone, privacy: .public), Spracherkennung \(speech, privacy: .public)")
         microphoneGranted = microphone
@@ -93,7 +108,10 @@ final class SpeechCapture {
             return
         }
         do {
-            try await begin(with: transcriber, ticket: ticket)
+            let marks = StartMarks(
+                open: open, modelCheck: Self.seconds(tModel - t0), rights: Self.seconds(tRights - tModel), since: tRights
+            )
+            try await begin(with: transcriber, ticket: ticket, marks: marks)
         } catch {
             Self.logger.error("Starting speech failed: \(error, privacy: .public)")
             stop()
@@ -114,6 +132,8 @@ final class SpeechCapture {
         box = nil
         resultCount = 0
         listeningSince = nil
+        openedAt = nil
+        timings = nil
         diagnosis = nil
         if let analyzer {
             Task { await analyzer.cancelAndFinishNow() }
@@ -191,11 +211,24 @@ final class SpeechCapture {
         case noAudioInput
     }
 
-    private func begin(with transcriber: SpeechTranscriber, ticket: Int) async throws {
+    /// Die drei Strecken aus `start()` und der Zeitpunkt, an dem die vierte („Analyzer“) beginnt (#274).
+    private struct StartMarks {
+        let open: TimeInterval
+        let modelCheck: TimeInterval
+        let rights: TimeInterval
+        let since: ContinuousClock.Instant
+    }
+
+    private nonisolated static func seconds(_ duration: Duration) -> TimeInterval {
+        Double(duration.components.seconds) + Double(duration.components.attoseconds) / 1e18
+    }
+
+    private func begin(with transcriber: SpeechTranscriber, ticket: Int, marks: StartMarks) async throws {
         let converter = try await AnalyzerInputConverter.converter(compatibleWith: [transcriber])
         let (stream, continuation) = AsyncStream<AnalyzerInput>.makeStream()
         let analyzer = SpeechAnalyzer(modules: [transcriber])
         try await analyzer.start(inputSequence: stream)
+        let tAnalyzer = ContinuousClock.now
         LaunchTimings.mark(.analyzerStarted)
         guard ticket == stopCount else {
             continuation.finish()
@@ -226,6 +259,7 @@ final class SpeechCapture {
         self.box = box
         engine.prepare()
         try engine.start()
+        let tMicrophone = ContinuousClock.now
         LaunchTimings.mark(.engineStarted)
 
         Self.logger.notice("Erkennung startet auf dem Gerät, Sprache \(Locale.current.identifier, privacy: .public)")
@@ -234,6 +268,10 @@ final class SpeechCapture {
         LaunchTimings.mark(.listening)
         resultCount = 0
         diagnosis = nil
+        timings = SpeechTimings(
+            open: marks.open, modelCheck: marks.modelCheck, rights: marks.rights,
+            analyzer: Self.seconds(tAnalyzer - marks.since), microphone: Self.seconds(tMicrophone - tAnalyzer)
+        )
         listeningSince = ContinuousClock.now
         run += 1
         let current = run
@@ -254,12 +292,11 @@ final class SpeechCapture {
             diagnosis = nil
             return
         }
-        let elapsed = ContinuousClock.now - listeningSince
-        let seconds = Double(elapsed.components.seconds) + Double(elapsed.components.attoseconds) / 1e18
         diagnosis = SpeechDiagnosis.hint(
             buffers: box.bufferCount, results: resultCount,
-            secondsListening: seconds,
-            modelStatus: modelStatus, microphone: microphoneGranted, speech: speechGranted
+            secondsListening: Self.seconds(ContinuousClock.now - listeningSince),
+            modelStatus: modelStatus, microphone: microphoneGranted, speech: speechGranted,
+            timings: timings
         )
     }
 
@@ -268,7 +305,13 @@ final class SpeechCapture {
         var fixed = ""
         do {
             for try await result in transcriber.results {
-                if run == self.run { resultCount += 1 }
+                if run == self.run {
+                    resultCount += 1
+                    // Zeit bis zum ersten Ergebnis (#274), einmal je Zuhören; flüchtig oder fest, auch leer.
+                    if timings?.firstResult == nil, let listeningSince {
+                        timings?.firstResult = Self.seconds(ContinuousClock.now - listeningSince)
+                    }
+                }
                 let text = String(result.text.characters)
                 if result.isFinal {
                     fixed += text

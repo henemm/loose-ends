@@ -242,6 +242,9 @@
     "Hidden" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ausgeblendet" } } } },
     "No text yet — model: %@ · microphone: %@ · speech: %@ · buffers: %lld · results: %lld" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Noch kein Text — Modell: %@ · Mikrofon: %@ · Sprache: %@ · Puffer: %lld · Ergebnisse: %lld" } } } },
     "Speech diagnosis yes" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "yes" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "ja" } } } },
-    "Speech diagnosis no" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "no" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "nein" } } } }
+    "Speech diagnosis no" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "no" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "nein" } } } },
+    "Speech diagnosis start: %@ s (opening %@ · model %@ · rights %@ · analyzer %@ · microphone %@)" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Start: %@ s (opening %@ · model %@ · rights %@ · analyzer %@ · microphone %@)" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Start: %@ s (Öffnen %@ · Modell %@ · Rechte %@ · Analyzer %@ · Mikrofon %@)" } } } },
+    "Speech diagnosis first text after %@ s" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "First text after %@ s" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Erster Text nach %@ s" } } } },
+    "Speech diagnosis join" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : " · " } }, "de" : { "stringUnit" : { "state" : "translated", "value" : " · " } } } }
   }
 }
