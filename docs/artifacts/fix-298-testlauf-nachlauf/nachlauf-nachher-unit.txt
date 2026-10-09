@@ -1,0 +1,14 @@
+# Nachlauf-Messung (nachher-unit), #298
+befehl: scripts/sim.sh sim-unit DueRemindersTests
+simulator: iPhone 17e  session: fix298
+head: 2b98d2a67045e11b7ba3c3172d838d9c4e96411f
+diagnose-option in sim.sh: 1
+start: 14:04:58
+ergebniszeile: 
+simctl diagnose gesehen:  
+prozessende: 14:05:06  rc=0
+ergebnis im log:
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+✔ Test run with 4 tests in 1 suite passed after 0.028 seconds.
+** TEST SUCCEEDED **

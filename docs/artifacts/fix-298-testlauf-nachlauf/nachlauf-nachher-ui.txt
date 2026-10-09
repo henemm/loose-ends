@@ -1,0 +1,15 @@
+# Nachlauf-Messung (nachher-ui), #298
+befehl: scripts/sim.sh test CalendarTargetTests
+simulator: iPhone 17e  session: fix298
+head: 2b98d2a67045e11b7ba3c3172d838d9c4e96411f
+diagnose-option in sim.sh: 1
+start: 14:04:04
+ergebniszeile: 14:04:55
+simctl diagnose gesehen:  
+prozessende: 14:04:57  rc=0
+nachlauf_s: 2
+ergebnis im log:
+	 Executed 1 test, with 0 failures (0 unexpected) in 30.879 (30.884) seconds
+	 Executed 1 test, with 0 failures (0 unexpected) in 30.879 (30.886) seconds
+	 Executed 1 test, with 0 failures (0 unexpected) in 30.879 (30.891) seconds
+** TEST SUCCEEDED **

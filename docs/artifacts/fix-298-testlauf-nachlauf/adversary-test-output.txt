@@ -1,0 +1,101 @@
+test_10_wrong_signature_is_rejected_and_fails (test_asc_cleanup_certs.ScriptTests.test_10_wrong_signature_is_rejected_and_fails) ... ok
+test_10b_a_new_valid_token_is_sent_with_every_request (test_asc_cleanup_certs.ScriptTests.test_10b_a_new_valid_token_is_sent_with_every_request) ... ok
+test_11_no_secrets_in_output (test_asc_cleanup_certs.ScriptTests.test_11_no_secrets_in_output) ... ok
+test_2_mixed_list_deletes_exactly_the_two_chosen (test_asc_cleanup_certs.ScriptTests.test_2_mixed_list_deletes_exactly_the_two_chosen) ... ok
+test_3_both_development_types_are_chosen (test_asc_cleanup_certs.ScriptTests.test_3_both_development_types_are_chosen) ... ok
+test_3b_display_name_is_the_fallback_for_name (test_asc_cleanup_certs.ScriptTests.test_3b_display_name_is_the_fallback_for_name) ... ok
+test_4_nothing_else_is_ever_deleted (test_asc_cleanup_certs.ScriptTests.test_4_nothing_else_is_ever_deleted) ... ok
+test_5_dry_run_deletes_nothing_and_lists (test_asc_cleanup_certs.ScriptTests.test_5_dry_run_deletes_nothing_and_lists) ... ok
+test_6_count_line_matches_the_list_and_goes_to_the_summary (test_asc_cleanup_certs.ScriptTests.test_6_count_line_matches_the_list_and_goes_to_the_summary) ... ok
+test_7_pagination_reads_links_next (test_asc_cleanup_certs.ScriptTests.test_7_pagination_reads_links_next) ... ok
+test_7b_foreign_host_in_links_next_aborts_before_a_token_goes_there (test_asc_cleanup_certs.ScriptTests.test_7b_foreign_host_in_links_next_aborts_before_a_token_goes_there) ... ok
+test_8_401_and_403_on_listing_exit_1_without_delete (test_asc_cleanup_certs.ScriptTests.test_8_401_and_403_on_listing_exit_1_without_delete) ... ok
+test_9_failed_revoke_does_not_stop_the_rest_and_is_loud (test_asc_cleanup_certs.ScriptTests.test_9_failed_revoke_does_not_stop_the_rest_and_is_loud) ... ok
+test_missing_environment_exits_1 (test_asc_cleanup_certs.ScriptTests.test_missing_environment_exits_1) ... ok
+test_12_cleanup_steps_sit_in_the_right_order (test_asc_cleanup_certs.WorkflowTests.test_12_cleanup_steps_sit_in_the_right_order) ... ok
+test_12_old_steps_and_confirm_stay (test_asc_cleanup_certs.WorkflowTests.test_12_old_steps_and_confirm_stay) ... ok
+test_12_run_blocks_are_valid_bash (test_asc_cleanup_certs.WorkflowTests.test_12_run_blocks_are_valid_bash) ... ok
+test_13_dry_run_input_is_passed_on (test_asc_cleanup_certs.WorkflowTests.test_13_dry_run_input_is_passed_on) ... ok
+test_14_doc_describes_the_way (test_asc_cleanup_certs.WorkflowTests.test_14_doc_describes_the_way) ... ok
+test_der_to_rs_fixed_bytes (test_asc_wait_build.DerTests.test_der_to_rs_fixed_bytes) ... ok
+test_2_valid_at_once (test_asc_wait_build.ScriptTests.test_2_valid_at_once) ... ok
+test_3_processing_then_valid_uses_a_new_token_per_round (test_asc_wait_build.ScriptTests.test_3_processing_then_valid_uses_a_new_token_per_round) ... ok
+test_4_invalid_and_failed_exit_nonzero (test_asc_wait_build.ScriptTests.test_4_invalid_and_failed_exit_nonzero) ... ok
+test_5_timeout_while_processing (test_asc_wait_build.ScriptTests.test_5_timeout_while_processing) ... ok
+test_6_empty_list_means_wait (test_asc_wait_build.ScriptTests.test_6_empty_list_means_wait) ... ok
+test_7_record_with_wrong_version_is_ignored (test_asc_wait_build.ScriptTests.test_7_record_with_wrong_version_is_ignored) ... ok
+test_8_wrong_signature_is_rejected_and_fails (test_asc_wait_build.ScriptTests.test_8_wrong_signature_is_rejected_and_fails) ... ok
+test_8b_unknown_app_fails (test_asc_wait_build.ScriptTests.test_8b_unknown_app_fails) ... ok
+test_9_no_secrets_in_output (test_asc_wait_build.ScriptTests.test_9_no_secrets_in_output) ... ok
+test_9b_malformed_200_bodies_mean_retry (test_asc_wait_build.ScriptTests.test_9b_malformed_200_bodies_mean_retry) ... ok
+test_9c_408_and_429_mean_retry (test_asc_wait_build.ScriptTests.test_9c_408_and_429_mean_retry) ... ok
+test_9d_other_4xx_still_fatal (test_asc_wait_build.ScriptTests.test_9d_other_4xx_still_fatal) ... ok
+test_9e_line_counts_records_before_own_filter (test_asc_wait_build.ScriptTests.test_9e_line_counts_records_before_own_filter)
+AC-9: treffer=<k> ist die Zahl der Datensätze in Apples Antwort, vor dem Filtern auf version. ... ok
+test_10_confirm_job_shape (test_asc_wait_build.WorkflowTests.test_10_confirm_job_shape) ... ok
+test_10_failed_final_cleanup_keeps_upload_green (test_asc_wait_build.WorkflowTests.test_10_failed_final_cleanup_keeps_upload_green)
+AC-2/F009: Scheitert das Aufräumen am Ende, bleibt upload grün und confirm läuft trotzdem; ... ok
+test_10_run_blocks_are_valid_bash (test_asc_wait_build.WorkflowTests.test_10_run_blocks_are_valid_bash) ... ok
+test_10_upload_job_keeps_every_step (test_asc_wait_build.WorkflowTests.test_10_upload_job_keeps_every_step) ... ok
+test_1_table_goes_to_the_log_too (test_asc_wait_build.WorkflowTests.test_1_table_goes_to_the_log_too) ... ok
+test_fails_without_iphone_17_on_ios_27_0 (test_ci_xcode27.PickSimulator.test_fails_without_iphone_17_on_ios_27_0) ... ok
+test_picks_iphone_17_on_ios_27_0 (test_ci_xcode27.PickSimulator.test_picks_iphone_17_on_ios_27_0) ... ok
+test_accepts_xcode_27_0 (test_ci_xcode27.SelectXcodeAction.test_accepts_xcode_27_0) ... ok
+test_rejects_other_version (test_ci_xcode27.SelectXcodeAction.test_rejects_other_version) ... ok
+test_selects_fixed_xcode_27_app (test_ci_xcode27.SelectXcodeAction.test_selects_fixed_xcode_27_app) ... ok
+test_claude_md_describes_the_new_ci (test_ci_xcode27.Sources.test_claude_md_describes_the_new_ci) ... ok
+test_no_compiler_switch_left (test_ci_xcode27.Sources.test_no_compiler_switch_left) ... ok
+test_no_server_recognition_dialog_left_to_decline (test_ci_xcode27.SpeechStressOnXcode27.test_no_server_recognition_dialog_left_to_decline) ... ok
+test_stress_runs_skip_the_600_second_diagnostics (test_ci_xcode27.SpeechStressOnXcode27.test_stress_runs_skip_the_600_second_diagnostics) ... ok
+test_check_names_unchanged (test_ci_xcode27.Workflows.test_check_names_unchanged) ... ok
+test_every_job_runs_on_xcode_27_with_the_action (test_ci_xcode27.Workflows.test_every_job_runs_on_xcode_27_with_the_action) ... ok
+test_no_lowering_anywhere_in_github (test_ci_xcode27.Workflows.test_no_lowering_anywhere_in_github) ... ok
+test_ui_smoke_has_a_diagnosis_step_that_never_fails (test_ci_xcode27.Workflows.test_ui_smoke_has_a_diagnosis_step_that_never_fails) ... ok
+test_ui_smoke_lets_the_simulator_settle_and_runs_without_parallel_clones (test_ci_xcode27.Workflows.test_ui_smoke_lets_the_simulator_settle_and_runs_without_parallel_clones) ... ok
+test_unit_job_prints_measurement_reports_into_its_own_log (test_ci_xcode27.Workflows.test_unit_job_prints_measurement_reports_into_its_own_log) ... ok
+test_unit_job_runs_every_script_test (test_ci_xcode27.Workflows.test_unit_job_runs_every_script_test)
+#185: every scripts/test_*.py runs in CI, in one step, before Xcode. ... ok
+test_workflows_wait_for_the_simulator_to_finish_booting (test_ci_xcode27.Workflows.test_workflows_wait_for_the_simulator_to_finish_booting) ... ok
+test_a_drop_of_more_than_ten_points_exits_one_and_names_the_field (test_compare_reports.CommandTests.test_a_drop_of_more_than_ten_points_exits_one_and_names_the_field) ... ok
+test_identical_reports_exit_zero (test_compare_reports.CommandTests.test_identical_reports_exit_zero) ... ok
+test_missing_file_and_empty_report_exit_two (test_compare_reports.CommandTests.test_missing_file_and_empty_report_exit_two) ... ok
+test_real_reports_in_the_repository_parse (test_compare_reports.CommandTests.test_real_reports_in_the_repository_parse) ... ok
+test_reports_without_a_common_value_exit_two (test_compare_reports.CommandTests.test_reports_without_a_common_value_exit_two) ... ok
+test_threshold_can_be_raised (test_compare_reports.CommandTests.test_threshold_can_be_raised) ... ok
+test_difference_is_new_minus_old_in_points (test_compare_reports.CompareTests.test_difference_is_new_minus_old_in_points) ... ok
+test_error_metrics_get_worse_when_they_rise (test_compare_reports.CompareTests.test_error_metrics_get_worse_when_they_rise) ... ok
+test_keys_missing_on_one_side_are_named_not_compared (test_compare_reports.CompareTests.test_keys_missing_on_one_side_are_named_not_compared) ... ok
+test_more_than_the_threshold_is_an_outlier_in_either_direction (test_compare_reports.CompareTests.test_more_than_the_threshold_is_an_outlier_in_either_direction) ... ok
+test_cells_without_percent_are_ignored (test_compare_reports.ParseTests.test_cells_without_percent_are_ignored) ... ok
+test_comma_decimal_and_repeated_rows_are_kept_apart (test_compare_reports.ParseTests.test_comma_decimal_and_repeated_rows_are_kept_apart) ... ok
+test_reads_percent_cells_with_section_row_and_column_as_key (test_compare_reports.ParseTests.test_reads_percent_cells_with_section_row_and_column_as_key) ... ok
+test_main_checkout_and_bare_worktrees_folder_have_none (test_measurement_status.MainCheckoutTests.test_main_checkout_and_bare_worktrees_folder_have_none) ... ok
+test_worktree_belongs_to_the_folder_above (test_measurement_status.MainCheckoutTests.test_worktree_belongs_to_the_folder_above) ... ok
+test_every_gate_is_listed_and_nothing_else (test_measurement_status.RegistryMatchesSwiftTests.test_every_gate_is_listed_and_nothing_else) ... ok
+test_no_suite_gates_on_a_corpus_path_of_its_own (test_measurement_status.RegistryMatchesSwiftTests.test_no_suite_gates_on_a_corpus_path_of_its_own) ... ok
+test_everything_present_says_so (test_measurement_status.StatusTests.test_everything_present_says_so) ... ok
+test_fresh_worktree_finds_the_corpus_of_the_main_checkout (test_measurement_status.StatusTests.test_fresh_worktree_finds_the_corpus_of_the_main_checkout) ... ok
+test_markdown_puts_the_count_in_bold (test_measurement_status.StatusTests.test_markdown_puts_the_count_in_bold) ... ok
+test_without_data_every_suite_is_named_as_skipped (test_measurement_status.StatusTests.test_without_data_every_suite_is_named_as_skipped) ... ok
+test_config_docs_and_scripts_do_not_count (test_sim_proof.CodeFilterTests.test_config_docs_and_scripts_do_not_count) ... ok
+test_product_and_test_sources_count_as_code (test_sim_proof.CodeFilterTests.test_product_and_test_sources_count_as_code) ... ok
+test_empty_file_set_is_explicit_and_matches_nothing (test_sim_proof.ProofFormatTests.test_empty_file_set_is_explicit_and_matches_nothing) ... ok
+test_roundtrip_through_plugin_regex (test_sim_proof.ProofFormatTests.test_roundtrip_through_plugin_regex) ... ok
+test_failed_summary_is_failed (test_sim_proof.SummaryParsingTests.test_failed_summary_is_failed) ... ok
+test_missing_fields_do_not_crash_and_invent_nothing (test_sim_proof.SummaryParsingTests.test_missing_fields_do_not_crash_and_invent_nothing) ... ok
+test_passed_summary_gives_counts_device_and_times (test_sim_proof.SummaryParsingTests.test_passed_summary_gives_counts_device_and_times) ... ok
+test_passed_with_failing_xcodebuild_is_not_passed (test_sim_proof.SummaryParsingTests.test_passed_with_failing_xcodebuild_is_not_passed) ... ok
+test_passed_without_tests_is_not_passed (test_sim_proof.SummaryParsingTests.test_passed_without_tests_is_not_passed) ... ok
+test_missing_class_fails_with_usage_and_keeps_old_proof (test_sim_proof.TestProofCommandErrorTests.test_missing_class_fails_with_usage_and_keeps_old_proof) ... ok
+test_missing_workflow_fails_before_any_run (test_sim_proof.TestProofCommandErrorTests.test_missing_workflow_fails_before_any_run) ... ok
+test_ordinary_workflow_names_are_accepted (test_sim_proof.TestProofCommandErrorTests.test_ordinary_workflow_names_are_accepted)
+Der Check lehnt nur Pfadteile ab: Namen wie `bug-203-kalender-termin` oder `fix_1.2` laufen bis zum Werkzeug. ... ok
+test_workflow_name_with_path_parts_is_refused_before_anything_is_touched (test_sim_proof.TestProofCommandErrorTests.test_workflow_name_with_path_parts_is_refused_before_anything_is_touched)
+#166: `../x` oder `a/b` dürfen nichts außerhalb von docs/artifacts/ löschen oder anlegen. ... ok
+test_build_action_keeps_its_arguments_unchanged (test_sim_run_xcodebuild.RunXcodebuildDiagnosticsTests.test_build_action_keeps_its_arguments_unchanged) ... ok
+test_test_action_switches_off_diagnostics_collection (test_sim_run_xcodebuild.RunXcodebuildDiagnosticsTests.test_test_action_switches_off_diagnostics_collection) ... ok
+
+----------------------------------------------------------------------
+Ran 91 tests in 33.457s
+
+OK

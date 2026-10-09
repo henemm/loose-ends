@@ -129,6 +129,9 @@ run_xcodebuild() {
     cd "$PROJECT_DIR"
     mkdir -p "$SESSION_DERIVED_DATA"
     BUILD_LOG="$SESSION_DERIVED_DATA/xcodebuild.log"
+    # Ein roter Test startet sonst `simctl diagnose --timeout=600` und xcodebuild wartet darauf,
+    # bei mehreren Simulatoren bis zu 19 Min (#298). Testergebnis und Ergebnisbündel bleiben gleich.
+    [ "${1:-}" = test ] && set -- "$@" -collect-test-diagnostics never
     # Die Rohausgabe geht ins Log, bevor xcbeautify sie kürzt: Messberichte stehen darin.
     if command -v xcbeautify >/dev/null; then
         xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG" | xcbeautify

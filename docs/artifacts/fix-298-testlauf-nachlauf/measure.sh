@@ -18,11 +18,11 @@ start=$(ts)
 pid=$!
 result_at=""; diag_at=""; diag_seen=""
 while kill -0 "$pid" 2>/dev/null; do
-    if [ -z "$result_at" ] && [ -f "$log" ] && grep -qE '^\*\* TEST (SUCCEEDED|FAILED) \*\*|^Test run with [0-9]+ tests? in [0-9]+ suites? (passed|failed)' "$log"; then
+    if [ -z "$result_at" ] && [ -f "$log" ] && grep -qE '\*\* TEST (SUCCEEDED|FAILED) \*\*|Test run with [0-9]+ tests? in [0-9]+ suites? (passed|failed)|Test Suite .Selected tests. (passed|failed)' "$log"; then
         result_at=$(ts)
     fi
-    if [ -z "$diag_at" ] && pgrep -f "simctl diagnose" >/dev/null; then
-        diag_at=$(ts); diag_seen="$(pgrep -fl 'simctl diagnose' | head -1)"
+    if [ -z "$diag_at" ] && pgrep -f "simctl diagnose.*LooseEnds-session-$CLAUDE_SESSION_ID" >/dev/null; then
+        diag_at=$(ts); diag_seen="$(pgrep -fl "simctl diagnose.*LooseEnds-session-$CLAUDE_SESSION_ID" | head -1)"
     fi
     sleep 2
 done
@@ -39,6 +39,6 @@ end=$(ts)
     echo "simctl diagnose gesehen: ${diag_at:+$(date -r "$diag_at" '+%H:%M:%S')} ${diag_seen}"
     echo "prozessende: $(date -r "$end" '+%H:%M:%S')  rc=$rc"
     [ -n "$result_at" ] && echo "nachlauf_s: $((end - result_at))"
-    echo "ergebnis im log:"; grep -E '^\*\* TEST|^Test run with|Executed [0-9]+ test' "$log" | tail -4
+    echo "ergebnis im log:"; grep -E '\*\* TEST|Test run with|Executed [0-9]+ test' "$log" | tail -4
 } > "$out"
 cat "$out"
