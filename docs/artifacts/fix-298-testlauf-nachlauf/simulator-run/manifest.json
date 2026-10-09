@@ -1,0 +1,17 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "68B9E284-12D2-412A-96EE-9CBBF7BBFB72",
+        "deviceName" : "iPhone 17e",
+        "exportedFileName" : "030A09A1-FE71-4D00-8661-05A84BC39C7F.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "detail-target-calendar_0_D0EF4DFD-A419-4199-A590-B121AA13340C.png",
+        "timestamp" : 1791577838.091
+      }
+    ],
+    "testIdentifier" : "CalendarTargetTests/testSwitchOnShowsTargetCalendar()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/CalendarTargetTests/testSwitchOnShowsTargetCalendar"
+  }
+]

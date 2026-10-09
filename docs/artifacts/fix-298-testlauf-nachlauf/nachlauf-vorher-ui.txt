@@ -1,0 +1,14 @@
+# Nachlauf-Messung (vorher-ui), #298
+befehl: scripts/sim.sh test CalendarTargetTests
+simulator: iPhone 17e  session: fix298
+head: 2b98d2a67045e11b7ba3c3172d838d9c4e96411f
+diagnose-option in sim.sh: 0
+start: 13:07:33
+ergebniszeile: 
+simctl diagnose gesehen: 13:25:04 44680 /Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl diagnose -l -b --timeout=600 --log-option=--last --log-option=11m --output=/Users/hem/Library/Developer/Xcode/DerivedData/Restock-dsoiexrtlpvugobznvrqmylcxylm/Logs/Test/Test-Restock-2026.10.09_13-15-43-+0200.xcresult/Staging/1_Test/Diagnostics/simctl_diagnostics --no-archive --udid=8F696920-4B9A-40A7-96F0-7697BE887CC7
+prozessende: 13:29:10  rc=0
+ergebnis im log:
+	 Executed 1 test, with 0 failures (0 unexpected) in 49.452 (49.455) seconds
+	 Executed 1 test, with 0 failures (0 unexpected) in 49.452 (49.457) seconds
+	 Executed 1 test, with 0 failures (0 unexpected) in 49.452 (49.460) seconds
+** TEST SUCCEEDED **

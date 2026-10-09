@@ -1,0 +1,15 @@
+# Nachlauf-Messung (nachher-rot), #298
+befehl: scripts/sim.sh sim-unit Zz298ThrowawayFailTests
+simulator: iPhone 17e  session: fix298
+head: 2b98d2a67045e11b7ba3c3172d838d9c4e96411f
+diagnose-option in sim.sh: 1
+start: 13:59:26
+ergebniszeile: 14:03:46
+simctl diagnose gesehen:  
+prozessende: 14:03:48  rc=65
+nachlauf_s: 2
+ergebnis im log:
+	 Executed 1 test, with 1 failure (0 unexpected) in 0.031 (0.032) seconds
+	 Executed 1 test, with 1 failure (0 unexpected) in 0.031 (0.033) seconds
+	 Executed 1 test, with 1 failure (0 unexpected) in 0.031 (0.033) seconds
+** TEST FAILED **
