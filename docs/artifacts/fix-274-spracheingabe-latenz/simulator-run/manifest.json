@@ -1,0 +1,26 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "469DCC53-BBB9-44F8-821E-562D869F4EA8.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "2-ergebnis_0_747FA2CB-ECCE-42D2-AEF2-D230414E3D51.png",
+        "timestamp" : 1791529472.499
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "9560A29B-17DD-489C-8967-E7DB29A67802.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "1-erfassung-offen_0_96BE7431-B91D-4944-9CE8-6629C6182855.png",
+        "timestamp" : 1791529472.149
+      }
+    ],
+    "testIdentifier" : "SpeechListeningTests/testCaptureNeverPretendsToListen()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/SpeechListeningTests/testCaptureNeverPretendsToListen"
+  }
+]

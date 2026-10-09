@@ -204,7 +204,16 @@ final class SpeechCapture {
             logger.notice("Stufe 0 — Sprache \(Locale.current.identifier, privacy: .public) wird auf dem Gerät nicht unterstützt")
             return nil
         }
-        return SpeechTranscriber(locale: locale, transcriptionOptions: [], reportingOptions: [.volatileResults], attributeOptions: [])
+        return makeTranscriber(locale: locale)
+    }
+
+    /// The transcriber's reporting options; `SpeechTranscriber` does not expose them, so the test reads this (#274).
+    nonisolated static let transcriberReportingOptions: Set<SpeechTranscriber.ReportingOption> = [.volatileResults, .fastResults]
+
+    /// The one place that builds the app's transcriber; the latency test (#274) goes through it too.
+    nonisolated static func makeTranscriber(locale: Locale) -> SpeechTranscriber {
+        SpeechTranscriber(locale: locale, transcriptionOptions: [], reportingOptions: transcriberReportingOptions,
+                          attributeOptions: [])
     }
 
     private enum StartError: Error {
