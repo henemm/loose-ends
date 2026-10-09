@@ -164,4 +164,14 @@ import Testing
         #expect(!plain.text.contains("Start"))
         #expect(!withNil.text.contains("Start"))
     }
+
+    @Test("Stop forgets the opening time, so a later tap does not count typing as opening (F001)")
+    @MainActor
+    func stopClearsOpenedAt() {
+        let speech = SpeechCapture()
+        speech.noteOpened()
+        #expect(speech.openedAt != nil)
+        speech.stop()
+        #expect(speech.openedAt == nil)
+    }
 }

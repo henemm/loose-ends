@@ -1,0 +1,21 @@
+# Simulator-Beleg
+erzeugt: 2026-10-09T10:03:45+0200
+befehl: scripts/sim.sh test-proof SpeechDiagnosisLineTests
+workflow: fix-274-sprache-latenz
+head: f77d366fc82cd2f0285f5a202c47faaa4c451a5d
+basis: 2216d317c48e66594e47089e32a4e5125cade705 (merge-base origin/main HEAD)
+testklasse: SpeechDiagnosisLineTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 2 gesamt, 2 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1791532382.242  ende: 1791533023.963
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/fix-274-sprache-latenz/simulator-run/summary.json  sha256:1baabf6250c08cf6df760d2daac5f6e9255864ad6db6b11106540e669b6402fc
+xcresult: docs/artifacts/fix-274-sprache-latenz/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-274-sprache-latenz/simulator-run/*.png (1 Stück)
+
+## Geprüfte Dateien
+- sha256:99a04148000cc4237662c7a994f95544d350eabe8f344e34da4bb4c8c9d8415a  LooseEnds/Speech/SpeechCapture.swift
+- sha256:47b77c27ae622d5709e613412915c125556cc25e07a5491c41f841cea3da3153  LooseEnds/Speech/SpeechDiagnosis.swift
+- sha256:2682a6a49a9eda00e8616dd39daac8485a5f9d1cb652bfb7203349eca3366d73  LooseEnds/Views/CaptureView.swift
+- sha256:0943cc01fc1db07f3de9ccc45b10ed591a6cd2b25759008d121edc3f757a73df  LooseEndsTests/SpeechDiagnosisTests.swift

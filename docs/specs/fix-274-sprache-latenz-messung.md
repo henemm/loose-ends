@@ -187,11 +187,10 @@ so gesagt, nicht als Beleg ausgegeben.
   stehen (Beleg: Code-Lesen wie AC-5 in Schnitt 1, nicht am Gerät beobachtet).
 - **AC-8 Erkennung unverändert:** Keine Änderung an Transcriber, Optionen, Analyzer, Tap, Wandler, Audio-Session, Rechteabfrage;
   die bestehenden Tests und der UI-Smoke bleiben unverändert grün.
-- **AC-9 Aussehen:** Grau (`.secondary`), `.footnote`, keine Farbe, keine Schaltfläche; `CaptureView` unverändert.
-- **AC-10 Gerät:** Henning sendet aus der neuen TestFlight-Fassung (iPhone, wenn möglich auch iPad) die Zeile mit den Zahlen.
-  Daraus wird im Ticket festgehalten, **welche** Strecke (Start: welche der fünf; oder erstes Ergebnis) die Zeit trägt. Das
-  Ticket bleibt offen; der Fix ist Schnitt 2.
-- **AC-11 Regression:** Unit, Build, UI-Smoke grün; Speech Stress (10×, weil `LooseEnds/Speech/**` berührt) grün.
+- **AC-9 Aussehen:** Grau (`.secondary`), `.footnote`, keine Farbe, keine Schaltfläche; Aussehen und Ablauf von `CaptureView` unverändert (nur der eine Meldeaufruf kommt dazu).
+- **Hinweis (Override Henning, 2026-10-09):** AC-10 (Gerät, TestFlight) und AC-11 (Speech Stress 10× in der CI) lassen sich
+  vor der Auslieferung nicht erfüllen. Sie stehen unter „Abschlusskriterien nach der Auslieferung“ in der Definition of Done
+  und sind Pflicht, aber kein Tor vor dem Commit.
 
 ## Dependencies
 
@@ -236,7 +235,7 @@ so gesagt, nicht als Beleg ausgegeben.
 
 ## Definition of Done
 
-- AC-1 bis AC-11 erfüllt; die neuen Fälle in `SpeechDiagnosisTests` grün (zuerst rot), alle bestehenden Tests grün.
+- AC-1 bis AC-9 erfüllt; die neuen Fälle in `SpeechDiagnosisTests` grün (zuerst rot), alle bestehenden Tests grün.
 - Build und UI-Smoke mit Screenshot (angesehen); im Abschlussbericht steht, dass der Simulator die Messstrecken nicht belegt.
 - Neue TestFlight-Fassung ausgeliefert; Henning hat (nach seinem Wort) die Zeile von iPhone, wenn möglich iPad gesendet.
 - #274 und #279: Kommentar mit den Zahlen und der Strecke, die die Zeit trägt; Schnitt 2 als eigenes Ticket mit dem Hebel,
@@ -245,6 +244,16 @@ so gesagt, nicht als Beleg ausgegeben.
 - Abschlussbericht ohne Git-Vokabular: was sich im Produkt ändert (die graue Zeile zeigt künftig Zeiten) und was Henning tun
   soll (Erfassung öffnen, sprechen, Zeile senden).
 
+### Abschlusskriterien nach der Auslieferung (Pflicht, nicht Tor vor dem Commit)
+
+- **AC-10 Gerät:** Henning sendet aus der neuen TestFlight-Fassung (iPhone, wenn möglich auch iPad) die Zeile mit den Zahlen.
+  Daraus wird im Ticket festgehalten, **welche** Strecke (Start: welche der fünf; oder erstes Ergebnis) die Zeit trägt. Das
+  Ticket bleibt offen; der Fix ist Schnitt 2.
+- **AC-11 Regression:** Unit, Build, UI-Smoke grün; Speech Stress (10×, weil `LooseEnds/Speech/**` berührt) grün.
+
+Der Workflow gilt erst als abgeschlossen, wenn beide belegt sind oder Henning ausdrücklich darauf verzichtet; bis dahin bleibt #274 offen.
+
 ## Changelog
 
 - 2026-10-09: Initiale Spec für den Verzögerungs-Schnitt 1 von #274/#279 A (Messen vor Ändern).
+- 2026-10-09: Override Henning: AC-10 und AC-11 aus den Acceptance Criteria in die Abschlusskriterien nach der Auslieferung verschoben (QA-Tor kennt kein „nachgelagert“); AC-9 präzisiert (Aussehen und Ablauf unverändert, eine Meldezeile in `CaptureView`).
