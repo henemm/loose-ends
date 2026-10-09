@@ -47,8 +47,11 @@ jede Einladung externer Tester über TestFlight.
   die Zeile zeigt. Henning meldete aus Build 21: Modell da, Rechte da, 71 Puffer, 0 Ergebnisse, Text kommt
   später — also Verzögerung, kein Ausfall. Schnitt 1 (Spec `fix-274-sprache-latenz-messung.md`): dieselbe Zeile
   zeigt Startdauer in fünf Strecken (Öffnen, Modell, Rechte, Analyzer, Mikrofon) und die Zeit bis zum ersten
-  Text; sie bleibt als Bericht stehen, wenn der Start ≥ 3 s oder der erste Text ≥ 6 s braucht. Kein Fix;
-  Schnitt 2 folgt nach Hennings Zahlen aus der TestFlight-Fassung. Verwandt: [#279](https://github.com/henemm/loose-ends/issues/279) (Verzögerung,
+  Text; sie bleibt als Bericht stehen, wenn der Start ≥ 3 s oder der erste Text ≥ 6 s braucht. Schnitt 2
+  (Spec `fix-274-spracheingabe-latenz.md`): Ursache war die fehlende Option `.fastResults` am
+  `SpeechTranscriber` — ohne sie ~12 s bis zum ersten Wort (am Mac reproduziert), mit ihr ~1 s; auf Hennings
+  iPhone im Prüfbau 1,5–2 s statt 13–14 s. Bleibt offen, bis Henning die TestFlight-Fassung im Alltag auf
+  iPhone und iPad bestätigt. Verwandt: [#279](https://github.com/henemm/loose-ends/issues/279) (Verzögerung,
   stoßweise Ergebnisse, Pegelanzeige, Mikrofon-Symbol — möglicher Zusammenhang).
 - [#193](https://github.com/henemm/loose-ends/issues/193) Zustimmungs-Dialog nach „Not now“ — nicht
   reproduzierbar (17 Läufe), bleibt nach Hennings Entscheidung vom 2026-10-05 ohne Code offen.
