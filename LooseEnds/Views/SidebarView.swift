@@ -5,9 +5,12 @@ import SwiftUI
 /// The start screen (design briefing, screen 2): system views with counts, then projects,
 /// then contexts, Done last. Projects and contexts are created, renamed and deleted right here
 /// (screen 7). On iPhone it opens with the two reasons to open the app at all (#180): a sentence
-/// on what is left to look over and what is lined up, then the first three of "Next up".
+/// on what is left to look over and what is lined up, then the first three of "Next up", with the
+/// same swipes and long-press menu as in the list (#303).
 struct SidebarView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(CompletionPulse.self) private var completionPulse: CompletionPulse?
+    @Environment(PendingCompletions.self) private var pendingCompletions: PendingCompletions?
     @Query(sort: \TaskContext.sortOrder) private var contexts: [TaskContext]
     @Query(sort: \Project.sortOrder) private var projects: [Project]
     @Binding var selection: ViewSelection?
@@ -26,6 +29,9 @@ struct SidebarView: View {
     @State private var pendingDelete: NameEdit.Target?
     @State private var confirmingDelete = false
     @State private var duplicateRejected = false
+    @State private var pendingTaskDelete: TaskItem?
+    @State private var confirmingTaskDelete = false
+    @State private var datingTask: TaskItem?
     /// Projects and contexts start folded (Henning, 2026-10-05): most days need neither, and their
     /// rows and "New …" buttons pushed the views off the screen. Per device, a view setting only.
     @AppStorage("startShowsProjects") private var showsProjects = false
@@ -40,6 +46,16 @@ struct SidebarView: View {
         #else
         false
         #endif
+    }
+
+    /// The preview's rows stand in "Next up", so they act as they do there (#303).
+    private var taskActions: TaskInteractions {
+        TaskInteractions(
+            kind: .next, tasks: tasks, contexts: contexts, projects: projects, modelContext: modelContext,
+            pendingCompletions: pendingCompletions, completionPulse: completionPulse,
+            pendingDelete: $pendingTaskDelete, confirmingDelete: $confirmingTaskDelete, datingTask: $datingTask,
+            didDelete: { id in if selection == .task(id) { selection = nil } }
+        )
     }
 
     var body: some View {
@@ -119,6 +135,7 @@ struct SidebarView: View {
         } message: { target in
             Text(target.deleteMessage)
         }
+        .taskInteractionDialogs(taskActions)
     }
 
     /// The header of a foldable group: its name, how many it holds while folded, and the arrow.
@@ -236,11 +253,25 @@ struct SidebarView: View {
                     .paperRow()
             } else {
                 ForEach(next.prefix(3)) { task in
-                    TaskRow(task: task, identifierPrefix: "nextUpPreview_")
-                        .tag(ViewSelection.task(task.id))
-                        .paperRow()
+                    previewRow(task)
                 }
             }
+        }
+    }
+
+    /// A tap opens the task; while its Done window runs (#32) a tap takes it back instead.
+    @ViewBuilder
+    private func previewRow(_ task: TaskItem) -> some View {
+        let row = TaskRow(task: task, identifierPrefix: "nextUpPreview_")
+        if taskActions.isPending(task) {
+            taskActions.pendingRow(task, row)
+        } else {
+            row
+                .tag(ViewSelection.task(task.id))
+                .swipeActions(edge: .leading, allowsFullSwipe: true) { taskActions.leadingActions(task) }
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) { taskActions.trailingActions(task) }
+                .contextMenu { taskActions.menu(task) }
+                .paperRow()
         }
     }
 
