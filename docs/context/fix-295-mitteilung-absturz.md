@@ -69,3 +69,55 @@ der CI läuft.
 - Test-Mitteilung im Produktcode nur hinter UI-Test-Schalter; darf in Release nie feuern.
 - Aktionsknöpfe (Erledigt/Als nächstes/Morgen) gehen durch dieselbe Methode → gleicher Absturz möglich; RED-Test oder
   Begründung, warum der Körper-Tipp stellvertretend reicht.
+
+## Analysis
+
+### Type
+Bug (Absturz). Verschlechterung? Nein: `DueNotificationCenter.swift` ist seit seiner Einführung (#9, f56d46a) unverändert;
+der Fehler steckt seit damals drin und zeigt sich, sobald jemand den Mitteilungskörper antippt.
+
+### Affected Files (with changes)
+| File | Change Type | Description |
+|------|-------------|-------------|
+| `LooseEnds/Notifications/DueNotificationCenter.swift` | MODIFY | `didReceive`/`willPresent` auf Rückruf-Varianten umstellen; `suppressed` unter `--ui-testing-notifications` aufheben; Test-Mitteilung (nur unter dem Schalter) |
+| `LooseEnds/App/LooseEndsApp.swift` | MODIFY | unter `--ui-testing-notifications` Erlaubnis anfragen und Test-Mitteilung planen (ggf. in DueNotificationCenter gekapselt) |
+| `LooseEndsUITests/DueNotificationTapTests.swift` | CREATE | RED-Test: Banner antippen → App im Vordergrund und bedienbar |
+| `LooseEndsUITests/Repro295Tests.swift` | DELETE | Wegwerf-Reproduktion, nie committet |
+
+### Scope Assessment
+- Files: 3 (+1 Wegwerfdatei weg)
+- Estimated LoC: ~+100/-15
+- Risk Level: LOW–MEDIUM (eine isolierte Klasse; Risiko liegt im UI-Test-Timing, nicht im Fix)
+
+### Technical Approach (Empfehlung, bestätigt durch Plan-Bewertung)
+- `nonisolated func userNotificationCenter(_:didReceive:withCompletionHandler:)`: `actionIdentifier` und `taskID` als
+  `String` synchron herausziehen (`UNNotificationResponse` ist nicht Sendable), dann
+  `Task { @MainActor in await apply(...); completionHandler() }` — Abschluss auf dem Hauptthread und erst nach `save()`,
+  damit ein Hintergrundstart über die Aktionsknöpfe nicht vor dem Speichern suspendiert wird. Abschluss auch bei jedem
+  frühen Rücksprung aus `apply` (steht nach dem `await`, also immer).
+- `willPresent:withCompletionHandler:` synchron `completionHandler([.banner, .list, .sound])`. Absturz dort mechanisch
+  unwahrscheinlich (Assert hängt am Vordergrund-Übergang), Umstellung aber billig und konsistent.
+- Keine async-Variante daneben stehen lassen.
+- Sendable-Annotation des Rückrufs im iOS-27-SDK beim ersten Build prüfen.
+
+### Alternativen
+- Isolierte Konformität `@MainActor UNUserNotificationCenterDelegate` mit async-Methoden: kürzer, aber nicht belegt, dass
+  der Compiler-Thunk den Systemabschluss dann auf dem Hauptthread ruft; verworfen (kein ADR betroffen).
+- Mitteilungskörper ohne Delegate-Behandlung (nur Knöpfe auswerten): löst den Absturz nicht, weil das System `didReceive`
+  für jeden Tipp ruft, sobald ein Delegate gesetzt ist.
+
+### Test
+UI-Test unter `--ui-testing --ui-testing-notifications` (In-Memory-Store), App plant selbst eine Mitteilung (Kategorie
+`DUE`, ~5 s), Test erlaubt per Interruption-Monitor, Home, tippt Banner, erwartet `runningForeground` + `captureButton`.
+Ohne `simctl push` → CI-tauglich. Flakiness mittel (Banner-Timing): großzügige Timeouts. Aktionsknöpfe: im UI-Test
+schwer bedienbar (Langdruck am Banner); gleicher Codeweg, durch den Körper-Tipp mitbelegt; Speichern-Logik ist
+`DueReminders.handle` (bestehende Unit-Tests).
+
+### Dependencies
+`UserNotifications`, `DueReminders`, `ModelContainer.mainContext`. Keine neuen Abhängigkeiten, keine Info.plist-Änderung.
+
+### Abnahme
+Stufe 3 greift (`LooseEnds/Notifications/` auf der Geräteliste) → Gerätelauf nur nach Hennings „jetzt ist ein Test möglich“.
+
+### Open Questions
+- keine PO-Fragen offen.

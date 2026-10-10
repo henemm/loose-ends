@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-10-10T13:47:39+0200
+befehl: scripts/sim.sh test-proof DueNotificationTapTests
+workflow: fix-295-mitteilung-absturz
+head: 288d1a94061aad170644d13963a5a7f24e3cd160
+basis: 5037f0ee63f82d1803090c66ee78064768f75852 (merge-base origin/main HEAD)
+testklasse: DueNotificationTapTests
+ergebnis: Failed
+xcodebuild: ** TEST FAILED **
+tests: 2 gesamt, 1 bestanden, 1 fehlgeschlagen, 0 übersprungen
+start: 1791632685.353  ende: 1791632858.643
+geraet: LE-295, iOS 27.0
+summary: docs/artifacts/fix-295-mitteilung-absturz/simulator-run/summary.json  sha256:236df8ad7c9c435309cceb393f4114eedd18298d03db29acc4c284d951a46ac2
+xcresult: docs/artifacts/fix-295-mitteilung-absturz/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-295-mitteilung-absturz/simulator-run/*.png (1 Stück)
+
+## Geprüfte Dateien
+- sha256:8ec00ce02e365da45fd64318ca8df358de8a598a63702e342196f091a73b86b9  LooseEnds/Notifications/DueNotificationCenter.swift
+- sha256:93882e6c79b90c2bb34120c15002fdb7be7a92cdcb881882d0971da90184e4e1  LooseEndsUITests/DueNotificationTapTests.swift

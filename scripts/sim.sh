@@ -15,6 +15,7 @@
 #   ./scripts/sim.sh sim-unit [Suite[/test]]  # Unit-Tests im iOS-Simulator
 #   ./scripts/sim.sh test <Class[/test]>      # UI-Test im iOS-Simulator
 #   ./scripts/sim.sh test-proof <Class[/test]> # UI-Test + Simulator-Beleg in docs/artifacts/<workflow>/ (#145)
+#     LOOSEENDS_PUSH=<datei.apns> davor: spielt die Mitteilung während des Laufs alle 5 s ein (#295)
 #   ./scripts/sim.sh boot | status | launch | screenshot [pfad]
 #
 # Messreihen gegen das echte Modell (Spikes #65-#73), ohne das iPhone zu belegen:
@@ -329,11 +330,22 @@ cmd_test_proof() {
     cmd_generate; acquire_lock; cmd_boot
     local id; id=$(sim_id)
     info "UI-Test mit Beleg: $1 → $art/simulator-run.txt"
+    # Mitteilungstests (#295): `add` aus der App scheitert im iOS-27-Simulator (UNErrorDomain 2003),
+    # also spielt der Lauf die Datei aus LOOSEENDS_PUSH alle 5 s per simctl push ein.
+    local push_pid=""
+    if [ -n "${LOOSEENDS_PUSH:-}" ]; then
+        [ -f "$LOOSEENDS_PUSH" ] || { release_lock; error "LOOSEENDS_PUSH: $LOOSEENDS_PUSH fehlt"; return 1; }
+        export TEST_RUNNER_LOOSEENDS_PUSH_FEED=1
+        ( while true; do $SIMCTL push "$id" com.henning.looseends "$LOOSEENDS_PUSH" >/dev/null 2>&1 || true; sleep 5; done ) &
+        push_pid=$!
+        info "Mitteilungen aus $LOOSEENDS_PUSH alle 5 s (simctl push)"
+    fi
     # Rückgabewert aus diesem Lauf festhalten (pipefail, Lehre #144); `|| rc=` hält set -e auf.
     local rc=0
     run_xcodebuild test -project "$PROJECT" -scheme "$SCHEME" -destination "platform=iOS Simulator,id=$id" \
         -only-testing:"$UI_TARGET/$1" -parallel-testing-enabled NO -disable-concurrent-destination-testing \
         -resultBundlePath "$run/run.xcresult" || rc=$?
+    [ -n "$push_pid" ] && { kill "$push_pid" 2>/dev/null || true; }
     local endline; endline=$(grep -E '^\*\* TEST (SUCCEEDED|FAILED) \*\*' "$BUILD_LOG" | tail -1 || true)
     release_lock
     local prc=0

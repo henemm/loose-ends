@@ -1,0 +1,17 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "0FD99675-0A9F-4731-B393-E9722B1E6391",
+        "deviceName" : "LE-295",
+        "exportedFileName" : "28323C33-D194-4548-9823-606FE1A92BD8.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "reminder-in-front_0_CB6A0490-D53F-44BD-BA8E-3704AC376906.png",
+        "timestamp" : 1791632772.587
+      }
+    ],
+    "testIdentifier" : "DueNotificationTapTests/testBannerWhileAppIsOpenKeepsAppAlive()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/DueNotificationTapTests/testBannerWhileAppIsOpenKeepsAppAlive"
+  }
+]

@@ -9,7 +9,9 @@ import UserNotifications
 /// Holds the reminder time for tasks without a due time (#311): kept in `UserDefaults` and mirrored
 /// to the iCloud key-value store, so a change on one device reschedules the others.
 /// Silent under tests, where a permission prompt would block the run; unit tests hand in a
-/// recording `DueScheduling` and their own stores instead (#328).
+/// recording `DueScheduling` and their own stores instead (#328). The notification UI test (#295)
+/// lets it run with `--ui-testing-notifications` while the store stays in memory; the banner itself
+/// comes from `simctl push`, because `add` from the app fails in the iOS 27 Simulator.
 @MainActor
 final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
     private let container: ModelContainer
@@ -23,7 +25,11 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
     static let timeKey = "dueReminderMinutes"
 
     private static var suppressed: Bool {
-        ModelContainerFactory.isRunningTests || ModelContainerFactory.isUITesting
+        ModelContainerFactory.isRunningTests || (ModelContainerFactory.isUITesting && !isNotificationUITest)
+    }
+
+    private static var isNotificationUITest: Bool {
+        ModelContainerFactory.isUITesting && ProcessInfo.processInfo.arguments.contains("--ui-testing-notifications")
     }
 
     init(
