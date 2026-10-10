@@ -104,20 +104,28 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
 
     // MARK: - UNUserNotificationCenterDelegate
 
+    // Callback variants, not async (#295): the async bridge called the system's completion from the
+    // cooperative pool and the app aborted on tap; the completion has to come from the main thread.
+    // `@Sendable` because the handler crosses into the main-actor task (the SDK leaves it unannotated).
     nonisolated func userNotificationCenter(
         _ center: UNUserNotificationCenter,
-        didReceive response: UNNotificationResponse
-    ) async {
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping @Sendable () -> Void
+    ) {
         let actionRaw = response.actionIdentifier
         let taskID = response.notification.request.content.userInfo["taskID"] as? String
-        await apply(actionRaw: actionRaw, taskID: taskID)
+        Task { @MainActor in
+            await apply(actionRaw: actionRaw, taskID: taskID)
+            completionHandler()
+        }
     }
 
     nonisolated func userNotificationCenter(
         _ center: UNUserNotificationCenter,
-        willPresent notification: UNNotification
-    ) async -> UNNotificationPresentationOptions {
-        [.banner, .list, .sound]
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        completionHandler([.banner, .list, .sound])
     }
 
     private func apply(actionRaw: String, taskID: String?) async {
