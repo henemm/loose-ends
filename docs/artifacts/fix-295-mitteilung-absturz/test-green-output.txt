@@ -1,0 +1,40 @@
+note: Building targets in dependency order
+note: Target dependency graph (6 targets)
+[LooseEnds] Compiling DueNotificationCenter.swift
+[LooseEnds] Compiling CaptureView.swift
+[LooseEnds] Compiling LooseEndsApp.swift
+[LooseEnds] Compiling ContentView.swift
+[LooseEnds] Copy arm64-apple-ios-simulator.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+[LooseEnds] Copy arm64-apple-ios-simulator.swiftmodule -> LooseEnds.swiftmodule
+[LooseEnds] Copy arm64-apple-ios-simulator.abi.json -> LooseEnds.abi.json
+[LooseEnds] Linking LooseEnds.debug.dylib
+note: Using stub executor library with Swift entry point. (in target 'LooseEnds' from project 'LooseEnds')
+[LooseEnds] Linking LooseEnds
+[LooseEnds] Extract App Intents Metadata
+[LooseEndsTests] Linking LooseEndsTests
+[LooseEndsTests] Extract App Intents Metadata
+[LooseEnds] Validate LooseEnds.app
+Test Suite 'Selected tests' started at 2026-10-10 13:50:43.736.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-10 13:50:43.739.
+Test Suite 'DueNotificationTapTests' started at 2026-10-10 13:50:43.740.
+    ✔ testBannerWhileAppIsOpenKeepsAppAlive (67.696 seconds)
+    ✔ testTapBannerFromHomeOpensApp (148.429 seconds)
+Executed 2 tests, with 0 failures (0 unexpected) in 216.125 (216.153) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-10 13:54:19.893.
+Executed 2 tests, with 0 failures (0 unexpected) in 216.125 (216.154) seconds
+Executed 2 tests, with 0 failures (0 unexpected) in 216.125 (216.158) seconds
+Test session results: /Users/hem/Developer/loose-ends/.claude/worktrees/zippy-baking-hejlsberg/docs/artifacts/fix-295-mitteilung-absturz/simulator-run/run.xcresult
+Test Succeeded
+Testing started
+./scripts/sim.sh: line 78: 20736 Terminated: 15          ( while true; do
+    $SIMCTL push "$id" com.henning.looseends "$LOOSEENDS_PUSH" > /dev/null 2>&1 || true; sleep 5;
+done )
+[sim] UI-Test bestanden, Beleg: docs/artifacts/fix-295-mitteilung-absturz/simulator-run.txt
+
+----- Unit-Lauf (sim-unit, Simulator LE-295) -----
+XCTest: Executed 7 tests, with 0 failures (0 unexpected)
+Swift Testing: 497 Tests bestanden, 0 fehlgeschlagen
+Test Succeeded
+[sim] Unit-Tests bestanden.
+[sim] Messstrecken: 1 von 5 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json

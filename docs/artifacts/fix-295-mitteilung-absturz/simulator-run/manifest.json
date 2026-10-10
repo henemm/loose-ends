@@ -5,13 +5,28 @@
         "configurationName" : "Test Scheme Action",
         "deviceId" : "0FD99675-0A9F-4731-B393-E9722B1E6391",
         "deviceName" : "LE-295",
-        "exportedFileName" : "28323C33-D194-4548-9823-606FE1A92BD8.png",
+        "exportedFileName" : "448EF7A7-CD95-45DE-AA38-D061AD86A1F7.png",
         "isAssociatedWithFailure" : false,
-        "suggestedHumanReadableName" : "reminder-in-front_0_CB6A0490-D53F-44BD-BA8E-3704AC376906.png",
-        "timestamp" : 1791632772.587
+        "suggestedHumanReadableName" : "reminder-in-front_0_DF7DCA56-6DEC-4128-8484-8D314C737E37.png",
+        "timestamp" : 1791633111.125
       }
     ],
     "testIdentifier" : "DueNotificationTapTests/testBannerWhileAppIsOpenKeepsAppAlive()",
     "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/DueNotificationTapTests/testBannerWhileAppIsOpenKeepsAppAlive"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "0FD99675-0A9F-4731-B393-E9722B1E6391",
+        "deviceName" : "LE-295",
+        "exportedFileName" : "E42586E6-079D-48E9-83B0-CD791C860C0B.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "opened-from-reminder_0_BFE0ED76-D10C-4A10-A231-83AF06996579.png",
+        "timestamp" : 1791633259.596
+      }
+    ],
+    "testIdentifier" : "DueNotificationTapTests/testTapBannerFromHomeOpensApp()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/DueNotificationTapTests/testTapBannerFromHomeOpensApp"
   }
 ]
