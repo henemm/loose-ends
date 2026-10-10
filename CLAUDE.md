@@ -224,7 +224,8 @@ not scope creep on the current one.
   only in the probe build (`.probe`); launch argument `-measureLaunch` opens the capture scene
 - `LooseEnds/Speech` — `SpeechCapture` (live recognition for the capture scene, skipped under `--ui-testing`; the transcriber
   is built only in `makeTranscriber` with `.volatileResults` and `.fastResults` — without the latter the first word takes
-  ~12 s instead of ~1 s, #274), `Waveform`,
+  ~12 s instead of ~1 s, #274), `Waveform` (level in dBFS, scale −55…−25 → 0…1, mic ring grows up to 35 % from 52 pt, #279),
+  `ListeningHint` (pure rule: "Listening …" while the mic listens and the field is empty, #297),
   `SpeechDiagnosis` (pure rule: after 6 s of audio without any result the capture shows a grey line with model status,
   permissions, buffer and result counts, #274; `--ui-testing-speech-diagnosis` fixes that state for the UI smoke test)
 - `Shared/Notifications` — `DueReminders` (pure plan and action handling); `PlaceReminders` (which ≤ 20 places
