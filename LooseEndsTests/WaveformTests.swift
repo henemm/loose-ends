@@ -15,21 +15,21 @@ import Testing
         #expect(Waveform.level(of: [0, 0, 0, 0]) == 0)
     }
 
-    // #279: the bar scale is in decibels, −50 … −10 dBFS onto 0 … 1, so normal speech
-    // without the system's gain control (`.measurement`) fills about half the height.
-    @Test("−50 dBFS is the floor")
-    func minusFiftyIsZero() {
-        #expect(abs(Waveform.level(of: signal(dBFS: -50))) < 0.01)
+    // #279: the bar scale is in decibels, −55 … −25 dBFS onto 0 … 1, so normal speech as measured on
+    // the iPhone (Build 23, ≈ −40 dBFS under `.measurement`) fills half the height.
+    @Test("−55 dBFS is the floor")
+    func floorIsZero() {
+        #expect(abs(Waveform.level(of: signal(dBFS: -55))) < 0.01)
     }
 
-    @Test("−30 dBFS, normal speech, is half the height")
-    func minusThirtyIsHalf() {
-        #expect(abs(Waveform.level(of: signal(dBFS: -30)) - 0.5) < 0.01)
+    @Test("−40 dBFS, measured speech, is half the height")
+    func measuredSpeechIsHalf() {
+        #expect(abs(Waveform.level(of: signal(dBFS: -40)) - 0.5) < 0.01)
     }
 
-    @Test("−10 dBFS and a full-scale signal fill the bar")
-    func minusTenIsOne() {
-        #expect(abs(Waveform.level(of: signal(dBFS: -10)) - 1) < 0.01)
+    @Test("−25 dBFS and a full-scale signal fill the bar")
+    func ceilingIsOne() {
+        #expect(abs(Waveform.level(of: signal(dBFS: -25)) - 1) < 0.01)
         #expect(Waveform.level(of: [1, -1, 1, -1]) == 1)
     }
 
@@ -38,10 +38,18 @@ import Testing
         #expect(Waveform.level(of: signal(dBFS: -70)) == 0)
     }
 
-    @Test("Amplitude 0.05 (−26 dBFS) sits a little above half")
-    func louderSpeech() {
-        let speech = Waveform.level(of: [0.05, -0.05, 0.05, -0.05])
-        #expect(abs(speech - 0.6) < 0.02)
+    @Test("−36 dBFS, measured peaks, sits above half")
+    func peaksAreAboveHalf() {
+        #expect(abs(Waveform.level(of: signal(dBFS: -36)) - 0.63) < 0.02)
+    }
+
+    @Test("The ring grows with the level from the circle to 1.35 times it, clamped")
+    func ringScale() {
+        #expect(abs(Waveform.ringScale(for: 0) - 1) < 0.001)
+        #expect(abs(Waveform.ringScale(for: 0.5) - 1.175) < 0.001)
+        #expect(abs(Waveform.ringScale(for: 1) - 1.35) < 0.001)
+        #expect(abs(Waveform.ringScale(for: -1) - 1) < 0.001)
+        #expect(abs(Waveform.ringScale(for: 3) - 1.35) < 0.001)
     }
 
     @Test("The waveform keeps only the newest levels and clamps them to 0...1")

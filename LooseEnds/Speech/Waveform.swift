@@ -16,9 +16,15 @@ struct Waveform: Equatable {
     }
 
     /// Bottom and top of the bar scale in dBFS (#279). Without the system's gain control (`.measurement`)
-    /// normal speech sits near −30 dBFS, which lands at half the height.
-    static let floorDecibel: Float = -50
-    static let ceilingDecibel: Float = -10
+    /// normal speech on the iPhone sits near −40 dBFS (Build 23), which lands at half the height.
+    static let floorDecibel: Float = -55
+    static let ceilingDecibel: Float = -25
+
+    /// How far the ring around the mic button reaches, as a multiple of its resting size (#279):
+    /// 1 at silence, 1.35 at the top of the scale.
+    static func ringScale(for level: Float) -> CGFloat {
+        1 + 0.35 * CGFloat(min(max(level, 0), 1))
+    }
 
     /// RMS of the samples in dBFS, mapped linearly from `floorDecibel … ceilingDecibel` onto 0 … 1.
     static func level(of samples: [Float]) -> Float {

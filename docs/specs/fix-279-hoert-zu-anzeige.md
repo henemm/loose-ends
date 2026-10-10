@@ -32,8 +32,8 @@ ersetzt wird.“ Entwurf: `docs/artifacts/279-pegel-mikrofon/entwurf.html` (Entw
 
 Umfang:
 
-1. **Pegel in Dezibel.** `Waveform.level(of:)` rechnet RMS in dBFS (20·log10) und bildet −50 … −10 dBFS linear auf 0 … 1
-   ab (Stille und leere Probe → 0, ≥ −10 dBFS → 1). Normale Sprache (−30 dBFS) landet bei 0,5, also etwa halber Höhe.
+1. **Pegel in Dezibel.** `Waveform.level(of:)` rechnet RMS in dBFS (20·log10) und bildet −55 … −25 dBFS linear auf 0 … 1
+   ab (Stille und leere Probe → 0, ≥ −25 dBFS → 1). Normale Sprache (am iPhone gemessen ≈ −40 dBFS, Build 23) landet bei 0,5, also etwa halber Höhe.
 2. **Graue Grundlinie** über die volle Breite der Wellenform, sobald die Zeile sichtbar ist (auch vor dem ersten Puffer).
    Balken: Akzentfarbe beim Zuhören, grau, wenn nicht zugehört wird.
 3. **Hinweis „Ich höre …“** (EN „Listening …“), grau, an der Platzhalterstelle des Textfelds, solange zugehört wird **und** das
@@ -54,7 +54,7 @@ Erkennung und die Audio-Session bleiben unverändert.
   geschrieben, wo später die erkannten Worte erscheinen. Mit einer Animation.“). Schließt #297. #279 bleibt offen: Die Verzögerung bis zum ersten Wort und die stoßweisen Ergebnisse (Teil A) sind unverändert (Henning, 2026-10-10: „die Lücke hat sich bisher nicht verändert … Deine bisherigen Versuche haben nichts gebracht“); diese Änderung macht die Wartezeit nur sichtbar, sie verkürzt sie nicht.
 - **#297 wünschte „kurze Verzögerung nach dem Öffnen“; freigegeben ist Erscheinen ab Beginn des Zuhörens**, ohne zusätzliche
   Verzögerung.
-- **Mac:** Die View ist geteilt. Dort gibt es keinen Messmodus, der Pegel liegt eher höher; die Skala −50 … −10 dBFS passt
+- **Mac:** Die View ist geteilt. Dort gibt es keinen Messmodus, der Pegel liegt eher höher; die Skala −55 … −25 dBFS passt
   trotzdem (laute Eingabe sättigt bei 1).
 - **Nicht im Umfang:** Teil A (Latenz, Vorstart; #274) und jede Änderung des Audio-Session-Modus.
 
@@ -72,7 +72,7 @@ Erkennung und die Audio-Session bleiben unverändert.
 
 | Datei | Änderung | Beschreibung |
 |---|---|---|
-| `LooseEnds/Speech/Waveform.swift` | MODIFY | `level(of samples:)`: RMS → `20·log10(rms)`; `Waveform.floorDecibel = -50`, `ceilingDecibel = -10`; Ergebnis `clamp((db − floor)/(ceiling − floor), 0, 1)`; RMS 0 oder leere Probe → 0 (kein `log10(0)`). Die Puffer-Variante bleibt, sie ruft die Proben-Variante. |
+| `LooseEnds/Speech/Waveform.swift` | MODIFY | `level(of samples:)`: RMS → `20·log10(rms)`; `Waveform.floorDecibel = -55`, `ceilingDecibel = -25`; Ergebnis `clamp((db − floor)/(ceiling − floor), 0, 1)`; RMS 0 oder leere Probe → 0 (kein `log10(0)`). Die Puffer-Variante bleibt, sie ruft die Proben-Variante. |
 | `LooseEnds/Speech/ListeningHint.swift` | NEU | `enum ListeningHint { case hint, placeholder, none }` und `static func state(isListening: Bool, text: String) -> ...`: zuhören und Text leer (nur Leerraum zählt als leer) → Hinweis; Text vorhanden → kein Hinweis (das Feld zeigt den Text); nicht zuhören und leer → Platzhalter. Rein, ohne Systemzugriff. |
 | `LooseEnds/Views/CaptureView.swift` | MODIFY | Textfeld: Hinweis „Listening …“ mit drei nacheinander aufleuchtenden Punkten als grauer Überlagerung an der Platzhalterstelle (`allowsHitTesting(false)`, ausgeblendet für VoiceOver, Kennung `listeningHint`), solange die Regel „Hinweis“ liefert; sonst Platzhalter wie heute. `WaveformView`: graue Grundlinie über die volle Breite, Balkenfarbe nach Zustand. Neuer privater `MicButton`: Kreis, Symbol, Ring nach letztem Pegel (`.smooth`), `reduceMotion` friert Ring und Punkte ein. Festzustand `--ui-testing-speech-listening`. |
 | `LooseEnds/Resources/Localizable.xcstrings` | MODIFY | Eintrag `Listening …` → `Ich höre …`. Reine Textdatei. |
@@ -98,8 +98,8 @@ Text aber nicht, weil es dort kein Zuhören gibt.
 ### Pegel
 
 `level(of:)`: `rms = sqrt(mean(x²))`. Bei `rms <= 0` Ergebnis 0. Sonst `db = 20 · log10(rms)`, Ergebnis
-`min(1, max(0, (db + 50) / 40))`. Stützpunkte: −50 dBFS → 0, −30 dBFS (RMS ≈ 0,0316) → 0,5, −10 dBFS (RMS ≈ 0,316) → 1.
-Ein Vollausschlag (RMS 1) und alles über −10 dBFS ergibt 1. Der Ringpuffer (`append`, Kapazität 40) bleibt unverändert.
+`min(1, max(0, (db + 55) / 30))`. Stützpunkte: −55 dBFS → 0, −40 dBFS (RMS ≈ 0,01) → 0,5, −25 dBFS (RMS ≈ 0,0562) → 1.
+Ein Vollausschlag (RMS 1) und alles über −25 dBFS ergibt 1. Der Ringpuffer (`append`, Kapazität 40) bleibt unverändert.
 Die Audio-Session (`.measurement`, #8) bleibt unverändert, weil der Erkennungspfad aus #274 daran hängt.
 
 ### Grundlinie und Balken
@@ -118,15 +118,16 @@ auf den Platzhalter bei beendetem Zuhören und leerem Feld geschieht über diese
 ### Runder Knopf
 
 Mindestens 44 × 44 pt Tippfläche. Hört zu: gefüllter Kreis (`Color.accentColor`), `mic.fill` in `.white`, Ring (Kreislinie,
-Akzent mit geringer Deckkraft) mit Durchmesser wachsend aus dem letzten Pegel (`waveform.levels.last`, Zuwachs auf wenige
-Punkte begrenzt), Animation `.smooth`. Nicht zuhören: Kreis nur umrandet in Grau, `mic.slash` in Grau, kein Ring.
+Akzent mit geringer Deckkraft) mit Durchmesser wachsend aus dem letzten Pegel (`waveform.levels.last`): Durchmesser = Kreis × (1 + 0,35 × Pegel), wie im Entwurf;
+die reine Rechnung ist `Waveform.ringScale(for:)` und unit-getestet), Animation `.smooth`. Der Knopf selbst bleibt ruhig, kein
+Atmen in der Stille. Nicht zuhören: Kreis nur umrandet in Grau, `mic.slash` in Grau, kein Ring.
 `accessibilityLabel` „Stop listening“ / „Listen“, Kennung `micButton`. Reduce Motion: Ring wird nicht animiert und bekommt
-eine feste Größe.
+die feste Größe × 1,15. Die Tippfläche wächst so mit, dass der größte Ring (× 1,35) nicht abgeschnitten wird.
 
 ### Festzustand für den UI-Test
 
 `--ui-testing-speech-listening` wirkt nur zusammen mit `--ui-testing` (Vorbild `--ui-testing-speech-diagnosis`). Dann zeigt
-die Erfassung die Zeile, startet **kein** Mikrofon und keine Erkennung, gilt als „hört zu“, hat feste Pegel (u. a. −30 dBFS-Wert
+die Erfassung die Zeile, startet **kein** Mikrofon und keine Erkennung, gilt als „hört zu“, hat feste Pegel (u. a. −40 dBFS-Wert
 0,5) und ein leeres Textfeld. Der Mikrofonknopf löst im Festzustand nichts aus. Ohne das Argument ändert sich unter
 `--ui-testing` nichts.
 
@@ -137,12 +138,12 @@ die Erfassung die Zeile, startet **kein** Mikrofon und keine Erkennung, gilt als
 `WaveformTests` (Swift Testing, Unit):
 
 - `testSilenceAndEmptyAreZero`: GIVEN `[]` und `[0, 0, 0, 0]` WHEN `level(of:)` THEN 0.
-- `testMinusFiftyIsZero`: GIVEN konstante Amplitude für −50 dBFS (≈ 0,00316) THEN Ergebnis 0 (Toleranz 0,01).
-- `testMinusThirtyIsHalf`: GIVEN −30 dBFS (≈ 0,0316) THEN 0,5 (Toleranz 0,01).
-- `testMinusTenIsOne`: GIVEN −10 dBFS (≈ 0,316) THEN 1 (Toleranz 0,01); GIVEN `[1, -1, 1, -1]` THEN 1.
+- `testFloorIsZero`: GIVEN konstante Amplitude für −55 dBFS (≈ 0,00178) THEN Ergebnis 0 (Toleranz 0,01).
+- `testMeasuredSpeechIsHalf`: GIVEN −40 dBFS (≈ 0,01, am iPhone gemessene Sprache) THEN 0,5 (Toleranz 0,01).
+- `testCeilingIsOne`: GIVEN −25 dBFS (≈ 0,0562) THEN 1 (Toleranz 0,01); GIVEN `[1, -1, 1, -1]` THEN 1.
 - `testBelowFloorClampsToZero`: GIVEN −70 dBFS THEN 0.
-- Der bestehende Test „speech between 0.2 and 0.5“ (Amplitude 0,05 → 0,3 alt) wird an die neue Skala angepasst: 0,05 entspricht
-  −26 dBFS, erwartet etwa 0,6; Wert und Toleranz stehen im Test.
+- `testPeaksAreAboveHalf`: GIVEN −36 dBFS (gemessene Spitzen, ≈ 0,0158) THEN ≈ 0,63 (Toleranz 0,02).
+- `testRingScale`: `Waveform.ringScale(for:)` liefert 0 → 1, 0,5 → 1,175, 1 → 1,35; Werte außerhalb 0 … 1 werden begrenzt.
 - Der bestehende Ringpuffer-Test bleibt unverändert.
 - `testHintWhileListeningAndEmpty`: GIVEN zuhören, Text `""` THEN Hinweis.
 - `testHintWhileListeningAndOnlyWhitespace`: GIVEN zuhören, Text `"  "` THEN Hinweis.
@@ -180,9 +181,9 @@ aufnehmen?“. Reduce Motion an → Punkte und Ring stehen still.
 
 ## Acceptance Criteria
 
-- **AC-1 Skala:** `Waveform.level(of:)` liefert −50 dBFS → 0, −30 dBFS → 0,5, −10 dBFS → 1, Stille und leere Probe → 0
+- **AC-1 Skala:** `Waveform.level(of:)` liefert −55 dBFS → 0, −40 dBFS → 0,5, −25 dBFS → 1, Stille und leere Probe → 0
   (Unit-Tests).
-- **AC-2 Sprachhöhe:** Normale Sprache (≈ −30 dBFS) erreicht etwa die halbe Balkenhöhe (Belegt am Gerät, Stufe 3).
+- **AC-2 Sprachhöhe:** Normale Sprache (≈ −40 dBFS) erreicht etwa die halbe Balkenhöhe (Belegt am Gerät, Stufe 3).
 - **AC-3 Grundlinie:** Die graue Grundlinie über die volle Breite steht, sobald die Zeile sichtbar ist, auch vor dem ersten
   Puffer. Balken sind beim Zuhören Akzent, sonst grau.
 - **AC-4 Hinweis:** Solange zugehört wird und das Textfeld leer ist, steht „Ich höre …“ (EN „Listening …“) grau an der
@@ -214,8 +215,10 @@ aufnehmen?“. Reduce Motion an → Punkte und Ring stehen still.
 
 ## Risiken
 
-- **Gerätepegel nicht gemessen.** Die −30 dBFS für normale Sprache sind eine Rechnung aus dem Messmodus, kein Messwert. Stufe 3
-  prüft die Höhe; liegt Sprache dort deutlich anders, ist die Skala (zwei Konstanten) das Einzige, was nachzuziehen ist.
+- **Gerätepegel aus einem Bildschirmfoto.** Die ursprünglich gerechneten −30 dBFS lagen 10 dB zu hoch: Build 23 zeigte am iPhone
+  ≈ −40 dBFS für normale Sprache, ausgemessen an den Balkenhöhen eines Bildschirmfotos des PO. Das ist eine Messung mit einer
+  Sprecherin bzw. einem Sprecher in einem Raum; ein anderer Abstand verschiebt den Pegel. Stufe 3 (TestFlight) prüft die Höhe erneut,
+  und nachzuziehen wären wieder nur die zwei Konstanten.
 - **Überlagerung statt echtem Platzhalter.** Ein `TextField`-Platzhalter kennt keine Animation; der Hinweis ist deshalb eine
   Überlagerung bei leerem Feld. Er darf den Cursor und das Tippen nicht blockieren (`allowsHitTesting(false)`), und der
   VoiceOver-Name des Felds bleibt der Platzhalter-Text.
@@ -254,3 +257,7 @@ aufnehmen?“. Reduce Motion an → Punkte und Ring stehen still.
 
 - 2026-10-10: Initiale Spec für #279 (B, C) mit gebündeltem #297; Umfang vom PO freigegeben (Entwurf C plus runder Knopf aus A).
 - 2026-10-10: #279 wird nicht geschlossen; Teil A ist ungelöst (Hinweis des PO bei der Freigabe).
+- 2026-10-10 (Nachbesserung nach Build 23, PO: „das Mikrophone (im Kreis) pulsiert nicht!“): Am iPhone kommt normale Sprache bei
+  ≈ −40 dBFS an (Spitzen ≈ −36), ausgemessen am Bildschirmfoto des PO; die Balken erreichten 0,2–0,34. Skala deshalb −55 … −25 dBFS
+  (−40 → 0,5). Ring wächst wie im Entwurf: Durchmesser = Kreis × (1 + 0,35 × Pegel), statt 46 → 56 pt; der Knopf selbst bleibt ruhig,
+  kein Atmen in der Stille (PO-Wahl „Ring wächst deutlich“). Reduce Motion: Ring fest bei × 1,15.
