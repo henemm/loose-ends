@@ -132,6 +132,10 @@ targets:
     entitlements:
       path: LooseEndsWidgets/LooseEndsWidgets.entitlements
       properties:
+        # The check mark in "Next up" writes into the store (#307); like the share extension the
+        # widget opens it with the CloudKit configuration, so it needs the container too.
+        com.apple.developer.icloud-container-identifiers: [iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)]
+        com.apple.developer.icloud-services: [CloudKit]
         com.apple.security.application-groups: [group.com.henning.looseends$(BUNDLE_ID_SUFFIX)]
         com.apple.security.app-sandbox: true
     info:
