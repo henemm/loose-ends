@@ -2,6 +2,7 @@ import Combine
 import OSLog
 import SwiftData
 import SwiftUI
+import WidgetKit
 
 /// Start screen on the left, one list on the right. One code path for iPhone, iPad and Mac (ADR-1).
 struct ContentView: View {
@@ -26,6 +27,7 @@ struct ContentView: View {
     var notifications: DueNotificationCenter?
     var calendar: CalendarBridge?
     private var captureRequest: CaptureRequest { .shared }
+    private var openTaskRequest: OpenTaskRequest { .shared }
 
     var body: some View {
         NavigationSplitView {
@@ -72,9 +74,13 @@ struct ContentView: View {
         }
         .onAppear(perform: consumeCaptureRequest)
         .onChange(of: captureRequest.pending) { _, _ in consumeCaptureRequest() }
+        .onAppear(perform: consumeOpenTaskRequest)
+        .onChange(of: openTaskRequest.taskID) { _, _ in consumeOpenTaskRequest() }
         .onReceive(NotificationCenter.default.publisher(for: ModelContext.didSave)) { _ in
             notifications?.rescheduleSoon()
             calendar?.syncSoon()
+            // The "Next up" widget follows what the app changed, not only every 15 minutes (#307).
+            WidgetCenter.shared.reloadTimelines(ofKind: "NextUp")
         }
     }
 
@@ -162,6 +168,13 @@ struct ContentView: View {
         guard captureRequest.pending else { return }
         captureRequest.pending = false
         isCapturing = true
+    }
+
+    /// A title tapped in the "Next up" widget opens that task (#307).
+    private func consumeOpenTaskRequest() {
+        guard let id = openTaskRequest.taskID else { return }
+        openTaskRequest.taskID = nil
+        selection = .task(id)
     }
 }
 
