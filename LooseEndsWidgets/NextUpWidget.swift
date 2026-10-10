@@ -31,7 +31,7 @@ struct NextUpProvider: TimelineProvider {
     private func load() -> NextUpEntry {
         do {
             // The context does not retain its container (CLAUDE.md): keep it alive while fetching.
-            let container = try ModelContainerFactory.make()
+            let container = try ModelContainerFactory.make(syncs: false)
             let next = try NextUpWidgetActions.nextUp(in: ModelContext(container), limit: 3)
             return NextUpEntry(date: .now, lines: next.map { NextUpEntry.Line(id: $0.id, title: $0.title) })
         } catch {
