@@ -118,7 +118,7 @@ auf den Platzhalter bei beendetem Zuhören und leerem Feld geschieht über diese
 ### Runder Knopf
 
 Mindestens 44 × 44 pt Tippfläche. Hört zu: gefüllter Kreis (`Color.accentColor`), `mic.fill` in `.white`, Ring (Kreislinie,
-Akzent mit geringer Deckkraft) mit Durchmesser wachsend aus dem letzten Pegel (`waveform.levels.last`): Durchmesser = Kreis × (1 + 0,35 × Pegel), wie im Entwurf;
+Akzent mit geringer Deckkraft) mit Durchmesser wachsend aus dem letzten Pegel (`waveform.levels.last`): Durchmesser = Ruhering 52 pt × (1 + 0,35 × Pegel), also 52 → ≈ 70 pt um den 44-pt-Kreis, wie im Entwurf;
 die reine Rechnung ist `Waveform.ringScale(for:)` und unit-getestet), Animation `.smooth`. Der Knopf selbst bleibt ruhig, kein
 Atmen in der Stille. Nicht zuhören: Kreis nur umrandet in Grau, `mic.slash` in Grau, kein Ring.
 `accessibilityLabel` „Stop listening“ / „Listen“, Kennung `micButton`. Reduce Motion: Ring wird nicht animiert und bekommt
@@ -259,5 +259,7 @@ aufnehmen?“. Reduce Motion an → Punkte und Ring stehen still.
 - 2026-10-10: #279 wird nicht geschlossen; Teil A ist ungelöst (Hinweis des PO bei der Freigabe).
 - 2026-10-10 (Nachbesserung nach Build 23, PO: „das Mikrophone (im Kreis) pulsiert nicht!“): Am iPhone kommt normale Sprache bei
   ≈ −40 dBFS an (Spitzen ≈ −36), ausgemessen am Bildschirmfoto des PO; die Balken erreichten 0,2–0,34. Skala deshalb −55 … −25 dBFS
-  (−40 → 0,5). Ring wächst wie im Entwurf: Durchmesser = Kreis × (1 + 0,35 × Pegel), statt 46 → 56 pt; der Knopf selbst bleibt ruhig,
+  (−40 → 0,5). Ring wächst wie im Entwurf: Durchmesser = Ruhering 52 pt × (1 + 0,35 × Pegel), statt 46 → 56 pt; der Knopf selbst bleibt ruhig,
   kein Atmen in der Stille (PO-Wahl „Ring wächst deutlich“). Reduce Motion: Ring fest bei × 1,15.
+- 2026-10-10 (F007, mit `override` des PO): Ringformel berichtigt. Bezugsgröße ist der Ruhering 52 pt (Kreis 44 + 8, `MicButton.ringRest`)
+  wie im Entwurf und im Code, nicht der 44-pt-Kreis. Nur Text, keine Verhaltensänderung.
