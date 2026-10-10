@@ -1,4 +1,3 @@
-import OSLog
 import SwiftData
 import SwiftUI
 
@@ -17,13 +16,11 @@ struct TaskListView: View {
 
     @State private var pendingDelete: TaskItem?
     @State private var confirmingDelete = false
-    /// The task whose "Move → Date…" sheet is open (#33).
     @State private var datingTask: TaskItem?
     /// Parents whose subtasks are folded out in the project view (#28); folded by default.
     @State private var unfolded: Set<UUID> = []
     /// The disclosure arrow's width, so titles line up with and without one.
     @ScaledMetric(relativeTo: .body) private var disclosureWidth: CGFloat = 22
-    private static let logger = Logger(subsystem: "com.henning.looseends", category: "List")
 
     /// The system kind, nil for a context or project view.
     private var kind: ViewKind? {
@@ -48,6 +45,15 @@ struct TaskListView: View {
         case .project: project.map { ViewRules.tasks(inProject: $0, in: tasks) } ?? []
         case .task: []
         }
+    }
+
+    /// Swipes, long-press menu and their actions, shared with the start screen (#303).
+    private var actions: TaskInteractions {
+        TaskInteractions(
+            kind: kind, tasks: tasks, contexts: contexts, projects: projects, modelContext: modelContext,
+            pendingCompletions: pendingCompletions, completionPulse: completionPulse,
+            pendingDelete: $pendingDelete, confirmingDelete: $confirmingDelete, datingTask: $datingTask
+        )
     }
 
     private var title: String {
@@ -78,17 +84,7 @@ struct TaskListView: View {
             }
         }
         .navigationTitle(title)
-        .confirmationDialog("Delete this task?", isPresented: $confirmingDelete, titleVisibility: .visible, presenting: pendingDelete) { task in
-            Button("Delete", role: .destructive) { delete(task) }
-                .accessibilityIdentifier("confirmDeleteButton")
-        } message: { _ in
-            Text("This cannot be undone.")
-        }
-        .sheet(item: $datingTask) { task in
-            MoveDateSheet(start: TaskActions.suggestedMoveDate(for: task)) { day in
-                move(task, to: .date(day))
-            }
-        }
+        .taskInteractionDialogs(actions)
     }
 
     /// The loose thread, third place of the knot (#180, rule 1), over one sentence per view.
@@ -174,7 +170,7 @@ struct TaskListView: View {
                 switch line {
                 case .task(let task):
                     // The Done window (#32) holds here too: struck through with Undo for three seconds.
-                    if pendingCompletions?.isPending(task.id) == true {
+                    if actions.isPending(task) {
                         pendingRow(task)
                     } else {
                         projectTaskRow(task)
@@ -194,9 +190,9 @@ struct TaskListView: View {
                 TaskRow(task: task, note: note(for: task))
             }
         }
-        .swipeActions(edge: .leading, allowsFullSwipe: true) { leadingActions(task) }
-        .swipeActions(edge: .trailing, allowsFullSwipe: true) { trailingActions(task) }
-        .contextMenu { menu(task) }
+        .swipeActions(edge: .leading, allowsFullSwipe: true) { actions.leadingActions(task) }
+        .swipeActions(edge: .trailing, allowsFullSwipe: true) { actions.trailingActions(task) }
+        .contextMenu { actions.menu(task) }
         .paperRow()
     }
 
@@ -239,7 +235,7 @@ struct TaskListView: View {
         let done = subtask.status == .done
         return Button {
             Subtasks.toggle(subtask)
-            save("toggle subtask")
+            actions.save("toggle subtask")
         } label: {
             HStack(spacing: 10) {
                 Image(systemName: done ? "checkmark.circle.fill" : "circle")
@@ -264,30 +260,15 @@ struct TaskListView: View {
 
     @ViewBuilder
     private func row(_ task: TaskItem) -> some View {
-        if pendingCompletions?.isPending(task.id) == true {
+        if actions.isPending(task) {
             pendingRow(task)
         } else {
             openRow(task)
         }
     }
 
-    /// Done, waiting out its three seconds (#32): struck through, no link, no swipes. A second tap
-    /// anywhere on the row takes it back; "Undo" says so. The long-press menu stays for Delete.
     private func pendingRow(_ task: TaskItem) -> some View {
-        HStack {
-            TaskRow(task: task, hidesContext: context != nil, note: note(for: task))
-                .strikethrough()
-                .foregroundStyle(.secondary)
-            Spacer(minLength: 8)
-            Button("Undo") { undoComplete(task) }
-                .buttonStyle(.borderless)
-                .font(.callout)
-                .accessibilityIdentifier("undoComplete_\(task.id.uuidString)")
-        }
-        .contentShape(Rectangle())
-        .onTapGesture { undoComplete(task) }
-        .contextMenu { menu(task) }
-        .paperRow()
+        actions.pendingRow(task, TaskRow(task: task, hidesContext: context != nil, note: note(for: task)))
     }
 
     private func openRow(_ task: TaskItem) -> some View {
@@ -296,9 +277,9 @@ struct TaskListView: View {
         } label: {
             TaskRow(task: task, hidesContext: context != nil, note: note(for: task))
         }
-        .swipeActions(edge: .leading, allowsFullSwipe: true) { leadingActions(task) }
-        .swipeActions(edge: .trailing, allowsFullSwipe: true) { trailingActions(task) }
-        .contextMenu { menu(task) }
+        .swipeActions(edge: .leading, allowsFullSwipe: true) { actions.leadingActions(task) }
+        .swipeActions(edge: .trailing, allowsFullSwipe: true) { actions.trailingActions(task) }
+        .contextMenu { actions.menu(task) }
         .paperRow()
     }
 
@@ -323,148 +304,6 @@ struct TaskListView: View {
 
     private func moveNext(from source: IndexSet, to destination: Int) {
         TaskActions.moveNext(shown, from: source, to: destination)
-        save("reorder")
-    }
-
-    // MARK: - Swipes
-
-    @ViewBuilder
-    private func leadingActions(_ task: TaskItem) -> some View {
-        switch kind {
-        case .done?:
-            Button("Restore", systemImage: "arrow.uturn.backward") { restore(task) }
-                .tint(.accentColor)
-        case .parked?:
-            Button("Activate", systemImage: "play") { activate(task) }
-                .tint(.accentColor)
-        default:
-            Button("Complete", systemImage: "checkmark") { complete(task) }
-                .tint(.green)
-                .accessibilityIdentifier("swipeDone_\(task.id.uuidString)")
-        }
-    }
-
-    @ViewBuilder
-    private func trailingActions(_ task: TaskItem) -> some View {
-        switch kind {
-        case .done?, .parked?:
-            EmptyView()
-        case .old?:
-            Button("Park", systemImage: "pause") { park(task) }
-        default:
-            // In "New" the full swipe confirms what the AI sorted (#188); Next up moves second.
-            if kind == .new, !ViewRules.needsLook(task) {
-                Button("Looks right", systemImage: "checkmark.circle") { confirm(task) }
-                    .tint(.accentColor)
-                    .accessibilityIdentifier("swipeConfirm_\(task.id.uuidString)")
-            }
-            if task.nextRank == nil {
-                Button("Next up", systemImage: "star") { toggleNext(task) }
-                    .tint(.accentColor)
-            } else {
-                Button("Remove from Next up", systemImage: "star.slash") { toggleNext(task) }
-            }
-        }
-    }
-
-    // MARK: - Long-press menu
-
-    @ViewBuilder
-    private func menu(_ task: TaskItem) -> some View {
-        if task.status == .done {
-            Button("Restore", systemImage: "arrow.uturn.backward") { restore(task) }
-        } else if task.status == .parked {
-            Button("Activate", systemImage: "play") { activate(task) }
-        } else {
-            if task.nextRank == nil {
-                Button("Next up", systemImage: "star") { toggleNext(task) }
-            } else {
-                Button("Remove from Next up", systemImage: "star.slash") { toggleNext(task) }
-            }
-            if pendingCompletions?.isPending(task.id) == true {
-                Button("Undo", systemImage: "arrow.uturn.backward") { undoComplete(task) }
-            } else {
-                Button("Complete", systemImage: "checkmark") { complete(task) }
-                    .accessibilityIdentifier("menuDone")
-            }
-            Menu("Move", systemImage: "calendar") {
-                Button("Tomorrow") { move(task, to: .tomorrow) }
-                Button("Weekend") { move(task, to: .weekend) }
-                Button("Next week") { move(task, to: .nextWeek) }
-                Button("Date…") { datingTask = task }
-                    .accessibilityIdentifier("menuMoveDate")
-            }
-            Button("Park", systemImage: "pause") { park(task) }
-        }
-        Divider()
-        Button("Delete", systemImage: "trash", role: .destructive) {
-            pendingDelete = task
-            confirmingDelete = true
-        }
-        .accessibilityIdentifier("menuDelete")
-    }
-
-    // MARK: - Actions
-
-    /// Starts the three-second window (#32); `ContentView` completes once it ran out. Without the
-    /// window (previews) Done lands at once.
-    private func complete(_ task: TaskItem) {
-        if let pendingCompletions {
-            pendingCompletions.schedule(task.id)
-            return
-        }
-        TaskActions.complete(task)
-        save("done")
-        completionPulse?.fire()
-    }
-
-    private func undoComplete(_ task: TaskItem) {
-        pendingCompletions?.cancel(task.id)
-    }
-
-    private func restore(_ task: TaskItem) {
-        TaskActions.restore(task)
-        save("restore")
-    }
-
-    /// Marks the AI's changes as seen; the task leaves "New", its revisions stay.
-    private func confirm(_ task: TaskItem) {
-        _ = RevisionService.markSeen(task)
-        save("confirm")
-    }
-
-    private func toggleNext(_ task: TaskItem) {
-        TaskActions.toggleNext(task, among: tasks)
-        save("next")
-    }
-
-    private func park(_ task: TaskItem) {
-        TaskActions.park(task)
-        save("park")
-    }
-
-    private func activate(_ task: TaskItem) {
-        TaskActions.activate(task)
-        save("activate")
-    }
-
-    private func move(_ task: TaskItem, to target: TaskActions.MoveTarget) {
-        TaskActions.move(task, to: target, contexts: contexts, projects: projects)
-        save("move")
-    }
-
-    private func delete(_ task: TaskItem) {
-        pendingCompletions?.cancel(task.id)
-        modelContext.delete(task)
-        pendingDelete = nil
-        save("delete")
-    }
-
-    private func save(_ what: String) {
-        do {
-            try modelContext.save()
-        } catch {
-            Self.logger.error("Saving \(what, privacy: .public) failed: \(error, privacy: .public)")
-        }
+        actions.save("reorder")
     }
 }
