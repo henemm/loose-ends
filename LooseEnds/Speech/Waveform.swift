@@ -15,11 +15,19 @@ struct Waveform: Equatable {
         }
     }
 
-    /// RMS of the samples, scaled so normal speech fills most of the bar height.
+    /// Bottom and top of the bar scale in dBFS (#279). Without the system's gain control (`.measurement`)
+    /// normal speech sits near −30 dBFS, which lands at half the height.
+    static let floorDecibel: Float = -50
+    static let ceilingDecibel: Float = -10
+
+    /// RMS of the samples in dBFS, mapped linearly from `floorDecibel … ceilingDecibel` onto 0 … 1.
     static func level(of samples: [Float]) -> Float {
         guard !samples.isEmpty else { return 0 }
         let meanSquare = samples.reduce(0) { $0 + $1 * $1 } / Float(samples.count)
-        return min(1, meanSquare.squareRoot() * 6)
+        let rms = meanSquare.squareRoot()
+        guard rms > 0 else { return 0 }
+        let decibel = 20 * log10(rms)
+        return min(1, max(0, (decibel - floorDecibel) / (ceilingDecibel - floorDecibel)))
     }
 
     static func level(of buffer: AVAudioPCMBuffer) -> Float {

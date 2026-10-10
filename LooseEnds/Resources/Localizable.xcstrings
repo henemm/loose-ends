@@ -150,6 +150,7 @@
     "Names, comma separated" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Namen, durch Komma getrennt" } } } },
     "Speech recognition is not available." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Spracherkennung ist nicht verfügbar." } } } },
     "Stop listening" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nicht mehr zuhören" } } } },
+    "Listening …" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ich höre …" } } } },
     "Listen" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Zuhören" } } } },
     "Due today" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute fällig" } } } },
     "Completed" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erledigt" } } } },

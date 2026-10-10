@@ -1,0 +1,26 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "611D4219-B7B5-44D0-B283-E21BD770113C.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "hoert-zu-dunkel_0_F584C3B7-26B5-4749-8D45-70CB17C84B52.png",
+        "timestamp" : 1791620788.268
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "309F61A2-4A21-44D4-BB09-D2DF34E6F88A.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "hoert-zu-hell_0_08DC8F7A-C627-4BB5-ABA8-8CC9023F764B.png",
+        "timestamp" : 1791620778.235
+      }
+    ],
+    "testIdentifier" : "SpeechListeningIndicatorTests/testListeningFixedStateShowsHintAndStopButton()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/SpeechListeningIndicatorTests/testListeningFixedStateShowsHintAndStopButton"
+  }
+]
