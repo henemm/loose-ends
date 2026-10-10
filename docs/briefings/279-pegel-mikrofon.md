@@ -1,6 +1,6 @@
 ---
 spec_file: docs/specs/fix-279-hoert-zu-anzeige.md
-spec_sha256: 41b29943eecc36d7940f34da8667ac225c8acd181eeafc7fc174ced4cf2ead45
+spec_sha256: 18422cddf29cec31f6ee152c7e2176da41b1e4e4684f30bd491ec7ab50b78ad3
 ---
 
 # PO-Briefing: 279-pegel-mikrofon
@@ -11,22 +11,22 @@ spec_sha256: 41b29943eecc36d7940f34da8667ac225c8acd181eeafc7fc174ced4cf2ead45
 
 ## Was gebaut wird
 
-Die Erfassung zeigt sofort „Ich höre …“, einen deutlicheren Pegel und einen runden Mikrofonknopf, damit klar ist, dass zugehört wird.
+Die Erfassung zeigt sofort „Ich höre …“, und der Mikrofonknopf pulsiert jetzt deutlich sichtbar im Takt deiner Stimme.
 
 ## Definition of Done
 
-Beim Öffnen steht sofort „Ich höre …“, Sprache lässt den Pegel etwa halb hoch ausschlagen, das erste Wort ersetzt den Hinweis.
+Normale Sprache lässt Pegel halb hoch ausschlagen und den Ring um bis zu 35 Prozent wachsen; das erste Wort ersetzt den Hinweis.
 
 ## Wie geprüft wird
 
-Tests belegen Pegelrechnung, Hinweisregel und Aussehen im Simulator; die echte Pegelhöhe belegt nur dein Test am iPhone.
+Tests belegen Rechnung und Aussehen im Simulator; ob der Ring am iPhone wirklich sichtbar pulsiert, zeigt nur dein Test.
 
 ## Kritische Anmerkungen
 
-- Die Wartezeit bis zum ersten Wort wird nicht kürzer, nur sichtbar; #279 bleibt offen.
-- Halbe Pegelhöhe bei Sprache ist gerechnet, nicht gemessen; Beleg erst mit deinem iPhone-Test.
-- Wachsender Ring und Grundlinie haben keinen automatischen Test; sie werden nur per Screenshot angesehen.
+- Neu seit Freigabe: Pegelskala empfindlicher; Ring wächst bis 35 Prozent mit der Stimme, Knopf selbst bleibt ruhig.
+- Die neue Skala beruht auf einem Bildschirmfoto, einer Stimme; anderer Abstand verschiebt sie.
+- Wartezeit bis zum ersten Wort bleibt unverändert.
 
 ## Freigabe-Frage
 
-Genügt dir diese reine Sichtbarmachung, obwohl die Wartezeit selbst unverändert bleibt?
+Ist ein pulsierender Ring bei unveränderter Wartezeit für dich ausreichend?

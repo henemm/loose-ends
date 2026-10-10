@@ -46,7 +46,7 @@ struct CaptureView: View {
             && ProcessInfo.processInfo.arguments.contains("--ui-testing-speech-listening")
     }
 
-    /// Fixed levels for the fixture; the last one is 0.5 (normal speech, −30 dBFS).
+    /// Fixed levels for the fixture; the last one is 0.5 (normal speech, −40 dBFS).
     private static let fixtureLevels: [Float] = (0..<Waveform.capacity).map { [0.15, 0.35, 0.6, 0.8, 0.5][$0 % 5] }
 
     private var isListening: Bool {
@@ -304,8 +304,13 @@ private struct MicButton: View {
     let action: () -> Void
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
+    private static let circle: CGFloat = 44
+    /// The ring rests 4 pt outside the circle, as in the design (#279).
+    private static let ringRest: CGFloat = circle + 8
+
+    /// Resting ring × (1 + 0.35 × level); fixed at × 1.15 with Reduce Motion (#279).
     private var ringDiameter: CGFloat {
-        reduceMotion ? 50 : 46 + CGFloat(min(max(level, 0), 1)) * 10
+        Self.ringRest * (reduceMotion ? 1.15 : Waveform.ringScale(for: level))
     }
 
     var body: some View {
@@ -316,15 +321,16 @@ private struct MicButton: View {
                         .stroke(Color.accentColor.opacity(0.35), lineWidth: 3)
                         .frame(width: ringDiameter, height: ringDiameter)
                         .animation(reduceMotion ? nil : .smooth, value: ringDiameter)
-                    Circle().fill(Color.accentColor).frame(width: 44, height: 44)
+                    Circle().fill(Color.accentColor).frame(width: Self.circle, height: Self.circle)
                     Image(systemName: "mic.fill").foregroundStyle(.white)
                 } else {
-                    Circle().stroke(Color.secondary, lineWidth: 1.5).frame(width: 44, height: 44)
+                    Circle().stroke(Color.secondary, lineWidth: 1.5).frame(width: Self.circle, height: Self.circle)
                     Image(systemName: "mic.slash").foregroundStyle(.secondary)
                 }
             }
             .font(.title3)
-            .frame(width: 56, height: 56)
+            // Room for the largest ring (52 × 1.35 ≈ 70.2 pt) plus its 3 pt stroke.
+            .frame(width: 74, height: 74)
             .contentShape(Circle())
         }
         .buttonStyle(.plain)

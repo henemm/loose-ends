@@ -1,22 +1,20 @@
 # Simulator-Beleg
-erzeugt: 2026-10-10T10:26:40+0200
+erzeugt: 2026-10-10T16:32:11+0200
 befehl: scripts/sim.sh test-proof SpeechListeningIndicatorTests
 workflow: 279-pegel-mikrofon
-head: 79476d1f760ea12071776a97ed5920628398fe6e
-basis: 5037f0ee63f82d1803090c66ee78064768f75852 (merge-base origin/main HEAD)
+head: b7220d1364eca3bc4249825a0d7936f4c21d2c92
+basis: b7220d1364eca3bc4249825a0d7936f4c21d2c92 (merge-base origin/main HEAD)
 testklasse: SpeechListeningIndicatorTests
 ergebnis: Passed
 xcodebuild: ** TEST SUCCEEDED **
 tests: 3 gesamt, 3 bestanden, 0 fehlgeschlagen, 0 übersprungen
-start: 1791620720.081  ende: 1791620800.351
+start: 1791642673.213  ende: 1791642730.608
 geraet: iPhone 17, iOS 27.0
-summary: docs/artifacts/279-pegel-mikrofon/simulator-run/summary.json  sha256:ecb0fc140d3238cb0ff2b5181a71a32f4bfddcac0fce044e58bb7e3449c5b1fc
+summary: docs/artifacts/279-pegel-mikrofon/simulator-run/summary.json  sha256:074f0bf7a44df8a7899d959debebd0e3f288a80cfd9c0c7c035aeb2e5326383e
 xcresult: docs/artifacts/279-pegel-mikrofon/simulator-run/run.xcresult  (gitignored)
 screenshots: docs/artifacts/279-pegel-mikrofon/simulator-run/*.png (2 Stück)
 
 ## Geprüfte Dateien
-- sha256:49bdc8afe5f6e4951d862be64480f72f4fbff53d360565ce4b87f4a6dd3e1370  LooseEnds/Speech/ListeningHint.swift
-- sha256:5358ec291bd85dce9f5be56aedc16757bf019beca2c5fef5cab338375cf4e995  LooseEnds/Speech/Waveform.swift
-- sha256:8cf133798f950b21337582b028840d77e7082e784db93b8ec43b2bde64c64f0a  LooseEnds/Views/CaptureView.swift
-- sha256:bfbd9f25b69892ca4060038d80943de76a3a006021ab4b97f1d5983a7f79b19b  LooseEndsTests/WaveformTests.swift
-- sha256:f60711140c8e2971e766d5f5c171ad23dbd621a5d350d38f25a2b6f160c4b953  LooseEndsUITests/SpeechListeningIndicatorTests.swift
+- sha256:c64c7b9b61ed6c924bb55258d9473242186b7f48d27bf363f62e3df065681f2b  LooseEnds/Speech/Waveform.swift
+- sha256:615dfb0e5bf90b1b9c7be4ded52c722c99cc0d59961ab792e1b64b1ac7f0a52f  LooseEnds/Views/CaptureView.swift
+- sha256:1fe7e343a22c4fab3d0fac4debb8946ba9e9a26a6f249a8e832695219595db5a  LooseEndsTests/WaveformTests.swift
