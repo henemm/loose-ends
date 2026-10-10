@@ -1,0 +1,237 @@
+<title>Hört zu? Entwurf #279</title>
+<style>
+/* Layout: Befund oben, dann drei Telefon-Ausschnitte nebeneinander (Heute · Entwurf A · Alternative B), je hell und dunkel. */
+:root {
+  --bg: #f6f7f7; --fg: #1d2324; --muted: #5d6869; --line: #d9dfdf; --card: #ffffff; --pick: #0F6E73;
+  --display: "Fraunces", Georgia, serif; --body: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #121616; --fg: #e7ecec; --muted: #9aa6a7; --line: #2b3333; --card: #1a2020; --pick: #5FC4C9; color-scheme: dark } }
+:root[data-theme="dark"] { --bg: #121616; --fg: #e7ecec; --muted: #9aa6a7; --line: #2b3333; --card: #1a2020; --pick: #5FC4C9; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font: 15px/1.55 var(--body); }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 56px; display: grid; gap: 28px; }
+h1 { font: 600 2rem/1.15 var(--display); margin: 0; text-wrap: balance; }
+h2 { font: 600 1.3rem/1.2 var(--display); margin: 0; text-wrap: balance; }
+h3 { font: 600 1rem/1.3 var(--body); margin: 0; }
+p { margin: 0; max-width: 68ch; }
+.lede { color: var(--muted); }
+.eyebrow { font: 500 .72rem var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+section { display: grid; gap: 14px; }
+.facts { display: grid; gap: 10px; padding: 0; margin: 0; list-style: none; max-width: 76ch; }
+.facts li { padding-left: 1.1em; position: relative; }
+.facts li::before { content: "·"; position: absolute; left: .2em; color: var(--pick); font-weight: 700; }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; font-variant-numeric: tabular-nums; min-width: 520px; }
+th, td { text-align: left; padding: 6px 14px 6px 0; border-bottom: 1px solid var(--line); }
+th { font: 500 .75rem var(--mono); color: var(--muted); letter-spacing: .04em; }
+td.n { font-family: var(--mono); }
+.bar { display: inline-block; width: 6px; border-radius: 2px; background: var(--pick); vertical-align: middle; }
+.variants { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.variant { display: grid; gap: 12px; align-content: start; min-width: 0; }
+.variant.rec h2::after { content: "Empfehlung"; font: 500 .7rem var(--mono); letter-spacing: .06em; text-transform: uppercase; margin-left: 10px; padding: 2px 8px; border-radius: 99px; border: 1px solid var(--pick); color: var(--pick); vertical-align: middle; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.phone { border-radius: 22px; padding: 14px 14px 18px; display: grid; gap: 10px; border: 1px solid var(--line); min-width: 0; }
+.phone.light { background: #ffffff; color: #000; --acc: #0F6E73; --sec: #8a8a8e; --idle: #c7c7cc; --chip: #f2f2f7; }
+.phone.dark { background: #1c1c1e; color: #fff; --acc: #5FC4C9; --sec: #8d8d93; --idle: #48484a; --chip: #2c2c2e; }
+.ph-top { display: flex; justify-content: space-between; align-items: center; font-size: .72rem; }
+.ph-top b { font-weight: 600; font-size: .78rem; }
+.ph-top span { padding: 3px 8px; border-radius: 99px; background: var(--chip); }
+.ph-text { font-size: .95rem; min-height: 2.6em; }
+.ph-text i { color: var(--sec); font-style: normal; }
+.dots span { animation: dot 1.2s infinite; opacity: .25; }
+.dots span:nth-child(2) { animation-delay: .2s; } .dots span:nth-child(3) { animation-delay: .4s; }
+@keyframes dot { 0%, 60%, 100% { opacity: .25 } 30% { opacity: 1 } }
+@media (prefers-reduced-motion: reduce) { .dots span { animation: none; opacity: .7 } }
+.row { display: flex; align-items: center; gap: 8px; }
+.row canvas { flex: 1; min-width: 0; height: 32px; width: 100%; }
+.status { font-size: .7rem; font-weight: 600; color: var(--acc); min-height: 1em; }
+.status.off { color: var(--sec); font-weight: 500; }
+.mic { width: 36px; height: 36px; flex: none; display: grid; place-items: center; border-radius: 50%; position: relative; }
+.mic svg { width: 18px; height: 18px; }
+.mic.plain { width: 26px; }
+.mic.round.on { background: var(--acc); }
+.mic.round.off { border: 1.5px solid var(--idle); }
+.mic .ring { position: absolute; inset: -4px; border-radius: 50%; border: 2px solid var(--acc); opacity: .35; transform: scale(var(--s, 1)); transition: transform .1s linear; }
+.cap { font-size: .7rem; color: var(--sec); text-align: center; }
+.shots { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.shots img { border-radius: 14px; border: 1px solid var(--line); display: block; }
+.note { font-size: .88rem; color: var(--muted); }
+.alt { border-top: 1px solid var(--line); padding-top: 18px; }
+.controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+button.tg { font: 500 .85rem var(--body); padding: 6px 14px; border-radius: 99px; border: 1px solid var(--line); background: var(--card); color: var(--fg); cursor: pointer; }
+button.tg:focus-visible { outline: 2px solid var(--pick); outline-offset: 2px; }
+@media (max-width: 420px) { .pair, .shots { grid-template-columns: 1fr; } }
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;600&display=swap">
+
+<div class="wrap">
+  <header style="display:grid;gap:10px">
+    <div class="eyebrow">Loose Ends · #279 Teil B und C · Entwurf vor der Spec</div>
+    <h1>Sieht man, dass die App zuhört?</h1>
+    <p class="lede">Bis das erste Wort erscheint, vergehen 1,5 bis 2 Sekunden. In dieser Zeit müssen Pegel und Mikrofon zeigen, dass die Aufnahme läuft. Unten steht der heutige Stand neben drei Entwürfen. C ist dein Vorschlag vom 10.10. und meine Empfehlung, jeweils hell und dunkel. Die Ausschläge laufen mit einem nachgebildeten Sprachsignal, das für alle drei gleich ist.</p>
+  </header>
+
+  <section>
+    <h2>Warum die Punkte kaum ausschlagen</h2>
+    <ul class="facts">
+      <li>Der Pegel wird heute linear gerechnet, Lautstärke mal sechs. Das Ohr und übliche Pegelanzeigen arbeiten in Dezibel, also logarithmisch.</li>
+      <li>Die App nimmt im Messmodus des Systems auf. Der schaltet die automatische Verstärkung ab, das Signal kommt deshalb leise an (Apple-Doku zu <code>AVAudioSession.Mode</code>).</li>
+      <li>Beides zusammen ergibt bei normaler Sprache Balken von 2 bis 6 Punkt Höhe in einer 32 Punkt hohen Zeile. Das sind die „Punkte“, die du gesehen hast.</li>
+      <li>Vor dem ersten Tonpaket zeigt die Zeile gar nichts, nur das Mikrofon. Im Bild „Heute“ unten ist das zu sehen.</li>
+      <li>Das Mikrofon unterscheidet „hört zu“ und „hört nicht zu“ nur durch gefüllt oder hohl, in derselben Farbe, ohne Bewegung.</li>
+    </ul>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Lautstärke am Mikrofon</th><th>dBFS</th><th>Balken heute</th><th></th><th>Balken Entwurf</th><th></th></tr></thead>
+        <tbody id="scale"></tbody>
+      </table>
+    </div>
+    <p class="note">Die Dezibelwerte sind übliche Werte ohne automatische Verstärkung. Gemessen an deinem iPhone sind sie noch nicht. Die neue Skala bildet −50 bis −10 dBFS auf die volle Höhe ab, wie in gängigen Pegelanzeigen (Kodeco, AVAudioEngine-Tutorial). Ruhe bleibt flach, normale Sprache füllt die halbe Höhe, laute Sprache fast die ganze.</p>
+  </section>
+
+  <section>
+    <div class="controls">
+      <button class="tg" id="toggle" type="button">Alle auf „hört nicht zu“ stellen</button>
+      <span class="note" id="toggleNote">Zustand jetzt: hört zu, du sprichst</span>
+    </div>
+    <div class="variants">
+      <article class="variant">
+        <div class="eyebrow">Heute</div>
+        <h2>Punkte und Mikrofon</h2>
+        <div class="pair" data-variant="today"></div>
+        <div class="shots">
+          <img src="heute-hell.png" alt="Bildschirmfoto heute, hell: Erfassen-Fenster, rechts nur das hohle Mikrofon, keine Pegelzeile">
+          <img src="heute-dunkel.png" alt="Bildschirmfoto heute, dunkel: dieselbe Ansicht">
+        </div>
+        <p class="note">Bildschirmfotos aus dem Simulator (ohne Mikrofon, deshalb ohne Ausschläge). Die Zeile darüber spielt den heutigen Pegel mit dem nachgebildeten Signal ab.</p>
+      </article>
+
+      <article class="variant">
+        <div class="eyebrow">Entwurf A</div>
+        <h2>Runder Knopf, der mitatmet</h2>
+        <div class="pair" data-variant="a"></div>
+        <p class="note">Pegel in Dezibel. Eine graue Grundlinie steht über die ganze Breite, sobald die Szene offen ist, und die Ausschläge laufen von rechts hinein. Beim Zuhören ist das Mikrofon ein gefüllter Kreis in der Akzentfarbe, ein Ring darum wächst mit der Lautstärke. Ist es aus, wird der Kreis grau umrandet, das Symbol durchgestrichen und die Linie grau. Der Knopf bleibt ein Knopf, die Akzentfarbe ist damit im Farbbudget erlaubt.</p>
+      </article>
+
+      <article class="variant rec">
+        <div class="eyebrow">Entwurf C · dein Vorschlag</div>
+        <h2>„Ich höre …“ dort, wo der Text erscheint</h2>
+        <div class="pair" data-variant="c"></div>
+        <p class="note">Sobald das Mikrofon zuhört, steht im Textfeld statt „Was soll ich aufnehmen?“ grau „Ich höre“ mit drei Punkten, die nacheinander aufleuchten. Mit dem ersten erkannten Wort verschwindet es, der Text steht an derselben Stelle. Hört das Mikrofon nicht zu, kommt die gewohnte Frage zurück. Dazu der deutlichere Pegel in Dezibel mit grauer Grundlinie, das Mikrofon bleibt wie heute. Grau, weil der Hinweis nicht tippbar ist (Farbbudget). Bei „Bewegung reduzieren“ stehen die Punkte still. Die Vorschau spielt den Ablauf in Schleife: 2 Sekunden warten, dann kommen die Wörter.</p>
+      </article>
+
+      <article class="variant">
+        <div class="eyebrow">Alternative B</div>
+        <h2>Ein Wort über der Linie</h2>
+        <div class="pair" data-variant="b"></div>
+        <p class="note">Gleiche Dezibel-Skala und Grundlinie, das Mikrofon bleibt das heutige Symbol. Über der Linie steht ein Wort: „Hört zu“ in Akzentfarbe, sonst grau „Pausiert“. Das ist am eindeutigsten zu lesen, kostet aber eine Zeile Höhe und Text, den VoiceOver ohnehin schon sagt.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="alt">
+    <h2>Weitere Wege, die ich nicht empfehle</h2>
+    <ul class="facts">
+      <li><b>Messmodus abschalten</b>, damit das System verstärkt. Das macht den Pegel lauter, ändert aber auch, was die Spracherkennung bekommt. An genau diesem Weg hing die Verzögerung aus #274. Ohne Messung auf dem Gerät riskiere ich die Erkennung für eine Anzeige.</li>
+      <li><b>Nur den Faktor erhöhen</b>, also mal 20 statt mal 6. Leise Sprache bliebe flach und laute Sprache stünde dauernd am Anschlag. Die Dezibel-Skala löst beides.</li>
+      <li><b>Rote Aufnahme-Markierung</b> wie bei Sprachmemos. Rot heißt in dieser App Zeitdruck (Farbbudget), deshalb nicht.</li>
+    </ul>
+  </section>
+</div>
+
+<script>
+(() => {
+  const H = 32;
+  const today = db => Math.min(1, Math.pow(10, db / 20) * 6);
+  const decibel = db => Math.min(1, Math.max(0, (db + 50) / 40));
+  const rows = [["Ruhe im Zimmer", -50], ["leise Sprache", -40], ["normale Sprache", -30], ["laute Sprache", -20], ["sehr laut, nah", -10]];
+  const pt = v => Math.max(2, v * H);
+  document.getElementById("scale").innerHTML = rows.map(([n, d]) => {
+    const a = pt(today(d)), b = pt(decibel(d));
+    return `<tr><td>${n}</td><td class="n">${d}</td><td class="n">${a.toFixed(0)} pt</td><td><span class="bar" style="height:${a / 1.6}px"></span></td><td class="n">${b.toFixed(0)} pt</td><td><span class="bar" style="height:${b / 1.6}px"></span></td></tr>`;
+  }).join("");
+
+  const micPath = '<path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z" FILL/><path d="M18 11a6 6 0 0 1-12 0M12 17v4M8.5 21h7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>';
+  const mic = (filled, slash) => `<svg viewBox="0 0 24 24" aria-hidden="true">${micPath.replace("FILL", filled ? 'fill="currentColor"' : 'fill="none" stroke="currentColor" stroke-width="1.8"')}${slash ? '<path d="M4 3l16 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>' : ""}</svg>`;
+
+  const phones = [];
+  document.querySelectorAll(".pair").forEach(pair => {
+    const v = pair.dataset.variant;
+    ["light", "dark"].forEach(theme => {
+      const el = document.createElement("div");
+      el.className = `phone ${theme}`;
+      el.innerHTML = `<div class="ph-top"><span>Abbrechen</span><b>Erfassen</b><span>Fertig</span></div>
+        <div class="ph-text"><i>Was soll ich aufnehmen?</i></div>
+        ${v === "b" ? '<div class="status"></div>' : ""}
+        <div class="row"><canvas></canvas><div class="mic ${v === "a" ? "round" : "plain"}"></div></div>
+        <div class="cap">${theme === "light" ? "Hell" : "Dunkel"}</div>`;
+      pair.appendChild(el);
+      phones.push({ v, el, canvas: el.querySelector("canvas"), micEl: el.querySelector(".mic"), status: el.querySelector(".status") });
+    });
+  });
+
+  let listening = true, levels = [], t = 0;
+  const CAP = 40;
+  function speechDb(i) {
+    const syll = Math.sin(i * 0.9) * 0.5 + Math.sin(i * 0.37) * 0.5;
+    const pause = (i % 34) > 26;
+    return pause ? -48 + Math.random() * 3 : -34 + syll * 7 + Math.random() * 4;
+  }
+  function draw() {
+    phones.forEach(p => {
+      const c = p.canvas, r = c.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+      c.width = r.width * dpr; c.height = H * dpr;
+      const ctx = c.getContext("2d"); ctx.scale(dpr, dpr);
+      const cs = getComputedStyle(p.el), acc = cs.getPropertyValue("--acc").trim(), idle = cs.getPropertyValue("--idle").trim();
+      const slot = r.width / CAP, w = slot * 0.5;
+      const map = p.v === "today" ? today : decibel;
+      const on = listening;
+      if (p.v !== "today") {
+        ctx.fillStyle = idle;
+        for (let i = 0; i < CAP; i++) ctx.fillRect(i * slot + slot * .25, H / 2 - 1, w, 2);
+      }
+      const shown = on ? levels : (p.v === "today" ? levels : []);
+      const start = CAP - shown.length;
+      shown.forEach((db, i) => {
+        const h = Math.max(2, map(db) * H);
+        ctx.fillStyle = p.v === "today" || on ? acc : idle;
+        ctx.beginPath();
+        ctx.roundRect((start + i) * slot + slot * .25, (H - h) / 2, w, h, 1);
+        ctx.fill();
+      });
+      const last = levels.length ? decibel(levels[levels.length - 1]) : 0;
+      if (p.v === "a") {
+        p.micEl.className = `mic round ${on ? "on" : "off"}`;
+        p.micEl.style.color = on ? (p.el.classList.contains("dark") ? "#000" : "#fff") : cs.getPropertyValue("--sec");
+        p.micEl.innerHTML = mic(on, !on) + (on ? `<span class="ring" style="--s:${1 + last * 0.35}"></span>` : "");
+      } else {
+        p.micEl.style.color = acc;
+        p.micEl.innerHTML = mic(on, false);
+      }
+      if (p.v === "c") {
+        const ph = p.el.querySelector(".ph-text"), k = t % 60;
+        const words = "Zahnarzt anrufen wegen Termin".split(" ");
+        const n = k < 20 ? 0 : Math.min(words.length, Math.floor((k - 20) / 6) + 1);
+        const html = !on ? '<i>Was soll ich aufnehmen?</i>' : n === 0 ? '<i>Ich höre<span class="dots"><span>.</span><span>.</span><span>.</span></span></i>' : words.slice(0, n).join(" ");
+        if (ph.dataset.h !== html) { ph.innerHTML = html; ph.dataset.h = html; }
+      }
+      if (p.status) { p.status.textContent = on ? "Hört zu" : "Pausiert"; p.status.className = `status${on ? "" : " off"}`; }
+    });
+  }
+  function tick() {
+    if (listening) { levels.push(speechDb(t++)); if (levels.length > CAP) levels.shift(); }
+    draw();
+  }
+  for (let i = 0; i < CAP; i++) { levels.push(speechDb(t++)); }
+  draw();
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduce) setInterval(tick, 100);
+  window.addEventListener("resize", draw);
+  const btn = document.getElementById("toggle"), note = document.getElementById("toggleNote");
+  btn.addEventListener("click", () => {
+    listening = !listening;
+    btn.textContent = listening ? "Alle auf „hört nicht zu“ stellen" : "Alle auf „hört zu“ stellen";
+    note.textContent = listening ? "Zustand jetzt: hört zu, du sprichst" : "Zustand jetzt: hört nicht zu";
+    draw();
+  });
+})();
+</script>

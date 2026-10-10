@@ -107,6 +107,12 @@ Installation. Ein Registrierungslauf (`LOOSEENDS_REGISTER=1 ./scripts/sim.sh dev
 nur nötig bei neuer Kennung, neuer Fähigkeit oder abgelaufenem Profil; nur er benutzt Hennings
 Xcode-Anmeldung, der normale Bau spricht nicht mit Apple. Im Zweifel läuft die Stufe.
 
+**Stufe 3 läuft über TestFlight** (Henning, 2026-10-10, #279: „Mache den Test über die normale App und
+TestFlight."): Statt „LE Prüfbau“ testet Henning in seiner normalen App aus TestFlight, wann er es
+einrichten kann. Ablauf: Merge, TestFlight-Bau (bei Modelländerung vorher `mac-schema-init` und Deploy),
+dann bekommt Henning die Buildnummer und die Prüfschritte, keine Befehlszeile. Seine Rückmeldung
+schließt die Gerätepunkte der Spec ab; bis dahin bleibt das Ticket offen.
+
 **⛔ Ausliefern ist Teil jedes Tickets.** Gearbeitet wird in einem Worktree, gebaut wird bei Henning aus
 `/Users/hem/Developer/loose-ends`. Den Checkout hält der SessionStart-Hook
 `~/.claude/scripts/loose-ends-sync-main.sh` aktuell (`main` nachziehen, Projekt neu erzeugen) — ohne ihn

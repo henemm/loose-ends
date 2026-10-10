@@ -40,6 +40,27 @@ struct CaptureView: View {
             && ProcessInfo.processInfo.arguments.contains("--ui-testing-speech-diagnosis")
     }
 
+    /// UI-Test der Hört-zu-Anzeige (#279, #297): gilt als „hört zu“ mit festen Pegeln, ohne Mikrofon und Erkennung.
+    private var listeningFixture: Bool {
+        ModelContainerFactory.isUITesting
+            && ProcessInfo.processInfo.arguments.contains("--ui-testing-speech-listening")
+    }
+
+    /// Fixed levels for the fixture; the last one is 0.5 (normal speech, −30 dBFS).
+    private static let fixtureLevels: [Float] = (0..<Waveform.capacity).map { [0.15, 0.35, 0.6, 0.8, 0.5][$0 % 5] }
+
+    private var isListening: Bool {
+        listeningFixture || speech.isListening
+    }
+
+    private var levels: [Float] {
+        listeningFixture ? Self.fixtureLevels : speech.waveform.levels
+    }
+
+    private var hintState: ListeningHint {
+        ListeningHint.state(isListening: isListening, text: text)
+    }
+
     private var diagnosis: SpeechDiagnosis? {
         guard diagnosisFixture else { return speech.diagnosis }
         return SpeechDiagnosis(modelStatus: "installed", microphone: true, speech: true, buffers: 62, results: 0)
@@ -48,7 +69,8 @@ struct CaptureView: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 12) {
-                TextField("What should I remember?", text: $text, axis: .vertical)
+                // The hint replaces the placeholder visually; the field keeps its name for VoiceOver.
+                TextField("What should I remember?", text: $text, prompt: hintState == .hint ? Text(verbatim: "") : nil, axis: .vertical)
                     .font(.title3)
                     .lineLimit(3...10)
                     .focused($isFocused)
@@ -56,7 +78,10 @@ struct CaptureView: View {
                     .onSubmit(save)
                     .onChange(of: text) { _, newValue in submitOnReturn(newValue) }
                     .accessibilityIdentifier("captureTextField")
-                if speechWanted || diagnosisFixture {
+                    .overlay(alignment: .topLeading) {
+                        if hintState == .hint { ListeningHintView() }
+                    }
+                if speechWanted || diagnosisFixture || listeningFixture {
                     listeningRow
                 }
                 Spacer()
@@ -148,15 +173,8 @@ struct CaptureView: View {
         case .idle, .listening:
             VStack(alignment: .leading, spacing: 6) {
                 HStack(spacing: 12) {
-                    WaveformView(levels: speech.waveform.levels)
-                    Button {
-                        toggleListening()
-                    } label: {
-                        Image(systemName: speech.isListening ? "mic.fill" : "mic")
-                            .font(.title2)
-                    }
-                    .accessibilityLabel(speech.isListening ? "Stop listening" : "Listen")
-                    .accessibilityIdentifier("micButton")
+                    WaveformView(levels: levels, isListening: isListening)
+                    MicButton(isListening: isListening, level: levels.last ?? 0, action: toggleListening)
                 }
                 if let diagnosis {
                     // Ton ohne Text (#274): grau, reiner Text, darf umbrechen.
@@ -180,14 +198,14 @@ struct CaptureView: View {
                 LaunchTimings.mark(.speechStartCalled)
                 await speech.start()
             }
-        } else {
+        } else if !listeningFixture {
             isFocused = true
         }
     }
 
     private func toggleListening() {
         // Festzustand der Diagnosezeile (#274, AC-10): kein Mikrofon, auch nicht auf Tipp.
-        guard !diagnosisFixture else { return }
+        guard !diagnosisFixture, !listeningFixture else { return }
         if speech.isListening {
             speech.stop()
         } else {
@@ -223,22 +241,95 @@ struct CaptureView: View {
     }
 }
 
-/// Bars for the last levels, accent-colored: the one animated thing on the screen.
+/// Bars for the last levels over a grey baseline: accent while listening, grey otherwise (#279).
 private struct WaveformView: View {
     let levels: [Float]
+    let isListening: Bool
 
     var body: some View {
         Canvas { context, size in
+            let baseline = CGRect(x: 0, y: size.height / 2 - 0.75, width: size.width, height: 1.5)
+            context.fill(Path(baseline), with: .color(.secondary.opacity(0.5)))
+            let bar: Color = isListening ? .accentColor : .secondary
             let slot = size.width / CGFloat(Waveform.capacity)
             let width = slot * 0.5
             for (index, level) in levels.enumerated() {
                 let height = max(2, CGFloat(level) * size.height)
                 let rect = CGRect(x: CGFloat(index) * slot + slot * 0.25, y: (size.height - height) / 2, width: width, height: height)
-                context.fill(Path(roundedRect: rect, cornerRadius: 1), with: .color(.accentColor))
+                context.fill(Path(roundedRect: rect, cornerRadius: 1), with: .color(bar))
             }
         }
         .frame(height: 32)
         .accessibilityHidden(true)
+    }
+}
+
+/// "Listening …" where the text will appear (#297): grey, three dots lighting up in turn, still under
+/// Reduce Motion. Hidden only while VoiceOver runs, so the field keeps its placeholder name there
+/// while UI tests still find it by its label.
+private struct ListeningHintView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityVoiceOverEnabled) private var voiceOverEnabled
+
+    private static let label = String(localized: "Listening …")
+    private static let word = label.replacingOccurrences(of: "…", with: "").trimmingCharacters(in: .whitespaces)
+    private static let tick: TimeInterval = 0.4
+
+    var body: some View {
+        TimelineView(.periodic(from: .now, by: Self.tick)) { timeline in
+            let lit = reduceMotion ? nil : Int(timeline.date.timeIntervalSinceReferenceDate / Self.tick) % 3
+            HStack(spacing: 0) {
+                Text(verbatim: Self.word + " ")
+                ForEach(0..<3, id: \.self) { index in
+                    Text(verbatim: ".").opacity(lit.map { $0 == index ? 1 : 0.25 } ?? 0.7)
+                }
+            }
+            .animation(.smooth, value: lit)
+        }
+        .font(.title3)
+        .foregroundStyle(.secondary)
+        .allowsHitTesting(false)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Self.label)
+        .accessibilityIdentifier("listeningHint")
+        .accessibilityHidden(voiceOverEnabled)
+    }
+}
+
+/// The microphone as a round button (#279 C): listening = filled accent circle with a ring that grows
+/// with the last level; off = grey outlined circle with `mic.slash`. At least 44 pt to tap.
+private struct MicButton: View {
+    let isListening: Bool
+    let level: Float
+    let action: () -> Void
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    private var ringDiameter: CGFloat {
+        reduceMotion ? 50 : 46 + CGFloat(min(max(level, 0), 1)) * 10
+    }
+
+    var body: some View {
+        Button(action: action) {
+            ZStack {
+                if isListening {
+                    Circle()
+                        .stroke(Color.accentColor.opacity(0.35), lineWidth: 3)
+                        .frame(width: ringDiameter, height: ringDiameter)
+                        .animation(reduceMotion ? nil : .smooth, value: ringDiameter)
+                    Circle().fill(Color.accentColor).frame(width: 44, height: 44)
+                    Image(systemName: "mic.fill").foregroundStyle(.white)
+                } else {
+                    Circle().stroke(Color.secondary, lineWidth: 1.5).frame(width: 44, height: 44)
+                    Image(systemName: "mic.slash").foregroundStyle(.secondary)
+                }
+            }
+            .font(.title3)
+            .frame(width: 56, height: 56)
+            .contentShape(Circle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(isListening ? "Stop listening" : "Listen")
+        .accessibilityIdentifier("micButton")
     }
 }
 

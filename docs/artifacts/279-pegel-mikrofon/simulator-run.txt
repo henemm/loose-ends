@@ -1,0 +1,22 @@
+# Simulator-Beleg
+erzeugt: 2026-10-10T10:26:40+0200
+befehl: scripts/sim.sh test-proof SpeechListeningIndicatorTests
+workflow: 279-pegel-mikrofon
+head: 79476d1f760ea12071776a97ed5920628398fe6e
+basis: 5037f0ee63f82d1803090c66ee78064768f75852 (merge-base origin/main HEAD)
+testklasse: SpeechListeningIndicatorTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 3 gesamt, 3 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1791620720.081  ende: 1791620800.351
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/279-pegel-mikrofon/simulator-run/summary.json  sha256:ecb0fc140d3238cb0ff2b5181a71a32f4bfddcac0fce044e58bb7e3449c5b1fc
+xcresult: docs/artifacts/279-pegel-mikrofon/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/279-pegel-mikrofon/simulator-run/*.png (2 Stück)
+
+## Geprüfte Dateien
+- sha256:49bdc8afe5f6e4951d862be64480f72f4fbff53d360565ce4b87f4a6dd3e1370  LooseEnds/Speech/ListeningHint.swift
+- sha256:5358ec291bd85dce9f5be56aedc16757bf019beca2c5fef5cab338375cf4e995  LooseEnds/Speech/Waveform.swift
+- sha256:8cf133798f950b21337582b028840d77e7082e784db93b8ec43b2bde64c64f0a  LooseEnds/Views/CaptureView.swift
+- sha256:bfbd9f25b69892ca4060038d80943de76a3a006021ab4b97f1d5983a7f79b19b  LooseEndsTests/WaveformTests.swift
+- sha256:f60711140c8e2971e766d5f5c171ad23dbd621a5d350d38f25a2b6f160c4b953  LooseEndsUITests/SpeechListeningIndicatorTests.swift
