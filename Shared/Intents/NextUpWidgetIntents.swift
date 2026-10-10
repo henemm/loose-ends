@@ -24,7 +24,7 @@ struct CompleteTaskIntent: AppIntent {
     func perform() async throws -> some IntentResult {
         guard let id = UUID(uuidString: taskID) else { return .result() }
         // The context does not retain its container (CLAUDE.md): keep it alive for the whole call.
-        let container = try ModelContainerFactory.make()
+        let container = try ModelContainerFactory.make(syncs: false)
         try NextUpWidgetActions.complete(id, in: ModelContext(container))
         return .result()
     }
