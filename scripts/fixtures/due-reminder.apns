@@ -1,0 +1,8 @@
+{
+  "Simulator Target Bundle": "com.henning.looseends",
+  "aps": {
+    "alert": { "title": "UI test reminder", "body": "Due today" },
+    "category": "DUE"
+  },
+  "taskID": "00000000-0000-0000-0000-000000000295"
+}

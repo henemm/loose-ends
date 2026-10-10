@@ -5,7 +5,9 @@ import UserNotifications
 
 /// Talks to the system for `DueReminders`: registers the category with its three actions, mirrors
 /// the plan into pending requests after every save, and applies an action when the user taps one.
-/// Silent under tests, where a permission prompt would block the run.
+/// Silent under tests, where a permission prompt would block the run; the notification UI test
+/// (#295) lets it run with `--ui-testing-notifications` while the store stays in memory; the
+/// banner itself comes from `simctl push`, because `add` from the app fails in the iOS 27 Simulator.
 @MainActor
 final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
     private let container: ModelContainer
@@ -13,7 +15,11 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Notifications")
 
     private static var suppressed: Bool {
-        ModelContainerFactory.isRunningTests || ModelContainerFactory.isUITesting
+        ModelContainerFactory.isRunningTests || (ModelContainerFactory.isUITesting && !isNotificationUITest)
+    }
+
+    private static var isNotificationUITest: Bool {
+        ModelContainerFactory.isUITesting && ProcessInfo.processInfo.arguments.contains("--ui-testing-notifications")
     }
 
     init(container: ModelContainer) {
