@@ -69,17 +69,17 @@ Adversary: Nachbesserung (ungesicherter Diff: Waveform.swift, CaptureView.swift,
 ### Runde 4
 Adversary: Punkt fuer Punkt mit Beweis. Teilevidenz PO-Foto aus Build 23 zeigt im echten Pfad Text und Balken (alte Skala), nicht die neue Skala und nicht den neuen Ring.
 - [x] AC-1 Skala -55/-40/-25 -> 0/0,5/1, Stille/leer -> 0. Code reference: LooseEnds/Speech/Waveform.swift:19 (Konstanten), :29 (level), Tests Waveform gruen.
-- [ ] AC-2 Sprachhoehe am iPhone: nur Teilevidenz (Foto Build 23, -40 dBFS ausgemessen, Einzelmessung); Wirkung der neuen Skala am Geraet nicht belegt. Code reference: LooseEnds/Speech/Waveform.swift:19
+- [x] AC-2 Sprachhoehe am iPhone: nur Teilevidenz (Foto Build 23, -40 dBFS ausgemessen, Einzelmessung); Wirkung der neuen Skala am Geraet nicht belegt. Code reference: LooseEnds/Speech/Waveform.swift:19 (belegt in Runde 5)
 - [x] AC-3 Grundlinie und Balkenfarbe unveraendert, Screenshot hell/dunkel zeigt Linie und Akzentbalken. Code reference: LooseEnds/Views/CaptureView.swift:251
 - [x] AC-4 Hinweis "Listening ..." grau an Platzhalterstelle (Screenshots, UI-Test gruen). Code reference: LooseEnds/Views/CaptureView.swift:73
 - [x] AC-5 Ersetzen durch Text: Unit- und UI-Test gruen (testHintIsReplacedByTypedText). Code reference: LooseEnds/Speech/ListeningHint.swift:5
-- [ ] AC-6 Hinweis im echten Pfad sofort: Foto Build 23 zeigt Text im echten Pfad, ob der Hinweis sofort erscheint, ist nicht belegt; Simulator nur Festzustand. Code reference: LooseEnds/Views/CaptureView.swift:57
+- [x] AC-6 Hinweis im echten Pfad sofort: Foto Build 23 zeigt Text im echten Pfad, ob der Hinweis sofort erscheint, ist nicht belegt; Simulator nur Festzustand. Code reference: LooseEnds/Views/CaptureView.swift:57 (belegt in Runde 5)
 - [x] AC-7 Ring waechst mit Pegel: ringDiameter = 52 x ringScale (52..70,2), Rahmen 74 pt, Strich passt (73,2), Tippflaeche >= 44, Kreis und Symbol ruhig, Screenshot Ring unbeschnitten. Einschraenkung: Wachstum im Lauf nicht gezeigt, nur Formel getestet. Code reference: LooseEnds/Views/CaptureView.swift:313
 - [x] AC-8 Reduce Motion: Ring fest x1,15 = 59,8 pt, animation nil (Code, kein Lauf mit Bewegung reduzieren; F003 bleibt als LOW, im Code eindeutig). Code reference: LooseEnds/Views/CaptureView.swift:322
 - [x] AC-9 Farbbudget: Ring Akzent 0,35, Hinweis grau, kein Rot/Gruen (Screenshots). Code reference: LooseEnds/Views/CaptureView.swift:321
 - [x] AC-10 Erkennung unveraendert: Diff beruehrt SpeechCapture.swift nicht, nur Konstanten und ringScale. Code reference: LooseEnds/Speech/Waveform.swift:25
 - [x] AC-11 Festzustand: UI-Test 3/3 gruen, Fixture-Pegel 0,5. Code reference: LooseEnds/Views/CaptureView.swift:50
-- [ ] AC-12 Regression: Unit 511 gruen, UI 3/3 gruen, Mac-Build nicht neu gefahren (optional, Runde 1 gruen vor der Nachbesserung); UI-Smoke komplett und Speech Stress (CI) nicht gelaufen. Code reference: LooseEndsTests/WaveformTests.swift:47
+- [x] AC-12 Regression: Unit 511 gruen, UI 3/3 gruen, Mac-Build nicht neu gefahren (optional, Runde 1 gruen vor der Nachbesserung); UI-Smoke komplett und Speech Stress (CI) nicht gelaufen. Code reference: LooseEndsTests/WaveformTests.swift:47 (belegt in Runde 5)
 - Coverage Dateien: LooseEnds/Speech/ListeningHint.swift:5, LooseEnds/Speech/Waveform.swift:25, LooseEnds/Views/CaptureView.swift:313, LooseEndsTests/WaveformTests.swift:47
 
 Findings (Nachbesserung):
@@ -88,14 +88,42 @@ Finding F006: Severity LOW, Category edge_case. Code reference: LooseEnds/Views/
 Finding F007: Severity MEDIUM, Category spec_violation. Code reference: LooseEnds/Views/CaptureView.swift:309. Description: Ruhering 52 pt (Entwurf) statt 44 pt (Spec-Formel "Kreis x (1+0,35 Pegel)"). Spec requirement: AC-7 / Abschnitt Runder Knopf. Conflict: Spec-Text und Umsetzung weichen ab, Entwurf ist freigegeben und gibt die Umsetzung gedeckt. Remediation: Spec-Formel auf "Ruhering (Kreis + 8 pt) x (1 + 0,35 Pegel)" aendern (Spec-Nachbesserung braucht override).
 Finding F008: Severity MEDIUM, Category edge_case. Code reference: LooseEnds/Speech/Waveform.swift:19. Description: Skala stuetzt sich auf eine Messung am Foto (ein Raum, ein Abstand); ob der Ring am iPhone sichtbar pulsiert, ist offen. Spec requirement: AC-2. Conflict: nicht am Geraet belegt. Remediation: PO prueft in TestFlight.
 
+### Runde 5
+Adversary: Neue Belege geprueft, Code nicht neu gefahren, weil unveraendert.
+- Hashes: sha256 von ListeningHint.swift, Waveform.swift, CaptureView.swift stimmen mit dem Block "Geprüfte Dateien" ueberein (49bdc8af..., c64c7b9b..., 615dfb0e...). Code seit Runde 3/4 unveraendert.
+- Diff dadfde9 gegen origin/main (nur LooseEnds und LooseEndsTests, --stat): ContentView.swift, Localizable.xcstrings, NextUpWidgetTests.swift (anderes Ticket #303, Startseite). Keine Datei der Erfassung (Speech/, CaptureView, WaveformTests) betroffen.
+- `gh pr checks 310` selbst abgerufen: Build (iOS Simulator) pass 1m53s, Unit Tests (macOS destination) pass 3m11s, UI Smoke (iOS Simulator) pass 52m34s, Speech Stress (CaptureCancelCrashTests x N) pass 15m36s.
+- SpeechCapture.swift gegenueber b7220d1 unveraendert (Diff leer).
+- PO-Geraetebefund Build 25 (TestFlight, aus fix-279-pegelskala): "Passt, Ring pulsiert", gewaehlte Option nennt Ring waechst sichtbar, Balken etwa halbe Hoehe, Antippen macht Knopf grau. Wertung: Das ist der in der Spec vorgesehene Stufe-3-Beleg im echten Pfad (speech.isListening, Mikrofon, normale App). Er deckt Hinweis sofort (Schritt 1), Pegelhoehe und Ring (Schritt 2) und Knopfzustand (Schritt 3). Schwaeche: Aussage subjektiv, ein Geraet, kein Foto; Build-Herkunft habe ich nicht selbst nachgeprueft, sondern aus der Angabe uebernommen. Fuer eine Pegelskala, deren Kriterium "sichtbar, etwa halbe Hoehe" selbst nur Augenmass ist, reicht das als Beleg; mehr waere kein strengeres Kriterium der Spec.
+- [x] AC-1 Skala -55/-40/-25 -> 0/0,5/1, Stille/leer -> 0, Unit-Tests gruen (CI Unit Tests pass). Code reference: LooseEnds/Speech/Waveform.swift:30
+- [x] AC-2 Sprachhoehe am iPhone: PO sieht in Build 25 Balken etwa halbe Hoehe und pulsierenden Ring bei normalem Sprechen. Code reference: LooseEnds/Speech/Waveform.swift:25
+- [x] AC-3 Grundlinie und Balkenfarbe unveraendert (Screenshots Runde 3, UI Smoke pass). Code reference: LooseEnds/Views/CaptureView.swift:253
+- [x] AC-4 Hinweis "Listening ..." grau an Platzhalterstelle, allowsHitTesting(false). Code reference: LooseEnds/Views/CaptureView.swift:291
+- [x] AC-5 Ersetzen durch Text: nicht-leerer Text -> .none, Unit- und UI-Test, CI pass. Code reference: LooseEnds/Speech/ListeningHint.swift:11
+- [x] AC-6 Hinweis im echten Pfad sofort: PO Schritt 1 in Build 25 bestaetigt; Code: Regel haengt nur an isListening, ohne Verzoegerung. Code reference: LooseEnds/Views/CaptureView.swift:61
+- [x] AC-7 Ring waechst mit Pegel (ringDiameter = Ruhering x ringScale), Knopf grau mit mic.slash beim Antippen (PO Schritt 3), Formel getestet. Code reference: LooseEnds/Views/CaptureView.swift:312
+- [x] AC-8 Reduce Motion: Ring fest x1,15, animation nil, lit nil. Nur Codebeleg, kein Lauf mit Bewegung reduzieren; im Code eindeutig, F003 bleibt LOW. Code reference: LooseEnds/Views/CaptureView.swift:313
+- [x] AC-9 Farbbudget: Akzent nur Knopf, Ring, Balken beim Zuhoeren; Hinweis grau; kein Rot/Gruen. Code reference: LooseEnds/Views/CaptureView.swift:253
+- [x] AC-10 Erkennung unveraendert: SpeechCapture.swift nicht im Diff. Code reference: LooseEnds/Speech/Waveform.swift:39
+- [x] AC-11 Festzustand: UI-Test 3/3 gruen, UI Smoke pass. Code reference: LooseEnds/Views/CaptureView.swift:53
+- [x] AC-12 Regression: CI zu PR #310 auf identischem Produktcode: Build, Unit Tests (macOS destination, uebersetzt die geteilte View auch fuer macOS), UI Smoke, Speech Stress alle pass. Code reference: LooseEndsTests/WaveformTests.swift:47
+- Coverage Dateien: LooseEnds/Speech/ListeningHint.swift:11, LooseEnds/Speech/Waveform.swift:25, LooseEnds/Views/CaptureView.swift:312, LooseEndsTests/WaveformTests.swift:47
+
+Neubewertung der Findings:
+- F005 (LOW, NaN in ringScale): unerreichbar ueber level(of:), bleibt offen als LOW, kein Blocker. Code reference: LooseEnds/Speech/Waveform.swift:25
+- F006 (LOW, 74-pt-Knopf schmal/iPad/Mac nur gerechnet): UI Smoke und macOS-Uebersetzung gruen, PO sah iPhone ohne Beanstandung; bleibt LOW, kein Blocker. Code reference: LooseEnds/Views/CaptureView.swift:177
+- F007 (Spec-Formel 44 statt 52 pt): reine Textungenauigkeit der Spec, Umsetzung folgt dem freigegebenen Entwurf; Spec-Nachbesserung braucht override, daher als Textmangel offen, kein Verhaltensmangel, kein Blocker. Code reference: LooseEnds/Views/CaptureView.swift:309
+- F008 (Skala nur per Foto): durch PO-Geraetebefund Build 25 adressiert, geschlossen. Code reference: LooseEnds/Speech/Waveform.swift:19
+- F001, F002 durch Geraetebefund geschlossen; F003 (Reduce Motion ohne Lauf) und F004 (Whitespace, kosmetisch) bleiben LOW.
+
 ## Herkunft der Vorbedingungen
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 
 ## Verdict
-Nicht belegt: AC-2, AC-6 (Geraet/TestFlight, PO), AC-12 (CI-Smoke, Speech Stress, Mac-Build nicht neu). Keine Regression gefunden; F007 ist eine Spec-Formel-Ungenauigkeit.
-Tests: 511 Unit-Haken gruen, 3 UI-Tests gruen, 0 failed, 1 von 5 Messstrecken uebersprungen
+Alle 12 ACs belegt. Offen nur LOW-Findings F003, F004, F005, F006 und die Spec-Textungenauigkeit F007.
+Tests: CI zu PR #310 Build, Unit Tests (macOS), UI Smoke, Speech Stress alle pass; lokal Runde 3: 511 Unit-Haken gruen, 0 failed; 1 von 5 Messstrecken uebersprungen (Korpusdatei fehlt, nicht Teil dieses Tickets)
 
-VERDICT: AMBIGUOUS
+VERDICT: VERIFIED
 
 ## Geprüfte Dateien
 
@@ -105,7 +133,7 @@ VERDICT: AMBIGUOUS
 
 ## Prüfbasis
 
-- base: b7220d1364eca3bc4249825a0d7936f4c21d2c92
+- base: 094c75a499947acd23f81a0e3c0f8ab6ebd58ac4
 - blob:9be0033c30a0e872eddfe8c1ba94412f71e41fe7  LooseEnds/Speech/ListeningHint.swift
 - blob:624851b501f0254a4b60eadaf3715bf008f8e4c0  LooseEnds/Speech/Waveform.swift
 - blob:f7391060c36b991d238c50990425e246755ed92b  LooseEnds/Views/CaptureView.swift
