@@ -18,7 +18,7 @@ struct NextUpProvider: TimelineProvider {
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Widget")
 
     func placeholder(in context: Context) -> NextUpEntry {
-        NextUpEntry(date: .now, lines: [NextUpEntry.Line(id: UUID(), title: "Follow up on the offer")])
+        NextUpEntry(date: .now, lines: [NextUpEntry.Line(id: UUID(), title: String(localized: "Follow up on the offer"))])
     }
 
     func getSnapshot(in context: Context, completion: @escaping (NextUpEntry) -> Void) { completion(load()) }
