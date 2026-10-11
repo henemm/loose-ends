@@ -59,6 +59,8 @@ jede Einladung externer Tester über TestFlight.
   geschlossen 2026-10-08: jeder Start faltet englische Standardkontexte in ihr deutsches Gegenstück
   (`CatalogService.mergeEnglishDefaults`, `docs/specs/fix-267-englische-kontexte.md`). Auf Hennings
   iPhone belegt mit dem TestFlight-Build vom 2026-10-08 (Stand `c03dcf4`).
+- ~~[#295](https://github.com/henemm/loose-ends/issues/295) Absturz beim Antippen einer Fälligkeits-Mitteilung~~ —
+  behoben 2026-10-11 (`docs/specs/fix-295-mitteilung-absturz.md`), auf Hennings Gerät mit TestFlight-Build 37 bestätigt.
 
 **Spikes zuerst** (technisches Risiko, blockieren die Umsetzung der Must-Features):
 

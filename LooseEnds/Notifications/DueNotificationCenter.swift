@@ -9,7 +9,9 @@ import UserNotifications
 /// Holds the reminder time for tasks without a due time (#311): kept in `UserDefaults` and mirrored
 /// to the iCloud key-value store, so a change on one device reschedules the others.
 /// Silent under tests, where a permission prompt would block the run; unit tests hand in a
-/// recording `DueScheduling` and their own stores instead (#328).
+/// recording `DueScheduling` and their own stores instead (#328). The notification UI test (#295)
+/// lets it run with `--ui-testing-notifications` while the store stays in memory; the banner itself
+/// comes from `simctl push`, because `add` from the app fails in the iOS 27 Simulator.
 @MainActor
 final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
     private let container: ModelContainer
@@ -23,7 +25,11 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
     static let timeKey = "dueReminderMinutes"
 
     private static var suppressed: Bool {
-        ModelContainerFactory.isRunningTests || ModelContainerFactory.isUITesting
+        ModelContainerFactory.isRunningTests || (ModelContainerFactory.isUITesting && !isNotificationUITest)
+    }
+
+    private static var isNotificationUITest: Bool {
+        ModelContainerFactory.isUITesting && ProcessInfo.processInfo.arguments.contains("--ui-testing-notifications")
     }
 
     init(
@@ -161,20 +167,28 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
 
     // MARK: - UNUserNotificationCenterDelegate
 
+    // Callback variants, not async (#295): the async bridge called the system's completion from the
+    // cooperative pool and the app aborted on tap; the completion has to come from the main thread.
+    // `@Sendable` because the handler crosses into the main-actor task (the SDK leaves it unannotated).
     nonisolated func userNotificationCenter(
         _ center: UNUserNotificationCenter,
-        didReceive response: UNNotificationResponse
-    ) async {
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping @Sendable () -> Void
+    ) {
         let actionRaw = response.actionIdentifier
         let taskID = response.notification.request.content.userInfo["taskID"] as? String
-        await apply(actionRaw: actionRaw, taskID: taskID)
+        Task { @MainActor in
+            await apply(actionRaw: actionRaw, taskID: taskID)
+            completionHandler()
+        }
     }
 
     nonisolated func userNotificationCenter(
         _ center: UNUserNotificationCenter,
-        willPresent notification: UNNotification
-    ) async -> UNNotificationPresentationOptions {
-        [.banner, .list, .sound]
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        completionHandler([.banner, .list, .sound])
     }
 
     private func apply(actionRaw: String, taskID: String?) async {

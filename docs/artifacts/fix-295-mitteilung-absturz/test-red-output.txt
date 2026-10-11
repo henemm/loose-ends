@@ -1,0 +1,35 @@
+[LooseEndsTests] Processing empty-LooseEndsTests.plist
+[LooseEndsTests] Linking LooseEndsTests
+[LooseEndsTests] Extract App Intents Metadata
+[LooseEnds] Validate LooseEnds.app
+[LooseEndsUITests] Processing empty-LooseEndsUITests.plist
+[LooseEndsUITests] Linking LooseEndsUITests
+[LooseEndsUITests] Extract App Intents Metadata
+Test Suite 'Selected tests' started at 2026-10-10 13:45:10.076.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-10 13:45:10.078.
+Test Suite 'DueNotificationTapTests' started at 2026-10-10 13:45:10.078.
+    ✔ testBannerWhileAppIsOpenKeepsAppAlive (62.761 seconds)
+    ✖ testTapBannerFromHomeOpensApp, XCTAssertTrue failed - App not in front after the tap, state 1
+Executed 2 tests, with 1 failure (0 unexpected) in 148.017 (148.036) seconds
+Test Suite 'LooseEndsUITests.xctest' failed at 2026-10-10 13:47:38.116.
+Executed 2 tests, with 1 failure (0 unexpected) in 148.017 (148.038) seconds
+Executed 2 tests, with 1 failure (0 unexpected) in 148.017 (148.040) seconds
+Test session results: /Users/hem/Developer/loose-ends/.claude/worktrees/zippy-baking-hejlsberg/docs/artifacts/fix-295-mitteilung-absturz/simulator-run/run.xcresult
+Testing started
+./scripts/sim.sh: line 78: 14876 Terminated: 15          ( while true; do
+    $SIMCTL push "$id" com.henning.looseends "$LOOSEENDS_PUSH" > /dev/null 2>&1 || true; sleep 5;
+done )
+[sim_proof] ergebnis: Failed
+[sim] UI-Test fehlgeschlagen (xcodebuild 65), Beleg: docs/artifacts/fix-295-mitteilung-absturz/simulator-run.txt
+
+[exited with code 65]
+crash red-crash.ips: "exception" : {"codes":"0x0000000000000000, 0x0000000000000000","rawCodes":[0,0],"type":"EXC_CRASH","signal":"SIGABRT"}
+crash red-crash.ips: "symbol":"-[UIApplication _performBlockAfterCATransactionCommitSynchronizes:]"
+crash red-crash.ips: "symbol":"-[UIApplication _updateStateRestorationArchiveForBackgroundEvent:saveState:exitIfCouldNotRestoreState:updateSnapshot:windowScene:]"
+crash red-crash.ips: "symbol":"-[UIApplication _updateSnapshotAndStateRestorationWithAction:windowScene:]"
+crash red-crash.ips: "symbol":"@objc closure #1 in DueNotificationCenter.userNotificationCenter(_:didReceive:)"
+crash red-crash.ips: "symbol":"UIApplicationMain"
+crash red-crash.ips: "symbol":"-[UIApplication _performBlockAfterCATransactionCommitSynchronizes:]"
+crash red-crash.ips: "symbol":"-[UIApplication _updateStateRestorationArchiveForBackgroundEvent:saveState:exitIfCouldNotRestoreState:updateSnapshot:windowScene:]"
+crash red-crash.ips: "symbol":"-[UIApplication _updateSnapshotAndStateRestorationWithAction:windowScene:]"
+crash red-crash.ips: "symbol":"@objc closure #1 in DueNotificationCenter.userNotificationCenter(_:didReceive:)"
