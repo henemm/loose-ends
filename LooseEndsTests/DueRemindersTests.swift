@@ -59,6 +59,67 @@ import Testing
         #expect(DueReminders.plan(for: [task], now: late, calendar: calendar).isEmpty)
     }
 
+    private func date(_ day: Int, hour: Int, minute: Int, in calendar: Calendar) throws -> Date {
+        try #require(calendar.date(from: DateComponents(year: 2026, month: 9, day: day, hour: hour, minute: minute)))
+    }
+
+    @Test("A task with a due time is reminded at exactly that time, as due now (#311)")
+    @MainActor func planWithTime() async throws {
+        let store = try TestStore()
+        let calendar = try berlin()
+        let now = try date(16, hour: 10, in: calendar)
+        let task = TaskItem(rawText: "Um 14:30 Zahnarzt anrufen")
+        task.status = .active
+        task.dueDate = try date(16, hour: 14, minute: 30, in: calendar)
+        task.dueHasTime = true
+        store.context.insert(task)
+
+        let reminders = DueReminders.plan(for: [task], time: DueReminders.Time(hour: 8, minute: 15), now: now, calendar: calendar)
+
+        #expect(reminders.first?.fireDate == (try date(16, hour: 14, minute: 30, in: calendar)), "the setting does not apply to a task with a time")
+        #expect(reminders.first?.kind == .now)
+    }
+
+    @Test("A task without a due time is reminded on its day at the set time, as due today (#311)")
+    @MainActor func planWithoutTime() async throws {
+        let store = try TestStore()
+        let calendar = try berlin()
+        let now = try date(16, hour: 7, in: calendar)
+        let task = TaskItem(rawText: "Steuer abgeben")
+        task.status = .active
+        task.dueDate = try date(16, hour: 0, in: calendar)
+        store.context.insert(task)
+
+        let reminders = DueReminders.plan(for: [task], time: DueReminders.Time(hour: 7, minute: 45), now: now, calendar: calendar)
+
+        #expect(reminders.first?.fireDate == (try date(16, hour: 7, minute: 45, in: calendar)))
+        #expect(reminders.first?.kind == .today)
+    }
+
+    @Test("A due time already passed gets no reminder (#311)")
+    @MainActor func planAfterDueTime() async throws {
+        let store = try TestStore()
+        let calendar = try berlin()
+        let task = TaskItem(rawText: "Um 14:30 Zahnarzt anrufen")
+        task.status = .active
+        task.dueDate = try date(16, hour: 14, minute: 30, in: calendar)
+        task.dueHasTime = true
+        store.context.insert(task)
+
+        let late = try date(16, hour: 15, in: calendar)
+        #expect(DueReminders.plan(for: [task], now: late, calendar: calendar).isEmpty)
+    }
+
+    @Test("The stored reminder time falls back to 9:00 when missing or out of range (#311)")
+    func storedTime() {
+        #expect(DueReminders.Time(minutesSinceMidnight: nil) == .standard)
+        #expect(DueReminders.Time(minutesSinceMidnight: -1) == .standard)
+        #expect(DueReminders.Time(minutesSinceMidnight: 24 * 60) == .standard)
+        #expect(DueReminders.Time(minutesSinceMidnight: 7 * 60 + 45) == DueReminders.Time(hour: 7, minute: 45))
+        #expect(DueReminders.Time(hour: 7, minute: 45).minutesSinceMidnight == 465)
+        #expect(DueReminders.Time.standard == DueReminders.Time(hour: 9, minute: 0))
+    }
+
     @Test("Done, Next up and Tomorrow apply from the notification; an unknown task is reported")
     @MainActor func handleActions() async throws {
         let store = try TestStore()

@@ -1,12 +1,12 @@
 import Foundation
 
-/// The one notification kind in v1 (data model doc, "Mitteilungen"): "Due today" on the due day
-/// at the reminder hour, only for active tasks. Three actions, none opens the app. Pure planning
-/// and handling; `DueNotificationCenter` talks to the system.
+/// The one notification kind in v1 (data model doc, "Mitteilungen"): a task with a due time is
+/// reminded at that time ("Due now"), a task with only a due day on that day at the reminder time
+/// from the settings ("Due today", #311). Only for active tasks. Three actions, none opens the app.
+/// Pure planning and handling; `DueNotificationCenter` talks to the system.
 enum DueReminders {
     static let categoryIdentifier = "DUE"
     static let identifierPrefix = "due_"
-    static let defaultHour = 9
 
     enum Action: String, CaseIterable, Sendable {
         case done = "DUE_DONE"
@@ -14,10 +14,40 @@ enum DueReminders {
         case tomorrow = "DUE_TOMORROW"
     }
 
+    /// The time of day for tasks without a due time (#311), one value on every device.
+    struct Time: Equatable, Sendable {
+        static let standard = Time(hour: 9, minute: 0)
+
+        let hour: Int
+        let minute: Int
+
+        init(hour: Int, minute: Int) {
+            self.hour = min(max(hour, 0), 23)
+            self.minute = min(max(minute, 0), 59)
+        }
+
+        /// The stored form: minutes since midnight. Anything out of range falls back to the standard.
+        init(minutesSinceMidnight: Int?) {
+            let minutes = minutesSinceMidnight.flatMap { (0..<24 * 60).contains($0) ? $0 : nil }
+                ?? Time.standard.minutesSinceMidnight
+            self.init(hour: minutes / 60, minute: minutes % 60)
+        }
+
+        var minutesSinceMidnight: Int { hour * 60 + minute }
+    }
+
     struct Reminder: Equatable, Sendable {
+        enum Kind: Equatable, Sendable {
+            /// At the task's own due time.
+            case now
+            /// On the due day at the reminder time.
+            case today
+        }
+
         let taskID: UUID
         let title: String
         let fireDate: Date
+        let kind: Kind
 
         var identifier: String { DueReminders.identifierPrefix + taskID.uuidString }
     }
@@ -25,15 +55,18 @@ enum DueReminders {
     /// One reminder per active task with a due date whose reminder time is still ahead.
     static func plan(
         for tasks: [TaskItem],
-        hour: Int = defaultHour,
+        time: Time = .standard,
         now: Date = Date(),
         calendar: Calendar = .current
     ) -> [Reminder] {
         tasks.compactMap { task -> Reminder? in
             guard task.status == .active, let due = task.dueDate else { return nil }
-            let fire = calendar.date(bySettingHour: hour, minute: 0, second: 0, of: due) ?? due
+            let kind: Reminder.Kind = task.dueHasTime ? .now : .today
+            let fire = kind == .now
+                ? due
+                : calendar.date(bySettingHour: time.hour, minute: time.minute, second: 0, of: due) ?? due
             guard fire > now else { return nil }
-            return Reminder(taskID: task.id, title: task.displayTitle, fireDate: fire)
+            return Reminder(taskID: task.id, title: task.displayTitle, fireDate: fire, kind: kind)
         }
         .sorted { $0.fireDate < $1.fireDate }
     }

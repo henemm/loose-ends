@@ -11,6 +11,7 @@ struct ContentView: View {
     @Query(sort: \TaskItem.capturedAt, order: .reverse) private var tasks: [TaskItem]
     @State private var selection: ViewSelection?
     @State private var isCapturing = false
+    @State private var showsSettings = false
     @State private var completionPulse = CompletionPulse()
     @State private var pendingCompletions = PendingCompletions(window: Self.doneWindow)
     @State private var showsOnboarding = OnboardingFlow.shouldShow()
@@ -32,7 +33,10 @@ struct ContentView: View {
     var body: some View {
         NavigationSplitView {
             SidebarView(selection: $selection, tasks: tasks)
-                .toolbar { captureToolbarItem }
+                .toolbar {
+                    captureToolbarItem
+                    settingsToolbarItem
+                }
         } detail: {
             if case .task(let id) = selection, let task = tasks.first(where: { $0.id == id }) {
                 NavigationStack {
@@ -56,6 +60,17 @@ struct ContentView: View {
         }
         .sheet(isPresented: $isCapturing) {
             CaptureView()
+        }
+        .sheet(isPresented: $showsSettings) {
+            NavigationStack {
+                SettingsView(notifications: notifications)
+                    .toolbar {
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Done") { showsSettings = false }
+                                .accessibilityIdentifier("settingsDoneButton")
+                        }
+                    }
+            }
         }
         #if os(iOS)
         .fullScreenCover(isPresented: $showsOnboarding) { onboarding }
@@ -90,6 +105,22 @@ struct ContentView: View {
             Button("Capture", systemImage: "plus") { isCapturing = true }
                 .keyboardShortcut("n", modifiers: .command)
                 .accessibilityIdentifier("captureButton")
+        }
+    }
+
+    /// The gear at the start screen opens the settings (#311). On the Mac it opens the settings
+    /// window, the same one as ⌘, and the app menu.
+    private var settingsToolbarItem: some ToolbarContent {
+        ToolbarItem(placement: .navigation) {
+            #if os(macOS)
+            SettingsLink {
+                Label("Settings", systemImage: "gearshape")
+            }
+            .accessibilityIdentifier("settingsButton")
+            #else
+            Button("Settings", systemImage: "gearshape") { showsSettings = true }
+                .accessibilityIdentifier("settingsButton")
+            #endif
         }
     }
 
