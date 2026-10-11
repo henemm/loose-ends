@@ -169,7 +169,7 @@ blockierte, "Geparkt" zeigt nur `parked`, "Erledigt" zeigt nur `done`.
 Eine Art in Version 1, eine Mitteilung je Aufgabe, nur für `status == active` (#311):
 Aufgabe **mit Uhrzeit** (`dueHasTime`) → „Jetzt fällig“ genau zur Fälligkeitszeit; Aufgabe **ohne
 Uhrzeit** → „Heute fällig“ am Fälligkeitstag zur Uhrzeit aus den Einstellungen (Standard 9:00, gilt auf
-allen Geräten über den iCloud-Schlüsselwertspeicher). Ist der Zeitpunkt vorbei, entfällt die Mitteilung. Aktionen ohne App-Start: Erledigt, Als nächstes, Morgen. Keine Mitteilung
+allen Geräten über den iCloud-Schlüsselwertspeicher). Ist der Zeitpunkt vorbei, entfällt die Mitteilung. Aktionen ohne App-Start: Erledigt, Als nächstes, Morgen. Ein Tipp auf die Mitteilung selbst öffnet die Aufgabe im Detail (#331). Keine Mitteilung
 für KI-Verarbeitung.
 
 ## Veredelungs-Pipeline

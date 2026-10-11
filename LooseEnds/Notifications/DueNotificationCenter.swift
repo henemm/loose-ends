@@ -161,6 +161,10 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
     }
 
     private func apply(actionRaw: String, taskID: String?) async {
+        if let open = DueReminders.taskToOpen(actionIdentifier: actionRaw, taskID: taskID) {
+            OpenTaskRequest.shared.taskID = open
+            return
+        }
         guard let action = DueReminders.Action(rawValue: actionRaw),
               let taskID, let id = UUID(uuidString: taskID) else { return }
         let context = container.mainContext
