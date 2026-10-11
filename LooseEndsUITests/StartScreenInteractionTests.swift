@@ -88,6 +88,39 @@ final class StartScreenInteractionTests: XCTestCase {
         XCTAssertTrue(element("menuDone", in: app).waitForExistence(timeout: 5), "The long-press menu in New should still offer Done")
     }
 
+    /// A task under "Needs a look" leaves New with "Looks right" in its detail (#318): opening
+    /// alone kept an unchecked title in New until it was edited.
+    @MainActor
+    func testLooksRightInDetailTakesTheTaskOutOfNew() throws {
+        let app = launch()
+        let captureButton = app.buttons["captureButton"]
+        XCTAssertTrue(captureButton.waitForExistence(timeout: 10), "No capture button")
+        captureButton.tap()
+        let field = element("captureTextField", in: app)
+        XCTAssertTrue(field.waitForExistence(timeout: 5), "Capture sheet did not open")
+        field.tap()
+        field.typeText("Dachrinne reinigen")
+        app.buttons["captureDoneButton"].tap()
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5), "Capture sheet did not close")
+
+        let newRow = element("viewRow_new", in: app)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5), "Start screen shows no New")
+        newRow.tap()
+        let row = firstElement(prefix: "taskRow_", in: app)
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "New shows no task")
+        let id = row.identifier
+        row.tap()
+        let confirm = element("detailConfirmButton", in: app)
+        // With Apple Intelligence the task may already be sorted; then opening was enough.
+        guard confirm.waitForExistence(timeout: 5) else { return }
+        confirm.tap()
+        XCTAssertTrue(confirm.waitForNonExistence(timeout: 5), "Looks right should go once the task is confirmed")
+        let back = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(back.waitForExistence(timeout: 5), "No back button")
+        back.tap()
+        XCTAssertTrue(element(id, in: app).waitForNonExistence(timeout: 5), "The confirmed task should leave New")
+    }
+
     @MainActor
     func testPreviewRowSwipesToDoneAndBack() throws {
         let app = launch()
