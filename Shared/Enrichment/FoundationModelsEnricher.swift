@@ -68,10 +68,6 @@ struct FoundationModelsEnricher: TaskEnricher {
         if !contexts.isEmpty {
             draft.contexts = EnrichmentDraft.Guess(contexts, confidence: EnrichmentParsing.clamp(result.contextsConfidence), reason: result.contextsReason)
         }
-        let people = result.people.map { $0.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty }
-        if !people.isEmpty {
-            draft.people = EnrichmentDraft.Guess(people, confidence: EnrichmentParsing.clamp(result.peopleConfidence), reason: result.peopleReason)
-        }
         let project = result.project.trimmingCharacters(in: .whitespaces)
         if !project.isEmpty {
             draft.project = EnrichmentDraft.Guess(project, confidence: EnrichmentParsing.clamp(result.projectConfidence), reason: result.projectReason)
@@ -105,12 +101,7 @@ struct ModelEnrichment {
     @Guide(description: "One sentence why these contexts")
     var contextsReason: String
 
-    @Guide(description: "Names of people mentioned in the note, empty list otherwise")
-    var people: [String]
-    @Guide(description: "Confidence 0 to 1 for the people")
-    var peopleConfidence: Double
-    @Guide(description: "One sentence why these people")
-    var peopleReason: String
+    // No people: the field left the product with #301 (#105, no use case, never measured).
 
     @Guide(description: "One of the allowed project names, or empty")
     var project: String

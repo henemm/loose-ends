@@ -54,7 +54,8 @@ enum DurationBucket: String, Codable, CaseIterable, Sendable {
     var isQuick: Bool { self == .minutes5 || self == .minutes15 }
 }
 
-/// Fields that can carry a revision entry.
+/// Fields that can carry a revision entry. `people` is retired (#301) and stays only so revisions
+/// written before still decode as what they were.
 enum RevisedField: String, Codable, CaseIterable, Sendable {
     case title, dueDate, importance, urgency, duration, energy, contexts, people, project, blockedBy, repeatRule, place
 }
