@@ -42,3 +42,39 @@ wie „Erledigt“ als eigene Zeile erreichbar ist.
 - Geräteliste (CLAUDE.md Stufe 3): voraussichtlich kein Pfad berührt (nur `Shared/Models`, `LooseEnds/Views`, Resources).
 - Produktfragen für die Analyse/den Entwurf: Blockierte (wartende) mitzeigen? Sortierung? Platz auf dem Startbildschirm (neben „Erledigt“ unten, oder oben bei den Tagesansichten)? Name („Alle offenen“ / „Offen“ / „Alle“)? Zähler an der Zeile?
 - Scope klein: ~5 Dateien Code + Test + Doku, geschätzt < 80 LoC.
+
+## Analysis
+
+### Type
+Feature
+
+### Affected Files (with changes)
+| File | Change Type | Description |
+|------|-------------|-------------|
+| `Shared/Models/Enums.swift` | MODIFY | `ViewKind.open`, Titel „All open“, Symbol `circle` |
+| `Shared/Models/ViewRules.swift` | MODIFY | `case .open`: Oberaufgaben mit `isOpen` (Wartende eingeschlossen, Geparkt/Erledigt nicht), `byUrgencyThenImportance` |
+| `LooseEnds/Views/SidebarView.swift` | MODIFY | Zeile `viewRow_open` in der letzten Section direkt über „Erledigt“, mit Zähler, immer sichtbar |
+| `LooseEnds/Views/TaskListView.swift` | MODIFY | Leersatz für `.open` |
+| `LooseEnds/Resources/Localizable.xcstrings` | MODIFY | „All open“ → „Alle offenen“, Leersatz DE |
+| `LooseEndsTests/StartViewsTests.swift` | MODIFY | `.open` in `everyViewHasAPlace` ausnehmen; Regeltest (Geparkt/Erledigt/Unteraufgaben raus, Wartende rein, Sortierung) |
+| `LooseEndsTests/SubtaskTests.swift` | MODIFY | `.open` zu den Ansichten ohne Unteraufgaben |
+| UI-Test (bestehende Smoke-Datei) | MODIFY | Zeile `viewRow_open` antippen, Liste zeigt offene Aufgabe, nicht die erledigte |
+| `docs/project/02-datenmodell-und-ansichten.md` | MODIFY | Zeile in der Regeltabelle |
+
+### Scope Assessment
+- Files: 4 Code + 2–3 Tests + 1 Doku
+- Estimated LoC: +60/-2
+- Risk Level: LOW (Compiler sichert die exhaustiven `switch`es; kein Modellfeld, kein CloudKit-Schema; `ViewSelection` wird nicht gespeichert, `SavedView.kindRaw` fällt auf `.next` zurück; Widgets/Watch/Intents nutzen `ViewKind` nicht)
+- Geräteliste Stufe 3: kein Pfad berührt.
+
+### Technical Approach
+Neuer Systemfall nach dem Muster von „Erledigt“ (Plan-Bewertung bestätigt, keine Befunde dagegen). Wischaktionen fallen in `default`: nach rechts Erledigen, nach links Vormerken.
+Entwurf: `docs/artifacts/feat-319-alle-offenen/index.html` (veröffentlicht: https://claude.ai/artifact/54cdy9kj31m8QSRCrVnvVE).
+Empfehlung: Zeile unten über „Erledigt“, flache Liste. Alternativen: (1) Zeile oben vor den Tagesansichten, (2) Liste nach Fälligkeit gruppiert.
+Recherche: keine Fehlermeldung, keine neue Schnittstelle (nur bestehende SwiftUI-Liste); Apple Erinnerungen hat dieselbe Sammelliste „Alle“ neben „Erledigt“.
+
+### Dependencies
+`TaskItem.isOpen`, `isBlocked`, `ViewRules.byUrgencyThenImportance`, `ViewSelection.system`, Lokalisierung.
+
+### Open Questions
+- [ ] PO: Entwurf freigeben — Platz der Zeile (unten über „Erledigt“ / oben), Geparktes ausgeschlossen, flache Liste.
