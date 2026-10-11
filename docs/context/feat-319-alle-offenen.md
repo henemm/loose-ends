@@ -52,11 +52,11 @@ Feature
 | File | Change Type | Description |
 |------|-------------|-------------|
 | `Shared/Models/Enums.swift` | MODIFY | `ViewKind.open`, Titel „All open“, Symbol `circle` |
-| `Shared/Models/ViewRules.swift` | MODIFY | `case .open`: Oberaufgaben mit `isOpen` (Wartende eingeschlossen, Geparkt/Erledigt nicht), `byUrgencyThenImportance` |
+| `Shared/Models/ViewRules.swift` | MODIFY | `case .open`: Oberaufgaben mit `status != .done` (Neu, Wartende und Geparktes eingeschlossen), `byUrgencyThenImportance` |
 | `LooseEnds/Views/SidebarView.swift` | MODIFY | Zeile `viewRow_open` in der letzten Section direkt über „Erledigt“, mit Zähler, immer sichtbar |
 | `LooseEnds/Views/TaskListView.swift` | MODIFY | Leersatz für `.open` |
 | `LooseEnds/Resources/Localizable.xcstrings` | MODIFY | „All open“ → „Alle offenen“, Leersatz DE |
-| `LooseEndsTests/StartViewsTests.swift` | MODIFY | `.open` in `everyViewHasAPlace` ausnehmen; Regeltest (Geparkt/Erledigt/Unteraufgaben raus, Wartende rein, Sortierung) |
+| `LooseEndsTests/StartViewsTests.swift` | MODIFY | `.open` in `everyViewHasAPlace` ausnehmen; Regeltest (Erledigt/Unteraufgaben raus, Wartende und Geparkte rein, Sortierung) |
 | `LooseEndsTests/SubtaskTests.swift` | MODIFY | `.open` zu den Ansichten ohne Unteraufgaben |
 | UI-Test (bestehende Smoke-Datei) | MODIFY | Zeile `viewRow_open` antippen, Liste zeigt offene Aufgabe, nicht die erledigte |
 | `docs/project/02-datenmodell-und-ansichten.md` | MODIFY | Zeile in der Regeltabelle |
@@ -77,4 +77,5 @@ Recherche: keine Fehlermeldung, keine neue Schnittstelle (nur bestehende SwiftUI
 `TaskItem.isOpen`, `isBlocked`, `ViewRules.byUrgencyThenImportance`, `ViewSelection.system`, Lokalisierung.
 
 ### Open Questions
-- [ ] PO: Entwurf freigeben — Platz der Zeile (unten über „Erledigt“ / oben), Geparktes ausgeschlossen, flache Liste.
+- [x] PO (Henning, 2026-10-11): Zeile unten über „Erledigt“; **Geparktes gehört dazu** (Abweichung von der Empfehlung); flache Liste, dringend zuerst.
+- [ ] Spec klärt: Geparkte Zeile erkennbar machen (Mond-Glyphe) und ihr Wisch nach links = „Aktivieren“ statt „Vormerken“, denn eine geparkte Aufgabe erscheint nicht in „Als nächstes“ (Regel `isOpen`). Erledigen per Wisch nach rechts wie überall.
