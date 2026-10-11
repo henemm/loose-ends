@@ -5,6 +5,5 @@ import WidgetKit
 struct LooseEndsWidgetsBundle: WidgetBundle {
     var body: some Widget {
         NextUpWidget()
-        CaptureControl()
     }
 }
