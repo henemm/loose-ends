@@ -238,10 +238,18 @@ final class StartScreenInteractionTests: XCTestCase {
     }
 
     /// Rows of the open list; a parked one says "Parked" (the moon) in its combined label.
+    /// Buttons only: the list's link cell and its text both carry the row's identifier, so
+    /// `.any` would count every row twice.
     @MainActor
     private func taskRows(in app: XCUIApplication, parkedOnly: Bool = false) -> XCUIElementQuery {
         let format = parkedOnly ? "identifier BEGINSWITH 'taskRow_' AND label CONTAINS 'Parked'" : "identifier BEGINSWITH 'taskRow_'"
-        return app.descendants(matching: .any).matching(NSPredicate(format: format))
+        return app.buttons.matching(NSPredicate(format: format))
+    }
+
+    /// The moon glyph itself (`parkedMarker_<uuid>`): it stays its own image inside the combined row.
+    @MainActor
+    private func parkedMarkers(in app: XCUIApplication) -> XCUIElementQuery {
+        app.images.matching(NSPredicate(format: "identifier BEGINSWITH 'parkedMarker_'"))
     }
 
     /// The row count as the badge shows it, read from the combined row ("All open, 2").
@@ -274,6 +282,9 @@ final class StartScreenInteractionTests: XCTestCase {
         XCTAssertTrue(taskRows(in: app).firstMatch.waitForExistence(timeout: 5), "All open shows no task")
         XCTAssertEqual(taskRows(in: app).count, 2, "The new and the parked task, not the completed one")
         XCTAssertEqual(taskRows(in: app, parkedOnly: true).count, 1, "Only the parked task carries the moon")
+        let parkedId = taskRows(in: app, parkedOnly: true).firstMatch.identifier.replacingOccurrences(of: "taskRow_", with: "")
+        XCTAssertEqual(parkedMarkers(in: app).count, 1, "All open shows exactly one moon glyph")
+        XCTAssertEqual(parkedMarkers(in: app).firstMatch.identifier, "parkedMarker_\(parkedId)", "The moon belongs to the parked row")
 
         let list = XCTAttachment(screenshot: app.screenshot())
         list.name = "All open list"
@@ -287,6 +298,7 @@ final class StartScreenInteractionTests: XCTestCase {
         XCTAssertTrue(taskRows(in: app).firstMatch.waitForExistence(timeout: 5), "Parked shows no task")
         XCTAssertEqual(taskRows(in: app).count, 1)
         XCTAssertEqual(taskRows(in: app, parkedOnly: true).count, 0, "In Parked the moon would be noise")
+        XCTAssertEqual(parkedMarkers(in: app).count, 0, "Parked shows no moon glyph")
     }
 
     @MainActor
@@ -303,6 +315,8 @@ final class StartScreenInteractionTests: XCTestCase {
             .matching(NSPredicate(format: "identifier BEGINSWITH 'taskRow_' AND NOT (label CONTAINS 'Parked')"))
             .firstMatch
         XCTAssertTrue(other.exists, "All open shows no other task")
+        XCTAssertTrue(element("parkedMarker_\(id)", in: app).exists, "The parked row carries the moon glyph")
+        XCTAssertEqual(parkedMarkers(in: app).count, 1, "Only the parked row carries the moon glyph")
 
         parked.swipeRight()
         XCTAssertTrue(element("swipeDone_\(id)", in: app).waitForExistence(timeout: 5), "Swipe right on a parked task should offer Complete")
@@ -322,6 +336,8 @@ final class StartScreenInteractionTests: XCTestCase {
         let row = element("taskRow_\(id)", in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5), "Activated, the task stays in All open")
         XCTAssertTrue(taskRows(in: app, parkedOnly: true).firstMatch.waitForNonExistence(timeout: 5), "Activated, the moon goes")
+        XCTAssertTrue(element("parkedMarker_\(id)", in: app).waitForNonExistence(timeout: 5), "Activated, the moon glyph goes")
+        XCTAssertEqual(parkedMarkers(in: app).count, 0, "Activated, no moon glyph is left")
     }
 
     @MainActor

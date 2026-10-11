@@ -1,0 +1,25 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: LaunchArgumentTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+Test Suite 'Selected tests' started at 2026-10-11 16:55:54.019.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-11 16:55:54.020.
+Test Suite 'LaunchArgumentTests' started at 2026-10-11 16:55:54.020.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.LaunchArgumentTests testMeasureArgumentOpensCaptureWithoutTap] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =     5.79s Waiting 15.0s for "captureTextField" Any to exist
+[32m    t =     6.83s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testMeasureArgumentOpensCaptureWithoutTap ([31m7.585[0m seconds)
+    [32m✔[0m testWithoutArgumentAppStartsUnchanged ([31m9.790[0m seconds)
+Executed 2 tests, with 0 failures (0 unexpected) in 17.375 (17.376) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-11 16:56:11.397.
+Executed 2 tests, with 0 failures (0 unexpected) in 17.375 (17.377) seconds
+Executed 2 tests, with 0 failures (0 unexpected) in 17.375 (17.378) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-feat319/Logs/Test/Test-LooseEnds-2026.10.11_16-55-47-+0200.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden.

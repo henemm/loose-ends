@@ -1,0 +1,21 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: SettingsSmokeTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+Test Suite 'Selected tests' started at 2026-10-11 16:59:42.605.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-11 16:59:42.605.
+Test Suite 'SettingsSmokeTests' started at 2026-10-11 16:59:42.605.
+    [32m✔[0m testGearOpensSettingsWithReminderTime ([31m9.594[0m seconds)
+Executed 1 test, with 0 failures (0 unexpected) in 9.594 (9.596) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-11 16:59:52.202.
+Executed 1 test, with 0 failures (0 unexpected) in 9.594 (9.596) seconds
+Executed 1 test, with 0 failures (0 unexpected) in 9.594 (9.597) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-feat319/Logs/Test/Test-LooseEnds-2026.10.11_16-59-39-+0200.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden.

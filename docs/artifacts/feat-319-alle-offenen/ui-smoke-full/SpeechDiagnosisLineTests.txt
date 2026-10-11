@@ -1,0 +1,28 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: SpeechDiagnosisLineTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+Test Suite 'Selected tests' started at 2026-10-11 16:59:56.902.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-11 16:59:56.903.
+Test Suite 'SpeechDiagnosisLineTests' started at 2026-10-11 16:59:56.903.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.SpeechDiagnosisLineTests testDiagnosisLineShowsFixedState] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =     6.72s Waiting 10.0s for "captureTextField" Any to exist
+[32m    t =     7.77s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testDiagnosisLineShowsFixedState ([31m14.522[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.SpeechDiagnosisLineTests testNoDiagnosisLineWithoutArgument] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =     6.54s     Wait for com.henning.looseends to idle
+[32m    t =     7.25s Waiting 10.0s for "captureTextField" Any to exist[0m
+    [32m✔[0m testNoDiagnosisLineWithoutArgument ([31m12.191[0m seconds)
+Executed 2 tests, with 0 failures (0 unexpected) in 26.713 (26.716) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-11 17:00:23.621.
+Executed 2 tests, with 0 failures (0 unexpected) in 26.713 (26.718) seconds
+Executed 2 tests, with 0 failures (0 unexpected) in 26.713 (26.720) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-feat319/Logs/Test/Test-LooseEnds-2026.10.11_16-59-53-+0200.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden.

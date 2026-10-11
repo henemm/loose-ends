@@ -1,0 +1,24 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: CaptureCancelCrashTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+Test Suite 'Selected tests' started at 2026-10-11 16:43:01.899.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-11 16:43:01.901.
+Test Suite 'CaptureCancelCrashTests' started at 2026-10-11 16:43:01.901.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CaptureCancelCrashTests testCancelAfterCaptureOpensLeavesAppAlive] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    13.05s Waiting 3.0s for Button (First Match) to exist
+[32m    t =    14.13s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`[0m
+    [32m✔[0m testCancelAfterCaptureOpensLeavesAppAlive ([31m24.054[0m seconds)
+Executed 1 test, with 0 failures (0 unexpected) in 24.054 (24.059) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-11 16:43:25.970.
+Executed 1 test, with 0 failures (0 unexpected) in 24.054 (24.069) seconds
+Executed 1 test, with 0 failures (0 unexpected) in 24.054 (24.074) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-feat319/Logs/Test/Test-LooseEnds-2026.10.11_16-42-47-+0200.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden.

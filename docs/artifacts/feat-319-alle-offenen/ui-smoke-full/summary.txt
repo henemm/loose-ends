@@ -1,0 +1,15 @@
+CalendarTargetTests rc=65 
+CaptureCancelCrashTests rc=0 
+CaptureSmokeTests rc=0 Executed 17 tests, with 0 failures (0 unexpected) in 490.669 (490.701) seconds
+ContextUniquenessTests rc=0 
+DesignGalleryTests rc=0 
+LaunchArgumentTests rc=0 Executed 2 tests, with 0 failures (0 unexpected) in 17.375 (17.378) seconds
+OnboardingTests rc=0 Executed 2 tests, with 0 failures (0 unexpected) in 23.740 (23.744) seconds
+PlaceSmokeTests rc=0 
+ProjectSubtasksTests rc=0 
+RecognitionWalkthroughTests rc=0 
+SettingsSmokeTests rc=0 
+SpeechDiagnosisLineTests rc=0 Executed 2 tests, with 0 failures (0 unexpected) in 26.713 (26.720) seconds
+SpeechListeningIndicatorTests rc=0 Executed 3 tests, with 0 failures (0 unexpected) in 43.619 (43.624) seconds
+SpeechListeningTests rc=0 
+StartScreenInteractionTests rc=0 Executed 8 tests, with 0 failures (0 unexpected) in 252.207 (252.225) seconds

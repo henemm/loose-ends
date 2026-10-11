@@ -1,0 +1,26 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "2189E420-E9C1-4699-AB16-42B092ADB0EC.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "All open list_0_3FAD8AF4-F591-42F1-951C-5A5D6E02A5F0.png",
+        "timestamp" : 1791734230.131
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "48A4A8AD-E991-4FBD-B87F-AF7CBCB89A15.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Start screen with All open_0_5BDDF6E7-143A-40B0-9093-F849C5C771B8.png",
+        "timestamp" : 1791734226.901
+      }
+    ],
+    "testIdentifier" : "StartScreenInteractionTests/testOpenRowShowsOpenAndParkedButNotDone()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/StartScreenInteractionTests/testOpenRowShowsOpenAndParkedButNotDone"
+  }
+]

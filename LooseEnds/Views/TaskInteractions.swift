@@ -4,7 +4,7 @@ import SwiftUI
 
 /// The usual gestures on a task (design briefing, screen 3), one set for every list and for the
 /// start screen's "Next up" preview (#303): swipe right Done (Restore in Done, Activate in Parked,
-/// "Looks right" in New), swipe left Next up (Park in Old), long press the full menu. The view owns the state behind the
+/// "Looks right" in New), swipe left Next up (Park in Old; All open: Activate for a parked task), long press the full menu. The view owns the state behind the
 /// delete confirmation and the date sheet and attaches both with `taskInteractionDialogs`.
 @MainActor
 struct TaskInteractions {
@@ -83,13 +83,23 @@ struct TaskInteractions {
             EmptyView()
         case .old?:
             Button("Park", systemImage: "pause") { park(task) }
+        case .open? where task.status == .parked:
+            // A parked task never shows in Next up, so the swipe wakes it instead (#319).
+            Button("Activate", systemImage: "play") { activate(task) }
+                .tint(.accentColor)
+                .accessibilityIdentifier("swipeActivate_\(task.id.uuidString)")
         default:
-            if task.nextRank == nil {
-                Button("Next up", systemImage: "star") { toggleNext(task) }
-                    .tint(.accentColor)
-            } else {
-                Button("Remove from Next up", systemImage: "star.slash") { toggleNext(task) }
-            }
+            nextUpAction(task)
+        }
+    }
+
+    @ViewBuilder
+    private func nextUpAction(_ task: TaskItem) -> some View {
+        if task.nextRank == nil {
+            Button("Next up", systemImage: "star") { toggleNext(task) }
+                .tint(.accentColor)
+        } else {
+            Button("Remove from Next up", systemImage: "star.slash") { toggleNext(task) }
         }
     }
 

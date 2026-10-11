@@ -122,7 +122,7 @@ Beenden der Wiederholung: `repeatRule = nil`, dann normale Erledigung.
 |------|-----|-----------|
 | id | UUID | |
 | name | String | |
-| kind | enum ViewKind | next, new, due, quick, old, waiting, repeating, parked, done, context, project |
+| kind | enum ViewKind | next, new, due, quick, old, waiting, repeating, parked, open, done, context, project |
 | contextID / projectID | UUID? | bei kind context/project |
 | isSystem | Bool | Systemansichten nicht löschbar, aber ausblendbar |
 | sortOrder | Int | |
@@ -133,7 +133,8 @@ Version 1 hat keine freien Filterregeln. Die Ansichtsarten sind im Code definier
 
 Alle Ansichten zeigen nur `status in (unprocessed, unverified, active)` und keine Aufgaben mit
 `parent != nil` (Unteraufgaben erscheinen in ihrer Elternaufgabe). Ausnahmen: "Alt" zeigt auch
-blockierte, "Geparkt" zeigt nur `parked`, "Erledigt" zeigt nur `done`.
+blockierte, "Geparkt" zeigt nur `parked`, "Erledigt" zeigt nur `done`, "Alle offenen" zeigt alles außer `done`
+(auch Geparktes und Wartendes, #319).
 
 | Ansicht | Regel | Sortierung |
 |---------|-------|------------|
@@ -145,6 +146,7 @@ blockierte, "Geparkt" zeigt nur `parked`, "Erledigt" zeigt nur `done`.
 | Wartet | `blockedBy` enthält mindestens eine offene Aufgabe | blockierende Aufgabe zuerst |
 | Wiederkehrend | `repeatRule != nil` | dueDate aufsteigend |
 | Geparkt | `status == parked` | parkedAt absteigend |
+| Alle offenen | `status != done` (Neu, Aktiv, Wartend, Geparkt), Zeile direkt über „Erledigt“, Geparktes mit Mond-Glyphe | urgency, importance, dann capturedAt |
 | Erledigt | `status == done` | completedAt absteigend, nach Tagen gruppiert |
 | Kontext X | `contexts` enthält X | urgency, importance, dann capturedAt |
 | Projekt P | `project == P` | manuell innerhalb des Projekts, sonst capturedAt |

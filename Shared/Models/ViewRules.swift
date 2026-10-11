@@ -93,6 +93,10 @@ enum ViewRules {
         case .parked:
             return topLevel.filter { $0.status == .parked }
                 .sorted { ($0.parkedAt ?? .distantPast) > ($1.parkedAt ?? .distantPast) }
+        case .open:
+            // Not `isOpen`: that leaves parked tasks out, and "All open" means all of them (#319).
+            return topLevel.filter { $0.status != .done }
+                .sorted(by: byUrgencyThenImportance)
         case .done:
             return topLevel.filter { $0.status == .done }
                 .sorted { ($0.completedAt ?? .distantPast) > ($1.completedAt ?? .distantPast) }
