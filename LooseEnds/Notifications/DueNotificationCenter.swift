@@ -4,7 +4,8 @@ import SwiftData
 import UserNotifications
 
 /// Talks to the system for `DueReminders`: registers the category with its three actions, mirrors
-/// the plan into pending requests after every save, and applies an action when the user taps one.
+/// the plan into pending requests after every save, sets the app badge (#299), and applies an
+/// action when the user taps one.
 /// Holds the reminder time for tasks without a due time (#311): kept in `UserDefaults` and mirrored
 /// to the iCloud key-value store, so a change on one device reschedules the others.
 /// Silent under tests, where a permission prompt would block the run.
@@ -96,8 +97,20 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
             for reminder in reminders {
                 try await center.add(Self.request(for: reminder))
             }
+            await updateBadge(for: tasks)
         } catch {
             Self.logger.error("Scheduling due reminders failed: \(error, privacy: .public)")
+        }
+    }
+
+    /// The number on the app icon (#299): "Next up" plus "Due today", each task once. Set with
+    /// every reschedule, so after every save and whenever the app comes to the front; a day that
+    /// turns over while the app is closed shows on the icon at the next launch.
+    private func updateBadge(for tasks: [TaskItem]) async {
+        do {
+            try await UNUserNotificationCenter.current().setBadgeCount(ViewRules.badgeCount(in: tasks))
+        } catch {
+            Self.logger.error("Setting the app badge failed: \(error, privacy: .public)")
         }
     }
 

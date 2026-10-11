@@ -121,6 +121,26 @@ final class StartScreenInteractionTests: XCTestCase {
         XCTAssertTrue(element(id, in: app).waitForNonExistence(timeout: 5), "The confirmed task should leave New")
     }
 
+    /// What is due today stands on the start screen under "Next up" (#299). The rule step reads
+    /// "heute" without Apple Intelligence, so this holds in the simulator too.
+    @MainActor
+    func testDueTodayShowsOnTheStartScreen() throws {
+        let app = launch()
+        let captureButton = app.buttons["captureButton"]
+        XCTAssertTrue(captureButton.waitForExistence(timeout: 10), "No capture button")
+        captureButton.tap()
+        let field = element("captureTextField", in: app)
+        XCTAssertTrue(field.waitForExistence(timeout: 5), "Capture sheet did not open")
+        field.tap()
+        field.typeText("Heute die Rechnung bezahlen")
+        app.buttons["captureDoneButton"].tap()
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5), "Capture sheet did not close")
+
+        let due = firstElement(prefix: "dueTodayPreview_", in: app)
+        XCTAssertTrue(due.waitForExistence(timeout: 15), "A task due today should show on the start screen")
+        XCTAssertTrue(due.label.contains("Rechnung"), "Row label was \(due.label)")
+    }
+
     @MainActor
     func testPreviewRowSwipesToDoneAndBack() throws {
         let app = launch()
