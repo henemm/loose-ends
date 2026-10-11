@@ -1,5 +1,7 @@
+#if os(iOS)
 import XCTest
 
+/// iOS only: the Mac has no home button and no banner tap (`XCUIDevice.press(.home)`).
 /// Tapping a due reminder (#295): the notification center runs as the real delegate
 /// (`--ui-testing-notifications`). The banner comes from outside: `add` from the app fails in the
 /// iOS 27 Simulator (UNErrorDomain 2003), so `LOOSEENDS_PUSH=scripts/fixtures/due-reminder.apns
@@ -89,3 +91,4 @@ final class DueNotificationTapTests: XCTestCase {
         add(shot)
     }
 }
+#endif

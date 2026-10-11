@@ -1,19 +1,19 @@
 # Simulator-Beleg
-erzeugt: 2026-10-10T13:54:21+0200
+erzeugt: 2026-10-11T18:48:07+0200
 befehl: scripts/sim.sh test-proof DueNotificationTapTests
 workflow: fix-295-mitteilung-absturz
-head: 1b106fe9734e46736c270e9d49e3765635af4a1d
-basis: 5037f0ee63f82d1803090c66ee78064768f75852 (merge-base origin/main HEAD)
+head: 65aab2d93c0cd100e396f9e2629c99b93f2350d2
+basis: 8fb57ea5fd20a917b066c6b3a11c8a5aa3d99259 (merge-base origin/main HEAD)
 testklasse: DueNotificationTapTests
 ergebnis: Passed
 xcodebuild: ** TEST SUCCEEDED **
 tests: 2 gesamt, 2 bestanden, 0 fehlgeschlagen, 0 übersprungen
-start: 1791633013.534  ende: 1791633260.349
+start: 1791737154.247  ende: 1791737287.293
 geraet: LE-295, iOS 27.0
-summary: docs/artifacts/fix-295-mitteilung-absturz/simulator-run/summary.json  sha256:de6f1bddc244910f0843da4db3aa2ae279b40267df1eb067103ad09718b060c6
+summary: docs/artifacts/fix-295-mitteilung-absturz/simulator-run/summary.json  sha256:a61b111142cad617ba2a551df5313f7c0739ddf9940a924b8578a217c5a0a787
 xcresult: docs/artifacts/fix-295-mitteilung-absturz/simulator-run/run.xcresult  (gitignored)
 screenshots: docs/artifacts/fix-295-mitteilung-absturz/simulator-run/*.png (2 Stück)
 
 ## Geprüfte Dateien
-- sha256:67d8e39e47f87c906bdd0e7a9bba310b1dcc579edb7fa1ce3cf27eaf1283f2bc  LooseEnds/Notifications/DueNotificationCenter.swift
-- sha256:93882e6c79b90c2bb34120c15002fdb7be7a92cdcb881882d0971da90184e4e1  LooseEndsUITests/DueNotificationTapTests.swift
+- sha256:e32bda0b784814932c673fb41b29962bc0bb23318a5fe3ebe17586eb2e85af6e  LooseEnds/Notifications/DueNotificationCenter.swift
+- sha256:dc57372612397ce063798f3813ae7b4135cf404d67f678808f42fee64869e691  LooseEndsUITests/DueNotificationTapTests.swift
