@@ -148,7 +148,6 @@
     "None" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Keine" } } } },
     "Date" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Datum" } } } },
     "Time" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Uhrzeit" } } } },
-    "Names, comma separated" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Namen, durch Komma getrennt" } } } },
     "Speech recognition is not available." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Spracherkennung ist nicht verfügbar." } } } },
     "Stop listening" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nicht mehr zuhören" } } } },
     "Listening …" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ich höre …" } } } },

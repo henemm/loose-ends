@@ -245,7 +245,6 @@ struct TaskDetailView: View {
             .init(field: .duration, value: FieldFormatting.value(task.durationRaw, for: .duration)),
             .init(field: .energy, value: FieldFormatting.value(task.energyRaw, for: .energy)),
             .init(field: .contexts, value: FieldFormatting.value(FieldCodec.encode(.contexts, of: task), for: .contexts)),
-            .init(field: .people, value: FieldFormatting.value(FieldCodec.encode(.people, of: task), for: .people)),
             .init(field: .project, value: task.project?.name),
             .init(field: .repeatRule, value: FieldFormatting.value(FieldCodec.encode(.repeatRule, of: task), for: .repeatRule)),
         ]

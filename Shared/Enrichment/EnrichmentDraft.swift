@@ -23,7 +23,6 @@ struct EnrichmentDraft: Equatable, Sendable {
     var duration: Guess<DurationBucket>?
     // No energy: it is set by hand only (#112).
     var contexts: Guess<[String]>?
-    var people: Guess<[String]>?
     var project: Guess<String>?
 
     /// Four of the five fields the FocusBlox export knows the truth for, as plain strings (#108);

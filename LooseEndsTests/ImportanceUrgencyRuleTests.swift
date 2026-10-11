@@ -167,7 +167,6 @@ struct ModelEnrichmentSchemaTests {
             title: "x", titleConfidence: 1, titleReason: "x",
             duration: "x", durationConfidence: 1, durationReason: "x",
             contexts: [], contextsConfidence: 1, contextsReason: "x",
-            people: [], peopleConfidence: 1, peopleReason: "x",
             project: "x", projectConfidence: 1, projectReason: "x"
         )
         let labels = Set(Mirror(reflecting: sample).children.compactMap(\.label))

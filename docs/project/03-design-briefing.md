@@ -92,7 +92,7 @@ Eine Liste. Jede Zeile:
 
 - Oben der Titel, editierbar. Darunter, klein, der Rohtext, nicht editierbar.
 - Abgeleitete Felder als kompakte Zeilen: Fälligkeit, Wichtigkeit, Dringlichkeit, Dauer, Energie,
-  Kontexte, Personen, Projekt, Wiederholung, "Im Kalender anzeigen".
+  Kontexte, Projekt, Wiederholung, "Im Kalender anzeigen". (Personen entfielen mit #301.)
 - Jedes Feld, das die KI gesetzt hat, trägt ein kleines Zeichen. Tipp darauf: Vorher, Nachher,
   Begründung in einem Satz, Button "Zurücksetzen".
 - Leere Felder sind leer, keine Platzhalter, die zur Eingabe drängen.

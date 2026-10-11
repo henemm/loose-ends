@@ -123,9 +123,6 @@ struct TaskRow: View {
         if !hidesContext, let context = (task.contexts ?? []).sorted(by: { $0.sortOrder < $1.sortOrder }).first {
             all.append(Trait(id: "context", text: context.name, tinted: unseen && FieldSource.isAutomatic(task.contextsSourceRaw)))
         }
-        if let person = task.people.first {
-            all.append(Trait(id: "person", text: person, symbol: "person", tinted: unseen && FieldSource.isAutomatic(task.peopleSourceRaw)))
-        }
         return Array(all.prefix(3))
     }
 }

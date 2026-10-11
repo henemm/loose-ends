@@ -51,7 +51,7 @@ Leerer Wert bedeutet: nicht gesetzt oder unter Schwelle.
 | duration | enum Duration? | minutes5, minutes15, minutes30, hour1, hours2plus |
 | energy | enum Energy? | −3 … +3: gibt oder nimmt die Aufgabe Energie; nur von Hand, gespeichert als Text "-3" … "3"; alte Werte low/medium/high lesen sich als leer (#112) |
 | contexts | [Context] | 0…n, Startset löschbar |
-| people | [String] | Namen aus dem Text, keine Kontakte-Berechtigung in v1 |
+| people | [String] | **Entfallen** (Henning, 2026-10-09, #105 → #301): kein Use Case, nie gemessen. Die Spalte bleibt nur fürs CloudKit-Schema (nur additiv), nichts liest oder schreibt sie |
 
 ### Context
 
