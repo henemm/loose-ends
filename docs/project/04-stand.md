@@ -16,10 +16,10 @@ sind daher meist nur Zeitverlust.
 |---------|-----|----|
 | Erfassung | Textfeld, Live-Spracherkennung mit Wellenform (nur auf dem Gerät über `SpeechAnalyzer`, fehlendes Sprachmodell auf Tipp „Laden“ mit Fortschritt, #64), Siri-Intent „Aufgabe erfassen“ (auch über das Kurzbefehle-Steuerelement im Kontrollzentrum, #326), Watch-Diktat, Teilen-Menü (iOS) | `LooseEnds/Views/CaptureView.swift`, `LooseEnds/Speech`, `Shared/Intents`, `LooseEndsShare` |
 | Veredelung | Foundation Models auf dem Gerät, Schwelle 0,6, je Feld eine KI-Revision, Nachzügler-Lauf | `Shared/Enrichment` |
-| Ansichten | Als nächstes, Neu, Fällig, Schnell, Alt, Wartet, Wiederkehrend, Geparkt, Erledigt, Kontext, Projekt | `Shared/Models/ViewRules.swift`, `LooseEnds/Views/SidebarView.swift` |
+| Ansichten | Als nächstes, Neu, Fällig, Schnell, Alt, Wartet, Wiederkehrend, Geparkt, Alle offenen (alles außer Erledigtem, auch Geparktes und Wartendes, dringend zuerst, #319), Erledigt, Kontext, Projekt | `Shared/Models/ViewRules.swift`, `LooseEnds/Views/SidebarView.swift` |
 | Liste | Wisch rechts/links, Erledigt drei Sekunden abbrechbar per Tipp auf die Zeile („Undo“, #32), Halten-Menü mit Verschieben (Morgen, Wochenende, nächste Woche, frei gewähltes Datum, #33), Parken, Löschen; Merkmalzeile; Drag-Sortierung in Als nächstes; Alt mit Alter und Verschiebungen; Erledigt nach Tagen; Projekt mit eingeklappten Unteraufgaben, per Pfeil aufklappbar und abhakbar (#28) | `LooseEnds/Views/TaskListView.swift`, `TaskRow.swift`, `Shared/Services/TaskActions.swift`, `PendingCompletions.swift` |
 | Detail | Titel, Rohtext, Felder mit Editor, KI-Vorher/Nachher, Zurücksetzen, Änderungen-Sheet, Wiederholung, Unteraufgaben (eine Ebene, abhakbar), Im Kalender anzeigen, Neu analysieren (#34) | `LooseEnds/Views/TaskDetailView.swift`, `FieldEditorView.swift`, `SubtasksSection.swift`, `Shared/Services/RevisionService.swift`, `FieldCodec.swift`, `Subtasks.swift`, `Shared/Enrichment/EnrichmentCoordinator.swift` |
-| Startscreen | Als nächstes, Neu, Fällig immer; die übrigen Ansichten nur mit Inhalt; Projekte und Kontexte als einklappbare Gruppen, eingeklappt per Vorgabe; dort anlegen, umbenennen, löschen | `LooseEnds/Views/SidebarView.swift`, `Shared/Services/CatalogService.swift` |
+| Startscreen | Als nächstes, Neu, Fällig immer; die übrigen Ansichten nur mit Inhalt; Projekte und Kontexte als einklappbare Gruppen, eingeklappt per Vorgabe; dort anlegen, umbenennen, löschen; unten immer „Alle offenen“ über „Erledigt“ (#319) | `LooseEnds/Views/SidebarView.swift`, `Shared/Services/CatalogService.swift` |
 | Onboarding | Drei überspringbare Schritte beim ersten Start je Gerät: Siri-Satz, Mitteilungen erlauben, Startset der Kontexte; Hinweis, wenn Apple Intelligence fehlt (#29) | `LooseEnds/Views/OnboardingView.swift`, `OnboardingFlow.swift` |
 | Mitteilung | "Heute fällig" um 9 Uhr mit Erledigt, Als nächstes, Morgen | `Shared/Notifications`, `LooseEnds/Notifications` |
 | Kalender | Eigener Kalender "Loose Ends", ein Termin je Aufgabe mit Schalter und Fälligkeit, Abgleich nach jedem Speichern; angelegt im ersten Konto, das es erlaubt (iCloud → Gerät → Standardkonto → übrige CalDAV, nie Exchange; Google lehnt ab, #203 Teil A), Zielkalender als Zeile im Detail, Hinweis unter dem Schalter, wenn nichts klappt. Offen: Rückfrage-Sheet und Zeile „Termin“ (Teil B), Kalender je Aufgabe wählbar (Teil C) | `Shared/Services/CalendarSync.swift`, `LooseEnds/Calendar/CalendarBridge.swift` |
@@ -59,6 +59,8 @@ jede Einladung externer Tester über TestFlight.
   geschlossen 2026-10-08: jeder Start faltet englische Standardkontexte in ihr deutsches Gegenstück
   (`CatalogService.mergeEnglishDefaults`, `docs/specs/fix-267-englische-kontexte.md`). Auf Hennings
   iPhone belegt mit dem TestFlight-Build vom 2026-10-08 (Stand `c03dcf4`).
+- ~~[#295](https://github.com/henemm/loose-ends/issues/295) Absturz beim Antippen einer Fälligkeits-Mitteilung~~ —
+  behoben 2026-10-11 (`docs/specs/fix-295-mitteilung-absturz.md`), auf Hennings Gerät mit TestFlight-Build 37 bestätigt.
 
 **Spikes zuerst** (technisches Risiko, blockieren die Umsetzung der Must-Features):
 

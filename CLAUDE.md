@@ -231,7 +231,8 @@ not scope creep on the current one.
 - `Shared/Notifications` — `DueReminders` (pure plan and action handling); `PlaceReminders` (which ≤ 20 places
   to watch, #226) and `PlaceDelivery` (what to hand to the system, replace or withdraw, from a per-device
   handover list; the system never reports delivery, #226 Schnitt 2a); `LooseEnds/Notifications` —
-  `DueNotificationCenter` (system wiring, silent under tests)
+  `DueNotificationCenter` (system wiring, silent under tests; completion-handler delegate methods, not async, #295; the
+  UI test gets its banner via `LOOSEENDS_PUSH=<file.apns> ./scripts/sim.sh test-proof <class>`)
 - `Shared/` compiles into the watch and widget targets too: no SwiftUI that is unavailable on watchOS there
   (keyboard shortcuts, navigation bar modifiers). App views belong in `LooseEnds/Views`.
 - `docs/project/` — decisions, user story, data model, design briefing, load-bearing assumptions with their experiments and alternatives (`06-annahmen-und-experimente.md`); `docs/reference/` — learnings carried over from FocusBlox

@@ -128,7 +128,13 @@ targets:
     supportedDestinations: [iOS, macOS]
     sources:
       - LooseEndsWidgets
-      - Shared
+      # Capture runs in the app process only (#326): iOS runs an intent compiled into several
+      # bundles in any of them when the app is not running. In the widget, which has no iCloud
+      # and opens the store without sync, "Aufgabe erfassen" failed with "Kurzbefehle konnte keine
+      # Kommunikation mit der App herstellen".
+      - path: Shared
+        excludes:
+          - Intents/CaptureTextIntent.swift
     entitlements:
       path: LooseEndsWidgets/LooseEndsWidgets.entitlements
       properties:
@@ -155,7 +161,11 @@ targets:
     platform: iOS
     sources:
       - LooseEndsShare
-      - Shared
+      # No App Intents in the share extension (#326): see the widget target.
+      - path: Shared
+        excludes:
+          - Intents/CaptureTextIntent.swift
+          - Intents/NextUpWidgetIntents.swift
     entitlements:
       path: LooseEndsShare/LooseEndsShare.entitlements
       properties:

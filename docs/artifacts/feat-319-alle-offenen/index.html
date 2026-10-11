@@ -1,0 +1,150 @@
+<title>Ansicht „Alle offenen“</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap">
+<style>
+/* Layout: Erklärtext oben, darunter Telefonrahmen nebeneinander (Heute | Entwurf hell/dunkel | Alternative), umbrechend */
+:root {
+  --bg: #ecebe5; --fg: #1d1f1e; --muted: #5d625f; --line: #d6d4cc; --card: #f8f7f3;
+  --paper-l: #F4F3EE; --paper-d: #171816; --ink-l: #111; --ink-d: #f2f2f0;
+  --sec-l: #8a8d8a; --sec-d: #8e918e; --sep-l: #dcdad3; --sep-d: #2c2e2b;
+  --acc-l: #0F6E73; --acc-d: #5FC4C9; --red: #c0392b;
+  --accent: #0F6E73; --new: #0F6E73;
+  --serif: "Source Serif 4", "New York", Georgia, serif;
+  --sans: -apple-system, "SF Pro Text", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121312; --fg: #ecedea; --muted: #a2a6a3; --line: #2c2f2d; --card: #1b1d1b; --accent: #5FC4C9; --new: #5FC4C9; color-scheme: dark } }
+:root[data-theme="dark"] { --bg: #121312; --fg: #ecedea; --muted: #a2a6a3; --line: #2c2f2d; --card: #1b1d1b; --accent: #5FC4C9; --new: #5FC4C9; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 56px; }
+h1 { font-family: var(--serif); font-weight: 600; font-size: 2rem; margin: 0 0 6px; text-wrap: balance; }
+h2 { font-family: var(--serif); font-weight: 600; font-size: 1.35rem; margin: 40px 0 6px; }
+p.lead { color: var(--muted); max-width: 68ch; margin: 0; }
+.rules { max-width: 72ch; margin: 14px 0 0; padding-left: 1.1em; color: var(--fg); }
+.rules li { margin: 4px 0; }
+.row { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 18px; align-items: flex-start; }
+figure { margin: 0; display: grid; gap: 8px; width: 300px; max-width: 100%; }
+figcaption { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+figcaption b { color: var(--accent); }
+.shot { width: 100%; border-radius: 34px; border: 1px solid var(--line); display: block; }
+.note { font-size: .85rem; color: var(--muted); max-width: 300px; }
+.tag { display: inline-block; font-size: .7rem; font-weight: 700; letter-spacing: .06em; padding: 1px 7px; border-radius: 99px; border: 1px solid var(--accent); color: var(--accent); margin-left: 6px; vertical-align: 1px; }
+
+/* Telefon */
+.phone { border-radius: 34px; border: 1px solid var(--line); overflow: hidden; aspect-ratio: 1206/2622; max-width: 100%;
+  padding: 44px 18px 18px; font-family: var(--sans); font-size: 13.5px; display: flex; flex-direction: column; }
+.phone.l { background: var(--paper-l); color: var(--ink-l); --s: var(--sec-l); --sp: var(--sep-l); --a: var(--acc-l); }
+.phone.d { background: var(--paper-d); color: var(--ink-d); --s: var(--sec-d); --sp: var(--sep-d); --a: var(--acc-d); }
+.top { display: flex; justify-content: space-between; margin-bottom: 14px; }
+.circ { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--sp); display: grid; place-items: center; color: var(--s); font-size: 16px; }
+.date { font-size: 9.5px; letter-spacing: .1em; font-weight: 600; color: var(--s); text-transform: uppercase; }
+.headline { font-family: var(--serif); font-size: 20px; font-weight: 500; line-height: 1.2; margin: 4px 0 14px; }
+.headline span { color: var(--a); }
+.cap { font-size: 9.5px; letter-spacing: .1em; font-weight: 600; color: var(--s); text-transform: uppercase; margin: 4px 0 8px; }
+.hint { font-size: 11px; color: var(--s); padding-bottom: 10px; border-bottom: 1px solid var(--sp); }
+.vr { display: grid; grid-template-columns: 28px 1fr auto; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--sp); }
+.vr svg { width: 18px; height: 18px; stroke: var(--s); fill: none; stroke-width: 1.5; }
+.vr .n { color: var(--s); font-variant-numeric: tabular-nums; }
+.vr.hl { position: relative; }
+.vr.hl::before { content: ""; position: absolute; inset: 2px -8px; border-radius: 10px; background: color-mix(in srgb, var(--a) 13%, transparent); z-index: 0; }
+.vr > * { position: relative; }
+.grp { display: flex; justify-content: space-between; color: var(--s); font-weight: 600; font-size: 14px; margin: 16px 0 4px; }
+.gap { height: 14px; }
+.ttl { font-family: var(--serif); font-size: 24px; font-weight: 600; margin: 4px 0 10px; }
+.task { padding: 8px 0; border-bottom: 1px solid var(--sp); }
+.task .t { font-size: 13.5px; }
+.task .m { font-size: 10.5px; color: var(--s); display: flex; gap: 8px; margin-top: 2px; flex-wrap: wrap; }
+.task .m .r { color: var(--red); }
+.dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--a); margin-right: 6px; vertical-align: 1px; }
+.sechead { font-size: 9.5px; letter-spacing: .1em; font-weight: 600; color: var(--s); text-transform: uppercase; margin: 12px 0 2px; }
+</style>
+
+<div class="wrap">
+  <h1>Ansicht „Alle offenen“ (#319)</h1>
+  <p class="lead">Neben „Erledigt“ kommt eine zweite Sammelansicht: alles, was noch nicht erledigt ist, in einer Liste. Links der Startbildschirm heute aus dem Simulator, daneben der Entwurf in den App-Farben (hell und dunkel), unten zwei Alternativen. Aufgaben im Entwurf sind Beispiele.</p>
+  <ul class="rules">
+    <li><b>Was drin ist:</b> jede Aufgabe, die noch nicht erledigt ist, auch neue, unsortierte, wartende und geparkte (Entscheidung Henning, 11.10.). Unteraufgaben erscheinen wie überall nur unter ihrer Aufgabe.</li>
+    <li><b>Was nicht drin ist:</b> Erledigtes.</li>
+    <li><b>Reihenfolge:</b> dringend vor wichtig, sonst älteste zuerst. So sortieren schon Kontexte und Projekte.</li>
+    <li><b>Wischen:</b> nach rechts erledigen, nach links vormerken, wie in den übrigen Listen.</li>
+  </ul>
+
+  <h2>Startbildschirm</h2>
+  <div class="row" id="start"></div>
+
+  <h2>Die Liste selbst</h2>
+  <div class="row" id="list"></div>
+
+  <h2>Alternativen</h2>
+  <div class="row" id="alts"></div>
+</div>
+
+<script>
+const I = {
+  star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',
+  tray:'<path d="M3 13l2.5-7h13L21 13v5H3z M3 13h5l1 2h6l1-2h5"/>',
+  cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/>',
+  hare:'<path d="M4 16c0-3 3-5 7-5h4l3-4 2 1-2 4c2 1 2 3 1 4H4z"/>',
+  circle:'<circle cx="12" cy="12" r="8.5"/>',
+  check:'<circle cx="12" cy="12" r="8.5"/><path d="M8 12.5l2.7 2.7L16 9.7"/>',
+};
+const ico = k => `<svg viewBox="0 0 24 24">${I[k]}</svg>`;
+const vr = (k, t, n, hl) => `<div class="vr${hl?' hl':''}">${ico(k)}<span>${t}</span><span class="n">${n||''}</span></div>`;
+
+function start(theme, variant) {
+  const daily = variant === 'top'
+    ? vr('circle','Alle offenen',7,true) + vr('star','Als nächstes') + vr('tray','Neu',1) + vr('cal','Fällig',2) + vr('hare','Schnell',1)
+    : vr('star','Als nächstes') + vr('tray','Neu',1) + vr('cal','Fällig',2) + vr('hare','Schnell',1);
+  const bottom = variant === 'top'
+    ? vr('check','Erledigt',12)
+    : vr('circle','Alle offenen',7,true) + vr('check','Erledigt',12);
+  return `<div class="phone ${theme}">
+    <div class="top"><div class="circ">⚙︎</div><div class="circ">＋</div></div>
+    <div class="date">Sonntag, 11. Oktober</div>
+    <div class="headline"><span>1</span> zum Durchsehen, nichts vorgemerkt.</div>
+    <div class="cap">Als nächstes</div>
+    <div class="hint">Wisch eine Aufgabe nach links, um sie hier vorzumerken.</div>
+    ${daily}
+    <div class="grp"><span>Projekte</span><span>⌄</span></div>
+    <div class="grp"><span>Kontexte</span><span>6 ›</span></div>
+    <div class="gap"></div>
+    ${bottom}
+  </div>`;
+}
+
+const tasks = [
+  ['Steuererklärung abgeben', ['Fr., 16. Okt.', 'dringend · wichtig'], true],
+  ['Zahnarzt anrufen', ['heute', 'dringend', '5 Min.'], true],
+  ['Angebot Gartenbau vergleichen', ['wichtig', 'wartet auf Malte']],
+  ['Reifenwechsel buchen', ['wichtig', 'Auto']],
+  ['Kellerregal aufbauen', ['1 Std.', 'Zuhause']],
+  ['LinkedIn Nachrichten beantworten', ['15 Min.']],
+  ['Idee: Fotobuch Sommer', ['neu']],
+];
+function list(theme, grouped) {
+  const row = ([t, m, red]) => `<div class="task"><div class="t">${m.includes('neu')?'<span class="dot"></span>':''}${t}</div>
+    <div class="m">${m.filter(x=>x!=='neu').map((x,i)=>`<span class="${red&&i===0?'r':''}">${x}</span>`).join('')}</div></div>`;
+  let body;
+  if (grouped) {
+    body = `<div class="sechead">Diese Woche fällig</div>${row(tasks[1])}${row(tasks[0])}
+      <div class="sechead">Ohne Datum</div>${[2,3,4,5,6].map(i=>row(tasks[i])).join('')}`;
+  } else body = tasks.map(row).join('');
+  return `<div class="phone ${theme}"><div class="top"><div class="circ">‹</div><div class="circ">＋</div></div>
+    <div class="ttl">Alle offenen</div>${body}</div>`;
+}
+
+const fig = (cap, html, note='') => `<figure><figcaption>${cap}</figcaption>${html}${note?`<div class="note">${note}</div>`:''}</figure>`;
+
+document.getElementById('start').innerHTML =
+  fig('Heute', '<img class="shot" src="heute.png" alt="Startbildschirm heute: Als nächstes, Neu, Fällig, Schnell, Projekte, Kontexte, Erledigt">', 'Simulator, Stand von heute früh. „Erledigt“ steht allein unten.') +
+  fig('Entwurf <b>· Empfehlung</b> · hell', start('l','bottom'), '„Alle offenen“ steht unten direkt über „Erledigt“, mit Zahl, immer sichtbar. Die beiden Sammelansichten bilden ein Paar, die Tagesansichten oben bleiben, wie sie sind.') +
+  fig('Entwurf · dunkel', start('d','bottom'));
+
+document.getElementById('list').innerHTML =
+  fig('Entwurf · hell', list('l', false), 'Eine flache Liste, dringend und wichtig zuerst. Wartende Aufgaben stehen mit drin und zeigen, auf wen sie warten.') +
+  fig('Entwurf · dunkel', list('d', false));
+
+document.getElementById('alts').innerHTML =
+  fig('Alternative 1 · oben', start('l','top'), 'Als erste Zeile über den Tagesansichten. Schneller erreichbar, aber „Als nächstes“ verliert seinen ersten Platz, und die App ist bewusst um „Als nächstes“ gebaut.') +
+  fig('Alternative 2 · nach Fälligkeit gruppiert', list('l', true), 'Liste in zwei Abschnitte geteilt: diese Woche fällig, dann alles ohne Datum. Doppelt sich aber mit „Fällig“.');
+</script>

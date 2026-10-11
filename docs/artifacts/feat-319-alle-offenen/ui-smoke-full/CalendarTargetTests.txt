@@ -1,0 +1,80 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: CalendarTargetTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.SwiftConstValuesFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.SwiftFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests-OutputFileMap.json
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.LinkFileList
+[[36mLooseEndsUITests[0m] [1mCompiling[0m LeaveOneOut.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m MeasurementRun.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/hashed-questing-parrot/Measurement/MeasurementRun.swift:212:60: [33m'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration][0m
+210 |     static func classify(_ error: Error) -> String {
+[32m211 |         #if canImport(FoundationModels) && !os(watchOS)[0m
+[[36mLooseEndsUITests[0m] [1mCompiling[0m CalendarTargetTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m CaptureCancelCrashTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m CaptureSmokeTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m ProjectSubtasksTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m ContextUniquenessTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m ConventionCorpus.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m Corpus.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m DesignGalleryTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m LaunchArgumentTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SelfConsistency.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SettingsSmokeTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RecognitionWalkthroughTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RuleBaseline.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m OnboardingTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m PlaceSmokeTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SpeechListeningTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m StartScreenInteractionTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/hashed-questing-parrot/LooseEndsUITests/SpeechListeningTests.swift:19:47: [33mcall to main actor-isolated instance method 'screenshot()' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+16 |     }
+[32m17 | [0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/hashed-questing-parrot/LooseEndsUITests/StartScreenInteractionTests.swift:257:16: [33mmain actor-isolated property 'label' can not be referenced from a nonisolated context[0m
+254 | 
+[32m255 |     /// The row count as the badge shows it, read from the combined row ("All open, 2").[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/hashed-questing-parrot/LooseEndsUITests/StartScreenInteractionTests.swift:257:29: [33mmain actor-isolated property 'value' can not be referenced from a nonisolated context[0m
+254 | 
+[32m255 |     /// The row count as the badge shows it, read from the combined row ("All open, 2").[0m
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-feat319/Build/Products/Debug-watchsimulator/LooseEndsWatch.app/Assets.car (in target 'LooseEndsWatch' from project 'LooseEnds')
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SpeechDiagnosisLineTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SpeechListeningIndicatorTests.swift
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsUITests.swiftmodule
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsUITests.abi.json
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-feat319/Build/Products/Debug-iphonesimulator/LooseEnds.app/Assets.car (in target 'LooseEnds' from project 'LooseEnds')
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-feat319/Build/Products/Debug-iphonesimulator/LooseEnds.app/AppIcon76x76@2x~ipad.png (in target 'LooseEnds' from project 'LooseEnds')
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-feat319/Build/Products/Debug-iphonesimulator/LooseEnds.app/AppIcon60x60@2x.png (in target 'LooseEnds' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mLinking[0m LooseEndsUITests
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+[[36mLooseEndsUITests[0m] [1mExtract App Intents Metadata[0m
+[36;1mnote: [0mRemoved stale file '/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-feat319/Build/Intermediates.noindex/LooseEnds.build/Debug-iphonesimulator/LooseEndsUITests.build/Objects-normal/arm64/Stage2ScreenshotsTemp.o'
+[36;1mnote: [0mRemoved stale file '/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-feat319/Build/Intermediates.noindex/LooseEnds.build/Debug-iphonesimulator/LooseEndsUITests.build/Objects-normal/arm64/Stage2ScreenshotsTemp.stringsdata'
+[36;1mnote: [0mRemoved stale file '/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-feat319/Build/Intermediates.noindex/LooseEnds.build/Debug-iphonesimulator/LooseEndsUITests.build/Objects-normal/arm64/Stage2ScreenshotsTemp.swiftconstvalues'
+Test Suite 'Selected tests' started at 2026-10-11 16:41:14.290.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-11 16:41:14.290.
+Test Suite 'CalendarTargetTests' started at 2026-10-11 16:41:14.290.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CalendarTargetTests testSwitchOnShowsTargetCalendar] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =     8.36s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =     9.39s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [31m✖[0m testSwitchOnShowsTargetCalendar, XCTAssertTrue failed - The detail should name the calendar the event goes to
+Executed 1 test, with 1 failure (0 unexpected) in 84.670 (84.699) seconds
+Test Suite 'LooseEndsUITests.xctest' failed at 2026-10-11 16:42:39.018.
+Executed 1 test, with 1 failure (0 unexpected) in 84.670 (84.728) seconds
+Executed 1 test, with 1 failure (0 unexpected) in 84.670 (84.809) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-feat319/Logs/Test/Test-LooseEnds-2026.10.11_16-41-05-+0200.xcresult
+[36;1mTesting started[0m

@@ -1,4 +1,5 @@
 import Foundation
+import UserNotifications
 
 /// The one notification kind in v1 (data model doc, "Mitteilungen"): a task with a due time is
 /// reminded at that time ("Due now"), a task with only a due day on that day at the reminder time
@@ -69,6 +70,13 @@ enum DueReminders {
             return Reminder(taskID: task.id, title: task.displayTitle, fireDate: fire, kind: kind)
         }
         .sorted { $0.fireDate < $1.fireDate }
+    }
+
+    /// The task a tap on the notification itself opens (#331), the same way as a title in the
+    /// "Next up" widget. The three actions and the dismissal open nothing.
+    static func taskToOpen(actionIdentifier: String, taskID: String?) -> UUID? {
+        guard actionIdentifier == UNNotificationDefaultActionIdentifier, let taskID else { return nil }
+        return UUID(uuidString: taskID)
     }
 
     /// Applies a notification action. Returns false when the task no longer exists.

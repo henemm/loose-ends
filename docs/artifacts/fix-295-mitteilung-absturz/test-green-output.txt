@@ -1,0 +1,60 @@
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/hem/Developer/loose-ends/.claude/worktrees/zippy-baking-hejlsberg/LooseEnds.xcodeproj
+[0;32m[sim][0m Projekt erzeugt.
+[0;32m[sim][0m Simulator bereit (LE-295).
+[0;34m[sim][0m UI-Test mit Beleg: DueNotificationTapTests → docs/artifacts/fix-295-mitteilung-absturz/simulator-run.txt
+[0;34m[sim][0m Mitteilungen aus scripts/fixtures/due-reminder.apns alle 5 s (simctl push)
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mCompiling[0m DueNotificationCenter.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/zippy-baking-hejlsberg/LooseEnds/Notifications/DueNotificationCenter.swift:61:23: [33mresult of call to 'assumeIsolated(_:file:line:)' is unused [#NoUsage][0m
+ 59 |             forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: NSUbiquitousKeyValueStore.default, queue: .main
+[32m 60 |         ) { [weak self] _ in[0m
+[[36mLooseEnds[0m] [1mCompiling[0m CaptureView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m LooseEndsApp.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ContentView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SettingsView.swift
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEnds.abi.json
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEnds.swiftmodule
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds.debug.dylib
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueNotificationCenterTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/zippy-baking-hejlsberg/LooseEndsTests/DueNotificationCenterTests.swift:49:45: [33m'#require(_:_:)' is redundant because 'calendar.date(bySettingHour: hour, minute: minute, second: 0, of: tomorrow)' never equals 'nil' (from macro 'require')[0m
+ 47 |             task.status = .active
+[32m 48 |             if let hour {[0m
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEnds' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds
+[[36mLooseEnds[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsTests.abi.json
+[[36mLooseEndsTests[0m] [1mLinking[0m LooseEndsTests
+[[36mLooseEndsTests[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-10-11 18:35:29.330.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-11 18:35:29.330.
+Test Suite 'DueNotificationTapTests' started at 2026-10-11 18:35:29.330.
+    [32m✔[0m testBannerWhileAppIsOpenKeepsAppAlive ([31m58.700[0m seconds)
+    [32m✔[0m testTapBannerFromHomeOpensApp ([31m66.201[0m seconds)
+Executed 2 tests, with 0 failures (0 unexpected) in 124.901 (124.904) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-11 18:37:34.237.
+Executed 2 tests, with 0 failures (0 unexpected) in 124.901 (124.907) seconds
+Executed 2 tests, with 0 failures (0 unexpected) in 124.901 (124.907) seconds
+[1mTest session results:[0m /Users/hem/Developer/loose-ends/.claude/worktrees/zippy-baking-hejlsberg/docs/artifacts/fix-295-mitteilung-absturz/simulator-run/run.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+./scripts/sim.sh: line 78: 77245 Terminated: 15          ( while true; do
+    $SIMCTL push "$id" com.henning.looseends "$LOOSEENDS_PUSH" > /dev/null 2>&1 || true; sleep 5;
+done )
+[0;32m[sim][0m UI-Test bestanden, Beleg: docs/artifacts/fix-295-mitteilung-absturz/simulator-run.txt

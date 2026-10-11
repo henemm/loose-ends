@@ -1,6 +1,7 @@
 import Foundation
 import SwiftData
 import Testing
+import UserNotifications
 @testable import LooseEnds
 
 @Suite("DueReminders") struct DueRemindersTests {
@@ -118,6 +119,18 @@ import Testing
         #expect(DueReminders.Time(minutesSinceMidnight: 7 * 60 + 45) == DueReminders.Time(hour: 7, minute: 45))
         #expect(DueReminders.Time(hour: 7, minute: 45).minutesSinceMidnight == 465)
         #expect(DueReminders.Time.standard == DueReminders.Time(hour: 9, minute: 0))
+    }
+
+    @Test("A tap on the notification opens its task; the actions and a dismissal open nothing (#331)")
+    func tapOpensTask() {
+        let id = UUID()
+        #expect(DueReminders.taskToOpen(actionIdentifier: UNNotificationDefaultActionIdentifier, taskID: id.uuidString) == id)
+        #expect(DueReminders.taskToOpen(actionIdentifier: UNNotificationDefaultActionIdentifier, taskID: nil) == nil)
+        #expect(DueReminders.taskToOpen(actionIdentifier: UNNotificationDefaultActionIdentifier, taskID: "kaputt") == nil)
+        #expect(DueReminders.taskToOpen(actionIdentifier: UNNotificationDismissActionIdentifier, taskID: id.uuidString) == nil)
+        for action in DueReminders.Action.allCases {
+            #expect(DueReminders.taskToOpen(actionIdentifier: action.rawValue, taskID: id.uuidString) == nil)
+        }
     }
 
     @Test("Done, Next up and Tomorrow apply from the notification; an unknown task is reported")
