@@ -8,21 +8,38 @@ import UserNotifications
 /// action when the user taps one.
 /// Holds the reminder time for tasks without a due time (#311): kept in `UserDefaults` and mirrored
 /// to the iCloud key-value store, so a change on one device reschedules the others.
-/// Silent under tests, where a permission prompt would block the run.
+/// Silent under tests, where a permission prompt would block the run; unit tests hand in a
+/// recording `DueScheduling` and their own stores instead (#328).
 @MainActor
 final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
     private let container: ModelContainer
+    /// Nil under tests unless one is handed in: then nothing reaches the system.
+    private let scheduler: (any DueScheduling)?
+    private let defaults: UserDefaults
+    private let cloud: any ReminderTimeCloud
     private var debounce: Task<Void, Never>?
     private var cloudObserver: (any NSObjectProtocol)?
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Notifications")
-    private static let timeKey = "dueReminderMinutes"
+    static let timeKey = "dueReminderMinutes"
 
     private static var suppressed: Bool {
         ModelContainerFactory.isRunningTests || ModelContainerFactory.isUITesting
     }
 
-    init(container: ModelContainer) {
+    init(
+        container: ModelContainer,
+        scheduler: (any DueScheduling)? = nil,
+        defaults: UserDefaults = .standard,
+        cloud: any ReminderTimeCloud = NSUbiquitousKeyValueStore.default
+    ) {
         self.container = container
+        if let scheduler {
+            self.scheduler = scheduler
+        } else {
+            self.scheduler = Self.suppressed ? nil : SystemDueScheduler()
+        }
+        self.defaults = defaults
+        self.cloud = cloud
         super.init()
     }
 
@@ -32,32 +49,34 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         let center = UNUserNotificationCenter.current()
         center.delegate = self
         center.setNotificationCategories([Self.category])
-        let cloud = NSUbiquitousKeyValueStore.default
         cloudObserver = NotificationCenter.default.addObserver(
-            forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: cloud, queue: .main
+            forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: NSUbiquitousKeyValueStore.default, queue: .main
         ) { [weak self] _ in
             MainActor.assumeIsolated { self?.takeCloudTime() }
         }
-        cloud.synchronize()
+        NSUbiquitousKeyValueStore.default.synchronize()
         takeCloudTime()
     }
 
     /// The time of day for tasks without a due time; changing it reschedules every reminder.
     var reminderTime: DueReminders.Time {
-        get { DueReminders.Time(minutesSinceMidnight: UserDefaults.standard.object(forKey: Self.timeKey) as? Int) }
+        get { DueReminders.Time(minutesSinceMidnight: defaults.object(forKey: Self.timeKey) as? Int) }
         set {
-            UserDefaults.standard.set(newValue.minutesSinceMidnight, forKey: Self.timeKey)
-            NSUbiquitousKeyValueStore.default.set(Int64(newValue.minutesSinceMidnight), forKey: Self.timeKey)
+            defaults.set(newValue.minutesSinceMidnight, forKey: Self.timeKey)
+            cloud.setReminderMinutes(newValue.minutesSinceMidnight)
             rescheduleSoon()
         }
     }
 
     /// Another device set a time (or this launch is the first to see it): take it over locally.
-    private func takeCloudTime() {
-        guard let minutes = NSUbiquitousKeyValueStore.default.object(forKey: Self.timeKey) as? Int,
-              minutes != UserDefaults.standard.object(forKey: Self.timeKey) as? Int else { return }
-        UserDefaults.standard.set(minutes, forKey: Self.timeKey)
+    /// Returns whether the local value changed.
+    @discardableResult
+    func takeCloudTime() -> Bool {
+        guard let minutes = cloud.reminderMinutes,
+              minutes != defaults.object(forKey: Self.timeKey) as? Int else { return false }
+        defaults.set(minutes, forKey: Self.timeKey)
         rescheduleSoon()
+        return true
     }
 
     func requestAuthorization() async {
@@ -71,7 +90,7 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
 
     /// Saves come in bursts (enrichment writes per task); one reschedule shortly after the last.
     func rescheduleSoon() {
-        guard !Self.suppressed else { return }
+        guard scheduler != nil else { return }
         debounce?.cancel()
         debounce = Task { [weak self] in
             do {
@@ -85,19 +104,17 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
 
     /// Replaces every pending due reminder with the current plan.
     func reschedule() async {
-        guard !Self.suppressed else { return }
-        let center = UNUserNotificationCenter.current()
+        guard let scheduler else { return }
         do {
             let tasks = try container.mainContext.fetch(FetchDescriptor<TaskItem>())
             let reminders = DueReminders.plan(for: tasks, time: reminderTime)
-            let stale = await center.pendingNotificationRequests()
-                .map(\.identifier)
+            let stale = await scheduler.pendingIdentifiers()
                 .filter { $0.hasPrefix(DueReminders.identifierPrefix) }
-            center.removePendingNotificationRequests(withIdentifiers: stale)
+            scheduler.remove(stale)
             for reminder in reminders {
-                try await center.add(Self.request(for: reminder))
+                try await scheduler.add(Self.request(for: reminder))
             }
-            await updateBadge(for: tasks)
+            await updateBadge(for: tasks, with: scheduler)
         } catch {
             Self.logger.error("Scheduling due reminders failed: \(error, privacy: .public)")
         }
@@ -106,9 +123,9 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
     /// The number on the app icon (#299): "Next up" plus "Due today", each task once. Set with
     /// every reschedule, so after every save and whenever the app comes to the front; a day that
     /// turns over while the app is closed shows on the icon at the next launch.
-    private func updateBadge(for tasks: [TaskItem]) async {
+    private func updateBadge(for tasks: [TaskItem], with scheduler: any DueScheduling) async {
         do {
-            try await UNUserNotificationCenter.current().setBadgeCount(ViewRules.badgeCount(in: tasks))
+            try await scheduler.setBadgeCount(ViewRules.badgeCount(in: tasks))
         } catch {
             Self.logger.error("Setting the app badge failed: \(error, privacy: .public)")
         }
@@ -174,5 +191,48 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         } catch {
             Self.logger.error("Applying \(actionRaw, privacy: .public) failed: \(error, privacy: .public)")
         }
+    }
+}
+
+/// The part of `UNUserNotificationCenter` the due reminders use (#328): the app talks to the
+/// system, unit tests hand in a recorder.
+@MainActor
+protocol DueScheduling {
+    func pendingIdentifiers() async -> [String]
+    func remove(_ identifiers: [String])
+    func add(_ request: UNNotificationRequest) async throws
+    func setBadgeCount(_ count: Int) async throws
+}
+
+struct SystemDueScheduler: DueScheduling {
+    func pendingIdentifiers() async -> [String] {
+        await UNUserNotificationCenter.current().pendingNotificationRequests().map(\.identifier)
+    }
+
+    func remove(_ identifiers: [String]) {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: identifiers)
+    }
+
+    func add(_ request: UNNotificationRequest) async throws {
+        try await UNUserNotificationCenter.current().add(request)
+    }
+
+    func setBadgeCount(_ count: Int) async throws {
+        try await UNUserNotificationCenter.current().setBadgeCount(count)
+    }
+}
+
+/// Where the reminder time travels between devices (#311): the iCloud key-value store in the app.
+@MainActor
+protocol ReminderTimeCloud {
+    var reminderMinutes: Int? { get }
+    func setReminderMinutes(_ minutes: Int)
+}
+
+extension NSUbiquitousKeyValueStore: ReminderTimeCloud {
+    var reminderMinutes: Int? { object(forKey: DueNotificationCenter.timeKey) as? Int }
+
+    func setReminderMinutes(_ minutes: Int) {
+        set(Int64(minutes), forKey: DueNotificationCenter.timeKey)
     }
 }
