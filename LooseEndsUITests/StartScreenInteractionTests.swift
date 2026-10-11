@@ -55,6 +55,39 @@ final class StartScreenInteractionTests: XCTestCase {
         back.tap()
     }
 
+    /// In New the check means "looked over" (#318): swipe right never completes there, it offers
+    /// "Looks right" for what the AI sorted and nothing for a task that needs a look. Done stays
+    /// in the long-press menu. Without Apple Intelligence (the simulator) every new task needs a
+    /// look, so the swipe shows nothing; with it, "Looks right". Never "Complete".
+    @MainActor
+    func testSwipeRightInNewNeverCompletes() throws {
+        let app = launch()
+        let captureButton = app.buttons["captureButton"]
+        XCTAssertTrue(captureButton.waitForExistence(timeout: 10), "No capture button")
+        captureButton.tap()
+        let field = element("captureTextField", in: app)
+        XCTAssertTrue(field.waitForExistence(timeout: 5), "Capture sheet did not open")
+        field.tap()
+        field.typeText("Rechnung bezahlen")
+        app.buttons["captureDoneButton"].tap()
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5), "Capture sheet did not close")
+
+        let newRow = element("viewRow_new", in: app)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5), "Start screen shows no New")
+        newRow.tap()
+        let row = firstElement(prefix: "taskRow_", in: app)
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "New shows no task")
+        row.swipeRight()
+        XCTAssertFalse(app.buttons["Complete"].waitForExistence(timeout: 2), "Swipe right in New must not offer Done")
+        XCTAssertFalse(firstElement(prefix: "undoComplete_", in: app).exists, "Swipe right in New must not start Done")
+        // With Apple Intelligence a full swipe may already have confirmed the task out of New.
+        guard row.exists else { return }
+
+        // Done is still there, one long press away.
+        row.press(forDuration: 1.2)
+        XCTAssertTrue(element("menuDone", in: app).waitForExistence(timeout: 5), "The long-press menu in New should still offer Done")
+    }
+
     @MainActor
     func testPreviewRowSwipesToDoneAndBack() throws {
         let app = launch()

@@ -77,6 +77,8 @@ Eine Liste. Jede Zeile:
 - KI-Marker (Variante C): Merkmale, die die KI gesetzt hat, sind akzentgetönt, bis der Nutzer sie gesehen hat. Ein geänderter Titel trägt zusätzlich den Funken.
 - Blockiert-Zeichen, wenn eine andere Aufgabe vorher erledigt werden muss.
 - Wisch rechts: Erledigt. Wisch links: Zu "Als nächstes" oder daraus entfernen. In "Alt": Wisch links parkt.
+  In "Neu" (dem Eingang) heißt Wisch rechts „Passt“ und bestätigt nur, was die KI sortiert hat; Erledigt
+  gibt es dort nur im Halten-Menü, und „Muss angesehen werden“ hat keinen Wisch (Henning, 2026-10-11, #318).
 - Halten: Vorschau plus Menü mit Als nächstes, Erledigt, Verschieben (Morgen, Wochenende, nächste Woche, Datum), Parken, Löschen.
 - Nur "Als nächstes" ist manuell sortierbar (Drag). Alle anderen Ansichten haben feste Sortierung.
 - Leerzustand je Ansicht in einem Satz, ohne Illustration.
