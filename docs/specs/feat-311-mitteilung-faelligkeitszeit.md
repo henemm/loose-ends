@@ -53,6 +53,9 @@ Keine Änderung an `Shared/Models` → kein `mac-schema-init`, kein CloudKit-Dep
 - Unit (`DueRemindersTests`): mit Uhrzeit → genau diese Zeit, Art `.now`, Einstellung wirkt nicht;
   ohne Uhrzeit → eingestellte Zeit, Art `.today`; Uhrzeit vorbei → keine Mitteilung; gespeicherte Form
   mit Rückfall. Bestehende Fälle (9:00-Standard, #127) bleiben grün.
+- Unit (`DueNotificationCenterTests`, #328): was beim System angemeldet wird — Text, Kategorie, Auslösezeit,
+  Ersetzen nach Änderung der Uhrzeit, fremde Anfragen bleiben, Übernahme aus iCloud. Ein aufzeichnender
+  Ersatz steht für `UNUserNotificationCenter` (`DueScheduling`), dessen `add` im iOS-27-Simulator scheitert.
 - UI-Smoke (`SettingsSmokeTests`): Zahnrad öffnet die Einstellungen mit der Uhrzeit, „Fertig“ schließt.
 - Simulator-Beleg: Banner per `simctl push` mit `body` „Jetzt fällig“ (`add` scheitert im iOS-27-Simulator).
 - Stufe 3 (Pfade `LooseEnds/Notifications/`, `*.entitlements`), über TestFlight:
