@@ -177,4 +177,161 @@ final class StartScreenInteractionTests: XCTestCase {
         remove.tap()
         XCTAssertTrue(preview.waitForNonExistence(timeout: 5), "Removed from Next up, the task leaves the preview")
     }
+
+    // MARK: - All open (#319)
+
+    /// Without the long Done window: a completed task really leaves the open lists after three seconds.
+    @MainActor
+    private func launchWithShortDoneWindow() -> XCUIApplication {
+        let app = XCUIApplication()
+        app.launchArguments = ["--ui-testing", "-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+        app.launch()
+        return app
+    }
+
+    @MainActor
+    private func capture(_ text: String, in app: XCUIApplication) {
+        let captureButton = app.buttons["captureButton"]
+        XCTAssertTrue(captureButton.waitForExistence(timeout: 10), "No capture button")
+        captureButton.tap()
+        let field = element("captureTextField", in: app)
+        XCTAssertTrue(field.waitForExistence(timeout: 5), "Capture sheet did not open")
+        field.tap()
+        field.typeText(text)
+        app.buttons["captureDoneButton"].tap()
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5), "Capture sheet did not close")
+    }
+
+    /// Captures one task, opens New (where it is the only one), long-presses it and picks a menu
+    /// entry; waits until the task has left New, then goes back to the start screen.
+    @MainActor
+    private func captureAndPick(_ text: String, _ entry: (XCUIApplication) -> XCUIElement, in app: XCUIApplication) {
+        capture(text, in: app)
+        let newRow = element("viewRow_new", in: app)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5), "Start screen shows no New")
+        newRow.tap()
+        let row = firstElement(prefix: "taskRow_", in: app)
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "New shows no task")
+        let item = entry(app)
+        // A slow runner can miss the first press (#114).
+        for duration in [1.2, 2.0, 3.0] where !item.exists {
+            row.press(forDuration: duration)
+            _ = item.waitForExistence(timeout: 2)
+        }
+        XCTAssertTrue(item.exists, "The long-press menu lacks the entry")
+        item.tap()
+        XCTAssertTrue(row.waitForNonExistence(timeout: 10), "The task should leave New")
+        let back = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(back.waitForExistence(timeout: 5), "No back button")
+        back.tap()
+    }
+
+    /// The bottom rows start out of sight on an iPhone (#180): swipe up until the row can be tapped.
+    @MainActor
+    private func scrollTo(_ id: String, in app: XCUIApplication) -> XCUIElement {
+        let row = element(id, in: app)
+        for _ in 0..<4 where !(row.waitForExistence(timeout: 2) && row.isHittable) {
+            app.swipeUp()
+        }
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "Start screen shows no \(id)")
+        return row
+    }
+
+    /// Rows of the open list; a parked one says "Parked" (the moon) in its combined label.
+    @MainActor
+    private func taskRows(in app: XCUIApplication, parkedOnly: Bool = false) -> XCUIElementQuery {
+        let format = parkedOnly ? "identifier BEGINSWITH 'taskRow_' AND label CONTAINS 'Parked'" : "identifier BEGINSWITH 'taskRow_'"
+        return app.descendants(matching: .any).matching(NSPredicate(format: format))
+    }
+
+    /// The row count as the badge shows it, read from the combined row ("All open, 2").
+    private func badgeNumbers(of row: XCUIElement) -> [String] {
+        "\(row.label) \(row.value as? String ?? "")"
+            .components(separatedBy: CharacterSet.decimalDigits.inverted)
+            .filter { !$0.isEmpty }
+    }
+
+    @MainActor
+    func testOpenRowShowsOpenAndParkedButNotDone() throws {
+        let app = launchWithShortDoneWindow()
+        captureAndPick("Müll rausbringen", { self.element("menuDone", in: $0) }, in: app)
+        captureAndPick("Fahrrad verkaufen", { $0.buttons["Park"] }, in: app)
+        capture("Rechnung bezahlen", in: app)
+
+        let openRow = scrollTo("viewRow_open", in: app)
+        let doneRow = scrollTo("viewRow_done", in: app)
+        XCTAssertTrue(openRow.isHittable && doneRow.isHittable, "Both rows should be on screen together")
+        XCTAssertLessThan(openRow.frame.minY, doneRow.frame.minY, "All open sits right above Completed")
+        XCTAssertEqual(badgeNumbers(of: openRow), ["2"], "The count should match the list: one new, one parked")
+
+        let shot = XCTAttachment(screenshot: app.screenshot())
+        shot.name = "Start screen with All open"
+        shot.lifetime = .keepAlways
+        add(shot)
+
+        openRow.tap()
+        XCTAssertTrue(app.navigationBars["All open"].waitForExistence(timeout: 5), "All open did not open")
+        XCTAssertTrue(taskRows(in: app).firstMatch.waitForExistence(timeout: 5), "All open shows no task")
+        XCTAssertEqual(taskRows(in: app).count, 2, "The new and the parked task, not the completed one")
+        XCTAssertEqual(taskRows(in: app, parkedOnly: true).count, 1, "Only the parked task carries the moon")
+
+        let list = XCTAttachment(screenshot: app.screenshot())
+        list.name = "All open list"
+        list.lifetime = .keepAlways
+        add(list)
+
+        let back = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(back.waitForExistence(timeout: 5), "No back button")
+        back.tap()
+        scrollTo("viewRow_parked", in: app).tap()
+        XCTAssertTrue(taskRows(in: app).firstMatch.waitForExistence(timeout: 5), "Parked shows no task")
+        XCTAssertEqual(taskRows(in: app).count, 1)
+        XCTAssertEqual(taskRows(in: app, parkedOnly: true).count, 0, "In Parked the moon would be noise")
+    }
+
+    @MainActor
+    func testSwipesOnParkedRowInOpenView() throws {
+        let app = launchWithShortDoneWindow()
+        captureAndPick("Fahrrad verkaufen", { $0.buttons["Park"] }, in: app)
+        capture("Rechnung bezahlen", in: app)
+        scrollTo("viewRow_open", in: app).tap()
+
+        let parked = taskRows(in: app, parkedOnly: true).firstMatch
+        XCTAssertTrue(parked.waitForExistence(timeout: 5), "All open shows no parked task")
+        let id = parked.identifier.replacingOccurrences(of: "taskRow_", with: "")
+        let other = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH 'taskRow_' AND NOT (label CONTAINS 'Parked')"))
+            .firstMatch
+        XCTAssertTrue(other.exists, "All open shows no other task")
+
+        parked.swipeRight()
+        XCTAssertTrue(element("swipeDone_\(id)", in: app).waitForExistence(timeout: 5), "Swipe right on a parked task should offer Complete")
+        parked.swipeLeft()
+
+        other.swipeLeft()
+        XCTAssertTrue(app.buttons["Next up"].waitForExistence(timeout: 5), "Swipe left on an open task offers Next up")
+        other.swipeRight()
+
+        parked.swipeLeft()
+        let activate = element("swipeActivate_\(id)", in: app)
+        XCTAssertTrue(activate.waitForExistence(timeout: 5), "Swipe left on a parked task should offer Activate")
+        XCTAssertEqual(activate.label, "Activate")
+        XCTAssertFalse(app.buttons["Next up"].exists, "A parked task never shows in Next up, so no Next up swipe")
+        activate.tap()
+
+        let row = element("taskRow_\(id)", in: app)
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "Activated, the task stays in All open")
+        XCTAssertTrue(taskRows(in: app, parkedOnly: true).firstMatch.waitForNonExistence(timeout: 5), "Activated, the moon goes")
+    }
+
+    @MainActor
+    func testOpenViewEmptySentence() throws {
+        let app = launchWithShortDoneWindow()
+        let openRow = scrollTo("viewRow_open", in: app)
+        XCTAssertEqual(badgeNumbers(of: openRow), [], "Without tasks the row shows no number")
+        openRow.tap()
+        let empty = element("emptyViewLabel", in: app)
+        XCTAssertTrue(empty.waitForExistence(timeout: 5), "All open shows no empty sentence")
+        XCTAssertEqual(empty.label, "Nothing left open.")
+    }
 }

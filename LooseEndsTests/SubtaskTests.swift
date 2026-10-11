@@ -75,7 +75,7 @@ import Testing
 
         let all = try store.context.fetch(FetchDescriptor<TaskItem>())
         #expect(all.count == 3)
-        for kind in [ViewKind.next, .new, .due, .quick, .old, .waiting, .repeating, .parked, .done] {
+        for kind in [ViewKind.next, .new, .due, .quick, .old, .waiting, .repeating, .parked, .open, .done] {
             let ids = ViewRules.tasks(for: kind, in: all).map(\.id)
             #expect(!ids.contains(milk.id), "\(kind) listed an open subtask")
             #expect(!ids.contains(bread.id), "\(kind) listed a done subtask")
