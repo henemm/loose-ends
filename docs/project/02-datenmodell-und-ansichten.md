@@ -258,7 +258,7 @@ die deshalb nicht gemessen hat (`scripts/measurement_status.py`, #149).
   `CaptureTextIntent` (Rohtext rein), `CompleteTaskIntent`, `ShowViewIntent(kind)`.
 - `ExecutionTargets`: Capture und Complete in der App-Intents-Extension, Show in der App.
 - Watch: dieselben Intents, Diktat als Eingabe.
-- Control Center: `ControlWidgetButton` mit `OpenCaptureIntent` (öffnet Erfassungs-Szene, ADR-9).
+- Control Center: kein eigenes Control mehr (#326, Henning 2026-10-11: „öffnet nur die App, wenig Mehrwert“). Erfasst wird über das Steuerelement der Kurzbefehle-App mit dem App-Kurzbefehl „Aufgabe erfassen“ (`CaptureTextIntent`, fragt nach Text, kein App-Start). `OpenCaptureIntent` bleibt als Aktion für Kurzbefehle und Aktionstaste.
 
 ## Offene Punkte für den Spike
 
