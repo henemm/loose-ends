@@ -9,7 +9,7 @@ Datum: 2026-10-11 18:39
 - [x] **AC-4 Schalter:** Given ein Start ohne `--ui-testing-notifications` (insbesondere Release/TestFlight) / When die App läuft / Then bleibt `suppressed` unter UI-Tests wirksam; nur `--ui-testing --ui-testing-notifications` setzt den Delegate im UI-Test. Der App-Code plant in keinem Fall eine Test-Mitteilung.
 - [x] **AC-5 RED vor dem Fix:** Given der neue UI-Test `DueNotificationTapTests` mit eingespielter Mitteilung (`LOOSEENDS_PUSH`) / When er ohne den Fix läuft / Then stürzt die App ab und der Test schlägt fehl (Protokoll mit dem Absturz); nach dem Fix besteht er. Ohne `LOOSEENDS_PUSH_FEED` (CI) überspringt er sich.
 - [x] **AC-6 Nichts sonst:** Diff berührt nur die genannten Dateien; `test-proof` ohne `LOOSEENDS_PUSH` verhält sich wie vorher; keine Änderung an Info.plist, Entitlements, AppStorage, Modell, `DueReminders`; alle bestehenden Unit- und UI-Tests grün.
-- [ ] **AC-7 Gerät:** Nach Hennings ausdrücklicher Freigabe bestätigt der Prüfbau auf dem iPhone, dass das Antippen einer fälligen Mitteilung die App ohne Absturz öffnet; Henning bestätigt es nach Auslieferung im Alltag. #295 wird erst danach geschlossen.
+- [x] **AC-7 Gerät:** Nach Hennings ausdrücklicher Freigabe bestätigt der Prüfbau auf dem iPhone, dass das Antippen einer fälligen Mitteilung die App ohne Absturz öffnet; Henning bestätigt es nach Auslieferung im Alltag. #295 wird erst danach geschlossen.
 
 ## Dialog
 
@@ -36,6 +36,10 @@ Datum: 2026-10-11 18:39
 ### Runde 3
 **Adversary:** F001 nachgeprüft. `LooseEndsUITests/DueNotificationTapTests.swift` beginnt mit `#if os(iOS)` (Zeile 1) und endet mit `#endif`; damit gibt es `XCUIDevice.press` nur auf iOS. Beleg `mac-build-for-testing.txt`: "** TEST BUILD SUCCEEDED **" für macOS. Eigener erneuter iOS-Lauf `LOOSEENDS_PUSH=scripts/fixtures/due-reminder.apns sim.sh test-proof DueNotificationTapTests` (Simulator LE-295, Output `adversary-test-output.txt`): testBannerWhileAppIsOpenKeepsAppAlive und testTapBannerFromHomeOpensApp beide bestanden, "Executed 2 tests, with 0 failures". Produktcode seit Runde 2 unverändert. Der Simulator-Unit-Lauf aus Runde 1 (`adversary-test-output-sim-unit.txt`, grün) bleibt gültig, da nur die Testdatei hinter `#if` ging. Den Mac-Unit-Lauf `sim.sh unit` selbst habe ich nicht erneut gefahren; die Übersetzung des Ziels für macOS ist durch build-for-testing belegt. F001 ist behoben, AC-6 bewiesen. Offen bleibt AC-7.
 **Implementierer:** F001 behoben.
+
+### Runde 4
+**Adversary:** AC-7 nachgeprüft. Gerätebeleg über TestFlight statt Prüfbau (Henning 2026-10-10: „Mach den Test über TestDrive“). TestFlight-Build 37 (Lauf 38157246970, success) ist exakt der geprüfte Stand e220127 dieses Zweigs. Prüfschritte an Henning: Aufgabe mit Uhrzeit wenige Minuten voraus, App in den Hintergrund (nicht beenden), Mitteilung „Jetzt fällig“ antippen. Henning, 2026-10-11, wörtlich: „/50-implement #295 funktioniert“. Damit ist das Antippen im vorher abstürzenden Zustand auf dem iPhone bestätigt; F002 (Build 29 ohne Absturz) ändert daran nichts, die Simulator-Gegenprobe auf main stürzt im Hintergrundzustand reproduzierbar ab. AC-7 bewiesen.
+**Implementierer:** Keine Codeänderung seit Runde 3.
 
 ## Findings
 
@@ -109,11 +113,11 @@ Finding-Hinweis scripts/sim.sh: Code reference: scripts/sim.sh:333 — test-proo
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`). Keine Tabelle angehängt, keine verdächtigen Zeilen.
 
 ## Verdict
-VERDICT: AMBIGUOUS
+VERDICT: VERIFIED
 
-F001 (HIGH) behoben und in Runde 3 geprüft. Offen: AC-7 (Gerät, nicht belegt; AMBIGUOUS bis Hennings Bestätigung), F002 AMBIGUOUS (Build 29 ohne Absturz), F003 LOW.
+F001 (HIGH) behoben (Runde 3). AC-7 durch Hennings Gerätetest mit TestFlight-Build 37 bestätigt (Runde 4). F002 bleibt als Beobachtung ohne Wirkung auf das Ergebnis, F003 LOW.
 Tests: iOS-UI 2 bestanden, 0 fehlgeschlagen, 0 übersprungen; sim-unit grün; Mac-Übersetzung grün.
-Checklist: AC-1 bis AC-6 bewiesen, AC-7 offen.
+Checklist: AC-1 bis AC-7 bewiesen.
 
 ## Geprüfte Dateien
 

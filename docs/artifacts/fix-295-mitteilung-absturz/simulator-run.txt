@@ -1,16 +1,16 @@
 # Simulator-Beleg
-erzeugt: 2026-10-11T18:48:07+0200
+erzeugt: 2026-10-11T20:09:16+0200
 befehl: scripts/sim.sh test-proof DueNotificationTapTests
 workflow: fix-295-mitteilung-absturz
-head: 65aab2d93c0cd100e396f9e2629c99b93f2350d2
+head: e220127a9e2b009a6680436b8ec81b778ef373af
 basis: 8fb57ea5fd20a917b066c6b3a11c8a5aa3d99259 (merge-base origin/main HEAD)
 testklasse: DueNotificationTapTests
 ergebnis: Passed
 xcodebuild: ** TEST SUCCEEDED **
 tests: 2 gesamt, 2 bestanden, 0 fehlgeschlagen, 0 übersprungen
-start: 1791737154.247  ende: 1791737287.293
+start: 1791742014.658  ende: 1791742156.014
 geraet: LE-295, iOS 27.0
-summary: docs/artifacts/fix-295-mitteilung-absturz/simulator-run/summary.json  sha256:a61b111142cad617ba2a551df5313f7c0739ddf9940a924b8578a217c5a0a787
+summary: docs/artifacts/fix-295-mitteilung-absturz/simulator-run/summary.json  sha256:d8e77ca413817a50e393d1775cbc0fe2d63a289b0686ea05e49964e1e4d1b584
 xcresult: docs/artifacts/fix-295-mitteilung-absturz/simulator-run/run.xcresult  (gitignored)
 screenshots: docs/artifacts/fix-295-mitteilung-absturz/simulator-run/*.png (2 Stück)
 
