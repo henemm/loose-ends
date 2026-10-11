@@ -3,8 +3,8 @@ import SwiftData
 import SwiftUI
 
 /// The usual gestures on a task (design briefing, screen 3), one set for every list and for the
-/// start screen's "Next up" preview (#303): swipe right Done (Restore in Done, Activate in Parked),
-/// swipe left Next up (Park in Old), long press the full menu. The view owns the state behind the
+/// start screen's "Next up" preview (#303): swipe right Done (Restore in Done, Activate in Parked,
+/// "Looks right" in New), swipe left Next up (Park in Old), long press the full menu. The view owns the state behind the
 /// delete confirmation and the date sheet and attaches both with `taskInteractionDialogs`.
 @MainActor
 struct TaskInteractions {
@@ -59,6 +59,16 @@ struct TaskInteractions {
         case .parked?:
             Button("Activate", systemImage: "play") { activate(task) }
                 .tint(.accentColor)
+        case .new?:
+            // New is the inbox: there the check reads "looked over", and a Done swipe made tasks
+            // vanish unseen (Henning, 2026-10-11, #318). The swipe confirms what the AI sorted
+            // (#188); Done stays in the long-press menu. A title nobody vouched for ("Needs a
+            // look") gets no swipe, it has to be opened.
+            if !ViewRules.needsLook(task) {
+                Button("Looks right", systemImage: "checkmark.circle") { confirm(task) }
+                    .tint(.accentColor)
+                    .accessibilityIdentifier("swipeConfirm_\(task.id.uuidString)")
+            }
         default:
             Button("Complete", systemImage: "checkmark") { complete(task) }
                 .tint(.green)
@@ -74,12 +84,6 @@ struct TaskInteractions {
         case .old?:
             Button("Park", systemImage: "pause") { park(task) }
         default:
-            // In "New" the full swipe confirms what the AI sorted (#188); Next up moves second.
-            if kind == .new, !ViewRules.needsLook(task) {
-                Button("Looks right", systemImage: "checkmark.circle") { confirm(task) }
-                    .tint(.accentColor)
-                    .accessibilityIdentifier("swipeConfirm_\(task.id.uuidString)")
-            }
             if task.nextRank == nil {
                 Button("Next up", systemImage: "star") { toggleNext(task) }
                     .tint(.accentColor)

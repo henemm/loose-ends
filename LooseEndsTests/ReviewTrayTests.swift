@@ -61,4 +61,25 @@ import Testing
         #expect(ViewRules.tasks(for: .new, in: [task]).isEmpty)
         #expect((task.revisions ?? []).count == 1)
     }
+
+    @Test("Looks right in the detail takes an unchecked or unsorted task out of New (#318)")
+    @MainActor func looksRightFromDetail() async throws {
+        let store = try TestStore()
+        let unchecked = TaskItem(rawText: "zahnarzt termin")
+        unchecked.title = "Zahnarzt Termin"
+        unchecked.status = .unverified
+        let unsorted = TaskItem(rawText: "Dachrinne")
+        unsorted.title = "Dachrinne"
+        let untitled = TaskItem(rawText: "…")
+        [unchecked, unsorted, untitled].forEach(store.context.insert)
+        try store.context.save()
+        #expect(ViewRules.tasks(for: .new, in: [unchecked, unsorted, untitled]).count == 3)
+
+        [unchecked, unsorted, untitled].forEach { TaskActions.confirmReview($0) }
+
+        #expect(unchecked.status == .active)
+        #expect(unsorted.status == .active)
+        #expect(untitled.status == .unprocessed, "no title, nothing to vouch for")
+        #expect(ViewRules.tasks(for: .new, in: [unchecked, unsorted, untitled]).map(\.id) == [untitled.id])
+    }
 }

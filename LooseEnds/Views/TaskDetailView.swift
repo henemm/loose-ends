@@ -7,7 +7,8 @@ import SwiftUI
 /// Tapping a row opens its editor; a field a rule read from the raw text carries »«, one the AI
 /// estimated the spark (#101), both accent-tinted, and its editor also shows before, after, the
 /// reason and Reset. Opening the detail marks the AI changes
-/// as seen. The bar carries Complete and the briefing's menu (Next up, Park, Analyze again).
+/// as seen. The bar carries Complete, "Looks right" while the task still needs a look (#318), and
+/// the briefing's menu (Next up, Park, Analyze again).
 struct TaskDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(CompletionPulse.self) private var completionPulse: CompletionPulse?
@@ -256,6 +257,17 @@ struct TaskDetailView: View {
         // Deleting stays in the list's long-press menu: deleting from inside the open detail would
         // leave the view on a destroyed model until it is gone.
         if task.isOpen {
+            // Still in New after opening ("Needs a look": title not checked, not sorted yet): one
+            // tap vouches for it, without editing the title first (#318).
+            if ViewRules.needsLook(task), task.title != nil {
+                ToolbarItem(placement: .primaryAction) {
+                    Button("Looks right", systemImage: "checkmark.circle") {
+                        TaskActions.confirmReview(task)
+                        save("confirm")
+                    }
+                    .accessibilityIdentifier("detailConfirmButton")
+                }
+            }
             ToolbarItem(placement: .primaryAction) {
                 Button("Complete", systemImage: "checkmark", action: complete)
                     .accessibilityIdentifier("detailCompleteButton")

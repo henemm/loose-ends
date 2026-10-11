@@ -161,6 +161,36 @@ struct TestStore {
         #expect(stub.calls == 2)
     }
 
+    @Test("A task confirmed with Looks right before its model step still gets its one run (#318)")
+    @MainActor func confirmedBeforeEnrichmentStillRuns() async throws {
+        let store = try TestStore()
+        let context = store.context
+        let container = store.container
+        let task = TaskItem(rawText: "Zettel sortieren")
+        task.title = "Zettel sortieren"
+        let sub = TaskItem(rawText: "Erster Stapel")
+        sub.status = .active
+        sub.parent = task
+        context.insert(task)
+        context.insert(sub)
+        try context.save()
+        TaskActions.confirmReview(task)
+        #expect(task.status == .active)
+
+        var draft = EnrichmentDraft()
+        draft.title = EnrichmentDraft.Guess("Zettel sortieren", confidence: 0.9, reason: "Stub.")
+        let stub = StubEnricher(draft: draft)
+        let coordinator = EnrichmentCoordinator(enricher: stub, container: container)
+
+        await coordinator.processPending()
+        #expect(stub.calls == 1, "the confirmed task runs once, the subtask never")
+        #expect(task.processedAt != nil)
+        #expect(task.status == .active)
+
+        await coordinator.processPending()
+        #expect(stub.calls == 1, "once means once")
+    }
+
     @Test("A failing model leaves the task unprocessed for the next pass")
     @MainActor func failureLeavesTaskUnprocessed() async throws {
         let store = try TestStore()
