@@ -83,6 +83,8 @@ struct ContentView: View {
         .onChange(of: scenePhase) { _, phase in
             // Leaving the foreground ends every window: a Done must not hang in memory.
             if phase != .active { commitCompletions(all: true) }
+            // Back in front, maybe on a new day: "Due today" and the badge follow the date (#299).
+            if phase == .active { notifications?.rescheduleSoon() }
         }
         .onChange(of: tasks.count) { _, _ in
             Task { await enrichment?.processPending() }

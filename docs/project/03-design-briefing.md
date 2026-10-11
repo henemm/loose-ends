@@ -65,6 +65,11 @@ Wiederkehrend und Geparkt nur, solange sie eine Aufgabe haben. Projekte und Kont
 einklappbare Gruppen, eingeklappt per Vorgabe; eingeklappt zeigen sie, wie viele es sind.
 Anlegen, Umbenennen und Löschen bleiben in der aufgeklappten Gruppe.
 
+**Heute fällig (Henning, 2026-10-11, #299):** Auf dem iPhone steht unter der Vorschau „Als nächstes“
+eine zweite, „Heute fällig“: was heute oder früher fällig ist, die ersten drei, nur wenn es etwas gibt.
+Eine Aufgabe, die in beiden steht, erscheint in beiden. Die Zahl am App-Symbol zählt „Als nächstes“
+plus „Heute fällig“, jede Aufgabe einmal. Die Ansicht „Fällig“ bleibt bei sieben Tagen.
+
 Berechnungsregeln der Ansichten stehen in `02-datenmodell-und-ansichten.md`.
 
 ### 3. Ansicht (Aufgabenliste)

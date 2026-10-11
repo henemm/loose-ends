@@ -49,9 +49,14 @@ struct SidebarView: View {
     }
 
     /// The preview's rows stand in "Next up", so they act as they do there (#303).
-    private var taskActions: TaskInteractions {
+    private var taskActions: TaskInteractions { interactions(.next) }
+
+    /// The "Due today" rows (#299) act as they do in "Due".
+    private var dueActions: TaskInteractions { interactions(.due) }
+
+    private func interactions(_ kind: ViewKind) -> TaskInteractions {
         TaskInteractions(
-            kind: .next, tasks: tasks, contexts: contexts, projects: projects, modelContext: modelContext,
+            kind: kind, tasks: tasks, contexts: contexts, projects: projects, modelContext: modelContext,
             pendingCompletions: pendingCompletions, completionPulse: completionPulse,
             pendingDelete: $pendingTaskDelete, confirmingDelete: $confirmingTaskDelete, datingTask: $datingTask,
             didDelete: { id in if selection == .task(id) { selection = nil } }
@@ -65,6 +70,7 @@ struct SidebarView: View {
                 Section {
                     header
                     nextUpPreview
+                    dueTodayPreview
                 }
             }
             Section {
@@ -238,13 +244,7 @@ struct SidebarView: View {
     @ViewBuilder
     private var nextUpPreview: some View {
         let next = ViewRules.tasks(for: .next, in: tasks)
-        Text("Next up")
-            .font(.caption.weight(.semibold))
-            .textCase(.uppercase)
-            .tracking(1)
-            .foregroundStyle(.secondary)
-            .listRowSeparator(.hidden)
-            .paperRow()
+        caption("Next up")
         Group {
             if next.isEmpty {
                 Text("Swipe left on any task to line it up here.")
@@ -259,18 +259,43 @@ struct SidebarView: View {
         }
     }
 
+    /// What stands for today (#299): due today or overdue, the first three, under "Next up". A
+    /// task in both stands in both (Henning, 2026-10-11). Nothing due today, no section: an empty
+    /// line here would only repeat "All tied up".
+    @ViewBuilder
+    private var dueTodayPreview: some View {
+        let due = ViewRules.dueToday(in: tasks)
+        if !due.isEmpty {
+            caption("Due today")
+            ForEach(due.prefix(3)) { task in
+                previewRow(task, actions: dueActions, prefix: "dueTodayPreview_")
+            }
+        }
+    }
+
+    private func caption(_ title: LocalizedStringKey) -> some View {
+        Text(title)
+            .font(.caption.weight(.semibold))
+            .textCase(.uppercase)
+            .tracking(1)
+            .foregroundStyle(.secondary)
+            .listRowSeparator(.hidden)
+            .paperRow()
+    }
+
     /// A tap opens the task; while its Done window runs (#32) a tap takes it back instead.
     @ViewBuilder
-    private func previewRow(_ task: TaskItem) -> some View {
-        let row = TaskRow(task: task, identifierPrefix: "nextUpPreview_")
-        if taskActions.isPending(task) {
-            taskActions.pendingRow(task, row)
+    private func previewRow(_ task: TaskItem, actions: TaskInteractions? = nil, prefix: String = "nextUpPreview_") -> some View {
+        let actions = actions ?? taskActions
+        let row = TaskRow(task: task, identifierPrefix: prefix)
+        if actions.isPending(task) {
+            actions.pendingRow(task, row)
         } else {
             row
                 .tag(ViewSelection.task(task.id))
-                .swipeActions(edge: .leading, allowsFullSwipe: true) { taskActions.leadingActions(task) }
-                .swipeActions(edge: .trailing, allowsFullSwipe: true) { taskActions.trailingActions(task) }
-                .contextMenu { taskActions.menu(task) }
+                .swipeActions(edge: .leading, allowsFullSwipe: true) { actions.leadingActions(task) }
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) { actions.trailingActions(task) }
+                .contextMenu { actions.menu(task) }
                 .paperRow()
         }
     }
