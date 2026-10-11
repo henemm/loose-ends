@@ -4,7 +4,7 @@ import Testing
 @testable import LooseEnds
 
 /// The start screen's "Due today" and the app badge (#299): today and overdue, not the whole week;
-/// a task in "Next up" and due today stands in both lists but counts once.
+/// a task in "Next up" and due today stands in "Next up" only (#339).
 @Suite("Due today and the app badge") struct DueTodayTests {
     static var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
@@ -50,7 +50,7 @@ import Testing
                 "the Due view still looks a week ahead")
     }
 
-    @Test("The badge counts Next up and Due today, a task in both once")
+    @Test("A task in Next up and due today stands in Next up only; the badge counts it once")
     @MainActor func badgeCountsEachTaskOnce() async throws {
         let store = try TestStore()
         let lined = TaskItem(rawText: "Angebot schreiben")
@@ -69,8 +69,11 @@ import Testing
         let all = [lined, both, dueOnly, later]
         all.forEach(store.context.insert)
 
-        #expect(ViewRules.dueToday(in: all, now: Self.now, calendar: Self.calendar).map(\.id) == [dueOnly.id, both.id],
-                "a task in Next up and due today stands in both lists")
+        #expect(ViewRules.dueToday(in: all, now: Self.now, calendar: Self.calendar).map(\.id) == [dueOnly.id],
+                "a task in Next up and due today is not repeated in Due today")
+        #expect(ViewRules.tasks(for: .next, in: all, now: Self.now, calendar: Self.calendar).map(\.id) == [lined.id, both.id])
+        #expect(ViewRules.tasks(for: .due, in: all, now: Self.now, calendar: Self.calendar).contains { $0.id == both.id },
+                "the Due view still shows it")
         #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 3)
         #expect(ViewRules.badgeCount(in: [], now: Self.now, calendar: Self.calendar) == 0)
     }

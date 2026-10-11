@@ -49,16 +49,19 @@ enum ViewRules {
 
     /// What stands for today (Henning, 2026-10-11, #299): open top-level tasks due today or
     /// earlier, earliest first. Narrower than the "Due" view (seven days), so the start screen and
-    /// the app badge say "today", not "this week". Blocked tasks stay out, as in "Due".
+    /// the app badge say "today", not "this week". Blocked tasks stay out, as in "Due". A task
+    /// already in "Next up" stays out too (Henning, 2026-10-11, #339): the manual pick wins, so a
+    /// task stands in one list only. The "Due" view is unaffected.
     static func dueToday(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [TaskItem] {
         let today = calendar.startOfDay(for: now)
         let end = calendar.date(byAdding: .day, value: 1, to: today) ?? now
-        return all.filter { $0.parent == nil && $0.isOpen && !$0.isBlocked && ($0.dueDate.map { $0 < end } ?? false) }
+        return all.filter { $0.parent == nil && $0.isOpen && !$0.isBlocked && $0.nextRank == nil
+            && ($0.dueDate.map { $0 < end } ?? false) }
             .sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
     }
 
-    /// The number on the app icon (#299): "Next up" plus "Due today", each task once. On the start
-    /// screen a task in both stands in both lists (Henning, 2026-10-11); the count does not double it.
+    /// The number on the app icon (#299): "Next up" plus "Due today", each task once. The two
+    /// lists are disjoint (#339), so this is the sum of both.
     static func badgeCount(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> Int {
         let next = tasks(for: .next, in: all, now: now, calendar: calendar).map(\.id)
         let due = dueToday(in: all, now: now, calendar: calendar).map(\.id)

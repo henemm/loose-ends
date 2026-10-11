@@ -263,7 +263,7 @@ struct SidebarView: View {
     }
 
     /// What stands for today (#299): due today or overdue, the first three, under "Next up". A
-    /// task in both stands in both (Henning, 2026-10-11). Nothing due today, no section: an empty
+    /// task in "Next up" is not repeated here (Henning, 2026-10-11, #339). Nothing due today, no section: an empty
     /// line here would only repeat "All tied up".
     @ViewBuilder
     private var dueTodayPreview: some View {
