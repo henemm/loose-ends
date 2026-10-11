@@ -113,6 +113,7 @@ struct TaskListView: View {
         case .waiting: "Not waiting on anyone."
         case .repeating: "Nothing comes back."
         case .parked: "Nothing parked."
+        case .open: "Nothing left open."
         case .done: "Nothing finished yet."
         case .context, .project, nil: "Nothing here yet."
         }
@@ -268,14 +269,14 @@ struct TaskListView: View {
     }
 
     private func pendingRow(_ task: TaskItem) -> some View {
-        actions.pendingRow(task, TaskRow(task: task, hidesContext: context != nil, note: note(for: task)))
+        actions.pendingRow(task, TaskRow(task: task, hidesContext: context != nil, note: note(for: task), marksParked: kind == .open))
     }
 
     private func openRow(_ task: TaskItem) -> some View {
         NavigationLink {
             TaskDetailView(task: task)
         } label: {
-            TaskRow(task: task, hidesContext: context != nil, note: note(for: task))
+            TaskRow(task: task, hidesContext: context != nil, note: note(for: task), marksParked: kind == .open)
         }
         .swipeActions(edge: .leading, allowsFullSwipe: true) { actions.leadingActions(task) }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) { actions.trailingActions(task) }

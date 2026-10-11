@@ -1,0 +1,24 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: ProjectSubtasksTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+Test Suite 'Selected tests' started at 2026-10-11 16:57:36.604.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-11 16:57:36.604.
+Test Suite 'ProjectSubtasksTests' started at 2026-10-11 16:57:36.604.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.ProjectSubtasksTests testSubtasksFoldOutInTheProjectAndCheckOff] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    14.22s     Wait for com.henning.looseends to idle
+[32m    t =    14.81s Waiting 5.0s for "captureTextField" Any to exist[0m
+    [32m✔[0m testSubtasksFoldOutInTheProjectAndCheckOff ([31m54.435[0m seconds)
+Executed 1 test, with 0 failures (0 unexpected) in 54.435 (54.437) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-11 16:58:31.042.
+Executed 1 test, with 0 failures (0 unexpected) in 54.435 (54.437) seconds
+Executed 1 test, with 0 failures (0 unexpected) in 54.435 (54.438) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-feat319/Logs/Test/Test-LooseEnds-2026.10.11_16-57-33-+0200.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden.

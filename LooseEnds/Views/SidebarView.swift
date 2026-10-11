@@ -114,6 +114,9 @@ struct SidebarView: View {
             }
 
             Section {
+                // Always there, right above Done (#319); `.badge` leaves a zero out.
+                countRow(String(localized: ViewKind.open.titleKey), symbol: ViewKind.open.symbol, count: ViewRules.tasks(for: .open, in: tasks).count, id: "viewRow_open")
+                    .tag(ViewSelection.system(.open))
                 countRow(String(localized: ViewKind.done.titleKey), symbol: ViewKind.done.symbol, count: ViewRules.tasks(for: .done, in: tasks).count, id: "viewRow_done")
                     .tag(ViewSelection.system(.done))
             }
