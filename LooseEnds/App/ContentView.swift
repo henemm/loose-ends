@@ -196,7 +196,7 @@ struct ContentView: View {
         completionPulse.fire()
     }
 
-    /// Control Center and the Action Button open the app straight into capture (ADR-9).
+    /// The "Open capture" action (Shortcuts, Action Button) opens the app straight into capture (ADR-9, #326).
     private func consumeCaptureRequest() {
         guard captureRequest.pending else { return }
         captureRequest.pending = false
