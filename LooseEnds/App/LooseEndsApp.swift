@@ -66,6 +66,11 @@ struct LooseEndsApp: App {
                 .preferredColorScheme(Self.uiTestColorScheme)
         }
         .modelContainer(container)
+        #if os(macOS)
+        Settings {
+            SettingsView(notifications: notifications)
+        }
+        #endif
     }
 }
 
