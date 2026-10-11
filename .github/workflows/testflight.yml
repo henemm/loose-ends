@@ -140,6 +140,24 @@ jobs:
           check com.henning.looseends.watchkitapp watchos27. NSMicrophoneUsageDescription NSSpeechRecognitionUsageDescription
           check com.henning.looseends.widgets iphoneos27.
           check com.henning.looseends.share iphoneos27.
+          # Deutsche Texte in jedem iOS-Bundle mit eigenem String Catalog (#323): Widget und Kontrollzentrum
+          # blieben auf einem deutschen iPhone englisch, ohne dass ein Schritt es bemerkte.
+          row ""
+          row "| Bundle | Sprachordner |"
+          row "|--------|--------------|"
+          for id in com.henning.looseends com.henning.looseends.widgets com.henning.looseends.share; do
+            bundle=""
+            while IFS= read -r b; do
+              [ "$(get CFBundleIdentifier "$b/Info.plist")" = "$id" ] && { bundle="$b"; break; }
+            done < <(find "$APPS" \( -name '*.app' -o -name '*.appex' \))
+            [ -n "$bundle" ] || continue
+            langs=$(find "$bundle" -maxdepth 1 -name '*.lproj' -exec basename {} \; | sort | tr '\n' ' ')
+            row "| $id | ${langs:-keine} |"
+            ls -la "$bundle"/*.lproj 2>/dev/null || true
+            if [ ! -d "$bundle/de.lproj" ]; then
+              echo "::error::$id has no de.lproj: German texts are missing (#323)"; fail=1
+            fi
+          done
           [ "$fail" = 0 ]
 
       - name: Write export options
