@@ -44,10 +44,17 @@ final class EnrichmentCoordinator {
         let context = container.mainContext
         do {
             let unprocessed = TaskStatus.unprocessed.rawValue
-            let pending = try context.fetch(FetchDescriptor<TaskItem>(
-                predicate: #Predicate { $0.processedAt == nil && $0.statusRaw == unprocessed },
-                sortBy: [SortDescriptor(\.capturedAt)]
+            let active = TaskStatus.active.rawValue
+            let waiting = try context.fetch(FetchDescriptor<TaskItem>(
+                predicate: #Predicate { $0.processedAt == nil && $0.statusRaw == unprocessed }
             ))
+            // Open top-level tasks the user vouched for with "Looks right" before the model step
+            // ran (#318), or activated again from parked: they are still owed their one run (ADR-4).
+            // Two fetches instead of `||`, as in `recognitionInputs`; subtasks are never enriched.
+            let confirmed = try context.fetch(FetchDescriptor<TaskItem>(
+                predicate: #Predicate { $0.processedAt == nil && $0.statusRaw == active }
+            )).filter { $0.parent == nil }
+            let pending = (waiting + confirmed).sorted { $0.capturedAt < $1.capturedAt }
             guard !pending.isEmpty else { return }
 
             let contexts = try context.fetch(FetchDescriptor<TaskContext>(sortBy: [SortDescriptor(\.sortOrder)]))
