@@ -140,6 +140,7 @@ jobs:
           check com.henning.looseends.watchkitapp watchos27. NSMicrophoneUsageDescription NSSpeechRecognitionUsageDescription
           check com.henning.looseends.widgets iphoneos27.
           check com.henning.looseends.share iphoneos27.
+          check com.henning.looseends.intents iphoneos27.
           # Deutsche Texte in jedem iOS-Bundle mit eigenem String Catalog (#323): Widget und Kontrollzentrum
           # blieben auf einem deutschen iPhone englisch, ohne dass ein Schritt es bemerkte.
           row ""

@@ -44,6 +44,8 @@ targets:
       - target: LooseEndsWidgets
       - target: LooseEndsShare
         platformFilter: iOS      # the Mac share extension is a later slice
+      - target: LooseEndsIntents
+        platformFilter: iOS      # SiriKit task intent (#353)
     entitlements:
       path: LooseEnds/LooseEnds.entitlements
       properties:
@@ -54,6 +56,8 @@ targets:
         com.apple.security.network.client: true
         com.apple.security.device.audio-input: true
         com.apple.security.personal-information.calendars: true
+        # SiriKit for the Intents extension (#353); the App ID has the Siri capability (testflight.md, step 2).
+        com.apple.developer.siri: true
         # CloudKit mirroring pushes silently; without this the device never hears about a change
         # made elsewhere. Xcode swaps the value for "production" on an App Store export.
         aps-environment: development
@@ -83,6 +87,7 @@ targets:
         NSSpeechRecognitionUsageDescription: Speech is turned into text on your device to capture a task.
         NSCalendarsFullAccessUsageDescription: Only if you switch it on, a task with a due date is shown in a "Loose Ends" calendar. The app never reads your other events.
         NSUserActivityTypes: [com.henning.looseends.capture]
+        NSSiriUsageDescription: Siri can add what you say to Loose Ends.
         # Siri on a German iPhone hears "Loose End" and found no app (#353). The names and the "sounds like"
         # hints are variables localized in LooseEnds/Resources/InfoPlist.xcstrings: an English hint read
         # with German phonetics does not sound like the name. At most three entries per language.
@@ -196,6 +201,40 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends$(BUNDLE_ID_SUFFIX).share
+
+  # Siri's own task intent (#353): Apple recognizes app name synonyms only for apps with an Intents
+  # extension. App group only, no iCloud (the CI key cannot add it to a new identifier, #307); the
+  # handler opens the store without sync and the app's mirroring exports the capture (#320).
+  LooseEndsIntents:
+    type: app-extension
+    platform: iOS
+    sources:
+      - LooseEndsIntents
+      - path: Shared
+        excludes:
+          - Intents/CaptureTextIntent.swift
+          - Intents/NextUpWidgetIntents.swift
+    entitlements:
+      path: LooseEndsIntents/LooseEndsIntents.entitlements
+      properties:
+        com.apple.security.application-groups: [group.com.henning.looseends$(BUNDLE_ID_SUFFIX)]
+    info:
+      path: LooseEndsIntents/Info.plist
+      properties:
+        CFBundleDisplayName: $(LE_DISPLAY_NAME)
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        LEAppGroup: group.com.henning.looseends$(BUNDLE_ID_SUFFIX)
+        LECloudContainer: iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.intents-service
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).IntentHandler
+          NSExtensionAttributes:
+            IntentsSupported: [INAddTasksIntent]
+            IntentsRestrictedWhileLocked: []
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends$(BUNDLE_ID_SUFFIX).intents
 
   # Messprogramm für die Spikes: eine eigene, wegwerfbare App auf Hennings iPhone. Sie misst in
   # Scheiben, wann immer er sie öffnet, und rührt die echten Daten nicht an — keine App-Gruppe,

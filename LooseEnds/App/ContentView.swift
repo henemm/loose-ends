@@ -162,6 +162,7 @@ struct ContentView: View {
         // The onboarding asks first (#29); after it, a launch asks only if the system has not yet.
         if OnboardingFlow.isDone() {
             await notifications?.requestAuthorization()
+            await SiriAccess.requestIfNeeded()
         }
         await notifications?.reschedule()
         await calendar?.sync()

@@ -86,7 +86,7 @@ touches any of these paths:
 | `Shared/Persistence/` | App-Gruppe und CloudKit-Abgleich zwischen Geräten |
 | `LooseEndsWatch/` | Apple Watch |
 | `LooseEndsWidgets/` | Widgets, Aktionstaste, Kurzbefehle |
-| `LooseEndsShare/`, `Shared/Intents/` | Erfassung von außerhalb der App |
+| `LooseEndsShare/`, `LooseEndsIntents/`, `Shared/Intents/` | Erfassung von außerhalb der App |
 | `LooseEnds/Speech/` | Mikrofon und Spracherkennung |
 | `LooseEnds/Notifications/` | Zustellung echter Mitteilungen |
 | `project.yml`, jede `*.entitlements`, jede `Info.plist` | Signierung, Berechtigungen, Targets — die Klasse des App-Group-Absturzes |
@@ -222,7 +222,8 @@ not scope creep on the current one.
   (a short word list per default context plus each context's own name sets the contexts; no hit stays empty, #232)
 - `Shared/Intents` — App Intents shared by app, widgets and (later) the intents extension
 - `LooseEnds/` — app entry and views (iPhone, iPad, Mac); `LooseEndsWatch/`, `LooseEndsWidgets/`, `LooseEndsShare/`
-  (iOS share sheet: text, links, mails via `SharedContent`) — platform targets
+  (iOS share sheet: text, links, mails via `SharedContent`), `LooseEndsIntents/` (SiriKit `INAddTasksIntent`; Apple honours
+  `INAlternativeAppNames` only for apps with an Intents extension, #353) — platform targets
 - `LooseEnds/App/LaunchTimings.swift` — cold-start measuring points (#22): signposts always, `Documents/launch-timings.json`
   only in the probe build (`.probe`); launch argument `-measureLaunch` opens the capture scene
 - `LooseEnds/Speech` — `SpeechCapture` (live recognition for the capture scene, skipped under `--ui-testing`; the transcriber

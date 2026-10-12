@@ -61,6 +61,17 @@ class SiriNamesTests(unittest.TestCase):
         for language in ("en", "de"):
             self.assertTrue(value(spoken, language), f"CFBundleSpokenName ohne {language}")
 
+    def test_intents_extension_supports_add_tasks_and_app_has_siri(self):
+        project = yaml.safe_load(PROJECT.read_text())
+        targets = project["targets"]
+        ext = targets["LooseEndsIntents"]["info"]["properties"]["NSExtension"]
+        self.assertEqual(ext["NSExtensionPointIdentifier"], "com.apple.intents-service")
+        self.assertIn("INAddTasksIntent", ext["NSExtensionAttributes"]["IntentsSupported"])
+        app = targets["LooseEnds"]
+        self.assertTrue(app["entitlements"]["properties"].get("com.apple.developer.siri"))
+        self.assertTrue(app["info"]["properties"].get("NSSiriUsageDescription"))
+        self.assertIn("LooseEndsIntents", [d.get("target") for d in app["dependencies"]])
+
     def test_german_synonyms_cover_what_siri_heard(self):
         strings = json.loads(INFOPLIST.read_text())["strings"]
         german = {value(e, "de") for k, e in strings.items() if k.startswith("LE_APP_SYNONYM") and not k.endswith("_HINT")}

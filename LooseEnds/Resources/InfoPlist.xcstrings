@@ -120,6 +120,23 @@
           }
         }
       }
+    },
+    "NSSiriUsageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siri can add what you say to Loose Ends."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siri kann das Gesagte zu Loose Ends hinzufügen."
+          }
+        }
+      }
     }
   }
 }
