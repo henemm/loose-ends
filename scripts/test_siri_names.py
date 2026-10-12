@@ -54,9 +54,16 @@ class SiriNamesTests(unittest.TestCase):
                     for language in ("en", "de"):
                         self.assertTrue(value(strings[variable], language), f"{variable} ohne {language}")
 
+    def test_spoken_name_is_set_and_localized(self):
+        app = yaml.safe_load(PROJECT.read_text())["targets"]["LooseEnds"]["info"]["properties"]
+        self.assertEqual(app.get("CFBundleSpokenName"), "Loose Ends")
+        spoken = json.loads(INFOPLIST.read_text())["strings"]["CFBundleSpokenName"]
+        for language in ("en", "de"):
+            self.assertTrue(value(spoken, language), f"CFBundleSpokenName ohne {language}")
+
     def test_german_synonyms_cover_what_siri_heard(self):
         strings = json.loads(INFOPLIST.read_text())["strings"]
-        german = {value(e, "de") for k, e in strings.items() if not k.endswith("_HINT")}
+        german = {value(e, "de") for k, e in strings.items() if k.startswith("LE_APP_SYNONYM") and not k.endswith("_HINT")}
         self.assertIn("Loose End", german)
 
 

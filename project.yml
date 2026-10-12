@@ -62,6 +62,8 @@ targets:
       properties:
         CFBundleDisplayName: $(LE_DISPLAY_NAME)
         CFBundleName: Loose Ends
+        # How Siri should hear the name (Apple QA1950); localized in InfoPlist.xcstrings, German Siri heard "Loose End" (#353).
+        CFBundleSpokenName: Loose Ends
         CFBundleShortVersionString: $(MARKETING_VERSION)
         LEAppGroup: group.com.henning.looseends$(BUNDLE_ID_SUFFIX)
         LECloudContainer: iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)

@@ -103,6 +103,23 @@
           }
         }
       }
+    },
+    "CFBundleSpokenName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loose Ends"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Luhs Ends"
+          }
+        }
+      }
     }
   }
 }
