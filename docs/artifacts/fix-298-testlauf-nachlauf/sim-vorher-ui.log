@@ -1,0 +1,32 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17e).
+[0;34m[sim][0m UI-Test: CalendarTargetTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsShare.appex -> LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
+Test Suite 'Selected tests' started at 2026-10-09 13:27:57.240.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-09 13:27:57.243.
+Test Suite 'CalendarTargetTests' started at 2026-10-09 13:27:57.243.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CalendarTargetTests testSwitchOnShowsTargetCalendar] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    14.12s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    15.15s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testSwitchOnShowsTargetCalendar ([31m49.452[0m seconds)
+Executed 1 test, with 0 failures (0 unexpected) in 49.452 (49.455) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-09 13:28:46.700.
+Executed 1 test, with 0 failures (0 unexpected) in 49.452 (49.457) seconds
+Executed 1 test, with 0 failures (0 unexpected) in 49.452 (49.460) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-fix298/Logs/Test/Test-LooseEnds-2026.10.09_13-08-16-+0200.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden.

@@ -5,9 +5,12 @@ import SwiftUI
 /// The start screen (design briefing, screen 2): system views with counts, then projects,
 /// then contexts, Done last. Projects and contexts are created, renamed and deleted right here
 /// (screen 7). On iPhone it opens with the two reasons to open the app at all (#180): a sentence
-/// on what is left to look over and what is lined up, then the first three of "Next up".
+/// on what is left to look over and what is lined up, then the first three of "Next up", with the
+/// same swipes and long-press menu as in the list (#303).
 struct SidebarView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(CompletionPulse.self) private var completionPulse: CompletionPulse?
+    @Environment(PendingCompletions.self) private var pendingCompletions: PendingCompletions?
     @Query(sort: \TaskContext.sortOrder) private var contexts: [TaskContext]
     @Query(sort: \Project.sortOrder) private var projects: [Project]
     @Binding var selection: ViewSelection?
@@ -26,6 +29,9 @@ struct SidebarView: View {
     @State private var pendingDelete: NameEdit.Target?
     @State private var confirmingDelete = false
     @State private var duplicateRejected = false
+    @State private var pendingTaskDelete: TaskItem?
+    @State private var confirmingTaskDelete = false
+    @State private var datingTask: TaskItem?
     /// Projects and contexts start folded (Henning, 2026-10-05): most days need neither, and their
     /// rows and "New …" buttons pushed the views off the screen. Per device, a view setting only.
     @AppStorage("startShowsProjects") private var showsProjects = false
@@ -42,6 +48,21 @@ struct SidebarView: View {
         #endif
     }
 
+    /// The preview's rows stand in "Next up", so they act as they do there (#303).
+    private var taskActions: TaskInteractions { interactions(.next) }
+
+    /// The "Due today" rows (#299) act as they do in "Due".
+    private var dueActions: TaskInteractions { interactions(.due) }
+
+    private func interactions(_ kind: ViewKind) -> TaskInteractions {
+        TaskInteractions(
+            kind: kind, tasks: tasks, contexts: contexts, projects: projects, modelContext: modelContext,
+            pendingCompletions: pendingCompletions, completionPulse: completionPulse,
+            pendingDelete: $pendingTaskDelete, confirmingDelete: $confirmingTaskDelete, datingTask: $datingTask,
+            didDelete: { id in if selection == .task(id) { selection = nil } }
+        )
+    }
+
     var body: some View {
         List(selection: $selection) {
             if isCompact {
@@ -49,6 +70,7 @@ struct SidebarView: View {
                 Section {
                     header
                     nextUpPreview
+                    dueTodayPreview
                 }
             }
             Section {
@@ -92,6 +114,9 @@ struct SidebarView: View {
             }
 
             Section {
+                // Always there, right above Done (#319); `.badge` leaves a zero out.
+                countRow(String(localized: ViewKind.open.titleKey), symbol: ViewKind.open.symbol, count: ViewRules.tasks(for: .open, in: tasks).count, id: "viewRow_open")
+                    .tag(ViewSelection.system(.open))
                 countRow(String(localized: ViewKind.done.titleKey), symbol: ViewKind.done.symbol, count: ViewRules.tasks(for: .done, in: tasks).count, id: "viewRow_done")
                     .tag(ViewSelection.system(.done))
             }
@@ -119,6 +144,7 @@ struct SidebarView: View {
         } message: { target in
             Text(target.deleteMessage)
         }
+        .taskInteractionDialogs(taskActions)
     }
 
     /// The header of a foldable group: its name, how many it holds while folded, and the arrow.
@@ -221,13 +247,7 @@ struct SidebarView: View {
     @ViewBuilder
     private var nextUpPreview: some View {
         let next = ViewRules.tasks(for: .next, in: tasks)
-        Text("Next up")
-            .font(.caption.weight(.semibold))
-            .textCase(.uppercase)
-            .tracking(1)
-            .foregroundStyle(.secondary)
-            .listRowSeparator(.hidden)
-            .paperRow()
+        caption("Next up")
         Group {
             if next.isEmpty {
                 Text("Swipe left on any task to line it up here.")
@@ -236,11 +256,50 @@ struct SidebarView: View {
                     .paperRow()
             } else {
                 ForEach(next.prefix(3)) { task in
-                    TaskRow(task: task, identifierPrefix: "nextUpPreview_")
-                        .tag(ViewSelection.task(task.id))
-                        .paperRow()
+                    previewRow(task)
                 }
             }
+        }
+    }
+
+    /// What stands for today (#299): due today or overdue, the first three, under "Next up". A
+    /// task in both stands in both (Henning, 2026-10-11). Nothing due today, no section: an empty
+    /// line here would only repeat "All tied up".
+    @ViewBuilder
+    private var dueTodayPreview: some View {
+        let due = ViewRules.dueToday(in: tasks)
+        if !due.isEmpty {
+            caption("Due today")
+            ForEach(due.prefix(3)) { task in
+                previewRow(task, actions: dueActions, prefix: "dueTodayPreview_")
+            }
+        }
+    }
+
+    private func caption(_ title: LocalizedStringKey) -> some View {
+        Text(title)
+            .font(.caption.weight(.semibold))
+            .textCase(.uppercase)
+            .tracking(1)
+            .foregroundStyle(.secondary)
+            .listRowSeparator(.hidden)
+            .paperRow()
+    }
+
+    /// A tap opens the task; while its Done window runs (#32) a tap takes it back instead.
+    @ViewBuilder
+    private func previewRow(_ task: TaskItem, actions: TaskInteractions? = nil, prefix: String = "nextUpPreview_") -> some View {
+        let actions = actions ?? taskActions
+        let row = TaskRow(task: task, identifierPrefix: prefix)
+        if actions.isPending(task) {
+            actions.pendingRow(task, row)
+        } else {
+            row
+                .tag(ViewSelection.task(task.id))
+                .swipeActions(edge: .leading, allowsFullSwipe: true) { actions.leadingActions(task) }
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) { actions.trailingActions(task) }
+                .contextMenu { actions.menu(task) }
+                .paperRow()
         }
     }
 

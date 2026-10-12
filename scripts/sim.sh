@@ -15,6 +15,7 @@
 #   ./scripts/sim.sh sim-unit [Suite[/test]]  # Unit-Tests im iOS-Simulator
 #   ./scripts/sim.sh test <Class[/test]>      # UI-Test im iOS-Simulator
 #   ./scripts/sim.sh test-proof <Class[/test]> # UI-Test + Simulator-Beleg in docs/artifacts/<workflow>/ (#145)
+#     LOOSEENDS_PUSH=<datei.apns> davor: spielt die Mitteilung während des Laufs alle 5 s ein (#295)
 #   ./scripts/sim.sh boot | status | launch | screenshot [pfad]
 #
 # Messreihen gegen das echte Modell (Spikes #65-#73), ohne das iPhone zu belegen:
@@ -129,6 +130,9 @@ run_xcodebuild() {
     cd "$PROJECT_DIR"
     mkdir -p "$SESSION_DERIVED_DATA"
     BUILD_LOG="$SESSION_DERIVED_DATA/xcodebuild.log"
+    # Ein roter Test startet sonst `simctl diagnose --timeout=600` und xcodebuild wartet darauf,
+    # bei mehreren Simulatoren bis zu 19 Min (#298). Testergebnis und Ergebnisbündel bleiben gleich.
+    [ "${1:-}" = test ] && set -- "$@" -collect-test-diagnostics never
     # Die Rohausgabe geht ins Log, bevor xcbeautify sie kürzt: Messberichte stehen darin.
     if command -v xcbeautify >/dev/null; then
         xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG" | xcbeautify
@@ -165,6 +169,12 @@ def ver(s): return tuple(int(p) for p in re.findall(r"\d+", s)[:3])
 sys.exit(0 if ver(sys.argv[1]) >= ver(sys.argv[2]) else 1)' "$(sw_vers -productVersion)" "$want"
 }
 
+# Welche Messstrecken mangels Daten übersprungen wurden (#149): ein übersprungener Lauf meldet
+# sonst „Test Succeeded" wie ein gemessener.
+measurement_status() {
+    python3 "$PROJECT_DIR/scripts/measurement_status.py" >&2 || warn "Messstrecken-Status nicht lesbar."
+}
+
 cmd_unit() {
     ensure_project
     local only="$UNIT_TARGET"; [ -n "${1:-}" ] && only="$UNIT_TARGET/$1"
@@ -176,6 +186,7 @@ cmd_unit() {
     info "Unit-Tests (macOS): $only"
     run_xcodebuild test -project "$PROJECT" -scheme "$SCHEME" -destination 'platform=macOS' -only-testing:"$only" -parallel-testing-enabled NO
     success "Unit-Tests bestanden."
+    measurement_status
 }
 
 cmd_build() {
@@ -288,6 +299,7 @@ cmd_sim_unit() {
     info "Unit-Tests (iOS-Simulator): $only"
     run_xcodebuild test -project "$PROJECT" -scheme "$SCHEME" -destination "platform=iOS Simulator,id=$id" -only-testing:"$only" -parallel-testing-enabled NO
     release_lock; success "Unit-Tests bestanden."
+    measurement_status
 }
 
 cmd_test() {
@@ -318,11 +330,22 @@ cmd_test_proof() {
     cmd_generate; acquire_lock; cmd_boot
     local id; id=$(sim_id)
     info "UI-Test mit Beleg: $1 → $art/simulator-run.txt"
+    # Mitteilungstests (#295): `add` aus der App scheitert im iOS-27-Simulator (UNErrorDomain 2003),
+    # also spielt der Lauf die Datei aus LOOSEENDS_PUSH alle 5 s per simctl push ein.
+    local push_pid=""
+    if [ -n "${LOOSEENDS_PUSH:-}" ]; then
+        [ -f "$LOOSEENDS_PUSH" ] || { release_lock; error "LOOSEENDS_PUSH: $LOOSEENDS_PUSH fehlt"; return 1; }
+        export TEST_RUNNER_LOOSEENDS_PUSH_FEED=1
+        ( while true; do $SIMCTL push "$id" com.henning.looseends "$LOOSEENDS_PUSH" >/dev/null 2>&1 || true; sleep 5; done ) &
+        push_pid=$!
+        info "Mitteilungen aus $LOOSEENDS_PUSH alle 5 s (simctl push)"
+    fi
     # Rückgabewert aus diesem Lauf festhalten (pipefail, Lehre #144); `|| rc=` hält set -e auf.
     local rc=0
     run_xcodebuild test -project "$PROJECT" -scheme "$SCHEME" -destination "platform=iOS Simulator,id=$id" \
         -only-testing:"$UI_TARGET/$1" -parallel-testing-enabled NO -disable-concurrent-destination-testing \
         -resultBundlePath "$run/run.xcresult" || rc=$?
+    [ -n "$push_pid" ] && { kill "$push_pid" 2>/dev/null || true; }
     local endline; endline=$(grep -E '^\*\* TEST (SUCCEEDED|FAILED) \*\*' "$BUILD_LOG" | tail -1 || true)
     release_lock
     local prc=0

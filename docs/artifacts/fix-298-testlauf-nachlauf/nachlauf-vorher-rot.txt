@@ -1,0 +1,15 @@
+# Nachlauf-Messung (vorher-rot), #298
+befehl: scripts/sim.sh sim-unit Zz298ThrowawayFailTests
+simulator: iPhone 17e  session: fix298
+head: 2b98d2a67045e11b7ba3c3172d838d9c4e96411f
+diagnose-option in sim.sh: 0
+start: 13:47:39
+ergebniszeile: 13:50:48
+simctl diagnose gesehen: 13:50:48 66318 /Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl diagnose -l -b --timeout=600 --log-option=--last --log-option=5m --output=/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-fix298/Logs/Test/Test-LooseEnds-2026.10.09_13-47-43-+0200.xcresult/Staging/1_Test/Diagnostics/simctl_diagnostics --no-archive --udid=68B9E284-12D2-412A-96EE-9CBBF7BBFB72
+prozessende: 13:55:06  rc=65
+nachlauf_s: 258
+ergebnis im log:
+	 Executed 1 test, with 1 failure (0 unexpected) in 0.347 (0.348) seconds
+	 Executed 1 test, with 1 failure (0 unexpected) in 0.347 (0.349) seconds
+	 Executed 1 test, with 1 failure (0 unexpected) in 0.347 (0.349) seconds
+** TEST FAILED **

@@ -1,0 +1,53 @@
+# AC-7 Regression lokal (2026-10-09, 09:27–11:35)
+stand: 136f924 + Arbeitsstand; LooseEnds/Speech/SpeechCapture.swift sha256 2cbfd973e6ca7c157026f0464040fca11f395a7de3a296b8007b7faf030f349f
+simulator: iPhone 17 Pro, iOS 27.0 (UDID D26D230C-000D-4AA5-8646-6E6E3469AD24), DerivedData LooseEnds-session-zippy274
+befehle: ./scripts/sim.sh test CaptureCancelCrashTests (11x), ./scripts/sim.sh test <Klasse> (alle 11 übrigen UI-Klassen), ./scripts/sim.sh sim-unit
+
+== Speech Stress: CaptureCancelCrashTests ==
+stress 1 rc=65   Failed to get matching snapshots: Error getting main window kAXErrorServerNotFound
+stress 2 rc=0
+stress 3 rc=0
+stress 4 rc=0
+stress 5 rc=0
+stress 6 rc=0
+stress 7 rc=0
+stress 8 rc=0
+stress 9 rc=0
+stress 10 rc=0
+stress 11 rc=0   (Ersatz für stress 1)
+Stress 1 war der erste Test nach dem Kaltstart des Simulators: Der Bedienungshilfen-Dienst war nicht erreichbar, bevor die
+App bedient wurde (bekanntes Muster, docs/context/fix-172-ui-tests-first-try.md). Grün: stress 2–11 = 10 von 10.
+
+== UI-Klassen (alle in LooseEndsUITests) ==
+CalendarTargetTests: Executed 1 test, with 0 failures
+CaptureSmokeTests: Executed 17 tests, with 0 failures
+ContextUniquenessTests: Executed 1 test, with 0 failures
+DesignGalleryTests: Executed 1 test, with 0 failures
+LaunchArgumentTests: Executed 2 tests, with 0 failures
+OnboardingTests: Executed 2 tests, with 0 failures
+PlaceSmokeTests: Executed 1 test, with 0 failures
+ProjectSubtasksTests: Executed 1 test, with 0 failures
+RecognitionWalkthroughTests: Executed 1 test, with 0 failures
+SpeechDiagnosisLineTests: Executed 2 tests, with 0 failures
+SpeechListeningTests: Executed 1 test, with 0 failures
+Summe: 30 Tests, 0 Fehlschläge
+
+== Unit im Simulator ==
+✔ Test run with 495 tests in 82 suites passed after 255.170 seconds.
+(Der Mac-Host-Lauf in test-green-output.txt zählte 545; die Differenz zur Simulator-Zahl ist nicht einzeln abgeglichen,
+0 Fehlschläge in beiden Läufen.)
+
+== Nachlauf ==
+xcodebuild wartete nach dem Ergebnis auf `simctl diagnose` (einmal 19 Min trotz --timeout=600). Dieser Prozess wurde jeweils
+nach dem Ergebnis beendet; rc und „Test Succeeded“ standen vorher fest. Dauerhafte Lösung: #298.
+
+== Nachprüfung nach dem Aufsetzen auf main 6a0853b (#296, Diagnosezeiten in SpeechCapture.swift) ==
+Patch ohne Konflikt angewandt (#296 berührt die Transcriber-Zeile nicht). Gleicher Simulator, gleiche Befehle:
+generate rc=0
+sim-unit rc=0 — ✔ Test run with 506 tests in 82 suites passed after 368.519 seconds.
+SpeechListeningTests: Executed 1 test, with 0 failures
+SpeechDiagnosisLineTests: Executed 2 tests, with 0 failures
+CaptureCancelCrashTests: Executed 1 test, with 0 failures
+CaptureSmokeTests: Executed 17 tests, with 0 failures
+Der Mac-Zeittest (AC-2) wurde auf dem neuen Stand nicht wiederholt (Tests nicht auf dem Mac, Henning 2026-10-09); die
+Optionszeile ist unverändert, der Optionstest läuft im Unit-Lauf mit.

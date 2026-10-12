@@ -259,17 +259,13 @@ struct RawTextWordsTests {
     }
 }
 
-private func repoFile(_ relativePath: String) -> URL {
-    URL(fileURLWithPath: #filePath)
-        .deletingLastPathComponent()
-        .deletingLastPathComponent()
-        .appendingPathComponent(relativePath)
-}
-private let recognitionCorpusURL = repoFile("docs/reference/focusblox-corpus.json")
+private let recognitionCorpusURL = MeasurementData.focusBloxCorpus
 
 /// Die Messung der Regel gegen die 287 echten Aufgaben (AC-12). Eigene Suite und per
 /// `.enabled(if:)` gegattert, weil `focusblox-corpus.json` persönliche, gitignorierte Daten sind und
-/// in CI nie existieren — **„grün ohne Korpus" heißt „Messung übersprungen", nicht „bestanden".**
+/// in CI nie existieren — **„grün ohne Korpus" heißt „Messung übersprungen", nicht „bestanden".** Seit
+/// #149 sagt das der Lauf selbst: Der Grund steht am Überspringen, und `sim.sh unit` und die CI nennen
+/// danach jede Messstrecke, die nicht gemessen hat.
 ///
 /// Beide Lesarten laufen, nicht nur die günstigere: der volle Pool zeigt, was die Regel im Alltag
 /// leistet, der entduplizierte zeigt, dass es Wiedererkennung ist und keine Ähnlichkeitsaussage für
@@ -279,7 +275,7 @@ private let recognitionCorpusURL = repoFile("docs/reference/focusblox-corpus.jso
 /// FocusBlox-Export (`scripts/export-focusblox-corpus.swift` setzt `rawText: title`), nicht für
 /// diktierten Rohtext (#82/#88). Wie gut die Regel auf Diktat trifft, ist mit diesem Korpus nicht
 /// messbar.
-@Suite(.enabled(if: FileManager.default.fileExists(atPath: recognitionCorpusURL.path)))
+@Suite(.enabled(if: MeasurementData.exists(recognitionCorpusURL), MeasurementData.corpusMissing))
 struct RecognitionRuleCorpusTests {
 
     private func pool(from entries: [Corpus.Entry]) -> [RecognitionRule.Candidate] {

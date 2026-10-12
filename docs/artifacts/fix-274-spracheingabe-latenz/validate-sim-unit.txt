@@ -1,0 +1,27 @@
+# /60-validate — Unit-Nachweis auf Commit 37f7325 (2026-10-09, 12:27–13:50)
+simulator: iPhone 17 Pro, iOS 27.0 (UDID D26D230C-000D-4AA5-8646-6E6E3469AD24), DerivedData LooseEnds-session-zippy274
+
+== Voller sim-unit-Lauf ==
+179 bestanden, 0 fehlgeschlagen, bis FocusBloxCalibrationTests (fragt das Simulator-Modell ab, sonst 214–232 s).
+Dort nach 28 Min ohne Ausgabe vom Zeitlimit gestoppt. Systemlast 250–900 (vier Simulatoren anderer Sitzungen,
+Datenträger 97 % voll). Der Test berührt SpeechCapture nicht.
+Der Baum unterscheidet sich vom 506/506-Lauf (main 6a0853b + Patch, ac7-regression.txt) nur in den drei Dateien
+der Spec (git diff 6a0853b HEAD: SpeechCapture.swift, SpeechLatencyTests.swift, Fixtures/speech-de.m4a).
+
+== Sprach-Klassen einzeln (./scripts/sim.sh sim-unit <Klasse>) ==
+== SpeechLatencyTests
+➜ Test "The first word arrives within 3 s of speech start" was cancelled after 1.528 seconds: "Sprache de_DE wird hier nicht unterstützt"
+➜ Test "The final text keeps the key words" was cancelled after 0.002 seconds: "Sprache de_DE wird hier nicht unterstützt"
+✔ Test run with 3 tests in 1 suite passed after 1.533 seconds.
+** TEST SUCCEEDED **
+== SpeechAccessTests
+✔ Test run with 2 tests in 1 suite passed after 0.002 seconds.
+** TEST SUCCEEDED **
+== SpeechDiagnosisTests
+✔ Test run with 20 tests in 1 suite passed after 0.116 seconds.
+** TEST SUCCEEDED **
+== SpeechReadinessTests
+✔ Test run with 3 tests in 1 suite passed after 0.002 seconds.
+** TEST SUCCEEDED **
+
+Vollständige Suite und UI Smoke laufen in der CI der PR.

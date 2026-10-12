@@ -54,14 +54,15 @@ enum DurationBucket: String, Codable, CaseIterable, Sendable {
     var isQuick: Bool { self == .minutes5 || self == .minutes15 }
 }
 
-/// Fields that can carry a revision entry.
+/// Fields that can carry a revision entry. `people` is retired (#301) and stays only so revisions
+/// written before still decode as what they were.
 enum RevisedField: String, Codable, CaseIterable, Sendable {
     case title, dueDate, importance, urgency, duration, energy, contexts, people, project, blockedBy, repeatRule, place
 }
 
 /// System and user views. Rules live in ViewRules.
 enum ViewKind: String, Codable, CaseIterable, Sendable {
-    case next, new, due, quick, old, waiting, repeating, parked, done, context, project
+    case next, new, due, quick, old, waiting, repeating, parked, open, done, context, project
 
     var isSystem: Bool { self != .context && self != .project }
 
@@ -75,6 +76,7 @@ enum ViewKind: String, Codable, CaseIterable, Sendable {
         case .waiting: "Waiting"
         case .repeating: "Repeating"
         case .parked: "Parked"
+        case .open: "All open"
         case .done: "Completed"
         case .context: "Context"
         case .project: "Project"
@@ -92,6 +94,7 @@ enum ViewKind: String, Codable, CaseIterable, Sendable {
         case .waiting: "clock"
         case .repeating: "repeat"
         case .parked: "moon.zzz"
+        case .open: "circle"
         case .done: "checkmark.circle"
         case .context: "tag"
         case .project: "folder"

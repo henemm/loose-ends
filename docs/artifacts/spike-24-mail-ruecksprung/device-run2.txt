@@ -1,0 +1,41 @@
+[0;34m[sim][0m Signierter Build für das Gerät (00008140-00111D582681801C), LooseEnds, Team XK87E2B3VR
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (4 targets)
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/zippy-baking-hejlsberg/LooseEndsShare/ShareViewController.swift:48:57: [33m'loadItem(forTypeIdentifier:options:)' was deprecated in iOS 27.0: Use loadObjectOfClass:completionHandler: instead. [#DeprecatedDeclaration][0m
+ 46 |                 do {
+[32m 47 |                     if provider.hasItemConformingToTypeIdentifier(UTType.emailMessage.identifier) {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/zippy-baking-hejlsberg/LooseEndsShare/ShareViewController.swift:52:57: [33m'loadItem(forTypeIdentifier:options:)' was deprecated in iOS 27.0: Use loadObjectOfClass:completionHandler: instead. [#DeprecatedDeclaration][0m
+ 50 |                         if let raw = string(from: loaded) { mails.append(raw) }
+[32m 51 |                     } else if provider.hasItemConformingToTypeIdentifier(UTType.url.identifier) {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/zippy-baking-hejlsberg/LooseEndsShare/ShareViewController.swift:56:57: [33m'loadItem(forTypeIdentifier:options:)' was deprecated in iOS 27.0: Use loadObjectOfClass:completionHandler: instead. [#DeprecatedDeclaration][0m
+ 54 |                         if let url = loaded as? URL { urls.append(url) }
+[32m 55 |                     } else if provider.hasItemConformingToTypeIdentifier(UTType.plainText.identifier) {[0m
+[[36mLooseEndsShare[0m] [1mCompiling[0m ShareViewController.swift
+[[36mLooseEndsShare[0m] [1mCopy[0m arm64-apple-ios.swiftmodule -> LooseEndsShare.swiftmodule
+[[36mLooseEndsShare[0m] [1mCopy[0m arm64-apple-ios.abi.json -> LooseEndsShare.abi.json
+[[36mLooseEndsShare[0m] [1mCopy[0m arm64-apple-ios.swiftsourceinfo -> LooseEndsShare.swiftsourceinfo
+[[36mLooseEndsShare[0m] [1mLinking[0m LooseEndsShare.debug.dylib
+[36;1mnote: [0mUsing stub executor library without Swift entry point. (in target 'LooseEndsShare' from project 'LooseEnds')
+[[36mLooseEndsShare[0m] [1mLinking[0m LooseEndsShare
+[[36mLooseEndsShare[0m] [1mExtract App Intents Metadata[0m
+[1mSigning[0m LooseEndsShare.debug.dylib (in target 'LooseEndsShare' from project 'LooseEnds')
+[1mSigning[0m __preview.dylib (in target 'LooseEndsShare' from project 'LooseEnds')
+[1mSigning[0m LooseEndsShare.appex (in target 'LooseEndsShare' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsShare.appex -> LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[1mSigning[0m LooseEnds.debug.dylib (in target 'LooseEnds' from project 'LooseEnds')
+[1mSigning[0m __preview.dylib (in target 'LooseEnds' from project 'LooseEnds')
+[1mSigning[0m LooseEnds.app (in target 'LooseEnds' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsShare.appex
+[32;1mBuild Succeeded[0m
+[0;32m[sim][0m Gerätebuild erfolgreich.
+[0;34m[sim][0m Installiere drahtlos auf 00008140-00111D582681801C
+[0;32m[sim][0m Installiert.
+Launched application with com.henning.looseends.probe bundle identifier.
+[0;32m[sim][0m Gestartet (com.henning.looseends.probe).

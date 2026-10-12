@@ -142,7 +142,6 @@ final class MeasurementRunner {
             result.title = draft.title?.value
             result.dueDate = draft.dueDate?.value
             result.dueHasTime = draft.dueHasTime
-            result.people = draft.people?.value ?? []
             let fields = draft.selfConsistencyValues
             result.importance = fields.importance
             result.urgency = fields.urgency

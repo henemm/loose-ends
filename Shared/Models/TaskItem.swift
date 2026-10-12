@@ -67,7 +67,9 @@ final class TaskItem {
     var energySourceRaw: String?
     var energyConfidence: Double?
 
-    // Derived: people (names from the text, no Contacts access in v1)
+    // Retired with #301 (Henning, 2026-10-09, #105: no use case, never measured): nothing reads or
+    // writes these any more. They stay only because the CloudKit schema is additive from the first
+    // deploy (#175); old values are kept in the store and shown nowhere.
     var people: [String] = []
     var peopleSourceRaw: String?
     var peopleConfidence: Double?
@@ -139,7 +141,8 @@ extension TaskItem {
     }
 
     /// Unseen revisions by the model or a rule drive the marker in the list (Variante C, #101).
+    /// A retired field's old revision (people, #301) keeps no task in New.
     var hasUnseenAutomaticRevisions: Bool {
-        (revisions ?? []).contains { $0.author.isAutomatic && $0.seenAt == nil }
+        (revisions ?? []).contains { $0.author.isAutomatic && $0.seenAt == nil && $0.field != .people }
     }
 }

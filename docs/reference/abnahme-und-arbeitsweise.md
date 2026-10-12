@@ -1,0 +1,83 @@
+# Abnahme und Arbeitsweise
+
+Hierher ausgelagert aus `docs/project/04-stand.md` (aufgelöst am 2026-10-12, Henning: Priorisierung
+gehört in GitHub). Die Prioritätsreihenfolge steht in den Meilensteinen M1 bis M4 des Repos, der
+Funktionsstand in `docs/reference/funktionsuebersicht.md`. Verbindlich bleibt `CLAUDE.md`; diese Datei
+trägt die Begründungen und die Geschichte.
+
+## Arbeitsweise, die sich bewährt hat
+
+- Ein Schnitt = ein PR mit reiner Logik in `Shared/Services` oder `Shared/Models` plus Unit-Tests,
+  dazu die View in `LooseEnds/Views` und ein UI-Smoke-Test unter `--ui-testing`.
+- Gestapelte PRs gehen, aber jede Ebene schreibt `Localizable.xcstrings` am Ende weiter; beim Zusammenführen
+  nach main jede Ebene erst mit main zusammenführen (Seite des Zweigs gewinnt, sie ist die Obermenge).
+- Ein `ModelContext` hält seinen `ModelContainer` nicht: in Tests `TestStore` benutzen.
+- Nichts mit `try?` verschlucken, `Logger` statt `print`, Berechtigungsabfragen unter Tests aus.
+- **Zwingend:** Jede Änderung zuerst selbst im Simulator laufen lassen (Build + Start + der
+  betroffene Ablauf), bevor Henning gebeten wird, etwas auf seinem eigenen Gerät zu testen.
+  Ursache: ein per Kommandozeile lokal signierter Build hatte eine fehlende App-Group-Berechtigung
+  (`SwiftData/DataUtilities.swift:1257: Fatal error: Unable to find App Group Container in
+  Entitlements`) — ungetestet an Henning weitergegeben, auf seinem Gerät reproduziert statt vorher
+  im Simulator gefunden.
+
+## Abnahme in drei Stufen
+
+Die Reihenfolge ist verbindlich, keine Stufe wird vorgezogen. Stufe 1 und 2 werden nie
+übersprungen; Stufe 3 nur, wenn der Schnitt einen Pfad der Geräteliste berührt (`CLAUDE.md`).
+
+1. **Tests** — `./scripts/sim.sh unit` und der betroffene UI-Test müssen grün sein.
+2. **Simulator** — `./scripts/sim.sh build`, `launch`, `screenshot`: der betroffene Ablauf wird
+   selbst durchgespielt und belegt. Nichts geht auf das Gerät, was hier nicht bewiesen ist.
+3. **Hennings Gerät** — seit 2026-10-10 über TestFlight in seiner normalen App (`CLAUDE.md`, „Stufe 3
+   läuft über TestFlight“). Nichts auf seinen Geräten ohne sein wörtliches „jetzt ist ein Test möglich“.
+
+Die frühere Stufe 3 (`device-status` und die Labor-App) ist abgelöst. Zur Geschichte:
+
+Stufe 3 fuhr seit #153 keinen nachgespielten Bedienablauf mehr. Der erste echte Versuch dafür —
+derselbe UI-Test wie im Simulator, aber signiert auf dem Gerät — lief am 2026-09-30 zwar grün, war
+dabei aber invasiv: Er überschrieb Hennings produktive Installation (gleiche Kennung
+`com.henning.looseends`), die Sperr-Vorprüfung startete die App im Vordergrund und verdrängte, was
+gerade lief, und das Telefon war 5–10 Minuten exklusiv belegt und musste entsperrt bleiben. Belegt
+hat er dabei nichts von dem, wofür er gebaut war: Auf dem Beweisbild
+(`docs/artifacts/feat-153-geraetestufe-ui-test/screenshots/`) hatte Apple Intelligence im Testlauf
+nichts gesetzt — der Lauf prüfte damit dasselbe wie der Simulator, nur invasiver. Das verletzte eine
+bestehende Entscheidung, die nie gekippt, sondern beim Bauen übersehen wurde, und die Festlegung,
+nie eine App auf Hennings Gerät fernzustarten.
+
+`device-status` zeigt nur, ob und wie das Gerät verbunden ist — es baut, installiert und startet
+nichts. `device-console` liest die Standardausgabe (`--console`), die App schreibt aber
+ausschließlich über `Logger`, nie über `print` (#160): Das Kommando hat nie gelesen, was sein
+Kommentar behauptete. Gerätelogs laufen über `xctrace`.
+
+**Die dadurch entstehende Lücke wird benannt, nicht versteckt.** Für Apple Intelligence bleibt die
+Labor-App der Messweg. Für Watch, Widgets, Share, Mikrofon und Mitteilungen gibt es auf echter
+Hardware keinen automatisierten Nachweis, nur Hennings Gerätetest über TestFlight. Seit #156
+tragen Gerätebauten die eigene Kennung `com.henning.looseends.probe` („LE Prüfbau“) mit eigener
+App-Gruppe und eigenem iCloud-Container, Hennings Installation bleibt unberührt.
+
+Was Stufe 3 findet und Stufe 2 prinzipiell nicht kann: Apple Intelligence auf dem Gerät,
+CloudKit-Sync zwischen Geräten, Watch, Action Button, Widgets, Mikrofon — und alles, was an
+Signierung, Provisioning und Entitlements hängt (siehe den App-Group-Absturz oben).
+
+**TestFlight war zuerst keine Stufe dieser Kette**, weil es keinen Debugger und keine Live-Logs
+gibt und Crash-Reports erst mit bis zu einem Tag Verzögerung im Xcode Organizer ankommen. Seit
+2026-10-10 ist es Hennings Weg für Stufe 3, weil der Test in der echten App mehr zeigt als jeder
+Prüfbau; Debugger und Live-Logs liefert weiterhin nur der Simulator.
+
+## Der Hauptcheckout hält sich selbst aktuell
+
+Alle Sessions arbeiten in Arbeitsordnern neben dem Hauptordner, PRs werden auf GitHub zusammengeführt —
+Hennings Hauptordner blieb dabei zurück, ohne dass es jemandem auffiel. Am 2026-09-19 stand er 36
+Commits hinter `origin/main` und baute noch das Grundgerüst ohne Capture-Button; Henning installierte
+das aufs iPhone und fand eine App ohne (+). Es dann geradezuziehen ist mühsam: Der Worktree-Zwang des
+Plugins sperrt schreibende Werkzeuge im Hauptverzeichnis, und aus einem Arbeitsordner heraus sind
+Git-Befehle auf den Hauptcheckout ebenfalls gesperrt.
+
+Deshalb erledigt das ein SessionStart-Hook, der vor allen Werkzeug-Sperren läuft:
+`~/.claude/scripts/loose-ends-sync-main.sh`, eingetragen in `~/.claude/settings.json`. Er springt
+nur an, wenn die Sitzung zu diesem Projekt gehört, holt `origin/main` und zieht `main` per
+Fast-Forward nach, erzeugt das Xcode-Projekt neu. Steht etwas im Weg — lokale Änderungen, ein anderer
+Branch, kein Netz —, bleibt alles unangetastet und der Grund steht in der Ausgabe.
+
+Das Skript liegt außerhalb des Repos, damit es nicht davon abhängt, wie alt der Checkout gerade
+ist. Auf einem neuen Rechner muss es einmal neu angelegt werden.

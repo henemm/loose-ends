@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-10-09T22:30:39+0200
+befehl: scripts/sim.sh test-proof CalendarTargetTests
+workflow: fix-298-testlauf-nachlauf
+head: 17f97a0b6a41557316773e73ff45a12a359aa42a
+basis: 6a0853bacaebf9f52530d4fd3762cf640b13456e (merge-base origin/main HEAD)
+testklasse: CalendarTargetTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1791577779.382  ende: 1791577838.734
+geraet: iPhone 17e, iOS 27.0
+summary: docs/artifacts/fix-298-testlauf-nachlauf/simulator-run/summary.json  sha256:4d9b08622fec16b55ac06b34b713212b1926b869dfca2b052f6cd9aa339eb49c
+xcresult: docs/artifacts/fix-298-testlauf-nachlauf/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-298-testlauf-nachlauf/simulator-run/*.png (1 Stück)
+
+## Geprüfte Dateien
+(keine Code-Dateien geändert)

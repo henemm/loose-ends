@@ -1,0 +1,40 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/WaveformTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.SwiftConstValuesFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.LinkFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.SwiftFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests-OutputFileMap.json
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SpeechListeningIndicatorTests.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/hashed-questing-parrot/LooseEndsTests/WaveformTests.swift:66:17: [31mcannot find 'ListeningHint' in scope[0m
+64 |     @Test("Listening with an empty field shows the hint")
+[36m65 |     func hintWhileListeningAndEmpty() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/hashed-questing-parrot/LooseEndsTests/WaveformTests.swift:71:17: [31mcannot find 'ListeningHint' in scope[0m
+69 |     @Test("Whitespace only counts as empty")
+[36m70 |     func hintWhileListeningAndOnlyWhitespace() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/hashed-questing-parrot/LooseEndsTests/WaveformTests.swift:76:17: [31mcannot find 'ListeningHint' in scope[0m
+74 |     @Test("The first word replaces the hint")
+[36m75 |     func noHintWhenTextPresent() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/hashed-questing-parrot/LooseEndsTests/WaveformTests.swift:81:17: [31mcannot find 'ListeningHint' in scope[0m
+79 |     @Test("Not listening with an empty field shows the usual placeholder")
+[36m80 |     func placeholderWhenNotListening() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/hashed-questing-parrot/LooseEndsTests/WaveformTests.swift:86:17: [31mcannot find 'ListeningHint' in scope[0m
+84 |     @Test("Not listening with text shows neither")
+[36m85 |     func noHintWhenNotListeningWithText() {[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m WaveformTests.swift
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsUITests.swiftmodule
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEndsUITests.swiftdoc
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsUITests.abi.json
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.10.10_09-20-20-+0200.xcresult

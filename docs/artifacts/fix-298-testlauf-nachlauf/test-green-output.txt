@@ -1,0 +1,7 @@
+test_build_action_keeps_its_arguments_unchanged (scripts.test_sim_run_xcodebuild.RunXcodebuildDiagnosticsTests.test_build_action_keeps_its_arguments_unchanged) ... ok
+test_test_action_switches_off_diagnostics_collection (scripts.test_sim_run_xcodebuild.RunXcodebuildDiagnosticsTests.test_test_action_switches_off_diagnostics_collection) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.595s
+
+OK

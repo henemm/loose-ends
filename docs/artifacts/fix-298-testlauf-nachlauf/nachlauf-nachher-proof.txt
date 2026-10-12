@@ -1,0 +1,14 @@
+# Nachlauf-Messung (nachher-proof), #298
+befehl: scripts/sim.sh test-proof CalendarTargetTests
+simulator: iPhone 17e  session: fix298
+head: 17f97a0b6a41557316773e73ff45a12a359aa42a
+diagnose-option in sim.sh: 1
+start: 22:29:36
+ergebniszeile: 
+simctl diagnose gesehen:  
+prozessende: 22:30:39  rc=0
+ergebnis im log:
+	 Executed 1 test, with 0 failures (0 unexpected) in 39.739 (39.742) seconds
+	 Executed 1 test, with 0 failures (0 unexpected) in 39.739 (39.745) seconds
+	 Executed 1 test, with 0 failures (0 unexpected) in 39.739 (39.746) seconds
+** TEST SUCCEEDED **

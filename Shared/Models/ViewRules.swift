@@ -30,12 +30,11 @@ enum ViewRules {
             && (task.status == .unprocessed || task.status == .unverified || task.hasUnseenAutomaticRevisions)
     }
 
-    /// "Looks right" in the detail (#349): everything in "New" but what is not sorted yet. An
-    /// unsorted task has nothing to confirm, and confirming it would keep the sorting from running;
-    /// an unchecked task needs a title to vouch for.
+    /// "Looks right" in the detail (#349): any task in "New" with something to vouch for. An
+    /// unchecked or unsorted task needs a title; one confirmed before its model step still gets
+    /// that run (`EnrichmentCoordinator`, #318).
     static func canConfirm(_ task: TaskItem) -> Bool {
-        guard isInNew(task), task.status != .unprocessed else { return false }
-        return task.status != .unverified || !(task.title ?? "").isEmpty
+        isInNew(task) && (task.status == .active || task.title != nil)
     }
 
     static func reviewReason(of task: TaskItem) -> ReviewReason {
@@ -59,6 +58,24 @@ enum ViewRules {
     /// others only while they hold a task, so the screen does not open on a column of empty rows.
     static func startViews(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [ViewKind] {
         dailyViews + occasionalViews.filter { !tasks(for: $0, in: all, now: now, calendar: calendar).isEmpty }
+    }
+
+    /// What stands for today (Henning, 2026-10-11, #299): open top-level tasks due today or
+    /// earlier, earliest first. Narrower than the "Due" view (seven days), so the start screen and
+    /// the app badge say "today", not "this week". Blocked tasks stay out, as in "Due".
+    static func dueToday(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [TaskItem] {
+        let today = calendar.startOfDay(for: now)
+        let end = calendar.date(byAdding: .day, value: 1, to: today) ?? now
+        return all.filter { $0.parent == nil && $0.isOpen && !$0.isBlocked && ($0.dueDate.map { $0 < end } ?? false) }
+            .sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
+    }
+
+    /// The number on the app icon (#299): "Next up" plus "Due today", each task once. On the start
+    /// screen a task in both stands in both lists (Henning, 2026-10-11); the count does not double it.
+    static func badgeCount(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> Int {
+        let next = tasks(for: .next, in: all, now: now, calendar: calendar).map(\.id)
+        let due = dueToday(in: all, now: now, calendar: calendar).map(\.id)
+        return Set(next + due).count
     }
 
     static func tasks(for kind: ViewKind, in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [TaskItem] {
@@ -89,6 +106,10 @@ enum ViewRules {
         case .parked:
             return topLevel.filter { $0.status == .parked }
                 .sorted { ($0.parkedAt ?? .distantPast) > ($1.parkedAt ?? .distantPast) }
+        case .open:
+            // Not `isOpen`: that leaves parked tasks out, and "All open" means all of them (#319).
+            return topLevel.filter { $0.status != .done }
+                .sorted(by: byUrgencyThenImportance)
         case .done:
             return topLevel.filter { $0.status == .done }
                 .sorted { ($0.completedAt ?? .distantPast) > ($1.completedAt ?? .distantPast) }

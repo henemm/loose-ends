@@ -1,0 +1,42 @@
+Spike #24, AC-1 — Messzeile der Teilen-Erweiterung im Simulator
+================================================================
+
+Datum: 2026-10-08, ca. 19:45–19:48 (+0200)
+Stand: Worktree zippy-baking-hejlsberg, HEAD 43ff9c6 plus ungesicherte Änderungen in
+       LooseEndsShare/ShareViewController.swift und Shared/Services/SharedContent.swift (Arbeitsstand)
+Simulator: iPhone 17, iOS 27.0, UDID 3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1
+Kein Gerät berührt (kein devicectl, kein sim.sh device*/lab/launch-measure).
+
+Befehle
+-------
+./scripts/sim.sh generate
+./scripts/sim.sh build                      # Build Succeeded, LooseEndsShare.appex eingebettet
+./scripts/sim.sh launch                     # install + launch com.henning.looseends im Simulator
+
+xcrun simctl spawn 3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1 log stream --level info \
+  --predicate 'subsystem == "com.henning.looseends" AND category == "Share"'   # im Hintergrund in Datei
+
+xcrun simctl openurl 3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1 https://example.com
+
+Wegwerf-XCUITest außerhalb des Repos (Scratchpad-Projekt, steuert com.apple.mobilesafari):
+  Safari-Knopf "MoreMenuButton" (Seitenmenü) -> "Teilen" -> Zelle "Loose Ends" im Teilen-Blatt.
+  Ergebnis: Test Case '-[UITests.ShareDrive testShareFromSafari]' passed (34.490 seconds), 19:48:09.
+
+Gefundene Logzeile (wörtlich aus dem log stream)
+------------------------------------------------
+Timestamp                       Thread     Type        Activity             PID    TTL
+2026-10-08 19:48:10.646822+0200 0x188ec81  Info        0x8b475a0            21519  0    LooseEndsShare: (LooseEndsShare.debug.dylib) [com.henning.looseends:Share] types=[public.url] loaded=url
+
+Einordnung
+----------
+- Prozess LooseEndsShare, Subsystem com.henning.looseends, Kategorie Share: die Zeile stammt aus
+  ShareViewController.collect(from:).
+- Safari liefert beim Teilen einer Seite genau einen Anhang mit dem Typ public.url; geladen wurde
+  er im url-Zweig als URL (nicht als Data, nicht als Datei). Kein public.plain-text-Anhang.
+- Kein Inhalt (keine URL) in der Zeile, nur Typkennungen und Ladeart.
+
+Screenshot simulator-share-sheet.png (19:47): Safari mit example.com, Teilen-Blatt offen,
+Kopfzeile "Example Domain / example.com", App-Reihe News, Erinnerungen, Safari, "Loose Ends".
+Screenshot nach dem Antippen (19:48, nicht abgelegt): Erweiterungs-Blatt geöffnet, Inhalt zu dem
+Zeitpunkt leer/hellgrau (Formular noch nicht sichtbar) — das betrifft nicht die Logzeile, die schon
+geschrieben war, ist aber nicht weiter untersucht.

@@ -1,0 +1,30 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: SpeechListeningIndicatorTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+Test Suite 'Selected tests' started at 2026-10-10 09:22:03.349.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-10 09:22:03.356.
+Test Suite 'SpeechListeningIndicatorTests' started at 2026-10-10 09:22:03.356.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.SpeechListeningIndicatorTests testHintIsReplacedByTypedText] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    16.50s Waiting 10.0s for "captureTextField" Any to exist
+[32m    t =    17.56s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [31m✖[0m testHintIsReplacedByTypedText, XCTAssertTrue failed - Hinweis „Listening …“ fehlt
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.SpeechListeningIndicatorTests testListeningFixedStateShowsHintAndStopButton] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    12.26s Waiting 10.0s for "captureTextField" Any to exist
+[32m    t =    13.30s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [31m✖[0m testListeningFixedStateShowsHintAndStopButton, XCTAssertTrue failed - Hinweis „Listening …“ fehlt
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.SpeechListeningIndicatorTests testNoHintWithoutArgument] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =     8.13s Waiting 10.0s for "captureTextField" Any to exist
+[32m    t =     9.16s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testNoHintWithoutArgument ([31m12.954[0m seconds)
+Executed 3 tests, with 2 failures (0 unexpected) in 65.907 (65.915) seconds
+Test Suite 'LooseEndsUITests.xctest' failed at 2026-10-10 09:23:09.276.
+Executed 3 tests, with 2 failures (0 unexpected) in 65.907 (65.920) seconds
+Executed 3 tests, with 2 failures (0 unexpected) in 65.907 (65.927) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.10.10_09-21-55-+0200.xcresult
+[36;1mTesting started[0m

@@ -62,7 +62,7 @@ import Testing
         #expect((task.revisions ?? []).count == 1)
     }
 
-    @Test("The detail's Looks right (#349): sorted and unchecked tasks can be confirmed, unsorted ones cannot")
+    @Test("The detail's Looks right (#349): any task in New with something to vouch for")
     @MainActor func canConfirm() async throws {
         let store = try TestStore()
         let unsorted = TaskItem(rawText: "Dachrinne")
@@ -79,7 +79,9 @@ import Testing
         store.context.insert(Revision(task: sorted, field: .duration, oldValue: nil, newValue: "15", author: .rule))
         try store.context.save()
 
-        #expect(!ViewRules.canConfirm(unsorted), "nothing to confirm, and confirming would stop the sorting")
+        #expect(!ViewRules.canConfirm(unsorted), "no title to vouch for")
+        unsorted.title = "Dachrinne"
+        #expect(ViewRules.canConfirm(unsorted), "the model step still runs after the nod (#318)")
         #expect(ViewRules.canConfirm(unchecked))
         #expect(!ViewRules.canConfirm(untitled), "no title to vouch for")
         #expect(ViewRules.canConfirm(sorted))
@@ -106,7 +108,7 @@ import Testing
         #expect((task.revisions ?? []).count == 1)
     }
 
-    @Test("Confirming leaves an unsorted task to the sorting")
+    @Test("Confirming leaves an unsorted task without a title to the sorting")
     @MainActor func confirmUnsorted() async throws {
         let store = try TestStore()
         let task = TaskItem(rawText: "Dachrinne")
@@ -135,5 +137,26 @@ import Testing
         #expect(Set(ViewRules.tasks(for: .new, in: all).map(\.id)) == Set(all.filter(ViewRules.isInNew).map(\.id)))
         #expect(ViewRules.tasks(for: .new, in: all).map(\.id) == [fresh.id])
         #expect(!ViewRules.isInNew(child))
+    }
+
+    @Test("Looks right in the detail takes an unchecked or unsorted task out of New (#318)")
+    @MainActor func looksRightFromDetail() async throws {
+        let store = try TestStore()
+        let unchecked = TaskItem(rawText: "zahnarzt termin")
+        unchecked.title = "Zahnarzt Termin"
+        unchecked.status = .unverified
+        let unsorted = TaskItem(rawText: "Dachrinne")
+        unsorted.title = "Dachrinne"
+        let untitled = TaskItem(rawText: "…")
+        [unchecked, unsorted, untitled].forEach(store.context.insert)
+        try store.context.save()
+        #expect(ViewRules.tasks(for: .new, in: [unchecked, unsorted, untitled]).count == 3)
+
+        [unchecked, unsorted, untitled].forEach { TaskActions.confirmReview($0) }
+
+        #expect(unchecked.status == .active)
+        #expect(unsorted.status == .active)
+        #expect(untitled.status == .unprocessed, "no title, nothing to vouch for")
+        #expect(ViewRules.tasks(for: .new, in: [unchecked, unsorted, untitled]).map(\.id) == [untitled.id])
     }
 }

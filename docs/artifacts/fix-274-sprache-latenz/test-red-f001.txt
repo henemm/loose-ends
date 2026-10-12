@@ -1,0 +1,30 @@
+# RED vor Fix F001 - ./scripts/sim.sh unit SpeechDiagnosisTests (2026-10-09, exit 65, vor openedAt = nil in stop())
+Test Suite 'Selected tests' started at 2026-10-09 08:10:13.383.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-09 08:10:13.384.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-09 08:10:13.384.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test run started.
+Suite "Speech diagnosis (#274)" started
+    ✔ "Threshold is six seconds, in one place" (0.001 seconds)
+    ✔ "No hint before the threshold" (0.001 seconds)
+    ✔ "Hint at exactly the threshold (inclusive)" (0.001 seconds)
+    ✔ "Hint stays after the threshold" (0.001 seconds)
+    ✔ "No hint without audio: that is a different failure" (0.001 seconds)
+    ✔ "No hint once any result arrived" (0.001 seconds)
+    ✔ "Hint disappears when a result comes later" (0.001 seconds)
+    ✔ "A fresh start (zeroed counters) shows nothing" (0.001 seconds)
+    ✔ "The text carries every fact" (0.005 seconds)
+    ✔ "Slow-start threshold is three seconds, in one place" (0.001 seconds)
+    ✔ "Start is the sum of the five parts" (0.001 seconds)
+    ✔ "Report when the start is slow (exactly 3 s)" (0.001 seconds)
+    ✔ "No report just below the thresholds" (0.003 seconds)
+    ✔ "Report when the first result is late (exactly 6 s)" (0.001 seconds)
+    ✔ "Without timings a result clears the line, as before" (0.001 seconds)
+    ✔ "Report works without a first-result time" (0.001 seconds)
+    ✔ "Waiting text carries the start parts in order" (0.001 seconds)
+    ✔ "Report text carries first result, sum and parts" (0.001 seconds)
+    ✔ "Waiting text without timings is the text from before" (0.001 seconds)
+    ⚠️  Test "Stop forgets the opening time, so a later tap does not count typing as opening (F001)" recorded an issue at SpeechDiagnosisTests.swift:175:9: Expectation failed: speech.openedAt == nil
+    ✖ "Stop forgets the opening time, so a later tap does not count typing as opening (F001)" (0.002 seconds) 1 issue(s)
+Suite "Speech diagnosis (#274)" failed after 0.015 seconds with 1 issue(s)

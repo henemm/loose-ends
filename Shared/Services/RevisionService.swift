@@ -101,7 +101,8 @@ enum RevisionService {
         // Set by hand only; a legacy AI "low"/"medium"/"high" reads as empty, so no origin (#112).
         case .energy: task.energy == nil ? nil : task.energySourceRaw
         case .contexts: task.contextsSourceRaw
-        case .people: task.peopleSourceRaw
+        // Retired (#301): an old AI value must not count as an unseen change or carry a marker.
+        case .people: nil
         case .place: task.placeSourceRaw
         case .project, .blockedBy, .repeatRule: nil
         }

@@ -85,14 +85,6 @@ enum EnrichmentWriter {
         // recognition of a raw text captured before and from the word list (#232); `draft.contexts`
         // stays for the measurements (#234).
 
-        if let people = draft.people, people.confidence >= threshold, !people.value.isEmpty,
-           may(.people, firstRun: true, changes: people.value != task.people) {
-            record(.people, old: encode(task.people), new: encode(people.value), reason: people.reason)
-            task.people = people.value
-            task.peopleSourceRaw = ai
-            task.peopleConfidence = people.confidence
-        }
-
         if let project = draft.project, project.confidence >= threshold,
            let matched = projects.first(where: { $0.name.compare(project.value, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame }),
            may(.project, firstRun: true, changes: matched.id != task.project?.id) {

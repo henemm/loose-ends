@@ -140,6 +140,37 @@ jobs:
           check com.henning.looseends.watchkitapp watchos27. NSMicrophoneUsageDescription NSSpeechRecognitionUsageDescription
           check com.henning.looseends.widgets iphoneos27.
           check com.henning.looseends.share iphoneos27.
+          # Deutsche Texte in jedem iOS-Bundle mit eigenem String Catalog (#323): Widget und Kontrollzentrum
+          # blieben auf einem deutschen iPhone englisch, ohne dass ein Schritt es bemerkte.
+          row ""
+          row "| Bundle | Sprachordner |"
+          row "|--------|--------------|"
+          for id in com.henning.looseends com.henning.looseends.widgets com.henning.looseends.share; do
+            bundle=""
+            while IFS= read -r b; do
+              [ "$(get CFBundleIdentifier "$b/Info.plist")" = "$id" ] && { bundle="$b"; break; }
+            done < <(find "$APPS" \( -name '*.app' -o -name '*.appex' \))
+            [ -n "$bundle" ] || continue
+            langs=$(find "$bundle" -maxdepth 1 -name '*.lproj' -exec basename {} \; | sort | tr '\n' ' ')
+            row "| $id | ${langs:-keine} |"
+            ls -la "$bundle"/*.lproj 2>/dev/null || true
+            if [ ! -d "$bundle/de.lproj" ]; then
+              echo "::error::$id has no de.lproj: German texts are missing (#323)"; fail=1
+            fi
+            # Kurzbefehle-Aktionen der App auf Deutsch (#326): Build 40 zeigte „Open capture“ englisch.
+            # Belegt, ob die Übersetzung im Bundle steckt; fehlt sie hier nicht, liegt es am Gerät.
+            if [ "$id" = com.henning.looseends ]; then
+              strings_de=$(plutil -convert xml1 -o - "$bundle/de.lproj/Localizable.strings" 2>/dev/null || true)
+              for text in "Aufgabe erfassen" "Erfassung öffnen"; do
+                if printf '%s' "$strings_de" | grep -qF "<string>$text</string>"; then
+                  row "| $id | de: „${text}“ vorhanden |"
+                else
+                  row "| $id | de: „${text}“ FEHLT |"
+                  echo "::error::$id: de.lproj/Localizable.strings has no '$text' (#326)"; fail=1
+                fi
+              done
+            fi
+          done
           [ "$fail" = 0 ]
 
       - name: Write export options

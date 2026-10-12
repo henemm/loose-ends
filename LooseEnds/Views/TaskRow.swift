@@ -14,6 +14,8 @@ struct TaskRow: View {
     /// The start screen's "Next up" preview shows the same task as the list; its own prefix keeps
     /// `taskRow_*` unique for the UI tests.
     var identifierPrefix = "taskRow_"
+    /// "All open" holds parked tasks among the rest (#319); there the moon tells them apart.
+    var marksParked = false
 
     /// A deleted task can still be drawn once while the list animates it out; reading any of its
     /// properties then traps inside SwiftData (#194: delete from Repeating with New still on the
@@ -40,6 +42,13 @@ struct TaskRow: View {
                         .foregroundStyle(.tint)
                         .accessibilityLabel("Changed by AI")
                         .accessibilityIdentifier("aiMarker_\(task.id.uuidString)")
+                }
+                if marksParked, task.status == .parked {
+                    Image(systemName: "moon.zzz")
+                        .imageScale(.small)
+                        .foregroundStyle(.secondary)
+                        .accessibilityLabel("Parked")
+                        .accessibilityIdentifier("parkedMarker_\(task.id.uuidString)")
                 }
             }
             if task.importance == .high || task.urgency == .high || !traits.isEmpty {
@@ -122,9 +131,6 @@ struct TaskRow: View {
         }
         if !hidesContext, let context = (task.contexts ?? []).sorted(by: { $0.sortOrder < $1.sortOrder }).first {
             all.append(Trait(id: "context", text: context.name, tinted: unseen && FieldSource.isAutomatic(task.contextsSourceRaw)))
-        }
-        if let person = task.people.first {
-            all.append(Trait(id: "person", text: person, symbol: "person", tinted: unseen && FieldSource.isAutomatic(task.peopleSourceRaw)))
         }
         return Array(all.prefix(3))
     }

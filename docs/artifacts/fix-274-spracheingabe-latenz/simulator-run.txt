@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-10-09T09:04:50+0200
+befehl: scripts/sim.sh test-proof SpeechListeningTests
+workflow: fix-274-spracheingabe-latenz
+head: 136f92429c0b4e61b1e663d60d0c0a353c33963f
+basis: 0d482c4fdeca91572d090c2660e1a11dd93c0dc1 (merge-base origin/main HEAD)
+testklasse: SpeechListeningTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1791529444.693  ende: 1791529489.303
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/fix-274-spracheingabe-latenz/simulator-run/summary.json  sha256:817b8582fd6b783d924be9b78b3cdb28b8d33f05ba4fa5e1895b86eae5881a06
+xcresult: docs/artifacts/fix-274-spracheingabe-latenz/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-274-spracheingabe-latenz/simulator-run/*.png (2 Stück)
+
+## Geprüfte Dateien
+- sha256:2cbfd973e6ca7c157026f0464040fca11f395a7de3a296b8007b7faf030f349f  LooseEnds/Speech/SpeechCapture.swift
+- sha256:e1e1ad70d7c98f11ac224fdd382ca66bdeb3279351176077c8fe07b1eb5bd328  LooseEndsTests/SpeechLatencyTests.swift

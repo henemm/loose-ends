@@ -1,0 +1,27 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17e).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/DueRemindersTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+Test Suite 'Selected tests' started at 2026-10-09 14:05:04.545.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-09 14:05:04.545.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-09 14:05:04.545.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+[1mTest run started.[0m
+Suite "DueReminders" started
+    [32m✔[0m "Only active tasks with a reminder time still ahead get a reminder, at the reminder hour" (0.005 seconds)
+    [32m✔[0m "A task due today after the reminder hour has passed is not reminded again" (0.003 seconds)
+    [32m✔[0m "Done, Next up and Tomorrow apply from the notification; an unknown task is reported" (0.014 seconds)
+    [32m✔[0m "Eine über firstDueDate implizit gesetzte Fälligkeit landet im Sammel-Push (AC-5)" (0.003 seconds)
+Suite "DueReminders" passed after 0.027 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-fix298/Logs/Test/Test-LooseEnds-2026.10.09_14-05-00-+0200.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 1 von 5 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json

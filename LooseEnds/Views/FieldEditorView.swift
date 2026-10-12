@@ -13,7 +13,6 @@ struct FieldEditorView: View {
     let contexts: [TaskContext]
     let projects: [Project]
 
-    @State private var peopleText = ""
     /// The energy slider's position (−3 … 3) and whether a finger is on it: written once on release (#112).
     @State private var energyPosition = 0.0
     @State private var energyDragging = false
@@ -43,10 +42,8 @@ struct FieldEditorView: View {
         .navigationBarTitleDisplayMode(.inline)
         #endif
         .onAppear {
-            peopleText = task.people.joined(separator: ", ")
             energyPosition = Double(task.energy?.rawValue ?? 0)
         }
-        .onDisappear { if field == .people { commitPeople() } }
     }
 
     // MARK: - Origin (#101)
@@ -116,10 +113,9 @@ struct FieldEditorView: View {
         case .energy: energyControl
         case .duration: durationPicker
         case .contexts: contextsControl
-        case .people: peopleControl
         case .project: projectPicker
         case .repeatRule: repeatControl
-        case .title, .blockedBy, .place: EmptyView()
+        case .title, .blockedBy, .place, .people: EmptyView()
         }
     }
 
@@ -245,12 +241,6 @@ struct FieldEditorView: View {
         }
     }
 
-    private var peopleControl: some View {
-        TextField("Names, comma separated", text: $peopleText)
-            .onSubmit(commitPeople)
-            .accessibilityIdentifier("peopleField")
-    }
-
     private var projectPicker: some View {
         Picker(FieldFormatting.label(field), selection: Binding(
             get: { task.project?.name ?? "" },
@@ -358,14 +348,6 @@ struct FieldEditorView: View {
         } else {
             names.append(context.name)
         }
-        apply(FieldCodec.encode(names))
-    }
-
-    private func commitPeople() {
-        let names = peopleText
-            .split(separator: ",")
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .filter { !$0.isEmpty }
         apply(FieldCodec.encode(names))
     }
 

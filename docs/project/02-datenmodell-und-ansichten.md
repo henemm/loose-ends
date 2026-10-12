@@ -51,7 +51,7 @@ Leerer Wert bedeutet: nicht gesetzt oder unter Schwelle.
 | duration | enum Duration? | minutes5, minutes15, minutes30, hour1, hours2plus |
 | energy | enum Energy? | −3 … +3: gibt oder nimmt die Aufgabe Energie; nur von Hand, gespeichert als Text "-3" … "3"; alte Werte low/medium/high lesen sich als leer (#112) |
 | contexts | [Context] | 0…n, Startset löschbar |
-| people | [String] | Namen aus dem Text, keine Kontakte-Berechtigung in v1 |
+| people | [String] | **Entfallen** (Henning, 2026-10-09, #105 → #301): kein Use Case, nie gemessen. Die Spalte bleibt nur fürs CloudKit-Schema (nur additiv), nichts liest oder schreibt sie |
 
 ### Context
 
@@ -122,7 +122,7 @@ Beenden der Wiederholung: `repeatRule = nil`, dann normale Erledigung.
 |------|-----|-----------|
 | id | UUID | |
 | name | String | |
-| kind | enum ViewKind | next, new, due, quick, old, waiting, repeating, parked, done, context, project |
+| kind | enum ViewKind | next, new, due, quick, old, waiting, repeating, parked, open, done, context, project |
 | contextID / projectID | UUID? | bei kind context/project |
 | isSystem | Bool | Systemansichten nicht löschbar, aber ausblendbar |
 | sortOrder | Int | |
@@ -133,7 +133,8 @@ Version 1 hat keine freien Filterregeln. Die Ansichtsarten sind im Code definier
 
 Alle Ansichten zeigen nur `status in (unprocessed, unverified, active)` und keine Aufgaben mit
 `parent != nil` (Unteraufgaben erscheinen in ihrer Elternaufgabe). Ausnahmen: "Alt" zeigt auch
-blockierte, "Geparkt" zeigt nur `parked`, "Erledigt" zeigt nur `done`.
+blockierte, "Geparkt" zeigt nur `parked`, "Erledigt" zeigt nur `done`, "Alle offenen" zeigt alles außer `done`
+(auch Geparktes und Wartendes, #319).
 
 | Ansicht | Regel | Sortierung |
 |---------|-------|------------|
@@ -145,6 +146,7 @@ blockierte, "Geparkt" zeigt nur `parked`, "Erledigt" zeigt nur `done`.
 | Wartet | `blockedBy` enthält mindestens eine offene Aufgabe | blockierende Aufgabe zuerst |
 | Wiederkehrend | `repeatRule != nil` | dueDate aufsteigend |
 | Geparkt | `status == parked` | parkedAt absteigend |
+| Alle offenen | `status != done` (Neu, Aktiv, Wartend, Geparkt), Zeile direkt über „Erledigt“, Geparktes mit Mond-Glyphe | urgency, importance, dann capturedAt |
 | Erledigt | `status == done` | completedAt absteigend, nach Tagen gruppiert |
 | Kontext X | `contexts` enthält X | urgency, importance, dann capturedAt |
 | Projekt P | `project == P` | manuell innerhalb des Projekts, sonst capturedAt |
@@ -166,9 +168,10 @@ blockierte, "Geparkt" zeigt nur `parked`, "Erledigt" zeigt nur `done`.
 
 ## Mitteilungen
 
-Genau eine Art in Version 1: „Heute fällig“ am Fälligkeitstag zur eingestellten Uhrzeit (Standard 9:00),
-für jede offene Aufgabe (`isOpen`: unverarbeitet, ungeprüft, aktiv; #352: das Datum setzen die Regeln
-auch ohne Modell). Aktionen ohne App-Start: Erledigt, Als nächstes, Morgen. Keine Mitteilung
+Eine Art in Version 1, eine Mitteilung je Aufgabe, für jede offene Aufgabe (`isOpen`: unverarbeitet, ungeprüft, aktiv; #352: das Datum setzen die Regeln auch ohne Modell; #311):
+Aufgabe **mit Uhrzeit** (`dueHasTime`) → „Jetzt fällig“ genau zur Fälligkeitszeit; Aufgabe **ohne
+Uhrzeit** → „Heute fällig“ am Fälligkeitstag zur Uhrzeit aus den Einstellungen (Standard 9:00, gilt auf
+allen Geräten über den iCloud-Schlüsselwertspeicher). Ist der Zeitpunkt vorbei, entfällt die Mitteilung. Aktionen ohne App-Start: Erledigt, Als nächstes, Morgen. Ein Tipp auf die Mitteilung selbst öffnet die Aufgabe im Detail (#331). Keine Mitteilung
 für KI-Verarbeitung.
 
 ## Veredelungs-Pipeline
@@ -244,7 +247,10 @@ Zuordnungen, die in der Mapping-Tabelle offen waren:
   gesetzt (Feld war in FocusBlox in der Praxis ungenutzt).
 
 Export-Ausgabe enthält echte private Aufgabentitel und wird nie committed
-(`docs/reference/focusblox-corpus.json` ist in `.gitignore`).
+(`docs/reference/focusblox-corpus.json` ist in `.gitignore`). Die Datei liegt einmal, im Hauptordner;
+ein Worktree unter `.claude/worktrees/` liest sie von dort, ohne Kopie (`LooseEndsTests/MeasurementData.swift`,
+#135). Fehlt sie, nennt `sim.sh unit` nach dem Lauf und die CI in ihrer Zusammenfassung jede Messstrecke,
+die deshalb nicht gemessen hat (`scripts/measurement_status.py`, #149).
 
 ## App Intents und Spotlight
 
@@ -254,7 +260,7 @@ Export-Ausgabe enthält echte private Aufgabentitel und wird nie committed
   `CaptureTextIntent` (Rohtext rein), `CompleteTaskIntent`, `ShowViewIntent(kind)`.
 - `ExecutionTargets`: Capture und Complete in der App-Intents-Extension, Show in der App.
 - Watch: dieselben Intents, Diktat als Eingabe.
-- Control Center: `ControlWidgetButton` mit `OpenCaptureIntent` (öffnet Erfassungs-Szene, ADR-9).
+- Control Center: kein eigenes Control mehr (#326, Henning 2026-10-11: „öffnet nur die App, wenig Mehrwert“). Erfasst wird über das Steuerelement der Kurzbefehle-App mit dem App-Kurzbefehl „Aufgabe erfassen“ (`CaptureTextIntent`, fragt nach Text, kein App-Start). `OpenCaptureIntent` bleibt als Aktion für Kurzbefehle und Aktionstaste.
 
 ## Offene Punkte für den Spike
 
@@ -316,4 +322,9 @@ Export-Ausgabe enthält echte private Aufgabentitel und wird nie committed
    nicht „Schwelle bestätigt", sondern „der Mechanismus hinter ADR-3 hat kein Signal". Wichtigkeit,
    Dringlichkeit und Energie liegen auf Zufallsniveau und werden trotzdem in über 90 % der Fälle
    gesetzt. Ersatzsignale und Alternativen werden in #65 gemessen, bevor weitere Ansichten entstehen.
-5. Kann die Share-Extension aus Apple Mail die `message:`-URL zuverlässig erhalten?
+5. ~~Kann die Share-Extension aus Apple Mail die `message:`-URL zuverlässig erhalten?~~ — beantwortet
+   2026-10-08 (#24): **Nein.** Auf iOS 27.0 gibt es keinen Teilen-Knopf für eine ganze Mail; markierter Text
+   kommt ohne Quelle an; „Drucken → Teilen“ liefert eine PDF-Datei, keine `message:`-URL. Fallback: Datei-Links
+   werden nicht als `sourceURL` gespeichert, „Source“ erscheint nur bei echter URL. Für einen echten
+   Rücksprung bleiben Ziehen aus Mail in die App und der Siri-Weg (#25). Bericht:
+   `docs/reference/mail-ruecksprung-messung.md`.

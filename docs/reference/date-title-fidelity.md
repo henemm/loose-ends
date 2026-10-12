@@ -10,8 +10,11 @@
 
 Gemessen hat die Labor-App auf dem iPhone, in Scheiben über mehrere Sitzungen. Jeder Satz
 wird gegen den Tag ausgewertet, an dem er gemessen wurde; mehrdeutige Formulierungen
-(„am Wochenende", „nächsten Freitag") lassen mehrere Tage gelten. `NSDataDetector` ist die
-deterministische Alternative aus dem Issue, auf denselben Sätzen.
+(„am Wochenende", „nächsten Freitag") lassen mehrere Tage gelten. Der Regelparser rechnet
+gegen den festen Bezugstag Do 12.03.2026 (Europe/Berlin), damit der Bericht an jedem Tag
+gleich ausfällt (#99, #148); bis dahin rechnete er gegen den Tag des Laufs, daher die
+anderen Daten unter „Was danebenging“. `NSDataDetector` ist die deterministische
+Alternative aus dem Issue, auf denselben Sätzen.
 
 ## Datum
 
@@ -20,6 +23,8 @@ deterministische Alternative aus dem Issue, auf denselben Sätzen.
 | Exakt getroffen | 49.6 % von 139 | 67.6 % von 139 | 99.3 % von 139 |
 | Feld leer gelassen statt geraten | 2 | 41 | 1 |
 | Erfundene Daten bei Sätzen ohne Datum | 95.3 % von 172 | 0.0 % von 172 | 0.0 % von 172 |
+
+`NSDataDetector` rechnet immer gegen die echte Uhr und lässt sich auf keinen Bezugstag festlegen; je nach Wochentag des Laufs traf er 65.5 % bis 68.3 %. Die Spalte ist der eingefrorene Stand vom 2026-09-25 und wird nicht neu berechnet (#148).
 
 ### Nach Art des Ausdrucks
 
@@ -165,7 +170,7 @@ umformuliert; umformulieren ist erlaubt, solange nichts erfunden wird.
 
 ### Regelparser danebenging (1)
 
-- `Am Freitga den Zählerstand melden` → – statt 2026-09-25 · Wochentag
+- `Am Freitga den Zählerstand melden` → – statt 2026-03-13 · Wochentag
 
 ### Entität verloren (62)
 

@@ -31,7 +31,7 @@ Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, 
   the line "Without the model this fails because …" with evidence from a measurement; without that line
   the rule path is the proposal. Every measurement report carries the rule-based column as baseline; if
   the rules beat the model, the rules win, and an existing ADR or schema is not a counter-argument.
-  Measured 2026-09-20: model 50 % exact dates, 96.5 % invented; `NSDataDetector` 65 %, 0 % (#67, #92);
+  Measured 2026-09-20: model 50 % exact dates, 96.5 % invented; `NSDataDetector` 65–68 % depending on the weekday of the run (it takes no reference day, so its column is frozen, #148), 0 % (#67, #92);
   own rule parser 99.3 %, 0 % (#92, Schnitt 1). Since #95 the rule parser sets the due date in the
   product path; the model schema lost the four due-date fields.
 - **Context names are unique** (Henning, 2026-10-01, #157). Contexts are matched by name
@@ -74,7 +74,7 @@ leerer Wert heißt, dass Xcode nach dem nächsten Stand jeden Gerätestart verwe
 
 **Acceptance runs in stages, and the first two are never skipped** — tests, then Simulator
 (`./scripts/sim.sh build`, `launch`, `screenshot`: the changed flow is played through and evidenced).
-`docs/project/04-stand.md` has the reasoning and the commands. TestFlight is a distribution channel,
+`docs/reference/abnahme-und-arbeitsweise.md` has the reasoning and the commands. TestFlight is a distribution channel,
 not a stage: it gives no debugger and no live logs, so it stays dormant until people other than
 Henning test.
 
@@ -103,12 +103,18 @@ Apple Intelligence zusätzlich die Labor-App, die Henning selbst antippt. Einen 
 Bedienablauf auf dem Gerät gibt es seit dem Rückbau von #153 nicht mehr: Der Versuch dazu
 überschrieb Hennings produktive Installation und bewies nicht, wofür er gebaut war. Für Watch,
 Widgets, Share, Mikrofon und Mitteilungen bleibt der automatisierte Nachweis auf echter Hardware
-damit offen (`docs/project/04-stand.md`, #143, #160). Seit #156 installieren Gerätebauten
+damit offen (`docs/reference/abnahme-und-arbeitsweise.md`). Seit #156 installieren Gerätebauten
 (`device-build`, `lab`) unter einer eigenen Kennung (`com.henning.looseends.probe`, Anzeigename
 „LE Prüfbau") mit eigener App-Gruppe und eigenem iCloud-Container — nie unter Hennings eigener
 Installation. Ein Registrierungslauf (`LOOSEENDS_REGISTER=1 ./scripts/sim.sh device-build`) ist
 nur nötig bei neuer Kennung, neuer Fähigkeit oder abgelaufenem Profil; nur er benutzt Hennings
 Xcode-Anmeldung, der normale Bau spricht nicht mit Apple. Im Zweifel läuft die Stufe.
+
+**Stufe 3 läuft über TestFlight** (Henning, 2026-10-10, #279: „Mache den Test über die normale App und
+TestFlight."): Statt „LE Prüfbau“ testet Henning in seiner normalen App aus TestFlight, wann er es
+einrichten kann. Ablauf: Merge, TestFlight-Bau (bei Modelländerung vorher `mac-schema-init` und Deploy),
+dann bekommt Henning die Buildnummer und die Prüfschritte, keine Befehlszeile. Seine Rückmeldung
+schließt die Gerätepunkte der Spec ab; bis dahin bleibt das Ticket offen.
 
 **⛔ Ausliefern ist Teil jedes Tickets.** Gearbeitet wird in einem Worktree, gebaut wird bei Henning aus
 `/Users/hem/Developer/loose-ends`. Den Checkout hält der SessionStart-Hook
@@ -186,10 +192,13 @@ claude plugin install agent-os-openspec
 Unit tests for enrichment, view rules, repeat rules and revisions come first; UI tests only after the design freeze, and only as smoke tests.
 
 **GitHub Issues is the one and only backlog.** Every open task — feature, bug, spike — is a GitHub
-issue with its own Definition of Done, not a bullet in a markdown file. `docs/project/04-stand.md`
-only holds the priority order and links to issue numbers; never re-list scope or DoD there, and never
-resurrect a status column in `docs/project/01-user-story.md` (it's a one-time snapshot from the
-briefing, not maintained). Opening a PR for an issue: reference it (`Closes #N`) so it auto-closes on
+issue with its own Definition of Done, not a bullet in a markdown file. **The priority order lives in
+the milestones** (M1 Alltag stabil → M2 Siri und Orte → M3 Bereit für externe Tester → M4 Nach der ersten
+Einladung; the order inside each is in the milestone description), not in a document. `docs/project/04-stand.md`
+is dissolved (2026-10-12): never recreate a status or priority file, and never resurrect a status column in
+`docs/project/01-user-story.md` (it's a one-time snapshot from the briefing, not maintained). The first
+invitation of external testers waits for everything in the user story, Siri schema and places included
+(Henning, 2026-10-12). Opening a PR for an issue: reference it (`Closes #N`) so it auto-closes on
 merge; if it doesn't auto-close, close it by hand. New work discovered mid-task becomes a new issue,
 not scope creep on the current one.
 
@@ -219,11 +228,17 @@ not scope creep on the current one.
   (iOS share sheet: text, links, mails via `SharedContent`) — platform targets
 - `LooseEnds/App/LaunchTimings.swift` — cold-start measuring points (#22): signposts always, `Documents/launch-timings.json`
   only in the probe build (`.probe`); launch argument `-measureLaunch` opens the capture scene
-- `LooseEnds/Speech` — `SpeechCapture` (live recognition for the capture scene, skipped under `--ui-testing`), `Waveform`
+- `LooseEnds/Speech` — `SpeechCapture` (live recognition for the capture scene, skipped under `--ui-testing`; the transcriber
+  is built only in `makeTranscriber` with `.volatileResults` and `.fastResults` — without the latter the first word takes
+  ~12 s instead of ~1 s, #274), `Waveform` (level in dBFS, scale −55…−25 → 0…1, mic ring grows up to 35 % from 52 pt, #279),
+  `ListeningHint` (pure rule: "Listening …" while the mic listens and the field is empty, #297),
+  `SpeechDiagnosis` (pure rule: after 6 s of audio without any result the capture shows a grey line with model status,
+  permissions, buffer and result counts, #274; `--ui-testing-speech-diagnosis` fixes that state for the UI smoke test)
 - `Shared/Notifications` — `DueReminders` (pure plan and action handling); `PlaceReminders` (which ≤ 20 places
   to watch, #226) and `PlaceDelivery` (what to hand to the system, replace or withdraw, from a per-device
   handover list; the system never reports delivery, #226 Schnitt 2a); `LooseEnds/Notifications` —
-  `DueNotificationCenter` (system wiring, silent under tests)
+  `DueNotificationCenter` (system wiring, silent under tests; completion-handler delegate methods, not async, #295; the
+  UI test gets its banner via `LOOSEENDS_PUSH=<file.apns> ./scripts/sim.sh test-proof <class>`)
 - `Shared/` compiles into the watch and widget targets too: no SwiftUI that is unavailable on watchOS there
   (keyboard shortcuts, navigation bar modifiers). App views belong in `LooseEnds/Views`.
 - `docs/project/` — decisions, user story, data model, design briefing, load-bearing assumptions with their experiments and alternatives (`06-annahmen-und-experimente.md`); `docs/reference/` — learnings carried over from FocusBlox

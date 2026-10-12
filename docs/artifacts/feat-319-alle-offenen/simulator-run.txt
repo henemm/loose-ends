@@ -1,0 +1,26 @@
+# Simulator-Beleg
+erzeugt: 2026-10-11T17:59:42+0200
+befehl: scripts/sim.sh test-proof StartScreenInteractionTests
+workflow: feat-319-alle-offenen
+head: 303fa0311924578b8c0d7e576f60084d2180afdf
+basis: 8fb57ea5fd20a917b066c6b3a11c8a5aa3d99259 (merge-base origin/main HEAD)
+testklasse: StartScreenInteractionTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 8 gesamt, 8 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1791734101.783  ende: 1791734381.94
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/feat-319-alle-offenen/simulator-run/summary.json  sha256:05f68ecd0b8585f372f80a8fa30660fbf9c8c37fedabebfb42dc15fe070ea5a1
+xcresult: docs/artifacts/feat-319-alle-offenen/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-319-alle-offenen/simulator-run/*.png (2 Stück)
+
+## Geprüfte Dateien
+- sha256:a28a9e8dc4da67cada427e5b197f04b329c5e3742abbee1031021d896b156278  LooseEnds/Views/SidebarView.swift
+- sha256:780971745a31feb5881d9ad525e1a9e9210a0baeab04659f10674c0007673366  LooseEnds/Views/TaskInteractions.swift
+- sha256:5ebe5b038bdf1904c5fbe600ef2b9c9413c86d8fbabf49427e00b043ccb0ca26  LooseEnds/Views/TaskListView.swift
+- sha256:99b76faea5f4fbd8d9ba117668d791e7784f367760508f734df76284a9f4d71b  LooseEnds/Views/TaskRow.swift
+- sha256:3e34da490f87a6647522afb90a7d6d089474fa7a2f63021fd93529d15fa80b5e  LooseEndsTests/StartViewsTests.swift
+- sha256:8628ba559e6d393fa713b7bf4719ef037547937df820a21c6cd141670e0676da  LooseEndsTests/SubtaskTests.swift
+- sha256:776f94e0149711a0123b49a171c3e7363587a65c5848eda6e3289f68eb97c1b0  LooseEndsUITests/StartScreenInteractionTests.swift
+- sha256:162362ab562d72ca749331e6ce6b1884342dde16c81adb8259cca1d22d90679b  Shared/Models/Enums.swift
+- sha256:6ad011d02e7562505e71cfc93844a7c6548205069789758a7b8c2ecd0fc05e06  Shared/Models/ViewRules.swift

@@ -14,12 +14,13 @@ private func repoFile(_ relativePath: String) -> URL {
         .deletingLastPathComponent()
         .appendingPathComponent(relativePath)
 }
-private let focusBloxTruthURL = repoFile("docs/reference/focusblox-corpus.json")
-private let selfConsistencyRunURL = repoFile("docs/reference/selfconsistency-run.json")
+private let focusBloxTruthURL = MeasurementData.focusBloxCorpus
+private let selfConsistencyRunURL = MeasurementData.selfConsistencyRun
 private let selfConsistencyReportURL = repoFile("docs/reference/uncertainty-signal-selfconsistency-report.md")
 
-@Suite(.enabled(if: FileManager.default.fileExists(atPath: focusBloxTruthURL.path)
-                  && FileManager.default.fileExists(atPath: selfConsistencyRunURL.path)))
+@Suite(.enabled(if: MeasurementData.exists(focusBloxTruthURL), MeasurementData.corpusMissing),
+       .enabled(if: MeasurementData.exists(selfConsistencyRunURL),
+                "selfconsistency-run.json fehlt: entsteht nur aus einem Gerätelauf (#108), Messung nicht gelaufen (#149)"))
 struct SelfConsistencyReportTests {
     @Test("Schreibt den Selbstkonsistenz-Bericht aus zwei bereits vorhandenen Dateien, ohne Modellaufruf (AC-9)")
     func writesReport() throws {

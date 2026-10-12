@@ -2,6 +2,7 @@ import Combine
 import OSLog
 import SwiftData
 import SwiftUI
+import WidgetKit
 
 /// Start screen on the left, one list on the right. One code path for iPhone, iPad and Mac (ADR-1).
 struct ContentView: View {
@@ -10,6 +11,7 @@ struct ContentView: View {
     @Query(sort: \TaskItem.capturedAt, order: .reverse) private var tasks: [TaskItem]
     @State private var selection: ViewSelection?
     @State private var isCapturing = false
+    @State private var showsSettings = false
     @State private var completionPulse = CompletionPulse()
     @State private var pendingCompletions = PendingCompletions(window: Self.doneWindow)
     @State private var showsOnboarding = OnboardingFlow.shouldShow()
@@ -26,11 +28,15 @@ struct ContentView: View {
     var notifications: DueNotificationCenter?
     var calendar: CalendarBridge?
     private var captureRequest: CaptureRequest { .shared }
+    private var openTaskRequest: OpenTaskRequest { .shared }
 
     var body: some View {
         NavigationSplitView {
             SidebarView(selection: $selection, tasks: tasks)
-                .toolbar { captureToolbarItem }
+                .toolbar {
+                    captureToolbarItem
+                    settingsToolbarItem
+                }
         } detail: {
             if case .task(let id) = selection, let task = tasks.first(where: { $0.id == id }) {
                 NavigationStack {
@@ -55,6 +61,17 @@ struct ContentView: View {
         .sheet(isPresented: $isCapturing) {
             CaptureView()
         }
+        .sheet(isPresented: $showsSettings) {
+            NavigationStack {
+                SettingsView(notifications: notifications)
+                    .toolbar {
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Done") { showsSettings = false }
+                                .accessibilityIdentifier("settingsDoneButton")
+                        }
+                    }
+            }
+        }
         #if os(iOS)
         .fullScreenCover(isPresented: $showsOnboarding) { onboarding }
         #else
@@ -66,15 +83,21 @@ struct ContentView: View {
         .onChange(of: scenePhase) { _, phase in
             // Leaving the foreground ends every window: a Done must not hang in memory.
             if phase != .active { commitCompletions(all: true) }
+            // Back in front, maybe on a new day: "Due today" and the badge follow the date (#299).
+            if phase == .active { notifications?.rescheduleSoon() }
         }
         .onChange(of: tasks.count) { _, _ in
             Task { await enrichment?.processPending() }
         }
         .onAppear(perform: consumeCaptureRequest)
         .onChange(of: captureRequest.pending) { _, _ in consumeCaptureRequest() }
+        .onAppear(perform: consumeOpenTaskRequest)
+        .onChange(of: openTaskRequest.taskID) { _, _ in consumeOpenTaskRequest() }
         .onReceive(NotificationCenter.default.publisher(for: ModelContext.didSave)) { _ in
             notifications?.rescheduleSoon()
             calendar?.syncSoon()
+            // The "Next up" widget follows what the app changed, not only every 15 minutes (#307).
+            WidgetCenter.shared.reloadTimelines(ofKind: "NextUp")
         }
     }
 
@@ -84,6 +107,22 @@ struct ContentView: View {
             Button("Capture", systemImage: "plus") { isCapturing = true }
                 .keyboardShortcut("n", modifiers: .command)
                 .accessibilityIdentifier("captureButton")
+        }
+    }
+
+    /// The gear at the start screen opens the settings (#311). On the Mac it opens the settings
+    /// window, the same one as ⌘, and the app menu.
+    private var settingsToolbarItem: some ToolbarContent {
+        ToolbarItem(placement: .navigation) {
+            #if os(macOS)
+            SettingsLink {
+                Label("Settings", systemImage: "gearshape")
+            }
+            .accessibilityIdentifier("settingsButton")
+            #else
+            Button("Settings", systemImage: "gearshape") { showsSettings = true }
+                .accessibilityIdentifier("settingsButton")
+            #endif
         }
     }
 
@@ -157,11 +196,18 @@ struct ContentView: View {
         completionPulse.fire()
     }
 
-    /// Control Center and the Action Button open the app straight into capture (ADR-9).
+    /// The "Open capture" action (Shortcuts, Action Button) opens the app straight into capture (ADR-9, #326).
     private func consumeCaptureRequest() {
         guard captureRequest.pending else { return }
         captureRequest.pending = false
         isCapturing = true
+    }
+
+    /// A title tapped in the "Next up" widget opens that task (#307).
+    private func consumeOpenTaskRequest() {
+        guard let id = openTaskRequest.taskID else { return }
+        openTaskRequest.taskID = nil
+        selection = .task(id)
     }
 }
 

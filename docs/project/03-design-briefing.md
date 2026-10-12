@@ -66,6 +66,11 @@ Wiederkehrend und Geparkt nur, solange sie eine Aufgabe haben. Projekte und Kont
 einklappbare Gruppen, eingeklappt per Vorgabe; eingeklappt zeigen sie, wie viele es sind.
 Anlegen, Umbenennen und Löschen bleiben in der aufgeklappten Gruppe.
 
+**Heute fällig (Henning, 2026-10-11, #299):** Auf dem iPhone steht unter der Vorschau „Als nächstes“
+eine zweite, „Heute fällig“: was heute oder früher fällig ist, die ersten drei, nur wenn es etwas gibt.
+Eine Aufgabe, die in beiden steht, erscheint in beiden. Die Zahl am App-Symbol zählt „Als nächstes“
+plus „Heute fällig“, jede Aufgabe einmal. Die Ansicht „Fällig“ bleibt bei sieben Tagen.
+
 Berechnungsregeln der Ansichten stehen in `02-datenmodell-und-ansichten.md`.
 
 ### 3. Ansicht (Aufgabenliste)
@@ -77,7 +82,9 @@ Eine Liste. Jede Zeile:
 - Höchstens drei kleine Merkmale, Rangfolge: Zustand (wartet), Fälligkeit, Dauer, Kontext, Person. In einer Kontext-Ansicht entfällt der Kontext. Der Rest ist im Detail. Eine Zeile ist nie höher als Titel plus eine Merkmalzeile, auch wenn alle Attribute gepflegt sind.
 - KI-Marker (Variante C): Merkmale, die die KI gesetzt hat, sind akzentgetönt, bis der Nutzer sie gesehen hat. Ein geänderter Titel trägt zusätzlich den Funken.
 - Blockiert-Zeichen, wenn eine andere Aufgabe vorher erledigt werden muss.
-- Wisch rechts: Erledigt. Wisch links: Zu "Als nächstes" oder daraus entfernen. In "Alt": Wisch links parkt. In "Neu" steht davor „Passt“ mit dem Daumen (`hand.thumbsup`); der Haken gehört allein dem Erledigen (#349).
+- Wisch rechts: Erledigt. Wisch links: Zu "Als nächstes" oder daraus entfernen. In "Alt": Wisch links parkt.
+  In "Neu" (dem Eingang) heißt Wisch rechts „Passt“ mit dem Daumen (`hand.thumbsup`; der Haken gehört allein dem Erledigen, #349) und bestätigt nur, was die KI sortiert hat; Erledigt
+  gibt es dort nur im Halten-Menü, und „Muss angesehen werden“ hat keinen Wisch (Henning, 2026-10-11, #318).
 - Halten: Vorschau plus Menü mit Als nächstes, Erledigt, Verschieben (Morgen, Wochenende, nächste Woche, Datum), Parken, Löschen.
 - Nur "Als nächstes" ist manuell sortierbar (Drag). Alle anderen Ansichten haben feste Sortierung.
 - Leerzustand je Ansicht in einem Satz, ohne Illustration.
@@ -86,7 +93,7 @@ Eine Liste. Jede Zeile:
 
 - Oben der Titel, editierbar. Darunter, klein, der Rohtext, nicht editierbar.
 - Abgeleitete Felder als kompakte Zeilen: Fälligkeit, Wichtigkeit, Dringlichkeit, Dauer, Energie,
-  Kontexte, Personen, Projekt, Wiederholung, "Im Kalender anzeigen".
+  Kontexte, Projekt, Wiederholung, "Im Kalender anzeigen". (Personen entfielen mit #301.)
 - Jedes Feld, das die KI gesetzt hat, trägt ein kleines Zeichen. Tipp darauf: Vorher, Nachher,
   Begründung in einem Satz, Button "Zurücksetzen".
 - Leere Felder sind leer, keine Platzhalter, die zur Eingabe drängen.

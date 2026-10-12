@@ -42,23 +42,37 @@ final class ShareViewController: UIViewController {
                 texts.append(text)
             }
             for provider in item.attachments ?? [] {
+                var kind: String?
                 do {
                     if provider.hasItemConformingToTypeIdentifier(UTType.emailMessage.identifier) {
                         let loaded = try await provider.loadItem(forTypeIdentifier: UTType.emailMessage.identifier)
+                        kind = loadedKind(loaded, branch: "mail")
                         if let raw = string(from: loaded) { mails.append(raw) }
                     } else if provider.hasItemConformingToTypeIdentifier(UTType.url.identifier) {
                         let loaded = try await provider.loadItem(forTypeIdentifier: UTType.url.identifier)
+                        kind = loadedKind(loaded, branch: "url")
                         if let url = loaded as? URL { urls.append(url) }
                     } else if provider.hasItemConformingToTypeIdentifier(UTType.plainText.identifier) {
                         let loaded = try await provider.loadItem(forTypeIdentifier: UTType.plainText.identifier)
+                        kind = loadedKind(loaded, branch: "text")
                         if let text = string(from: loaded) { texts.append(text) }
                     }
                 } catch {
                     logger.error("Reading a shared item failed: \(error, privacy: .public)")
                 }
+                // #24 AC-1: type identifiers and the loaded kind only, never the content.
+                let line = SharedContent.probeLine(typeIdentifiers: provider.registeredTypeIdentifiers, loaded: kind)
+                logger.info("\(line, privacy: .public)")
             }
         }
         return SharedContent.make(texts: texts, urls: urls, mails: mails)
+    }
+
+    /// What an attachment delivered: raw `data`, a `file`, or else the branch's own kind (#24).
+    private static func loadedKind(_ loaded: any NSSecureCoding, branch: String) -> String {
+        if loaded is Data { return "data" }
+        if let url = loaded as? URL, url.isFileURL { return "file" }
+        return branch
     }
 
     private static func string(from loaded: any NSSecureCoding) -> String? {

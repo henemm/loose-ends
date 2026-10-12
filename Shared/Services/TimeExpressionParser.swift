@@ -33,7 +33,7 @@ struct TimeExpressionParser: Sendable {
 
     private static func earliest(in words: [ExpressionWord]) -> Match? {
         for index in words.indices {
-            if let match = half(at: index, in: words) ?? clock(at: index, in: words) {
+            if let match = half(at: index, in: words) ?? clock(at: index, in: words) ?? spelled(at: index, in: words) {
                 return match
             }
         }
@@ -90,6 +90,25 @@ struct TimeExpressionParser: Sendable {
         }
         guard (0...23).contains(hour), (0...59).contains(minute) else { return nil }
         return Match(hour: hour, minute: minute, index: index, count: end - index)
+    }
+
+    /// Hours dictation spells out: the shared number words reach twelve, "dreizehn" to "dreiundzwanzig"
+    /// and "null" come on top. Folded like `ExpressionText` folds words (no diacritics).
+    private static let spelledHours: [String: Int] = ExpressionText.numbers.merging([
+        "null": 0, "dreizehn": 13, "vierzehn": 14, "funfzehn": 15, "sechzehn": 16, "siebzehn": 17,
+        "achtzehn": 18, "neunzehn": 19, "zwanzig": 20, "einundzwanzig": 21, "zweiundzwanzig": 22,
+        "dreiundzwanzig": 23,
+    ]) { current, _ in current }
+
+    /// "um neunzehn Uhr", "acht Uhr" (#70: dictation writes numbers out). Only with "Uhr" after it,
+    /// and "ein/eine … Uhr" only after "um": "eine Uhr kaufen" is a clock, not a time.
+    private static func spelled(at index: Int, in words: [ExpressionWord]) -> Match? {
+        let text = ExpressionText.word(words, index)
+        guard let hour = spelledHours[text], (0...23).contains(hour),
+              ExpressionText.word(words, index + 1) == "uhr" else { return nil }
+        let article = ["ein", "eine", "einer", "einem", "einen"].contains(text)
+        if article, ExpressionText.word(words, index - 1) != "um" { return nil }
+        return Match(hour: hour, minute: 0, index: index, count: 2)
     }
 
     /// Leading digits plus an optional am/pm glued to them ("5pm"); "4th" is not a number here.

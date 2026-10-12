@@ -8,8 +8,8 @@ import SwiftUI
 /// estimated the spark (#101), both accent-tinted, and its editor also shows before, after, the
 /// reason and Reset. Opening the detail marks the AI changes as seen, except from "New" (#349):
 /// there a line under the title says why the task waits, and "Looks right" takes the place of
-/// Complete, which moves into the menu. Otherwise the bar carries Complete and the briefing's menu
-/// (Next up, Park, Analyze again).
+/// Complete, which moves into the menu. Opened elsewhere, the bar carries Complete, "Looks right"
+/// while the task still needs a look (#318), and the briefing's menu (Next up, Park, Analyze again).
 struct TaskDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(CompletionPulse.self) private var completionPulse: CompletionPulse?
@@ -256,7 +256,6 @@ struct TaskDetailView: View {
             .init(field: .duration, value: FieldFormatting.value(task.durationRaw, for: .duration)),
             .init(field: .energy, value: FieldFormatting.value(task.energyRaw, for: .energy)),
             .init(field: .contexts, value: FieldFormatting.value(FieldCodec.encode(.contexts, of: task), for: .contexts)),
-            .init(field: .people, value: FieldFormatting.value(FieldCodec.encode(.people, of: task), for: .people)),
             .init(field: .project, value: task.project?.name),
             .init(field: .repeatRule, value: FieldFormatting.value(FieldCodec.encode(.repeatRule, of: task), for: .repeatRule)),
         ]
@@ -269,16 +268,30 @@ struct TaskDetailView: View {
         // Deleting stays in the list's long-press menu: deleting from inside the open detail would
         // leave the view on a destroyed model until it is gone.
         if task.isOpen {
-            if !inReview {
+            if inReview {
+                if ViewRules.canConfirm(task) {
+                    ToolbarItem(placement: .primaryAction) {
+                        Button("Looks right", action: confirmReview)
+                            .buttonStyle(.borderedProminent)
+                            .accessibilityIdentifier("detailConfirmButton")
+                    }
+                }
+            } else {
+                // Still in New after opening ("Needs a look": title not checked, not sorted yet): one
+                // tap vouches for it, without editing the title first (#318). The thumb, not a
+                // checkmark: that belongs to Complete alone (#349).
+                if ViewRules.needsLook(task), task.title != nil {
+                    ToolbarItem(placement: .primaryAction) {
+                        Button("Looks right", systemImage: "hand.thumbsup") {
+                            TaskActions.confirmReview(task)
+                            save("confirm")
+                        }
+                        .accessibilityIdentifier("detailConfirmButton")
+                    }
+                }
                 ToolbarItem(placement: .primaryAction) {
                     Button("Complete", systemImage: "checkmark", action: complete)
                         .accessibilityIdentifier("detailCompleteButton")
-                }
-            } else if ViewRules.canConfirm(task) {
-                ToolbarItem(placement: .primaryAction) {
-                    Button("Looks right", action: confirmReview)
-                        .buttonStyle(.borderedProminent)
-                        .accessibilityIdentifier("detailConfirmButton")
                 }
             }
             ToolbarItem(placement: .primaryAction) {

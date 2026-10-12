@@ -88,4 +88,21 @@ struct TimeExpressionParserTests {
         #expect(Self.time("Um 0 Uhr die Sicherung wechseln") == "00:00")
         #expect(Self.time("Um 23:59 die Steuer abgeben") == "23:59")
     }
+
+    @Test("Diktierte Uhrzeiten: ausgeschriebene Stunde mit Uhr (#70)")
+    func spelledOut() {
+        #expect(Self.time("also am freitag um neunzehn uhr ist elternabend") == "19:00")
+        #expect(Self.time("morgen um neun uhr kann ich das paket abholen") == "09:00")
+        #expect(Self.time("am freitag um acht Uhr die Rechnung überweisen") == "08:00")
+        #expect(Self.time("Montag zwölf Uhr Teamrunde") == "12:00")
+        #expect(Self.time("um dreiundzwanzig Uhr die Heizung ausmachen") == "23:00")
+        #expect(Self.time("um ein Uhr Mittagspause") == "01:00")
+    }
+
+    @Test("Ausgeschriebene Zahl ohne Uhr oder ein Artikel vor Uhr ist keine Uhrzeit (#70)")
+    func spelledOutTraps() {
+        for trap in ["in drei Tagen anrufen", "um acht Euro wetten", "eine Uhr für Papa kaufen", "die Uhr ist kaputt"] {
+            #expect(Self.time(trap) == nil, "\(trap) darf keine Uhrzeit ergeben")
+        }
+    }
 }

@@ -1,0 +1,30 @@
+FAIL CalendarTargetTests
+PASS CaptureCancelCrashTests
+PASS CaptureSmokeTests
+FAIL ContextUniquenessTests
+PASS DesignGalleryTests
+PASS LaunchArgumentTests
+PASS OnboardingTests
+PASS PlaceSmokeTests
+PASS ProjectSubtasksTests
+PASS RecognitionWalkthroughTests
+PASS SpeechDiagnosisLineTests
+PASS SpeechListeningIndicatorTests
+PASS SpeechListeningTests
+PASS stress 1
+PASS stress 2
+PASS stress 3
+PASS stress 4
+PASS stress 5
+PASS stress 6
+PASS stress 7
+PASS stress 8
+PASS stress 9
+PASS stress 10
+Speech stress: 0 of 10 runs failed
+DONE fail=1 stressfail=0 2026-10-10T11:38:35+0200 head=79476d1f760ea12071776a97ed5920628398fe6e
+
+Einordnung (2026-10-10): CalendarTargetTests und ContextUniquenessTests scheitern identisch auf main 5037f0e ohne #279
+(Wegwerf-Kopie, gleicher Simulator): testSwitchOnShowsTargetCalendar "The detail should name the calendar the event goes to",
+testSecondGardenIsRejected "Kein Neuer-Kontext-Knopf". CI auf 5037f0e grün (Lauf 37992820230). Lokaler Simulatorzustand,
+keine Regression durch #279. Ticket #305.
