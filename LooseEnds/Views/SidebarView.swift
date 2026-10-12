@@ -22,6 +22,7 @@ struct SidebarView: View {
     /// (the hare is wide), and a bare frame lets a wide one spill past the margin.
     @ScaledMetric(relativeTo: .body) private var glyphSize: CGFloat = 20
     @ScaledMetric(relativeTo: .caption) private var knotHeight: CGFloat = 16
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     @State private var edit: NameEdit?
     @State private var isEditing = false
@@ -74,15 +75,18 @@ struct SidebarView: View {
                     situationChips
                 }
             }
-            Section {
-                if isCompact {
+            if isCompact {
+                Section {
                     caption("All views")
+                    viewGrid
                 }
-                // The daily three always, the others only with a task in them. On iPhone the
-                // inbox bar stands in for "New" and the chips for "Quick" (#368).
-                ForEach(ViewRules.startViews(in: tasks).filter { !(isCompact && ($0 == .new || $0 == .quick)) }, id: \.self) { kind in
-                    countRow(String(localized: kind.titleKey), symbol: kind.symbol, count: ViewRules.tasks(for: kind, in: tasks).count, id: "viewRow_\(kind.rawValue)")
-                        .tag(ViewSelection.system(kind))
+            } else {
+                Section {
+                    // The daily three always, the others only with a task in them.
+                    ForEach(ViewRules.startViews(in: tasks), id: \.self) { kind in
+                        countRow(String(localized: kind.titleKey), symbol: kind.symbol, count: ViewRules.tasks(for: kind, in: tasks).count, id: "viewRow_\(kind.rawValue)")
+                            .tag(ViewSelection.system(kind))
+                    }
                 }
             }
 
@@ -118,12 +122,14 @@ struct SidebarView: View {
                 foldHeader("Contexts", count: contexts.count, isOpen: $showsContexts, id: "contextsToggle")
             }
 
-            Section {
-                // Always there, right above Done (#319); `.badge` leaves a zero out.
-                countRow(String(localized: ViewKind.open.titleKey), symbol: ViewKind.open.symbol, count: ViewRules.tasks(for: .open, in: tasks).count, id: "viewRow_open")
-                    .tag(ViewSelection.system(.open))
-                countRow(String(localized: ViewKind.done.titleKey), symbol: ViewKind.done.symbol, count: ViewRules.tasks(for: .done, in: tasks).count, id: "viewRow_done")
-                    .tag(ViewSelection.system(.done))
+            if !isCompact {
+                Section {
+                    // Always there, right above Done (#319); `.badge` leaves a zero out.
+                    countRow(String(localized: ViewKind.open.titleKey), symbol: ViewKind.open.symbol, count: ViewRules.tasks(for: .open, in: tasks).count, id: "viewRow_open")
+                        .tag(ViewSelection.system(.open))
+                    countRow(String(localized: ViewKind.done.titleKey), symbol: ViewKind.done.symbol, count: ViewRules.tasks(for: .done, in: tasks).count, id: "viewRow_done")
+                        .tag(ViewSelection.system(.done))
+                }
             }
         }
         .paperList()
@@ -203,6 +209,53 @@ struct SidebarView: View {
     }
 
     // MARK: - Start (iPhone)
+
+    /// The quiet views in two columns (#368): the system views that hold something, then All open
+    /// and Done. Grey glyphs, no accent: these are places to browse, not a call to act (ADR-14).
+    /// From a large Dynamic Type size on, one column, so no name is cut.
+    @ViewBuilder
+    private var viewGrid: some View {
+        let columns = dynamicTypeSize >= .xxLarge
+            ? [GridItem(.flexible())]
+            : [GridItem(.flexible(), spacing: 20), GridItem(.flexible())]
+        LazyVGrid(columns: columns, alignment: .leading, spacing: 0) {
+            ForEach(ViewRules.compactGridViews(in: tasks), id: \.self) { kind in
+                gridCell(kind)
+            }
+        }
+        .listRowSeparator(.hidden)
+        .paperRow()
+    }
+
+    private func gridCell(_ kind: ViewKind) -> some View {
+        let count = ViewRules.tasks(for: kind, in: tasks).count
+        return Button {
+            selection = .system(kind)
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: kind.symbol)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: glyphSize * 0.8, height: glyphSize * 0.8)
+                    .foregroundStyle(.secondary)
+                Text(String(localized: kind.titleKey))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                Spacer(minLength: 4)
+                if count > 0 {
+                    Text(verbatim: "\(count)")
+                        .monospacedDigit()
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .font(.subheadline)
+            .padding(.vertical, 9)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("viewRow_\(kind.rawValue)")
+    }
 
     /// The date under the knot. Plain: the sentence it used to carry is gone (#368).
     private var header: some View {

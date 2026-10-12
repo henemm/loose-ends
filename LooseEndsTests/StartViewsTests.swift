@@ -129,4 +129,18 @@ import Testing
         #expect(german.localizedString(forKey: "All open", value: nil, table: nil) == "Alle offenen")
         #expect(german.localizedString(forKey: "Nothing left open.", value: nil, table: nil) == "Nichts mehr offen.")
     }
+
+    @Test("The iPhone grid leaves out New and Quick, which have the bar and a chip, and always ends on All open and Done (#368)")
+    @MainActor func compactGridViews() async throws {
+        #expect(ViewRules.compactGridViews(in: []) == [.next, .due, .open, .done])
+
+        let store = try TestStore()
+        let parked = TaskItem(rawText: "Fahrrad verkaufen")
+        store.context.insert(parked)
+        TaskActions.park(parked)
+        try store.context.save()
+        let all = try store.context.fetch(FetchDescriptor<TaskItem>())
+
+        #expect(ViewRules.compactGridViews(in: all) == [.next, .due, .parked, .open, .done])
+    }
 }

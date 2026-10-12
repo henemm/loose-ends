@@ -60,6 +60,12 @@ enum ViewRules {
         dailyViews + occasionalViews.filter { !tasks(for: $0, in: all, now: now, calendar: calendar).isEmpty }
     }
 
+    /// The quiet views of the iPhone start screen (#368), in the order of its two-column grid. "New"
+    /// is the inbox bar and "Quick" a chip there, so neither is a cell; All open and Done always are.
+    static func compactGridViews(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [ViewKind] {
+        startViews(in: all, now: now, calendar: calendar).filter { $0 != .new && $0 != .quick } + [.open, .done]
+    }
+
     /// What stands for today (Henning, 2026-10-11, #299): open top-level tasks due today or
     /// earlier, earliest first. Narrower than the "Due" view (seven days), so the start screen and
     /// the app badge say "today", not "this week". Blocked tasks stay out, as in "Due".
