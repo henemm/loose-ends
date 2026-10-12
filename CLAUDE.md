@@ -194,7 +194,10 @@ the milestones** (M1 Alltag stabil → M2 Siri und Orte → M3 Bereit für exter
 Einladung; the order inside each is in the milestone description), not in a document.
 **The GitHub Project "loose ends" (henemm, project 1) is the Kanban view of those issues** (Henning, 2026-10-12):
 Status (Backlog → Ready → In progress → In review → Done), Priority (P0–P2) and Size (XS–XL) live there.
-Priority follows the milestone (M1 = P0, M2 and M3 = P1, M4 = P2; without milestone by content). Claude keeps the board
+Priority follows the milestone (M1 = P0, M2 and M3 = P1, M4 = P2; without milestone by content).
+Henning orders cards by dragging (view without sort): `gh project item-list` returns the manual order, top = most
+relevant. Pick the next ticket by Priority first, then by that order; his drag beats the milestone order inside a
+priority (2026-10-12: #355 moved to the top). Raw notes from him (no body yet) get Priority and Size at `/00-intake`. Claude keeps the board
 current without being asked: a new issue goes onto the board with Priority and Size, In progress when work starts
 (`/00-intake`), In review when the PR opens, Done on merge. Commands: `gh project item-edit` (field and option ids from
 `gh project field-list 1 --owner henemm --format json`); the token needs the `project` scope. `docs/project/04-stand.md`
