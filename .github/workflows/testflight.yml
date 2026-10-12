@@ -10,6 +10,10 @@ name: TestFlight
 on:
   workflow_dispatch:
     inputs:
+      what_to_test:
+        description: Was testen (TestFlight „Was testen“, höchstens 4000 Zeichen)
+        type: string
+        required: true
       cleanup_dry_run:
         description: Zertifikate nur auflisten, nichts widerrufen
         type: boolean
@@ -20,6 +24,11 @@ on:
 concurrency:
   group: testflight
   cancel-in-progress: false
+
+# Jeder Build sagt in TestFlight, was zu testen ist (#347): beim Start von Hand das Eingabefeld,
+# bei einem v*-Tag die Nachricht des getaggten Commits.
+env:
+  WHAT_TO_TEST: ${{ inputs.what_to_test || github.event.head_commit.message }}
 
 jobs:
   upload:
@@ -41,6 +50,13 @@ jobs:
           done
           if [ -z "${{ secrets.ASC_PRIVATE_KEY }}" ]; then echo "::error::Repository secret ASC_PRIVATE_KEY is missing"; missing=1; fi
           [ "$missing" = 0 ] || { echo "See docs/reference/testflight.md"; exit 1; }
+
+      - name: Check the test notes
+        run: |
+          len=$(printf '%s' "$WHAT_TO_TEST" | tr -d '[:space:]' | wc -c)
+          [ "$len" -gt 0 ] || { echo "::error::No test notes: every TestFlight build says what to test (#347)"; exit 1; }
+          chars=$(printf '%s' "$WHAT_TO_TEST" | python3 -c 'import sys; print(len(sys.stdin.read().strip()))')
+          [ "$chars" -le 4000 ] || { echo "::error::Test notes have $chars characters, TestFlight takes at most 4000"; exit 1; }
 
       - name: Select Xcode 27.0
         run: |
@@ -169,6 +185,46 @@ jobs:
                   echo "::error::$id: de.lproj/Localizable.strings has no '$text' (#326)"; fail=1
                 fi
               done
+              # Siri-Sätze auf Deutsch (#347): ohne de.lproj/AppShortcuts.strings erkennt eine deutsche
+              # Siri nur die englischen Sätze. „Erfassen“ ist der kurze Titel in der Kurzbefehle-App.
+              shortcuts_de=$(plutil -convert xml1 -o - "$bundle/de.lproj/AppShortcuts.strings" 2>/dev/null || true)
+              for text in 'Zu ${applicationName} hinzufügen' 'Neue Aufgabe in ${applicationName}' 'In ${applicationName} erfassen' 'Merk dir in ${applicationName}'; do
+                if printf '%s' "$shortcuts_de" | grep -qF "<string>$text</string>"; then
+                  row "| $id | de: Siri-Satz „${text}“ vorhanden |"
+                else
+                  row "| $id | de: Siri-Satz „${text}“ FEHLT |"
+                  echo "::error::$id: de.lproj/AppShortcuts.strings has no '$text' (#347)"; fail=1
+                fi
+              done
+              if printf '%s' "$strings_de" | grep -qF "<string>Erfassen</string>"; then
+                row "| $id | de: Kurztitel „Erfassen“ vorhanden |"
+              else
+                row "| $id | de: Kurztitel „Erfassen“ FEHLT |"
+                echo "::error::$id: de.lproj/Localizable.strings has no 'Erfassen' (#347)"; fail=1
+              fi
+              # Siris Name für die App (#347): Build 43 kannte nur englische Aussprachehinweise, eine
+              # deutsche Siri fand „Loose Ends“ nicht. Die Namen stehen als Variablen im Info.plist und
+              # werden je Sprache aus InfoPlist.strings gefüllt; fehlt die Datei, hört Siri nur Platzhalter.
+              # Ohne Siri-Berechtigung übergeht Siri die Ersatznamen (#347, Build 43: „Loose End ist
+              # nicht installiert“).
+              if codesign -d --entitlements :- "$bundle" 2>/dev/null | grep -q "com.apple.developer.siri"; then
+                row "| $id | Siri-Berechtigung im signierten Bundle vorhanden |"
+              else
+                row "| $id | Siri-Berechtigung FEHLT |"
+                echo "::error::$id is signed without com.apple.developer.siri (#347)"; fail=1
+              fi
+              for lang in de en; do
+                infoplist=$(plutil -convert xml1 -o - "$bundle/$lang.lproj/InfoPlist.strings" 2>/dev/null || true)
+                for key in CFBundleSpokenName LE_ALT_NAME_1 LE_ALT_NAME_2 LE_ALT_NAME_3; do
+                  value=$(printf '%s' "$infoplist" | awk -v k="<key>$key</key>" '$0 ~ k {getline; gsub(/.*<string>|<\/string>.*/, ""); print; exit}')
+                  if [ -n "$value" ]; then
+                    row "| $id | $lang: Siri-Name $key „${value}“ vorhanden |"
+                  else
+                    row "| $id | $lang: Siri-Name $key FEHLT |"
+                    echo "::error::$id: $lang.lproj/InfoPlist.strings has no $key (#347)"; fail=1
+                  fi
+                done
+              done
             fi
           done
           [ "$fail" = 0 ]
@@ -255,3 +311,4 @@ jobs:
           umask 077
           printf '%s\n' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"
           ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_wait_build.py "$BUILD"
+          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_what_to_test.py "$BUILD"

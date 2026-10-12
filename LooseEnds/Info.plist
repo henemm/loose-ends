@@ -18,21 +18,29 @@
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleSpokenName</key>
+	<string>Loose Ends</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>INAlternativeAppNames</key>
 	<array>
 		<dict>
 			<key>INAlternativeAppName</key>
-			<string>Loose End</string>
+			<string>LE_ALT_NAME_1</string>
 			<key>INAlternativeAppNamePronunciationHint</key>
-			<string>loose end</string>
+			<string>LE_ALT_HINT_1</string>
 		</dict>
 		<dict>
 			<key>INAlternativeAppName</key>
-			<string>LooseEnds</string>
+			<string>LE_ALT_NAME_2</string>
 			<key>INAlternativeAppNamePronunciationHint</key>
-			<string>loose ends</string>
+			<string>LE_ALT_HINT_2</string>
+		</dict>
+		<dict>
+			<key>INAlternativeAppName</key>
+			<string>LE_ALT_NAME_3</string>
+			<key>INAlternativeAppNamePronunciationHint</key>
+			<string>LE_ALT_HINT_3</string>
 		</dict>
 	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>

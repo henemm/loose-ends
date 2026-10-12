@@ -168,6 +168,12 @@ Since #174 it runs on the `xcode-27` preview image with Xcode 27.0 pinned and ne
 deployment targets; a step before the upload checks every target in the archive (27 SDK, minimum 27.0,
 version, dSYM, privacy strings) and stops the upload on any mismatch.
 
+**Every TestFlight build says what to test (Henning, 2026-10-12, #347).** A manual run requires the
+input `what_to_test`; a `v*` tag uses the tagged commit's message. After Apple reports the build as
+`VALID`, `scripts/asc_what_to_test.py` writes the text into TestFlight's „Was testen“ (every existing
+localization, `de-DE` created if missing). Write it for Henning, in German: which flow, which steps,
+what he should see. The run fails without it.
+
 **CloudKit schema before every TestFlight build that changes the model (#175).** TestFlight talks to the
 CloudKit environment Production, Xcode runs to Development. Production never creates a schema by itself, and
 Development only knows fields some record wrote with a value. So after any change in `Shared/Models`, before
