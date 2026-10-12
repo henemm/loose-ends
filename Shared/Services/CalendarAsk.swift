@@ -55,6 +55,7 @@ enum CalendarAsk {
         to task: TaskItem,
         contexts: [TaskContext],
         projects: [Project],
+        deviceDefault: CalendarSync.Choice? = nil,
         calendar: Calendar = .current
     ) {
         guard isComplete(answer, for: gaps) else { return }
@@ -76,6 +77,6 @@ enum CalendarAsk {
         if let duration = answer.duration, task.dueHasTime {
             RevisionService.set(.duration, to: duration.rawValue, on: task, contexts: contexts, projects: projects)
         }
-        task.showInCalendar = true
+        CalendarSync.switchOn(task, deviceDefault: deviceDefault)
     }
 }

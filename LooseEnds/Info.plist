@@ -50,7 +50,7 @@
 	<key>LECloudContainer</key>
 	<string>iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
 	<key>NSCalendarsFullAccessUsageDescription</key>
-	<string>Only if you switch it on, a task with a due date is shown in a "Loose Ends" calendar. The app never reads your other events.</string>
+	<string>Only if you switch it on, a task with a due date is shown in "Loose Ends" or in a calendar you pick. The app only changes its own events.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Loose Ends listens so you can say a task instead of typing it.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
