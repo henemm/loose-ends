@@ -200,7 +200,13 @@ Unit tests for enrichment, view rules, repeat rules and revisions come first; UI
 **GitHub Issues is the one and only backlog.** Every open task — feature, bug, spike — is a GitHub
 issue with its own Definition of Done, not a bullet in a markdown file. **The priority order lives in
 the milestones** (M1 Alltag stabil → M2 Siri und Orte → M3 Bereit für externe Tester → M4 Nach der ersten
-Einladung; the order inside each is in the milestone description), not in a document. `docs/project/04-stand.md`
+Einladung; the order inside each is in the milestone description), not in a document.
+**The GitHub Project "loose ends" (henemm, project 1) is the Kanban view of those issues** (Henning, 2026-10-12):
+Status (Backlog → Ready → In progress → In review → Done), Priority (P0–P2) and Size (XS–XL) live there.
+Priority follows the milestone (M1 = P0, M2 and M3 = P1, M4 = P2; without milestone by content). Claude keeps the board
+current without being asked: a new issue goes onto the board with Priority and Size, In progress when work starts
+(`/00-intake`), In review when the PR opens, Done on merge. Commands: `gh project item-edit` (field and option ids from
+`gh project field-list 1 --owner henemm --format json`); the token needs the `project` scope. `docs/project/04-stand.md`
 is dissolved (2026-10-12): never recreate a status or priority file, and never resurrect a status column in
 `docs/project/01-user-story.md` (it's a one-time snapshot from the briefing, not maintained). The first
 invitation of external testers waits for everything in the user story, Siri schema and places included
