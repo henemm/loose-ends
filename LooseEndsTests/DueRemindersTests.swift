@@ -14,7 +14,7 @@ import Testing
         try #require(calendar.date(from: DateComponents(year: 2026, month: 9, day: day, hour: hour)))
     }
 
-    @Test("Only active tasks with a reminder time still ahead get a reminder, at the reminder hour")
+    @Test("Only open tasks with a reminder time still ahead get a reminder, at the reminder hour")
     @MainActor func plan() async throws {
         let store = try TestStore()
         let calendar = try berlin()
@@ -44,6 +44,27 @@ import Testing
         #expect(reminders.first?.fireDate == todayAtNine)
         #expect(reminders.last?.fireDate == tomorrowAtNine)
         #expect(reminders.first?.identifier == "due_" + today.id.uuidString)
+    }
+
+    @Test("Unsorted and unchecked tasks are reminded too; parked ones are not (#352)")
+    @MainActor func planUnsortedAndUnchecked() async throws {
+        let store = try TestStore()
+        let calendar = try berlin()
+        let now = try date(16, hour: 8, in: calendar)
+
+        let unsorted = TaskItem(rawText: "Morgen Zahnarzt anrufen")
+        unsorted.dueDate = try date(17, hour: 0, in: calendar)
+        let unchecked = TaskItem(rawText: "reifen wechseln morgen")
+        unchecked.status = .unverified
+        unchecked.dueDate = try date(17, hour: 0, in: calendar)
+        let parked = TaskItem(rawText: "Keller")
+        parked.status = .parked
+        parked.dueDate = try date(17, hour: 0, in: calendar)
+        for task in [unsorted, unchecked, parked] { store.context.insert(task) }
+
+        let reminders = DueReminders.plan(for: [unsorted, unchecked, parked], now: now, calendar: calendar)
+
+        #expect(Set(reminders.map(\.taskID)) == [unsorted.id, unchecked.id])
     }
 
     @Test("A task due today after the reminder hour has passed is not reminded again")

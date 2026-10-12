@@ -167,7 +167,8 @@ blockierte, "Geparkt" zeigt nur `parked`, "Erledigt" zeigt nur `done`.
 ## Mitteilungen
 
 Genau eine Art in Version 1: „Heute fällig“ am Fälligkeitstag zur eingestellten Uhrzeit (Standard 9:00),
-nur für `status == active`. Aktionen ohne App-Start: Erledigt, Als nächstes, Morgen. Keine Mitteilung
+für jede offene Aufgabe (`isOpen`: unverarbeitet, ungeprüft, aktiv; #352: das Datum setzen die Regeln
+auch ohne Modell). Aktionen ohne App-Start: Erledigt, Als nächstes, Morgen. Keine Mitteilung
 für KI-Verarbeitung.
 
 ## Veredelungs-Pipeline
