@@ -71,7 +71,7 @@ leerer Wert heißt, dass Xcode nach dem nächsten Stand jeden Gerätestart verwe
 
 **Acceptance runs in stages, and the first two are never skipped** — tests, then Simulator
 (`./scripts/sim.sh build`, `launch`, `screenshot`: the changed flow is played through and evidenced).
-`docs/project/04-stand.md` has the reasoning and the commands. TestFlight is a distribution channel,
+`docs/reference/abnahme-und-arbeitsweise.md` has the reasoning and the commands. TestFlight is a distribution channel,
 not a stage: it gives no debugger and no live logs, so it stays dormant until people other than
 Henning test.
 
@@ -100,7 +100,7 @@ Apple Intelligence zusätzlich die Labor-App, die Henning selbst antippt. Einen 
 Bedienablauf auf dem Gerät gibt es seit dem Rückbau von #153 nicht mehr: Der Versuch dazu
 überschrieb Hennings produktive Installation und bewies nicht, wofür er gebaut war. Für Watch,
 Widgets, Share, Mikrofon und Mitteilungen bleibt der automatisierte Nachweis auf echter Hardware
-damit offen (`docs/project/04-stand.md`, #143, #160). Seit #156 installieren Gerätebauten
+damit offen (`docs/reference/abnahme-und-arbeitsweise.md`). Seit #156 installieren Gerätebauten
 (`device-build`, `lab`) unter einer eigenen Kennung (`com.henning.looseends.probe`, Anzeigename
 „LE Prüfbau") mit eigener App-Gruppe und eigenem iCloud-Container — nie unter Hennings eigener
 Installation. Ein Registrierungslauf (`LOOSEENDS_REGISTER=1 ./scripts/sim.sh device-build`) ist
@@ -189,10 +189,13 @@ claude plugin install agent-os-openspec
 Unit tests for enrichment, view rules, repeat rules and revisions come first; UI tests only after the design freeze, and only as smoke tests.
 
 **GitHub Issues is the one and only backlog.** Every open task — feature, bug, spike — is a GitHub
-issue with its own Definition of Done, not a bullet in a markdown file. `docs/project/04-stand.md`
-only holds the priority order and links to issue numbers; never re-list scope or DoD there, and never
-resurrect a status column in `docs/project/01-user-story.md` (it's a one-time snapshot from the
-briefing, not maintained). Opening a PR for an issue: reference it (`Closes #N`) so it auto-closes on
+issue with its own Definition of Done, not a bullet in a markdown file. **The priority order lives in
+the milestones** (M1 Alltag stabil → M2 Siri und Orte → M3 Bereit für externe Tester → M4 Nach der ersten
+Einladung; the order inside each is in the milestone description), not in a document. `docs/project/04-stand.md`
+is dissolved (2026-10-12): never recreate a status or priority file, and never resurrect a status column in
+`docs/project/01-user-story.md` (it's a one-time snapshot from the briefing, not maintained). The first
+invitation of external testers waits for everything in the user story, Siri schema and places included
+(Henning, 2026-10-12). Opening a PR for an issue: reference it (`Closes #N`) so it auto-closes on
 merge; if it doesn't auto-close, close it by hand. New work discovered mid-task becomes a new issue,
 not scope creep on the current one.
 
