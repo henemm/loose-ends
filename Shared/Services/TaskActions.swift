@@ -48,6 +48,13 @@ enum TaskActions {
         }
     }
 
+    /// "Looks right" (#188, #349): the automatic changes count as seen, and a title nobody vouched
+    /// for is vouched for now, so the task leaves "New". The revisions stay.
+    static func confirmReview(_ task: TaskItem, now: Date = Date()) {
+        _ = RevisionService.markSeen(task, now: now)
+        if task.status == .unverified, !(task.title ?? "").isEmpty { task.status = .active }
+    }
+
     static func park(_ task: TaskItem, now: Date = Date()) {
         task.status = .parked
         task.parkedAt = now

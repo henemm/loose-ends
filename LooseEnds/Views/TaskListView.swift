@@ -292,7 +292,7 @@ struct TaskListView: View {
 
     private func openRow(_ task: TaskItem) -> some View {
         NavigationLink {
-            TaskDetailView(task: task)
+            TaskDetailView(task: task, reviewing: kind == .new)
         } label: {
             TaskRow(task: task, hidesContext: context != nil, note: note(for: task))
         }
@@ -354,7 +354,8 @@ struct TaskListView: View {
         default:
             // In "New" the full swipe confirms what the AI sorted (#188); Next up moves second.
             if kind == .new, !ViewRules.needsLook(task) {
-                Button("Looks right", systemImage: "checkmark.circle") { confirm(task) }
+                // The checkmark belongs to Complete alone (#349).
+                Button("Looks right", systemImage: "hand.thumbsup") { confirm(task) }
                     .tint(.accentColor)
                     .accessibilityIdentifier("swipeConfirm_\(task.id.uuidString)")
             }
@@ -429,7 +430,7 @@ struct TaskListView: View {
 
     /// Marks the AI's changes as seen; the task leaves "New", its revisions stay.
     private func confirm(_ task: TaskItem) {
-        _ = RevisionService.markSeen(task)
+        TaskActions.confirmReview(task)
         save("confirm")
     }
 

@@ -61,4 +61,79 @@ import Testing
         #expect(ViewRules.tasks(for: .new, in: [task]).isEmpty)
         #expect((task.revisions ?? []).count == 1)
     }
+
+    @Test("The detail's Looks right (#349): sorted and unchecked tasks can be confirmed, unsorted ones cannot")
+    @MainActor func canConfirm() async throws {
+        let store = try TestStore()
+        let unsorted = TaskItem(rawText: "Dachrinne")
+        let unchecked = TaskItem(rawText: "zahnarzt termin")
+        unchecked.status = .unverified
+        unchecked.title = "Zahnarzt Termin"
+        let untitled = TaskItem(rawText: "ähm")
+        untitled.status = .unverified
+        let sorted = TaskItem(rawText: "Rasen mähen")
+        sorted.status = .active
+        let seen = TaskItem(rawText: "Müll raus")
+        seen.status = .active
+        [unsorted, unchecked, untitled, sorted, seen].forEach(store.context.insert)
+        store.context.insert(Revision(task: sorted, field: .duration, oldValue: nil, newValue: "15", author: .rule))
+        try store.context.save()
+
+        #expect(!ViewRules.canConfirm(unsorted), "nothing to confirm, and confirming would stop the sorting")
+        #expect(ViewRules.canConfirm(unchecked))
+        #expect(!ViewRules.canConfirm(untitled), "no title to vouch for")
+        #expect(ViewRules.canConfirm(sorted))
+        #expect(!ViewRules.isInNew(seen))
+        #expect(!ViewRules.canConfirm(seen), "not in New")
+    }
+
+    @Test("Confirming an unchecked title vouches for it: the task leaves New, the revisions stay")
+    @MainActor func confirmUnchecked() async throws {
+        let store = try TestStore()
+        let task = TaskItem(rawText: "zahnarzt termin")
+        task.status = .unverified
+        task.title = "Zahnarzt Termin"
+        store.context.insert(task)
+        store.context.insert(Revision(task: task, field: .contexts, oldValue: nil, newValue: "Telefon", author: .rule))
+        try store.context.save()
+        #expect(ViewRules.isInNew(task))
+
+        TaskActions.confirmReview(task)
+
+        #expect(task.status == .active)
+        #expect(!ViewRules.isInNew(task))
+        #expect(ViewRules.tasks(for: .new, in: [task]).isEmpty)
+        #expect((task.revisions ?? []).count == 1)
+    }
+
+    @Test("Confirming leaves an unsorted task to the sorting")
+    @MainActor func confirmUnsorted() async throws {
+        let store = try TestStore()
+        let task = TaskItem(rawText: "Dachrinne")
+        store.context.insert(task)
+
+        TaskActions.confirmReview(task)
+
+        #expect(task.status == .unprocessed)
+        #expect(ViewRules.isInNew(task))
+    }
+
+    @Test("New lists exactly the tasks isInNew accepts; subtasks stay out")
+    @MainActor func newMatchesIsInNew() async throws {
+        let store = try TestStore()
+        let parent = TaskItem(rawText: "Umzug")
+        parent.status = .active
+        let child = TaskItem(rawText: "Kartons")
+        child.parent = parent
+        let done = TaskItem(rawText: "erledigt")
+        done.status = .done
+        let fresh = TaskItem(rawText: "Dachrinne")
+        [parent, child, done, fresh].forEach(store.context.insert)
+        try store.context.save()
+
+        let all = [parent, child, done, fresh]
+        #expect(Set(ViewRules.tasks(for: .new, in: all).map(\.id)) == Set(all.filter(ViewRules.isInNew).map(\.id)))
+        #expect(ViewRules.tasks(for: .new, in: all).map(\.id) == [fresh.id])
+        #expect(!ViewRules.isInNew(child))
+    }
 }

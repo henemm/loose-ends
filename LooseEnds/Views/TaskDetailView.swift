@@ -4,10 +4,12 @@ import SwiftUI
 
 /// Task detail (design briefing, screen 4): editable title, the raw text underneath while it says
 /// more than the title, then the fields that are set; empty ones wait behind "Add detail" (#187).
-/// Tapping a row opens its editor; a field a rule read from the raw text carries »«, one the AI
+/// Tapping a row opens its editor; a field a rule read from the raw text carries the quote mark, one the AI
 /// estimated the spark (#101), both accent-tinted, and its editor also shows before, after, the
-/// reason and Reset. Opening the detail marks the AI changes
-/// as seen. The bar carries Complete and the briefing's menu (Next up, Park, Analyze again).
+/// reason and Reset. Opening the detail marks the AI changes as seen, except from "New" (#349):
+/// there a line under the title says why the task waits, and "Looks right" takes the place of
+/// Complete, which moves into the menu. Otherwise the bar carries Complete and the briefing's menu
+/// (Next up, Park, Analyze again).
 struct TaskDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(CompletionPulse.self) private var completionPulse: CompletionPulse?
@@ -18,6 +20,8 @@ struct TaskDetailView: View {
     @Query(sort: \TaskContext.sortOrder) private var contexts: [TaskContext]
     @Query(sort: \Project.sortOrder) private var projects: [Project]
     @Bindable var task: TaskItem
+    /// Opened from "New" (#349): opening confirms nothing, "Looks right" does.
+    var reviewing = false
     /// Nil in previews and tests; the app passes its bridge for the access note.
     @Environment(CalendarBridge.self) private var calendar: CalendarBridge?
     /// Nil in previews; then "Analyze again" is not offered.
@@ -36,6 +40,7 @@ struct TaskDetailView: View {
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Detail")
 
     private var aiFields: [RevisedField] { RevisionService.automaticFields(on: task) }
+    private var inReview: Bool { reviewing && ViewRules.isInNew(task) }
 
     var body: some View {
         Form {
@@ -84,6 +89,13 @@ struct TaskDetailView: View {
                 }
             }
             .paperRow()
+
+            if inReview {
+                Section {
+                    ReviewNote(task: task, automaticFields: aiFields.count)
+                }
+                .listRowBackground(Color.accentColor.opacity(0.08))
+            }
 
             if let reanalysis {
                 Section {
@@ -202,7 +214,7 @@ struct TaskDetailView: View {
         .toolbar { actions }
         .onAppear {
             titleDraft = task.title ?? ""
-            markSeen()
+            if !reviewing { markSeen() }
         }
         .onChange(of: titleFocused) { _, focused in
             if !focused { commitTitle() }
@@ -250,18 +262,31 @@ struct TaskDetailView: View {
         ]
     }
 
-    /// Complete, and the briefing's "…" menu (screen 4). Completing leaves the detail.
+    /// Complete, and the briefing's "…" menu (screen 4). Completing leaves the detail. From "New"
+    /// the place of Complete belongs to "Looks right" (#349): a checkmark there reads as "OK".
     @ToolbarContentBuilder
     private var actions: some ToolbarContent {
         // Deleting stays in the list's long-press menu: deleting from inside the open detail would
         // leave the view on a destroyed model until it is gone.
         if task.isOpen {
-            ToolbarItem(placement: .primaryAction) {
-                Button("Complete", systemImage: "checkmark", action: complete)
-                    .accessibilityIdentifier("detailCompleteButton")
+            if !inReview {
+                ToolbarItem(placement: .primaryAction) {
+                    Button("Complete", systemImage: "checkmark", action: complete)
+                        .accessibilityIdentifier("detailCompleteButton")
+                }
+            } else if ViewRules.canConfirm(task) {
+                ToolbarItem(placement: .primaryAction) {
+                    Button("Looks right", action: confirmReview)
+                        .buttonStyle(.borderedProminent)
+                        .accessibilityIdentifier("detailConfirmButton")
+                }
             }
             ToolbarItem(placement: .primaryAction) {
                 Menu("More", systemImage: "ellipsis") {
+                    if inReview {
+                        Button("Complete", systemImage: "checkmark", action: complete)
+                            .accessibilityIdentifier("menuCompleteButton")
+                    }
                     if task.nextRank == nil {
                         Button("Next up", systemImage: "star", action: toggleNext)
                     } else {
@@ -330,6 +355,13 @@ struct TaskDetailView: View {
         save("next")
     }
 
+    /// The nod (#349): the task leaves "New", and the detail returns to it for the next one.
+    private func confirmReview() {
+        TaskActions.confirmReview(task)
+        save("confirm")
+        dismiss()
+    }
+
     /// Back to the list, where the row waits out its three seconds with Undo (#32). Without the
     /// window (previews) Done lands at once.
     private func complete() {
@@ -369,8 +401,8 @@ struct TaskDetailView: View {
             }
             switch origin {
             case .rule:
-                Text(verbatim: "»«")
-                    .font(.footnote)
+                Image(systemName: "quote.opening")
+                    .imageScale(.small)
                     .foregroundStyle(.tint)
                     .accessibilityLabel("From your words")
             case .ai:
@@ -454,7 +486,7 @@ struct RevisionsSheet: View {
                             .font(.caption)
                             .foregroundStyle(revision.author.isAutomatic ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
                     }
-                    Text("\(FieldFormatting.value(revision.oldValue, for: revision.field) ?? String(localized: "Empty")) → \(FieldFormatting.value(revision.newValue, for: revision.field) ?? String(localized: "Empty"))")
+                    Text("\(FieldFormatting.value(revision.oldValue, for: revision.field) ?? String(localized: "Empty")) \(Image(systemName: "arrow.right")) \(FieldFormatting.value(revision.newValue, for: revision.field) ?? String(localized: "Empty"))")
                     if let reason = revision.reason, !reason.isEmpty {
                         Text(reason).font(.footnote).foregroundStyle(.secondary)
                     }
