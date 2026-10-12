@@ -1,0 +1,5 @@
+getpwuid_r did not find a match for uid 501
+Timestamp               Ty Process[PID:TID]
+2026-10-12 04:47:57.810 Df LooseEnds[33870:2571be7] [com.henning.looseends:Watchdog] Watchdog started
+2026-10-12 04:47:58.971 Df LooseEnds[33870:2571be7] [com.henning.looseends:Watchdog] Main thread blocked for more than 1 s
+2026-10-12 04:48:01.687 Df LooseEnds[33870:2571be7] [com.henning.looseends:Watchdog] Main thread blocked for 3.8 s

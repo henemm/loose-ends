@@ -1,0 +1,9 @@
+Adversary #336: keine Neuausführung, zitierte Kernzeilen der geprüften Läufe.
+test-green-output.txt:  Executed 1 test, with 0 failures (0 unexpected) in 64.334 (64.340) seconds
+probe-gruen-60s.txt:    Executed 2 tests, with 0 failures (0 unexpected) in 42.330 (42.337) seconds
+probe-rot-10s.txt:      Executed 2 tests, with 2 failures (0 unexpected) in 40.600 (40.606) seconds  (9,2 s -> 10,3 s, 1 Auswertung; 29,1 s -> 30,1 s, 1 Auswertung)
+probe-gegenprobe-30s.txt: Executed 2 tests, with 1 failure (0 unexpected) in 42.084 (42.088) seconds (29-s-Fall rot, 30,2 s, 1 Auswertung)
+test4-falscher-wert.txt: Executed 1 test, with 1 failure; Wartezeit an Zeile 171 ca. 60 s (18,9 -> 78,9 s)
+load-vorher/test-proof.log:  Executed 1 test, with 0 failures (0 unexpected) in 88.748 seconds (8x yes, Blockaden 5,1 s und 9,9 s)
+load-nachher/test-proof.log: Executed 1 test, with 0 failures (0 unexpected) in 67.162 seconds (8x yes, Blockade 3,8 s)
+simulator-run.txt: ergebnis: Passed; tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen; head e1534c0

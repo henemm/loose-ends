@@ -130,3 +130,11 @@ Keine Produktabhängigkeiten. Die CI-Diagnose (Watchdog, `host-load.log`) bleibt
 
 ### Open Questions
 - keine (rein technisch, Tech-Lead-Entscheidung)
+
+## RED-Stand (Phase 5, 2026-10-12)
+- Wegwerf-Prüfung `docs/artifacts/fix-336-wiedererkennung-wackler/probe-wegwerf.swift.txt` (Klasse
+  `WaitForLabelSlowSnapshotProbe`; `waitForLabel` dafür vorübergehend `internal` und `of: NSObject`): erste Auswertung
+  hängt 9,2 s bzw. 29,1 s. 10 s → beide rot nach 1 Auswertung (`probe-rot-10s.txt`), 30 s → 29-s-Fall rot (`probe-gegenprobe-30s.txt`).
+- GREEN in Phase 6: dieselbe Prüfung mit 60 s (Wegwerf, danach Datei wieder auf den Fix zurücksetzen), dann `load-nachher`
+  über `loadrun.sh`-Ablauf (8× `yes`, `LOOSEENDS_SIM=LE-336`, `CLAUDE_SESSION_ID=fix336`) und `test-proof` ohne Last.
+- Lauf unter Last vorher: grün, Blockaden 5,1 s / 9,9 s nach Testaktivität (`load-vorher/correlate-output.txt`).

@@ -1,0 +1,16 @@
+    ✖ testWordEqualRecaptureTakesOverDurationAndContext, XCTAssertTrue failed - Die geöffnete Detailansicht zeigt nicht den ersten Rohtext
+Executed 1 test, with 1 failure (0 unexpected) in 79.519 (79.522) seconds
+Executed 1 test, with 1 failure (0 unexpected) in 79.519 (79.527) seconds
+Executed 1 test, with 1 failure (0 unexpected) in 79.519 (79.528) seconds
+rc=65
+
+Fehlerstelle (xcresult sourceLocation): LooseEndsUITests/RecognitionWalkthroughTests.swift:171
+Wegwerf-Änderung (nur für diesen Lauf, danach zurückgesetzt): waitForLabel(Self.firstText + "X", of: firstRawText)
+  erwartet "Zaun streichenX" statt "Zaun streichen"
+
+Dauer (xcresult-Aktivitäten, relativ zum Teststart 2026-10-12 07:39:44.914):
+  18.10 s  Tap Any (First Match)            erste Zeile in "Neu" geöffnet
+  19.63 s  erste Auswertung                 label == "Zaun streichenX" für "detailRawTextMarker"
+  78.62 s  letzte Auswertung                (rund 60 Auswertungen im 1-s-Takt)
+  78.93 s  XCTAssertTrue failed - Die geöffnete Detailansicht zeigt nicht den ersten Rohtext
+  => Wartezeit an der Zusicherung ≈ 60 s (18,9 s → 78,9 s); Testdauer gesamt 79,519 s
