@@ -4,6 +4,9 @@ import SwiftUI
 
 @main
 struct LooseEndsApp: App {
+    #if os(macOS)
+    @NSApplicationDelegateAdaptor(MacAppDelegate.self) private var macDelegate
+    #endif
     let container: ModelContainer
     let enrichment: EnrichmentCoordinator
     let notifications: DueNotificationCenter
@@ -60,7 +63,7 @@ struct LooseEndsApp: App {
     }
 
     var body: some Scene {
-        WindowGroup {
+        WindowGroup(id: "main") {
             ContentView(enrichment: enrichment, notifications: notifications, calendar: calendar)
                 .environment(calendar)
                 .preferredColorScheme(Self.uiTestColorScheme)
@@ -70,6 +73,12 @@ struct LooseEndsApp: App {
         Settings {
             SettingsView(notifications: notifications)
         }
+        // Quick capture from the menu bar (#356); SF Symbol, not the logo (#350).
+        MenuBarExtra("Loose Ends", systemImage: "text.badge.plus") {
+            MenuBarCaptureView(enrichment: enrichment)
+                .modelContainer(container)
+        }
+        .menuBarExtraStyle(.window)
         #endif
     }
 }

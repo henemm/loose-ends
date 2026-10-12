@@ -6,6 +6,9 @@ struct SettingsView: View {
     /// Nil only in previews; the app always passes its notification center.
     let notifications: DueNotificationCenter?
     @State private var time: Date
+    #if os(macOS)
+    @State private var opensAtLogin = LoginItem.isEnabled
+    #endif
 
     init(notifications: DueNotificationCenter?) {
         self.notifications = notifications
@@ -23,6 +26,21 @@ struct SettingsView: View {
             } footer: {
                 Text("A task without a due time is reminded on its day at this time. A task with a due time is reminded at that time.")
             }
+            #if os(macOS)
+            Section {
+                Toggle("Open at login", isOn: $opensAtLogin)
+                    .onChange(of: opensAtLogin) { _, on in
+                        guard on != LoginItem.isEnabled else { return }
+                        LoginItem.setEnabled(on)
+                        opensAtLogin = LoginItem.isEnabled
+                    }
+                    .accessibilityIdentifier("openAtLoginToggle")
+            } header: {
+                Text("Menu bar")
+            } footer: {
+                Text("Then capturing from the menu bar is ready right after you log in, without a window.")
+            }
+            #endif
         }
         .formStyle(.grouped)
         .navigationTitle("Settings")

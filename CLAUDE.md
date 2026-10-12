@@ -232,6 +232,8 @@ not scope creep on the current one.
 - `Shared/Intents` — App Intents shared by app, widgets and (later) the intents extension
 - `LooseEnds/` — app entry and views (iPhone, iPad, Mac); `LooseEndsWatch/`, `LooseEndsWidgets/`, `LooseEndsShare/`
   (iOS share sheet: text, links, mails via `SharedContent`) — platform targets
+- `LooseEnds/Mac` — `MenuBarCapture` (Mac only, #356): the menu bar panel with the same `CaptureView`, Dock icon only
+  while a list window is open (`DockPolicy`), login item via `SMAppService` (on from the first start, never under tests)
 - `LooseEnds/App/LaunchTimings.swift` — cold-start measuring points (#22): signposts always, `Documents/launch-timings.json`
   only in the probe build (`.probe`); launch argument `-measureLaunch` opens the capture scene
 - `LooseEnds/Speech` — `SpeechCapture` (live recognition for the capture scene, skipped under `--ui-testing`; the transcriber
