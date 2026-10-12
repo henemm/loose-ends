@@ -206,7 +206,7 @@ jobs:
               # Siri-Sätze auf Deutsch (#347): ohne de.lproj/AppShortcuts.strings erkennt eine deutsche
               # Siri nur die englischen Sätze. „Erfassen“ ist der kurze Titel in der Kurzbefehle-App.
               shortcuts_de=$(plutil -convert xml1 -o - "$bundle/de.lproj/AppShortcuts.strings" 2>/dev/null || true)
-              for text in 'Zu ${applicationName} hinzufügen' 'Neue Aufgabe in ${applicationName}' 'In ${applicationName} erfassen' 'Merk dir in ${applicationName}'; do
+              for text in 'Zu ${applicationName} hinzufügen' '${applicationName} neue Aufgabe' 'In ${applicationName} erfassen' 'Aufgabe mit ${applicationName}'; do
                 if printf '%s' "$shortcuts_de" | grep -qF "<string>$text</string>"; then
                   row "| $id | de: Siri-Satz „${text}“ vorhanden |"
                 else
