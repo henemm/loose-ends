@@ -72,7 +72,7 @@ struct CaptureView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
                 // The hint replaces the placeholder visually; the field keeps its name for VoiceOver.
                 TextField("What should I remember?", text: $text, prompt: hintState == .hint ? Text(verbatim: "") : nil, axis: .vertical)
                     .font(.title3)
@@ -82,8 +82,9 @@ struct CaptureView: View {
                     .onSubmit(save)
                     .onChange(of: text) { _, newValue in submitOnReturn(newValue) }
                     .accessibilityIdentifier("captureTextField")
+                    .modifier(FieldSurface())
                     .overlay(alignment: .topLeading) {
-                        if hintState == .hint { ListeningHintView() }
+                        if hintState == .hint { ListeningHintView().padding(FieldSurface.inset) }
                     }
                 if speechWanted || diagnosisFixture || listeningFixture {
                     listeningRow
@@ -97,7 +98,7 @@ struct CaptureView: View {
                     }
                 }
             }
-            .padding()
+            .padding(Layout.edge)
             .navigationTitle("Capture")
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
@@ -127,7 +128,20 @@ struct CaptureView: View {
             if focused { speech.stop() }
         }
         #if os(macOS)
-        .frame(minWidth: 440, minHeight: 240)
+        .frame(minWidth: 440, minHeight: 280)
+        #endif
+    }
+
+    /// Spacing scale (#356 follow-up): the Mac window is wider and calmer than a phone sheet.
+    private enum Layout {
+        #if os(macOS)
+        static let edge: CGFloat = 24
+        static let sectionSpacing: CGFloat = 20
+        static let captionSpacing: CGFloat = 8
+        #else
+        static let edge: CGFloat = 16
+        static let sectionSpacing: CGFloat = 12
+        static let captionSpacing: CGFloat = 6
         #endif
     }
 
@@ -188,8 +202,8 @@ struct CaptureView: View {
             .accessibilityElement(children: .combine)
             .accessibilityIdentifier("speechLoadingLabel")
         case .idle, .listening:
-            VStack(alignment: .leading, spacing: 6) {
-                HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: Layout.captionSpacing) {
+                HStack(spacing: Layout.sectionSpacing) {
                     WaveformView(levels: levels, isListening: isListening)
                     MicButton(isListening: isListening, level: levels.last ?? 0, action: toggleListening)
                 }
@@ -266,6 +280,26 @@ struct CaptureView: View {
             saveFailed = true
         }
     }
+}
+
+/// On the Mac the field is a quiet rounded surface with its own inner padding, so text and hint never
+/// touch the edge or the focus ring; iPhone and iPad keep the bare field.
+private struct FieldSurface: ViewModifier {
+    #if os(macOS)
+    static let inset: CGFloat = 14
+
+    func body(content: Content) -> some View {
+        content
+            .textFieldStyle(.plain)
+            .padding(Self.inset)
+            .frame(maxWidth: .infinity, minHeight: 96, alignment: .topLeading)
+            .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+    #else
+    static let inset: CGFloat = 0
+
+    func body(content: Content) -> some View { content }
+    #endif
 }
 
 /// Bars for the last levels over a grey baseline: accent while listening, grey otherwise (#279).
