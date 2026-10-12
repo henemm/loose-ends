@@ -1,0 +1,30 @@
+$ python3 -m unittest scripts/test_entitlements_sync.py -v   (2026-10-12, nach dem Fix, codesign --xml und typgenauem Vergleich, F001)
+test_every_target_matches_its_committed_entitlements (scripts.test_entitlements_sync.EntitlementsSyncTests.test_every_target_matches_its_committed_entitlements) ... ok
+test_integer_one_is_not_true (scripts.test_entitlements_sync.EntitlementsSyncTests.test_integer_one_is_not_true) ... ok
+test_kvstore_key_is_declared_for_the_app (scripts.test_entitlements_sync.EntitlementsSyncTests.test_kvstore_key_is_declared_for_the_app) ... ok
+test_mismatch_is_reported_per_key (scripts.test_entitlements_sync.EntitlementsSyncTests.test_mismatch_is_reported_per_key) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.032s
+
+OK
+exit=0
+
+=== Nach ./scripts/sim.sh generate: Diff von LooseEnds/LooseEnds.entitlements gegen den eingecheckten Stand ===
+(leer, 0 Zeilen; Arbeitsstand zeigt nur project.yml, .github/workflows/testflight.yml und scripts/test_entitlements_sync.py als geaendert)
+
+=== python3 -m unittest discover -s scripts -p 'test_*.py' ===
+...............................................................................................
+----------------------------------------------------------------------
+Ran 95 tests in 91.772s
+
+OK
+exit=0
+
+Ergebnis: Zieltest 4/4 OK; alle Skripttests 95/95 OK.
+Hinweise:
+- Ein frueherer discover-Lauf war rot (test_ci_xcode27.Workflows.test_no_lowering_anywhere_in_github), weil der neue
+  Kommentar in testflight.yml das Wort "project.yml" enthielt (der Test verbietet es unter .github/). Kommentar
+  umformuliert ("XcodeGen-Quelle"), danach gruen.
+- F001 (Gegenpruefung Runde 1): differences verglich mit !=, in Python ist 1 == True. Jetzt typgenau ueber same(),
+  auch elementweise in Listen; neuer Test test_integer_one_is_not_true.

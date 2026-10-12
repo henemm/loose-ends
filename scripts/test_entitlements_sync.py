@@ -27,6 +27,15 @@ def declared(project):
     return result
 
 
+def same(a, b):
+    """Typgenau gleich: in Python ist 1 == True, eine Datei mit <integer>1</integer> ist aber nicht `true`."""
+    if type(a) is not type(b):
+        return False
+    if isinstance(a, list):
+        return len(a) == len(b) and all(same(x, y) for x, y in zip(a, b))
+    return a == b
+
+
 def differences(want, have):
     """Beschreibt jede Abweichung zwischen project.yml (want) und Datei (have), je Schlüssel."""
     problems = []
@@ -35,7 +44,7 @@ def differences(want, have):
             problems.append(f"{key}: nur in project.yml, fehlt in der Datei")
         elif key not in want:
             problems.append(f"{key}: nur in der Datei, fehlt in project.yml (wird bei generate gelöscht)")
-        elif want[key] != have[key]:
+        elif not same(want[key], have[key]):
             problems.append(f"{key}: project.yml {want[key]!r}, Datei {have[key]!r}")
     return problems
 
@@ -60,6 +69,10 @@ class EntitlementsSyncTests(unittest.TestCase):
         self.assertIn("nur.yml: nur in project.yml", report)
         self.assertIn("b: project.yml 'neu', Datei 'alt'", report)
         self.assertNotIn("a:", report)
+
+    def test_integer_one_is_not_true(self):
+        self.assertEqual(["k: project.yml True, Datei 1"], differences({"k": True}, {"k": 1}))
+        self.assertEqual(["k: project.yml [True], Datei [1]"], differences({"k": [True]}, {"k": [1]}))
 
     def test_kvstore_key_is_declared_for_the_app(self):
         _, properties = declared(load_project())["LooseEnds"]
