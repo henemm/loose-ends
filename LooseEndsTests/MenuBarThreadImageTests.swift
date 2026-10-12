@@ -13,8 +13,9 @@ import Testing
         let data: [UInt8]
 
         init(_ image: CGImage) throws {
-            width = image.width
-            height = image.height
+            let width = image.width, height = image.height
+            self.width = width
+            self.height = height
             var buffer = [UInt8](repeating: 0, count: width * height * 4)
             let drawn = buffer.withUnsafeMutableBytes { raw -> Bool in
                 guard let context = CGContext(
@@ -90,7 +91,16 @@ import Testing
         let pixels = try Pixels(#require(MenuBarThreadRaster.cgImage(scale: 2)))
 
         let center = MenuBarThreadRaster.pixelPosition(of: loop.center, scale: 2)
-        #expect(pixels.alpha(x: Int(center.x), y: Int(center.y)) == 0, "loop middle is closed")
+        // The loop's free disc is ~4.2 px; 3.5 px keeps a margin for anti-aliasing at the stroke edge
+        // while still failing as soon as the stroke is much thicker than intended.
+        let radius = 3.5
+        for y in Int(center.y - radius - 1)...Int(center.y + radius + 1) {
+            for x in Int(center.x - radius - 1)...Int(center.x + radius + 1) {
+                let dx = Double(x) + 0.5 - Double(center.x), dy = Double(y) + 0.5 - Double(center.y)
+                guard (dx * dx + dy * dy).squareRoot() <= radius else { continue }
+                #expect(pixels.alpha(x: x, y: y) == 0, "loop middle is closed at (\(x), \(y))")
+            }
+        }
 
         let ring = MenuBarThreadRaster.pixelPosition(of: loop.ringPoint, scale: 2)
         #expect(pixels.alpha(x: Int(ring.x.rounded()), y: Int(ring.y.rounded())) > 0, "loop ring is missing")
