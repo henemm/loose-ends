@@ -27,6 +27,10 @@ final class TaskItem {
     // Calendar (ADR-13)
     var showInCalendar: Bool = false
     var calendarEventID: String?
+    /// The calendar the event goes to (#203 Teil C), by account and calendar name: a calendar id holds
+    /// on one device only. Both nil: the device's default, "Loose Ends". A setting, not a derived field.
+    var calendarAccount: String?
+    var calendarName: String?
 
     // Repeat (ADR-7)
     var repeatRule: RepeatRule?

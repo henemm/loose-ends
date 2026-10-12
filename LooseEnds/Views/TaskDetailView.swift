@@ -35,6 +35,8 @@ struct TaskDetailView: View {
     @State private var showsEmptyFields = false
     /// "Add to calendar" (#203): what the sheet still asks, nil while closed.
     @State private var calendarGaps: CalendarAsk.Gaps?
+    /// The calendar picker (#203 Teil C) is open.
+    @State private var choosesCalendar = false
     /// "Analyze again" (#34): running, or what it found, until the detail closes.
     @State private var reanalysis: Reanalysis?
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Detail")
@@ -155,16 +157,27 @@ struct TaskDetailView: View {
                     .accessibilityElement(children: .combine)
                     .accessibilityIdentifier("calendarAppointmentRow")
                 }
-                if task.showInCalendar, task.dueDate != nil, let target = calendar?.target {
-                    HStack {
-                        Text("Calendar")
-                        Spacer()
-                        Image(systemName: "circle.fill")
-                            .imageScale(.small)
-                            .foregroundStyle(Color(cgColor: target.color))
-                            .accessibilityHidden(true)
-                        Text(target.title)
-                            .foregroundStyle(.secondary)
+                if task.showInCalendar, task.dueDate != nil, let calendar, calendar.appCalendarID != nil {
+                    // Tapping picks the task's own calendar (#203 Teil C). A choice this device does not
+                    // have shows by name, without a color.
+                    let target = calendar.target(for: task)
+                    Button { choosesCalendar = true } label: {
+                        HStack {
+                            Text("Calendar").foregroundStyle(.primary)
+                            Spacer()
+                            if let target {
+                                Image(systemName: "circle.fill")
+                                    .imageScale(.small)
+                                    .foregroundStyle(Color(cgColor: target.color))
+                                    .accessibilityHidden(true)
+                            }
+                            Text(target?.title ?? task.calendarName ?? "")
+                                .foregroundStyle(.secondary)
+                            Image(systemName: "chevron.forward")
+                                .imageScale(.small)
+                                .foregroundStyle(.tertiary)
+                                .accessibilityHidden(true)
+                        }
                     }
                     .accessibilityElement(children: .combine)
                     .accessibilityIdentifier("calendarTargetRow")
@@ -233,6 +246,15 @@ struct TaskDetailView: View {
             CalendarAskSheet(gaps: gaps, existingStart: task.dueHasTime ? task.dueDate : nil) { answer in
                 CalendarAsk.apply(answer, gaps: gaps, to: task, contexts: contexts, projects: projects)
                 save("calendar")
+            }
+        }
+        .sheet(isPresented: $choosesCalendar) {
+            if let calendar {
+                CalendarPickerSheet(calendars: calendar.calendars, defaultID: calendar.appCalendarID,
+                                    selectedID: calendar.target(for: task)?.id) { picked in
+                    CalendarSync.choose(picked, for: task)
+                    save("calendar")
+                }
             }
         }
     }
@@ -392,11 +414,12 @@ struct TaskDetailView: View {
     /// last sync went through.
     @ViewBuilder
     private var calendarNote: some View {
-        switch CalendarSync.note(for: task, problem: calendar?.problem) {
+        switch CalendarSync.note(for: task, problem: calendar?.problem, missing: calendar?.isMissing(task) ?? false) {
         case .needsDueDate: Text("Shows up once the task has a due date.")
         case .accessOff: Text("Calendar access is off in Settings.")
         case .noWritableSource: Text("Couldn't create the Loose Ends calendar in any of your accounts.")
         case .syncFailed: Text("The calendar couldn't be updated.")
+        case .calendarMissing(let name): Text("The calendar “\(name)” isn't on this device.")
         case nil: EmptyView()
         }
     }
