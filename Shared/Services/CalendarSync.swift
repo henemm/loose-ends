@@ -1,7 +1,7 @@
 import Foundation
 
 /// "Show in calendar" (ADR-13): a task with a due date and the switch on is one event in the
-/// app's own calendar. Pure planning over the model objects; `CalendarBridge` talks to EventKit.
+/// app's own calendar, or in the one the task chose (#203 Teil C). Pure planning over the model objects; `CalendarBridge` talks to EventKit.
 enum CalendarSync {
     static let calendarTitle = "Loose Ends"
 
@@ -103,21 +103,76 @@ enum CalendarSync {
         return (iCloud + local + fallback + others).map(\.id).filter { seen.insert($0).inserted }
     }
 
+    // MARK: The calendar a task chose (#203 Teil C)
+
+    /// A calendar as every device can name it: the account it lives in and its own name.
+    struct Choice: Hashable {
+        let account: String
+        let name: String
+    }
+
+    /// A writable calendar on this device.
+    struct CalendarRef: Equatable {
+        let id: String
+        let account: String
+        let name: String
+    }
+
+    /// The task's own calendar, or nil for the device's default.
+    static func choice(for task: TaskItem) -> Choice? {
+        guard let account = task.calendarAccount, let name = task.calendarName else { return nil }
+        return Choice(account: account, name: name)
+    }
+
+    /// Sets the task's calendar; nil goes back to the default.
+    static func choose(_ choice: Choice?, for task: TaskItem) {
+        task.calendarAccount = choice?.account
+        task.calendarName = choice?.name
+    }
+
+    /// The id of the chosen calendar on this device, nil when it has none by that account and name.
+    /// Two alike pick the smallest id, so the choice does not flip between syncs.
+    static func resolve(_ choice: Choice, among calendars: [CalendarRef]) -> String? {
+        calendars.filter { $0.account == choice.account && $0.name == choice.name }.map(\.id).min()
+    }
+
+    /// Every event the app writes carries its task (#203 Teil C): the event id holds on one device
+    /// only, so another device finds the event by this mark instead of adding a second one, and in a
+    /// calendar the app did not create, only marked events are ever removed.
+    static func mark(for task: TaskItem) -> URL? {
+        URL(string: "looseends://task/\(task.id.uuidString)")
+    }
+
+    /// The task an event's mark names, nil for an event without one.
+    static func taskID(fromMark url: URL?) -> UUID? {
+        guard let url, url.scheme == "looseends", url.host() == "task" else { return nil }
+        return UUID(uuidString: url.lastPathComponent)
+    }
+
+    /// Marked events whose task is gone. A marked event of a task that still exists stays, even when
+    /// this device does not hold its id: another device may have written it.
+    static func orphanedMarks(_ marked: [String: UUID], taskIDs: Set<UUID>) -> [String] {
+        marked.filter { !taskIDs.contains($0.value) }.map(\.key).sorted()
+    }
+
     /// What went wrong on the last sync, as `CalendarBridge` saw it.
     enum Problem: Equatable { case accessDenied, noWritableSource, syncFailed }
 
     /// The note under the switch.
-    enum Note: Equatable { case needsDueDate, accessOff, noWritableSource, syncFailed }
+    enum Note: Equatable { case needsDueDate, accessOff, noWritableSource, syncFailed, calendarMissing(String) }
 
-    /// Why nothing shows in the calendar, or nil while the switch is off or all is well.
-    static func note(for task: TaskItem, problem: Problem?) -> Note? {
+    /// Why nothing shows in the calendar, or nil while the switch is off or all is well. `missing` is
+    /// true when the task's calendar does not exist on this device (#203 Teil C): no event from here.
+    static func note(for task: TaskItem, problem: Problem?, missing: Bool = false) -> Note? {
         guard task.showInCalendar else { return nil }
         guard task.dueDate != nil else { return .needsDueDate }
         switch problem {
         case .accessDenied: return .accessOff
         case .noWritableSource: return .noWritableSource
         case .syncFailed: return .syncFailed
-        case nil: return nil
+        case nil:
+            guard missing, let choice = choice(for: task) else { return nil }
+            return .calendarMissing(choice.name)
         }
     }
 }
