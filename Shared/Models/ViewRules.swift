@@ -70,6 +70,17 @@ enum ViewRules {
             .sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
     }
 
+    /// The "Now" block of the iPhone start screen (#368): due today or overdue first (earliest
+    /// first), then what is lined up in "Next up" in its manual order. Each task stands once; a
+    /// task in both stays in the due part. Unlike the two lists it merges, this is one answer to
+    /// "what now?"; the badge count (`badgeCount`) is the same set.
+    static func now(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [TaskItem] {
+        let due = dueToday(in: all, now: now, calendar: calendar)
+        let dueIDs = Set(due.map(\.id))
+        let next = tasks(for: .next, in: all, now: now, calendar: calendar).filter { !dueIDs.contains($0.id) }
+        return due + next
+    }
+
     /// The number on the app icon (#299): "Next up" plus "Due today", each task once. On the start
     /// screen a task in both stands in both lists (Henning, 2026-10-11); the count does not double it.
     static func badgeCount(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> Int {
