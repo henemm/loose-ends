@@ -1,0 +1,9 @@
+/* Siri-Namen der App (#347), Hinweise in deutscher Lautschrift („klingt wie“).
+   Schlüssel sind die Variablen in project.yml → INAlternativeAppNames. */
+"CFBundleSpokenName" = "Luus Ends";
+"LE_ALT_NAME_1" = "Loose End";
+"LE_ALT_HINT_1" = "Luus End";
+"LE_ALT_NAME_2" = "LooseEnds";
+"LE_ALT_HINT_2" = "Luus Ends";
+"LE_ALT_NAME_3" = "Lose Enden";
+"LE_ALT_HINT_3" = "Lose Enden";

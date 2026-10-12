@@ -202,6 +202,21 @@ jobs:
                 row "| $id | de: Kurztitel „Erfassen“ FEHLT |"
                 echo "::error::$id: de.lproj/Localizable.strings has no 'Erfassen' (#347)"; fail=1
               fi
+              # Siris Name für die App (#347): Build 43 kannte nur englische Aussprachehinweise, eine
+              # deutsche Siri fand „Loose Ends“ nicht. Die Namen stehen als Variablen im Info.plist und
+              # werden je Sprache aus InfoPlist.strings gefüllt; fehlt die Datei, hört Siri nur Platzhalter.
+              for lang in de en; do
+                infoplist=$(plutil -convert xml1 -o - "$bundle/$lang.lproj/InfoPlist.strings" 2>/dev/null || true)
+                for key in CFBundleSpokenName LE_ALT_NAME_1 LE_ALT_NAME_2 LE_ALT_NAME_3; do
+                  value=$(printf '%s' "$infoplist" | awk -v k="<key>$key</key>" '$0 ~ k {getline; gsub(/.*<string>|<\/string>.*/, ""); print; exit}')
+                  if [ -n "$value" ]; then
+                    row "| $id | $lang: Siri-Name $key „${value}“ vorhanden |"
+                  else
+                    row "| $id | $lang: Siri-Name $key FEHLT |"
+                    echo "::error::$id: $lang.lproj/InfoPlist.strings has no $key (#347)"; fail=1
+                  fi
+                done
+              done
             fi
           done
           [ "$fail" = 0 ]

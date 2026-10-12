@@ -1,0 +1,8 @@
+/* Siri's names for the app (#347). Keys are the variables in project.yml → INAlternativeAppNames. */
+"CFBundleSpokenName" = "Loose Ends";
+"LE_ALT_NAME_1" = "Loose End";
+"LE_ALT_HINT_1" = "loose end";
+"LE_ALT_NAME_2" = "LooseEnds";
+"LE_ALT_HINT_2" = "loose ends";
+"LE_ALT_NAME_3" = "Lose Enden";
+"LE_ALT_HINT_3" = "lose enden";
