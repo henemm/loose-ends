@@ -29,6 +29,35 @@ Finding:
   Conflict: Kein Verstoß; nur Testlücke, Logik durch Lesen korrekt.
   Remediation: Optional zwei Tests ergänzen.
 
+
+Confirmation:
+  ID: C001
+  AC: AC-1
+  Status: CONFIRMED
+  Code reference: Shared/Models/ViewRules.swift:94
+  Description: AC-1 - Vereinigung aus dueToday und tasks(for: .next), Dubletten per seen-Set entfernt; Unter-, blockierte, erledigte, geparkte Aufgaben fallen in den Quellen heraus.
+
+Confirmation:
+  ID: C002
+  AC: AC-2
+  Status: CONFIRMED
+  Code reference: Shared/Models/ViewRules.swift:98
+  Description: AC-2 - Gruppen überfällig, heute, vorgemerkt (Zeitdruck gewinnt), Sortierung in byDueThenRank und byRank (Zeilen 107-115).
+
+Confirmation:
+  ID: C003
+  AC: AC-3
+  Status: CONFIRMED
+  Code reference: Shared/Models/ViewRules.swift:66
+  Description: AC-3 - dueToday (66), badgeCount (75), tasks(for:) (118) im Diff unverändert, nur Hinzufügungen.
+
+Confirmation:
+  ID: C004
+  AC: AC-4
+  Status: CONFIRMED
+  Code reference: LooseEndsTests/NowRuleTests.swift:181
+  Description: AC-4 - PR #340 CLOSED und nicht gemergt, pr-body.md mit Closes #339, Regel in docs/project/02-datenmodell-und-ansichten.md; Regressionstest für Abzeichen und Heute fällig grün.
+
 ## Herkunft der Vorbedingungen
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 
@@ -39,8 +68,10 @@ Tests: 560 bestanden, 0 fehlgeschlagen; NowRuleTests 13/13; 1 Messstrecke übers
 ## Geprüfte Dateien
 
 - sha256:f6f06d3f74ccbb9d44d85b6b9e27e570361887b13a153498d1de9f75b273ffc6  LooseEndsTests/NowRuleTests.swift
+- sha256:edaa04debc69028befe5674e3342b1296b84855eded2616a78bdc9e8f2bca382  Shared/Models/ViewRules.swift
 
 ## Prüfbasis
 
-- base: c90de26cb76636321315808675dce796d8949756
+- base: 3b061d1c7d89189b56dd435fc586ab1734992d4a
 - blob:a2735f8f953b248abfba55922d00def807a50289  LooseEndsTests/NowRuleTests.swift
+- blob:b5a1994c561700068653a7a0c98ef88c873c4480  Shared/Models/ViewRules.swift
