@@ -1,0 +1,71 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/NowRuleTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWidgets.appex
+[[36mLooseEndsTests[0m] [1mCompiling[0m NowRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m OnboardingFlowTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceDeliveryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PendingCompletionsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PeopleRetiredTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceEditingTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProcessCacheTests.swift
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsTests.abi.json
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsTests.swiftsourceinfo
+[[36mLooseEndsTests[0m] [1mLinking[0m LooseEndsTests
+[[36mLooseEndsTests[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsTests[0m] [1mRegisterExecutionPolicyException[0m LooseEndsTests.xctest
+[[36mLooseEndsTests[0m] [1mTouching[0m LooseEndsTests.xctest
+[[36mLooseEnds[0m] [1mRegisterExecutionPolicyException[0m LooseEnds.app
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEnds[0m] [1mTouching[0m LooseEnds.app
+[[36mLooseEndsUITests[0m] [1mCopying[0m textform-corpus.json
+[[36mLooseEndsUITests[0m] [1mCopying[0m lab-run.log
+[[36mLooseEndsUITests[0m] [1mCopying[0m convention-corpus.json
+[[36mLooseEndsUITests[0m] [1mLinking[0m LooseEndsUITests
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+[[36mLooseEndsUITests[0m] [1mCopying[0m date-title.json
+[[36mLooseEndsUITests[0m] [1mCopying[0m guardrail-corpus.json
+[[36mLooseEndsUITests[0m] [1mCopying[0m date-title-corpus.json
+[[36mLooseEndsUITests[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsUITests[0m] [1mCopying[0m Info.plist
+[[36mLooseEndsUITests[0m] [1mCopy[0m PkgInfo -> PkgInfo
+[[36mLooseEndsUITests[0m] [1mRegisterExecutionPolicyException[0m LooseEndsUITests.xctest
+[[36mLooseEndsUITests[0m] [1mTouching[0m LooseEndsUITests.xctest
+Test Suite 'Selected tests' started at 2026-10-12 18:32:02.757.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-12 18:32:02.759.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-12 18:32:02.759.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.003) seconds
+[1mTest run started.[0m
+Suite "Now on the start screen" started
+    [32m✔[0m "Overdue comes before due today, due today before the rest of Next up" (0.009 seconds)
+    [32m✔[0m "A task lined up and due today stands once, in the today group" (0.002 seconds)
+    [32m✔[0m "Lined up and overdue: time pressure wins" (0.002 seconds)
+    [32m✔[0m "Due earlier today is today, not overdue: the day counts, not the hour" (0.002 seconds)
+    [32m✔[0m "Due today sorts by hour, earliest first" (0.002 seconds)
+    [32m✔[0m "The rest of Next up keeps its own order" (0.002 seconds)
+    [32m✔[0m "Overdue: the oldest first" (0.002 seconds)
+    [32m✔[0m "Blocked, subtasks, done and parked stay out, even when due today or lined up" (0.004 seconds)
+    [32m✔[0m "Due later without a rank stays out" (0.002 seconds)
+    [32m✔[0m "Due later but lined up stands with the lined-up tasks" (0.002 seconds)
+    [32m✔[0m "Nothing in, nothing out" (0.001 seconds)
+    [32m✔[0m "Now holds exactly Due today and Next up, and as many tasks as the badge counts" (0.003 seconds)
+    [32m✔[0m "Due today and the badge are unchanged: a lined-up task due today still stands in Due today (#299)" (0.003 seconds)
+Suite "Now on the start screen" passed after 0.042 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-a10e694c-368/Logs/Test/Test-LooseEnds-2026.10.12_18-31-44-+0200.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 1 von 5 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
