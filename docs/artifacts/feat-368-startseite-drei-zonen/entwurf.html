@@ -1,0 +1,186 @@
+<title>Startseite drei Zonen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Layout: Arbeitsblatt — oben Entscheidungsfragen, darunter Telefon-Paare (Heute | Entwurf A | Alternative B), je hell und dunkel. */
+:root{
+  --bg:#ecebe5; --fg:#22231f; --muted:#6b6d66; --line:#d5d3cb; --card:#f7f6f1; --accent:#0F6E73;
+  --serif:"Source Serif 4", "New York", Georgia, serif;
+  --sans:"Inter Tight", -apple-system, "SF Pro Text", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#121311;--fg:#e8e8e3;--muted:#9a9c94;--line:#2c2e2a;--card:#1b1c1a;--accent:#5FC4C9;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121311;--fg:#e8e8e3;--muted:#9a9c94;--line:#2c2e2a;--card:#1b1c1a;--accent:#5FC4C9;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 64px;display:flex;flex-direction:column;gap:36px}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(26px,4vw,36px);line-height:1.15;margin:0;text-wrap:balance}
+h2{font-family:var(--serif);font-weight:600;font-size:22px;margin:0 0 4px;text-wrap:balance}
+.lede{max-width:68ch;color:var(--muted);margin:6px 0 0}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.qs{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.q b{display:block;margin-bottom:4px}
+.q .rec{color:var(--accent);font-weight:600}
+.row{display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start}
+.col{display:flex;flex-direction:column;gap:8px;min-width:0}
+.cap{font-size:13px;color:var(--muted);max-width:300px}
+.cap strong{color:var(--fg)}
+.shot{width:300px;max-width:100%;border-radius:28px;border:1px solid var(--line);display:block}
+ul.notes{margin:0;padding-left:18px;max-width:72ch}
+ul.notes li{margin:4px 0}
+
+/* Telefon-Mockups: eigene Tokens je Erscheinungsbild, unabhängig vom Seitenthema */
+.phone{--p-bg:#F4F3EE;--p-fg:#1c1c1e;--p-2:#6e6e73;--p-3:#c7c7cc;--p-acc:#0F6E73;--p-accbg:rgba(15,110,115,.10);--p-red:#d70015;--p-chip:#e9e8e1;
+  width:300px;max-width:100%;border-radius:28px;background:var(--p-bg);color:var(--p-fg);border:1px solid var(--line);
+  padding:18px 16px 22px;font-family:-apple-system,"SF Pro Text",var(--sans);font-size:14px;display:flex;flex-direction:column;gap:14px;box-sizing:border-box}
+.phone.dark{--p-bg:#171816;--p-fg:#f2f2f7;--p-2:#98989f;--p-3:#3a3a3c;--p-acc:#5FC4C9;--p-accbg:rgba(95,196,201,.14);--p-red:#ff6961;--p-chip:#242522}
+.p-top{display:flex;justify-content:space-between}.p-top span{width:30px;height:30px;border-radius:50%;background:var(--p-chip);display:grid;place-items:center;color:var(--p-fg);font-size:17px}
+.p-date{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--p-2)}
+.p-date svg{width:24px;height:14px}
+.inbox{display:flex;align-items:center;gap:10px;background:var(--p-accbg);color:var(--p-acc);border-radius:12px;padding:11px 12px;font-weight:600}
+.inbox .n{font-variant-numeric:tabular-nums;font-size:17px}
+.inbox .chev{margin-left:auto;opacity:.8}
+.p-cap{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--p-2);margin-bottom:2px}
+.zone{display:flex;flex-direction:column;gap:0}
+.task{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:.5px solid var(--p-3)}
+.task:last-child{border-bottom:0}
+.circ{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--p-3);flex:none;margin-top:2px}
+.t{min-width:0}
+.t .ti{font-family:"New York",var(--serif);font-size:15px}
+.t .me{font-size:12px;color:var(--p-2)}
+.t .me .r{color:var(--p-red);font-weight:500}
+.more{font-size:13px;color:var(--p-acc);padding-top:6px}
+.sub{font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--p-2);padding-top:8px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chips.scroll{flex-wrap:nowrap;overflow:hidden;mask-image:linear-gradient(90deg,#000 85%,transparent)}
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 11px;background:var(--p-accbg);color:var(--p-acc);font-size:13px;font-weight:500;white-space:nowrap}
+.chip .c{font-variant-numeric:tabular-nums;opacity:.75}
+.chip svg{width:14px;height:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 14px}
+.cell{display:flex;align-items:center;gap:7px;padding:6px 0;font-size:13px;color:var(--p-2)}
+.cell svg{width:14px;height:14px;flex:none}
+.cell .c{margin-left:auto;font-variant-numeric:tabular-nums}
+.lrow{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:.5px solid var(--p-3);font-size:13.5px;color:var(--p-fg)}
+.lrow svg{width:15px;height:15px;color:var(--p-2)}
+.lrow .c{margin-left:auto;color:var(--p-2);font-variant-numeric:tabular-nums}
+.fold{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--p-2);padding:8px 0}
+.fold .c{margin-left:auto}
+.badge-rec{font-size:11px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">#368 · Epic #372 · Analyse, vor der Spec</div>
+    <h1>iPhone-Startseite in drei Zonen</h1>
+    <p class="lede">Links der heutige Stand aus dem Simulator, daneben Entwurf A (Empfehlung) und Alternative B. Die Telefone zeigen die echten App-Farben: Papiergrund, Petrol als Akzent für alles Tippbare, Rot nur für Zeitdruck, Grau für Hierarchie. Symbole sind hier Nachbildungen; in der App stehen SF Symbols.</p>
+  </header>
+
+  <section>
+    <h2>Vier Fragen an dich</h2>
+    <div class="qs">
+      <div class="q"><b>1 · Wie lang wird „Jetzt“?</b>Viele überfällige Aufgaben schieben „Passt gerade“ aus dem Bild. <span class="rec">Empfehlung:</span> höchstens 5 Zeilen, darunter „4 weitere“, das den Block an Ort und Stelle aufklappt. Alternative: immer alle zeigen.</div>
+      <div class="q"><b>2 · Wo stehen vorgemerkte Aufgaben, die zugleich fällig sind?</b><span class="rec">Empfehlung:</span> nach Zeitdruck, wie im Ticket: überfällig, dann heute fällig, dann der Rest der vorgemerkten in deiner Reihenfolge. Jede Aufgabe einmal. Das ersetzt die Regel aus #339 („die Vormerkung gewinnt“), #339 wird mit #368 geschlossen.</div>
+      <div class="q"><b>3 · Welche Kontext-Chips?</b><span class="rec">Empfehlung:</span> „Schnell“ zuerst, dann nur Kontexte mit mindestens einer offenen Aufgabe, umbrechend in mehrere Zeilen (alle sichtbar, auch bei großer Schrift). Alternative B: eine Zeile, seitlich scrollen.</div>
+      <div class="q"><b>4 · Wohin mit „Als nächstes“, „Fällig“, „Neu“, Projekten und Kontexten?</b><span class="rec">Empfehlung:</span> alle in „Alle Ansichten“, klein und grau. Projekte und Kontexte bleiben dort einklappbar, mit Anlegen, Umbenennen und Löschen wie heute.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Heute</h2>
+    <p class="cap" style="max-width:68ch">Simulator, iPhone 17 Pro, englische Oberfläche, drei frisch erfasste Aufgaben, eine davon vorgemerkt. „Next up“ steht dreimal: im Satz, als Vorschau und als Zeile. Heute fällig ist hier nichts, deshalb fehlt die zweite Vorschau.</p>
+    <div class="row" id="heute">
+      <div class="col"><img class="shot" src="heute-hell.png" alt="Heutige Startseite, hell"><span class="cap">Hell</span></div>
+      <div class="col"><img class="shot" src="heute-dunkel.png" alt="Heutige Startseite, dunkel"><span class="cap">Dunkel</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Entwurf A <span class="badge-rec">Empfehlung</span></h2>
+    <p class="cap" style="max-width:68ch">Oben die Eingangsleiste (nur wenn etwas in „Neu“ liegt), dann „Jetzt“ mit höchstens fünf Zeilen, dann die Chips, unten „Alle Ansichten“ als graues Zwei-Spalten-Raster.</p>
+    <div class="row">
+      <div class="col" data-mock="A" data-theme-mock="light"></div>
+      <div class="col" data-mock="A" data-theme-mock="dark"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Alternative B</h2>
+    <p class="cap" style="max-width:68ch">„Jetzt“ mit zwei Unterzeilen (Zeitdruck, Vorgemerkt) und ohne Obergrenze, Chips in einer seitlich scrollenden Zeile, „Alle Ansichten“ als ausklappbare Liste wie heute, nur kleiner.</p>
+    <div class="row">
+      <div class="col" data-mock="B" data-theme-mock="light"></div>
+      <div class="col" data-mock="B" data-theme-mock="dark"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Was gleich bleibt</h2>
+    <ul class="notes">
+      <li>iPad und Mac behalten die Seitenleiste unverändert.</li>
+      <li>Wischen und Halten in „Jetzt“ wie heute in der Vorschau: rechts Erledigt, links Vormerken bzw. Vormerkung lösen.</li>
+      <li>Die Zahl am App-Symbol zählt unverändert „Als nächstes“ plus „heute fällig“, jede Aufgabe einmal.</li>
+      <li>Datum mit Knoten oben bleibt. Der Satz „2 zum Durchsehen, 2 vorgemerkt“ entfällt, die Eingangsleiste ersetzt ihn.</li>
+    </ul>
+  </section>
+</div>
+
+<script>
+const I = {
+  knot:'<svg viewBox="0 0 40 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 12c6 0 9-8 15-8 5 0 5 9 0 9s-4-7 3-7 9 6 18 6"/></svg>',
+  tray:'<svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3 11l2-7h10l2 7v5H3z"/><path d="M3 11h4l1 2h4l1-2h4"/></svg>',
+  hare:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 15c0-4 4-6 8-6l3-5 1 5c2 1 3 3 3 5H3z"/></svg>',
+  tag:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M3 3h7l7 7-7 7-7-7z"/><circle cx="7" cy="7" r="1.2"/></svg>',
+  star:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M10 2.5l2.3 4.8 5.2.7-3.8 3.6.9 5.2-4.6-2.5-4.6 2.5.9-5.2L2.5 8l5.2-.7z"/></svg>',
+  cal:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14M7 2v4M13 2v4"/></svg>',
+  clock:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>',
+  hour:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M5 3h10M5 17h10M6 3c0 4 8 4 8 7s-8 3-8 7M14 3c0 4-8 4-8 7"/></svg>',
+  rep:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 9a6 6 0 0 1 10-4l2 2M16 11a6 6 0 0 1-10 4l-2-2"/><path d="M16 3v4h-4M4 17v-4h4"/></svg>',
+  pause:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M7 5v10M13 5v10"/></svg>',
+  folder:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2.5 5.5h5l1.5 2h8.5v8.5h-15z"/></svg>',
+  list:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 5h10M7 10h10M7 15h10"/><circle cx="3.5" cy="5" r=".8"/><circle cx="3.5" cy="10" r=".8"/><circle cx="3.5" cy="15" r=".8"/></svg>',
+  check:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="7"/><path d="M6.8 10.2l2.2 2.2 4.2-4.6"/></svg>',
+};
+const chev = '<span class="chev">›</span>';
+const tasks = [
+  {t:'Steuerbescheid prüfen', m:'<span class="r">Gestern</span> · 30 Min', g:'zeit'},
+  {t:'Anna wegen Sonntag anrufen', m:'<span class="r">Heute, 17:00</span> · Telefon', g:'zeit'},
+  {t:'Müll rausstellen', m:'<span class="r">Heute</span> · Zuhause', g:'zeit'},
+  {t:'Rasen mähen', m:'1 Std · Garten', g:'vor'},
+  {t:'Angebote Fenster vergleichen', m:'Computer', g:'vor'},
+  {t:'Fahrradschloss ölen', m:'5 Min · Zuhause', g:'vor'},
+  {t:'Rückmeldung an Jens', m:'Computer', g:'vor'},
+];
+const row = x => `<div class="task"><span class="circ"></span><div class="t"><div class="ti">${x.t}</div><div class="me">${x.m}</div></div></div>`;
+const date = `<div class="p-top"><span><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="2.6"/><circle cx="10" cy="10" r="6.5" stroke-dasharray="2.6 1.8"/></svg></span><span>+</span></div><div class="p-date">${I.knot}<span>Montag, 12. Oktober</span></div>`;
+const inbox = `<div class="inbox">${I.tray}<span><span class="n">3</span> neue durchsehen</span>${chev}</div>`;
+const chips = cls => `<div><div class="p-cap">Passt gerade</div><div class="chips ${cls}">
+  <span class="chip">${I.hare}Schnell <span class="c">4</span></span><span class="chip">${I.tag}Zuhause <span class="c">6</span></span>
+  <span class="chip">${I.tag}Computer <span class="c">5</span></span><span class="chip">${I.tag}Garten <span class="c">2</span></span>
+  <span class="chip">${I.tag}Telefon <span class="c">2</span></span><span class="chip">${I.tag}Unterwegs <span class="c">1</span></span></div></div>`;
+
+function mockA(){
+  return `${date}${inbox}
+  <div class="zone"><div class="p-cap">Jetzt</div>${tasks.slice(0,5).map(row).join('')}<div class="more">2 weitere</div></div>
+  ${chips('')}
+  <div><div class="p-cap">Alle Ansichten</div><div class="grid">
+    <div class="cell">${I.star}Als nächstes<span class="c">4</span></div><div class="cell">${I.cal}Fällig<span class="c">5</span></div>
+    <div class="cell">${I.tray}Neu<span class="c">3</span></div><div class="cell">${I.hour}Alt<span class="c">2</span></div>
+    <div class="cell">${I.clock}Wartet<span class="c">1</span></div><div class="cell">${I.rep}Wiederkehrend<span class="c">4</span></div>
+    <div class="cell">${I.pause}Geparkt<span class="c">2</span></div><div class="cell">${I.folder}Projekte<span class="c">3</span></div>
+    <div class="cell">${I.tag}Kontexte<span class="c">6</span></div><div class="cell">${I.list}Alle offenen<span class="c">31</span></div>
+    <div class="cell">${I.check}Erledigt<span class="c"></span></div>
+  </div></div>`;
+}
+function mockB(){
+  const z = tasks.filter(x=>x.g==='zeit').map(row).join(''), v = tasks.filter(x=>x.g==='vor').map(row).join('');
+  return `${date}${inbox}
+  <div class="zone"><div class="p-cap">Jetzt</div><div class="sub">Zeitdruck</div>${z}<div class="sub">Vorgemerkt</div>${v}</div>
+  ${chips('scroll')}
+  <div><div class="fold">Alle Ansichten<span class="c">11 ›</span></div>
+    <div class="lrow">${I.star}Als nächstes<span class="c">4</span></div><div class="lrow">${I.cal}Fällig<span class="c">5</span></div>
+    <div class="lrow">${I.hour}Alt<span class="c">2</span></div><div class="lrow">${I.list}Alle offenen<span class="c">31</span></div>
+  </div>`;
+}
+document.querySelectorAll('[data-mock]').forEach(el=>{
+  const dark = el.dataset.themeMock==='dark';
+  el.innerHTML = `<div class="phone ${dark?'dark':''}">${el.dataset.mock==='A'?mockA():mockB()}</div><span class="cap">${dark?'Dunkel':'Hell'}</span>`;
+});
+</script>
