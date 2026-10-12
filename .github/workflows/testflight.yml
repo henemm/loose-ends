@@ -157,6 +157,19 @@ jobs:
             if [ ! -d "$bundle/de.lproj" ]; then
               echo "::error::$id has no de.lproj: German texts are missing (#323)"; fail=1
             fi
+            # Kurzbefehle-Aktionen der App auf Deutsch (#326): Build 40 zeigte „Open capture“ englisch.
+            # Belegt, ob die Übersetzung im Bundle steckt; fehlt sie hier nicht, liegt es am Gerät.
+            if [ "$id" = com.henning.looseends ]; then
+              strings_de=$(plutil -convert xml1 -o - "$bundle/de.lproj/Localizable.strings" 2>/dev/null || true)
+              for text in "Aufgabe erfassen" "Erfassung öffnen"; do
+                if printf '%s' "$strings_de" | grep -qF "<string>$text</string>"; then
+                  row "| $id | de: „${text}“ vorhanden |"
+                else
+                  row "| $id | de: „${text}“ FEHLT |"
+                  echo "::error::$id: de.lproj/Localizable.strings has no '$text' (#326)"; fail=1
+                fi
+              done
+            fi
           done
           [ "$fail" = 0 ]
 
