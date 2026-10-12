@@ -21,6 +21,9 @@ Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, 
 - **Revisions, not undo.** Every AI or user change to a derived field is a `Revision`. Nothing is deleted.
 - **Repeat without series.** `RepeatRule` on the task, roll forward on completion, `CompletionRecord` per cycle.
 - **Color budget.** Accent = tappable (incl. AI tint), red = time pressure, grey = hierarchy, green = the completion moment.
+- **SF Symbols only** (Henning, 2026-10-12, #350). Every sign in the app is an SF Symbol, outline where one exists:
+  no emoji, no characters standing in for a symbol (»«, →), no own images. The one exception is the logo's thread
+  (knot, loose thread, #180): it is the brand mark, not a control.
 - **Rules before the model** (Henning, 2026-09-20). Every derived field is first attempted with rules,
   regex, calendar, contacts or a word list. The on-device model only gets what needs language
   understanding (refining the title: since #202 `TitleRule` sets it at capture from the cleaned raw

@@ -274,7 +274,7 @@ struct TaskListView: View {
 
     private func openRow(_ task: TaskItem) -> some View {
         NavigationLink {
-            TaskDetailView(task: task)
+            TaskDetailView(task: task, reviewing: kind == .new)
         } label: {
             TaskRow(task: task, hidesContext: context != nil, note: note(for: task), marksParked: kind == .open)
         }

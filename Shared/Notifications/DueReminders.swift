@@ -3,7 +3,8 @@ import UserNotifications
 
 /// The one notification kind in v1 (data model doc, "Mitteilungen"): a task with a due time is
 /// reminded at that time ("Due now"), a task with only a due day on that day at the reminder time
-/// from the settings ("Due today", #311). Only for active tasks. Three actions, none opens the app.
+/// from the settings ("Due today", #311). For every open task: the rules set the due date without
+/// the model, sorted or not (#352). Three actions, none opens the app.
 /// Pure planning and handling; `DueNotificationCenter` talks to the system.
 enum DueReminders {
     static let categoryIdentifier = "DUE"
@@ -53,7 +54,9 @@ enum DueReminders {
         var identifier: String { DueReminders.identifierPrefix + taskID.uuidString }
     }
 
-    /// One reminder per active task with a due date whose reminder time is still ahead.
+    /// One reminder per open task with a due date whose reminder time is still ahead. Unsorted and
+    /// unchecked tasks count: the rules set their date without the model (#95, #144), and without
+    /// Apple Intelligence a task stays unsorted for good (#352). Parked and done ones do not.
     static func plan(
         for tasks: [TaskItem],
         time: Time = .standard,
@@ -61,7 +64,7 @@ enum DueReminders {
         calendar: Calendar = .current
     ) -> [Reminder] {
         tasks.compactMap { task -> Reminder? in
-            guard task.status == .active, let due = task.dueDate else { return nil }
+            guard task.isOpen, let due = task.dueDate else { return nil }
             let kind: Reminder.Kind = task.dueHasTime ? .now : .today
             let fire = kind == .now
                 ? due

@@ -24,6 +24,19 @@ enum ViewRules {
         task.status == .unprocessed || task.status == .unverified
     }
 
+    /// Sits in "New": open, top level, and not sorted, not vouched for, or changed unseen.
+    static func isInNew(_ task: TaskItem) -> Bool {
+        task.parent == nil && task.isOpen
+            && (task.status == .unprocessed || task.status == .unverified || task.hasUnseenAutomaticRevisions)
+    }
+
+    /// "Looks right" in the detail (#349): any task in "New" with something to vouch for. An
+    /// unchecked or unsorted task needs a title; one confirmed before its model step still gets
+    /// that run (`EnrichmentCoordinator`, #318).
+    static func canConfirm(_ task: TaskItem) -> Bool {
+        isInNew(task) && (task.status == .active || task.title != nil)
+    }
+
     static func reviewReason(of task: TaskItem) -> ReviewReason {
         switch task.status {
         case .unprocessed: return .notSortedYet
@@ -72,7 +85,7 @@ enum ViewRules {
             return topLevel.filter { $0.isOpen && $0.nextRank != nil && !$0.isBlocked }
                 .sorted { ($0.nextRank ?? 0) < ($1.nextRank ?? 0) }
         case .new:
-            return topLevel.filter { $0.isOpen && ($0.status == .unprocessed || $0.status == .unverified || $0.hasUnseenAutomaticRevisions) }
+            return topLevel.filter(isInNew)
                 .sorted { $0.capturedAt > $1.capturedAt }
         case .due:
             let limit = calendar.date(byAdding: .day, value: dueWithinDays, to: now) ?? now

@@ -24,6 +24,7 @@ passen: im Garten, fünf Minuten Zeit, wartet schon lange.
 - Die App plant nicht. Sie zeigt. Kein Timer, kein Kalender-Raster, kein Coach.
 - SF Symbols, Systemschriften, Dynamic Type, Dark Mode, Englisch und Deutsch (Textlängen).
 - Farbbudget (ADR-14): Akzent heißt tippbar, Rot heißt Zeitdruck, Grau trägt Hierarchie, Grün nur beim Erledigen. Jeder Screen muss in Graustufen funktionieren.
+- Zeichen sind ausschließlich SF Symbols, als Outline wo es eine gibt (Henning, 2026-10-12, #350). Keine Emojis, keine Schriftzeichen als Symbol, keine eigenen Bilder. Ausgenommen ist nur der Faden aus dem Logo (Knoten, loser Faden, #180): Er ist Marke, kein Bedienzeichen.
 
 ## Plattformen
 
@@ -82,7 +83,7 @@ Eine Liste. Jede Zeile:
 - KI-Marker (Variante C): Merkmale, die die KI gesetzt hat, sind akzentgetönt, bis der Nutzer sie gesehen hat. Ein geänderter Titel trägt zusätzlich den Funken.
 - Blockiert-Zeichen, wenn eine andere Aufgabe vorher erledigt werden muss.
 - Wisch rechts: Erledigt. Wisch links: Zu "Als nächstes" oder daraus entfernen. In "Alt": Wisch links parkt.
-  In "Neu" (dem Eingang) heißt Wisch rechts „Passt“ und bestätigt nur, was die KI sortiert hat; Erledigt
+  In "Neu" (dem Eingang) heißt Wisch rechts „Passt“ mit dem Daumen (`hand.thumbsup`; der Haken gehört allein dem Erledigen, #349) und bestätigt nur, was die KI sortiert hat; Erledigt
   gibt es dort nur im Halten-Menü, und „Muss angesehen werden“ hat keinen Wisch (Henning, 2026-10-11, #318).
 - Halten: Vorschau plus Menü mit Als nächstes, Erledigt, Verschieben (Morgen, Wochenende, nächste Woche, Datum), Parken, Löschen.
 - Nur "Als nächstes" ist manuell sortierbar (Drag). Alle anderen Ansichten haben feste Sortierung.
@@ -102,6 +103,15 @@ Eine Liste. Jede Zeile:
 - Tipp auf ein getöntes Merkmal: Popover mit Vorher, Nachher, Begründung, „Zurücksetzen“ (Wert vor der KI) und „Ändern“ (Picker). Beides ist eine Korrektur.
 - „Anzeigen“ neben „n Felder von der KI gesetzt“ öffnet das Änderungen-Sheet (Screen 5) mit allen Einträgen und „Alle zurücksetzen“.
 - Menü hinter „…“: Änderungen anzeigen, Neu analysieren, Als nächstes, Parken, Löschen (rot, mit Rückfrage, nicht rückgängig). „Neu analysieren“ ist die einzige zweite Verarbeitung und deshalb versteckt.
+
+**Aus „Neu“ geöffnet (Henning, 2026-10-12, #349).** Der Haken oben rechts erledigt, liest sich in
+einer Prüfansicht aber als „OK“. Deshalb steht dort, aus „Neu“ geöffnet, das Wort „Passt“ (Akzent,
+hervorgehoben), und „Erledigt“ steht im Menü „…“. Unter dem Titel sagt eine Zeile, warum die Aufgabe
+in „Neu“ ist: was umformuliert oder gesetzt wurde, „Titel nicht geprüft“ oder „Noch nicht sortiert“.
+Öffnen allein bestätigt dort nichts; „Passt“ markiert die Änderungen als gesehen, nimmt einen
+ungeprüften Titel an und führt zurück in die Liste. Eine unsortierte Aufgabe hat kein „Passt“, sie
+verlässt „Neu“, sobald sie sortiert ist. Aus jeder anderen Ansicht gilt Öffnen weiter als gesehen.
+Konzept mit Mockups: https://claude.ai/artifact/259uebtk5zCWHEzSydAjco
 
 ### 5. Revisions-Sheet
 

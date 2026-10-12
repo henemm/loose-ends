@@ -84,8 +84,8 @@ final class CaptureSmokeTests: XCTestCase {
     }
 
     /// Editor → detail → list → sidebar, then "Repeating"; returns the task row found there.
-    /// With the model active the enriched task leaves "New" once the detail is seen again (#165),
-    /// so the row is looked up under "Repeating", where its rule keeps it regardless of enrichment.
+    /// Whether the task still sits in "New" depends on enrichment and on "Looks right" (#165, #349),
+    /// so the row is looked up under "Repeating", where its rule keeps it regardless of either.
     @MainActor
     private func openRepeatingFromEditor(in app: XCUIApplication, detailMarker: XCUIElement) -> XCUIElement {
         let backToDetail = app.navigationBars.buttons.firstMatch

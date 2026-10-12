@@ -60,7 +60,7 @@ struct FieldEditorView: View {
             Button("Reset") { reset(revision) }
                 .accessibilityIdentifier("resetRevisionButton")
         } header: {
-            Label { Text("From your words") } icon: { Text(verbatim: "»«") }
+            Label("From your words", systemImage: "quote.opening")
                 .foregroundStyle(.tint)
                 .accessibilityIdentifier("originRuleHeader")
         } footer: {
