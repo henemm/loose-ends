@@ -98,11 +98,14 @@ deshalb als Zusatz geplant, nie als Umbau.
 ## 5. Build starten
 
 1. https://github.com/henemm/loose-ends/actions → links **TestFlight** → rechts **Run workflow**
-   → Branch `main` → **Run workflow**.
+   → Branch `main` → Feld **Was testen** ausfüllen → **Run workflow**. Ohne Text bricht der Lauf
+   ab (#347); bei einem `v*`-Tag gilt die Nachricht des getaggten Commits.
 2. Etwa 15 Minuten bis zum Upload, danach bis zu 45 Minuten Wartezeit im zweiten Job. Der Lauf hat zwei
    Jobs: „Archive and upload (iOS)" grün heißt nur hochgeladen. „Confirm Apple processed the build"
    wartet danach bis zu 45 Minuten und ist erst grün, wenn App Store Connect den Build als `VALID`
    meldet; sein Protokoll nennt `build=<Nummer> processingState=… uploadedDate=… treffer=<k>`.
+   Danach trägt er den Text unter „Was testen“ in TestFlight ein (`build=<Nummer> whatToTest gesetzt
+   für …`). Der API-Schlüssel braucht dafür die Rolle App Manager oder Admin.
 3. Zur Kontrolle in der Oberfläche: Unter https://appstoreconnect.apple.com → **Loose Ends → TestFlight** erscheint der Build,
    erst mit "Wird verarbeitet", nach 10 bis 30 Minuten bereit. Die Export-Compliance-Frage
    stellt Apple nicht, das steht schon in der App (keine eigene Verschlüsselung).

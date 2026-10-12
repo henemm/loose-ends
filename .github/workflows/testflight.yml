@@ -10,6 +10,10 @@ name: TestFlight
 on:
   workflow_dispatch:
     inputs:
+      what_to_test:
+        description: Was testen (TestFlight „Was testen“, höchstens 4000 Zeichen)
+        type: string
+        required: true
       cleanup_dry_run:
         description: Zertifikate nur auflisten, nichts widerrufen
         type: boolean
@@ -20,6 +24,11 @@ on:
 concurrency:
   group: testflight
   cancel-in-progress: false
+
+# Jeder Build sagt in TestFlight, was zu testen ist (#347): beim Start von Hand das Eingabefeld,
+# bei einem v*-Tag die Nachricht des getaggten Commits.
+env:
+  WHAT_TO_TEST: ${{ inputs.what_to_test || github.event.head_commit.message }}
 
 jobs:
   upload:
@@ -41,6 +50,13 @@ jobs:
           done
           if [ -z "${{ secrets.ASC_PRIVATE_KEY }}" ]; then echo "::error::Repository secret ASC_PRIVATE_KEY is missing"; missing=1; fi
           [ "$missing" = 0 ] || { echo "See docs/reference/testflight.md"; exit 1; }
+
+      - name: Check the test notes
+        run: |
+          len=$(printf '%s' "$WHAT_TO_TEST" | tr -d '[:space:]' | wc -c)
+          [ "$len" -gt 0 ] || { echo "::error::No test notes: every TestFlight build says what to test (#347)"; exit 1; }
+          chars=$(printf '%s' "$WHAT_TO_TEST" | python3 -c 'import sys; print(len(sys.stdin.read().strip()))')
+          [ "$chars" -le 4000 ] || { echo "::error::Test notes have $chars characters, TestFlight takes at most 4000"; exit 1; }
 
       - name: Select Xcode 27.0
         run: |
@@ -272,3 +288,4 @@ jobs:
           umask 077
           printf '%s\n' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"
           ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_wait_build.py "$BUILD"
+          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_what_to_test.py "$BUILD"
