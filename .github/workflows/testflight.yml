@@ -205,6 +205,14 @@ jobs:
               # Siris Name für die App (#347): Build 43 kannte nur englische Aussprachehinweise, eine
               # deutsche Siri fand „Loose Ends“ nicht. Die Namen stehen als Variablen im Info.plist und
               # werden je Sprache aus InfoPlist.strings gefüllt; fehlt die Datei, hört Siri nur Platzhalter.
+              # Ohne Siri-Berechtigung übergeht Siri die Ersatznamen (#347, Build 43: „Loose End ist
+              # nicht installiert“).
+              if codesign -d --entitlements :- "$bundle" 2>/dev/null | grep -q "com.apple.developer.siri"; then
+                row "| $id | Siri-Berechtigung im signierten Bundle vorhanden |"
+              else
+                row "| $id | Siri-Berechtigung FEHLT |"
+                echo "::error::$id is signed without com.apple.developer.siri (#347)"; fail=1
+              fi
               for lang in de en; do
                 infoplist=$(plutil -convert xml1 -o - "$bundle/$lang.lproj/InfoPlist.strings" 2>/dev/null || true)
                 for key in CFBundleSpokenName LE_ALT_NAME_1 LE_ALT_NAME_2 LE_ALT_NAME_3; do
