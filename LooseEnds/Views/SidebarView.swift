@@ -75,9 +75,12 @@ struct SidebarView: View {
                 }
             }
             Section {
-                // The daily three always, the others only with a task in them.
-                // On iPhone the inbox bar stands in for the "New" row (#368).
-                ForEach(ViewRules.startViews(in: tasks).filter { !(isCompact && $0 == .new) }, id: \.self) { kind in
+                if isCompact {
+                    caption("All views")
+                }
+                // The daily three always, the others only with a task in them. On iPhone the
+                // inbox bar stands in for "New" and the chips for "Quick" (#368).
+                ForEach(ViewRules.startViews(in: tasks).filter { !(isCompact && ($0 == .new || $0 == .quick)) }, id: \.self) { kind in
                     countRow(String(localized: kind.titleKey), symbol: kind.symbol, count: ViewRules.tasks(for: kind, in: tasks).count, id: "viewRow_\(kind.rawValue)")
                         .tag(ViewSelection.system(kind))
                 }
