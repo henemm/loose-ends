@@ -6,9 +6,9 @@ Datum: 2026-10-12 10:26
 - [x] **AC-1 Quelle:** Given `project.yml` / When `xcodegen generate` läuft / Then entspricht `LooseEnds/LooseEnds.entitlements` der eingecheckten Fassung (`git diff` leer), und der Schlüssel `com.apple.developer.ubiquity-kvstore-identifier` mit dem Wert `$(TeamIdentifierPrefix)$(CFBundleIdentifier)` steht in beiden.
 - [x] **AC-2 Test:** Given der Skripttest / When er auf dem Stand vor der Änderung läuft / Then schlägt er mit dem Schlüsselnamen fehl; nach der Änderung besteht er. Er läuft in der CI im Schritt „Script tests“.
 - [x] **AC-3 Archivprüfung:** Given ein Archiv, dessen Haupt-App den Schlüssel nicht trägt / When der Schritt „Verify the archive“ läuft / Then bricht er mit einer Fehlermeldung ab, die den Schlüssel nennt, vor „Upload to TestFlight“. Given ein Archiv mit Schlüssel / Then bleibt der Schritt grün. Die Prüflogik ist an einer gebauten App belegt.
-- [ ] **AC-4 Signierung:** Given der Stand mit dem Schlüssel / When der TestFlight-Workflow läuft / Then signiert die Cloud- Signierung die Haupt-App mit dem Schlüssel, die Archivprüfung (AC-3) ist grün und der Bau erscheint als VALID. Verweigert sie den Schlüssel, wird der Rückfall (Alternative 3) neu bewertet; der Fix wird nicht mit abgeschwächter Prüfung ausgeliefert.
+- [x] **AC-4 Signierung:** Given der Stand mit dem Schlüssel / When der TestFlight-Workflow läuft / Then signiert die Cloud- Signierung die Haupt-App mit dem Schlüssel, die Archivprüfung (AC-3) ist grün und der Bau erscheint als VALID. Verweigert sie den Schlüssel, wird der Rückfall (Alternative 3) neu bewertet; der Fix wird nicht mit abgeschwächter Prüfung ausgeliefert.
 - [x] **AC-5 Nichts sonst:** Der Diff berührt nur die drei genannten Dateien; die Berechtigungen von Watch, Widget und Share sind unverändert; alle bestehenden Tests grün.
-- [ ] **AC-6 Gerät:** Nach Hennings ausdrücklicher Freigabe: Uhrzeit auf dem iPhone ändern, auf dem zweiten Gerät (Mac oder iPad) steht nach kurzer Zeit dieselbe Uhrzeit (#311 Schritt 3). #311 wird erst nach seiner Bestätigung geschlossen.
+- [x] **AC-6 Gerät:** Nach Hennings ausdrücklicher Freigabe: Uhrzeit auf dem iPhone ändern, auf dem zweiten Gerät (Mac oder iPad) steht nach kurzer Zeit dieselbe Uhrzeit (#311 Schritt 3). #311 wird erst nach seiner Bestätigung geschlossen.
 
 ## Dialog
 
@@ -41,12 +41,21 @@ Nachfragen / geforderte Beweise für Runde 2:
 - Bewertung AC-4/AC-6: Die Spec (Definition of Done) verlangt beides ausdrücklich nach dem Zusammenführen; vorher unmöglich. Verschieben mit offenem #311 ist zulässig, kein Defekt. Bedingungen: `Refs`, #311 offen bis Hennings Rückmeldung nach seinem wörtlichen "jetzt ist ein Test möglich"; verweigert die Signierung den Schlüssel, gilt der Rückfall (Alternative 3), nie eine abgeschwächte Prüfung.
 **Implementierer:** Antworten und Belege wie vom Orchestrator übermittelt.
 
+### Runde 3 (nach dem Zusammenführen, 2026-10-12)
+**Adversary:**
+- AC-4 nachgereicht: TestFlight-Lauf 38226509728 vom Zweig des PR #358; die Archivprüfung zeigt im Protokoll `| com.henning.looseends | com.apple.developer.ubiquity-kvstore-identifier | vorhanden |`, der Lauf endet grün, Apple meldet Build 48 als VALID. Die Cloud-Signierung vergibt den Schlüssel, der Rückfall (Alternative 3) ist nicht nötig; das Restrisiko aus Runde 2 ist damit am echten Archiv widerlegt.
+- AC-6 nachgereicht: Henning hat Build 48 auf seinen Geräten nach eigenem „jetzt ist ein Test möglich“ geprüft (Uhrzeit auf dem iPhone ändern, zweites Gerät zeigt dieselbe Uhrzeit, Aufgabe ohne Uhrzeit meldet „Heute fällig“ zur eingestellten Zeit) und meldet: „alles positiv getestet.“
+- Auflagen aus Runde 2 erfüllt: PR #358 mit `Refs #311`, Abschnitt „Offen nach dem Zusammenführen“ vorhanden, #311 bis zu Hennings Rückmeldung offen.
+**Implementierer:** Belege wie genannt; kein Code seit Runde 2 geändert.
+
 ### Bestätigungen
+Confirmation AC-4: Code reference: .github/workflows/testflight.yml:160 (echter Archivlauf 38226509728: Zeile „vorhanden“ für die Haupt-App, Build 48 VALID). CONFIRMED
+Confirmation AC-6: Code reference: project.yml:58 (Henning, nach „jetzt ist ein Test möglich“: Uhrzeit-Abgleich iPhone → zweites Gerät „alles positiv getestet“). CONFIRMED
 Confirmation AC-1: Code reference: project.yml:58 (Schlüssel mit Wert $(TeamIdentifierPrefix)$(CFBundleIdentifier) im Ziel LooseEnds; generate lässt alle .entitlements unverändert). CONFIRMED
 Confirmation AC-2: Code reference: scripts/test_entitlements_sync.py:47 (typgenauer Vergleich, rot im Vorzustand mit Schlüsselname, 95/95 grün im CI-Aufruf). CONFIRMED
 Confirmation AC-3: Code reference: .github/workflows/testflight.yml:160 (entitled() Z. 145-158 setzt fail=1, Schritt endet mit [ "$fail" = 0 ] vor Upload Z. 211). CONFIRMED
 Confirmation AC-5: Code reference: project.yml:58 (Code-Diff nur drei Dateien, andere Ziele unverändert, Tests grün). CONFIRMED
-AC-4 und AC-6: vor Auslieferung nicht beweisbar, laut Spec nachgelagert (siehe Verdict).
+AC-4 und AC-6: nach dem Zusammenführen nachgewiesen (Runde 3).
 
 Confirmation:
   AC: AC-1
@@ -84,17 +93,17 @@ VERDICT: VERIFIED
 Tests: 95 passed, 0 failed, 0 übersprungen (Skripttests, CI-Aufruf)
 Edge cases: geprüft, keiner gebrochen (F001 behoben)
 Regressions: keine gefunden
-Checklist: 4/6 bewiesen (AC-1, AC-2, AC-3, AC-5). AC-4 und AC-6 laut Spec-DoD erst nach Zusammenführen prüfbar; Verschieben zulässig nur mit Refs #311, #311 offen bis zum ersten TestFlight-Lauf (Zeile vorhanden, VALID) und Hennings Rückmeldung.
+Checklist: 6/6 bewiesen. AC-1, AC-2, AC-3, AC-5 vor dem Zusammenführen; AC-4 (Lauf 38226509728, Zeile „vorhanden“, Build 48 VALID) und AC-6 (Hennings Geräte-Rückmeldung) in Runde 3.
 
 ## Geprüfte Dateien
 
-- sha256:00a862c27f602d0a9e9493e8fabbfe10a07df236d3690229822fe712db76a534  .github/workflows/testflight.yml
-- sha256:f63849e3386fa494c1c4f80deb9430cdc44b94dd82496295bb90bb5aea8f7003  project.yml
+- sha256:3daffc5b9c7e79b3076d9b4e3047146d0dd595ed7c407b979c29a2f7e8e56850  .github/workflows/testflight.yml
+- sha256:4f92589d62e714f7493702e3b6ed0966aa388c792f3cd99ab35978b7e0b52233  project.yml
 - sha256:815d780afb4a12f801f842e53d928015a0814c1cdce8960e8a5b02b93688e7fd  scripts/test_entitlements_sync.py
 
 ## Prüfbasis
 
-- base: d1de688828f8cf85e9f0b7337c3c749c89c76dad
-- blob:70bcc2c93d5285b4c478246e1411a2383ff8c5ff  .github/workflows/testflight.yml
-- blob:a0f0f7672823a8f7a0708d94a8d6f9deea68a491  project.yml
+- base: badaa159428a3cf96d4d58083879f6aef60c3691
+- blob:53d722959699fa1dcdcc93a8b8c9622242829f4d  .github/workflows/testflight.yml
+- blob:c74626ad04beceb88e4914f7d7f63fa358e15137  project.yml
 - blob:ef02f5b2ec2956c87194006a22bde650f4f59d0c  scripts/test_entitlements_sync.py
