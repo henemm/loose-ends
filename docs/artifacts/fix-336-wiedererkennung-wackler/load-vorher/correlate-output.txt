@@ -1,0 +1,10 @@
+
+04:39:29.428 Blockade 5.1 s
+   +13.63s vorher  [testWordEqualRecaptureTakesOverDurationA] Launch com.henning.looseends
+   +13.63s vorher  [testWordEqualRecaptureTakesOverDurationA] Terminate com.henning.looseends:95166
+    +1.52s vorher  [testWordEqualRecaptureTakesOverDurationA] Setting up automation session
+
+04:39:37.742 Blockade 9.9 s
+    +0.54s vorher  [testWordEqualRecaptureTakesOverDurationA] Check for interrupting elements affecting "captureButton" Button
+    +0.46s vorher  [testWordEqualRecaptureTakesOverDurationA] Synthesize event
+    -0.01s vorher  [testWordEqualRecaptureTakesOverDurationA] Wait for com.henning.looseends to idle
