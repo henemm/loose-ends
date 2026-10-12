@@ -169,6 +169,23 @@ jobs:
                   echo "::error::$id: de.lproj/Localizable.strings has no '$text' (#326)"; fail=1
                 fi
               done
+              # Siri-Sätze auf Deutsch (#347): ohne de.lproj/AppShortcuts.strings erkennt eine deutsche
+              # Siri nur die englischen Sätze. „Erfassen“ ist der kurze Titel in der Kurzbefehle-App.
+              shortcuts_de=$(plutil -convert xml1 -o - "$bundle/de.lproj/AppShortcuts.strings" 2>/dev/null || true)
+              for text in 'Zu ${applicationName} hinzufügen' 'Neue Aufgabe in ${applicationName}' 'In ${applicationName} erfassen'; do
+                if printf '%s' "$shortcuts_de" | grep -qF "<string>$text</string>"; then
+                  row "| $id | de: Siri-Satz „${text}“ vorhanden |"
+                else
+                  row "| $id | de: Siri-Satz „${text}“ FEHLT |"
+                  echo "::error::$id: de.lproj/AppShortcuts.strings has no '$text' (#347)"; fail=1
+                fi
+              done
+              if printf '%s' "$strings_de" | grep -qF "<string>Erfassen</string>"; then
+                row "| $id | de: Kurztitel „Erfassen“ vorhanden |"
+              else
+                row "| $id | de: Kurztitel „Erfassen“ FEHLT |"
+                echo "::error::$id: de.lproj/Localizable.strings has no 'Erfassen' (#347)"; fail=1
+              fi
             fi
           done
           [ "$fail" = 0 ]
