@@ -230,4 +230,41 @@ import Testing
         CalendarSync.choose(nil, for: task)
         #expect(CalendarSync.note(for: task, problem: nil, missing: true) == nil, "the default is never missing")
     }
+
+    @Test("The device default round-trips through the settings, nil goes back to Loose Ends (#203 Teil C2)")
+    func deviceDefaultRoundTrip() throws {
+        let suite = "CalendarSyncTests.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        #expect(CalendarSync.deviceDefault(in: defaults) == nil)
+
+        let familie = CalendarSync.Choice(account: "iCloud", name: "Familie")
+        CalendarSync.setDeviceDefault(familie, in: defaults)
+        #expect(CalendarSync.deviceDefault(in: defaults) == familie)
+
+        CalendarSync.setDeviceDefault(nil, in: defaults)
+        #expect(CalendarSync.deviceDefault(in: defaults) == nil)
+    }
+
+    @Test("Switching on takes the device default along, but never over the task's own choice (#203 Teil C2)")
+    @MainActor func switchOnTakesDefault() async throws {
+        let store = try TestStore()
+        let familie = CalendarSync.Choice(account: "iCloud", name: "Familie")
+        let arbeit = CalendarSync.Choice(account: "Exchange", name: "Arbeit")
+
+        let plain = TaskItem(rawText: "Zahnarzt anrufen")
+        let chosen = TaskItem(rawText: "Steuer abgeben")
+        let standard = TaskItem(rawText: "Rasen mähen")
+        for task in [plain, chosen, standard] { store.context.insert(task) }
+        CalendarSync.choose(arbeit, for: chosen)
+
+        CalendarSync.switchOn(plain, deviceDefault: familie)
+        CalendarSync.switchOn(chosen, deviceDefault: familie)
+        CalendarSync.switchOn(standard, deviceDefault: nil)
+
+        #expect(plain.showInCalendar && chosen.showInCalendar && standard.showInCalendar)
+        #expect(CalendarSync.choice(for: plain) == familie)
+        #expect(CalendarSync.choice(for: chosen) == arbeit)
+        #expect(CalendarSync.choice(for: standard) == nil, "Loose Ends stays without a choice")
+    }
 }

@@ -72,6 +72,7 @@ struct LooseEndsApp: App {
         #if os(macOS)
         Settings {
             SettingsView(notifications: notifications)
+                .environment(calendar)
         }
         // Quick capture from the menu bar (#356); the logo's thread, the one exception of the
         // SF Symbols rule (#350, #366).

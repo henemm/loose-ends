@@ -85,7 +85,7 @@ targets:
           - UIInterfaceOrientationLandscapeRight
         NSMicrophoneUsageDescription: Loose Ends listens so you can say a task instead of typing it.
         NSSpeechRecognitionUsageDescription: Speech is turned into text on your device to capture a task.
-        NSCalendarsFullAccessUsageDescription: Only if you switch it on, a task with a due date is shown in a "Loose Ends" calendar. The app never reads your other events.
+        NSCalendarsFullAccessUsageDescription: Only if you switch it on, a task with a due date is shown in "Loose Ends" or in a calendar you pick. The app only changes its own events.
         NSUserActivityTypes: [com.henning.looseends.capture]
         # Siri's name for the app (#347): a German Siri did not recognise "Loose Ends" in build 43 —
         # the hints were English only. Names and hints are variables, filled per language from
