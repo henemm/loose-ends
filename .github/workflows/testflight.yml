@@ -156,6 +156,24 @@ jobs:
           check com.henning.looseends.watchkitapp watchos27. NSMicrophoneUsageDescription NSSpeechRecognitionUsageDescription
           check com.henning.looseends.widgets iphoneos27.
           check com.henning.looseends.share iphoneos27.
+          # Signierte Berechtigungen der App (#311): fehlte der Key-Value-Schlüssel in der XcodeGen-Quelle, ging er
+          # beim generate still verloren, und die Mitteilungs-Uhrzeit glich sich zwischen den Geräten nicht ab.
+          entitled() { # Bundle-Kennung, Berechtigungsschlüssel
+            local id="$1" key="$2" b app=""
+            while IFS= read -r b; do
+              [ "$(get CFBundleIdentifier "$b/Info.plist")" = "$id" ] && { app="$b"; break; }
+            done < <(find "$APPS" -name '*.app')
+            if [ -n "$app" ] && codesign -d --entitlements - --xml "$app" 2>/dev/null | grep -qF "<key>$key</key>"; then
+              row "| $id | $key | vorhanden |"
+            else
+              row "| $id | $key | FEHLT |"
+              echo "::error::$id is not signed with $key (#311)"; fail=1
+            fi
+          }
+          row ""
+          row "| Bundle | Berechtigung | Ergebnis |"
+          row "|--------|--------------|----------|"
+          entitled com.henning.looseends com.apple.developer.ubiquity-kvstore-identifier
           # Deutsche Texte in jedem iOS-Bundle mit eigenem String Catalog (#323): Widget und Kontrollzentrum
           # blieben auf einem deutschen iPhone englisch, ohne dass ein Schritt es bemerkte.
           row ""

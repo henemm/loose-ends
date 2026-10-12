@@ -58,6 +58,8 @@ targets:
         # ist nicht installiert“ although „Loose End“ was declared. The App ID has had the Siri
         # capability since setup (docs/reference/testflight.md, step 2).
         com.apple.developer.siri: true
+        # iCloud key-value store: DueNotificationCenter syncs the reminder time across devices (#311).
+        com.apple.developer.ubiquity-kvstore-identifier: $(TeamIdentifierPrefix)$(CFBundleIdentifier)
         # CloudKit mirroring pushes silently; without this the device never hears about a change
         # made elsewhere. Xcode swaps the value for "production" on an App Store export.
         aps-environment: development

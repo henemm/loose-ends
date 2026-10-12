@@ -1,0 +1,36 @@
+test_every_target_matches_its_committed_entitlements (scripts.test_entitlements_sync.EntitlementsSyncTests.test_every_target_matches_its_committed_entitlements) ... FAIL
+test_kvstore_key_is_declared_for_the_app (scripts.test_entitlements_sync.EntitlementsSyncTests.test_kvstore_key_is_declared_for_the_app) ... FAIL
+test_mismatch_is_reported_per_key (scripts.test_entitlements_sync.EntitlementsSyncTests.test_mismatch_is_reported_per_key) ... ok
+
+======================================================================
+FAIL: test_every_target_matches_its_committed_entitlements (scripts.test_entitlements_sync.EntitlementsSyncTests.test_every_target_matches_its_committed_entitlements)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/fix-311-kvstore/scripts/test_entitlements_sync.py", line 53, in test_every_target_matches_its_committed_entitlements
+    self.assertEqual([], problems, "project.yml und eingecheckte Berechtigungen weichen ab:\n" + "\n".join(problems))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != ['LooseEnds (LooseEnds/LooseEnds.entitleme[118 chars]ht)']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'LooseEnds (LooseEnds/LooseEnds.entitlements) com.apple.developer.ubiquity-kvstore-identifier: nur in der Datei, fehlt in project.yml (wird bei generate gelöscht)'
+
+- []
++ ['LooseEnds (LooseEnds/LooseEnds.entitlements) '
++  'com.apple.developer.ubiquity-kvstore-identifier: nur in der Datei, fehlt in '
++  'project.yml (wird bei generate gelöscht)'] : project.yml und eingecheckte Berechtigungen weichen ab:
+LooseEnds (LooseEnds/LooseEnds.entitlements) com.apple.developer.ubiquity-kvstore-identifier: nur in der Datei, fehlt in project.yml (wird bei generate gelöscht)
+
+======================================================================
+FAIL: test_kvstore_key_is_declared_for_the_app (scripts.test_entitlements_sync.EntitlementsSyncTests.test_kvstore_key_is_declared_for_the_app)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/fix-311-kvstore/scripts/test_entitlements_sync.py", line 66, in test_kvstore_key_is_declared_for_the_app
+    self.assertEqual("$(TeamIdentifierPrefix)$(CFBundleIdentifier)", properties.get(KVSTORE))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '$(TeamIdentifierPrefix)$(CFBundleIdentifier)' != None
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.042s
+
+FAILED (failures=2)

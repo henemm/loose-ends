@@ -1,0 +1,144 @@
+Archivpruefung #311 (AC-3), lokaler Beleg, 2026-10-12 (Pruefung mit codesign -d --entitlements - --xml)
+
+Befund vorweg: ./scripts/sim.sh build baut mit CODE_SIGNING_ALLOWED=NO. Die Simulator-App traegt nur die
+Linker-Ad-hoc-Signatur ohne Berechtigungen; codesign -d --entitlements - --xml zeigt bei ihr GAR KEINE Berechtigungen,
+auch nicht den neuen Schluessel (Fall 1). Der Simulator-Bau allein kann den Schluessel also nicht zeigen. Darum:
+- Fall 2: Kopie der gebauten App, ad hoc signiert mit LooseEnds/LooseEnds.entitlements (Variablen aufgeloest wie bei
+  der Signierung: TeamIdentifierPrefix=XK87E2B3VR., CFBundleIdentifier=com.henning.looseends) -> Pruefung gruen.
+- Fall 3: dieselbe Kopie mit denselben Berechtigungen ohne den Key-Value-Schluessel -> Pruefung bricht ab.
+- Fall 4: Archiv ohne Haupt-App -> Pruefung bricht ab.
+Der gepruefte Code ist woertlich aus dem Schritt "Verify the archive" in .github/workflows/testflight.yml gezogen
+(row/get/entitled). Dass die Cloud-Signierung den Schluessel im echten Archiv setzt, belegt das nicht (das ist AC-4).
+
+=================================== Pruefskript ===================================
+#!/bin/bash
+# Belegt die Archivpruefung (#311, AC-3) mit genau dem Shell-Code aus testflight.yml.
+set -u
+WT=/Users/hem/Developer/loose-ends/.claude/worktrees/fix-311-kvstore
+S=/private/tmp/claude-501/-Users-hem-Developer-loose-ends/698d9b05-157d-401c-abaa-1505c3c45b9b/scratchpad/ac3
+BUILT=$HOME/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Products/Debug-iphonesimulator/LooseEnds.app
+rm -rf "$S"; mkdir -p "$S"
+
+# Funktionen row/get/entitled woertlich aus dem Workflow-Schritt ziehen.
+python3 - "$WT/.github/workflows/testflight.yml" > "$S/fn.sh" <<'PY'
+import sys, yaml
+steps = yaml.safe_load(open(sys.argv[1]))["jobs"]
+for job in steps.values():
+    for st in job["steps"]:
+        if st.get("name", "").startswith("Verify the archive"):
+            lines = st["run"].splitlines()
+out, take = [], False
+for l in lines:
+    if l.startswith("row() {") or l.startswith("get() {"):
+        out.append(l)
+    if l.startswith("entitled() {"):
+        take = True
+    if take:
+        out.append(l)
+        if l == "}":
+            take = False
+print("\n".join(out))
+PY
+echo "=== Aus testflight.yml gezogener Pruefcode ==="
+cat "$S/fn.sh"
+
+run_check() { # Archiv-Ordner
+  ( ARCHIVE="$1"; APPS="$ARCHIVE/Products/Applications"; SUMMARY=/dev/null; fail=0
+    source "$S/fn.sh"
+    entitled com.henning.looseends com.apple.developer.ubiquity-kvstore-identifier
+    echo "fail=$fail"; [ "$fail" = 0 ] )
+  echo "Schritt-Exit: $?"
+}
+
+echo
+echo "=== 1. Simulator-App so, wie ./scripts/sim.sh build sie baut ==="
+echo "App: $BUILT"
+codesign -dv "$BUILT" 2>&1 | grep -E 'Signature|flags'
+echo "--- codesign -d --entitlements - --xml (Ausgabe) ---"
+codesign -d --entitlements - --xml "$BUILT" 2>&1
+echo "--- Ende ---"
+mkdir -p "$S/sim-as-built/Products/Applications"
+cp -R "$BUILT" "$S/sim-as-built/Products/Applications/"
+run_check "$S/sim-as-built"
+
+echo
+echo "=== 2. Kopie, ad hoc signiert MIT den Berechtigungen aus LooseEnds.entitlements (Variablen aufgeloest) ==="
+sed -e 's/\$(TeamIdentifierPrefix)/XK87E2B3VR./' -e 's/\$(CFBundleIdentifier)/com.henning.looseends/' \
+    -e 's/\$(BUNDLE_ID_SUFFIX)//' "$WT/LooseEnds/LooseEnds.entitlements" > "$S/resolved.entitlements"
+mkdir -p "$S/with-key/Products/Applications"
+cp -R "$BUILT" "$S/with-key/Products/Applications/"
+codesign --force --sign - --entitlements "$S/resolved.entitlements" "$S/with-key/Products/Applications/LooseEnds.app" 2>&1
+echo "--- codesign -d --entitlements - --xml (Auszug) ---"
+codesign -d --entitlements - --xml "$S/with-key/Products/Applications/LooseEnds.app" 2>/dev/null | plutil -convert xml1 -o - - | grep -A1 ubiquity-kvstore
+run_check "$S/with-key"
+
+echo
+echo "=== 3. Kopie, ad hoc signiert mit denselben Berechtigungen OHNE den Key-Value-Schlüssel ==="
+python3 -c 'import plistlib,sys; d=plistlib.load(open(sys.argv[1],"rb")); d.pop("com.apple.developer.ubiquity-kvstore-identifier"); plistlib.dump(d,open(sys.argv[2],"wb"))' \
+  "$S/resolved.entitlements" "$S/without.entitlements"
+echo "Schlüssel in without.entitlements: $(grep -c ubiquity-kvstore "$S/without.entitlements"), uebrige Schluessel: $(grep -c '<key>' "$S/without.entitlements")"
+mkdir -p "$S/without-key/Products/Applications"
+cp -R "$BUILT" "$S/without-key/Products/Applications/"
+codesign --force --sign - --entitlements "$S/without.entitlements" "$S/without-key/Products/Applications/LooseEnds.app" 2>&1
+echo "--- Schlüssel in den signierten Berechtigungen? ---"
+codesign -d --entitlements - --xml "$S/without-key/Products/Applications/LooseEnds.app" 2>/dev/null | plutil -convert xml1 -o - - | grep -c ubiquity-kvstore
+run_check "$S/without-key"
+
+echo
+echo "=== 4. Archiv ohne Haupt-App ==="
+mkdir -p "$S/no-app/Products/Applications"
+run_check "$S/no-app"
+
+=================================== Ausgabe ===================================
+=== Aus testflight.yml gezogener Pruefcode ===
+row() { printf '%s\n' "$1" | tee -a "$SUMMARY"; }   # Protokoll und Zusammenfassung (#183)
+get() { plutil -extract "$1" raw "$2" 2>/dev/null || true; }
+entitled() { # Bundle-Kennung, Berechtigungsschlüssel
+  local id="$1" key="$2" b app=""
+  while IFS= read -r b; do
+    [ "$(get CFBundleIdentifier "$b/Info.plist")" = "$id" ] && { app="$b"; break; }
+  done < <(find "$APPS" -name '*.app')
+  if [ -n "$app" ] && codesign -d --entitlements - --xml "$app" 2>/dev/null | grep -qF "<key>$key</key>"; then
+    row "| $id | $key | vorhanden |"
+  else
+    row "| $id | $key | FEHLT |"
+    echo "::error::$id is not signed with $key (#311)"; fail=1
+  fi
+}
+
+=== 1. Simulator-App so, wie ./scripts/sim.sh build sie baut ===
+App: /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Products/Debug-iphonesimulator/LooseEnds.app
+CodeDirectory v=20400 size=418 flags=0x20002(adhoc,linker-signed) hashes=10+0 location=embedded
+Signature=adhoc
+--- codesign -d --entitlements - --xml (Ausgabe) ---
+Executable=/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Products/Debug-iphonesimulator/LooseEnds.app/LooseEnds
+--- Ende ---
+| com.henning.looseends | com.apple.developer.ubiquity-kvstore-identifier | FEHLT |
+::error::com.henning.looseends is not signed with com.apple.developer.ubiquity-kvstore-identifier (#311)
+fail=1
+Schritt-Exit: 1
+
+=== 2. Kopie, ad hoc signiert MIT den Berechtigungen aus LooseEnds.entitlements (Variablen aufgeloest) ===
+/private/tmp/claude-501/-Users-hem-Developer-loose-ends/698d9b05-157d-401c-abaa-1505c3c45b9b/scratchpad/ac3/with-key/Products/Applications/LooseEnds.app: replacing existing signature
+--- codesign -d --entitlements - --xml (Auszug) ---
+	<key>com.apple.developer.ubiquity-kvstore-identifier</key>
+	<string>XK87E2B3VR.com.henning.looseends</string>
+| com.henning.looseends | com.apple.developer.ubiquity-kvstore-identifier | vorhanden |
+fail=0
+Schritt-Exit: 0
+
+=== 3. Kopie, ad hoc signiert mit denselben Berechtigungen OHNE den Key-Value-Schlüssel ===
+Schlüssel in without.entitlements: 0, uebrige Schluessel: 8
+/private/tmp/claude-501/-Users-hem-Developer-loose-ends/698d9b05-157d-401c-abaa-1505c3c45b9b/scratchpad/ac3/without-key/Products/Applications/LooseEnds.app: replacing existing signature
+--- Schlüssel in den signierten Berechtigungen? ---
+0
+| com.henning.looseends | com.apple.developer.ubiquity-kvstore-identifier | FEHLT |
+::error::com.henning.looseends is not signed with com.apple.developer.ubiquity-kvstore-identifier (#311)
+fail=1
+Schritt-Exit: 1
+
+=== 4. Archiv ohne Haupt-App ===
+| com.henning.looseends | com.apple.developer.ubiquity-kvstore-identifier | FEHLT |
+::error::com.henning.looseends is not signed with com.apple.developer.ubiquity-kvstore-identifier (#311)
+fail=1
+Schritt-Exit: 1
