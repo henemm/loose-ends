@@ -1,0 +1,6 @@
+    ✖ testFirstSnapshotHangs29s, XCTAssertTrue failed - waitForLabel gab nach 30.1 s auf, Auswertungen: 1
+    ✖ testFirstSnapshotHangs9s, XCTAssertTrue failed - waitForLabel gab nach 10.3 s auf, Auswertungen: 1
+Executed 2 tests, with 2 failures (0 unexpected) in 40.600 (40.606) seconds
+Executed 2 tests, with 2 failures (0 unexpected) in 40.600 (40.609) seconds
+Executed 2 tests, with 2 failures (0 unexpected) in 40.600 (40.611) seconds
+rc=65

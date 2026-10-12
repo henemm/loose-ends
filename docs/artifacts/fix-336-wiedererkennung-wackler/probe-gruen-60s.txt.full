@@ -1,0 +1,58 @@
+[0;32m[sim][0m Simulator bereit (LE-336).
+[0;34m[sim][0m UI-Test: WaitForLabelSlowSnapshotProbe
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEnds[0m] [1mCompile XCStrings[0m Localizable.xcstrings
+[[36mLooseEnds[0m] [1mCopying[0m Localizable.strings
+[[36mLooseEnds[0m] [1mCopying[0m Localizable.strings
+[[36mLooseEnds[0m] [1mCompiling[0m OnboardingView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ContentView.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/hashed-questing-parrot/LooseEnds/Notifications/DueNotificationCenter.swift:61:23: [33mresult of call to 'assumeIsolated(_:file:line:)' is unused [#NoUsage][0m
+ 59 |             forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: NSUbiquitousKeyValueStore.default, queue: .main
+[32m 60 |         ) { [weak self] _ in[0m
+[[36mLooseEnds[0m] [1mCompiling[0m DueNotificationCenter.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SettingsView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CaptureView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m LooseEndsApp.swift
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEnds.swiftmodule
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEnds.abi.json
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEnds.swiftdoc
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds.debug.dylib
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEnds' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds
+[[36mLooseEnds[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RecognitionWalkthroughTests.swift
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEndsUITests.swiftdoc
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsUITests.swiftmodule
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsUITests.abi.json
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueNotificationCenterTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/hashed-questing-parrot/LooseEndsTests/DueNotificationCenterTests.swift:49:45: [33m'#require(_:_:)' is redundant because 'calendar.date(bySettingHour: hour, minute: minute, second: 0, of: tomorrow)' never equals 'nil' (from macro 'require')[0m
+ 47 |             task.status = .active
+[32m 48 |             if let hour {[0m
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsTests.abi.json
+[[36mLooseEndsTests[0m] [1mLinking[0m LooseEndsTests
+[[36mLooseEndsTests[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEndsUITests[0m] [1mLinking[0m LooseEndsUITests
+[[36mLooseEndsUITests[0m] [1mExtract App Intents Metadata[0m
+Test Suite 'Selected tests' started at 2026-10-12 06:46:47.827.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-12 06:46:47.829.
+Test Suite 'WaitForLabelSlowSnapshotProbe' started at 2026-10-12 06:46:47.829.
+    [32m✔[0m testFirstSnapshotHangs29s ([31m31.238[0m seconds)
+    [32m✔[0m testFirstSnapshotHangs9s ([31m11.092[0m seconds)
+Executed 2 tests, with 0 failures (0 unexpected) in 42.330 (42.337) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-12 06:47:30.168.
+Executed 2 tests, with 0 failures (0 unexpected) in 42.330 (42.339) seconds
+Executed 2 tests, with 0 failures (0 unexpected) in 42.330 (42.341) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-fix336/Logs/Test/Test-LooseEnds-2026.10.12_06-46-34-+0200.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden.
+rc=0

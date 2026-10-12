@@ -1,0 +1,44 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F280661-099B-4EC3-8874-309E72B0F822",
+        "deviceName" : "LE-336",
+        "exportedFileName" : "0950EF59-5B2E-4EA4-A694-FE46F06621E0.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "4-zweite-aufgabe-mit-uebernommenen-werten_0_723CC366-16E3-46D0-9512-CFC7F1164E91.png",
+        "timestamp" : 1791780635.065
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F280661-099B-4EC3-8874-309E72B0F822",
+        "deviceName" : "LE-336",
+        "exportedFileName" : "8AD24659-DE5B-43D3-ACAC-E66EF7D5008B.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "3-wortgleich-erneut-erfasst_0_EB48B05A-5908-4933-B365-417E3904813B.png",
+        "timestamp" : 1791780626.041
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F280661-099B-4EC3-8874-309E72B0F822",
+        "deviceName" : "LE-336",
+        "exportedFileName" : "DFFD3598-4747-4B7E-9BBF-B429227CA8AC.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "2-werte-von-hand-gesetzt_0_BB279052-E82C-48FF-A45E-0E971A060CB2.png",
+        "timestamp" : 1791780613.977
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F280661-099B-4EC3-8874-309E72B0F822",
+        "deviceName" : "LE-336",
+        "exportedFileName" : "21880542-65B2-4E1A-BF44-DEB9A9ECB291.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "1-erste-aufgabe-erfasst_0_EB39CDB9-044C-40C0-AE78-964573101660.png",
+        "timestamp" : 1791780590.243
+      }
+    ],
+    "testIdentifier" : "RecognitionWalkthroughTests/testWordEqualRecaptureTakesOverDurationAndContext()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/RecognitionWalkthroughTests/testWordEqualRecaptureTakesOverDurationAndContext"
+  }
+]

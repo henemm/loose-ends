@@ -126,8 +126,12 @@ final class RecognitionWalkthroughTests: XCTestCase {
 
     /// True, sobald das Element genau diese Beschriftung trägt — der Veredelungs-Durchgang läuft
     /// asynchron nach dem Speichern, die Ansicht zeigt das Ergebnis also erst kurz danach.
+    ///
+    /// 60 s Frist (#336): Schnappschüsse des Elementbaums baut die App auf ihrem Hauptthread. Auf dem
+    /// ausgelasteten CI-Rechner dauert einer bis zu 29 s, XCTest bricht ihn nach 30 s ab. Die Frist
+    /// muss zwei solche Auswertungen fassen, sonst bleibt nach einer langsamen ersten keine zweite.
     @MainActor
-    private func waitForLabel(_ label: String, of element: XCUIElement, timeout: TimeInterval = 10) -> Bool {
+    private func waitForLabel(_ label: String, of element: XCUIElement, timeout: TimeInterval = 60) -> Bool {
         let predicate = NSPredicate(format: "label == %@", label)
         let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
         return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed

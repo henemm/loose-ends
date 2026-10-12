@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-10-12T06:49:04+0200
+befehl: scripts/sim.sh test-proof RecognitionWalkthroughTests/testWordEqualRecaptureTakesOverDurationAndContext
+workflow: fix-336-wiedererkennung-wackler
+head: e1534c0582cd2491135190f28d3fd34d0ce30087
+basis: c16cd5ad396b5afe88ece991a4f382e67fc0005b (merge-base origin/main HEAD)
+testklasse: RecognitionWalkthroughTests/testWordEqualRecaptureTakesOverDurationAndContext
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1791780464.119  ende: 1791780543.436
+geraet: LE-336, iOS 27.0
+summary: docs/artifacts/fix-336-wiedererkennung-wackler/simulator-run/summary.json  sha256:2a38f9afbabf840e8a9d07c9fbe3be7e55106e3866695121cdcec51c3fd638cb
+xcresult: docs/artifacts/fix-336-wiedererkennung-wackler/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-336-wiedererkennung-wackler/simulator-run/*.png (4 Stück)
+
+## Geprüfte Dateien
+- sha256:b42d61551e4c4fba228b7c1151f06b06655b09a46d38e7d069b7f615a8570aff  LooseEndsUITests/RecognitionWalkthroughTests.swift

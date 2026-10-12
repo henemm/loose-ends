@@ -1,0 +1,36 @@
+[0;32m[sim][0m Simulator bereit (LE-336).
+[0;34m[sim][0m UI-Test: WaitForLabelSlowSnapshotProbe
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsShare.appex -> LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsShare.appex
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RecognitionWalkthroughTests.swift
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
+[[36mLooseEndsUITests[0m] [1mLinking[0m LooseEndsUITests
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEndsUITests.swiftdoc
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsUITests.abi.json
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsUITests.swiftmodule
+[[36mLooseEndsUITests[0m] [1mExtract App Intents Metadata[0m
+Test Suite 'Selected tests' started at 2026-10-12 06:42:13.834.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-12 06:42:13.835.
+Test Suite 'WaitForLabelSlowSnapshotProbe' started at 2026-10-12 06:42:13.835.
+    [31m✖[0m testFirstSnapshotHangs29s, XCTAssertTrue failed - waitForLabel gab nach 30.1 s auf, Auswertungen: 1
+    [31m✖[0m testFirstSnapshotHangs9s, XCTAssertTrue failed - waitForLabel gab nach 10.3 s auf, Auswertungen: 1
+Executed 2 tests, with 2 failures (0 unexpected) in 40.600 (40.606) seconds
+Test Suite 'LooseEndsUITests.xctest' failed at 2026-10-12 06:42:54.444.
+Executed 2 tests, with 2 failures (0 unexpected) in 40.600 (40.609) seconds
+Executed 2 tests, with 2 failures (0 unexpected) in 40.600 (40.611) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-fix336/Logs/Test/Test-LooseEnds-2026.10.12_06-42-04-+0200.xcresult
+[36;1mTesting started[0m
+rc=65
