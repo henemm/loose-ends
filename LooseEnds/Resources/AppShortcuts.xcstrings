@@ -4,6 +4,7 @@
   "strings" : {
     "Add to ${applicationName}" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Zu ${applicationName} hinzufügen" } } } },
     "New task in ${applicationName}" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Neue Aufgabe in ${applicationName}" } } } },
-    "Capture in ${applicationName}" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "In ${applicationName} erfassen" } } } }
+    "Capture in ${applicationName}" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "In ${applicationName} erfassen" } } } },
+    "Remember in ${applicationName}" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Merk dir in ${applicationName}" } } } }
   }
 }
