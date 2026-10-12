@@ -45,9 +45,9 @@ struct LooseEndsShortcuts: AppShortcutsProvider {
             intent: CaptureTextIntent(),
             phrases: [
                 "Add to \(.applicationName)",
-                "New task in \(.applicationName)",
+                "\(.applicationName) new task",
                 "Capture in \(.applicationName)",
-                "Remember in \(.applicationName)",
+                "Task with \(.applicationName)",
             ],
             shortTitle: "Capture",
             systemImageName: "mic"
