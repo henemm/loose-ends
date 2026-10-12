@@ -95,6 +95,43 @@ enum ViewRules {
         return Set(next + due).count
     }
 
+    /// "Now" on the iPhone start screen (#368), split by time pressure.
+    struct NowTasks {
+        let overdue: [TaskItem]
+        let today: [TaskItem]
+        let lined: [TaskItem]
+        var all: [TaskItem] { overdue + today + lined }
+    }
+
+    /// "Now" (#368): "Due today" and "Next up" as one list, each task once — the same two sets
+    /// `badgeCount` counts. Overdue first (oldest first), then due today (earliest first), then the
+    /// rest of "Next up" by rank. A task lined up and due stands with the due ones: time pressure wins.
+    static func now(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> NowTasks {
+        var seen = Set<UUID>()
+        let union = (dueToday(in: all, now: now, calendar: calendar)
+            + tasks(for: .next, in: all, now: now, calendar: calendar)).filter { seen.insert($0.id).inserted }
+        let today = calendar.startOfDay(for: now)
+        let end = calendar.date(byAdding: .day, value: 1, to: today) ?? now
+        let overdue = union.filter { ($0.dueDate.map { $0 < today } ?? false) }
+        let dueNow = union.filter { ($0.dueDate.map { $0 >= today && $0 < end } ?? false) }
+        let timed = Set((overdue + dueNow).map(\.id))
+        let lined = union.filter { !timed.contains($0.id) }
+        return NowTasks(overdue: overdue.sorted(by: byDueThenRank), today: dueNow.sorted(by: byDueThenRank),
+                        lined: lined.sorted(by: byRank))
+    }
+
+    /// Due date first, then rank (none last), then capture time (#368).
+    private static func byDueThenRank(_ a: TaskItem, _ b: TaskItem) -> Bool {
+        let (da, db) = (a.dueDate ?? .distantFuture, b.dueDate ?? .distantFuture)
+        return da != db ? da < db : byRank(a, b)
+    }
+
+    /// Rank first (none last), then capture time (#368).
+    private static func byRank(_ a: TaskItem, _ b: TaskItem) -> Bool {
+        let (ra, rb) = (a.nextRank ?? .infinity, b.nextRank ?? .infinity)
+        return ra != rb ? ra < rb : a.capturedAt < b.capturedAt
+    }
+
     static func tasks(for kind: ViewKind, in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [TaskItem] {
         let topLevel = all.filter { $0.parent == nil }
         switch kind {

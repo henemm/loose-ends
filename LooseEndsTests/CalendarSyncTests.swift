@@ -157,4 +157,77 @@ import Testing
         #expect(CalendarSync.note(for: task, problem: .noWritableSource) == .noWritableSource)
         #expect(CalendarSync.note(for: task, problem: .syncFailed) == .syncFailed)
     }
+
+    @Test("A task's calendar choice needs both names, and choosing nil goes back to the default (#203 Teil C)")
+    @MainActor func choiceRoundTrip() async throws {
+        let store = try TestStore()
+        let task = TaskItem(rawText: "Zahnarzt anrufen")
+        store.context.insert(task)
+        #expect(CalendarSync.choice(for: task) == nil)
+
+        let privat = CalendarSync.Choice(account: "iCloud", name: "Privat")
+        CalendarSync.choose(privat, for: task)
+        #expect(task.calendarAccount == "iCloud")
+        #expect(task.calendarName == "Privat")
+        #expect(CalendarSync.choice(for: task) == privat)
+
+        task.calendarAccount = nil
+        #expect(CalendarSync.choice(for: task) == nil, "one name alone is no choice")
+
+        CalendarSync.choose(nil, for: task)
+        #expect(task.calendarAccount == nil && task.calendarName == nil)
+    }
+
+    @Test("A choice resolves by account and name, picks the smallest id of two alike, and is nil when missing (#203 Teil C)")
+    func resolveByNames() {
+        let calendars = [
+            CalendarSync.CalendarRef(id: "c", account: "iCloud", name: "Privat"),
+            CalendarSync.CalendarRef(id: "b", account: "henning@gmail.com", name: "Privat"),
+            CalendarSync.CalendarRef(id: "a", account: "iCloud", name: "Privat"),
+        ]
+        #expect(CalendarSync.resolve(.init(account: "iCloud", name: "Privat"), among: calendars) == "a")
+        #expect(CalendarSync.resolve(.init(account: "henning@gmail.com", name: "Privat"), among: calendars) == "b")
+        #expect(CalendarSync.resolve(.init(account: "iCloud", name: "Arbeit"), among: calendars) == nil)
+        #expect(CalendarSync.resolve(.init(account: "Exchange", name: "Privat"), among: calendars) == nil)
+    }
+
+    @Test("The mark names its task and nothing else (#203 Teil C)")
+    @MainActor func markRoundTrip() async throws {
+        let store = try TestStore()
+        let task = TaskItem(rawText: "Zahnarzt anrufen")
+        store.context.insert(task)
+        let mark = try #require(CalendarSync.mark(for: task))
+        #expect(CalendarSync.taskID(fromMark: mark) == task.id)
+        #expect(CalendarSync.taskID(fromMark: nil) == nil)
+        #expect(CalendarSync.taskID(fromMark: URL(string: "https://example.com/task/\(task.id.uuidString)")) == nil)
+        #expect(CalendarSync.taskID(fromMark: URL(string: "looseends://task/kein-id")) == nil)
+    }
+
+    @Test("Only marked events of a deleted task are orphans; another device's event of a living task stays (#203 Teil C)")
+    func orphanedMarksOnlyForGoneTasks() {
+        let living = UUID()
+        let gone = UUID()
+        let marked = ["e1": living, "e2": gone, "e3": living]
+        #expect(CalendarSync.orphanedMarks(marked, taskIDs: [living]) == ["e2"])
+        #expect(CalendarSync.orphanedMarks(marked, taskIDs: [living, gone]).isEmpty)
+    }
+
+    @Test("A calendar missing on this device is the note, after the due date and any sync problem (#203 Teil C)")
+    @MainActor func noteForMissingCalendar() async throws {
+        let store = try TestStore()
+        let task = TaskItem(rawText: "Zahnarzt anrufen")
+        task.status = .active
+        task.showInCalendar = true
+        store.context.insert(task)
+        CalendarSync.choose(.init(account: "henning@gmail.com", name: "Familie"), for: task)
+        #expect(CalendarSync.note(for: task, problem: nil, missing: true) == .needsDueDate)
+
+        task.dueDate = Date(timeIntervalSince1970: 1_800_000_000)
+        #expect(CalendarSync.note(for: task, problem: nil, missing: true) == .calendarMissing("Familie"))
+        #expect(CalendarSync.note(for: task, problem: .accessDenied, missing: true) == .accessOff)
+        #expect(CalendarSync.note(for: task, problem: nil, missing: false) == nil)
+
+        CalendarSync.choose(nil, for: task)
+        #expect(CalendarSync.note(for: task, problem: nil, missing: true) == nil, "the default is never missing")
+    }
 }

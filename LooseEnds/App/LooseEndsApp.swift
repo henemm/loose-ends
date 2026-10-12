@@ -73,10 +73,14 @@ struct LooseEndsApp: App {
         Settings {
             SettingsView(notifications: notifications)
         }
-        // Quick capture from the menu bar (#356); SF Symbol, not the logo (#350).
-        MenuBarExtra("Loose Ends", systemImage: "text.badge.plus") {
+        // Quick capture from the menu bar (#356); the logo's thread, the one exception of the
+        // SF Symbols rule (#350, #366).
+        MenuBarExtra {
             MenuBarCaptureView(enrichment: enrichment)
                 .modelContainer(container)
+        } label: {
+            Image(nsImage: MenuBarThreadImage.image)
+                .accessibilityLabel("Loose Ends")
         }
         .menuBarExtraStyle(.window)
         #endif

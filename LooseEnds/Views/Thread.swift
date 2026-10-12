@@ -12,15 +12,20 @@ struct ThreadShape: Shape {
 
     var form: Form = .knot
 
-    func path(in rect: CGRect) -> Path {
+    /// The raw curve, unscaled, y pointing down: shared by this shape and the menu bar symbol (#366).
+    nonisolated static func curvePoints(form: Form) -> [CGPoint] {
         let a = 90.0
         let b = form == .knot ? 230.0 : 50.0
         let range = form == .knot ? -3.5...3.0 : -6.8...6.0
         let steps = 120
-        let points = (0...steps).map { i -> CGPoint in
+        return (0...steps).map { i -> CGPoint in
             let t = range.lowerBound + (range.upperBound - range.lowerBound) * Double(i) / Double(steps)
             return CGPoint(x: a * t - b * sin(t), y: -b * cos(t))
         }
+    }
+
+    func path(in rect: CGRect) -> Path {
+        let points = Self.curvePoints(form: form)
         let xs = points.map(\.x), ys = points.map(\.y)
         let minX = xs.min() ?? 0, maxX = xs.max() ?? 1
         let minY = ys.min() ?? 0, maxY = ys.max() ?? 1

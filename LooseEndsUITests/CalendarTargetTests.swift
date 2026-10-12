@@ -1,7 +1,8 @@
 import XCTest
 
 /// "Show in calendar" on the real path (#203): the calendar bridge runs (`--ui-testing-calendar`),
-/// so switching it on asks for access, creates the "Loose Ends" calendar and shows it as the target.
+/// so switching it on asks for access, creates the "Loose Ends" calendar and shows it as the target;
+/// picking another calendar for the task replaces it (#203 Teil C).
 /// The store stays in memory (`--ui-testing`); only the simulator's calendar is touched.
 final class CalendarTargetTests: XCTestCase {
     override func setUp() {
@@ -65,6 +66,29 @@ final class CalendarTargetTests: XCTestCase {
         shot.name = "detail-target-calendar"
         shot.lifetime = .keepAlways
         add(shot)
+
+        // The task picks its own calendar (#203 Teil C): the row opens the list, another calendar
+        // replaces "Loose Ends" in the row.
+        target.tap()
+        let picks = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH 'calendarPick_' AND NOT identifier ENDSWITH 'Loose Ends'"))
+        let other = picks.firstMatch
+        XCTAssertTrue(other.waitForExistence(timeout: 5), "The picker should list a calendar besides Loose Ends")
+        let otherName = String(other.identifier.dropFirst("calendarPick_".count))
+        let picker = XCTAttachment(screenshot: app.screenshot())
+        picker.name = "calendar-picker"
+        picker.lifetime = .keepAlways
+        add(picker)
+        other.tap()
+
+        XCTAssertTrue(target.waitForExistence(timeout: 5))
+        let moved = NSPredicate(format: "label CONTAINS %@", otherName)
+        expectation(for: moved, evaluatedWith: target)
+        waitForExpectations(timeout: 10)
+        let chosen = XCTAttachment(screenshot: app.screenshot())
+        chosen.name = "detail-chosen-calendar"
+        chosen.lifetime = .keepAlways
+        add(chosen)
     }
 
     /// The system asks once per install, in the simulator's own language. On a slow CI runner the

@@ -4,20 +4,24 @@ import Foundation
 import OSLog
 import SwiftData
 
-/// EventKit for `CalendarSync`: one event per task in the app's own "Loose Ends" calendar, created
-/// in the first account that allows it (#203). The app never reads or touches other calendars;
-/// full access is only needed so it can refresh and remove its own events. Asks for access the
-/// first time a task wants to be shown, and stays silent under tests, where a permission prompt
-/// would block the run.
+/// EventKit for `CalendarSync`: one event per task, in the app's own "Loose Ends" calendar (created
+/// in the first account that allows it, #203) or in the calendar the task chose (#203 Teil C). In a
+/// calendar the app did not create, it only ever touches events carrying a task's mark. Full access is
+/// needed so it can refresh and remove its own events. Asks for access the first time a task wants to
+/// be shown, and stays silent under tests, where a permission prompt would block the run.
 @Observable
 @MainActor
 final class CalendarBridge {
     /// What went wrong on the last sync; cleared by the next one that succeeds.
     private(set) var problem: CalendarSync.Problem?
-    /// The calendar events go to, once a sync has found or created it.
-    private(set) var target: Target?
+    /// Every writable calendar on this device, once a sync has run with access; empty after one failed.
+    private(set) var calendars: [Target] = []
+    /// The app's own calendar, the default for a task without a choice.
+    private(set) var appCalendarID: String?
 
-    struct Target {
+    struct Target: Identifiable {
+        let id: String
+        let account: String
         let title: String
         let color: CGColor
     }
@@ -26,6 +30,8 @@ final class CalendarBridge {
     @ObservationIgnored private let store = EKEventStore()
     @ObservationIgnored private var debounce: Task<Void, Never>?
     private static let calendarKey = "calendarIdentifier"
+    /// The calendars this device ever wrote an event into: where a deleted task's event is looked for.
+    private static let writtenCalendarsKey = "calendarIdentifiersWritten"
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Calendar")
 
     /// The calendar UI test (#203) lets the bridge run against the simulator's calendar while the
@@ -37,6 +43,27 @@ final class CalendarBridge {
 
     init(container: ModelContainer) {
         self.container = container
+    }
+
+    /// Where the task's event goes on this device: its chosen calendar, else the app's own. Nil before
+    /// the first sync with access, and when the chosen calendar does not exist here.
+    func target(for task: TaskItem) -> Target? {
+        guard let appCalendarID else { return nil }
+        guard let choice = CalendarSync.choice(for: task) else {
+            return calendars.first { $0.id == appCalendarID }
+        }
+        guard let id = CalendarSync.resolve(choice, among: refs) else { return nil }
+        return calendars.first { $0.id == id }
+    }
+
+    /// The task chose a calendar this device does not have (#203 Teil C): no event from here.
+    func isMissing(_ task: TaskItem) -> Bool {
+        guard appCalendarID != nil, let choice = CalendarSync.choice(for: task) else { return false }
+        return CalendarSync.resolve(choice, among: refs) == nil
+    }
+
+    private var refs: [CalendarSync.CalendarRef] {
+        calendars.map { CalendarSync.CalendarRef(id: $0.id, account: $0.account, name: $0.title) }
     }
 
     /// Saves come in bursts; one sync shortly after the last.
@@ -53,49 +80,28 @@ final class CalendarBridge {
         }
     }
 
-    /// Brings the app's calendar in line with the tasks and writes the event ids back. A task
-    /// deleted outright (not just switched off) leaves no `TaskItem` behind to ask for its event's
-    /// removal — once access is already granted, every sync also checks the calendar itself for
-    /// such orphans (#122), without ever requesting access on their account alone.
+    /// Brings the calendars in line with the tasks and writes the event ids back. A task deleted
+    /// outright (not just switched off) leaves no `TaskItem` behind to ask for its event's removal —
+    /// once access is already granted, every sync also checks the calendars for such orphans (#122),
+    /// without ever requesting access on their account alone.
     func sync() async {
         guard !Self.suppressed else { return }
         let context = container.mainContext
         do {
             let tasks = try context.fetch(FetchDescriptor<TaskItem>())
-            let alreadyAuthorized = EKEventStore.authorizationStatus(for: .event) == .fullAccess
+            let status = EKEventStore.authorizationStatus(for: .event)
+            // Access taken away in Settings: say so at once, whatever note stood before (#203).
+            if status != .fullAccess, status != .notDetermined {
+                forgetCalendars()
+                if tasks.contains(where: \.showInCalendar) { problem = .accessDenied }
+                return
+            }
             let quickChanges = CalendarSync.changes(in: tasks)
-            guard !quickChanges.isEmpty || alreadyAuthorized, await ensureAccess() else { return }
-            let calendar = try appCalendar()
-            target = Target(title: calendar.title, color: calendar.cgColor)
-            let changes = CalendarSync.changes(in: tasks, knownEventIDs: knownEventIDs(in: calendar))
-
-            for id in changes.removeOrphaned {
-                if let event = store.event(withIdentifier: id), event.calendar == calendar {
-                    try store.remove(event, span: .thisEvent, commit: false)
-                }
-            }
-            for task in changes.remove {
-                if let id = task.calendarEventID, let event = store.event(withIdentifier: id), event.calendar == calendar {
-                    try store.remove(event, span: .thisEvent, commit: false)
-                }
-                task.calendarEventID = nil
-            }
-            for task in changes.create + changes.update {
-                guard let plan = CalendarSync.plan(for: task) else { continue }
-                let existing = task.calendarEventID.flatMap { store.event(withIdentifier: $0) }
-                if let existing, Self.matches(existing, plan) { continue }
-                let event = existing ?? EKEvent(eventStore: store)
-                event.calendar = calendar
-                event.title = plan.title
-                event.startDate = plan.start
-                event.endDate = plan.end
-                event.isAllDay = plan.isAllDay
-                event.notes = plan.notes
-                try store.save(event, span: .thisEvent, commit: false)
-                if task.calendarEventID != event.eventIdentifier {
-                    task.calendarEventID = event.eventIdentifier
-                }
-            }
+            guard !quickChanges.isEmpty || status == .fullAccess, await ensureAccess() else { return }
+            let appCalendar = try appCalendar()
+            calendars = Self.targets(store.calendars(for: .event).filter(Self.isWritable) + [appCalendar])
+            appCalendarID = appCalendar.calendarIdentifier
+            try apply(to: tasks, appCalendar: appCalendar)
             try store.commit()
             if context.hasChanges {
                 try context.save()
@@ -104,7 +110,122 @@ final class CalendarBridge {
         } catch {
             Self.logger.error("Calendar sync failed: \(error, privacy: .public)")
             problem = (error as? CalendarError) == .noWritableSource ? .noWritableSource : .syncFailed
+            // No stale calendar row next to the note (#203).
+            forgetCalendars()
         }
+    }
+
+    private func forgetCalendars() {
+        calendars = []
+        appCalendarID = nil
+    }
+
+    private func apply(to tasks: [TaskItem], appCalendar: EKCalendar) throws {
+        let watched = watchedCalendars(appCalendar: appCalendar)
+        let watchedIDs = Set(watched.map(\.calendarIdentifier))
+        var unmarked: Set<String> = []
+        var marked: [String: UUID] = [:]
+        var markedByTask: [UUID: [EKEvent]] = [:]
+        for event in events(in: watched) {
+            guard let id = event.eventIdentifier else { continue }
+            if let taskID = CalendarSync.taskID(fromMark: event.url) {
+                marked[id] = taskID
+                markedByTask[taskID, default: []].append(event)
+            } else if event.calendar.calendarIdentifier == appCalendar.calendarIdentifier {
+                unmarked.insert(id)
+            }
+        }
+        // Unmarked events count only in the app's own calendar, as before the mark existed (#122).
+        let changes = CalendarSync.changes(in: tasks, knownEventIDs: unmarked)
+        let orphans = changes.removeOrphaned + CalendarSync.orphanedMarks(marked, taskIDs: Set(tasks.map(\.id)))
+        for id in orphans {
+            if let event = store.event(withIdentifier: id), watchedIDs.contains(event.calendar.calendarIdentifier) {
+                try store.remove(event, span: .thisEvent, commit: false)
+            }
+        }
+        for task in changes.remove {
+            var gone = markedByTask[task.id] ?? []
+            if let id = task.calendarEventID, let event = store.event(withIdentifier: id),
+               watchedIDs.contains(event.calendar.calendarIdentifier) {
+                gone.append(event)
+            }
+            try remove(gone)
+            task.calendarEventID = nil
+        }
+        for task in changes.create + changes.update {
+            guard let plan = CalendarSync.plan(for: task) else { continue }
+            let own = task.calendarEventID.flatMap { store.event(withIdentifier: $0) }
+            guard let destination = destination(for: task, appCalendar: appCalendar) else {
+                // The chosen calendar is not on this device: no event from here (#203 Teil C).
+                if let own { try remove([own]) }
+                continue
+            }
+            // Its own event or one carrying its mark, here or written by another device that sees
+            // the same calendar; anything of it left in another calendar goes (the choice changed).
+            let candidates = [own].compactMap { $0 } + (markedByTask[task.id] ?? [])
+            let isHere: (EKEvent) -> Bool = { $0.calendar.calendarIdentifier == destination.calendarIdentifier }
+            try remove(candidates.filter { !isHere($0) })
+            let existing = candidates.first(where: isHere)
+            if let existing, Self.matches(existing, plan, mark: CalendarSync.mark(for: task)) { continue }
+            let event = existing ?? EKEvent(eventStore: store)
+            event.calendar = destination
+            event.title = plan.title
+            event.startDate = plan.start
+            event.endDate = plan.end
+            event.isAllDay = plan.isAllDay
+            event.notes = plan.notes
+            event.url = CalendarSync.mark(for: task)
+            try store.save(event, span: .thisEvent, commit: false)
+            rememberWritten(destination)
+            // An adopted event keeps the id its own device wrote; overwriting it would flip the field
+            // between devices on every sync.
+            if existing == nil || own != nil, task.calendarEventID != event.eventIdentifier {
+                task.calendarEventID = event.eventIdentifier
+            }
+        }
+    }
+
+    private func remove(_ events: [EKEvent]) throws {
+        var seen: Set<String> = []
+        for event in events where seen.insert(event.eventIdentifier ?? "").inserted {
+            try store.remove(event, span: .thisEvent, commit: false)
+        }
+    }
+
+    /// The task's calendar on this device; nil when it chose one this device does not have.
+    private func destination(for task: TaskItem, appCalendar: EKCalendar) -> EKCalendar? {
+        guard let choice = CalendarSync.choice(for: task) else { return appCalendar }
+        guard let id = CalendarSync.resolve(choice, among: refs) else { return nil }
+        return store.calendar(withIdentifier: id)
+    }
+
+    /// The app's own calendar and every calendar this device wrote into that still exists.
+    private func watchedCalendars(appCalendar: EKCalendar) -> [EKCalendar] {
+        let written = UserDefaults.standard.stringArray(forKey: Self.writtenCalendarsKey) ?? []
+        let others = written.filter { $0 != appCalendar.calendarIdentifier }.compactMap { store.calendar(withIdentifier: $0) }
+        return [appCalendar] + others
+    }
+
+    private func rememberWritten(_ calendar: EKCalendar) {
+        let defaults = UserDefaults.standard
+        var written = defaults.stringArray(forKey: Self.writtenCalendarsKey) ?? []
+        guard !written.contains(calendar.calendarIdentifier) else { return }
+        written.append(calendar.calendarIdentifier)
+        defaults.set(written, forKey: Self.writtenCalendarsKey)
+    }
+
+    /// Calendars an event can be written into: no subscriptions, no birthdays, nothing read-only.
+    private static func isWritable(_ calendar: EKCalendar) -> Bool {
+        calendar.allowsContentModifications && calendar.type != .subscription && calendar.type != .birthday
+    }
+
+    /// One entry per calendar, by account and then name.
+    private static func targets(_ calendars: [EKCalendar]) -> [Target] {
+        var seen: Set<String> = []
+        return calendars
+            .filter { seen.insert($0.calendarIdentifier).inserted }
+            .map { Target(id: $0.calendarIdentifier, account: $0.source.title, title: $0.title, color: $0.cgColor) }
+            .sorted { ($0.account, $0.title, $0.id) < ($1.account, $1.title, $1.id) }
     }
 
     private func ensureAccess() async -> Bool {
@@ -182,26 +303,26 @@ final class CalendarBridge {
         return CalendarSync.SourceCandidate(id: source.sourceIdentifier, title: source.title, kind: kind)
     }
 
-    /// The ids of every event already sitting in the app's own calendar, so a task deleted outright
-    /// (not just switched off) still gets its leftover event found (#122). EventKit refuses an
-    /// unbounded range, so this looks a year either side of now — comfortably past any due date a
-    /// personal task list actually carries.
-    private func knownEventIDs(in calendar: EKCalendar) -> Set<String> {
+    /// Every event in these calendars. EventKit refuses an unbounded range, so this looks a year
+    /// either side of now — comfortably past any due date a personal task list actually carries (#122).
+    private func events(in calendars: [EKCalendar]) -> [EKEvent] {
         let now = Date()
         let start = Calendar.current.date(byAdding: .year, value: -1, to: now) ?? now
         let end = Calendar.current.date(byAdding: .year, value: 1, to: now) ?? now
-        let predicate = store.predicateForEvents(withStart: start, end: end, calendars: [calendar])
-        return Set(store.events(matching: predicate).compactMap(\.eventIdentifier))
+        let predicate = store.predicateForEvents(withStart: start, end: end, calendars: calendars)
+        return store.events(matching: predicate)
     }
 
-    /// EventKit keeps whole seconds, so dates match within a second.
-    private static func matches(_ event: EKEvent, _ plan: CalendarSync.EventPlan) -> Bool {
+    /// EventKit keeps whole seconds, so dates match within a second. An event without the mark is
+    /// written again once, so it carries it from then on.
+    private static func matches(_ event: EKEvent, _ plan: CalendarSync.EventPlan, mark: URL?) -> Bool {
         guard let start = event.startDate, let end = event.endDate else { return false }
         return event.title == plan.title
             && abs(start.timeIntervalSince(plan.start)) < 1
             && abs(end.timeIntervalSince(plan.end)) < 1
             && event.isAllDay == plan.isAllDay
             && (event.notes ?? "") == (plan.notes ?? "")
+            && event.url == mark
     }
 
     enum CalendarError: Error, Equatable {

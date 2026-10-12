@@ -43,7 +43,7 @@ struct OnboardingView: View {
         switch flow.step {
         case .siri:
             page(symbol: "mic", title: "Capture without opening the app") {
-                Text("Say “New task in Loose Ends” to Siri. Or add the Shortcuts control with “Capture a task” to Control Center. Both save without opening the app.")
+                Text("Say “Capture in Loose Ends” to Siri. Or add the Shortcuts control with “Capture a task” to Control Center. Both save without opening the app.")
             }
         case .notifications:
             page(symbol: "bell", title: "One reminder on the day") {
