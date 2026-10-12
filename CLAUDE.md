@@ -68,6 +68,10 @@ wie „iPhone 17" gibt es unter mehreren iOS-Versionen, und die falsche lehnt Xc
 Das Projekt ist generiert und nicht versioniert: Nach jedem neuen Stand muss `generate` laufen,
 sonst kennt Xcode die neu hinzugekommenen Dateien nicht und baut eine App ohne die neuen Views.
 
+Berechtigungen gehören in `project.yml` (`entitlements.properties`), nie nur in die erzeugte `.entitlements`-Datei:
+`generate` überschreibt sie (#311). `scripts/test_entitlements_sync.py` und die Archivprüfung `entitled` sichern das ab
+(`docs/reference/testflight.md`).
+
 `DEVELOPMENT_TEAM` steht in `project.yml` (`XK87E2B3VR`) und darf dort nicht geleert werden: Xcode
 legt das Team in der erzeugten Projektdatei ab, die bei jedem `generate` neu geschrieben wird — ein
 leerer Wert heißt, dass Xcode nach dem nächsten Stand jeden Gerätestart verweigert.

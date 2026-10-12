@@ -178,6 +178,14 @@ Archiv, Datenschutz-Zweckbeschreibungen nicht leer, `ITSAppUsesNonExemptEncrypti
 Ergebnis steht als Tabelle in der Zusammenfassung des Laufs und im Protokoll des Schritts (abrufbar
 mit `gh run view <id> --log`); jede Abweichung stoppt den Upload.
 
+Berechtigungen (#311) gehören in `project.yml` (`entitlements.properties` des Ziels), nie nur in die
+erzeugte `.entitlements`-Datei: XcodeGen schreibt sie bei jedem `generate` neu, ein nur dort
+eingetragener Schlüssel fehlt dann im TestFlight-Bau (so fehlte `com.apple.developer.ubiquity-kvstore-identifier`
+ab Build 29). Zwei Prüfungen sichern das ab: `python3 scripts/test_entitlements_sync.py` (läuft in der CI im
+Schritt „Script tests") vergleicht `project.yml` typgenau mit allen eingecheckten `.entitlements`; die Zeile
+`entitled` der Archivprüfung liest die signierten Berechtigungen der Haupt-App per `codesign` und stoppt
+den Upload, wenn der Schlüssel fehlt.
+
 Nach dem Upload läuft der Job `confirm` („Confirm Apple processed the build") auf `ubuntu-latest`.
 Er ruft `scripts/asc_wait_build.py` mit der Lauf-Nummer auf: Das Skript ermittelt über die App
 Store Connect API die App zur Bundle-Kennung, fragt alle 30 Sekunden den Build mit dieser Nummer ab
