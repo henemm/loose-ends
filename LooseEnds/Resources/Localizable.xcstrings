@@ -2,6 +2,11 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "Open Loose Ends" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Loose Ends öffnen" } } } },
+    "Quit Loose Ends" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Loose Ends beenden" } } } },
+    "Open at login" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Beim Anmelden öffnen" } } } },
+    "Menu bar" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Menüleiste" } } } },
+    "Then capturing from the menu bar is ready right after you log in, without a window." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Dann ist die Erfassung in der Menüleiste gleich nach dem Anmelden da, ohne Fenster." } } } },
     "Microphone access is off. Type instead, or allow it in Settings." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Mikrofonzugriff ist aus. Tippe stattdessen oder erlaube ihn in den Einstellungen." } } } },
     "Speech recognition is off. Type instead, or allow it in Settings." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Spracherkennung ist aus. Tippe stattdessen oder erlaube sie in den Einstellungen." } } } },
     "Microphone and speech recognition are off. Type instead, or allow them in Settings." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Mikrofon und Spracherkennung sind aus. Tippe stattdessen oder erlaube beides in den Einstellungen." } } } },

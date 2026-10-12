@@ -16,13 +16,17 @@ struct CaptureView: View {
 
     private let channel: CaptureChannel
     private let sourceURL: URL?
+    /// Set by the Mac menu bar (#356): there is no sheet to dismiss, the panel closes itself, and
+    /// Cancel and Done sit under the field because the panel has no toolbar. `true` after a save.
+    private let onFinish: ((Bool) -> Void)?
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Capture")
 
     /// `prefill` and `sourceURL` serve the share and mail paths (subject in, mail link attached).
-    init(prefill: String = "", channel: CaptureChannel = .app, sourceURL: URL? = nil) {
+    init(prefill: String = "", channel: CaptureChannel = .app, sourceURL: URL? = nil, onFinish: ((Bool) -> Void)? = nil) {
         _text = State(initialValue: prefill)
         self.channel = channel
         self.sourceURL = sourceURL
+        self.onFinish = onFinish
     }
 
     private var canSave: Bool {
@@ -85,6 +89,13 @@ struct CaptureView: View {
                     listeningRow
                 }
                 Spacer()
+                if onFinish != nil {
+                    HStack {
+                        Spacer()
+                        cancelButton
+                        doneButton
+                    }
+                }
             }
             .padding()
             .navigationTitle("Capture")
@@ -92,15 +103,9 @@ struct CaptureView: View {
             .navigationBarTitleDisplayMode(.inline)
             #endif
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel", role: .cancel) { cancel() }
-                        .keyboardShortcut(.cancelAction)
-                        .accessibilityIdentifier("captureCancelButton")
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Done", action: save)
-                        .disabled(!canSave)
-                        .accessibilityIdentifier("captureDoneButton")
+                if onFinish == nil {
+                    ToolbarItem(placement: .cancellationAction) { cancelButton }
+                    ToolbarItem(placement: .confirmationAction) { doneButton }
                 }
             }
             .alert("Could not save", isPresented: $saveFailed) {
@@ -124,6 +129,18 @@ struct CaptureView: View {
         #if os(macOS)
         .frame(minWidth: 440, minHeight: 240)
         #endif
+    }
+
+    private var cancelButton: some View {
+        Button("Cancel", role: .cancel) { cancel() }
+            .keyboardShortcut(.cancelAction)
+            .accessibilityIdentifier("captureCancelButton")
+    }
+
+    private var doneButton: some View {
+        Button("Done", action: save)
+            .disabled(!canSave)
+            .accessibilityIdentifier("captureDoneButton")
     }
 
     /// Waveform plus the microphone toggle; when speech is unavailable, one line says why.
@@ -225,7 +242,17 @@ struct CaptureView: View {
 
     private func cancel() {
         speech.stop()
-        dismiss()
+        finish(saved: false)
+    }
+
+    /// The sheet goes away; the menu bar panel stays alive between openings, so it starts empty next time.
+    private func finish(saved: Bool) {
+        guard let onFinish else {
+            dismiss()
+            return
+        }
+        text = ""
+        onFinish(saved)
     }
 
     private func save() {
@@ -233,7 +260,7 @@ struct CaptureView: View {
         speech.stop()
         do {
             try CaptureService.save(text, via: channel, sourceURL: sourceURL, in: modelContext)
-            dismiss()
+            finish(saved: true)
         } catch {
             Self.logger.error("Capture failed: \(error, privacy: .public)")
             saveFailed = true
