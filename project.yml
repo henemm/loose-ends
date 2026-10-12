@@ -81,11 +81,16 @@ targets:
         NSSpeechRecognitionUsageDescription: Speech is turned into text on your device to capture a task.
         NSCalendarsFullAccessUsageDescription: Only if you switch it on, a task with a due date is shown in a "Loose Ends" calendar. The app never reads your other events.
         NSUserActivityTypes: [com.henning.looseends.capture]
+        # Siri on a German iPhone hears "Loose End" and found no app (#353). The names and the "sounds like"
+        # hints are variables localized in LooseEnds/Resources/InfoPlist.xcstrings: an English hint read
+        # with German phonetics does not sound like the name. At most three entries per language.
         INAlternativeAppNames:
-          - INAlternativeAppName: Loose End
-            INAlternativeAppNamePronunciationHint: loose end
-          - INAlternativeAppName: LooseEnds
-            INAlternativeAppNamePronunciationHint: loose ends
+          - INAlternativeAppName: LE_APP_SYNONYM_1
+            INAlternativeAppNamePronunciationHint: LE_APP_SYNONYM_1_HINT
+          - INAlternativeAppName: LE_APP_SYNONYM_2
+            INAlternativeAppNamePronunciationHint: LE_APP_SYNONYM_2_HINT
+          - INAlternativeAppName: LE_APP_SYNONYM_3
+            INAlternativeAppNamePronunciationHint: LE_APP_SYNONYM_3_HINT
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends$(BUNDLE_ID_SUFFIX)

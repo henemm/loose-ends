@@ -169,6 +169,16 @@ jobs:
                   echo "::error::$id: de.lproj/Localizable.strings has no '$text' (#326)"; fail=1
                 fi
               done
+              # Siri-Synonyme des App-Namens (#353): Info.plist trägt nur Variablen, die Werte stehen hier.
+              for lang in en de; do
+                plist_strings=$(plutil -convert xml1 -o - "$bundle/$lang.lproj/InfoPlist.strings" 2>/dev/null || true)
+                if printf '%s' "$plist_strings" | grep -qF "<key>LE_APP_SYNONYM_1</key>"; then
+                  row "| $id | $lang: App-Synonyme vorhanden |"
+                else
+                  row "| $id | $lang: App-Synonyme FEHLEN |"
+                  echo "::error::$id: $lang.lproj/InfoPlist.strings has no LE_APP_SYNONYM_1 (#353)"; fail=1
+                fi
+              done
             fi
           done
           [ "$fail" = 0 ]

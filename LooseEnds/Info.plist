@@ -24,15 +24,21 @@
 	<array>
 		<dict>
 			<key>INAlternativeAppName</key>
-			<string>Loose End</string>
+			<string>LE_APP_SYNONYM_1</string>
 			<key>INAlternativeAppNamePronunciationHint</key>
-			<string>loose end</string>
+			<string>LE_APP_SYNONYM_1_HINT</string>
 		</dict>
 		<dict>
 			<key>INAlternativeAppName</key>
-			<string>LooseEnds</string>
+			<string>LE_APP_SYNONYM_2</string>
 			<key>INAlternativeAppNamePronunciationHint</key>
-			<string>loose ends</string>
+			<string>LE_APP_SYNONYM_2_HINT</string>
+		</dict>
+		<dict>
+			<key>INAlternativeAppName</key>
+			<string>LE_APP_SYNONYM_3</string>
+			<key>INAlternativeAppNamePronunciationHint</key>
+			<string>LE_APP_SYNONYM_3_HINT</string>
 		</dict>
 	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
