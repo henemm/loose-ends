@@ -48,6 +48,14 @@ struct SidebarView: View {
         #endif
     }
 
+    /// The contexts that hold an open task, in catalog order, with the count of the list behind them (#368).
+    private var fitPlaces: [FitPlace] {
+        contexts.compactMap { context in
+            let count = ViewRules.tasks(inContext: context, in: tasks).count
+            return count > 0 ? FitPlace(context: context, count: count) : nil
+        }
+    }
+
     /// The "Now" rows act as in "Next up" (#303): one set of actions carries them all (#368).
     private var taskActions: TaskInteractions { interactions(.next) }
 
@@ -71,6 +79,7 @@ struct SidebarView: View {
                         InboxBar(count: review).tag(ViewSelection.system(.new))
                     }
                     NowBlock(tasks: ViewRules.now(in: tasks).all) { previewRow($0) }
+                    FitChips(quick: ViewRules.tasks(for: .quick, in: tasks).count, places: fitPlaces) { selection = $0 }
                 }
             }
             Section {

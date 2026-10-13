@@ -191,8 +191,9 @@ final class StartScreenInteractionTests: XCTestCase {
     @MainActor
     func testInboxBarAppearsOnlyWithNewAndOpensNew() throws {
         let app = launch()
-        XCTAssertTrue(element("viewRow_new", in: app).waitForExistence(timeout: 10), "New stays in the views")
+        XCTAssertTrue(scrollTo("viewRow_new", in: app).waitForExistence(timeout: 10), "New stays in the views")
         XCTAssertFalse(element("inboxBar", in: app).exists, "No inbox bar without anything in New")
+        app.swipeDown() // back to the top if the lookup scrolled
 
         capture("Rechnung bezahlen", in: app)
 
@@ -248,6 +249,26 @@ final class StartScreenInteractionTests: XCTestCase {
         remove.tap()
         XCTAssertTrue(row.waitForExistence(timeout: 5), "Due today, the task stays in Now")
         XCTAssertEqual(nowRows(in: app).count, 1)
+    }
+
+    // MARK: - Chips (#368)
+
+    /// A task the rule files under Garden raises a chip with the list's count; the tap opens that list (AC-13).
+    @MainActor
+    func testChipOpensItsView() throws {
+        let app = launch()
+        XCTAssertFalse(firstElement(prefix: "chip_", in: app).exists, "No chip without a task in a context")
+        capture("Rasen mähen", in: app)
+
+        let chip = firstElement(prefix: "chip_", in: app)
+        XCTAssertTrue(chip.waitForExistence(timeout: 20), "A context with a task should raise a chip")
+        XCTAssertTrue(chip.label.contains("Garden"), "Chip label was \(chip.label)")
+        XCTAssertTrue(chip.label.contains("1"), "Chip label was \(chip.label)")
+        // The list reports the chip's row as its frame; the capsule sits at the leading edge, so tap there.
+        chip.coordinate(withNormalizedOffset: CGVector(dx: 0.12, dy: 0.5)).tap()
+
+        XCTAssertTrue(app.navigationBars["Garden"].waitForExistence(timeout: 5), "The chip should open its context")
+        XCTAssertEqual(taskRows(in: app).count, 1, "The list holds as many rows as the chip counted")
     }
 
     // MARK: - All open (#319)
