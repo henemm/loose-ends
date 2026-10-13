@@ -181,19 +181,6 @@ final class StartScreenInteractionTests: XCTestCase {
     // MARK: - Inbox bar and Now (#368)
 
     @MainActor
-    private func capture(_ text: String, in app: XCUIApplication) {
-        let captureButton = app.buttons["captureButton"]
-        XCTAssertTrue(captureButton.waitForExistence(timeout: 10), "No capture button")
-        captureButton.tap()
-        let field = element("captureTextField", in: app)
-        XCTAssertTrue(field.waitForExistence(timeout: 5), "Capture sheet did not open")
-        field.tap()
-        field.typeText(text)
-        app.buttons["captureDoneButton"].tap()
-        XCTAssertTrue(field.waitForNonExistence(timeout: 5), "Capture sheet did not close")
-    }
-
-    @MainActor
     private func nowRows(in app: XCUIApplication) -> [XCUIElement] {
         app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH 'nowRow_'")).allElementsBoundByIndex
