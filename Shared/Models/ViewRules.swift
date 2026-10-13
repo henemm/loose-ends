@@ -60,6 +60,13 @@ enum ViewRules {
         dailyViews + occasionalViews.filter { !tasks(for: $0, in: all, now: now, calendar: calendar).isEmpty }
     }
 
+    /// The views before Projects and Contexts in the iPhone grid (#368): Next up, Due and New always,
+    /// then the occasional ones that hold a task. "Quick" is a chip there, so it is not a cell.
+    static func gridViews(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [ViewKind] {
+        [.next, .due, .new]
+            + occasionalViews.filter { $0 != .quick && !tasks(for: $0, in: all, now: now, calendar: calendar).isEmpty }
+    }
+
     /// What stands for today (Henning, 2026-10-11, #299): open top-level tasks due today or
     /// earlier, earliest first. Narrower than the "Due" view (seven days), so the start screen and
     /// the app badge say "today", not "this week". Blocked tasks stay out, as in "Due".
