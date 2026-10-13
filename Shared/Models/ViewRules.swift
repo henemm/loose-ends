@@ -60,12 +60,6 @@ enum ViewRules {
         dailyViews + occasionalViews.filter { !tasks(for: $0, in: all, now: now, calendar: calendar).isEmpty }
     }
 
-    /// The quiet views of the iPhone start screen (#368), in the order of its two-column grid. "New"
-    /// is the inbox bar and "Quick" a chip there, so neither is a cell; All open and Done always are.
-    static func compactGridViews(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [ViewKind] {
-        startViews(in: all, now: now, calendar: calendar).filter { $0 != .new && $0 != .quick } + [.open, .done]
-    }
-
     /// What stands for today (Henning, 2026-10-11, #299): open top-level tasks due today or
     /// earlier, earliest first. Narrower than the "Due" view (seven days), so the start screen and
     /// the app badge say "today", not "this week". Blocked tasks stay out, as in "Due".
@@ -74,17 +68,6 @@ enum ViewRules {
         let end = calendar.date(byAdding: .day, value: 1, to: today) ?? now
         return all.filter { $0.parent == nil && $0.isOpen && !$0.isBlocked && ($0.dueDate.map { $0 < end } ?? false) }
             .sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
-    }
-
-    /// The "Now" block of the iPhone start screen (#368): due today or overdue first (earliest
-    /// first), then what is lined up in "Next up" in its manual order. Each task stands once; a
-    /// task in both stays in the due part. Unlike the two lists it merges, this is one answer to
-    /// "what now?"; the badge count (`badgeCount`) is the same set.
-    static func now(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [TaskItem] {
-        let due = dueToday(in: all, now: now, calendar: calendar)
-        let dueIDs = Set(due.map(\.id))
-        let next = tasks(for: .next, in: all, now: now, calendar: calendar).filter { !dueIDs.contains($0.id) }
-        return due + next
     }
 
     /// The number on the app icon (#299): "Next up" plus "Due today", each task once. On the start

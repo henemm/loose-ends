@@ -74,31 +74,4 @@ import Testing
         #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 3)
         #expect(ViewRules.badgeCount(in: [], now: Self.now, calendar: Self.calendar) == 0)
     }
-
-    @Test("The start screen's Now block: due first, then Next up in its order, each task once (#368)")
-    @MainActor func nowBlockStandsEachTaskOnce() async throws {
-        let store = try TestStore()
-        let lined = TaskItem(rawText: "Angebot schreiben")
-        lined.status = .active
-        lined.nextRank = 0
-        let both = TaskItem(rawText: "Steuer abgeben")
-        both.status = .active
-        both.nextRank = 1
-        both.dueDate = Self.day(0)
-        let overdue = TaskItem(rawText: "Paket abholen")
-        overdue.status = .active
-        overdue.dueDate = Self.day(-1)
-        let later = TaskItem(rawText: "Reifen wechseln")
-        later.status = .active
-        later.dueDate = Self.day(3)
-        let all = [lined, both, overdue, later]
-        all.forEach(store.context.insert)
-
-        let now = ViewRules.now(in: all, now: Self.now, calendar: Self.calendar)
-
-        #expect(now.map(\.id) == [overdue.id, both.id, lined.id], "overdue, due today, then the rest of Next up")
-        #expect(now.count == ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar),
-                "the Now block is the set the app badge counts")
-        #expect(ViewRules.now(in: [], now: Self.now, calendar: Self.calendar).isEmpty)
-    }
 }

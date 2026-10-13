@@ -4,9 +4,9 @@ import SwiftUI
 
 /// The start screen (design briefing, screen 2): system views with counts, then projects,
 /// then contexts, Done last. Projects and contexts are created, renamed and deleted right here
-/// (screen 7). On iPhone it opens in three zones (#368): an inbox bar while anything waits in "New",
-/// the "Now" block (due today first, then "Next up", each task once, with the same swipes and
-/// long-press menu as in the list, #303), and situation chips; the other views follow quietly.
+/// (screen 7). On iPhone it opens with the two reasons to open the app at all (#180): a sentence
+/// on what is left to look over and what is lined up, then the first three of "Next up", with the
+/// same swipes and long-press menu as in the list (#303).
 struct SidebarView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(CompletionPulse.self) private var completionPulse: CompletionPulse?
@@ -22,7 +22,6 @@ struct SidebarView: View {
     /// (the hare is wide), and a bare frame lets a wide one spill past the margin.
     @ScaledMetric(relativeTo: .body) private var glyphSize: CGFloat = 20
     @ScaledMetric(relativeTo: .caption) private var knotHeight: CGFloat = 16
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     @State private var edit: NameEdit?
     @State private var isEditing = false
@@ -70,23 +69,15 @@ struct SidebarView: View {
                 // One section: a plain list puts a tall gap above every section header.
                 Section {
                     header
-                    inboxBar
-                    nowBlock
-                    situationChips
+                    nextUpPreview
+                    dueTodayPreview
                 }
             }
-            if isCompact {
-                Section {
-                    caption("All views")
-                    viewGrid
-                }
-            } else {
-                Section {
-                    // The daily three always, the others only with a task in them.
-                    ForEach(ViewRules.startViews(in: tasks), id: \.self) { kind in
-                        countRow(String(localized: kind.titleKey), symbol: kind.symbol, count: ViewRules.tasks(for: kind, in: tasks).count, id: "viewRow_\(kind.rawValue)")
-                            .tag(ViewSelection.system(kind))
-                    }
+            Section {
+                // The daily three always, the others only with a task in them.
+                ForEach(ViewRules.startViews(in: tasks), id: \.self) { kind in
+                    countRow(String(localized: kind.titleKey), symbol: kind.symbol, count: ViewRules.tasks(for: kind, in: tasks).count, id: "viewRow_\(kind.rawValue)")
+                        .tag(ViewSelection.system(kind))
                 }
             }
 
@@ -122,14 +113,12 @@ struct SidebarView: View {
                 foldHeader("Contexts", count: contexts.count, isOpen: $showsContexts, id: "contextsToggle")
             }
 
-            if !isCompact {
-                Section {
-                    // Always there, right above Done (#319); `.badge` leaves a zero out.
-                    countRow(String(localized: ViewKind.open.titleKey), symbol: ViewKind.open.symbol, count: ViewRules.tasks(for: .open, in: tasks).count, id: "viewRow_open")
-                        .tag(ViewSelection.system(.open))
-                    countRow(String(localized: ViewKind.done.titleKey), symbol: ViewKind.done.symbol, count: ViewRules.tasks(for: .done, in: tasks).count, id: "viewRow_done")
-                        .tag(ViewSelection.system(.done))
-                }
+            Section {
+                // Always there, right above Done (#319); `.badge` leaves a zero out.
+                countRow(String(localized: ViewKind.open.titleKey), symbol: ViewKind.open.symbol, count: ViewRules.tasks(for: .open, in: tasks).count, id: "viewRow_open")
+                    .tag(ViewSelection.system(.open))
+                countRow(String(localized: ViewKind.done.titleKey), symbol: ViewKind.done.symbol, count: ViewRules.tasks(for: .done, in: tasks).count, id: "viewRow_done")
+                    .tag(ViewSelection.system(.done))
             }
         }
         .paperList()
@@ -210,167 +199,81 @@ struct SidebarView: View {
 
     // MARK: - Start (iPhone)
 
-    /// The quiet views in two columns (#368): the system views that hold something, then All open
-    /// and Done. Grey glyphs, no accent: these are places to browse, not a call to act (ADR-14).
-    /// From a large Dynamic Type size on, one column, so no name is cut.
+    /// The date, then one sentence in serif. Tapping it opens "New" while anything waits there.
     @ViewBuilder
-    private var viewGrid: some View {
-        let columns = dynamicTypeSize >= .xxLarge
-            ? [GridItem(.flexible())]
-            : [GridItem(.flexible(), spacing: 20), GridItem(.flexible())]
-        LazyVGrid(columns: columns, alignment: .leading, spacing: 0) {
-            ForEach(ViewRules.compactGridViews(in: tasks), id: \.self) { kind in
-                gridCell(kind)
-            }
-        }
-        .listRowSeparator(.hidden)
-        .paperRow()
-    }
-
-    private func gridCell(_ kind: ViewKind) -> some View {
-        let count = ViewRules.tasks(for: kind, in: tasks).count
-        return Button {
-            selection = .system(kind)
-        } label: {
-            HStack(spacing: 8) {
-                Image(systemName: kind.symbol)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: glyphSize * 0.8, height: glyphSize * 0.8)
-                    .foregroundStyle(.secondary)
-                Text(String(localized: kind.titleKey))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
-                Spacer(minLength: 4)
-                if count > 0 {
-                    Text(verbatim: "\(count)")
-                        .monospacedDigit()
-                        .foregroundStyle(.secondary)
-                }
-            }
-            .font(.subheadline)
-            .padding(.vertical, 9)
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .accessibilityElement(children: .combine)
-        .accessibilityIdentifier("viewRow_\(kind.rawValue)")
-    }
-
-    /// The date under the knot. Plain: the sentence it used to carry is gone (#368).
     private var header: some View {
-        HStack(spacing: 8) {
-            // The knot, first of its three places (#180, rule 1). Grey like the date: it is
-            // the mark, not something to tap (ADR-14).
-            ThreadGlyph(form: .knot, lineWidth: 1.5)
-                .frame(width: knotHeight * 1.6, height: knotHeight)
-            Text(Date.now, format: .dateTime.weekday(.wide).day().month(.wide))
-                .font(.caption.weight(.semibold))
-                .textCase(.uppercase)
-                .tracking(1)
+        let review = ViewRules.tasks(for: .new, in: tasks).count
+        let content = VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 8) {
+                // The knot, first of its three places (#180, rule 1). Grey like the date: it is
+                // the mark, not something to tap (ADR-14).
+                ThreadGlyph(form: .knot, lineWidth: 1.5)
+                    .frame(width: knotHeight * 1.6, height: knotHeight)
+                Text(Date.now, format: .dateTime.weekday(.wide).day().month(.wide))
+                    .font(.caption.weight(.semibold))
+                    .textCase(.uppercase)
+                    .tracking(1)
+            }
+            .foregroundStyle(.secondary)
+            lead(review: review, next: ViewRules.tasks(for: .next, in: tasks).count)
+                .font(.title2.weight(.medium))
+                .fontDesign(.serif)
         }
-        .foregroundStyle(.secondary)
         .padding(.vertical, 6)
         .listRowSeparator(.hidden)
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("startHeader")
         .paperRow()
-    }
-
-    /// "New" is an inbox, not a list among lists (#368): a bar that exists only while something
-    /// waits there. The one accent surface of the start screen, since it is the one thing to tap.
-    /// It keeps the id of the row it replaces.
-    @ViewBuilder
-    private var inboxBar: some View {
-        let review = ViewRules.tasks(for: .new, in: tasks).count
         if review > 0 {
-            HStack(spacing: 10) {
-                Image(systemName: "tray")
-                Text("\(review) to look over")
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .imageScale(.small)
-            }
-            .font(.subheadline.weight(.semibold))
-            .foregroundStyle(.tint)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 10)
-            .background(Color.accentColor.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
-            .contentShape(Rectangle())
-            .accessibilityElement(children: .combine)
-            .accessibilityIdentifier("viewRow_new")
-            .tag(ViewSelection.system(.new))
-            .listRowSeparator(.hidden)
-            .paperRow()
+            content.tag(ViewSelection.system(.new))
+        } else {
+            content
         }
     }
 
-    /// What stands for now (#368): due today or overdue, then "Next up", the first five, each
-    /// task once. A task lined up keeps the "Next up" menu (it can leave the line there), one
-    /// that is only due acts as in "Due". Nothing at all: one line, "All tied up".
+    /// The count to look over is accent-tinted: it is the tappable part (ADR-14).
+    private func lead(review: Int, next: Int) -> Text {
+        let reviewCount = Text(verbatim: "\(review)").foregroundStyle(.tint)
+        switch (review, next) {
+        case (0, 0): return Text("All tied up.")
+        case (0, _): return Text("Nothing to look over, \(next) lined up.")
+        case (_, 0): return Text("\(reviewCount) to look over, nothing lined up.")
+        default: return Text("\(reviewCount) to look over, \(next) lined up.")
+        }
+    }
+
+    /// The first three of "Next up" under a small caption; a tap opens the task. Empty: one line
+    /// on how to fill it.
     @ViewBuilder
-    private var nowBlock: some View {
-        let now = ViewRules.now(in: tasks)
-        if now.isEmpty {
-            if ViewRules.tasks(for: .new, in: tasks).isEmpty {
-                Text("All tied up.")
+    private var nextUpPreview: some View {
+        let next = ViewRules.tasks(for: .next, in: tasks)
+        caption("Next up")
+        Group {
+            if next.isEmpty {
+                Text("Swipe left on any task to line it up here.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .paperRow()
-            }
-        } else {
-            caption("Now")
-            ForEach(now.prefix(5)) { task in
-                if task.nextRank != nil {
+            } else {
+                ForEach(next.prefix(3)) { task in
                     previewRow(task)
-                } else {
-                    previewRow(task, actions: dueActions, prefix: "dueTodayPreview_")
                 }
             }
         }
     }
 
-    /// Quick and the contexts that hold a task, one tap each (#368). Accent outline: tappable.
+    /// What stands for today (#299): due today or overdue, the first three, under "Next up". A
+    /// task in both stands in both (Henning, 2026-10-11). Nothing due today, no section: an empty
+    /// line here would only repeat "All tied up".
     @ViewBuilder
-    private var situationChips: some View {
-        let quick = ViewRules.tasks(for: .quick, in: tasks).count
-        let places = contexts.map { ($0, ViewRules.tasks(inContext: $0, in: tasks).count) }.filter { $0.1 > 0 }
-        if quick > 0 || !places.isEmpty {
-            caption("Fits right now")
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    if quick > 0 {
-                        chip(String(localized: ViewKind.quick.titleKey), count: quick, target: .system(.quick), id: "situationChip_quick")
-                    }
-                    ForEach(places, id: \.0.id) { context, count in
-                        chip(context.name, count: count, target: .context(context.id), id: "situationChip_\(context.id.uuidString)")
-                    }
-                }
-                .padding(.vertical, 2)
+    private var dueTodayPreview: some View {
+        let due = ViewRules.dueToday(in: tasks)
+        if !due.isEmpty {
+            caption("Due today")
+            ForEach(due.prefix(3)) { task in
+                previewRow(task, actions: dueActions, prefix: "dueTodayPreview_")
             }
-            .listRowSeparator(.hidden)
-            .paperRow()
         }
-    }
-
-    private func chip(_ title: String, count: Int, target: ViewSelection, id: String) -> some View {
-        Button {
-            selection = target
-        } label: {
-            HStack(spacing: 4) {
-                Text(title)
-                Text(verbatim: "\(count)")
-                    .monospacedDigit()
-                    .foregroundStyle(.secondary)
-            }
-            .font(.subheadline)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
-            .overlay(Capsule().stroke(Color.accentColor.opacity(0.5), lineWidth: 1))
-            .foregroundStyle(.tint)
-        }
-        .buttonStyle(.plain)
-        .accessibilityIdentifier(id)
     }
 
     private func caption(_ title: LocalizedStringKey) -> some View {
