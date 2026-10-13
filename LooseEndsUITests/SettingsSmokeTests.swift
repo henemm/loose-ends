@@ -23,6 +23,9 @@ final class SettingsSmokeTests: XCTestCase {
         let picker = app.descendants(matching: .any).matching(identifier: "reminderTimePicker").firstMatch
         XCTAssertTrue(picker.waitForExistence(timeout: 5), "The settings should show the reminder time")
 
+        let sync = app.descendants(matching: .any).matching(identifier: "iCloudSyncRow").firstMatch
+        XCTAssertTrue(sync.exists, "The settings should show the iCloud sync row (#377)")
+
         let done = app.buttons["settingsDoneButton"]
         XCTAssertTrue(done.exists)
         done.tap()
