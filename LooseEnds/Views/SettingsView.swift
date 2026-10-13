@@ -46,6 +46,11 @@ struct SettingsView: View {
                 Text("Then capturing from the menu bar is ready right after you log in, without a window.")
             }
             #endif
+            Section("About") {
+                LabeledContent("Version", value: AppVersion.text())
+                    .textSelection(.enabled)
+                    .accessibilityIdentifier("appVersionRow")
+            }
         }
         .formStyle(.grouped)
         .navigationTitle("Settings")

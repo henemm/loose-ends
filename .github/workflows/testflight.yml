@@ -1,6 +1,6 @@
 name: TestFlight
 
-# Archives the iOS app with cloud-managed signing and uploads it to TestFlight.
+# Archives the iOS app and then the Mac app (#389) with cloud-managed signing and uploads it to TestFlight.
 # Needs four repository secrets (docs/reference/testflight.md walks through creating them):
 #   APPLE_TEAM_ID, ASC_KEY_ID, ASC_ISSUER_ID, ASC_PRIVATE_KEY
 # Run it by hand from the Actions tab, or push a tag like v0.1.0.
@@ -308,6 +308,188 @@ jobs:
       - name: Remove the key
         if: always()
         run: rm -f "$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8"
+
+  # The Mac app is its own archive and its own TestFlight entry (#389). It runs after the iOS job, never
+  # beside it: both jobs create and revoke "Created via API" development certificates in one account.
+  # The build number is the run number, as for iOS; ASC keeps one build per platform under it.
+  upload-mac:
+    name: Archive and upload (macOS)
+    needs: upload
+    runs-on: xcode-27
+    timeout-minutes: 60
+    env:
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Select Xcode 27.0
+        run: |
+          sudo xcode-select -s /Applications/Xcode_27.app
+          xcodebuild -version
+          version=$(xcodebuild -version | sed -n 1p)
+          if [ "$version" != "Xcode 27.0" ]; then
+            echo "::error::Expected Xcode 27.0 at /Applications/Xcode_27.app, got: $version. Not building an older or beta toolchain. See docs/reference/testflight.md"
+            exit 1
+          fi
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate project
+        run: xcodegen generate
+
+      - name: Store the App Store Connect API key
+        run: |
+          mkdir -p "$HOME/private_keys"
+          printf '%s\n' "${{ secrets.ASC_PRIVATE_KEY }}" > "$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8"
+          chmod 600 "$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8"
+
+      - name: Clear leftover development certificates
+        run: |
+          ASC_KEY_FILE="$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8" python3 scripts/asc_cleanup_certs.py
+
+      - name: Archive (macOS)
+        run: |
+          set -o pipefail
+          xcodebuild archive \
+            -project LooseEnds.xcodeproj \
+            -scheme LooseEnds \
+            -destination 'generic/platform=macOS' \
+            -archivePath build/LooseEndsMac.xcarchive \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
+            CODE_SIGN_STYLE=Automatic \
+            CURRENT_PROJECT_VERSION="${{ github.run_number }}" \
+            2>&1 | tee archive-mac.log | xcbeautify
+
+      # The Mac counterpart of the iOS proof: macOS 27 SDK, minimum 27.0, version, dSYM, privacy file,
+      # category, sandbox and iCloud entitlements. Runs locally too: ARCHIVE=<path> BUILD=<number>.
+      - name: Verify the macOS archive
+        env:
+          BUILD: ${{ github.run_number }}
+        run: |
+          ARCHIVE="${ARCHIVE:-build/LooseEndsMac.xcarchive}"
+          BUILD="${BUILD:?BUILD (build number) must be set}"
+          MARKETING="0.1.0"
+          SUMMARY="${GITHUB_STEP_SUMMARY:-/dev/null}"
+          row() { printf '%s\n' "$1" | tee -a "$SUMMARY"; }
+          APP="$ARCHIVE/Products/Applications/Loose Ends.app"
+          [ -d "$APP" ] || APP=$(find "$ARCHIVE/Products/Applications" -maxdepth 1 -name '*.app' | sed -n 1p)
+          [ -d "$APP" ] || { echo "::error::No .app in $ARCHIVE/Products/Applications"; exit 1; }
+          P="$APP/Contents/Info.plist"
+          get() { plutil -extract "$1" raw "$P" 2>/dev/null || true; }
+          fail=0
+          need() { # Schlüssel, erwarteter Wert (leer = nur vorhanden)
+            local have; have=$(get "$1")
+            if [ -z "$have" ] || { [ -n "$2" ] && [ "$have" != "$2" ]; }; then
+              row "| $1 | '$have' | FEHLER |"; echo "::error::macOS app: $1 is '$have'${2:+, expected $2}"; fail=1
+            else
+              row "| $1 | $have | OK |"
+            fi
+          }
+          row "| Schlüssel | Wert | Ergebnis |"
+          row "|-----------|------|----------|"
+          need CFBundleIdentifier com.henning.looseends
+          need CFBundleShortVersionString "$MARKETING"
+          need CFBundleVersion "$BUILD"
+          need LSMinimumSystemVersion 27.0
+          need LSApplicationCategoryType ""
+          need ITSAppUsesNonExemptEncryption false
+          need NSMicrophoneUsageDescription ""
+          need NSSpeechRecognitionUsageDescription ""
+          sdk=$(get DTSDKName)
+          case "$sdk" in macosx27.*) row "| DTSDKName | $sdk | OK |" ;; *) row "| DTSDKName | $sdk | FEHLER |"; echo "::error::macOS app linked against '$sdk', expected macosx27.*"; fail=1 ;; esac
+          [ -d "$ARCHIVE/dSYMs/$(basename "$APP").dSYM" ] || { echo "::error::macOS app has no dSYM in the archive"; fail=1; }
+          [ -f "$APP/Contents/Resources/PrivacyInfo.xcprivacy" ] || { echo "::error::macOS app has no PrivacyInfo.xcprivacy (#177)"; fail=1; }
+          [ -d "$APP/Contents/Resources/de.lproj" ] || { echo "::error::macOS app has no de.lproj: German texts are missing (#323)"; fail=1; }
+          ents=$(codesign -d --entitlements - --xml "$APP" 2>/dev/null || true)
+          for key in com.apple.security.app-sandbox com.apple.developer.ubiquity-kvstore-identifier com.apple.security.device.audio-input; do
+            if printf '%s' "$ents" | grep -qF "<key>$key</key>"; then row "| $key | vorhanden | OK |"
+            else row "| $key | FEHLT | FEHLER |"; echo "::error::macOS app is not signed with $key"; fail=1; fi
+          done
+          [ "$fail" = 0 ]
+
+      - name: Write export options
+        run: |
+          cat > ExportOptionsMac.plist <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key><string>app-store-connect</string>
+            <key>destination</key><string>upload</string>
+            <key>signingStyle</key><string>automatic</string>
+            <key>teamID</key><string>${APPLE_TEAM_ID}</string>
+            <key>uploadSymbols</key><true/>
+            <key>manageAppVersionAndBuildNumber</key><false/>
+          </dict>
+          </plist>
+          EOF
+
+      - name: Upload to TestFlight (macOS)
+        run: |
+          set -o pipefail
+          xcodebuild -exportArchive \
+            -archivePath build/LooseEndsMac.xcarchive \
+            -exportOptionsPlist ExportOptionsMac.plist \
+            -exportPath build/export-mac \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            2>&1 | tee upload-mac.log | xcbeautify
+
+      - name: Show what went wrong
+        if: failure()
+        run: grep -n -E -i "error|failed|provisioning|entitlement" archive-mac.log upload-mac.log 2>/dev/null | head -80 || true
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: testflight-logs-mac
+          path: |
+            archive-mac.log
+            upload-mac.log
+          if-no-files-found: warn
+
+      - name: Clear the development certificates of this run
+        if: always()
+        continue-on-error: true
+        run: |
+          KEY="$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8"
+          [ -f "$KEY" ] || { echo "No API key stored, nothing to clear"; exit 0; }
+          ASC_KEY_FILE="$KEY" python3 scripts/asc_cleanup_certs.py
+
+      - name: Remove the key
+        if: always()
+        run: rm -f "$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8"
+
+  confirm-mac:
+    name: Confirm Apple processed the macOS build
+    needs: upload-mac
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_PLATFORM: MAC_OS
+    steps:
+      - uses: actions/checkout@v7
+      - name: Wait until App Store Connect reports the macOS build as VALID
+        env:
+          BUILD: ${{ github.run_number }}
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT
+          umask 077
+          printf '%s\n' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"
+          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_wait_build.py "$BUILD"
+          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_what_to_test.py "$BUILD"
 
   # "Upload succeeded" only means Apple received the package. This job waits on ubuntu (no macOS
   # minutes) until App Store Connect reports the build as VALID; only this job turns red (#183).
