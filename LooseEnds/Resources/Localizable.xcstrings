@@ -172,6 +172,8 @@
     "Due today" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute fällig" } } } },
     "Due now" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Jetzt fällig" } } } },
     "Settings" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Einstellungen" } } } },
+    "About" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Info" } } } },
+    "Version" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Version" } } } },
     "Notifications" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Mitteilungen" } } } },
     "Reminder time" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Uhrzeit ohne Fälligkeitszeit" } } } },
     "A task without a due time is reminded on its day at this time. A task with a due time is reminded at that time." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Eine Aufgabe ohne Uhrzeit meldet sich an ihrem Tag zu dieser Uhrzeit. Eine Aufgabe mit Uhrzeit meldet sich genau dann." } } } },

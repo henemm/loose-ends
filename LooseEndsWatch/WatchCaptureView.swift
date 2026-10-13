@@ -20,6 +20,9 @@ struct WatchCaptureView: View {
                 Button("Done", action: save)
                     .buttonStyle(.borderedProminent)
                     .disabled(text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                Text(verbatim: AppVersion.text())
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
             }
         }
         .padding()
