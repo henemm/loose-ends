@@ -268,7 +268,22 @@ final class StartScreenInteractionTests: XCTestCase {
         let opened = app.navigationBars["Garden"].waitForExistence(timeout: 5)
         let bars = app.navigationBars.allElementsBoundByIndex.map(\.identifier)
         let texts = app.staticTexts.allElementsBoundByIndex.prefix(25).map(\.label)
-        XCTAssertTrue(opened, "The chip should open its context. Bars: \(bars). Texts: \(texts)")
+        if !opened {
+            // Diagnosis for the CI log (#368): does the same context open from its sidebar row?
+            let toggle = element("contextsToggle", in: app)
+            if toggle.waitForExistence(timeout: 3), !element("newContextButton", in: app).exists { toggle.tap() }
+            let row = firstElement(prefix: "contextRow_", in: app)
+            _ = row.waitForExistence(timeout: 5)
+            let rowLabels = app.descendants(matching: .any)
+                .matching(NSPredicate(format: "identifier BEGINSWITH 'contextRow_'")).allElementsBoundByIndex.map(\.label)
+            let tappableRow = app.descendants(matching: .any)
+                .matching(NSPredicate(format: "identifier BEGINSWITH 'contextRow_' AND label CONTAINS 'Garden'")).firstMatch
+            tappableRow.tap()
+            let viaRow = app.navigationBars["Garden"].waitForExistence(timeout: 5)
+            XCTFail("Chip did not open Garden. Bars: \(bars). Texts: \(texts). Rows: \(rowLabels). Via row: \(viaRow)")
+            return
+        }
+        XCTAssertTrue(opened)
         XCTAssertEqual(app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH 'taskRow_'")).allElementsBoundByIndex.count, 1,
             "The list holds as many rows as the chip counted")
