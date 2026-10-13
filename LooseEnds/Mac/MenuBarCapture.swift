@@ -18,6 +18,8 @@ struct MenuBarCaptureView: View {
                 if saved { Task { await enrichment.processPending() } }
                 MacWindows.closeMenuBarPanel()
             }
+            // The panel takes the capture's ideal height: without it Cancel and Done slid under the footer.
+            .fixedSize(horizontal: false, vertical: true)
             Divider()
             HStack {
                 Button("Open Loose Ends") {
@@ -31,8 +33,8 @@ struct MenuBarCaptureView: View {
             }
             .buttonStyle(.borderless)
             .font(.footnote)
-            .padding(.horizontal)
-            .padding(.vertical, 8)
+            .padding(.horizontal, 24)
+            .padding(.vertical, 10)
         }
         .frame(width: 440)
     }
