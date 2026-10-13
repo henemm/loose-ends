@@ -1,0 +1,369 @@
+[0;34m[sim][0m Unit-Tests (macOS): LooseEndsTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (4 targets)
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWidgets-OutputFileMap.json
+[[36mLooseEndsWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWidgets.SwiftFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.SwiftFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests-OutputFileMap.json
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-OutputFileMap.json
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds.SwiftFileList
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds-OutputFileMap.json
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mCompile XCStrings[0m Localizable.xcstrings
+[[36mLooseEndsWidgets[0m] [1mCopying[0m PrivacyInfo.xcprivacy
+[[36mLooseEndsWidgets[0m] [1mCopying[0m Localizable.strings
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m AppVersion.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CalendarAsk.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CalendarSync.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CaptureService.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CatalogService.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CloudKitSchemaInitializer.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ModelContainerFactory.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m NextUpWidget.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m NextUpWidgetIntents.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m PendingCompletions.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m PlaceDelivery.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m PlaceEditing.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m PlaceReminders.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ProcessCache.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m Project.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m SavedView.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m SharedContent.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m SiriFields.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m SiriRepeatMapping.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m Subtasks.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m Enums.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m FieldCodec.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m FoundationModelsEnricher.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ImportanceUrgencyRule.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m LooseEndsWidgetsBundle.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TimeExpressionParser.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TitleRule.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ViewSelection.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m WaitingOn.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m RecognitionRule.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m RepeatRule.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m Revision.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m RevisionService.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m RuleTrigger.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m SyncStatus.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TaskActions.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TaskContext.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TaskItem.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TaskPlace.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CompletionRecord.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ContextSeeder.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ContextWordLearning.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ContextWordRule.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m DateExpressionParser.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m DueDateRule.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m DueReminders.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m EnrichmentCoordinator.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m EnrichmentDraft.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m EnrichmentWriter.swift
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-macos.abi.json -> LooseEndsWidgets.abi.json
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-macos.swiftsourceinfo -> LooseEndsWidgets.swiftsourceinfo
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-macos.swiftmodule -> LooseEndsWidgets.swiftmodule
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-macos.swiftdoc -> LooseEndsWidgets.swiftdoc
+[[36mLooseEnds[0m] [1mGenerate Asset Symbols[0m Assets.xcassets
+[[36mLooseEndsWidgets[0m] [1mLinking[0m LooseEndsWidgets.debug.dylib
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Products/Debug/LooseEnds.app/Contents/Resources/Assets.car (in target 'LooseEnds' from project 'LooseEnds')
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Build/Products/Debug/LooseEnds.app/Contents/Resources/AppIcon.icns (in target 'LooseEnds' from project 'LooseEnds')
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWidgets' from project 'LooseEnds')
+[[36mLooseEndsWidgets[0m] [1mLinking[0m LooseEndsWidgets
+[[36mLooseEndsWidgets[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mCopying[0m PrivacyInfo.xcprivacy
+[[36mLooseEnds[0m] [1mCopying[0m InfoPlist.strings
+[[36mLooseEnds[0m] [1mCopying[0m InfoPlist.strings
+[[36mLooseEnds[0m] [1mCompile XCStrings[0m Localizable.xcstrings
+[[36mLooseEnds[0m] [1mCompile XCStrings[0m AppShortcuts.xcstrings
+[[36mLooseEnds[0m] [1mCopying[0m AppShortcuts.strings
+[[36mLooseEnds[0m] [1mCompiling[0m FieldFormatting.swift
+[[36mLooseEnds[0m] [1mCompiling[0m FlowLayout.swift
+[[36mLooseEnds[0m] [1mCompiling[0m FoundationModelsEnricher.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ImportanceUrgencyRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m LaunchTimings.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ListeningHint.swift
+[[36mLooseEnds[0m] [1mCompiling[0m LooseEndsApp.swift
+[[36mLooseEnds[0m] [1mCompiling[0m MainThreadWatchdog.swift
+[[36mLooseEnds[0m] [1mCompiling[0m MenuBarCapture.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CatalogService.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CloudKitSchemaInitializer.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CompletionRecord.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ContentView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ContextSeeder.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ContextWordLearning.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ContextWordRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m DateExpressionParser.swift
+[[36mLooseEnds[0m] [1mCompiling[0m DetailLayout.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ReviewNote.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Revision.swift
+[[36mLooseEnds[0m] [1mCompiling[0m RevisionService.swift
+[[36mLooseEnds[0m] [1mCompiling[0m RuleTrigger.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SavedView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SettingsView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SharedContent.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SidebarView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SiriFields.swift
+[[36mLooseEnds[0m] [1mCompiling[0m AppVersion.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CalendarAsk.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CalendarAskSheet.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CalendarBridge.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CalendarPickerSheet.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CalendarSync.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CaptureService.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CaptureTextIntent.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CaptureView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SiriRepeatMapping.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SpeechAccess.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SpeechCapture.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SpeechDiagnosis.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SpeechReadiness.swift
+[[36mLooseEnds[0m] [1mCompiling[0m StartZones.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Subtasks.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SubtasksSection.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SyncStatus.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskActions.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskContext.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskDetailView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskInteractions.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskItem.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskListView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskPlace.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskRow.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Thread.swift
+[[36mLooseEnds[0m] [1mCompiling[0m MenuBarThreadImage.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ModelContainerFactory.swift
+[[36mLooseEnds[0m] [1mCompiling[0m MoveDateSheet.swift
+[[36mLooseEnds[0m] [1mCompiling[0m NextUpWidgetIntents.swift
+[[36mLooseEnds[0m] [1mCompiling[0m OnboardingFlow.swift
+[[36mLooseEnds[0m] [1mCompiling[0m OnboardingView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Paper.swift
+[[36mLooseEnds[0m] [1mCompiling[0m PendingCompletions.swift
+[[36mLooseEnds[0m] [1mCompiling[0m PlaceDelivery.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TimeExpressionParser.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TitleRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ViewSelection.swift
+[[36mLooseEnds[0m] [1mCompiling[0m WaitingOn.swift
+[[36mLooseEnds[0m] [1mCompiling[0m WaitingOnSection.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Waveform.swift
+[[36mLooseEnds[0m] [1mCompiling[0m GeneratedAssetSymbols.swift
+[[36mLooseEnds[0m] [1mCompiling[0m PlaceEditing.swift
+[[36mLooseEnds[0m] [1mCompiling[0m PlaceReminders.swift
+[[36mLooseEnds[0m] [1mCompiling[0m PlaceSearch.swift
+[[36mLooseEnds[0m] [1mCompiling[0m PlaceSection.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ProcessCache.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Project.swift
+[[36mLooseEnds[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEnds[0m] [1mCompiling[0m RecognitionRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m RepeatRule.swift
+[[36mLooseEnds[0m] [1mCopying[0m Localizable.strings
+[[36mLooseEnds[0m] [1mCopying[0m Localizable.strings
+[[36mLooseEnds[0m] [1mCompiling[0m DueDateRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m DueNotificationCenter.swift
+[[36mLooseEnds[0m] [1mCompiling[0m DueReminders.swift
+[[36mLooseEnds[0m] [1mCompiling[0m EnrichmentCoordinator.swift
+[[36mLooseEnds[0m] [1mCompiling[0m EnrichmentDraft.swift
+[[36mLooseEnds[0m] [1mCompiling[0m EnrichmentWriter.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Enums.swift
+[[36mLooseEnds[0m] [1mCompiling[0m FieldCodec.swift
+[[36mLooseEnds[0m] [1mCompiling[0m FieldEditorView.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEnds/Notifications/DueNotificationCenter.swift:61:23: [33mresult of call to 'assumeIsolated(_:file:line:)' is unused [#NoUsage][0m
+ 59 |             forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: NSUbiquitousKeyValueStore.default, queue: .main
+[32m 60 |         ) { [weak self] _ in[0m
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-macos.swiftdoc -> LooseEnds.swiftdoc
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-macos.abi.json -> LooseEnds.abi.json
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-macos.swiftmodule -> LooseEnds.swiftmodule
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-macos.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+[[36mLooseEndsUITests[0m] [1mCompiling[0m DesignGalleryTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m DueNotificationTapTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m LaunchArgumentTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m OnboardingTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m PlaceSmokeTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RecognitionWalkthroughTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RuleBaseline.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m ProjectSubtasksTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m ContextUniquenessTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m ConventionCorpus.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m Corpus.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/Measurement/MeasurementRun.swift:212:60: [33m'GenerationError' was deprecated in macOS 27.0 [#DeprecatedDeclaration][0m
+210 |     static func classify(_ error: Error) -> String {
+[32m211 |         #if canImport(FoundationModels) && !os(watchOS)[0m
+[[36mLooseEndsUITests[0m] [1mCompiling[0m LeaveOneOut.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m MeasurementRun.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsUITests/SpeechListeningTests.swift:19:47: [33mcall to main actor-isolated instance method 'screenshot()' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+16 |     }
+[32m17 | [0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsUITests/StartScreenInteractionTests.swift:378:16: [33mmain actor-isolated property 'label' can not be referenced from a nonisolated context[0m
+375 | 
+[32m376 |     /// The row count as the badge shows it, read from the combined row ("All open, 2").[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsUITests/StartScreenInteractionTests.swift:378:29: [33mmain actor-isolated property 'value' can not be referenced from a nonisolated context[0m
+375 | 
+[32m376 |     /// The row count as the badge shows it, read from the combined row ("All open, 2").[0m
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SpeechListeningTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m StartScreenInteractionTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SpeechDiagnosisLineTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SpeechListeningIndicatorTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m CalendarTargetTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m CaptureCancelCrashTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m CaptureSmokeTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsUITests/SettingsSmokeTests.swift:15:9: [33mcode after 'throw' will never be executed[0m
+13 |         throw XCTSkip("On the Mac the gear opens the settings window (SettingsLink), not a sheet with Done.")
+[32m14 |         #endif[0m
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SelfConsistency.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SettingsSmokeTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReanalysisTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RecognitionRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatEditTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReviewTrayTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RevisionServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleBaseline.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleLeaveOneOutTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleTriggerTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistency.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistencyReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistencyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SharedContentTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SiriFieldsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SiriRepeatMappingTests.swift
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-macos.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/Measurement/MeasurementRun.swift:212:60: [33m'GenerationError' was deprecated in macOS 27.0 [#DeprecatedDeclaration][0m
+210 |     static func classify(_ error: Error) -> String {
+[32m211 |         #if canImport(FoundationModels) && !os(watchOS)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsTests/MeasurementRunTests.swift:71:44: [33m'GenerationError' was deprecated in macOS 27.0 [#DeprecatedDeclaration][0m
+ 69 |         #expect(MeasurementErrorKind.classify(NSError(domain: "x", code: 1)) == "andere")
+[32m 70 |         #if canImport(FoundationModels)[0m
+⚠️  macro expansion #expect:1:83: [33m'GenerationError' was deprecated in macOS 27.0 [#DeprecatedDeclaration][0m
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsTests/MeasurementRunTests.swift:72:123: note: expanded code originates here
+[32m 70 |         #if canImport(FoundationModels)[0m
+⚠️  macro expansion #expect:1:99: [33m'rateLimited' was deprecated in macOS 27.0: Use ``LanguageModelError/rateLimited(_:)`` instead. [#DeprecatedDeclaration][0m
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsTests/MeasurementRunTests.swift:72:123: note: expanded code originates here
+[32m 70 |         #if canImport(FoundationModels)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsTests/MeasurementRunTests.swift:72:68: [33m'GenerationError' was deprecated in macOS 27.0 [#DeprecatedDeclaration][0m
+ 70 |         #if canImport(FoundationModels)
+[32m 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsTests/MeasurementRunTests.swift:72:84: [33m'rateLimited' was deprecated in macOS 27.0: Use ``LanguageModelError/rateLimited(_:)`` instead. [#DeprecatedDeclaration][0m
+ 70 |         #if canImport(FoundationModels)
+[32m 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")[0m
+⚠️  macro expansion #expect:1:83: [33m'GenerationError' was deprecated in macOS 27.0 [#DeprecatedDeclaration][0m
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsTests/MeasurementRunTests.swift:73:128: note: expanded code originates here
+[32m 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")[0m
+⚠️  macro expansion #expect:1:99: [33m'guardrailViolation' was deprecated in macOS 27.0: Use ``LanguageModelError/guardrailViolation(_:)`` instead. [#DeprecatedDeclaration][0m
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsTests/MeasurementRunTests.swift:73:128: note: expanded code originates here
+[32m 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsTests/MeasurementRunTests.swift:73:68: [33m'GenerationError' was deprecated in macOS 27.0 [#DeprecatedDeclaration][0m
+ 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")
+[32m 72 |         #expect(MeasurementErrorKind.classify(LanguageModelSession.GenerationError.rateLimited(context)) == "rateLimited")[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRun.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRunTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MenuBarTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MenuBarThreadImageTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelContainerFactoryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NextUpWidgetTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NowRuleTests.swift
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-macos.swiftmodule -> LooseEndsUITests.swiftmodule
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-macos.swiftdoc -> LooseEndsUITests.swiftdoc
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-macos.abi.json -> LooseEndsUITests.abi.json
+[[36mLooseEndsTests[0m] [1mCompiling[0m ConventionBaselineTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ConventionCorpus.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m Corpus.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateExpressionParserTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateParserCorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateTitleReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DetailLayoutTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueDateRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m AppVersionTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CalendarAskTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CalendarSyncTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CatalogServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CloudKitSchemaInitializerTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordLearningReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordLearningTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueNotificationCenterTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueTodayTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m EnergyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m EnrichmentTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m FieldEditTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m FieldOriginTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m FocusBloxCalibrationTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m GuardrailCorpusTests.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsTests/SpeechDiagnosisTests.swift:15:65: [31mextra argument 'secondsAudible' in call[0m
+ 13 |     ) -> SpeechDiagnosis? {
+[36m 14 |         SpeechDiagnosis.hint([0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsTests/SpeechDiagnosisTests.swift:15:47: [31mmissing argument for parameter 'secondsListening' in call[0m
+ 13 |     ) -> SpeechDiagnosis? {
+[36m 14 |         SpeechDiagnosis.hint([0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsTests/SpeechDiagnosisTests.swift:89:29: [31mextra arguments at positions #3, #4 in call[0m
+ 87 |         results: Int, seconds: TimeInterval? = 10, showsReport: Bool = true, timings: SpeechTimings?
+[36m 88 |     ) -> SpeechDiagnosis? {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsTests/SpeechDiagnosisTests.swift:90:43: [31mmissing argument for parameter 'secondsListening' in call[0m
+ 88 |     ) -> SpeechDiagnosis? {
+[36m 89 |         SpeechDiagnosis.hint([0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsTests/SpeechDiagnosisTests.swift:186:33: [31mtype 'SpeechDiagnosis' has no member 'audibleLevel'[0m
+184 |     @Test("The audible level is one named constant above silence")
+[36m185 |     func audibleLevelIsOneNamedConstant() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsTests/SpeechDiagnosisTests.swift:187:33: [31mtype 'SpeechDiagnosis' has no member 'audibleLevel'[0m
+185 |     func audibleLevelIsOneNamedConstant() {
+[36m186 |         #expect(SpeechDiagnosis.audibleLevel > 0)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsTests/SpeechDiagnosisTests.swift:203:28: [31mvalue of type 'SpeechDiagnosis' has no member 'shortText'[0m
+201 |     func shortTextIsOneLineWithoutFigures() throws {
+[36m202 |         let diagnosis = try #require(hint(seconds: 7, buffers: 62, results: 0))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsTests/SpeechDiagnosisTests.swift:204:28: [31mvalue of type 'SpeechDiagnosis' has no member 'shortText'[0m
+202 |         let diagnosis = try #require(hint(seconds: 7, buffers: 62, results: 0))
+[36m203 |         #expect(!diagnosis.shortText.contains("62"))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsTests/SpeechDiagnosisTests.swift:205:28: [31mvalue of type 'SpeechDiagnosis' has no member 'shortText'[0m
+203 |         #expect(!diagnosis.shortText.contains("62"))
+[36m204 |         #expect(!diagnosis.shortText.contains("installed"))[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/curious-crunching-hopcroft/LooseEndsTests/TaskActionsTests.swift:172:37: [33m'#require(_:_:)' is redundant because 'calendar.date(byAdding: .hour, value: 5, to: wednesday)' never equals 'nil' (from macro 'require')[0m
+170 |         let task = TaskItem(rawText: "Zahnarzt anrufen")
+[32m171 |         let wednesday = try day(2026, 9, 16, in: calendar)[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechAccessTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechDiagnosisTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechLatencyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechReadinessTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m StartViewsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SubtaskTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SyncStatusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TaskActionsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m OnboardingFlowTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PendingCompletionsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PeopleRetiredTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceDeliveryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceEditingTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProcessCacheTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProjectLinesTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ImportanceUrgencyRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m IntentExecutionTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m LaunchTimingsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m LeaveOneOut.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ListPolishTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementData.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementDataTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementFieldScopeTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TaskPlaceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TextFormRuleReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ThreadShapeTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TimeExpressionParserTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TitleFidelityPromptTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TitleRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m WaitingOnTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m WaveformTests.swift
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.10.13_19-39-59-+0200.xcresult

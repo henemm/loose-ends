@@ -1,0 +1,72 @@
+<title>Menüleisten-Erfassen Entwurf</title>
+<style>
+/* Layout: eine Seite, Heute oben, darunter Entwurf und zwei Alternativen; jede Karte zeigt Hell und Dunkel nebeneinander */
+:root{--bg:#f4f5f5;--fg:#1d2527;--mut:#5d6b6e;--line:#d5dcdd;--card:#fff;--warn:#b3361f;--ok:#2e6b73}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141b1c;--fg:#e6ecec;--mut:#9aa9ab;--line:#2b3638;--card:#1c2526;--warn:#ff8a73;--ok:#6cc0cb;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141b1c;--fg:#e6ecec;--mut:#9aa9ab;--line:#2b3638;--card:#1c2526;--warn:#ff8a73;--ok:#6cc0cb;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:15px/1.5 -apple-system,"SF Pro Text",system-ui,sans-serif;padding-inline:16px;padding-block:24px;max-width:1100px;margin:0 auto}
+h1{font-size:26px;margin:0 0 4px;text-wrap:balance}
+h2{font-size:18px;margin:36px 0 4px}
+p{margin:4px 0 12px;max-width:68ch;color:var(--mut)}
+.row{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.cell{min-width:0}
+.cap{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin:0 0 6px}
+.shot{max-width:100%;width:440px;border:1px solid var(--line);border-radius:12px}
+.rec{display:inline-block;font-size:12px;background:var(--ok);color:#fff;border-radius:6px;padding:1px 8px;margin-left:8px;vertical-align:middle}
+
+/* Panel-Mockup, eigene Tokens je Thema */
+.panel{width:440px;max-width:100%;box-sizing:border-box;border-radius:14px;border:1px solid var(--pl);background:var(--pb);color:var(--pf);box-shadow:0 8px 24px rgba(0,0,0,.18);overflow:hidden}
+.panel.l{--pb:#f6f6f6;--pf:#1d1d1f;--pl:#d8d8d8;--pm:#7a7a7e;--pfield:#ececee;--pbtn:#e2e2e4;--pacc:#2e6b73}
+.panel.d{--pb:#2a2a2c;--pf:#f2f2f4;--pl:#444;--pm:#9a9aa0;--pfield:#363638;--pbtn:#444446;--pacc:#4fa3ad}
+.in{padding:24px;display:flex;flex-direction:column;gap:20px}
+.field{background:var(--pfield);border-radius:10px;padding:12px;min-height:76px;font-size:17px;color:var(--pm)}
+.lv{display:flex;align-items:center;gap:20px}
+.wave{flex:1;height:14px;background:repeating-linear-gradient(90deg,var(--pacc) 0 3px,transparent 3px 8px);opacity:.55;mask:linear-gradient(90deg,#000,#000)}
+.mic{width:46px;height:46px;border-radius:50%;background:var(--pacc);flex:none;position:relative}
+.mic:after{content:"";position:absolute;inset:-5px;border-radius:50%;border:3px solid var(--pacc);opacity:.3}
+.diag{font-size:12px;color:var(--pm);display:flex;align-items:center;gap:6px}
+.diag.big{display:block}
+.btns{display:flex;justify-content:flex-end;gap:8px}
+.b{background:var(--pbtn);border-radius:6px;padding:3px 12px;font-size:14px}
+.b.off{opacity:.45}
+.foot{border-top:1px solid var(--pl);display:flex;justify-content:space-between;font-size:12px;color:var(--pm);padding:8px 16px}
+.sym{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--warn);color:var(--warn);font-size:10px;line-height:11px;text-align:center;font-weight:700;flex:none}
+.note{font-size:13px;color:var(--mut);margin:8px 0 0;max-width:440px}
+</style>
+
+<h1>Menüleisten-Erfassen: Entwurf</h1>
+<p>Ticket #402. Links jeweils Hell, rechts Dunkel. Zuerst, was du heute siehst, dann der empfohlene Entwurf und zwei Alternativen.</p>
+
+<h2>Heute (aus dem Prüfbau, 13. Okt.)</h2>
+<div class="row">
+  <div class="cell"><p class="cap">Direkt nach dem Öffnen</p><img class="shot" src="heute-ohne-diagnose.png" alt="Panel ohne Diagnosezeile: Knöpfe sitzen direkt auf der Trennlinie"><p class="note">Die Knöpfe haben keinen Abstand zur Fußzeile.</p></div>
+  <div class="cell"><p class="cap">Nach etwa 8 s Schweigen</p><img class="shot" src="heute-mit-diagnose.png" alt="Panel mit zweizeiliger Diagnose, Knöpfe überdecken die Fußzeile"><p class="note">Die Diagnose erscheint, obwohl nichts defekt ist. Das Panel wächst nicht mit, „Abbrechen/Fertig“ liegen über „Loose Ends beenden“.</p></div>
+</div>
+
+<h2>Entwurf <span class="rec">empfohlen</span></h2>
+<p>Das Panel ist immer gleich hoch und schließt unten mit Abstand ab. Im Alltag steht keine Diagnose. Nur wenn Ton ankommt und kein Text entsteht, erscheint eine einzige graue Zeile mit Symbol; die Einzelwerte stehen im Hinweis beim Darüberfahren.</p>
+<div class="row">
+  <div class="cell"><p class="cap">Alltag, Hell</p>
+    <div class="panel l"><div class="in"><div class="field">Ich höre …</div><div class="lv"><div class="wave"></div><div class="mic"></div></div><div class="btns"><span class="b">Abbrechen</span><span class="b off">Fertig</span></div></div><div class="foot"><span>Loose Ends öffnen</span><span>Loose Ends beenden</span></div></div></div>
+  <div class="cell"><p class="cap">Alltag, Dunkel</p>
+    <div class="panel d"><div class="in"><div class="field">Ich höre …</div><div class="lv"><div class="wave"></div><div class="mic"></div></div><div class="btns"><span class="b">Abbrechen</span><span class="b off">Fertig</span></div></div><div class="foot"><span>Loose Ends öffnen</span><span>Loose Ends beenden</span></div></div></div>
+</div>
+<div class="row" style="margin-top:20px">
+  <div class="cell"><p class="cap">Bei echtem Problem, Hell</p>
+    <div class="panel l"><div class="in"><div class="field">Ich höre …</div><div class="lv"><div class="wave"></div><div class="mic"></div></div><div class="diag"><span class="sym">!</span>Ton kommt an, aber kein Text erkannt</div><div class="btns"><span class="b">Abbrechen</span><span class="b off">Fertig</span></div></div><div class="foot"><span>Loose Ends öffnen</span><span>Loose Ends beenden</span></div></div></div>
+  <div class="cell"><p class="cap">Bei echtem Problem, Dunkel</p>
+    <div class="panel d"><div class="in"><div class="field">Ich höre …</div><div class="lv"><div class="wave"></div><div class="mic"></div></div><div class="diag"><span class="sym">!</span>Ton kommt an, aber kein Text erkannt</div><div class="btns"><span class="b">Abbrechen</span><span class="b off">Fertig</span></div></div><div class="foot"><span>Loose Ends öffnen</span><span>Loose Ends beenden</span></div></div></div>
+</div>
+<p class="note">Die Zeile zählt ab dem ersten hörbaren Pegel, nicht ab dem Öffnen. Wer erst nach 7 s spricht, sieht nichts.</p>
+
+<h2>Alternative A: Diagnose nur im Fenster</h2>
+<p>Im Panel gibt es nie eine Diagnose, es sieht immer aus wie „Alltag“ oben. Am ruhigsten, aber ein Defekt der Spracherkennung zeigt sich im Panel nicht.</p>
+
+<h2>Alternative B: Symbol statt Zeile</h2>
+<p>Bei Problem erscheint nur das Warnsymbol links vom Mikrofon. Ein Klick zeigt die Werte. Das Panel bleibt gleich hoch, das Problem ist aber leicht zu übersehen.</p>
+<div class="row">
+  <div class="cell"><p class="cap">Bei Problem, Hell</p>
+    <div class="panel l"><div class="in"><div class="field">Ich höre …</div><div class="lv"><div class="wave"></div><span class="sym">!</span><div class="mic"></div></div><div class="btns"><span class="b">Abbrechen</span><span class="b off">Fertig</span></div></div><div class="foot"><span>Loose Ends öffnen</span><span>Loose Ends beenden</span></div></div></div>
+  <div class="cell"><p class="cap">Bei Problem, Dunkel</p>
+    <div class="panel d"><div class="in"><div class="field">Ich höre …</div><div class="lv"><div class="wave"></div><span class="sym">!</span><div class="mic"></div></div><div class="btns"><span class="b">Abbrechen</span><span class="b off">Fertig</span></div></div><div class="foot"><span>Loose Ends öffnen</span><span>Loose Ends beenden</span></div></div></div>
+</div>
