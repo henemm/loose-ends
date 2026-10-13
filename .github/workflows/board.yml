@@ -1,0 +1,52 @@
+# Board „loose ends“ aus der Cloud lesen und pflegen (#385). Cloud-Sitzungen erreichen das
+# GitHub Project nicht direkt; sie stoßen diesen Lauf an und lesen das Ergebnis als Annotation
+# (repos/{owner}/{repo}/check-runs/{id}/annotations). Anleitung: docs/reference/board.md.
+name: Board
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: list oder set
+        type: choice
+        options: [list, set]
+        default: list
+      issue:
+        description: Ticketnummer (nur set)
+        type: string
+        required: false
+      fields:
+        description: Feld=Wert, mit Komma getrennt, z. B. „Status=In progress,Size=S“ (nur set)
+        type: string
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: board
+  cancel-in-progress: false
+
+jobs:
+  board:
+    name: Board ${{ inputs.action }} ${{ inputs.issue }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - name: Run
+        env:
+          GH_TOKEN: ${{ secrets.PROJECT_TOKEN }}
+          ACTION: ${{ inputs.action }}
+          ISSUE: ${{ inputs.issue }}
+          FIELDS: ${{ inputs.fields }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::error title=board::Secret PROJECT_TOKEN fehlt (docs/reference/board.md)"
+            exit 1
+          fi
+          if [ "$ACTION" = "set" ]; then
+            python3 scripts/board.py set "$ISSUE" "$FIELDS"
+          else
+            python3 scripts/board.py list
+          fi
