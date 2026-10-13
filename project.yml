@@ -39,6 +39,9 @@ targets:
       - LooseEnds
       - Shared
     dependencies:
+      # macOS does not link CloudKit on its own the way iOS does: a Mac build launched outside Xcode
+      # then never starts the mirroring, silently (#377, Apple Forums 784215). Explicit on every platform.
+      - sdk: CloudKit.framework
       - target: LooseEndsWatch
         platformFilter: iOS      # a watch app can only be embedded in the iOS build
       - target: LooseEndsWidgets

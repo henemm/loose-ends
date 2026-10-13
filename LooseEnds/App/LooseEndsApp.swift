@@ -21,6 +21,7 @@ struct LooseEndsApp: App {
         #if DEBUG
         Self.initializeCloudKitSchemaIfAsked()
         #endif
+        CloudSyncStatus.shared.start()   // before the container: its setup event comes first (#377)
         LaunchTimings.mark(.containerStart)
         do {
             container = try ModelContainerFactory.make()

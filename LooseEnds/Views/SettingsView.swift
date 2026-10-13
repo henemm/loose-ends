@@ -20,6 +20,38 @@ struct SettingsView: View {
         _time = State(initialValue: Calendar.current.date(bySettingHour: stored.hour, minute: stored.minute, second: 0, of: Date()) ?? Date())
     }
 
+    /// One line for the sync state (#377), plain words, no code.
+    private func cloudState(_ state: CloudSyncSummary.State) -> LocalizedStringResource {
+        switch state {
+        case .neverContacted: return "No contact yet"
+        case .running: return "Syncing …"
+        case .failed(let kind, let error): return "\(kindName(kind)) failed: \(error)"
+        case .ok(let date): return "In sync, \(date.formatted(date: .abbreviated, time: .shortened))"
+        }
+    }
+
+    private func kindName(_ kind: CloudSyncEventKind) -> String {
+        switch kind {
+        case .setup: return String(localized: "Setup")
+        case .import: return String(localized: "Import")
+        case .export: return String(localized: "Export")
+        }
+    }
+
+    @ViewBuilder
+    private func cloudRow(_ title: LocalizedStringKey, _ event: CloudSyncEvent?) -> some View {
+        LabeledContent(title) {
+            if let event, let ended = event.endedAt {
+                Text(ended.formatted(date: .abbreviated, time: .shortened))
+                    .foregroundStyle(event.failed ? .red : .secondary)
+            } else if event != nil {
+                Text("Running …").foregroundStyle(.secondary)
+            } else {
+                Text("—").foregroundStyle(.secondary)
+            }
+        }
+    }
+
     var body: some View {
         Form {
             Section {
@@ -31,6 +63,17 @@ struct SettingsView: View {
                 Text("A task without a due time is reminded on its day at this time. A task with a due time is reminded at that time.")
             }
             calendarSection
+            Section {
+                let sync = CloudSyncStatus.shared.summary
+                LabeledContent("Status") { Text(cloudState(sync.state)) }
+                    .accessibilityIdentifier("cloudSyncStatus")
+                cloudRow("Last import", sync.latest(.import))
+                cloudRow("Last export", sync.latest(.export))
+            } header: {
+                Text("iCloud")
+            } footer: {
+                Text("What this device's sync with iCloud reports. \"No contact yet\" after a minute means the app never reached iCloud here.")
+            }
             #if os(macOS)
             Section {
                 Toggle("Open at login", isOn: $opensAtLogin)
