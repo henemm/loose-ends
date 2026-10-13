@@ -264,23 +264,11 @@ final class StartScreenInteractionTests: XCTestCase {
         XCTAssertTrue(chip.waitForExistence(timeout: 20), "A context with a task should raise a chip")
         XCTAssertTrue(chip.label.contains("Garden"), "Chip label was \(chip.label)")
         XCTAssertTrue(chip.label.contains("1"), "Chip label was \(chip.label)")
-        chip.tap()
+        // The list reports the chip's row as its frame; the capsule sits at the leading edge, so tap there.
+        chip.coordinate(withNormalizedOffset: CGVector(dx: 0.12, dy: 0.5)).tap()
 
-        let opened = app.navigationBars["Garden"].waitForExistence(timeout: 5)
-        let bars = app.navigationBars.allElementsBoundByIndex.map(\.identifier)
-        let texts = app.staticTexts.allElementsBoundByIndex.prefix(25).map(\.label)
-        if !opened {
-            // Diagnosis for the CI log (#368): what does the screen look like after the tap?
-            let tree = app.debugDescription.split(separator: "\n")
-                .filter { $0.contains("Garden") || $0.contains("NavigationBar") || $0.contains("chip_") || $0.contains("Table") || $0.contains("Cell") }
-                .prefix(40).map { $0.trimmingCharacters(in: .whitespaces) }.joined(separator: " | ")
-            XCTFail("Chip did not open Garden. Bars: \(bars). Tree: \(tree)")
-            return
-        }
-        XCTAssertTrue(opened)
-        XCTAssertEqual(app.descendants(matching: .any)
-            .matching(NSPredicate(format: "identifier BEGINSWITH 'taskRow_'")).allElementsBoundByIndex.count, 1,
-            "The list holds as many rows as the chip counted")
+        XCTAssertTrue(app.navigationBars["Garden"].waitForExistence(timeout: 5), "The chip should open its context")
+        XCTAssertEqual(taskRows(in: app).count, 1, "The list holds as many rows as the chip counted")
     }
 
     // MARK: - All open (#319)
