@@ -15,7 +15,9 @@ import os
 import subprocess
 import sys
 
-OWNER = os.environ.get("BOARD_OWNER", "henemm")
+# "@me": the token belongs to the board owner, and gh then skips its owner-type lookup, which fails
+# with a token that carries only the `project` scope ("unknown owner type", #385).
+OWNER = os.environ.get("BOARD_OWNER", "@me")
 NUMBER = os.environ.get("BOARD_NUMBER", "1")
 REPO = os.environ.get("GITHUB_REPOSITORY", "henemm/loose-ends")
 
