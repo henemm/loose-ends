@@ -250,6 +250,27 @@ final class StartScreenInteractionTests: XCTestCase {
         XCTAssertEqual(nowRows(in: app).count, 1)
     }
 
+    // MARK: - Chips (#368)
+
+    /// A task the rule files under Garden raises a chip with the list's count; the tap opens that list (AC-13).
+    @MainActor
+    func testChipOpensItsView() throws {
+        let app = launch()
+        XCTAssertFalse(firstElement(prefix: "chip_", in: app).exists, "No chip without a task in a context")
+        capture("Rasen mähen", in: app)
+
+        let chip = firstElement(prefix: "chip_", in: app)
+        XCTAssertTrue(chip.waitForExistence(timeout: 20), "A context with a task should raise a chip")
+        XCTAssertTrue(chip.label.contains("Garden"), "Chip label was \(chip.label)")
+        XCTAssertTrue(chip.label.contains("1"), "Chip label was \(chip.label)")
+        chip.tap()
+
+        XCTAssertTrue(app.navigationBars["Garden"].waitForExistence(timeout: 5), "The chip should open its context")
+        XCTAssertEqual(app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH 'taskRow_'")).allElementsBoundByIndex.count, 1,
+            "The list holds as many rows as the chip counted")
+    }
+
     // MARK: - All open (#319)
 
     /// Without the long Done window: a completed task really leaves the open lists after three seconds.
