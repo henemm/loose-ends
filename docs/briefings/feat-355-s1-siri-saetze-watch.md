@@ -1,6 +1,6 @@
 ---
 spec_file: docs/specs/intents/feat-355-s1-siri-saetze-watch.md
-spec_sha256: f005a7aeb117b2163524798c2eaef8fc6f140a7cb440198b36f625cc224432c2
+spec_sha256: 4b1979c40a8d259f8591ef93cd6992458377c3866794070bb37a04c1732682b3
 ---
 
 # PO-Briefing: feat-355-s1-siri-saetze-watch
@@ -11,22 +11,22 @@ spec_sha256: f005a7aeb117b2163524798c2eaef8fc6f140a7cb440198b36f625cc224432c2
 
 ## Was gebaut wird
 
-Die Watch versteht deutsche Siri-Sätze wie „Erfasse in Loose Ends“ und fragt auf Deutsch nach dem Text.
+Auf der Watch soll deutsche Siri „Erfasse in Loose Ends“ verstehen, nach dem Text fragen und speichern.
 
 ## Definition of Done
 
-Auf deiner Watch erkennt Siri die fünf deutschen Sätze, fragt nach dem Text und speichert ohne App-Start.
+Deine Watch versteht per Siri auf Deutsch alle fünf Sätze, fragt nach dem Text und speichert ihn ohne App-Start aufs iPhone.
 
 ## Wie geprüft wird
 
-Skripte und Paketinspektion belegen deutsche Texte im Watch-Paket; ob Siri versteht und speichert, zeigt nur dein TestFlight-Test.
+Tests prüfen nur Satzlisten, Übersetzungen und Paketinhalt; ob Siri auf der echten Watch zuhört und speichert, zeigt nur dein Gerätetest.
 
 ## Kritische Anmerkungen
 
-- Siri fragt „Was soll ich aufnehmen?“ statt des verlangten „Was soll ich mir merken?“.
-- Kernziel ohne Gerätetest unbewiesen; ein bekannter Siri-Fehler könnte die Rückfrage auf der Watch verhindern.
-- Watch erkennt Sätze nur wörtlich; Ersatznamen wie „Lose Enden“ wirken eventuell nicht.
+- Siri-Erkennung und Speichern sind nur am Gerät prüfbar; Build 52 scheiterte bereits am App-Namen.
+- Siri-Rückfrage nach dem Text versagte auf älteren Uhren; Ersatz öffnet die App, verfehlt „ohne App-Start“.
+- Dialog weicht vom Ticket ab: „Was soll ich aufnehmen?“ statt „…mir merken?“.
 
 ## Freigabe-Frage
 
-Gibst du den Schnitt frei, obwohl die Siri-Frage abweicht und die Wirkung erst per TestFlight bewiesen wird?
+Soll dieser Schnitt mit Siri-Berechtigung für die Watch gebaut und per TestFlight getestet werden?

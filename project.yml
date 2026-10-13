@@ -129,6 +129,9 @@ targets:
         com.apple.developer.icloud-services: [CloudKit]
         com.apple.security.application-groups: [group.com.henning.looseends$(BUNDLE_ID_SUFFIX)]
         aps-environment: development   # the watch mirrors the same store and needs its own pushes
+        # Siri (#355): TestFlight build 52 — without it Siri on the watch did not recognise the app
+        # name and heard „Los Angeles“; same pattern as #347 on the iPhone.
+        com.apple.developer.siri: true
     info:
       path: LooseEndsWatch/Info.plist
       properties:

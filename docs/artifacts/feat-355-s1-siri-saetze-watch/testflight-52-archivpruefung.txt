@@ -1,0 +1,36 @@
+| com.henning.looseends | LooseEnds.app | iphoneos27.0 | 27.0 | 0.1.0 (52) | da | OK |
+| com.henning.looseends.watchkitapp | LooseEnds.app/Watch/LooseEndsWatch.app | watchos27.0 | 27.0 | 0.1.0 (52) | da | OK |
+| com.henning.looseends | com.apple.developer.ubiquity-kvstore-identifier | vorhanden |
+| com.henning.looseends | de.lproj en.lproj  |
+| com.henning.looseends | de: „Aufgabe erfassen“ vorhanden |
+| com.henning.looseends | de: „Erfassung öffnen“ vorhanden |
+| com.henning.looseends | de: Kurztitel „Erfassen“ vorhanden |
+| com.henning.looseends | Siri-Berechtigung im signierten Bundle vorhanden |
+| com.henning.looseends | de: Siri-Satz „Zu ${applicationName} hinzufügen“ vorhanden |
+| com.henning.looseends | de: Siri-Satz „${applicationName} neue Aufgabe“ vorhanden |
+| com.henning.looseends | de: Siri-Satz „In ${applicationName} erfassen“ vorhanden |
+| com.henning.looseends | de: Siri-Satz „Erfasse in ${applicationName}“ vorhanden |
+| com.henning.looseends | de: Siri-Satz „Aufgabe mit ${applicationName}“ vorhanden |
+| com.henning.looseends | de: Siri-Name CFBundleSpokenName „Luus Ends“ vorhanden |
+| com.henning.looseends | de: Siri-Name LE_ALT_NAME_1 „Loose End“ vorhanden |
+| com.henning.looseends | de: Siri-Name LE_ALT_NAME_2 „LooseEnds“ vorhanden |
+| com.henning.looseends | de: Siri-Name LE_ALT_NAME_3 „Lose Enden“ vorhanden |
+| com.henning.looseends | en: Siri-Name CFBundleSpokenName „Loose Ends“ vorhanden |
+| com.henning.looseends | en: Siri-Name LE_ALT_NAME_1 „Loose End“ vorhanden |
+| com.henning.looseends | en: Siri-Name LE_ALT_NAME_2 „LooseEnds“ vorhanden |
+| com.henning.looseends | en: Siri-Name LE_ALT_NAME_3 „Lose Enden“ vorhanden |
+| com.henning.looseends.watchkitapp | de.lproj en.lproj  |
+| com.henning.looseends.watchkitapp | de: Siri-Satz „Zu ${applicationName} hinzufügen“ vorhanden |
+| com.henning.looseends.watchkitapp | de: Siri-Satz „${applicationName} neue Aufgabe“ vorhanden |
+| com.henning.looseends.watchkitapp | de: Siri-Satz „In ${applicationName} erfassen“ vorhanden |
+| com.henning.looseends.watchkitapp | de: Siri-Satz „Erfasse in ${applicationName}“ vorhanden |
+| com.henning.looseends.watchkitapp | de: Siri-Satz „Aufgabe mit ${applicationName}“ vorhanden |
+| com.henning.looseends.watchkitapp | de: Siri-Name CFBundleSpokenName „Luus Ends“ vorhanden |
+| com.henning.looseends.watchkitapp | de: Siri-Name LE_ALT_NAME_1 „Loose End“ vorhanden |
+| com.henning.looseends.watchkitapp | de: Siri-Name LE_ALT_NAME_2 „LooseEnds“ vorhanden |
+| com.henning.looseends.watchkitapp | de: Siri-Name LE_ALT_NAME_3 „Lose Enden“ vorhanden |
+| com.henning.looseends.watchkitapp | en: Siri-Name CFBundleSpokenName „Loose Ends“ vorhanden |
+| com.henning.looseends.watchkitapp | en: Siri-Name LE_ALT_NAME_1 „Loose End“ vorhanden |
+| com.henning.looseends.watchkitapp | en: Siri-Name LE_ALT_NAME_2 „LooseEnds“ vorhanden |
+| com.henning.looseends.watchkitapp | en: Siri-Name LE_ALT_NAME_3 „Lose Enden“ vorhanden |
+| CFBundleIdentifier | com.henning.looseends | OK |

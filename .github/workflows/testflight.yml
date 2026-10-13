@@ -243,16 +243,16 @@ jobs:
                 row "| $id | de: Kurztitel „Erfassen“ FEHLT |"
                 echo "::error::$id: de.lproj/Localizable.strings has no 'Erfassen' (#347)"; fail=1
               fi
+            fi
+            if [ "$id" = com.henning.looseends ] || [ "$id" = com.henning.looseends.watchkitapp ]; then
               # Ohne Siri-Berechtigung übergeht Siri die Ersatznamen (#347, Build 43: „Loose End ist
-              # nicht installiert“). Nur die App: die Watch bleibt ohne Siri-Berechtigung (#355).
+              # nicht installiert“). Auch die Watch braucht sie: Build 52 hörte dort „Los Angeles“ (#355).
               if codesign -d --entitlements :- "$bundle" 2>/dev/null | grep -q "com.apple.developer.siri"; then
                 row "| $id | Siri-Berechtigung im signierten Bundle vorhanden |"
               else
                 row "| $id | Siri-Berechtigung FEHLT |"
-                echo "::error::$id is signed without com.apple.developer.siri (#347)"; fail=1
+                echo "::error::$id is signed without com.apple.developer.siri (#347, #355)"; fail=1
               fi
-            fi
-            if [ "$id" = com.henning.looseends ] || [ "$id" = com.henning.looseends.watchkitapp ]; then
               siri_phrases "$id" "$bundle"
               siri_names "$id" "$bundle"
             fi

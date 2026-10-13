@@ -99,6 +99,12 @@ class SiriPhraseTests(unittest.TestCase):
             self.assertIn(key, watch)
             self.assertEqual(watch[key], app[key], f"{key}: Watch weicht von der App ab")
 
+    def test_watch_is_entitled_for_siri_like_the_app(self):
+        # Build 52: without it Siri on the watch did not know the app's name („Los Angeles“), as on the iPhone in #347.
+        for name in ("LooseEnds", "LooseEndsWatch"):
+            properties = self.project["targets"][name]["entitlements"]["properties"]
+            self.assertIs(properties.get("com.apple.developer.siri"), True, f"{name}: keine Siri-Berechtigung")
+
 
 if __name__ == "__main__":
     unittest.main()

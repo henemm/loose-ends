@@ -76,10 +76,11 @@ Dialog („What should I remember?“) und Intent-Titel sind auf der Watch desha
 
 | Datei | Änderungsart | Beschreibung |
 |---|---|---|
-| `project.yml` | MODIFY | Watch-Target: `path: LooseEnds/Resources` mit `includes: [AppShortcuts.xcstrings, Localizable.xcstrings, "*.lproj/InfoPlist.strings"]` (Assets bleiben draußen); Watch-`Info.plist`: `CFBundleSpokenName` und `INAlternativeAppNames` mit denselben `LE_ALT_*`-Variablen wie iOS. Keine Siri-Berechtigung. |
+| `project.yml` | MODIFY | Watch-Target: `path: LooseEnds/Resources` mit `includes: [AppShortcuts.xcstrings, Localizable.xcstrings, "*.lproj/InfoPlist.strings"]` (Assets bleiben draußen); Watch-`Info.plist`: `CFBundleSpokenName` und `INAlternativeAppNames` mit denselben `LE_ALT_*`-Variablen wie iOS. Watch-Berechtigungen: `com.apple.developer.siri: true` (Variante B, nach Gerätebefund Build 52). |
+| `LooseEndsWatch/Info.plist`, `LooseEndsWatch/LooseEndsWatch.entitlements` | MODIFY (erzeugt) | von `./scripts/sim.sh generate` aus `project.yml` geschrieben: Siri-Namen bzw. Siri-Berechtigung. |
 | `Shared/Intents/CaptureTextIntent.swift` | MODIFY | 5. Satz `"Capture with \(.applicationName)"` (wirkt auf iPhone, Mac und Watch) |
 | `LooseEnds/Resources/AppShortcuts.xcstrings` | MODIFY | Schlüssel `Capture with ${applicationName}` → de `Erfasse in ${applicationName}`, `state: translated` |
-| `.github/workflows/testflight.yml` | MODIFY | Sprach-/Siri-Prüfung als Funktion je Bundle; Watch: `de.lproj` vorhanden, alle 5 deutschen Sätze, Siri-Namen in `InfoPlist.strings` (de/en); neuer Satz auch in der iPhone-Prüfung. Keine Siri-Berechtigungsprüfung für die Watch. |
+| `.github/workflows/testflight.yml` | MODIFY | Sprach-/Siri-Prüfung als Funktion je Bundle; Watch: `de.lproj` vorhanden, alle 5 deutschen Sätze, Siri-Namen in `InfoPlist.strings` (de/en); neuer Satz auch in der iPhone-Prüfung. Siri-Berechtigung im signierten Bundle für App **und** Watch. |
 | `scripts/test_siri_phrases.py` | CREATE | Jeder Satz in `CaptureTextIntent.swift` hat genau einen Katalogschlüssel mit deutscher Übersetzung, kein veralteter Schlüssel; Watch-Target in `project.yml` führt Katalog und `InfoPlist.strings` |
 
 ### Estimated Changes
@@ -94,7 +95,6 @@ Dialog („What should I remember?“) und Intent-Titel sind auf der Watch desha
   neuen Satz angleichen).
 - Quelle `.watch`: `CaptureTextIntent` speichert weiter `via: .siri`, auch auf der Watch (das Ticket akzeptiert
   „Siri oder Watch“).
-- Siri-Berechtigung für die Watch-Kennung (Variante B, siehe Alternativen).
 
 ## Implementation Details
 
@@ -114,7 +114,7 @@ Geräten und wird hier offen benannt.
 
 Die Archivprüfung in `testflight.yml` wird von einer Prüfung nur für `com.henning.looseends` zu einer Funktion je
 Bundle umgebaut. Für die Watch prüft sie `de.lproj`, alle fünf deutschen Sätze und die Siri-Namen in
-`InfoPlist.strings`; die Siri-Berechtigung wird dort nicht verlangt. Details stehen in der Datei, nicht hier.
+`InfoPlist.strings` und die Siri-Berechtigung im signierten Bundle. Details stehen in der Datei, nicht hier.
 
 ## Test Plan
 
@@ -162,8 +162,9 @@ Siri-Sätze sprechen. Der Bundle-Inhalt wird in Stufe 2 geprüft, das Verhalten 
   `Localizable.xcstrings` und `*.lproj/InfoPlist.strings` aus `LooseEnds/Resources` ein (ohne Kopie, ohne Assets).
   Nachweis: `test_siri_phrases.py` (Test 3).
 - **AC-4:** Ersatznamen im Watch-Info.plist — Das Watch-`Info.plist` enthält `CFBundleSpokenName` und
-  `INAlternativeAppNames` mit denselben `LE_ALT_*`-Variablen wie iOS; keine Siri-Berechtigung wird hinzugefügt.
-  Nachweis: `test_siri_phrases.py`, `test_entitlements_sync.py` grün, Diff von `project.yml`.
+  `INAlternativeAppNames` mit denselben `LE_ALT_*`-Variablen wie iOS, und die Watch-Berechtigungen in `project.yml`
+  (und damit `LooseEndsWatch.entitlements`) enthalten `com.apple.developer.siri: true` wie die App.
+  Nachweis: `test_siri_phrases.py` (erst rot, dann grün), `test_entitlements_sync.py` grün, Diff von `project.yml`.
 - **AC-5:** Watch-Bundle enthält Deutsch (Stufe 2) — Das gebaute Watch-Paket enthält `de.lproj/AppShortcuts.strings`
   mit allen fünf deutschen Sätzen, `de.lproj/Localizable.strings` und `de.lproj/InfoPlist.strings` (de und en);
   die gebaute `Info.plist` enthält `CFBundleSpokenName` und `INAlternativeAppNames`. Kein `root.ssu.yaml` erwartet:
@@ -174,7 +175,7 @@ Siri-Sätze sprechen. Der Bundle-Inhalt wird in Stufe 2 geprüft, das Verhalten 
   ${applicationName}“ in `de.lproj/AppShortcuts.strings`. Nachweis: Paketinspektion.
 - **AC-7:** CI sichert das Watch-Bundle ab — Die Archivprüfung in `testflight.yml` prüft je Bundle, und für die Watch
   `de.lproj`, die fünf deutschen Sätze und die Siri-Namen in `InfoPlist.strings` (de/en); der neue Satz steht auch in
-  der iPhone-Prüfung; für die Watch wird keine Siri-Berechtigung verlangt. Nachweis: Diff und
+  der iPhone-Prüfung; die Siri-Berechtigung wird für App und Watch im signierten Bundle verlangt. Nachweis: Diff und
   `scripts/test_ci_xcode27.py` grün; der Archivlauf selbst ist der Beleg im TestFlight-Bau.
 - **AC-8:** Bestehendes bleibt grün — `./scripts/sim.sh unit`, `test_entitlements_sync.py`, `test_ci_xcode27.py`
   bestehen. Nachweis: Lauf-Ausgaben.
@@ -204,11 +205,13 @@ Siri-Sätze sprechen. Der Bundle-Inhalt wird in Stufe 2 geprüft, das Verhalten 
 
 ## Alternativen
 
-- **A (gewählt):** geteilte Kataloge und `InfoPlist.strings`, Ersatznamen im Watch-Info.plist, keine
-  Siri-Berechtigung. Klein, signiert wie heute.
-- **B: A plus `com.apple.developer.siri` für `…watchkitapp`.** Macht Ersatznamen sicherer, aber der CI-Schlüssel kann
-  die Fähigkeit eventuell nicht anlegen (#307: Widget und iCloud), und der ganze TestFlight-Bau scheitert. Erst nach
-  Gerätebefund und Prüfung der App-ID. Kippt keine ADR, nur die Annahme „Watch ohne Siri-Berechtigung“.
+- **A (Erstfassung, Build 52):** geteilte Kataloge und `InfoPlist.strings`, Ersatznamen im Watch-Info.plist, keine
+  Siri-Berechtigung. Gerätebefund Build 52: Siri auf der Watch erkennt den App-Namen nicht („Los Angeles“,
+  „Dose Enden“), kein Satz greift; die Kurzbefehle-App der Watch zeigt Loose Ends, das iPhone versteht den Satz.
+- **B (gewählt nach Build 52): A plus `com.apple.developer.siri` für `…watchkitapp`.** Einziger Unterschied zum
+  iPhone, auf dem derselbe Satz funktioniert; #347 Build 43 zeigte dasselbe Muster ohne Berechtigung. Risiko: Der CI-Schlüssel
+  kann die Fähigkeit eventuell nicht an der App-ID anlegen (#307: Widget und iCloud); dann scheitert der TestFlight-Bau
+  sofort und sichtbar. Kippt keine ADR, nur die Annahme „Watch ohne Siri-Berechtigung“.
 - **C: eigene Katalogkopie im Watch-Ordner.** Unabhängig, aber eine Dublette, die driftet, und mehr LoC. Kippt die
   Regel aus #323 „eine Quelle je Text“ nicht, widerspricht aber ihrem Geist.
 - **D: Watch-Kurzbefehl öffnet die App statt Siri-Rückfrage.** Umgeht Risiko 1, verfehlt aber „ohne App-Start“. Würde
@@ -231,9 +234,11 @@ Siri-Sätze sprechen. Der Bundle-Inhalt wird in Stufe 2 geprüft, das Verhalten 
 
 - **Rationale:** Dieselben Ressourcen werden einem weiteren Target zugeordnet; die Regel „Regeln vor Modell“ ist
   erfüllt, weil nichts zu verstehen, nur zuzuordnen ist. Die Entscheidung gegen die Siri-Berechtigung für die Watch
-  ist begründet (Recherche: für App Shortcuts nicht verlangt) und mit Rückfall (Variante B) benannt.
+  wurde nach dem Gerätebefund Build 52 revidiert (Variante B). Hilft auch B nicht, wird die Komplikation (Schnitt 3)
+  zum Hauptweg auf der Watch; dafür entsteht ein eigenes Ticket.
 
 ## Changelog
 
 - 2026-10-13: Initial spec created (Variante A aus der Analyse).
 - 2026-10-13: AC-5 und Stufe 2 ohne `root.ssu.yaml` auf der Watch (Bauprotokoll: kein SSU-Schritt für watchOS; Henning: override).
+- 2026-10-13: Variante B nach Gerätebefund Build 52 (Siri erkennt den App-Namen auf der Watch nicht): Siri-Berechtigung für die Watch, AC-4 und AC-7 angepasst (Henning: override).

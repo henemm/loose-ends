@@ -136,3 +136,33 @@ AppIntentsSSUTraining (in target 'LooseEndsWidgets' from project 'LooseEnds')
 AppIntentsSSUTraining (in target 'LooseEndsShare' from project 'LooseEnds')
 AppIntentsSSUTraining (in target 'LooseEnds' from project 'LooseEnds')
 (kein Eintrag für LooseEndsWatch: Xcode erzeugt für das Watch-Target keine SSU-Daten/root.ssu.yaml)
+
+=== Variante B (2026-10-13): Siri-Berechtigung auch für die Watch ===
+Anlass: TestFlight-Build 52 — Siri auf der Watch erkannte den App-Namen nicht („Los Angeles“).
+Änderung: project.yml, LooseEndsWatch → entitlements.properties: com.apple.developer.siri: true.
+
+$ ./scripts/sim.sh generate && git diff LooseEndsWatch/LooseEndsWatch.entitlements
+--- a/LooseEndsWatch/LooseEndsWatch.entitlements
++++ b/LooseEndsWatch/LooseEndsWatch.entitlements
+@@ -12,6 +12,8 @@
+ 	<array>
+ 		<string>CloudKit</string>
+ 	</array>
++	<key>com.apple.developer.siri</key>
++	<true/>
+ 	<key>com.apple.security.application-groups</key>
+ 	<array>
+ 		<string>group.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
+
+$ python3 scripts/test_siri_phrases.py -v      (vorher: test_watch_is_entitled_for_siri_like_the_app FAIL)
+Ran 6 tests — OK   (Volltext: test-green-output.txt)
+$ python3 scripts/test_entitlements_sync.py
+Ran 4 tests — OK
+$ python3 scripts/test_ci_xcode27.py
+Ran 17 tests — OK
+
+$ xcodebuild -project LooseEnds.xcodeproj -scheme LooseEndsWatch -destination 'generic/platform=watchOS Simulator' -derivedDataPath build/dd-355 build CODE_SIGNING_ALLOWED=NO
+** BUILD SUCCEEDED **
+(Signatur entfällt im Simulator; ob die Berechtigung im signierten Watch-Bundle steht, prüft die
+Archivprüfung in .github/workflows/testflight.yml — die Siri-Berechtigungsprüfung gilt jetzt für
+com.henning.looseends UND com.henning.looseends.watchkitapp. bash -n auf den Prüfblock: OK.)
