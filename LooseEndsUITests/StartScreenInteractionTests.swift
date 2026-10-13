@@ -191,8 +191,9 @@ final class StartScreenInteractionTests: XCTestCase {
     @MainActor
     func testInboxBarAppearsOnlyWithNewAndOpensNew() throws {
         let app = launch()
-        XCTAssertTrue(element("viewRow_new", in: app).waitForExistence(timeout: 10), "New stays in the views")
+        XCTAssertTrue(scrollTo("viewRow_new", in: app).waitForExistence(timeout: 10), "New stays in the views")
         XCTAssertFalse(element("inboxBar", in: app).exists, "No inbox bar without anything in New")
+        app.swipeDown() // back to the top if the lookup scrolled
 
         capture("Rechnung bezahlen", in: app)
 
@@ -269,18 +270,11 @@ final class StartScreenInteractionTests: XCTestCase {
         let bars = app.navigationBars.allElementsBoundByIndex.map(\.identifier)
         let texts = app.staticTexts.allElementsBoundByIndex.prefix(25).map(\.label)
         if !opened {
-            // Diagnosis for the CI log (#368): does the same context open from its sidebar row?
-            let toggle = element("contextsToggle", in: app)
-            if toggle.waitForExistence(timeout: 3), !element("newContextButton", in: app).exists { toggle.tap() }
-            let row = firstElement(prefix: "contextRow_", in: app)
-            _ = row.waitForExistence(timeout: 5)
-            let rowLabels = app.descendants(matching: .any)
-                .matching(NSPredicate(format: "identifier BEGINSWITH 'contextRow_'")).allElementsBoundByIndex.map(\.label)
-            let tappableRow = app.descendants(matching: .any)
-                .matching(NSPredicate(format: "identifier BEGINSWITH 'contextRow_' AND label CONTAINS 'Garden'")).firstMatch
-            tappableRow.tap()
-            let viaRow = app.navigationBars["Garden"].waitForExistence(timeout: 5)
-            XCTFail("Chip did not open Garden. Bars: \(bars). Texts: \(texts). Rows: \(rowLabels). Via row: \(viaRow)")
+            // Diagnosis for the CI log (#368): what does the screen look like after the tap?
+            let tree = app.debugDescription.split(separator: "\n")
+                .filter { $0.contains("Garden") || $0.contains("NavigationBar") || $0.contains("chip_") || $0.contains("Table") || $0.contains("Cell") }
+                .prefix(40).map { $0.trimmingCharacters(in: .whitespaces) }.joined(separator: " | ")
+            XCTFail("Chip did not open Garden. Bars: \(bars). Tree: \(tree)")
             return
         }
         XCTAssertTrue(opened)
