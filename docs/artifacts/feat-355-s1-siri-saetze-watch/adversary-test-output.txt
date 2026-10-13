@@ -1,0 +1,13 @@
+Adversary-Laeufe 2026-10-13 (feat-355-s1-siri-saetze-watch)
+
+test_siri_phrases.py:      Ran 5 tests ... OK
+test_entitlements_sync.py: Ran 4 tests ... OK
+test_ci_xcode27.py:        Ran 17 tests ... OK
+bash -n (Siri-Block aus testflight.yml, 79 Zeilen): SYNTAX_OK
+watchOS-Simulatorbau (xcodebuild, neu): BUILD SUCCEEDED; AppIntentsSSUTraining nur "in target 'LooseEnds'", nicht LooseEndsWatch
+CI-Funktionen siri_phrases/siri_names gegen gebautes Watch-Paket: 5/5 Saetze, 2x4 Namen vorhanden, FAIL=0
+siri_phrases gegen fehlendes Bundle: 5x FEHLT, fail=1 (bricht nicht still ab)
+Watch-Paket: de.lproj {AppShortcuts,InfoPlist,Localizable}.strings, en.lproj {InfoPlist,Localizable}.strings; Assets.car nur AppIcon (Watch-eigen)
+Watch Info.plist: CFBundleSpokenName, INAlternativeAppNames (LE_ALT_NAME_1..3 / HINT_1..3), identisch zur iOS-Info.plist
+iPhone-Paket de.lproj/AppShortcuts.strings: "Capture with ${applicationName}" => "Erfasse in ${applicationName}"
+unit-run-4.log (Implementierer, Simulator): 572 tests in 88 suites passed; XCTest 7/0; Messsuiten uebersprungen (Korpus/Geraetelauf fehlt), FocusBloxCalibrationTests ausgelassen (#395)

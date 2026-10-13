@@ -1,0 +1,10 @@
+test_every_phrase_has_one_german_key_and_no_key_is_stale (__main__.SiriPhraseTests.test_every_phrase_has_one_german_key_and_no_key_is_stale) ... ok
+test_phrase_list_has_english_and_german_including_erfasse_in (__main__.SiriPhraseTests.test_phrase_list_has_english_and_german_including_erfasse_in) ... ok
+test_stale_key_is_reported (__main__.SiriPhraseTests.test_stale_key_is_reported) ... ok
+test_watch_infoplist_declares_the_same_siri_names_as_the_app (__main__.SiriPhraseTests.test_watch_infoplist_declares_the_same_siri_names_as_the_app) ... ok
+test_watch_target_carries_catalogs_and_infoplist_strings (__main__.SiriPhraseTests.test_watch_target_carries_catalogs_and_infoplist_strings) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.178s
+
+OK

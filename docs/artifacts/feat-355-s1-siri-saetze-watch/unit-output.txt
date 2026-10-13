@@ -1,0 +1,20 @@
+# Unit-Läufe #355 Schnitt 1 (2026-10-13), Stand b783939 + Arbeitskopie, Simulator (CLAUDE_SESSION_ID=feat-355-s1)
+
+Lauf 0: ./scripts/sim.sh unit -> wählte den Mac als Testhost (macOS >= Target); abgebrochen, weil Unit-Tests
+        nur im Simulator laufen sollen. Kein Ergebnis.
+
+Lauf 1: ./scripts/sim.sh sim-unit (09:31) -> TEST FAILED, bevor ein Test lief:
+        "LooseEnds encountered an error (Early unexpected exit, operation never finished bootstrapping -
+        no restart will be attempted. (Underlying Error: The test runner exited with code 0 before
+        establishing connection.))". Kein Absturzbericht von LooseEnds in ~/Library/Logs/DiagnosticReports.
+
+Lauf 2: ./scripts/sim.sh sim-unit (09:4x) -> Tests liefen an:
+        Swift Testing: 199 Tests bestanden, 31 Suites bestanden, 0 fehlgeschlagen
+        XCTest: 7 Testfälle bestanden, 0 fehlgeschlagen
+        Danach blieb der Lauf ab 09:50 hängen in
+          Suite FocusBloxCalibrationTests
+          Test "Precision/Recall je Schwelle für duration (Energie verließ das Modell mit #112)" started.
+        (letzte Logzeile: "[widget] WidgetCenter connection interrupted.") und wurde nach dem Zeitlimit des
+        Hintergrundlaufs beendet. Kein vollständiger Lauf, kein Gesamtergebnis.
+
+Ergebnis: AC-8 (sim.sh unit grün) ist NICHT belegt. Bis zum Hänger 0 Fehler.

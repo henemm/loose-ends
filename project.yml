@@ -114,6 +114,14 @@ targets:
     sources:
       - LooseEndsWatch
       - Shared
+      # Siri phrases, dialogs and the app's spoken names in German (#355): the watch inherits none of
+      # them from the iOS app (WWDC23 10102; SiriKit "Specifying synonyms for your app name").
+      # Same files as the app, no copy; the iOS assets stay out.
+      - path: LooseEnds/Resources
+        includes:
+          - AppShortcuts.xcstrings
+          - Localizable.xcstrings
+          - "*.lproj/InfoPlist.strings"
     entitlements:
       path: LooseEndsWatch/LooseEndsWatch.entitlements
       properties:
@@ -135,6 +143,15 @@ targets:
         WKRunsIndependentlyOfCompanionApp: true
         NSMicrophoneUsageDescription: Loose Ends listens so you can say a task.
         NSSpeechRecognitionUsageDescription: Speech is turned into text on your watch to capture a task.
+        # Same spoken name and alternative names as the app (#355), filled per language from InfoPlist.strings.
+        CFBundleSpokenName: Loose Ends
+        INAlternativeAppNames:
+          - INAlternativeAppName: LE_ALT_NAME_1
+            INAlternativeAppNamePronunciationHint: LE_ALT_HINT_1
+          - INAlternativeAppName: LE_ALT_NAME_2
+            INAlternativeAppNamePronunciationHint: LE_ALT_HINT_2
+          - INAlternativeAppName: LE_ALT_NAME_3
+            INAlternativeAppNamePronunciationHint: LE_ALT_HINT_3
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends$(BUNDLE_ID_SUFFIX).watchkitapp

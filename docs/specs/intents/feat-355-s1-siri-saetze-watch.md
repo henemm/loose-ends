@@ -145,7 +145,7 @@ Siri-Sätze sprechen. Der Bundle-Inhalt wird in Stufe 2 geprüft, das Verhalten 
   `./scripts/sim.sh unit`.
 - **Stufe 2:** `./scripts/sim.sh generate`, watchOS-Simulatorbau und Paketinspektion des Watch-Bundles
   (`de.lproj/AppShortcuts.strings`, `de.lproj/Localizable.strings`, `de.lproj/InfoPlist.strings`,
-  `Metadata.appintents` mit `de/root.ssu.yaml`, `Info.plist` mit `INAlternativeAppNames`) sowie des iPhone-Bundles
+  `de.lproj` und `en.lproj` mit Sätzen, Texten und Siri-Namen, `Info.plist` mit `INAlternativeAppNames`) sowie des iPhone-Bundles
   (neuer Satz auf Deutsch). **Der Simulator kann Siri nicht sprechen:** Stufe 2 belegt Paketinhalt und Bau, nicht die
   Erkennung.
 - **Stufe 3 greift** (`project.yml`, Watch): über TestFlight und Hennings Rückmeldung (Buildnummer und Prüfschritte,
@@ -165,9 +165,11 @@ Siri-Sätze sprechen. Der Bundle-Inhalt wird in Stufe 2 geprüft, das Verhalten 
   `INAlternativeAppNames` mit denselben `LE_ALT_*`-Variablen wie iOS; keine Siri-Berechtigung wird hinzugefügt.
   Nachweis: `test_siri_phrases.py`, `test_entitlements_sync.py` grün, Diff von `project.yml`.
 - **AC-5:** Watch-Bundle enthält Deutsch (Stufe 2) — Das gebaute Watch-Paket enthält `de.lproj/AppShortcuts.strings`
-  mit allen fünf deutschen Sätzen, `de.lproj/Localizable.strings`, `de.lproj/InfoPlist.strings` und
-  `Metadata.appintents` mit `de/root.ssu.yaml`; die gebaute `Info.plist` enthält `INAlternativeAppNames`. Nachweis:
-  Paketinspektion nach watchOS-Simulatorbau, Befund im Abschlussbericht.
+  mit allen fünf deutschen Sätzen, `de.lproj/Localizable.strings` und `de.lproj/InfoPlist.strings` (de und en);
+  die gebaute `Info.plist` enthält `CFBundleSpokenName` und `INAlternativeAppNames`. Kein `root.ssu.yaml` erwartet:
+  Xcode führt den Schritt `AppIntentsSSUTraining` (Daten für flexibles Satz-Matching) für das Watch-Target nicht aus,
+  passend zu WWDC23 10102 („Flexible matching with Siri is not available on Apple Watch“). Nachweis:
+  Paketinspektion nach watchOS-Simulatorbau, Bauprotokoll ohne SSU-Schritt für `LooseEndsWatch`.
 - **AC-6:** iPhone-Bundle trägt den neuen Satz (Stufe 2) — Das gebaute iPhone-Paket enthält „Erfasse in
   ${applicationName}“ in `de.lproj/AppShortcuts.strings`. Nachweis: Paketinspektion.
 - **AC-7:** CI sichert das Watch-Bundle ab — Die Archivprüfung in `testflight.yml` prüft je Bundle, und für die Watch
@@ -234,3 +236,4 @@ Siri-Sätze sprechen. Der Bundle-Inhalt wird in Stufe 2 geprüft, das Verhalten 
 ## Changelog
 
 - 2026-10-13: Initial spec created (Variante A aus der Analyse).
+- 2026-10-13: AC-5 und Stufe 2 ohne `root.ssu.yaml` auf der Watch (Bauprotokoll: kein SSU-Schritt für watchOS; Henning: override).

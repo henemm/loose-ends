@@ -179,7 +179,40 @@ jobs:
           row ""
           row "| Bundle | Sprachordner |"
           row "|--------|--------------|"
-          for id in com.henning.looseends com.henning.looseends.widgets com.henning.looseends.share; do
+          # Siri-Sätze auf Deutsch (#347): ohne de.lproj/AppShortcuts.strings erkennt eine deutsche
+          # Siri nur die englischen Sätze. Gilt für App und Watch: die Watch erbt nichts vom iPhone (#355).
+          siri_phrases() {
+            local id="$1" bundle="$2" shortcuts_de text
+            shortcuts_de=$(plutil -convert xml1 -o - "$bundle/de.lproj/AppShortcuts.strings" 2>/dev/null || true)
+            for text in 'Zu ${applicationName} hinzufügen' '${applicationName} neue Aufgabe' 'In ${applicationName} erfassen' 'Erfasse in ${applicationName}' 'Aufgabe mit ${applicationName}'; do
+              if printf '%s' "$shortcuts_de" | grep -qF "<string>$text</string>"; then
+                row "| $id | de: Siri-Satz „${text}“ vorhanden |"
+              else
+                row "| $id | de: Siri-Satz „${text}“ FEHLT |"
+                echo "::error::$id: de.lproj/AppShortcuts.strings has no '$text' (#347)"; fail=1
+              fi
+            done
+          }
+          # Siris Name für die App (#347): Build 43 kannte nur englische Aussprachehinweise, eine
+          # deutsche Siri fand „Loose Ends“ nicht. Die Namen stehen als Variablen im Info.plist und
+          # werden je Sprache aus InfoPlist.strings gefüllt; fehlt die Datei, hört Siri nur Platzhalter.
+          # Auch für die Watch, die Ersatznamen nicht von der iOS-App erbt (#355).
+          siri_names() {
+            local id="$1" bundle="$2" lang infoplist key value
+            for lang in de en; do
+              infoplist=$(plutil -convert xml1 -o - "$bundle/$lang.lproj/InfoPlist.strings" 2>/dev/null || true)
+              for key in CFBundleSpokenName LE_ALT_NAME_1 LE_ALT_NAME_2 LE_ALT_NAME_3; do
+                value=$(printf '%s' "$infoplist" | awk -v k="<key>$key</key>" '$0 ~ k {getline; gsub(/.*<string>|<\/string>.*/, ""); print; exit}')
+                if [ -n "$value" ]; then
+                  row "| $id | $lang: Siri-Name $key „${value}“ vorhanden |"
+                else
+                  row "| $id | $lang: Siri-Name $key FEHLT |"
+                  echo "::error::$id: $lang.lproj/InfoPlist.strings has no $key (#347)"; fail=1
+                fi
+              done
+            done
+          }
+          for id in com.henning.looseends com.henning.looseends.widgets com.henning.looseends.share com.henning.looseends.watchkitapp; do
             bundle=""
             while IFS= read -r b; do
               [ "$(get CFBundleIdentifier "$b/Info.plist")" = "$id" ] && { bundle="$b"; break; }
@@ -203,46 +236,25 @@ jobs:
                   echo "::error::$id: de.lproj/Localizable.strings has no '$text' (#326)"; fail=1
                 fi
               done
-              # Siri-Sätze auf Deutsch (#347): ohne de.lproj/AppShortcuts.strings erkennt eine deutsche
-              # Siri nur die englischen Sätze. „Erfassen“ ist der kurze Titel in der Kurzbefehle-App.
-              shortcuts_de=$(plutil -convert xml1 -o - "$bundle/de.lproj/AppShortcuts.strings" 2>/dev/null || true)
-              for text in 'Zu ${applicationName} hinzufügen' '${applicationName} neue Aufgabe' 'In ${applicationName} erfassen' 'Aufgabe mit ${applicationName}'; do
-                if printf '%s' "$shortcuts_de" | grep -qF "<string>$text</string>"; then
-                  row "| $id | de: Siri-Satz „${text}“ vorhanden |"
-                else
-                  row "| $id | de: Siri-Satz „${text}“ FEHLT |"
-                  echo "::error::$id: de.lproj/AppShortcuts.strings has no '$text' (#347)"; fail=1
-                fi
-              done
+              # „Erfassen“ ist der kurze Titel in der Kurzbefehle-App (#347).
               if printf '%s' "$strings_de" | grep -qF "<string>Erfassen</string>"; then
                 row "| $id | de: Kurztitel „Erfassen“ vorhanden |"
               else
                 row "| $id | de: Kurztitel „Erfassen“ FEHLT |"
                 echo "::error::$id: de.lproj/Localizable.strings has no 'Erfassen' (#347)"; fail=1
               fi
-              # Siris Name für die App (#347): Build 43 kannte nur englische Aussprachehinweise, eine
-              # deutsche Siri fand „Loose Ends“ nicht. Die Namen stehen als Variablen im Info.plist und
-              # werden je Sprache aus InfoPlist.strings gefüllt; fehlt die Datei, hört Siri nur Platzhalter.
               # Ohne Siri-Berechtigung übergeht Siri die Ersatznamen (#347, Build 43: „Loose End ist
-              # nicht installiert“).
+              # nicht installiert“). Nur die App: die Watch bleibt ohne Siri-Berechtigung (#355).
               if codesign -d --entitlements :- "$bundle" 2>/dev/null | grep -q "com.apple.developer.siri"; then
                 row "| $id | Siri-Berechtigung im signierten Bundle vorhanden |"
               else
                 row "| $id | Siri-Berechtigung FEHLT |"
                 echo "::error::$id is signed without com.apple.developer.siri (#347)"; fail=1
               fi
-              for lang in de en; do
-                infoplist=$(plutil -convert xml1 -o - "$bundle/$lang.lproj/InfoPlist.strings" 2>/dev/null || true)
-                for key in CFBundleSpokenName LE_ALT_NAME_1 LE_ALT_NAME_2 LE_ALT_NAME_3; do
-                  value=$(printf '%s' "$infoplist" | awk -v k="<key>$key</key>" '$0 ~ k {getline; gsub(/.*<string>|<\/string>.*/, ""); print; exit}')
-                  if [ -n "$value" ]; then
-                    row "| $id | $lang: Siri-Name $key „${value}“ vorhanden |"
-                  else
-                    row "| $id | $lang: Siri-Name $key FEHLT |"
-                    echo "::error::$id: $lang.lproj/InfoPlist.strings has no $key (#347)"; fail=1
-                  fi
-                done
-              done
+            fi
+            if [ "$id" = com.henning.looseends ] || [ "$id" = com.henning.looseends.watchkitapp ]; then
+              siri_phrases "$id" "$bundle"
+              siri_names "$id" "$bundle"
             fi
           done
           [ "$fail" = 0 ]

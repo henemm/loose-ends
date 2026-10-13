@@ -47,6 +47,7 @@ struct LooseEndsShortcuts: AppShortcutsProvider {
                 "Add to \(.applicationName)",
                 "\(.applicationName) new task",
                 "Capture in \(.applicationName)",
+                "Capture with \(.applicationName)",
                 "Task with \(.applicationName)",
             ],
             shortTitle: "Capture",
