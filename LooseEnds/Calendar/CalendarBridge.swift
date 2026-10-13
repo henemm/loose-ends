@@ -18,6 +18,8 @@ final class CalendarBridge {
     private(set) var calendars: [Target] = []
     /// The app's own calendar, the default for a task without a choice.
     private(set) var appCalendarID: String?
+    /// This device's calendar for new events (#203 Teil C2), nil for "Loose Ends".
+    private(set) var deviceDefault = CalendarSync.deviceDefault()
 
     struct Target: Identifiable {
         let id: String
@@ -62,8 +64,34 @@ final class CalendarBridge {
         return CalendarSync.resolve(choice, among: refs) == nil
     }
 
+    /// What a task switched on now takes along: the device default while this device has that
+    /// calendar (or before a sync could tell), nil for "Loose Ends".
+    var defaultForNewEvents: CalendarSync.Choice? {
+        guard let deviceDefault, !calendars.isEmpty else { return deviceDefault }
+        return CalendarSync.resolve(deviceDefault, among: refs) == nil ? nil : deviceDefault
+    }
+
+    /// The default as a calendar of this device; "Loose Ends" without one, nil when it is missing here.
+    var defaultTarget: Target? {
+        guard let deviceDefault else { return calendars.first { $0.id == appCalendarID } }
+        guard let id = CalendarSync.resolve(deviceDefault, among: refs) else { return nil }
+        return calendars.first { $0.id == id }
+    }
+
+    func setDeviceDefault(_ choice: CalendarSync.Choice?) {
+        CalendarSync.setDeviceDefault(choice)
+        deviceDefault = choice
+    }
+
     private var refs: [CalendarSync.CalendarRef] {
         calendars.map { CalendarSync.CalendarRef(id: $0.id, account: $0.account, name: $0.title) }
+    }
+
+    /// A sync only when access is already granted: the settings show the calendars without ever
+    /// asking for access (#203 Teil C2).
+    func refreshIfAllowed() async {
+        guard EKEventStore.authorizationStatus(for: .event) == .fullAccess else { return }
+        await sync()
     }
 
     /// Saves come in bursts; one sync shortly after the last.

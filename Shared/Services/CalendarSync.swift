@@ -155,6 +155,33 @@ enum CalendarSync {
         marked.filter { !taskIDs.contains($0.value) }.map(\.key).sorted()
     }
 
+    // MARK: This device's calendar for new events (#203 Teil C2)
+
+    private static let defaultAccountKey = "calendarDefaultAccount"
+    private static let defaultNameKey = "calendarDefaultName"
+
+    /// The calendar new events on this device go to, nil for "Loose Ends". Per device, not synced.
+    static func deviceDefault(in defaults: UserDefaults = .standard) -> Choice? {
+        guard let account = defaults.string(forKey: defaultAccountKey),
+              let name = defaults.string(forKey: defaultNameKey) else { return nil }
+        return Choice(account: account, name: name)
+    }
+
+    /// Stores this device's default; nil goes back to "Loose Ends".
+    static func setDeviceDefault(_ choice: Choice?, in defaults: UserDefaults = .standard) {
+        defaults.set(choice?.account, forKey: defaultAccountKey)
+        defaults.set(choice?.name, forKey: defaultNameKey)
+    }
+
+    /// Switches the task into the calendar. A task without its own calendar takes `deviceDefault`
+    /// along and keeps it on every device; one that already chose keeps its choice.
+    static func switchOn(_ task: TaskItem, deviceDefault: Choice?) {
+        if choice(for: task) == nil, let deviceDefault {
+            choose(deviceDefault, for: task)
+        }
+        task.showInCalendar = true
+    }
+
     /// What went wrong on the last sync, as `CalendarBridge` saw it.
     enum Problem: Equatable { case accessDenied, noWritableSource, syncFailed }
 

@@ -140,8 +140,11 @@ struct TaskDetailView: View {
                     set: { on in
                         if on, let gaps = CalendarAsk.gaps(for: task) {
                             calendarGaps = gaps
+                        } else if on {
+                            CalendarSync.switchOn(task, deviceDefault: calendar?.defaultForNewEvents)
+                            save("calendar")
                         } else {
-                            task.showInCalendar = on
+                            task.showInCalendar = false
                             save("calendar")
                         }
                     }
@@ -244,7 +247,8 @@ struct TaskDetailView: View {
         }
         .sheet(item: $calendarGaps) { gaps in
             CalendarAskSheet(gaps: gaps, existingStart: task.dueHasTime ? task.dueDate : nil) { answer in
-                CalendarAsk.apply(answer, gaps: gaps, to: task, contexts: contexts, projects: projects)
+                CalendarAsk.apply(answer, gaps: gaps, to: task, contexts: contexts, projects: projects,
+                                  deviceDefault: calendar?.defaultForNewEvents)
                 save("calendar")
             }
         }

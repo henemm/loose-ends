@@ -1,11 +1,15 @@
 import SwiftUI
 
-/// The settings (#311): for now one value, the time of day a task without a due time is reminded.
+/// The settings (#311): the time of day a task without a due time is reminded, and where new calendar
+/// events on this device go (#203 Teil C2).
 /// The same view in the sheet behind the gear (iPhone, iPad) and in the Mac settings window (⌘,).
 struct SettingsView: View {
     /// Nil only in previews; the app always passes its notification center.
     let notifications: DueNotificationCenter?
+    @Environment(CalendarBridge.self) private var calendar: CalendarBridge?
     @State private var time: Date
+    /// The calendar picker for new events (#203 Teil C2) is open.
+    @State private var choosesCalendar = false
     #if os(macOS)
     @State private var opensAtLogin = LoginItem.isEnabled
     #endif
@@ -26,6 +30,7 @@ struct SettingsView: View {
             } footer: {
                 Text("A task without a due time is reminded on its day at this time. A task with a due time is reminded at that time.")
             }
+            calendarSection
             #if os(macOS)
             Section {
                 Toggle("Open at login", isOn: $opensAtLogin)
@@ -44,9 +49,59 @@ struct SettingsView: View {
         }
         .formStyle(.grouped)
         .navigationTitle("Settings")
+        // Only refreshes the calendar list when access is already there; never asks for it.
+        .task { await calendar?.refreshIfAllowed() }
+        .sheet(isPresented: $choosesCalendar) {
+            if let calendar {
+                CalendarPickerSheet(calendars: calendar.calendars, defaultID: calendar.appCalendarID,
+                                    selectedID: calendar.defaultTarget?.id) { picked in
+                    calendar.setDeviceDefault(picked)
+                }
+            }
+        }
         .onChange(of: time) { _, new in
             let parts = Calendar.current.dateComponents([.hour, .minute], from: new)
             notifications?.reminderTime = DueReminders.Time(hour: parts.hour ?? 9, minute: parts.minute ?? 0)
+        }
+    }
+
+    /// Where new events on this device go (#203 Teil C2). Without calendar access the list is unknown,
+    /// so the row waits until a task is in the calendar.
+    @ViewBuilder private var calendarSection: some View {
+        let ready = calendar?.appCalendarID != nil
+        let target = calendar?.defaultTarget
+        Section {
+            Button { choosesCalendar = true } label: {
+                HStack {
+                    Text("New events in").foregroundStyle(.primary)
+                    Spacer()
+                    if let target {
+                        Image(systemName: "circle.fill")
+                            .imageScale(.small)
+                            .foregroundStyle(Color(cgColor: target.color))
+                            .accessibilityHidden(true)
+                    }
+                    Text(target?.title ?? calendar?.deviceDefault?.name ?? CalendarSync.calendarTitle)
+                        .foregroundStyle(.secondary)
+                    Image(systemName: "chevron.forward")
+                        .imageScale(.small)
+                        .foregroundStyle(.tertiary)
+                        .accessibilityHidden(true)
+                }
+            }
+            .disabled(!ready)
+            .accessibilityElement(children: .combine)
+            .accessibilityIdentifier("defaultCalendarRow")
+        } header: {
+            Text("Calendar")
+        } footer: {
+            if !ready {
+                Text("Available once a task is in the calendar.")
+            } else if target == nil {
+                Text("Not on this device. New events go to “Loose Ends”.")
+            } else {
+                Text("Applies to this device only. A task keeps the calendar it gets when you switch it on.")
+            }
         }
     }
 }
