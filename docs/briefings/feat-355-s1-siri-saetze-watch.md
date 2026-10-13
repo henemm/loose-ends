@@ -1,6 +1,6 @@
 ---
 spec_file: docs/specs/intents/feat-355-s1-siri-saetze-watch.md
-spec_sha256: 4b1979c40a8d259f8591ef93cd6992458377c3866794070bb37a04c1732682b3
+spec_sha256: 887833d77d2c3dfdda2da76123e7a4ca80e9b6f2cc7437f5ebc21b8345c897a6
 ---
 
 # PO-Briefing: feat-355-s1-siri-saetze-watch
@@ -11,22 +11,22 @@ spec_sha256: 4b1979c40a8d259f8591ef93cd6992458377c3866794070bb37a04c1732682b3
 
 ## Was gebaut wird
 
-Auf der Watch soll deutsche Siri „Erfasse in Loose Ends“ verstehen, nach dem Text fragen und speichern.
+Auf iPhone und Mac versteht Siri zusätzlich „Erfasse in Loose Ends“; die Watch erhält deutsche Texte und Siri-Namen.
 
 ## Definition of Done
 
-Deine Watch versteht per Siri auf Deutsch alle fünf Sätze, fragt nach dem Text und speichert ihn ohne App-Start aufs iPhone.
+Neuer Satz funktioniert auf dem iPhone; Watch-Paket enthält deutsche Texte; Siri auf der Watch ist ausdrücklich ausgenommen.
 
 ## Wie geprüft wird
 
-Tests prüfen nur Satzlisten, Übersetzungen und Paketinhalt; ob Siri auf der echten Watch zuhört und speichert, zeigt nur dein Gerätetest.
+Skripte und Paketinspektion belegen Satz, Katalog und Inhalt; Siri-Erkennung auf der Watch wird nicht geprüft, der Simulator kann nicht sprechen.
 
 ## Kritische Anmerkungen
 
-- Siri-Erkennung und Speichern sind nur am Gerät prüfbar; Build 52 scheiterte bereits am App-Namen.
-- Siri-Rückfrage nach dem Text versagte auf älteren Uhren; Ersatz öffnet die App, verfehlt „ohne App-Start“.
-- Dialog weicht vom Ticket ab: „Was soll ich aufnehmen?“ statt „…mir merken?“.
+- Watch-Siri funktioniert nicht (Build 52 und 54: „Los Angeles“); das Hauptziel des Tickets bleibt offen, Untersuchung in #404.
+- Dialog bleibt „Was soll ich aufnehmen?“ statt gewünschtem „Was soll ich mir merken?“.
+- Komplikation wird Watch-Hauptweg; #355 bleibt bis Schnitt 3 offen.
 
 ## Freigabe-Frage
 
-Soll dieser Schnitt mit Siri-Berechtigung für die Watch gebaut und per TestFlight getestet werden?
+Gibst du frei, dass ohne funktionierende Watch-Siri nur der iPhone-Satz und die deutschen Watch-Texte ausgeliefert werden?

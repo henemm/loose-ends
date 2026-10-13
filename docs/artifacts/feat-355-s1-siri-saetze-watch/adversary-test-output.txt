@@ -1,13 +1,45 @@
-Adversary-Laeufe 2026-10-13 (feat-355-s1-siri-saetze-watch)
+# Adversary-Lauf Endstand (Code b1d2f12)
+$ python3 scripts/test_siri_phrases.py -v; test_entitlements_sync.py; test_ci_xcode27.py
+test_every_phrase_has_one_german_key_and_no_key_is_stale (__main__.SiriPhraseTests.test_every_phrase_has_one_german_key_and_no_key_is_stale) ... ok
+test_phrase_list_has_english_and_german_including_erfasse_in (__main__.SiriPhraseTests.test_phrase_list_has_english_and_german_including_erfasse_in) ... ok
+test_stale_key_is_reported (__main__.SiriPhraseTests.test_stale_key_is_reported) ... ok
+test_watch_infoplist_declares_the_same_siri_names_as_the_app (__main__.SiriPhraseTests.test_watch_infoplist_declares_the_same_siri_names_as_the_app) ... ok
+test_watch_is_entitled_for_siri_like_the_app (__main__.SiriPhraseTests.test_watch_is_entitled_for_siri_like_the_app) ... ok
+test_watch_target_carries_catalogs_and_infoplist_strings (__main__.SiriPhraseTests.test_watch_target_carries_catalogs_and_infoplist_strings) ... ok
 
-test_siri_phrases.py:      Ran 5 tests ... OK
-test_entitlements_sync.py: Ran 4 tests ... OK
-test_ci_xcode27.py:        Ran 17 tests ... OK
-bash -n (Siri-Block aus testflight.yml, 79 Zeilen): SYNTAX_OK
-watchOS-Simulatorbau (xcodebuild, neu): BUILD SUCCEEDED; AppIntentsSSUTraining nur "in target 'LooseEnds'", nicht LooseEndsWatch
-CI-Funktionen siri_phrases/siri_names gegen gebautes Watch-Paket: 5/5 Saetze, 2x4 Namen vorhanden, FAIL=0
-siri_phrases gegen fehlendes Bundle: 5x FEHLT, fail=1 (bricht nicht still ab)
-Watch-Paket: de.lproj {AppShortcuts,InfoPlist,Localizable}.strings, en.lproj {InfoPlist,Localizable}.strings; Assets.car nur AppIcon (Watch-eigen)
-Watch Info.plist: CFBundleSpokenName, INAlternativeAppNames (LE_ALT_NAME_1..3 / HINT_1..3), identisch zur iOS-Info.plist
-iPhone-Paket de.lproj/AppShortcuts.strings: "Capture with ${applicationName}" => "Erfasse in ${applicationName}"
-unit-run-4.log (Implementierer, Simulator): 572 tests in 88 suites passed; XCTest 7/0; Messsuiten uebersprungen (Korpus/Geraetelauf fehlt), FocusBloxCalibrationTests ausgelassen (#395)
+----------------------------------------------------------------------
+Ran 6 tests in 0.046s
+
+OK
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.021s
+
+OK
+test_fails_without_iphone_17_on_ios_27_0 (__main__.PickSimulator.test_fails_without_iphone_17_on_ios_27_0) ... ok
+test_picks_iphone_17_on_ios_27_0 (__main__.PickSimulator.test_picks_iphone_17_on_ios_27_0) ... ok
+test_accepts_xcode_27_0 (__main__.SelectXcodeAction.test_accepts_xcode_27_0) ... ok
+test_rejects_other_version (__main__.SelectXcodeAction.test_rejects_other_version) ... ok
+test_selects_fixed_xcode_27_app (__main__.SelectXcodeAction.test_selects_fixed_xcode_27_app) ... ok
+test_claude_md_describes_the_new_ci (__main__.Sources.test_claude_md_describes_the_new_ci) ... ok
+test_no_compiler_switch_left (__main__.Sources.test_no_compiler_switch_left) ... ok
+test_no_server_recognition_dialog_left_to_decline (__main__.SpeechStressOnXcode27.test_no_server_recognition_dialog_left_to_decline) ... ok
+test_stress_runs_skip_the_600_second_diagnostics (__main__.SpeechStressOnXcode27.test_stress_runs_skip_the_600_second_diagnostics) ... ok
+test_check_names_unchanged (__main__.Workflows.test_check_names_unchanged) ... ok
+test_every_job_runs_on_xcode_27_with_the_action (__main__.Workflows.test_every_job_runs_on_xcode_27_with_the_action) ... ok
+test_no_lowering_anywhere_in_github (__main__.Workflows.test_no_lowering_anywhere_in_github) ... ok
+test_ui_smoke_has_a_diagnosis_step_that_never_fails (__main__.Workflows.test_ui_smoke_has_a_diagnosis_step_that_never_fails) ... ok
+test_ui_smoke_lets_the_simulator_settle_and_runs_without_parallel_clones (__main__.Workflows.test_ui_smoke_lets_the_simulator_settle_and_runs_without_parallel_clones) ... ok
+test_unit_job_prints_measurement_reports_into_its_own_log (__main__.Workflows.test_unit_job_prints_measurement_reports_into_its_own_log) ... ok
+test_unit_job_runs_every_script_test (__main__.Workflows.test_unit_job_runs_every_script_test)
+#185: every scripts/test_*.py runs in CI, in one step, before Xcode. ... ok
+test_workflows_wait_for_the_simulator_to_finish_booting (__main__.Workflows.test_workflows_wait_for_the_simulator_to_finish_booting) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 1.412s
+
+OK
+
+$ bash -n auf Siri-Block aus testflight.yml (siri_phrases/siri_names): rc 0; YAML parst
+Unit-Lauf: unit-run-4.log: Test run with 574 tests in 89 suites passed; ** TEST SUCCEEDED **
+exit=0

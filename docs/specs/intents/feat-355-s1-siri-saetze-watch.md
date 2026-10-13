@@ -179,15 +179,19 @@ Siri-Sätze sprechen. Der Bundle-Inhalt wird in Stufe 2 geprüft, das Verhalten 
   `scripts/test_ci_xcode27.py` grün; der Archivlauf selbst ist der Beleg im TestFlight-Bau.
 - **AC-8:** Bestehendes bleibt grün — `./scripts/sim.sh unit`, `test_entitlements_sync.py`, `test_ci_xcode27.py`
   bestehen. Nachweis: Lauf-Ausgaben.
-- **AC-9:** Gerät, TestFlight: Satz wird verstanden — Eine deutsche Siri auf Hennings Watch versteht „Erfasse in Loose
-  Ends“ und die übrigen vier deutschen Sätze und startet den Erfassungsablauf. Nachweis: Hennings Rückmeldung zum
-  TestFlight-Bau.
-- **AC-10:** Gerät, TestFlight: Rückfrage und Speichern — Siri fragt auf der Watch nach dem Text und speichert ihn
-  ohne App-Start als Aufgabe, die auf dem iPhone ankommt. Nachweis: Hennings Rückmeldung. Scheitert die
-  Rückfrage (Risiko 1), wird Variante D als neues Ticket angelegt; AC-10 gilt dann als offen und nicht erfüllt.
-- **AC-11:** Gerät, TestFlight: Ersatznamen — Siri erkennt „Loose End“, „LooseEnds“ oder „Lose Enden“ als App-Name auf
-  der Watch, oder der Befund „Ersatznamen ohne Siri-Berechtigung ignoriert“ wird ausdrücklich festgehalten und als
-  Folgeticket (Variante B) angelegt. Nachweis: Hennings Rückmeldung.
+## Gerätebefund: Watch-Siri nicht erfüllt (weiter in #404)
+
+Die ursprünglichen Gerätekriterien (Siri versteht die Sätze auf der Watch, fragt nach dem Text und speichert; Ersatznamen
+werden erkannt) sind **nicht erfüllt** und aus diesem Schnitt herausgenommen (Henning, 2026-10-13: „Ausliefern +
+Ticket“):
+
+- TestFlight-Build 52 (Variante A) und Build 54 (Variante B, Siri-Berechtigung im signierten Watch-Paket): Siri auf
+  der Watch hört „Los Angeles“ / „Dose Enden“ statt „Loose Ends“ / „Lose Enden“; kein Satz greift.
+- Die Kurzbefehle-App der Watch zeigt Loose Ends; auf dem iPhone versteht Siri „Erfasse in Loose Ends“.
+- Ursache offen, Untersuchung in #404. Auf der Watch wird die Komplikation (#355 Schnitt 3) der Hauptweg.
+
+Was dieser Schnitt ausliefert: den Satz „Erfasse in Loose Ends“ für iPhone und Mac (auf dem iPhone bestätigt) und die
+deutschen Texte, Siri-Namen und die Siri-Berechtigung im Watch-Paket (Grundlage für Schnitt 2 und #404).
 
 ## Known Risks
 
@@ -222,7 +226,7 @@ Siri-Sätze sprechen. Der Bundle-Inhalt wird in Stufe 2 geprüft, das Verhalten 
 
 ## Definition of Done
 
-- [ ] AC-1 bis AC-8 erfüllt und belegt (Stufen 1 und 2); AC-9 bis AC-11 über Hennings Rückmeldung zu TestFlight
+- [ ] AC-1 bis AC-8 erfüllt und belegt (Stufen 1 und 2); Watch-Siri nicht erfüllt, Befund und Untersuchung in #404
 - [ ] `./scripts/sim.sh unit` grün, Build erfolgreich, jeder Commit kompiliert
 - [ ] CI grün; TestFlight-Bau mit „Was testen“-Text auf Deutsch (Satz sprechen, Rückfrage, Speichern)
 - [ ] Nach dem Zusammenführen: Hennings Hauptordner nachgezogen und Projekt neu erzeugt
@@ -242,3 +246,4 @@ Siri-Sätze sprechen. Der Bundle-Inhalt wird in Stufe 2 geprüft, das Verhalten 
 - 2026-10-13: Initial spec created (Variante A aus der Analyse).
 - 2026-10-13: AC-5 und Stufe 2 ohne `root.ssu.yaml` auf der Watch (Bauprotokoll: kein SSU-Schritt für watchOS; Henning: override).
 - 2026-10-13: Variante B nach Gerätebefund Build 52 (Siri erkennt den App-Namen auf der Watch nicht): Siri-Berechtigung für die Watch, AC-4 und AC-7 angepasst (Henning: override).
+- 2026-10-13: Gerätekriterien AC-9 bis AC-11 nach Build 52 und 54 als nicht erfüllt herausgenommen, Untersuchung in #404; Komplikation wird Watch-Hauptweg (Henning: „Ausliefern + Ticket“, override).

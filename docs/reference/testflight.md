@@ -21,6 +21,8 @@ Unter https://developer.apple.com/account/resources/identifiers/list:
    - Bundle ID: **Explicit**, `com.henning.looseends`
    - Capabilities anhaken: **App Groups**, **iCloud** (mit CloudKit), **Siri**.
    - Continue → Register.
+   - Die Watch-Kennung `com.henning.looseends.watchkitapp` trägt seit #355 ebenfalls **Siri**; der CI-Bau hat die
+     Fähigkeit beim ersten Archiv mit der Berechtigung selbst angelegt (TestFlight-Build 54).
 2. **Identifiers → +** → **App Groups**: Description `Loose Ends`, Identifier
    `group.com.henning.looseends` → Register.
 3. **Identifiers → +** → **iCloud Containers**: Description `Loose Ends`, Identifier
