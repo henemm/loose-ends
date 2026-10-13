@@ -25,6 +25,10 @@ final class SettingsSmokeTests: XCTestCase {
 
         let sync = app.descendants(matching: .any).matching(identifier: "iCloudSyncRow").firstMatch
         XCTAssertTrue(sync.exists, "The settings should show the iCloud sync row (#377)")
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = "settings-icloud-row"
+        attachment.lifetime = .keepAlways
+        add(attachment)
 
         let done = app.buttons["settingsDoneButton"]
         XCTAssertTrue(done.exists)

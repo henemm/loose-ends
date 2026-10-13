@@ -123,7 +123,7 @@ SettingsSmokeTests` und Screenshot, ohne Dateiänderung am UI-Test, dann aber oh
 (Tech Lead): die sechste Datei bleibt**, weil die UI-Test-Pflicht schwerer wiegt als die Dateizahl und die Abweichung vier
 Zeilen beträgt. Die Abweichung wird im Briefing offen genannt.
 
-**Geräteliste berührt:** `Shared/Persistence/`, `project.yml`. Stufe 3 ist Pflicht (siehe AC-8), **nur nach Hennings
+**Geräteliste berührt:** `Shared/Persistence/`, `project.yml`. Stufe 3 ist Pflicht (siehe Nachgelagert G-1), **nur nach Hennings
 wörtlichem „jetzt ist ein Test möglich“**.
 
 **Side-Effects:** Keine Änderung am Datenmodell (kein `mac-schema-init`, kein CloudKit-Deploy), an Berechtigungen,
@@ -211,26 +211,37 @@ Bestehende Unit-Tests und der volle Lauf `./scripts/sim.sh unit` bleiben grün.
   `CloudKit.framework` explizit (Treffer in der erzeugten Projektdatei, vorher 0), der iOS-Bau (`./scripts/sim.sh build`)
   und alle Tests laufen unverändert, und der Diff an `project.yml` berührt weder Entitlements noch `DEVELOPMENT_TEAM` noch
   ein anderes Ziel.
-- **AC-7:** Given der Produktpfad im Simulator (ohne `--ui-testing`) / When die App mit einem Container mit CloudKit
-  startet / Then ist belegt (Logger-Mitschnitt), ob `NSPersistentCloudKitContainer.eventChangedNotification` für den
-  SwiftData-Container eintrifft. Das Ergebnis steht im Artefaktordner `docs/artifacts/fix-377-mac-abgleich/`. Trifft sie
-  nicht ein, wird gemeldet, bevor weitergebaut wird.
-- **AC-8:** Nachgelagert, **nur nach Hennings wörtlichem „jetzt ist ein Test möglich“** (Stufe 3): Auf seinem Mac zeigt die
+- **AC-9:** Given der Diff / When er geprüft wird / Then berührt er nur die sechs genannten Dateien, ändert kein
+  Datenmodell (kein `mac-schema-init`), keinen Abgleichspfad und keinen Entitlement-Schlüssel, und alle bestehenden Tests
+  sind grün.
+
+### Nachgelagert (signierter Bau, Stufe 3) — kein Prüfpunkt dieses Gates (Override Henning, 2026-10-13, zweimal)
+
+Die Punkte waren als AC-7 und AC-8 geführt. Beide sind erst mit einem signierten Bau prüfbar und, auf Mac oder Gerät, erst nach
+Hennings wörtlichem „jetzt ist ein Test möglich“; das Gate kennt kein „nachgelagert“, deshalb stehen sie hier statt in der
+AC-Liste. Sie bleiben verbindlich: #377 bleibt bis dahin offen.
+
+- **Nachgelagert G-0 (früher AC-7):** Kommt `NSPersistentCloudKitContainer.eventChangedNotification` für den SwiftData-Container
+  an? Im Simulator **nicht beantwortbar** (belegt 2026-10-13, `docs/artifacts/fix-377-mac-abgleich/ac7-ergebnis.md`): Der
+  unsignierte Simulator-Bau hat keine App-Gruppe, die App fällt vor der Container-Anlage auf den lokalen Speicher zurück, es
+  entsteht keine Spiegelung und damit kein Ereignis. Zu prüfen mit einem signierten Bau (Mac, gemeinsam mit G-1): Eine Zeile
+  „Wartet auf iCloud“ trotz Netz und Anmeldung ist erst dann ein Befund für Hypothese 2, wenn G-0 zeigt, dass die Meldung
+  überhaupt ankommt. Bleibt sie aus, ist die Quelle der Anzeige zu wechseln (z. B. Core-Data-Verlauf), die Regel in
+  `SyncStatus` bleibt.
+
+- **Nachgelagert G-1 (früher AC-8):** Nur nach Hennings wörtlichem „jetzt ist ein Test möglich“ (Stufe 3): Auf seinem Mac zeigt die
   Zeile einen von drei lesbaren Befunden. (a) „Nur auf diesem Gerät“ mit Grund: Hypothese 1 (Rückfall) ist bestätigt, die
   Ursache ist App-Gruppe oder Container-Anlage. (b) „Wartet auf iCloud“ und bleibt es über einen Start mit Netz und
   iCloud-Anmeldung, oder „Gestört“ mit Fehlertext (z. B. CKError 6 der Sandbox): Hypothese 2 (Spiegelung startet nicht oder
   bricht ab). (c) „Aktiv“ mit Zeit: Die Spiegelung läuft; dann sind Hypothese 3 (fehlende Pushes) oder 4 (Schema)
   nachzuverfolgen. iPhone und iPad zeigen im Vergleich „Aktiv“. Das Ergebnis geht als Kommentar in #377 und entscheidet den
   Inhalt von Schnitt 2. #377 bleibt bis dahin offen (PR mit `Refs #377`, nicht `Closes`).
-- **AC-9:** Given der Diff / When er geprüft wird / Then berührt er nur die sechs genannten Dateien, ändert kein
-  Datenmodell (kein `mac-schema-init`), keinen Abgleichspfad und keinen Entitlement-Schlüssel, und alle bestehenden Tests
-  sind grün.
 
 ## Dependencies
 
 | Komponente | Beschreibung |
 |---|---|
-| `NSPersistentCloudKitContainer.eventChangedNotification` | Quelle der Ereignisse (CoreData); Verfügbarkeit für SwiftData ist Annahme, AC-7 |
+| `NSPersistentCloudKitContainer.eventChangedNotification` | Quelle der Ereignisse (CoreData); Verfügbarkeit für SwiftData ist Annahme, Nachgelagert G-0 |
 | XcodeGen | `sdk: CloudKit.framework`, ggf. mit `platformFilter` |
 | `ModelContainerFactory` | einzige Stelle der beiden Rückfälle |
 | `SettingsView` | Ort der Zeile; Einstellungsblatt (iOS) und Fenster (Mac) |
@@ -241,15 +252,15 @@ Keine neue externe Abhängigkeit.
 ## Risiken
 
 - **Benachrichtigung bleibt aus (mittel):** Liefert SwiftData sie nicht, zeigt die Zeile dauerhaft „Wartet auf iCloud“ und
-  belegt nichts. Gegenmittel: AC-7 im Simulator vor dem Weiterbau; Quelle austauschbar, Regel bleibt.
+  belegt nichts. Gegenmittel: Nachgelagert G-0 mit signiertem Bau (im Simulator nicht prüfbar); Quelle austauschbar, Regel bleibt.
 - **Bindung ändert das Mac-Verhalten (niedrig bis mittel):** Startet die Spiegelung erstmals, tauchen auf dem Mac
   zusammengeführte Aufgaben auf. Nichts wird gelöscht; Henning wird im Gerätebericht darauf hingewiesen.
 - **`platformFilter` an `sdk:`-Abhängigkeit (niedrig):** Wird in der XcodeGen-Version nicht angenommen; Rückfall: ohne Filter.
 - **Falsche Beruhigung (mittel):** „Aktiv“ zeigt nur, dass Ereignisse ohne Fehler kamen, nicht dass beide Seiten gleich
   sind. Der Erklärtext behauptet deshalb nur den Abgleich, nicht den Gleichstand; der Vergleich mit dem zweiten Gerät
-  bleibt Teil von AC-8.
+  bleibt Teil von Nachgelagert G-1.
 - **Dateigrenze (niedrig):** sechste Datei, siehe Scope.
-- **Der Simulator ersetzt den Mac nicht** (AC-8).
+- **Der Simulator ersetzt den Mac nicht** (Nachgelagert G-1).
 
 ## Alternativen
 
@@ -262,7 +273,7 @@ Keine neue externe Abhängigkeit.
   trifft; verworfen von Henning.
 - **Nur `CloudKit.framework` binden, ohne Anzeige:** billig, aber ohne Beleg, ob es half. Gegen die Regel „erst messen“.
   Verworfen.
-- **Core-Data-Verlauf statt Benachrichtigung als Quelle:** Rückfall, falls AC-7 scheitert.
+- **Core-Data-Verlauf statt Benachrichtigung als Quelle:** Rückfall, falls Nachgelagert G-0 scheitert.
 
 ## Architektur-Entscheidung (ADR)
 
@@ -272,9 +283,9 @@ Keine neue externe Abhängigkeit.
 
 ## Definition of Done
 
-- AC-1 bis AC-7 und AC-9 erfüllt; `SyncStatusTests` zuerst rot, dann grün; alle bestehenden Tests grün.
-- Simulator-Belege (Screenshots Hell/Dunkel, Mitschnitt zu AC-7) liegen unter `docs/artifacts/fix-377-mac-abgleich/`.
-- AC-8 (Gerät) nur nach Hennings wörtlichem „jetzt ist ein Test möglich“; bis dahin bleibt #377 offen.
+- AC-1 bis AC-6 und AC-9 erfüllt; `SyncStatusTests` zuerst rot, dann grün; alle bestehenden Tests grün.
+- Simulator-Belege (Screenshots Hell/Dunkel, Ergebnis zu Nachgelagert G-0) liegen unter `docs/artifacts/fix-377-mac-abgleich/`.
+- Nachgelagert G-1 (Gerät, früher AC-8) nur nach Hennings wörtlichem „jetzt ist ein Test möglich“; bis dahin bleibt #377 offen.
 - Der PR verweist mit `Refs #377` (nicht `Closes`); Schnitt 2 wird nach dem Beleg als Teil-Spec geplant.
 - Abschlussbericht ohne Git-Vokabular: Die Einstellungen zeigen jetzt, ob die App mit iCloud abgleicht. Henning soll auf dem
   Mac die Einstellungen öffnen und sagen, was in „iCloud-Abgleich“ steht.

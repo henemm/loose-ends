@@ -53,6 +53,14 @@ import Testing
         }
     }
 
+    /// `reportFallBack` only reaches `shared`. No test reads `shared` (only `SettingsView` does, which no unit
+    /// test shows), and `fellBack` overwrites whatever the test host set before, so the assertion is deterministic.
+    @Test("The factory's report on the main thread sets the shared status to local only at once")
+    func reportFallBackReachesShared() {
+        SyncStatus.reportFallBack(.containerFailed)
+        #expect(SyncStatus.shared.state == .localOnly(.containerFailed))
+    }
+
     @Test("Each state has its sign and role; only alive is accent")
     func summaryPerState() {
         let cases: [(SyncStatus.State, SyncStatus.Headline, String, SyncStatus.Role)] = [

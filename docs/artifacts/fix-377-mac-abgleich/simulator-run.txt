@@ -1,0 +1,22 @@
+# Simulator-Beleg
+erzeugt: 2026-10-13T09:32:11+0200
+befehl: scripts/sim.sh test-proof SettingsSmokeTests
+workflow: fix-377-mac-abgleich
+head: d719e435b1a860ac4b6968d886c6a148728b3e5e
+basis: 2c8577532ca1fc89c97acadd4261684b51e1417e (merge-base origin/main HEAD)
+testklasse: SettingsSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1791876584.109  ende: 1791876728.185
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/fix-377-mac-abgleich/simulator-run/summary.json  sha256:bc1f91d61f3fad8d40b96090c0a448632e8d880691d6c3883349a7196bc3a1da
+xcresult: docs/artifacts/fix-377-mac-abgleich/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-377-mac-abgleich/simulator-run/*.png (1 Stück)
+
+## Geprüfte Dateien
+- sha256:fda0c3898fed284d370969d9384ab7ce97d5e1ac5a165b5acbf2ab2649a2313e  LooseEnds/Views/SettingsView.swift
+- sha256:1bf8956afd2544e1cfc3975977b6744842b1d9214435e76c968e5c39cfad37bd  LooseEndsTests/SyncStatusTests.swift
+- sha256:9501a70b9d8fce9ccff633e2e2d75daa88ee2852612075f1b60f025b005c2395  LooseEndsUITests/SettingsSmokeTests.swift
+- sha256:e1dce282fb119c180d62d53c033614d67b4fec332d89c492c045bdda8bec3fb9  Shared/Persistence/ModelContainerFactory.swift
+- sha256:5b6cb118a9b5445847017ae83227519f1b6502888b2802789656a9845ce4d6f0  Shared/Persistence/SyncStatus.swift

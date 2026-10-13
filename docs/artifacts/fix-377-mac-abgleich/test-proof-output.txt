@@ -1,0 +1,40 @@
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEnds.xcodeproj
+[0;32m[sim][0m Projekt erzeugt.
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test mit Beleg: SettingsSmokeTests → docs/artifacts/fix-377-mac-abgleich/simulator-run.txt
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEnds[0m] [1mCompiling[0m SettingsView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ContentView.swift
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEnds.swiftmodule
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEnds.abi.json
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds.debug.dylib
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEnds' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds
+[[36mLooseEnds[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsTests.abi.json
+[[36mLooseEndsTests[0m] [1mLinking[0m LooseEndsTests
+[[36mLooseEndsTests[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+Test Suite 'Selected tests' started at 2026-10-13 09:25:33.855.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-13 09:25:33.872.
+Test Suite 'SettingsSmokeTests' started at 2026-10-13 09:25:33.873.
+    [32m✔[0m testGearOpensSettingsWithReminderTime ([31m98.394[0m seconds)
+Executed 1 test, with 0 failures (0 unexpected) in 98.394 (98.419) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-13 09:27:12.299.
+Executed 1 test, with 0 failures (0 unexpected) in 98.394 (98.427) seconds
+Executed 1 test, with 0 failures (0 unexpected) in 98.394 (98.452) seconds
+[1mTest session results:[0m /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/docs/artifacts/fix-377-mac-abgleich/simulator-run/run.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden, Beleg: docs/artifacts/fix-377-mac-abgleich/simulator-run.txt
+EXIT=0

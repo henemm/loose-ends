@@ -1,6 +1,6 @@
 ---
 spec_file: docs/specs/fix-377-mac-abgleich.md
-spec_sha256: 9aa56b7e00e666130977dc6795112b04e40ea13b0c1bd3288da1262c9be02e9c
+spec_sha256: 850e03edda7750edadfc618bfa486ad968c2c1f2b783f54d01340e8a16f0a65a
 ---
 
 # PO-Briefing: fix-377-mac-abgleich
@@ -11,22 +11,22 @@ spec_sha256: 9aa56b7e00e666130977dc6795112b04e40ea13b0c1bd3288da1262c9be02e9c
 
 ## Was gebaut wird
 
-Die Einstellungen zeigen, ob die App mit iCloud abgleicht; der Mac bekommt dafür die nötige Anbindung.
+Die Einstellungen zeigen, ob die App mit iCloud abgleicht; auf dem Mac wird dafür ein fehlender Baustein ergänzt.
 
 ## Definition of Done
 
-In den Einstellungen steht „iCloud-Abgleich“ mit lesbarem Zustand; auf deinem Mac zeigt er, warum Aufgaben abweichen.
+Im Simulator zeigt die Zeile „iCloud-Abgleich“ in Hell und Dunkel, Tests grün; die Mac-Antwort folgt später, #377 bleibt offen.
 
 ## Wie geprüft wird
 
-Tests und Simulator belegen Regel und Anzeige; ob dein Mac wirklich abgleicht, zeigt erst dein Test am Gerät.
+Tests belegen die Auswertungsregel und die sichtbare Zeile im Simulator; ob iCloud-Meldungen ankommen und was der Mac zeigt, belegen sie nicht.
 
 ## Kritische Anmerkungen
 
-- Behebt die Ursache nicht, macht sie nur sichtbar; Mac-Messung braucht dein „jetzt ist ein Test möglich“.
-- Sechs statt fünf Dateien (UI-Test-Zusicherung, vier Zeilen); ungeprüft, ob das System die nötigen Abgleich-Ereignisse liefert.
-- Anbindung könnte den Mac erstmals abgleichen lassen; zusammengeführte Aufgaben erscheinen, nichts wird gelöscht.
+- Neu gegenüber der Freigabe: Ob iCloud-Meldungen ankommen, ist im Simulator unbeantwortbar und wird nachgelagert mit dem Mac-Test geprüft; beides verbindlich.
+- Mac zeigt womöglich erstmals zusammengeführte Aufgaben; nichts wird gelöscht. Nur Anzeige, keine Reparatur.
+- Sechs statt fünf Dateien, wegen einer Zusicherung im Bedienungstest.
 
 ## Freigabe-Frage
 
-Soll dieser Schnitt, der nur sichtbar macht und noch nichts repariert, freigegeben werden?
+Gibst du diese Fassung frei, mit Mac-Test nachgelagert und #377 weiter offen?
