@@ -271,6 +271,34 @@ final class StartScreenInteractionTests: XCTestCase {
         XCTAssertEqual(taskRows(in: app).count, 1, "The list holds as many rows as the chip counted")
     }
 
+    // MARK: - Grid (#368)
+
+    /// All open and Completed open from the grid (AC-15).
+    @MainActor
+    func testGridCellOpensView() throws {
+        let app = launch()
+        scrollTo("viewRow_done", in: app).tap()
+        XCTAssertTrue(app.navigationBars["Completed"].waitForExistence(timeout: 5), "The Completed cell should open its list")
+        app.navigationBars.buttons.firstMatch.tap()
+
+        scrollTo("viewRow_open", in: app).tap()
+        XCTAssertTrue(app.navigationBars["All open"].waitForExistence(timeout: 5), "The All open cell should open its list")
+    }
+
+    /// The Projects cell folds the project group open and shut (AC-17); the stored state may be either at launch.
+    @MainActor
+    func testProjectsCellUnfoldsGroup() throws {
+        let app = launch()
+        let toggle = scrollTo("projectsToggle", in: app)
+        let newProject = element("newProjectButton", in: app)
+        if newProject.exists {
+            toggle.tap()
+            XCTAssertTrue(newProject.waitForNonExistence(timeout: 5), "The cell should fold the group")
+        }
+        toggle.tap()
+        XCTAssertTrue(newProject.waitForExistence(timeout: 5), "The cell should unfold the group with its new-project button")
+    }
+
     // MARK: - All open (#319)
 
     /// Without the long Done window: a completed task really leaves the open lists after three seconds.

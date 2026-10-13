@@ -48,6 +48,20 @@ struct SidebarView: View {
         #endif
     }
 
+    /// The cells of the iPhone grid (#368): the views, then Projects and Contexts as groups that
+    /// unfold below it, then All open and Done.
+    private var gridCells: [ViewCell] {
+        func view(_ kind: ViewKind) -> ViewCell {
+            ViewCell(id: "viewRow_\(kind.rawValue)", title: String(localized: kind.titleKey), symbol: kind.symbol,
+                     count: ViewRules.tasks(for: kind, in: tasks).count, isOpen: nil) { selection = .system(kind) }
+        }
+        let projectsCell = ViewCell(id: "projectsToggle", title: String(localized: "Projects"), symbol: ViewKind.project.symbol,
+                                    count: projects.count, isOpen: showsProjects) { withAnimation(.snappy) { showsProjects.toggle() } }
+        let contextsCell = ViewCell(id: "contextsToggle", title: String(localized: "Contexts"), symbol: ViewKind.context.symbol,
+                                    count: contexts.count, isOpen: showsContexts) { withAnimation(.snappy) { showsContexts.toggle() } }
+        return ViewRules.gridViews(in: tasks).map(view) + [projectsCell, contextsCell, view(.open), view(.done)]
+    }
+
     /// The contexts that hold an open task, in catalog order, with the count of the list behind them (#368).
     private var fitPlaces: [FitPlace] {
         contexts.compactMap { context in
@@ -81,53 +95,68 @@ struct SidebarView: View {
                     NowBlock(tasks: ViewRules.now(in: tasks).all) { previewRow($0) }
                     FitChips(quick: ViewRules.tasks(for: .quick, in: tasks).count, places: fitPlaces) { selection = $0 }
                 }
-            }
-            Section {
-                // The daily three always, the others only with a task in them.
-                ForEach(ViewRules.startViews(in: tasks), id: \.self) { kind in
-                    countRow(String(localized: kind.titleKey), symbol: kind.symbol, count: ViewRules.tasks(for: kind, in: tasks).count, id: "viewRow_\(kind.rawValue)")
-                        .tag(ViewSelection.system(kind))
+                Section {
+                    AllViewsGrid(cells: gridCells)
                 }
-            }
-
-            Section {
-                if showsProjects {
-                    ForEach(projects) { project in
-                        countRow(project.name, count: ViewRules.tasks(inProject: project, in: tasks).count, id: "projectRow_\(project.id.uuidString)")
-                            .tag(ViewSelection.project(project.id))
-                            .contextMenu { catalogMenu(.project(project)) }
-                            .swipeActions { deleteButton(.project(project)) }
+            } else {
+                Section {
+                    // The daily three always, the others only with a task in them.
+                    ForEach(ViewRules.startViews(in: tasks), id: \.self) { kind in
+                        countRow(String(localized: kind.titleKey), symbol: kind.symbol, count: ViewRules.tasks(for: kind, in: tasks).count, id: "viewRow_\(kind.rawValue)")
+                            .tag(ViewSelection.system(kind))
                     }
-                    Button("New project", systemImage: "plus") { begin(NameEdit(target: .newProject)) }
-                        .accessibilityIdentifier("newProjectButton")
-                        .paperRow()
                 }
-            } header: {
-                foldHeader("Projects", count: projects.count, isOpen: $showsProjects, id: "projectsToggle")
             }
 
-            Section {
-                if showsContexts {
-                    ForEach(contexts) { context in
-                        countRow(context.name, count: ViewRules.tasks(inContext: context, in: tasks).count, id: "contextRow_\(context.id.uuidString)")
-                            .tag(ViewSelection.context(context.id))
-                            .contextMenu { catalogMenu(.context(context)) }
-                            .swipeActions { deleteButton(.context(context)) }
+            // On iPhone the grid cells fold these groups; their rows show only while unfolded.
+            if !isCompact || showsProjects {
+                Section {
+                    if showsProjects {
+                        ForEach(projects) { project in
+                            countRow(project.name, count: ViewRules.tasks(inProject: project, in: tasks).count, id: "projectRow_\(project.id.uuidString)")
+                                .tag(ViewSelection.project(project.id))
+                                .contextMenu { catalogMenu(.project(project)) }
+                                .swipeActions { deleteButton(.project(project)) }
+                        }
+                        Button("New project", systemImage: "plus") { begin(NameEdit(target: .newProject)) }
+                            .accessibilityIdentifier("newProjectButton")
+                            .paperRow()
                     }
-                    Button("New context", systemImage: "plus") { begin(NameEdit(target: .newContext)) }
-                        .accessibilityIdentifier("newContextButton")
-                        .paperRow()
+                } header: {
+                    if !isCompact {
+                        foldHeader("Projects", count: projects.count, isOpen: $showsProjects, id: "projectsToggle")
+                    }
                 }
-            } header: {
-                foldHeader("Contexts", count: contexts.count, isOpen: $showsContexts, id: "contextsToggle")
             }
 
-            Section {
-                // Always there, right above Done (#319); `.badge` leaves a zero out.
-                countRow(String(localized: ViewKind.open.titleKey), symbol: ViewKind.open.symbol, count: ViewRules.tasks(for: .open, in: tasks).count, id: "viewRow_open")
-                    .tag(ViewSelection.system(.open))
-                countRow(String(localized: ViewKind.done.titleKey), symbol: ViewKind.done.symbol, count: ViewRules.tasks(for: .done, in: tasks).count, id: "viewRow_done")
-                    .tag(ViewSelection.system(.done))
+            if !isCompact || showsContexts {
+                Section {
+                    if showsContexts {
+                        ForEach(contexts) { context in
+                            countRow(context.name, count: ViewRules.tasks(inContext: context, in: tasks).count, id: "contextRow_\(context.id.uuidString)")
+                                .tag(ViewSelection.context(context.id))
+                                .contextMenu { catalogMenu(.context(context)) }
+                                .swipeActions { deleteButton(.context(context)) }
+                        }
+                        Button("New context", systemImage: "plus") { begin(NameEdit(target: .newContext)) }
+                            .accessibilityIdentifier("newContextButton")
+                            .paperRow()
+                    }
+                } header: {
+                    if !isCompact {
+                        foldHeader("Contexts", count: contexts.count, isOpen: $showsContexts, id: "contextsToggle")
+                    }
+                }
+            }
+
+            if !isCompact {
+                Section {
+                    // Always there, right above Done (#319); `.badge` leaves a zero out.
+                    countRow(String(localized: ViewKind.open.titleKey), symbol: ViewKind.open.symbol, count: ViewRules.tasks(for: .open, in: tasks).count, id: "viewRow_open")
+                        .tag(ViewSelection.system(.open))
+                    countRow(String(localized: ViewKind.done.titleKey), symbol: ViewKind.done.symbol, count: ViewRules.tasks(for: .done, in: tasks).count, id: "viewRow_done")
+                        .tag(ViewSelection.system(.done))
+                }
             }
         }
         .paperList()

@@ -129,4 +129,18 @@ import Testing
         #expect(german.localizedString(forKey: "All open", value: nil, table: nil) == "Alle offenen")
         #expect(german.localizedString(forKey: "Nothing left open.", value: nil, table: nil) == "Nichts mehr offen.")
     }
+
+    @Test("The iPhone grid leaves out Quick (a chip), shows the daily three first and the occasional ones with content (#368)")
+    @MainActor func gridViews() async throws {
+        #expect(ViewRules.gridViews(in: []) == [.next, .due, .new])
+
+        let store = try TestStore()
+        let parked = TaskItem(rawText: "Fahrrad verkaufen")
+        store.context.insert(parked)
+        TaskActions.park(parked)
+        try store.context.save()
+        let all = try store.context.fetch(FetchDescriptor<TaskItem>())
+
+        #expect(ViewRules.gridViews(in: all) == [.next, .due, .new, .parked])
+    }
 }

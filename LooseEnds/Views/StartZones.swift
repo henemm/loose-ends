@@ -167,3 +167,69 @@ struct FitChips: View {
         .accessibilityIdentifier(id)
     }
 }
+
+/// One cell of the "All views" grid: a view, or a group (Projects, Contexts) that unfolds below it.
+struct ViewCell: Identifiable {
+    let id: String
+    let title: String
+    let symbol: String
+    let count: Int
+    /// Nil for a view; for a group whether it is unfolded.
+    let isOpen: Bool?
+    let action: () -> Void
+}
+
+/// "All views" (#368): the quiet places in two grey columns, one column from large text sizes on.
+/// Each cell is a button with the id of the row it replaces. Grey, not accent: places to browse,
+/// not a call to act (ADR-14).
+struct AllViewsGrid: View {
+    let cells: [ViewCell]
+    @Environment(\.dynamicTypeSize) private var typeSize
+    @ScaledMetric(relativeTo: .subheadline) private var glyph: CGFloat = 16
+
+    private var columns: [GridItem] {
+        typeSize >= .xxLarge ? [GridItem(.flexible())] : [GridItem(.flexible(), spacing: 20), GridItem(.flexible())]
+    }
+
+    var body: some View {
+        ZoneCaption("All views")
+        LazyVGrid(columns: columns, alignment: .leading, spacing: 0) {
+            ForEach(cells) { cell in
+                cellButton(cell)
+            }
+        }
+        .listRowSeparator(.hidden)
+        .paperRow()
+    }
+
+    private func cellButton(_ cell: ViewCell) -> some View {
+        Button(action: cell.action) {
+            HStack(spacing: 8) {
+                Image(systemName: cell.symbol)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: glyph, height: glyph)
+                Text(cell.title)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                Spacer(minLength: 4)
+                if cell.count > 0 {
+                    Text(verbatim: "\(cell.count)")
+                        .monospacedDigit()
+                }
+                if let isOpen = cell.isOpen {
+                    Image(systemName: isOpen ? "chevron.up" : "chevron.down")
+                        .imageScale(.small)
+                }
+            }
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
+            .padding(.vertical, 9)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityElement(children: .combine)
+        .accessibilityValue(cell.isOpen.map { $0 ? Text("Shown") : Text("Hidden") } ?? Text(verbatim: ""))
+        .accessibilityIdentifier(cell.id)
+    }
+}
