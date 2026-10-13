@@ -265,7 +265,10 @@ final class StartScreenInteractionTests: XCTestCase {
         XCTAssertTrue(chip.label.contains("1"), "Chip label was \(chip.label)")
         chip.tap()
 
-        XCTAssertTrue(app.navigationBars["Garden"].waitForExistence(timeout: 5), "The chip should open its context")
+        let opened = app.navigationBars["Garden"].waitForExistence(timeout: 5)
+        let bars = app.navigationBars.allElementsBoundByIndex.map(\.identifier)
+        let texts = app.staticTexts.allElementsBoundByIndex.prefix(25).map(\.label)
+        XCTAssertTrue(opened, "The chip should open its context. Bars: \(bars). Texts: \(texts)")
         XCTAssertEqual(app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH 'taskRow_'")).allElementsBoundByIndex.count, 1,
             "The list holds as many rows as the chip counted")
