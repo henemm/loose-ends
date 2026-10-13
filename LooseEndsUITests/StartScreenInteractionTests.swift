@@ -390,7 +390,10 @@ final class StartScreenInteractionTests: XCTestCase {
         let openRow = scrollTo("viewRow_open", in: app)
         let doneRow = scrollTo("viewRow_done", in: app)
         XCTAssertTrue(openRow.isHittable && doneRow.isHittable, "Both rows should be on screen together")
-        XCTAssertLessThan(openRow.frame.minY, doneRow.frame.minY, "All open sits right above Completed")
+        // In the iPhone grid (#368) the two cells share a row, All open on the left; with one column it sits above.
+        let openFirst = openRow.frame.minY < doneRow.frame.minY
+            || (openRow.frame.minY == doneRow.frame.minY && openRow.frame.minX < doneRow.frame.minX)
+        XCTAssertTrue(openFirst, "All open comes right before Completed")
         XCTAssertEqual(badgeNumbers(of: openRow), ["2"], "The count should match the list: one new, one parked")
 
         let shot = XCTAttachment(screenshot: app.screenshot())
