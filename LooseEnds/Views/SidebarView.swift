@@ -4,9 +4,9 @@ import SwiftUI
 
 /// The start screen (design briefing, screen 2): system views with counts, then projects,
 /// then contexts, Done last. Projects and contexts are created, renamed and deleted right here
-/// (screen 7). On iPhone it opens with the two reasons to open the app at all (#180): a sentence
-/// on what is left to look over and what is lined up, then the first three of "Next up", with the
-/// same swipes and long-press menu as in the list (#303).
+/// (screen 7). On iPhone it opens in zones (#368): the inbox bar while anything waits in "New", then
+/// the "Now" block (overdue, due today, lined up, each task once, with the same swipes and
+/// long-press menu as in the list, #303); the views follow below.
 struct SidebarView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(CompletionPulse.self) private var completionPulse: CompletionPulse?
@@ -48,11 +48,8 @@ struct SidebarView: View {
         #endif
     }
 
-    /// The preview's rows stand in "Next up", so they act as they do there (#303).
+    /// The "Now" rows act as in "Next up" (#303): one set of actions carries them all (#368).
     private var taskActions: TaskInteractions { interactions(.next) }
-
-    /// The "Due today" rows (#299) act as they do in "Due".
-    private var dueActions: TaskInteractions { interactions(.due) }
 
     private func interactions(_ kind: ViewKind) -> TaskInteractions {
         TaskInteractions(
@@ -69,8 +66,11 @@ struct SidebarView: View {
                 // One section: a plain list puts a tall gap above every section header.
                 Section {
                     header
-                    nextUpPreview
-                    dueTodayPreview
+                    let review = ViewRules.tasks(for: .new, in: tasks).count
+                    if review > 0 {
+                        InboxBar(count: review).tag(ViewSelection.system(.new))
+                    }
+                    NowBlock(tasks: ViewRules.now(in: tasks).all) { previewRow($0) }
                 }
             }
             Section {
@@ -199,98 +199,31 @@ struct SidebarView: View {
 
     // MARK: - Start (iPhone)
 
-    /// The date, then one sentence in serif. Tapping it opens "New" while anything waits there.
-    @ViewBuilder
+    /// The date under the knot. Plain: the sentence it used to carry is the inbox bar now (#368).
     private var header: some View {
-        let review = ViewRules.tasks(for: .new, in: tasks).count
-        let content = VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 8) {
-                // The knot, first of its three places (#180, rule 1). Grey like the date: it is
-                // the mark, not something to tap (ADR-14).
-                ThreadGlyph(form: .knot, lineWidth: 1.5)
-                    .frame(width: knotHeight * 1.6, height: knotHeight)
-                Text(Date.now, format: .dateTime.weekday(.wide).day().month(.wide))
-                    .font(.caption.weight(.semibold))
-                    .textCase(.uppercase)
-                    .tracking(1)
-            }
-            .foregroundStyle(.secondary)
-            lead(review: review, next: ViewRules.tasks(for: .next, in: tasks).count)
-                .font(.title2.weight(.medium))
-                .fontDesign(.serif)
+        HStack(spacing: 8) {
+            // The knot, first of its three places (#180, rule 1). Grey like the date: it is
+            // the mark, not something to tap (ADR-14).
+            ThreadGlyph(form: .knot, lineWidth: 1.5)
+                .frame(width: knotHeight * 1.6, height: knotHeight)
+            Text(Date.now, format: .dateTime.weekday(.wide).day().month(.wide))
+                .font(.caption.weight(.semibold))
+                .textCase(.uppercase)
+                .tracking(1)
         }
+        .foregroundStyle(.secondary)
         .padding(.vertical, 6)
         .listRowSeparator(.hidden)
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("startHeader")
         .paperRow()
-        if review > 0 {
-            content.tag(ViewSelection.system(.new))
-        } else {
-            content
-        }
-    }
-
-    /// The count to look over is accent-tinted: it is the tappable part (ADR-14).
-    private func lead(review: Int, next: Int) -> Text {
-        let reviewCount = Text(verbatim: "\(review)").foregroundStyle(.tint)
-        switch (review, next) {
-        case (0, 0): return Text("All tied up.")
-        case (0, _): return Text("Nothing to look over, \(next) lined up.")
-        case (_, 0): return Text("\(reviewCount) to look over, nothing lined up.")
-        default: return Text("\(reviewCount) to look over, \(next) lined up.")
-        }
-    }
-
-    /// The first three of "Next up" under a small caption; a tap opens the task. Empty: one line
-    /// on how to fill it.
-    @ViewBuilder
-    private var nextUpPreview: some View {
-        let next = ViewRules.tasks(for: .next, in: tasks)
-        caption("Next up")
-        Group {
-            if next.isEmpty {
-                Text("Swipe left on any task to line it up here.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .paperRow()
-            } else {
-                ForEach(next.prefix(3)) { task in
-                    previewRow(task)
-                }
-            }
-        }
-    }
-
-    /// What stands for today (#299): due today or overdue, the first three, under "Next up". A
-    /// task in both stands in both (Henning, 2026-10-11). Nothing due today, no section: an empty
-    /// line here would only repeat "All tied up".
-    @ViewBuilder
-    private var dueTodayPreview: some View {
-        let due = ViewRules.dueToday(in: tasks)
-        if !due.isEmpty {
-            caption("Due today")
-            ForEach(due.prefix(3)) { task in
-                previewRow(task, actions: dueActions, prefix: "dueTodayPreview_")
-            }
-        }
-    }
-
-    private func caption(_ title: LocalizedStringKey) -> some View {
-        Text(title)
-            .font(.caption.weight(.semibold))
-            .textCase(.uppercase)
-            .tracking(1)
-            .foregroundStyle(.secondary)
-            .listRowSeparator(.hidden)
-            .paperRow()
     }
 
     /// A tap opens the task; while its Done window runs (#32) a tap takes it back instead.
     @ViewBuilder
-    private func previewRow(_ task: TaskItem, actions: TaskInteractions? = nil, prefix: String = "nextUpPreview_") -> some View {
-        let actions = actions ?? taskActions
-        let row = TaskRow(task: task, identifierPrefix: prefix)
+    private func previewRow(_ task: TaskItem) -> some View {
+        let actions = taskActions
+        let row = TaskRow(task: task, identifierPrefix: "nowRow_")
         if actions.isPending(task) {
             actions.pendingRow(task, row)
         } else {
