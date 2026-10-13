@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// The settings (#311): the time of day a task without a due time is reminded, and where new calendar
-/// events on this device go (#203 Teil C2).
+/// The settings (#311): the time of day a task without a due time is reminded, whether this device mirrors
+/// with iCloud (#377), and where new calendar events on this device go (#203 Teil C2).
 /// The same view in the sheet behind the gear (iPhone, iPad) and in the Mac settings window (⌘,).
 struct SettingsView: View {
     /// Nil only in previews; the app always passes its notification center.
@@ -30,6 +30,7 @@ struct SettingsView: View {
             } footer: {
                 Text("A task without a due time is reminded on its day at this time. A task with a due time is reminded at that time.")
             }
+            syncSection
             calendarSection
             #if os(macOS)
             Section {
@@ -67,6 +68,52 @@ struct SettingsView: View {
         .onChange(of: time) { _, new in
             let parts = Calendar.current.dateComponents([.hour, .minute], from: new)
             notifications?.reminderTime = DueReminders.Time(hour: parts.hour ?? 9, minute: parts.minute ?? 0)
+        }
+    }
+
+    /// Whether this device mirrors with iCloud (#377). Every decision comes from `SyncStatus.summary`.
+    private var syncSection: some View {
+        Section {
+            syncRow
+        } header: {
+            Text("iCloud")
+        } footer: {
+            if let detail = SyncStatus.summary(for: SyncStatus.shared.state, now: .now).detail { Text(detail) }
+        }
+    }
+
+    /// Only the row needs the clock ("n min ago"); the section stays a direct child of the form.
+    private var syncRow: some View {
+        TimelineView(.periodic(from: .now, by: 60)) { context in
+            let summary = SyncStatus.summary(for: SyncStatus.shared.state, now: context.date)
+            HStack {
+                Text("iCloud sync")
+                Spacer()
+                Label(syncValue(summary), systemImage: summary.symbol)
+                    .foregroundStyle(summary.role == .accent ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
+            }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text("iCloud sync"))
+            .accessibilityValue(Text(syncValue(summary)))
+            .accessibilityIdentifier("iCloudSyncRow")
+        }
+    }
+
+    private func syncValue(_ summary: SyncStatus.Summary) -> String {
+        switch summary.headline {
+        case .waiting: return String(localized: "Waiting for iCloud")
+        case .disturbed: return String(localized: "Disturbed")
+        case .localOnly: return String(localized: "This device only")
+        case .active:
+            let activity = switch summary.activity {
+            case .setup?: String(localized: "Set up")
+            case .imported?: String(localized: "Received")
+            case .exported?, nil: String(localized: "Sent")
+            }
+            let minutes = summary.ageMinutes ?? 0
+            return minutes == 0
+                ? String(localized: "Active · \(activity), just now")
+                : String(localized: "Active · \(activity), \(minutes) min ago")
         }
     }
 

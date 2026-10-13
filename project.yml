@@ -44,6 +44,8 @@ targets:
       - target: LooseEndsWidgets
       - target: LooseEndsShare
         platformFilter: iOS      # the Mac share extension is a later slice
+      - sdk: CloudKit.framework
+        destinationFilters: [macOS]   # macOS builds don't link it by default, mirroring may never start (#377)
     entitlements:
       path: LooseEnds/LooseEnds.entitlements
       properties:

@@ -97,9 +97,12 @@ enum ModelContainerFactory {
         return try cache.value {
             guard FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroup) != nil else {
                 logger.error("App-group entitlement unavailable, using local store without sync")
+                SyncStatus.reportFallBack(.appGroupMissing)
                 let fallback = ModelConfiguration("LooseEnds", schema: schema, groupContainer: .none, cloudKitDatabase: .none)
                 return try ModelContainer(for: schema, configurations: [fallback])
             }
+            // Before the container exists, so its setup event is not missed (#377).
+            SyncStatus.startShared()
             do {
                 let configuration = ModelConfiguration(
                     "LooseEnds",
@@ -110,6 +113,7 @@ enum ModelContainerFactory {
                 return try ModelContainer(for: schema, configurations: [configuration])
             } catch {
                 logger.error("App-group store unavailable, using local store without sync: \(error, privacy: .public)")
+                SyncStatus.reportFallBack(.containerFailed)
                 let fallback = ModelConfiguration("LooseEnds", schema: schema, groupContainer: .none, cloudKitDatabase: .none)
                 return try ModelContainer(for: schema, configurations: [fallback])
             }
