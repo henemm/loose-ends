@@ -1,0 +1,168 @@
+# Paketinspektion #355 Schnitt 1, 2026-10-13 09:30, Stand b783939 + Arbeitskopie
+# Watch: xcodebuild -scheme LooseEndsWatch -destination 'generic/platform=watchOS Simulator' -derivedDataPath build/dd-355 build CODE_SIGNING_ALLOWED=NO -> BUILD SUCCEEDED
+# iPhone: ./scripts/sim.sh build -> Build erfolgreich
+
+=== Watch-Bundle: /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/build/dd-355/Build/Products/Debug-watchsimulator/LooseEndsWatch.app ===
+$ ls -d /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/build/dd-355/Build/Products/Debug-watchsimulator/LooseEndsWatch.app/de.lproj /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/build/dd-355/Build/Products/Debug-watchsimulator/LooseEndsWatch.app/en.lproj
+/Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/build/dd-355/Build/Products/Debug-watchsimulator/LooseEndsWatch.app/de.lproj
+/Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/build/dd-355/Build/Products/Debug-watchsimulator/LooseEndsWatch.app/en.lproj
+
+$ ls /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/build/dd-355/Build/Products/Debug-watchsimulator/LooseEndsWatch.app/de.lproj
+AppShortcuts.strings
+InfoPlist.strings
+Localizable.strings
+
+$ ls /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/build/dd-355/Build/Products/Debug-watchsimulator/LooseEndsWatch.app/en.lproj
+InfoPlist.strings
+Localizable.strings
+
+$ plutil -p /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/build/dd-355/Build/Products/Debug-watchsimulator/LooseEndsWatch.app/de.lproj/AppShortcuts.strings
+{
+  "${applicationName} new task" => "${applicationName} neue Aufgabe"
+  "Add to ${applicationName}" => "Zu ${applicationName} hinzufügen"
+  "Capture in ${applicationName}" => "In ${applicationName} erfassen"
+  "Capture with ${applicationName}" => "Erfasse in ${applicationName}"
+  "Task with ${applicationName}" => "Aufgabe mit ${applicationName}"
+}
+
+$ plutil -p de.lproj/Localizable.strings | grep -E 'Aufgabe erfassen|aufnehmen|Erfassen'
+  "Capture" => "Erfassen"
+  "Capture a task" => "Aufgabe erfassen"
+  "Capture without opening the app" => "Erfassen, ohne die App zu öffnen"
+  "Say “Capture in Loose Ends” to Siri. Or add the Shortcuts control with “Capture a task” to Control Center. Both save without opening the app." => "Sag zu Siri „In Loose Ends erfassen“. Oder leg im Kontrollzentrum das Kurzbefehle-Steuerelement mit „Aufgabe erfassen“ ab. Beides speichert, ohne die App zu öffnen."
+  "What should I remember?" => "Was soll ich aufnehmen?"
+
+$ plutil -p /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/build/dd-355/Build/Products/Debug-watchsimulator/LooseEndsWatch.app/de.lproj/InfoPlist.strings
+{
+  "CFBundleSpokenName" => "Luus Ends"
+  "LE_ALT_HINT_1" => "Luus End"
+  "LE_ALT_HINT_2" => "Luus Ends"
+  "LE_ALT_HINT_3" => "Lose Enden"
+  "LE_ALT_NAME_1" => "Loose End"
+  "LE_ALT_NAME_2" => "LooseEnds"
+  "LE_ALT_NAME_3" => "Lose Enden"
+}
+
+$ plutil -p /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/build/dd-355/Build/Products/Debug-watchsimulator/LooseEndsWatch.app/en.lproj/InfoPlist.strings
+{
+  "CFBundleSpokenName" => "Loose Ends"
+  "LE_ALT_HINT_1" => "loose end"
+  "LE_ALT_HINT_2" => "loose ends"
+  "LE_ALT_HINT_3" => "lose enden"
+  "LE_ALT_NAME_1" => "Loose End"
+  "LE_ALT_NAME_2" => "LooseEnds"
+  "LE_ALT_NAME_3" => "Lose Enden"
+}
+
+$ find Metadata.appintents
+Metadata.appintents
+Metadata.appintents/version.json
+Metadata.appintents/extract.actionsdata
+
+$ grep -rl 'Erfasse in' Metadata.appintents
+
+$ strings extract.actionsdata | grep -c 'Capture with'
+1
+
+$ plutil -extract CFBundleSpokenName raw /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/build/dd-355/Build/Products/Debug-watchsimulator/LooseEndsWatch.app/Info.plist
+Loose Ends
+
+$ plutil -extract INAlternativeAppNames xml1 -o - /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/build/dd-355/Build/Products/Debug-watchsimulator/LooseEndsWatch.app/Info.plist
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>INAlternativeAppName</key>
+		<string>LE_ALT_NAME_1</string>
+		<key>INAlternativeAppNamePronunciationHint</key>
+		<string>LE_ALT_HINT_1</string>
+	</dict>
+	<dict>
+		<key>INAlternativeAppName</key>
+		<string>LE_ALT_NAME_2</string>
+		<key>INAlternativeAppNamePronunciationHint</key>
+		<string>LE_ALT_HINT_2</string>
+	</dict>
+	<dict>
+		<key>INAlternativeAppName</key>
+		<string>LE_ALT_NAME_3</string>
+		<key>INAlternativeAppNamePronunciationHint</key>
+		<string>LE_ALT_HINT_3</string>
+	</dict>
+</array>
+</plist>
+
+$ ls Assets.car / sonstige Dateien im Watch-Bundle (Top-Level)
+__preview.dylib
+Assets.car
+de.lproj
+en.lproj
+Info.plist
+LooseEndsWatch
+LooseEndsWatch.debug.dylib
+Metadata.appintents
+PkgInfo
+PrivacyInfo.xcprivacy
+
+=== iPhone-Bundle (./scripts/sim.sh build): /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-feat-355-s1/Build/Products/Debug-iphonesimulator/LooseEnds.app ===
+$ plutil -p de.lproj/AppShortcuts.strings
+{
+  "${applicationName} new task" => "${applicationName} neue Aufgabe"
+  "Add to ${applicationName}" => "Zu ${applicationName} hinzufügen"
+  "Capture in ${applicationName}" => "In ${applicationName} erfassen"
+  "Capture with ${applicationName}" => "Erfasse in ${applicationName}"
+  "Task with ${applicationName}" => "Aufgabe mit ${applicationName}"
+}
+
+$ find Metadata.appintents (iPhone, zum Vergleich)
+Metadata.appintents
+Metadata.appintents/version.json
+Metadata.appintents/root.ssu.yaml
+Metadata.appintents/extract.actionsdata
+
+$ grep -rl 'Erfasse in' Metadata.appintents (iPhone)
+Metadata.appintents/root.ssu.yaml
+
+$ ls de.lproj (iPhone)
+AppShortcuts.strings
+InfoPlist.strings
+Localizable.strings
+nlu.appintents
+
+=== Watch-Bau: AppIntentsSSUTraining-Schritte im Bauprotokoll (xcodebuild -scheme LooseEndsWatch) ===
+$ grep 'AppIntentsSSUTraining (in target' watch-build.log
+AppIntentsSSUTraining (in target 'LooseEndsWidgets' from project 'LooseEnds')
+AppIntentsSSUTraining (in target 'LooseEndsShare' from project 'LooseEnds')
+AppIntentsSSUTraining (in target 'LooseEnds' from project 'LooseEnds')
+(kein Eintrag für LooseEndsWatch: Xcode erzeugt für das Watch-Target keine SSU-Daten/root.ssu.yaml)
+
+=== Variante B (2026-10-13): Siri-Berechtigung auch für die Watch ===
+Anlass: TestFlight-Build 52 — Siri auf der Watch erkannte den App-Namen nicht („Los Angeles“).
+Änderung: project.yml, LooseEndsWatch → entitlements.properties: com.apple.developer.siri: true.
+
+$ ./scripts/sim.sh generate && git diff LooseEndsWatch/LooseEndsWatch.entitlements
+--- a/LooseEndsWatch/LooseEndsWatch.entitlements
++++ b/LooseEndsWatch/LooseEndsWatch.entitlements
+@@ -12,6 +12,8 @@
+ 	<array>
+ 		<string>CloudKit</string>
+ 	</array>
++	<key>com.apple.developer.siri</key>
++	<true/>
+ 	<key>com.apple.security.application-groups</key>
+ 	<array>
+ 		<string>group.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
+
+$ python3 scripts/test_siri_phrases.py -v      (vorher: test_watch_is_entitled_for_siri_like_the_app FAIL)
+Ran 6 tests — OK   (Volltext: test-green-output.txt)
+$ python3 scripts/test_entitlements_sync.py
+Ran 4 tests — OK
+$ python3 scripts/test_ci_xcode27.py
+Ran 17 tests — OK
+
+$ xcodebuild -project LooseEnds.xcodeproj -scheme LooseEndsWatch -destination 'generic/platform=watchOS Simulator' -derivedDataPath build/dd-355 build CODE_SIGNING_ALLOWED=NO
+** BUILD SUCCEEDED **
+(Signatur entfällt im Simulator; ob die Berechtigung im signierten Watch-Bundle steht, prüft die
+Archivprüfung in .github/workflows/testflight.yml — die Siri-Berechtigungsprüfung gilt jetzt für
+com.henning.looseends UND com.henning.looseends.watchkitapp. bash -n auf den Prüfblock: OK.)

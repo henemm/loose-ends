@@ -1,0 +1,47 @@
+test_every_phrase_has_one_german_key_and_no_key_is_stale (__main__.SiriPhraseTests.test_every_phrase_has_one_german_key_and_no_key_is_stale) ... ok
+test_phrase_list_has_english_and_german_including_erfasse_in (__main__.SiriPhraseTests.test_phrase_list_has_english_and_german_including_erfasse_in) ... FAIL
+test_stale_key_is_reported (__main__.SiriPhraseTests.test_stale_key_is_reported) ... ok
+test_watch_infoplist_declares_the_same_siri_names_as_the_app (__main__.SiriPhraseTests.test_watch_infoplist_declares_the_same_siri_names_as_the_app) ... FAIL
+test_watch_target_carries_catalogs_and_infoplist_strings (__main__.SiriPhraseTests.test_watch_target_carries_catalogs_and_infoplist_strings) ... FAIL
+
+======================================================================
+FAIL: test_phrase_list_has_english_and_german_including_erfasse_in (__main__.SiriPhraseTests.test_phrase_list_has_english_and_german_including_erfasse_in)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/scripts/test_siri_phrases.py", line 83, in test_phrase_list_has_english_and_german_including_erfasse_in
+    self.assertIn("Capture with ${applicationName}", self.sentences)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'Capture with ${applicationName}' not found in ['Add to ${applicationName}', '${applicationName} new task', 'Capture in ${applicationName}', 'Task with ${applicationName}']
+
+======================================================================
+FAIL: test_watch_infoplist_declares_the_same_siri_names_as_the_app (__main__.SiriPhraseTests.test_watch_infoplist_declares_the_same_siri_names_as_the_app)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/scripts/test_siri_phrases.py", line 99, in test_watch_infoplist_declares_the_same_siri_names_as_the_app
+    self.assertIn(key, watch)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: 'CFBundleSpokenName' not found in {'CFBundleDisplayName': '$(LE_DISPLAY_NAME)', 'CFBundleShortVersionString': '$(MARKETING_VERSION)', 'LEAppGroup': 'group.com.henning.looseends$(BUNDLE_ID_SUFFIX)', 'LECloudContainer': 'iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)', 'CFBundleVersion': '$(CURRENT_PROJECT_VERSION)', 'UIBackgroundModes': ['remote-notification'], 'WKApplication': True, 'WKCompanionAppBundleIdentifier': 'com.henning.looseends$(BUNDLE_ID_SUFFIX)', 'WKRunsIndependentlyOfCompanionApp': True, 'NSMicrophoneUsageDescription': 'Loose Ends listens so you can say a task.', 'NSSpeechRecognitionUsageDescription': 'Speech is turned into text on your watch to capture a task.'}
+
+======================================================================
+FAIL: test_watch_target_carries_catalogs_and_infoplist_strings (__main__.SiriPhraseTests.test_watch_target_carries_catalogs_and_infoplist_strings)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/scripts/test_siri_phrases.py", line 92, in test_watch_target_carries_catalogs_and_infoplist_strings
+    self.assertEqual(missing, [], "Watch-Target führt diese Sprachdateien nicht")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['AppShortcuts.xcstrings', 'Localizable.xc[64 chars]ngs'] != []
+
+First list contains 4 additional elements.
+First extra element 0:
+'AppShortcuts.xcstrings'
+
++ []
+- ['AppShortcuts.xcstrings',
+-  'Localizable.xcstrings',
+-  'de.lproj/InfoPlist.strings',
+-  'en.lproj/InfoPlist.strings'] : Watch-Target führt diese Sprachdateien nicht
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.096s
+
+FAILED (failures=3)
