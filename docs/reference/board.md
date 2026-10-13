@@ -17,7 +17,8 @@ Dann steht jedes geschlossene Ticket ohne Zutun auf „Done“.
 Einmalig von Henning:
 
 1. https://github.com/settings/tokens → **Generate new token (classic)**, Name „loose-ends board“, Ablauf nach
-   Wahl, Scope **project** (sonst nichts) → Token kopieren.
+   Wahl, Scopes **project**, **read:org** und **read:discussion** (`gh project` fragt die beiden letzten ab) → Token
+   kopieren.
 2. https://github.com/henemm/loose-ends/settings/secrets/actions → **New repository secret**, Name
    `PROJECT_TOKEN`, Wert der Token.
 
