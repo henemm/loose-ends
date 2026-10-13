@@ -1,6 +1,6 @@
 import XCTest
 
-/// The start screen's "Next up" preview acts like the list (#303): swipe right is Done with Undo,
+/// The start screen's "Now" rows act like the list (#303): swipe right is Done with Undo,
 /// the long-press menu holds the rest. Runs against an in-memory store (`--ui-testing`).
 final class StartScreenInteractionTests: XCTestCase {
     override func setUp() {
@@ -121,7 +121,7 @@ final class StartScreenInteractionTests: XCTestCase {
         XCTAssertTrue(element(id, in: app).waitForNonExistence(timeout: 5), "The confirmed task should leave New")
     }
 
-    /// What is due today stands on the start screen under "Next up" (#299). The rule step reads
+    /// What is due today stands in the "Now" block of the start screen (#299, #368). The rule step reads
     /// "heute" without Apple Intelligence, so this holds in the simulator too.
     @MainActor
     func testDueTodayShowsOnTheStartScreen() throws {
@@ -136,7 +136,7 @@ final class StartScreenInteractionTests: XCTestCase {
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5), "Capture sheet did not close")
 
-        let due = firstElement(prefix: "dueTodayPreview_", in: app)
+        let due = firstElement(prefix: "nowRow_", in: app)
         XCTAssertTrue(due.waitForExistence(timeout: 15), "A task due today should show on the start screen")
         XCTAssertTrue(due.label.contains("Rechnung"), "Row label was \(due.label)")
     }
@@ -146,7 +146,7 @@ final class StartScreenInteractionTests: XCTestCase {
         let app = launch()
         captureAndLineUp("Rechnung bezahlen", in: app)
 
-        let preview = firstElement(prefix: "nextUpPreview_", in: app)
+        let preview = firstElement(prefix: "nowRow_", in: app)
         XCTAssertTrue(preview.waitForExistence(timeout: 5), "Start screen shows no Next up preview")
         preview.swipeRight()
         let complete = app.buttons["Complete"]
@@ -164,7 +164,7 @@ final class StartScreenInteractionTests: XCTestCase {
         let app = launch()
         captureAndLineUp("Auto waschen", in: app)
 
-        let preview = firstElement(prefix: "nextUpPreview_", in: app)
+        let preview = firstElement(prefix: "nowRow_", in: app)
         XCTAssertTrue(preview.waitForExistence(timeout: 5), "Start screen shows no Next up preview")
         let remove = app.buttons["Remove from Next up"]
         // A slow runner can miss the first press (#114).
@@ -176,6 +176,78 @@ final class StartScreenInteractionTests: XCTestCase {
         XCTAssertTrue(app.buttons["Park"].exists, "The menu should offer Park")
         remove.tap()
         XCTAssertTrue(preview.waitForNonExistence(timeout: 5), "Removed from Next up, the task leaves the preview")
+    }
+
+    // MARK: - Inbox bar and Now (#368)
+
+    @MainActor
+    private func nowRows(in app: XCUIApplication) -> [XCUIElement] {
+        app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH 'nowRow_'")).allElementsBoundByIndex
+    }
+
+    /// The inbox bar stands for "New" only while something waits there (AC-5); "New" stays reachable
+    /// as a row either way (AC-16).
+    @MainActor
+    func testInboxBarAppearsOnlyWithNewAndOpensNew() throws {
+        let app = launch()
+        XCTAssertTrue(element("viewRow_new", in: app).waitForExistence(timeout: 10), "New stays in the views")
+        XCTAssertFalse(element("inboxBar", in: app).exists, "No inbox bar without anything in New")
+
+        capture("Rechnung bezahlen", in: app)
+
+        let bar = element("inboxBar", in: app)
+        XCTAssertTrue(bar.waitForExistence(timeout: 5), "A captured task should raise the inbox bar")
+        bar.tap()
+        XCTAssertTrue(app.navigationBars["New"].waitForExistence(timeout: 5), "The bar should open New")
+    }
+
+    /// Seven tasks due today: five rows, "2 more" unfolds in place and folds again (AC-6).
+    @MainActor
+    func testNowMoreExpandsInPlace() throws {
+        let app = launch()
+        for number in 1...7 { capture("Heute Aufgabe \(number)", in: app) }
+
+        let more = element("nowMore", in: app)
+        XCTAssertTrue(more.waitForExistence(timeout: 15), "Seven tasks should leave a \"more\" row")
+        XCTAssertEqual(nowRows(in: app).count, 5, "Five rows before unfolding")
+        XCTAssertEqual(more.label, "2 more")
+
+        more.tap()
+        XCTAssertTrue(app.staticTexts["Show less"].waitForExistence(timeout: 5), "Unfolded, the row offers Show less")
+        XCTAssertEqual(nowRows(in: app).count, 7, "All seven rows after unfolding")
+
+        more.tap()
+        XCTAssertTrue(app.staticTexts["2 more"].waitForExistence(timeout: 5), "Folded again")
+        XCTAssertEqual(nowRows(in: app).count, 5)
+    }
+
+    /// Empty "Now" keeps its heading and the hint, with no rows and no "more" (AC-10).
+    @MainActor
+    func testEmptyNowShowsTheHint() throws {
+        let app = launch()
+        XCTAssertTrue(app.staticTexts["Swipe left on any task to line it up here."].waitForExistence(timeout: 10))
+        XCTAssertTrue(nowRows(in: app).isEmpty)
+        XCTAssertFalse(element("nowMore", in: app).exists)
+    }
+
+    /// A task that is lined up and due today stands once (AC-7); taking it out of Next up leaves it in Now (AC-9).
+    @MainActor
+    func testRemovingNextUpFromDueRowKeepsItInNow() throws {
+        let app = launch()
+        captureAndLineUp("Heute Rechnung bezahlen", in: app)
+        XCTAssertEqual(nowRows(in: app).count, 1, "A lined up task that is due today stands once")
+
+        let row = firstElement(prefix: "nowRow_", in: app)
+        let remove = app.buttons["Remove from Next up"]
+        for duration in [1.2, 2.0, 3.0] where !remove.exists {
+            row.press(forDuration: duration)
+            _ = remove.waitForExistence(timeout: 2)
+        }
+        XCTAssertTrue(remove.exists, "Long press should open the task menu")
+        remove.tap()
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "Due today, the task stays in Now")
+        XCTAssertEqual(nowRows(in: app).count, 1)
     }
 
     // MARK: - All open (#319)
