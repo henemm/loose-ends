@@ -73,6 +73,7 @@ targets:
         LECloudContainer: iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UILaunchScreen: {}
+        LSApplicationCategoryType: public.app-category.productivity   # the Mac App Store upload requires a category (#389)
         # Required alongside aps-environment, or CloudKit logs
         # "BUG IN CLIENT OF CLOUDKIT: CloudKit push notifications require the
         # 'remote-notification' background mode" and sync only catches up on a cold start.

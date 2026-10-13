@@ -295,6 +295,20 @@ class WorkflowTests(unittest.TestCase):
         self.assertRegex(confirm, r'ASC_KEY_FILE="\$RUNNER_TEMP/[^"]+\.p8"')
         self.assertRegex(confirm, r'> "\$RUNNER_TEMP/[^"]+\.p8"')
 
+    def test_11_mac_job_runs_after_ios_and_confirms_its_platform(self):
+        mac = self.job("upload-mac")
+        self.assertRegex(mac, r"(?m)^    needs: upload$")
+        self.assertIn("generic/platform=macOS", mac)
+        self.assertIn("Verify the macOS archive", mac)
+        confirm = self.job("confirm-mac")
+        self.assertRegex(confirm, r"(?m)^    needs: upload-mac$")
+        self.assertRegex(confirm, r"(?m)^      ASC_PLATFORM: MAC_OS$")
+
+    def test_11_platform_filter_only_when_set(self):
+        self.assertEqual(asc_wait_build.platform_filter({}), "")
+        self.assertEqual(asc_wait_build.platform_filter({"platform": "MAC_OS"}),
+                         "&filter[preReleaseVersion.platform]=MAC_OS")
+
     def step(self, job, name):
         match = re.search(rf"(?m)^      - name: {re.escape(name)}\n((?:(?:        .*)?\n)+)", self.job(job))
         self.assertIsNotNone(match, f"Schritt {name} fehlt im Job {job}")

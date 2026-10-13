@@ -218,7 +218,10 @@ nur aufgelistet, die Zeile endet dann mit `wuerde-widerrufen=<k>`. Gerätebauten
 gespeicherten Profilen und sind davon nicht berührt. Lokal laufen nur die Tests
 `python3 scripts/test_asc_cleanup_certs.py` (der Schlüssel liegt nur in den Secrets).
 
-Die Mac-App kommt in einem späteren Schritt dazu (eigenes Archiv, eigener TestFlight-Eintrag).
+Die Mac-App (#389): Der Job `upload-mac` läuft nach dem iOS-Job, archiviert `generic/platform=macOS`, prüft das Archiv
+(SDK, Mindestversion, Kategorie, Sandbox, iCloud) und lädt unter derselben Buildnummer hoch; `confirm-mac` wartet auf `VALID`
+und schreibt „Was testen“ (`ASC_PLATFORM=MAC_OS`). Einmalig im Konto: in App Store Connect bei „Loose Ends“ die Plattform
+**macOS** hinzufügen (gleiche Bundle-ID, universeller Kauf); die Mac-Profile legt die Cloud-Signierung selbst an.
 
 ## Wenn das Vorschau-Image wegfällt oder umbenannt wird
 

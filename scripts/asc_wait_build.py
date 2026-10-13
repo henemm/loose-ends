@@ -125,9 +125,15 @@ def duration(seconds):
     return f"{seconds / 60:g} min" if seconds >= 60 else f"{seconds:g} s"
 
 
+def platform_filter(config):
+    """Ein Bau je Plattform trägt dieselbe Nummer (iOS und macOS, #389): ASC_PLATFORM trennt sie."""
+    platform = config.get("platform")
+    return f"&filter[preReleaseVersion.platform]={urllib.parse.quote(platform, safe='')}" if platform else ""
+
+
 def wait_for_build(config, app_id, number):
     """Fragt alle ASC_POLL_SECONDS ab; Exit-Code 0 nur bei VALID."""
-    path = f"/v1/builds?filter[app]={app_id}&filter[version]={urllib.parse.quote(number, safe='')}"
+    path = f"/v1/builds?filter[app]={app_id}&filter[version]={urllib.parse.quote(number, safe='')}{platform_filter(config)}"
     deadline = time.monotonic() + config["timeout"]
     last = "nicht-gelistet"
     while True:
@@ -157,6 +163,7 @@ def read_config():
         "key_file": os.environ["ASC_KEY_FILE"],
         "bundle_id": os.environ.get("ASC_BUNDLE_ID", "com.henning.looseends"),
         "base": os.environ.get("ASC_API_BASE", "https://api.appstoreconnect.apple.com").rstrip("/"),
+        "platform": os.environ.get("ASC_PLATFORM", "").strip(),
         "poll": float(os.environ.get("ASC_POLL_SECONDS", "30")),
         "timeout": float(os.environ.get("ASC_TIMEOUT_SECONDS", "2700")),
     }

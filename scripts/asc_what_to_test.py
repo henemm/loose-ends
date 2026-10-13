@@ -14,7 +14,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-from asc_wait_build import Fatal, find_app_id, get_json, make_token, read_config
+from asc_wait_build import Fatal, find_app_id, get_json, make_token, platform_filter, read_config
 
 LOCALE = "de-DE"
 MAX_LENGTH = 4000
@@ -54,7 +54,7 @@ def get_data(config, path):
 
 
 def find_build_id(config, app_id, number):
-    path = f"/v1/builds?filter[app]={app_id}&filter[version]={urllib.parse.quote(number, safe='')}"
+    path = f"/v1/builds?filter[app]={app_id}&filter[version]={urllib.parse.quote(number, safe='')}{platform_filter(config)}"
     for record in get_data(config, path):
         if isinstance(record, dict) and (record.get("attributes") or {}).get("version") == number:
             return record["id"]
