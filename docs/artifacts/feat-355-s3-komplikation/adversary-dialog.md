@@ -26,7 +26,12 @@ Code reference: LooseEndsWatchWidgets/PrivacyInfo.xcprivacy
 Code reference: LooseEndsWatchWidgets/LooseEndsWatchWidgetsBundle.swift:5
 - [x] **AC-8:** Bestehendes bleibt grün — Beleg: `test-green-output.txt`, voller Lauf 589 Tests in 92 Suites, Exit 0, „Menu bar thread (#366)“ und „Thread from the logo curve (#180, step 3)“ bestanden. Selbst ausgeführt: `CaptureComplicationTests`, `test_entitlements_sync.py`, `test_ci_xcode27.py`. `Thread.swift` ohne Diff.
 Code reference: LooseEndsTests/CaptureComplicationTests.swift:1
-- [ ] **AC-9:** Gerätepunkt (Stufe 3): Auf Hennings Watch wählbar, zeigt den Knoten, Antippen öffnet die Erfassung — OFFEN, nicht belegt. Nachweis ausschließlich Hennings Rückmeldung zum TestFlight-Bau nach seinem wörtlichen „jetzt ist ein Test möglich“.
+- [x] **AC-9:** Gerätepunkt (Stufe 3): Auf Hennings Watch wählbar, zeigt den Knoten, Antippen öffnet die Erfassung — in Runde 2 offen, in Runde 3 belegt durch Hennings Rückmeldung zu TestFlight-Build 57 (siehe Runde 3).
+
+## Herkunft der Vorbedingungen
+
+Kein Sprachprofil konfiguriert. Keine neuen Schreibstellen auf Modellfelder: Die Komplikation zeigt eine feste
+Zeichnung, der Provider liest und schreibt nichts. Daher keine Einträge für „Bedingung davor“ oder „Test für diesen Weg“.
 
 ## Findings
 
@@ -89,7 +94,28 @@ Verdict allein aus AC-1 bis AC-8: VERIFIED. AC-9 offen und hier nicht belegbar (
 
 Tests: CaptureComplicationTests 4/4, voller Lauf 589 bestanden, 0 fehlgeschlagen; Skripttests 4 und 17 bestanden. Regressionen: keine. Checklist: 8/9 belegt, AC-9 offen.
 
-VERDICT: AMBIGUOUS
+Verdict Runde 2 (überholt): AMBIGUOUS — gemergt mit Hennings getipptem `override` (PR #407, 0b96fc4), dann TestFlight-Build 57.
+
+### Runde 3
+
+AC-9 bewertet mit Hennings Gerätebefund zu Build 57. Eigene Prüfung: `LooseEndsWatch/WatchCaptureView.swift` hat `@State private var saved = false` (Zeile 9), setzt `saved = true` (Zeile 37), und keine Stelle setzt ihn zurück. `git log` der Datei zeigt nur 33ae74e (#390), 2b29436 und b7ae28a; der Schnitt hat sie nicht angefasst, das Verhalten stammt aus dem Walking Skeleton (#1).
+
+- [x] **AC-9:** Gerätepunkt — Beleg: Hennings wörtliche Rückmeldung zu Build 57 auf seiner Watch: „ja, grundsätzlich funktioniert es.“ Komplikation wählbar, Knoten sichtbar, Antippen öffnet die Erfassung. Gestützt durch die Archivprüfung in Lauf 38523695048: `com.henning.looseends.watchkitapp.widgets | …PlugIns/LooseEndsWatchWidgets.appex | watchos27.0 | 27.0 | 0.1.0 (57) | OK`; cloud-managed Signing hat die neue App-ID angelegt (F005, Known Risks 1 und 2 belegt). Die Rückmeldung ist pauschal und wird nach „Bestätigung gilt“ als Beleg gewertet.
+Code reference: LooseEndsWatch/WatchCaptureView.swift:9
+
+Finding:
+  ID: F006
+  Severity: MEDIUM
+  Category: edge_case
+  Code reference: LooseEndsWatch/WatchCaptureView.swift:37
+  Description: `saved = true` wird nach dem Speichern nie zurückgesetzt; die Erfassung bleibt im Abschlusszustand, eine zweite Aufgabe geht nicht ohne Neustart der App (Hennings Befund zu Build 57).
+  Spec requirement: Kein AC dieses Schnitts; die Spec lässt die Erfassung unverändert.
+  Conflict: Kein Defekt dieses Schnitts, das Verhalten bestand seit #1. Die Komplikation macht es nur öfter sichtbar.
+  Remediation: Eigenes Ticket (automatisch zurück zum leeren Feld nach kurzem „Gesichert“, Hennings Wahl 2026-10-14, mit UI-Test).
+
+Bilanz: AC-1 bis AC-9 belegt, keine Regression, F006 außerhalb der Spec und als Folgearbeit erfasst.
+
+VERDICT: VERIFIED
 
 ## Geprüfte Dateien
 
@@ -106,6 +132,29 @@ VERDICT: AMBIGUOUS
 - base: 28777a71c41e38564cb2dd6ea01c59670e631de4
 - blob:3770e0de7ff3170d0e5118b40998f1699fb7a120  .github/workflows/testflight.yml
 - blob:5a846480e62beef6162936a33c46d7045fc8c920  LooseEndsTests/CaptureComplicationTests.swift
+- blob:6b1f5afc33d1335d5756c9fb1da2d2d27f36cbdf  LooseEndsWatchWidgets/CaptureComplication.swift
+- blob:6370abfccc8b4db0fd14a0a704a6b1ce3a9b23a0  LooseEndsWatchWidgets/Info.plist
+- blob:550af69c1609713148f81ad5afaa507f9e9e2a60  LooseEndsWatchWidgets/LooseEndsWatchWidgetsBundle.swift
+- blob:e08a130bce319577ff33577af8aa04e4ff1b87c2  LooseEndsWatchWidgets/PrivacyInfo.xcprivacy
+- blob:76119e82712344c4366c697bf8a5f93e2d3c2264  project.yml
+
+## Geprüfte Dateien
+
+- sha256:22aa25dc7882bbb1def6fb7e4ae07708ab18faa48de071be82a35ea97ea4782b  .github/workflows/testflight.yml
+- sha256:ec63d7355cf3ce226502a29244276f199c2763a60c858c909d5e67688e2a77fe  LooseEndsTests/CaptureComplicationTests.swift
+- sha256:1cbfd61c3c747345903c59fc8eda15057c530e3a47852affb03341d307d3ecd8  LooseEndsWatch/WatchCaptureView.swift
+- sha256:7873eb6987031015af36f6dacb3454582fa79b3de6dfc0d7de119057069092d4  LooseEndsWatchWidgets/CaptureComplication.swift
+- sha256:43a6e963ebf4df7d01741c68405d162f69d75b1dd1b4fe4c05b8652a35e1777b  LooseEndsWatchWidgets/Info.plist
+- sha256:905d8f4b4e592ee7253162141203118505314553a3c01bf39413ce4ab2ab1e84  LooseEndsWatchWidgets/LooseEndsWatchWidgetsBundle.swift
+- sha256:521eb6ef8430773e5c010e1838fe9dd8fa5d62b7b76d1cea8d7d8daadcb144e2  LooseEndsWatchWidgets/PrivacyInfo.xcprivacy
+- sha256:a6732b5088ce25a38cbdaa85036a33202061dd75ae9a0cefd6e54ee696f6c0d5  project.yml
+
+## Prüfbasis
+
+- base: 28777a71c41e38564cb2dd6ea01c59670e631de4
+- blob:3770e0de7ff3170d0e5118b40998f1699fb7a120  .github/workflows/testflight.yml
+- blob:5a846480e62beef6162936a33c46d7045fc8c920  LooseEndsTests/CaptureComplicationTests.swift
+- blob:f3be68a344c2b6b49f3f1424a00f6841532e5bb5  LooseEndsWatch/WatchCaptureView.swift
 - blob:6b1f5afc33d1335d5756c9fb1da2d2d27f36cbdf  LooseEndsWatchWidgets/CaptureComplication.swift
 - blob:6370abfccc8b4db0fd14a0a704a6b1ce3a9b23a0  LooseEndsWatchWidgets/Info.plist
 - blob:550af69c1609713148f81ad5afaa507f9e9e2a60  LooseEndsWatchWidgets/LooseEndsWatchWidgetsBundle.swift
