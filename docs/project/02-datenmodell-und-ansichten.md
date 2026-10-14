@@ -153,6 +153,10 @@ blockierte, "Geparkt" zeigt nur `parked`, "Erledigt" zeigt nur `done`, "Alle off
 
 "Blockiert" heißt: mindestens eine Aufgabe in `blockedBy` hat `status != done`.
 
+**Fälligkeit in der Zeile (#414):** `ViewRules.dueState` — heute fällig rot; nach dem Tag rot nur mit Uhrzeit (`missed`),
+ohne Uhrzeit grau „Seit gestern“ / „Seit N Tagen“ (`carried`, Kalendertage). Erledigtes und Geparktes ohne Zeitdruck.
+Ansichten, „Jetzt“ und die Zahl am App-Symbol zählen eine weitergetragene Aufgabe weiter als überfällig.
+
 **Jetzt (nur Startbildschirm iPhone, #368):** „Heute fällig“ (`dueDate` vor Beginn von morgen) und „Als nächstes“ als eine
 Liste, jede Aufgabe einmal — dieselben zwei Mengen, die die Zahl am App-Symbol zählt. Zuerst überfällig (älteste zuerst), dann
 heute fällig (früheste Uhrzeit zuerst), dann der Rest von „Als nächstes“ nach nextRank. Eine vorgemerkte Aufgabe, die fällig

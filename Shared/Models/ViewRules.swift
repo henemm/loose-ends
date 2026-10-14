@@ -77,6 +77,27 @@ enum ViewRules {
             .sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
     }
 
+    /// How a due date reads in a row (#414, ADR-14): red only for time pressure. A task due today is
+    /// red; once its day is over, only a task with a due time stays red (`missed`). A day-only date is
+    /// mostly a spoken intention ("tomorrow", "on Friday"), so it turns grey and shows how long it has
+    /// been carried along. Done and parked tasks read as `later`: no pressure on them.
+    enum DueState: Equatable {
+        case later
+        case today
+        case missed
+        case carried(days: Int)
+    }
+
+    static func dueState(of task: TaskItem, now: Date = Date(), calendar: Calendar = .current) -> DueState {
+        guard task.isOpen, let due = task.dueDate else { return .later }
+        let today = calendar.startOfDay(for: now)
+        guard let tomorrow = calendar.date(byAdding: .day, value: 1, to: today), due < tomorrow else { return .later }
+        if due >= today { return .today }
+        if task.dueHasTime { return .missed }
+        let days = calendar.dateComponents([.day], from: calendar.startOfDay(for: due), to: today).day ?? 1
+        return .carried(days: max(days, 1))
+    }
+
     /// The number on the app icon (#299): "Next up" plus "Due today", each task once. On the start
     /// screen a task in both stands in both lists (Henning, 2026-10-11); the count does not double it.
     static func badgeCount(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> Int {

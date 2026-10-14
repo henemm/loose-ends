@@ -158,6 +158,9 @@ Aufgabe in den Kalender will. Priorität Should, nicht Must.
 **ADR-14 Farbbudget.** Jede Farbe hat genau eine Bedeutung, nie Farbe als einziger Unterschied:
 Akzent = tippbar (inklusive KI-Tönung), Rot = Zeitdruck (überfällig, heute fällig, immer mit Text),
 Grau-Abstufung = Hierarchie (blockiert, erledigt, ungeprüft), Grün = nur im Moment des Erledigens.
+Nachgeschärft (Henning, 2026-10-14, #414): Nach ihrem Tag bleibt nur eine Fälligkeit mit Uhrzeit rot. Eine
+Fälligkeit ohne Uhrzeit ist meist ein gesprochener Vorsatz („morgen“, „am Freitag“) und kein Zeitdruck; sie
+steht danach grau als „Seit gestern“ bzw. „Seit N Tagen“ (`ViewRules.dueState`).
 Wichtigkeit und Energie haben keine Farbe, sie sortieren und tragen ein Glyph. Projekte dürfen eine
 Nutzerfarbe zur Identifikation tragen (später), Kontexte bekommen Symbole. Jeder Screen muss in
 Graustufen funktionieren. Begründung: FocusBlox nutzte zehn Farbtöne für elf Bedeutungen, Rot stand
