@@ -1,6 +1,6 @@
 ---
 spec_file: docs/specs/intents/feat-355-s3-komplikation.md
-spec_sha256: 3f958055bc6a1b1572a37812e32b9ecf89f0505343ee100a1644318f189a2094
+spec_sha256: c19f278ae3ef060e70ba5a0d7ed8c5a093b98b27330146f614660652fd941472
 ---
 
 # PO-Briefing: feat-355-s3-komplikation
