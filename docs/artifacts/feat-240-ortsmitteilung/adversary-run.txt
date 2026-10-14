@@ -1,0 +1,41 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/PlaceNotificationsTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+Test Suite 'Selected tests' started at 2026-10-14 08:48:00.580.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-14 08:48:00.584.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-14 08:48:00.584.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.005) seconds
+[1mTest run started.[0m
+Suite "PlaceNotifications (#240)" started
+    [32m✔[0m "The due buttons survive: DUE keeps all three, PLACE gets only Complete and Next up" (0.002 seconds)
+    [32m✔[0m "Only while-using or always with full accuracy counts as permitted" (0.001 seconds)
+    [32m✔[0m "Asking needs undecided, a watched place, never asked before, and the foreground" (0.001 seconds)
+    [32m✔[0m "Tapping a place notification marks the task, so it leaves the plan" (0.009 seconds)
+    [32m✔[0m "Complete on a place notification marks the task and completes it" (0.002 seconds)
+    [32m✔[0m "Next up on a place notification marks the task and puts it next" (0.003 seconds)
+    [32m✔[0m "A due notification never sets the place mark" (0.002 seconds)
+    [32m✔[0m "A broken, missing or unknown task id changes nothing" (0.002 seconds)
+    [32m✔[0m "An unknown action on a due notification changes nothing; on a place notification only the mark is set" (0.002 seconds)
+    [32m✔[0m "Planning alone never sets the mark" (0.002 seconds)
+    [32m✔[0m "The place reconcile sees only place_ identifiers" (0.001 seconds)
+    [32m✔[0m "Silent under unit tests; under UI tests only with the places argument" (0.001 seconds)
+    [32m✔[0m "Triggers during a run cause exactly one rerun" (0.001 seconds)
+Suite "PlaceNotifications (#240)" passed after 0.028 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.10.14_08-47-54-+0200.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 1 von 5 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json

@@ -1,0 +1,160 @@
+[0;34m[sim][0m Unit-Tests (macOS): LooseEndsTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (4 targets)
+[[36mLooseEndsTests[0m] [1mCompiling[0m ConventionBaselineTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ConventionCorpus.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m Corpus.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateExpressionParserTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateParserCorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateTitleReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DetailLayoutTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueDateRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m AppVersionTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CalendarAskTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CalendarSyncTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CatalogServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CloudKitSchemaInitializerTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordLearningReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordLearningTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordRuleTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/Measurement/MeasurementRun.swift:212:60: [33m'GenerationError' was deprecated in macOS 27.0 [#DeprecatedDeclaration][0m
+210 |     static func classify(_ error: Error) -> String {
+[32m211 |         #if canImport(FoundationModels) && !os(watchOS)[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m ImportanceUrgencyRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m IntentExecutionTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m LaunchTimingsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m LeaveOneOut.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ListPolishTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementData.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementDataTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementFieldScopeTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRun.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/MeasurementRunTests.swift:71:44: [33m'GenerationError' was deprecated in macOS 27.0 [#DeprecatedDeclaration][0m
+ 69 |         #expect(MeasurementErrorKind.classify(NSError(domain: "x", code: 1)) == "andere")
+[32m 70 |         #if canImport(FoundationModels)[0m
+⚠️  macro expansion #expect:1:83: [33m'GenerationError' was deprecated in macOS 27.0 [#DeprecatedDeclaration][0m
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/MeasurementRunTests.swift:72:123: note: expanded code originates here
+[32m 70 |         #if canImport(FoundationModels)[0m
+⚠️  macro expansion #expect:1:99: [33m'rateLimited' was deprecated in macOS 27.0: Use ``LanguageModelError/rateLimited(_:)`` instead. [#DeprecatedDeclaration][0m
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/MeasurementRunTests.swift:72:123: note: expanded code originates here
+[32m 70 |         #if canImport(FoundationModels)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/MeasurementRunTests.swift:72:68: [33m'GenerationError' was deprecated in macOS 27.0 [#DeprecatedDeclaration][0m
+ 70 |         #if canImport(FoundationModels)
+[32m 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/MeasurementRunTests.swift:72:84: [33m'rateLimited' was deprecated in macOS 27.0: Use ``LanguageModelError/rateLimited(_:)`` instead. [#DeprecatedDeclaration][0m
+ 70 |         #if canImport(FoundationModels)
+[32m 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")[0m
+⚠️  macro expansion #expect:1:83: [33m'GenerationError' was deprecated in macOS 27.0 [#DeprecatedDeclaration][0m
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/MeasurementRunTests.swift:73:128: note: expanded code originates here
+[32m 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")[0m
+⚠️  macro expansion #expect:1:99: [33m'guardrailViolation' was deprecated in macOS 27.0: Use ``LanguageModelError/guardrailViolation(_:)`` instead. [#DeprecatedDeclaration][0m
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/MeasurementRunTests.swift:73:128: note: expanded code originates here
+[32m 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/MeasurementRunTests.swift:73:68: [33m'GenerationError' was deprecated in macOS 27.0 [#DeprecatedDeclaration][0m
+ 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")
+[32m 72 |         #expect(MeasurementErrorKind.classify(LanguageModelSession.GenerationError.rateLimited(context)) == "rateLimited")[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRunTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MenuBarTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MenuBarThreadImageTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelContainerFactoryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NextUpWidgetTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NowRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m OnboardingFlowTests.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/PlaceNotificationsTests.swift:44:23: [31mcannot find type 'PlaceNotifications' in scope[0m
+ 42 |     @Test("Only while-using or always with full accuracy counts as permitted")
+[36m 43 |     func authorizationDecision() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/PlaceNotificationsTests.swift:59:23: [31mcannot find type 'PlaceNotifications' in scope[0m
+ 57 |     @Test("Asking needs undecided, a watched place, never asked before, and the foreground")
+[36m 58 |     func askingDecision() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/PlaceNotificationsTests.swift:173:23: [31mcannot find type 'PlaceNotifications' in scope[0m
+171 |     @Test("Silent under unit tests; under UI tests only with the places argument")
+[36m172 |     func silence() {[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m TaskPlaceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TextFormRuleReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ThreadShapeTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TimeExpressionParserTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TitleFidelityPromptTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TitleRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m WaitingOnTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m WaveformTests.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/PlaceNotificationsTests.swift:19:9: [31mcannot find 'PlaceNotifications' in scope[0m
+ 17 |         identifier: String, action: String? = nil, taskID: String?, tasks: [TaskItem]
+[36m 18 |     ) -> Bool {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/PlaceNotificationsTests.swift:32:26: [31mcannot find 'NotificationCategories' in scope[0m
+ 30 |     @Test("The due buttons survive: DUE keeps all three, PLACE gets only Complete and Next up")
+[36m 31 |     func categoriesCarryBothRows() throws {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/PlaceNotificationsTests.swift:36:33: [31mcannot infer key path type from context; consider explicitly specifying a root type[0m
+ 34 |         let due = try #require(categories.first { $0.identifier == "DUE" })
+[36m 35 |         let place = try #require(categories.first { $0.identifier == "PLACE" })[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/PlaceNotificationsTests.swift:37:35: [31mcannot infer key path type from context; consider explicitly specifying a root type[0m
+ 35 |         let place = try #require(categories.first { $0.identifier == "PLACE" })
+[36m 36 |         #expect(due.actions.map(\.identifier).sorted() == ["DUE_DONE", "DUE_NEXT", "DUE_TOMORROW"])[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/PlaceNotificationsTests.swift:34:19: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+ 32 |         let categories = NotificationCategories.all()
+[32m 33 |         #expect(categories.count == 2)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/PlaceNotificationsTests.swift:35:21: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+ 33 |         #expect(categories.count == 2)
+[32m 34 |         let due = try #require(categories.first { $0.identifier == "DUE" })[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/PlaceNotificationsTests.swift:44:23: [31mcannot find type 'PlaceNotifications' in scope[0m
+ 42 |     @Test("Only while-using or always with full accuracy counts as permitted")
+[36m 43 |     func authorizationDecision() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/PlaceNotificationsTests.swift:59:23: [31mcannot find type 'PlaceNotifications' in scope[0m
+ 57 |     @Test("Asking needs undecided, a watched place, never asked before, and the foreground")
+[36m 58 |     func askingDecision() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/PlaceNotificationsTests.swift:165:20: [31mcannot find 'PlaceNotifications' in scope[0m
+163 |     func prefixFilter() {
+[36m164 |         let id = UUID().uuidString[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/PlaceNotificationsTests.swift:173:23: [31mcannot find type 'PlaceNotifications' in scope[0m
+171 |     @Test("Silent under unit tests; under UI tests only with the places argument")
+[36m172 |     func silence() {[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m PendingCompletionsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PeopleRetiredTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceDeliveryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceEditingTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceNotificationsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProcessCacheTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProjectLinesTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleLeaveOneOutTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleTriggerTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistency.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistencyReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistencyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SharedContentTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SiriFieldsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SiriRepeatMappingTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReanalysisTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RecognitionRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatEditTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReviewTrayTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RevisionServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleBaseline.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechAccessTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechDiagnosisTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechLatencyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechReadinessTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m StartViewsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SubtaskTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SyncStatusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TaskActionsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueNotificationCenterTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueTodayTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m EnergyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m EnrichmentTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m FieldEditTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m FieldOriginTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m FocusBloxCalibrationTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m GuardrailCorpusTests.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskPlace.swift
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.10.14_08-06-13-+0200.xcresult
