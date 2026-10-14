@@ -1,0 +1,8 @@
+{
+  "Simulator Target Bundle": "com.henning.looseends",
+  "aps": {
+    "alert": { "title": "UI test place", "body": "You're at Post office." },
+    "category": "PLACE"
+  },
+  "taskID": "00000000-0000-0000-0000-000000000240"
+}

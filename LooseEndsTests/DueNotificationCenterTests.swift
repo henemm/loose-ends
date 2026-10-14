@@ -12,11 +12,20 @@ import UserNotifications
     final class Recorder: DueScheduling {
         var pending: [String: UNNotificationRequest] = [:]
         var badge: Int?
+        var categorySets: [Set<UNNotificationCategory>] = []
 
         func pendingIdentifiers() async -> [String] { Array(pending.keys) }
         func remove(_ identifiers: [String]) { identifiers.forEach { pending[$0] = nil } }
         func add(_ request: UNNotificationRequest) async throws { pending[request.identifier] = request }
         func setBadgeCount(_ count: Int) async throws { badge = count }
+        func setNotificationCategories(_ categories: Set<UNNotificationCategory>) { categorySets.append(categories) }
+    }
+
+    /// Stands in for the place reconcile (#240): counts the runs `reschedule()` triggers.
+    @MainActor
+    final class PlaceSpy: PlaceReconciling {
+        var runs = 0
+        func reconcile() async { runs += 1 }
     }
 
     @MainActor
@@ -39,11 +48,20 @@ import UserNotifications
         let calendar = Calendar.current
         let tomorrow: Date
 
-        init() throws {
+        init(places: (any PlaceReconciling)? = nil) throws {
             store = try TestStore()
             let defaults = try #require(UserDefaults(suiteName: "DueNotificationCenterTests-\(UUID().uuidString)"))
-            center = DueNotificationCenter(container: store.container, scheduler: recorder, defaults: defaults, cloud: cloud)
+            center = DueNotificationCenter(
+                container: store.container, scheduler: recorder, defaults: defaults, cloud: cloud, places: places
+            )
             tomorrow = try #require(calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: Date())))
+        }
+
+        func placed(_ raw: String) throws -> TaskItem {
+            let task = try task(raw)
+            task.place = try #require(TaskPlace(name: "Büro", latitude: 51.99563, longitude: 7.71357, event: .arrive))
+            try store.context.save()
+            return task
         }
 
         func task(_ raw: String, hour: Int? = nil, minute: Int = 0) throws -> TaskItem {
@@ -248,5 +266,101 @@ import UserNotifications
         #expect(CarryReviewRequest.shared.taskIDs == [task.id])
         #expect(task.dueDate == due)
         CarryReviewRequest.shared.taskIDs = []
+    }
+
+    // MARK: - #240 Schnitt 2: one category set, routing by prefix, the place reconcile
+
+    @Test("Activating sets the categories once, DUE with Tomorrow and PLACE without (AC-1)")
+    @MainActor func oneCategorySet() throws {
+        let fixture = try Fixture()
+
+        fixture.center.activate()
+
+        #expect(fixture.recorder.categorySets.count == 1)
+        let categories = try #require(fixture.recorder.categorySets.first)
+        let actions = Dictionary(uniqueKeysWithValues: categories.map { ($0.identifier, $0.actions.map(\.identifier)) })
+        #expect(actions == [
+            DueReminders.categoryIdentifier: ["DUE_DONE", "DUE_NEXT", "DUE_TOMORROW"],
+            PlaceNotifications.categoryIdentifier: ["DUE_DONE", "DUE_NEXT"],
+        ])
+    }
+
+    @Test("Tapping a place notification marks the task, saves, and opens it — without any place center (AC-3, AC-4)")
+    @MainActor func tapOnPlaceMarksAndOpens() async throws {
+        let fixture = try Fixture()
+        let task = try fixture.placed("Drucker abholen")
+        OpenTaskRequest.shared.taskID = nil
+
+        await fixture.center.respond(
+            identifier: "place_" + task.id.uuidString,
+            actionRaw: UNNotificationDefaultActionIdentifier,
+            taskID: task.id.uuidString
+        )
+
+        #expect(task.placeRemindedAt != nil)
+        #expect(fixture.store.context.hasChanges == false, "the mark is saved")
+        #expect(OpenTaskRequest.shared.taskID == task.id)
+        OpenTaskRequest.shared.taskID = nil
+    }
+
+    @Test("Complete and Next up on a place notification act and mark; Tomorrow changes nothing there (AC-4)")
+    @MainActor func buttonsOnPlace() async throws {
+        let fixture = try Fixture()
+        let done = try fixture.placed("Drucker abholen")
+        let next = try fixture.placed("Papier kaufen")
+        let tomorrow = try fixture.placed("Pflanzen gießen")
+        let due = tomorrow.dueDate
+
+        await fixture.center.respond(identifier: "place_" + done.id.uuidString, actionRaw: "DUE_DONE", taskID: done.id.uuidString)
+        await fixture.center.respond(identifier: "place_" + next.id.uuidString, actionRaw: "DUE_NEXT", taskID: next.id.uuidString)
+        await fixture.center.respond(identifier: "place_" + tomorrow.id.uuidString, actionRaw: "DUE_TOMORROW", taskID: tomorrow.id.uuidString)
+
+        #expect(done.status == .done)
+        #expect(done.placeRemindedAt != nil)
+        #expect(next.nextRank != nil)
+        #expect(next.placeRemindedAt != nil)
+        #expect(tomorrow.dueDate == due)
+        #expect(tomorrow.status == .active)
+        #expect(tomorrow.placeRemindedAt != nil)
+    }
+
+    @Test("A due notification keeps its path and never sets the place mark (AC-3)")
+    @MainActor func dueKeepsItsPath() async throws {
+        let fixture = try Fixture()
+        let task = try fixture.placed("Drucker abholen")
+
+        await fixture.center.respond(identifier: "due_" + task.id.uuidString, actionRaw: "DUE_DONE", taskID: task.id.uuidString)
+
+        #expect(task.status == .done)
+        #expect(task.placeRemindedAt == nil)
+    }
+
+    @Test("A place notification in front marks its task in its own task; a due one does not (AC-5)")
+    @MainActor func presentMarks() async throws {
+        let fixture = try Fixture()
+        let task = try fixture.placed("Drucker abholen")
+        #expect(DueNotificationCenter.presentationOptions == [.banner, .list, .sound])
+
+        let dueMark = fixture.center.present(identifier: "due_" + task.id.uuidString, taskID: task.id.uuidString)
+        #expect(dueMark == nil)
+        #expect(task.placeRemindedAt == nil)
+
+        let placeMark = try #require(fixture.center.present(identifier: "place_" + task.id.uuidString, taskID: task.id.uuidString))
+        await placeMark.value
+        #expect(task.placeRemindedAt != nil)
+        #expect(fixture.store.context.hasChanges == false, "the mark is saved")
+    }
+
+    @Test("Every reschedule runs the place reconcile after the due run, which still completes (AC-9)")
+    @MainActor func rescheduleRunsThePlaceReconcile() async throws {
+        let spy = PlaceSpy()
+        let fixture = try Fixture(places: spy)
+        let task = try fixture.task("Steuer abgeben")
+
+        await fixture.center.reschedule()
+
+        #expect(spy.runs == 1)
+        #expect(fixture.request(for: task) != nil)
+        #expect(fixture.recorder.badge != nil)
     }
 }
