@@ -14,11 +14,11 @@ import UserNotifications
     }
 
     private func respond(
-        identifier: String, action: String? = nil, taskID: String?, tasks: [TaskItem]
+        identifier: String, action: String? = nil, taskID: String?, tasks: [TaskItem], now: Date = Date()
     ) -> Bool {
         PlaceNotifications.respond(
             identifier: identifier, actionRaw: action, taskID: taskID,
-            in: tasks, contexts: [], projects: []
+            in: tasks, contexts: [], projects: [], now: now
         )
     }
 
@@ -144,6 +144,72 @@ import UserNotifications
         #expect(task.placeRemindedAt != nil)
         #expect(task.status == .active)
         #expect(task.nextRank == nil)
+    }
+
+    @Test("A second place answer without a button changes nothing and keeps the first mark")
+    @MainActor func secondAnswerChangesNothing() throws {
+        let store = try TestStore()
+        let task = try openTask()
+        store.context.insert(task)
+        let first = Date(timeIntervalSince1970: 1_800_000_000)
+
+        #expect(respond(identifier: placeID(task), taskID: task.id.uuidString, tasks: [task], now: first))
+        let marked = task.placeRemindedAt
+
+        let again = respond(
+            identifier: placeID(task), taskID: task.id.uuidString, tasks: [task],
+            now: first.addingTimeInterval(3600)
+        )
+
+        #expect(!again)
+        #expect(marked == first)
+        #expect(task.placeRemindedAt == marked)
+    }
+
+    @Test("Tomorrow on a place notification only sets the mark, the task is not moved")
+    @MainActor func tomorrowOnPlaceDoesNotMove() throws {
+        let store = try TestStore()
+        let task = try openTask()
+        store.context.insert(task)
+        let dueBefore = task.dueDate
+        let hasTimeBefore = task.dueHasTime
+        let revisionsBefore = task.revisions?.count ?? 0
+
+        let changed = respond(identifier: placeID(task), action: "DUE_TOMORROW", taskID: task.id.uuidString, tasks: [task])
+
+        #expect(changed)
+        #expect(task.placeRemindedAt != nil)
+        #expect(task.dueDate == dueBefore)
+        #expect(task.dueHasTime == hasTimeBefore)
+        #expect((task.revisions?.count ?? 0) == revisionsBefore)
+        #expect(task.status == .active)
+        #expect(task.nextRank == nil)
+    }
+
+    @Test("Tomorrow on a due notification still moves the task")
+    @MainActor func tomorrowOnDueMoves() throws {
+        let store = try TestStore()
+        let task = try openTask()
+        store.context.insert(task)
+
+        let changed = respond(identifier: dueID(task), action: "DUE_TOMORROW", taskID: task.id.uuidString, tasks: [task])
+
+        #expect(changed)
+        #expect(task.dueDate != nil)
+        #expect(task.placeRemindedAt == nil)
+    }
+
+    @Test("Complete on a due notification completes the task and leaves the place mark empty")
+    @MainActor func completeOnDueDoesNotMark() throws {
+        let store = try TestStore()
+        let task = try openTask()
+        store.context.insert(task)
+
+        let changed = respond(identifier: dueID(task), action: "DUE_DONE", taskID: task.id.uuidString, tasks: [task])
+
+        #expect(changed)
+        #expect(task.status == .done)
+        #expect(task.placeRemindedAt == nil)
     }
 
     @Test("Planning alone never sets the mark")
