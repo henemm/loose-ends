@@ -91,7 +91,7 @@ touches any of these paths:
 |---|---|
 | `Shared/Enrichment/FoundationModelsEnricher.swift`, `Shared/Enrichment/EnrichmentCoordinator.swift` | Apple Intelligence — der Simulator hat keine Modell-Assets |
 | `Shared/Persistence/` | App-Gruppe und CloudKit-Abgleich zwischen Geräten |
-| `LooseEndsWatch/` | Apple Watch |
+| `LooseEndsWatch/`, `LooseEndsWatchWidgets/` | Apple Watch, Komplikation auf dem Zifferblatt |
 | `LooseEndsWidgets/` | Widgets, Aktionstaste, Kurzbefehle |
 | `LooseEndsShare/`, `Shared/Intents/` | Erfassung von außerhalb der App |
 | `LooseEnds/Speech/` | Mikrofon und Spracherkennung |
@@ -248,6 +248,9 @@ not scope creep on the current one.
 - `Shared/Intents` — App Intents shared by app, widgets and (later) the intents extension
 - `LooseEnds/` — app entry and views (iPhone, iPad, Mac); `LooseEndsWatch/`, `LooseEndsWidgets/`, `LooseEndsShare/`
   (iOS share sheet: text, links, mails via `SharedContent`) — platform targets
+- `LooseEndsWatchWidgets/` — watch complication (#355 Schnitt 3a): the logo's knot, families `accessoryCircular` and
+  `accessoryCorner`, static (one entry, `.never`), no entitlements and no `Shared/`; it compiles `LooseEnds/Views/Thread.swift`
+  as a single file, so that file must stay watchOS-safe (SwiftUI only). A tap opens the watch app's capture.
 - `LooseEnds/Mac` — `MenuBarCapture` (Mac only, #356): the menu bar panel with the same `CaptureView`, Dock icon only
   while a list window is open (`DockPolicy`), login item via `SMAppService` (on from the first start, never under tests);
   `MenuBarThreadImage` (#366): the menu bar symbol is the logo's thread, drawn from `ThreadShape.curvePoints` into a
