@@ -68,7 +68,7 @@ genügt trivial: Die Komplikation zeigt eine feste Zeichnung ohne Daten, ein Mod
 | Datei | Änderungsart | Beschreibung |
 |---|---|---|
 | `project.yml` | MODIFY (~+25) | Neues Ziel `LooseEndsWatchWidgets` (`app-extension`, `platform: watchOS`, Kennung `com.henning.looseends$(BUNDLE_ID_SUFFIX).watchkitapp.widgets`, **keine** Berechtigungen, Info-Eigenschaften mit `NSExtension.NSExtensionPointIdentifier: com.apple.widgetkit-extension`, Version und Build wie die anderen Ziele). Quellen: Ordner `LooseEndsWatchWidgets` und die einzelne Datei `LooseEnds/Views/Thread.swift`. Abhängigkeit `- target: LooseEndsWatchWidgets` im Ziel `LooseEndsWatch`. Das Testziel kompiliert zusätzlich `LooseEndsWatchWidgets/CaptureComplication.swift`. Hinweiskommentar: `Thread.swift` muss watchOS-tauglich bleiben. |
-| `LooseEndsWatchWidgets/CaptureComplication.swift` | CREATE (~60) | `CaptureComplicationProvider`, `CaptureComplicationView(family:)`, `CaptureComplication: Widget` |
+| `LooseEndsWatchWidgets/CaptureComplication.swift` | CREATE (~60) | `CaptureComplicationProvider`, `CaptureComplicationView(face:)`, `CaptureComplication: Widget` |
 | `LooseEndsWatchWidgets/LooseEndsWatchWidgetsBundle.swift` | CREATE (~8) | `@main struct LooseEndsWatchWidgetsBundle: WidgetBundle`; eigene Datei, damit der Testbau `CaptureComplication.swift` ohne `@main` kompiliert |
 | `LooseEndsWatchWidgets/PrivacyInfo.xcprivacy` | CREATE | Kopie von `LooseEndsWidgets/PrivacyInfo.xcprivacy` ohne API-Einträge |
 | `LooseEndsWatchWidgets/Info.plist` | erzeugt | von `./scripts/sim.sh generate` aus `project.yml` geschrieben, nicht von Hand |
@@ -106,8 +106,9 @@ mitkompiliert; sie importiert nur SwiftUI und benutzt nichts aus der App. Eingeb
 **Provider.** `CaptureComplicationProvider: TimelineProvider` mit einem Eintrag (nur `Date`), `getTimeline` liefert genau
 diesen Eintrag mit `policy: .never`. Es gibt nichts, was sich ändert.
 
-**Ansicht.** `CaptureComplicationView` nimmt `family: WidgetFamily` als Parameter; `@Environment(\.widgetFamily)` wird
-nur im `Widget`-Body gelesen und durchgereicht, damit der iOS-Test die Familie setzen kann. Beide Familien zeigen
+**Ansicht.** `CaptureComplicationView` nimmt `face: Face` (`.circular`, `.corner`) als Parameter, weil es
+`accessoryCorner` auf iOS nicht gibt; `@Environment(\.widgetFamily)` wird nur im `Widget`-Body gelesen und auf `Face`
+abgebildet, damit der iOS-Test die Form setzen kann. Beide Familien zeigen
 `ThreadShape(form: .knot)` als Strich, `.widgetAccentable()`, Strichstärke relativ zur Größe (`GeometryReader`), abgerundete
 Enden. `accessoryCircular` legt `AccessoryWidgetBackground()` hinter den Knoten. `accessoryCorner` zeigt den Knoten
 mit `widgetLabel` „Capture“. Der Knoten ist dekorativ; die Komplikation trägt `accessibilityLabel` „Capture“ (Schlüssel
@@ -134,10 +135,10 @@ zuletzt `testflight.yml` und die bestehenden Skripttests.
 Neue Datei `LooseEndsTests/CaptureComplicationTests.swift` (Swift Testing). Rot zuerst: Die View wird als leere Hülle
 angelegt, der Test scheitert an „keine Pixel gezeichnet“; ein reiner Kompilierfehler zählt nicht als rot.
 
-- [ ] Test 1: GIVEN `CaptureComplicationView(family: .accessoryCircular)` in 76×76 pt, hell auf dunkel / WHEN per
+- [ ] Test 1: GIVEN `CaptureComplicationView(face: .circular)` in 76×76 pt, hell auf dunkel / WHEN per
   `ImageRenderer` gerendert / THEN enthält das Bild gezeichnete (nicht dunkle) Pixel, und die Glyphe bleibt innerhalb
   der Fläche (kein Pixel im äußeren Randstreifen von 2 pt).
-- [ ] Test 2: GIVEN `family: .accessoryCorner` in 80×40 pt / WHEN gerendert / THEN dasselbe: Pixel gezeichnet, Rand frei.
+- [ ] Test 2: GIVEN `face: .corner` in 80×40 pt / WHEN gerendert / THEN dasselbe: Pixel gezeichnet, Rand frei.
 - [ ] Test 3: GIVEN der Provider / WHEN `getTimeline` aufgerufen wird / THEN liefert er genau einen Eintrag mit Policy
   `.never`.
 - [ ] Test 4: GIVEN beide Renderings / WHEN das Verhältnis gezeichneter Pixel gemessen wird / THEN ist der Knoten bei
@@ -248,3 +249,4 @@ ist durch die bestehenden Tests abgedeckt.
 ## Changelog
 
 - 2026-10-14: Initial spec created (Variante A, Knoten; von Henning im Entwurf freigegeben).
+- 2026-10-14: Ansicht nimmt `face:` statt `family:` (Adversary F001, `accessoryCorner` fehlt auf iOS); mit Hennings `override`.

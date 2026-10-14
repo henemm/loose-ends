@@ -1,0 +1,46 @@
+# Rot zur Laufzeit (#355 Schnitt 3a), 2026-10-14
+# Lauf: CLAUDE_SESSION_ID=s355s3 ./scripts/sim.sh sim-unit CaptureComplicationTests (iOS-Simulator, iPhone 17, iOS 27.0)
+# Stand: leere Hülle LooseEndsWatchWidgets/CaptureComplication.swift — CaptureComplicationView rendert Color.clear,
+#        CaptureComplicationProvider.timeline() liefert einen Eintrag mit policy .atEnd.
+# Ergebnis: xcodebuild Exit 65, 4 Tests, 5 Zusicherungen gescheitert, kein Kompilierfehler.
+#
+# HINWEIS: Die committete Testdatei kompiliert nicht (Simulator wie Mac):
+#   CaptureComplicationTests.swift:23:55: error: constant 'self.lit' captured by a closure before being initialized
+# Für diesen Lauf wurde in Bright.init `width = image.width; height = image.height` vorübergehend ersetzt durch
+#   `let width = image.width, height = image.height; self.width = width; self.height = height`
+# (Semantik unverändert; die Closure fängt lokale Konstanten statt self). Die Testdatei wurde danach per git zurückgesetzt.
+
+## Testereignisse (xcodebuild.log, Swift Testing)
+◇ Suite "Watch complication (#355)" started.
+◇ Test "Round complication: the knot is drawn and stays off the edge" started.
+⎙ Attached 'complication-circular.png' to "Round complication: the knot is drawn and stays off the edge".
+✘ Test "Round complication: the knot is drawn and stays off the edge" recorded an issue at CaptureComplicationTests.swift:78:9: Expectation failed: bright.share > 0
+↳ nothing bright drawn
+↳ bright.share > 0 → false
+↳   bright.share → 0.0
+✘ Test "Round complication: the knot is drawn and stays off the edge" failed after 0.033 seconds with 1 issue.
+◇ Test "Corner complication: the knot is drawn and stays off the edge" started.
+⎙ Attached 'complication-corner.png' to "Corner complication: the knot is drawn and stays off the edge".
+✘ Test "Corner complication: the knot is drawn and stays off the edge" recorded an issue at CaptureComplicationTests.swift:85:9: Expectation failed: bright.share > 0
+↳ nothing bright drawn
+↳ bright.share > 0 → false
+↳   bright.share → 0.0
+✘ Test "Corner complication: the knot is drawn and stays off the edge" failed after 0.004 seconds with 1 issue.
+◇ Test "At watch size the knot is a readable stroke: neither a hairline nor a blot" started.
+✘ Test "At watch size the knot is a readable stroke: neither a hairline nor a blot" recorded an issue with 2 arguments face → .circular, size → (76.0, 76.0) at CaptureComplicationTests.swift:93:9: Expectation failed: share >= 0.04
+↳ .circular: only 0.0 of the face is knot
+↳   share → 0.0
+✘ Test "At watch size the knot is a readable stroke: neither a hairline nor a blot" recorded an issue with 2 arguments face → .corner, size → (80.0, 40.0) at CaptureComplicationTests.swift:93:9: Expectation failed: share >= 0.04
+↳ .corner: only 0.0 of the face is knot
+↳   share → 0.0
+✘ Test "At watch size the knot is a readable stroke: neither a hairline nor a blot" with 2 test cases failed after 0.015 seconds with 2 issues.
+◇ Test "The provider hands out one entry and never reloads: nothing on it changes" started.
+✘ Test "The provider hands out one entry and never reloads: nothing on it changes" recorded an issue at CaptureComplicationTests.swift:101:9: Expectation failed: "\(timeline.policy)" == "\(TimelineReloadPolicy.never)"
+↳   "\(timeline.policy)" → "TimelineReloadPolicy(date: nil)"
+↳   "\(TimelineReloadPolicy.never)" → "TimelineReloadPolicy(date: Optional(4001-01-01 00:00:00 +0000))"
+✘ Test "The provider hands out one entry and never reloads: nothing on it changes" failed after 0.002 seconds with 1 issue.
+✘ Suite "Watch complication (#355)" failed after 0.056 seconds with 5 issues.
+✘ Test run with 4 tests in 1 suite failed after 0.056 seconds with 5 issues.
+
+## Kompilierfehler der unveränderten Testdatei (Simulatorlauf davor, xcbeautify)
+❌ LooseEndsTests/CaptureComplicationTests.swift:23:55: constant 'self.lit' captured by a closure before being initialized

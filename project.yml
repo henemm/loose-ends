@@ -155,9 +155,33 @@ targets:
             INAlternativeAppNamePronunciationHint: LE_ALT_HINT_2
           - INAlternativeAppName: LE_ALT_NAME_3
             INAlternativeAppNamePronunciationHint: LE_ALT_HINT_3
+    dependencies:
+      - target: LooseEndsWatchWidgets   # the knot complication on the watch face (#355)
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends$(BUNDLE_ID_SUFFIX).watchkitapp
+
+  # Watch face complication with the logo's knot (#355). Static drawing, no data: no entitlements
+  # (no app group, no iCloud — a new capability on a new App ID failed the CI key before, #307), no Shared/.
+  LooseEndsWatchWidgets:
+    type: app-extension
+    platform: watchOS
+    sources:
+      - LooseEndsWatchWidgets
+      # The knot's curve. Compiled into the watch widget as is: Thread.swift must stay watchOS-ready
+      # (SwiftUI only, nothing from the app), or the watch build breaks.
+      - path: LooseEnds/Views/Thread.swift
+    info:
+      path: LooseEndsWatchWidgets/Info.plist
+      properties:
+        CFBundleDisplayName: $(LE_DISPLAY_NAME)
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends$(BUNDLE_ID_SUFFIX).watchkitapp.widgets
 
   LooseEndsWidgets:
     type: app-extension
@@ -263,6 +287,9 @@ targets:
       - LooseEndsTests
       - Measurement
       - path: Shared/Services/RawTextWords.swift   # s. LooseEndsLab (#136)
+      # The watch complication's drawing, rendered on iOS (#355): the simulator cannot put it on a
+      # face. Without the @main bundle file; ThreadShape comes from `@testable import LooseEnds`.
+      - path: LooseEndsWatchWidgets/CaptureComplication.swift
     dependencies:
       - target: LooseEnds
     settings:

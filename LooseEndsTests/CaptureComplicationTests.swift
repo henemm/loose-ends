@@ -17,8 +17,9 @@ import WidgetKit
         let lit: [Bool]
 
         init(_ image: CGImage) throws {
-            width = image.width
-            height = image.height
+            let width = image.width, height = image.height
+            self.width = width
+            self.height = height
             var buffer = [UInt8](repeating: 0, count: width * height * 4)
             let drawn = buffer.withUnsafeMutableBytes { raw -> Bool in
                 guard let context = CGContext(
