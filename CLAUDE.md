@@ -258,8 +258,10 @@ not scope creep on the current one.
   is built only in `makeTranscriber` with `.volatileResults` and `.fastResults` — without the latter the first word takes
   ~12 s instead of ~1 s, #274), `Waveform` (level in dBFS, scale −55…−25 → 0…1, mic ring grows up to 35 % from 52 pt, #279),
   `ListeningHint` (pure rule: "Listening …" while the mic listens and the field is empty, #297),
-  `SpeechDiagnosis` (pure rule: after 6 s of audio without any result the capture shows a grey line with model status,
-  permissions, buffer and result counts, #274; `--ui-testing-speech-diagnosis` fixes that state for the UI smoke test)
+  `SpeechDiagnosis` (pure rule: 6 s after the first audible level (`audibleLevel` 0.1; silence never triggers) without any
+  result the capture shows a grey line with model status, permissions, buffer and result counts, #274/#402; the start-time
+  report only in the probe build; on the Mac one calm line „Sound arrives, but no text recognized“ with the values in `.help`;
+  `--ui-testing-speech-diagnosis` fixes that state for the UI smoke test)
 - `Shared/Notifications` — `DueReminders` (pure plan and action handling); `PlaceReminders` (which ≤ 20 places
   to watch, #226) and `PlaceDelivery` (what to hand to the system, replace or withdraw, from a per-device
   handover list; the system never reports delivery, #226 Schnitt 2a); `LooseEnds/Notifications` —
