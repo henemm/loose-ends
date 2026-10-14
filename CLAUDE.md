@@ -264,7 +264,9 @@ not scope creep on the current one.
   `--ui-testing-speech-diagnosis` fixes that state for the UI smoke test)
 - `Shared/Notifications` — `DueReminders` (pure plan and action handling); `PlaceReminders` (which ≤ 20 places
   to watch, #226) and `PlaceDelivery` (what to hand to the system, replace or withdraw, from a per-device
-  handover list; the system never reports delivery, #226 Schnitt 2a); `LooseEnds/Notifications` —
+  handover list; the system never reports delivery, #226 Schnitt 2a); `PlaceNotifications` (#240 Schnitt 1, pure
+  building blocks, not wired yet: categories with both button rows, authorization decision, ask once only with a place
+  and in the foreground, answer sets the mark, `place_` / `due_` prefixes apart, re-entry lock); `LooseEnds/Notifications` —
   `DueNotificationCenter` (system wiring, silent under tests; completion-handler delegate methods, not async, #295; the
   UI test gets its banner via `LOOSEENDS_PUSH=<file.apns> ./scripts/sim.sh test-proof <class>`)
 - `Shared/` compiles into the watch and widget targets too: no SwiftUI that is unavailable on watchOS there
