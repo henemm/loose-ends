@@ -1,0 +1,145 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/CaptureComplicationTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (6 targets)
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ConventionBaselineTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ConventionCorpus.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m Corpus.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateExpressionParserTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateParserCorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateTitleReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DetailLayoutTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleLeaveOneOutTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleTriggerTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistency.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistencyReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistencyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SharedContentTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SiriFieldsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SiriRepeatMappingTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m GuardrailCorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ImportanceUrgencyRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m IntentExecutionTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m LaunchTimingsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m LeaveOneOut.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ListPolishTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementData.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementDataTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementFieldScopeTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechAccessTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechDiagnosisTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechLatencyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechReadinessTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m StartViewsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SubtaskTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SyncStatusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TaskActionsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReanalysisTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RecognitionRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatEditTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReviewTrayTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RevisionServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleBaseline.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/LooseEndsTests/CaptureComplicationTests.swift:89:24: [31mcannot find 'CaptureComplicationView' in scope[0m
+ 87 | 
+[36m 88 |     @Test("At watch size the knot is a readable stroke: neither a hairline nor a blot",[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/LooseEndsTests/CaptureComplicationTests.swift:89:97: [31mcannot infer contextual base in reference to member 'corner'[0m
+ 87 | 
+[36m 88 |     @Test("At watch size the knot is a readable stroke: neither a hairline nor a blot",[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/LooseEndsTests/CaptureComplicationTests.swift:53:33: [31mcannot find type 'CaptureComplicationView' in scope[0m
+ 51 |     }
+[36m 52 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/LooseEndsTests/CaptureComplicationTests.swift:90:25: [31mcannot find type 'CaptureComplicationView' in scope[0m
+ 88 |     @Test("At watch size the knot is a readable stroke: neither a hairline nor a blot",
+[36m 89 |           arguments: [(CaptureComplicationView.Face.circular, CGSize(width: 76, height: 76)), (.corner, CGSize(width: 80, height: 40))])[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m TaskPlaceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TextFormRuleReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ThreadShapeTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TimeExpressionParserTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TitleFidelityPromptTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TitleRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m WaitingOnTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m WaveformTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m OnboardingFlowTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PendingCompletionsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PeopleRetiredTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceDeliveryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceEditingTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProcessCacheTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProjectLinesTests.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/LooseEndsTests/CaptureComplicationTests.swift:89:24: [31mcannot find 'CaptureComplicationView' in scope[0m
+ 87 | 
+[36m 88 |     @Test("At watch size the knot is a readable stroke: neither a hairline nor a blot",[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/LooseEndsTests/CaptureComplicationTests.swift:89:97: [31mcannot infer contextual base in reference to member 'corner'[0m
+ 87 | 
+[36m 88 |     @Test("At watch size the knot is a readable stroke: neither a hairline nor a blot",[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/LooseEndsTests/CaptureComplicationTests.swift:53:33: [31mcannot find type 'CaptureComplicationView' in scope[0m
+ 51 |     }
+[36m 52 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/LooseEndsTests/CaptureComplicationTests.swift:90:25: [31mcannot find type 'CaptureComplicationView' in scope[0m
+ 88 |     @Test("At watch size the knot is a readable stroke: neither a hairline nor a blot",
+[36m 89 |           arguments: [(CaptureComplicationView.Face.circular, CGSize(width: 76, height: 76)), (.corner, CGSize(width: 80, height: 40))])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/LooseEndsTests/CaptureComplicationTests.swift:54:20: [31mcannot find 'CaptureComplicationView' in scope[0m
+ 52 | 
+[36m 53 |     private func render(_ face: CaptureComplicationView.Face, size: CGSize) throws -> CGImage {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/LooseEndsTests/CaptureComplicationTests.swift:57:26: [31mcannot infer key path type from context; consider explicitly specifying a root type[0m
+ 55 |             .foregroundStyle(.white)
+[36m 56 |             .frame(width: size.width, height: size.height)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/LooseEndsTests/CaptureComplicationTests.swift:91:21: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+ 89 |           arguments: [(CaptureComplicationView.Face.circular, CGSize(width: 76, height: 76)), (.corner, CGSize(width: 80, height: 40))])
+[32m 90 |     func readable(face: CaptureComplicationView.Face, size: CGSize) throws {[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m AppVersionTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CalendarAskTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CalendarSyncTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureComplicationTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CatalogServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CloudKitSchemaInitializerTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordLearningReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordLearningTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/Measurement/MeasurementRun.swift:212:60: [33m'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration][0m
+210 |     static func classify(_ error: Error) -> String {
+[32m211 |         #if canImport(FoundationModels) && !os(watchOS)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/LooseEndsTests/MeasurementRunTests.swift:71:44: [33m'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration][0m
+ 69 |         #expect(MeasurementErrorKind.classify(NSError(domain: "x", code: 1)) == "andere")
+[32m 70 |         #if canImport(FoundationModels)[0m
+⚠️  macro expansion #expect:1:83: [33m'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration][0m
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/LooseEndsTests/MeasurementRunTests.swift:72:123: note: expanded code originates here
+[32m 70 |         #if canImport(FoundationModels)[0m
+⚠️  macro expansion #expect:1:99: [33m'rateLimited' was deprecated in iOS 27.0: Use ``LanguageModelError/rateLimited(_:)`` instead. [#DeprecatedDeclaration][0m
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/LooseEndsTests/MeasurementRunTests.swift:72:123: note: expanded code originates here
+[32m 70 |         #if canImport(FoundationModels)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/LooseEndsTests/MeasurementRunTests.swift:72:68: [33m'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration][0m
+ 70 |         #if canImport(FoundationModels)
+[32m 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/LooseEndsTests/MeasurementRunTests.swift:72:84: [33m'rateLimited' was deprecated in iOS 27.0: Use ``LanguageModelError/rateLimited(_:)`` instead. [#DeprecatedDeclaration][0m
+ 70 |         #if canImport(FoundationModels)
+[32m 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")[0m
+⚠️  macro expansion #expect:1:83: [33m'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration][0m
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/LooseEndsTests/MeasurementRunTests.swift:73:128: note: expanded code originates here
+[32m 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")[0m
+⚠️  macro expansion #expect:1:99: [33m'guardrailViolation' was deprecated in iOS 27.0: Use ``LanguageModelError/guardrailViolation(_:)`` instead. [#DeprecatedDeclaration][0m
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/LooseEndsTests/MeasurementRunTests.swift:73:128: note: expanded code originates here
+[32m 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/deep-strolling-quilt/LooseEndsTests/MeasurementRunTests.swift:73:68: [33m'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration][0m
+ 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")
+[32m 72 |         #expect(MeasurementErrorKind.classify(LanguageModelSession.GenerationError.rateLimited(context)) == "rateLimited")[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRun.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRunTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MenuBarTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MenuBarThreadImageTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelContainerFactoryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NextUpWidgetTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NowRuleTests.swift
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.10.14_06-32-50-+0200.xcresult

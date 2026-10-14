@@ -154,6 +154,7 @@ jobs:
           check com.henning.looseends iphoneos27. NSMicrophoneUsageDescription NSSpeechRecognitionUsageDescription \
             NSCalendarsFullAccessUsageDescription ITSAppUsesNonExemptEncryption=false
           check com.henning.looseends.watchkitapp watchos27. NSMicrophoneUsageDescription NSSpeechRecognitionUsageDescription
+          check com.henning.looseends.watchkitapp.widgets watchos27.
           check com.henning.looseends.widgets iphoneos27.
           check com.henning.looseends.share iphoneos27.
           # Signierte Berechtigungen der App (#311): fehlte der Key-Value-Schlüssel in der XcodeGen-Quelle, ging er

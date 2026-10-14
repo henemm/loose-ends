@@ -49,6 +49,8 @@
 	<string>group.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
 	<key>LECloudContainer</key>
 	<string>iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.productivity</string>
 	<key>NSCalendarsFullAccessUsageDescription</key>
 	<string>Only if you switch it on, a task with a due date is shown in "Loose Ends" or in a calendar you pick. The app only changes its own events.</string>
 	<key>NSMicrophoneUsageDescription</key>
