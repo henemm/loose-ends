@@ -1,0 +1,97 @@
+<title>Knoten auf dem Zifferblatt</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Layout: eine Lesespalte, Zifferblätter als Reihen von Uhren, die auf Handybreite untereinander rutschen */
+:root {
+  --bg: #f4f6f6; --surface: #ffffff; --fg: #17201f; --muted: #5b6766; --line: #d9e1e0;
+  --accent: #0F6E73; --tint: #e3efef;
+  --display: "Fraunces", Georgia, serif; --body: "Inter Tight", -apple-system, system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1414; --surface: #182020; --fg: #e9efee; --muted: #9aa8a7; --line: #2a3535;
+  --accent: #5FC4C9; --tint: #1c2a2a; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0f1414; --surface: #182020; --fg: #e9efee; --muted: #9aa8a7; --line: #2a3535;
+  --accent: #5FC4C9; --tint: #1c2a2a; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 16px; line-height: 1.55; }
+main { max-width: 960px; margin: 0 auto; padding-inline: 20px; padding-block: 40px 64px; display: grid; gap: 48px; }
+h1, h2 { font-family: var(--display); font-weight: 600; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(30px, 5vw, 44px); line-height: 1.1; }
+h2 { font-size: 24px; }
+p { margin: 0; max-width: 65ch; }
+.lede { color: var(--muted); font-size: 18px; }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+section { display: grid; gap: 18px; }
+.row { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 24px; align-items: start; }
+figure { margin: 0; display: grid; gap: 10px; justify-items: center; text-align: center; min-width: 0; }
+figcaption { font-size: 14px; color: var(--muted); max-width: 30ch; }
+figcaption b { color: var(--fg); font-weight: 600; }
+.watch, .shot { width: 100%; max-width: 208px; border-radius: 44px; display: block; box-shadow: 0 0 0 10px #26292b, 0 0 0 11px var(--line); margin: 11px; }
+.shot { aspect-ratio: 416/496; object-fit: cover; }
+.arrow { align-self: center; color: var(--muted); font-size: 14px; text-align: center; }
+.pick { border: 1px solid var(--line); background: var(--surface); border-radius: 18px; padding: 24px 20px; display: grid; gap: 18px; }
+.pick.rec { border-color: var(--accent); }
+.tag { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 99px; background: var(--tint); color: var(--accent); }
+.texts { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+.page { border-radius: 16px; padding: 22px; display: grid; gap: 10px; min-width: 0; }
+.page.light { background: #ffffff; color: #17201f; border: 1px solid #d9e1e0; }
+.page.dark { background: #1c1c1e; color: #f2f2f7; }
+.page h3 { margin: 0; font-size: 19px; font-weight: 600; }
+.page .lbl { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; opacity: .6; }
+.page mark { background: none; color: #0F6E73; font-weight: 600; }
+.page.dark mark { color: #5FC4C9; }
+ul.notes { margin: 0; padding-left: 20px; display: grid; gap: 6px; max-width: 70ch; }
+</style>
+
+<main>
+  <header style="display:grid;gap:12px">
+    <div class="eyebrow">#355 · Schnitt 3 · Entwurf zur Freigabe</div>
+    <h1>Der Knoten auf dem Zifferblatt</h1>
+    <p class="lede">Ein Tipp auf die Komplikation öffnet die Erfassung von Loose Ends auf der Watch. Weil Siri auf der Watch den Namen nicht versteht (#404), wird das der Hauptweg.</p>
+  </header>
+
+  <section>
+    <div class="eyebrow">Heute</div>
+    <h2>Keine Komplikation, die Erfassung nur über die App-Liste</h2>
+    <div class="row">
+      <figure><img class="shot" src="{{HEUTE_FACE}}" alt="Zifferblatt im Simulator ohne Loose-Ends-Komplikation"><figcaption><b>Zifferblatt</b> (watchOS-27-Simulator). Loose Ends taucht hier nicht auf.</figcaption></figure>
+      <figure><img class="shot" src="{{HEUTE_CAPTURE}}" alt="Erfassung der Watch-App: Feld Ich höre zu, Knopf Fertig"><figcaption><b>Erfassung</b> der Watch-App, Stand heute. Ein Tipp aufs Feld öffnet die Eingabe des Systems.</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Entwurf</div>
+    <h2>Der Knoten aus dem Logo, in der Farbe des Zifferblatts</h2>
+    <div class="row">
+      <figure>{{ENTWURF}}<figcaption><b>Rund</b> (unten links) und <b>Ecke</b> (oben links, mit „Erfassen“). Die Uhr färbt den Knoten in ihren Akzent ein. Hier ist es Petrol.</figcaption></figure>
+      <div class="arrow">Tipp auf den Knoten öffnet</div>
+      <figure><img class="shot" src="{{HEUTE_CAPTURE}}" alt="Erfassung der Watch-App"><figcaption><b>Die Erfassung</b>, wie sie heute aussieht. Ein Tipp aufs Feld startet das Diktat, wenn du es zuletzt benutzt hast.</figcaption></figure>
+    </div>
+    <ul class="notes">
+      <li>Die Watch ist immer dunkel, eine helle Fassung gibt es auf dem Zifferblatt nicht. Auf getönten Zifferblättern färbt watchOS den Knoten selbst ein.</li>
+      <li><b>Direkt ins Diktat geht nicht.</b> Apple bietet keinen Weg, das Diktat beim Öffnen von selbst zu starten. Seit watchOS 11 öffnet die Eingabe aber direkt das Diktat, wenn du es zuletzt benutzt hast. So bleibt es bei einem Tipp aufs Feld.</li>
+      <li>Die kleine Textzeile über der Uhrzeit (inline) kann nur Text zeigen, keinen Knoten. Sie bleibt im Entwurf weg.</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="eyebrow">Alternativen</div>
+    <div class="row">
+      <div class="pick rec"><span class="tag">Empfehlung · A</span>{{ENTWURF}}<p><b>Knoten.</b> Das Markenzeichen, sofort als Loose Ends erkennbar. Er ist die eine erlaubte Ausnahme von „nur SF Symbols“.</p></div>
+      <div class="pick"><span class="tag">B</span>{{ALT_B}}<p><b>Mikrofon (SF Symbol).</b> Sagt „Sprechen“, ist aber nicht als Loose Ends zu erkennen. Neben Diktier-Apps auf dem Zifferblatt verwechselbar. Etwas einfacher zu bauen.</p></div>
+      <div class="pick"><span class="tag">C</span>{{ALT_C}}<p><b>Kurzbefehl als Komplikation.</b> Du legst „Aufgabe erfassen“ aus der Kurzbefehle-App selbst aufs Zifferblatt. Wir bauen nichts dafür. Das Symbol ist das allgemeine Kurzbefehle-Zeichen. Ob es auf der Watch nach dem Text fragt, ohne die App zu öffnen, ist ungeprüft. Du kannst es nebenher ausprobieren.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Hinweistext in der Einführung</div>
+    <h2>Der Siri-Satz wird angeglichen, der Watch-Weg kommt dazu</h2>
+    <div class="texts">
+      <div class="page light"><span class="lbl">Heute · Hell</span><h3>Erfassen, ohne die App zu öffnen</h3><p>{{OLD_DE}}</p></div>
+      <div class="page light"><span class="lbl">Entwurf · Hell</span><h3>Erfassen, ohne die App zu öffnen</h3><p>Sag zu Siri <mark>„Erfasse in Loose Ends“</mark>. Oder leg im Kontrollzentrum das Kurzbefehle-Steuerelement mit „Aufgabe erfassen“ ab. Beides speichert, ohne die App zu öffnen. <mark>Auf der Apple Watch führt der Knoten auf dem Zifferblatt direkt zur Erfassung.</mark></p></div>
+      <div class="page dark"><span class="lbl">Heute · Dunkel</span><h3>Erfassen, ohne die App zu öffnen</h3><p>{{OLD_DE}}</p></div>
+      <div class="page dark"><span class="lbl">Entwurf · Dunkel</span><h3>Erfassen, ohne die App zu öffnen</h3><p>Sag zu Siri <mark>„Erfasse in Loose Ends“</mark>. Oder leg im Kontrollzentrum das Kurzbefehle-Steuerelement mit „Aufgabe erfassen“ ab. Beides speichert, ohne die App zu öffnen. <mark>Auf der Apple Watch führt der Knoten auf dem Zifferblatt direkt zur Erfassung.</mark></p></div>
+    </div>
+    <p class="lede" style="font-size:15px">Einen Abschnitt „Erfassen von außerhalb“ in den Einstellungen gibt es nicht. Der Hinweis steht deshalb nur in der Einführung, nicht in einem neuen Einstellungsabschnitt.</p>
+  </section>
+</main>
