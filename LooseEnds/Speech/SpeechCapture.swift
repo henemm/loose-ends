@@ -40,6 +40,8 @@ final class SpeechCapture {
     /// Kennung des laufenden Zuhörens: `collect` zählt nur, solange seine Kennung die aktuelle ist (#274).
     private var run = 0
     private var listeningSince: ContinuousClock.Instant?
+    /// Erster Pegel über `SpeechDiagnosis.audibleLevel` (#402): ab hier zählt Fall W, Schweigen davor nicht.
+    private var firstAudibleAt: ContinuousClock.Instant?
     /// Startzeiten (#274 / #279 A): `openedAt` meldet `CaptureView`, `timings` steht ab dem Zuhören bis `stop()`.
     private(set) var openedAt: ContinuousClock.Instant?
     private var timings: SpeechTimings?
@@ -132,6 +134,7 @@ final class SpeechCapture {
         box = nil
         resultCount = 0
         listeningSince = nil
+        firstAudibleAt = nil
         openedAt = nil
         timings = nil
         diagnosis = nil
@@ -262,7 +265,7 @@ final class SpeechCapture {
             Task { @MainActor in self?.recognitionFailed(message) }
         }
         try Self.installTap(on: engine.inputNode, feeding: box) { [weak self] level in
-            Task { @MainActor in self?.waveform.append(level) }
+            Task { @MainActor in self?.noteLevel(level) }
         }
         self.engine = engine
         self.box = box
@@ -282,6 +285,7 @@ final class SpeechCapture {
             analyzer: Self.seconds(tAnalyzer - marks.since), microphone: Self.seconds(tMicrophone - tAnalyzer)
         )
         listeningSince = ContinuousClock.now
+        firstAudibleAt = nil
         run += 1
         let current = run
         results = Task { [weak self] in await self?.collect(from: transcriber, run: current) }
@@ -295,15 +299,24 @@ final class SpeechCapture {
         }
     }
 
+    /// Pegel in die Anzeige; der erste hörbare Pegel startet die Uhr der Diagnose (#402).
+    private func noteLevel(_ level: Float) {
+        waveform.append(level)
+        if firstAudibleAt == nil, listeningSince != nil, level > SpeechDiagnosis.audibleLevel {
+            firstAudibleAt = ContinuousClock.now
+        }
+    }
+
     /// Jede Sekunde: Zähler und Uhr gegen die Regel (#274). Nur beim Zuhören, sonst steht ein Grund da.
     private func updateDiagnosis() {
-        guard isListening, let listeningSince, let box else {
+        guard isListening, listeningSince != nil, let box else {
             diagnosis = nil
             return
         }
         diagnosis = SpeechDiagnosis.hint(
             buffers: box.bufferCount, results: resultCount,
-            secondsListening: Self.seconds(ContinuousClock.now - listeningSince),
+            secondsAudible: firstAudibleAt.map { Self.seconds(ContinuousClock.now - $0) },
+            showsReport: LaunchTimings.isProbeBuild(bundleID: Bundle.main.bundleIdentifier),
             modelStatus: modelStatus, microphone: microphoneGranted, speech: speechGranted,
             timings: timings
         )

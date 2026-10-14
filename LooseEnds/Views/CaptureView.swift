@@ -207,6 +207,9 @@ struct CaptureView: View {
                     WaveformView(levels: levels, isListening: isListening)
                     MicButton(isListening: isListening, level: levels.last ?? 0, action: toggleListening)
                 }
+                #if os(macOS)
+                macDiagnosisLine
+                #else
                 if let diagnosis {
                     // Ton ohne Text (#274): grau, reiner Text, darf umbrechen.
                     Text(diagnosis.text)
@@ -217,9 +220,31 @@ struct CaptureView: View {
                         .accessibilityLabel(diagnosis.text)
                         .accessibilityIdentifier("speechDiagnosisLabel")
                 }
+                #endif
             }
         }
     }
+
+    #if os(macOS)
+    /// Mac (#402): eine ruhige Zeile, Einzelwerte im Hinweis und für VoiceOver. Der Platz ist immer reserviert
+    /// (unsichtbar statt entfernt), damit das Panel nie springt und die Knöpfe die Fußzeile nie überdecken.
+    private var macDiagnosisLine: some View {
+        Label {
+            Text(diagnosis?.shortText ?? " ")
+        } icon: {
+            Image(systemName: "exclamationmark.circle")
+        }
+        .font(.footnote)
+        .foregroundStyle(.secondary)
+        .lineLimit(1)
+        .opacity(diagnosis == nil ? 0 : 1)
+        .help(diagnosis?.text ?? "")
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(diagnosis?.text ?? "")
+        .accessibilityIdentifier("speechDiagnosisLabel")
+        .accessibilityHidden(diagnosis == nil)
+    }
+    #endif
 
     private func begin() {
         LaunchTimings.mark(.captureAppeared)
