@@ -224,6 +224,8 @@ Die Mac-App (#389): Der Job `upload-mac` läuft nach dem iOS-Job, archiviert `ge
 (SDK, Mindestversion, Kategorie, Sandbox, iCloud) und lädt unter derselben Buildnummer hoch; `confirm-mac` wartet auf `VALID`
 und schreibt „Was testen“ (`ASC_PLATFORM=MAC_OS`). Einmalig im Konto: in App Store Connect bei „Loose Ends“ die Plattform
 **macOS** hinzufügen (gleiche Bundle-ID, universeller Kauf); die Mac-Profile legt die Cloud-Signierung selbst an.
+Beim Installieren in der TestFlight-App am Mac oben rechts **„macOS“** wählen; sonst installiert TestFlight die iOS-Fassung im
+Mac-Wrapper (`/Applications/Loose Ends.app` mit `Wrapper/LooseEnds.app`), die kein Menüleistensymbol hat (#405).
 
 ## Wenn das Vorschau-Image wegfällt oder umbenannt wird
 

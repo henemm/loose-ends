@@ -1,0 +1,17 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "65089CB7-8DCC-4B3C-8003-52983FC28C8E.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "diagnosezeile_0_33A94143-84B1-4E9A-B9D8-5E15487E3D5A.png",
+        "timestamp" : 1791914071.694
+      }
+    ],
+    "testIdentifier" : "SpeechDiagnosisLineTests/testDiagnosisLineShowsFixedState()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/SpeechDiagnosisLineTests/testDiagnosisLineShowsFixedState"
+  }
+]

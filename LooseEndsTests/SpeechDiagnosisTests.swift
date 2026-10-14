@@ -6,12 +6,13 @@ import Testing
 /// Kurzdiagnose sieht. Rein, ohne Systemzugriff; Zähler und Neustart in `SpeechCapture` belegt der
 /// Durchlauf auf dem Gerät.
 @Suite("Speech diagnosis (#274)") struct SpeechDiagnosisTests {
+    /// `seconds` sind die Sekunden seit dem ersten hörbaren Pegel (#402); `nil` heißt: bisher nur Stille.
     private func hint(
-        seconds: TimeInterval, buffers: Int, results: Int,
+        seconds: TimeInterval?, buffers: Int, results: Int,
         status: String = "installed", microphone: Bool = true, speech: Bool = true
     ) -> SpeechDiagnosis? {
         SpeechDiagnosis.hint(
-            buffers: buffers, results: results, secondsListening: seconds,
+            buffers: buffers, results: results, secondsAudible: seconds,
             modelStatus: status, microphone: microphone, speech: speech
         )
     }
@@ -82,9 +83,11 @@ import Testing
                       microphone: microphone, firstResult: firstResult)
     }
 
-    private func hint(results: Int, seconds: TimeInterval = 10, timings: SpeechTimings?) -> SpeechDiagnosis? {
+    private func hint(
+        results: Int, seconds: TimeInterval? = 10, showsReport: Bool = true, timings: SpeechTimings?
+    ) -> SpeechDiagnosis? {
         SpeechDiagnosis.hint(
-            buffers: 100, results: results, secondsListening: seconds,
+            buffers: 100, results: results, secondsAudible: seconds, showsReport: showsReport,
             modelStatus: "installed", microphone: true, speech: true, timings: timings
         )
     }
@@ -163,6 +166,45 @@ import Testing
         let withNil = try #require(hint(results: 0, seconds: 7, timings: nil))
         #expect(!plain.text.contains("Start"))
         #expect(!withNil.text.contains("Start"))
+    }
+
+    // MARK: - Schweigen ist kein Problem, Bericht nur im Prüfbau (#402)
+
+    @Test("Silence is no problem: no sound level ever, however long we listen")
+    func silenceIsNoProblem() {
+        #expect(hint(seconds: nil, buffers: 1000, results: 0) == nil)
+    }
+
+    @Test("The clock starts with the first audible level: 5.9 s no, 6.0 s yes, whatever the total time")
+    func audibleLevelStartsTheClock() {
+        #expect(hint(seconds: 5.9, buffers: 900, results: 0) == nil)
+        #expect(hint(seconds: 6.0, buffers: 900, results: 0) != nil)
+    }
+
+    @Test("The audible level is one named constant above silence")
+    func audibleLevelIsOneNamedConstant() {
+        #expect(SpeechDiagnosis.audibleLevel > 0)
+        #expect(SpeechDiagnosis.audibleLevel < 1)
+    }
+
+    @Test("The start report is a measurement: only the probe build shows it")
+    func reportOnlyInProbeBuild() {
+        let slow = timings(open: 3, model: 0, rights: 0, analyzer: 0, microphone: 0, firstResult: 1)
+        let late = timings(firstResult: SpeechDiagnosis.threshold)
+        #expect(hint(results: 1, showsReport: false, timings: slow) == nil)
+        #expect(hint(results: 1, showsReport: false, timings: late) == nil)
+        #expect(hint(results: 1, showsReport: true, timings: slow) != nil)
+        #expect(hint(results: 1, showsReport: true, timings: late) != nil)
+    }
+
+    @Test("The short text is one calm line without the figures; the full text keeps them")
+    func shortTextIsOneLineWithoutFigures() throws {
+        let diagnosis = try #require(hint(seconds: 7, buffers: 62, results: 0))
+        #expect(!diagnosis.shortText.contains("62"))
+        #expect(!diagnosis.shortText.contains("installed"))
+        #expect(!diagnosis.shortText.contains("\n"))
+        #expect(diagnosis.text.contains("62"))
+        #expect(diagnosis.text.contains("installed"))
     }
 
     @Test("Stop forgets the opening time, so a later tap does not count typing as opening (F001)")

@@ -1,0 +1,21 @@
+# Simulator-Beleg
+erzeugt: 2026-10-13T19:54:51+0200
+befehl: scripts/sim.sh test-proof SpeechDiagnosisLineTests
+workflow: fix-402-menueleiste-layout
+head: d166c43e4b806763a99f3a8a84e9f8db595c41c6
+basis: b5fd0b501bff3de0729f47faa7eeebaa78506dbb (merge-base origin/main HEAD)
+testklasse: SpeechDiagnosisLineTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 2 gesamt, 2 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1791914035.608  ende: 1791914090.532
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/fix-402-menueleiste-layout/simulator-run/summary.json  sha256:4f74b1deafe524db3d46ebd026a22195d350347cc58c6216b3a66b333b6673f9
+xcresult: docs/artifacts/fix-402-menueleiste-layout/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-402-menueleiste-layout/simulator-run/*.png (1 Stück)
+
+## Geprüfte Dateien
+- sha256:fe81a670b157d453c2ad0d7b2f8cc2caffaac08bcab83def42ec84b9a0191c1c  LooseEnds/Speech/SpeechCapture.swift
+- sha256:d1439423dfffa01fbe7e2e9a9cdc8458edccd1f75466af6f91352150396e3bf7  LooseEnds/Speech/SpeechDiagnosis.swift
+- sha256:785e0f5df14764493423f38e0b020587f05d950fd1ae66b97ba3d79627975beb  LooseEnds/Views/CaptureView.swift
+- sha256:e6ddc15e62d02839165db8a0acad537e921e3bf2b667aff4ae7063feec3b313c  LooseEndsTests/SpeechDiagnosisTests.swift

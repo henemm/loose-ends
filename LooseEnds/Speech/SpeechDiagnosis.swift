@@ -23,6 +23,9 @@ struct SpeechDiagnosis: Equatable {
     static let threshold: TimeInterval = 6
     /// Die eine Stelle für den langsamen Start: im Prüfbau 0,6 s (#22), 3 s liegen weit darüber.
     static let slowStart: TimeInterval = 3
+    /// Die eine Stelle für „hörbar“ (#402): Pegel auf der 0…1-Skala von `Waveform` (−55…−25 dBFS), 0,1 ≈ −52 dBFS,
+    /// knapp über Stille. Erst ab dem ersten Pegel darüber läuft die Uhr für Fall W; Schweigen löst nichts aus.
+    static let audibleLevel: Float = 0.1
 
     let modelStatus: String
     let microphone: Bool
@@ -31,15 +34,17 @@ struct SpeechDiagnosis: Equatable {
     let results: Int
     var timings: SpeechTimings?
 
-    /// Fall W: Ton kommt an, kein Ergebnis, Schwelle erreicht (inklusive). Fall B: Ergebnisse da, und der Start
-    /// dauerte mindestens `slowStart` oder das erste Ergebnis kam nach mindestens `threshold`. Ohne Zeiten kein Fall B.
+    /// Fall W: Ton kommt an, kein Ergebnis, `threshold` Sekunden seit dem ersten hörbaren Pegel (inklusive;
+    /// `secondsAudible == nil` heißt bisher nur Stille, #402). Fall B, nur mit `showsReport` (Prüfbau): Ergebnisse da,
+    /// und der Start dauerte mindestens `slowStart` oder das erste Ergebnis kam nach mindestens `threshold`.
+    /// Ohne Zeiten kein Fall B.
     static func hint(
-        buffers: Int, results: Int, secondsListening: TimeInterval,
+        buffers: Int, results: Int, secondsAudible: TimeInterval?, showsReport: Bool = false,
         modelStatus: String, microphone: Bool, speech: Bool,
         timings: SpeechTimings? = nil
     ) -> SpeechDiagnosis? {
-        let waiting = buffers > 0 && results == 0 && secondsListening >= threshold
-        let report = results > 0 && timings.map(isSlow) == true
+        let waiting = buffers > 0 && results == 0 && (secondsAudible.map { $0 >= threshold } ?? false)
+        let report = showsReport && results > 0 && timings.map(isSlow) == true
         guard waiting || report else { return nil }
         return SpeechDiagnosis(
             modelStatus: modelStatus, microphone: microphone, speech: speech,
@@ -49,6 +54,11 @@ struct SpeechDiagnosis: Equatable {
 
     private static func isSlow(_ timings: SpeechTimings) -> Bool {
         timings.start >= slowStart || (timings.firstResult.map { $0 >= threshold } ?? false)
+    }
+
+    /// Eine ruhige Zeile ohne Einzelwerte für den Mac (#402); die Werte stehen in `text`.
+    var shortText: String {
+        String(localized: "Speech diagnosis short", defaultValue: "Sound arrives, but no text recognized")
     }
 
     /// Die Kurzzeile in der Gerätesprache; der Modellstatus bleibt der Rohwert des Systems.
