@@ -198,9 +198,11 @@ import UserNotifications
 
         await fixture.center.applyCarry(.today, taskIDs: [task.id.uuidString])
 
-        #expect(task.dueDate == fixture.calendar.startOfDay(for: Date()))
-        #expect(!fixture.recorder.pending.keys.contains { $0.hasPrefix(CarryReminders.identifierPrefix) },
-                "due today now, so nothing is carried any more")
+        let today = fixture.calendar.startOfDay(for: Date())
+        #expect(task.dueDate == today)
+        let carried = fixture.recorder.pending.filter { $0.key.hasPrefix(CarryReminders.identifierPrefix) }.values
+        #expect(carried.allSatisfy { fixture.fireComponents(of: $0).day != fixture.calendar.component(.day, from: today) },
+                "due today now: not carried this morning, only again from tomorrow if still open")
     }
 
     @Test("Evening mode hands over the day's open tasks at 20:00 in the CARRY_EVENING category")
