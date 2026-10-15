@@ -1,0 +1,44 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "F68F99F3-B339-42D5-A710-8A8A5AA2CBAA",
+        "deviceName" : "iPhone 18 Pro Max",
+        "exportedFileName" : "5D24816D-8815-466A-960D-A53622A73AB8.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "leeres Feld nach Brot holen_0_2DD823B4-1D23-4B97-B441-55B2377E0144.png",
+        "timestamp" : 1792071011.199
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "F68F99F3-B339-42D5-A710-8A8A5AA2CBAA",
+        "deviceName" : "iPhone 18 Pro Max",
+        "exportedFileName" : "3CCEC834-D8AC-49A3-9503-58F532A2FF6A.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "gespeichert Brot holen_0_C856D60C-D872-4C6A-BF06-B63E3236CD6B.png",
+        "timestamp" : 1792071010.023
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "F68F99F3-B339-42D5-A710-8A8A5AA2CBAA",
+        "deviceName" : "iPhone 18 Pro Max",
+        "exportedFileName" : "EA0E4217-0928-4C87-BDDA-5DC724719C14.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "leeres Feld nach Milch kaufen_0_EB6E9C9F-7CA6-4DFF-98C1-10D87D7CFA97.png",
+        "timestamp" : 1792070997.246
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "F68F99F3-B339-42D5-A710-8A8A5AA2CBAA",
+        "deviceName" : "iPhone 18 Pro Max",
+        "exportedFileName" : "A30B8BC9-E9D4-424D-92F6-E015D0BCA695.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "gespeichert Milch kaufen_0_CD6FBE41-5B50-4CA3-BF59-8316B7BDCE85.png",
+        "timestamp" : 1792070996.069
+      }
+    ],
+    "testIdentifier" : "WatchCaptureUITests/testTwoCapturesInARowReturnToEmptyField()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsWatchUITests/WatchCaptureUITests/testTwoCapturesInARowReturnToEmptyField"
+  }
+]
