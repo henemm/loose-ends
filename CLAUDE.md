@@ -272,10 +272,15 @@ not scope creep on the current one.
 - `Shared/Notifications` — `DueReminders` (pure plan and action handling); `PlaceReminders` (which ≤ 20 places
   to watch, #226) and `PlaceDelivery` (what to hand to the system, replace or withdraw, from a per-device
   handover list; the system never reports delivery, #226 Schnitt 2a); `PlaceNotifications` (#240 Schnitt 1, pure
-  building blocks, not wired yet: categories with both button rows, authorization decision, ask once only with a place
+  building blocks: categories with both button rows, authorization decision, ask once only with a place
   and in the foreground, answer sets the mark, `place_` / `due_` prefixes apart, re-entry lock); `LooseEnds/Notifications` —
   `DueNotificationCenter` (system wiring, silent under tests; completion-handler delegate methods, not async, #295; the
-  UI test gets its banner via `LOOSEENDS_PUSH=<file.apns> ./scripts/sim.sh test-proof <class>`)
+  only notification delegate and the only `setNotificationCategories` call; routes `place_` answers by prefix;
+  `reschedule()` runs the place reconcile after the due pass; the UI test gets its banner via
+  `LOOSEENDS_PUSH=<file.apns> ./scripts/sim.sh test-proof <class>`), `PlaceNotificationCenter` (iOS/iPadOS only, #240
+  Schnitt 2: `UNLocationNotificationTrigger` with a 150 m region, permission „When in use“ only, never `CLMonitor` or
+  „Always“; reconcile removes first, adds, then writes the handover list, errors are logged and never thrown; the
+  simulator cannot fire the real trigger and rejects `add` with 2003, so arrival is proven on the device only)
 - `Shared/` compiles into the watch and widget targets too: no SwiftUI that is unavailable on watchOS there
   (keyboard shortcuts, navigation bar modifiers). App views belong in `LooseEnds/Views`.
 - `docs/project/` — decisions, user story, data model, design briefing, load-bearing assumptions with their experiments and alternatives (`06-annahmen-und-experimente.md`); `docs/reference/` — learnings carried over from FocusBlox
