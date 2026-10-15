@@ -48,6 +48,22 @@ final class DueNotificationTapTests: XCTestCase {
         attachScreenshot(of: app, named: "reminder-in-front")
     }
 
+    /// Counter-check to the place notification (#240, AC-14): both categories go in one call, and the
+    /// due one keeps its third button.
+    @MainActor
+    func testButtonsKeepTomorrow() throws {
+        let app = launchAndAllow()
+
+        let banner = reminderBanner()
+        XCTAssertTrue(banner.waitForExistence(timeout: 60), "The due reminder never showed up in front")
+        banner.press(forDuration: 1.5)
+
+        XCTAssertTrue(springboard.buttons["Complete"].waitForExistence(timeout: 10), "No Complete button on the due reminder")
+        XCTAssertTrue(springboard.buttons["Next up"].exists, "No Next up button on the due reminder")
+        XCTAssertTrue(springboard.buttons["Tomorrow"].exists, "The due reminder lost its Tomorrow button")
+        attachScreenshot(of: app, named: "due-buttons")
+    }
+
     // MARK: - Helpers
 
     @MainActor

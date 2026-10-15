@@ -3,9 +3,9 @@ import OSLog
 import SwiftData
 import UserNotifications
 
-/// Talks to the system for `DueReminders`: registers the category with its three actions, mirrors
+/// Talks to the system for `DueReminders`: registers both categories (due and place, #240), mirrors
 /// the plan into pending requests after every save, sets the app badge (#299), and applies an
-/// action when the user taps one.
+/// action when the user taps one. The only notification delegate; `place_` responses mark their task.
 /// Holds the reminder time for tasks without a due time (#311): kept in `UserDefaults` and mirrored
 /// to the iCloud key-value store, so a change on one device reschedules the others.
 /// Silent under tests, where a permission prompt would block the run; unit tests hand in a
@@ -19,6 +19,8 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
     private let scheduler: (any DueScheduling)?
     private let defaults: UserDefaults
     private let cloud: any ReminderTimeCloud
+    /// The place reconcile (#240), iOS only; nil on the Mac and in tests that do not hand one in.
+    private let places: (any PlaceReconciling)?
     private var debounce: Task<Void, Never>?
     private var cloudObserver: (any NSObjectProtocol)?
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Notifications")
@@ -38,7 +40,8 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         container: ModelContainer,
         scheduler: (any DueScheduling)? = nil,
         defaults: UserDefaults = .standard,
-        cloud: any ReminderTimeCloud = NSUbiquitousKeyValueStore.default
+        cloud: any ReminderTimeCloud = NSUbiquitousKeyValueStore.default,
+        places: (any PlaceReconciling)? = nil
     ) {
         self.container = container
         if let scheduler {
@@ -48,15 +51,17 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         }
         self.defaults = defaults
         self.cloud = cloud
+        self.places = places
         super.init()
     }
 
     /// Call once at launch, before the first notification response can arrive.
+    /// All categories go in one call (#240: due and place, #414: carry and evening): every call
+    /// replaces the earlier set.
     func activate() {
+        scheduler?.setNotificationCategories(NotificationCategories.all().union([Self.carryCategory, Self.eveningCategory]))
         guard !Self.suppressed else { return }
-        let center = UNUserNotificationCenter.current()
-        center.delegate = self
-        center.setNotificationCategories([Self.category, Self.carryCategory, Self.eveningCategory])
+        UNUserNotificationCenter.current().delegate = self
         cloudObserver = NotificationCenter.default.addObserver(
             forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: NSUbiquitousKeyValueStore.default, queue: .main
         ) { [weak self] _ in
@@ -143,8 +148,13 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         }
     }
 
-    /// Replaces every pending due reminder with the current plan.
+    /// Replaces every pending due reminder with the current plan, then reconciles the places (#240).
     func reschedule() async {
+        await rescheduleDue()
+        await places?.reconcile()
+    }
+
+    private func rescheduleDue() async {
         guard let scheduler else { return }
         do {
             let tasks = try container.mainContext.fetch(FetchDescriptor<TaskItem>())
@@ -236,19 +246,6 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         )
     }
 
-    private static var category: UNNotificationCategory {
-        UNNotificationCategory(
-            identifier: DueReminders.categoryIdentifier,
-            actions: [
-                UNNotificationAction(identifier: DueReminders.Action.done.rawValue, title: String(localized: "Complete"), options: []),
-                UNNotificationAction(identifier: DueReminders.Action.next.rawValue, title: String(localized: "Next up"), options: []),
-                UNNotificationAction(identifier: DueReminders.Action.tomorrow.rawValue, title: String(localized: "Tomorrow"), options: []),
-            ],
-            intentIdentifiers: [],
-            options: []
-        )
-    }
-
     // MARK: - UNUserNotificationCenterDelegate
 
     // Callback variants, not async (#295): the async bridge called the system's completion from the
@@ -259,28 +256,80 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping @Sendable () -> Void
     ) {
+        let identifier = response.notification.request.identifier
         let actionRaw = response.actionIdentifier
         let taskID = response.notification.request.content.userInfo["taskID"] as? String
         let taskIDs = response.notification.request.content.userInfo["taskIDs"] as? [String] ?? []
         // A tap on the evening notification itself opens the look-over too.
         let tappedEvening = actionRaw == UNNotificationDefaultActionIdentifier
             && response.notification.request.content.categoryIdentifier == CarryReminders.eveningCategoryIdentifier
+        let isPlace = identifier.hasPrefix(PlaceReminders.identifierPrefix)
         Task { @MainActor in
-            if let carry = tappedEvening ? CarryReminders.Action.review : CarryReminders.Action(rawValue: actionRaw) {
+            if !isPlace, let carry = tappedEvening ? CarryReminders.Action.review : CarryReminders.Action(rawValue: actionRaw) {
                 await applyCarry(carry, taskIDs: taskIDs)
             } else {
-                await apply(actionRaw: actionRaw, taskID: taskID)
+                await respond(identifier: identifier, actionRaw: actionRaw, taskID: taskID)
             }
             completionHandler()
         }
     }
 
+    /// The completion comes at once; marking a place notification (#240) runs in its own task after it.
     nonisolated func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification,
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
-        completionHandler([.banner, .list, .sound])
+        let identifier = notification.request.identifier
+        let taskID = notification.request.content.userInfo["taskID"] as? String
+        completionHandler(Self.presentationOptions)
+        Task { @MainActor in
+            present(identifier: identifier, taskID: taskID)
+        }
+    }
+
+    nonisolated static let presentationOptions: UNNotificationPresentationOptions = [.banner, .list, .sound]
+
+    /// Routes by identifier alone (#240): `place_` marks the task, applies a button and opens on a tap;
+    /// every other identifier takes the due path unchanged.
+    func respond(identifier: String, actionRaw: String?, taskID: String?) async {
+        guard identifier.hasPrefix(PlaceReminders.identifierPrefix) else {
+            await apply(actionRaw: actionRaw ?? "", taskID: taskID)
+            return
+        }
+        let changed = markPlace(identifier: identifier, actionRaw: actionRaw, taskID: taskID)
+        if let actionRaw, let open = DueReminders.taskToOpen(actionIdentifier: actionRaw, taskID: taskID) {
+            OpenTaskRequest.shared.taskID = open
+        }
+        if changed { await reschedule() }
+    }
+
+    /// A place notification shown while the app is open marks its task, once for all devices (#240).
+    @discardableResult
+    func present(identifier: String, taskID: String?) -> Task<Void, Never>? {
+        guard identifier.hasPrefix(PlaceReminders.identifierPrefix) else { return nil }
+        return Task { @MainActor [weak self] in
+            self?.markPlace(identifier: identifier, actionRaw: nil, taskID: taskID)
+        }
+    }
+
+    /// Mark plus button through `PlaceNotifications.respond`; saves when something changed.
+    @discardableResult
+    private func markPlace(identifier: String, actionRaw: String?, taskID: String?) -> Bool {
+        let context = container.mainContext
+        do {
+            let changed = PlaceNotifications.respond(
+                identifier: identifier, actionRaw: actionRaw, taskID: taskID,
+                in: try context.fetch(FetchDescriptor<TaskItem>()),
+                contexts: try context.fetch(FetchDescriptor<TaskContext>()),
+                projects: try context.fetch(FetchDescriptor<Project>())
+            )
+            if changed { try context.save() }
+            return changed
+        } catch {
+            Self.logger.error("Answering place notification failed: \(error, privacy: .public)")
+            return false
+        }
     }
 
     private func apply(actionRaw: String, taskID: String?) async {
@@ -335,6 +384,21 @@ protocol DueScheduling {
     func remove(_ identifiers: [String])
     func add(_ request: UNNotificationRequest) async throws
     func setBadgeCount(_ count: Int) async throws
+    func setNotificationCategories(_ categories: Set<UNNotificationCategory>)
+}
+
+/// Runs after every due reschedule (#240): the place reconcile on iOS, nothing on the Mac.
+@MainActor
+protocol PlaceReconciling: AnyObject {
+    func reconcile() async
+}
+
+/// The part of `UNUserNotificationCenter` the place reminders use (#240); unit tests hand in a recorder.
+@MainActor
+protocol PlaceScheduling {
+    func pendingIdentifiers() async -> [String]
+    func remove(_ identifiers: [String])
+    func add(_ request: UNNotificationRequest) async throws
 }
 
 struct SystemDueScheduler: DueScheduling {
@@ -353,7 +417,13 @@ struct SystemDueScheduler: DueScheduling {
     func setBadgeCount(_ count: Int) async throws {
         try await UNUserNotificationCenter.current().setBadgeCount(count)
     }
+
+    func setNotificationCategories(_ categories: Set<UNNotificationCategory>) {
+        UNUserNotificationCenter.current().setNotificationCategories(categories)
+    }
 }
+
+extension SystemDueScheduler: PlaceScheduling {}
 
 /// Where the reminder time (#311) and the carry mode (#414) travel between devices: the iCloud
 /// key-value store in the app.

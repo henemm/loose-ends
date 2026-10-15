@@ -1,0 +1,24 @@
+# Simulator-Beleg
+erzeugt: 2026-10-15T08:50:27+0200
+befehl: scripts/sim.sh test-proof PlaceNotificationTapTests
+workflow: feat-240-schnitt-2-zustellung
+head: f0448063fd5cca04f83a912af3cabf0a63ab427e
+basis: a371718bc3a71a4dafeee2ebb7a9a47a175aff1d (merge-base origin/main HEAD)
+testklasse: PlaceNotificationTapTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 3 gesamt, 3 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1792046826.236  ende: 1792047026.492
+geraet: iPhone Air, iOS 27.0
+summary: docs/artifacts/feat-240-schnitt-2-zustellung/simulator-run/summary.json  sha256:5a9e67ace6dd904f246a6691e924cdfb2746df270ff0ef4910b17672ef6a2b2f
+xcresult: docs/artifacts/feat-240-schnitt-2-zustellung/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-240-schnitt-2-zustellung/simulator-run/*.png (4 Stück)
+
+## Geprüfte Dateien
+- sha256:3101dce7d575fcaa1dd28cc17532811a8b5c5e338e8af581b55b7a03b7d9d06e  LooseEnds/App/LooseEndsApp.swift
+- sha256:2ff8b7d356311352498a919c8782586615e467cd2569e5c046a8c52b6f6eb841  LooseEnds/Notifications/DueNotificationCenter.swift
+- sha256:e686a05fd75399858a17ad9956083597bf053f41d32e77c9cdfe6fb5133c268e  LooseEnds/Notifications/PlaceNotificationCenter.swift
+- sha256:20217d8f060e522bfb6c1e1bedf9b14efe63528bdd7f1771e1bb8ceeffec03d4  LooseEndsTests/DueNotificationCenterTests.swift
+- sha256:5a30b575830a8a33bd4afb269ef86327efd87a144c10633f574e40d01887cd58  LooseEndsTests/PlaceNotificationCenterTests.swift
+- sha256:52814a632d861f8e676102c3c14c49103d325e4b03699a59bcfd375ec772240f  LooseEndsUITests/DueNotificationTapTests.swift
+- sha256:0954de1e6e857ff87949877b41bdb2ce4f58d0c2ece781c0db32baf711f7ef4e  LooseEndsUITests/PlaceNotificationTapTests.swift
