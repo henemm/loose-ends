@@ -63,7 +63,8 @@ struct TaskRow: View {
                 Text(task.displayTitle)
                     .fontDesign(.serif)
                     .italic(task.title == nil || task.status == .unverified)
-                    .lineLimit(1)
+                    // Two lines before the "…": one cut "Termin beim Hautarzt für O…" (Henning, 2026-10-15, #433).
+                    .lineLimit(2)
                 if task.hasUnseenAutomaticRevisions, task.titleSourceRaw == FieldSource.ai.rawValue {
                     Image(systemName: "sparkle")
                         .imageScale(.small)

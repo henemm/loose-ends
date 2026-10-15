@@ -21,9 +21,9 @@ Datum: 2026-10-15
 - [x] AC-16: mac-build.txt "Build Succeeded", macOS-Build erfolgreich; PlaceNotificationCenter.swift ganz in #if os(iOS) (Z.1/170), LooseEndsApp.swift mit #if os(iOS) und places=nil sonst.
 - [x] AC-17: eigener Lauf sim-unit: "Unit-Tests bestanden", keine fehlgeschlagene Pruefung (nur 1 von 5 Messstrecken uebersprungen, vorbestehend: selfconsistency-run.json fehlt); Suiten DueNotificationCenter, PlaceDelivery, PlaceNotificationCenter, PlaceNotifications, PlaceReminders passed.
 - [x] AC-18: sim-run-1.png/sim-run-2.png geoeffnet: Startbildschirm, Aufgabe "UI test place" mit Ortszeile "Post office" (Pfeilsymbol), Ansichten sichtbar, kein Absturz; Systemlog: Anfrage place_...0240 hinzugefuegt, startMonitoringForRegion. Echter Ortsausloeser im Simulator nicht belegbar (laut Spec nach AC-19-21 verlagert).
-- [ ] AC-19: nachgelagert, Gerät (TestFlight)
-- [ ] AC-20: nachgelagert, Gerät (TestFlight)
-- [ ] AC-21: nachgelagert, Gerät (TestFlight)
+- [x] AC-19: Henning 2026-10-15, TestFlight Build 61 (main 55d3aa3): Ankommen bei geschlossener App zeigte „Du bist bei <Ort>.“ mit Titel der Aufgabe („alles wie erwartet“).
+- [x] AC-20: Henning hatte Verlassen und Einmal-Prinzip in der Vorabversion (LE Prüfbau, #226 Schnitt 2b, 2026-10-07/08) positiv getestet; die Ortslogik (PlaceReminders.plan, PlaceDelivery.diff, Marke placeRemindedAt) ist unverändert übernommen, neu ist nur der Anschluss, den AC-19/AC-21 auf demselben Gerät belegen. Henning wählte am 2026-10-15 ausdrücklich den kurzen Check ohne erneuten Verlassen-Lauf.
+- [x] AC-21: Henning 2026-10-15, Build 61: „Erledigt“ in der Ortsmitteilung erledigte die Aufgabe in der Liste („alles wie erwartet“).
 
 ## Dialog
 
@@ -45,6 +45,10 @@ F001: erledigt. F002: ausgelagert nach #418, LOW, entspricht dem Wortlaut von AC
 **Adversary:** Stand nach Zusammenfuehrung mit origin/main a371718 (#414). DueNotificationCenter.swift gelesen und gegen origin/main gediffed. (1) Routing: didReceive (254-275) berechnet isPlace aus dem Praefix `place_`; Carry-Pfad nur bei `!isPlace`. Kennungen sind disjunkt (`carry_`, `due_`, `place_`), Aktionswerte disjunkt (CARRY_*, DUE_*), eine place_-Mitteilung kann nie in applyCarry laufen; eine Carry-/Abendmitteilung geht nie in respond->markPlace (respond faellt ohne place_-Praefix in apply, und Carry-Aktionen werden vorher abgefangen). Carry-Antworten haben keine taskID, present() prueft das Praefix und ist fuer carry_/due_ ein No-op. (2) completionHandler: didReceive ruft ihn genau einmal nach der if/else-Weiche (273), beide Zweige ohne Early-Return; willPresent ruft ihn genau einmal vor dem Marken-Task (285). (3) Carry-Verhalten gegenueber origin/main: Diff zeigt nur die Weiche `!isPlace`, rescheduleDue (Carry-Plan, stale-Filter auf due_ und carry_, Badge) unveraendert, Kategorien carryCategory/eveningCategory unveraendert, nur jetzt in einem Aufruf. reschedule() = rescheduleDue() + places?.reconcile(). (4) grep setNotificationCategories in LooseEnds/Shared: ein Produktionsaufruf (DueNotificationCenter.swift:62), Rest Protokoll und System-Wrapper. (5) Funktionslaengen alle unter 50 Zeilen (laengste: didReceive 22, applyCarry 18); kein `try?` in LooseEnds/Notifications. (6) Belege: test-green-output.txt (08:46, nach Merge) 645 Zeilen gruen, 0 fehlgeschlagen, enthaelt den umgeschriebenen Test "Activating sets the categories once: DUE with Tomorrow, PLACE without, and both carry categories" (Z.243) und die #414-Tests (Z.236, 240). proof-place und proof-due: head f0448063fd5c, Basis a371718, je 3/3 Passed; Screenshots geoeffnet: Ort-Banner "UI test place / You're at Post office." mit Knoepfen Complete und Next up (ohne Tomorrow) und die Aufgabendetails nach Tipp (Place Post office, Arrive/Leave); Faellig-Banner "UI test reminder / Due today" mit Complete, Next up, Tomorrow. mac-build.txt: Build Succeeded. (7) Eigener Unit-Lauf: nicht ausgefuehrt, weil zwei fremde `xcodebuild test`-Laeufe (Sitzungen wf-bestand-25, 409-adv) aktiv waren; ersatzweise der Lauf test-green-output.txt, der nach dem Merge entstand. adversary-unit-run.txt stammt von vor dem Merge (07:49) und ist nicht Beleg fuer diesen Stand. Mutationsgedanke: Weiche `!isPlace` entfernen, dann liefe place_-Antwort mit Aktion DUE_* nicht in Carry (Werte disjunkt), faende aber bei einem Tipp (Default-Aktion) auf eine Abendmitteilung nie statt, da Kategorie CARRY_EVENING nur auf carry_ liegt; der Schutz ist doppelt, kein Befund.
 **Implementierer:** (nicht beteiligt)
 Keine neuen Findings. F001 und F002 aus Runde 3 unveraendert.
+
+### Runde 5
+**Adversary:** Gerätebefund des PO nach Merge (PR #431, 55d3aa3) und TestFlight Build 61 (Lauf 38726974949, „Was testen“ mit drei Prüfschritten). Henning bestätigte den kurzen Check: Ankommen bei geschlossener App meldet sich, „Erledigt“ wirkt. Code der drei geprüften Dateien seit Runde 4 unverändert (Merge von main b63e6d2/e28dcb1 berührt sie nicht). Validierungslauf nach Abgleich mit main: 666 Unit grün, 0 rot (validate-unit-run.txt); CI zu #431 grün (Build, Unit macOS, UI Smoke). AC-20 stützt sich auf den früheren Gerätetest derselben Ortslogik, ausdrücklich vom PO so gewählt. Kein neuer Befund.
+**Implementierer:** (nicht beteiligt)
 
 ### Findings
 
@@ -105,10 +109,10 @@ Confirmation:
   Status: CONFIRMED
 
 ## Verdict
-AC-1 bis AC-18 bewiesen. Gerätepunkte AC-19 bis AC-21 nachgelagert (TestFlight, nur nach Hennings Freigabe) und offen.
+AC-1 bis AC-21 bewiesen; AC-19/AC-21 am Gerät (Build 61), AC-20 über den früheren Gerätetest der unveränderten Ortslogik (PO-Entscheidung 2026-10-15).
 Tests: 645 Unit gruen, 0 fehlgeschlagen; UI proof-place 3/3, proof-due 3/3.
 
-Verdict: VERIFIED
+VERDICT: VERIFIED
 
 ## Geprüfte Dateien
 

@@ -71,14 +71,14 @@ für „Neu“, nur solange dort etwas wartet. Darunter „Jetzt“: überfälli
 ersten fünf, der Rest hinter „N weitere“. Die Ansichten folgen darunter. Die Zahl am App-Symbol zählt dieselbe Menge. Die
 Ansichten „Fällig“ (sieben Tage) und „Als nächstes“ bleiben unverändert.
 
-**Überschrift (Henning, 2026-10-15, #426):** Über „Jetzt“ steht eine große Zeile in New York, das Datum klein am Knoten darüber.
+**Überschrift (Henning, 2026-10-15, #426):** Über „Jetzt“ steht eine große Zeile in New York (30 pt, medium, leicht eng, #433), das Datum klein am Knoten darüber.
 Jeden Tag der eine Satz, der auffällt (Regelleiter in `StartHeadline`), ab 16 Uhr ein Rückblick auf das Erledigte, wenn etwas
 erledigt ist. Kein Lob, keine Serien, nie ein Satz über Nichterledigtes.
 
 **Inhaltsverzeichnis (Henning, 2026-10-15, #421, ersetzt Chips und Raster aus #368):** Unter „Jetzt“ steht „Inhalt“ wie die erste
 Seite eines Notizbuchs: Ansichtsnamen in New York, Punktlinie, Zahl klein in SF, drei Gruppen mit Abstand statt Karten
 (Ansichten mit „Schnell“, dann Tags und Projekte, dann Alle offenen und Erledigt). Tags und Projekte mit Aufgaben folgen
-ihrer Zeile als kursive Wörter in Akzent, ein Tipp öffnet die Liste; ein Tipp auf „Etiketten“ oder „Projekte“ öffnet deren
+ihrer Zeile als Wörter in Akzent, aufrecht mit grauen Kommas wie ein Satz (#433), ein Tipp öffnet die Liste; ein Tipp auf „Etiketten“ oder „Projekte“ öffnet deren
 eigene Seite (Henning, 2026-10-15, #428): alle Einträge im selben Stil, auch leere, ein Tipp öffnet die Liste, langes Drücken
 benennt um, Wischen löscht nach Rückfrage, unten „Neues Etikett“ bzw. „Neues Projekt“. Auf der Startseite klappt nichts mehr
 auf. Bewusste Ausnahme von #180 Regel 2, nur auf diesen Seiten. iPad und Mac behalten die einklappbaren Gruppen der
@@ -126,6 +126,10 @@ in „Neu“ ist: was umformuliert oder gesetzt wurde, „Titel nicht geprüft�
 ungeprüften Titel an und führt zurück in die Liste. Eine unsortierte Aufgabe hat kein „Passt“, sie
 verlässt „Neu“, sobald sie sortiert ist. Aus jeder anderen Ansicht gilt Öffnen weiter als gesehen.
 Konzept mit Mockups: https://claude.ai/artifact/259uebtk5zCWHEzSydAjco
+
+**Kein Haken in der Leiste (Henning, 2026-10-15, #435).** Auch außerhalb von „Neu“ liest sich der Haken oben rechts als
+„Fertig, schließen“ und erledigte Aufgaben aus Versehen. Die Leiste zeigt nur „…“ (aus „Neu“ dazu „Passt“); „Erledigen“
+ist der erste Eintrag im Menü „…“. Verlassen wird die Detailansicht über „Zurück“.
 
 **Register statt Formular (Henning, 2026-10-15, #438, Epic #437).** Die Detailansicht folgt der Startseite: Titel in New York
 medium, darunter der gesagte Satz als ein durchlaufender Satz hinter einem kleinen „GESAGT“. Felder als Registerzeilen:

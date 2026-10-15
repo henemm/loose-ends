@@ -21,6 +21,8 @@ struct SidebarView: View {
     /// (the hare is wide), and a bare frame lets a wide one spill past the margin.
     @ScaledMetric(relativeTo: .body) private var glyphSize: CGFloat = 20
     @ScaledMetric(relativeTo: .caption) private var knotHeight: CGFloat = 16
+    /// The headline as in the draft (#433): 30 pt New York, medium, slightly tight; grows with Dynamic Type.
+    @ScaledMetric(relativeTo: .title) private var headlineSize: CGFloat = 30
 
     @State private var catalog = CatalogEditor()
     @State private var pendingTaskDelete: TaskItem?
@@ -149,6 +151,8 @@ struct SidebarView: View {
             }
         }
         .paperList()
+        // Rows as tall as their content: the 44 pt minimum put a gap under every caption (#433).
+        .environment(\.defaultMinListRowHeight, isCompact ? 0 : 44)
         .navigationTitle(isCompact ? Text(verbatim: "") : Text("Views"))
         #if os(iOS)
         .listSectionSpacing(.compact)
@@ -232,8 +236,8 @@ struct SidebarView: View {
                 .accessibilityIdentifier("startHeader")
                 // The one fact that stands out today, from 16:00 a look back (#426). Content, so New York.
                 Text(StartHeadlineText.sentence(StartHeadline.of(tasks, now: timeline.date)))
-                    .font(.title)
-                    .fontDesign(.serif)
+                    .font(.system(size: headlineSize, weight: .medium, design: .serif))
+                    .tracking(-0.3)
                     .foregroundStyle(.primary)
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
