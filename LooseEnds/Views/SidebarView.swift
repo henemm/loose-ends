@@ -151,6 +151,8 @@ struct SidebarView: View {
             }
         }
         .paperList()
+        // Rows as tall as their content: the 44 pt minimum put a gap under every caption (#433).
+        .environment(\.defaultMinListRowHeight, isCompact ? 0 : 44)
         .navigationTitle(isCompact ? Text(verbatim: "") : Text("Views"))
         #if os(iOS)
         .listSectionSpacing(.compact)
