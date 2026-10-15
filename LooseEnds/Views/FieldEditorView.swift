@@ -8,6 +8,7 @@ import SwiftUI
 /// user revision and therefore a learning example (ADR-5, ADR-6).
 struct FieldEditorView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
     @Bindable var task: TaskItem
     let field: RevisedField
     let contexts: [TaskContext]
@@ -121,6 +122,7 @@ struct FieldEditorView: View {
 
     @ViewBuilder
     private var dueControl: some View {
+        quickDue
         Toggle("Due", isOn: Binding(
             get: { task.dueDate != nil },
             set: { on in setDue(on ? Self.tomorrow : nil, hasTime: false) }
@@ -137,6 +139,70 @@ struct FieldEditorView: View {
                 set: { setDue(due, hasTime: $0) }
             ))
         }
+    }
+
+    /// Quick choices first (#440): a day, then a time, and the editor closes. "Tomorrow at 3 pm" is
+    /// three taps from the detail. The toggles and the wheel below stay for any other date.
+    @ViewBuilder
+    private var quickDue: some View {
+        let chosen = QuickDue.matching(task.dueDate)
+        FlowLayout(spacing: 8) {
+            ForEach(QuickDue.Day.allCases, id: \.self) { day in
+                quickChip(Self.dayLabel(day), on: chosen == day, id: "quickDay_\(day)") {
+                    setDue(QuickDue.move(task.dueDate, hasTime: task.dueHasTime, to: QuickDue.day(day)),
+                           hasTime: task.dueHasTime)
+                }
+            }
+        }
+        .padding(.vertical, 4)
+        if let due = task.dueDate {
+            FlowLayout(spacing: 8) {
+                quickChip(String(localized: "No time"), on: !task.dueHasTime, id: "quickTime_none") {
+                    setDue(due, hasTime: false)
+                    dismiss()
+                }
+                ForEach(QuickDue.hours, id: \.self) { hour in
+                    let at = QuickDue.at(hour: hour, on: Calendar.current.startOfDay(for: due))
+                    quickChip(at.formatted(date: .omitted, time: .shortened), on: task.dueHasTime && due == at,
+                              id: "quickTime_\(hour)") {
+                        setDue(at, hasTime: true)
+                        dismiss()
+                    }
+                }
+            }
+            .padding(.vertical, 4)
+        }
+    }
+
+    private static func dayLabel(_ day: QuickDue.Day) -> String {
+        switch day {
+        case .today: String(localized: "Today")
+        case .tomorrow: String(localized: "Tomorrow")
+        case .weekend: String(localized: "Weekend")
+        case .nextWeek: String(localized: "Next week")
+        }
+    }
+
+    /// A capsule: filled in accent when chosen, outlined otherwise (accent = tappable, ADR-14).
+    private func quickChip(_ title: String, on: Bool, id: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title)
+                .font(.subheadline)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .foregroundStyle(on ? AnyShapeStyle(.background) : AnyShapeStyle(.tint))
+                .background {
+                    if on {
+                        Capsule().fill(.tint)
+                    } else {
+                        Capsule().strokeBorder(.tint.opacity(0.5))
+                    }
+                }
+                .contentShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(on ? .isSelected : [])
+        .accessibilityIdentifier(id)
     }
 
     private static var tomorrow: Date {
