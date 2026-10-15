@@ -1,16 +1,16 @@
 # Simulator-Beleg
-erzeugt: 2026-10-15T15:30:16+0200
+erzeugt: 2026-10-15T21:51:46+0200
 befehl: scripts/sim.sh test-proof WatchCaptureUITests
 workflow: fix-409-watch-reset
-head: c323154e07c9ba0c2b03532ca0992e8ef8ed5593
-basis: a371718bc3a71a4dafeee2ebb7a9a47a175aff1d (merge-base origin/main HEAD)
+head: 91b176bbdacfab398d158ac15028f32235e699b4
+basis: 663fb10875e2a13385014232cbe1ad2a12d57c25 (merge-base origin/main HEAD)
 testklasse: WatchCaptureUITests
 ergebnis: Passed
 xcodebuild: ** TEST SUCCEEDED **
 tests: 2 gesamt, 2 bestanden, 0 fehlgeschlagen, 0 übersprungen
-start: 1792070947.761  ende: 1792071012.566
+start: 1792093807.134  ende: 1792093903.137
 geraet: Apple Watch Series 12, watchOS 27.0
-summary: docs/artifacts/fix-409-watch-reset/simulator-run/summary.json  sha256:bf007ae9cd2029f6175f786c481db094fd15679bfa5d3e53d32b25a2b5cd698b
+summary: docs/artifacts/fix-409-watch-reset/simulator-run/summary.json  sha256:084b15d44ba672a049510f9c937f503471e108720e8840f5c04aa18d0a15354d
 xcresult: docs/artifacts/fix-409-watch-reset/simulator-run/run.xcresult  (gitignored)
 screenshots: docs/artifacts/fix-409-watch-reset/simulator-run/*.png (4 Stück)
 
