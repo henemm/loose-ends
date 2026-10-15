@@ -5,7 +5,8 @@ import Foundation
 ///
 /// Words a rule reads into a field leave the title (#217): the due date with its time and the small
 /// words leading into it ("bis Freitag", "um 15 Uhr"), and the words that say importance or urgency
-/// outright ("wichtig", "dringend"). They stand in their fields already. Content words that also set
+/// outright ("wichtig", "dringend"), and a phone number, which the rule step puts into the note (#439).
+/// They stand in their fields already. Content words that also set
 /// a field ("Rechnung", "Frist") stay. If nothing is left, the title keeps every word.
 enum TitleRule {
     static let maxWords = 12
@@ -61,6 +62,10 @@ enum TitleRule {
         let markers = [ImportanceUrgencyRule.importanceMarker(in: text), ImportanceUrgencyRule.urgencyMarker(in: text)]
         for marker in markers.compactMap({ $0 }) {
             struck.formUnion(ranges.indices.filter { ranges[$0].overlaps(marker) })
+        }
+        // A phone number goes to the note (#439): all its words leave the title.
+        for number in PhoneRule.ranges(in: text) {
+            struck.formUnion(ranges.indices.filter { ranges[$0].overlaps(number) })
         }
         for index in words.indices
         where connectors.contains(words[index].text) && struck.contains(index - 1) && struck.contains(index + 1) {
