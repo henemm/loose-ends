@@ -107,7 +107,7 @@ struct TaskListView: View {
         switch kind {
         case .new: "Nothing to look over."
         case .next: "Nothing lined up yet."
-        case .due: "Nothing due this week."
+        case .due: "Nothing due today."
         case .quick: "No quick ones right now."
         case .old: "Nothing has been lying around."
         case .waiting: "Not waiting on anyone."

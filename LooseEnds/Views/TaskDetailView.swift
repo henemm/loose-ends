@@ -3,7 +3,7 @@ import SwiftData
 import SwiftUI
 
 /// Task detail (design briefing, screen 4): editable title, the raw text underneath while it says
-/// more than the title, then the fields that are set; empty ones wait behind "Add detail" (#187).
+/// more than the title, then the fields that are set; empty ones follow as a line of words (#440, before: "Add detail", #187).
 /// Tapping a row opens its editor; a field a rule read from the raw text carries the quote mark, one the AI
 /// estimated the spark (#101), both accent-tinted, and its editor also shows before, after, the
 /// reason and Reset. Opening the detail marks the AI changes as seen, except from "New" (#349):
@@ -38,7 +38,6 @@ struct TaskDetailView: View {
     @State private var showsRevisions = false
     /// Owned here, not by `PlaceSection`: a sheet on a section inside the list did not present (#241).
     @State private var searchesPlace = false
-    @State private var showsEmptyFields = false
     /// "Add to calendar" (#203): what the sheet still asks, nil while closed.
     @State private var calendarGaps: CalendarAsk.Gaps?
     /// The calendar picker (#203 Teil C) is open.
@@ -127,14 +126,23 @@ struct TaskDetailView: View {
             }
             if !layout.empty.isEmpty {
                 Section {
-                    // Opens once and stays open while the detail is shown: a second tap never
-                    // hides a row someone is about to reach.
-                    if showsEmptyFields {
-                        ForEach(layout.empty, id: \.field) { fieldRow($0.field, value: nil) }
-                    } else {
-                        Button("Add detail", systemImage: "plus") { showsEmptyFields = true }
-                            .accessibilityIdentifier("addDetailRow")
+                    // The empty fields as a line of words (#440): one tap opens the editor, no list
+                    // to unfold first. Accent, since each word is a button (ADR-14).
+                    FlowLayout(spacing: 14) {
+                        ForEach(layout.empty, id: \.field) { entry in
+                            Button { editingField = entry.field } label: {
+                                Label(FieldFormatting.label(entry.field), systemImage: "plus")
+                                    .labelStyle(AddWordLabelStyle())
+                            }
+                            .buttonStyle(.plain)
+                            .foregroundStyle(.tint)
+                            .accessibilityIdentifier("field_\(entry.field.rawValue)")
+                        }
                     }
+                    .padding(.vertical, 4)
+                    // Each word stays its own element with its own `field_…` identifier: an identifier on
+                    // the line would overwrite theirs.
+                    .accessibilityElement(children: .contain)
                 }
                 .paperRow()
             }
@@ -609,5 +617,19 @@ struct RevisionsSheet: View {
         } catch {
             Self.logger.error("Reset failed: \(error, privacy: .public)")
         }
+    }
+}
+
+/// "+ Due": a small plus before the field's name in New York, for the line of empty fields (#440).
+private struct AddWordLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: 3) {
+            configuration.icon
+                .imageScale(.small)
+            configuration.title
+                .font(.system(.body, design: .serif))
+        }
+        .padding(.vertical, 4)
+        .contentShape(Rectangle())
     }
 }

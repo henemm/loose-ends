@@ -46,8 +46,8 @@ import Testing
 
         let due = ViewRules.dueToday(in: all, now: Self.now, calendar: Self.calendar)
         #expect(due.map(\.id) == [overdue.id, tonight.id], "earliest first")
-        #expect(ViewRules.tasks(for: .due, in: all, now: Self.now, calendar: Self.calendar).contains { $0.id == tomorrow.id },
-                "the Due view still looks a week ahead")
+        #expect(!ViewRules.tasks(for: .due, in: all, now: Self.now, calendar: Self.calendar).contains { $0.id == tomorrow.id },
+                "the Due view does not look ahead")
     }
 
     @Test("The badge counts Next up and Due today, a task in both once")
