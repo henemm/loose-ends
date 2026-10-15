@@ -147,7 +147,7 @@ blockierte, "Geparkt" zeigt nur `parked`, "Erledigt" zeigt nur `done`, "Alle off
 |---------|-------|------------|
 | Als nächstes | `nextRank != nil` und nicht blockiert | nextRank manuell |
 | Neu | `status in (unprocessed, unverified)` oder Revision `author == ai` ungesehen | capturedAt absteigend |
-| Fällig | `dueDate <= heute + 7 Tage` | dueDate aufsteigend, überfällig zuerst |
+| Fällig | `dueDate <= heute` (Henning, 2026-10-15: morgen ist noch nicht fällig) | dueDate aufsteigend, überfällig zuerst |
 | Schnell | `duration in (minutes5, minutes15)` | urgency, importance |
 | Alt | `capturedAt < heute − 30 Tage` | capturedAt aufsteigend |
 | Wartet | `blockedBy` enthält mindestens eine offene Aufgabe | blockierende Aufgabe zuerst |
