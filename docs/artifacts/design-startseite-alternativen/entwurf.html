@@ -151,6 +151,18 @@ th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute
 .fixed{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px 24px;margin:18px 0 0;max-width:980px;font-size:14px;line-height:1.45}
 .fixed div{border-top:1px solid var(--line);padding-top:8px}
 .fixed b{display:block;font:500 16px var(--serif);margin-bottom:2px}
+
+.rules{width:100%;max-width:1000px;border-collapse:collapse;font-size:14px;margin-top:10px;min-width:620px}
+.rules th,.rules td{text-align:left;padding:9px 12px 9px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.rules th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.rules td.s{font:400 16px/1.35 var(--serif)}
+.rules td.n{white-space:nowrap;color:var(--muted);font-variant-numeric:tabular-nums}
+.rules tr.pm td{background:color-mix(in srgb,var(--accent) 7%,transparent)}
+.timeline{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:14px;max-width:1000px}
+.timeline div{border-top:2px solid var(--line);padding-top:8px}
+.timeline div.pm{border-top-color:var(--accent)}
+.timeline span{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.timeline b{display:block;font:400 18px/1.3 var(--serif);margin-top:4px}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -321,5 +333,33 @@ th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute
       <ul class="days"><li class=""><span>Mo</span><b>Am Wochenende: zwei verknotet.</b></li><li class=""><span>Di</span><b>Gestern nichts verknotet. Heute ist neu.</b></li><li class=""><span>Mi</span><b>Diese Woche: elf verknotet.</b></li><li class="x"><span>48 offen</span><b>Gestern: drei verknotet.</b></li></ul>
       <ul class="notes"><li>Die Überschrift spricht nie über die Last, nur über das Erledigte. Die Zahl der offenen taucht nirgends groß auf.</li><li class="minus">Nah an Leistungsanzeige; das Briefing schließt Gamification aus. Nur ohne Serien, Vergleiche und Lob denkbar.</li></ul>
     </section>
+  </div>
+
+  <h2>X1 als Regelwerk</h2>
+  <p class="p">Ja, das geht rein mit Regeln. Die App kennt für jede Aufgabe den Zeitpunkt des Erledigens (<code>completedAt</code>, bei wiederkehrenden je Durchgang einen <code>CompletionRecord</code>), die Fälligkeit mit oder ohne Uhrzeit, das Alter und die Tags. Ein Modell braucht es nicht. Der Satz ist eine reine Funktion aus Aufgaben und Uhrzeit, jede Stufe bekommt Unit-Tests, Deutsch und Englisch mit Plural.</p>
+  <div style="overflow-x:auto"><table class="rules">
+    <thead><tr><th>#</th><th>Wann</th><th>Satz</th></tr></thead>
+    <tbody>
+      <tr class="pm"><td class="n">A</td><td>ab 16:00 und heute mindestens eins erledigt</td><td class="s">Heute verknotet: Steuerbescheid. · Heute verknotet: Steuerbescheid und Mama zurückrufen. · Heute vier verknotet, zuletzt Steuerbescheid.</td></tr>
+      <tr class="pm"><td class="n">A+</td><td>wie A, und in den nächsten zwei Stunden steht noch eine feste Uhrzeit</td><td class="s">Heute vier verknotet. Um 18 noch: Anna abholen.</td></tr>
+      <tr><td class="n">1</td><td>eine feste Uhrzeit heute ist vorbei</td><td class="s">Der Zahnarzt um 9 ist vorbei.</td></tr>
+      <tr><td class="n">2</td><td>heute steht noch eine feste Uhrzeit an</td><td class="s">Heute um 12 der Steuerbescheid. · Heute zwei feste Zeiten, die erste um 12.</td></tr>
+      <tr><td class="n">3</td><td>eine Aufgabe wird seit mindestens zwei Tagen weitergetragen</td><td class="s">Mama zurückrufen wartet seit drei Tagen.</td></tr>
+      <tr><td class="n">4</td><td>unter einem Tag (Etikett) liegen mindestens vier offene Aufgaben</td><td class="s">Unter Garten liegen fünf Dinge.</td></tr>
+      <tr><td class="n">5</td><td>mindestens drei Aufgaben älter als 30 Tage</td><td class="s">Drei Dinge liegen seit über einem Monat. Zeit zum Parken?</td></tr>
+      <tr><td class="n">6</td><td>vor 16:00, gestern mindestens eins erledigt</td><td class="s">Gestern: vier verknotet.</td></tr>
+      <tr><td class="n">7</td><td>sonst, mit offenen Aufgaben</td><td class="s">Heute drängt nichts.</td></tr>
+      <tr><td class="n">8</td><td>nichts offen</td><td class="s">Alles verknotet.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="p" style="margin-top:12px"><b>Reihenfolge.</b> Ab 16:00 gewinnt der Rückblick (A), sobald etwas erledigt ist; nur eine feste Zeit in den nächsten zwei Stunden hängt sich an (A+). Sonst gewinnen Zeitdruck (1, 2), danach wechseln die ruhigen Stufen 3 bis 6: Treffen mehrere zu, nimmt die App je nach Kalendertag eine andere. So steht nicht jeden Morgen derselbe Satz da, obwohl sich die Daten kaum ändern.</p>
+  <p class="p"><b>Leitplanken.</b> Kein Lob, keine Serien, keine Ausrufezeichen; die Sätze stellen fest. Ist nichts erledigt, gibt es ab 16:00 keinen Satz über das Nichterledigte, die Leiter läuft einfach weiter. Lange Titel (über etwa 32 Zeichen) werden nicht zitiert, dann steht „eine Aufgabe“. Erledigtes von einem anderen Gerät zählt mit, sobald es abgeglichen ist. Zurückholen nimmt es wieder heraus.</p>
+  <p class="p"><b>Grenze.</b> 16:00 ist eine feste Uhrzeit. Wer abends durchsehen gewählt hat (#414), könnte den Rückblick auch an diese Zeit binden; das wäre eine kleine Erweiterung.</p>
+  <div class="timeline">
+    <div><span>08:00</span><b>Gestern: vier verknotet.</b></div>
+    <div><span>11:30</span><b>Heute um 12 der Steuerbescheid.</b></div>
+    <div><span>14:00</span><b>Mama zurückrufen wartet seit drei Tagen.</b></div>
+    <div class="pm"><span>16:30</span><b>Heute verknotet: Steuerbescheid.</b></div>
+    <div class="pm"><span>21:00</span><b>Heute drei verknotet, zuletzt Mama zurückrufen.</b></div>
   </div>
 </div>
