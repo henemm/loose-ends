@@ -5,6 +5,7 @@ import Foundation
 enum ViewRules {
     static let oldAfterDays = 30
     static let dueWithinDays = 7
+    static let carriedInNowDays = 7
 
     /// Why a task sits in "New", the review tray (#188).
     enum ReviewReason: Equatable {
@@ -70,10 +71,16 @@ enum ViewRules {
     /// What stands for today (Henning, 2026-10-11, #299): open top-level tasks due today or
     /// earlier, earliest first. Narrower than the "Due" view (seven days), so the start screen and
     /// the app badge say "today", not "this week". Blocked tasks stay out, as in "Due".
+    /// A day-only date carried longer than `carriedInNowDays` leaves it (#414, Henning 2026-10-14): "Now"
+    /// shows no intention older than a week. It stays in "Due" and, captured long ago, in "Old".
     static func dueToday(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [TaskItem] {
         let today = calendar.startOfDay(for: now)
         let end = calendar.date(byAdding: .day, value: 1, to: today) ?? now
         return all.filter { $0.parent == nil && $0.isOpen && !$0.isBlocked && ($0.dueDate.map { $0 < end } ?? false) }
+            .filter { task in
+                if case .carried(let days) = dueState(of: task, now: now, calendar: calendar) { return days <= carriedInNowDays }
+                return true
+            }
             .sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
     }
 

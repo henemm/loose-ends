@@ -4,6 +4,13 @@
   "strings" : {
     "Since yesterday" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Seit gestern" } } } },
     "Since %lld days" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Seit %lld Tagen" } } } },
+    "Still open: %lld" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Noch offen: %lld" } } } },
+    "Today again" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute nochmal" } } } },
+    "Still open at day's end" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Noch offen am Tagesende" } } } },
+    "Remind in the morning" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Morgens erinnern" } } } },
+    "Carry along quietly" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Still weitertragen" } } } },
+    "A task still open after its day comes back at the reminder time, on up to three mornings, all in one notification." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Eine Aufgabe, die nach ihrem Tag noch offen ist, kommt zur Erinnerungszeit wieder, an bis zu drei Morgen, alle in einer Mitteilung." } } } },
+    "No notification. The task shows how long it has been carried along." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Keine Mitteilung. Die Aufgabe zeigt, wie lange sie schon mitgetragen wird." } } } },
     "Open Loose Ends" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Loose Ends öffnen" } } } },
     "Quit Loose Ends" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Loose Ends beenden" } } } },
     "Open at login" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Beim Anmelden öffnen" } } } },

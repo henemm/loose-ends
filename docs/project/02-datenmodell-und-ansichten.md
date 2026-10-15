@@ -155,7 +155,8 @@ blockierte, "Geparkt" zeigt nur `parked`, "Erledigt" zeigt nur `done`, "Alle off
 
 **Fälligkeit in der Zeile (#414):** `ViewRules.dueState` — heute fällig rot; nach dem Tag rot nur mit Uhrzeit (`missed`),
 ohne Uhrzeit grau „Seit gestern“ / „Seit N Tagen“ (`carried`, Kalendertage). Erledigtes und Geparktes ohne Zeitdruck.
-Ansichten, „Jetzt“ und die Zahl am App-Symbol zählen eine weitergetragene Aufgabe weiter als überfällig.
+Ansichten, „Jetzt“ und die Zahl am App-Symbol zählen eine weitergetragene Aufgabe weiter als überfällig, „Jetzt“ und die
+Zahl am App-Symbol nur bis 7 Tage (siehe Mitteilungen).
 
 **Jetzt (nur Startbildschirm iPhone, #368):** „Heute fällig“ (`dueDate` vor Beginn von morgen) und „Als nächstes“ als eine
 Liste, jede Aufgabe einmal — dieselben zwei Mengen, die die Zahl am App-Symbol zählt. Zuerst überfällig (älteste zuerst), dann
@@ -182,6 +183,13 @@ Aufgabe **mit Uhrzeit** (`dueHasTime`) → „Jetzt fällig“ genau zur Fällig
 Uhrzeit** → „Heute fällig“ am Fälligkeitstag zur Uhrzeit aus den Einstellungen (Standard 9:00, gilt auf
 allen Geräten über den iCloud-Schlüsselwertspeicher). Ist der Zeitpunkt vorbei, entfällt die Mitteilung. Aktionen ohne App-Start: Erledigt, Als nächstes, Morgen. Ein Tipp auf die Mitteilung selbst öffnet die Aufgabe im Detail (#331). Keine Mitteilung
 für KI-Verarbeitung.
+
+**Noch offen am Tagesende (#414, `CarryReminders`):** Einstellung „Morgens erinnern“ (Vorgabe) oder „Still weitertragen“,
+über den iCloud-Schlüsselwertspeicher wie die Uhrzeit. Morgens erinnern: eine Mitteilung je Morgen zur Erinnerungszeit
+(`carry_JJJJ-MM-TT`) mit allen offenen Aufgaben (oberste Ebene, nicht blockiert, mit oder ohne Uhrzeit), deren Fälligkeitstag
+1 bis 3 Tage zurückliegt. „Heute nochmal“ setzt jede auf heute (Revision des Nutzers), „Anzeigen“ öffnet die App.
+In jedem Modus verlässt eine Fälligkeit ohne Uhrzeit nach mehr als 7 Tagen „Jetzt“ und die Zahl am App-Symbol
+(`carriedInNowDays`), bleibt aber in „Fällig“.
 
 ## Veredelungs-Pipeline
 

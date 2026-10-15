@@ -30,7 +30,7 @@ Was mit einer Aufgabe passiert, deren Fälligkeitstag vorbei ist und die offen b
 | Schnitt | Inhalt | Geräteliste |
 |---|---|---|
 | 1 | `ViewRules.dueState`, Zeile grau „Seit gestern“ / „Seit N Tagen“ | nicht berührt |
-| 2 | Einstellung (iCloud-Schlüsselwertspeicher wie die Erinnerungszeit), „Morgens erinnern“: eine gebündelte Mitteilung „Von gestern noch offen: N“ zur Erinnerungszeit, Aktionen „Heute nochmal“ und „Ansehen“, höchstens 3 Morgen je Aufgabe; „Still weitertragen“: nach 7 Tagen aus „Jetzt“ und Zahl am App-Symbol | `LooseEnds/Notifications/` → Stufe 3 über TestFlight |
+| 2 | Einstellung (iCloud-Schlüsselwertspeicher wie die Erinnerungszeit), „Morgens erinnern“: eine gebündelte Mitteilung „Von gestern noch offen: N“ zur Erinnerungszeit, Aktionen „Heute nochmal“ und „Ansehen“, höchstens 3 Morgen je Aufgabe; in jedem Modus nach 7 Tagen aus „Jetzt“ und Zahl am App-Symbol (Henning, 2026-10-14) | `LooseEnds/Notifications/` → Stufe 3 über TestFlight |
 | 3 | „Abends durchsehen“: Mitteilung zur eigenen Abendzeit (Vorgabe 20:00) „N lose Enden von heute“, Aktionen „Alle auf morgen“ und „Ansehen“, Durchsicht: Morgen, Später, Parken, Erledigt | `LooseEnds/Notifications/` → Stufe 3 über TestFlight |
 
 Schnitt 2 und 3 bekommen je eine Teil-Spec, bevor sie gebaut werden. ADR-16 wird mit Schnitt 2 ergänzt.
@@ -61,3 +61,32 @@ Schnitt 2 und 3 bekommen je eine Teil-Spec, bevor sie gebaut werden. ADR-16 wird
 
 Stufe 1: `DueStateTests` und der volle Unit-Lauf in CI. Stufe 2: Simulator, Zeile einer Aufgabe mit Fälligkeit gestern
 ohne Uhrzeit zeigt grau „Seit gestern“. Stufe 3: Kein Pfad der Geräteliste berührt.
+
+## Schnitt 2: Einstellung und „Morgens erinnern“
+
+### Source
+
+| Datei | Änderung |
+|---|---|
+| `Shared/Models/ViewRules.swift` | `carriedInNowDays = 7`; `dueToday` lässt eine länger weitergetragene Fälligkeit ohne Uhrzeit weg |
+| `Shared/Notifications/CarryReminders.swift` | NEU: `Mode` (`quiet`, `morning`), `plan`, `handle` (`today`, `show`) |
+| `LooseEnds/Notifications/DueNotificationCenter.swift` | `carryMode` (Defaults + iCloud), Kategorie `CARRY`, Anfrage je Morgen, `applyCarry` |
+| `LooseEnds/Views/SettingsView.swift` | Abschnitt „Noch offen am Tagesende“ |
+| `LooseEndsTests/CarryRemindersTests.swift`, `DueNotificationCenterTests.swift` | Unit-Tests |
+
+### Acceptance Criteria
+
+- **AC-6:** „Morgens erinnern“ (Vorgabe): Am Morgen nach dem Fälligkeitstag kommt zur Erinnerungszeit eine Mitteilung
+  „Noch offen: N“ mit den Titeln aller offenen Aufgaben (oberste Ebene, nicht blockiert), deren Tag 1 bis 3 Tage zurückliegt.
+- **AC-7:** Eine Aufgabe kommt an höchstens drei Morgen wieder; ein vergangener Zeitpunkt entfällt.
+- **AC-8:** „Heute nochmal“ setzt jede noch offene Aufgabe der Mitteilung auf heute (ohne Uhrzeit, Revision des Nutzers),
+  ohne die App zu öffnen. „Anzeigen“ öffnet die App.
+- **AC-9:** „Still weitertragen“: keine solche Mitteilung.
+- **AC-10:** Die Wahl gilt auf allen Geräten (iCloud-Schlüsselwertspeicher), wie die Erinnerungszeit.
+- **AC-11:** In jedem Modus verlässt eine Fälligkeit ohne Uhrzeit nach mehr als 7 Tagen „Jetzt“ und die Zahl am App-Symbol,
+  bleibt in „Fällig“.
+
+### Abnahme
+
+Stufe 1: `CarryRemindersTests`, `DueNotificationCenterTests`, voller Unit-Lauf in CI. Stufe 3 (`LooseEnds/Notifications/`):
+über TestFlight nach Schnitt 3; Prüfschritte gehen mit dem Bau an Henning.
