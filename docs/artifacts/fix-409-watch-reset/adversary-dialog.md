@@ -19,7 +19,7 @@ Datum: 2026-10-15
   Code reference: project.yml:326
   Code reference: scripts/sim.sh:365
   Code reference: scripts/sim_proof.py:55
-- [ ] **AC-8:** Gerätepunkt (Stufe 3) — bewusst offen (kein Befund, laut Spec Abnahme nach dem Merge): Spec legt TestFlight-Weg nach dem Merge fest („Abnahme“, Stufe 3, Buildnummer + Prüfschritte, nur nach Hennings „jetzt ist ein Test möglich“; Ticket bleibt offen). Kein Gerätezugriff durch mich, kein Gerätebeweis erfunden.
+- [x] **AC-8:** Gerätepunkt (Stufe 3) — Beweis: Henning hat TestFlight-Build 64 (PR #451, b9bd752) auf seiner Watch geprüft und am 2026-10-15 auf die Frage „Wie verhält sich die Watch-Erfassung mit Build 64?“ mit „Funktioniert“ geantwortet (Option: kurz „Gespeichert“, dann leeres Feld, zweite Aufgabe ging direkt, beide auf dem iPhone). Kein Gerätezugriff durch mich.
   Code reference: LooseEndsWatch/WatchCaptureView.swift:32
 - [x] **AC-9:** Bestehendes grün — Runde 3 unabhängig nachgeprüft: `sim.sh test CaptureSmokeTests` 17/17 grün (smoke.log: „Executed 17 tests, with 0 failures“, „UI-Test bestanden“); `sim-unit` per xcresulttool aus Test-LooseEnds-2026.10.15_11-47-05: 644 gesamt, 641 bestanden, 0 fehlgeschlagen, 3 übersprungen, Ergebnis Passed. Die 3 einzeln: `SelfConsistencyReportTests` (Messdatei fehlt), `Speech latency (#274)/The first word arrives within 3 s of speech start`, `…/The final text keeps the key words` (Ticket #419, unabhängig von #409). Skripttests `test_sim_proof` 14 OK. Hinweis: Lauf lag vor der Testdatei-Änderung 13:05; die Watch-Testdatei ist im iOS-Ziel per Exclude `Watch/**` ausgeschlossen, `WatchCaptureView.swift` (Watch-Ziel) unverändert seit dem Lauf.
   Code reference: project.yml:315
@@ -132,7 +132,9 @@ Kein Sprachprofil konfiguriert (`precondition_origins.default_lang`). Betroffene
 
 AC-1 bis AC-7 und AC-9 bestätigt (Runde 4: AC-2-Test atomar und mindestens so streng, 3/3 grüne Läufe nach der Änderung; Rest wie Runde 3). AC-8 (Gerät, Stufe 3, TestFlight nach dem Merge) ist laut Spec bewusst offen und von mir nicht erfindbar; ein offenes AC blockiert das Gate, bis Henning den Override setzt. Offene Befunde: F003 (LOW), F005 (LOW, Spec-Pfad), F006 (LOW, Lastflackern). Keine CRITICAL/HIGH/MEDIUM offen. Behoben: F001, F002, F004.
 
-**Verdict:** AMBIGUOUS
+Nachtrag Auftraggeber (2026-10-15, nach dem Merge): AC-8 von Henning mit TestFlight-Build 64 auf der Watch bestätigt („Funktioniert“), siehe Checkliste. Das Urteil des Adversary bleibt unverändert; der Override für AC-8 steht im Workflow.
+
+### Verdict: AMBIGUOUS
 
 ## Geprüfte Dateien
 
