@@ -5,7 +5,7 @@ import SwiftData
 /// to CloudKit as an asset (`externalStorage`). Added 2026-10-15, additive for CloudKit; the views
 /// that add and show attachments follow in their own slice.
 @Model
-final class Attachment {
+final class TaskAttachment {
     var id: UUID = UUID()
     var task: TaskItem?
     @Attribute(.externalStorage) var data: Data?

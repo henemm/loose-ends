@@ -15,7 +15,7 @@ DEFINE SCHEMA
         GRANT READ TO "_world"
     );
 
-    RECORD TYPE CD_Attachment (
+    RECORD TYPE CD_TaskAttachment (
         CD_createdAt              TIMESTAMP QUERYABLE SORTABLE,
         CD_data                   BYTES QUERYABLE SORTABLE,
         CD_data_ckAsset           ASSET,

@@ -11,11 +11,11 @@ import Testing
         let task = TaskItem(rawText: "Befund ablegen")
         store.context.insert(task)
         let bytes = Data([0x25, 0x50, 0x44, 0x46])
-        let attachment = Attachment(task: task, data: bytes, fileName: "Befund.pdf", typeIdentifier: "com.adobe.pdf")
+        let attachment = TaskAttachment(task: task, data: bytes, fileName: "Befund.pdf", typeIdentifier: "com.adobe.pdf")
         store.context.insert(attachment)
         try store.context.save()
 
-        let fetched = try store.context.fetch(FetchDescriptor<Attachment>())
+        let fetched = try store.context.fetch(FetchDescriptor<TaskAttachment>())
         #expect(fetched.count == 1)
         #expect(fetched.first?.data == bytes)
         #expect(fetched.first?.fileName == "Befund.pdf")
@@ -27,11 +27,11 @@ import Testing
         let store = try TestStore()
         let task = TaskItem(rawText: "Rechnung zahlen")
         store.context.insert(task)
-        store.context.insert(Attachment(task: task, data: Data([1, 2, 3]), fileName: "Rechnung.jpg", typeIdentifier: "public.jpeg"))
+        store.context.insert(TaskAttachment(task: task, data: Data([1, 2, 3]), fileName: "Rechnung.jpg", typeIdentifier: "public.jpeg"))
         try store.context.save()
 
         store.context.delete(task)
         try store.context.save()
-        #expect(try store.context.fetchCount(FetchDescriptor<Attachment>()) == 0)
+        #expect(try store.context.fetchCount(FetchDescriptor<TaskAttachment>()) == 0)
     }
 }
