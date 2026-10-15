@@ -26,7 +26,9 @@ status: approved
   (Schnell eingeschlossen) · Tags, Projekte · Alle offenen, Erledigt.
 - **AC-2:** Namen in New York, Punktlinie, Zahl in SF grau; ab Bedienungshilfe-Schriftgröße entfällt die Punktlinie.
 - **AC-3:** Tags und Projekte mit offenen Aufgaben stehen kursiv in Akzent unter ihrer Zeile, mit Zahl; ein Tipp öffnet die Liste.
-- **AC-4:** Ein Tipp auf „Tags“ oder „Projekte“ klappt die Verwaltung auf und zu, wie bisher die Zellen.
+- **AC-4:** ~~Ein Tipp auf „Tags“ oder „Projekte“ klappt die Verwaltung auf und zu, wie bisher die Zellen.~~ Ersetzt durch
+  #428 (Henning, 2026-10-15, Build 59: die Verwaltung erschien unten unter „Erledigt“ im alten Zellenstil): Der Tipp öffnet
+  eine eigene Seite, siehe `feat-428-etiketten-seite.md`.
 - **AC-5:** Keine Chips, kein Raster mehr; die Leiste „Neu“ und „Jetzt“ bleiben unverändert. iPad und Mac unverändert.
 - **AC-6:** Kennungen `viewRow_*`, `contextsToggle`, `projectsToggle`, `chip_<id>` bleiben.
 

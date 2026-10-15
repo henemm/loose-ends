@@ -366,12 +366,11 @@ final class CaptureSmokeTests: XCTestCase {
         let app = launch()
 
         let newProject = element("newProjectButton", in: app)
-        // Projects start folded on the start screen; an earlier run may have left them open.
-        if !newProject.waitForExistence(timeout: 5) {
-            let toggle = element("projectsToggle", in: app)
-            XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Start screen should offer the Projects group")
-            toggle.tap()
-        }
+        // The Projects line of the start screen opens the page with the button (#428).
+        let toggle = element("projectsToggle", in: app)
+        if !toggle.waitForExistence(timeout: 5) { app.swipeUp() }
+        XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Start screen should offer the Projects line")
+        toggle.tap()
         XCTAssertTrue(newProject.waitForExistence(timeout: 5), "Start screen should offer New project")
         newProject.tap()
 

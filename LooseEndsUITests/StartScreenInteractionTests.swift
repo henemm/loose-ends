@@ -285,18 +285,17 @@ final class StartScreenInteractionTests: XCTestCase {
         XCTAssertTrue(app.navigationBars["All open"].waitForExistence(timeout: 5), "The All open cell should open its list")
     }
 
-    /// The Projects cell folds the project group open and shut (AC-17); the stored state may be either at launch.
+    /// The Projects line opens its own page with the new-project button (#428); nothing unfolds on the start screen.
     @MainActor
-    func testProjectsCellUnfoldsGroup() throws {
+    func testProjectsLineOpensPage() throws {
         let app = launch()
-        let toggle = scrollTo("projectsToggle", in: app)
         let newProject = element("newProjectButton", in: app)
-        if newProject.exists {
-            toggle.tap()
-            XCTAssertTrue(newProject.waitForNonExistence(timeout: 5), "The cell should fold the group")
-        }
-        toggle.tap()
-        XCTAssertTrue(newProject.waitForExistence(timeout: 5), "The cell should unfold the group with its new-project button")
+        XCTAssertFalse(newProject.exists, "The start screen should not unfold the projects")
+        scrollTo("projectsToggle", in: app).tap()
+        XCTAssertTrue(element("catalogTitle", in: app).waitForExistence(timeout: 5), "The line should open the Projects page")
+        XCTAssertTrue(newProject.waitForExistence(timeout: 5), "The page should offer New project")
+        app.navigationBars.buttons.firstMatch.tap()
+        XCTAssertTrue(newProject.waitForNonExistence(timeout: 5), "Back on the start screen the button should be gone")
     }
 
     // MARK: - All open (#319)

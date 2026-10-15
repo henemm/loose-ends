@@ -43,6 +43,11 @@ struct ContentView: View {
                 NavigationStack {
                     TaskDetailView(task: task)
                 }
+            } else if case .catalog(let kind) = selection {
+                NavigationStack {
+                    CatalogPage(kind: kind, tasks: tasks)
+                        .toolbar { captureToolbarItem }
+                }
             } else if let selection {
                 NavigationStack {
                     TaskListView(selection: selection, tasks: tasks)

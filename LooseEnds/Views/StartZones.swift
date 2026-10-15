@@ -116,7 +116,7 @@ struct IndexWord: Identifiable {
     let target: ViewSelection
 }
 
-/// One line of the index: a view, or a group (Tags, Projects) whose line folds its management rows.
+/// One line of the index: a view, or a group (Tags, Projects) whose line opens its page (#428).
 struct IndexLine: Identifiable {
     let id: String
     let title: String
@@ -133,7 +133,6 @@ struct IndexLine: Identifiable {
 struct ContentsIndex: View {
     let groups: [[IndexLine]]
     let select: (ViewSelection) -> Void
-    @Environment(\.dynamicTypeSize) private var typeSize
     @ScaledMetric(relativeTo: .title3) private var groupGap: CGFloat = 12
     @ScaledMetric(relativeTo: .body) private var wordGap: CGFloat = 10
 
@@ -158,28 +157,7 @@ struct ContentsIndex: View {
 
     private func lineButton(_ line: IndexLine) -> some View {
         Button(action: line.action) {
-            HStack(alignment: .firstTextBaseline, spacing: 6) {
-                Text(line.title)
-                    .font(.title3)
-                    .fontDesign(.serif)
-                    .foregroundStyle(.primary)
-                if typeSize.isAccessibilitySize {
-                    Spacer(minLength: 4)
-                } else {
-                    Leader()
-                        .stroke(.tertiary, style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [0.5, 5]))
-                        .frame(height: 1.5)
-                        .accessibilityHidden(true)
-                }
-                if line.count > 0 {
-                    Text(verbatim: "\(line.count)")
-                        .font(.subheadline)
-                        .monospacedDigit()
-                        .foregroundStyle(.secondary)
-                }
-            }
-            .padding(.vertical, 6)
-            .contentShape(Rectangle())
+            IndexLineLabel(title: line.title, count: line.count)
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)
@@ -214,6 +192,39 @@ struct ContentsIndex: View {
         }
         .padding(.leading, 18)
         .padding(.bottom, 4)
+    }
+}
+
+/// A line of the notebook index: the name in New York, a dotted leader, the count small in SF; a
+/// zero is left out (#180). Shared by the index and the pages of tags and projects (#428).
+struct IndexLineLabel: View {
+    let title: String
+    let count: Int
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    var body: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 6) {
+            Text(title)
+                .font(.title3)
+                .fontDesign(.serif)
+                .foregroundStyle(.primary)
+            if typeSize.isAccessibilitySize {
+                Spacer(minLength: 4)
+            } else {
+                Leader()
+                    .stroke(.tertiary, style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [0.5, 5]))
+                    .frame(height: 1.5)
+                    .accessibilityHidden(true)
+            }
+            if count > 0 {
+                Text(verbatim: "\(count)")
+                    .font(.subheadline)
+                    .monospacedDigit()
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding(.vertical, 6)
+        .contentShape(Rectangle())
     }
 }
 
