@@ -89,6 +89,30 @@ svg.s{width:13px;height:13px}
 table{border-collapse:collapse;font-size:14px;min-width:560px;width:100%;max-width:900px}
 th,td{text-align:left;padding:9px 12px 9px 0;border-bottom:1px solid var(--line);vertical-align:top}
 th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+
+/* Zeichen vor der Aufgabe */
+.marks{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px;margin-top:22px}
+.mk{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:6px 18px 14px;min-width:0}
+.mk h3{font:500 18px/1.2 var(--serif);margin:12px 0 4px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.mk .why{font-size:13px;color:var(--muted);line-height:1.5;margin:10px 0 0}
+.mk .why b{color:var(--ink);font-weight:600}
+.mrow{display:grid;grid-template-columns:auto 1fr;column-gap:12px;padding:11px 0;border-bottom:.5px solid var(--hair)}
+.mrow.plain{grid-template-columns:1fr}
+.mrow .t{font:400 18px/1.25 var(--serif)}
+.mrow .m{font:400 12.5px var(--sans);color:var(--grey);display:flex;gap:10px;align-items:center;margin-top:3px}
+.mrow .m .r{color:var(--red)}
+.mrow .m .k{display:inline-flex;gap:3px;align-items:center}
+.margin{width:52px;font:500 12px/1.3 var(--sans);color:var(--grey);text-align:right;padding-top:4px;font-variant-numeric:tabular-nums}
+.margin.r{color:var(--red)}
+.thread{width:18px;position:relative}
+.thread::before{content:"";position:absolute;left:8px;top:-12px;bottom:-12px;border-left:1.2px solid var(--hair)}
+.thread i{position:absolute;left:4px;top:8px;width:9px;height:9px;border-radius:50%;background:var(--paper);border:1.2px solid var(--grey)}
+.thread i.r{border-color:var(--red)}
+.sub{display:flex;align-items:center;gap:10px;padding:8px 0 8px 4px;font:400 16px var(--serif);border-bottom:.5px solid var(--hair)}
+.sub.done{color:var(--grey);text-decoration:line-through;text-decoration-thickness:1px}
+.sub svg{color:var(--grey);width:15px;height:15px;flex:none}
+.sub .sp{width:15px;flex:none}
+.lbl{font:600 11px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin:14px 0 2px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -99,6 +123,9 @@ th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute
   <symbol id="gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M5.5 18.5l1.8-1.8M16.7 7.3l1.8-1.8"/></symbol>
   <symbol id="plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="cr" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+  <symbol id="check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="circ_o" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/></symbol>
+  <symbol id="circ_d" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M8.3 12.3l2.5 2.5 5-5.2"/></symbol>
   <symbol id="loose" viewBox="0 0 90 34"><path d="M4 22c12 0 16-14 28-14s10 18 22 18c8 0 10-8 6-11-5-3-9 5-2 9 8 4 18-2 28-6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
 </svg>
 
@@ -114,9 +141,9 @@ th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute
   <div class="head">Donnerstag, 15. Oktober</div>
   <div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
   <div class="cap">Jetzt</div>
-  <div class="row"><span class="o"></span><div><div class="t">Steuerbescheid prüfen</div><div class="m"><span class="r">Heute 12:00</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Computer</span></div></div></div>
-  <div class="row"><span class="o"></span><div><div class="t">Mama zurückrufen</div><div class="m"><span>Seit gestern</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Telefon</span></div></div></div>
-  <div class="row" style="border-bottom:0"><span class="o"></span><div><div class="t">Hecke am Eingang schneiden</div><div class="m"><span>30 Min.</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Garten</span></div></div></div>
+  <div class="row"><div><div class="t">Steuerbescheid prüfen</div><div class="m"><span class="r">Heute 12:00</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Computer</span></div></div></div>
+  <div class="row"><div><div class="t">Mama zurückrufen</div><div class="m"><span>Seit gestern</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Telefon</span></div></div></div>
+  <div class="row" style="border-bottom:0"><div><div class="t">Hecke am Eingang schneiden</div><div class="m"><span>30 Min.</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Garten</span></div></div></div>
 </template>
 
 <div class="wrap">
@@ -196,6 +223,26 @@ th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute
         <li class="minus">Links im Fließtext sind kleinere Ziele als Zeilen. Projekte und Wiederkehrend fehlen im Satz und brauchen einen eigenen Weg.</li>
       </ul>
     </section>
+  </div>
+
+
+  <h2>Das Zeichen vor der Aufgabe</h2>
+  <p class="p">Die Kreise in den Telefonen hatte ich hineingezeichnet. Die App selbst setzt vor eine Aufgabe nichts: Titel in New York, darunter die Merkmale. Erledigt wird per Wisch, dabei zieht sich der Knoten grün zu (#180). Kreise gibt es in der App nur bei Unteraufgaben. Drei Wege für die Aufgaben und einer für die Unteraufgaben; die Telefone oben zeigen jetzt Z1.</p>
+  <div class="marks">
+    <div class="mk"><h3>Z1 · Kein Zeichen <span class="rec" style="font-family:var(--sans)">Empfehlung</span></h3><div class="mrow plain"><div><div class="t">Steuerbescheid prüfen</div><div class="m"><span class="r">Heute 12:00</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Computer</span></div></div></div><div class="mrow plain"><div><div class="t">Mama zurückrufen</div><div class="m"><span>Seit gestern</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Telefon</span></div></div></div><div class="mrow plain"><div><div class="t">Hecke am Eingang schneiden</div><div class="m"><span>30 Min.</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Garten</span></div></div></div>
+      <p class="why">So ist die App heute. Die Aufgabe ist ein Satz auf Papier, keine Zeile mit Kästchen. <b>Preis:</b> Wer zum ersten Mal kommt, sieht nicht, wie man abhakt. Das Onboarding zeigt den Wisch einmal.</p></div>
+    <div class="mk"><h3>Z2 · Randspalte</h3><div class="mrow "><div class="margin r">12:00</div><div><div class="t">Steuerbescheid prüfen</div><div class="m"><span class="k"><svg class="i s"><use href="#tag"/></svg>Computer</span></div></div></div><div class="mrow "><div class="margin">gestern</div><div><div class="t">Mama zurückrufen</div><div class="m"><span class="k"><svg class="i s"><use href="#tag"/></svg>Telefon</span></div></div></div><div class="mrow "><div class="margin">30 Min.</div><div><div class="t">Hecke am Eingang schneiden</div><div class="m"><span class="k"><svg class="i s"><use href="#tag"/></svg>Garten</span></div></div></div>
+      <p class="why">Wie ein Tagebuch: Links am Rand steht die Zeit, rot nur bei Zeitdruck. Die Merkmalzeile wird kürzer. <b>Preis:</b> Aufgaben ohne Zeit lassen den Rand leer, die Spalte kostet Breite.</p></div>
+    <div class="mk"><h3>Z3 · Faden</h3><div class="mrow "><div class="thread"><i class="r"></i></div><div><div class="t">Steuerbescheid prüfen</div><div class="m"><span class="r">Heute 12:00</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Computer</span></div></div></div><div class="mrow "><div class="thread"><i class=""></i></div><div><div class="t">Mama zurückrufen</div><div class="m"><span>Seit gestern</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Telefon</span></div></div></div><div class="mrow "><div class="thread"><i class=""></i></div><div><div class="t">Hecke am Eingang schneiden</div><div class="m"><span>30 Min.</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Garten</span></div></div></div>
+      <p class="why">Ein feiner Faden verbindet die Aufgaben, jede hängt als Perle daran, rot bei Zeitdruck. Stark und eigen. <b>Preis:</b> #180 sagt, der Knoten kommt genau dreimal vor; das wäre eine vierte Stelle, nur für „Jetzt“ denkbar.</p></div>
+    <div class="mk"><h3>U · Unteraufgaben ohne Kreis</h3>
+      <div class="lbl">Heute</div>
+      <div class="sub"><svg class="i"><use href="#circ_o"/></svg>Kartons besorgen</div>
+      <div class="sub done"><svg class="i"><use href="#circ_d"/></svg>Umzugsfirma anrufen</div>
+      <div class="lbl">Vorschlag</div>
+      <div class="sub"><span class="sp"></span>Kartons besorgen</div>
+      <div class="sub done"><svg class="i"><use href="#check"/></svg>Umzugsfirma anrufen</div>
+      <p class="why">Offen steht nichts davor, erledigt ein feiner grauer Haken und der Text ist durchgestrichen. Ein Tipp auf die Zeile hakt ab wie heute. <b>Preis:</b> Eine offene Unteraufgabe zeigt nicht von selbst, dass sie antippbar ist.</p></div>
   </div>
 
   <h2>Was „Tags“ in der App ändert</h2>
