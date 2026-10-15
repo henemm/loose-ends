@@ -173,6 +173,10 @@ Parken per Wisch in „Alt“ und über das Halten-Menü, Aktivieren per Wisch i
 **ADR-16 Mitteilung mit Aktionen.** Version 1 kennt genau eine Mitteilung: am Fälligkeitstag zur
 eingestellten Uhrzeit. Drei Aktionen ohne App-Start: Erledigt, Als nächstes, Morgen (Fälligkeit +1 Tag,
 zählt als Korrektur). Keine Mitteilung für KI-Verarbeitung, keine Zusammenfassungen.
+Ergänzt (Henning, 2026-10-14, #414): Die Einstellung „Noch offen am Tagesende“ erlaubt eine zweite, gebündelte
+Mitteilung. „Morgens erinnern“ (Vorgabe) bringt zur Erinnerungszeit alles, was nach seinem Tag noch offen ist, in einer
+Mitteilung zurück, an höchstens drei Morgen, mit „Heute nochmal“ und „Anzeigen“. „Still weitertragen“ schickt keine.
+„Abends durchsehen“ folgt als dritte Wahl (#414 Schnitt 3).
 
 **ADR-17 Ergänzte Screens nach Lückenprüfung.** Als nächstes (manuell sortiert), Neu (Eingang),
 Feld-Picker statt Formular, Wisch- und Halten-Gesten mit Verschieben (Morgen, Wochenende, nächste Woche,

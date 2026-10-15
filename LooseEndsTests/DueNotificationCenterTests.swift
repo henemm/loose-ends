@@ -23,6 +23,8 @@ import UserNotifications
     final class Cloud: ReminderTimeCloud {
         var reminderMinutes: Int?
         func setReminderMinutes(_ minutes: Int) { reminderMinutes = minutes }
+        var carryModeRaw: String?
+        func setCarryMode(_ raw: String) { carryModeRaw = raw }
     }
 
     /// Holds the container for the whole test (`TestStore`) next to the center under test.
@@ -98,7 +100,8 @@ import UserNotifications
         fixture.center.reminderTime = DueReminders.Time(hour: 7, minute: 30)
         await fixture.center.reschedule()
 
-        #expect(fixture.recorder.pending.count == 1, "the old request is replaced, not doubled")
+        #expect(fixture.recorder.pending.keys.filter { $0.hasPrefix(DueReminders.identifierPrefix) }.count == 1,
+                "the old request is replaced, not doubled")
         let moved = fixture.fireComponents(of: fixture.request(for: task))
         #expect(moved.hour == 7 && moved.minute == 30)
         #expect(fixture.cloud.reminderMinutes == 7 * 60 + 30, "the new time goes to iCloud for the other devices")
@@ -135,5 +138,68 @@ import UserNotifications
         #expect(fixture.center.reminderTime == DueReminders.Time(hour: 18, minute: 15))
         let fire = fixture.fireComponents(of: fixture.request(for: task))
         #expect(fire.hour == 18 && fire.minute == 15)
+    }
+
+    /// A task due yesterday without a time (#414).
+    @MainActor func carriedTask(_ fixture: Fixture, _ raw: String) throws -> TaskItem {
+        let task = TaskItem(rawText: raw)
+        task.status = .active
+        task.dueDate = try #require(fixture.calendar.date(byAdding: .day, value: -2, to: fixture.tomorrow))
+        fixture.store.context.insert(task)
+        try fixture.store.context.save()
+        return task
+    }
+
+    @Test("Tasks still open from yesterday are handed over as one morning notification in the CARRY category (#414)")
+    @MainActor func carriedMorningNotification() async throws {
+        let fixture = try Fixture()
+        let a = try carriedTask(fixture, "Steuerbescheid ablegen")
+        let b = try carriedTask(fixture, "Hecke schneiden")
+
+        await fixture.center.reschedule()
+
+        let carry = fixture.recorder.pending.filter { $0.key.hasPrefix(CarryReminders.identifierPrefix) }
+        let tomorrowMorning = try #require(carry.values.first { fixture.fireComponents(of: $0).day == fixture.calendar.component(.day, from: fixture.tomorrow) })
+        #expect(tomorrowMorning.content.categoryIdentifier == CarryReminders.categoryIdentifier)
+        #expect(Set(tomorrowMorning.content.userInfo["taskIDs"] as? [String] ?? []) == [a.id.uuidString, b.id.uuidString])
+        #expect(tomorrowMorning.content.title == String(localized: "Still open: \(2)"))
+        #expect(fixture.fireComponents(of: tomorrowMorning).hour == 9)
+    }
+
+    @Test("Carrying quietly hands over no morning notification, and the choice goes to iCloud")
+    @MainActor func quietCarry() async throws {
+        let fixture = try Fixture()
+        _ = try carriedTask(fixture, "Steuerbescheid ablegen")
+        #expect(fixture.center.carryMode == .morning, "morning while nothing is set")
+
+        fixture.center.carryMode = .quiet
+        await fixture.center.reschedule()
+
+        #expect(!fixture.recorder.pending.keys.contains { $0.hasPrefix(CarryReminders.identifierPrefix) })
+        #expect(fixture.cloud.carryModeRaw == "quiet")
+    }
+
+    @Test("A carry mode set on another device is taken over")
+    @MainActor func takesTheCloudCarryMode() async throws {
+        let fixture = try Fixture()
+        fixture.cloud.carryModeRaw = "quiet"
+
+        #expect(fixture.center.takeCloudTime())
+        #expect(fixture.center.takeCloudTime() == false)
+        #expect(fixture.center.carryMode == .quiet)
+    }
+
+    @Test("Today again from the morning notification makes the tasks due today and replans")
+    @MainActor func todayAgainFromNotification() async throws {
+        let fixture = try Fixture()
+        let task = try carriedTask(fixture, "Steuerbescheid ablegen")
+
+        await fixture.center.applyCarry(.today, taskIDs: [task.id.uuidString])
+
+        let today = fixture.calendar.startOfDay(for: Date())
+        #expect(task.dueDate == today)
+        let carried = fixture.recorder.pending.filter { $0.key.hasPrefix(CarryReminders.identifierPrefix) }.values
+        #expect(carried.allSatisfy { fixture.fireComponents(of: $0).day != fixture.calendar.component(.day, from: today) },
+                "due today now: not carried this morning, only again from tomorrow if still open")
     }
 }
