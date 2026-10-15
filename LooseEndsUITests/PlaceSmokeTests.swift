@@ -70,12 +70,12 @@ final class PlaceSmokeTests: XCTestCase {
         let placeRow = reveal("placeRow", in: app)
         XCTAssertTrue(placeRow.exists, "The place row should show the chosen place")
         XCTAssertTrue(placeRow.label.contains("Bauhaus, Hamburg-Altona"), "Place row was \(placeRow.label)")
-        let note = element("placeEventNote", in: app)
+        let note = reveal("placeEventNote", in: app)
         XCTAssertTrue(note.label.contains("arrive"), "A new place reminds on arrival, note was \(note.label)")
 
         app.buttons["Leave"].firstMatch.tap()
         XCTAssertTrue(
-            NSPredicate(format: "label CONTAINS 'leave'").evaluate(with: element("placeEventNote", in: app)),
+            NSPredicate(format: "label CONTAINS 'leave'").evaluate(with: reveal("placeEventNote", in: app)),
             "Switching to Leave should change the note"
         )
         shot(app, "2-place-detail")

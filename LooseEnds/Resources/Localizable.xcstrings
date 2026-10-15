@@ -2,6 +2,11 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "Photo" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Foto" } } } },
+    "File" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Datei" } } } },
+    "Attachments" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Anhänge" } } } },
+    "Delete this attachment?" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Diesen Anhang löschen?" } } } },
+    "The file is too large (over 50 MB)." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Die Datei ist zu groß (über 50 MB)." } } } },
     "No time" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ohne Uhrzeit" } } } },
     "From a phone number in the note." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus einer Telefonnummer in deinen Worten." } } } },
     "Note" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Notiz" } } } },

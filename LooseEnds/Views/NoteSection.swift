@@ -47,7 +47,7 @@ struct NoteSection: View {
                 }
             }
         } header: {
-            Text("Note")
+            Text("Note").captionHead()
         }
         .onAppear { draft = task.notes ?? "" }
     }

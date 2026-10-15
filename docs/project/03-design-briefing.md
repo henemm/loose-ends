@@ -234,3 +234,5 @@ Sharing-Flows, freie Suche in natürlicher Sprache.
 - Accessibility-Identifier folgen dem Muster `camelCaseButton`, `taskRow_<uuid>`, `contextTile_<uuid>`.
 - Dynamic Type bis XXL, VoiceOver für alle Aktionen inklusive Zurücksetzen.
 - Deployment Target iOS 27, macOS 27, watchOS 27. Apple Intelligence ab iPhone 15 Pro.
+
+**Anhänge (Henning, 2026-10-15, #442).** Unter der Notiz ein Abschnitt „Anhänge“: Fotos und Dateien anhängen, Tipp zeigt sie (Quick Look), Wischen löscht nach Rückfrage, höchstens 50 MB je Anhang. Scannen und Teilen-Menü folgen.

@@ -151,6 +151,10 @@ struct TaskDetailView: View {
             NoteSection(task: task)
                 .paperRow()
 
+            // Photos and files on the task (#442).
+            AttachmentsSection(task: task)
+                .paperRow()
+
             Section {
                 // Stays visible without a due date: it can be switched on first (see the note).
                 // Switching on asks for what the event still lacks (#203): the switch stays off until the
