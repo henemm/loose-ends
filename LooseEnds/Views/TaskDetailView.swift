@@ -140,7 +140,9 @@ struct TaskDetailView: View {
                         }
                     }
                     .padding(.vertical, 4)
-                    .accessibilityIdentifier("addDetailWords")
+                    // Each word stays its own element with its own `field_…` identifier: an identifier on
+                    // the line would overwrite theirs.
+                    .accessibilityElement(children: .contain)
                 }
                 .paperRow()
             }
