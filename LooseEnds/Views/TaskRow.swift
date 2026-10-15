@@ -110,13 +110,13 @@ struct TaskRow: View {
             all.append(Trait(id: "waiting", text: String(localized: "Waiting on: \(waitingOn)"), symbol: "lock"))
         }
         if let due = task.dueDate {
-            let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Calendar.current.startOfDay(for: Date())) ?? Date()
+            let state = ViewRules.dueState(of: task)
             all.append(Trait(
                 id: "due",
-                text: due.formatted(date: .abbreviated, time: task.dueHasTime ? .shortened : .omitted),
+                text: Self.dueText(due, hasTime: task.dueHasTime, state: state),
                 symbol: "calendar",
                 tinted: unseen && FieldSource.isAutomatic(task.dueSourceRaw),
-                red: task.isOpen && due < tomorrow
+                red: state == .today || state == .missed
             ))
         }
         if let place = task.place {
@@ -133,5 +133,14 @@ struct TaskRow: View {
             all.append(Trait(id: "context", text: context.name, tinted: unseen && FieldSource.isAutomatic(task.contextsSourceRaw)))
         }
         return Array(all.prefix(3))
+    }
+
+    /// A day-only date past its day says how long it has been carried, in grey (#414).
+    private static func dueText(_ due: Date, hasTime: Bool, state: ViewRules.DueState) -> String {
+        switch state {
+        case .carried(let days) where days == 1: String(localized: "Since yesterday")
+        case .carried(let days): String(localized: "Since \(days) days")
+        default: due.formatted(date: .abbreviated, time: hasTime ? .shortened : .omitted)
+        }
     }
 }

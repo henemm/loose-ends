@@ -2,6 +2,8 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "Since yesterday" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Seit gestern" } } } },
+    "Since %lld days" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Seit %lld Tagen" } } } },
     "Open Loose Ends" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Loose Ends öffnen" } } } },
     "Quit Loose Ends" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Loose Ends beenden" } } } },
     "Open at login" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Beim Anmelden öffnen" } } } },

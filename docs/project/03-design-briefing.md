@@ -168,7 +168,8 @@ Hinweis, wenn Apple Intelligence auf dem Gerät nicht verfügbar ist (dann gibt 
 | KI hat geändert | Ungesehene KI-Revisionen | Marker an der Zeile und am Feld |
 | Blockiert | Wartet auf andere Aufgabe | Zeichen an der Zeile, ausgeblendet in "Als nächstes" |
 | Geparkt | Bewusst beiseitegelegt | Nur in "Geparkt" sichtbar |
-| Überfällig | Fälligkeit vorbei | Datum in Rot mit Wort „überfällig“, der einzige Rotton |
+| Überfällig | Fälligkeit mit Uhrzeit vorbei | Datum in Rot, der einzige Rotton |
+| Weitergetragen | Fälligkeit ohne Uhrzeit, Tag vorbei (#414) | Grau „Seit gestern“ / „Seit N Tagen“ statt Datum |
 | Wiederkehrend | Rückt nach Erledigung weiter | Zeichen an der Zeile, Ansicht "Wiederkehrend" |
 | Aus Mail | Hat Quell-Link | Zeichen im Detail |
 
