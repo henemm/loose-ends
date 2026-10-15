@@ -52,6 +52,23 @@ struct SiriFieldsTests {
         #expect(try store.context.fetch(FetchDescriptor<TaskItem>()).isEmpty)
     }
 
+    @Test("Ein Link mit und ohne leeren Pfad „/“ zählt einmal (#25 Schnitt 1, AC-11)")
+    func linkWithAndWithoutTrailingSlashCountsOnce() throws {
+        let store = try TestStore()
+        let bare = URL(string: "https://a.de")!
+        let slash = URL(string: "https://a.de/")!
+        let resolved = try SiriFields.resolve(SiriFields(urls: [bare, slash], isFlagged: nil, tags: []), in: store.context)
+        let url = try #require(resolved.url)
+        #expect(url == bare || url == slash)
+    }
+
+    @Test("Ein anderer Pfad bleibt ein anderer Link (#25 Schnitt 1, AC-11)")
+    func differentPathStaysDifferentLink() throws {
+        let store = try TestStore()
+        let fields = SiriFields(urls: [URL(string: "https://a.de/")!, URL(string: "https://a.de/x")!], isFlagged: nil, tags: [])
+        #expect(throws: SiriFieldsError.multipleLinks(2)) { try SiriFields.resolve(fields, in: store.context) }
+    }
+
     @Test("Ohne Link bleibt die Quelle leer (AC-3)")
     func noLinksSetsNothing() throws {
         let store = try TestStore()
@@ -164,6 +181,25 @@ struct SiriFieldsTests {
         let task = try capture(SiriFields(urls: [], isFlagged: nil, tags: []), in: store.context)
         #expect((task.contexts ?? []).isEmpty)
         #expect(revisions(of: .contexts, on: task).isEmpty)
+    }
+
+    @Test("Leere Tags werden ignoriert: kein Fehler, keine Kontexte, keine Revision (#25 Schnitt 1, AC-11)")
+    func blankTagsAreIgnored() throws {
+        let store = try TestStore()
+        store.context.insert(TaskContext(name: "Garten"))
+        try store.context.save()
+        let task = try capture(SiriFields(urls: [], isFlagged: nil, tags: ["", " "]), in: store.context)
+        #expect((task.contexts ?? []).isEmpty)
+        #expect(revisions(of: .contexts, on: task).isEmpty)
+    }
+
+    @Test("Ein leeres Tag neben einem bekannten stört nicht (#25 Schnitt 1, AC-11)")
+    func blankTagNextToKnownOne() throws {
+        let store = try TestStore()
+        store.context.insert(TaskContext(name: "Garten"))
+        try store.context.save()
+        let resolved = try SiriFields.resolve(SiriFields(urls: [], isFlagged: nil, tags: ["", "Garten"]), in: store.context)
+        #expect(resolved.contexts.map(\.name) == ["Garten"])
     }
 
     // MARK: Schutz vor Überschreiben
