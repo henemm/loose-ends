@@ -287,8 +287,9 @@ struct TaskDetailView: View {
         ]
     }
 
-    /// Complete, and the briefing's "…" menu (screen 4). Completing leaves the detail. From "New"
-    /// the place of Complete belongs to "Looks right" (#349): a checkmark there reads as "OK".
+    /// The briefing's "…" menu (screen 4) with Complete first; completing leaves the detail. No
+    /// checkmark in the bar: it reads as "close" (#349 for New, #435 everywhere). From "New" the
+    /// bar holds "Looks right".
     @ToolbarContentBuilder
     private var actions: some ToolbarContent {
         // Deleting stays in the list's long-press menu: deleting from inside the open detail would
@@ -315,17 +316,13 @@ struct TaskDetailView: View {
                         .accessibilityIdentifier("detailConfirmButton")
                     }
                 }
-                ToolbarItem(placement: .primaryAction) {
-                    Button("Complete", systemImage: "checkmark", action: complete)
-                        .accessibilityIdentifier("detailCompleteButton")
-                }
             }
             ToolbarItem(placement: .primaryAction) {
                 Menu("More", systemImage: "ellipsis") {
-                    if inReview {
-                        Button("Complete", systemImage: "checkmark", action: complete)
-                            .accessibilityIdentifier("menuCompleteButton")
-                    }
+                    // No checkmark in the bar (Henning, 2026-10-15): anyone taps it to close the
+                    // detail and completes the task by accident. Complete lives here, first, by name.
+                    Button("Complete", systemImage: "checkmark", action: complete)
+                        .accessibilityIdentifier("menuCompleteButton")
                     if task.nextRank == nil {
                         Button("Next up", systemImage: "star", action: toggleNext)
                     } else {
