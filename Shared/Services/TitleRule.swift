@@ -26,7 +26,9 @@ enum TitleRule {
 
     /// `reference` is the moment of capture: only a date the rule step can resolve from it is struck.
     static func title(from rawText: String, reference: Date = Date(), calendar: Calendar = .current) -> String? {
-        let stripped = strippingRuleWords(from: rawText, reference: reference, calendar: calendar)
+        // A phone number goes to the note (#439): it leaves the title whole, "+" and "/" included.
+        let withoutPhones = PhoneRule.removing(from: rawText)
+        let stripped = strippingRuleWords(from: withoutPhones, reference: reference, calendar: calendar)
         return cleaned(stripped.contains { $0.isLetter || $0.isNumber } ? stripped : rawText)
     }
 
@@ -62,10 +64,6 @@ enum TitleRule {
         let markers = [ImportanceUrgencyRule.importanceMarker(in: text), ImportanceUrgencyRule.urgencyMarker(in: text)]
         for marker in markers.compactMap({ $0 }) {
             struck.formUnion(ranges.indices.filter { ranges[$0].overlaps(marker) })
-        }
-        // A phone number goes to the note (#439): all its words leave the title.
-        for number in PhoneRule.ranges(in: text) {
-            struck.formUnion(ranges.indices.filter { ranges[$0].overlaps(number) })
         }
         for index in words.indices
         where connectors.contains(words[index].text) && struck.contains(index - 1) && struck.contains(index + 1) {

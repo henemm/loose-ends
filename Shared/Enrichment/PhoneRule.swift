@@ -14,6 +14,15 @@ enum PhoneRule {
         NoteLinks.hits(in: text).filter { $0.kind == .phone }.map(\.range)
     }
 
+    /// The text without its phone numbers, for the title.
+    static func removing(from text: String) -> String {
+        var result = text
+        for range in ranges(in: text).reversed() {
+            result.removeSubrange(range)
+        }
+        return result
+    }
+
     /// The note the rule writes: one number per line.
     static func note(from text: String) -> String? {
         let found = numbers(in: text)
