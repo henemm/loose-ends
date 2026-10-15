@@ -1,0 +1,47 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "FC38C177-1826-445A-A210-30CAD97F76B3",
+        "deviceName" : "iPhone Air",
+        "exportedFileName" : "CF3772E1-543A-4823-82A9-C98817ABDA63.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "reminder-in-front_0_62519BFB-8114-49DA-8763-7E1D0822CACB.png",
+        "timestamp" : 1792047111.018
+      }
+    ],
+    "testIdentifier" : "DueNotificationTapTests/testBannerWhileAppIsOpenKeepsAppAlive()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/DueNotificationTapTests/testBannerWhileAppIsOpenKeepsAppAlive"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "FC38C177-1826-445A-A210-30CAD97F76B3",
+        "deviceName" : "iPhone Air",
+        "exportedFileName" : "2BB09590-17CC-49BF-896C-1B8C052924F0.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "due-buttons_0_2C2CAC70-776D-4F4B-ADA9-3DA60EDB9337.png",
+        "timestamp" : 1792047213.413
+      }
+    ],
+    "testIdentifier" : "DueNotificationTapTests/testButtonsKeepTomorrow()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/DueNotificationTapTests/testButtonsKeepTomorrow"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "FC38C177-1826-445A-A210-30CAD97F76B3",
+        "deviceName" : "iPhone Air",
+        "exportedFileName" : "8D17BBD5-AB7E-410D-9D1F-C199E41B5877.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "opened-from-reminder_0_6265A269-E8FA-498C-B289-15B7EE3B7258.png",
+        "timestamp" : 1792047297.172
+      }
+    ],
+    "testIdentifier" : "DueNotificationTapTests/testTapBannerFromHomeOpensApp()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/DueNotificationTapTests/testTapBannerFromHomeOpensApp"
+  }
+]
