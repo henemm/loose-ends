@@ -1,0 +1,265 @@
+<title>Startseite: drei Alternativen</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: Phones nebeneinander (umbrechend), je Phone darunter Pro/Contra. Phone-Inhalt nach App-Tokens (Papier, Akzent #0F6E73). */
+:root{
+  --page:#E9E8E3; --ink:#1B1D1E; --muted:#6B6E70; --line:#D3D2CC;
+  --paper:#F2F2EE; --card:#FFFFFF; --sep:#DEDDD8; --grey:#8A8D8F;
+  --accent:#0F6E73; --tint:rgba(15,110,115,.10); --red:#C2362B; --frame:#1B1D1E;
+  --sys:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --page:#121314; --ink:#ECECEA; --muted:#9A9C9E; --line:#2E3032;
+  --paper:#1A1B1C; --card:#262729; --sep:#343537; --grey:#8E9092;
+  --accent:#5FC4C9; --tint:rgba(95,196,201,.14); --red:#FF6B5E; --frame:#000; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --page:#121314; --ink:#ECECEA; --muted:#9A9C9E; --line:#2E3032;
+  --paper:#1A1B1C; --card:#262729; --sep:#343537; --grey:#8E9092;
+  --accent:#5FC4C9; --tint:rgba(95,196,201,.14); --red:#FF6B5E; --frame:#000; color-scheme:dark}
+body{background:var(--page);color:var(--ink);font-family:var(--sys);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 48px}
+.wrap{max-width:1560px;margin:0 auto}
+h1{font-size:26px;margin:0 0 6px;text-wrap:balance;letter-spacing:-.01em}
+.lede{color:var(--muted);max-width:68ch;line-height:1.5;margin:0 0 28px;font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:36px 28px;align-items:start}
+.col{display:flex;flex-direction:column;gap:14px;min-width:0}
+.label{display:flex;align-items:baseline;gap:10px}
+.label b{font-size:18px}
+.label span{color:var(--muted);font-size:13px}
+.rec{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);border-radius:99px;padding:2px 8px}
+.notes{font-size:14px;line-height:1.5;color:var(--ink);margin:0;padding-left:18px}
+.notes li{margin:2px 0}
+.notes .minus{color:var(--muted)}
+
+/* Phone */
+.phone{width:100%;max-width:360px;border:10px solid var(--frame);border-radius:46px;background:var(--paper);overflow:hidden;position:relative;font-size:17px;color:var(--ink)}
+.status{display:flex;justify-content:space-between;padding:12px 26px 0;font-size:14px;font-weight:600}
+.bar{display:flex;justify-content:space-between;align-items:center;padding:8px 14px 4px}
+.glass{width:44px;height:44px;border-radius:50%;background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.12);display:grid;place-items:center;color:var(--ink)}
+.screen{padding:0 18px 22px}
+.date{font-size:28px;font-weight:700;margin:6px 0 14px;letter-spacing:-.01em}
+.cap{font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--grey);margin:18px 0 6px}
+.row{display:flex;flex-direction:column;gap:2px;padding:9px 0;border-bottom:1px solid var(--sep)}
+.row:last-child{border-bottom:0}
+.row .t{font-size:17px}
+.row .m{font-size:13px;color:var(--grey);display:flex;gap:10px}
+.row .m .r{color:var(--red)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid color-mix(in srgb,var(--accent) 50%,transparent);color:var(--accent);border-radius:99px;padding:6px 12px;font-size:15px;display:flex;gap:6px;align-items:center}
+.chip i{font-style:normal;color:var(--grey)}
+svg.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.more{font-size:13px;color:var(--muted);margin-top:4px}
+
+/* Heute */
+.flat{display:flex;align-items:center;gap:12px;padding:10px 0;color:var(--grey);font-size:17px}
+.flat .n{margin-left:auto;font-variant-numeric:tabular-nums}
+.ctx{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--sep);font-size:19px}
+.ctx .n{color:var(--grey)}
+.overlap{position:relative}
+.overlap::after{content:"";position:absolute;inset:-6px -4px;border:2px dashed var(--red);border-radius:8px}
+.flag{font-size:12px;color:var(--red);margin:4px 0 0}
+
+/* A Kacheln */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{background:var(--card);border-radius:14px;padding:10px 12px 10px;display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;row-gap:6px;min-width:0}
+.tile svg{color:var(--accent);width:24px;height:24px}
+.tile .n{justify-self:end;font-size:24px;font-weight:700;font-variant-numeric:tabular-nums}
+.tile .n.z{color:var(--grey);font-weight:500}
+.tile .name{grid-column:1/-1;font-size:15px;font-weight:600;color:var(--grey);line-height:1.2}
+
+/* B gruppiert */
+.group{background:var(--card);border-radius:12px;padding:0 0 0 14px;margin-top:14px}
+.group .gl{display:flex;align-items:center;gap:12px;padding:11px 14px 11px 0;border-bottom:1px solid var(--sep)}
+.group .gl:last-child{border-bottom:0}
+.group .gl svg:first-child{color:var(--accent)}
+.group .gl .n{margin-left:auto;color:var(--grey);font-variant-numeric:tabular-nums}
+.group .gl .c{color:var(--grey);width:14px;height:14px}
+
+/* C */
+.allrow{margin-top:18px;background:var(--card);border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:12px}
+.allrow .sub{font-size:13px;color:var(--grey)}
+.allrow .c{margin-left:auto;color:var(--grey);width:14px;height:14px}
+.navtitle{display:flex;align-items:center;gap:6px;color:var(--accent);font-size:17px;padding:4px 0 0}
+.mini{max-width:300px;font-size:16px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8l-5.2 2.7 1-5.8L3.6 9.6l5.8-.8z"/></symbol>
+  <symbol id="cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 9.5h17M8 3.5v3M16 3.5v3"/></symbol>
+  <symbol id="tray" viewBox="0 0 24 24"><path d="M3.5 13.5l2.5-7.5h12l2.5 7.5v5a1.5 1.5 0 0 1-1.5 1.5H5a1.5 1.5 0 0 1-1.5-1.5z"/><path d="M3.5 13.5h5l1 2h5l1-2h5"/></symbol>
+  <symbol id="rep" viewBox="0 0 24 24"><path d="M4 11V9.5A2.5 2.5 0 0 1 6.5 7H19l-3-3M20 13v1.5a2.5 2.5 0 0 1-2.5 2.5H5l3 3"/></symbol>
+  <symbol id="fold" viewBox="0 0 24 24"><path d="M3.5 7a1.5 1.5 0 0 1 1.5-1.5h4.5l2 2.5H19a1.5 1.5 0 0 1 1.5 1.5V18a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 18z"/></symbol>
+  <symbol id="tag" viewBox="0 0 24 24"><path d="M3.5 12.2V5a1.5 1.5 0 0 1 1.5-1.5h7.2l8.3 8.3a1.5 1.5 0 0 1 0 2.1l-6.1 6.1a1.5 1.5 0 0 1-2.1 0z"/><circle cx="8" cy="8" r="1.3"/></symbol>
+  <symbol id="circ" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/></symbol>
+  <symbol id="done" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M8.3 12.3l2.5 2.5 5-5.2"/></symbol>
+  <symbol id="gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M5.5 18.5l1.8-1.8M16.7 7.3l1.8-1.8"/></symbol>
+  <symbol id="plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="cr" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+  <symbol id="cl" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+  <symbol id="cd" viewBox="0 0 24 24"><path d="M5 9l7 7 7-7"/></symbol>
+  <symbol id="cu" viewBox="0 0 24 24"><path d="M5 15l7-7 7 7"/></symbol>
+  <symbol id="bolt" viewBox="0 0 24 24"><path d="M13 3L5 13.5h6L10 21l8-10.5h-6z"/></symbol>
+  <symbol id="grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></symbol>
+</svg>
+
+<template id="top">
+  <div class="status"><span>08:02</span><span>●●● ▮</span></div>
+  <div class="bar">
+    <div class="glass"><svg class="i"><use href="#gear"/></svg></div>
+    <div class="glass"><svg class="i"><use href="#plus"/></svg></div>
+  </div>
+</template>
+<template id="head">
+  <div class="date">Donnerstag, 15. Okt.</div>
+  <div class="cap">Jetzt</div>
+  <div class="row"><span class="t">Steuerbescheid prüfen</span><span class="m"><span class="r">Heute 12:00</span><span>Computer</span></span></div>
+  <div class="row"><span class="t">Mama zurückrufen</span><span class="m"><span>Seit gestern</span><span>Telefon</span></span></div>
+  <div class="row"><span class="t">Hecke am Eingang schneiden</span><span class="m"><span>30 Min</span><span>Garten</span></span></div>
+  <div class="cap">Passt gerade</div>
+  <div class="chips">
+    <span class="chip">Computer <i>3</i></span><span class="chip">Telefon <i>1</i></span>
+    <span class="chip">Haus <i>3</i></span><span class="chip">Garten <i>2</i></span>
+  </div>
+</template>
+
+<div class="wrap">
+  <h1>Startseite: drei Alternativen</h1>
+  <p class="lede">Gleicher Datenstand wie dein Screenshot (Als nächstes 2, Fällig 2, Neu 0, Wiederkehrend 1, 1 Projekt, 6 Kontexte, 12 offen, 37 erledigt). Die drei Aufgaben unter „Jetzt“ sind Beispiele. Oben bleibt in allen Varianten gleich: Datum, „Jetzt“, „Passt gerade“. Unterschiedlich ist alles darunter. In allen dreien liegt keine Überschrift mehr unter den Glas-Buttons.</p>
+
+  <div class="grid">
+
+    <section class="col">
+      <div class="label"><b>Heute</b><span>Build 58, zum Vergleich</span></div>
+      <div class="phone">
+        <div data-top></div>
+        <div class="screen">
+          <div class="cap overlap">Alle Ansichten</div>
+          <p class="flag">Überschrift liegt unter den Buttons</p>
+          <div class="flat"><svg class="i"><use href="#star"/></svg>Als nächstes<span class="n">2</span></div>
+          <div class="flat"><svg class="i"><use href="#cal"/></svg>Fällig<span class="n">2</span></div>
+          <div class="flat"><svg class="i"><use href="#tray"/></svg>Neu</div>
+          <div class="flat"><svg class="i"><use href="#rep"/></svg>Wiederkehrend<span class="n">1</span></div>
+          <div class="flat"><svg class="i"><use href="#fold"/></svg>Projekte<span class="n">1</span><svg class="i" style="width:14px"><use href="#cd"/></svg></div>
+          <div class="flat"><svg class="i"><use href="#tag"/></svg>Kontexte<span class="n">6</span><svg class="i" style="width:14px"><use href="#cu"/></svg></div>
+          <div class="flat"><svg class="i"><use href="#circ"/></svg>Alle offenen<span class="n">12</span></div>
+          <div class="flat"><svg class="i"><use href="#done"/></svg>Erledigt<span class="n">37</span></div>
+          <div class="ctx">Computer<span class="n">3</span></div>
+          <div class="ctx">Telefon<span class="n">1</span></div>
+          <div class="ctx">Haus<span class="n">3</span></div>
+          <div class="ctx">Garten<span class="n">2</span></div>
+          <div class="ctx">Besorgung</div>
+          <div class="ctx">Unterwegs</div>
+        </div>
+      </div>
+      <ul class="notes">
+        <li>Die Ansichten sind grau und klein, die aufgeklappten Kontexte groß und schwarz. Die Gewichtung ist damit umgedreht.</li>
+        <li>Kontexte stehen doppelt da, als Chips und als Liste.</li>
+        <li>15 Zeilen in gleicher Form, ohne Flächen.</li>
+      </ul>
+    </section>
+
+    <section class="col">
+      <div class="label"><b>A · Kacheln</b><span>wie Erinnerungen</span></div>
+      <div class="phone">
+        <div data-top></div>
+        <div class="screen">
+          <div data-head></div>
+          <div class="cap">Alle Ansichten</div>
+          <div class="tiles">
+            <div class="tile"><svg class="i"><use href="#star"/></svg><span class="n">2</span><span class="name">Als nächstes</span></div>
+            <div class="tile"><svg class="i"><use href="#cal"/></svg><span class="n">2</span><span class="name">Fällig</span></div>
+            <div class="tile"><svg class="i"><use href="#tray"/></svg><span class="n z">0</span><span class="name">Neu</span></div>
+            <div class="tile"><svg class="i"><use href="#rep"/></svg><span class="n">1</span><span class="name">Wieder&shy;kehrend</span></div>
+            <div class="tile"><svg class="i"><use href="#fold"/></svg><span class="n">1</span><span class="name">Projekte</span></div>
+            <div class="tile"><svg class="i"><use href="#tag"/></svg><span class="n">6</span><span class="name">Kontexte</span></div>
+            <div class="tile"><svg class="i"><use href="#circ"/></svg><span class="n">12</span><span class="name">Alle offenen</span></div>
+            <div class="tile"><svg class="i"><use href="#done"/></svg><span class="n">37</span><span class="name">Erledigt</span></div>
+          </div>
+        </div>
+      </div>
+      <ul class="notes">
+        <li>Die Zahl steht im Vordergrund, der Name tritt zurück. Ein Blick reicht.</li>
+        <li>Auch bei großer Schrift zwei Spalten; ein langer Name bricht um.</li>
+        <li>„Projekte“ und „Kontexte“ öffnen je eine eigene Seite mit Anlegen und Umbenennen. Auf der Startseite klappt nichts mehr auf.</li>
+        <li class="minus">Kacheln sind eigene Flächen, kein Systembaustein. Das ist mehr Gestaltung als bisher.</li>
+      </ul>
+    </section>
+
+    <section class="col">
+      <div class="label"><b>B · Gruppierte Liste</b><span class="rec">Empfehlung</span></div>
+      <div class="phone">
+        <div data-top></div>
+        <div class="screen">
+          <div data-head></div>
+          <div class="group">
+            <div class="gl"><svg class="i"><use href="#star"/></svg>Als nächstes<span class="n">2</span><svg class="i c"><use href="#cr"/></svg></div>
+            <div class="gl"><svg class="i"><use href="#cal"/></svg>Fällig<span class="n">2</span><svg class="i c"><use href="#cr"/></svg></div>
+            <div class="gl"><svg class="i"><use href="#tray"/></svg>Neu<span class="n"></span><svg class="i c"><use href="#cr"/></svg></div>
+            <div class="gl"><svg class="i"><use href="#rep"/></svg>Wiederkehrend<span class="n">1</span><svg class="i c"><use href="#cr"/></svg></div>
+          </div>
+          <div class="group">
+            <div class="gl"><svg class="i"><use href="#fold"/></svg>Projekte<span class="n">1</span><svg class="i c"><use href="#cr"/></svg></div>
+            <div class="gl"><svg class="i"><use href="#tag"/></svg>Kontexte<span class="n">6</span><svg class="i c"><use href="#cr"/></svg></div>
+          </div>
+          <div class="group">
+            <div class="gl"><svg class="i"><use href="#circ"/></svg>Alle offenen<span class="n">12</span><svg class="i c"><use href="#cr"/></svg></div>
+            <div class="gl"><svg class="i"><use href="#done"/></svg>Erledigt<span class="n">37</span><svg class="i c"><use href="#cr"/></svg></div>
+          </div>
+        </div>
+      </div>
+      <ul class="notes">
+        <li>Drei weiße Kästen (Ansichten, Ordnen, Archiv) gliedern ohne Überschrift. Das ist Apples eingerückte, gruppierte Liste.</li>
+        <li>8 statt 15 Zeilen. Die Symbole sind in der Akzentfarbe, weil sie tippbar sind.</li>
+        <li>„Projekte“ und „Kontexte“ öffnen je eine eigene Seite; die Kontexte erscheinen nicht mehr doppelt.</li>
+        <li class="minus">Wirkt vertraut, aber weniger eigen als A.</li>
+      </ul>
+    </section>
+
+    <section class="col">
+      <div class="label"><b>C · Nur Jetzt</b><span>eine Zeile zu allem Weiteren</span></div>
+      <div class="phone">
+        <div data-top></div>
+        <div class="screen">
+          <div data-head></div>
+          <div class="allrow"><svg class="i" style="color:var(--accent)"><use href="#grid"/></svg>
+            <div><div>Alle Ansichten</div><div class="sub">12 offen · 37 erledigt · 6 Kontexte</div></div>
+            <svg class="i c"><use href="#cr"/></svg></div>
+        </div>
+      </div>
+      <div class="phone mini">
+        <div data-top></div>
+        <div class="screen">
+          <div class="navtitle"><svg class="i"><use href="#cl"/></svg>Start</div>
+          <div class="date" style="font-size:26px">Alle Ansichten</div>
+          <div class="group">
+            <div class="gl"><svg class="i"><use href="#star"/></svg>Als nächstes<span class="n">2</span></div>
+            <div class="gl"><svg class="i"><use href="#cal"/></svg>Fällig<span class="n">2</span></div>
+            <div class="gl"><svg class="i"><use href="#rep"/></svg>Wiederkehrend<span class="n">1</span></div>
+            <div class="gl"><svg class="i"><use href="#circ"/></svg>Alle offenen<span class="n">12</span></div>
+            <div class="gl"><svg class="i"><use href="#done"/></svg>Erledigt<span class="n">37</span></div>
+          </div>
+          <div class="cap">Kontexte</div>
+          <div class="group">
+            <div class="gl">Computer<span class="n">3</span></div>
+            <div class="gl">Telefon<span class="n">1</span></div>
+            <div class="gl">… 4 weitere</div>
+          </div>
+        </div>
+      </div>
+      <ul class="notes">
+        <li>Die Startseite passt auf einen Bildschirm: nur, was jetzt dran ist.</li>
+        <li>Kontexte mit Aufgaben erreichst du über die Chips; alles Weitere liegt eine Seite tiefer.</li>
+        <li class="minus">Für „Erledigt“ oder „Wiederkehrend“ braucht es einen Tipp mehr.</li>
+      </ul>
+    </section>
+
+  </div>
+</div>
+
+<script>
+  const topHtml = document.getElementById('top').innerHTML;
+  const headHtml = document.getElementById('head').innerHTML;
+  document.querySelectorAll('[data-top]').forEach(e => e.outerHTML = topHtml);
+  document.querySelectorAll('[data-head]').forEach(e => e.outerHTML = headHtml);
+</script>
