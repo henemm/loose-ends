@@ -127,6 +127,12 @@ ungeprüften Titel an und führt zurück in die Liste. Eine unsortierte Aufgabe 
 verlässt „Neu“, sobald sie sortiert ist. Aus jeder anderen Ansicht gilt Öffnen weiter als gesehen.
 Konzept mit Mockups: https://claude.ai/artifact/259uebtk5zCWHEzSydAjco
 
+**Register statt Formular (Henning, 2026-10-15, #438, Epic #437).** Die Detailansicht folgt der Startseite: Titel in New York
+medium, darunter der gesagte Satz als ein durchlaufender Satz hinter einem kleinen „GESAGT“. Felder als Registerzeilen:
+Name klein in SF grau in fester Spalte, Wert in New York (Inhalt), kein Pfeil, die ganze Zeile öffnet den Editor. Fälligkeit in
+Worten („Heute, 14:30“), rot bei Zeitdruck wie die Randspalte. Abschnittsköpfe wie die Zonenköpfe der Startseite.
+Entwurf: https://claude.ai/artifact/HD818Gm9YorDsjN7uFy9z5
+
 ### 5. Revisions-Sheet
 
 Vom KI-Marker aus: Liste aller Änderungen an dieser Aufgabe, neueste oben.

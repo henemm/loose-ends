@@ -44,6 +44,24 @@ enum FieldFormatting {
         }
     }
 
+    /// The due date in words for the detail's register (#438): "Today, 14:30", "Tomorrow", "Yesterday",
+    /// else the short date; the time after a comma when it has one. As in the start screen's margin.
+    static func dueWords(_ date: Date, hasTime: Bool, now: Date = Date(), calendar: Calendar = .current,
+                         locale: Locale = .current, bundle: Bundle = .main) -> String {
+        let days = calendar.dateComponents([.day], from: calendar.startOfDay(for: now), to: calendar.startOfDay(for: date)).day ?? 0
+        var timeStyle = Date.FormatStyle(date: .omitted, time: .shortened, locale: locale, calendar: calendar)
+        timeStyle.timeZone = calendar.timeZone
+        var dateStyle = Date.FormatStyle(date: .abbreviated, time: .omitted, locale: locale, calendar: calendar)
+        dateStyle.timeZone = calendar.timeZone
+        let day: String = switch days {
+        case 0: String(localized: "Today", bundle: bundle)
+        case 1: String(localized: "Tomorrow", bundle: bundle)
+        case -1: String(localized: "Yesterday", bundle: bundle)
+        default: date.formatted(dateStyle)
+        }
+        return hasTime ? "\(day), \(date.formatted(timeStyle))" : day
+    }
+
     /// "Weekly · Mon, Sat", "Every 2 months · after completion". Weekday names follow the calendar;
     /// the translated words follow `bundle` (the app's UI language by default). `bundle` exists so tests
     /// can pin a deterministic language, independent of the host machine's system language.

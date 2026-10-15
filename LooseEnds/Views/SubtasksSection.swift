@@ -41,7 +41,7 @@ struct SubtasksSection: View {
                     .accessibilityIdentifier("subtaskAddButton")
             }
         } header: {
-            Text("Subtasks")
+            Text("Subtasks").captionHead()
         } footer: {
             if progress.total > 0 {
                 Text("\(progress.done) of \(progress.total) done")
