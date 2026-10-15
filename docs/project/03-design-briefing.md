@@ -137,6 +137,11 @@ Name klein in SF grau in fester Spalte, Wert in New York (Inhalt), kein Pfeil, d
 Worten („Heute, 14:30“), rot bei Zeitdruck wie die Randspalte. Abschnittsköpfe wie die Zonenköpfe der Startseite.
 Entwurf: https://claude.ai/artifact/HD818Gm9YorDsjN7uFy9z5
 
+**Wortleiste und Schnellwahl (Henning, 2026-10-15, #440).** Leere Felder stehen unter den gesetzten als eine Zeile Wörter
+in Akzent („+ Fällig  + Wichtigkeit  + Projekt …“); ein Tipp öffnet den Editor, „Detail hinzufügen“ entfällt. Der Editor der
+Fälligkeit beginnt mit Schnellwahl: Heute, Morgen, Wochenende, Nächste Woche, dann Ohne Uhrzeit, 9, 12, 15, 18 Uhr; die
+Uhrzeit schließt den Editor. „Morgen 15 Uhr“ braucht drei Griffe statt sechs. Schalter und Rad bleiben für alles andere.
+
 ### 5. Revisions-Sheet
 
 Vom KI-Marker aus: Liste aller Änderungen an dieser Aufgabe, neueste oben.
