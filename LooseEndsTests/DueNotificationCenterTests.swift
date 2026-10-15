@@ -7,7 +7,8 @@ import UserNotifications
 /// #328: what `DueNotificationCenter` hands to the system, with a recorder in place of
 /// `UNUserNotificationCenter` (its `add` fails in the iOS 27 simulator, and a real run would ask
 /// for permission). `DueRemindersTests` covers the plan; this covers the bridge.
-@Suite("DueNotificationCenter") struct DueNotificationCenterTests {
+/// Serialized: several tests set the shared `OpenTaskRequest.shared` and would reset it under each other.
+@Suite("DueNotificationCenter", .serialized) struct DueNotificationCenterTests {
     @MainActor
     final class Recorder: DueScheduling {
         var pending: [String: UNNotificationRequest] = [:]
@@ -270,7 +271,7 @@ import UserNotifications
 
     // MARK: - #240 Schnitt 2: one category set, routing by prefix, the place reconcile
 
-    @Test("Activating sets the categories once, DUE with Tomorrow and PLACE without (AC-1)")
+    @Test("Activating sets the categories once: DUE with Tomorrow, PLACE without, and both carry categories (AC-1, #414)")
     @MainActor func oneCategorySet() throws {
         let fixture = try Fixture()
 
@@ -282,6 +283,8 @@ import UserNotifications
         #expect(actions == [
             DueReminders.categoryIdentifier: ["DUE_DONE", "DUE_NEXT", "DUE_TOMORROW"],
             PlaceNotifications.categoryIdentifier: ["DUE_DONE", "DUE_NEXT"],
+            CarryReminders.categoryIdentifier: ["CARRY_TODAY", "CARRY_SHOW"],
+            CarryReminders.eveningCategoryIdentifier: ["CARRY_TOMORROW", "CARRY_REVIEW"],
         ])
     }
 
@@ -362,5 +365,117 @@ import UserNotifications
         #expect(spy.runs == 1)
         #expect(fixture.request(for: task) != nil)
         #expect(fixture.recorder.badge != nil)
+    }
+
+    // MARK: - #240 AC-2, AC-5: the delegate's callback variants, called as the system calls them
+
+    /// What the completion handlers saw; they run on the main thread, like the system's.
+    final class Calls: @unchecked Sendable {
+        var count = 0
+        var options: [UNNotificationPresentationOptions] = []
+        var markSetAtCompletion: [Bool] = []
+    }
+
+    /// `UNNotification` and `UNNotificationResponse` have no public initializer; the usual test route
+    /// is the `NSCoding` initializer with an empty archiver, then the properties by key-value coding.
+    /// An unarchiver over an empty archive: every key decodes to nil (an archiver as coder throws on decode).
+    static func emptyCoder() throws -> NSKeyedUnarchiver {
+        let archiver = NSKeyedArchiver(requiringSecureCoding: false)
+        archiver.finishEncoding()
+        let coder = try NSKeyedUnarchiver(forReadingFrom: archiver.encodedData)
+        coder.requiresSecureCoding = false
+        return coder
+    }
+
+    static func notification(identifier: String, taskID: UUID) throws -> UNNotification {
+        let content = UNMutableNotificationContent()
+        content.userInfo = ["taskID": taskID.uuidString]
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: nil)
+        let notification = try #require(UNNotification(coder: try emptyCoder()))
+        notification.setValue(request, forKey: "request")
+        return notification
+    }
+
+    static func response(identifier: String, taskID: UUID, action: String) throws -> UNNotificationResponse {
+        let response = try #require(UNNotificationResponse(coder: try emptyCoder()))
+        response.setValue(try notification(identifier: identifier, taskID: taskID), forKey: "notification")
+        response.setValue(action, forKey: "actionIdentifier")
+        return response
+    }
+
+    /// The mark is set in a main-actor task after `willPresent` returns; give it a bounded moment.
+    @MainActor static func waitForMark(on task: TaskItem) async throws {
+        for _ in 0..<100 where task.placeRemindedAt == nil {
+            try await Task.sleep(for: .milliseconds(10))
+        }
+    }
+
+    @Test("didReceive (callback variant) answers a place tap, then calls its completion exactly once (AC-2)")
+    @MainActor func didReceiveCallsCompletionOnce() async throws {
+        let fixture = try Fixture()
+        let task = try fixture.placed("Drucker abholen")
+        let response = try Self.response(
+            identifier: "place_" + task.id.uuidString, taskID: task.id, action: UNNotificationDefaultActionIdentifier
+        )
+        let calls = Calls()
+        OpenTaskRequest.shared.taskID = nil
+
+        await withCheckedContinuation { (done: CheckedContinuation<Void, Never>) in
+            fixture.center.userNotificationCenter(.current(), didReceive: response) {
+                calls.count += 1
+                done.resume()
+            }
+        }
+
+        #expect(response.actionIdentifier == UNNotificationDefaultActionIdentifier)
+        #expect(response.notification.request.identifier == "place_" + task.id.uuidString)
+        #expect(response.notification.request.content.userInfo["taskID"] as? String == task.id.uuidString)
+        #expect(calls.count == 1)
+        #expect(task.placeRemindedAt != nil, "the work is done before the completion")
+        #expect(fixture.store.context.hasChanges == false, "the mark is saved")
+        // Opening is not asserted here: in the test host the app's `ContentView` observes `OpenTaskRequest.shared`
+        // and consumes it (sets it back to nil) while this test waits for the completion; `tapOnPlaceMarksAndOpens`
+        // covers the opening.
+        OpenTaskRequest.shared.taskID = nil
+    }
+
+    @Test("willPresent (callback variant): completion once with banner, list, sound, before the mark; mark after (AC-2, AC-5)")
+    @MainActor func willPresentCompletesBeforeTheMark() async throws {
+        let fixture = try Fixture()
+        let task = try fixture.placed("Drucker abholen")
+        let notification = try Self.notification(identifier: "place_" + task.id.uuidString, taskID: task.id)
+        let calls = Calls()
+
+        fixture.center.userNotificationCenter(.current(), willPresent: notification) { options in
+            calls.count += 1
+            calls.options.append(options)
+            calls.markSetAtCompletion.append(task.placeRemindedAt != nil)
+        }
+
+        #expect(calls.count == 1)
+        #expect(calls.options == [[.banner, .list, .sound]])
+        #expect(calls.markSetAtCompletion == [false], "the completion does not wait for the mark")
+        try await Self.waitForMark(on: task)
+        #expect(task.placeRemindedAt != nil)
+        #expect(fixture.store.context.hasChanges == false, "the mark is saved")
+        #expect(calls.count == 1)
+    }
+
+    @Test("willPresent of a due reminder completes once and never sets the place mark (AC-5)")
+    @MainActor func willPresentDueLeavesTheMark() async throws {
+        let fixture = try Fixture()
+        let task = try fixture.placed("Drucker abholen")
+        let notification = try Self.notification(identifier: "due_" + task.id.uuidString, taskID: task.id)
+        let calls = Calls()
+
+        fixture.center.userNotificationCenter(.current(), willPresent: notification) { options in
+            calls.count += 1
+            calls.options.append(options)
+        }
+        try await Task.sleep(for: .milliseconds(200))
+
+        #expect(calls.count == 1)
+        #expect(calls.options == [[.banner, .list, .sound]])
+        #expect(task.placeRemindedAt == nil)
     }
 }

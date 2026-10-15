@@ -258,7 +258,8 @@ import UserNotifications
         let german = try #require(Bundle(path: path))
         #expect(german.localizedString(forKey: "You're at %@.", value: nil, table: nil) == "Du bist bei %@.")
         let key = "NSLocationWhenInUseUsageDescription"
-        let english = try #require(Bundle.main.object(forInfoDictionaryKey: key) as? String)
+        // `infoDictionary` is not localized; `object(forInfoDictionaryKey:)` gives German on a German simulator.
+        let english = try #require(Bundle.main.infoDictionary?[key] as? String)
         #expect(english.isEmpty == false)
         let translated = german.localizedString(forKey: key, value: nil, table: "InfoPlist")
         #expect(translated != key && translated != english, "the German InfoPlist.strings carries its own text")

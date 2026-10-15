@@ -1,0 +1,120 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/DueNotificationCenterTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueNotificationCenterTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/DueNotificationCenterTests.swift:59:39: [33m'#require(_:_:)' is redundant because 'TaskPlace(name: "Büro", latitude: 51.99563, longitude: 7.71357, event: .arrive)' never equals 'nil' (from macro 'require')[0m
+ 57 |         func placed(_ raw: String) throws -> TaskItem {
+[32m 58 |             let task = try task(raw)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/LooseEndsTests/DueNotificationCenterTests.swift:68:45: [33m'#require(_:_:)' is redundant because 'calendar.date(bySettingHour: hour, minute: minute, second: 0, of: tomorrow)' never equals 'nil' (from macro 'require')[0m
+ 66 |             task.status = .active
+[32m 67 |             if let hour {[0m
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsTests.swiftsourceinfo
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsTests.abi.json
+[[36mLooseEndsTests[0m] [1mLinking[0m LooseEndsTests
+[[36mLooseEndsTests[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+Test Suite 'Selected tests' started at 2026-10-15 07:36:58.261.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-15 07:36:58.261.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-15 07:36:58.262.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+[1mTest run started.[0m
+Suite "DueNotificationCenter" started
+    [32m✔[0m "A task with a due time is handed over as due now, at that time, in the DUE category" (0.015 seconds)
+    [32m✔[0m "A task without a due time is handed over as due today, at the set time; a new time replaces it" (0.006 seconds)
+    [32m✔[0m "Other requests stay; a completed task loses its request" (0.006 seconds)
+    [32m✔[0m "A time set on another device is taken over and planned with" (0.005 seconds)
+    [32m✔[0m "Activating sets the categories once, DUE with Tomorrow and PLACE without (AC-1)" (0.002 seconds)
+    [32m✔[0m "Tapping a place notification marks the task, saves, and opens it — without any place center (AC-3, AC-4)" (0.007 seconds)
+    [32m✔[0m "Complete and Next up on a place notification act and mark; Tomorrow changes nothing there (AC-4)" (0.016 seconds)
+    [32m✔[0m "A due notification keeps its path and never sets the place mark (AC-3)" (0.008 seconds)
+    [32m✔[0m "A place notification in front marks its task in its own task; a due one does not (AC-5)" (0.005 seconds)
+    [32m✔[0m "Every reschedule runs the place reconcile after the due run, which still completes (AC-9)" (0.005 seconds)
+    [32m✔[0m "didReceive (callback variant) answers a place tap, then calls its completion exactly once (AC-2)" ([33m0.074[0m seconds)
+    [32m✔[0m "willPresent (callback variant): completion once with banner, list, sound, before the mark; mark after (AC-2, AC-5)" (0.017 seconds)
+    [32m✔[0m "willPresent of a due reminder completes once and never sets the place mark (AC-5)" ([31m0.207[0m seconds)
+Suite "DueNotificationCenter" passed after 0.380 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-goose240/Logs/Test/Test-LooseEnds-2026.10.15_07-36-53-+0200.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 1 von 5 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/DueNotificationCenterTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+Test Suite 'Selected tests' started at 2026-10-15 07:37:02.420.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-15 07:37:02.421.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-15 07:37:02.421.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+[1mTest run started.[0m
+Suite "DueNotificationCenter" started
+    [32m✔[0m "A task with a due time is handed over as due now, at that time, in the DUE category" (0.016 seconds)
+    [32m✔[0m "A task without a due time is handed over as due today, at the set time; a new time replaces it" (0.006 seconds)
+    [32m✔[0m "Other requests stay; a completed task loses its request" (0.006 seconds)
+    [32m✔[0m "A time set on another device is taken over and planned with" (0.006 seconds)
+    [32m✔[0m "Activating sets the categories once, DUE with Tomorrow and PLACE without (AC-1)" (0.002 seconds)
+    [32m✔[0m "Tapping a place notification marks the task, saves, and opens it — without any place center (AC-3, AC-4)" (0.008 seconds)
+    [32m✔[0m "Complete and Next up on a place notification act and mark; Tomorrow changes nothing there (AC-4)" (0.018 seconds)
+    [32m✔[0m "A due notification keeps its path and never sets the place mark (AC-3)" (0.006 seconds)
+    [32m✔[0m "A place notification in front marks its task in its own task; a due one does not (AC-5)" (0.005 seconds)
+    [32m✔[0m "Every reschedule runs the place reconcile after the due run, which still completes (AC-9)" (0.004 seconds)
+    [32m✔[0m "didReceive (callback variant) answers a place tap, then calls its completion exactly once (AC-2)" ([33m0.070[0m seconds)
+    [32m✔[0m "willPresent (callback variant): completion once with banner, list, sound, before the mark; mark after (AC-2, AC-5)" (0.018 seconds)
+    [32m✔[0m "willPresent of a due reminder completes once and never sets the place mark (AC-5)" ([31m0.215[0m seconds)
+Suite "DueNotificationCenter" passed after 0.390 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-goose240/Logs/Test/Test-LooseEnds-2026.10.15_07-37-00-+0200.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 1 von 5 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/DueNotificationCenterTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+Test Suite 'Selected tests' started at 2026-10-15 07:37:06.235.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-15 07:37:06.236.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-15 07:37:06.236.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+[1mTest run started.[0m
+Suite "DueNotificationCenter" started
+    [32m✔[0m "A task with a due time is handed over as due now, at that time, in the DUE category" (0.016 seconds)
+    [32m✔[0m "A task without a due time is handed over as due today, at the set time; a new time replaces it" (0.006 seconds)
+    [32m✔[0m "Other requests stay; a completed task loses its request" (0.006 seconds)
+    [32m✔[0m "A time set on another device is taken over and planned with" (0.005 seconds)
+    [32m✔[0m "Activating sets the categories once, DUE with Tomorrow and PLACE without (AC-1)" (0.002 seconds)
+    [32m✔[0m "Tapping a place notification marks the task, saves, and opens it — without any place center (AC-3, AC-4)" (0.008 seconds)
+    [32m✔[0m "Complete and Next up on a place notification act and mark; Tomorrow changes nothing there (AC-4)" (0.017 seconds)
+    [32m✔[0m "A due notification keeps its path and never sets the place mark (AC-3)" (0.006 seconds)
+    [32m✔[0m "A place notification in front marks its task in its own task; a due one does not (AC-5)" (0.005 seconds)
+    [32m✔[0m "Every reschedule runs the place reconcile after the due run, which still completes (AC-9)" (0.004 seconds)
+    [32m✔[0m "didReceive (callback variant) answers a place tap, then calls its completion exactly once (AC-2)" ([33m0.066[0m seconds)
+    [32m✔[0m "willPresent (callback variant): completion once with banner, list, sound, before the mark; mark after (AC-2, AC-5)" (0.018 seconds)
+    [32m✔[0m "willPresent of a due reminder completes once and never sets the place mark (AC-5)" ([31m0.209[0m seconds)
+Suite "DueNotificationCenter" passed after 0.376 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-goose240/Logs/Test/Test-LooseEnds-2026.10.15_07-37-04-+0200.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 1 von 5 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json

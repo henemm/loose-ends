@@ -30,7 +30,13 @@ struct LooseEndsApp: App {
         LaunchTimings.mark(.containerEnd)
         let enricher: any TaskEnricher = ModelContainerFactory.isUITesting ? ModelOffEnricher() : FoundationModelsEnricher()
         enrichment = EnrichmentCoordinator(enricher: enricher, container: container)
-        notifications = DueNotificationCenter(container: container)
+        #if os(iOS)
+        Self.seedPlaceTaskIfAsked(in: container)
+        let places: (any PlaceReconciling)? = PlaceNotificationCenter(container: container)
+        #else
+        let places: (any PlaceReconciling)? = nil
+        #endif
+        notifications = DueNotificationCenter(container: container, places: places)
         notifications.activate()
         calendar = CalendarBridge(container: container)
         if ModelContainerFactory.isUITesting { MainThreadWatchdog.start() }
@@ -52,6 +58,29 @@ struct LooseEndsApp: App {
             Logger(subsystem: "com.henning.looseends", category: "Persistence")
                 .error("Schema-Initialisierung fehlgeschlagen: \(error, privacy: .public)")
             exit(1)
+        }
+    }
+    #endif
+
+    #if os(iOS)
+    /// The task the pushed place notification names in `PlaceNotificationTapTests` (#240), only under
+    /// `--ui-testing-places` and only in the in-memory store. Lined up, so it stands on the start screen.
+    private static func seedPlaceTaskIfAsked(in container: ModelContainer) {
+        guard ModelContainerFactory.isUITesting,
+              ProcessInfo.processInfo.arguments.contains(PlaceNotifications.testArgument),
+              let id = UUID(uuidString: "00000000-0000-0000-0000-000000000240") else { return }
+        let task = TaskItem(rawText: "UI test place")
+        task.id = id
+        task.title = "UI test place"
+        task.status = .active
+        task.nextRank = 1
+        task.place = TaskPlace(name: "Post office", latitude: 51.99563, longitude: 7.71357, event: .arrive)
+        container.mainContext.insert(task)
+        do {
+            try container.mainContext.save()
+        } catch {
+            Logger(subsystem: "com.henning.looseends", category: "Notifications")
+                .error("Seeding the place test task failed: \(error, privacy: .public)")
         }
     }
     #endif

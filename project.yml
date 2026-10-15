@@ -87,6 +87,7 @@ targets:
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
         NSMicrophoneUsageDescription: Loose Ends listens so you can say a task instead of typing it.
+        NSLocationWhenInUseUsageDescription: Only when a task has a place, Loose Ends asks the system to remind you when you arrive or leave.
         NSSpeechRecognitionUsageDescription: Speech is turned into text on your device to capture a task.
         NSCalendarsFullAccessUsageDescription: Only if you switch it on, a task with a due date is shown in "Loose Ends" or in a calendar you pick. The app only changes its own events.
         NSUserActivityTypes: [com.henning.looseends.capture]

@@ -1,0 +1,56 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "FC38C177-1826-445A-A210-30CAD97F76B3",
+        "deviceName" : "iPhone Air",
+        "exportedFileName" : "B912BBF1-6533-4971-8E9E-E7D8C5D52FE1.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "place-in-front_0_C4622571-5C6D-452C-8773-70A8BFA79642.png",
+        "timestamp" : 1792046896.832
+      }
+    ],
+    "testIdentifier" : "PlaceNotificationTapTests/testBannerWhileAppIsOpenKeepsAppAlive()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/PlaceNotificationTapTests/testBannerWhileAppIsOpenKeepsAppAlive"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "FC38C177-1826-445A-A210-30CAD97F76B3",
+        "deviceName" : "iPhone Air",
+        "exportedFileName" : "DA9ADDCE-5FDE-4A51-A486-87FF281C7053.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "place-completed_0_F5EE8013-A892-49EA-BC36-5C2C87AAD2B8.png",
+        "timestamp" : 1792046960.75
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "FC38C177-1826-445A-A210-30CAD97F76B3",
+        "deviceName" : "iPhone Air",
+        "exportedFileName" : "8C0ABE20-D3E2-4557-A052-B6F99ED75006.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "place-buttons_0_E56BF82C-C8BB-4E4D-BE89-77116F46A276.png",
+        "timestamp" : 1792046955.281
+      }
+    ],
+    "testIdentifier" : "PlaceNotificationTapTests/testButtonsCompleteWithoutTomorrow()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/PlaceNotificationTapTests/testButtonsCompleteWithoutTomorrow"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "FC38C177-1826-445A-A210-30CAD97F76B3",
+        "deviceName" : "iPhone Air",
+        "exportedFileName" : "1CC423EC-7D46-4B15-A5E9-C5C92140EE10.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "opened-from-place_0_9BCFF225-5758-46F6-9519-D6EA5DF893E8.png",
+        "timestamp" : 1792047025.875
+      }
+    ],
+    "testIdentifier" : "PlaceNotificationTapTests/testTapBannerFromHomeOpensApp()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/PlaceNotificationTapTests/testTapBannerFromHomeOpensApp"
+  }
+]

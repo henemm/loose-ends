@@ -1,0 +1,8 @@
+getpwuid_r did not find a match for uid 501
+Filtering the log data using "subsystem == "com.henning.looseends""
+Timestamp                       Thread     Type        Activity             PID    TTL  
+2026-10-15 06:45:24.131013+0200 0x22abe    Default     0x0                  21974  0    LooseEnds: (LooseEnds.debug.dylib) [com.henning.looseends:Watchdog] Watchdog started
+2026-10-15 06:45:25.339747+0200 0x22958    Default     0x0                  21974  0    LooseEnds: (LooseEnds.debug.dylib) [com.henning.looseends:Enrichment] Model unavailable, rules only: Apple Intelligence is off under UI testing.
+2026-10-15 06:45:50.052400+0200 0x2331a    Default     0x0                  22313  0    LooseEnds: (LooseEnds.debug.dylib) [com.henning.looseends:Watchdog] Watchdog started
+2026-10-15 06:45:50.221730+0200 0x232d9    Default     0x0                  22313  0    LooseEnds: (LooseEnds.debug.dylib) [com.henning.looseends:Enrichment] Model unavailable, rules only: Apple Intelligence is off under UI testing.
+Child process terminated with signal 15: Terminated

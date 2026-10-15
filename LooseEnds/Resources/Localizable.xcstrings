@@ -190,6 +190,7 @@
     "Listening …" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ich höre …" } } } },
     "Listen" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Zuhören" } } } },
     "Due today" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute fällig" } } } },
+    "You're at %@." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Du bist bei %@." } } } },
     "Due now" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Jetzt fällig" } } } },
     "Settings" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Einstellungen" } } } },
     "About" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Info" } } } },
