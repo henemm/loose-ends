@@ -113,6 +113,18 @@ th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute
 .sub svg{color:var(--grey);width:15px;height:15px;flex:none}
 .sub .sp{width:15px;flex:none}
 .lbl{font:600 11px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin:14px 0 2px}
+
+/* Überschrift */
+.heads{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px;margin-top:22px}
+.hd{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:6px 20px 16px;min-width:0}
+.hd h3{font:500 18px/1.2 var(--serif);margin:12px 0 2px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.hd .why{font-size:13px;color:var(--muted);line-height:1.5;margin:12px 0 0}
+.hd .why b{color:var(--ink);font-weight:600}
+.hd .head{margin-bottom:10px}
+.hd .head .r{color:var(--red)}
+.cases{font-size:13px;line-height:1.5;margin:8px 0 0;padding:0;list-style:none;color:var(--muted)}
+.cases li{padding:3px 0;border-top:.5px solid var(--hair)}
+.cases li b{font:400 15px var(--serif);color:var(--ink)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -137,8 +149,8 @@ th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute
   </div>
 </template>
 <template id="head">
-  <div class="dateline"><svg><use href="#knot"/></svg></div>
-  <div class="head">Donnerstag, 15. Oktober</div>
+  <div class="dateline"><svg><use href="#knot"/></svg>Donnerstag, 15. Oktober</div>
+  <div class="head">12 lose Enden.</div>
   <div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
   <div class="cap">Jetzt</div>
   <div class="row"><div><div class="t">Steuerbescheid prüfen</div><div class="m"><span class="r">Heute 12:00</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Computer</span></div></div></div>
@@ -225,6 +237,24 @@ th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute
     </section>
   </div>
 
+
+
+  <h2>Die Überschrift</h2>
+  <p class="p">Die große Zeile in New York bleibt, das Datum rückt klein zum Knoten darüber. Die Überschrift sagt etwas, das die Seite sonst nicht in einem Blick sagt. Alle drei entstehen aus Regeln, ohne Modell, mit festen Sätzen je Fall.</p>
+  <div class="heads">
+    <div class="hd"><h3>K1 · Lose Enden <span class="rec" style="font-family:var(--sans)">Empfehlung</span></h3>
+      <div class="dateline"><svg><use href="#knot"/></svg>Donnerstag, 15. Oktober</div><div class="head">12 lose Enden.</div><div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
+      <ul class="cases"><li><b>Alles verknotet.</b> wenn nichts offen ist</li><li><b>Ein loses Ende.</b> bei einer Aufgabe</li><li><b>12 lose Enden.</b> alle offenen ohne Geparkte</li></ul>
+      <p class="why">Der Name der App wird zur Zahl, die zählt: Wie viel hängt gerade lose? Ruhig, ohne Druck, und am Ende eines guten Tages steht „Alles verknotet.“ <b>Preis:</b> Die Zahl sagt nichts über heute; das tut „Jetzt“ darunter.</p></div>
+    <div class="hd"><h3>K2 · Was drängt</h3>
+      <div class="dateline"><svg><use href="#knot"/></svg>Donnerstag, 15. Oktober</div><div class="head"><span class="r">Zwei Dinge</span> drängen heute.</div><div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
+      <ul class="cases"><li><b>Heute drängt nichts.</b> ohne Fälliges</li><li><b>Eins drängt heute.</b> bei einer Aufgabe</li><li><b>Zwei Dinge drängen heute.</b> heute fällig und verpasst</li></ul>
+      <p class="why">Die Antwort auf „Muss ich heute etwas?“, bevor man liest. Rot nur für die Zahl, wie im Farbbudget. <b>Preis:</b> Wiederholt, was „Jetzt“ in Rot schon zeigt; an ruhigen Tagen steht dort jeden Tag derselbe Satz.</p></div>
+    <div class="hd"><h3>K3 · Das Nächste</h3>
+      <div class="dateline"><svg><use href="#knot"/></svg>Donnerstag, 15. Oktober</div><div class="head">Um 12:00 Steuerbescheid.</div><div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
+      <ul class="cases"><li><b>Kein Termin heute.</b> ohne Uhrzeit</li><li><b>Um 12:00 Steuerbescheid.</b> die nächste Uhrzeit</li><li><b>Verpasst: Zahnarzt, 9:00.</b> wenn eine Uhrzeit vorbei ist</li></ul>
+      <p class="why">Wie ein Blick in den Kalender: das eine, was als Nächstes eine feste Zeit hat. <b>Preis:</b> Lange Titel brechen um; die Zeile steht doppelt, denn dieselbe Aufgabe steht in „Jetzt“ oben.</p></div>
+  </div>
 
   <h2>Das Zeichen vor der Aufgabe</h2>
   <p class="p">Die Kreise in den Telefonen hatte ich hineingezeichnet. Die App selbst setzt vor eine Aufgabe nichts: Titel in New York, darunter die Merkmale. Erledigt wird per Wisch, dabei zieht sich der Knoten grün zu (#180). Kreise gibt es in der App nur bei Unteraufgaben. Drei Wege für die Aufgaben und einer für die Unteraufgaben; die Telefone oben zeigen jetzt Z1.</p>
