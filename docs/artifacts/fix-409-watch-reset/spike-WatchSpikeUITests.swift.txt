@@ -1,0 +1,32 @@
+import XCTest
+
+// SPIKE #409 (Wegwerf-Kopie). Nachstellen: nach „Fertig“ kehrt das leere Feld zurück?
+final class WatchSpikeUITests: XCTestCase {
+    func testSpike() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["--ui-testing"]
+        app.launch()
+
+        let field = app.textFields.firstMatch
+        XCTAssertTrue(field.waitForExistence(timeout: 10))
+        field.tap()
+        app.typeText("Milch kaufen")
+        let sheetDone = app.navigationBars.buttons.element(boundBy: 1)
+        print("SPIKE sheetDone=\(sheetDone.label)")
+        sheetDone.tap()
+        sleep(1)
+        print("SPIKE-AFTER-SHEET\n\(app.debugDescription)")
+        do { let a = XCTAttachment(screenshot: app.screenshot()); a.lifetime = .keepAlways; add(a) }
+
+        let done = app.buttons.matching(NSPredicate(format: "isEnabled == true")).firstMatch
+        print("SPIKE appDone=\(done.label) enabled=\(done.isEnabled)")
+        done.tap()
+        sleep(1)
+        print("SPIKE-SAVED\n\(app.debugDescription)")
+        do { let a = XCTAttachment(screenshot: app.screenshot()); a.lifetime = .keepAlways; add(a) }
+        sleep(3)
+        print("SPIKE-AFTER-4S\n\(app.debugDescription)")
+        do { let a = XCTAttachment(screenshot: app.screenshot()); a.lifetime = .keepAlways; add(a) }
+        print("SPIKE RESULT fieldBack=\(app.textFields.firstMatch.exists)")
+    }
+}

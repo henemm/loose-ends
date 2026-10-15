@@ -1,0 +1,45 @@
+# fix-409-watch-reset — TDD GREEN (2026-10-15)
+
+## 1. Watch-UI-Test: CLAUDE_SESSION_ID=409-green ./scripts/sim.sh watch-test-proof WatchCaptureUITests
+xcodebuild: Executed 2 tests, with 0 failures (0 unexpected) in 77.772 seconds — Test Succeeded
+
+### simulator-run.txt
+# Simulator-Beleg
+erzeugt: 2026-10-15T07:41:37+0200
+befehl: scripts/sim.sh test-proof WatchCaptureUITests
+workflow: fix-409-watch-reset
+head: c323154e07c9ba0c2b03532ca0992e8ef8ed5593
+basis: a371718bc3a71a4dafeee2ebb7a9a47a175aff1d (merge-base origin/main HEAD)
+testklasse: WatchCaptureUITests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 2 gesamt, 2 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1792042776.892  ende: 1792042893.668
+geraet: Apple Watch Series 12, watchOS 27.0
+summary: docs/artifacts/fix-409-watch-reset/simulator-run/summary.json  sha256:f2b94ece12c034be6716e44ac1e67f429b03cec9a78caaa1dd9e3466f34df34e
+xcresult: docs/artifacts/fix-409-watch-reset/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-409-watch-reset/simulator-run/*.png (4 Stück)
+
+## Geprüfte Dateien
+- sha256:f737c4d79ab78d90577fcf14a5940882e47408446a8122ce23219f4b9107e727  LooseEndsUITests/Watch/WatchCaptureUITests.swift
+- sha256:ee69e583d817c13bf218dd7a22b42215ad0a164ac62eb7941d9b8b7e18cd772f  LooseEndsWatch/WatchCaptureView.swift
+
+## 2. Skripttests: python3 -m unittest -v scripts.test_sim_proof scripts.test_ci_xcode27 scripts.test_entitlements_sync
+test_watch_run_names_the_watch_not_the_paired_iphone (scripts.test_sim_proof.SummaryParsingTests) ... ok
+test_passed_summary_gives_counts_device_and_times (scripts.test_sim_proof.SummaryParsingTests) ... ok
+(test_sim_proof: 14 Tests OK; test_ci_xcode27: 17 Tests OK; test_entitlements_sync: 4 Tests OK)
+----------------------------------------------------------------------
+Ran 35 tests in 1.433s
+
+OK
+
+## 3. Unit-Tests im Simulator: CLAUDE_SESSION_ID=409-green ./scripts/sim.sh sim-unit
+xcresult (Test-LooseEnds-2026.10.15_07-41-54-+0200.xcresult) summary:
+result: Passed, 644 gesamt, 641 bestanden, 0 fehlgeschlagen, 3 übersprungen — iPhone 17, iOS 27.0
+[sim] Unit-Tests bestanden.
+[sim] Messstrecken: 1 von 5 übersprungen (SelfConsistencyReportTests – fehlt: selfconsistency-run.json)
+Danach zurückgesetzt: docs/reference/focusblox-calibration-report.md, docs/reference/retrieval-leave-one-out-rules.md;
+vom Lauf neu erzeugt und entfernt: docs/reference/context-word-learning.md (untracked).
+
+## 4. iOS-Bau: CLAUDE_SESSION_ID=409-green ./scripts/sim.sh build
+Build Succeeded (inkl. Validate Embedded Binary LooseEndsWatch.app)

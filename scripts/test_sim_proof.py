@@ -45,6 +45,14 @@ class SummaryParsingTests(NeedsModule):
         self.assertEqual(s["geraet"], "iPhone 17, iOS 27.0")
         self.assertEqual((s["start"], s["ende"]), (1759320000.5, 1759320042.0))
 
+    def test_watch_run_names_the_watch_not_the_paired_iphone(self):
+        # #409: xcresult gives a watch simulator the paired iPhone's name as deviceName.
+        watch = dict(PASSED, devicesAndConfigurations=[{"device": {
+            "deviceName": "iPhone 18 Pro Max", "modelName": "Apple Watch Series 12",
+            "osVersion": "27.0", "platform": "watchOS Simulator"}}])
+        self.assertEqual(sim_proof.parse_summary(watch, xcodebuild_exit=0)["geraet"],
+                         "Apple Watch Series 12, watchOS 27.0")
+
     def test_failed_summary_is_failed(self):
         self.assertEqual(sim_proof.parse_summary(FAILED, xcodebuild_exit=65)["ergebnis"], "Failed")
 

@@ -312,7 +312,8 @@ targets:
     type: bundle.ui-testing
     supportedDestinations: [iOS, macOS]
     sources:
-      - LooseEndsUITests
+      - path: LooseEndsUITests
+        excludes: ["Watch/**"]   # watchOS UI tests, own target below (#409)
       - Measurement   # the same corpus feeds the Reminders benchmark (#78)
       - path: Shared/Services/RawTextWords.swift   # s. LooseEndsLab (#136)
     dependencies:
@@ -321,6 +322,20 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends.uitests
         GENERATE_INFOPLIST_FILE: YES
+
+  # Watch capture flow in the watchOS simulator (#409): `./scripts/sim.sh watch-test-proof <Class>`.
+  LooseEndsWatchUITests:
+    type: bundle.ui-testing
+    platform: watchOS
+    sources:
+      - LooseEndsUITests/Watch   # next to the iOS UI tests, so the test-folder rules apply alike
+    dependencies:
+      - target: LooseEndsWatch
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends.watchuitests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: LooseEndsWatch
 
 schemes:
   LooseEnds:
@@ -332,3 +347,10 @@ schemes:
     test:
       targets: [LooseEndsTests, LooseEndsUITests]
       gatherCoverageData: true
+  LooseEndsWatch:
+    build:
+      targets:
+        LooseEndsWatch: all
+        LooseEndsWatchUITests: [test]
+    test:
+      targets: [LooseEndsWatchUITests]

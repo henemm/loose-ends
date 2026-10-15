@@ -54,6 +54,7 @@ brew install xcodegen xcbeautify
 ./scripts/sim.sh unit         # Unit-Tests
 ./scripts/sim.sh build        # iOS-App für den Simulator
 ./scripts/sim.sh test-proof <Klasse>  # UI-Test + maschineller Simulator-Beleg (#145)
+./scripts/sim.sh watch-test-proof <Klasse>  # dasselbe im watchOS-Simulator, App vorher deinstalliert (#409)
 ./scripts/sim.sh launch-measure <n>   # Kaltstart-Messung, n Starts auf dem Gerät (#22)
 ```
 

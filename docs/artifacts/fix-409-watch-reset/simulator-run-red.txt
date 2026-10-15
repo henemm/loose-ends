@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-10-15T07:13:21+0200
+befehl: scripts/sim.sh test-proof WatchCaptureUITests
+workflow: fix-409-watch-reset
+head: 254280fb7962be64a9f6c1ef04b1afc8657dbb4b
+basis: 254280fb7962be64a9f6c1ef04b1afc8657dbb4b (merge-base origin/main HEAD)
+testklasse: WatchCaptureUITests
+ergebnis: Failed
+xcodebuild: ** TEST FAILED **
+tests: 2 gesamt, 1 bestanden, 1 fehlgeschlagen, 0 übersprungen
+start: 1792041103.305  ende: 1792041196.771
+geraet: iPhone 18 Pro Max, iOS 27.0
+summary: docs/artifacts/fix-409-watch-reset/simulator-run/summary.json  sha256:5d8b3c17f686434281cefa6d35fb22f2ce9f2592a21255212f33f762e18014e4
+xcresult: docs/artifacts/fix-409-watch-reset/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-409-watch-reset/simulator-run/*.png (1 Stück)
+
+## Geprüfte Dateien
+- sha256:f737c4d79ab78d90577fcf14a5940882e47408446a8122ce23219f4b9107e727  LooseEndsUITests/Watch/WatchCaptureUITests.swift

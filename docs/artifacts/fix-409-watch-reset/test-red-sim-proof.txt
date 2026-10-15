@@ -1,0 +1,19 @@
+.........F....
+======================================================================
+FAIL: test_watch_run_names_the_watch_not_the_paired_iphone (scripts.test_sim_proof.SummaryParsingTests.test_watch_run_names_the_watch_not_the_paired_iphone)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/scripts/test_sim_proof.py", line 53, in test_watch_run_names_the_watch_not_the_paired_iphone
+    self.assertEqual(sim_proof.parse_summary(watch, xcodebuild_exit=0)["geraet"],
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     "Apple Watch Series 12, watchOS 27.0")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'iPhone 18 Pro Max, iOS 27.0' != 'Apple Watch Series 12, watchOS 27.0'
+- iPhone 18 Pro Max, iOS 27.0
++ Apple Watch Series 12, watchOS 27.0
+
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.597s
+
+FAILED (failures=1)

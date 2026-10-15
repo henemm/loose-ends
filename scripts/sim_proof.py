@@ -52,7 +52,10 @@ def parse_summary(summary, xcodebuild_exit):
     out["ende"] = summary.get("finishTime", UNKNOWN)
     devices = summary.get("devicesAndConfigurations") or [{}]
     device = devices[0].get("device") or {}
-    if "deviceName" in device and "osVersion" in device:
+    if str(device.get("platform", "")).startswith("watchOS") and "modelName" in device and "osVersion" in device:
+        # #409: for a watch simulator xcresult reports the paired iPhone as deviceName.
+        out["geraet"] = f"{device['modelName']}, watchOS {device['osVersion']}"
+    elif "deviceName" in device and "osVersion" in device:
         out["geraet"] = f"{device['deviceName']}, iOS {device['osVersion']}"
     else:
         out["geraet"] = UNKNOWN
