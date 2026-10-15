@@ -125,6 +125,12 @@ th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute
 .cases{font-size:13px;line-height:1.5;margin:8px 0 0;padding:0;list-style:none;color:var(--muted)}
 .cases li{padding:3px 0;border-top:.5px solid var(--hair)}
 .cases li b{font:400 15px var(--serif);color:var(--ink)}
+
+.days{list-style:none;margin:10px 0 0;padding:0;font-size:12px;color:var(--muted)}
+.days li{display:grid;grid-template-columns:62px 1fr;gap:8px;padding:6px 0;border-top:.5px solid var(--hair);align-items:baseline}
+.days li b{font:400 15px/1.3 var(--serif);color:var(--ink)}
+.days li.x{background:color-mix(in srgb,var(--red) 6%,transparent)}
+.hd .head.q{font-style:italic}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -150,7 +156,7 @@ th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute
 </template>
 <template id="head">
   <div class="dateline"><svg><use href="#knot"/></svg>Donnerstag, 15. Oktober</div>
-  <div class="head">12 lose Enden.</div>
+  <div class="head">Mama wartet seit drei Tagen.</div>
   <div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
   <div class="cap">Jetzt</div>
   <div class="row"><div><div class="t">Steuerbescheid prüfen</div><div class="m"><span class="r">Heute 12:00</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Computer</span></div></div></div>
@@ -230,29 +236,32 @@ th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute
         <svg class="coil"><use href="#loose"/></svg>
       </div></div>
       <ul class="notes">
-        <li>Die App spricht, wie du erfasst: in einem Satz. Jede Zahl und jeder Tag ist ein Link. Der lose Faden schließt die Seite.</li>
-        <li>Der Satz entsteht aus Regeln mit festen Bausteinen; ohne Modell, mit Tests je Fall.</li>
-        <li class="minus">Links im Fließtext sind kleinere Ziele als Zeilen. Projekte und Wiederkehrend fehlen im Satz und brauchen einen eigenen Weg.</li>
-      </ul>
-    </section>
+        <li>Die App spricht, wie du erfasst: in einem Satz.   <h2>Die Überschrift</h2>
+  <p class="p">E1 ist gesetzt. Für die große Zeile in New York fünf extreme Wege. Bedingungen: Sie wechselt von Tag zu Tag, sie ist kein Platzhalter mit einer Zahl, und sie erdrückt nicht, wenn 48 Aufgaben offen sind (rot hinterlegt). Alle entstehen aus Regeln, ohne Modell. Das Datum steht klein am Knoten.</p>
+  <div class="heads">
+    <div class="hd"><h3>X1 · Die Beobachtung <span class="rec" style="font-family:var(--sans)">Empfehlung</span></h3>
+      <div class="dateline"><svg><use href="#knot"/></svg>Donnerstag, 15. Oktober</div><div class="head ">Mama wartet seit drei Tagen.</div><div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
+      <ul class="days"><li class=""><span>Mo</span><b>Heute um 12 der Steuerbescheid.</b></li><li class=""><span>Di</span><b>Im Garten hat sich einiges gesammelt.</b></li><li class=""><span>Mi</span><b>Gestern sind vier lose Enden verknotet worden.</b></li><li class="x"><span>48 offen</span><b>Drei Dinge liegen seit einem Monat. Zeit zum Parken?</b></li></ul>
+      <p class="why">Jeden Morgen der eine Satz, der heute auffällt: eine Leiter fester Regeln, die oberste zutreffende gewinnt (feste Uhrzeit heute, am längsten weitergetragen, ein Tag mit vielen Aufgaben, was gestern erledigt wurde, sehr Altes). Die Seite liest sich wie eine Notiz an dich, und weil sich die Daten ändern, ändert sich der Satz. <b>Preis:</b> Rund zehn Satzbausteine je Sprache und eine Regel, welcher gewinnt; alles testbar, kein Modell. Am Tag ohne Auffälligkeit braucht es einen ruhigen Rückfallsatz.</p></div>
+    <div class="hd"><h3>X2 · Der Tagescharakter</h3>
+      <div class="dateline"><svg><use href="#knot"/></svg>15. Oktober</div><div class="head ">Ein ruhiger Donnerstag.</div><div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
+      <ul class="days"><li class=""><span>Mo</span><b>Ein voller Montag.</b></li><li class=""><span>Di</span><b>Ein Dienstag mit einem Termin.</b></li><li class=""><span>Mi</span><b>Ein freier Mittwoch.</b></li><li class="x"><span>48 offen</span><b>Ein voller Donnerstag.</b></li></ul>
+      <p class="why">Das Datum selbst bekommt Bedeutung: der Wochentag mit einem Wort für den Tag, aus der Zahl der heute fälligen und festen Termine (frei, ruhig, mit einem Termin, voll). Die Zahl aller offenen kommt nie vor. <b>Preis:</b> Vier, fünf Wörter wiederholen sich; nach ein paar Wochen kennt man sie. Sagt nicht, was zu tun ist.</p></div>
+    <div class="hd"><h3>X3 · Die eine Aufgabe</h3>
+      <div class="dateline"><svg><use href="#knot"/></svg>Donnerstag, 15. Oktober</div><div class="head ">Steuerbescheid prüfen.</div><div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
+      <ul class="days"><li class=""><span>Mo</span><b>Mama zurückrufen.</b></li><li class=""><span>Di</span><b>Hecke am Eingang schneiden.</b></li><li class=""><span>Mi</span><b>Nichts drängt. Such dir etwas aus.</b></li><li class="x"><span>48 offen</span><b>Steuerbescheid prüfen.</b></li></ul>
+      <p class="why">Die Überschrift ist die eine Aufgabe, die jetzt dran ist (die erste aus „Jetzt“), groß in New York; ein Tipp öffnet sie, ein Wisch erledigt sie. Darunter steht der Rest. Radikaler Fokus: Auch bei 48 Aufgaben sieht man nur eine. <b>Preis:</b> Dieselbe Aufgabe steht nicht noch einmal in „Jetzt“, die Liste rückt nach. Die Überschrift wird bedienbar, das ist mehr als ein Text.</p></div>
+    <div class="hd"><h3>X4 · Zuletzt gesagt</h3>
+      <div class="dateline"><svg><use href="#knot"/></svg>Gestern, 21:40</div><div class="head q">„Morgen unbedingt Mama anrufen“</div><div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
+      <ul class="days"><li class=""><span>Mo</span><b>„Rasenmäher Ölwechsel am Samstag“</b></li><li class=""><span>Di</span><b>„Steuer bis Freitag“</b></li><li class=""><span>Mi</span><b>„Hecke vorne schneiden, dauert ne halbe Stunde“</b></li><li class="x"><span>48 offen</span><b>„Paket für Anna zur Post“</b></li></ul>
+      <p class="why">Die Überschrift zitiert, was du zuletzt gesagt hast, als Rohtext, unverändert, kursiv. Darüber klein, wann. Das ist das Versprechen der App: Gesagt, und es ist sortiert. Jede Erfassung ändert die Seite. <b>Preis:</b> Erinnert an das Erfasste, nicht an das Wichtige. Ein Diktierfehler steht groß da.</p></div>
+    <div class="hd"><h3>X5 · Der Rückblick</h3>
+      <div class="dateline"><svg><use href="#knot"/></svg>Donnerstag, 15. Oktober</div><div class="head ">Gestern: vier verknotet.</div><div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
+      <ul class="days"><li class=""><span>Mo</span><b>Am Wochenende: zwei verknotet.</b></li><li class=""><span>Di</span><b>Gestern: nichts verknotet. Heute ist neu.</b></li><li class=""><span>Mi</span><b>Diese Woche: elf verknotet.</b></li><li class="x"><span>48 offen</span><b>Gestern: drei verknotet.</b></li></ul>
+      <p class="why">Die Überschrift spricht nie über die Last, nur über das Erledigte. Die Zahl der offenen Aufgaben taucht nirgends groß auf. Wohlwollend und ruhig. <b>Preis:</b> Nah an Leistungsanzeige; das Briefing schließt Gamification und Disziplin-Statistiken aus. Nur ohne Serien, ohne Vergleiche, ohne Lob denkbar.</p></div>
   </div>
 
-
-
-  <h2>Die Überschrift</h2>
-  <p class="p">Die große Zeile in New York bleibt, das Datum rückt klein zum Knoten darüber. Die Überschrift sagt etwas, das die Seite sonst nicht in einem Blick sagt. Alle drei entstehen aus Regeln, ohne Modell, mit festen Sätzen je Fall.</p>
-  <div class="heads">
-    <div class="hd"><h3>K1 · Lose Enden <span class="rec" style="font-family:var(--sans)">Empfehlung</span></h3>
-      <div class="dateline"><svg><use href="#knot"/></svg>Donnerstag, 15. Oktober</div><div class="head">12 lose Enden.</div><div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
-      <ul class="cases"><li><b>Alles verknotet.</b> wenn nichts offen ist</li><li><b>Ein loses Ende.</b> bei einer Aufgabe</li><li><b>12 lose Enden.</b> alle offenen ohne Geparkte</li></ul>
-      <p class="why">Der Name der App wird zur Zahl, die zählt: Wie viel hängt gerade lose? Ruhig, ohne Druck, und am Ende eines guten Tages steht „Alles verknotet.“ <b>Preis:</b> Die Zahl sagt nichts über heute; das tut „Jetzt“ darunter.</p></div>
-    <div class="hd"><h3>K2 · Was drängt</h3>
-      <div class="dateline"><svg><use href="#knot"/></svg>Donnerstag, 15. Oktober</div><div class="head"><span class="r">Zwei Dinge</span> drängen heute.</div><div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
-      <ul class="cases"><li><b>Heute drängt nichts.</b> ohne Fälliges</li><li><b>Eins drängt heute.</b> bei einer Aufgabe</li><li><b>Zwei Dinge drängen heute.</b> heute fällig und verpasst</li></ul>
-      <p class="why">Die Antwort auf „Muss ich heute etwas?“, bevor man liest. Rot nur für die Zahl, wie im Farbbudget. <b>Preis:</b> Wiederholt, was „Jetzt“ in Rot schon zeigt; an ruhigen Tagen steht dort jeden Tag derselbe Satz.</p></div>
-    <div class="hd"><h3>K3 · Das Nächste</h3>
-      <div class="dateline"><svg><use href="#knot"/></svg>Donnerstag, 15. Oktober</div><div class="head">Um 12:00 Steuerbescheid.</div><div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
-      <ul class="cases"><li><b>Kein Termin heute.</b> ohne Uhrzeit</li><li><b>Um 12:00 Steuerbescheid.</b> die nächste Uhrzeit</li><li><b>Verpasst: Zahnarzt, 9:00.</b> wenn eine Uhrzeit vorbei ist</li></ul>
+rzeit</li><li><b>Um 12:00 Steuerbescheid.</b> die nächste Uhrzeit</li><li><b>Verpasst: Zahnarzt, 9:00.</b> wenn eine Uhrzeit vorbei ist</li></ul>
       <p class="why">Wie ein Blick in den Kalender: das eine, was als Nächstes eine feste Zeit hat. <b>Preis:</b> Lange Titel brechen um; die Zeile steht doppelt, denn dieselbe Aufgabe steht in „Jetzt“ oben.</p></div>
   </div>
 
