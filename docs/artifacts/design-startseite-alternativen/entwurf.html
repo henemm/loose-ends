@@ -132,6 +132,25 @@ th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute
 .days li.x{background:color-mix(in srgb,var(--red) 6%,transparent)}
 .hd .head.q{font-style:italic}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* Fassung 4: E1 fest, Randspalte, Überschriften */
+.mrow{display:grid;grid-template-columns:52px 1fr;column-gap:12px;padding:11px 0;border-bottom:.5px solid var(--hair)}
+.mrow:last-child{border-bottom:0}
+.mrow .t{font:400 18px/1.25 var(--serif)}
+.mrow .m{font:400 12.5px var(--sans);color:var(--grey);display:flex;gap:10px;align-items:center;margin-top:3px}
+.mrow .m .k{display:inline-flex;gap:3px;align-items:center}
+.margin{font:500 12px/1.3 var(--sans);color:var(--grey);text-align:right;padding-top:4px;font-variant-numeric:tabular-nums}
+.margin.r{color:var(--red)}
+.head.q{font-style:italic}
+.head .r{color:var(--red)}
+.days{list-style:none;margin:0;padding:0;font-size:12px;color:var(--muted)}
+.days li{display:grid;grid-template-columns:62px 1fr;gap:8px;padding:6px 0;border-top:.5px solid var(--line);align-items:baseline}
+.days li b{font:400 15px/1.3 var(--serif);color:var(--ink)}
+.days li.x b{color:var(--red)}
+.days li.x span{color:var(--red)}
+.fixed{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px 24px;margin:18px 0 0;max-width:980px;font-size:14px;line-height:1.45}
+.fixed div{border-top:1px solid var(--line);padding-top:8px}
+.fixed b{display:block;font:500 16px var(--serif);margin-bottom:2px}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -147,45 +166,34 @@ th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute
   <symbol id="loose" viewBox="0 0 90 34"><path d="M4 22c12 0 16-14 28-14s10 18 22 18c8 0 10-8 6-11-5-3-9 5-2 9 8 4 18-2 28-6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
 </svg>
 
-<template id="top">
-  <div class="status"><span>08:02</span><span></span></div>
-  <div class="bar">
-    <div class="glass"><svg class="i"><use href="#gear"/></svg></div>
-    <div class="glass"><svg class="i"><use href="#plus"/></svg></div>
-  </div>
-</template>
-<template id="head">
-  <div class="dateline"><svg><use href="#knot"/></svg>Donnerstag, 15. Oktober</div>
-  <div class="head">Mama wartet seit drei Tagen.</div>
-  <div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
-  <div class="cap">Jetzt</div>
-  <div class="row"><div><div class="t">Steuerbescheid prüfen</div><div class="m"><span class="r">Heute 12:00</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Computer</span></div></div></div>
-  <div class="row"><div><div class="t">Mama zurückrufen</div><div class="m"><span>Seit gestern</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Telefon</span></div></div></div>
-  <div class="row" style="border-bottom:0"><div><div class="t">Hecke am Eingang schneiden</div><div class="m"><span>30 Min.</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Garten</span></div></div></div>
-</template>
-
 <div class="wrap">
-  <h1>Startseite: drei Alternativen</h1>
-  <p class="lede">Dritte Fassung. Die zweite brach zwei Regeln aus #180: weiße Karten statt Haarlinien und alles in SF statt New York. So sah sie technisch aus, und nicht wie die App. Diese Fassung beginnt bei dem, was die App schon ist: Papiergrund, Aufgaben in New York, Beschriftungen klein in SF, der Knoten am Datum, Haarlinien. Unterschiedlich ist nur der Teil unter „Jetzt“.</p>
-  <div class="decided">
-    <span><b>Neu</b> · Leiste ganz oben, nur solange etwas wartet (#368)</span>
-    <span><b>Begriff</b> · „Tags“ überall, mit dem Etikett-Zeichen (heute entschieden)</span>
-    <span><b>Tags</b> · stehen nur noch an einer Stelle, nicht als Chips und als Liste</span>
+  <h1>Startseite: die Überschrift</h1>
+  <p class="lede">Vierte Fassung. Alles steht auf E1, dem Inhaltsverzeichnis, mit Randspalte und Tags. Verglichen wird nur die große Zeile in New York. Bedingungen: Sie wechselt von Tag zu Tag, sie ist kein Platzhalter mit einer Zahl, und sie erdrückt nicht, wenn 48 Aufgaben offen sind (unter jedem Telefon rot). Alle Sätze entstehen aus Regeln, ohne Modell. Das Datum steht klein am Knoten.</p>
+  <div class="fixed">
+    <div><b>Inhalt (E1)</b>Ansichten wie ein Inhaltsverzeichnis, Tags und Projekte kursiv darunter. #421</div>
+    <div><b>Randspalte (Z2)</b>Links die eine Zeit, die zählt, rot nur bei Zeitdruck. Kein Kreis. #424</div>
+    <div><b>Tags</b>Ein Wort und ein Zeichen überall. #420</div>
+    <div><b>Neu</b>Leiste ganz oben, nur solange etwas wartet. #368</div>
   </div>
-
   <div class="grid">
-
     <section class="col">
-      <div class="label"><b>E1 · Inhaltsverzeichnis</b><span class="rec">Empfehlung</span></div>
-      <div class="phone"><div data-top></div><div class="screen"><div data-head></div>
+      <div class="label"><b>X1 · Die Beobachtung</b><span class="rec">Empfehlung</span><span>Satz aus einer Regelleiter</span></div>
+      <div class="phone"><div class="status"><span>08:02</span><span></span></div>
+      <div class="bar"><div class="glass"><svg class="i"><use href="#gear"/></svg></div><div class="glass"><svg class="i"><use href="#plus"/></svg></div></div><div class="screen">
+        <div class="dateline"><svg><use href="#knot"/></svg>Donnerstag, 15. Oktober</div>
+        <div class="head ">Mama wartet seit drei Tagen.</div>
+        <div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
+        <div class="cap">Jetzt</div>
+        <div class="mrow"><div class="margin r">12:00</div><div><div class="t">Steuerbescheid prüfen</div><div class="m"><span class="k"><svg class="i s"><use href="#tag"/></svg>Computer</span></div></div></div><div class="mrow"><div class="margin">Seit gestern</div><div><div class="t">Mama zurückrufen</div><div class="m"><span class="k"><svg class="i s"><use href="#tag"/></svg>Telefon</span></div></div></div><div class="mrow"><div class="margin">30 Min.</div><div><div class="t">Hecke am Eingang schneiden</div><div class="m"><span class="k"><svg class="i s"><use href="#tag"/></svg>Garten</span></div></div></div>
         <div class="cap">Inhalt</div>
         <div class="toc">
           <div class="ln">Als nächstes<span class="dots"></span><span class="n">2</span></div>
           <div class="ln">Fällig<span class="dots"></span><span class="n">2</span></div>
-          <div class="ln">Schnell erledigt<span class="dots"></span><span class="n">2</span></div>
+          <div class="ln">Neu<span class="dots"></span><span class="n">2</span></div>
+          <div class="ln">Schnell<span class="dots"></span><span class="n">2</span></div>
           <div class="ln">Wiederkehrend<span class="dots"></span><span class="n">1</span></div>
           <div class="gap"></div>
-          <div class="ln">Tags<span class="dots"></span><span class="n">4</span></div>
+          <div class="ln">Tags<span class="dots"></span><span class="n">6</span></div>
           <div class="sub"><a>Computer<i>3</i></a>, <a>Telefon<i>1</i></a>, <a>Haus<i>3</i></a>, <a>Garten<i>2</i></a></div>
           <div class="ln">Projekte<span class="dots"></span><span class="n">1</span></div>
           <div class="sub"><a>Umzug<i>7</i></a></div>
@@ -194,113 +202,124 @@ th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute
           <div class="ln">Erledigt<span class="dots"></span><span class="n">37</span></div>
         </div>
       </div></div>
-      <ul class="notes">
-        <li>Wie die erste Seite eines Notizbuchs: Namen in New York, Punktlinie, Zahl klein in SF. Keine Symbole, keine Flächen.</li>
-        <li>Tags und Projekte stehen eingerückt unter ihrer Überschrift, kursiv, jeder Name tippbar. Kein Aufklappen, keine Chips.</li>
-        <li class="minus">Die Ansichtsnamen werden Serif. #180 sagt: Serif ist Inhalt, Beschriftungen bleiben SF. Hier wäre das eine bewusste Ausnahme, nur auf der Startseite.</li>
-      </ul>
-    </section>
-
-    <section class="col">
-      <div class="label"><b>E2 · Register</b><span>zwei Spalten, Regel #180 bleibt</span></div>
-      <div class="phone"><div data-top></div><div class="screen"><div data-head></div>
-        <div class="reg" style="margin-top:22px">
-          <div>
-            <div class="h">Ansichten</div>
-            <div class="e">Als nächstes<span class="n">2</span></div>
-            <div class="e">Fällig<span class="n">2</span></div>
-            <div class="e">Schnell<span class="n">2</span></div>
-            <div class="e">Wiederkehrend<span class="n">1</span></div>
-          </div>
-          <div>
-            <div class="h">Tags</div>
-            <div class="e"><a>Computer</a><span class="n">3</span></div>
-            <div class="e"><a>Telefon</a><span class="n">1</span></div>
-            <div class="e"><a>Haus</a><span class="n">3</span></div>
-            <div class="e"><a>Garten</a><span class="n">2</span></div>
-          </div>
-        </div>
-        <div class="foot"><a>Projekte 1</a><a>Alle offenen 12</a><a>Erledigt 37</a></div>
-      </div></div>
-      <ul class="notes">
-        <li>Zwei Spalten mit einer Haarlinie dazwischen, wie das Register eines Buchs. Links, was die App berechnet, rechts deine Tags.</li>
-        <li>Alles Beschriftung, also SF; Serif bleibt den Aufgaben. Ruhig und genau.</li>
-        <li class="minus">Bei großer Schrift wird es eine Spalte. Mehr als sechs Tags brauchen „N weitere“.</li>
-      </ul>
-    </section>
-
-    <section class="col">
-      <div class="label"><b>E3 · Ein Satz</b><span>der Kopfsatz kehrt zurück</span></div>
-      <div class="phone"><div data-top></div><div class="screen"><div data-head></div>
-        <p class="prose">Außerdem sind <a>2 vorgemerkt</a>, <a>2 bald fällig</a> und <a>2 schnell erledigt</a>. Nach Tags: <a>Computer</a>, <a>Telefon</a>, <a>Haus</a>, <a>Garten</a>. <span class="q">Insgesamt</span> <a>12 offen</a>, <a>37 erledigt</a>.</p>
-        <svg class="coil"><use href="#loose"/></svg>
-      </div></div>
-      <ul class="notes">
-        <li>Die App spricht, wie du erfasst: in einem Satz.   <h2>Die Überschrift</h2>
-  <p class="p">E1 ist gesetzt. Für die große Zeile in New York fünf extreme Wege. Bedingungen: Sie wechselt von Tag zu Tag, sie ist kein Platzhalter mit einer Zahl, und sie erdrückt nicht, wenn 48 Aufgaben offen sind (rot hinterlegt). Alle entstehen aus Regeln, ohne Modell. Das Datum steht klein am Knoten.</p>
-  <div class="heads">
-    <div class="hd"><h3>X1 · Die Beobachtung <span class="rec" style="font-family:var(--sans)">Empfehlung</span></h3>
-      <div class="dateline"><svg><use href="#knot"/></svg>Donnerstag, 15. Oktober</div><div class="head ">Mama wartet seit drei Tagen.</div><div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
       <ul class="days"><li class=""><span>Mo</span><b>Heute um 12 der Steuerbescheid.</b></li><li class=""><span>Di</span><b>Im Garten hat sich einiges gesammelt.</b></li><li class=""><span>Mi</span><b>Gestern sind vier lose Enden verknotet worden.</b></li><li class="x"><span>48 offen</span><b>Drei Dinge liegen seit einem Monat. Zeit zum Parken?</b></li></ul>
-      <p class="why">Jeden Morgen der eine Satz, der heute auffällt: eine Leiter fester Regeln, die oberste zutreffende gewinnt (feste Uhrzeit heute, am längsten weitergetragen, ein Tag mit vielen Aufgaben, was gestern erledigt wurde, sehr Altes). Die Seite liest sich wie eine Notiz an dich, und weil sich die Daten ändern, ändert sich der Satz. <b>Preis:</b> Rund zehn Satzbausteine je Sprache und eine Regel, welcher gewinnt; alles testbar, kein Modell. Am Tag ohne Auffälligkeit braucht es einen ruhigen Rückfallsatz.</p></div>
-    <div class="hd"><h3>X2 · Der Tagescharakter</h3>
-      <div class="dateline"><svg><use href="#knot"/></svg>15. Oktober</div><div class="head ">Ein ruhiger Donnerstag.</div><div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
+      <ul class="notes"><li>Jeden Morgen der eine Satz, der heute auffällt. Eine Leiter fester Regeln, die oberste zutreffende gewinnt: feste Uhrzeit heute, am längsten weitergetragen, ein Tag mit vielen Aufgaben, was gestern erledigt wurde, sehr Altes. Weil sich die Daten ändern, ändert sich der Satz.</li><li class="minus">Rund zehn Satzbausteine je Sprache und eine Regel, welcher gewinnt; testbar, kein Modell. Ein ruhiger Rückfallsatz für Tage ohne Auffälligkeit.</li></ul>
+    </section>
+    <section class="col">
+      <div class="label"><b>X2 · Der Tagescharakter</b><span>Wochentag mit Bedeutung</span></div>
+      <div class="phone"><div class="status"><span>08:02</span><span></span></div>
+      <div class="bar"><div class="glass"><svg class="i"><use href="#gear"/></svg></div><div class="glass"><svg class="i"><use href="#plus"/></svg></div></div><div class="screen">
+        <div class="dateline"><svg><use href="#knot"/></svg>15. Oktober</div>
+        <div class="head ">Ein ruhiger Donnerstag.</div>
+        <div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
+        <div class="cap">Jetzt</div>
+        <div class="mrow"><div class="margin r">12:00</div><div><div class="t">Steuerbescheid prüfen</div><div class="m"><span class="k"><svg class="i s"><use href="#tag"/></svg>Computer</span></div></div></div><div class="mrow"><div class="margin">Seit gestern</div><div><div class="t">Mama zurückrufen</div><div class="m"><span class="k"><svg class="i s"><use href="#tag"/></svg>Telefon</span></div></div></div><div class="mrow"><div class="margin">30 Min.</div><div><div class="t">Hecke am Eingang schneiden</div><div class="m"><span class="k"><svg class="i s"><use href="#tag"/></svg>Garten</span></div></div></div>
+        <div class="cap">Inhalt</div>
+        <div class="toc">
+          <div class="ln">Als nächstes<span class="dots"></span><span class="n">2</span></div>
+          <div class="ln">Fällig<span class="dots"></span><span class="n">2</span></div>
+          <div class="ln">Neu<span class="dots"></span><span class="n">2</span></div>
+          <div class="ln">Schnell<span class="dots"></span><span class="n">2</span></div>
+          <div class="ln">Wiederkehrend<span class="dots"></span><span class="n">1</span></div>
+          <div class="gap"></div>
+          <div class="ln">Tags<span class="dots"></span><span class="n">6</span></div>
+          <div class="sub"><a>Computer<i>3</i></a>, <a>Telefon<i>1</i></a>, <a>Haus<i>3</i></a>, <a>Garten<i>2</i></a></div>
+          <div class="ln">Projekte<span class="dots"></span><span class="n">1</span></div>
+          <div class="sub"><a>Umzug<i>7</i></a></div>
+          <div class="gap"></div>
+          <div class="ln">Alle offenen<span class="dots"></span><span class="n">12</span></div>
+          <div class="ln">Erledigt<span class="dots"></span><span class="n">37</span></div>
+        </div>
+      </div></div>
       <ul class="days"><li class=""><span>Mo</span><b>Ein voller Montag.</b></li><li class=""><span>Di</span><b>Ein Dienstag mit einem Termin.</b></li><li class=""><span>Mi</span><b>Ein freier Mittwoch.</b></li><li class="x"><span>48 offen</span><b>Ein voller Donnerstag.</b></li></ul>
-      <p class="why">Das Datum selbst bekommt Bedeutung: der Wochentag mit einem Wort für den Tag, aus der Zahl der heute fälligen und festen Termine (frei, ruhig, mit einem Termin, voll). Die Zahl aller offenen kommt nie vor. <b>Preis:</b> Vier, fünf Wörter wiederholen sich; nach ein paar Wochen kennt man sie. Sagt nicht, was zu tun ist.</p></div>
-    <div class="hd"><h3>X3 · Die eine Aufgabe</h3>
-      <div class="dateline"><svg><use href="#knot"/></svg>Donnerstag, 15. Oktober</div><div class="head ">Steuerbescheid prüfen.</div><div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
+      <ul class="notes"><li>Das Datum bekommt Bedeutung: der Wochentag mit einem Wort aus den heute fälligen und festen Terminen (frei, ruhig, mit einem Termin, voll). Die Zahl aller offenen kommt nie vor.</li><li class="minus">Vier, fünf Wörter wiederholen sich, nach ein paar Wochen kennt man sie. Sagt nicht, was zu tun ist.</li></ul>
+    </section>
+    <section class="col">
+      <div class="label"><b>X3 · Die eine Aufgabe</b><span>radikaler Fokus</span></div>
+      <div class="phone"><div class="status"><span>08:02</span><span></span></div>
+      <div class="bar"><div class="glass"><svg class="i"><use href="#gear"/></svg></div><div class="glass"><svg class="i"><use href="#plus"/></svg></div></div><div class="screen">
+        <div class="dateline"><svg><use href="#knot"/></svg>Jetzt dran · 12:00</div>
+        <div class="head ">Steuerbescheid prüfen.</div>
+        <div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
+        <div class="cap">Jetzt</div>
+        <div class="mrow"><div class="margin">Seit gestern</div><div><div class="t">Mama zurückrufen</div><div class="m"><span class="k"><svg class="i s"><use href="#tag"/></svg>Telefon</span></div></div></div><div class="mrow"><div class="margin">30 Min.</div><div><div class="t">Hecke am Eingang schneiden</div><div class="m"><span class="k"><svg class="i s"><use href="#tag"/></svg>Garten</span></div></div></div>
+        <div class="cap">Inhalt</div>
+        <div class="toc">
+          <div class="ln">Als nächstes<span class="dots"></span><span class="n">2</span></div>
+          <div class="ln">Fällig<span class="dots"></span><span class="n">2</span></div>
+          <div class="ln">Neu<span class="dots"></span><span class="n">2</span></div>
+          <div class="ln">Schnell<span class="dots"></span><span class="n">2</span></div>
+          <div class="ln">Wiederkehrend<span class="dots"></span><span class="n">1</span></div>
+          <div class="gap"></div>
+          <div class="ln">Tags<span class="dots"></span><span class="n">6</span></div>
+          <div class="sub"><a>Computer<i>3</i></a>, <a>Telefon<i>1</i></a>, <a>Haus<i>3</i></a>, <a>Garten<i>2</i></a></div>
+          <div class="ln">Projekte<span class="dots"></span><span class="n">1</span></div>
+          <div class="sub"><a>Umzug<i>7</i></a></div>
+          <div class="gap"></div>
+          <div class="ln">Alle offenen<span class="dots"></span><span class="n">12</span></div>
+          <div class="ln">Erledigt<span class="dots"></span><span class="n">37</span></div>
+        </div>
+      </div></div>
       <ul class="days"><li class=""><span>Mo</span><b>Mama zurückrufen.</b></li><li class=""><span>Di</span><b>Hecke am Eingang schneiden.</b></li><li class=""><span>Mi</span><b>Nichts drängt. Such dir etwas aus.</b></li><li class="x"><span>48 offen</span><b>Steuerbescheid prüfen.</b></li></ul>
-      <p class="why">Die Überschrift ist die eine Aufgabe, die jetzt dran ist (die erste aus „Jetzt“), groß in New York; ein Tipp öffnet sie, ein Wisch erledigt sie. Darunter steht der Rest. Radikaler Fokus: Auch bei 48 Aufgaben sieht man nur eine. <b>Preis:</b> Dieselbe Aufgabe steht nicht noch einmal in „Jetzt“, die Liste rückt nach. Die Überschrift wird bedienbar, das ist mehr als ein Text.</p></div>
-    <div class="hd"><h3>X4 · Zuletzt gesagt</h3>
-      <div class="dateline"><svg><use href="#knot"/></svg>Gestern, 21:40</div><div class="head q">„Morgen unbedingt Mama anrufen“</div><div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
+      <ul class="notes"><li>Die Überschrift ist die erste Aufgabe aus „Jetzt“, groß in New York; ein Tipp öffnet sie, ein Wisch erledigt sie. „Jetzt“ darunter beginnt mit der zweiten. Auch bei 48 Aufgaben sieht man zuerst nur eine.</li><li class="minus">Die Überschrift wird bedienbar, mehr als ein Text.</li></ul>
+    </section>
+    <section class="col">
+      <div class="label"><b>X4 · Zuletzt gesagt</b><span>das Versprechen der App</span></div>
+      <div class="phone"><div class="status"><span>08:02</span><span></span></div>
+      <div class="bar"><div class="glass"><svg class="i"><use href="#gear"/></svg></div><div class="glass"><svg class="i"><use href="#plus"/></svg></div></div><div class="screen">
+        <div class="dateline"><svg><use href="#knot"/></svg>Gestern, 21:40</div>
+        <div class="head q">„Morgen unbedingt Mama anrufen“</div>
+        <div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
+        <div class="cap">Jetzt</div>
+        <div class="mrow"><div class="margin r">12:00</div><div><div class="t">Steuerbescheid prüfen</div><div class="m"><span class="k"><svg class="i s"><use href="#tag"/></svg>Computer</span></div></div></div><div class="mrow"><div class="margin">Seit gestern</div><div><div class="t">Mama zurückrufen</div><div class="m"><span class="k"><svg class="i s"><use href="#tag"/></svg>Telefon</span></div></div></div><div class="mrow"><div class="margin">30 Min.</div><div><div class="t">Hecke am Eingang schneiden</div><div class="m"><span class="k"><svg class="i s"><use href="#tag"/></svg>Garten</span></div></div></div>
+        <div class="cap">Inhalt</div>
+        <div class="toc">
+          <div class="ln">Als nächstes<span class="dots"></span><span class="n">2</span></div>
+          <div class="ln">Fällig<span class="dots"></span><span class="n">2</span></div>
+          <div class="ln">Neu<span class="dots"></span><span class="n">2</span></div>
+          <div class="ln">Schnell<span class="dots"></span><span class="n">2</span></div>
+          <div class="ln">Wiederkehrend<span class="dots"></span><span class="n">1</span></div>
+          <div class="gap"></div>
+          <div class="ln">Tags<span class="dots"></span><span class="n">6</span></div>
+          <div class="sub"><a>Computer<i>3</i></a>, <a>Telefon<i>1</i></a>, <a>Haus<i>3</i></a>, <a>Garten<i>2</i></a></div>
+          <div class="ln">Projekte<span class="dots"></span><span class="n">1</span></div>
+          <div class="sub"><a>Umzug<i>7</i></a></div>
+          <div class="gap"></div>
+          <div class="ln">Alle offenen<span class="dots"></span><span class="n">12</span></div>
+          <div class="ln">Erledigt<span class="dots"></span><span class="n">37</span></div>
+        </div>
+      </div></div>
       <ul class="days"><li class=""><span>Mo</span><b>„Rasenmäher Ölwechsel am Samstag“</b></li><li class=""><span>Di</span><b>„Steuer bis Freitag“</b></li><li class=""><span>Mi</span><b>„Hecke vorne schneiden, dauert ne halbe Stunde“</b></li><li class="x"><span>48 offen</span><b>„Paket für Anna zur Post“</b></li></ul>
-      <p class="why">Die Überschrift zitiert, was du zuletzt gesagt hast, als Rohtext, unverändert, kursiv. Darüber klein, wann. Das ist das Versprechen der App: Gesagt, und es ist sortiert. Jede Erfassung ändert die Seite. <b>Preis:</b> Erinnert an das Erfasste, nicht an das Wichtige. Ein Diktierfehler steht groß da.</p></div>
-    <div class="hd"><h3>X5 · Der Rückblick</h3>
-      <div class="dateline"><svg><use href="#knot"/></svg>Donnerstag, 15. Oktober</div><div class="head ">Gestern: vier verknotet.</div><div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
-      <ul class="days"><li class=""><span>Mo</span><b>Am Wochenende: zwei verknotet.</b></li><li class=""><span>Di</span><b>Gestern: nichts verknotet. Heute ist neu.</b></li><li class=""><span>Mi</span><b>Diese Woche: elf verknotet.</b></li><li class="x"><span>48 offen</span><b>Gestern: drei verknotet.</b></li></ul>
-      <p class="why">Die Überschrift spricht nie über die Last, nur über das Erledigte. Die Zahl der offenen Aufgaben taucht nirgends groß auf. Wohlwollend und ruhig. <b>Preis:</b> Nah an Leistungsanzeige; das Briefing schließt Gamification und Disziplin-Statistiken aus. Nur ohne Serien, ohne Vergleiche, ohne Lob denkbar.</p></div>
+      <ul class="notes"><li>Die Überschrift zitiert, was du zuletzt gesagt hast, als Rohtext, unverändert, kursiv; klein darüber, wann. Das Versprechen der App: gesagt, und es ist sortiert.</li><li class="minus">Erinnert an das Erfasste, nicht an das Wichtige. Ein Diktierfehler steht groß da.</li></ul>
+    </section>
+    <section class="col">
+      <div class="label"><b>X5 · Der Rückblick</b><span>nur das Erledigte</span></div>
+      <div class="phone"><div class="status"><span>08:02</span><span></span></div>
+      <div class="bar"><div class="glass"><svg class="i"><use href="#gear"/></svg></div><div class="glass"><svg class="i"><use href="#plus"/></svg></div></div><div class="screen">
+        <div class="dateline"><svg><use href="#knot"/></svg>Donnerstag, 15. Oktober</div>
+        <div class="head ">Gestern: vier verknotet.</div>
+        <div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
+        <div class="cap">Jetzt</div>
+        <div class="mrow"><div class="margin r">12:00</div><div><div class="t">Steuerbescheid prüfen</div><div class="m"><span class="k"><svg class="i s"><use href="#tag"/></svg>Computer</span></div></div></div><div class="mrow"><div class="margin">Seit gestern</div><div><div class="t">Mama zurückrufen</div><div class="m"><span class="k"><svg class="i s"><use href="#tag"/></svg>Telefon</span></div></div></div><div class="mrow"><div class="margin">30 Min.</div><div><div class="t">Hecke am Eingang schneiden</div><div class="m"><span class="k"><svg class="i s"><use href="#tag"/></svg>Garten</span></div></div></div>
+        <div class="cap">Inhalt</div>
+        <div class="toc">
+          <div class="ln">Als nächstes<span class="dots"></span><span class="n">2</span></div>
+          <div class="ln">Fällig<span class="dots"></span><span class="n">2</span></div>
+          <div class="ln">Neu<span class="dots"></span><span class="n">2</span></div>
+          <div class="ln">Schnell<span class="dots"></span><span class="n">2</span></div>
+          <div class="ln">Wiederkehrend<span class="dots"></span><span class="n">1</span></div>
+          <div class="gap"></div>
+          <div class="ln">Tags<span class="dots"></span><span class="n">6</span></div>
+          <div class="sub"><a>Computer<i>3</i></a>, <a>Telefon<i>1</i></a>, <a>Haus<i>3</i></a>, <a>Garten<i>2</i></a></div>
+          <div class="ln">Projekte<span class="dots"></span><span class="n">1</span></div>
+          <div class="sub"><a>Umzug<i>7</i></a></div>
+          <div class="gap"></div>
+          <div class="ln">Alle offenen<span class="dots"></span><span class="n">12</span></div>
+          <div class="ln">Erledigt<span class="dots"></span><span class="n">37</span></div>
+        </div>
+      </div></div>
+      <ul class="days"><li class=""><span>Mo</span><b>Am Wochenende: zwei verknotet.</b></li><li class=""><span>Di</span><b>Gestern nichts verknotet. Heute ist neu.</b></li><li class=""><span>Mi</span><b>Diese Woche: elf verknotet.</b></li><li class="x"><span>48 offen</span><b>Gestern: drei verknotet.</b></li></ul>
+      <ul class="notes"><li>Die Überschrift spricht nie über die Last, nur über das Erledigte. Die Zahl der offenen taucht nirgends groß auf.</li><li class="minus">Nah an Leistungsanzeige; das Briefing schließt Gamification aus. Nur ohne Serien, Vergleiche und Lob denkbar.</li></ul>
+    </section>
   </div>
-
-rzeit</li><li><b>Um 12:00 Steuerbescheid.</b> die nächste Uhrzeit</li><li><b>Verpasst: Zahnarzt, 9:00.</b> wenn eine Uhrzeit vorbei ist</li></ul>
-      <p class="why">Wie ein Blick in den Kalender: das eine, was als Nächstes eine feste Zeit hat. <b>Preis:</b> Lange Titel brechen um; die Zeile steht doppelt, denn dieselbe Aufgabe steht in „Jetzt“ oben.</p></div>
-  </div>
-
-  <h2>Das Zeichen vor der Aufgabe</h2>
-  <p class="p">Die Kreise in den Telefonen hatte ich hineingezeichnet. Die App selbst setzt vor eine Aufgabe nichts: Titel in New York, darunter die Merkmale. Erledigt wird per Wisch, dabei zieht sich der Knoten grün zu (#180). Kreise gibt es in der App nur bei Unteraufgaben. Drei Wege für die Aufgaben und einer für die Unteraufgaben; die Telefone oben zeigen jetzt Z1.</p>
-  <div class="marks">
-    <div class="mk"><h3>Z1 · Kein Zeichen <span class="rec" style="font-family:var(--sans)">Empfehlung</span></h3><div class="mrow plain"><div><div class="t">Steuerbescheid prüfen</div><div class="m"><span class="r">Heute 12:00</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Computer</span></div></div></div><div class="mrow plain"><div><div class="t">Mama zurückrufen</div><div class="m"><span>Seit gestern</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Telefon</span></div></div></div><div class="mrow plain"><div><div class="t">Hecke am Eingang schneiden</div><div class="m"><span>30 Min.</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Garten</span></div></div></div>
-      <p class="why">So ist die App heute. Die Aufgabe ist ein Satz auf Papier, keine Zeile mit Kästchen. <b>Preis:</b> Wer zum ersten Mal kommt, sieht nicht, wie man abhakt. Das Onboarding zeigt den Wisch einmal.</p></div>
-    <div class="mk"><h3>Z2 · Randspalte</h3><div class="mrow "><div class="margin r">12:00</div><div><div class="t">Steuerbescheid prüfen</div><div class="m"><span class="k"><svg class="i s"><use href="#tag"/></svg>Computer</span></div></div></div><div class="mrow "><div class="margin">gestern</div><div><div class="t">Mama zurückrufen</div><div class="m"><span class="k"><svg class="i s"><use href="#tag"/></svg>Telefon</span></div></div></div><div class="mrow "><div class="margin">30 Min.</div><div><div class="t">Hecke am Eingang schneiden</div><div class="m"><span class="k"><svg class="i s"><use href="#tag"/></svg>Garten</span></div></div></div>
-      <p class="why">Wie ein Tagebuch: Links am Rand steht die Zeit, rot nur bei Zeitdruck. Die Merkmalzeile wird kürzer. <b>Preis:</b> Aufgaben ohne Zeit lassen den Rand leer, die Spalte kostet Breite.</p></div>
-    <div class="mk"><h3>Z3 · Faden</h3><div class="mrow "><div class="thread"><i class="r"></i></div><div><div class="t">Steuerbescheid prüfen</div><div class="m"><span class="r">Heute 12:00</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Computer</span></div></div></div><div class="mrow "><div class="thread"><i class=""></i></div><div><div class="t">Mama zurückrufen</div><div class="m"><span>Seit gestern</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Telefon</span></div></div></div><div class="mrow "><div class="thread"><i class=""></i></div><div><div class="t">Hecke am Eingang schneiden</div><div class="m"><span>30 Min.</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Garten</span></div></div></div>
-      <p class="why">Ein feiner Faden verbindet die Aufgaben, jede hängt als Perle daran, rot bei Zeitdruck. Stark und eigen. <b>Preis:</b> #180 sagt, der Knoten kommt genau dreimal vor; das wäre eine vierte Stelle, nur für „Jetzt“ denkbar.</p></div>
-    <div class="mk"><h3>U · Unteraufgaben ohne Kreis</h3>
-      <div class="lbl">Heute</div>
-      <div class="sub"><svg class="i"><use href="#circ_o"/></svg>Kartons besorgen</div>
-      <div class="sub done"><svg class="i"><use href="#circ_d"/></svg>Umzugsfirma anrufen</div>
-      <div class="lbl">Vorschlag</div>
-      <div class="sub"><span class="sp"></span>Kartons besorgen</div>
-      <div class="sub done"><svg class="i"><use href="#check"/></svg>Umzugsfirma anrufen</div>
-      <p class="why">Offen steht nichts davor, erledigt ein feiner grauer Haken und der Text ist durchgestrichen. Ein Tipp auf die Zeile hakt ab wie heute. <b>Preis:</b> Eine offene Unteraufgabe zeigt nicht von selbst, dass sie antippbar ist.</p></div>
-  </div>
-
-  <h2>Was „Tags“ in der App ändert</h2>
-  <p class="p">Du hast „Tags“ statt „Kontexte“ gewählt. Das betrifft jede Stelle, an der das Wort heute steht. Für die Umsetzung lege ich ein eigenes Ticket an.</p>
-  <div class="tw"><table>
-    <thead><tr><th>Stelle</th><th>Heute</th><th>Neu</th></tr></thead>
-    <tbody>
-      <tr><td>Detail</td><td>Feld „Kontexte“</td><td>Feld „Tags“ mit Etikett-Zeichen</td></tr>
-      <tr><td>Aufgabenzeile</td><td>nur der Name</td><td>Etikett-Zeichen vor dem Namen</td></tr>
-      <tr><td>Startseite</td><td>Chips „Passt gerade“ und Gruppe „Kontexte“</td><td>eine Stelle „Tags“, je nach Entwurf</td></tr>
-      <tr><td>Verwaltung</td><td>„Neuer Kontext“, „Diesen Kontext löschen?“</td><td>„Neuer Tag“, „Diesen Tag löschen?“</td></tr>
-      <tr><td>Erster Start</td><td>„Diese Kontexte bringt die App mit.“</td><td>„Diese Tags bringt die App mit.“</td></tr>
-      <tr><td>Siri</td><td>Tags aus dem Erinnerungen-Schema werden Kontexte (#25)</td><td>dasselbe Wort auf beiden Seiten</td></tr>
-    </tbody>
-  </table></div>
-  <p class="p" style="margin-top:12px">Im Code und im Datenmodell bleibt <code>TaskContext</code>: Das CloudKit-Schema ist nur additiv, eine Umbenennung dort brächte nichts. Es ändern sich nur die Texte.</p>
 </div>
-
-<script>
-  const fill = (sel, id) => { const h = document.getElementById(id).innerHTML; document.querySelectorAll(sel).forEach(e => e.outerHTML = h); };
-  fill('[data-top]', 'top'); fill('[data-head]', 'head');
-</script>
