@@ -2,6 +2,7 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "From a phone number in the note." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus einer Telefonnummer in deinen Worten." } } } },
     "Note" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Notiz" } } } },
     "Numbers, addresses, anything else" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nummern, Adressen, alles andere" } } } },
     "Edit note" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Notiz bearbeiten" } } } },

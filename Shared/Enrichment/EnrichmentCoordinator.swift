@@ -181,6 +181,7 @@ final class EnrichmentCoordinator {
         if !matched.contains(.contexts), applyContextWordRule(to: task, mode: mode, catalog: catalog) {
             matched.insert(.contexts)
         }
+        if applyPhoneRule(to: task, mode: mode) { matched.insert(.notes) }
         return matched
     }
 
@@ -229,6 +230,24 @@ final class EnrichmentCoordinator {
         task.dueSourceRaw = FieldSource.rule.rawValue
         task.dueConfidence = match.guess.confidence
         logger.info("Rule set due date for \(task.id, privacy: .public)")
+        return true
+    }
+
+    /// A dictated phone number goes to the note (#439), only while the note is empty and the user never
+    /// wrote one; in a re-analysis only to a new value the user has not touched.
+    private func applyPhoneRule(to task: TaskItem, mode: EnrichmentWriter.Mode) -> Bool {
+        guard let note = PhoneRule.note(from: task.rawText) else { return false }
+        guard EnrichmentWriter.mayWrite(
+            .notes, on: task, mode: mode,
+            firstRun: (task.notes ?? "").isEmpty && !EnrichmentWriter.userHasTouched(.notes, on: task),
+            changes: note != task.notes
+        ) else { return true }
+        let revision = Revision(task: task, field: .notes, oldValue: task.notes, newValue: note,
+                                author: .rule, reason: PhoneRule.reason)
+        task.revisions = (task.revisions ?? []) + [revision]
+        task.notes = note
+        task.notesSourceRaw = FieldSource.rule.rawValue
+        logger.info("Rule moved a phone number into the note of \(task.id, privacy: .public)")
         return true
     }
 
