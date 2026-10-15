@@ -1,0 +1,467 @@
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEnds.xcodeproj
+[0;32m[sim][0m Projekt erzeugt.
+[0;32m[sim][0m Simulator bereit (Apple Watch Series 12 (46mm)).
+[0;34m[sim][0m UI-Test mit Beleg: WatchCaptureUITests → docs/artifacts/fix-409-watch-reset/simulator-run.txt
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (3 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets.SwiftConstValuesFileList
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets.SwiftFileList
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets_const_extract_protocols.json
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets-OutputFileMap.json
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets.SwiftFileList
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets.SwiftConstValuesFileList
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets.LinkFileList
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets.LinkFileList
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets_const_extract_protocols.json
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets-OutputFileMap.json
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets.hmap
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets.DependencyStaticMetadataFileList
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets.DependencyMetadataFileList
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets-project-headers.hmap
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets-own-target-headers.hmap
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets-all-target-headers.hmap
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets-generated-files.hmap
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets-all-non-framework-target-headers.hmap
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets-DebugEntryPoint-normal-x86_64.txt
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets-DebugEntryPoint-normal-arm64.txt
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets-DebugDylibPath-normal-x86_64.txt
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets-DebugDylibPath-normal-arm64.txt
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets-DebugDylibInstallName-normal-x86_64.txt
+[[36mLooseEndsWatchWidgets[0m] [1mWrite Auxiliary File[0m LooseEndsWatchWidgets-DebugDylibInstallName-normal-arm64.txt
+[[36mLooseEndsWatchUITests[0m] [1mWrite Auxiliary File[0m ProductTypeInfoPlistAdditions.plist
+[[36mLooseEndsWatchUITests[0m] [1mWrite Auxiliary File[0m empty-LooseEndsWatchUITests.plist
+[[36mLooseEndsWatchUITests[0m] [1mWrite Auxiliary File[0m LooseEndsWatchUITests.SwiftConstValuesFileList
+[[36mLooseEndsWatchUITests[0m] [1mWrite Auxiliary File[0m LooseEndsWatchUITests_const_extract_protocols.json
+[[36mLooseEndsWatchUITests[0m] [1mWrite Auxiliary File[0m LooseEndsWatchUITests.SwiftFileList
+[[36mLooseEndsWatchUITests[0m] [1mWrite Auxiliary File[0m LooseEndsWatchUITests.LinkFileList
+[[36mLooseEndsWatchUITests[0m] [1mWrite Auxiliary File[0m LooseEndsWatchUITests-OutputFileMap.json
+[[36mLooseEndsWatchUITests[0m] [1mWrite Auxiliary File[0m LooseEndsWatchUITests.SwiftConstValuesFileList
+[[36mLooseEndsWatchUITests[0m] [1mWrite Auxiliary File[0m LooseEndsWatchUITests_const_extract_protocols.json
+[[36mLooseEndsWatchUITests[0m] [1mWrite Auxiliary File[0m LooseEndsWatchUITests.SwiftFileList
+[[36mLooseEndsWatchUITests[0m] [1mWrite Auxiliary File[0m LooseEndsWatchUITests.LinkFileList
+[[36mLooseEndsWatchUITests[0m] [1mWrite Auxiliary File[0m LooseEndsWatchUITests-OutputFileMap.json
+[[36mLooseEndsWatchUITests[0m] [1mWrite Auxiliary File[0m LooseEndsWatchUITests.hmap
+[[36mLooseEndsWatchUITests[0m] [1mWrite Auxiliary File[0m LooseEndsWatchUITests.DependencyStaticMetadataFileList
+[[36mLooseEndsWatchUITests[0m] [1mWrite Auxiliary File[0m LooseEndsWatchUITests.DependencyMetadataFileList
+[[36mLooseEndsWatchUITests[0m] [1mWrite Auxiliary File[0m LooseEndsWatchUITests-project-headers.hmap
+[[36mLooseEndsWatchUITests[0m] [1mWrite Auxiliary File[0m LooseEndsWatchUITests-own-target-headers.hmap
+[[36mLooseEndsWatchUITests[0m] [1mWrite Auxiliary File[0m LooseEndsWatchUITests-generated-files.hmap
+[[36mLooseEndsWatchUITests[0m] [1mWrite Auxiliary File[0m LooseEndsWatchUITests-all-target-headers.hmap
+[[36mLooseEndsWatchUITests[0m] [1mWrite Auxiliary File[0m LooseEndsWatchUITests-all-non-framework-target-headers.hmap
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch_const_extract_protocols.json
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch.SwiftFileList
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch.SwiftConstValuesFileList
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch.LinkFileList
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch-OutputFileMap.json
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch.SwiftFileList
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch_const_extract_protocols.json
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch.SwiftConstValuesFileList
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch.LinkFileList
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch-OutputFileMap.json
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch.hmap
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch.DependencyStaticMetadataFileList
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch.DependencyMetadataFileList
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch-project-headers.hmap
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch-own-target-headers.hmap
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch-generated-files.hmap
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch-all-non-framework-target-headers.hmap
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch-all-target-headers.hmap
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch-DebugDylibPath-normal-x86_64.txt
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch-DebugDylibPath-normal-arm64.txt
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch-DebugDylibInstallName-normal-x86_64.txt
+[[36mLooseEndsWatch[0m] [1mWrite Auxiliary File[0m LooseEndsWatch-DebugDylibInstallName-normal-arm64.txt
+[[36mLooseEndsWatchWidgets[0m] [1mCopying[0m PrivacyInfo.xcprivacy
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatchWidgets[0m] [1mLinking[0m __preview.dylib
+[[36mLooseEndsWatchWidgets[0m] [1mLinking[0m __preview.dylib
+[[36mLooseEndsWatchWidgets[0m] [1mCreate Universal Binary[0m __preview.dylib
+[[36mLooseEndsWatchWidgets[0m] [1mCompiling[0m CaptureComplication.swift
+[[36mLooseEndsWatchWidgets[0m] [1mCompiling[0m LooseEndsWatchWidgetsBundle.swift
+[[36mLooseEndsWatchWidgets[0m] [1mCompiling[0m Thread.swift
+[[36mLooseEndsWatchWidgets[0m] [1mCompiling[0m LooseEndsWatchWidgetsBundle.swift
+[[36mLooseEndsWatchWidgets[0m] [1mCompiling[0m Thread.swift
+[[36mLooseEndsWatchWidgets[0m] [1mCompiling[0m CaptureComplication.swift
+[[36mLooseEndsWatchWidgets[0m] [1mCopy[0m x86_64-apple-watchos-simulator.swiftdoc -> LooseEndsWatchWidgets.swiftdoc
+[[36mLooseEndsWatchWidgets[0m] [1mCopy[0m x86_64-apple-watchos-simulator.abi.json -> LooseEndsWatchWidgets.abi.json
+[[36mLooseEndsWatchWidgets[0m] [1mCopy[0m x86_64-apple-watchos-simulator.swiftmodule -> LooseEndsWatchWidgets.swiftmodule
+[[36mLooseEndsWatchWidgets[0m] [1mCopy[0m x86_64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatchWidgets.swiftsourceinfo
+[[36mLooseEndsWatchWidgets[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftmodule -> LooseEndsWatchWidgets.swiftmodule
+[[36mLooseEndsWatchWidgets[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftdoc -> LooseEndsWatchWidgets.swiftdoc
+[[36mLooseEndsWatchWidgets[0m] [1mCopy[0m arm64-apple-watchos-simulator.abi.json -> LooseEndsWatchWidgets.abi.json
+[[36mLooseEndsWatchWidgets[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatchWidgets.swiftsourceinfo
+[[36mLooseEndsWatch[0m] [1mGenerate Asset Symbols[0m Assets.xcassets
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-velvet409/Build/Products/Debug-watchsimulator/LooseEndsWatch.app/Assets.car (in target 'LooseEndsWatch' from project 'LooseEnds')
+[[36mLooseEndsWatchWidgets[0m] [1mLinking[0m LooseEndsWatchWidgets.debug.dylib
+[[36mLooseEndsWatchWidgets[0m] [1mLinking[0m LooseEndsWatchWidgets.debug.dylib
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWatchWidgets' from project 'LooseEnds')
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWatchWidgets' from project 'LooseEnds')
+[[36mLooseEndsWatchWidgets[0m] [1mCreate Universal Binary[0m LooseEndsWatchWidgets.debug.dylib
+[[36mLooseEndsWatchWidgets[0m] [1mLinking[0m LooseEndsWatchWidgets
+[[36mLooseEndsWatchWidgets[0m] [1mLinking[0m LooseEndsWatchWidgets
+[[36mLooseEndsWatchWidgets[0m] [1mCreate Universal Binary[0m LooseEndsWatchWidgets
+[[36mLooseEndsWatchWidgets[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsWatchWidgets[0m] [1mRegisterExecutionPolicyException[0m LooseEndsWatchWidgets.appex
+[[36mLooseEndsWatchWidgets[0m] [1mTouching[0m LooseEndsWatchWidgets.appex
+[[36mLooseEndsWatch[0m] [1mCopying[0m PrivacyInfo.xcprivacy
+[[36mLooseEndsWatch[0m] [1mCompile XCStrings[0m AppShortcuts.xcstrings
+[[36mLooseEndsWatch[0m] [1mCopying[0m InfoPlist.strings
+[[36mLooseEndsWatch[0m] [1mCopying[0m InfoPlist.strings
+[[36mLooseEndsWatch[0m] [1mLinking[0m __preview.dylib
+[[36mLooseEndsWatch[0m] [1mLinking[0m __preview.dylib
+[[36mLooseEndsWatch[0m] [1mCompile XCStrings[0m Localizable.xcstrings
+[[36mLooseEndsWatch[0m] [1mCopying[0m AppShortcuts.strings
+[[36mLooseEndsWatch[0m] [1mCreate Universal Binary[0m __preview.dylib
+[[36mLooseEndsWatch[0m] [1mCopying[0m Localizable.strings
+[[36mLooseEndsWatch[0m] [1mCopying[0m Localizable.strings
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ProcessCache.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m Project.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m RecognitionRule.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m RepeatRule.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TaskContext.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TaskItem.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TaskPlace.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TimeExpressionParser.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TitleRule.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m PendingCompletions.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m PlaceDelivery.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m PlaceEditing.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m PlaceNotifications.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m PlaceReminders.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m Revision.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m RevisionService.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m RuleTrigger.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SavedView.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SharedContent.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m DueDateRule.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m DueReminders.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m EnrichmentCoordinator.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m EnrichmentDraft.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m EnrichmentWriter.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m Enums.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m AppVersion.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CalendarAsk.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CalendarSync.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CaptureService.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CaptureTextIntent.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CatalogService.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m FieldCodec.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m FoundationModelsEnricher.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ImportanceUrgencyRule.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m LooseEndsWatchApp.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ModelContainerFactory.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m NextUpWidgetIntents.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ViewSelection.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m WaitingOn.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m WatchCaptureView.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m GeneratedAssetSymbols.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SiriFields.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SiriRepeatMapping.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m Subtasks.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SyncStatus.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TaskActions.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m FieldCodec.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m FoundationModelsEnricher.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ImportanceUrgencyRule.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m LooseEndsWatchApp.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ModelContainerFactory.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m NextUpWidgetIntents.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SiriFields.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SiriRepeatMapping.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m Subtasks.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SyncStatus.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TaskActions.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m Revision.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m RevisionService.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m RuleTrigger.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SavedView.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SharedContent.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m PendingCompletions.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m PlaceDelivery.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m PlaceEditing.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m PlaceNotifications.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m PlaceReminders.swift
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftmodule -> LooseEndsWatch.swiftmodule
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftdoc -> LooseEndsWatch.swiftdoc
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos-simulator.abi.json -> LooseEndsWatch.abi.json
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatch.swiftsourceinfo
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TaskContext.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TaskItem.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TaskPlace.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TimeExpressionParser.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TitleRule.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CloudKitSchemaInitializer.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CompletionRecord.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ContextSeeder.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ContextWordLearning.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ContextWordRule.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m DateExpressionParser.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m DueDateRule.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m DueReminders.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m EnrichmentCoordinator.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m EnrichmentDraft.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m EnrichmentWriter.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m Enums.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ViewSelection.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m WaitingOn.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m WatchCaptureView.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m GeneratedAssetSymbols.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m AppVersion.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CalendarAsk.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CalendarSync.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CaptureService.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CaptureTextIntent.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CatalogService.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CloudKitSchemaInitializer.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CompletionRecord.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ContextSeeder.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ContextWordLearning.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ContextWordRule.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m DateExpressionParser.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ProcessCache.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m Project.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m RecognitionRule.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m RepeatRule.swift
+[[36mLooseEndsWatch[0m] [1mCopy[0m x86_64-apple-watchos-simulator.swiftmodule -> LooseEndsWatch.swiftmodule
+[[36mLooseEndsWatch[0m] [1mCopy[0m x86_64-apple-watchos-simulator.swiftdoc -> LooseEndsWatch.swiftdoc
+[[36mLooseEndsWatch[0m] [1mCopy[0m x86_64-apple-watchos-simulator.abi.json -> LooseEndsWatch.abi.json
+[[36mLooseEndsWatch[0m] [1mCopy[0m x86_64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatch.swiftsourceinfo
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch.debug.dylib
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch.debug.dylib
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:11:15: [33mcall to main actor-isolated initializer 'init()' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+ 9 |     override func setUpWithError() throws {
+[32m10 |         continueAfterFailure = false[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:12:13: [33mmain actor-isolated property 'launchArguments' can not be mutated from a nonisolated context[0m
+10 |         continueAfterFailure = false
+[32m11 |         app = XCUIApplication()[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:13:13: [33mcall to main actor-isolated instance method 'launch()' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+11 |         app = XCUIApplication()
+[32m12 |         app.launchArguments = ["--ui-testing"][0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:20:40: [33mcall to main actor-isolated instance method 'waitForExistence(timeout:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+18 |         for text in ["Milch kaufen", "Brot holen"] {
+[32m19 |             capture(text)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:22:33: [33mcall to main actor-isolated instance method 'waitForExistence(timeout:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+20 |             XCTAssertTrue(confirmation.waitForExistence(timeout: 5), "„Gespeichert“ fehlt nach „\(text)“")
+[32m21 |             snapshot("gespeichert: \(text)")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:23:41: [33mmain actor-isolated property 'exists' can not be referenced from a nonisolated autoclosure[0m
+21 |             snapshot("gespeichert: \(text)")
+[32m22 |             XCTAssertTrue(field.waitForExistence(timeout: 5), "Feld kommt nach „\(text)“ nicht zurück")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:24:31: [33mmain actor-isolated property 'value' can not be referenced from a nonisolated context[0m
+15 | 
+[32m16 |     /// AC-1, AC-3, AC-6: two captures in a row, each confirmed, each followed by the empty field.[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:26:38: [33mmain actor-isolated property 'exists' can not be referenced from a nonisolated autoclosure[0m
+24 |             let value = field.value as? String ?? ""
+[32m25 |             XCTAssertFalse(value.contains(text), "Voriger Text steht noch im Feld: \(value)")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:34:36: [33mcall to main actor-isolated instance method 'waitForExistence(timeout:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+32 |     func testConfirmationIsVisibleBeforeFieldReturns() throws {
+[32m33 |         capture("Milch kaufen")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:35:30: [33mmain actor-isolated property 'exists' can not be referenced from a nonisolated autoclosure[0m
+33 |         capture("Milch kaufen")
+[32m34 |         XCTAssertTrue(confirmation.waitForExistence(timeout: 5), "„Gespeichert“ fehlt")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:39:53: [33mmain actor-isolated property 'firstMatch' can not be referenced from a nonisolated context[0m
+37 | 
+[32m38 |     /// The only text field on the screen once the system sheet is closed.[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:39:42: [33mmain actor-isolated property 'textFields' can not be referenced from a nonisolated context[0m
+37 | 
+[32m38 |     /// The only text field on the screen once the system sheet is closed.[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:40:69: [33mcall to main actor-isolated instance method 'element(boundBy:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+38 |     /// The only text field on the screen once the system sheet is closed.
+[32m39 |     private var field: XCUIElement { app.textFields.firstMatch }[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:40:61: [33mmain actor-isolated property 'buttons' can not be referenced from a nonisolated context[0m
+38 |     /// The only text field on the screen once the system sheet is closed.
+[32m39 |     private var field: XCUIElement { app.textFields.firstMatch }[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:40:46: [33mmain actor-isolated property 'navigationBars' can not be referenced from a nonisolated context[0m
+38 |     /// The only text field on the screen once the system sheet is closed.
+[32m39 |     private var field: XCUIElement { app.textFields.firstMatch }[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:43:91: [33mmain actor-isolated property 'firstMatch' can not be referenced from a nonisolated context[0m
+41 |     private var appDone: XCUIElement {
+[32m42 |         app.buttons.matching(NSPredicate([0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:42:21: [33mcall to main actor-isolated instance method 'matching' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+40 |     private var sheetDone: XCUIElement { app.navigationBars.buttons.element(boundBy: 1) }
+[32m41 |     private var appDone: XCUIElement {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:42:13: [33mmain actor-isolated property 'buttons' can not be referenced from a nonisolated context[0m
+40 |     private var sheetDone: XCUIElement { app.navigationBars.buttons.element(boundBy: 1) }
+[32m41 |     private var appDone: XCUIElement {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:47:98: [33mmain actor-isolated property 'firstMatch' can not be referenced from a nonisolated context[0m
+45 |     private var confirmation: XCUIElement {
+[32m46 |         app.staticTexts.matching(NSPredicate([0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:46:25: [33mcall to main actor-isolated instance method 'matching' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+44 |     }
+[32m45 |     private var confirmation: XCUIElement {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:46:13: [33mmain actor-isolated property 'staticTexts' can not be referenced from a nonisolated context[0m
+44 |     }
+[32m45 |     private var confirmation: XCUIElement {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:52:29: [33mcall to main actor-isolated instance method 'waitForExistence(timeout:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+50 |     /// Tap the field, type into the system sheet, take it with the sheet's "Done", then the app's "Done".
+[32m51 |     private func capture(_ text: String) {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:53:15: [33mcall to main actor-isolated instance method 'tap()' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+49 | 
+[32m50 |     /// Tap the field, type into the system sheet, take it with the sheet's "Done", then the app's "Done".[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:54:13: [33mcall to main actor-isolated instance method 'typeText' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+49 | 
+[32m50 |     /// Tap the field, type into the system sheet, take it with the sheet's "Done", then the app's "Done".[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:55:33: [33mcall to main actor-isolated instance method 'waitForExistence(timeout:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+53 |         field.tap()
+[32m54 |         app.typeText(text)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:56:19: [33mcall to main actor-isolated instance method 'tap()' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+49 | 
+[32m50 |     /// Tap the field, type into the system sheet, take it with the sheet's "Done", then the app's "Done".[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:57:29: [33mcall to main actor-isolated instance method 'waitForExistence(timeout:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+55 |         XCTAssertTrue(sheetDone.waitForExistence(timeout: 5), "Knopf des Eingabeblatts fehlt")
+[32m56 |         sheetDone.tap()[0m
+[[36mLooseEndsWatchUITests[0m] [1mCompiling[0m WatchCaptureUITests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:58:31: [33mcall to main actor-isolated instance method 'waitForExistence(timeout:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+56 |         sheetDone.tap()
+[32m57 |         XCTAssertTrue(field.waitForExistence(timeout: 5), "Eingabeblatt schließt nicht")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:59:17: [33mcall to main actor-isolated instance method 'tap()' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+49 | 
+[32m50 |     /// Tap the field, type into the system sheet, take it with the sheet's "Done", then the app's "Done".[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:63:50: [33mcall to main actor-isolated instance method 'screenshot()' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+60 |     }
+[32m61 | [0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:11:15: [33mcall to main actor-isolated initializer 'init()' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+ 9 |     override func setUpWithError() throws {
+[32m10 |         continueAfterFailure = false[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:12:13: [33mmain actor-isolated property 'launchArguments' can not be mutated from a nonisolated context[0m
+10 |         continueAfterFailure = false
+[32m11 |         app = XCUIApplication()[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:13:13: [33mcall to main actor-isolated instance method 'launch()' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+11 |         app = XCUIApplication()
+[32m12 |         app.launchArguments = ["--ui-testing"][0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:20:40: [33mcall to main actor-isolated instance method 'waitForExistence(timeout:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+18 |         for text in ["Milch kaufen", "Brot holen"] {
+[32m19 |             capture(text)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:22:33: [33mcall to main actor-isolated instance method 'waitForExistence(timeout:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+20 |             XCTAssertTrue(confirmation.waitForExistence(timeout: 5), "„Gespeichert“ fehlt nach „\(text)“")
+[32m21 |             snapshot("gespeichert: \(text)")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:23:41: [33mmain actor-isolated property 'exists' can not be referenced from a nonisolated autoclosure[0m
+21 |             snapshot("gespeichert: \(text)")
+[32m22 |             XCTAssertTrue(field.waitForExistence(timeout: 5), "Feld kommt nach „\(text)“ nicht zurück")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:24:31: [33mmain actor-isolated property 'value' can not be referenced from a nonisolated context[0m
+15 | 
+[32m16 |     /// AC-1, AC-3, AC-6: two captures in a row, each confirmed, each followed by the empty field.[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:26:38: [33mmain actor-isolated property 'exists' can not be referenced from a nonisolated autoclosure[0m
+24 |             let value = field.value as? String ?? ""
+[32m25 |             XCTAssertFalse(value.contains(text), "Voriger Text steht noch im Feld: \(value)")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:34:36: [33mcall to main actor-isolated instance method 'waitForExistence(timeout:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+32 |     func testConfirmationIsVisibleBeforeFieldReturns() throws {
+[32m33 |         capture("Milch kaufen")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:35:30: [33mmain actor-isolated property 'exists' can not be referenced from a nonisolated autoclosure[0m
+33 |         capture("Milch kaufen")
+[32m34 |         XCTAssertTrue(confirmation.waitForExistence(timeout: 5), "„Gespeichert“ fehlt")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:39:53: [33mmain actor-isolated property 'firstMatch' can not be referenced from a nonisolated context[0m
+37 | 
+[32m38 |     /// The only text field on the screen once the system sheet is closed.[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:39:42: [33mmain actor-isolated property 'textFields' can not be referenced from a nonisolated context[0m
+37 | 
+[32m38 |     /// The only text field on the screen once the system sheet is closed.[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:40:69: [33mcall to main actor-isolated instance method 'element(boundBy:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+38 |     /// The only text field on the screen once the system sheet is closed.
+[32m39 |     private var field: XCUIElement { app.textFields.firstMatch }[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:40:61: [33mmain actor-isolated property 'buttons' can not be referenced from a nonisolated context[0m
+38 |     /// The only text field on the screen once the system sheet is closed.
+[32m39 |     private var field: XCUIElement { app.textFields.firstMatch }[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:40:46: [33mmain actor-isolated property 'navigationBars' can not be referenced from a nonisolated context[0m
+38 |     /// The only text field on the screen once the system sheet is closed.
+[32m39 |     private var field: XCUIElement { app.textFields.firstMatch }[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:43:91: [33mmain actor-isolated property 'firstMatch' can not be referenced from a nonisolated context[0m
+41 |     private var appDone: XCUIElement {
+[32m42 |         app.buttons.matching(NSPredicate([0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:42:21: [33mcall to main actor-isolated instance method 'matching' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+40 |     private var sheetDone: XCUIElement { app.navigationBars.buttons.element(boundBy: 1) }
+[32m41 |     private var appDone: XCUIElement {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:42:13: [33mmain actor-isolated property 'buttons' can not be referenced from a nonisolated context[0m
+40 |     private var sheetDone: XCUIElement { app.navigationBars.buttons.element(boundBy: 1) }
+[32m41 |     private var appDone: XCUIElement {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:47:98: [33mmain actor-isolated property 'firstMatch' can not be referenced from a nonisolated context[0m
+45 |     private var confirmation: XCUIElement {
+[32m46 |         app.staticTexts.matching(NSPredicate([0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:46:25: [33mcall to main actor-isolated instance method 'matching' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+44 |     }
+[32m45 |     private var confirmation: XCUIElement {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:46:13: [33mmain actor-isolated property 'staticTexts' can not be referenced from a nonisolated context[0m
+44 |     }
+[32m45 |     private var confirmation: XCUIElement {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:52:29: [33mcall to main actor-isolated instance method 'waitForExistence(timeout:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+50 |     /// Tap the field, type into the system sheet, take it with the sheet's "Done", then the app's "Done".
+[32m51 |     private func capture(_ text: String) {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:53:15: [33mcall to main actor-isolated instance method 'tap()' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+49 | 
+[32m50 |     /// Tap the field, type into the system sheet, take it with the sheet's "Done", then the app's "Done".[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:54:13: [33mcall to main actor-isolated instance method 'typeText' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+49 | 
+[32m50 |     /// Tap the field, type into the system sheet, take it with the sheet's "Done", then the app's "Done".[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:55:33: [33mcall to main actor-isolated instance method 'waitForExistence(timeout:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+53 |         field.tap()
+[32m54 |         app.typeText(text)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:56:19: [33mcall to main actor-isolated instance method 'tap()' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+49 | 
+[32m50 |     /// Tap the field, type into the system sheet, take it with the sheet's "Done", then the app's "Done".[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:57:29: [33mcall to main actor-isolated instance method 'waitForExistence(timeout:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+55 |         XCTAssertTrue(sheetDone.waitForExistence(timeout: 5), "Knopf des Eingabeblatts fehlt")
+[32m56 |         sheetDone.tap()[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:58:31: [33mcall to main actor-isolated instance method 'waitForExistence(timeout:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+56 |         sheetDone.tap()
+[32m57 |         XCTAssertTrue(field.waitForExistence(timeout: 5), "Eingabeblatt schließt nicht")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:59:17: [33mcall to main actor-isolated instance method 'tap()' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+49 | 
+[32m50 |     /// Tap the field, type into the system sheet, take it with the sheet's "Done", then the app's "Done".[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/LooseEndsUITests/Watch/WatchCaptureUITests.swift:63:50: [33mcall to main actor-isolated instance method 'screenshot()' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+60 |     }
+[32m61 | [0m
+[[36mLooseEndsWatchUITests[0m] [1mCompiling[0m WatchCaptureUITests.swift
+[[36mLooseEndsWatchUITests[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftdoc -> LooseEndsWatchUITests.swiftdoc
+[[36mLooseEndsWatchUITests[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftmodule -> LooseEndsWatchUITests.swiftmodule
+[[36mLooseEndsWatchUITests[0m] [1mCopy[0m arm64-apple-watchos-simulator.abi.json -> LooseEndsWatchUITests.abi.json
+[[36mLooseEndsWatchUITests[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatchUITests.swiftsourceinfo
+[[36mLooseEndsWatchUITests[0m] [1mCopy[0m x86_64-apple-watchos-simulator.swiftmodule -> LooseEndsWatchUITests.swiftmodule
+[[36mLooseEndsWatchUITests[0m] [1mCopy[0m x86_64-apple-watchos-simulator.swiftdoc -> LooseEndsWatchUITests.swiftdoc
+[[36mLooseEndsWatchUITests[0m] [1mCopy[0m x86_64-apple-watchos-simulator.abi.json -> LooseEndsWatchUITests.abi.json
+[[36mLooseEndsWatchUITests[0m] [1mCopy[0m x86_64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatchUITests.swiftsourceinfo
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWatch' from project 'LooseEnds')
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWatch' from project 'LooseEnds')
+[[36mLooseEndsWatch[0m] [1mCreate Universal Binary[0m LooseEndsWatch.debug.dylib
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch
+[[36mLooseEndsWatch[0m] [1mCreate Universal Binary[0m LooseEndsWatch
+[[36mLooseEndsWatch[0m] [1mCopy[0m LooseEndsWatchWidgets.appex -> LooseEndsWatchWidgets.appex
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsWatch[0m] [1mValidate Embedded Binary[0m LooseEndsWatchWidgets.appex
+[[36mLooseEndsWatch[0m] [1mRegisterExecutionPolicyException[0m LooseEndsWatch.app
+[[36mLooseEndsWatch[0m] [1mValidate[0m LooseEndsWatch.app
+[[36mLooseEndsWatch[0m] [1mTouching[0m LooseEndsWatch.app
+[[36mLooseEndsWatchUITests[0m] [1mProcessing[0m empty-LooseEndsWatchUITests.plist
+[[36mLooseEndsWatchUITests[0m] [1mLinking[0m LooseEndsWatchUITests
+[[36mLooseEndsWatchUITests[0m] [1mLinking[0m LooseEndsWatchUITests
+[[36mLooseEndsWatchUITests[0m] [1mCreate Universal Binary[0m LooseEndsWatchUITests
+[[36mLooseEndsWatchUITests[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsWatchUITests[0m] [1mCopy[0m PkgInfo -> PkgInfo
+[[36mLooseEndsWatchUITests[0m] [1mCopying[0m Info.plist
+[[36mLooseEndsWatchUITests[0m] [1mRegisterExecutionPolicyException[0m LooseEndsWatchUITests.xctest
+[[36mLooseEndsWatchUITests[0m] [1mTouching[0m LooseEndsWatchUITests.xctest
+Test Suite 'Selected tests' started at 2026-10-15 07:12:15.549.
+Test Suite 'LooseEndsWatchUITests.xctest' started at 2026-10-15 07:12:15.560.
+Test Suite 'WatchCaptureUITests' started at 2026-10-15 07:12:15.561.
+    [32m✔[0m testConfirmationIsVisibleBeforeFieldReturns ([31m37.251[0m seconds)
+    [31m✖[0m testTwoCapturesInARowReturnToEmptyField, XCTAssertTrue failed - Feld kommt nach „Milch kaufen“ nicht zurück
+Executed 2 tests, with 1 failure (0 unexpected) in 59.823 (59.840) seconds
+Test Suite 'LooseEndsWatchUITests.xctest' failed at 2026-10-15 07:13:15.404.
+Executed 2 tests, with 1 failure (0 unexpected) in 59.823 (59.843) seconds
+Executed 2 tests, with 1 failure (0 unexpected) in 59.823 (59.856) seconds
+[1mTest session results:[0m /Users/hem/Developer/loose-ends/.claude/worktrees/velvet-soaring-mango/docs/artifacts/fix-409-watch-reset/simulator-run/run.xcresult
+[36;1mTesting started[0m
+[sim_proof] ergebnis: Failed
+[0;31m[sim][0m UI-Test fehlgeschlagen (xcodebuild 65), Beleg: docs/artifacts/fix-409-watch-reset/simulator-run.txt
+rc=65

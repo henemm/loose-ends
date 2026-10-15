@@ -15,6 +15,7 @@
 #   ./scripts/sim.sh sim-unit [Suite[/test]]  # Unit-Tests im iOS-Simulator
 #   ./scripts/sim.sh test <Class[/test]>      # UI-Test im iOS-Simulator
 #   ./scripts/sim.sh test-proof <Class[/test]> # UI-Test + Simulator-Beleg in docs/artifacts/<workflow>/ (#145)
+#   ./scripts/sim.sh watch-test-proof <Class[/test]> # dasselbe im watchOS-Simulator (#409)
 #     LOOSEENDS_PUSH=<datei.apns> davor: spielt die Mitteilung während des Laufs alle 5 s ein (#295)
 #   ./scripts/sim.sh boot | status | launch | screenshot [pfad]
 #
@@ -43,6 +44,8 @@ SCHEME="LooseEnds"
 UNIT_TARGET="LooseEndsTests"
 UI_TARGET="LooseEndsUITests"
 SIM_NAME="${LOOSEENDS_SIM:-iPhone 17}"
+SIM_OS="iOS"                      # watch-test-proof stellt auf watchOS um (#409)
+SIM_FAMILY="iPhone"
 SIMCTL="xcrun simctl"
 DEVICECTL="xcrun devicectl"
 TEAM_ID="${LOOSEENDS_TEAM_ID:-XK87E2B3VR}"
@@ -101,7 +104,7 @@ def ver(s): return tuple(int(p) for p in re.findall(r"\d+", s)[:3])
 floor = ver(minimum) if minimum else (0,)
 cands = []
 for runtime, devs in json.load(sys.stdin)["devices"].items():
-    m = re.search(r"SimRuntime\.iOS-([\d-]+)$", runtime)
+    m = re.search(r"SimRuntime\." + sys.argv[3] + r"-([\d-]+)$", runtime)
     if not m: continue
     v = ver(m.group(1).replace("-", "."))
     if v < floor: continue
@@ -109,9 +112,9 @@ for runtime, devs in json.load(sys.stdin)["devices"].items():
 if not cands: sys.exit(0)
 hit = next((d for _, d in cands if d["name"] == name), None)
 if hit is None:
-    pool = [c for c in cands if c[1]["name"].startswith("iPhone")] or cands
+    pool = [c for c in cands if c[1]["name"].startswith(sys.argv[4])] or cands
     hit = max(pool, key=lambda c: c[0])[1]
-print(hit["udid"])' "$SIM_NAME" "$(deployment_target iOS)"
+print(hit["udid"])' "$SIM_NAME" "$(deployment_target "$SIM_OS")" "$SIM_OS" "$SIM_FAMILY"
 }
 
 ensure_project() {
@@ -342,7 +345,9 @@ cmd_test_proof() {
     fi
     # Rückgabewert aus diesem Lauf festhalten (pipefail, Lehre #144); `|| rc=` hält set -e auf.
     local rc=0
-    run_xcodebuild test -project "$PROJECT" -scheme "$SCHEME" -destination "platform=iOS Simulator,id=$id" \
+    # Watch (#409): App vorher deinstallieren, sonst hängt der Testläufer (developer.apple.com/forums/thread/805060).
+    [ -n "${WATCH_APP_ID:-}" ] && { $SIMCTL uninstall "$id" "$WATCH_APP_ID" 2>/dev/null || true; }
+    run_xcodebuild test -project "$PROJECT" -scheme "$SCHEME" -destination "platform=$SIM_OS Simulator,id=$id" \
         -only-testing:"$UI_TARGET/$1" -parallel-testing-enabled NO -disable-concurrent-destination-testing \
         -resultBundlePath "$run/run.xcresult" || rc=$?
     [ -n "$push_pid" ] && { kill "$push_pid" 2>/dev/null || true; }
@@ -354,6 +359,13 @@ cmd_test_proof() {
     [ "$rc" -ne 0 ] && { error "UI-Test fehlgeschlagen (xcodebuild $rc), Beleg: $art/simulator-run.txt"; return "$rc"; }
     [ "$prc" -ne 0 ] && { error "Beleg ungültig (sim_proof $prc): $art/simulator-run.txt"; return "$prc"; }
     success "UI-Test bestanden, Beleg: $art/simulator-run.txt"
+}
+
+# Watch-UI-Test mit demselben Beleg (#409): watchOS-Simulator mit Laufzeit ≥ Target, eigenes Schema.
+cmd_watch_test_proof() {
+    SIM_OS="watchOS"; SIM_FAMILY="Apple Watch"; SIM_NAME="${LOOSEENDS_WATCH_SIM:-Apple Watch Series 12 (46mm)}"
+    SCHEME="LooseEndsWatch"; UI_TARGET="LooseEndsWatchUITests"; WATCH_APP_ID="com.henning.looseends.watchkitapp"
+    cmd_test_proof "$@"
 }
 
 cmd_launch() {
@@ -639,6 +651,7 @@ case "$COMMAND" in
     sim-unit)   cmd_sim_unit "$@" ;;
     test)       cmd_test "$@" ;;
     test-proof) cmd_test_proof "$@" ;;
+    watch-test-proof) cmd_watch_test_proof "$@" ;;
     boot)       cmd_boot ;;
     status)     cmd_status ;;
     launch)     cmd_launch "$@" ;;
