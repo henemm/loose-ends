@@ -71,6 +71,10 @@ für „Neu“, nur solange dort etwas wartet. Darunter „Jetzt“: überfälli
 ersten fünf, der Rest hinter „N weitere“. Die Ansichten folgen darunter. Die Zahl am App-Symbol zählt dieselbe Menge. Die
 Ansichten „Fällig“ (sieben Tage) und „Als nächstes“ bleiben unverändert.
 
+**Überschrift (Henning, 2026-10-15, #426):** Über „Jetzt“ steht eine große Zeile in New York, das Datum klein am Knoten darüber.
+Jeden Tag der eine Satz, der auffällt (Regelleiter in `StartHeadline`), ab 16 Uhr ein Rückblick auf das Erledigte, wenn etwas
+erledigt ist. Kein Lob, keine Serien, nie ein Satz über Nichterledigtes.
+
 **Inhaltsverzeichnis (Henning, 2026-10-15, #421, ersetzt Chips und Raster aus #368):** Unter „Jetzt“ steht „Inhalt“ wie die erste
 Seite eines Notizbuchs: Ansichtsnamen in New York, Punktlinie, Zahl klein in SF, drei Gruppen mit Abstand statt Karten
 (Ansichten mit „Schnell“, dann Tags und Projekte, dann Alle offenen und Erledigt). Tags und Projekte mit Aufgaben folgen
