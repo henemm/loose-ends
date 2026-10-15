@@ -182,6 +182,13 @@ input `what_to_test`; a `v*` tag uses the tagged commit's message. After Apple r
 localization, `de-DE` created if missing). Write it for Henning, in German: which flow, which steps,
 what he should see. The run fails without it.
 
+**CloudKit schema through CI (#448, Henning 2026-10-15: „Bündeln + CI-Weg“).** The schema lives in
+`cloudkit/schema.ckdb`; a model change adds its fields there in the same PR (`scripts/test_cloudkit_schema.py` fails
+otherwise). On merge, `.github/workflows/cloudkit-schema.yml` imports the file into Development with `cktool` (secret
+`CLOUDKIT_MANAGEMENT_TOKEN`); `export-production`/`export-development` read the live schema. Apple allows the step to
+Production only in the CloudKit Console: Henning clicks „Deploy Schema Changes“ once, then the build starts. Bundle model
+changes so he clicks rarely. `mac-schema-init` below is the fallback.
+
 **CloudKit schema before every TestFlight build that changes the model (#175).** TestFlight talks to the
 CloudKit environment Production, Xcode runs to Development. Production never creates a schema by itself, and
 Development only knows fields some record wrote with a value. So after any change in `Shared/Models`, before

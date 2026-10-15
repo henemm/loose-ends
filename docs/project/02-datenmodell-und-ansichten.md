@@ -25,6 +25,7 @@
 | capturedVia | enum CaptureChannel | System | siri, watch, control, share, mail, app, actionButton |
 | sourceURL | URL? | System | `message:` bei Mail, sonst Share-URL oder Siri-Link |
 | notes, notesSourceRaw | String? | Nutzer/Regel | Notiz (#439): langes Textfeld, Telefonnummern, Links, Mails, Adressen antippbar (`NoteLinks`, `NSDataDetector`); Änderung = Revision `notes` |
+| attachments | [TaskAttachment]? | Nutzer | Anhänge (#442): `TaskAttachment` mit `data` (externalStorage, CloudKit-Asset), `fileName`, `typeIdentifier`, `createdAt`; kaskadierend gelöscht |
 | status | enum TaskStatus | System/Nutzer | unprocessed, unverified, active, parked, done |
 | parkedAt | Date? | Nutzer | gesetzt bei Parken, gelöscht bei Aktivieren |
 | processedAt | Date? | System | Modell hat die Aufgabe gesehen, genau einmal gesetzt (ADR-4) |

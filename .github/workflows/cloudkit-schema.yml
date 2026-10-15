@@ -74,6 +74,9 @@ jobs:
         if: inputs.action == 'import-development' || github.event_name == 'push'
         run: |
           test -f cloudkit/schema.ckdb || { echo "::error::cloudkit/schema.ckdb fehlt"; exit 1; }
+          # Development first goes back to Production, so it holds exactly the file afterwards: nothing a
+          # test run or an earlier import left there can slip into the next deploy.
+          xcrun cktool reset-schema --team-id "$TEAM_ID" --container-id "$CONTAINER_ID"
           xcrun cktool import-schema --team-id "$TEAM_ID" --container-id "$CONTAINER_ID" \
             --environment development --file cloudkit/schema.ckdb
           echo "::notice::Schema in Development importiert. Jetzt in der CloudKit Console „Deploy Schema Changes“."

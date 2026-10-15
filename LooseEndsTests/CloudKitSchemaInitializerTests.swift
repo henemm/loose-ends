@@ -7,11 +7,11 @@ import Testing
 /// eleven task fields were missing (#175, S0). The initializer creates the full schema from the model
 /// before the deploy to Production. None of these tests talks to CloudKit.
 @Suite("CloudKit schema initializer (#175)") struct CloudKitSchemaInitializerTests {
-    @Test("The model handed to CloudKit holds all six entities")
+    @Test("The model handed to CloudKit holds all seven entities")
     func modelHoldsAllEntities() {
         let model = CloudKitSchemaInitializer.makeModel()
         let names = Set(model.entitiesByName.keys)
-        #expect(names == ["TaskItem", "TaskContext", "Project", "Revision", "CompletionRecord", "SavedView"])
+        #expect(names == ["TaskItem", "TaskContext", "Project", "Revision", "CompletionRecord", "SavedView", "TaskAttachment"])
     }
 
     @Test("The task entity carries the fields Development was missing")

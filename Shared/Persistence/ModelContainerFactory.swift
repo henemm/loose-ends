@@ -4,7 +4,7 @@ import SwiftData
 
 enum LooseEndsSchema {
     static let models: [any PersistentModel.Type] = [
-        TaskItem.self, TaskContext.self, Project.self, Revision.self, CompletionRecord.self, SavedView.self,
+        TaskItem.self, TaskContext.self, Project.self, Revision.self, CompletionRecord.self, SavedView.self, TaskAttachment.self,
     ]
 }
 
