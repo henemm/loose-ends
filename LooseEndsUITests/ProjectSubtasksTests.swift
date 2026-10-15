@@ -40,12 +40,11 @@ final class ProjectSubtasksTests: XCTestCase {
 
         // A project to put the task in.
         let newProject = element("newProjectButton", in: app)
-        // Projects start folded on the start screen; an earlier run may have left them open.
-        if !newProject.waitForExistence(timeout: 5) {
-            let toggle = element("projectsToggle", in: app)
-            XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Start screen should offer the Projects group")
-            toggle.tap()
-        }
+        // The Projects line of the start screen opens the page with the button (#428).
+        let toggle = element("projectsToggle", in: app)
+        if !toggle.waitForExistence(timeout: 5) { app.swipeUp() }
+        XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Start screen should offer the Projects line")
+        toggle.tap()
         XCTAssertTrue(newProject.waitForExistence(timeout: 5))
         newProject.tap()
         let nameField = app.textFields.firstMatch
@@ -58,6 +57,7 @@ final class ProjectSubtasksTests: XCTestCase {
         XCTAssertTrue(add.waitForExistence(timeout: 5))
         add.tap()
         XCTAssertTrue(first(prefix: "projectRow_", in: app).waitForExistence(timeout: 5), "The project should be listed")
+        back(in: app)   // Projects page → start screen
 
         // A task with one subtask.
         app.buttons["captureButton"].tap()
@@ -100,6 +100,9 @@ final class ProjectSubtasksTests: XCTestCase {
         back(in: app)   // editor → detail
         back(in: app)   // detail → New
         back(in: app)   // New → start screen
+        if !toggle.waitForExistence(timeout: 3) { app.swipeUp() }
+        XCTAssertTrue(toggle.waitForExistence(timeout: 5))
+        toggle.tap()
         let projectRow = first(prefix: "projectRow_", in: app)
         XCTAssertTrue(projectRow.waitForExistence(timeout: 5))
         projectRow.tap()

@@ -1,4 +1,3 @@
-import OSLog
 import SwiftData
 import SwiftUI
 
@@ -23,20 +22,15 @@ struct SidebarView: View {
     @ScaledMetric(relativeTo: .body) private var glyphSize: CGFloat = 20
     @ScaledMetric(relativeTo: .caption) private var knotHeight: CGFloat = 16
 
-    @State private var edit: NameEdit?
-    @State private var isEditing = false
-    @State private var editName = ""
-    @State private var pendingDelete: NameEdit.Target?
-    @State private var confirmingDelete = false
-    @State private var duplicateRejected = false
+    @State private var catalog = CatalogEditor()
     @State private var pendingTaskDelete: TaskItem?
     @State private var confirmingTaskDelete = false
     @State private var datingTask: TaskItem?
-    /// Projects and contexts start folded (Henning, 2026-10-05): most days need neither, and their
-    /// rows and "New …" buttons pushed the views off the screen. Per device, a view setting only.
+    /// iPad and Mac: projects and tags start folded (Henning, 2026-10-05): most days need neither,
+    /// and their rows and "New …" buttons pushed the views off the screen. Per device, a view setting
+    /// only. The iPhone ignores both: its index opens a page instead (#428).
     @AppStorage("startShowsProjects") private var showsProjects = false
     @AppStorage("startShowsContexts") private var showsContexts = false
-    private static let logger = Logger(subsystem: "com.henning.looseends", category: "Sidebar")
 
     /// iPhone: the sentence and the preview replace the big "Views" title. iPad and Mac keep the
     /// plain sidebar, where the list sits right next to it anyway.
@@ -49,7 +43,7 @@ struct SidebarView: View {
     }
 
     /// The iPhone index (#421): the views, then Tags and Projects with their words, then All open
-    /// and Done. The Tags and Projects lines fold their management rows below the index.
+    /// and Done. The Tags and Projects lines open their own page (#428).
     private var indexGroups: [[IndexLine]] {
         func view(_ kind: ViewKind) -> IndexLine {
             IndexLine(id: "viewRow_\(kind.rawValue)", title: String(localized: kind.titleKey),
@@ -66,9 +60,9 @@ struct SidebarView: View {
                                          target: .project(project.id)) : nil
         }
         let tagsLine = IndexLine(id: "contextsToggle", title: String(localized: "Tags"), count: contexts.count,
-                                 words: tagWords) { withAnimation(.snappy) { showsContexts.toggle() } }
+                                 words: tagWords) { selection = .catalog(.tags) }
         let projectsLine = IndexLine(id: "projectsToggle", title: String(localized: "Projects"), count: projects.count,
-                                     words: projectWords) { withAnimation(.snappy) { showsProjects.toggle() } }
+                                     words: projectWords) { selection = .catalog(.projects) }
         return [ViewRules.indexViews(in: tasks).map(view), [tagsLine, projectsLine], [view(.open), view(.done)]]
     }
 
@@ -109,44 +103,38 @@ struct SidebarView: View {
                 }
             }
 
-            // On iPhone the index lines fold these groups; their rows show only while unfolded.
-            if !isCompact || showsProjects {
+            // On iPhone the index lines open these groups as pages (#428).
+            if !isCompact {
                 Section {
                     if showsProjects {
                         ForEach(projects) { project in
                             countRow(project.name, count: ViewRules.tasks(inProject: project, in: tasks).count, id: "projectRow_\(project.id.uuidString)")
                                 .tag(ViewSelection.project(project.id))
-                                .contextMenu { catalogMenu(.project(project)) }
-                                .swipeActions { deleteButton(.project(project)) }
+                                .catalogMenu(.project(project), in: catalog)
+                                .swipeActions { CatalogDeleteButton(target: .project(project), editor: catalog) }
                         }
-                        Button("New project", systemImage: "plus") { begin(NameEdit(target: .newProject)) }
+                        Button("New project", systemImage: "plus") { catalog.begin(NameEdit(target: .newProject)) }
                             .accessibilityIdentifier("newProjectButton")
                             .paperRow()
                     }
                 } header: {
-                    if !isCompact {
-                        foldHeader("Projects", count: projects.count, isOpen: $showsProjects, id: "projectsToggle")
-                    }
+                    foldHeader("Projects", count: projects.count, isOpen: $showsProjects, id: "projectsToggle")
                 }
-            }
 
-            if !isCompact || showsContexts {
                 Section {
                     if showsContexts {
                         ForEach(contexts) { context in
                             countRow(context.name, count: ViewRules.tasks(inContext: context, in: tasks).count, id: "contextRow_\(context.id.uuidString)")
                                 .tag(ViewSelection.context(context.id))
-                                .contextMenu { catalogMenu(.context(context)) }
-                                .swipeActions { deleteButton(.context(context)) }
+                                .catalogMenu(.context(context), in: catalog)
+                                .swipeActions { CatalogDeleteButton(target: .context(context), editor: catalog) }
                         }
-                        Button("New tag", systemImage: "plus") { begin(NameEdit(target: .newContext)) }
+                        Button("New tag", systemImage: "plus") { catalog.begin(NameEdit(target: .newContext)) }
                             .accessibilityIdentifier("newContextButton")
                             .paperRow()
                     }
                 } header: {
-                    if !isCompact {
-                        foldHeader("Tags", count: contexts.count, isOpen: $showsContexts, id: "contextsToggle")
-                    }
+                    foldHeader("Tags", count: contexts.count, isOpen: $showsContexts, id: "contextsToggle")
                 }
             }
 
@@ -166,22 +154,8 @@ struct SidebarView: View {
         .listSectionSpacing(.compact)
         .navigationBarTitleDisplayMode(isCompact ? .inline : .automatic)
         #endif
-        .alert(Text(edit?.title ?? ""), isPresented: $isEditing, presenting: edit) { edit in
-            TextField("Name", text: $editName)
-                .accessibilityIdentifier("nameField")
-            Button(edit.isNew ? "Add" : "Save") { commit(edit) }
-                .accessibilityIdentifier("nameSaveButton")
-            Button("Cancel", role: .cancel) {}
-        }
-        .alert("A tag with this name already exists.", isPresented: $duplicateRejected) {
-            Button("OK", role: .cancel) {}
-                .accessibilityIdentifier("duplicateNameOKButton")
-        }
-        .confirmationDialog(Text(pendingDelete?.deleteTitle ?? ""), isPresented: $confirmingDelete, titleVisibility: .visible, presenting: pendingDelete) { target in
-            Button("Delete", role: .destructive) { delete(target) }
-                .accessibilityIdentifier("confirmDeleteButton")
-        } message: { target in
-            Text(target.deleteMessage)
+        .catalogDialogs(catalog, contexts: contexts, projects: projects) { gone in
+            if selection == gone { selection = nil }
         }
         .taskInteractionDialogs(taskActions)
     }
@@ -285,119 +259,6 @@ struct SidebarView: View {
                 .swipeActions(edge: .trailing, allowsFullSwipe: true) { actions.trailingActions(task) }
                 .contextMenu { actions.menu(task) }
                 .paperRow()
-        }
-    }
-
-    @ViewBuilder
-    private func catalogMenu(_ target: NameEdit.Target) -> some View {
-        Button("Rename", systemImage: "pencil") { begin(NameEdit(target: target)) }
-        deleteButton(target)
-    }
-
-    private func deleteButton(_ target: NameEdit.Target) -> some View {
-        Button("Delete", systemImage: "trash", role: .destructive) {
-            pendingDelete = target
-            confirmingDelete = true
-        }
-    }
-
-    // MARK: - Edits
-
-    private func begin(_ edit: NameEdit) {
-        editName = edit.currentName
-        self.edit = edit
-        isEditing = true
-    }
-
-    /// A blank name is a cancel, not an error worth showing. A taken context name is (#157).
-    private func commit(_ edit: NameEdit) {
-        do {
-            switch edit.target {
-            case .newProject:
-                try CatalogService.addProject(named: editName, in: modelContext, existing: projects)
-            case .newContext:
-                try CatalogService.addContext(named: editName, in: modelContext, existing: contexts)
-            case .project(let project):
-                try CatalogService.rename(project, to: editName)
-            case .context(let context):
-                try CatalogService.rename(context, to: editName, among: contexts)
-            }
-            try modelContext.save()
-        } catch CatalogError.emptyName {
-            return
-        } catch CatalogError.duplicateName {
-            duplicateRejected = true
-        } catch {
-            Self.logger.error("Saving the name failed: \(error, privacy: .public)")
-        }
-    }
-
-    private func delete(_ target: NameEdit.Target) {
-        switch target {
-        case .project(let project):
-            if selection == .project(project.id) { selection = nil }
-            CatalogService.delete(project, in: modelContext)
-        case .context(let context):
-            if selection == .context(context.id) { selection = nil }
-            CatalogService.delete(context, in: modelContext, among: contexts)
-        case .newProject, .newContext:
-            return
-        }
-        pendingDelete = nil
-        do {
-            try modelContext.save()
-        } catch {
-            Self.logger.error("Deleting failed: \(error, privacy: .public)")
-        }
-    }
-}
-
-/// What the name alert is editing.
-struct NameEdit {
-    enum Target {
-        case newProject, newContext
-        case project(Project)
-        case context(TaskContext)
-
-        var deleteTitle: String {
-            switch self {
-            case .project: String(localized: "Delete this project?")
-            case .context: String(localized: "Delete this tag?")
-            case .newProject, .newContext: ""
-            }
-        }
-
-        var deleteMessage: String {
-            switch self {
-            case .project: String(localized: "Its tasks stay and lose the project.")
-            case .context: String(localized: "Its tasks stay and lose the tag.")
-            case .newProject, .newContext: ""
-            }
-        }
-    }
-
-    let target: Target
-
-    var isNew: Bool {
-        switch target {
-        case .newProject, .newContext: true
-        case .project, .context: false
-        }
-    }
-
-    var title: String {
-        switch target {
-        case .newProject: String(localized: "New project")
-        case .newContext: String(localized: "New tag")
-        case .project, .context: String(localized: "Rename")
-        }
-    }
-
-    var currentName: String {
-        switch target {
-        case .project(let project): project.name
-        case .context(let context): context.name
-        case .newProject, .newContext: ""
         }
     }
 }

@@ -38,11 +38,11 @@ final class ContextUniquenessTests: XCTestCase {
     @MainActor
     private func addContext(_ name: String, in app: XCUIApplication) {
         let button = element("newContextButton", in: app)
-        // Contexts start folded on the start screen; an earlier run may have left them open.
+        // The Tags line of the start screen opens the page with the button (#428); a second call is already there.
         if !button.waitForExistence(timeout: 3) {
             let toggle = element("contextsToggle", in: app)
             if !toggle.waitForExistence(timeout: 3) { app.swipeUp() }
-            XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Start screen should offer the Contexts group")
+            XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Start screen should offer the Tags line")
             toggle.tap()
         }
         if !button.waitForExistence(timeout: 3) { app.swipeUp() }
@@ -79,6 +79,7 @@ final class ContextUniquenessTests: XCTestCase {
         addContext("Garten", in: app)
         XCTAssertFalse(app.alerts.firstMatch.waitForExistence(timeout: 2), "Garten wurde abgelehnt")
         shot(app, "2-seitenleiste")
+        app.navigationBars.buttons.firstMatch.tap()   // Tags page → start screen (#428)
 
         let captureButton = app.buttons["captureButton"]
         if !captureButton.waitForExistence(timeout: 3) { app.swipeDown() }
