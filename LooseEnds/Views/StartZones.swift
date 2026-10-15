@@ -134,7 +134,7 @@ struct ContentsIndex: View {
     let groups: [[IndexLine]]
     let select: (ViewSelection) -> Void
     @ScaledMetric(relativeTo: .title3) private var groupGap: CGFloat = 12
-    @ScaledMetric(relativeTo: .body) private var wordGap: CGFloat = 10
+    @ScaledMetric(relativeTo: .callout) private var wordGap: CGFloat = 5
 
     var body: some View {
         ZoneCaption("Contents")
@@ -164,30 +164,40 @@ struct ContentsIndex: View {
         .accessibilityIdentifier(line.id)
     }
 
-    /// Accent, since each word opens its list (ADR-14); the count stays grey.
+    /// Accent, since each word opens its list (ADR-14); the count stays grey. Upright in New York with a
+    /// grey comma between, so the words read as a sentence, as in the draft (#433).
     private func words(_ words: [IndexWord]) -> some View {
         FlowLayout(spacing: wordGap) {
-            ForEach(words) { word in
-                Button {
-                    select(word.target)
-                } label: {
-                    HStack(alignment: .firstTextBaseline, spacing: 3) {
-                        Text(word.name)
-                            .font(.body)
+            ForEach(Array(words.enumerated()), id: \.element.id) { index, word in
+                HStack(alignment: .firstTextBaseline, spacing: 0) {
+                    Button {
+                        select(word.target)
+                    } label: {
+                        HStack(alignment: .firstTextBaseline, spacing: 2) {
+                            Text(word.name)
+                                .font(.callout)
+                                .fontDesign(.serif)
+                                .foregroundStyle(.tint)
+                            Text(verbatim: "\(word.count)")
+                                .font(.caption)
+                                .monospacedDigit()
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(.vertical, 4)
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityIdentifier(word.id)
+                    if index < words.count - 1 {
+                        Text(verbatim: ",")
+                            .font(.callout)
                             .fontDesign(.serif)
                             .italic()
-                            .foregroundStyle(.tint)
-                        Text(verbatim: "\(word.count)")
-                            .font(.caption)
-                            .monospacedDigit()
                             .foregroundStyle(.secondary)
+                            .accessibilityHidden(true)
                     }
-                    .padding(.vertical, 4)
-                    .contentShape(Rectangle())
                 }
-                .buttonStyle(.plain)
-                .accessibilityElement(children: .combine)
-                .accessibilityIdentifier(word.id)
             }
         }
         .padding(.leading, 18)

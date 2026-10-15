@@ -37,7 +37,7 @@ eine eigene Seite im Stil des Inhaltsverzeichnisses. Rein Darstellung; keine Mod
   (auch ohne Aufgabe) in New York mit Punktlinie und Zahl (eine Null entfällt, #180), unten „Neues Etikett“ / „Neues Projekt“.
 - **AC-2:** Auf der Seite: Tipp öffnet die Liste des Eintrags, langes Drücken bietet Umbenennen und Löschen, Wischen löscht nach
   Rückfrage. Ein doppelter Name wird weiter abgelehnt (#157).
-- **AC-3:** Startseite iPhone: keine aufgeklappten Verwaltungszeilen mehr; die kursiven Wörter unter den Zeilen bleiben.
+- **AC-3:** Startseite iPhone: keine aufgeklappten Verwaltungszeilen mehr; die Wörter unter den Zeilen bleiben.
   `startShowsContexts`/`startShowsProjects` wirken auf dem iPhone nicht mehr.
 - **AC-4:** iPad und Mac unverändert (einklappbare Gruppen der Seitenleiste).
 - **AC-5:** Kennungen `contextsToggle`, `projectsToggle`, `newContextButton`, `newProjectButton`, `contextRow_<id>`,
