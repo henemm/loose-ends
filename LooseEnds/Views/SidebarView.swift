@@ -240,21 +240,34 @@ struct SidebarView: View {
 
     /// The date under the knot. Plain: the sentence it used to carry is the inbox bar now (#368).
     private var header: some View {
-        HStack(spacing: 8) {
-            // The knot, first of its three places (#180, rule 1). Grey like the date: it is
-            // the mark, not something to tap (ADR-14).
-            ThreadGlyph(form: .knot, lineWidth: 1.5)
-                .frame(width: knotHeight * 1.6, height: knotHeight)
-            Text(Date.now, format: .dateTime.weekday(.wide).day().month(.wide))
-                .font(.caption.weight(.semibold))
-                .textCase(.uppercase)
-                .tracking(1)
+        // Once a minute, so the line turns to the look back at 16:00 without a save (#426).
+        TimelineView(.periodic(from: .now, by: 60)) { timeline in
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(spacing: 8) {
+                    // The knot, first of its three places (#180, rule 1). Grey like the date: it is
+                    // the mark, not something to tap (ADR-14).
+                    ThreadGlyph(form: .knot, lineWidth: 1.5)
+                        .frame(width: knotHeight * 1.6, height: knotHeight)
+                    Text(timeline.date, format: .dateTime.weekday(.wide).day().month(.wide))
+                        .font(.caption.weight(.semibold))
+                        .textCase(.uppercase)
+                        .tracking(1)
+                }
+                .foregroundStyle(.secondary)
+                .accessibilityElement(children: .combine)
+                .accessibilityIdentifier("startHeader")
+                // The one fact that stands out today, from 16:00 a look back (#426). Content, so New York.
+                Text(StartHeadlineText.sentence(StartHeadline.of(tasks, now: timeline.date)))
+                    .font(.title)
+                    .fontDesign(.serif)
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("startHeadline")
+            }
         }
-        .foregroundStyle(.secondary)
         .padding(.vertical, 6)
         .listRowSeparator(.hidden)
-        .accessibilityElement(children: .combine)
-        .accessibilityIdentifier("startHeader")
         .paperRow()
     }
 
