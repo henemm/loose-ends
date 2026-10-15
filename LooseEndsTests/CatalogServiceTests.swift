@@ -526,4 +526,44 @@ import Testing
         let shown = ViewRules.tasks(inProject: house, in: [calm, urgent, other])
         #expect(shown.map(\.rawText) == ["Wasserrohr", "Bilder aufhängen"])
     }
+
+    // MARK: Projektsuche über den Namen (#25 Schnitt 1, AC-9)
+
+    @Test("A project is found by name, ignoring case, accents and surrounding space (#25, AC-9)",
+          arguments: ["Büro", "büro", "BÜRO ", "Buro"])
+    @MainActor func projectFoundByNameKey(_ name: String) async throws {
+        let store = try TestStore()
+        let office = Project(name: "Büro", sortOrder: 0)
+        store.context.insert(office)
+        store.context.insert(Project(name: "Haus", sortOrder: 1))
+        try store.context.save()
+
+        let found = try CatalogService.project(named: name, in: store.context)
+
+        #expect(found?.id == office.id)
+    }
+
+    @Test("An unknown or blank project name finds nothing and inserts nothing (#25, AC-9)",
+          arguments: ["Garten", "", "  "])
+    @MainActor func unknownProjectNameFindsNothing(_ name: String) async throws {
+        let store = try TestStore()
+        store.context.insert(Project(name: "Büro"))
+        try store.context.save()
+
+        #expect(try CatalogService.project(named: name, in: store.context) == nil)
+        #expect(!store.context.hasChanges)
+        #expect(try store.context.fetchCount(FetchDescriptor<Project>()) == 1)
+    }
+
+    @Test("Among projects with the same name the smallest sort order wins (#25, AC-9)")
+    @MainActor func duplicateProjectNamePicksSmallestSortOrder() async throws {
+        let store = try TestStore()
+        let later = Project(name: "Büro", sortOrder: 7)
+        let first = Project(name: "büro", sortOrder: 2)
+        store.context.insert(later)
+        store.context.insert(first)
+        try store.context.save()
+
+        #expect(try CatalogService.project(named: "BÜRO", in: store.context)?.id == first.id)
+    }
 }

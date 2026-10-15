@@ -87,7 +87,9 @@ enum EnrichmentWriter {
 
         if let project = draft.project, project.confidence >= threshold,
            let matched = projects.first(where: { $0.name.compare(project.value, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame }),
-           may(.project, firstRun: true, changes: matched.id != task.project?.id) {
+           // Like duration: a project the user (or Siri, #25) set stays on the first run.
+           may(.project, firstRun: task.project == nil && !userHasTouched(.project, on: task),
+               changes: matched.id != task.project?.id) {
             record(.project, old: task.project?.name, new: matched.name, reason: project.reason)
             task.project = matched
         }

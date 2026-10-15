@@ -17,6 +17,16 @@ enum CatalogService {
         return project
     }
 
+    /// The project carrying this name by `nameKey` (#25, F2), so Siri reuses it instead of adding a
+    /// second one. Among duplicates the smallest sort order wins, then the smallest id. Reads only.
+    static func project(named raw: String, in context: ModelContext) throws -> Project? {
+        let key = nameKey(raw)
+        guard !key.isEmpty else { return nil }
+        return try context.fetch(FetchDescriptor<Project>())
+            .filter { nameKey($0.name) == key }
+            .min { $0.sortOrder != $1.sortOrder ? $0.sortOrder < $1.sortOrder : $0.id.uuidString < $1.id.uuidString }
+    }
+
     @discardableResult
     static func addContext(
         named raw: String, in context: ModelContext, existing: [TaskContext], defaults: UserDefaults = .standard
