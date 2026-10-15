@@ -18,6 +18,15 @@ extension View {
         modifier(PaperRow())
     }
 
+    /// Small, grey, spaced capitals, like the heads of the start screen's zones: the detail's section
+    /// heads take them too (#438).
+    func captionHead() -> some View {
+        font(.caption.weight(.semibold))
+            .textCase(.uppercase)
+            .tracking(1)
+            .foregroundStyle(.secondary)
+    }
+
     /// Paper behind a grouped form; its sections stay cards until the detail is reworked (#180, step 2).
     func paperGround() -> some View {
         scrollContentBackground(.hidden)

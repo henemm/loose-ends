@@ -41,6 +41,7 @@ struct WaitingOnSection: View {
                 }
                 Text("Waiting on")
             }
+            .captionHead()
             .accessibilityElement(children: .combine)
             .accessibilityIdentifier("waitingOnHeader")
         }

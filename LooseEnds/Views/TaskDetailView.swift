@@ -27,6 +27,12 @@ struct TaskDetailView: View {
     /// Nil in previews; then "Analyze again" is not offered.
     @Environment(\.enrichment) private var enrichment: EnrichmentCoordinator?
 
+    /// The title as on the start screen (#438): New York medium, a little smaller than the headline.
+    @ScaledMetric(relativeTo: .title2) private var titleSize: CGFloat = 23
+    /// The field names' column (#438), so every value starts at the same edge.
+    @ScaledMetric(relativeTo: .footnote) private var labelWidth: CGFloat = 92
+    /// The field whose editor is open; a button row instead of a link, so no chevron (#438).
+    @State private var editingField: RevisedField?
     @State private var titleDraft = ""
     @FocusState private var titleFocused: Bool
     @State private var showsRevisions = false
@@ -51,8 +57,8 @@ struct TaskDetailView: View {
                     // Serif is the content, SF is the app (#180, rule 2). Wraps instead of cutting the
                     // title off with "…" (#216); Return still ends the edit, as in the capture field.
                     TextField("Title", text: $titleDraft, axis: .vertical)
-                        .font(.title3.weight(.semibold))
-                        .fontDesign(.serif)
+                        .font(.system(size: titleSize, weight: .medium, design: .serif))
+                        .tracking(-0.2)
                         .lineLimit(1...4)
                         .focused($titleFocused)
                         .submitLabel(.done)
@@ -78,16 +84,18 @@ struct TaskDetailView: View {
                         .accessibilityIdentifier("detailRawTextMarker")
                 }
                 if DetailLayout.showsRawText(task.rawText, title: task.title) {
-                    // The raw text as a quote: what was said, in the words it was said (#180).
-                    HStack(alignment: .firstTextBaseline, spacing: 4) {
-                        Text("You said:")
-                        Text(task.rawText)
-                            .accessibilityIdentifier("detailRawText")
-                    }
-                    .font(.footnote)
-                    .italic()
-                    .fontDesign(.serif)
-                    .foregroundStyle(.secondary)
+                    // The raw text as a quote: what was said, in the words it was said (#180). One
+                    // running sentence behind a small head, so a second line starts at the edge (#438).
+                    (Text(String(localized: "Said").uppercased())
+                        .font(.caption2.weight(.semibold))
+                        .tracking(1)
+                     + Text(verbatim: "  ")
+                     + Text(task.rawText)
+                        .font(.system(.subheadline, design: .serif))
+                        .italic())
+                        .foregroundStyle(.secondary)
+                        .accessibilityLabel(task.rawText)
+                        .accessibilityIdentifier("detailRawText")
                 }
             }
             .paperRow()
@@ -219,8 +227,10 @@ struct TaskDetailView: View {
             }
 
             if let url = task.sourceURL {
-                Section("Source") {
+                Section {
                     Link("Open the source", destination: url)
+                } header: {
+                    Text("Source").captionHead()
                 }
                 .paperRow()
             }
@@ -230,7 +240,12 @@ struct TaskDetailView: View {
         .navigationTitle("")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
+        // No 35 pt of air between the said sentence and the fields (#438).
+        .listSectionSpacing(.compact)
         #endif
+        .navigationDestination(item: $editingField) { field in
+            FieldEditorView(task: task, field: field, contexts: contexts, projects: projects)
+        }
         .toolbar { actions }
         .onAppear {
             titleDraft = task.title ?? ""
@@ -429,16 +444,24 @@ struct TaskDetailView: View {
         }
     }
 
-    /// Label left, value right. Empty fields stay empty (no placeholder nudging for input).
+    /// A register line (#438): the name small and grey in a fixed column, the value in New York after
+    /// it (the value is content, #180 rule 2), no chevron; the whole line opens the editor. Empty
+    /// fields stay empty (no placeholder nudging for input). Red only for time pressure (ADR-14).
     @ViewBuilder
     private func fieldRow(_ field: RevisedField, value: String?) -> some View {
         let origin = aiFields.contains(field) ? RevisionService.origin(of: field, on: task) : nil
-        let row = HStack {
+        let pressing = field == .dueDate && ViewRules.marginMark(of: task).pressing
+        let shown = field == .dueDate ? task.dueDate.map { FieldFormatting.dueWords($0, hasTime: task.dueHasTime) } ?? value : value
+        let row = HStack(alignment: .firstTextBaseline, spacing: 10) {
             Text(FieldFormatting.label(field))
-            Spacer()
-            if let value {
-                Text(value)
-                    .foregroundStyle(origin != nil ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .frame(width: labelWidth, alignment: .leading)
+            if let shown {
+                Text(shown)
+                    .font(.system(.body, design: .serif))
+                    .foregroundStyle(pressing ? AnyShapeStyle(.red) : origin != nil ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
+                    .multilineTextAlignment(.leading)
             }
             switch origin {
             case .rule:
@@ -454,15 +477,14 @@ struct TaskDetailView: View {
             case .user, nil:
                 EmptyView()
             }
+            Spacer(minLength: 0)
         }
-        .accessibilityElement(children: .combine)
-        .accessibilityIdentifier("field_\(field.rawValue)")
+        .contentShape(Rectangle())
 
-        NavigationLink {
-            FieldEditorView(task: task, field: field, contexts: contexts, projects: projects)
-        } label: {
-            row
-        }
+        Button { editingField = field } label: { row }
+            .buttonStyle(.plain)
+            .accessibilityElement(children: .combine)
+            .accessibilityIdentifier("field_\(field.rawValue)")
     }
 
     /// Return in the wrapping title field ends the edit, which commits (#216).

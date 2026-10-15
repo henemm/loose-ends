@@ -46,7 +46,7 @@ struct PlaceSection: View {
                     .accessibilityIdentifier("addPlaceButton")
             }
         } header: {
-            Text("Place")
+            Text("Place").captionHead()
         } footer: {
             footer
         }
