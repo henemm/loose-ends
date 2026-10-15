@@ -48,26 +48,28 @@ struct SidebarView: View {
         #endif
     }
 
-    /// The cells of the iPhone grid (#368): the views, then Projects and Contexts as groups that
-    /// unfold below it, then All open and Done.
-    private var gridCells: [ViewCell] {
-        func view(_ kind: ViewKind) -> ViewCell {
-            ViewCell(id: "viewRow_\(kind.rawValue)", title: String(localized: kind.titleKey), symbol: kind.symbol,
-                     count: ViewRules.tasks(for: kind, in: tasks).count, isOpen: nil) { selection = .system(kind) }
+    /// The iPhone index (#421): the views, then Tags and Projects with their words, then All open
+    /// and Done. The Tags and Projects lines fold their management rows below the index.
+    private var indexGroups: [[IndexLine]] {
+        func view(_ kind: ViewKind) -> IndexLine {
+            IndexLine(id: "viewRow_\(kind.rawValue)", title: String(localized: kind.titleKey),
+                      count: ViewRules.tasks(for: kind, in: tasks).count) { selection = .system(kind) }
         }
-        let projectsCell = ViewCell(id: "projectsToggle", title: String(localized: "Projects"), symbol: ViewKind.project.symbol,
-                                    count: projects.count, isOpen: showsProjects) { withAnimation(.snappy) { showsProjects.toggle() } }
-        let contextsCell = ViewCell(id: "contextsToggle", title: String(localized: "Contexts"), symbol: ViewKind.context.symbol,
-                                    count: contexts.count, isOpen: showsContexts) { withAnimation(.snappy) { showsContexts.toggle() } }
-        return ViewRules.gridViews(in: tasks).map(view) + [projectsCell, contextsCell, view(.open), view(.done)]
-    }
-
-    /// The contexts that hold an open task, in catalog order, with the count of the list behind them (#368).
-    private var fitPlaces: [FitPlace] {
-        contexts.compactMap { context in
+        let tagWords = contexts.compactMap { context -> IndexWord? in
             let count = ViewRules.tasks(inContext: context, in: tasks).count
-            return count > 0 ? FitPlace(context: context, count: count) : nil
+            return count > 0 ? IndexWord(id: "chip_\(context.id.uuidString)", name: context.name, count: count,
+                                         target: .context(context.id)) : nil
         }
+        let projectWords = projects.compactMap { project -> IndexWord? in
+            let count = ViewRules.tasks(inProject: project, in: tasks).count
+            return count > 0 ? IndexWord(id: "projectWord_\(project.id.uuidString)", name: project.name, count: count,
+                                         target: .project(project.id)) : nil
+        }
+        let tagsLine = IndexLine(id: "contextsToggle", title: String(localized: "Tags"), count: contexts.count,
+                                 words: tagWords) { withAnimation(.snappy) { showsContexts.toggle() } }
+        let projectsLine = IndexLine(id: "projectsToggle", title: String(localized: "Projects"), count: projects.count,
+                                     words: projectWords) { withAnimation(.snappy) { showsProjects.toggle() } }
+        return [ViewRules.indexViews(in: tasks).map(view), [tagsLine, projectsLine], [view(.open), view(.done)]]
     }
 
     /// The "Now" rows act as in "Next up" (#303): one set of actions carries them all (#368).
@@ -93,10 +95,9 @@ struct SidebarView: View {
                         InboxBar(count: review).tag(ViewSelection.system(.new))
                     }
                     NowBlock(tasks: ViewRules.now(in: tasks).all) { previewRow($0) }
-                    FitChips(quick: ViewRules.tasks(for: .quick, in: tasks).count, places: fitPlaces) { selection = $0 }
                 }
                 Section {
-                    AllViewsGrid(cells: gridCells)
+                    ContentsIndex(groups: indexGroups) { selection = $0 }
                 }
             } else {
                 Section {
@@ -108,7 +109,7 @@ struct SidebarView: View {
                 }
             }
 
-            // On iPhone the grid cells fold these groups; their rows show only while unfolded.
+            // On iPhone the index lines fold these groups; their rows show only while unfolded.
             if !isCompact || showsProjects {
                 Section {
                     if showsProjects {
@@ -138,13 +139,13 @@ struct SidebarView: View {
                                 .contextMenu { catalogMenu(.context(context)) }
                                 .swipeActions { deleteButton(.context(context)) }
                         }
-                        Button("New context", systemImage: "plus") { begin(NameEdit(target: .newContext)) }
+                        Button("New tag", systemImage: "plus") { begin(NameEdit(target: .newContext)) }
                             .accessibilityIdentifier("newContextButton")
                             .paperRow()
                     }
                 } header: {
                     if !isCompact {
-                        foldHeader("Contexts", count: contexts.count, isOpen: $showsContexts, id: "contextsToggle")
+                        foldHeader("Tags", count: contexts.count, isOpen: $showsContexts, id: "contextsToggle")
                     }
                 }
             }
@@ -172,7 +173,7 @@ struct SidebarView: View {
                 .accessibilityIdentifier("nameSaveButton")
             Button("Cancel", role: .cancel) {}
         }
-        .alert("A context with this name already exists.", isPresented: $duplicateRejected) {
+        .alert("A tag with this name already exists.", isPresented: $duplicateRejected) {
             Button("OK", role: .cancel) {}
                 .accessibilityIdentifier("duplicateNameOKButton")
         }
@@ -239,21 +240,34 @@ struct SidebarView: View {
 
     /// The date under the knot. Plain: the sentence it used to carry is the inbox bar now (#368).
     private var header: some View {
-        HStack(spacing: 8) {
-            // The knot, first of its three places (#180, rule 1). Grey like the date: it is
-            // the mark, not something to tap (ADR-14).
-            ThreadGlyph(form: .knot, lineWidth: 1.5)
-                .frame(width: knotHeight * 1.6, height: knotHeight)
-            Text(Date.now, format: .dateTime.weekday(.wide).day().month(.wide))
-                .font(.caption.weight(.semibold))
-                .textCase(.uppercase)
-                .tracking(1)
+        // Once a minute, so the line turns to the look back at 16:00 without a save (#426).
+        TimelineView(.periodic(from: .now, by: 60)) { timeline in
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(spacing: 8) {
+                    // The knot, first of its three places (#180, rule 1). Grey like the date: it is
+                    // the mark, not something to tap (ADR-14).
+                    ThreadGlyph(form: .knot, lineWidth: 1.5)
+                        .frame(width: knotHeight * 1.6, height: knotHeight)
+                    Text(timeline.date, format: .dateTime.weekday(.wide).day().month(.wide))
+                        .font(.caption.weight(.semibold))
+                        .textCase(.uppercase)
+                        .tracking(1)
+                }
+                .foregroundStyle(.secondary)
+                .accessibilityElement(children: .combine)
+                .accessibilityIdentifier("startHeader")
+                // The one fact that stands out today, from 16:00 a look back (#426). Content, so New York.
+                Text(StartHeadlineText.sentence(StartHeadline.of(tasks, now: timeline.date)))
+                    .font(.title)
+                    .fontDesign(.serif)
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("startHeadline")
+            }
         }
-        .foregroundStyle(.secondary)
         .padding(.vertical, 6)
         .listRowSeparator(.hidden)
-        .accessibilityElement(children: .combine)
-        .accessibilityIdentifier("startHeader")
         .paperRow()
     }
 
@@ -348,7 +362,7 @@ struct NameEdit {
         var deleteTitle: String {
             switch self {
             case .project: String(localized: "Delete this project?")
-            case .context: String(localized: "Delete this context?")
+            case .context: String(localized: "Delete this tag?")
             case .newProject, .newContext: ""
             }
         }
@@ -356,7 +370,7 @@ struct NameEdit {
         var deleteMessage: String {
             switch self {
             case .project: String(localized: "Its tasks stay and lose the project.")
-            case .context: String(localized: "Its tasks stay and lose the context.")
+            case .context: String(localized: "Its tasks stay and lose the tag.")
             case .newProject, .newContext: ""
             }
         }
@@ -374,7 +388,7 @@ struct NameEdit {
     var title: String {
         switch target {
         case .newProject: String(localized: "New project")
-        case .newContext: String(localized: "New context")
+        case .newContext: String(localized: "New tag")
         case .project, .context: String(localized: "Rename")
         }
     }

@@ -69,7 +69,7 @@ final class ContextUniquenessTests: XCTestCase {
 
         // „Garden" ist gesät; ein zweites Mal wird es abgelehnt.
         addContext("Garden", in: app)
-        let rejection = app.alerts["A context with this name already exists."]
+        let rejection = app.alerts["A tag with this name already exists."]
         XCTAssertTrue(rejection.waitForExistence(timeout: 5), "Keine Meldung zum doppelten Namen")
         shot(app, "1-meldung-doppelter-name")
         rejection.buttons["OK"].firstMatch.tap()
@@ -120,7 +120,7 @@ final class ContextUniquenessTests: XCTestCase {
         shot(app, "4-detail-nach-antippen")
         // Der Herkunftsvermerk (#101) hängt hinten an, wenn die Erschließung „Garden" gesetzt hat.
         let shown = contextsRow.label
-            .replacingOccurrences(of: "Contexts, ", with: "")
+            .replacingOccurrences(of: "Tags, ", with: "")
             .replacingOccurrences(of: ", From your words", with: "")
             .replacingOccurrences(of: ", Estimated by AI", with: "")
         XCTAssertEqual(shown, "Garden", "Beschriftung war \(contextsRow.label)")

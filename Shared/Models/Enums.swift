@@ -78,7 +78,7 @@ enum ViewKind: String, Codable, CaseIterable, Sendable {
         case .parked: "Parked"
         case .open: "All open"
         case .done: "Completed"
-        case .context: "Context"
+        case .context: "Tag"
         case .project: "Project"
         }
     }

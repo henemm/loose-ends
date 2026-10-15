@@ -53,11 +53,14 @@ struct SubtasksSection: View {
     private func row(_ line: TaskItem) -> some View {
         let done = line.status == .done
         return HStack(spacing: 10) {
-            Image(systemName: done ? "checkmark.circle.fill" : "circle")
-                .imageScale(.large)
-                .foregroundStyle(done ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
+            // No circle (#424): an open subtask is just its words, a done one gets a fine grey check.
+            Image(systemName: "checkmark")
+                .imageScale(.small)
+                .foregroundStyle(.secondary)
+                .opacity(done ? 1 : 0)
                 .accessibilityHidden(true)
             Text(line.displayTitle)
+                .fontDesign(.serif)
                 .strikethrough(done)
                 .foregroundStyle(done ? AnyShapeStyle(.secondary) : AnyShapeStyle(.primary))
             Spacer()

@@ -239,8 +239,11 @@ struct TaskListView: View {
             actions.save("toggle subtask")
         } label: {
             HStack(spacing: 10) {
-                Image(systemName: done ? "checkmark.circle.fill" : "circle")
-                    .foregroundStyle(done ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
+                // No circle (#424): open is just the words, done a fine grey check.
+                Image(systemName: "checkmark")
+                    .imageScale(.small)
+                    .foregroundStyle(.secondary)
+                    .opacity(done ? 1 : 0)
                     .accessibilityHidden(true)
                 Text(subtask.displayTitle)
                     .fontDesign(.serif)

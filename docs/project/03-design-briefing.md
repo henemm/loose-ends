@@ -71,6 +71,16 @@ für „Neu“, nur solange dort etwas wartet. Darunter „Jetzt“: überfälli
 ersten fünf, der Rest hinter „N weitere“. Die Ansichten folgen darunter. Die Zahl am App-Symbol zählt dieselbe Menge. Die
 Ansichten „Fällig“ (sieben Tage) und „Als nächstes“ bleiben unverändert.
 
+**Überschrift (Henning, 2026-10-15, #426):** Über „Jetzt“ steht eine große Zeile in New York, das Datum klein am Knoten darüber.
+Jeden Tag der eine Satz, der auffällt (Regelleiter in `StartHeadline`), ab 16 Uhr ein Rückblick auf das Erledigte, wenn etwas
+erledigt ist. Kein Lob, keine Serien, nie ein Satz über Nichterledigtes.
+
+**Inhaltsverzeichnis (Henning, 2026-10-15, #421, ersetzt Chips und Raster aus #368):** Unter „Jetzt“ steht „Inhalt“ wie die erste
+Seite eines Notizbuchs: Ansichtsnamen in New York, Punktlinie, Zahl klein in SF, drei Gruppen mit Abstand statt Karten
+(Ansichten mit „Schnell“, dann Tags und Projekte, dann Alle offenen und Erledigt). Tags und Projekte mit Aufgaben folgen
+ihrer Zeile als kursive Wörter in Akzent, ein Tipp öffnet die Liste; ein Tipp auf „Tags“ oder „Projekte“ klappt die
+Verwaltung auf. Bewusste Ausnahme von #180 Regel 2, nur auf dieser Seite. Entwurf: https://claude.ai/artifact/AppBHrhym57SBMURaQck5P
+
 Berechnungsregeln der Ansichten stehen in `02-datenmodell-und-ansichten.md`.
 
 ### 3. Ansicht (Aufgabenliste)
@@ -79,6 +89,7 @@ Eine Liste. Jede Zeile:
 
 - Titel (oder Rohtext, wenn ungeprüft, dann visuell als Rohtext erkennbar).
 - Wichtigkeit und Dringlichkeit erscheinen in der Zeile nur, wenn hoch: als schwarze Glyphen (Fahne, Blitz) am Anfang der Merkmalzeile, ohne Text, ohne Farbe, nie als Emoji. Im Detail als Wörter (Niedrig, Mittel, Hoch). Beide bestimmen außerdem die Sortierung.
+- **Randspalte (Henning, 2026-10-15, #424):** Links am Rand steht die eine Zeit, die zählt, wie im Tagebuch: Uhrzeit oder „Heute“ (rot), „Gestern“/„Vor N Tagen“ bei verpasster Uhrzeit (rot), „Seit gestern“ (grau, #414), „Morgen“, Wochentag, Datum, ohne Fälligkeit die Dauer. Kein Kreis vor der Aufgabe; Unteraufgaben ohne Kreis, erledigt mit feinem grauem Haken. Das Datum fällt aus der Merkmalzeile.
 - Höchstens drei kleine Merkmale, Rangfolge: Zustand (wartet), Fälligkeit, Dauer, Kontext, Person. In einer Kontext-Ansicht entfällt der Kontext. Der Rest ist im Detail. Eine Zeile ist nie höher als Titel plus eine Merkmalzeile, auch wenn alle Attribute gepflegt sind.
 - KI-Marker (Variante C): Merkmale, die die KI gesetzt hat, sind akzentgetönt, bis der Nutzer sie gesehen hat. Ein geänderter Titel trägt zusätzlich den Funken.
 - Blockiert-Zeichen, wenn eine andere Aufgabe vorher erledigt werden muss.
@@ -172,6 +183,9 @@ Hinweis, wenn Apple Intelligence auf dem Gerät nicht verfügbar ist (dann gibt 
 | Weitergetragen | Fälligkeit ohne Uhrzeit, Tag vorbei (#414) | Grau „Seit gestern“ / „Seit N Tagen“ statt Datum |
 | Wiederkehrend | Rückt nach Erledigung weiter | Zeichen an der Zeile, Ansicht "Wiederkehrend" |
 | Aus Mail | Hat Quell-Link | Zeichen im Detail |
+
+**Etiketten statt Kontexte (Henning, 2026-10-15, #420).** Sichtbar heißt ein Kontext überall „Etikett“ (englisch „Tag“), mit dem
+Etikett-Zeichen (`tag`) in Zeile, Detail und Startseite. Nicht „Tag“ im Deutschen: das liest sich als Kalendertag („Diesen Tag löschen?“). Im Code und im Datenmodell bleibt `TaskContext`.
 
 ## Tonalität
 
