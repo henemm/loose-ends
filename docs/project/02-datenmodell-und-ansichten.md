@@ -185,7 +185,9 @@ allen Geräten über den iCloud-Schlüsselwertspeicher). Ist der Zeitpunkt vorbe
 für KI-Verarbeitung.
 
 **Noch offen am Tagesende (#414, `CarryReminders`):** Einstellung „Morgens erinnern“ (Vorgabe) oder „Still weitertragen“,
-über den iCloud-Schlüsselwertspeicher wie die Uhrzeit. Morgens erinnern: eine Mitteilung je Morgen zur Erinnerungszeit
+über den iCloud-Schlüsselwertspeicher wie die Uhrzeit. Abends durchsehen (#414 Schnitt 3): eine Mitteilung je Abend zur
+Abendzeit (Vorgabe 20:00, `carry_evening_JJJJ-MM-TT`) mit den offenen Aufgaben, die an diesem Tag fällig sind; „Alle auf
+morgen“ ohne App-Start, „Durchsehen“ und ein Tipp auf die Mitteilung öffnen das Blatt „Von heute offen“. Morgens erinnern: eine Mitteilung je Morgen zur Erinnerungszeit
 (`carry_JJJJ-MM-TT`) mit allen offenen Aufgaben (oberste Ebene, nicht blockiert, mit oder ohne Uhrzeit), deren Fälligkeitstag
 1 bis 3 Tage zurückliegt. „Heute nochmal“ setzt jede auf heute (Revision des Nutzers), „Anzeigen“ öffnet die App.
 In jedem Modus verlässt eine Fälligkeit ohne Uhrzeit nach mehr als 7 Tagen „Jetzt“ und die Zahl am App-Symbol

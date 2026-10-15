@@ -90,3 +90,29 @@ ohne Uhrzeit zeigt grau „Seit gestern“. Stufe 3: Kein Pfad der Geräteliste 
 
 Stufe 1: `CarryRemindersTests`, `DueNotificationCenterTests`, voller Unit-Lauf in CI. Stufe 3 (`LooseEnds/Notifications/`):
 über TestFlight nach Schnitt 3; Prüfschritte gehen mit dem Bau an Henning.
+
+## Schnitt 3: „Abends durchsehen“
+
+### Source
+
+| Datei | Änderung |
+|---|---|
+| `Shared/Notifications/CarryReminders.swift` | `Mode.evening`, `Reminder.Kind`, Abendplan, Aktionen `tomorrow` und `review` |
+| `LooseEnds/Notifications/DueNotificationCenter.swift` | `eveningTime` (Defaults + iCloud), Kategorie `CARRY_EVENING`, Tipp öffnet die Durchsicht |
+| `LooseEnds/Views/CarryReviewSheet.swift` | NEU: `CarryReviewRequest`, Blatt „Von heute offen“ |
+| `LooseEnds/App/ContentView.swift` | Blatt bei `CarryReviewRequest` |
+| `LooseEnds/Views/SettingsView.swift` | dritte Wahl, Abendzeit |
+
+### Acceptance Criteria
+
+- **AC-12:** „Abends durchsehen“: Zur Abendzeit (Vorgabe 20:00) kommt eine Mitteilung „Lose Enden von heute: N“ mit allen
+  offenen Aufgaben (oberste Ebene, nicht blockiert), die an diesem Tag fällig sind. Keine Morgen-Mitteilung.
+- **AC-13:** „Alle auf morgen“ verschiebt jede noch offene Aufgabe der Mitteilung auf morgen (ohne Uhrzeit, Revision des
+  Nutzers), ohne die App zu öffnen.
+- **AC-14:** „Durchsehen“ und ein Tipp auf die Mitteilung öffnen das Blatt „Von heute offen“: Wisch rechts erledigt,
+  Wisch links auf morgen, das Menü bietet Morgen, Wochenende, nächste Woche, Parken, Erledigt. Entschiedenes verlässt die Liste.
+- **AC-15:** Die Abendzeit gilt auf allen Geräten.
+
+### Abnahme
+
+Stufe 1: `CarryRemindersTests`, `DueNotificationCenterTests`, voller Unit-Lauf in CI. Stufe 3 über TestFlight.

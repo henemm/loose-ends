@@ -24,6 +24,7 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Notifications")
     static let timeKey = "dueReminderMinutes"
     static let carryKey = "carryMode"
+    static let eveningKey = "eveningReminderMinutes"
 
     private static var suppressed: Bool {
         ModelContainerFactory.isRunningTests || (ModelContainerFactory.isUITesting && !isNotificationUITest)
@@ -55,7 +56,7 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         guard !Self.suppressed else { return }
         let center = UNUserNotificationCenter.current()
         center.delegate = self
-        center.setNotificationCategories([Self.category, Self.carryCategory])
+        center.setNotificationCategories([Self.category, Self.carryCategory, Self.eveningCategory])
         cloudObserver = NotificationCenter.default.addObserver(
             forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: NSUbiquitousKeyValueStore.default, queue: .main
         ) { [weak self] _ in
@@ -85,6 +86,19 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         }
     }
 
+    /// The time of the evening look (#414 Schnitt 3); travels like the reminder time.
+    var eveningTime: DueReminders.Time {
+        get {
+            guard let minutes = defaults.object(forKey: Self.eveningKey) as? Int else { return CarryReminders.eveningStandard }
+            return DueReminders.Time(minutesSinceMidnight: minutes)
+        }
+        set {
+            defaults.set(newValue.minutesSinceMidnight, forKey: Self.eveningKey)
+            cloud.setEveningMinutes(newValue.minutesSinceMidnight)
+            rescheduleSoon()
+        }
+    }
+
     /// Another device set a time or a carry mode (or this launch is the first to see it): take it
     /// over locally. Returns whether a local value changed.
     @discardableResult
@@ -96,6 +110,10 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         }
         if let mode = cloud.carryModeRaw, mode != defaults.string(forKey: Self.carryKey) {
             defaults.set(mode, forKey: Self.carryKey)
+            changed = true
+        }
+        if let minutes = cloud.eveningMinutes, minutes != defaults.object(forKey: Self.eveningKey) as? Int {
+            defaults.set(minutes, forKey: Self.eveningKey)
             changed = true
         }
         if changed { rescheduleSoon() }
@@ -131,7 +149,7 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         do {
             let tasks = try container.mainContext.fetch(FetchDescriptor<TaskItem>())
             let reminders = DueReminders.plan(for: tasks, time: reminderTime)
-            let carried = CarryReminders.plan(for: tasks, mode: carryMode, time: reminderTime)
+            let carried = CarryReminders.plan(for: tasks, mode: carryMode, time: reminderTime, eveningTime: eveningTime)
             let stale = await scheduler.pendingIdentifiers()
                 .filter { $0.hasPrefix(DueReminders.identifierPrefix) || $0.hasPrefix(CarryReminders.identifierPrefix) }
             scheduler.remove(stale)
@@ -173,13 +191,19 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         return UNNotificationRequest(identifier: reminder.identifier, content: content, trigger: trigger)
     }
 
-    /// The morning after (#414): one notification for every task still open from the days before.
+    /// The morning after or the evening of the day (#414): one notification for every task still open.
     private static func request(for reminder: CarryReminders.Reminder) -> UNNotificationRequest {
         let content = UNMutableNotificationContent()
-        content.title = String(localized: "Still open: \(reminder.taskIDs.count)")
+        switch reminder.kind {
+        case .morning:
+            content.title = String(localized: "Still open: \(reminder.taskIDs.count)")
+            content.categoryIdentifier = CarryReminders.categoryIdentifier
+        case .evening:
+            content.title = String(localized: "Loose ends from today: \(reminder.taskIDs.count)")
+            content.categoryIdentifier = CarryReminders.eveningCategoryIdentifier
+        }
         content.body = ListFormatter.localizedString(byJoining: reminder.titles)
         content.sound = .default
-        content.categoryIdentifier = CarryReminders.categoryIdentifier
         content.userInfo = ["taskIDs": reminder.taskIDs.map(\.uuidString)]
         let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: reminder.fireDate)
         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
@@ -193,6 +217,19 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
             actions: [
                 UNNotificationAction(identifier: CarryReminders.Action.today.rawValue, title: String(localized: "Today again"), options: []),
                 UNNotificationAction(identifier: CarryReminders.Action.show.rawValue, title: String(localized: "Show"), options: [.foreground]),
+            ],
+            intentIdentifiers: [],
+            options: []
+        )
+    }
+
+    /// "All to tomorrow" stays in the notification; "Look over" opens the look-over sheet.
+    private static var eveningCategory: UNNotificationCategory {
+        UNNotificationCategory(
+            identifier: CarryReminders.eveningCategoryIdentifier,
+            actions: [
+                UNNotificationAction(identifier: CarryReminders.Action.tomorrow.rawValue, title: String(localized: "All to tomorrow"), options: []),
+                UNNotificationAction(identifier: CarryReminders.Action.review.rawValue, title: String(localized: "Look over"), options: [.foreground]),
             ],
             intentIdentifiers: [],
             options: []
@@ -225,8 +262,11 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         let actionRaw = response.actionIdentifier
         let taskID = response.notification.request.content.userInfo["taskID"] as? String
         let taskIDs = response.notification.request.content.userInfo["taskIDs"] as? [String] ?? []
+        // A tap on the evening notification itself opens the look-over too.
+        let tappedEvening = actionRaw == UNNotificationDefaultActionIdentifier
+            && response.notification.request.content.categoryIdentifier == CarryReminders.eveningCategoryIdentifier
         Task { @MainActor in
-            if let carry = CarryReminders.Action(rawValue: actionRaw) {
+            if let carry = tappedEvening ? CarryReminders.Action.review : CarryReminders.Action(rawValue: actionRaw) {
                 await applyCarry(carry, taskIDs: taskIDs)
             } else {
                 await apply(actionRaw: actionRaw, taskID: taskID)
@@ -265,9 +305,14 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
 }
 
 extension DueNotificationCenter {
-    /// "Today again" from the morning notification (#414); "Show" only brings the app forward.
+    /// "Today again" or "All to tomorrow" from a carry notification (#414); "Show" only brings the
+    /// app forward, "Look over" opens the look-over sheet on these tasks.
     func applyCarry(_ action: CarryReminders.Action, taskIDs: [String]) async {
         let ids = taskIDs.compactMap(UUID.init(uuidString:))
+        if action == .review {
+            CarryReviewRequest.shared.taskIDs = ids
+            return
+        }
         let context = container.mainContext
         do {
             let tasks = try context.fetch(FetchDescriptor<TaskItem>())
@@ -318,6 +363,8 @@ protocol ReminderTimeCloud {
     func setReminderMinutes(_ minutes: Int)
     var carryModeRaw: String? { get }
     func setCarryMode(_ raw: String)
+    var eveningMinutes: Int? { get }
+    func setEveningMinutes(_ minutes: Int)
 }
 
 extension NSUbiquitousKeyValueStore: ReminderTimeCloud {
@@ -331,5 +378,11 @@ extension NSUbiquitousKeyValueStore: ReminderTimeCloud {
 
     func setCarryMode(_ raw: String) {
         set(raw, forKey: DueNotificationCenter.carryKey)
+    }
+
+    var eveningMinutes: Int? { object(forKey: DueNotificationCenter.eveningKey) as? Int }
+
+    func setEveningMinutes(_ minutes: Int) {
+        set(Int64(minutes), forKey: DueNotificationCenter.eveningKey)
     }
 }

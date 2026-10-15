@@ -25,6 +25,8 @@ import UserNotifications
         func setReminderMinutes(_ minutes: Int) { reminderMinutes = minutes }
         var carryModeRaw: String?
         func setCarryMode(_ raw: String) { carryModeRaw = raw }
+        var eveningMinutes: Int?
+        func setEveningMinutes(_ minutes: Int) { eveningMinutes = minutes }
     }
 
     /// Holds the container for the whole test (`TestStore`) next to the center under test.
@@ -201,5 +203,50 @@ import UserNotifications
         let carried = fixture.recorder.pending.filter { $0.key.hasPrefix(CarryReminders.identifierPrefix) }.values
         #expect(carried.allSatisfy { fixture.fireComponents(of: $0).day != fixture.calendar.component(.day, from: today) },
                 "due today now: not carried this morning, only again from tomorrow if still open")
+    }
+
+    @Test("Evening mode hands over the day's open tasks at 20:00 in the CARRY_EVENING category")
+    @MainActor func eveningNotification() async throws {
+        let fixture = try Fixture()
+        let task = try fixture.task("Steuerbescheid ablegen")
+        fixture.center.carryMode = .evening
+
+        await fixture.center.reschedule()
+
+        let evening = fixture.recorder.pending.values.filter { $0.content.categoryIdentifier == CarryReminders.eveningCategoryIdentifier }
+        let request = try #require(evening.first { fixture.fireComponents(of: $0).day == fixture.calendar.component(.day, from: fixture.tomorrow) })
+        #expect(fixture.fireComponents(of: request).hour == 20)
+        #expect(request.content.userInfo["taskIDs"] as? [String] == [task.id.uuidString])
+        #expect(request.content.title == String(localized: "Loose ends from today: \(1)"))
+        #expect(fixture.cloud.carryModeRaw == "evening")
+    }
+
+    @Test("A changed evening time is planned with and goes to iCloud")
+    @MainActor func eveningTimeChange() async throws {
+        let fixture = try Fixture()
+        _ = try fixture.task("Steuerbescheid ablegen")
+        fixture.center.carryMode = .evening
+        fixture.center.eveningTime = DueReminders.Time(hour: 19, minute: 15)
+
+        await fixture.center.reschedule()
+
+        let evening = fixture.recorder.pending.values.filter { $0.content.categoryIdentifier == CarryReminders.eveningCategoryIdentifier }
+        #expect(!evening.isEmpty)
+        #expect(evening.allSatisfy { fixture.fireComponents(of: $0).hour == 19 && fixture.fireComponents(of: $0).minute == 15 })
+        #expect(fixture.cloud.eveningMinutes == 19 * 60 + 15)
+    }
+
+    @Test("Look over hands the tasks to the look-over sheet and changes nothing")
+    @MainActor func lookOver() async throws {
+        let fixture = try Fixture()
+        let task = try fixture.task("Steuerbescheid ablegen")
+        let due = task.dueDate
+        CarryReviewRequest.shared.taskIDs = []
+
+        await fixture.center.applyCarry(.review, taskIDs: [task.id.uuidString])
+
+        #expect(CarryReviewRequest.shared.taskIDs == [task.id])
+        #expect(task.dueDate == due)
+        CarryReviewRequest.shared.taskIDs = []
     }
 }

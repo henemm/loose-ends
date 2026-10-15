@@ -176,7 +176,9 @@ zählt als Korrektur). Keine Mitteilung für KI-Verarbeitung, keine Zusammenfass
 Ergänzt (Henning, 2026-10-14, #414): Die Einstellung „Noch offen am Tagesende“ erlaubt eine zweite, gebündelte
 Mitteilung. „Morgens erinnern“ (Vorgabe) bringt zur Erinnerungszeit alles, was nach seinem Tag noch offen ist, in einer
 Mitteilung zurück, an höchstens drei Morgen, mit „Heute nochmal“ und „Anzeigen“. „Still weitertragen“ schickt keine.
-„Abends durchsehen“ folgt als dritte Wahl (#414 Schnitt 3).
+„Abends durchsehen“ schickt zur eigenen Abendzeit (Vorgabe 20:00) eine Mitteilung mit allem, was an diesem Tag fällig
+und noch offen ist, mit „Alle auf morgen“ und „Durchsehen“ (Blatt „Von heute offen“: Erledigt, Morgen, Wochenende,
+nächste Woche, Parken). Das ist ein freiwilliger Tagesreview; als Vorgabe bleibt er aus.
 
 **ADR-17 Ergänzte Screens nach Lückenprüfung.** Als nächstes (manuell sortiert), Neu (Eingang),
 Feld-Picker statt Formular, Wisch- und Halten-Gesten mit Verschieben (Morgen, Wochenende, nächste Woche,
@@ -195,6 +197,6 @@ Kennung hängt am Prüfweg, nicht an der Build-Konfiguration — Begründung und
 
 ## Bewusst nicht in Version 1
 
-Fokusblöcke, Timer, Coaching, Tagesreview, Disziplin-Statistiken, Aufgabentyp (Einkommen,
+Fokusblöcke, Timer, Coaching, Tagesreview (außer der Wahl „Abends durchsehen“, #414), Disziplin-Statistiken, Aufgabentyp (Einkommen,
 Wartung, Erholung), Erinnerungen-Sync, Teilen, freie Fragen in natürlicher Sprache,
 Kalender-Verschieben, Watch-Lesen, Projektfarben, Mehrfachauswahl.
