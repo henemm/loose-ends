@@ -173,6 +173,9 @@ Hinweis, wenn Apple Intelligence auf dem Gerät nicht verfügbar ist (dann gibt 
 | Wiederkehrend | Rückt nach Erledigung weiter | Zeichen an der Zeile, Ansicht "Wiederkehrend" |
 | Aus Mail | Hat Quell-Link | Zeichen im Detail |
 
+**Tags statt Kontexte (Henning, 2026-10-15, #420).** Sichtbar heißt ein Kontext überall „Tag“, mit dem Etikett-Zeichen (`tag`) in
+Zeile, Detail und Startseite, wie in Apple Erinnerungen. Im Code und im Datenmodell bleibt `TaskContext`.
+
 ## Tonalität
 
 Ruhig, knapp, vertrauensvoll. Die App erklärt sich nicht, sie zeigt.

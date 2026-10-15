@@ -102,7 +102,8 @@ struct TaskRow: View {
         }
     }
 
-    /// Ranked: waiting, due, place, duration, subtasks, context, person. The first three win.
+    /// Ranked: waiting, due, place, duration, subtasks, tag, person. The first three win. A tag carries its
+    /// symbol, the same as in the detail and on the start screen (#420).
     private var traits: [Trait] {
         let unseen = task.hasUnseenAutomaticRevisions
         var all: [Trait] = []
@@ -130,7 +131,7 @@ struct TaskRow: View {
             all.append(Trait(id: "subtasks", text: "\(progress.done)/\(progress.total)", symbol: "checklist"))
         }
         if !hidesContext, let context = (task.contexts ?? []).sorted(by: { $0.sortOrder < $1.sortOrder }).first {
-            all.append(Trait(id: "context", text: context.name, tinted: unseen && FieldSource.isAutomatic(task.contextsSourceRaw)))
+            all.append(Trait(id: "context", text: context.name, symbol: ViewKind.context.symbol, tinted: unseen && FieldSource.isAutomatic(task.contextsSourceRaw)))
         }
         return Array(all.prefix(3))
     }

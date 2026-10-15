@@ -207,7 +207,7 @@ final class RecognitionWalkthroughTests: XCTestCase {
         }
         garden.tap()
         back(in: app)
-        let ownContext = fieldLabel("Contexts", Self.contextLabel)
+        let ownContext = fieldLabel("Tags", Self.contextLabel)
         XCTAssertTrue(waitForLabel(ownContext, of: contextsRow),
                       "Erwartet „\(ownContext)\", Beschriftung war „\(contextsRow.label)\"")
         shot(app, "2-werte-von-hand-gesetzt")
@@ -240,7 +240,7 @@ final class RecognitionWalkthroughTests: XCTestCase {
         let secondContexts = element("field_contexts", in: app)
         if !secondContexts.waitForExistence(timeout: 3) { app.swipeUp() }
         XCTAssertTrue(secondContexts.waitForExistence(timeout: 5), "Die Detailansicht listet keine Kontexte")
-        let takenContext = fieldLabel("Contexts", Self.contextLabel, marker: Self.ruleMarker)
+        let takenContext = fieldLabel("Tags", Self.contextLabel, marker: Self.ruleMarker)
         XCTAssertTrue(waitForLabel(takenContext, of: secondContexts),
                       "Erwartet „\(takenContext)\", Beschriftung war „\(secondContexts.label)\"")
         shot(app, "4-zweite-aufgabe-mit-uebernommenen-werten")

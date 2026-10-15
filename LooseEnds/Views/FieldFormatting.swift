@@ -10,7 +10,7 @@ enum FieldFormatting {
         case .urgency: String(localized: "Urgency")
         case .duration: String(localized: "Duration")
         case .energy: String(localized: "Energy")
-        case .contexts: String(localized: "Contexts")
+        case .contexts: String(localized: "Tags")
         case .people: String(localized: "People")
         case .project: String(localized: "Project")
         case .blockedBy: String(localized: "Blocked by")

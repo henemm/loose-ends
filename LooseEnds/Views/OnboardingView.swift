@@ -52,7 +52,7 @@ struct OnboardingView: View {
         case .contexts:
             page(symbol: "tag", title: "Where things get done") {
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("These contexts come with the app. Rename, delete or add your own on the start screen.")
+                    Text("These tags come with the app. Rename, delete or add your own on the start screen.")
                     Text(contexts.map(\.name).formatted(.list(type: .and)))
                         .fontDesign(.serif)
                         .accessibilityIdentifier("onboardingContexts")

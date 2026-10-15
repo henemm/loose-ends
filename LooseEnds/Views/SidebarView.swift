@@ -57,7 +57,7 @@ struct SidebarView: View {
         }
         let projectsCell = ViewCell(id: "projectsToggle", title: String(localized: "Projects"), symbol: ViewKind.project.symbol,
                                     count: projects.count, isOpen: showsProjects) { withAnimation(.snappy) { showsProjects.toggle() } }
-        let contextsCell = ViewCell(id: "contextsToggle", title: String(localized: "Contexts"), symbol: ViewKind.context.symbol,
+        let contextsCell = ViewCell(id: "contextsToggle", title: String(localized: "Tags"), symbol: ViewKind.context.symbol,
                                     count: contexts.count, isOpen: showsContexts) { withAnimation(.snappy) { showsContexts.toggle() } }
         return ViewRules.gridViews(in: tasks).map(view) + [projectsCell, contextsCell, view(.open), view(.done)]
     }
@@ -138,13 +138,13 @@ struct SidebarView: View {
                                 .contextMenu { catalogMenu(.context(context)) }
                                 .swipeActions { deleteButton(.context(context)) }
                         }
-                        Button("New context", systemImage: "plus") { begin(NameEdit(target: .newContext)) }
+                        Button("New tag", systemImage: "plus") { begin(NameEdit(target: .newContext)) }
                             .accessibilityIdentifier("newContextButton")
                             .paperRow()
                     }
                 } header: {
                     if !isCompact {
-                        foldHeader("Contexts", count: contexts.count, isOpen: $showsContexts, id: "contextsToggle")
+                        foldHeader("Tags", count: contexts.count, isOpen: $showsContexts, id: "contextsToggle")
                     }
                 }
             }
@@ -172,7 +172,7 @@ struct SidebarView: View {
                 .accessibilityIdentifier("nameSaveButton")
             Button("Cancel", role: .cancel) {}
         }
-        .alert("A context with this name already exists.", isPresented: $duplicateRejected) {
+        .alert("A tag with this name already exists.", isPresented: $duplicateRejected) {
             Button("OK", role: .cancel) {}
                 .accessibilityIdentifier("duplicateNameOKButton")
         }
@@ -348,7 +348,7 @@ struct NameEdit {
         var deleteTitle: String {
             switch self {
             case .project: String(localized: "Delete this project?")
-            case .context: String(localized: "Delete this context?")
+            case .context: String(localized: "Delete this tag?")
             case .newProject, .newContext: ""
             }
         }
@@ -356,7 +356,7 @@ struct NameEdit {
         var deleteMessage: String {
             switch self {
             case .project: String(localized: "Its tasks stay and lose the project.")
-            case .context: String(localized: "Its tasks stay and lose the context.")
+            case .context: String(localized: "Its tasks stay and lose the tag.")
             case .newProject, .newContext: ""
             }
         }
@@ -374,7 +374,7 @@ struct NameEdit {
     var title: String {
         switch target {
         case .newProject: String(localized: "New project")
-        case .newContext: String(localized: "New context")
+        case .newContext: String(localized: "New tag")
         case .project, .context: String(localized: "Rename")
         }
     }
