@@ -1,0 +1,220 @@
+<title>Startseite: drei Alternativen</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+<style>
+/* Layout: Kopf, drei iPhone-Startseiten nebeneinander (umbrechend), darunter je Haltung und Preis. Die Telefone tragen die App-Tokens: Papier #F4F3EE, Petrol, New York für Inhalt, SF für Beschriftung, Haarlinien statt Karten (#180). */
+:root{
+  --page:#E7E5DF; --ink:#1D2120; --muted:#676B69; --line:#D4D1C9;
+  --paper:#F4F3EE; --hair:#DCD9D0; --grey:#8B8E8B; --accent:#0F6E73; --tint:rgba(15,110,115,.10);
+  --red:#B3361F; --frame:#1D2120; --card:#FBFAF7;
+  --serif:ui-serif,"New York","Newsreader",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --page:#0F1110; --ink:#ECEDEA; --muted:#9B9E9B; --line:#2C2F2D;
+  --paper:#171816; --hair:#2E302C; --grey:#8F928F; --accent:#5FC4C9; --tint:rgba(95,196,201,.13);
+  --red:#FF8A73; --frame:#000; --card:#1D1F1C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --page:#0F1110; --ink:#ECEDEA; --muted:#9B9E9B; --line:#2C2F2D;
+  --paper:#171816; --hair:#2E302C; --grey:#8F928F; --accent:#5FC4C9; --tint:rgba(95,196,201,.13);
+  --red:#FF8A73; --frame:#000; --card:#1D1F1C; color-scheme:dark}
+body{background:var(--page);color:var(--ink);font-family:var(--sans);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 64px}
+.wrap{max-width:1240px;margin:0 auto}
+h1{font:500 32px/1.15 var(--serif);margin:0 0 8px;text-wrap:balance;letter-spacing:-.005em}
+h2{font:500 23px/1.2 var(--serif);margin:56px 0 8px;text-wrap:balance}
+.lede,.p{color:var(--muted);max-width:68ch;line-height:1.55;margin:0 0 14px;font-size:15px}
+.decided{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:14px;margin:18px 0 0;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);max-width:960px}
+.decided span b{font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:44px 32px;align-items:start;margin-top:28px}
+.col{display:flex;flex-direction:column;gap:16px;min-width:0}
+.label{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.label b{font:500 21px/1.2 var(--serif)}
+.label span{color:var(--muted);font-size:13px}
+.rec{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);border-radius:99px;padding:2px 8px}
+.notes{font-size:14px;line-height:1.55;margin:0;padding-left:18px}
+.notes li{margin:3px 0}
+.notes .minus{color:var(--muted)}
+
+/* Telefon */
+.phone{width:100%;max-width:360px;border:10px solid var(--frame);border-radius:48px;background:var(--paper);overflow:hidden;color:var(--ink)}
+.status{display:flex;justify-content:space-between;padding:13px 28px 0;font:600 14px var(--sans)}
+.bar{display:flex;justify-content:space-between;align-items:center;padding:8px 14px 0}
+.glass{width:42px;height:42px;border-radius:50%;background:color-mix(in srgb,var(--card) 80%,transparent);border:1px solid var(--hair);display:grid;place-items:center;color:var(--ink)}
+.screen{padding:4px 20px 28px}
+svg.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+svg.s{width:13px;height:13px}
+.dateline{display:flex;align-items:center;gap:8px;font:600 11px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin:14px 0 0}
+.dateline svg{width:30px;height:16px;color:var(--grey)}
+.head{font:500 30px/1.1 var(--serif);margin:6px 0 16px;letter-spacing:-.01em}
+.inbox{display:flex;align-items:center;gap:9px;background:var(--tint);color:var(--accent);border-radius:12px;padding:10px 12px;font:600 15px var(--sans)}
+.inbox .c{margin-left:auto;width:13px;height:13px}
+.cap{font:600 11px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin:22px 0 4px}
+.row{display:flex;gap:12px;padding:11px 0;border-bottom:.5px solid var(--hair)}
+.row .o{width:18px;height:18px;border-radius:50%;border:1.3px solid var(--grey);flex:none;margin-top:2px}
+.row .t{font:400 18px/1.25 var(--serif)}
+.row .m{font:400 12.5px var(--sans);color:var(--grey);display:flex;gap:10px;align-items:center;margin-top:3px}
+.row .m .r{color:var(--red)}
+.row .m .k{display:inline-flex;gap:3px;align-items:center}
+
+/* E1 Inhaltsverzeichnis */
+.toc{margin-top:6px}
+.toc .ln{display:flex;align-items:baseline;gap:6px;padding:7px 0;font:400 19px/1.2 var(--serif);color:var(--ink)}
+.toc .ln .dots{flex:1;border-bottom:1.5px dotted var(--hair);transform:translateY(-4px)}
+.toc .ln .n{font:400 14px var(--sans);color:var(--grey);font-variant-numeric:tabular-nums}
+.toc .gap{height:10px}
+.toc .sub{font:italic 400 16px/1.5 var(--serif);color:var(--muted);padding:0 0 6px 18px}
+.toc .sub a{color:var(--accent);font-style:normal;text-decoration:none}
+.toc .sub a i{font:400 12px var(--sans);color:var(--grey);font-style:normal;margin-left:2px}
+
+/* E2 Register */
+.reg{display:grid;grid-template-columns:1fr 1fr;gap:0 18px;margin-top:6px}
+.reg>div{min-width:0}
+.reg>div+div{border-left:.5px solid var(--hair);padding-left:18px}
+.reg .h{font:600 11px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin:4px 0 8px}
+.reg .e{display:flex;align-items:baseline;justify-content:space-between;padding:6px 0;font:400 16px/1.2 var(--sans);color:var(--ink)}
+.reg .e a{color:var(--accent);text-decoration:none}
+.reg .e .n{color:var(--grey);font-size:13px;font-variant-numeric:tabular-nums}
+.foot{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:16px;padding-top:12px;border-top:.5px solid var(--hair);font:400 14px var(--sans);color:var(--grey)}
+.foot a{color:var(--ink);text-decoration:none}
+
+/* E3 Satz */
+.prose{font:400 20px/1.5 var(--serif);margin:14px 0 0;color:var(--ink);text-wrap:pretty}
+.prose a{color:var(--accent);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;text-decoration-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+.prose .q{color:var(--muted)}
+.coil{display:block;margin:20px auto 0;width:90px;height:34px;color:var(--grey)}
+
+/* Begriff */
+.tw{overflow-x:auto;margin-top:12px}
+table{border-collapse:collapse;font-size:14px;min-width:560px;width:100%;max-width:900px}
+th,td{text-align:left;padding:9px 12px 9px 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="knot" viewBox="0 0 40 20"><path d="M2 12c5-8 10 6 15-1 3-4-1-8-4-5-3 3 2 8 7 6 5-2 9-8 18-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="tray" viewBox="0 0 24 24"><path d="M3.5 13.5l2.5-7.5h12l2.5 7.5v5a1.5 1.5 0 0 1-1.5 1.5H5a1.5 1.5 0 0 1-1.5-1.5z"/><path d="M3.5 13.5h5l1 2h5l1-2h5"/></symbol>
+  <symbol id="tag" viewBox="0 0 24 24"><path d="M3.5 12.2V5a1.5 1.5 0 0 1 1.5-1.5h7.2l8.3 8.3a1.5 1.5 0 0 1 0 2.1l-6.1 6.1a1.5 1.5 0 0 1-2.1 0z"/><circle cx="8" cy="8" r="1.3"/></symbol>
+  <symbol id="gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M5.5 18.5l1.8-1.8M16.7 7.3l1.8-1.8"/></symbol>
+  <symbol id="plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="cr" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+  <symbol id="loose" viewBox="0 0 90 34"><path d="M4 22c12 0 16-14 28-14s10 18 22 18c8 0 10-8 6-11-5-3-9 5-2 9 8 4 18-2 28-6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+</svg>
+
+<template id="top">
+  <div class="status"><span>08:02</span><span></span></div>
+  <div class="bar">
+    <div class="glass"><svg class="i"><use href="#gear"/></svg></div>
+    <div class="glass"><svg class="i"><use href="#plus"/></svg></div>
+  </div>
+</template>
+<template id="head">
+  <div class="dateline"><svg><use href="#knot"/></svg></div>
+  <div class="head">Donnerstag, 15. Oktober</div>
+  <div class="inbox"><svg class="i"><use href="#tray"/></svg>2 zum Durchsehen<svg class="i c"><use href="#cr"/></svg></div>
+  <div class="cap">Jetzt</div>
+  <div class="row"><span class="o"></span><div><div class="t">Steuerbescheid prüfen</div><div class="m"><span class="r">Heute 12:00</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Computer</span></div></div></div>
+  <div class="row"><span class="o"></span><div><div class="t">Mama zurückrufen</div><div class="m"><span>Seit gestern</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Telefon</span></div></div></div>
+  <div class="row" style="border-bottom:0"><span class="o"></span><div><div class="t">Hecke am Eingang schneiden</div><div class="m"><span>30 Min.</span><span class="k"><svg class="i s"><use href="#tag"/></svg>Garten</span></div></div></div>
+</template>
+
+<div class="wrap">
+  <h1>Startseite: drei Alternativen</h1>
+  <p class="lede">Dritte Fassung. Die zweite brach zwei Regeln aus #180: weiße Karten statt Haarlinien und alles in SF statt New York. So sah sie technisch aus, und nicht wie die App. Diese Fassung beginnt bei dem, was die App schon ist: Papiergrund, Aufgaben in New York, Beschriftungen klein in SF, der Knoten am Datum, Haarlinien. Unterschiedlich ist nur der Teil unter „Jetzt“.</p>
+  <div class="decided">
+    <span><b>Neu</b> · Leiste ganz oben, nur solange etwas wartet (#368)</span>
+    <span><b>Begriff</b> · „Tags“ überall, mit dem Etikett-Zeichen (heute entschieden)</span>
+    <span><b>Tags</b> · stehen nur noch an einer Stelle, nicht als Chips und als Liste</span>
+  </div>
+
+  <div class="grid">
+
+    <section class="col">
+      <div class="label"><b>E1 · Inhaltsverzeichnis</b><span class="rec">Empfehlung</span></div>
+      <div class="phone"><div data-top></div><div class="screen"><div data-head></div>
+        <div class="cap">Inhalt</div>
+        <div class="toc">
+          <div class="ln">Als nächstes<span class="dots"></span><span class="n">2</span></div>
+          <div class="ln">Fällig<span class="dots"></span><span class="n">2</span></div>
+          <div class="ln">Schnell erledigt<span class="dots"></span><span class="n">2</span></div>
+          <div class="ln">Wiederkehrend<span class="dots"></span><span class="n">1</span></div>
+          <div class="gap"></div>
+          <div class="ln">Tags<span class="dots"></span><span class="n">4</span></div>
+          <div class="sub"><a>Computer<i>3</i></a>, <a>Telefon<i>1</i></a>, <a>Haus<i>3</i></a>, <a>Garten<i>2</i></a></div>
+          <div class="ln">Projekte<span class="dots"></span><span class="n">1</span></div>
+          <div class="sub"><a>Umzug<i>7</i></a></div>
+          <div class="gap"></div>
+          <div class="ln">Alle offenen<span class="dots"></span><span class="n">12</span></div>
+          <div class="ln">Erledigt<span class="dots"></span><span class="n">37</span></div>
+        </div>
+      </div></div>
+      <ul class="notes">
+        <li>Wie die erste Seite eines Notizbuchs: Namen in New York, Punktlinie, Zahl klein in SF. Keine Symbole, keine Flächen.</li>
+        <li>Tags und Projekte stehen eingerückt unter ihrer Überschrift, kursiv, jeder Name tippbar. Kein Aufklappen, keine Chips.</li>
+        <li class="minus">Die Ansichtsnamen werden Serif. #180 sagt: Serif ist Inhalt, Beschriftungen bleiben SF. Hier wäre das eine bewusste Ausnahme, nur auf der Startseite.</li>
+      </ul>
+    </section>
+
+    <section class="col">
+      <div class="label"><b>E2 · Register</b><span>zwei Spalten, Regel #180 bleibt</span></div>
+      <div class="phone"><div data-top></div><div class="screen"><div data-head></div>
+        <div class="reg" style="margin-top:22px">
+          <div>
+            <div class="h">Ansichten</div>
+            <div class="e">Als nächstes<span class="n">2</span></div>
+            <div class="e">Fällig<span class="n">2</span></div>
+            <div class="e">Schnell<span class="n">2</span></div>
+            <div class="e">Wiederkehrend<span class="n">1</span></div>
+          </div>
+          <div>
+            <div class="h">Tags</div>
+            <div class="e"><a>Computer</a><span class="n">3</span></div>
+            <div class="e"><a>Telefon</a><span class="n">1</span></div>
+            <div class="e"><a>Haus</a><span class="n">3</span></div>
+            <div class="e"><a>Garten</a><span class="n">2</span></div>
+          </div>
+        </div>
+        <div class="foot"><a>Projekte 1</a><a>Alle offenen 12</a><a>Erledigt 37</a></div>
+      </div></div>
+      <ul class="notes">
+        <li>Zwei Spalten mit einer Haarlinie dazwischen, wie das Register eines Buchs. Links, was die App berechnet, rechts deine Tags.</li>
+        <li>Alles Beschriftung, also SF; Serif bleibt den Aufgaben. Ruhig und genau.</li>
+        <li class="minus">Bei großer Schrift wird es eine Spalte. Mehr als sechs Tags brauchen „N weitere“.</li>
+      </ul>
+    </section>
+
+    <section class="col">
+      <div class="label"><b>E3 · Ein Satz</b><span>der Kopfsatz kehrt zurück</span></div>
+      <div class="phone"><div data-top></div><div class="screen"><div data-head></div>
+        <p class="prose">Außerdem sind <a>2 vorgemerkt</a>, <a>2 bald fällig</a> und <a>2 schnell erledigt</a>. Nach Tags: <a>Computer</a>, <a>Telefon</a>, <a>Haus</a>, <a>Garten</a>. <span class="q">Insgesamt</span> <a>12 offen</a>, <a>37 erledigt</a>.</p>
+        <svg class="coil"><use href="#loose"/></svg>
+      </div></div>
+      <ul class="notes">
+        <li>Die App spricht, wie du erfasst: in einem Satz. Jede Zahl und jeder Tag ist ein Link. Der lose Faden schließt die Seite.</li>
+        <li>Der Satz entsteht aus Regeln mit festen Bausteinen; ohne Modell, mit Tests je Fall.</li>
+        <li class="minus">Links im Fließtext sind kleinere Ziele als Zeilen. Projekte und Wiederkehrend fehlen im Satz und brauchen einen eigenen Weg.</li>
+      </ul>
+    </section>
+  </div>
+
+  <h2>Was „Tags“ in der App ändert</h2>
+  <p class="p">Du hast „Tags“ statt „Kontexte“ gewählt. Das betrifft jede Stelle, an der das Wort heute steht. Für die Umsetzung lege ich ein eigenes Ticket an.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Stelle</th><th>Heute</th><th>Neu</th></tr></thead>
+    <tbody>
+      <tr><td>Detail</td><td>Feld „Kontexte“</td><td>Feld „Tags“ mit Etikett-Zeichen</td></tr>
+      <tr><td>Aufgabenzeile</td><td>nur der Name</td><td>Etikett-Zeichen vor dem Namen</td></tr>
+      <tr><td>Startseite</td><td>Chips „Passt gerade“ und Gruppe „Kontexte“</td><td>eine Stelle „Tags“, je nach Entwurf</td></tr>
+      <tr><td>Verwaltung</td><td>„Neuer Kontext“, „Diesen Kontext löschen?“</td><td>„Neuer Tag“, „Diesen Tag löschen?“</td></tr>
+      <tr><td>Erster Start</td><td>„Diese Kontexte bringt die App mit.“</td><td>„Diese Tags bringt die App mit.“</td></tr>
+      <tr><td>Siri</td><td>Tags aus dem Erinnerungen-Schema werden Kontexte (#25)</td><td>dasselbe Wort auf beiden Seiten</td></tr>
+    </tbody>
+  </table></div>
+  <p class="p" style="margin-top:12px">Im Code und im Datenmodell bleibt <code>TaskContext</code>: Das CloudKit-Schema ist nur additiv, eine Umbenennung dort brächte nichts. Es ändern sich nur die Texte.</p>
+</div>
+
+<script>
+  const fill = (sel, id) => { const h = document.getElementById(id).innerHTML; document.querySelectorAll(sel).forEach(e => e.outerHTML = h); };
+  fill('[data-top]', 'top'); fill('[data-head]', 'head');
+</script>

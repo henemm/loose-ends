@@ -61,11 +61,11 @@ enum ViewRules {
         dailyViews + occasionalViews.filter { !tasks(for: $0, in: all, now: now, calendar: calendar).isEmpty }
     }
 
-    /// The views before Projects and Contexts in the iPhone grid (#368): Next up, Due and New always,
-    /// then the occasional ones that hold a task. "Quick" is a chip there, so it is not a cell.
-    static func gridViews(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [ViewKind] {
+    /// The views before Tags and Projects in the iPhone index (#421): Next up, Due and New always,
+    /// then the occasional ones that hold a task, Quick among them (it was a chip until #421).
+    static func indexViews(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [ViewKind] {
         [.next, .due, .new]
-            + occasionalViews.filter { $0 != .quick && !tasks(for: $0, in: all, now: now, calendar: calendar).isEmpty }
+            + occasionalViews.filter { !tasks(for: $0, in: all, now: now, calendar: calendar).isEmpty }
     }
 
     /// What stands for today (Henning, 2026-10-11, #299): open top-level tasks due today or
@@ -103,6 +103,48 @@ enum ViewRules {
         if task.dueHasTime { return .missed }
         let days = calendar.dateComponents([.day], from: calendar.startOfDay(for: due), to: today).day ?? 1
         return .carried(days: max(days, 1))
+    }
+
+    /// What stands in the margin of a row (#424, Henning 2026-10-15): the one time that counts, like
+    /// a diary. Red only for time pressure (`pressing`). Done and parked tasks leave it empty.
+    enum MarginMark: Equatable {
+        /// Due today at this time.
+        case time(Date)
+        /// Due today, no time.
+        case today
+        /// A time that has passed, `days` calendar days ago.
+        case missed(days: Int)
+        /// A day-only date carried along (#414).
+        case carried(days: Int)
+        case tomorrow
+        /// Within the coming six days: the weekday.
+        case weekday(Date)
+        /// Later: day and month.
+        case date(Date)
+        /// No due date: the duration instead.
+        case duration(DurationBucket)
+        case none
+
+        var pressing: Bool {
+            switch self {
+            case .time, .today, .missed: true
+            default: false
+            }
+        }
+    }
+
+    static func marginMark(of task: TaskItem, now: Date = Date(), calendar: Calendar = .current) -> MarginMark {
+        guard task.isOpen else { return .none }
+        guard let due = task.dueDate else { return task.duration.map(MarginMark.duration) ?? .none }
+        let today = calendar.startOfDay(for: now)
+        let days = calendar.dateComponents([.day], from: today, to: calendar.startOfDay(for: due)).day ?? 0
+        switch days {
+        case ..<0: return task.dueHasTime ? .missed(days: -days) : .carried(days: -days)
+        case 0: return task.dueHasTime ? .time(due) : .today
+        case 1: return .tomorrow
+        case 2...6: return .weekday(due)
+        default: return .date(due)
+        }
     }
 
     /// The number on the app icon (#299): "Next up" plus "Due today", each task once. On the start

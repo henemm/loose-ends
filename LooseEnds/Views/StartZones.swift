@@ -108,128 +108,121 @@ struct NowBlock<Row: View>: View {
     }
 }
 
-/// A context with at least one open task, for its chip.
-struct FitPlace: Identifiable {
-    let context: TaskContext
+/// A tag or a project with at least one open task, for its word in the index.
+struct IndexWord: Identifiable {
+    let id: String
+    let name: String
     let count: Int
-    var id: UUID { context.id }
+    let target: ViewSelection
 }
 
-/// "Fits right now" (#368): Quick first, then each context that holds a task, one tap to its view.
-/// The numbers come from the same functions as the lists behind them. No chip, no block. Chips
-/// wrap (`FlowLayout`) and carry the accent, since they are tappable (ADR-14); the count is grey.
-struct FitChips: View {
-    let quick: Int
-    let places: [FitPlace]
-    let select: (ViewSelection) -> Void
-    @ScaledMetric(relativeTo: .subheadline) private var gap: CGFloat = 8
-
-    var body: some View {
-        if quick > 0 || !places.isEmpty {
-            ZoneCaption("Fits now")
-            FlowLayout(spacing: gap) {
-                if quick > 0 {
-                    chip(String(localized: ViewKind.quick.titleKey), symbol: ViewKind.quick.symbol, count: quick,
-                         target: .system(.quick), id: "chip_quick")
-                }
-                ForEach(places) { place in
-                    chip(place.context.name, symbol: nil, count: place.count, target: .context(place.context.id),
-                         id: "chip_\(place.id.uuidString)")
-                }
-            }
-            .listRowSeparator(.hidden)
-            .paperRow()
-        }
-    }
-
-    private func chip(_ title: String, symbol: String?, count: Int, target: ViewSelection, id: String) -> some View {
-        Button {
-            select(target)
-        } label: {
-            HStack(spacing: 4) {
-                if let symbol {
-                    Image(systemName: symbol)
-                }
-                Text(title)
-                Text(verbatim: "\(count)")
-                    .monospacedDigit()
-                    .foregroundStyle(.secondary)
-            }
-            .font(.subheadline)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
-            .foregroundStyle(.tint)
-            .overlay(Capsule().stroke(Color.accentColor.opacity(0.5), lineWidth: 1))
-            .contentShape(Capsule())
-        }
-        .buttonStyle(.plain)
-        .accessibilityElement(children: .combine)
-        .accessibilityIdentifier(id)
-    }
-}
-
-/// One cell of the "All views" grid: a view, or a group (Projects, Contexts) that unfolds below it.
-struct ViewCell: Identifiable {
+/// One line of the index: a view, or a group (Tags, Projects) whose line folds its management rows.
+struct IndexLine: Identifiable {
     let id: String
     let title: String
-    let symbol: String
     let count: Int
-    /// Nil for a view; for a group whether it is unfolded.
-    let isOpen: Bool?
+    /// The tags or projects that hold a task, set in italics below the group's line.
+    var words: [IndexWord] = []
     let action: () -> Void
 }
 
-/// "All views" (#368): the quiet places in two grey columns, one column from large text sizes on.
-/// Each cell is a button with the id of the row it replaces. Grey, not accent: places to browse,
-/// not a call to act (ADR-14).
-struct AllViewsGrid: View {
-    let cells: [ViewCell]
+/// "Contents" (#421, Henning 2026-10-15): the quiet places of the iPhone start screen as the first
+/// page of a notebook. Names in New York, a dotted leader, the count small in SF. A deliberate
+/// exception to #180 rule 2, for this page only. Groups are kept apart by space, not by cards;
+/// tags and projects with tasks follow their line as italic words, one tap to their list.
+struct ContentsIndex: View {
+    let groups: [[IndexLine]]
+    let select: (ViewSelection) -> Void
     @Environment(\.dynamicTypeSize) private var typeSize
-    @ScaledMetric(relativeTo: .subheadline) private var glyph: CGFloat = 16
-
-    private var columns: [GridItem] {
-        typeSize >= .xxLarge ? [GridItem(.flexible())] : [GridItem(.flexible(), spacing: 20), GridItem(.flexible())]
-    }
+    @ScaledMetric(relativeTo: .title3) private var groupGap: CGFloat = 12
+    @ScaledMetric(relativeTo: .body) private var wordGap: CGFloat = 10
 
     var body: some View {
-        ZoneCaption("All views")
-        LazyVGrid(columns: columns, alignment: .leading, spacing: 0) {
-            ForEach(cells) { cell in
-                cellButton(cell)
+        ZoneCaption("Contents")
+        VStack(alignment: .leading, spacing: 0) {
+            ForEach(Array(groups.enumerated()), id: \.offset) { index, group in
+                if index > 0 {
+                    Spacer().frame(height: groupGap)
+                }
+                ForEach(group) { line in
+                    lineButton(line)
+                    if !line.words.isEmpty {
+                        words(line.words)
+                    }
+                }
             }
         }
         .listRowSeparator(.hidden)
         .paperRow()
     }
 
-    private func cellButton(_ cell: ViewCell) -> some View {
-        Button(action: cell.action) {
-            HStack(spacing: 8) {
-                Image(systemName: cell.symbol)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: glyph, height: glyph)
-                Text(cell.title)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
-                Spacer(minLength: 4)
-                if cell.count > 0 {
-                    Text(verbatim: "\(cell.count)")
-                        .monospacedDigit()
+    private func lineButton(_ line: IndexLine) -> some View {
+        Button(action: line.action) {
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                Text(line.title)
+                    .font(.title3)
+                    .fontDesign(.serif)
+                    .foregroundStyle(.primary)
+                if typeSize.isAccessibilitySize {
+                    Spacer(minLength: 4)
+                } else {
+                    Leader()
+                        .stroke(.tertiary, style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [0.5, 5]))
+                        .frame(height: 1.5)
+                        .accessibilityHidden(true)
                 }
-                if let isOpen = cell.isOpen {
-                    Image(systemName: isOpen ? "chevron.up" : "chevron.down")
-                        .imageScale(.small)
+                if line.count > 0 {
+                    Text(verbatim: "\(line.count)")
+                        .font(.subheadline)
+                        .monospacedDigit()
+                        .foregroundStyle(.secondary)
                 }
             }
-            .font(.subheadline)
-            .foregroundStyle(.secondary)
-            .padding(.vertical, 9)
+            .padding(.vertical, 6)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)
-        .accessibilityValue(cell.isOpen.map { $0 ? Text("Shown") : Text("Hidden") } ?? Text(verbatim: ""))
-        .accessibilityIdentifier(cell.id)
+        .accessibilityIdentifier(line.id)
+    }
+
+    /// Accent, since each word opens its list (ADR-14); the count stays grey.
+    private func words(_ words: [IndexWord]) -> some View {
+        FlowLayout(spacing: wordGap) {
+            ForEach(words) { word in
+                Button {
+                    select(word.target)
+                } label: {
+                    HStack(alignment: .firstTextBaseline, spacing: 3) {
+                        Text(word.name)
+                            .font(.body)
+                            .fontDesign(.serif)
+                            .italic()
+                            .foregroundStyle(.tint)
+                        Text(verbatim: "\(word.count)")
+                            .font(.caption)
+                            .monospacedDigit()
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.vertical, 4)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityElement(children: .combine)
+                .accessibilityIdentifier(word.id)
+            }
+        }
+        .padding(.leading, 18)
+        .padding(.bottom, 4)
+    }
+}
+
+/// The dotted line between a name and its count, drawn through the middle of its frame.
+private struct Leader: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.minX, y: rect.midY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.midY))
+        return path
     }
 }
