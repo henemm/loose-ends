@@ -5,7 +5,8 @@ import Foundation
 ///
 /// Words a rule reads into a field leave the title (#217): the due date with its time and the small
 /// words leading into it ("bis Freitag", "um 15 Uhr"), and the words that say importance or urgency
-/// outright ("wichtig", "dringend"). They stand in their fields already. Content words that also set
+/// outright ("wichtig", "dringend"), and a phone number, which the rule step puts into the note (#439).
+/// They stand in their fields already. Content words that also set
 /// a field ("Rechnung", "Frist") stay. If nothing is left, the title keeps every word.
 enum TitleRule {
     static let maxWords = 12
@@ -25,7 +26,9 @@ enum TitleRule {
 
     /// `reference` is the moment of capture: only a date the rule step can resolve from it is struck.
     static func title(from rawText: String, reference: Date = Date(), calendar: Calendar = .current) -> String? {
-        let stripped = strippingRuleWords(from: rawText, reference: reference, calendar: calendar)
+        // A phone number goes to the note (#439): it leaves the title whole, "+" and "/" included.
+        let withoutPhones = PhoneRule.removing(from: rawText)
+        let stripped = strippingRuleWords(from: withoutPhones, reference: reference, calendar: calendar)
         return cleaned(stripped.contains { $0.isLetter || $0.isNumber } ? stripped : rawText)
     }
 
