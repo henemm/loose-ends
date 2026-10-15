@@ -3,7 +3,7 @@ import SwiftUI
 /// The zones of the iPhone start screen (#368). Each one is a few rows of the start list, so they
 /// are built to sit inside a `List` and carry their own row look (`paperRow`).
 
-/// A small grey heading above a zone.
+/// A small grey heading above a zone, as a row of its own.
 struct ZoneCaption: View {
     private let title: LocalizedStringKey
 
@@ -12,13 +12,24 @@ struct ZoneCaption: View {
     }
 
     var body: some View {
+        ZoneCaptionText(title: title)
+            // Space above, little below: the caption belongs to what follows (#433, draft: 22 above, 4 below).
+            .padding(.top, 14)
+            .listRowSeparator(.hidden)
+            .paperRow()
+    }
+}
+
+/// The caption's text alone, for a zone that sets it inside its own row (the index, #433).
+struct ZoneCaptionText: View {
+    let title: LocalizedStringKey
+
+    var body: some View {
         Text(title)
             .font(.caption.weight(.semibold))
             .textCase(.uppercase)
             .tracking(1)
             .foregroundStyle(.secondary)
-            .listRowSeparator(.hidden)
-            .paperRow()
     }
 }
 
@@ -134,11 +145,14 @@ struct ContentsIndex: View {
     let groups: [[IndexLine]]
     let select: (ViewSelection) -> Void
     @ScaledMetric(relativeTo: .title3) private var groupGap: CGFloat = 12
-    @ScaledMetric(relativeTo: .body) private var wordGap: CGFloat = 10
+    @ScaledMetric(relativeTo: .callout) private var wordGap: CGFloat = 5
 
     var body: some View {
-        ZoneCaption("Contents")
         VStack(alignment: .leading, spacing: 0) {
+            // Inside the index's row, so no row inset lies between the caption and the first line (#433).
+            ZoneCaptionText(title: "Contents")
+                .padding(.top, 14)
+                .padding(.bottom, 4)
             ForEach(Array(groups.enumerated()), id: \.offset) { index, group in
                 if index > 0 {
                     Spacer().frame(height: groupGap)
@@ -164,30 +178,40 @@ struct ContentsIndex: View {
         .accessibilityIdentifier(line.id)
     }
 
-    /// Accent, since each word opens its list (ADR-14); the count stays grey.
+    /// Accent, since each word opens its list (ADR-14); the count stays grey. Upright in New York with a
+    /// grey comma between, so the words read as a sentence, as in the draft (#433).
     private func words(_ words: [IndexWord]) -> some View {
         FlowLayout(spacing: wordGap) {
-            ForEach(words) { word in
-                Button {
-                    select(word.target)
-                } label: {
-                    HStack(alignment: .firstTextBaseline, spacing: 3) {
-                        Text(word.name)
-                            .font(.body)
+            ForEach(Array(words.enumerated()), id: \.element.id) { index, word in
+                HStack(alignment: .firstTextBaseline, spacing: 0) {
+                    Button {
+                        select(word.target)
+                    } label: {
+                        HStack(alignment: .firstTextBaseline, spacing: 2) {
+                            Text(word.name)
+                                .font(.callout)
+                                .fontDesign(.serif)
+                                .foregroundStyle(.tint)
+                            Text(verbatim: "\(word.count)")
+                                .font(.caption)
+                                .monospacedDigit()
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(.vertical, 4)
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityIdentifier(word.id)
+                    if index < words.count - 1 {
+                        Text(verbatim: ",")
+                            .font(.callout)
                             .fontDesign(.serif)
                             .italic()
-                            .foregroundStyle(.tint)
-                        Text(verbatim: "\(word.count)")
-                            .font(.caption)
-                            .monospacedDigit()
                             .foregroundStyle(.secondary)
+                            .accessibilityHidden(true)
                     }
-                    .padding(.vertical, 4)
-                    .contentShape(Rectangle())
                 }
-                .buttonStyle(.plain)
-                .accessibilityElement(children: .combine)
-                .accessibilityIdentifier(word.id)
             }
         }
         .padding(.leading, 18)
@@ -216,12 +240,13 @@ struct IndexLineLabel: View {
                     .frame(height: 1.5)
                     .accessibilityHidden(true)
             }
-            if count > 0 {
-                Text(verbatim: "\(count)")
-                    .font(.subheadline)
-                    .monospacedDigit()
-                    .foregroundStyle(.secondary)
-            }
+            // A zero is left out (#180), but its place stays, so every leader ends at the same edge (#433).
+            Text(verbatim: "\(max(count, 0))")
+                .font(.subheadline)
+                .monospacedDigit()
+                .foregroundStyle(.secondary)
+                .opacity(count > 0 ? 1 : 0)
+                .accessibilityHidden(count == 0)
         }
         .padding(.vertical, 6)
         .contentShape(Rectangle())
