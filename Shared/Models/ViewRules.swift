@@ -105,6 +105,48 @@ enum ViewRules {
         return .carried(days: max(days, 1))
     }
 
+    /// What stands in the margin of a row (#424, Henning 2026-10-15): the one time that counts, like
+    /// a diary. Red only for time pressure (`pressing`). Done and parked tasks leave it empty.
+    enum MarginMark: Equatable {
+        /// Due today at this time.
+        case time(Date)
+        /// Due today, no time.
+        case today
+        /// A time that has passed, `days` calendar days ago.
+        case missed(days: Int)
+        /// A day-only date carried along (#414).
+        case carried(days: Int)
+        case tomorrow
+        /// Within the coming six days: the weekday.
+        case weekday(Date)
+        /// Later: day and month.
+        case date(Date)
+        /// No due date: the duration instead.
+        case duration(DurationBucket)
+        case none
+
+        var pressing: Bool {
+            switch self {
+            case .time, .today, .missed: true
+            default: false
+            }
+        }
+    }
+
+    static func marginMark(of task: TaskItem, now: Date = Date(), calendar: Calendar = .current) -> MarginMark {
+        guard task.isOpen else { return .none }
+        guard let due = task.dueDate else { return task.duration.map(MarginMark.duration) ?? .none }
+        let today = calendar.startOfDay(for: now)
+        let days = calendar.dateComponents([.day], from: today, to: calendar.startOfDay(for: due)).day ?? 0
+        switch days {
+        case ..<0: return task.dueHasTime ? .missed(days: -days) : .carried(days: -days)
+        case 0: return task.dueHasTime ? .time(due) : .today
+        case 1: return .tomorrow
+        case 2...6: return .weekday(due)
+        default: return .date(due)
+        }
+    }
+
     /// The number on the app icon (#299): "Next up" plus "Due today", each task once. On the start
     /// screen a task in both stands in both lists (Henning, 2026-10-11); the count does not double it.
     static func badgeCount(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> Int {

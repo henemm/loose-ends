@@ -16,6 +16,8 @@ struct TaskRow: View {
     var identifierPrefix = "taskRow_"
     /// "All open" holds parked tasks among the rest (#319); there the moon tells them apart.
     var marksParked = false
+    /// The margin with the one time that counts (#424); wide enough for "12:00" and "Seit gestern" in two lines.
+    @ScaledMetric(relativeTo: .caption) private var marginWidth: CGFloat = 54
 
     /// A deleted task can still be drawn once while the list animates it out; reading any of its
     /// properties then traps inside SwiftData (#194: delete from Repeating with New still on the
@@ -29,6 +31,32 @@ struct TaskRow: View {
     }
 
     private var content: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 12) {
+            margin
+            lines
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("\(identifierPrefix)\(task.id.uuidString)")
+    }
+
+    /// Like a diary (#424): the time at the left edge, red only for time pressure, accent while the
+    /// AI's date is unseen. Empty without a date or duration, but always the same width.
+    private var margin: some View {
+        let mark = ViewRules.marginMark(of: task)
+        let unseenAI = task.hasUnseenAutomaticRevisions
+            && FieldSource.isAutomatic(task.dueDate == nil ? task.durationSourceRaw : task.dueSourceRaw)
+        let style: AnyShapeStyle = mark.pressing ? AnyShapeStyle(.red) : unseenAI ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary)
+        return Text(Self.marginText(mark))
+            .font(.caption)
+            .monospacedDigit()
+            .multilineTextAlignment(.trailing)
+            .lineLimit(2)
+            .minimumScaleFactor(0.8)
+            .foregroundStyle(style)
+            .frame(width: marginWidth, alignment: .trailing)
+    }
+
+    private var lines: some View {
         VStack(alignment: .leading, spacing: 2) {
             HStack(spacing: 6) {
                 // Serif is the content, SF is the app (#180, rule 2).
@@ -84,8 +112,6 @@ struct TaskRow: View {
                     .lineLimit(1)
             }
         }
-        .accessibilityElement(children: .combine)
-        .accessibilityIdentifier("\(identifierPrefix)\(task.id.uuidString)")
     }
 
     private struct Trait: Identifiable {
@@ -93,37 +119,26 @@ struct TaskRow: View {
         let text: String
         var symbol: String?
         var tinted = false
-        var red = false
 
         var style: AnyShapeStyle {
-            if red { return AnyShapeStyle(.red) }
             if tinted { return AnyShapeStyle(.tint) }
             return AnyShapeStyle(.secondary)
         }
     }
 
-    /// Ranked: waiting, due, place, duration, subtasks, tag, person. The first three win. A tag carries its
-    /// symbol, the same as in the detail and on the start screen (#420).
+    /// Ranked: waiting, place, duration, subtasks, tag, person; the date moved to the margin (#424).
+    /// The first three win. A tag carries its symbol, as in the detail and on the start screen (#420).
     private var traits: [Trait] {
         let unseen = task.hasUnseenAutomaticRevisions
         var all: [Trait] = []
         if let waitingOn = WaitingOn.rowLabel(for: task) {
             all.append(Trait(id: "waiting", text: String(localized: "Waiting on: \(waitingOn)"), symbol: "lock"))
         }
-        if let due = task.dueDate {
-            let state = ViewRules.dueState(of: task)
-            all.append(Trait(
-                id: "due",
-                text: Self.dueText(due, hasTime: task.dueHasTime, state: state),
-                symbol: "calendar",
-                tinted: unseen && FieldSource.isAutomatic(task.dueSourceRaw),
-                red: state == .today || state == .missed
-            ))
-        }
         if let place = task.place {
             all.append(Trait(id: "place", text: place.name, symbol: "location"))
         }
-        if let duration = task.duration {
+        // Without a date the margin shows the duration (#424); with one, the duration stays a trait.
+        if let duration = task.duration, task.dueDate != nil {
             all.append(Trait(id: "duration", text: FieldFormatting.duration(duration), symbol: "clock", tinted: unseen && FieldSource.isAutomatic(task.durationSourceRaw)))
         }
         let progress = Subtasks.progress(of: task)
@@ -136,12 +151,20 @@ struct TaskRow: View {
         return Array(all.prefix(3))
     }
 
-    /// A day-only date past its day says how long it has been carried, in grey (#414).
-    private static func dueText(_ due: Date, hasTime: Bool, state: ViewRules.DueState) -> String {
-        switch state {
+    /// The margin's words (#424). A day-only date past its day says how long it has been carried (#414).
+    private static func marginText(_ mark: ViewRules.MarginMark) -> String {
+        switch mark {
+        case .time(let date): date.formatted(date: .omitted, time: .shortened)
+        case .today: String(localized: "Today")
+        case .missed(let days) where days == 1: String(localized: "Yesterday")
+        case .missed(let days): String(localized: "\(days) days ago")
         case .carried(let days) where days == 1: String(localized: "Since yesterday")
         case .carried(let days): String(localized: "Since \(days) days")
-        default: due.formatted(date: .abbreviated, time: hasTime ? .shortened : .omitted)
+        case .tomorrow: String(localized: "Tomorrow")
+        case .weekday(let date): date.formatted(.dateTime.weekday(.abbreviated))
+        case .date(let date): date.formatted(.dateTime.day().month(.abbreviated))
+        case .duration(let bucket): FieldFormatting.duration(bucket)
+        case .none: ""
         }
     }
 }
