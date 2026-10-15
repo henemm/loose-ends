@@ -43,6 +43,12 @@ final class TaskItem {
     /// derived field: no source, no revision.
     var placeRemindedAt: Date?
 
+    /// The note (#439): a long text for numbers, addresses, links, anything beside the title. Mostly
+    /// the user's own; a rule may move a dictated phone number here (marked by `notesSourceRaw`).
+    /// Added 2026-10-15, additive for CloudKit.
+    var notes: String?
+    var notesSourceRaw: String?
+
     // Derived: title
     var title: String?
     var titleSourceRaw: String?

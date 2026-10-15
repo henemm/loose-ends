@@ -131,6 +131,10 @@ struct TaskDetailView: View {
                 .paperRow()
             }
 
+            // Numbers, addresses, links beside the title (#439).
+            NoteSection(task: task)
+                .paperRow()
+
             Section {
                 // Stays visible without a due date: it can be switched on first (see the note).
                 // Switching on asks for what the event still lacks (#203): the switch stays off until the

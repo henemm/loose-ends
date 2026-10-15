@@ -2,6 +2,9 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "Note" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Notiz" } } } },
+    "Numbers, addresses, anything else" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nummern, Adressen, alles andere" } } } },
+    "Edit note" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Notiz bearbeiten" } } } },
     "Since yesterday" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Seit gestern" } } } },
     "Since %lld days" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Seit %lld Tagen" } } } },
     "Still open: %lld" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Noch offen: %lld" } } } },

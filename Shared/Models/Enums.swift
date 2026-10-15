@@ -58,6 +58,8 @@ enum DurationBucket: String, Codable, CaseIterable, Sendable {
 /// written before still decode as what they were.
 enum RevisedField: String, Codable, CaseIterable, Sendable {
     case title, dueDate, importance, urgency, duration, energy, contexts, people, project, blockedBy, repeatRule, place
+    /// The note (#439). Last, so existing orders stay as they are.
+    case notes
 }
 
 /// System and user views. Rules live in ViewRules.

@@ -16,6 +16,7 @@ enum FieldFormatting {
         case .blockedBy: String(localized: "Blocked by")
         case .repeatRule: String(localized: "Repeat")
         case .place: String(localized: "Place")
+        case .notes: String(localized: "Note")
         }
     }
 
@@ -23,7 +24,7 @@ enum FieldFormatting {
     static func value(_ encoded: String?, for field: RevisedField, hasTime: Bool = false) -> String? {
         guard let encoded, !encoded.isEmpty else { return nil }
         switch field {
-        case .title, .project:
+        case .title, .project, .notes:
             return encoded
         case .dueDate:
             guard let date = ISO8601DateFormatter().date(from: encoded) else { return nil }

@@ -21,6 +21,7 @@ enum FieldCodec {
         case .blockedBy: return encode((task.blockedBy ?? []).map(\.id.uuidString))
         case .repeatRule: return task.repeatRule.flatMap(encode)
         case .place: return task.place.flatMap(encode)
+        case .notes: return task.notes
         }
     }
 
@@ -78,6 +79,9 @@ enum FieldCodec {
             task.place = decodePlace(encoded)
             task.placeSourceRaw = task.place == nil ? nil : sourceRaw
             task.placeRemindedAt = nil   // a new place is a new reminder (#226)
+        case .notes:
+            task.notes = nonEmpty(encoded)
+            task.notesSourceRaw = task.notes == nil ? nil : sourceRaw
         case .blockedBy:
             break
         }
