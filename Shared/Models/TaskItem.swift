@@ -97,6 +97,8 @@ final class TaskItem {
     var contexts: [TaskContext]?
     @Relationship(deleteRule: .cascade, inverse: \Revision.task) var revisions: [Revision]?
     @Relationship(deleteRule: .cascade, inverse: \CompletionRecord.task) var completions: [CompletionRecord]?
+    /// Photos, scans and documents (#442); they go with the task.
+    @Relationship(deleteRule: .cascade, inverse: \Attachment.task) var attachments: [Attachment]?
 
     init(rawText: String, capturedVia: CaptureChannel = .app, sourceURL: URL? = nil, ownerID: String = "") {
         self.rawText = rawText
