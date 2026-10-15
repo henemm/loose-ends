@@ -127,6 +127,10 @@ ungeprüften Titel an und führt zurück in die Liste. Eine unsortierte Aufgabe 
 verlässt „Neu“, sobald sie sortiert ist. Aus jeder anderen Ansicht gilt Öffnen weiter als gesehen.
 Konzept mit Mockups: https://claude.ai/artifact/259uebtk5zCWHEzSydAjco
 
+**Kein Haken in der Leiste (Henning, 2026-10-15, #435).** Auch außerhalb von „Neu“ liest sich der Haken oben rechts als
+„Fertig, schließen“ und erledigte Aufgaben aus Versehen. Die Leiste zeigt nur „…“ (aus „Neu“ dazu „Passt“); „Erledigen“
+ist der erste Eintrag im Menü „…“. Verlassen wird die Detailansicht über „Zurück“.
+
 ### 5. Revisions-Sheet
 
 Vom KI-Marker aus: Liste aller Änderungen an dieser Aufgabe, neueste oben.
