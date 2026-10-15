@@ -4,7 +4,6 @@ import Foundation
 /// Pure functions over fetched tasks so they are trivially unit-testable.
 enum ViewRules {
     static let oldAfterDays = 30
-    static let dueWithinDays = 7
     static let carriedInNowDays = 7
 
     /// Why a task sits in "New", the review tray (#188).
@@ -69,8 +68,7 @@ enum ViewRules {
     }
 
     /// What stands for today (Henning, 2026-10-11, #299): open top-level tasks due today or
-    /// earlier, earliest first. Narrower than the "Due" view (seven days), so the start screen and
-    /// the app badge say "today", not "this week". Blocked tasks stay out, as in "Due".
+    /// earlier, earliest first. Differs from the "Due" view only by the carried-over cut-off below. Blocked tasks stay out, as in "Due".
     /// A day-only date carried longer than `carriedInNowDays` leaves it (#414, Henning 2026-10-14): "Now"
     /// shows no intention older than a week. It stays in "Due" and, captured long ago, in "Old".
     static func dueToday(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [TaskItem] {
@@ -202,8 +200,10 @@ enum ViewRules {
             return topLevel.filter(isInNew)
                 .sorted { $0.capturedAt > $1.capturedAt }
         case .due:
-            let limit = calendar.date(byAdding: .day, value: dueWithinDays, to: now) ?? now
-            return topLevel.filter { $0.isOpen && ($0.dueDate.map { $0 <= limit } ?? false) && !$0.isBlocked }
+            // Today and overdue (Henning, 2026-10-15): tomorrow or "Monday" is not due yet.
+            let today = calendar.startOfDay(for: now)
+            let limit = calendar.date(byAdding: .day, value: 1, to: today) ?? now
+            return topLevel.filter { $0.isOpen && ($0.dueDate.map { $0 < limit } ?? false) && !$0.isBlocked }
                 .sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
         case .quick:
             return topLevel.filter { $0.isOpen && ($0.duration?.isQuick ?? false) && !$0.isBlocked }
