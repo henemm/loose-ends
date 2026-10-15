@@ -33,14 +33,23 @@ struct SiriFields: Sendable {
     /// Reads only. Throws on more than one distinct link or a tag that matches no context.
     static func resolve(_ fields: SiriFields, in context: ModelContext) throws -> Resolved {
         var links: [URL] = []
-        for url in fields.urls where !links.contains(url) { links.append(url) }
+        for url in fields.urls where !links.contains(where: { linkKey($0) == linkKey(url) }) { links.append(url) }
         guard links.count <= 1 else { throw SiriFieldsError.multipleLinks(links.count) }
         let contexts = try matchingContexts(for: fields.tags, in: context)
         return Resolved(url: links.first, flagged: fields.isFlagged == true, contexts: contexts)
     }
 
+    /// `https://a.de` and `https://a.de/` are one link: only the empty path "/" is dropped (#25 Schnitt 1).
+    private static func linkKey(_ url: URL) -> String {
+        guard var parts = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return url.absoluteString }
+        if parts.path == "/" { parts.path = "" }
+        return parts.string ?? url.absoluteString
+    }
+
     /// Each tag by the catalog's name rule (#157); duplicates resolve to the merge's survivor.
-    private static func matchingContexts(for tags: Set<String>, in context: ModelContext) throws -> [TaskContext] {
+    /// A blank tag names nothing and is skipped (#25 Schnitt 1).
+    private static func matchingContexts(for allTags: Set<String>, in context: ModelContext) throws -> [TaskContext] {
+        let tags = allTags.filter { !CatalogService.nameKey($0).isEmpty }
         guard !tags.isEmpty else { return [] }
         let all = try context.fetch(FetchDescriptor<TaskContext>())
         var found: [TaskContext] = []

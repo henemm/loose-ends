@@ -23,7 +23,7 @@
 | rawText | String | Nutzer | unveränderlich |
 | capturedAt | Date | System | |
 | capturedVia | enum CaptureChannel | System | siri, watch, control, share, mail, app, actionButton |
-| sourceURL | URL? | System | `message:` bei Mail, sonst Share-URL |
+| sourceURL | URL? | System | `message:` bei Mail, sonst Share-URL oder Siri-Link |
 | status | enum TaskStatus | System/Nutzer | unprocessed, unverified, active, parked, done |
 | parkedAt | Date? | Nutzer | gesetzt bei Parken, gelöscht bei Aktivieren |
 | processedAt | Date? | System | Modell hat die Aufgabe gesehen, genau einmal gesetzt (ADR-4) |
@@ -36,6 +36,11 @@
 | repeatRule | RepeatRule? | KI/Nutzer | eingebettet, siehe unten |
 | showInCalendar | Bool | Nutzer | ADR-13 |
 | calendarEventID | String? | System | |
+
+**Siri-Felder (#25 Schnitt 1, `SiriCapture`):** Titel → Titel (via `TitleRule`), Notiz → an den Rohtext angehängt,
+Datum → `dueDate` + `dueHasTime`, Liste → Projekt (angelegt, wenn unbekannt), Wiederholung → `RepeatRule`,
+Ort → `TaskPlace` (Herkunft user), Link → `sourceURL`, Markierung → `isFlagged`, Tags → Kontexte.
+Abschnitt und Bilder werden abgelehnt. Alle Werte tragen den Autor `.user`.
 
 ### Abgeleitete Felder auf Task
 

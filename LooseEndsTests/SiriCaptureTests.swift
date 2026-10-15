@@ -3,16 +3,23 @@ import SwiftData
 import Testing
 @testable import LooseEnds
 
-/// Geocoding stand-in (#25 Schnitt 1): answers with a fixed hit or none and counts the calls.
+/// Geocoding stand-in (#25 Schnitt 1): answers with a fixed hit, none or an error, and counts the calls.
 final class GeocodeFake: @unchecked Sendable {
+    struct Offline: Error {}
+
     let hit: SiriCapture.Coordinate?
+    let failure: Error?
     private(set) var calls: [String] = []
 
-    init(hit: SiriCapture.Coordinate? = nil) { self.hit = hit }
+    init(hit: SiriCapture.Coordinate? = nil, failure: Error? = nil) {
+        self.hit = hit
+        self.failure = failure
+    }
 
     var function: SiriCapture.Geocode {
         { [self] address in
             calls.append(address)
+            if let failure { throw failure }
             return hit
         }
     }
@@ -252,6 +259,116 @@ struct SiriCaptureTests {
         #expect(try tasks(in: store.context).isEmpty)
     }
 
+    @Test("Geocoding ohne Netz ist placeNotFound, keine Aufgabe (F005, Spec-Risiko)")
+    func geocodingFailureIsPlaceNotFound() async throws {
+        let store = try TestStore()
+        var input = SiriCapture.Input(title: "Brot kaufen")
+        input.place = SiriCapture.Place(name: "Bäcker", address: "Markt 1, Münster", coordinate: nil, event: .arrive)
+        let geocode = GeocodeFake(failure: GeocodeFake.Offline())
+
+        await #expect(throws: SiriCaptureError.placeNotFound) {
+            try await SiriCapture.prepare(input, in: store.context, geocode: geocode.function)
+        }
+        #expect(geocode.calls.count == 1)
+        #expect(try tasks(in: store.context).isEmpty)
+        #expect(!store.context.hasChanges)
+    }
+
+    // MARK: Fehler in commit (F001, F005)
+
+    /// prepare saw the tag; it is deleted before commit (another device, the user). Returns the prepared value.
+    private func preparedThenTagDeleted(
+        _ input: SiriCapture.Input, in store: TestStore
+    ) async throws -> SiriCapture.Prepared {
+        let garden = TaskContext(name: "Garten")
+        store.context.insert(garden)
+        store.context.insert(Project(name: "Haus", sortOrder: 0))
+        try store.context.save()
+        let prepared = try await SiriCapture.prepare(input, in: store.context, geocode: GeocodeFake().function)
+        store.context.delete(garden)
+        try store.context.save()
+        return prepared
+    }
+
+    @Test("Ein zwischen prepare und commit gelöschtes Tag wird nicht verschluckt (F005)")
+    func tagDeletedBeforeCommitThrows() async throws {
+        let store = try TestStore()
+        var input = SiriCapture.Input(title: "Rasen mähen")
+        input.tags = ["Garten"]
+        let prepared = try await preparedThenTagDeleted(input, in: store)
+
+        #expect(throws: SiriCaptureError.tagRemoved) { try SiriCapture.commit(prepared, in: store.context) }
+        #expect(try tasks(in: store.context).isEmpty)
+    }
+
+    @Test("Ein Fehler in commit nach dem ersten Speichern hinterlässt keine Aufgabe, kein Projekt, keine Änderung (F001)")
+    func errorInCommitLeavesNothingBehind() async throws {
+        let store = try TestStore()
+        var input = SiriCapture.Input(title: "Rasen mähen")
+        input.notes = "bis Freitag"
+        input.due = nineTomorrow
+        input.recurrence = weekly
+        input.place = home
+        input.listName = "Neue Liste"
+        input.urls = [linkB]
+        input.isFlagged = true
+        input.tags = ["Garten"]
+        let prepared = try await preparedThenTagDeleted(input, in: store)
+
+        #expect(throws: SiriCaptureError.tagRemoved) { try SiriCapture.commit(prepared, in: store.context) }
+
+        #expect(try tasks(in: store.context).isEmpty)
+        #expect(try projects(in: store.context).map(\.name) == ["Haus"])
+        #expect(try store.context.fetchCount(FetchDescriptor<Revision>()) == 0)
+        #expect(!store.context.hasChanges)
+        // The store itself, read from a fresh context, holds no task either.
+        #expect(try ModelContext(store.container).fetch(FetchDescriptor<TaskItem>()).isEmpty)
+    }
+
+    /// The intent may share the app's context: an object the caller inserted and has not saved yet is
+    /// not commit's to throw away. Here `CaptureService.save` itself throws (no task was saved).
+    @Test("Scheitert commit vor dem ersten Speichern, bleibt ein fremdes ungespeichertes Objekt unangetastet (N1)")
+    func failedCommitKeepsCallersUnsavedInsert() throws {
+        let store = try TestStore()
+        let foreign = Project(name: "Fremd", sortOrder: 0)
+        store.context.insert(foreign)
+        let prepared = SiriCapture.Prepared(
+            rawText: "   ", title: "   ", due: nil, dueHasTime: false, listName: nil, repeatRule: nil,
+            place: nil, url: nil, flagged: false, contextIDs: []
+        )
+
+        #expect(throws: CaptureError.emptyText) { try SiriCapture.commit(prepared, in: store.context) }
+
+        #expect(!foreign.isDeleted)
+        #expect(store.context.insertedModelsArray.contains { $0.persistentModelID == foreign.persistentModelID })
+        #expect(store.context.hasChanges, "the caller's insert stays unsaved, commit saves nothing for it")
+        #expect(try tasks(in: store.context).isEmpty)
+        #expect(try ModelContext(store.container).fetch(FetchDescriptor<Project>()).isEmpty)
+    }
+
+    /// Once `CaptureService.save` succeeded it has saved the whole context, the caller's insert included:
+    /// that object is persisted from then on and stays. Only the Siri task, its project and revisions go.
+    @Test("Scheitert commit nach dem ersten Speichern, bleibt ein fremdes Objekt gespeichert, die Siri-Aufgabe ist weg (N1)")
+    func failedCommitAfterSaveKeepsCallersObject() async throws {
+        let store = try TestStore()
+        var input = SiriCapture.Input(title: "Rasen mähen")
+        input.listName = "Neue Liste"
+        input.due = nineTomorrow
+        input.tags = ["Garten"]
+        let prepared = try await preparedThenTagDeleted(input, in: store)
+        let foreign = Project(name: "Fremd", sortOrder: 1)
+        store.context.insert(foreign)
+
+        #expect(throws: SiriCaptureError.tagRemoved) { try SiriCapture.commit(prepared, in: store.context) }
+
+        #expect(!foreign.isDeleted)
+        #expect(try tasks(in: store.context).isEmpty)
+        #expect(try store.context.fetchCount(FetchDescriptor<Revision>()) == 0)
+        let stored = try ModelContext(store.container).fetch(FetchDescriptor<Project>()).map(\.name)
+        #expect(Set(stored) == ["Haus", "Fremd"])
+        #expect(!store.context.hasChanges)
+    }
+
     // MARK: AC-5
 
     @Test("Datum, Wiederholung, Ort und Liste: je eine Nutzer-Revision mit Grund Siri, Ort mit Herkunft user (AC-5)")
@@ -365,6 +482,45 @@ struct SiriCaptureTests {
 
         #expect(task.processedAt != nil, "the pass ran")
         #expect(task.project?.name == "Büro")
+    }
+
+    /// The title is not one of the fields Siri protects: the project's decision is that the model may
+    /// refine every title in the first pass (CLAUDE.md, "Rules before the model"; `TitleRule` sets it at
+    /// capture, the model may refine it). A Siri title is captured text like any other, so it is refined
+    /// too, while every value Siri set as the user's stays.
+    @Test("Der Siri-Titel darf im ersten Durchlauf verfeinert werden wie jeder Titel, die übrigen Siri-Felder bleiben (F002)")
+    func siriTitleMayBeRefinedLikeAnyTitle() async throws {
+        let store = try TestStore()
+        store.context.insert(TaskContext(name: "Garten"))
+        try store.context.save()
+        var input = SiriCapture.Input(title: "rasen mähen machen")
+        input.due = nineTomorrow
+        input.dueHasTime = true
+        input.listName = "Büro"
+        input.recurrence = weekly
+        input.place = home
+        input.urls = [linkB]
+        input.isFlagged = true
+        input.tags = ["Garten"]
+        let task = try await capture(input, in: store.context)
+        #expect(task.title == "Rasen mähen machen")
+
+        var draft = EnrichmentDraft()
+        draft.title = EnrichmentDraft.Guess("Rasen mähen", confidence: 0.9, reason: "Stub.")
+        let coordinator = EnrichmentCoordinator(enricher: StubEnricher(draft: draft), container: store.container)
+
+        await coordinator.processPending()
+
+        #expect(task.processedAt != nil, "the pass ran")
+        #expect(task.title == "Rasen mähen")
+        #expect(task.dueDate == nineTomorrow)
+        #expect(task.dueHasTime == true)
+        #expect(task.project?.name == "Büro")
+        #expect(task.repeatRule == RepeatRule(frequency: .weekly, interval: 1))
+        #expect(task.place == TaskPlace(name: "Zuhause", latitude: 51.99563, longitude: 7.71357, event: .arrive))
+        #expect(task.sourceURL == linkB)
+        #expect(task.importance == .high)
+        #expect((task.contexts ?? []).map(\.name) == ["Garten"])
     }
 
     // MARK: AC-8

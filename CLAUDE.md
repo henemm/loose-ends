@@ -236,10 +236,14 @@ not scope creep on the current one.
   date/time extraction DE/EN, moved from `Measurement/` in #95), `RawTextWords` (the one tokenizer for word-set
   equality, shared with `Measurement/`, moved from `TitleCheck` in #136), `TitleRule` (the title at capture: raw text
   cleaned, first 12 words, #202), `SiriFields` (Siri's link, flag, tags onto a new task: `resolve` checks before
-  saving, `apply` writes after; not in the product path until #25, #225), `WaitingOn` ("waiting on" set by hand:
+  saving, `apply` writes after; not in the product path until #25, #225), `SiriCapture` (Siri's reminder fields onto a
+  new task in two steps: `prepare` (async, checks everything, writes nothing, geocoder injected) and `commit`
+  (MainActor, writes with author `.user`, reason "Siri", F1 notes appended to the raw text, F2 unknown list creates the
+  project via `CatalogService.project(named:in:)` by `nameKey`; on any error nothing is left behind); no Siri types in
+  `Shared/Services`; not in the product path until #25 Schnitt 2), `WaitingOn` ("waiting on" set by hand:
   link, loosen, picker candidates without loops, a user revision per change, #251). All pure over the model objects; the
   caller saves.
-- `Shared/Enrichment` — `TaskEnricher` protocol, `EnrichmentWriter` (threshold + revisions), `EnrichmentCoordinator`
+- `Shared/Enrichment` — `TaskEnricher` protocol, `EnrichmentWriter` (threshold + revisions; leaves a project the user or Siri set alone (user revision), like duration), `EnrichmentCoordinator`
   (catch-up pass), `FoundationModelsEnricher` (on-device model, `#if canImport(FoundationModels)`), `DueDateRule`
   (combines the rule parsers into the due date, confidence 1.0, #95), `ImportanceUrgencyRule` (keyword
   match for importance/urgency, confidence 1.0, no default on miss, #117), `RecognitionRule` (equality of
