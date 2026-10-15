@@ -81,7 +81,16 @@ Schema von selbst an. Fehlt dort ein Typ oder ein Feld, scheitert der Abgleich d
 Feld zum ersten Mal einen Wert hat. Development legt Felder nur an, wenn ein Datensatz sie mit Wert schreibt, und ist
 deshalb fast immer lückenhaft.
 
-Bei jeder Änderung an `Shared/Models` (neues Feld, neuer Typ), **bevor** ein TestFlight-Build gestartet wird:
+**Seit #448 über die CI, ohne Hennings Mac.** Das Schema steht als Datei in `cloudkit/schema.ckdb`. Wer ein Feld oder
+einen Typ ins Modell bringt, ergänzt es dort im selben PR. Ein Unit-Test prüft, dass kein Modellfeld fehlt. Nach dem
+Merge schreibt `.github/workflows/cloudkit-schema.yml` die Datei mit `cktool import-schema` nach Development. Den Schritt
+nach Production lässt Apple nur in der Console zu (`cktool` kann es nicht): Henning klickt dort **Deploy Schema Changes**,
+und erst danach startet der Build. Den aktuellen Stand liest der Workflow mit `export-production` bzw. `export-development`.
+Er braucht das Secret `CLOUDKIT_MANAGEMENT_TOKEN`: einmalig in der Console unter Settings → Tokens → Management Token
+angelegt und mit `gh secret set` hinterlegt. Der Token gilt ein Jahr. Modelländerungen werden gebündelt, damit Henning
+selten klicken muss.
+
+Rückfallweg ohne CI. Bei jeder Änderung an `Shared/Models` (neues Feld, neuer Typ), **bevor** ein TestFlight-Build gestartet wird:
 
 1. `./scripts/sim.sh mac-schema-init`: signierter Mac-Debug-Bau der Hauptkennung, der mit
    `-LEInitializeCloudKitSchema` startet. Er legt das volle Schema aus dem Modell in Development an
