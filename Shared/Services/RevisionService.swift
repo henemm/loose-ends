@@ -104,6 +104,7 @@ enum RevisionService {
         // Retired (#301): an old AI value must not count as an unseen change or carry a marker.
         case .people: nil
         case .place: task.placeSourceRaw
+        case .notes: task.notesSourceRaw
         case .project, .blockedBy, .repeatRule: nil
         }
         return raw.flatMap(FieldSource.init(rawValue:))
