@@ -85,6 +85,7 @@ Eine Liste. Jede Zeile:
 
 - Titel (oder Rohtext, wenn ungeprüft, dann visuell als Rohtext erkennbar).
 - Wichtigkeit und Dringlichkeit erscheinen in der Zeile nur, wenn hoch: als schwarze Glyphen (Fahne, Blitz) am Anfang der Merkmalzeile, ohne Text, ohne Farbe, nie als Emoji. Im Detail als Wörter (Niedrig, Mittel, Hoch). Beide bestimmen außerdem die Sortierung.
+- **Randspalte (Henning, 2026-10-15, #424):** Links am Rand steht die eine Zeit, die zählt, wie im Tagebuch: Uhrzeit oder „Heute“ (rot), „Gestern“/„Vor N Tagen“ bei verpasster Uhrzeit (rot), „Seit gestern“ (grau, #414), „Morgen“, Wochentag, Datum, ohne Fälligkeit die Dauer. Kein Kreis vor der Aufgabe; Unteraufgaben ohne Kreis, erledigt mit feinem grauem Haken. Das Datum fällt aus der Merkmalzeile.
 - Höchstens drei kleine Merkmale, Rangfolge: Zustand (wartet), Fälligkeit, Dauer, Kontext, Person. In einer Kontext-Ansicht entfällt der Kontext. Der Rest ist im Detail. Eine Zeile ist nie höher als Titel plus eine Merkmalzeile, auch wenn alle Attribute gepflegt sind.
 - KI-Marker (Variante C): Merkmale, die die KI gesetzt hat, sind akzentgetönt, bis der Nutzer sie gesehen hat. Ein geänderter Titel trägt zusätzlich den Funken.
 - Blockiert-Zeichen, wenn eine andere Aufgabe vorher erledigt werden muss.
