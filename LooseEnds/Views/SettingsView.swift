@@ -10,6 +10,7 @@ struct SettingsView: View {
     @Environment(CalendarBridge.self) private var calendar: CalendarBridge?
     @State private var time: Date
     @State private var carryMode: CarryReminders.Mode
+    @State private var eveningTime: Date
     /// The calendar picker for new events (#203 Teil C2) is open.
     @State private var choosesCalendar = false
     #if os(macOS)
@@ -21,6 +22,8 @@ struct SettingsView: View {
         let stored = notifications?.reminderTime ?? .standard
         _time = State(initialValue: Calendar.current.date(bySettingHour: stored.hour, minute: stored.minute, second: 0, of: Date()) ?? Date())
         _carryMode = State(initialValue: notifications?.carryMode ?? .standard)
+        let evening = notifications?.eveningTime ?? CarryReminders.eveningStandard
+        _eveningTime = State(initialValue: Calendar.current.date(bySettingHour: evening.hour, minute: evening.minute, second: 0, of: Date()) ?? Date())
     }
 
     var body: some View {
@@ -36,16 +39,22 @@ struct SettingsView: View {
             Section {
                 Picker("Still open at day's end", selection: $carryMode) {
                     Text("Remind in the morning").tag(CarryReminders.Mode.morning)
+                    Text("Look over in the evening").tag(CarryReminders.Mode.evening)
                     Text("Carry along quietly").tag(CarryReminders.Mode.quiet)
                 }
                 .pickerStyle(.inline)
                 .labelsHidden()
                 .accessibilityIdentifier("carryModePicker")
+                if carryMode == .evening {
+                    DatePicker("Evening time", selection: $eveningTime, displayedComponents: .hourAndMinute)
+                        .accessibilityIdentifier("eveningTimePicker")
+                }
             } header: {
                 Text("Still open at day's end")
             } footer: {
                 switch carryMode {
                 case .morning: Text("A task still open after its day comes back at the reminder time, on up to three mornings, all in one notification.")
+                case .evening: Text("At this time, what is still open from today comes in one notification: all to tomorrow, or look over each.")
                 case .quiet: Text("No notification. The task shows how long it has been carried along.")
                 }
             }
@@ -86,6 +95,10 @@ struct SettingsView: View {
         }
         .onChange(of: carryMode) { _, new in
             notifications?.carryMode = new
+        }
+        .onChange(of: eveningTime) { _, new in
+            let parts = Calendar.current.dateComponents([.hour, .minute], from: new)
+            notifications?.eveningTime = DueReminders.Time(hour: parts.hour ?? 20, minute: parts.minute ?? 0)
         }
         .onChange(of: time) { _, new in
             let parts = Calendar.current.dateComponents([.hour, .minute], from: new)

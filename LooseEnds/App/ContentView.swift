@@ -29,6 +29,7 @@ struct ContentView: View {
     var calendar: CalendarBridge?
     private var captureRequest: CaptureRequest { .shared }
     private var openTaskRequest: OpenTaskRequest { .shared }
+    private var carryReviewRequest: CarryReviewRequest { .shared }
 
     var body: some View {
         NavigationSplitView {
@@ -71,6 +72,12 @@ struct ContentView: View {
                         }
                     }
             }
+        }
+        .sheet(isPresented: Binding(
+            get: { !carryReviewRequest.taskIDs.isEmpty },
+            set: { if !$0 { carryReviewRequest.taskIDs = [] } }
+        )) {
+            CarryReviewSheet(taskIDs: carryReviewRequest.taskIDs, tasks: tasks) { carryReviewRequest.taskIDs = [] }
         }
         #if os(iOS)
         .fullScreenCover(isPresented: $showsOnboarding) { onboarding }
