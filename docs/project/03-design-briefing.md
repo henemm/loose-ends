@@ -71,6 +71,12 @@ für „Neu“, nur solange dort etwas wartet. Darunter „Jetzt“: überfälli
 ersten fünf, der Rest hinter „N weitere“. Die Ansichten folgen darunter. Die Zahl am App-Symbol zählt dieselbe Menge. Die
 Ansichten „Fällig“ (sieben Tage) und „Als nächstes“ bleiben unverändert.
 
+**Inhaltsverzeichnis (Henning, 2026-10-15, #421, ersetzt Chips und Raster aus #368):** Unter „Jetzt“ steht „Inhalt“ wie die erste
+Seite eines Notizbuchs: Ansichtsnamen in New York, Punktlinie, Zahl klein in SF, drei Gruppen mit Abstand statt Karten
+(Ansichten mit „Schnell“, dann Tags und Projekte, dann Alle offenen und Erledigt). Tags und Projekte mit Aufgaben folgen
+ihrer Zeile als kursive Wörter in Akzent, ein Tipp öffnet die Liste; ein Tipp auf „Tags“ oder „Projekte“ klappt die
+Verwaltung auf. Bewusste Ausnahme von #180 Regel 2, nur auf dieser Seite. Entwurf: https://claude.ai/artifact/AppBHrhym57SBMURaQck5P
+
 Berechnungsregeln der Ansichten stehen in `02-datenmodell-und-ansichten.md`.
 
 ### 3. Ansicht (Aufgabenliste)

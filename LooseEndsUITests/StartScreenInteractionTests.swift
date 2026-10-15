@@ -251,7 +251,7 @@ final class StartScreenInteractionTests: XCTestCase {
         XCTAssertEqual(nowRows(in: app).count, 1)
     }
 
-    // MARK: - Chips (#368)
+    // MARK: - Tag words in the index (#368, #421: the chips became italic words under „Tags“)
 
     /// A task the rule files under Garden raises a chip with the list's count; the tap opens that list (AC-13).
     @MainActor
@@ -271,7 +271,7 @@ final class StartScreenInteractionTests: XCTestCase {
         XCTAssertEqual(taskRows(in: app).count, 1, "The list holds as many rows as the chip counted")
     }
 
-    // MARK: - Grid (#368)
+    // MARK: - Index lines (#368, #421: the grid became the contents index)
 
     /// All open and Completed open from the grid (AC-15).
     @MainActor

@@ -130,9 +130,9 @@ import Testing
         #expect(german.localizedString(forKey: "Nothing left open.", value: nil, table: nil) == "Nichts mehr offen.")
     }
 
-    @Test("The iPhone grid leaves out Quick (a chip), shows the daily three first and the occasional ones with content (#368)")
-    @MainActor func gridViews() async throws {
-        #expect(ViewRules.gridViews(in: []) == [.next, .due, .new])
+    @Test("The iPhone index shows the daily three first and the occasional ones with content, Quick included (#421)")
+    @MainActor func indexViews() async throws {
+        #expect(ViewRules.indexViews(in: []) == [.next, .due, .new])
 
         let store = try TestStore()
         let parked = TaskItem(rawText: "Fahrrad verkaufen")
@@ -141,6 +141,18 @@ import Testing
         try store.context.save()
         let all = try store.context.fetch(FetchDescriptor<TaskItem>())
 
-        #expect(ViewRules.gridViews(in: all) == [.next, .due, .new, .parked])
+        #expect(ViewRules.indexViews(in: all) == [.next, .due, .new, .parked])
+    }
+
+    @Test("Quick stands in the index while it holds a task, after the daily three (#421)")
+    @MainActor func indexShowsQuick() async throws {
+        let store = try TestStore()
+        let task = TaskItem(rawText: "Müll rausbringen")
+        task.status = .active
+        task.duration = .minutes5
+        store.context.insert(task)
+        try store.context.save()
+
+        #expect(ViewRules.indexViews(in: [task]) == [.next, .due, .new, .quick])
     }
 }
