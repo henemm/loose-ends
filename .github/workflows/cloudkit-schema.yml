@@ -1,0 +1,79 @@
+# CloudKit-Schema ohne Hennings Mac (#448). Das Schema der App steht als Datei in `cloudkit/schema.ckdb`.
+# `import` schreibt es in die Umgebung Development; den Schritt nach Production („Deploy Schema
+# Changes“) lässt Apple nur in der CloudKit Console zu, den klickt Henning. `export` liest das
+# aktuelle Schema aus Development oder Production und legt es als Artefakt und in die Zusammenfassung,
+# so dass eine Cloud-Sitzung es lesen und die Datei nachziehen kann. Anleitung: docs/reference/testflight.md (5a).
+name: CloudKit schema
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: export-development, export-production oder import-development
+        type: choice
+        options: [export-development, export-production, import-development]
+        default: export-production
+  push:
+    branches: [main]
+    paths: [cloudkit/schema.ckdb]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudkit-schema
+  cancel-in-progress: false
+
+env:
+  TEAM_ID: XK87E2B3VR
+  CONTAINER_ID: iCloud.com.henning.looseends
+
+jobs:
+  schema:
+    name: Schema ${{ inputs.action || 'import-development' }}
+    runs-on: xcode-27
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/select-xcode-27
+      - name: Store the management token
+        env:
+          CLOUDKIT_MANAGEMENT_TOKEN: ${{ secrets.CLOUDKIT_MANAGEMENT_TOKEN }}
+        run: |
+          if [ -z "$CLOUDKIT_MANAGEMENT_TOKEN" ]; then
+            echo "::error::Secret CLOUDKIT_MANAGEMENT_TOKEN fehlt (docs/reference/testflight.md, 5a)."
+            exit 1
+          fi
+          # cktool reads the token from the keychain; non-interactive it takes it as an argument.
+          xcrun cktool save-token --type management "$CLOUDKIT_MANAGEMENT_TOKEN"
+      - name: Export
+        if: startsWith(inputs.action, 'export-')
+        env:
+          ACTION: ${{ inputs.action }}
+        run: |
+          environment="${ACTION#export-}"
+          xcrun cktool export-schema --team-id "$TEAM_ID" --container-id "$CONTAINER_ID" \
+            --environment "$environment" --output-file "exported-$environment.ckdb"
+          {
+            echo "### Schema $environment"
+            echo '```'
+            cat "exported-$environment.ckdb"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          # One line per annotation would be cut; the whole file goes to the log for the job-log API.
+          echo "----- BEGIN SCHEMA $environment"
+          cat "exported-$environment.ckdb"
+          echo "----- END SCHEMA $environment"
+      - name: Upload export
+        if: startsWith(inputs.action, 'export-')
+        uses: actions/upload-artifact@v7
+        with:
+          name: cloudkit-schema-export
+          path: exported-*.ckdb
+      - name: Import into Development
+        if: inputs.action == 'import-development' || github.event_name == 'push'
+        run: |
+          test -f cloudkit/schema.ckdb || { echo "::error::cloudkit/schema.ckdb fehlt"; exit 1; }
+          xcrun cktool import-schema --team-id "$TEAM_ID" --container-id "$CONTAINER_ID" \
+            --environment development --file cloudkit/schema.ckdb
+          echo "::notice::Schema in Development importiert. Jetzt in der CloudKit Console „Deploy Schema Changes“."
