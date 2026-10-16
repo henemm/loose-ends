@@ -20,7 +20,7 @@ struct DocumentScanner: UIViewControllerRepresentable {
 
     func makeCoordinator() -> Coordinator { Coordinator(finish: finish) }
 
-    @MainActor final class Coordinator: NSObject, VNDocumentCameraViewControllerDelegate {
+    @MainActor final class Coordinator: NSObject, @MainActor VNDocumentCameraViewControllerDelegate {
         let finish: @MainActor ([CGImage]) -> Void
         private static let logger = Logger(subsystem: "com.henning.looseends", category: "Detail")
 
