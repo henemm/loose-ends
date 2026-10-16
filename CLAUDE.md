@@ -95,6 +95,7 @@ touches any of these paths:
 | `LooseEndsWatch/`, `LooseEndsWatchWidgets/` | Apple Watch, Komplikation auf dem Zifferblatt |
 | `LooseEndsWidgets/` | Widgets, Aktionstaste, Kurzbefehle |
 | `LooseEndsShare/`, `Shared/Intents/` | Erfassung von außerhalb der App |
+| `LooseEnds/Intents/` | Siri: Erfassung von außerhalb der App; nur das Gerät zeigt, ob Siri den Weg nimmt |
 | `LooseEnds/Speech/` | Mikrofon und Spracherkennung |
 | `LooseEnds/Notifications/` | Zustellung echter Mitteilungen |
 | `project.yml`, jede `*.entitlements`, jede `Info.plist` | Signierung, Berechtigungen, Targets — die Klasse des App-Group-Absturzes |
@@ -266,7 +267,10 @@ not scope creep on the current one.
 - `LooseEnds/Intents` — app target only (iOS/macOS 27, never watch, widget or share, no `project.yml` entry): `ReminderSchema`
   (Apple's reminders schema entities, read-only: `ListEntity` = project plus the virtual inbox „Loose Ends“, `ReminderEntity`
   from `TaskItem`, `LocationTriggerEntity` and `SectionEntity` with empty queries) and `ReminderTranslation` (Siri's SDK
-  types onto `SiriCapture.Input`: incomplete date dropped without error, coordinate before address); no intent yet (#25 Schnitt 2a)
+  types onto `SiriCapture.Input`: incomplete date dropped without error, coordinate before address) and `CreateReminderIntent`
+  (schema intent `.reminders.createReminder` with all eleven parameters; core `create` = `SiriCapture.prepare` then `commit`,
+  errors go up unchanged; images, tags and links default to empty; the geocoder is `Geocoding.live` in `LooseEnds/Places`,
+  `MKGeocodingRequest`, first valid hit, no location permission; #25 Schnitt 2b-1)
 - `LooseEnds/` — app entry and views (iPhone, iPad, Mac); `LooseEndsWatch/`, `LooseEndsWidgets/`, `LooseEndsShare/`
   (iOS share sheet: text, links, mails via `SharedContent`) — platform targets
 - `LooseEndsWatchWidgets/` — watch complication (#355 Schnitt 3a): the logo's knot, families `accessoryCircular` and
