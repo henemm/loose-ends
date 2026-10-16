@@ -34,6 +34,10 @@ struct ContentView: View {
     var body: some View {
         NavigationSplitView {
             SidebarView(selection: $selection, tasks: tasks)
+                #if os(macOS)
+                // 220 to 300 pt, 250 by default (#476): "Wiederkehrend" and "Neues Etikett" were cut off.
+                .navigationSplitViewColumnWidth(min: 220, ideal: 250, max: 300)
+                #endif
                 .toolbar {
                     captureToolbarItem
                     settingsToolbarItem
