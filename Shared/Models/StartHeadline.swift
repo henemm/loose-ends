@@ -11,6 +11,8 @@ enum StartHeadline: Equatable {
     case missed(title: String?, at: Date)
     /// 2: fixed times still ahead today; `at` is the first.
     case upcoming(title: String?, at: Date, count: Int)
+    /// 2b: tasks due today without a time (Henning, 2026-10-16): the day-only date is today's fact.
+    case dueToday(title: String?, count: Int)
     /// 3: a day-only date carried for days.
     case waiting(title: String?, days: Int)
     /// 4: a tag (label) holding many open tasks.
@@ -57,6 +59,13 @@ enum StartHeadline: Equatable {
         }
         if let first = ahead.first, let at = first.dueDate {
             return .upcoming(title: short(first), at: at, count: ahead.count)
+        }
+        // 2b: due today, no time of day.
+        let dayOnlyToday = open.filter {
+            !$0.isBlocked && !$0.dueHasTime && ($0.dueDate.map { $0 >= today && $0 < tomorrow } ?? false)
+        }.sorted { ($0.nextRank ?? .infinity) < ($1.nextRank ?? .infinity) }
+        if let first = dayOnlyToday.first {
+            return .dueToday(title: dayOnlyToday.count == 1 ? short(first) : nil, count: dayOnlyToday.count)
         }
         // 3 to 6: the quiet rungs take turns by day.
         var quiet: [StartHeadline] = []
