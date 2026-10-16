@@ -30,8 +30,9 @@ import Testing
         try store.context.save()
         #expect(guessed.project == nil)
         #expect(chosen.project?.name == "Erstes")
-        let last = try #require((guessed.revisions ?? []).last)
-        #expect(last.author == .rule && last.oldValue == "Erstes" && last.newValue == nil)
+        // The stored order of a relationship is not fixed: look for the release, not at the end.
+        let release = try #require((guessed.revisions ?? []).first { $0.author == .rule })
+        #expect(release.field == .project && release.oldValue == "Erstes" && release.newValue == nil)
         #expect(try GuessedProjects.release(in: store.context) == 0, "a second start finds nothing")
     }
 

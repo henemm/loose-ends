@@ -19,35 +19,10 @@ struct SidebarView: View {
     #endif
     /// One size for every view glyph, growing with Dynamic Type: SF Symbols differ in width
     /// (the hare is wide), and a bare frame lets a wide one spill past the margin.
-    @ScaledMetric(relativeTo: .body) private var glyphSize: CGFloat = Self.baseGlyphSize
+    @ScaledMetric(relativeTo: .body) private var glyphSize: CGFloat = 20
     /// The start screen's sizes from the draft, growing at half the system's rate (#463).
     @Environment(\.dynamicTypeSize) private var typeSize
     private var metrics: StartMetrics { StartMetrics(typeSize) }
-
-    /// The Mac sidebar from the draft (#476): 17 pt glyphs, 14 pt names, rows 32 pt high. iPad keeps its sizes.
-    private static var baseGlyphSize: CGFloat {
-        #if os(macOS)
-        17
-        #else
-        20
-        #endif
-    }
-
-    private static var minRowHeight: CGFloat {
-        #if os(macOS)
-        32
-        #else
-        44
-        #endif
-    }
-
-    private var rowFont: Font? {
-        #if os(macOS)
-        .system(size: 14)
-        #else
-        nil
-        #endif
-    }
 
     @State private var catalog = CatalogEditor()
     @State private var pendingTaskDelete: TaskItem?
@@ -69,12 +44,25 @@ struct SidebarView: View {
         #endif
     }
 
+    /// The Mac sidebar is the iPhone's index too (#476, Henning 2026-10-16: the sidebar must match the iOS look):
+    /// names in New York, dotted leader, small count; "Tags" and "Projects" open their page. The date, the
+    /// sentence and "Now" are the start page's on the Mac. iPad keeps its folding groups.
+    private var isMac: Bool {
+        #if os(macOS)
+        true
+        #else
+        false
+        #endif
+    }
+
+    private var showsFoldGroups: Bool { !isCompact && !isMac }
+
     /// The iPhone index (#421): the views, then Tags and Projects with their words, then All open
     /// and Done. The Tags and Projects lines open their own page (#428).
     private var indexGroups: [[IndexLine]] {
         func view(_ kind: ViewKind) -> IndexLine {
             IndexLine(id: "viewRow_\(kind.rawValue)", title: String(localized: kind.titleKey),
-                      count: ViewRules.tasks(for: kind, in: tasks).count) { selection = .system(kind) }
+                      count: ViewRules.tasks(for: kind, in: tasks).count, target: .system(kind)) { selection = .system(kind) }
         }
         let tagWords = contexts.compactMap { context -> IndexWord? in
             let count = ViewRules.tasks(inContext: context, in: tasks).count
@@ -87,9 +75,9 @@ struct SidebarView: View {
                                          target: .project(project.id)) : nil
         }
         let tagsLine = IndexLine(id: "contextsToggle", title: String(localized: "Tags"), count: contexts.count,
-                                 words: tagWords) { selection = .catalog(.tags) }
+                                 words: tagWords, target: .catalog(.tags)) { selection = .catalog(.tags) }
         let projectsLine = IndexLine(id: "projectsToggle", title: String(localized: "Projects"), count: projects.count,
-                                     words: projectWords) { selection = .catalog(.projects) }
+                                     words: projectWords, target: .catalog(.projects)) { selection = .catalog(.projects) }
         return [ViewRules.indexViews(in: tasks).map(view), [tagsLine, projectsLine], [view(.open), view(.done)]]
     }
 
@@ -119,6 +107,10 @@ struct SidebarView: View {
                     // Same section: a second one put the list's section gap above "Contents" (#463).
                     ContentsIndex(groups: indexGroups) { selection = $0 }
                 }
+            } else if isMac {
+                Section {
+                    ContentsIndex(groups: indexGroups, selected: selection) { selection = $0 }
+                }
             } else {
                 Section {
                     // The daily three always, the others only with a task in them.
@@ -129,8 +121,8 @@ struct SidebarView: View {
                 }
             }
 
-            // On iPhone the index lines open these groups as pages (#428).
-            if !isCompact {
+            // On iPhone and Mac the index lines open these groups as pages (#428).
+            if showsFoldGroups {
                 Section {
                     if showsProjects {
                         ForEach(projects) { project in
@@ -141,7 +133,6 @@ struct SidebarView: View {
                         }
                         Button("New project", systemImage: "plus") { catalog.begin(NameEdit(target: .newProject)) }
                             .accessibilityIdentifier("newProjectButton")
-                            .addButtonSurface()
                             .paperRow()
                     }
                 } header: {
@@ -158,7 +149,6 @@ struct SidebarView: View {
                         }
                         Button("New tag", systemImage: "plus") { catalog.begin(NameEdit(target: .newContext)) }
                             .accessibilityIdentifier("newContextButton")
-                            .addButtonSurface()
                             .paperRow()
                     }
                 } header: {
@@ -166,7 +156,7 @@ struct SidebarView: View {
                 }
             }
 
-            if !isCompact {
+            if showsFoldGroups {
                 Section {
                     // Always there, right above Done (#319); `.badge` leaves a zero out.
                     countRow(String(localized: ViewKind.open.titleKey), symbol: ViewKind.open.symbol, count: ViewRules.tasks(for: .open, in: tasks).count, id: "viewRow_open")
@@ -178,7 +168,7 @@ struct SidebarView: View {
         }
         .paperList()
         // Rows as tall as their content: the 44 pt minimum put a gap under every caption (#433).
-        .environment(\.defaultMinListRowHeight, isCompact ? 0 : Self.minRowHeight)
+        .environment(\.defaultMinListRowHeight, isCompact ? 0 : 44)
         .navigationTitle(isCompact ? Text(verbatim: "") : Text("Views"))
         #if os(iOS)
         .listSectionSpacing(.compact)
@@ -234,7 +224,6 @@ struct SidebarView: View {
                 Text(title)
             }
         }
-        .font(rowFont)
         .badge(count)
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier(id)
@@ -273,21 +262,5 @@ struct SidebarView: View {
                 .contextMenu { actions.menu(task) }
                 .paperRow()
         }
-    }
-}
-
-private extension View {
-    /// "New tag" and "New project" as the quiet grey surface of the Mac draft (#476); elsewhere the plain button.
-    @ViewBuilder
-    func addButtonSurface() -> some View {
-        #if os(macOS)
-        buttonStyle(.plain)
-            .foregroundStyle(.secondary)
-            .padding(.horizontal, 10)
-            .frame(maxWidth: .infinity, minHeight: 32, alignment: .leading)
-            .background(Color.primary.opacity(0.07), in: RoundedRectangle(cornerRadius: 8))
-        #else
-        self
-        #endif
     }
 }
