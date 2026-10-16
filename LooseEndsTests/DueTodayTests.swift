@@ -74,4 +74,36 @@ import Testing
         #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 3)
         #expect(ViewRules.badgeCount(in: [], now: Self.now, calendar: Self.calendar) == 0)
     }
+
+    /// #443: a weekly task whose next round lies ahead is not due, before or after completing it;
+    /// the same task due today or overdue is.
+    @Test("A repeating task stands in Due only on its day, also after completing")
+    @MainActor func repeatingTaskDueOnlyOnItsDay() async throws {
+        let store = try TestStore()
+        func weekly(_ text: String, due: Date) -> TaskItem {
+            let task = TaskItem(rawText: text)
+            task.status = .active
+            task.dueDate = due
+            task.repeatRule = RepeatRule(frequency: .weekly, hour: 19, minute: 0)
+            store.context.insert(task)
+            return task
+        }
+        let tomorrow = weekly("Fußnagel behandeln", due: Self.day(1, hour: 19))
+        let nextWeek = weekly("Wäsche waschen", due: Self.day(7, hour: 19))
+        let tonight = weekly("Pflanzen gießen", due: Self.day(0, hour: 19))
+        let overdue = weekly("Tabletten nehmen", due: Self.day(-1, hour: 19))
+        let rolling = weekly("Bad putzen", due: Self.day(0, hour: 9))
+        let all = [tomorrow, nextWeek, tonight, overdue, rolling]
+
+        func dueIDs() -> Set<UUID> {
+            Set(ViewRules.tasks(for: .due, in: all, now: Self.now, calendar: Self.calendar).map(\.id))
+        }
+        #expect(dueIDs() == [tonight.id, overdue.id, rolling.id])
+
+        TaskActions.complete(rolling, now: Self.now, calendar: Self.calendar)
+        TaskActions.complete(tonight, now: Self.now, calendar: Self.calendar)
+        TaskActions.complete(overdue, now: Self.now, calendar: Self.calendar)
+        #expect(dueIDs().isEmpty, "after completing, the next round is a week ahead or later")
+        #expect(rolling.dueDate.map { $0 > Self.day(0, hour: 23) } == true)
+    }
 }

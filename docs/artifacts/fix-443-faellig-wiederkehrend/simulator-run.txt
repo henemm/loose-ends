@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-10-16T14:00:10+0200
+befehl: scripts/sim.sh test-proof CaptureSmokeTests/testWeeklyTaskIsNotDueUntilItsDay
+workflow: fix-443-faellig-wiederkehrend
+head: 414c87de01f09a66bab2485a099ef7517699a68b
+basis: 414c87de01f09a66bab2485a099ef7517699a68b (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests/testWeeklyTaskIsNotDueUntilItsDay
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1792151941.325  ende: 1792152010.061
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/fix-443-faellig-wiederkehrend/simulator-run/summary.json  sha256:47b7af027c52acb4c46a4e568aa018d76f953f672c8b95c04c4e837d96c7c987
+xcresult: docs/artifacts/fix-443-faellig-wiederkehrend/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-443-faellig-wiederkehrend/simulator-run/*.png (3 Stück)
+
+## Geprüfte Dateien
+- sha256:16c2758ec837365b80920f743fbae644ce5e34d12e106eace929944cf7133afc  LooseEndsTests/DueTodayTests.swift
+- sha256:ce3ec79ec54d4f73d542f5faf871af16c8801944735a9357818a2211048658cf  LooseEndsUITests/CaptureSmokeTests.swift
