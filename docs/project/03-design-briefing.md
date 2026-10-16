@@ -250,5 +250,6 @@ Entwurf mit sieben Tafeln: `docs/artifacts/feat-408-mac-entwurf/` (Dateien) und 
 - **Schrift** wie überall (#180): Serif für Inhalt (Satz, Titel, Eingabefeld, Notiz), SF für die App (Seitenleiste, Fenstertitel, Einstellungen, Merkmale, kleine Überschriften in Großbuchstaben).
 - **Farbe** wie überall (ADR-14): Akzent nur für Antippbares und Auswahl (12 %), Rot nur Zeitdruck, Grün nur Erledigen, Grau Hierarchie. Hell und dunkel.
 - **Raum:** Fenster mindestens 760 × 520 pt, Seitenleiste 220 bis 300 pt (Standard 250), Textbreite der Startseite höchstens 640 pt.
-- **Seitenleiste, Liste, Detail, Einstellungen, Menüleisten-Panel** auf Papier mit Haarlinien statt grauer Karten; Titel in der Werkzeugleiste in SF.
+- **Seitenleiste (Henning, 2026-10-16, #476):** der „Inhalt“ der iPhone-App (#421): Namen in New York, Punktlinie, Zahl klein in SF, Gruppen mit Abstand, „Tags“ und „Projekte“ mit ihren Wörtern in Akzent, die offene Ansicht in zartem Grau markiert; keine Symbole. Tags und Projekte verwaltet man auf ihrer Seite (#428), wie auf dem iPhone. iPad behält die Fold-Gruppen.
+- **Liste, Detail, Einstellungen, Menüleisten-Panel** auf Papier mit Haarlinien statt grauer Karten; Titel in der Werkzeugleiste in SF.
 - **Zeiger und Tastatur:** ⌘N neue Aufgabe, ⌘, Einstellungen, Leertaste erledigt die gewählte Zeile, ⌫ löscht mit Rückfrage, Rechtsklick öffnet das Menü der Zeile, Hover Grau 7 %.
