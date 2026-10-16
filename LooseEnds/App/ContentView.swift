@@ -11,6 +11,9 @@ struct ContentView: View {
     @Query(sort: \TaskItem.capturedAt, order: .reverse) private var tasks: [TaskItem]
     @State private var selection: ViewSelection?
     @State private var isCapturing = false
+    /// ⌘N while the wide start page is open puts the cursor in its field instead of opening the sheet (#472).
+    @State private var startFocusRequest = 0
+    @Environment(\.horizontalSizeClass) private var sizeClass
     @State private var showsSettings = false
     @State private var completionPulse = CompletionPulse()
     @State private var pendingCompletions = PendingCompletions(window: Self.doneWindow)
@@ -64,7 +67,7 @@ struct ContentView: View {
                         .toolbar { captureToolbarItem }
                 }
             } else {
-                StartPage(selection: $selection, tasks: tasks)
+                StartPage(selection: $selection, tasks: tasks, focusRequest: startFocusRequest)
                     .toolbar { captureToolbarItem }
             }
         }
@@ -136,7 +139,13 @@ struct ContentView: View {
     /// The capture button sits in the same place on every screen (design briefing, screen 2).
     private var captureToolbarItem: some ToolbarContent {
         ToolbarItem(placement: .primaryAction) {
-            Button("Capture", systemImage: "plus") { isCapturing = true }
+            Button("Capture", systemImage: "plus") {
+                if selection == nil, sizeClass != .compact {
+                    startFocusRequest += 1
+                } else {
+                    isCapturing = true
+                }
+            }
                 .keyboardShortcut("n", modifiers: .command)
                 .accessibilityIdentifier("captureButton")
         }
