@@ -531,6 +531,83 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(captureButton.waitForExistence(timeout: 5), "App should still respond after deleting a recurring task")
     }
 
+    /// #443: a weekly task is not "Due" while its next round lies ahead — neither once the rule is set
+    /// nor after completing it — and stays under "Repeating". Played through as the user does it.
+    @MainActor
+    func testWeeklyTaskIsNotDueUntilItsDay() throws {
+        let app = launch()
+
+        let captureButton = app.buttons["captureButton"]
+        XCTAssertTrue(captureButton.waitForExistence(timeout: 10))
+        captureButton.tap()
+        let field = element("captureTextField", in: app)
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText("Fußnagel behandeln")
+        app.buttons["captureDoneButton"].tap()
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5))
+
+        let newRow = element("viewRow_new", in: app)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
+        newRow.tap()
+        let row = taskRow(in: app)
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        row.tap()
+        assertDetailRawText("Fußnagel behandeln", in: app)
+
+        let repeatRow = revealField("field_repeatRule", in: app)
+        XCTAssertTrue(repeatRow.waitForExistence(timeout: 5), "Detail should list Repeat")
+        repeatRow.tap()
+        let weekly = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Weekly")).firstMatch
+        XCTAssertTrue(weekly.waitForExistence(timeout: 5), "Editor should offer Weekly")
+        weekly.tap()
+        XCTAssertTrue(element("repeatIntervalStepper", in: app).waitForExistence(timeout: 5), "A rule shows its interval")
+
+        let repeating = openRepeatingFromEditor(in: app, detailMarker: repeatRow)
+        assertDueViewHoldsNoTask(in: app, step: "after setting the rule")
+
+        let repeatingRow = element("viewRow_repeating", in: app)
+        XCTAssertTrue(repeatingRow.waitForExistence(timeout: 5))
+        repeatingRow.tap()
+        XCTAssertTrue(repeating.waitForExistence(timeout: 5), "The weekly task is listed under Repeating")
+
+        let complete = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier == %@ OR label == %@", "menuDone", "Complete"))
+            .firstMatch
+        openMenu(on: repeating, expecting: complete)
+        XCTAssertTrue(complete.waitForExistence(timeout: 5), "Long press should open the menu with Complete")
+        complete.tap()
+        let undo = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH 'undoComplete_'"))
+            .firstMatch
+        _ = undo.waitForExistence(timeout: 2)
+        XCTAssertTrue(undo.waitForNonExistence(timeout: 10), "The Done window should run out")
+        XCTAssertTrue(repeating.waitForExistence(timeout: 5), "A repeating task stays listed after completion")
+
+        assertDueViewHoldsNoTask(in: app, step: "after completing it")
+        let again = element("viewRow_repeating", in: app)
+        XCTAssertTrue(again.waitForExistence(timeout: 5))
+        again.tap()
+        XCTAssertTrue(taskRow(in: app).waitForExistence(timeout: 5), "Repeating still shows the task")
+        attachScreenshot(app, "443-wiederholend-zeigt-aufgabe")
+    }
+
+    /// Sidebar → "Due": no task row, the empty text instead. Leaves the list open.
+    @MainActor
+    private func assertDueViewHoldsNoTask(in app: XCUIApplication, step: String) {
+        let back = app.navigationBars.buttons.firstMatch
+        if back.waitForExistence(timeout: 3) { back.tap() }
+        let dueRow = element("viewRow_due", in: app)
+        XCTAssertTrue(dueRow.waitForExistence(timeout: 5), "Start screen should show Due")
+        dueRow.tap()
+        XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 5),
+                      "Due should be empty \(step): a weekly task is not due yet")
+        XCTAssertFalse(taskRow(in: app).exists, "Due must not list the weekly task \(step)")
+        attachScreenshot(app, "443-faellig-leer-\(step)")
+        let leave = app.navigationBars.buttons.firstMatch
+        if leave.waitForExistence(timeout: 3) { leave.tap() }
+    }
+
     @MainActor
     func testCompletedTaskShowsUnderCompleted() throws {
         let app = launch()
