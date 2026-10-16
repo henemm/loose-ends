@@ -1,0 +1,60 @@
+test_equal_schemas_pass (test_check_cloudkit_production.ComparisonTests.test_equal_schemas_pass) ... ok
+test_extra_fields_and_types_in_production_pass (test_check_cloudkit_production.ComparisonTests.test_extra_fields_and_types_in_production_pass) ... ok
+test_flags_types_grants_and_system_fields_are_ignored (test_check_cloudkit_production.ComparisonTests.test_flags_types_grants_and_system_fields_are_ignored) ... ok
+test_message_points_to_documentation (test_check_cloudkit_production.ComparisonTests.test_message_points_to_documentation) ... ok
+test_missing_field_is_reported (test_check_cloudkit_production.ComparisonTests.test_missing_field_is_reported) ... ok
+test_missing_record_type_is_reported (test_check_cloudkit_production.ComparisonTests.test_missing_record_type_is_reported) ... ok
+test_comment_line_is_ignored (test_check_cloudkit_production.ParserGapTests.test_comment_line_is_ignored) ... FAIL
+test_duplicate_type_block_in_abbild_is_united (test_check_cloudkit_production.ParserGapTests.test_duplicate_type_block_in_abbild_is_united) ... FAIL
+test_duplicate_type_block_in_production_is_united (test_check_cloudkit_production.ParserGapTests.test_duplicate_type_block_in_production_is_united) ... FAIL
+test_two_fields_on_one_line_are_both_checked (test_check_cloudkit_production.ParserGapTests.test_two_fields_on_one_line_are_both_checked) ... FAIL
+test_unreadable_input_is_exit_2 (test_check_cloudkit_production.UnreadableInputTests.test_unreadable_input_is_exit_2) ... ok
+test_unreadable_message_differs_from_missing_field (test_check_cloudkit_production.UnreadableInputTests.test_unreadable_message_differs_from_missing_field) ... ok
+test_no_input_skips_schema_check (test_check_cloudkit_production.WorkflowWiringTests.test_no_input_skips_schema_check) ... ok
+test_upload_waits_for_schema_check (test_check_cloudkit_production.WorkflowWiringTests.test_upload_waits_for_schema_check) ... ok
+
+======================================================================
+FAIL: test_comment_line_is_ignored (test_check_cloudkit_production.ParserGapTests.test_comment_line_is_ignored)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/scripts/test_check_cloudkit_production.py", line 109, in test_comment_line_is_ignored
+    self.assertFalse([f for f in fields if f.startswith("//")], fields)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ['//'] is not false : {'CD_rawText', '//', 'CD_notes'}
+
+======================================================================
+FAIL: test_duplicate_type_block_in_abbild_is_united (test_check_cloudkit_production.ParserGapTests.test_duplicate_type_block_in_abbild_is_united)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/scripts/test_check_cloudkit_production.py", line 127, in test_duplicate_type_block_in_abbild_is_united
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : Production kennt alle 2 Typen des Abbilds samt Feldern.
+
+
+======================================================================
+FAIL: test_duplicate_type_block_in_production_is_united (test_check_cloudkit_production.ParserGapTests.test_duplicate_type_block_in_production_is_united)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/scripts/test_check_cloudkit_production.py", line 136, in test_duplicate_type_block_in_production_is_united
+    self.assertEqual(code, 0, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : ::error::CloudKit Production kennt diese Typen/Felder aus cloudkit/schema.ckdb nicht: CD_TaskItem.CD_notes
+  fehlt in Production: CD_TaskItem.CD_notes
+Weg (docs/reference/testflight.md, Abschnitt 5a): Abbild im selben PR ergänzen; nach dem Merge importiert die CI es nach Development; dann in der CloudKit Console „Deploy Schema Changes“; dann diesen Lauf wiederholen.
+
+
+======================================================================
+FAIL: test_two_fields_on_one_line_are_both_checked (test_check_cloudkit_production.ParserGapTests.test_two_fields_on_one_line_are_both_checked)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/scripts/test_check_cloudkit_production.py", line 118, in test_two_fields_on_one_line_are_both_checked
+    self.assertEqual(check.parse(soll)["CD_TaskItem"], {"CD_rawText", "CD_notes"})
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Items in the second set but not the first:
+'CD_notes'
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.008s
+
+FAILED (failures=4)

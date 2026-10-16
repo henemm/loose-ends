@@ -1,0 +1,17 @@
+Production knows the CloudKit schema	Export Production	﻿2026-10-16T04:44:22.5094880Z ##[group]Run if ! xcrun cktool export-schema --team-id "$TEAM_ID" --container-id "$CONTAINER_ID" \
+Production knows the CloudKit schema	Export Production	2026-10-16T04:44:22.5096880Z ^[[36;1mif ! xcrun cktool export-schema --team-id "$TEAM_ID" --container-id "$CONTAINER_ID" \^[[0m
+Production knows the CloudKit schema	Export Production	2026-10-16T04:44:22.5098250Z ^[[36;1m    --environment production --output-file exported-production.ckdb; then^[[0m
+Production knows the CloudKit schema	Export Production	2026-10-16T04:44:22.5100670Z ^[[36;1m  echo "::error::Production-Schema nicht lesbar (Netz, Token abgelaufen oder Berechtigung). Ein nicht prüfbarer Stand ist kein grüner Stand (docs/reference/testflight.md, 5a)."^[[0m
+Production knows the CloudKit schema	Export Production	2026-10-16T04:44:22.5102380Z ^[[36;1m  exit 1^[[0m
+Production knows the CloudKit schema	Export Production	2026-10-16T04:44:22.5102870Z ^[[36;1mfi^[[0m
+Production knows the CloudKit schema	Export Production	2026-10-16T04:44:22.5159580Z shell: /bin/bash -e {0}
+Production knows the CloudKit schema	Export Production	2026-10-16T04:44:22.5160300Z env:
+Production knows the CloudKit schema	Export Production	2026-10-16T04:44:22.5161300Z   WHAT_TO_TEST: Probelauf der Schranke (#268), bitte nicht testen: dieser Lauf soll vor dem Bau anhalten.
+Production knows the CloudKit schema	Export Production	2026-10-16T04:44:22.5162400Z   TEAM_ID: XK87E2B3VR
+Production knows the CloudKit schema	Export Production	2026-10-16T04:44:22.5163060Z   CONTAINER_ID: iCloud.com.henning.doesnotexist
+Production knows the CloudKit schema	Export Production	2026-10-16T04:44:22.5163960Z ##[endgroup]
+Production knows the CloudKit schema	Export Production	2026-10-16T04:44:23.0025380Z ❌ An error occurred while performing the command.
+Production knows the CloudKit schema	Export Production	2026-10-16T04:44:23.0106320Z Operation: export
+Production knows the CloudKit schema	Export Production	2026-10-16T04:44:23.0125970Z ##[error]Production-Schema nicht lesbar (Netz, Token abgelaufen oder Berechtigung). Ein nicht prüfbarer Stand ist kein grüner Stand (docs/reference/testflight.md, 5a).
+Production knows the CloudKit schema	Export Production	2026-10-16T04:44:23.0135440Z An unknown error occured with message: authorization-failed.
+Production knows the CloudKit schema	Export Production	2026-10-16T04:44:23.0137460Z ##[error]Process completed with exit code 1.

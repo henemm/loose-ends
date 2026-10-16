@@ -196,7 +196,10 @@ the build: `./scripts/sim.sh mac-schema-init` (signed Mac debug build of the mai
 `-LEInitializeCloudKitSchema`, writes the full schema into Development via `initializeCloudKitSchema`, never
 opens the app-group store; `LOOSEENDS_REGISTER=1` on the first run), then Henning deploys in the CloudKit
 Console. **Production is additive only from the first deploy:** new fields and types work, deleting or renaming
-does not — plan model changes as additions. Steps and fallback: `docs/reference/testflight.md` (5a).
+does not — plan model changes as additions. The TestFlight run starts with `schema-check`, which compares
+`cloudkit/schema.ckdb` with `cktool export-schema --environment production` and stops before archiving if a type or
+field is missing (own messages for a missing secret, an unreadable Production and missing names); no way around it
+(#268). Steps and fallback: `docs/reference/testflight.md` (5a).
 
 ## Process
 

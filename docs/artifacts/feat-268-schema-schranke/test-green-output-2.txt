@@ -1,0 +1,19 @@
+test_equal_schemas_pass (test_check_cloudkit_production.ComparisonTests.test_equal_schemas_pass) ... ok
+test_extra_fields_and_types_in_production_pass (test_check_cloudkit_production.ComparisonTests.test_extra_fields_and_types_in_production_pass) ... ok
+test_flags_types_grants_and_system_fields_are_ignored (test_check_cloudkit_production.ComparisonTests.test_flags_types_grants_and_system_fields_are_ignored) ... ok
+test_message_points_to_documentation (test_check_cloudkit_production.ComparisonTests.test_message_points_to_documentation) ... ok
+test_missing_field_is_reported (test_check_cloudkit_production.ComparisonTests.test_missing_field_is_reported) ... ok
+test_missing_record_type_is_reported (test_check_cloudkit_production.ComparisonTests.test_missing_record_type_is_reported) ... ok
+test_comment_line_is_ignored (test_check_cloudkit_production.ParserGapTests.test_comment_line_is_ignored) ... ok
+test_duplicate_type_block_in_abbild_is_united (test_check_cloudkit_production.ParserGapTests.test_duplicate_type_block_in_abbild_is_united) ... ok
+test_duplicate_type_block_in_production_is_united (test_check_cloudkit_production.ParserGapTests.test_duplicate_type_block_in_production_is_united) ... ok
+test_two_fields_on_one_line_are_both_checked (test_check_cloudkit_production.ParserGapTests.test_two_fields_on_one_line_are_both_checked) ... ok
+test_unreadable_input_is_exit_2 (test_check_cloudkit_production.UnreadableInputTests.test_unreadable_input_is_exit_2) ... ok
+test_unreadable_message_differs_from_missing_field (test_check_cloudkit_production.UnreadableInputTests.test_unreadable_message_differs_from_missing_field) ... ok
+test_no_input_skips_schema_check (test_check_cloudkit_production.WorkflowWiringTests.test_no_input_skips_schema_check) ... ok
+test_upload_waits_for_schema_check (test_check_cloudkit_production.WorkflowWiringTests.test_upload_waits_for_schema_check) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.008s
+
+OK

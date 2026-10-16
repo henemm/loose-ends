@@ -31,8 +31,40 @@ env:
   WHAT_TO_TEST: ${{ inputs.what_to_test || github.event.head_commit.message }}
 
 jobs:
+  # TestFlight talks to CloudKit Production, which never creates a schema by itself. Before anything is
+  # archived, Production must know every type and field of cloudkit/schema.ckdb (#268). No way around it.
+  schema-check:
+    name: Production knows the CloudKit schema
+    runs-on: xcode-27
+    timeout-minutes: 15
+    env:
+      TEAM_ID: XK87E2B3VR
+      CONTAINER_ID: iCloud.com.henning.looseends
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/select-xcode-27
+      - name: Store the management token
+        env:
+          CLOUDKIT_MANAGEMENT_TOKEN: ${{ secrets.CLOUDKIT_MANAGEMENT_TOKEN }}
+        run: |
+          if [ -z "$CLOUDKIT_MANAGEMENT_TOKEN" ]; then
+            echo "::error::Secret CLOUDKIT_MANAGEMENT_TOKEN fehlt: ohne ihn ist Production nicht prüfbar, kein Build (docs/reference/testflight.md, 5a)."
+            exit 1
+          fi
+          xcrun cktool save-token --type management "$CLOUDKIT_MANAGEMENT_TOKEN"
+      - name: Export Production
+        run: |
+          if ! xcrun cktool export-schema --team-id "$TEAM_ID" --container-id "$CONTAINER_ID" \
+              --environment production --output-file exported-production.ckdb; then
+            echo "::error::Production-Schema nicht lesbar (Netz, Token abgelaufen oder Berechtigung). Ein nicht prüfbarer Stand ist kein grüner Stand (docs/reference/testflight.md, 5a)."
+            exit 1
+          fi
+      - name: Compare with cloudkit/schema.ckdb
+        run: python3 scripts/check_cloudkit_production.py cloudkit/schema.ckdb exported-production.ckdb
+
   upload:
     name: Archive and upload (iOS)
+    needs: schema-check
     runs-on: xcode-27
     timeout-minutes: 60
     env:
