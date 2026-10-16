@@ -2,6 +2,7 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "The project was a guess of the model, not from your words." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Das Projekt hatte das Modell geraten, es stand nicht in deinen Worten." } } } },
     "Add more" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ergänzen" } } } },
     "Apply" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Übernehmen" } } } },
     "Friday, one hour, call first" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Freitag, eine Stunde, vorher anrufen" } } } },

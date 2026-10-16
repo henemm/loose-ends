@@ -63,7 +63,7 @@ final class EnrichmentCoordinator {
             let recognition = try Self.recognitionInputs(in: context)   // once before the loop (#136)
 
             for task in pending {
-                applyRules(to: task, mode: .firstRun, catalog: contexts,
+                applyRules(to: task, mode: .firstRun, catalog: contexts, projects: projects,
                            recognitionPool: recognition.pool, tasksByID: recognition.tasksByID)
                 // Outside the model block and outside its `do`/`catch` on purpose: the rule step ran,
                 // whether or not the model was there and whether or not its call threw (#144).
@@ -121,7 +121,7 @@ final class EnrichmentCoordinator {
             let recognition = try Self.recognitionInputs(in: context)
             // The task's own rule step ran before, so it sits in the pool: it must not recognise itself.
             let pool = recognition.pool.filter { $0.id != task.id }
-            let ruleFields = applyRules(to: task, mode: .reanalysis, catalog: contexts,
+            let ruleFields = applyRules(to: task, mode: .reanalysis, catalog: contexts, projects: projects,
                                         recognitionPool: pool, tasksByID: recognition.tasksByID)
             task.rulesAppliedAt = Date()
 
@@ -168,6 +168,7 @@ final class EnrichmentCoordinator {
         to task: TaskItem,
         mode: EnrichmentWriter.Mode,
         catalog: [TaskContext],
+        projects: [Project],
         recognitionPool: [RecognitionRule.Candidate],
         tasksByID: [UUID: TaskItem]
     ) -> Set<RevisedField> {
@@ -182,6 +183,7 @@ final class EnrichmentCoordinator {
             matched.insert(.contexts)
         }
         if applyPhoneRule(to: task, mode: mode) { matched.insert(.notes) }
+        if applyProjectNameRule(to: task, mode: mode, projects: projects) { matched.insert(.project) }
         return matched
     }
 
@@ -230,6 +232,24 @@ final class EnrichmentCoordinator {
         task.dueSourceRaw = FieldSource.rule.rawValue
         task.dueConfidence = match.guess.confidence
         logger.info("Rule set due date for \(task.id, privacy: .public)")
+        return true
+    }
+
+    /// The project whose name stands in the note (#469), only while the task has none and the user (or
+    /// Siri) never set or cleared one; in a re-analysis only to a new project the user has not touched.
+    private func applyProjectNameRule(to task: TaskItem, mode: EnrichmentWriter.Mode, projects: [Project]) -> Bool {
+        guard let guess = ProjectNameRule.match(in: task.rawText, projects: projects.map(\.name)),
+              let project = projects.first(where: { $0.name == guess.value }) else { return false }
+        guard EnrichmentWriter.mayWrite(
+            .project, on: task, mode: mode,
+            firstRun: task.project == nil && !EnrichmentWriter.userHasTouched(.project, on: task),
+            changes: project.id != task.project?.id
+        ) else { return true }
+        let revision = Revision(task: task, field: .project, oldValue: task.project?.name, newValue: project.name,
+                                author: .rule, reason: guess.reason)
+        task.revisions = (task.revisions ?? []) + [revision]
+        task.project = project
+        logger.info("Rule set the project of \(task.id, privacy: .public)")
         return true
     }
 

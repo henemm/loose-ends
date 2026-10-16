@@ -170,6 +170,16 @@ struct ContentView: View {
         } catch {
             Self.logger.error("Merging duplicate contexts failed: \(error, privacy: .public)")
         }
+        do {
+            // The model's project guesses go (#469); idempotent, so every start may run it.
+            let released = try GuessedProjects.release(in: modelContext)
+            if released > 0 {
+                try modelContext.save()
+                Self.logger.info("Released \(released) guessed projects")
+            }
+        } catch {
+            Self.logger.error("Releasing guessed projects failed: \(error, privacy: .public)")
+        }
         await enrichment?.processPending()
         // The onboarding asks first (#29); after it, a launch asks only if the system has not yet.
         if OnboardingFlow.isDone() {
