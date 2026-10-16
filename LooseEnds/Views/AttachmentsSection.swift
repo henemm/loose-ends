@@ -5,8 +5,9 @@ import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
 
-/// The attachments of the detail (#442): photos and files on the task, a tap shows them (Quick Look), a
-/// swipe deletes after asking. The bytes travel with iCloud as assets (`TaskAttachment.data`).
+/// The attachments of the detail (#442): photos, files and scans (iPhone and iPad) on the task, a tap
+/// shows them (Quick Look), a swipe deletes after asking. The bytes travel with iCloud as assets
+/// (`TaskAttachment.data`).
 struct AttachmentsSection: View {
     @Environment(\.modelContext) private var modelContext
     let task: TaskItem
@@ -16,6 +17,7 @@ struct AttachmentsSection: View {
     @State private var preview: URL?
     @State private var pendingDelete: TaskAttachment?
     @State private var tooLarge = false
+    @State private var scans = false
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Detail")
 
     private var attachments: [TaskAttachment] {
@@ -49,6 +51,12 @@ struct AttachmentsSection: View {
                 .accessibilityIdentifier("addPhotoButton")
                 Button("File", systemImage: "doc") { importsFile = true }
                     .accessibilityIdentifier("addFileButton")
+                #if os(iOS)
+                if DocumentScanner.isAvailable {
+                    Button("Scan", systemImage: "doc.viewfinder") { scans = true }
+                        .accessibilityIdentifier("scanDocumentButton")
+                }
+                #endif
             }
             .buttonStyle(.borderless)
         } header: {
@@ -65,6 +73,15 @@ struct AttachmentsSection: View {
             }
         }
         .quickLookPreview($preview)
+        #if os(iOS)
+        .fullScreenCover(isPresented: $scans) {
+            DocumentScanner { pages in
+                scans = false
+                addScan(pages)
+            }
+            .ignoresSafeArea()
+        }
+        #endif
         .confirmationDialog("Delete this attachment?", isPresented: Binding(
             get: { pendingDelete != nil }, set: { if !$0 { pendingDelete = nil } }
         ), titleVisibility: .visible) {
@@ -100,6 +117,13 @@ struct AttachmentsSection: View {
         } catch {
             Self.logger.error("Reading the file failed: \(error, privacy: .public)")
         }
+    }
+
+    /// The scanned pages as one PDF; cancelling hands back no pages and adds nothing.
+    private func addScan(_ pages: [CGImage]) {
+        guard !pages.isEmpty else { return }
+        guard let data = ScanPDF.pdf(from: pages) else { return }
+        add(data, fileName: ScanPDF.fileName(at: Date(), prefix: String(localized: "Scan")), type: .pdf)
     }
 
     private func add(_ data: Data, fileName: String, type: UTType) {
