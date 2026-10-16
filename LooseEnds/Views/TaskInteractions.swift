@@ -57,22 +57,22 @@ struct TaskInteractions {
             Button("Restore", systemImage: "arrow.uturn.backward") { restore(task) }
                 .tint(.accentColor)
         case .parked?:
-            Button("Activate", systemImage: "play") { activate(task) }
+            Button("Activate", systemImage: "sun.max") { activate(task) }
                 .tint(.accentColor)
         case .new?:
             // New is the inbox: there the check reads "looked over", and a Done swipe made tasks
             // vanish unseen (Henning, 2026-10-11, #318). The swipe confirms what the AI sorted
             // (#188); Done stays in the long-press menu. A title nobody vouched for ("Needs a
             // look") gets no swipe, it has to be opened.
-            // The thumb, not a checkmark: that belongs to Complete alone (#349).
+            // The eye ("looked over"), not a checkmark: that belongs to Complete alone (#349).
             if !ViewRules.needsLook(task) {
-                Button("Looks right", systemImage: "hand.thumbsup") { confirm(task) }
+                Button("Looks right", systemImage: "eye") { confirm(task) }
                     .tint(.accentColor)
                     .accessibilityIdentifier("swipeConfirm_\(task.id.uuidString)")
             }
         default:
-            Button("Complete", systemImage: "checkmark") { complete(task) }
-                .tint(.green)
+            Button("Complete", systemImage: "checkmark.circle") { complete(task) }
+                .tint(Color("Completed"))
                 .accessibilityIdentifier("swipeDone_\(task.id.uuidString)")
         }
     }
@@ -83,10 +83,11 @@ struct TaskInteractions {
         case .done?, .parked?:
             EmptyView()
         case .old?:
-            Button("Park", systemImage: "pause") { park(task) }
+            Button("Park", systemImage: "moon.zzz") { park(task) }
+                .tint(Color("Quiet"))
         case .open? where task.status == .parked:
             // A parked task never shows in Next up, so the swipe wakes it instead (#319).
-            Button("Activate", systemImage: "play") { activate(task) }
+            Button("Activate", systemImage: "sun.max") { activate(task) }
                 .tint(.accentColor)
                 .accessibilityIdentifier("swipeActivate_\(task.id.uuidString)")
         default:
@@ -111,7 +112,7 @@ struct TaskInteractions {
         if task.status == .done {
             Button("Restore", systemImage: "arrow.uturn.backward") { restore(task) }
         } else if task.status == .parked {
-            Button("Activate", systemImage: "play") { activate(task) }
+            Button("Activate", systemImage: "sun.max") { activate(task) }
         } else {
             if task.nextRank == nil {
                 Button("Next up", systemImage: "star") { toggleNext(task) }
@@ -121,7 +122,7 @@ struct TaskInteractions {
             if isPending(task) {
                 Button("Undo", systemImage: "arrow.uturn.backward") { undoComplete(task) }
             } else {
-                Button("Complete", systemImage: "checkmark") { complete(task) }
+                Button("Complete", systemImage: "checkmark.circle") { complete(task) }
                     .accessibilityIdentifier("menuDone")
             }
             Menu("Move", systemImage: "calendar") {
@@ -131,7 +132,7 @@ struct TaskInteractions {
                 Button("Date…") { datingTask = task }
                     .accessibilityIdentifier("menuMoveDate")
             }
-            Button("Park", systemImage: "pause") { park(task) }
+            Button("Park", systemImage: "moon.zzz") { park(task) }
         }
         Divider()
         Button("Delete", systemImage: "trash", role: .destructive) {

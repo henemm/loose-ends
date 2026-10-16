@@ -344,7 +344,7 @@ struct TaskDetailView: View {
                 // checkmark: that belongs to Complete alone (#349).
                 if ViewRules.needsLook(task), task.title != nil {
                     ToolbarItem(placement: .primaryAction) {
-                        Button("Looks right", systemImage: "hand.thumbsup") {
+                        Button("Looks right", systemImage: "eye") {
                             TaskActions.confirmReview(task)
                             save("confirm")
                         }
@@ -356,14 +356,14 @@ struct TaskDetailView: View {
                 Menu("More", systemImage: "ellipsis") {
                     // No checkmark in the bar (Henning, 2026-10-15): anyone taps it to close the
                     // detail and completes the task by accident. Complete lives here, first, by name.
-                    Button("Complete", systemImage: "checkmark", action: complete)
+                    Button("Complete", systemImage: "checkmark.circle", action: complete)
                         .accessibilityIdentifier("menuCompleteButton")
                     if task.nextRank == nil {
                         Button("Next up", systemImage: "star", action: toggleNext)
                     } else {
                         Button("Remove from Next up", systemImage: "star.slash", action: toggleNext)
                     }
-                    Button("Park", systemImage: "pause") {
+                    Button("Park", systemImage: "moon.zzz") {
                         TaskActions.park(task)
                         save("park")
                     }
