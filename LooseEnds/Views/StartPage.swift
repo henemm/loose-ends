@@ -84,6 +84,8 @@ struct StartPage: View {
         .paperGround()
         .frame(maxWidth: 720)
         .frame(maxWidth: .infinity)
+        // The paper runs edge to edge: outside the 720 pt column the window showed white bars (build 71).
+        .background(Paper.ground.ignoresSafeArea())
         .accessibilityIdentifier("startPage")
     }
 

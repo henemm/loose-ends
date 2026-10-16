@@ -39,13 +39,19 @@ struct ContentView: View {
                 .navigationSplitViewColumnWidth(min: 220, ideal: 250, max: 300)
                 #endif
                 .toolbar {
+                    #if os(macOS)
+                    // The detail columns carry the capture button; a second one in the sidebar column
+                    // ended up behind the toolbar's overflow arrow (build 71).
+                    settingsToolbarItem
+                    #else
                     captureToolbarItem
                     settingsToolbarItem
+                    #endif
                 }
         } detail: {
             if case .task(let id) = selection, let task = tasks.first(where: { $0.id == id }) {
                 NavigationStack {
-                    TaskDetailView(task: task)
+                    withMacCapture(TaskDetailView(task: task))
                 }
             } else if case .catalog(let kind) = selection {
                 NavigationStack {
@@ -59,6 +65,7 @@ struct ContentView: View {
                 }
             } else {
                 StartPage(selection: $selection, tasks: tasks)
+                    .toolbar { captureToolbarItem }
             }
         }
         .environment(completionPulse)
@@ -114,6 +121,16 @@ struct ContentView: View {
             // The "Next up" widget follows what the app changed, not only every 15 minutes (#307).
             WidgetCenter.shared.reloadTimelines(ofKind: "NextUp")
         }
+    }
+
+    /// The task detail has no capture button of its own; on the Mac it takes one, so ⌘N works there too.
+    @ViewBuilder
+    private func withMacCapture<Content: View>(_ content: Content) -> some View {
+        #if os(macOS)
+        content.toolbar { captureToolbarItem }
+        #else
+        content
+        #endif
     }
 
     /// The capture button sits in the same place on every screen (design briefing, screen 2).
