@@ -18,6 +18,8 @@ struct TaskRow: View {
     var marksParked = false
     /// The margin with the one time that counts (#424); wide enough for "12:00" and "Seit gestern" in two lines.
     @ScaledMetric(relativeTo: .caption) private var marginWidth: CGFloat = 54
+    /// The start screen's draft sizes (#463); everywhere else the row keeps the text styles.
+    @Environment(\.startMetrics) private var startMetrics
 
     /// A deleted task can still be drawn once while the list animates it out; reading any of its
     /// properties then traps inside SwiftData (#194: delete from Repeating with New still on the
@@ -47,13 +49,12 @@ struct TaskRow: View {
             && FieldSource.isAutomatic(task.dueDate == nil ? task.durationSourceRaw : task.dueSourceRaw)
         let style: AnyShapeStyle = mark.pressing ? AnyShapeStyle(.red) : unseenAI ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary)
         return Text(Self.marginText(mark))
-            .font(.caption)
-            .monospacedDigit()
+            .font(startMetrics?.margin ?? .caption.monospacedDigit())
             .multilineTextAlignment(.trailing)
             .lineLimit(2)
             .minimumScaleFactor(0.8)
             .foregroundStyle(style)
-            .frame(width: marginWidth, alignment: .trailing)
+            .frame(width: startMetrics?.marginWidth ?? marginWidth, alignment: .trailing)
     }
 
     private var lines: some View {
@@ -61,6 +62,7 @@ struct TaskRow: View {
             HStack(spacing: 6) {
                 // Serif is the content, SF is the app (#180, rule 2).
                 Text(task.displayTitle)
+                    .font(startMetrics?.rowTitle ?? .body)
                     .fontDesign(.serif)
                     .italic(task.title == nil || task.status == .unverified)
                     // Two lines before the "…": one cut "Termin beim Hautarzt für O…" (Henning, 2026-10-15, #433).
@@ -102,7 +104,7 @@ struct TaskRow: View {
                         .foregroundStyle(trait.style)
                     }
                 }
-                .font(.caption)
+                .font(startMetrics?.rowMeta ?? .caption)
                 .imageScale(.small)
                 .lineLimit(1)
             }

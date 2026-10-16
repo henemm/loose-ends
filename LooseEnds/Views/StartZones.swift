@@ -6,16 +6,21 @@ import SwiftUI
 /// A small grey heading above a zone, as a row of its own.
 struct ZoneCaption: View {
     private let title: LocalizedStringKey
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     init(_ title: LocalizedStringKey) {
         self.title = title
     }
 
     var body: some View {
+        let metrics = StartMetrics(typeSize)
         ZoneCaptionText(title: title)
-            // Space above, little below: the caption belongs to what follows (#433, draft: 22 above, 4 below).
-            .padding(.top, 14)
+            // Space above, little below: the caption belongs to what follows (draft: 22 above, 4 below, #463).
+            .padding(.top, 22)
+            .padding(.bottom, 4)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .listRowSeparator(.hidden)
+            .startRow(metrics)
             .paperRow()
     }
 }
@@ -23,12 +28,14 @@ struct ZoneCaption: View {
 /// The caption's text alone, for a zone that sets it inside its own row (the index, #433).
 struct ZoneCaptionText: View {
     let title: LocalizedStringKey
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
+        let metrics = StartMetrics(typeSize)
         Text(title)
-            .font(.caption.weight(.semibold))
+            .font(metrics.caption)
             .textCase(.uppercase)
-            .tracking(1)
+            .tracking(metrics.captionTracking)
             .foregroundStyle(.secondary)
     }
 }
@@ -38,16 +45,18 @@ struct ZoneCaptionText: View {
 /// with the selection it opens.
 struct InboxBar: View {
     let count: Int
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
-        HStack(spacing: 10) {
+        let metrics = StartMetrics(typeSize)
+        HStack(spacing: 9) {
             Image(systemName: "tray")
             Text("\(count) to look over")
             Spacer()
             Image(systemName: "chevron.right")
                 .imageScale(.small)
         }
-        .font(.subheadline.weight(.semibold))
+        .font(metrics.inbox)
         .foregroundStyle(.tint)
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
@@ -56,6 +65,7 @@ struct InboxBar: View {
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("inboxBar")
         .listRowSeparator(.hidden)
+        .startRow(metrics)
         .paperRow()
     }
 }
@@ -67,6 +77,7 @@ struct NowBlock<Row: View>: View {
     private let tasks: [TaskItem]
     private let row: (TaskItem) -> Row
     @State private var expanded = false
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     private static var limit: Int { 5 }
 
@@ -79,8 +90,10 @@ struct NowBlock<Row: View>: View {
         ZoneCaption("Now")
         if tasks.isEmpty {
             Text("Swipe left on any task to line it up here.")
-                .font(.footnote)
+                .font(StartMetrics(typeSize).rowMeta)
                 .foregroundStyle(.secondary)
+                .padding(.vertical, 11)
+                .startRow(StartMetrics(typeSize))
                 .paperRow()
         } else {
             ForEach(expanded ? tasks : Array(tasks.prefix(Self.limit))) { task in
@@ -108,13 +121,15 @@ struct NowBlock<Row: View>: View {
                     .accessibilityHidden(true)
                 Spacer()
             }
-            .font(.footnote)
+            .font(StartMetrics(typeSize).rowMeta)
             .foregroundStyle(.secondary)
+            .padding(.vertical, 11)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier("nowMore")
         .listRowSeparator(.hidden)
+        .startRow(StartMetrics(typeSize))
         .paperRow()
     }
 }
@@ -144,34 +159,37 @@ struct IndexLine: Identifiable {
 struct ContentsIndex: View {
     let groups: [[IndexLine]]
     let select: (ViewSelection) -> Void
-    @ScaledMetric(relativeTo: .title3) private var groupGap: CGFloat = 12
-    @ScaledMetric(relativeTo: .callout) private var wordGap: CGFloat = 5
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
+        let metrics = StartMetrics(typeSize)
         VStack(alignment: .leading, spacing: 0) {
             // Inside the index's row, so no row inset lies between the caption and the first line (#433).
             ZoneCaptionText(title: "Contents")
-                .padding(.top, 14)
+                .padding(.top, 22)
                 .padding(.bottom, 4)
             ForEach(Array(groups.enumerated()), id: \.offset) { index, group in
                 if index > 0 {
-                    Spacer().frame(height: groupGap)
+                    // The draft keeps the groups apart by 10 pt of space, not by a card or a line.
+                    Spacer().frame(height: metrics(10))
                 }
                 ForEach(group) { line in
-                    lineButton(line)
+                    lineButton(line, metrics: metrics)
                     if !line.words.isEmpty {
-                        words(line.words)
+                        words(line.words, metrics: metrics)
                     }
                 }
             }
         }
+        .padding(.bottom, 28)
         .listRowSeparator(.hidden)
+        .startRow(metrics)
         .paperRow()
     }
 
-    private func lineButton(_ line: IndexLine) -> some View {
+    private func lineButton(_ line: IndexLine, metrics: StartMetrics) -> some View {
         Button(action: line.action) {
-            IndexLineLabel(title: line.title, count: line.count)
+            IndexLineLabel(title: line.title, count: line.count, metrics: metrics)
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)
@@ -179,9 +197,10 @@ struct ContentsIndex: View {
     }
 
     /// Accent, since each word opens its list (ADR-14); the count stays grey. Upright in New York with a
-    /// grey comma between, so the words read as a sentence, as in the draft (#433).
-    private func words(_ words: [IndexWord]) -> some View {
-        FlowLayout(spacing: wordGap) {
+    /// grey comma between, so the words read as a sentence, as in the draft (#433). Set like a paragraph
+    /// at line height 1.5: no padding around the words, so a second line follows at the draft's distance (#463).
+    private func words(_ words: [IndexWord], metrics: StartMetrics) -> some View {
+        FlowLayout(spacing: metrics(5)) {
             ForEach(Array(words.enumerated()), id: \.element.id) { index, word in
                 HStack(alignment: .firstTextBaseline, spacing: 0) {
                     Button {
@@ -189,15 +208,12 @@ struct ContentsIndex: View {
                     } label: {
                         HStack(alignment: .firstTextBaseline, spacing: 2) {
                             Text(word.name)
-                                .font(.callout)
-                                .fontDesign(.serif)
+                                .font(metrics.word)
                                 .foregroundStyle(.tint)
                             Text(verbatim: "\(word.count)")
-                                .font(.caption)
-                                .monospacedDigit()
+                                .font(metrics.wordCount)
                                 .foregroundStyle(.secondary)
                         }
-                        .padding(.vertical, 4)
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
@@ -205,8 +221,7 @@ struct ContentsIndex: View {
                     .accessibilityIdentifier(word.id)
                     if index < words.count - 1 {
                         Text(verbatim: ",")
-                            .font(.callout)
-                            .fontDesign(.serif)
+                            .font(metrics.word)
                             .italic()
                             .foregroundStyle(.secondary)
                             .accessibilityHidden(true)
@@ -214,8 +229,8 @@ struct ContentsIndex: View {
                 }
             }
         }
-        .padding(.leading, 18)
-        .padding(.bottom, 4)
+        .padding(.leading, metrics(18))
+        .padding(.bottom, metrics(6))
     }
 }
 
@@ -224,31 +239,33 @@ struct ContentsIndex: View {
 struct IndexLineLabel: View {
     let title: String
     let count: Int
+    /// The start screen passes its draft sizes (#463); the pages of tags and projects keep the text styles.
+    var metrics: StartMetrics?
     @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 6) {
             Text(title)
-                .font(.title3)
+                .font(metrics?.indexLine ?? .title3)
                 .fontDesign(.serif)
                 .foregroundStyle(.primary)
             if typeSize.isAccessibilitySize {
                 Spacer(minLength: 4)
             } else {
+                // Close, fine dots on the baseline, as the draft's dotted rule (#463).
                 Leader()
-                    .stroke(.tertiary, style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [0.5, 5]))
+                    .stroke(.secondary.opacity(0.5), style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [0, 3.5]))
                     .frame(height: 1.5)
                     .accessibilityHidden(true)
             }
             // A zero is left out (#180), but its place stays, so every leader ends at the same edge (#433).
             Text(verbatim: "\(max(count, 0))")
-                .font(.subheadline)
-                .monospacedDigit()
+                .font(metrics?.indexCount ?? .subheadline.monospacedDigit())
                 .foregroundStyle(.secondary)
                 .opacity(count > 0 ? 1 : 0)
                 .accessibilityHidden(count == 0)
         }
-        .padding(.vertical, 6)
+        .padding(.vertical, metrics.map { $0(7) } ?? 6)
         .contentShape(Rectangle())
     }
 }

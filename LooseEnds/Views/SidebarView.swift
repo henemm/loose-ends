@@ -20,9 +20,9 @@ struct SidebarView: View {
     /// One size for every view glyph, growing with Dynamic Type: SF Symbols differ in width
     /// (the hare is wide), and a bare frame lets a wide one spill past the margin.
     @ScaledMetric(relativeTo: .body) private var glyphSize: CGFloat = 20
-    @ScaledMetric(relativeTo: .caption) private var knotHeight: CGFloat = 16
-    /// The headline as in the draft (#433): 30 pt New York, medium, slightly tight; grows with Dynamic Type.
-    @ScaledMetric(relativeTo: .title) private var headlineSize: CGFloat = 30
+    /// The start screen's sizes from the draft, growing at half the system's rate (#463).
+    @Environment(\.dynamicTypeSize) private var typeSize
+    private var metrics: StartMetrics { StartMetrics(typeSize) }
 
     @State private var catalog = CatalogEditor()
     @State private var pendingTaskDelete: TaskItem?
@@ -91,8 +91,7 @@ struct SidebarView: View {
                         InboxBar(count: review).tag(ViewSelection.system(.new))
                     }
                     NowBlock(tasks: ViewRules.now(in: tasks).all) { previewRow($0) }
-                }
-                Section {
+                    // Same section: a second one put the list's section gap above "Contents" (#463).
                     ContentsIndex(groups: indexGroups) { selection = $0 }
                 }
             } else {
@@ -220,32 +219,38 @@ struct SidebarView: View {
     private var header: some View {
         // Once a minute, so the line turns to the look back at 16:00 without a save (#426).
         TimelineView(.periodic(from: .now, by: 60)) { timeline in
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 0) {
                 HStack(spacing: 8) {
                     // The knot, first of its three places (#180, rule 1). Grey like the date: it is
                     // the mark, not something to tap (ADR-14).
                     ThreadGlyph(form: .knot, lineWidth: 1.5)
-                        .frame(width: knotHeight * 1.6, height: knotHeight)
+                        .frame(width: metrics(30), height: metrics(16))
                     Text(timeline.date, format: .dateTime.weekday(.wide).day().month(.wide))
-                        .font(.caption.weight(.semibold))
+                        .font(metrics.caption)
                         .textCase(.uppercase)
-                        .tracking(1)
+                        .tracking(metrics.captionTracking)
                 }
                 .foregroundStyle(.secondary)
                 .accessibilityElement(children: .combine)
                 .accessibilityIdentifier("startHeader")
                 // The one fact that stands out today, from 16:00 a look back (#426). Content, so New York.
                 Text(StartHeadlineText.sentence(StartHeadline.of(tasks, now: timeline.date)))
-                    .font(.system(size: headlineSize, weight: .medium, design: .serif))
+                    .font(metrics.headline)
                     .tracking(-0.3)
+                    .lineSpacing(0)
                     .foregroundStyle(.primary)
                     .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, 6)
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityIdentifier("startHeadline")
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(.vertical, 6)
+        // The draft: 14 above the date line, 16 under the headline (#463).
+        .padding(.top, 14)
+        .padding(.bottom, 16)
         .listRowSeparator(.hidden)
+        .startRow(metrics)
         .paperRow()
     }
 
@@ -258,6 +263,10 @@ struct SidebarView: View {
             actions.pendingRow(task, row)
         } else {
             row
+                // The draft's slim row: 11 pt above and below, its sizes, the list's edges (#463).
+                .padding(.vertical, 11)
+                .environment(\.startMetrics, metrics)
+                .startRow(metrics)
                 .tag(ViewSelection.task(task.id))
                 .swipeActions(edge: .leading, allowsFullSwipe: true) { actions.leadingActions(task) }
                 .swipeActions(edge: .trailing, allowsFullSwipe: true) { actions.trailingActions(task) }
