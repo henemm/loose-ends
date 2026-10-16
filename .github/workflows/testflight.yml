@@ -152,7 +152,7 @@ jobs:
             [ "$res" = OK ] || fail=1
           }
           check com.henning.looseends iphoneos27. NSMicrophoneUsageDescription NSSpeechRecognitionUsageDescription \
-            NSCalendarsFullAccessUsageDescription ITSAppUsesNonExemptEncryption=false
+            NSCalendarsFullAccessUsageDescription NSCameraUsageDescription ITSAppUsesNonExemptEncryption=false
           check com.henning.looseends.watchkitapp watchos27. NSMicrophoneUsageDescription NSSpeechRecognitionUsageDescription
           check com.henning.looseends.watchkitapp.widgets watchos27.
           check com.henning.looseends.widgets iphoneos27.
