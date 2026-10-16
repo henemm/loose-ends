@@ -171,7 +171,10 @@ Kein Lesen, kein Abhaken in Version 1.
 ### 9. Widgets und Control
 
 - Small: die oberste Aufgabe aus "Als nächstes".
-- Medium: die obersten drei.
+- Medium: die obersten drei. Large (Henning, 2026-10-16, #488): die obersten sechs.
+- Aussehen (Henning, 2026-10-16: liebevoll und ästhetisch): das Papier der App als Grund, oben der Knoten und „Als nächstes“ klein
+  in Grau und Großbuchstaben, Titel in New York, ein dünner offener Kreis in Akzent zum Erledigen (Akzent nur für Antippbares),
+  Haarlinien zwischen den Zeilen, leerer Zustand als kursiver Satz „Noch nichts vorgemerkt.“ Der Name der Erweiterung ist „Loose Ends“.
 - Control Center: ein Button, der die Erfassungs-Szene öffnet.
 
 ### 10. Mitteilung
@@ -241,7 +244,7 @@ Sharing-Flows, freie Suche in natürlicher Sprache.
 
 **Ergänzen (Henning, 2026-10-15, #441).** Am Ende der Detailansicht ein Feld „Ergänzen“: ein Satz, getippt oder diktiert, wird beim Schreiben von denselben Regeln gelesen wie die Erfassung (Fällig, Dauer, Wichtigkeit, Dringlichkeit, Etiketten), kein Modell. Darunter steht, was erkannt wurde, und „Nicht erkannt: …“. „Übernehmen“ schreibt es als Nutzer-Revision; Etiketten kommen dazu, die Nicht erkannten Wörter bleiben im Feld. Der Rohtext bleibt unverändert. Dauer liest `DurationRule` („20 Minuten“, „eine halbe Stunde“, aufgerundet auf die nächste Stufe; „in 2 Stunden“ ist ein Zeitpunkt, keine Dauer).
 
-**Editoren als Notizbuchseiten (Henning, 2026-10-16, #482).** Kein Editor ist mehr eine Systemliste mit weißer Karte und Häkchen. Jeder ist eine Seite auf Papier: klein die Beschriftung, groß in New York der jetzige Wert, darunter eine Form, die zum Feld passt. Wichtigkeit und Dringlichkeit als steigende Leiter mit kleinen Balken (rot nur Dringlichkeit Hoch), Dauer als Maßband, Etiketten als Satz (gewählt: Tinte mit Strich in Petrol), Projekt als Verzeichnis mit Punktlinie und Knoten. Die Wahl trägt einen Punkt am Rand, das Häkchen bleibt dem Erledigen. Einzelwahl schließt nach dem Tipp. Herkunft als Zitat mit markiertem Wort, Vorher/Nachher, Zurücksetzen. Entwurf: https://claude.ai/artifact/TsJ3X8aTtdu1zysX8uGh3j. Energie, Fällig (mit eigener Uhrzeit), Wiederholung und das Mac-Popover folgen.
+**Editoren als Notizbuchseiten (Henning, 2026-10-16, #488).** Kein Editor ist mehr eine Systemliste mit weißer Karte und Häkchen. Jeder ist eine Seite auf Papier: klein die Beschriftung, groß in New York der jetzige Wert, darunter eine Form, die zum Feld passt. Wichtigkeit und Dringlichkeit als steigende Leiter mit kleinen Balken (rot nur Dringlichkeit Hoch), Dauer als Maßband, Etiketten als Satz (gewählt: Tinte mit Strich in Petrol), Projekt als Verzeichnis mit Punktlinie und Knoten. Die Wahl trägt einen Punkt am Rand, das Häkchen bleibt dem Erledigen. Einzelwahl schließt nach dem Tipp. Herkunft als Zitat mit markiertem Wort, Vorher/Nachher, Zurücksetzen. Entwurf: https://claude.ai/artifact/TsJ3X8aTtdu1zysX8uGh3j. Energie, Fällig (mit eigener Uhrzeit), Wiederholung und das Mac-Popover folgen.
 
 ## Mac-App (Henning, 2026-10-16, Epic #467, ersetzt #408)
 

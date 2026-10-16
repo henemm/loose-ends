@@ -190,6 +190,10 @@ targets:
     supportedDestinations: [iOS, macOS]
     sources:
       - LooseEndsWidgets
+      # The widget paints on the app's paper and tints with its accent (#488): its own copy of the two
+      # colour sets (LooseEndsWidgets/Assets.xcassets), kept equal to LooseEnds/Resources/Assets.xcassets.
+      # The logo's knot is the one shared file, as in the watch complication.
+      - path: LooseEnds/Views/Thread.swift
       # Capture runs in the app process only (#326): iOS runs an intent compiled into several
       # bundles in any of them when the app is not running. In the widget, which has no iCloud
       # and opens the store without sync, "Aufgabe erfassen" failed with "Kurzbefehle konnte keine
@@ -207,7 +211,8 @@ targets:
     info:
       path: LooseEndsWidgets/Info.plist
       properties:
-        CFBundleDisplayName: Loose Ends Widgets
+        CFBundleDisplayName: $(LE_DISPLAY_NAME)
+        CFBundleName: Loose Ends
         CFBundleShortVersionString: $(MARKETING_VERSION)
         LEAppGroup: group.com.henning.looseends$(BUNDLE_ID_SUFFIX)
         LECloudContainer: iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)
@@ -217,6 +222,7 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends$(BUNDLE_ID_SUFFIX).widgets
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
 
   LooseEndsShare:
     type: app-extension
