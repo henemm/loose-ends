@@ -478,6 +478,10 @@ final class StartScreenInteractionTests: XCTestCase {
     /// it is a page, so after "Back" nothing stays marked.
     @MainActor
     func testIndexMarksTheOpenListOnIPadOnly() throws {
+        #if os(macOS)
+        // The UI test target compiles for the Mac too (CI "macOS destination"): no UIDevice, no orientation there.
+        throw XCTSkip("The sidebar mark is an iPad and iPhone behaviour")
+        #else
         let isPad = UIDevice.current.userInterfaceIdiom == .pad
         if isPad { XCUIDevice.shared.orientation = .landscapeLeft }
         defer { if isPad { XCUIDevice.shared.orientation = .portrait } }
@@ -498,5 +502,6 @@ final class StartScreenInteractionTests: XCTestCase {
             XCTAssertTrue(scrollTo("viewRow_new", in: app).waitForExistence(timeout: 5))
             XCTAssertFalse(element("viewRow_new", in: app).isSelected, "On the iPhone the index is a page: nothing stays marked")
         }
+        #endif
     }
 }
