@@ -236,3 +236,5 @@ Sharing-Flows, freie Suche in natürlicher Sprache.
 - Deployment Target iOS 27, macOS 27, watchOS 27. Apple Intelligence ab iPhone 15 Pro.
 
 **Anhänge (Henning, 2026-10-15, #442).** Unter der Notiz ein Abschnitt „Anhänge“: Fotos und Dateien anhängen, Tipp zeigt sie (Quick Look), Wischen löscht nach Rückfrage, höchstens 50 MB je Anhang. Scannen und Teilen-Menü folgen.
+
+**Ergänzen (Henning, 2026-10-15, #441).** Am Ende der Detailansicht ein Feld „Ergänzen“: ein Satz, getippt oder diktiert, wird beim Schreiben von denselben Regeln gelesen wie die Erfassung (Fällig, Dauer, Wichtigkeit, Dringlichkeit, Etiketten), kein Modell. Darunter steht, was erkannt wurde, und „Nicht erkannt: …“. „Übernehmen“ schreibt es als Nutzer-Revision; Etiketten kommen dazu, die Nicht erkannten Wörter bleiben im Feld. Der Rohtext bleibt unverändert. Dauer liest `DurationRule` („20 Minuten“, „eine halbe Stunde“, aufgerundet auf die nächste Stufe; „in 2 Stunden“ ist ein Zeitpunkt, keine Dauer).

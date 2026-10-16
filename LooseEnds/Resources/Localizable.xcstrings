@@ -2,6 +2,11 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "Add more" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ergänzen" } } } },
+    "Apply" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Übernehmen" } } } },
+    "Friday, one hour, call first" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Freitag, eine Stunde, vorher anrufen" } } } },
+    "Not read: %@" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nicht erkannt: %@" } } } },
+    "From the length named in your words." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus der Dauer in deinen Worten." } } } },
     "Photo" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Foto" } } } },
     "File" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Datei" } } } },
     "Attachments" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Anhänge" } } } },

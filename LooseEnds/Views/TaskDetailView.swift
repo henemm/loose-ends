@@ -246,6 +246,10 @@ struct TaskDetailView: View {
                 }
                 .paperRow()
             }
+
+            // A sentence about the task, read by the rules (#441).
+            SupplementSection(task: task)
+                .paperRow()
         }
         .formStyle(.grouped)
         .paperGround()
