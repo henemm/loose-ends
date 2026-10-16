@@ -1,0 +1,21 @@
+test_check_cloudkit_production (unittest.loader._FailedTest.test_check_cloudkit_production) ... ERROR
+
+======================================================================
+ERROR: test_check_cloudkit_production (unittest.loader._FailedTest.test_check_cloudkit_production)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_check_cloudkit_production
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/loader.py", line 433, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/loader.py", line 374, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/precious-tumbling-goose/scripts/test_check_cloudkit_production.py", line 15, in <module>
+    import check_cloudkit_production as check
+ModuleNotFoundError: No module named 'check_cloudkit_production'. Did you mean: 'test_check_cloudkit_production'?
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)
