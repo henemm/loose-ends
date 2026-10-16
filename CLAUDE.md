@@ -254,12 +254,14 @@ not scope creep on the current one.
   `Shared/Services`; not in the product path until #25 Schnitt 2), `WaitingOn` ("waiting on" set by hand:
   link, loosen, picker candidates without loops, a user revision per change, #251). All pure over the model objects; the
   caller saves.
-- `Shared/Enrichment` — `TaskEnricher` protocol, `EnrichmentWriter` (threshold + revisions; leaves a project the user or Siri set alone (user revision), like duration), `EnrichmentCoordinator`
+- `Shared/Enrichment` — `TaskEnricher` protocol, `EnrichmentWriter` (threshold + revisions; never writes the model's contexts or project, #215/#469), `EnrichmentCoordinator`
   (catch-up pass), `FoundationModelsEnricher` (on-device model, `#if canImport(FoundationModels)`), `DueDateRule`
   (combines the rule parsers into the due date, confidence 1.0, #95), `ImportanceUrgencyRule` (keyword
   match for importance/urgency, confidence 1.0, no default on miss, #117), `RecognitionRule` (equality of
   `RawTextWords` sets contexts and duration from an earlier task, confidence 1.0, no energy, #136), `ContextWordRule`
-  (a short word list per default context plus each context's own name sets the contexts; no hit stays empty, #232)
+  (a short word list per default context plus each context's own name sets the contexts; no hit stays empty, #232),
+  `ProjectNameRule` (a project's own name in the note sets it; the model never does, its old guesses are released at start
+  by `GuessedProjects`, #469)
 - `Shared/Intents` — App Intents shared by app, widgets and (later) the intents extension
 - `LooseEnds/` — app entry and views (iPhone, iPad, Mac); `LooseEndsWatch/`, `LooseEndsWidgets/`, `LooseEndsShare/`
   (iOS share sheet: text, links, mails via `SharedContent`) — platform targets

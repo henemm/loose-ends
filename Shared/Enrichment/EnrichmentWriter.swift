@@ -87,14 +87,9 @@ enum EnrichmentWriter {
         // recognition of a raw text captured before and from the word list (#232); `draft.contexts`
         // stays for the measurements (#234).
 
-        if let project = draft.project, project.confidence >= threshold,
-           let matched = projects.first(where: { $0.name.compare(project.value, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame }),
-           // Like duration: a project the user (or Siri, #25) set stays on the first run.
-           may(.project, firstRun: task.project == nil && !userHasTouched(.project, on: task),
-               changes: matched.id != task.project?.id) {
-            record(.project, old: task.project?.name, new: matched.name, reason: project.reason)
-            task.project = matched
-        }
+        // The model never sets the project either (Henning, 2026-10-16, #469): with one project named
+        // "Erstes" it put nearly every task there. A project comes from the user, from Siri and from
+        // its own name in the note (`ProjectNameRule`); `draft.project` stays for the measurements.
 
         task.processedAt = now
         return written

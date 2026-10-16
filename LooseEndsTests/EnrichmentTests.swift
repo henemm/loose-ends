@@ -109,8 +109,8 @@ struct TestStore {
         #expect((task.revisions ?? []).isEmpty)
     }
 
-    @Test("A project is assigned only when the name matches an existing project")
-    @MainActor func projectMatchesByName() async throws {
+    @Test("The model's project is never written (#469)")
+    @MainActor func modelProjectIsIgnored() async throws {
         let store = try TestStore()
         let context = store.context
         let house = Project(name: "Haus")
@@ -118,17 +118,12 @@ struct TestStore {
         let task = TaskItem(rawText: "Dachrinne reinigen")
         context.insert(task)
         var draft = EnrichmentDraft()
-        draft.project = EnrichmentDraft.Guess("haus", confidence: 0.8, reason: "House upkeep.")
+        draft.project = EnrichmentDraft.Guess("Haus", confidence: 0.9, reason: "House upkeep.")
 
         EnrichmentWriter.apply(draft, to: task, contexts: [], projects: [house])
         try context.save()
-        #expect(task.project?.name == "Haus")
-
-        let other = TaskItem(rawText: "Reifen wechseln")
-        context.insert(other)
-        draft.project = EnrichmentDraft.Guess("Auto", confidence: 0.9, reason: "Car.")
-        EnrichmentWriter.apply(draft, to: other, contexts: [], projects: [house])
-        #expect(other.project == nil)
+        #expect(task.project == nil)
+        #expect(!(task.revisions ?? []).contains { $0.field == .project })
     }
 }
 
