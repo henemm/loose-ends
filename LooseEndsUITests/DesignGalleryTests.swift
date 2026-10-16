@@ -132,10 +132,11 @@ final class DesignGalleryTests: XCTestCase {
         let energyRow = element("field_energy", in: app)
         XCTAssertTrue(energyRow.waitForExistence(timeout: 5), "Detail offers no energy")
         energyRow.tap()
-        let slider = app.sliders["energySlider"]
-        XCTAssertTrue(slider.waitForExistence(timeout: 5), "Energy editor shows no slider")
-        slider.adjust(toNormalizedSliderPosition: 1.0 / 6.0)
-        XCTAssertTrue(app.buttons["energyRemoveButton"].waitForExistence(timeout: 5), "The slider set no value")
+        // Seven dots instead of the slider (#482); the second from the left takes a fair amount.
+        let dot = app.buttons["energyDot_-2"]
+        XCTAssertTrue(dot.waitForExistence(timeout: 5), "Energy editor shows no dots")
+        dot.tap()
+        XCTAssertTrue(app.buttons["energyRemoveButton"].waitForExistence(timeout: 5), "The dot set no value")
         shot(app, "gallery-\(label)-6-energy")
         let backToDetail = app.navigationBars.buttons.firstMatch
         XCTAssertTrue(backToDetail.waitForExistence(timeout: 5), "No back button")
