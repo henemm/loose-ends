@@ -68,7 +68,7 @@ enum DurationRule {
             return nil
         }
         for found in text.matches(of: regex) {
-            // No lookbehind in Swift's regex: a number glued to a word ("A4") is checked here.
+            // A number glued to a word ("A4", "x10") is no length.
             if found.range.lowerBound > text.startIndex {
                 let before = text[text.index(before: found.range.lowerBound)]
                 if before.isLetter || before.isNumber { continue }

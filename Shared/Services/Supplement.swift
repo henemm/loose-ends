@@ -33,7 +33,10 @@ struct Supplement: Equatable {
         var remaining = TitleRule.strippingRuleWords(from: text, reference: reference, calendar: calendar)
         if let duration = DurationRule.match(in: remaining) { remaining.removeSubrange(duration.range) }
         for name in named {
-            if let word = ContextWordRule.trigger(in: remaining, contexts: [name]) { remaining.removeSubrange(word) }
+            // A list word may hit the start of a longer word ("anruf" in "anrufen"): the whole word goes.
+            if let hit = ContextWordRule.trigger(in: remaining, contexts: [name]) {
+                remaining.removeSubrange(wholeWord(around: hit, in: remaining))
+            }
         }
         // A comma left behind by a struck word is no word of its own.
         result.rest = remaining.split(whereSeparator: { $0.isWhitespace })
@@ -41,6 +44,14 @@ struct Supplement: Equatable {
             .joined(separator: " ")
             .trimmingCharacters(in: CharacterSet(charactersIn: ".,;:!?–—- "))
         return result
+    }
+
+    private static func wholeWord(around range: Range<String.Index>, in text: String) -> Range<String.Index> {
+        var start = range.lowerBound
+        var end = range.upperBound
+        while start > text.startIndex, text[text.index(before: start)].isLetter { start = text.index(before: start) }
+        while end < text.endIndex, text[end].isLetter { end = text.index(after: end) }
+        return start..<end
     }
 
     /// Writes what was read as user revisions; a field already holding the value writes nothing.
