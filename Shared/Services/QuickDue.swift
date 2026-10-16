@@ -47,4 +47,12 @@ enum QuickDue {
         let start = calendar.startOfDay(for: date)
         return Day.allCases.first { day($0, now: now, calendar: calendar) == start }
     }
+
+    /// The two weeks the due editor shows as a calendar (#482): from the start of this week (the
+    /// calendar's first weekday) fourteen days on, each at the start of its day.
+    static func fortnight(now: Date = Date(), calendar: Calendar = .current) -> [Date] {
+        let today = calendar.startOfDay(for: now)
+        let start = calendar.dateInterval(of: .weekOfYear, for: today)?.start ?? today
+        return (0..<14).compactMap { calendar.date(byAdding: .day, value: $0, to: start) }
+    }
 }

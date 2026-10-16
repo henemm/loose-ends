@@ -52,4 +52,15 @@ import Testing
         #expect(QuickDue.matching(Self.date(25), now: now, calendar: Self.calendar) == nil)
         #expect(QuickDue.matching(nil, now: now, calendar: Self.calendar) == nil)
     }
+
+    @Test("The calendar shows this week and the next, from the first weekday")
+    func fortnight() {
+        var calendar = Self.calendar
+        calendar.firstWeekday = 2   // Monday, as in Germany
+        let days = QuickDue.fortnight(now: Self.date(15, hour: 10), calendar: calendar)
+        #expect(days.count == 14)
+        #expect(days.first == Self.date(12))
+        #expect(days.last == Self.date(25))
+    }
 }
+

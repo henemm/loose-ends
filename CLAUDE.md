@@ -263,6 +263,10 @@ not scope creep on the current one.
   `ProjectNameRule` (a project's own name in the note sets it; the model never does, its old guesses are released at start
   by `GuessedProjects`, #469)
 - `Shared/Intents` — App Intents shared by app, widgets and (later) the intents extension
+- `LooseEnds/Intents` — app target only (iOS/macOS 27, never watch, widget or share, no `project.yml` entry): `ReminderSchema`
+  (Apple's reminders schema entities, read-only: `ListEntity` = project plus the virtual inbox „Loose Ends“, `ReminderEntity`
+  from `TaskItem`, `LocationTriggerEntity` and `SectionEntity` with empty queries) and `ReminderTranslation` (Siri's SDK
+  types onto `SiriCapture.Input`: incomplete date dropped without error, coordinate before address); no intent yet (#25 Schnitt 2a)
 - `LooseEnds/` — app entry and views (iPhone, iPad, Mac); `LooseEndsWatch/`, `LooseEndsWidgets/`, `LooseEndsShare/`
   (iOS share sheet: text, links, mails via `SharedContent`) — platform targets
 - `LooseEndsWatchWidgets/` — watch complication (#355 Schnitt 3a): the logo's knot, families `accessoryCircular` and
