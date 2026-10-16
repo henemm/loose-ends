@@ -254,6 +254,8 @@ struct SidebarView: View {
         .paperRow()
     }
 
+    /// A tap opens the task; while its Done window runs (#32) a tap takes it back instead.
+    @ViewBuilder
     private func previewRow(_ task: TaskItem) -> some View {
         let actions = taskActions
         let row = TaskRow(task: task, identifierPrefix: "nowRow_")
