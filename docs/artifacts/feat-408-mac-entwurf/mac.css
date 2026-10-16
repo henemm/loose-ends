@@ -87,3 +87,13 @@ body{margin:0}
 .sw{display:flex;align-items:center;gap:14px;margin:0 0 14px;font-size:13px;color:var(--grey)}
 .sw i{display:block;width:56px;height:56px;border-radius:12px;border:1px solid var(--hair)}
 .note-s{font-size:12px;color:var(--grey);line-height:1.5}
+
+/* Sidebar = the iPhone's "Inhalt" (#476): New York names, dotted leader, small count, words in accent */
+.ix{display:flex;align-items:baseline;gap:6px;padding:5px 10px;border-radius:8px;font:17px/1.25 "New York","Iowan Old Style",Palatino,Georgia,serif;color:var(--ink)}
+.ix i{flex:1;border-bottom:1.5px dotted var(--faint);transform:translateY(-3px);min-width:8px}
+.ix b{font:400 12px/1 -apple-system,system-ui,sans-serif;color:var(--grey);font-variant-numeric:tabular-nums;min-width:14px;text-align:right}
+.ix.on{background:var(--sel)}
+.ixw{padding:0 10px 6px 28px;font:15px/1.55 "New York","Iowan Old Style",Palatino,Georgia,serif;color:var(--grey)}
+.ixw span{color:var(--acc)}
+.ixw span em{font:12px -apple-system,system-ui,sans-serif;font-style:normal;color:var(--grey);margin-left:2px}
+.ixg{height:10px}
