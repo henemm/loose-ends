@@ -105,7 +105,8 @@ struct SidebarView: View {
                     }
                     NowBlock(tasks: ViewRules.now(in: tasks).all) { previewRow($0) }
                     // Same section: a second one put the list's section gap above "Contents" (#463).
-                    ContentsIndex(groups: indexGroups) { selection = $0 }
+                    // iPad: the sidebar marks the open list (#334); iPhone: after Back selection is nil.
+                    ContentsIndex(groups: indexGroups, selected: selection) { selection = $0 }
                 }
             } else if isMac {
                 Section {

@@ -160,7 +160,8 @@ struct IndexLine: Identifiable {
 /// tags and projects with tasks follow their line as italic words, one tap to their list.
 struct ContentsIndex: View {
     let groups: [[IndexLine]]
-    /// The open view, marked on the Mac; nil on the iPhone, where the index is a page and not a sidebar.
+    /// The open view, marked in the sidebar on Mac and iPad (#334); nil on the iPhone after Back,
+    /// where the index is a page and not a sidebar.
     var selected: ViewSelection?
     let select: (ViewSelection) -> Void
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -201,6 +202,7 @@ struct ContentsIndex: View {
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(isOpen ? .isSelected : [])
         .accessibilityIdentifier(line.id)
     }
 

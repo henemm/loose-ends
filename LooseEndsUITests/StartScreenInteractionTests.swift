@@ -473,4 +473,35 @@ final class StartScreenInteractionTests: XCTestCase {
         XCTAssertTrue(empty.waitForExistence(timeout: 5), "All open shows no empty sentence")
         XCTAssertEqual(empty.label, "Nothing left open.")
     }
+
+    /// The index marks the open list on the iPad, where it is a sidebar next to the list (#334); on the iPhone
+    /// it is a page, so after "Back" nothing stays marked.
+    @MainActor
+    func testIndexMarksTheOpenListOnIPadOnly() throws {
+        #if os(macOS)
+        // The UI test target compiles for the Mac too (CI "macOS destination"): no UIDevice, no orientation there.
+        throw XCTSkip("The sidebar mark is an iPad and iPhone behaviour")
+        #else
+        let isPad = UIDevice.current.userInterfaceIdiom == .pad
+        if isPad { XCUIDevice.shared.orientation = .landscapeLeft }
+        defer { if isPad { XCUIDevice.shared.orientation = .portrait } }
+        let app = launch()
+        let newRow = scrollTo("viewRow_new", in: app)
+        XCTAssertFalse(newRow.isSelected, "Nothing is open yet, so nothing is marked")
+        newRow.tap()
+        XCTAssertTrue(app.navigationBars["New"].waitForExistence(timeout: 5), "New did not open")
+
+        if isPad {
+            XCTAssertTrue(newRow.waitForExistence(timeout: 5), "The sidebar should stay next to the list")
+            XCTAssertTrue(newRow.isSelected, "The open list is marked in the sidebar (#334)")
+            XCTAssertFalse(element("viewRow_open", in: app).isSelected, "Only the open list is marked")
+        } else {
+            let back = app.navigationBars.buttons.firstMatch
+            XCTAssertTrue(back.waitForExistence(timeout: 5), "No back button")
+            back.tap()
+            XCTAssertTrue(scrollTo("viewRow_new", in: app).waitForExistence(timeout: 5))
+            XCTAssertFalse(element("viewRow_new", in: app).isSelected, "On the iPhone the index is a page: nothing stays marked")
+        }
+        #endif
+    }
 }
