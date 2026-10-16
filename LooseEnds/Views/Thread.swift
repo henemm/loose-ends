@@ -72,8 +72,9 @@ final class CompletionPulse {
     }
 }
 
-/// The completion moment (#180, rule 1): the knot draws itself in green, then fades. Green is
-/// spent here and nowhere else (ADR-14). Reduce Motion shows it drawn at once.
+/// The completion moment (#180, rule 1): the knot draws itself in the app's completion green
+/// (`Completed`, the same as the swipe action, #494), then fades. Green is spent here and nowhere
+/// else (ADR-14). Reduce Motion shows it drawn at once. Used by the app only: the app's catalog holds `Completed`.
 struct CompletionKnot: View {
     let trigger: Int
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -83,7 +84,7 @@ struct CompletionKnot: View {
 
     var body: some View {
         ThreadGlyph(form: .knot, lineWidth: size / 12, drawn: drawn)
-            .foregroundStyle(.green)
+            .foregroundStyle(Color("Completed"))
             .frame(width: size * 1.6, height: size)
             .opacity(visible ? 1 : 0)
             .allowsHitTesting(false)
