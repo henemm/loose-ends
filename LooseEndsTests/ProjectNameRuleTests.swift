@@ -23,7 +23,11 @@ import Testing
         store.context.insert(guessed)
         store.context.insert(chosen)
         guessed.project = first
-        guessed.revisions = [Revision(task: guessed, field: .project, oldValue: nil, newValue: "Erstes", author: .ai)]
+        // Confirmed long ago: the model's revision was seen.
+        let guess = Revision(task: guessed, field: .project, oldValue: nil, newValue: "Erstes", author: .ai)
+        guess.seenAt = Date(timeIntervalSince1970: 0)
+        guess.createdAt = Date(timeIntervalSince1970: 0)
+        guessed.revisions = [guess]
         RevisionService.set(.project, to: "Erstes", on: chosen, contexts: [], projects: [first])
 
         #expect(try GuessedProjects.release(in: store.context) == 1)
@@ -34,6 +38,21 @@ import Testing
         let release = try #require((guessed.revisions ?? []).first { $0.author == .rule })
         #expect(release.field == .project && release.oldValue == "Erstes" && release.newValue == nil)
         #expect(try GuessedProjects.release(in: store.context) == 0, "a second start finds nothing")
+        #expect(!guessed.hasUnseenAutomaticRevisions, "the release does not put the task back into New")
+    }
+
+    @Test("A release written unseen by build 70 is marked seen at the next start")
+    @MainActor func repairsUnseenRelease() async throws {
+        let store = try TestStore()
+        let task = TaskItem(rawText: "Fenster putzen")
+        store.context.insert(task)
+        task.status = .active
+        task.revisions = [Revision(task: task, field: .project, oldValue: "Erstes", newValue: nil, author: .rule,
+                                   reason: GuessedProjects.reason)]
+        #expect(task.hasUnseenAutomaticRevisions)
+        #expect(try GuessedProjects.release(in: store.context) == 0)
+        #expect(!task.hasUnseenAutomaticRevisions)
+        #expect(!ViewRules.isInNew(task))
     }
 
     @Test("The rule step sets the project named in the note, with the rule as its origin")
