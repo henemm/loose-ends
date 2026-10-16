@@ -343,14 +343,15 @@ struct TaskDetailView: View {
                 }
             } else {
                 // Still in New after opening ("Needs a look": title not checked, not sorted yet): one
-                // tap vouches for it, without editing the title first (#318). The thumb, not a
-                // checkmark: that belongs to Complete alone (#349).
+                // tap vouches for it, without editing the title first (#318). The word, not a sign:
+                // a bare eye in the bar said nothing (Henning, 2026-10-16, build 76).
                 if ViewRules.needsLook(task), task.title != nil {
                     ToolbarItem(placement: .primaryAction) {
-                        Button("Looks right", systemImage: "eye") {
+                        Button("Looks right") {
                             TaskActions.confirmReview(task)
                             save("confirm")
                         }
+                        .buttonStyle(.borderedProminent)
                         .accessibilityIdentifier("detailConfirmButton")
                     }
                 }
