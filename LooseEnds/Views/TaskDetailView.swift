@@ -137,6 +137,7 @@ struct TaskDetailView: View {
                             .buttonStyle(.plain)
                             .foregroundStyle(.tint)
                             .accessibilityIdentifier("field_\(entry.field.rawValue)")
+                            .editorPopover(entry.field, editing: $editingField) { editor(for: entry.field) }
                         }
                     }
                     .padding(.vertical, 4)
@@ -259,9 +260,11 @@ struct TaskDetailView: View {
         // No 35 pt of air between the said sentence and the fields (#438).
         .listSectionSpacing(.compact)
         #endif
+        #if os(iOS)
         .navigationDestination(item: $editingField) { field in
             FieldEditorView(task: task, field: field, contexts: contexts, projects: projects)
         }
+        #endif
         .toolbar { actions }
         .onAppear {
             titleDraft = task.title ?? ""
@@ -501,6 +504,11 @@ struct TaskDetailView: View {
             .buttonStyle(.plain)
             .accessibilityElement(children: .combine)
             .accessibilityIdentifier("field_\(field.rawValue)")
+            .editorPopover(field, editing: $editingField) { editor(for: field) }
+    }
+
+    private func editor(for field: RevisedField) -> FieldEditorView {
+        FieldEditorView(task: task, field: field, contexts: contexts, projects: projects)
     }
 
     /// Return in the wrapping title field ends the edit, which commits (#216).
@@ -635,5 +643,26 @@ private struct AddWordLabelStyle: LabelStyle {
         }
         .padding(.vertical, 4)
         .contentShape(Rectangle())
+    }
+}
+
+extension View {
+    /// Mac (#482, Henning 2026-10-16): the editor opens as a popover at its row and the detail stays
+    /// where it is; Escape closes it, a single choice closes it by itself. iPhone and iPad push it.
+    @ViewBuilder
+    func editorPopover<Editor: View>(_ field: RevisedField, editing: Binding<RevisedField?>,
+                                     @ViewBuilder editor: @escaping () -> Editor) -> some View {
+        #if os(macOS)
+        popover(isPresented: Binding(
+            get: { editing.wrappedValue == field },
+            set: { shown in if !shown, editing.wrappedValue == field { editing.wrappedValue = nil } }
+        ), arrowEdge: .trailing) {
+            editor()
+                .frame(width: 340)
+                .frame(minHeight: 260, idealHeight: 460, maxHeight: 620)
+        }
+        #else
+        self
+        #endif
     }
 }
