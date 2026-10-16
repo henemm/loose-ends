@@ -215,43 +215,15 @@ struct SidebarView: View {
 
     // MARK: - Start (iPhone)
 
-    /// The date under the knot. Plain: the sentence it used to carry is the inbox bar now (#368).
+    /// The date under the knot and the sentence of the day (#426), as the first row of the start list.
     private var header: some View {
-        // Once a minute, so the line turns to the look back at 16:00 without a save (#426).
-        TimelineView(.periodic(from: .now, by: 60)) { timeline in
-            VStack(alignment: .leading, spacing: 0) {
-                HStack(spacing: 8) {
-                    // The knot, first of its three places (#180, rule 1). Grey like the date: it is
-                    // the mark, not something to tap (ADR-14).
-                    ThreadGlyph(form: .knot, lineWidth: 1.5)
-                        .frame(width: metrics(30), height: metrics(16))
-                    Text(timeline.date, format: .dateTime.weekday(.wide).day().month(.wide))
-                        .font(metrics.caption)
-                        .textCase(.uppercase)
-                        .tracking(metrics.captionTracking)
-                }
-                .foregroundStyle(.secondary)
-                .accessibilityElement(children: .combine)
-                .accessibilityIdentifier("startHeader")
-                // The one fact that stands out today, from 16:00 a look back (#426). Content, so New York.
-                Text(StartHeadlineText.sentence(StartHeadline.of(tasks, now: timeline.date)))
-                    .font(metrics.headline)
-                    .tracking(-0.3)
-                    .lineSpacing(0)
-                    .foregroundStyle(.primary)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(.top, 6)
-                    .accessibilityAddTraits(.isHeader)
-                    .accessibilityIdentifier("startHeadline")
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        // The draft: 14 above the date line, 16 under the headline (#463).
-        .padding(.top, 14)
-        .padding(.bottom, 16)
-        .listRowSeparator(.hidden)
-        .startRow(metrics)
-        .paperRow()
+        StartHeader(tasks: tasks)
+            // The draft: 14 above the date line, 16 under the headline (#463).
+            .padding(.top, 14)
+            .padding(.bottom, 16)
+            .listRowSeparator(.hidden)
+            .startRow(metrics)
+            .paperRow()
     }
 
     /// A tap opens the task; while its Done window runs (#32) a tap takes it back instead.

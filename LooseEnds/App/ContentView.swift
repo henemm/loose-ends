@@ -54,8 +54,7 @@ struct ContentView: View {
                         .toolbar { captureToolbarItem }
                 }
             } else {
-                Text("Pick a view")
-                    .foregroundStyle(.secondary)
+                StartPage(selection: $selection, tasks: tasks)
             }
         }
         .environment(completionPulse)
