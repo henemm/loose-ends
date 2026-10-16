@@ -1,0 +1,31 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-10-16T08:00:00Z" },
+  "title": "Loose Ends Mac",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 1320, "h": 800, "title": "Startseite, breit, hell (Schnitt 1 bis 3)" },
+    "Start-dunkel.dc.html": { "x": 1400, "y": 0, "w": 1320, "h": 800, "title": "Startseite, breit, dunkel" },
+    "Liste.dc.html": { "x": 0, "y": 1100, "w": 1100, "h": 660, "title": "Liste: Etikett Computer" },
+    "Detail.dc.html": { "x": 1180, "y": 1100, "w": 1100, "h": 760, "title": "Aufgabe im Detail" },
+    "Einstellungen.dc.html": { "x": 0, "y": 2220, "w": 640, "h": 720, "title": "Einstellungen" },
+    "Menueleiste.dc.html": { "x": 720, "y": 2220, "w": 460, "h": 560, "title": "Menüleisten-Panel" },
+    "Grundlagen.dc.html": { "x": 1260, "y": 2220, "w": 1100, "h": 820, "title": "Grundlagen: Farbe, Schrift, Raum, Regeln" }
+  },
+  "order": [
+    "Main.dc.html",
+    "Start-dunkel.dc.html",
+    "Liste.dc.html",
+    "Detail.dc.html",
+    "Einstellungen.dc.html",
+    "Menueleiste.dc.html",
+    "Grundlagen.dc.html"
+  ],
+  "notes": {
+    "t1": { "x": 0, "y": -240, "text": "Startseite: das Fenster, das heute „Ansicht wählen“ zeigt", "kind": "title1", "maxW": 2720 },
+    "t2": { "x": 0, "y": 860, "text": "Liste und Detail: dieselbe Papierwelt wie auf dem iPhone", "kind": "title1", "maxW": 2280 },
+    "t3": { "x": 0, "y": 1980, "text": "Einstellungen, Menüleiste, Grundlagen", "kind": "title1", "maxW": 2360 }
+  },
+  "designSystems": []
+}

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Menüleisten-Panel</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="mac.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>body{margin:0}</style>
+</helmet>
+<div style="width:460px;height:560px;background:#CFCDC5;border-radius:12px;position:relative;overflow:hidden;font:13px/1.35 -apple-system,system-ui,sans-serif;color:#1B1C1A">
+  <div style="height:30px;background:rgba(244,243,238,.55);display:flex;align-items:center;justify-content:flex-end;gap:14px;padding:0 14px;font-size:13px">
+    <span>Fr. 16. Okt.</span><span>08:12</span>
+    <span style="width:30px;height:22px;border-radius:6px;background:rgba(27,28,26,.16);display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 30 16" width="20" height="11" fill="none" stroke="#1B1C1A" stroke-width="1.6" stroke-linecap="round"><path d="M1 13C7 13 9 3 14 3C19 3 17 12 13 12C9 12 10 5 15 4C21 3 22 10 29 10"/></svg></span>
+  </div>
+  <div class="win" style="position:absolute;right:10px;top:36px;width:440px;flex-direction:column;border-radius:14px">
+    <div style="padding:22px 24px 8px">
+      <div class="hd"><svg class="knot" viewBox="0 0 30 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 13C7 13 9 3 14 3C19 3 17 12 13 12C9 12 10 5 15 4C21 3 22 10 29 10"/></svg>Neue Aufgabe</div>
+      <div class="serif" style="margin-top:12px;min-height:110px;font-size:22px;line-height:1.3;color:var(--faint)">Was soll ich mir merken?</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:6px 24px 18px">
+      <span style="width:46px;height:46px;border-radius:50%;border:1.5px solid var(--acc);color:var(--acc);display:flex;align-items:center;justify-content:center"><svg class="ic" viewBox="0 0 24 24" style="width:20px;height:20px"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21"/></svg></span>
+      <span style="color:var(--grey);font-size:13px">Sprich los oder tippe. Return speichert.</span>
+      <span style="margin-left:auto;color:var(--grey)">Abbrechen</span>
+      <span style="height:30px;padding:0 14px;border-radius:15px;background:var(--acc);color:#fff;display:flex;align-items:center;font-weight:600">Fertig</span>
+    </div>
+    <div style="border-top:1px solid var(--hair);display:flex;padding:10px 24px;font-size:12px;color:var(--grey)">
+      <span>Loose Ends öffnen</span><span style="margin-left:auto">Beenden</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":460,"height":560}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
