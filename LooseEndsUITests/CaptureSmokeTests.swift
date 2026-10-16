@@ -781,4 +781,33 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(note.waitForExistence(timeout: 10), "The detail should report what the second run found")
         XCTAssertTrue(element("detailRawTextMarker", in: app).exists, "The raw text stays as it was")
     }
+
+    /// #441: a sentence at the end of the detail sets the fields the rules read; the rest stays.
+    @MainActor
+    func testSupplementSetsDurationAndKeepsRest() throws {
+        let app = launch()
+        _ = captureAndOpenDetail("Reifen wechseln", in: app)
+
+        let field = element("supplementField", in: app)
+        for _ in 0..<5 where !(field.exists && field.isHittable) { app.swipeUp() }
+        XCTAssertTrue(field.waitForExistence(timeout: 5), "The detail should end with Add more")
+        field.tap()
+        field.typeText("eine Stunde, Werkstatt anrufen")
+
+        XCTAssertTrue(element("supplementRead_duration", in: app).waitForExistence(timeout: 5),
+                      "The duration should be read")
+        let rest = element("supplementRest", in: app)
+        XCTAssertTrue(rest.waitForExistence(timeout: 5))
+        XCTAssertTrue(rest.label.contains("Werkstatt"), "Rest was \(rest.label)")
+        attachScreenshot(app, "441-ergaenzen-gelesen")
+
+        element("supplementApply", in: app).tap()
+        XCTAssertTrue(waitForValue("Werkstatt", of: field), "The unread words stay in the field")
+        XCTAssertFalse(element("supplementApply", in: app).exists, "Nothing left to apply")
+
+        for _ in 0..<5 where !element("field_duration", in: app).exists { app.swipeDown() }
+        let duration = element("field_duration", in: app)
+        XCTAssertTrue(duration.waitForExistence(timeout: 5))
+        XCTAssertTrue(duration.label.contains("1 h"), "Duration row was \(duration.label)")
+    }
 }
