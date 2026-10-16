@@ -30,9 +30,25 @@ import Testing
         try store.context.save()
         #expect(guessed.project == nil)
         #expect(chosen.project?.name == "Erstes")
-        let last = try #require((guessed.revisions ?? []).last)
-        #expect(last.author == .rule && last.oldValue == "Erstes" && last.newValue == nil)
+        // The stored order of a relationship is not fixed: look for the release, not at the end.
+        let release = try #require((guessed.revisions ?? []).first { $0.author == .rule })
+        #expect(release.field == .project && release.oldValue == "Erstes" && release.newValue == nil)
         #expect(try GuessedProjects.release(in: store.context) == 0, "a second start finds nothing")
+        #expect(!guessed.hasUnseenAutomaticRevisions, "the release does not put the task back into New")
+    }
+
+    @Test("A release written unseen by build 70 is marked seen at the next start")
+    @MainActor func repairsUnseenRelease() async throws {
+        let store = try TestStore()
+        let task = TaskItem(rawText: "Fenster putzen")
+        store.context.insert(task)
+        task.status = .active
+        task.revisions = [Revision(task: task, field: .project, oldValue: "Erstes", newValue: nil, author: .rule,
+                                   reason: GuessedProjects.reason)]
+        #expect(task.hasUnseenAutomaticRevisions)
+        #expect(try GuessedProjects.release(in: store.context) == 0)
+        #expect(!task.hasUnseenAutomaticRevisions)
+        #expect(!ViewRules.isInNew(task))
     }
 
     @Test("The rule step sets the project named in the note, with the rule as its origin")

@@ -193,10 +193,9 @@ struct ContentView: View {
         do {
             // The model's project guesses go (#469); idempotent, so every start may run it.
             let released = try GuessedProjects.release(in: modelContext)
-            if released > 0 {
-                try modelContext.save()
-                Self.logger.info("Released \(released) guessed projects")
-            }
+            // Also saves the repair of releases written unseen (build 70), which releases nothing.
+            if modelContext.hasChanges { try modelContext.save() }
+            if released > 0 { Self.logger.info("Released \(released) guessed projects") }
         } catch {
             Self.logger.error("Releasing guessed projects failed: \(error, privacy: .public)")
         }
