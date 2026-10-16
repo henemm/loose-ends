@@ -179,8 +179,7 @@ final class RecognitionWalkthroughTests: XCTestCase {
         let thirtyMinutes = app.descendants(matching: .any)
             .matching(NSPredicate(format: "label == %@", Self.durationLabel)).firstMatch
         XCTAssertTrue(thirtyMinutes.waitForExistence(timeout: 5), "Der Editor bietet \(Self.durationLabel) nicht an")
-        thirtyMinutes.tap()
-        back(in: app)
+        thirtyMinutes.tap()   // a single choice closes the editor by itself (#482)
         // Selbst gesetzt heißt: kein Vermerk, weder ✦ noch » «.
         let ownDuration = fieldLabel("Duration", Self.durationLabel)
         XCTAssertTrue(waitForLabel(ownDuration, of: durationRow),

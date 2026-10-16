@@ -2,6 +2,11 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "When its name is in your words, the app sets it by itself." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Steht der Name in deinen Worten, setzt die App ihn selbst." } } } },
+    "Tap a word to add or remove it." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Tippe ein Wort an oder ab." } } } },
+    "Shown in red in the margin." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Steht rot in der Randspalte." } } } },
+    "No project" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Kein Projekt" } } } },
+    "No duration" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Keine Dauer" } } } },
     "The project was a guess of the model, not from your words." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Das Projekt hatte das Modell geraten, es stand nicht in deinen Worten." } } } },
     "Add more" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ergänzen" } } } },
     "Apply" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Übernehmen" } } } },

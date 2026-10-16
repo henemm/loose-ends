@@ -25,6 +25,125 @@ struct FieldEditorView: View {
     }
 
     var body: some View {
+        if Self.onPaper.contains(field) {
+            paperPage
+        } else {
+            formPage
+        }
+    }
+
+    /// The fields already drawn as notebook pages (#482, Schnitt 1); the rest follow in Schnitt 2.
+    private static let onPaper: Set<RevisedField> = [.importance, .urgency, .duration, .contexts, .project]
+
+    // MARK: - Notebook page (#482)
+
+    private var paperPage: some View {
+        EditorPage(caption: FieldFormatting.label(field), value: paperValue,
+                   pressing: field == .urgency && task.urgency == .high, note: paperNote) {
+            VStack(alignment: .leading, spacing: 0) {
+                paperControl
+                if let revision = automaticRevision {
+                    origin(revision)
+                        .padding(.top, 34)
+                }
+            }
+        }
+        .navigationTitle("")
+        #if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+        #endif
+    }
+
+    private var paperValue: String? {
+        switch field {
+        case .contexts:
+            let names = (task.contexts ?? []).sorted { $0.sortOrder < $1.sortOrder }.map(\.name)
+            return names.isEmpty ? nil : names.formatted(.list(type: .and))
+        default:
+            return FieldFormatting.value(FieldCodec.encode(field, of: task), for: field)
+        }
+    }
+
+    private var paperNote: String? {
+        switch field {
+        case .urgency where task.urgency == .high: String(localized: "Shown in red in the margin.")
+        case .contexts: String(localized: "Tap a word to add or remove it.")
+        case .project: String(localized: "When its name is in your words, the app sets it by itself.")
+        default: nil
+        }
+    }
+
+    /// Single choices set and close: one tap from the detail and back (Henning, 2026-10-16).
+    @ViewBuilder
+    private var paperControl: some View {
+        switch field {
+        case .importance:
+            LevelLadder(current: task.importanceRaw, highIsPressing: false) { choose($0) }
+        case .urgency:
+            LevelLadder(current: task.urgencyRaw, highIsPressing: true) { choose($0) }
+        case .duration:
+            DurationTape(current: task.duration) { choose($0?.rawValue) }
+        case .contexts:
+            TagSentence(contexts: contexts, chosen: Set((task.contexts ?? []).map(\.id))) { toggle($0) }
+        case .project:
+            ProjectIndex(projects: projects, current: task.project) { choose($0?.name) }
+        default:
+            EmptyView()
+        }
+    }
+
+    private func choose(_ encoded: String?) {
+        apply(encoded)
+        dismiss()
+    }
+
+    /// Where a rule or the model set the value: the said sentence as a quote with the trigger marked,
+    /// before and after, and "Reset" (#101), on paper like the rest of the page.
+    private func origin(_ revision: Revision) -> some View {
+        let fromRule = RevisionService.origin(of: field, on: task) == .rule
+        return VStack(alignment: .leading, spacing: 14) {
+            Label(fromRule ? LocalizedStringKey("From your words") : LocalizedStringKey("Estimated by Apple Intelligence"),
+                  systemImage: fromRule ? "quote.opening" : "sparkle")
+                .captionHead()
+                .accessibilityIdentifier(fromRule ? "originRuleHeader" : "originAIHeader")
+            if fromRule {
+                Text(Self.marked(task.rawText, trigger: RuleTrigger.range(
+                    of: field, in: task.rawText, contexts: (task.contexts ?? []).map(\.name))))
+                    .font(.system(.title3, design: .serif))
+                    .italic()
+                    .padding(.leading, 14)
+                    .overlay(alignment: .leading) {
+                        Rectangle().fill(.quaternary).frame(width: 1.5)
+                    }
+                    .accessibilityIdentifier("originRawText")
+            }
+            Grid(alignment: .leadingFirstTextBaseline, horizontalSpacing: 14, verticalSpacing: 6) {
+                GridRow {
+                    Text("Before").captionHead()
+                    Text(FieldFormatting.value(revision.oldValue, for: field) ?? String(localized: "Empty"))
+                        .font(.system(.body, design: .serif))
+                        .foregroundStyle(.secondary)
+                }
+                GridRow {
+                    Text("After").captionHead()
+                    Text(FieldFormatting.value(revision.newValue, for: field) ?? String(localized: "Empty"))
+                        .font(.system(.body, design: .serif))
+                }
+            }
+            if let reason = revision.reason, !reason.isEmpty {
+                Text(reason).font(.footnote).foregroundStyle(.secondary)
+            } else if !fromRule {
+                Text("Estimated, not read – worth a look.").font(.footnote).foregroundStyle(.secondary)
+            }
+            Button("Reset", systemImage: "arrow.uturn.backward") { reset(revision) }
+                .buttonStyle(.borderless)
+                .accessibilityIdentifier("resetRevisionButton")
+        }
+    }
+
+    // MARK: - Form page (until Schnitt 2)
+
+    private var formPage: some View {
         Form {
             Section {
                 control

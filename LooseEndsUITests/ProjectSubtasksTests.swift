@@ -95,9 +95,9 @@ final class ProjectSubtasksTests: XCTestCase {
         projectField.tap()
         let haus = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Haus")).firstMatch
         XCTAssertTrue(haus.waitForExistence(timeout: 5), "The editor should offer the project")
-        haus.tap()
+        haus.tap()   // a single choice closes the editor by itself (#482)
 
-        back(in: app)   // editor → detail
+        XCTAssertTrue(projectField.waitForExistence(timeout: 5), "Back in the detail")
         back(in: app)   // detail → New
         back(in: app)   // New → start screen
         if !toggle.waitForExistence(timeout: 3) { app.swipeUp() }

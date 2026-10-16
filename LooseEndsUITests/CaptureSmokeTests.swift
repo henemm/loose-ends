@@ -421,13 +421,10 @@ final class CaptureSmokeTests: XCTestCase {
         let high = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "High")).firstMatch
         XCTAssertTrue(high.waitForExistence(timeout: 5), "Editor should offer High")
         high.tap()
+        // A single choice closes the editor by itself (#482).
 
-        let back = app.navigationBars.buttons.firstMatch
-        XCTAssertTrue(back.waitForExistence(timeout: 5))
-        back.tap()
-
-        XCTAssertTrue(importanceRow.waitForExistence(timeout: 5))
-        XCTAssertTrue(importanceRow.label.contains("High"), "Row label was \(importanceRow.label)")
+        let showsHigh = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label CONTAINS 'High'"), object: importanceRow)
+        XCTAssertEqual(XCTWaiter().wait(for: [showsHigh], timeout: 5), .completed, "Row label was \(importanceRow.label)")
     }
 
     @MainActor
