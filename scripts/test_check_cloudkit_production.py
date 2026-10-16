@@ -100,6 +100,42 @@ class ComparisonTests(unittest.TestCase):
         self.assertIn("docs/reference/testflight.md", output)
 
 
+class ParserGapTests(unittest.TestCase):
+    """Adversary findings F001, F004, F005 on the parser."""
+
+    def test_comment_line_is_ignored(self):
+        soll = SOLL.replace("        CD_notes ", "        // a comment\n        CD_notes ", 1)
+        fields = check.parse(soll)["CD_TaskItem"]
+        self.assertFalse([f for f in fields if f.startswith("//")], fields)
+        code, output = run(soll, production())
+        self.assertEqual(code, 0, output)
+
+    def test_two_fields_on_one_line_are_both_checked(self):
+        soll = SOLL.replace(
+            "        CD_rawText      STRING QUERYABLE SEARCHABLE SORTABLE,\n"
+            "        CD_notes        STRING QUERYABLE SEARCHABLE SORTABLE,\n",
+            "        CD_rawText STRING, CD_notes STRING,\n", 1)
+        self.assertEqual(check.parse(soll)["CD_TaskItem"], {"CD_rawText", "CD_notes"})
+        code, output = run(soll, production(without_notes=True))
+        self.assertEqual(code, 1, output)
+        self.assertIn("CD_TaskItem.CD_notes", output)
+
+    def test_duplicate_type_block_in_abbild_is_united(self):
+        soll = SOLL + "\n    RECORD TYPE CD_TaskItem (\n        CD_extra STRING,\n    );\n"
+        extra = "        CD_extra        STRING,\n"
+        code, output = run(soll, production(without_notes=True, extra_fields=extra))
+        self.assertEqual(code, 1, output)
+        self.assertIn("CD_TaskItem.CD_notes", output)
+        code, output = run(soll, production())
+        self.assertEqual(code, 1, output)
+        self.assertIn("CD_TaskItem.CD_extra", output)
+
+    def test_duplicate_type_block_in_production_is_united(self):
+        ist = production() + "\n    RECORD TYPE CD_TaskItem (\n        CD_rawText STRING,\n    );\n"
+        code, output = run(SOLL, ist)
+        self.assertEqual(code, 0, output)
+
+
 class UnreadableInputTests(unittest.TestCase):
     def test_unreadable_input_is_exit_2(self):
         cases = {

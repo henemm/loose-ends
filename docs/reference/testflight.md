@@ -90,6 +90,19 @@ Er braucht das Secret `CLOUDKIT_MANAGEMENT_TOKEN`: einmalig in der Console unter
 angelegt und mit `gh secret set` hinterlegt. Der Token gilt ein Jahr. Modelländerungen werden gebündelt, damit Henning
 selten klicken muss.
 
+**Schranke vor jedem TestFlight-Build (#268).** Der TestFlight-Lauf beginnt mit dem Job `schema-check`
+(„Production knows the CloudKit schema"). Er liest Production mit `cktool export-schema --environment production` und
+vergleicht mit `scripts/check_cloudkit_production.py`, ob jeder Typ und jedes Feld aus `cloudkit/schema.ckdb` dort steht
+(nur Namen; mehr in Production ist erlaubt). Fehlt etwas, wird weder iOS noch Mac archiviert oder hochgeladen. Es gibt
+keinen Notausgang: kein Eingabefeld, keinen Schalter. Drei Meldungen, alle als `::error::`:
+
+- **„Secret CLOUDKIT_MANAGEMENT_TOKEN fehlt"**: den Token wie oben anlegen und mit `gh secret set` hinterlegen.
+- **„Production-Schema nicht lesbar"**: Netz, abgelaufener Token oder fehlende Berechtigung. Der Token vom 2026-10-15
+  läuft am 2027-10-15 ab; dann einen neuen anlegen und das Secret ersetzen. Ein nicht prüfbarer Stand ist kein grüner Stand.
+- **„CloudKit Production kennt diese Typen/Felder … nicht"** mit der Liste (`record type CD_<Typ>` bzw.
+  `CD_<Typ>.CD_<feld>`): Weg nach dem Halt: Abbild im selben PR ergänzen, nach dem Merge importiert die CI es nach
+  Development, Henning klickt in der CloudKit Console **Deploy Schema Changes**, dann den TestFlight-Lauf wiederholen.
+
 Rückfallweg ohne CI. Bei jeder Änderung an `Shared/Models` (neues Feld, neuer Typ), **bevor** ein TestFlight-Build gestartet wird:
 
 1. `./scripts/sim.sh mac-schema-init`: signierter Mac-Debug-Bau der Hauptkennung, der mit
@@ -170,6 +183,9 @@ still mit einer älteren oder Beta-Version zu bauen (siehe „Wenn es hakt").
 - **Schritt „Clear …" rot mit HTTP 401 oder 403**: Schlüssel-ID, Aussteller-ID oder privater
   Schlüssel stimmen nicht, oder der Schlüssel hat nicht die Rolle **Admin** (nötig zum Widerrufen).
   Das betrifft beide Aufräum-Schritte, also auch einen roten Schritt am Ende eines sonst grünen Laufs.
+- **Job „Production knows the CloudKit schema" rot**: Die Schranke aus 5a (#268) hat angehalten, archiviert und
+  hochgeladen wurde nichts. Die Meldung sagt, welcher der drei Fälle es ist (Secret fehlt, Production nicht lesbar,
+  Typ/Feld fehlt); den Weg dazu nennt 5a. Es gibt keinen Weg daran vorbei.
 - Die Logs jedes Laufs liegen als `testflight-logs` unter dem Lauf in GitHub Actions.
 
 ## Was der Workflow tut

@@ -1,0 +1,12 @@
+Production knows the CloudKit schema	Compare with cloudkit/schema.ckdb	﻿2026-10-16T04:37:34.7883900Z ##[group]Run python3 scripts/check_cloudkit_production.py cloudkit/schema.ckdb exported-production.ckdb
+Production knows the CloudKit schema	Compare with cloudkit/schema.ckdb	2026-10-16T04:37:34.7884510Z ^[[36;1mpython3 scripts/check_cloudkit_production.py cloudkit/schema.ckdb exported-production.ckdb^[[0m
+Production knows the CloudKit schema	Compare with cloudkit/schema.ckdb	2026-10-16T04:37:34.7914150Z shell: /bin/bash -e {0}
+Production knows the CloudKit schema	Compare with cloudkit/schema.ckdb	2026-10-16T04:37:34.7914350Z env:
+Production knows the CloudKit schema	Compare with cloudkit/schema.ckdb	2026-10-16T04:37:34.7914670Z   WHAT_TO_TEST: Probelauf der Schranke (#268), bitte nicht testen: dieser Lauf soll vor dem Bau anhalten.
+Production knows the CloudKit schema	Compare with cloudkit/schema.ckdb	2026-10-16T04:37:34.7915040Z   TEAM_ID: XK87E2B3VR
+Production knows the CloudKit schema	Compare with cloudkit/schema.ckdb	2026-10-16T04:37:34.7915230Z   CONTAINER_ID: iCloud.com.henning.looseends
+Production knows the CloudKit schema	Compare with cloudkit/schema.ckdb	2026-10-16T04:37:34.7915450Z ##[endgroup]
+Production knows the CloudKit schema	Compare with cloudkit/schema.ckdb	2026-10-16T04:37:34.9389240Z ##[error]CloudKit Production kennt diese Typen/Felder aus cloudkit/schema.ckdb nicht: CD_TaskItem.CD_probe268
+Production knows the CloudKit schema	Compare with cloudkit/schema.ckdb	2026-10-16T04:37:34.9393380Z   fehlt in Production: CD_TaskItem.CD_probe268
+Production knows the CloudKit schema	Compare with cloudkit/schema.ckdb	2026-10-16T04:37:34.9394450Z Weg (docs/reference/testflight.md, Abschnitt 5a): Abbild im selben PR ergänzen; nach dem Merge importiert die CI es nach Development; dann in der CloudKit Console „Deploy Schema Changes“; dann diesen Lauf wiederholen.
+Production knows the CloudKit schema	Compare with cloudkit/schema.ckdb	2026-10-16T04:37:34.9401660Z ##[error]Process completed with exit code 1.
