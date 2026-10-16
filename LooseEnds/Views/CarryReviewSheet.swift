@@ -49,8 +49,8 @@ struct CarryReviewSheet: View {
                         .accessibilityIdentifier("carryReviewMenu_\(task.id.uuidString)")
                     }
                     .swipeActions(edge: .leading) {
-                        Button("Complete", systemImage: "checkmark") { act { TaskActions.complete(task) } }
-                            .tint(.green)
+                        Button("Complete", systemImage: "checkmark.circle") { act { TaskActions.complete(task) } }
+                            .tint(Color("Completed"))
                     }
                     .swipeActions(edge: .trailing) {
                         Button("Tomorrow", systemImage: "sunrise") { move(task, to: .tomorrow) }
