@@ -19,10 +19,35 @@ struct SidebarView: View {
     #endif
     /// One size for every view glyph, growing with Dynamic Type: SF Symbols differ in width
     /// (the hare is wide), and a bare frame lets a wide one spill past the margin.
-    @ScaledMetric(relativeTo: .body) private var glyphSize: CGFloat = 20
+    @ScaledMetric(relativeTo: .body) private var glyphSize: CGFloat = Self.baseGlyphSize
     /// The start screen's sizes from the draft, growing at half the system's rate (#463).
     @Environment(\.dynamicTypeSize) private var typeSize
     private var metrics: StartMetrics { StartMetrics(typeSize) }
+
+    /// The Mac sidebar from the draft (#476): 17 pt glyphs, 14 pt names, rows 32 pt high. iPad keeps its sizes.
+    private static var baseGlyphSize: CGFloat {
+        #if os(macOS)
+        17
+        #else
+        20
+        #endif
+    }
+
+    private static var minRowHeight: CGFloat {
+        #if os(macOS)
+        32
+        #else
+        44
+        #endif
+    }
+
+    private var rowFont: Font? {
+        #if os(macOS)
+        .system(size: 14)
+        #else
+        nil
+        #endif
+    }
 
     @State private var catalog = CatalogEditor()
     @State private var pendingTaskDelete: TaskItem?
@@ -116,6 +141,7 @@ struct SidebarView: View {
                         }
                         Button("New project", systemImage: "plus") { catalog.begin(NameEdit(target: .newProject)) }
                             .accessibilityIdentifier("newProjectButton")
+                            .addButtonSurface()
                             .paperRow()
                     }
                 } header: {
@@ -132,6 +158,7 @@ struct SidebarView: View {
                         }
                         Button("New tag", systemImage: "plus") { catalog.begin(NameEdit(target: .newContext)) }
                             .accessibilityIdentifier("newContextButton")
+                            .addButtonSurface()
                             .paperRow()
                     }
                 } header: {
@@ -151,7 +178,7 @@ struct SidebarView: View {
         }
         .paperList()
         // Rows as tall as their content: the 44 pt minimum put a gap under every caption (#433).
-        .environment(\.defaultMinListRowHeight, isCompact ? 0 : 44)
+        .environment(\.defaultMinListRowHeight, isCompact ? 0 : Self.minRowHeight)
         .navigationTitle(isCompact ? Text(verbatim: "") : Text("Views"))
         #if os(iOS)
         .listSectionSpacing(.compact)
@@ -207,6 +234,7 @@ struct SidebarView: View {
                 Text(title)
             }
         }
+        .font(rowFont)
         .badge(count)
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier(id)
@@ -245,5 +273,21 @@ struct SidebarView: View {
                 .contextMenu { actions.menu(task) }
                 .paperRow()
         }
+    }
+}
+
+private extension View {
+    /// "New tag" and "New project" as the quiet grey surface of the Mac draft (#476); elsewhere the plain button.
+    @ViewBuilder
+    func addButtonSurface() -> some View {
+        #if os(macOS)
+        buttonStyle(.plain)
+            .foregroundStyle(.secondary)
+            .padding(.horizontal, 10)
+            .frame(maxWidth: .infinity, minHeight: 32, alignment: .leading)
+            .background(Color.primary.opacity(0.07), in: RoundedRectangle(cornerRadius: 8))
+        #else
+        self
+        #endif
     }
 }
