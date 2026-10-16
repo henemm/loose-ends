@@ -3,6 +3,8 @@
   "version" : "1.0",
   "strings" : {
     "Next up" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Als nächstes" } } } },
+    "Nothing lined up yet." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Noch nichts vorgemerkt." } } } },
+    "What you lined up, one tap to finish it." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Was du dir vorgemerkt hast, mit einem Tipp erledigt." } } } },
     "Nothing lined up" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nichts vorgemerkt" } } } },
     "Complete" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erledigt" } } } },
     "Capture" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erfassen" } } } },

@@ -171,7 +171,10 @@ Kein Lesen, kein Abhaken in Version 1.
 ### 9. Widgets und Control
 
 - Small: die oberste Aufgabe aus "Als nächstes".
-- Medium: die obersten drei.
+- Medium: die obersten drei. Large (Henning, 2026-10-16, #488): die obersten sechs.
+- Aussehen (Henning, 2026-10-16: liebevoll und ästhetisch): das Papier der App als Grund, oben der Knoten und „Als nächstes“ klein
+  in Grau und Großbuchstaben, Titel in New York, ein dünner offener Kreis in Akzent zum Erledigen (Akzent nur für Antippbares),
+  Haarlinien zwischen den Zeilen, leerer Zustand als kursiver Satz „Noch nichts vorgemerkt.“ Der Name der Erweiterung ist „Loose Ends“.
 - Control Center: ein Button, der die Erfassungs-Szene öffnet.
 
 ### 10. Mitteilung
