@@ -1,0 +1,37 @@
+[0;32m[sim][0m Simulator bereit (iPad Pro 13-inch (M5)).
+[0;34m[sim][0m UI-Test: StartScreenInteractionTests/testIndexMarksTheOpenListOnIPadOnly
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEnds.abi.json
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEnds.swiftdoc
+[[36mLooseEnds[0m] [1mCompiling[0m StartZones.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SidebarView.swift
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds.debug.dylib
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEnds' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsTests[0m] [1mLinking[0m LooseEndsTests
+[[36mLooseEndsTests[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+Test Suite 'Selected tests' started at 2026-10-16 21:03:36.452.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-16 21:03:36.455.
+Test Suite 'StartScreenInteractionTests' started at 2026-10-16 21:03:36.455.
+    [32m✔[0m testIndexMarksTheOpenListOnIPadOnly ([31m21.156[0m seconds)
+Executed 1 test, with 0 failures (0 unexpected) in 21.156 (21.164) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-16 21:03:57.625.
+Executed 1 test, with 0 failures (0 unexpected) in 21.156 (21.170) seconds
+Executed 1 test, with 0 failures (0 unexpected) in 21.156 (21.173) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-afcae9e1/Logs/Test/Test-LooseEnds-2026.10.16_21-03-20-+0200.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden.
