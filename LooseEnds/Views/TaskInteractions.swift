@@ -64,9 +64,10 @@ struct TaskInteractions {
             // vanish unseen (Henning, 2026-10-11, #318). The swipe confirms what the AI sorted
             // (#188); Done stays in the long-press menu. A title nobody vouched for ("Needs a
             // look") gets no swipe, it has to be opened.
-            // The eye ("looked over"), not a checkmark: that belongs to Complete alone (#349).
+            // The word, as in the detail's bar, not a sign: a bare eye said nothing (Henning,
+            // 2026-10-16, build 76), and a checkmark belongs to Complete alone (#349).
             if !ViewRules.needsLook(task) {
-                Button("Looks right", systemImage: "eye") { confirm(task) }
+                Button("Looks right") { confirm(task) }
                     .tint(.accentColor)
                     .accessibilityIdentifier("swipeConfirm_\(task.id.uuidString)")
             }
