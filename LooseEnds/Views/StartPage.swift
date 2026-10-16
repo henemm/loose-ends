@@ -65,8 +65,23 @@ struct StartPage: View {
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "StartPage")
 
     var body: some View {
+        // The right column needs room: from about 900 pt of width it stands next to the list (#473).
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 0) {
+                listColumn
+                SideColumnView(tasks: tasks, selection: $selection)
+            }
+            .frame(minWidth: 900)
+            listColumn
+        }
+        .accessibilityIdentifier("startPage")
+        .taskInteractionDialogs(actions)
+        .onChange(of: focusRequest) { _, _ in fieldFocused = true }
+    }
+
+    private var listColumn: some View {
         let metrics = StartMetrics(typeSize)
-        List {
+        return List {
             StartHeader(tasks: tasks)
                 .padding(.top, 14)
                 .padding(.bottom, 16)
@@ -86,9 +101,6 @@ struct StartPage: View {
         .frame(maxWidth: .infinity)
         // The paper runs edge to edge: outside the 720 pt column the window showed white bars (build 71).
         .background(Paper.ground.ignoresSafeArea())
-        .accessibilityIdentifier("startPage")
-        .taskInteractionDialogs(actions)
-        .onChange(of: focusRequest) { _, _ in fieldFocused = true }
     }
 
     /// The "Now" rows act as on the iPhone (#472): Done with the Undo window, swipes, the menu on
