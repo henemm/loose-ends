@@ -280,9 +280,18 @@ die deshalb nicht gemessen hat (`scripts/measurement_status.py`, #149).
 
 ## App Intents und Spotlight
 
-- `TaskEntity` konform zu `AppEntity`, `IndexedEntity`, Reminders-App-Schema (`reminders.reminder`).
-  Schema-Felder: title, dueDate, notes (= rawText), isCompleted, list (= Project).
-- Intents: `createReminder`, `updateReminder`, `deleteReminders`, `createList`; plus eigene:
+- Reminders-App-Schema (#25, ab iOS/macOS 27, nicht watchOS): `LooseEnds/Intents/ReminderSchema.swift`, nur im
+  App-Ziel. `ReminderEntity` (`reminders.reminder`, nur lesend, aus `TaskItem`): id, title (= `displayTitle`),
+  list, isCompleted, creationDate (= `capturedAt`), dueDate als `DateComponents` (mit Stunde und Minute nur bei
+  `dueHasTime`); note, tags, urls, recurrence, isFlagged, locationTrigger verlangt das Schema, sie bleiben bis
+  Schnitt 3 leer. `ListEntity` (`reminders.list`) = Projekt (ADR-8), dazu die virtuelle Eingangsliste
+  „Loose Ends“ (Kennung `inbox`) für Aufgaben ohne Projekt; Vorschläge: Eingang, dann nicht archivierte
+  Projekte nach `sortOrder`; Namenssuche ohne Groß/Klein und Akzente (`nameKey`). `LocationTriggerEntity`
+  (`PlaceDescriptor` + Ereignis `arrive`/`depart`) und `SectionEntity` sind Pflicht des Schemas, ihre Queries
+  lösen nichts auf. Geschrieben wird nur über `SiriCapture`; `ReminderTranslation.input` übersetzt Siris
+  SDK-Typen in `SiriCapture.Input` (Datum ohne Jahr, Monat oder Tag entfällt ohne Fehler; Koordinate vor
+  Adresse; Eingangsliste = kein Projekt). Der Intent `createReminder` folgt in Schnitt 2b.
+- Intents: `createReminder` (Schnitt 2b); `updateReminder`, `deleteReminders`, `createList` (Schnitt 3); plus eigene:
   `CaptureTextIntent` (Rohtext rein), `CompleteTaskIntent`, `ShowViewIntent(kind)`.
 - `ExecutionTargets`: Capture und Complete in der App-Intents-Extension, Show in der App.
 - Watch: dieselben Intents, Diktat als Eingabe.

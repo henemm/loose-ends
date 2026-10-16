@@ -1,0 +1,352 @@
+[sim] Simulator bereit (iPhone 17).
+[sim] Unit-Tests (iOS-Simulator): LooseEndsTests/ReminderTranslationTests
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+note: Building targets in dependency order
+note: Target dependency graph (7 targets)
+[LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets_const_extract_protocols.json
+[LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets.SwiftFileList
+[LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets.SwiftConstValuesFileList
+[LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets.LinkFileList
+[LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-OutputFileMap.json
+[LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets.hmap
+[LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets.DependencyStaticMetadataFileList
+[LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets.DependencyMetadataFileList
+[LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-project-headers.hmap
+[LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-own-target-headers.hmap
+[LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-generated-files.hmap
+[LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-all-target-headers.hmap
+[LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-all-non-framework-target-headers.hmap
+[LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-DebugEntryPoint-normal-arm64.txt
+[LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-DebugDylibInstallName-normal-arm64.txt
+[LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-DebugDylibPath-normal-arm64.txt
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets_const_extract_protocols.json
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets.SwiftFileList
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets.SwiftConstValuesFileList
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets.LinkFileList
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets-OutputFileMap.json
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets_const_extract_protocols.json
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets.SwiftFileList
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets.SwiftConstValuesFileList
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets.LinkFileList
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets-OutputFileMap.json
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets.hmap
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets.DependencyStaticMetadataFileList
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets.DependencyMetadataFileList
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets-project-headers.hmap
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets-own-target-headers.hmap
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets-generated-files.hmap
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets-all-target-headers.hmap
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets-all-non-framework-target-headers.hmap
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets-DebugEntryPoint-normal-x86_64.txt
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets-DebugEntryPoint-normal-arm64.txt
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets-DebugDylibPath-normal-x86_64.txt
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets-DebugDylibPath-normal-arm64.txt
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets-DebugDylibInstallName-normal-x86_64.txt
+[LooseEndsWatchWidgets] Write Auxiliary File LooseEndsWatchWidgets-DebugDylibInstallName-normal-arm64.txt
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch_const_extract_protocols.json
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch.SwiftFileList
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch.SwiftConstValuesFileList
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch.LinkFileList
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch-OutputFileMap.json
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch_const_extract_protocols.json
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch.SwiftFileList
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch.SwiftConstValuesFileList
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch.LinkFileList
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch-OutputFileMap.json
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch.hmap
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch.DependencyStaticMetadataFileList
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch.DependencyMetadataFileList
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch-project-headers.hmap
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch-own-target-headers.hmap
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch-generated-files.hmap
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch-all-target-headers.hmap
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch-all-non-framework-target-headers.hmap
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch-DebugDylibPath-normal-x86_64.txt
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch-DebugDylibPath-normal-arm64.txt
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch-DebugDylibInstallName-normal-x86_64.txt
+[LooseEndsWatch] Write Auxiliary File LooseEndsWatch-DebugDylibInstallName-normal-arm64.txt
+[LooseEndsUITests] Write Auxiliary File empty-LooseEndsUITests.plist
+[LooseEndsUITests] Write Auxiliary File ProductTypeInfoPlistAdditions.plist
+[LooseEndsUITests] Write Auxiliary File LooseEndsUITests_const_extract_protocols.json
+[LooseEndsUITests] Write Auxiliary File LooseEndsUITests.SwiftFileList
+[LooseEndsUITests] Write Auxiliary File LooseEndsUITests.SwiftConstValuesFileList
+[LooseEndsUITests] Write Auxiliary File LooseEndsUITests.LinkFileList
+[LooseEndsUITests] Write Auxiliary File LooseEndsUITests-OutputFileMap.json
+[LooseEndsUITests] Write Auxiliary File LooseEndsUITests.hmap
+[LooseEndsUITests] Write Auxiliary File LooseEndsUITests.DependencyStaticMetadataFileList
+[LooseEndsUITests] Write Auxiliary File LooseEndsUITests-project-headers.hmap
+[LooseEndsUITests] Write Auxiliary File LooseEndsUITests.DependencyMetadataFileList
+[LooseEndsUITests] Write Auxiliary File LooseEndsUITests-own-target-headers.hmap
+[LooseEndsUITests] Write Auxiliary File LooseEndsUITests-generated-files.hmap
+[LooseEndsUITests] Write Auxiliary File LooseEndsUITests-all-target-headers.hmap
+[LooseEndsUITests] Write Auxiliary File LooseEndsUITests-all-non-framework-target-headers.hmap
+[LooseEndsTests] Write Auxiliary File empty-LooseEndsTests.plist
+[LooseEndsTests] Write Auxiliary File LooseEndsTests_const_extract_protocols.json
+[LooseEndsTests] Write Auxiliary File LooseEndsTests.SwiftFileList
+[LooseEndsTests] Write Auxiliary File LooseEndsTests.SwiftConstValuesFileList
+[LooseEndsTests] Write Auxiliary File LooseEndsTests.LinkFileList
+[LooseEndsTests] Write Auxiliary File LooseEndsTests-OutputFileMap.json
+[LooseEndsTests] Write Auxiliary File LooseEndsTests.hmap
+[LooseEndsTests] Write Auxiliary File LooseEndsTests.DependencyStaticMetadataFileList
+[LooseEndsTests] Write Auxiliary File LooseEndsTests.DependencyMetadataFileList
+[LooseEndsTests] Write Auxiliary File LooseEndsTests-project-headers.hmap
+[LooseEndsTests] Write Auxiliary File LooseEndsTests-own-target-headers.hmap
+[LooseEndsTests] Write Auxiliary File LooseEndsTests-generated-files.hmap
+[LooseEndsTests] Write Auxiliary File LooseEndsTests-all-target-headers.hmap
+[LooseEndsTests] Write Auxiliary File LooseEndsTests-all-non-framework-target-headers.hmap
+[LooseEndsShare] Write Auxiliary File LooseEndsShare_const_extract_protocols.json
+[LooseEndsShare] Write Auxiliary File LooseEndsShare.SwiftFileList
+[LooseEndsShare] Write Auxiliary File LooseEndsShare.SwiftConstValuesFileList
+[LooseEndsShare] Write Auxiliary File LooseEndsShare.LinkFileList
+[LooseEndsShare] Write Auxiliary File LooseEndsShare-OutputFileMap.json
+[LooseEndsShare] Write Auxiliary File LooseEndsShare.hmap
+[LooseEndsShare] Write Auxiliary File LooseEndsShare.DependencyStaticMetadataFileList
+[LooseEndsShare] Write Auxiliary File LooseEndsShare.DependencyMetadataFileList
+[LooseEndsShare] Write Auxiliary File LooseEndsShare-project-headers.hmap
+[LooseEndsShare] Write Auxiliary File LooseEndsShare-own-target-headers.hmap
+[LooseEndsShare] Write Auxiliary File LooseEndsShare-generated-files.hmap
+[LooseEndsShare] Write Auxiliary File LooseEndsShare-all-target-headers.hmap
+[LooseEndsShare] Write Auxiliary File LooseEndsShare-all-non-framework-target-headers.hmap
+[LooseEndsShare] Write Auxiliary File LooseEndsShare-DebugEntryPoint-normal-arm64.txt
+[LooseEndsShare] Write Auxiliary File LooseEndsShare-DebugDylibPath-normal-arm64.txt
+[LooseEndsShare] Write Auxiliary File LooseEndsShare-DebugDylibInstallName-normal-arm64.txt
+[LooseEnds] Write Auxiliary File LooseEnds_const_extract_protocols.json
+[LooseEnds] Write Auxiliary File LooseEnds.SwiftFileList
+[LooseEnds] Write Auxiliary File LooseEnds.SwiftConstValuesFileList
+[LooseEnds] Write Auxiliary File LooseEnds.LinkFileList
+[LooseEnds] Write Auxiliary File LooseEnds-OutputFileMap.json
+[LooseEnds] Write Auxiliary File LooseEnds.hmap
+[LooseEnds] Write Auxiliary File LooseEnds.DependencyStaticMetadataFileList
+[LooseEnds] Write Auxiliary File LooseEnds.DependencyMetadataFileList
+[LooseEnds] Write Auxiliary File LooseEnds-project-headers.hmap
+[LooseEnds] Write Auxiliary File LooseEnds-own-target-headers.hmap
+[LooseEnds] Write Auxiliary File LooseEnds-generated-files.hmap
+[LooseEnds] Write Auxiliary File LooseEnds-all-target-headers.hmap
+[LooseEnds] Write Auxiliary File LooseEnds-all-non-framework-target-headers.hmap
+[LooseEnds] Write Auxiliary File LooseEnds-DebugDylibPath-normal-arm64.txt
+[LooseEnds] Write Auxiliary File LooseEnds-DebugDylibInstallName-normal-arm64.txt
+[LooseEndsWidgets] Linking __preview.dylib
+[LooseEndsWidgets] Processing Info.plist
+[LooseEndsWidgets] Copying PrivacyInfo.xcprivacy
+[LooseEndsWidgets] Compile XCStrings Localizable.xcstrings
+[LooseEndsWatchWidgets] Linking __preview.dylib
+[LooseEndsWatchWidgets] Linking __preview.dylib
+[LooseEndsWatchWidgets] Processing Info.plist
+[LooseEndsWatchWidgets] Copying PrivacyInfo.xcprivacy
+[LooseEndsShare] Linking __preview.dylib
+[LooseEndsShare] Processing Info.plist
+[LooseEndsShare] Copying PrivacyInfo.xcprivacy
+[LooseEndsShare] Compile XCStrings Localizable.xcstrings
+[LooseEndsWidgets] Copying Localizable.strings
+[LooseEndsShare] Copying Localizable.strings
+[LooseEndsWatchWidgets] Create Universal Binary __preview.dylib
+[LooseEndsWatchWidgets] Copy arm64-apple-watchos-simulator.swiftmodule -> LooseEndsWatchWidgets.swiftmodule
+[LooseEndsWatchWidgets] Copy x86_64-apple-watchos-simulator.swiftmodule -> LooseEndsWatchWidgets.swiftmodule
+[LooseEndsWatchWidgets] Copy x86_64-apple-watchos-simulator.swiftdoc -> LooseEndsWatchWidgets.swiftdoc
+[LooseEndsWatchWidgets] Copy x86_64-apple-watchos-simulator.abi.json -> LooseEndsWatchWidgets.abi.json
+[LooseEndsWatchWidgets] Copy arm64-apple-watchos-simulator.swiftdoc -> LooseEndsWatchWidgets.swiftdoc
+[LooseEndsWatchWidgets] Copy arm64-apple-watchos-simulator.abi.json -> LooseEndsWatchWidgets.abi.json
+[LooseEndsWatchWidgets] Copy x86_64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatchWidgets.swiftsourceinfo
+[LooseEndsWatchWidgets] Copy arm64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatchWidgets.swiftsourceinfo
+[LooseEndsWidgets] Copy arm64-apple-ios-simulator.swiftmodule -> LooseEndsWidgets.swiftmodule
+[LooseEndsWidgets] Copy arm64-apple-ios-simulator.swiftdoc -> LooseEndsWidgets.swiftdoc
+[LooseEndsWidgets] Copy arm64-apple-ios-simulator.abi.json -> LooseEndsWidgets.abi.json
+[LooseEndsWidgets] Copy arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsWidgets.swiftsourceinfo
+[LooseEndsShare] Copy arm64-apple-ios-simulator.swiftmodule -> LooseEndsShare.swiftmodule
+[LooseEndsShare] Copy arm64-apple-ios-simulator.swiftdoc -> LooseEndsShare.swiftdoc
+[LooseEndsShare] Copy arm64-apple-ios-simulator.abi.json -> LooseEndsShare.abi.json
+[LooseEndsShare] Copy arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsShare.swiftsourceinfo
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsShare/ShareViewController.swift:48:57: 'loadItem(forTypeIdentifier:options:)' was deprecated in iOS 27.0: Use loadObjectOfClass:completionHandler: instead. [#DeprecatedDeclaration]
+46 |                 do {
+47 |                     if provider.hasItemConformingToTypeIdentifier(UTType.emailMessage.identifier) {
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsShare/ShareViewController.swift:52:57: 'loadItem(forTypeIdentifier:options:)' was deprecated in iOS 27.0: Use loadObjectOfClass:completionHandler: instead. [#DeprecatedDeclaration]
+50 |                         if let raw = string(from: loaded) { mails.append(raw) }
+51 |                     } else if provider.hasItemConformingToTypeIdentifier(UTType.url.identifier) {
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsShare/ShareViewController.swift:56:57: 'loadItem(forTypeIdentifier:options:)' was deprecated in iOS 27.0: Use loadObjectOfClass:completionHandler: instead. [#DeprecatedDeclaration]
+54 |                         if let url = loaded as? URL { urls.append(url) }
+55 |                     } else if provider.hasItemConformingToTypeIdentifier(UTType.plainText.identifier) {
+[LooseEndsWatchWidgets] Linking LooseEndsWatchWidgets.debug.dylib
+[LooseEndsWatchWidgets] Linking LooseEndsWatchWidgets.debug.dylib
+note: Using stub executor library with Swift entry point. (in target 'LooseEndsWatchWidgets' from project 'LooseEnds')
+[LooseEndsWatch] Generate Asset Symbols Assets.xcassets
+[LooseEndsWatchWidgets] Create Universal Binary LooseEndsWatchWidgets.debug.dylib
+note: Using stub executor library with Swift entry point. (in target 'LooseEndsWatchWidgets' from project 'LooseEnds')
+[LooseEndsWatchWidgets] Linking LooseEndsWatchWidgets
+[LooseEndsWatchWidgets] Linking LooseEndsWatchWidgets
+[LooseEndsWatchWidgets] Create Universal Binary LooseEndsWatchWidgets
+[LooseEndsWatchWidgets] Extract App Intents Metadata
+[LooseEndsWatchWidgets] RegisterExecutionPolicyException LooseEndsWatchWidgets.appex
+[LooseEndsWatchWidgets] Touching LooseEndsWatchWidgets.appex
+[LooseEndsWatch] Copying PrivacyInfo.xcprivacy
+[LooseEndsWatch] Linking __preview.dylib
+[LooseEndsWatch] Linking __preview.dylib
+[LooseEndsWatch] Copying InfoPlist.strings
+[LooseEndsWatch] Copying InfoPlist.strings
+[LooseEndsWatch] Compile XCStrings Localizable.xcstrings
+[LooseEndsWatch] Compile XCStrings AppShortcuts.xcstrings
+[LooseEndsWatch] Create Universal Binary __preview.dylib
+[LooseEndsWatch] Copying Localizable.strings
+[LooseEndsWatch] Copying Localizable.strings
+[LooseEndsWatch] Copying AppShortcuts.strings
+note: Emplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-s25-2a/Build/Products/Debug-watchsimulator/LooseEndsWatch.app/Assets.car (in target 'LooseEndsWatch' from project 'LooseEnds')
+[LooseEndsShare] Linking LooseEndsShare.debug.dylib
+[LooseEndsWidgets] Linking LooseEndsWidgets.debug.dylib
+note: Using stub executor library without Swift entry point. (in target 'LooseEndsShare' from project 'LooseEnds')
+[LooseEndsShare] Linking LooseEndsShare
+[LooseEndsShare] Extract App Intents Metadata
+[LooseEndsShare] RegisterExecutionPolicyException LooseEndsShare.appex
+[LooseEndsShare] Touching LooseEndsShare.appex
+note: Using stub executor library with Swift entry point. (in target 'LooseEndsWidgets' from project 'LooseEnds')
+[LooseEndsWidgets] Linking LooseEndsWidgets
+[LooseEndsWidgets] Extract App Intents Metadata
+[LooseEndsWidgets] RegisterExecutionPolicyException LooseEndsWidgets.appex
+[LooseEndsWidgets] Touching LooseEndsWidgets.appex
+[LooseEndsWatch] Copy x86_64-apple-watchos-simulator.swiftmodule -> LooseEndsWatch.swiftmodule
+[LooseEndsWatch] Copy x86_64-apple-watchos-simulator.swiftdoc -> LooseEndsWatch.swiftdoc
+[LooseEndsWatch] Copy x86_64-apple-watchos-simulator.abi.json -> LooseEndsWatch.abi.json
+[LooseEndsWatch] Copy x86_64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatch.swiftsourceinfo
+[LooseEndsWatch] Copy arm64-apple-watchos-simulator.swiftmodule -> LooseEndsWatch.swiftmodule
+[LooseEndsWatch] Copy arm64-apple-watchos-simulator.swiftdoc -> LooseEndsWatch.swiftdoc
+[LooseEndsWatch] Copy arm64-apple-watchos-simulator.abi.json -> LooseEndsWatch.abi.json
+[LooseEndsWatch] Copy arm64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatch.swiftsourceinfo
+[LooseEnds] Generate Asset Symbols Assets.xcassets
+note: Emplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-s25-2a/Build/Products/Debug-iphonesimulator/LooseEnds.app/Assets.car (in target 'LooseEnds' from project 'LooseEnds')
+note: Emplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-s25-2a/Build/Products/Debug-iphonesimulator/LooseEnds.app/AppIcon76x76@2x~ipad.png (in target 'LooseEnds' from project 'LooseEnds')
+note: Emplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-s25-2a/Build/Products/Debug-iphonesimulator/LooseEnds.app/AppIcon60x60@2x.png (in target 'LooseEnds' from project 'LooseEnds')
+[LooseEndsWatch] Linking LooseEndsWatch.debug.dylib
+[LooseEndsWatch] Linking LooseEndsWatch.debug.dylib
+note: Using stub executor library with Swift entry point. (in target 'LooseEndsWatch' from project 'LooseEnds')
+[LooseEndsWatch] Create Universal Binary LooseEndsWatch.debug.dylib
+note: Using stub executor library with Swift entry point. (in target 'LooseEndsWatch' from project 'LooseEnds')
+[LooseEndsWatch] Linking LooseEndsWatch
+[LooseEndsWatch] Linking LooseEndsWatch
+[LooseEndsWatch] Create Universal Binary LooseEndsWatch
+[LooseEndsWatch] Copy LooseEndsWatchWidgets.appex -> LooseEndsWatchWidgets.appex
+[LooseEndsWatch] Processing Info.plist
+[LooseEndsWatch] Extract App Intents Metadata
+[LooseEndsWatch] Validate Embedded Binary LooseEndsWatchWidgets.appex
+[LooseEndsWatch] RegisterExecutionPolicyException LooseEndsWatch.app
+[LooseEndsWatch] Validate LooseEndsWatch.app
+[LooseEndsWatch] Touching LooseEndsWatch.app
+[LooseEnds] Copying PrivacyInfo.xcprivacy
+[LooseEnds] Linking __preview.dylib
+[LooseEnds] Copying InfoPlist.strings
+[LooseEnds] Compile XCStrings Localizable.xcstrings
+[LooseEnds] Copying InfoPlist.strings
+[LooseEnds] Compile XCStrings AppShortcuts.xcstrings
+[LooseEnds] Copying AppShortcuts.strings
+[LooseEnds] Copying Localizable.strings
+[LooseEnds] Copying Localizable.strings
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEnds/Notifications/DueNotificationCenter.swift:68:23: result of call to 'assumeIsolated(_:file:line:)' is unused [#NoUsage]
+ 66 |             forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: NSUbiquitousKeyValueStore.default, queue: .main
+ 67 |         ) { [weak self] _ in
+[LooseEnds] Copy arm64-apple-ios-simulator.swiftmodule -> LooseEnds.swiftmodule
+[LooseEnds] Copy arm64-apple-ios-simulator.swiftdoc -> LooseEnds.swiftdoc
+[LooseEnds] Copy arm64-apple-ios-simulator.abi.json -> LooseEnds.abi.json
+[LooseEnds] Copy arm64-apple-ios-simulator.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/ReminderTranslationTests.swift:24:10: cannot find type 'LocationTriggerEntity' in scope
+ 22 |         name: String? = nil, coordinate: CLLocationCoordinate2D? = nil, address: String? = nil,
+ 23 |         event: LocationTriggerEvent = .arrive
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/ReminderTranslationTests.swift:23:16: cannot find type 'LocationTriggerEvent' in scope
+ 21 |     private func place(
+ 22 |         name: String? = nil, coordinate: CLLocationCoordinate2D? = nil, address: String? = nil,
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/Measurement/MeasurementRun.swift:212:60: 'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration]
+210 |     static func classify(_ error: Error) -> String {
+211 |         #if canImport(FoundationModels) && !os(watchOS)
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsUITests/SpeechListeningTests.swift:19:47: call to main actor-isolated instance method 'screenshot()' in a synchronous nonisolated context [#ActorIsolatedCall]
+16 |     }
+17 | 
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsUITests/StartScreenInteractionTests.swift:377:16: main actor-isolated property 'label' can not be referenced from a nonisolated context
+374 | 
+375 |     /// The row count as the badge shows it, read from the combined row ("All open, 2").
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsUITests/StartScreenInteractionTests.swift:377:29: main actor-isolated property 'value' can not be referenced from a nonisolated context
+374 | 
+375 |     /// The row count as the badge shows it, read from the combined row ("All open, 2").
+[LooseEndsUITests] Copy arm64-apple-ios-simulator.swiftmodule -> LooseEndsUITests.swiftmodule
+[LooseEndsUITests] Copy arm64-apple-ios-simulator.swiftdoc -> LooseEndsUITests.swiftdoc
+[LooseEndsUITests] Copy arm64-apple-ios-simulator.abi.json -> LooseEndsUITests.abi.json
+[LooseEndsUITests] Copy arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/Measurement/MeasurementRun.swift:212:60: 'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration]
+210 |     static func classify(_ error: Error) -> String {
+211 |         #if canImport(FoundationModels) && !os(watchOS)
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/MeasurementRunTests.swift:71:44: 'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration]
+ 69 |         #expect(MeasurementErrorKind.classify(NSError(domain: "x", code: 1)) == "andere")
+ 70 |         #if canImport(FoundationModels)
+⚠️  macro expansion #expect:1:83: 'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration]
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/MeasurementRunTests.swift:72:123: note: expanded code originates here
+ 70 |         #if canImport(FoundationModels)
+⚠️  macro expansion #expect:1:99: 'rateLimited' was deprecated in iOS 27.0: Use ``LanguageModelError/rateLimited(_:)`` instead. [#DeprecatedDeclaration]
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/MeasurementRunTests.swift:72:123: note: expanded code originates here
+ 70 |         #if canImport(FoundationModels)
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/MeasurementRunTests.swift:72:68: 'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration]
+ 70 |         #if canImport(FoundationModels)
+ 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/MeasurementRunTests.swift:72:84: 'rateLimited' was deprecated in iOS 27.0: Use ``LanguageModelError/rateLimited(_:)`` instead. [#DeprecatedDeclaration]
+ 70 |         #if canImport(FoundationModels)
+ 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")
+⚠️  macro expansion #expect:1:83: 'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration]
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/MeasurementRunTests.swift:73:128: note: expanded code originates here
+ 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")
+⚠️  macro expansion #expect:1:99: 'guardrailViolation' was deprecated in iOS 27.0: Use ``LanguageModelError/guardrailViolation(_:)`` instead. [#DeprecatedDeclaration]
+`- /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/MeasurementRunTests.swift:73:128: note: expanded code originates here
+ 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/MeasurementRunTests.swift:73:68: 'GenerationError' was deprecated in iOS 27.0 [#DeprecatedDeclaration]
+ 71 |         let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")
+ 72 |         #expect(MeasurementErrorKind.classify(LanguageModelSession.GenerationError.rateLimited(context)) == "rateLimited")
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/ReminderEntityTests.swift:27:22: cannot find 'ReminderEntity' in scope
+ 25 |         try store.context.save()
+ 26 | 
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/ReminderEntityTests.swift:40:17: cannot find 'ReminderEntity' in scope
+ 38 | 
+ 39 |         task.dueHasTime = false
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/ReminderEntityTests.swift:42:17: cannot find 'ReminderEntity' in scope
+ 40 |         #expect(ReminderEntity(task: task).dueDate?.hour == nil)
+ 41 |         task.dueDate = nil
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/ReminderEntityTests.swift:52:22: cannot find 'ReminderEntity' in scope
+ 50 |         try store.context.save()
+ 51 | 
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/ReminderEntityTests.swift:53:35: cannot find 'ListEntity' in scope
+ 51 | 
+ 52 |         let entity = ReminderEntity(task: task)
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/ReminderEntityTests.swift:67:25: cannot find 'ListEntity' in scope
+ 65 |         try store.context.save()
+ 66 | 
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/ReminderEntityTests.swift:68:19: cannot find 'ListEntity' in scope
+ 66 | 
+ 67 |         let found = try ListEntity.entities(
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/ReminderEntityTests.swift:71:27: cannot infer key path type from context; consider explicitly specifying a root type
+ 69 |             in: store.context
+ 70 |         )
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/ReminderEntityTests.swift:84:25: cannot find 'ListEntity' in scope
+ 82 |         try store.context.save()
+ 83 | 
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/ReminderEntityTests.swift:84:69: cannot infer key path type from context; consider explicitly specifying a root type
+ 82 |         try store.context.save()
+ 83 | 
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/ReminderEntityTests.swift:95:21: cannot find 'ListEntity' in scope
+ 93 |         try store.context.save()
+ 94 | 
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/ReminderEntityTests.swift:95:72: cannot infer key path type from context; consider explicitly specifying a root type
+ 93 |         try store.context.save()
+ 94 | 
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/ReminderEntityTests.swift:96:21: cannot find 'ListEntity' in scope
+ 94 | 
+ 95 |         #expect(try ListEntity.matching("buro", in: store.context).map(\.name) == ["Büro"])
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/ReminderEntityTests.swift:96:73: cannot infer key path type from context; consider explicitly specifying a root type
+ 94 | 
+ 95 |         #expect(try ListEntity.matching("buro", in: store.context).map(\.name) == ["Büro"])
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/ReminderEntityTests.swift:97:21: cannot find 'ListEntity' in scope
+ 95 |         #expect(try ListEntity.matching("buro", in: store.context).map(\.name) == ["Büro"])
+ 96 |         #expect(try ListEntity.matching("BÜRO", in: store.context).map(\.name) == ["Büro"])
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/ReminderEntityTests.swift:97:73: cannot infer key path type from context; consider explicitly specifying a root type
+ 95 |         #expect(try ListEntity.matching("buro", in: store.context).map(\.name) == ["Büro"])
+ 96 |         #expect(try ListEntity.matching("BÜRO", in: store.context).map(\.name) == ["Büro"])
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/ReminderEntityTests.swift:98:21: cannot find 'ListEntity' in scope
+ 96 |         #expect(try ListEntity.matching("BÜRO", in: store.context).map(\.name) == ["Büro"])
+ 97 |         #expect(try ListEntity.matching("loose", in: store.context).map(\.name) == ["Loose Ends"])
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/workflow-bestand/LooseEndsTests/ReminderEntityTests.swift:111:25: cannot find 'ReminderEntity' in scope
+109 |         try store.context.save()
+110 | 
+Test session results: /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-s25-2a/Logs/Test/Test-LooseEnds-2026.10.15_15-17-54-+0200.xcresult
