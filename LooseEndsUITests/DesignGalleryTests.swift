@@ -160,6 +160,8 @@ final class DesignGalleryTests: XCTestCase {
         XCTAssertTrue(summary.waitForExistence(timeout: 5), "Detail shows no origin summary")
         shot(app, "gallery-\(label)-8-detail-origin")
         let dueRow = element("field_dueDate", in: app)
+        // The swipe to the summary can carry the fields above the fold (the detail ends with "Add more", #441).
+        if !(dueRow.exists && dueRow.isHittable) { app.swipeDown() }
         XCTAssertTrue(dueRow.waitForExistence(timeout: 5), "Detail shows no due date")
         dueRow.tap()
         XCTAssertTrue(element("originRuleHeader", in: app).waitForExistence(timeout: 5), "Editor shows no From your words")
