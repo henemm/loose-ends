@@ -112,6 +112,21 @@ import Testing
         #expect(Self.headline([missed, ahead], Self.at(10)) == .upcoming(title: "Steuerbescheid", at: Self.at(12), count: 1))
     }
 
+    @Test("2b: a day-only date today speaks before the quiet rungs; a time of day still wins")
+    @MainActor func dueTodayWithoutTime() async throws {
+        let store = try TestStore()
+        let one = Self.task("Arzttermin", due: Self.at(0), in: store)
+        let yesterday = Self.done("Steuer", at: Self.at(18, day: -1), in: store)
+        #expect(Self.headline([one, yesterday], Self.at(7)) == .dueToday(title: "Arzttermin", count: 1))
+
+        let two = Self.task("Fußnagel", due: Self.at(0), in: store)
+        #expect(Self.headline([one, two], Self.at(7)) == .dueToday(title: nil, count: 2))
+
+        let timed = Self.task("Anna abholen", due: Self.at(17), timed: true, in: store)
+        #expect(Self.headline([one, timed], Self.at(7)) == .upcoming(title: "Anna abholen", at: Self.at(17), count: 1))
+        #expect(Self.headline([one], Self.at(7, day: 1)) != .dueToday(title: "Arzttermin", count: 1))
+    }
+
     // MARK: - 3 to 8
 
     @Test("Each quiet rung on its own: waiting, pile, old, yesterday")

@@ -36,6 +36,9 @@ enum StartHeadlineText {
             }
             return title.map { String(localized: "Today at \(time(at)): \($0).") }
                 ?? String(localized: "Today a fixed time at \(time(at)).")
+        case .dueToday(let title, let count):
+            if count > 1 { return String(localized: "Today \(number(count)) things due.") }
+            return title.map { String(localized: "Today: \($0).") } ?? String(localized: "Today one thing due.")
         case .waiting(let title, let days):
             return title.map { String(localized: "\($0) has been waiting for \(number(days)) days.") }
                 ?? String(localized: "A task has been waiting for \(number(days)) days.")
