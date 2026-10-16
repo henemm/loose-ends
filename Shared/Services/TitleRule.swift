@@ -32,6 +32,18 @@ enum TitleRule {
         return cleaned(stripped.contains { $0.isLetter || $0.isNumber } ? stripped : rawText)
     }
 
+    /// Whether a model title comes from the note (#460): at least one of its content words (four
+    /// letters or more) stands in the note, a word start being enough ("Anruf" for "anrufen"). The
+    /// model was handed the notes of past tasks as examples and copied one onto an unrelated note
+    /// ("Das ist jetzt nur ein Test …" became "Eløb Frühbucher anmelden"). A title without content
+    /// words passes: there is nothing to check.
+    static func isFromNote(_ title: String, rawText: String) -> Bool {
+        let noteWords = RawTextWords.words(in: rawText).map(RawTextWords.normalized).filter { $0.count >= 4 }
+        let content = RawTextWords.words(in: title).map(RawTextWords.normalized).filter { $0.count >= 4 }
+        guard !content.isEmpty else { return true }
+        return content.contains { word in noteWords.contains { $0.hasPrefix(word) || word.hasPrefix($0) } }
+    }
+
     private static func cleaned(_ rawText: String) -> String? {
         let words = rawText.split(whereSeparator: { $0.isWhitespace })
         var text = words.prefix(maxWords).joined(separator: " ")

@@ -263,4 +263,27 @@ import Testing
         #expect(task.title == nil)
         #expect(task.titleSourceRaw == nil)
     }
+
+    // MARK: Model title from the note (#460)
+
+    @Test("A model title without a word of the note is a copy and is not written")
+    @MainActor func foreignModelTitleIsDropped() throws {
+        let store = try TestStore()
+        let task = try CaptureService.save("Das ist jetzt nur ein Test bitte hinterher löschen", via: .app, in: store.context)
+        let ruleTitle = try #require(task.title)
+        modelTitle("Eløb Frühbucher anmelden", on: task)
+        #expect(task.title == ruleTitle)
+        #expect(!(task.revisions ?? []).contains { $0.field == .title })
+    }
+
+    @Test("A title sharing one word or word start with the note counts as from the note")
+    func fromNote() {
+        #expect(TitleRule.isFromNote("Zettel ordnen", rawText: "Zettel sortieren"))
+        #expect(TitleRule.isFromNote("Anruf bei Petra", rawText: "Petra anrufen"))
+        #expect(TitleRule.isFromNote("Rasenmäher: Ölwechsel", rawText: "Rasenmäher Ölwechsel am Samstag"))
+        #expect(!TitleRule.isFromNote("Eløb Frühbucher anmelden", rawText: "Das ist jetzt nur ein Test bitte hinterher löschen"))
+        #expect(!TitleRule.isFromNote("Einkaufen gehen", rawText: "Ein Brief an Oma"))
+        #expect(TitleRule.isFromNote("Tee", rawText: "Kaffee"), "no content word, nothing to check")
+    }
 }
+

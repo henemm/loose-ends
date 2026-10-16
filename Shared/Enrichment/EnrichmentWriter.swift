@@ -40,7 +40,9 @@ enum EnrichmentWriter {
             written += 1
         }
 
-        if let title = draft.title, title.confidence >= threshold, !title.value.isEmpty {
+        // A title with no word of the note is a copy from elsewhere, not a refinement (#460).
+        if let title = draft.title, title.confidence >= threshold, !title.value.isEmpty,
+           TitleRule.isFromNote(title.value, rawText: task.rawText) {
             // The model may refine the rule title, but not bring back what the rules struck (#217):
             // its title goes through the same rule. Equal to the rule title means nothing to write.
             let value = TitleRule.title(from: title.value, reference: task.capturedAt) ?? title.value
