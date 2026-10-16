@@ -157,6 +157,8 @@
     "Next up" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Als nächstes" } } } },
     "New" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Neu" } } } },
     "Due" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Fällig" } } } },
+    "Recently captured" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Zuletzt erfasst" } } } },
+    "Next days" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nächste Tage" } } } },
     "Quick" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Schnell" } } } },
     "Old" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Alt" } } } },
     "Waiting" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Wartet" } } } },

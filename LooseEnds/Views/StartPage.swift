@@ -48,15 +48,40 @@ struct StartHeader: View {
 struct StartPage: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dynamicTypeSize) private var typeSize
+    @Environment(CompletionPulse.self) private var completionPulse: CompletionPulse?
+    @Environment(PendingCompletions.self) private var pendingCompletions: PendingCompletions?
+    @Query(sort: \TaskContext.sortOrder) private var contexts: [TaskContext]
+    @Query(sort: \Project.sortOrder) private var projects: [Project]
     @Binding var selection: ViewSelection?
     let tasks: [TaskItem]
+    /// ⌘N on the start page: each change puts the cursor in the field (#472).
+    var focusRequest = 0
     @State private var text = ""
     @State private var saveFailed = false
+    @State private var pendingTaskDelete: TaskItem?
+    @State private var confirmingTaskDelete = false
+    @State private var datingTask: TaskItem?
+    @FocusState private var fieldFocused: Bool
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "StartPage")
 
     var body: some View {
+        // The right column needs room: from about 900 pt of width it stands next to the list (#473).
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 0) {
+                listColumn
+                SideColumnView(tasks: tasks, selection: $selection)
+            }
+            .frame(minWidth: 900)
+            listColumn
+        }
+        .accessibilityIdentifier("startPage")
+        .taskInteractionDialogs(actions)
+        .onChange(of: focusRequest) { _, _ in fieldFocused = true }
+    }
+
+    private var listColumn: some View {
         let metrics = StartMetrics(typeSize)
-        List {
+        return List {
             StartHeader(tasks: tasks)
                 .padding(.top, 14)
                 .padding(.bottom, 16)
@@ -68,17 +93,7 @@ struct StartPage: View {
                 .listRowSeparator(.hidden)
                 .startRow(metrics)
                 .paperRow()
-            NowBlock(tasks: ViewRules.now(in: tasks).all) { task in
-                Button { selection = .task(task.id) } label: {
-                    TaskRow(task: task, identifierPrefix: "startNowRow_")
-                        .padding(.vertical, 11)
-                        .environment(\.startMetrics, metrics)
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .startRow(metrics)
-                .paperRow()
-            }
+            NowBlock(tasks: ViewRules.now(in: tasks).all) { nowRow($0, metrics) }
         }
         .listStyle(.plain)
         .paperGround()
@@ -86,7 +101,39 @@ struct StartPage: View {
         .frame(maxWidth: .infinity)
         // The paper runs edge to edge: outside the 720 pt column the window showed white bars (build 71).
         .background(Paper.ground.ignoresSafeArea())
-        .accessibilityIdentifier("startPage")
+    }
+
+    /// The "Now" rows act as on the iPhone (#472): Done with the Undo window, swipes, the menu on
+    /// right click. One set of actions, the one "Next up" uses (#303).
+    private var actions: TaskInteractions {
+        TaskInteractions(
+            kind: .next, tasks: tasks, contexts: contexts, projects: projects, modelContext: modelContext,
+            pendingCompletions: pendingCompletions, completionPulse: completionPulse,
+            pendingDelete: $pendingTaskDelete, confirmingDelete: $confirmingTaskDelete, datingTask: $datingTask,
+            didDelete: { id in if selection == .task(id) { selection = nil } }
+        )
+    }
+
+    @ViewBuilder
+    private func nowRow(_ task: TaskItem, _ metrics: StartMetrics) -> some View {
+        let actions = self.actions
+        let row = TaskRow(task: task, identifierPrefix: "startNowRow_")
+        if actions.isPending(task) {
+            actions.pendingRow(task, row)
+        } else {
+            Button { selection = .task(task.id) } label: {
+                row
+                    .padding(.vertical, 11)
+                    .environment(\.startMetrics, metrics)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .startRow(metrics)
+            .swipeActions(edge: .leading, allowsFullSwipe: true) { actions.leadingActions(task) }
+            .swipeActions(edge: .trailing, allowsFullSwipe: true) { actions.trailingActions(task) }
+            .contextMenu { actions.menu(task) }
+            .paperRow()
+        }
     }
 
     /// Saving is the same write path as the capture sheet; the text is kept as typed (ADR-3).
@@ -98,6 +145,7 @@ struct StartPage: View {
             .padding(.vertical, 12)
             .background(.background, in: RoundedRectangle(cornerRadius: 12))
             .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(.separator))
+            .focused($fieldFocused)
             .onSubmit(save)
             .submitLabel(.done)
             .accessibilityIdentifier("startCaptureField")
