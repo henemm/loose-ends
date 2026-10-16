@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Einstellungen</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="mac.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>body{margin:0}</style>
+</helmet>
+<div class="win" style="width:640px;height:720px;flex-direction:column">
+  <div style="height:58px;flex:none;position:relative;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--hair)">
+    <div class="tl"><i></i><i></i><i></i></div>
+    <h1 style="margin:0;font-size:15px;font-weight:600">Einstellungen</h1>
+  </div>
+  <div style="padding:0 44px 28px;overflow:hidden">
+    <div class="sg">
+      <div class="sr">iCloud-Abgleich<em class="acc"><svg class="ic" viewBox="0 0 24 24"><path d="M7 18a4 4 0 01-.6-7.95A5.5 5.5 0 0117 9a4.5 4.5 0 01.5 9z"/><path d="M9.5 13.3l1.8 1.8 3.4-3.6"/></svg>Aktiv · Gesendet, gerade eben</em></div>
+      <p class="sub">Deine Aufgaben werden mit deinen anderen Geräten abgeglichen.</p>
+    </div>
+    <div class="sg">
+      <h3>Erinnerungen</h3>
+      <div class="sr">Uhrzeit für Fälliges<em>08:00</em></div>
+      <div class="sr">Was am Tagesende offen bleibt<em>Abends erinnern<svg class="ic" viewBox="0 0 24 24" style="width:12px;height:12px"><path d="M7 9.5l5 5 5-5"/></svg></em></div>
+      <div class="sr">Abendzeit<em>18:00</em></div>
+    </div>
+    <div class="sg">
+      <h3>Kalender</h3>
+      <div class="sr">Neue Termine in<em><i style="display:block;width:10px;height:10px;border-radius:50%;background:var(--red)"></i>gemeinsam<svg class="ic" viewBox="0 0 24 24" style="width:12px;height:12px"><path d="M9 5l7 7-7 7"/></svg></em></div>
+      <p class="sub">Gilt nur auf diesem Gerät. Eine Aufgabe behält den Kalender, den sie beim Einschalten bekommt.</p>
+    </div>
+    <div class="sg">
+      <h3>Menüleiste</h3>
+      <div class="sr">Beim Anmelden öffnen<span class="tg"></span></div>
+      <p class="sub">Dann ist die Erfassung in der Menüleiste gleich nach dem Anmelden da, ohne Fenster.</p>
+    </div>
+    <div class="sg">
+      <h3>Info</h3>
+      <div class="sr" style="border-bottom:none">Version<em>0.1.0 (69)</em></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":640,"height":720}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

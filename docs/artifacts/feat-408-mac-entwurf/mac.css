@@ -1,0 +1,89 @@
+/* Loose Ends Mac: tokens from the app (Paper, AccentColor) and the iPhone start screen (StartMetrics). */
+:root{--paper:#F4F3EE;--panel:#F4F3EE;--ink:#1B1C1A;--grey:#6F706B;--faint:#A3A49E;--hair:#DAD9D2;--sel:rgba(27,28,26,.07);--acc:#0F6E73;--accbg:rgba(15,110,115,.12);--red:#D4402F;--green:#2E8B57;--field:#FFFFFF;--shadow:0 20px 60px rgba(0,0,0,.18)}
+.dark{--paper:#171816;--panel:#171816;--ink:#EFEEE8;--grey:#9A9B95;--faint:#5E5F5A;--hair:#2D2E2B;--sel:rgba(239,238,232,.09);--acc:#5FC4C9;--accbg:rgba(95,196,201,.16);--red:#FF6B5B;--green:#5BCB8A;--field:#1F201E;--shadow:0 20px 60px rgba(0,0,0,.6)}
+*{box-sizing:border-box}
+body{margin:0}
+.win{display:flex;background:var(--paper);color:var(--ink);font:13px/1.35 -apple-system,"SF Pro Text",system-ui,sans-serif;border-radius:12px;overflow:hidden;border:1px solid var(--hair);box-shadow:var(--shadow);-webkit-font-smoothing:antialiased}
+.serif{font-family:"New York","Iowan Old Style",Palatino,Georgia,serif}
+.tl{position:absolute;left:18px;top:18px;display:flex;gap:8px;z-index:3}
+.tl i{display:block;width:12px;height:12px;border-radius:50%}
+.tl i:nth-child(1){background:#FF5F57}.tl i:nth-child(2){background:#FEBC2E}.tl i:nth-child(3){background:#28C840}
+.ic{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* Sidebar */
+.side{width:250px;flex:none;position:relative;background:var(--panel);border-right:1px solid var(--hair);padding:58px 10px 14px;display:flex;flex-direction:column;gap:2px}
+.nv{display:flex;align-items:center;gap:10px;height:32px;padding:0 10px;border-radius:8px;font-size:14px;color:var(--ink)}
+.nv .ic{color:var(--grey)}
+.nv b{margin-left:auto;font-weight:400;font-size:12px;color:var(--grey);font-variant-numeric:tabular-nums}
+.nv.on{background:var(--sel)}
+.sp{height:14px}
+.gh{display:flex;align-items:center;gap:6px;height:30px;padding:0 10px;font-size:13px;font-weight:600;color:var(--grey)}
+.gh b{margin-left:auto;font-weight:400;font-size:12px}
+.gh .ic{width:12px;height:12px;stroke-width:2}
+.nw{display:flex;align-items:center;gap:8px;height:32px;margin:6px 4px 0;padding:0 10px;border-radius:8px;background:var(--sel);font-size:13px;color:var(--grey)}
+
+/* Toolbar */
+.main{flex:1;position:relative;display:flex;flex-direction:column;min-width:0}
+.bar{height:58px;flex:none;display:flex;align-items:center;gap:12px;padding:0 16px}
+.bar h1{margin:0;font-size:15px;font-weight:600;color:var(--grey)}
+.bar .fill{flex:1}
+.rb{width:34px;height:34px;border-radius:50%;border:1px solid var(--hair);background:var(--field);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+.rb.lead{margin-left:84px}
+.rb.bare{margin-left:0}
+
+/* Start page and rows */
+.start{padding:6px 44px 28px;overflow:hidden;flex:1}
+.hd{display:flex;align-items:center;gap:8px;color:var(--grey);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.knot{width:30px;height:16px;flex:none}
+.hl{margin:8px 0 0;font:500 30px/1.15 "New York","Iowan Old Style",Palatino,Georgia,serif;letter-spacing:-.3px;color:var(--ink)}
+.field{display:flex;align-items:center;gap:10px;margin-top:22px;padding:0 14px;height:46px;border-radius:12px;background:var(--field);border:1px solid var(--hair);color:var(--faint);font:18px/1 "New York","Iowan Old Style",Palatino,Georgia,serif}
+.field .ic{margin-left:auto;color:var(--grey)}
+.cap{margin:26px 0 4px;color:var(--grey);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.row{display:grid;grid-template-columns:76px 22px 1fr 18px;column-gap:10px;align-items:start;padding:11px 0;border-bottom:1px solid var(--hair);position:relative}
+.row .mg{text-align:right;font-size:12px;font-weight:500;color:var(--grey);font-variant-numeric:tabular-nums;line-height:1.25;padding-top:4px}
+.row .mg.red{color:var(--red)}
+.row .tt{font:18px/1.22 "New York","Iowan Old Style",Palatino,Georgia,serif;color:var(--ink)}
+.row .tt.it{font-style:italic}
+.row .mt{display:flex;gap:14px;align-items:center;margin-top:5px;font-size:13px;color:var(--grey)}
+.row .mt .ic{width:15px;height:15px;stroke-width:1.7}
+.row .mt .mi{display:inline-flex;align-items:center;gap:5px}
+.row .mt .pr{color:var(--ink)}
+.row .cv{color:var(--faint);padding-top:5px}
+.row .cv .ic{width:13px;height:13px}
+.row.plain{grid-template-columns:76px 1fr 18px}
+.row.sel{background:var(--accbg);margin:0 -12px;padding-left:12px;padding-right:12px;border-radius:10px;border-bottom-color:transparent}
+
+/* Right column (cut 3) */
+.rc{width:300px;flex:none;border-left:1px solid var(--hair);padding:16px 24px 24px;display:flex;flex-direction:column}
+.rc .cap:first-child{margin-top:8px}
+.li{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--hair);font:16px/1.25 "New York","Iowan Old Style",Palatino,Georgia,serif}
+.li span{font:12px/1.4 -apple-system,system-ui,sans-serif;color:var(--grey);white-space:nowrap;padding-top:3px}
+.wk{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px}
+.wk div{border:1px solid var(--hair);border-radius:10px;padding:8px 0;text-align:center;font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:.08em}
+.wk div b{display:block;margin-top:2px;font:500 20px/1 "New York","Iowan Old Style",Palatino,Georgia,serif;color:var(--ink);letter-spacing:0}
+.wk div.today{border-color:var(--ink)}
+
+/* Detail */
+.dt{padding:0 56px 28px;max-width:760px}
+.dt h2{margin:6px 0 0;font:500 30px/1.15 "New York","Iowan Old Style",Palatino,Georgia,serif;letter-spacing:-.3px}
+.dt .raw{margin-top:8px;font-size:12.5px;color:var(--grey)}
+.fr{display:grid;grid-template-columns:130px 1fr;align-items:center;min-height:40px;border-bottom:1px solid var(--hair);font-size:14px}
+.fr dt{color:var(--grey);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.fr dd{margin:0;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.fr dd i{font-style:normal;font-size:11px;color:var(--grey)}
+.chip{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:13px;border:1px solid var(--hair);font-size:12.5px;color:var(--acc)}
+.chip .ic{width:12px;height:12px;stroke-width:2}
+.note{margin-top:20px;font:17px/1.45 "New York","Iowan Old Style",Palatino,Georgia,serif;color:var(--ink)}
+
+/* Settings and panel */
+.sg{margin:0 0 4px;padding:0}
+.sg h3{margin:22px 0 6px;color:var(--grey);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.sr{display:flex;align-items:center;gap:12px;min-height:40px;border-bottom:1px solid var(--hair);font-size:14px}
+.sr em{margin-left:auto;font-style:normal;color:var(--grey);display:flex;align-items:center;gap:6px}
+.sr em.acc{color:var(--acc)}
+.sub{margin:6px 0 0;font-size:12px;color:var(--grey)}
+.tg{margin-left:auto;width:38px;height:22px;border-radius:11px;background:var(--acc);position:relative}
+.tg::after{content:"";position:absolute;right:2px;top:2px;width:18px;height:18px;border-radius:50%;background:#fff}
+.sw{display:flex;align-items:center;gap:14px;margin:0 0 14px;font-size:13px;color:var(--grey)}
+.sw i{display:block;width:56px;height:56px;border-radius:12px;border:1px solid var(--hair)}
+.note-s{font-size:12px;color:var(--grey);line-height:1.5}

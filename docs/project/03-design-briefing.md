@@ -240,3 +240,15 @@ Sharing-Flows, freie Suche in natürlicher Sprache.
 **Anhänge (Henning, 2026-10-15, #442).** Unter der Notiz ein Abschnitt „Anhänge“: Fotos und Dateien anhängen, Tipp zeigt sie (Quick Look), Wischen löscht nach Rückfrage, höchstens 50 MB je Anhang. „Scan“ (iPhone und iPad) öffnet die Dokumentkamera des Systems: mehrere Seiten werden ein PDF (JPEG, 150 dpi). Das Teilen-Menü folgt.
 
 **Ergänzen (Henning, 2026-10-15, #441).** Am Ende der Detailansicht ein Feld „Ergänzen“: ein Satz, getippt oder diktiert, wird beim Schreiben von denselben Regeln gelesen wie die Erfassung (Fällig, Dauer, Wichtigkeit, Dringlichkeit, Etiketten), kein Modell. Darunter steht, was erkannt wurde, und „Nicht erkannt: …“. „Übernehmen“ schreibt es als Nutzer-Revision; Etiketten kommen dazu, die Nicht erkannten Wörter bleiben im Feld. Der Rohtext bleibt unverändert. Dauer liest `DurationRule` („20 Minuten“, „eine halbe Stunde“, aufgerundet auf die nächste Stufe; „in 2 Stunden“ ist ein Zeitpunkt, keine Dauer).
+
+## Mac-App (Henning, 2026-10-16, Epic #467, ersetzt #408)
+
+Entwurf mit sieben Tafeln: `docs/artifacts/feat-408-mac-entwurf/` (Dateien) und https://claude.ai/artifact/RuLo7oxphcG4oJfTJ7HeLT (Ansicht, Kommentare). Die Mac-App ist dieselbe Papierwelt wie das iPhone; es gibt keine eigene Mac-Gestaltung (ADR-1), nur Fenster, Zeiger und Tastatur.
+
+- **Startseite** statt „Ansicht wählen“, solange links nichts gewählt ist: Datum, Satz des Tages (`StartHeadline`, dieselbe Regel wie auf dem iPhone), Eingabefeld, „Jetzt“. Die Zeilen sind die des iPhone: Zeit am Rand, Titel in Serif, Merkmale mit Symbolen (15 pt), **kein Faden und keine Punkte**; das war der alte Entwurf vom 14.10. und ist überholt (Kommentar im Entwurf).
+- **Rechte Spalte** ab 900 pt Inhaltsbreite: „Schnell“ (offen, nicht blockiert, Dauer höchstens 15 Min., die ersten drei nach Dringlichkeit und Wichtigkeit), „Zuletzt erfasst“, „Nächste Tage“. Kein neues Modellfeld.
+- **Schrift** wie überall (#180): Serif für Inhalt (Satz, Titel, Eingabefeld, Notiz), SF für die App (Seitenleiste, Fenstertitel, Einstellungen, Merkmale, kleine Überschriften in Großbuchstaben).
+- **Farbe** wie überall (ADR-14): Akzent nur für Antippbares und Auswahl (12 %), Rot nur Zeitdruck, Grün nur Erledigen, Grau Hierarchie. Hell und dunkel.
+- **Raum:** Fenster mindestens 760 × 520 pt, Seitenleiste 220 bis 300 pt (Standard 250), Textbreite der Startseite höchstens 640 pt.
+- **Seitenleiste, Liste, Detail, Einstellungen, Menüleisten-Panel** auf Papier mit Haarlinien statt grauer Karten; Titel in der Werkzeugleiste in SF.
+- **Zeiger und Tastatur:** ⌘N neue Aufgabe, ⌘, Einstellungen, Leertaste erledigt die gewählte Zeile, ⌫ löscht mit Rückfrage, Rechtsklick öffnet das Menü der Zeile, Hover Grau 7 %.
