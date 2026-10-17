@@ -1,3 +1,5 @@
+import Foundation
+
 /// The two daily notifications around the loose ends (#414, rewritten #518, Henning 2026-10-17: "Abends
 /// daran erinnert werden, neue Termine zu planen, und morgens mir die losen Enden anschauen"). Evening:
 /// what needs a new date. Morning: an invitation to look at the loose ends. Each one is switched on
