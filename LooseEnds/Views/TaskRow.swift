@@ -16,6 +16,9 @@ struct TaskRow: View {
     var identifierPrefix = "taskRow_"
     /// "All open" holds parked tasks among the rest (#319); there the moon tells them apart.
     var marksParked = false
+    /// The task's place in "Next up" (#509): shown as a star with the number at the row's end. Nil in
+    /// that view itself and on the start screen, where every row is lined up anyway.
+    var nextRank: Int?
     /// The margin with the one time that counts (#424); wide enough for "12:00" and "Seit gestern" in two lines.
     @ScaledMetric(relativeTo: .caption) private var marginWidth: CGFloat = 54
     /// The start screen's draft sizes (#463); everywhere else the row keeps the text styles.
@@ -36,6 +39,8 @@ struct TaskRow: View {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
             margin
             lines
+                .frame(maxWidth: .infinity, alignment: .leading)
+            marker
         }
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("\(identifierPrefix)\(task.id.uuidString)")
@@ -57,6 +62,30 @@ struct TaskRow: View {
             .frame(width: startMetrics?.marginWidth ?? marginWidth, alignment: .trailing)
     }
 
+    /// The same signs as the swipe actions and the menu (#509): the star with the place in "Next up"
+    /// in the ink, the moon for a parked task in grey. Nothing tappable, so no accent.
+    @ViewBuilder
+    private var marker: some View {
+        if let nextRank {
+            HStack(spacing: 3) {
+                Image(systemName: "star")
+                Text("\(nextRank)")
+                    .monospacedDigit()
+            }
+            .font((startMetrics?.rowMeta ?? .caption).weight(.semibold))
+            .foregroundStyle(.primary)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Next up, number \(nextRank)")
+            .accessibilityIdentifier("nextMarker_\(task.id.uuidString)")
+        } else if marksParked, task.status == .parked {
+            Image(systemName: "moon.zzz")
+                .font(startMetrics?.rowMeta ?? .caption)
+                .foregroundStyle(.secondary)
+                .accessibilityLabel("Parked")
+                .accessibilityIdentifier("parkedMarker_\(task.id.uuidString)")
+        }
+    }
+
     private var lines: some View {
         VStack(alignment: .leading, spacing: 2) {
             HStack(spacing: 6) {
@@ -73,13 +102,6 @@ struct TaskRow: View {
                         .foregroundStyle(.tint)
                         .accessibilityLabel("Changed by AI")
                         .accessibilityIdentifier("aiMarker_\(task.id.uuidString)")
-                }
-                if marksParked, task.status == .parked {
-                    Image(systemName: "moon.zzz")
-                        .imageScale(.small)
-                        .foregroundStyle(.secondary)
-                        .accessibilityLabel("Parked")
-                        .accessibilityIdentifier("parkedMarker_\(task.id.uuidString)")
                 }
             }
             if task.importance == .high || task.urgency == .high || !traits.isEmpty {

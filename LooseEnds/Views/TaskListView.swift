@@ -188,8 +188,9 @@ struct TaskListView: View {
             NavigationLink {
                 TaskDetailView(task: task)
             } label: {
-                TaskRow(task: task, note: note(for: task))
+                TaskRow(task: task, note: note(for: task), nextRank: nextRank(of: task))
             }
+            .navigationLinkIndicatorVisibility(.hidden)
         }
         .swipeActions(edge: .leading, allowsFullSwipe: true) { actions.leadingActions(task) }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) { actions.trailingActions(task) }
@@ -272,19 +273,27 @@ struct TaskListView: View {
     }
 
     private func pendingRow(_ task: TaskItem) -> some View {
-        actions.pendingRow(task, TaskRow(task: task, hidesContext: context != nil, note: note(for: task), marksParked: kind == .open))
+        actions.pendingRow(task, TaskRow(task: task, hidesContext: context != nil, note: note(for: task), marksParked: kind == .open, nextRank: nextRank(of: task)))
     }
 
     private func openRow(_ task: TaskItem) -> some View {
         NavigationLink {
             TaskDetailView(task: task, reviewing: kind == .new)
         } label: {
-            TaskRow(task: task, hidesContext: context != nil, note: note(for: task), marksParked: kind == .open)
+            TaskRow(task: task, hidesContext: context != nil, note: note(for: task), marksParked: kind == .open, nextRank: nextRank(of: task))
         }
+        // The whole row opens the task; the system's arrow at its end made room for the star (#509).
+        .navigationLinkIndicatorVisibility(.hidden)
         .swipeActions(edge: .leading, allowsFullSwipe: true) { actions.leadingActions(task) }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) { actions.trailingActions(task) }
         .contextMenu { actions.menu(task) }
         .paperRow()
+    }
+
+    /// The star's number (#509): not in "Next up" itself, where every row would carry one.
+    private func nextRank(of task: TaskItem) -> Int? {
+        guard kind != .next else { return nil }
+        return ViewRules.nextRanks(in: tasks)[task.id]
     }
 
     /// Old shows the age and how often the task was pushed (design briefing, screen 11).
