@@ -3,8 +3,8 @@ import SwiftData
 import Testing
 @testable import LooseEnds
 
-/// "Loose ends" (#518, Henning 2026-10-17): left from earlier days, sorted once in the morning.
-@Suite("Loose ends: sorting what was left (#518)") struct LeftoversTests {
+/// Left from an earlier day (#518, Henning 2026-10-17): not carried on, it needs a new date.
+@Suite("Needs a new date (#518)") struct LeftoversTests {
     static var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(identifier: "Europe/Berlin")!
@@ -28,8 +28,8 @@ import Testing
         return task
     }
 
-    @Test("Today, Tomorrow and Weekend set a new day as a user revision; Park parks; each leaves the card")
-    @MainActor func eachChoiceSortsTheTask() async throws {
+    @Test("A new date (today, tomorrow, weekend) or parking takes the task out; the date is a user revision")
+    @MainActor func newDateOrParkSortsTheTask() async throws {
         let store = try TestStore()
         let today = leftover("Rechnung bezahlen", in: store)
         let tomorrow = leftover("Zahnarzt anrufen", in: store)
@@ -38,13 +38,13 @@ import Testing
         let all = [today, tomorrow, weekend, park]
         #expect(ViewRules.leftovers(in: all, now: Self.now, calendar: Self.calendar).count == 4)
 
-        for (task, choice) in [(today, TaskActions.LeftoverChoice.today), (tomorrow, .tomorrow), (weekend, .weekend), (park, .park)] {
-            TaskActions.sortLeftover(task, as: choice, contexts: [], projects: [], now: Self.now, calendar: Self.calendar)
+        for (task, target) in [(today, TaskActions.MoveTarget.date(Self.now)), (tomorrow, .tomorrow), (weekend, .weekend)] {
+            TaskActions.move(task, to: target, contexts: [], projects: [], now: Self.now, calendar: Self.calendar)
         }
+        TaskActions.park(park, now: Self.now)
 
         #expect(ViewRules.leftovers(in: all, now: Self.now, calendar: Self.calendar).isEmpty)
         #expect(Self.calendar.isDate(try #require(today.dueDate), inSameDayAs: Self.now))
-        #expect(today.dueHasTime == false)
         #expect(ViewRules.dueToday(in: all, now: Self.now, calendar: Self.calendar).map(\.id) == [today.id])
         #expect(Self.calendar.isDate(try #require(tomorrow.dueDate), inSameDayAs: Self.day(1)))
         #expect(try #require(weekend.dueDate) > Self.now)

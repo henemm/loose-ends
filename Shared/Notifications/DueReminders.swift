@@ -55,9 +55,9 @@ enum DueReminders {
     }
 
     /// iOS keeps at most 64 pending notifications per app. The single reminders take at most this
-    /// many, the soonest first, so the bundled morning or evening ones (`CarryReminders`, a handful)
-    /// and the places (at most 20) always fit (#518).
-    static let maxPlanned = 40
+    /// many, the soonest first, so the morning and evening ones (`CarryReminders`, two a day for eight
+    /// days) and the places (at most 20) always fit (#518).
+    static let maxPlanned = 28
 
     /// One reminder per open task with a due date whose reminder time is still ahead, the soonest
     /// `maxPlanned`. Unsorted and unchecked tasks count: the rules set their date without the model

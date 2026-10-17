@@ -3,8 +3,8 @@ import SwiftData
 import Testing
 @testable import LooseEnds
 
-/// Still open after its day (#414): one bundled notification on the mornings after, at most three,
-/// and a day-only date carried longer than a week leaves "Now" and the app badge.
+/// The evening and morning notifications around the loose ends (#414, #518): in the evening what needs
+/// a new date (its day, three days after, then Mondays), in the morning an invitation to look at them.
 @Suite("CarryReminders") struct CarryRemindersTests {
     static var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
@@ -29,48 +29,86 @@ import Testing
         return task
     }
 
-    static func plan(_ tasks: [TaskItem], mode: CarryReminders.Mode = .morning, now: Date = now) -> [CarryReminders.Reminder] {
+    static func plan(_ tasks: [TaskItem], mode: CarryReminders.Mode = .both, now: Date = now) -> [CarryReminders.Reminder] {
         CarryReminders.plan(for: tasks, mode: mode, now: now, calendar: calendar)
     }
 
-    @Test("Yesterday's open task comes back this morning at the reminder time, in one bundled reminder")
-    @MainActor func yesterdayThisMorning() async throws {
+    static func evenings(_ tasks: [TaskItem], now: Date = now) -> [CarryReminders.Reminder] {
+        plan(tasks, mode: .evening, now: now)
+    }
+
+    static func mornings(_ tasks: [TaskItem], now: Date = now) -> [CarryReminders.Reminder] {
+        plan(tasks, mode: .morning, now: now)
+    }
+
+    @Test("Morning: every day at the reminder time, the loose ends counted and what needs a new date listed")
+    @MainActor func morningInvitation() async throws {
         let store = try TestStore()
         let a = Self.task("Steuerbescheid ablegen", due: Self.day(-1), in: store)
         let b = Self.task("Zahnarzt anrufen", due: Self.day(-1, hour: 14), hasTime: true, in: store)
+        let later = Self.task("Reifen wechseln", due: Self.day(5), in: store)
+        let undated = Self.task("Fahrradlicht", due: nil, in: store)
 
-        let first = try #require(Self.plan([a, b]).first)
-        #expect(first.fireDate == Self.day(0, hour: 9))
+        let mornings = Self.mornings([a, b, later, undated])
+        #expect(mornings.map(\.fireDate) == (0...CarryReminders.daysAhead).map { Self.day($0, hour: 9) })
+        #expect(mornings.allSatisfy { $0.kind == .morning && $0.openCount == 4 })
+        let first = try #require(mornings.first)
         #expect(Set(first.taskIDs) == [a.id, b.id])
-        #expect(first.titles.count == 2)
         #expect(first.identifier == "carry_2026-03-12")
+        #expect(mornings[6].taskIDs.contains(later.id), "five days on, the tyres need a new date too")
     }
 
-    @Test("A task comes back on at most three mornings after its day")
-    @MainActor func atMostThreeMornings() async throws {
+    @Test("Morning without anything to date names the longest open; nothing open, no morning")
+    @MainActor func morningLongestOpen() async throws {
+        let store = try TestStore()
+        let old = Self.task("Fotos sortieren", due: nil, in: store)
+        old.capturedAt = Self.day(-40)
+        let older = Self.task("Fahrradlicht", due: nil, in: store)
+        older.capturedAt = Self.day(-60)
+        let fresh = Self.task("Brot", due: nil, in: store)
+        fresh.capturedAt = Self.day(-1)
+
+        let first = try #require(Self.mornings([old, older, fresh]).first)
+        #expect(first.taskIDs.isEmpty)
+        #expect(first.longestOpen == ["Fahrradlicht", "Fotos sortieren"])
+        #expect(Self.mornings([]).isEmpty)
+    }
+
+    @Test("Evening: due that day, then the three evenings after, then Mondays, until a new date")
+    @MainActor func eveningThreeDaysThenMondays() async throws {
         let store = try TestStore()
         let task = Self.task("Hecke schneiden", due: Self.day(0), in: store)
 
-        let reminders = Self.plan([task])
-        #expect(reminders.map(\.fireDate) == [Self.day(1, hour: 9), Self.day(2, hour: 9), Self.day(3, hour: 9)])
+        // Thursday: Thu, Fri, Sat, Sun daily, then Monday the 16th; the 23rd is beyond the plan.
+        #expect(Self.evenings([task]).map(\.fireDate) == (0...4).map { Self.day($0, hour: 20) })
+        #expect(Self.evenings([task]).allSatisfy { $0.kind == .evening && $0.taskIDs == [task.id] })
     }
 
-    @Test("Past the reminder time, this morning is skipped; days already used up do not return")
-    @MainActor func pastTimeAndUsedUp() async throws {
+    @Test("Evening: an older one comes back on Monday only; a passed evening time skips today")
+    @MainActor func eveningOlderAndPassed() async throws {
         let store = try TestStore()
         let yesterday = Self.task("Paket", due: Self.day(-1), in: store)
-        let threeDays = Self.task("Keller", due: Self.day(-3), in: store)
-        let later = Self.day(0, hour: 10)
+        let week = Self.task("Keller", due: Self.day(-7), in: store)
+        let late = Self.day(0, hour: 21)
 
-        let reminders = Self.plan([yesterday, threeDays], now: later)
-        #expect(reminders.map(\.fireDate) == [Self.day(1, hour: 9), Self.day(2, hour: 9)])
-        #expect(reminders.allSatisfy { $0.taskIDs == [yesterday.id] })
+        let evenings = Self.evenings([yesterday, week], now: late)
+        #expect(evenings.map(\.fireDate) == [Self.day(1, hour: 20), Self.day(2, hour: 20), Self.day(4, hour: 20)])
+        #expect(evenings.map(\.taskIDs) == [[yesterday.id], [yesterday.id], [week.id, yesterday.id]])
+        #expect(evenings[0].identifier == "carry_evening_2026-03-13")
     }
 
-    @Test("Due today or later, done, parked, subtasks and undated tasks are not carried")
+    @Test("A set evening time is used")
+    @MainActor func eveningTime() async throws {
+        let store = try TestStore()
+        let today = Self.task("Steuer", due: Self.day(0), in: store)
+        let early = CarryReminders.plan(for: [today], mode: .evening, eveningTime: DueReminders.Time(hour: 18, minute: 30),
+                                        now: Self.now, calendar: Self.calendar)
+        #expect(early.first?.fireDate == Self.calendar.date(byAdding: .minute, value: 30, to: Self.day(0, hour: 18)))
+    }
+
+    @Test("Done, parked, blocked, subtasks and undated tasks never need a new date")
     @MainActor func notCarried() async throws {
         let store = try TestStore()
-        let today = Self.task("Heute", due: Self.day(0), in: store)
         let done = Self.task("Erledigt", due: Self.day(-1), status: .done, in: store)
         let parked = Self.task("Geparkt", due: Self.day(-1), status: .parked, in: store)
         let undated = Self.task("Irgendwann", due: nil, in: store)
@@ -78,22 +116,30 @@ import Testing
         let sub = Self.task("Kartons", due: Self.day(-1), in: store)
         sub.parent = parent
 
-        let thisMorning = Self.plan([today, done, parked, undated, parent, sub]).filter { $0.day == Self.day(0) }
-        #expect(thisMorning.isEmpty)
+        let all = [done, parked, undated, parent, sub]
+        #expect(Self.evenings(all).isEmpty)
+        #expect(Self.mornings(all).allSatisfy { $0.taskIDs.isEmpty })
     }
 
-    @Test("Carrying quietly plans nothing")
-    @MainActor func quietPlansNothing() async throws {
+    @Test("Switched off plans nothing; each switch plans only its own")
+    @MainActor func switches() async throws {
         let store = try TestStore()
         let task = Self.task("Steuer", due: Self.day(-1), in: store)
         #expect(Self.plan([task], mode: .quiet).isEmpty)
+        #expect(Self.plan([task], mode: .morning).allSatisfy { $0.kind == .morning })
+        #expect(Self.plan([task], mode: .evening).allSatisfy { $0.kind == .evening })
+        #expect(Set(Self.plan([task]).map(\.kind)) == [.morning, .evening])
     }
 
-    @Test("The stored mode falls back to the morning reminder")
+    @Test("The stored choice falls back to both; the switches map onto it")
     func storedMode() {
-        #expect(CarryReminders.Mode(stored: nil) == .morning)
-        #expect(CarryReminders.Mode(stored: "nonsense") == .morning)
+        #expect(CarryReminders.Mode(stored: nil) == .both)
+        #expect(CarryReminders.Mode(stored: "nonsense") == .both)
         #expect(CarryReminders.Mode(stored: "quiet") == .quiet)
+        #expect(CarryReminders.Mode(stored: "evening") == .evening)
+        #expect(CarryReminders.Mode(morning: true, evening: false) == .morning)
+        #expect(CarryReminders.Mode(morning: false, evening: false) == .quiet)
+        #expect(CarryReminders.Mode.both.remindsMorning && CarryReminders.Mode.both.remindsEvening)
     }
 
     @Test("Today again makes every listed open task due today, as a user revision without a time")
@@ -113,7 +159,7 @@ import Testing
         #expect(ViewRules.postponeCount(a) == 1)
     }
 
-    @Test("Anything from before today leaves Now and the badge for the card, not Due (#518)")
+    @Test("Anything from before today leaves Now and the badge until it has a new date, not Due (#518)")
     @MainActor func weekOldLeavesNow() async throws {
         let store = try TestStore()
         let seven = Self.task("Sieben Tage", due: Self.day(-7), in: store)
@@ -127,42 +173,6 @@ import Testing
         #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 0)
         #expect(ViewRules.now(in: all, now: Self.now, calendar: Self.calendar).all.contains { $0.id == eight.id } == false)
         #expect(ViewRules.tasks(for: .due, in: all, now: Self.now, calendar: Self.calendar).contains { $0.id == eight.id })
-    }
-
-    @Test("Evening: today's open tasks come at the evening time in one reminder, planned ahead per due day")
-    @MainActor func eveningPlan() async throws {
-        let store = try TestStore()
-        let today = Self.task("Steuerbescheid ablegen", due: Self.day(0), in: store)
-        let timed = Self.task("Zahnarzt", due: Self.day(0, hour: 14), hasTime: true, in: store)
-        let friday = Self.task("Hecke schneiden", due: Self.day(1), in: store)
-        let yesterday = Self.task("Paket", due: Self.day(-1), in: store)
-
-        let reminders = CarryReminders.plan(for: [today, timed, friday, yesterday], mode: .evening, now: Self.now, calendar: Self.calendar)
-        #expect(reminders.map(\.fireDate) == [Self.day(0, hour: 20), Self.day(1, hour: 20)])
-        #expect(reminders.allSatisfy { $0.kind == .evening })
-        #expect(Set(reminders[0].taskIDs) == [today.id, timed.id])
-        #expect(reminders[1].taskIDs == [friday.id])
-        #expect(reminders[0].identifier == "carry_evening_2026-03-12")
-    }
-
-    @Test("Evening: a set evening time is used, and a passed one skips today")
-    @MainActor func eveningTime() async throws {
-        let store = try TestStore()
-        let today = Self.task("Steuer", due: Self.day(0), in: store)
-        let late = Self.day(0, hour: 21)
-
-        let early = CarryReminders.plan(for: [today], mode: .evening, eveningTime: DueReminders.Time(hour: 18, minute: 30),
-                                        now: Self.now, calendar: Self.calendar)
-        #expect(early.map(\.fireDate) == [Self.calendar.date(byAdding: .minute, value: 30, to: Self.day(0, hour: 18))!])
-        #expect(CarryReminders.plan(for: [today], mode: .evening, now: late, calendar: Self.calendar).isEmpty)
-    }
-
-    @Test("Evening mode plans no morning reminder")
-    @MainActor func eveningHasNoMorning() async throws {
-        let store = try TestStore()
-        let task = Self.task("Steuer", due: Self.day(-1), in: store)
-        #expect(CarryReminders.plan(for: [task], mode: .evening, now: Self.now, calendar: Self.calendar).isEmpty)
-        #expect(CarryReminders.Mode(stored: "evening") == .evening)
     }
 
     @Test("All to tomorrow moves every listed open task to tomorrow; Look over changes nothing")

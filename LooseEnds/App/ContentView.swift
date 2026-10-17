@@ -33,6 +33,7 @@ struct ContentView: View {
     private var captureRequest: CaptureRequest { .shared }
     private var openTaskRequest: OpenTaskRequest { .shared }
     private var carryReviewRequest: CarryReviewRequest { .shared }
+    private var openViewRequest: OpenViewRequest { .shared }
 
     var body: some View {
         NavigationSplitView {
@@ -121,6 +122,8 @@ struct ContentView: View {
         .onChange(of: captureRequest.pending) { _, _ in consumeCaptureRequest() }
         .onAppear(perform: consumeOpenTaskRequest)
         .onChange(of: openTaskRequest.taskID) { _, _ in consumeOpenTaskRequest() }
+        .onAppear(perform: consumeOpenViewRequest)
+        .onChange(of: openViewRequest.view) { _, _ in consumeOpenViewRequest() }
         .onReceive(NotificationCenter.default.publisher(for: ModelContext.didSave)) { _ in
             notifications?.rescheduleSoon()
             calendar?.syncSoon()
@@ -261,6 +264,13 @@ struct ContentView: View {
         guard let id = openTaskRequest.taskID else { return }
         openTaskRequest.taskID = nil
         selection = .task(id)
+    }
+
+    /// "Show" in the morning notification opens "Loose ends" (#518).
+    private func consumeOpenViewRequest() {
+        guard let view = openViewRequest.view else { return }
+        openViewRequest.view = nil
+        selection = .system(view)
     }
 }
 

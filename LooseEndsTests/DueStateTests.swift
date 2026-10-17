@@ -79,7 +79,7 @@ import Testing
         #expect(Self.state(due: Self.day(0), status: .unprocessed, in: store) == .today)
     }
 
-    @Test("A carried task waits in the card, not in Now or on the badge; Due keeps it (#518)")
+    @Test("A carried task stays out of Now and the badge until it has a new date; Due keeps it (#518)")
     @MainActor func viewsUnchanged() async throws {
         let store = try TestStore()
         let carried = TaskItem(rawText: "Hecke schneiden")

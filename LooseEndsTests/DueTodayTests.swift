@@ -5,7 +5,7 @@ import Testing
 
 /// The start screen's "Due today" and the app badge (#299): today, not the whole week; a task in
 /// "Next up" and due today stands in both lists but counts once. What is left from earlier days
-/// counts only once it is sorted (#518).
+/// counts only once it has a new date (#518).
 @Suite("Due today and the app badge") struct DueTodayTests {
     static var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
@@ -21,7 +21,7 @@ import Testing
         return calendar.date(byAdding: DateComponents(day: offset, hour: hour), to: start)!
     }
 
-    @Test("Today counts; earlier waits in the card, tomorrow and later do not; done tasks and subtasks stay out")
+    @Test("Today counts; earlier needs a new date first, tomorrow and later do not; done tasks and subtasks stay out")
     @MainActor func todayAndOverdue() async throws {
         let store = try TestStore()
         let overdue = TaskItem(rawText: "Rechnung bezahlen")
@@ -76,8 +76,8 @@ import Testing
         #expect(ViewRules.dueToday(in: all, now: Self.now, calendar: Self.calendar).map(\.id) == [both.id],
                 "a task in Next up and due today stands in both lists")
         #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 2,
-                "the one from yesterday counts only once it is sorted (#518)")
-        TaskActions.sortLeftover(dueOnly, as: .today, contexts: [], projects: [], now: Self.now, calendar: Self.calendar)
+                "the one from yesterday counts only once it has a new date (#518)")
+        TaskActions.move(dueOnly, to: .date(Self.now), contexts: [], projects: [], now: Self.now, calendar: Self.calendar)
         #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 3)
         #expect(ViewRules.badgeCount(in: [], now: Self.now, calendar: Self.calendar) == 0)
     }

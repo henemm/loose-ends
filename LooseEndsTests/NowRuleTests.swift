@@ -5,7 +5,7 @@ import Testing
 
 /// The start screen's "Now" (#368): due today, then the rest of "Next up", each task once. Built
 /// from the same sets as the app badge, so the two never disagree. What is left from earlier days
-/// waits in the "Loose ends" card until it is sorted (#518).
+/// stays out until it has a new date (#518).
 @Suite("Now on the start screen") struct NowRuleTests {
     static var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
@@ -33,7 +33,7 @@ import Testing
         ViewRules.now(in: all, now: Self.now, calendar: Self.calendar)
     }
 
-    @Test("Due today before the rest of Next up; a task left from yesterday waits in the card (#518)")
+    @Test("Due today before the rest of Next up; a task left from yesterday needs a new date first (#518)")
     @MainActor func overdueBeforeTodayBeforeLined() async throws {
         let store = try TestStore()
         let lined = Self.task("Angebot schreiben", rank: 0)
@@ -61,7 +61,7 @@ import Testing
         #expect(result.lined.isEmpty)
     }
 
-    @Test("Lined up and left from earlier: it waits in the card too, until it is sorted (#518)")
+    @Test("Lined up and left from earlier: it stays out too, until it has a new date (#518)")
     @MainActor func overdueAndLinedStaysInTimePressureGroup() async throws {
         let store = try TestStore()
         let both = Self.task("Paket abholen", due: Self.day(-3), rank: 0)
