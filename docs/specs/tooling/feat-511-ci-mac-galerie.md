@@ -215,5 +215,6 @@ selbst; der eigentliche Nachweis ist der CI-Lauf mit angesehenen Bildern.
 
 ## Changelog
 
+- 2026-10-17: Umsetzung nach den CI-Läufen (Belege `docs/artifacts/feat-511-ci-mac-galerie/ci-lauf-belege.md`): Lauf 39015688624 rot, weil die App beim allerersten Start kein Fenster öffnete; der Test öffnet es seitdem wie ein Nutzer über das Menüleisten-Symbol („Open Loose Ends“) und vermerkt `window at launch` (App-Frage: #513). Lauf 39016175718 grün, 6 Bilder, Fenster 900 × 450 pt (< 1120 → #514). Ad-hoc-Signatur reichte, kein Rückfall auf `CODE_SIGNING_ALLOWED=NO`. Umfang +324 statt ≤ 250 LoC (240 davon Tests, keine App-Zeile); Henning: „So lassen“.
 - 2026-10-17: Mindestbreite beziffert (700 pt Zusicherung, 1120 pt volle Startseite, Größe als Anhang), nach PO-Briefing.
 - 2026-10-17: Initial spec created (Analyse in `docs/context/feat-511-ci-mac-galerie.md`).
