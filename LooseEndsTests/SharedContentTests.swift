@@ -105,4 +105,53 @@ import Testing
     func probeLineEmpty() {
         #expect(SharedContent.probeLine(typeIdentifiers: [], loaded: nil) == "types=[] loaded=none")
     }
+
+    // MARK: - Attachments (#399)
+
+    private func shared(_ name: String, type: String, status: SharedAttachment.Status = .ready) -> SharedAttachment {
+        SharedAttachment(fileURL: URL(fileURLWithPath: "/tmp/\(name)"), fileName: name, typeIdentifier: type, byteCount: 10, status: status)
+    }
+
+    @Test("A shared file without text gives its readable name; photos alone leave the field empty")
+    func attachmentPrefill() {
+        let pdf = shared("Befund_Dr-Meier.pdf", type: "com.adobe.pdf")
+        let photo = shared("IMG_0001.heic", type: "public.heic")
+
+        let file = SharedContent.make(texts: [], urls: [], mails: [], attachments: [pdf])
+        #expect(file.prefill == "Befund Dr Meier")
+        #expect(file.attachments == [pdf])
+        #expect(file.channel == .share)
+
+        #expect(SharedContent.make(texts: [], urls: [], mails: [], attachments: [photo]).prefill == "")
+        #expect(SharedContent.make(texts: [], urls: [], mails: [], attachments: [photo, pdf]).prefill == "Befund Dr Meier")
+
+        for status in [SharedAttachment.Status.tooLarge, .overLimit] {
+            let skipped = shared("Befund.pdf", type: "com.adobe.pdf", status: status)
+            #expect(SharedContent.make(texts: [], urls: [], mails: [], attachments: [skipped]).prefill == "")
+        }
+    }
+
+    @Test("Text, links and mail keep the lead over a shared file, which is still carried")
+    func attachmentKeepsLead() throws {
+        let pdf = shared("Befund.pdf", type: "com.adobe.pdf")
+        let web = try #require(URL(string: "https://example.com/a"))
+        let message = try #require(URL(string: "message://%3Cx@example.com%3E"))
+        let file = URL(fileURLWithPath: "/tmp/Befund.pdf")
+        let cases: [(texts: [String], urls: [URL], mails: [String])] = [
+            (["Arzt anrufen"], [], []),
+            ([], [web], []),
+            ([], [message], []),
+            ([], [], [sampleMail]),
+            (["Arzt anrufen"], [file], []),
+        ]
+        for input in cases {
+            let without = SharedContent.make(texts: input.texts, urls: input.urls, mails: input.mails)
+            let with = SharedContent.make(texts: input.texts, urls: input.urls, mails: input.mails, attachments: [pdf])
+            #expect(with.prefill == without.prefill)
+            #expect(with.sourceURL == without.sourceURL)
+            #expect(with.channel == without.channel)
+            #expect(with.attachments == [pdf])
+        }
+        #expect(SharedContent.make(texts: ["x"], urls: [file], mails: [], attachments: [pdf]).sourceURL == nil, "a file link is still dropped")
+    }
 }
