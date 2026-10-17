@@ -62,7 +62,11 @@ final class MacGalleryTests: XCTestCase {
         XCTAssertTrue(field.waitForExistence(timeout: 10), "Start page shows no capture field")
         field.click()
         field.typeText(text + "\n")
-        let emptied = NSPredicate(format: "value == nil OR value == ''")
+        // XCUITest reports an empty text field with its placeholder as value (Apple forum 86653).
+        let emptied = NSPredicate(
+            format: "value == nil OR value == '' OR value == placeholderValue OR value == %@",
+            "What should I remember?"
+        )
         let wait = expectation(for: emptied, evaluatedWith: field)
         XCTAssertEqual(XCTWaiter.wait(for: [wait], timeout: 5), .completed, "Field kept \(text)")
     }
