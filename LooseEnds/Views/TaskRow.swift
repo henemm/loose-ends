@@ -53,7 +53,7 @@ struct TaskRow: View {
         let unseenAI = task.hasUnseenAutomaticRevisions
             && FieldSource.isAutomatic(task.dueDate == nil ? task.durationSourceRaw : task.dueSourceRaw)
         let style: AnyShapeStyle = mark.pressing ? AnyShapeStyle(.red) : unseenAI ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary)
-        return Text(Self.marginText(mark))
+        return Text(mark.text)
             .font(startMetrics?.margin ?? .caption.monospacedDigit())
             .multilineTextAlignment(.trailing)
             .lineLimit(2)
@@ -174,22 +174,5 @@ struct TaskRow: View {
             all.append(Trait(id: "context", text: context.name, symbol: ViewKind.context.symbol, tinted: unseen && FieldSource.isAutomatic(task.contextsSourceRaw)))
         }
         return Array(all.prefix(3))
-    }
-
-    /// The margin's words (#424). A day-only date past its day says how long it has been carried (#414).
-    private static func marginText(_ mark: ViewRules.MarginMark) -> String {
-        switch mark {
-        case .time(let date): date.formatted(date: .omitted, time: .shortened)
-        case .today: String(localized: "Today")
-        case .missed(let days) where days == 1: String(localized: "Yesterday")
-        case .missed(let days): String(localized: "\(days) days ago")
-        case .carried(let days) where days == 1: String(localized: "Since yesterday")
-        case .carried(let days): String(localized: "Since \(days) days")
-        case .tomorrow: String(localized: "Tomorrow")
-        case .weekday(let date): date.formatted(.dateTime.weekday(.abbreviated))
-        case .date(let date): date.formatted(.dateTime.day().month(.abbreviated))
-        case .duration(let bucket): FieldFormatting.duration(bucket)
-        case .none: ""
-        }
     }
 }

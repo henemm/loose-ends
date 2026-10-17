@@ -75,6 +75,10 @@ targets:
         LECloudContainer: iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UILaunchScreen: {}
+        # "Neue Aufgabe" in the large widget opens capture as looseends://capture (#521).
+        CFBundleURLTypes:
+          - CFBundleURLName: com.henning.looseends
+            CFBundleURLSchemes: [looseends]
         LSApplicationCategoryType: public.app-category.productivity   # the Mac App Store upload requires a category (#389)
         # Required alongside aps-environment, or CloudKit logs
         # "BUG IN CLIENT OF CLOUDKIT: CloudKit push notifications require the
@@ -190,8 +194,9 @@ targets:
     supportedDestinations: [iOS, macOS]
     sources:
       - LooseEndsWidgets
-      # The widget paints on the app's paper and tints with its accent (#488): its own copy of the two
-      # colour sets (LooseEndsWidgets/Assets.xcassets), kept equal to LooseEnds/Resources/Assets.xcassets.
+      # The widget paints on the app's paper, tints with its accent (#488) and completes in its green
+      # (#521): its own copy of the three colour sets (LooseEndsWidgets/Assets.xcassets), kept equal to
+      # LooseEnds/Resources/Assets.xcassets.
       # The logo's knot is the one shared file, as in the watch complication.
       - path: LooseEnds/Views/Thread.swift
       # Capture runs in the app process only (#326): iOS runs an intent compiled into several

@@ -6,12 +6,26 @@
     "Nothing lined up yet." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Noch nichts vorgemerkt." } } } },
     "What you lined up, one tap to finish it." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Was du dir vorgemerkt hast, mit einem Tipp erledigt." } } } },
     "Nothing lined up" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nichts vorgemerkt" } } } },
-    "Complete" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erledigt" } } } },
+    "Complete" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erledigen" } } } },
     "Capture" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erfassen" } } } },
     "Follow up on the offer" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Beim Angebot nachhaken" } } } },
     "Complete task" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufgabe erledigen" } } } },
     "Open task" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufgabe öffnen" } } } },
     "Task" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufgabe" } } } },
-    "Open capture" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erfassung öffnen" } } } }
+    "Open capture" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erfassung öffnen" } } } },
+    "Today" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute" } } } },
+    "Yesterday" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Gestern" } } } },
+    "%lld days ago" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Vor %lld Tagen" } } } },
+    "Since yesterday" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Seit gestern" } } } },
+    "Since %lld days" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Seit %lld Tagen" } } } },
+    "Tomorrow" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Morgen" } } } },
+    "5 min" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "5 Min." } } } },
+    "15 min" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "15 Min." } } } },
+    "30 min" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "30 Min." } } } },
+    "1 h" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "1 Std." } } } },
+    "2 h+" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "2 Std.+" } } } },
+    "Completed" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erledigt" } } } },
+    "New task" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Neue Aufgabe" } } } },
+    "%lld more" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "%lld weitere" } } } }
   }
 }
