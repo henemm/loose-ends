@@ -179,8 +179,9 @@ import UserNotifications
 
         await fixture.center.reschedule()
 
-        let carry = fixture.recorder.pending.filter { $0.key.hasPrefix(CarryReminders.identifierPrefix) }
-        let tomorrowMorning = try #require(carry.values.first { fixture.fireComponents(of: $0).day == fixture.calendar.component(.day, from: fixture.tomorrow) })
+        // Each day has a morning and an evening one now (#518): pick the morning one.
+        let mornings = fixture.recorder.pending.values.filter { $0.content.categoryIdentifier == CarryReminders.categoryIdentifier }
+        let tomorrowMorning = try #require(mornings.first { fixture.fireComponents(of: $0).day == fixture.calendar.component(.day, from: fixture.tomorrow) })
         #expect(tomorrowMorning.content.categoryIdentifier == CarryReminders.categoryIdentifier)
         #expect(Set(tomorrowMorning.content.userInfo["taskIDs"] as? [String] ?? []) == [a.id.uuidString, b.id.uuidString])
         #expect(tomorrowMorning.content.title == String(localized: "Loose ends: \(2)"))
@@ -220,9 +221,12 @@ import UserNotifications
 
         let today = fixture.calendar.startOfDay(for: Date())
         #expect(task.dueDate == today)
-        let mornings = fixture.recorder.pending.values.filter { $0.content.categoryIdentifier == CarryReminders.categoryIdentifier }
-        #expect(mornings.allSatisfy { !($0.content.userInfo["taskIDs"] as? [String] ?? []).contains(task.id.uuidString) },
-                "due today now: no longer one that needs a new date in the morning")
+        let thisMorning = fixture.recorder.pending.values.filter {
+            $0.content.categoryIdentifier == CarryReminders.categoryIdentifier
+                && fixture.fireComponents(of: $0).day == fixture.calendar.component(.day, from: today)
+        }
+        #expect(thisMorning.allSatisfy { !($0.content.userInfo["taskIDs"] as? [String] ?? []).contains(task.id.uuidString) },
+                "due today now: it does not need a new date this morning, only from tomorrow if still open")
     }
 
     @Test("The evening hands over what needs a new date at 20:00 in the CARRY_EVENING category")
