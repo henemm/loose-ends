@@ -1,0 +1,31 @@
+test_automation_mode_is_enabled_before_the_test (scripts.test_ci_xcode27.MacGallery.test_automation_mode_is_enabled_before_the_test) ... ok
+test_claude_md_names_the_mac_gallery (scripts.test_ci_xcode27.MacGallery.test_claude_md_names_the_mac_gallery) ... ok
+test_diagnosis_export_and_upload_run_after_a_failure (scripts.test_ci_xcode27.MacGallery.test_diagnosis_export_and_upload_run_after_a_failure) ... ok
+test_export_keeps_only_mac_gallery_attachments (scripts.test_ci_xcode27.MacGallery.test_export_keeps_only_mac_gallery_attachments) ... ok
+test_gallery_source_is_mac_only (scripts.test_ci_xcode27.MacGallery.test_gallery_source_is_mac_only) ... ok
+test_job_runs_on_xcode_27_and_never_fails_silently (scripts.test_ci_xcode27.MacGallery.test_job_runs_on_xcode_27_and_never_fails_silently) ... ok
+test_runs_only_the_mac_gallery_on_the_mac_with_ad_hoc_signing (scripts.test_ci_xcode27.MacGallery.test_runs_only_the_mac_gallery_on_the_mac_with_ad_hoc_signing) ... ok
+test_ui_smoke_neither_runs_nor_exports_the_mac_gallery (scripts.test_ci_xcode27.MacGallery.test_ui_smoke_neither_runs_nor_exports_the_mac_gallery) ... ok
+test_fails_without_iphone_17_on_ios_27_0 (scripts.test_ci_xcode27.PickSimulator.test_fails_without_iphone_17_on_ios_27_0) ... ok
+test_picks_iphone_17_on_ios_27_0 (scripts.test_ci_xcode27.PickSimulator.test_picks_iphone_17_on_ios_27_0) ... ok
+test_accepts_xcode_27_0 (scripts.test_ci_xcode27.SelectXcodeAction.test_accepts_xcode_27_0) ... ok
+test_rejects_other_version (scripts.test_ci_xcode27.SelectXcodeAction.test_rejects_other_version) ... ok
+test_selects_fixed_xcode_27_app (scripts.test_ci_xcode27.SelectXcodeAction.test_selects_fixed_xcode_27_app) ... ok
+test_claude_md_describes_the_new_ci (scripts.test_ci_xcode27.Sources.test_claude_md_describes_the_new_ci) ... ok
+test_no_compiler_switch_left (scripts.test_ci_xcode27.Sources.test_no_compiler_switch_left) ... ok
+test_no_server_recognition_dialog_left_to_decline (scripts.test_ci_xcode27.SpeechStressOnXcode27.test_no_server_recognition_dialog_left_to_decline) ... ok
+test_stress_runs_skip_the_600_second_diagnostics (scripts.test_ci_xcode27.SpeechStressOnXcode27.test_stress_runs_skip_the_600_second_diagnostics) ... ok
+test_check_names_unchanged (scripts.test_ci_xcode27.Workflows.test_check_names_unchanged) ... ok
+test_every_job_runs_on_xcode_27_with_the_action (scripts.test_ci_xcode27.Workflows.test_every_job_runs_on_xcode_27_with_the_action) ... ok
+test_no_lowering_anywhere_in_github (scripts.test_ci_xcode27.Workflows.test_no_lowering_anywhere_in_github) ... ok
+test_ui_smoke_has_a_diagnosis_step_that_never_fails (scripts.test_ci_xcode27.Workflows.test_ui_smoke_has_a_diagnosis_step_that_never_fails) ... ok
+test_ui_smoke_lets_the_simulator_settle_and_runs_without_parallel_clones (scripts.test_ci_xcode27.Workflows.test_ui_smoke_lets_the_simulator_settle_and_runs_without_parallel_clones) ... ok
+test_unit_job_prints_measurement_reports_into_its_own_log (scripts.test_ci_xcode27.Workflows.test_unit_job_prints_measurement_reports_into_its_own_log) ... ok
+test_unit_job_runs_every_script_test (scripts.test_ci_xcode27.Workflows.test_unit_job_runs_every_script_test)
+#185: every scripts/test_*.py runs in CI, in one step, before Xcode. ... ok
+test_workflows_wait_for_the_simulator_to_finish_booting (scripts.test_ci_xcode27.Workflows.test_workflows_wait_for_the_simulator_to_finish_booting) ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 4.241s
+
+OK

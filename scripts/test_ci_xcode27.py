@@ -141,6 +141,99 @@ class Workflows(unittest.TestCase):
         self.assertLess(names.index(step["name"]), names.index("Upload test results"))
 
 
+class MacGallery(unittest.TestCase):
+    """#511: the Mac app photographed in CI, never on Henning's Mac."""
+
+    def job(self):
+        return load(CI)["jobs"]["mac-gallery"]
+
+    def names(self):
+        return [s.get("name") for s in self.job()["steps"]]
+
+    def test_job_runs_on_xcode_27_and_never_fails_silently(self):
+        job = self.job()
+        self.assertEqual(job["name"], "Mac Gallery (macOS)")
+        self.assertEqual(job["runs-on"], "xcode-27")
+        self.assertIn(ACTION_REF, [s.get("uses") for s in job["steps"]])
+        self.assertNotIn("continue-on-error", job, "Eine still scheiternde Galerie ist kein Nachweis")
+
+    def test_runs_only_the_mac_gallery_on_the_mac_with_ad_hoc_signing(self):
+        run = step_named(self.job(), "Run Mac gallery")["run"]
+        self.assertIn("-destination 'platform=macOS'", run)
+        self.assertIn("-only-testing:LooseEndsUITests/MacGalleryTests", run)
+        self.assertEqual(run.count("-only-testing:"), 1, "nur die Galerie, nicht alle UI-Tests")
+        self.assertIn("-resultBundlePath MacGallery.xcresult", run)
+        for arg in ("CODE_SIGN_IDENTITY=-", "CODE_SIGN_STYLE=Manual", "DEVELOPMENT_TEAM=", "CODE_SIGN_ENTITLEMENTS="):
+            self.assertIn(arg, run.split(), arg)
+
+    def test_automation_mode_is_enabled_before_the_test(self):
+        names = self.names()
+        step = step_named(self.job(), "Enable UI automation")
+        self.assertIn("sudo automationmodetool enable-automationmode-without-authentication", step["run"])
+        self.assertIn("DevToolsSecurity -enable", step["run"])
+        self.assertLess(names.index(step["name"]), names.index(step_named(self.job(), "Run Mac gallery")["name"]))
+
+    def test_diagnosis_export_and_upload_run_after_a_failure(self):
+        job, names = self.job(), self.names()
+        test_at = names.index(step_named(job, "Run Mac gallery")["name"])
+        diagnose = step_named(job, "Diagnose UI automation")
+        self.assertTrue(diagnose.get("continue-on-error"), "Die Diagnose darf den Lauf nie abbrechen")
+        for prefix in ("Diagnose UI automation", "Export Mac gallery", "Upload Mac gallery"):
+            step = step_named(job, prefix)
+            self.assertEqual(step.get("if"), "always()", prefix)
+            self.assertGreater(names.index(step["name"]), test_at, prefix)
+        upload = step_named(job, "Upload Mac gallery")
+        self.assertEqual(upload["with"]["name"], "MacGallery")
+        self.assertEqual(upload["with"]["path"], "MacGallery")
+
+    def test_export_keeps_only_mac_gallery_attachments(self):
+        script = step_named(self.job(), "Export Mac gallery")["run"]
+        manifest = [{"attachments": [
+            {"suggestedHumanReadableName": "mac-gallery-light-1-start_0_AB12.png", "exportedFileName": "a.png"},
+            {"suggestedHumanReadableName": "mac-gallery-light-window-size_0_CD34.txt", "exportedFileName": "b.txt"},
+            {"suggestedHumanReadableName": "gallery-light-1-start_0_EF56.png", "exportedFileName": "c.png"},
+            {"suggestedHumanReadableName": "Screenshot at failure_0_GH78.png", "exportedFileName": "d.png"},
+        ]}]
+        with tempfile.TemporaryDirectory() as tmp:
+            fakes, work = Path(tmp) / "bin", Path(tmp) / "work"
+            fakes.mkdir()
+            work.mkdir()
+            write_exe(fakes, "xcrun", """
+out=""; while [ $# -gt 0 ]; do [ "$1" = "--output-path" ] && out="$2"; shift; done
+cp "$FIXTURE"/* "$out"/
+""")
+            fixture = Path(tmp) / "fixture"
+            fixture.mkdir()
+            (fixture / "manifest.json").write_text(json.dumps(manifest))
+            for name in ("a.png", "b.txt", "c.png", "d.png"):
+                (fixture / name).write_text(name)
+            result = run_bash(f"cd {work}\n{script}", fakes, {"FIXTURE": str(fixture)})
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertEqual(sorted(p.name for p in (work / "MacGallery").iterdir()),
+                             ["mac-gallery-light-1-start.png", "mac-gallery-light-window-size.txt"])
+
+    def test_ui_smoke_neither_runs_nor_exports_the_mac_gallery(self):
+        smoke = load(CI)["jobs"]["ui-smoke"]
+        self.assertNotIn("MacGallery", yaml.safe_dump(smoke))
+        self.assertEqual(step_named(smoke, "Upload design gallery")["with"]["name"], "DesignGallery")
+
+    def test_gallery_source_is_mac_only(self):
+        lines = [l for l in (ROOT / "LooseEndsUITests" / "MacGalleryTests.swift").read_text().splitlines()
+                 if l.strip() and not l.lstrip().startswith("//")]
+        self.assertEqual(lines[0].strip(), "#if os(macOS)")
+        self.assertEqual(lines[-1].strip(), "#endif")
+        source = "\n".join(lines)
+        for name in ("mac-gallery-", "window-size", "viewRow_new", "startCaptureField", "detailRawTextMarker"):
+            self.assertIn(name, source, name)
+        self.assertIn(".screenshot()", source)
+        self.assertNotIn("app.screenshot()", source, "das Hauptfenster, nicht der ganze Bildschirm")
+
+    def test_claude_md_names_the_mac_gallery(self):
+        text = (ROOT / "CLAUDE.md").read_text()
+        for name in ("Mac Gallery (macOS)", "MacGallery", "mac-gallery-"):
+            self.assertTrue(name in text, f"CLAUDE.md nennt {name} nicht")
+
+
 class PickSimulator(unittest.TestCase):
     def pick(self, workflow, key, devices):
         script = step_named(load(workflow)["jobs"][key], "Pick a simulator")["run"]

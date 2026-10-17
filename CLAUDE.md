@@ -167,6 +167,9 @@ reports any other version. The deployment target stays at 27.0, nothing in `proj
 UI Smoke and Speech Stress run only on an iPhone 17 simulator with iOS 27.0 (otherwise the step stops).
 If the label goes away or is renamed, follow `docs/reference/testflight.md` and adjust `runs-on` in
 `ci.yml`, `speech-stress.yml` and `testflight.yml`.
+The job „Mac Gallery (macOS)“ photographs the Mac app (`MacGalleryTests`, start page, New, detail, light and dark) and
+uploads the pictures `mac-gallery-*` as the artifact `MacGallery` (#511); Mac pictures come only from there, never from
+Henning's Mac.
 
 ## Ship
 

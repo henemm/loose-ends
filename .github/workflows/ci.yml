@@ -310,3 +310,84 @@ jobs:
             host-load.log
             hang-reports
           if-no-files-found: warn
+
+  # #511: the Mac app photographed in CI (MacGalleryTests), never on Henning's Mac. The app is signed
+  # ad hoc for this run only, without restricted entitlements (iCloud, push), so macOS lets it start.
+  # An experiment: whether the xcode-27 runner allows Mac UI automation is shown by the first run.
+  mac-gallery:
+    name: Mac Gallery (macOS)
+    runs-on: xcode-27
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v7
+      - name: Select Xcode 27.0
+        uses: ./.github/actions/select-xcode-27
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        run: xcodegen generate
+      - name: Enable UI automation (#511)
+        # Without it the test stops with "Timed out while enabling automation mode" (Apple forum 693850).
+        run: |
+          sudo automationmodetool enable-automationmode-without-authentication
+          sudo DevToolsSecurity -enable || true
+      - name: Run Mac gallery
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project LooseEnds.xcodeproj \
+            -scheme LooseEnds \
+            -destination 'platform=macOS' \
+            -only-testing:LooseEndsUITests/MacGalleryTests \
+            -parallel-testing-enabled NO \
+            -resultBundlePath MacGallery.xcresult \
+            CODE_SIGN_IDENTITY=- \
+            CODE_SIGN_STYLE=Manual \
+            DEVELOPMENT_TEAM= \
+            CODE_SIGN_ENTITLEMENTS= \
+            2>&1 | tee mac-gallery.log | xcbeautify
+      - name: Diagnose UI automation
+        if: always()
+        continue-on-error: true
+        timeout-minutes: 5
+        run: |
+          automationmodetool || true
+          DevToolsSecurity -status || true
+          system_profiler SPDisplaysDataType | grep -i resolution || true
+          log show --last 15m --style compact \
+            --predicate 'process == "testmanagerd" OR subsystem == "com.apple.TCC"' | tail -200 || true
+      - name: Export Mac gallery
+        if: always()
+        continue-on-error: true
+        run: |
+          # The window photos (.png) and the window size (.txt) MacGalleryTests attaches, under their names.
+          mkdir -p mac-gallery-raw MacGallery
+          xcrun xcresulttool export attachments --path MacGallery.xcresult --output-path mac-gallery-raw
+          python3 - <<'PY'
+          import json, pathlib, shutil
+          raw, out = pathlib.Path("mac-gallery-raw"), pathlib.Path("MacGallery")
+          for test in json.loads((raw / "manifest.json").read_text()):
+              for a in test.get("attachments", []):
+                  name = a.get("suggestedHumanReadableName", "")
+                  if name.startswith("mac-gallery-"):
+                      stem = name.split("_")[0]
+                      suffix = pathlib.Path(a["exportedFileName"]).suffix
+                      shutil.copy(raw / a["exportedFileName"], out / f"{stem}{suffix}")
+          print("\n".join(sorted(p.name for p in out.iterdir())) or "no Mac gallery attachments")
+          PY
+      - name: Upload Mac gallery
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: MacGallery
+          path: MacGallery
+          if-no-files-found: warn
+      - name: Upload Mac gallery results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: MacGalleryResults
+          path: |
+            MacGallery.xcresult
+            mac-gallery.log
+          if-no-files-found: warn

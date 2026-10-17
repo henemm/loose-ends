@@ -1,0 +1,75 @@
+EFEE.EE..................
+======================================================================
+ERROR: test_automation_mode_is_enabled_before_the_test (scripts.test_ci_xcode27.MacGallery.test_automation_mode_is_enabled_before_the_test)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/scripts/test_ci_xcode27.py", line 170, in test_automation_mode_is_enabled_before_the_test
+    names = self.names()
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/scripts/test_ci_xcode27.py", line 151, in names
+    return [s.get("name") for s in self.job()["steps"]]
+                                   ~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/scripts/test_ci_xcode27.py", line 148, in job
+    return load(CI)["jobs"]["mac-gallery"]
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'mac-gallery'
+
+======================================================================
+ERROR: test_diagnosis_export_and_upload_run_after_a_failure (scripts.test_ci_xcode27.MacGallery.test_diagnosis_export_and_upload_run_after_a_failure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/scripts/test_ci_xcode27.py", line 177, in test_diagnosis_export_and_upload_run_after_a_failure
+    job, names = self.job(), self.names()
+                 ~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/scripts/test_ci_xcode27.py", line 148, in job
+    return load(CI)["jobs"]["mac-gallery"]
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'mac-gallery'
+
+======================================================================
+ERROR: test_export_keeps_only_mac_gallery_attachments (scripts.test_ci_xcode27.MacGallery.test_export_keeps_only_mac_gallery_attachments)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/scripts/test_ci_xcode27.py", line 190, in test_export_keeps_only_mac_gallery_attachments
+    script = step_named(self.job(), "Export Mac gallery")["run"]
+                        ~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/scripts/test_ci_xcode27.py", line 148, in job
+    return load(CI)["jobs"]["mac-gallery"]
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'mac-gallery'
+
+======================================================================
+ERROR: test_job_runs_on_xcode_27_and_never_fails_silently (scripts.test_ci_xcode27.MacGallery.test_job_runs_on_xcode_27_and_never_fails_silently)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/scripts/test_ci_xcode27.py", line 154, in test_job_runs_on_xcode_27_and_never_fails_silently
+    job = self.job()
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/scripts/test_ci_xcode27.py", line 148, in job
+    return load(CI)["jobs"]["mac-gallery"]
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'mac-gallery'
+
+======================================================================
+ERROR: test_runs_only_the_mac_gallery_on_the_mac_with_ad_hoc_signing (scripts.test_ci_xcode27.MacGallery.test_runs_only_the_mac_gallery_on_the_mac_with_ad_hoc_signing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/scripts/test_ci_xcode27.py", line 161, in test_runs_only_the_mac_gallery_on_the_mac_with_ad_hoc_signing
+    run = step_named(self.job(), "Run Mac gallery")["run"]
+                     ~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/scripts/test_ci_xcode27.py", line 148, in job
+    return load(CI)["jobs"]["mac-gallery"]
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'mac-gallery'
+
+======================================================================
+FAIL: test_claude_md_names_the_mac_gallery (scripts.test_ci_xcode27.MacGallery.test_claude_md_names_the_mac_gallery)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/scripts/test_ci_xcode27.py", line 234, in test_claude_md_names_the_mac_gallery
+    self.assertTrue(name in text, f"CLAUDE.md nennt {name} nicht")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : CLAUDE.md nennt Mac Gallery (macOS) nicht
+
+----------------------------------------------------------------------
+Ran 25 tests in 1.327s
+
+FAILED (failures=1, errors=5)
