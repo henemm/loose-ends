@@ -255,7 +255,9 @@ not scope creep on the current one.
   (MainActor, writes with author `.user`, reason "Siri", F1 notes appended to the raw text, F2 unknown list creates the
   project via `CatalogService.project(named:in:)` by `nameKey`; on any error nothing is left behind); no Siri types in
   `Shared/Services`; not in the product path until #25 Schnitt 2), `WaitingOn` ("waiting on" set by hand:
-  link, loosen, picker candidates without loops, a user revision per change, #251). All pure over the model objects; the
+  link, loosen, picker candidates without loops, a user revision per change, #251), `SharedAttachment` (a shared photo or
+  file before saving: temp file, never `Data`; title from the file name, photo name, ≤ 50 MB and ≤ 10 per share;
+  `CaptureService.save(attachments:)` reads each once, #399). All pure over the model objects; the
   caller saves.
 - `Shared/Enrichment` — `TaskEnricher` protocol, `EnrichmentWriter` (threshold + revisions; never writes the model's contexts or project, #215/#469), `EnrichmentCoordinator`
   (catch-up pass), `FoundationModelsEnricher` (on-device model, `#if canImport(FoundationModels)`), `DueDateRule`

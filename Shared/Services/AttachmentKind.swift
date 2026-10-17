@@ -7,7 +7,11 @@ enum AttachmentKind {
     static let maximumBytes = 50 * 1024 * 1024
 
     static func fits(_ data: Data) -> Bool {
-        data.count <= maximumBytes
+        fits(byteCount: data.count)
+    }
+
+    static func fits(byteCount: Int) -> Bool {
+        byteCount <= maximumBytes
     }
 
     /// The SF Symbol for the row: a photo, a PDF, or any other document.
