@@ -3,8 +3,9 @@ import SwiftData
 import Testing
 @testable import LooseEnds
 
-/// The start screen's "Now" (#368): overdue, then due today, then the rest of "Next up", each task
-/// once. Built from the same two sets as the app badge, so the two never disagree.
+/// The start screen's "Now" (#368): due today, then the rest of "Next up", each task once. Built
+/// from the same sets as the app badge, so the two never disagree. What is left from earlier days
+/// waits in the "Loose ends" card until it is sorted (#518).
 @Suite("Now on the start screen") struct NowRuleTests {
     static var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
@@ -32,7 +33,7 @@ import Testing
         ViewRules.now(in: all, now: Self.now, calendar: Self.calendar)
     }
 
-    @Test("Overdue comes before due today, due today before the rest of Next up")
+    @Test("Due today before the rest of Next up; a task left from yesterday waits in the card (#518)")
     @MainActor func overdueBeforeTodayBeforeLined() async throws {
         let store = try TestStore()
         let lined = Self.task("Angebot schreiben", rank: 0)
@@ -42,8 +43,8 @@ import Testing
         all.forEach(store.context.insert)
 
         let result = Self.now(all)
-        #expect(result.all.map(\.id) == [overdue.id, today.id, lined.id])
-        #expect(result.overdue.map(\.id) == [overdue.id])
+        #expect(result.all.map(\.id) == [today.id, lined.id])
+        #expect(ViewRules.leftovers(in: all, now: Self.now, calendar: Self.calendar).map(\.id) == [overdue.id])
         #expect(result.today.map(\.id) == [today.id])
         #expect(result.lined.map(\.id) == [lined.id])
     }
@@ -60,15 +61,14 @@ import Testing
         #expect(result.lined.isEmpty)
     }
 
-    @Test("Lined up and overdue: time pressure wins")
+    @Test("Lined up and left from earlier: it waits in the card too, until it is sorted (#518)")
     @MainActor func overdueAndLinedStaysInTimePressureGroup() async throws {
         let store = try TestStore()
         let both = Self.task("Paket abholen", due: Self.day(-3), rank: 0)
         store.context.insert(both)
 
-        let result = Self.now([both])
-        #expect(result.overdue.map(\.id) == [both.id])
-        #expect(result.lined.isEmpty)
+        #expect(Self.now([both]).all.isEmpty)
+        #expect(ViewRules.leftovers(in: [both], now: Self.now, calendar: Self.calendar).map(\.id) == [both.id])
     }
 
     @Test("Due earlier today is today, not overdue: the day counts, not the hour")
@@ -79,7 +79,7 @@ import Testing
 
         let result = Self.now([morning])
         #expect(result.today.map(\.id) == [morning.id])
-        #expect(result.overdue.isEmpty)
+        #expect(ViewRules.leftovers(in: [morning], now: Self.now, calendar: Self.calendar).isEmpty)
     }
 
     @Test("Due today sorts by hour, earliest first")
@@ -105,15 +105,22 @@ import Testing
         #expect(Self.now(all).lined.map(\.id) == [first.id, second.id, third.id])
     }
 
-    @Test("Overdue: the oldest first")
+    @Test("Loose ends: the oldest first, blocked, parked and done stay out (#518)")
     @MainActor func overdueOldestFirst() async throws {
         let store = try TestStore()
         let twoDays = Self.task("Zwei Tage", due: Self.day(-2))
         let fiveDays = Self.task("Fünf Tage", due: Self.day(-5))
-        let all = [twoDays, fiveDays]
+        let parked = Self.task("Keller", due: Self.day(-1))
+        parked.status = .parked
+        let done = Self.task("Erledigt", due: Self.day(-1))
+        done.status = .done
+        let blocker = Self.task("Schlüssel holen")
+        let blocked = Self.task("Wohnung aufschließen", due: Self.day(-1))
+        blocked.blockedBy = [blocker]
+        let all = [twoDays, fiveDays, parked, done, blocker, blocked]
         all.forEach(store.context.insert)
 
-        #expect(Self.now(all).overdue.map(\.id) == [fiveDays.id, twoDays.id])
+        #expect(ViewRules.leftovers(in: all, now: Self.now, calendar: Self.calendar).map(\.id) == [fiveDays.id, twoDays.id])
     }
 
     @Test("Blocked, subtasks, done and parked stay out, even when due today or lined up")
@@ -157,7 +164,7 @@ import Testing
     @MainActor func emptyInputIsEmpty() async throws {
         let result = Self.now([])
         #expect(result.all.isEmpty)
-        #expect(result.overdue.isEmpty && result.today.isEmpty && result.lined.isEmpty)
+        #expect(result.today.isEmpty && result.lined.isEmpty)
     }
 
     @Test("Now holds exactly Due today and Next up, and as many tasks as the badge counts")

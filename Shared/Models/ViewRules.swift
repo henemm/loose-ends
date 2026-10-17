@@ -4,7 +4,6 @@ import Foundation
 /// Pure functions over fetched tasks so they are trivially unit-testable.
 enum ViewRules {
     static let oldAfterDays = 30
-    static let carriedInNowDays = 7
 
     /// Why a task sits in "New", the review tray (#188).
     enum ReviewReason: Equatable {
@@ -67,19 +66,24 @@ enum ViewRules {
             + occasionalViews.filter { !tasks(for: $0, in: all, now: now, calendar: calendar).isEmpty }
     }
 
-    /// What stands for today (Henning, 2026-10-11, #299): open top-level tasks due today or
-    /// earlier, earliest first. Differs from the "Due" view only by the carried-over cut-off below. Blocked tasks stay out, as in "Due".
-    /// A day-only date carried longer than `carriedInNowDays` leaves it (#414, Henning 2026-10-14): "Now"
-    /// shows no intention older than a week. It stays in "Due" and, captured long ago, in "Old".
+    /// What stands for today (Henning, 2026-10-11, #299): open top-level tasks due today, earliest
+    /// first. Blocked tasks stay out, as in "Due". What is left from earlier days is not today's: it
+    /// waits in `leftovers` until it is sorted (Henning, 2026-10-17, #518), so a day no longer
+    /// starts full. The "Due" view keeps showing it.
     static func dueToday(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [TaskItem] {
         let today = calendar.startOfDay(for: now)
         let end = calendar.date(byAdding: .day, value: 1, to: today) ?? now
-        return all.filter { $0.parent == nil && $0.isOpen && !$0.isBlocked && ($0.dueDate.map { $0 < end } ?? false) }
-            .filter { task in
-                if case .carried(let days) = dueState(of: task, now: now, calendar: calendar) { return days <= carriedInNowDays }
-                return true
-            }
+        return all.filter { $0.parent == nil && $0.isOpen && !$0.isBlocked && ($0.dueDate.map { $0 >= today && $0 < end } ?? false) }
             .sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
+    }
+
+    /// Left from earlier days (#518): open top-level tasks due before today, oldest first. The start
+    /// screen asks once for each — today, tomorrow, the weekend or park — and until then they count
+    /// neither in "Now" nor on the app icon.
+    static func leftovers(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [TaskItem] {
+        let today = calendar.startOfDay(for: now)
+        return all.filter { $0.parent == nil && $0.isOpen && !$0.isBlocked && ($0.dueDate.map { $0 < today } ?? false) }
+            .sorted { ($0.dueDate ?? .distantPast) < ($1.dueDate ?? .distantPast) }
     }
 
     /// How a due date reads in a row (#414, ADR-14): red only for time pressure. A task due today is
@@ -147,35 +151,34 @@ enum ViewRules {
 
     /// The number on the app icon (#299): "Next up" plus "Due today", each task once. On the start
     /// screen a task in both stands in both lists (Henning, 2026-10-11); the count does not double it.
+    /// What is left from earlier days counts only once it is sorted (#518).
     static func badgeCount(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> Int {
-        let next = tasks(for: .next, in: all, now: now, calendar: calendar).map(\.id)
-        let due = dueToday(in: all, now: now, calendar: calendar).map(\.id)
-        return Set(next + due).count
+        self.now(in: all, now: now, calendar: calendar).all.count
     }
 
     /// "Now" on the iPhone start screen (#368), split by time pressure.
     struct NowTasks {
-        let overdue: [TaskItem]
         let today: [TaskItem]
         let lined: [TaskItem]
-        var all: [TaskItem] { overdue + today + lined }
+        var all: [TaskItem] { today + lined }
     }
 
-    /// "Now" (#368): "Due today" and "Next up" as one list, each task once — the same two sets
-    /// `badgeCount` counts. Overdue first (oldest first), then due today (earliest first), then the
-    /// rest of "Next up" by rank. A task lined up and due stands with the due ones: time pressure wins.
+    /// "Now" (#368): "Due today" and "Next up" as one list, each task once — the same sets
+    /// `badgeCount` counts. Due today first (earliest first), then the rest of "Next up" by rank. A
+    /// task lined up and due stands with the due ones: time pressure wins. A task left from an
+    /// earlier day stays out, lined up or not, until it is sorted (#518).
     static func now(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> NowTasks {
+        let left = Set(leftovers(in: all, now: now, calendar: calendar).map(\.id))
         var seen = Set<UUID>()
         let union = (dueToday(in: all, now: now, calendar: calendar)
-            + tasks(for: .next, in: all, now: now, calendar: calendar)).filter { seen.insert($0.id).inserted }
+            + tasks(for: .next, in: all, now: now, calendar: calendar))
+            .filter { !left.contains($0.id) && seen.insert($0.id).inserted }
         let today = calendar.startOfDay(for: now)
         let end = calendar.date(byAdding: .day, value: 1, to: today) ?? now
-        let overdue = union.filter { ($0.dueDate.map { $0 < today } ?? false) }
         let dueNow = union.filter { ($0.dueDate.map { $0 >= today && $0 < end } ?? false) }
-        let timed = Set((overdue + dueNow).map(\.id))
+        let timed = Set(dueNow.map(\.id))
         let lined = union.filter { !timed.contains($0.id) }
-        return NowTasks(overdue: overdue.sorted(by: byDueThenRank), today: dueNow.sorted(by: byDueThenRank),
-                        lined: lined.sorted(by: byRank))
+        return NowTasks(today: dueNow.sorted(by: byDueThenRank), lined: lined.sorted(by: byRank))
     }
 
     /// Due date first, then rank (none last), then capture time (#368).

@@ -79,7 +79,7 @@ import Testing
         #expect(Self.state(due: Self.day(0), status: .unprocessed, in: store) == .today)
     }
 
-    @Test("Now, the badge and Due still treat a carried task as overdue")
+    @Test("A carried task waits in the card, not in Now or on the badge; Due keeps it (#518)")
     @MainActor func viewsUnchanged() async throws {
         let store = try TestStore()
         let carried = TaskItem(rawText: "Hecke schneiden")
@@ -87,8 +87,9 @@ import Testing
         carried.dueDate = Self.day(-3)
         store.context.insert(carried)
 
-        #expect(ViewRules.now(in: [carried], now: Self.now, calendar: Self.calendar).overdue.map(\.id) == [carried.id])
-        #expect(ViewRules.badgeCount(in: [carried], now: Self.now, calendar: Self.calendar) == 1)
+        #expect(ViewRules.now(in: [carried], now: Self.now, calendar: Self.calendar).all.isEmpty)
+        #expect(ViewRules.leftovers(in: [carried], now: Self.now, calendar: Self.calendar).map(\.id) == [carried.id])
+        #expect(ViewRules.badgeCount(in: [carried], now: Self.now, calendar: Self.calendar) == 0)
         #expect(ViewRules.tasks(for: .due, in: [carried], now: Self.now, calendar: Self.calendar).map(\.id) == [carried.id])
     }
 }

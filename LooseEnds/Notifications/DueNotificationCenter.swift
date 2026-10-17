@@ -163,11 +163,15 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
             let stale = await scheduler.pendingIdentifiers()
                 .filter { $0.hasPrefix(DueReminders.identifierPrefix) || $0.hasPrefix(CarryReminders.identifierPrefix) }
             scheduler.remove(stale)
-            for reminder in reminders {
-                try await scheduler.add(Self.request(for: reminder))
-            }
-            for reminder in carried {
-                try await scheduler.add(Self.request(for: reminder))
+            // The bundled ones first, and one failing request does not cost the rest (#518): the
+            // morning notification stayed away while a single reminder before it failed.
+            let requests = carried.map { Self.request(for: $0) } + reminders.map { Self.request(for: $0) }
+            for request in requests {
+                do {
+                    try await scheduler.add(request)
+                } catch {
+                    Self.logger.error("Scheduling \(request.identifier, privacy: .public) failed: \(error, privacy: .public)")
+                }
             }
             await updateBadge(for: tasks, with: scheduler)
         } catch {

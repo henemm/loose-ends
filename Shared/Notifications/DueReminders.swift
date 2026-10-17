@@ -54,9 +54,15 @@ enum DueReminders {
         var identifier: String { DueReminders.identifierPrefix + taskID.uuidString }
     }
 
-    /// One reminder per open task with a due date whose reminder time is still ahead. Unsorted and
-    /// unchecked tasks count: the rules set their date without the model (#95, #144), and without
-    /// Apple Intelligence a task stays unsorted for good (#352). Parked and done ones do not.
+    /// iOS keeps at most 64 pending notifications per app. The single reminders take at most this
+    /// many, the soonest first, so the bundled morning or evening ones (`CarryReminders`, a handful)
+    /// and the places (at most 20) always fit (#518).
+    static let maxPlanned = 40
+
+    /// One reminder per open task with a due date whose reminder time is still ahead, the soonest
+    /// `maxPlanned`. Unsorted and unchecked tasks count: the rules set their date without the model
+    /// (#95, #144), and without Apple Intelligence a task stays unsorted for good (#352). Parked and
+    /// done ones do not.
     static func plan(
         for tasks: [TaskItem],
         time: Time = .standard,
@@ -73,6 +79,8 @@ enum DueReminders {
             return Reminder(taskID: task.id, title: task.displayTitle, fireDate: fire, kind: kind)
         }
         .sorted { $0.fireDate < $1.fireDate }
+        .prefix(maxPlanned)
+        .map { $0 }
     }
 
     /// The task a tap on the notification itself opens (#331), the same way as a title in the

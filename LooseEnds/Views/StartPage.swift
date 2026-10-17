@@ -93,6 +93,7 @@ struct StartPage: View {
                 .listRowSeparator(.hidden)
                 .startRow(metrics)
                 .paperRow()
+            LeftoversCard(tasks: tasks)
             NowBlock(tasks: ViewRules.now(in: tasks).all) { nowRow($0, metrics) }
         }
         .listStyle(.plain)

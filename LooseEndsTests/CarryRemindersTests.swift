@@ -113,7 +113,7 @@ import Testing
         #expect(ViewRules.postponeCount(a) == 1)
     }
 
-    @Test("A day-only date carried longer than seven days leaves Now and the badge, not Due's overdue")
+    @Test("Anything from before today leaves Now and the badge for the card, not Due (#518)")
     @MainActor func weekOldLeavesNow() async throws {
         let store = try TestStore()
         let seven = Self.task("Sieben Tage", due: Self.day(-7), in: store)
@@ -122,8 +122,9 @@ import Testing
         let all = [seven, eight, timed]
 
         let today = ViewRules.dueToday(in: all, now: Self.now, calendar: Self.calendar).map(\.id)
-        #expect(Set(today) == [seven.id, timed.id])
-        #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 2)
+        #expect(today.isEmpty)
+        #expect(Set(ViewRules.leftovers(in: all, now: Self.now, calendar: Self.calendar).map(\.id)) == [seven.id, eight.id, timed.id])
+        #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 0)
         #expect(ViewRules.now(in: all, now: Self.now, calendar: Self.calendar).all.contains { $0.id == eight.id } == false)
         #expect(ViewRules.tasks(for: .due, in: all, now: Self.now, calendar: Self.calendar).contains { $0.id == eight.id })
     }

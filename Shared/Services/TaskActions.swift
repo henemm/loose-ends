@@ -67,6 +67,29 @@ enum TaskActions {
         task.nextRank = nil
     }
 
+    /// The four answers to a task left from an earlier day (#518).
+    enum LeftoverChoice: CaseIterable, Sendable {
+        case today, tomorrow, weekend, park
+    }
+
+    /// Sorts a task left from an earlier day: a new due day as a user revision, or parked. Either way
+    /// it leaves the "Earlier" card.
+    static func sortLeftover(
+        _ task: TaskItem,
+        as choice: LeftoverChoice,
+        contexts: [TaskContext],
+        projects: [Project],
+        now: Date = Date(),
+        calendar: Calendar = .current
+    ) {
+        switch choice {
+        case .today: move(task, to: .date(now), contexts: contexts, projects: projects, now: now, calendar: calendar)
+        case .tomorrow: move(task, to: .tomorrow, contexts: contexts, projects: projects, now: now, calendar: calendar)
+        case .weekend: move(task, to: .weekend, contexts: contexts, projects: projects, now: now, calendar: calendar)
+        case .park: park(task, now: now)
+        }
+    }
+
     static func activate(_ task: TaskItem) {
         task.status = .active
         task.parkedAt = nil
