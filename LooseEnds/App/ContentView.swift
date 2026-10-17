@@ -110,6 +110,9 @@ struct ContentView: View {
             if phase != .active { commitCompletions(all: true) }
             // Back in front, maybe on a new day: "Due today" and the badge follow the date (#299).
             if phase == .active { notifications?.rescheduleSoon() }
+            // A task Siri or a shortcut saved while the app sat in the background is still unsorted:
+            // the catch-up ran only at launch. Cheap without pending tasks, and one pass at a time.
+            if phase == .active { Task { await enrichment?.processPending() } }
         }
         .onChange(of: tasks.count) { _, _ in
             Task { await enrichment?.processPending() }
