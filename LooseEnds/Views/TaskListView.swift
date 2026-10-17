@@ -21,6 +21,19 @@ struct TaskListView: View {
     @State private var unfolded: Set<UUID> = []
     /// The disclosure arrow's width, so titles line up with and without one.
     @ScaledMetric(relativeTo: .body) private var disclosureWidth: CGFloat = 22
+    @Environment(\.dynamicTypeSize) private var typeSize
+    #if os(iOS)
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    #endif
+
+    /// The Mac always, iOS whenever the window is not compact (#477, as #471/#476).
+    private var isWide: Bool {
+        #if os(iOS)
+        sizeClass != .compact
+        #else
+        true
+        #endif
+    }
 
     /// The system kind, nil for a context or project view.
     private var kind: ViewKind? {
@@ -66,7 +79,7 @@ struct TaskListView: View {
     }
 
     var body: some View {
-        List {
+        hull(List {
             if kind == .done {
                 doneSections
             } else if project != nil {
@@ -76,15 +89,46 @@ struct TaskListView: View {
             } else {
                 openRows
             }
-        }
-        .paperList()
+        })
         .overlay {
             if shown.isEmpty {
                 emptyState
             }
         }
         .navigationTitle(title)
+        .modifier(ListSubtitle(wide: isWide, text: subtitle))
         .taskInteractionDialogs(actions)
+    }
+
+    /// Compact: the paper list as before. Wide (#477): plain on paper in the start page's 720 pt
+    /// column, the paper running edge to edge below it.
+    @ViewBuilder
+    private func hull(_ list: some View) -> some View {
+        if isWide {
+            list
+                .listStyle(.plain)
+                .paperGround()
+                .frame(maxWidth: 720)
+                .frame(maxWidth: .infinity)
+                .background(Paper.ground.ignoresSafeArea())
+        } else {
+            list.paperList()
+        }
+    }
+
+    /// "2 open · 20 min"; never in Done, where "open" would be wrong.
+    private var subtitle: String? {
+        kind == .done ? nil : ListSummary.of(shown).text()
+    }
+
+    /// A section head: as before on compact, the start screen's grey capitals on wide.
+    @ViewBuilder
+    private func head(_ text: Text) -> some View {
+        if isWide {
+            text.captionHead().startRow(StartMetrics(typeSize))
+        } else {
+            text
+        }
     }
 
     /// The loose thread, third place of the knot (#180, rule 1), over one sentence per view.
@@ -128,7 +172,7 @@ struct TaskListView: View {
                     row(task)
                 }
             } header: {
-                Text(group.day, format: .dateTime.weekday(.wide).day().month())
+                head(Text(group.day, format: .dateTime.weekday(.wide).day().month()))
             }
         }
     }
@@ -148,7 +192,7 @@ struct TaskListView: View {
             Section {
                 ForEach(look) { row($0) }
             } header: {
-                Text("Needs a look")
+                head(Text("Needs a look"))
             }
         }
     }
@@ -172,7 +216,7 @@ struct TaskListView: View {
                 case .task(let task):
                     // The Done window (#32) holds here too: struck through with Undo for three seconds.
                     if actions.isPending(task) {
-                        pendingRow(task)
+                        pendingRow(task).wideListRow()
                     } else {
                         projectTaskRow(task)
                     }
@@ -196,6 +240,7 @@ struct TaskListView: View {
         .swipeActions(edge: .trailing, allowsFullSwipe: true) { actions.trailingActions(task) }
         .contextMenu { actions.menu(task) }
         .paperRow()
+        .wideListRow()
     }
 
     /// The arrow, or its empty width for a task without subtasks. A deleted task can be drawn once
@@ -261,12 +306,13 @@ struct TaskListView: View {
         .accessibilityValue(done ? Text("Completed") : Text("Open"))
         .accessibilityIdentifier("projectSubtask_\(subtask.id.uuidString)")
         .paperRow()
+        .wideListRow()
     }
 
     @ViewBuilder
     private func row(_ task: TaskItem) -> some View {
         if actions.isPending(task) {
-            pendingRow(task)
+            pendingRow(task).wideListRow()
         } else {
             openRow(task)
         }
@@ -288,6 +334,7 @@ struct TaskListView: View {
         .swipeActions(edge: .trailing, allowsFullSwipe: true) { actions.trailingActions(task) }
         .contextMenu { actions.menu(task) }
         .paperRow()
+        .wideListRow()
     }
 
     /// The star's number (#509): not in "Next up" itself, where every row would carry one.
@@ -318,5 +365,21 @@ struct TaskListView: View {
     private func moveNext(from source: IndexSet, to destination: Int) {
         TaskActions.moveNext(shown, from: source, to: destination)
         actions.save("reorder")
+    }
+}
+
+/// The list's subtitle under its title, wide only (#477); compact stays exactly as it was. On wide
+/// it stays attached while empty, so the list keeps its identity when the last task is done.
+private struct ListSubtitle: ViewModifier {
+    let wide: Bool
+    let text: String?
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if wide {
+            content.navigationSubtitle(text ?? "")
+        } else {
+            content
+        }
     }
 }
