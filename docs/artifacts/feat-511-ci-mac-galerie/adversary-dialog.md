@@ -14,7 +14,7 @@ Datum: 2026-10-17 09:48
 - [x] **AC-9:** `python3 scripts/test_ci_xcode27.py` ist grün, einschließlich des neuen Tests, der vor Änderung 2 rot war (RED vor GREEN belegt) und alle Prüfpunkte aus Test 1 abdeckt. Nachweis: Testausgabe vorher und nachher; Unit-Job der CI führt die Skript-Tests aus.
 - [x] **AC-10:** „Mac Gallery (macOS)“ ist im CI-Lauf auf dem PR-Zweig grün, ohne Wiederholung. Beide Tests bestehen; das Hauptfenster ist mindestens 700 pt breit. Nachweis: Lauf-ID, Protokollzeilen des Testschritts, Diagnoseschritt (Automationsstatus).
 - [x] **AC-11:** Die Bilder aus dem PR-Lauf sind heruntergeladen, geöffnet und beschrieben: je Bild, was zu sehen ist (Seitenleiste, Startseite mit Aufgaben, Liste „Neu“, Detail), ob hell/dunkel stimmt (auch Titelleiste und Seitenleiste im Dunkelbild), und die tatsächliche Fenstergröße aus dem Anhang `window-size`. Ist das Fenster schmaler als 1120 pt (die rechte Spalte der Startseite fehlt dann), wird ein eigenes Ticket für `defaultSize` angelegt und hier nichts geändert. Nachweis: Beschreibung im Bericht, nicht nur Dateiliste.
-- [ ] **AC-12:** Nach dem Merge liefert ein CI-Lauf auf `main` das Artefakt `MacGallery` mit den Bildern (DoD-Punkt 4 aus #511). Nachweis: Lauf-ID auf `main`, Artefaktliste. [offen: nachgelagert, erst nach dem Merge belegbar]
+- [x] **AC-12:** Nach dem Merge liefert ein CI-Lauf auf `main` das Artefakt `MacGallery` mit den Bildern (DoD-Punkt 4 aus #511). Nachweis: Lauf-ID auf `main`, Artefaktliste. [belegt: Lauf 39024850068 auf `main` (Stand 99bbaeb, PR #512), Job „Mac Gallery (macOS)“ success, Artefakt `MacGallery` = 6 PNG + 2 TXT, Bilder geöffnet, siehe `ci-lauf-belege.md`]
 - [x] **AC-13:** `CLAUDE.md` nennt im CI-Abschnitt in einem Satz den Job „Mac Gallery (macOS)“, das Artefakt `MacGallery` und dass Mac-Bilder nur dort entstehen. Nachweis: Diff.
 - [x] **AC-14:** Abnahmestufe: Kein Pfad der Geräteliste berührt. Die Abnahme endet nach Stufe 2 (Bilder aus dem Artefakt angesehen); auf Hennings Mac oder seinen Geräten läuft nichts. Nachweis: `git diff --name-only` aus AC-8.
 
@@ -206,7 +206,7 @@ Confirmation:
   Evidence: Job-Name, Xcode 27.0 im Protokoll Z.131; Signaturargumente (Ad-hoc ohne Entitlements) funktionierten, App startete, kein Rueckfall auf CODE_SIGNING_ALLOWED=NO noetig (AC-4).
   Status: CONFIRMED
 
-AC-12: offen, prinzipbedingt nachgelagert. Es verlangt einen Lauf auf `main` nach dem Merge; in dieser Phase nicht belegbar, kein Defekt. Alles andere ist belegt.
+AC-12: nach dem Merge belegt. Lauf 39024850068 auf `main` (Stand 99bbaeb): Job „Mac Gallery (macOS)“ success, Artefakt `MacGallery` mit 6 PNG + 2 TXT, Bilder geöffnet (`ci-lauf-belege.md`, Lauf 3).
 **Implementierer:**
 (in diesem Lauf keine Gegenrede noetig; F001/F002 in Commits 5a0dfc9 behoben)
 
@@ -218,7 +218,7 @@ kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 
 VERDICT: VERIFIED
 
-Alle ACs ausser AC-12 sind belegt (AC-1 bis AC-11, AC-13, AC-14). AC-12 (Lauf auf `main` nach dem Merge) ist prinzipbedingt erst nach dem Merge belegbar und bleibt offen, kein Defekt. F001/F002 behoben, F003/F004 LOW ohne Folge.
+Alle ACs sind belegt (AC-1 bis AC-14); AC-12 nach dem Merge mit Lauf 39024850068 auf `main`. F001/F002 behoben, F003/F004 LOW ohne Folge.
 Tests: 25 passed, 0 failed, 0 übersprungen (scripts.test_ci_xcode27); CI Lauf 39016175718: Unit, Build, Mac Gallery, UI Smoke gruen.
 
 ## Geprüfte Dateien
@@ -234,6 +234,21 @@ Tests: 25 passed, 0 failed, 0 übersprungen (scripts.test_ci_xcode27); CI Lauf 3
 - blob:6efef9a5364703396d36763347d6ec349ac4a5d6  .github/workflows/ci.yml
 - blob:9d9a3f49ee67dac02acee31e06c09c3025f1c8ab  CLAUDE.md
 - blob:43de9abb5c8969303ae2f7d1164203e7f1d08434  LooseEndsUITests/MacGalleryTests.swift
+- blob:4177e7140415901814647eb4e0441422af9e9eb9  scripts/test_ci_xcode27.py
+
+## Geprüfte Dateien
+
+- sha256:b13a8b34729e1c9845d865d8c87cc315e74183e21235810fa2b8ef9e97b1b369  .github/workflows/ci.yml
+- sha256:2e60fe057af10d92b66dae86b8ef44d4f962d227bbc7d63a1cdc2b0b40db9f1a  CLAUDE.md
+- sha256:b50ed953f45705eb770aedd53d84cbda19466f5cfa9308a15e9874592670c30a  LooseEndsUITests/MacGalleryTests.swift
+- sha256:2038cfd163fadf8353e6b33b633accd3ca98cef09215178aef9e6d52e99331c4  scripts/test_ci_xcode27.py
+
+## Prüfbasis
+
+- base: 85ed8a236cebb548bfa946fce08da949fcfbe886
+- blob:93d2dc98ac4840a7e59339c9a9100d5e124b0beb  .github/workflows/ci.yml
+- blob:9d9a3f49ee67dac02acee31e06c09c3025f1c8ab  CLAUDE.md
+- blob:edc920f831d70d22f476ae9fa17df62df16c58e5  LooseEndsUITests/MacGalleryTests.swift
 - blob:4177e7140415901814647eb4e0441422af9e9eb9  scripts/test_ci_xcode27.py
 
 ## Geprüfte Dateien

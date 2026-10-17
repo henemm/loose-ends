@@ -33,3 +33,9 @@
 - „Completed“ ist in der Seitenleiste zu „Compl…“ abgeschnitten (Fenster 900 pt).
 - Hinweis „Swipe left on any task…“ ist auf dem Mac Wisch-Sprache.
 - Titel ohne Datumswörter („Anna wegen anrufen“) ist gewolltes Verhalten (#217).
+
+## Lauf 3 auf `main` (AC-12): 39024850068, Stand 99bbaeb (PR #512 eingespielt)
+- Job „Mac Gallery (macOS)“: completed success. Build (iOS Simulator) success, die übrigen Jobs liefen beim Abruf noch.
+- Artefakt `MacGallery`: `mac-gallery-{light,dark}-{1-start,2-list-new,3-detail}.png` (6 PNG) und `mac-gallery-{light,dark}-window-size.txt` (2 TXT).
+- Fenstergröße: beide `900 x 450 pt; window at launch: no, opened from the menu bar`. Auf dieser Maschine öffnete also auch der zweite Start kein Fenster (Ergänzung in #513).
+- Geöffnet: light-1-start (wie Lauf 2: Seitenleiste, „Nothing presses today.“, leeres Feld, NOW), dark-2-list-new (drei Zeilen, „New“ markiert, dunkle Seitenleiste), dark-3-detail („Rasen mähen“, „Looks right“ türkis). Inhaltlich gleich mit Lauf 2.

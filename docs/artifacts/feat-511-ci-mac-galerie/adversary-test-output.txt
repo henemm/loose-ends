@@ -26,6 +26,6 @@ test_unit_job_runs_every_script_test (scripts.test_ci_xcode27.Workflows.test_uni
 test_workflows_wait_for_the_simulator_to_finish_booting (scripts.test_ci_xcode27.Workflows.test_workflows_wait_for_the_simulator_to_finish_booting) ... ok
 
 ----------------------------------------------------------------------
-Ran 25 tests in 4.241s
+Ran 25 tests in 2.362s
 
 OK
