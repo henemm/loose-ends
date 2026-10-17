@@ -1,6 +1,7 @@
 Geteilte Anhänge: Regeln und Speicherweg (#399 Schnitt 1)
 
 Refs #399
+Refs #442 (darin ist #399 am 2026-10-17 aufgegangen: „App als Ziel für Anhänge im Teilen-Menü“)
 
 Schnitt 1 von 2, ohne sichtbare Änderung. Er legt fest, wie ein geteiltes Foto oder eine Datei vor dem Speichern
 beschrieben wird (`SharedAttachment`: Kopie im Temp-Ordner statt `Data`, Titel aus dem Dateinamen, Fotoname,
