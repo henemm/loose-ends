@@ -1,4 +1,5 @@
 import Foundation
+import UniformTypeIdentifiers
 
 /// What the share sheet handed over, reduced to what capture needs: the text to prefill, the link
 /// back to the source, and the channel. Mail wins over links, links over plain text. Pure, so the
@@ -7,11 +8,14 @@ struct SharedContent: Equatable, Sendable {
     var prefill: String
     var sourceURL: URL?
     var channel: CaptureChannel
+    /// Shared photos and files (#399), in the order they came; saved by `CaptureService`.
+    var attachments: [SharedAttachment] = []
 
     static let empty = SharedContent(prefill: "", sourceURL: nil, channel: .share)
 
     /// `mails` are raw RFC 822 messages (what Mail shares); `texts` and `urls` come as they are.
-    static func make(texts: [String], urls: [URL], mails: [String]) -> SharedContent {
+    /// A file without text, link or mail offers its readable name; photos alone leave the field empty (#399).
+    static func make(texts: [String], urls: [URL], mails: [String], attachments: [SharedAttachment] = []) -> SharedContent {
         // File links are dropped (#24): Mail's "Print → Share" hands over a PDF in the extension's
         // temporary folder, a dead link once the extension ends and a path as title.
         let urls = urls.filter { !$0.isFileURL }
@@ -23,16 +27,19 @@ struct SharedContent: Equatable, Sendable {
             return SharedContent(
                 prefill: subject ?? text ?? "",
                 sourceURL: messageLink ?? messageURL(ofMail: mail),
-                channel: .mail
+                channel: .mail,
+                attachments: attachments
             )
         }
         if let link = messageLink {
-            return SharedContent(prefill: text ?? "", sourceURL: link, channel: .mail)
+            return SharedContent(prefill: text ?? "", sourceURL: link, channel: .mail, attachments: attachments)
         }
         if let url = urls.first {
-            return SharedContent(prefill: text ?? url.absoluteString, sourceURL: url, channel: .share)
+            return SharedContent(prefill: text ?? url.absoluteString, sourceURL: url, channel: .share, attachments: attachments)
         }
-        return SharedContent(prefill: text ?? "", sourceURL: nil, channel: .share)
+        let file = attachments.first { $0.status == .ready && !(UTType($0.typeIdentifier)?.conforms(to: .image) ?? false) }
+        let fileTitle = file.map { SharedAttachment.title(fromFileName: $0.fileName) }
+        return SharedContent(prefill: text ?? fileTitle ?? "", sourceURL: nil, channel: .share, attachments: attachments)
     }
 
     /// One log line per shared attachment (#24): its type identifiers and the kind of value read
