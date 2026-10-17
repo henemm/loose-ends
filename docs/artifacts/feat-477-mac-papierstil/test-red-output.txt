@@ -1,0 +1,70 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17 Pro).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/ListSummaryTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mCopy[0m LooseEndsWatchWidgets.appex -> LooseEndsWatchWidgets.appex
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mValidate Embedded Binary[0m LooseEndsWatchWidgets.appex
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsShare.appex -> LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftConstValuesFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.LinkFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-OutputFileMap.json
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/LooseEndsTests/ListSummaryTests.swift:41:17: [31mcannot find 'ListSummary' in scope[0m
+ 39 |         let store = try TestStore()
+[36m 40 |         let all = Self.tasks([nil, nil], in: store) + [Self.done(nil, in: store)][0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/LooseEndsTests/ListSummaryTests.swift:47:23: [31mcannot find 'ListSummary' in scope[0m
+ 45 |     @MainActor func sumsDurationBuckets() throws {
+[36m 46 |         let store = try TestStore()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/LooseEndsTests/ListSummaryTests.swift:55:23: [31mcannot find 'ListSummary' in scope[0m
+ 53 |     @MainActor func taskWithoutDurationAddsNothing() throws {
+[36m 54 |         let store = try TestStore()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/LooseEndsTests/ListSummaryTests.swift:63:23: [31mcannot find 'ListSummary' in scope[0m
+ 61 |     @MainActor func twoHoursPlusIsALowerBound() throws {
+[36m 62 |         let store = try TestStore()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/LooseEndsTests/ListSummaryTests.swift:71:23: [31mcannot find 'ListSummary' in scope[0m
+ 69 |     @MainActor func doneTaskDurationDoesNotCount() throws {
+[36m 70 |         let store = try TestStore()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/LooseEndsTests/ListSummaryTests.swift:81:17: [31mcannot find 'ListSummary' in scope[0m
+ 79 |     @MainActor func emptyListHasNoText() throws {
+[36m 80 |         let store = try TestStore()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/LooseEndsTests/ListSummaryTests.swift:82:17: [31mcannot find 'ListSummary' in scope[0m
+ 80 |         let store = try TestStore()
+[36m 81 |         #expect(ListSummary.of([]).text(bundle: Self.english) == nil)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/LooseEndsTests/ListSummaryTests.swift:88:17: [31mcannot find 'ListSummary' in scope[0m
+ 86 |     @MainActor func textWithoutDurationIsOnlyTheCount() throws {
+[36m 87 |         let store = try TestStore()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/LooseEndsTests/ListSummaryTests.swift:94:20: [31mcannot find 'ListSummary' in scope[0m
+ 92 |     @MainActor func textUnderAnHourInMinutes() throws {
+[36m 93 |         let store = try TestStore()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/LooseEndsTests/ListSummaryTests.swift:101:21: [31mcannot find 'ListSummary' in scope[0m
+ 99 |     @MainActor func textFromAnHourInHoursAndMinutes() throws {
+[36m100 |         let store = try TestStore()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/LooseEndsTests/ListSummaryTests.swift:103:21: [31mcannot find 'ListSummary' in scope[0m
+101 |         let mixed = ListSummary.of(Self.tasks([.hour1, .minutes15, .minutes15], in: store)).text(bundle: Self.english)
+[36m102 |         #expect(mixed == "3 open · 1 h 30 min")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/LooseEndsTests/ListSummaryTests.swift:110:20: [31mcannot find 'ListSummary' in scope[0m
+108 |     @MainActor func textWithLowerBoundSaysAtLeast() throws {
+[36m109 |         let store = try TestStore()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/LooseEndsTests/ListSummaryTests.swift:118:21: [31mcannot find 'ListSummary' in scope[0m
+116 |         let store = try TestStore()
+[36m117 |         let german = try Self.german()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/LooseEndsTests/ListSummaryTests.swift:120:20: [31mcannot find 'ListSummary' in scope[0m
+118 |         let short = ListSummary.of(Self.tasks([.minutes5, .minutes15], in: store)).text(bundle: german)
+[36m119 |         #expect(short == "2 offen · 20 Min.")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/LooseEndsTests/ListSummaryTests.swift:122:21: [31mcannot find 'ListSummary' in scope[0m
+120 |         let long = ListSummary.of(Self.tasks([.hour1, .minutes30], in: store)).text(bundle: german)
+[36m121 |         #expect(long == "2 offen · 1 Std. 30 Min.")[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m ListSummaryTests.swift
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-ui-aesthetik/Logs/Test/Test-LooseEnds-2026.10.17_16-44-20-+0200.xcresult
