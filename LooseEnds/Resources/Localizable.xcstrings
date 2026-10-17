@@ -2,6 +2,7 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "From earlier: %lld" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Von früher: %lld" } } } },
     "years" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Jahre" } } } },
     "year" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Jahr" } } } },
     "months" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Monate" } } } },

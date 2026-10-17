@@ -54,7 +54,7 @@ import Testing
         #expect(result.map(\.rawText) == ["C", "B", "A"])
     }
 
-    @Test("Next days: five tiles, today counts overdue, the day limits are midnight")
+    @Test("Next days: five tiles, earlier waits in the card (#518), the day limits are midnight")
     @MainActor func days() throws {
         let store = try TestStore()
         let overdue = task("Überfällig", due: DueTodayTests.day(-2), store: store)
@@ -69,7 +69,7 @@ import Testing
             in: [overdue, tonight, tomorrowStart, tomorrowLate, fourth, beyond, done], now: Self.now, calendar: Self.calendar
         )
         #expect(days.count == 5)
-        #expect(days.map(\.count) == [2, 2, 0, 0, 1])
+        #expect(days.map(\.count) == [1, 2, 0, 0, 1])
         #expect(days.map(\.isToday) == [true, false, false, false, false])
     }
 }

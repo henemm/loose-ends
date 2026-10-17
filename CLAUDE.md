@@ -246,7 +246,7 @@ not scope creep on the current one.
   device builds carry their own via `BUNDLE_ID_SUFFIX`, #156), `ContextSeeder`,
   `CloudKitSchemaInitializer` (Debug only: writes the full CloudKit schema into Development, never opens the app-group store, #175)
 - `Shared/Services` — `CaptureService`, `FieldCodec` (one encoding per field), `RevisionService` (reset = user revision),
-  `TaskActions` (done, next up, park, move, restore), `DateExpressionParser`/`TimeExpressionParser` (rule-based
+  `TaskActions` (done, next up, park, move, restore, `sortLeftover` for the „From earlier“ card, #518), `DateExpressionParser`/`TimeExpressionParser` (rule-based
   date/time extraction DE/EN, moved from `Measurement/` in #95), `RawTextWords` (the one tokenizer for word-set
   equality, shared with `Measurement/`, moved from `TitleCheck` in #136), `TitleRule` (the title at capture: raw text
   cleaned, first 12 words, #202), `SiriFields` (Siri's link, flag, tags onto a new task: `resolve` checks before

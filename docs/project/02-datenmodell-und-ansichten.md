@@ -197,8 +197,10 @@ Abendzeit (Vorgabe 20:00, `carry_evening_JJJJ-MM-TT`) mit den offenen Aufgaben, 
 morgen“ ohne App-Start, „Durchsehen“ und ein Tipp auf die Mitteilung öffnen das Blatt „Von heute offen“. Morgens erinnern: eine Mitteilung je Morgen zur Erinnerungszeit
 (`carry_JJJJ-MM-TT`) mit allen offenen Aufgaben (oberste Ebene, nicht blockiert, mit oder ohne Uhrzeit), deren Fälligkeitstag
 1 bis 3 Tage zurückliegt. „Heute nochmal“ setzt jede auf heute (Revision des Nutzers), „Anzeigen“ öffnet die App.
-In jedem Modus verlässt eine Fälligkeit ohne Uhrzeit nach mehr als 7 Tagen „Jetzt“ und die Zahl am App-Symbol
-(`carriedInNowDays`), bleibt aber in „Fällig“.
+**Morgens einmal sortieren (#518, Henning 2026-10-17):** Was vor heute fällig war und offen ist (`ViewRules.leftovers`),
+zählt nicht in „Jetzt“, nicht in „Heute fällig“ und nicht in der Zahl am App-Symbol. Die Startseite zeigt es oben als
+Karte „Von früher“; je Aufgabe „Heute“, „Morgen“, „Wochenende“ oder „Parken“ (Revision des Nutzers). In „Fällig“ bleibt es
+stehen. Die 7-Tage-Grenze aus #414 entfällt.
 
 ## Veredelungs-Pipeline
 
