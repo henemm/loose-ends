@@ -3,8 +3,8 @@ import SwiftData
 import Testing
 @testable import LooseEnds
 
-/// "From earlier" (#518, Henning 2026-10-17): left from earlier days, sorted once in the morning.
-@Suite("From earlier: sorting what was left (#518)") struct LeftoversTests {
+/// "Loose ends" (#518, Henning 2026-10-17): left from earlier days, sorted once in the morning.
+@Suite("Loose ends: sorting what was left (#518)") struct LeftoversTests {
     static var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(identifier: "Europe/Berlin")!

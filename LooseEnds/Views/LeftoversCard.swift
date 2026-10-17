@@ -2,7 +2,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-/// "From earlier" on the start screen (#518, Henning 2026-10-17): what was due before today and is
+/// "Loose ends" on the start screen (#518, Henning 2026-10-17): what was due before today and is
 /// still open, asked once each morning — Today, Tomorrow, Weekend or Park. Until a task is sorted
 /// it stays out of "Now" and off the app icon, so a day no longer starts full. Rows of the start
 /// list, like the other zones; nothing shows when nothing is left.
@@ -17,7 +17,7 @@ struct LeftoversCard: View {
     var body: some View {
         let leftovers = ViewRules.leftovers(in: tasks)
         if !leftovers.isEmpty {
-            ZoneCaption("From earlier: \(leftovers.count)")
+            ZoneCaption("Loose ends: \(leftovers.count)")
             ForEach(leftovers) { task in
                 row(task)
             }
@@ -26,11 +26,12 @@ struct LeftoversCard: View {
 
     private func row(_ task: TaskItem) -> some View {
         let metrics = StartMetrics(typeSize)
+        // The same row as in "Now" (margin, serif title, trait line), the four choices under the title.
         return VStack(alignment: .leading, spacing: 8) {
-            Text(task.displayTitle)
-                .fontDesign(.serif)
-                .lineLimit(2)
-            HStack(spacing: 8) {
+            TaskRow(task: task, identifierPrefix: "leftoverRow_")
+                .environment(\.startMetrics, metrics)
+            // Wraps where four German words do not fit on one line (larger text, the Mac's narrow column).
+            FlowLayout(spacing: 8) {
                 choice("Today", .today, task)
                 choice("Tomorrow", .tomorrow, task)
                 choice("Weekend", .weekend, task)
@@ -39,7 +40,7 @@ struct LeftoversCard: View {
             .buttonStyle(.bordered)
             .controlSize(.small)
         }
-        .padding(.vertical, 10)
+        .padding(.vertical, 11)
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("leftover_\(task.id.uuidString)")
         .listRowSeparator(.hidden)

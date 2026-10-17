@@ -5,7 +5,7 @@ import Testing
 
 /// The start screen's "Now" (#368): due today, then the rest of "Next up", each task once. Built
 /// from the same sets as the app badge, so the two never disagree. What is left from earlier days
-/// waits in the "From earlier" card until it is sorted (#518).
+/// waits in the "Loose ends" card until it is sorted (#518).
 @Suite("Now on the start screen") struct NowRuleTests {
     static var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
@@ -105,7 +105,7 @@ import Testing
         #expect(Self.now(all).lined.map(\.id) == [first.id, second.id, third.id])
     }
 
-    @Test("From earlier: the oldest first, blocked, parked and done stay out (#518)")
+    @Test("Loose ends: the oldest first, blocked, parked and done stay out (#518)")
     @MainActor func overdueOldestFirst() async throws {
         let store = try TestStore()
         let twoDays = Self.task("Zwei Tage", due: Self.day(-2))

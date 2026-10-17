@@ -29,7 +29,7 @@ enum SideColumn {
     }
 
     /// "Next days": five tiles from today with the number of open, unblocked top-level tasks due
-    /// that day. What is left from earlier days waits in the "From earlier" card and is not today's (#518).
+    /// that day. What is left from earlier days waits in the "Loose ends" card and is not today's (#518).
     static func days(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [Day] {
         let today = calendar.startOfDay(for: now)
         let open = all.filter { $0.parent == nil && $0.isOpen && !$0.isBlocked }
