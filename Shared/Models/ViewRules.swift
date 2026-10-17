@@ -190,6 +190,16 @@ enum ViewRules {
         return ra != rb ? ra < rb : a.capturedAt < b.capturedAt
     }
 
+    /// The place of each task in "Next up": 1, 2, 3 … in that view's order (#509). Lists show it as a
+    /// star with the number at the row's end, so a task already lined up is seen in every list.
+    static func nextRanks(in all: [TaskItem]) -> [UUID: Int] {
+        var ranks: [UUID: Int] = [:]
+        for (index, task) in tasks(for: .next, in: all).enumerated() {
+            ranks[task.id] = index + 1
+        }
+        return ranks
+    }
+
     static func tasks(for kind: ViewKind, in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [TaskItem] {
         let topLevel = all.filter { $0.parent == nil }
         switch kind {
