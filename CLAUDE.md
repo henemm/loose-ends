@@ -56,6 +56,7 @@ brew install xcodegen xcbeautify
 ./scripts/sim.sh test-proof <Klasse>  # UI-Test + maschineller Simulator-Beleg (#145)
 ./scripts/sim.sh watch-test-proof <Klasse>  # dasselbe im watchOS-Simulator, App vorher deinstalliert (#409)
 ./scripts/sim.sh launch-measure <n>   # Kaltstart-Messung, n Starts auf dem Gerät (#22)
+./scripts/sim.sh real-model            # echtes On-Device-Modell auf diesem Mac, nur lokal (#531)
 ```
 
 `launch-measure` baut einen Release-Prüfbau und startet ihn per devicectl; es läuft nur nach Hennings

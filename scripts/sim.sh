@@ -8,6 +8,7 @@
 # Usage:
 #   ./scripts/sim.sh generate                 # Xcode-Projekt aus project.yml erzeugen
 #   ./scripts/sim.sh unit [Suite[/test]]      # Unit-Tests, macOS-Destination (schnell, kein Simulator)
+#   ./scripts/sim.sh real-model               # Tests gegen das echte Modell auf diesem Mac (Apple Intelligence an, #531)
 #   ./scripts/sim.sh build                    # iOS-App für den Simulator bauen
 #   ./scripts/sim.sh mac-build                # macOS-App bauen
 #   ./scripts/sim.sh mac-schema-init          # CloudKit-Schema in Development anlegen (#175, schreibt in iCloud)
@@ -190,6 +191,18 @@ cmd_unit() {
     run_xcodebuild test -project "$PROJECT" -scheme "$SCHEME" -destination 'platform=macOS' -only-testing:"$only" -parallel-testing-enabled NO
     success "Unit-Tests bestanden."
     measurement_status
+}
+
+# Das echte On-Device-Modell auf diesem Mac (#531): dasselbe Modell wie auf dem iPhone, ohne Labor-App.
+# Nur hier gesetzt, nie in der CI; ohne Apple Intelligence überspringt die Suite sich selbst.
+cmd_real_model() {
+    ensure_project
+    mac_hosts_tests || { error "macOS $(sw_vers -productVersion) < Deployment Target $(deployment_target macOS): das Modell läuft nur auf dem Mac selbst"; return 1; }
+    [ "$(uname -m)" = arm64 ] || { error "Apple Intelligence braucht einen Mac mit Apple Silicon"; return 1; }
+    info "Echtes Modell (macOS): $UNIT_TARGET/RealModelTests"
+    TEST_RUNNER_LOOSEENDS_REAL_MODEL=1 run_xcodebuild test -project "$PROJECT" -scheme "$SCHEME" -destination 'platform=macOS' \
+        -only-testing:"$UNIT_TARGET/RealModelTests" -parallel-testing-enabled NO
+    success "Lauf gegen das echte Modell beendet (übersprungen, wenn Apple Intelligence aus ist; siehe Ausgabe)."
 }
 
 cmd_build() {
@@ -644,6 +657,7 @@ COMMAND="${1:-help}"; shift 2>/dev/null || true
 case "$COMMAND" in
     generate)   cmd_generate ;;
     unit)       cmd_unit "$@" ;;
+    real-model) cmd_real_model ;;
     build)      cmd_build ;;
     mac-build)  cmd_mac_build ;;
     mac-schema-init) cmd_mac_schema_init ;;
