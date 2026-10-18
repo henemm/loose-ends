@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Ordnung der Felder</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+.map{--paper:#F4F3EE;--ink:#1B1C1A;--grey:#6F706B;--faint:#A3A49E;--hair:#DAD9D2;--acc:#0F6E73;--red:#D4402F;font-family:-apple-system,"SF Pro Text",system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+.serif{font-family:"New York","Iowan Old Style",Palatino,Georgia,serif}
+.cap{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--grey)}
+.grp{border-top:1px solid var(--hair);padding-top:12px;display:flex;flex-direction:column;gap:6px}
+.grp h3{margin:0 0 6px;font:500 20px/1.2 "New York","Iowan Old Style",Palatino,Georgia,serif}
+.grp p{margin:0 0 6px;font-size:12px;line-height:1.45;color:var(--grey)}
+.f{display:grid;grid-template-columns:18px 1fr auto;column-gap:10px;align-items:baseline;padding:6px 0;border-bottom:.5px solid var(--hair)}
+.f .n{font:17px/1.25 "New York","Iowan Old Style",Palatino,Georgia,serif}
+.f .s{font-size:11px;color:var(--grey);white-space:nowrap}
+.f .m{font-size:11px;font-weight:600;color:var(--grey);text-align:center}
+.f.fix .m{color:var(--ink)}
+.f.off .n{color:var(--grey)}
+.f.sub{margin-left:26px}
+.f.sub .n{font-size:15px}
+.legend{display:flex;gap:22px;font-size:12px;color:var(--grey)}
+.legend b{color:var(--ink);font-weight:600}
+.dep{font-size:11px;color:var(--acc)}
+</style>
+</helmet>
+<div class="map" style="width:1180px;height:1180px;box-sizing:border-box;padding:48px 56px;background:#F4F3EE;display:flex;flex-direction:column;gap:22px">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:40px">
+    <div>
+      <div class="cap">Eine Aufgabe trägt</div>
+      <h1 class="serif" style="margin:6px 0 0;font-size:34px;font-weight:500;letter-spacing:-.3px">Fünf Gruppen, eine Reihenfolge, überall dieselbe</h1>
+      <p style="margin:8px 0 0;max-width:720px;font-size:14px;line-height:1.5;color:var(--grey)">Die Reihenfolge gilt für die gesetzten Zeilen im Detail, für die Wortzeile der leeren Felder und für die Liste in den Einstellungen. Wer sie einmal gelernt hat, findet alles an derselben Stelle.</p>
+    </div>
+    <div class="legend" style="flex:none;padding-bottom:6px">
+      <span><b>fest</b> immer da</span>
+      <span><b>an</b> angeboten, Vorgabe</span>
+      <span><b>aus</b> abschaltbar, Vorgabe aus</span>
+      <span style="color:var(--acc)">→ braucht</span>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:44px;row-gap:28px;flex:1">
+    <div class="grp">
+      <h3>Was</h3>
+      <p>Der Inhalt der Aufgabe selbst. Steht oben, weil man zuerst liest, worum es geht.</p>
+      <div class="f fix"><span class="m">fest</span><span class="n">Titel</span><span class="s">Regel, Modell darf verfeinern</span></div>
+      <div class="f fix"><span class="m">fest</span><span class="n">Gesagt</span><span class="s">Rohtext, unveränderlich</span></div>
+      <div class="f"><span class="m">an</span><span class="n">Notiz</span><span class="s">Nummern, Adressen, Links</span></div>
+      <div class="f"><span class="m">an</span><span class="n">Anhänge</span><span class="s">Foto, Datei, Scan</span></div>
+    </div>
+
+    <div class="grp">
+      <h3>Wann</h3>
+      <p>Die eine Zeit, die zählt. Fällig trägt Jetzt, Randspalte, Mitteilung, Kalender und das Weitertragen; darum fest.</p>
+      <div class="f fix"><span class="m">fest</span><span class="n">Fällig</span><span class="s">Regelparser, 99 %</span></div>
+      <div class="f sub off"><span class="m">aus</span><span class="n">Wiederholung</span><span class="s dep">→ Fällig</span></div>
+      <div class="f sub"><span class="m">an</span><span class="n">Im Kalender</span><span class="s dep">→ Fällig, Kalenderzugriff</span></div>
+      <div class="f off"><span class="m">aus</span><span class="n">Ort</span><span class="s">Ankommen, Verlassen; Standortrecht</span></div>
+    </div>
+
+    <div class="grp">
+      <h3>Gewicht</h3>
+      <p>Wie schwer die Aufgabe wiegt. Sortiert die Listen und füllt „Schnell“.</p>
+      <div class="f off"><span class="m">aus</span><span class="n">Wichtigkeit</span><span class="s">Wortregel setzt sie trotzdem</span></div>
+      <div class="f off"><span class="m">aus</span><span class="n">Dringlichkeit</span><span class="s">Wortregel, rot bei Hoch</span></div>
+      <div class="f"><span class="m">an</span><span class="n">Dauer</span><span class="s">Regel, Wiedererkennung; „Schnell“</span></div>
+      <div class="f off"><span class="m">aus</span><span class="n">Energie</span><span class="s">nur von Hand; keine Ansicht nutzt sie</span></div>
+    </div>
+
+    <div class="grp">
+      <h3>Ablage</h3>
+      <p>Wo die Aufgabe einsortiert ist. Dieselben Schalter steuern die Gruppen auf der Startseite.</p>
+      <div class="f"><span class="m">an</span><span class="n">Etiketten</span><span class="s">Wortliste, Wiedererkennung</span></div>
+      <div class="f off"><span class="m">aus</span><span class="n">Projekt</span><span class="s">eigener Name in der Notiz</span></div>
+    </div>
+
+    <div class="grp">
+      <h3>Zusammenhang</h3>
+      <p>Was mit anderen Aufgaben zu tun hat. Nur auf der obersten Ebene, nie an einer Unteraufgabe.</p>
+      <div class="f off"><span class="m">aus</span><span class="n">Unteraufgaben</span><span class="s">eine Ebene</span></div>
+      <div class="f off"><span class="m">aus</span><span class="n">Wartet auf</span><span class="s">blockiert, verlässt „Als nächstes“</span></div>
+      <div class="f fix"><span class="m">fest</span><span class="n">Quelle</span><span class="s">nur wenn aus Mail, Teilen, Siri</span></div>
+    </div>
+
+    <div class="grp">
+      <h3>Nachweis</h3>
+      <p>Nicht Teil der Aufgabe, sondern über sie: Was die KI gesetzt hat, und der Weg, Worte nachzuschieben.</p>
+      <div class="f fix"><span class="m">fest</span><span class="n">Herkunft</span><span class="s">„N Felder von der KI“, nur wenn ≥ 1</span></div>
+      <div class="f fix"><span class="m">fest</span><span class="n">Ergänzen</span><span class="s">ein Satz, dieselben Regeln wie Erfassen</span></div>
+    </div>
+  </div>
+
+  <div style="border-top:1px solid var(--hair);padding-top:14px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:44px;font-size:12.5px;line-height:1.5;color:var(--grey)">
+    <div><b style="color:var(--ink)">Fest</b> ist, worauf andere Teile der App stehen: ohne Fällig kein „Jetzt“, keine Mitteilung, keine Randspalte. Titel und Gesagt sind die Aufgabe. Herkunft ist Pflicht aus ADR-6: Nichts, was die KI tat, wird versteckt.</div>
+    <div><b style="color:var(--ink)">Aus</b> heißt: nicht angeboten. Was eine Aufgabe schon trägt, zeigt sie trotzdem, ob von Siri, einer Regel oder von früher. Ein Schalter versteckt nie Daten, er räumt nur die Wortzeile auf.</div>
+    <div><b style="color:var(--ink)">Vorgabe an</b> (Henning, 2026-10-18) nur bei Notiz, Anhänge, Kalender, Dauer und Etiketten. Alles andere ist aus, bis man es einschaltet. Die Regeln setzen Wichtigkeit und Dringlichkeit trotzdem aus den Wörtern; gesetzt bleiben sie sichtbar.</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1180,"height":1180}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>
