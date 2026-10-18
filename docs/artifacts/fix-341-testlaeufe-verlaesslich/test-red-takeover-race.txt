@@ -1,0 +1,26 @@
+F
+======================================================================
+FAIL: test_parallel_takeover_of_orphan_lock (scripts.test_sim_lock.TestLockTests.test_parallel_takeover_of_orphan_lock)
+8 Wartende gegen eine verwaiste Sperre: keiner bricht ab, nie zwei zugleich drin (#341, F001).
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 213, in test_parallel_takeover_of_orphan_lock
+    self.assertEqual([p.returncode for p in procs], [0] * 8, outs)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [0, 0, 0, 1, 0, 0, 1, 0] != [0, 0, 0, 0, 0, 0, 0, 0]
+
+First differing element 3:
+1
+0
+
+- [0, 0, 0, 1, 0, 0, 1, 0]
+?           ---      ^
+
++ [0, 0, 0, 0, 0, 0, 0, 0]
+?                 ^ +++
+ : [('', '[sim] Verwaiste Testsperre übernommen (pid=42919 start=1 worktree=alt command=test )\n[sim] Testsperre belegt — warte (0 s). Halter: Worktree /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmprds40eo7/wt-2, Befehl test, PID 42922\n[sim] Testsperre belegt — warte (1 s). Halter: Worktree /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmprds40eo7/wt-5, Befehl test, PID 42925\n'), ('', '[sim] Verwaiste Testsperre übernommen (ohne pid-Datei)\n[sim] Testsperre belegt — warte (0 s). Halter: Worktree /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmprds40eo7/wt-2, Befehl test, PID 42922\n[sim] Testsperre belegt — warte (1 s). Halter: Worktree /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmprds40eo7/wt-5, Befehl test, PID 42925\n'), ('', ''), ('', 'mv: rename /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmprds40eo7/testlauf.lock/.pid.42923 to /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmprds40eo7/testlauf.lock/pid: No such file or directory\n'), ('', '[sim] Testsperre belegt — warte (0 s). Halter: Handsperre ohne pid-Datei (/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmprds40eo7/testlauf.lock)\n'), ('', '[sim] Testsperre belegt — warte (0 s). Halter: Handsperre ohne pid-Datei (/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmprds40eo7/testlauf.lock)\n'), ('', 'mv: rename /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmprds40eo7/testlauf.lock/.pid.42926 to /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmprds40eo7/testlauf.lock/pid: No such file or directory\n'), ('', '[sim] Verwaiste Testsperre übernommen (ohne pid-Datei)\n[sim] Testsperre belegt — warte (0 s). Halter: Worktree /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmprds40eo7/wt-2, Befehl test, PID 42922\n[sim] Testsperre belegt — warte (1 s). Halter: Worktree /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmprds40eo7/wt-5, Befehl test, PID 42925\n')]
+
+----------------------------------------------------------------------
+Ran 1 test in 1.438s
+
+FAILED (failures=1)

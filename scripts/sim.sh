@@ -3,11 +3,11 @@
 # sim.sh — Build- und Test-Toolkit für Loose Ends
 #
 # EINE Anlaufstelle für Build, Tests, Simulator. Die Workflow-Hooks blocken
-# direktes xcodebuild/simctl, damit alle Sessions denselben, gelockten Weg gehen.
+# direktes xcodebuild/simctl; Bau- und Testläufe holen die rechnerweite Sperre /tmp/loose-ends-testlauf.lock.
 #
 # Usage:
 #   ./scripts/sim.sh generate                 # Xcode-Projekt aus project.yml erzeugen
-#   ./scripts/sim.sh unit [Suite[/test]]      # Unit-Tests, macOS-Destination (schnell, kein Simulator)
+#   ./scripts/sim.sh unit [Suite[/test]]      # Unit-Tests im iOS-Simulator; Mac als Host nur mit LOOSEENDS_MAC_HOST=1
 #   ./scripts/sim.sh build                    # iOS-App für den Simulator bauen
 #   ./scripts/sim.sh mac-build                # macOS-App bauen
 #   ./scripts/sim.sh mac-schema-init          # CloudKit-Schema in Development anlegen (#175, schreibt in iCloud)
@@ -51,10 +51,15 @@ DEVICECTL="xcrun devicectl"
 TEAM_ID="${LOOSEENDS_TEAM_ID:-XK87E2B3VR}"
 DEVICE_DERIVED_DATA=""  # wird in device_derived_data() gesetzt
 DERIVED_DATA="$HOME/Library/Developer/Xcode/DerivedData"
-SESSION_ID="${CLAUDE_SESSION_ID:-default}"
+
+# Bauordner je Worktree (#304): bereinigter Ordnername, CLAUDE_SESSION_ID als Override.
+session_key() {
+    local key="${CLAUDE_SESSION_ID:-}"
+    [ -z "$key" ] && key=$(basename "$PROJECT_DIR" | LC_ALL=C sed 's/[^A-Za-z0-9._-]/-/g')
+    echo "${key:-default}"
+}
+SESSION_ID="$(session_key)"
 SESSION_DERIVED_DATA="$DERIVED_DATA/LooseEnds-session-${SESSION_ID}"
-LOCK_DIR="$PROJECT_DIR/.claude/sim_lock.d"
-LOCK_ACQUIRED=""
 
 BLUE='\033[0;34m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; RED='\033[0;31m'; NC='\033[0m'
 info()    { echo -e "${BLUE}[sim]${NC} $1" >&2; }
@@ -62,24 +67,113 @@ success() { echo -e "${GREEN}[sim]${NC} $1" >&2; }
 warn()    { echo -e "${YELLOW}[sim]${NC} $1" >&2; }
 error()   { echo -e "${RED}[sim]${NC} $1" >&2; }
 
-# --- Simulator-Lock (mkdir ist atomar), serialisiert Sessions ---
-acquire_lock() {
-    local waited=0
-    # Frische Worktrees haben kein .claude/, sonst scheitert mkdir bis zum Timeout.
-    mkdir -p "$(dirname "$LOCK_DIR")"
-    while ! mkdir "$LOCK_DIR" 2>/dev/null; do
-        if [ -f "$LOCK_DIR/info" ]; then
-            local t; t=$(head -1 "$LOCK_DIR/info" 2>/dev/null || echo 0)
-            if [ $(( $(date +%s) - t )) -gt 600 ]; then warn "Stale Lock entfernt"; rm -rf "$LOCK_DIR"; continue; fi
-        fi
-        [ $waited -ge 300 ] && { error "Simulator-Lock Timeout"; return 1; }
-        sleep 5; waited=$((waited + 5))
-    done
-    mkdir -p "$(dirname "$LOCK_DIR")"
-    date +%s > "$LOCK_DIR/info"; echo "$SESSION_ID" >> "$LOCK_DIR/info"; LOCK_ACQUIRED=1
+# --- Rechnerweite Testsperre (#413): mkdir ist atomar, eine Sperre für alle Worktrees ---
+# Datei pid: pid, Startzeit (Epoch-Sekunden), Worktree, Befehl. Verwaist = PID tot, oder Startzeit ist eine
+# Zahl und der Prozess hinter der PID ist jünger als sie (PID wiederverwendet). Ein Prozess, der vor oder zur
+# Startzeit lief, ist der Halter: Handsperren schreiben start=$(date +%s) später als ihr Prozessstart (#341).
+# Eine Startzeit in fremdem Format zählt nicht, dann nur die PID.
+# Ohne pid-Zeile (Handsperre) erst nach LOOSEENDS_LOCK_HAND_GRACE Sekunden seit der Änderungszeit.
+# Übernommen wird nur unter der Übernahme-Sperre <Sperre>.takeover, sonst verschiebt ein zweiter Wartender die
+# eben neu angelegte Sperre eines anderen (#341, F001).
+
+# Startzeit eines Prozesses in Epoch-Sekunden, unabhängig von der Locale; leer, wenn er nicht lebt.
+proc_start() {
+    local lstart
+    lstart=$(LC_ALL=C ps -o lstart= -p "$1" 2>/dev/null | awk '{$1=$1; print}' || true)
+    [ -n "$lstart" ] || return 0
+    LC_ALL=C date -j -f "%a %b %d %T %Y" "$lstart" +%s 2>/dev/null \
+        || LC_ALL=C date -d "$lstart" +%s 2>/dev/null || true
 }
-release_lock() { [ -n "$LOCK_ACQUIRED" ] && rm -rf "$LOCK_DIR" 2>/dev/null; LOCK_ACQUIRED=""; return 0; }
-trap release_lock EXIT
+
+lock_is_stale() {
+    local dir="${LOOSEENDS_LOCK_DIR:-/tmp/loose-ends-testlauf.lock}" pid start now mtime
+    [ -e "$dir" ] || return 1   # auch eine Datei (alte Handabsprache) zählt als Handsperre ohne pid
+    pid=$(sed -n 's/^pid=//p' "$dir/pid" 2>/dev/null | head -1 || true)
+    if [ -n "$pid" ]; then
+        now=$(proc_start "$pid")
+        [ -n "$now" ] || return 0
+        start=$(sed -n 's/^start=//p' "$dir/pid" 2>/dev/null | head -1 || true)
+        [[ "$start" =~ ^[0-9]+$ ]] && [ "$now" -gt "$start" ] && return 0
+        return 1
+    fi
+    mtime=$(stat -f %m "$dir" 2>/dev/null || stat -c %Y "$dir" 2>/dev/null || true)
+    [ -n "$mtime" ] || return 1
+    [ $(( $(date +%s) - mtime )) -gt "${LOOSEENDS_LOCK_HAND_GRACE:-1800}" ]
+}
+
+# Holt die Sperre für den Befehl $1. Wartet mit Statuszeile alle LOOSEENDS_LOCK_REPORT s, bricht nach
+# LOOSEENDS_LOCK_MAX s ab. Reentrant: dieselbe Skript-PID oder ein Kind des Halters (LOOSEENDS_LOCK_OWNER).
+acquire_testlock() {
+    local dir="${LOOSEENDS_LOCK_DIR:-/tmp/loose-ends-testlauf.lock}" what="${1:-sim.sh}"
+    local max="${LOOSEENDS_LOCK_MAX:-1800}" every="${LOOSEENDS_LOCK_REPORT:-30}"
+    local holder t0 elapsed last=-1 desc old
+    holder=$(sed -n 's/^pid=//p' "$dir/pid" 2>/dev/null || true)
+    if [ -n "$holder" ] && { [ "$holder" = "$$" ] || [ "$holder" = "${LOOSEENDS_LOCK_OWNER:-}" ]; } && ! lock_is_stale; then
+        return 0
+    fi
+    t0=$(date +%s)
+    mkdir -p "$(dirname "$dir")"
+    until mkdir "$dir" 2>/dev/null && claim_testlock "$dir" "$what"; do
+        lock_is_stale && take_over_stale_lock "$dir" && continue
+        if [ -f "$dir/pid" ]; then
+            desc="Worktree $(sed -n 's/^worktree=//p' "$dir/pid" 2>/dev/null), Befehl $(sed -n 's/^command=//p' "$dir/pid" 2>/dev/null), PID $(sed -n 's/^pid=//p' "$dir/pid" 2>/dev/null)" || true
+        else
+            desc="Handsperre ohne pid-Datei ($dir)"
+        fi
+        elapsed=$(( $(date +%s) - t0 ))
+        if [ "$elapsed" -ge "$max" ]; then
+            error "Testsperre nach ${max} s nicht frei. Halter: $desc. Sperre: $dir"
+            return 1
+        fi
+        if [ "$last" -lt 0 ] || [ $(( elapsed - last )) -ge "$every" ]; then
+            info "Testsperre belegt — warte ($elapsed s). Halter: $desc"
+            last=$elapsed
+        fi
+        sleep "${LOOSEENDS_LOCK_POLL:-5}"
+    done
+    export LOOSEENDS_LOCK_OWNER=$$
+}
+
+# Schreibt die pid-Datei in die eben angelegte Sperre. Erst vollständig schreiben, dann hineinschieben: ein
+# Leser sieht nie eine halbe pid-Datei. Scheitert es, ist die Sperre verloren und der Aufrufer wartet weiter.
+claim_testlock() {
+    { echo "pid=$$"; echo "start=$(proc_start $$)"
+      echo "worktree=$PROJECT_DIR"; echo "command=$2"; } 2>/dev/null > "$1/.pid.$$" \
+        && mv "$1/.pid.$$" "$1/pid" 2>/dev/null && return 0
+    rm -f "$1/.pid.$$" 2>/dev/null || true
+    warn "Testsperre beim Anlegen verloren, warte weiter"
+    return 1
+}
+
+# Übernimmt eine verwaiste Sperre $1, nur unter der Übernahme-Sperre $1.takeover (#341, F001). Rückgabe 1:
+# ein anderer übernimmt gerade, der Aufrufer wartet. Eine Übernahme-Sperre älter als 10 s ist verwaist.
+take_over_stale_lock() {
+    local dir="$1" guard="$1.takeover" old mtime
+    if ! mkdir "$guard" 2>/dev/null; then
+        mtime=$(stat -f %m "$guard" 2>/dev/null || stat -c %Y "$guard" 2>/dev/null || true)
+        if [ -n "$mtime" ] && [ $(( $(date +%s) - mtime )) -gt 10 ]; then rmdir "$guard" 2>/dev/null || true; fi
+        return 1
+    fi
+    if lock_is_stale; then
+        old="$dir.stale.$$.$RANDOM"
+        if mv "$dir" "$old" 2>/dev/null; then
+            warn "Verwaiste Testsperre übernommen ($(tr '\n' ' ' 2>/dev/null < "$old/pid" || echo 'ohne pid-Datei'))"
+            rm -rf "$old"
+        fi
+    fi
+    rmdir "$guard" 2>/dev/null || true
+}
+
+# Gibt die Sperre nur frei, wenn sie diesem Prozess gehört; ohne Sperre gefahrlos.
+release_testlock() {
+    local dir="${LOOSEENDS_LOCK_DIR:-/tmp/loose-ends-testlauf.lock}" gone
+    grep -qx "pid=$$" "$dir/pid" 2>/dev/null || return 0
+    gone="$dir.done.$$.$RANDOM"
+    mv "$dir" "$gone" 2>/dev/null && rm -rf "$gone"
+    unset LOOSEENDS_LOCK_OWNER
+    return 0
+}
+trap release_testlock EXIT
 
 # --- Deployment Target aus project.yml lesen (eine Quelle der Wahrheit) ---
 deployment_target() {
@@ -179,8 +273,15 @@ measurement_status() {
 }
 
 cmd_unit() {
+    acquire_testlock "unit"
     ensure_project
     local only="$UNIT_TARGET"; [ -n "${1:-}" ] && only="$UNIT_TARGET/$1"
+    # Standard ist der Simulator (#294, #374): der Mac hostet nur mit LOOSEENDS_MAC_HOST=1.
+    if [ "${LOOSEENDS_MAC_HOST:-}" != 1 ]; then
+        info "Unit-Tests im Simulator (Mac als Host nur mit LOOSEENDS_MAC_HOST=1)."
+        cmd_sim_unit "$@"
+        return
+    fi
     if ! mac_hosts_tests; then
         warn "macOS $(sw_vers -productVersion) < Deployment Target $(deployment_target macOS) — Unit-Tests laufen im Simulator."
         cmd_sim_unit "$@"
@@ -193,14 +294,16 @@ cmd_unit() {
 }
 
 cmd_build() {
+    acquire_testlock "build"
     ensure_project
     local id; id=$(sim_id); [ -z "$id" ] && { error "Kein Simulator '$SIM_NAME' gefunden"; return 1; }
-    info "iOS-Build für $SIM_NAME ($id), DerivedData ${SESSION_ID:0:8}"
+    info "iOS-Build für $SIM_NAME ($id), DerivedData $SESSION_DERIVED_DATA"
     run_xcodebuild build -project "$PROJECT" -scheme "$SCHEME" -destination "platform=iOS Simulator,id=$id"
     success "Build erfolgreich."
 }
 
 cmd_mac_build() {
+    acquire_testlock "mac-build"
     ensure_project
     info "macOS-Build"
     run_xcodebuild build -project "$PROJECT" -scheme "$SCHEME" -destination 'platform=macOS'
@@ -284,6 +387,8 @@ cmd_boot() {
     open -a Simulator --args -CurrentDeviceUDID "$id" 2>/dev/null || true
     $SIMCTL boot "$id" 2>/dev/null || true
     $SIMCTL bootstatus "$id" -b >/dev/null 2>&1 || true
+    # Frischer Simulator (#341): der Tastatur-Hinweis „Speed up your typing…“ hängt XCTest-Abfragen auf.
+    [ "$SIM_OS" = "iOS" ] && { $SIMCTL spawn "$id" defaults write com.apple.keyboard.preferences DidShowContinuousPathIntroduction -bool true || warn "Tastatur-Hinweis nicht abgeschaltet ($SIM_NAME), UI-Tests können hängen (#341)"; }
     success "Simulator bereit ($SIM_NAME)."
 }
 
@@ -296,22 +401,22 @@ cmd_status() {
 }
 
 cmd_sim_unit() {
-    ensure_project; acquire_lock; cmd_boot
+    acquire_testlock "sim-unit"; ensure_project; cmd_boot
     local id; id=$(sim_id)
     local only="$UNIT_TARGET"; [ -n "${1:-}" ] && only="$UNIT_TARGET/$1"
     info "Unit-Tests (iOS-Simulator): $only"
     run_xcodebuild test -project "$PROJECT" -scheme "$SCHEME" -destination "platform=iOS Simulator,id=$id" -only-testing:"$only" -parallel-testing-enabled NO
-    release_lock; success "Unit-Tests bestanden."
+    success "Unit-Tests bestanden."
     measurement_status
 }
 
 cmd_test() {
     [ -z "${1:-}" ] && { error "Usage: ./scripts/sim.sh test Class[/test]"; return 1; }
-    ensure_project; acquire_lock; cmd_boot
+    acquire_testlock "test"; ensure_project; cmd_boot
     local id; id=$(sim_id)
     info "UI-Test: $1"
     run_xcodebuild test -project "$PROJECT" -scheme "$SCHEME" -destination "platform=iOS Simulator,id=$id" -only-testing:"$UI_TARGET/$1" -parallel-testing-enabled NO -disable-concurrent-destination-testing
-    release_lock; success "UI-Test bestanden."
+    success "UI-Test bestanden."
 }
 
 # UI-Test mit maschinellem Beleg (#145): Beleg, summary.json und Screenshots entstehen aus diesem
@@ -328,16 +433,18 @@ cmd_test_proof() {
     fi
     local art="docs/artifacts/$wf"; local run="$art/simulator-run"
     cd "$PROJECT_DIR"
+    # Erst die Sperre, dann aufräumen (#341): ein wartender Lauf löschte sonst das Ergebnisbündel des laufenden.
+    acquire_testlock "test-proof"
     rm -rf "$art/simulator-run.txt" "$run"   # ein alter grüner Beleg darf keinen roten Lauf überleben
     mkdir -p "$run"
-    cmd_generate; acquire_lock; cmd_boot
+    cmd_generate; cmd_boot
     local id; id=$(sim_id)
     info "UI-Test mit Beleg: $1 → $art/simulator-run.txt"
     # Mitteilungstests (#295): `add` aus der App scheitert im iOS-27-Simulator (UNErrorDomain 2003),
     # also spielt der Lauf die Datei aus LOOSEENDS_PUSH alle 5 s per simctl push ein.
     local push_pid=""
     if [ -n "${LOOSEENDS_PUSH:-}" ]; then
-        [ -f "$LOOSEENDS_PUSH" ] || { release_lock; error "LOOSEENDS_PUSH: $LOOSEENDS_PUSH fehlt"; return 1; }
+        [ -f "$LOOSEENDS_PUSH" ] || { release_testlock; error "LOOSEENDS_PUSH: $LOOSEENDS_PUSH fehlt"; return 1; }
         export TEST_RUNNER_LOOSEENDS_PUSH_FEED=1
         ( while true; do $SIMCTL push "$id" com.henning.looseends "$LOOSEENDS_PUSH" >/dev/null 2>&1 || true; sleep 5; done ) &
         push_pid=$!
@@ -352,7 +459,7 @@ cmd_test_proof() {
         -resultBundlePath "$run/run.xcresult" || rc=$?
     [ -n "$push_pid" ] && { kill "$push_pid" 2>/dev/null || true; }
     local endline; endline=$(grep -E '^\*\* TEST (SUCCEEDED|FAILED) \*\*' "$BUILD_LOG" | tail -1 || true)
-    release_lock
+    release_testlock
     local prc=0
     python3 scripts/sim_proof.py "$wf" "$1" "$run/run.xcresult" "${endline:-unbekannt}" \
         "scripts/sim.sh test-proof $1" "$rc" || prc=$?
@@ -369,7 +476,7 @@ cmd_watch_test_proof() {
 }
 
 cmd_launch() {
-    acquire_lock; cmd_boot
+    acquire_testlock "launch"; cmd_boot
     local id; id=$(sim_id)
     local app="$SESSION_DERIVED_DATA/Build/Products/Debug-iphonesimulator/LooseEnds.app"
     [ -d "$app" ] || { error "Erst bauen: ./scripts/sim.sh build"; return 1; }
@@ -377,7 +484,7 @@ cmd_launch() {
     $SIMCTL terminate "$id" "$bundle" 2>/dev/null || true
     $SIMCTL install "$id" "$app"
     $SIMCTL launch "$id" "$bundle" "$@"
-    release_lock; success "App gestartet ($bundle)."
+    success "App gestartet ($bundle)."
 }
 
 # --- Stufe 2: Hennings echtes iPhone ---------------------------------------
@@ -399,7 +506,9 @@ for line in sys.stdin:
         print(m.group(1)); break'
 }
 
-device_derived_data() { echo "$DERIVED_DATA/LooseEnds-device-${SESSION_ID}"; }
+device_derived_data() {
+    echo "$DERIVED_DATA/LooseEnds-device-${SESSION_ID}"
+}
 
 require_device() {
     local id; id=$(device_id)

@@ -43,7 +43,7 @@ final class CalendarTargetTests: XCTestCase {
         row.tap()
 
         let toggle = app.switches["showInCalendarToggle"]
-        if !toggle.waitForExistence(timeout: 3) { app.swipeUp() }
+        scrollUntilVisible(toggle, named: "showInCalendarToggle", in: app, firstWait: 3)
         XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Detail should offer Show in calendar")
         XCTAssertEqual(toggle.value as? String, "0")
         // The element spans the row; the switch itself sits at the trailing edge.
@@ -57,9 +57,9 @@ final class CalendarTargetTests: XCTestCase {
         }
 
         let target = app.descendants(matching: .any).matching(identifier: "calendarTargetRow").firstMatch
-        allowCalendarAccessIfAsked(until: target)
+        allowCalendarAccessIfAsked()
 
-        if !target.waitForExistence(timeout: 10) { app.swipeUp() }
+        scrollUntilVisible(target, named: "calendarTargetRow", in: app, firstWait: 10)
         XCTAssertTrue(target.waitForExistence(timeout: 5), "The detail should name the calendar the event goes to")
         XCTAssertTrue(target.label.contains("Loose Ends"), "Target calendar label was \(target.label)")
         let shot = XCTAttachment(screenshot: app.screenshot())
@@ -160,7 +160,7 @@ final class CalendarTargetTests: XCTestCase {
         XCTAssertTrue(firstRow.waitForExistence(timeout: 5), "The first task should still be listed")
         firstRow.tap()
         let firstAgain = app.descendants(matching: .any).matching(identifier: "calendarTargetRow").firstMatch
-        if !firstAgain.waitForExistence(timeout: 5) { app.swipeUp() }
+        scrollUntilVisible(firstAgain, named: "calendarTargetRow", in: app, firstWait: 5)
         XCTAssertTrue(firstAgain.waitForExistence(timeout: 5))
         XCTAssertTrue(firstAgain.label.contains("Loose Ends"), "First task moved to \(firstAgain.label)")
         let firstShot = XCTAttachment(screenshot: app.screenshot())
@@ -198,7 +198,7 @@ final class CalendarTargetTests: XCTestCase {
         row.tap()
 
         let toggle = app.switches["showInCalendarToggle"]
-        if !toggle.waitForExistence(timeout: 3) { app.swipeUp() }
+        scrollUntilVisible(toggle, named: "showInCalendarToggle", in: app, firstWait: 3)
         XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Detail should offer Show in calendar")
         XCTAssertEqual(toggle.value as? String, "0")
         toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
@@ -209,8 +209,8 @@ final class CalendarTargetTests: XCTestCase {
             app.buttons["calendarAskConfirm"].tap()
         }
         let target = app.descendants(matching: .any).matching(identifier: "calendarTargetRow").firstMatch
-        allowCalendarAccessIfAsked(until: target)
-        if !target.waitForExistence(timeout: 10) { app.swipeUp() }
+        allowCalendarAccessIfAsked()
+        scrollUntilVisible(target, named: "calendarTargetRow", in: app, firstWait: 10)
         XCTAssertTrue(target.waitForExistence(timeout: 5), "The detail should name the calendar the event goes to")
         return target
     }
@@ -248,19 +248,30 @@ final class CalendarTargetTests: XCTestCase {
         return name
     }
 
-    /// The system asks once per install, in the simulator's own language. On a slow CI runner the
-    /// prompt came only after about eight seconds (#203), so this watches for it until the target row
-    /// shows up, for at most 30 seconds. A simulator that already granted access shows no prompt.
+    /// The system asks once per install, in the simulator's own language. Waits a short while for the
+    /// prompt itself (#341), not 30 s for the row: a simulator that already granted access shows none. A
+    /// prompt that comes later (slow CI runner, #203) is caught by the interruption monitor on the next gesture.
     @MainActor
-    private func allowCalendarAccessIfAsked(until target: XCUIElement) {
-        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        let deadline = Date().addingTimeInterval(30)
-        while Date() < deadline {
-            for label in ["Allow Full Access", "Vollen Zugriff erlauben"] where springboard.buttons[label].exists {
-                springboard.buttons[label].tap()
-                return
-            }
-            if target.waitForExistence(timeout: 1) { return }
+    private func allowCalendarAccessIfAsked() {
+        let alert = XCUIApplication(bundleIdentifier: "com.apple.springboard").alerts.firstMatch
+        guard alert.waitForExistence(timeout: 3) else { return }
+        for label in ["Allow Full Access", "Vollen Zugriff erlauben"] where alert.buttons[label].exists {
+            alert.buttons[label].tap()
+            return
         }
+    }
+
+    /// A row below the screen edge is only created once the list scrolls; one swipe sometimes did not
+    /// move the list (#305). Up to five slow swipes on the list, each followed by a short look.
+    @MainActor
+    private func scrollUntilVisible(_ element: XCUIElement, named name: String, in app: XCUIApplication,
+                                    firstWait: TimeInterval, file: StaticString = #filePath, line: UInt = #line) {
+        if element.waitForExistence(timeout: firstWait) { return }
+        let list = app.collectionViews.firstMatch
+        for _ in 0..<5 {
+            list.swipeUp(velocity: .slow)
+            if element.waitForExistence(timeout: 1) { return }
+        }
+        XCTFail("\(name) nach 5 Wischversuchen nicht erzeugt", file: file, line: line)
     }
 }

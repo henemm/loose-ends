@@ -1,0 +1,155 @@
+test_session_key_from_folder_name (scripts.test_sim_lock.SessionKeyTests.test_session_key_from_folder_name) ... FAIL
+test_session_key_override (scripts.test_sim_lock.SessionKeyTests.test_session_key_override) ... FAIL
+test_hand_lock_without_pid_waits (scripts.test_sim_lock.TestLockTests.test_hand_lock_without_pid_waits) ... FAIL
+test_orphan_lock_taken_over (scripts.test_sim_lock.TestLockTests.test_orphan_lock_taken_over) ... FAIL
+test_reentrant (scripts.test_sim_lock.TestLockTests.test_reentrant) ... FAIL
+test_start_time_mismatch_is_orphan (scripts.test_sim_lock.TestLockTests.test_start_time_mismatch_is_orphan) ... FAIL
+test_two_runs_are_serialized (scripts.test_sim_lock.TestLockTests.test_two_runs_are_serialized) ... FAIL
+test_wait_message_and_cap (scripts.test_sim_lock.TestLockTests.test_wait_message_and_cap) ... FAIL
+test_unit_never_macos_without_switch (scripts.test_sim_lock.UnitDestinationTests.test_unit_never_macos_without_switch) ... FAIL
+
+======================================================================
+FAIL: test_session_key_from_folder_name (scripts.test_sim_lock.SessionKeyTests.test_session_key_from_folder_name)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 96, in test_session_key_from_folder_name
+    key, device = self.key("/Users/x/loose-ends/.claude/worktrees/prancy-noodling-axolotl")
+                  ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 89, in key
+    function_source("session_key"), function_source("device_derived_data"),
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 26, in function_source
+    raise AssertionError(f"{name}() fehlt in scripts/sim.sh")
+AssertionError: session_key() fehlt in scripts/sim.sh
+
+======================================================================
+FAIL: test_session_key_override (scripts.test_sim_lock.SessionKeyTests.test_session_key_override)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 105, in test_session_key_override
+    self.assertEqual(self.key("/tmp/prancy-noodling-axolotl", override="abc")[0], "abc")
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 89, in key
+    function_source("session_key"), function_source("device_derived_data"),
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 26, in function_source
+    raise AssertionError(f"{name}() fehlt in scripts/sim.sh")
+AssertionError: session_key() fehlt in scripts/sim.sh
+
+======================================================================
+FAIL: test_hand_lock_without_pid_waits (scripts.test_sim_lock.TestLockTests.test_hand_lock_without_pid_waits)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 187, in test_hand_lock_without_pid_waits
+    r = self.run_bash('acquire_testlock "build"\nrelease_testlock', env=env)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 62, in run_bash
+    return subprocess.run(["bash", "-c", self.script(body, worktree)], env=env or self.env,
+                                         ~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 58, in script
+    functions = "\n".join(function_source(n) for n in LOCK_FUNCTIONS)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 58, in <genexpr>
+    functions = "\n".join(function_source(n) for n in LOCK_FUNCTIONS)
+                          ~~~~~~~~~~~~~~~^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 26, in function_source
+    raise AssertionError(f"{name}() fehlt in scripts/sim.sh")
+AssertionError: lock_is_stale() fehlt in scripts/sim.sh
+
+======================================================================
+FAIL: test_orphan_lock_taken_over (scripts.test_sim_lock.TestLockTests.test_orphan_lock_taken_over)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 160, in test_orphan_lock_taken_over
+    holder = self.start_bash('acquire_testlock "test"\nsleep 60', "wt-a")
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 66, in start_bash
+    p = subprocess.Popen(["bash", "-c", self.script(body, worktree)], env=self.env,
+                                        ~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 58, in script
+    functions = "\n".join(function_source(n) for n in LOCK_FUNCTIONS)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 58, in <genexpr>
+    functions = "\n".join(function_source(n) for n in LOCK_FUNCTIONS)
+                          ~~~~~~~~~~~~~~~^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 26, in function_source
+    raise AssertionError(f"{name}() fehlt in scripts/sim.sh")
+AssertionError: lock_is_stale() fehlt in scripts/sim.sh
+
+======================================================================
+FAIL: test_reentrant (scripts.test_sim_lock.TestLockTests.test_reentrant)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 194, in test_reentrant
+    functions = "\n".join(function_source(n) for n in LOCK_FUNCTIONS)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 194, in <genexpr>
+    functions = "\n".join(function_source(n) for n in LOCK_FUNCTIONS)
+                          ~~~~~~~~~~~~~~~^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 26, in function_source
+    raise AssertionError(f"{name}() fehlt in scripts/sim.sh")
+AssertionError: lock_is_stale() fehlt in scripts/sim.sh
+
+======================================================================
+FAIL: test_start_time_mismatch_is_orphan (scripts.test_sim_lock.TestLockTests.test_start_time_mismatch_is_orphan)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 179, in test_start_time_mismatch_is_orphan
+    r = self.run_bash('acquire_testlock "build"\nrelease_testlock')
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 62, in run_bash
+    return subprocess.run(["bash", "-c", self.script(body, worktree)], env=env or self.env,
+                                         ~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 58, in script
+    functions = "\n".join(function_source(n) for n in LOCK_FUNCTIONS)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 58, in <genexpr>
+    functions = "\n".join(function_source(n) for n in LOCK_FUNCTIONS)
+                          ~~~~~~~~~~~~~~~^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 26, in function_source
+    raise AssertionError(f"{name}() fehlt in scripts/sim.sh")
+AssertionError: lock_is_stale() fehlt in scripts/sim.sh
+
+======================================================================
+FAIL: test_two_runs_are_serialized (scripts.test_sim_lock.TestLockTests.test_two_runs_are_serialized)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 147, in test_two_runs_are_serialized
+    a = self.start_bash(body, "wt-a")
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 66, in start_bash
+    p = subprocess.Popen(["bash", "-c", self.script(body, worktree)], env=self.env,
+                                        ~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 58, in script
+    functions = "\n".join(function_source(n) for n in LOCK_FUNCTIONS)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 58, in <genexpr>
+    functions = "\n".join(function_source(n) for n in LOCK_FUNCTIONS)
+                          ~~~~~~~~~~~~~~~^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 26, in function_source
+    raise AssertionError(f"{name}() fehlt in scripts/sim.sh")
+AssertionError: lock_is_stale() fehlt in scripts/sim.sh
+
+======================================================================
+FAIL: test_wait_message_and_cap (scripts.test_sim_lock.TestLockTests.test_wait_message_and_cap)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 206, in test_wait_message_and_cap
+    self.start_bash('acquire_testlock "test-proof"\nsleep 60', "wt-holder")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 66, in start_bash
+    p = subprocess.Popen(["bash", "-c", self.script(body, worktree)], env=self.env,
+                                        ~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 58, in script
+    functions = "\n".join(function_source(n) for n in LOCK_FUNCTIONS)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 58, in <genexpr>
+    functions = "\n".join(function_source(n) for n in LOCK_FUNCTIONS)
+                          ~~~~~~~~~~~~~~~^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 26, in function_source
+    raise AssertionError(f"{name}() fehlt in scripts/sim.sh")
+AssertionError: lock_is_stale() fehlt in scripts/sim.sh
+
+======================================================================
+FAIL: test_unit_never_macos_without_switch (scripts.test_sim_lock.UnitDestinationTests.test_unit_never_macos_without_switch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 131, in test_unit_never_macos_without_switch
+    self.assertNotIn("platform=macOS", out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'platform=macOS' unexpectedly found in 'XCODEBUILD test -project P -scheme S -destination platform=macOS -only-testing:LooseEndsTests -parallel-testing-enabled NO\n[sim] Unit-Tests (macOS): LooseEndsTests\n[sim] Unit-Tests bestanden.\n'
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.017s
+
+FAILED (failures=9)

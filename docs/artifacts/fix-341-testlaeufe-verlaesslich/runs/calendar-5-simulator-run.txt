@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-10-17T10:17:52+0200
+befehl: scripts/sim.sh test-proof CalendarTargetTests
+workflow: fix-341-testlaeufe-verlaesslich
+head: 096c3474ee43257b85f3266e2b959f2e0df58683
+basis: d0e166b970d7d35a1088df2478ae385fc5397f37 (merge-base origin/main HEAD)
+testklasse: CalendarTargetTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 3 gesamt, 3 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1792224872.408  ende: 1792225071.343
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/fix-341-testlaeufe-verlaesslich/simulator-run/summary.json  sha256:089a62f6203a60af018c543c4d06b90e559c74c2cabc35aa882af60a2e9a661f
+xcresult: docs/artifacts/fix-341-testlaeufe-verlaesslich/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-341-testlaeufe-verlaesslich/simulator-run/*.png (7 Stück)
+
+## Geprüfte Dateien
+- sha256:f70522788126133af298cecbf3c744f10022eb3fac15f40327cc99e9ce58c304  LooseEndsUITests/CalendarTargetTests.swift

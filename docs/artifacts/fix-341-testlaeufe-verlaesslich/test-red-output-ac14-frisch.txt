@@ -1,0 +1,33 @@
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/LooseEnds.xcodeproj
+[0;32m[sim][0m Projekt erzeugt.
+[0;32m[sim][0m Simulator bereit (LE341 frisch).
+[0;34m[sim][0m UI-Test mit Beleg: ContextUniquenessTests → docs/artifacts/fix-341-testlaeufe-verlaesslich/simulator-run.txt
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-10-18 07:41:56.876.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-18 07:41:56.879.
+Test Suite 'ContextUniquenessTests' started at 2026-10-18 07:41:56.879.
+    [31m✖[0m testSecondGardenIsRejected, Failed to get matching snapshots: Timed out while evaluating UI query.
+Executed 1 test, with 1 failure (0 unexpected) in 1450.698 (1450.736) seconds
+Test Suite 'LooseEndsUITests.xctest' failed at 2026-10-18 08:06:07.629.
+Executed 1 test, with 1 failure (0 unexpected) in 1450.698 (1450.751) seconds
+Executed 1 test, with 1 failure (0 unexpected) in 1450.698 (1450.754) seconds
+[1mTest session results:[0m /Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/docs/artifacts/fix-341-testlaeufe-verlaesslich/simulator-run/run.xcresult
+[36;1mTesting started[0m
+[sim_proof] ergebnis: Failed
+[0;31m[sim][0m UI-Test fehlgeschlagen (xcodebuild 65), Beleg: docs/artifacts/fix-341-testlaeufe-verlaesslich/simulator-run.txt
