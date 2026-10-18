@@ -1,0 +1,43 @@
+# AC-12 Messung: Warten auf den Springboard-Alert (allowCalendarAccessIfAsked)
+
+Lauf: runs/calendar-6.log, Beleg runs/calendar-6-simulator-run.txt
+Befehl: LOOSEENDS_LOCK_MAX=14400 ./scripts/sim.sh test-proof CalendarTargetTests
+Gerät: iPhone 17, iOS 27.0 (benutzter Simulator, Kalenderzugriff schon erteilt), head 096c347
+Ergebnis: rc=0, 3 gesamt, 3 bestanden, 0 fehlgeschlagen, 0 übersprungen
+Quelle der Zeiten: xcrun xcresulttool get test-results activities, simulator-run/run.xcresult, Schritte ab Teststart
+
+## Neuer Code (allowCalendarAccessIfAsked: alerts.firstMatch.waitForExistence(timeout: 3))
+
+| Test | Aufruf | "Waiting 3.0s for Alert" ab | nächster Testschritt ab | Spanne |
+|---|---|---|---|---|
+| testSwitchOnShowsTargetCalendar | 1 | 22.8 s | 25.9 s | 3.1 s |
+| testDefaultCalendarIsStampedOnSwitchOn | 1 | 25.9 s | 29.1 s | 3.1 s (aus Rohzeitstempeln) |
+| testDefaultCalendarIsStampedOnSwitchOn | 2 | 84.1 s | 87.3 s | 3.2 s |
+| testSettingsShowDefaultCalendarRow | – | ruft den Helfer nicht auf | – | – |
+
+Danach folgt jeweils scrollUntilVisible: "Waiting 10.0s for calendarTargetRow" läuft voll aus (10.3–10.4 s),
+weil die Zeile unter dem Bildschirmrand liegt; ein langsamer Wisch erzeugt sie, gefunden nach 1 Wisch.
+Testdauern: testSwitchOnShowsTargetCalendar 47.2 s, testDefaultCalendarIsStampedOnSwitchOn 138.5 s,
+testSettingsShowDefaultCalendarRow 10.5 s.
+
+## Alter Code (git show d0e166b:LooseEndsUITests/CalendarTargetTests.swift, Zeile 255–265)
+
+allowCalendarAccessIfAsked(until: target): Schleife bis 30 s Frist, je Runde Springboard-Knopf prüfen und
+target.waitForExistence(timeout: 1). Ohne Alert endet sie nur, wenn target erscheint. Da die Zielzeile auf
+diesem Simulator unter dem Bildschirmrand liegt (oben belegt: erst nach dem Wisch erzeugt), lief die Schleife
+nach dem Code die vollen 30 s je Aufruf, danach noch target.waitForExistence(timeout: 10) vor dem Wisch.
+Das ist aus dem Code abgeleitet, nicht mit dem alten Code gemessen.
+
+Vergleich je Aufruf bis zum Wisch: alt ca. 30 s + 10 s = 40 s, neu 3.1 s + 10.4 s = 13.5 s.
+
+## Historische Einzeldauern (Angabe aus dem Auftrag)
+
+testSwitchOnShowsTargetCalendar 31–35 s, testCalendarSwitchStaysOn 31–54 s.
+Hinweis: In curious-crunching-hopcroft/docs/artifacts/279-pegel-mikrofon/regression-ui.txt stehen diese Zahlen
+nicht (nur PASS/FAIL je Klasse); eine Quelle dafür habe ich dort nicht gefunden. testCalendarSwitchStaysOn liegt in
+CaptureSmokeTests.swift:702, nicht in CalendarTargetTests, und gehört nicht zu diesem Lauf.
+
+## Frühere Läufe derselben Klasse in diesem Workflow (runs/calendar-1 … 5)
+
+testSwitchOnShowsTargetCalendar 47.4 / 47.6 / 47.5 / 47.0 / 47.2 s, testDefaultCalendarIsStampedOnSwitchOn
+138.0 / 137.0 / 133.7 / 134.1 / 133.6 s, testSettingsShowDefaultCalendarRow 9.6–11.1 s; calendar-6 liegt im selben Band.

@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-10-17T11:38:20+0200
+befehl: scripts/sim.sh test-proof RecognitionWalkthroughTests
+workflow: fix-341-testlaeufe-verlaesslich
+head: 096c3474ee43257b85f3266e2b959f2e0df58683
+basis: d0e166b970d7d35a1088df2478ae385fc5397f37 (merge-base origin/main HEAD)
+testklasse: RecognitionWalkthroughTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1792229814.483  ende: 1792229899.946
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/fix-341-testlaeufe-verlaesslich/simulator-run/summary.json  sha256:a14ff3dba64d1202ce8fbb884f8b9911d7f496f5fd417a1f86ccdc9b706a6556
+xcresult: docs/artifacts/fix-341-testlaeufe-verlaesslich/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-341-testlaeufe-verlaesslich/simulator-run/*.png (4 Stück)
+
+## Geprüfte Dateien
+- sha256:f70522788126133af298cecbf3c744f10022eb3fac15f40327cc99e9ce58c304  LooseEndsUITests/CalendarTargetTests.swift

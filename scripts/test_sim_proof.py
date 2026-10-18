@@ -116,7 +116,8 @@ class TestProofCommandErrorTests(unittest.TestCase):
             stub = stubs / tool
             stub.write_text(f'#!/bin/bash\ntouch "{self.marker}"\nexit 0\n')
             stub.chmod(0o755)
-        self.env = dict(os.environ, PATH=f"{stubs}:/usr/bin:/bin", CLAUDE_PROJECT_DIR=str(self.root))
+        self.env = dict(os.environ, PATH=f"{stubs}:/usr/bin:/bin", CLAUDE_PROJECT_DIR=str(self.root),
+                        LOOSEENDS_LOCK_DIR=str(self.root / "testlauf.lock"))  # nie die echte Sperre in /tmp (#341)
 
     def run_sim(self, *args):
         return subprocess.run(["bash", str(self.root / "scripts" / "sim.sh"), "test-proof", *args],

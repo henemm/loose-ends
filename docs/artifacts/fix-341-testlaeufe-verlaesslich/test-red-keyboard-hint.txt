@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_boot_marks_continuous_path_hint_shown (scripts.test_sim_lock.KeyboardHintTests.test_boot_marks_continuous_path_hint_shown)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 163, in test_boot_marks_continuous_path_hint_shown
+    self.assertGreaterEqual(write, 0, "cmd_boot schreibt DidShowContinuousPathIntroduction nicht")
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: -1 not greater than or equal to 0 : cmd_boot schreibt DidShowContinuousPathIntroduction nicht
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)
