@@ -37,6 +37,13 @@ struct ShareCaptureView: View {
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                 }
+                if !content.attachments.isEmpty {
+                    Section("Attachments") {
+                        ForEach(Array(content.attachments.enumerated()), id: \.offset) { _, attachment in
+                            ShareAttachmentRow(attachment: attachment)
+                        }
+                    }
+                }
             }
             .navigationTitle("Capture")
             .navigationBarTitleDisplayMode(.inline)
@@ -62,11 +69,38 @@ struct ShareCaptureView: View {
         do {
             let container = try ModelContainerFactory.make()
             let context = ModelContext(container)
-            try CaptureService.save(text, via: content.channel, sourceURL: content.sourceURL, in: context)
+            try CaptureService.save(text, via: content.channel, sourceURL: content.sourceURL,
+                                    attachments: content.attachments, in: context)
             finish()
         } catch {
             Self.logger.error("Share capture failed: \(error, privacy: .public)")
             saveFailed = true
+        }
+    }
+}
+
+/// One shared photo or file (#442, design A): symbol, name, size. What is not attached says why, in grey.
+private struct ShareAttachmentRow: View {
+    let attachment: SharedAttachment
+
+    var body: some View {
+        HStack {
+            Label(attachment.fileName, systemImage: AttachmentKind.symbol(for: attachment.typeIdentifier))
+                .lineLimit(1)
+                .truncationMode(.middle)
+            Spacer()
+            Text(detail)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.trailing)
+        }
+    }
+
+    private var detail: String {
+        switch attachment.status {
+        case .ready: ByteCountFormatter.string(fromByteCount: Int64(attachment.byteCount), countStyle: .file)
+        case .tooLarge: String(localized: "Too large (max. 50 MB) – not attached")
+        case .overLimit: String(localized: "More than 10 – not attached")
         }
     }
 }

@@ -257,7 +257,9 @@ not scope creep on the current one.
   `Shared/Services`; not in the product path until #25 Schnitt 2), `WaitingOn` ("waiting on" set by hand:
   link, loosen, picker candidates without loops, a user revision per change, #251), `SharedAttachment` (a shared photo or
   file before saving: temp file, never `Data`; title from the file name, photo name, ≤ 50 MB and ≤ 10 per share;
-  `CaptureService.save(attachments:)` reads each once, #399). All pure over the model objects; the
+  `CaptureService.save(attachments:)` reads each once, #399), `SharedAttachmentFile` (the share extension's file I/O: which
+  registered type is an attachment, copy out of the provider's handler into a temp folder, over 50 MB not copied, remove the
+  folder on Done and Cancel, #442). All pure over the model objects; the
   caller saves.
 - `Shared/Enrichment` — `TaskEnricher` protocol, `EnrichmentWriter` (threshold + revisions; never writes the model's contexts or project, #215/#469), `EnrichmentCoordinator`
   (catch-up pass), `FoundationModelsEnricher` (on-device model, `#if canImport(FoundationModels)`), `DueDateRule`
