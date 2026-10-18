@@ -55,6 +55,19 @@ Hardware keinen automatisierten Nachweis, nur Hennings Gerätetest über TestFli
 tragen Gerätebauten die eigene Kennung `com.henning.looseends.probe` („LE Prüfbau“) mit eigener
 App-Gruppe und eigenem iCloud-Container, Hennings Installation bleibt unberührt.
 
+**Das Modell zwischen CI und iPhone (#530, #531).** Die CI prüft die ganze Verarbeitungskette ohne
+Apple Intelligence: `StubEnricher` spielt Hängen (Timeout, `ModelDeadline`), leere Antwort, Antwort je
+Notiz und Guardrail-Fehler; `FoundationModelsEnricher.draft(from:)` wird ohne Modell getestet. GitHubs
+macOS-Runner sind virtuelle Maschinen, auf denen sich Apple Intelligence nach bisherigem Stand nicht
+einschalten lässt. Ein Apple-Silicon-Mac mit eingeschaltetem Apple Intelligence führt dasselbe
+On-Device-Modell aus: `./scripts/sim.sh real-model` startet dort `RealModelTests` (setzt
+`LOOSEENDS_REAL_MODEL=1`; ohne Variable oder Modell überspringt die Suite sich, sie wird nie rot). Sie
+prüft Eigenschaften, keine Wörter: Antwort in unter 30 s, Titel vorhanden und höchstens 12 Wörter,
+mindestens 80 % der Titel behalten ein Wort der Notiz. Was weiter nur das iPhone zeigt: Speicher und
+Wärme unter Last, Verhalten bei gesperrtem Gerät und das Laden der Modell-Assets nach einem
+iOS-Update. Die Messreihen der Labor-App laufen weiter auf dem iPhone, bis ein Mac-Lauf dieselben
+Zahlen liefert.
+
 Was Stufe 3 findet und Stufe 2 prinzipiell nicht kann: Apple Intelligence auf dem Gerät,
 CloudKit-Sync zwischen Geräten, Watch, Action Button, Widgets, Mikrofon — und alles, was an
 Signierung, Provisioning und Entitlements hängt (siehe den App-Group-Absturz oben).
