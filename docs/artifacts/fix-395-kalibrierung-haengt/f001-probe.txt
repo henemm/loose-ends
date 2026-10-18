@@ -1,0 +1,80 @@
+..F......
+======================================================================
+FAIL: test_no_unit_suite_calls_the_model (__main__.NoModelInUnitRunTests.test_no_unit_suite_calls_the_model)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_measurement_status.py", line 95, in test_no_unit_suite_calls_the_model
+    self.assertEqual(callers, [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+AssertionError: Lists differ: ['LooseEndsTests/Zz/P.swift', 'Measurement/ZzP.swift'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'LooseEndsTests/Zz/P.swift'
+
+- ['LooseEndsTests/Zz/P.swift', 'Measurement/ZzP.swift']
++ []
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.027s
+
+FAILED (failures=1)
+--- nach Entfernen der Proben ---
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 0.025s
+
+OK
+
+--- nach Rebase auf #531 ---
+Wächter: Aufruf (Regex FoundationModelsEnricher\s*\() nur erlaubt, wenn die Datei '.enabled(if: RealModel.isRequested' enthält
+$ grep -rlnE 'FoundationModelsEnricher\s*\(' LooseEndsTests Measurement
+LooseEndsTests/RealModelTests.swift
+--- (a) aktueller Stand ---
+test_no_unit_suite_calls_the_model (__main__.NoModelInUnitRunTests.test_no_unit_suite_calls_the_model) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+OK
+--- (b) Probe LooseEndsTests/Zz/P.swift: Aufruf ohne Schalter ---
+func p() { _ = FoundationModelsEnricher () }
+test_no_unit_suite_calls_the_model (__main__.NoModelInUnitRunTests.test_no_unit_suite_calls_the_model) ... FAIL
+
+======================================================================
+FAIL: test_no_unit_suite_calls_the_model (__main__.NoModelInUnitRunTests.test_no_unit_suite_calls_the_model)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_measurement_status.py", line 97, in test_no_unit_suite_calls_the_model
+    self.assertEqual(callers, [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+AssertionError: Lists differ: ['LooseEndsTests/Zz/P.swift'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'LooseEndsTests/Zz/P.swift'
+
+- ['LooseEndsTests/Zz/P.swift']
++ []
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+FAILED (failures=1)
+--- (c) Probe LooseEndsTests/Zz/P.swift: Aufruf mit Schalter ---
+@Suite(.enabled(if: RealModel.isRequested, "probe"))
+struct P { func p() { _ = FoundationModelsEnricher () } }
+test_no_unit_suite_calls_the_model (__main__.NoModelInUnitRunTests.test_no_unit_suite_calls_the_model) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+OK
+--- Proben samt Ordner entfernt ---
+ls: LooseEndsTests/Zz: No such file or directory
+test_no_unit_suite_calls_the_model (__main__.NoModelInUnitRunTests.test_no_unit_suite_calls_the_model) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+OK

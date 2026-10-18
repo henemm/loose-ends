@@ -19,7 +19,6 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 GATES = {
     "focusblox-corpus.json": [
         "ContextWordLearningReportTests",
-        "FocusBloxCalibrationTests",
         "RecognitionRuleCorpusTests",
         "RuleLeaveOneOutReportTests",
         "SelfConsistencyReportTests",

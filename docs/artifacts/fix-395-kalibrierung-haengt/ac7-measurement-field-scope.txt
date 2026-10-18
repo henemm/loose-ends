@@ -1,0 +1,41 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/MeasurementFieldScopeTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mCopy[0m LooseEndsWatchWidgets.appex -> LooseEndsWatchWidgets.appex
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mValidate Embedded Binary[0m LooseEndsWatchWidgets.appex
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsShare.appex -> LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-10-18 16:48:03.957.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-18 16:48:03.958.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-18 16:48:03.959.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
+[1mTest run started.[0m
+Suite MeasurementFieldScopeTests started
+    [32m✔[0m "SelfConsistencyReportTests wertet importance/urgency nicht mehr aus (#118)" (0.001 seconds)
+    [32m✔[0m "RuleLeaveOneOutTests wertet importance/urgency nicht aus (#118, #131)" (0.001 seconds)
+Suite MeasurementFieldScopeTests passed after 0.003 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-prancy-noodling-axolotl/Logs/Test/Test-LooseEnds-2026.10.18_16-47-52-+0200.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 1 von 4 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json

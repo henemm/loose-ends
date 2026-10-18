@@ -1,0 +1,62 @@
+test_main_checkout_and_bare_worktrees_folder_have_none (__main__.MainCheckoutTests.test_main_checkout_and_bare_worktrees_folder_have_none) ... ok
+test_worktree_belongs_to_the_folder_above (__main__.MainCheckoutTests.test_worktree_belongs_to_the_folder_above) ... ok
+test_no_unit_suite_calls_the_model (__main__.NoModelInUnitRunTests.test_no_unit_suite_calls_the_model) ... FAIL
+test_every_gate_is_listed_and_nothing_else (__main__.RegistryMatchesSwiftTests.test_every_gate_is_listed_and_nothing_else) ... ok
+test_no_suite_gates_on_a_corpus_path_of_its_own (__main__.RegistryMatchesSwiftTests.test_no_suite_gates_on_a_corpus_path_of_its_own) ... ok
+test_everything_present_says_so (__main__.StatusTests.test_everything_present_says_so) ... FAIL
+test_fresh_worktree_finds_the_corpus_of_the_main_checkout (__main__.StatusTests.test_fresh_worktree_finds_the_corpus_of_the_main_checkout) ... ok
+test_markdown_puts_the_count_in_bold (__main__.StatusTests.test_markdown_puts_the_count_in_bold) ... FAIL
+test_without_data_every_suite_is_named_as_skipped (__main__.StatusTests.test_without_data_every_suite_is_named_as_skipped) ... FAIL
+
+======================================================================
+FAIL: test_no_unit_suite_calls_the_model (__main__.NoModelInUnitRunTests.test_no_unit_suite_calls_the_model)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_measurement_status.py", line 89, in test_no_unit_suite_calls_the_model
+    self.assertEqual(callers, [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+AssertionError: Lists differ: ['FocusBloxCalibrationTests.swift'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'FocusBloxCalibrationTests.swift'
+
+- ['FocusBloxCalibrationTests.swift']
++ []
+
+======================================================================
+FAIL: test_everything_present_says_so (__main__.StatusTests.test_everything_present_says_so)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_measurement_status.py", line 49, in test_everything_present_says_so
+    self.assertEqual(ms.render(ms.status(self.worktree), markdown=False), "[sim] Messstrecken: alle 4 liefen mit Daten.")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '[sim] Messstrecken: alle 5 liefen mit Daten.' != '[sim] Messstrecken: alle 4 liefen mit Daten.'
+- [sim] Messstrecken: alle 5 liefen mit Daten.
+?                          ^
++ [sim] Messstrecken: alle 4 liefen mit Daten.
+?                          ^
+
+
+======================================================================
+FAIL: test_markdown_puts_the_count_in_bold (__main__.StatusTests.test_markdown_puts_the_count_in_bold)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_measurement_status.py", line 53, in test_markdown_puts_the_count_in_bold
+    self.assertIn("**4 von 4 Messstrecken übersprungen**", text)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '**4 von 4 Messstrecken übersprungen**' not found in '### Messstrecken\n\n**5 von 5 Messstrecken übersprungen** – „grün“ heißt hier „nicht gemessen“, nicht „bestanden“.\n\n| Suite | Ergebnis |\n|---|---|\n| `ContextWordLearningReportTests` | übersprungen, fehlt: focusblox-corpus.json |\n| `FocusBloxCalibrationTests` | übersprungen, fehlt: focusblox-corpus.json |\n| `RecognitionRuleCorpusTests` | übersprungen, fehlt: focusblox-corpus.json |\n| `RuleLeaveOneOutReportTests` | übersprungen, fehlt: focusblox-corpus.json |\n| `SelfConsistencyReportTests` | übersprungen, fehlt: focusblox-corpus.json, selfconsistency-run.json |'
+
+======================================================================
+FAIL: test_without_data_every_suite_is_named_as_skipped (__main__.StatusTests.test_without_data_every_suite_is_named_as_skipped)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_measurement_status.py", line 36, in test_without_data_every_suite_is_named_as_skipped
+    self.assertIn("4 von 4 übersprungen", text)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '4 von 4 übersprungen' not found in '[sim] Messstrecken: 5 von 5 übersprungen (nicht gemessen, nicht bestanden):\n[sim]   ContextWordLearningReportTests – fehlt: focusblox-corpus.json\n[sim]   FocusBloxCalibrationTests – fehlt: focusblox-corpus.json\n[sim]   RecognitionRuleCorpusTests – fehlt: focusblox-corpus.json\n[sim]   RuleLeaveOneOutReportTests – fehlt: focusblox-corpus.json\n[sim]   SelfConsistencyReportTests – fehlt: focusblox-corpus.json, selfconsistency-run.json'
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.029s
+
+FAILED (failures=4)

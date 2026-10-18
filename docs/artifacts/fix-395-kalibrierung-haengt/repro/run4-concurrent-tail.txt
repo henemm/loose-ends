@@ -1,0 +1,12 @@
+Test suite 'Selected tests' started on 'iPhone 17 - LooseEnds (63669)'
+Test suite 'LooseEndsTests.xctest' started on 'iPhone 17 - LooseEnds (63669)'
+Test suite 'FocusBloxCalibrationTests' started on 'iPhone 17 - LooseEnds (63669)'
+Test suite 'Selected tests' started on 'iPhone 17e - LooseEnds (66393)'
+Test suite 'LooseEndsTests.xctest' started on 'iPhone 17e - LooseEnds (66393)'
+Test suite 'FocusBloxCalibrationTests' started on 'iPhone 17e - LooseEnds (66393)'
+Test case 'FocusBloxCalibrationTests/calibrate()' failed on 'iPhone 17 - LooseEnds (63669)' (0.000 seconds)
+Test suite 'Selected tests' started on 'iPhone 17 - LooseEnds (69059)'
+Test suite 'LooseEndsTests.xctest' started on 'iPhone 17 - LooseEnds (69059)'
+Testing failed on 'iPhone 17'
+Test case 'FocusBloxCalibrationTests/calibrate()' passed on 'iPhone 17e - LooseEnds (66393)' (575.448 seconds)
+Testing passed on 'iPhone 17e'

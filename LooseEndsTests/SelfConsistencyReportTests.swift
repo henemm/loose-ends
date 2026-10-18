@@ -6,7 +6,7 @@ import Testing
 /// repeated runs of the same FocusBlox note track whether the majority answer is actually right?
 /// Reads two files that already sit locally — the FocusBlox truth export and a `MeasurementRun`
 /// result file fetched from the device (`sim.sh lab-fetch`) — and calls no model, unlike
-/// `FocusBloxCalibrationTests`. Gated because both are personal, gitignored data
+/// the removed calibration suite (#395). Gated because both are personal, gitignored data
 /// ([[feedback-phone-is-not-a-test-bench]]); never runs in CI.
 private func repoFile(_ relativePath: String) -> URL {
     URL(fileURLWithPath: #filePath)

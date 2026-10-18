@@ -62,7 +62,7 @@ enum SelfConsistency {
         var correct: Bool
     }
 
-    /// Agreement is the axis here, where `FocusBloxCalibrationTests` uses the confidence threshold.
+    /// Agreement is the axis here, where the removed calibration suite (#395) used the confidence threshold.
     static let thresholds: [Double] = [0.6, 0.8, 1.0]
 
     /// One row per threshold: how many notes reach that agreement (coverage) and how many of those
