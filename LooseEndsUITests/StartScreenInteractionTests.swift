@@ -474,6 +474,49 @@ final class StartScreenInteractionTests: XCTestCase {
         XCTAssertEqual(empty.label, "Nothing left open.")
     }
 
+    /// A row of the open list whose label names the task.
+    @MainActor
+    private func taskRow(containing text: String, in app: XCUIApplication) -> XCUIElement {
+        app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'taskRow_' AND label CONTAINS %@", text)).firstMatch
+    }
+
+    /// "Loose ends" sorted by pressure (#545): a task due today stands first, an unweighted one
+    /// after it, the parked one last under its own grey head, whatever the order of capture. The
+    /// unweighted task is captured before the due one, so the old order (capture time) would fail.
+    /// The rule step reads "heute" without Apple Intelligence (#95), so this holds in the simulator.
+    @MainActor
+    func testOpenViewOrdersDueThenUnweightedThenParked() throws {
+        let app = launchWithShortDoneWindow()
+        captureAndPick("Fahrrad verkaufen", { $0.buttons["Park"] }, in: app)
+        capture("Blumen gießen", in: app)
+        capture("Heute die Rechnung bezahlen", in: app)
+        let due = firstElement(prefix: "nowRow_", in: app)
+        XCTAssertTrue(due.waitForExistence(timeout: 15), "The task due today should reach the start screen before the list is checked")
+
+        scrollTo("viewRow_open", in: app).tap()
+        XCTAssertTrue(app.navigationBars["All open"].waitForExistence(timeout: 5), "All open did not open")
+        let dueRow = taskRow(containing: "Rechnung", in: app)
+        let plainRow = taskRow(containing: "Blumen", in: app)
+        let parkedRow = taskRow(containing: "Fahrrad", in: app)
+        XCTAssertTrue(dueRow.waitForExistence(timeout: 5), "All open shows no due task")
+        XCTAssertTrue(plainRow.exists, "All open shows no unweighted task")
+        XCTAssertTrue(parkedRow.exists, "All open shows no parked task")
+        XCTAssertEqual(taskRows(in: app).count, 3, "The due, the unweighted and the parked task")
+
+        XCTAssertLessThan(dueRow.frame.minY, plainRow.frame.minY, "Due today stands above the unweighted task")
+        XCTAssertLessThan(plainRow.frame.minY, parkedRow.frame.minY, "The unweighted task stands above the parked one")
+        let parkedHead = element("parkedHead", in: app)
+        XCTAssertTrue(parkedHead.waitForExistence(timeout: 5), "The parked block carries its own head")
+        XCTAssertGreaterThan(parkedHead.frame.minY, plainRow.frame.minY, "The head stands below the open tasks")
+        XCTAssertLessThan(parkedHead.frame.minY, parkedRow.frame.minY, "The head stands above the parked task")
+        XCTAssertEqual(parkedMarkers(in: app).count, 1, "The parked row still carries the moon")
+
+        let shot = XCTAttachment(screenshot: app.screenshot())
+        shot.name = "All open by pressure"
+        shot.lifetime = .keepAlways
+        add(shot)
+    }
+
     /// The index marks the open list on the iPad, where it is a sidebar next to the list (#334); on the iPhone
     /// it is a page, so after "Back" nothing stays marked.
     @MainActor
