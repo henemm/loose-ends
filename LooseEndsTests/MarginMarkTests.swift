@@ -39,14 +39,31 @@ import Testing
         #expect(ViewRules.MarginMark.today.pressing)
     }
 
-    @Test("Past: a missed time presses, a day-only date is carried quietly (#414)")
-    @MainActor func past() async throws {
+    @Test("Passed: a deadline that passed is no deadline, the margin offers a new date over the trace (#548)")
+    @MainActor func passed() async throws {
         let store = try TestStore()
-        #expect(Self.mark(due: Self.day(-1, hour: 14), hasTime: true, in: store) == .missed(days: 1))
-        #expect(Self.mark(due: Self.day(-3, hour: 9), hasTime: true, in: store) == .missed(days: 3))
-        #expect(Self.mark(due: Self.day(-2), in: store) == .carried(days: 2))
-        #expect(ViewRules.MarginMark.missed(days: 1).pressing)
-        #expect(!ViewRules.MarginMark.carried(days: 2).pressing)
+        #expect(Self.mark(due: Self.day(-1, hour: 14), hasTime: true, in: store) == .passed(.yesterday))
+        #expect(Self.mark(due: Self.day(-3, hour: 9), hasTime: true, in: store) == .passed(.weekday(Self.day(-3, hour: 9))))
+        #expect(Self.mark(due: Self.day(-2), in: store) == .passed(.weekday(Self.day(-2))))
+        #expect(Self.mark(due: Self.day(-9), in: store) == .passed(.date(Self.day(-9))))
+        let nine = Self.day(0, hour: 9)
+        #expect(Self.mark(due: nine, hasTime: true, in: store) == .passed(.today(time: nine)), "9:00 is behind at 10:00")
+        #expect(!ViewRules.MarginMark.passed(.yesterday).pressing, "no pressure left, only a decision")
+    }
+
+    @Test("A waiting task past its deadline shows its trace too; only Now leaves it out")
+    @MainActor func blockedPassed() async throws {
+        let store = try TestStore()
+        let blocker = TaskItem(rawText: "Antwort von Anna")
+        blocker.status = .active
+        store.context.insert(blocker)
+        let task = TaskItem(rawText: "Vertrag schicken")
+        task.status = .active
+        task.dueDate = Self.day(-1)
+        task.blockedBy = [blocker]
+        store.context.insert(task)
+        #expect(ViewRules.marginMark(of: task, now: Self.now, calendar: Self.calendar) == .passed(.yesterday))
+        #expect(ViewRules.leftovers(in: [task, blocker], now: Self.now, calendar: Self.calendar).isEmpty)
     }
 
     @Test("Ahead: tomorrow, then the weekday for six days, then the date")

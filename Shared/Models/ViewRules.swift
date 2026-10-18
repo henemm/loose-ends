@@ -77,19 +77,17 @@ enum ViewRules {
             .sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
     }
 
-    /// Left from earlier days (#518): open top-level tasks due before today, oldest first. Not carried
-    /// on: each needs a new date (or parking, or Done). Until then they count neither in "Now" nor on
-    /// the app icon; "Due" and "Loose ends" show them on top, the evening notification asks for them.
+    /// Whose deadline passed (#518, #548): open tasks, subtasks among them, whose due time is behind
+    /// or whose day is over, oldest first. Not carried on: each needs a new date (or parking, or Done).
+    /// Until then they count neither in "Now" nor on the app icon; "Due" and "Loose ends" show them on
+    /// top with the "New date" button, the evening notification asks for them.
     static func leftovers(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [TaskItem] {
-        let today = calendar.startOfDay(for: now)
-        return all.filter { $0.parent == nil && $0.isOpen && !$0.isBlocked && ($0.dueDate.map { $0 < today } ?? false) }
-            .sorted { ($0.dueDate ?? .distantPast) < ($1.dueDate ?? .distantPast) }
+        NewDateRule.tasks(in: all, now: now, calendar: calendar)
     }
 
-    /// How a due date reads in a row (#414, ADR-14): red only for time pressure. A task due today is
-    /// red; once its day is over, only a task with a due time stays red (`missed`). A day-only date is
-    /// mostly a spoken intention ("tomorrow", "on Friday"), so it turns grey and shows how long it has
-    /// been carried along. Done and parked tasks read as `later`: no pressure on them.
+    /// How a due date reads (#414, #548): `today` while the deadline lies ahead today, `missed` once a
+    /// due time passed, `carried(days:)` once a day-only date's day is over. Done and parked tasks
+    /// read as `later`: no pressure on them. The margin itself comes from `marginMark`.
     enum DueState: Equatable {
         case later
         case today
@@ -101,8 +99,8 @@ enum ViewRules {
         guard task.isOpen, let due = task.dueDate else { return .later }
         let today = calendar.startOfDay(for: now)
         guard let tomorrow = calendar.date(byAdding: .day, value: 1, to: today), due < tomorrow else { return .later }
+        if task.dueHasTime { return due < now ? .missed : .today }
         if due >= today { return .today }
-        if task.dueHasTime { return .missed }
         let days = calendar.dateComponents([.day], from: calendar.startOfDay(for: due), to: today).day ?? 1
         return .carried(days: max(days, 1))
     }
@@ -110,14 +108,12 @@ enum ViewRules {
     /// What stands in the margin of a row (#424, Henning 2026-10-15): the one time that counts, like
     /// a diary. Red only for time pressure (`pressing`). Done and parked tasks leave it empty.
     enum MarginMark: Equatable {
-        /// Due today at this time.
+        /// Due today at this time, still ahead.
         case time(Date)
         /// Due today, no time.
         case today
-        /// A time that has passed, `days` calendar days ago.
-        case missed(days: Int)
-        /// A day-only date carried along (#414).
-        case carried(days: Int)
+        /// The deadline passed (#548): the row offers "New date", the trace says what was planned.
+        case passed(NewDateRule.Trace)
         case tomorrow
         /// Within the coming six days: the weekday.
         case weekday(Date)
@@ -129,7 +125,7 @@ enum ViewRules {
 
         var pressing: Bool {
             switch self {
-            case .time, .today, .missed: true
+            case .time, .today: true
             default: false
             }
         }
@@ -140,9 +136,12 @@ enum ViewRules {
         guard let due = task.dueDate else { return task.duration.map(MarginMark.duration) ?? .none }
         let today = calendar.startOfDay(for: now)
         let days = calendar.dateComponents([.day], from: today, to: calendar.startOfDay(for: due)).day ?? 0
+        // Behind, blocked or not: a waiting task shows its trace too, only "Now" leaves it out.
+        if days < 0 || (task.dueHasTime && due < now), let trace = NewDateRule.trace(of: task, now: now, calendar: calendar) {
+            return .passed(trace)
+        }
         switch days {
-        case ..<0: return task.dueHasTime ? .missed(days: -days) : .carried(days: -days)
-        case 0: return task.dueHasTime ? .time(due) : .today
+        case ...0: return task.dueHasTime ? .time(due) : .today
         case 1: return .tomorrow
         case 2...6: return .weekday(due)
         default: return .date(due)

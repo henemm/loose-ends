@@ -89,6 +89,22 @@ enum TaskActions {
         return day
     }
 
+    /// A due date with or without a time, as a user revision (#548): a day-only date is stored at the
+    /// start of its day, like the due editor does. Nil clears the date.
+    static func setDue(
+        _ task: TaskItem,
+        to date: Date?,
+        hasTime: Bool,
+        contexts: [TaskContext],
+        projects: [Project],
+        now: Date = Date(),
+        calendar: Calendar = .current
+    ) {
+        let stored = date.map { hasTime ? $0 : calendar.startOfDay(for: $0) }
+        RevisionService.set(.dueDate, to: stored?.ISO8601Format(), on: task, contexts: contexts, projects: projects, now: now)
+        task.dueHasTime = stored != nil && hasTime
+    }
+
     /// Where the date picker of "Move → Date…" starts (#33): the current due day while it lies
     /// ahead, otherwise tomorrow — moving to today or into the past is never the likely intent.
     static func suggestedMoveDate(for task: TaskItem, now: Date = Date(), calendar: Calendar = .current) -> Date {
