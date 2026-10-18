@@ -229,7 +229,8 @@ import UserNotifications
             $0.content.categoryIdentifier == CarryReminders.categoryIdentifier
                 && fixture.fireComponents(of: $0).day == fixture.calendar.component(.day, from: fixture.tomorrow)
         }
-        #expect(eight?.content.body.contains(dayOnly.displayTitle) == false)
+        #expect(eight?.content.body.hasPrefix(String(localized: "Today: \(dayOnly.displayTitle)")) == false,
+                "no Today line at 8:00; the longest-open line may still name the task")
     }
 
     @Test("Both switched off hands over no morning or evening notification, and the choice goes to iCloud")
