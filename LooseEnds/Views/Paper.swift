@@ -5,6 +5,10 @@ import SwiftUI
 /// Sheets keep the system background. On iPad and Mac the sidebar style stays; only the ground changes.
 enum Paper {
     static let ground = Color("Paper")
+    /// Rows of the detail in a wide window and on the Mac (#477): 20 pt beside, a little air above and below.
+    static let wideRowInsets = EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20)
+    /// The review note's row there: its tint spans the lines' 20 pt, its text sits 12 pt inside the tint.
+    static let wideNoteInsets = EdgeInsets(top: 10, leading: 32, bottom: 10, trailing: 32)
 }
 
 extension View {
@@ -16,6 +20,18 @@ extension View {
     /// A row of a paper list. Plain rows paint their own background, so they take the ground too.
     func paperRow() -> some View {
         modifier(PaperRow())
+    }
+
+    /// A row of the task detail (#477): paper behind it on every size, so a wide window and the Mac
+    /// show lines on paper instead of cards. In a compact window the same as `paperRow()`.
+    func detailRow() -> some View {
+        listRowBackground(Paper.ground)
+    }
+
+    /// The task detail in a wide window (#477): a centered column of at most
+    /// `DetailLayout.columnWidth`, paper to the window's edges. No effect in a compact window.
+    func detailColumn(wide: Bool) -> some View {
+        modifier(DetailColumn(wide: wide))
     }
 
     /// A row of a list in a wide window (#477): the start screen's sizes, 11 pt above and below,
@@ -78,6 +94,22 @@ private struct PaperRow: ViewModifier {
         #else
         content
         #endif
+    }
+}
+
+private struct DetailColumn: ViewModifier {
+    let wide: Bool
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if wide {
+            content
+                .frame(maxWidth: DetailLayout.columnWidth)
+                .frame(maxWidth: .infinity)
+                .background(Paper.ground.ignoresSafeArea())
+        } else {
+            content
+        }
     }
 }
 

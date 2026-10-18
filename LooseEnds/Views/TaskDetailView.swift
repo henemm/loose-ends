@@ -28,7 +28,12 @@ struct TaskDetailView: View {
     @Environment(\.enrichment) private var enrichment: EnrichmentCoordinator?
 
     /// The title as on the start screen (#438): New York medium, a little smaller than the headline.
-    @ScaledMetric(relativeTo: .title2) private var titleSize: CGFloat = 23
+    @ScaledMetric(relativeTo: .title2) private var titleSize: CGFloat = DetailLayout.titleSize(wide: false)
+    /// The same, larger in a wide window and on the Mac (#477).
+    @ScaledMetric(relativeTo: .title2) private var wideTitleSize: CGFloat = DetailLayout.titleSize(wide: true)
+    #if os(iOS)
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    #endif
     /// The field names' column (#438), so every value starts at the same edge.
     @ScaledMetric(relativeTo: .footnote) private var labelWidth: CGFloat = 92
     /// The field whose editor is open; a button row instead of a link, so no chevron (#438).
@@ -48,15 +53,25 @@ struct TaskDetailView: View {
 
     private var aiFields: [RevisedField] { RevisionService.automaticFields(on: task) }
     private var inReview: Bool { reviewing && ViewRules.isInNew(task) }
+    /// A wide window or the Mac (#477): the detail as a centered column with the larger title.
+    /// Split View and Slide Over are compact and keep the iPhone's detail.
+    private var isWide: Bool {
+        #if os(iOS)
+        sizeClass != .compact
+        #else
+        true
+        #endif
+    }
 
-    var body: some View {
-        Form {
+    /// The detail's sections, the same in the form and in the list (#477).
+    private var sections: some View {
+        Group {
             Section {
                 HStack(alignment: .firstTextBaseline) {
                     // Serif is the content, SF is the app (#180, rule 2). Wraps instead of cutting the
                     // title off with "…" (#216); Return still ends the edit, as in the capture field.
                     TextField("Title", text: $titleDraft, axis: .vertical)
-                        .font(.system(size: titleSize, weight: .medium, design: .serif))
+                        .font(.system(size: isWide ? wideTitleSize : titleSize, weight: .medium, design: .serif))
                         .tracking(-0.2)
                         .lineLimit(1...4)
                         .focused($titleFocused)
@@ -64,6 +79,10 @@ struct TaskDetailView: View {
                         .onSubmit(commitTitle)
                         .onChange(of: titleDraft) { _, newValue in endEditOnReturn(newValue) }
                         .accessibilityIdentifier("detailTitleField")
+                        #if os(macOS)
+                        // No "Title" column before the title on the Mac (#477); the label stays for VoiceOver.
+                        .labelsHidden()
+                        #endif
                     if aiFields.contains(.title) {
                         Button(action: resetTitle) {
                             Image(systemName: "arrow.uturn.backward")
@@ -82,6 +101,8 @@ struct TaskDetailView: View {
                         .accessibilityLabel(task.rawText)
                         .accessibilityIdentifier("detailRawTextMarker")
                 }
+                // No hairline above the title in the wide list (#477); the form shows none anyway.
+                .listRowSeparator(isWide ? .hidden : .automatic, edges: .top)
                 if DetailLayout.showsRawText(task.rawText, title: task.title) {
                     // The raw text as a quote: what was said, in the words it was said (#180). One
                     // running sentence behind a small head, so a second line starts at the edge (#438).
@@ -97,13 +118,15 @@ struct TaskDetailView: View {
                         .accessibilityIdentifier("detailRawText")
                 }
             }
-            .paperRow()
+            .detailRow()
 
             if inReview {
                 Section {
                     ReviewNote(task: task, automaticFields: aiFields.count)
                 }
-                .listRowBackground(Color.accentColor.opacity(0.08))
+                // Wide: the tint no wider than the hairlines (#477).
+                .listRowBackground(Color.accentColor.opacity(0.08).padding(.horizontal, isWide ? 20 : 0))
+                .listRowInsets(isWide ? Paper.wideNoteInsets : nil)
             }
 
             if let reanalysis {
@@ -114,7 +137,7 @@ struct TaskDetailView: View {
                         .accessibilityElement(children: .combine)
                         .accessibilityIdentifier("reanalysisNote")
                 }
-                .paperRow()
+                .detailRow()
             }
 
             let layout = DetailLayout.split(fieldEntries)
@@ -122,7 +145,7 @@ struct TaskDetailView: View {
                 Section {
                     ForEach(layout.set, id: \.field) { fieldRow($0.field, value: $0.value) }
                 }
-                .paperRow()
+                .detailRow()
             }
             if !layout.empty.isEmpty {
                 Section {
@@ -145,16 +168,16 @@ struct TaskDetailView: View {
                     // the line would overwrite theirs.
                     .accessibilityElement(children: .contain)
                 }
-                .paperRow()
+                .detailRow()
             }
 
             // Numbers, addresses, links beside the title (#439).
             NoteSection(task: task)
-                .paperRow()
+                .detailRow()
 
             // Photos and files on the task (#442).
             AttachmentsSection(task: task)
-                .paperRow()
+                .detailRow()
 
             Section {
                 // Stays visible without a due date: it can be switched on first (see the note).
@@ -213,16 +236,16 @@ struct TaskDetailView: View {
             } footer: {
                 calendarNote
             }
-            .paperRow()
+            .detailRow()
 
             PlaceSection(task: task, searching: $searchesPlace)
-                .paperRow()
+                .detailRow()
 
             if task.parent == nil {
                 SubtasksSection(task: task)
-                    .paperRow()
+                    .detailRow()
                 WaitingOnSection(task: task)
-                    .paperRow()
+                    .detailRow()
             }
 
             if !aiFields.isEmpty {
@@ -236,7 +259,7 @@ struct TaskDetailView: View {
                             .accessibilityIdentifier("revisionsButton")
                     }
                 }
-                .paperRow()
+                .detailRow()
             }
 
             if let url = task.sourceURL {
@@ -245,15 +268,42 @@ struct TaskDetailView: View {
                 } header: {
                     Text("Source").captionHead()
                 }
-                .paperRow()
+                .detailRow()
             }
 
             // A sentence about the task, read by the rules (#441).
             SupplementSection(task: task)
-                .paperRow()
+                .detailRow()
         }
-        .formStyle(.grouped)
-        .paperGround()
+    }
+
+    /// Compact: the grouped form as on the iPhone, unchanged. Wide and Mac (#477): a plain list, so the
+    /// sections are lines on paper with hairlines like the lists of Schnitt 1, not cards.
+    @ViewBuilder
+    private var container: some View {
+        if isWide {
+            List {
+                sections
+                    .listRowInsets(Paper.wideRowInsets)
+            }
+            .listStyle(.plain)
+            #if os(macOS)
+            // Outside a form the Mac draws a bezel around text fields and a checkbox for a toggle.
+            .textFieldStyle(.plain)
+            .toggleStyle(.switch)
+            #endif
+            .paperGround()
+            .detailColumn(wide: true)
+        } else {
+            Form { sections }
+                .formStyle(.grouped)
+                .paperGround()
+                .detailColumn(wide: false)
+        }
+    }
+
+    var body: some View {
+        container
         .navigationTitle("")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
