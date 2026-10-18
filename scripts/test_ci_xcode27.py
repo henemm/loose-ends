@@ -157,11 +157,13 @@ class MacGallery(unittest.TestCase):
         self.assertIn(ACTION_REF, [s.get("uses") for s in job["steps"]])
         self.assertNotIn("continue-on-error", job, "Eine still scheiternde Galerie ist kein Nachweis")
 
-    def test_runs_only_the_mac_gallery_on_the_mac_with_ad_hoc_signing(self):
+    def test_runs_only_the_mac_gallery_and_the_click_test_on_the_mac_with_ad_hoc_signing(self):
         run = step_named(self.job(), "Run Mac gallery")["run"]
         self.assertIn("-destination 'platform=macOS'", run)
         self.assertIn("-only-testing:LooseEndsUITests/MacGalleryTests", run)
-        self.assertEqual(run.count("-only-testing:"), 1, "nur die Galerie, nicht alle UI-Tests")
+        # #544: the detail click test runs next to the gallery; still never all UI tests.
+        self.assertIn("-only-testing:LooseEndsUITests/MacDetailClickTests", run)
+        self.assertEqual(run.count("-only-testing:"), 2, "nur Galerie und Klick-Test, nicht alle UI-Tests")
         self.assertIn("-resultBundlePath MacGallery.xcresult", run)
         for arg in ("CODE_SIGN_IDENTITY=-", "CODE_SIGN_STYLE=Manual", "DEVELOPMENT_TEAM=", "CODE_SIGN_ENTITLEMENTS="):
             self.assertIn(arg, run.split(), arg)
@@ -217,16 +219,33 @@ cp "$FIXTURE"/* "$out"/
         self.assertNotIn("MacGallery", yaml.safe_dump(smoke))
         self.assertEqual(step_named(smoke, "Upload design gallery")["with"]["name"], "DesignGallery")
 
-    def test_gallery_source_is_mac_only(self):
-        lines = [l for l in (ROOT / "LooseEndsUITests" / "MacGalleryTests.swift").read_text().splitlines()
+    MAC_SOURCES = ("MacGalleryTests.swift", "MacUITestSupport.swift", "MacDetailClickTests.swift")
+
+    def mac_source(self, name):
+        lines = [l for l in (ROOT / "LooseEndsUITests" / name).read_text().splitlines()
                  if l.strip() and not l.lstrip().startswith("//")]
-        self.assertEqual(lines[0].strip(), "#if os(macOS)")
-        self.assertEqual(lines[-1].strip(), "#endif")
-        source = "\n".join(lines)
+        self.assertEqual(lines[0].strip(), "#if os(macOS)", name)
+        self.assertEqual(lines[-1].strip(), "#endif", name)
+        return "\n".join(lines)
+
+    def test_gallery_source_is_mac_only(self):
+        # The helpers moved to MacUITestSupport with #544; gallery and click test share them.
+        sources = {name: self.mac_source(name) for name in self.MAC_SOURCES}
+        combined = "\n".join(sources.values())
         for name in ("mac-gallery-", "window-size", "viewRow_new", "startCaptureField", "detailRawTextMarker"):
-            self.assertIn(name, source, name)
-        self.assertIn(".screenshot()", source)
-        self.assertNotIn("app.screenshot()", source, "das Hauptfenster, nicht der ganze Bildschirm")
+            self.assertIn(name, combined, name)
+        self.assertIn(".screenshot()", combined)
+        for name, source in sources.items():
+            self.assertNotIn("app.screenshot()", source, f"{name}: das Hauptfenster, nicht der ganze Bildschirm")
+        for name in ("MacGalleryTests.swift", "MacDetailClickTests.swift"):
+            self.assertIn("mac-gallery-", sources[name], f"{name} liefert Bilder ins Artefakt MacGallery")
+
+    def test_click_test_clicks_the_four_fields_and_both_pickers(self):
+        """#544: the click test reaches Note, subtask, Add more, File and Photo; the gallery only photographs."""
+        source = self.mac_source("MacDetailClickTests.swift")
+        for identifier in ("noteField", "subtaskTextField", "supplementField", "addFileButton", "addPhotoButton"):
+            self.assertIn(identifier, source, identifier)
+        self.assertIn("hasKeyboardFocus", source, "der Klick muss den Fokus setzen, nicht nur treffen")
 
     def test_claude_md_names_the_mac_gallery(self):
         text = (ROOT / "CLAUDE.md").read_text()
