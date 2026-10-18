@@ -33,7 +33,7 @@ class StatusTests(unittest.TestCase):
 
     def test_without_data_every_suite_is_named_as_skipped(self):
         text = ms.render(ms.status(self.worktree), markdown=False)
-        self.assertIn("5 von 5 übersprungen", text)
+        self.assertIn("4 von 4 übersprungen", text)
         self.assertIn("RecognitionRuleCorpusTests – fehlt: focusblox-corpus.json", text)
         self.assertIn("SelfConsistencyReportTests – fehlt: focusblox-corpus.json, selfconsistency-run.json", text)
 
@@ -46,12 +46,12 @@ class StatusTests(unittest.TestCase):
     def test_everything_present_says_so(self):
         self.put(self.worktree, "focusblox-corpus.json")
         self.put(self.worktree, "selfconsistency-run.json")
-        self.assertEqual(ms.render(ms.status(self.worktree), markdown=False), "[sim] Messstrecken: alle 5 liefen mit Daten.")
+        self.assertEqual(ms.render(ms.status(self.worktree), markdown=False), "[sim] Messstrecken: alle 4 liefen mit Daten.")
 
     def test_markdown_puts_the_count_in_bold(self):
         text = ms.render(ms.status(self.worktree), markdown=True)
-        self.assertIn("**5 von 5 Messstrecken übersprungen**", text)
-        self.assertIn("| `FocusBloxCalibrationTests` | übersprungen, fehlt: focusblox-corpus.json |", text)
+        self.assertIn("**4 von 4 Messstrecken übersprungen**", text)
+        self.assertIn("| `RuleLeaveOneOutReportTests` | übersprungen, fehlt: focusblox-corpus.json |", text)
 
 
 class RegistryMatchesSwiftTests(unittest.TestCase):
@@ -79,6 +79,14 @@ class RegistryMatchesSwiftTests(unittest.TestCase):
             if path.name == "MeasurementData.swift":
                 continue
             self.assertNotIn('repoFile("docs/reference/focusblox-corpus.json")', path.read_text(), path.name)
+
+
+class NoModelInUnitRunTests(unittest.TestCase):
+    """Der Unit-Lauf ruft das On-Device-Modell nie (#395): im Simulator misst es ein anderes Modell als das Gerät."""
+
+    def test_no_unit_suite_calls_the_model(self):
+        callers = sorted(p.name for p in TESTS.glob("*.swift") if "FoundationModelsEnricher(" in p.read_text())
+        self.assertEqual(callers, [])
 
 
 if __name__ == "__main__":
