@@ -259,7 +259,7 @@ struct IndexLineLabel: View {
                 .font(metrics?.indexLine ?? .title3)
                 .fontDesign(.serif)
                 .foregroundStyle(.primary)
-                // The name keeps its width; the dotted leader gives way (a narrow sidebar cut it to "Als nä…", #511).
+                // The name keeps its width; the dotted leader gives way (a narrow sidebar cut it to "Als nä…", #526).
                 .lineLimit(1)
                 .layoutPriority(1)
             if typeSize.isAccessibilitySize {

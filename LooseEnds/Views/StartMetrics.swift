@@ -45,7 +45,7 @@ struct StartMetrics: Equatable, Sendable {
     var captionTracking: CGFloat { self(11) * 0.12 }
     var inbox: Font { .system(size: self(15), weight: .semibold) }
     /// The Mac sidebar is 220 to 300 pt wide and sits beside the page's own text, so its index runs
-    /// smaller there: at 19 pt "Als nächstes" and the others were cut off (#511).
+    /// smaller there: at 19 pt "Als nächstes" and the others were cut off (#526).
     private static var isMac: Bool {
         #if os(macOS)
         true
@@ -75,7 +75,7 @@ extension EnvironmentValues {
 }
 
 extension View {
-    /// The contents index's row: the draft's edges, narrower on the Mac sidebar (#511).
+    /// The contents index's row: the draft's edges, narrower on the Mac sidebar (#526).
     func indexRow(_ metrics: StartMetrics) -> some View {
         listRowInsets(EdgeInsets(top: 0, leading: metrics.indexEdge, bottom: 0, trailing: metrics.indexEdge))
     }
