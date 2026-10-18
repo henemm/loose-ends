@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Regeln</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+.rg{--paper:#F4F3EE;--ink:#1B1C1A;--grey:#6F706B;--hair:#DAD9D2;--acc:#0F6E73;font-family:-apple-system,"SF Pro Text",system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+.serif{font-family:"New York","Iowan Old Style",Palatino,Georgia,serif}
+.cap{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--grey)}
+.rule{display:grid;grid-template-columns:34px 1fr;column-gap:14px;padding:14px 0;border-bottom:.5px solid var(--hair)}
+.rule .no{font:500 26px/1 "New York","Iowan Old Style",Palatino,Georgia,serif;color:var(--grey)}
+.rule h3{margin:0 0 4px;font:500 19px/1.25 "New York","Iowan Old Style",Palatino,Georgia,serif}
+.rule p{margin:0;font-size:13.5px;line-height:1.5;color:var(--grey)}
+.rule p b{color:var(--ink);font-weight:600}
+</style>
+</helmet>
+<div class="rg" style="width:1180px;height:1060px;box-sizing:border-box;padding:48px 56px;background:#F4F3EE;display:flex;flex-direction:column">
+  <div class="cap">Sieben Regeln</div>
+  <h1 class="serif" style="margin:6px 0 18px;font-size:34px;font-weight:500;letter-spacing:-.3px">Zeigen, was da ist. Anbieten an einer Stelle. Den Rest abschaltbar.</h1>
+  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:56px;flex:1">
+    <div>
+      <div class="rule"><span class="no">1</span><div><h3>Ein Abschnitt erscheint nur mit Inhalt</h3><p>Notiz, Anhänge, Kalender, Ort, Unteraufgaben, Wartet auf: heute immer da, auch leer. Morgen nur, wenn die Aufgabe etwas davon trägt. Sieben leere Köpfe und sieben Knöpfe fallen weg.</p></div></div>
+      <div class="rule"><span class="no">2</span><div><h3>Eine Wortzeile für alles Leere</h3><p>Hinzugefügt wird an genau einer Stelle: die Wortzeile unter den gesetzten Feldern. Sie bekommt dazu <b>+ Notiz</b>, <b>+ Anhang</b>, <b>+ Kalender</b>, <b>+ Ort</b>, <b>+ Unteraufgabe</b>, <b>+ Wartet auf</b>. Ein Tipp öffnet den Editor, den Scanner, die Ortssuche. Die Knöpfe in den Abschnitten entfallen; Ergänzen bleibt als der Weg mit Worten.</p></div></div>
+      <div class="rule"><span class="no">3</span><div><h3>Eine Ordnung, überall</h3><p>Was · Wann · Gewicht · Ablage · Zusammenhang. Dieselbe Reihenfolge für die gesetzten Zeilen, die Wortzeile und die Einstellungen. Gruppen trennt ein Abstand, keine Überschrift (wie der „Inhalt“ auf der Startseite). Die Wortzeile bricht je Gruppe um, so liest sie sich als vier kurze Sätze statt als ein langer.</p></div></div>
+      <div class="rule"><span class="no">4</span><div><h3>Abhängige Felder warten</h3><p><b>Wiederholung</b> und <b>Kalender</b> gehören zu Fällig: Sie erscheinen in der Wortzeile erst, wenn Fällig gesetzt ist, und stehen gesetzt als Zeile direkt darunter. <b>Unteraufgaben</b> und <b>Wartet auf</b> nur auf der obersten Ebene. Eine neue Aufgabe ohne Datum bietet so neun Wörter statt vierzehn.</p></div></div>
+    </div>
+    <div>
+      <div class="rule"><span class="no">5</span><div><h3>Aus heißt nicht angeboten, nie versteckt</h3><p>Ein Schalter in den Einstellungen nimmt ein Feld aus der Wortzeile und aus dem Ergänzen-Lesen. Was eine Aufgabe schon trägt, von Siri, einer Regel oder von früher, bleibt sichtbar und bearbeitbar. Daten verschwinden nie hinter einer Einstellung (ADR-6, Rohtext und Revisionen).</p></div></div>
+      <div class="rule"><span class="no">6</span><div><h3>Fest ist, worauf die App steht</h3><p><b>Titel</b> und <b>Gesagt</b> sind die Aufgabe. <b>Fällig</b> trägt Jetzt, Randspalte, Mitteilungen, Kalender, Weitertragen. <b>Herkunft</b> zeigt, was die KI tat. <b>Quelle</b> und <b>Ergänzen</b> sind Wege hinein und zurück. Diese sechs haben keinen Schalter. Alles andere hat einen; Vorgabe aus nur bei Energie, Ort und Wartet auf.</p></div></div>
+      <div class="rule"><span class="no">7</span><div><h3>Eine Einstellung, nicht viele</h3><p>Eine Seite „Felder“ in den Einstellungen, dieselbe Ordnung. Die zwei Schalter der Startseite (Etiketten, Projekte zeigen) ziehen dorthin: ein Schalter je Feld, der Detail, Wortzeile und Startseitengruppe zugleich meint. Die Wahl gilt auf allen Geräten, über den iCloud-Schlüsselspeicher wie die Erinnerungszeit (#311).</p></div></div>
+      <div style="padding:16px 0 0;font-size:13px;line-height:1.5;color:var(--grey)"><b style="color:var(--ink)">Nicht Teil davon:</b> Reihenfolge je Nutzer per Ziehen (eine Ordnung, die man lernt, schlägt eine, die man pflegt), Felder ganz entfernen (Modell und Regeln dürfen sie weiter setzen), ein Schalter je Gerät (die Vorliebe ist persönlich, nicht geräteabhängig).</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1180,"height":1060}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>
