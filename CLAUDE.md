@@ -51,7 +51,7 @@ The Xcode project is generated. Never edit `LooseEnds.xcodeproj` by hand.
 ```bash
 brew install xcodegen xcbeautify
 ./scripts/sim.sh generate     # LooseEnds.xcodeproj aus project.yml
-./scripts/sim.sh unit         # Unit-Tests
+./scripts/sim.sh unit         # Unit-Tests im iOS-Simulator (Mac als Host nur mit LOOSEENDS_MAC_HOST=1)
 ./scripts/sim.sh build        # iOS-App für den Simulator
 ./scripts/sim.sh test-proof <Klasse>  # UI-Test + maschineller Simulator-Beleg (#145)
 ./scripts/sim.sh watch-test-proof <Klasse>  # dasselbe im watchOS-Simulator, App vorher deinstalliert (#409)
@@ -63,9 +63,20 @@ brew install xcodegen xcbeautify
 ausdrücklichem „jetzt ist ein Test möglich“ (Regel im Stufe-3-Absatz unten, nicht umgehen).
 
 Immer über `scripts/sim.sh` gehen, nicht direkt über `xcodebuild`. Das Skript wählt Destinationen,
-die zum Deployment Target passen: Der Mac hostet die Tests nur, wenn sein macOS ≥ Target ist
-(sonst laufen sie im Simulator), und ein Simulator zählt nur mit Laufzeit ≥ iOS-Target — Gerätenamen
+die zum Deployment Target passen: Ein Simulator zählt nur mit Laufzeit ≥ iOS-Target — Gerätenamen
 wie „iPhone 17" gibt es unter mehreren iOS-Versionen, und die falsche lehnt Xcode als Ziel ab.
+`unit` läuft im Simulator; der Mac hostet die Unit-Tests nur mit `LOOSEENDS_MAC_HOST=1` und macOS ≥ Target
+(#294, #374).
+
+Parallele Sitzungen (#341, #304, #413): `build`, `unit`, `sim-unit`, `test`, `test-proof`, `launch` und
+`mac-build` holen die rechnerweite Sperre `/tmp/loose-ends-testlauf.lock` (Datei `pid`: PID, Startzeit,
+Worktree, Befehl). Wer wartet, sieht alle 30 s den Halter und bricht nach 30 min ab; eine verwaiste Sperre
+(Prozess tot oder PID wiederverwendet) wird sofort übernommen, eine Sperre ohne `pid`-Datei erst nach 30 min.
+Übernommen wird nur unter `<Sperre>.takeover`, damit zwei Wartende sich nicht gegenseitig die neue Sperre
+wegziehen. `boot` markiert auf jedem iOS-Simulator den Tastatur-Hinweis „Speed up your typing…“ als gezeigt:
+auf einem frischen Simulator hängt er sonst jede UI-Abfrage nach dem ersten `typeText` auf.
+DerivedData liegt je Worktree unter `LooseEnds-session-<Ordnername>` (`CLAUDE_SESSION_ID` überschreibt den
+Schlüssel). Die Handabsprache per Sperrdatei zwischen Sitzungen entfällt.
 
 Das Projekt ist generiert und nicht versioniert: Nach jedem neuen Stand muss `generate` laufen,
 sonst kennt Xcode die neu hinzugekommenen Dateien nicht und baut eine App ohne die neuen Views.

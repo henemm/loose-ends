@@ -44,10 +44,21 @@ struct StartMetrics: Equatable, Sendable {
     /// 0.12 em of the 11 pt caption.
     var captionTracking: CGFloat { self(11) * 0.12 }
     var inbox: Font { .system(size: self(15), weight: .semibold) }
-    var indexLine: Font { .system(size: self(19), design: .serif) }
-    var indexCount: Font { .system(size: self(14)).monospacedDigit() }
-    var word: Font { .system(size: self(16), design: .serif) }
-    var wordCount: Font { .system(size: self(12)).monospacedDigit() }
+    /// The Mac sidebar is 220 to 300 pt wide and sits beside the page's own text, so its index runs
+    /// smaller there: at 19 pt "Als nächstes" and the others were cut off (#526).
+    private static var isMac: Bool {
+        #if os(macOS)
+        true
+        #else
+        false
+        #endif
+    }
+    var indexLine: Font { .system(size: self(Self.isMac ? 16 : 19), design: .serif) }
+    var indexCount: Font { .system(size: self(Self.isMac ? 12 : 14)).monospacedDigit() }
+    var word: Font { .system(size: self(Self.isMac ? 14 : 16), design: .serif) }
+    var wordCount: Font { .system(size: self(Self.isMac ? 11 : 12)).monospacedDigit() }
+    /// The index's side space: the Mac sidebar adds its own inset, so the draft's 20 pt would sit twice.
+    var indexEdge: CGFloat { Self.isMac ? 6 : 20 }
     var rowTitle: Font { .system(size: self(18), design: .serif) }
     var rowMeta: Font { .system(size: self(12.5)) }
     var margin: Font { .system(size: self(12), weight: .medium).monospacedDigit() }
@@ -64,6 +75,11 @@ extension EnvironmentValues {
 }
 
 extension View {
+    /// The contents index's row: the draft's edges, narrower on the Mac sidebar (#526).
+    func indexRow(_ metrics: StartMetrics) -> some View {
+        listRowInsets(EdgeInsets(top: 0, leading: metrics.indexEdge, bottom: 0, trailing: metrics.indexEdge))
+    }
+
     /// A start screen row: no list inset above or below, the draft's edges at the sides; the row sets
     /// its own space, so the gaps are the draft's and not the list's (#463).
     func startRow(_ metrics: StartMetrics) -> some View {

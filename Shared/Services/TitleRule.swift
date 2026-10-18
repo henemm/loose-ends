@@ -44,6 +44,25 @@ enum TitleRule {
         return content.contains { word in noteWords.contains { $0.hasPrefix(word) || word.hasPrefix($0) } }
     }
 
+    /// Month and weekday names the model may not bring into a title on its own (#507): it was handed the
+    /// capture day and wrote it into "Blumen gießen muss" as "Blumen 17. Oktober, gießen".
+    private static let dateWords: Set<String> = Set([
+        "januar", "februar", "märz", "april", "mai", "juni", "juli", "august", "september", "oktober", "november", "dezember",
+        "montag", "dienstag", "mittwoch", "donnerstag", "freitag", "samstag", "sonntag",
+        "january", "february", "march", "june", "july", "october", "december",
+        "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",
+    ].map(RawTextWords.normalized))
+
+    /// Whether a model title names a date the note does not: a month or weekday name, or a number, that
+    /// does not stand in the note (#507). The due date is the rules' job (#95); a date in the title is the
+    /// capture day leaking in.
+    static func addsDate(_ title: String, rawText: String) -> Bool {
+        let note = Set(RawTextWords.words(in: rawText).map(RawTextWords.normalized))
+        return RawTextWords.words(in: title).map(RawTextWords.normalized).contains { word in
+            !note.contains(word) && (dateWords.contains(word) || word.allSatisfy(\.isNumber))
+        }
+    }
+
     private static func cleaned(_ rawText: String) -> String? {
         let words = rawText.split(whereSeparator: { $0.isWhitespace })
         var text = words.prefix(maxWords).joined(separator: " ")
