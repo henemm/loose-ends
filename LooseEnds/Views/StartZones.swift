@@ -188,7 +188,7 @@ struct ContentsIndex: View {
         }
         .padding(.bottom, 28)
         .listRowSeparator(.hidden)
-        .startRow(metrics)
+        .indexRow(metrics)
         .paperRow()
     }
 
@@ -259,6 +259,9 @@ struct IndexLineLabel: View {
                 .font(metrics?.indexLine ?? .title3)
                 .fontDesign(.serif)
                 .foregroundStyle(.primary)
+                // The name keeps its width; the dotted leader gives way (a narrow sidebar cut it to "Als nä…", #526).
+                .lineLimit(1)
+                .layoutPriority(1)
             if typeSize.isAccessibilitySize {
                 Spacer(minLength: 4)
             } else {
