@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Widget Maße</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+.sheet{font-family:-apple-system,"SF Pro Text",system-ui,sans-serif;color:#1B1C1A;-webkit-font-smoothing:antialiased}
+.serif{font-family:"New York","Iowan Old Style",Palatino,Georgia,serif}
+.cap{margin:0 0 10px;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#6F706B}
+.t{display:flex;justify-content:space-between;align-items:baseline;gap:24px;padding:10px 0;border-bottom:1px solid #DAD9D2;font-size:14px}
+.t span{color:#6F706B;font-size:13px;text-align:right}
+.sw{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.sw div{display:flex;align-items:center;gap:10px;font-size:13px}
+.sw i{display:block;width:36px;height:36px;border-radius:10px;flex:none;border:1px solid rgba(0,0,0,.08)}
+.sw small{display:block;color:#6F706B;font-size:11.5px}
+</style>
+</helmet>
+<div class="sheet" style="width:1236px;height:714px;box-sizing:border-box;padding:56px 64px;background:#F4F3EE;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:72px">
+  <div>
+    <p class="cap">Aufbau</p>
+    <div class="t">Klein, 170 × 170 pt<span>die oberste Aufgabe, Titel bis 3 Zeilen</span></div>
+    <div class="t">Mittel, 364 × 170 pt<span>die obersten drei, Titel 1 Zeile</span></div>
+    <div class="t">Groß, 364 × 382 pt<span>die obersten sechs, Titel 2 Zeilen, Fußzeile</span></div>
+    <div class="t">Innenrand<span>16 pt, Ecken vom System</span></div>
+    <div class="t">Kopf<span>Knoten 21 × 15 pt, „Als nächstes“, Zahl rechts</span></div>
+    <div class="t">Zeile<span>Randspalte 44 pt rechtsbündig · 10 pt · Titel · Haken weiß auf Grün, 34 × 26 pt</span></div>
+    <div class="t">Haarlinie<span>0,5 pt, beginnt an der Titelspalte</span></div>
+    <p class="cap" style="margin-top:34px">Verhalten</p>
+    <div class="t">Haken weiß auf Grün<span>wie beim Wischen in der App; erledigt, ohne sie zu öffnen</span></div>
+    <div class="t">Zeile (mittel, groß)<span>die ganze Zeile öffnet die Aufgabe</span></div>
+    <div class="t">Neue Aufgabe (nur groß)<span>öffnet die Erfassung, Mikrofon hört sofort</span></div>
+    <div class="t">Randspalte<span>dieselbe Zeit wie in den Listen (#424)</span></div>
+  </div>
+  <div>
+    <p class="cap">Schrift</p>
+    <div class="t"><span class="serif" style="font-size:19px;font-weight:500;color:#1B1C1A;text-align:left">Titel klein</span><span>New York, 19 pt, medium</span></div>
+    <div class="t"><span class="serif" style="font-size:15px;color:#1B1C1A;text-align:left">Titel mittel und groß</span><span>New York, 15 pt</span></div>
+    <div class="t"><span class="serif" style="font-size:17px;font-style:italic;font-weight:500;color:#6F706B;text-align:left">Noch nichts vorgemerkt.</span><span>New York, 17 pt, kursiv</span></div>
+    <div class="t"><span style="font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;text-align:left">Als nächstes</span><span>SF, 10,5 pt, semibold, gesperrt</span></div>
+    <div class="t"><span style="font-size:11.5px;font-weight:500;color:#D4402F;text-align:left">14:30 · Heute</span><span>SF, 11,5 pt, medium, Ziffern gleich breit</span></div>
+    <p class="cap" style="margin-top:34px">Farbe, hell und dunkel (ADR-14)</p>
+    <div class="sw">
+      <div><i style="background:#F4F3EE"></i><span>Papier<small>F4F3EE · 171816</small></span></div>
+      <div><i style="background:#1B1C1A"></i><span>Tinte<small>Titel</small></span></div>
+      <div><i style="background:#6F706B"></i><span>Grau<small>Kopf, Rand, Zahl</small></span></div>
+      <div><i style="background:#0F6E73"></i><span>Petrol<small>nur Antippbares</small></span></div>
+      <div><i style="background:#D4402F"></i><span>Rot<small>nur Zeitdruck</small></span></div>
+      <div><i style="background:#3E8C5F"></i><span>Grün<small>3E8C5F, Erledigen wie beim Wischen</small></span></div>
+    </div>
+    <p style="margin:26px 0 0;font-size:13px;line-height:1.5;color:#6F706B">Getönt und klar färbt das System nur, was als antippbar markiert ist: der Haken und „Neue Aufgabe“. Rot wird dort weiß, deshalb steht „Heute“ immer als Wort und nie nur als Farbe.</p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1236,"height":714}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

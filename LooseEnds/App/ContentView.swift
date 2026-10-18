@@ -124,6 +124,10 @@ struct ContentView: View {
         .onChange(of: openTaskRequest.taskID) { _, _ in consumeOpenTaskRequest() }
         .onAppear(perform: consumeOpenViewRequest)
         .onChange(of: openViewRequest.view) { _, _ in consumeOpenViewRequest() }
+        // "Neue Aufgabe" in the large widget opens capture by link (#521).
+        .onOpenURL { url in
+            if NextUpWidgetActions.isCaptureLink(url) { captureRequest.pending = true }
+        }
         .onReceive(NotificationCenter.default.publisher(for: ModelContext.didSave)) { _ in
             notifications?.rescheduleSoon()
             calendar?.syncSoon()

@@ -116,13 +116,7 @@ enum FieldFormatting {
     }
 
     static func duration(_ bucket: DurationBucket) -> String {
-        switch bucket {
-        case .minutes5: String(localized: "5 min")
-        case .minutes15: String(localized: "15 min")
-        case .minutes30: String(localized: "30 min")
-        case .hour1: String(localized: "1 h")
-        case .hours2plus: String(localized: "2 h+")
-        }
+        bucket.shortText
     }
 
     static func author(_ source: FieldSource) -> String {

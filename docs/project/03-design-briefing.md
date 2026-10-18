@@ -175,6 +175,13 @@ Kein Lesen, kein Abhaken in Version 1.
 - Aussehen (Henning, 2026-10-16: liebevoll und ästhetisch): das Papier der App als Grund, oben der Knoten und „Als nächstes“ klein
   in Grau und Großbuchstaben, Titel in New York, ein dünner offener Kreis in Akzent zum Erledigen (Akzent nur für Antippbares),
   Haarlinien zwischen den Zeilen, leerer Zustand als kursiver Satz „Noch nichts vorgemerkt.“ Der Name der Erweiterung ist „Loose Ends“.
+- **Wie die Listen (Henning, 2026-10-17, #521, ersetzt den Kreis):** links die Randspalte mit derselben Zeit wie in den Listen (#424),
+  rot nur bei Zeitdruck; kein Kreis vor der Aufgabe. Erledigt wird am Zeilenende mit dem Haken, wie ihn das Wischen in der App zeigt:
+  weiß auf Grün (`Completed`); klein mit dem Wort „Erledigen“. Wischen gibt es in Widgets nicht. Nach dem Tipp wird der Haken zum
+  grünen Knoten, der sich zeichnet, „Erledigt“ am Rand, Titel grau; nach 1,65 s geht die Zeile, die nächste rückt nach. Im Kopf rechts
+  die Zahl der Aufgaben in „Als nächstes“, klein „+N“, groß unten „Neue Aufgabe“ (öffnet die Erfassung per `looseends://capture`) und
+  „N weitere“. Getönt und klar ist der Haken aus der Fläche gestanzt. **Bewusste Ausnahme vom Farbbudget (ADR-14):** Im Widget
+  steht das Grün dauerhaft am Haken, weil der Haken dort das Wischen vertritt. Entwurf: https://claude.ai/artifact/XCazDXib75oqQSHxP8Sqmj
 - Control Center: ein Button, der die Erfassungs-Szene öffnet.
 
 ### 10. Mitteilung
