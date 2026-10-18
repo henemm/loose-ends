@@ -233,9 +233,10 @@ enum ViewRules {
             return topLevel.filter { $0.status == .parked }
                 .sorted { ($0.parkedAt ?? .distantPast) > ($1.parkedAt ?? .distantPast) }
         case .open:
-            // Not `isOpen`: that leaves parked tasks out, and "All open" means all of them (#319).
+            // Not `isOpen`: that leaves parked tasks out, and "Loose ends" means all of them (#319);
+            // since #545 the parked ones close the list as a block of their own.
             return topLevel.filter { $0.status != .done }
-                .sorted(by: byUrgencyThenImportance)
+                .sorted(by: byPressureThenWeight)
         case .done:
             return topLevel.filter { $0.status == .done }
                 .sorted { ($0.completedAt ?? .distantPast) > ($1.completedAt ?? .distantPast) }
@@ -300,6 +301,27 @@ enum ViewRules {
     static func groupedByCompletionDay(_ tasks: [TaskItem], calendar: Calendar = .current) -> [DayGroup] {
         let groups = Dictionary(grouping: tasks) { calendar.startOfDay(for: $0.completedAt ?? .distantPast) }
         return groups.keys.sorted(by: >).map { DayGroup(day: $0, tasks: groups[$0] ?? []) }
+    }
+
+    /// "Loose ends" (#545, Henning 2026-10-18: "Erst was drängt"): what presses stands first, what rests
+    /// stands last. A dated task before an undated one, dated by due date (overdue and today on top,
+    /// then the coming days), undated by urgency, importance and capture time as before. Parked
+    /// tasks close the list as one block in the order of "Parked" (last parked first), whatever
+    /// their weight: parked means no pressure. The same logic as "Now" on the start screen, without
+    /// the rank limit; #319 holds by half, parked tasks stay visible, at the end.
+    static func byPressureThenWeight(_ a: TaskItem, _ b: TaskItem) -> Bool {
+        let (parkedA, parkedB) = (a.status == .parked, b.status == .parked)
+        if parkedA != parkedB { return parkedB }
+        if parkedA {
+            let (pa, pb) = (a.parkedAt ?? .distantPast, b.parkedAt ?? .distantPast)
+            return pa != pb ? pa > pb : a.capturedAt < b.capturedAt
+        }
+        switch (a.dueDate, b.dueDate) {
+        case let (da?, db?): return da != db ? da < db : a.capturedAt < b.capturedAt
+        case (.some, nil): return true
+        case (nil, .some): return false
+        case (nil, nil): return byUrgencyThenImportance(a, b)
+        }
     }
 
     static func byUrgencyThenImportance(_ a: TaskItem, _ b: TaskItem) -> Bool {

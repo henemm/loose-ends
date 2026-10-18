@@ -153,7 +153,7 @@ blockierte, "Geparkt" zeigt nur `parked`, "Erledigt" zeigt nur `done`, "Alle off
 | Wartet | `blockedBy` enthält mindestens eine offene Aufgabe | blockierende Aufgabe zuerst |
 | Wiederkehrend | `repeatRule != nil` | dueDate aufsteigend |
 | Geparkt | `status == parked` | parkedAt absteigend |
-| Lose Enden (früher „Alle offenen“, #518) | `status != done` (Neu, Aktiv, Wartend, Geparkt), Zeile direkt über „Erledigt“, Geparktes mit Mond-Glyphe | urgency, importance, dann capturedAt |
+| Lose Enden (früher „Alle offenen“, #518) | `status != done` (Neu, Aktiv, Wartend, Geparkt), Zeile direkt über „Erledigt“, Geparktes mit Mond-Glyphe | „Erst was drängt“ (#545, `byPressureThenWeight`): mit Datum vor ohne Datum, mit Datum nach dueDate (überfällig und heute oben, dann die nächsten Tage), ohne Datum urgency, importance, dann capturedAt; Geparktes als eigener Block ganz unten unter grauem Kopf, in der Reihenfolge von „Geparkt“ |
 | Erledigt | `status == done` | completedAt absteigend, nach Tagen gruppiert |
 | Kontext X | `contexts` enthält X | urgency, importance, dann capturedAt |
 | Projekt P | `project == P` | manuell innerhalb des Projekts, sonst capturedAt |

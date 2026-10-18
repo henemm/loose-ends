@@ -181,7 +181,9 @@ If the label goes away or is renamed, follow `docs/reference/testflight.md` and 
 `ci.yml`, `speech-stress.yml` and `testflight.yml`.
 The job „Mac Gallery (macOS)“ photographs the Mac app (`MacGalleryTests`, start page, New, detail, light and dark) and
 uploads the pictures `mac-gallery-*` as the artifact `MacGallery` (#511); Mac pictures come only from there, never from
-Henning's Mac.
+Henning's Mac. The same job runs `MacDetailClickTests` (#544): it clicks Note, "Add a subtask", "Add more", File and Photo
+in the detail and types; the gallery only photographs, so a Mac control that does not answer a click shows up here. The
+helpers both share live in `MacUITestSupport.swift` (`mac` prefix).
 
 ## Ship
 
