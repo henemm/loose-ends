@@ -37,6 +37,8 @@ import UserNotifications
         func setCarryMode(_ raw: String) { carryModeRaw = raw }
         var eveningMinutes: Int?
         func setEveningMinutes(_ minutes: Int) { eveningMinutes = minutes }
+        var morningMinutes: Int?
+        func setMorningMinutes(_ minutes: Int) { morningMinutes = minutes }
     }
 
     /// Holds the container for the whole test (`TestStore`) next to the center under test.
@@ -272,6 +274,29 @@ import UserNotifications
         #expect(CarryReviewRequest.shared.taskIDs == [task.id])
         #expect(task.dueDate == due)
         CarryReviewRequest.shared.taskIDs = []
+    }
+
+    @Test("A changed morning time is planned with and goes to iCloud (#518)")
+    @MainActor func morningTimeChange() async throws {
+        let fixture = try Fixture()
+        _ = try carriedTask(fixture, "Steuerbescheid ablegen")
+        fixture.center.morningTime = DueReminders.Time(hour: 7, minute: 30)
+
+        await fixture.center.reschedule()
+
+        let mornings = fixture.recorder.pending.values.filter { $0.content.categoryIdentifier == CarryReminders.categoryIdentifier }
+        #expect(!mornings.isEmpty)
+        #expect(mornings.allSatisfy { fixture.fireComponents(of: $0).hour == 7 && fixture.fireComponents(of: $0).minute == 30 })
+        #expect(fixture.cloud.morningMinutes == 7 * 60 + 30)
+    }
+
+    @Test("A morning time set on another device is taken over")
+    @MainActor func takesTheCloudMorningTime() async throws {
+        let fixture = try Fixture()
+        fixture.cloud.morningMinutes = 8 * 60
+
+        #expect(fixture.center.takeCloudTime())
+        #expect(fixture.center.morningTime == DueReminders.Time(hour: 8, minute: 0))
     }
 
     @Test("Show in the morning notification opens Loose ends and changes nothing (#518)")

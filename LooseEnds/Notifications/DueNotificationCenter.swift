@@ -27,6 +27,7 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
     static let timeKey = "dueReminderMinutes"
     static let carryKey = "carryMode"
     static let eveningKey = "eveningReminderMinutes"
+    static let morningKey = "morningReminderMinutes"
 
     private static var suppressed: Bool {
         ModelContainerFactory.isRunningTests || (ModelContainerFactory.isUITesting && !isNotificationUITest)
@@ -104,6 +105,20 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         }
     }
 
+    /// The time of the morning invitation (#518, Henning 2026-10-18: its own time, like the evening);
+    /// travels like the reminder time.
+    var morningTime: DueReminders.Time {
+        get {
+            guard let minutes = defaults.object(forKey: Self.morningKey) as? Int else { return CarryReminders.morningStandard }
+            return DueReminders.Time(minutesSinceMidnight: minutes)
+        }
+        set {
+            defaults.set(newValue.minutesSinceMidnight, forKey: Self.morningKey)
+            cloud.setMorningMinutes(newValue.minutesSinceMidnight)
+            rescheduleSoon()
+        }
+    }
+
     /// Another device set a time or a carry mode (or this launch is the first to see it): take it
     /// over locally. Returns whether a local value changed.
     @discardableResult
@@ -119,6 +134,10 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         }
         if let minutes = cloud.eveningMinutes, minutes != defaults.object(forKey: Self.eveningKey) as? Int {
             defaults.set(minutes, forKey: Self.eveningKey)
+            changed = true
+        }
+        if let minutes = cloud.morningMinutes, minutes != defaults.object(forKey: Self.morningKey) as? Int {
+            defaults.set(minutes, forKey: Self.morningKey)
             changed = true
         }
         if changed { rescheduleSoon() }
@@ -159,7 +178,7 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         do {
             let tasks = try container.mainContext.fetch(FetchDescriptor<TaskItem>())
             let reminders = DueReminders.plan(for: tasks, time: reminderTime)
-            let carried = CarryReminders.plan(for: tasks, mode: carryMode, time: reminderTime, eveningTime: eveningTime)
+            let carried = CarryReminders.plan(for: tasks, mode: carryMode, time: morningTime, eveningTime: eveningTime)
             let stale = await scheduler.pendingIdentifiers()
                 .filter { $0.hasPrefix(DueReminders.identifierPrefix) || $0.hasPrefix(CarryReminders.identifierPrefix) }
             scheduler.remove(stale)
@@ -459,6 +478,8 @@ protocol ReminderTimeCloud {
     func setCarryMode(_ raw: String)
     var eveningMinutes: Int? { get }
     func setEveningMinutes(_ minutes: Int)
+    var morningMinutes: Int? { get }
+    func setMorningMinutes(_ minutes: Int)
 }
 
 extension NSUbiquitousKeyValueStore: ReminderTimeCloud {
@@ -475,6 +496,12 @@ extension NSUbiquitousKeyValueStore: ReminderTimeCloud {
     }
 
     var eveningMinutes: Int? { object(forKey: DueNotificationCenter.eveningKey) as? Int }
+
+    var morningMinutes: Int? { object(forKey: DueNotificationCenter.morningKey) as? Int }
+
+    func setMorningMinutes(_ minutes: Int) {
+        set(Int64(minutes), forKey: DueNotificationCenter.morningKey)
+    }
 
     func setEveningMinutes(_ minutes: Int) {
         set(Int64(minutes), forKey: DueNotificationCenter.eveningKey)

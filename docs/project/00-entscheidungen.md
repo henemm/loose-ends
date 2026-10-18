@@ -182,7 +182,7 @@ nächste Woche, Parken). Das ist ein freiwilliger Tagesreview; als Vorgabe bleib
 Neu gefasst (Henning, 2026-10-17, #518): Liegengebliebenes wird nicht weitergetragen, es braucht eine neue Fälligkeit.
 Statt der Auswahl gibt es zwei Schalter, beide an: „Abends: neue Termine planen“ (Abendzeit, Vorgabe 20:00: „Neues Datum
 nötig: N“ mit allem, was an dem Tag fällig war, an den drei Tagen danach und dann montags, bis es ein neues Datum hat;
-„Alle auf morgen“ und „Durchsehen“) und „Morgens: lose Enden ansehen“ (Erinnerungszeit, jeden Tag, solange etwas offen ist:
+„Alle auf morgen“ und „Durchsehen“) und „Morgens: lose Enden ansehen“ (eigene Morgenzeit, Vorgabe 9:00, jeden Tag, solange etwas offen ist:
 „Lose Enden: N“, darunter was ein neues Datum braucht oder was am längsten offen ist; öffnet „Lose Enden“).
 
 **ADR-17 Ergänzte Screens nach Lückenprüfung.** Als nächstes (manuell sortiert), Neu (Eingang),
