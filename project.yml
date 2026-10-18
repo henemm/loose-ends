@@ -257,8 +257,9 @@ targets:
           NSExtensionPointIdentifier: com.apple.share-services
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ShareViewController
           NSExtensionAttributes:
-            # Text, links and mails (what Mail's share sheet hands over).
-            NSExtensionActivationRule: 'SUBQUERY(extensionItems, $item, SUBQUERY($item.attachments, $a, ANY $a.registeredTypeIdentifiers UTI-CONFORMS-TO "public.text" OR ANY $a.registeredTypeIdentifiers UTI-CONFORMS-TO "public.url" OR ANY $a.registeredTypeIdentifiers UTI-CONFORMS-TO "public.email-message").@count >= 1).@count >= 1'
+            # Text, links and mails (what Mail's share sheet hands over), photos and files (#442). No count limit and
+            # no catch-all predicate (App Review rejects it): the code caps at ten attachments and says why.
+            NSExtensionActivationRule: 'SUBQUERY(extensionItems, $item, SUBQUERY($item.attachments, $a, ANY $a.registeredTypeIdentifiers UTI-CONFORMS-TO "public.text" OR ANY $a.registeredTypeIdentifiers UTI-CONFORMS-TO "public.url" OR ANY $a.registeredTypeIdentifiers UTI-CONFORMS-TO "public.email-message" OR ANY $a.registeredTypeIdentifiers UTI-CONFORMS-TO "public.image" OR ANY $a.registeredTypeIdentifiers UTI-CONFORMS-TO "public.data").@count >= 1).@count >= 1'
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends$(BUNDLE_ID_SUFFIX).share
