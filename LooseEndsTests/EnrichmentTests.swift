@@ -3,12 +3,18 @@ import SwiftData
 import Testing
 @testable import LooseEnds
 
-/// Fake model (ADR-11): returns a fixed draft, or fails, and counts calls.
+/// Fake model (ADR-11): returns a fixed draft, or fails, and counts calls. For the cases only a real
+/// model shows otherwise (#530): an answer per note (`respond`), and a call that takes its time
+/// (`delay`, per note through `delayFor`), honouring cancellation like the real session.
 final class StubEnricher: TaskEnricher, @unchecked Sendable {
     var draft: EnrichmentDraft
     var failure: Error?
     var unavailableReason: String?
+    var delay: Duration?
+    var delayFor: (@Sendable (EnrichmentInput) -> Duration?)?
+    var respond: (@Sendable (EnrichmentInput) throws -> EnrichmentDraft)?
     private(set) var calls = 0
+    private(set) var notes: [String] = []
 
     init(draft: EnrichmentDraft = EnrichmentDraft(), failure: Error? = nil, unavailableReason: String? = nil) {
         self.draft = draft
@@ -18,7 +24,12 @@ final class StubEnricher: TaskEnricher, @unchecked Sendable {
 
     func enrich(_ input: EnrichmentInput) async throws -> EnrichmentDraft {
         calls += 1
+        notes.append(input.rawText)
+        if let wait = delayFor?(input) ?? delay {
+            try await Task.sleep(for: wait)
+        }
         if let failure { throw failure }
+        if let respond { return try respond(input) }
         return draft
     }
 }

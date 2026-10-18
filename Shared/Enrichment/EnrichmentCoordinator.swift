@@ -21,12 +21,22 @@ final class EnrichmentCoordinator {
 
     private let enricher: any TaskEnricher
     private let container: ModelContainer
+    /// How long one model call may take before it counts as failed (#530). Generous: a first call
+    /// loads the model, later ones take a few seconds; a hang must not hold the pass forever.
+    private let modelTimeout: Duration
     private let logger = Logger(subsystem: "com.henning.looseends", category: "Enrichment")
     private var isRunning = false
 
-    init(enricher: any TaskEnricher, container: ModelContainer) {
+    init(enricher: any TaskEnricher, container: ModelContainer, modelTimeout: Duration = .seconds(30)) {
         self.enricher = enricher
         self.container = container
+        self.modelTimeout = modelTimeout
+    }
+
+    /// The model call with its time limit; a timeout throws like any other failure of the call.
+    private func callModel(_ input: EnrichmentInput) async throws -> EnrichmentDraft {
+        let enricher = enricher
+        return try await ModelDeadline.run(within: modelTimeout) { try await enricher.enrich(input) }
     }
 
     /// Processes all pending tasks once, oldest first. A call while a pass is running returns at once.
@@ -77,7 +87,7 @@ final class EnrichmentCoordinator {
                         examples: examples
                     )
                     do {
-                        let draft = try await enricher.enrich(input)
+                        let draft = try await callModel(input)
                         let written = EnrichmentWriter.apply(draft, to: task, contexts: contexts, projects: projects)
                         logger.info("Enriched \(task.id, privacy: .public): \(written) fields")
                     } catch {
@@ -135,7 +145,7 @@ final class EnrichmentCoordinator {
                     examples: examples
                 )
                 do {
-                    let draft = try await enricher.enrich(input)
+                    let draft = try await callModel(input)
                     EnrichmentWriter.apply(
                         draft, to: task, contexts: contexts, projects: projects, mode: .reanalysis, ruleFields: ruleFields
                     )
