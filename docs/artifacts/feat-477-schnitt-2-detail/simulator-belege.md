@@ -100,6 +100,15 @@ Hinweis als abgerundete Karte, Due / Importance / Tags, Wortleiste, NOTE, ATTACH
 `iphone-detail-vorher.png` (PIL `ImageChops.difference`): einzige Abweichung die Uhrzeit (bbox x 154–292,
 y 77–117); **ab y 150 bbox `None`, pixelgleich**.
 
+**iPhone gescrollt nach Politur: `iphone-detail-scrolled-nachher.png` (neu, Stand `4b3efe9`, Lauf 15:22, Sitzung
+`le477-scr`, iPhone 17, derselbe Wegwerf-Test, danach entfernt).** Wie vorher: Leiste mit Zurück, „Looks right“, „…“,
+darunter verblasst die Wortleiste; NOTE mit Platzhalter, ATTACHMENTS (Photo / File / Scan), „Show in calendar“ mit
+Schalter (aus), PLACE („Add place“), SUBTASKS („Add a subtask … Add“), WAITING ON („Choose a task“), „3 from your
+words – Show“, ADD MORE („Friday, one hour, call first“), Scroll-Indikator rechts. Pixelvergleich gegen
+`iphone-detail-scrolled-vorher.png` (PIL `ImageChops.difference`): gesamt bbox (155, 77, 1197, 2427); ab y 150 bbox
+**(1188, 1200, 1197, 2427)**, ein 9 px breiter Streifen am rechten Rand = Scroll-Indikator; ab y 150 ohne x ≥ 1180
+bbox `None`. Die Politur ändert das kompakte Detail also nicht.
+
 Mac: nicht lokal belegbar (Mac-Bilder nur aus der CI-Galerie `MacGallery`); dieselben Einzüge greifen dort über
 `isWide` (auf dem Mac immer wahr).
 
