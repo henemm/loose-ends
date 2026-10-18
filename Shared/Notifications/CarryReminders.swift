@@ -19,6 +19,8 @@ enum CarryReminders {
     /// "Longest open" in the morning names this many tasks.
     static let longestNamed = 2
     static let eveningStandard = DueReminders.Time(hour: 20, minute: 0)
+    /// The morning has its own time, like the evening (Henning, 2026-10-18); 9:00 like the reminder time.
+    static let morningStandard = DueReminders.Time(hour: 9, minute: 0)
 
     /// Which of the two notifications are on. Stored as one word, so the old setting carries over:
     /// "morning" and "evening" keep their one notification, "quiet" none.
@@ -87,7 +89,7 @@ enum CarryReminders {
     static func plan(
         for tasks: [TaskItem],
         mode: Mode,
-        time: DueReminders.Time = .standard,
+        time: DueReminders.Time = morningStandard,
         eveningTime: DueReminders.Time = eveningStandard,
         now: Date = Date(),
         calendar: Calendar = .current
