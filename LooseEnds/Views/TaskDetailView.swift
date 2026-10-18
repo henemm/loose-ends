@@ -28,7 +28,12 @@ struct TaskDetailView: View {
     @Environment(\.enrichment) private var enrichment: EnrichmentCoordinator?
 
     /// The title as on the start screen (#438): New York medium, a little smaller than the headline.
-    @ScaledMetric(relativeTo: .title2) private var titleSize: CGFloat = 23
+    @ScaledMetric(relativeTo: .title2) private var titleSize: CGFloat = DetailLayout.titleSize(wide: false)
+    /// The same, larger in a wide window and on the Mac (#477).
+    @ScaledMetric(relativeTo: .title2) private var wideTitleSize: CGFloat = DetailLayout.titleSize(wide: true)
+    #if os(iOS)
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    #endif
     /// The field names' column (#438), so every value starts at the same edge.
     @ScaledMetric(relativeTo: .footnote) private var labelWidth: CGFloat = 92
     /// The field whose editor is open; a button row instead of a link, so no chevron (#438).
@@ -48,6 +53,15 @@ struct TaskDetailView: View {
 
     private var aiFields: [RevisedField] { RevisionService.automaticFields(on: task) }
     private var inReview: Bool { reviewing && ViewRules.isInNew(task) }
+    /// A wide window or the Mac (#477): the detail as a centered column with the larger title.
+    /// Split View and Slide Over are compact and keep the iPhone's detail.
+    private var isWide: Bool {
+        #if os(iOS)
+        sizeClass != .compact
+        #else
+        true
+        #endif
+    }
 
     var body: some View {
         Form {
@@ -56,7 +70,7 @@ struct TaskDetailView: View {
                     // Serif is the content, SF is the app (#180, rule 2). Wraps instead of cutting the
                     // title off with "…" (#216); Return still ends the edit, as in the capture field.
                     TextField("Title", text: $titleDraft, axis: .vertical)
-                        .font(.system(size: titleSize, weight: .medium, design: .serif))
+                        .font(.system(size: isWide ? wideTitleSize : titleSize, weight: .medium, design: .serif))
                         .tracking(-0.2)
                         .lineLimit(1...4)
                         .focused($titleFocused)
@@ -64,6 +78,10 @@ struct TaskDetailView: View {
                         .onSubmit(commitTitle)
                         .onChange(of: titleDraft) { _, newValue in endEditOnReturn(newValue) }
                         .accessibilityIdentifier("detailTitleField")
+                        #if os(macOS)
+                        // No "Title" column before the title on the Mac (#477); the label stays for VoiceOver.
+                        .labelsHidden()
+                        #endif
                     if aiFields.contains(.title) {
                         Button(action: resetTitle) {
                             Image(systemName: "arrow.uturn.backward")
@@ -97,7 +115,7 @@ struct TaskDetailView: View {
                         .accessibilityIdentifier("detailRawText")
                 }
             }
-            .paperRow()
+            .detailRow()
 
             if inReview {
                 Section {
@@ -114,7 +132,7 @@ struct TaskDetailView: View {
                         .accessibilityElement(children: .combine)
                         .accessibilityIdentifier("reanalysisNote")
                 }
-                .paperRow()
+                .detailRow()
             }
 
             let layout = DetailLayout.split(fieldEntries)
@@ -122,7 +140,7 @@ struct TaskDetailView: View {
                 Section {
                     ForEach(layout.set, id: \.field) { fieldRow($0.field, value: $0.value) }
                 }
-                .paperRow()
+                .detailRow()
             }
             if !layout.empty.isEmpty {
                 Section {
@@ -145,16 +163,16 @@ struct TaskDetailView: View {
                     // the line would overwrite theirs.
                     .accessibilityElement(children: .contain)
                 }
-                .paperRow()
+                .detailRow()
             }
 
             // Numbers, addresses, links beside the title (#439).
             NoteSection(task: task)
-                .paperRow()
+                .detailRow()
 
             // Photos and files on the task (#442).
             AttachmentsSection(task: task)
-                .paperRow()
+                .detailRow()
 
             Section {
                 // Stays visible without a due date: it can be switched on first (see the note).
@@ -213,16 +231,16 @@ struct TaskDetailView: View {
             } footer: {
                 calendarNote
             }
-            .paperRow()
+            .detailRow()
 
             PlaceSection(task: task, searching: $searchesPlace)
-                .paperRow()
+                .detailRow()
 
             if task.parent == nil {
                 SubtasksSection(task: task)
-                    .paperRow()
+                    .detailRow()
                 WaitingOnSection(task: task)
-                    .paperRow()
+                    .detailRow()
             }
 
             if !aiFields.isEmpty {
@@ -236,7 +254,7 @@ struct TaskDetailView: View {
                             .accessibilityIdentifier("revisionsButton")
                     }
                 }
-                .paperRow()
+                .detailRow()
             }
 
             if let url = task.sourceURL {
@@ -245,15 +263,16 @@ struct TaskDetailView: View {
                 } header: {
                     Text("Source").captionHead()
                 }
-                .paperRow()
+                .detailRow()
             }
 
             // A sentence about the task, read by the rules (#441).
             SupplementSection(task: task)
-                .paperRow()
+                .detailRow()
         }
         .formStyle(.grouped)
         .paperGround()
+        .detailColumn(wide: isWide)
         .navigationTitle("")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)

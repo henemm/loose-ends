@@ -9,6 +9,14 @@ enum DetailLayout {
         let value: String?
     }
 
+    /// The title's size (#477): 23 pt as on the iPhone since #438, 30 pt in a wide window and on the Mac.
+    static func titleSize(wide: Bool) -> CGFloat {
+        wide ? 30 : 23
+    }
+
+    /// The detail's column in a wide window (#477): at most 760 pt, centered, paper on both sides.
+    static let columnWidth: CGFloat = 760
+
     static func split(_ entries: [Entry]) -> (set: [Entry], empty: [Entry]) {
         (entries.filter { $0.value != nil }, entries.filter { $0.value == nil })
     }

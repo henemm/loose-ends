@@ -18,6 +18,18 @@ extension View {
         modifier(PaperRow())
     }
 
+    /// A row of the task detail (#477): paper behind it on every size, so a wide window and the Mac
+    /// show lines on paper instead of cards. In a compact window the same as `paperRow()`.
+    func detailRow() -> some View {
+        listRowBackground(Paper.ground)
+    }
+
+    /// The task detail in a wide window (#477): a centered column of at most
+    /// `DetailLayout.columnWidth`, paper to the window's edges. No effect in a compact window.
+    func detailColumn(wide: Bool) -> some View {
+        modifier(DetailColumn(wide: wide))
+    }
+
     /// A row of a list in a wide window (#477): the start screen's sizes, 11 pt above and below,
     /// paper behind it and grey under the pointer on the Mac. No effect in a compact window.
     func wideListRow() -> some View {
@@ -78,6 +90,22 @@ private struct PaperRow: ViewModifier {
         #else
         content
         #endif
+    }
+}
+
+private struct DetailColumn: ViewModifier {
+    let wide: Bool
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if wide {
+            content
+                .frame(maxWidth: DetailLayout.columnWidth)
+                .frame(maxWidth: .infinity)
+                .background(Paper.ground.ignoresSafeArea())
+        } else {
+            content
+        }
     }
 }
 
