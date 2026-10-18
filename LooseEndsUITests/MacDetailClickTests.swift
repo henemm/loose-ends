@@ -53,14 +53,28 @@ final class MacDetailClickTests: XCTestCase {
         return pickerCount(app) > baseline
     }
 
+    /// Cancel inside the sheet or dialog itself: `app.buttons["Cancel"]` finds the Touch Bar's first,
+    /// which XCUITest cannot click (run 39148286538). Without one, Escape closes the panel.
     @MainActor
     private func dismissPicker(in app: XCUIApplication) {
-        let cancel = app.buttons["Cancel"].firstMatch
-        if cancel.waitForExistence(timeout: 3) {
-            cancel.click()
-        } else {
-            app.typeKey(.escape, modifierFlags: [])
+        for container in [app.sheets.firstMatch, app.dialogs.firstMatch] where container.exists {
+            let cancel = container.buttons["Cancel"].firstMatch
+            if cancel.exists && cancel.isHittable {
+                cancel.click()
+                return
+            }
         }
+        app.typeKey(.escape, modifierFlags: [])
+    }
+
+    /// The text of the note at rest, wherever the Mac keeps it: a selectable `Text` reports an
+    /// empty label and carries its words as value, or as its own static text (run 39148286538).
+    @MainActor
+    private func showsText(_ words: String, in window: XCUIElement) -> Bool {
+        let holder = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "label CONTAINS %@ OR value CONTAINS %@", words, words))
+            .firstMatch
+        return holder.waitForExistence(timeout: 5)
     }
 
     @MainActor
@@ -81,7 +95,7 @@ final class MacDetailClickTests: XCTestCase {
         XCTAssertTrue(hasKeyboardFocus(subtask), "A click on Add a subtask should focus its field")
         let noteText = macElement("noteText", in: window)
         XCTAssertTrue(noteText.waitForExistence(timeout: 5), "Leaving the note should show it as text")
-        XCTAssertTrue(noteText.label.contains("Matte"), "Note was \(noteText.label)")
+        XCTAssertTrue(showsText("Matte", in: window), "The note at rest should hold the typed words")
         subtask.typeText("Mäher tanken\n")
         let line = window.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH %@", "subtaskRow_"))
