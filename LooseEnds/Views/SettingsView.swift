@@ -11,6 +11,7 @@ struct SettingsView: View {
     @State private var time: Date
     @State private var carryMode: CarryReminders.Mode
     @State private var eveningTime: Date
+    @State private var morningTime: Date
     /// The calendar picker for new events (#203 Teil C2) is open.
     @State private var choosesCalendar = false
     #if os(macOS)
@@ -24,6 +25,8 @@ struct SettingsView: View {
         _carryMode = State(initialValue: notifications?.carryMode ?? .standard)
         let evening = notifications?.eveningTime ?? CarryReminders.eveningStandard
         _eveningTime = State(initialValue: Calendar.current.date(bySettingHour: evening.hour, minute: evening.minute, second: 0, of: Date()) ?? Date())
+        let morning = notifications?.morningTime ?? CarryReminders.morningStandard
+        _morningTime = State(initialValue: Calendar.current.date(bySettingHour: morning.hour, minute: morning.minute, second: 0, of: Date()) ?? Date())
     }
 
     var body: some View {
@@ -52,10 +55,14 @@ struct SettingsView: View {
                     set: { carryMode = CarryReminders.Mode(morning: $0, evening: carryMode.remindsEvening) }
                 ))
                 .accessibilityIdentifier("morningToggle")
+                if carryMode.remindsMorning {
+                    DatePicker("Morning time", selection: $morningTime, displayedComponents: .hourAndMinute)
+                        .accessibilityIdentifier("morningTimePicker")
+                }
             } header: {
                 Text("Loose ends")
             } footer: {
-                Text("In the evening, what needs a new date comes in one notification. In the morning, at the reminder time, one notification invites you to look at your loose ends.")
+                Text("In the evening, what needs a new date comes in one notification. In the morning, one notification invites you to look at your loose ends.")
             }
             syncSection
             calendarSection
@@ -94,6 +101,10 @@ struct SettingsView: View {
         }
         .onChange(of: carryMode) { _, new in
             notifications?.carryMode = new
+        }
+        .onChange(of: morningTime) { _, new in
+            let parts = Calendar.current.dateComponents([.hour, .minute], from: new)
+            notifications?.morningTime = DueReminders.Time(hour: parts.hour ?? 9, minute: parts.minute ?? 0)
         }
         .onChange(of: eveningTime) { _, new in
             let parts = Calendar.current.dateComponents([.hour, .minute], from: new)

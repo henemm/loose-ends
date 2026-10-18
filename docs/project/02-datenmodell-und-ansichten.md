@@ -199,7 +199,7 @@ in der Zahl am App-Symbol, auch vorgemerkt nicht. „Fällig“ und „Lose Ende
 den Einstellungen, beide an (iCloud-Schlüsselwertspeicher, gespeichert als `quiet`/`morning`/`evening`/`both`):
 **Abends** zur Abendzeit (Vorgabe 20:00, `carry_evening_JJJJ-MM-TT`) „Neues Datum nötig: N“ mit allem, was an diesem Tag
 fällig ist, an den drei Tagen danach und danach montags, bis es ein neues Datum hat; „Alle auf morgen“ ohne App-Start,
-„Durchsehen“ und ein Tipp öffnen das Blatt „Neues Datum nötig“. **Morgens** zur Erinnerungszeit (`carry_JJJJ-MM-TT`) jeden
+„Durchsehen“ und ein Tipp öffnen das Blatt „Neues Datum nötig“. **Morgens** zur eigenen Morgenzeit (Vorgabe 9:00, `carry_JJJJ-MM-TT`) jeden
 Tag, solange etwas offen ist: „Lose Enden: N“ (N wie die Ansicht), darunter „N brauchen ein neues Datum.“ oder „Am längsten
 offen: …“; „Anzeigen“ und ein Tipp öffnen „Lose Enden“. Geplant werden acht Tage im Voraus; die Einzelerinnerungen nehmen
 höchstens 28 der 64 Plätze, die iOS hält (`DueReminders.maxPlanned`), damit beide und die Orte immer Platz haben.
