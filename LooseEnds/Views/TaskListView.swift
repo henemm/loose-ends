@@ -17,6 +17,8 @@ struct TaskListView: View {
     @State private var pendingDelete: TaskItem?
     @State private var confirmingDelete = false
     @State private var datingTask: TaskItem?
+    /// A task left from an earlier day whose new date is being chosen (#518).
+    @State private var redating: TaskItem?
     /// Parents whose subtasks are folded out in the project view (#28); folded by default.
     @State private var unfolded: Set<UUID> = []
     /// The disclosure arrow's width, so titles line up with and without one.
@@ -86,6 +88,8 @@ struct TaskListView: View {
                 projectRows
             } else if kind == .new {
                 reviewSections
+            } else if kind == .due || kind == .open {
+                newDateSections
             } else {
                 openRows
             }
@@ -98,6 +102,17 @@ struct TaskListView: View {
         .navigationTitle(title)
         .modifier(ListSubtitle(wide: isWide, text: subtitle))
         .taskInteractionDialogs(actions)
+        .sheet(item: $redating) { task in
+            NavigationStack {
+                FieldEditorView(task: task, field: .dueDate, contexts: contexts, projects: projects)
+                    .toolbar {
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Done") { redating = nil }
+                                .accessibilityIdentifier("newDateDone")
+                        }
+                    }
+            }
+        }
     }
 
     /// Compact: the paper list as before. Wide (#477): plain on paper in the start page's 720 pt
@@ -193,6 +208,26 @@ struct TaskListView: View {
                 ForEach(look) { row($0) }
             } header: {
                 head(Text("Needs a look"))
+            }
+        }
+    }
+
+    /// "Due" and "Loose ends" (#518): what was due before today stands on top until it has a new date;
+    /// swiping left opens the date. The rest follows as before.
+    @ViewBuilder
+    private var newDateSections: some View {
+        let left = Set(ViewRules.leftovers(in: tasks).map(\.id))
+        let needsDate = shown.filter { left.contains($0.id) }
+        if needsDate.isEmpty {
+            openRows
+        } else {
+            Section {
+                ForEach(needsDate) { row($0) }
+            } header: {
+                Text("Needs a new date")
+            }
+            Section {
+                ForEach(shown.filter { !left.contains($0.id) }) { row($0) }
             }
         }
     }
@@ -331,10 +366,22 @@ struct TaskListView: View {
         // The whole row opens the task; the system's arrow at its end made room for the star (#509).
         .navigationLinkIndicatorVisibility(.hidden)
         .swipeActions(edge: .leading, allowsFullSwipe: true) { actions.leadingActions(task) }
-        .swipeActions(edge: .trailing, allowsFullSwipe: true) { actions.trailingActions(task) }
+        .swipeActions(edge: .trailing, allowsFullSwipe: true) { trailingActions(task) }
         .contextMenu { actions.menu(task) }
         .paperRow()
         .wideListRow()
+    }
+
+    /// Left from an earlier day (#518): the swipe gives it a new date; everything else as everywhere.
+    @ViewBuilder
+    private func trailingActions(_ task: TaskItem) -> some View {
+        if kind == .due || kind == .open, ViewRules.leftovers(in: tasks).contains(where: { $0.id == task.id }) {
+            Button("New date", systemImage: "calendar") { redating = task }
+                .tint(.accentColor)
+                .accessibilityIdentifier("swipeNewDate_\(task.id.uuidString)")
+        } else {
+            actions.trailingActions(task)
+        }
     }
 
     /// The star's number (#509): not in "Next up" itself, where every row would carry one.

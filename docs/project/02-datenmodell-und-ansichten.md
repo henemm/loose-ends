@@ -153,7 +153,7 @@ blockierte, "Geparkt" zeigt nur `parked`, "Erledigt" zeigt nur `done`, "Alle off
 | Wartet | `blockedBy` enthält mindestens eine offene Aufgabe | blockierende Aufgabe zuerst |
 | Wiederkehrend | `repeatRule != nil` | dueDate aufsteigend |
 | Geparkt | `status == parked` | parkedAt absteigend |
-| Alle offenen | `status != done` (Neu, Aktiv, Wartend, Geparkt), Zeile direkt über „Erledigt“, Geparktes mit Mond-Glyphe | urgency, importance, dann capturedAt |
+| Lose Enden (früher „Alle offenen“, #518) | `status != done` (Neu, Aktiv, Wartend, Geparkt), Zeile direkt über „Erledigt“, Geparktes mit Mond-Glyphe | urgency, importance, dann capturedAt |
 | Erledigt | `status == done` | completedAt absteigend, nach Tagen gruppiert |
 | Kontext X | `contexts` enthält X | urgency, importance, dann capturedAt |
 | Projekt P | `project == P` | manuell innerhalb des Projekts, sonst capturedAt |
@@ -191,14 +191,18 @@ Uhrzeit** → „Heute fällig“ am Fälligkeitstag zur Uhrzeit aus den Einstel
 allen Geräten über den iCloud-Schlüsselwertspeicher). Ist der Zeitpunkt vorbei, entfällt die Mitteilung. Aktionen ohne App-Start: Erledigt, Als nächstes, Morgen. Ein Tipp auf die Mitteilung selbst öffnet die Aufgabe im Detail (#331). Keine Mitteilung
 für KI-Verarbeitung.
 
-**Noch offen am Tagesende (#414, `CarryReminders`):** Einstellung „Morgens erinnern“ (Vorgabe) oder „Still weitertragen“,
-über den iCloud-Schlüsselwertspeicher wie die Uhrzeit. Abends durchsehen (#414 Schnitt 3): eine Mitteilung je Abend zur
-Abendzeit (Vorgabe 20:00, `carry_evening_JJJJ-MM-TT`) mit den offenen Aufgaben, die an diesem Tag fällig sind; „Alle auf
-morgen“ ohne App-Start, „Durchsehen“ und ein Tipp auf die Mitteilung öffnen das Blatt „Von heute offen“. Morgens erinnern: eine Mitteilung je Morgen zur Erinnerungszeit
-(`carry_JJJJ-MM-TT`) mit allen offenen Aufgaben (oberste Ebene, nicht blockiert, mit oder ohne Uhrzeit), deren Fälligkeitstag
-1 bis 3 Tage zurückliegt. „Heute nochmal“ setzt jede auf heute (Revision des Nutzers), „Anzeigen“ öffnet die App.
-In jedem Modus verlässt eine Fälligkeit ohne Uhrzeit nach mehr als 7 Tagen „Jetzt“ und die Zahl am App-Symbol
-(`carriedInNowDays`), bleibt aber in „Fällig“.
+**Lose Enden am Abend und am Morgen (#414, neu gefasst #518, Henning 2026-10-17, `CarryReminders`):** Was vor heute fällig
+war und offen ist (`ViewRules.leftovers`: oberste Ebene, nicht blockiert, mit oder ohne Uhrzeit), wird nicht weitergetragen:
+es braucht eine neue Fälligkeit, Parken oder Erledigt. Bis dahin zählt es nicht in „Jetzt“, nicht in „Heute fällig“ und nicht
+in der Zahl am App-Symbol, auch vorgemerkt nicht. „Fällig“ und „Lose Enden“ (früher „Alle offenen“) zeigen es oben unter
+„Neues Datum nötig“; Wisch links öffnet dort die Fälligkeit (Schnellwahl, Kalender). Zwei Mitteilungen, je ein Schalter in
+den Einstellungen, beide an (iCloud-Schlüsselwertspeicher, gespeichert als `quiet`/`morning`/`evening`/`both`):
+**Abends** zur Abendzeit (Vorgabe 20:00, `carry_evening_JJJJ-MM-TT`) „Neues Datum nötig: N“ mit allem, was an diesem Tag
+fällig ist, an den drei Tagen danach und danach montags, bis es ein neues Datum hat; „Alle auf morgen“ ohne App-Start,
+„Durchsehen“ und ein Tipp öffnen das Blatt „Neues Datum nötig“. **Morgens** zur Erinnerungszeit (`carry_JJJJ-MM-TT`) jeden
+Tag, solange etwas offen ist: „Lose Enden: N“ (N wie die Ansicht), darunter „N brauchen ein neues Datum.“ oder „Am längsten
+offen: …“; „Anzeigen“ und ein Tipp öffnen „Lose Enden“. Geplant werden acht Tage im Voraus; die Einzelerinnerungen nehmen
+höchstens 28 der 64 Plätze, die iOS hält (`DueReminders.maxPlanned`), damit beide und die Orte immer Platz haben.
 
 ## Veredelungs-Pipeline
 

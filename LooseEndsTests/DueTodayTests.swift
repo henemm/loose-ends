@@ -3,8 +3,9 @@ import SwiftData
 import Testing
 @testable import LooseEnds
 
-/// The start screen's "Due today" and the app badge (#299): today and overdue, not the whole week;
-/// a task in "Next up" and due today stands in both lists but counts once.
+/// The start screen's "Due today" and the app badge (#299): today, not the whole week; a task in
+/// "Next up" and due today stands in both lists but counts once. What is left from earlier days
+/// counts only once it has a new date (#518).
 @Suite("Due today and the app badge") struct DueTodayTests {
     static var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
@@ -20,7 +21,7 @@ import Testing
         return calendar.date(byAdding: DateComponents(day: offset, hour: hour), to: start)!
     }
 
-    @Test("Overdue and today count, tomorrow and later do not; done tasks and subtasks stay out")
+    @Test("Today counts; earlier needs a new date first, tomorrow and later do not; done tasks and subtasks stay out")
     @MainActor func todayAndOverdue() async throws {
         let store = try TestStore()
         let overdue = TaskItem(rawText: "Rechnung bezahlen")
@@ -45,7 +46,10 @@ import Testing
         all.forEach(store.context.insert)
 
         let due = ViewRules.dueToday(in: all, now: Self.now, calendar: Self.calendar)
-        #expect(due.map(\.id) == [overdue.id, tonight.id], "earliest first")
+        #expect(due.map(\.id) == [tonight.id])
+        #expect(ViewRules.leftovers(in: all, now: Self.now, calendar: Self.calendar).map(\.id) == [overdue.id])
+        #expect(ViewRules.tasks(for: .due, in: all, now: Self.now, calendar: Self.calendar).contains { $0.id == overdue.id },
+                "the Due view keeps what is left from earlier")
         #expect(!ViewRules.tasks(for: .due, in: all, now: Self.now, calendar: Self.calendar).contains { $0.id == tomorrow.id },
                 "the Due view does not look ahead")
     }
@@ -69,8 +73,11 @@ import Testing
         let all = [lined, both, dueOnly, later]
         all.forEach(store.context.insert)
 
-        #expect(ViewRules.dueToday(in: all, now: Self.now, calendar: Self.calendar).map(\.id) == [dueOnly.id, both.id],
+        #expect(ViewRules.dueToday(in: all, now: Self.now, calendar: Self.calendar).map(\.id) == [both.id],
                 "a task in Next up and due today stands in both lists")
+        #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 2,
+                "the one from yesterday counts only once it has a new date (#518)")
+        TaskActions.move(dueOnly, to: .date(Self.now), contexts: [], projects: [], now: Self.now, calendar: Self.calendar)
         #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 3)
         #expect(ViewRules.badgeCount(in: [], now: Self.now, calendar: Self.calendar) == 0)
     }

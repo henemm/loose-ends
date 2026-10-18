@@ -163,11 +163,15 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
             let stale = await scheduler.pendingIdentifiers()
                 .filter { $0.hasPrefix(DueReminders.identifierPrefix) || $0.hasPrefix(CarryReminders.identifierPrefix) }
             scheduler.remove(stale)
-            for reminder in reminders {
-                try await scheduler.add(Self.request(for: reminder))
-            }
-            for reminder in carried {
-                try await scheduler.add(Self.request(for: reminder))
+            // The bundled ones first, and one failing request does not cost the rest (#518): the
+            // morning notification stayed away while a single reminder before it failed.
+            let requests = carried.map { Self.request(for: $0) } + reminders.map { Self.request(for: $0) }
+            for request in requests {
+                do {
+                    try await scheduler.add(request)
+                } catch {
+                    Self.logger.error("Scheduling \(request.identifier, privacy: .public) failed: \(error, privacy: .public)")
+                }
             }
             await updateBadge(for: tasks, with: scheduler)
         } catch {
@@ -201,18 +205,20 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         return UNNotificationRequest(identifier: reminder.identifier, content: content, trigger: trigger)
     }
 
-    /// The morning after or the evening of the day (#414): one notification for every task still open.
+    /// Morning: "Loose ends: N", with what needs a new date or the longest open (#518). Evening: "Needs a
+    /// new date: N" with the titles.
     private static func request(for reminder: CarryReminders.Reminder) -> UNNotificationRequest {
         let content = UNMutableNotificationContent()
         switch reminder.kind {
         case .morning:
-            content.title = String(localized: "Still open: \(reminder.taskIDs.count)")
+            content.title = String(localized: "Loose ends: \(reminder.openCount)")
+            content.body = morningBody(reminder)
             content.categoryIdentifier = CarryReminders.categoryIdentifier
         case .evening:
-            content.title = String(localized: "Loose ends from today: \(reminder.taskIDs.count)")
+            content.title = String(localized: "Needs a new date: \(reminder.taskIDs.count)")
+            content.body = ListFormatter.localizedString(byJoining: reminder.titles)
             content.categoryIdentifier = CarryReminders.eveningCategoryIdentifier
         }
-        content.body = ListFormatter.localizedString(byJoining: reminder.titles)
         content.sound = .default
         content.userInfo = ["taskIDs": reminder.taskIDs.map(\.uuidString)]
         let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: reminder.fireDate)
@@ -220,12 +226,21 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         return UNNotificationRequest(identifier: reminder.identifier, content: content, trigger: trigger)
     }
 
-    /// "Today again" stays in the notification; "Show" opens the app on its start screen.
+    private static func morningBody(_ reminder: CarryReminders.Reminder) -> String {
+        switch reminder.taskIDs.count {
+        case 0 where !reminder.longestOpen.isEmpty:
+            String(localized: "Longest open: \(ListFormatter.localizedString(byJoining: reminder.longestOpen))")
+        case 0: ""
+        case 1: String(localized: "One needs a new date.")
+        default: String(localized: "\(reminder.taskIDs.count) need a new date.")
+        }
+    }
+
+    /// "Show" opens "Loose ends"; a tap on the notification does the same.
     private static var carryCategory: UNNotificationCategory {
         UNNotificationCategory(
             identifier: CarryReminders.categoryIdentifier,
             actions: [
-                UNNotificationAction(identifier: CarryReminders.Action.today.rawValue, title: String(localized: "Today again"), options: []),
                 UNNotificationAction(identifier: CarryReminders.Action.show.rawValue, title: String(localized: "Show"), options: [.foreground]),
             ],
             intentIdentifiers: [],
@@ -260,12 +275,15 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         let actionRaw = response.actionIdentifier
         let taskID = response.notification.request.content.userInfo["taskID"] as? String
         let taskIDs = response.notification.request.content.userInfo["taskIDs"] as? [String] ?? []
-        // A tap on the evening notification itself opens the look-over too.
-        let tappedEvening = actionRaw == UNNotificationDefaultActionIdentifier
-            && response.notification.request.content.categoryIdentifier == CarryReminders.eveningCategoryIdentifier
+        // A tap on the evening notification itself opens the look-over too, on the morning one "Loose ends" (#518).
+        let category = response.notification.request.content.categoryIdentifier
+        let tapped = actionRaw == UNNotificationDefaultActionIdentifier
+        let tappedCarry: CarryReminders.Action? = !tapped ? nil
+            : category == CarryReminders.eveningCategoryIdentifier ? .review
+            : category == CarryReminders.categoryIdentifier ? .show : nil
         let isPlace = identifier.hasPrefix(PlaceReminders.identifierPrefix)
         Task { @MainActor in
-            if !isPlace, let carry = tappedEvening ? CarryReminders.Action.review : CarryReminders.Action(rawValue: actionRaw) {
+            if !isPlace, let carry = tappedCarry ?? CarryReminders.Action(rawValue: actionRaw) {
                 await applyCarry(carry, taskIDs: taskIDs)
             } else {
                 await respond(identifier: identifier, actionRaw: actionRaw, taskID: taskID)
@@ -354,13 +372,19 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
 }
 
 extension DueNotificationCenter {
-    /// "Today again" or "All to tomorrow" from a carry notification (#414); "Show" only brings the
-    /// app forward, "Look over" opens the look-over sheet on these tasks.
+    /// "All to tomorrow" from the evening notification (#414); "Show" in the morning opens "Loose ends",
+    /// where what needs a new date stands on top (#518); "Look over" opens the sheet on these tasks.
     func applyCarry(_ action: CarryReminders.Action, taskIDs: [String]) async {
         let ids = taskIDs.compactMap(UUID.init(uuidString:))
-        if action == .review {
+        switch action {
+        case .review:
             CarryReviewRequest.shared.taskIDs = ids
             return
+        case .show:
+            OpenViewRequest.shared.view = .open
+            return
+        case .today, .tomorrow:
+            break
         }
         let context = container.mainContext
         do {

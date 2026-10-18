@@ -11,9 +11,17 @@ final class CarryReviewRequest {
     var taskIDs: [UUID] = []
 }
 
-/// "Look over" in the evening (#414 Schnitt 3): today's tasks still open, each decided in one move.
+/// Bridge from the morning notification's "Show" to the app scene (#518): opens a view, "Loose ends".
+@MainActor
+@Observable
+final class OpenViewRequest {
+    static let shared = OpenViewRequest()
+    var view: ViewKind?
+}
+
+/// "Look over" in the evening (#414 Schnitt 3, #518): what needs a new date, each decided in one move.
 /// Swipe right completes, swipe left moves to tomorrow; the menu also offers the weekend, next week
-/// and parking. A task decided leaves the list; whatever is left is carried along grey.
+/// and parking. A task decided leaves the list; what is left comes back in the next evenings.
 struct CarryReviewSheet: View {
     let taskIDs: [UUID]
     let tasks: [TaskItem]
@@ -59,11 +67,11 @@ struct CarryReviewSheet: View {
             }
             .overlay {
                 if open.isEmpty {
-                    Text("Nothing left from today.")
+                    Text("Every one has a new date.")
                         .foregroundStyle(.secondary)
                 }
             }
-            .navigationTitle("Still open from today")
+            .navigationTitle("Needs a new date")
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done", action: onClose)

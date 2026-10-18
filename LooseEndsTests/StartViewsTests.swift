@@ -121,12 +121,12 @@ import Testing
         #expect(!ViewRules.startViews(in: all).contains(.open), "All open sits apart above Done")
     }
 
-    @Test("All open is called „Alle offenen“ in German, shows a circle and says „Nichts mehr offen.“ when empty")
+    @Test("All open is called „Lose Enden“ in German (#518), shows a circle and says „Nichts mehr offen.“ when empty")
     func openViewTitleAndSymbol() throws {
         #expect(ViewKind.open.symbol == "circle")
         let path = try #require(Bundle.main.path(forResource: "de", ofType: "lproj"))
         let german = try #require(Bundle(path: path))
-        #expect(german.localizedString(forKey: "All open", value: nil, table: nil) == "Alle offenen")
+        #expect(german.localizedString(forKey: "All open", value: nil, table: nil) == "Lose Enden")
         #expect(german.localizedString(forKey: "Nothing left open.", value: nil, table: nil) == "Nichts mehr offen.")
     }
 
