@@ -1,0 +1,33 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/DetailLayoutTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mCopy[0m arm64-apple-watchos-simulator.abi.json -> LooseEndsWatchWidgets.abi.json
+[[36mLooseEndsWatchWidgets[0m] [1mCopy[0m x86_64-apple-watchos-simulator.abi.json -> LooseEndsWatchWidgets.abi.json
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/LooseEndsTests/DetailLayoutTests.swift:51:37: [31mtype 'DetailLayout' has no member 'titleSize'[0m
+49 | 
+[36m50 |     func testTitleIsLargerOnWide() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/LooseEndsTests/DetailLayoutTests.swift:52:37: [31mtype 'DetailLayout' has no member 'titleSize'[0m
+50 |     func testTitleIsLargerOnWide() {
+[36m51 |         XCTAssertEqual(DetailLayout.titleSize(wide: true), 30)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/LooseEndsTests/DetailLayoutTests.swift:56:37: [31mtype 'DetailLayout' has no member 'columnWidth'[0m
+54 | 
+[36m55 |     func testColumnIsAtMost760() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/ui-aesthetik/LooseEndsTests/DetailLayoutTests.swift:60:37: [31mtype 'DetailLayout' has no member 'titleSize'[0m
+58 | 
+[36m59 |     func testCompactTitleSizeIsUnchanged() {[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m DetailLayoutTests.swift
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-default/Logs/Test/Test-LooseEnds-2026.10.18_07-43-49-+0200.xcresult

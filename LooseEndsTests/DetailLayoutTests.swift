@@ -44,4 +44,19 @@ final class DetailLayoutTests: XCTestCase {
         XCTAssertEqual(result.text, "Rasen mähen")
         XCTAssertFalse(result.ended)
     }
+
+    // MARK: Breites Register (#477 Schnitt 2)
+
+    func testTitleIsLargerOnWide() {
+        XCTAssertEqual(DetailLayout.titleSize(wide: true), 30)
+        XCTAssertEqual(DetailLayout.titleSize(wide: false), 23)
+    }
+
+    func testColumnIsAtMost760() {
+        XCTAssertEqual(DetailLayout.columnWidth, 760)
+    }
+
+    func testCompactTitleSizeIsUnchanged() {
+        XCTAssertEqual(DetailLayout.titleSize(wide: false), 23, "iPhone darf nicht wandern")
+    }
 }
