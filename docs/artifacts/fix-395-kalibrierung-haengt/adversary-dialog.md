@@ -111,6 +111,12 @@ Confirmation:
   Evidence: Staged plus origin/main...HEAD ergibt exakt die acht Spec-Dateien (u. a. Measurement/SelfConsistency.swift:65, docs/reference/funktionsuebersicht.md:19) plus Protokolle/Spec/Context/Briefing; kein Geräte-Pfad, keine Info.plist, kein project.yml, kein Shared/ oder LooseEnds/.
   Status: CONFIRMED
 
+Confirmation:
+  AC: AC-9
+  Code reference: Measurement/SelfConsistency.swift:65
+  Evidence: Einzige Änderung ist die Kommentarzeile (Runde 2): „the removed calibration suite (#395)“ statt des Suitennamens; kein Code, kein Geräte-Pfad. In /60-validate am Diff origin/main...HEAD erneut gesehen.
+  Status: CONFIRMED
+
 ## Verdict
 
 ═══════════════════════════════════════
@@ -135,6 +141,27 @@ Checklist: 9/9 points proven (4 Runden)
 - base: e59468c2f6d12f317a4f76b1a9ccd784e8c828bc
 - blob:60b7187b9668eb95ec77edf8bb889e280fbf8421  LooseEndsTests/MeasurementFieldScopeTests.swift
 - blob:31919f715364c7fbabaa2deea0af74f8c3fc984c  LooseEndsTests/SelfConsistencyReportTests.swift
+- blob:1cf0e835a30411a8e3affa6891f6e1520ee0ccdd  docs/project/02-datenmodell-und-ansichten.md
+- blob:5df20a285f08e9749c8f261a8e6f4fdec3186e7c  docs/reference/focusblox-calibration-report.md
+- blob:1d67632ca5c22e5093808834b49f71afc9dbf84b  scripts/measurement_status.py
+- blob:618ad38fad6f312eeb6fe49da1a0c5cc8666b94e  scripts/test_measurement_status.py
+
+## Geprüfte Dateien
+
+- sha256:6c22e2ff54d91059597133d815d9de8d5ac0a07615c7e4415e674fc6447bbc0e  LooseEndsTests/MeasurementFieldScopeTests.swift
+- sha256:aea0a462b74f4d890a5ecf9e02cb2ff9b160c9ddea614a0278f9b9e76837e60f  LooseEndsTests/SelfConsistencyReportTests.swift
+- sha256:1589d85beffadce4bb158daca2c197f84b345ee93bf7b48dd007695605ddefc0  Measurement/SelfConsistency.swift
+- sha256:b8db33709801714bc14e299f1312e53c888692c2609f4f366f5454a732041635  docs/project/02-datenmodell-und-ansichten.md
+- sha256:a9bf0f28624de000889184a7c13b843aea72b0ff7ce4cf279eff2ee445429ccd  docs/reference/focusblox-calibration-report.md
+- sha256:73feb7671a6f456e39cb772e4aa41ecdff2332b3889cd9f3c013ae80057a56b1  scripts/measurement_status.py
+- sha256:7a9c78631fa539cc9f4e4c346fe02cc6462e4ce9fad5defabc510445e9a21a41  scripts/test_measurement_status.py
+
+## Prüfbasis
+
+- base: e59468c2f6d12f317a4f76b1a9ccd784e8c828bc
+- blob:60b7187b9668eb95ec77edf8bb889e280fbf8421  LooseEndsTests/MeasurementFieldScopeTests.swift
+- blob:31919f715364c7fbabaa2deea0af74f8c3fc984c  LooseEndsTests/SelfConsistencyReportTests.swift
+- blob:eb3bc0f658369c253c48bf3e9f606b01cd5861a5  Measurement/SelfConsistency.swift
 - blob:1cf0e835a30411a8e3affa6891f6e1520ee0ccdd  docs/project/02-datenmodell-und-ansichten.md
 - blob:5df20a285f08e9749c8f261a8e6f4fdec3186e7c  docs/reference/focusblox-calibration-report.md
 - blob:1d67632ca5c22e5093808834b49f71afc9dbf84b  scripts/measurement_status.py
