@@ -9,12 +9,22 @@ enum TaskActions {
         case date(Date)
     }
 
-    /// Done. A repeating task does not end: it records the completion and rolls forward (ADR-7).
+    /// Done. A repeating task does not end: it records the completion and rolls forward (ADR-7). The
+    /// next round counts from the series' anchor (#552), not from a due date moved for one round, and
+    /// lands on the first round after now, so a round moved past its successor does not roll back.
     static func complete(_ task: TaskItem, now: Date = Date(), calendar: Calendar = .current) {
-        if let rule = task.repeatRule {
+        if var rule = task.repeatRule {
             let record = CompletionRecord(task: task, completedAt: now, dueDateAtCompletion: task.dueDate)
             task.completions = (task.completions ?? []) + [record]
-            task.dueDate = rule.nextDueDate(previousDue: task.dueDate, completedOn: now, calendar: calendar)
+            var next = rule.nextDueDate(previousDue: rule.anchor ?? task.dueDate, completedOn: now, calendar: calendar)
+            var rounds = 0
+            while next <= now, rounds < 1000 {
+                next = rule.nextDueDate(previousDue: next, completedOn: now, calendar: calendar)
+                rounds += 1
+            }
+            task.dueDate = next
+            rule.anchor = next
+            task.repeatRule = rule
             task.placeRemindedAt = nil   // the place is armed again for the next round (#226)
             return
         }
