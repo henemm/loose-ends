@@ -857,6 +857,66 @@ final class CaptureSmokeTests: XCTestCase {
     }
 
     /// #441: a sentence at the end of the detail sets the fields the rules read; the rest stays.
+    /// #544: the note takes typed text on the iPhone too, and keeps it. Leaving the field writes the
+    /// note; at rest it shows as text, and it is still there after the detail is closed and reopened.
+    @MainActor
+    func testNoteIsTypedAndSaved() throws {
+        let app = launch()
+        _ = captureAndOpenDetail("Paket abholen", in: app)
+
+        let note = element("noteField", in: app)
+        for _ in 0..<5 where !(note.exists && note.isHittable) { app.swipeUp() }
+        XCTAssertTrue(note.waitForExistence(timeout: 5), "The detail should offer the note field")
+        note.tap()
+        note.typeText("Abholcode 4711")
+        // Leaving the field writes the note: the title takes the focus.
+        let title = element("detailTitleField", in: app)
+        for _ in 0..<5 where !(title.exists && title.isHittable) { app.swipeDown() }
+        title.tap()
+        let text = element("noteText", in: app)
+        XCTAssertTrue(text.waitForExistence(timeout: 5), "At rest the note shows as text")
+        XCTAssertTrue(text.label.contains("4711"), "Note was \(text.label)")
+        attachScreenshot(app, "544-notiz-gespeichert")
+
+        let back = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(back.waitForExistence(timeout: 5), "No back button")
+        back.tap()
+        let row = taskRow(in: app)
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "The task should still be in New")
+        row.tap()
+        let again = element("noteText", in: app)
+        for _ in 0..<5 where !again.exists { app.swipeUp() }
+        XCTAssertTrue(again.waitForExistence(timeout: 5), "Reopened, the detail should show the note")
+        XCTAssertTrue(again.label.contains("4711"), "Saved note was \(again.label)")
+    }
+
+    /// #544: "File" opens the document picker and "Photo" the photo picker. Both are system sheets
+    /// with a Cancel button the detail itself never has; Cancel closes them again.
+    @MainActor
+    func testFileAndPhotoButtonsOpenTheirPickers() throws {
+        let app = launch()
+        _ = captureAndOpenDetail("Vertrag ablegen", in: app)
+
+        let file = element("addFileButton", in: app)
+        for _ in 0..<5 where !(file.exists && file.isHittable) { app.swipeUp() }
+        XCTAssertTrue(file.waitForExistence(timeout: 5), "The detail should offer File")
+        let cancel = app.buttons["Cancel"].firstMatch
+        XCTAssertFalse(cancel.exists, "Nothing to cancel before the tap")
+        file.tap()
+        XCTAssertTrue(cancel.waitForExistence(timeout: 20), "File should open the document picker")
+        attachScreenshot(app, "544-datei-auswahl")
+        cancel.tap()
+        XCTAssertTrue(cancel.waitForNonExistence(timeout: 10), "Cancel should close the document picker")
+
+        let photo = element("addPhotoButton", in: app)
+        XCTAssertTrue(photo.waitForExistence(timeout: 5), "The detail should offer Photo")
+        photo.tap()
+        XCTAssertTrue(cancel.waitForExistence(timeout: 20), "Photo should open the photo picker")
+        attachScreenshot(app, "544-foto-auswahl")
+        cancel.tap()
+        XCTAssertTrue(cancel.waitForNonExistence(timeout: 10), "Cancel should close the photo picker")
+    }
+
     @MainActor
     func testSupplementSetsDurationAndKeepsRest() throws {
         let app = launch()

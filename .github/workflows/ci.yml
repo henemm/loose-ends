@@ -331,7 +331,7 @@ jobs:
         run: |
           sudo automationmodetool enable-automationmode-without-authentication
           sudo DevToolsSecurity -enable || true
-      - name: Run Mac gallery
+      - name: Run Mac gallery and the detail click test (#544)
         run: |
           set -o pipefail
           xcodebuild test \
@@ -339,6 +339,7 @@ jobs:
             -scheme LooseEnds \
             -destination 'platform=macOS' \
             -only-testing:LooseEndsUITests/MacGalleryTests \
+            -only-testing:LooseEndsUITests/MacDetailClickTests \
             -parallel-testing-enabled NO \
             -resultBundlePath MacGallery.xcresult \
             CODE_SIGN_IDENTITY=- \
