@@ -5,6 +5,10 @@ import SwiftUI
 /// Sheets keep the system background. On iPad and Mac the sidebar style stays; only the ground changes.
 enum Paper {
     static let ground = Color("Paper")
+    /// Rows of the detail in a wide window and on the Mac (#477): 20 pt beside, a little air above and below.
+    static let wideRowInsets = EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20)
+    /// The review note's row there: its tint spans the lines' 20 pt, its text sits 12 pt inside the tint.
+    static let wideNoteInsets = EdgeInsets(top: 10, leading: 32, bottom: 10, trailing: 32)
 }
 
 extension View {

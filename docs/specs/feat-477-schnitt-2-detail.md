@@ -212,3 +212,9 @@ nach dem Merge, kein Abnahmekriterium dieser Spec. Es ändert sich kein Modell, 
 ## Changelog
 
 - 2026-10-18: Teil-Spec Schnitt 2 (Detail) aus der Analyse `docs/context/feat-477-schnitt-2-detail.md` geschrieben.
+- 2026-10-18: Beleg-Entscheidung von Henning (Auswahl „iPad-Bild als Beleg“) nach den Mac-Galeriebildern des PR-Laufs: Das
+  Galeriefenster ist 900 pt breit (Detailbereich etwa 650 pt) und die Galerie-Aufgabe hat keinen gesagten Satz. Deshalb
+  werden die Spalte von höchstens 760 pt mittig (Teil von AC-4) und der Kopf „SAID“ mit dem gesagten Satz (Teil von AC-3) am
+  iPad-Querformat-Bild `ipad-landscape-detail.png` belegt, nicht am Mac-Bild; Mac und breites iPad nehmen denselben Code. Am
+  Mac-Bild bleiben belegt: Papier mit Haarlinien ohne Karten (AC-2), Titel New York groß ohne „Title“, Köpfe in
+  Großbuchstaben (AC-3), Papier bis zum Rand ohne Streifen (AC-4). Wortlaut der Abnahmekriterien unverändert.

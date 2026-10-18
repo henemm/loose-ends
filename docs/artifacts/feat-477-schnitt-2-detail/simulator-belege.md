@@ -78,3 +78,33 @@ unterhalb der Statusleiste einzige Abweichung ein 9 px breiter Streifen am recht
 Scroll-Indikator — wie nach Schritt 1.
 
 AC-7 (Bildteil): **erfüllt** — das iPhone-Detail ist vorher und nach Schritt 2 pixelgleich.
+
+## Politur (2026-10-18, Sitzung `le477-pol`)
+
+Zwei Mängel nur auf breit, gefunden vom Adversary: eine Haarlinie über dem Titel und auf dem Mac nur ~8 pt Einzug
+mit flachen Zeilen. Änderung: auf breit bekommen alle Zeilen `Paper.wideRowInsets` (20 pt links/rechts, 10 pt
+oben/unten), die Titelzeile blendet ihren oberen Trenner aus, der Hinweis „Not sorted yet“ malt seine Fläche um
+20 pt eingerückt (so breit wie die Haarlinien) und setzt seinen Text 12 pt in die Fläche (`Paper.wideNoteInsets`).
+Kompakt: `nil`-Einzüge und `.automatic`-Trenner, also die Voreinstellung der Form. Derselbe Wegwerf-Test wie oben,
+danach wieder entfernt.
+
+**`ipad-landscape-detail.png` (neu, überschreibt Schritt 2).** Über dem Titel **keine Linie mehr** (Pixelprüfung:
+zwischen Leiste und Titel keine waagrechte Linie über 1000 px). Titel, „SAID“, Feldzeilen und Abschnittsköpfe stehen
+wie vorher bei x ≈ 710 (von 2000), also ~20 pt vom Spaltenrand; die Zeilen haben etwas mehr Luft. Der Hinweis „Not
+sorted yet“ ist eine blassgrüne Fläche **genau so breit wie die Haarlinien**: gemessen im Original beide von px 976
+bis 2415; sein Text steht 12 pt innerhalb der Fläche. Alles übrige (Wortleiste, NOTE, ATTACHMENTS, „Show in calendar“
+mit Schalter, PLACE, SUBTASKS) unverändert auf Papier mit Haarlinien.
+
+**`iphone-detail-nachher.png` (neu).** Wie zuvor beschrieben: Titel dreizeilig in New York, Haarlinie, „SAID“,
+Hinweis als abgerundete Karte, Due / Importance / Tags, Wortleiste, NOTE, ATTACHMENTS. Pixelvergleich gegen
+`iphone-detail-vorher.png` (PIL `ImageChops.difference`): einzige Abweichung die Uhrzeit (bbox x 154–292,
+y 77–117); **ab y 150 bbox `None`, pixelgleich**.
+
+Mac: nicht lokal belegbar (Mac-Bilder nur aus der CI-Galerie `MacGallery`); dieselben Einzüge greifen dort über
+`isWide` (auf dem Mac immer wahr).
+
+Tests: `sim-unit` 823, davon 820 bestanden, 3 übersprungen (`SelfConsistencyReportTests/writesReport` – fehlt
+`selfconsistency-run.json`; `SpeechLatencyTests/firstWordArrivesWithinThreeSecondsOfSpeechStart` und
+`SpeechLatencyTests/finalTextContainsKeyWords` – Latenzschutz #274, läuft im Simulator nie), 0 fehlgeschlagen
+(`test-green-output-politur.txt`). UI auf iPhone 17: `RecognitionWalkthroughTests` 1/1, `StartScreenInteractionTests`
+16/16 grün.

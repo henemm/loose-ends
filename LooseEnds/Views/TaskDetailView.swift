@@ -101,6 +101,8 @@ struct TaskDetailView: View {
                         .accessibilityLabel(task.rawText)
                         .accessibilityIdentifier("detailRawTextMarker")
                 }
+                // No hairline above the title in the wide list (#477); the form shows none anyway.
+                .listRowSeparator(isWide ? .hidden : .automatic, edges: .top)
                 if DetailLayout.showsRawText(task.rawText, title: task.title) {
                     // The raw text as a quote: what was said, in the words it was said (#180). One
                     // running sentence behind a small head, so a second line starts at the edge (#438).
@@ -122,7 +124,9 @@ struct TaskDetailView: View {
                 Section {
                     ReviewNote(task: task, automaticFields: aiFields.count)
                 }
-                .listRowBackground(Color.accentColor.opacity(0.08))
+                // Wide: the tint no wider than the hairlines (#477).
+                .listRowBackground(Color.accentColor.opacity(0.08).padding(.horizontal, isWide ? 20 : 0))
+                .listRowInsets(isWide ? Paper.wideNoteInsets : nil)
             }
 
             if let reanalysis {
@@ -278,15 +282,18 @@ struct TaskDetailView: View {
     @ViewBuilder
     private var container: some View {
         if isWide {
-            List { sections }
-                .listStyle(.plain)
-                #if os(macOS)
-                // Outside a form the Mac draws a bezel around text fields and a checkbox for a toggle.
-                .textFieldStyle(.plain)
-                .toggleStyle(.switch)
-                #endif
-                .paperGround()
-                .detailColumn(wide: true)
+            List {
+                sections
+                    .listRowInsets(Paper.wideRowInsets)
+            }
+            .listStyle(.plain)
+            #if os(macOS)
+            // Outside a form the Mac draws a bezel around text fields and a checkbox for a toggle.
+            .textFieldStyle(.plain)
+            .toggleStyle(.switch)
+            #endif
+            .paperGround()
+            .detailColumn(wide: true)
         } else {
             Form { sections }
                 .formStyle(.grouped)
