@@ -75,7 +75,8 @@ struct RealModelTests {
             lines.append("\(fromNote ? "ok " : "NO ") \(note) → \(title)")
         }
         let rate = Double(kept) / Double(RealModel.notes.count)
-        #expect(rate >= 0.8, "\(kept)/\(RealModel.notes.count) titles from the note:\n" + lines.joined(separator: "\n"))
+        let report = lines.joined(separator: "\n")
+        #expect(rate >= 0.8, "\(kept)/\(RealModel.notes.count) titles from the note:\n\(report)")
     }
 }
 #endif
