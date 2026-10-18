@@ -7,6 +7,10 @@
     "Cancel" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Abbrechen" } } } },
     "Done" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Fertig" } } } },
     "OK" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "OK" } } } },
-    "Could not save" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Konnte nicht sichern" } } } }
+    "Could not save" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Konnte nicht sichern" } } } },
+    "Attachments" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Anhänge" } } } },
+    "Photo" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Foto" } } } },
+    "Too large (max. 50 MB) – not attached" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Zu groß (max. 50 MB) – nicht angehängt" } } } },
+    "More than 10 – not attached" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Mehr als 10 – nicht angehängt" } } } }
   }
 }
