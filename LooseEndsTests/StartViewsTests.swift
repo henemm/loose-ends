@@ -81,7 +81,7 @@ import Testing
         #expect(!ids.contains(milk.id))
     }
 
-    @Test("All open puts urgent first, then important, then the older one; parked tasks sort along")
+    @Test("All open puts urgent first, then important, then the older one; a parked task closes the list (#545)")
     @MainActor func openViewSortsUrgentFirst() async throws {
         let store = try TestStore()
         let base = Date(timeIntervalSince1970: 1_800_000_000)
@@ -106,7 +106,7 @@ import Testing
 
         let order = ViewRules.tasks(for: .open, in: all).map(\.id)
 
-        #expect(order == [parkedHighImportant, highEarlier, highLater, medium, low, none].map(\.id))
+        #expect(order == [highEarlier, highLater, medium, low, none, parkedHighImportant].map(\.id))
     }
 
     @Test("All open is empty without tasks and never one of the upper start rows")

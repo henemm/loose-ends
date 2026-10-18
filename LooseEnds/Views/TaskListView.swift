@@ -213,21 +213,35 @@ struct TaskListView: View {
     }
 
     /// "Due" and "Loose ends" (#518): what was due before today stands on top until it has a new date;
-    /// swiping left opens the date. The rest follows as before.
+    /// swiping left opens the date. The rest follows in the view's order. In "Loose ends" the parked
+    /// tasks close the list as their own block under a grey head (#545): visible, but apart, and no
+    /// colour of its own (grey is hierarchy).
     @ViewBuilder
     private var newDateSections: some View {
         let left = Set(ViewRules.leftovers(in: tasks).map(\.id))
         let needsDate = shown.filter { left.contains($0.id) }
-        if needsDate.isEmpty {
+        let parked = kind == .open ? shown.filter { $0.status == .parked } : []
+        let rest = shown.filter { !left.contains($0.id) && $0.status != .parked }
+        if needsDate.isEmpty, parked.isEmpty {
             openRows
         } else {
-            Section {
-                ForEach(needsDate) { row($0) }
-            } header: {
-                Text("Needs a new date")
+            if !needsDate.isEmpty {
+                Section {
+                    ForEach(needsDate) { row($0) }
+                } header: {
+                    Text("Needs a new date")
+                }
             }
             Section {
-                ForEach(shown.filter { !left.contains($0.id) }) { row($0) }
+                ForEach(rest) { row($0) }
+            }
+            if !parked.isEmpty {
+                Section {
+                    ForEach(parked) { row($0) }
+                } header: {
+                    head(Text("Parked"))
+                        .accessibilityIdentifier("parkedHead")
+                }
             }
         }
     }
