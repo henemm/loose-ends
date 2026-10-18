@@ -285,5 +285,27 @@ import Testing
         #expect(!TitleRule.isFromNote("Einkaufen gehen", rawText: "Ein Brief an Oma"))
         #expect(TitleRule.isFromNote("Tee", rawText: "Kaffee"), "no content word, nothing to check")
     }
-}
 
+    // MARK: A date the note does not name (#507)
+
+    @Test("A model title with the capture day in it is not written")
+    @MainActor func dateInModelTitleIsDropped() throws {
+        let store = try TestStore()
+        let task = try CaptureService.save("Erinnere mich daran, dass ich Blumen gießen muss", via: .app, in: store.context)
+        let ruleTitle = try #require(task.title)
+        modelTitle("Blumen 17. Oktober, gießen", on: task)
+        #expect(task.title == ruleTitle)
+        #expect(!(task.revisions ?? []).contains { $0.field == .title })
+    }
+
+    @Test("A month, a weekday or a number counts only when the note names it")
+    func addsDate() {
+        #expect(TitleRule.addsDate("Blumen 17. Oktober, gießen", rawText: "Blumen gießen muss"))
+        #expect(TitleRule.addsDate("Zahnarzt am Montag", rawText: "Zahnarzt anrufen"))
+        #expect(TitleRule.addsDate("Zahnarzt anrufen 12", rawText: "Zahnarzt anrufen"))
+        #expect(!TitleRule.addsDate("Zahnarzt am Montag", rawText: "Am Montag zum Zahnarzt"))
+        #expect(!TitleRule.addsDate("Rechnung 17 bezahlen", rawText: "Rechnung 17 bezahlen bis Freitag"))
+        #expect(!TitleRule.addsDate("Blumen gießen", rawText: "Blumen gießen muss"))
+        #expect(!TitleRule.addsDate("Mai-Fest planen", rawText: "Mai-Fest planen"), "a hyphenated word is one word")
+    }
+}

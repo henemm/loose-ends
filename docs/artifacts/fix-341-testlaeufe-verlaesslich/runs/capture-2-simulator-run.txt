@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-10-17T11:08:32+0200
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: fix-341-testlaeufe-verlaesslich
+head: 096c3474ee43257b85f3266e2b959f2e0df58683
+basis: d0e166b970d7d35a1088df2478ae385fc5397f37 (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Failed
+xcodebuild: ** TEST FAILED **
+tests: 19 gesamt, 18 bestanden, 1 fehlgeschlagen, 0 übersprungen
+start: 1792227415.483  ende: 1792228111.071
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/fix-341-testlaeufe-verlaesslich/simulator-run/summary.json  sha256:abce6d9141c1de29f7366252183f7a5b8e10918aaf16f1ea345987c7b9aed975
+xcresult: docs/artifacts/fix-341-testlaeufe-verlaesslich/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-341-testlaeufe-verlaesslich/simulator-run/*.png (10 Stück)
+
+## Geprüfte Dateien
+- sha256:f70522788126133af298cecbf3c744f10022eb3fac15f40327cc99e9ce58c304  LooseEndsUITests/CalendarTargetTests.swift

@@ -1,0 +1,83 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "F2F02754-C87F-4396-ACFA-6C54517D6C33.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "detail-first-stays_0_3E120387-FE46-4939-8EC8-C89FFD1DB2D7.png",
+        "timestamp" : 1792317183.28
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "01065F2D-C031-4005-A7A9-4A371565B06B.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "detail-default-stamped_0_F2982533-DFCC-4D87-BE6E-0AEFB003A312.png",
+        "timestamp" : 1792317170.076
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "A5F21D0A-DCDF-4151-8110-B269B785BC00.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "settings-default-chosen_0_E632D037-AEE4-4E86-A4E7-6C0037FA6501.png",
+        "timestamp" : 1792317132.048
+      }
+    ],
+    "testIdentifier" : "CalendarTargetTests/testDefaultCalendarIsStampedOnSwitchOn()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/CalendarTargetTests/testDefaultCalendarIsStampedOnSwitchOn"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "EB44C15D-CB7E-4F4F-8961-0051D69E94FA.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "settings-default-calendar_0_ACBC905D-819B-4C4A-B637-5C1E3F2F2AE7.png",
+        "timestamp" : 1792317214.803
+      }
+    ],
+    "testIdentifier" : "CalendarTargetTests/testSettingsShowDefaultCalendarRow()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/CalendarTargetTests/testSettingsShowDefaultCalendarRow"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "BB03CE5B-BCC6-408C-859F-BF9D3A70CDD7.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "detail-chosen-calendar_0_D23544D9-D2DE-4F26-9370-57E7FD7BD10E.png",
+        "timestamp" : 1792317261.977
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "A9572333-445C-4CBF-9123-90E4DD697282.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "calendar-picker_0_AAF2C2D6-210F-414A-ADD1-6CC372E2CCCF.png",
+        "timestamp" : 1792317258.708
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "D61F67E3-BF5C-428B-83CE-CAD96F32B8B4.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "detail-target-calendar_0_C87D8EBE-C884-442B-A59B-276C656246DD.png",
+        "timestamp" : 1792317256.528
+      }
+    ],
+    "testIdentifier" : "CalendarTargetTests/testSwitchOnShowsTargetCalendar()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/CalendarTargetTests/testSwitchOnShowsTargetCalendar"
+  }
+]

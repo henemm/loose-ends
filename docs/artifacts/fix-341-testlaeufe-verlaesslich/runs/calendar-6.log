@@ -1,0 +1,42 @@
+[1;33m[sim][0m Verwaiste Testsperre übernommen (pid=24795 start=1792316307 worktree=/Users/hem/Developer/loose-ends/.claude/worktrees/lovely-dancing-parnas command=test Wegwerf442ShareTests (442 Stufe 2) )
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/LooseEnds.xcodeproj
+[0;32m[sim][0m Projekt erzeugt.
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test mit Beleg: CalendarTargetTests → docs/artifacts/fix-341-testlaeufe-verlaesslich/simulator-run.txt
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-10-18 11:51:06.043.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-18 11:51:06.044.
+Test Suite 'CalendarTargetTests' started at 2026-10-18 11:51:06.044.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CalendarTargetTests testDefaultCalendarIsStampedOnSwitchOn] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =     9.66s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    10.71s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testDefaultCalendarIsStampedOnSwitchOn ([31m138.485[0m seconds)
+    [32m✔[0m testSettingsShowDefaultCalendarRow ([31m10.502[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.CalendarTargetTests testSwitchOnShowsTargetCalendar] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =     7.38s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =     8.41s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testSwitchOnShowsTargetCalendar ([31m47.215[0m seconds)
+Executed 3 tests, with 0 failures (0 unexpected) in 196.202 (196.207) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-18 11:54:22.254.
+Executed 3 tests, with 0 failures (0 unexpected) in 196.202 (196.210) seconds
+Executed 3 tests, with 0 failures (0 unexpected) in 196.202 (196.212) seconds
+[1mTest session results:[0m /Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/docs/artifacts/fix-341-testlaeufe-verlaesslich/simulator-run/run.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden, Beleg: docs/artifacts/fix-341-testlaeufe-verlaesslich/simulator-run.txt
