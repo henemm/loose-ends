@@ -102,6 +102,8 @@ struct LooseEndsApp: App {
         // The start page with its right column needs about 1120 pt (sidebar 220 + page 900, #473); without
         // a size the window opened at 900 x 450 and the column and the sidebar's names were cut (#514).
         .defaultSize(width: 1200, height: 780)
+        #endif
+        #if os(macOS)
         Settings {
             SettingsView(notifications: notifications)
                 .environment(calendar)
