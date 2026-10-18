@@ -71,9 +71,19 @@ struct FieldEditorView: View {
         case .urgency where task.urgency == .high: String(localized: "Shown in red in the margin.")
         case .contexts: String(localized: "Tap a word to add or remove it.")
         case .project: String(localized: "When its name is in your words, the app sets it by itself.")
-        case .dueDate: task.dueDate?.formatted(.dateTime.weekday(.wide).day().month(.wide))
+        case .dueDate: dueNote
         case .energy: String(localized: "Three steps to each side, the middle is neutral.")
         default: nil
+        }
+    }
+
+    /// The weekday of the date; past its day the question that brought the editor up (#518).
+    private var dueNote: String? {
+        switch ViewRules.dueState(of: task) {
+        case .carried(let days) where days == 1: String(localized: "Open since yesterday. When now?")
+        case .carried(let days): String(localized: "Open for \(days) days. When now?")
+        case .missed: String(localized: "The time has passed. When now?")
+        case .today, .later: task.dueDate?.formatted(.dateTime.weekday(.wide).day().month(.wide))
         }
     }
 

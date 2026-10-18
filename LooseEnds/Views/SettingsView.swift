@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// The settings (#311): the time of day a task without a due time is reminded, what happens to a task
-/// still open after its day (#414), whether this device mirrors
+/// The settings (#311): the time of day a task without a due time is reminded, the evening and morning
+/// notifications around the loose ends (#414, #518), whether this device mirrors
 /// with iCloud (#377), and where new calendar events on this device go (#203 Teil C2).
 /// The same view in the sheet behind the gear (iPhone, iPad) and in the Mac settings window (⌘,).
 struct SettingsView: View {
@@ -37,26 +37,25 @@ struct SettingsView: View {
                 Text("A task without a due time is reminded on its day at this time. A task with a due time is reminded at that time.")
             }
             Section {
-                Picker("Still open at day's end", selection: $carryMode) {
-                    Text("Remind in the morning").tag(CarryReminders.Mode.morning)
-                    Text("Look over in the evening").tag(CarryReminders.Mode.evening)
-                    Text("Carry along quietly").tag(CarryReminders.Mode.quiet)
-                }
-                .pickerStyle(.inline)
-                .labelsHidden()
-                .accessibilityIdentifier("carryModePicker")
-                if carryMode == .evening {
+                // Two notifications, each on its own (#518, Henning 2026-10-17).
+                Toggle("Evening: plan new dates", isOn: Binding(
+                    get: { carryMode.remindsEvening },
+                    set: { carryMode = CarryReminders.Mode(morning: carryMode.remindsMorning, evening: $0) }
+                ))
+                .accessibilityIdentifier("eveningToggle")
+                if carryMode.remindsEvening {
                     DatePicker("Evening time", selection: $eveningTime, displayedComponents: .hourAndMinute)
                         .accessibilityIdentifier("eveningTimePicker")
                 }
+                Toggle("Morning: look at loose ends", isOn: Binding(
+                    get: { carryMode.remindsMorning },
+                    set: { carryMode = CarryReminders.Mode(morning: $0, evening: carryMode.remindsEvening) }
+                ))
+                .accessibilityIdentifier("morningToggle")
             } header: {
-                Text("Still open at day's end")
+                Text("Loose ends")
             } footer: {
-                switch carryMode {
-                case .morning: Text("A task still open after its day comes back at the reminder time, on up to three mornings, all in one notification.")
-                case .evening: Text("At this time, what is still open from today comes in one notification: all to tomorrow, or look over each.")
-                case .quiet: Text("No notification. The task shows how long it has been carried along.")
-                }
+                Text("In the evening, what needs a new date comes in one notification. In the morning, at the reminder time, one notification invites you to look at your loose ends.")
             }
             syncSection
             calendarSection

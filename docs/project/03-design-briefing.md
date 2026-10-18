@@ -79,7 +79,7 @@ ruhigen Sätzen (Henning, 2026-10-16); Uhrzeiten heute gehen weiter vor.
 
 **Inhaltsverzeichnis (Henning, 2026-10-15, #421, ersetzt Chips und Raster aus #368):** Unter „Jetzt“ steht „Inhalt“ wie die erste
 Seite eines Notizbuchs: Ansichtsnamen in New York, Punktlinie, Zahl klein in SF, drei Gruppen mit Abstand statt Karten
-(Ansichten mit „Schnell“, dann Tags und Projekte, dann Alle offenen und Erledigt). Tags und Projekte mit Aufgaben folgen
+(Ansichten mit „Schnell“, dann Tags und Projekte, dann Lose Enden (früher „Alle offenen“, #518) und Erledigt). Tags und Projekte mit Aufgaben folgen
 ihrer Zeile als Wörter in Akzent, aufrecht mit grauen Kommas wie ein Satz (#433), ein Tipp öffnet die Liste; ein Tipp auf „Etiketten“ oder „Projekte“ öffnet deren
 eigene Seite (Henning, 2026-10-15, #428): alle Einträge im selben Stil, auch leere, ein Tipp öffnet die Liste, langes Drücken
 benennt um, Wischen löscht nach Rückfrage, unten „Neues Etikett“ bzw. „Neues Projekt“. Auf der Startseite klappt nichts mehr

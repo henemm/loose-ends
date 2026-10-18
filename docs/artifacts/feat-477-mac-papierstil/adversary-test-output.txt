@@ -1,0 +1,23 @@
+Adversary-Testlage #477 Schnitt 1 (keine lokalen Laeufe, nur vorhandene Belege und CI)
+Stand: 2026-10-17 20:20 UTC, PR #520, CI-Lauf 39062131247, Commit c1096d7
+
+== gh pr checks 520 ==
+Build (iOS Simulator)           pass     1m46s
+Mac Gallery (macOS)             pass     3m56s
+Unit Tests (macOS destination)  pass     4m23s
+UI Smoke (iOS Simulator)        pending  (laeuft seit 19:21 UTC, ueber 58 Min., kein Ergebnis)
+Artefakt DesignGallery des PR-Laufs: noch nicht vorhanden (entsteht erst im UI Smoke).
+Vergleichslauf main: 39028852918 (2ed1cca, success), Artefakt DesignGallery vorhanden.
+
+== Unit (lokaler Beleg test-green-output.txt, sim-unit) ==
+Executed 7 tests, with 0 failures (0 unexpected) in 0.040 seconds (XCTest-Teil)
+Swift Testing: 773 Haken, 0 Fehlschlaege; Suite "List summary" passed (11 Tests, alle gruen)
+Messstrecken: 1 von 5 uebersprungen (SelfConsistencyReportTests, fehlt selfconsistency-run.json), bekannt, unabhaengig.
+
+== iPad-Wegwerflauf ==
+F001 behoben: der veraltete Fehllauf (ipad-gallery-run.txt) ist entfernt; der gruene Lauf, aus dem die PNGs (21:05) stammen,
+liegt als ipad-run-green.txt: testDark und testLight passed, Executed 2 tests, with 0 failures (0 unexpected) in 77.214 seconds.
+
+== Nachtrag 20:40 UTC ==
+gh pr checks 520: Build pass, Mac Gallery pass, Unit Tests pass, UI Smoke pass (1h1m55s). Alle vier gruen.
+DesignGallery PR (39062131247) gegen main (39028852918): gallery-light/dark-3-list-new geoeffnet, iPhone-Liste unveraendert (nur Statusleistenuhr verschieden).

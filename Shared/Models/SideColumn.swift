@@ -29,7 +29,7 @@ enum SideColumn {
     }
 
     /// "Next days": five tiles from today with the number of open, unblocked top-level tasks due
-    /// that day. Today also counts what is overdue, as everywhere else (#299).
+    /// that day. What is left from earlier days needs a new date first and is not today's (#518).
     static func days(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [Day] {
         let today = calendar.startOfDay(for: now)
         let open = all.filter { $0.parent == nil && $0.isOpen && !$0.isBlocked }
@@ -38,7 +38,7 @@ enum SideColumn {
                   let end = calendar.date(byAdding: .day, value: 1, to: start) else { return nil }
             let count = open.filter { task in
                 guard let due = task.dueDate else { return false }
-                return offset == 0 ? due < end : (due >= start && due < end)
+                return due >= start && due < end
             }.count
             return Day(date: start, count: count, isToday: offset == 0)
         }

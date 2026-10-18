@@ -171,7 +171,7 @@ import UserNotifications
         return task
     }
 
-    @Test("Tasks still open from yesterday are handed over as one morning notification in the CARRY category (#414)")
+    @Test("The morning notification names the loose ends and what needs a new date, in the CARRY category (#518)")
     @MainActor func carriedMorningNotification() async throws {
         let fixture = try Fixture()
         let a = try carriedTask(fixture, "Steuerbescheid ablegen")
@@ -179,19 +179,21 @@ import UserNotifications
 
         await fixture.center.reschedule()
 
-        let carry = fixture.recorder.pending.filter { $0.key.hasPrefix(CarryReminders.identifierPrefix) }
-        let tomorrowMorning = try #require(carry.values.first { fixture.fireComponents(of: $0).day == fixture.calendar.component(.day, from: fixture.tomorrow) })
+        // Each day has a morning and an evening one now (#518): pick the morning one.
+        let mornings = fixture.recorder.pending.values.filter { $0.content.categoryIdentifier == CarryReminders.categoryIdentifier }
+        let tomorrowMorning = try #require(mornings.first { fixture.fireComponents(of: $0).day == fixture.calendar.component(.day, from: fixture.tomorrow) })
         #expect(tomorrowMorning.content.categoryIdentifier == CarryReminders.categoryIdentifier)
         #expect(Set(tomorrowMorning.content.userInfo["taskIDs"] as? [String] ?? []) == [a.id.uuidString, b.id.uuidString])
-        #expect(tomorrowMorning.content.title == String(localized: "Still open: \(2)"))
+        #expect(tomorrowMorning.content.title == String(localized: "Loose ends: \(2)"))
+        #expect(tomorrowMorning.content.body == String(localized: "\(2) need a new date."))
         #expect(fixture.fireComponents(of: tomorrowMorning).hour == 9)
     }
 
-    @Test("Carrying quietly hands over no morning notification, and the choice goes to iCloud")
+    @Test("Both switched off hands over no morning or evening notification, and the choice goes to iCloud")
     @MainActor func quietCarry() async throws {
         let fixture = try Fixture()
         _ = try carriedTask(fixture, "Steuerbescheid ablegen")
-        #expect(fixture.center.carryMode == .morning, "morning while nothing is set")
+        #expect(fixture.center.carryMode == .both, "evening and morning while nothing is set (#518)")
 
         fixture.center.carryMode = .quiet
         await fixture.center.reschedule()
@@ -219,12 +221,15 @@ import UserNotifications
 
         let today = fixture.calendar.startOfDay(for: Date())
         #expect(task.dueDate == today)
-        let carried = fixture.recorder.pending.filter { $0.key.hasPrefix(CarryReminders.identifierPrefix) }.values
-        #expect(carried.allSatisfy { fixture.fireComponents(of: $0).day != fixture.calendar.component(.day, from: today) },
-                "due today now: not carried this morning, only again from tomorrow if still open")
+        let thisMorning = fixture.recorder.pending.values.filter {
+            $0.content.categoryIdentifier == CarryReminders.categoryIdentifier
+                && fixture.fireComponents(of: $0).day == fixture.calendar.component(.day, from: today)
+        }
+        #expect(thisMorning.allSatisfy { !($0.content.userInfo["taskIDs"] as? [String] ?? []).contains(task.id.uuidString) },
+                "due today now: it does not need a new date this morning, only from tomorrow if still open")
     }
 
-    @Test("Evening mode hands over the day's open tasks at 20:00 in the CARRY_EVENING category")
+    @Test("The evening hands over what needs a new date at 20:00 in the CARRY_EVENING category")
     @MainActor func eveningNotification() async throws {
         let fixture = try Fixture()
         let task = try fixture.task("Steuerbescheid ablegen")
@@ -236,7 +241,7 @@ import UserNotifications
         let request = try #require(evening.first { fixture.fireComponents(of: $0).day == fixture.calendar.component(.day, from: fixture.tomorrow) })
         #expect(fixture.fireComponents(of: request).hour == 20)
         #expect(request.content.userInfo["taskIDs"] as? [String] == [task.id.uuidString])
-        #expect(request.content.title == String(localized: "Loose ends from today: \(1)"))
+        #expect(request.content.title == String(localized: "Needs a new date: \(1)"))
         #expect(fixture.cloud.carryModeRaw == "evening")
     }
 
@@ -269,6 +274,20 @@ import UserNotifications
         CarryReviewRequest.shared.taskIDs = []
     }
 
+    @Test("Show in the morning notification opens Loose ends and changes nothing (#518)")
+    @MainActor func showOpensLooseEnds() async throws {
+        let fixture = try Fixture()
+        let task = try carriedTask(fixture, "Steuerbescheid ablegen")
+        let due = task.dueDate
+        OpenViewRequest.shared.view = nil
+
+        await fixture.center.applyCarry(.show, taskIDs: [task.id.uuidString])
+
+        #expect(OpenViewRequest.shared.view == .open)
+        #expect(task.dueDate == due)
+        OpenViewRequest.shared.view = nil
+    }
+
     // MARK: - #240 Schnitt 2: one category set, routing by prefix, the place reconcile
 
     @Test("Activating sets the categories once: DUE with Tomorrow, PLACE without, and both carry categories (AC-1, #414)")
@@ -283,7 +302,7 @@ import UserNotifications
         #expect(actions == [
             DueReminders.categoryIdentifier: ["DUE_DONE", "DUE_NEXT", "DUE_TOMORROW"],
             PlaceNotifications.categoryIdentifier: ["DUE_DONE", "DUE_NEXT"],
-            CarryReminders.categoryIdentifier: ["CARRY_TODAY", "CARRY_SHOW"],
+            CarryReminders.categoryIdentifier: ["CARRY_SHOW"],
             CarryReminders.eveningCategoryIdentifier: ["CARRY_TOMORROW", "CARRY_REVIEW"],
         ])
     }
