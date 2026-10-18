@@ -63,8 +63,9 @@ struct TaskDetailView: View {
         #endif
     }
 
-    var body: some View {
-        Form {
+    /// The detail's sections, the same in the form and in the list (#477).
+    private var sections: some View {
+        Group {
             Section {
                 HStack(alignment: .firstTextBaseline) {
                     // Serif is the content, SF is the app (#180, rule 2). Wraps instead of cutting the
@@ -270,9 +271,32 @@ struct TaskDetailView: View {
             SupplementSection(task: task)
                 .detailRow()
         }
-        .formStyle(.grouped)
-        .paperGround()
-        .detailColumn(wide: isWide)
+    }
+
+    /// Compact: the grouped form as on the iPhone, unchanged. Wide and Mac (#477): a plain list, so the
+    /// sections are lines on paper with hairlines like the lists of Schnitt 1, not cards.
+    @ViewBuilder
+    private var container: some View {
+        if isWide {
+            List { sections }
+                .listStyle(.plain)
+                #if os(macOS)
+                // Outside a form the Mac draws a bezel around text fields and a checkbox for a toggle.
+                .textFieldStyle(.plain)
+                .toggleStyle(.switch)
+                #endif
+                .paperGround()
+                .detailColumn(wide: true)
+        } else {
+            Form { sections }
+                .formStyle(.grouped)
+                .paperGround()
+                .detailColumn(wide: false)
+        }
+    }
+
+    var body: some View {
+        container
         .navigationTitle("")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
