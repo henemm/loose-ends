@@ -96,7 +96,8 @@ struct ContentView: View {
             get: { !carryReviewRequest.taskIDs.isEmpty },
             set: { if !$0 { carryReviewRequest.taskIDs = [] } }
         )) {
-            CarryReviewSheet(taskIDs: carryReviewRequest.taskIDs, tasks: tasks) { carryReviewRequest.taskIDs = [] }
+            CarryReviewSheet(taskIDs: carryReviewRequest.taskIDs, tasks: tasks,
+                             reminderTime: notifications?.reminderTime ?? .standard) { carryReviewRequest.taskIDs = [] }
         }
         #if os(iOS)
         .fullScreenCover(isPresented: $showsOnboarding) { onboarding }

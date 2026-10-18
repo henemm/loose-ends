@@ -178,7 +178,8 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         do {
             let tasks = try container.mainContext.fetch(FetchDescriptor<TaskItem>())
             let reminders = DueReminders.plan(for: tasks, time: reminderTime)
-            let carried = CarryReminders.plan(for: tasks, mode: carryMode, time: morningTime, eveningTime: eveningTime)
+            let carried = CarryReminders.plan(for: tasks, mode: carryMode, time: morningTime, eveningTime: eveningTime,
+                                              reminderTime: reminderTime)
             let stale = await scheduler.pendingIdentifiers()
                 .filter { $0.hasPrefix(DueReminders.identifierPrefix) || $0.hasPrefix(CarryReminders.identifierPrefix) }
             scheduler.remove(stale)
@@ -410,7 +411,8 @@ extension DueNotificationCenter {
             let tasks = try context.fetch(FetchDescriptor<TaskItem>())
             let contexts = try context.fetch(FetchDescriptor<TaskContext>())
             let projects = try context.fetch(FetchDescriptor<Project>())
-            guard CarryReminders.handle(action, taskIDs: ids, in: tasks, contexts: contexts, projects: projects) > 0 else { return }
+            guard CarryReminders.handle(action, taskIDs: ids, in: tasks, contexts: contexts, projects: projects,
+                                        reminderTime: reminderTime) > 0 else { return }
             try context.save()
             await reschedule()
         } catch {

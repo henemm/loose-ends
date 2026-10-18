@@ -3,8 +3,9 @@ import SwiftData
 import Testing
 @testable import LooseEnds
 
-/// The evening and morning notifications around the loose ends (#414, #518): in the evening what needs
-/// a new date (its day, three days after, then Mondays), in the morning an invitation to look at them.
+/// The evening and morning notifications around the loose ends (#414, #518, #550): in the evening what
+/// needs a new date (once its deadline is behind, three evenings after, then Mondays), in the morning an
+/// invitation to look at them.
 @Suite("CarryReminders") struct CarryRemindersTests {
     static var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
@@ -106,19 +107,51 @@ import Testing
         #expect(early.first?.fireDate == Self.calendar.date(byAdding: .minute, value: 30, to: Self.day(0, hour: 18)))
     }
 
-    @Test("Done, parked, blocked, subtasks and undated tasks never need a new date")
+    @Test("Done, parked, blocked and undated tasks never need a new date; a subtask does, like a task (#550)")
     @MainActor func notCarried() async throws {
         let store = try TestStore()
         let done = Self.task("Erledigt", due: Self.day(-1), status: .done, in: store)
         let parked = Self.task("Geparkt", due: Self.day(-1), status: .parked, in: store)
         let undated = Self.task("Irgendwann", due: nil, in: store)
+        let blocker = Self.task("Antwort", due: nil, in: store)
+        let blocked = Self.task("Vertrag", due: Self.day(-1), in: store)
+        blocked.blockedBy = [blocker]
+
+        #expect(Self.evenings([done, parked, undated, blocker, blocked]).isEmpty)
+
         let parent = Self.task("Umzug", due: nil, in: store)
         let sub = Self.task("Kartons", due: Self.day(-1), in: store)
         sub.parent = parent
+        let evenings = Self.evenings([parent, sub])
+        #expect(evenings.first?.taskIDs == [sub.id], "the subtask needs a new date like a task")
+    }
 
-        let all = [done, parked, undated, parent, sub]
-        #expect(Self.evenings(all).isEmpty)
-        #expect(Self.mornings(all).allSatisfy { $0.taskIDs.isEmpty })
+    @Test("Evening: a due time counts after it passed, a later one comes the next evening (#550)")
+    @MainActor func eveningAfterTheTime() async throws {
+        let store = try TestStore()
+        let afternoon = Self.task("Buch erstellen", due: Self.day(0, hour: 15), hasTime: true, in: store)
+        let cinema = Self.task("Kino", due: Self.day(0, hour: 22), hasTime: true, in: store)
+        let exact = Self.task("Punkt acht", due: Self.day(0, hour: 20), hasTime: true, in: store)
+
+        let evenings = Self.evenings([afternoon, cinema, exact])
+        #expect(evenings.first?.fireDate == Self.day(0, hour: 20))
+        #expect(evenings.first?.taskIDs == [afternoon.id], "15:00 is behind at 20:00; 22:00 and 20:00 sharp are not")
+        #expect(evenings[1].fireDate == Self.day(1, hour: 20))
+        #expect(Set(evenings[1].taskIDs) == [afternoon.id, exact.id, cinema.id], "the next evening asks for all three")
+    }
+
+    @Test("Evening: a day-only date counts after the reminder time; one later than the evening waits a day (#550)")
+    @MainActor func eveningAfterTheReminderTime() async throws {
+        let store = try TestStore()
+        let hedge = Self.task("Hecke schneiden", due: Self.day(0), in: store)
+
+        let early = CarryReminders.plan(for: [hedge], mode: .evening, reminderTime: DueReminders.Time(hour: 9, minute: 0),
+                                        now: Self.now, calendar: Self.calendar)
+        #expect(early.first?.fireDate == Self.day(0, hour: 20))
+        let late = CarryReminders.plan(for: [hedge], mode: .evening, reminderTime: DueReminders.Time(hour: 21, minute: 0),
+                                       now: Self.now, calendar: Self.calendar)
+        #expect(late.first?.fireDate == Self.day(1, hour: 20), "21:00 is not behind at 20:00: the next evening")
+        #expect(late.map(\.fireDate) == [1, 2, 3, 4].map { Self.day($0, hour: 20) }, "three evenings after, then Monday")
     }
 
     @Test("Switched off plans nothing; each switch plans only its own")
@@ -175,21 +208,28 @@ import Testing
         #expect(ViewRules.tasks(for: .due, in: all, now: Self.now, calendar: Self.calendar).contains { $0.id == eight.id })
     }
 
-    @Test("All to tomorrow moves every listed open task to tomorrow; Look over changes nothing")
+    @Test("All to tomorrow moves what still needs a date; one given a new date meanwhile stays (#550)")
     @MainActor func allToTomorrow() async throws {
         let store = try TestStore()
         let a = Self.task("Steuer", due: Self.day(0), in: store)
         let b = Self.task("Anruf", due: Self.day(0, hour: 14), hasTime: true, in: store)
+        let redated = Self.task("Keller", due: Self.day(5), in: store)
+        let evening = Self.day(0, hour: 20)
 
         #expect(CarryReminders.handle(.review, taskIDs: [a.id], in: [a, b], contexts: [], projects: [],
-                                      now: Self.now, calendar: Self.calendar) == 0)
+                                      now: evening, calendar: Self.calendar) == 0)
         #expect(a.dueDate == Self.day(0))
 
-        let moved = CarryReminders.handle(.tomorrow, taskIDs: [a.id, b.id], in: [a, b], contexts: [], projects: [],
-                                          now: Self.now, calendar: Self.calendar)
+        let moved = CarryReminders.handle(.tomorrow, taskIDs: [a.id, b.id, redated.id], in: [a, b, redated], contexts: [], projects: [],
+                                          now: evening, calendar: Self.calendar)
         #expect(moved == 2)
         #expect(a.dueDate == Self.day(1))
         #expect(b.dueDate == Self.day(1))
         #expect(b.dueHasTime == false)
+        #expect(redated.dueDate == Self.day(5), "already on next week: an old notification does not pull it back")
+
+        let early = CarryReminders.handle(.tomorrow, taskIDs: [a.id], in: [a], contexts: [], projects: [],
+                                          now: Self.day(1, hour: 8), calendar: Self.calendar)
+        #expect(early == 0, "tomorrow at 8:00 its day has not reached the reminder time")
     }
 }
