@@ -62,7 +62,7 @@ struct SettingsView: View {
             } header: {
                 Text("Loose ends")
             } footer: {
-                Text("In the evening, what needs a new date comes in one notification. In the morning, one notification invites you to look at your loose ends.")
+                Text("In the evening, what needs a new date comes in one notification. In the morning, one invites you to look at your loose ends; at the reminder time it also names what is due today.")
             }
             syncSection
             calendarSection

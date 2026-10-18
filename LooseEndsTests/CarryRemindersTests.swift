@@ -42,7 +42,7 @@ import Testing
         plan(tasks, mode: .morning, now: now)
     }
 
-    @Test("Morning: every day at the reminder time, the loose ends counted and what needs a new date listed")
+    @Test("Morning: every day at the morning time, an invitation only: the count, never what needs a new date (#551)")
     @MainActor func morningInvitation() async throws {
         let store = try TestStore()
         let a = Self.task("Steuerbescheid ablegen", due: Self.day(-1), in: store)
@@ -53,14 +53,13 @@ import Testing
         let mornings = Self.mornings([a, b, later, undated])
         #expect(mornings.map(\.fireDate) == (0...CarryReminders.daysAhead).map { Self.day($0, hour: 9) })
         #expect(mornings.allSatisfy { $0.kind == .morning && $0.openCount == 4 })
+        #expect(mornings.allSatisfy { $0.taskIDs.isEmpty && $0.titles.isEmpty }, "the number of undated belongs to the evening")
         let first = try #require(mornings.first)
-        #expect(Set(first.taskIDs) == [a.id, b.id])
         #expect(first.identifier == "carry_2026-03-12")
-        #expect(mornings[6].taskIDs.contains(later.id), "five days on, the tyres need a new date too")
     }
 
-    @Test("Morning without anything to date names the longest open; nothing open, no morning")
-    @MainActor func morningLongestOpen() async throws {
+    @Test("Morning counts what one can act on: parked and waiting tasks neither count nor are named (#551)")
+    @MainActor func morningCountsActionable() async throws {
         let store = try TestStore()
         let old = Self.task("Fotos sortieren", due: nil, in: store)
         old.capturedAt = Self.day(-40)
@@ -68,11 +67,43 @@ import Testing
         older.capturedAt = Self.day(-60)
         let fresh = Self.task("Brot", due: nil, in: store)
         fresh.capturedAt = Self.day(-1)
+        let parked = Self.task("Keller", due: nil, status: .parked, in: store)
+        parked.capturedAt = Self.day(-90)
+        let blocker = Self.task("Antwort von Anna", due: nil, in: store)
+        blocker.capturedAt = Self.day(-5)
+        let waiting = Self.task("Vertrag schicken", due: nil, in: store)
+        waiting.capturedAt = Self.day(-80)
+        waiting.blockedBy = [blocker]
 
-        let first = try #require(Self.mornings([old, older, fresh]).first)
-        #expect(first.taskIDs.isEmpty)
+        let first = try #require(Self.mornings([old, older, fresh, parked, blocker, waiting]).first)
+        #expect(first.openCount == 4, "three plain ones and the blocker; not the parked, not the waiting")
         #expect(first.longestOpen == ["Fahrradlicht", "Fotos sortieren"])
         #expect(Self.mornings([]).isEmpty)
+        #expect(Self.mornings([parked]).isEmpty, "only parked: nothing to invite to")
+    }
+
+    @Test("Same minute, one notification: the morning at the reminder time names today's day-only tasks (#551)")
+    @MainActor func morningCarriesTodayAtTheReminderTime() async throws {
+        let store = try TestStore()
+        let hedge = Self.task("Hecke schneiden", due: Self.day(0), in: store)
+        let call = Self.task("Zahnarzt anrufen", due: Self.day(0, hour: 14), hasTime: true, in: store)
+        let tyres = Self.task("Reifen wechseln", due: Self.day(5), in: store)
+        let nine = DueReminders.Time(hour: 9, minute: 0)
+        let eight = DueReminders.Time(hour: 8, minute: 0)
+
+        #expect(CarryReminders.mergesReminders(mode: .both, time: nine, reminderTime: nine))
+        #expect(!CarryReminders.mergesReminders(mode: .both, time: eight, reminderTime: nine))
+        #expect(!CarryReminders.mergesReminders(mode: .evening, time: nine, reminderTime: nine))
+
+        let merged = CarryReminders.plan(for: [hedge, call, tyres], mode: .morning, time: nine, reminderTime: nine,
+                                         now: Self.now, calendar: Self.calendar)
+        #expect(merged.first?.today == ["Hecke schneiden"], "the timed one keeps its own reminder")
+        #expect(merged[5].today == ["Reifen wechseln"])
+        #expect(merged[1].today.isEmpty)
+
+        let apart = CarryReminders.plan(for: [hedge, call, tyres], mode: .morning, time: eight, reminderTime: nine,
+                                        now: Self.now, calendar: Self.calendar)
+        #expect(apart.allSatisfy { $0.today.isEmpty }, "different minutes: both come, each for itself")
     }
 
     @Test("Evening: due that day, then the three evenings after, then Mondays, until a new date")

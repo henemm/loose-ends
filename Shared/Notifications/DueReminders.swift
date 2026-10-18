@@ -62,15 +62,17 @@ enum DueReminders {
     /// One reminder per open task with a due date whose reminder time is still ahead, the soonest
     /// `maxPlanned`. Unsorted and unchecked tasks count: the rules set their date without the model
     /// (#95, #144), and without Apple Intelligence a task stays unsorted for good (#352). Parked and
-    /// done ones do not.
+    /// done ones do not. With `skipsDayOnly` the tasks without a time get none: the morning
+    /// notification names them at the same minute (#551).
     static func plan(
         for tasks: [TaskItem],
         time: Time = .standard,
+        skipsDayOnly: Bool = false,
         now: Date = Date(),
         calendar: Calendar = .current
     ) -> [Reminder] {
         tasks.compactMap { task -> Reminder? in
-            guard task.isOpen, let due = task.dueDate else { return nil }
+            guard task.isOpen, let due = task.dueDate, task.dueHasTime || !skipsDayOnly else { return nil }
             let kind: Reminder.Kind = task.dueHasTime ? .now : .today
             let fire = kind == .now
                 ? due

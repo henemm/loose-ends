@@ -177,7 +177,10 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         guard let scheduler else { return }
         do {
             let tasks = try container.mainContext.fetch(FetchDescriptor<TaskItem>())
-            let reminders = DueReminders.plan(for: tasks, time: reminderTime)
+            // One notification when the morning and the reminder time coincide (#551): the morning names
+            // today's day-only tasks, the single reminders cover only tasks with a time.
+            let merges = CarryReminders.mergesReminders(mode: carryMode, time: morningTime, reminderTime: reminderTime)
+            let reminders = DueReminders.plan(for: tasks, time: reminderTime, skipsDayOnly: merges)
             let carried = CarryReminders.plan(for: tasks, mode: carryMode, time: morningTime, eveningTime: eveningTime,
                                               reminderTime: reminderTime)
             let stale = await scheduler.pendingIdentifiers()
@@ -225,8 +228,8 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         return UNNotificationRequest(identifier: reminder.identifier, content: content, trigger: trigger)
     }
 
-    /// Morning: "Loose ends: N", with what needs a new date or the longest open (#518). Evening: "Needs a
-    /// new date: N" with the titles.
+    /// Morning: "Loose ends: N" with today's day-only tasks when it carries them and the longest open
+    /// (#518, #551). Evening: "Needs a new date: N" with the titles.
     private static func request(for reminder: CarryReminders.Reminder) -> UNNotificationRequest {
         let content = UNMutableNotificationContent()
         switch reminder.kind {
@@ -247,13 +250,14 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
     }
 
     private static func morningBody(_ reminder: CarryReminders.Reminder) -> String {
-        switch reminder.taskIDs.count {
-        case 0 where !reminder.longestOpen.isEmpty:
-            String(localized: "Longest open: \(ListFormatter.localizedString(byJoining: reminder.longestOpen))")
-        case 0: ""
-        case 1: String(localized: "One needs a new date.")
-        default: String(localized: "\(reminder.taskIDs.count) need a new date.")
+        var lines: [String] = []
+        if !reminder.today.isEmpty {
+            lines.append(String(localized: "Today: \(ListFormatter.localizedString(byJoining: reminder.today))"))
         }
+        if !reminder.longestOpen.isEmpty {
+            lines.append(String(localized: "Longest open: \(ListFormatter.localizedString(byJoining: reminder.longestOpen))"))
+        }
+        return lines.joined(separator: "\n")
     }
 
     /// "Show" opens "Loose ends"; a tap on the notification does the same.

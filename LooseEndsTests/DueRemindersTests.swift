@@ -47,6 +47,26 @@ import UserNotifications
         #expect(reminders.first?.identifier == "due_" + today.id.uuidString)
     }
 
+    @Test("With the morning at the same minute, tasks without a time get no single reminder (#551)")
+    @MainActor func skipsDayOnlyWhenTheMorningNamesThem() async throws {
+        let store = try TestStore()
+        let calendar = try berlin()
+        let now = try date(16, hour: 8, in: calendar)
+        let dayOnly = TaskItem(rawText: "Steuer abgeben")
+        dayOnly.status = .active
+        dayOnly.dueDate = try date(16, hour: 0, in: calendar)
+        let timed = TaskItem(rawText: "Anruf")
+        timed.status = .active
+        timed.dueDate = try date(16, hour: 14, in: calendar)
+        timed.dueHasTime = true
+        for task in [dayOnly, timed] { store.context.insert(task) }
+
+        let merged = DueReminders.plan(for: [dayOnly, timed], skipsDayOnly: true, now: now, calendar: calendar)
+        #expect(merged.map(\.title) == ["Anruf"])
+        let apart = DueReminders.plan(for: [dayOnly, timed], now: now, calendar: calendar)
+        #expect(apart.map(\.title) == ["Steuer abgeben", "Anruf"])
+    }
+
     @Test("Unsorted and unchecked tasks are reminded too; parked ones are not (#352)")
     @MainActor func planUnsortedAndUnchecked() async throws {
         let store = try TestStore()
