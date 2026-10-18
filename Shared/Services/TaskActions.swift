@@ -23,6 +23,7 @@ enum TaskActions {
                 rounds += 1
             }
             task.dueDate = next
+            if rule.hour != nil { task.dueHasTime = true }   // the anchor carries the rule's time back after a day-only move
             rule.anchor = next
             task.repeatRule = rule
             task.placeRemindedAt = nil   // the place is armed again for the next round (#226)

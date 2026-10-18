@@ -100,6 +100,7 @@ import Testing
         TaskActions.complete(task, now: Self.day(1, hour: 12), calendar: Self.calendar)
 
         #expect(task.dueDate == Self.day(7, hour: 7), "the anchor carries the 7:00")
+        #expect(task.dueHasTime == true)
     }
 
     @Test("The anchor rides in the encoding only when set, so old rules encode as before")

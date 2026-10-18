@@ -161,6 +161,11 @@ Grau-Abstufung = Hierarchie (blockiert, erledigt, ungeprüft), Grün = nur im Mo
 Nachgeschärft (Henning, 2026-10-14, #414): Nach ihrem Tag bleibt nur eine Fälligkeit mit Uhrzeit rot. Eine
 Fälligkeit ohne Uhrzeit ist meist ein gesprochener Vorsatz („morgen“, „am Freitag“) und kein Zeitdruck; sie
 steht danach grau als „Seit gestern“ bzw. „Seit N Tagen“ (`ViewRules.dueState`).
+Neu gefasst (Henning, 2026-10-18, #548): Eine verpasste Frist ist erloschen („die alte kann ich nicht mehr einhalten“).
+Mit Uhrzeit ist sie nach der Uhrzeit vorbei, ohne Uhrzeit nach dem Tag. Danach ist nichts mehr rot: In der Randspalte
+steht der Akzent-Knopf „Neues Datum“ (tippbar) über der grauen Spur „war heute 15:00“ / „war gestern“ / „war Di.“
+(`NewDateRule`, `ViewRules.MarginMark.passed`). Der Knopf öffnet die Datumswahl (Heute später, Morgen, Wochenende,
+Nächste Woche, Kalender mit Uhrzeit, Parken, Erledigt). Die alte Zeit bleibt in den Revisionen.
 Wichtigkeit und Energie haben keine Farbe, sie sortieren und tragen ein Glyph. Projekte dürfen eine
 Nutzerfarbe zur Identifikation tragen (später), Kontexte bekommen Symbole. Jeder Screen muss in
 Graustufen funktionieren. Begründung: FocusBlox nutzte zehn Farbtöne für elf Bedeutungen, Rot stand
@@ -184,6 +189,17 @@ Statt der Auswahl gibt es zwei Schalter, beide an: „Abends: neue Termine plane
 nötig: N“ mit allem, was an dem Tag fällig war, an den drei Tagen danach und dann montags, bis es ein neues Datum hat;
 „Alle auf morgen“ und „Durchsehen“) und „Morgens: lose Enden ansehen“ (eigene Morgenzeit, Vorgabe 9:00, jeden Tag, solange etwas offen ist:
 „Lose Enden: N“, darunter was ein neues Datum braucht oder was am längsten offen ist; öffnet „Lose Enden“).
+Nachgeschärft (Henning, 2026-10-18, #550, #551): Der Abend fragt erst, wenn die Frist hinter der Abendzeit liegt (mit
+Uhrzeit nach der Uhrzeit, ohne Uhrzeit nach der Erinnerungszeit des Tages; liegt sie später, am nächsten Abend), und
+„Alle auf morgen“ verschiebt nur, was beim Tippen noch kein neues Datum hat. Der Morgen ist nur die Einladung: „Lose
+Enden: N“ (ohne Geparktes und ohne „wartet auf“) und „Am längsten offen“; die Zahl der Undatierten gehört dem Abend.
+Fallen Morgen- und Erinnerungszeit zusammen, kommt eine Mitteilung „Lose Enden: N · Heute: …“ statt zweier, und
+Aufgaben ohne Uhrzeit bekommen an dem Tag keine Einzelmitteilung. Jedes Gerät meldet für sich. Der Plan hält ohne
+App-Start: tägliche Hintergrund-Auffrischung und Neuplanung bei einem CloudKit-Import (#553).
+
+**ADR-7 ergänzt (Henning, 2026-10-18, #552).** Ein neues Datum an einer wiederkehrenden Aufgabe gilt nur für diese
+Runde: Die Serie steht auf ihrem Anker (`RepeatRule.anchor`), das Erledigen rechnet von dort weiter, nicht vom
+verschobenen Datum. Der Anker wandert mit jeder Runde; Regeln von früher ohne Anker rechnen wie bisher vom Datum.
 
 **ADR-17 Ergänzte Screens nach Lückenprüfung.** Als nächstes (manuell sortiert), Neu (Eingang),
 Feld-Picker statt Formular, Wisch- und Halten-Gesten mit Verschieben (Morgen, Wochenende, nächste Woche,

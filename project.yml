@@ -83,7 +83,9 @@ targets:
         # Required alongside aps-environment, or CloudKit logs
         # "BUG IN CLIENT OF CLOUDKIT: CloudKit push notifications require the
         # 'remote-notification' background mode" and sync only catches up on a cold start.
-        UIBackgroundModes: [remote-notification]
+        # fetch (#553): a daily app refresh renews the morning and evening notifications without an app start.
+        UIBackgroundModes: [remote-notification, fetch]
+        BGTaskSchedulerPermittedIdentifiers: [com.henning.looseends.refresh]
         ITSAppUsesNonExemptEncryption: false   # no custom crypto: TestFlight skips the export-compliance question
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait

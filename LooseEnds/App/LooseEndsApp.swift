@@ -38,6 +38,10 @@ struct LooseEndsApp: App {
         #endif
         notifications = DueNotificationCenter(container: container, places: places)
         notifications.activate()
+        #if os(iOS)
+        // The plan holds without an app start (#553): registered before launch ends, as the system requires.
+        BackgroundRefresh.register(notifications)
+        #endif
         calendar = CalendarBridge(container: container)
         if ModelContainerFactory.isUITesting { MainThreadWatchdog.start() }
         LaunchTimings.mark(.initEnd)

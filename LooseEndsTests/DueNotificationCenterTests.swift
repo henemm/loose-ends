@@ -176,6 +176,19 @@ import UserNotifications
         return task
     }
 
+    @Test("A change from elsewhere replans, like a save: a task saved behind the center's back gets its reminder (#553)")
+    @MainActor func changeFromElsewhereReplans() async throws {
+        let fixture = try Fixture()
+        await fixture.center.reschedule()
+        let task = try fixture.task("Zahnarzt anrufen", hour: 14)
+        #expect(fixture.request(for: task) == nil, "saved without the center hearing of it")
+
+        fixture.center.storeChangedElsewhere()
+        try await Task.sleep(for: .seconds(1))
+
+        #expect(fixture.request(for: task) != nil)
+    }
+
     @Test("The morning notification counts the loose ends and names the longest open, in the CARRY category (#518, #551)")
     @MainActor func carriedMorningNotification() async throws {
         let fixture = try Fixture()

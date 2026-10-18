@@ -2,6 +2,9 @@ import Foundation
 import OSLog
 import SwiftData
 import UserNotifications
+#if canImport(CoreData)
+import CoreData
+#endif
 
 /// Talks to the system for `DueReminders`: registers both categories (due and place, #240), mirrors
 /// the plan into pending requests after every save, sets the app badge (#299), and applies an
@@ -23,6 +26,7 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
     private let places: (any PlaceReconciling)?
     private var debounce: Task<Void, Never>?
     private var cloudObserver: (any NSObjectProtocol)?
+    private var importObserver: (any NSObjectProtocol)?
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Notifications")
     static let timeKey = "dueReminderMinutes"
     static let carryKey = "carryMode"
@@ -70,6 +74,23 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         }
         NSUbiquitousKeyValueStore.default.synchronize()
         takeCloudTime()
+        #if canImport(CoreData)
+        // A change from another device arrives as a CloudKit import (#553): replan while the app runs, so
+        // the evening does not name a task done on the Mac at noon.
+        importObserver = NotificationCenter.default.addObserver(
+            forName: NSPersistentCloudKitContainer.eventChangedNotification, object: nil, queue: .main
+        ) { [weak self] notification in
+            guard let event = notification.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey]
+                as? NSPersistentCloudKitContainer.Event, event.type == .import, event.endDate != nil, event.succeeded else { return }
+            MainActor.assumeIsolated { self?.storeChangedElsewhere() }
+        }
+        #endif
+    }
+
+    /// The store changed without this process saving (#553): an import from another device, or the
+    /// daily refresh in the background. Replans like a save does.
+    func storeChangedElsewhere() {
+        rescheduleSoon()
     }
 
     /// The time of day for tasks without a due time; changing it reschedules every reminder.
