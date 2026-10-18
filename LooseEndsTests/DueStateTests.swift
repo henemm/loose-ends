@@ -3,8 +3,8 @@ import SwiftData
 import Testing
 @testable import LooseEnds
 
-/// How a due date reads in a row (#414): red only for time pressure. Due today is red; past its
-/// day only a task with a due time stays red, a day-only date turns grey and counts the days.
+/// How a due date reads (#414, #548): today while the deadline lies ahead, missed once a due time
+/// passed, carried once a day-only date's day is over (the margin then offers a new date).
 @Suite("Due state in a row") struct DueStateTests {
     static var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
@@ -31,12 +31,12 @@ import Testing
         return ViewRules.dueState(of: task, now: now, calendar: calendar)
     }
 
-    @Test("Due today is red, with or without a time, also once the time has passed")
+    @Test("Due today is today while the deadline lies ahead; a due time that passed is missed (#548)")
     @MainActor func todayIsToday() async throws {
         let store = try TestStore()
         #expect(Self.state(due: Self.day(0), in: store) == .today)
         #expect(Self.state(due: Self.day(0, hour: 18), hasTime: true, in: store) == .today)
-        #expect(Self.state(due: Self.day(0, hour: 9), hasTime: true, in: store) == .today)
+        #expect(Self.state(due: Self.day(0, hour: 9), hasTime: true, in: store) == .missed, "9:00 is behind at 10:00")
     }
 
     @Test("A day-only date past its day is carried: one day reads as yesterday, then counts")

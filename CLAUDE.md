@@ -254,7 +254,10 @@ not scope creep on the current one.
 
 ## Where things live
 
-- `Shared/Models` — SwiftData model, enums, `RepeatRule`, `ViewRules` (pure view computation)
+- `Shared/Models` — SwiftData model, enums, `RepeatRule` (its `anchor` holds the rhythm, a moved round does not shift it, #552),
+  `ViewRules` (pure view computation), `NewDateRule` (a deadline that passed is no deadline, #548: with a time after the
+  time, without one after the day; the evening look reads a day-only date as passed after the reminder time; the trace
+  "was 15:00" under the "New date" button)
 - `Shared/Persistence` — `ModelContainerFactory` (app group + private CloudKit; identifiers read from
   `Info.plist`, keys `LEAppGroup`/`LECloudContainer`, with the production constants as fallback —
   device builds carry their own via `BUNDLE_ID_SUFFIX`, #156), `ContextSeeder`,
@@ -316,7 +319,9 @@ not scope creep on the current one.
   `DueNotificationCenter` (system wiring, silent under tests; completion-handler delegate methods, not async, #295; the
   only notification delegate and the only `setNotificationCategories` call; routes `place_` answers by prefix;
   `reschedule()` runs the place reconcile after the due pass; the UI test gets its banner via
-  `LOOSEENDS_PUSH=<file.apns> ./scripts/sim.sh test-proof <class>`), `PlaceNotificationCenter` (iOS/iPadOS only, #240
+  `LOOSEENDS_PUSH=<file.apns> ./scripts/sim.sh test-proof <class>`; replans on a CloudKit import, #553),
+  `BackgroundRefresh` (iOS only, #553: a daily `BGAppRefreshTask` rewrites the plan without an app start; identifier
+  `com.henning.looseends.refresh` in `project.yml`), `PlaceNotificationCenter` (iOS/iPadOS only, #240
   Schnitt 2: `UNLocationNotificationTrigger` with a 150 m region, permission „When in use“ only, never `CLMonitor` or
   „Always“; reconcile removes first, adds, then writes the handover list, errors are logged and never thrown; the
   simulator cannot fire the real trigger and rejects `add` with 2003, so arrival is proven on the device only)

@@ -103,15 +103,7 @@ struct TaskListView: View {
         .modifier(ListSubtitle(wide: isWide, text: subtitle))
         .taskInteractionDialogs(actions)
         .sheet(item: $redating) { task in
-            NavigationStack {
-                FieldEditorView(task: task, field: .dueDate, contexts: contexts, projects: projects)
-                    .toolbar {
-                        ToolbarItem(placement: .confirmationAction) {
-                            Button("Done") { redating = nil }
-                                .accessibilityIdentifier("newDateDone")
-                        }
-                    }
-            }
+            NewDateSheet(task: task) { redating = nil }
         }
     }
 
@@ -212,14 +204,15 @@ struct TaskListView: View {
         }
     }
 
-    /// "Due" and "Loose ends" (#518): what was due before today stands on top until it has a new date;
-    /// swiping left opens the date. The rest follows in the view's order. In "Loose ends" the parked
-    /// tasks close the list as their own block under a grey head (#545): visible, but apart, and no
-    /// colour of its own (grey is hierarchy).
+    /// "Due" and "Loose ends" (#518, #548): whose deadline passed stands on top until it has a new date,
+    /// subtasks among them with their parent named; the margin's button and the swipe open the date
+    /// choice. The rest follows in the view's order. In "Loose ends" the parked tasks close the list as
+    /// their own block under a grey head (#545): visible, but apart, and no colour of its own (grey is
+    /// hierarchy).
     @ViewBuilder
     private var newDateSections: some View {
-        let left = Set(ViewRules.leftovers(in: tasks).map(\.id))
-        let needsDate = shown.filter { left.contains($0.id) }
+        let needsDate = ViewRules.leftovers(in: tasks)
+        let left = Set(needsDate.map(\.id))
         let parked = kind == .open ? shown.filter { $0.status == .parked } : []
         let rest = shown.filter { !left.contains($0.id) && $0.status != .parked }
         if needsDate.isEmpty, parked.isEmpty {
@@ -281,7 +274,7 @@ struct TaskListView: View {
             NavigationLink {
                 TaskDetailView(task: task)
             } label: {
-                TaskRow(task: task, note: note(for: task), nextRank: nextRank(of: task))
+                TaskRow(task: task, note: note(for: task), nextRank: nextRank(of: task), onNewDate: { redating = task })
             }
             .navigationLinkIndicatorVisibility(.hidden)
         }
@@ -375,7 +368,8 @@ struct TaskListView: View {
         NavigationLink {
             TaskDetailView(task: task, reviewing: kind == .new)
         } label: {
-            TaskRow(task: task, hidesContext: context != nil, note: note(for: task), marksParked: kind == .open, nextRank: nextRank(of: task))
+            TaskRow(task: task, hidesContext: context != nil, note: note(for: task), marksParked: kind == .open,
+                    nextRank: nextRank(of: task), onNewDate: { redating = task })
         }
         // The whole row opens the task; the system's arrow at its end made room for the star (#509).
         .navigationLinkIndicatorVisibility(.hidden)
@@ -386,10 +380,10 @@ struct TaskListView: View {
         .wideListRow()
     }
 
-    /// Left from an earlier day (#518): the swipe gives it a new date; everything else as everywhere.
+    /// Whose deadline passed (#518, #548): the swipe gives it a new date; everything else as everywhere.
     @ViewBuilder
     private func trailingActions(_ task: TaskItem) -> some View {
-        if kind == .due || kind == .open, ViewRules.leftovers(in: tasks).contains(where: { $0.id == task.id }) {
+        if kind == .due || kind == .open, NewDateRule.needsNewDate(task) {
             Button("New date", systemImage: "calendar") { redating = task }
                 .tint(.accentColor)
                 .accessibilityIdentifier("swipeNewDate_\(task.id.uuidString)")
@@ -404,8 +398,12 @@ struct TaskListView: View {
         return ViewRules.nextRanks(in: tasks)[task.id]
     }
 
-    /// Old shows the age and how often the task was pushed (design briefing, screen 11).
+    /// Old shows the age and how often the task was pushed (design briefing, screen 11). A subtask
+    /// under "Needs a new date" (#548) names its parent.
     private func note(for task: TaskItem) -> String? {
+        if let parent = task.parent {
+            return String(localized: "Subtask of \(parent.displayTitle)")
+        }
         if kind == .new {
             switch ViewRules.reviewReason(of: task) {
             case .titleChanged(let raw): return String(localized: "was: \(raw)")

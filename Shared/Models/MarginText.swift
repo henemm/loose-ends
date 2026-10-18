@@ -7,15 +7,25 @@ extension ViewRules.MarginMark {
         switch self {
         case .time(let date): date.formatted(date: .omitted, time: .shortened)
         case .today: String(localized: "Today")
-        case .missed(let days) where days == 1: String(localized: "Yesterday")
-        case .missed(let days): String(localized: "\(days) days ago")
-        case .carried(let days) where days == 1: String(localized: "Since yesterday")
-        case .carried(let days): String(localized: "Since \(days) days")
+        case .passed(let trace): trace.text
         case .tomorrow: String(localized: "Tomorrow")
         case .weekday(let date): date.formatted(.dateTime.weekday(.abbreviated))
         case .date(let date): date.formatted(.dateTime.day().month(.abbreviated))
         case .duration(let bucket): bucket.shortText
         case .none: ""
+        }
+    }
+}
+
+extension NewDateRule.Trace {
+    /// What had been planned, small and grey under "New date" (#548): "was 15:00", "was yesterday", "was Tue".
+    var text: String {
+        switch self {
+        case .today(let time?): String(localized: "was \(time.formatted(date: .omitted, time: .shortened))")
+        case .today(nil): String(localized: "was today")
+        case .yesterday: String(localized: "was yesterday")
+        case .weekday(let date): String(localized: "was \(date.formatted(.dateTime.weekday(.abbreviated)))")
+        case .date(let date): String(localized: "was \(date.formatted(.dateTime.day().month(.abbreviated)))")
         }
     }
 }

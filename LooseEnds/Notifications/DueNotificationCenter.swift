@@ -2,6 +2,9 @@ import Foundation
 import OSLog
 import SwiftData
 import UserNotifications
+#if canImport(CoreData)
+import CoreData
+#endif
 
 /// Talks to the system for `DueReminders`: registers both categories (due and place, #240), mirrors
 /// the plan into pending requests after every save, sets the app badge (#299), and applies an
@@ -23,6 +26,7 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
     private let places: (any PlaceReconciling)?
     private var debounce: Task<Void, Never>?
     private var cloudObserver: (any NSObjectProtocol)?
+    private var importObserver: (any NSObjectProtocol)?
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Notifications")
     static let timeKey = "dueReminderMinutes"
     static let carryKey = "carryMode"
@@ -70,6 +74,23 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         }
         NSUbiquitousKeyValueStore.default.synchronize()
         takeCloudTime()
+        #if canImport(CoreData)
+        // A change from another device arrives as a CloudKit import (#553): replan while the app runs, so
+        // the evening does not name a task done on the Mac at noon.
+        importObserver = NotificationCenter.default.addObserver(
+            forName: NSPersistentCloudKitContainer.eventChangedNotification, object: nil, queue: .main
+        ) { [weak self] notification in
+            guard let event = notification.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey]
+                as? NSPersistentCloudKitContainer.Event, event.type == .import, event.endDate != nil, event.succeeded else { return }
+            MainActor.assumeIsolated { self?.storeChangedElsewhere() }
+        }
+        #endif
+    }
+
+    /// The store changed without this process saving (#553): an import from another device, or the
+    /// daily refresh in the background. Replans like a save does.
+    func storeChangedElsewhere() {
+        rescheduleSoon()
     }
 
     /// The time of day for tasks without a due time; changing it reschedules every reminder.
@@ -177,8 +198,12 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         guard let scheduler else { return }
         do {
             let tasks = try container.mainContext.fetch(FetchDescriptor<TaskItem>())
-            let reminders = DueReminders.plan(for: tasks, time: reminderTime)
-            let carried = CarryReminders.plan(for: tasks, mode: carryMode, time: morningTime, eveningTime: eveningTime)
+            // One notification when the morning and the reminder time coincide (#551): the morning names
+            // today's day-only tasks, the single reminders cover only tasks with a time.
+            let merges = CarryReminders.mergesReminders(mode: carryMode, time: morningTime, reminderTime: reminderTime)
+            let reminders = DueReminders.plan(for: tasks, time: reminderTime, skipsDayOnly: merges)
+            let carried = CarryReminders.plan(for: tasks, mode: carryMode, time: morningTime, eveningTime: eveningTime,
+                                              reminderTime: reminderTime)
             let stale = await scheduler.pendingIdentifiers()
                 .filter { $0.hasPrefix(DueReminders.identifierPrefix) || $0.hasPrefix(CarryReminders.identifierPrefix) }
             scheduler.remove(stale)
@@ -224,8 +249,8 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         return UNNotificationRequest(identifier: reminder.identifier, content: content, trigger: trigger)
     }
 
-    /// Morning: "Loose ends: N", with what needs a new date or the longest open (#518). Evening: "Needs a
-    /// new date: N" with the titles.
+    /// Morning: "Loose ends: N" with today's day-only tasks when it carries them and the longest open
+    /// (#518, #551). Evening: "Needs a new date: N" with the titles.
     private static func request(for reminder: CarryReminders.Reminder) -> UNNotificationRequest {
         let content = UNMutableNotificationContent()
         switch reminder.kind {
@@ -246,13 +271,14 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
     }
 
     private static func morningBody(_ reminder: CarryReminders.Reminder) -> String {
-        switch reminder.taskIDs.count {
-        case 0 where !reminder.longestOpen.isEmpty:
-            String(localized: "Longest open: \(ListFormatter.localizedString(byJoining: reminder.longestOpen))")
-        case 0: ""
-        case 1: String(localized: "One needs a new date.")
-        default: String(localized: "\(reminder.taskIDs.count) need a new date.")
+        var lines: [String] = []
+        if !reminder.today.isEmpty {
+            lines.append(String(localized: "Today: \(ListFormatter.localizedString(byJoining: reminder.today))"))
         }
+        if !reminder.longestOpen.isEmpty {
+            lines.append(String(localized: "Longest open: \(ListFormatter.localizedString(byJoining: reminder.longestOpen))"))
+        }
+        return lines.joined(separator: "\n")
     }
 
     /// "Show" opens "Loose ends"; a tap on the notification does the same.
@@ -410,7 +436,8 @@ extension DueNotificationCenter {
             let tasks = try context.fetch(FetchDescriptor<TaskItem>())
             let contexts = try context.fetch(FetchDescriptor<TaskContext>())
             let projects = try context.fetch(FetchDescriptor<Project>())
-            guard CarryReminders.handle(action, taskIDs: ids, in: tasks, contexts: contexts, projects: projects) > 0 else { return }
+            guard CarryReminders.handle(action, taskIDs: ids, in: tasks, contexts: contexts, projects: projects,
+                                        reminderTime: reminderTime) > 0 else { return }
             try context.save()
             await reschedule()
         } catch {

@@ -9,12 +9,23 @@ enum TaskActions {
         case date(Date)
     }
 
-    /// Done. A repeating task does not end: it records the completion and rolls forward (ADR-7).
+    /// Done. A repeating task does not end: it records the completion and rolls forward (ADR-7). The
+    /// next round counts from the series' anchor (#552), not from a due date moved for one round, and
+    /// lands on the first round after now, so a round moved past its successor does not roll back.
     static func complete(_ task: TaskItem, now: Date = Date(), calendar: Calendar = .current) {
-        if let rule = task.repeatRule {
+        if var rule = task.repeatRule {
             let record = CompletionRecord(task: task, completedAt: now, dueDateAtCompletion: task.dueDate)
             task.completions = (task.completions ?? []) + [record]
-            task.dueDate = rule.nextDueDate(previousDue: task.dueDate, completedOn: now, calendar: calendar)
+            var next = rule.nextDueDate(previousDue: rule.anchor ?? task.dueDate, completedOn: now, calendar: calendar)
+            var rounds = 0
+            while next <= now, rounds < 1000 {
+                next = rule.nextDueDate(previousDue: next, completedOn: now, calendar: calendar)
+                rounds += 1
+            }
+            task.dueDate = next
+            if rule.hour != nil { task.dueHasTime = true }   // the anchor carries the rule's time back after a day-only move
+            rule.anchor = next
+            task.repeatRule = rule
             task.placeRemindedAt = nil   // the place is armed again for the next round (#226)
             return
         }
@@ -87,6 +98,22 @@ enum TaskActions {
         RevisionService.set(.dueDate, to: day.ISO8601Format(), on: task, contexts: contexts, projects: projects, now: now)
         task.dueHasTime = false
         return day
+    }
+
+    /// A due date with or without a time, as a user revision (#548): a day-only date is stored at the
+    /// start of its day, like the due editor does. Nil clears the date.
+    static func setDue(
+        _ task: TaskItem,
+        to date: Date?,
+        hasTime: Bool,
+        contexts: [TaskContext],
+        projects: [Project],
+        now: Date = Date(),
+        calendar: Calendar = .current
+    ) {
+        let stored = date.map { hasTime ? $0 : calendar.startOfDay(for: $0) }
+        RevisionService.set(.dueDate, to: stored?.ISO8601Format(), on: task, contexts: contexts, projects: projects, now: now)
+        task.dueHasTime = stored != nil && hasTime
     }
 
     /// Where the date picker of "Move → Date…" starts (#33): the current due day while it lies

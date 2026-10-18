@@ -520,14 +520,24 @@ struct TaskDetailView: View {
     @ViewBuilder
     private func fieldRow(_ field: RevisedField, value: String?) -> some View {
         let origin = aiFields.contains(field) ? RevisionService.origin(of: field, on: task) : nil
-        let pressing = field == .dueDate && ViewRules.marginMark(of: task).pressing
+        let mark = field == .dueDate ? ViewRules.marginMark(of: task) : ViewRules.MarginMark.none
+        let pressing = mark.pressing
         let shown = field == .dueDate ? task.dueDate.map { FieldFormatting.dueWords($0, hasTime: task.dueHasTime) } ?? value : value
         let row = HStack(alignment: .firstTextBaseline, spacing: 10) {
             Text(FieldFormatting.label(field))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .frame(width: labelWidth, alignment: .leading)
-            if let shown {
+            if case .passed(let trace) = mark {
+                // A deadline that passed is no deadline (#548): the line asks for a new one, the old
+                // time stays as a grey trace.
+                Text("New date")
+                    .font(.system(.body, design: .serif))
+                    .foregroundStyle(.tint)
+                Text(trace.text)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            } else if let shown {
                 Text(shown)
                     .font(.system(.body, design: .serif))
                     .foregroundStyle(pressing ? AnyShapeStyle(.red) : origin != nil ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))

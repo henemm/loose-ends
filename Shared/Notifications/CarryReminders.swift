@@ -2,9 +2,10 @@ import Foundation
 
 /// The two daily notifications around the loose ends (#414, rewritten #518, Henning 2026-10-17: "Abends
 /// daran erinnert werden, neue Termine zu planen, und morgens mir die losen Enden anschauen"). Evening:
-/// what needs a new date. Morning: an invitation to look at the loose ends. Each one is switched on
-/// its own in the settings, both on by default. Pure planning and handling; `DueNotificationCenter`
-/// talks to the system.
+/// what needs a new date. Morning: an invitation to look at the loose ends, nothing more (#551): the
+/// number of what needs a new date belongs to the evening alone, so the morning never nags about what
+/// the evening lets rest until Monday. Each one is switched on its own in the settings, both on by
+/// default. Pure planning and handling; `DueNotificationCenter` talks to the system.
 enum CarryReminders {
     static let categoryIdentifier = "CARRY"
     static let eveningCategoryIdentifier = "CARRY_EVENING"
@@ -64,7 +65,7 @@ enum CarryReminders {
 
     struct Reminder: Equatable, Sendable {
         enum Kind: Equatable, Sendable {
-            /// "Loose ends: N" at the reminder time.
+            /// "Loose ends: N" at the morning time.
             case morning
             /// "Needs a new date: N" at the evening time.
             case evening
@@ -73,49 +74,70 @@ enum CarryReminders {
         let kind: Kind
         let day: Date
         let fireDate: Date
-        /// What needs a new date that day.
+        /// Evening: what needs a new date that day. Morning: empty, it is an invitation only (#551).
         let taskIDs: [UUID]
         let titles: [String]
-        /// Morning: every loose end, as "Loose ends" counts them.
+        /// Morning: every loose end one can act on: not done, not parked, not waiting on anyone (#551).
         var openCount = 0
-        /// Morning: the longest open, named when nothing needs a new date.
+        /// Morning: the longest open among them.
         var longestOpen: [String] = []
+        /// Morning, when its time is the reminder time (#551): the day-only tasks due that day, which
+        /// then come in this one notification instead of one each.
+        var today: [String] = []
         /// One per day and kind: `carry_2026-03-13`, `carry_evening_2026-03-13`.
         let identifier: String
     }
 
+    /// Whether the morning carries today's day-only tasks (#551, Henning 2026-10-18: "gleiche Minute,
+    /// eine Mitteilung"): only while it is switched on and its time is the reminder time. Then
+    /// `DueReminders` plans no single reminder for a task without a time.
+    static func mergesReminders(mode: Mode, time: DueReminders.Time, reminderTime: DueReminders.Time) -> Bool {
+        mode.remindsMorning && time == reminderTime
+    }
+
     /// One reminder per coming day and switched-on kind. Planned ahead as if nothing changes; every
     /// save replans, so a task done, parked or given a new date meanwhile drops out.
+    /// The evening asks only once a deadline is behind (#550, Henning 2026-10-18: "erst nach der
+    /// Uhrzeit"): a due time after it passed, a day-only date after the reminder time of its day
+    /// (`NewDateRule.deadline`). A deadline later than the evening comes the next evening. Subtasks
+    /// count like tasks.
     static func plan(
         for tasks: [TaskItem],
         mode: Mode,
         time: DueReminders.Time = morningStandard,
         eveningTime: DueReminders.Time = eveningStandard,
+        reminderTime: DueReminders.Time = .standard,
         now: Date = Date(),
         calendar: Calendar = .current
     ) -> [Reminder] {
-        let dated = tasks.filter { $0.parent == nil && $0.isOpen && !$0.isBlocked && $0.dueDate != nil }
+        let withDeadline = tasks.filter { $0.isOpen && !$0.isBlocked && $0.dueDate != nil }
             .sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
+        // The morning counts what one can act on (#551): "Loose ends" holds parked tasks too, the number does not.
         let loose = ViewRules.tasks(for: .open, in: tasks, now: now, calendar: calendar)
-        let longest = loose.filter { $0.status != .parked }
-            .sorted { $0.capturedAt < $1.capturedAt }
+            .filter { $0.status != .parked && !$0.isBlocked }
+        let longest = loose.sorted { $0.capturedAt < $1.capturedAt }
             .prefix(longestNamed).map(\.displayTitle)
+        let merges = mergesReminders(mode: mode, time: time, reminderTime: reminderTime)
         let today = calendar.startOfDay(for: now)
         var reminders: [Reminder] = []
         for offset in 0...daysAhead {
             guard let day = calendar.date(byAdding: .day, value: offset, to: today) else { continue }
-            let since = { (task: TaskItem) -> Int in
-                calendar.dateComponents([.day], from: calendar.startOfDay(for: task.dueDate ?? day), to: day).day ?? -1
-            }
             let stamp = Self.stamp(day, calendar: calendar)
             if mode.remindsMorning, !loose.isEmpty, let fire = fireDate(time, on: day, after: now, calendar: calendar) {
-                let left = dated.filter { since($0) > 0 }
-                reminders.append(Reminder(kind: .morning, day: day, fireDate: fire, taskIDs: left.map(\.id),
-                                          titles: left.map(\.displayTitle), openCount: loose.count,
-                                          longestOpen: Array(longest), identifier: identifierPrefix + stamp))
+                let dueThatDay = merges
+                    ? withDeadline.filter { !$0.dueHasTime && calendar.isDate($0.dueDate ?? .distantPast, inSameDayAs: day) }
+                    : []
+                reminders.append(Reminder(kind: .morning, day: day, fireDate: fire, taskIDs: [], titles: [],
+                                          openCount: loose.count, longestOpen: Array(longest),
+                                          today: dueThatDay.map(\.displayTitle), identifier: identifierPrefix + stamp))
             }
             if mode.remindsEvening, let fire = fireDate(eveningTime, on: day, after: now, calendar: calendar) {
-                let due = dated.filter { comesBack(since: since($0), on: day, calendar: calendar) }
+                let due = withDeadline.filter { task in
+                    guard let deadline = NewDateRule.deadline(of: task, reminderTime: reminderTime, calendar: calendar),
+                          deadline < fire else { return false }
+                    let behind = calendar.dateComponents([.day], from: calendar.startOfDay(for: deadline), to: day).day ?? -1
+                    return comesBack(since: behind, on: day, calendar: calendar)
+                }
                 if !due.isEmpty {
                     reminders.append(Reminder(kind: .evening, day: day, fireDate: fire, taskIDs: due.map(\.id),
                                               titles: due.map(\.displayTitle), identifier: identifierPrefix + "evening_" + stamp))
@@ -141,8 +163,10 @@ enum CarryReminders {
         return String(format: "%04d-%02d-%02d", parts.year ?? 0, parts.month ?? 0, parts.day ?? 0)
     }
 
-    /// "Today again" or "All to tomorrow": each listed task that still exists and is open moves, as a
-    /// user revision like "Tomorrow" in the due notification. Returns how many moved.
+    /// "Today again" or "All to tomorrow": each listed task that still exists and still needs a new
+    /// date moves, as a user revision like "Tomorrow" in the due notification. A task given a new date
+    /// meanwhile, on another device or from an older notification, stays where it was put (#550).
+    /// Returns how many moved.
     @discardableResult
     static func handle(
         _ action: Action,
@@ -150,6 +174,7 @@ enum CarryReminders {
         in tasks: [TaskItem],
         contexts: [TaskContext],
         projects: [Project],
+        reminderTime: DueReminders.Time = .standard,
         now: Date = Date(),
         calendar: Calendar = .current
     ) -> Int {
@@ -160,7 +185,9 @@ enum CarryReminders {
         case .show, .review: return 0
         }
         let ids = Set(taskIDs)
-        let open = tasks.filter { ids.contains($0.id) && $0.isOpen }
+        let open = tasks.filter {
+            ids.contains($0.id) && NewDateRule.passed($0, reminderTime: reminderTime, now: now, calendar: calendar)
+        }
         for task in open {
             TaskActions.move(task, to: target, contexts: contexts, projects: projects, now: now, calendar: calendar)
         }

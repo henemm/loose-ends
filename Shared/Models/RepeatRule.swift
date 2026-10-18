@@ -1,7 +1,7 @@
 import Foundation
 
 /// A task carries at most one rule. On completion the same task moves to the next due date;
-/// there are no templates, instances or series (ADR-7).
+/// there are no templates, instances or series (ADR-7). The rhythm hangs on `anchor` (#552).
 struct RepeatRule: Codable, Hashable, Sendable {
     enum Frequency: String, Codable, CaseIterable, Sendable { case daily, weekly, monthly, yearly }
     enum Basis: String, Codable, CaseIterable, Sendable { case fromDueDate, fromCompletion }
@@ -14,6 +14,12 @@ struct RepeatRule: Codable, Hashable, Sendable {
     /// Time of day the repetition refers to, taken once from the raw text when the rule is created (#102).
     var hour: Int? = nil
     var minute: Int? = nil
+    /// The day the series stands on (#552, Henning 2026-10-18): a new date given for one round, in the
+    /// evening look or anywhere else, does not shift the rhythm, so completion counts from here, not
+    /// from the moved due date. Set when the rule first dates the task and after every roll forward.
+    /// Nil on rules from before: they count from the due date as they did. Absent from the encoding
+    /// while nil, so old rules encode as before.
+    var anchor: Date? = nil
 
     /// Next due date after a completion.
     func nextDueDate(previousDue: Date?, completedOn: Date, calendar: Calendar = .current) -> Date {

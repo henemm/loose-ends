@@ -1,4 +1,3 @@
-import OSLog
 import SwiftData
 import SwiftUI
 
@@ -19,56 +18,42 @@ final class OpenViewRequest {
     var view: ViewKind?
 }
 
-/// "Look over" in the evening (#414 Schnitt 3, #518): what needs a new date, each decided in one move.
-/// Swipe right completes, swipe left moves to tomorrow; the menu also offers the weekend, next week
-/// and parking. A task decided leaves the list; what is left comes back in the next evenings.
+/// "Look over" in the evening (#414 Schnitt 3, #518, #550): the tasks of the notification, each with the
+/// "New date" button of the lists (#548) over the trace of what had been planned. The button opens the
+/// date choice; nothing is hidden in a swipe or a menu (Henning, 2026-10-18: "Was soll ich hier
+/// machen?"). A task decided leaves the list; what is left comes back in the next evenings.
 struct CarryReviewSheet: View {
     let taskIDs: [UUID]
     let tasks: [TaskItem]
+    /// The silent time of a task without one (#550): a day-only date is behind after it.
+    let reminderTime: DueReminders.Time
     let onClose: () -> Void
-    @Environment(\.modelContext) private var modelContext
-    @Query(sort: \TaskContext.sortOrder) private var contexts: [TaskContext]
-    @Query(sort: \Project.sortOrder) private var projects: [Project]
-    private static let logger = Logger(subsystem: "com.henning.looseends", category: "App")
+    @State private var choosing: TaskItem?
 
-    /// In the order of the notification; done, parked or moved to a later day drop out.
+    /// In the order of the notification; done, parked or given a date still ahead drop out.
     private var open: [TaskItem] {
         taskIDs.compactMap { id in tasks.first { $0.id == id } }
-            .filter { ViewRules.dueState(of: $0) != .later }
+            .filter { NewDateRule.passed($0, reminderTime: reminderTime, now: Date()) }
     }
 
     var body: some View {
         NavigationStack {
             List {
                 ForEach(open) { task in
-                    HStack {
-                        TaskRow(task: task)
-                        Spacer(minLength: 8)
-                        Menu {
-                            Button("Tomorrow", systemImage: "sunrise") { move(task, to: .tomorrow) }
-                            Button("Weekend", systemImage: "calendar") { move(task, to: .weekend) }
-                            Button("Next week", systemImage: "calendar") { move(task, to: .nextWeek) }
-                            Button("Park", systemImage: "moon.zzz") { act { TaskActions.park(task) } }
-                            Button("Complete", systemImage: "checkmark.circle") { act { TaskActions.complete(task) } }
-                        } label: {
-                            Image(systemName: "ellipsis.circle")
-                                .accessibilityLabel("Decide")
-                        }
-                        .accessibilityIdentifier("carryReviewMenu_\(task.id.uuidString)")
-                    }
-                    .swipeActions(edge: .leading) {
-                        Button("Complete", systemImage: "checkmark.circle") { act { TaskActions.complete(task) } }
-                            .tint(Color("Completed"))
-                    }
-                    .swipeActions(edge: .trailing) {
-                        Button("Tomorrow", systemImage: "sunrise") { move(task, to: .tomorrow) }
-                    }
+                    TaskRow(task: task, note: task.parent.map { String(localized: "Subtask of \($0.displayTitle)") },
+                            onNewDate: { choosing = task }, asksNewDate: true)
+                        .paperRow()
+                        .wideListRow()
                 }
             }
+            .paperList()
             .overlay {
                 if open.isEmpty {
                     Text("Every one has a new date.")
+                        .font(.title3)
+                        .fontDesign(.serif)
                         .foregroundStyle(.secondary)
+                        .accessibilityIdentifier("carryReviewEmpty")
                 }
             }
             .navigationTitle("Needs a new date")
@@ -78,19 +63,9 @@ struct CarryReviewSheet: View {
                         .accessibilityIdentifier("carryReviewDoneButton")
                 }
             }
-        }
-    }
-
-    private func move(_ task: TaskItem, to target: TaskActions.MoveTarget) {
-        act { TaskActions.move(task, to: target, contexts: contexts, projects: projects) }
-    }
-
-    private func act(_ change: () -> Void) {
-        change()
-        do {
-            try modelContext.save()
-        } catch {
-            Self.logger.error("Saving the evening look failed: \(error, privacy: .public)")
+            .sheet(item: $choosing) { task in
+                NewDateSheet(task: task) { choosing = nil }
+            }
         }
     }
 }

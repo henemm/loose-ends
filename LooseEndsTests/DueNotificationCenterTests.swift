@@ -113,6 +113,7 @@ import UserNotifications
     @Test("A task without a due time is handed over as due today, at the set time; a new time replaces it")
     @MainActor func untimedTaskFollowsTheSetting() async throws {
         let fixture = try Fixture()
+        fixture.center.carryMode = .evening   // morning off: at 9:00 it would carry the task itself (#551)
         let task = try fixture.task("Steuer abgeben")
 
         await fixture.center.reschedule()
@@ -133,6 +134,7 @@ import UserNotifications
     @Test("Other requests stay; a completed task loses its request")
     @MainActor func replacesOnlyDueRequests() async throws {
         let fixture = try Fixture()
+        fixture.center.carryMode = .evening   // morning off: at 9:00 it would carry the task itself (#551)
         let task = try fixture.task("Steuer abgeben")
         let place = UNNotificationRequest(identifier: "place_x", content: UNMutableNotificationContent(), trigger: nil)
         fixture.recorder.pending[place.identifier] = place
@@ -151,6 +153,7 @@ import UserNotifications
     @Test("A time set on another device is taken over and planned with")
     @MainActor func takesTheCloudTime() async throws {
         let fixture = try Fixture()
+        fixture.center.carryMode = .evening   // morning off: at 9:00 it would carry the task itself (#551)
         let task = try fixture.task("Steuer abgeben")
         fixture.cloud.reminderMinutes = 18 * 60 + 15
 
@@ -173,7 +176,20 @@ import UserNotifications
         return task
     }
 
-    @Test("The morning notification names the loose ends and what needs a new date, in the CARRY category (#518)")
+    @Test("A change from elsewhere replans, like a save: a task saved behind the center's back gets its reminder (#553)")
+    @MainActor func changeFromElsewhereReplans() async throws {
+        let fixture = try Fixture()
+        await fixture.center.reschedule()
+        let task = try fixture.task("Zahnarzt anrufen", hour: 14)
+        #expect(fixture.request(for: task) == nil, "saved without the center hearing of it")
+
+        fixture.center.storeChangedElsewhere()
+        try await Task.sleep(for: .seconds(1))
+
+        #expect(fixture.request(for: task) != nil)
+    }
+
+    @Test("The morning notification counts the loose ends and names the longest open, in the CARRY category (#518, #551)")
     @MainActor func carriedMorningNotification() async throws {
         let fixture = try Fixture()
         let a = try carriedTask(fixture, "Steuerbescheid ablegen")
@@ -185,10 +201,36 @@ import UserNotifications
         let mornings = fixture.recorder.pending.values.filter { $0.content.categoryIdentifier == CarryReminders.categoryIdentifier }
         let tomorrowMorning = try #require(mornings.first { fixture.fireComponents(of: $0).day == fixture.calendar.component(.day, from: fixture.tomorrow) })
         #expect(tomorrowMorning.content.categoryIdentifier == CarryReminders.categoryIdentifier)
-        #expect(Set(tomorrowMorning.content.userInfo["taskIDs"] as? [String] ?? []) == [a.id.uuidString, b.id.uuidString])
+        #expect((tomorrowMorning.content.userInfo["taskIDs"] as? [String] ?? []).isEmpty, "an invitation, not a list")
         #expect(tomorrowMorning.content.title == String(localized: "Loose ends: \(2)"))
-        #expect(tomorrowMorning.content.body == String(localized: "\(2) need a new date."))
+        let named = ListFormatter.localizedString(byJoining: [a.displayTitle, b.displayTitle])
+        #expect(tomorrowMorning.content.body == String(localized: "Longest open: \(named)"))
         #expect(fixture.fireComponents(of: tomorrowMorning).hour == 9)
+    }
+
+    @Test("Morning and reminder time at the same minute: one notification with today's day-only tasks, no single one for them (#551)")
+    @MainActor func morningCarriesTheDayOnlyReminders() async throws {
+        let fixture = try Fixture()
+        let dayOnly = try fixture.task("Steuer abgeben")
+        let timed = try fixture.task("Zahnarzt anrufen", hour: 14, minute: 30)
+
+        await fixture.center.reschedule()
+
+        let mornings = fixture.recorder.pending.values.filter { $0.content.categoryIdentifier == CarryReminders.categoryIdentifier }
+        let tomorrowMorning = try #require(mornings.first { fixture.fireComponents(of: $0).day == fixture.calendar.component(.day, from: fixture.tomorrow) })
+        #expect(tomorrowMorning.content.body.hasPrefix(String(localized: "Today: \(dayOnly.displayTitle)")))
+        #expect(fixture.request(for: dayOnly) == nil, "named in the morning, so no second notification at 9:00")
+        #expect(fixture.request(for: timed) != nil, "a time keeps its own reminder")
+
+        fixture.center.morningTime = DueReminders.Time(hour: 8, minute: 0)
+        await fixture.center.reschedule()
+        #expect(fixture.request(for: dayOnly) != nil, "different minutes: the single reminder is back")
+        let eight = fixture.recorder.pending.values.first {
+            $0.content.categoryIdentifier == CarryReminders.categoryIdentifier
+                && fixture.fireComponents(of: $0).day == fixture.calendar.component(.day, from: fixture.tomorrow)
+        }
+        #expect(eight?.content.body.hasPrefix(String(localized: "Today: \(dayOnly.displayTitle)")) == false,
+                "no Today line at 8:00; the longest-open line may still name the task")
     }
 
     @Test("Both switched off hands over no morning or evening notification, and the choice goes to iCloud")
@@ -402,7 +444,8 @@ import UserNotifications
     @MainActor func rescheduleRunsThePlaceReconcile() async throws {
         let spy = PlaceSpy()
         let fixture = try Fixture(places: spy)
-        let task = try fixture.task("Steuer abgeben")
+        // With a time: at 9:00 the morning would carry a day-only task itself (#551).
+        let task = try fixture.task("Steuer abgeben", hour: 14)
 
         await fixture.center.reschedule()
 

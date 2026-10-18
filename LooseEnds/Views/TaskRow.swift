@@ -19,7 +19,13 @@ struct TaskRow: View {
     /// The task's place in "Next up" (#509): shown as a star with the number at the row's end. Nil in
     /// that view itself and on the start screen, where every row is lined up anyway.
     var nextRank: Int?
-    /// The margin with the one time that counts (#424); wide enough for "12:00" and "Seit gestern" in two lines.
+    /// Opens the date choice (#548). With it, a task whose deadline passed shows "New date" in the
+    /// margin instead of its old time; without it the margin only says what had been planned.
+    var onNewDate: (() -> Void)?
+    /// The evening look (#550) asks for a new date for every task it lists, a day-only date still
+    /// standing on its day among them: the button shows regardless of the margin's own reading.
+    var asksNewDate = false
+    /// The margin with the one time that counts (#424); wide enough for "12:00" and "Neues Datum" in two lines.
     @ScaledMetric(relativeTo: .caption) private var marginWidth: CGFloat = 54
     /// The start screen's draft sizes (#463); everywhere else the row keeps the text styles.
     @Environment(\.startMetrics) private var startMetrics
@@ -47,19 +53,55 @@ struct TaskRow: View {
     }
 
     /// Like a diary (#424): the time at the left edge, red only for time pressure, accent while the
-    /// AI's date is unseen. Empty without a date or duration, but always the same width.
+    /// AI's date is unseen. Empty without a date or duration, but always the same width. A deadline
+    /// that passed is no deadline (#548): then the margin is the "New date" button over its grey trace.
+    @ViewBuilder
     private var margin: some View {
         let mark = ViewRules.marginMark(of: task)
-        let unseenAI = task.hasUnseenAutomaticRevisions
-            && FieldSource.isAutomatic(task.dueDate == nil ? task.durationSourceRaw : task.dueSourceRaw)
-        let style: AnyShapeStyle = mark.pressing ? AnyShapeStyle(.red) : unseenAI ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary)
-        return Text(mark.text)
-            .font(startMetrics?.margin ?? .caption.monospacedDigit())
+        if let onNewDate, let trace = newDateTrace(mark) {
+            newDateButton(trace, action: onNewDate)
+        } else {
+            let unseenAI = task.hasUnseenAutomaticRevisions
+                && FieldSource.isAutomatic(task.dueDate == nil ? task.durationSourceRaw : task.dueSourceRaw)
+            let style: AnyShapeStyle = mark.pressing ? AnyShapeStyle(.red) : unseenAI ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary)
+            Text(mark.text)
+                .font(startMetrics?.margin ?? .caption.monospacedDigit())
+                .multilineTextAlignment(.trailing)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
+                .foregroundStyle(style)
+                .frame(width: startMetrics?.marginWidth ?? marginWidth, alignment: .trailing)
+        }
+    }
+
+    /// The trace under the button: the margin's own when the deadline passed, else the date as it
+    /// stands when the evening look asks anyway.
+    private func newDateTrace(_ mark: ViewRules.MarginMark) -> NewDateRule.Trace? {
+        if case .passed(let trace) = mark { return trace }
+        return asksNewDate ? NewDateRule.trace(of: task) : nil
+    }
+
+    /// Accent = tappable (ADR-14); the trace in grey below, never red: there is no pressure left.
+    private func newDateButton(_ trace: NewDateRule.Trace, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(alignment: .trailing, spacing: 1) {
+                Text("New date")
+                    .font((startMetrics?.margin ?? .caption).weight(.medium))
+                    .foregroundStyle(.tint)
+                    .lineLimit(2)
+                Text(trace.text)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
             .multilineTextAlignment(.trailing)
-            .lineLimit(2)
             .minimumScaleFactor(0.8)
-            .foregroundStyle(style)
             .frame(width: startMetrics?.marginWidth ?? marginWidth, alignment: .trailing)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.borderless)
+        .accessibilityLabel(Text("New date, \(trace.text)"))
+        .accessibilityIdentifier("newDate_\(task.id.uuidString)")
     }
 
     /// The same signs as the swipe actions and the menu (#509): the star with the place in "Next up"

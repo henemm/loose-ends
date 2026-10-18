@@ -96,7 +96,8 @@ struct ContentView: View {
             get: { !carryReviewRequest.taskIDs.isEmpty },
             set: { if !$0 { carryReviewRequest.taskIDs = [] } }
         )) {
-            CarryReviewSheet(taskIDs: carryReviewRequest.taskIDs, tasks: tasks) { carryReviewRequest.taskIDs = [] }
+            CarryReviewSheet(taskIDs: carryReviewRequest.taskIDs, tasks: tasks,
+                             reminderTime: notifications?.reminderTime ?? .standard) { carryReviewRequest.taskIDs = [] }
         }
         #if os(iOS)
         .fullScreenCover(isPresented: $showsOnboarding) { onboarding }
@@ -111,6 +112,10 @@ struct ContentView: View {
             if phase != .active { commitCompletions(all: true) }
             // Back in front, maybe on a new day: "Due today" and the badge follow the date (#299).
             if phase == .active { notifications?.rescheduleSoon() }
+            #if os(iOS)
+            // Gone to the back: ask for a refresh, so the plan is renewed without an app start (#553).
+            if phase == .background { BackgroundRefresh.schedule() }
+            #endif
             // A task Siri or a shortcut saved while the app sat in the background is still unsorted:
             // the catch-up ran only at launch. Cheap without pending tasks, and one pass at a time.
             if phase == .active { Task { await enrichment?.processPending() } }
