@@ -105,7 +105,7 @@ Geprüft per grep: Außer `FocusBloxCalibrationTests.swift` instanziiert keine D
    (`ContextWordLearningReportTests`, `RecognitionRuleCorpusTests`, `RuleLeaveOneOutReportTests`, `SelfConsistencyReportTests`).
 4. `scripts/test_measurement_status.py`: Zahlen 5 auf 4; die Markdown-Zeilen-Prüfung (Zeile 54) wechselt auf eine
    verbliebene Suite; neuer Test `test_no_unit_suite_calls_the_model`: durchsucht `LooseEndsTests/*.swift` nach
-   `FoundationModelsEnricher(` und erwartet keinen Treffer. Er schützt davor, dass eine Modellmessung unbemerkt
+   `FoundationModelsEnricher(` und erwartet keinen Treffer außer in Dateien mit dem Schalter `.enabled(if: RealModel.isRequested` aus #531. Er schützt davor, dass eine Modellmessung unbemerkt
    in den Unit-Lauf zurückkehrt.
 5. Kommentarzeilen in `SelfConsistencyReportTests.swift:9` und `Measurement/SelfConsistency.swift:65` nennen die gelöschte
    Suite nicht mehr (z. B. „die entfernte Kalibrierungssuite, #395“ oder Satz ohne Namen).
@@ -154,7 +154,7 @@ python3 -m unittest discover -s scripts -p 'test_*.py'
 
 - **AC-1:** Given der Stand nach der Umsetzung, When `test ! -e LooseEndsTests/FocusBloxCalibrationTests.swift` und `grep -rn "FocusBloxCalibrationTests\|CalibrationGate" LooseEndsTests Measurement scripts` laufen, Then existiert die Datei nicht mehr und der grep ist leer (Treffer nur in Doku-Zeilen, die die Entfernung nennen, nicht in diesen drei Ordnern).
 - **AC-2:** Given der Stand nach der Umsetzung, When `python3 scripts/test_measurement_status.py` läuft, Then ist es grün und die Messstrecken-Liste in `GATES` hat genau vier Einträge ohne `FocusBloxCalibrationTests`.
-- **AC-3:** Given der Stand nach der Umsetzung, When `grep -rln "FoundationModelsEnricher(" LooseEndsTests Measurement` läuft, Then ist die Ausgabe leer; der Skripttest `test_no_unit_suite_calls_the_model` prüft dasselbe und ist grün.
+- **AC-3:** Given der Stand nach der Umsetzung (auf `main` mit #531), When `grep -rlnE "FoundationModelsEnricher\s*\(" LooseEndsTests Measurement` läuft, Then nennt er nur Dateien, deren Suite am Schalter `.enabled(if: RealModel.isRequested` hängt (heute nur `LooseEndsTests/RealModelTests.swift`, aus #531, läuft nur mit `./scripts/sim.sh real-model`); der Skripttest `test_no_unit_suite_calls_the_model` prüft dasselbe rekursiv über beide Ordner, ist grün und schlägt bei einem Modellaufruf ohne diesen Schalter an.
 - **AC-4:** Given ein voller Lauf `./scripts/sim.sh sim-unit` mit Korpus (`focusblox-corpus.json` liegt im Hauptordner `/Users/hem/Developer/loose-ends/docs/reference/`, `MeasurementData` findet ihn), When der Lauf endet, Then ist das Ergebnis grün, und die Statuszeile von `measurement_status.py` am Ende nennt vier Messstrecken und keine Kalibrierung.
 - **AC-5:** Given derselbe Lauf, When danach `git diff --exit-code docs/reference/focusblox-calibration-report.md` läuft, Then ist der Exit-Code 0 (Bericht byte-gleich, #147 eingelöst).
 - **AC-6:** Given derselbe Lauf, When die Laufzeit mit den 187 s bis 218 s der Nachstellung verglichen wird, Then enthält das Protokoll keinen Test aus der gelöschten Suite und keinen Modellaufruf (`grep -c "FocusBloxCalibration" <Protokoll>` ergibt 0).
@@ -187,5 +187,7 @@ python3 -m unittest discover -s scripts -p 'test_*.py'
 - **ADR-Nr.:** keine — Grund: Testwerkzeug, keine Architekturentscheidung; keine bestehende ADR wird gekippt, und #147 („nur echte Messungen schreiben“) wird eingelöst.
 
 ## Changelog
+
+- 2026-10-18: AC-3 nach dem Rebase auf #531 angepasst (override von Henning): Die per Schalter abgeschaltete Mac-Reihe `RealModelTests` darf das Modell rufen, jede andere Datei nicht; Wächter rekursiv über `LooseEndsTests/` und `Measurement/` (Prüfbefund F001).
 
 - 2026-10-18: Spec erstellt (Variante A, Alternativen B bis D, von Henning freigegeben).

@@ -82,10 +82,18 @@ class RegistryMatchesSwiftTests(unittest.TestCase):
 
 
 class NoModelInUnitRunTests(unittest.TestCase):
-    """Der Unit-Lauf ruft das On-Device-Modell nie (#395): im Simulator misst es ein anderes Modell als das Gerät."""
+    """Der Unit-Lauf ruft das On-Device-Modell nie (#395): im Simulator misst es ein anderes Modell als das Gerät.
+    Erlaubt ist ein Aufruf nur hinter dem Schalter von `./scripts/sim.sh real-model` (#531)."""
 
     def test_no_unit_suite_calls_the_model(self):
-        callers = sorted(p.name for p in TESTS.glob("*.swift") if "FoundationModelsEnricher(" in p.read_text())
+        call = re.compile(r"FoundationModelsEnricher\s*\(")
+        switch = ".enabled(if: RealModel.isRequested"
+        callers = sorted(
+            str(p.relative_to(ms.ROOT))
+            for folder in (TESTS, ms.ROOT / "Measurement")
+            for p in folder.rglob("*.swift")
+            if call.search(text := p.read_text()) and switch not in text
+        )
         self.assertEqual(callers, [])
 
 

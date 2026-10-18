@@ -339,7 +339,7 @@ die deshalb nicht gemessen hat (`scripts/measurement_status.py`, #149).
 4. ~~Konfidenzschwelle mit dem FocusBlox-Korpus kalibrieren (Evaluations-Framework).~~ **Beantwortet
    (2026-09-18, Issue #23): Schwelle 0,6 bestätigt, keine Anpassung.** `FoundationModelsEnricher`
    lief gegen eine Stichprobe von 60 der 287 exportierten FocusBlox-Aufgaben
-   (`LooseEndsTests/FocusBloxCalibrationTests.swift`, Report in
+   (Suite entfernt (#395), Bericht ist der Gerätestand aus #23:
    `docs/reference/focusblox-calibration-report.md`). Ergebnis für importance/urgency/duration/energy:
    Precision und Recall bewegen sich zwischen Schwelle 0,3 und 0,7 kaum (z. B. duration konstant bei
    51 % Precision), erst ab 0,8–0,9 sinkt die Trefferzahl ohne klaren Precision-Gewinn. Die
