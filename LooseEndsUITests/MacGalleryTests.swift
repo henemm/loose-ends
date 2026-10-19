@@ -71,22 +71,22 @@ final class MacGalleryTests: XCTestCase {
     @MainActor
     private func photographSettings(dark: Bool) {
         let label = dark ? "dark" : "light"
-        let app = launch(dark: dark)
-        _ = openMainWindowIfNeeded(app)
-        XCTAssertTrue(element("startCaptureField", in: app).waitForExistence(timeout: 20), "No start page")
+        let app = macLaunch(dark: dark)
+        _ = macOpenMainWindowIfNeeded(app)
+        XCTAssertTrue(macElement("startCaptureField", in: app).waitForExistence(timeout: 20), "No start page")
         app.typeKey(",", modifierFlags: .command)
         let window = app.windows.containing(.any, identifier: "reminderTimePicker").firstMatch
         XCTAssertTrue(window.waitForExistence(timeout: 10), "⌘, opened no settings window")
         for id in ["reminderTimePicker", "eveningToggle", "morningToggle", "iCloudSyncRow",
                    "defaultCalendarRow", "openAtLoginToggle", "appVersionRow"] {
-            XCTAssertTrue(element(id, in: window).waitForExistence(timeout: 5), "Settings show no \(id)")
+            XCTAssertTrue(macElement(id, in: window).waitForExistence(timeout: 5), "Settings show no \(id)")
         }
         let size = window.frame.size
         let note = XCTAttachment(string: "\(Int(size.width)) x \(Int(size.height)) pt")
         note.name = "mac-gallery-settings-\(label)-window-size"
         note.lifetime = .keepAlways
         add(note)
-        shot(window, "mac-gallery-settings-\(label)")
+        macShot(window, "mac-gallery-settings-\(label)")
         XCTAssertEqual(size.width, 640, accuracy: 2, "Settings window is not 640 pt wide")
         app.terminate()
     }
