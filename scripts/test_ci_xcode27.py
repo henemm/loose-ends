@@ -240,10 +240,10 @@ cp "$FIXTURE"/* "$out"/
         for name in ("MacGalleryTests.swift", "MacDetailClickTests.swift"):
             self.assertIn("mac-gallery-", sources[name], f"{name} liefert Bilder ins Artefakt MacGallery")
 
-    def test_click_test_clicks_the_four_fields_and_both_pickers(self):
-        """#544: the click test reaches Note, subtask, Add more, File and Photo; the gallery only photographs."""
+    def test_click_test_clicks_the_fields_and_both_pickers(self):
+        """#544: the click test reaches Note, subtask, File and Photo; the gallery only photographs ("Add more" gone, #560)."""
         source = self.mac_source("MacDetailClickTests.swift")
-        for identifier in ("noteField", "subtaskTextField", "supplementField", "addFileButton", "addPhotoButton"):
+        for identifier in ("noteField", "subtaskTextField", "addFileButton", "addPhotoButton"):
             self.assertIn(identifier, source, identifier)
         self.assertIn("hasKeyboardFocus", source, "der Klick muss den Fokus setzen, nicht nur treffen")
 

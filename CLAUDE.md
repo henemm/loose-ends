@@ -181,7 +181,7 @@ If the label goes away or is renamed, follow `docs/reference/testflight.md` and 
 `ci.yml`, `speech-stress.yml` and `testflight.yml`.
 The job „Mac Gallery (macOS)“ photographs the Mac app (`MacGalleryTests`, start page, New, detail, light and dark) and
 uploads the pictures `mac-gallery-*` as the artifact `MacGallery` (#511); Mac pictures come only from there, never from
-Henning's Mac. The same job runs `MacDetailClickTests` (#544): it clicks Note, "Add a subtask", "Add more", File and Photo
+Henning's Mac. The same job runs `MacDetailClickTests` (#544): it clicks Note, "Add a subtask", File and Photo
 in the detail and types; the gallery only photographs, so a Mac control that does not answer a click shows up here. The
 helpers both share live in `MacUITestSupport.swift` (`mac` prefix).
 
@@ -231,8 +231,10 @@ Unit tests for enrichment, view rules, repeat rules and revisions come first; UI
 
 **GitHub Issues is the one and only backlog.** Every open task — feature, bug, spike — is a GitHub
 issue with its own Definition of Done, not a bullet in a markdown file. **The priority order lives in
-the milestones** (M1 Alltag stabil → M2 Siri und Orte → M3 Bereit für externe Tester → M4 Nach der ersten
-Einladung; the order inside each is in the milestone description), not in a document.
+the milestones** (M1 Alltag stabil → M2 Orte und Mail-Rücksprung → M3 Bereit für externe Tester → M4 Nach der
+ersten Einladung; the order inside each is in the milestone description), not in a document. M2 was „Siri und Orte“
+until 2026-10-19: after #25 (Siri via the Reminders schema) was rolled back on 2026-10-17, the Siri epic #369 moved
+to M4 and Siri stays on the App Shortcut „Aufgabe erfassen“.
 **The GitHub Project "loose ends" (henemm, project 1) is the Kanban view of those issues** (Henning, 2026-10-12):
 Status (Backlog → Ready → In progress → In review → Done), Priority (P0–P2) and Size (XS–XL) live there.
 Priority follows the milestone (M1 = P0, M2 and M3 = P1, M4 = P2; without milestone by content). Claude keeps the board
@@ -247,8 +249,8 @@ priority (2026-10-12: #355 moved to the top). Raw notes from him (no body yet) g
 `docs/project/04-stand.md`
 is dissolved (2026-10-12): never recreate a status or priority file, and never resurrect a status column in
 `docs/project/01-user-story.md` (it's a one-time snapshot from the briefing, not maintained). The first
-invitation of external testers waits for everything in the user story, Siri schema and places included
-(Henning, 2026-10-12). Opening a PR for an issue: reference it (`Closes #N`) so it auto-closes on
+invitation of external testers waits for everything in the user story, places included
+(Henning, 2026-10-12; the Siri schema left that list with #369 → M4, 2026-10-19). Opening a PR for an issue: reference it (`Closes #N`) so it auto-closes on
 merge; if it doesn't auto-close, close it by hand. New work discovered mid-task becomes a new issue,
 not scope creep on the current one.
 
