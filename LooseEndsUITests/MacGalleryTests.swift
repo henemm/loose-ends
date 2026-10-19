@@ -68,7 +68,10 @@ final class MacGalleryTests: XCTestCase {
         XCTAssertTrue(macElement("startCaptureField", in: app).waitForExistence(timeout: 20), "No start page")
         macCapture("Heute um 1 Uhr Rechnung bezahlen", in: app)
         for text in ["Rasen mähen", "Anna anrufen", "Steuer prüfen", "Fahrrad putzen", "Keller aufräumen",
-                     "Brot kaufen", "Zahnarzt anrufen", "Blumen gießen", "Paket abholen"] {
+                     "Brot kaufen", "Zahnarzt anrufen", "Blumen gießen", "Paket abholen",
+                     // More than a window full, so the list really scrolls under its head (#566 round 3).
+                     "Fenster putzen", "Auto waschen", "Oma schreiben", "Regal bauen", "Kuchen backen",
+                     "Lampe tauschen", "Bücher sortieren", "Schuhe putzen"] {
             macCapture(text, in: app)
         }
         let window = macMainWindow(of: app)
