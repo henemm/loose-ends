@@ -214,5 +214,31 @@ final class MacDetailClickTests: XCTestCase {
         dismissPicker(in: app)
         app.terminate()
     }
+
+    // MARK: - Settings (#573)
+
+    /// Henning (2026-10-19, build 92 on the Mac): "you need luck to open Fields". The row took the click
+    /// only on its word and its arrow; a plain button hits what its label paints, and the space between
+    /// painted nothing. Clicks the middle of the row, where nothing but the row stands.
+    @MainActor
+    func testFieldsOpensFromTheMiddleOfItsRow() throws {
+        let app = macLaunch(dark: false)
+        _ = macOpenMainWindowIfNeeded(app)
+        XCTAssertTrue(macElement("startCaptureField", in: app).waitForExistence(timeout: 20), "No start page")
+        app.typeKey(",", modifierFlags: .command)
+        let settings = app.windows.containing(.any, identifier: "reminderTimePicker").firstMatch
+        XCTAssertTrue(settings.waitForExistence(timeout: 10), "⌘, opened no settings window")
+        let row = macElement("fieldsRow", in: settings)
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "Settings show no Fields row")
+        row.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).click()
+        let page = macElement("fieldSettings", in: app)
+        XCTAssertTrue(page.waitForExistence(timeout: 10), "A click on the middle of the Fields row should open the page")
+        macShot(settings, "mac-gallery-573-fields-from-row-middle")
+        let done = macElement("fieldsDoneButton", in: app)
+        XCTAssertTrue(done.waitForExistence(timeout: 5), "The Fields sheet shows no Done")
+        done.click()
+        XCTAssertTrue(page.waitForNonExistence(timeout: 5), "Done should close the Fields sheet")
+        app.terminate()
+    }
 }
 #endif
