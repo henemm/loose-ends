@@ -33,6 +33,10 @@ struct SidebarView: View {
     /// only. The iPhone ignores both: its index opens a page instead (#428).
     @AppStorage("startShowsProjects") private var showsProjects = false
     @AppStorage("startShowsContexts") private var showsContexts = false
+    /// Tags and Projects stand on the start page only while their field is on (#538, rule 7).
+    @Environment(FieldSettingsStore.self) private var fieldSettings: FieldSettingsStore?
+    private var offersTags: Bool { (fieldSettings?.settings ?? .standard).isOn(.contexts) }
+    private var offersProjects: Bool { (fieldSettings?.settings ?? .standard).isOn(.project) }
 
     /// iPhone: the sentence and the preview replace the big "Views" title. iPad and Mac keep the
     /// plain sidebar, where the list sits right next to it anyway.
@@ -78,7 +82,8 @@ struct SidebarView: View {
                                  words: tagWords, target: .catalog(.tags)) { selection = .catalog(.tags) }
         let projectsLine = IndexLine(id: "projectsToggle", title: String(localized: "Projects"), count: projects.count,
                                      words: projectWords, target: .catalog(.projects)) { selection = .catalog(.projects) }
-        return [ViewRules.indexViews(in: tasks).map(view), [tagsLine, projectsLine], [view(.open), view(.done)]]
+        let groups = [offersTags ? tagsLine : nil, offersProjects ? projectsLine : nil].compactMap { $0 }
+        return [ViewRules.indexViews(in: tasks).map(view), groups, [view(.open), view(.done)]].filter { !$0.isEmpty }
     }
 
     /// The "Now" rows act as in "Next up" (#303): one set of actions carries them all (#368).
@@ -123,7 +128,7 @@ struct SidebarView: View {
             }
 
             // On iPhone and Mac the index lines open these groups as pages (#428).
-            if showsFoldGroups {
+            if showsFoldGroups, offersProjects {
                 Section {
                     if showsProjects {
                         ForEach(projects) { project in
@@ -139,7 +144,9 @@ struct SidebarView: View {
                 } header: {
                     foldHeader("Projects", count: projects.count, isOpen: $showsProjects, id: "projectsToggle")
                 }
+            }
 
+            if showsFoldGroups, offersTags {
                 Section {
                     if showsContexts {
                         ForEach(contexts) { context in

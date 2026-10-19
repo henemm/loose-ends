@@ -125,6 +125,8 @@ final class MacDetailClickTests: XCTestCase {
     @MainActor
     func testNoteTakesAClickAndIsSaved() throws {
         let (app, window) = openDetail("Schlüssel abholen")
+        // The note shows only with content (#538): its word opens the section.
+        reveal("field_notes", in: window).click()
         let note = reveal("noteField", in: window)
         clickWords(of: note)
         XCTAssertTrue(hasKeyboardFocus(note), "A click on Note should put the cursor there")
@@ -140,6 +142,7 @@ final class MacDetailClickTests: XCTestCase {
     @MainActor
     func testSubtaskIsAddedByClickAndCheckedByClick() throws {
         let (app, window) = openDetail("Einkaufen")
+        reveal("field_subtasks", in: window).click()
         let field = reveal("subtaskTextField", in: window)
         clickWords(of: field)
         XCTAssertTrue(hasKeyboardFocus(field), "A click on Add a subtask should put the cursor there")
@@ -163,6 +166,7 @@ final class MacDetailClickTests: XCTestCase {
     @MainActor
     func testFileOpensTheOpenPanel() throws {
         let (app, window) = openDetail("Vertrag ablegen")
+        reveal("field_attachments", in: window).click()
         let file = reveal("addFileButton", in: window)
         let baseline = pickerCount(app)
         file.click()
@@ -188,6 +192,7 @@ final class MacDetailClickTests: XCTestCase {
         XCTAssertTrue(now.waitForExistence(timeout: 10), "The task due today should stand in Now")
         now.click()
         XCTAssertTrue(macElement("detailRawTextMarker", in: window).waitForExistence(timeout: 10), "Detail did not open")
+        reveal("field_attachments", in: window).click()
         let file = reveal("addFileButton", in: window)
         let baseline = pickerCount(app)
         file.click()
@@ -200,6 +205,7 @@ final class MacDetailClickTests: XCTestCase {
     @MainActor
     func testPhotoOpensThePhotoPicker() throws {
         let (app, window) = openDetail("Foto vom Zähler")
+        reveal("field_attachments", in: window).click()
         let photo = reveal("addPhotoButton", in: window)
         let baseline = pickerCount(app)
         photo.click()

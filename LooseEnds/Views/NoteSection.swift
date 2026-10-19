@@ -10,6 +10,8 @@ struct NoteSection: View {
     @Query(sort: \TaskContext.sortOrder) private var contexts: [TaskContext]
     @Query(sort: \Project.sortOrder) private var projects: [Project]
     let task: TaskItem
+    /// Opened from the word line (#538): the field takes the focus at once.
+    var startsEditing = false
 
     @State private var draft = ""
     @State private var editing = false
@@ -46,10 +48,14 @@ struct NoteSection: View {
                     .accessibilityIdentifier("editNoteButton")
                 }
             }
-        } header: {
-            Text("Note").captionHead()
         }
-        .onAppear { draft = task.notes ?? "" }
+        .onAppear {
+            draft = task.notes ?? ""
+            if startsEditing, (task.notes ?? "").isEmpty {
+                editing = true
+                focused = true
+            }
+        }
     }
 
     /// Trimmed; empty clears the note. Unchanged writes nothing (`RevisionService.set`).

@@ -7,6 +7,8 @@ import SwiftUI
 struct SubtasksSection: View {
     @Environment(\.modelContext) private var modelContext
     let task: TaskItem
+    /// Opened from the word line (#538): the field takes the focus at once.
+    var startsEditing = false
 
     @State private var draft = ""
     @FocusState private var draftFocused: Bool
@@ -47,6 +49,9 @@ struct SubtasksSection: View {
                 Text("\(progress.done) of \(progress.total) done")
                     .accessibilityIdentifier("subtaskProgress")
             }
+        }
+        .onAppear {
+            if startsEditing, lines.isEmpty { draftFocused = true }
         }
     }
 

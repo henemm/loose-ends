@@ -42,12 +42,11 @@ final class CalendarTargetTests: XCTestCase {
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
 
-        let toggle = app.switches["showInCalendarToggle"]
-        scrollUntilVisible(toggle, named: "showInCalendarToggle", in: app, firstWait: 3)
-        XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Detail should offer Show in calendar")
-        XCTAssertEqual(toggle.value as? String, "0")
-        // The element spans the row; the switch itself sits at the trailing edge.
-        toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
+        // "+ Calendar" in the word line switches on (#538); the switch itself shows once it is on.
+        let word = app.descendants(matching: .any).matching(identifier: "field_calendar").firstMatch
+        scrollUntilVisible(word, named: "field_calendar", in: app, firstWait: 3)
+        XCTAssertTrue(word.waitForExistence(timeout: 5), "Detail should offer Calendar")
+        word.tap()
 
         // A time without a duration asks for the duration first (#203, Teil B).
         let hour = app.descendants(matching: .any).matching(identifier: "calendarAskDuration_hour1").firstMatch
@@ -197,11 +196,10 @@ final class CalendarTargetTests: XCTestCase {
         XCTAssertTrue(row.waitForExistence(timeout: 5), "New should list the task \(title)")
         row.tap()
 
-        let toggle = app.switches["showInCalendarToggle"]
-        scrollUntilVisible(toggle, named: "showInCalendarToggle", in: app, firstWait: 3)
-        XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Detail should offer Show in calendar")
-        XCTAssertEqual(toggle.value as? String, "0")
-        toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
+        let word = app.descendants(matching: .any).matching(identifier: "field_calendar").firstMatch
+        scrollUntilVisible(word, named: "field_calendar", in: app, firstWait: 3)
+        XCTAssertTrue(word.waitForExistence(timeout: 5), "Detail should offer Calendar")
+        word.tap()
 
         let hour = app.descendants(matching: .any).matching(identifier: "calendarAskDuration_hour1").firstMatch
         if hour.waitForExistence(timeout: 5) {

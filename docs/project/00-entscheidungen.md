@@ -201,6 +201,13 @@ App-Start: tägliche Hintergrund-Auffrischung und Neuplanung bei einem CloudKit-
 Runde: Die Serie steht auf ihrem Anker (`RepeatRule.anchor`), das Erledigen rechnet von dort weiter, nicht vom
 verschobenen Datum. Der Anker wandert mit jeder Runde; Regeln von früher ohne Anker rechnen wie bisher vom Datum.
 
+**ADR-19 Felder: zeigen, was da ist (Henning, 2026-10-18, #538).** Die Detailseite zeigt nur, was die Aufgabe trägt,
+in fünf Gruppen und einer Ordnung (Was · Wann · Gewicht · Ablage · Zusammenhang); alles Leere steht in einer Wortzeile
+darunter, je Gruppe umgebrochen. Wiederholung und Kalender warten auf Fällig, Unteraufgaben und Wartet auf auf die oberste
+Ebene. Fest ohne Schalter: Titel, Gesagt, Fällig, Herkunft, Quelle. Eine Seite „Felder“ in den Einstellungen
+schaltet je Feld, ob es angeboten wird; aus heißt nie versteckt. Vorgabe an: Notiz, Anhänge, Im Kalender, Dauer,
+Etiketten. Die Wahl gilt auf allen Geräten (iCloud-Schlüsselwertspeicher) und steuert auch die Gruppen der Startseite.
+
 **ADR-17 Ergänzte Screens nach Lückenprüfung.** Als nächstes (manuell sortiert), Neu (Eingang),
 Feld-Picker statt Formular, Wisch- und Halten-Gesten mit Verschieben (Morgen, Wochenende, nächste Woche,
 Datum), Erledigt mit Zurückholen, Erfassung aus Mail, Bestätigung, Alt mit Parken, Mitteilung.

@@ -14,6 +14,8 @@ struct SettingsView: View {
     @State private var morningTime: Date
     /// The calendar picker for new events (#203 Teil C2) is open.
     @State private var choosesCalendar = false
+    /// Mac only: the "Fields" page (#538) is open as a sheet; the settings window has no navigation stack.
+    @State private var showsFields = false
     #if os(macOS)
     @State private var opensAtLogin = LoginItem.isEnabled
     #endif
@@ -64,6 +66,10 @@ struct SettingsView: View {
             syncSection
             #endif
             calendarSection
+            // Below the calendar (#538): the rows above keep their place on the screen.
+            group("Task", hint: Text("What a task offers. Off means not offered; what a task already carries, it shows anyway.")) {
+                fieldsRow
+            }
             #if os(macOS)
             group("Menu bar", hint: Text("Then capturing from the menu bar is ready right after you log in, without a window.")) {
                 Toggle("Open at login", isOn: $opensAtLogin)
@@ -84,6 +90,20 @@ struct SettingsView: View {
         .navigationTitle("Settings")
         // Only refreshes the calendar list when access is already there; never asks for it.
         .task { await calendar?.refreshIfAllowed() }
+        #if os(macOS)
+        .sheet(isPresented: $showsFields) {
+            NavigationStack {
+                FieldSettingsView()
+                    .toolbar {
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Done") { showsFields = false }
+                                .accessibilityIdentifier("fieldsDoneButton")
+                        }
+                    }
+            }
+            .frame(width: 520, height: 640)
+        }
+        #endif
         .sheet(isPresented: $choosesCalendar) {
             if let calendar {
                 CalendarPickerSheet(calendars: calendar.calendars, defaultID: calendar.appCalendarID,
@@ -214,6 +234,32 @@ struct SettingsView: View {
                 ? String(localized: "Active · \(activity), just now")
                 : String(localized: "Active · \(activity), \(minutes) min ago")
         }
+    }
+
+    /// Settings › Fields (#538). iPhone and iPad push the page; the Mac settings window has no navigation
+    /// stack, so there the row opens it as a sheet, like the calendar picker.
+    @ViewBuilder private var fieldsRow: some View {
+        #if os(macOS)
+        Button { showsFields = true } label: {
+            HStack {
+                Text("Fields").foregroundStyle(.primary)
+                Spacer()
+                Image(systemName: "chevron.forward")
+                    .imageScale(.small)
+                    .foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
+            }
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("fieldsRow")
+        #else
+        NavigationLink {
+            FieldSettingsView()
+        } label: {
+            Text("Fields")
+        }
+        .accessibilityIdentifier("fieldsRow")
+        #endif
     }
 
     /// Where new events on this device go (#203 Teil C2). Without calendar access the list is unknown,

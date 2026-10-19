@@ -3,7 +3,9 @@ import SwiftData
 import SwiftUI
 
 /// Task detail (design briefing, screen 4): editable title, the raw text underneath while it says
-/// more than the title, then the fields that are set; empty ones follow as a line of words (#440, before: "Add detail", #187).
+/// more than the title, then what the task carries, in five groups and one order (#538: What · When ·
+/// Weight · Filing · Connection); a section shows only with content, and everything empty is offered
+/// in one line of words below, grouped the same way, only the fields that are on in the settings.
 /// Tapping a row opens its editor; a field a rule read from the raw text carries the quote mark, one the AI
 /// estimated the spark (#101), both accent-tinted, and its editor also shows before, after, the
 /// reason and Reset. Opening the detail marks the AI changes as seen, except from "New" (#349):
@@ -26,6 +28,11 @@ struct TaskDetailView: View {
     @Environment(CalendarBridge.self) private var calendar: CalendarBridge?
     /// Nil in previews; then "Analyze again" is not offered.
     @Environment(\.enrichment) private var enrichment: EnrichmentCoordinator?
+    /// Which fields the word line offers (#538); the standard in previews and tests.
+    @Environment(FieldSettingsStore.self) private var fieldSettings: FieldSettingsStore?
+    /// Sections opened from the word line while still empty (#538, rule 2): the note, the attachment
+    /// buttons, the subtask field, the waiting-on picker, the calendar switch. Gone again with the detail.
+    @State private var opened: Set<DetailField> = []
 
     /// The title as on the start screen (#438): New York medium, a little smaller than the headline.
     @ScaledMetric(relativeTo: .title2) private var titleSize: CGFloat = DetailLayout.titleSize(wide: false)
@@ -52,6 +59,10 @@ struct TaskDetailView: View {
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Detail")
 
     private var aiFields: [RevisedField] { RevisionService.automaticFields(on: task) }
+    private var settings: DetailFieldSettings { fieldSettings?.settings ?? .standard }
+    private var carried: Set<DetailField> { DetailFields.carried(by: task) }
+    /// A section shows with content, or once its word was tapped (rule 1 and 2).
+    private func shows(_ field: DetailField) -> Bool { carried.contains(field) || opened.contains(field) }
     private var inReview: Bool { reviewing && ViewRules.isInNew(task) }
     /// A wide window or the Mac (#477): the detail as a centered column with the larger title.
     /// Split View and Slide Over are compact and keep the iPhone's detail.
@@ -140,113 +151,43 @@ struct TaskDetailView: View {
                 .detailRow()
             }
 
-            let layout = DetailLayout.split(fieldEntries)
-            if !layout.set.isEmpty {
-                Section {
-                    ForEach(layout.set, id: \.field) { fieldRow($0.field, value: $0.value) }
-                }
-                .detailRow()
+            // What (#538): the note and the attachments, right by the title; each only with content.
+            if shows(.notes) {
+                NoteSection(task: task, startsEditing: opened.contains(.notes))
+                    .detailRow()
             }
-            if !layout.empty.isEmpty {
-                Section {
-                    // The empty fields as a line of words (#440): one tap opens the editor, no list
-                    // to unfold first. Accent, since each word is a button (ADR-14).
-                    FlowLayout(spacing: 14) {
-                        ForEach(layout.empty, id: \.field) { entry in
-                            Button { editingField = entry.field } label: {
-                                Label(FieldFormatting.label(entry.field), systemImage: "plus")
-                                    .labelStyle(AddWordLabelStyle())
-                            }
-                            .buttonStyle(.plain)
-                            .foregroundStyle(.tint)
-                            .accessibilityIdentifier("field_\(entry.field.rawValue)")
-                            .editorPopover(entry.field, editing: $editingField) { editor(for: entry.field) }
-                        }
-                    }
-                    .padding(.vertical, 4)
-                    // Each word stays its own element with its own `field_…` identifier: an identifier on
-                    // the line would overwrite theirs.
-                    .accessibilityElement(children: .contain)
-                }
-                .detailRow()
+            if shows(.attachments) {
+                AttachmentsSection(task: task)
+                    .detailRow()
             }
 
-            // Numbers, addresses, links beside the title (#439).
-            NoteSection(task: task)
-                .detailRow()
-
-            // Photos and files on the task (#442).
-            AttachmentsSection(task: task)
-                .detailRow()
-
-            Section {
-                // Stays visible without a due date: it can be switched on first (see the note).
-                // Switching on asks for what the event still lacks (#203): the switch stays off until the
-                // sheet is answered, and Cancel leaves it off.
-                Toggle("Show in calendar", isOn: Binding(
-                    get: { task.showInCalendar },
-                    set: { on in
-                        if on, let gaps = CalendarAsk.gaps(for: task) {
-                            calendarGaps = gaps
-                        } else if on {
-                            CalendarSync.switchOn(task, deviceDefault: calendar?.defaultForNewEvents)
-                            save("calendar")
-                        } else {
-                            task.showInCalendar = false
-                            save("calendar")
-                        }
-                    }
-                ))
-                .accessibilityIdentifier("showInCalendarToggle")
-                if task.showInCalendar, let plan = CalendarSync.plan(for: task) {
-                    HStack {
-                        Text("Appointment")
-                        Spacer()
-                        Text(CalendarSync.appointment(plan))
-                            .foregroundStyle(.secondary)
-                    }
-                    .accessibilityElement(children: .combine)
-                    .accessibilityIdentifier("calendarAppointmentRow")
-                }
-                if task.showInCalendar, task.dueDate != nil, let calendar, calendar.appCalendarID != nil {
-                    // Tapping picks the task's own calendar (#203 Teil C). A choice this device does not
-                    // have shows by name, without a color.
-                    let target = calendar.target(for: task)
-                    Button { choosesCalendar = true } label: {
-                        HStack {
-                            Text("Calendar").foregroundStyle(.primary)
-                            Spacer()
-                            if let target {
-                                Image(systemName: "circle.fill")
-                                    .imageScale(.small)
-                                    .foregroundStyle(Color(cgColor: target.color))
-                                    .accessibilityHidden(true)
-                            }
-                            Text(target?.title ?? task.calendarName ?? "")
-                                .foregroundStyle(.secondary)
-                            Image(systemName: "chevron.forward")
-                                .imageScale(.small)
-                                .foregroundStyle(.tertiary)
-                                .accessibilityHidden(true)
-                        }
-                    }
-                    .accessibilityElement(children: .combine)
-                    .accessibilityIdentifier("calendarTargetRow")
-                }
-            } footer: {
-                calendarNote
+            // When: the one time that counts, then what hangs on it.
+            groupRows(.when)
+            if shows(.calendar) {
+                calendarSection
             }
-            .detailRow()
+            if shows(.place) {
+                PlaceSection(task: task, searching: $searchesPlace)
+                    .detailRow()
+            }
 
-            PlaceSection(task: task, searching: $searchesPlace)
-                .detailRow()
+            // Weight and Filing: set lines, one section per group so a gap separates them (rule 3).
+            groupRows(.weight)
+            groupRows(.filing)
 
+            // Connection: top level only (rule 4).
             if task.parent == nil {
-                SubtasksSection(task: task)
-                    .detailRow()
-                WaitingOnSection(task: task)
-                    .detailRow()
+                if shows(.subtasks) {
+                    SubtasksSection(task: task, startsEditing: opened.contains(.subtasks))
+                        .detailRow()
+                }
+                if shows(.waitingOn) {
+                    WaitingOnSection(task: task, startsPicking: opened.contains(.waitingOn))
+                        .detailRow()
+                }
             }
+
+            wordLine
 
             if !aiFields.isEmpty {
                 Section {
@@ -357,18 +298,162 @@ struct TaskDetailView: View {
         return parts.joined(separator: " · ")
     }
 
-    /// Every derived field in its fixed order, with its display value or nil.
-    private var fieldEntries: [DetailLayout.Entry] {
-        [
-            .init(field: .dueDate, value: FieldFormatting.value(FieldCodec.encode(.dueDate, of: task), for: .dueDate, hasTime: task.dueHasTime)),
-            .init(field: .importance, value: FieldFormatting.value(task.importanceRaw, for: .importance)),
-            .init(field: .urgency, value: FieldFormatting.value(task.urgencyRaw, for: .urgency)),
-            .init(field: .duration, value: FieldFormatting.value(task.durationRaw, for: .duration)),
-            .init(field: .energy, value: FieldFormatting.value(task.energyRaw, for: .energy)),
-            .init(field: .contexts, value: FieldFormatting.value(FieldCodec.encode(.contexts, of: task), for: .contexts)),
-            .init(field: .project, value: task.project?.name),
-            .init(field: .repeatRule, value: FieldFormatting.value(FieldCodec.encode(.repeatRule, of: task), for: .repeatRule)),
-        ]
+    /// The set lines of one group (#538, rule 3), in the group's order; nothing while the group is empty.
+    @ViewBuilder
+    private func groupRows(_ group: DetailField.Group) -> some View {
+        let rows = DetailField.allCases.filter { $0.group == group && carried.contains($0) && $0.revisedField != nil }
+        if !rows.isEmpty {
+            Section {
+                ForEach(rows, id: \.self) { field in
+                    if let revised = field.revisedField {
+                        fieldRow(revised, value: value(of: revised))
+                    }
+                }
+            }
+            .detailRow()
+        }
+    }
+
+    /// The display value of a set field.
+    private func value(of field: RevisedField) -> String? {
+        switch field {
+        case .dueDate: FieldFormatting.value(FieldCodec.encode(.dueDate, of: task), for: .dueDate, hasTime: task.dueHasTime)
+        case .importance: FieldFormatting.value(task.importanceRaw, for: .importance)
+        case .urgency: FieldFormatting.value(task.urgencyRaw, for: .urgency)
+        case .duration: FieldFormatting.value(task.durationRaw, for: .duration)
+        case .energy: FieldFormatting.value(task.energyRaw, for: .energy)
+        case .contexts: FieldFormatting.value(FieldCodec.encode(.contexts, of: task), for: .contexts)
+        case .project: task.project?.name
+        case .repeatRule: FieldFormatting.value(FieldCodec.encode(.repeatRule, of: task), for: .repeatRule)
+        case .title, .people, .blockedBy, .place, .notes: nil
+        }
+    }
+
+    /// Everything empty, offered at one place (#538, rule 2): one line of words per group, the groups
+    /// in their order with a gap between them, only the fields that are on and whose conditions hold
+    /// (rules 4 and 5). One tap opens the editor, the section, the picker or the search. Accent, since
+    /// each word is a button (ADR-14).
+    @ViewBuilder
+    private var wordLine: some View {
+        let groups = DetailFields.offered(settings: settings, carried: carried.union(opened),
+                                          hasDueDate: task.dueDate != nil, topLevel: task.parent == nil)
+        if !groups.isEmpty {
+            Section {
+                VStack(alignment: .leading, spacing: 10) {
+                    ForEach(groups, id: \.self) { words in
+                        FlowLayout(spacing: 14) {
+                            ForEach(words, id: \.self) { field in
+                                word(field)
+                            }
+                        }
+                    }
+                }
+                .padding(.vertical, 4)
+                // Each word stays its own element with its own `field_…` identifier: an identifier on
+                // the line would overwrite theirs.
+                .accessibilityElement(children: .contain)
+                .accessibilityIdentifier("wordLine")
+            }
+            .detailRow()
+        }
+    }
+
+    @ViewBuilder
+    private func word(_ field: DetailField) -> some View {
+        let button = Button { offer(field) } label: {
+            Label(FieldSettingsView.word(field), systemImage: "plus")
+                .labelStyle(AddWordLabelStyle())
+        }
+        .buttonStyle(.plain)
+        .foregroundStyle(.tint)
+        .accessibilityIdentifier("field_\(field.rawValue)")
+        // The note and the place have no field editor: their word opens the section and the search.
+        if let revised = field.revisedField, field != .notes, field != .place {
+            button.editorPopover(revised, editing: $editingField) { editor(for: revised) }
+        } else {
+            button
+        }
+    }
+
+    /// What a word does (#538, rule 2): a field with an editor opens it; the note, the attachments, the
+    /// subtasks and waiting on open their section ready for input; the place its search; the calendar
+    /// switches on, asking first for what the event still lacks (#203).
+    private func offer(_ field: DetailField) {
+        switch field {
+        case .notes, .attachments, .subtasks, .waitingOn:
+            opened.insert(field)
+        case .place:
+            searchesPlace = true
+        case .calendar:
+            opened.insert(.calendar)
+            switchCalendar(on: true)
+        case .dueDate, .repeatRule, .importance, .urgency, .duration, .energy, .contexts, .project:
+            if let revised = field.revisedField { editingField = revised }
+        }
+    }
+
+    /// "Show in calendar" (#203): switching on asks for what the event still lacks; the switch stays
+    /// off until the sheet is answered, and Cancel leaves it off.
+    private func switchCalendar(on: Bool) {
+        if on, let gaps = CalendarAsk.gaps(for: task) {
+            calendarGaps = gaps
+        } else if on {
+            CalendarSync.switchOn(task, deviceDefault: calendar?.defaultForNewEvents)
+            save("calendar")
+        } else {
+            task.showInCalendar = false
+            save("calendar")
+        }
+    }
+
+    /// The calendar as a section (#203): the switch, the appointment, the calendar it goes to. Shown
+    /// while the task is in the calendar, or right after "+ Calendar" was tapped (#538).
+    private var calendarSection: some View {
+        Section {
+            Toggle("Show in calendar", isOn: Binding(
+                get: { task.showInCalendar },
+                set: { switchCalendar(on: $0) }
+            ))
+            .accessibilityIdentifier("showInCalendarToggle")
+            if task.showInCalendar, let plan = CalendarSync.plan(for: task) {
+                HStack {
+                    Text("Appointment")
+                    Spacer()
+                    Text(CalendarSync.appointment(plan))
+                        .foregroundStyle(.secondary)
+                }
+                .accessibilityElement(children: .combine)
+                .accessibilityIdentifier("calendarAppointmentRow")
+            }
+            if task.showInCalendar, task.dueDate != nil, let calendar, calendar.appCalendarID != nil {
+                // Tapping picks the task's own calendar (#203 Teil C). A choice this device does not
+                // have shows by name, without a color.
+                let target = calendar.target(for: task)
+                Button { choosesCalendar = true } label: {
+                    HStack {
+                        Text("Calendar").foregroundStyle(.primary)
+                        Spacer()
+                        if let target {
+                            Image(systemName: "circle.fill")
+                                .imageScale(.small)
+                                .foregroundStyle(Color(cgColor: target.color))
+                                .accessibilityHidden(true)
+                        }
+                        Text(target?.title ?? task.calendarName ?? "")
+                            .foregroundStyle(.secondary)
+                        Image(systemName: "chevron.forward")
+                            .imageScale(.small)
+                            .foregroundStyle(.tertiary)
+                            .accessibilityHidden(true)
+                    }
+                }
+                .accessibilityElement(children: .combine)
+                .accessibilityIdentifier("calendarTargetRow")
+            }
+        } footer: {
+            calendarNote
+        }
+        .detailRow()
     }
 
     /// The briefing's "…" menu (screen 4) with Complete first; completing leaves the detail. No

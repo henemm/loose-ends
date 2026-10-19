@@ -132,7 +132,7 @@ final class MacGalleryTests: XCTestCase {
         let window = app.windows.containing(.any, identifier: "reminderTimePicker").firstMatch
         XCTAssertTrue(window.waitForExistence(timeout: 10), "⌘, opened no settings window")
         for id in ["reminderTimePicker", "eveningToggle", "morningToggle", "iCloudSyncRow",
-                   "defaultCalendarRow", "openAtLoginToggle", "appVersionRow"] {
+                   "defaultCalendarRow", "fieldsRow", "openAtLoginToggle", "appVersionRow"] {
             XCTAssertTrue(macElement(id, in: window).waitForExistence(timeout: 5), "Settings show no \(id)")
         }
         let size = window.frame.size

@@ -74,6 +74,11 @@ final class ProjectSubtasksTests: XCTestCase {
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
 
+        // The subtasks show only with content (#538): their word opens the section.
+        let subtasksWord = element("field_subtasks", in: app)
+        if !subtasksWord.waitForExistence(timeout: 3) { app.swipeUp() }
+        XCTAssertTrue(subtasksWord.waitForExistence(timeout: 5), "Detail should offer Subtasks in the word line")
+        subtasksWord.tap()
         let subtaskField = element("subtaskTextField", in: app)
         if !subtaskField.waitForExistence(timeout: 3) { app.swipeUp() }
         XCTAssertTrue(subtaskField.waitForExistence(timeout: 5), "Detail should offer a subtask field")

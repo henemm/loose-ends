@@ -53,8 +53,9 @@ final class PlaceSmokeTests: XCTestCase {
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
 
-        let add = reveal("addPlaceButton", in: app)
-        XCTAssertTrue(add.exists, "Detail should offer Add place")
+        // The place is offered as a word in the line below the fields (#538).
+        let add = reveal("field_place", in: app)
+        XCTAssertTrue(add.exists, "Detail should offer Place")
         add.tap()
 
         let search = element("placeSearchField", in: app)
@@ -94,6 +95,6 @@ final class PlaceSmokeTests: XCTestCase {
         if !remove.waitForExistence(timeout: 2) { remove = app.buttons["Remove"].firstMatch }
         XCTAssertTrue(remove.waitForExistence(timeout: 3), "Swiping the place row should offer Remove")
         remove.tap()
-        XCTAssertTrue(reveal("addPlaceButton", in: app).exists, "After removing, Add place should be back")
+        XCTAssertTrue(reveal("field_place", in: app).exists, "After removing, the word Place should be back")
     }
 }

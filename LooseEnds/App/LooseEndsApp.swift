@@ -11,6 +11,8 @@ struct LooseEndsApp: App {
     let enrichment: EnrichmentCoordinator
     let notifications: DueNotificationCenter
     let calendar: CalendarBridge
+    /// Which fields a task offers (#538); one choice on every device.
+    let fieldSettings: FieldSettingsStore
 
     init() {
         LaunchTimings.mark(.initStart)
@@ -43,6 +45,8 @@ struct LooseEndsApp: App {
         BackgroundRefresh.register(notifications)
         #endif
         calendar = CalendarBridge(container: container)
+        fieldSettings = FieldSettingsStore.forApp()
+        fieldSettings.activate()
         if ModelContainerFactory.isUITesting { MainThreadWatchdog.start() }
         LaunchTimings.mark(.initEnd)
     }
@@ -99,6 +103,7 @@ struct LooseEndsApp: App {
         WindowGroup(id: "main") {
             ContentView(enrichment: enrichment, notifications: notifications, calendar: calendar)
                 .environment(calendar)
+                .environment(fieldSettings)
                 .preferredColorScheme(Self.uiTestColorScheme)
         }
         .modelContainer(container)
@@ -111,6 +116,7 @@ struct LooseEndsApp: App {
         Settings {
             SettingsView(notifications: notifications)
                 .environment(calendar)
+                .environment(fieldSettings)
                 // 640 x 720 pt like the board (#478); a list has no height of its own, and 512 cut off the last rows.
                 .frame(width: 640, height: 720)
                 .preferredColorScheme(Self.uiTestColorScheme)
