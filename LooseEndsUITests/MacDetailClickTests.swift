@@ -58,15 +58,12 @@ final class MacDetailClickTests: XCTestCase {
 
     // MARK: - Pickers
 
-    /// In the sandbox the open panel is drawn by a system service, not by the app.
-    private static let panelService = "com.apple.appkit.xpc.openAndSavePanelService"
-
-    /// A system picker in front of the window: a sheet or dialog of the app, or the sandbox's panel service.
+    /// A system picker in front of the window: a sheet or dialog of the app. In the sandbox the open
+    /// panel is drawn by a system service but still hangs as a sheet on the app's window. Asking XCUITest
+    /// for that service as an app of its own throws when it does not run (run 39209916143).
     @MainActor
     private func pickerCount(_ app: XCUIApplication) -> Int {
-        let service = XCUIApplication(bundleIdentifier: Self.panelService)
-        let remote = service.state == .notRunning ? 0 : service.windows.count
-        return app.sheets.count + app.dialogs.count + remote
+        app.sheets.count + app.dialogs.count
     }
 
     @MainActor
@@ -116,12 +113,12 @@ final class MacDetailClickTests: XCTestCase {
         title.typeText("Rasen mähen am Samstag\n")
         macShot(window, "mac-gallery-544-1-title-typed")
 
-        // Back in the list, the row carries the new title: it was saved, not only typed.
-        macElement("viewRow_open", in: window).click()
-        let row = window.descendants(matching: .any)
-            .matching(NSPredicate(format: "identifier BEGINSWITH 'taskRow_' AND label CONTAINS 'Samstag'"))
-            .firstMatch
-        XCTAssertTrue(row.waitForExistence(timeout: 5), "Loose ends should list the task under its new title")
+        // Saved, not only typed: the "Said" line appears only once the stored title differs from the
+        // raw text. (Clicking "Loose ends" again does not leave the detail while that row stays selected,
+        // run 39209916143.)
+        XCTAssertTrue(macElement("detailRawText", in: window).waitForExistence(timeout: 5),
+                      "The new title should be stored: the said line shows only when the title differs")
+        XCTAssertTrue(shows("Samstag", in: window), "The title should hold the typed words")
         app.terminate()
     }
 
@@ -153,10 +150,12 @@ final class MacDetailClickTests: XCTestCase {
         XCTAssertTrue(line.waitForExistence(timeout: 5), "Return should list the subtask")
         XCTAssertTrue(line.label.contains("Milch"), "Subtask row was \(line.label)")
 
+        // The footer reads "0 of 1 done" as soon as the line exists; only "1 of 1" proves the click.
+        // A Mac `Text` may carry its words as value with an empty label (run 39209916143).
         line.click()
-        let progress = macElement("subtaskProgress", in: window)
-        XCTAssertTrue(progress.waitForExistence(timeout: 5), "A click on the subtask should check it off")
-        XCTAssertTrue(progress.label.contains("1"), "Progress was \(progress.label)")
+        let checked = NSPredicate(format: "label CONTAINS '1 of 1' OR value CONTAINS '1 of 1'")
+        let progress = window.descendants(matching: .any).matching(checked).firstMatch
+        XCTAssertTrue(progress.waitForExistence(timeout: 5), "A click on the subtask should check it off: 1 of 1 done")
         macShot(window, "mac-gallery-544-3-subtask-checked")
         app.terminate()
     }
