@@ -72,8 +72,9 @@ struct CalendarAskSheet: View {
             }
         }
         #if os(macOS)
+        // As high as its rows: a fixed minimum left a hollow sheet before the first choice (#574).
         .frame(width: 400)
-        .frame(minHeight: 300)
+        .fixedSize(horizontal: false, vertical: true)
         #endif
     }
 
