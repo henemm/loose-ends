@@ -65,7 +65,18 @@ struct FieldSettingsView: View {
         }
     }
 
-    /// The field's name as the detail says it; the word line and the settings use the same.
+    /// The word in the detail's line (#538, draft): one of a kind, so "+ Attachment", "+ Subtask",
+    /// "+ Project"; the settings name the field as a whole.
+    static func word(_ field: DetailField) -> String {
+        switch field {
+        case .attachments: String(localized: "Attachment")
+        case .subtasks: String(localized: "Subtask")
+        case .project: String(localized: "Project")
+        default: title(field)
+        }
+    }
+
+    /// The field's name in the settings.
     static func title(_ field: DetailField) -> String {
         switch field {
         case .notes: String(localized: "Note")

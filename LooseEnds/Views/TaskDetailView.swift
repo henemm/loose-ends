@@ -365,7 +365,7 @@ struct TaskDetailView: View {
     @ViewBuilder
     private func word(_ field: DetailField) -> some View {
         let button = Button { offer(field) } label: {
-            Label(FieldSettingsView.title(field), systemImage: "plus")
+            Label(FieldSettingsView.word(field), systemImage: "plus")
                 .labelStyle(AddWordLabelStyle())
         }
         .buttonStyle(.plain)

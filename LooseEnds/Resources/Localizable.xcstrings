@@ -2,6 +2,8 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "Attachment" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Anhang" } } } },
+    "Subtask" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Unteraufgabe" } } } },
     "Fields" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Felder" } } } },
     "What a task offers. Off means not offered; what a task already carries, it shows anyway." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Was eine Aufgabe anbietet. Aus heißt: nicht angeboten. Was eine Aufgabe schon trägt, zeigt sie trotzdem." } } } },
     "Off means not offered. What a task already carries, it shows anyway." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus heißt: nicht angeboten. Was eine Aufgabe schon trägt, zeigt sie trotzdem." } } } },
