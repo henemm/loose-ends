@@ -108,15 +108,15 @@ struct TaskListView: View {
     }
 
     /// Compact: the paper list as before. Wide (#477): plain on paper in the start page's 720 pt
-    /// column, the paper running edge to edge below it. The top scroll edge is soft (#566): the Mac's
-    /// hard edge covered the column up to the title bar with an opaque strip in the system's colour,
-    /// a light box over the paper.
+    /// column, the paper running edge to edge below it. No top scroll edge (#566): the Mac's hard edge
+    /// covered the column up to the title bar with a strip and a dividing line, a box over the paper;
+    /// `.soft` did not take on the Mac's List.
     @ViewBuilder
     private func hull(_ list: some View) -> some View {
         if isWide {
             list
                 .listStyle(.plain)
-                .scrollEdgeEffectStyle(.soft, for: .top)
+                .scrollEdgeEffectHidden(true, for: .top)
                 .paperGround()
                 .frame(maxWidth: 720)
                 .frame(maxWidth: .infinity)
