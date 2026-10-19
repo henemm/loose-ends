@@ -13,7 +13,7 @@ Epic #563 „Modellaufruf robust“. Der CI-Bau warnt, weil `LanguageModelSessio
 obwohl die Konstanten existieren. Der Produktpfad ist nicht betroffen: `FoundationModelsEnricher` reicht Frameworkfehler unverändert
 durch, `EnrichmentCoordinator` behandelt jeden Fehler gleich (loggen, `processedAt` bleibt leer, Regeln bleiben).
 
-## Expected Behavior
+## Acceptance Criteria
 
 - **AC-1:** Kein `GenerationError` mehr in `*.swift`; der Bau meldet keine Veraltet-Warnung mehr aus diesen Dateien.
 - **AC-2:** `MeasurementErrorKind.classify` liefert für jede Fehlerart den bisherigen, unveränderten String (alte Messberichte bleiben lesbar):
