@@ -1,12 +1,4 @@
-2026-10-19T15:55:52.1612030Z ##[error]    testPanelDark, XCTAssertTrue failed - The symbol opened no panel
-2026-10-19T15:55:52.1614080Z ##[error]    testPanelLight, XCTAssertTrue failed - The symbol opened no panel
-2026-10-19T15:55:52.1620300Z Executed 8 tests, with 2 failures (0 unexpected) in 384.501 (384.511) seconds
-2026-10-19T15:55:52.1621340Z Executed 8 tests, with 2 failures (0 unexpected) in 384.501 (384.512) seconds
-2026-10-19T15:55:52.1625360Z Executed 8 tests, with 2 failures (0 unexpected) in 384.501 (384.514) seconds
-2026-10-19T16:00:23.9699860Z Executed 6 tests, with 0 failures (0 unexpected) in 138.788 (138.793) seconds
-2026-10-19T16:00:23.9700860Z Executed 6 tests, with 0 failures (0 unexpected) in 138.788 (138.794) seconds
-2026-10-19T16:00:23.9701350Z Executed 6 tests, with 0 failures (0 unexpected) in 138.788 (138.796) seconds
-2026-10-19T16:04:54.5467810Z Executed 3 tests, with 0 failures (0 unexpected) in 224.440 (224.444) seconds
-2026-10-19T16:24:16.7040620Z Executed 21 tests, with 0 failures (0 unexpected) in 754.396 (754.408) seconds
-2026-10-19T16:24:16.7298450Z Executed 3 tests, with 3 tests skipped and 0 failures (0 unexpected) in 0.318 (0.320) seconds
-2026-10-19T16:24:16.7347000Z Executed 3 tests, with 0 failures (0 unexpected) in 108.857 (108.859) seconds
+CI-Lauf 39288524455, Job Mac Gallery (macOS):
+testPanelLight/testPanelDark: Panel gefunden (menuBarOpenApp, menuBarQuit, captureTextField, captureCancelButton, captureDoneButton vorhanden); Feld 67 pt hoch (Soll >= 110).
+2026-10-19T16:57:01Z ##[error]    testPanelDark, XCTAssertTrue failed - Panel shows no capturePanelHeader
+2026-10-19T16:57:01Z ##[error]    testPanelLight, XCTAssertTrue failed - Panel shows no capturePanelHeader
