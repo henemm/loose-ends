@@ -857,6 +857,40 @@ final class CaptureSmokeTests: XCTestCase {
     }
 
     /// #441: a sentence at the end of the detail sets the fields the rules read; the rest stays.
+    /// #556, #557: the due editor of a task due today at 8:00. Both weeks of the calendar stand, today
+    /// among them and tappable (the first week was dropped). The 8:00 is a word of its own, marked, and
+    /// "Other time …" stays next to it (8:00 used to take its place); a tap on it opens the wheel.
+    @MainActor
+    func testDueEditorKeepsOtherTimeAndThisWeek() throws {
+        let app = launch()
+        _ = captureAndOpenDetail("Heute um 8 Uhr Brötchen holen", in: app)
+
+        let dueRow = revealField("field_dueDate", in: app)
+        XCTAssertTrue(dueRow.waitForExistence(timeout: 10), "The rules should read today at 8 as the due date")
+        dueRow.tap()
+
+        let today = Calendar.current.startOfDay(for: Date()).formatted(.iso8601.year().month().day())
+        let todayCell = element("dueDay_\(today)", in: app)
+        XCTAssertTrue(todayCell.waitForExistence(timeout: 5), "The calendar should show this week, today included")
+        XCTAssertTrue(todayCell.isHittable, "Today should be tappable in the calendar")
+
+        let custom = element("quickTime_custom", in: app)
+        XCTAssertTrue(custom.waitForExistence(timeout: 5), "The set 8:00 should stand as a word of its own")
+        XCTAssertTrue(custom.label.contains("8:00"), "The own time word was \(custom.label)")
+        XCTAssertTrue(custom.isSelected, "The set time should be marked")
+        let other = element("quickTime_other", in: app)
+        XCTAssertTrue(other.exists, "Other time … should stay next to a time of its own")
+        XCTAssertEqual(other.label, "Other time …")
+        let nine = element("quickTime_9", in: app)
+        let sameLine = abs(custom.frame.midY - nine.frame.midY) < 4
+        XCTAssertTrue(sameLine ? custom.frame.minX < nine.frame.minX : custom.frame.minY < nine.frame.minY,
+                      "8:00 should stand before 9:00, was \(custom.frame) and \(nine.frame)")
+        attachScreenshot(app, "556-faellig-andere-uhrzeit")
+
+        other.tap()
+        XCTAssertTrue(element("dueOtherTimePicker", in: app).waitForExistence(timeout: 5), "Other time … should open the wheel")
+    }
+
     /// #544: the note takes typed text on the iPhone too, and keeps it. Leaving the field writes the
     /// note; at rest it shows as text, and it is still there after the detail is closed and reopened.
     @MainActor
