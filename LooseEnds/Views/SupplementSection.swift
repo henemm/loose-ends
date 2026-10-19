@@ -10,12 +10,15 @@ struct SupplementSection: View {
     @Query(sort: \TaskContext.sortOrder) private var contexts: [TaskContext]
     @Query(sort: \Project.sortOrder) private var projects: [Project]
     let task: TaskItem
+    /// A switch takes a field out of the reading too (#538, rule 5); due is fixed.
+    @Environment(FieldSettingsStore.self) private var fieldSettings: FieldSettingsStore?
 
     @State private var text = ""
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Detail")
 
     private var read: Supplement {
         Supplement.read(text, available: contexts.map(\.name), current: (task.contexts ?? []).map(\.name))
+            .offered(by: fieldSettings?.settings ?? .standard)
     }
 
     var body: some View {

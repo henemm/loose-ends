@@ -18,6 +18,17 @@ struct Supplement: Equatable {
         due == nil && duration == nil && importance == nil && urgency == nil && contexts.isEmpty
     }
 
+    /// Only the fields that are on (#538, rule 5): a switch takes a field out of the reading; its
+    /// words then stay in the rest. Due is fixed and always read.
+    func offered(by settings: DetailFieldSettings) -> Supplement {
+        var next = self
+        if !settings.isOn(.duration) { next.duration = nil }
+        if !settings.isOn(.importance) { next.importance = nil }
+        if !settings.isOn(.urgency) { next.urgency = nil }
+        if !settings.isOn(.contexts) { next.contexts = [] }
+        return next
+    }
+
     /// `available` are the catalog's context names in catalog order; `current` the task's own.
     static func read(_ text: String, available: [String], current: [String] = [], reference: Date = Date(),
                      calendar: Calendar = .current) -> Supplement {

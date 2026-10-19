@@ -82,14 +82,17 @@ final class MacDetailClickTests: XCTestCase {
         let app = macLaunch(dark: false)
         let window = macOpenDetail(of: "Rasen mähen", in: app)
 
-        // Note: a click focuses the field, typing lands, leaving the field writes it.
+        // Note: its word opens the section (#538); a click focuses the field, typing lands, leaving writes it.
+        reveal("field_notes", in: window).click()
         let note = reveal("noteField", in: window)
         note.click()
         XCTAssertTrue(hasKeyboardFocus(note), "A click on Note should focus its field")
         note.typeText("Schlüssel liegt unter der Matte")
         macShot(window, "mac-gallery-544-1-note-typed")
 
-        // Subtask: the next click moves the focus there, which commits the note; Return adds the line.
+        // Subtask: its word opens the section; the click moves the focus there, which commits the note;
+        // Return adds the line.
+        reveal("field_subtasks", in: window).click()
         let subtask = reveal("subtaskTextField", in: window)
         subtask.click()
         XCTAssertTrue(hasKeyboardFocus(subtask), "A click on Add a subtask should focus its field")
@@ -120,6 +123,7 @@ final class MacDetailClickTests: XCTestCase {
         let app = macLaunch(dark: false)
         let window = macOpenDetail(of: "Vertrag ablegen", in: app)
 
+        reveal("field_attachments", in: window).click()
         let file = reveal("addFileButton", in: window)
         let baseline = pickerCount(app)
         file.click()

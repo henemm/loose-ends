@@ -12,6 +12,8 @@ struct WaitingOnSection: View {
     /// Every task, for the picker.
     @Query private var allTasks: [TaskItem]
     let task: TaskItem
+    /// Opened from the word line (#538): the picker comes up at once.
+    var startsPicking = false
 
     @State private var picking = false
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Detail")
@@ -50,6 +52,9 @@ struct WaitingOnSection: View {
                 WaitingOn.link(blocker, to: task)
                 save("link blocker")
             }
+        }
+        .onAppear {
+            if startsPicking, WaitingOn.blockers(of: task).isEmpty { picking = true }
         }
     }
 

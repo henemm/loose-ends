@@ -257,7 +257,10 @@ not scope creep on the current one.
 - `Shared/Models` — SwiftData model, enums, `RepeatRule` (its `anchor` holds the rhythm, a moved round does not shift it, #552),
   `ViewRules` (pure view computation), `NewDateRule` (a deadline that passed is no deadline, #548: with a time after the
   time, without one after the day; the evening look reads a day-only date as passed after the reminder time; the trace
-  "was 15:00" under the "New date" button)
+  "was 15:00" under the "New date" button), `DetailFields` (#538: what a task offers, five groups in one order, a section
+  only with content, one word line for everything empty, dependent fields wait, off is not offered but never hidden;
+  `DetailFieldSettings` with the standard on Note, Attachments, Calendar, Duration, Tags; the app's `FieldSettingsStore` in
+  `LooseEnds/App` keeps the choice in defaults and the iCloud key-value store, everything on under UI tests)
 - `Shared/Persistence` — `ModelContainerFactory` (app group + private CloudKit; identifiers read from
   `Info.plist`, keys `LEAppGroup`/`LECloudContainer`, with the production constants as fallback —
   device builds carry their own via `BUNDLE_ID_SUFFIX`, #156), `ContextSeeder`,

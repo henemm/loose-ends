@@ -25,6 +25,18 @@ final class CaptureSmokeTests: XCTestCase {
         app.descendants(matching: .any).matching(identifier: id).firstMatch
     }
 
+    /// A section shows only with content (#538): its word in the line below opens it. Nothing to do
+    /// when the section is already there.
+    @MainActor
+    private func openSection(_ word: String, showing id: String, in app: XCUIApplication) {
+        let target = element(id, in: app)
+        if target.waitForExistence(timeout: 2) { return }
+        let button = element(word, in: app)
+        for _ in 0..<5 where !(button.exists && button.isHittable) { app.swipeUp() }
+        XCTAssertTrue(button.waitForExistence(timeout: 5), "The word line should offer \(word)")
+        button.tap()
+    }
+
     /// Empty fields wait behind "Add detail" (#187): open it if the row is not there yet.
     @MainActor
     private func revealField(_ id: String, in app: XCUIApplication) -> XCUIElement {
@@ -437,7 +449,7 @@ final class CaptureSmokeTests: XCTestCase {
         let field = element("captureTextField", in: app)
         XCTAssertTrue(field.waitForExistence(timeout: 5))
         field.tap()
-        field.typeText("Rasen mähen")
+        field.typeText("Rasen mähen am Samstag")
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
 
@@ -447,7 +459,7 @@ final class CaptureSmokeTests: XCTestCase {
         let row = taskRow(in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
-        assertDetailRawText("Rasen mähen", in: app)
+        assertDetailRawText("Rasen mähen am Samstag", in: app)
 
         let repeatRow = revealField("field_repeatRule", in: app)
         XCTAssertTrue(repeatRow.waitForExistence(timeout: 5), "Detail should list Repeat")
@@ -481,7 +493,7 @@ final class CaptureSmokeTests: XCTestCase {
         let field = element("captureTextField", in: app)
         XCTAssertTrue(field.waitForExistence(timeout: 5))
         field.tap()
-        field.typeText("Tabletten nehmen")
+        field.typeText("Tabletten nehmen morgen")
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
 
@@ -491,7 +503,7 @@ final class CaptureSmokeTests: XCTestCase {
         let row = taskRow(in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
-        assertDetailRawText("Tabletten nehmen", in: app)
+        assertDetailRawText("Tabletten nehmen morgen", in: app)
 
         let repeatRow = revealField("field_repeatRule", in: app)
         XCTAssertTrue(repeatRow.waitForExistence(timeout: 5), "Detail should list Repeat")
@@ -543,7 +555,7 @@ final class CaptureSmokeTests: XCTestCase {
         let field = element("captureTextField", in: app)
         XCTAssertTrue(field.waitForExistence(timeout: 5))
         field.tap()
-        field.typeText("Fußnagel behandeln")
+        field.typeText("Fußnagel behandeln morgen")
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
 
@@ -553,7 +565,7 @@ final class CaptureSmokeTests: XCTestCase {
         let row = taskRow(in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
-        assertDetailRawText("Fußnagel behandeln", in: app)
+        assertDetailRawText("Fußnagel behandeln morgen", in: app)
 
         let repeatRow = revealField("field_repeatRule", in: app)
         XCTAssertTrue(repeatRow.waitForExistence(timeout: 5), "Detail should list Repeat")
@@ -674,6 +686,7 @@ final class CaptureSmokeTests: XCTestCase {
         row.tap()
         assertDetailRawText("Einkaufen", in: app)
 
+        openSection("field_subtasks", showing: "subtaskTextField", in: app)
         let subtaskField = element("subtaskTextField", in: app)
         if !subtaskField.waitForExistence(timeout: 3) {
             app.swipeUp()
@@ -708,7 +721,8 @@ final class CaptureSmokeTests: XCTestCase {
         let field = element("captureTextField", in: app)
         XCTAssertTrue(field.waitForExistence(timeout: 5))
         field.tap()
-        field.typeText("Zahnarzt anrufen")
+        // The calendar waits for a due date (#538, rule 4): "morgen" gives the task one at capture.
+        field.typeText("Zahnarzt anrufen morgen")
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
 
@@ -718,24 +732,17 @@ final class CaptureSmokeTests: XCTestCase {
         let row = taskRow(in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
-        assertDetailRawText("Zahnarzt anrufen", in: app)
+        assertDetailRawText("Zahnarzt anrufen morgen", in: app)
 
+        // The word "+ Calendar" switches on (#538); a day without a time asks first (#203, Teil B)
+        // and the switch stays off until the sheet is answered.
+        let word = element("field_calendar", in: app)
+        for _ in 0..<5 where !(word.exists && word.isHittable) { app.swipeUp() }
+        XCTAssertTrue(word.waitForExistence(timeout: 5), "Detail should offer Calendar in the word line")
+        word.tap()
         let toggle = app.switches["showInCalendarToggle"]
-        if !toggle.waitForExistence(timeout: 3) {
-            app.swipeUp()
-        }
-        XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Detail should offer Show in calendar")
-        // Not model-derived, so a new task always starts off: read it, nothing to wait for.
-        let initial = toggle.value as? String
-        XCTAssertEqual(initial, "0", "Value was \(String(describing: initial))")
-        toggle.tap()
-        // Without a date the switch asks first (#203, Teil B) and stays off until the sheet is answered.
         let allDay = element("calendarAskAllDay", in: app)
-        if !allDay.waitForExistence(timeout: 2) {
-            // The element spans the row; the switch itself sits at the trailing edge.
-            toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
-        }
-        XCTAssertTrue(allDay.waitForExistence(timeout: 5), "Without a due date the switch should ask first")
+        XCTAssertTrue(allDay.waitForExistence(timeout: 5), "Without a time the switch should ask first")
         allDay.tap()
         let add = app.buttons["calendarAskConfirm"]
         XCTAssertTrue(add.waitForExistence(timeout: 5))
@@ -864,6 +871,7 @@ final class CaptureSmokeTests: XCTestCase {
         let app = launch()
         _ = captureAndOpenDetail("Paket abholen", in: app)
 
+        openSection("field_notes", showing: "noteField", in: app)
         let note = element("noteField", in: app)
         for _ in 0..<5 where !(note.exists && note.isHittable) { app.swipeUp() }
         XCTAssertTrue(note.waitForExistence(timeout: 5), "The detail should offer the note field")
@@ -897,6 +905,7 @@ final class CaptureSmokeTests: XCTestCase {
         let app = launch()
         _ = captureAndOpenDetail("Vertrag ablegen", in: app)
 
+        openSection("field_attachments", showing: "addFileButton", in: app)
         let file = element("addFileButton", in: app)
         for _ in 0..<5 where !(file.exists && file.isHittable) { app.swipeUp() }
         XCTAssertTrue(file.waitForExistence(timeout: 5), "The detail should offer File")
