@@ -97,5 +97,91 @@ class NoModelInUnitRunTests(unittest.TestCase):
         self.assertEqual(callers, [])
 
 
+FIRST = "The first word arrives within 3 s of speech start"
+FINAL = "The final text keeps the key words"
+# Auszug aus unit-tests.log, CI-Lauf 39167072947 (main, 20b9553), Z. 5246-5253 (#419)
+CANCELLED_LOG = f"""◇ Suite "Speech latency (#274)" started.
+◇ Test "The app's transcriber asks for fast results" started.
+✔ Test "The app's transcriber asks for fast results" passed after 0.001 seconds.
+◇ Test "{FIRST}" started.
+➜ Test "{FIRST}" was cancelled after 0.003 seconds: "Sprache de_DE wird hier nicht unterstützt"
+◇ Test "{FINAL}" started.
+➜ Test "{FINAL}" was cancelled after 0.002 seconds: "Sprache de_DE wird hier nicht unterstützt"
+✔ Suite "Speech latency (#274)" passed after 0.007 seconds.
+"""
+
+
+class LatencyGuardTests(unittest.TestCase):
+    """Der Latenzschutz aus #274 sagt laut, wenn er nicht misst (#419)."""
+
+    def states(self, log):
+        return {name: (state, why) for name, state, why in ms.latency_status(log)}
+
+    def test_cancelled_tests_are_named_one_by_one_with_the_reason(self):
+        rows = self.states(CANCELLED_LOG)
+        self.assertEqual(set(rows), {FIRST, FINAL})
+        for state, why in rows.values():
+            self.assertEqual(state, "not_measured")
+            self.assertIn("Sprache de_DE wird hier nicht unterstützt", why)
+
+    def test_passed_and_failed_are_told_apart_per_test(self):
+        log = (f'✔ Test "{FIRST}" passed after 10.2 seconds.\n'
+               f'✘ Test "{FINAL}" failed after 10.1 seconds with 1 issue.\n')
+        rows = self.states(log)
+        self.assertEqual(rows[FIRST][0], "measured")
+        self.assertEqual(rows[FINAL][0], "failed")
+
+    def test_a_test_missing_from_the_log_is_not_silent(self):
+        rows = self.states(f'✔ Test "{FIRST}" passed after 10.2 seconds.\n')
+        self.assertEqual(rows[FIRST][0], "measured")
+        self.assertEqual(rows[FINAL], ("not_measured", "nicht im Log"))
+
+    def test_text_names_each_test_as_not_measured(self):
+        text = ms.render_latency(ms.latency_status(CANCELLED_LOG), markdown=False)
+        self.assertIn("Latenzschutz (#274)", text)
+        self.assertIn(f"{FIRST} – NICHT gemessen: Sprache de_DE wird hier nicht unterstützt", text)
+        self.assertIn(f"{FINAL} – NICHT gemessen", text)
+
+    def test_markdown_table_and_warning(self):
+        rows = ms.latency_status(CANCELLED_LOG)
+        text = ms.render_latency(rows, markdown=True)
+        self.assertIn("### Latenzschutz (#274)", text)
+        self.assertIn(f"| {FIRST} | NICHT gemessen: Sprache de_DE wird hier nicht unterstützt |", text)
+        self.assertIn("::warning::Latenzschutz #274 nicht gemessen", ms.latency_warning(rows))
+
+    def test_no_warning_when_both_were_measured(self):
+        log = (f'✔ Test "{FIRST}" passed after 10.2 seconds.\n'
+               f'✔ Test "{FINAL}" passed after 10.1 seconds.\n')
+        self.assertEqual(ms.latency_warning(ms.latency_status(log)), "")
+
+    def test_main_reads_the_log_file(self):
+        path = pathlib.Path(tempfile.mkdtemp()) / "unit-tests.log"
+        path.write_text(CANCELLED_LOG)
+        import contextlib, io
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            self.assertEqual(ms.main(["--latency-log", str(path)]), 0)
+        self.assertIn("NICHT gemessen", out.getvalue())
+
+    def test_missing_log_file_is_said_aloud(self):
+        import contextlib, io
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            ms.main(["--latency-log", "/nonexistent/unit-tests.log"])
+        self.assertIn("Latenzschutz", out.getvalue())
+        self.assertIn("kein Log", out.getvalue())
+
+    def test_cancel_message_carries_the_diagnosis(self):
+        source = (TESTS / "SpeechLatencyTests.swift").read_text()
+        for key in ("isAvailable", "supportedLocales.count", "installedLocales.count"):
+            self.assertIn(key, source)
+
+    def test_ci_and_sim_pass_the_log(self):
+        ci = (ms.ROOT / ".github" / "workflows" / "ci.yml").read_text()
+        self.assertIn("--latency-log unit-tests.log", ci)
+        sim = (ms.ROOT / "scripts" / "sim.sh").read_text()
+        self.assertIn("--latency-log", sim)
+
+
 if __name__ == "__main__":
     unittest.main()
