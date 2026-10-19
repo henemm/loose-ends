@@ -1,0 +1,65 @@
+test_build_action_keeps_its_arguments_unchanged (scripts.test_sim_run_xcodebuild.RunXcodebuildDiagnosticsTests.test_build_action_keeps_its_arguments_unchanged) ... ok
+test_test_action_switches_off_diagnostics_collection (scripts.test_sim_run_xcodebuild.RunXcodebuildDiagnosticsTests.test_test_action_switches_off_diagnostics_collection) ... ok
+test_hang_detected_without_pipefail (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_hang_detected_without_pipefail) ... ok
+test_hang_message_names_deadline_last_line_and_simulator_service (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_hang_message_names_deadline_last_line_and_simulator_service) ... ok
+test_lock_released_after_hang (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_lock_released_after_hang) ... ok
+test_no_leftovers_after_normal_run (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_no_leftovers_after_normal_run) ... ok
+test_other_session_xcodebuild_survives (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_other_session_xcodebuild_survives) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1313: ResourceWarning: subprocess 26805 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_silent_xcodebuild_is_killed_after_deadline (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_silent_xcodebuild_is_killed_after_deadline) ... ok
+test_talkative_run_is_not_aborted (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_talkative_run_is_not_aborted) ... ok
+test_boot_marks_continuous_path_hint_shown (scripts.test_sim_lock.KeyboardHintTests.test_boot_marks_continuous_path_hint_shown) ... ok
+test_lock_before_cleanup_and_generate (scripts.test_sim_lock.LockOrderTests.test_lock_before_cleanup_and_generate) ... ok
+test_session_key_from_folder_name (scripts.test_sim_lock.SessionKeyTests.test_session_key_from_folder_name) ... ok
+test_session_key_override (scripts.test_sim_lock.SessionKeyTests.test_session_key_override) ... ok
+test_foreign_start_format_live_pid_not_taken (scripts.test_sim_lock.TestLockTests.test_foreign_start_format_live_pid_not_taken) ... ok
+test_hand_lock_file_waits_then_taken_over (scripts.test_sim_lock.TestLockTests.test_hand_lock_file_waits_then_taken_over)
+Die alte Handabsprache legte die Sperre als Datei an; sie gilt wie eine Handsperre ohne pid. ... ok
+test_hand_lock_without_pid_waits (scripts.test_sim_lock.TestLockTests.test_hand_lock_without_pid_waits) ... ok
+test_live_holder_with_later_written_start_not_taken (scripts.test_sim_lock.TestLockTests.test_live_holder_with_later_written_start_not_taken)
+Handsperre mit start=$(date +%s) beim Schreiben: später als der Prozessstart, Halter lebt (#341). ... ok
+test_live_pid_without_start_not_taken (scripts.test_sim_lock.TestLockTests.test_live_pid_without_start_not_taken) ... ok
+test_locale_independent_start (scripts.test_sim_lock.TestLockTests.test_locale_independent_start) ... ok
+test_orphan_lock_taken_over (scripts.test_sim_lock.TestLockTests.test_orphan_lock_taken_over) ... ok
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed file <_io.TextIOWrapper name=5 encoding='utf-8'>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed file <_io.TextIOWrapper name=3 encoding='utf-8'>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_parallel_takeover_of_orphan_lock (scripts.test_sim_lock.TestLockTests.test_parallel_takeover_of_orphan_lock)
+8 Wartende gegen eine verwaiste Sperre: keiner bricht ab, nie zwei zugleich drin (#341, F001). ... ok
+test_reentrant (scripts.test_sim_lock.TestLockTests.test_reentrant) ... ok
+test_start_time_mismatch_is_orphan (scripts.test_sim_lock.TestLockTests.test_start_time_mismatch_is_orphan) ... ok
+test_two_runs_are_serialized (scripts.test_sim_lock.TestLockTests.test_two_runs_are_serialized) ... ok
+test_wait_message_and_cap (scripts.test_sim_lock.TestLockTests.test_wait_message_and_cap) ... ok
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:84: ResourceWarning: unclosed file <_io.TextIOWrapper name=5 encoding='utf-8'>
+  return self.run(*args, **kwds)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:84: ResourceWarning: unclosed file <_io.TextIOWrapper name=3 encoding='utf-8'>
+  return self.run(*args, **kwds)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_unit_never_macos_without_switch (scripts.test_sim_lock.UnitDestinationTests.test_unit_never_macos_without_switch) ... ok
+test_config_docs_and_scripts_do_not_count (scripts.test_sim_proof.CodeFilterTests.test_config_docs_and_scripts_do_not_count) ... ok
+test_product_and_test_sources_count_as_code (scripts.test_sim_proof.CodeFilterTests.test_product_and_test_sources_count_as_code) ... ok
+test_empty_file_set_is_explicit_and_matches_nothing (scripts.test_sim_proof.ProofFormatTests.test_empty_file_set_is_explicit_and_matches_nothing) ... ok
+test_roundtrip_through_plugin_regex (scripts.test_sim_proof.ProofFormatTests.test_roundtrip_through_plugin_regex) ... ok
+test_failed_summary_is_failed (scripts.test_sim_proof.SummaryParsingTests.test_failed_summary_is_failed) ... ok
+test_missing_fields_do_not_crash_and_invent_nothing (scripts.test_sim_proof.SummaryParsingTests.test_missing_fields_do_not_crash_and_invent_nothing) ... ok
+test_passed_summary_gives_counts_device_and_times (scripts.test_sim_proof.SummaryParsingTests.test_passed_summary_gives_counts_device_and_times) ... ok
+test_passed_with_failing_xcodebuild_is_not_passed (scripts.test_sim_proof.SummaryParsingTests.test_passed_with_failing_xcodebuild_is_not_passed) ... ok
+test_passed_without_tests_is_not_passed (scripts.test_sim_proof.SummaryParsingTests.test_passed_without_tests_is_not_passed) ... ok
+test_watch_run_names_the_watch_not_the_paired_iphone (scripts.test_sim_proof.SummaryParsingTests.test_watch_run_names_the_watch_not_the_paired_iphone) ... ok
+test_missing_class_fails_with_usage_and_keeps_old_proof (scripts.test_sim_proof.TestProofCommandErrorTests.test_missing_class_fails_with_usage_and_keeps_old_proof) ... ok
+test_missing_workflow_fails_before_any_run (scripts.test_sim_proof.TestProofCommandErrorTests.test_missing_workflow_fails_before_any_run) ... ok
+test_ordinary_workflow_names_are_accepted (scripts.test_sim_proof.TestProofCommandErrorTests.test_ordinary_workflow_names_are_accepted)
+Der Check lehnt nur Pfadteile ab: Namen wie `bug-203-kalender-termin` oder `fix_1.2` laufen bis zum Werkzeug. ... ok
+test_workflow_name_with_path_parts_is_refused_before_anything_is_touched (scripts.test_sim_proof.TestProofCommandErrorTests.test_workflow_name_with_path_parts_is_refused_before_anything_is_touched)
+#166: `../x` oder `a/b` dürfen nichts außerhalb von docs/artifacts/ löschen oder anlegen. ... ok
+
+----------------------------------------------------------------------
+Ran 40 tests in 90.071s
+
+OK
