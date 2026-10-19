@@ -62,5 +62,32 @@ import Testing
         #expect(days.first == Self.date(12))
         #expect(days.last == Self.date(25))
     }
-}
 
+    @Test("The time words are the four full hours when the due time is one of them or there is none (#556)")
+    func timeChoicesPresets() {
+        let day = Self.date(19)
+        let presets = [9, 12, 15, 18].map { Self.date(19, hour: $0) }
+        #expect(QuickDue.timeChoices(on: day, due: Self.date(19, hour: 12), hasTime: true, calendar: Self.calendar) == presets)
+        #expect(QuickDue.timeChoices(on: day, due: day, hasTime: false, calendar: Self.calendar) == presets)
+        #expect(QuickDue.timeChoices(on: day, due: nil, hasTime: false, calendar: Self.calendar) == presets)
+    }
+
+    @Test("A time of its own stands among the hours by the clock, before 9:00 or between two (#556)")
+    func timeChoicesCustom() {
+        let day = Self.date(19)
+        let early = QuickDue.timeChoices(on: day, due: Self.date(19, hour: 8), hasTime: true, calendar: Self.calendar)
+        #expect(early == [8, 9, 12, 15, 18].map { Self.date(19, hour: $0) })
+        let between = QuickDue.timeChoices(on: day, due: Self.date(19, hour: 13, minute: 30), hasTime: true, calendar: Self.calendar)
+        #expect(between == [Self.date(19, hour: 9), Self.date(19, hour: 12), Self.date(19, hour: 13, minute: 30),
+                            Self.date(19, hour: 15), Self.date(19, hour: 18)])
+    }
+
+    @Test("A due time on another day adds no word, and the list never holds a time twice (#556)")
+    func timeChoicesOtherDayAndUnique() {
+        let day = Self.date(19)
+        let presets = [9, 12, 15, 18].map { Self.date(19, hour: $0) }
+        #expect(QuickDue.timeChoices(on: day, due: Self.date(20, hour: 8), hasTime: true, calendar: Self.calendar) == presets)
+        let choices = QuickDue.timeChoices(on: day, due: Self.date(19, hour: 8), hasTime: true, calendar: Self.calendar)
+        #expect(Set(choices).count == choices.count)
+    }
+}

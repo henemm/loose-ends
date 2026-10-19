@@ -157,16 +157,36 @@ class MacGallery(unittest.TestCase):
         self.assertIn(ACTION_REF, [s.get("uses") for s in job["steps"]])
         self.assertNotIn("continue-on-error", job, "Eine still scheiternde Galerie ist kein Nachweis")
 
-    def test_runs_only_the_mac_gallery_and_the_click_test_on_the_mac_with_ad_hoc_signing(self):
+    def test_runs_only_the_mac_gallery_on_the_mac_with_ad_hoc_signing(self):
         run = step_named(self.job(), "Run Mac gallery")["run"]
         self.assertIn("-destination 'platform=macOS'", run)
         self.assertIn("-only-testing:LooseEndsUITests/MacGalleryTests", run)
-        # #544: the detail click test runs next to the gallery; still never all UI tests.
-        self.assertIn("-only-testing:LooseEndsUITests/MacDetailClickTests", run)
-        self.assertEqual(run.count("-only-testing:"), 2, "nur Galerie und Klick-Test, nicht alle UI-Tests")
+        self.assertEqual(run.count("-only-testing:"), 1, "nur die Galerie, nicht alle UI-Tests")
         self.assertIn("-resultBundlePath MacGallery.xcresult", run)
         for arg in ("CODE_SIGN_IDENTITY=-", "CODE_SIGN_STYLE=Manual", "DEVELOPMENT_TEAM=", "CODE_SIGN_ENTITLEMENTS="):
             self.assertIn(arg, run.split(), arg)
+
+    def test_click_test_runs_in_the_sandbox_of_the_real_app(self):
+        """#544: the click test's app carries the App Sandbox of project.yml; without it the open panel opened
+        in CI and not in the TestFlight app. Build, re-sign with the generated entitlements, then test."""
+        job, names = self.job(), self.names()
+        sandbox = step_named(job, "Sandbox of the real app")
+        build = step_named(job, "Build the click test")
+        sign = step_named(job, "Sign the app with the sandbox")
+        test = step_named(job, "Run the click test in the sandbox")
+        self.assertIn("scripts/mac_ci_entitlements.py \"$RUNNER_TEMP/mac-sandbox.plist\"", sandbox["run"])
+        self.assertIn("build-for-testing", build["run"])
+        self.assertIn("codesign --force --sign - --entitlements \"$RUNNER_TEMP/mac-sandbox.plist\"", sign["run"])
+        self.assertIn("test-without-building", test["run"])
+        self.assertIn("-only-testing:LooseEndsUITests/MacDetailClickTests", test["run"])
+        self.assertEqual(test["run"].count("-only-testing:"), 1)
+        for step in (build, test):
+            self.assertIn("-derivedDataPath build/click", step["run"])
+        order = [names.index(s["name"]) for s in (sandbox, build, sign, test)]
+        self.assertEqual(order, sorted(order), "Sandbox, Bau, Signatur, Test in dieser Reihenfolge")
+        self.assertGreater(order[0], names.index(step_named(job, "Enable UI automation")["name"]))
+        for step in (sandbox, build, sign, test):
+            self.assertEqual(step.get("if"), "${{ !cancelled() }}", "auch nach einer roten Galerie")
 
     def test_automation_mode_is_enabled_before_the_test(self):
         names = self.names()
@@ -240,10 +260,10 @@ cp "$FIXTURE"/* "$out"/
         for name in ("MacGalleryTests.swift", "MacDetailClickTests.swift"):
             self.assertIn("mac-gallery-", sources[name], f"{name} liefert Bilder ins Artefakt MacGallery")
 
-    def test_click_test_clicks_the_four_fields_and_both_pickers(self):
-        """#544: the click test reaches Note, subtask, Add more, File and Photo; the gallery only photographs."""
+    def test_click_test_clicks_the_fields_and_both_pickers(self):
+        """#544: the click test reaches Note, subtask, File and Photo; the gallery only photographs ("Add more" gone, #560)."""
         source = self.mac_source("MacDetailClickTests.swift")
-        for identifier in ("noteField", "subtaskTextField", "supplementField", "addFileButton", "addPhotoButton"):
+        for identifier in ("noteField", "subtaskTextField", "addFileButton", "addPhotoButton"):
             self.assertIn(identifier, source, identifier)
         self.assertIn("hasKeyboardFocus", source, "der Klick muss den Fokus setzen, nicht nur treffen")
 

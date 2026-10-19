@@ -269,8 +269,10 @@ sys.exit(0 if ver(sys.argv[1]) >= ver(sys.argv[2]) else 1)' "$(sw_vers -productV
 
 # Welche Messstrecken mangels Daten übersprungen wurden (#149): ein übersprungener Lauf meldet
 # sonst „Test Succeeded" wie ein gemessener.
+# Dazu der Latenzschutz aus #274 (#419) aus dem Rohlog des Laufs; ohne Log sagt das Skript „kein Log“.
 measurement_status() {
-    python3 "$PROJECT_DIR/scripts/measurement_status.py" >&2 || warn "Messstrecken-Status nicht lesbar."
+    python3 "$PROJECT_DIR/scripts/measurement_status.py" --latency-log "${BUILD_LOG:-kein-xcodebuild-log}" >&2 \
+        || warn "Messstrecken-Status nicht lesbar."
 }
 
 cmd_unit() {

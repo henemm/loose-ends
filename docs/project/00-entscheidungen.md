@@ -204,7 +204,7 @@ verschobenen Datum. Der Anker wandert mit jeder Runde; Regeln von früher ohne A
 **ADR-19 Felder: zeigen, was da ist (Henning, 2026-10-18, #538).** Die Detailseite zeigt nur, was die Aufgabe trägt,
 in fünf Gruppen und einer Ordnung (Was · Wann · Gewicht · Ablage · Zusammenhang); alles Leere steht in einer Wortzeile
 darunter, je Gruppe umgebrochen. Wiederholung und Kalender warten auf Fällig, Unteraufgaben und Wartet auf auf die oberste
-Ebene. Fest ohne Schalter: Titel, Gesagt, Fällig, Herkunft, Quelle, Ergänzen. Eine Seite „Felder“ in den Einstellungen
+Ebene. Fest ohne Schalter: Titel, Gesagt, Fällig, Herkunft, Quelle. Eine Seite „Felder“ in den Einstellungen
 schaltet je Feld, ob es angeboten wird; aus heißt nie versteckt. Vorgabe an: Notiz, Anhänge, Im Kalender, Dauer,
 Etiketten. Die Wahl gilt auf allen Geräten (iCloud-Schlüsselwertspeicher) und steuert auch die Gruppen der Startseite.
 

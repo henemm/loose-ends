@@ -95,18 +95,6 @@ import Testing
         let offered = DetailFields.offered(settings: .standard, for: task)
         #expect(offered == [[.attachments], [.contexts]])
     }
-
-    @Test("A switch takes a field out of the supplement's reading too; due stays")
-    func supplementFollowsTheSwitches() {
-        let read = Supplement.read("Freitag eine Stunde wichtig Garten", available: ["Garten"])
-        #expect(read.duration != nil && read.importance != nil && !read.contexts.isEmpty)
-        let standard = read.offered(by: .standard)
-        #expect(standard.due != nil, "due is fixed")
-        #expect(standard.duration != nil && !standard.contexts.isEmpty, "on in the standard")
-        #expect(standard.importance == nil, "off in the standard")
-        let none = read.offered(by: DetailFieldSettings(stored: []))
-        #expect(none.due != nil && none.duration == nil && none.contexts.isEmpty)
-    }
 }
 
 /// The store behind the settings page (#538, rule 7): defaults, iCloud, the UI tests' everything.

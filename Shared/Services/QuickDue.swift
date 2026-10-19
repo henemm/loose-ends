@@ -29,6 +29,15 @@ enum QuickDue {
         }
     }
 
+    /// The time words after a day (#556): the four full hours and, when the due date carries a time
+    /// outside them, that time in its place by the clock. "Other time …" is not among them: the editor
+    /// always shows it after the last, so a set 8:00 never takes its place (Henning, 2026-10-19).
+    static func timeChoices(on day: Date, due: Date?, hasTime: Bool, calendar: Calendar = .current) -> [Date] {
+        let presets = hours.map { at(hour: $0, on: day, calendar: calendar) }
+        guard hasTime, let due, !presets.contains(due), calendar.isDate(due, inSameDayAs: day) else { return presets }
+        return (presets + [due]).sorted()
+    }
+
     /// The same day at a full hour.
     static func at(hour: Int, on day: Date, calendar: Calendar = .current) -> Date {
         calendar.date(bySettingHour: hour, minute: 0, second: 0, of: day) ?? day
