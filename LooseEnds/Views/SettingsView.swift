@@ -101,7 +101,9 @@ struct SettingsView: View {
                         }
                     }
             }
-            .frame(width: 520, height: 640)
+            // An ideal height: a sheet taller than its window would put Done out of reach (#573).
+            .frame(width: 520)
+            .frame(minHeight: 360, idealHeight: 600)
         }
         #endif
         .sheet(isPresented: $choosesCalendar) {
