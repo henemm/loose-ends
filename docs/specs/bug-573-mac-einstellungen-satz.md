@@ -46,6 +46,11 @@ Kalenderzeile nur, wenn sie bereit ist.
 
 **Zeit.** `datePickerStyle(.field)` am Behälter: Wert ohne Stepper, Eingabe per Tastatur bleibt.
 
+**Höhe.** Die Tafel zeigt ein Fenster von 720 pt mit sechs Blöcken; die App hat mit den Abend- und Morgenzeilen
+(#518) und „Felder“ (#538) rund 860 pt Inhalt. In 720 lag „Felder“ unter dem Rand (der erste CI-Lauf klickte
+ins Leere: „not hittable“). Das Fenster bekommt 880 pt (`LooseEndsApp.swift`), damit jede Zeile ohne Scrollen
+steht, wo der Bildschirm es zulässt; ein kleinerer Bildschirm scrollt, nichts geht verloren.
+
 ## Acceptance Criteria
 
 - **AC-1:** Köpfe bündig mit dem Zeilentext, Luft darüber, keine Linie darunter (Galeriebilder hell und dunkel).

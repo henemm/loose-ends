@@ -230,7 +230,13 @@ final class MacDetailClickTests: XCTestCase {
         XCTAssertTrue(settings.waitForExistence(timeout: 10), "⌘, opened no settings window")
         let row = macElement("fieldsRow", in: settings)
         XCTAssertTrue(row.waitForExistence(timeout: 5), "Settings show no Fields row")
-        XCTAssertTrue(row.isHittable, "The Fields row is not hittable")
+        // The CI screen is 674 pt high and clips the 880 pt window, so the list scrolls to the row first.
+        let list = settings.scrollViews.firstMatch
+        for _ in 0..<8 where !row.isHittable {
+            if list.exists { list.scroll(byDeltaX: 0, deltaY: -200) }
+            RunLoop.current.run(until: Date().addingTimeInterval(0.3))
+        }
+        XCTAssertTrue(row.isHittable, "The Fields row stays out of reach after scrolling")
         let baseline = pickerCount(app)
         row.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).click()
         // The page is a sheet with one switch per field; the sheet counts like the pickers do, the
