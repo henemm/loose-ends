@@ -192,6 +192,7 @@ final class MacDetailClickTests: XCTestCase {
         XCTAssertTrue(now.waitForExistence(timeout: 10), "The task due today should stand in Now")
         now.click()
         XCTAssertTrue(macElement("detailRawTextMarker", in: window).waitForExistence(timeout: 10), "Detail did not open")
+        reveal("field_attachments", in: window).click()
         let file = reveal("addFileButton", in: window)
         let baseline = pickerCount(app)
         file.click()
