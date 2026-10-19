@@ -231,12 +231,40 @@ run_xcodebuild() {
     # Ein roter Test startet sonst `simctl diagnose --timeout=600` und xcodebuild wartet darauf,
     # bei mehreren Simulatoren bis zu 19 Min (#298). Testergebnis und Ergebnisbündel bleiben gleich.
     [ "${1:-}" = test ] && set -- "$@" -collect-test-diagnostics never
+    # Stille-Wächter (#516): Bleibt das Log LOOSEENDS_SILENCE_MAX s stumm, endet nur der xcodebuild dieser
+    # Sitzung (eigener -derivedDataPath) samt Kindern, sonst hielte er die rechnerweite Sperre unbegrenzt.
+    local hung="$SESSION_DERIVED_DATA/xcodebuild.hung" status=0 watcher
+    rm -f "$hung"; : > "$BUILD_LOG"
+    (
+        max=${LOOSEENDS_SILENCE_MAX:-900} sp=""
+        trap '[ -n "$sp" ] && kill "$sp" 2>/dev/null; exit 0' TERM
+        while :; do
+            sleep "${LOOSEENDS_SILENCE_POLL:-10}" & sp=$!; wait "$sp"; sp=""
+            age=$(( $(date +%s) - $(stat -f %m "$BUILD_LOG" 2>/dev/null || date +%s) ))
+            [ "$age" -gt "$max" ] || continue
+            trap - TERM; touch "$hung"
+            echo "xcodebuild hängt seit $((age / 60)) min, abgebrochen (Frist ${max} s Stille, LOOSEENDS_SILENCE_MAX)." >&2
+            echo "Letzte Logzeile: $(tail -n 1 "$BUILD_LOG")" >&2
+            echo "Ein Neustart von CoreSimulatorService kann nötig sein." >&2
+            pids=$(pgrep -f -- "xcodebuild.* -derivedDataPath $SESSION_DERIVED_DATA( |\$)" || true)
+            for p in $pids; do pkill -TERM -P "$p" 2>/dev/null || true; kill -TERM "$p" 2>/dev/null || true; done
+            sleep 5
+            for p in $pids; do pkill -KILL -P "$p" 2>/dev/null || true; kill -KILL "$p" 2>/dev/null || true; done
+            exit 0
+        done
+    ) </dev/null >/dev/null &
+    watcher=$!
     # Die Rohausgabe geht ins Log, bevor xcbeautify sie kürzt: Messberichte stehen darin.
     if command -v xcbeautify >/dev/null; then
-        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG" | xcbeautify
+        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG" | xcbeautify || status=$?
     else
-        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG"
+        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG" || status=$?
     fi
+    # Hat der Wächter ausgelöst, darf er seinen KILL-Schritt beenden; die Markierung entscheidet, nicht pipefail.
+    [ -e "$hung" ] || kill "$watcher" 2>/dev/null || true
+    wait "$watcher" 2>/dev/null || true
+    [ -e "$hung" ] && { rm -f "$hung"; return 1; }
+    return "$status"
 }
 
 # Ein Messlauf druckt seinen Bericht zwischen Markern, weil ein Test auf dem iPhone nicht ins

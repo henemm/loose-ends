@@ -1,0 +1,175 @@
+test_build_action_keeps_its_arguments_unchanged (scripts.test_sim_run_xcodebuild.RunXcodebuildDiagnosticsTests.test_build_action_keeps_its_arguments_unchanged) ... ok
+test_test_action_switches_off_diagnostics_collection (scripts.test_sim_run_xcodebuild.RunXcodebuildDiagnosticsTests.test_test_action_switches_off_diagnostics_collection) ... ok
+test_hang_detected_without_pipefail (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_hang_detected_without_pipefail) ... FAIL
+test_hang_message_names_deadline_last_line_and_simulator_service (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_hang_message_names_deadline_last_line_and_simulator_service) ... FAIL
+test_lock_released_after_hang (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_lock_released_after_hang) ... FAIL
+test_no_leftovers_after_normal_run (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_no_leftovers_after_normal_run) ... ok
+test_other_session_xcodebuild_survives (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_other_session_xcodebuild_survives) ... FAIL
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1313: ResourceWarning: subprocess 24631 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_silent_xcodebuild_is_killed_after_deadline (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_silent_xcodebuild_is_killed_after_deadline) ... FAIL
+test_talkative_run_is_not_aborted (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_talkative_run_is_not_aborted) ... ok
+
+======================================================================
+FAIL: test_hang_detected_without_pipefail (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_hang_detected_without_pipefail)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_run_xcodebuild.py", line 104, in run_guarded
+    out, err = proc.communicate(timeout=timeout)
+               ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 1395, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 2424, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        skip_check_and_raise=True)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 1434, in _check_timeout
+    raise TimeoutExpired(
+    ...<2 lines>...
+            stderr=b''.join(stderr_seq) if stderr_seq else None)
+subprocess.TimeoutExpired: Command '['bash', '-c', 'set -eu\nPROJECT_DIR="/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpcgpcxyul"\nSESSION_DERIVED_DATA="/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpcgpcxyul/DerivedData"\ntrap \'touch "/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpcgpcxyul/released"\' EXIT\nrun_xcodebuild() {\n    cd "$PROJECT_DIR"\n    mkdir -p "$SESSION_DERIVED_DATA"\n    BUILD_LOG="$SESSION_DERIVED_DATA/xcodebuild.log"\n    # Ein roter Test startet sonst `simctl diagnose --timeout=600` und xcodebuild wartet darauf,\n    # bei mehreren Simulatoren bis zu 19 Min (#298). Testergebnis und Ergebnisbündel bleiben gleich.\n    [ "${1:-}" = test ] && set -- "$@" -collect-test-diagnostics never\n    # Die Rohausgabe geht ins Log, bevor xcbeautify sie kürzt: Messberichte stehen darin.\n    if command -v xcbeautify >/dev/null; then\n        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG" | xcbeautify\n    else\n        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG"\n    fi\n}\nrun_xcodebuild build -project P.xcodeproj\necho REACHED_AFTER', 'sim.sh']' timed out after 15 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_run_xcodebuild.py", line 124, in test_hang_detected_without_pipefail
+    result = self.run_guarded(pipefail=False)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_run_xcodebuild.py", line 108, in run_guarded
+    self.fail(f"der Lauf hängt nach {timeout} s weiter, der Wächter hat nicht eingegriffen")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: der Lauf hängt nach 15 s weiter, der Wächter hat nicht eingegriffen
+
+======================================================================
+FAIL: test_hang_message_names_deadline_last_line_and_simulator_service (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_hang_message_names_deadline_last_line_and_simulator_service)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_run_xcodebuild.py", line 104, in run_guarded
+    out, err = proc.communicate(timeout=timeout)
+               ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 1395, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 2424, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        skip_check_and_raise=True)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 1434, in _check_timeout
+    raise TimeoutExpired(
+    ...<2 lines>...
+            stderr=b''.join(stderr_seq) if stderr_seq else None)
+subprocess.TimeoutExpired: Command '['bash', '-c', 'set -euo pipefail\nPROJECT_DIR="/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp_ivii3jo"\nSESSION_DERIVED_DATA="/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp_ivii3jo/DerivedData"\ntrap \'touch "/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp_ivii3jo/released"\' EXIT\nrun_xcodebuild() {\n    cd "$PROJECT_DIR"\n    mkdir -p "$SESSION_DERIVED_DATA"\n    BUILD_LOG="$SESSION_DERIVED_DATA/xcodebuild.log"\n    # Ein roter Test startet sonst `simctl diagnose --timeout=600` und xcodebuild wartet darauf,\n    # bei mehreren Simulatoren bis zu 19 Min (#298). Testergebnis und Ergebnisbündel bleiben gleich.\n    [ "${1:-}" = test ] && set -- "$@" -collect-test-diagnostics never\n    # Die Rohausgabe geht ins Log, bevor xcbeautify sie kürzt: Messberichte stehen darin.\n    if command -v xcbeautify >/dev/null; then\n        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG" | xcbeautify\n    else\n        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG"\n    fi\n}\nrun_xcodebuild build -project P.xcodeproj\necho REACHED_AFTER', 'sim.sh']' timed out after 15 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_run_xcodebuild.py", line 130, in test_hang_message_names_deadline_last_line_and_simulator_service
+    err = self.run_guarded().stderr
+          ~~~~~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_run_xcodebuild.py", line 108, in run_guarded
+    self.fail(f"der Lauf hängt nach {timeout} s weiter, der Wächter hat nicht eingegriffen")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: der Lauf hängt nach 15 s weiter, der Wächter hat nicht eingegriffen
+
+======================================================================
+FAIL: test_lock_released_after_hang (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_lock_released_after_hang)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_run_xcodebuild.py", line 104, in run_guarded
+    out, err = proc.communicate(timeout=timeout)
+               ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 1395, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 2424, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        skip_check_and_raise=True)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 1434, in _check_timeout
+    raise TimeoutExpired(
+    ...<2 lines>...
+            stderr=b''.join(stderr_seq) if stderr_seq else None)
+subprocess.TimeoutExpired: Command '['bash', '-c', 'set -euo pipefail\nPROJECT_DIR="/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp4hden8cl"\nSESSION_DERIVED_DATA="/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp4hden8cl/DerivedData"\ntrap \'touch "/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp4hden8cl/released"\' EXIT\nrun_xcodebuild() {\n    cd "$PROJECT_DIR"\n    mkdir -p "$SESSION_DERIVED_DATA"\n    BUILD_LOG="$SESSION_DERIVED_DATA/xcodebuild.log"\n    # Ein roter Test startet sonst `simctl diagnose --timeout=600` und xcodebuild wartet darauf,\n    # bei mehreren Simulatoren bis zu 19 Min (#298). Testergebnis und Ergebnisbündel bleiben gleich.\n    [ "${1:-}" = test ] && set -- "$@" -collect-test-diagnostics never\n    # Die Rohausgabe geht ins Log, bevor xcbeautify sie kürzt: Messberichte stehen darin.\n    if command -v xcbeautify >/dev/null; then\n        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG" | xcbeautify\n    else\n        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG"\n    fi\n}\nrun_xcodebuild build -project P.xcodeproj\necho REACHED_AFTER', 'sim.sh']' timed out after 15 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_run_xcodebuild.py", line 139, in test_lock_released_after_hang
+    self.run_guarded()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_run_xcodebuild.py", line 108, in run_guarded
+    self.fail(f"der Lauf hängt nach {timeout} s weiter, der Wächter hat nicht eingegriffen")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: der Lauf hängt nach 15 s weiter, der Wächter hat nicht eingegriffen
+
+======================================================================
+FAIL: test_other_session_xcodebuild_survives (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_other_session_xcodebuild_survives)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_run_xcodebuild.py", line 104, in run_guarded
+    out, err = proc.communicate(timeout=timeout)
+               ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 1395, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 2424, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        skip_check_and_raise=True)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 1434, in _check_timeout
+    raise TimeoutExpired(
+    ...<2 lines>...
+            stderr=b''.join(stderr_seq) if stderr_seq else None)
+subprocess.TimeoutExpired: Command '['bash', '-c', 'set -euo pipefail\nPROJECT_DIR="/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp0v36_7cy"\nSESSION_DERIVED_DATA="/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp0v36_7cy/DerivedData"\ntrap \'touch "/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp0v36_7cy/released"\' EXIT\nrun_xcodebuild() {\n    cd "$PROJECT_DIR"\n    mkdir -p "$SESSION_DERIVED_DATA"\n    BUILD_LOG="$SESSION_DERIVED_DATA/xcodebuild.log"\n    # Ein roter Test startet sonst `simctl diagnose --timeout=600` und xcodebuild wartet darauf,\n    # bei mehreren Simulatoren bis zu 19 Min (#298). Testergebnis und Ergebnisbündel bleiben gleich.\n    [ "${1:-}" = test ] && set -- "$@" -collect-test-diagnostics never\n    # Die Rohausgabe geht ins Log, bevor xcbeautify sie kürzt: Messberichte stehen darin.\n    if command -v xcbeautify >/dev/null; then\n        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG" | xcbeautify\n    else\n        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG"\n    fi\n}\nrun_xcodebuild build -project P.xcodeproj\necho REACHED_AFTER', 'sim.sh']' timed out after 15 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_run_xcodebuild.py", line 151, in test_other_session_xcodebuild_survives
+    self.run_guarded()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_run_xcodebuild.py", line 108, in run_guarded
+    self.fail(f"der Lauf hängt nach {timeout} s weiter, der Wächter hat nicht eingegriffen")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: der Lauf hängt nach 15 s weiter, der Wächter hat nicht eingegriffen
+
+======================================================================
+FAIL: test_silent_xcodebuild_is_killed_after_deadline (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_silent_xcodebuild_is_killed_after_deadline)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_run_xcodebuild.py", line 104, in run_guarded
+    out, err = proc.communicate(timeout=timeout)
+               ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 1395, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 2424, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        skip_check_and_raise=True)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 1434, in _check_timeout
+    raise TimeoutExpired(
+    ...<2 lines>...
+            stderr=b''.join(stderr_seq) if stderr_seq else None)
+subprocess.TimeoutExpired: Command '['bash', '-c', 'set -euo pipefail\nPROJECT_DIR="/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpxmw8742g"\nSESSION_DERIVED_DATA="/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpxmw8742g/DerivedData"\ntrap \'touch "/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpxmw8742g/released"\' EXIT\nrun_xcodebuild() {\n    cd "$PROJECT_DIR"\n    mkdir -p "$SESSION_DERIVED_DATA"\n    BUILD_LOG="$SESSION_DERIVED_DATA/xcodebuild.log"\n    # Ein roter Test startet sonst `simctl diagnose --timeout=600` und xcodebuild wartet darauf,\n    # bei mehreren Simulatoren bis zu 19 Min (#298). Testergebnis und Ergebnisbündel bleiben gleich.\n    [ "${1:-}" = test ] && set -- "$@" -collect-test-diagnostics never\n    # Die Rohausgabe geht ins Log, bevor xcbeautify sie kürzt: Messberichte stehen darin.\n    if command -v xcbeautify >/dev/null; then\n        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG" | xcbeautify\n    else\n        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG"\n    fi\n}\nrun_xcodebuild build -project P.xcodeproj\necho REACHED_AFTER', 'sim.sh']' timed out after 15 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_run_xcodebuild.py", line 114, in test_silent_xcodebuild_is_killed_after_deadline
+    result = self.run_guarded()
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_run_xcodebuild.py", line 108, in run_guarded
+    self.fail(f"der Lauf hängt nach {timeout} s weiter, der Wächter hat nicht eingegriffen")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: der Lauf hängt nach 15 s weiter, der Wächter hat nicht eingegriffen
+
+----------------------------------------------------------------------
+Ran 9 tests in 82.269s
+
+FAILED (failures=5)

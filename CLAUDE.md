@@ -73,7 +73,9 @@ Parallele Sitzungen (#341, #304, #413): `build`, `unit`, `sim-unit`, `test`, `te
 Worktree, Befehl). Wer wartet, sieht alle 30 s den Halter und bricht nach 30 min ab; eine verwaiste Sperre
 (Prozess tot oder PID wiederverwendet) wird sofort übernommen, eine Sperre ohne `pid`-Datei erst nach 30 min.
 Übernommen wird nur unter `<Sperre>.takeover`, damit zwei Wartende sich nicht gegenseitig die neue Sperre
-wegziehen. `boot` markiert auf jedem iOS-Simulator den Tastatur-Hinweis „Speed up your typing…“ als gezeigt:
+wegziehen. Schreibt `xcodebuild` 15 min nichts ins Log (`LOOSEENDS_SILENCE_MAX`, Sekunden), beendet ein Wächter nur den
+Lauf dieser Sitzung und meldet „hängt seit N min, abgebrochen“ samt letzter Logzeile; die Sperre wird frei,
+CoreSimulatorService startet er nicht neu (#516). `boot` markiert auf jedem iOS-Simulator den Tastatur-Hinweis „Speed up your typing…“ als gezeigt:
 auf einem frischen Simulator hängt er sonst jede UI-Abfrage nach dem ersten `typeText` auf.
 DerivedData liegt je Worktree unter `LooseEnds-session-<Ordnername>` (`CLAUDE_SESSION_ID` überschreibt den
 Schlüssel). Die Handabsprache per Sperrdatei zwischen Sitzungen entfällt.
