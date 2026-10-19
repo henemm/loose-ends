@@ -56,6 +56,9 @@ targets:
         com.apple.security.network.client: true
         com.apple.security.device.audio-input: true
         com.apple.security.personal-information.calendars: true
+        # File and Photo in the detail (#544): in the App Sandbox the open panel and the photo picker hand
+        # the app only what the person picks, and only with this key. Without it build 89 opened neither.
+        com.apple.security.files.user-selected.read-only: true
         # Siri (#347): without it Siri ignores INAlternativeAppNames — build 43 answered „Loose End
         # ist nicht installiert“ although „Loose End“ was declared. The App ID has had the Siri
         # capability since setup (docs/reference/testflight.md, step 2).
