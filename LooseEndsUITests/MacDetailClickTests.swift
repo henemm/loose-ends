@@ -1,10 +1,15 @@
 #if os(macOS)
 import XCTest
 
-/// #544 (Henning, 2026-10-18, Mac): a click on Note, "Add a subtask", "Add more" (removed in #560) and the File button
-/// in the detail did nothing. The gallery (#511) only photographs; this test clicks. Runs in the CI
-/// job "Mac Gallery (macOS)" next to `MacGalleryTests`; its pictures leave as `mac-gallery-544-*`.
-/// Written before the fix, so the first run shows red where the Mac really does not answer.
+/// #544 (Henning, 2026-10-18 and 2026-10-19, TestFlight builds 87 and 89 on the Mac): in the detail, title,
+/// subtasks, File and Photo do not answer. The first version of this test was green while Henning's app
+/// failed, for three reasons this version removes:
+/// 1. The CI app ran without the App Sandbox (ad hoc, entitlements stripped). The job now signs it with
+///    the sandbox entitlements of the real app (`scripts/mac_ci_entitlements.py`).
+/// 2. It clicked the centre of each field after scrolling and with the focus already in the detail. Each
+///    test now starts the app afresh and clicks where a person reads the words, at the leading edge.
+/// 3. It opened the detail from New only. It now opens it from Loose ends, the list Henning works in.
+/// Runs in the CI job "Mac Gallery (macOS)"; its pictures leave as `mac-gallery-544-*`.
 final class MacDetailClickTests: XCTestCase {
     override func setUp() {
         continueAfterFailure = false
@@ -16,13 +21,21 @@ final class MacDetailClickTests: XCTestCase {
         (element.value(forKey: "hasKeyboardFocus") as? Bool) ?? false
     }
 
+    /// A fresh app with one task, its detail open from Loose ends.
+    @MainActor
+    private func openDetail(_ text: String) -> (XCUIApplication, XCUIElement) {
+        let app = macLaunch(dark: false)
+        let window = macOpenDetail(of: text, in: app, list: "viewRow_open")
+        return (app, window)
+    }
+
     /// The detail's own scroll view, not the sidebar's: the one holding the title field.
     @MainActor
     private func detailScroll(in window: XCUIElement) -> XCUIElement {
         window.scrollViews.containing(.any, identifier: "detailTitleField").firstMatch
     }
 
-    /// Scrolls the detail until the element can be clicked; the Mac does not scroll for a click by itself.
+    /// Scrolls the detail until the element is in reach; the Mac does not scroll for a click by itself.
     @MainActor
     private func reveal(_ id: String, in window: XCUIElement) -> XCUIElement {
         let target = macElement(id, in: window)
@@ -36,21 +49,31 @@ final class MacDetailClickTests: XCTestCase {
         return target
     }
 
-    /// A system picker in front of the window: the open panel or the photo picker. Both come as a
-    /// sheet of the window or a dialog of the app; the count before the click is the baseline.
+    /// Where a person clicks into a text field: on its words at the leading edge, not the centre of
+    /// its accessibility frame, which can sit right of what one sees.
+    @MainActor
+    private func clickWords(of field: XCUIElement) {
+        field.coordinate(withNormalizedOffset: CGVector(dx: 0.06, dy: 0.5)).click()
+    }
+
+    // MARK: - Pickers
+
+    /// A system picker in front of the window: a sheet or dialog of the app. In the sandbox the open
+    /// panel is drawn by a system service but still hangs as a sheet on the app's window. Asking XCUITest
+    /// for that service as an app of its own throws when it does not run (run 39209916143).
     @MainActor
     private func pickerCount(_ app: XCUIApplication) -> Int {
         app.sheets.count + app.dialogs.count
     }
 
     @MainActor
-    private func waitForPicker(above baseline: Int, in app: XCUIApplication, timeout: TimeInterval = 15) -> Bool {
+    private func waitForPicker(_ shown: Bool, baseline: Int, in app: XCUIApplication, timeout: TimeInterval) -> Bool {
         let deadline = Date().addingTimeInterval(timeout)
         while Date() < deadline {
-            if pickerCount(app) > baseline { return true }
+            if (pickerCount(app) > baseline) == shown { return true }
             RunLoop.current.run(until: Date().addingTimeInterval(0.5))
         }
-        return pickerCount(app) > baseline
+        return (pickerCount(app) > baseline) == shown
     }
 
     /// Cancel inside the sheet or dialog itself: `app.buttons["Cancel"]` finds the Touch Bar's first,
@@ -67,74 +90,123 @@ final class MacDetailClickTests: XCTestCase {
         app.typeKey(.escape, modifierFlags: [])
     }
 
-    /// The text of the note at rest, wherever the Mac keeps it: a selectable `Text` reports an
-    /// empty label and carries its words as value, or as its own static text (run 39148286538).
+    /// Words on screen, wherever the Mac keeps them: a selectable `Text` reports an empty label and
+    /// carries its words as value, or as its own static text (run 39148286538).
     @MainActor
-    private func showsText(_ words: String, in window: XCUIElement) -> Bool {
-        let holder = window.descendants(matching: .any)
+    private func shows(_ words: String, in window: XCUIElement) -> Bool {
+        window.descendants(matching: .any)
             .matching(NSPredicate(format: "label CONTAINS %@ OR value CONTAINS %@", words, words))
             .firstMatch
-        return holder.waitForExistence(timeout: 5)
+            .waitForExistence(timeout: 5)
+    }
+
+    // MARK: - Tests
+
+    @MainActor
+    func testTitleTakesAClickAndKeepsTheNewWords() throws {
+        let (app, window) = openDetail("Rasen mähen")
+        let title = macElement("detailTitleField", in: window)
+        XCTAssertTrue(title.waitForExistence(timeout: 5), "Detail shows no title field")
+        clickWords(of: title)
+        XCTAssertTrue(hasKeyboardFocus(title), "A click on the title should put the cursor there")
+        title.typeKey("a", modifierFlags: .command)
+        title.typeText("Rasen mähen am Samstag\n")
+        macShot(window, "mac-gallery-544-1-title-typed")
+
+        // Saved, not only typed: the "Said" line appears only once the stored title differs from the
+        // raw text. (Clicking "Loose ends" again does not leave the detail while that row stays selected,
+        // run 39209916143.)
+        XCTAssertTrue(macElement("detailRawText", in: window).waitForExistence(timeout: 5),
+                      "The new title should be stored: the said line shows only when the title differs")
+        XCTAssertTrue(shows("Samstag", in: window), "The title should hold the typed words")
+        app.terminate()
     }
 
     @MainActor
-    func testNoteAndSubtaskTakeAClick() throws {
-        let app = macLaunch(dark: false)
-        let window = macOpenDetail(of: "Rasen mähen", in: app)
-
-        // Note: a click focuses the field, typing lands, leaving the field writes it.
+    func testNoteTakesAClickAndIsSaved() throws {
+        let (app, window) = openDetail("Schlüssel abholen")
         let note = reveal("noteField", in: window)
-        note.click()
-        XCTAssertTrue(hasKeyboardFocus(note), "A click on Note should focus its field")
-        note.typeText("Schlüssel liegt unter der Matte")
-        macShot(window, "mac-gallery-544-1-note-typed")
+        clickWords(of: note)
+        XCTAssertTrue(hasKeyboardFocus(note), "A click on Note should put the cursor there")
+        note.typeText("liegt unter der Matte")
+        // Leaving the field writes the note: the title takes the focus.
+        clickWords(of: macElement("detailTitleField", in: window))
+        XCTAssertTrue(macElement("noteText", in: window).waitForExistence(timeout: 5), "Leaving the note should show it as text")
+        XCTAssertTrue(shows("Matte", in: window), "The note at rest should hold the typed words")
+        macShot(window, "mac-gallery-544-2-note-saved")
+        app.terminate()
+    }
 
-        // Subtask: the next click moves the focus there, which commits the note; Return adds the line.
-        let subtask = reveal("subtaskTextField", in: window)
-        subtask.click()
-        XCTAssertTrue(hasKeyboardFocus(subtask), "A click on Add a subtask should focus its field")
-        let noteText = macElement("noteText", in: window)
-        XCTAssertTrue(noteText.waitForExistence(timeout: 5), "Leaving the note should show it as text")
-        XCTAssertTrue(showsText("Matte", in: window), "The note at rest should hold the typed words")
-        subtask.typeText("Mäher tanken\n")
+    @MainActor
+    func testSubtaskIsAddedByClickAndCheckedByClick() throws {
+        let (app, window) = openDetail("Einkaufen")
+        let field = reveal("subtaskTextField", in: window)
+        clickWords(of: field)
+        XCTAssertTrue(hasKeyboardFocus(field), "A click on Add a subtask should put the cursor there")
+        field.typeText("Milch\n")
         let line = window.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH %@", "subtaskRow_"))
             .firstMatch
         XCTAssertTrue(line.waitForExistence(timeout: 5), "Return should list the subtask")
-        XCTAssertTrue(line.label.contains("Mäher"), "Subtask row was \(line.label)")
-        macShot(window, "mac-gallery-544-2-subtask-added")
+        XCTAssertTrue(line.label.contains("Milch"), "Subtask row was \(line.label)")
+
+        // The footer reads "0 of 1 done" as soon as the line exists; only "1 of 1" proves the click.
+        // A Mac `Text` may carry its words as value with an empty label (run 39209916143).
+        line.click()
+        let checked = NSPredicate(format: "label CONTAINS '1 of 1' OR value CONTAINS '1 of 1'")
+        let progress = window.descendants(matching: .any).matching(checked).firstMatch
+        XCTAssertTrue(progress.waitForExistence(timeout: 5), "A click on the subtask should check it off: 1 of 1 done")
+        macShot(window, "mac-gallery-544-3-subtask-checked")
         app.terminate()
     }
 
     @MainActor
-    func testFileAndPhotoButtonsOpenTheirPickers() throws {
-        let app = macLaunch(dark: false)
-        let window = macOpenDetail(of: "Vertrag ablegen", in: app)
-
+    func testFileOpensTheOpenPanel() throws {
+        let (app, window) = openDetail("Vertrag ablegen")
         let file = reveal("addFileButton", in: window)
         let baseline = pickerCount(app)
         file.click()
-        XCTAssertTrue(waitForPicker(above: baseline, in: app), "File should open the open panel")
+        XCTAssertTrue(waitForPicker(true, baseline: baseline, in: app, timeout: 15), "File should open the open panel")
         macShot(window, "mac-gallery-544-4-file-panel")
         dismissPicker(in: app)
-        XCTAssertTrue(waitForPickerGone(to: baseline, in: app), "Cancel should close the open panel")
+        XCTAssertTrue(waitForPicker(false, baseline: baseline, in: app, timeout: 10), "Cancel should close the open panel")
+        app.terminate()
+    }
 
-        let photo = reveal("addPhotoButton", in: window)
-        photo.click()
-        XCTAssertTrue(waitForPicker(above: baseline, in: app), "Photo should open the photo picker")
-        macShot(window, "mac-gallery-544-5-photo-picker")
+    /// Henning opens tasks from the start page (2026-10-19): "Now" sets the detail column directly, not
+    /// through a list. A task due today stands there; File from that detail.
+    @MainActor
+    func testFileOpensTheOpenPanelFromTheStartPage() throws {
+        let app = macLaunch(dark: false)
+        _ = macOpenMainWindowIfNeeded(app)
+        XCTAssertTrue(macElement("startCaptureField", in: app).waitForExistence(timeout: 20), "No start page")
+        macCapture("Heute Vertrag ablegen", in: app)
+        let window = macMainWindow(of: app)
+        let now = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "startNowRow_"))
+            .firstMatch
+        XCTAssertTrue(now.waitForExistence(timeout: 10), "The task due today should stand in Now")
+        now.click()
+        XCTAssertTrue(macElement("detailRawTextMarker", in: window).waitForExistence(timeout: 10), "Detail did not open")
+        let file = reveal("addFileButton", in: window)
+        let baseline = pickerCount(app)
+        file.click()
+        XCTAssertTrue(waitForPicker(true, baseline: baseline, in: app, timeout: 15), "File should open the open panel")
+        macShot(window, "mac-gallery-544-6-file-panel-from-start")
         dismissPicker(in: app)
         app.terminate()
     }
 
     @MainActor
-    private func waitForPickerGone(to baseline: Int, in app: XCUIApplication, timeout: TimeInterval = 10) -> Bool {
-        let deadline = Date().addingTimeInterval(timeout)
-        while Date() < deadline {
-            if pickerCount(app) <= baseline { return true }
-            RunLoop.current.run(until: Date().addingTimeInterval(0.5))
-        }
-        return pickerCount(app) <= baseline
+    func testPhotoOpensThePhotoPicker() throws {
+        let (app, window) = openDetail("Foto vom Zähler")
+        let photo = reveal("addPhotoButton", in: window)
+        let baseline = pickerCount(app)
+        photo.click()
+        XCTAssertTrue(waitForPicker(true, baseline: baseline, in: app, timeout: 15), "Photo should open the photo picker")
+        macShot(window, "mac-gallery-544-5-photo-picker")
+        dismissPicker(in: app)
+        app.terminate()
     }
 }
 #endif
