@@ -72,33 +72,14 @@ struct CaptureView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
-                // The hint replaces the placeholder visually; the field keeps its name for VoiceOver.
-                TextField("What should I remember?", text: $text, prompt: hintState == .hint ? Text(verbatim: "") : nil, axis: .vertical)
-                    .font(.title3)
-                    .lineLimit(3...10)
-                    .focused($isFocused)
-                    .submitLabel(.done)
-                    .onSubmit(save)
-                    .onChange(of: text) { _, newValue in submitOnReturn(newValue) }
-                    .accessibilityIdentifier("captureTextField")
-                    .modifier(FieldSurface())
-                    .overlay(alignment: .topLeading) {
-                        if hintState == .hint { ListeningHintView().padding(FieldSurface.inset) }
-                    }
-                if speechWanted || diagnosisFixture || listeningFixture {
-                    listeningRow
-                }
-                Spacer()
-                if onFinish != nil {
-                    HStack {
-                        Spacer()
-                        cancelButton
-                        doneButton
-                    }
-                }
+            Group {
+                #if os(macOS)
+                // The menu bar panel (#479) has its own paper layout; the window's ⌘N keeps the standard one.
+                if onFinish != nil { panelContent } else { standardContent }
+                #else
+                standardContent
+                #endif
             }
-            .padding(Layout.edge)
             .navigationTitle("Capture")
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
@@ -130,6 +111,37 @@ struct CaptureView: View {
         #if os(macOS)
         .frame(minWidth: 440, minHeight: 280)
         #endif
+    }
+
+    /// iPhone, iPad and the Mac window's capture (⌘N), unchanged by #479.
+    private var standardContent: some View {
+        VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
+            // The hint replaces the placeholder visually; the field keeps its name for VoiceOver.
+            TextField("What should I remember?", text: $text, prompt: hintState == .hint ? Text(verbatim: "") : nil, axis: .vertical)
+                .font(.title3)
+                .lineLimit(3...10)
+                .focused($isFocused)
+                .submitLabel(.done)
+                .onSubmit(save)
+                .onChange(of: text) { _, newValue in submitOnReturn(newValue) }
+                .accessibilityIdentifier("captureTextField")
+                .modifier(FieldSurface())
+                .overlay(alignment: .topLeading) {
+                    if hintState == .hint { ListeningHintView().padding(FieldSurface.inset) }
+                }
+            if speechWanted || diagnosisFixture || listeningFixture {
+                listeningRow
+            }
+            Spacer()
+            if onFinish != nil {
+                HStack {
+                    Spacer()
+                    cancelButton
+                    doneButton
+                }
+            }
+        }
+        .padding(Layout.edge)
     }
 
     /// Spacing scale (#356 follow-up): the Mac window is wider and calmer than a phone sheet.
@@ -226,6 +238,72 @@ struct CaptureView: View {
     }
 
     #if os(macOS)
+    /// The menu bar panel on paper (#479, board `Menueleiste.dc.html`): the knot and "New task" as head,
+    /// the field in serif without a grey box, one row with microphone, hint or wave, Cancel and Done, and
+    /// the quiet diagnosis line with its space always reserved (#402), so the panel never jumps (#400).
+    private var panelContent: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 8) {
+                ThreadGlyph(form: .knot, lineWidth: 1.5)
+                    .frame(width: 30, height: 16)
+                Text("New task").captionHead()
+            }
+            .foregroundStyle(.secondary)
+            .accessibilityElement(children: .combine)
+            .accessibilityIdentifier("capturePanelHeader")
+            // The hint replaces the placeholder visually; the field keeps its name for VoiceOver.
+            TextField("What should I remember?", text: $text, prompt: hintState == .hint ? Text(verbatim: "") : nil, axis: .vertical)
+                .font(.system(size: 22, design: .serif))
+                .textFieldStyle(.plain)
+                .lineLimit(3...10)
+                .focused($isFocused)
+                .onSubmit(save)
+                .onChange(of: text) { _, newValue in submitOnReturn(newValue) }
+                .frame(maxWidth: .infinity, minHeight: 112, alignment: .topLeading)
+                .accessibilityIdentifier("captureTextField")
+                .overlay(alignment: .topLeading) {
+                    if hintState == .hint { ListeningHintView() }
+                }
+            panelRow
+            macDiagnosisLine
+        }
+        .padding(.horizontal, 24)
+        .padding(.top, 18)
+        .padding(.bottom, 12)
+        .background(Paper.ground)
+    }
+
+    /// Microphone (74 pt frame for the level ring, #279), then the wave while it listens, the resting hint
+    /// while it does not and the field is empty, nothing otherwise; Cancel grey, Done as accent capsule.
+    /// Without speech (unavailable, no access, no model) the existing status line takes the middle.
+    private var panelRow: some View {
+        HStack(spacing: 12) {
+            switch speech.state {
+            case .idle, .listening:
+                MicButton(isListening: isListening, level: levels.last ?? 0, action: toggleListening)
+                Group {
+                    if isListening {
+                        WaveformView(levels: levels, isListening: true, height: 18)
+                    } else if hintState == .placeholder {
+                        Text("Speak or type. Return saves.")
+                            .font(.system(size: 13))
+                            .foregroundStyle(.secondary)
+                            .lineLimit(2)
+                            .accessibilityIdentifier("captureRestHint")
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            default:
+                listeningRow.frame(maxWidth: .infinity, alignment: .leading)
+            }
+            cancelButton
+                .buttonStyle(.plain)
+                .font(.system(size: 13))
+                .foregroundStyle(.secondary)
+            doneButton.buttonStyle(AccentCapsuleStyle())
+        }
+    }
+
     /// Mac (#402): eine ruhige Zeile, Einzelwerte im Hinweis und für VoiceOver. Der Platz ist immer reserviert
     /// (unsichtbar statt entfernt), damit das Panel nie springt und die Knöpfe die Fußzeile nie überdecken.
     private var macDiagnosisLine: some View {
@@ -331,6 +409,8 @@ private struct FieldSurface: ViewModifier {
 private struct WaveformView: View {
     let levels: [Float]
     let isListening: Bool
+    /// The menu bar panel takes a thin wave (#479); everywhere else 32 pt.
+    var height: CGFloat = 32
 
     var body: some View {
         Canvas { context, size in
@@ -345,10 +425,27 @@ private struct WaveformView: View {
                 context.fill(Path(roundedRect: rect, cornerRadius: 1), with: .color(bar))
             }
         }
-        .frame(height: 32)
+        .frame(height: height)
         .accessibilityHidden(true)
     }
 }
+
+#if os(macOS)
+/// Done in the menu bar panel (#479): an accent capsule, white, 30 pt high; faded while there is nothing to save.
+private struct AccentCapsuleStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 13, weight: .semibold))
+            .foregroundStyle(.white)
+            .padding(.horizontal, 16)
+            .frame(height: 30)
+            .background(Color.accentColor.opacity(isEnabled ? (configuration.isPressed ? 0.8 : 1) : 0.45), in: Capsule())
+            .contentShape(Capsule())
+    }
+}
+#endif
 
 /// "Listening …" where the text will appear (#297): grey, three dots lighting up in turn, still under
 /// Reduce Motion. Hidden only while VoiceOver runs, so the field keeps its placeholder name there
