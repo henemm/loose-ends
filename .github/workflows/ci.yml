@@ -62,8 +62,12 @@ jobs:
       - name: Report skipped measurements
         if: always()
         # Measurement suites gated on personal data are skipped here and still read as passed
-        # (#149); the job summary says which ones did not measure.
-        run: python3 scripts/measurement_status.py --markdown >> "$GITHUB_STEP_SUMMARY"
+        # (#149); the job summary says which ones did not measure. The two latency tests of #274 cancel
+        # themselves without a speech model and read as passed too (#419): the summary names each one,
+        # and a warning annotation marks the run. The run stays green: a missing model is the runner, not a fault.
+        run: |
+          python3 scripts/measurement_status.py --markdown --latency-log unit-tests.log >> "$GITHUB_STEP_SUMMARY"
+          python3 scripts/measurement_status.py --latency-warning --latency-log unit-tests.log
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v7

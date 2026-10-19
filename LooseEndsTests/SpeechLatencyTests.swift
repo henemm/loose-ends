@@ -49,7 +49,11 @@ import Testing
 
     private static func measuredRun() async throws -> Run {
         guard let locale = await SpeechTranscriber.supportedLocale(equivalentTo: Locale(identifier: "de_DE")) else {
-            try Test.cancel("Sprache de_DE wird hier nicht unterstützt")
+            // Diagnose im Abbruchgrund (#419): Sprache, Modell oder Hardware – steht so im Log und im CI-Bericht.
+            let available = SpeechTranscriber.isAvailable
+            let supported = await SpeechTranscriber.supportedLocales.count
+            let installed = await SpeechTranscriber.installedLocales.count
+            try Test.cancel("Sprache de_DE wird hier nicht unterstützt (isAvailable \(available), supportedLocales.count \(supported), installedLocales.count \(installed))")
         }
         let status = await AssetInventory.status(forModules: [SpeechCapture.makeTranscriber(locale: locale)])
         guard status == .installed else {

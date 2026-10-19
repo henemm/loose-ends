@@ -1,0 +1,33 @@
+...................
+----------------------------------------------------------------------
+Ran 19 tests in 0.033s
+
+OK
+..................................................................../opt/homebrew/lib/python3.15/site-packages/yaml/error.py:6: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 57065)>
+  def __init__(self, name, index, line, column, buffer, pointer):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/lib/python3.15/site-packages/yaml/error.py:6: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 57070)>
+  def __init__(self, name, index, line, column, buffer, pointer):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/lib/python3.15/site-packages/yaml/error.py:6: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 57076)>
+  def __init__(self, name, index, line, column, buffer, pointer):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.........................................................................../opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed file <_io.TextIOWrapper name=6 encoding='utf-8'>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed file <_io.TextIOWrapper name=3 encoding='utf-8'>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+...../opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:84: ResourceWarning: unclosed file <_io.TextIOWrapper name=6 encoding='utf-8'>
+  return self.run(*args, **kwds)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:84: ResourceWarning: unclosed file <_io.TextIOWrapper name=3 encoding='utf-8'>
+  return self.run(*args, **kwds)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.........................
+----------------------------------------------------------------------
+Ran 173 tests in 76.276s
+
+OK
+::error title=board::Usage: board.py list | board.py set <issue> <Field=Value,...>
+::error title=board::Usage: board.py list | board.py set <issue> <Field=Value,...>
