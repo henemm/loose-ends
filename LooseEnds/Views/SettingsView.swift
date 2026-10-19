@@ -64,6 +64,9 @@ struct SettingsView: View {
             } footer: {
                 Text("In the evening, what needs a new date comes in one notification. In the morning, one invites you to look at your loose ends; at the reminder time it also names what is due today.")
             }
+            syncSection
+            calendarSection
+            // Below the calendar (#538): the rows above keep their place on the screen.
             Section {
                 NavigationLink {
                     FieldSettingsView()
@@ -76,8 +79,6 @@ struct SettingsView: View {
             } footer: {
                 Text("What a task offers. Off means not offered; what a task already carries, it shows anyway.")
             }
-            syncSection
-            calendarSection
             #if os(macOS)
             Section {
                 Toggle("Open at login", isOn: $opensAtLogin)
