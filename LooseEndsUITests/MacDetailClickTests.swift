@@ -173,6 +173,30 @@ final class MacDetailClickTests: XCTestCase {
         app.terminate()
     }
 
+    /// Henning opens tasks from the start page (2026-10-19): "Now" sets the detail column directly, not
+    /// through a list. A task due today stands there; File from that detail.
+    @MainActor
+    func testFileOpensTheOpenPanelFromTheStartPage() throws {
+        let app = macLaunch(dark: false)
+        _ = macOpenMainWindowIfNeeded(app)
+        XCTAssertTrue(macElement("startCaptureField", in: app).waitForExistence(timeout: 20), "No start page")
+        macCapture("Heute Vertrag ablegen", in: app)
+        let window = macMainWindow(of: app)
+        let now = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "startNowRow_"))
+            .firstMatch
+        XCTAssertTrue(now.waitForExistence(timeout: 10), "The task due today should stand in Now")
+        now.click()
+        XCTAssertTrue(macElement("detailRawTextMarker", in: window).waitForExistence(timeout: 10), "Detail did not open")
+        let file = reveal("addFileButton", in: window)
+        let baseline = pickerCount(app)
+        file.click()
+        XCTAssertTrue(waitForPicker(true, baseline: baseline, in: app, timeout: 15), "File should open the open panel")
+        macShot(window, "mac-gallery-544-6-file-panel-from-start")
+        dismissPicker(in: app)
+        app.terminate()
+    }
+
     @MainActor
     func testPhotoOpensThePhotoPicker() throws {
         let (app, window) = openDetail("Foto vom Zähler")
