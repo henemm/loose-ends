@@ -100,6 +100,45 @@ final class MacGalleryTests: XCTestCase {
         app.terminate()
     }
 
+    /// #574 (Henning, 2026-10-19): "Add to calendar" on the Mac was a column of wide grey buttons with
+    /// ticks. A task with a day but no time asks for the timing; photographed as it opens and after
+    /// "At a time", the sheet on its own.
+    @MainActor
+    private func photographCalendarAsk(dark: Bool) {
+        let label = dark ? "dark" : "light"
+        let app = macLaunch(dark: dark)
+        let window = macOpenDetail(of: "Zahnarzt anrufen morgen", in: app)
+        let word = macElement("field_calendar", in: window)
+        let scroll = window.scrollViews.containing(.any, identifier: "detailRawTextMarker").firstMatch
+        for _ in 0..<8 where !(word.exists && word.isHittable) {
+            if scroll.exists { scroll.scroll(byDeltaX: 0, deltaY: -200) }
+            RunLoop.current.run(until: Date().addingTimeInterval(0.3))
+        }
+        XCTAssertTrue(word.waitForExistence(timeout: 5), "Detail offers no Calendar")
+        word.click()
+        let sheet = app.sheets.firstMatch
+        XCTAssertTrue(sheet.waitForExistence(timeout: 10), "Calendar should ask first for a day without a time")
+        RunLoop.current.run(until: Date().addingTimeInterval(0.5))
+        macShot(sheet, "mac-gallery-\(label)-8-calendar-ask")
+
+        let timed = sheet.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "At a time")).firstMatch
+        XCTAssertTrue(timed.waitForExistence(timeout: 5), "The sheet offers no \"At a time\"")
+        timed.click()
+        RunLoop.current.run(until: Date().addingTimeInterval(0.5))
+        macShot(sheet, "mac-gallery-\(label)-9-calendar-ask-timed")
+        app.terminate()
+    }
+
+    @MainActor
+    func testCalendarAskLight() throws {
+        photographCalendarAsk(dark: false)
+    }
+
+    @MainActor
+    func testCalendarAskDark() throws {
+        photographCalendarAsk(dark: true)
+    }
+
     @MainActor
     func testLooseEndsTopLight() throws {
         photographLooseEnds(dark: false)

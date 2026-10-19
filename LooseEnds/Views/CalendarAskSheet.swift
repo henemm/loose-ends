@@ -21,11 +21,16 @@ struct CalendarAskSheet: View {
                     DatePicker("Date", selection: dateBinding, displayedComponents: .date)
                         .accessibilityIdentifier("calendarAskDate")
                 }
+                // System controls, as the Calendar app has them (#574): two ways side by side as a
+                // segmented control, one of several values as a pop-up menu. Both start without a
+                // choice, so nothing is guessed (#203, Teil B).
                 if gaps.timing {
-                    Section {
-                        choice(Text("All day"), isOn: answer.timing == .allDay, id: "calendarAskAllDay") { answer.timing = .allDay }
-                        choice(Text("At a time"), isOn: answer.timing == .timed, id: "calendarAskTimed") { answer.timing = .timed }
+                    Picker("When", selection: $answer.timing) {
+                        Text("All day").tag(CalendarAsk.Timing?.some(.allDay))
+                        Text("At a time").tag(CalendarAsk.Timing?.some(.timed))
                     }
+                    .pickerStyle(.segmented)
+                    .accessibilityIdentifier("calendarAskTiming")
                 }
                 if gaps.timing && answer.timing == .timed {
                     DatePicker("Time", selection: timeBinding, displayedComponents: .hourAndMinute)
@@ -33,14 +38,14 @@ struct CalendarAskSheet: View {
                 }
                 if gaps.duration || answer.timing == .timed {
                     Section {
-                        ForEach(DurationBucket.allCases, id: \.self) { bucket in
-                            choice(Text(FieldFormatting.duration(bucket)),
-                                   isOn: answer.duration == bucket, id: "calendarAskDuration_\(bucket.rawValue)") {
-                                answer.duration = bucket
+                        Picker("Duration", selection: $answer.duration) {
+                            Text("Choose").tag(DurationBucket?.none)
+                            ForEach(DurationBucket.allCases, id: \.self) { bucket in
+                                Text(FieldFormatting.duration(bucket)).tag(DurationBucket?.some(bucket))
                             }
                         }
-                    } header: {
-                        Text("Duration")
+                        .pickerStyle(.menu)
+                        .accessibilityIdentifier("calendarAskDuration")
                     } footer: {
                         if let range { Text(range).accessibilityIdentifier("calendarAskRange") }
                     }
@@ -67,7 +72,9 @@ struct CalendarAskSheet: View {
             }
         }
         #if os(macOS)
-        .frame(minWidth: 360, minHeight: 420)
+        // As high as its rows: a fixed minimum left a hollow sheet before the first choice (#574).
+        .frame(width: 400)
+        .fixedSize(horizontal: false, vertical: true)
         #endif
     }
 
@@ -91,17 +98,5 @@ struct CalendarAskSheet: View {
         guard let start else { return nil }
         let end = start.addingTimeInterval(Double(CalendarSync.length(of: duration)) * 60)
         return CalendarSync.timeRange(start: start, end: end)
-    }
-
-    private func choice(_ title: Text, isOn: Bool, id: String, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            HStack {
-                title.foregroundStyle(.primary)
-                Spacer()
-                if isOn { Image(systemName: "checkmark").foregroundStyle(Color.accentColor) }
-            }
-        }
-        .accessibilityIdentifier(id)
-        .accessibilityAddTraits(isOn ? .isSelected : [])
     }
 }

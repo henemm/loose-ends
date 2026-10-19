@@ -741,7 +741,8 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(word.waitForExistence(timeout: 5), "Detail should offer Calendar in the word line")
         word.tap()
         let toggle = app.switches["showInCalendarToggle"]
-        let allDay = element("calendarAskAllDay", in: app)
+        // "All day" is a segment of the timing control (#574).
+        let allDay = app.segmentedControls.buttons["All day"].firstMatch
         XCTAssertTrue(allDay.waitForExistence(timeout: 5), "Without a time the switch should ask first")
         allDay.tap()
         let add = app.buttons["calendarAskConfirm"]

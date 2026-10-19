@@ -49,9 +49,9 @@ final class CalendarTargetTests: XCTestCase {
         word.tap()
 
         // A time without a duration asks for the duration first (#203, Teil B).
-        let hour = app.descendants(matching: .any).matching(identifier: "calendarAskDuration_hour1").firstMatch
-        if hour.waitForExistence(timeout: 5) {
-            hour.tap()
+        let duration = app.descendants(matching: .any).matching(identifier: "calendarAskDuration").firstMatch
+        if duration.waitForExistence(timeout: 5) {
+            chooseHour(from: duration, in: app)
             app.buttons["calendarAskConfirm"].tap()
         }
 
@@ -201,9 +201,9 @@ final class CalendarTargetTests: XCTestCase {
         XCTAssertTrue(word.waitForExistence(timeout: 5), "Detail should offer Calendar")
         word.tap()
 
-        let hour = app.descendants(matching: .any).matching(identifier: "calendarAskDuration_hour1").firstMatch
-        if hour.waitForExistence(timeout: 5) {
-            hour.tap()
+        let duration = app.descendants(matching: .any).matching(identifier: "calendarAskDuration").firstMatch
+        if duration.waitForExistence(timeout: 5) {
+            chooseHour(from: duration, in: app)
             app.buttons["calendarAskConfirm"].tap()
         }
         let target = app.descendants(matching: .any).matching(identifier: "calendarTargetRow").firstMatch
@@ -250,6 +250,14 @@ final class CalendarTargetTests: XCTestCase {
     /// prompt itself (#341), not 30 s for the row: a simulator that already granted access shows none. A
     /// prompt that comes later (slow CI runner, #203) is caught by the interruption monitor on the next gesture.
     @MainActor
+    /// The duration is a pop-up menu (#574): open it, then pick "1 h".
+    private func chooseHour(from duration: XCUIElement, in app: XCUIApplication) {
+        duration.tap()
+        let hour = app.buttons["1 h"].firstMatch
+        XCTAssertTrue(hour.waitForExistence(timeout: 5), "The duration menu should offer 1 h")
+        hour.tap()
+    }
+
     private func allowCalendarAccessIfAsked() {
         let alert = XCUIApplication(bundleIdentifier: "com.apple.springboard").alerts.firstMatch
         guard alert.waitForExistence(timeout: 3) else { return }
