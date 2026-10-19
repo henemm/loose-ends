@@ -171,6 +171,9 @@ struct SettingsView: View {
         }
         Group(content: rows)
             .frame(minHeight: 40 - Paper.wideRowInsets.top - Paper.wideRowInsets.bottom)
+            // The hairline from the row's leading edge, whatever the row's first text is (the iCloud
+            // row's started under its value on the right).
+            .alignmentGuide(.listRowSeparatorLeading) { _ in 0 }
             .listRowInsets(Paper.wideRowInsets)
             .listRowBackground(Paper.ground)
         if let hint {

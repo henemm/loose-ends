@@ -230,14 +230,31 @@ final class MacDetailClickTests: XCTestCase {
         XCTAssertTrue(settings.waitForExistence(timeout: 10), "⌘, opened no settings window")
         let row = macElement("fieldsRow", in: settings)
         XCTAssertTrue(row.waitForExistence(timeout: 5), "Settings show no Fields row")
+        XCTAssertTrue(row.isHittable, "The Fields row is not hittable")
+        let baseline = pickerCount(app)
         row.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).click()
-        let page = macElement("fieldSettings", in: app)
-        XCTAssertTrue(page.waitForExistence(timeout: 10), "A click on the middle of the Fields row should open the page")
+        // The page is a sheet with one switch per field; the sheet counts like the pickers do, the
+        // switch is a control the Mac always exposes (a form's own identifier it may not).
+        let notesSwitch = app.descendants(matching: .any).matching(identifier: "fieldSwitch_notes").firstMatch
+        let opened = waitForPicker(true, baseline: baseline, in: app, timeout: 10) || notesSwitch.waitForExistence(timeout: 5)
+        // Pictures first, so a failure leaves them in the gallery.
         macShot(settings, "mac-gallery-573-fields-from-row-middle")
+        let screen = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        screen.name = "mac-gallery-573-screen-after-click"
+        screen.lifetime = .keepAlways
+        add(screen)
+        if !opened {
+            let hierarchy = XCTAttachment(string: app.debugDescription)
+            hierarchy.name = "mac-gallery-573-hierarchy-after-click"
+            hierarchy.lifetime = .keepAlways
+            add(hierarchy)
+        }
+        XCTAssertTrue(opened, "A click on the middle of the Fields row should open the page")
+        XCTAssertTrue(notesSwitch.waitForExistence(timeout: 5), "The Fields page shows no switch for Note")
         let done = macElement("fieldsDoneButton", in: app)
         XCTAssertTrue(done.waitForExistence(timeout: 5), "The Fields sheet shows no Done")
         done.click()
-        XCTAssertTrue(page.waitForNonExistence(timeout: 5), "Done should close the Fields sheet")
+        XCTAssertTrue(waitForPicker(false, baseline: baseline, in: app, timeout: 5), "Done should close the Fields sheet")
         app.terminate()
     }
 }
