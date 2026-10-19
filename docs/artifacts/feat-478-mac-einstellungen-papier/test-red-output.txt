@@ -1,0 +1,7 @@
+2026-10-18T17:35:11.9519380Z ##[error]    testSettingsDark, XCTAssertEqualWithAccuracy failed: ("900.0") is not equal to ("640.0") +/- ("2.0") - Settings window is not 640 pt wide
+2026-10-18T17:35:11.9521940Z ##[error]    testSettingsLight, XCTAssertEqualWithAccuracy failed: ("900.0") is not equal to ("640.0") +/- ("2.0") - Settings window is not 640 pt wide
+2026-10-18T17:35:11.9523130Z Executed 4 tests, with 2 failures (0 unexpected) in 117.146 (117.152) seconds
+2026-10-18T17:35:11.9524320Z Executed 4 tests, with 2 failures (0 unexpected) in 117.146 (117.152) seconds
+2026-10-18T17:35:11.9524930Z Executed 4 tests, with 2 failures (0 unexpected) in 117.146 (117.154) seconds
+2026-10-18T17:35:20.1162040Z Exported 5 attachments for: MacGalleryTests/testSettingsDark():
+2026-10-18T17:35:20.1168810Z Exported 5 attachments for: MacGalleryTests/testSettingsLight():

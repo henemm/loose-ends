@@ -1,0 +1,7 @@
+CI-Lauf 39231055167 auf c52a0f5 (PR #549): conclusion=success
+Mac Gallery (macOS): success (testSettingsLight/Dark inkl. Kennungen und Breite 640)
+UI Smoke (iOS Simulator): success
+Build (iOS Simulator): success
+Unit Tests (macOS destination): success
+Lokal: sim-unit 848 Tests, 843 bestanden, 0 fehlgeschlagen, 5 uebersprungen (Messtests); SettingsSmokeTests 1/1
+Test Succeeded

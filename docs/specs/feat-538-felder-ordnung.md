@@ -46,7 +46,7 @@ Energie, Wiederholung, Ort, Projekt, Unteraufgaben, Wartet auf.
 | `LooseEnds/Views/TaskDetailView.swift` | Fünf Gruppen, Abschnitte nur mit Inhalt oder nach Tipp auf ihr Wort (`opened`), eine Wortzeile je Gruppe, Kalender als Abschnitt erst wenn an |
 | `LooseEnds/Views/NoteSection.swift`, `SubtasksSection.swift`, `WaitingOnSection.swift` | Öffnen bereit zur Eingabe (`startsEditing`/`startsPicking`); Notiz ohne Kopf |
 | `LooseEnds/Views/SidebarView.swift` | Etiketten und Projekte auf der Startseite nur, solange ihr Feld an ist (Regel 7) |
-| `LooseEnds/Views/SettingsView.swift`, `LooseEnds/App/LooseEndsApp.swift` | Zeile „Felder“, Speicher in die Umgebung |
+| `LooseEnds/Views/SettingsView.swift`, `LooseEnds/App/LooseEndsApp.swift` | Zeile „Felder“ (iPhone/iPad als Navigation, Mac als Blatt mit „Fertig“: das Einstellungsfenster im Papierstil (#478) hat keinen Navigations-Stack), Speicher in die Umgebung |
 | `LooseEndsTests/DetailFieldsTests.swift` | NEU: Ordnung, Vorgabe, Speicherform, Wortzeile, Abhängigkeiten, Getragenes, Speicher, iCloud |
 | `LooseEndsUITests/FieldsSmokeTests.swift` | NEU: mit der Vorgabe: nur die fünf Wörter, keine leeren Abschnitte, Kalender erst mit Datum, Schalter wirkt auf Wortzeile und Startseite |
 | `LooseEndsUITests/*` | Abschnitte über ihr Wort öffnen; Wiederholung und Kalender mit einem Datum im Text (Regel 4) |
