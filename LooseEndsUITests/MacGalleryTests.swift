@@ -85,6 +85,15 @@ final class MacGalleryTests: XCTestCase {
         if list.exists { list.scroll(byDeltaX: 0, deltaY: -60) }
         RunLoop.current.run(until: Date().addingTimeInterval(1))
         macShot(window, "mac-gallery-\(label)-5-loose-ends-scrolled")
+
+        // Henning's screenshot had the sidebar hidden and the list scrolled further (2026-10-19):
+        // the light box sat over the list's column up to the toolbar. ⌃⌘S hides the sidebar.
+        app.typeKey("s", modifierFlags: [.command, .control])
+        RunLoop.current.run(until: Date().addingTimeInterval(1))
+        macShot(window, "mac-gallery-\(label)-6-loose-ends-no-sidebar")
+        if list.exists { list.scroll(byDeltaX: 0, deltaY: -240) }
+        RunLoop.current.run(until: Date().addingTimeInterval(1))
+        macShot(window, "mac-gallery-\(label)-7-loose-ends-no-sidebar-scrolled")
         app.terminate()
     }
 
