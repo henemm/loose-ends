@@ -304,9 +304,30 @@ cmd_real_model() {
     mac_hosts_tests || { error "macOS $(sw_vers -productVersion) < Deployment Target $(deployment_target macOS): das Modell läuft nur auf dem Mac selbst"; return 1; }
     [ "$(uname -m)" = arm64 ] || { error "Apple Intelligence braucht einen Mac mit Apple Silicon"; return 1; }
     info "Echtes Modell (macOS): $UNIT_TARGET/RealModelTests"
+    local rc=0
     TEST_RUNNER_LOOSEENDS_REAL_MODEL=1 run_xcodebuild test -project "$PROJECT" -scheme "$SCHEME" -destination 'platform=macOS' \
-        -only-testing:"$UNIT_TARGET/RealModelTests" -parallel-testing-enabled NO
-    success "Lauf gegen das echte Modell beendet (übersprungen, wenn Apple Intelligence aus ist; siehe Ausgabe)."
+        -only-testing:"$UNIT_TARGET/RealModelTests" -parallel-testing-enabled NO || rc=$?
+    real_model_result "$BUILD_LOG"
+    return $rc
+}
+
+# Ein Satz am Ende statt „siehe Ausgabe“ (Henning, 2026-10-19: aus dem Log war nicht zu erkennen, ob die
+# Modelltests liefen). Liest die Zeilen zu RealModelTests aus dem rohen xcodebuild-Log: Swift Testing
+# schreibt je Test „passed“, „failed“ oder „skipped“ mit dem Grund des Gates.
+real_model_result() {
+    local log="$1"
+    [ -f "$log" ] || { warn "Kein Log unter $log; Ergebnis der Modelltests unbekannt."; return; }
+    local lines; lines=$(grep -E 'RealModelTests|LOOSEENDS_REAL_MODEL|Apple Intelligence is not available' "$log" | grep -E 'passed|failed|skipped' || true)
+    echo "$lines" | sed '/^$/d' | sed 's/^/   /' >&2
+    if echo "$lines" | grep -q 'skipped'; then
+        warn "Modelltests ÜBERSPRUNGEN, nicht gelaufen. Grund steht oben (Variable nicht gesetzt oder Apple Intelligence aus)."
+    elif echo "$lines" | grep -qE 'failed'; then
+        error "Modelltests gegen das echte Modell FEHLGESCHLAGEN; Details oben und in $log"
+    elif echo "$lines" | grep -qE 'passed'; then
+        success "Modelltests gegen das echte Modell BESTANDEN: Das Modell lief auf diesem Mac."
+    else
+        warn "Keine Zeile zu RealModelTests im Log; der Lauf ist vermutlich vor den Tests abgebrochen: $log"
+    fi
 }
 
 cmd_build() {
