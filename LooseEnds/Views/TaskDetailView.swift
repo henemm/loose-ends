@@ -270,10 +270,6 @@ struct TaskDetailView: View {
                 }
                 .detailRow()
             }
-
-            // A sentence about the task, read by the rules (#441).
-            SupplementSection(task: task)
-                .detailRow()
         }
     }
 

@@ -1,7 +1,7 @@
 #if os(macOS)
 import XCTest
 
-/// #544 (Henning, 2026-10-18, Mac): a click on Note, "Add a subtask", "Add more" and the File button
+/// #544 (Henning, 2026-10-18, Mac): a click on Note, "Add a subtask", "Add more" (removed in #560) and the File button
 /// in the detail did nothing. The gallery (#511) only photographs; this test clicks. Runs in the CI
 /// job "Mac Gallery (macOS)" next to `MacGalleryTests`; its pictures leave as `mac-gallery-544-*`.
 /// Written before the fix, so the first run shows red where the Mac really does not answer.
@@ -78,7 +78,7 @@ final class MacDetailClickTests: XCTestCase {
     }
 
     @MainActor
-    func testNoteSubtaskAndSupplementTakeAClick() throws {
+    func testNoteAndSubtaskTakeAClick() throws {
         let app = macLaunch(dark: false)
         let window = macOpenDetail(of: "Rasen mähen", in: app)
 
@@ -103,15 +103,6 @@ final class MacDetailClickTests: XCTestCase {
         XCTAssertTrue(line.waitForExistence(timeout: 5), "Return should list the subtask")
         XCTAssertTrue(line.label.contains("Mäher"), "Subtask row was \(line.label)")
         macShot(window, "mac-gallery-544-2-subtask-added")
-
-        // Add more: a click focuses the field, the rules read the duration while typing.
-        let supplement = reveal("supplementField", in: window)
-        supplement.click()
-        XCTAssertTrue(hasKeyboardFocus(supplement), "A click on Add more should focus its field")
-        supplement.typeText("eine Stunde")
-        XCTAssertTrue(macElement("supplementRead_duration", in: window).waitForExistence(timeout: 5),
-                      "Add more should read the duration")
-        macShot(window, "mac-gallery-544-3-supplement-read")
         app.terminate()
     }
 

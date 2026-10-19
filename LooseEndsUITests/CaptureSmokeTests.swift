@@ -950,32 +950,4 @@ final class CaptureSmokeTests: XCTestCase {
         cancel.tap()
         XCTAssertTrue(cancel.waitForNonExistence(timeout: 10), "Cancel should close the photo picker")
     }
-
-    @MainActor
-    func testSupplementSetsDurationAndKeepsRest() throws {
-        let app = launch()
-        _ = captureAndOpenDetail("Reifen wechseln", in: app)
-
-        let field = element("supplementField", in: app)
-        for _ in 0..<5 where !(field.exists && field.isHittable) { app.swipeUp() }
-        XCTAssertTrue(field.waitForExistence(timeout: 5), "The detail should end with Add more")
-        field.tap()
-        field.typeText("eine Stunde, Werkstatt anrufen")
-
-        XCTAssertTrue(element("supplementRead_duration", in: app).waitForExistence(timeout: 5),
-                      "The duration should be read")
-        let rest = element("supplementRest", in: app)
-        XCTAssertTrue(rest.waitForExistence(timeout: 5))
-        XCTAssertTrue(rest.label.contains("Werkstatt"), "Rest was \(rest.label)")
-        attachScreenshot(app, "441-ergaenzen-gelesen")
-
-        element("supplementApply", in: app).tap()
-        XCTAssertTrue(waitForValue("Werkstatt", of: field), "The unread words stay in the field")
-        XCTAssertFalse(element("supplementApply", in: app).exists, "Nothing left to apply")
-
-        for _ in 0..<5 where !element("field_duration", in: app).exists { app.swipeDown() }
-        let duration = element("field_duration", in: app)
-        XCTAssertTrue(duration.waitForExistence(timeout: 5))
-        XCTAssertTrue(duration.label.contains("1 h"), "Duration row was \(duration.label)")
-    }
 }
