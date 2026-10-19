@@ -331,7 +331,7 @@ jobs:
         run: |
           sudo automationmodetool enable-automationmode-without-authentication
           sudo DevToolsSecurity -enable || true
-      - name: Run Mac gallery and the detail click test (#544)
+      - name: Run Mac gallery
         run: |
           set -o pipefail
           xcodebuild test \
@@ -339,7 +339,6 @@ jobs:
             -scheme LooseEnds \
             -destination 'platform=macOS' \
             -only-testing:LooseEndsUITests/MacGalleryTests \
-            -only-testing:LooseEndsUITests/MacDetailClickTests \
             -parallel-testing-enabled NO \
             -resultBundlePath MacGallery.xcresult \
             CODE_SIGN_IDENTITY=- \
@@ -347,6 +346,49 @@ jobs:
             DEVELOPMENT_TEAM= \
             CODE_SIGN_ENTITLEMENTS= \
             2>&1 | tee mac-gallery.log | xcbeautify
+      # #544: the click test runs the app in the App Sandbox of the real app. Without it the open panel
+      # opened in CI and not in Henning's TestFlight app (the sandbox lacked the user-selected-files
+      # entitlement). The sandbox keys come from the app target, minus those that need a profile.
+      - name: Sandbox of the real app for the click test (#544)
+        if: ${{ !cancelled() }}
+        run: |
+          python3 -m venv "$RUNNER_TEMP/sandbox-venv"
+          "$RUNNER_TEMP/sandbox-venv/bin/pip" install --quiet 'pyyaml~=6.0'
+          "$RUNNER_TEMP/sandbox-venv/bin/python" scripts/mac_ci_entitlements.py "$RUNNER_TEMP/mac-sandbox.plist"
+      - name: Build the click test (#544)
+        if: ${{ !cancelled() }}
+        run: |
+          set -o pipefail
+          xcodebuild build-for-testing \
+            -project LooseEnds.xcodeproj \
+            -scheme LooseEnds \
+            -destination 'platform=macOS' \
+            -derivedDataPath build/click \
+            CODE_SIGN_IDENTITY=- \
+            CODE_SIGN_STYLE=Manual \
+            DEVELOPMENT_TEAM= \
+            CODE_SIGN_ENTITLEMENTS= \
+            2>&1 | tee mac-click-build.log | xcbeautify
+      - name: Sign the app with the sandbox (#544)
+        if: ${{ !cancelled() }}
+        run: |
+          app=$(find build/click/Build/Products/Debug -maxdepth 1 -name '*.app' ! -name '*-Runner.app' | head -1)
+          if [ -z "$app" ]; then echo "::error::No app in build/click"; ls build/click/Build/Products/Debug; exit 1; fi
+          codesign --force --sign - --entitlements "$RUNNER_TEMP/mac-sandbox.plist" "$app"
+          codesign -d --entitlements - "$app"
+      - name: Run the click test in the sandbox (#544)
+        if: ${{ !cancelled() }}
+        run: |
+          set -o pipefail
+          xcodebuild test-without-building \
+            -project LooseEnds.xcodeproj \
+            -scheme LooseEnds \
+            -destination 'platform=macOS' \
+            -derivedDataPath build/click \
+            -only-testing:LooseEndsUITests/MacDetailClickTests \
+            -parallel-testing-enabled NO \
+            -resultBundlePath MacDetailClick.xcresult \
+            2>&1 | tee mac-click.log | xcbeautify
       - name: Diagnose UI automation
         if: always()
         continue-on-error: true
@@ -362,18 +404,27 @@ jobs:
         continue-on-error: true
         run: |
           # The window photos (.png) and the window size (.txt) MacGalleryTests attaches, under their names.
-          mkdir -p mac-gallery-raw MacGallery
-          xcrun xcresulttool export attachments --path MacGallery.xcresult --output-path mac-gallery-raw
+          # The gallery's bundle and the click test's (#544), each into its own folder.
+          mkdir -p MacGallery
+          for bundle in MacGallery MacDetailClick; do
+            mkdir -p "raw-$bundle"
+            [ -d "$bundle.xcresult" ] || [ "$bundle" = MacGallery ] || continue
+            xcrun xcresulttool export attachments --path "$bundle.xcresult" --output-path "raw-$bundle" || true
+          done
           python3 - <<'PY'
           import json, pathlib, shutil
-          raw, out = pathlib.Path("mac-gallery-raw"), pathlib.Path("MacGallery")
-          for test in json.loads((raw / "manifest.json").read_text()):
-              for a in test.get("attachments", []):
-                  name = a.get("suggestedHumanReadableName", "")
-                  if name.startswith("mac-gallery-"):
-                      stem = name.split("_")[0]
-                      suffix = pathlib.Path(a["exportedFileName"]).suffix
-                      shutil.copy(raw / a["exportedFileName"], out / f"{stem}{suffix}")
+          out = pathlib.Path("MacGallery")
+          for raw in sorted(pathlib.Path(".").glob("raw-*")):
+              manifest = raw / "manifest.json"
+              if not manifest.exists():
+                  continue
+              for test in json.loads(manifest.read_text()):
+                  for a in test.get("attachments", []):
+                      name = a.get("suggestedHumanReadableName", "")
+                      if name.startswith("mac-gallery-"):
+                          stem = name.split("_")[0]
+                          suffix = pathlib.Path(a["exportedFileName"]).suffix
+                          shutil.copy(raw / a["exportedFileName"], out / f"{stem}{suffix}")
           print("\n".join(sorted(p.name for p in out.iterdir())) or "no Mac gallery attachments")
           PY
       - name: Upload Mac gallery
@@ -391,4 +442,7 @@ jobs:
           path: |
             MacGallery.xcresult
             mac-gallery.log
+            MacDetailClick.xcresult
+            mac-click.log
+            mac-click-build.log
           if-no-files-found: warn
