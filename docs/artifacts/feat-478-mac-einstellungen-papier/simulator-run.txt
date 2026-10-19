@@ -1,0 +1,20 @@
+# Simulator-Beleg
+erzeugt: 2026-10-18T22:11:47+0200
+befehl: scripts/sim.sh test-proof SettingsSmokeTests
+workflow: feat-478-mac-einstellungen-papier
+head: d140d53a20793b0e1d3d3a2c58a58cdc90e8c726
+basis: 28d7c167a7924bdb41bd52f309337b8d220722ba (merge-base origin/main HEAD)
+testklasse: SettingsSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1792354281.505  ende: 1792354306.688
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/feat-478-mac-einstellungen-papier/simulator-run/summary.json  sha256:897ac266039cfd70a9821b044ffad8a9215d1d85555ee6d89ae9b4ddb84ed4fe
+xcresult: docs/artifacts/feat-478-mac-einstellungen-papier/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-478-mac-einstellungen-papier/simulator-run/*.png (1 Stück)
+
+## Geprüfte Dateien
+- sha256:451140bcc1916c6c61ca02b4a89e951ebecdccba754c9880196a19a300187f8f  LooseEnds/App/LooseEndsApp.swift
+- sha256:e33295c770674400a700e55847561b3f2ed4908a2758629af59dd5d24a25d7a0  LooseEnds/Views/SettingsView.swift
+- sha256:8d864576e526b9b0437ac8af7e4e29b1dcc155c9d364811ca92b505ad8e4223e  LooseEndsUITests/MacGalleryTests.swift

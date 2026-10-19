@@ -111,6 +111,9 @@ struct LooseEndsApp: App {
         Settings {
             SettingsView(notifications: notifications)
                 .environment(calendar)
+                // 640 pt wide like the board (#478); a list has no height of its own, so it starts at 720.
+                .frame(width: 640)
+                .frame(minHeight: 480, idealHeight: 720)
         }
         // Quick capture from the menu bar (#356); the logo's thread, the one exception of the
         // SF Symbols rule (#350, #366).
