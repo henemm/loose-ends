@@ -200,5 +200,46 @@ final class MacGalleryTests: XCTestCase {
     func testSettingsDark() throws {
         photographSettings(dark: true)
     }
+
+    /// #479: the menu bar panel on paper. Asserts what can be measured: the head with the knot, the resting
+    /// hint, a field at least 110 pt high, and that Cancel, Done and both footer rows lie inside the panel
+    /// and can be hit (#400). That it reads as paper without a grey box is judged on the pictures.
+    @MainActor
+    private func photographPanel(dark: Bool) {
+        let label = dark ? "dark" : "light"
+        let app = macLaunch(dark: dark)
+        let statusItem = app.statusItems.firstMatch
+        XCTAssertTrue(statusItem.waitForExistence(timeout: 20), "No menu bar symbol")
+        statusItem.click()
+        let panel = app.windows.containing(.any, identifier: "menuBarOpenApp").firstMatch
+        XCTAssertTrue(panel.waitForExistence(timeout: 10), "The symbol opened no panel")
+        for id in ["capturePanelHeader", "captureRestHint", "captureTextField", "micButton",
+                   "captureCancelButton", "captureDoneButton", "menuBarOpenApp", "menuBarQuit"] {
+            XCTAssertTrue(macElement(id, in: panel).waitForExistence(timeout: 5), "Panel shows no \(id)")
+        }
+        macShot(panel, "mac-gallery-panel-\(label)")
+        let frame = panel.frame
+        for id in ["captureCancelButton", "captureDoneButton", "menuBarOpenApp", "menuBarQuit"] {
+            let element = macElement(id, in: panel)
+            XCTAssertTrue(element.isHittable, "\(id) cannot be hit")
+            XCTAssertTrue(frame.contains(element.frame), "\(id) lies outside the panel: \(element.frame) in \(frame)")
+        }
+        XCTAssertGreaterThanOrEqual(macElement("captureTextField", in: panel).frame.height, 110, "Field is lower than 110 pt")
+        let note = XCTAttachment(string: "\(Int(frame.width)) x \(Int(frame.height)) pt")
+        note.name = "mac-gallery-panel-\(label)-size"
+        note.lifetime = .keepAlways
+        add(note)
+        app.terminate()
+    }
+
+    @MainActor
+    func testPanelLight() throws {
+        photographPanel(dark: false)
+    }
+
+    @MainActor
+    func testPanelDark() throws {
+        photographPanel(dark: true)
+    }
 }
 #endif
