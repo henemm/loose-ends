@@ -48,10 +48,11 @@ Kalenderzeile nur, wenn sie bereit ist.
 
 **Höhe.** Die Tafel zeigt ein Fenster von 720 pt mit sechs Blöcken; die App hat mit den Abend- und Morgenzeilen
 (#518) und „Felder“ (#538) rund 860 pt Inhalt. In 720 lag „Felder“ unter dem Rand (der erste CI-Lauf klickte
-ins Leere: „not hittable“). Das Fenster bekommt 880 pt als Wunschhöhe (`idealHeight`, `LooseEndsApp.swift`), damit jede
-Zeile ohne Scrollen steht, wo der Bildschirm es zulässt; eine feste Höhe stand im CI 912 pt hoch auf einem 674-pt-Bildschirm,
-mit dem „Fertig“ des Blatts außer Reichweite. Mit der Wunschhöhe passt macOS das Fenster an den Bildschirm an, die Liste
-scrollt dann, und das Fenster lässt sich in der Höhe ziehen. Das Blatt „Felder“ ebenso (520 breit, Wunschhöhe 600).
+ins Leere: „not hittable“). Das Fenster bekommt 880 pt, wo der Bildschirm es zulässt, sonst die Höhe des sichtbaren
+Bildschirms minus 64 (`SettingsView.macWindowHeight`, einmal je Start aus `NSScreen.main`): eine feste 880 stand im CI
+912 pt hoch auf einem 674-pt-Bildschirm, mit dem „Fertig“ des Blatts außer Reichweite; eine Wunschhöhe (`idealHeight`) griff
+nicht, das Fenster öffnete mit seiner Mindesthöhe 480, weil eine Liste keine eigene Höhe hat. Auf einem kleinen Bildschirm
+scrollt die Liste. Das Blatt „Felder“: 520 breit, 600 hoch oder 80 weniger als das Fenster.
 
 ## Acceptance Criteria
 

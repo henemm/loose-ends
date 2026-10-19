@@ -119,12 +119,9 @@ struct LooseEndsApp: App {
                 .environment(fieldSettings)
                 // 640 pt wide like the board (#478); a list has no height of its own, and 512 cut off the last
                 // rows. The board's 720 held its six blocks; with the evening and morning rows (#518) and
-                // "Fields" (#538) the list set after the board (#573) runs to about 860, so 880 is the wish:
-                // an ideal height, not a fixed one, so AppKit fits the window to a smaller screen (a fixed
-                // 880 stood 912 tall on the 674 pt CI screen, with the sheet's Done out of reach) and the
-                // list scrolls there; the window may be resized in height.
-                .frame(width: 640)
-                .frame(minHeight: 480, idealHeight: 880)
+                // "Fields" (#538) the list set after the board (#573) runs to about 860: 880 where the screen
+                // allows, else what the screen leaves (`SettingsView.macWindowHeight`).
+                .frame(width: 640, height: SettingsView.macWindowHeight)
                 .preferredColorScheme(Self.uiTestColorScheme)
         }
         // Quick capture from the menu bar (#356); the logo's thread, the one exception of the

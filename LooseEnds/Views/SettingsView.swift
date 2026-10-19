@@ -20,6 +20,20 @@ struct SettingsView: View {
     @State private var opensAtLogin = LoginItem.isEnabled
     #endif
 
+    #if os(macOS)
+    /// The settings window's height (#573): the list runs to about 860 after the board, so 880 where the
+    /// screen allows, else what the screen's visible frame leaves (a fixed 880 stood 912 tall on the
+    /// 674 pt CI screen; an ideal height is not honoured, a list has none of its own and the window
+    /// opened at its minimum). Fixed per launch; the list scrolls on a small screen.
+    static let macWindowHeight: CGFloat = {
+        let visible = NSScreen.main?.visibleFrame.height ?? 880
+        return min(880, max(480, visible - 64))
+    }()
+
+    /// The "Fields" sheet's height: 600, or less so that Done stays inside the window.
+    static var macSheetHeight: CGFloat { min(600, macWindowHeight - 80) }
+    #endif
+
     init(notifications: DueNotificationCenter?) {
         self.notifications = notifications
         let stored = notifications?.reminderTime ?? .standard
@@ -101,9 +115,8 @@ struct SettingsView: View {
                         }
                     }
             }
-            // An ideal height: a sheet taller than its window would put Done out of reach (#573).
-            .frame(width: 520)
-            .frame(minHeight: 360, idealHeight: 600)
+            // Not taller than the window: a sheet beyond it puts Done out of reach (#573).
+            .frame(width: 520, height: Self.macSheetHeight)
         }
         #endif
         .sheet(isPresented: $choosesCalendar) {
