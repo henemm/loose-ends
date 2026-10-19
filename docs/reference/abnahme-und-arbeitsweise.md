@@ -20,6 +20,28 @@ trägt die Begründungen und die Geschichte.
   Entitlements`) — ungetestet an Henning weitergegeben, auf seinem Gerät reproduziert statt vorher
   im Simulator gefunden.
 
+## Was ein grüner Test nicht beweist (#544, 2026-10-19)
+
+Henning meldete auf dem Mac: Titel, Unteraufgaben, Datei und Foto antworten nicht. Ein eigens dafür gebauter
+Klicktest war grün, und das Ticket wurde zweimal zu früh geschlossen. Was falsch lief und was seitdem gilt:
+
+- **Die CI-App war nicht Hennings App.** Der Mac-Job signierte ad hoc und strich alle Berechtigungen; die App lief
+  ohne App Sandbox. In der Sandbox öffnet macOS die Dateiauswahl nur mit `files.user-selected.read-only`, die fehlte.
+  Seitdem bekommt der Klicktest die Sandbox-Schlüssel aus `project.yml` (`scripts/mac_ci_entitlements.py`). Regel:
+  Ein UI-Test läuft unter den Bedingungen des Auslieferungsbaus, soweit eine Ad-hoc-Signatur sie tragen kann; was sie
+  nicht tragen kann (iCloud, Push, App-Gruppe), steht als Lücke im Test.
+- **Der Test klickte nicht wie ein Mensch.** Er traf die Mitte des Accessibility-Rahmens, nach Scrollen und mit dem
+  Fokus schon im Detail, und kam immer aus „Neu“. Seitdem: frischer Start je Bedienelement, Klick auf die sichtbaren
+  Wörter, der Weg, den Henning nimmt.
+- **„Rot zuerst“ wurde nicht am gemeldeten Stand gezeigt.** Die Definition of Done verlangte einen Test, der auf dem
+  Stand vor dem Fix scheitert. Gescheitert war der erste Lauf an Fehlern des Tests selbst, und das galt als Beleg.
+  Regel: Der rote Lauf muss an der Stelle scheitern, die der Nutzer meldet, mit seiner Fehlermeldung, sonst ist er
+  kein Beleg.
+- **Geschlossen vor der Rückmeldung.** `Closes #N` schloss das Ticket beim Merge, obwohl die Abnahme auf dem Mac über
+  TestFlight lief. Danach wurde Hennings Antwort falsch als Abnahme gelesen. Regel: Verlangt die Definition of Done
+  eine Rückmeldung auf dem Gerät, schreibt der PR `Refs #N`, nicht `Closes #N`, und geschlossen wird erst mit seinem
+  ausdrücklichen „geht“ zu jedem gemeldeten Punkt.
+
 ## Abnahme in drei Stufen
 
 Die Reihenfolge ist verbindlich, keine Stufe wird vorgezogen. Stufe 1 und 2 werden nie
