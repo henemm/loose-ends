@@ -30,16 +30,16 @@ struct SettingsView: View {
     }
 
     var body: some View {
-        Form {
-            Section {
+        container {
+            #if os(macOS)
+            // On the Mac the iCloud row stands on top without a head of its own (#478).
+            syncSection
+            #endif
+            group("Notifications", hint: Text("A task without a due time is reminded on its day at this time. A task with a due time is reminded at that time.")) {
                 DatePicker("Reminder time", selection: $time, displayedComponents: .hourAndMinute)
                     .accessibilityIdentifier("reminderTimePicker")
-            } header: {
-                Text("Notifications")
-            } footer: {
-                Text("A task without a due time is reminded on its day at this time. A task with a due time is reminded at that time.")
             }
-            Section {
+            group("Loose ends", hint: Text("In the evening, what needs a new date comes in one notification. In the morning, one invites you to look at your loose ends; at the reminder time it also names what is due today.")) {
                 // Two notifications, each on its own (#518, Henning 2026-10-17).
                 Toggle("Evening: plan new dates", isOn: Binding(
                     get: { carryMode.remindsEvening },
@@ -59,15 +59,13 @@ struct SettingsView: View {
                     DatePicker("Morning time", selection: $morningTime, displayedComponents: .hourAndMinute)
                         .accessibilityIdentifier("morningTimePicker")
                 }
-            } header: {
-                Text("Loose ends")
-            } footer: {
-                Text("In the evening, what needs a new date comes in one notification. In the morning, one invites you to look at your loose ends; at the reminder time it also names what is due today.")
             }
+            #if os(iOS)
             syncSection
+            #endif
             calendarSection
             #if os(macOS)
-            Section {
+            group("Menu bar", hint: Text("Then capturing from the menu bar is ready right after you log in, without a window.")) {
                 Toggle("Open at login", isOn: $opensAtLogin)
                     .onChange(of: opensAtLogin) { _, on in
                         guard on != LoginItem.isEnabled else { return }
@@ -75,19 +73,14 @@ struct SettingsView: View {
                         opensAtLogin = LoginItem.isEnabled
                     }
                     .accessibilityIdentifier("openAtLoginToggle")
-            } header: {
-                Text("Menu bar")
-            } footer: {
-                Text("Then capturing from the menu bar is ready right after you log in, without a window.")
             }
             #endif
-            Section("About") {
+            group("About", hint: nil) {
                 LabeledContent("Version", value: AppVersion.text())
                     .textSelection(.enabled)
                     .accessibilityIdentifier("appVersionRow")
             }
         }
-        .formStyle(.grouped)
         .navigationTitle("Settings")
         // Only refreshes the calendar list when access is already there; never asks for it.
         .task { await calendar?.refreshIfAllowed() }
@@ -116,14 +109,75 @@ struct SettingsView: View {
         }
     }
 
+    /// iPhone and iPad: the grouped form, unchanged. Mac (#478): a plain list on paper with hairlines,
+    /// like the detail (#477). The rows are the same in both.
+    @ViewBuilder
+    private func container(@ViewBuilder _ sections: () -> some View) -> some View {
+        #if os(macOS)
+        List(content: sections)
+            .listStyle(.plain)
+            // Outside a form the Mac draws a bezel around text fields, a checkbox for a toggle and a
+            // push button for the calendar row.
+            .textFieldStyle(.plain)
+            .toggleStyle(.switch)
+            .buttonStyle(.plain)
+            .font(.system(size: 14))
+            // The hint lines are lower than a row; `group` keeps the rows at 40 pt or more.
+            .environment(\.defaultMinListRowHeight, 0)
+            .paperGround()
+        #else
+        Form(content: sections)
+            .formStyle(.grouped)
+        #endif
+    }
+
+    /// One section. iPhone and iPad: head and footer of the form. Mac: a small grey head in capitals
+    /// and the hint as its own grey 12 pt line right under the rows, without a hairline between them
+    /// (a plain list does not set a footer close under the row). Without a title the Mac shows no head.
+    @ViewBuilder
+    private func group(_ title: LocalizedStringKey?, hint: Text?, @ViewBuilder rows: () -> some View) -> some View {
+        #if os(macOS)
+        let content = Group {
+            Group(content: rows)
+                .frame(minHeight: 40 - Paper.wideRowInsets.top - Paper.wideRowInsets.bottom)
+                .listRowInsets(Paper.wideRowInsets)
+                .listRowBackground(Paper.ground)
+            if let hint {
+                hint
+                    .font(.system(size: 12))
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .listRowInsets(EdgeInsets(top: 0, leading: Paper.wideRowInsets.leading,
+                                              bottom: Paper.wideRowInsets.bottom, trailing: Paper.wideRowInsets.trailing))
+                    .listRowSeparator(.hidden, edges: .top)
+                    .listRowBackground(Paper.ground)
+            }
+        }
+        if let title {
+            Section { content } header: { Text(title).captionHead() }
+        } else {
+            Section { content }
+        }
+        #else
+        Section {
+            rows()
+        } header: {
+            if let title { Text(title) }
+        } footer: {
+            if let hint { hint }
+        }
+        #endif
+    }
+
     /// Whether this device mirrors with iCloud (#377). Every decision comes from `SyncStatus.summary`.
     private var syncSection: some View {
-        Section {
+        #if os(macOS)
+        let title: LocalizedStringKey? = nil
+        #else
+        let title: LocalizedStringKey? = "iCloud"
+        #endif
+        return group(title, hint: SyncStatus.summary(for: SyncStatus.shared.state, now: .now).detail.map { Text($0) }) {
             syncRow
-        } header: {
-            Text("iCloud")
-        } footer: {
-            if let detail = SyncStatus.summary(for: SyncStatus.shared.state, now: .now).detail { Text(detail) }
         }
     }
 
@@ -167,7 +221,7 @@ struct SettingsView: View {
     @ViewBuilder private var calendarSection: some View {
         let ready = calendar?.appCalendarID != nil
         let target = calendar?.defaultTarget
-        Section {
+        group("Calendar", hint: calendarHint(ready: ready, target: target)) {
             Button { choosesCalendar = true } label: {
                 HStack {
                     Text("New events in").foregroundStyle(.primary)
@@ -189,16 +243,16 @@ struct SettingsView: View {
             .disabled(!ready)
             .accessibilityElement(children: .combine)
             .accessibilityIdentifier("defaultCalendarRow")
-        } header: {
-            Text("Calendar")
-        } footer: {
-            if !ready {
-                Text("Available once a task is in the calendar.")
-            } else if target == nil {
-                Text("Not on this device. New events go to “Loose Ends”.")
-            } else {
-                Text("Applies to this device only. A task keeps the calendar it gets when you switch it on.")
-            }
+        }
+    }
+
+    private func calendarHint(ready: Bool, target: CalendarBridge.Target?) -> Text {
+        if !ready {
+            Text("Available once a task is in the calendar.")
+        } else if target == nil {
+            Text("Not on this device. New events go to “Loose Ends”.")
+        } else {
+            Text("Applies to this device only. A task keeps the calendar it gets when you switch it on.")
         }
     }
 }
