@@ -22,10 +22,16 @@ import OSLog
         settings = DetailFieldSettings(stored: defaults.stringArray(forKey: Self.key))
     }
 
-    /// The app's own: everything on under the UI tests unless they ask for the standard.
+    /// The app's own. Under the UI tests a fresh store each launch (their own defaults suite, wiped at
+    /// start, no iCloud), so a switch one test flips never reaches the next; everything on unless the
+    /// test asks for the standard.
     static func forApp(arguments: [String] = ProcessInfo.processInfo.arguments) -> FieldSettingsStore {
-        let store = FieldSettingsStore()
-        if ModelContainerFactory.isUITesting, !arguments.contains(standardArgument) {
+        guard ModelContainerFactory.isUITesting else { return FieldSettingsStore() }
+        let suite = "com.henning.looseends.ui-testing-fields"
+        let defaults = UserDefaults(suiteName: suite) ?? .standard
+        defaults.removePersistentDomain(forName: suite)
+        let store = FieldSettingsStore(defaults: defaults, cloud: SilentCloud())
+        if !arguments.contains(standardArgument) {
             store.settings = .everything
         }
         return store
@@ -67,6 +73,13 @@ import OSLog
 protocol FieldSettingsCloud {
     var offeredFields: [String]? { get }
     func setOfferedFields(_ fields: [String])
+}
+
+/// No iCloud under the UI tests: nothing read, nothing written.
+@MainActor
+private final class SilentCloud: FieldSettingsCloud {
+    var offeredFields: [String]? { nil }
+    func setOfferedFields(_ fields: [String]) {}
 }
 
 extension NSUbiquitousKeyValueStore: FieldSettingsCloud {
