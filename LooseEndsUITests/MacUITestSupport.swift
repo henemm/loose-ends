@@ -87,16 +87,17 @@ extension XCTestCase {
         XCTAssertEqual(XCTWaiter.wait(for: [wait], timeout: 5), .completed, "Field kept \(text)")
     }
 
-    /// Captures one task on the start page, opens New and the task's detail in the main window.
+    /// Captures one task on the start page, opens a list (New unless named) and the task's detail in
+    /// the main window. `list` is the sidebar row's identifier, e.g. `viewRow_open` for Loose ends.
     @MainActor
-    func macOpenDetail(of text: String, in app: XCUIApplication) -> XCUIElement {
+    func macOpenDetail(of text: String, in app: XCUIApplication, list: String = "viewRow_new") -> XCUIElement {
         _ = macOpenMainWindowIfNeeded(app)
         XCTAssertTrue(macElement("startCaptureField", in: app).waitForExistence(timeout: 20), "No start page")
         macCapture(text, in: app)
         let window = macMainWindow(of: app)
-        let newRow = macElement("viewRow_new", in: window)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 10), "Sidebar shows no New")
-        newRow.click()
+        let listRow = macElement(list, in: window)
+        XCTAssertTrue(listRow.waitForExistence(timeout: 10), "Sidebar shows no \(list)")
+        listRow.click()
         let row = window.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH %@", "taskRow_"))
             .firstMatch
