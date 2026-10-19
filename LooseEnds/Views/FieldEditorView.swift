@@ -201,69 +201,79 @@ struct FieldEditorView: View {
         }
     }
 
-    /// This week and the next in New York: past days faint, today ringed, the due day filled.
+    /// This week and the next in New York: past days faint, today ringed, the due day filled. The
+    /// weekday heads sit in a grid of their own: in one lazy grid they shared the dates of the first
+    /// week as identity, and SwiftUI dropped that whole row of days, today included (#557).
     private func fortnight(calendar: Calendar) -> some View {
         let days = QuickDue.fortnight(calendar: calendar)
         let today = calendar.startOfDay(for: Date())
         let due = task.dueDate.map { calendar.startOfDay(for: $0) }
         let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: 7)
-        return LazyVGrid(columns: columns, spacing: 4) {
-            ForEach(Array(days.prefix(7)), id: \.self) { day in
-                Text(day.formatted(.dateTime.weekday(.abbreviated)).uppercased())
-                    .font(.caption2.weight(.semibold))
-                    .foregroundStyle(.secondary)
-                    .padding(.bottom, 4)
-            }
-            ForEach(days, id: \.self) { day in
-                let past = day < today
-                let on = day == due
-                Button {
-                    setDue(QuickDue.move(task.dueDate, hasTime: task.dueHasTime, to: day), hasTime: task.dueHasTime)
-                } label: {
-                    Text(day.formatted(.dateTime.day()))
-                        .font(.system(.title3, design: .serif))
-                        .foregroundStyle(on ? AnyShapeStyle(.background) : past ? AnyShapeStyle(.quaternary) : AnyShapeStyle(.primary))
-                        .frame(width: 38, height: 38)
-                        .background {
-                            if on {
-                                Circle().fill(.tint)
-                            } else if day == today {
-                                Circle().strokeBorder(.secondary, lineWidth: 1.2)
-                            }
-                        }
-                        .contentShape(Circle())
+        return VStack(spacing: 8) {
+            LazyVGrid(columns: columns, spacing: 0) {
+                ForEach(Array(days.prefix(7)), id: \.self) { day in
+                    Text(day.formatted(.dateTime.weekday(.abbreviated)).uppercased())
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(.secondary)
                 }
-                .buttonStyle(.plain)
-                .disabled(past)
-                .accessibilityLabel(day.formatted(date: .complete, time: .omitted))
-                .accessibilityAddTraits(on ? .isSelected : [])
-                .accessibilityIdentifier("dueDay_\(day.formatted(.iso8601.year().month().day()))")
+            }
+            LazyVGrid(columns: columns, spacing: 4) {
+                fortnightDays(days, today: today, due: due)
             }
         }
     }
 
-    /// Times as words; one of them sets and closes, "Other time …" opens a wheel and stays (#482).
+    private func fortnightDays(_ days: [Date], today: Date, due: Date?) -> some View {
+        ForEach(days, id: \.self) { day in
+            let past = day < today
+            let on = day == due
+            Button {
+                setDue(QuickDue.move(task.dueDate, hasTime: task.dueHasTime, to: day), hasTime: task.dueHasTime)
+            } label: {
+                Text(day.formatted(.dateTime.day()))
+                    .font(.system(.title3, design: .serif))
+                    .foregroundStyle(on ? AnyShapeStyle(.background) : past ? AnyShapeStyle(.quaternary) : AnyShapeStyle(.primary))
+                    .frame(width: 38, height: 38)
+                    .background {
+                        if on {
+                            Circle().fill(.tint)
+                        } else if day == today {
+                            Circle().strokeBorder(.secondary, lineWidth: 1.2)
+                        }
+                    }
+                    .contentShape(Circle())
+            }
+            .buttonStyle(.plain)
+            .disabled(past)
+            .accessibilityLabel(day.formatted(date: .complete, time: .omitted))
+            .accessibilityAddTraits(on ? .isSelected : [])
+            .accessibilityIdentifier("dueDay_\(day.formatted(.iso8601.year().month().day()))")
+        }
+    }
+
+    /// Times as words; one of them sets and closes, "Other time …" opens a wheel and stays (#482). A time
+    /// set outside the full hours stands as its own word by the clock; "Other time …" stays the last word
+    /// either way, so the way to another time never disappears (#556).
     @ViewBuilder
     private func times(due: Date, calendar: Calendar) -> some View {
         let day = calendar.startOfDay(for: due)
-        let presets = QuickDue.hours.map { QuickDue.at(hour: $0, on: day) }
-        let custom = task.dueHasTime && !presets.contains(due)
+        let choices = QuickDue.timeChoices(on: day, due: due, hasTime: task.dueHasTime, calendar: calendar)
         VStack(alignment: .leading, spacing: 12) {
             FlowLayout(spacing: 16) {
                 timeWord(String(localized: "No time"), on: !task.dueHasTime, id: "quickTime_none") {
                     setDue(due, hasTime: false)
                     dismiss()
                 }
-                ForEach(QuickDue.hours, id: \.self) { hour in
-                    let at = QuickDue.at(hour: hour, on: day)
+                ForEach(choices, id: \.self) { at in
+                    let hour = calendar.component(.hour, from: at)
+                    let full = QuickDue.hours.contains(hour) && at == QuickDue.at(hour: hour, on: day, calendar: calendar)
                     timeWord(at.formatted(date: .omitted, time: .shortened), on: task.dueHasTime && due == at,
-                             id: "quickTime_\(hour)") {
+                             id: full ? "quickTime_\(hour)" : "quickTime_custom") {
                         setDue(at, hasTime: true)
                         dismiss()
                     }
                 }
-                timeWord(custom ? due.formatted(date: .omitted, time: .shortened) : String(localized: "Other time …"),
-                         on: custom, id: "quickTime_other") {
+                timeWord(String(localized: "Other time …"), on: false, id: "quickTime_other") {
                     showsOtherTime.toggle()
                 }
             }
