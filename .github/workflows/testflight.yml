@@ -453,7 +453,7 @@ jobs:
           [ -f "$APP/Contents/Resources/PrivacyInfo.xcprivacy" ] || { echo "::error::macOS app has no PrivacyInfo.xcprivacy (#177)"; fail=1; }
           [ -d "$APP/Contents/Resources/de.lproj" ] || { echo "::error::macOS app has no de.lproj: German texts are missing (#323)"; fail=1; }
           ents=$(codesign -d --entitlements - --xml "$APP" 2>/dev/null || true)
-          for key in com.apple.security.app-sandbox com.apple.developer.ubiquity-kvstore-identifier com.apple.security.device.audio-input; do
+          for key in com.apple.security.app-sandbox com.apple.developer.ubiquity-kvstore-identifier com.apple.security.device.audio-input com.apple.security.files.user-selected.read-only com.apple.security.network.client com.apple.security.personal-information.calendars; do
             if printf '%s' "$ents" | grep -qF "<key>$key</key>"; then row "| $key | vorhanden | OK |"
             else row "| $key | FEHLT | FEHLER |"; echo "::error::macOS app is not signed with $key"; fail=1; fi
           done
