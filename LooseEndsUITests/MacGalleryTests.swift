@@ -211,8 +211,19 @@ final class MacGalleryTests: XCTestCase {
         let statusItem = app.statusItems.firstMatch
         XCTAssertTrue(statusItem.waitForExistence(timeout: 20), "No menu bar symbol")
         statusItem.click()
-        let panel = app.windows.containing(.any, identifier: "menuBarOpenApp").firstMatch
-        XCTAssertTrue(panel.waitForExistence(timeout: 10), "The symbol opened no panel")
+        // The footer row is found directly (as `macOpenMainWindowIfNeeded` does); the panel is the
+        // window, popover or group that holds it. The hierarchy goes along as text for the next run.
+        XCTAssertTrue(app.buttons["menuBarOpenApp"].waitForExistence(timeout: 10), "The symbol opened no panel")
+        let tree = XCTAttachment(string: app.debugDescription)
+        tree.name = "mac-gallery-panel-\(label)-hierarchy"
+        tree.lifetime = .keepAlways
+        add(tree)
+        let holders = [app.windows, app.popovers, app.groups]
+            .map { $0.containing(.any, identifier: "menuBarOpenApp").firstMatch }
+        guard let panel = holders.first(where: { $0.exists }) else {
+            XCTFail("No window, popover or group holds the panel")
+            return
+        }
         for id in ["capturePanelHeader", "captureRestHint", "captureTextField", "micButton",
                    "captureCancelButton", "captureDoneButton", "menuBarOpenApp", "menuBarQuit"] {
             XCTAssertTrue(macElement(id, in: panel).waitForExistence(timeout: 5), "Panel shows no \(id)")
