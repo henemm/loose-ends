@@ -222,7 +222,8 @@ struct TaskListView: View {
                 Section {
                     ForEach(needsDate) { row($0) }
                 } header: {
-                    Text("Needs a new date")
+                    head(Text("Needs a new date"))
+                        .accessibilityIdentifier("newDateHead")
                 }
             }
             Section {
