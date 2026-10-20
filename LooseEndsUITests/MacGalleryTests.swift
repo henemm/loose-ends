@@ -249,7 +249,11 @@ final class MacGalleryTests: XCTestCase {
             XCTAssertTrue(element.isHittable, "\(id) cannot be hit")
             XCTAssertTrue(frame.contains(element.frame), "\(id) lies outside the panel: \(element.frame) in \(frame)")
         }
-        XCTAssertGreaterThanOrEqual(macElement("captureTextField", in: panel).frame.height, 110, "Field is lower than 110 pt")
+        // The field grows to its five lines a moment after the panel shows: run 39486128730 read 107 pt
+        // right away and 110 pt in the next run (#596). Wait for the layout, then judge it.
+        let field = macElement("captureTextField", in: panel)
+        macWait(timeout: 5) { field.frame.height >= 110 }
+        XCTAssertGreaterThanOrEqual(field.frame.height, 110, "Field is lower than 110 pt")
         let note = XCTAttachment(string: "\(Int(frame.width)) x \(Int(frame.height)) pt")
         note.name = "mac-gallery-panel-\(label)-size"
         note.lifetime = .keepAlways
