@@ -51,6 +51,13 @@ final class MacGalleryTests: XCTestCase {
         XCTAssertTrue(macElement("detailRawTextMarker", in: window).waitForExistence(timeout: 10), "Detail did not open")
         macShot(window, "mac-gallery-\(label)-3-detail")
 
+        // The sidebar's first line leads back to the start page (#583).
+        let startRow = macElement("viewRow_start", in: window)
+        XCTAssertTrue(startRow.waitForExistence(timeout: 10), "Sidebar shows no Start")
+        startRow.click()
+        XCTAssertTrue(macElement("startCaptureField", in: window).waitForExistence(timeout: 10), "Start page did not come back")
+        macShot(window, "mac-gallery-\(label)-4-start-again")
+
         // After the pictures, so a narrow window still delivers them.
         XCTAssertGreaterThanOrEqual(size.width, Self.minimumWidth, "Window \(size) too narrow for sidebar and list")
         app.terminate()
