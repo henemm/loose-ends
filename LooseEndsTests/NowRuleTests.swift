@@ -167,7 +167,7 @@ import Testing
         #expect(result.today.isEmpty && result.lined.isEmpty)
     }
 
-    @Test("Now holds exactly Due today and Next up, and as many tasks as the badge counts")
+    @Test("Now holds exactly Due today and Next up; the badge counts yesterday's task on top (#584)")
     @MainActor func unionMatchesTheTwoSources() async throws {
         let store = try TestStore()
         let all = [
@@ -181,7 +181,9 @@ import Testing
         let due = ViewRules.dueToday(in: all, now: Self.now, calendar: Self.calendar).map(\.id)
         #expect(Set(ids) == Set(next + due))
         #expect(ids.count == Set(ids).count, "each task once")
-        #expect(ids.count == ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar))
+        #expect(ids.count == 3)
+        #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 4,
+                "C from yesterday stands in Due, so on the icon, but not in Now (#518, #584)")
     }
 
     @Test("Due today and the badge are unchanged: a lined-up task due today still stands in Due today (#299)")

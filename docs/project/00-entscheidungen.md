@@ -193,6 +193,11 @@ Nachgeschärft (Henning, 2026-10-18, #550, #551): Der Abend fragt erst, wenn die
 Uhrzeit nach der Uhrzeit, ohne Uhrzeit nach der Erinnerungszeit des Tages; liegt sie später, am nächsten Abend), und
 „Alle auf morgen“ verschiebt nur, was beim Tippen noch kein neues Datum hat. Der Morgen ist nur die Einladung: „Lose
 Enden: N“ (ohne Geparktes und ohne „wartet auf“) und „Am längsten offen“; die Zahl der Undatierten gehört dem Abend.
+Zahl auf dem App-Icon (Henning, 2026-10-20, #584): genau „Fällig“ plus „Als nächstes“, jede Aufgabe einmal, wie die
+Listen zählen; eine vorbeigegangene Zeit und ein früherer Tag zählen weiter, bis die Aufgabe ein neues Datum hat
+(seit #518 fielen sie heraus, und das Icon sagte 3, während „Fällig“ 4 zeigte). Die Zahl ändert sich damit nur beim
+Bearbeiten und beim Tageswechsel; den Tageswechsel bringt die Morgenmitteilung mit (`badge` im Inhalt), damit das Icon
+ohne App-Start stimmt. Der Abend trägt keine Zahl.
 Fallen Morgen- und Erinnerungszeit zusammen, kommt eine Mitteilung „Lose Enden: N · Heute: …“ statt zweier, und
 Aufgaben ohne Uhrzeit bekommen an dem Tag keine Einzelmitteilung. Jedes Gerät meldet für sich. Der Plan hält ohne
 App-Start: tägliche Hintergrund-Auffrischung und Neuplanung bei einem CloudKit-Import (#553).

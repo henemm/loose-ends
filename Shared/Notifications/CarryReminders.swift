@@ -84,6 +84,9 @@ enum CarryReminders {
         /// Morning, when its time is the reminder time (#551): the day-only tasks due that day, which
         /// then come in this one notification instead of one each.
         var today: [String] = []
+        /// Morning: the number for the app icon on its day (#584, `ViewRules.badgeCount` as of the morning),
+        /// so the icon turns over with the day without an app start. The evening carries none.
+        var badge: Int?
         /// One per day and kind: `carry_2026-03-13`, `carry_evening_2026-03-13`.
         let identifier: String
     }
@@ -129,7 +132,9 @@ enum CarryReminders {
                     : []
                 reminders.append(Reminder(kind: .morning, day: day, fireDate: fire, taskIDs: [], titles: [],
                                           openCount: loose.count, longestOpen: Array(longest),
-                                          today: dueThatDay.map(\.displayTitle), identifier: identifierPrefix + stamp))
+                                          today: dueThatDay.map(\.displayTitle),
+                                          badge: ViewRules.badgeCount(in: tasks, now: fire, calendar: calendar),
+                                          identifier: identifierPrefix + stamp))
             }
             if mode.remindsEvening, let fire = fireDate(eveningTime, on: day, after: now, calendar: calendar) {
                 let due = withDeadline.filter { task in

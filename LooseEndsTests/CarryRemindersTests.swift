@@ -56,6 +56,11 @@ import Testing
         #expect(mornings.allSatisfy { $0.taskIDs.isEmpty && $0.titles.isEmpty }, "the number of undated belongs to the evening")
         let first = try #require(mornings.first)
         #expect(first.identifier == "carry_2026-03-12")
+        // The icon's number for each morning (#584): the two from yesterday today, the later one from its day on.
+        #expect(first.badge == 2)
+        #expect(mornings[4].badge == 2)
+        #expect(mornings[5].badge == 3)
+        #expect(Self.evenings([a, b]).allSatisfy { $0.badge == nil }, "the evening carries no number")
     }
 
     @Test("Morning counts what one can act on: parked and waiting tasks neither count nor are named (#551)")
@@ -223,7 +228,7 @@ import Testing
         #expect(ViewRules.postponeCount(a) == 1)
     }
 
-    @Test("Anything from before today leaves Now and the badge until it has a new date, not Due (#518)")
+    @Test("Anything from before today leaves Now until it has a new date, not Due and not the badge (#518, #584)")
     @MainActor func weekOldLeavesNow() async throws {
         let store = try TestStore()
         let seven = Self.task("Sieben Tage", due: Self.day(-7), in: store)
@@ -234,7 +239,7 @@ import Testing
         let today = ViewRules.dueToday(in: all, now: Self.now, calendar: Self.calendar).map(\.id)
         #expect(today.isEmpty)
         #expect(Set(ViewRules.leftovers(in: all, now: Self.now, calendar: Self.calendar).map(\.id)) == [seven.id, eight.id, timed.id])
-        #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 0)
+        #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 3)
         #expect(ViewRules.now(in: all, now: Self.now, calendar: Self.calendar).all.contains { $0.id == eight.id } == false)
         #expect(ViewRules.tasks(for: .due, in: all, now: Self.now, calendar: Self.calendar).contains { $0.id == eight.id })
     }
