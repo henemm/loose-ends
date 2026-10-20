@@ -292,7 +292,8 @@ struct CaptureView: View {
         HStack(spacing: 12) {
             switch speech.state {
             case .idle, .listening:
-                MicButton(isListening: isListening, level: levels.last ?? 0, action: toggleListening)
+                // At rest the ring and symbol in accent, as on the board (#479 AC-4); elsewhere grey.
+                MicButton(isListening: isListening, level: levels.last ?? 0, restTint: .accentColor, action: toggleListening)
                 Group {
                     if isListening {
                         WaveformView(levels: levels, isListening: true, height: 18)
@@ -306,7 +307,11 @@ struct CaptureView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             default:
-                listeningRow.frame(maxWidth: .infinity, alignment: .leading)
+                // As high as the microphone's 74 pt frame, so the panel keeps its height when the state
+                // settles after opening (AC-6); five footnote lines fit in it, the longest status needs four.
+                listeningRow
+                    .lineLimit(5)
+                    .frame(maxWidth: .infinity, minHeight: 74, alignment: .leading)
             }
             cancelButton
                 .buttonStyle(.plain)
@@ -496,6 +501,8 @@ private struct ListeningHintView: View {
 private struct MicButton: View {
     let isListening: Bool
     let level: Float
+    /// Ring and symbol while not listening: grey, accent only in the menu bar panel (#479).
+    var restTint: Color?
     let action: () -> Void
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -519,8 +526,8 @@ private struct MicButton: View {
                     Circle().fill(Color.accentColor).frame(width: Self.circle, height: Self.circle)
                     Image(systemName: "mic.fill").foregroundStyle(.white)
                 } else {
-                    Circle().stroke(Color.secondary, lineWidth: 1.5).frame(width: Self.circle, height: Self.circle)
-                    Image(systemName: "mic.slash").foregroundStyle(.secondary)
+                    Circle().stroke(restTint ?? Color.secondary, lineWidth: 1.5).frame(width: Self.circle, height: Self.circle)
+                    Image(systemName: "mic.slash").foregroundStyle(restTint.map(AnyShapeStyle.init) ?? AnyShapeStyle(.secondary))
                 }
             }
             .font(.title3)
