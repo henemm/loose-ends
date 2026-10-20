@@ -5,9 +5,11 @@ import SwiftUI
 /// The "Subtasks" area of the detail (design briefing, screen 4): one level, each line checkable,
 /// a text field adds the next one. Only a top-level task has it (ADR-8). A line becomes a task when
 /// needed (#565, concept D): "Details" at its end opens its own detail, and what it carries of its
-/// own stands grey under its words.
+/// own stands grey under its words. Its words are read by the due date and tag word rules alone.
 struct SubtasksSection: View {
     @Environment(\.modelContext) private var modelContext
+    /// Runs the line's two rules right after it is added (#565); nil in previews.
+    @Environment(\.enrichment) private var enrichment: EnrichmentCoordinator?
     let task: TaskItem
     /// Opened from the word line (#538): the field takes the focus at once.
     var startsEditing = false
@@ -125,6 +127,8 @@ struct SubtasksSection: View {
             draft = ""
             draftFocused = true
             save("add subtask")
+            // Due date and tag word by rule, never the model (#565): the line shows them at once.
+            if let enrichment { Task { await enrichment.processPending() } }
         } catch {
             Self.logger.error("Adding a subtask failed: \(error, privacy: .public)")
         }

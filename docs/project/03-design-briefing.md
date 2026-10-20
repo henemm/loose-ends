@@ -114,7 +114,11 @@ Eine Liste. Jede Zeile:
   Begründung in einem Satz, Button "Zurücksetzen".
 - Leere Felder sind leer, keine Platzhalter, die zur Eingabe drängen.
 - Bereich "Blockiert durch": Liste der Aufgaben, die vorher erledigt sein müssen.
-- Bereich "Unteraufgaben": eine Ebene, abhakbar, per Textfeld ergänzbar (siehe offene Frage 3).
+- Bereich "Unteraufgaben": eine Ebene, abhakbar, per Textfeld ergänzbar (siehe offene Frage 3). **Seit #565 (Henning,
+  2026-10-20):** ein Tipp auf die Worte hakt ab, „Details“ (Akzent) am Zeilenende öffnet das eigene Detail der Zeile;
+  eigene Merkmale (Fällig, Etikett, Ort, Dauer, Notiz) stehen grau unter den Worten, Fällig rot bei Zeitdruck. Return legt
+  an und behält den Fokus, „Hinzufügen“ erscheint erst mit Text. Im Detail der Zeile oben „Teil von <Aufgabe>“. Erledigen
+  mit offenen Zeilen fragt „Alle erledigen“ oder „Offene behalten“.
 - Bereich "Quelle": Link zurück zur Mail, wenn vorhanden.
 - Tipp auf ein getöntes Merkmal: Popover mit Vorher, Nachher, Begründung, „Zurücksetzen“ (Wert vor der KI) und „Ändern“ (Picker). Beides ist eine Korrektur.
 - „Anzeigen“ neben „n Felder von der KI gesetzt“ öffnet das Änderungen-Sheet (Screen 5) mit allen Einträgen und „Alle zurücksetzen“.
@@ -237,6 +241,8 @@ Sharing-Flows, freie Suche in natürlicher Sprache.
 3. **Hierarchie.** Wie zeigen wir Unteraufgaben und Projekte so, dass es eine Ebene bleibt,
    aber sich nicht nach Checkliste anfühlt? Das war die Bedingung des PO für Hierarchie überhaupt.
    **Beantwortet (2026-10-05, #28):** eingeklappt, per Pfeil aufklappbar — siehe Screen 6.
+   **Ergänzt (Henning, 2026-10-20, #565):** Konzept D, eine Zeile, die bei Bedarf Aufgabe wird (ADR-8 ergänzt);
+   kein Konzept „Checkliste“ daneben, damit es sich nicht nach Checkliste anfühlt.
 4. **Ungeprüft.** Wie unterscheidet sich Rohtext von Titel, ohne dass die Zeile hässlich wird?
 5. **Mac.** Reicht NavigationSplitView mit Sidebar, oder braucht die Erfassung ein eigenes Panel-Design?
 

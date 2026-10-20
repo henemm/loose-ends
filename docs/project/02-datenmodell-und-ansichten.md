@@ -139,7 +139,9 @@ Version 1 hat keine freien Filterregeln. Die Ansichtsarten sind im Code definier
 ## Ansichten (Berechnungsregeln)
 
 Alle Ansichten zeigen nur `status in (unprocessed, unverified, active)` und keine Aufgaben mit
-`parent != nil` (Unteraufgaben erscheinen in ihrer Elternaufgabe). Ausnahmen: "Alt" zeigt auch
+`parent != nil` (Unteraufgaben erscheinen in ihrer Elternaufgabe) — außer mit eigenem Merkmal (#565): eine Unteraufgabe
+mit eigenem Datum steht in „Fällig“, „Jetzt“, der Startzeile und der Zahl am App-Symbol, eine mit eigenem Etikett in
+dessen Liste, jede Zeile nennt ihre Aufgabe; „Neu“, „Lose Enden“, „Als nächstes“ bleiben oberste Aufgaben. Ausnahmen: "Alt" zeigt auch
 blockierte, "Geparkt" zeigt nur `parked`, "Erledigt" zeigt nur `done`, "Alle offenen" zeigt alles außer `done`
 (auch Geparktes und Wartendes, #319).
 
