@@ -21,6 +21,8 @@ struct TaskInteractions {
     @Binding var confirmingDelete: Bool
     /// The task whose "Move → Date…" sheet is open (#33).
     @Binding var datingTask: TaskItem?
+    /// The task whose Complete asks about its open subtasks (#565).
+    @Binding var askingSubtasks: TaskItem?
     /// Runs after a delete is saved, so the view can let go of a selection on that task.
     var didDelete: (UUID) -> Void = { _ in }
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "List")
@@ -146,11 +148,23 @@ struct TaskInteractions {
     // MARK: - Actions
 
     /// Starts the three-second window (#32); `ContentView` completes once it ran out. Without the
-    /// window (previews) Done lands at once.
+    /// window (previews) Done lands at once. With open subtasks it asks first (#565).
     func complete(_ task: TaskItem) {
-        if let pendingCompletions {
-            pendingCompletions.schedule(task.id)
+        if !Subtasks.open(of: task).isEmpty {
+            askingSubtasks = task
             return
+        }
+        complete(task, withSubtasks: false)
+    }
+
+    /// The answer to the question (#565): "Complete all" takes the open subtasks along.
+    func complete(_ task: TaskItem, withSubtasks: Bool) {
+        if let pendingCompletions {
+            pendingCompletions.schedule(task.id, withSubtasks: withSubtasks)
+            return
+        }
+        if withSubtasks {
+            for subtask in Subtasks.open(of: task) { TaskActions.complete(subtask) }
         }
         TaskActions.complete(task)
         save("done")
@@ -218,6 +232,9 @@ extension View {
                 .accessibilityIdentifier("confirmDeleteButton")
         } message: { _ in
             Text("This cannot be undone.")
+        }
+        .completesWithSubtasks(asking: actions.$askingSubtasks) { task, withSubtasks in
+            actions.complete(task, withSubtasks: withSubtasks)
         }
         .sheet(item: actions.$datingTask) { task in
             MoveDateSheet(start: TaskActions.suggestedMoveDate(for: task)) { day in

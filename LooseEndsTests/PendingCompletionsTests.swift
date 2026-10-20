@@ -143,4 +143,61 @@ import Testing
         #expect(task.completions?.count == 1)
         #expect(task.dueDate != nil)
     }
+
+    // MARK: - Open subtasks (#565, Schnitt 3)
+
+    @Test("Complete all: the open subtasks finish with their task once the window ran out, a done one keeps its time")
+    @MainActor func completeAllTakesOpenSubtasksAlong() async throws {
+        let store = try TestStore()
+        let task = openTask("Umzug", in: store)
+        let boxes = try Subtasks.add("Kartons holen", to: task, in: store.context, now: start)
+        let keys = try Subtasks.add("Schlüssel abgeben", to: task, in: store.context, now: start)
+        let earlier = start.addingTimeInterval(-60)
+        Subtasks.toggle(keys, now: earlier)
+        #expect(Subtasks.open(of: task).map(\.id) == [boxes.id])
+        let pending = PendingCompletions()
+
+        pending.schedule(task.id, now: start, withSubtasks: true)
+        _ = pending.commitDue(in: [task], now: start.addingTimeInterval(2))
+        #expect(boxes.status == .active, "inside the window the subtask stays open too")
+
+        _ = pending.commitDue(in: [task], now: start.addingTimeInterval(3))
+        try store.context.save()
+        #expect(task.status == .done)
+        #expect(boxes.status == .done)
+        #expect(boxes.completedAt == start.addingTimeInterval(3))
+        #expect(keys.completedAt == earlier, "a line done before keeps its own time")
+        #expect(Subtasks.open(of: task).isEmpty)
+    }
+
+    @Test("Keep open ones: the task finishes, its open subtasks stay open")
+    @MainActor func keepOpenLeavesSubtasks() async throws {
+        let store = try TestStore()
+        let task = openTask("Umzug", in: store)
+        let boxes = try Subtasks.add("Kartons holen", to: task, in: store.context, now: start)
+        let pending = PendingCompletions()
+
+        pending.schedule(task.id, now: start)
+        _ = pending.commitDue(in: [task], now: start.addingTimeInterval(3))
+        try store.context.save()
+        #expect(task.status == .done)
+        #expect(boxes.status == .active)
+    }
+
+    @Test("Undo after Complete all takes back the task and its subtasks; a new Done asks afresh")
+    @MainActor func undoForgetsCompleteAll() async throws {
+        let store = try TestStore()
+        let task = openTask("Umzug", in: store)
+        let boxes = try Subtasks.add("Kartons holen", to: task, in: store.context, now: start)
+        let pending = PendingCompletions()
+
+        pending.schedule(task.id, now: start, withSubtasks: true)
+        #expect(pending.cancel(task.id))
+        #expect(!pending.withSubtasks.contains(task.id))
+        pending.schedule(task.id, now: start.addingTimeInterval(5))
+        _ = pending.commitDue(in: [task], now: start.addingTimeInterval(8))
+        try store.context.save()
+        #expect(task.status == .done)
+        #expect(boxes.status == .active, "the second Done was without its subtasks")
+    }
 }
