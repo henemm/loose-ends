@@ -24,6 +24,9 @@ struct TaskDetailView: View {
     @Bindable var task: TaskItem
     /// Opened from "New" (#349): opening confirms nothing, "Looks right" does.
     var reviewing = false
+    /// Opened by "Details" on its parent's line (#565): "Part of" goes back instead of stacking the
+    /// parent once more.
+    var fromParent = false
     /// Nil in previews and tests; the app passes its bridge for the access note.
     @Environment(CalendarBridge.self) private var calendar: CalendarBridge?
     /// Nil in previews; then "Analyze again" is not offered.
@@ -56,6 +59,10 @@ struct TaskDetailView: View {
     @State private var choosesCalendar = false
     /// "Analyze again" (#34): running, or what it found, until the detail closes.
     @State private var reanalysis: Reanalysis?
+    /// A subtask whose own detail is open (#565).
+    @State private var openedSubtask: TaskItem?
+    /// The parent, opened by "Part of" when this detail was not reached from it (#565).
+    @State private var openedParent: TaskItem?
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Detail")
 
     private var aiFields: [RevisedField] { RevisionService.automaticFields(on: task) }
@@ -78,6 +85,9 @@ struct TaskDetailView: View {
     private var sections: some View {
         Group {
             Section {
+                if let parent = task.parent {
+                    partOf(parent)
+                }
                 HStack(alignment: .firstTextBaseline) {
                     // Serif is the content, SF is the app (#180, rule 2). Wraps instead of cutting the
                     // title off with "…" (#216); Return still ends the edit, as in the capture field.
@@ -178,7 +188,7 @@ struct TaskDetailView: View {
             // Connection: top level only (rule 4).
             if task.parent == nil {
                 if shows(.subtasks) {
-                    SubtasksSection(task: task, startsEditing: opened.contains(.subtasks))
+                    SubtasksSection(task: task, startsEditing: opened.contains(.subtasks)) { openedSubtask = $0 }
                         .detailRow()
                 }
                 if shows(.waitingOn) {
@@ -252,6 +262,12 @@ struct TaskDetailView: View {
             FieldEditorView(task: task, field: field, contexts: contexts, projects: projects)
         }
         #endif
+        .navigationDestination(item: $openedSubtask) { subtask in
+            TaskDetailView(task: subtask, fromParent: true)
+        }
+        .navigationDestination(item: $openedParent) { parent in
+            TaskDetailView(task: parent)
+        }
         .toolbar { actions }
         .onAppear {
             titleDraft = task.title ?? ""
@@ -286,6 +302,20 @@ struct TaskDetailView: View {
                 }
             }
         }
+    }
+
+    /// "Part of <task>" above a subtask's title (#565): accent, since a tap opens the task (ADR-14).
+    private func partOf(_ parent: TaskItem) -> some View {
+        Button {
+            if fromParent { dismiss() } else { openedParent = parent }
+        } label: {
+            Label("Part of \(parent.displayTitle)", systemImage: "arrow.turn.left.up")
+                .font(.footnote)
+                .lineLimit(1)
+        }
+        .buttonStyle(.borderless)
+        .foregroundStyle(.tint)
+        .accessibilityIdentifier("partOfParentButton")
     }
 
     /// "2 from your words · 2 from AI" (#101); a part with nothing in it is left out.

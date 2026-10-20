@@ -311,6 +311,8 @@
     "postponed %lld times" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "%lld-mal verschoben" } } } },
     "Subtasks" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Unteraufgaben" } } } },
     "Add a subtask" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Unteraufgabe hinzufügen" } } } },
+    "Details" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Details" } } } },
+    "Part of %@" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Teil von %@" } } } },
     "%lld of %lld done" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "%lld von %lld erledigt" } } } },
     "Open" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Offen" } } } },
     "Show in calendar" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Im Kalender anzeigen" } } } },
