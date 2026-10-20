@@ -172,13 +172,18 @@ struct TaskRow: View {
                 .imageScale(.small)
                 .lineLimit(1)
             }
-            if let note {
+            if let note = note ?? parentNote {
                 Text(note)
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
             }
         }
+    }
+
+    /// A subtask in a list names its task (#548, #565), wherever it stands: "Due", "Now", a tag.
+    private var parentNote: String? {
+        task.parent.map { String(localized: "Subtask of \($0.displayTitle)") }
     }
 
     private struct Trait: Identifiable {
