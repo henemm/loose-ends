@@ -481,7 +481,7 @@ import Testing
 }
 
 @Suite("ViewRules for contexts and projects") struct ContextProjectViewTests {
-    @Test("A context view lists open top-level tasks with that tag only")
+    @Test("A context view lists open tasks with that tag only, a subtask with the tag of its own among them (#565)")
     @MainActor func contextView() async throws {
         let store = try TestStore()
         let garden = TaskContext(name: "Garten")
@@ -502,7 +502,7 @@ import Testing
         try store.context.save()
 
         let shown = ViewRules.tasks(inContext: garden, in: [open, done, untagged, child])
-        #expect(shown.map(\.rawText) == ["Rasen mähen"])
+        #expect(Set(shown.map(\.rawText)) == ["Rasen mähen", "Benzin holen"])
     }
 
     @Test("A project view lists open top-level tasks of that project, urgent first")
