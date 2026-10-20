@@ -209,20 +209,7 @@ enum MeasurementErrorKind {
 
     static func classify(_ error: Error) -> String {
         #if canImport(FoundationModels) && !os(watchOS)
-        if let generation = error as? LanguageModelSession.GenerationError {
-            switch generation {
-            case .rateLimited: return rateLimited
-            case .guardrailViolation: return guardrail
-            case .assetsUnavailable: return assetsUnavailable
-            case .exceededContextWindowSize: return contextWindow
-            case .decodingFailure: return decoding
-            case .unsupportedGuide, .unsupportedLanguageOrLocale: return unsupported
-            case .refusal: return refusal
-            case .concurrentRequests: return concurrent
-            @unknown default: return other
-            }
-        }
-        // `LanguageModelError` replaces `GenerationError` in the iOS 27 SDK (Xcode 27, Swift 6.4).
+        // Since the iOS 27 SDK a model failure arrives as one of four types (#536).
         if let model = error as? LanguageModelError {
             switch model {
             case .rateLimited: return rateLimited
@@ -235,6 +222,20 @@ enum MeasurementErrorKind {
             @unknown default: return other
             }
         }
+        if let system = error as? SystemLanguageModel.Error {
+            switch system {
+            case .assetsUnavailable: return assetsUnavailable
+            @unknown default: return other
+            }
+        }
+        if let session = error as? LanguageModelSession.Error {
+            switch session {
+            case .concurrentRequests: return concurrent
+            case .transcriptMutationWhileResponding: return other
+            @unknown default: return other
+            }
+        }
+        if error is GeneratedContent.ParsingError { return decoding }
         #endif
         return other
     }
