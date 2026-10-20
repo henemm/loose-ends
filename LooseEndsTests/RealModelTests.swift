@@ -54,8 +54,8 @@ struct RealModelTests {
     }
 
     @Test(
-        .enabled(if: RealModel.isAvailable, "Apple Intelligence is not available on this Mac"),
-        "Every note gets an answer in time, and its title is short enough for a row"
+        "Every note gets an answer in time, and its title is short enough for a row",
+        .enabled(if: RealModel.isAvailable, "Apple Intelligence is not available on this Mac")
     )
     func answersInShape() async throws {
         let enricher = FoundationModelsEnricher()
@@ -73,8 +73,8 @@ struct RealModelTests {
     }
 
     @Test(
-        .enabled(if: RealModel.isAvailable, "Apple Intelligence is not available on this Mac"),
-        "Most titles keep a word of their note (the writer drops the rest, #460)"
+        "Most titles keep a word of their note (the writer drops the rest, #460)",
+        .enabled(if: RealModel.isAvailable, "Apple Intelligence is not available on this Mac")
     )
     func titlesStayWithTheNote() async throws {
         let enricher = FoundationModelsEnricher()
