@@ -42,14 +42,33 @@ extension XCTestCase {
             XCTFail("No window at launch and no menu bar symbol to open one")
             return false
         }
-        statusItem.click()
         let openApp = app.buttons["menuBarOpenApp"]
+        // A panel that is still closing (Return in the German gallery test, #596) swallows the first
+        // click: wait until it is gone, then click, and once more if nothing opened within 10 s.
+        _ = macWait(timeout: 5) { !openApp.exists }
+        statusItem.click()
+        if !openApp.waitForExistence(timeout: 10) {
+            statusItem.click()
+        }
         guard openApp.waitForExistence(timeout: 10) else {
             XCTFail("Menu bar panel shows no Open Loose Ends")
             return false
         }
         openApp.click()
         return false
+    }
+
+    /// Polls `condition` until it holds or `timeout` passes; returns whether it held. For values XCTest
+    /// cannot wait on with a predicate, such as a frame that is still settling (#596).
+    @MainActor
+    @discardableResult
+    func macWait(timeout: TimeInterval, until condition: @MainActor () -> Bool) -> Bool {
+        let deadline = Date(timeIntervalSinceNow: timeout)
+        while Date() < deadline {
+            if condition() { return true }
+            RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.25))
+        }
+        return condition()
     }
 
     /// The list window, not the menu bar panel: `MenuBarExtra` owns a window of its own under tests.

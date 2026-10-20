@@ -6,9 +6,11 @@ enum SubtaskError: Error, Equatable {
     case nested
 }
 
-/// Subtasks (ADR-8): the model allows any depth, the app shows one level. A subtask is a plain
-/// line under its parent: active from the start, so the AI leaves it alone, and never listed in a
-/// view of its own. Pure over the model objects; the caller saves.
+/// Subtasks (ADR-8): the model allows any depth, the app shows one level. A subtask is a line under
+/// its parent that becomes a task when needed (#565, concept D): active from the start, its own
+/// detail behind "Details", listed outside its task only with a date or tag of its own. The due
+/// date and tag word rules read its words (`EnrichmentCoordinator.applySubtaskRules`); the
+/// on-device model never sees it. Pure over the model objects; the caller saves.
 enum Subtasks {
     /// Adds a line under a top-level task. The text is trimmed once and never touched again (ADR-3).
     @discardableResult
