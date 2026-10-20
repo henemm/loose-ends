@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.henning.looseends.refresh</string>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -64,6 +68,8 @@
 	<string>public.app-category.productivity</string>
 	<key>NSCalendarsFullAccessUsageDescription</key>
 	<string>Only if you switch it on, a task with a due date is shown in "Loose Ends" or in a calendar you pick. The app only changes its own events.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>The camera scans a document you attach to a task.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Only when a task has a place, Loose Ends asks the system to remind you when you arrive or leave.</string>
 	<key>NSMicrophoneUsageDescription</key>
@@ -77,6 +83,7 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
+		<string>fetch</string>
 	</array>
 	<key>UILaunchScreen</key>
 	<dict/>

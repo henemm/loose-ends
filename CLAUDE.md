@@ -87,7 +87,9 @@ sonst kennt Xcode die neu hinzugekommenen Dateien nicht und baut eine App ohne d
 
 Berechtigungen gehören in `project.yml` (`entitlements.properties`), nie nur in die erzeugte `.entitlements`-Datei:
 `generate` überschreibt sie (#311). `scripts/test_entitlements_sync.py` und die Archivprüfung `entitled` sichern das ab
-(`docs/reference/testflight.md`).
+(`docs/reference/testflight.md`). Dasselbe gilt für jede `Info.plist`: Quelle ist `info.properties` in `project.yml`, die Datei im Repo
+nur das Abbild (#499); `scripts/test_info_plist_sync.py` vergleicht beide, und der CI-Schritt „Generate leaves the tree clean“
+schlägt fehl, wenn `generate` einen Diff hinterlässt.
 
 `DEVELOPMENT_TEAM` steht in `project.yml` (`XK87E2B3VR`) und darf dort nicht geleert werden: Xcode
 legt das Team in der erzeugten Projektdatei ab, die bei jedem `generate` neu geschrieben wird — ein
