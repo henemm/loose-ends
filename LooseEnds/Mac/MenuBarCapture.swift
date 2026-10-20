@@ -44,6 +44,23 @@ struct MenuBarCaptureView: View {
         .frame(width: 440)
         // Paper behind the whole panel (#479); the window's own corner stays the system's.
         .background(Paper.ground.ignoresSafeArea())
+        .background(UITestDarkPanel())
+    }
+}
+
+/// The gallery's dark run (#479, AC-10): `.preferredColorScheme` does not reach the menu bar panel's
+/// window, so under `--ui-testing-dark` (the same argument as `uiTestColorScheme`) the window itself
+/// turns dark. Without the argument it does nothing; the product follows the system.
+private struct UITestDarkPanel: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSView { DarkWindowView() }
+    func updateNSView(_ nsView: NSView, context: Context) {}
+
+    private final class DarkWindowView: NSView {
+        override func viewDidMoveToWindow() {
+            super.viewDidMoveToWindow()
+            guard ProcessInfo.processInfo.arguments.contains("--ui-testing-dark") else { return }
+            window?.appearance = NSAppearance(named: .darkAqua)
+        }
     }
 }
 

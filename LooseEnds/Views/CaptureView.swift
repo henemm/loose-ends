@@ -71,29 +71,7 @@ struct CaptureView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            Group {
-                #if os(macOS)
-                // The menu bar panel (#479) has its own paper layout; the window's ⌘N keeps the standard one.
-                if onFinish != nil { panelContent } else { standardContent }
-                #else
-                standardContent
-                #endif
-            }
-            .navigationTitle("Capture")
-            #if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
-            #endif
-            .toolbar {
-                if onFinish == nil {
-                    ToolbarItem(placement: .cancellationAction) { cancelButton }
-                    ToolbarItem(placement: .confirmationAction) { doneButton }
-                }
-            }
-            .alert("Could not save", isPresented: $saveFailed) {
-                Button("OK") {}
-            }
-        }
+        root
         .onAppear(perform: begin)
         .onDisappear { speech.stop() }
         .onChange(of: speech.transcript) { _, transcript in
@@ -111,6 +89,40 @@ struct CaptureView: View {
         #if os(macOS)
         .frame(minWidth: 440, minHeight: 280)
         #endif
+    }
+
+    /// The menu bar panel (#479) has its own paper layout without a navigation bar (no white "Capture"
+    /// strip); the window's ⌘N, iPhone and iPad keep the standard one.
+    @ViewBuilder
+    private var root: some View {
+        #if os(macOS)
+        if onFinish != nil {
+            panelContent.alert("Could not save", isPresented: $saveFailed) { Button("OK") {} }
+        } else {
+            stack
+        }
+        #else
+        stack
+        #endif
+    }
+
+    private var stack: some View {
+        NavigationStack {
+            standardContent
+                .navigationTitle("Capture")
+                #if os(iOS)
+                .navigationBarTitleDisplayMode(.inline)
+                #endif
+                .toolbar {
+                    if onFinish == nil {
+                        ToolbarItem(placement: .cancellationAction) { cancelButton }
+                        ToolbarItem(placement: .confirmationAction) { doneButton }
+                    }
+                }
+                .alert("Could not save", isPresented: $saveFailed) {
+                    Button("OK") {}
+                }
+        }
     }
 
     /// iPhone, iPad and the Mac window's capture (⌘N), unchanged by #479.
@@ -255,11 +267,11 @@ struct CaptureView: View {
             TextField("What should I remember?", text: $text, prompt: hintState == .hint ? Text(verbatim: "") : nil, axis: .vertical)
                 .font(.system(size: 22, design: .serif))
                 .textFieldStyle(.plain)
-                .lineLimit(3...10)
+                .lineLimit(5...10)
                 .focused($isFocused)
                 .onSubmit(save)
                 .onChange(of: text) { _, newValue in submitOnReturn(newValue) }
-                .frame(maxWidth: .infinity, minHeight: 112, alignment: .topLeading)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
                 .accessibilityIdentifier("captureTextField")
                 .overlay(alignment: .topLeading) {
                     if hintState == .hint { ListeningHintView() }
@@ -268,7 +280,7 @@ struct CaptureView: View {
             macDiagnosisLine
         }
         .padding(.horizontal, 24)
-        .padding(.top, 18)
+        .padding(.top, 22)
         .padding(.bottom, 12)
         .background(Paper.ground)
     }
