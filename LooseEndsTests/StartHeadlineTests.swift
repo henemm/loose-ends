@@ -126,10 +126,14 @@ import Testing
 
         let result = Self.headline([late, early], Self.at(11, minute: 54))
         #expect(result == .missed(title: "Sommer gegen Winterklamotten …", at: Self.at(11), count: 2))
+        // `String(localized:)` speaks the process language (English on CI); only the number word
+        // follows `locale`, so the sentence is checked by its parts.
         let de = Locale(identifier: "de_DE")
-        #expect(StartHeadlineText.sentence(result, locale: de).hasPrefix("Zwei feste Zeiten sind vorbei, zuletzt "))
-        let one = Self.headline([late], Self.at(11, minute: 54))
-        #expect(StartHeadlineText.sentence(one, locale: de).hasPrefix("Sommer gegen Winterklamotten … um "))
+        let two = StartHeadlineText.sentence(result, locale: de)
+        #expect(two.hasPrefix("Zwei "))
+        #expect(!two.contains("Sommer"))
+        let one = StartHeadlineText.sentence(Self.headline([late], Self.at(11, minute: 54)), locale: de)
+        #expect(one.hasPrefix("Sommer gegen Winterklamotten … "))
     }
 
     @Test("2b: a day-only date today speaks before the quiet rungs; a time of day still wins")
