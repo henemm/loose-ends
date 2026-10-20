@@ -67,10 +67,19 @@ struct MeasurementRunTests {
     @Test("Fehlerart wird typisiert erkannt, nicht per Textvergleich")
     func errorKinds() {
         #expect(MeasurementErrorKind.classify(NSError(domain: "x", code: 1)) == "andere")
-        #if canImport(FoundationModels)
-        let context = LanguageModelSession.GenerationError.Context(debugDescription: "t")
-        #expect(MeasurementErrorKind.classify(LanguageModelSession.GenerationError.rateLimited(context)) == "rateLimited")
-        #expect(MeasurementErrorKind.classify(LanguageModelSession.GenerationError.guardrailViolation(context)) == "guardrail")
+        #if canImport(FoundationModels) && !os(watchOS)
+        let text = "t"
+        func kind(_ error: Error) -> String { MeasurementErrorKind.classify(error) }
+        #expect(kind(LanguageModelError.rateLimited(.init(resetDate: nil, debugDescription: text))) == "rateLimited")
+        #expect(kind(LanguageModelError.guardrailViolation(.init(debugDescription: text))) == "guardrail")
+        #expect(kind(LanguageModelError.contextSizeExceeded(.init(contextSize: 10, tokenCount: 20, debugDescription: text))) == "contextWindow")
+        #expect(kind(LanguageModelError.refusal(.init(explanation: text, debugDescription: text))) == "refusal")
+        #expect(kind(LanguageModelError.timeout(.init(debugDescription: text))) == "timeout")
+        #expect(kind(LanguageModelError.unsupportedGenerationGuide(.init(schemaName: nil, debugDescription: text))) == "unsupported")
+        #expect(kind(SystemLanguageModel.Error.assetsUnavailable(.init(debugDescription: text))) == "assetsUnavailable")
+        #expect(kind(LanguageModelSession.Error.concurrentRequests) == "concurrent")
+        #expect(kind(GeneratedContent.ParsingError(rawContent: "x", debugDescription: text)) == "decoding")
+        #expect(kind(LanguageModelSession.Error.transcriptMutationWhileResponding) == "andere")
         #endif
     }
 

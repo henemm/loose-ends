@@ -101,7 +101,7 @@ import FoundationModels
         let task = TaskItem(rawText: "Zettel sortieren")
         store.context.insert(task)
         try store.context.save()
-        let refusal = LanguageModelSession.GenerationError.guardrailViolation(.init(debugDescription: "test"))
+        let refusal = LanguageModelError.guardrailViolation(.init(debugDescription: "test"))
         let coordinator = EnrichmentCoordinator(enricher: StubEnricher(failure: refusal), container: store.container)
 
         await coordinator.processPending()
