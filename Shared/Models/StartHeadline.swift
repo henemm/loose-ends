@@ -3,18 +3,21 @@ import Foundation
 /// The big line above "Now" on the iPhone start screen (#426, Henning 2026-10-15): each day the one
 /// fact that stands out, from 16:00 a look back at what got done. Pure over the tasks and the clock;
 /// the words live in the app (`StartHeadlineText`). No model: every rung is a count or a date.
+/// Every title is quoted, a long one cut at a word with "…" (#585): a sentence without the task
+/// ("The fixed time at 11:00 has passed.") said nothing.
 enum StartHeadline: Equatable {
     /// A, A+: from 16:00 with something done today. Titles are the latest first, at most two;
     /// `next` is a fixed time within the next two hours.
-    case doneToday(count: Int, titles: [String?], next: Upcoming?)
-    /// 1: a fixed time today has passed.
-    case missed(title: String?, at: Date)
-    /// 2: fixed times still ahead today; `at` is the first.
-    case upcoming(title: String?, at: Date, count: Int)
-    /// 2b: tasks due today without a time (Henning, 2026-10-16): the day-only date is today's fact.
-    case dueToday(title: String?, count: Int)
+    case doneToday(count: Int, titles: [String], next: Upcoming?)
+    /// 1: fixed times today have passed; `title` and `at` are the latest, `count` how many.
+    case missed(title: String, at: Date, count: Int)
+    /// 2: fixed times still ahead today; `title` and `at` are the first.
+    case upcoming(title: String, at: Date, count: Int)
+    /// 2b: tasks due today without a time (Henning, 2026-10-16): the day-only date is today's fact;
+    /// `title` is the first by rank, spoken only when it is the only one.
+    case dueToday(title: String, count: Int)
     /// 3: a day-only date carried for days.
-    case waiting(title: String?, days: Int)
+    case waiting(title: String, days: Int)
     /// 4: a tag (label) holding many open tasks.
     case pile(label: String, count: Int)
     /// 5: tasks older than a month.
@@ -27,7 +30,7 @@ enum StartHeadline: Equatable {
     case allDone
 
     struct Upcoming: Equatable {
-        let title: String?
+        let title: String
         let at: Date
     }
 
@@ -56,8 +59,9 @@ enum StartHeadline: Equatable {
                               next: soon.map { Upcoming(title: short($0), at: $0.dueDate ?? now) })
         }
         // 1, 2: time pressure.
-        if let missed = timedToday.last(where: { ($0.dueDate ?? now) < now }), let at = missed.dueDate {
-            return .missed(title: short(missed), at: at)
+        let passed = timedToday.filter { ($0.dueDate ?? now) < now }
+        if let missed = passed.last, let at = missed.dueDate {
+            return .missed(title: short(missed), at: at, count: passed.count)
         }
         if let first = ahead.first, let at = first.dueDate {
             return .upcoming(title: short(first), at: at, count: ahead.count)
@@ -67,7 +71,7 @@ enum StartHeadline: Equatable {
             !$0.isBlocked && !$0.dueHasTime && ($0.dueDate.map { $0 >= today && $0 < tomorrow } ?? false)
         }.sorted { ($0.nextRank ?? .infinity) < ($1.nextRank ?? .infinity) }
         if let first = dayOnlyToday.first {
-            return .dueToday(title: dayOnlyToday.count == 1 ? short(first) : nil, count: dayOnlyToday.count)
+            return .dueToday(title: short(first), count: dayOnlyToday.count)
         }
         // 3 to 6: the quiet rungs take turns by day.
         var quiet: [StartHeadline] = []
@@ -119,9 +123,21 @@ enum StartHeadline: Equatable {
         return hits.sorted { $0.0 > $1.0 }.map(\.1)
     }
 
-    /// A title short enough to quote; a longer one is left out of the sentence.
-    private static func short(_ task: TaskItem) -> String? {
-        let title = task.displayTitle
-        return title.count <= titleLimit ? title : nil
+    /// A title short enough to quote: up to `titleLimit` characters as it is, a longer one cut after
+    /// the last whole word that fits before " …" (#585). A first word longer than the limit is cut in
+    /// the middle, so there is always something to say.
+    static func short(_ task: TaskItem) -> String { short(task.displayTitle) }
+
+    static func short(_ title: String) -> String {
+        guard title.count > titleLimit else { return title }
+        let room = titleLimit - 2
+        var cut = ""
+        for word in title.split(separator: " ") {
+            let next = cut.isEmpty ? String(word) : cut + " " + word
+            if next.count > room { break }
+            cut = next
+        }
+        if cut.isEmpty { cut = String(title.prefix(room)) }
+        return cut + " …"
     }
 }

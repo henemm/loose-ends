@@ -5,7 +5,7 @@ import Testing
 
 /// The start screen's "Due today" and the app badge (#299): today, not the whole week; a task in
 /// "Next up" and due today stands in both lists but counts once. What is left from earlier days
-/// counts only once it has a new date (#518).
+/// leaves "Due today" until it has a new date (#518); the badge counts it like the "Due" list (#584).
 @Suite("Due today and the app badge") struct DueTodayTests {
     static var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
@@ -54,7 +54,7 @@ import Testing
                 "the Due view does not look ahead")
     }
 
-    @Test("The badge counts Next up and Due today, a task in both once")
+    @Test("The badge counts Due and Next up as the lists do, a task in both once; a passed time and an earlier day keep counting (#584)")
     @MainActor func badgeCountsEachTaskOnce() async throws {
         let store = try TestStore()
         let lined = TaskItem(rawText: "Angebot schreiben")
@@ -70,14 +70,21 @@ import Testing
         let later = TaskItem(rawText: "Reifen wechseln")
         later.status = .active
         later.dueDate = Self.day(3)
-        let all = [lined, both, dueOnly, later]
+        let passed = TaskItem(rawText: "Zahnarzt anrufen")
+        passed.status = .active
+        passed.dueDate = Self.day(0, hour: 9)
+        passed.dueHasTime = true
+        let all = [lined, both, dueOnly, later, passed]
         all.forEach(store.context.insert)
 
-        #expect(ViewRules.dueToday(in: all, now: Self.now, calendar: Self.calendar).map(\.id) == [both.id],
-                "a task in Next up and due today stands in both lists")
-        #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 2,
-                "the one from yesterday counts only once it has a new date (#518)")
+        #expect(Set(ViewRules.dueToday(in: all, now: Self.now, calendar: Self.calendar).map(\.id)) == [both.id, passed.id],
+                "a task in Next up and due today stands in both lists; Now leaves the passed time out (#548)")
+        #expect(ViewRules.now(in: all, now: Self.now, calendar: Self.calendar).all.map(\.id) == [both.id, lined.id])
+        #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 4,
+                "lined, both, yesterday's and the passed time: Due plus Next up, each once (#584)")
         TaskActions.move(dueOnly, to: .date(Self.now), contexts: [], projects: [], now: Self.now, calendar: Self.calendar)
+        #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 4, "a new date changes nothing on the icon")
+        TaskActions.complete(passed)
         #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 3)
         #expect(ViewRules.badgeCount(in: [], now: Self.now, calendar: Self.calendar) == 0)
     }

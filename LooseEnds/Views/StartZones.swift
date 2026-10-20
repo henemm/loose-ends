@@ -151,6 +151,10 @@ struct IndexLine: Identifiable {
     var words: [IndexWord] = []
     /// What the line opens; the Mac sidebar marks the line of the open view (#476).
     var target: ViewSelection?
+    /// The "Start" line of the Mac sidebar (#583): opens the start page, marked while no view is open.
+    var opensStart = false
+    /// ⌘1 on the Start line (#583).
+    var shortcut: KeyboardShortcut?
     let action: () -> Void
 }
 
@@ -192,8 +196,15 @@ struct ContentsIndex: View {
         .paperRow()
     }
 
+    /// Whether a line is marked as the open one: the Start line while nothing is chosen (#583), a
+    /// view's line while that view is.
+    static func isOpen(_ line: IndexLine, selected: ViewSelection?) -> Bool {
+        if line.opensStart { return selected == nil }
+        return selected != nil && line.target == selected
+    }
+
     private func lineButton(_ line: IndexLine, metrics: StartMetrics) -> some View {
-        let isOpen = selected != nil && line.target == selected
+        let isOpen = Self.isOpen(line, selected: selected)
         return Button(action: line.action) {
             IndexLineLabel(title: line.title, count: line.count, metrics: metrics)
                 .padding(.horizontal, isOpen ? 8 : 0)
@@ -201,6 +212,7 @@ struct ContentsIndex: View {
                 .padding(.horizontal, isOpen ? -8 : 0)
         }
         .buttonStyle(.plain)
+        .keyboardShortcut(line.shortcut)
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(isOpen ? .isSelected : [])
         .accessibilityIdentifier(line.id)

@@ -206,6 +206,10 @@ import UserNotifications
         let named = ListFormatter.localizedString(byJoining: [a.displayTitle, b.displayTitle])
         #expect(tomorrowMorning.content.body == String(localized: "Longest open: \(named)"))
         #expect(fixture.fireComponents(of: tomorrowMorning).hour == 9)
+        // The morning carries the icon's number for its day: both are in Due tomorrow (#584).
+        #expect(tomorrowMorning.content.badge?.intValue == 2)
+        let evenings = fixture.recorder.pending.values.filter { $0.content.categoryIdentifier == CarryReminders.eveningCategoryIdentifier }
+        #expect(!evenings.isEmpty && evenings.allSatisfy { $0.content.badge == nil }, "the evening carries no number")
     }
 
     @Test("Morning and reminder time at the same minute: one notification with today's day-only tasks, no single one for them (#551)")

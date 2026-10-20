@@ -51,6 +51,13 @@ final class MacGalleryTests: XCTestCase {
         XCTAssertTrue(macElement("detailRawTextMarker", in: window).waitForExistence(timeout: 10), "Detail did not open")
         macShot(window, "mac-gallery-\(label)-3-detail")
 
+        // The sidebar's first line leads back to the start page (#583).
+        let startRow = macElement("viewRow_start", in: window)
+        XCTAssertTrue(startRow.waitForExistence(timeout: 10), "Sidebar shows no Start")
+        startRow.click()
+        XCTAssertTrue(macElement("startCaptureField", in: window).waitForExistence(timeout: 10), "Start page did not come back")
+        macShot(window, "mac-gallery-\(label)-4-start-again")
+
         // After the pictures, so a narrow window still delivers them.
         XCTAssertGreaterThanOrEqual(size.width, Self.minimumWidth, "Window \(size) too narrow for sidebar and list")
         app.terminate()
@@ -192,6 +199,146 @@ final class MacGalleryTests: XCTestCase {
     @MainActor
     func testSettingsDark() throws {
         photographSettings(dark: true)
+    }
+
+    /// #479: the menu bar panel on paper. Asserts what can be measured: the head with the knot, the resting
+    /// hint, a field at least 110 pt high, and that Cancel, Done and both footer rows lie inside the panel
+    /// and can be hit (#400). That it reads as paper without a grey box is judged on the pictures.
+    @MainActor
+    private func photographPanel(dark: Bool) {
+        let label = dark ? "dark" : "light"
+        let app = macLaunch(dark: dark)
+        guard let panel = openPanel(in: app, label: label) else { return }
+        for id in ["capturePanelHeader", "captureRestHint", "captureTextField", "micButton",
+                   "captureCancelButton", "captureDoneButton", "menuBarOpenApp", "menuBarQuit"] {
+            XCTAssertTrue(macElement(id, in: panel).waitForExistence(timeout: 5), "Panel shows no \(id)")
+        }
+        macShot(panel, "mac-gallery-panel-\(label)")
+        assertPanelFits(panel, label: label)
+        app.terminate()
+    }
+
+    /// Clicks the menu bar symbol and returns the window, popover or group holding the panel. The footer
+    /// row is found directly (as `macOpenMainWindowIfNeeded` does); the hierarchy goes along as text.
+    @MainActor
+    private func openPanel(in app: XCUIApplication, label: String) -> XCUIElement? {
+        let statusItem = app.statusItems.firstMatch
+        XCTAssertTrue(statusItem.waitForExistence(timeout: 20), "No menu bar symbol")
+        statusItem.click()
+        XCTAssertTrue(app.buttons["menuBarOpenApp"].waitForExistence(timeout: 10), "The symbol opened no panel")
+        let tree = XCTAttachment(string: app.debugDescription)
+        tree.name = "mac-gallery-panel-\(label)-hierarchy"
+        tree.lifetime = .keepAlways
+        add(tree)
+        let holders = [app.windows, app.popovers, app.groups]
+            .map { $0.containing(.any, identifier: "menuBarOpenApp").firstMatch }
+        guard let panel = holders.first(where: { $0.exists }) else {
+            XCTFail("No window, popover or group holds the panel")
+            return nil
+        }
+        return panel
+    }
+
+    /// #400, AC-6/AC-7: Cancel, Done and both footer rows can be hit inside the panel, the field keeps
+    /// 110 pt; the panel's size goes along as text so the states can be compared.
+    @MainActor
+    private func assertPanelFits(_ panel: XCUIElement, label: String) {
+        let frame = panel.frame
+        for id in ["captureCancelButton", "captureDoneButton", "menuBarOpenApp", "menuBarQuit"] {
+            let element = macElement(id, in: panel)
+            XCTAssertTrue(element.isHittable, "\(id) cannot be hit")
+            XCTAssertTrue(frame.contains(element.frame), "\(id) lies outside the panel: \(element.frame) in \(frame)")
+        }
+        XCTAssertGreaterThanOrEqual(macElement("captureTextField", in: panel).frame.height, 110, "Field is lower than 110 pt")
+        let note = XCTAttachment(string: "\(Int(frame.width)) x \(Int(frame.height)) pt")
+        note.name = "mac-gallery-panel-\(label)-size"
+        note.lifetime = .keepAlways
+        add(note)
+    }
+
+    @MainActor
+    func testPanelLight() throws {
+        photographPanel(dark: false)
+    }
+
+    @MainActor
+    func testPanelDark() throws {
+        photographPanel(dark: true)
+    }
+
+    /// #479 AC-6: the wave and the diagnosis line push nothing out; compare the sizes with `light`.
+    @MainActor
+    private func photographPanelState(_ argument: String, label: String, shows id: String) {
+        let app = macLaunch(dark: false, extra: [argument])
+        guard let panel = openPanel(in: app, label: label) else { return }
+        XCTAssertTrue(macElement(id, in: panel).waitForExistence(timeout: 5), "Panel shows no \(id) under \(argument)")
+        RunLoop.current.run(until: Date().addingTimeInterval(0.5))
+        macShot(panel, "mac-gallery-panel-\(label)")
+        assertPanelFits(panel, label: label)
+        app.terminate()
+    }
+
+    @MainActor
+    func testPanelListening() throws {
+        photographPanelState("--ui-testing-speech-listening", label: "listening", shows: "listeningHint")
+    }
+
+    @MainActor
+    func testPanelDiagnosis() throws {
+        photographPanelState("--ui-testing-speech-diagnosis", label: "diagnosis", shows: "speechDiagnosisLabel")
+    }
+
+    /// #479 AC-9, AC-12: in German the panel reads "Neue Aufgabe", "Abbrechen", "Fertig"; typed text turns
+    /// Done on, and Return saves and closes the panel. The task then shows in New.
+    @MainActor
+    func testPanelTypedGerman() throws {
+        let app = macLaunch(dark: false, locale: "de_DE")
+        guard let panel = openPanel(in: app, label: "typed-de") else { return }
+        let hint = macElement("captureRestHint", in: panel)
+        XCTAssertTrue(hint.waitForExistence(timeout: 5), "Panel shows no resting hint")
+        macShot(panel, "mac-gallery-panel-de")
+        // A Mac `Text` reports its words as value with an empty label (run 39407681767: hint and head are
+        // static texts with only a value; buttons carry a label, the field only a placeholder value).
+        XCTAssertEqual(hint.value as? String, "Sprich los oder tippe. Return speichert.", "Resting hint is not in German")
+        XCTAssertEqual(macElement("capturePanelHeader", in: panel).value as? String, "Neue Aufgabe", "Head is not in German")
+        let field = macElement("captureTextField", in: panel)
+        field.click()
+        field.typeText("Müll rausbringen")
+        let done = macElement("captureDoneButton", in: panel)
+        let enabled = expectation(for: NSPredicate(format: "isEnabled == true"), evaluatedWith: done)
+        XCTAssertEqual(XCTWaiter.wait(for: [enabled], timeout: 5), .completed, "Done is not on after typing")
+        XCTAssertTrue(done.isHittable, "Done cannot be hit after typing")
+        for (id, text) in [("captureDoneButton", "Fertig"), ("captureCancelButton", "Abbrechen"),
+                           ("menuBarOpenApp", "Loose Ends öffnen"), ("menuBarQuit", "Loose Ends beenden")] {
+            XCTAssertEqual(macElement(id, in: panel).label, text, "\(id) is not in German")
+        }
+        macShot(panel, "mac-gallery-panel-typed-de")
+        assertPanelFits(panel, label: "typed-de")
+
+        // The panel's field is vertical: Return arrives as a newline, which `submitOnReturn` saves.
+        field.typeText("\n")
+        // `closeMenuBarPanel` closes the panel's window, so its elements leave the tree.
+        let closed = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: app.buttons["menuBarOpenApp"])
+        XCTAssertEqual(XCTWaiter.wait(for: [closed], timeout: 10), .completed, "Return did not close the panel")
+        _ = macOpenMainWindowIfNeeded(app)
+        let window = macMainWindow(of: app)
+        let newRow = macElement("viewRow_new", in: window)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 10), "Sidebar shows no New")
+        // With the panel gone no window may be key; activate, so the first click selects New.
+        app.activate()
+        newRow.click()
+        let row = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "taskRow_")).firstMatch
+        if !row.waitForExistence(timeout: 5) { newRow.click() }
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "New shows no task after Return")
+        // Only once New shows rows, so the start page's recent list cannot answer. Label or value as in
+        // `MacDetailClickTests.shows`: a combined row may keep its words as value.
+        let saved = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "label CONTAINS %@ OR value CONTAINS %@", "Müll rausbringen", "Müll rausbringen"))
+            .firstMatch
+        XCTAssertTrue(saved.waitForExistence(timeout: 10), "New shows no \"Müll rausbringen\" after Return")
+        macShot(window, "mac-gallery-panel-de-saved-in-new")
+        app.terminate()
     }
 }
 #endif

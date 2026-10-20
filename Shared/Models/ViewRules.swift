@@ -85,8 +85,8 @@ enum ViewRules {
 
     /// Whose deadline passed (#518, #548): open tasks, subtasks among them, whose due time is behind
     /// or whose day is over, oldest first. Not carried on: each needs a new date (or parking, or Done).
-    /// Until then they count neither in "Now" nor on the app icon; "Due" and "Loose ends" show them on
-    /// top with the "New date" button, the evening notification asks for them.
+    /// Until then they stay out of "Now"; "Due" and "Loose ends" show them on top with the "New date"
+    /// button, the app icon keeps counting them (#584), the evening notification asks for them.
     static func leftovers(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [TaskItem] {
         NewDateRule.tasks(in: all, now: now, calendar: calendar)
     }
@@ -154,11 +154,14 @@ enum ViewRules {
         }
     }
 
-    /// The number on the app icon (#299): "Next up" plus "Due today", each task once. On the start
-    /// screen a task in both stands in both lists (Henning, 2026-10-11); the count does not double it.
-    /// What is left from earlier days counts only once it has a new date (#518).
+    /// The number on the app icon (#299, Henning 2026-10-20, #584): "Due" plus "Next up" as the lists
+    /// count them, each task once. A passed time or an earlier day keeps counting until the task has a
+    /// new date: the icon said 3 while "Due" said 4. So the number changes only with an edit or a new
+    /// day, and the morning notification carries its day's number (`CarryReminders`).
     static func badgeCount(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> Int {
-        self.now(in: all, now: now, calendar: calendar).all.count
+        let due = tasks(for: .due, in: all, now: now, calendar: calendar).map(\.id)
+        let next = tasks(for: .next, in: all, now: now, calendar: calendar).map(\.id)
+        return Set(due + next).count
     }
 
     /// "Now" on the iPhone start screen (#368), split by time pressure.
@@ -168,10 +171,10 @@ enum ViewRules {
         var all: [TaskItem] { today + lined }
     }
 
-    /// "Now" (#368): "Due today" and "Next up" as one list, each task once — the same sets
-    /// `badgeCount` counts. Due today first (earliest first), then the rest of "Next up" by rank. A
-    /// task lined up and due stands with the due ones: time pressure wins. A task left from an
-    /// earlier day stays out, lined up or not, until it has a new date (#518).
+    /// "Now" (#368): "Due today" and "Next up" as one list, each task once. Due today first (earliest
+    /// first), then the rest of "Next up" by rank. A task lined up and due stands with the due ones:
+    /// time pressure wins. A task left from an earlier day stays out, lined up or not, until it has a
+    /// new date (#518); the app icon still counts it (`badgeCount`, #584).
     static func now(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> NowTasks {
         let left = Set(leftovers(in: all, now: now, calendar: calendar).map(\.id))
         var seen = Set<UUID>()
