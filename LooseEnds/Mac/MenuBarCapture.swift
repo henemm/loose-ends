@@ -20,7 +20,11 @@ struct MenuBarCaptureView: View {
             }
             // The panel takes the capture's ideal height: without it Cancel and Done slid under the footer.
             .fixedSize(horizontal: false, vertical: true)
-            Divider()
+            // A hairline from the ink itself (#479), so light and dark take the same rule.
+            Rectangle()
+                .fill(Color.primary.opacity(0.12))
+                .frame(height: 1)
+                .accessibilityHidden(true)
             HStack {
                 Button("Open Loose Ends") {
                     MacWindows.closeMenuBarPanel()
@@ -31,12 +35,32 @@ struct MenuBarCaptureView: View {
                 Button("Quit Loose Ends") { NSApp.terminate(nil) }
                     .accessibilityIdentifier("menuBarQuit")
             }
-            .buttonStyle(.borderless)
-            .font(.footnote)
+            .buttonStyle(.plain)
+            .font(.system(size: 12))
+            .foregroundStyle(.secondary)
             .padding(.horizontal, 24)
             .padding(.vertical, 10)
         }
         .frame(width: 440)
+        // Paper behind the whole panel (#479); the window's own corner stays the system's.
+        .background(Paper.ground.ignoresSafeArea())
+        .background(UITestDarkPanel())
+    }
+}
+
+/// The gallery's dark run (#479, AC-10): `.preferredColorScheme` does not reach the menu bar panel's
+/// window, so under `--ui-testing-dark` (the same argument as `uiTestColorScheme`) the window itself
+/// turns dark. Without the argument it does nothing; the product follows the system.
+private struct UITestDarkPanel: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSView { DarkWindowView() }
+    func updateNSView(_ nsView: NSView, context: Context) {}
+
+    private final class DarkWindowView: NSView {
+        override func viewDidMoveToWindow() {
+            super.viewDidMoveToWindow()
+            guard ProcessInfo.processInfo.arguments.contains("--ui-testing-dark") else { return }
+            window?.appearance = NSAppearance(named: .darkAqua)
+        }
     }
 }
 

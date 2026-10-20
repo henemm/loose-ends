@@ -129,6 +129,7 @@ struct LooseEndsApp: App {
         MenuBarExtra {
             MenuBarCaptureView(enrichment: enrichment)
                 .modelContainer(container)
+                .preferredColorScheme(Self.uiTestColorScheme)
         } label: {
             Image(nsImage: MenuBarThreadImage.image)
                 .accessibilityLabel("Loose Ends")

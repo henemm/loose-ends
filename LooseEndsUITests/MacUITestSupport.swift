@@ -7,16 +7,17 @@ import XCTest
 /// helpers of the iPhone test classes, which compile for the Mac too.
 extension XCTestCase {
     /// The iPhone gallery's arguments (#182). Dark: `--ui-testing-dark` colors the window content,
-    /// `-AppleInterfaceStyle Dark` the title bar and the sidebar material.
+    /// `-AppleInterfaceStyle Dark` the title bar and the sidebar material. `locale` (e.g. `de_DE`) sets
+    /// language and region; `extra` adds fixture arguments such as `--ui-testing-speech-listening`.
     @MainActor
-    func macLaunch(dark: Bool) -> XCUIApplication {
+    func macLaunch(dark: Bool, locale: String = "en_US", extra: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = [
             "--ui-testing",
-            "-AppleLanguages", "(en)", "-AppleLocale", "en_US",
+            "-AppleLanguages", "(\(locale.prefix(2)))", "-AppleLocale", locale,
             "-contextsEmptiedByUser", "NO",
             "-startShowsProjects", "NO", "-startShowsContexts", "NO",
-        ] + (dark ? ["--ui-testing-dark", "-AppleInterfaceStyle", "Dark"] : [])
+        ] + (dark ? ["--ui-testing-dark", "-AppleInterfaceStyle", "Dark"] : []) + extra
         app.launch()
         app.activate()
         return app

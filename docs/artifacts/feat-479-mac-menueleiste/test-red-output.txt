@@ -1,0 +1,4 @@
+CI-Lauf 39288524455, Job Mac Gallery (macOS):
+testPanelLight/testPanelDark: Panel gefunden (menuBarOpenApp, menuBarQuit, captureTextField, captureCancelButton, captureDoneButton vorhanden); Feld 67 pt hoch (Soll >= 110).
+2026-10-19T16:57:01Z ##[error]    testPanelDark, XCTAssertTrue failed - Panel shows no capturePanelHeader
+2026-10-19T16:57:01Z ##[error]    testPanelLight, XCTAssertTrue failed - Panel shows no capturePanelHeader
