@@ -17,6 +17,8 @@ enum Subtasks {
         guard !trimmed.isEmpty else { throw SubtaskError.emptyText }
         guard parent.parent == nil else { throw SubtaskError.nested }
         let subtask = TaskItem(rawText: trimmed, capturedVia: .app, ownerID: parent.ownerID)
+        // The typed line is its title as typed (#565): its own detail shows it, not an empty "Title".
+        subtask.title = trimmed
         subtask.capturedAt = now
         subtask.status = .active
         context.insert(subtask)

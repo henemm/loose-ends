@@ -20,6 +20,7 @@ import Testing
         try store.context.save()
 
         #expect(milk.rawText == "Milch")
+        #expect(milk.title == "Milch", "the typed line is the subtask's title, so its own detail is not untitled (#565)")
         #expect(milk.status == .active)
         #expect(milk.parent?.id == parent.id)
         #expect(milk.project?.id == project.id)

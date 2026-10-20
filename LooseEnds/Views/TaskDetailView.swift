@@ -270,7 +270,7 @@ struct TaskDetailView: View {
         }
         .toolbar { actions }
         .onAppear {
-            titleDraft = task.title ?? ""
+            titleDraft = storedTitle
             if !reviewing { markSeen() }
         }
         .onChange(of: titleFocused) { _, focused in
@@ -555,7 +555,7 @@ struct TaskDetailView: View {
         reanalysis = .running
         Task {
             let result = await enrichment.reanalyze(task)
-            titleDraft = task.title ?? ""
+            titleDraft = storedTitle
             reanalysis = .done(result)
         }
     }
@@ -690,9 +690,15 @@ struct TaskDetailView: View {
         if result.ended { titleFocused = false }
     }
 
+    /// The title the field starts from. A subtask added before #565 has none; its line's words stand
+    /// in, so its own detail is not an empty "Title".
+    private var storedTitle: String {
+        task.title ?? (task.parent != nil ? task.rawText : "")
+    }
+
     private func commitTitle() {
         let trimmed = titleDraft.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard trimmed != (task.title ?? "") else { return }
+        guard trimmed != storedTitle else { return }
         RevisionService.set(.title, to: trimmed.isEmpty ? nil : trimmed, on: task, contexts: contexts, projects: projects)
         if task.status == .unverified, !trimmed.isEmpty { task.status = .active }
         save("title")
@@ -703,7 +709,7 @@ struct TaskDetailView: View {
     private func resetTitle() {
         guard let revision = RevisionService.firstAutomaticRevision(of: .title, on: task) else { return }
         RevisionService.revert(revision, on: task, contexts: contexts, projects: projects)
-        titleDraft = task.title ?? ""
+        titleDraft = storedTitle
         save("title reset")
     }
 

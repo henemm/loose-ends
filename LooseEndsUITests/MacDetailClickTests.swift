@@ -192,6 +192,10 @@ final class MacDetailClickTests: XCTestCase {
             .matching(NSPredicate(format: "identifier == 'detailRawTextMarker' AND label == 'Milch'"))
             .firstMatch
         XCTAssertTrue(subtaskDetail.waitForExistence(timeout: 10), "Details should open the subtask's own detail")
+        let title = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier == 'detailTitleField' AND value == 'Milch'"))
+            .firstMatch
+        XCTAssertTrue(title.waitForExistence(timeout: 5), "The subtask's detail should carry its words as title, not an empty Title")
         let partOf = macElement("partOfParentButton", in: window)
         XCTAssertTrue(partOf.waitForExistence(timeout: 5), "The subtask's detail should name its task")
         macShot(window, "mac-gallery-565-3-subtask-detail")
