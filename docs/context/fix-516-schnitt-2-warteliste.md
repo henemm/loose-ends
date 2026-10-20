@@ -56,3 +56,70 @@ KILL-Eskalation (`trap '' TERM` im Stub).
 - **Bestehende Tests** (`test_parallel_takeover_of_orphan_lock`, 8 Wartende × 10 Runden) müssen grün bleiben.
 - F001: `trap` in der Wächter-Subshell nur für TERM; ein TERM an sim.sh selbst erreicht die Subshell nicht — sie
   läuft bis zur Frist weiter (und könnte dann einen späteren Lauf derselben Sitzung beenden).
+
+## Analysis
+
+### Type
+Bug (Werkzeug): Die Testsperre ist unfair — wer zuerst wartet, bekommt sie nicht zuerst (#399, 2026-10-17).
+
+### Recherche
+- `mkdir` ist atomar, aber ohne Reihenfolge: wer nach der Freigabe zuerst fragt, gewinnt
+  ([BashFAQ/045](https://mywiki.wooledge.org/BashFAQ/045), [mkdir-Locking](https://tobrunet.ch/easy-bash-script-locking-with-mkdir)).
+- macOS hat kein `flock`-Kommando (nur `flock(2)`, `shlock`); `flock` aus Homebrew wäre eine neue Abhängigkeit und
+  garantiert ohnehin keine FIFO-Reihenfolge ([flock(2)](https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/flock.2.html), [brew flock](https://formulae.brew.sh/formula/flock)).
+- FIFO per `mkfifo` braucht einen dauerhaft laufenden Verteiler-Prozess — stirbt er, steht alles; für Sitzungen, die
+  einander nicht kennen, zu zerbrechlich.
+
+### Affected Files (with changes)
+| File | Change Type | Description |
+|------|-------------|-------------|
+| `scripts/sim.sh` | MODIFY | `queue_enter`/`queue_head`/`queue_leave`; `acquire_testlock`: nur der Kopf der Liste versucht `mkdir`; `release_testlock` löscht die eigene Marke; Wächter in `run_xcodebuild` endet, wenn sim.sh nicht mehr lebt (F001) |
+| `scripts/test_sim_lock.py` | MODIFY | `LOCK_FUNCTIONS` ergänzen; Tests: Reihenfolge, toter Kopf, Marke ohne pid-Datei, Abbruch räumt Marke, reentrant stellt sich nicht an, `.queue` nach Paralleltest leer |
+| `scripts/test_sim_run_xcodebuild.py` | MODIFY | F003: Stub mit `trap '' TERM` wird per KILL beendet; F001: Wächter endet mit sim.sh |
+| `CLAUDE.md` | MODIFY | Absatz „Parallele Sitzungen“: Warteliste in einem Satz |
+
+### Scope Assessment
+- Files: 4 (+ Spec)
+- Estimated LoC: ca. +180/−10
+- Risk Level: MEDIUM — zentrale Sperre aller Testläufe; Fehler hieße Verklemmen. Abgesichert durch Mischbetrieb-Regel
+  (kein Teilnehmer muss die Liste kennen) und den bestehenden Paralleltest.
+
+### Technical Approach (Empfehlung)
+Wartemarken-Verzeichnis `<Sperre>.queue/` neben der Sperre, wird **nie** entfernt (sonst ENOENT-Rennen).
+- **Anstellen:** Marke `<time_ns, 20-stellig>-<pid>` per einem `mkdir` (Zeit aus `python3 -c 'import time; …'`;
+  bash 3.2 hat kein `$EPOCHREALTIME`). Darin `pid` mit `pid=`/`start=` wie `claim_testlock` (erst schreiben, dann `mv`).
+  Name sortiert lexikografisch = Ankunftsreihenfolge; keine Nummernvergabe, kein Zähler-Reset.
+- **Warten:** Jeder darf weiter eine verwaiste Sperre übernehmen (wie heute). `mkdir` der Sperre versucht nur, wessen
+  Marke die kleinste lebende ist. Lebendigkeit wird **nur für die Kopfmarke** geprüft (PID tot oder jünger als `start`;
+  ohne pid-Datei älter als 10 s = tot) und tote Köpfe gelöscht — sonst Dutzende `ps`-Aufrufe je Takt.
+- **Verlassen:** Marke in globaler `QUEUE_MARK`; `acquire_testlock` löscht sie bei Erfolg und bei Abbruch,
+  `release_testlock` (EXIT-Trap) ebenfalls, falls noch vorhanden.
+- **Reentrant** (Halter oder Kind des Halters) kehrt vor dem Anstellen zurück, wie heute.
+- **Mischbetrieb:** Altes sim.sh und Handskripte kennen die Liste nicht und können vordrängeln; verklemmen kann
+  nichts, weil der Kopf weiter pollt.
+- **F001:** Wächter-Subshell prüft je Takt und unmittelbar vor `pgrep`/Kill `kill -0 $$` (in `( … )` ist `$$` die
+  PID von sim.sh) und endet, wenn sim.sh weg ist. Folge: Stirbt sim.sh per KILL, bleibt sein xcodebuild als Waise —
+  bewusst, denn ihn später zu beenden wäre genau die F001-Gefahr. Wird in der Spec benannt.
+- **F003:** Stub heißt `xcodebuild`, trägt `-derivedDataPath` (sonst trifft `pgrep -f` nicht), setzt `trap '' TERM`;
+  Test dauert wegen `sleep 5` mind. 5 s.
+- **`LOOSEENDS_LOCK_MAX`** bleibt ab Wartebeginn (Geduld des Aufrufers, 1800 s). Die Abbruchmeldung nennt zusätzlich
+  den Platz in der Liste, damit sichtbar ist, warum.
+
+### Alternativen
+| Weg | Fair? | Bewertung |
+|-----|-------|-----------|
+| **Zeitstempel-Marken (empfohlen)** | ja (ns, bei Uhr-Rückstellung höchstens kurz unfair) | ein `mkdir`, kein Verteiler, verträgt Mischbetrieb |
+| Laufende Nummer per `mkdir max+1` | ja | Kollisionsschleife und Reset-Fall, mehr Code bei gleichem Nutzen |
+| `flock` (Homebrew) / Python `fcntl` | nein, keine FIFO-Garantie | neue Abhängigkeit bzw. neues Artefakt, alte Stände kennen es nicht |
+| `mkfifo` mit Verteiler-Prozess | ja | Verteiler stirbt → alle stehen; zu zerbrechlich |
+| Nur Pollintervall verkürzen | nein | mildert, behebt nicht; Handskripte pollen weiter 30 s |
+| Höhere `LOCK_MAX`-Vorgabe | — | verworfen fürs Erste: ändert Geduld, nicht Fairness; eigenes Thema, falls Abbrüche auftreten |
+
+Keine ADR betroffen.
+
+### Risiken für bestehende Tests
+`test_parallel_takeover_of_orphan_lock` (8 × 10) wird strikt seriell: geschätzt 2–3 s je Runde, Grenze 30 s — früh
+messen. Er bekommt die Zusatzprüfung „`.queue` leer“.
+
+### Open Questions
+- keine (reines Werkzeugthema, keine Produktfrage)

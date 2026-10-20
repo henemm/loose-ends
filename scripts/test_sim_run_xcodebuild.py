@@ -167,6 +167,52 @@ class RunXcodebuildSilenceGuardTests(unittest.TestCase):
         ps = subprocess.run(["pgrep", "-f", str(self.derived)], capture_output=True, text=True)
         self.assertEqual(ps.stdout.strip(), "", "ein Wächterprozess läuft weiter")
 
+    def test_watcher_ends_when_script_dies(self):
+        """F001: stirbt sim.sh per KILL, löst der Wächter nicht mehr aus; der xcodebuild bleibt bewusst als Waise."""
+        self.stub(f'echo eins\necho $$ > "{self.root}/pid"\nexec sleep 600')
+        script = "\n".join([
+            "set -euo pipefail",
+            f'PROJECT_DIR="{self.root}"',
+            f'SESSION_DERIVED_DATA="{self.derived}"',
+            run_xcodebuild_source(),
+            "run_xcodebuild build -project P.xcodeproj",
+        ])
+        out_file, err_file = self.root / "out", self.root / "err"
+        with open(out_file, "w") as out, open(err_file, "w") as err:
+            proc = subprocess.Popen(["bash", "-c", script, "sim.sh"], env=self.environment,
+                                    stdout=out, stderr=err, start_new_session=True)
+        self.addCleanup(lambda: os.killpg(proc.pid, signal.SIGKILL) if group_alive(proc.pid) else None)
+        pid_file = self.root / "pid"
+        end = time.time() + 10
+        while not pid_file.exists() and time.time() < end:
+            time.sleep(0.05)
+        self.assertTrue(pid_file.exists(), "xcodebuild-Stub nicht gestartet")
+        proc.kill()
+        proc.wait()
+        time.sleep(5)          # Frist 2 s + Takt 1 s: ein weiterlaufender Wächter hätte jetzt ausgelöst
+        pid = int(pid_file.read_text())
+        self.assertTrue(alive(pid), "der Wächter einer toten sim.sh hat den xcodebuild beendet")
+        self.assertNotIn("abgebrochen", err_file.read_text(), "der Wächter einer toten sim.sh hat ausgelöst")
+
+    def test_term_ignoring_xcodebuild_is_killed_after_grace(self):
+        """F003: ein xcodebuild, der TERM ignoriert, endet 5 s später per KILL."""
+        self.stub(f"trap '' TERM\necho eins\necho $$ > \"{self.root}/pid\"\nwhile :; do sleep 1; done")
+        t0 = time.time()
+        result = self.run_guarded(timeout=25)
+        took = time.time() - t0
+        self.assertNotEqual(result.returncode, 0)
+        pid = int((self.root / "pid").read_text())
+        self.assertFalse(alive(pid), "der TERM ignorierende xcodebuild lebt noch")
+        self.assertGreaterEqual(took, 7, "KILL kam vor Frist + 5 s Nachfrist")
+
+
+def group_alive(pgid):
+    try:
+        os.killpg(pgid, 0)
+    except (ProcessLookupError, PermissionError):
+        return False
+    return True
+
 
 def alive(pid):
     try:
