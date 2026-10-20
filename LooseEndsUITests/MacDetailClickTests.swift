@@ -208,6 +208,35 @@ final class MacDetailClickTests: XCTestCase {
         app.terminate()
     }
 
+    /// #565, Schnitt 3: on the Mac too, Complete with an open subtask asks first.
+    @MainActor
+    func testCompleteWithAnOpenSubtaskAsks() throws {
+        let (app, window) = openDetail("Umzug planen")
+        reveal("field_subtasks", in: window).click()
+        let field = reveal("subtaskTextField", in: window)
+        clickWords(of: field)
+        field.typeText("Kartons holen\n")
+        let line = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "subtaskRow_"))
+            .firstMatch
+        XCTAssertTrue(line.waitForExistence(timeout: 5), "Return should list the subtask")
+
+        let more = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "label == 'More' AND (elementType == %d OR elementType == %d)",
+                                  XCUIElement.ElementType.menuButton.rawValue, XCUIElement.ElementType.popUpButton.rawValue))
+            .firstMatch
+        XCTAssertTrue(more.waitForExistence(timeout: 5), "The detail's toolbar should offer More")
+        more.click()
+        let complete = app.descendants(matching: .any).matching(identifier: "menuCompleteButton").firstMatch
+        XCTAssertTrue(complete.waitForExistence(timeout: 5), "More should offer Complete")
+        complete.click()
+
+        let keepOpen = app.descendants(matching: .any).matching(identifier: "completeKeepOpenSubtasks").firstMatch
+        XCTAssertTrue(keepOpen.waitForExistence(timeout: 5), "An open subtask should make Complete ask first")
+        macShot(window, "mac-gallery-565-4-complete-asks")
+        app.terminate()
+    }
+
     @MainActor
     func testFileOpensTheOpenPanel() throws {
         let (app, window) = openDetail("Vertrag ablegen")
