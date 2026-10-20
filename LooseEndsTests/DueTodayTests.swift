@@ -21,7 +21,7 @@ import Testing
         return calendar.date(byAdding: DateComponents(day: offset, hour: hour), to: start)!
     }
 
-    @Test("Today counts; earlier needs a new date first, tomorrow and later do not; done tasks and subtasks stay out")
+    @Test("Today counts; earlier needs a new date first, tomorrow and later do not; done tasks and dateless subtasks stay out")
     @MainActor func todayAndOverdue() async throws {
         let store = try TestStore()
         let overdue = TaskItem(rawText: "Rechnung bezahlen")
@@ -38,9 +38,9 @@ import Testing
         done.dueDate = Self.day(0)
         let parent = TaskItem(rawText: "Umzug")
         parent.status = .active
+        // Without a date of its own; one with a date stands in "Now" (#565, SubtaskListsTests).
         let sub = TaskItem(rawText: "Kartons holen")
         sub.status = .active
-        sub.dueDate = Self.day(0)
         sub.parent = parent
         let all = [overdue, tonight, tomorrow, done, parent, sub]
         all.forEach(store.context.insert)
