@@ -397,27 +397,30 @@ cmd_real_model() {
     local rc=0
     TEST_RUNNER_LOOSEENDS_REAL_MODEL=1 run_xcodebuild test -project "$PROJECT" -scheme "$SCHEME" -destination 'platform=macOS' \
         -only-testing:"$UNIT_TARGET/RealModelTests" -parallel-testing-enabled NO || rc=$?
-    real_model_result "$BUILD_LOG"
+    # Der Satz zählt, nicht der Exit von xcodebuild: Übersprungen ist für ihn grün (#531).
+    real_model_result "$BUILD_LOG" || rc=$?
     return $rc
 }
 
 # Ein Satz am Ende statt „siehe Ausgabe“ (Henning, 2026-10-19: aus dem Log war nicht zu erkennen, ob die
-# Modelltests liefen). Liest die Zeilen zu RealModelTests aus dem rohen xcodebuild-Log: Swift Testing
-# schreibt je Test „passed“, „failed“ oder „skipped“ mit dem Grund des Gates.
+# Modelltests liefen; 2026-10-20: Xcode 27 schreibt die Testzeilen gar nicht mehr ins Log). Deshalb liest
+# scripts/real_model_result.py das Ergebnisbündel, dessen Pfad xcodebuild ins Log schreibt.
 real_model_result() {
     local log="$1"
-    [ -f "$log" ] || { warn "Kein Log unter $log; Ergebnis der Modelltests unbekannt."; return; }
-    local lines; lines=$(grep -E 'RealModelTests|LOOSEENDS_REAL_MODEL|Apple Intelligence is not available' "$log" | grep -E 'passed|failed|skipped' || true)
-    echo "$lines" | sed '/^$/d' | sed 's/^/   /' >&2
-    if echo "$lines" | grep -q 'skipped'; then
-        warn "Modelltests ÜBERSPRUNGEN, nicht gelaufen. Grund steht oben (Variable nicht gesetzt oder Apple Intelligence aus)."
-    elif echo "$lines" | grep -qE 'failed'; then
-        error "Modelltests gegen das echte Modell FEHLGESCHLAGEN; Details oben und in $log"
-    elif echo "$lines" | grep -qE 'passed'; then
-        success "Modelltests gegen das echte Modell BESTANDEN: Das Modell lief auf diesem Mac."
-    else
-        warn "Keine Zeile zu RealModelTests im Log; der Lauf ist vermutlich vor den Tests abgebrochen: $log"
-    fi
+    [ -f "$log" ] || { warn "Kein Log unter $log; Ergebnis der Modelltests unbekannt."; return 3; }
+    local bundle; bundle=$(grep -oE '/[^[:space:]]+\.xcresult' "$log" | tail -n 1)
+    [ -n "$bundle" ] || { warn "Kein Ergebnisbündel im Log; der Lauf ist vor den Tests abgebrochen: $log"; return 3; }
+    local rc=0 out
+    out=$(python3 "$PROJECT_DIR/scripts/real_model_result.py" "$bundle" 2>&1) || rc=$?
+    echo "$out" | sed '$d' >&2
+    local sentence; sentence=$(echo "$out" | tail -n 1)
+    case $rc in
+        0) success "$sentence" ;;
+        1) error "$sentence Details: $bundle" ;;
+        2) warn "$sentence" ;;
+        *) warn "$sentence ($bundle)" ;;
+    esac
+    return $rc
 }
 
 cmd_build() {

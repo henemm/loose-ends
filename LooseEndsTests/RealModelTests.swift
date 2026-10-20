@@ -6,8 +6,9 @@ import Testing
 /// The real on-device model on a Mac (#531): an Apple Silicon Mac with Apple Intelligence on runs the
 /// same model as the iPhone, so these run there instead of in the lab app. Never in CI: GitHub's
 /// macOS runners are virtual machines without Apple Intelligence, and `LOOSEENDS_REAL_MODEL` is
-/// set only by `./scripts/sim.sh real-model`. Without the variable or the model the suite is
-/// skipped, never red.
+/// set only by `./scripts/sim.sh real-model`. Without the variable the suite is skipped, never red.
+/// With the variable but without Apple Intelligence the first test is red and names the reason
+/// (2026-10-20: a silent skip looked like an aborted run); the model tests are then skipped.
 ///
 /// The model is not deterministic, so nothing here compares words. Hard checks are only what the
 /// pipeline relies on; the title's closeness to the note is a rate over all notes with a threshold.
@@ -33,10 +34,15 @@ enum RealModel {
 
 @Suite(
     .enabled(if: RealModel.isRequested, "LOOSEENDS_REAL_MODEL=1 is not set (./scripts/sim.sh real-model)"),
-    .enabled(if: RealModel.isAvailable, "Apple Intelligence is not available on this Mac"),
     .serialized
 )
 struct RealModelTests {
+    @Test("Apple Intelligence is available on this Mac")
+    func modelIsAvailable() {
+        let reason = FoundationModelsEnricher().unavailableReason
+        #expect(reason == nil, "Apple Intelligence is not available on this Mac: \(reason ?? "")")
+    }
+
     private func input(_ note: String) -> EnrichmentInput {
         EnrichmentInput(
             rawText: note,
@@ -47,7 +53,10 @@ struct RealModelTests {
         )
     }
 
-    @Test("Every note gets an answer in time, and its title is short enough for a row")
+    @Test(
+        .enabled(if: RealModel.isAvailable, "Apple Intelligence is not available on this Mac"),
+        "Every note gets an answer in time, and its title is short enough for a row"
+    )
     func answersInShape() async throws {
         let enricher = FoundationModelsEnricher()
         for note in RealModel.notes {
@@ -63,7 +72,10 @@ struct RealModelTests {
         }
     }
 
-    @Test("Most titles keep a word of their note (the writer drops the rest, #460)")
+    @Test(
+        .enabled(if: RealModel.isAvailable, "Apple Intelligence is not available on this Mac"),
+        "Most titles keep a word of their note (the writer drops the rest, #460)"
+    )
     func titlesStayWithTheNote() async throws {
         let enricher = FoundationModelsEnricher()
         var kept = 0
