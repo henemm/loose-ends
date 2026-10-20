@@ -83,9 +83,13 @@ Notiz und Guardrail-Fehler; `FoundationModelsEnricher.draft(from:)` wird ohne Mo
 macOS-Runner sind virtuelle Maschinen, auf denen sich Apple Intelligence nach bisherigem Stand nicht
 einschalten lässt. Ein Apple-Silicon-Mac mit eingeschaltetem Apple Intelligence führt dasselbe
 On-Device-Modell aus: `./scripts/sim.sh real-model` startet dort `RealModelTests` (setzt
-`LOOSEENDS_REAL_MODEL=1`; ohne Variable oder Modell überspringt die Suite sich, sie wird nie rot). Sie
+`LOOSEENDS_REAL_MODEL=1`; ohne Variable überspringt die Suite sich, sie wird nie rot; mit Variable, aber
+ohne Apple Intelligence, wird der erste Test rot und nennt den Grund). Sie
 prüft Eigenschaften, keine Wörter: Antwort in unter 30 s, Titel vorhanden und höchstens 12 Wörter,
-mindestens 80 % der Titel behalten ein Wort der Notiz. Was weiter nur das iPhone zeigt: Speicher und
+mindestens 80 % der Titel behalten ein Wort der Notiz. Am Ende steht ein Satz: bestanden, fehlgeschlagen
+mit Grund, übersprungen oder nicht gelaufen; `scripts/real_model_result.py` liest ihn aus dem Ergebnisbündel,
+nicht aus dem Log, denn Xcode 27 schreibt die Zeilen von Swift Testing nicht mehr in die Ausgabe von xcodebuild
+(2026-10-20: nach „Testing started“ kam nichts, der Lauf galt fälschlich als abgebrochen). Was weiter nur das iPhone zeigt: Speicher und
 Wärme unter Last, Verhalten bei gesperrtem Gerät und das Laden der Modell-Assets nach einem
 iOS-Update. Die Messreihen der Labor-App laufen weiter auf dem iPhone, bis ein Mac-Lauf dieselben
 Zahlen liefert.
