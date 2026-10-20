@@ -92,11 +92,17 @@ import Testing
         #expect(Self.headline([gym], Self.at(17)) == .doneToday(count: 1, titles: ["Sport"], next: nil))
     }
 
-    @Test("A title longer than 32 characters is not quoted")
+    @Test("A title longer than 32 characters is cut after a whole word, never left out (#585)")
     @MainActor func longTitle() async throws {
         let store = try TestStore()
         let done = Self.done("Steuerunterlagen für das Finanzamt zusammensuchen", at: Self.at(10), in: store)
-        #expect(Self.headline([done], Self.at(17)) == .doneToday(count: 1, titles: [nil], next: nil))
+        #expect(Self.headline([done], Self.at(17))
+                == .doneToday(count: 1, titles: ["Steuerunterlagen für das …"], next: nil))
+        #expect(StartHeadline.short("Sommer gegen Winterklamotten umräumen") == "Sommer gegen Winterklamotten …")
+        #expect(StartHeadline.short("Zweiunddreißig Zeichen lang hier") == "Zweiunddreißig Zeichen lang hier")
+        // A first word longer than the limit is cut in the middle; the sentence still names something.
+        #expect(StartHeadline.short("Donaudampfschifffahrtsgesellschaftskapitän anrufen")
+                == "Donaudampfschifffahrtsgesellsc …")
     }
 
     // MARK: - 1, 2
@@ -107,9 +113,23 @@ import Testing
         let missed = Self.task("Zahnarzt", due: Self.at(9), timed: true, in: store)
         let ahead = Self.task("Steuerbescheid", due: Self.at(12), timed: true, in: store)
 
-        #expect(Self.headline([missed, ahead], Self.at(10)) == .missed(title: "Zahnarzt", at: Self.at(9)))
+        #expect(Self.headline([missed, ahead], Self.at(10)) == .missed(title: "Zahnarzt", at: Self.at(9), count: 1))
         missed.status = .done
         #expect(Self.headline([missed, ahead], Self.at(10)) == .upcoming(title: "Steuerbescheid", at: Self.at(12), count: 1))
+    }
+
+    @Test("Two fixed times passed: the count and the latest time; the sentence names it (#585)")
+    @MainActor func twoMissed() async throws {
+        let store = try TestStore()
+        let early = Self.task("Rechnung für Senger überweisen", due: Self.at(10), timed: true, in: store)
+        let late = Self.task("Sommer gegen Winterklamotten umräumen", due: Self.at(11), timed: true, in: store)
+
+        let result = Self.headline([late, early], Self.at(11, minute: 54))
+        #expect(result == .missed(title: "Sommer gegen Winterklamotten …", at: Self.at(11), count: 2))
+        let de = Locale(identifier: "de_DE")
+        #expect(StartHeadlineText.sentence(result, locale: de).hasPrefix("Zwei feste Zeiten sind vorbei, zuletzt "))
+        let one = Self.headline([late], Self.at(11, minute: 54))
+        #expect(StartHeadlineText.sentence(one, locale: de).hasPrefix("Sommer gegen Winterklamotten … um "))
     }
 
     @Test("2b: a day-only date today speaks before the quiet rungs; a time of day still wins")
@@ -120,7 +140,7 @@ import Testing
         #expect(Self.headline([one, yesterday], Self.at(7)) == .dueToday(title: "Arzttermin", count: 1))
 
         let two = Self.task("Fußnagel", due: Self.at(0), in: store)
-        #expect(Self.headline([one, two], Self.at(7)) == .dueToday(title: nil, count: 2))
+        #expect(Self.headline([one, two], Self.at(7)) == .dueToday(title: "Arzttermin", count: 2))
 
         let timed = Self.task("Anna abholen", due: Self.at(17), timed: true, in: store)
         #expect(Self.headline([one, timed], Self.at(7)) == .upcoming(title: "Anna abholen", at: Self.at(17), count: 1))
