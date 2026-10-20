@@ -62,7 +62,9 @@ struct SidebarView: View {
     private var showsFoldGroups: Bool { !isCompact && !isMac }
 
     /// The iPhone index (#421): the views, then Tags and Projects with their words, then All open
-    /// and Done. The Tags and Projects lines open their own page (#428).
+    /// and Done. The Tags and Projects lines open their own page (#428). The Mac puts "Start" first
+    /// (#583): its start page shows only while nothing is chosen, and a Mac list never lets go of
+    /// its selection by a click; ⌘1 does the same.
     private var indexGroups: [[IndexLine]] {
         func view(_ kind: ViewKind) -> IndexLine {
             IndexLine(id: "viewRow_\(kind.rawValue)", title: String(localized: kind.titleKey),
@@ -83,7 +85,10 @@ struct SidebarView: View {
         let projectsLine = IndexLine(id: "projectsToggle", title: String(localized: "Projects"), count: projects.count,
                                      words: projectWords, target: .catalog(.projects)) { selection = .catalog(.projects) }
         let groups = [offersTags ? tagsLine : nil, offersProjects ? projectsLine : nil].compactMap { $0 }
-        return [ViewRules.indexViews(in: tasks).map(view), groups, [view(.open), view(.done)]].filter { !$0.isEmpty }
+        let start = IndexLine(id: "viewRow_start", title: String(localized: "Start page"), count: 0, opensStart: true,
+                              shortcut: KeyboardShortcut("1", modifiers: .command)) { selection = nil }
+        let views = (isMac ? [start] : []) + ViewRules.indexViews(in: tasks).map(view)
+        return [views, groups, [view(.open), view(.done)]].filter { !$0.isEmpty }
     }
 
     /// The "Now" rows act as in "Next up" (#303): one set of actions carries them all (#368).
@@ -119,6 +124,13 @@ struct SidebarView: View {
                 }
             } else {
                 Section {
+                    // iPad: the start page shows while nothing is chosen; this row and ⌘1 lead back (#583).
+                    Button { selection = nil } label: {
+                        countRow(String(localized: "Start page"), symbol: "house", count: 0, id: "viewRow_start")
+                    }
+                    .buttonStyle(.plain)
+                    .keyboardShortcut("1", modifiers: .command)
+                    .accessibilityAddTraits(selection == nil ? .isSelected : [])
                     // The daily three always, the others only with a task in them.
                     ForEach(ViewRules.startViews(in: tasks), id: \.self) { kind in
                         countRow(String(localized: kind.titleKey), symbol: kind.symbol, count: ViewRules.tasks(for: kind, in: tasks).count, id: "viewRow_\(kind.rawValue)")
