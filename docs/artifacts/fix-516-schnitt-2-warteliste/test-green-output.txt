@@ -1,0 +1,44 @@
+.../opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed file <_io.TextIOWrapper name=5 encoding='utf-8'>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed file <_io.TextIOWrapper name=3 encoding='utf-8'>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..../opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed file <_io.TextIOWrapper name=5 encoding='utf-8'>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed file <_io.TextIOWrapper name=3 encoding='utf-8'>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..../opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed file <_io.TextIOWrapper name=5 encoding='utf-8'>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed file <_io.TextIOWrapper name=3 encoding='utf-8'>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:84: ResourceWarning: unclosed file <_io.TextIOWrapper name=5 encoding='utf-8'>
+  return self.run(*args, **kwds)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:84: ResourceWarning: unclosed file <_io.TextIOWrapper name=3 encoding='utf-8'>
+  return self.run(*args, **kwds)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+........./opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed file <_io.TextIOWrapper name=5 encoding='utf-8'>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed file <_io.TextIOWrapper name=3 encoding='utf-8'>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+...../opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:84: ResourceWarning: unclosed file <_io.TextIOWrapper name=5 encoding='utf-8'>
+  return self.run(*args, **kwds)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:84: ResourceWarning: unclosed file <_io.TextIOWrapper name=3 encoding='utf-8'>
+  return self.run(*args, **kwds)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+......./opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1313: ResourceWarning: subprocess 10526 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+...................
+----------------------------------------------------------------------
+Ran 52 tests in 116.448s
+
+OK

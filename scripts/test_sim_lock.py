@@ -17,13 +17,16 @@ from pathlib import Path
 
 SCRIPTS = Path(__file__).resolve().parent
 LOCK_FUNCTIONS = ("proc_start", "lock_is_stale", "claim_testlock", "take_over_stale_lock", "acquire_testlock",
-                  "release_testlock")
+                  "release_testlock", "queue_enter", "queue_head", "queue_leave")
+QUEUE_FUNCTIONS = ("queue_enter", "queue_head", "queue_leave")
 
 
-def function_source(name):
+def function_source(name, required=True):
     text = (SCRIPTS / "sim.sh").read_text()
     match = re.search(rf"(?ms)^{name}\(\) \{{.*?^\}}", text)
     if match is None:
+        if not required:
+            return ""
         raise AssertionError(f"{name}() fehlt in scripts/sim.sh")
     return match.group(0)
 
@@ -56,7 +59,7 @@ class LockHarness(unittest.TestCase):
                 p.wait()
 
     def script(self, body, worktree="wt-a"):
-        functions = "\n".join(function_source(n) for n in LOCK_FUNCTIONS)
+        functions = "\n".join(function_source(n, required=n not in QUEUE_FUNCTIONS) for n in LOCK_FUNCTIONS)
         return "\n".join([PRELUDE, f'PROJECT_DIR="{self.root / worktree}"', functions, body])
 
     def run_bash(self, body, env=None, worktree="wt-a", timeout=40):
@@ -77,6 +80,41 @@ class LockHarness(unittest.TestCase):
                 return pid_file.read_text()
             time.sleep(0.05)
         self.fail("Sperre wurde nicht angelegt")
+
+    @property
+    def queue(self):
+        return Path(f"{self.lock}.queue")
+
+    def marks(self):
+        if not self.queue.is_dir():
+            return []
+        return sorted(m.name for m in self.queue.iterdir() if not m.name.startswith("."))
+
+    def wait_for_marks(self, count, timeout=10):
+        end = time.time() + timeout
+        while time.time() < end:
+            if len(self.marks()) >= count:
+                return self.marks()
+            time.sleep(0.05)
+        self.fail(f"nach {timeout} s {len(self.marks())} statt {count} Wartemarken in {self.queue}")
+
+    def put_mark(self, order, pid, start=None):
+        """Wartemarke von Hand, Name wie in sim.sh: 20-stellige Nanosekunden, Bindestrich, PID."""
+        mark = self.queue / f"{order:020d}-{pid}"
+        mark.mkdir(parents=True)
+        if start is not None:
+            (mark / "pid").write_text(f"pid={pid}\nstart={start}\n")
+        return mark
+
+    def live_sleeper(self):
+        sleeper = subprocess.Popen(["sleep", "60"])
+        self.procs.append(sleeper)
+        return sleeper
+
+    def dead_pid(self):
+        dead = subprocess.Popen(["true"])
+        dead.wait()
+        return dead.pid
 
 
 class SessionKeyTests(unittest.TestCase):
@@ -213,6 +251,7 @@ class TestLockTests(LockHarness):
             outs = [p.communicate(timeout=30) for p in procs]
             self.assertEqual([p.returncode for p in procs], [0] * 8, outs)
             self.assertFalse(self.lock.exists(), "Sperre nach der Runde nicht freigegeben")
+            self.assertEqual(self.marks(), [], "Wartemarken nach der Runde übrig (AC-7)")
 
     def test_start_time_mismatch_is_orphan(self):
         sleeper = subprocess.Popen(["sleep", "60"])
@@ -312,6 +351,173 @@ class TestLockTests(LockHarness):
         self.assertIn("test-proof", r.stderr)
         self.assertIn(holder_pid, r.stderr)
         self.assertGreaterEqual(r.stderr.count("wt-holder"), 2, "keine wiederholte Statuszeile")
+
+
+class QueueTests(LockHarness):
+    """Warteliste (#516 Schnitt 2): wer zuerst wartet, bekommt die Sperre zuerst."""
+
+    HOLD = 'acquire_testlock "{what}"\nwhile [ ! -e "{go}" ]; do sleep 0.05; done\nrelease_testlock'
+    TURN = 'acquire_testlock "{what}"\necho {name} >> "{order}"\nsleep 0.3\nrelease_testlock'
+    LIST = 'ls -A "{queue}" | grep -v "^\\." || true'
+
+    def env_with(self, **extra):
+        return dict(self.env, **extra)
+
+    def test_queue_functions_exist(self):
+        for name in QUEUE_FUNCTIONS:
+            function_source(name)
+
+    def test_waiters_get_lock_in_arrival_order(self):
+        go, order = self.root / "go", self.root / "order"
+        self.start_bash(self.HOLD.format(what="halter", go=go), "wt-h")
+        self.wait_for_holder()
+        waiters = []
+        for i, name in enumerate(("A", "B", "C"), start=1):
+            waiters.append(self.start_bash(self.TURN.format(what=name, name=name, order=order), f"wt-{name}"))
+            self.wait_for_marks(i)
+        go.touch()
+        outs = [p.communicate(timeout=30) for p in waiters]
+        self.assertEqual([p.returncode for p in waiters], [0, 0, 0], outs)
+        self.assertEqual(order.read_text().split(), ["A", "B", "C"], "Reihenfolge ≠ Reihenfolge des Anstellens")
+        self.assertEqual(self.marks(), [])
+
+    def test_live_head_blocks_free_lock(self):
+        """Nur der Kopf versucht mkdir: eine freie Sperre bleibt frei, solange ein lebender Kopf vorn steht."""
+        sleeper = self.live_sleeper()
+        head = self.put_mark(1, sleeper.pid, start=int(time.time()) + 60)
+        r = self.run_bash('acquire_testlock "build"\necho bekommen', env=self.env_with(LOOSEENDS_LOCK_MAX="2"))
+        self.assertNotEqual(r.returncode, 0, "an einem lebenden Kopf vorbei die Sperre geholt")
+        self.assertNotIn("bekommen", r.stdout)
+        self.assertEqual(self.marks(), [head.name], "eigene Marke nach Abbruch übrig oder Kopf gelöscht")
+
+    def test_dead_head_is_removed_and_next_proceeds(self):
+        sleeper = self.live_sleeper()
+        self.put_mark(1, self.dead_pid(), start=1)          # PID tot
+        self.put_mark(2, sleeper.pid, start=1)              # PID lebt, ist aber jünger als start: wiederverwendet
+        t0 = time.time()
+        r = self.run_bash('acquire_testlock "build"\n' + self.LIST.format(queue=self.queue) +
+                          '\necho bekommen\nrelease_testlock', env=self.env_with(LOOSEENDS_LOCK_MAX="5"))
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertLess(time.time() - t0, 4, "tote Köpfe nicht sofort gelöscht")
+        self.assertEqual(r.stdout.split(), ["bekommen"], "Marken nach dem Erhalt der Sperre übrig")
+        self.assertEqual(self.marks(), [])
+
+    def test_queue_mark_without_pid_file_dead_after_10s(self):
+        mark = self.put_mark(1, 99999)
+        r = self.run_bash('acquire_testlock "build"\necho bekommen', env=self.env_with(LOOSEENDS_LOCK_MAX="2"))
+        self.assertNotEqual(r.returncode, 0, "frische Marke ohne pid-Datei übergangen")
+        self.assertIn(mark.name, self.marks())
+        old = time.time() - 20
+        os.utime(mark, (old, old))
+        r = self.run_bash('acquire_testlock "build"\necho bekommen\nrelease_testlock',
+                          env=self.env_with(LOOSEENDS_LOCK_MAX="5"))
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn("bekommen", r.stdout)
+        self.assertEqual(self.marks(), [], "Marke ohne pid-Datei älter als 10 s nicht gelöscht")
+
+    def test_abort_removes_own_mark_and_names_position(self):
+        self.start_bash(self.HOLD.format(what="halter", go=self.root / "nie"), "wt-h")
+        self.wait_for_holder()
+        sleeper = self.live_sleeper()
+        head = self.put_mark(1, sleeper.pid, start=int(time.time()) + 60)
+        r = self.run_bash('acquire_testlock "build"\necho bekommen', env=self.env_with(LOOSEENDS_LOCK_MAX="2"))
+        self.assertNotEqual(r.returncode, 0)
+        self.assertNotIn("bekommen", r.stdout)
+        self.assertRegex(r.stderr, r"Platz 2\b", "Abbruchmeldung nennt den Platz in der Warteliste nicht")
+        self.assertEqual(self.marks(), [head.name], "eigene Marke nach Abbruch übrig")
+
+    def test_success_and_exit_trap_remove_mark_queue_dir_stays(self):
+        r = self.run_bash('trap release_testlock EXIT\nacquire_testlock "build"\n' +
+                          self.LIST.format(queue=self.queue) + '\necho bekommen')
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertEqual(r.stdout.split(), ["bekommen"], "eigene Marke nach Erfolg übrig")
+        self.assertTrue(self.queue.is_dir(), "Warteliste entfernt (ENOENT-Rennen)")
+        # Ein Wartender, der per TERM endet, räumt seine Marke über den EXIT-Trap.
+        go = self.root / "go"
+        self.start_bash(self.HOLD.format(what="halter", go=go), "wt-h")
+        self.wait_for_holder()
+        waiter = self.start_bash('trap release_testlock EXIT\nacquire_testlock "build"\necho bekommen', "wt-w")
+        self.wait_for_marks(1)
+        waiter.send_signal(signal.SIGTERM)
+        waiter.communicate(timeout=10)
+        self.assertEqual(self.marks(), [], "Marke eines per TERM beendeten Wartenden übrig")
+        self.assertTrue(self.queue.is_dir())
+        go.touch()
+
+    def test_reentrant_does_not_enqueue(self):
+        function_source("queue_enter")
+        entered = self.root / "entered"
+        spy = (f'eval "orig_$(declare -f queue_enter)"\n'
+               f'queue_enter() {{ echo x >> "{entered}"; orig_queue_enter "$@"; }}\n')
+        inner_file = self.root / "inner.sh"
+        functions = "\n".join(function_source(n) for n in LOCK_FUNCTIONS)
+        inner_file.write_text("\n".join([PRELUDE, functions, spy, 'acquire_testlock "test"', "echo inner-ok"]))
+        r = self.run_bash(spy + f'acquire_testlock "test-proof"\n: > "{entered}"\nacquire_testlock "again"\n'
+                          f'bash "{inner_file}"\nrelease_testlock', env=self.env_with(LOOSEENDS_LOCK_MAX="3"))
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn("inner-ok", r.stdout)
+        self.assertEqual(entered.read_text(), "", "Halter oder Kind des Halters hat sich angestellt")
+
+    def test_mixed_mode_legacy_holder_and_stale_takeover(self):
+        """Eine Sperre ohne Liste (Handskript) verklemmt nichts; wird sie verwaist, kommen die Wartenden der Reihe nach."""
+        legacy = self.live_sleeper()
+        self.lock.mkdir()
+        (self.lock / "pid").write_text(f"pid={legacy.pid}\nstart={int(time.time()) + 60}\nworktree=hand\ncommand=test\n")
+        order = self.root / "order"
+        waiters = []
+        for i, name in enumerate(("W", "V"), start=1):
+            waiters.append(self.start_bash(self.TURN.format(what=name, name=name, order=order), f"wt-{name}"))
+            self.wait_for_marks(i)
+        legacy.kill()
+        legacy.wait()
+        outs = [p.communicate(timeout=30) for p in waiters]
+        self.assertEqual([p.returncode for p in waiters], [0, 0], outs)
+        self.assertEqual(order.read_text().split(), ["W", "V"])
+        self.assertEqual(self.marks(), [])
+
+    @staticmethod
+    def resume_group(proc):
+        """Angehaltene Prozessgruppe fortsetzen; sie ist evtl. schon beendet. kill_all killt sie danach notfalls."""
+        try:
+            os.killpg(proc.pid, signal.SIGCONT)
+        except ProcessLookupError:
+            pass
+
+    def test_mixed_mode_legacy_waiter_can_cut_in_but_nothing_deadlocks(self):
+        """Ein Teilnehmer ohne Liste (nur mkdir) drängelt am Kopf vorbei; der Kopf bekommt die Sperre danach (AC-6)."""
+        go, order, ready = self.root / "go", self.root / "order", self.root / "legacy-ready"
+        self.start_bash(self.HOLD.format(what="halter", go=go), "wt-h")
+        self.wait_for_holder()
+        head = subprocess.Popen(["bash", "-c", self.script(self.TURN.format(what="A", name="A", order=order), "wt-A")],
+                                env=self.env, start_new_session=True,
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        self.procs.append(head)
+        self.addCleanup(self.resume_group, head)
+        self.wait_for_marks(1)
+        legacy = subprocess.Popen(["bash", "-c",
+                                   f': > "{ready}"\n'
+                                   f'until mkdir "{self.lock}" 2>/dev/null; do sleep 0.01; done\n'
+                                   f"printf 'pid=%s\\nstart=%s\\nworktree=hand\\ncommand=hand\\n' $$ $(date +%s)"
+                                   f' > "{self.lock}/pid"\n'
+                                   f'echo L >> "{order}"\nsleep 0.3\nrm -rf "{self.lock}"'],
+                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        self.procs.append(legacy)
+        end = time.time() + 10
+        while not ready.exists() and time.time() < end:
+            time.sleep(0.01)
+        self.assertTrue(ready.exists(), "Teilnehmer ohne Liste nicht gestartet")
+        os.killpg(head.pid, signal.SIGSTOP)                 # Kopf angehalten: L holt die frei werdende Sperre sicher
+        go.touch()
+        end = time.time() + 10
+        while not (order.exists() and "L" in order.read_text().split()) and time.time() < end:
+            time.sleep(0.01)
+        self.assertTrue(order.exists() and "L" in order.read_text().split(), "Teilnehmer ohne Liste kam nicht dran")
+        self.resume_group(head)
+        outs = [p.communicate(timeout=30) for p in (head, legacy)]
+        self.assertEqual([head.returncode, legacy.returncode], [0, 0], outs)
+        self.assertEqual(order.read_text().split(), ["L", "A"], "Teilnehmer ohne Liste nicht vorbei oder Kopf verklemmt")
+        self.assertEqual(self.marks(), [])
+        self.assertFalse(self.lock.exists(), "Sperre nach allen Läufen übrig")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,147 @@
+..FFFFFFFFF........./opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed file <_io.TextIOWrapper name=13 encoding='utf-8'>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed file <_io.TextIOWrapper name=10 encoding='utf-8'>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.F.../opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:84: ResourceWarning: unclosed file <_io.TextIOWrapper name=13 encoding='utf-8'>
+  return self.run(*args, **kwds)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:84: ResourceWarning: unclosed file <_io.TextIOWrapper name=10 encoding='utf-8'>
+  return self.run(*args, **kwds)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+......./opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1313: ResourceWarning: subprocess 4165 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+....F
+======================================================================
+FAIL: test_abort_removes_own_mark_and_names_position (scripts.test_sim_lock.QueueTests.test_abort_removes_own_mark_and_names_position)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 426, in test_abort_removes_own_mark_and_names_position
+    self.assertRegex(r.stderr, r"Platz 2\b", "Abbruchmeldung nennt den Platz in der Warteliste nicht")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Regex didn't match: 'Platz 2\\b' not found in '[sim] Testsperre belegt — warte (0 s). Halter: Worktree /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpjo5ifexp/wt-h, Befehl halter, PID 92582\n[sim] Testsperre belegt — warte (1 s). Halter: Worktree /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpjo5ifexp/wt-h, Befehl halter, PID 92582\n[sim] Testsperre nach 2 s nicht frei. Halter: Worktree /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpjo5ifexp/wt-h, Befehl halter, PID 92582. Sperre: /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpjo5ifexp/testlauf.lock\n' : Abbruchmeldung nennt den Platz in der Warteliste nicht
+
+======================================================================
+FAIL: test_dead_head_is_removed_and_next_proceeds (scripts.test_sim_lock.QueueTests.test_dead_head_is_removed_and_next_proceeds)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 402, in test_dead_head_is_removed_and_next_proceeds
+    self.assertEqual(r.stdout.split(), ["bekommen"], "Marken nach dem Erhalt der Sperre übrig")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['00000000000000000001-92768', '00000000000000000002-92767', 'bekommen'] != ['bekommen']
+
+First differing element 0:
+'00000000000000000001-92768'
+'bekommen'
+
+First list contains 2 additional elements.
+First extra element 1:
+'00000000000000000002-92767'
+
+- ['00000000000000000001-92768', '00000000000000000002-92767', 'bekommen']
++ ['bekommen'] : Marken nach dem Erhalt der Sperre übrig
+
+======================================================================
+FAIL: test_live_head_blocks_free_lock (scripts.test_sim_lock.QueueTests.test_live_head_blocks_free_lock)
+Nur der Kopf versucht mkdir: eine freie Sperre bleibt frei, solange ein lebender Kopf vorn steht.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 389, in test_live_head_blocks_free_lock
+    self.assertNotEqual(r.returncode, 0, "an einem lebenden Kopf vorbei die Sperre geholt")
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : an einem lebenden Kopf vorbei die Sperre geholt
+
+======================================================================
+FAIL: test_mixed_mode_legacy_holder_and_stale_takeover (scripts.test_sim_lock.QueueTests.test_mixed_mode_legacy_holder_and_stale_takeover)
+Eine Sperre ohne Liste (Handskript) verklemmt nichts; wird sie verwaist, kommen die Wartenden der Reihe nach.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 470, in test_mixed_mode_legacy_holder_and_stale_takeover
+    self.wait_for_marks(i)
+    ~~~~~~~~~~~~~~~~~~~^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 99, in wait_for_marks
+    self.fail(f"nach {timeout} s {len(self.marks())} statt {count} Wartemarken in {self.queue}")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: nach 10 s 0 statt 1 Wartemarken in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpr_200bth/testlauf.lock.queue
+
+======================================================================
+FAIL: test_queue_functions_exist (scripts.test_sim_lock.QueueTests.test_queue_functions_exist)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 368, in test_queue_functions_exist
+    function_source(name)
+    ~~~~~~~~~~~~~~~^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 30, in function_source
+    raise AssertionError(f"{name}() fehlt in scripts/sim.sh")
+AssertionError: queue_enter() fehlt in scripts/sim.sh
+
+======================================================================
+FAIL: test_queue_mark_without_pid_file_dead_after_10s (scripts.test_sim_lock.QueueTests.test_queue_mark_without_pid_file_dead_after_10s)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 408, in test_queue_mark_without_pid_file_dead_after_10s
+    self.assertNotEqual(r.returncode, 0, "frische Marke ohne pid-Datei übergangen")
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : frische Marke ohne pid-Datei übergangen
+
+======================================================================
+FAIL: test_reentrant_does_not_enqueue (scripts.test_sim_lock.QueueTests.test_reentrant_does_not_enqueue)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 448, in test_reentrant_does_not_enqueue
+    function_source("queue_enter")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 30, in function_source
+    raise AssertionError(f"{name}() fehlt in scripts/sim.sh")
+AssertionError: queue_enter() fehlt in scripts/sim.sh
+
+======================================================================
+FAIL: test_success_and_exit_trap_remove_mark_queue_dir_stays (scripts.test_sim_lock.QueueTests.test_success_and_exit_trap_remove_mark_queue_dir_stays)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 434, in test_success_and_exit_trap_remove_mark_queue_dir_stays
+    self.assertTrue(self.queue.is_dir(), "Warteliste entfernt (ENOENT-Rennen)")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : Warteliste entfernt (ENOENT-Rennen)
+
+======================================================================
+FAIL: test_waiters_get_lock_in_arrival_order (scripts.test_sim_lock.QueueTests.test_waiters_get_lock_in_arrival_order)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 377, in test_waiters_get_lock_in_arrival_order
+    self.wait_for_marks(i)
+    ~~~~~~~~~~~~~~~~~~~^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 99, in wait_for_marks
+    self.fail(f"nach {timeout} s {len(self.marks())} statt {count} Wartemarken in {self.queue}")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: nach 10 s 0 statt 1 Wartemarken in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpaxukl6p5/testlauf.lock.queue
+
+======================================================================
+FAIL: test_reentrant (scripts.test_sim_lock.TestLockTests.test_reentrant)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 329, in test_reentrant
+    functions = "\n".join(function_source(n) for n in LOCK_FUNCTIONS)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 329, in <genexpr>
+    functions = "\n".join(function_source(n) for n in LOCK_FUNCTIONS)
+                          ~~~~~~~~~~~~~~~^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_lock.py", line 30, in function_source
+    raise AssertionError(f"{name}() fehlt in scripts/sim.sh")
+AssertionError: queue_enter() fehlt in scripts/sim.sh
+
+======================================================================
+FAIL: test_watcher_ends_when_script_dies (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_watcher_ends_when_script_dies)
+F001: stirbt sim.sh per KILL, löst der Wächter nicht mehr aus; der xcodebuild bleibt bewusst als Waise.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/prancy-noodling-axolotl/scripts/test_sim_run_xcodebuild.py", line 195, in test_watcher_ends_when_script_dies
+    self.assertNotIn("abgebrochen", err_file.read_text(), "der Wächter einer toten sim.sh hat ausgelöst")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'abgebrochen' unexpectedly found in 'xcodebuild hängt seit 0 min, abgebrochen (Frist 2 s Stille, LOOSEENDS_SILENCE_MAX).\nLetzte Logzeile: eins\nEin Neustart von CoreSimulatorService kann nötig sein.\n' : der Wächter einer toten sim.sh hat ausgelöst
+
+----------------------------------------------------------------------
+Ran 37 tests in 125.786s
+
+FAILED (failures=11)
