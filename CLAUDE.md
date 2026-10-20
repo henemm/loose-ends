@@ -73,7 +73,9 @@ Parallele Sitzungen (#341, #304, #413): `build`, `unit`, `sim-unit`, `test`, `te
 Worktree, Befehl). Wer wartet, sieht alle 30 s den Halter und bricht nach 30 min ab; eine verwaiste Sperre
 (Prozess tot oder PID wiederverwendet) wird sofort übernommen, eine Sperre ohne `pid`-Datei erst nach 30 min.
 Übernommen wird nur unter `<Sperre>.takeover`, damit zwei Wartende sich nicht gegenseitig die neue Sperre
-wegziehen. Schreibt `xcodebuild` 15 min nichts ins Log (`LOOSEENDS_SILENCE_MAX`, Sekunden), beendet ein Wächter nur den
+wegziehen. Wer zuerst wartet, bekommt die Sperre zuerst: jeder Wartende stellt eine Marke `<Zeit_ns>-<pid>` in die
+Warteliste `<Sperre>.queue`, nur der Kopf greift zu, tote Marken fallen heraus, Handskripte ohne Liste können
+vordrängeln, ohne etwas zu verklemmen (#516). Schreibt `xcodebuild` 15 min nichts ins Log (`LOOSEENDS_SILENCE_MAX`, Sekunden), beendet ein Wächter nur den
 Lauf dieser Sitzung und meldet „hängt seit N min, abgebrochen“ samt letzter Logzeile; die Sperre wird frei,
 CoreSimulatorService startet er nicht neu (#516). `boot` markiert auf jedem iOS-Simulator den Tastatur-Hinweis „Speed up your typing…“ als gezeigt:
 auf einem frischen Simulator hängt er sonst jede UI-Abfrage nach dem ersten `typeText` auf.

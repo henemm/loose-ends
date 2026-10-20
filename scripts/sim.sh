@@ -104,35 +104,92 @@ lock_is_stale() {
 
 # Holt die Sperre für den Befehl $1. Wartet mit Statuszeile alle LOOSEENDS_LOCK_REPORT s, bricht nach
 # LOOSEENDS_LOCK_MAX s ab. Reentrant: dieselbe Skript-PID oder ein Kind des Halters (LOOSEENDS_LOCK_OWNER).
+# Warteliste (#516): nur der Kopf versucht mkdir, wer zuerst wartet, bekommt die Sperre zuerst. Eine verwaiste
+# Sperre räumt jeder Wartende ab; ein Handskript ohne Liste kann vordrängeln, verklemmt aber nichts.
 acquire_testlock() {
     local dir="${LOOSEENDS_LOCK_DIR:-/tmp/loose-ends-testlauf.lock}" what="${1:-sim.sh}"
     local max="${LOOSEENDS_LOCK_MAX:-1800}" every="${LOOSEENDS_LOCK_REPORT:-30}"
-    local holder t0 elapsed last=-1 desc old
+    local holder t0 elapsed last=-1 desc place m n=0 total=0
     holder=$(sed -n 's/^pid=//p' "$dir/pid" 2>/dev/null || true)
     if [ -n "$holder" ] && { [ "$holder" = "$$" ] || [ "$holder" = "${LOOSEENDS_LOCK_OWNER:-}" ]; } && ! lock_is_stale; then
         return 0
     fi
     t0=$(date +%s)
     mkdir -p "$(dirname "$dir")"
-    until mkdir "$dir" 2>/dev/null && claim_testlock "$dir" "$what"; do
+    queue_enter
+    until [ "$(queue_head)" = "$QUEUE_MARK" ] && mkdir "$dir" 2>/dev/null && claim_testlock "$dir" "$what"; do
         lock_is_stale && take_over_stale_lock "$dir" && continue
+        elapsed=$(( $(date +%s) - t0 ))
+        [ "$elapsed" -ge "$max" ] || [ "$last" -lt 0 ] || [ $(( elapsed - last )) -ge "$every" ] || {
+            sleep "${LOOSEENDS_LOCK_POLL:-5}"; continue; }
+        n=0; total=0
+        for m in "$dir.queue"/[0-9]*; do
+            [ -d "$m" ] || continue
+            total=$((total + 1)); [[ "$m" > "$QUEUE_MARK" ]] || n=$((n + 1))
+        done
+        place="Platz $n von $total in der Warteliste"
         if [ -f "$dir/pid" ]; then
             desc="Worktree $(sed -n 's/^worktree=//p' "$dir/pid" 2>/dev/null), Befehl $(sed -n 's/^command=//p' "$dir/pid" 2>/dev/null), PID $(sed -n 's/^pid=//p' "$dir/pid" 2>/dev/null)" || true
-        else
+        elif [ -e "$dir" ]; then
             desc="Handsperre ohne pid-Datei ($dir)"
+        else
+            desc="keiner, Sperre frei, Vorrang hat $(basename "$(queue_head)")"
         fi
-        elapsed=$(( $(date +%s) - t0 ))
         if [ "$elapsed" -ge "$max" ]; then
-            error "Testsperre nach ${max} s nicht frei. Halter: $desc. Sperre: $dir"
+            queue_leave
+            error "Testsperre nach ${max} s nicht frei. Halter: $desc. $place. Sperre: $dir"
             return 1
         fi
-        if [ "$last" -lt 0 ] || [ $(( elapsed - last )) -ge "$every" ]; then
-            info "Testsperre belegt — warte ($elapsed s). Halter: $desc"
-            last=$elapsed
-        fi
+        info "Testsperre belegt — warte ($elapsed s, $place). Halter: $desc"
+        last=$elapsed
         sleep "${LOOSEENDS_LOCK_POLL:-5}"
     done
+    queue_leave
     export LOOSEENDS_LOCK_OWNER=$$
+}
+
+# Stellt diesen Prozess in die Warteliste <Sperre>.queue (#516). Marke = ein mkdir, Name <time_ns 20-stellig>-<pid>,
+# sortiert also nach Ankunft; darin pid= und start= wie in der Sperre. Die Liste selbst wird nie gelöscht.
+queue_enter() {
+    local queue="${LOOSEENDS_LOCK_DIR:-/tmp/loose-ends-testlauf.lock}.queue" ns
+    mkdir -p "$queue"
+    ns=$(python3 -c 'import time; print(time.time_ns())')
+    QUEUE_MARK="$queue/$(printf '%020d' "$ns")-$$"
+    mkdir "$QUEUE_MARK"
+    { echo "pid=$$"; echo "start=$(proc_start $$)"; } > "$QUEUE_MARK/.pid.$$" \
+        && mv "$QUEUE_MARK/.pid.$$" "$QUEUE_MARK/pid"
+}
+
+# Gibt die Kopfmarke aus (kleinster Name). Nur der Kopf wird geprüft: tot ist er, wenn seine PID nicht lebt oder
+# wiederverwendet ist, ohne pid-Datei erst 10 s nach dem Anlegen. Tote Köpfe werden gelöscht, der Nächste rückt nach.
+queue_head() {
+    local queue="${LOOSEENDS_LOCK_DIR:-/tmp/loose-ends-testlauf.lock}.queue" head pid start now mtime
+    while :; do
+        head=""
+        for head in "$queue"/[0-9]*; do [ -d "$head" ] && break; head=""; done
+        [ -n "$head" ] || return 0
+        if [ "$head" != "${QUEUE_MARK:-}" ]; then
+            pid=$(sed -n 's/^pid=//p' "$head/pid" 2>/dev/null | head -1 || true)
+            if [ -n "$pid" ]; then
+                now=$(proc_start "$pid")
+                start=$(sed -n 's/^start=//p' "$head/pid" 2>/dev/null | head -1 || true)
+                if [ -z "$now" ] || { [[ "$start" =~ ^[0-9]+$ ]] && [ "$now" -gt "$start" ]; }; then
+                    rm -rf "$head"; continue
+                fi
+            elif [ ! -e "$head/pid" ]; then
+                mtime=$(stat -f %m "$head" 2>/dev/null || stat -c %Y "$head" 2>/dev/null || true)
+                if [ -n "$mtime" ] && [ $(( $(date +%s) - mtime )) -gt 10 ]; then rm -rf "$head"; continue; fi
+            fi
+        fi
+        echo "$head"
+        return 0
+    done
+}
+
+# Löscht die eigene Wartemarke, falls es eine gibt (#516).
+queue_leave() {
+    if [ -n "${QUEUE_MARK:-}" ]; then rm -rf "$QUEUE_MARK" 2>/dev/null || true; fi
+    QUEUE_MARK=""
 }
 
 # Schreibt die pid-Datei in die eben angelegte Sperre. Erst vollständig schreiben, dann hineinschieben: ein
@@ -168,6 +225,7 @@ take_over_stale_lock() {
 # Gibt die Sperre nur frei, wenn sie diesem Prozess gehört; ohne Sperre gefahrlos.
 release_testlock() {
     local dir="${LOOSEENDS_LOCK_DIR:-/tmp/loose-ends-testlauf.lock}" gone
+    queue_leave   # auch ein Wartender ohne Sperre, etwa per TERM beendet, räumt seine Marke (#516)
     grep -qx "pid=$$" "$dir/pid" 2>/dev/null || return 0
     gone="$dir.done.$$.$RANDOM"
     mv "$dir" "$gone" 2>/dev/null && rm -rf "$gone"
@@ -233,6 +291,8 @@ run_xcodebuild() {
     [ "${1:-}" = test ] && set -- "$@" -collect-test-diagnostics never
     # Stille-Wächter (#516): Bleibt das Log LOOSEENDS_SILENCE_MAX s stumm, endet nur der xcodebuild dieser
     # Sitzung (eigener -derivedDataPath) samt Kindern, sonst hielte er die rechnerweite Sperre unbegrenzt.
+    # Der Wächter endet mit sim.sh ($$ in der Subshell): Ein xcodebuild einer per KILL gestorbenen sim.sh bleibt
+    # bewusst als Waise stehen, später gehörte derselbe Pfad womöglich schon dem nächsten Lauf (#516, F001).
     local hung="$SESSION_DERIVED_DATA/xcodebuild.hung" status=0 watcher
     rm -f "$hung"; : > "$BUILD_LOG"
     (
@@ -240,12 +300,14 @@ run_xcodebuild() {
         trap '[ -n "$sp" ] && kill "$sp" 2>/dev/null; exit 0' TERM
         while :; do
             sleep "${LOOSEENDS_SILENCE_POLL:-10}" & sp=$!; wait "$sp"; sp=""
+            kill -0 $$ 2>/dev/null || exit 0   # sim.sh tot (#516, F001): nichts mehr auslösen
             age=$(( $(date +%s) - $(stat -f %m "$BUILD_LOG" 2>/dev/null || date +%s) ))
             [ "$age" -gt "$max" ] || continue
             trap - TERM; touch "$hung"
             echo "xcodebuild hängt seit $((age / 60)) min, abgebrochen (Frist ${max} s Stille, LOOSEENDS_SILENCE_MAX)." >&2
             echo "Letzte Logzeile: $(tail -n 1 "$BUILD_LOG")" >&2
             echo "Ein Neustart von CoreSimulatorService kann nötig sein." >&2
+            kill -0 $$ 2>/dev/null || exit 0
             pids=$(pgrep -f -- "xcodebuild.* -derivedDataPath $SESSION_DERIVED_DATA( |\$)" || true)
             for p in $pids; do pkill -TERM -P "$p" 2>/dev/null || true; kill -TERM "$p" 2>/dev/null || true; done
             sleep 5

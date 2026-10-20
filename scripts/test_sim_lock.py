@@ -475,6 +475,50 @@ class QueueTests(LockHarness):
         self.assertEqual(order.read_text().split(), ["W", "V"])
         self.assertEqual(self.marks(), [])
 
+    @staticmethod
+    def resume_group(proc):
+        """Angehaltene Prozessgruppe fortsetzen; sie ist evtl. schon beendet. kill_all killt sie danach notfalls."""
+        try:
+            os.killpg(proc.pid, signal.SIGCONT)
+        except ProcessLookupError:
+            pass
+
+    def test_mixed_mode_legacy_waiter_can_cut_in_but_nothing_deadlocks(self):
+        """Ein Teilnehmer ohne Liste (nur mkdir) drängelt am Kopf vorbei; der Kopf bekommt die Sperre danach (AC-6)."""
+        go, order, ready = self.root / "go", self.root / "order", self.root / "legacy-ready"
+        self.start_bash(self.HOLD.format(what="halter", go=go), "wt-h")
+        self.wait_for_holder()
+        head = subprocess.Popen(["bash", "-c", self.script(self.TURN.format(what="A", name="A", order=order), "wt-A")],
+                                env=self.env, start_new_session=True,
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        self.procs.append(head)
+        self.addCleanup(self.resume_group, head)
+        self.wait_for_marks(1)
+        legacy = subprocess.Popen(["bash", "-c",
+                                   f': > "{ready}"\n'
+                                   f'until mkdir "{self.lock}" 2>/dev/null; do sleep 0.01; done\n'
+                                   f"printf 'pid=%s\\nstart=%s\\nworktree=hand\\ncommand=hand\\n' $$ $(date +%s)"
+                                   f' > "{self.lock}/pid"\n'
+                                   f'echo L >> "{order}"\nsleep 0.3\nrm -rf "{self.lock}"'],
+                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        self.procs.append(legacy)
+        end = time.time() + 10
+        while not ready.exists() and time.time() < end:
+            time.sleep(0.01)
+        self.assertTrue(ready.exists(), "Teilnehmer ohne Liste nicht gestartet")
+        os.killpg(head.pid, signal.SIGSTOP)                 # Kopf angehalten: L holt die frei werdende Sperre sicher
+        go.touch()
+        end = time.time() + 10
+        while not (order.exists() and "L" in order.read_text().split()) and time.time() < end:
+            time.sleep(0.01)
+        self.assertTrue(order.exists() and "L" in order.read_text().split(), "Teilnehmer ohne Liste kam nicht dran")
+        self.resume_group(head)
+        outs = [p.communicate(timeout=30) for p in (head, legacy)]
+        self.assertEqual([head.returncode, legacy.returncode], [0, 0], outs)
+        self.assertEqual(order.read_text().split(), ["L", "A"], "Teilnehmer ohne Liste nicht vorbei oder Kopf verklemmt")
+        self.assertEqual(self.marks(), [])
+        self.assertFalse(self.lock.exists(), "Sperre nach allen Läufen übrig")
+
 
 if __name__ == "__main__":
     unittest.main()
