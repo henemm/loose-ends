@@ -1,7 +1,8 @@
 import Foundation
 
 /// The words of the start screen's headline (#426). Facts stated, no praise, no exclamation marks.
-/// Numbers up to twelve are spelled out; times as the system writes them.
+/// Numbers up to twelve are spelled out; times as the system writes them. Every sentence about a
+/// task names it (#585); only a count stands without a title.
 enum StartHeadlineText {
     static func sentence(_ headline: StartHeadline, locale: Locale = .current) -> String {
         // A spelled-out number or a lower-case title may open the sentence.
@@ -14,34 +15,29 @@ enum StartHeadlineText {
         func time(_ date: Date) -> String { date.formatted(date: .omitted, time: .shortened) }
         switch headline {
         case .doneToday(let count, let titles, let next):
-            let named = titles.compactMap { $0 }
             let first: String
-            if count <= 2, named.count == count {
-                first = String(localized: "Today tied up: \(ListFormatter.localizedString(byJoining: named)).")
-            } else if let last = named.first {
-                first = String(localized: "Today \(number(count)) tied up, last \(last).")
+            if count <= 2, titles.count == count {
+                first = String(localized: "Today tied up: \(ListFormatter.localizedString(byJoining: titles)).")
             } else {
-                first = String(localized: "Today \(number(count)) tied up.")
+                first = String(localized: "Today \(number(count)) tied up, last \(titles.first ?? "").")
             }
             guard let next else { return first }
-            let then = next.title.map { String(localized: "At \(time(next.at)) still: \($0).") }
-                ?? String(localized: "At \(time(next.at)) one more fixed time.")
-            return first + " " + then
-        case .missed(let title, let at):
-            return title.map { String(localized: "\($0) at \(time(at)) has passed.") }
-                ?? String(localized: "The fixed time at \(time(at)) has passed.")
+            return first + " " + String(localized: "At \(time(next.at)) still: \(next.title).")
+        case .missed(let title, let at, let count):
+            if count > 1 {
+                return String(localized: "\(number(count)) fixed times have passed, the last at \(time(at)).")
+            }
+            return String(localized: "\(title) at \(time(at)) has passed.")
         case .upcoming(let title, let at, let count):
             if count > 1 {
                 return String(localized: "Today \(number(count)) fixed times, the first at \(time(at)).")
             }
-            return title.map { String(localized: "Today at \(time(at)): \($0).") }
-                ?? String(localized: "Today a fixed time at \(time(at)).")
+            return String(localized: "Today at \(time(at)): \(title).")
         case .dueToday(let title, let count):
             if count > 1 { return String(localized: "Today \(number(count)) things due.") }
-            return title.map { String(localized: "Today: \($0).") } ?? String(localized: "Today one thing due.")
+            return String(localized: "Today: \(title).")
         case .waiting(let title, let days):
-            return title.map { String(localized: "\($0) has been waiting for \(number(days)) days.") }
-                ?? String(localized: "A task has been waiting for \(number(days)) days.")
+            return String(localized: "\(title) has been waiting for \(number(days)) days.")
         case .pile(let label, let count):
             return String(localized: "\(number(count)) things under \(label).")
         case .old(let count):
