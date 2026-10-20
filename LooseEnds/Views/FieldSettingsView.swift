@@ -22,7 +22,7 @@ struct FieldSettingsView: View {
                     Text(Self.groupTitle(group))
                 } footer: {
                     if group == .connection {
-                        Text("Off means not offered. What a task already carries, it shows anyway.")
+                        Text("Fields that are off are not offered when filling in a task. What a task already holds stays visible.")
                     }
                 }
             }

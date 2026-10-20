@@ -81,7 +81,7 @@ struct SettingsView: View {
             #endif
             calendarSection
             // Below the calendar (#538): the rows above keep their place on the screen.
-            group("Task", hint: Text("What a task offers. Off means not offered; what a task already carries, it shows anyway.")) {
+            group("Task", hint: Text("Which fields a task offers to fill in, for example note, place or project. Fields that are off are not offered; what a task already holds stays visible.")) {
                 fieldsRow
             }
             #if os(macOS)
