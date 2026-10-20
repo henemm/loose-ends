@@ -33,7 +33,8 @@ Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, 
   the rules beat the model, the rules win, and an existing ADR or schema is not a counter-argument.
   Measured 2026-09-20: model 50 % exact dates, 96.5 % invented; `NSDataDetector` 65–68 % depending on the weekday of the run (it takes no reference day, so its column is frozen, #148), 0 % (#67, #92);
   own rule parser 99.3 %, 0 % (#92, Schnitt 1). Since #95 the rule parser sets the due date in the
-  product path; the model schema lost the four due-date fields.
+  product path; the model schema lost the four due-date fields. A subtask gets the due date and context word rules
+  at add and on "Analyze again", never the model (#565).
 - **Context names are unique** (Henning, 2026-10-01, #157). Contexts are matched by name
   (`FieldCodec`), so two contexts named alike put both on a task ("Garden, Garden"). `CatalogService`
   rejects a taken name (trimmed, case- and accent-insensitive) when adding or renaming, and
@@ -282,7 +283,11 @@ not scope creep on the current one.
   new task in two steps: `prepare` (async, checks everything, writes nothing, geocoder injected) and `commit`
   (MainActor, writes with author `.user`, reason "Siri", F1 notes appended to the raw text, F2 unknown list creates the
   project via `CatalogService.project(named:in:)` by `nameKey`; on any error nothing is left behind); no Siri types in
-  `Shared/Services`; not in the product path until #25 Schnitt 2), `WaitingOn` ("waiting on" set by hand:
+  `Shared/Services`; not in the product path until #25 Schnitt 2), `Subtasks` (#565, concept D: a line under a task
+  that becomes a task when needed; `add` keeps the typed words as title, `traits` what a line carries of its own, `open`
+  the lines a completion asks about; the due date and tag word rules read a line in
+  `EnrichmentCoordinator.applySubtaskRules`, the model never), `PendingCompletions` (the three-second undo window;
+  "Complete all" checks the open lines off with the task, #565), `WaitingOn` ("waiting on" set by hand:
   link, loosen, picker candidates without loops, a user revision per change, #251), `SharedAttachment` (a shared photo or
   file before saving: temp file, never `Data`; title from the file name, photo name, ≤ 50 MB and ≤ 10 per share;
   `CaptureService.save(attachments:)` reads each once, #399), `SharedAttachmentFile` (the share extension's file I/O: which

@@ -52,6 +52,9 @@ final class EnrichmentCoordinator {
         }
 
         let context = container.mainContext
+        // Lines under a task first (#565): their two rules, never the model, so an added line shows
+        // its date and tag at once; the pass below is for top-level tasks only.
+        applySubtaskRules(in: context)
         do {
             let unprocessed = TaskStatus.unprocessed.rawValue
             let active = TaskStatus.active.rawValue
@@ -60,7 +63,7 @@ final class EnrichmentCoordinator {
             ))
             // Open top-level tasks the user vouched for with "Looks right" before the model step
             // ran (#318), or activated again from parked: they are still owed their one run (ADR-4).
-            // Two fetches instead of `||`, as in `recognitionInputs`; subtasks are never enriched.
+            // Two fetches instead of `||`, as in `recognitionInputs`; subtasks never see the model (#565).
             let confirmed = try context.fetch(FetchDescriptor<TaskItem>(
                 predicate: #Predicate { $0.processedAt == nil && $0.statusRaw == active }
             )).filter { $0.parent == nil }
@@ -120,6 +123,21 @@ final class EnrichmentCoordinator {
 
         let context = container.mainContext
         let before = task.revisions?.count ?? 0
+        // A line under a task is read again by its two rules only (#565): the model never sees it.
+        if task.parent != nil {
+            do {
+                let contexts = try context.fetch(FetchDescriptor<TaskContext>(sortBy: [SortDescriptor(\.sortOrder)]))
+                applySubtaskRules(to: task, mode: .reanalysis, catalog: contexts)
+                task.rulesAppliedAt = Date()
+                try context.save()
+            } catch {
+                logger.error("Re-analysis failed for subtask \(task.id, privacy: .public): \(error, privacy: .public)")
+                return .failed
+            }
+            let changed = (task.revisions?.count ?? 0) - before
+            logger.info("Re-analysed subtask \(task.id, privacy: .public): \(changed) fields")
+            return .finished(changed: changed, modelRan: false)
+        }
         let modelUnavailable = enricher.unavailableReason
         if let modelUnavailable {
             logger.notice("Model unavailable, re-analysis with rules only: \(modelUnavailable, privacy: .public)")
@@ -194,6 +212,46 @@ final class EnrichmentCoordinator {
         }
         if applyPhoneRule(to: task, mode: mode) { matched.insert(.notes) }
         if applyProjectNameRule(to: task, mode: mode, projects: projects) { matched.insert(.project) }
+        return matched
+    }
+
+    /// The rule step for the lines under a task (#565, Henning 2026-10-20): a line reads its own due
+    /// date and tag word from its words, like a task at capture, but the on-device model never sees
+    /// it, and the other rules stay with top-level tasks (importance, urgency, recognition, phone
+    /// number, project: a line belongs to its task's project already). Every open line without the
+    /// rule marker, oldest first; the marker is set whether or not a rule hit, so each line gets the
+    /// step once (#144). Saved per line, caught per line, like the pass for tasks. `rulesAppliedAt`
+    /// alone marks a line: `processedAt` stays empty, because the model has not seen it (ADR-4).
+    private func applySubtaskRules(in context: ModelContext) {
+        do {
+            let active = TaskStatus.active.rawValue
+            let lines = try context.fetch(FetchDescriptor<TaskItem>(
+                predicate: #Predicate { $0.rulesAppliedAt == nil && $0.statusRaw == active }
+            )).filter { $0.parent != nil }.sorted { $0.capturedAt < $1.capturedAt }
+            guard !lines.isEmpty else { return }
+            let contexts = try context.fetch(FetchDescriptor<TaskContext>(sortBy: [SortDescriptor(\.sortOrder)]))
+            for line in lines {
+                applySubtaskRules(to: line, mode: .firstRun, catalog: contexts)
+                line.rulesAppliedAt = Date()
+                do {
+                    try context.save()
+                } catch {
+                    logger.error("Saving failed for subtask \(line.id, privacy: .public): \(error, privacy: .public)")
+                }
+            }
+        } catch {
+            logger.error("Subtask rule step failed: \(error, privacy: .public)")
+        }
+    }
+
+    /// Due date and tag word only (#565). Returns the fields a rule matched, written or not.
+    @discardableResult
+    private func applySubtaskRules(
+        to line: TaskItem, mode: EnrichmentWriter.Mode, catalog: [TaskContext]
+    ) -> Set<RevisedField> {
+        var matched = Set<RevisedField>()
+        if applyDueDateRule(to: line, mode: mode) { matched.insert(.dueDate) }
+        if applyContextWordRule(to: line, mode: mode, catalog: catalog) { matched.insert(.contexts) }
         return matched
     }
 
