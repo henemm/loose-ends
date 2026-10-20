@@ -214,5 +214,54 @@ final class MacDetailClickTests: XCTestCase {
         dismissPicker(in: app)
         app.terminate()
     }
+
+    // MARK: - Settings (#573)
+
+    /// Henning (2026-10-19, build 92 on the Mac): "you need luck to open Fields". The row took the click
+    /// only on its word and its arrow; a plain button hits what its label paints, and the space between
+    /// painted nothing. Clicks the middle of the row, where nothing but the row stands.
+    @MainActor
+    func testFieldsOpensFromTheMiddleOfItsRow() throws {
+        let app = macLaunch(dark: false)
+        _ = macOpenMainWindowIfNeeded(app)
+        XCTAssertTrue(macElement("startCaptureField", in: app).waitForExistence(timeout: 20), "No start page")
+        app.typeKey(",", modifierFlags: .command)
+        let settings = app.windows.containing(.any, identifier: "reminderTimePicker").firstMatch
+        XCTAssertTrue(settings.waitForExistence(timeout: 10), "⌘, opened no settings window")
+        let row = macElement("fieldsRow", in: settings)
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "Settings show no Fields row")
+        // The CI screen is 674 pt high and clips the 880 pt window, so the list scrolls to the row first.
+        let list = settings.scrollViews.firstMatch
+        for _ in 0..<8 where !row.isHittable {
+            if list.exists { list.scroll(byDeltaX: 0, deltaY: -200) }
+            RunLoop.current.run(until: Date().addingTimeInterval(0.3))
+        }
+        XCTAssertTrue(row.isHittable, "The Fields row stays out of reach after scrolling")
+        let baseline = pickerCount(app)
+        row.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).click()
+        // The page is a sheet with one switch per field; the sheet counts like the pickers do, the
+        // switch is a control the Mac always exposes (a form's own identifier it may not).
+        let notesSwitch = app.descendants(matching: .any).matching(identifier: "fieldSwitch_notes").firstMatch
+        let opened = waitForPicker(true, baseline: baseline, in: app, timeout: 10) || notesSwitch.waitForExistence(timeout: 5)
+        // Pictures first, so a failure leaves them in the gallery.
+        macShot(settings, "mac-gallery-573-fields-from-row-middle")
+        let screen = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        screen.name = "mac-gallery-573-screen-after-click"
+        screen.lifetime = .keepAlways
+        add(screen)
+        if !opened {
+            let hierarchy = XCTAttachment(string: app.debugDescription)
+            hierarchy.name = "mac-gallery-573-hierarchy-after-click"
+            hierarchy.lifetime = .keepAlways
+            add(hierarchy)
+        }
+        XCTAssertTrue(opened, "A click on the middle of the Fields row should open the page")
+        XCTAssertTrue(notesSwitch.waitForExistence(timeout: 5), "The Fields page shows no switch for Note")
+        let done = macElement("fieldsDoneButton", in: app)
+        XCTAssertTrue(done.waitForExistence(timeout: 5), "The Fields sheet shows no Done")
+        done.click()
+        XCTAssertTrue(waitForPicker(false, baseline: baseline, in: app, timeout: 5), "Done should close the Fields sheet")
+        app.terminate()
+    }
 }
 #endif

@@ -20,6 +20,20 @@ struct SettingsView: View {
     @State private var opensAtLogin = LoginItem.isEnabled
     #endif
 
+    #if os(macOS)
+    /// The settings window's height (#573): the list runs to about 860 after the board, so 880 where the
+    /// screen allows, else what the screen's visible frame leaves (a fixed 880 stood 912 tall on the
+    /// 674 pt CI screen; an ideal height is not honoured, a list has none of its own and the window
+    /// opened at its minimum). Fixed per launch; the list scrolls on a small screen.
+    static let macWindowHeight: CGFloat = {
+        let visible = NSScreen.main?.visibleFrame.height ?? 880
+        return min(880, max(480, visible - 64))
+    }()
+
+    /// The "Fields" sheet's height: 600, or less so that Done stays inside the window.
+    static var macSheetHeight: CGFloat { min(600, macWindowHeight - 80) }
+    #endif
+
     init(notifications: DueNotificationCenter?) {
         self.notifications = notifications
         let stored = notifications?.reminderTime ?? .standard
@@ -101,7 +115,8 @@ struct SettingsView: View {
                         }
                     }
             }
-            .frame(width: 520, height: 640)
+            // Not taller than the window: a sheet beyond it puts Done out of reach (#573).
+            .frame(width: 520, height: Self.macSheetHeight)
         }
         #endif
         .sheet(isPresented: $choosesCalendar) {
@@ -141,6 +156,8 @@ struct SettingsView: View {
             .textFieldStyle(.plain)
             .toggleStyle(.switch)
             .buttonStyle(.plain)
+            // The time as a field without the stepper (#573): the value stands on the right as on the board.
+            .datePickerStyle(.field)
             .font(.system(size: 14))
             // The hint lines are lower than a row; `group` keeps the rows at 40 pt or more.
             .environment(\.defaultMinListRowHeight, 0)
@@ -151,32 +168,38 @@ struct SettingsView: View {
         #endif
     }
 
-    /// One section. iPhone and iPad: head and footer of the form. Mac: a small grey head in capitals
-    /// and the hint as its own grey 12 pt line right under the rows, without a hairline between them
-    /// (a plain list does not set a footer close under the row). Without a title the Mac shows no head.
+    /// One section. iPhone and iPad: head and footer of the form. Mac (#478, set right in #573 after the
+    /// board `feat-408-mac-entwurf/Einstellungen`): the head is a row of its own, flush with the rows'
+    /// text, with air above it and no hairline under it; the hint is a grey 12 pt row under the block's
+    /// closing hairline, without one of its own. So a hairline stands only between rows and under the
+    /// last row of a block, never under a head or a hint. Without a title the Mac shows no head.
     @ViewBuilder
     private func group(_ title: LocalizedStringKey?, hint: Text?, @ViewBuilder rows: () -> some View) -> some View {
         #if os(macOS)
-        let content = Group {
-            Group(content: rows)
-                .frame(minHeight: 40 - Paper.wideRowInsets.top - Paper.wideRowInsets.bottom)
-                .listRowInsets(Paper.wideRowInsets)
-                .listRowBackground(Paper.ground)
-            if let hint {
-                hint
-                    .font(.system(size: 12))
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .listRowInsets(EdgeInsets(top: 0, leading: Paper.wideRowInsets.leading,
-                                              bottom: Paper.wideRowInsets.bottom, trailing: Paper.wideRowInsets.trailing))
-                    .listRowSeparator(.hidden, edges: .top)
-                    .listRowBackground(Paper.ground)
-            }
-        }
         if let title {
-            Section { content } header: { Text(title).captionHead() }
-        } else {
-            Section { content }
+            Text(title)
+                .captionHead()
+                .listRowInsets(EdgeInsets(top: 24, leading: Paper.wideRowInsets.leading,
+                                          bottom: 6, trailing: Paper.wideRowInsets.trailing))
+                .listRowSeparator(.hidden, edges: .bottom)
+                .listRowBackground(Paper.ground)
+        }
+        Group(content: rows)
+            .frame(minHeight: 40 - Paper.wideRowInsets.top - Paper.wideRowInsets.bottom)
+            // The hairline from the row's leading edge, whatever the row's first text is (the iCloud
+            // row's started under its value on the right).
+            .alignmentGuide(.listRowSeparatorLeading) { _ in 0 }
+            .listRowInsets(Paper.wideRowInsets)
+            .listRowBackground(Paper.ground)
+        if let hint {
+            hint
+                .font(.system(size: 12))
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+                .listRowInsets(EdgeInsets(top: 8, leading: Paper.wideRowInsets.leading,
+                                          bottom: Paper.wideRowInsets.bottom, trailing: Paper.wideRowInsets.trailing))
+                .listRowSeparator(.hidden, edges: .bottom)
+                .listRowBackground(Paper.ground)
         }
         #else
         Section {
@@ -249,7 +272,9 @@ struct SettingsView: View {
                     .foregroundStyle(.tertiary)
                     .accessibilityHidden(true)
             }
+            .clickRow()
         }
+        .hoverRow()
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("fieldsRow")
         #else
@@ -285,7 +310,9 @@ struct SettingsView: View {
                         .foregroundStyle(.tertiary)
                         .accessibilityHidden(true)
                 }
+                .clickRow()
             }
+            .hoverRow(enabled: ready)
             .disabled(!ready)
             .accessibilityElement(children: .combine)
             .accessibilityIdentifier("defaultCalendarRow")
@@ -302,3 +329,44 @@ struct SettingsView: View {
         }
     }
 }
+
+/// A row that opens something (#573): on the Mac the whole row takes the click, not only its words
+/// (a plain button in a list hits only what its label paints, and a `Spacer` paints nothing); on
+/// iPhone and iPad the form's own row already does. `hoverRow` adds the grey under the pointer and the
+/// pointer hand, like the lists (#477).
+private extension View {
+    func clickRow() -> some View {
+        #if os(macOS)
+        frame(maxWidth: .infinity).contentShape(Rectangle())
+        #else
+        self
+        #endif
+    }
+
+    func hoverRow(enabled: Bool = true) -> some View {
+        #if os(macOS)
+        modifier(HoverRow(enabled: enabled))
+        #else
+        self
+        #endif
+    }
+}
+
+#if os(macOS)
+private struct HoverRow: ViewModifier {
+    let enabled: Bool
+    @State private var hovering = false
+
+    func body(content: Content) -> some View {
+        content
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            // Grey 7 % from the ink itself, so light and dark take the same rule (#477).
+            .background(RoundedRectangle(cornerRadius: 8).fill(Color.primary.opacity(hovering && enabled ? 0.07 : 0)))
+            .padding(.horizontal, -8)
+            .padding(.vertical, -4)
+            .onHover { hovering = $0 }
+            .pointerStyle(enabled ? .link : .default)
+    }
+}
+#endif

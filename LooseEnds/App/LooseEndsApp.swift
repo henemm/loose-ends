@@ -117,8 +117,11 @@ struct LooseEndsApp: App {
             SettingsView(notifications: notifications)
                 .environment(calendar)
                 .environment(fieldSettings)
-                // 640 x 720 pt like the board (#478); a list has no height of its own, and 512 cut off the last rows.
-                .frame(width: 640, height: 720)
+                // 640 pt wide like the board (#478); a list has no height of its own, and 512 cut off the last
+                // rows. The board's 720 held its six blocks; with the evening and morning rows (#518) and
+                // "Fields" (#538) the list set after the board (#573) runs to about 860: 880 where the screen
+                // allows, else what the screen leaves (`SettingsView.macWindowHeight`).
+                .frame(width: 640, height: SettingsView.macWindowHeight)
                 .preferredColorScheme(Self.uiTestColorScheme)
         }
         // Quick capture from the menu bar (#356); the logo's thread, the one exception of the
