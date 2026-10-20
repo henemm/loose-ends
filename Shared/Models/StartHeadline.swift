@@ -42,7 +42,9 @@ enum StartHeadline: Equatable {
         let tomorrow = calendar.date(byAdding: .day, value: 1, to: today) ?? now
         let yesterday = calendar.date(byAdding: .day, value: -1, to: today) ?? now
         let open = all.filter { $0.parent == nil && $0.isOpen }
-        let timedToday = open.filter { $0.dueHasTime && ($0.dueDate.map { $0 >= today && $0 < tomorrow } ?? false) }
+        // What is due today counts by date, a subtask with its own among it (#565).
+        let dated = all.filter { ViewRules.listedByDate($0) && $0.isOpen }
+        let timedToday = dated.filter { $0.dueHasTime && ($0.dueDate.map { $0 >= today && $0 < tomorrow } ?? false) }
             .sorted { ($0.dueDate ?? now) < ($1.dueDate ?? now) }
         let ahead = timedToday.filter { ($0.dueDate ?? now) >= now }
 
@@ -61,7 +63,7 @@ enum StartHeadline: Equatable {
             return .upcoming(title: short(first), at: at, count: ahead.count)
         }
         // 2b: due today, no time of day.
-        let dayOnlyToday = open.filter {
+        let dayOnlyToday = dated.filter {
             !$0.isBlocked && !$0.dueHasTime && ($0.dueDate.map { $0 >= today && $0 < tomorrow } ?? false)
         }.sorted { ($0.nextRank ?? .infinity) < ($1.nextRank ?? .infinity) }
         if let first = dayOnlyToday.first {

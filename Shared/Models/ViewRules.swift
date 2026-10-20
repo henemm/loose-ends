@@ -73,8 +73,14 @@ enum ViewRules {
     static func dueToday(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [TaskItem] {
         let today = calendar.startOfDay(for: now)
         let end = calendar.date(byAdding: .day, value: 1, to: today) ?? now
-        return all.filter { $0.parent == nil && $0.isOpen && !$0.isBlocked && ($0.dueDate.map { $0 >= today && $0 < end } ?? false) }
+        return all.filter { listedByDate($0) && $0.isOpen && !$0.isBlocked && ($0.dueDate.map { $0 >= today && $0 < end } ?? false) }
             .sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
+    }
+
+    /// Stands in a list by its date (#565, concept D): a top-level task, or a subtask with a due date
+    /// of its own. A subtask stands outside its task only with something of its own.
+    static func listedByDate(_ task: TaskItem) -> Bool {
+        task.parent == nil || task.dueDate != nil
     }
 
     /// Whose deadline passed (#518, #548): open tasks, subtasks among them, whose due time is behind
@@ -215,7 +221,8 @@ enum ViewRules {
             // Today and overdue (Henning, 2026-10-15): tomorrow or "Monday" is not due yet.
             let today = calendar.startOfDay(for: now)
             let limit = calendar.date(byAdding: .day, value: 1, to: today) ?? now
-            return topLevel.filter { $0.isOpen && ($0.dueDate.map { $0 < limit } ?? false) && !$0.isBlocked }
+            // A subtask with a date of its own stands here too (#565).
+            return all.filter { listedByDate($0) && $0.isOpen && ($0.dueDate.map { $0 < limit } ?? false) && !$0.isBlocked }
                 .sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
         case .quick:
             return topLevel.filter { $0.isOpen && ($0.duration?.isQuick ?? false) && !$0.isBlocked }
@@ -245,9 +252,10 @@ enum ViewRules {
         }
     }
 
-    /// Open top-level tasks carrying the context, urgency then importance.
+    /// Open tasks carrying the context, urgency then importance; a subtask with that tag of its own
+    /// among them (#565).
     static func tasks(inContext context: TaskContext, in all: [TaskItem]) -> [TaskItem] {
-        all.filter { $0.parent == nil && $0.isOpen && ($0.contexts ?? []).contains { $0.id == context.id } }
+        all.filter { $0.isOpen && ($0.contexts ?? []).contains { $0.id == context.id } }
             .sorted(by: byUrgencyThenImportance)
     }
 
