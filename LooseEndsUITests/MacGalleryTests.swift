@@ -297,7 +297,10 @@ final class MacGalleryTests: XCTestCase {
         let hint = macElement("captureRestHint", in: panel)
         XCTAssertTrue(hint.waitForExistence(timeout: 5), "Panel shows no resting hint")
         macShot(panel, "mac-gallery-panel-de")
-        XCTAssertEqual(hint.label, "Sprich los oder tippe. Return speichert.")
+        // A Mac `Text` reports its words as value with an empty label (run 39407681767: hint and head are
+        // static texts with only a value; buttons carry a label, the field only a placeholder value).
+        XCTAssertEqual(hint.value as? String, "Sprich los oder tippe. Return speichert.", "Resting hint is not in German")
+        XCTAssertEqual(macElement("capturePanelHeader", in: panel).value as? String, "Neue Aufgabe", "Head is not in German")
         let field = macElement("captureTextField", in: panel)
         field.click()
         field.typeText("Müll rausbringen")
@@ -312,15 +315,29 @@ final class MacGalleryTests: XCTestCase {
         macShot(panel, "mac-gallery-panel-typed-de")
         assertPanelFits(panel, label: "typed-de")
 
+        // The panel's field is vertical: Return arrives as a newline, which `submitOnReturn` saves.
         field.typeText("\n")
+        // `closeMenuBarPanel` closes the panel's window, so its elements leave the tree.
         let closed = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: app.buttons["menuBarOpenApp"])
-        XCTAssertEqual(XCTWaiter.wait(for: [closed], timeout: 5), .completed, "Return did not close the panel")
+        XCTAssertEqual(XCTWaiter.wait(for: [closed], timeout: 10), .completed, "Return did not close the panel")
         _ = macOpenMainWindowIfNeeded(app)
         let window = macMainWindow(of: app)
-        macElement("viewRow_new", in: window).click()
+        let newRow = macElement("viewRow_new", in: window)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 10), "Sidebar shows no New")
+        // With the panel gone no window may be key; activate, so the first click selects New.
+        app.activate()
+        newRow.click()
+        let row = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "taskRow_")).firstMatch
+        if !row.waitForExistence(timeout: 5) { newRow.click() }
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "New shows no task after Return")
+        // Only once New shows rows, so the start page's recent list cannot answer. Label or value as in
+        // `MacDetailClickTests.shows`: a combined row may keep its words as value.
         let saved = window.descendants(matching: .any)
-            .matching(NSPredicate(format: "label CONTAINS %@", "Müll rausbringen")).firstMatch
+            .matching(NSPredicate(format: "label CONTAINS %@ OR value CONTAINS %@", "Müll rausbringen", "Müll rausbringen"))
+            .firstMatch
         XCTAssertTrue(saved.waitForExistence(timeout: 10), "New shows no \"Müll rausbringen\" after Return")
+        macShot(window, "mac-gallery-panel-de-saved-in-new")
         app.terminate()
     }
 }
