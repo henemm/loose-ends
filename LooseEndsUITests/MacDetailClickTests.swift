@@ -49,6 +49,16 @@ final class MacDetailClickTests: XCTestCase {
         return target
     }
 
+    /// Window ▸ Zoom: fits a window wider than the screen to it.
+    @MainActor
+    private func zoomWindow(of app: XCUIApplication) {
+        app.menuBars.menuBarItems["Window"].click()
+        let zoom = app.menuBars.menuItems["Zoom"]
+        XCTAssertTrue(zoom.waitForExistence(timeout: 5), "The Window menu should offer Zoom")
+        zoom.click()
+        RunLoop.current.run(until: Date().addingTimeInterval(1))
+    }
+
     /// Where a person clicks into a text field: on its words at the leading edge, not the centre of
     /// its accessibility frame, which can sit right of what one sees.
     @MainActor
@@ -205,6 +215,36 @@ final class MacDetailClickTests: XCTestCase {
             .matching(NSPredicate(format: "identifier == 'detailRawTextMarker' AND label == 'Einkaufen'"))
             .firstMatch
         XCTAssertTrue(parentDetail.waitForExistence(timeout: 10), "Part of should lead back to the task")
+        app.terminate()
+    }
+
+    /// #565, Schnitt 3: on the Mac too, Complete with an open subtask asks first.
+    @MainActor
+    func testCompleteWithAnOpenSubtaskAsks() throws {
+        let (app, window) = openDetail("Umzug planen")
+        reveal("field_subtasks", in: window).click()
+        let field = reveal("subtaskTextField", in: window)
+        clickWords(of: field)
+        field.typeText("Kartons holen\n")
+        let line = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "subtaskRow_"))
+            .firstMatch
+        XCTAssertTrue(line.waitForExistence(timeout: 5), "Return should list the subtask")
+
+        let more = app.descendants(matching: .any).matching(identifier: "detailMoreMenu").firstMatch
+        XCTAssertTrue(more.waitForExistence(timeout: 5), "The detail's toolbar should offer More")
+        // The CI screen is 1024 pt wide, the window opens at 1200 pt when it opens at launch (run
+        // 39463321124): More sits off screen then. Window ▸ Zoom fits it, as a person would.
+        if !more.isHittable { zoomWindow(of: app) }
+        XCTAssertTrue(more.isHittable, "More should be in reach once the window fits the screen")
+        more.click()
+        let complete = app.descendants(matching: .any).matching(identifier: "menuCompleteButton").firstMatch
+        XCTAssertTrue(complete.waitForExistence(timeout: 5), "More should offer Complete")
+        complete.click()
+
+        let keepOpen = app.descendants(matching: .any).matching(identifier: "completeKeepOpenSubtasks").firstMatch
+        XCTAssertTrue(keepOpen.waitForExistence(timeout: 5), "An open subtask should make Complete ask first")
+        macShot(window, "mac-gallery-565-4-complete-asks")
         app.terminate()
     }
 

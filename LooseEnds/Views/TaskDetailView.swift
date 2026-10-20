@@ -59,6 +59,8 @@ struct TaskDetailView: View {
     @State private var choosesCalendar = false
     /// "Analyze again" (#34): running, or what it found, until the detail closes.
     @State private var reanalysis: Reanalysis?
+    /// Complete with open subtasks asks first (#565).
+    @State private var askingSubtasks: TaskItem?
     /// A subtask whose own detail is open (#565).
     @State private var openedSubtask: TaskItem?
     /// The parent, opened by "Part of" when this detail was not reached from it (#565).
@@ -269,6 +271,9 @@ struct TaskDetailView: View {
             TaskDetailView(task: parent)
         }
         .toolbar { actions }
+        .completesWithSubtasks(asking: $askingSubtasks) { _, withSubtasks in
+            finish(withSubtasks: withSubtasks)
+        }
         .onAppear {
             titleDraft = storedTitle
             if !reviewing { markSeen() }
@@ -599,11 +604,23 @@ struct TaskDetailView: View {
     }
 
     /// Back to the list, where the row waits out its three seconds with Undo (#32). Without the
-    /// window (previews) Done lands at once.
+    /// window (previews) Done lands at once. With open subtasks it asks first (#565).
     private func complete() {
+        if !Subtasks.open(of: task).isEmpty {
+            askingSubtasks = task
+            return
+        }
+        finish(withSubtasks: false)
+    }
+
+    /// "Complete all" takes the open subtasks along (#565).
+    private func finish(withSubtasks: Bool) {
         if let pendingCompletions {
-            pendingCompletions.schedule(task.id)
+            pendingCompletions.schedule(task.id, withSubtasks: withSubtasks)
         } else {
+            if withSubtasks {
+                for subtask in Subtasks.open(of: task) { TaskActions.complete(subtask) }
+            }
             TaskActions.complete(task)
             save("done")
             completionPulse?.fire()

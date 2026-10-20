@@ -28,6 +28,8 @@ struct SidebarView: View {
     @State private var pendingTaskDelete: TaskItem?
     @State private var confirmingTaskDelete = false
     @State private var datingTask: TaskItem?
+    /// Complete with open subtasks asks first (#565).
+    @State private var askingSubtasks: TaskItem?
     /// iPad and Mac: projects and tags start folded (Henning, 2026-10-05): most days need neither,
     /// and their rows and "New …" buttons pushed the views off the screen. Per device, a view setting
     /// only. The iPhone ignores both: its index opens a page instead (#428).
@@ -99,6 +101,7 @@ struct SidebarView: View {
             kind: kind, tasks: tasks, contexts: contexts, projects: projects, modelContext: modelContext,
             pendingCompletions: pendingCompletions, completionPulse: completionPulse,
             pendingDelete: $pendingTaskDelete, confirmingDelete: $confirmingTaskDelete, datingTask: $datingTask,
+            askingSubtasks: $askingSubtasks,
             didDelete: { id in if selection == .task(id) { selection = nil } }
         )
     }

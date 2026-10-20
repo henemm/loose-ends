@@ -5,12 +5,15 @@ import Observation
 /// (data model doc, "Erledigt"; ADR-17, from FocusBlox). Holds only ids and deadlines, the clock
 /// comes in from the caller, so the window is testable without waiting. The completion itself is
 /// still `TaskActions.complete`; the notification's Done and a subtask's checkbox stay immediate.
+/// "Complete all" (#565) takes the task's open subtasks along when the window runs out; Undo keeps them.
 @MainActor @Observable
 final class PendingCompletions {
     nonisolated static let defaultWindow: TimeInterval = 3
 
     let window: TimeInterval
     private(set) var deadlines: [UUID: Date] = [:]
+    /// Tasks whose open subtasks complete with them ("Complete all", #565).
+    private(set) var withSubtasks: Set<UUID> = []
 
     init(window: TimeInterval = defaultWindow) {
         self.window = window
@@ -24,15 +27,17 @@ final class PendingCompletions {
     }
 
     /// Starts the window. A second schedule for the same task does not stretch it.
-    func schedule(_ id: UUID, now: Date = Date()) {
+    func schedule(_ id: UUID, now: Date = Date(), withSubtasks: Bool = false) {
         guard deadlines[id] == nil else { return }
         deadlines[id] = now.addingTimeInterval(window)
+        if withSubtasks { self.withSubtasks.insert(id) }
     }
 
     /// The second tap. Returns whether there was anything left to take back.
     @discardableResult
     func cancel(_ id: UUID) -> Bool {
-        deadlines.removeValue(forKey: id) != nil
+        withSubtasks.remove(id)
+        return deadlines.removeValue(forKey: id) != nil
     }
 
     /// Completes every task whose window has run out and returns them; the caller saves. A task that
@@ -47,11 +52,18 @@ final class PendingCompletions {
     ) -> [TaskItem] {
         let due = Set(deadlines.filter { all || $0.value <= now }.keys)
         guard !due.isEmpty else { return [] }
+        let alongWith = withSubtasks.intersection(due)
         for id in due {
             deadlines.removeValue(forKey: id)
+            withSubtasks.remove(id)
         }
         let completed = tasks.filter { due.contains($0.id) && $0.isOpen }
         for task in completed {
+            if alongWith.contains(task.id) {
+                for subtask in Subtasks.open(of: task) {
+                    TaskActions.complete(subtask, now: now, calendar: calendar)
+                }
+            }
             TaskActions.complete(task, now: now, calendar: calendar)
         }
         return completed

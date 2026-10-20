@@ -664,6 +664,53 @@ final class CaptureSmokeTests: XCTestCase {
         assertDetailRawText("Keller aufräumen", in: app)
     }
 
+    /// #565, Schnitt 3 (Henning, 2026-10-20): finishing a task while a subtask is still open asks
+    /// "Complete all" or "Keep open ones" instead of closing it silently.
+    @MainActor
+    func testCompletingWithAnOpenSubtaskAsks() throws {
+        let app = launch()
+        let captureButton = app.buttons["captureButton"]
+        XCTAssertTrue(captureButton.waitForExistence(timeout: 10))
+        captureButton.tap()
+        let field = element("captureTextField", in: app)
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText("Umzug planen")
+        app.buttons["captureDoneButton"].tap()
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5))
+
+        let newRow = element("viewRow_new", in: app)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
+        newRow.tap()
+        let row = taskRow(in: app)
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        row.tap()
+        assertDetailRawText("Umzug planen", in: app)
+
+        openSection("field_subtasks", showing: "subtaskTextField", in: app)
+        let subtaskField = element("subtaskTextField", in: app)
+        if !subtaskField.waitForExistence(timeout: 3) { app.swipeUp() }
+        XCTAssertTrue(subtaskField.waitForExistence(timeout: 5), "Detail should offer a subtask field")
+        subtaskField.tap()
+        subtaskField.typeText("Kartons holen\n")
+        XCTAssertTrue(app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "subtaskRow_"))
+            .firstMatch.waitForExistence(timeout: 5), "The subtask should be listed")
+
+        let more = app.buttons["More"]
+        XCTAssertTrue(more.waitForExistence(timeout: 5), "Detail should offer its menu")
+        more.tap()
+        let complete = element("menuCompleteButton", in: app)
+        XCTAssertTrue(complete.waitForExistence(timeout: 5), "The menu should offer Complete")
+        complete.tap()
+
+        let keepOpen = element("completeKeepOpenSubtasks", in: app)
+        XCTAssertTrue(keepOpen.waitForExistence(timeout: 5), "An open subtask should make Complete ask first")
+        XCTAssertTrue(element("completeAllSubtasks", in: app).exists, "The question should offer Complete all")
+        element("completeAllSubtasks", in: app).tap()
+        XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 10), "New should be empty after Complete all")
+    }
+
     @MainActor
     func testSubtaskCanBeAddedAndChecked() throws {
         let app = launch()

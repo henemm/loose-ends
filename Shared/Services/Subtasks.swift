@@ -32,6 +32,11 @@ enum Subtasks {
         (parent.subtasks ?? []).sorted { $0.capturedAt < $1.capturedAt }
     }
 
+    /// The lines still open (#565, Schnitt 3): finishing their task asks about them first.
+    static func open(of parent: TaskItem) -> [TaskItem] {
+        ordered(of: parent).filter(\.isOpen)
+    }
+
     struct Progress: Equatable {
         let done: Int
         let total: Int

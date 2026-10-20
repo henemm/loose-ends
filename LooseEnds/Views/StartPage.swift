@@ -61,6 +61,8 @@ struct StartPage: View {
     @State private var pendingTaskDelete: TaskItem?
     @State private var confirmingTaskDelete = false
     @State private var datingTask: TaskItem?
+    /// Complete with open subtasks asks first (#565).
+    @State private var askingSubtasks: TaskItem?
     @FocusState private var fieldFocused: Bool
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "StartPage")
 
@@ -110,6 +112,7 @@ struct StartPage: View {
             kind: .next, tasks: tasks, contexts: contexts, projects: projects, modelContext: modelContext,
             pendingCompletions: pendingCompletions, completionPulse: completionPulse,
             pendingDelete: $pendingTaskDelete, confirmingDelete: $confirmingTaskDelete, datingTask: $datingTask,
+            askingSubtasks: $askingSubtasks,
             didDelete: { id in if selection == .task(id) { selection = nil } }
         )
     }
