@@ -163,6 +163,51 @@ final class MacDetailClickTests: XCTestCase {
         app.terminate()
     }
 
+    /// #565 (Henning, 2026-10-19): "Add" stood grey until text was typed and read as dead, and a
+    /// subtask was only a line. Now a line opens its own detail by "Details", and that detail leads back
+    /// to its task by "Part of".
+    @MainActor
+    func testSubtaskOpensItsOwnDetailAndLeadsBack() throws {
+        let (app, window) = openDetail("Einkaufen")
+        reveal("field_subtasks", in: window).click()
+        let field = reveal("subtaskTextField", in: window)
+        macShot(window, "mac-gallery-565-1-subtask-field")
+        let add = macElement("subtaskAddButton", in: window)
+        XCTAssertFalse(add.exists && !add.isEnabled, "Add should not stand there grey before there is text")
+
+        clickWords(of: field)
+        field.typeText("Milch\n")
+        let line = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "subtaskRow_"))
+            .firstMatch
+        XCTAssertTrue(line.waitForExistence(timeout: 5), "Return should list the subtask")
+        macShot(window, "mac-gallery-565-2-subtask-line")
+
+        let details = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "subtaskDetails_"))
+            .firstMatch
+        XCTAssertTrue(details.waitForExistence(timeout: 5), "The line should offer its own detail")
+        details.click()
+        let subtaskDetail = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier == 'detailRawTextMarker' AND label == 'Milch'"))
+            .firstMatch
+        XCTAssertTrue(subtaskDetail.waitForExistence(timeout: 10), "Details should open the subtask's own detail")
+        let title = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier == 'detailTitleField' AND value == 'Milch'"))
+            .firstMatch
+        XCTAssertTrue(title.waitForExistence(timeout: 5), "The subtask's detail should carry its words as title, not an empty Title")
+        let partOf = macElement("partOfParentButton", in: window)
+        XCTAssertTrue(partOf.waitForExistence(timeout: 5), "The subtask's detail should name its task")
+        macShot(window, "mac-gallery-565-3-subtask-detail")
+
+        partOf.click()
+        let parentDetail = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier == 'detailRawTextMarker' AND label == 'Einkaufen'"))
+            .firstMatch
+        XCTAssertTrue(parentDetail.waitForExistence(timeout: 10), "Part of should lead back to the task")
+        app.terminate()
+    }
+
     @MainActor
     func testFileOpensTheOpenPanel() throws {
         let (app, window) = openDetail("Vertrag ablegen")

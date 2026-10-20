@@ -20,6 +20,7 @@ import Testing
         try store.context.save()
 
         #expect(milk.rawText == "Milch")
+        #expect(milk.title == "Milch", "the typed line is the subtask's title, so its own detail is not untitled (#565)")
         #expect(milk.status == .active)
         #expect(milk.parent?.id == parent.id)
         #expect(milk.project?.id == project.id)
@@ -83,6 +84,42 @@ import Testing
         #expect(ViewRules.tasks(for: .next, in: all).map(\.id) == [parent.id])
         #expect(ViewRules.tasks(for: .done, in: all).isEmpty)
         #expect(ViewRules.tasks(inProject: project, in: all).map(\.id) == [parent.id])
+    }
+
+    @Test("A bare line carries no traits; its own due date, tags, place, duration and note come in that order (#565)")
+    @MainActor func traitsInOrder() async throws {
+        let store = try TestStore()
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = try #require(TimeZone(identifier: "Europe/Berlin"))
+        let now = try #require(calendar.date(from: DateComponents(year: 2026, month: 10, day: 20, hour: 9)))
+        let parent = TaskItem(rawText: "Einkaufen")
+        parent.status = .active
+        store.context.insert(parent)
+        let garden = TaskContext(name: "Garten", sortOrder: 2)
+        let phone = TaskContext(name: "Telefon", sortOrder: 1)
+        store.context.insert(garden)
+        store.context.insert(phone)
+        let bare = try Subtasks.add("Brot", to: parent, in: store.context, now: now)
+        let milk = try Subtasks.add("Milch", to: parent, in: store.context, now: now)
+        let due = try #require(calendar.date(byAdding: .hour, value: 6, to: now))
+        milk.dueDate = due
+        milk.dueHasTime = true
+        milk.contexts = [garden, phone]
+        milk.place = try #require(TaskPlace(name: "Markt", latitude: 53.55, longitude: 9.93, event: .arrive))
+        milk.duration = .minutes15
+        milk.notes = "  fettarm "
+        try store.context.save()
+
+        #expect(Subtasks.traits(of: bare, now: now, calendar: calendar).isEmpty)
+        let traits = Subtasks.traits(of: milk, now: now, calendar: calendar)
+        #expect(traits == [.due(.time(due)), .tag("Telefon"), .tag("Garten"), .place("Markt"), .duration(.minutes15), .note])
+        if case .due(let mark) = traits.first { #expect(mark.pressing, "due today should read as time pressure") }
+
+        milk.notes = "   "
+        Subtasks.toggle(milk, now: now)
+        #expect(Subtasks.traits(of: milk, now: now, calendar: calendar)
+            == [.tag("Telefon"), .tag("Garten"), .place("Markt"), .duration(.minutes15)],
+            "a done line keeps its traits but no due date, and a blank note is no note")
     }
 
     @Test("Deleting the parent takes its subtasks with it")

@@ -709,6 +709,19 @@ final class CaptureSmokeTests: XCTestCase {
         let progress = element("subtaskProgress", in: app)
         XCTAssertTrue(progress.waitForExistence(timeout: 5), "Checking a line off should show the progress")
         XCTAssertEqual(progress.label, "1 of 1 done")
+
+        // #565: the line opens its own detail, and that detail names its task.
+        let details = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "subtaskDetails_"))
+            .firstMatch
+        XCTAssertTrue(details.waitForExistence(timeout: 5), "The line should offer its own detail")
+        details.tap()
+        let partOf = element("partOfParentButton", in: app)
+        XCTAssertTrue(partOf.waitForExistence(timeout: 5), "The subtask's detail should name its task")
+        let subtaskDetail = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier == 'detailRawTextMarker' AND label == 'Milch'"))
+            .firstMatch
+        XCTAssertTrue(subtaskDetail.waitForExistence(timeout: 5), "Details should open the subtask's own detail")
     }
 
     @MainActor

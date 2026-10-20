@@ -17,6 +17,8 @@ enum Subtasks {
         guard !trimmed.isEmpty else { throw SubtaskError.emptyText }
         guard parent.parent == nil else { throw SubtaskError.nested }
         let subtask = TaskItem(rawText: trimmed, capturedVia: .app, ownerID: parent.ownerID)
+        // The typed line is its title as typed (#565): its own detail shows it, not an empty "Title".
+        subtask.title = trimmed
         subtask.capturedAt = now
         subtask.status = .active
         context.insert(subtask)
@@ -38,6 +40,33 @@ enum Subtasks {
     static func progress(of parent: TaskItem) -> Progress {
         let all = parent.subtasks ?? []
         return Progress(done: all.filter { $0.status == .done }.count, total: all.count)
+    }
+
+    /// What a subtask carries of its own (#565), grey under its words in the detail.
+    enum Trait: Equatable {
+        /// As in the lists' margin; red while `pressing`.
+        case due(ViewRules.MarginMark)
+        case tag(String)
+        case place(String)
+        case duration(DurationBucket)
+        case note
+    }
+
+    /// The due date first, then tags, place, duration and note. Empty for a bare line; a done line
+    /// keeps its traits but no due date, as in the lists.
+    static func traits(of subtask: TaskItem, now: Date = Date(), calendar: Calendar = .current) -> [Trait] {
+        var traits: [Trait] = []
+        if subtask.dueDate != nil {
+            let mark = ViewRules.marginMark(of: subtask, now: now, calendar: calendar)
+            if mark != .none { traits.append(.due(mark)) }
+        }
+        traits += (subtask.contexts ?? []).sorted { $0.sortOrder < $1.sortOrder }.map { Trait.tag($0.name) }
+        if let place = subtask.place { traits.append(.place(place.name)) }
+        if let duration = subtask.duration { traits.append(.duration(duration)) }
+        if let notes = subtask.notes, !notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            traits.append(.note)
+        }
+        return traits
     }
 
     /// Checks a line off, or reopens it.

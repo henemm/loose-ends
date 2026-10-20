@@ -3,12 +3,16 @@ import SwiftData
 import SwiftUI
 
 /// The "Subtasks" area of the detail (design briefing, screen 4): one level, each line checkable,
-/// a text field adds the next one. Only a top-level task has it (ADR-8).
+/// a text field adds the next one. Only a top-level task has it (ADR-8). A line becomes a task when
+/// needed (#565, concept D): "Details" at its end opens its own detail, and what it carries of its
+/// own stands grey under its words.
 struct SubtasksSection: View {
     @Environment(\.modelContext) private var modelContext
     let task: TaskItem
     /// Opened from the word line (#538): the field takes the focus at once.
     var startsEditing = false
+    /// Opens a line's own detail in the same navigation (#565).
+    let open: (TaskItem) -> Void
 
     @State private var draft = ""
     @FocusState private var draftFocused: Bool
@@ -21,14 +25,26 @@ struct SubtasksSection: View {
     var body: some View {
         Section {
             ForEach(lines) { line in
-                Button {
-                    toggle(line)
-                } label: {
-                    row(line)
+                HStack(spacing: 8) {
+                    // A tap on the words still checks off: quick outlining stays as it was.
+                    Button {
+                        toggle(line)
+                    } label: {
+                        row(line)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityValue(line.status == .done ? Text("Completed") : Text("Open"))
+                    .accessibilityIdentifier("subtaskRow_\(line.id.uuidString)")
+                    Button {
+                        open(line)
+                    } label: {
+                        Image(systemName: "info.circle")
+                    }
+                    .buttonStyle(.borderless)
+                    .foregroundStyle(.tint)
+                    .accessibilityLabel("Details")
+                    .accessibilityIdentifier("subtaskDetails_\(line.id.uuidString)")
                 }
-                .buttonStyle(.plain)
-                .accessibilityValue(line.status == .done ? Text("Completed") : Text("Open"))
-                .accessibilityIdentifier("subtaskRow_\(line.id.uuidString)")
             }
             .onDelete(perform: delete)
 
@@ -38,9 +54,12 @@ struct SubtasksSection: View {
                     .submitLabel(.done)
                     .onSubmit(add)
                     .accessibilityIdentifier("subtaskTextField")
-                Button("Add", action: add)
-                    .disabled(draftIsEmpty)
-                    .accessibilityIdentifier("subtaskAddButton")
+                // Only with text (#565): a grey button before any input read as dead on the Mac.
+                // Return adds as well and keeps the focus for the next line.
+                if !draftIsEmpty {
+                    Button("Add", action: add)
+                        .accessibilityIdentifier("subtaskAddButton")
+                }
             }
         } header: {
             Text("Subtasks").captionHead()
@@ -64,14 +83,39 @@ struct SubtasksSection: View {
                 .foregroundStyle(.secondary)
                 .opacity(done ? 1 : 0)
                 .accessibilityHidden(true)
-            Text(line.displayTitle)
-                .fontDesign(.serif)
-                .strikethrough(done)
-                .foregroundStyle(done ? AnyShapeStyle(.secondary) : AnyShapeStyle(.primary))
+            VStack(alignment: .leading, spacing: 2) {
+                Text(line.displayTitle)
+                    .fontDesign(.serif)
+                    .strikethrough(done)
+                    .foregroundStyle(done ? AnyShapeStyle(.secondary) : AnyShapeStyle(.primary))
+                let traits = Subtasks.traits(of: line)
+                if !traits.isEmpty {
+                    traitLine(traits)
+                        .font(.caption)
+                        .lineLimit(1)
+                }
+            }
             Spacer()
         }
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
+    }
+
+    /// Grey, the due date as in the lists' margin: red only for time pressure (ADR-14).
+    private func traitLine(_ traits: [Subtasks.Trait]) -> Text {
+        traits.enumerated().reduce(Text(verbatim: "")) { line, item in
+            let separator = item.offset == 0 ? Text(verbatim: "") : Text(verbatim: " · ").foregroundStyle(.secondary)
+            return line + separator + traitText(item.element)
+        }
+    }
+
+    private func traitText(_ trait: Subtasks.Trait) -> Text {
+        switch trait {
+        case .due(let mark): Text(mark.text).foregroundStyle(mark.pressing ? AnyShapeStyle(.red) : AnyShapeStyle(.secondary))
+        case .tag(let name), .place(let name): Text(name).foregroundStyle(.secondary)
+        case .duration(let bucket): Text(bucket.shortText).foregroundStyle(.secondary)
+        case .note: Text("Note").foregroundStyle(.secondary)
+        }
     }
 
     private func add() {
