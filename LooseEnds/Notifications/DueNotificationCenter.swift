@@ -223,9 +223,9 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         }
     }
 
-    /// The number on the app icon (#299): "Next up" plus "Due today", each task once. Set with
-    /// every reschedule, so after every save and whenever the app comes to the front; a day that
-    /// turns over while the app is closed shows on the icon at the next launch.
+    /// The number on the app icon (#299, #584): "Due" plus "Next up", each task once. Set with every
+    /// reschedule, so after every save and whenever the app comes to the front; a day that turns over
+    /// while the app is closed is set by the morning notification, which carries its day's number.
     private func updateBadge(for tasks: [TaskItem], with scheduler: any DueScheduling) async {
         do {
             try await scheduler.setBadgeCount(ViewRules.badgeCount(in: tasks))
@@ -258,6 +258,8 @@ final class DueNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
             content.title = String(localized: "Loose ends: \(reminder.openCount)")
             content.body = morningBody(reminder)
             content.categoryIdentifier = CarryReminders.categoryIdentifier
+            // The icon's number for the new day, applied by the system at delivery (#584).
+            if let badge = reminder.badge { content.badge = NSNumber(value: badge) }
         case .evening:
             content.title = String(localized: "Needs a new date: \(reminder.taskIDs.count)")
             content.body = ListFormatter.localizedString(byJoining: reminder.titles)
