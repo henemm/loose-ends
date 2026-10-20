@@ -221,10 +221,7 @@ final class MacDetailClickTests: XCTestCase {
             .firstMatch
         XCTAssertTrue(line.waitForExistence(timeout: 5), "Return should list the subtask")
 
-        let more = window.descendants(matching: .any)
-            .matching(NSPredicate(format: "label == 'More' AND (elementType == %d OR elementType == %d)",
-                                  XCUIElement.ElementType.menuButton.rawValue, XCUIElement.ElementType.popUpButton.rawValue))
-            .firstMatch
+        let more = app.descendants(matching: .any).matching(identifier: "detailMoreMenu").firstMatch
         XCTAssertTrue(more.waitForExistence(timeout: 5), "The detail's toolbar should offer More")
         more.click()
         let complete = app.descendants(matching: .any).matching(identifier: "menuCompleteButton").firstMatch

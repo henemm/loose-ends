@@ -539,6 +539,7 @@ struct TaskDetailView: View {
                     }
                 }
                 .accessibilityIdentifier("detailMoreMenu")
+                .accessibilityIdentifier("detailMoreMenu")
             }
         }
     }
