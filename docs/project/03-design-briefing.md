@@ -259,12 +259,21 @@ Sharing-Flows, freie Suche in natürlicher Sprache.
 
 **Editoren als Notizbuchseiten (Henning, 2026-10-16, #482).** Kein Editor ist mehr eine Systemliste mit weißer Karte und Häkchen. Jeder ist eine Seite auf Papier: klein die Beschriftung, groß in New York der jetzige Wert, darunter eine Form, die zum Feld passt. Wichtigkeit und Dringlichkeit als steigende Leiter mit kleinen Balken (rot nur Dringlichkeit Hoch), Dauer als Maßband, Etiketten als Satz (gewählt: Tinte mit Strich in Petrol), Projekt als Verzeichnis mit Punktlinie und Knoten. Die Wahl trägt einen Punkt am Rand, das Häkchen bleibt dem Erledigen. Einzelwahl schließt nach dem Tipp. Herkunft als Zitat mit markiertem Wort, Vorher/Nachher, Zurücksetzen. Entwurf: https://claude.ai/artifact/TsJ3X8aTtdu1zysX8uGh3j. Energie als sieben Punkte, Fällig mit Schnellwahl, zwei Wochen Kalender, Uhrzeiten als Wörter und eigener Uhrzeit, Wiederholung mit Häufigkeit als Wörtern, Kreisen für Wochentage und dem Satz im Kopf. Auf dem Mac öffnet jeder Editor als Popover an seiner Zeile, das Detail bleibt stehen; Escape schließt.
 
+**Schreibzeile unter „Neu“ (Henning, 2026-10-21, #601).** Auf der Startseite steht direkt unter dem Knopf „N zu prüfen“ eine
+Schreibzeile auf dem Papier (kein Kasten, kein Mikrofon, Platzhalter in New York), über „Jetzt“, auf iPhone, iPad und Mac
+gleich. Return legt die Aufgabe sofort an und behält den Cursor; beim ersten Return klappt der Knopf zur Schublade auf:
+Kopf mit Zahl (zählt sofort), darunter die Zeilen dieser Sitzung wie in den Listen (Titel per Regel, Datum am Rand), die
+Schreibzeile als letzte Zeile. Aufhören (Tastatur weg, Tipp auf den Satz des Tages, Escape, Seitenwechsel) faltet die
+Schublade in den Knopf. Bewegung weich, 0,4 s, ohne Feder; die Zahl wechselt als Ziffer, der Rand leuchtet kurz.
+Verworfen: Entwürfe mit Timer („Tablett“), Schreibleiste unten, Eingang als Liste; „Zuletzt erfasst“ rechts auf dem Mac
+entfällt. Entwurf: https://claude.ai/artifact/R8C6iLGAHXHrMqBvuyU6Zs; Spec `docs/specs/feat-601-schreibzeile.md`.
+
 ## Mac-App (Henning, 2026-10-16, Epic #467, ersetzt #408)
 
 Entwurf mit sieben Tafeln: `docs/artifacts/feat-408-mac-entwurf/` (Dateien) und https://claude.ai/artifact/RuLo7oxphcG4oJfTJ7HeLT (Ansicht, Kommentare). Die Mac-App ist dieselbe Papierwelt wie das iPhone; es gibt keine eigene Mac-Gestaltung (ADR-1), nur Fenster, Zeiger und Tastatur.
 
 - **Startseite** statt „Ansicht wählen“, solange links nichts gewählt ist: Datum, Satz des Tages (`StartHeadline`, dieselbe Regel wie auf dem iPhone), Eingabefeld, „Jetzt“. Die Zeilen sind die des iPhone: Zeit am Rand, Titel in Serif, Merkmale mit Symbolen (15 pt), **kein Faden und keine Punkte**; das war der alte Entwurf vom 14.10. und ist überholt (Kommentar im Entwurf).
-- **Rechte Spalte** ab 900 pt Inhaltsbreite: „Schnell“ (offen, nicht blockiert, Dauer höchstens 15 Min., die ersten drei nach Dringlichkeit und Wichtigkeit), „Zuletzt erfasst“, „Nächste Tage“. Kein neues Modellfeld.
+- **Rechte Spalte** ab 900 pt Inhaltsbreite: „Schnell“ (offen, nicht blockiert, Dauer höchstens 15 Min., die ersten drei nach Dringlichkeit und Wichtigkeit), „Nächste Tage“. Kein neues Modellfeld. „Zuletzt erfasst“ entfiel mit #601 (die Schublade unter „Neu“ zeigt das Getippte).
 - **Schrift** wie überall (#180): Serif für Inhalt (Satz, Titel, Eingabefeld, Notiz), SF für die App (Seitenleiste, Fenstertitel, Einstellungen, Merkmale, kleine Überschriften in Großbuchstaben).
 - **Farbe** wie überall (ADR-14): Akzent nur für Antippbares und Auswahl (12 %), Rot nur Zeitdruck, Grün nur Erledigen, Grau Hierarchie. Hell und dunkel.
 - **Raum:** Fenster mindestens 760 × 520 pt, Seitenleiste 220 bis 300 pt (Standard 250), Textbreite der Startseite höchstens 640 pt.

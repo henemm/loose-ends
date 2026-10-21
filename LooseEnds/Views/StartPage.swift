@@ -1,4 +1,3 @@
-import OSLog
 import SwiftData
 import SwiftUI
 
@@ -54,17 +53,13 @@ struct StartPage: View {
     @Query(sort: \Project.sortOrder) private var projects: [Project]
     @Binding var selection: ViewSelection?
     let tasks: [TaskItem]
-    /// ⌘N on the start page: each change puts the cursor in the field (#472).
+    /// ⌘N on the start page: each change puts the cursor in the writing line (#472).
     var focusRequest = 0
-    @State private var text = ""
-    @State private var saveFailed = false
     @State private var pendingTaskDelete: TaskItem?
     @State private var confirmingTaskDelete = false
     @State private var datingTask: TaskItem?
     /// Complete with open subtasks asks first (#565).
     @State private var askingSubtasks: TaskItem?
-    @FocusState private var fieldFocused: Bool
-    private static let logger = Logger(subsystem: "com.henning.looseends", category: "StartPage")
 
     var body: some View {
         // The right column needs room: from about 900 pt of width it stands next to the list (#473).
@@ -78,7 +73,6 @@ struct StartPage: View {
         }
         .accessibilityIdentifier("startPage")
         .taskInteractionDialogs(actions)
-        .onChange(of: focusRequest) { _, _ in fieldFocused = true }
     }
 
     private var listColumn: some View {
@@ -90,8 +84,9 @@ struct StartPage: View {
                 .listRowSeparator(.hidden)
                 .startRow(metrics)
                 .paperRow()
-            captureField
-                .padding(.bottom, 8)
+            // "New" with the writing line under it (#601): Return makes a task, the button opens
+            // into a drawer that shows it, leaving the line folds it.
+            InboxDrawerView(tasks: tasks, open: { selection = $0 }, selection: selection, focusRequest: focusRequest)
                 .listRowSeparator(.hidden)
                 .startRow(metrics)
                 .paperRow()
@@ -136,35 +131,6 @@ struct StartPage: View {
             .swipeActions(edge: .trailing, allowsFullSwipe: true) { actions.trailingActions(task) }
             .contextMenu { actions.menu(task) }
             .paperRow()
-        }
-    }
-
-    /// Saving is the same write path as the capture sheet; the text is kept as typed (ADR-3).
-    private var captureField: some View {
-        TextField("What should I remember?", text: $text)
-            .textFieldStyle(.plain)
-            .font(StartMetrics(typeSize).rowTitle)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 12)
-            .background(.background, in: RoundedRectangle(cornerRadius: 12))
-            .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(.separator))
-            .focused($fieldFocused)
-            .onSubmit(save)
-            .submitLabel(.done)
-            .accessibilityIdentifier("startCaptureField")
-            .alert("Could not save", isPresented: $saveFailed) {
-                Button("OK") {}
-            }
-    }
-
-    private func save() {
-        guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
-        do {
-            try CaptureService.save(text, via: .app, in: modelContext)
-            text = ""
-        } catch {
-            Self.logger.error("Capture from the start page failed: \(error, privacy: .public)")
-            saveFailed = true
         }
     }
 }

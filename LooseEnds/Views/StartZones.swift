@@ -40,36 +40,6 @@ struct ZoneCaptionText: View {
     }
 }
 
-/// "New" is an inbox, not a list among lists: one bar, there only while something waits. The one
-/// accent surface of the zone, since it is the one thing to tap (ADR-14). The caller tags the row
-/// with the selection it opens.
-struct InboxBar: View {
-    let count: Int
-    @Environment(\.dynamicTypeSize) private var typeSize
-
-    var body: some View {
-        let metrics = StartMetrics(typeSize)
-        HStack(spacing: 9) {
-            Image(systemName: "tray")
-            Text("\(count) to look over")
-            Spacer()
-            Image(systemName: "chevron.right")
-                .imageScale(.small)
-        }
-        .font(metrics.inbox)
-        .foregroundStyle(.tint)
-        .padding(.horizontal, 12)
-        .padding(.vertical, 10)
-        .background(Color.accentColor.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
-        .contentShape(Rectangle())
-        .accessibilityElement(children: .combine)
-        .accessibilityIdentifier("inboxBar")
-        .listRowSeparator(.hidden)
-        .startRow(metrics)
-        .paperRow()
-    }
-}
-
 /// What stands for now: the first five of the "Now" rule, the rest behind "N more", which unfolds
 /// in place. The unfolded state is local and not kept. `row` builds one task's row, so the swipes,
 /// the menu and the Done window stay with the caller.
