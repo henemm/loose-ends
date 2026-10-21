@@ -10,7 +10,7 @@ struct WaitingOnSection: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(CompletionPulse.self) private var completionPulse: CompletionPulse?
     /// Every task, for the picker.
-    @Query private var allTasks: [TaskItem]
+    @Query(filter: TaskItem.present) private var allTasks: [TaskItem]
     let task: TaskItem
     /// Opened from the word line (#538): the picker comes up at once.
     var startsPicking = false

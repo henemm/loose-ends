@@ -150,6 +150,12 @@ extension TaskItem {
         status == .unprocessed || status == .unverified || status == .active
     }
 
+    /// What exists for the user (#605): every task but one removed with its subtasks.
+    static var present: Predicate<TaskItem> {
+        let removed = TaskStatus.removed.rawValue
+        return #Predicate { $0.statusRaw != removed }
+    }
+
     /// Blocked means at least one blocker is still open.
     var isBlocked: Bool {
         (blockedBy ?? []).contains { $0.isOpen }

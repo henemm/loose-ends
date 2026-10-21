@@ -18,7 +18,7 @@ struct TaskDetailView: View {
     @Environment(PendingCompletions.self) private var pendingCompletions: PendingCompletions?
     @Environment(\.dismiss) private var dismiss
     /// Every task, for the "Next up" rank.
-    @Query private var allTasks: [TaskItem]
+    @Query(filter: TaskItem.present) private var allTasks: [TaskItem]
     @Query(sort: \TaskContext.sortOrder) private var contexts: [TaskContext]
     @Query(sort: \Project.sortOrder) private var projects: [Project]
     @Bindable var task: TaskItem

@@ -118,10 +118,11 @@ struct ReminderEntity: AppEntity {
         self.urls = []
     }
 
-    /// Tasks by id in every status; unknown ids are left out.
+    /// Tasks by id in every status but removed (#605); unknown ids are left out.
     @MainActor
     static func entities(for ids: [UUID], in context: ModelContext) throws -> [ReminderEntity] {
         let tasks = try context.fetch(FetchDescriptor<TaskItem>(predicate: #Predicate { ids.contains($0.id) }))
+            .filter { $0.status != .removed }
         return tasks.map(ReminderEntity.init(task:))
     }
 

@@ -9,7 +9,7 @@ import SwiftUI
 struct PlaceSection: View {
     @Environment(\.modelContext) private var modelContext
     /// Every task, for the 20-place ranking behind the "not watched" note.
-    @Query private var allTasks: [TaskItem]
+    @Query(filter: TaskItem.present) private var allTasks: [TaskItem]
     let task: TaskItem
     /// The detail presents the search sheet; this section only asks for it.
     @Binding var searching: Bool
