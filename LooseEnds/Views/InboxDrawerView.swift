@@ -62,7 +62,8 @@ struct InboxDrawerView: View {
                 .strokeBorder(Color.accentColor.opacity(glowing ? 0.35 : 0), lineWidth: 1.5)
         }
         .clipShape(RoundedRectangle(cornerRadius: 12))
-        .accessibilityIdentifier("inboxDrawer")
+        // No identifier on the stack: with the line as its only child it is transparent to
+        // accessibility, and an outer identifier replaced the line's own (CI run 39556748082).
         .alert("Could not save", isPresented: $saveFailed) {
             Button("OK") {}
         }
