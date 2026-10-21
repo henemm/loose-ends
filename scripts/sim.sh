@@ -9,6 +9,7 @@
 #   ./scripts/sim.sh generate                 # Xcode-Projekt aus project.yml erzeugen
 #   ./scripts/sim.sh unit [Suite[/test]]      # Unit-Tests im iOS-Simulator; Mac als Host nur mit LOOSEENDS_MAC_HOST=1
 #   ./scripts/sim.sh real-model               # Tests gegen das echte Modell auf diesem Mac (Apple Intelligence an, #531)
+#   ./scripts/sim.sh real-model-latency <n>   # Modell-Latenz kalt/warm, n Testprozesse, nach docs/artifacts/534-modell-latenz/
 #   ./scripts/sim.sh build                    # iOS-App für den Simulator bauen
 #   ./scripts/sim.sh mac-build                # macOS-App bauen
 #   ./scripts/sim.sh mac-schema-init          # CloudKit-Schema in Development anlegen (#175, schreibt in iCloud)
@@ -400,6 +401,34 @@ cmd_real_model() {
     # Der Satz zählt, nicht der Exit von xcodebuild: Übersprungen ist für ihn grün (#531).
     real_model_result "$BUILD_LOG" || rc=$?
     return $rc
+}
+
+# Latenz des echten Modells auf diesem Mac (#534): einmal bauen, dann n Testprozesse nacheinander, damit jeder
+# Lauf einen prozess-kalten ersten Aufruf hat. Jeder Lauf schreibt seine Rohproben nach lauf-NN.json; der Test
+# läuft unsigniert (CODE_SIGNING_ALLOWED=NO), also ohne App-Sandbox, und schreibt direkt ins Repo.
+cmd_real_model_latency() {
+    local n="${1:-}"
+    [[ "$n" =~ ^[1-9][0-9]*$ ]] || { error "Aufruf: sim.sh real-model-latency <n> (n Läufe, z. B. 15)"; return 1; }
+    acquire_testlock "real-model-latency"
+    ensure_project
+    mac_hosts_tests || { error "macOS $(sw_vers -productVersion) < Deployment Target $(deployment_target macOS): das Modell läuft nur auf dem Mac selbst"; return 1; }
+    [ "$(uname -m)" = arm64 ] || { error "Apple Intelligence braucht einen Mac mit Apple Silicon"; return 1; }
+    local only="$UNIT_TARGET/RealModelLatencyTests" out="$PROJECT_DIR/docs/artifacts/534-modell-latenz"
+    mkdir -p "$out"
+    rm -f "$out"/lauf-*.json
+    info "Latenz echtes Modell (macOS): $only, $n Läufe nach $out"
+    run_xcodebuild build-for-testing -project "$PROJECT" -scheme "$SCHEME" -destination 'platform=macOS' \
+        -only-testing:"$only" || { error "build-for-testing fehlgeschlagen: $BUILD_LOG"; return 1; }
+    local i file
+    for i in $(seq 1 "$n"); do
+        file="$out/lauf-$(printf '%02d' "$i").json"
+        info "Lauf $i/$n"
+        TEST_RUNNER_LOOSEENDS_REAL_MODEL=1 TEST_RUNNER_LOOSEENDS_LATENCY_OUT="$file" \
+            run_xcodebuild test-without-building -project "$PROJECT" -scheme "$SCHEME" -destination 'platform=macOS' \
+            -only-testing:"$only" -parallel-testing-enabled NO || { error "Lauf $i fehlgeschlagen: $BUILD_LOG"; return 1; }
+        [ -s "$file" ] || { error "Lauf $i hat keine Rohdaten geschrieben ($file fehlt). Ist Apple Intelligence an? Log: $BUILD_LOG"; return 1; }
+    done
+    python3 "$PROJECT_DIR/scripts/latency_summary.py" "$out"
 }
 
 # Ein Satz am Ende statt „siehe Ausgabe“ (Henning, 2026-10-19: aus dem Log war nicht zu erkennen, ob die
@@ -877,13 +906,14 @@ cmd_screenshot() {
     [ -f "$out" ] && success "Screenshot: $out" || { error "Screenshot fehlgeschlagen"; return 1; }
 }
 
-cmd_help() { sed -n '3,34p' "$0" | sed 's/^# \{0,1\}//'; }
+cmd_help() { sed -n '3,35p' "$0" | sed 's/^# \{0,1\}//'; }
 
 COMMAND="${1:-help}"; shift 2>/dev/null || true
 case "$COMMAND" in
     generate)   cmd_generate ;;
     unit)       cmd_unit "$@" ;;
     real-model) cmd_real_model ;;
+    real-model-latency) cmd_real_model_latency "$@" ;;
     build)      cmd_build ;;
     mac-build)  cmd_mac_build ;;
     mac-schema-init) cmd_mac_schema_init ;;
