@@ -248,7 +248,7 @@ enum ViewRules {
             // since #545 the parked ones close the list as a block of their own. A subtask with a
             // date of its own stands among the dated ones (Henning, 2026-10-21, #565): moved to
             // tomorrow, it had vanished from every list until its day.
-            return all.filter { listedByDate($0) && $0.status != .done }
+            return all.filter { listedByDate($0) && $0.status != .done && $0.status != .removed }
                 .sorted(by: byPressureThenWeight)
         case .done:
             return topLevel.filter { $0.status == .done }

@@ -206,12 +206,17 @@ struct TaskInteractions {
         save("move")
     }
 
+    /// Its subtasks stay as tasks of their own (#605); the log says how many were let go.
     func delete(_ task: TaskItem) {
         let id = task.id
         pendingCompletions?.cancel(id)
-        modelContext.delete(task)
         pendingDelete = nil
-        save("delete")
+        do {
+            let lifted = try TaskActions.delete(task, in: modelContext)
+            Self.logger.info("Deleted a task, \(lifted.count, privacy: .public) subtasks lifted")
+        } catch {
+            Self.logger.error("Deleting a task failed: \(error, privacy: .public)")
+        }
         didDelete(id)
     }
 

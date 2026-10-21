@@ -148,4 +148,68 @@ import Testing
         #expect(boxes.status == .done, "a done one stays done")
         #expect(ViewRules.tasks(for: .open, in: left).map(\.id) == [call.id], "the open one stands in Loose ends")
     }
+
+    @Test("Deleting on a store on disk: the subtasks are still there, on their own, after the store is opened again (#605)")
+    @MainActor func deleteLiftsSubtasksOnDisk() async throws {
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        let url = folder.appendingPathComponent("LooseEnds.store")
+        let schema = Schema(LooseEndsSchema.models)
+        func open() throws -> ModelContainer {
+            try ModelContainer(for: schema, configurations: [ModelConfiguration(schema: schema, url: url, cloudKitDatabase: .none)])
+        }
+
+        do {
+            let container = try open()
+            let context = container.mainContext
+            let parent = TaskItem(rawText: "Umzug")
+            parent.status = .active
+            context.insert(parent)
+            try Subtasks.add("Kartons holen", to: parent, in: context)
+            let keys = try Subtasks.add("Schlüssel abgeben", to: parent, in: context)
+            Subtasks.toggle(keys)
+            try context.save()
+
+            let lifted = try TaskActions.delete(parent, in: context)
+            #expect(Set(lifted.map(\.rawText)) == ["Kartons holen", "Schlüssel abgeben"])
+        }
+
+        let reopened = try open()
+        let left = try reopened.mainContext.fetch(FetchDescriptor<TaskItem>(predicate: TaskItem.present))
+        #expect(Set(left.map(\.rawText)) == ["Kartons holen", "Schlüssel abgeben"], "both subtasks are on disk, the task is not shown")
+        #expect(left.allSatisfy { $0.parent == nil }, "they stand on their own")
+        #expect(ViewRules.tasks(for: .open, in: left).map(\.rawText) == ["Kartons holen"], "the open one stands in Loose ends")
+        #expect(ViewRules.tasks(for: .done, in: left).map(\.rawText) == ["Schlüssel abgeben"], "the done one in Done")
+    }
+
+    @Test("Deleting a task with subtasks deletes no record, so no device can cascade it; one without subtasks is deleted (#605)")
+    @MainActor func deleteWithSubtasksKeepsEveryRecord() async throws {
+        let store = try TestStore()
+        let parent = TaskItem(rawText: "Umzug")
+        parent.status = .active
+        parent.nextRank = 1
+        store.context.insert(parent)
+        let boxes = try Subtasks.add("Kartons holen", to: parent, in: store.context)
+        let alone = TaskItem(rawText: "Blumen gießen")
+        alone.status = .active
+        store.context.insert(alone)
+        try store.context.save()
+        let before = try store.context.fetchCount(FetchDescriptor<TaskItem>())
+
+        try TaskActions.delete(parent, in: store.context)
+        #expect(try store.context.fetchCount(FetchDescriptor<TaskItem>()) == before, "a task with subtasks stays as a record")
+        #expect(parent.status == .removed)
+        #expect(parent.nextRank == nil)
+        #expect(boxes.parent == nil)
+
+        let present = try store.context.fetch(FetchDescriptor<TaskItem>(predicate: TaskItem.present))
+        #expect(Set(present.map(\.rawText)) == ["Kartons holen", "Blumen gießen"], "every list leaves the removed task out")
+        for kind in [ViewKind.next, .new, .due, .open, .done, .parked] {
+            #expect(!ViewRules.tasks(for: kind, in: [parent, boxes, alone]).contains { $0.id == parent.id },
+                    "\(kind) should leave a removed task out")
+        }
+
+        try TaskActions.delete(alone, in: store.context)
+        #expect(try store.context.fetchCount(FetchDescriptor<TaskItem>()) == before - 1, "a task without subtasks is deleted")
+    }
 }

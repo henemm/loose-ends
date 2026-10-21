@@ -9,7 +9,10 @@ import SwiftUI
 struct PlaceSection: View {
     @Environment(\.modelContext) private var modelContext
     /// Every task, for the 20-place ranking behind the "not watched" note.
-    @Query private var allTasks: [TaskItem]
+    @Query private var storedTasks: [TaskItem]
+    /// Filtered here, not in `@Query`: a predicate there is rebuilt on every init and kept the
+    /// detail from settling after a field tap (#605).
+    private var allTasks: [TaskItem] { storedTasks.filter(\.isPresent) }
     let task: TaskItem
     /// The detail presents the search sheet; this section only asks for it.
     @Binding var searching: Bool
