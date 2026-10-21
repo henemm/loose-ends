@@ -389,7 +389,7 @@ jobs:
           if [ -z "$app" ]; then echo "::error::No app in build/click"; ls build/click/Build/Products/Debug; exit 1; fi
           codesign --force --sign - --entitlements "$RUNNER_TEMP/mac-sandbox.plist" "$app"
           codesign -d --entitlements - "$app"
-      - name: Run the click test in the sandbox (#544)
+      - name: Run the click and keyboard tests in the sandbox (#544, #480)
         if: ${{ !cancelled() }}
         run: |
           set -o pipefail
@@ -399,6 +399,7 @@ jobs:
             -destination 'platform=macOS' \
             -derivedDataPath build/click \
             -only-testing:LooseEndsUITests/MacDetailClickTests \
+            -only-testing:LooseEndsUITests/MacKeyboardTests \
             -parallel-testing-enabled NO \
             -resultBundlePath MacDetailClick.xcresult \
             2>&1 | tee mac-click.log | xcbeautify
