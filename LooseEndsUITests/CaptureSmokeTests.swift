@@ -711,6 +711,62 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 10), "New should be empty after Complete all")
     }
 
+    /// #605 (Henning, 2026-10-21): deleting a task with a subtask left the task standing; its
+    /// subtasks are to stay, as tasks of their own, one level up.
+    @MainActor
+    func testDeletingATaskLiftsItsSubtask() throws {
+        let app = launch()
+        let captureButton = app.buttons["captureButton"]
+        XCTAssertTrue(captureButton.waitForExistence(timeout: 10))
+        captureButton.tap()
+        let field = element("captureTextField", in: app)
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText("Umzug planen")
+        app.buttons["captureDoneButton"].tap()
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5))
+
+        let newRow = element("viewRow_new", in: app)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
+        newRow.tap()
+        let row = taskRow(in: app)
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        row.tap()
+        assertDetailRawText("Umzug planen", in: app)
+
+        openSection("field_subtasks", showing: "subtaskTextField", in: app)
+        let subtaskField = element("subtaskTextField", in: app)
+        if !subtaskField.waitForExistence(timeout: 3) { app.swipeUp() }
+        XCTAssertTrue(subtaskField.waitForExistence(timeout: 5), "Detail should offer a subtask field")
+        subtaskField.tap()
+        subtaskField.typeText("Kartons holen\n")
+        XCTAssertTrue(app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "subtaskRow_"))
+            .firstMatch.waitForExistence(timeout: 5), "The subtask should be listed")
+
+        let back = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(back.waitForExistence(timeout: 5))
+        back.tap()
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "Back in New, the task should be listed")
+        deleteFromMenu(row, in: app)
+        XCTAssertTrue(row.waitForNonExistence(timeout: 5), "The deleted task should leave New")
+
+        let toSidebar = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(toSidebar.waitForExistence(timeout: 5))
+        toSidebar.tap()
+        let openRow = element("viewRow_open", in: app)
+        XCTAssertTrue(openRow.waitForExistence(timeout: 5), "The start screen should offer Loose ends")
+        openRow.tap()
+        let lifted = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH 'taskRow_' AND label CONTAINS %@", "Kartons holen"))
+            .firstMatch
+        XCTAssertTrue(lifted.waitForExistence(timeout: 5), "The subtask should stand in Loose ends as a task of its own")
+        let parentLeft = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH 'taskRow_' AND label CONTAINS %@", "Umzug planen"))
+            .firstMatch
+        XCTAssertFalse(parentLeft.exists, "The deleted task should not stand there")
+    }
+
     @MainActor
     func testSubtaskCanBeAddedAndChecked() throws {
         let app = launch()
