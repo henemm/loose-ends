@@ -51,6 +51,19 @@ struct TaskListView: View {
     @State private var isShown = false
     #endif
 
+    init(selection: ViewSelection, tasks: [TaskItem]) {
+        self.selection = selection
+        self.tasks = tasks
+        #if os(macOS)
+        // The Mac rebuilds the list on the way back from the detail without calling `onAppear`
+        // (CI run 39616031250), so the choice comes from the memo when the view is made. A stale id
+        // is harmless: it matches no row and `RowKeyAction` treats it as no choice.
+        let memo = ChosenRows.shared.byList[selection]
+        _selectedID = State(initialValue: memo)
+        lk("init", "view \(selection) from memo \(String(describing: memo))")
+        #endif
+    }
+
     /// The Mac always, iOS whenever the window is not compact (#477, as #471/#476).
     private var isWide: Bool {
         #if os(iOS)
