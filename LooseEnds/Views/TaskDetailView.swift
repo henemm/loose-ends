@@ -18,7 +18,10 @@ struct TaskDetailView: View {
     @Environment(PendingCompletions.self) private var pendingCompletions: PendingCompletions?
     @Environment(\.dismiss) private var dismiss
     /// Every task, for the "Next up" rank.
-    @Query(filter: TaskItem.present) private var allTasks: [TaskItem]
+    @Query private var storedTasks: [TaskItem]
+    /// Filtered here, not in `@Query`: a predicate there is rebuilt on every init and kept the
+    /// detail from settling after a field tap (#605).
+    private var allTasks: [TaskItem] { storedTasks.filter(\.isPresent) }
     @Query(sort: \TaskContext.sortOrder) private var contexts: [TaskContext]
     @Query(sort: \Project.sortOrder) private var projects: [Project]
     @Bindable var task: TaskItem

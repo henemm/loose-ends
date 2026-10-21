@@ -8,8 +8,9 @@ import WidgetKit
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.scenePhase) private var scenePhase
-    /// Without the tasks removed with their subtasks (#605).
-    @Query(filter: TaskItem.present, sort: \TaskItem.capturedAt, order: .reverse) private var tasks: [TaskItem]
+    @Query(sort: \TaskItem.capturedAt, order: .reverse) private var storedTasks: [TaskItem]
+    /// Without the tasks removed with their subtasks (#605); filtered here, not in `@Query` (see TaskDetailView).
+    private var tasks: [TaskItem] { storedTasks.filter(\.isPresent) }
     @State private var selection: ViewSelection?
     @State private var isCapturing = false
     /// ⌘N while the wide start page is open puts the cursor in its field instead of opening the sheet (#472).
