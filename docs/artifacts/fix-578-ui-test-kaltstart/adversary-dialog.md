@@ -8,7 +8,7 @@ Datum: 2026-10-21 08:36
 - [x] **AC-3:** Given `./scripts/sim.sh boot`, When der Simulator gestartet ist, Then ruft `cmd_boot` dasselbe Skript (kein zweiter Ort für die Einstellung).
 - [x] **AC-4:** Given der Job `ui-smoke`, When er läuft, Then führt er das Skript nach dem Boot-Warten und vor dem Testlauf aus und bricht bei Fehler vor dem Testlauf ab; `scripts/test_sim_lock.py` prüft diese Reihenfolge.
 - [x] **AC-5:** Given `CalendarTargetTests` auf einem so vorbereiteten, frischen Simulator, When der erste Test den Kalender einschaltet, Then erscheint kein Systemdialog und alle drei Tests sind grün.
-- [ ] **AC-6:** Given der Job `UI Smoke` in der CI (jeder Lauf bootet einen frischen Simulator), When er fünfmal läuft, Then sind alle fünf Läufe beim ersten Versuch grün, das Schritt-Log jedes Laufs enthält die Zeile „Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (<udid>)“, und in einem zusätzlichen, sechsten Beleglauf (Implementation Details 1), der nur `testDefaultCalendarIsStampedOnSwitchOn` ausführt, ist dieser Test als erster und einziger Test auf dem frischen Simulator grün; fehlt dieser grüne Beleglauf, ist AC-6 nicht erfüllt.
+- [x] **AC-6:** Given der Job `UI Smoke` in der CI (jeder Lauf bootet einen frischen Simulator), When er fünfmal läuft, Then sind alle fünf Läufe beim ersten Versuch grün, das Schritt-Log jedes Laufs enthält die Zeile „Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (<udid>)“, und in einem zusätzlichen, sechsten Beleglauf (Implementation Details 1), der nur `testDefaultCalendarIsStampedOnSwitchOn` ausführt, ist dieser Test als erster und einziger Test auf dem frischen Simulator grün; fehlt dieser grüne Beleglauf, ist AC-6 nicht erfüllt.
 - [x] **AC-7:** Given ein frischer Wegwerf-Simulator, When die Berechtigung vorab erteilt und die App danach durch `xcodebuild test` frisch installiert wird, Then bleibt der Kalender-Dialog aus, und das Ergebnis steht als Kommentar im Ticket.
 
 ## Dialog
@@ -31,6 +31,10 @@ Datum: 2026-10-21 08:36
 ### Runde 3
 **Adversary:** Nachpruefung der Behebungen. F001: `ls-files -s` zeigt 100755 fuer scripts/sim_prepare.sh, Datei ist im Index (5 Dateien gestaged, +38/-6). F002: Diff in scripts/test_sim_lock.py:260 ergaenzt assertGreaterEqual fuer die Marker "Wait until..." und "Run UI smoke tests" sowie eine Blockpruefung des Schritts "Prepare the simulator" auf `continue-on-error` und `|| true`; der Schrittblock enthaelt beides nicht, Test besteht. Suite erneut: "Ran 32 tests in 48.299s / OK", 0 uebersprungen (adversary-test-output.txt aktualisiert). F001 und F002 sind behoben. AC-6 bleibt offen (F003), nur aus der CI belegbar.
 **Implementierer:** F001/F002 behoben (laut Orchestrator).
+
+### Runde 4
+**Adversary:** AC-6 selbst nachgeprueft. Lauf 39565694080: Attempt 5 conclusion success; Attempts 1-4 einzeln per `gh run view --attempt N --json jobs`: UI Smoke (Jobs 119107302512, 119138397368, 119174116787, 119205350544, 119238534082) jeweils success, ebenso Build, Unit, Mac Gallery. Job-Logs je Attempt per `gh api .../actions/jobs/<id>/logs` (eigene Logs, nicht der letzte Attempt): jeder enthaelt "Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (B8D3DB6B-...)" und "Executed 22 tests, with 0 failures" (UI-Smoke-Block) bzw. 68 tests, 6 skipped, 0 failures gesamt; die 6 Skips sind die bekannten uebersprungenen Suiten (3+3), keine Fehler. Beleglauf 39620315452 (Commit 5d827ab, temporaerer -only-testing): alle Jobs success, UI Smoke Job 119291735651 hat "Simulator prepared: ... (600763F8-...)", Befehl mit -only-testing:LooseEndsUITests/CalendarTargetTests/testDefaultCalendarIsStampedOnSwitchOn und "Executed 1 test, with 0 failures". Rueckname: der Diff gegen origin/main fuer .github/workflows/ci.yml zeigt nur den Schritt "Prepare the simulator (#578)"; -only-testing in ci.yml nur noch LooseEndsTests, LooseEndsUITests (gesamt), MacGalleryTests, MacDetailClickTests, kein Einzeltest; HEAD 0a95744 ist der Revert. Hinweis: "erster Versuch" wird als je ein frischer Lauf/Runner verstanden (Re-Run-Attempts, jeweils neuer Simulator); eine Test-Retry-Option kommt in ci.yml nicht vor. F003 damit behoben.
+**Implementierer:** (nicht beteiligt)
 
 ## Findings und Confirmations
 
@@ -55,7 +59,7 @@ Finding:
   Remediation: assertGreaterEqual(wait, 0) und assertNotIn("continue-on-error", Schrittblock) ergaenzen.
 
 Finding:
-  ID: F003
+  ID: F003 (BEHOBEN in Runde 4, CI-Belege liegen vor)
   Severity: HIGH
   Category: spec_violation
   Code reference: .github/workflows/ci.yml:147
@@ -100,15 +104,21 @@ Confirmation:
   Evidence: Ticket-Kommentar AC-7, frischer Simulator, Installation durch xcodebuild test, kein Dialog.
   Status: CONFIRMED
 
+Confirmation:
+  AC: AC-6
+  Code reference: .github/workflows/ci.yml:147
+  Evidence: Lauf 39565694080 Attempts 1-5 alle Jobs success, je Log "Simulator prepared"-Zeile und 22 UI-Tests ohne Fehler; Beleglauf 39620315452 (Job 119291735651) fuehrt nur testDefaultCalendarIsStampedOnSwitchOn aus, 1 Test, 0 Fehler; Einzeltest-Filter im Zweig zurueckgenommen.
+  Status: CONFIRMED
+
 ## Herkunft der Vorbedingungen
 
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 
 ## Verdict
 
-VERDICT: AMBIGUOUS
-AC-1 bis AC-5 und AC-7 bewiesen (6/7). AC-6 nicht belegt (nur CI nach Push). F001 und F002 behoben. AC-6 extern nachzureichen (CI-Belege).
-Tests: 32 passed, 0 failed, 0 uebersprungen
+VERDICT: VERIFIED
+AC-1 bis AC-7 bewiesen (7/7). F001, F002, F003 behoben.
+Tests: 32 passed, 0 failed, 0 uebersprungen (lokale Suite); CI: 5 Laeufe UI Smoke gruen (22 Tests, 0 Fehler) plus Beleglauf 1 Test gruen
 
 ## Geprüfte Dateien
 
@@ -120,7 +130,7 @@ Tests: 32 passed, 0 failed, 0 uebersprungen
 
 ## Prüfbasis
 
-- base: 6ce15a05448b2ed277eb80a4a876621eda8d402c
+- base: 17190e7ca2dbc0a403938879079de35656990789
 - blob:c2db6c9a49b48729f2f8036915f932dd57e3853d  .github/workflows/ci.yml
 - blob:3b7c3acbd903435f06439a08a6771044ad615e99  LooseEndsUITests/CalendarTargetTests.swift
 - blob:fdfe323fcc62f2f8fecc10331705b3ec8fd89b79  scripts/sim.sh
