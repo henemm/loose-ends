@@ -91,7 +91,8 @@ final class EnrichmentCoordinator {
                     )
                     do {
                         let draft = try await callModel(input)
-                        let written = EnrichmentWriter.apply(draft, to: task, contexts: contexts, projects: projects)
+                        let written = EnrichmentWriter.apply(draft, to: task, contexts: contexts, projects: projects,
+                                                             pastNotes: examples.map(\.rawText))
                         logger.info("Enriched \(task.id, privacy: .public): \(written) fields")
                     } catch {
                         logger.error("Enrichment failed for \(task.id, privacy: .public): \(error, privacy: .public)")
@@ -171,7 +172,8 @@ final class EnrichmentCoordinator {
                 do {
                     let draft = try await callModel(input)
                     EnrichmentWriter.apply(
-                        draft, to: task, contexts: contexts, projects: projects, mode: .reanalysis, ruleFields: ruleFields
+                        draft, to: task, contexts: contexts, projects: projects, mode: .reanalysis, ruleFields: ruleFields,
+                        pastNotes: examples.map(\.rawText)
                     )
                     modelRan = true
                 } catch {
