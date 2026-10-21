@@ -517,8 +517,8 @@ cmd_boot() {
     open -a Simulator --args -CurrentDeviceUDID "$id" 2>/dev/null || true
     $SIMCTL boot "$id" 2>/dev/null || true
     $SIMCTL bootstatus "$id" -b >/dev/null 2>&1 || true
-    # Frischer Simulator (#341): der Tastatur-Hinweis „Speed up your typing…“ hängt XCTest-Abfragen auf.
-    [ "$SIM_OS" = "iOS" ] && { $SIMCTL spawn "$id" defaults write com.apple.keyboard.preferences DidShowContinuousPathIntroduction -bool true || warn "Tastatur-Hinweis nicht abgeschaltet ($SIM_NAME), UI-Tests können hängen (#341)"; }
+    # Frischer Simulator (#341, #578): Tastatur-Hinweis aus, Kalender-Zugriff vorab erteilt; dasselbe Skript wie die CI.
+    [ "$SIM_OS" = "iOS" ] && { "$PROJECT_DIR/scripts/sim_prepare.sh" "$id" || warn "Simulator nicht vorbereitet ($SIM_NAME), UI-Tests können hängen oder am Kalender-Dialog scheitern (#341, #578)"; }
     success "Simulator bereit ($SIM_NAME)."
 }
 

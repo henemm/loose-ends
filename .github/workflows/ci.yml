@@ -139,6 +139,12 @@ jobs:
         # #228: `simctl boot` returns before SpringBoard and the accessibility services are up; the
         # first UI queries then wait for a reply that comes late or not at all.
         run: xcrun simctl bootstatus "$SIM_UDID" -b
+      - name: Prepare the simulator (#578)
+        # #578: on a fresh simulator the keyboard hint "Speed up your typing…" covers the keyboard for ~50 s,
+        # and the calendar dialog comes late on a busy runner; under iOS 27 the interruption monitor does
+        # not catch it, so it stayed up and failed 25 tests (run 39457247533). Switch the hint off and grant
+        # calendar access before the tests; a failure stops the job here.
+        run: scripts/sim_prepare.sh "$SIM_UDID"
       - name: Let the simulator settle (#228)
         timeout-minutes: 5
         continue-on-error: true

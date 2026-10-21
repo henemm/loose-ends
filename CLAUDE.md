@@ -78,8 +78,9 @@ wegziehen. Wer zuerst wartet, bekommt die Sperre zuerst: jeder Wartende stellt e
 Warteliste `<Sperre>.queue`, nur der Kopf greift zu, tote Marken fallen heraus, Handskripte ohne Liste können
 vordrängeln, ohne etwas zu verklemmen (#516). Schreibt `xcodebuild` 15 min nichts ins Log (`LOOSEENDS_SILENCE_MAX`, Sekunden), beendet ein Wächter nur den
 Lauf dieser Sitzung und meldet „hängt seit N min, abgebrochen“ samt letzter Logzeile; die Sperre wird frei,
-CoreSimulatorService startet er nicht neu (#516). `boot` markiert auf jedem iOS-Simulator den Tastatur-Hinweis „Speed up your typing…“ als gezeigt:
-auf einem frischen Simulator hängt er sonst jede UI-Abfrage nach dem ersten `typeText` auf.
+CoreSimulatorService startet er nicht neu (#516). `boot` und der CI-Job `ui-smoke` rufen `scripts/sim_prepare.sh` auf (#578): es markiert den Tastatur-Hinweis „Speed up your typing…“ als gezeigt
+(auf einem frischen Simulator hängt er sonst jede UI-Abfrage nach dem ersten `typeText` auf) und erteilt der App den Kalenderzugriff vorab
+per `simctl privacy grant`. Der Kalender-Systemdialog wird in der CI nicht mehr durchgespielt; die 3-s-Suche im Test bleibt als Rückfall.
 DerivedData liegt je Worktree unter `LooseEnds-session-<Ordnername>` (`CLAUDE_SESSION_ID` überschreibt den
 Schlüssel). Die Handabsprache per Sperrdatei zwischen Sitzungen entfällt.
 
