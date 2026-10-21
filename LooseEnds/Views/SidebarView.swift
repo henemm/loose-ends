@@ -30,6 +30,8 @@ struct SidebarView: View {
     @State private var datingTask: TaskItem?
     /// Complete with open subtasks asks first (#565).
     @State private var askingSubtasks: TaskItem?
+    /// Each change ends the entry in the writing line (#601).
+    @State private var endRequest = 0
     /// iPad and Mac: projects and tags start folded (Henning, 2026-10-05): most days need neither,
     /// and their rows and "New …" buttons pushed the views off the screen. Per device, a view setting
     /// only. The iPhone ignores both: its index opens a page instead (#428).
@@ -112,10 +114,11 @@ struct SidebarView: View {
                 // One section: a plain list puts a tall gap above every section header.
                 Section {
                     header
-                    let review = ViewRules.tasks(for: .new, in: tasks).count
-                    if review > 0 {
-                        InboxBar(count: review).tag(ViewSelection.system(.new))
-                    }
+                    // "New" with the writing line under it (#601); a tap on the header ends the entry.
+                    InboxDrawerView(tasks: tasks, open: { selection = $0 }, selection: selection, endRequest: endRequest)
+                        .listRowSeparator(.hidden)
+                        .startRow(metrics)
+                        .paperRow()
                     NowBlock(tasks: ViewRules.now(in: tasks).all) { previewRow($0) }
                     // Same section: a second one put the list's section gap above "Contents" (#463).
                     // iPad: the sidebar marks the open list (#334); iPhone: after Back selection is nil.
@@ -194,6 +197,8 @@ struct SidebarView: View {
         .environment(\.defaultMinListRowHeight, isCompact ? 0 : 44)
         .navigationTitle(isCompact ? Text(verbatim: "") : Text("Views"))
         #if os(iOS)
+        // Putting the keyboard away by scrolling ends the entry in the writing line (#601).
+        .scrollDismissesKeyboard(.immediately)
         .listSectionSpacing(.compact)
         .navigationBarTitleDisplayMode(isCompact ? .inline : .automatic)
         #endif
@@ -261,6 +266,9 @@ struct SidebarView: View {
             // The draft: 14 above the date line, 16 under the headline (#463).
             .padding(.top, 14)
             .padding(.bottom, 16)
+            // A tap beside the writing line, on the sentence of the day, ends the entry (#601).
+            .contentShape(Rectangle())
+            .onTapGesture { endRequest += 1 }
             .listRowSeparator(.hidden)
             .startRow(metrics)
             .paperRow()

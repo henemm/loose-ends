@@ -39,21 +39,6 @@ import Testing
         #expect(!result.contains { $0.rawText == "Lang" || $0.rawText == "Wartet" })
     }
 
-    @Test("Recently captured: newest first, three at most, done and subtasks out")
-    @MainActor func recent() throws {
-        let store = try TestStore()
-        let old = task("Alt", captured: Self.now.addingTimeInterval(-4 * 86_400), store: store)
-        let a = task("A", captured: Self.now.addingTimeInterval(-3 * 86_400), store: store)
-        let b = task("B", captured: Self.now.addingTimeInterval(-2 * 86_400), store: store)
-        let c = task("C", captured: Self.now.addingTimeInterval(-86_400), store: store)
-        let done = task("Fertig", captured: Self.now, store: store)
-        done.status = .done
-        let sub = task("Unter", captured: Self.now, store: store)
-        sub.parent = c
-        let result = SideColumn.recent(in: [old, a, b, c, done, sub])
-        #expect(result.map(\.rawText) == ["C", "B", "A"])
-    }
-
     @Test("Next days: five tiles, earlier needs a new date first (#518), the day limits are midnight")
     @MainActor func days() throws {
         let store = try TestStore()

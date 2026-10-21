@@ -1,8 +1,8 @@
 import SwiftUI
 
-/// The right column of the wide start page (#473, draft "Main"): Quick, recently captured and the
-/// next five days. Reads only; a tap on a task opens it. Grey headings, serif lines (content), the
-/// number of a day in SF (the app).
+/// The right column of the wide start page (#473, draft "Main"): Quick and the next five days;
+/// "Recently captured" left with #601, the drawer under "New" shows what was just typed. Reads
+/// only; a tap on a task opens it. Grey headings, serif lines (content), the number of a day in SF.
 struct SideColumnView: View {
     let tasks: [TaskItem]
     @Binding var selection: ViewSelection?
@@ -13,9 +13,6 @@ struct SideColumnView: View {
         VStack(alignment: .leading, spacing: 0) {
             block("Quick") {
                 ForEach(SideColumn.quick(in: tasks)) { line($0, trailing: $0.duration.map(FieldFormatting.duration)) }
-            }
-            block("Recently captured") {
-                ForEach(SideColumn.recent(in: tasks)) { line($0, trailing: Self.age(of: $0.capturedAt)) }
             }
             block("Next days") { dayTiles }
             Spacer(minLength: 0)
@@ -76,12 +73,5 @@ struct SideColumnView: View {
                 .accessibilityElement(children: .combine)
             }
         }
-    }
-
-    /// "Today", "Yesterday", else the weekday.
-    private static func age(of date: Date, calendar: Calendar = .current) -> String {
-        if calendar.isDateInToday(date) { return String(localized: "Today") }
-        if calendar.isDateInYesterday(date) { return String(localized: "Yesterday") }
-        return date.formatted(.dateTime.weekday(.abbreviated))
     }
 }
