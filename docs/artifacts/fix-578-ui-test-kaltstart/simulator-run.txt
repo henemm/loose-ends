@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-10-21T08:32:40+0200
+befehl: scripts/sim.sh test-proof CalendarTargetTests
+workflow: fix-578-ui-test-kaltstart
+head: 314525e2a5c3b5d509c8738d251067c4a0b69f81
+basis: 6ce15a05448b2ed277eb80a4a876621eda8d402c (merge-base origin/main HEAD)
+testklasse: CalendarTargetTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 3 gesamt, 3 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1792564119.526  ende: 1792564359.697
+geraet: LE-578-fresh, iOS 27.0
+summary: docs/artifacts/fix-578-ui-test-kaltstart/simulator-run/summary.json  sha256:f0325a894f58a000f7fb42d6deeedd57539679eeab4ef77007ef8ff9a710ef0f
+xcresult: docs/artifacts/fix-578-ui-test-kaltstart/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-578-ui-test-kaltstart/simulator-run/*.png (7 Stück)
+
+## Geprüfte Dateien
+- sha256:f324f73142dc781495b7fa5dac19d0524e5723f9ed36547e287fa831c8c0fdba  LooseEndsUITests/CalendarTargetTests.swift
