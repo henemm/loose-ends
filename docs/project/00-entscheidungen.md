@@ -216,8 +216,10 @@ Etiketten. Die Wahl gilt auf allen Geräten (iCloud-Schlüsselwertspeicher) und 
 **ADR-8 ergänzt: eine Zeile, die bei Bedarf Aufgabe wird (Henning, 2026-10-20, #565).** Eine Unteraufgabe wird schnell
 als Zeile angelegt und abgehakt; „Details“ an der Zeile öffnet ihr eigenes Detail mit denselben Feldern wie eine Aufgabe,
 oben „Teil von …“. Eine Ebene tief, kein zweites Konzept „Checkliste“ daneben. Außerhalb ihrer Aufgabe erscheint sie nur
-mit eigenem Merkmal: eigenes Datum in „Fällig“ und „Jetzt“, eigenes Etikett in dessen Liste, immer mit ihrer Aufgabe in
-der Zeile; „Neu“, „Lose Enden“, „Als nächstes“ und die Zählungen bleiben bei obersten Aufgaben. Wer eine Aufgabe mit
+mit eigenem Merkmal: eigenes Datum überall, wo eine Aufgabe mit Datum steht („Fällig“, „Jetzt“, „Lose Enden“ bei den
+Datierten, „Nächste Tage“ auf dem Mac; Henning, 2026-10-21, nachdem eine auf morgen verschobene Zeile bis dahin nirgends
+mehr stand), eigenes Etikett in dessen Liste, immer mit ihrer Aufgabe in der Zeile; „Neu“ und „Als nächstes“ bleiben
+bei obersten Aufgaben. Wer eine Aufgabe mit
 offenen Unteraufgaben erledigt, wird gefragt: „Alle erledigen“ oder „Offene behalten“; Widget und Mitteilung fragen nicht
 und lassen Offenes offen. Regeln lesen auch die Zeile (Fällig aus dem Text, Etikett-Wort), das On-Device-Modell nie: die
 Zeile bleibt, was der Nutzer gegliedert hat, und bekommt kein zweites Konzept als Aufgabe im Eingang. Die anderen Regeln

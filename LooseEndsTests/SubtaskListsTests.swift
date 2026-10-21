@@ -4,8 +4,10 @@ import Testing
 @testable import LooseEnds
 
 /// Subtasks in the lists (#565, Henning 2026-10-20, concept D): a subtask stands outside its task
-/// only with something of its own. Its own date puts it in "Due", "Now", the badge and the start
-/// headline; its own tag in that tag's list. "New", "Loose ends" and "Next up" stay top level.
+/// only with something of its own. Its own date puts it wherever a dated task stands: "Due", "Now",
+/// the badge, the start headline, "Loose ends" and the Mac's "Next days" (Henning, 2026-10-21: moved
+/// to tomorrow, it had vanished until its day); its own tag in that tag's list. "New" and "Next up"
+/// stay top level.
 @Suite("Subtasks in the lists") struct SubtaskListsTests {
     static var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
@@ -73,7 +75,7 @@ import Testing
         #expect(ViewRules.tasks(inContext: phone, in: all).map(\.id) == [tagged.id])
     }
 
-    @Test("New, Loose ends and Next up keep to top-level tasks, whatever a subtask carries")
+    @Test("New and Next up keep to top-level tasks, whatever a subtask carries")
     @MainActor func topLevelViewsStay() async throws {
         let store = try TestStore()
         let phone = TaskContext(name: "Telefon", sortOrder: 0)
@@ -85,10 +87,35 @@ import Testing
         sub.nextRank = 0
         let all = [parent, sub]
 
-        for kind in [ViewKind.new, .open, .next] {
+        for kind in [ViewKind.new, .next] {
             #expect(!ViewRules.tasks(for: kind, in: all, now: Self.now, calendar: Self.calendar).contains { $0.id == sub.id },
                     "\(kind) should keep to top-level tasks")
         }
+    }
+
+    @Test("Moved to tomorrow, a dated subtask stands in Loose ends among the dated and in the Mac's Next days (#565)")
+    @MainActor func tomorrowStaysVisible() async throws {
+        let store = try TestStore()
+        let parent = Self.task("Umzug", in: store)
+        let undated = Self.task("Keller aufräumen", in: store)
+        let tomorrow = try Subtasks.add("Kartons holen", to: parent, in: store.context, now: Self.day(-1))
+        tomorrow.dueDate = Self.day(1)
+        let bare = try Subtasks.add("Kisten packen", to: parent, in: store.context, now: Self.day(-1))
+        let done = try Subtasks.add("Schlüssel abgeben", to: parent, in: store.context, now: Self.day(-1))
+        done.dueDate = Self.day(1)
+        Subtasks.toggle(done, now: Self.now)
+        let all = [parent, undated, tomorrow, bare, done]
+
+        // Not due yet: out of Due and Now, as a task due tomorrow is.
+        #expect(ViewRules.tasks(for: .due, in: all, now: Self.now, calendar: Self.calendar).isEmpty)
+        #expect(ViewRules.now(in: all, now: Self.now, calendar: Self.calendar).all.isEmpty)
+        // Loose ends: the dated line first, then the undated tasks; the bare and the done line out.
+        let open = ViewRules.tasks(for: .open, in: all, now: Self.now, calendar: Self.calendar).map(\.id)
+        #expect(open.first == tomorrow.id)
+        #expect(Set(open) == [tomorrow.id, parent.id, undated.id])
+        // Next days on the Mac: the tile for tomorrow counts the line.
+        let days = SideColumn.days(in: all, now: Self.now, calendar: Self.calendar)
+        #expect(days.map(\.count) == [0, 1, 0, 0, 0])
     }
 
     @Test("The start headline counts a subtask due today by its own date")

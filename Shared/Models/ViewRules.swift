@@ -78,7 +78,8 @@ enum ViewRules {
     }
 
     /// Stands in a list by its date (#565, concept D): a top-level task, or a subtask with a due date
-    /// of its own. A subtask stands outside its task only with something of its own.
+    /// of its own. A subtask stands outside its task only with something of its own, and then
+    /// wherever a dated task stands: Due, Now, Loose ends, the Mac's Next days.
     static func listedByDate(_ task: TaskItem) -> Bool {
         task.parent == nil || task.dueDate != nil
     }
@@ -244,8 +245,10 @@ enum ViewRules {
                 .sorted { ($0.parkedAt ?? .distantPast) > ($1.parkedAt ?? .distantPast) }
         case .open:
             // Not `isOpen`: that leaves parked tasks out, and "Loose ends" means all of them (#319);
-            // since #545 the parked ones close the list as a block of their own.
-            return topLevel.filter { $0.status != .done }
+            // since #545 the parked ones close the list as a block of their own. A subtask with a
+            // date of its own stands among the dated ones (Henning, 2026-10-21, #565): moved to
+            // tomorrow, it had vanished from every list until its day.
+            return all.filter { listedByDate($0) && $0.status != .done }
                 .sorted(by: byPressureThenWeight)
         case .done:
             return topLevel.filter { $0.status == .done }
