@@ -36,8 +36,9 @@ extension View {
 
     /// A row of a list in a wide window (#477): the start screen's sizes, 11 pt above and below,
     /// paper behind it and grey under the pointer on the Mac. No effect in a compact window.
-    func wideListRow() -> some View {
-        modifier(WideListRow())
+    /// `selected` marks the row chosen by the keys on the Mac in accent 12 % (#480); iOS ignores it.
+    func wideListRow(selected: Bool = false) -> some View {
+        modifier(WideListRow(selected: selected))
     }
 
     /// Small, grey, spaced capitals, like the heads of the start screen's zones: the detail's section
@@ -114,6 +115,7 @@ private struct DetailColumn: ViewModifier {
 }
 
 private struct WideListRow: ViewModifier {
+    var selected = false
     @Environment(\.dynamicTypeSize) private var typeSize
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var sizeClass
@@ -132,10 +134,13 @@ private struct WideListRow: ViewModifier {
         #else
         wide(content)
             .onHover { hovering = $0 }
-            // Grey 7 % from the ink itself, so light and dark take the same rule (#477).
+            // Grey 7 % from the ink itself, so light and dark take the same rule (#477). The chosen
+            // row is accent 12 % and wins over the pointer (#480): accent = tappable or chosen.
             .listRowBackground(
                 Paper.ground.overlay {
-                    if hovering {
+                    if selected {
+                        RoundedRectangle(cornerRadius: 10).fill(Color.accentColor.opacity(0.12))
+                    } else if hovering {
                         RoundedRectangle(cornerRadius: 10).fill(Color.primary.opacity(0.07))
                     }
                 }

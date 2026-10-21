@@ -78,4 +78,32 @@ import Testing
             #expect(RowKeyAction.resolve(.delete, textFocused: false, selection: selected, ids: ids) == .delete(selected))
         }
     }
+
+    // MARK: - Where Space may not finish (adversary F001)
+
+    @Test func spaceIgnoresARowItMayNotFinishButDeleteStillAsks() {
+        let notB: (UUID) -> Bool = { $0 != b }
+        #expect(RowKeyAction.resolve(.space, textFocused: false, selection: b, ids: ids, completes: notB) == .ignore)
+        #expect(RowKeyAction.resolve(.space, textFocused: false, selection: a, ids: ids, completes: notB) == .complete(a))
+        #expect(RowKeyAction.resolve(.delete, textFocused: false, selection: b, ids: ids, completes: notB) == .delete(b))
+        #expect(RowKeyAction.resolve(.down, textFocused: false, selection: b, ids: ids, completes: notB) == .select(c))
+    }
+
+    @Test func spaceFinishesOnlyWhereTheSwipeOffersDone() {
+        for kind in [ViewKind.done, .new, .parked] {
+            #expect(!RowKeyAction.spaceCompletes(in: kind, status: .active), "\(kind)")
+        }
+        for kind in [ViewKind.next, .due, .quick, .old, .waiting, .repeating, .open] {
+            #expect(RowKeyAction.spaceCompletes(in: kind, status: .active), "\(kind)")
+        }
+        // A context or project view has no system kind.
+        #expect(RowKeyAction.spaceCompletes(in: nil, status: .unprocessed))
+        #expect(RowKeyAction.spaceCompletes(in: nil, status: .unverified))
+    }
+
+    @Test func aParkedOrDoneTaskIsNeverFinishedBySpace() {
+        #expect(!RowKeyAction.spaceCompletes(in: .open, status: .parked))
+        #expect(!RowKeyAction.spaceCompletes(in: nil, status: .parked))
+        #expect(!RowKeyAction.spaceCompletes(in: nil, status: .done))
+    }
 }

@@ -6,8 +6,9 @@ import XCTest
 /// A click still opens the task and now also marks its row. The marked row exposes the selected trait on
 /// the element that carries `taskRow_<id>`.
 ///
-/// The list has no search field; the text-focus case uses the detail's title field, which stands beside
-/// the list in the same window.
+/// On the Mac the detail takes the list's place (one column, "Back" leads on), and the list has no text
+/// field: the keys reach the list after a click on its paper, the text-focus case uses the capture field
+/// that ⌘N opens.
 /// Runs in the CI job "Mac Gallery (macOS)", in the sandbox of the real app, next to `MacDetailClickTests`;
 /// its pictures leave as `mac-gallery-480-*`.
 final class MacKeyboardTests: XCTestCase {
@@ -69,15 +70,33 @@ final class MacKeyboardTests: XCTestCase {
     private func id(of row: XCUIElement) -> String { row.identifier }
 
     @MainActor
-    private func undoButtons(in window: XCUIElement) -> XCUIElementQuery {
-        window.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH %@", "undoComplete_"))
+    private func undoButtons(in scope: XCUIElement) -> XCUIElementQuery {
+        scope.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH %@", "undoComplete_"))
     }
 
-    /// A click opens the task in the detail and marks its row; the list keeps the keys from there.
+    /// A click opens the task: on the Mac the detail takes the list's place.
     @MainActor
     private func clickRow(_ row: XCUIElement, in window: XCUIElement) {
         row.click()
         XCTAssertTrue(macElement("detailRawTextMarker", in: window).waitForExistence(timeout: 10), "Detail did not open")
+    }
+
+    /// "Back" from the detail to the list: the toolbar button named so, else the first toolbar button.
+    @MainActor
+    private func goBack(in window: XCUIElement) {
+        let named = window.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'Back' OR identifier CONTAINS[c] 'Back'")).firstMatch
+        let button = named.waitForExistence(timeout: 3) ? named : window.toolbars.buttons.firstMatch
+        XCTAssertTrue(button.waitForExistence(timeout: 5), "The detail shows no way back to the list")
+        button.click()
+        XCTAssertTrue(waitUntil(10) { !taskRows(in: window).isEmpty }, "The list did not come back")
+    }
+
+    /// Gives the list the keys the way a person does: a click on the paper below the last row.
+    @MainActor
+    private func focusList(_ rows: [XCUIElement], in window: XCUIElement) {
+        guard let last = rows.last else { return XCTFail("No rows to focus") }
+        let origin = window.coordinate(withNormalizedOffset: .zero)
+        origin.withOffset(CGVector(dx: last.frame.midX - window.frame.minX, dy: last.frame.maxY - window.frame.minY + 80)).click()
     }
 
     @MainActor
@@ -91,9 +110,10 @@ final class MacKeyboardTests: XCTestCase {
     func testArrowsSelectAndSpaceCompletes() throws {
         let (app, window, rows) = openList()
         let ids = rows.map { id(of: $0) }
-        clickRow(rows[0], in: window)
-        XCTAssertTrue(waitUntil { selectedRows(in: window) == [ids[0]] }, "A click should mark the row it opens")
+        focusList(rows, in: window)
 
+        app.typeKey(.downArrow, modifierFlags: [])
+        XCTAssertTrue(waitUntil { selectedRows(in: window) == [ids[0]] }, "Down without a choice should take the first row, marked: \(selectedRows(in: window))")
         app.typeKey(.downArrow, modifierFlags: [])
         XCTAssertTrue(waitUntil { selectedRows(in: window) == [ids[1]] }, "Down should choose the second row, marked: \(selectedRows(in: window))")
         app.typeKey(.upArrow, modifierFlags: [])
@@ -118,9 +138,10 @@ final class MacKeyboardTests: XCTestCase {
     func testDeleteAsksFirst() throws {
         let (app, window, rows) = openList()
         let ids = rows.map { id(of: $0) }
-        clickRow(rows[0], in: window)
+        focusList(rows, in: window)
         app.typeKey(.downArrow, modifierFlags: [])
-        XCTAssertTrue(waitUntil { selectedRows(in: window) == [ids[1]] }, "Down should choose the second row")
+        app.typeKey(.downArrow, modifierFlags: [])
+        XCTAssertTrue(waitUntil { selectedRows(in: window) == [ids[1]] }, "Two downs should choose the second row, marked: \(selectedRows(in: window))")
 
         app.typeKey(.delete, modifierFlags: [])
         let confirm = macElement("confirmDeleteButton", in: app)
@@ -140,24 +161,30 @@ final class MacKeyboardTests: XCTestCase {
 
     // MARK: - Text focus
 
+    /// The list has no text field and the detail takes its place, so the text focus is the one ⌘N brings:
+    /// with a row chosen, Delete goes to the capture field and touches no task.
     @MainActor
     func testTextFocusKeepsKeys() throws {
         let (app, window, rows) = openList()
         let ids = rows.map { id(of: $0) }
-        clickRow(rows[0], in: window)
+        focusList(rows, in: window)
         // The row is chosen first, so that a text field which lets the keys through would do harm.
         app.typeKey(.downArrow, modifierFlags: [])
-        XCTAssertTrue(waitUntil { selectedRows(in: window) == [ids[1]] }, "Down should choose the second row")
+        app.typeKey(.downArrow, modifierFlags: [])
+        XCTAssertTrue(waitUntil { selectedRows(in: window) == [ids[1]] }, "Two downs should choose the second row, marked: \(selectedRows(in: window))")
 
-        let title = macElement("detailTitleField", in: window)
-        XCTAssertTrue(title.waitForExistence(timeout: 5), "Detail shows no title field")
-        title.coordinate(withNormalizedOffset: CGVector(dx: 0.06, dy: 0.5)).click()
-        title.typeKey(" ", modifierFlags: [])
-        title.typeKey(.delete, modifierFlags: [])
-        title.typeKey(.delete, modifierFlags: [])
+        app.typeKey("n", modifierFlags: .command)
+        let field = macElement("captureTextField", in: app)
+        XCTAssertTrue(field.waitForExistence(timeout: 10), "⌘N opened no capture")
+        field.typeText("a b")
+        app.typeKey(.delete, modifierFlags: [])
+        let value = (field.value as? String) ?? ""
+        XCTAssertTrue(value.hasPrefix("a") && !value.contains("b"), "Delete should take the last letter out of the field, it holds \"\(value)\"")
 
-        XCTAssertFalse(undoButtons(in: window).firstMatch.waitForExistence(timeout: 2), "Space in a text field must not finish a task")
+        XCTAssertFalse(undoButtons(in: app).firstMatch.exists, "Space in a text field must not finish a task")
         XCTAssertFalse(macElement("confirmDeleteButton", in: app).exists, "Delete in a text field must not ask to delete a task")
+        app.typeKey(.escape, modifierFlags: [])
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5), "Escape should close the capture")
         XCTAssertEqual(taskRows(in: window).count, 3, "No task should have gone")
         app.terminate()
     }
@@ -169,8 +196,9 @@ final class MacKeyboardTests: XCTestCase {
         let (app, window, rows) = openList()
         let ids = rows.map { id(of: $0) }
         clickRow(rows[1], in: window)
-        XCTAssertTrue(waitUntil { selectedRows(in: window) == [ids[1]] }, "The clicked row should be marked: \(selectedRows(in: window))")
         XCTAssertTrue(macElement("detailTitleField", in: window).waitForExistence(timeout: 5), "The click should still open the task")
+        goBack(in: window)
+        XCTAssertTrue(waitUntil { selectedRows(in: window) == [ids[1]] }, "The opened row should be marked on the way back: \(selectedRows(in: window))")
         app.terminate()
     }
 
@@ -178,7 +206,7 @@ final class MacKeyboardTests: XCTestCase {
 
     @MainActor
     func testShortcutsAndContextMenu() throws {
-        let (app, window, rows) = openList()
+        let (app, _, rows) = openList()
 
         // ⌘N from a list opens the capture sheet (on the start page it goes into the field).
         app.typeKey("n", modifierFlags: .command)
@@ -206,9 +234,10 @@ final class MacKeyboardTests: XCTestCase {
     private func photographSelection(dark: Bool, name: String) {
         let (app, window, rows) = openList(dark: dark)
         let ids = rows.map { id(of: $0) }
-        clickRow(rows[0], in: window)
+        focusList(rows, in: window)
         app.typeKey(.downArrow, modifierFlags: [])
-        XCTAssertTrue(waitUntil { selectedRows(in: window) == [ids[1]] }, "Down should choose the second row")
+        app.typeKey(.downArrow, modifierFlags: [])
+        XCTAssertTrue(waitUntil { selectedRows(in: window) == [ids[1]] }, "Two downs should choose the second row")
         macShot(window, name)
         app.terminate()
     }
