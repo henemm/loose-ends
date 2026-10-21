@@ -148,4 +148,37 @@ import Testing
         #expect(boxes.status == .done, "a done one stays done")
         #expect(ViewRules.tasks(for: .open, in: left).map(\.id) == [call.id], "the open one stands in Loose ends")
     }
+
+    @Test("Deleting on a store on disk: the subtasks are still there, on their own, after the store is opened again (#605)")
+    @MainActor func deleteLiftsSubtasksOnDisk() async throws {
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        let url = folder.appendingPathComponent("LooseEnds.store")
+        let schema = Schema(LooseEndsSchema.models)
+        func open() throws -> ModelContainer {
+            try ModelContainer(for: schema, configurations: [ModelConfiguration(schema: schema, url: url, cloudKitDatabase: .none)])
+        }
+
+        do {
+            let container = try open()
+            let context = container.mainContext
+            let parent = TaskItem(rawText: "Umzug")
+            parent.status = .active
+            context.insert(parent)
+            try Subtasks.add("Kartons holen", to: parent, in: context)
+            let keys = try Subtasks.add("Schlüssel abgeben", to: parent, in: context)
+            Subtasks.toggle(keys)
+            try context.save()
+
+            let lifted = try TaskActions.delete(parent, in: context)
+            #expect(Set(lifted.map(\.rawText)) == ["Kartons holen", "Schlüssel abgeben"])
+        }
+
+        let reopened = try open()
+        let left = try reopened.mainContext.fetch(FetchDescriptor<TaskItem>())
+        #expect(Set(left.map(\.rawText)) == ["Kartons holen", "Schlüssel abgeben"], "both subtasks are on disk")
+        #expect(left.allSatisfy { $0.parent == nil }, "they stand on their own")
+        #expect(ViewRules.tasks(for: .open, in: left).map(\.rawText) == ["Kartons holen"], "the open one stands in Loose ends")
+        #expect(ViewRules.tasks(for: .done, in: left).map(\.rawText) == ["Schlüssel abgeben"], "the done one in Done")
+    }
 }
