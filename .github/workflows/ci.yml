@@ -35,6 +35,15 @@ jobs:
         run: brew install xcodegen
       - name: Generate project
         run: xcodegen generate
+      # #499: XcodeGen rewrites every Info.plist and .entitlements from the project spec. A checked-in copy that lags
+      # behind leaves a diff after every `generate`, so the tree must be clean here; the sync tests above catch
+      # the same without Xcode.
+      - name: Generate leaves the tree clean
+        run: |
+          if ! git diff --exit-code --stat; then
+            echo "::error title=generate::xcodegen generate changed checked-in files; commit the regenerated copies (#499)"
+            exit 1
+          fi
       - name: Build and test
         run: |
           set -o pipefail
