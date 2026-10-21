@@ -87,7 +87,12 @@ final class MacKeyboardTests: XCTestCase {
         let named = window.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'Back' OR identifier CONTAINS[c] 'Back'")).firstMatch
         let button = named.waitForExistence(timeout: 3) ? named : window.toolbars.buttons.firstMatch
         XCTAssertTrue(button.waitForExistence(timeout: 5), "The detail shows no way back to the list")
+        macShot(window, "mac-gallery-480-2-before-back")
         button.click()
+        // The list is back when the detail's marker is gone, not merely when rows can be found.
+        let gone = macElement("detailRawTextMarker", in: window).waitForNonExistence(timeout: 10)
+        macShot(window, "mac-gallery-480-3-after-back")
+        XCTAssertTrue(gone, "Back did not leave the detail (clicked: \(button.label) / \(button.identifier))")
         XCTAssertTrue(waitUntil(10) { !taskRows(in: window).isEmpty }, "The list did not come back")
     }
 
@@ -198,7 +203,14 @@ final class MacKeyboardTests: XCTestCase {
         clickRow(rows[1], in: window)
         XCTAssertTrue(macElement("detailTitleField", in: window).waitForExistence(timeout: 5), "The click should still open the task")
         goBack(in: window)
-        XCTAssertTrue(waitUntil { selectedRows(in: window) == [ids[1]] }, "The opened row should be marked on the way back: \(selectedRows(in: window))")
+        let marked = waitUntil { selectedRows(in: window) == [ids[1]] }
+        if !marked {
+            let hierarchy = XCTAttachment(string: app.debugDescription)
+            hierarchy.name = "mac-gallery-480-hierarchy-after-back"
+            hierarchy.lifetime = .keepAlways
+            add(hierarchy)
+        }
+        XCTAssertTrue(marked, "The opened row should be marked on the way back: \(selectedRows(in: window)) of \(taskRows(in: window).count) rows")
         app.terminate()
     }
 

@@ -1,0 +1,1997 @@
+﻿2026-10-21T06:43:04.1912140Z Current runner version: '2.337.0'
+2026-10-21T06:43:04.1933510Z ##[group]Runner Image Provisioner
+2026-10-21T06:43:04.1934250Z Hosted Compute Agent
+2026-10-21T06:43:04.1934750Z Version: 20261006.597
+2026-10-21T06:43:04.1935200Z Commit: c696a59e4a9ffbc6a6203385bd1b2a10e87b1c9c
+2026-10-21T06:43:04.1935790Z Build Date: 2026-10-06T21:39:28Z
+2026-10-21T06:43:04.1936250Z Worker ID: {d17165d5-3fce-4b54-bd86-eb57e35024c3}
+2026-10-21T06:43:04.1936770Z Region: westus
+2026-10-21T06:43:04.1937190Z Cloud: MacCloud
+2026-10-21T06:43:04.1937570Z ##[endgroup]
+2026-10-21T06:43:04.1938860Z ##[group]Operating System
+2026-10-21T06:43:04.1939270Z macOS
+2026-10-21T06:43:04.1939700Z 27.0.1
+2026-10-21T06:43:04.1940040Z 26A434
+2026-10-21T06:43:04.1940600Z ##[endgroup]
+2026-10-21T06:43:04.1941030Z ##[group]Runner Image
+2026-10-21T06:43:04.1941440Z Image: xcode-27-arm64
+2026-10-21T06:43:04.1941890Z Version: 20261012.0260.1
+2026-10-21T06:43:04.1942830Z Included Software: https://github.com/actions/runner-images/blob/xcode-27-arm64/20261012.0260/images/macos/xcode-27-arm64-Readme.md
+2026-10-21T06:43:04.1944010Z Image Release: https://github.com/actions/runner-images/releases/tag/xcode-27-arm64%2F20261012.0260
+2026-10-21T06:43:04.1944720Z ##[endgroup]
+2026-10-21T06:43:04.1945740Z ##[group]GITHUB_TOKEN Permissions
+2026-10-21T06:43:04.1947630Z Contents: read
+2026-10-21T06:43:04.1948080Z Metadata: read
+2026-10-21T06:43:04.1948560Z Packages: read
+2026-10-21T06:43:04.1949010Z ##[endgroup]
+2026-10-21T06:43:04.1950760Z Secret source: Actions
+2026-10-21T06:43:04.1951440Z Cache mode: write
+2026-10-21T06:43:04.1951920Z Prepare workflow directory
+2026-10-21T06:43:04.2285800Z Prepare all required actions
+2026-10-21T06:43:04.2326890Z Getting action download info
+2026-10-21T06:43:04.6342950Z Download action repository 'actions/checkout@v7' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-10-21T06:43:04.9731330Z Download action repository 'actions/upload-artifact@v7' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+2026-10-21T06:43:05.5208410Z Complete job name: Mac Gallery (macOS)
+2026-10-21T06:43:05.5754930Z ##[group]Run actions/checkout@v7
+2026-10-21T06:43:05.5755760Z with:
+2026-10-21T06:43:05.5756100Z   repository: henemm/loose-ends
+2026-10-21T06:43:05.5759240Z   token: ***
+2026-10-21T06:43:05.5759580Z   ssh-strict: true
+2026-10-21T06:43:05.5759920Z   ssh-user: git
+2026-10-21T06:43:05.5760260Z   persist-credentials: true
+2026-10-21T06:43:05.5760630Z   clean: true
+2026-10-21T06:43:05.5760980Z   sparse-checkout-cone-mode: true
+2026-10-21T06:43:05.5761380Z   fetch-depth: 1
+2026-10-21T06:43:05.5761700Z   fetch-tags: false
+2026-10-21T06:43:05.5762040Z   show-progress: true
+2026-10-21T06:43:05.5762380Z   lfs: false
+2026-10-21T06:43:05.5762700Z   submodules: false
+2026-10-21T06:43:05.5763040Z   set-safe-directory: true
+2026-10-21T06:43:05.5763580Z   allow-unsafe-pr-checkout: false
+2026-10-21T06:43:05.5764360Z ##[endgroup]
+2026-10-21T06:43:05.7732450Z Syncing repository: henemm/loose-ends
+2026-10-21T06:43:05.7733910Z ##[group]Getting Git version info
+2026-10-21T06:43:05.7734530Z Working directory is '/Users/runner/work/loose-ends/loose-ends'
+2026-10-21T06:43:05.7736260Z [command]/opt/homebrew/bin/git version
+2026-10-21T06:43:05.8042300Z git version 2.56.0
+2026-10-21T06:43:05.8324090Z ##[endgroup]
+2026-10-21T06:43:05.8350940Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/248a8975-31bd-4c61-bcfc-0a5aeb1844e1/.gitconfig'
+2026-10-21T06:43:05.8381490Z Temporarily overriding HOME='/Users/runner/work/_temp/248a8975-31bd-4c61-bcfc-0a5aeb1844e1' before making global git config changes
+2026-10-21T06:43:05.8469190Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-21T06:43:05.8531600Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/loose-ends/loose-ends
+2026-10-21T06:43:05.8837190Z Deleting the contents of '/Users/runner/work/loose-ends/loose-ends'
+2026-10-21T06:43:05.8864310Z ##[group]Determining repository object format
+2026-10-21T06:43:05.8886640Z ##[endgroup]
+2026-10-21T06:43:05.8917930Z ##[group]Initializing the repository
+2026-10-21T06:43:05.9020100Z [command]/opt/homebrew/bin/git init /Users/runner/work/loose-ends/loose-ends
+2026-10-21T06:43:05.9122220Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-21T06:43:05.9224100Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-21T06:43:05.9327050Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-21T06:43:05.9429000Z hint: call:
+2026-10-21T06:43:05.9530760Z hint:
+2026-10-21T06:43:05.9633020Z hint: 	git config --global init.defaultBranch <name>
+2026-10-21T06:43:05.9682080Z hint:
+2026-10-21T06:43:05.9702500Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-21T06:43:05.9728690Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-21T06:43:05.9798050Z hint:
+2026-10-21T06:43:05.9807650Z hint: 	git branch -m <name>
+2026-10-21T06:43:05.9826660Z hint:
+2026-10-21T06:43:05.9841570Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-21T06:43:05.9846430Z Initialized empty Git repository in /Users/runner/work/loose-ends/loose-ends/.git/
+2026-10-21T06:43:05.9876900Z [command]/opt/homebrew/bin/git remote add origin https://github.com/henemm/loose-ends
+2026-10-21T06:43:05.9908450Z ##[endgroup]
+2026-10-21T06:43:05.9914120Z ##[group]Disabling automatic garbage collection
+2026-10-21T06:43:05.9918810Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+2026-10-21T06:43:05.9925560Z ##[endgroup]
+2026-10-21T06:43:05.9927270Z ##[group]Setting up auth
+2026-10-21T06:43:05.9929300Z Removing SSH command configuration
+2026-10-21T06:43:05.9930690Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T06:43:05.9935410Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-21T06:43:06.0183000Z Removing HTTP extra header
+2026-10-21T06:43:06.0187510Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T06:43:06.0250460Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-21T06:43:06.1204300Z Removing includeIf entries pointing to credentials config files
+2026-10-21T06:43:06.1205190Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-21T06:43:06.1249500Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-21T06:43:06.2141740Z [command]/opt/homebrew/bin/git config --file /Users/runner/work/_temp/git-credentials-0efd6400-cd5d-45a8-a1f0-2784aa38c01e.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-21T06:43:06.2226240Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/loose-ends/loose-ends/.git.path /Users/runner/work/_temp/git-credentials-0efd6400-cd5d-45a8-a1f0-2784aa38c01e.config
+2026-10-21T06:43:06.2377700Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/loose-ends/loose-ends/.git/worktrees/*.path /Users/runner/work/_temp/git-credentials-0efd6400-cd5d-45a8-a1f0-2784aa38c01e.config
+2026-10-21T06:43:06.2746490Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-0efd6400-cd5d-45a8-a1f0-2784aa38c01e.config
+2026-10-21T06:43:06.2827820Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-0efd6400-cd5d-45a8-a1f0-2784aa38c01e.config
+2026-10-21T06:43:06.2831950Z ##[endgroup]
+2026-10-21T06:43:06.2832790Z ##[group]Fetching the repository
+2026-10-21T06:43:06.2835080Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +5342744f4c958cb7182a3b19787ef87dccf1aace:refs/remotes/pull/600/merge
+2026-10-21T06:43:08.3068720Z From https://github.com/henemm/loose-ends
+2026-10-21T06:43:08.3069840Z  * [new ref]         5342744f4c958cb7182a3b19787ef87dccf1aace -> pull/600/merge
+2026-10-21T06:43:08.3072330Z ##[endgroup]
+2026-10-21T06:43:08.3073180Z ##[group]Determining the checkout info
+2026-10-21T06:43:08.3074280Z ##[endgroup]
+2026-10-21T06:43:08.3076210Z [command]/opt/homebrew/bin/git sparse-checkout disable
+2026-10-21T06:43:08.3178110Z [command]/opt/homebrew/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-21T06:43:08.3250700Z ##[group]Checking out the ref
+2026-10-21T06:43:08.3253070Z [command]/opt/homebrew/bin/git checkout --progress --force refs/remotes/pull/600/merge
+2026-10-21T06:43:08.7246690Z HEAD is now at 5342744 Merge 347d1cfde2d12af4db0232df220e203de04b99ad into 6ce15a05448b2ed277eb80a4a876621eda8d402c
+2026-10-21T06:43:08.7256670Z ##[endgroup]
+2026-10-21T06:43:08.7365240Z [command]/opt/homebrew/bin/git log -1 --format=%H
+2026-10-21T06:43:08.7449820Z 5342744f4c958cb7182a3b19787ef87dccf1aace
+2026-10-21T06:43:08.7646620Z Prepare all required actions
+2026-10-21T06:43:08.7697950Z ##[group]Run ./.github/actions/select-xcode-27
+2026-10-21T06:43:08.7698470Z ##[endgroup]
+2026-10-21T06:43:08.7750720Z ##[start-action display=Run sudo xcode-select -s /Applications/Xcode_27.app;id=__self.__run]
+2026-10-21T06:43:08.7812070Z ##[group]Run sudo xcode-select -s /Applications/Xcode_27.app
+2026-10-21T06:43:08.7812670Z sudo xcode-select -s /Applications/Xcode_27.app
+2026-10-21T06:43:08.7813090Z xcodebuild -version
+2026-10-21T06:43:08.7813590Z version=$(xcodebuild -version | sed -n 1p)   # sed liest bis zum Ende: kein SIGPIPE unter pipefail
+2026-10-21T06:43:08.7814110Z if [ "$version" != "Xcode 27.0" ]; then
+2026-10-21T06:43:08.7814810Z   echo "::error::Expected Xcode 27.0 at /Applications/Xcode_27.app, got: $version. Not building an older or beta toolchain. See docs/reference/testflight.md"
+2026-10-21T06:43:08.7815580Z   exit 1
+2026-10-21T06:43:08.7815870Z fi
+2026-10-21T06:43:08.7865840Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-21T06:43:08.7866630Z ##[endgroup]
+2026-10-21T06:43:09.0792690Z Xcode 27.0
+2026-10-21T06:43:09.0800300Z Build version 27A266a
+2026-10-21T06:43:09.1493960Z ##[end-action id=__self.__run;outcome=success;conclusion=success;duration_ms=374]
+2026-10-21T06:43:09.1570320Z ##[group]Run brew install xcodegen
+2026-10-21T06:43:09.1570800Z brew install xcodegen
+2026-10-21T06:43:09.1608040Z shell: /bin/bash -e {0}
+2026-10-21T06:43:09.1608380Z ##[endgroup]
+2026-10-21T06:43:11.3662520Z ==> Downloading bottle manifests
+2026-10-21T06:43:11.3764530Z ✔︎ Bottle Manifest xcodegen (2.46.0)
+2026-10-21T06:43:11.3865360Z ==> Fetching downloads for: xcodegen
+2026-10-21T06:43:12.6814980Z ✔︎ Bottle xcodegen (2.46.0)
+2026-10-21T06:43:12.7159190Z ==> Pouring xcodegen--2.46.0.arm64_golden_gate.bottle.1.tar.gz
+2026-10-21T06:43:13.3082340Z 🍺  /opt/homebrew/Cellar/xcodegen/2.46.0: 38 files, 7.5MB
+2026-10-21T06:43:13.3195710Z ##[group]Run xcodegen generate
+2026-10-21T06:43:13.3196000Z xcodegen generate
+2026-10-21T06:43:13.3231360Z shell: /bin/bash -e {0}
+2026-10-21T06:43:13.3231590Z ##[endgroup]
+2026-10-21T06:43:13.3697460Z ⚙️  Generating plists...
+2026-10-21T06:43:13.3707150Z ⚙️  Generating project...
+2026-10-21T06:43:13.4321930Z ⚙️  Writing project...
+2026-10-21T06:43:13.4520100Z Created project at /Users/runner/work/loose-ends/loose-ends/LooseEnds.xcodeproj
+2026-10-21T06:43:13.4570190Z ##[group]Run sudo automationmodetool enable-automationmode-without-authentication
+2026-10-21T06:43:13.4570860Z sudo automationmodetool enable-automationmode-without-authentication
+2026-10-21T06:43:13.4571270Z sudo DevToolsSecurity -enable || true
+2026-10-21T06:43:13.4608650Z shell: /bin/bash -e {0}
+2026-10-21T06:43:13.4608940Z ##[endgroup]
+2026-10-21T06:43:15.5685270Z Setting up machine to allow Automation Mode without requiring user authentication... succeeded.
+2026-10-21T06:43:15.5986910Z Developer mode is already enabled.
+2026-10-21T06:43:15.5998740Z Enter the password for user 'root': 
+2026-10-21T06:43:15.6039400Z ##[group]Run set -o pipefail
+2026-10-21T06:43:15.6039820Z set -o pipefail
+2026-10-21T06:43:15.6040180Z xcodebuild test \
+2026-10-21T06:43:15.6040490Z   -project LooseEnds.xcodeproj \
+2026-10-21T06:43:15.6040820Z   -scheme LooseEnds \
+2026-10-21T06:43:15.6041240Z   -destination 'platform=macOS' \
+2026-10-21T06:43:15.6041690Z   -only-testing:LooseEndsUITests/MacGalleryTests \
+2026-10-21T06:43:15.6042090Z   -parallel-testing-enabled NO \
+2026-10-21T06:43:15.6042570Z   -resultBundlePath MacGallery.xcresult \
+2026-10-21T06:43:15.6042980Z   CODE_SIGN_IDENTITY=- \
+2026-10-21T06:43:15.6043280Z   CODE_SIGN_STYLE=Manual \
+2026-10-21T06:43:15.6043550Z   DEVELOPMENT_TEAM= \
+2026-10-21T06:43:15.6043840Z   CODE_SIGN_ENTITLEMENTS= \
+2026-10-21T06:43:15.6044250Z   2>&1 | tee mac-gallery.log | xcbeautify
+2026-10-21T06:43:15.6099960Z shell: /bin/bash -e {0}
+2026-10-21T06:43:15.6100220Z ##[endgroup]
+2026-10-21T06:44:07.7764280Z 
+2026-10-21T06:44:07.7863680Z ----- xcbeautify -----
+2026-10-21T06:44:07.8068970Z Version: 3.2.1
+2026-10-21T06:44:07.8100030Z ----------------------
+2026-10-21T06:44:07.8179680Z 
+2026-10-21T06:44:07.8190730Z note: Using codesigning identity override: -
+2026-10-21T06:44:07.8191770Z note: Building targets in dependency order
+2026-10-21T06:44:07.8192390Z note: Target dependency graph (4 targets)
+2026-10-21T06:44:07.8193130Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets.hmap
+2026-10-21T06:44:07.8193840Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets_const_extract_protocols.json
+2026-10-21T06:44:07.8194730Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets.SwiftFileList
+2026-10-21T06:44:07.8195470Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets.SwiftConstValuesFileList
+2026-10-21T06:44:07.8196290Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets.LinkFileList
+2026-10-21T06:44:07.8197080Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-OutputFileMap.json
+2026-10-21T06:44:07.8197810Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets.DependencyStaticMetadataFileList
+2026-10-21T06:44:07.8198520Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets.DependencyMetadataFileList
+2026-10-21T06:44:07.8199470Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-project-headers.hmap
+2026-10-21T06:44:07.8200140Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-own-target-headers.hmap
+2026-10-21T06:44:07.8200830Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-generated-files.hmap
+2026-10-21T06:44:07.8201580Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-all-target-headers.hmap
+2026-10-21T06:44:07.8202390Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-all-non-framework-target-headers.hmap
+2026-10-21T06:44:07.8203160Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-DebugEntryPoint-normal-arm64.txt
+2026-10-21T06:44:07.8203880Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-DebugDylibPath-normal-arm64.txt
+2026-10-21T06:44:07.8204670Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-DebugDylibInstallName-normal-arm64.txt
+2026-10-21T06:44:07.8205470Z [LooseEndsWidgets] Write Auxiliary File Entitlements.plist
+2026-10-21T06:44:07.8205980Z [LooseEndsUITests] Write Auxiliary File empty-LooseEndsUITests.plist
+2026-10-21T06:44:07.8213670Z [LooseEndsUITests] Write Auxiliary File ProductTypeInfoPlistAdditions.plist
+2026-10-21T06:44:07.8214330Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests.SwiftFileList
+2026-10-21T06:44:07.8218070Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests_const_extract_protocols.json
+2026-10-21T06:44:07.8218980Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests.SwiftConstValuesFileList
+2026-10-21T06:44:07.8219750Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests.LinkFileList
+2026-10-21T06:44:07.8220370Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests-OutputFileMap.json
+2026-10-21T06:44:07.8221000Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests.hmap
+2026-10-21T06:44:07.8221700Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests.DependencyStaticMetadataFileList
+2026-10-21T06:44:07.8222470Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests.DependencyMetadataFileList
+2026-10-21T06:44:07.8223170Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests-project-headers.hmap
+2026-10-21T06:44:07.8223850Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests-own-target-headers.hmap
+2026-10-21T06:44:07.8224570Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests-generated-files.hmap
+2026-10-21T06:44:07.8225190Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests-all-target-headers.hmap
+2026-10-21T06:44:07.8225990Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests-all-non-framework-target-headers.hmap
+2026-10-21T06:44:07.8226760Z [LooseEndsUITests] Write Auxiliary File Entitlements.plist
+2026-10-21T06:44:07.8227320Z [LooseEndsTests] Write Auxiliary File empty-LooseEndsTests.plist
+2026-10-21T06:44:07.8228080Z [LooseEndsTests] Write Auxiliary File LooseEndsTests_const_extract_protocols.json
+2026-10-21T06:44:07.8228700Z [LooseEndsTests] Write Auxiliary File LooseEndsTests.SwiftFileList
+2026-10-21T06:44:07.8229410Z [LooseEndsTests] Write Auxiliary File LooseEndsTests.SwiftConstValuesFileList
+2026-10-21T06:44:07.8229990Z [LooseEndsTests] Write Auxiliary File LooseEndsTests.LinkFileList
+2026-10-21T06:44:07.8230690Z [LooseEndsTests] Write Auxiliary File LooseEndsTests-OutputFileMap.json
+2026-10-21T06:44:07.8231340Z [LooseEndsTests] Write Auxiliary File LooseEndsTests.hmap
+2026-10-21T06:44:07.8231940Z [LooseEndsTests] Write Auxiliary File LooseEndsTests.DependencyStaticMetadataFileList
+2026-10-21T06:44:07.8232720Z [LooseEndsTests] Write Auxiliary File LooseEndsTests.DependencyMetadataFileList
+2026-10-21T06:44:07.8233340Z [LooseEndsTests] Write Auxiliary File LooseEndsTests-project-headers.hmap
+2026-10-21T06:44:07.8234080Z [LooseEndsTests] Write Auxiliary File LooseEndsTests-own-target-headers.hmap
+2026-10-21T06:44:07.8234710Z [LooseEndsTests] Write Auxiliary File LooseEndsTests-generated-files.hmap
+2026-10-21T06:44:07.8235350Z [LooseEndsTests] Write Auxiliary File LooseEndsTests-all-target-headers.hmap
+2026-10-21T06:44:07.8236100Z [LooseEndsTests] Write Auxiliary File LooseEndsTests-all-non-framework-target-headers.hmap
+2026-10-21T06:44:07.8236680Z [LooseEnds] Write Auxiliary File LooseEnds.SwiftFileList
+2026-10-21T06:44:07.8237260Z [LooseEnds] Write Auxiliary File LooseEnds_const_extract_protocols.json
+2026-10-21T06:44:07.8237820Z [LooseEnds] Write Auxiliary File LooseEnds.SwiftConstValuesFileList
+2026-10-21T06:44:07.8238440Z [LooseEnds] Write Auxiliary File LooseEnds.LinkFileList
+2026-10-21T06:44:07.8238940Z [LooseEnds] Write Auxiliary File LooseEnds-OutputFileMap.json
+2026-10-21T06:44:07.8240070Z [LooseEnds] Write Auxiliary File LooseEnds.hmap
+2026-10-21T06:44:07.8240640Z [LooseEnds] Write Auxiliary File LooseEnds.DependencyStaticMetadataFileList
+2026-10-21T06:44:07.8241570Z [LooseEnds] Write Auxiliary File LooseEnds.DependencyMetadataFileList
+2026-10-21T06:44:07.8242270Z [LooseEnds] Write Auxiliary File LooseEnds-project-headers.hmap
+2026-10-21T06:44:07.8242830Z [LooseEnds] Write Auxiliary File LooseEnds-own-target-headers.hmap
+2026-10-21T06:44:07.8243390Z [LooseEnds] Write Auxiliary File LooseEnds-generated-files.hmap
+2026-10-21T06:44:07.8243960Z [LooseEnds] Write Auxiliary File LooseEnds-all-target-headers.hmap
+2026-10-21T06:44:07.8244580Z [LooseEnds] Write Auxiliary File LooseEnds-all-non-framework-target-headers.hmap
+2026-10-21T06:44:07.8245290Z [LooseEnds] Write Auxiliary File LooseEnds-DebugDylibPath-normal-arm64.txt
+2026-10-21T06:44:07.8246140Z [LooseEnds] Write Auxiliary File LooseEnds-DebugDylibInstallName-normal-arm64.txt
+2026-10-21T06:44:07.8246760Z [LooseEnds] Write Auxiliary File Entitlements.plist
+2026-10-21T06:44:07.8247220Z [LooseEndsWidgets] Linking __preview.dylib
+2026-10-21T06:44:07.8247780Z [LooseEndsWidgets] Generate Asset Symbols Assets.xcassets
+2026-10-21T06:44:07.8248780Z [LooseEndsWidgets] Copying PrivacyInfo.xcprivacy
+2026-10-21T06:44:07.8249500Z [LooseEndsWidgets] Compile XCStrings Localizable.xcstrings
+2026-10-21T06:44:07.8250140Z [LooseEndsWidgets] Copying Localizable.strings
+2026-10-21T06:44:07.8251260Z note: Emplaced /Users/runner/Library/Developer/Xcode/DerivedData/LooseEnds-drzmhuptkirelpbobzbvhuzvuwmy/Build/Products/Debug/LooseEndsWidgets.appex/Contents/Resources/Assets.car (in target 'LooseEndsWidgets' from project 'LooseEnds')
+2026-10-21T06:44:07.8254250Z [LooseEndsWidgets] Processing Info.plist
+2026-10-21T06:44:07.8254700Z [LooseEndsWidgets] Compiling RuleTrigger.swift
+2026-10-21T06:44:07.8255180Z [LooseEndsWidgets] Compiling SavedView.swift
+2026-10-21T06:44:07.8255700Z [LooseEndsWidgets] Compiling SharedAttachment.swift
+2026-10-21T06:44:07.8256160Z [LooseEndsWidgets] Compiling SharedAttachmentFile.swift
+2026-10-21T06:44:07.8256690Z [LooseEndsWidgets] Compiling SharedContent.swift
+2026-10-21T06:44:07.8257130Z [LooseEndsWidgets] Compiling SideColumn.swift
+2026-10-21T06:44:07.8257590Z [LooseEndsWidgets] Compiling SiriCapture.swift
+2026-10-21T06:44:07.8258160Z [LooseEndsWidgets] Compiling SiriFields.swift
+2026-10-21T06:44:07.8258640Z [LooseEndsWidgets] Compiling SiriRepeatMapping.swift
+2026-10-21T06:44:07.8259090Z [LooseEndsWidgets] Compiling StartHeadline.swift
+2026-10-21T06:44:07.8259670Z [LooseEndsWidgets] Compiling Subtasks.swift
+2026-10-21T06:44:07.8260150Z [LooseEndsWidgets] Compiling SyncStatus.swift
+2026-10-21T06:44:07.8260650Z [LooseEndsWidgets] Compiling TaskActions.swift
+2026-10-21T06:44:07.8261240Z [LooseEndsWidgets] Compiling TaskAttachment.swift
+2026-10-21T06:44:07.8261830Z [LooseEndsWidgets] Compiling TaskContext.swift
+2026-10-21T06:44:07.8262630Z [LooseEndsWidgets] Compiling TaskItem.swift
+2026-10-21T06:44:07.8263290Z [LooseEndsWidgets] Compiling TaskPlace.swift
+2026-10-21T06:44:07.8263800Z [LooseEndsWidgets] Compiling Thread.swift
+2026-10-21T06:44:07.8264430Z [LooseEndsWidgets] Compiling TimeExpressionParser.swift
+2026-10-21T06:44:07.8265180Z [LooseEndsWidgets] Compiling TitleRule.swift
+2026-10-21T06:44:07.8265890Z [LooseEndsWidgets] Compiling ViewRules.swift
+2026-10-21T06:44:07.8266810Z [LooseEndsWidgets] Compiling ViewSelection.swift
+2026-10-21T06:44:07.8267440Z [LooseEndsWidgets] Compiling WaitingOn.swift
+2026-10-21T06:44:07.8267990Z [LooseEndsWidgets] Compiling GeneratedAssetSymbols.swift
+2026-10-21T06:44:07.8268830Z [LooseEndsWidgets] Compiling AppVersion.swift
+2026-10-21T06:44:07.8269290Z [LooseEndsWidgets] Compiling AttachmentKind.swift
+2026-10-21T06:44:07.8269740Z [LooseEndsWidgets] Compiling CalendarAsk.swift
+2026-10-21T06:44:07.8270190Z [LooseEndsWidgets] Compiling CalendarSync.swift
+2026-10-21T06:44:07.8270730Z [LooseEndsWidgets] Compiling CaptureService.swift
+2026-10-21T06:44:07.8271150Z [LooseEndsWidgets] Compiling CarryReminders.swift
+2026-10-21T06:44:07.8271660Z [LooseEndsWidgets] Compiling CatalogService.swift
+2026-10-21T06:44:07.8272100Z [LooseEndsWidgets] Compiling CloudKitSchemaInitializer.swift
+2026-10-21T06:44:07.8298440Z [LooseEndsWidgets] Compiling CompletionRecord.swift
+2026-10-21T06:44:07.8298950Z [LooseEndsWidgets] Compiling ContextSeeder.swift
+2026-10-21T06:44:07.8299610Z [LooseEndsWidgets] Compiling ContextWordLearning.swift
+2026-10-21T06:44:07.8300180Z [LooseEndsWidgets] Compiling ContextWordRule.swift
+2026-10-21T06:44:07.8300850Z [LooseEndsWidgets] Compiling DateExpressionParser.swift
+2026-10-21T06:44:07.8301320Z [LooseEndsWidgets] Compiling DetailFields.swift
+2026-10-21T06:44:07.8301800Z [LooseEndsWidgets] Compiling DueDateRule.swift
+2026-10-21T06:44:07.8303040Z [LooseEndsWidgets] Compiling DueReminders.swift
+2026-10-21T06:44:07.8303820Z [LooseEndsWidgets] Compiling DurationRule.swift
+2026-10-21T06:44:07.8304770Z [LooseEndsWidgets] Compiling EnrichmentCoordinator.swift
+2026-10-21T06:44:07.8305730Z [LooseEndsWidgets] Compiling EnrichmentDraft.swift
+2026-10-21T06:44:07.8306880Z [LooseEndsWidgets] Compiling EnrichmentWriter.swift
+2026-10-21T06:44:07.8307880Z [LooseEndsWidgets] Compiling Enums.swift
+2026-10-21T06:44:07.8308390Z [LooseEndsWidgets] Compiling FieldCodec.swift
+2026-10-21T06:44:07.8309270Z [LooseEndsWidgets] Compiling FoundationModelsEnricher.swift
+2026-10-21T06:44:07.8310110Z [LooseEndsWidgets] Compiling GuessedProjects.swift
+2026-10-21T06:44:07.8311950Z [LooseEndsWidgets] Compiling ImportanceUrgencyRule.swift
+2026-10-21T06:44:07.8312690Z [LooseEndsWidgets] Compiling LooseEndsWidgetsBundle.swift
+2026-10-21T06:44:07.8313650Z [LooseEndsWidgets] Compiling MarginText.swift
+2026-10-21T06:44:07.8314240Z [LooseEndsWidgets] Compiling ModelContainerFactory.swift
+2026-10-21T06:44:07.8314910Z [LooseEndsWidgets] Compiling ModelDeadline.swift
+2026-10-21T06:44:07.8315910Z [LooseEndsWidgets] Compiling NewDateRule.swift
+2026-10-21T06:44:07.8316640Z [LooseEndsWidgets] Compiling NextUpWidget.swift
+2026-10-21T06:44:07.8319010Z [LooseEndsWidgets] Compiling NextUpWidgetIntents.swift
+2026-10-21T06:44:07.8319810Z [LooseEndsWidgets] Compiling NoteLinks.swift
+2026-10-21T06:44:07.8320650Z [LooseEndsWidgets] Compiling PendingCompletions.swift
+2026-10-21T06:44:07.8322090Z [LooseEndsWidgets] Compiling PhoneRule.swift
+2026-10-21T06:44:07.8323770Z [LooseEndsWidgets] Compiling PlaceDelivery.swift
+2026-10-21T06:44:07.8324450Z [LooseEndsWidgets] Compiling PlaceEditing.swift
+2026-10-21T06:44:07.8325610Z [LooseEndsWidgets] Compiling PlaceNotifications.swift
+2026-10-21T06:44:07.8326490Z [LooseEndsWidgets] Compiling PlaceReminders.swift
+2026-10-21T06:44:07.8327730Z [LooseEndsWidgets] Compiling ProcessCache.swift
+2026-10-21T06:44:07.8328980Z [LooseEndsWidgets] Compiling Project.swift
+2026-10-21T06:44:07.8329690Z [LooseEndsWidgets] Compiling ProjectNameRule.swift
+2026-10-21T06:44:07.8330480Z [LooseEndsWidgets] Compiling QuickDue.swift
+2026-10-21T06:44:07.8331540Z [LooseEndsWidgets] Compiling RawTextWords.swift
+2026-10-21T06:44:07.8332600Z [LooseEndsWidgets] Compiling RecognitionRule.swift
+2026-10-21T06:44:07.8333440Z [LooseEndsWidgets] Compiling RepeatRule.swift
+2026-10-21T06:44:07.8334690Z [LooseEndsWidgets] Compiling Revision.swift
+2026-10-21T06:44:07.8335790Z [LooseEndsWidgets] Compiling RevisionService.swift
+2026-10-21T06:44:07.8337790Z [LooseEndsWidgets] Compiling RowKeyAction.swift
+2026-10-21T06:44:07.8339610Z [LooseEndsWidgets] Copy arm64-apple-macos.swiftmodule -> LooseEndsWidgets.swiftmodule
+2026-10-21T06:44:07.8341360Z [LooseEndsWidgets] Copy arm64-apple-macos.swiftdoc -> LooseEndsWidgets.swiftdoc
+2026-10-21T06:44:07.8344070Z [LooseEndsWidgets] Copy arm64-apple-macos.abi.json -> LooseEndsWidgets.abi.json
+2026-10-21T06:44:07.8346330Z [LooseEndsWidgets] Copy arm64-apple-macos.swiftsourceinfo -> LooseEndsWidgets.swiftsourceinfo
+2026-10-21T06:44:07.8348090Z [LooseEnds] Generate Asset Symbols Assets.xcassets
+2026-10-21T06:44:07.8349310Z note: Emplaced /Users/runner/Library/Developer/Xcode/DerivedData/LooseEnds-drzmhuptkirelpbobzbvhuzvuwmy/Build/Products/Debug/LooseEnds.app/Contents/Resources/AppIcon.icns (in target 'LooseEnds' from project 'LooseEnds')
+2026-10-21T06:44:07.8350800Z note: Emplaced /Users/runner/Library/Developer/Xcode/DerivedData/LooseEnds-drzmhuptkirelpbobzbvhuzvuwmy/Build/Products/Debug/LooseEnds.app/Contents/Resources/Assets.car (in target 'LooseEnds' from project 'LooseEnds')
+2026-10-21T06:44:07.8351820Z [LooseEndsWidgets] Linking LooseEndsWidgets.debug.dylib
+2026-10-21T06:44:07.8352380Z note: Using stub executor library with Swift entry point. (in target 'LooseEndsWidgets' from project 'LooseEnds')
+2026-10-21T06:44:07.8352950Z [LooseEndsWidgets] Linking LooseEndsWidgets
+2026-10-21T06:44:07.8353370Z [LooseEndsWidgets] Extract App Intents Metadata
+2026-10-21T06:44:07.8353900Z Signing LooseEndsWidgets.debug.dylib (in target 'LooseEndsWidgets' from project 'LooseEnds')
+2026-10-21T06:44:07.8354430Z Signing __preview.dylib (in target 'LooseEndsWidgets' from project 'LooseEnds')
+2026-10-21T06:44:07.8354960Z Signing LooseEndsWidgets.appex (in target 'LooseEndsWidgets' from project 'LooseEnds')
+2026-10-21T06:44:07.8355650Z [LooseEndsWidgets] RegisterExecutionPolicyException LooseEndsWidgets.appex
+2026-10-21T06:44:07.8356120Z [LooseEndsWidgets] Touching LooseEndsWidgets.appex
+2026-10-21T06:44:07.8356560Z [LooseEnds] Copying PrivacyInfo.xcprivacy
+2026-10-21T06:44:07.8356960Z [LooseEnds] Linking __preview.dylib
+2026-10-21T06:44:07.8357400Z [LooseEnds] Copying InfoPlist.strings
+2026-10-21T06:44:07.8357830Z [LooseEnds] Copying InfoPlist.strings
+2026-10-21T06:44:07.8358230Z [LooseEnds] Compile XCStrings Localizable.xcstrings
+2026-10-21T06:44:07.8358770Z [LooseEnds] Compile XCStrings AppShortcuts.xcstrings
+2026-10-21T06:44:07.8359240Z [LooseEnds] Copying Localizable.strings
+2026-10-21T06:44:07.8359710Z [LooseEnds] Copying Localizable.strings
+2026-10-21T06:44:07.8360120Z [LooseEnds] Copying AppShortcuts.strings
+2026-10-21T06:44:07.8360420Z [LooseEnds] Compiling AppVersion.swift
+2026-10-21T06:44:07.8360800Z [LooseEnds] Compiling AttachmentKind.swift
+2026-10-21T06:44:07.8361310Z [LooseEnds] Compiling AttachmentsSection.swift
+2026-10-21T06:44:07.8362150Z [LooseEnds] Compiling BackgroundRefresh.swift
+2026-10-21T06:44:07.8362550Z [LooseEnds] Compiling CalendarAsk.swift
+2026-10-21T06:44:07.8363020Z [LooseEnds] Compiling CalendarAskSheet.swift
+2026-10-21T06:44:07.8363790Z [LooseEnds] Compiling CalendarBridge.swift
+2026-10-21T06:44:07.8364260Z [LooseEnds] Compiling CalendarPickerSheet.swift
+2026-10-21T06:44:07.8364750Z [LooseEnds] Compiling CalendarSync.swift
+2026-10-21T06:44:07.8365130Z [LooseEnds] Compiling CaptureService.swift
+2026-10-21T06:44:07.8365640Z [LooseEnds] Compiling CaptureTextIntent.swift
+2026-10-21T06:44:07.8366090Z [LooseEnds] Compiling CaptureView.swift
+2026-10-21T06:44:07.8366520Z [LooseEnds] Compiling CarryReminders.swift
+2026-10-21T06:44:07.8366960Z [LooseEnds] Compiling CarryReviewSheet.swift
+2026-10-21T06:44:07.8367290Z [LooseEnds] Compiling CatalogEditing.swift
+2026-10-21T06:44:07.8367700Z [LooseEnds] Compiling CatalogPage.swift
+2026-10-21T06:44:07.8368070Z [LooseEnds] Compiling CatalogService.swift
+2026-10-21T06:44:07.8368430Z [LooseEnds] Compiling CloudKitSchemaInitializer.swift
+2026-10-21T06:44:07.8368880Z [LooseEnds] Compiling CompletionRecord.swift
+2026-10-21T06:44:07.8369320Z [LooseEnds] Compiling ContentView.swift
+2026-10-21T06:44:07.8369840Z [LooseEnds] Compiling ContextSeeder.swift
+2026-10-21T06:44:07.8370220Z [LooseEnds] Compiling ContextWordLearning.swift
+2026-10-21T06:44:07.8370630Z [LooseEnds] Compiling ImportanceUrgencyRule.swift
+2026-10-21T06:44:07.8371010Z [LooseEnds] Compiling LaunchTimings.swift
+2026-10-21T06:44:07.8371370Z [LooseEnds] Compiling ListSummary.swift
+2026-10-21T06:44:07.8371900Z [LooseEnds] Compiling ListeningHint.swift
+2026-10-21T06:44:07.8372320Z [LooseEnds] Compiling LooseEndsApp.swift
+2026-10-21T06:44:07.8372820Z [LooseEnds] Compiling MainThreadWatchdog.swift
+2026-10-21T06:44:07.8373210Z [LooseEnds] Compiling MarginText.swift
+2026-10-21T06:44:07.8373690Z [LooseEnds] Compiling MenuBarCapture.swift
+2026-10-21T06:44:07.8374060Z [LooseEnds] Compiling MenuBarThreadImage.swift
+2026-10-21T06:44:07.8374450Z [LooseEnds] Compiling ModelContainerFactory.swift
+2026-10-21T06:44:07.8374830Z [LooseEnds] Compiling ModelDeadline.swift
+2026-10-21T06:44:07.8375200Z [LooseEnds] Compiling MoveDateSheet.swift
+2026-10-21T06:44:07.8375610Z [LooseEnds] Compiling NewDateRule.swift
+2026-10-21T06:44:07.8376100Z [LooseEnds] Compiling NewDateSheet.swift
+2026-10-21T06:44:07.8376440Z [LooseEnds] Compiling NextUpWidgetIntents.swift
+2026-10-21T06:44:07.8376900Z [LooseEnds] Compiling NoteLinks.swift
+2026-10-21T06:44:07.8377340Z [LooseEnds] Compiling NoteSection.swift
+2026-10-21T06:44:07.8377800Z [LooseEnds] Compiling OnboardingFlow.swift
+2026-10-21T06:44:07.8378390Z [LooseEnds] Compiling OnboardingView.swift
+2026-10-21T06:44:07.8378730Z [LooseEnds] Compiling Paper.swift
+2026-10-21T06:44:07.8379120Z [LooseEnds] Compiling PendingCompletions.swift
+2026-10-21T06:44:07.8379510Z [LooseEnds] Compiling PhoneRule.swift
+2026-10-21T06:44:36.0813640Z [LooseEnds] Compiling ScanPDF.swift
+2026-10-21T06:44:36.0817330Z [LooseEnds] Compiling SettingsView.swift
+2026-10-21T06:44:36.0932830Z [LooseEnds] Compiling SharedAttachment.swift
+2026-10-21T06:44:36.1038320Z [LooseEnds] Compiling SharedAttachmentFile.swift
+2026-10-21T06:44:36.1145530Z [LooseEnds] Compiling SharedContent.swift
+2026-10-21T06:44:36.1247570Z [LooseEnds] Compiling SideColumn.swift
+2026-10-21T06:44:36.1276220Z [LooseEnds] Compiling SideColumnView.swift
+2026-10-21T06:44:36.1281240Z [LooseEnds] Compiling SidebarView.swift
+2026-10-21T06:44:36.1284470Z [LooseEnds] Compiling SiriCapture.swift
+2026-10-21T06:44:36.1418310Z [LooseEnds] Compiling SiriFields.swift
+2026-10-21T06:44:36.1526250Z [LooseEnds] Compiling SiriRepeatMapping.swift
+2026-10-21T06:44:36.1592920Z [LooseEnds] Compiling SpeechAccess.swift
+2026-10-21T06:44:36.1635140Z [LooseEnds] Compiling SpeechCapture.swift
+2026-10-21T06:44:36.1668980Z [LooseEnds] Compiling SpeechDiagnosis.swift
+2026-10-21T06:44:36.1711810Z [LooseEnds] Compiling SpeechReadiness.swift
+2026-10-21T06:44:36.1716390Z [LooseEnds] Compiling StartHeadline.swift
+2026-10-21T06:44:36.1736920Z [LooseEnds] Compiling StartHeadlineText.swift
+2026-10-21T06:44:36.1742580Z [LooseEnds] Compiling StartMetrics.swift
+2026-10-21T06:44:36.1746990Z [LooseEnds] Compiling StartPage.swift
+2026-10-21T06:44:36.1749660Z [LooseEnds] Compiling StartZones.swift
+2026-10-21T06:44:36.1751920Z [LooseEnds] Compiling SubtaskCompletionDialog.swift
+2026-10-21T06:44:36.1768610Z [LooseEnds] Compiling PlaceDelivery.swift
+2026-10-21T06:44:36.1769290Z [LooseEnds] Compiling PlaceEditing.swift
+2026-10-21T06:44:36.1771510Z [LooseEnds] Compiling PlaceNotificationCenter.swift
+2026-10-21T06:44:36.1772150Z [LooseEnds] Compiling PlaceNotifications.swift
+2026-10-21T06:44:36.1774450Z [LooseEnds] Compiling PlaceReminders.swift
+2026-10-21T06:44:36.1775020Z [LooseEnds] Compiling PlaceSearch.swift
+2026-10-21T06:44:36.1775970Z [LooseEnds] Compiling PlaceSection.swift
+2026-10-21T06:44:36.1778310Z [LooseEnds] Compiling ProcessCache.swift
+2026-10-21T06:44:36.1778860Z [LooseEnds] Compiling Project.swift
+2026-10-21T06:44:36.1781690Z [LooseEnds] Compiling ProjectNameRule.swift
+2026-10-21T06:44:36.1785820Z [LooseEnds] Compiling QuickDue.swift
+2026-10-21T06:44:36.1794630Z [LooseEnds] Compiling RawTextWords.swift
+2026-10-21T06:44:36.1795240Z [LooseEnds] Compiling RecognitionRule.swift
+2026-10-21T06:44:36.1797360Z [LooseEnds] Compiling ReminderSchema.swift
+2026-10-21T06:44:36.1799070Z [LooseEnds] Compiling ReminderTranslation.swift
+2026-10-21T06:44:36.1809430Z [LooseEnds] Compiling RepeatRule.swift
+2026-10-21T06:44:36.1810160Z [LooseEnds] Compiling ReviewNote.swift
+2026-10-21T06:44:36.1811590Z [LooseEnds] Compiling Revision.swift
+2026-10-21T06:44:36.1813620Z [LooseEnds] Compiling RevisionService.swift
+2026-10-21T06:44:36.1814510Z [LooseEnds] Compiling RowKeyAction.swift
+2026-10-21T06:44:36.1817560Z [LooseEnds] Compiling RuleTrigger.swift
+2026-10-21T06:44:36.1827310Z [LooseEnds] Compiling SavedView.swift
+2026-10-21T06:44:36.1828690Z [LooseEnds] Copy arm64-apple-macos.swiftmodule -> LooseEnds.swiftmodule
+2026-10-21T06:44:36.1830610Z [LooseEnds] Copy arm64-apple-macos.swiftdoc -> LooseEnds.swiftdoc
+2026-10-21T06:44:36.1831260Z [LooseEnds] Copy arm64-apple-macos.abi.json -> LooseEnds.abi.json
+2026-10-21T06:44:36.1833800Z [LooseEnds] Copy arm64-apple-macos.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+2026-10-21T06:44:36.1834590Z [LooseEnds] Compiling Subtasks.swift
+2026-10-21T06:44:36.1836440Z [LooseEnds] Compiling SubtasksSection.swift
+2026-10-21T06:44:36.1842740Z [LooseEnds] Compiling SyncStatus.swift
+2026-10-21T06:44:36.1848450Z [LooseEnds] Compiling TaskActions.swift
+2026-10-21T06:44:36.1849170Z [LooseEnds] Compiling TaskAttachment.swift
+2026-10-21T06:44:36.1850440Z [LooseEnds] Compiling TaskContext.swift
+2026-10-21T06:44:36.1852600Z [LooseEnds] Compiling TaskDetailView.swift
+2026-10-21T06:44:36.1854490Z [LooseEnds] Compiling TaskInteractions.swift
+2026-10-21T06:44:36.1857090Z [LooseEnds] Compiling TaskItem.swift
+2026-10-21T06:44:36.1859050Z [LooseEnds] Compiling TaskListView.swift
+2026-10-21T06:44:36.1860130Z [LooseEnds] Compiling TaskPlace.swift
+2026-10-21T06:44:36.1860620Z [LooseEnds] Compiling TaskRow.swift
+2026-10-21T06:44:36.1861060Z [LooseEnds] Compiling Thread.swift
+2026-10-21T06:44:36.1868330Z [LooseEnds] Compiling TimeExpressionParser.swift
+2026-10-21T06:44:36.1868910Z [LooseEnds] Compiling TitleRule.swift
+2026-10-21T06:44:36.1869410Z [LooseEnds] Compiling ViewRules.swift
+2026-10-21T06:44:36.1871730Z [LooseEnds] Compiling ViewSelection.swift
+2026-10-21T06:44:36.1878650Z [LooseEnds] Compiling WaitingOn.swift
+2026-10-21T06:44:36.1882560Z [LooseEnds] Compiling WaitingOnSection.swift
+2026-10-21T06:44:36.1884450Z [LooseEnds] Compiling Waveform.swift
+2026-10-21T06:44:36.1890940Z [LooseEnds] Compiling GeneratedAssetSymbols.swift
+2026-10-21T06:44:36.1956230Z ##[warning]'+' was deprecated in macOS 26.0: Use string interpolation on `Text` instead: `Text("Hello \(name)")` [#DeprecatedDeclaration]
+2026-10-21T06:44:36.2066620Z 108 |         traits.enumerated().reduce(Text(verbatim: "")) { line, item in
+2026-10-21T06:44:36.2079920Z 109 |             let separator = item.offset == 0 ? Text(verbatim: "") : Text(verbatim: " · ").foregroundStyle(.secondary)
+2026-10-21T06:44:36.2092460Z ##[warning]'+' was deprecated in macOS 26.0: Use string interpolation on `Text` instead: `Text("Hello \(name)")` [#DeprecatedDeclaration]
+2026-10-21T06:44:36.2105440Z 108 |         traits.enumerated().reduce(Text(verbatim: "")) { line, item in
+2026-10-21T06:44:36.2106730Z 109 |             let separator = item.offset == 0 ? Text(verbatim: "") : Text(verbatim: " · ").foregroundStyle(.secondary)
+2026-10-21T06:44:36.2120160Z ##[warning]'+' was deprecated in macOS 26.0: Use string interpolation on `Text` instead: `Text("Hello \(name)")` [#DeprecatedDeclaration]
+2026-10-21T06:44:36.2123880Z 134 |                         .tracking(1)
+2026-10-21T06:44:36.2124500Z 135 |                      + Text(verbatim: "  ")
+2026-10-21T06:44:36.2130380Z ##[warning]'+' was deprecated in macOS 26.0: Use string interpolation on `Text` instead: `Text("Hello \(name)")` [#DeprecatedDeclaration]
+2026-10-21T06:44:36.2134730Z 133 |                         .font(.caption2.weight(.semibold))
+2026-10-21T06:44:36.2135160Z 134 |                         .tracking(1)
+2026-10-21T06:44:36.2138220Z ##[warning]result of call to 'assumeIsolated(_:file:line:)' is unused [#NoUsage]
+2026-10-21T06:44:36.2150870Z  71 |             forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: NSUbiquitousKeyValueStore.default, queue: .main
+2026-10-21T06:44:36.2163360Z  72 |         ) { [weak self] _ in
+2026-10-21T06:44:36.2203950Z ##[warning]result of call to 'assumeIsolated(_:file:line:)' is unused [#NoUsage]
+2026-10-21T06:44:36.2223880Z 44 |             forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: NSUbiquitousKeyValueStore.default, queue: .main
+2026-10-21T06:44:36.2226780Z 45 |         ) { [weak self] _ in
+2026-10-21T06:44:36.2227480Z [LooseEnds] Compiling ContextWordRule.swift
+2026-10-21T06:44:36.2235730Z [LooseEnds] Compiling DateExpressionParser.swift
+2026-10-21T06:44:36.2236590Z [LooseEnds] Compiling DetailFields.swift
+2026-10-21T06:44:36.2239570Z [LooseEnds] Compiling DetailLayout.swift
+2026-10-21T06:44:36.2247280Z [LooseEnds] Compiling DocumentScanner.swift
+2026-10-21T06:44:36.2247940Z [LooseEnds] Compiling DueDateRule.swift
+2026-10-21T06:44:36.2250900Z [LooseEnds] Compiling DueNotificationCenter.swift
+2026-10-21T06:44:36.2255010Z [LooseEnds] Compiling DueReminders.swift
+2026-10-21T06:44:36.2263020Z [LooseEnds] Compiling DurationRule.swift
+2026-10-21T06:44:36.2266760Z [LooseEnds] Compiling EditorPage.swift
+2026-10-21T06:44:36.2271000Z [LooseEnds] Compiling EnrichmentCoordinator.swift
+2026-10-21T06:44:36.2278770Z [LooseEnds] Compiling EnrichmentDraft.swift
+2026-10-21T06:44:36.2282760Z [LooseEnds] Compiling EnrichmentWriter.swift
+2026-10-21T06:44:36.2287970Z [LooseEnds] Compiling Enums.swift
+2026-10-21T06:44:36.2290940Z [LooseEnds] Compiling FieldCodec.swift
+2026-10-21T06:44:36.2291600Z [LooseEnds] Compiling FieldEditorView.swift
+2026-10-21T06:44:36.2315970Z [LooseEnds] Compiling FieldFormatting.swift
+2026-10-21T06:44:36.2327480Z [LooseEnds] Compiling FieldSettingsStore.swift
+2026-10-21T06:44:36.2335080Z [LooseEnds] Compiling FieldSettingsView.swift
+2026-10-21T06:44:36.2336110Z [LooseEnds] Compiling FlowLayout.swift
+2026-10-21T06:44:36.2341260Z [LooseEnds] Compiling FoundationModelsEnricher.swift
+2026-10-21T06:44:36.2343280Z [LooseEnds] Compiling GuessedProjects.swift
+2026-10-21T06:44:36.2350860Z ##[warning]call to main actor-isolated instance method 'screenshot()' in a synchronous nonisolated context [#ActorIsolatedCall]
+2026-10-21T06:44:36.2364460Z 16 |     }
+2026-10-21T06:44:36.2370610Z 17 | 
+2026-10-21T06:44:36.2373970Z ##[warning]main actor-isolated property 'label' can not be referenced from a nonisolated context
+2026-10-21T06:44:36.2393190Z 374 | 
+2026-10-21T06:44:36.2397630Z 375 |     /// The row count as the badge shows it, read from the combined row ("All open, 2").
+2026-10-21T06:44:36.2405880Z ##[warning]main actor-isolated property 'value' can not be referenced from a nonisolated context
+2026-10-21T06:44:36.2409300Z 374 | 
+2026-10-21T06:44:36.2411460Z 375 |     /// The row count as the badge shows it, read from the combined row ("All open, 2").
+2026-10-21T06:44:36.2412820Z ##[warning]code after 'throw' will never be executed
+2026-10-21T06:44:36.2417230Z 13 |         throw XCTSkip("On the Mac the gear opens the settings window (SettingsLink), not a sheet with Done.")
+2026-10-21T06:44:36.2418960Z 14 |         #endif
+2026-10-21T06:44:36.2419490Z [LooseEndsUITests] Compiling RawTextWords.swift
+2026-10-21T06:44:36.2422170Z [LooseEndsUITests] Compiling RecognitionWalkthroughTests.swift
+2026-10-21T06:44:36.2422800Z [LooseEndsUITests] Compiling RuleBaseline.swift
+2026-10-21T06:44:36.2432730Z [LooseEndsUITests] Compiling SelfConsistency.swift
+2026-10-21T06:44:36.2434620Z [LooseEndsUITests] Compiling SettingsSmokeTests.swift
+2026-10-21T06:44:36.2435230Z [LooseEndsUITests] Compiling SpeechDiagnosisLineTests.swift
+2026-10-21T06:44:36.2435970Z [LooseEndsUITests] Compiling SpeechListeningIndicatorTests.swift
+2026-10-21T06:44:36.2439170Z [LooseEndsUITests] Compiling SpeechListeningTests.swift
+2026-10-21T06:44:36.2440080Z [LooseEndsUITests] Compiling StartScreenInteractionTests.swift
+2026-10-21T06:44:36.2444020Z [LooseEndsUITests] Copy arm64-apple-macos.swiftmodule -> LooseEndsUITests.swiftmodule
+2026-10-21T06:44:36.2451830Z [LooseEndsUITests] Copy arm64-apple-macos.swiftdoc -> LooseEndsUITests.swiftdoc
+2026-10-21T06:44:36.2454170Z [LooseEndsUITests] Copy arm64-apple-macos.abi.json -> LooseEndsUITests.abi.json
+2026-10-21T06:44:36.2455120Z [LooseEndsUITests] Copy arm64-apple-macos.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
+2026-10-21T06:44:36.2459050Z ##[warning]main actor-isolated property 'firstMatch' can not be referenced from a nonisolated context
+2026-10-21T06:44:36.2462440Z 259 |     }
+2026-10-21T06:44:36.2462740Z 260 | 
+2026-10-21T06:44:36.2465950Z ##[warning]main actor-isolated property 'alerts' can not be referenced from a nonisolated context
+2026-10-21T06:44:36.2471290Z 259 |     }
+2026-10-21T06:44:36.2471650Z 260 | 
+2026-10-21T06:44:36.2473960Z ##[warning]call to main actor-isolated initializer 'init(bundleIdentifier:)' in a synchronous nonisolated context [#ActorIsolatedCall]
+2026-10-21T06:44:36.2478430Z 259 |     }
+2026-10-21T06:44:36.2481340Z 260 | 
+2026-10-21T06:44:36.2483860Z ##[warning]call to main actor-isolated instance method 'waitForExistence(timeout:)' in a synchronous nonisolated context [#ActorIsolatedCall]
+2026-10-21T06:44:36.2485110Z 259 |     }
+2026-10-21T06:44:36.2485390Z 260 | 
+2026-10-21T06:44:36.2487470Z ##[warning]main actor-isolated property 'exists' can not be referenced from a nonisolated context
+2026-10-21T06:44:36.2488860Z 259 |     }
+2026-10-21T06:44:36.2491260Z 260 | 
+2026-10-21T06:44:36.2493690Z ##[warning]main actor-isolated subscript 'subscript(_:)' can not be referenced from a nonisolated context
+2026-10-21T06:44:36.2495270Z 259 |     }
+2026-10-21T06:44:36.2495620Z 260 | 
+2026-10-21T06:44:36.2497960Z ##[warning]main actor-isolated property 'buttons' can not be referenced from a nonisolated context
+2026-10-21T06:44:36.2502250Z 259 |     }
+2026-10-21T06:44:36.2504760Z 260 | 
+2026-10-21T06:44:36.2506110Z ##[warning]call to main actor-isolated instance method 'tap()' in a synchronous nonisolated context [#ActorIsolatedCall]
+2026-10-21T06:44:36.2508730Z 259 |     }
+2026-10-21T06:44:36.2509070Z 260 | 
+2026-10-21T06:44:36.2510290Z ##[warning]main actor-isolated subscript 'subscript(_:)' can not be referenced from a nonisolated context
+2026-10-21T06:44:36.2519110Z 259 |     }
+2026-10-21T06:44:36.2521180Z 260 | 
+2026-10-21T06:44:36.2522530Z ##[warning]main actor-isolated property 'buttons' can not be referenced from a nonisolated context
+2026-10-21T06:44:36.2525710Z 259 |     }
+2026-10-21T06:44:36.2526620Z 260 | 
+2026-10-21T06:44:36.2528820Z [LooseEndsUITests] Compiling CalendarTargetTests.swift
+2026-10-21T06:44:36.2531810Z [LooseEndsUITests] Compiling CaptureCancelCrashTests.swift
+2026-10-21T06:44:36.2534550Z [LooseEndsUITests] Compiling CaptureSmokeTests.swift
+2026-10-21T06:44:36.2535200Z [LooseEndsUITests] Compiling ContextUniquenessTests.swift
+2026-10-21T06:44:36.2537950Z [LooseEndsUITests] Compiling ConventionCorpus.swift
+2026-10-21T06:44:36.2538500Z [LooseEndsUITests] Compiling Corpus.swift
+2026-10-21T06:44:36.2539070Z [LooseEndsUITests] Compiling DesignGalleryTests.swift
+2026-10-21T06:44:36.2541340Z [LooseEndsUITests] Compiling DueNotificationTapTests.swift
+2026-10-21T06:44:36.2542620Z [LooseEndsUITests] Compiling FieldsSmokeTests.swift
+2026-10-21T06:44:36.2547240Z [LooseEndsUITests] Compiling LaunchArgumentTests.swift
+2026-10-21T06:44:36.2551170Z [LooseEndsUITests] Compiling LeaveOneOut.swift
+2026-10-21T06:44:36.2573260Z [LooseEndsUITests] Compiling MacDetailClickTests.swift
+2026-10-21T06:44:36.2574080Z [LooseEndsUITests] Compiling MacGalleryTests.swift
+2026-10-21T06:44:36.2576100Z [LooseEndsUITests] Compiling MacKeyboardTests.swift
+2026-10-21T06:44:36.2578000Z [LooseEndsUITests] Compiling MacUITestSupport.swift
+2026-10-21T06:44:36.2579780Z [LooseEndsUITests] Compiling MeasurementRun.swift
+2026-10-21T06:44:36.2583190Z [LooseEndsUITests] Compiling OnboardingTests.swift
+2026-10-21T06:44:36.2587340Z [LooseEndsUITests] Compiling PlaceNotificationTapTests.swift
+2026-10-21T06:44:36.2588020Z [LooseEndsUITests] Compiling PlaceSmokeTests.swift
+2026-10-21T06:44:36.2590060Z [LooseEndsUITests] Compiling ProjectSubtasksTests.swift
+2026-10-21T06:44:36.2599280Z [LooseEndsTests] Compiling SiriCaptureTests.swift
+2026-10-21T06:44:36.2602070Z [LooseEndsTests] Compiling SiriFieldsTests.swift
+2026-10-21T06:44:36.2603510Z [LooseEndsTests] Compiling SiriRepeatMappingTests.swift
+2026-10-21T06:44:36.2604480Z [LooseEndsTests] Compiling SpeechAccessTests.swift
+2026-10-21T06:44:36.2605360Z [LooseEndsTests] Compiling SpeechDiagnosisTests.swift
+2026-10-21T06:44:36.2606760Z [LooseEndsTests] Compiling SpeechLatencyTests.swift
+2026-10-21T06:44:36.2607610Z [LooseEndsTests] Compiling SpeechReadinessTests.swift
+2026-10-21T06:44:36.2608160Z [LooseEndsTests] Compiling StartHeadlineTests.swift
+2026-10-21T06:44:36.2609340Z [LooseEndsTests] Compiling StartMetricsTests.swift
+2026-10-21T06:44:36.2611910Z [LooseEndsTests] Compiling StartViewsTests.swift
+2026-10-21T06:44:36.2612400Z [LooseEndsTests] Compiling SubtaskListsTests.swift
+2026-10-21T06:44:36.2613160Z [LooseEndsTests] Compiling SubtaskRulesTests.swift
+2026-10-21T06:44:36.2614910Z [LooseEndsTests] Compiling SubtaskTests.swift
+2026-10-21T06:44:36.2615650Z [LooseEndsTests] Compiling SyncStatusTests.swift
+2026-10-21T06:44:36.2616210Z [LooseEndsTests] Compiling TaskActionsTests.swift
+2026-10-21T06:44:36.2617310Z [LooseEndsTests] Compiling TaskAttachmentModelTests.swift
+2026-10-21T06:44:36.2617830Z [LooseEndsTests] Compiling TaskPlaceTests.swift
+2026-10-21T06:44:36.2618330Z [LooseEndsTests] Compiling TextFormRuleReportTests.swift
+2026-10-21T06:44:36.2620420Z [LooseEndsTests] Compiling ThreadShapeTests.swift
+2026-10-21T06:44:36.2621160Z [LooseEndsTests] Compiling TimeExpressionParserTests.swift
+2026-10-21T06:44:36.2625700Z [LooseEndsTests] Compiling TitleFidelityPromptTests.swift
+2026-10-21T06:44:36.2626210Z [LooseEndsTests] Compiling TitleRuleTests.swift
+2026-10-21T06:44:36.2626810Z [LooseEndsTests] Compiling WaitingOnTests.swift
+2026-10-21T06:44:36.2630770Z [LooseEndsTests] Compiling WaveformTests.swift
+2026-10-21T06:44:36.2632770Z ##[warning]'#require(_:_:)' is redundant because 'TaskPlace(name: "Markt", latitude: 53.55, longitude: 9.93, event: .arrive)' never equals 'nil' (from macro 'require')
+2026-10-21T06:44:36.2635130Z 106 |         milk.dueHasTime = true
+2026-10-21T06:44:36.2635460Z 107 |         milk.contexts = [garden, phone]
+2026-10-21T06:44:36.2639490Z ##[warning]'#require(_:_:)' is redundant because 'calendar.date(byAdding: .hour, value: 5, to: wednesday)' never equals 'nil' (from macro 'require')
+2026-10-21T06:44:36.2641000Z 170 |         let task = TaskItem(rawText: "Zahnarzt anrufen")
+2026-10-21T06:44:36.2641420Z 171 |         let wednesday = try day(2026, 9, 16, in: calendar)
+2026-10-21T06:44:36.2641890Z [LooseEndsTests] Compiling MenuBarTests.swift
+2026-10-21T06:44:36.2643330Z [LooseEndsTests] Compiling MenuBarThreadImageTests.swift
+2026-10-21T06:44:36.2648390Z [LooseEndsTests] Compiling ModelContainerFactoryTests.swift
+2026-10-21T06:44:36.2648910Z [LooseEndsTests] Compiling ModelSeamTests.swift
+2026-10-21T06:52:39.1068210Z [LooseEndsTests] Compiling ModelTests.swift
+2026-10-21T06:52:39.1095760Z [LooseEndsTests] Compiling NewDateRuleTests.swift
+2026-10-21T06:52:39.1099860Z [LooseEndsTests] Compiling NextRankTests.swift
+2026-10-21T06:52:39.1100710Z [LooseEndsTests] Compiling NextUpWidgetTests.swift
+2026-10-21T06:52:39.1101320Z [LooseEndsTests] Compiling NoteLinksTests.swift
+2026-10-21T06:52:39.1101840Z [LooseEndsTests] Compiling NowRuleTests.swift
+2026-10-21T06:52:39.1162260Z [LooseEndsTests] Compiling OnboardingFlowTests.swift
+2026-10-21T06:52:39.1162850Z [LooseEndsTests] Compiling PendingCompletionsTests.swift
+2026-10-21T06:52:39.1163540Z [LooseEndsTests] Compiling PeopleRetiredTests.swift
+2026-10-21T06:52:39.1230790Z [LooseEndsTests] Compiling PhoneRuleTests.swift
+2026-10-21T06:52:39.1231290Z [LooseEndsTests] Compiling PlaceDeliveryTests.swift
+2026-10-21T06:52:39.1231950Z [LooseEndsTests] Compiling PlaceEditingTests.swift
+2026-10-21T06:52:39.1232630Z [LooseEndsTests] Compiling PlaceNotificationCenterTests.swift
+2026-10-21T06:52:39.1233240Z [LooseEndsTests] Compiling PlaceNotificationsTests.swift
+2026-10-21T06:52:39.1233750Z [LooseEndsTests] Compiling PlaceRemindersTests.swift
+2026-10-21T06:52:39.1234260Z [LooseEndsTests] Compiling PressureOrderTests.swift
+2026-10-21T06:52:39.1234750Z [LooseEndsTests] Compiling ProcessCacheTests.swift
+2026-10-21T06:52:39.1235260Z [LooseEndsTests] Compiling ProjectLinesTests.swift
+2026-10-21T06:52:39.1235820Z [LooseEndsTests] Compiling ProjectNameRuleTests.swift
+2026-10-21T06:52:39.1236270Z [LooseEndsTests] Compiling QuickDueTests.swift
+2026-10-21T06:52:39.1236790Z [LooseEndsTests] Compiling RawTextWords.swift
+2026-10-21T06:52:39.1237270Z [LooseEndsTests] Compiling RealModelGateTests.swift
+2026-10-21T06:52:39.1237820Z [LooseEndsTests] Compiling RealModelTests.swift
+2026-10-21T06:52:39.1238240Z [LooseEndsTests] Compiling ReanalysisTests.swift
+2026-10-21T06:52:39.1239100Z [LooseEndsTests] Compiling RecognitionRuleTests.swift
+2026-10-21T06:52:39.1239720Z [LooseEndsTests] Compiling ReminderEntityTests.swift
+2026-10-21T06:52:39.1240450Z [LooseEndsTests] Compiling ReminderTranslationTests.swift
+2026-10-21T06:52:39.1241010Z [LooseEndsTests] Compiling RepeatAnchorTests.swift
+2026-10-21T06:52:39.1241570Z [LooseEndsTests] Compiling RepeatEditTests.swift
+2026-10-21T06:52:39.1242040Z [LooseEndsTests] Compiling RepeatRuleTests.swift
+2026-10-21T06:52:39.1242680Z [LooseEndsTests] Compiling ReviewTrayTests.swift
+2026-10-21T06:52:39.1243230Z [LooseEndsTests] Compiling RevisionServiceTests.swift
+2026-10-21T06:52:39.1243800Z [LooseEndsTests] Compiling RowKeyActionTests.swift
+2026-10-21T06:52:39.1244300Z [LooseEndsTests] Compiling RuleBaseline.swift
+2026-10-21T06:52:39.1244850Z [LooseEndsTests] Compiling RuleLeaveOneOutTests.swift
+2026-10-21T06:52:39.1245600Z [LooseEndsTests] Compiling RuleTriggerTests.swift
+2026-10-21T06:52:39.1246020Z [LooseEndsTests] Compiling ScanPDFTests.swift
+2026-10-21T06:52:39.1246600Z [LooseEndsTests] Compiling SelfConsistency.swift
+2026-10-21T06:52:39.1247050Z [LooseEndsTests] Compiling SelfConsistencyReportTests.swift
+2026-10-21T06:52:39.1247740Z [LooseEndsTests] Compiling SelfConsistencyTests.swift
+2026-10-21T06:52:39.1248440Z [LooseEndsTests] Compiling SharedAttachmentFileTests.swift
+2026-10-21T06:52:39.1248980Z [LooseEndsTests] Compiling SharedAttachmentTests.swift
+2026-10-21T06:52:39.1249490Z [LooseEndsTests] Compiling SharedContentTests.swift
+2026-10-21T06:52:39.1250150Z [LooseEndsTests] Compiling SideColumnTests.swift
+2026-10-21T06:52:39.1251080Z [LooseEndsTests] Copy arm64-apple-macos.swiftmodule -> LooseEndsTests.swiftmodule
+2026-10-21T06:52:39.1251670Z [LooseEndsTests] Copy arm64-apple-macos.swiftdoc -> LooseEndsTests.swiftdoc
+2026-10-21T06:52:39.1252320Z [LooseEndsTests] Copy arm64-apple-macos.abi.json -> LooseEndsTests.abi.json
+2026-10-21T06:52:39.1253270Z [LooseEndsTests] Copy arm64-apple-macos.swiftsourceinfo -> LooseEndsTests.swiftsourceinfo
+2026-10-21T06:52:39.1253920Z [LooseEndsTests] Compiling AppVersionTests.swift
+2026-10-21T06:52:39.1254700Z [LooseEndsTests] Compiling AttachmentKindTests.swift
+2026-10-21T06:52:39.1255370Z [LooseEndsTests] Compiling CalendarAskTests.swift
+2026-10-21T06:52:39.1256020Z [LooseEndsTests] Compiling CalendarSyncTests.swift
+2026-10-21T06:52:39.1256540Z [LooseEndsTests] Compiling CaptureComplication.swift
+2026-10-21T06:52:39.1257200Z [LooseEndsTests] Compiling CaptureComplicationTests.swift
+2026-10-21T06:52:39.1257720Z [LooseEndsTests] Compiling CaptureServiceTests.swift
+2026-10-21T06:52:39.1258300Z [LooseEndsTests] Compiling CarryRemindersTests.swift
+2026-10-21T06:52:39.1258870Z [LooseEndsTests] Compiling CatalogServiceTests.swift
+2026-10-21T06:52:39.1259430Z [LooseEndsTests] Compiling CloudKitSchemaInitializerTests.swift
+2026-10-21T06:52:39.1260190Z [LooseEndsTests] Compiling ContentsIndexTests.swift
+2026-10-21T06:52:39.1260770Z [LooseEndsTests] Compiling ContextWordLearningReportTests.swift
+2026-10-21T06:52:39.1261700Z [LooseEndsTests] Compiling ContextWordLearningTests.swift
+2026-10-21T06:52:39.1262230Z [LooseEndsTests] Compiling ContextWordRuleTests.swift
+2026-10-21T06:52:39.1262820Z [LooseEndsTests] Compiling ConventionBaselineTests.swift
+2026-10-21T06:52:39.1263270Z [LooseEndsTests] Compiling ConventionCorpus.swift
+2026-10-21T06:52:39.1263740Z [LooseEndsTests] Compiling Corpus.swift
+2026-10-21T06:52:39.1264180Z [LooseEndsTests] Compiling CorpusTests.swift
+2026-10-21T06:52:39.1264660Z [LooseEndsTests] Compiling DateExpressionParserTests.swift
+2026-10-21T06:52:39.1265340Z [LooseEndsTests] Compiling DateParserCorpusTests.swift
+2026-10-21T06:52:39.1265880Z [LooseEndsTests] Compiling DateTitleReportTests.swift
+2026-10-21T06:52:39.1266410Z [LooseEndsTests] Compiling DetailFieldsTests.swift
+2026-10-21T06:52:39.1266980Z [LooseEndsTests] Compiling DetailLayoutTests.swift
+2026-10-21T06:52:39.1267530Z [LooseEndsTests] Compiling DueDateRuleTests.swift
+2026-10-21T06:52:39.1268100Z [LooseEndsTests] Compiling DueNotificationCenterTests.swift
+2026-10-21T06:52:39.1268570Z [LooseEndsTests] Compiling DueRemindersTests.swift
+2026-10-21T06:52:39.1269050Z [LooseEndsTests] Compiling DueStateTests.swift
+2026-10-21T06:52:39.1269530Z [LooseEndsTests] Compiling DueTodayTests.swift
+2026-10-21T06:52:39.1270000Z [LooseEndsTests] Compiling DueWordsTests.swift
+2026-10-21T06:52:39.1270430Z [LooseEndsTests] Compiling DurationRuleTests.swift
+2026-10-21T06:52:39.1271050Z [LooseEndsTests] Compiling EnergyTests.swift
+2026-10-21T06:52:39.1271520Z [LooseEndsTests] Compiling EnrichmentTests.swift
+2026-10-21T06:52:39.1272200Z [LooseEndsTests] Compiling FieldEditTests.swift
+2026-10-21T06:52:39.1272690Z [LooseEndsTests] Compiling FieldOriginTests.swift
+2026-10-21T06:52:39.1274380Z [LooseEndsTests] Compiling GuardrailCorpusTests.swift
+2026-10-21T06:52:39.1275340Z [LooseEndsTests] Compiling ImportanceUrgencyRuleTests.swift
+2026-10-21T06:52:39.1277210Z [LooseEndsTests] Compiling IntentExecutionTests.swift
+2026-10-21T06:52:39.1278880Z [LooseEndsTests] Compiling LaunchTimingsTests.swift
+2026-10-21T06:52:39.1279410Z [LooseEndsTests] Compiling LeaveOneOut.swift
+2026-10-21T06:52:39.1281610Z [LooseEndsTests] Compiling LeftoversTests.swift
+2026-10-21T06:52:39.1282670Z [LooseEndsTests] Compiling ListPolishTests.swift
+2026-10-21T06:52:39.1283440Z [LooseEndsTests] Compiling ListSummaryTests.swift
+2026-10-21T06:52:39.1283950Z [LooseEndsTests] Compiling MarginMarkTests.swift
+2026-10-21T06:52:39.1285480Z [LooseEndsTests] Compiling MeasurementData.swift
+2026-10-21T06:52:39.1287870Z [LooseEndsTests] Compiling MeasurementDataTests.swift
+2026-10-21T06:52:39.1288780Z [LooseEndsTests] Compiling MeasurementFieldScopeTests.swift
+2026-10-21T06:52:39.1289410Z [LooseEndsTests] Compiling MeasurementRun.swift
+2026-10-21T06:52:39.1291270Z [LooseEndsTests] Compiling MeasurementRunTests.swift
+2026-10-21T06:52:39.1361430Z ##[warning]'#require(_:_:)' is redundant because 'TaskPlace(name: "Büro", latitude: 51.99563, longitude: 7.71357, event: .arrive)' never equals 'nil' (from macro 'require')
+2026-10-21T06:52:39.1389840Z  63 |         func placed(_ raw: String) throws -> TaskItem {
+2026-10-21T06:52:39.1390180Z  64 |             let task = try task(raw)
+2026-10-21T06:52:39.1392390Z ##[warning]'#require(_:_:)' is redundant because 'calendar.date(bySettingHour: hour, minute: minute, second: 0, of: tomorrow)' never equals 'nil' (from macro 'require')
+2026-10-21T06:52:39.1393540Z  72 |             task.status = .active
+2026-10-21T06:52:39.1393970Z  73 |             if let hour {
+2026-10-21T06:52:39.1395860Z ##[warning]'#require(_:_:)' is redundant because 'fixture.calendar.date(byAdding: .day, value: -2, to: fixture.tomorrow)' never equals 'nil' (from macro 'require')
+2026-10-21T06:52:39.1397710Z 171 |         let task = TaskItem(rawText: raw)
+2026-10-21T06:52:39.1398010Z 172 |         task.status = .active
+2026-10-21T06:52:39.1398560Z [LooseEnds] Linking LooseEnds.debug.dylib
+2026-10-21T06:52:39.1399400Z note: Using stub executor library with Swift entry point. (in target 'LooseEnds' from project 'LooseEnds')
+2026-10-21T06:52:39.1400170Z [LooseEnds] Linking LooseEnds
+2026-10-21T06:52:39.1400600Z [LooseEnds] Copy LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+2026-10-21T06:52:39.1401190Z [LooseEnds] Processing Info.plist
+2026-10-21T06:52:39.1401550Z [LooseEnds] Extract App Intents Metadata
+2026-10-21T06:52:39.1402320Z [LooseEndsTests] Processing empty-LooseEndsTests.plist
+2026-10-21T06:52:39.1402960Z [LooseEndsTests] Copying textform-corpus.json
+2026-10-21T06:52:39.1403400Z [LooseEndsTests] Copying speech-de.m4a
+2026-10-21T06:52:39.1403900Z [LooseEndsTests] Copying lab-run.log
+2026-10-21T06:52:39.1404290Z [LooseEndsTests] Copying guardrail-corpus.json
+2026-10-21T06:52:39.1404760Z [LooseEndsTests] Copying date-title.json
+2026-10-21T06:52:39.1405220Z [LooseEndsTests] Copying date-title-corpus.json
+2026-10-21T06:52:39.1405710Z [LooseEndsTests] Copying convention-corpus.json
+2026-10-21T06:52:39.1406110Z [LooseEndsTests] Linking LooseEndsTests
+2026-10-21T06:52:39.1406540Z [LooseEndsTests] Extract App Intents Metadata
+2026-10-21T06:52:39.1407120Z Signing LooseEndsTests.xctest (in target 'LooseEndsTests' from project 'LooseEnds')
+2026-10-21T06:52:39.1407670Z [LooseEndsTests] RegisterExecutionPolicyException LooseEndsTests.xctest
+2026-10-21T06:52:39.1408220Z [LooseEndsTests] Touching LooseEndsTests.xctest
+2026-10-21T06:52:39.1408690Z Signing LooseEnds.debug.dylib (in target 'LooseEnds' from project 'LooseEnds')
+2026-10-21T06:52:39.1409300Z Signing __preview.dylib (in target 'LooseEnds' from project 'LooseEnds')
+2026-10-21T06:52:39.1409800Z Signing LooseEnds.app (in target 'LooseEnds' from project 'LooseEnds')
+2026-10-21T06:52:39.1410360Z [LooseEnds] Validate Embedded Binary LooseEndsWidgets.appex
+2026-10-21T06:52:39.1411850Z [LooseEnds] RegisterExecutionPolicyException LooseEnds.app
+2026-10-21T06:52:39.1412320Z [LooseEnds] Validate LooseEnds.app
+2026-10-21T06:52:39.1412740Z [LooseEnds] Touching LooseEnds.app
+2026-10-21T06:52:39.1413480Z [LooseEndsUITests] Processing empty-LooseEndsUITests.plist
+2026-10-21T06:52:39.1413960Z [LooseEndsUITests] Copying lab-run.log
+2026-10-21T06:52:39.1414330Z [LooseEndsUITests] Copying textform-corpus.json
+2026-10-21T06:52:39.1414760Z [LooseEndsUITests] Linking LooseEndsUITests
+2026-10-21T06:52:39.1415140Z [LooseEndsUITests] Copying guardrail-corpus.json
+2026-10-21T06:52:39.1415630Z [LooseEndsUITests] Copying date-title.json
+2026-10-21T06:52:39.1416070Z [LooseEndsUITests] Copying date-title-corpus.json
+2026-10-21T06:52:39.1416480Z [LooseEndsUITests] Copying convention-corpus.json
+2026-10-21T06:52:39.1416980Z [LooseEndsUITests] Extract App Intents Metadata
+2026-10-21T06:52:39.1417370Z [LooseEndsUITests] Copying Info.plist
+2026-10-21T06:52:39.1417970Z [LooseEndsUITests] Copy PkgInfo -> PkgInfo
+2026-10-21T06:52:39.1418460Z Signing LooseEndsUITests.xctest (in target 'LooseEndsUITests' from project 'LooseEnds')
+2026-10-21T06:52:39.1419160Z Signing LooseEndsUITests-Runner.app (in target 'LooseEndsUITests' from project 'LooseEnds')
+2026-10-21T06:52:39.1419760Z [LooseEndsUITests] RegisterExecutionPolicyException LooseEndsUITests.xctest
+2026-10-21T06:52:39.1420320Z [LooseEndsUITests] Touching LooseEndsUITests.xctest
+2026-10-21T06:52:39.1420790Z Test Suite 'Selected tests' started at 2026-10-21 06:45:02.948.
+2026-10-21T06:52:39.1421170Z Test Suite 'LooseEndsUITests.xctest' started at 2026-10-21 06:45:02.948.
+2026-10-21T06:52:39.1421620Z Test Suite 'MacGalleryTests' started at 2026-10-21 06:45:02.948.
+2026-10-21T06:52:39.1423210Z     ✔ testCalendarAskDark (43.910 seconds)
+2026-10-21T06:52:39.1423640Z     ✔ testCalendarAskLight (40.078 seconds)
+2026-10-21T06:52:39.1423990Z     ✔ testGalleryDark (44.919 seconds)
+2026-10-21T06:52:39.1424440Z     ✔ testGalleryLight (26.254 seconds)
+2026-10-21T06:52:39.1424800Z     ✔ testLooseEndsTopDark (92.654 seconds)
+2026-10-21T06:52:39.1425210Z     ✔ testLooseEndsTopLight (93.107 seconds)
+2026-10-21T06:52:39.1425670Z     ✔ testPanelDark (19.090 seconds)
+2026-10-21T06:52:39.1426050Z     ✔ testPanelDiagnosis (12.020 seconds)
+2026-10-21T06:52:39.1426500Z     ✔ testPanelLight (18.742 seconds)
+2026-10-21T06:52:39.1426880Z     ✔ testPanelListening (11.842 seconds)
+2026-10-21T06:52:39.1427300Z     ✔ testPanelTypedGerman (22.759 seconds)
+2026-10-21T06:52:39.1427680Z     ✔ testSettingsDark (14.858 seconds)
+2026-10-21T06:52:39.1428060Z     ✔ testSettingsLight (14.915 seconds)
+2026-10-21T06:52:39.1428430Z Executed 13 tests, with 0 failures (0 unexpected) in 455.148 (455.158) seconds
+2026-10-21T06:52:39.1428930Z Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-21 06:52:38.107.
+2026-10-21T06:52:39.1429390Z Executed 13 tests, with 0 failures (0 unexpected) in 455.148 (455.159) seconds
+2026-10-21T06:52:39.1429940Z Executed 13 tests, with 0 failures (0 unexpected) in 455.148 (455.160) seconds
+2026-10-21T06:52:39.1430450Z Test session results: /Users/runner/work/loose-ends/loose-ends/MacGallery.xcresult
+2026-10-21T06:52:39.1430950Z Test Succeeded
+2026-10-21T06:52:39.1431370Z Testing started
+2026-10-21T06:52:39.1620680Z ##[group]Run python3 -m venv "$RUNNER_TEMP/sandbox-venv"
+2026-10-21T06:52:39.1621100Z python3 -m venv "$RUNNER_TEMP/sandbox-venv"
+2026-10-21T06:52:39.1621520Z "$RUNNER_TEMP/sandbox-venv/bin/pip" install --quiet 'pyyaml~=6.0'
+2026-10-21T06:52:39.1622240Z "$RUNNER_TEMP/sandbox-venv/bin/python" scripts/mac_ci_entitlements.py "$RUNNER_TEMP/mac-sandbox.plist"
+2026-10-21T06:52:39.2366610Z shell: /bin/bash -e {0}
+2026-10-21T06:52:39.2366850Z ##[endgroup]
+2026-10-21T06:52:46.2226360Z 
+2026-10-21T06:52:46.2227020Z [notice] A new release of pip is available: 26.2.1 -> 26.2.2
+2026-10-21T06:52:46.3721010Z [notice] To update, run: /Users/runner/work/_temp/sandbox-venv/bin/python3.15 -m pip install --upgrade pip
+2026-10-21T06:52:46.3721500Z com.apple.security.app-sandbox: True
+2026-10-21T06:52:46.3721880Z com.apple.security.device.audio-input: True
+2026-10-21T06:52:46.3722170Z com.apple.security.files.user-selected.read-only: True
+2026-10-21T06:52:46.3723650Z com.apple.security.network.client: True
+2026-10-21T06:52:46.3724050Z com.apple.security.personal-information.calendars: True
+2026-10-21T06:52:46.3790590Z ##[group]Run set -o pipefail
+2026-10-21T06:52:46.3790930Z set -o pipefail
+2026-10-21T06:52:46.3791170Z xcodebuild build-for-testing \
+2026-10-21T06:52:46.3791460Z   -project LooseEnds.xcodeproj \
+2026-10-21T06:52:46.3791710Z   -scheme LooseEnds \
+2026-10-21T06:52:46.3791940Z   -destination 'platform=macOS' \
+2026-10-21T06:52:46.3792180Z   -derivedDataPath build/click \
+2026-10-21T06:52:46.3792420Z   CODE_SIGN_IDENTITY=- \
+2026-10-21T06:52:46.3792630Z   CODE_SIGN_STYLE=Manual \
+2026-10-21T06:52:46.3793150Z   DEVELOPMENT_TEAM= \
+2026-10-21T06:52:46.3793460Z   CODE_SIGN_ENTITLEMENTS= \
+2026-10-21T06:52:46.3793810Z   2>&1 | tee mac-click-build.log | xcbeautify
+2026-10-21T06:52:46.3829220Z shell: /bin/bash -e {0}
+2026-10-21T06:52:46.3829430Z ##[endgroup]
+2026-10-21T06:53:25.6506010Z 
+2026-10-21T06:53:25.6606750Z ----- xcbeautify -----
+2026-10-21T06:53:25.6706870Z Version: 3.2.1
+2026-10-21T06:53:25.6807640Z ----------------------
+2026-10-21T06:53:25.6908450Z 
+2026-10-21T06:53:25.7010500Z note: Using codesigning identity override: -
+2026-10-21T06:53:25.7109930Z note: Building targets in dependency order
+2026-10-21T06:53:25.7215470Z note: Target dependency graph (4 targets)
+2026-10-21T06:53:25.7317300Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets_const_extract_protocols.json
+2026-10-21T06:53:25.7419060Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets.SwiftFileList
+2026-10-21T06:53:25.7525420Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets.SwiftConstValuesFileList
+2026-10-21T06:53:25.7626950Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets.LinkFileList
+2026-10-21T06:53:25.7729140Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-OutputFileMap.json
+2026-10-21T06:53:25.7846290Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets.hmap
+2026-10-21T06:53:25.7949850Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets.DependencyStaticMetadataFileList
+2026-10-21T06:53:25.8075480Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets.DependencyMetadataFileList
+2026-10-21T06:53:25.8182920Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-project-headers.hmap
+2026-10-21T06:53:25.8243950Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-own-target-headers.hmap
+2026-10-21T06:53:25.8358290Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-generated-files.hmap
+2026-10-21T06:53:25.8460000Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-all-target-headers.hmap
+2026-10-21T06:53:25.8562330Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-all-non-framework-target-headers.hmap
+2026-10-21T06:53:25.8664160Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-DebugEntryPoint-normal-arm64.txt
+2026-10-21T06:53:25.8927860Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-DebugDylibPath-normal-arm64.txt
+2026-10-21T06:53:25.9033600Z [LooseEndsWidgets] Write Auxiliary File LooseEndsWidgets-DebugDylibInstallName-normal-arm64.txt
+2026-10-21T06:53:25.9134920Z [LooseEndsWidgets] Write Auxiliary File Entitlements.plist
+2026-10-21T06:53:25.9236650Z [LooseEndsUITests] Write Auxiliary File empty-LooseEndsUITests.plist
+2026-10-21T06:53:25.9330150Z [LooseEndsUITests] Write Auxiliary File ProductTypeInfoPlistAdditions.plist
+2026-10-21T06:53:25.9330810Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests.SwiftFileList
+2026-10-21T06:53:25.9331460Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests_const_extract_protocols.json
+2026-10-21T06:53:25.9333430Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests.SwiftConstValuesFileList
+2026-10-21T06:53:25.9334190Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests.LinkFileList
+2026-10-21T06:53:25.9334920Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests-OutputFileMap.json
+2026-10-21T06:53:25.9335600Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests.hmap
+2026-10-21T06:53:25.9336330Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests.DependencyStaticMetadataFileList
+2026-10-21T06:53:25.9337080Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests.DependencyMetadataFileList
+2026-10-21T06:53:25.9337900Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests-project-headers.hmap
+2026-10-21T06:53:25.9338600Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests-own-target-headers.hmap
+2026-10-21T06:53:25.9339360Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests-generated-files.hmap
+2026-10-21T06:53:25.9340110Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests-all-target-headers.hmap
+2026-10-21T06:53:25.9341030Z [LooseEndsUITests] Write Auxiliary File LooseEndsUITests-all-non-framework-target-headers.hmap
+2026-10-21T06:53:25.9341640Z [LooseEndsUITests] Write Auxiliary File Entitlements.plist
+2026-10-21T06:53:25.9342270Z [LooseEndsTests] Write Auxiliary File empty-LooseEndsTests.plist
+2026-10-21T06:53:25.9342880Z [LooseEndsTests] Write Auxiliary File LooseEndsTests_const_extract_protocols.json
+2026-10-21T06:53:25.9343540Z [LooseEndsTests] Write Auxiliary File LooseEndsTests.SwiftFileList
+2026-10-21T06:53:25.9344110Z [LooseEndsTests] Write Auxiliary File LooseEndsTests.SwiftConstValuesFileList
+2026-10-21T06:53:25.9344810Z [LooseEndsTests] Write Auxiliary File LooseEndsTests.LinkFileList
+2026-10-21T06:53:25.9444420Z [LooseEndsTests] Write Auxiliary File LooseEndsTests-OutputFileMap.json
+2026-10-21T06:53:25.9547790Z [LooseEndsTests] Write Auxiliary File LooseEndsTests.hmap
+2026-10-21T06:53:25.9649660Z [LooseEndsTests] Write Auxiliary File LooseEndsTests.DependencyStaticMetadataFileList
+2026-10-21T06:53:25.9751000Z [LooseEndsTests] Write Auxiliary File LooseEndsTests.DependencyMetadataFileList
+2026-10-21T06:53:25.9852660Z [LooseEndsTests] Write Auxiliary File LooseEndsTests-project-headers.hmap
+2026-10-21T06:53:25.9954340Z [LooseEndsTests] Write Auxiliary File LooseEndsTests-own-target-headers.hmap
+2026-10-21T06:53:26.0055730Z [LooseEndsTests] Write Auxiliary File LooseEndsTests-generated-files.hmap
+2026-10-21T06:53:26.0415640Z [LooseEndsTests] Write Auxiliary File LooseEndsTests-all-target-headers.hmap
+2026-10-21T06:53:26.0517140Z [LooseEndsTests] Write Auxiliary File LooseEndsTests-all-non-framework-target-headers.hmap
+2026-10-21T06:53:26.0618620Z [LooseEnds] Write Auxiliary File LooseEnds_const_extract_protocols.json
+2026-10-21T06:53:26.0720790Z [LooseEnds] Write Auxiliary File LooseEnds.SwiftFileList
+2026-10-21T06:53:26.0839940Z [LooseEnds] Write Auxiliary File LooseEnds.SwiftConstValuesFileList
+2026-10-21T06:53:26.0941320Z [LooseEnds] Write Auxiliary File LooseEnds.LinkFileList
+2026-10-21T06:53:26.1042920Z [LooseEnds] Write Auxiliary File LooseEnds-OutputFileMap.json
+2026-10-21T06:53:26.1321580Z [LooseEnds] Write Auxiliary File LooseEnds.hmap
+2026-10-21T06:53:26.1423150Z [LooseEnds] Write Auxiliary File LooseEnds.DependencyStaticMetadataFileList
+2026-10-21T06:53:26.1533440Z [LooseEnds] Write Auxiliary File LooseEnds.DependencyMetadataFileList
+2026-10-21T06:53:26.1651010Z [LooseEnds] Write Auxiliary File LooseEnds-project-headers.hmap
+2026-10-21T06:53:26.1759080Z [LooseEnds] Write Auxiliary File LooseEnds-own-target-headers.hmap
+2026-10-21T06:53:26.1860650Z [LooseEnds] Write Auxiliary File LooseEnds-generated-files.hmap
+2026-10-21T06:53:26.1973650Z [LooseEnds] Write Auxiliary File LooseEnds-all-target-headers.hmap
+2026-10-21T06:53:26.2091380Z [LooseEnds] Write Auxiliary File LooseEnds-all-non-framework-target-headers.hmap
+2026-10-21T06:53:26.2193220Z [LooseEnds] Write Auxiliary File LooseEnds-DebugDylibPath-normal-arm64.txt
+2026-10-21T06:53:26.2294970Z [LooseEnds] Write Auxiliary File LooseEnds-DebugDylibInstallName-normal-arm64.txt
+2026-10-21T06:53:26.2414110Z [LooseEnds] Write Auxiliary File Entitlements.plist
+2026-10-21T06:53:26.2515300Z [LooseEndsWidgets] Linking __preview.dylib
+2026-10-21T06:53:26.2666670Z [LooseEndsWidgets] Generate Asset Symbols Assets.xcassets
+2026-10-21T06:53:26.2785470Z [LooseEndsWidgets] Copying PrivacyInfo.xcprivacy
+2026-10-21T06:53:26.2915690Z [LooseEndsWidgets] Compile XCStrings Localizable.xcstrings
+2026-10-21T06:53:26.3059410Z [LooseEndsWidgets] Copying Localizable.strings
+2026-10-21T06:53:26.3175750Z note: Emplaced /Users/runner/work/loose-ends/loose-ends/build/click/Build/Products/Debug/LooseEndsWidgets.appex/Contents/Resources/Assets.car (in target 'LooseEndsWidgets' from project 'LooseEnds')
+2026-10-21T06:53:26.3318730Z [LooseEndsWidgets] Processing Info.plist
+2026-10-21T06:53:26.3420190Z [LooseEndsWidgets] Compiling RuleTrigger.swift
+2026-10-21T06:53:26.3551210Z [LooseEndsWidgets] Compiling SavedView.swift
+2026-10-21T06:53:26.3657670Z [LooseEndsWidgets] Compiling SharedAttachment.swift
+2026-10-21T06:53:26.3773520Z [LooseEndsWidgets] Compiling SharedAttachmentFile.swift
+2026-10-21T06:53:26.3874640Z [LooseEndsWidgets] Compiling SharedContent.swift
+2026-10-21T06:53:26.3989860Z [LooseEndsWidgets] Compiling SideColumn.swift
+2026-10-21T06:53:26.4113840Z [LooseEndsWidgets] Compiling SiriCapture.swift
+2026-10-21T06:53:26.4251980Z [LooseEndsWidgets] Compiling SiriFields.swift
+2026-10-21T06:53:26.4360410Z [LooseEndsWidgets] Compiling SiriRepeatMapping.swift
+2026-10-21T06:53:26.4464000Z [LooseEndsWidgets] Compiling StartHeadline.swift
+2026-10-21T06:53:26.4565470Z [LooseEndsWidgets] Compiling Subtasks.swift
+2026-10-21T06:53:26.4670250Z [LooseEndsWidgets] Compiling SyncStatus.swift
+2026-10-21T06:53:26.4783180Z [LooseEndsWidgets] Compiling TaskActions.swift
+2026-10-21T06:53:26.4885130Z [LooseEndsWidgets] Compiling TaskAttachment.swift
+2026-10-21T06:53:26.4987460Z [LooseEndsWidgets] Compiling TaskContext.swift
+2026-10-21T06:53:26.5102420Z [LooseEndsWidgets] Compiling TaskItem.swift
+2026-10-21T06:53:26.5208050Z [LooseEndsWidgets] Compiling TaskPlace.swift
+2026-10-21T06:53:26.5309910Z [LooseEndsWidgets] Compiling Thread.swift
+2026-10-21T06:53:26.5410600Z [LooseEndsWidgets] Compiling TimeExpressionParser.swift
+2026-10-21T06:53:26.5511470Z [LooseEndsWidgets] Compiling TitleRule.swift
+2026-10-21T06:53:26.5611990Z [LooseEndsWidgets] Compiling ViewRules.swift
+2026-10-21T06:53:26.5713390Z [LooseEndsWidgets] Compiling ViewSelection.swift
+2026-10-21T06:53:26.5814840Z [LooseEndsWidgets] Compiling WaitingOn.swift
+2026-10-21T06:53:26.5916580Z [LooseEndsWidgets] Compiling GeneratedAssetSymbols.swift
+2026-10-21T06:53:26.6017950Z [LooseEndsWidgets] Compiling LooseEndsWidgetsBundle.swift
+2026-10-21T06:53:26.6118320Z [LooseEndsWidgets] Compiling MarginText.swift
+2026-10-21T06:53:26.6220470Z [LooseEndsWidgets] Compiling ModelContainerFactory.swift
+2026-10-21T06:53:26.6320300Z [LooseEndsWidgets] Compiling ModelDeadline.swift
+2026-10-21T06:53:26.6420880Z [LooseEndsWidgets] Compiling NewDateRule.swift
+2026-10-21T06:53:26.6522460Z [LooseEndsWidgets] Compiling NextUpWidget.swift
+2026-10-21T06:53:26.6623950Z [LooseEndsWidgets] Compiling NextUpWidgetIntents.swift
+2026-10-21T06:53:26.6726870Z [LooseEndsWidgets] Compiling NoteLinks.swift
+2026-10-21T06:53:26.6827230Z [LooseEndsWidgets] Compiling PendingCompletions.swift
+2026-10-21T06:53:26.6927710Z [LooseEndsWidgets] Compiling PhoneRule.swift
+2026-10-21T06:53:26.7029450Z [LooseEndsWidgets] Compiling PlaceDelivery.swift
+2026-10-21T06:53:26.7130100Z [LooseEndsWidgets] Compiling PlaceEditing.swift
+2026-10-21T06:53:26.7230680Z [LooseEndsWidgets] Compiling PlaceNotifications.swift
+2026-10-21T06:53:26.7331700Z [LooseEndsWidgets] Compiling PlaceReminders.swift
+2026-10-21T06:53:26.7432010Z [LooseEndsWidgets] Compiling ProcessCache.swift
+2026-10-21T06:53:26.7532670Z [LooseEndsWidgets] Compiling Project.swift
+2026-10-21T06:53:26.7634130Z [LooseEndsWidgets] Compiling ProjectNameRule.swift
+2026-10-21T06:53:26.7734710Z [LooseEndsWidgets] Compiling QuickDue.swift
+2026-10-21T06:53:26.7836070Z [LooseEndsWidgets] Compiling RawTextWords.swift
+2026-10-21T06:53:26.7941510Z [LooseEndsWidgets] Compiling RecognitionRule.swift
+2026-10-21T06:53:26.8044270Z [LooseEndsWidgets] Compiling RepeatRule.swift
+2026-10-21T06:53:26.8145750Z [LooseEndsWidgets] Compiling Revision.swift
+2026-10-21T06:53:26.8247320Z [LooseEndsWidgets] Compiling RevisionService.swift
+2026-10-21T06:53:26.8348590Z [LooseEndsWidgets] Compiling RowKeyAction.swift
+2026-10-21T06:53:26.8449380Z [LooseEndsWidgets] Compiling AppVersion.swift
+2026-10-21T06:53:26.8549680Z [LooseEndsWidgets] Compiling AttachmentKind.swift
+2026-10-21T06:53:26.8650970Z [LooseEndsWidgets] Compiling CalendarAsk.swift
+2026-10-21T06:53:26.8769990Z [LooseEndsWidgets] Compiling CalendarSync.swift
+2026-10-21T06:53:26.8871580Z [LooseEndsWidgets] Compiling CaptureService.swift
+2026-10-21T06:53:26.8973280Z [LooseEndsWidgets] Compiling CarryReminders.swift
+2026-10-21T06:53:26.9075220Z [LooseEndsWidgets] Compiling CatalogService.swift
+2026-10-21T06:53:26.9176390Z [LooseEndsWidgets] Compiling CloudKitSchemaInitializer.swift
+2026-10-21T06:53:26.9297150Z [LooseEndsWidgets] Compiling CompletionRecord.swift
+2026-10-21T06:53:26.9413750Z [LooseEndsWidgets] Compiling ContextSeeder.swift
+2026-10-21T06:53:26.9514800Z [LooseEndsWidgets] Compiling ContextWordLearning.swift
+2026-10-21T06:53:26.9617470Z [LooseEndsWidgets] Compiling ContextWordRule.swift
+2026-10-21T06:53:26.9718990Z [LooseEndsWidgets] Compiling DateExpressionParser.swift
+2026-10-21T06:53:26.9719590Z [LooseEndsWidgets] Compiling DetailFields.swift
+2026-10-21T06:53:26.9830100Z [LooseEndsWidgets] Compiling DueDateRule.swift
+2026-10-21T06:53:26.9931330Z [LooseEndsWidgets] Compiling DueReminders.swift
+2026-10-21T06:53:27.0046350Z [LooseEndsWidgets] Compiling DurationRule.swift
+2026-10-21T06:53:27.0147760Z [LooseEndsWidgets] Compiling EnrichmentCoordinator.swift
+2026-10-21T06:53:27.0258250Z [LooseEndsWidgets] Compiling EnrichmentDraft.swift
+2026-10-21T06:53:27.0359610Z [LooseEndsWidgets] Compiling EnrichmentWriter.swift
+2026-10-21T06:53:27.0460890Z [LooseEndsWidgets] Compiling Enums.swift
+2026-10-21T06:53:27.0644270Z [LooseEndsWidgets] Compiling FieldCodec.swift
+2026-10-21T06:53:27.0744730Z [LooseEndsWidgets] Compiling FoundationModelsEnricher.swift
+2026-10-21T06:53:27.0846780Z [LooseEndsWidgets] Compiling GuessedProjects.swift
+2026-10-21T06:53:27.0947640Z [LooseEndsWidgets] Compiling ImportanceUrgencyRule.swift
+2026-10-21T06:53:27.1048280Z [LooseEndsWidgets] Copy arm64-apple-macos.swiftmodule -> LooseEndsWidgets.swiftmodule
+2026-10-21T06:53:27.1148960Z [LooseEndsWidgets] Copy arm64-apple-macos.swiftdoc -> LooseEndsWidgets.swiftdoc
+2026-10-21T06:53:27.1250420Z [LooseEndsWidgets] Copy arm64-apple-macos.abi.json -> LooseEndsWidgets.abi.json
+2026-10-21T06:53:27.1351240Z [LooseEndsWidgets] Copy arm64-apple-macos.swiftsourceinfo -> LooseEndsWidgets.swiftsourceinfo
+2026-10-21T06:53:27.1452250Z [LooseEnds] Generate Asset Symbols Assets.xcassets
+2026-10-21T06:53:27.1558290Z note: Emplaced /Users/runner/work/loose-ends/loose-ends/build/click/Build/Products/Debug/LooseEnds.app/Contents/Resources/Assets.car (in target 'LooseEnds' from project 'LooseEnds')
+2026-10-21T06:53:27.1660850Z note: Emplaced /Users/runner/work/loose-ends/loose-ends/build/click/Build/Products/Debug/LooseEnds.app/Contents/Resources/AppIcon.icns (in target 'LooseEnds' from project 'LooseEnds')
+2026-10-21T06:53:27.1761130Z [LooseEndsWidgets] Linking LooseEndsWidgets.debug.dylib
+2026-10-21T06:53:27.1862300Z note: Using stub executor library with Swift entry point. (in target 'LooseEndsWidgets' from project 'LooseEnds')
+2026-10-21T06:53:27.1963060Z [LooseEndsWidgets] Linking LooseEndsWidgets
+2026-10-21T06:53:27.2063470Z [LooseEndsWidgets] Extract App Intents Metadata
+2026-10-21T06:53:27.2164630Z Signing LooseEndsWidgets.debug.dylib (in target 'LooseEndsWidgets' from project 'LooseEnds')
+2026-10-21T06:53:27.2264980Z Signing __preview.dylib (in target 'LooseEndsWidgets' from project 'LooseEnds')
+2026-10-21T06:53:27.2365820Z Signing LooseEndsWidgets.appex (in target 'LooseEndsWidgets' from project 'LooseEnds')
+2026-10-21T06:53:27.2467170Z [LooseEndsWidgets] RegisterExecutionPolicyException LooseEndsWidgets.appex
+2026-10-21T06:53:27.2467960Z [LooseEndsWidgets] Touching LooseEndsWidgets.appex
+2026-10-21T06:53:27.2569270Z [LooseEnds] Copying PrivacyInfo.xcprivacy
+2026-10-21T06:53:27.2670420Z [LooseEnds] Copying InfoPlist.strings
+2026-10-21T06:53:27.2771770Z [LooseEnds] Linking __preview.dylib
+2026-10-21T06:53:27.2904000Z [LooseEnds] Copying InfoPlist.strings
+2026-10-21T06:53:27.3024550Z [LooseEnds] Compile XCStrings Localizable.xcstrings
+2026-10-21T06:53:27.3146340Z [LooseEnds] Compile XCStrings AppShortcuts.xcstrings
+2026-10-21T06:53:27.3247600Z [LooseEnds] Copying Localizable.strings
+2026-10-21T06:53:27.3349850Z [LooseEnds] Copying Localizable.strings
+2026-10-21T06:53:27.3460370Z [LooseEnds] Copying AppShortcuts.strings
+2026-10-21T06:53:27.3561790Z [LooseEnds] Compiling ScanPDF.swift
+2026-10-21T06:53:27.3662900Z [LooseEnds] Compiling SettingsView.swift
+2026-10-21T06:53:27.3781990Z [LooseEnds] Compiling SharedAttachment.swift
+2026-10-21T06:53:27.3903820Z [LooseEnds] Compiling SharedAttachmentFile.swift
+2026-10-21T06:53:27.4004830Z [LooseEnds] Compiling SharedContent.swift
+2026-10-21T06:53:27.4109140Z [LooseEnds] Compiling SideColumn.swift
+2026-10-21T06:53:27.4211600Z [LooseEnds] Compiling SideColumnView.swift
+2026-10-21T06:53:27.4338940Z [LooseEnds] Compiling SidebarView.swift
+2026-10-21T06:53:27.4463020Z [LooseEnds] Compiling SiriCapture.swift
+2026-10-21T06:53:27.4587260Z [LooseEnds] Compiling SiriFields.swift
+2026-10-21T06:53:27.4688610Z [LooseEnds] Compiling SiriRepeatMapping.swift
+2026-10-21T06:53:27.4799370Z [LooseEnds] Compiling SpeechAccess.swift
+2026-10-21T06:53:27.4900520Z [LooseEnds] Compiling SpeechCapture.swift
+2026-10-21T06:53:27.5001350Z [LooseEnds] Compiling SpeechDiagnosis.swift
+2026-10-21T06:53:27.5101930Z [LooseEnds] Compiling SpeechReadiness.swift
+2026-10-21T06:53:27.5202970Z [LooseEnds] Compiling StartHeadline.swift
+2026-10-21T06:53:27.5304460Z [LooseEnds] Compiling StartHeadlineText.swift
+2026-10-21T06:53:27.5411820Z [LooseEnds] Compiling StartMetrics.swift
+2026-10-21T06:53:27.5512390Z [LooseEnds] Compiling StartPage.swift
+2026-10-21T06:53:27.5612530Z [LooseEnds] Compiling StartZones.swift
+2026-10-21T06:53:27.5713030Z [LooseEnds] Compiling SubtaskCompletionDialog.swift
+2026-10-21T06:53:27.5813880Z [LooseEnds] Compiling PlaceDelivery.swift
+2026-10-21T06:53:27.5914080Z [LooseEnds] Compiling PlaceEditing.swift
+2026-10-21T06:53:27.6014600Z [LooseEnds] Compiling PlaceNotificationCenter.swift
+2026-10-21T06:53:27.6114900Z [LooseEnds] Compiling PlaceNotifications.swift
+2026-10-21T06:53:27.6215990Z [LooseEnds] Compiling PlaceReminders.swift
+2026-10-21T06:53:27.6316280Z [LooseEnds] Compiling PlaceSearch.swift
+2026-10-21T06:53:27.6416920Z [LooseEnds] Compiling PlaceSection.swift
+2026-10-21T06:53:27.6517240Z [LooseEnds] Compiling ProcessCache.swift
+2026-10-21T06:53:27.6617930Z [LooseEnds] Compiling Project.swift
+2026-10-21T06:53:27.6719470Z [LooseEnds] Compiling ProjectNameRule.swift
+2026-10-21T06:53:27.6825480Z [LooseEnds] Compiling QuickDue.swift
+2026-10-21T06:53:27.6926990Z [LooseEnds] Compiling RawTextWords.swift
+2026-10-21T06:53:27.7028480Z [LooseEnds] Compiling RecognitionRule.swift
+2026-10-21T06:53:27.7129590Z [LooseEnds] Compiling ReminderSchema.swift
+2026-10-21T06:53:27.7231680Z [LooseEnds] Compiling ReminderTranslation.swift
+2026-10-21T06:53:27.7333840Z [LooseEnds] Compiling RepeatRule.swift
+2026-10-21T06:53:27.7437200Z [LooseEnds] Compiling ReviewNote.swift
+2026-10-21T06:53:27.7566680Z [LooseEnds] Compiling Revision.swift
+2026-10-21T06:53:27.7667890Z [LooseEnds] Compiling RevisionService.swift
+2026-10-21T06:53:27.7769090Z [LooseEnds] Compiling RowKeyAction.swift
+2026-10-21T06:53:27.7870240Z [LooseEnds] Compiling RuleTrigger.swift
+2026-10-21T06:53:27.7977320Z [LooseEnds] Compiling SavedView.swift
+2026-10-21T06:53:27.8092630Z [LooseEnds] Compiling Subtasks.swift
+2026-10-21T06:53:27.8193800Z [LooseEnds] Compiling SubtasksSection.swift
+2026-10-21T06:53:27.8294930Z [LooseEnds] Compiling SyncStatus.swift
+2026-10-21T06:53:50.1065420Z [LooseEnds] Compiling TaskActions.swift
+2026-10-21T06:53:50.1166830Z [LooseEnds] Compiling TaskAttachment.swift
+2026-10-21T06:53:50.1267350Z [LooseEnds] Compiling TaskContext.swift
+2026-10-21T06:53:50.1368350Z [LooseEnds] Compiling TaskDetailView.swift
+2026-10-21T06:53:50.1469210Z [LooseEnds] Compiling TaskInteractions.swift
+2026-10-21T06:53:50.1570190Z [LooseEnds] Compiling TaskItem.swift
+2026-10-21T06:53:50.1670710Z [LooseEnds] Compiling TaskListView.swift
+2026-10-21T06:53:50.1772090Z [LooseEnds] Compiling TaskPlace.swift
+2026-10-21T06:53:50.1881950Z [LooseEnds] Compiling TaskRow.swift
+2026-10-21T06:53:50.1983130Z [LooseEnds] Compiling Thread.swift
+2026-10-21T06:53:50.2085990Z [LooseEnds] Compiling TimeExpressionParser.swift
+2026-10-21T06:53:50.2200840Z [LooseEnds] Compiling TitleRule.swift
+2026-10-21T06:53:50.2307340Z [LooseEnds] Compiling ViewRules.swift
+2026-10-21T06:53:50.2408560Z [LooseEnds] Compiling ViewSelection.swift
+2026-10-21T06:53:50.2509860Z [LooseEnds] Compiling WaitingOn.swift
+2026-10-21T06:53:50.2610980Z [LooseEnds] Compiling WaitingOnSection.swift
+2026-10-21T06:53:50.2657430Z [LooseEnds] Compiling Waveform.swift
+2026-10-21T06:53:50.2789560Z [LooseEnds] Compiling GeneratedAssetSymbols.swift
+2026-10-21T06:53:50.2901500Z ##[warning]'+' was deprecated in macOS 26.0: Use string interpolation on `Text` instead: `Text("Hello \(name)")` [#DeprecatedDeclaration]
+2026-10-21T06:53:50.3010470Z 108 |         traits.enumerated().reduce(Text(verbatim: "")) { line, item in
+2026-10-21T06:53:50.3112170Z 109 |             let separator = item.offset == 0 ? Text(verbatim: "") : Text(verbatim: " · ").foregroundStyle(.secondary)
+2026-10-21T06:53:50.3214500Z ##[warning]'+' was deprecated in macOS 26.0: Use string interpolation on `Text` instead: `Text("Hello \(name)")` [#DeprecatedDeclaration]
+2026-10-21T06:53:50.3314690Z 108 |         traits.enumerated().reduce(Text(verbatim: "")) { line, item in
+2026-10-21T06:53:50.3417820Z 109 |             let separator = item.offset == 0 ? Text(verbatim: "") : Text(verbatim: " · ").foregroundStyle(.secondary)
+2026-10-21T06:53:50.3555950Z ##[warning]'+' was deprecated in macOS 26.0: Use string interpolation on `Text` instead: `Text("Hello \(name)")` [#DeprecatedDeclaration]
+2026-10-21T06:53:50.3662760Z 134 |                         .tracking(1)
+2026-10-21T06:53:50.3773420Z 135 |                      + Text(verbatim: "  ")
+2026-10-21T06:53:50.3885220Z ##[warning]'+' was deprecated in macOS 26.0: Use string interpolation on `Text` instead: `Text("Hello \(name)")` [#DeprecatedDeclaration]
+2026-10-21T06:53:50.4005950Z 133 |                         .font(.caption2.weight(.semibold))
+2026-10-21T06:53:50.4112470Z 134 |                         .tracking(1)
+2026-10-21T06:53:50.4213570Z [LooseEnds] Compiling ImportanceUrgencyRule.swift
+2026-10-21T06:53:50.4313820Z [LooseEnds] Compiling LaunchTimings.swift
+2026-10-21T06:53:50.4414910Z [LooseEnds] Compiling ListSummary.swift
+2026-10-21T06:53:50.4515310Z [LooseEnds] Compiling ListeningHint.swift
+2026-10-21T06:53:50.4615560Z [LooseEnds] Compiling LooseEndsApp.swift
+2026-10-21T06:53:50.4716460Z [LooseEnds] Compiling MainThreadWatchdog.swift
+2026-10-21T06:53:50.4817210Z [LooseEnds] Compiling MarginText.swift
+2026-10-21T06:53:50.4917450Z [LooseEnds] Compiling MenuBarCapture.swift
+2026-10-21T06:53:50.5017940Z [LooseEnds] Compiling MenuBarThreadImage.swift
+2026-10-21T06:53:50.5118710Z [LooseEnds] Compiling ModelContainerFactory.swift
+2026-10-21T06:53:50.5219050Z [LooseEnds] Compiling ModelDeadline.swift
+2026-10-21T06:53:50.5321160Z [LooseEnds] Compiling MoveDateSheet.swift
+2026-10-21T06:53:50.5421630Z [LooseEnds] Compiling NewDateRule.swift
+2026-10-21T06:53:50.5522800Z [LooseEnds] Compiling NewDateSheet.swift
+2026-10-21T06:53:50.5623910Z [LooseEnds] Compiling NextUpWidgetIntents.swift
+2026-10-21T06:53:50.5699990Z [LooseEnds] Compiling NoteLinks.swift
+2026-10-21T06:53:50.5700610Z [LooseEnds] Compiling NoteSection.swift
+2026-10-21T06:53:50.5809420Z [LooseEnds] Compiling OnboardingFlow.swift
+2026-10-21T06:53:50.5942110Z [LooseEnds] Compiling OnboardingView.swift
+2026-10-21T06:53:50.6063420Z [LooseEnds] Compiling Paper.swift
+2026-10-21T06:53:50.6185240Z [LooseEnds] Compiling PendingCompletions.swift
+2026-10-21T06:53:50.6287130Z [LooseEnds] Compiling PhoneRule.swift
+2026-10-21T06:53:50.6388340Z [LooseEnds] Copy arm64-apple-macos.swiftmodule -> LooseEnds.swiftmodule
+2026-10-21T06:53:50.6523620Z [LooseEnds] Copy arm64-apple-macos.swiftdoc -> LooseEnds.swiftdoc
+2026-10-21T06:53:50.6645260Z [LooseEnds] Copy arm64-apple-macos.abi.json -> LooseEnds.abi.json
+2026-10-21T06:53:50.6739100Z [LooseEnds] Copy arm64-apple-macos.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+2026-10-21T06:53:50.6739930Z [LooseEnds] Compiling ContextWordRule.swift
+2026-10-21T06:53:50.6740350Z [LooseEnds] Compiling DateExpressionParser.swift
+2026-10-21T06:53:50.6740710Z [LooseEnds] Compiling DetailFields.swift
+2026-10-21T06:53:50.6741030Z [LooseEnds] Compiling DetailLayout.swift
+2026-10-21T06:53:50.6741350Z [LooseEnds] Compiling DocumentScanner.swift
+2026-10-21T06:53:50.6741720Z [LooseEnds] Compiling DueDateRule.swift
+2026-10-21T06:53:50.6742160Z [LooseEnds] Compiling DueNotificationCenter.swift
+2026-10-21T06:53:50.6843170Z [LooseEnds] Compiling DueReminders.swift
+2026-10-21T06:53:50.6944420Z [LooseEnds] Compiling DurationRule.swift
+2026-10-21T06:53:50.7045440Z [LooseEnds] Compiling EditorPage.swift
+2026-10-21T06:53:50.7146560Z [LooseEnds] Compiling EnrichmentCoordinator.swift
+2026-10-21T06:53:50.7247670Z [LooseEnds] Compiling EnrichmentDraft.swift
+2026-10-21T06:53:50.7348780Z [LooseEnds] Compiling EnrichmentWriter.swift
+2026-10-21T06:53:50.7457950Z [LooseEnds] Compiling Enums.swift
+2026-10-21T06:53:50.7559040Z [LooseEnds] Compiling FieldCodec.swift
+2026-10-21T06:53:50.7660240Z [LooseEnds] Compiling FieldEditorView.swift
+2026-10-21T06:53:50.7770750Z [LooseEnds] Compiling FieldFormatting.swift
+2026-10-21T06:53:50.7771270Z [LooseEnds] Compiling FieldSettingsStore.swift
+2026-10-21T06:53:50.7857130Z [LooseEnds] Compiling FieldSettingsView.swift
+2026-10-21T06:53:50.7967880Z [LooseEnds] Compiling FlowLayout.swift
+2026-10-21T06:53:50.8068980Z [LooseEnds] Compiling FoundationModelsEnricher.swift
+2026-10-21T06:53:50.8178270Z [LooseEnds] Compiling GuessedProjects.swift
+2026-10-21T06:53:50.8280200Z ##[warning]result of call to 'assumeIsolated(_:file:line:)' is unused [#NoUsage]
+2026-10-21T06:53:50.8382540Z  71 |             forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: NSUbiquitousKeyValueStore.default, queue: .main
+2026-10-21T06:53:50.8504190Z  72 |         ) { [weak self] _ in
+2026-10-21T06:53:50.8639840Z ##[warning]result of call to 'assumeIsolated(_:file:line:)' is unused [#NoUsage]
+2026-10-21T06:53:50.8741580Z 44 |             forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: NSUbiquitousKeyValueStore.default, queue: .main
+2026-10-21T06:53:50.8849330Z 45 |         ) { [weak self] _ in
+2026-10-21T06:53:50.8924800Z [LooseEnds] Compiling AppVersion.swift
+2026-10-21T06:53:50.8926060Z [LooseEnds] Compiling AttachmentKind.swift
+2026-10-21T06:53:50.8926480Z [LooseEnds] Compiling AttachmentsSection.swift
+2026-10-21T06:53:50.8926940Z [LooseEnds] Compiling BackgroundRefresh.swift
+2026-10-21T06:53:50.8927370Z [LooseEnds] Compiling CalendarAsk.swift
+2026-10-21T06:53:50.8927750Z [LooseEnds] Compiling CalendarAskSheet.swift
+2026-10-21T06:53:50.8928300Z [LooseEnds] Compiling CalendarBridge.swift
+2026-10-21T06:53:50.8928700Z [LooseEnds] Compiling CalendarPickerSheet.swift
+2026-10-21T06:53:50.8929170Z [LooseEnds] Compiling CalendarSync.swift
+2026-10-21T06:53:50.8929540Z [LooseEnds] Compiling CaptureService.swift
+2026-10-21T06:53:50.8930400Z [LooseEnds] Compiling CaptureTextIntent.swift
+2026-10-21T06:53:50.8930910Z [LooseEnds] Compiling CaptureView.swift
+2026-10-21T06:53:50.9063700Z [LooseEnds] Compiling CarryReminders.swift
+2026-10-21T06:53:50.9165260Z [LooseEnds] Compiling CarryReviewSheet.swift
+2026-10-21T06:53:50.9266510Z [LooseEnds] Compiling CatalogEditing.swift
+2026-10-21T06:53:50.9367660Z [LooseEnds] Compiling CatalogPage.swift
+2026-10-21T06:53:50.9468890Z [LooseEnds] Compiling CatalogService.swift
+2026-10-21T06:53:50.9469310Z [LooseEnds] Compiling CloudKitSchemaInitializer.swift
+2026-10-21T06:53:50.9469690Z [LooseEnds] Compiling CompletionRecord.swift
+2026-10-21T06:53:50.9470020Z [LooseEnds] Compiling ContentView.swift
+2026-10-21T06:53:50.9470330Z [LooseEnds] Compiling ContextSeeder.swift
+2026-10-21T06:53:50.9470690Z [LooseEnds] Compiling ContextWordLearning.swift
+2026-10-21T06:53:50.9471880Z ##[warning]main actor-isolated property 'firstMatch' can not be referenced from a nonisolated context
+2026-10-21T06:53:50.9472700Z 259 |     }
+2026-10-21T06:53:50.9472820Z 260 | 
+2026-10-21T06:53:50.9473520Z ##[warning]main actor-isolated property 'alerts' can not be referenced from a nonisolated context
+2026-10-21T06:53:50.9474150Z 259 |     }
+2026-10-21T06:53:50.9474270Z 260 | 
+2026-10-21T06:53:50.9475230Z ##[warning]call to main actor-isolated initializer 'init(bundleIdentifier:)' in a synchronous nonisolated context [#ActorIsolatedCall]
+2026-10-21T06:53:50.9576530Z 259 |     }
+2026-10-21T06:53:50.9677340Z 260 | 
+2026-10-21T06:53:50.9779300Z ##[warning]call to main actor-isolated instance method 'waitForExistence(timeout:)' in a synchronous nonisolated context [#ActorIsolatedCall]
+2026-10-21T06:53:50.9880840Z 259 |     }
+2026-10-21T06:53:51.0076200Z 260 | 
+2026-10-21T06:53:51.0077480Z ##[warning]main actor-isolated property 'exists' can not be referenced from a nonisolated context
+2026-10-21T06:53:51.0078300Z 259 |     }
+2026-10-21T06:53:51.0078430Z 260 | 
+2026-10-21T06:53:51.0079200Z ##[warning]main actor-isolated subscript 'subscript(_:)' can not be referenced from a nonisolated context
+2026-10-21T06:53:51.0079850Z 259 |     }
+2026-10-21T06:53:51.0079970Z 260 | 
+2026-10-21T06:53:51.0080660Z ##[warning]main actor-isolated property 'buttons' can not be referenced from a nonisolated context
+2026-10-21T06:53:51.0081290Z 259 |     }
+2026-10-21T06:53:51.0081400Z 260 | 
+2026-10-21T06:53:51.0082190Z ##[warning]call to main actor-isolated instance method 'tap()' in a synchronous nonisolated context [#ActorIsolatedCall]
+2026-10-21T06:53:51.0082860Z 259 |     }
+2026-10-21T06:53:51.0082990Z 260 | 
+2026-10-21T06:53:51.0083700Z ##[warning]main actor-isolated subscript 'subscript(_:)' can not be referenced from a nonisolated context
+2026-10-21T06:53:51.0084350Z 259 |     }
+2026-10-21T06:53:51.0084470Z 260 | 
+2026-10-21T06:53:51.0085150Z ##[warning]main actor-isolated property 'buttons' can not be referenced from a nonisolated context
+2026-10-21T06:53:51.0085770Z 259 |     }
+2026-10-21T06:53:51.0086540Z 260 | 
+2026-10-21T06:53:51.0086890Z [LooseEndsUITests] Compiling CalendarTargetTests.swift
+2026-10-21T06:53:51.0087320Z [LooseEndsUITests] Compiling CaptureCancelCrashTests.swift
+2026-10-21T06:53:51.0087740Z [LooseEndsUITests] Compiling CaptureSmokeTests.swift
+2026-10-21T06:53:51.0088140Z [LooseEndsUITests] Compiling ContextUniquenessTests.swift
+2026-10-21T06:53:51.0088540Z [LooseEndsUITests] Compiling ConventionCorpus.swift
+2026-10-21T06:53:51.0088900Z [LooseEndsUITests] Compiling Corpus.swift
+2026-10-21T06:53:51.0089260Z [LooseEndsUITests] Compiling DesignGalleryTests.swift
+2026-10-21T06:53:51.0089670Z [LooseEndsUITests] Compiling DueNotificationTapTests.swift
+2026-10-21T06:53:51.0090450Z [LooseEndsUITests] Compiling FieldsSmokeTests.swift
+2026-10-21T06:53:51.0090880Z [LooseEndsUITests] Compiling LaunchArgumentTests.swift
+2026-10-21T06:53:51.0091390Z [LooseEndsUITests] Copy arm64-apple-macos.swiftmodule -> LooseEndsUITests.swiftmodule
+2026-10-21T06:53:51.0092030Z [LooseEndsUITests] Copy arm64-apple-macos.swiftdoc -> LooseEndsUITests.swiftdoc
+2026-10-21T06:53:51.0193260Z [LooseEndsUITests] Copy arm64-apple-macos.abi.json -> LooseEndsUITests.abi.json
+2026-10-21T06:53:51.0294640Z [LooseEndsUITests] Copy arm64-apple-macos.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
+2026-10-21T06:53:51.0396070Z [LooseEndsUITests] Compiling LeaveOneOut.swift
+2026-10-21T06:53:51.0513420Z [LooseEndsUITests] Compiling MacDetailClickTests.swift
+2026-10-21T06:53:51.0614750Z [LooseEndsUITests] Compiling MacGalleryTests.swift
+2026-10-21T06:53:51.0722330Z [LooseEndsUITests] Compiling MacKeyboardTests.swift
+2026-10-21T06:53:51.0836910Z [LooseEndsUITests] Compiling MacUITestSupport.swift
+2026-10-21T06:53:51.0962260Z [LooseEndsUITests] Compiling MeasurementRun.swift
+2026-10-21T06:53:51.1035370Z [LooseEndsUITests] Compiling OnboardingTests.swift
+2026-10-21T06:53:51.1036630Z [LooseEndsUITests] Compiling PlaceNotificationTapTests.swift
+2026-10-21T06:53:51.1137790Z [LooseEndsUITests] Compiling PlaceSmokeTests.swift
+2026-10-21T06:53:51.1238910Z [LooseEndsUITests] Compiling ProjectSubtasksTests.swift
+2026-10-21T06:53:51.1340940Z ##[warning]call to main actor-isolated instance method 'screenshot()' in a synchronous nonisolated context [#ActorIsolatedCall]
+2026-10-21T06:53:51.1442570Z 16 |     }
+2026-10-21T06:53:51.1568740Z 17 | 
+2026-10-21T06:53:51.1670620Z ##[warning]main actor-isolated property 'label' can not be referenced from a nonisolated context
+2026-10-21T06:53:51.1791970Z 374 | 
+2026-10-21T06:53:51.1932930Z 375 |     /// The row count as the badge shows it, read from the combined row ("All open, 2").
+2026-10-21T06:53:51.2055250Z ##[warning]main actor-isolated property 'value' can not be referenced from a nonisolated context
+2026-10-21T06:53:51.2156800Z 374 | 
+2026-10-21T06:53:51.2257880Z 375 |     /// The row count as the badge shows it, read from the combined row ("All open, 2").
+2026-10-21T06:53:51.2364510Z ##[warning]code after 'throw' will never be executed
+2026-10-21T06:53:51.2466190Z 13 |         throw XCTSkip("On the Mac the gear opens the settings window (SettingsLink), not a sheet with Done.")
+2026-10-21T06:53:51.2567410Z 14 |         #endif
+2026-10-21T06:53:51.2683970Z [LooseEndsUITests] Compiling RawTextWords.swift
+2026-10-21T06:53:51.2725320Z [LooseEndsUITests] Compiling RecognitionWalkthroughTests.swift
+2026-10-21T06:53:51.2929530Z [LooseEndsUITests] Compiling RuleBaseline.swift
+2026-10-21T06:53:51.3043870Z [LooseEndsUITests] Compiling SelfConsistency.swift
+2026-10-21T06:53:51.3145220Z [LooseEndsUITests] Compiling SettingsSmokeTests.swift
+2026-10-21T06:53:51.3255130Z [LooseEndsUITests] Compiling SpeechDiagnosisLineTests.swift
+2026-10-21T06:53:51.3356490Z [LooseEndsUITests] Compiling SpeechListeningIndicatorTests.swift
+2026-10-21T06:53:51.3459130Z [LooseEndsUITests] Compiling SpeechListeningTests.swift
+2026-10-21T06:53:51.3560560Z [LooseEndsUITests] Compiling StartScreenInteractionTests.swift
+2026-10-21T06:53:51.3662030Z [LooseEndsTests] Compiling RawTextWords.swift
+2026-10-21T06:53:51.3718080Z [LooseEndsTests] Compiling RealModelGateTests.swift
+2026-10-21T06:53:51.3718630Z [LooseEndsTests] Compiling RealModelTests.swift
+2026-10-21T06:53:51.3719020Z [LooseEndsTests] Compiling ReanalysisTests.swift
+2026-10-21T06:53:51.3719410Z [LooseEndsTests] Compiling RecognitionRuleTests.swift
+2026-10-21T06:53:51.3720360Z [LooseEndsTests] Compiling ReminderEntityTests.swift
+2026-10-21T06:53:51.3720800Z [LooseEndsTests] Compiling ReminderTranslationTests.swift
+2026-10-21T06:53:51.3721220Z [LooseEndsTests] Compiling RepeatAnchorTests.swift
+2026-10-21T06:53:51.3721610Z [LooseEndsTests] Compiling RepeatEditTests.swift
+2026-10-21T06:53:51.3722000Z [LooseEndsTests] Compiling RepeatRuleTests.swift
+2026-10-21T06:53:51.3809080Z [LooseEndsTests] Compiling ReviewTrayTests.swift
+2026-10-21T06:53:51.3809760Z [LooseEndsTests] Compiling RevisionServiceTests.swift
+2026-10-21T06:53:51.3810160Z [LooseEndsTests] Compiling RowKeyActionTests.swift
+2026-10-21T06:53:51.3810560Z [LooseEndsTests] Compiling RuleBaseline.swift
+2026-10-21T06:53:51.3810930Z [LooseEndsTests] Compiling RuleLeaveOneOutTests.swift
+2026-10-21T06:53:51.3811330Z [LooseEndsTests] Compiling RuleTriggerTests.swift
+2026-10-21T06:53:51.3811690Z [LooseEndsTests] Compiling ScanPDFTests.swift
+2026-10-21T06:53:51.3812040Z [LooseEndsTests] Compiling SelfConsistency.swift
+2026-10-21T06:53:51.3812440Z [LooseEndsTests] Compiling SelfConsistencyReportTests.swift
+2026-10-21T06:53:51.3812850Z [LooseEndsTests] Compiling SelfConsistencyTests.swift
+2026-10-21T06:53:51.3813260Z [LooseEndsTests] Compiling SharedAttachmentFileTests.swift
+2026-10-21T06:53:51.3813670Z [LooseEndsTests] Compiling SharedAttachmentTests.swift
+2026-10-21T06:53:51.3814070Z [LooseEndsTests] Compiling SharedContentTests.swift
+2026-10-21T06:53:51.3814440Z [LooseEndsTests] Compiling SideColumnTests.swift
+2026-10-21T06:53:51.3814800Z [LooseEndsTests] Compiling SiriCaptureTests.swift
+2026-10-21T06:53:51.3815190Z [LooseEndsTests] Compiling SiriFieldsTests.swift
+2026-10-21T06:53:51.3815570Z [LooseEndsTests] Compiling SiriRepeatMappingTests.swift
+2026-10-21T06:53:51.3815970Z [LooseEndsTests] Compiling SpeechAccessTests.swift
+2026-10-21T06:53:51.3816350Z [LooseEndsTests] Compiling SpeechDiagnosisTests.swift
+2026-10-21T06:53:51.3816730Z [LooseEndsTests] Compiling SpeechLatencyTests.swift
+2026-10-21T06:53:51.3817120Z [LooseEndsTests] Compiling SpeechReadinessTests.swift
+2026-10-21T06:53:51.3817650Z [LooseEndsTests] Compiling StartHeadlineTests.swift
+2026-10-21T06:53:51.3818030Z [LooseEndsTests] Compiling StartMetricsTests.swift
+2026-10-21T06:53:51.3818390Z [LooseEndsTests] Compiling StartViewsTests.swift
+2026-10-21T06:53:51.3818750Z [LooseEndsTests] Compiling SubtaskListsTests.swift
+2026-10-21T06:53:51.3819130Z [LooseEndsTests] Compiling SubtaskRulesTests.swift
+2026-10-21T06:53:51.3819490Z [LooseEndsTests] Compiling SubtaskTests.swift
+2026-10-21T06:53:51.3819850Z [LooseEndsTests] Compiling SyncStatusTests.swift
+2026-10-21T06:53:51.3820900Z [LooseEndsTests] Compiling TaskActionsTests.swift
+2026-10-21T06:53:51.3821290Z [LooseEndsTests] Compiling TaskAttachmentModelTests.swift
+2026-10-21T06:54:10.7979860Z [LooseEndsTests] Compiling TaskPlaceTests.swift
+2026-10-21T06:54:10.7980670Z [LooseEndsTests] Compiling TextFormRuleReportTests.swift
+2026-10-21T06:54:10.7981250Z [LooseEndsTests] Compiling ThreadShapeTests.swift
+2026-10-21T06:54:10.7981850Z [LooseEndsTests] Compiling TimeExpressionParserTests.swift
+2026-10-21T06:54:10.7982360Z [LooseEndsTests] Compiling TitleFidelityPromptTests.swift
+2026-10-21T06:54:10.7982910Z [LooseEndsTests] Compiling TitleRuleTests.swift
+2026-10-21T06:54:10.7983950Z [LooseEndsTests] Compiling WaitingOnTests.swift
+2026-10-21T06:54:10.7984500Z [LooseEndsTests] Compiling WaveformTests.swift
+2026-10-21T06:54:10.7989100Z ##[warning]'#require(_:_:)' is redundant because 'TaskPlace(name: "Markt", latitude: 53.55, longitude: 9.93, event: .arrive)' never equals 'nil' (from macro 'require')
+2026-10-21T06:54:10.7992160Z 106 |         milk.dueHasTime = true
+2026-10-21T06:54:10.7992530Z 107 |         milk.contexts = [garden, phone]
+2026-10-21T06:54:10.7994110Z ##[warning]'#require(_:_:)' is redundant because 'calendar.date(byAdding: .hour, value: 5, to: wednesday)' never equals 'nil' (from macro 'require')
+2026-10-21T06:54:10.7995180Z 170 |         let task = TaskItem(rawText: "Zahnarzt anrufen")
+2026-10-21T06:54:10.7995550Z 171 |         let wednesday = try day(2026, 9, 16, in: calendar)
+2026-10-21T06:54:10.7996070Z [LooseEndsTests] Compiling DueNotificationCenterTests.swift
+2026-10-21T06:54:10.7996720Z [LooseEndsTests] Compiling DueRemindersTests.swift
+2026-10-21T06:54:10.7997160Z [LooseEndsTests] Compiling DueStateTests.swift
+2026-10-21T06:54:10.7997650Z [LooseEndsTests] Compiling DueTodayTests.swift
+2026-10-21T06:54:10.7998040Z [LooseEndsTests] Compiling DueWordsTests.swift
+2026-10-21T06:54:10.7998530Z [LooseEndsTests] Compiling DurationRuleTests.swift
+2026-10-21T06:54:10.7998990Z [LooseEndsTests] Compiling EnergyTests.swift
+2026-10-21T06:54:10.7999470Z [LooseEndsTests] Compiling EnrichmentTests.swift
+2026-10-21T06:54:10.7999910Z [LooseEndsTests] Compiling FieldEditTests.swift
+2026-10-21T06:54:10.8000440Z [LooseEndsTests] Compiling FieldOriginTests.swift
+2026-10-21T06:54:10.8000930Z [LooseEndsTests] Compiling GuardrailCorpusTests.swift
+2026-10-21T06:54:10.8001370Z [LooseEndsTests] Compiling ImportanceUrgencyRuleTests.swift
+2026-10-21T06:54:10.8001890Z [LooseEndsTests] Compiling IntentExecutionTests.swift
+2026-10-21T06:54:10.8002320Z [LooseEndsTests] Compiling LaunchTimingsTests.swift
+2026-10-21T06:54:10.8002790Z [LooseEndsTests] Compiling LeaveOneOut.swift
+2026-10-21T06:54:10.8003240Z [LooseEndsTests] Compiling LeftoversTests.swift
+2026-10-21T06:54:10.8003650Z [LooseEndsTests] Compiling ListPolishTests.swift
+2026-10-21T06:54:10.8004110Z [LooseEndsTests] Compiling ListSummaryTests.swift
+2026-10-21T06:54:10.8004590Z [LooseEndsTests] Compiling MarginMarkTests.swift
+2026-10-21T06:54:10.8005020Z [LooseEndsTests] Compiling MeasurementData.swift
+2026-10-21T06:54:10.8005480Z [LooseEndsTests] Compiling MeasurementDataTests.swift
+2026-10-21T06:54:10.8005920Z [LooseEndsTests] Compiling MeasurementFieldScopeTests.swift
+2026-10-21T06:54:10.8006430Z [LooseEndsTests] Compiling MeasurementRun.swift
+2026-10-21T06:54:10.8006850Z [LooseEndsTests] Compiling MeasurementRunTests.swift
+2026-10-21T06:54:10.8008950Z ##[warning]'#require(_:_:)' is redundant because 'TaskPlace(name: "Büro", latitude: 51.99563, longitude: 7.71357, event: .arrive)' never equals 'nil' (from macro 'require')
+2026-10-21T06:54:10.8011380Z  63 |         func placed(_ raw: String) throws -> TaskItem {
+2026-10-21T06:54:10.8011790Z  64 |             let task = try task(raw)
+2026-10-21T06:54:10.8013130Z ##[warning]'#require(_:_:)' is redundant because 'calendar.date(bySettingHour: hour, minute: minute, second: 0, of: tomorrow)' never equals 'nil' (from macro 'require')
+2026-10-21T06:54:10.8014170Z  72 |             task.status = .active
+2026-10-21T06:54:10.8014570Z  73 |             if let hour {
+2026-10-21T06:54:10.8016050Z ##[warning]'#require(_:_:)' is redundant because 'fixture.calendar.date(byAdding: .day, value: -2, to: fixture.tomorrow)' never equals 'nil' (from macro 'require')
+2026-10-21T06:54:10.8017100Z 171 |         let task = TaskItem(rawText: raw)
+2026-10-21T06:54:10.8017700Z 172 |         task.status = .active
+2026-10-21T06:54:10.8018110Z [LooseEndsTests] Compiling MenuBarTests.swift
+2026-10-21T06:54:10.8018680Z [LooseEndsTests] Compiling MenuBarThreadImageTests.swift
+2026-10-21T06:54:10.8019300Z [LooseEndsTests] Compiling ModelContainerFactoryTests.swift
+2026-10-21T06:54:10.8019840Z [LooseEndsTests] Compiling ModelSeamTests.swift
+2026-10-21T06:54:10.8020360Z [LooseEndsTests] Compiling ModelTests.swift
+2026-10-21T06:54:10.8020780Z [LooseEndsTests] Compiling NewDateRuleTests.swift
+2026-10-21T06:54:10.8021330Z [LooseEndsTests] Compiling NextRankTests.swift
+2026-10-21T06:54:10.8021790Z [LooseEndsTests] Compiling NextUpWidgetTests.swift
+2026-10-21T06:54:10.8022300Z [LooseEndsTests] Compiling NoteLinksTests.swift
+2026-10-21T06:54:10.8022710Z [LooseEndsTests] Compiling NowRuleTests.swift
+2026-10-21T06:54:10.8023250Z [LooseEndsTests] Compiling OnboardingFlowTests.swift
+2026-10-21T06:54:10.8023700Z [LooseEndsTests] Compiling PendingCompletionsTests.swift
+2026-10-21T06:54:10.8024240Z [LooseEndsTests] Compiling PeopleRetiredTests.swift
+2026-10-21T06:54:10.8024810Z [LooseEndsTests] Compiling PhoneRuleTests.swift
+2026-10-21T06:54:10.8025280Z [LooseEndsTests] Compiling PlaceDeliveryTests.swift
+2026-10-21T06:54:10.8025820Z [LooseEndsTests] Compiling PlaceEditingTests.swift
+2026-10-21T06:54:10.8026310Z [LooseEndsTests] Compiling PlaceNotificationCenterTests.swift
+2026-10-21T06:54:10.8026920Z [LooseEndsTests] Compiling PlaceNotificationsTests.swift
+2026-10-21T06:54:10.8027440Z [LooseEndsTests] Compiling PlaceRemindersTests.swift
+2026-10-21T06:54:10.8027970Z [LooseEndsTests] Compiling PressureOrderTests.swift
+2026-10-21T06:54:10.8028550Z [LooseEndsTests] Compiling ProcessCacheTests.swift
+2026-10-21T06:54:10.8029020Z [LooseEndsTests] Compiling ProjectLinesTests.swift
+2026-10-21T06:54:10.8029580Z [LooseEndsTests] Compiling ProjectNameRuleTests.swift
+2026-10-21T06:54:10.8030060Z [LooseEndsTests] Compiling QuickDueTests.swift
+2026-10-21T06:54:10.8030720Z [LooseEndsTests] Copy arm64-apple-macos.swiftmodule -> LooseEndsTests.swiftmodule
+2026-10-21T06:54:10.8031310Z [LooseEndsTests] Copy arm64-apple-macos.swiftdoc -> LooseEndsTests.swiftdoc
+2026-10-21T06:54:10.8031960Z [LooseEndsTests] Copy arm64-apple-macos.abi.json -> LooseEndsTests.abi.json
+2026-10-21T06:54:10.8032600Z [LooseEndsTests] Copy arm64-apple-macos.swiftsourceinfo -> LooseEndsTests.swiftsourceinfo
+2026-10-21T06:54:10.8033170Z [LooseEndsTests] Compiling AppVersionTests.swift
+2026-10-21T06:54:10.8033650Z [LooseEndsTests] Compiling AttachmentKindTests.swift
+2026-10-21T06:54:10.8034070Z [LooseEndsTests] Compiling CalendarAskTests.swift
+2026-10-21T06:54:10.8034830Z [LooseEndsTests] Compiling CalendarSyncTests.swift
+2026-10-21T06:54:10.8035260Z [LooseEndsTests] Compiling CaptureComplication.swift
+2026-10-21T06:54:10.8035760Z [LooseEndsTests] Compiling CaptureComplicationTests.swift
+2026-10-21T06:54:10.8036210Z [LooseEndsTests] Compiling CaptureServiceTests.swift
+2026-10-21T06:54:10.8036690Z [LooseEndsTests] Compiling CarryRemindersTests.swift
+2026-10-21T06:54:10.8037120Z [LooseEndsTests] Compiling CatalogServiceTests.swift
+2026-10-21T06:54:10.8037690Z [LooseEndsTests] Compiling CloudKitSchemaInitializerTests.swift
+2026-10-21T06:54:10.8038230Z [LooseEndsTests] Compiling ContentsIndexTests.swift
+2026-10-21T06:54:10.8039000Z [LooseEndsTests] Compiling ContextWordLearningReportTests.swift
+2026-10-21T06:54:10.8039590Z [LooseEndsTests] Compiling ContextWordLearningTests.swift
+2026-10-21T06:54:10.8040080Z [LooseEndsTests] Compiling ContextWordRuleTests.swift
+2026-10-21T06:54:10.8040570Z [LooseEndsTests] Compiling ConventionBaselineTests.swift
+2026-10-21T06:54:10.8041000Z [LooseEndsTests] Compiling ConventionCorpus.swift
+2026-10-21T06:54:10.8041440Z [LooseEndsTests] Compiling Corpus.swift
+2026-10-21T06:54:10.8041870Z [LooseEndsTests] Compiling CorpusTests.swift
+2026-10-21T06:54:10.8042310Z [LooseEndsTests] Compiling DateExpressionParserTests.swift
+2026-10-21T06:54:10.8042860Z [LooseEndsTests] Compiling DateParserCorpusTests.swift
+2026-10-21T06:54:10.8043310Z [LooseEndsTests] Compiling DateTitleReportTests.swift
+2026-10-21T06:54:10.8043850Z [LooseEndsTests] Compiling DetailFieldsTests.swift
+2026-10-21T06:54:10.8044350Z [LooseEndsTests] Compiling DetailLayoutTests.swift
+2026-10-21T06:54:10.8044890Z [LooseEndsTests] Compiling DueDateRuleTests.swift
+2026-10-21T06:54:10.8045340Z [LooseEnds] Linking LooseEnds.debug.dylib
+2026-10-21T06:54:10.8046110Z note: Using stub executor library with Swift entry point. (in target 'LooseEnds' from project 'LooseEnds')
+2026-10-21T06:54:10.8046790Z [LooseEnds] Linking LooseEnds
+2026-10-21T06:54:10.8047220Z [LooseEnds] Copy LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+2026-10-21T06:54:10.8047710Z [LooseEnds] Processing Info.plist
+2026-10-21T06:54:10.8048170Z [LooseEnds] Extract App Intents Metadata
+2026-10-21T06:54:10.8048630Z [LooseEndsTests] Processing empty-LooseEndsTests.plist
+2026-10-21T06:54:10.8049130Z [LooseEndsTests] Copying textform-corpus.json
+2026-10-21T06:54:10.8049560Z [LooseEndsTests] Copying speech-de.m4a
+2026-10-21T06:54:10.8050010Z [LooseEndsTests] Copying lab-run.log
+2026-10-21T06:54:10.8050470Z [LooseEndsTests] Copying guardrail-corpus.json
+2026-10-21T06:54:10.8050870Z [LooseEndsTests] Copying date-title.json
+2026-10-21T06:54:10.8051370Z [LooseEndsTests] Copying date-title-corpus.json
+2026-10-21T06:54:10.8051860Z [LooseEndsTests] Copying convention-corpus.json
+2026-10-21T06:54:10.8052330Z [LooseEndsTests] Linking LooseEndsTests
+2026-10-21T06:54:10.8052730Z [LooseEndsTests] Extract App Intents Metadata
+2026-10-21T06:54:10.8053320Z Signing LooseEndsTests.xctest (in target 'LooseEndsTests' from project 'LooseEnds')
+2026-10-21T06:54:10.8053900Z [LooseEndsTests] RegisterExecutionPolicyException LooseEndsTests.xctest
+2026-10-21T06:54:10.8054550Z [LooseEndsTests] Touching LooseEndsTests.xctest
+2026-10-21T06:54:10.8055110Z Signing LooseEnds.debug.dylib (in target 'LooseEnds' from project 'LooseEnds')
+2026-10-21T06:54:10.8055620Z Signing __preview.dylib (in target 'LooseEnds' from project 'LooseEnds')
+2026-10-21T06:54:10.8056350Z Signing LooseEnds.app (in target 'LooseEnds' from project 'LooseEnds')
+2026-10-21T06:54:10.8056840Z [LooseEnds] Validate Embedded Binary LooseEndsWidgets.appex
+2026-10-21T06:54:10.8057360Z [LooseEnds] RegisterExecutionPolicyException LooseEnds.app
+2026-10-21T06:54:10.8057760Z [LooseEnds] Validate LooseEnds.app
+2026-10-21T06:54:10.8058180Z [LooseEnds] Touching LooseEnds.app
+2026-10-21T06:54:10.8058650Z [LooseEndsUITests] Processing empty-LooseEndsUITests.plist
+2026-10-21T06:54:10.8059120Z [LooseEndsUITests] Linking LooseEndsUITests
+2026-10-21T06:54:10.8059600Z [LooseEndsUITests] Copying textform-corpus.json
+2026-10-21T06:54:10.8060210Z [LooseEndsUITests] Copying lab-run.log
+2026-10-21T06:54:10.8060670Z [LooseEndsUITests] Copying guardrail-corpus.json
+2026-10-21T06:54:10.8061070Z [LooseEndsUITests] Copying date-title.json
+2026-10-21T06:54:10.8061510Z [LooseEndsUITests] Copying date-title-corpus.json
+2026-10-21T06:54:10.8061930Z [LooseEndsUITests] Copying convention-corpus.json
+2026-10-21T06:54:10.8062400Z [LooseEndsUITests] Extract App Intents Metadata
+2026-10-21T06:54:10.8062900Z [LooseEndsUITests] Copying Info.plist
+2026-10-21T06:54:10.8063270Z [LooseEndsUITests] Copy PkgInfo -> PkgInfo
+2026-10-21T06:54:10.8063800Z Signing LooseEndsUITests.xctest (in target 'LooseEndsUITests' from project 'LooseEnds')
+2026-10-21T06:54:10.8064430Z Signing LooseEndsUITests-Runner.app (in target 'LooseEndsUITests' from project 'LooseEnds')
+2026-10-21T06:54:10.8065220Z [LooseEndsUITests] RegisterExecutionPolicyException LooseEndsUITests.xctest
+2026-10-21T06:54:10.8065760Z [LooseEndsUITests] Touching LooseEndsUITests.xctest
+2026-10-21T06:54:10.8066250Z Test Build Succeeded
+2026-10-21T06:54:10.8461810Z ##[group]Run app=$(find build/click/Build/Products/Debug -maxdepth 1 -name '*.app' ! -name '*-Runner.app' | head -1)
+2026-10-21T06:54:10.8462520Z app=$(find build/click/Build/Products/Debug -maxdepth 1 -name '*.app' ! -name '*-Runner.app' | head -1)
+2026-10-21T06:54:10.8463100Z if [ -z "$app" ]; then echo "::error::No app in build/click"; ls build/click/Build/Products/Debug; exit 1; fi
+2026-10-21T06:54:10.8463670Z codesign --force --sign - --entitlements "$RUNNER_TEMP/mac-sandbox.plist" "$app"
+2026-10-21T06:54:10.8464080Z codesign -d --entitlements - "$app"
+2026-10-21T06:54:10.8886590Z shell: /bin/bash -e {0}
+2026-10-21T06:54:10.8886860Z ##[endgroup]
+2026-10-21T06:54:10.9754130Z build/click/Build/Products/Debug/LooseEnds.app: replacing existing signature
+2026-10-21T06:54:10.9985040Z Executable=/Users/runner/work/loose-ends/loose-ends/build/click/Build/Products/Debug/LooseEnds.app/Contents/MacOS/LooseEnds
+2026-10-21T06:54:11.0003510Z [Dict]
+2026-10-21T06:54:11.0004080Z 	[Key] com.apple.security.app-sandbox
+2026-10-21T06:54:11.0004630Z 	[Value]
+2026-10-21T06:54:11.0004890Z 		[Bool] true
+2026-10-21T06:54:11.0005690Z 	[Key] com.apple.security.device.audio-input
+2026-10-21T06:54:11.0006060Z 	[Value]
+2026-10-21T06:54:11.0006210Z 		[Bool] true
+2026-10-21T06:54:11.0006460Z 	[Key] com.apple.security.files.user-selected.read-only
+2026-10-21T06:54:11.0006720Z 	[Value]
+2026-10-21T06:54:11.0006860Z 		[Bool] true
+2026-10-21T06:54:11.0007060Z 	[Key] com.apple.security.network.client
+2026-10-21T06:54:11.0007270Z 	[Value]
+2026-10-21T06:54:11.0007410Z 		[Bool] true
+2026-10-21T06:54:11.0008050Z 	[Key] com.apple.security.personal-information.calendars
+2026-10-21T06:54:11.0008380Z 	[Value]
+2026-10-21T06:54:11.0008520Z 		[Bool] true
+2026-10-21T06:54:11.0048680Z ##[group]Run set -o pipefail
+2026-10-21T06:54:11.0048930Z set -o pipefail
+2026-10-21T06:54:11.0049170Z xcodebuild test-without-building \
+2026-10-21T06:54:11.0049770Z   -project LooseEnds.xcodeproj \
+2026-10-21T06:54:11.0050010Z   -scheme LooseEnds \
+2026-10-21T06:54:11.0050220Z   -destination 'platform=macOS' \
+2026-10-21T06:54:11.0050470Z   -derivedDataPath build/click \
+2026-10-21T06:54:11.0050770Z   -only-testing:LooseEndsUITests/MacDetailClickTests \
+2026-10-21T06:54:11.0051100Z   -only-testing:LooseEndsUITests/MacKeyboardTests \
+2026-10-21T06:54:11.0051390Z   -parallel-testing-enabled NO \
+2026-10-21T06:54:11.0051670Z   -resultBundlePath MacDetailClick.xcresult \
+2026-10-21T06:54:11.0051950Z   2>&1 | tee mac-click.log | xcbeautify
+2026-10-21T06:54:11.0087730Z shell: /bin/bash -e {0}
+2026-10-21T06:54:11.0087910Z ##[endgroup]
+2026-10-21T07:01:19.9728950Z 
+2026-10-21T07:01:19.9761230Z ----- xcbeautify -----
+2026-10-21T07:01:19.9766890Z Version: 3.2.1
+2026-10-21T07:01:19.9767280Z ----------------------
+2026-10-21T07:01:19.9767570Z 
+2026-10-21T07:01:19.9772310Z Test Suite 'Selected tests' started at 2026-10-21 06:54:13.287.
+2026-10-21T07:01:19.9774970Z Test Suite 'LooseEndsUITests.xctest' started at 2026-10-21 06:54:13.288.
+2026-10-21T07:01:19.9775960Z Test Suite 'MacDetailClickTests' started at 2026-10-21 06:54:13.288.
+2026-10-21T07:01:19.9784550Z     ✔ testCompleteWithAnOpenSubtaskAsks (27.665 seconds)
+2026-10-21T07:01:19.9785100Z     ✔ testFieldsOpensFromTheMiddleOfItsRow (13.460 seconds)
+2026-10-21T07:01:19.9789840Z     ✔ testFileOpensTheOpenPanel (22.806 seconds)
+2026-10-21T07:01:19.9790560Z     ✔ testFileOpensTheOpenPanelFromTheStartPage (20.950 seconds)
+2026-10-21T07:01:19.9791170Z     ✔ testNoteTakesAClickAndIsSaved (23.674 seconds)
+2026-10-21T07:01:19.9791720Z     ✔ testPhotoOpensThePhotoPicker (20.453 seconds)
+2026-10-21T07:01:19.9805460Z ##[warning]-[LooseEndsUITests.MacDetailClickTests testSubtaskIsAddedByClickAndCheckedByClick] : [Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions
+2026-10-21T07:01:19.9808220Z     t =     6.00s     Wait for com.henning.looseends to idle
+2026-10-21T07:01:19.9808990Z     t =     7.04s Checking `Expect predicate `value == nil OR value == "" OR value == placeholderValue OR value == "What should I remember?"` for object "startCaptureField" TextField`
+2026-10-21T07:01:19.9809840Z     ✔ testSubtaskIsAddedByClickAndCheckedByClick (23.226 seconds)
+2026-10-21T07:01:19.9815180Z ##[warning]-[LooseEndsUITests.MacDetailClickTests testSubtaskOpensItsOwnDetailAndLeadsBack] : [Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions
+2026-10-21T07:01:19.9816790Z     t =     5.95s     Wait for com.henning.looseends to idle
+2026-10-21T07:01:19.9817550Z     t =     7.01s Checking `Expect predicate `value == nil OR value == "" OR value == placeholderValue OR value == "What should I remember?"` for object "startCaptureField" TextField`
+2026-10-21T07:01:19.9818530Z     ✔ testSubtaskOpensItsOwnDetailAndLeadsBack (28.702 seconds)
+2026-10-21T07:01:19.9819130Z     ✔ testTitleTakesAClickAndKeepsTheNewWords (20.209 seconds)
+2026-10-21T07:01:19.9819680Z Executed 9 tests, with 0 failures (0 unexpected) in 201.144 (201.151) seconds
+2026-10-21T07:01:19.9820200Z Test Suite 'MacKeyboardTests' started at 2026-10-21 06:57:34.440.
+2026-10-21T07:01:19.9820660Z     ✔ testArrowsSelectAndSpaceCompletes (34.406 seconds)
+2026-10-21T07:01:19.9844620Z ##[error]    testClickOpensAndMarks, XCTAssertTrue failed - The opened row should be marked on the way back: []
+2026-10-21T07:01:19.9845940Z     ✔ testDeleteAsksFirst (33.468 seconds)
+2026-10-21T07:01:19.9846380Z     ✔ testSelectionPhotoDark (26.043 seconds)
+2026-10-21T07:01:20.0277860Z     ✔ testSelectionPhotoLight (25.287 seconds)
+2026-10-21T07:01:20.0280650Z     ✔ testShortcutsAndContextMenu (29.341 seconds)
+2026-10-21T07:01:20.0282140Z     ✔ testTextFocusKeepsKeys (30.122 seconds)
+2026-10-21T07:01:20.0283730Z Executed 7 tests, with 1 failure (0 unexpected) in 216.989 (216.996) seconds
+2026-10-21T07:01:20.0285370Z Test Suite 'LooseEndsUITests.xctest' failed at 2026-10-21 07:01:11.437.
+2026-10-21T07:01:20.0287030Z Executed 16 tests, with 1 failure (0 unexpected) in 418.133 (418.149) seconds
+2026-10-21T07:01:20.0288410Z Executed 16 tests, with 1 failure (0 unexpected) in 418.133 (418.150) seconds
+2026-10-21T07:01:20.0290430Z Test session results: /Users/runner/work/loose-ends/loose-ends/MacDetailClick.xcresult
+2026-10-21T07:01:20.0291740Z Testing started
+2026-10-21T07:01:20.0318470Z ##[error]Process completed with exit code 65.
+2026-10-21T07:01:20.0428130Z ##[group]Run automationmodetool || true
+2026-10-21T07:01:20.0428460Z automationmodetool || true
+2026-10-21T07:01:20.0428770Z DevToolsSecurity -status || true
+2026-10-21T07:01:20.0429120Z system_profiler SPDisplaysDataType | grep -i resolution || true
+2026-10-21T07:01:20.0429580Z log show --last 15m --style compact \
+2026-10-21T07:01:20.0430070Z   --predicate 'process == "testmanagerd" OR subsystem == "com.apple.TCC"' | tail -200 || true
+2026-10-21T07:01:20.0885100Z shell: /bin/bash -e {0}
+2026-10-21T07:01:20.0889420Z ##[endgroup]
+2026-10-21T07:01:20.2358520Z Automation Mode is disabled.
+2026-10-21T07:01:20.2360410Z This device DOES NOT REQUIRE user authentication to enable Automation Mode.
+2026-10-21T07:01:20.2678550Z Developer mode is currently enabled.
+2026-10-21T07:01:31.8761650Z 2026-10-21 07:01:10.425 Df testmanagerd[8137:1b985] [com.apple.dt.xctest:Default] <XCTestSession: 0x7bf7221b00> pid 29785 com.henning.looseends@/Users/runner/work/loose-ends/loose-ends/build/click/Build/Products/Debug/LooseEnds.app processName: looseends pid: 44418 state: running background event: 274
+2026-10-21T07:01:31.8767260Z 2026-10-21 07:01:10.425 Df testmanagerd[8137:1b985] [com.apple.dt.xctest:Default] [LSM:275] Handling LS notification: { code: kLSNotifyApplicationDeath | bundle ID: <private> | ASN: <private> | previous ASN: (null) }
+2026-10-21T07:01:31.8772640Z 2026-10-21 07:01:10.425 Df testmanagerd[8137:1b985] [com.apple.dt.xctest:Default] <XCTestSession: 0x7bf7221b00> pid 29785 com.apple.appkit.xpc.ThemeWidgetControlViewService@/System/Library/Frameworks/AppKit.framework/Versions/C/XPCServices/ThemeWidgetControlViewService.xpc processName: themewidgetcontrolviewservice pid: 44427 state: not running activation policy: accessory event: 275
+2026-10-21T07:01:31.8774340Z 2026-10-21 07:01:10.425 Df testmanagerd[8137:1b985] [com.apple.dt.xctest:Default] Target app was terminated; removing process assertion for target app with pid 44427
+2026-10-21T07:01:31.8775530Z 2026-10-21 07:01:10.425 Df testmanagerd[8137:1b985] [com.apple.dt.xctest:Default] [LSM:276] Handling LS notification: { code: kLSNotifyApplicationDeath | bundle ID: <private> | ASN: <private> | previous ASN: (null) }
+2026-10-21T07:01:31.8777520Z 2026-10-21 07:01:10.425 Df testmanagerd[8137:1b985] [com.apple.dt.xctest:Default] <XCTestSession: 0x7bf7221b00> pid 29785 com.apple.SafariPlatformSupport.Helper@/System/Volumes/Preboot/Cryptexes/OS/System/Library/PrivateFrameworks/SafariPlatformSupport.framework/Versions/A/XPCServices/com.apple.SafariPlatformSupport.Helper.xpc processName: com.apple.safariplatformsupport.helper pid: 44435 state: not running activation policy: accessory event: 276
+2026-10-21T07:01:31.8779380Z 2026-10-21 07:01:10.425 Df testmanagerd[8137:1b985] [com.apple.dt.xctest:Default] Target app was terminated; removing process assertion for target app with pid 44435
+2026-10-21T07:01:31.8780320Z 2026-10-21 07:01:10.425 Df testmanagerd[8137:1a88f] [com.apple.dt.xctest:Default] Test session requested listening for crashes of extra processes named {(
+2026-10-21T07:01:31.8788420Z     looseends
+2026-10-21T07:01:31.8788770Z )} (requested by 29785)
+2026-10-21T07:01:31.8789510Z 2026-10-21 07:01:10.425 Df testmanagerd[8137:1a88f] [com.apple.dt.xctest:HarnessSession] Received request to begin observing crashes in processes with names ["looseends"]
+2026-10-21T07:01:31.8790460Z 2026-10-21 07:01:10.425 Df testmanagerd[8137:1a88f] [com.apple.dt.xctest:Default] Starting observing in XCCrashReportObserver extra processes crashes for <private>
+2026-10-21T07:01:31.8791400Z 2026-10-21 07:01:10.425 Df testmanagerd[8137:1a88f] [com.apple.dt.xctest:Default] Test session requested listening for crashes of extra processes named {(
+2026-10-21T07:01:31.8791950Z     themewidgetcontrolviewservice
+2026-10-21T07:01:31.8792260Z )} (requested by 29785)
+2026-10-21T07:01:31.8793830Z 2026-10-21 07:01:10.425 Df testmanagerd[8137:1a88f] [com.apple.dt.xctest:HarnessSession] Received request to begin observing crashes in processes with names ["themewidgetcontrolviewservice"]
+2026-10-21T07:01:31.8794970Z 2026-10-21 07:01:10.425 Df testmanagerd[8137:1a88f] [com.apple.dt.xctest:Default] Starting observing in XCCrashReportObserver extra processes crashes for <private>
+2026-10-21T07:01:31.8795970Z 2026-10-21 07:01:10.425 Df testmanagerd[8137:1a88f] [com.apple.dt.xctest:Default] Test session requested listening for crashes of extra processes named {(
+2026-10-21T07:01:31.8796560Z     "com.apple.safariplatformsupport.helper"
+2026-10-21T07:01:31.8796910Z )} (requested by 29785)
+2026-10-21T07:01:31.8797550Z 2026-10-21 07:01:10.425 Df testmanagerd[8137:1a88f] [com.apple.dt.xctest:HarnessSession] Received request to begin observing crashes in processes with names ["com.apple.safariplatformsupport.helper"]
+2026-10-21T07:01:31.8798620Z 2026-10-21 07:01:10.425 Df testmanagerd[8137:1a88f] [com.apple.dt.xctest:Default] Starting observing in XCCrashReportObserver extra processes crashes for <private>
+2026-10-21T07:01:31.8799570Z 2026-10-21 07:01:10.425 Df testmanagerd[8137:1b985] [com.apple.xpc:connection] [0x7bf707f340] invalidated because the client process (pid 44418) either cancelled the connection or exited
+2026-10-21T07:01:31.8800450Z 2026-10-21 07:01:10.425 Df testmanagerd[8137:1b985] [com.apple.dt.xctest:Default] Connection to target invalidated.
+2026-10-21T07:01:31.8801460Z 2026-10-21 07:01:10.425 Df testmanagerd[8137:1b985] [com.apple.dt.xctest:Default] Closed <XCTTargetBootstrapSession: 0x7bf6eed260>(pid 44418), removing from {
+2026-10-21T07:01:31.8802140Z     44418 = "<XCTTargetBootstrapSession: 0x7bf6eed260>(pid 44418)";
+2026-10-21T07:01:31.8802520Z }
+2026-10-21T07:01:31.8803390Z 2026-10-21 07:01:10.425 Df testmanagerd[8137:1b985] [com.apple.dt.xctest:Default] Invalidating <XCTTargetBootstrapSession: 0x7bf6eed260>(pid 44418)
+2026-10-21T07:01:31.8804200Z 2026-10-21 07:01:10.425 Df testmanagerd[8137:1b985] [com.apple.dt.xctest:Default] Invalidated <XCTTargetBootstrapSession: 0x7bf6eed260>(pid 44418)
+2026-10-21T07:01:31.8805570Z 2026-10-21 07:01:10.455 Df tccd[350:1c1a5] [com.apple.TCC:access] REQUEST: tccd_uid=501, sender_pid=450, sender_uid=501, sender_auid=501, function=TCCAccessCopyInformationForBundle, msgID=450.159
+2026-10-21T07:01:31.8826150Z 2026-10-21 07:01:10.459 Df tccd[350:1c1a5] [com.apple.TCC:access] REPLY: (501) function=TCCAccessCopyInformationForBundle, msgID=450.159
+2026-10-21T07:01:31.8827480Z 2026-10-21 07:01:10.461 Df syncdefaultsd[450:1c5d1] [com.apple.TCC:access] send_message_with_reply_sync(): user tccd unavailable, forwarding msgID=450.159 to system tccd (function=TCCAccessCopyInformationForBundle, service=(null))
+2026-10-21T07:01:31.8828880Z 2026-10-21 07:01:10.465 E  syncdefaultsd[450:1c5d1] [com.apple.TCC:access] send_message_with_reply_sync(): XPC_ERROR_CONNECTION_INVALID for msgID=450.159 (function=TCCAccessCopyInformationForBundle, service=(null))
+2026-10-21T07:01:31.8830010Z 2026-10-21 07:01:10.465 E  syncdefaultsd[450:1c5d1] [com.apple.TCC:access] TCCAccessCopyInformationForBundleId_block_invoke_2 to system: Connection invalid (bundle_id=com.apple.finder)
+2026-10-21T07:01:31.8831690Z 2026-10-21 07:01:10.472 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] [LSM:277] Handling LS notification: { code: kLSNotifyApplicationDeath | bundle ID: <private> | ASN: <private> | previous ASN: (null) }
+2026-10-21T07:01:31.8833130Z 2026-10-21 07:01:10.472 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] <XCTestSession: 0x7bf7221b00> pid 29785 com.henning.looseends@/Users/runner/work/loose-ends/loose-ends/build/click/Build/Products/Debug/LooseEnds.app processName: looseends pid: 44418 state: not running event: 277
+2026-10-21T07:01:31.8834320Z 2026-10-21 07:01:10.472 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Target app was terminated; removing process assertion for target app with pid 44418
+2026-10-21T07:01:31.8836010Z 2026-10-21 07:01:10.473 Df testmanagerd[8137:6785] [com.apple.dt.xctest:Default] [<XCTDAXManager_macOS: 0x7bf7221c80>] -[XCTDAXManager_macOS _unregisterForAXNotificationsForApplicationWithPID:]: Removing source for observer <AXObserver 0x7bf6fc7160> {pid=44427}
+2026-10-21T07:01:31.8837170Z 2026-10-21 07:01:10.473 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Test session requested listening for crashes of extra processes named {(
+2026-10-21T07:01:31.8837750Z     looseends
+2026-10-21T07:01:31.8838010Z )} (requested by 29785)
+2026-10-21T07:01:31.8838500Z 2026-10-21 07:01:10.473 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:HarnessSession] Received request to begin observing crashes in processes with names ["looseends"]
+2026-10-21T07:01:31.8839480Z 2026-10-21 07:01:10.473 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Starting observing in XCCrashReportObserver extra processes crashes for <private>
+2026-10-21T07:01:31.8840350Z 2026-10-21 07:01:10.473 Df testmanagerd[8137:6785] [com.apple.dt.xctest:Default] Dealloc <XCTDAXManager_macOS: 0x7bf7221c80> set _observersByPID to nil
+2026-10-21T07:01:31.8841670Z 2026-10-21 07:01:10.475 E  testmanagerd[8137:1cd6c] [com.apple.dt.xctest:ScreenRecording] Failed to append sample buffer. sampleBuffer.isValid == true, sampleBuffer.imageBuffer == <private>
+2026-10-21T07:01:31.8843020Z 2026-10-21 07:01:10.476 Df testmanagerd[8137:6785] [com.apple.dt.xctest:Default] [<XCTDAXManager_macOS: 0x7bf7221c80>] -[XCTDAXManager_macOS _unregisterForAXNotificationsForApplicationWithPID:]: Removing source for observer <AXObserver 0x7bf6fc6e40> {pid=44418}
+2026-10-21T07:01:31.8844160Z 2026-10-21 07:01:10.476 Df testmanagerd[8137:6785] [com.apple.dt.xctest:Default] Dealloc <XCTDAXManager_macOS: 0x7bf7221c80> set _observersByPID to nil
+2026-10-21T07:01:31.8845150Z 2026-10-21 07:01:10.477 Df tccd[350:1c1a5] [com.apple.TCC:access] REQUEST: tccd_uid=501, sender_pid=450, sender_uid=501, sender_auid=501, function=TCCAccessCopyInformationForBundle, msgID=450.160
+2026-10-21T07:01:31.8846030Z 2026-10-21 07:01:10.477 Df tccd[350:1c1a5] [com.apple.TCC:access] REPLY: (501) function=TCCAccessCopyInformationForBundle, msgID=450.160
+2026-10-21T07:01:31.8847090Z 2026-10-21 07:01:10.478 Df syncdefaultsd[450:1c5d1] [com.apple.TCC:access] send_message_with_reply_sync(): user tccd unavailable, forwarding msgID=450.160 to system tccd (function=TCCAccessCopyInformationForBundle, service=(null))
+2026-10-21T07:01:31.8848340Z 2026-10-21 07:01:10.478 E  syncdefaultsd[450:1c5d1] [com.apple.TCC:access] send_message_with_reply_sync(): XPC_ERROR_CONNECTION_INVALID for msgID=450.160 (function=TCCAccessCopyInformationForBundle, service=(null))
+2026-10-21T07:01:31.8849370Z 2026-10-21 07:01:10.478 E  syncdefaultsd[450:1c5d1] [com.apple.TCC:access] TCCAccessCopyInformationForBundleId_block_invoke_2 to system: Connection invalid (bundle_id=com.apple.finder)
+2026-10-21T07:01:31.8850390Z 2026-10-21 07:01:10.481 Df tccd[350:1c1a5] [com.apple.TCC:access] REQUEST: tccd_uid=501, sender_pid=450, sender_uid=501, sender_auid=501, function=TCCAccessCopyInformationForBundle, msgID=450.161
+2026-10-21T07:01:31.8851220Z 2026-10-21 07:01:10.484 Df tccd[350:1c1a5] [com.apple.TCC:access] REPLY: (501) function=TCCAccessCopyInformationForBundle, msgID=450.161
+2026-10-21T07:01:31.8852410Z 2026-10-21 07:01:10.484 Df syncdefaultsd[450:1c5d1] [com.apple.TCC:access] send_message_with_reply_sync(): user tccd unavailable, forwarding msgID=450.161 to system tccd (function=TCCAccessCopyInformationForBundle, service=(null))
+2026-10-21T07:01:31.8853540Z 2026-10-21 07:01:10.484 E  syncdefaultsd[450:1c5d1] [com.apple.TCC:access] send_message_with_reply_sync(): XPC_ERROR_CONNECTION_INVALID for msgID=450.161 (function=TCCAccessCopyInformationForBundle, service=(null))
+2026-10-21T07:01:31.8854670Z 2026-10-21 07:01:10.484 E  syncdefaultsd[450:1c5d1] [com.apple.TCC:access] TCCAccessCopyInformationForBundleId_block_invoke_2 to system: Connection invalid (bundle_id=com.apple.finder)
+2026-10-21T07:01:31.8855690Z 2026-10-21 07:01:10.487 Df tccd[350:1cd72] [com.apple.TCC:access] REQUEST: tccd_uid=501, sender_pid=450, sender_uid=501, sender_auid=501, function=TCCAccessCopyInformationForBundle, msgID=450.162
+2026-10-21T07:01:31.8856690Z 2026-10-21 07:01:10.488 Df tccd[350:1cd72] [com.apple.TCC:access] REPLY: (501) function=TCCAccessCopyInformationForBundle, msgID=450.162
+2026-10-21T07:01:31.8857650Z 2026-10-21 07:01:10.489 Df syncdefaultsd[450:1cd75] [com.apple.TCC:access] send_message_with_reply_sync(): user tccd unavailable, forwarding msgID=450.162 to system tccd (function=TCCAccessCopyInformationForBundle, service=(null))
+2026-10-21T07:01:31.8858790Z 2026-10-21 07:01:10.489 E  syncdefaultsd[450:1cd75] [com.apple.TCC:access] send_message_with_reply_sync(): XPC_ERROR_CONNECTION_INVALID for msgID=450.162 (function=TCCAccessCopyInformationForBundle, service=(null))
+2026-10-21T07:01:31.8859920Z 2026-10-21 07:01:10.489 E  syncdefaultsd[450:1cd75] [com.apple.TCC:access] TCCAccessCopyInformationForBundleId_block_invoke_2 to system: Connection invalid (bundle_id=com.apple.finder)
+2026-10-21T07:01:31.8860890Z 2026-10-21 07:01:10.675 Df testmanagerd[8137:1cd6c] [com.apple.dt.xctest:Default] Dealloc <XCTDEventConfirmationTracker: 0x7bf68ce080>, unregistering notification handler identifier 264
+2026-10-21T07:01:31.8861870Z 2026-10-21 07:01:10.675 Df testmanagerd[8137:1b985] [com.apple.dt.xctest:Default] Dealloc <XCTDEventConfirmationTracker: 0x7bf68ce620>, unregistering notification handler identifier 265
+2026-10-21T07:01:31.8862880Z 2026-10-21 07:01:11.064 E  testmanagerd[8137:1b985] [com.apple.dt.xctest:ScreenRecording] Failed to append sample buffer. sampleBuffer.isValid == true, sampleBuffer.imageBuffer == <private>
+2026-10-21T07:01:31.8863870Z 2026-10-21 07:01:11.328 E  testmanagerd[8137:1b985] [com.apple.dt.xctest:ScreenRecording] Failed to append sample buffer. sampleBuffer.isValid == true, sampleBuffer.imageBuffer == <private>
+2026-10-21T07:01:31.8864850Z 2026-10-21 07:01:11.398 E  testmanagerd[8137:1b985] [com.apple.dt.xctest:ScreenRecording] Failed to append sample buffer. sampleBuffer.isValid == true, sampleBuffer.imageBuffer == <private>
+2026-10-21T07:01:31.8865780Z 2026-10-21 07:01:11.400 Df testmanagerd[8137:1b985] [com.apple.dt.xctest:ScreenRecording] Stopping screen recording session with UUID 60A960C6-3930-4617-8402-9453D108B747.
+2026-10-21T07:01:31.8866640Z 2026-10-21 07:01:11.400 Df testmanagerd[8137:1b985] (ScreenCaptureKit)  [INFO] -[SCStream stopCaptureWithCompletionHandler:]:983 0x7bf7160a80 streamID=<private>
+2026-10-21T07:01:31.8867370Z 2026-10-21 07:01:11.400 Df testmanagerd[8137:1b985] (ScreenCaptureKit)  [INFO] SCRemoteQueue_Destroy:261 remoteQueue=0x7bf7031470
+2026-10-21T07:01:31.8868000Z 2026-10-21 07:01:11.401 Df testmanagerd[8137:1b985] (ScreenCaptureKit)  [INFO] SCRemoteQueue_Destroy:261 remoteQueue=0x7bf7031200
+2026-10-21T07:01:31.8868640Z 2026-10-21 07:01:11.401 Df testmanagerd[8137:1b985] (ScreenCaptureKit)  [INFO] SCRemoteQueue_Destroy:261 remoteQueue=0x7bf7031e60
+2026-10-21T07:01:31.8869340Z 2026-10-21 07:01:11.401 Df testmanagerd[8137:1b985] (ReplayKit)  [INFO] -[RPDaemonProxy stop:transactionID:streamData:withCompletionHandler:]:924
+2026-10-21T07:01:31.8870010Z 2026-10-21 07:01:11.412 Df testmanagerd[8137:1b985] (ReplayKit)  [INFO] -[RPDaemonProxy stopRemoteQueue:type:]:1456
+2026-10-21T07:01:31.8870840Z 2026-10-21 07:01:11.412 Df testmanagerd[8137:1b985] (ScreenCaptureKit)  [INFO] -[SCStreamManager stopRemoteQueue:type:]:129 0x7bf6eac180 streamId=<private>
+2026-10-21T07:01:31.8871520Z 2026-10-21 07:01:11.412 Df testmanagerd[8137:1b985] (ReplayKit)  [INFO] -[RPDaemonProxy stopRemoteQueue:type:]:1456
+2026-10-21T07:01:31.8872200Z 2026-10-21 07:01:11.412 Df testmanagerd[8137:1b985] (ScreenCaptureKit)  [INFO] -[SCStreamManager stopRemoteQueue:type:]:129 0x7bf6eac180 streamId=<private>
+2026-10-21T07:01:31.8872880Z 2026-10-21 07:01:11.412 Df testmanagerd[8137:1b985] (ReplayKit)  [INFO] -[RPDaemonProxy stopRemoteQueue:type:]:1456
+2026-10-21T07:01:31.8873560Z 2026-10-21 07:01:11.412 Df testmanagerd[8137:1b985] (ScreenCaptureKit)  [INFO] -[SCStreamManager stopRemoteQueue:type:]:129 0x7bf6eac180 streamId=<private>
+2026-10-21T07:01:31.8874510Z 2026-10-21 07:01:11.412 Df testmanagerd[8137:1b985] [com.apple.dt.xctest:ScreenRecording] Did stop capturing session with UUID 60A960C6-3930-4617-8402-9453D108B747.
+2026-10-21T07:01:31.8875700Z 2026-10-21 07:01:11.423 Df testmanagerd[8137:1cd9a] [com.apple.coremedia:] <<<< FigExportCommmon >>>> remakerFamily_handleLastStep: [0x7bf68d4000|W/DP] FigAssetWriter:[EXP]:Handle Last Step - current state finish writing called
+2026-10-21T07:01:31.8876890Z 2026-10-21 07:01:11.423 Df testmanagerd[8137:1cd9a] [com.apple.coremedia:] <<<< FigExportCommmon >>>> remakerFamily_handleLastStep: [0x7bf68d4000|W/DP] FigAssetWriter:[EXP]:Handle Last Step: setting new state to finish writing called
+2026-10-21T07:01:31.8878090Z 2026-10-21 07:01:11.428 Df testmanagerd[8137:1cd9a] [com.apple.coremedia:VTCompression] <<<< VT-CS >>>> VTCompressionSessionInvalidate: [0x7bf68da800:CS/SDI] invalidating compression session: encoded 254 dropped 0 duration 30016 [ms]
+2026-10-21T07:01:31.8879310Z 2026-10-21 07:01:11.429 Df testmanagerd[8137:1cd9a] [com.apple.coremedia:] <<<< FigExportCommmon >>>> remakerfamily_setFailureStatusIfError: [0x7bf68d4000|W/DP] FigAssetWriter:[EXP]:Set Failure Status if error err 0 state finish writing called
+2026-10-21T07:01:31.8880560Z 2026-10-21 07:01:11.429 Df testmanagerd[8137:1cd9a] [com.apple.coremedia:] <<<< FigExportCommmon >>>> remakerFamily_handleLastStep: [0x7bf68d4000|W/DP] FigAssetWriter:[EXP]:Handle Last Step: leaving err 0 current state finish writing completed
+2026-10-21T07:01:31.8881940Z 2026-10-21 07:01:11.429 Df testmanagerd[8137:16c84] [com.apple.coremedia:] <<<< FigExportCommmon >>>> remakerFamily_Invalidate: [0x7bf68d4000|W/DP] FigAssetWriter:[EXP]:Invalidating FigAssetWriter current state finish writing completed
+2026-10-21T07:01:31.8883050Z 2026-10-21 07:01:11.429 Df testmanagerd[8137:16c84] [com.apple.coremedia:] <<<< FigExportCommmon >>>> remakerFamily_Invalidate: [0x7bf68d4000|W/DP] FigAssetWriter:[EXP]:State now invalidated
+2026-10-21T07:01:31.8883960Z 2026-10-21 07:01:11.429 Df testmanagerd[8137:16c84] [com.apple.coremedia:] <<<< FigExportCommmon >>>> remakerFamily_invalidateTrack: [EXP]:Invalidate track [0x7bf73e8000]
+2026-10-21T07:01:31.8884860Z 2026-10-21 07:01:11.429 Df testmanagerd[8137:16c84] [com.apple.coremedia:] <<<< FigExportCommmon >>>> assetReaderTrack_Invalidate: [EXP]:Invalidate FigAssetTrackReader [0x7bf71dc0e0]
+2026-10-21T07:01:31.8885780Z 2026-10-21 07:01:11.429 Df testmanagerd[8137:16c84] [com.apple.coremedia:] <<<< FigExportCommmon >>>> assetWriterTrack_Invalidate: [EXP]:Invalidate FigAssetWriterTrack [0x7bf72103c0]
+2026-10-21T07:01:31.8886790Z 2026-10-21 07:01:11.430 Df testmanagerd[8137:1b985] [com.apple.dt.xctest:ScreenRecording] Did stop screen recording session with UUID 60A960C6-3930-4617-8402-9453D108B747 and finished writing to file: <private>
+2026-10-21T07:01:31.8887670Z 2026-10-21 07:01:11.430 Df testmanagerd[8137:1b985] (ScreenCaptureKit)  [INFO] -[SCStream dealloc]:697 0x7bf7160a80 streamID=<private>
+2026-10-21T07:01:31.8888460Z 2026-10-21 07:01:11.430 Df testmanagerd[8137:1b985] (ScreenCaptureKit)  [INFO] -[SCStreamManager deregisterStream:]:97 0x7bf6eac180 Deregistering stream with streamID=<private>
+2026-10-21T07:01:31.8889550Z 2026-10-21 07:01:11.430 Df testmanagerd[8137:1cd6c] [com.apple.dt.xctest:Screenshot] Notifying attachment observers that attachment future with UUID <private> was written to disk.
+2026-10-21T07:01:31.8890570Z 2026-10-21 07:01:11.430 Df testmanagerd[8137:1b985] [com.apple.coremedia:] <<<< FigExportCommmon >>>> remakerFamily_Finalize: [0x7bf68d4000|W/DP] FigAssetWriter:[EXP]:Finalizing FigAssetWriter current state invalidated
+2026-10-21T07:01:31.8891690Z 2026-10-21 07:01:11.430 Df testmanagerd[8137:1b985] [com.apple.coremedia:] <<<< FigExportCommmon >>>> remakerFamily_Invalidate: [0x7bf68d4000|W/DP] FigAssetWriter:[EXP]:Invalidating FigAssetWriter current state invalidated
+2026-10-21T07:01:31.8892680Z 2026-10-21 07:01:11.430 Df testmanagerd[8137:1b985] [com.apple.coremedia:] <<<< FigExportCommmon >>>> FigRemakerTrackFinalize: [EXP]:Remaker Track Finalize [0x7bf73e8000]
+2026-10-21T07:01:31.8893700Z 2026-10-21 07:01:11.430 Df testmanagerd[8137:1b985] [com.apple.coremedia:] <<<< FigExportCommmon >>>> remakerFamily_invalidateTrack: [EXP]:Invalidate track [0x7bf73e8000]
+2026-10-21T07:01:31.8894610Z 2026-10-21 07:01:11.430 Df testmanagerd[8137:1b985] [com.apple.coremedia:] <<<< FigExportCommmon >>>> FigAssetReaderTrackFinalize: [EXP]:Finalize FigAssetTrackReader [0x7bf71dc0e0]
+2026-10-21T07:01:31.8895520Z 2026-10-21 07:01:11.430 Df testmanagerd[8137:1b985] [com.apple.coremedia:] <<<< FigExportCommmon >>>> assetReaderTrack_Invalidate: [EXP]:Invalidate FigAssetTrackReader [0x7bf71dc0e0]
+2026-10-21T07:01:31.8896440Z 2026-10-21 07:01:11.430 Df testmanagerd[8137:1b985] [com.apple.coremedia:] <<<< FigExportCommmon >>>> FigAssetWriterTrackFinalize: [EXP]:Finalize FigAssetTrackWriter [0x7bf72103c0]
+2026-10-21T07:01:31.8897350Z 2026-10-21 07:01:11.430 Df testmanagerd[8137:1b985] [com.apple.coremedia:] <<<< FigExportCommmon >>>> assetWriterTrack_Invalidate: [EXP]:Invalidate FigAssetWriterTrack [0x7bf72103c0]
+2026-10-21T07:01:31.8898270Z 2026-10-21 07:01:11.430 Df testmanagerd[8137:1b985] [com.apple.coremedia:VTCompression] <<<< VT-CS >>>> vtCompressionSessionFinalize: [0x7bf68da800:CS/SDI] finalizing compression session
+2026-10-21T07:01:31.8899300Z 2026-10-21 07:01:11.432 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] <XCTestSession: 0x7bf7221b00> pid 29785 received request to sync crash reporter
+2026-10-21T07:01:31.8899980Z 2026-10-21 07:01:11.432 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Calling OSASyncCrashReporter
+2026-10-21T07:01:31.8900780Z 2026-10-21 07:01:11.432 Df testmanagerd[8137:1b985] [com.apple.xpc:connection] [0x7bf707d040] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-10-21T07:01:31.8901750Z 2026-10-21 07:01:11.432 Df testmanagerd[8137:1b985] [com.apple.xpc:connection] [0x7bf707f980] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-10-21T07:01:31.8902730Z 2026-10-21 07:01:11.432 Df testmanagerd[8137:1b985] [com.apple.xpc:connection] [0x7bf707f480] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-10-21T07:01:31.8903520Z 2026-10-21 07:01:11.433 Df testmanagerd[8137:16c84] (OSAnalytics) sending sync request to com.apple.ReportCrash
+2026-10-21T07:01:31.8904020Z 2026-10-21 07:01:11.433 Df testmanagerd[8137:16c84] (OSAnalytics) synced after 5 total events
+2026-10-21T07:01:31.8904580Z 2026-10-21 07:01:11.433 Df testmanagerd[8137:16c84] (OSAnalytics) sending sync request to com.apple.ReportCrash.DirectoryService
+2026-10-21T07:01:31.8905140Z 2026-10-21 07:01:11.434 Df testmanagerd[8137:16c84] (OSAnalytics) synced after 6 total events
+2026-10-21T07:01:31.8905840Z 2026-10-21 07:01:11.434 Df testmanagerd[8137:16c84] (OSAnalytics) unable to lookup port for (null)
+2026-10-21T07:01:31.8906530Z 2026-10-21 07:01:11.434 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Completed OSASyncCrashReporter (result: 11, error: (null)
+2026-10-21T07:01:31.8907370Z 2026-10-21 07:01:11.439 Df testmanagerd[8137:1b985] [com.apple.dt.xctest:HarnessSession] Received request from harness to delete attachments with ids 60A960C6-3930-4617-8402-9453D108B747
+2026-10-21T07:01:31.8908870Z 2026-10-21 07:01:11.439 Df testmanagerd[8137:1b985] [com.apple.dt.xctest:HarnessSession] Deleting <private> copy of attachments with ids (60A960C6-3930-4617-8402-9453D108B747) stored at file:///Users/runner/Library/Daemon%20Containers/320C0BE7-6085-41DE-B96B-F4DCC2D3AB97/Data/tmp/Attachments/
+2026-10-21T07:01:31.8910290Z 2026-10-21 07:01:11.440 Df testmanagerd[8137:1b985] [com.apple.dt.xctest:HarnessSession] Deleted attachment at /Users/runner/Library/Daemon Containers/320C0BE7-6085-41DE-B96B-F4DCC2D3AB97/Data/tmp/Attachments/60A960C6-3930-4617-8402-9453D108B747
+2026-10-21T07:01:31.8911400Z 2026-10-21 07:01:11.456 Df testmanagerd[8137:16c84] [com.apple.xpc:connection] [0x7bf707f840] invalidated because the client process (pid 29785) either cancelled the connection or exited
+2026-10-21T07:01:31.8912540Z 2026-10-21 07:01:11.456 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Test process connection invalidated or interrupted, closing test session <XCTestSession: 0x7bf7221b00> pid 29785.
+2026-10-21T07:01:31.8913430Z 2026-10-21 07:01:11.456 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Closed <XCTestSession: 0x7bf7221b00> pid 29785, removing from (
+2026-10-21T07:01:31.8913920Z     "<XCTestSession: 0x7bf7221b00> pid 29785"
+2026-10-21T07:01:31.8914150Z )
+2026-10-21T07:01:31.8914520Z 2026-10-21 07:01:11.456 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Tearing down <XCTestSession: 0x7bf7221b00> pid 29785.
+2026-10-21T07:01:31.8915280Z 2026-10-21 07:01:11.456 Df testmanagerd[8137:16c84] [com.apple.locationd.Core:Simulation] {"msg":"getDaemonProxy called"}
+2026-10-21T07:01:31.8916410Z 2026-10-21 07:01:11.456 Df testmanagerd[8137:16c84] [com.apple.locationd.Core:Simulation] {"msg":"Do we have a proxy?", "proxy":"<__NSXPCInterfaceProxy_CLSimulationXPCServerInterface: 0x7bf68ce170>", "connection":"<NSXPCConnection: 0x7bf73e45a0> connection to service named com.apple.locationd.simulation"}
+2026-10-21T07:01:31.8917540Z 2026-10-21 07:01:11.456 Df testmanagerd[8137:16c84] [com.apple.locationd.Core:Simulation] {"msg":"getDaemonProxy called"}
+2026-10-21T07:01:31.8918640Z 2026-10-21 07:01:11.456 Df testmanagerd[8137:16c84] [com.apple.locationd.Core:Simulation] {"msg":"Do we have a proxy?", "proxy":"<__NSXPCInterfaceProxy_CLSimulationXPCServerInterface: 0x7bf68cd180>", "connection":"<NSXPCConnection: 0x7bf73e45a0> connection to service named com.apple.locationd.simulation"}
+2026-10-21T07:01:31.8919740Z 2026-10-21 07:01:11.456 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] disableAutomationModeForClient
+2026-10-21T07:01:31.8920480Z 2026-10-21 07:01:11.457 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Removed Automation Mode client <XCTestSession: 0x7bf7221b00> pid 29785. Total clients: 0
+2026-10-21T07:01:31.8921300Z 2026-10-21 07:01:11.457 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Disabling Automation Mode...
+2026-10-21T07:01:31.8922230Z 2026-10-21 07:01:11.457 Df testmanagerd[8137:16c84] [com.apple.xpc:connection] [0x7bf707ee40] activating connection: mach=true listener=false peer=false name=com.apple.dt.automationmode.writer
+2026-10-21T07:01:31.8923100Z 2026-10-21 07:01:11.457 Df testmanagerd[8137:16c84] [com.apple.dt.automationmode:Default] Created new connection <private>.
+2026-10-21T07:01:31.8924250Z 2026-10-21 07:01:11.458 Df testmanagerd[8137:1b985] [com.apple.dt.xctest:Default] XCTDAuthorizedProcessTracker has cancelled dispatch source for pid 29785 and removed it from its list of dispatch sources to track
+2026-10-21T07:01:31.8925090Z 2026-10-21 07:01:11.458 Df testmanagerd[8137:1b985] [com.apple.dt.xctest:Default] Current mappings: {
+2026-10-21T07:01:31.8925430Z }
+2026-10-21T07:01:31.8926030Z 2026-10-21 07:01:11.463 Df testmanagerd[8137:1cd6c] [com.apple.dt.xctest:Default] [LSM:278] Handling LS notification: { code: kLSNotifyApplicationDeath | bundle ID: <private> | ASN: <private> | previous ASN: (null) }
+2026-10-21T07:01:31.8927920Z 2026-10-21 07:01:11.463 Df testmanagerd[8137:1cd6c] [com.apple.dt.xctest:Default] <XCTestSession: 0x7bf7221b00> pid 29785 com.henning.looseends.uitests.xctrunner@/Users/runner/work/loose-ends/loose-ends/build/click/Build/Products/Debug/LooseEndsUITests-Runner.app processName: looseendsuitests-runner pid: 29785 state: not running activation policy: accessory event: 278
+2026-10-21T07:01:31.8929380Z 2026-10-21 07:01:11.464 Df testmanagerd[8137:1cd6c] [com.apple.dt.automationmode:Default] Handling posted change notification (com.apple.dt.automationmode.state-changed)
+2026-10-21T07:01:31.8930240Z 2026-10-21 07:01:11.464 Df testmanagerd[8137:1cd6c] [com.apple.dt.automationmode:Default] XAM shared observer connecting to com.apple.dt.automationmode.reader
+2026-10-21T07:01:31.8930980Z 2026-10-21 07:01:11.465 Df testmanagerd[8137:16c84] [com.apple.dt.automationmode:Default] Invalidating connection <private>.
+2026-10-21T07:01:31.8931980Z 2026-10-21 07:01:11.465 Df testmanagerd[8137:16c84] [com.apple.xpc:connection] [0x7bf707ee40] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-10-21T07:01:31.8932770Z 2026-10-21 07:01:11.465 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Finished disabling Automation Mode
+2026-10-21T07:01:31.8933510Z 2026-10-21 07:01:11.465 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] XCTestSession is responsible for cleaning up its socket from an XCTDHarnessSession
+2026-10-21T07:01:31.8934470Z 2026-10-21 07:01:11.465 Df testmanagerd[8137:1cd6c] [com.apple.xpc:connection] [0x7bf707f480] activating connection: mach=true listener=false peer=false name=com.apple.dt.automationmode.reader
+2026-10-21T07:01:31.8935340Z 2026-10-21 07:01:11.465 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Invalidating <XCTDAutomationServicesProvider: 0x7bf7273580>.
+2026-10-21T07:01:31.8936180Z 2026-10-21 07:01:11.465 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] <XCTDLaunchServicesFramework: 0x7bf718ce70> unregistered LaunchServices handler 0x7bf6c90c80
+2026-10-21T07:01:31.8937090Z 2026-10-21 07:01:11.465 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Invalidating <XCTDAXManager_macOS: 0x7bf7222100>, unregistering notification handler identifier 131
+2026-10-21T07:01:31.8937950Z 2026-10-21 07:01:11.465 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Invalidating <XCTDProcessManagementServicesProvider: 0x7bf68a33c0>
+2026-10-21T07:01:31.8938670Z 2026-10-21 07:01:11.465 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Invalidating <XCTDProcessMonitor: 0x7bf68a2160>
+2026-10-21T07:01:31.8939410Z 2026-10-21 07:01:11.465 Df testmanagerd[8137:16c84] [com.apple.runningboard:monitor] unsubscribing configuration of monitor M8137-2
+2026-10-21T07:01:31.8940110Z 2026-10-21 07:01:11.466 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Tearing down <XCTDProcessAssertionManager: 0x7bf68a18f0>
+2026-10-21T07:01:31.8941090Z 2026-10-21 07:01:11.466 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Session summary: 0 test sessions, 0 sessions with identifiers, 1 unidentified sessions, 0 remote automation sessions, 0 pending harness sessions, has control sessions
+2026-10-21T07:01:31.8942130Z 2026-10-21 07:01:11.466 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Unidentified harness sessions: (
+2026-10-21T07:01:31.8942580Z     "<XCTDaemon.XCTDHarnessSession: 0x7bf7221200>"
+2026-10-21T07:01:31.8942810Z )
+2026-10-21T07:01:31.8943100Z 2026-10-21 07:01:11.466 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Control sessions: (
+2026-10-21T07:01:31.8943480Z     "<XCTDaemon.XCTDHarnessSession: 0x7bf7221200>"
+2026-10-21T07:01:31.8943710Z )
+2026-10-21T07:01:31.8944080Z 2026-10-21 07:01:11.466 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Deallocating <XCTestSession: 0x7bf7221b00> pid 29785.
+2026-10-21T07:01:31.8944810Z 2026-10-21 07:01:11.466 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Deallocating <XCTDAutomationServicesProvider: 0x7bf7273580>.
+2026-10-21T07:01:31.8945800Z 2026-10-21 07:01:11.468 Df testmanagerd[8137:1cd6c] [com.apple.xpc:connection] [0x7bf707f480] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-10-21T07:01:31.8946710Z 2026-10-21 07:01:11.468 Df testmanagerd[8137:1cd6c] [com.apple.dt.automationmode:Default] Comparing previous enabled state (1) to current enabled state (0)
+2026-10-21T07:01:31.8947520Z 2026-10-21 07:01:11.754 Df testmanagerd[8137:1cd6c] [com.apple.dt.xctest:HarnessSession] Received log archive request from start date 2026-10-21 06:54:12 +0000
+2026-10-21T07:01:31.8948480Z 2026-10-21 07:01:11.756 Df testmanagerd[8137:1cd6c] [com.apple.xpc:connection] [0x7bf707f480] activating connection: mach=false listener=false peer=false name=com.apple.dt.xctautomationsupport.LogArchiveCollector
+2026-10-21T07:01:31.8949830Z 2026-10-21 07:01:11.757 Df testmanagerd[8137:1cd6c] [com.apple.dt.xctest:Default] Requesting log archive with <XCTLogArchiveRequest: 0x7bf68a2490> from start date Wed Oct 21 06:54:12 2026 at path /var/tmp/test-session-systemlogs-2026.10.21_06-54-12-+0000.logarchive
+2026-10-21T07:01:31.8950980Z 2026-10-21 07:01:12.821 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Dealloc <XCTDEventConfirmationTracker: 0x7bf68cc4b0>, unregistering notification handler identifier 266
+2026-10-21T07:01:31.8951850Z 2026-10-21 07:01:16.566 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] <XCTLogArchiveRequest: 0x7bf68a2490> completed successfully after 4.8s
+2026-10-21T07:01:31.8952560Z 2026-10-21 07:01:16.566 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Updating ownership of logarchive to user 501
+2026-10-21T07:01:31.8953440Z 2026-10-21 07:01:16.719 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Successfully updated ownership of logarchive at /var/tmp/test-session-systemlogs-2026.10.21_06-54-12-+0000.logarchive to user 501
+2026-10-21T07:01:31.8954310Z 2026-10-21 07:01:16.767 E  testmanagerd[8137:1cd6c] [com.apple.dt.xctest:Default] Error 29: Results channel was never configured
+2026-10-21T07:01:31.8955090Z 2026-10-21 07:01:16.880 Df testmanagerd[8137:1cd6c] [com.apple.dt.xctest:HarnessSession] XCTDHarnessSession's DTXSocketTransport for socket 3 disconnected
+2026-10-21T07:01:31.8955830Z 2026-10-21 07:01:16.880 Df testmanagerd[8137:1cd6c] [com.apple.dt.xctest:HarnessSession] Closing harness session
+2026-10-21T07:01:31.8956470Z 2026-10-21 07:01:16.880 Df testmanagerd[8137:1a88f] [com.apple.dt.xctest:Default] Closing session <XCTDaemon.XCTDHarnessSession: 0x7bf7221200>
+2026-10-21T07:01:31.8957210Z 2026-10-21 07:01:16.880 Df testmanagerd[8137:1a88f] [com.apple.dt.xctest:Default] Control session closed, will disconnect from matching testing client.
+2026-10-21T07:01:31.8958250Z 2026-10-21 07:01:16.880 Df testmanagerd[8137:1a88f] [com.apple.dt.xctest:Default] Session summary: 0 test sessions, 0 sessions with identifiers, 0 unidentified sessions, 0 remote automation sessions, 0 pending harness sessions, does not have control sessions
+2026-10-21T07:01:31.8959390Z 2026-10-21 07:01:16.880 Df testmanagerd[8137:1a88f] [com.apple.dt.xctest:HarnessSession] Connection flushed with barrier, cancelling...
+2026-10-21T07:01:31.8960140Z 2026-10-21 07:01:16.881 Df testmanagerd[8137:1cd6c] [com.apple.dt.xctest:HarnessSession] No results channel to finalize
+2026-10-21T07:01:31.8960750Z 2026-10-21 07:01:16.881 Df testmanagerd[8137:1cd6c] [com.apple.dt.xctest:HarnessSession] deinit AttachmentProcessor
+2026-10-21T07:01:31.8961620Z 2026-10-21 07:01:16.881 Df testmanagerd[8137:1cd6c] [com.apple.dt.xctest:Default] XCTDAuthorizedProcessTracker is cancelling dispatch sources as part of its dealloc routine
+2026-10-21T07:01:31.8962580Z 2026-10-21 07:01:16.881 Df testmanagerd[8137:1cd6c] [com.apple.dt.xctest:Default] XCTDAuthorizedProcessTracker has cancelled dispatch sources as part of its dealloc routine
+2026-10-21T07:01:31.8963490Z 2026-10-21 07:01:16.881 Df testmanagerd[8137:16c84] [com.apple.osanalytics:DiagnosticMonitor] Client: tearing down server connection after removing last observer.
+2026-10-21T07:01:31.8964710Z 2026-10-21 07:01:16.881 Df testmanagerd[8137:16c84] [com.apple.xpc:connection] [0x7bf707c3c0] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-10-21T07:01:31.8965650Z 2026-10-21 07:01:16.882 E  testmanagerd[8137:16c84] [com.apple.osanalytics:DiagnosticMonitor] Error registering write types with the diagnostic monitor server: <private>
+2026-10-21T07:01:31.8966510Z 2026-10-21 07:01:16.882 E  testmanagerd[8137:16c84] [com.apple.osanalytics:DiagnosticMonitor] Error registering event types with the diagnostic monitor server: <private>
+2026-10-21T07:01:31.8967420Z 2026-10-21 07:01:19.658 Df testmanagerd[8137:16c84] [com.apple.dt.xctest:Default] Dealloc <XCTDEventConfirmationTracker: 0x7bf68cdfe0>, unregistering notification handler identifier 267
+2026-10-21T07:01:31.8968530Z 2026-10-21 07:01:20.614 Df tccd[159:1c609] [com.apple.TCC:access] REQUEST: tccd_uid=0, sender_pid=45653, sender_uid=501, sender_auid=501, function=TCCAccessRequest, msgID=45653.1
+2026-10-21T07:01:31.8969510Z 2026-10-21 07:01:20.615 Df tccd[159:1c609] [com.apple.TCC:access] AUTHREQ_CTX: msgID=45653.1, function=<private>, service=kTCCServiceListenEvent, preflight=yes, query=1, client_dict=(null), daemon_dict=<private>
+2026-10-21T07:01:31.8971120Z 2026-10-21 07:01:20.615 Df tccd[159:1c609] [com.apple.TCC:access] AUTHREQ_ATTRIBUTION: msgID=45653.1, attribution={responsible={TCCDProcess: identifier=a.out, pid=998, auid=501, euid=501, responsible_path=/opt/hca/hosted-compute-agent, binary_path=/opt/hca/hosted-compute-agent}, requesting={TCCDProcess: identifier=com.apple.system_profiler, pid=45653, auid=501, euid=501, binary_path=/usr/sbin/system_profiler}, },
+2026-10-21T07:01:31.8972480Z 2026-10-21 07:01:20.615 Df tccd[159:1c609] [com.apple.TCC:access] <private> does not support RBS assertion override
+2026-10-21T07:01:31.8973100Z 2026-10-21 07:01:20.618 Df tccd[159:1c609] [com.apple.TCC:access] AUTHREQ_SUBJECT: msgID=45653.1, subject=/opt/hca/hosted-compute-agent,
+2026-10-21T07:01:31.8973840Z 2026-10-21 07:01:20.618 Df tccd[159:1c609] [com.apple.TCC:access] AUTHREQ_RESULT: msgID=45653.1, authValue=2, authReason=4, authVersion=1, desired_auth=0, error=(null),
+2026-10-21T07:01:31.8974520Z 2026-10-21 07:01:20.618 Df tccd[159:1c609] [com.apple.TCC:access] REPLY: (0) function=TCCAccessRequest, msgID=45653.1
+2026-10-21T07:01:31.8975340Z 2026-10-21 07:01:20.619 Df tccd[159:1d172] [com.apple.TCC:access] REQUEST: tccd_uid=0, sender_pid=162, sender_uid=88, sender_auid=-1, function=TCCAccessRequest, msgID=162.230
+2026-10-21T07:01:31.8976280Z 2026-10-21 07:01:20.620 Df tccd[159:1d172] [com.apple.TCC:access] AUTHREQ_CTX: msgID=162.230, function=<private>, service=kTCCServiceListenEvent, preflight=yes, query=1, client_dict=(null), daemon_dict=<private>
+2026-10-21T07:01:31.8978470Z 2026-10-21 07:01:20.620 Df tccd[159:1d172] [com.apple.TCC:access] AUTHREQ_ATTRIBUTION: msgID=162.230, attribution={responsible={TCCDProcess: identifier=a.out, pid=998, auid=501, euid=501, responsible_path=/opt/hca/hosted-compute-agent, binary_path=/opt/hca/hosted-compute-agent}, accessing={TCCDProcess: identifier=com.apple.system_profiler, pid=45653, auid=501, euid=501, binary_path=/usr/sbin/system_profiler}, requesting={TCCDProcess: identifier=com.apple.WindowServer, pid=162, auid=88, euid=88, binary_path=/System/Library/PrivateFrameworks/SkyLight.framework/Versions/A/Resources/WindowServer}, },
+2026-10-21T07:01:31.8981200Z 2026-10-21 07:01:20.620 Df tccd[159:1d172] [com.apple.TCC:access] requestor: TCCDProcess: identifier=com.apple.WindowServer, pid=162, auid=88, euid=88, binary_path=/System/Library/PrivateFrameworks/SkyLight.framework/Versions/A/Resources/WindowServer is checking access for accessor TCCDProcess: identifier=com.apple.system_profiler, pid=45653, auid=501, euid=501, binary_path=/usr/sbin/system_profiler
+2026-10-21T07:01:31.8982560Z 2026-10-21 07:01:20.620 Df tccd[159:1d172] [com.apple.TCC:access] <private> does not support RBS assertion override
+2026-10-21T07:01:31.8983280Z 2026-10-21 07:01:20.620 Df tccd[159:1d172] [com.apple.TCC:access] AUTHREQ_SUBJECT: msgID=162.230, subject=/opt/hca/hosted-compute-agent,
+2026-10-21T07:01:31.8984020Z 2026-10-21 07:01:20.620 Df tccd[159:1d172] [com.apple.TCC:access] AUTHREQ_RESULT: msgID=162.230, authValue=2, authReason=4, authVersion=1, desired_auth=0, error=(null),
+2026-10-21T07:01:31.8984710Z 2026-10-21 07:01:20.620 Df tccd[159:1d172] [com.apple.TCC:access] REPLY: (0) function=TCCAccessRequest, msgID=162.230
+2026-10-21T07:01:31.9037800Z ##[group]Run # The window photos (.png) and the window size (.txt) MacGalleryTests attaches, under their names.
+2026-10-21T07:01:31.9038470Z # The window photos (.png) and the window size (.txt) MacGalleryTests attaches, under their names.
+2026-10-21T07:01:31.9038960Z # The gallery's bundle and the click test's (#544), each into its own folder.
+2026-10-21T07:01:31.9039290Z mkdir -p MacGallery
+2026-10-21T07:01:31.9039520Z for bundle in MacGallery MacDetailClick; do
+2026-10-21T07:01:31.9039840Z   mkdir -p "raw-$bundle"
+2026-10-21T07:01:31.9040140Z   [ -d "$bundle.xcresult" ] || [ "$bundle" = MacGallery ] || continue
+2026-10-21T07:01:31.9040620Z   xcrun xcresulttool export attachments --path "$bundle.xcresult" --output-path "raw-$bundle" || true
+2026-10-21T07:01:31.9041140Z done
+2026-10-21T07:01:31.9041360Z python3 - <<'PY'
+2026-10-21T07:01:31.9041840Z import json, pathlib, shutil
+2026-10-21T07:01:31.9042250Z out = pathlib.Path("MacGallery")
+2026-10-21T07:01:31.9042630Z for raw in sorted(pathlib.Path(".").glob("raw-*")):
+2026-10-21T07:01:31.9043040Z     manifest = raw / "manifest.json"
+2026-10-21T07:01:31.9043320Z     if not manifest.exists():
+2026-10-21T07:01:31.9043810Z         continue
+2026-10-21T07:01:31.9044040Z     for test in json.loads(manifest.read_text()):
+2026-10-21T07:01:31.9044380Z         for a in test.get("attachments", []):
+2026-10-21T07:01:31.9044810Z             name = a.get("suggestedHumanReadableName", "")
+2026-10-21T07:01:31.9045120Z             if name.startswith("mac-gallery-"):
+2026-10-21T07:01:31.9045380Z                 stem = name.split("_")[0]
+2026-10-21T07:01:31.9045730Z                 suffix = pathlib.Path(a["exportedFileName"]).suffix
+2026-10-21T07:01:31.9046130Z                 shutil.copy(raw / a["exportedFileName"], out / f"{stem}{suffix}")
+2026-10-21T07:01:31.9046600Z print("\n".join(sorted(p.name for p in out.iterdir())) or "no Mac gallery attachments")
+2026-10-21T07:01:31.9053350Z PY
+2026-10-21T07:01:31.9117330Z shell: /bin/bash -e {0}
+2026-10-21T07:01:31.9117510Z ##[endgroup]
+2026-10-21T07:01:34.5699880Z Exported 2 attachments for: MacGalleryTests/testCalendarAskDark():
+2026-10-21T07:01:34.5702650Z File: E3B16366-D716-40F2-B565-9148788BFD58.png, suggested name: "mac-gallery-dark-9-calendar-ask-timed_0_0390AFC1-D11D-4486-9310-46AF56CCEEC9.png"
+2026-10-21T07:01:34.5706080Z File: 688F8A40-E4CF-4FCF-B932-A572B1C0643B.png, suggested name: "mac-gallery-dark-8-calendar-ask_0_EE43C0BE-5651-4BA9-82CE-ED88BBFF7974.png"
+2026-10-21T07:01:34.5719610Z 
+2026-10-21T07:01:34.5720150Z Exported 2 attachments for: MacGalleryTests/testCalendarAskLight():
+2026-10-21T07:01:34.5721270Z File: 95C22F4C-099A-4545-98BF-061C7DD1A2D0.png, suggested name: "mac-gallery-light-9-calendar-ask-timed_0_D967AE26-389C-41C4-8C98-E1B960F2D241.png"
+2026-10-21T07:01:34.5722230Z File: 8D9B6D76-CE0D-48EC-9F37-65E211A329D3.png, suggested name: "mac-gallery-light-8-calendar-ask_0_F7BC282D-E24F-422F-BC37-63692C72CD1D.png"
+2026-10-21T07:01:34.5726510Z 
+2026-10-21T07:01:34.5727430Z Exported 5 attachments for: MacGalleryTests/testGalleryDark():
+2026-10-21T07:01:34.5729260Z File: 7F1154A1-FCE1-40B7-9EA2-60F295A953F5.png, suggested name: "mac-gallery-dark-4-start-again_0_929FBA35-68C6-4EBE-B0B9-9A496FBFD920.png"
+2026-10-21T07:01:34.5732580Z File: 516DC733-07EE-4680-A83C-C2B7EB9CDFB2.png, suggested name: "mac-gallery-dark-3-detail_0_C186993A-66DE-462F-9C42-9A646CF24DE6.png"
+2026-10-21T07:01:34.5736700Z File: D0767C22-EB56-496E-9956-2FE4D8692171.png, suggested name: "mac-gallery-dark-2-list-new_0_7165D782-C157-4038-B0D6-4B4B2980DCAD.png"
+2026-10-21T07:01:34.5739090Z File: 3391A2B2-FF45-4317-8C85-72D938101CFD.txt, suggested name: "mac-gallery-dark-window-size_0_F401CB4E-284B-417A-8E79-7513AD40FF58.txt"
+2026-10-21T07:01:34.5743470Z File: 11D54D2B-A433-4F30-A4DB-8A00678AD594.png, suggested name: "mac-gallery-dark-1-start_0_B085D642-447D-4F3F-8AA5-05A97473FF3B.png"
+2026-10-21T07:01:34.5745250Z 
+2026-10-21T07:01:34.5745930Z Exported 5 attachments for: MacGalleryTests/testGalleryLight():
+2026-10-21T07:01:34.5747820Z File: F01E85DE-265F-448B-97DA-13F7584D78FA.png, suggested name: "mac-gallery-light-4-start-again_0_5029AAB2-91C5-471C-8763-E7B009F3406B.png"
+2026-10-21T07:01:34.5750400Z File: B9B6A353-B8DC-4253-91E6-8AFB8B9A45DE.png, suggested name: "mac-gallery-light-3-detail_0_D1D6F1E6-4367-4A53-B454-4203728001B4.png"
+2026-10-21T07:01:34.5752830Z File: 2B7527EF-2294-4F82-84A8-959BAADA1365.png, suggested name: "mac-gallery-light-2-list-new_0_A64035C6-1812-47CA-B605-C0222BD6CBAC.png"
+2026-10-21T07:01:34.5756510Z File: A01FE277-E1CE-4459-9CFA-5B9D6F34DA67.txt, suggested name: "mac-gallery-light-window-size_0_48C54D87-597E-4A9D-AB1F-0B5F7593102C.txt"
+2026-10-21T07:01:34.5758990Z File: 27345015-639A-4D7D-AB29-66662B37D57A.png, suggested name: "mac-gallery-light-1-start_0_50693DA0-6DCB-4947-802B-A8D2FCC9DED4.png"
+2026-10-21T07:01:34.5760600Z 
+2026-10-21T07:01:34.5761430Z Exported 4 attachments for: MacGalleryTests/testLooseEndsTopDark():
+2026-10-21T07:01:34.5763370Z File: 386E7056-A4C2-479C-99DB-965BFECA1C2E.png, suggested name: "mac-gallery-dark-7-loose-ends-no-sidebar-scrolled_0_A7718DB9-14AC-4B37-8B68-FE9FE3523D20.png"
+2026-10-21T07:01:34.5767370Z File: 49B7BB6F-6793-437E-B9E3-F1601E839A23.png, suggested name: "mac-gallery-dark-6-loose-ends-no-sidebar_0_9CCEC45C-F9D0-444C-AEFC-C85E4326B780.png"
+2026-10-21T07:01:34.5770340Z File: 045EA904-ECF8-47D5-A661-265BDDC0E348.png, suggested name: "mac-gallery-dark-5-loose-ends-scrolled_0_74BAD75D-20E2-431A-B581-067B6AACD7A9.png"
+2026-10-21T07:01:34.5772870Z File: 3BF653EC-5157-4951-9800-2F9C419969D5.png, suggested name: "mac-gallery-dark-4-loose-ends_0_8550F475-AA13-4086-8874-10B95235F2D8.png"
+2026-10-21T07:01:34.5780780Z 
+2026-10-21T07:01:34.5781620Z Exported 4 attachments for: MacGalleryTests/testLooseEndsTopLight():
+2026-10-21T07:01:34.5783850Z File: CB6658B3-5423-4E72-B1A5-36C0D5734AC0.png, suggested name: "mac-gallery-light-7-loose-ends-no-sidebar-scrolled_0_DC269800-0DE3-4A14-ADD2-FAE98ED5F908.png"
+2026-10-21T07:01:34.5786780Z File: E555999F-A74A-44CB-B410-71FAEAD99C05.png, suggested name: "mac-gallery-light-6-loose-ends-no-sidebar_0_1084FD5A-134E-4836-BC97-19E1DE0F4CB9.png"
+2026-10-21T07:01:34.5789540Z File: ED4C63A9-E1E9-4159-A0C1-A9D7BE90263D.png, suggested name: "mac-gallery-light-5-loose-ends-scrolled_0_E6FBD106-9FEB-4342-AD17-B236A5C88947.png"
+2026-10-21T07:01:34.5792110Z File: FF1F115C-DFE2-4B75-AC05-746A2204481F.png, suggested name: "mac-gallery-light-4-loose-ends_0_BE316932-DD9A-4CA7-BE0F-472160EDC9F8.png"
+2026-10-21T07:01:34.5793620Z 
+2026-10-21T07:01:34.5794300Z Exported 3 attachments for: MacGalleryTests/testPanelDark():
+2026-10-21T07:01:34.5796110Z File: A0A69D4B-D242-485C-876F-D75199D5D9F9.txt, suggested name: "mac-gallery-panel-dark-size_0_692E7A87-4711-4B41-8AEF-4AE814BC61F3.txt"
+2026-10-21T07:01:34.5798760Z File: 96CA2B6D-AFE0-427B-ADDC-0A77DE06F699.png, suggested name: "mac-gallery-panel-dark_0_B902D937-F8E1-49C6-BFA7-624503D0EFB9.png"
+2026-10-21T07:01:34.5801550Z File: 205C0645-F2A3-4AAD-867F-B8CBB60AB80D.txt, suggested name: "mac-gallery-panel-dark-hierarchy_0_1E1DE055-87A4-4FF7-935A-D977346CC46B.txt"
+2026-10-21T07:01:34.5802280Z 
+2026-10-21T07:01:34.5802590Z Exported 3 attachments for: MacGalleryTests/testPanelDiagnosis():
+2026-10-21T07:01:34.5803650Z File: 8BE88E03-2A36-45F7-9F0E-4A110FF94EF0.txt, suggested name: "mac-gallery-panel-diagnosis-size_0_4817EE3F-46A8-47DC-962E-06C5DC1705E2.txt"
+2026-10-21T07:01:34.5805150Z File: A8BEF33E-9F2E-4518-AC85-8EA82C842488.png, suggested name: "mac-gallery-panel-diagnosis_0_BB1526A0-1789-471C-A5D4-109636727478.png"
+2026-10-21T07:01:34.5806290Z File: F0D4E4C2-6398-4C8D-95A1-7252F8AD4367.txt, suggested name: "mac-gallery-panel-diagnosis-hierarchy_0_0BF8CBEC-986A-4DB7-9A3D-EE33EDAFD887.txt"
+2026-10-21T07:01:34.5806920Z 
+2026-10-21T07:01:34.5807620Z Exported 3 attachments for: MacGalleryTests/testPanelLight():
+2026-10-21T07:01:34.5808540Z File: 16C1B790-353D-4FB2-9794-9DA523D2AA7F.txt, suggested name: "mac-gallery-panel-light-size_0_BC625060-36F9-4E7F-ACD1-435457B25A25.txt"
+2026-10-21T07:01:34.5809650Z File: DEF1DF9F-5243-4258-BAF5-981E5FA040D4.png, suggested name: "mac-gallery-panel-light_0_8C341682-13C2-454D-B604-85326652713F.png"
+2026-10-21T07:01:34.5810790Z File: A17E97F1-39DA-4DEA-9DB5-30D7A0A9996E.txt, suggested name: "mac-gallery-panel-light-hierarchy_0_4D13F1E1-3BFA-47E4-BBC9-FE615938B791.txt"
+2026-10-21T07:01:34.5811810Z 
+2026-10-21T07:01:34.5812220Z Exported 3 attachments for: MacGalleryTests/testPanelListening():
+2026-10-21T07:01:34.5813190Z File: D7BAE502-3D60-4233-95B8-D6BC5A36426C.txt, suggested name: "mac-gallery-panel-listening-size_0_0DA10FE5-1A56-4A43-9CFA-488EE1D161AF.txt"
+2026-10-21T07:01:34.5814420Z File: 92682AA4-23F0-4B1B-A25F-874D6F1770B1.png, suggested name: "mac-gallery-panel-listening_0_660D7C13-B7C4-4081-805D-BCF6D8780296.png"
+2026-10-21T07:01:34.5815630Z File: 6320F022-F9EA-4F11-B13F-CDF4F2355084.txt, suggested name: "mac-gallery-panel-listening-hierarchy_0_7232F5B0-247C-412D-B8CE-2DCB25E94372.txt"
+2026-10-21T07:01:34.5816360Z 
+2026-10-21T07:01:34.5816780Z Exported 5 attachments for: MacGalleryTests/testPanelTypedGerman():
+2026-10-21T07:01:34.5817580Z File: D503A393-CCE2-4A27-BE0A-5D0F4A1FA9D0.png, suggested name: "mac-gallery-panel-de-saved-in-new_0_9ED03A4D-26FC-481F-8C22-5A228A7FFD9F.png"
+2026-10-21T07:01:34.5818790Z File: A6F259EA-AEBA-4A82-9725-421338F74DBE.txt, suggested name: "mac-gallery-panel-typed-de-size_0_9D46C7FB-08BD-4693-AD45-2F5AF0CCD0B6.txt"
+2026-10-21T07:01:34.5820130Z File: EFBA9B22-B47C-40BA-8513-7721328D7EF9.png, suggested name: "mac-gallery-panel-typed-de_0_915A1E7C-234A-4306-BE17-3D98652E6658.png"
+2026-10-21T07:01:34.5821200Z File: EC0B08BA-9C2B-447D-92C0-C257E9601E21.png, suggested name: "mac-gallery-panel-de_0_99AE143D-C2D7-4FA9-9BA2-9BCF39C4ED83.png"
+2026-10-21T07:01:34.5822230Z File: 03F7FC19-3E03-4A51-9432-59DB12081B4C.txt, suggested name: "mac-gallery-panel-typed-de-hierarchy_0_1F0F408D-C2E0-4583-A7B8-0D47232B1E8A.txt"
+2026-10-21T07:01:34.5822800Z 
+2026-10-21T07:01:34.5823080Z Exported 2 attachments for: MacGalleryTests/testSettingsDark():
+2026-10-21T07:01:34.5823870Z File: 5F4ED2C5-7DDA-4B15-AE81-628A404CB137.png, suggested name: "mac-gallery-settings-dark_0_0759024E-D1E7-435B-9267-1DB03916377D.png"
+2026-10-21T07:01:34.5824820Z File: E307CCB5-E8AA-483D-9FAE-899B475AD0FE.txt, suggested name: "mac-gallery-settings-dark-window-size_0_E43A2776-0728-433D-8E84-4D29E86876AA.txt"
+2026-10-21T07:01:34.5825450Z 
+2026-10-21T07:01:34.5825740Z Exported 2 attachments for: MacGalleryTests/testSettingsLight():
+2026-10-21T07:01:34.5826510Z File: 9A49BA69-A819-499A-9123-A8D045D6700C.png, suggested name: "mac-gallery-settings-light_0_70F4228E-06A6-4835-B995-1B88A27DEDA4.png"
+2026-10-21T07:01:34.5827630Z File: 3BAFAC6D-2797-49DA-BA9E-50E526621315.txt, suggested name: "mac-gallery-settings-light-window-size_0_BD5EBC00-E164-49E8-B4F2-5BF049187A2A.txt"
+2026-10-21T07:01:34.5828400Z 
+2026-10-21T07:01:34.5828900Z Generated manifest file with attachment details: /Users/runner/work/loose-ends/loose-ends/raw-MacGallery/manifest.json
+2026-10-21T07:01:35.7434560Z Exported 1 attachment for: MacDetailClickTests/testCompleteWithAnOpenSubtaskAsks():
+2026-10-21T07:01:35.7436830Z File: FF5945C3-F994-47C1-8F5F-2FB5D6B9D7A1.png, suggested name: "mac-gallery-565-4-complete-asks_0_23D7F213-B075-442A-84E2-416B0C35D186.png"
+2026-10-21T07:01:35.7438270Z 
+2026-10-21T07:01:35.7439020Z Exported 2 attachments for: MacDetailClickTests/testFieldsOpensFromTheMiddleOfItsRow():
+2026-10-21T07:01:35.7442110Z File: A9410CEA-4E68-4820-AA75-211CBAD767A2.png, suggested name: "mac-gallery-573-screen-after-click_0_4BEDDF6F-38C5-4166-AB45-134B9D46CEB5.png"
+2026-10-21T07:01:35.7454360Z File: 0600D0E0-E957-46A9-8CB9-9AFA92D095C7.png, suggested name: "mac-gallery-573-fields-from-row-middle_0_672B62AA-4540-42AC-A829-A66FDA78CE9C.png"
+2026-10-21T07:01:35.7456820Z 
+2026-10-21T07:01:35.7459680Z Exported 1 attachment for: MacDetailClickTests/testFileOpensTheOpenPanel():
+2026-10-21T07:01:35.7461980Z File: D1E053E2-C593-48D7-8111-818E54F66C77.png, suggested name: "mac-gallery-544-4-file-panel_0_FB0E7F64-2F4B-4411-AD5B-6092A4238A30.png"
+2026-10-21T07:01:35.7462610Z 
+2026-10-21T07:01:35.7462900Z Exported 1 attachment for: MacDetailClickTests/testFileOpensTheOpenPanelFromTheStartPage():
+2026-10-21T07:01:35.7463870Z File: 9FEAB8C7-ED4C-4C92-AF03-4544B4BDE40A.png, suggested name: "mac-gallery-544-6-file-panel-from-start_0_FE8C1B61-E661-4074-A8F9-97D901065C3B.png"
+2026-10-21T07:01:35.7464530Z 
+2026-10-21T07:01:35.7465090Z Exported 1 attachment for: MacDetailClickTests/testNoteTakesAClickAndIsSaved():
+2026-10-21T07:01:35.7466200Z File: 107C95CA-C3CC-436E-BDDB-DF5D4943BE15.png, suggested name: "mac-gallery-544-2-note-saved_0_DE787A41-B640-4D05-AB90-DFD5E9C4FCFD.png"
+2026-10-21T07:01:35.7466740Z 
+2026-10-21T07:01:35.7467880Z Exported 1 attachment for: MacDetailClickTests/testPhotoOpensThePhotoPicker():
+2026-10-21T07:01:35.7471240Z File: 1F551829-BF2C-4F61-8A4B-76E9FE415EF7.png, suggested name: "mac-gallery-544-5-photo-picker_0_2219F099-4623-48B3-B3CE-58FB41140FB1.png"
+2026-10-21T07:01:35.7471850Z 
+2026-10-21T07:01:35.7472150Z Exported 1 attachment for: MacDetailClickTests/testSubtaskIsAddedByClickAndCheckedByClick():
+2026-10-21T07:01:35.7473400Z File: A5B5BDE5-485B-4E51-A00E-B73B6EA3A668.png, suggested name: "mac-gallery-544-3-subtask-checked_0_9606C0BE-219A-49A4-9FE7-FF1B24486F62.png"
+2026-10-21T07:01:35.7473940Z 
+2026-10-21T07:01:35.7475330Z Exported 3 attachments for: MacDetailClickTests/testSubtaskOpensItsOwnDetailAndLeadsBack():
+2026-10-21T07:01:35.7477710Z File: 51A86D8E-B868-4752-979B-B567D07B3BE0.png, suggested name: "mac-gallery-565-3-subtask-detail_0_8004F270-1544-4FB7-A64F-EE0FA0AD17A6.png"
+2026-10-21T07:01:35.7480440Z File: 26C4D1BB-8C25-4536-A9AB-54B8369A2608.png, suggested name: "mac-gallery-565-2-subtask-line_0_1A1080C5-DFAA-43C1-B396-97750DE5F3C3.png"
+2026-10-21T07:01:35.7482850Z File: A30E6BC8-756A-4C62-A197-9C63F785206F.png, suggested name: "mac-gallery-565-1-subtask-field_0_E41AB421-F283-4C5F-9ABF-D83AD49A37A6.png"
+2026-10-21T07:01:35.7483390Z 
+2026-10-21T07:01:35.7483740Z Exported 1 attachment for: MacDetailClickTests/testTitleTakesAClickAndKeepsTheNewWords():
+2026-10-21T07:01:35.7484900Z File: 0BC7CB2F-4894-4812-8F4F-C11EB7100DE4.png, suggested name: "mac-gallery-544-1-title-typed_0_27AF451F-F60E-4DCF-8D78-6CA4DCEFDBB0.png"
+2026-10-21T07:01:35.7485890Z 
+2026-10-21T07:01:35.7486160Z Exported 1 attachment for: MacKeyboardTests/testArrowsSelectAndSpaceCompletes():
+2026-10-21T07:01:35.7486870Z File: 41B733FA-C159-463B-BD28-7CDD218A6F31.png, suggested name: "mac-gallery-480-1-space-undo-window_0_54EF51D7-4858-4520-89D1-A6AC5A17F678.png"
+2026-10-21T07:01:35.7487380Z 
+2026-10-21T07:01:35.7487600Z Exported 10 attachments for: MacKeyboardTests/testClickOpensAndMarks():
+2026-10-21T07:01:35.7488160Z File: 8E274C35-AC54-4179-A409-2218623D88FE, suggested name: "Synthesized Event 2026-10-21 at 06.58.36 AM"
+2026-10-21T07:01:35.7488860Z File: 9D2519A2-F7C2-474C-A2CF-DA0BED3EAE5D, suggested name: "Synthesized Event 2026-10-21 at 06.58.31 AM"
+2026-10-21T07:01:35.7489540Z File: B89D4287-6F90-496A-8B5A-4EC91F2D8324, suggested name: "Synthesized Event 2026-10-21 at 06.58.29 AM"
+2026-10-21T07:01:35.7490280Z File: 1213BBEB-5C65-428E-8F2E-3515DA0197C5, suggested name: "Synthesized Event 2026-10-21 at 06.58.25 AM"
+2026-10-21T07:01:35.7491060Z File: 5C25A8A8-2108-47AF-AAA7-F108E38774DE, suggested name: "Synthesized Event 2026-10-21 at 06.58.24 AM"
+2026-10-21T07:01:35.7492060Z File: 1F5E1D6C-D93E-4D09-949F-BA93A8D5635A, suggested name: "Synthesized Event 2026-10-21 at 06.58.20 AM"
+2026-10-21T07:01:35.7492770Z File: 6309AABE-EEFC-4DE4-B255-B0AB0F1ADA24, suggested name: "Synthesized Event 2026-10-21 at 06.58.19 AM"
+2026-10-21T07:01:35.7493370Z File: A03DE793-ED04-4F11-B701-1826979CA06A, suggested name: "Synthesized Event 2026-10-21 at 06.58.16 AM"
+2026-10-21T07:01:35.7494480Z File: 5F91721E-290F-47BA-A409-33EFDF9BCBD2, suggested name: "Synthesized Event 2026-10-21 at 06.58.15 AM"
+2026-10-21T07:01:35.7495240Z File: DD0B1FB2-167A-4029-863C-1A9678810180.mp4, suggested name: "Screen Recording 2026-10-21 at 06.58.08 AM.mp4"
+2026-10-21T07:01:35.7495580Z 
+2026-10-21T07:01:35.7495800Z Skipped export for MacKeyboardTests/testDeleteAsksFirst(): no matching attachments
+2026-10-21T07:01:35.7496070Z 
+2026-10-21T07:01:35.7496240Z Exported 1 attachment for: MacKeyboardTests/testSelectionPhotoDark():
+2026-10-21T07:01:35.7496910Z File: CF2C30D7-DE6D-4623-8B6F-3495E77B7CA8.png, suggested name: "mac-gallery-480-selection-dark_0_2EEF6BD6-095C-47F9-A413-452E33BF12E3.png"
+2026-10-21T07:01:35.7497390Z 
+2026-10-21T07:01:35.7497580Z Exported 1 attachment for: MacKeyboardTests/testSelectionPhotoLight():
+2026-10-21T07:01:35.7498170Z File: A5A2783C-8F06-4663-80AE-03B9A3239F98.png, suggested name: "mac-gallery-480-selection-light_0_E1A79C6B-CAF2-4434-AE17-E62406122E14.png"
+2026-10-21T07:01:35.7498690Z 
+2026-10-21T07:01:35.7499020Z Skipped export for MacKeyboardTests/testShortcutsAndContextMenu(): no matching attachments
+2026-10-21T07:01:35.7499370Z 
+2026-10-21T07:01:35.7499630Z Skipped export for MacKeyboardTests/testTextFocusKeepsKeys(): no matching attachments
+2026-10-21T07:01:35.7499920Z 
+2026-10-21T07:01:35.7500270Z Generated manifest file with attachment details: /Users/runner/work/loose-ends/loose-ends/raw-MacDetailClick/manifest.json
+2026-10-21T07:01:35.9276820Z mac-gallery-480-1-space-undo-window.png
+2026-10-21T07:01:35.9382120Z mac-gallery-480-selection-dark.png
+2026-10-21T07:01:35.9483990Z mac-gallery-480-selection-light.png
+2026-10-21T07:01:35.9554140Z mac-gallery-544-1-title-typed.png
+2026-10-21T07:01:35.9555150Z mac-gallery-544-2-note-saved.png
+2026-10-21T07:01:35.9555960Z mac-gallery-544-3-subtask-checked.png
+2026-10-21T07:01:35.9558780Z mac-gallery-544-4-file-panel.png
+2026-10-21T07:01:35.9560030Z mac-gallery-544-5-photo-picker.png
+2026-10-21T07:01:35.9560540Z mac-gallery-544-6-file-panel-from-start.png
+2026-10-21T07:01:35.9561460Z mac-gallery-565-1-subtask-field.png
+2026-10-21T07:01:35.9561970Z mac-gallery-565-2-subtask-line.png
+2026-10-21T07:01:35.9562670Z mac-gallery-565-3-subtask-detail.png
+2026-10-21T07:01:35.9563240Z mac-gallery-565-4-complete-asks.png
+2026-10-21T07:01:35.9563950Z mac-gallery-573-fields-from-row-middle.png
+2026-10-21T07:01:35.9565330Z mac-gallery-573-screen-after-click.png
+2026-10-21T07:01:35.9566300Z mac-gallery-dark-1-start.png
+2026-10-21T07:01:35.9567360Z mac-gallery-dark-2-list-new.png
+2026-10-21T07:01:35.9568500Z mac-gallery-dark-3-detail.png
+2026-10-21T07:01:35.9578540Z mac-gallery-dark-4-loose-ends.png
+2026-10-21T07:01:35.9578990Z mac-gallery-dark-4-start-again.png
+2026-10-21T07:01:35.9579520Z mac-gallery-dark-5-loose-ends-scrolled.png
+2026-10-21T07:01:35.9579920Z mac-gallery-dark-6-loose-ends-no-sidebar.png
+2026-10-21T07:01:35.9580430Z mac-gallery-dark-7-loose-ends-no-sidebar-scrolled.png
+2026-10-21T07:01:35.9580790Z mac-gallery-dark-8-calendar-ask.png
+2026-10-21T07:01:35.9581070Z mac-gallery-dark-9-calendar-ask-timed.png
+2026-10-21T07:01:35.9581330Z mac-gallery-dark-window-size.txt
+2026-10-21T07:01:35.9581560Z mac-gallery-light-1-start.png
+2026-10-21T07:01:35.9581770Z mac-gallery-light-2-list-new.png
+2026-10-21T07:01:35.9582000Z mac-gallery-light-3-detail.png
+2026-10-21T07:01:35.9582220Z mac-gallery-light-4-loose-ends.png
+2026-10-21T07:01:35.9582490Z mac-gallery-light-4-start-again.png
+2026-10-21T07:01:35.9582750Z mac-gallery-light-5-loose-ends-scrolled.png
+2026-10-21T07:01:35.9583040Z mac-gallery-light-6-loose-ends-no-sidebar.png
+2026-10-21T07:01:35.9584040Z mac-gallery-light-7-loose-ends-no-sidebar-scrolled.png
+2026-10-21T07:01:35.9584330Z mac-gallery-light-8-calendar-ask.png
+2026-10-21T07:01:35.9584590Z mac-gallery-light-9-calendar-ask-timed.png
+2026-10-21T07:01:35.9584840Z mac-gallery-light-window-size.txt
+2026-10-21T07:01:35.9585080Z mac-gallery-panel-dark-hierarchy.txt
+2026-10-21T07:01:35.9585310Z mac-gallery-panel-dark-size.txt
+2026-10-21T07:01:35.9585530Z mac-gallery-panel-dark.png
+2026-10-21T07:01:35.9586130Z mac-gallery-panel-de-saved-in-new.png
+2026-10-21T07:01:35.9586390Z mac-gallery-panel-de.png
+2026-10-21T07:01:35.9586620Z mac-gallery-panel-diagnosis-hierarchy.txt
+2026-10-21T07:01:35.9586870Z mac-gallery-panel-diagnosis-size.txt
+2026-10-21T07:01:35.9587110Z mac-gallery-panel-diagnosis.png
+2026-10-21T07:01:35.9587320Z mac-gallery-panel-light-hierarchy.txt
+2026-10-21T07:01:35.9587560Z mac-gallery-panel-light-size.txt
+2026-10-21T07:01:35.9587800Z mac-gallery-panel-light.png
+2026-10-21T07:01:35.9588080Z mac-gallery-panel-listening-hierarchy.txt
+2026-10-21T07:01:35.9588350Z mac-gallery-panel-listening-size.txt
+2026-10-21T07:01:35.9588590Z mac-gallery-panel-listening.png
+2026-10-21T07:01:35.9588820Z mac-gallery-panel-typed-de-hierarchy.txt
+2026-10-21T07:01:35.9589090Z mac-gallery-panel-typed-de-size.txt
+2026-10-21T07:01:35.9589350Z mac-gallery-panel-typed-de.png
+2026-10-21T07:01:35.9589570Z mac-gallery-settings-dark-window-size.txt
+2026-10-21T07:01:35.9589820Z mac-gallery-settings-dark.png
+2026-10-21T07:01:35.9590040Z mac-gallery-settings-light-window-size.txt
+2026-10-21T07:01:35.9590290Z mac-gallery-settings-light.png
+2026-10-21T07:01:35.9820650Z ##[group]Run actions/upload-artifact@v7
+2026-10-21T07:01:35.9820930Z with:
+2026-10-21T07:01:35.9821080Z   name: MacGallery
+2026-10-21T07:01:35.9821230Z   path: MacGallery
+2026-10-21T07:01:35.9821600Z   if-no-files-found: warn
+2026-10-21T07:01:35.9821770Z   compression-level: 6
+2026-10-21T07:01:35.9821940Z   overwrite: false
+2026-10-21T07:01:35.9822110Z   include-hidden-files: false
+2026-10-21T07:01:35.9822300Z   archive: true
+2026-10-21T07:01:35.9822460Z ##[endgroup]
+2026-10-21T07:01:36.8949350Z With the provided path, there will be 58 files uploaded
+2026-10-21T07:01:36.8951240Z Artifact name is valid!
+2026-10-21T07:01:36.8952150Z Root directory input is valid!
+2026-10-21T07:01:37.2134050Z Uploading artifact: MacGallery.zip
+2026-10-21T07:01:37.2197950Z Beginning upload of artifact content to blob storage
+2026-10-21T07:01:38.2693550Z Uploaded bytes 2799673
+2026-10-21T07:01:38.3423060Z Finished uploading artifact content to blob storage!
+2026-10-21T07:01:38.3428010Z SHA256 digest of uploaded artifact is d55c1690f12171341d871fe99fe76c16e791b1cce848d6952c35694886bca14a
+2026-10-21T07:01:38.3429170Z Finalizing artifact upload
+2026-10-21T07:01:38.7508910Z Artifact MacGallery successfully finalized. Artifact ID 12327365928
+2026-10-21T07:01:38.7510710Z Artifact MacGallery has been successfully uploaded! Final size is 2799673 bytes. Artifact ID is 12327365928
+2026-10-21T07:01:38.7517280Z Artifact download URL: https://github.com/henemm/loose-ends/actions/runs/39556574796/artifacts/12327365928
+2026-10-21T07:01:38.7655760Z ##[group]Run actions/upload-artifact@v7
+2026-10-21T07:01:38.7656040Z with:
+2026-10-21T07:01:38.7656270Z   name: MacGalleryResults
+2026-10-21T07:01:38.7656660Z   path: MacGallery.xcresult
+mac-gallery.log
+MacDetailClick.xcresult
+mac-click.log
+mac-click-build.log
+
+2026-10-21T07:01:38.7657150Z   if-no-files-found: warn
+2026-10-21T07:01:38.7657350Z   compression-level: 6
+2026-10-21T07:01:38.7668520Z   overwrite: false
+2026-10-21T07:01:38.7668830Z   include-hidden-files: false
+2026-10-21T07:01:38.7669080Z   archive: true
+2026-10-21T07:01:38.7669320Z ##[endgroup]
+2026-10-21T07:01:39.2132110Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-10-21T07:01:39.2135050Z The least common ancestor is /Users/runner/work/loose-ends/loose-ends. This will be the root directory of the artifact
+2026-10-21T07:01:39.2136370Z With the provided path, there will be 2281 files uploaded
+2026-10-21T07:01:39.2139490Z Artifact name is valid!
+2026-10-21T07:01:39.2140050Z Root directory input is valid!
+2026-10-21T07:01:39.6639440Z Uploading artifact: MacGalleryResults.zip
+2026-10-21T07:01:39.6729840Z Beginning upload of artifact content to blob storage
+2026-10-21T07:01:41.0830770Z Uploaded bytes 8388608
+2026-10-21T07:01:41.3905610Z Uploaded bytes 16777216
+2026-10-21T07:01:41.6251680Z Uploaded bytes 25165824
+2026-10-21T07:01:41.7055430Z Uploaded bytes 33554432
+2026-10-21T07:01:41.9293730Z Uploaded bytes 41943040
+2026-10-21T07:01:42.0279340Z Uploaded bytes 50331648
+2026-10-21T07:01:42.3510880Z Uploaded bytes 58720256
+2026-10-21T07:01:42.7561090Z Uploaded bytes 67108864
+2026-10-21T07:01:43.0620490Z Uploaded bytes 75497472
+2026-10-21T07:01:43.3520920Z Uploaded bytes 83886080
+2026-10-21T07:01:43.6462510Z Uploaded bytes 92274688
+2026-10-21T07:01:43.9514950Z Uploaded bytes 100663296
+2026-10-21T07:01:44.6026940Z Uploaded bytes 109051904
+2026-10-21T07:01:45.2001630Z Uploaded bytes 117440512
+2026-10-21T07:01:45.4310950Z Uploaded bytes 125829120
+2026-10-21T07:01:45.7447250Z Uploaded bytes 134217728
+2026-10-21T07:01:46.0539300Z Uploaded bytes 142606336
+2026-10-21T07:01:47.6400760Z Uploaded bytes 150673076
+2026-10-21T07:01:47.7127370Z Finished uploading artifact content to blob storage!
+2026-10-21T07:01:47.7131490Z SHA256 digest of uploaded artifact is 24c57580a97c369442ac33f6de20268650710ecd74345fc3ad49a07b56c93f57
+2026-10-21T07:01:47.7133100Z Finalizing artifact upload
+2026-10-21T07:01:48.1706820Z Artifact MacGalleryResults successfully finalized. Artifact ID 12326778531
+2026-10-21T07:01:48.1709010Z Artifact MacGalleryResults has been successfully uploaded! Final size is 150673076 bytes. Artifact ID is 12326778531
+2026-10-21T07:01:48.1720310Z Artifact download URL: https://github.com/henemm/loose-ends/actions/runs/39556574796/artifacts/12326778531
+2026-10-21T07:01:48.2158400Z Post job cleanup.
+2026-10-21T07:01:48.3760880Z [command]/opt/homebrew/bin/git version
+2026-10-21T07:01:48.4296040Z git version 2.56.0
+2026-10-21T07:01:48.4326310Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/b23cde81-650f-4c33-8eaf-0c2ebbafb35b/.gitconfig'
+2026-10-21T07:01:48.4342650Z Temporarily overriding HOME='/Users/runner/work/_temp/b23cde81-650f-4c33-8eaf-0c2ebbafb35b' before making global git config changes
+2026-10-21T07:01:48.4346990Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-21T07:01:48.4351060Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/loose-ends/loose-ends
+2026-10-21T07:01:48.4541910Z Removing SSH command configuration
+2026-10-21T07:01:48.4543680Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T07:01:48.4744300Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-21T07:01:48.6308700Z Removing HTTP extra header
+2026-10-21T07:01:48.6310510Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T07:01:48.6401310Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-21T07:01:48.8253600Z Removing includeIf entries pointing to credentials config files
+2026-10-21T07:01:48.8359180Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-21T07:01:48.8481940Z includeif.gitdir:/Users/runner/work/loose-ends/loose-ends/.git.path
+2026-10-21T07:01:48.8590610Z includeif.gitdir:/Users/runner/work/loose-ends/loose-ends/.git/worktrees/*.path
+2026-10-21T07:01:48.8716930Z includeif.gitdir:/github/workspace/.git.path
+2026-10-21T07:01:48.8835060Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-21T07:01:48.9145210Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/loose-ends/loose-ends/.git.path
+2026-10-21T07:01:48.9275380Z /Users/runner/work/_temp/git-credentials-0efd6400-cd5d-45a8-a1f0-2784aa38c01e.config
+2026-10-21T07:01:48.9443830Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/Users/runner/work/loose-ends/loose-ends/.git.path \/Users\/runner\/work\/_temp\/git\-credentials\-0efd6400\-cd5d\-45a8\-a1f0\-2784aa38c01e\.config
+2026-10-21T07:01:48.9574550Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/loose-ends/loose-ends/.git/worktrees/*.path
+2026-10-21T07:01:48.9615980Z /Users/runner/work/_temp/git-credentials-0efd6400-cd5d-45a8-a1f0-2784aa38c01e.config
+2026-10-21T07:01:48.9758860Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/Users/runner/work/loose-ends/loose-ends/.git/worktrees/*.path \/Users\/runner\/work\/_temp\/git\-credentials\-0efd6400\-cd5d\-45a8\-a1f0\-2784aa38c01e\.config
+2026-10-21T07:01:48.9776480Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-21T07:01:48.9781840Z /github/runner_temp/git-credentials-0efd6400-cd5d-45a8-a1f0-2784aa38c01e.config
+2026-10-21T07:01:48.9806520Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-0efd6400\-cd5d\-45a8\-a1f0\-2784aa38c01e\.config
+2026-10-21T07:01:48.9852310Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-21T07:01:48.9868330Z /github/runner_temp/git-credentials-0efd6400-cd5d-45a8-a1f0-2784aa38c01e.config
+2026-10-21T07:01:48.9886880Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-0efd6400\-cd5d\-45a8\-a1f0\-2784aa38c01e\.config
+2026-10-21T07:01:48.9978360Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-21T07:01:49.0979610Z Removing credentials config '/Users/runner/work/_temp/git-credentials-0efd6400-cd5d-45a8-a1f0-2784aa38c01e.config'
+2026-10-21T07:01:49.1143710Z Cleaning up orphan processes

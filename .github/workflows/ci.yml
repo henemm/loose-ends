@@ -389,7 +389,7 @@ jobs:
           if [ -z "$app" ]; then echo "::error::No app in build/click"; ls build/click/Build/Products/Debug; exit 1; fi
           codesign --force --sign - --entitlements "$RUNNER_TEMP/mac-sandbox.plist" "$app"
           codesign -d --entitlements - "$app"
-      - name: Run the click and keyboard tests in the sandbox (#544, #480)
+      - name: Run the click test in the sandbox (#544)
         if: ${{ !cancelled() }}
         run: |
           set -o pipefail
