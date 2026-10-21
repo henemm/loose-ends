@@ -246,9 +246,6 @@ final class CalendarTargetTests: XCTestCase {
         return name
     }
 
-    /// The system asks once per install, in the simulator's own language. Waits a short while for the
-    /// prompt itself (#341), not 30 s for the row: a simulator that already granted access shows none. A
-    /// prompt that comes later (slow CI runner, #203) is caught by the interruption monitor on the next gesture.
     @MainActor
     /// The duration is a pop-up menu (#574): open it, then pick "1 h".
     private func chooseHour(from duration: XCUIElement, in app: XCUIApplication) {
@@ -258,6 +255,10 @@ final class CalendarTargetTests: XCTestCase {
         hour.tap()
     }
 
+    /// The system asks once per install, in the simulator's own language. CI and `sim.sh boot` grant access
+    /// in advance with `simctl privacy grant` (`scripts/sim_prepare.sh`, #578), so no prompt should come. The
+    /// 3 s search for the prompt stays as a fallback only: under iOS 27 the interruption handler does not see
+    /// SpringBoard alerts reliably (https://developer.apple.com/forums/thread/737880).
     private func allowCalendarAccessIfAsked() {
         let alert = XCUIApplication(bundleIdentifier: "com.apple.springboard").alerts.firstMatch
         guard alert.waitForExistence(timeout: 3) else { return }

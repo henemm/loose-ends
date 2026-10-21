@@ -1,0 +1,83 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "6552EE18-99E1-4B92-9AF7-0A5E0343314E",
+        "deviceName" : "LE-578-fresh",
+        "exportedFileName" : "535BEFB8-BE1D-4DF4-9A08-BBE17FDFD4DB.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "detail-first-stays_0_29316169-9D08-431E-8750-80B81590C254.png",
+        "timestamp" : 1792564290.878
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "6552EE18-99E1-4B92-9AF7-0A5E0343314E",
+        "deviceName" : "LE-578-fresh",
+        "exportedFileName" : "8EEBCC1B-5F3E-42D6-9DC0-8BC710F59CF2.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "detail-default-stamped_0_4817EA3C-1382-486C-B303-6BA2AB54976C.png",
+        "timestamp" : 1792564285.705
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "6552EE18-99E1-4B92-9AF7-0A5E0343314E",
+        "deviceName" : "LE-578-fresh",
+        "exportedFileName" : "BB288CA5-ACA3-495C-B273-0154F88E4E02.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "settings-default-chosen_0_98613E6E-AFD5-453B-B8A0-D641154FE182.png",
+        "timestamp" : 1792564255.778
+      }
+    ],
+    "testIdentifier" : "CalendarTargetTests/testDefaultCalendarIsStampedOnSwitchOn()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/CalendarTargetTests/testDefaultCalendarIsStampedOnSwitchOn"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "6552EE18-99E1-4B92-9AF7-0A5E0343314E",
+        "deviceName" : "LE-578-fresh",
+        "exportedFileName" : "7146BB9F-215D-4C10-B1B0-5FA5B0D5F6DC.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "settings-default-calendar_0_8A1270C9-E47D-4A24-9FAB-65F644749022.png",
+        "timestamp" : 1792564321.919
+      }
+    ],
+    "testIdentifier" : "CalendarTargetTests/testSettingsShowDefaultCalendarRow()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/CalendarTargetTests/testSettingsShowDefaultCalendarRow"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "6552EE18-99E1-4B92-9AF7-0A5E0343314E",
+        "deviceName" : "LE-578-fresh",
+        "exportedFileName" : "DE818F76-207C-430A-BD54-68C5E1161002.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "detail-chosen-calendar_0_992A75D7-DAB5-4735-8069-AF0DA071B85E.png",
+        "timestamp" : 1792564358.91
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "6552EE18-99E1-4B92-9AF7-0A5E0343314E",
+        "deviceName" : "LE-578-fresh",
+        "exportedFileName" : "1307A5F7-F355-48A2-9DAE-B9059D34691A.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "calendar-picker_0_A4BB8A7A-4FFD-42D2-A4ED-71C285B21D3D.png",
+        "timestamp" : 1792564355.776
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "6552EE18-99E1-4B92-9AF7-0A5E0343314E",
+        "deviceName" : "LE-578-fresh",
+        "exportedFileName" : "86149329-493A-4D6B-B351-A7F4FB0E6A43.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "detail-target-calendar_0_A20EFDF2-F7BE-4F1F-A08F-7EFB677575C3.png",
+        "timestamp" : 1792564353.732
+      }
+    ],
+    "testIdentifier" : "CalendarTargetTests/testSwitchOnShowsTargetCalendar()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/CalendarTargetTests/testSwitchOnShowsTargetCalendar"
+  }
+]

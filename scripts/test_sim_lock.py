@@ -193,15 +193,88 @@ class LockOrderTests(unittest.TestCase):
                     self.assertLess(lock, pos, f"{name}: {step} vor acquire_testlock")
 
 
-class KeyboardHintTests(unittest.TestCase):
-    """Frischer Simulator: der Tastatur-Hinweis „Speed up your typing…“ hängt XCTest auf (#341, AC-14)."""
+class SimPrepareTests(unittest.TestCase):
+    """Frischer Simulator vorbereiten (#341 Tastatur-Hinweis, #578 Kalender-Dialog): ein Skript für sim.sh und CI."""
 
-    def test_boot_marks_continuous_path_hint_shown(self):
+    PREPARE = SCRIPTS / "sim_prepare.sh"
+    UDID = "11111111-2222-3333-4444-555555555555"
+
+    def setUp(self):
+        self.root = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.root, True)
+        self.calls = self.root / "calls.log"
+        stub = self.root / "xcrun"
+        stub.write_text('#!/bin/bash\necho "$*" >> "$CALLS"\n'
+                        'case "$*" in *"$FAIL_ON"*) [ -n "$FAIL_ON" ] && { echo "stub: $FAIL_ON schlägt fehl" >&2; exit 1; };; esac\n'
+                        "exit 0\n")
+        stub.chmod(0o755)
+
+    def run_prepare(self, *args, fail_on=""):
+        env = dict(os.environ, PATH=f"{self.root}:{os.environ['PATH']}", CALLS=str(self.calls), FAIL_ON=fail_on)
+        return subprocess.run(["bash", str(self.PREPARE), *args], env=env, capture_output=True, text=True, timeout=20)
+
+    def logged(self):
+        return self.calls.read_text().splitlines() if self.calls.exists() else []
+
+    def test_prepare_script_sets_hint_and_grants_calendar(self):
+        self.assertTrue(self.PREPARE.exists(), "scripts/sim_prepare.sh fehlt")
+        result = self.run_prepare(self.UDID)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        calls = self.logged()
+        self.assertIn(f"simctl spawn {self.UDID} defaults write com.apple.keyboard.preferences "
+                      "DidShowContinuousPathIntroduction -bool true", calls)
+        self.assertIn(f"simctl privacy {self.UDID} grant calendar com.henning.looseends", calls)
+        self.assertEqual(result.stdout.strip().splitlines(),
+                         [f"Simulator prepared: keyboard hint off, calendar access granted for "
+                          f"com.henning.looseends ({self.UDID})"])
+
+    def test_prepare_script_takes_bundle_id(self):
+        self.assertTrue(self.PREPARE.exists(), "scripts/sim_prepare.sh fehlt")
+        result = self.run_prepare(self.UDID, "com.example.other")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn(f"simctl privacy {self.UDID} grant calendar com.example.other", self.logged())
+
+    def test_prepare_script_fails_loudly(self):
+        self.assertTrue(self.PREPARE.exists(), "scripts/sim_prepare.sh fehlt")
+        for failing, word in (("privacy", "privacy"), ("defaults write", "defaults")):
+            self.calls.unlink(missing_ok=True)
+            result = self.run_prepare(self.UDID, fail_on=failing)
+            self.assertNotEqual(result.returncode, 0, f"{failing}: Fehler verschluckt")
+            self.assertIn(word, result.stderr, f"{failing}: Meldung nennt den Befehl nicht")
+            self.assertNotIn("Simulator prepared", result.stdout, f"{failing}: Beleg-Zeile trotz Fehler")
+
+    def test_prepare_script_needs_udid(self):
+        self.assertTrue(self.PREPARE.exists(), "scripts/sim_prepare.sh fehlt")
+        result = self.run_prepare()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(self.logged(), [], "ohne UDID darf nichts aufgerufen werden")
+
+    def test_boot_uses_prepare_script(self):
         code = function_source("cmd_boot")
-        write = code.find("defaults write com.apple.keyboard.preferences DidShowContinuousPathIntroduction -bool true")
-        self.assertGreaterEqual(write, 0, "cmd_boot schreibt DidShowContinuousPathIntroduction nicht")
-        self.assertLess(code.find("bootstatus"), write, "Einstellung vor dem fertigen Boot geschrieben")
-        self.assertIn("|| warn", code[write:], "Fehler beim Schreiben wird verschluckt")
+        call = code.find("sim_prepare.sh")
+        self.assertGreaterEqual(call, 0, "cmd_boot ruft sim_prepare.sh nicht")
+        self.assertLess(code.find("bootstatus"), call, "Vorbereitung vor dem fertigen Boot")
+        self.assertIn("|| warn", code[call:], "Fehler der Vorbereitung wird verschluckt")
+        self.assertNotIn("DidShowContinuousPathIntroduction", code, "zweiter Ort für die Einstellung in cmd_boot")
+
+    def test_ci_prepares_simulator_before_tests(self):
+        text = (SCRIPTS.parent / ".github" / "workflows" / "ci.yml").read_text()
+        job = text[text.index("\n  ui-smoke:"):]
+        nxt = re.search(r"\n  [a-z0-9-]+:\n", job[5:])
+        job = job[:nxt.start() + 5] if nxt else job
+        wait = job.find("Wait until the simulator has finished booting")
+        prepare = job.find('scripts/sim_prepare.sh "$SIM_UDID"')
+        run = job.find("Run UI smoke tests")
+        self.assertGreaterEqual(wait, 0, "ui-smoke wartet nicht auf den fertigen Boot (Schritt fehlt)")
+        self.assertGreaterEqual(prepare, 0, "ui-smoke ruft scripts/sim_prepare.sh \"$SIM_UDID\" nicht")
+        self.assertGreaterEqual(run, 0, "ui-smoke hat keinen Schritt „Run UI smoke tests“")
+        self.assertLess(wait, prepare, "Vorbereitung vor dem fertigen Boot")
+        self.assertLess(prepare, run, "Vorbereitung nach dem Testlauf")
+        start = job.find("- name: Prepare the simulator")
+        self.assertGreaterEqual(start, 0, "ui-smoke hat keinen Schritt „Prepare the simulator“")
+        block = job[start:job.find("\n      - name:", start)]
+        for swallow in ("continue-on-error", "|| true"):
+            self.assertNotIn(swallow, block, f"Fehler der Vorbereitung wird verschluckt ({swallow})")
 
 
 class TestLockTests(LockHarness):

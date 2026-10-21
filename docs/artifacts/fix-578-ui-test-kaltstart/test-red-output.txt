@@ -1,0 +1,65 @@
+test_boot_uses_prepare_script (scripts.test_sim_lock.SimPrepareTests.test_boot_uses_prepare_script) ... FAIL
+test_ci_prepares_simulator_before_tests (scripts.test_sim_lock.SimPrepareTests.test_ci_prepares_simulator_before_tests) ... FAIL
+test_prepare_script_fails_loudly (scripts.test_sim_lock.SimPrepareTests.test_prepare_script_fails_loudly) ... FAIL
+test_prepare_script_needs_udid (scripts.test_sim_lock.SimPrepareTests.test_prepare_script_needs_udid) ... FAIL
+test_prepare_script_sets_hint_and_grants_calendar (scripts.test_sim_lock.SimPrepareTests.test_prepare_script_sets_hint_and_grants_calendar) ... FAIL
+test_prepare_script_takes_bundle_id (scripts.test_sim_lock.SimPrepareTests.test_prepare_script_takes_bundle_id) ... FAIL
+
+======================================================================
+FAIL: test_boot_uses_prepare_script (scripts.test_sim_lock.SimPrepareTests.test_boot_uses_prepare_script)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-465-auswahl/scripts/test_sim_lock.py", line 255, in test_boot_uses_prepare_script
+    self.assertGreaterEqual(call, 0, "cmd_boot ruft sim_prepare.sh nicht")
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: -1 not greater than or equal to 0 : cmd_boot ruft sim_prepare.sh nicht
+
+======================================================================
+FAIL: test_ci_prepares_simulator_before_tests (scripts.test_sim_lock.SimPrepareTests.test_ci_prepares_simulator_before_tests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-465-auswahl/scripts/test_sim_lock.py", line 268, in test_ci_prepares_simulator_before_tests
+    self.assertGreaterEqual(prepare, 0, "ui-smoke ruft scripts/sim_prepare.sh \"$SIM_UDID\" nicht")
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: -1 not greater than or equal to 0 : ui-smoke ruft scripts/sim_prepare.sh "$SIM_UDID" nicht
+
+======================================================================
+FAIL: test_prepare_script_fails_loudly (scripts.test_sim_lock.SimPrepareTests.test_prepare_script_fails_loudly)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-465-auswahl/scripts/test_sim_lock.py", line 238, in test_prepare_script_fails_loudly
+    self.assertTrue(self.PREPARE.exists(), "scripts/sim_prepare.sh fehlt")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : scripts/sim_prepare.sh fehlt
+
+======================================================================
+FAIL: test_prepare_script_needs_udid (scripts.test_sim_lock.SimPrepareTests.test_prepare_script_needs_udid)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-465-auswahl/scripts/test_sim_lock.py", line 247, in test_prepare_script_needs_udid
+    self.assertTrue(self.PREPARE.exists(), "scripts/sim_prepare.sh fehlt")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : scripts/sim_prepare.sh fehlt
+
+======================================================================
+FAIL: test_prepare_script_sets_hint_and_grants_calendar (scripts.test_sim_lock.SimPrepareTests.test_prepare_script_sets_hint_and_grants_calendar)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-465-auswahl/scripts/test_sim_lock.py", line 220, in test_prepare_script_sets_hint_and_grants_calendar
+    self.assertTrue(self.PREPARE.exists(), "scripts/sim_prepare.sh fehlt")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : scripts/sim_prepare.sh fehlt
+
+======================================================================
+FAIL: test_prepare_script_takes_bundle_id (scripts.test_sim_lock.SimPrepareTests.test_prepare_script_takes_bundle_id)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-465-auswahl/scripts/test_sim_lock.py", line 232, in test_prepare_script_takes_bundle_id
+    self.assertTrue(self.PREPARE.exists(), "scripts/sim_prepare.sh fehlt")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : scripts/sim_prepare.sh fehlt
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.003s
+
+FAILED (failures=6)
