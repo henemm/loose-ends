@@ -44,6 +44,25 @@ enum TitleRule {
         return content.contains { word in noteWords.contains { $0.hasPrefix(word) || word.hasPrefix($0) } }
     }
 
+    /// Whether a model title takes a word from a past task's note (#607): a content word (four letters or
+    /// more) that does not stand in this note but in one of the notes the model was handed as examples.
+    /// "Cider kaltstellen" became "Cider kaltstellen und Altpapier Altglas wegbringen"; one word of the
+    /// note was enough for `isFromNote`. A word the note lacks is rephrasing, allowed; one an example
+    /// carries is a copy. Word starts count both ways, as in `isFromNote`.
+    static func borrows(_ title: String, rawText: String, pastNotes: [String]) -> Bool {
+        let noteWords = contentWords(in: rawText)
+        let pastWords = Set(pastNotes.flatMap { contentWords(in: $0) })
+        guard !pastWords.isEmpty else { return false }
+        func matches(_ word: String, _ other: String) -> Bool { word.hasPrefix(other) || other.hasPrefix(word) }
+        return contentWords(in: title).contains { word in
+            !noteWords.contains { matches(word, $0) } && pastWords.contains { matches(word, $0) }
+        }
+    }
+
+    private static func contentWords(in text: String) -> [String] {
+        RawTextWords.words(in: text).map(RawTextWords.normalized).filter { $0.count >= 4 }
+    }
+
     /// Month and weekday names the model may not bring into a title on its own (#507): it was handed the
     /// capture day and wrote it into "Blumen gießen muss" as "Blumen 17. Oktober, gießen".
     private static let dateWords: Set<String> = Set([

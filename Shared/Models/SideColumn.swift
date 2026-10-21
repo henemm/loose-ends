@@ -1,25 +1,15 @@
 import Foundation
 
-/// What the wide start page's right column shows (#473, draft "Main"): three small blocks, no new
-/// model field. Pure over the tasks; the view only draws.
+/// What the wide start page's right column shows (#473, draft "Main"): two small blocks, no new
+/// model field ("Recently captured" left with #601). Pure over the tasks; the view only draws.
 enum SideColumn {
     static let quickLimit = 3
-    static let recentLimit = 3
     static let dayCount = 5
 
     /// "Quick": the same set as the Quick view (open, not blocked, 15 minutes at most), the first
     /// three by urgency then importance.
     static func quick(in all: [TaskItem]) -> [TaskItem] {
         Array(ViewRules.tasks(for: .quick, in: all).prefix(quickLimit))
-    }
-
-    /// "Recently captured": the last three open top-level tasks, newest first.
-    static func recent(in all: [TaskItem]) -> [TaskItem] {
-        Array(
-            all.filter { $0.parent == nil && $0.isOpen }
-                .sorted { $0.capturedAt > $1.capturedAt }
-                .prefix(recentLimit)
-        )
     }
 
     struct Day: Equatable {

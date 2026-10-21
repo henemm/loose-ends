@@ -92,7 +92,9 @@ final class TaskItem {
     // Relationships (all optional: CloudKit requirement)
     var project: Project?
     var parent: TaskItem?
-    @Relationship(deleteRule: .cascade, inverse: \TaskItem.parent) var subtasks: [TaskItem]?
+    /// Deleting a task lifts its subtasks one level instead of taking them along (Henning, 2026-10-21,
+    /// #605): they stay as tasks of their own, with what they carry.
+    @Relationship(deleteRule: .nullify, inverse: \TaskItem.parent) var subtasks: [TaskItem]?
     @Relationship(inverse: \TaskItem.blocks) var blockedBy: [TaskItem]?
     var blocks: [TaskItem]?
     var contexts: [TaskContext]?

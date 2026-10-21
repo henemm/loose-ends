@@ -308,4 +308,50 @@ import Testing
         #expect(!TitleRule.addsDate("Blumen gießen", rawText: "Blumen gießen muss"))
         #expect(!TitleRule.addsDate("Mai-Fest planen", rawText: "Mai-Fest planen"), "a hyphenated word is one word")
     }
+
+    // MARK: A word of a past task's note (#607)
+
+    @Test("A model title that tacks on an example's note is not written")
+    @MainActor func borrowedModelTitleIsDropped() throws {
+        let store = try TestStore()
+        let task = try CaptureService.save("Cider kaltstellen", via: .app, in: store.context)
+        var draft = EnrichmentDraft()
+        draft.title = EnrichmentDraft.Guess("Cider kaltstellen und Altpapier Altglas wegbringen", confidence: 0.9, reason: "Names the job.")
+        EnrichmentWriter.apply(draft, to: task, contexts: [], projects: [], pastNotes: ["Altpapier Altglas wegbringen"])
+        #expect(task.title == "Cider kaltstellen")
+        #expect(task.titleSourceRaw == nil, "the rule title stays, no AI marker")
+        #expect(!(task.revisions ?? []).contains { $0.field == .title })
+    }
+
+    @Test("First run and Analyze again hand the examples' notes to the guard")
+    @MainActor func coordinatorDropsBorrowedTitle() async throws {
+        let store = try TestStore()
+        let done = TaskItem(rawText: "Altpapier Altglas wegbringen")
+        done.status = .done
+        done.completedAt = Date()
+        store.context.insert(done)
+        let task = try CaptureService.save("Cider kaltstellen", via: .app, in: store.context)
+        var draft = EnrichmentDraft()
+        draft.title = EnrichmentDraft.Guess("Cider kaltstellen und Altpapier Altglas wegbringen", confidence: 0.9, reason: "Stub.")
+        let coordinator = EnrichmentCoordinator(enricher: StubEnricher(draft: draft), container: store.container)
+
+        await coordinator.processPending()
+        #expect(task.processedAt != nil)
+        #expect(task.title == "Cider kaltstellen")
+
+        _ = await coordinator.reanalyze(task)
+        #expect(task.title == "Cider kaltstellen")
+        #expect(!(task.revisions ?? []).contains { $0.field == .title })
+    }
+
+    @Test("Only a word the note lacks and an example carries counts as borrowed")
+    func borrows() {
+        let past = ["Altpapier Altglas wegbringen", "Zahnarzttermin vereinbaren"]
+        #expect(TitleRule.borrows("Cider kaltstellen und Altpapier Altglas wegbringen", rawText: "Cider kaltstellen", pastNotes: past))
+        #expect(TitleRule.borrows("Zahnarzt: Termin vereinbaren", rawText: "Zahnarzt anrufen", pastNotes: past))
+        #expect(!TitleRule.borrows("Cider kalt stellen", rawText: "Cider kaltstellen", pastNotes: past), "rephrasing stays allowed")
+        #expect(!TitleRule.borrows("Altglas wegbringen", rawText: "Heute Altglas wegbringen", pastNotes: past), "the note has it too")
+        #expect(!TitleRule.borrows("Altpapier holen", rawText: "Altpapiertonne holen", pastNotes: past), "a word start of the note")
+        #expect(!TitleRule.borrows("Cider kaltstellen und Altpapier wegbringen", rawText: "Cider kaltstellen", pastNotes: []))
+    }
 }

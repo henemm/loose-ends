@@ -122,22 +122,30 @@ import Testing
             "a done line keeps its traits but no due date, and a blank note is no note")
     }
 
-    @Test("Deleting the parent takes its subtasks with it")
-    @MainActor func deleteCascades() async throws {
+    @Test("Deleting a task lifts its subtasks one level: they stay, as tasks of their own, with what they carry (#605)")
+    @MainActor func deletingParentLiftsSubtasks() async throws {
         let store = try TestStore()
-        let parent = TaskItem(rawText: "Einkaufen")
+        let phone = TaskContext(name: "Telefon", sortOrder: 0)
+        store.context.insert(phone)
+        let parent = TaskItem(rawText: "Umzug")
         parent.status = .active
         store.context.insert(parent)
-        try Subtasks.add("Milch", to: parent, in: store.context)
-        try Subtasks.add("Brot", to: parent, in: store.context)
+        let call = try Subtasks.add("Vermieter anrufen", to: parent, in: store.context)
+        call.contexts = [phone]
+        let boxes = try Subtasks.add("Kartons holen", to: parent, in: store.context)
+        Subtasks.toggle(boxes)
         try store.context.save()
-        let before = try store.context.fetchCount(FetchDescriptor<TaskItem>())
-        #expect(before == 3)
+        let parentID = parent.id
 
         store.context.delete(parent)
         try store.context.save()
 
-        let remaining = try store.context.fetch(FetchDescriptor<TaskItem>())
-        #expect(remaining.isEmpty, "left behind: \(remaining.map(\.rawText))")
+        let left = try store.context.fetch(FetchDescriptor<TaskItem>())
+        #expect(!left.contains { $0.id == parentID }, "the task itself is gone")
+        #expect(Set(left.map(\.rawText)) == ["Vermieter anrufen", "Kartons holen"], "its subtasks stay")
+        #expect(left.allSatisfy { $0.parent == nil }, "they stand on their own now")
+        #expect(call.contexts?.map(\.name) == ["Telefon"], "a lifted subtask keeps what it carries")
+        #expect(boxes.status == .done, "a done one stays done")
+        #expect(ViewRules.tasks(for: .open, in: left).map(\.id) == [call.id], "the open one stands in Loose ends")
     }
 }

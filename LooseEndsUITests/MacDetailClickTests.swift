@@ -300,6 +300,40 @@ final class MacDetailClickTests: XCTestCase {
         app.terminate()
     }
 
+    // MARK: - Writing line (#601)
+
+    /// The writing line under "New" on the Mac start page (#601, form 2): Return makes a task and
+    /// opens the button into a drawer that shows it, the cursor stays; Escape folds the drawer, the
+    /// number keeps counting.
+    @MainActor
+    func testWritingLineOpensTheDrawerAndEscapeFoldsIt() throws {
+        let app = macLaunch(dark: false)
+        _ = macOpenMainWindowIfNeeded(app)
+        let line = macElement("startCaptureField", in: app)
+        XCTAssertTrue(line.waitForExistence(timeout: 20), "No start page")
+        let window = macMainWindow(of: app)
+        line.click()
+        line.typeText("Reifen wechseln am Freitag\n")
+        let row = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "drawerRow_")).firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "Return should put the task into the drawer")
+        XCTAssertTrue(row.label.contains("Reifen wechseln"), "The drawer row shows the sorted title, got \(row.label)")
+        let head = macElement("inboxBar", in: window)
+        XCTAssertTrue(head.waitForExistence(timeout: 5), "The New button should head the drawer")
+        XCTAssertTrue(head.label.contains("1 to look over"), "New counts the task at once, got \(head.label)")
+        XCTAssertTrue(hasKeyboardFocus(line), "The cursor should stay in the line after Return")
+        macShot(window, "mac-gallery-601-1-schublade-offen")
+
+        line.typeText("Mama anrufen\n")
+        XCTAssertTrue(head.label.contains("2 to look over"), "New counts both, got \(head.label)")
+        app.typeKey(.escape, modifierFlags: [])
+        XCTAssertTrue(row.waitForNonExistence(timeout: 10), "Escape should fold the drawer")
+        XCTAssertTrue(head.label.contains("2 to look over"), "The number keeps counting after folding, got \(head.label)")
+        XCTAssertTrue(line.exists, "The line stays under the button")
+        macShot(window, "mac-gallery-601-2-zugeklappt")
+        app.terminate()
+    }
+
     // MARK: - Settings (#573)
 
     /// Henning (2026-10-19, build 92 on the Mac): "you need luck to open Fields". The row took the click
