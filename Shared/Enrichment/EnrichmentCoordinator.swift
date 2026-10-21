@@ -95,6 +95,12 @@ final class EnrichmentCoordinator {
                         logger.info("Enriched \(task.id, privacy: .public): \(written) fields")
                     } catch {
                         logger.error("Enrichment failed for \(task.id, privacy: .public): \(error, privacy: .public)")
+                        // A permanent failure marks the one run as spent, without an AI revision:
+                        // the note would fail the same way on every pass (#535). "Reanalyze" still tries.
+                        if ModelFailure.isPermanent(error) {
+                            task.processedAt = Date()
+                            logger.notice("Model failure for \(task.id, privacy: .public) is permanent, not retried")
+                        }
                     }
                 }
                 // Saving per task, caught per task: a failed save skips this one task, the pass

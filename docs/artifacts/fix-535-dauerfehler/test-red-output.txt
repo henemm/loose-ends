@@ -1,0 +1,48 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/ModelSeamTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelSeamTests.swift
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsTests.swiftmodule
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsTests.abi.json
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsTests.swiftsourceinfo
+[[36mLooseEndsTests[0m] [1mLinking[0m LooseEndsTests
+[[36mLooseEndsTests[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-10-21 07:05:55.010.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-21 07:05:55.010.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-21 07:05:55.010.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+[1mTest run started.[0m
+Suite "Model seam" started
+    [32m✔[0m "A model call that hangs ends at its limit; the pass goes on with the next note" ([31m0.315[0m seconds)
+    [32m✔[0m "A re-analysis whose model call hangs reports that the model did not run" ([31m0.280[0m seconds)
+    [32m✔[0m "An empty answer marks the note as seen by the model and writes nothing" ([33m0.031[0m seconds)
+    [32m✔[0m "Each note gets its own answer" ([33m0.078[0m seconds)
+    [33m⚠️[0m  Test "A guardrail refusal is permanent: rules stay, the note is marked, no revision (#535)" recorded an issue at ModelSeamTests.swift:115:9: Expectation failed: task.processedAt != nil
+    [33m⚠️[0m  Test "A guardrail refusal is permanent: rules stay, the note is marked, no revision (#535)" recorded an issue at ModelSeamTests.swift:118:9: Expectation failed: stub.calls == 1
+    [31m✖[0m [31m"A guardrail refusal is permanent: rules stay, the note is marked, no revision (#535)" (0.069 seconds) 2 issue(s)[0m
+    [33m⚠️[0m  Test "An exceeded context window is permanent too (#535)" recorded an issue at ModelSeamTests.swift:127:9: Expectation failed: task.processedAt != nil
+    [33m⚠️[0m  Test "An exceeded context window is permanent too (#535)" recorded an issue at ModelSeamTests.swift:129:9: Expectation failed: stub.calls == 1
+    [31m✖[0m [31m"An exceeded context window is permanent too (#535)" (0.096 seconds) 2 issue(s)[0m
+    [32m✔[0m "A re-analysis still calls the model for a note it permanently refused (#535)" ([33m0.082[0m seconds)
+    [33m⚠️[0m  Test "Only guardrail and context window are permanent" recorded an issue at ModelSeamTests.swift:162:9: Expectation failed: ModelFailure.isPermanent(LanguageModelError.guardrailViolation(.init(debugDescription: text)))
+    [33m⚠️[0m  Test "Only guardrail and context window are permanent" recorded an issue at ModelSeamTests.swift:163:9: Expectation failed: ModelFailure.isPermanent(LanguageModelError.contextSizeExceeded(.init(contextSize: 10, tokenCount: 20, debugDescription: text)))
+    [31m✖[0m [31m"Only guardrail and context window are permanent" (0.016 seconds) 2 issue(s)[0m
+Suite "Model seam" failed after 1.165 seconds with 6 issue(s)
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-epic-563-auswahl/Logs/Test/Test-LooseEnds-2026.10.21_07-05-43-+0200.xcresult
+[36;1mTesting started[0m
+exit=65
