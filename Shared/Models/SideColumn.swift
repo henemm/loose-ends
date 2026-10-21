@@ -28,11 +28,12 @@ enum SideColumn {
         let isToday: Bool
     }
 
-    /// "Next days": five tiles from today with the number of open, unblocked top-level tasks due
-    /// that day. What is left from earlier days needs a new date first and is not today's (#518).
+    /// "Next days": five tiles from today with the number of open, unblocked tasks due that day, a
+    /// subtask with a date of its own among them (#565). What is left from earlier days needs a new
+    /// date first and is not today's (#518).
     static func days(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [Day] {
         let today = calendar.startOfDay(for: now)
-        let open = all.filter { $0.parent == nil && $0.isOpen && !$0.isBlocked }
+        let open = all.filter { ViewRules.listedByDate($0) && $0.isOpen && !$0.isBlocked }
         return (0..<dayCount).compactMap { offset in
             guard let start = calendar.date(byAdding: .day, value: offset, to: today),
                   let end = calendar.date(byAdding: .day, value: 1, to: start) else { return nil }
