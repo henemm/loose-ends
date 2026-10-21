@@ -1,0 +1,40 @@
+F.EFE
+======================================================================
+ERROR: test_failed_probes_are_counted_apart (__main__.SummaryTests.test_failed_probes_are_counted_apart)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-auswahl/scripts/test_latency_summary.py", line 44, in test_failed_probes_are_counted_apart
+    import latency_summary
+ModuleNotFoundError: No module named 'latency_summary'. Did you mean: 'test_latency_summary'?
+
+======================================================================
+ERROR: test_statistics_per_group (__main__.SummaryTests.test_statistics_per_group)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-auswahl/scripts/test_latency_summary.py", line 31, in test_statistics_per_group
+    import latency_summary
+ModuleNotFoundError: No module named 'latency_summary'. Did you mean: 'test_latency_summary'?
+
+======================================================================
+FAIL: test_cli_reads_a_folder (__main__.SummaryTests.test_cli_reads_a_folder)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-auswahl/scripts/test_latency_summary.py", line 56, in test_cli_reads_a_folder
+    self.assertEqual(run.returncode, 0, run.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-auswahl/scripts/latency_summary.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_missing_group_fails_with_message (__main__.SummaryTests.test_missing_group_fails_with_message)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-auswahl/scripts/test_latency_summary.py", line 71, in test_missing_group_fails_with_message
+    self.assertIn("warm", run.stderr)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'warm' not found in "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-auswahl/scripts/latency_summary.py': [Errno 2] No such file or directory\n"
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.153s
+
+FAILED (failures=2, errors=2)

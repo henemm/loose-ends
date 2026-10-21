@@ -14,6 +14,15 @@ struct RealModelGateTests {
         #expect(text.contains(".enabled(if: RealModel.isAvailable"))
     }
 
+    @Test("The latency suite carries the same gates and the output variable (#534)")
+    func latencySuiteIsGated() throws {
+        let text = try String(contentsOf: Self.testsFolder.appendingPathComponent("RealModelLatencyTests.swift"), encoding: .utf8)
+        #expect(text.contains(".enabled(if: RealModel.isRequested"))
+        #expect(text.contains(".enabled(if: RealModel.isAvailable"))
+        #expect(text.contains(".serialized"))
+        #expect(text.contains("LOOSEENDS_LATENCY_OUT"))
+    }
+
     @Test("No CI workflow sets LOOSEENDS_REAL_MODEL")
     func ciNeverAsksForTheRealModel() throws {
         let workflows = Self.testsFolder.deletingLastPathComponent().appendingPathComponent(".github/workflows")
