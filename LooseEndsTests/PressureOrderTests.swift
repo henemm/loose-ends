@@ -111,7 +111,7 @@ import Testing
         #expect(Self.open(all) == [open.id] + parkedView)
     }
 
-    @Test("Done tasks and subtasks stay out; a waiting task sorts by its own date and weight")
+    @Test("Done tasks and bare subtasks stay out; a dated subtask sorts by its date (#565); a waiting task by its own date and weight")
     @MainActor func doneAndSubtasksOutWaitingInPlace() async throws {
         let store = try TestStore()
         let done = Self.task("Erledigt", due: Self.day(-1), minute: 0, in: store)
@@ -122,9 +122,11 @@ import Testing
         let blocker = Self.task("Schlüssel holen", minute: 3, in: store)
         let waiting = Self.task("Wohnung aufschließen", due: Self.day(0), minute: 4, in: store)
         waiting.blockedBy = [blocker]
-        let all = [done, parent, sub, blocker, waiting]
+        let bare = Self.task("Kisten packen", minute: 5, in: store)
+        bare.parent = parent
+        let all = [done, parent, sub, blocker, waiting, bare]
 
-        #expect(Self.open(all) == [waiting, parent, blocker].map(\.id))
+        #expect(Self.open(all) == [sub, waiting, parent, blocker].map(\.id))
     }
 
     @Test("The comparator is a strict weak order: never both ways, and a task never before itself")
