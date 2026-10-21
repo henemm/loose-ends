@@ -122,25 +122,6 @@ import Testing
             "a done line keeps its traits but no due date, and a blank note is no note")
     }
 
-    @Test("Deleting the parent takes its subtasks with it")
-    @MainActor func deleteCascades() async throws {
-        let store = try TestStore()
-        let parent = TaskItem(rawText: "Einkaufen")
-        parent.status = .active
-        store.context.insert(parent)
-        try Subtasks.add("Milch", to: parent, in: store.context)
-        try Subtasks.add("Brot", to: parent, in: store.context)
-        try store.context.save()
-        let before = try store.context.fetchCount(FetchDescriptor<TaskItem>())
-        #expect(before == 3)
-
-        store.context.delete(parent)
-        try store.context.save()
-
-        let remaining = try store.context.fetch(FetchDescriptor<TaskItem>())
-        #expect(remaining.isEmpty, "left behind: \(remaining.map(\.rawText))")
-    }
-
     @Test("Deleting a task lifts its subtasks one level: they stay, as tasks of their own, with what they carry (#605)")
     @MainActor func deletingParentLiftsSubtasks() async throws {
         let store = try TestStore()
