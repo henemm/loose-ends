@@ -140,4 +140,31 @@ import Testing
         let remaining = try store.context.fetch(FetchDescriptor<TaskItem>())
         #expect(remaining.isEmpty, "left behind: \(remaining.map(\.rawText))")
     }
+
+    @Test("Deleting a task lifts its subtasks one level: they stay, as tasks of their own, with what they carry (#605)")
+    @MainActor func deletingParentLiftsSubtasks() async throws {
+        let store = try TestStore()
+        let phone = TaskContext(name: "Telefon", sortOrder: 0)
+        store.context.insert(phone)
+        let parent = TaskItem(rawText: "Umzug")
+        parent.status = .active
+        store.context.insert(parent)
+        let call = try Subtasks.add("Vermieter anrufen", to: parent, in: store.context)
+        call.contexts = [phone]
+        let boxes = try Subtasks.add("Kartons holen", to: parent, in: store.context)
+        Subtasks.toggle(boxes)
+        try store.context.save()
+        let parentID = parent.id
+
+        store.context.delete(parent)
+        try store.context.save()
+
+        let left = try store.context.fetch(FetchDescriptor<TaskItem>())
+        #expect(!left.contains { $0.id == parentID }, "the task itself is gone")
+        #expect(Set(left.map(\.rawText)) == ["Vermieter anrufen", "Kartons holen"], "its subtasks stay")
+        #expect(left.allSatisfy { $0.parent == nil }, "they stand on their own now")
+        #expect(call.contexts?.map(\.name) == ["Telefon"], "a lifted subtask keeps what it carries")
+        #expect(boxes.status == .done, "a done one stays done")
+        #expect(ViewRules.tasks(for: .open, in: left).map(\.id) == [call.id], "the open one stands in Loose ends")
+    }
 }
