@@ -202,7 +202,7 @@ final class MacGalleryTests: XCTestCase {
     }
 
     /// #479: the menu bar panel on paper. Asserts what can be measured: the head with the knot, the resting
-    /// hint, a field at least 110 pt high, and that Cancel, Done and both footer rows lie inside the panel
+    /// hint, a field of at least five lines, and that Cancel, Done and both footer rows lie inside the panel
     /// and can be hit (#400). That it reads as paper without a grey box is judged on the pictures.
     @MainActor
     private func photographPanel(dark: Bool) {
@@ -239,8 +239,11 @@ final class MacGalleryTests: XCTestCase {
         return panel
     }
 
+    /// Five lines of the panel's 22 pt serif field, as the CI Mac measures them at the least (#596).
+    private static let fiveLinesHeight: CGFloat = 105
+
     /// #400, AC-6/AC-7: Cancel, Done and both footer rows can be hit inside the panel, the field keeps
-    /// 110 pt; the panel's size goes along as text so the states can be compared.
+    /// its five lines; the panel's size goes along as text so the states can be compared.
     @MainActor
     private func assertPanelFits(_ panel: XCUIElement, label: String) {
         let frame = panel.frame
@@ -249,11 +252,12 @@ final class MacGalleryTests: XCTestCase {
             XCTAssertTrue(element.isHittable, "\(id) cannot be hit")
             XCTAssertTrue(frame.contains(element.frame), "\(id) lies outside the panel: \(element.frame) in \(frame)")
         }
-        // The field grows to its five lines a moment after the panel shows: run 39486128730 read 107 pt
-        // right away and 110 pt in the next run (#596). Wait for the layout, then judge it.
+        // The product promises five lines (`lineLimit(5...10)`, 22 pt serif), not a point value: the CI Mac
+        // measures those five lines at 107 pt in one run and 110 pt in the next, also after a 5 s wait
+        // (runs 39486128730 and 39509147972, #596). Five lines are at least 105 pt; four would be under 90.
         let field = macElement("captureTextField", in: panel)
-        macWait(timeout: 5) { field.frame.height >= 110 }
-        XCTAssertGreaterThanOrEqual(field.frame.height, 110, "Field is lower than 110 pt")
+        macWait(timeout: 5) { field.frame.height >= Self.fiveLinesHeight }
+        XCTAssertGreaterThanOrEqual(field.frame.height, Self.fiveLinesHeight, "Field is lower than five lines")
         let note = XCTAttachment(string: "\(Int(frame.width)) x \(Int(frame.height)) pt")
         note.name = "mac-gallery-panel-\(label)-size"
         note.lifetime = .keepAlways
