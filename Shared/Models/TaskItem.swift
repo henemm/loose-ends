@@ -18,7 +18,8 @@ final class TaskItem {
     var statusRaw: String = TaskStatus.unprocessed.rawValue
     var processedAt: Date?
     /// "Der Regelschritt lief" — unabhängig davon, ob das Modell verfügbar war oder sein Aufruf
-    /// glückte (#144). `processedAt` bleibt der Modell-Vermerk (ADR-4).
+    /// glückte (#144). `processedAt` bleibt der Modell-Vermerk (ADR-4): das Modell lief oder hat die
+    /// Aufgabe endgültig abgelehnt (Guardrail, Kontextfenster, #535).
     var rulesAppliedAt: Date?
     var nextRank: Double?
     var completedAt: Date?
