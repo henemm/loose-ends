@@ -95,20 +95,78 @@ import FoundationModels
     }
 
     #if canImport(FoundationModels) && !os(watchOS)
-    @Test("A guardrail refusal is a failure like any other: rules stay, the note waits")
-    @MainActor func guardrailRefusal() async throws {
-        let store = try TestStore()
+    /// One note, the model fails with `failure`, two passes (#535). Returns the stub and the note.
+    @MainActor private func twoPasses(in store: TestStore, failing failure: Error) async throws -> (StubEnricher, TaskItem, EnrichmentCoordinator) {
         let task = TaskItem(rawText: "Zettel sortieren")
         store.context.insert(task)
         try store.context.save()
-        let refusal = LanguageModelError.guardrailViolation(.init(debugDescription: "test"))
-        let coordinator = EnrichmentCoordinator(enricher: StubEnricher(failure: refusal), container: store.container)
-
+        let stub = StubEnricher(failure: failure)
+        let coordinator = EnrichmentCoordinator(enricher: stub, container: store.container)
         await coordinator.processPending()
+        await coordinator.processPending()
+        return (stub, task, coordinator)
+    }
+
+    @Test("A guardrail refusal is permanent: rules stay, the note is marked, no revision (#535)")
+    @MainActor func guardrailRefusal() async throws {
+        let store = try TestStore()
+        let (stub, task, _) = try await twoPasses(in: store, failing: LanguageModelError.guardrailViolation(.init(debugDescription: "test")))
+
+        #expect(task.processedAt != nil)
+        #expect(task.rulesAppliedAt != nil)
+        #expect((task.revisions ?? []).isEmpty)
+        #expect(stub.calls == 1, "the second pass does not send it to the model again")
+    }
+
+    @Test("An exceeded context window is permanent too (#535)")
+    @MainActor func contextWindow() async throws {
+        let store = try TestStore()
+        let (stub, task, _) = try await twoPasses(
+            in: store, failing: LanguageModelError.contextSizeExceeded(.init(contextSize: 10, tokenCount: 20, debugDescription: "test")))
+
+        #expect(task.processedAt != nil)
+        #expect((task.revisions ?? []).isEmpty)
+        #expect(stub.calls == 1)
+    }
+
+    @Test("Transient failures stay retryable: the note is tried again on the next pass (#535)",
+          arguments: [0, 1, 2])
+    @MainActor func transientFailures(kind: Int) async throws {
+        let failure: Error = switch kind {
+        case 0: LanguageModelError.timeout(.init(debugDescription: "test"))
+        case 1: LanguageModelError.rateLimited(.init(resetDate: nil, debugDescription: "test"))
+        default: StubFailure()
+        }
+        let store = try TestStore()
+        let (stub, task, _) = try await twoPasses(in: store, failing: failure)
 
         #expect(task.processedAt == nil)
         #expect(task.rulesAppliedAt != nil)
-        #expect((task.revisions ?? []).isEmpty)
+        #expect(stub.calls == 2)
+    }
+
+    @Test("A re-analysis still calls the model for a note it permanently refused (#535)")
+    @MainActor func reanalysisAfterPermanentFailure() async throws {
+        let store = try TestStore()
+        let (stub, task, coordinator) = try await twoPasses(in: store, failing: LanguageModelError.guardrailViolation(.init(debugDescription: "test")))
+        let before = stub.calls
+
+        _ = await coordinator.reanalyze(task)
+
+        #expect(stub.calls == before + 1)
+    }
+
+    @Test("Only guardrail and context window are permanent")
+    func classification() {
+        let text = "test"
+        #expect(ModelFailure.isPermanent(LanguageModelError.guardrailViolation(.init(debugDescription: text))))
+        #expect(ModelFailure.isPermanent(LanguageModelError.contextSizeExceeded(.init(contextSize: 10, tokenCount: 20, debugDescription: text))))
+        #expect(!ModelFailure.isPermanent(LanguageModelError.rateLimited(.init(resetDate: nil, debugDescription: text))))
+        #expect(!ModelFailure.isPermanent(LanguageModelError.refusal(.init(explanation: text, debugDescription: text))))
+        #expect(!ModelFailure.isPermanent(LanguageModelError.timeout(.init(debugDescription: text))))
+        #expect(!ModelFailure.isPermanent(LanguageModelError.unsupportedGenerationGuide(.init(schemaName: nil, debugDescription: text))))
+        #expect(!ModelFailure.isPermanent(ModelDeadline.Exceeded(limit: .seconds(1))))
+        #expect(!ModelFailure.isPermanent(StubFailure()))
     }
     #endif
 }

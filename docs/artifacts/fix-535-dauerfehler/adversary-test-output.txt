@@ -1,0 +1,119 @@
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/ModelSeamTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatch.swiftsourceinfo
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftdoc -> LooseEndsWatch.swiftdoc
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos-simulator.abi.json -> LooseEndsWatch.abi.json
+[[36mLooseEndsWatch[0m] [1mCopy[0m x86_64-apple-watchos-simulator.swiftdoc -> LooseEndsWatch.swiftdoc
+[[36mLooseEndsWatch[0m] [1mCopy[0m x86_64-apple-watchos-simulator.abi.json -> LooseEndsWatch.abi.json
+[[36mLooseEndsWatch[0m] [1mCopy[0m x86_64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatch.swiftsourceinfo
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsWidgets.swiftsourceinfo
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEndsWidgets.swiftdoc
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsWidgets.abi.json
+[[36mLooseEndsShare[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsShare.swiftsourceinfo
+[[36mLooseEndsShare[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEndsShare.swiftdoc
+[[36mLooseEndsShare[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsShare.abi.json
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ModelFailure.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m EnrichmentCoordinator.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SideColumn.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TaskItem.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ModelFailure.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TaskItem.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SideColumn.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m EnrichmentCoordinator.swift
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch.debug.dylib
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWatch' from project 'LooseEnds')
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch.debug.dylib
+[[36mLooseEndsWatch[0m] [1mCreate Universal Binary[0m LooseEndsWatch.debug.dylib
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWatch' from project 'LooseEnds')
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch
+[[36mLooseEndsWatch[0m] [1mCreate Universal Binary[0m LooseEndsWatch
+[[36mLooseEndsWatch[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TaskItem.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m SideColumn.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m EnrichmentCoordinator.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ModelFailure.swift
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEnds.swiftdoc
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEnds.abi.json
+[[36mLooseEndsWidgets[0m] [1mLinking[0m LooseEndsWidgets.debug.dylib
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWidgets' from project 'LooseEnds')
+[[36mLooseEndsWidgets[0m] [1mLinking[0m LooseEndsWidgets
+[[36mLooseEndsWidgets[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mCompiling[0m ModelFailure.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m SideColumn.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m EnrichmentCoordinator.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m TaskItem.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PressureOrderTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SubtaskListsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelSeamTests.swift
+[[36mLooseEndsShare[0m] [1mLinking[0m LooseEndsShare.debug.dylib
+[36;1mnote: [0mUsing stub executor library without Swift entry point. (in target 'LooseEndsShare' from project 'LooseEnds')
+[[36mLooseEndsShare[0m] [1mLinking[0m LooseEndsShare
+[[36mLooseEndsShare[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ModelFailure.swift
+[[36mLooseEnds[0m] [1mCompiling[0m EnrichmentCoordinator.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SideColumn.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskItem.swift
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds.debug.dylib
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEnds' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsShare.appex -> LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsTests.swiftmodule
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsTests.abi.json
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsTests.swiftsourceinfo
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEndsTests.swiftdoc
+[[36mLooseEndsTests[0m] [1mLinking[0m LooseEndsTests
+[[36mLooseEndsTests[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-10-21 08:00:15.621.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-21 08:00:15.621.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-21 08:00:15.621.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+[1mTest run started.[0m
+Suite "Model seam" started
+    [32m✔[0m "A model call that hangs ends at its limit; the pass goes on with the next note" ([31m0.298[0m seconds)
+    [32m✔[0m "A re-analysis whose model call hangs reports that the model did not run" ([31m0.285[0m seconds)
+    [32m✔[0m "An empty answer marks the note as seen by the model and writes nothing" ([33m0.029[0m seconds)
+    [32m✔[0m "Each note gets its own answer" ([33m0.073[0m seconds)
+    [32m✔[0m "A guardrail refusal is permanent: rules stay, the note is marked, no revision (#535)" ([33m0.034[0m seconds)
+    [32m✔[0m "An exceeded context window is permanent too (#535)" ([33m0.031[0m seconds)
+    [32m✔[0m "A re-analysis still calls the model for a note it permanently refused (#535)" ([33m0.056[0m seconds)
+    [32m✔[0m "Only guardrail and context window are permanent" (0.001 seconds)
+Suite "Model seam" passed after 0.982 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-epic-563-auswahl/Logs/Test/Test-LooseEnds-2026.10.21_07-59-40-+0200.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 1 von 4 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
+[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log
+exit=0

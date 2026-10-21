@@ -95,6 +95,10 @@ Modellaufruf glückte, dass der Regelschritt (Fälligkeitsdatum, Wichtigkeit, Dr
 Wiedererkennung) für diese Aufgabe gelaufen ist; die Vergleichsmenge der Wiedererkennung
 (`RecognitionRule`) liest `processedAt` und `rulesAppliedAt` gemeinsam, damit sie nicht am
 Modell hängt.
+Seit #535 setzt ein dauerhafter Modellfehler (Guardrail, Kontextfenster) `processedAt` ohne
+KI-Revision, damit die Aufgabe nicht bei jedem Durchlauf erneut ans Modell geht; vorübergehende
+Fehler (Zeitgrenze, Last, Gerätezustand, unbekannte Fehler) lassen es leer. „Neu analysieren"
+bleibt der ausdrückliche zweite Versuch.
 Seit #34 ist die erneute Analyse „Neu analysieren" im Detail-Menü: derselbe Regelschritt und
 derselbe Modellaufruf wie beim ersten Mal (`EnrichmentCoordinator.reanalyze`). Sie darf jedes
 Feld neu setzen, das der Nutzer nie angefasst hat — von der KI gesetzt oder noch leer —, jede
