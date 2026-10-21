@@ -399,10 +399,22 @@ jobs:
             -destination 'platform=macOS' \
             -derivedDataPath build/click \
             -only-testing:LooseEndsUITests/MacDetailClickTests \
-            -only-testing:LooseEndsUITests/MacKeyboardTests \
             -parallel-testing-enabled NO \
             -resultBundlePath MacDetailClick.xcresult \
             2>&1 | tee mac-click.log | xcbeautify
+      - name: Run the keyboard test in the sandbox (#480)
+        if: ${{ !cancelled() }}
+        run: |
+          set -o pipefail
+          xcodebuild test-without-building \
+            -project LooseEnds.xcodeproj \
+            -scheme LooseEnds \
+            -destination 'platform=macOS' \
+            -derivedDataPath build/click \
+            -only-testing:LooseEndsUITests/MacKeyboardTests \
+            -parallel-testing-enabled NO \
+            -resultBundlePath MacKeyboard.xcresult \
+            2>&1 | tee mac-keyboard.log | xcbeautify
       - name: Diagnose UI automation
         if: always()
         continue-on-error: true
@@ -420,7 +432,7 @@ jobs:
           # The window photos (.png) and the window size (.txt) MacGalleryTests attaches, under their names.
           # The gallery's bundle and the click test's (#544), each into its own folder.
           mkdir -p MacGallery
-          for bundle in MacGallery MacDetailClick; do
+          for bundle in MacGallery MacDetailClick MacKeyboard; do
             mkdir -p "raw-$bundle"
             [ -d "$bundle.xcresult" ] || [ "$bundle" = MacGallery ] || continue
             xcrun xcresulttool export attachments --path "$bundle.xcresult" --output-path "raw-$bundle" || true
@@ -458,5 +470,7 @@ jobs:
             mac-gallery.log
             MacDetailClick.xcresult
             mac-click.log
+            MacKeyboard.xcresult
+            mac-keyboard.log
             mac-click-build.log
           if-no-files-found: warn

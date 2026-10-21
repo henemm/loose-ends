@@ -36,6 +36,8 @@ struct TaskListView: View {
     /// so a click keeps opening the task (#544).
     @State private var selectedID: UUID?
     @FocusState private var listFocused: Bool
+    /// Whether the list is on screen; a detail pushed over it must not clear the choice.
+    @State private var isShown = false
     #endif
 
     /// The Mac always, iOS whenever the window is not compact (#477, as #471/#476).
@@ -131,7 +133,11 @@ struct TaskListView: View {
     private func detail(_ task: TaskItem, reviewing: Bool = false) -> some View {
         TaskDetailView(task: task, reviewing: reviewing)
         #if os(macOS)
-            .onAppear { selectedID = task.id }
+            .onAppear {
+                // Into the memo first: the list's own state may not be installed while the detail is up.
+                ChosenRows.shared.byList[selection] = task.id
+                selectedID = task.id
+            }
         #endif
     }
 
@@ -143,7 +149,13 @@ struct TaskListView: View {
         ScrollViewReader { proxy in
             list
                 .focused($listFocused)
-                .onAppear { listFocused = true }
+                .onAppear {
+                    // Back from the detail (CI run 39559352169): the choice comes from the memo.
+                    isShown = true
+                    selectedID = RowKeyAction.restored(ChosenRows.shared.byList[selection], ids: rowIDs)
+                    listFocused = true
+                }
+                .onDisappear { isShown = false }
                 // Only the bare keys: ⌘⌫, ⇧Space or ⌥↓ mean something else.
                 .onKeyPress(keys: [.upArrow, .downArrow, .space, .delete]) { press in
                     guard press.modifiers.isDisjoint(with: [.command, .shift, .option, .control]) else { return .ignored }
@@ -167,11 +179,13 @@ struct TaskListView: View {
                 .onDeleteCommand { if Self.bareKey { _ = handle(.delete) } }
                 // The chosen row stays in sight: the arrows scroll it in, as little as needed.
                 .onChange(of: selectedID) { _, id in
+                    ChosenRows.shared.byList[selection] = id
                     if let id { proxy.scrollTo(id) }
                 }
                 // A row that left the list (done, moved, deleted) takes the choice with it; nothing jumps on.
+                // Only while the list is shown: a passing state behind the open detail clears nothing.
                 .onChange(of: rowIDs) { _, ids in
-                    if let chosen = selectedID, !ids.contains(chosen) { selectedID = nil }
+                    if isShown, let chosen = selectedID, !ids.contains(chosen) { selectedID = nil }
                 }
         }
         #else
@@ -558,6 +572,16 @@ struct TaskListView: View {
         actions.save("reorder")
     }
 }
+
+#if os(macOS)
+/// The chosen row per list (#480), in memory only: the Mac's navigation stack can rebuild a list on the
+/// way back from the detail, and its own state goes with it. Nothing is stored past the app's run.
+@MainActor
+private final class ChosenRows {
+    static let shared = ChosenRows()
+    var byList: [ViewSelection: UUID] = [:]
+}
+#endif
 
 /// The list's subtitle under its title, wide only (#477); compact stays exactly as it was. On wide
 /// it stays attached while empty, so the list keeps its identity when the last task is done.
