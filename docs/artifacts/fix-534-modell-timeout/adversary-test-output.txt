@@ -1,0 +1,10 @@
+test_cli_reads_a_folder (__main__.SummaryTests.test_cli_reads_a_folder) ... ok
+test_empty_folder_fails_with_message (__main__.SummaryTests.test_empty_folder_fails_with_message) ... ok
+test_failed_probes_are_counted_apart (__main__.SummaryTests.test_failed_probes_are_counted_apart) ... ok
+test_missing_group_fails_with_message (__main__.SummaryTests.test_missing_group_fails_with_message) ... ok
+test_statistics_per_group (__main__.SummaryTests.test_statistics_per_group) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.101s
+
+OK
