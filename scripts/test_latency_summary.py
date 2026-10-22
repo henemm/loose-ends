@@ -71,5 +71,56 @@ class SummaryTests(unittest.TestCase):
         self.assertIn("warm", run.stderr)
 
 
+def lab_result(seconds, thermal="normal", power="akku", error=None):
+    r = {"entryID": "lat-01", "seconds": seconds, "conditions": {"thermal": thermal, "power": power}}
+    if error:
+        r["error"] = error
+    return r
+
+
+def write_lab(folder, name, results):
+    (Path(folder) / name).write_text(json.dumps({"name": name, "results": results, "events": []}))
+
+
+class LabFormatTests(unittest.TestCase):
+    """Labor-App-Format (#534, Schnitt 2): je Datei ein Start, der erste Aufruf ist kalt."""
+
+    def test_first_result_per_file_is_cold(self):
+        import latency_summary
+        with tempfile.TemporaryDirectory() as d:
+            write_lab(d, "latency-01.json", [lab_result(9.0), lab_result(8.0), lab_result(7.0)])
+            write_lab(d, "latency-02.json", [lab_result(11.0), lab_result(6.0)])
+            out = latency_summary.summarize(latency_summary.read_folder(d))
+        self.assertEqual(out["kalt"]["n"], 2)
+        self.assertEqual(out["kalt"]["max"], 11.0)
+        self.assertEqual(out["warm"]["n"], 3)
+        self.assertEqual(out["warm"]["max"], 8.0)
+
+    def test_errors_are_counted_apart(self):
+        import latency_summary
+        with tempfile.TemporaryDirectory() as d:
+            write_lab(d, "latency-01.json", [lab_result(9.0), lab_result(30.0, error="timeout"), lab_result(7.0)])
+            out = latency_summary.summarize(latency_summary.read_folder(d))
+        self.assertEqual(out["warm"]["n"], 1)
+        self.assertEqual(out["warm"]["fehler"], 1)
+        self.assertEqual(out["warm"]["max"], 7.0)
+
+    def test_max_by_thermal_and_power_counts(self):
+        import latency_summary
+        with tempfile.TemporaryDirectory() as d:
+            write_lab(d, "latency-01.json", [
+                lab_result(9.0), lab_result(8.0), lab_result(14.0, thermal="serious", power="strom")])
+            out = latency_summary.summarize(latency_summary.read_folder(d))
+        self.assertEqual(out["warm"]["max_by_thermal"], {"normal": 8.0, "serious": 14.0})
+        self.assertEqual(out["warm"]["power"], {"akku": 1, "strom": 1})
+
+    def test_cli_prints_thermal_breakdown(self):
+        with tempfile.TemporaryDirectory() as d:
+            write_lab(d, "latency-01.json", [lab_result(9.0), lab_result(14.0, thermal="serious")])
+            run = subprocess.run([sys.executable, str(SCRIPT), d], capture_output=True, text=True)
+        self.assertEqual(run.returncode, 0, run.stderr)
+        self.assertIn("serious", run.stdout)
+
+
 if __name__ == "__main__":
     unittest.main()

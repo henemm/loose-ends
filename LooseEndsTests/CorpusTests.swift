@@ -201,6 +201,35 @@ struct CorpusTests {
         #expect(Corpus.runsPerEntry(from: ["LooseEndsLab"]) == 1)
         #expect(Corpus.runsPerEntry(from: ["LooseEndsLab", "--corpus", "focusblox-corpus"]) == 1)
     }
+
+    @Test("--result nennt die Ergebnisdatei, Default bleibt date-title (#534 AC-1)")
+    func resultNameFromArguments() {
+        #expect(Corpus.resultName(from: ["LooseEndsLab", "--result", "latency-03"]) == "latency-03")
+        #expect(Corpus.resultName(from: ["LooseEndsLab", "--result"]) == "date-title")
+        #expect(Corpus.resultName(from: ["LooseEndsLab", "--measure"]) == "date-title")
+    }
+
+    @Test("--context-words liest das Wörterbuch, ohne Flag ist es leer (#534 AC-1)")
+    func contextWordsFromArguments() {
+        #expect(Corpus.contextWords(from: ["LooseEndsLab", "--context-words", "Computer,Telefon,Haus"]) == ["Computer", "Telefon", "Haus"])
+        #expect(Corpus.contextWords(from: ["LooseEndsLab", "--context-words"]).isEmpty)
+        #expect(Corpus.contextWords(from: ["LooseEndsLab", "--measure"]).isEmpty)
+    }
+
+    @Test("--exit-when-done ist nur mit dem Flag an (#534 AC-1)")
+    func exitWhenDoneFromArguments() {
+        #expect(Corpus.exitWhenDone(from: ["LooseEndsLab", "--measure", "--exit-when-done"]))
+        #expect(!Corpus.exitWhenDone(from: ["LooseEndsLab", "--measure"]))
+    }
+
+    @Test("Der Latenz-Korpus trägt dieselben sechs Notizen wie die Mac-Messung (#534 AC-3)")
+    func latencyCorpusMatchesTheMacNotes() throws {
+        let entries = try Corpus.load(fileName: "latency-corpus")
+        #expect(entries.map(\.id) == ["lat-01", "lat-02", "lat-03", "lat-04", "lat-05", "lat-06"])
+        #if canImport(FoundationModels) && !os(watchOS)
+        #expect(entries.map(\.text) == RealModel.notes)
+        #endif
+    }
 }
 
 @Suite("Titelprüfung")
