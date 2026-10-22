@@ -36,24 +36,38 @@ final class MacKeyboardTests: XCTestCase {
         return (app, window, rows)
     }
 
+    /// The task rows from one snapshot of the window, top to bottom (#631): identifier, frame and selection
+    /// come from one read. Rows bound by index re-resolve per attribute, and a row that left between `exists`
+    /// and `frame` (the completed row animating out while `waitForRows` polls) threw "Failed to get matching
+    /// snapshot" instead of returning false (PR #628, run 39857377394).
+    @MainActor
+    private func taskRowSnapshots(in window: XCUIElement) -> [any XCUIElementSnapshot] {
+        let root: any XCUIElementSnapshot
+        do {
+            root = try window.snapshot()
+        } catch {
+            XCTFail("No snapshot of the window: \(error)")
+            return []
+        }
+        var rows: [any XCUIElementSnapshot] = []
+        var pending = root.children
+        while let next = pending.popLast() {
+            if next.identifier.hasPrefix("taskRow_") { rows.append(next) }
+            pending.append(contentsOf: next.children)
+        }
+        return rows.sorted { $0.frame.minY < $1.frame.minY }
+    }
+
+    /// The rows as elements, for clicks; each resolves by its identifier when it is used.
     @MainActor
     private func taskRows(in window: XCUIElement) -> [XCUIElement] {
-        window.descendants(matching: .any)
-            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "taskRow_"))
-            .allElementsBoundByIndex
-            .filter { $0.exists }
-            .sorted { $0.frame.minY < $1.frame.minY }
+        taskRowSnapshots(in: window).map { window.descendants(matching: .any).matching(identifier: $0.identifier).firstMatch }
     }
 
     @MainActor
     private func waitForRows(_ count: Int, in window: XCUIElement, timeout: TimeInterval = 10) -> [XCUIElement] {
-        let deadline = Date().addingTimeInterval(timeout)
-        var rows = taskRows(in: window)
-        while rows.count != count, Date() < deadline {
-            RunLoop.current.run(until: Date().addingTimeInterval(0.3))
-            rows = taskRows(in: window)
-        }
-        return rows
+        _ = waitUntil(timeout) { taskRowSnapshots(in: window).count == count }
+        return taskRows(in: window)
     }
 
     @MainActor
@@ -106,7 +120,7 @@ final class MacKeyboardTests: XCTestCase {
 
     @MainActor
     private func selectedRows(in window: XCUIElement) -> [String] {
-        taskRows(in: window).filter { $0.isSelected }.map { $0.identifier }
+        taskRowSnapshots(in: window).filter { $0.isSelected }.map { $0.identifier }
     }
 
     // MARK: - Arrows, Space

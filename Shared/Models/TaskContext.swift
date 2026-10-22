@@ -8,7 +8,16 @@ final class TaskContext {
     var name: String = ""
     var isSystemDefault: Bool = false
     var sortOrder: Int = 0
+    /// Words the user struck from this tag's learned list (#233 Schnitt 2b), normalized like
+    /// `RawTextWords.normalized`, one per line: never learned for this tag again, on every device. One
+    /// string, not an array, so CloudKit carries it as a single additive field (#175).
+    var forgottenWordsRaw: String = ""
     @Relationship(inverse: \TaskItem.contexts) var tasks: [TaskItem]?
+
+    var forgottenWords: Set<String> {
+        get { Set(forgottenWordsRaw.split(separator: "\n").map(String.init).filter { !$0.isEmpty }) }
+        set { forgottenWordsRaw = newValue.sorted().joined(separator: "\n") }
+    }
 
     init(name: String, isSystemDefault: Bool = false, sortOrder: Int = 0) {
         self.name = name
