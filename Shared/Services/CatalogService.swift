@@ -173,6 +173,15 @@ enum CatalogService {
         context.delete(taskContext)
     }
 
+    /// Strikes a learned word from a tag (#233 Schnitt 2b): it leaves the line "Recognizes: …" at once
+    /// and is never learned for this tag again, on every device. Stored normalized, the way the
+    /// learning compares; the caller saves.
+    static func forget(_ word: String, on taskContext: TaskContext) {
+        let normalized = RawTextWords.normalized(word.trimmingCharacters(in: .whitespacesAndNewlines))
+        guard !normalized.isEmpty else { return }
+        taskContext.forgottenWords.insert(normalized)
+    }
+
     private static func nextSortOrder(after orders: [Int]) -> Int {
         (orders.max() ?? -1) + 1
     }

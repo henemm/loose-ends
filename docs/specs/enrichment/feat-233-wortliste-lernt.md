@@ -68,7 +68,8 @@ nur auf Hennings Mac).
 |---|---|---|
 | 1 (gemerged) | Reine Lernregel, Unit-Tests (Lernen, Konflikt, Löschen, Füllwörter, Treffer), Messbericht | `Shared/Enrichment/ContextWordLearning.swift`, `LooseEndsTests/ContextWordLearningTests.swift`, `LooseEndsTests/ContextWordLearningReportTests.swift` |
 | 2a | Gelernte Wörter im Regelschritt: `EnrichmentCoordinator.learnedWords` lernt einmal je Durchlauf aus allen Aufgaben mit Etiketten vom Ursprung `user` (nie Regel- oder Modellwert, #244), fest + gelernt zusammen wie gemessen, auch für Zeilen unter einer Aufgabe (#565); Begründung „Aus „Wort“ in der Notiz, gelernt aus deinen Etiketten.“ | `EnrichmentCoordinator`, `ContextWordLearning` (N, Begründung), `LooseEndsTests/ContextWordLearningCoordinatorTests.swift` |
-| 2b | Gelöschte Wörter je Etikett im Modell (`TaskContext`, additiv, `cloudkit/schema.ckdb`), Zeile „Erkennt: …“ auf der Etiketten-Seite, Wortliste mit Wischen-Löschen, Markierung des gelernten Worts im Feld-Editor (#101) | `TaskContext`, `CatalogService`, `CatalogPage`, `RuleTrigger` |
+| 2b | Gestrichene Wörter je Etikett im Modell (`TaskContext.forgottenWordsRaw`, additiv, `cloudkit/schema.ckdb`), Zeile „Erkennt: …“ auf der Etiketten-Seite in der Schreibweise des Nutzers (`ContextWordLearning.spelled`), `LearnedWordsSheet` mit Wischen „Vergessen“ (`CatalogService.forget`) | `TaskContext`, `CatalogService`, `CatalogPage`, `LearnedWordsSheet`, `LooseEndsTests/ContextWordForgettingTests.swift` |
+| offen | Markierung des gelernten Worts im Zitat des Feld-Editors (#101): der Editor kennt nur die eine Aufgabe, die gelernte Liste bräuchte alle — eigenes Ticket, falls Henning es vermisst | `RuleTrigger`, `FieldEditorView` |
 
 Schnitt 2a berührt `EnrichmentCoordinator.swift`, Schnitt 2b `Shared/Models`: beide stehen auf der Geräteliste
 (Stufe 3, über TestFlight). Henning hat am 2026-10-22 beide Schnitte freigegeben.

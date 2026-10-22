@@ -13,6 +13,7 @@ struct CatalogPage: View {
 
     @State private var catalog = CatalogEditor()
     @State private var opened: ViewSelection?
+    @State private var showsWords: TaskContext?
 
     private struct Entry: Identifiable {
         let id: String
@@ -20,6 +21,12 @@ struct CatalogPage: View {
         let count: Int
         let selection: ViewSelection
         let target: NameEdit.Target
+        var context: TaskContext?
+    }
+
+    /// The learned words under each tag (#233 Schnitt 2b), as the user wrote them.
+    private var recognized: [String: [String]] {
+        kind == .tags ? EnrichmentCoordinator.recognizedWords(in: tasks, catalog: contexts) : [:]
     }
 
     private var entries: [Entry] {
@@ -28,7 +35,7 @@ struct CatalogPage: View {
             contexts.map { context in
                 Entry(id: "contextRow_\(context.id.uuidString)", name: context.name,
                       count: ViewRules.tasks(inContext: context, in: tasks).count,
-                      selection: .context(context.id), target: .context(context))
+                      selection: .context(context.id), target: .context(context), context: context)
             }
         case .projects:
             projects.map { project in
@@ -62,6 +69,21 @@ struct CatalogPage: View {
                 .swipeActions { CatalogDeleteButton(target: entry.target, editor: catalog) }
                 .listRowSeparator(.hidden)
                 .paperRow()
+                // What the tag learned from the user's own assignments (#233): one grey line, a tap
+                // opens the words to strike one. Nothing learned, no line.
+                if let context = entry.context, let words = recognized[entry.name], !words.isEmpty {
+                    Button { showsWords = context } label: {
+                        Text("Recognizes: \(words.joined(separator: ", "))")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(2)
+                            .padding(.bottom, 4)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("recognizedWords_\(context.id.uuidString)")
+                    .listRowSeparator(.hidden)
+                    .paperRow()
+                }
             }
             newButton
                 .padding(.top, 6)
@@ -75,6 +97,9 @@ struct CatalogPage: View {
         #endif
         .navigationDestination(item: $opened) { selection in
             TaskListView(selection: selection, tasks: tasks)
+        }
+        .sheet(item: $showsWords) { context in
+            LearnedWordsSheet(context: context, tasks: tasks, contexts: contexts)
         }
         .catalogDialogs(catalog, contexts: contexts, projects: projects) { gone in
             if opened == gone { opened = nil }

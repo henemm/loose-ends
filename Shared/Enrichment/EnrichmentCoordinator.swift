@@ -74,7 +74,7 @@ final class EnrichmentCoordinator {
             let projects = try context.fetch(FetchDescriptor<Project>(sortBy: [SortDescriptor(\.sortOrder)]))
             let examples = modelUnavailable == nil ? try Self.examples(in: context) : []
             let recognition = try Self.recognitionInputs(in: context)   // once before the loop (#136)
-            let learned = Self.learnedWords(from: recognition.tasksByID.values)   // once as well (#233)
+            let learned = Self.learnedWords(from: recognition.tasksByID.values, catalog: contexts)   // once as well (#233)
 
             for task in pending {
                 applyRules(to: task, mode: .firstRun, catalog: contexts, projects: projects,
@@ -135,7 +135,7 @@ final class EnrichmentCoordinator {
         if task.parent != nil {
             do {
                 let contexts = try context.fetch(FetchDescriptor<TaskContext>(sortBy: [SortDescriptor(\.sortOrder)]))
-                let learned = try Self.learnedWords(from: Self.recognitionInputs(in: context).tasksByID.values)
+                let learned = try Self.learnedWords(from: Self.recognitionInputs(in: context).tasksByID.values, catalog: contexts)
                 applySubtaskRules(to: task, mode: .reanalysis, catalog: contexts, learned: learned)
                 task.rulesAppliedAt = Date()
                 try context.save()
@@ -158,7 +158,7 @@ final class EnrichmentCoordinator {
             let recognition = try Self.recognitionInputs(in: context)
             // The task's own rule step ran before, so it sits in the pool: it must not recognise itself.
             let pool = recognition.pool.filter { $0.id != task.id }
-            let learned = Self.learnedWords(from: recognition.tasksByID.values)
+            let learned = Self.learnedWords(from: recognition.tasksByID.values, catalog: contexts)
             let ruleFields = applyRules(to: task, mode: .reanalysis, catalog: contexts, projects: projects,
                                         recognitionPool: pool, tasksByID: recognition.tasksByID, learned: learned)
             task.rulesAppliedAt = Date()
@@ -242,7 +242,7 @@ final class EnrichmentCoordinator {
             )).filter { $0.parent != nil }.sorted { $0.capturedAt < $1.capturedAt }
             guard !lines.isEmpty else { return }
             let contexts = try context.fetch(FetchDescriptor<TaskContext>(sortBy: [SortDescriptor(\.sortOrder)]))
-            let learned = try Self.learnedWords(from: Self.recognitionInputs(in: context).tasksByID.values)
+            let learned = try Self.learnedWords(from: Self.recognitionInputs(in: context).tasksByID.values, catalog: contexts)
             for line in lines {
                 applySubtaskRules(to: line, mode: .firstRun, catalog: contexts, learned: learned)
                 line.rulesAppliedAt = Date()
@@ -271,15 +271,34 @@ final class EnrichmentCoordinator {
     /// The words the user's own tags taught (#233 Schnitt 2), learned once per pass from every task
     /// whose contexts the user set: never a model guess, and no rule value either, since a rule may
     /// have copied a guess (#244). The pool is the recognition's (#136): every task the rule step or
-    /// the model has seen, done ones included, a removed one never. Words the user deleted from a
-    /// list come with Schnitt 2b.
-    static func learnedWords(from tasks: some Collection<TaskItem>) -> [String: Set<String>] {
-        let assignments = tasks.compactMap { task -> ContextWordLearning.Assignment? in
-            guard task.contextsSourceRaw == FieldSource.user.rawValue,
+    /// the model has seen, done ones included, a removed one never. A word the user struck from a
+    /// tag's list (`TaskContext.forgottenWords`, Schnitt 2b) stays out of that tag's list.
+    static func learnedWords(from tasks: some Collection<TaskItem>, catalog: [TaskContext]) -> [String: Set<String>] {
+        ContextWordLearning.learn(from: assignments(from: tasks), minimumCount: ContextWordLearning.minimumCount,
+                                  forgotten: forgottenWords(in: catalog))
+    }
+
+    /// The tasks the learning counts: those whose contexts the user set, a removed one never (#605).
+    static func assignments(from tasks: some Collection<TaskItem>) -> [ContextWordLearning.Assignment] {
+        tasks.compactMap { task in
+            guard task.status != .removed, task.contextsSourceRaw == FieldSource.user.rawValue,
                   let contexts = task.contexts, !contexts.isEmpty else { return nil }
             return ContextWordLearning.Assignment(rawText: task.rawText, contexts: contexts.map(\.name))
         }
-        return ContextWordLearning.learn(from: assignments, minimumCount: ContextWordLearning.minimumCount)
+    }
+
+    /// Two tags of one name cannot exist for long (#157), but CloudKit may deliver them: their words unite.
+    static func forgottenWords(in catalog: [TaskContext]) -> [String: Set<String>] {
+        Dictionary(catalog.map { ($0.name, $0.forgottenWords) }, uniquingKeysWith: { $0.union($1) })
+    }
+
+    /// The learned words under each tag, spelled as the user wrote them (Schnitt 2b): what the
+    /// "Recognizes: …" line of the tags page shows, the same list the rule step reads.
+    static func recognizedWords(in tasks: [TaskItem], catalog: [TaskContext]) -> [String: [String]] {
+        let assignments = assignments(from: tasks)
+        let learned = ContextWordLearning.learn(from: assignments, minimumCount: ContextWordLearning.minimumCount,
+                                                forgotten: forgottenWords(in: catalog))
+        return ContextWordLearning.spelled(learned, in: assignments)
     }
 
     /// Contexts from words of the note: the fixed lists (#232) and the learned ones (#233) together,

@@ -73,6 +73,22 @@ enum ContextWordLearning {
         return learned.filter { !$0.value.isDisjoint(with: words) }.keys.sorted()
     }
 
+    /// The learned words as the user wrote them, for the line under a tag (Schnitt 2b): the learning
+    /// keeps them normalized ("brucke"), the user should read "Brücke". Each word takes the spelling of
+    /// the first assignment that carries it; per context sorted for a steady line.
+    static func spelled(_ learned: [String: Set<String>], in assignments: [Assignment]) -> [String: [String]] {
+        var spelling: [String: String] = [:]
+        for assignment in assignments {
+            for word in RawTextWords.words(in: assignment.rawText) {
+                let key = RawTextWords.normalized(word)
+                if spelling[key] == nil { spelling[key] = word }
+            }
+        }
+        return learned.mapValues { words in
+            words.map { spelling[$0] ?? $0 }.sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
+        }
+    }
+
     /// The first word of `text`, in its own spelling, that a learned list of one of `names` carries —
     /// the word the reason quotes (#101). `nil` when none does.
     static func firstWord(in text: String, learned: [String: Set<String>], names: [String]) -> String? {

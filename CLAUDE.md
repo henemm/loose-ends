@@ -310,7 +310,8 @@ not scope creep on the current one.
   (a short word list per default context plus each context's own name sets the contexts; no hit stays empty, #232),
   `ContextWordLearning` (#233: the word list grows from the user's own tag assignments, N = 1 as measured in
   `docs/reference/context-word-learning.md`; the coordinator learns once per pass from every task whose contexts the user set,
-  never from a rule or model value (#244), and applies fixed and learned words together; the reason names the learned word),
+  never from a rule or model value (#244), and applies fixed and learned words together; the reason names the learned word;
+  the tags page shows "Recognizes: …" under each tag and `LearnedWordsSheet` strikes a word into `TaskContext.forgottenWords`),
   `ProjectNameRule` (a project's own name in the note sets it; the model never does, its old guesses are released at start
   by `GuessedProjects`, #469)
 - `Shared/Intents` — App Intents shared by app, widgets and (later) the intents extension
