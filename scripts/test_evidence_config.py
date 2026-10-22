@@ -1,11 +1,13 @@
 """Tests für das Einschalten des Simulator-Beleg-Gates in Loose Ends (#145, Schnitt 2).
 
-AC-23: `openspec.yaml` trägt `evidence_checks.phase8_complete` in der Form der Spec
-(docs/specs/tooling/feat-145-s2-gate.md). AC-21: Die Dateimenge, die `sim_proof.py` in den Beleg
+AC-23: `openspec.yaml` trägt `evidence_checks` in der Form, die das Plugin liest (#447, PR #449):
+`verifier`/`file` je Eintrag, `exempt_paths` neben `phase8_complete` als fnmatch-Muster. Eine andere Form
+weist das Plugin als kaputte Config ab und sperrt jeden Abschluss (docs/specs/tooling/feat-145-s2-gate.md). AC-21: Die Dateimenge, die `sim_proof.py` in den Beleg
 schreibt, ist eine Obermenge der Menge, die das Plugin-Gate mit der Loose-Ends-Konfiguration verlangt.
 
 Aufruf: python3 -m unittest scripts/test_evidence_config.py
 """
+import fnmatch
 import importlib.util
 import json
 import sys
@@ -70,26 +72,27 @@ class EvidenceConfigTests(unittest.TestCase):
     def setUp(self):
         self.config = load_project_config()
 
-    def checks(self):
+    def section(self):
         section = self.config.get("evidence_checks")
         self.assertIsInstance(section, dict, "openspec.yaml: Abschnitt evidence_checks fehlt")
-        entries = section.get("phase8_complete")
+        return section
+
+    def checks(self):
+        entries = self.section().get("phase8_complete")
         self.assertIsInstance(entries, list, "evidence_checks.phase8_complete ist keine Liste")
         self.assertEqual(len(entries), 1, "genau ein Belegtyp für phase8_complete erwartet")
         return entries[0]
 
     def test_phase8_requires_xcresult_proof(self):
-        self.assertEqual(self.checks().get("type"), "xcresult_proof")
-
-    def test_artifact_is_simulator_run(self):
-        self.assertEqual(self.checks().get("artifact"), "simulator-run.txt")
+        self.assertEqual(self.checks(), {"verifier": "xcresult_proof", "file": "simulator-run.txt"},
+                         "Eintrag braucht genau `verifier` und `file` (Form des Plugins)")
 
     def test_only_mac_folder_is_exempt(self):
-        self.assertEqual(self.checks().get("exempt_paths"), ["LooseEnds/Mac/"])
+        self.assertEqual(self.section().get("exempt_paths"), ["LooseEnds/Mac/*"],
+                         "exempt_paths gehört neben phase8_complete, als fnmatch-Muster")
 
     def test_no_other_phase_is_gated(self):
-        section = self.config.get("evidence_checks") or {}
-        self.assertEqual(set(section), {"phase8_complete"},
+        self.assertEqual(set(self.section()), {"phase8_complete", "exempt_paths"},
                          "der Beleg sperrt nur „fertig“, keine Zwischenphase")
 
 
@@ -103,12 +106,11 @@ class ProducerCoversGateTests(unittest.TestCase):
         self.config = load_project_config()
 
     def gate_paths(self):
-        exempt = []
-        for entry in (self.config.get("evidence_checks") or {}).get("phase8_complete", []):
-            exempt += entry.get("exempt_paths", [])
+        # Wie evidence_gate._gate_files: Muster auf Abschnittsebene, fnmatch auf den repo-relativen Pfad.
+        exempt = (self.config.get("evidence_checks") or {}).get("exempt_paths") or []
         return {p for p in SAMPLE_PATHS
                 if self.hook_utils.is_gated_code_path(p, self.config)
-                and not any(p.startswith(e) for e in exempt)}
+                and not any(fnmatch.fnmatch(p, e) for e in exempt)}
 
     def test_gate_set_is_not_empty(self):
         self.assertIn("LooseEnds/Views/InboxDrawerView.swift", self.gate_paths())

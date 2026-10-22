@@ -1,4 +1,3 @@
-test_artifact_is_simulator_run (scripts.test_evidence_config.EvidenceConfigTests.test_artifact_is_simulator_run) ... FAIL
 test_no_other_phase_is_gated (scripts.test_evidence_config.EvidenceConfigTests.test_no_other_phase_is_gated) ... FAIL
 test_only_mac_folder_is_exempt (scripts.test_evidence_config.EvidenceConfigTests.test_only_mac_folder_is_exempt) ... FAIL
 test_phase8_requires_xcresult_proof (scripts.test_evidence_config.EvidenceConfigTests.test_phase8_requires_xcresult_proof) ... FAIL
@@ -7,63 +6,53 @@ test_mac_folder_is_exempt_from_gate (scripts.test_evidence_config.ProducerCovers
 test_producer_covers_every_gate_path (scripts.test_evidence_config.ProducerCoversGateTests.test_producer_covers_every_gate_path) ... ok
 
 ======================================================================
-FAIL: test_artifact_is_simulator_run (scripts.test_evidence_config.EvidenceConfigTests.test_artifact_is_simulator_run)
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zany-wiggling-tower/scripts/test_evidence_config.py", line 85, in test_artifact_is_simulator_run
-    self.assertEqual(self.checks().get("artifact"), "simulator-run.txt")
-                     ~~~~~~~~~~~^^
-  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zany-wiggling-tower/scripts/test_evidence_config.py", line 75, in checks
-    self.assertIsInstance(section, dict, "openspec.yaml: Abschnitt evidence_checks fehlt")
-    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: None is not an instance of <class 'dict'> : openspec.yaml: Abschnitt evidence_checks fehlt
-
-======================================================================
 FAIL: test_no_other_phase_is_gated (scripts.test_evidence_config.EvidenceConfigTests.test_no_other_phase_is_gated)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zany-wiggling-tower/scripts/test_evidence_config.py", line 92, in test_no_other_phase_is_gated
-    self.assertEqual(set(section), {"phase8_complete"},
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zany-wiggling-tower/scripts/test_evidence_config.py", line 95, in test_no_other_phase_is_gated
+    self.assertEqual(set(self.section()), {"phase8_complete", "exempt_paths"},
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                      "der Beleg sperrt nur „fertig“, keine Zwischenphase")
                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 AssertionError: Items in the second set but not the first:
-'phase8_complete' : der Beleg sperrt nur „fertig“, keine Zwischenphase
+'exempt_paths' : der Beleg sperrt nur „fertig“, keine Zwischenphase
 
 ======================================================================
 FAIL: test_only_mac_folder_is_exempt (scripts.test_evidence_config.EvidenceConfigTests.test_only_mac_folder_is_exempt)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zany-wiggling-tower/scripts/test_evidence_config.py", line 88, in test_only_mac_folder_is_exempt
-    self.assertEqual(self.checks().get("exempt_paths"), ["LooseEnds/Mac/"])
-                     ~~~~~~~~~~~^^
-  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zany-wiggling-tower/scripts/test_evidence_config.py", line 75, in checks
-    self.assertIsInstance(section, dict, "openspec.yaml: Abschnitt evidence_checks fehlt")
-    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: None is not an instance of <class 'dict'> : openspec.yaml: Abschnitt evidence_checks fehlt
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zany-wiggling-tower/scripts/test_evidence_config.py", line 91, in test_only_mac_folder_is_exempt
+    self.assertEqual(self.section().get("exempt_paths"), ["LooseEnds/Mac/*"],
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     "exempt_paths gehört neben phase8_complete, als fnmatch-Muster")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != ['LooseEnds/Mac/*'] : exempt_paths gehört neben phase8_complete, als fnmatch-Muster
 
 ======================================================================
 FAIL: test_phase8_requires_xcresult_proof (scripts.test_evidence_config.EvidenceConfigTests.test_phase8_requires_xcresult_proof)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zany-wiggling-tower/scripts/test_evidence_config.py", line 82, in test_phase8_requires_xcresult_proof
-    self.assertEqual(self.checks().get("type"), "xcresult_proof")
-                     ~~~~~~~~~~~^^
-  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zany-wiggling-tower/scripts/test_evidence_config.py", line 75, in checks
-    self.assertIsInstance(section, dict, "openspec.yaml: Abschnitt evidence_checks fehlt")
-    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: None is not an instance of <class 'dict'> : openspec.yaml: Abschnitt evidence_checks fehlt
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zany-wiggling-tower/scripts/test_evidence_config.py", line 87, in test_phase8_requires_xcresult_proof
+    self.assertEqual(self.checks(), {"verifier": "xcresult_proof", "file": "simulator-run.txt"},
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     "Eintrag braucht genau `verifier` und `file` (Form des Plugins)")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'type': 'xcresult_proof', 'artifact': 'sim[47 chars]c/']} != {'verifier': 'xcresult_proof', 'file': 'simulator-run.txt'}
++ {'file': 'simulator-run.txt', 'verifier': 'xcresult_proof'}
+- {'artifact': 'simulator-run.txt',
+-  'exempt_paths': ['LooseEnds/Mac/'],
+-  'type': 'xcresult_proof'} : Eintrag braucht genau `verifier` und `file` (Form des Plugins)
 
 ======================================================================
 FAIL: test_mac_folder_is_exempt_from_gate (scripts.test_evidence_config.ProducerCoversGateTests.test_mac_folder_is_exempt_from_gate)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zany-wiggling-tower/scripts/test_evidence_config.py", line 122, in test_mac_folder_is_exempt_from_gate
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zany-wiggling-tower/scripts/test_evidence_config.py", line 124, in test_mac_folder_is_exempt_from_gate
     self.assertNotIn("LooseEnds/Mac/MenuBarCapture.swift", self.gate_paths())
     ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: 'LooseEnds/Mac/MenuBarCapture.swift' unexpectedly found in {'LooseEnds/App/LaunchTimings.swift', 'LooseEnds/Views/InboxDrawerView.swift', 'LooseEndsWatch/WatchCapture.swift', 'Shared/Services/CaptureService.swift', 'Measurement/LeaveOneOut.swift', 'Shared/Models/RepeatRule.swift', 'LooseEnds/Mac/MenuBarCapture.swift'}
+AssertionError: 'LooseEnds/Mac/MenuBarCapture.swift' unexpectedly found in {'Shared/Services/CaptureService.swift', 'LooseEnds/Mac/MenuBarCapture.swift', 'LooseEnds/Views/InboxDrawerView.swift', 'LooseEndsWatch/WatchCapture.swift', 'LooseEnds/App/LaunchTimings.swift', 'Measurement/LeaveOneOut.swift', 'Shared/Models/RepeatRule.swift'}
 
 ----------------------------------------------------------------------
-Ran 7 tests in 0.038s
+Ran 6 tests in 0.010s
 
-FAILED (failures=5)
+FAILED (failures=4)

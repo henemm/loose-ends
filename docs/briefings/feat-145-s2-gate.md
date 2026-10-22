@@ -1,7 +1,7 @@
 ---
 spec_file: docs/specs/tooling/feat-145-s2-gate.md
-spec_sha256: 872e4fa5b034c998985e690b6531e62e8cbadd3b336640db713a517b3ed30c0d
-spec_frozen_sha256: 61db95edbf20e2a19416f343f0858f75783dec3790bb24318df462246da60dfb
+spec_sha256: 58614a6cc1ed1dc5a59f01a89da118b41557a3a8b2e7e222b716c3291e3422a2
+spec_frozen_sha256: b0fb0557fa98a1866762cb0719b130d333a68e5350ee71d63ff257b5467c10eb
 ---
 
 # PO-Briefing: feat-145-s2-gate
@@ -12,22 +12,22 @@ spec_frozen_sha256: 61db95edbf20e2a19416f343f0858f75783dec3790bb24318df462246da6
 
 ## Was gebaut wird
 
-Abschluss eines Tickets mit sichtbarer Änderung wird gesperrt, solange kein echter, zum Stand passender Simulator-Durchlauf-Beleg vorliegt.
+Ein Ticket mit sichtbarer App-Änderung lässt sich nur abschließen, wenn ein echter, zum Stand passender Simulator-Durchlauf-Beleg vorliegt.
 
 ## Definition of Done
 
-Bewusster Versuch ohne Beleg wird abgelehnt; beim nächsten echten UI-Ticket kommt der Abschluss mit gültigem Beleg durch.
+Ohne Beleg wird der Abschluss abgelehnt, mit ehrlichem Beleg aus einem Probe-Ticket durchgelassen; der Pilot an einem echten Ticket bleibt offen.
 
 ## Wie geprüft wird
 
-Tests mit Attrappen prüfen alle Regeln samt Fehlversuchen; ob das Gate echte Simulatorläufe verträgt, zeigt erst der Pilot.
+Tests mit Attrappen und ein echter Probelauf zeigen Ablehnung und Annahme; ob das Gate im Alltag ehrliche Abschlüsse stört, zeigt erst der Pilot.
 
 ## Kritische Anmerkungen
 
-- Gate-Code wird nicht hier gebaut, sondern im Plugin-Ticket #447; Fertigstellung hängt von dessen Release und einem späteren Pilot-Ticket ab.
-- Restlücke: Ein selbst gebauter Simulator-Beleg wird nicht als unecht erkannt; Schutz erschwert Fälschen nur.
-- Mac-Änderungen sind ausgenommen; Doku-Schnitt fehlt bewusst.
+- Neu seit erster Freigabe: Gate-Code ist im Plugin schon gebaut; Konfiguration wurde daran angepasst, Pilot-Ticket bleibt offen.
+- Neu: Abnahme jetzt am Wegwerf-Probelauf statt am nächsten echten Ticket; Alltagstauglichkeit bleibt ungeprüft.
+- Restlücke: selbst gebauter Beleg wird nicht als unecht erkannt.
 
 ## Freigabe-Frage
 
-Soll das Gate in Loose Ends eingeschaltet werden, obwohl es auch ehrliche Abschlüsse blockieren kann?
+Soll das Gate in Loose Ends eingeschaltet werden, obwohl es ehrliche Abschlüsse blockieren kann?

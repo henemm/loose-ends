@@ -95,9 +95,8 @@ Tech-Lead-Entscheidung vom 2026-10-01 in #145 („Gate leitet lokal aus `run.xcr
 | `core/hooks/evidence_gate.py` | CREATE: `check_evidence(target_phase, wf) -> str\|None`, fail-closed, Verifier-Registry mit erstem Mitglied `xcresult_proof` | 2a |
 | `core/hooks/workflow.py` | MODIFY: eine Aufrufstelle im Phase-8-Zweig nach dem Dialog-Check (gilt damit auch für `complete` und `finish`) | 2a |
 | `core/hooks/config_loader.py`, `config.yaml` | MODIFY: Abschnitt `evidence_checks` (Default leer), Schlüssel in `PLUGIN_CONFIG_KEYS` | 2a |
-| `tests/test_evidence_gate_145.py` | CREATE | 2a |
+| `tests/test_evidence_gate_447.py` | CREATE (gebaut, PR #449; enthält auch 2b) | 2a, 2b |
 | `core/hooks/edit_gate.py`, `core/hooks/bash_gate.py` | MODIFY: Sperre auf `docs/artifacts/*/simulator-run.txt` und `simulator-run/` | 2b |
-| `tests/test_evidence_write_lock_145.py` | CREATE | 2b |
 
 Schätzung 2a: 4 Produktionsdateien, ca. +170 LoC Prod, ca. +250 LoC Test. Schätzung 2b: 2 bis 3 Dateien, ca. +40
 LoC Prod, ca. +120 LoC Test. Beide bleiben je Schnitt in den Scoping-Limits; wird eine Grenze beim Bau überschritten,
@@ -115,10 +114,14 @@ wird vor dem Weiterbauen gestoppt.
 ```yaml
 evidence_checks:
   phase8_complete:
-    - type: xcresult_proof
-      artifact: simulator-run.txt
-      exempt_paths: ["LooseEnds/Mac/"]
+    - verifier: xcresult_proof
+      file: simulator-run.txt
+  exempt_paths: ["LooseEnds/Mac/*"]
 ```
+
+Schlüsselnamen und Ebene folgen dem gebauten Plugin (#447, PR #449): `verifier`/`file` je Eintrag, `exempt_paths`
+neben `phase8_complete` als `fnmatch`-Muster auf repo-relative Pfade (`*` umfasst auch `/`). Jede andere Form weist
+das Plugin als kaputte Config ab und sperrt damit jeden Abschluss, auch gegen ein `override`.
 
 `LooseEnds/Mac/` ist Mac-only und hat keinen Simulator-UI-Test (der Mac-Nachweis läuft über die Mac-Galerie in
 der CI). Weitere Ausnahmepfade nur mit begründeter Änderung dieser Datei.
@@ -141,16 +144,16 @@ fälschbares Feld.
 
 ## Acceptance Criteria
 
-Gilt für den Plugin-Workflow zu #447 (Tests in den genannten Testdateien) und für Loose Ends (Konfiguration,
-Pilot). „Gate" meint die Prüfung beim Übergang nach `phase8_complete`, auch über `complete` und `finish`.
+AC-1 bis AC-22 gelten für das Plugin (#447, gebaut in PR #449, Tests in `tests/test_evidence_gate_447.py`); verlangt
+ist der Sinn der Meldung, nicht ein Wortlaut. AC-23 und AC-24 gelten für Loose Ends. „Gate" meint die Prüfung beim Übergang nach `phase8_complete`, auch über `complete` und `finish`.
 Der Nachweis, dass es greift, ist jeweils ein bewusster Fehlversuch.
 
 - **AC-1:** Kein Beleg, bewusster Fehlversuch. Given `evidence_checks` ist für `phase8_complete` gesetzt, eine
   Gate-Datei (z. B. `LooseEnds/Views/Foo.swift`) ist seit der Basis geändert und es existiert kein
   `simulator-run.txt` / When der Übergang nach `phase8_complete` versucht wird / Then wird er abgelehnt, und die
-  Meldung nennt den fehlenden Beleg und den Befehl `scripts/sim.sh test-proof <Klasse>`.
+  Meldung nennt den fehlenden Beleg und den Befehl `scripts/sim.sh test-proof`.
 - **AC-2:** Veralteter Hash. Given ein gültiger Beleg, danach wird eine Gate-Datei inhaltlich verändert / When der
-  Übergang versucht wird / Then Ablehnung, die Meldung nennt Pfad und „Hash weicht ab" dieser Datei.
+  Übergang versucht wird / Then Ablehnung, die Meldung nennt den Pfad dieser Datei und dass sie nach dem Lauf geändert wurde.
 - **AC-3:** Datei fehlt im Beleg. Given ein gültiger Beleg, danach kommt eine weitere Gate-Datei (geändert oder
   neu) hinzu, die im Block `## Geprüfte Dateien` fehlt / When der Übergang versucht wird / Then Ablehnung mit dem
   Pfad der nicht gebundenen Datei.
@@ -159,8 +162,8 @@ Der Nachweis, dass es greift, ist jeweils ein bewusster Fehlversuch.
 - **AC-5:** Null Tests. Given ein Beleg mit `ergebnis: Passed`, aber `tests: 0 gesamt` (oder 0 bestanden) /
   When der Übergang versucht wird / Then Ablehnung mit dem Hinweis „kein bestandener Test".
 - **AC-6:** `summary.json` manipuliert. Given ein Beleg, dessen `summary.json` nach dem Lauf verändert wurde, sodass
-  die Prüfsumme der Zeile `summary:` nicht mehr stimmt / When der Übergang versucht wird / Then Ablehnung mit
-  „summary.json: Prüfsumme weicht ab".
+  die Prüfsumme der Zeile `summary:` nicht mehr stimmt / When der Übergang versucht wird / Then Ablehnung, die Meldung
+  nennt `summary.json` und die Prüfsumme.
 - **AC-7:** Bündel fehlt. Given ein sonst gültiger Beleg, dessen `simulator-run/run.xcresult` fehlt / When der
   Übergang versucht wird / Then Ablehnung mit „run.xcresult fehlt".
 - **AC-8:** Neuableitung weicht ab. Given ein Beleg und eine `summary.json`, die `Passed` und 3 bestandene Tests
@@ -172,7 +175,7 @@ Der Nachweis, dass es greift, ist jeweils ein bewusster Fehlversuch.
   byteweiser Vergleich).
 - **AC-10:** `xcresulttool` nicht nutzbar, fail-closed. Given `xcresulttool` fehlt (z. B. Linux) oder
   überschreitet das Zeitlimit / When der Übergang versucht wird / Then Ablehnung mit einer Meldung, die
-  `xcresulttool` und „fehlt" bzw. „Zeitlimit" nennt; es wird nie stillschweigend durchgelassen, und das Gate wirft
+  `xcresulttool` und „nicht verfügbar" bzw. „Zeitlimit" nennt; es wird nie stillschweigend durchgelassen, und das Gate wirft
   keine Ausnahme.
 - **AC-11:** Gültiger Beleg wird akzeptiert. Given ein von `scripts/sim.sh test-proof` erzeugter Beleg, dessen
   Hashes zum Arbeitsbaum passen, mit `ergebnis: Passed` und passender Neuableitung / When der Übergang versucht
@@ -183,7 +186,7 @@ Der Nachweis, dass es greift, ist jeweils ein bewusster Fehlversuch.
 - **AC-13:** Keine Gate-Datei geändert. Given die seit der Basis geänderten Dateien sind nur Doku, Skripte oder
   Tests (`docs/`, `scripts/`, `*.md`) / When der Übergang versucht wird / Then verlangt das Gate keinen Beleg.
 - **AC-14:** Nur Ausnahmepfade geändert. Given die einzige geänderte Gate-Datei liegt unter einem
-  `exempt_paths`-Eintrag (z. B. `LooseEnds/Mac/MenuBarCapture.swift`) / When der Übergang versucht wird /
+  `exempt_paths`-Muster (z. B. `LooseEnds/Mac/MenuBarCapture.swift` unter `LooseEnds/Mac/*`) / When der Übergang versucht wird /
   Then verlangt das Gate keinen Beleg. Given zusätzlich eine Datei außerhalb der Ausnahmepfade geändert ist /
   Then verlangt es ihn weiter (und prüft nur diese Datei gegen den Beleg).
 - **AC-15:** Projekt ohne Konfiguration unverändert. Given ein Projekt ohne Abschnitt `evidence_checks` (oder mit
@@ -197,7 +200,7 @@ Der Nachweis, dass es greift, ist jeweils ein bewusster Fehlversuch.
   Beleg ersetzen könnte, oder `add-artifact` einen anderen Pfad meldet / Then ändert das nichts am Gate-Ergebnis:
   gelesen wird ausschließlich der feste Pfad `docs/artifacts/<wf>/simulator-run.txt`.
 - **AC-18:** Beleg außerhalb des Projekts. Given der feste Pfad ist ein Symlink, der aus dem Projekt zeigt /
-  When der Übergang versucht wird / Then Ablehnung (`_outside_roots`), der Inhalt wird nicht gelesen.
+  When der Übergang versucht wird / Then Ablehnung (Prüfung „liegt im Projekt“ vor dem Lesen), der Inhalt wird nicht gelesen.
 - **AC-19:** Schreibsperre (Schnitt 2b). Given ein aktiver Workflow / When ein Write- oder Edit-Aufruf auf
   `docs/artifacts/<wf>/simulator-run.txt` oder eine Datei in `docs/artifacts/<wf>/simulator-run/` zielt, oder ein
   Bash-Befehl, dessen Text eine dieser Dateien mit `>`, `>>`, `tee`, `cp`, `mv`, `sed -i` oder `rm` beschreibt /
@@ -206,7 +209,8 @@ Der Nachweis, dass es greift, ist jeweils ein bewusster Fehlversuch.
   aufgerufen wird / Then wird der Aufruf nicht blockiert (erkannt am Befehl, nicht am Pfad allein), und der Beleg
   entsteht. Lesende Zugriffe (`cat`, Read) auf Beleg und Bündel bleiben erlaubt.
 - **AC-21:** Drift zwischen Erzeuger und Gate. Given die Dateimenge, die `scripts/sim_proof.py` in den Beleg
-  schreibt, und die Gate-Menge des Plugins mit der Loose-Ends-Konfiguration / When ein Test beide für ein
+  schreibt, und die Gate-Menge des Plugins mit der Loose-Ends-Konfiguration (`is_gated_code_path` des installierten
+  Plugins, abzüglich `evidence_checks.exempt_paths` als `fnmatch`-Muster wie im Plugin) / When ein Test beide für ein
   Musterset von Pfaden (`.swift` unter `LooseEnds/`, `Shared/`, `LooseEndsTests/`, `LooseEndsUITests/`,
   `Measurement/`, sowie `docs/`, `scripts/`, `*.md`, `*.json`) berechnet / Then ist die Erzeuger-Menge eine
   Obermenge der Gate-Menge. Der Test schlägt fehl, wenn das Plugin eine Endung oder einen Pfad zählt, den
@@ -216,20 +220,22 @@ Der Nachweis, dass es greift, ist jeweils ein bewusster Fehlversuch.
   bestehenden Mechanismus mit Hennings **getipptem** `override` (Einstunden-Fenster, nur das Wort „override"
   zählt). Es gibt kein selbst registrierbares Verzichtsartefakt.
 - **AC-23:** Einschalten in Loose Ends. Given der Plugin-Release mit 2a ist installiert / When `openspec.yaml`
-  den Abschnitt `evidence_checks` mit `phase8_complete`, Typ `xcresult_proof` und `exempt_paths` laut obiger Form
-  enthält / Then lädt das Plugin die Konfiguration ohne Fehler, ein Test (Plugin oder `scripts/test_evidence_config.py`)
-  liest die Datei und bestätigt Form und Inhalt, und ein bewusster Fehlversuch an einem Wegwerf-Workflow in Loose
-  Ends (Gate-Datei geändert, kein Beleg) wird abgelehnt.
-- **AC-24:** Pilot. Given das Gate ist in Loose Ends eingeschaltet / When das nächste echte UI-Ticket
-  (Änderung in `LooseEnds/Views/` o. ä.) durch die Phasen läuft / Then erzeugt `scripts/sim.sh test-proof` seinen
-  Beleg, das Gate lässt `phase8_complete` genau einmal vollständig durch, und der Abschlussbericht des Tickets
-  zitiert die Gate-Entscheidung. Schlägt der Pilot an einem ehrlichen Beleg fehl, wird das Gate repariert, nicht
-  umgangen.
+  den Abschnitt `evidence_checks` mit `phase8_complete` (`verifier: xcresult_proof`, `file: simulator-run.txt`) und
+  `exempt_paths: ["LooseEnds/Mac/*"]` laut obiger Form enthält / Then liest `scripts/test_evidence_config.py` die Datei
+  und bestätigt Form und Inhalt, und ein bewusster Fehlversuch wird abgelehnt: die Gate-Prüfung des installierten
+  Plugins (`evidence_gate.check_evidence("phase8_complete", …)`) für einen Wegwerf-Workflow in Loose Ends, in dem eine
+  Gate-Datei geändert ist und kein Beleg liegt, liefert eine Ablehnung, die den fehlenden Beleg nennt (nicht eine
+  Config-Ablehnung).
+- **AC-24:** Ehrlicher Beleg wird akzeptiert. Given das Gate ist in Loose Ends eingeschaltet und derselbe
+  Wegwerf-Workflow wie in AC-23 / When `scripts/sim.sh test-proof <Klasse>` im Simulator einen echten Beleg zu einer
+  bestehenden UI-Testklasse erzeugt hat / Then liefert dieselbe Gate-Prüfung keine Ablehnung, ohne `override`.
+  Schlägt das an einem ehrlichen Beleg fehl, wird das Gate repariert, nicht umgangen. Der Pilot am nächsten echten
+  UI-Ticket bleibt offener Punkt in #145 (außerhalb dieses Workflows, weil er ein anderes Ticket braucht).
 
 ## Ausnahmen
 
 - Keine Gate-Datei geändert: kein Beleg (Doku, Skripte, Tests; AC-13).
-- `exempt_paths` für Bereiche ohne Simulator-UI-Test, in Loose Ends `LooseEnds/Mac/` (AC-14).
+- `exempt_paths` für Bereiche ohne Simulator-UI-Test, in Loose Ends `LooseEnds/Mac/*` (AC-14).
 - Sonst nur Hennings getipptes `override` (AC-22). Fast-Track, Spikes und Doku-Tickets ohne Gate-Datei laufen
   durch Regel 1, ohne Sonderpfad.
 - Verbreitung heute: 22 von 81 Artefaktordnern haben einen `simulator-run.txt`; ohne diese Ausnahmen würde das Gate
@@ -258,20 +264,21 @@ als erste Stufe sinnvoll; der CI-Nachlauf ist als Zielbild in #145 festgehalten 
 
 ## Test Plan
 
-- **Plugin, Schnitt 2a:** `tests/test_evidence_gate_145.py` mit temporärem Projektbaum und einem Stub für
+- **Plugin, Schnitt 2a und 2b (gebaut, PR #449):** `tests/test_evidence_gate_447.py` mit temporärem Projektbaum und einem Stub für
   `xcresulttool` (Skript im `PATH` mit festen JSON-Ausgaben). Fälle: AC-1 bis AC-18, jeder als eigener Test, darunter
   fehlender Beleg, veralteter Hash, fehlende Datei, `Failed`/`Unbekannt`, 0 Tests, falsche `summary.json`-Prüfsumme,
   fehlendes Bündel, abweichende Neuableitung, Zusatzfelder ohne Folge, `xcresulttool` fehlt, Timeout, Symlink,
   leere Konfiguration, `complete`/`finish`.
-- **Plugin, Schnitt 2b:** `tests/test_evidence_write_lock_145.py`: Write/Edit auf Beleg und Bündel blockiert,
+  Darin auch Schnitt 2b: Write/Edit auf Beleg und Bündel blockiert,
   Bash-Umleitungen blockiert, `scripts/sim.sh test-proof …` und lesende Befehle erlaubt (AC-19, AC-20).
-- **Drift (AC-21):** ein Test, der `scripts/sim_proof.py` (Filterfunktion) und das Plugin-Gate mit der
-  Loose-Ends-Konfiguration gegeneinander hält; er liegt dort, wo beide Seiten erreichbar sind (Plugin-Test mit
-  Pfad auf das Loose-Ends-Skript, falls vorhanden, sonst `scripts/test_evidence_config.py`).
+- **Drift (AC-21):** `scripts/test_evidence_config.py` hält `sim_proof.is_gated_code_path` gegen
+  `is_gated_code_path` des installierten Plugins mit der Loose-Ends-Konfiguration und `fnmatch` auf
+  `evidence_checks.exempt_paths`; ohne installiertes Plugin (CI) übersprungen.
 - **Loose Ends, Konfiguration (AC-23):** `scripts/test_evidence_config.py` (`python3 -m unittest`) liest
-  `openspec.yaml` und prüft Form, Typ, Artefaktname und `exempt_paths`.
-- **Pilot (AC-24):** echter Durchlauf eines UI-Tickets; kein Unit-Test, der Beleg entsteht aus dem echten
-  Simulatorlauf.
+  `openspec.yaml` und prüft `verifier`, `file` und `exempt_paths` in der Form des Plugins.
+- **Fehlversuch und ehrlicher Beleg (AC-23, AC-24):** Wegwerf-Workflow in Loose Ends, Aufruf der Gate-Prüfung des
+  installierten Plugins einmal ohne Beleg, einmal nach `scripts/sim.sh test-proof <Klasse>`; die wörtlichen
+  Ausgaben gehen ins Adversary-Protokoll. Danach wird der Wegwerf-Workflow entfernt.
 - Keine UI-Tests der App: das Werkzeug hat keine Oberfläche, die UI-Testklassen dienen nur als Eingabe für den Pilot.
 
 ## Risiken
@@ -286,14 +293,20 @@ als erste Stufe sinnvoll; der CI-Nachlauf ist als Zielbild in #145 festgehalten 
    mit klarer Meldung ab (AC-10), statt zu raten.
 5. **Format ändert sich** (Schema 0.4.0 ist versioniert, nicht öffentlich dokumentiert). Fehlende Felder führen
    zur Ablehnung, nie zum Durchlassen.
-6. **Reihenfolge:** Wird `openspec.yaml` vor dem Plugin-Release geändert, kennt das Plugin den Schlüssel nicht.
-   Deshalb Einschalten erst nach Installation von 2a (AC-23).
+6. **Reihenfolge:** Plugin 3.41.0 überliest `evidence_checks` (geprüft 2026-10-22), der Abschnitt darf also vor
+   dem Release stehen. AC-23 und AC-24 brauchen aber das installierte Release mit #447 (Version nach 3.41.0).
+8. **Falsche Form sperrt alles.** Das Plugin prüft die Config vor dem `override`; eine kaputte Form ließe keinen
+   Abschluss mehr zu. Gegenmittel: `scripts/test_evidence_config.py` prüft die Form des Plugins, nicht eine eigene.
+9. **Latente Drift, heute ohne Fall:** Das Plugin verlangt eine `.swift`-Datei in einem Unterordner namens `tools/`,
+   `tests/`, `spec/` o. ä. (z. B. `Measurement/tools/X.swift`), `sim_proof.py` schreibt sie nicht in den Beleg. Solch
+   eine Datei gibt es heute nicht; entsteht eine, scheitert der ehrliche Beleg sichtbar und `sim_proof.py` wird
+   angepasst. Ebenso nimmt das Plugin `base_commit`, wenn er jünger als der merge-base ist.
 7. **Schreibsperre vs. Erzeuger:** Die Sperre sieht nur Befehlstexte, die den Pfad nennen; `sim.sh` schreibt intern
    und wird nicht gesehen (gewollt, AC-20).
 
 ## Abnahme
 
-Stufe 1 (Tests) und Stufe 2 (echter Durchlauf des Gates: bewusster Fehlversuch und gültiger Beleg im Pilot) sind
+Stufe 1 (Tests) und Stufe 2 (echter Durchlauf des Gates: bewusster Fehlversuch und ehrlicher Beleg, AC-23/AC-24) sind
 Pflicht. Stufe 3 entfällt: `openspec.yaml` steht nicht in der Geräteliste von `CLAUDE.md`, das Plugin ist kein
 App-Pfad. Abschlussbericht-Satz: „Kein Pfad der Geräteliste berührt."
 
@@ -306,12 +319,13 @@ App-Pfad. Abschlussbericht-Satz: „Kein Pfad der Geräteliste berührt."
 ## Definition of Done
 
 - [ ] AC-1 bis AC-24 erfüllt, jeder bewusste Fehlversuch mit wörtlicher Ausgabe im Abschlussbericht
-- [ ] Plugin: `tests/test_evidence_gate_145.py` und `tests/test_evidence_write_lock_145.py` grün, Plugin-Release installiert (#447)
+- [ ] Plugin: `tests/test_evidence_gate_447.py` grün (#447), Release mit #447 veröffentlicht und installiert
 - [ ] Loose Ends: `openspec.yaml` eingeschaltet, Konfigurationsprüfung grün
-- [ ] Pilot-Ticket läuft einmal vollständig durch das Gate, Entscheidung zitiert
+- [ ] Fehlversuch und ehrlicher Beleg am Wegwerf-Workflow mit wörtlicher Ausgabe; Pilot am nächsten UI-Ticket als offener Punkt in #145
 - [ ] Schnitt 3 (Doku) als offener Punkt von #145 sichtbar; PR verweist mit `Refs #145`, nicht `Closes`
 - [ ] Jeder Commit kompiliert, CI grün
 
 ## Changelog
 
+- 2026-10-22: An das gebaute Plugin (#447, PR #449) angeglichen: Konfigurationsform (`verifier`/`file`, `exempt_paths` eine Ebene höher als `fnmatch`-Muster), Meldungs-ACs auf Sinn statt Wortlaut (AC-1, 2, 6, 10), Testdatei `test_evidence_gate_447.py`; AC-24 vom Pilot am nächsten Ticket auf den ehrlichen Beleg am Wegwerf-Workflow umgestellt (der Pilot bleibt offen in #145), Risiken 6, 8, 9.
 - 2026-10-22: Spec aus der Analyse in `docs/context/feat-145-s2-gate.md` geschrieben (Schnitt 2 von #145; Plugin-Ticket henemm/agent-os-openspec#447).
