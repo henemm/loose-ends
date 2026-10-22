@@ -36,11 +36,6 @@ enum RowKeyAction: Equatable {
         }
     }
 
-    /// The row a list remembered comes back only while it is still shown; else nothing is chosen.
-    static func restored(_ remembered: UUID?, ids: [UUID]) -> UUID? {
-        remembered.flatMap { ids.contains($0) ? $0 : nil }
-    }
-
     /// Space finishes only where the swipe offers Done: never in Completed (only Restore; it would set
     /// the completion again), New (the inbox only confirms, #318) or Parked (only Activate), and never a
     /// parked task, the parked block of "All open" included.

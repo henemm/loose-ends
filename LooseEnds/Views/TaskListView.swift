@@ -2,17 +2,7 @@ import SwiftData
 import SwiftUI
 #if os(macOS)
 import AppKit
-import OSLog
-
-/// Temporary diagnosis for the choice lost on the way back from the detail (#480, CI run 39567071321).
-private let keyLog = Logger(subsystem: "com.henning.looseends", category: "ListKeys")
-@MainActor private var keyLogCount = 0
-
-/// One line "LK <n> <tag>: <text>", numbered so the order reads in `log show`.
-@MainActor private func lk(_ tag: String, _ text: String) {
-    keyLogCount += 1
-    keyLog.notice("LK \(keyLogCount, privacy: .public) \(tag, privacy: .public): \(text, privacy: .public)")
-}
+import Observation
 #endif
 
 /// One view as a list (design briefing, screen 3): a system view, a context or a project.
@@ -43,26 +33,18 @@ struct TaskListView: View {
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var sizeClass
     #else
-    /// The row chosen by the arrows or the last one opened (#480); our own, never `List(selection:)`,
-    /// so a click keeps opening the task (#544).
-    @State private var selectedID: UUID?
     @FocusState private var listFocused: Bool
-    /// Whether the list is on screen; a detail pushed over it must not clear the choice.
-    @State private var isShown = false
     #endif
 
-    init(selection: ViewSelection, tasks: [TaskItem]) {
-        self.selection = selection
-        self.tasks = tasks
-        #if os(macOS)
-        // The Mac rebuilds the list on the way back from the detail without calling `onAppear`
-        // (CI run 39616031250), so the choice comes from the memo when the view is made. A stale id
-        // is harmless: it matches no row and `RowKeyAction` treats it as no choice.
-        let memo = ChosenRows.shared.byList[selection]
-        _selectedID = State(initialValue: memo)
-        lk("init", "view \(selection) from memo \(String(describing: memo))")
-        #endif
+    #if os(macOS)
+    /// The row chosen by the arrows or the last one opened (#480); our own, never `List(selection:)`,
+    /// so a click keeps opening the task (#544). It lives in `ChosenRows`, not in the view's state:
+    /// the Mac rebuilds the list on the way back from the detail (CI runs 39616031250, 39631899047).
+    private var selectedID: UUID? {
+        get { ChosenRows.shared.byList[selection] }
+        nonmutating set { ChosenRows.shared.byList[selection] = newValue }
     }
+    #endif
 
     /// The Mac always, iOS whenever the window is not compact (#477, as #471/#476).
     private var isWide: Bool {
@@ -157,13 +139,7 @@ struct TaskListView: View {
     private func detail(_ task: TaskItem, reviewing: Bool = false) -> some View {
         TaskDetailView(task: task, reviewing: reviewing)
         #if os(macOS)
-            .onAppear {
-                // Into the memo first: the list's own state may not be installed while the detail is up.
-                let before = ChosenRows.shared.byList[selection]
-                ChosenRows.shared.byList[selection] = task.id
-                selectedID = task.id
-                lk("detail.appear", "task \(task.id) view \(selection) memo \(String(describing: before)) -> \(String(describing: ChosenRows.shared.byList[selection])) selectedID \(String(describing: selectedID))")
-            }
+            .onAppear { selectedID = task.id }
         #endif
     }
 
@@ -175,20 +151,7 @@ struct TaskListView: View {
         ScrollViewReader { proxy in
             list
                 .focused($listFocused)
-                .onAppear {
-                    // Back from the detail (CI run 39559352169): the choice comes from the memo.
-                    isShown = true
-                    let before = selectedID
-                    let memo = ChosenRows.shared.byList[selection]
-                    let ids = rowIDs
-                    selectedID = RowKeyAction.restored(memo, ids: ids)
-                    listFocused = true
-                    lk("list.appear", "view \(selection) selectedID before \(String(describing: before)) memo \(String(describing: memo)) rows \(ids.count) restored \(String(describing: RowKeyAction.restored(memo, ids: ids)))")
-                }
-                .onDisappear {
-                    isShown = false
-                    lk("list.disappear", "view \(selection) selectedID \(String(describing: selectedID)) memo \(String(describing: ChosenRows.shared.byList[selection]))")
-                }
+                .onAppear { listFocused = true }
                 // Only the bare keys: ⌘⌫, ⇧Space or ⌥↓ mean something else.
                 .onKeyPress(keys: [.upArrow, .downArrow, .space, .delete]) { press in
                     guard press.modifiers.isDisjoint(with: [.command, .shift, .option, .control]) else { return .ignored }
@@ -211,18 +174,13 @@ struct TaskListView: View {
                 }
                 .onDeleteCommand { if Self.bareKey { _ = handle(.delete) } }
                 // The chosen row stays in sight: the arrows scroll it in, as little as needed.
-                .onChange(of: selectedID) { old, id in
-                    lk("selected.change", "view \(selection) \(String(describing: old)) -> \(String(describing: id)) shown \(isShown)")
-                    ChosenRows.shared.byList[selection] = id
+                .onChange(of: selectedID) { _, id in
                     if let id { proxy.scrollTo(id) }
                 }
                 // A row that left the list (done, moved, deleted) takes the choice with it; nothing jumps on.
-                // Only while the list is shown: a passing state behind the open detail clears nothing.
+                // An empty list is a passing state while the list is rebuilt, never a reason to clear.
                 .onChange(of: rowIDs) { _, ids in
-                    if isShown, let chosen = selectedID, !ids.contains(chosen) {
-                        lk("rows.clear", "view \(selection) shown \(isShown) chosen \(chosen) rows \(ids.count)")
-                        selectedID = nil
-                    }
+                    if !ids.isEmpty, let chosen = selectedID, !ids.contains(chosen) { selectedID = nil }
                 }
         }
         #else
@@ -612,8 +570,9 @@ struct TaskListView: View {
 
 #if os(macOS)
 /// The chosen row per list (#480), in memory only: the Mac's navigation stack can rebuild a list on the
-/// way back from the detail, and its own state goes with it. Nothing is stored past the app's run.
-@MainActor
+/// way back from the detail, and its own state goes with it. Observed, so every instance of a list
+/// redraws when its choice changes. Nothing is stored past the app's run.
+@MainActor @Observable
 private final class ChosenRows {
     static let shared = ChosenRows()
     var byList: [ViewSelection: UUID] = [:]

@@ -431,7 +431,6 @@ jobs:
           system_profiler SPDisplaysDataType | grep -i resolution || true
           log show --last 15m --style compact \
             --predicate 'process == "testmanagerd" OR subsystem == "com.apple.TCC"' | tail -200 || true
-          log show --last 40m --style compact --predicate 'subsystem == "com.henning.looseends" AND category == "ListKeys"' | tail -300 || true
       - name: Export Mac gallery
         if: always()
         continue-on-error: true

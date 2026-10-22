@@ -101,15 +101,6 @@ import Testing
         #expect(RowKeyAction.spaceCompletes(in: nil, status: .unverified))
     }
 
-    // MARK: - Back from the detail (CI run 39559352169)
-
-    @Test func aRememberedRowComesBackOnlyWhileShown() {
-        #expect(RowKeyAction.restored(b, ids: ids) == b)
-        #expect(RowKeyAction.restored(UUID(), ids: ids) == nil)
-        #expect(RowKeyAction.restored(nil, ids: ids) == nil)
-        #expect(RowKeyAction.restored(a, ids: []) == nil)
-    }
-
     @Test func aParkedOrDoneTaskIsNeverFinishedBySpace() {
         #expect(!RowKeyAction.spaceCompletes(in: .open, status: .parked))
         #expect(!RowKeyAction.spaceCompletes(in: nil, status: .parked))
