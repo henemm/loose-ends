@@ -11,7 +11,7 @@ der Titel, gefiltert auf Wörter ab vier Zeichen.
 | Energie | 211 | exakte Gleichheit |
 
 Korpus: `docs/reference/focusblox-corpus.json` (287 Aufgaben) ·
-Messtag: 2026-09-26 · Methode: Regel-Auslass-Test, kein Modell, kein Gerät.
+Methode: Regel-Auslass-Test, kein Modell, kein Gerät.
 
 Im Pool eines Merkmals steht nur, wer für dieses Merkmal eine Wahrheit trägt. Bei Kontexten
 heißt das: die 183 Aufgaben mit leerer Kontextliste sind
