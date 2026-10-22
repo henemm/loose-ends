@@ -15,6 +15,15 @@ enum ContextWordLearning {
         let contexts: [String]
     }
 
+    /// N in the product path (Schnitt 2, Henning 2026-10-22): the smallest N that met the rule fixed
+    /// before the measurement (`docs/reference/context-word-learning.md`) — fixed list plus learned
+    /// words hit 32 % of the tasks exactly instead of 12 %, and the share of foreign contexts among
+    /// the set ones does not rise. One assignment by hand teaches every content word of its text.
+    static let minimumCount = 1
+
+    /// A learned hit carries the fixed list's confidence: the word is there or it is not.
+    static let confidence = ContextWordRule.confidence
+
     /// The learned words per context name, each normalized like `RawTextWords.normalized`.
     ///
     /// Counted over *distinct* word sets: a task captured ten times is one assignment, not ten, or a
@@ -62,6 +71,19 @@ enum ContextWordLearning {
     static func match(in text: String, learned: [String: Set<String>]) -> [String] {
         let words = candidateWords(in: text)
         return learned.filter { !$0.value.isDisjoint(with: words) }.keys.sorted()
+    }
+
+    /// The first word of `text`, in its own spelling, that a learned list of one of `names` carries —
+    /// the word the reason quotes (#101). `nil` when none does.
+    static func firstWord(in text: String, learned: [String: Set<String>], names: [String]) -> String? {
+        let words = names.reduce(into: Set<String>()) { $0.formUnion(learned[$1] ?? []) }
+        return RawTextWords.words(in: text).first { words.contains(RawTextWords.normalized($0)) }
+    }
+
+    /// The reason of a learned hit, next to the fixed list's "From “…” in the note.": it says where
+    /// the word comes from, so the user knows which tag taught it and where to delete it.
+    static func reason(word: String) -> String {
+        String(localized: "From “\(word)” in the note, learned from your tags.")
     }
 
     /// The words of a raw text that may be learned: normalized, four characters or more (the

@@ -74,10 +74,11 @@ final class EnrichmentCoordinator {
             let projects = try context.fetch(FetchDescriptor<Project>(sortBy: [SortDescriptor(\.sortOrder)]))
             let examples = modelUnavailable == nil ? try Self.examples(in: context) : []
             let recognition = try Self.recognitionInputs(in: context)   // once before the loop (#136)
+            let learned = Self.learnedWords(from: recognition.tasksByID.values)   // once as well (#233)
 
             for task in pending {
                 applyRules(to: task, mode: .firstRun, catalog: contexts, projects: projects,
-                           recognitionPool: recognition.pool, tasksByID: recognition.tasksByID)
+                           recognitionPool: recognition.pool, tasksByID: recognition.tasksByID, learned: learned)
                 // Outside the model block and outside its `do`/`catch` on purpose: the rule step ran,
                 // whether or not the model was there and whether or not its call threw (#144).
                 task.rulesAppliedAt = Date()
@@ -134,7 +135,8 @@ final class EnrichmentCoordinator {
         if task.parent != nil {
             do {
                 let contexts = try context.fetch(FetchDescriptor<TaskContext>(sortBy: [SortDescriptor(\.sortOrder)]))
-                applySubtaskRules(to: task, mode: .reanalysis, catalog: contexts)
+                let learned = try Self.learnedWords(from: Self.recognitionInputs(in: context).tasksByID.values)
+                applySubtaskRules(to: task, mode: .reanalysis, catalog: contexts, learned: learned)
                 task.rulesAppliedAt = Date()
                 try context.save()
             } catch {
@@ -156,8 +158,9 @@ final class EnrichmentCoordinator {
             let recognition = try Self.recognitionInputs(in: context)
             // The task's own rule step ran before, so it sits in the pool: it must not recognise itself.
             let pool = recognition.pool.filter { $0.id != task.id }
+            let learned = Self.learnedWords(from: recognition.tasksByID.values)
             let ruleFields = applyRules(to: task, mode: .reanalysis, catalog: contexts, projects: projects,
-                                        recognitionPool: pool, tasksByID: recognition.tasksByID)
+                                        recognitionPool: pool, tasksByID: recognition.tasksByID, learned: learned)
             task.rulesAppliedAt = Date()
 
             if modelUnavailable == nil {
@@ -206,7 +209,8 @@ final class EnrichmentCoordinator {
         catalog: [TaskContext],
         projects: [Project],
         recognitionPool: [RecognitionRule.Candidate],
-        tasksByID: [UUID: TaskItem]
+        tasksByID: [UUID: TaskItem],
+        learned: [String: Set<String>]
     ) -> Set<RevisedField> {
         var matched = Set<RevisedField>()
         if applyDueDateRule(to: task, mode: mode) { matched.insert(.dueDate) }
@@ -215,7 +219,7 @@ final class EnrichmentCoordinator {
         matched.formUnion(applyRecognitionRule(to: task, mode: mode, pool: recognitionPool, tasksByID: tasksByID))
         // The word list only where recognition found nothing: a text captured before carries what
         // the user decided then, which beats a word list (#232).
-        if !matched.contains(.contexts), applyContextWordRule(to: task, mode: mode, catalog: catalog) {
+        if !matched.contains(.contexts), applyContextWordRule(to: task, mode: mode, catalog: catalog, learned: learned) {
             matched.insert(.contexts)
         }
         if applyPhoneRule(to: task, mode: mode) { matched.insert(.notes) }
@@ -238,8 +242,9 @@ final class EnrichmentCoordinator {
             )).filter { $0.parent != nil }.sorted { $0.capturedAt < $1.capturedAt }
             guard !lines.isEmpty else { return }
             let contexts = try context.fetch(FetchDescriptor<TaskContext>(sortBy: [SortDescriptor(\.sortOrder)]))
+            let learned = try Self.learnedWords(from: Self.recognitionInputs(in: context).tasksByID.values)
             for line in lines {
-                applySubtaskRules(to: line, mode: .firstRun, catalog: contexts)
+                applySubtaskRules(to: line, mode: .firstRun, catalog: contexts, learned: learned)
                 line.rulesAppliedAt = Date()
                 do {
                     try context.save()
@@ -255,19 +260,44 @@ final class EnrichmentCoordinator {
     /// Due date and tag word only (#565). Returns the fields a rule matched, written or not.
     @discardableResult
     private func applySubtaskRules(
-        to line: TaskItem, mode: EnrichmentWriter.Mode, catalog: [TaskContext]
+        to line: TaskItem, mode: EnrichmentWriter.Mode, catalog: [TaskContext], learned: [String: Set<String>]
     ) -> Set<RevisedField> {
         var matched = Set<RevisedField>()
         if applyDueDateRule(to: line, mode: mode) { matched.insert(.dueDate) }
-        if applyContextWordRule(to: line, mode: mode, catalog: catalog) { matched.insert(.contexts) }
+        if applyContextWordRule(to: line, mode: mode, catalog: catalog, learned: learned) { matched.insert(.contexts) }
         return matched
     }
 
-    /// Contexts from words of the note (#232). Same guards as the recognition: only while the user
-    /// has not set or cleared the contexts, and in a re-analysis only to a new value.
-    private func applyContextWordRule(to task: TaskItem, mode: EnrichmentWriter.Mode, catalog: [TaskContext]) -> Bool {
-        guard let guess = ContextWordRule.match(in: task.rawText, available: catalog.map(\.name)) else { return false }
-        let hits = catalog.filter { guess.value.contains($0.name) }
+    /// The words the user's own tags taught (#233 Schnitt 2), learned once per pass from every task
+    /// whose contexts the user set: never a model guess, and no rule value either, since a rule may
+    /// have copied a guess (#244). The pool is the recognition's (#136): every task the rule step or
+    /// the model has seen, done ones included, a removed one never. Words the user deleted from a
+    /// list come with Schnitt 2b.
+    static func learnedWords(from tasks: some Collection<TaskItem>) -> [String: Set<String>] {
+        let assignments = tasks.compactMap { task -> ContextWordLearning.Assignment? in
+            guard task.contextsSourceRaw == FieldSource.user.rawValue,
+                  let contexts = task.contexts, !contexts.isEmpty else { return nil }
+            return ContextWordLearning.Assignment(rawText: task.rawText, contexts: contexts.map(\.name))
+        }
+        return ContextWordLearning.learn(from: assignments, minimumCount: ContextWordLearning.minimumCount)
+    }
+
+    /// Contexts from words of the note: the fixed lists (#232) and the learned ones (#233) together,
+    /// as measured ("fest + gelernt"). Same guards as the recognition: only while the user has not
+    /// set or cleared the contexts, and in a re-analysis only to a new value. The reason names the
+    /// fixed list's word where it hit, otherwise the learned one and where it came from (#101).
+    private func applyContextWordRule(
+        to task: TaskItem, mode: EnrichmentWriter.Mode, catalog: [TaskContext], learned: [String: Set<String>]
+    ) -> Bool {
+        let fixed = ContextWordRule.match(in: task.rawText, available: catalog.map(\.name))
+        let fromLearning = ContextWordLearning.match(in: task.rawText, learned: learned)
+            .filter { name in catalog.contains { $0.name == name } }
+        let names = Set((fixed?.value ?? []) + fromLearning)
+        guard !names.isEmpty else { return false }
+        let reason = fixed?.reason ?? ContextWordLearning.reason(
+            word: ContextWordLearning.firstWord(in: task.rawText, learned: learned, names: fromLearning) ?? ""
+        )
+        let hits = catalog.filter { names.contains($0.name) }
         let current = Set((task.contexts ?? []).map(\.id))
         guard EnrichmentWriter.mayWrite(
             .contexts, on: task, mode: mode,
@@ -277,12 +307,12 @@ final class EnrichmentCoordinator {
         let revision = Revision(
             task: task, field: .contexts,
             oldValue: current.isEmpty ? nil : EnrichmentWriter.encode((task.contexts ?? []).map(\.name)),
-            newValue: EnrichmentWriter.encode(hits.map(\.name)), author: .rule, reason: guess.reason
+            newValue: EnrichmentWriter.encode(hits.map(\.name)), author: .rule, reason: reason
         )
         task.revisions = (task.revisions ?? []) + [revision]
         task.contexts = hits
         task.contextsSourceRaw = FieldSource.rule.rawValue
-        task.contextsConfidence = guess.confidence
+        task.contextsConfidence = ContextWordLearning.confidence
         logger.info("Rule set contexts for \(task.id, privacy: .public)")
         return true
     }

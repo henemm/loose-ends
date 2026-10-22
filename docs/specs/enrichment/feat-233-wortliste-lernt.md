@@ -2,8 +2,8 @@
 entity_id: feat-233-wortliste-lernt
 type: feature
 created: 2026-10-07
-updated: 2026-10-07
-status: draft
+updated: 2026-10-22
+status: in-progress
 workflow: feat-233-wortliste-lernt
 ---
 
@@ -11,10 +11,19 @@ workflow: feat-233-wortliste-lernt
 
 ## Approval
 
-- [ ] Approved
+- [x] Approved (Henning, 2026-10-22: N = 1 wie gemessen; Anzeige als Zeile unter dem Etikett)
 
 Die Produktentscheidung steht im Issue (Henning, 2026-10-06): Die Wortliste aus #232 wächst aus
 eigenen Zuordnungen; gelernte Wörter sind sichtbar und löschbar. Diese Spec legt nur die Technik fest.
+
+**Ergebnis der Messung (Schnitt 1, gemerged):** Die vorab festgelegte Regel wählt **N = 1**
+(`docs/reference/context-word-learning.md`: fest + gelernt 32 % statt 12 % exakte Treffer, Anteil fremder
+Etiketten unter den gesetzten 36 % statt 42 %). Henning hat N = 1 am 2026-10-22 bestätigt; N = 2 erfüllte die
+Regel ebenfalls, lernt aber erst aus zwei verschieden formulierten Aufgaben.
+
+**Anzeige (Henning, 2026-10-22):** Auf der Seite „Etiketten“ steht unter jedem Etikett grau
+„Erkennt: Hecke, Rasen …“. Tippen auf die Zeile öffnet die Wortliste; Wischen löscht ein Wort, und es wird
+für dieses Etikett nie wieder gelernt.
 
 ## Purpose
 
@@ -57,10 +66,12 @@ nur auf Hennings Mac).
 
 | Schnitt | Inhalt | Dateien |
 |---|---|---|
-| 1 (dieser PR) | Reine Lernregel, Unit-Tests (Lernen, Konflikt, Löschen, Füllwörter, Treffer), Messbericht | `Shared/Enrichment/ContextWordLearning.swift`, `LooseEndsTests/ContextWordLearningTests.swift`, `LooseEndsTests/ContextWordLearningReportTests.swift` |
-| 2 (nach der Messung) | Gelernte Wörter im Regelschritt (`EnrichmentCoordinator` → Begründung „Aus »Wort« in der Notiz"), gelöschte Wörter je Kontext gespeichert, Anzeige „Erkennt: …" mit Löschen in der Kontext-Verwaltung | `EnrichmentCoordinator`, `TaskContext`, Kontext-Verwaltung |
+| 1 (gemerged) | Reine Lernregel, Unit-Tests (Lernen, Konflikt, Löschen, Füllwörter, Treffer), Messbericht | `Shared/Enrichment/ContextWordLearning.swift`, `LooseEndsTests/ContextWordLearningTests.swift`, `LooseEndsTests/ContextWordLearningReportTests.swift` |
+| 2a | Gelernte Wörter im Regelschritt: `EnrichmentCoordinator.learnedWords` lernt einmal je Durchlauf aus allen Aufgaben mit Etiketten vom Ursprung `user` (nie Regel- oder Modellwert, #244), fest + gelernt zusammen wie gemessen, auch für Zeilen unter einer Aufgabe (#565); Begründung „Aus „Wort“ in der Notiz, gelernt aus deinen Etiketten.“ | `EnrichmentCoordinator`, `ContextWordLearning` (N, Begründung), `LooseEndsTests/ContextWordLearningCoordinatorTests.swift` |
+| 2b | Gelöschte Wörter je Etikett im Modell (`TaskContext`, additiv, `cloudkit/schema.ckdb`), Zeile „Erkennt: …“ auf der Etiketten-Seite, Wortliste mit Wischen-Löschen, Markierung des gelernten Worts im Feld-Editor (#101) | `TaskContext`, `CatalogService`, `CatalogPage`, `RuleTrigger` |
 
-Schnitt 2 berührt `EnrichmentCoordinator.swift` und damit die Geräteliste (Stufe 3).
+Schnitt 2a berührt `EnrichmentCoordinator.swift`, Schnitt 2b `Shared/Models`: beide stehen auf der Geräteliste
+(Stufe 3, über TestFlight). Henning hat am 2026-10-22 beide Schnitte freigegeben.
 
 ## Acceptance Criteria
 
@@ -72,3 +83,10 @@ Schnitt 2 berührt `EnrichmentCoordinator.swift` und damit die Geräteliste (Stu
   die Löschung nicht.
 - AC-5: Füllwörter, Zahlen und Wörter unter vier Zeichen werden nie gelernt.
 - AC-6: Der Bericht trägt die Regelspalte als Baseline und nennt das gewählte N nach der Regel oben.
+- AC-7 (2a): Eine neu formulierte Aufgabe mit einem gelernten Wort bekommt das Etikett mit Ursprung Regel,
+  Konfidenz 1.0, einer Regel-Revision und einer Begründung, die das Wort nennt; feste und gelernte Treffer
+  ergänzen sich, die feste Liste begründet, wo sie trifft.
+- AC-8 (2a): Gelernt wird nur aus Etiketten, die der Nutzer gesetzt hat; eine Zeile unter einer Aufgabe liest
+  gelernte Wörter wie eine Aufgabe.
+- AC-9 (2b): Unter jedem Etikett stehen die gelernten Wörter; ein gelöschtes Wort verschwindet sofort aus der
+  Zeile und wird für dieses Etikett nie wieder gelernt, auf jedem Gerät.
