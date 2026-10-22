@@ -1,0 +1,5 @@
+Plugin: /Users/hem/.claude/plugins/cache/henemm-private/agent-os-openspec/3.42.0/core/hooks/evidence_gate.py
+Config: /private/tmp/claude-501/-Users-hem-Developer-loose-ends--claude-worktrees-zany-wiggling-tower/0294c6eb-65a7-4747-aa2d-3bb6d69b5b3b/scratchpad/le-probe/openspec.yaml
+Basis: e95791847875424c7694146a6789f553944c64eb
+Änderungsmenge: ['LooseEnds/Views/InboxDrawerView.swift'] | Basis: base_commit e95791847875424c7694146a6789f553944c64eb
+Gate-Ergebnis: Evidence-Gate: Beleg fehlt: /private/tmp/claude-501/-Users-hem-Developer-loose-ends--claude-worktrees-zany-wiggling-tower/0294c6eb-65a7-4747-aa2d-3bb6d69b5b3b/scratchpad/le-probe/docs/artifacts/probe-145/simulator-run.txt (erzeugen mit scripts/sim.sh test-proof)

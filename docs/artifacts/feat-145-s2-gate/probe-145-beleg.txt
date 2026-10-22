@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-10-22T19:48:57+0200
+befehl: scripts/sim.sh test-proof InboxDrawerSmokeTests
+workflow: probe-145
+head: e95791847875424c7694146a6789f553944c64eb
+basis: b8e656ae939473ffcab59812c6a7af5800327485 (merge-base origin/main HEAD)
+testklasse: InboxDrawerSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1792691211.569  ende: 1792691336.933
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/probe-145/simulator-run/summary.json  sha256:33d8d5e8e77598c161dc68bd11538558b8ac40f1bce2ccd6a36bf57529db008b
+xcresult: docs/artifacts/probe-145/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/probe-145/simulator-run/*.png (4 Stück)
+
+## Geprüfte Dateien
+- sha256:dcb8bb7b9b92a7b90e5e031951092fe373c3ec84038637b565767a00ba71e32e  LooseEnds/Views/InboxDrawerView.swift
