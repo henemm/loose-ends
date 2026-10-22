@@ -277,5 +277,249 @@ final class MacKeyboardTests: XCTestCase {
     func testSelectionPhotoDark() throws {
         photographSelection(dark: true, name: "mac-gallery-480-selection-dark")
     }
+
+    // MARK: - Start page (#480 Schnitt 2)
+
+    /// A fresh app with `count` tasks due today, start page open. The "Now" rows come back top to bottom,
+    /// at most five while the block is folded.
+    @MainActor
+    private func openStart(_ count: Int = 4, dark: Bool = false) -> (XCUIApplication, XCUIElement, [XCUIElement]) {
+        let app = macLaunch(dark: dark)
+        _ = macOpenMainWindowIfNeeded(app)
+        XCTAssertTrue(macElement("startCaptureField", in: app).waitForExistence(timeout: 20), "No start page")
+        for number in 1...count {
+            macCapture("Heute Aufgabe \(number)", in: app)
+        }
+        let window = macMainWindow(of: app)
+        let rows = waitForNowRows(min(count, 5), in: window)
+        XCTAssertEqual(rows.count, min(count, 5), "Now should show the tasks due today")
+        return (app, window, rows)
+    }
+
+    @MainActor
+    private func nowRows(in window: XCUIElement) -> [XCUIElement] {
+        window.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "startNowRow_"))
+            .allElementsBoundByIndex
+            .filter { $0.exists }
+            .sorted { $0.frame.minY < $1.frame.minY }
+    }
+
+    @MainActor
+    private func waitForNowRows(_ count: Int, in window: XCUIElement, timeout: TimeInterval = 10) -> [XCUIElement] {
+        _ = waitUntil(timeout) { nowRows(in: window).count == count }
+        return nowRows(in: window)
+    }
+
+    @MainActor
+    private func selectedNowRows(in window: XCUIElement) -> [String] {
+        nowRows(in: window).filter { $0.isSelected }.map { $0.identifier }
+    }
+
+    /// The task id behind a row, for the Undo button's identifier.
+    private func taskID(_ rowID: String) -> String {
+        String(rowID.dropFirst("startNowRow_".count))
+    }
+
+    /// Back to the start page through its sidebar entry; the start page is built anew.
+    @MainActor
+    private func backToStart(in window: XCUIElement) {
+        let start = macElement("viewRow_start", in: window)
+        XCTAssertTrue(start.waitForExistence(timeout: 5), "Sidebar shows no Start page")
+        start.click()
+        XCTAssertTrue(macElement("detailRawTextMarker", in: window).waitForNonExistence(timeout: 10), "Start page did not come back")
+        XCTAssertTrue(waitUntil(10) { !nowRows(in: window).isEmpty }, "Now did not come back")
+    }
+
+    /// Chooses the row at `index` with the keys: a click on the paper below the rows, then Down.
+    @MainActor
+    private func chooseNow(_ index: Int, in app: XCUIApplication, window: XCUIElement) -> [String] {
+        let rows = nowRows(in: window)
+        let ids = rows.map(\.identifier)
+        focusList(rows, in: window)
+        for _ in 0...index {
+            app.typeKey(.downArrow, modifierFlags: [])
+        }
+        XCTAssertTrue(waitUntil { selectedNowRows(in: window) == [ids[index]] },
+                      "\(index + 1) downs should choose Now row \(index + 1), marked: \(selectedNowRows(in: window))")
+        return ids
+    }
+
+    @MainActor
+    func testStartArrowsSelectAndSpaceCompletes() throws {
+        let (app, window, rows) = openStart()
+        let ids = rows.map(\.identifier)
+        clickRow(rows[0], in: window)
+        backToStart(in: window)
+        XCTAssertTrue(waitUntil { selectedNowRows(in: window) == [ids[0]] }, "The opened row should be marked")
+        focusList(nowRows(in: window), in: window)
+
+        app.typeKey(.downArrow, modifierFlags: [])
+        app.typeKey(.downArrow, modifierFlags: [])
+        app.typeKey(.upArrow, modifierFlags: [])
+        XCTAssertTrue(waitUntil { selectedNowRows(in: window) == [ids[1]] }, "Down down up should choose the second row, marked: \(selectedNowRows(in: window))")
+        app.typeKey(.upArrow, modifierFlags: [])
+        app.typeKey(.upArrow, modifierFlags: [])
+        XCTAssertTrue(waitUntil { selectedNowRows(in: window) == [ids[0]] }, "Up at the top should stay on the first row")
+        app.typeKey(.downArrow, modifierFlags: [])
+
+        app.typeKey(" ", modifierFlags: [])
+        let undo = undoButtons(in: window).firstMatch
+        XCTAssertTrue(undo.waitForExistence(timeout: 5), "Space should start the Done window with Undo")
+        XCTAssertEqual(undo.identifier, "undoComplete_" + taskID(ids[1]), "Undo should belong to the chosen row")
+        app.typeKey(" ", modifierFlags: [])
+        XCTAssertEqual(undoButtons(in: window).count, 1, "A second Space must not plan anything twice")
+        macShot(window, "mac-gallery-480-s2-1-space-undo-window")
+
+        let left = waitForNowRows(3, in: window, timeout: 12).map(\.identifier)
+        XCTAssertEqual(left, [ids[0], ids[2], ids[3]], "Only the chosen task should be done; the others stay")
+        app.terminate()
+    }
+
+    @MainActor
+    func testStartMoreExtendsRows() throws {
+        let (app, window, rows) = openStart(7)
+        let ids = rows.map(\.identifier)
+        focusList(rows, in: window)
+        for _ in 0..<7 { app.typeKey(.downArrow, modifierFlags: []) }
+        XCTAssertTrue(waitUntil { selectedNowRows(in: window) == [ids[4]] }, "Folded, Down should stop on row 5, marked: \(selectedNowRows(in: window))")
+
+        let more = macElement("nowMore", in: window)
+        XCTAssertTrue(more.waitForExistence(timeout: 5), "Seven tasks should leave a more row")
+        more.click()
+        let all = waitForNowRows(7, in: window).map(\.identifier)
+        XCTAssertEqual(all.count, 7, "More should show all seven")
+        focusList(nowRows(in: window), in: window)
+        app.typeKey(.downArrow, modifierFlags: [])
+        app.typeKey(.downArrow, modifierFlags: [])
+        XCTAssertTrue(waitUntil { selectedNowRows(in: window) == [all[6]] }, "Unfolded, Down should reach row 7, marked: \(selectedNowRows(in: window))")
+        app.terminate()
+    }
+
+    @MainActor
+    func testStartDeleteAsksFirst() throws {
+        let (app, window, _) = openStart()
+        let ids = chooseNow(1, in: app, window: window)
+
+        app.typeKey(.delete, modifierFlags: [])
+        let confirm = macElement("confirmDeleteButton", in: app)
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5), "Delete should ask \"Delete this task?\" first")
+        app.typeKey(.escape, modifierFlags: [])
+        XCTAssertTrue(confirm.waitForNonExistence(timeout: 5), "Escape should close the question")
+        XCTAssertEqual(nowRows(in: window).count, 4, "Cancelling deletes nothing")
+
+        app.typeKey(.delete, modifierFlags: [])
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5), "Delete should ask again")
+        confirm.click()
+        let left = waitForNowRows(3, in: window).map(\.identifier)
+        XCTAssertEqual(left, [ids[0], ids[2], ids[3]], "Only the chosen task should be deleted")
+        app.terminate()
+    }
+
+    /// The writing line sits in the same list as Now: its keys stay in the field.
+    @MainActor
+    func testStartWritingLineKeepsKeys() throws {
+        let (app, window, _) = openStart()
+        let ids = chooseNow(1, in: app, window: window)
+
+        let field = macElement("startCaptureField", in: window)
+        field.click()
+        field.typeText("a b")
+        app.typeKey(.delete, modifierFlags: [])
+        app.typeKey(.downArrow, modifierFlags: [])
+        let value = (field.value as? String) ?? ""
+        XCTAssertTrue(value.hasPrefix("a") && !value.contains("b"), "Delete should take the last letter out of the field, it holds \"\(value)\"")
+        XCTAssertFalse(undoButtons(in: window).firstMatch.exists, "Space in the writing line must not finish a task")
+        XCTAssertFalse(macElement("confirmDeleteButton", in: app).exists, "Delete in the writing line must not ask to delete a task")
+        XCTAssertNotEqual(selectedNowRows(in: window), [ids[2]], "Down in the writing line must not move the choice")
+        XCTAssertEqual(nowRows(in: window).count, 4, "No task should have gone")
+        app.terminate()
+    }
+
+    @MainActor
+    func testStartNewTaskShortcutFocusesWritingLine() throws {
+        let (app, window, _) = openStart()
+        _ = chooseNow(0, in: app, window: window)
+        app.typeKey("n", modifierFlags: .command)
+        app.typeKey("x", modifierFlags: [])
+        let field = macElement("startCaptureField", in: window)
+        XCTAssertTrue(waitUntil { ((field.value as? String) ?? "").contains("x") }, "⌘N should put the cursor in the writing line (#472)")
+        XCTAssertFalse(undoButtons(in: window).firstMatch.exists, "Nothing should be finished")
+        app.terminate()
+    }
+
+    @MainActor
+    func testStartHasNoListFocusOnAppear() throws {
+        let (app, window, _) = openStart()
+        let open = macElement("viewRow_open", in: window)
+        XCTAssertTrue(open.waitForExistence(timeout: 10), "Sidebar shows no viewRow_open")
+        open.click()
+        XCTAssertTrue(waitUntil(10) { !taskRows(in: window).isEmpty }, "Loose ends did not open")
+        backToStart(in: window)
+        app.typeKey(" ", modifierFlags: [])
+        app.typeKey(.downArrow, modifierFlags: [])
+        XCTAssertTrue(selectedNowRows(in: window).isEmpty, "No row should be chosen when the start page appears")
+        XCTAssertFalse(undoButtons(in: window).firstMatch.exists, "Space on a fresh start page must not finish a task")
+        app.terminate()
+    }
+
+    @MainActor
+    func testStartSelectionSurvivesDetail() throws {
+        let (app, window, _) = openStart()
+        let ids = chooseNow(2, in: app, window: window)
+        let open = macElement("viewRow_open", in: window)
+        XCTAssertTrue(open.waitForExistence(timeout: 10), "Sidebar shows no viewRow_open")
+        open.click()
+        XCTAssertTrue(waitUntil(10) { !taskRows(in: window).isEmpty }, "Loose ends did not open")
+        backToStart(in: window)
+        XCTAssertTrue(waitUntil { selectedNowRows(in: window) == [ids[2]] }, "The choice should survive leaving the start page, marked: \(selectedNowRows(in: window))")
+        app.terminate()
+    }
+
+    @MainActor
+    func testStartSelectionClearsWhenRowGoes() throws {
+        let (app, window, _) = openStart()
+        _ = chooseNow(1, in: app, window: window)
+        app.typeKey(" ", modifierFlags: [])
+        XCTAssertEqual(waitForNowRows(3, in: window, timeout: 12).count, 3, "The chosen task should be done")
+        XCTAssertTrue(selectedNowRows(in: window).isEmpty, "No row should be chosen once the chosen one is gone")
+        app.typeKey(" ", modifierFlags: [])
+        XCTAssertFalse(undoButtons(in: window).firstMatch.waitForExistence(timeout: 2), "Space must not move on to another row")
+        app.terminate()
+    }
+
+    @MainActor
+    func testWindowMinimumSize() throws {
+        let (app, window, _) = openStart(1)
+        let corner = window.coordinate(withNormalizedOffset: CGVector(dx: 1, dy: 1)).withOffset(CGVector(dx: -2, dy: -2))
+        let inside = window.coordinate(withNormalizedOffset: CGVector(dx: 0.05, dy: 0.05))
+        corner.press(forDuration: 0.3, thenDragTo: inside)
+        _ = macWait(timeout: 2) { false }
+        let size = window.frame.size
+        XCTAssertGreaterThanOrEqual(size.width, 760, "The window should not get narrower than 760 pt, it is \(size)")
+        XCTAssertGreaterThanOrEqual(size.height, 520, "The window should not get lower than 520 pt, it is \(size)")
+        XCTAssertLessThan(size.width, 900, "The drag should have shrunk the window, it is \(size)")
+        app.terminate()
+    }
+
+    @MainActor
+    private func photographStartSelection(dark: Bool, name: String) {
+        let (app, window, _) = openStart(dark: dark)
+        let ids = chooseNow(1, in: app, window: window)
+        let other = nowRows(in: window).first { $0.identifier == ids[3] }
+        other?.hover()
+        macShot(window, name)
+        app.terminate()
+    }
+
+    @MainActor
+    func testStartSelectionPhotoLight() throws {
+        photographStartSelection(dark: false, name: "mac-gallery-480-start-selection-light")
+    }
+
+    @MainActor
+    func testStartSelectionPhotoDark() throws {
+        photographStartSelection(dark: true, name: "mac-gallery-480-start-selection-dark")
+    }
 }
 #endif
