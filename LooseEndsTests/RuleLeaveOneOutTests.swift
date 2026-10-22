@@ -25,17 +25,6 @@ private func percent(_ value: Double) -> String {
     String(format: "%.1f %%", value * 100)
 }
 
-/// The measurement day for the report head. Local calendar day, fixed format — the report says
-/// *when* it was measured, so a later reader can tell it apart from an older run of the same file.
-/// Call this once per run and reuse the value: a test that formats `Date()` twice and compares the
-/// two disagrees when the run crosses midnight, without anything being broken.
-private func measurementDay(_ date: Date = Date()) -> String {
-    let formatter = DateFormatter()
-    formatter.locale = Locale(identifier: "en_US_POSIX")
-    formatter.dateFormat = "yyyy-MM-dd"
-    return formatter.string(from: date)
-}
-
 /// `Corpus.Entry` is `Decodable` only — it has no memberwise initialiser, and giving it one just
 /// for the tests would widen a type the measurement code shares. Building the cases through JSON
 /// keeps `LeaveOneOut` bound to the real entry type instead of a parallel test double.
@@ -202,8 +191,6 @@ struct RuleLeaveOneOutReportTests {
         let entries = try JSONDecoder().decode([Corpus.Entry].self,
                                                from: Data(contentsOf: focusBloxTruthURL))
         let kValues = [1, 3, 5]
-        // Einmal gebildet, zweimal benutzt: zwei `Date()` fallen über Mitternacht auseinander.
-        let day = measurementDay()
 
         // Der Pool eines Merkmals ist genau die Menge der Aufgaben, für die die Wertfunktion dieses
         // Merkmals einen Wert liefert — nicht „Feld nicht nil". Bei Kontexten fällt das auseinander:
@@ -260,7 +247,7 @@ struct RuleLeaveOneOutReportTests {
         | Energie | \(energyPool.count) | exakte Gleichheit |
 
         Korpus: `docs/reference/focusblox-corpus.json` (\(entries.count) Aufgaben) ·
-        Messtag: \(day) · Methode: Regel-Auslass-Test, kein Modell, kein Gerät.
+        Methode: Regel-Auslass-Test, kein Modell, kein Gerät.
 
         Im Pool eines Merkmals steht nur, wer für dieses Merkmal eine Wahrheit trägt. Bei Kontexten
         heißt das: die \(entries.count - contextPool.count) Aufgaben mit leerer Kontextliste sind
@@ -404,7 +391,8 @@ struct RuleLeaveOneOutReportTests {
         #expect(written.contains("p-Wert"))
         #expect(written.contains("ohne Nachbarn"))
         #expect(written.contains("Nulllinie"))
-        #expect(written.contains("Messtag: \(day)"))
+        // Kein Datum im Kopf: Ein Lauf ohne neue Zahlen lässt den eingecheckten Bericht unverändert (#543).
+        #expect(!written.contains("Messtag"))
         // Die Gegenprobe muss im geschriebenen Bericht stehen, nicht nur gerechnet sein.
         #expect(written.contains("## Gegenprobe ohne Textdubletten (k = 1)"))
         #expect(written.contains("| Kontexte (n = \(dedupedContext.count)) | 1 |"))
