@@ -41,8 +41,9 @@ struct ZoneCaptionText: View {
 }
 
 /// What stands for now: the first five of the "Now" rule, the rest behind "N more", which unfolds
-/// in place. The unfolded state is local and not kept. `row` builds one task's row, so the swipes,
-/// the menu and the Done window stay with the caller.
+/// in place. The unfolded state is local and not kept: once five or fewer are left it folds again,
+/// so a later sixth task never finds the block open unasked (#398). `row` builds one task's row, so
+/// the swipes, the menu and the Done window stay with the caller.
 struct NowBlock<Row: View>: View {
     private let tasks: [TaskItem]
     private let row: (TaskItem) -> Row
@@ -58,6 +59,10 @@ struct NowBlock<Row: View>: View {
 
     var body: some View {
         ZoneCaption("Now")
+            // On the caption, which always stands: the button is gone at five or fewer, the hint with rows.
+            .onChange(of: tasks.count) { _, count in
+                if count <= Self.limit { expanded = false }
+            }
         if tasks.isEmpty {
             Text("Swipe left on any task to line it up here.")
                 .font(StartMetrics(typeSize).rowMeta)
@@ -97,6 +102,8 @@ struct NowBlock<Row: View>: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        // The label stays the visible words ("2 more"); the hint says what a tap does (#398).
+        .accessibilityHint(expanded ? Text("Shows only the first five tasks") : Text("Shows the remaining tasks"))
         .accessibilityIdentifier("nowMore")
         .listRowSeparator(.hidden)
         .startRow(StartMetrics(typeSize))
