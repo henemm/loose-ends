@@ -114,8 +114,20 @@ final class MacKeyboardTests: XCTestCase {
     @MainActor
     private func focusList(_ rows: [XCUIElement], in window: XCUIElement) {
         guard let last = rows.last else { return XCTFail("No rows to focus") }
+        // Inside the window: in run 39786681337 the point 80 pt below the last row lay under the window, on the
+        // Dock, and the click started Contacts, so the keys never reached the app.
+        let below = min(last.frame.maxY + 80, window.frame.maxY - 10)
+        XCTAssertGreaterThan(below, last.frame.maxY + 10, "No paper below the last row inside the window: row ends at \(last.frame.maxY), window \(window.frame)")
         let origin = window.coordinate(withNormalizedOffset: .zero)
-        origin.withOffset(CGVector(dx: last.frame.midX - window.frame.minX, dy: last.frame.maxY - window.frame.minY + 80)).click()
+        origin.withOffset(CGVector(dx: last.frame.midX - window.frame.minX, dy: below - window.frame.minY)).click()
+    }
+
+    /// Where the keys went, for a failure message: the writing line's focus and whether the app is in front.
+    @MainActor
+    private func keyNote(_ app: XCUIApplication, _ window: XCUIElement) -> String {
+        let field = macElement("startCaptureField", in: window)
+        let focused = field.exists ? ((field.value(forKey: "hasKeyboardFocus") as? Bool) ?? false) : false
+        return "writing line focused: \(focused), app in front: \(app.state == .runningForeground)"
     }
 
     @MainActor
@@ -291,6 +303,12 @@ final class MacKeyboardTests: XCTestCase {
             macCapture("Heute Aufgabe \(number)", in: app)
         }
         let window = macMainWindow(of: app)
+        // Return keeps the cursor in the line and the drawer open (#601); its rows push Now down. A person leaves
+        // the line with Escape, the drawer folds, and Now stands where the paper below it is in the window.
+        app.typeKey(.escape, modifierFlags: [])
+        let drawerRow = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "drawerRow_")).firstMatch
+        XCTAssertTrue(drawerRow.waitForNonExistence(timeout: 10), "Escape should fold the drawer")
         let rows = waitForNowRows(min(count, 5), in: window)
         XCTAssertEqual(rows.count, min(count, 5), "Now should show the tasks due today")
         return (app, window, rows)
@@ -341,7 +359,7 @@ final class MacKeyboardTests: XCTestCase {
             app.typeKey(.downArrow, modifierFlags: [])
         }
         XCTAssertTrue(waitUntil { selectedNowRows(in: window) == [ids[index]] },
-                      "\(index + 1) downs should choose Now row \(index + 1), marked: \(selectedNowRows(in: window))")
+                      "\(index + 1) downs should choose Now row \(index + 1), marked: \(selectedNowRows(in: window)); \(keyNote(app, window))")
         return ids
     }
 
@@ -382,7 +400,7 @@ final class MacKeyboardTests: XCTestCase {
         let ids = rows.map(\.identifier)
         focusList(rows, in: window)
         for _ in 0..<7 { app.typeKey(.downArrow, modifierFlags: []) }
-        XCTAssertTrue(waitUntil { selectedNowRows(in: window) == [ids[4]] }, "Folded, Down should stop on row 5, marked: \(selectedNowRows(in: window))")
+        XCTAssertTrue(waitUntil { selectedNowRows(in: window) == [ids[4]] }, "Folded, Down should stop on row 5, marked: \(selectedNowRows(in: window)); \(keyNote(app, window))")
 
         let more = macElement("nowMore", in: window)
         XCTAssertTrue(more.waitForExistence(timeout: 5), "Seven tasks should leave a more row")
@@ -392,7 +410,7 @@ final class MacKeyboardTests: XCTestCase {
         focusList(nowRows(in: window), in: window)
         app.typeKey(.downArrow, modifierFlags: [])
         app.typeKey(.downArrow, modifierFlags: [])
-        XCTAssertTrue(waitUntil { selectedNowRows(in: window) == [all[6]] }, "Unfolded, Down should reach row 7, marked: \(selectedNowRows(in: window))")
+        XCTAssertTrue(waitUntil { selectedNowRows(in: window) == [all[6]] }, "Unfolded, Down should reach row 7, marked: \(selectedNowRows(in: window)); \(keyNote(app, window))")
         app.terminate()
     }
 
@@ -493,28 +511,28 @@ final class MacKeyboardTests: XCTestCase {
         let (app, window, _) = openStart(1)
         // Run 39776539157: the window filled the 1024 x 768 screen (0, 31, 1024, 674), so its side edges and
         // corners lay on the screen's edge, and `press` (XCUICoordinate.h files it under touch events) moved
-        // nothing at any grip. The mouse API `click(forDuration:thenDragTo:)` first pulls the title bar down
-        // and to the right, off the screen's edges, then pulls the top left corner far into the window.
+        // nothing at any grip. The mouse API `click(forDuration:thenDragTo:)` first pulls the title bar sideways
+        // only: run 39786681337 pulled it down by 80 and the bottom edge left the screen (784 > 768), and its top
+        // edge grip caught the title bar. So the left edge (proven there: width down to 760) and the bottom edge,
+        // each pulled far into the window. The bottom grip sits 2 pt below the window (705 there), above the Dock's
+        // bar, which the recording of that run shows from about 708.
         var notes = ["screen \(XCUIScreen.main.screenshot().image.size), window \(window.frame)"]
         let titleBar = window.coordinate(withNormalizedOffset: CGVector(dx: 0.6, dy: 0)).withOffset(CGVector(dx: 0, dy: 14))
-        titleBar.click(forDuration: 0.3, thenDragTo: titleBar.withOffset(CGVector(dx: 150, dy: 80)),
+        titleBar.click(forDuration: 0.3, thenDragTo: titleBar.withOffset(CGVector(dx: 150, dy: 0)),
                        withVelocity: .slow, thenHoldForDuration: 0.3)
         _ = macWait(timeout: 2) { window.frame.minX > 50 }
         notes.append("moved: \(window.frame)")
         let before = window.frame.size
-        let grips: [(String, CGVector, CGVector)] = [
-            ("top left corner", CGVector(dx: 0, dy: 0), CGVector(dx: -3, dy: -3)),
-            ("left edge", CGVector(dx: 0, dy: 0.5), CGVector(dx: -3, dy: 0)),
-            ("top edge", CGVector(dx: 0.5, dy: 0), CGVector(dx: 0, dy: -3)),
+        let grips: [(String, CGVector, CGVector, CGVector)] = [
+            ("left edge", CGVector(dx: 0, dy: 0.5), CGVector(dx: -3, dy: 0), CGVector(dx: 700, dy: 0)),
+            ("bottom edge", CGVector(dx: 0.5, dy: 1), CGVector(dx: 0, dy: 2), CGVector(dx: 0, dy: -500)),
         ]
-        for (name, point, offset) in grips {
+        for (name, point, offset, pull) in grips {
             let grip = window.coordinate(withNormalizedOffset: point).withOffset(offset)
             let last = window.frame.size
-            grip.click(forDuration: 0.5, thenDragTo: grip.withOffset(CGVector(dx: 700, dy: 500)),
-                       withVelocity: .slow, thenHoldForDuration: 0.3)
+            grip.click(forDuration: 0.5, thenDragTo: grip.withOffset(pull), withVelocity: .slow, thenHoldForDuration: 0.3)
             _ = macWait(timeout: 2) { window.frame.size != last }
             notes.append("\(name): \(window.frame)")
-            if window.frame.width < before.width - 100, window.frame.height < before.height - 100 { break }
         }
         let log = XCTAttachment(string: notes.joined(separator: "\n"))
         log.name = "mac-gallery-480-s2-window-drag"
