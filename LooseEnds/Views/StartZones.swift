@@ -47,14 +47,24 @@ struct ZoneCaptionText: View {
 struct NowBlock<Row: View>: View {
     private let tasks: [TaskItem]
     private let row: (TaskItem) -> Row
-    @State private var expanded = false
+    @State private var ownExpanded = false
+    /// The host's fold state, so the Mac's keys see the same rows (#480); the sidebar keeps its own.
+    private let hostExpanded: Binding<Bool>?
     @Environment(\.dynamicTypeSize) private var typeSize
 
-    private static var limit: Int { 5 }
+    static var limit: Int { 5 }
 
-    init(tasks: [TaskItem], @ViewBuilder row: @escaping (TaskItem) -> Row) {
+    init(tasks: [TaskItem], expanded: Binding<Bool>? = nil, @ViewBuilder row: @escaping (TaskItem) -> Row) {
         self.tasks = tasks
+        self.hostExpanded = expanded
         self.row = row
+    }
+
+    private var expanded: Bool {
+        get { hostExpanded?.wrappedValue ?? ownExpanded }
+        nonmutating set {
+            if let hostExpanded { hostExpanded.wrappedValue = newValue } else { ownExpanded = newValue }
+        }
     }
 
     var body: some View {
