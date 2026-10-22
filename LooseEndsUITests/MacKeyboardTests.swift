@@ -314,24 +314,41 @@ final class MacKeyboardTests: XCTestCase {
         return (app, window, rows)
     }
 
+    /// The Now rows from one snapshot of the window, top to bottom. One read for identifier, frame and selection:
+    /// rows bound by index re-resolve per attribute, and a row that left meanwhile failed the test with "Failed to
+    /// get matching snapshot" (run 39811214025, a completed row animating out).
+    @MainActor
+    private func nowRowSnapshots(in window: XCUIElement) -> [any XCUIElementSnapshot] {
+        let root: any XCUIElementSnapshot
+        do {
+            root = try window.snapshot()
+        } catch {
+            XCTFail("No snapshot of the window: \(error)")
+            return []
+        }
+        var rows: [any XCUIElementSnapshot] = []
+        var pending = root.children
+        while let next = pending.popLast() {
+            if next.identifier.hasPrefix("startNowRow_") { rows.append(next) }
+            pending.append(contentsOf: next.children)
+        }
+        return rows.sorted { $0.frame.minY < $1.frame.minY }
+    }
+
     @MainActor
     private func nowRows(in window: XCUIElement) -> [XCUIElement] {
-        window.descendants(matching: .any)
-            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "startNowRow_"))
-            .allElementsBoundByIndex
-            .filter { $0.exists }
-            .sorted { $0.frame.minY < $1.frame.minY }
+        nowRowSnapshots(in: window).map { window.descendants(matching: .any).matching(identifier: $0.identifier).firstMatch }
     }
 
     @MainActor
     private func waitForNowRows(_ count: Int, in window: XCUIElement, timeout: TimeInterval = 10) -> [XCUIElement] {
-        _ = waitUntil(timeout) { nowRows(in: window).count == count }
+        _ = waitUntil(timeout) { nowRowSnapshots(in: window).count == count }
         return nowRows(in: window)
     }
 
     @MainActor
     private func selectedNowRows(in window: XCUIElement) -> [String] {
-        nowRows(in: window).filter { $0.isSelected }.map { $0.identifier }
+        nowRowSnapshots(in: window).filter { $0.isSelected }.map { $0.identifier }
     }
 
     /// The task id behind a row, for the Undo button's identifier.
