@@ -404,7 +404,9 @@ final class EnrichmentCoordinator {
     ) throws -> (pool: [RecognitionRule.Candidate], tasksByID: [UUID: TaskItem]) {
         let byModel = try context.fetch(FetchDescriptor<TaskItem>(predicate: #Predicate { $0.processedAt != nil }))
         let byRules = try context.fetch(FetchDescriptor<TaskItem>(predicate: #Predicate { $0.rulesAppliedAt != nil }))
-        let merged = Dictionary((byModel + byRules).map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        // A task removed with its subtasks (#605) is gone for the user: nothing is recognized from it.
+        let merged = Dictionary((byModel + byRules).filter { $0.status != .removed }.map { ($0.id, $0) },
+                                uniquingKeysWith: { first, _ in first })
         return (recognitionCandidates(in: Array(merged.values)), merged)
     }
 

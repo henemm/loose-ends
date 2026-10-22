@@ -2,8 +2,28 @@ import Foundation
 import SwiftData
 
 /// The actions on a task (data model doc, "Aktionen auf einer Aufgabe"). Pure over the model
-/// objects; the caller saves.
+/// objects; the caller saves, except for `delete`, which saves in two steps on purpose.
 enum TaskActions {
+    /// Deletes a task; its subtasks stay as tasks of their own (Henning, 2026-10-21, #605). On build 103
+    /// they vanished on the iPhone although the relationship no longer cascades: a device with an older
+    /// build (the watch keeps its own synced store) cascades a deletion it imports and exports that back.
+    /// So a task with subtasks is never deleted as a record: they are let go of and it is marked
+    /// `.removed`, which every list leaves out. No device ever sees a deletion, whatever build it runs.
+    /// A task without subtasks is deleted as before. Returns the lifted subtasks.
+    @discardableResult
+    static func delete(_ task: TaskItem, in context: ModelContext) throws -> [TaskItem] {
+        let lifted = task.subtasks ?? []
+        if lifted.isEmpty {
+            context.delete(task)
+        } else {
+            for subtask in lifted { subtask.parent = nil }
+            task.status = .removed
+            task.nextRank = nil
+        }
+        try context.save()
+        return lifted
+    }
+
     enum MoveTarget: Hashable, Sendable {
         case tomorrow, weekend, nextWeek
         case date(Date)

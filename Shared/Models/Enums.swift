@@ -7,6 +7,10 @@ enum TaskStatus: String, Codable, CaseIterable, Sendable {
     case active
     case parked
     case done
+    /// Deleted while it had subtasks (#605): the record stays, so no device, whatever build it runs,
+    /// ever sees a deletion it could cascade to the subtasks. Every list leaves it out (`TaskItem.present`).
+    /// An older build reads the unknown value as `.unprocessed`, it never crashes.
+    case removed
 }
 
 enum CaptureChannel: String, Codable, CaseIterable, Sendable {

@@ -10,7 +10,10 @@ struct WaitingOnSection: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(CompletionPulse.self) private var completionPulse: CompletionPulse?
     /// Every task, for the picker.
-    @Query private var allTasks: [TaskItem]
+    @Query private var storedTasks: [TaskItem]
+    /// Filtered here, not in `@Query`: a predicate there is rebuilt on every init and kept the
+    /// detail from settling after a field tap (#605).
+    private var allTasks: [TaskItem] { storedTasks.filter(\.isPresent) }
     let task: TaskItem
     /// Opened from the word line (#538): the picker comes up at once.
     var startsPicking = false
