@@ -491,25 +491,30 @@ final class MacKeyboardTests: XCTestCase {
     @MainActor
     func testWindowMinimumSize() throws {
         let (app, window, _) = openStart(1)
-        let before = window.frame.size
-        // A drag at the bottom right corner left the window as it was in runs 39759219395 and
-        // 39766895911, and no source says where XCUITest finds the grip. So the test tries the corner,
-        // the right edge and the left edge, each pulled towards the middle, stops at the first that
-        // changes the size, and keeps a note of every try for the run's attachments.
+        // Run 39776539157: the window filled the 1024 x 768 screen (0, 31, 1024, 674), so its side edges and
+        // corners lay on the screen's edge, and `press` (XCUICoordinate.h files it under touch events) moved
+        // nothing at any grip. The mouse API `click(forDuration:thenDragTo:)` first pulls the title bar down
+        // and to the right, off the screen's edges, then pulls the top left corner far into the window.
         var notes = ["screen \(XCUIScreen.main.screenshot().image.size), window \(window.frame)"]
-        let middle = window.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        let titleBar = window.coordinate(withNormalizedOffset: CGVector(dx: 0.6, dy: 0)).withOffset(CGVector(dx: 0, dy: 14))
+        titleBar.click(forDuration: 0.3, thenDragTo: titleBar.withOffset(CGVector(dx: 150, dy: 80)),
+                       withVelocity: .slow, thenHoldForDuration: 0.3)
+        _ = macWait(timeout: 2) { window.frame.minX > 50 }
+        notes.append("moved: \(window.frame)")
+        let before = window.frame.size
         let grips: [(String, CGVector, CGVector)] = [
-            ("corner", CGVector(dx: 1, dy: 1), CGVector(dx: -3, dy: -3)),
-            ("corner outside", CGVector(dx: 1, dy: 1), CGVector(dx: 3, dy: 3)),
-            ("right edge", CGVector(dx: 1, dy: 0.5), CGVector(dx: -2, dy: 0)),
-            ("left edge", CGVector(dx: 0, dy: 0.5), CGVector(dx: 2, dy: 0)),
+            ("top left corner", CGVector(dx: 0, dy: 0), CGVector(dx: -3, dy: -3)),
+            ("left edge", CGVector(dx: 0, dy: 0.5), CGVector(dx: -3, dy: 0)),
+            ("top edge", CGVector(dx: 0.5, dy: 0), CGVector(dx: 0, dy: -3)),
         ]
         for (name, point, offset) in grips {
             let grip = window.coordinate(withNormalizedOffset: point).withOffset(offset)
-            grip.press(forDuration: 0.6, thenDragTo: middle, withVelocity: .slow, thenHoldForDuration: 0.3)
-            let changed = macWait(timeout: 2) { window.frame.size != before }
+            let last = window.frame.size
+            grip.click(forDuration: 0.5, thenDragTo: grip.withOffset(CGVector(dx: 700, dy: 500)),
+                       withVelocity: .slow, thenHoldForDuration: 0.3)
+            _ = macWait(timeout: 2) { window.frame.size != last }
             notes.append("\(name): \(window.frame)")
-            if changed { break }
+            if window.frame.width < before.width - 100, window.frame.height < before.height - 100 { break }
         }
         let log = XCTAttachment(string: notes.joined(separator: "\n"))
         log.name = "mac-gallery-480-s2-window-drag"
@@ -521,6 +526,7 @@ final class MacKeyboardTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(size.width, 760, "The window should not get narrower than 760 pt, it is \(size); tries: \(trace)")
         XCTAssertGreaterThanOrEqual(size.height, 520, "The window should not get lower than 520 pt, it is \(size); tries: \(trace)")
         XCTAssertLessThan(size.width, before.width - 100, "The drag should have shrunk the window from \(before), it is \(size); tries: \(trace)")
+        XCTAssertLessThan(size.height, before.height - 100, "The drag should have lowered the window from \(before), it is \(size); tries: \(trace)")
         app.terminate()
     }
 
