@@ -1,5 +1,9 @@
 import SwiftData
 import SwiftUI
+#if os(macOS)
+import AppKit
+import Observation
+#endif
 
 /// One view as a list (design briefing, screen 3): a system view, a context or a project.
 /// Swipe right: Done (Restore in Done, Activate in Parked). Swipe left: Next up, or Park in Old.
@@ -28,6 +32,18 @@ struct TaskListView: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var sizeClass
+    #else
+    @FocusState private var listFocused: Bool
+    #endif
+
+    #if os(macOS)
+    /// The row chosen by the arrows or the last one opened (#480); our own, never `List(selection:)`,
+    /// so a click keeps opening the task (#544). It lives in `ChosenRows`, not in the view's state:
+    /// the Mac rebuilds the list on the way back from the detail (CI runs 39616031250, 39631899047).
+    private var selectedID: UUID? {
+        get { ChosenRows.shared.byList[selection] }
+        nonmutating set { ChosenRows.shared.byList[selection] = newValue }
+    }
     #endif
 
     /// The Mac always, iOS whenever the window is not compact (#477, as #471/#476).
@@ -84,7 +100,7 @@ struct TaskListView: View {
     }
 
     var body: some View {
-        hull(List {
+        hull(keyed(List {
             if kind == .done {
                 doneSections
             } else if project != nil {
@@ -96,7 +112,7 @@ struct TaskListView: View {
             } else {
                 openRows
             }
-        })
+        }))
         .overlay {
             if shown.isEmpty {
                 emptyState
@@ -109,6 +125,125 @@ struct TaskListView: View {
             NewDateSheet(task: task) { redating = nil }
         }
     }
+
+    /// Whether the row is the one chosen on the Mac (#480); iOS has no choosing.
+    private func isChosen(_ task: TaskItem) -> Bool {
+        #if os(macOS)
+        selectedID == task.id
+        #else
+        false
+        #endif
+    }
+
+    /// Opening a task marks its row on the Mac (#480), so the arrows go on from there after "Back".
+    private func detail(_ task: TaskItem, reviewing: Bool = false) -> some View {
+        TaskDetailView(task: task, reviewing: reviewing)
+        #if os(macOS)
+            .onAppear { selectedID = task.id }
+        #endif
+    }
+
+    /// The Mac's keys on the list (#480): arrows choose, Space finishes, Delete asks first. They only
+    /// arrive while the list holds the focus, so a text field keeps its Space and Delete.
+    @ViewBuilder
+    private func keyed(_ list: some View) -> some View {
+        #if os(macOS)
+        ScrollViewReader { proxy in
+            list
+                .focused($listFocused)
+                .onAppear { listFocused = true }
+                // Only the bare keys: ⌘⌫, ⇧Space or ⌥↓ mean something else.
+                .onKeyPress(keys: [.upArrow, .downArrow, .space, .delete]) { press in
+                    guard press.modifiers.isDisjoint(with: [.command, .shift, .option, .control]) else { return .ignored }
+                    switch press.key {
+                    case .upArrow: return handle(.up)
+                    case .downArrow: return handle(.down)
+                    case .space: return handle(.space)
+                    default: return handle(.delete)
+                    }
+                }
+                // Fallbacks should the list take the keys before `onKeyPress` (Apple forums 667366, 772806):
+                // a key that `onKeyPress` handled never turns into one of these commands.
+                .onMoveCommand { direction in
+                    guard Self.bareKey else { return }
+                    switch direction {
+                    case .up: _ = handle(.up)
+                    case .down: _ = handle(.down)
+                    default: break
+                    }
+                }
+                .onDeleteCommand { if Self.bareKey { _ = handle(.delete) } }
+                // The chosen row stays in sight: the arrows scroll it in, as little as needed.
+                .onChange(of: selectedID) { _, id in
+                    if let id { proxy.scrollTo(id) }
+                }
+                // A row that left the list (done, moved, deleted) takes the choice with it; nothing jumps on.
+                // An empty list is a passing state while the list is rebuilt, never a reason to clear.
+                .onChange(of: rowIDs) { _, ids in
+                    if !ids.isEmpty, let chosen = selectedID, !ids.contains(chosen) { selectedID = nil }
+                }
+        }
+        #else
+        list
+        #endif
+    }
+
+    #if os(macOS)
+    /// Carries out what `RowKeyAction` decided, with the list's existing actions only.
+    private func handle(_ key: RowKey) -> KeyPress.Result {
+        // `textFocused` stays false on purpose: the list has no text field of its own, and with the
+        // focus in one elsewhere (detail, capture sheet) the keys never reach the list's handlers.
+        let action = RowKeyAction.resolve(key, textFocused: false, selection: selectedID, ids: rowIDs) { id in
+            tasks.first { $0.id == id }.map { RowKeyAction.spaceCompletes(in: kind, status: $0.status) } ?? false
+        }
+        switch action {
+        case .select(let id):
+            selectedID = id
+        case .complete(let id):
+            // A row in its Done window (#32) is not scheduled twice.
+            if let task = tasks.first(where: { $0.id == id }), !actions.isPending(task) {
+                actions.complete(task)
+            }
+        case .delete(let id):
+            guard let task = tasks.first(where: { $0.id == id }) else { return .ignored }
+            pendingDelete = task
+            confirmingDelete = true
+        case .ignore:
+            return .ignored
+        }
+        return .handled
+    }
+
+    /// The move and delete commands carry no key press; the modifiers come from the current event.
+    private static var bareKey: Bool {
+        NSEvent.modifierFlags.isDisjoint(with: [.command, .shift, .option, .control])
+    }
+
+    /// The rows as the sections below show them, top to bottom; subtask lines are no rows.
+    private var rowIDs: [UUID] {
+        if kind == .done {
+            return ViewRules.groupedByCompletionDay(shown).flatMap { $0.tasks.map(\.id) }
+        }
+        if let project {
+            return ViewRules.lines(inProject: project, in: tasks, unfolded: unfolded).compactMap { line in
+                if case .task(let task) = line { return task.id }
+                return nil
+            }
+        }
+        if kind == .new {
+            return (shown.filter { !ViewRules.needsLook($0) } + shown.filter(ViewRules.needsLook)).map(\.id)
+        }
+        if kind == .due || kind == .open {
+            let needsDate = ViewRules.leftovers(in: tasks)
+            let parked = kind == .open ? shown.filter { $0.status == .parked } : []
+            if needsDate.isEmpty, parked.isEmpty { return shown.map(\.id) }
+            let left = Set(needsDate.map(\.id))
+            let rest = shown.filter { !left.contains($0.id) && $0.status != .parked }
+            return (needsDate + rest + parked).map(\.id)
+        }
+        return shown.map(\.id)
+    }
+    #endif
 
     /// Compact: the paper list as before. Wide (#477): plain on paper in the start page's 720 pt
     /// column, the paper running edge to edge below it.
@@ -262,7 +397,7 @@ struct TaskListView: View {
                 case .task(let task):
                     // The Done window (#32) holds here too: struck through with Undo for three seconds.
                     if actions.isPending(task) {
-                        pendingRow(task).wideListRow()
+                        pendingRow(task).wideListRow(selected: isChosen(task))
                     } else {
                         projectTaskRow(task)
                     }
@@ -276,9 +411,10 @@ struct TaskListView: View {
         HStack(spacing: 4) {
             disclosure(task)
             NavigationLink {
-                TaskDetailView(task: task)
+                detail(task)
             } label: {
                 TaskRow(task: task, note: note(for: task), nextRank: nextRank(of: task), onNewDate: { redating = task })
+                    .accessibilityAddTraits(isChosen(task) ? .isSelected : [])
             }
             .navigationLinkIndicatorVisibility(.hidden)
         }
@@ -286,7 +422,7 @@ struct TaskListView: View {
         .swipeActions(edge: .trailing, allowsFullSwipe: true) { actions.trailingActions(task) }
         .contextMenu { actions.menu(task) }
         .paperRow()
-        .wideListRow()
+        .wideListRow(selected: isChosen(task))
     }
 
     /// The arrow, or its empty width for a task without subtasks. A deleted task can be drawn once
@@ -358,7 +494,7 @@ struct TaskListView: View {
     @ViewBuilder
     private func row(_ task: TaskItem) -> some View {
         if actions.isPending(task) {
-            pendingRow(task).wideListRow()
+            pendingRow(task).wideListRow(selected: isChosen(task))
         } else {
             openRow(task)
         }
@@ -370,10 +506,11 @@ struct TaskListView: View {
 
     private func openRow(_ task: TaskItem) -> some View {
         NavigationLink {
-            TaskDetailView(task: task, reviewing: kind == .new)
+            detail(task, reviewing: kind == .new)
         } label: {
             TaskRow(task: task, hidesContext: context != nil, note: note(for: task), marksParked: kind == .open,
                     nextRank: nextRank(of: task), onNewDate: { redating = task })
+                .accessibilityAddTraits(isChosen(task) ? .isSelected : [])
         }
         // The whole row opens the task; the system's arrow at its end made room for the star (#509).
         .navigationLinkIndicatorVisibility(.hidden)
@@ -381,7 +518,7 @@ struct TaskListView: View {
         .swipeActions(edge: .trailing, allowsFullSwipe: true) { trailingActions(task) }
         .contextMenu { actions.menu(task) }
         .paperRow()
-        .wideListRow()
+        .wideListRow(selected: isChosen(task))
     }
 
     /// Whose deadline passed (#518, #548): the swipe gives it a new date; everything else as everywhere.
@@ -430,6 +567,17 @@ struct TaskListView: View {
         actions.save("reorder")
     }
 }
+
+#if os(macOS)
+/// The chosen row per list (#480), in memory only: the Mac's navigation stack can rebuild a list on the
+/// way back from the detail, and its own state goes with it. Observed, so every instance of a list
+/// redraws when its choice changes. Nothing is stored past the app's run.
+@MainActor @Observable
+private final class ChosenRows {
+    static let shared = ChosenRows()
+    var byList: [ViewSelection: UUID] = [:]
+}
+#endif
 
 /// The list's subtitle under its title, wide only (#477); compact stays exactly as it was. On wide
 /// it stays attached while empty, so the list keeps its identity when the last task is done.
