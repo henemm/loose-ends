@@ -491,14 +491,20 @@ final class MacKeyboardTests: XCTestCase {
     @MainActor
     func testWindowMinimumSize() throws {
         let (app, window, _) = openStart(1)
-        let corner = window.coordinate(withNormalizedOffset: CGVector(dx: 1, dy: 1)).withOffset(CGVector(dx: -2, dy: -2))
-        let inside = window.coordinate(withNormalizedOffset: CGVector(dx: 0.05, dy: 0.05))
-        corner.press(forDuration: 0.3, thenDragTo: inside)
-        _ = macWait(timeout: 2) { false }
+        let before = window.frame.size
+        // The resize grip straddles the rounded corner; where exactly is not documented, so the drag
+        // tries a few points around it, slowly, until the window changes size (run 39759219395: a quick
+        // drag 2 pt inside the corner left it at 1024 × 674).
+        for offset in [-2.0, 2.0, -6.0, 5.0] {
+            let corner = window.coordinate(withNormalizedOffset: CGVector(dx: 1, dy: 1)).withOffset(CGVector(dx: offset, dy: offset))
+            let inside = window.coordinate(withNormalizedOffset: CGVector(dx: 0.05, dy: 0.05))
+            corner.press(forDuration: 0.6, thenDragTo: inside, withVelocity: .slow, thenHoldForDuration: 0.3)
+            if macWait(timeout: 2, until: { window.frame.size != before }) { break }
+        }
         let size = window.frame.size
         XCTAssertGreaterThanOrEqual(size.width, 760, "The window should not get narrower than 760 pt, it is \(size)")
         XCTAssertGreaterThanOrEqual(size.height, 520, "The window should not get lower than 520 pt, it is \(size)")
-        XCTAssertLessThan(size.width, 900, "The drag should have shrunk the window, it is \(size)")
+        XCTAssertLessThan(size.width, before.width - 100, "The drag should have shrunk the window from \(before), it is \(size)")
         app.terminate()
     }
 
