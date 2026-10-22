@@ -1,0 +1,26 @@
+RED #480 Schnitt 2 — CI-Job "Mac Gallery (macOS)", Läufe 39759219395 (a92f047) und 39766895911 (f4bc5af)
+Logs: ci-mac-gallery-red.log, ci-mac-gallery-red-2.log (dieser Ordner)
+
+MacKeyboardTests: Executed 18 tests, with 10 failures.
+Schnitt-1-Tests (7) grün, MacGalleryTests 13/13 grün, MacDetailClickTests 10/10 grün.
+
+FAILED (Lauf 2):
+testStartArrowsSelectAndSpaceCompletes, XCTAssertTrue failed - The opened row should be marked
+testStartDeleteAsksFirst, XCTAssertTrue failed - 2 downs should choose Now row 2, marked: []
+testStartMoreExtendsRows, XCTAssertTrue failed - Folded, Down should stop on row 5, marked: []
+testStartNewTaskShortcutFocusesWritingLine, XCTAssertTrue failed - 1 downs should choose Now row 1, marked: []
+testStartSelectionClearsWhenRowGoes, XCTAssertTrue failed - 2 downs should choose Now row 2, marked: []
+testStartSelectionPhotoDark, XCTAssertTrue failed - 2 downs should choose Now row 2, marked: []
+testStartSelectionPhotoLight, XCTAssertTrue failed - 2 downs should choose Now row 2, marked: []
+testStartSelectionSurvivesDetail, XCTAssertTrue failed - 3 downs should choose Now row 3, marked: []
+testStartWritingLineKeepsKeys, XCTAssertTrue failed - 2 downs should choose Now row 2, marked: []
+testWindowMinimumSize, XCTAssertLessThan failed: ("1200.0") is not less than ("1100.0") - The drag should have shrunk the window from (1200.0, 674.0), it is (1200.0, 674.0)
+
+Bewertung:
+- 9 Tests rot aus dem richtigen Grund: Die Startseite kennt keine Auswahl (marked: []) und keine Tasten.
+- testStartHasNoListFocusOnAppear grün: Schutztest für AC-7, heute ohne Tastenbehandlung trivial erfüllt;
+  er muss nach der Umsetzung grün bleiben.
+- testWindowMinimumSize rot aus dem FALSCHEN Grund: Das Ziehen verkleinert das Fenster in der CI nicht
+  (1200 x 674 vorher und nachher, auch langsam an vier Punkten der Ecke). Der Test probiert seitdem Ecke,
+  rechten und linken Rand und schreibt jeden Versuch in die Fehlermeldung. Der nächste CI-Lauf zeigt, welcher
+  Weg greift; die Korrektur folgt in Phase 6, bevor die Mindestgröße als belegt gilt.
