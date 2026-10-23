@@ -100,6 +100,8 @@ leerer Wert heißt, dass Xcode nach dem nächsten Stand jeden Gerätestart verwe
 
 **Acceptance runs in stages, and the first two are never skipped** — tests, then Simulator
 (`./scripts/sim.sh build`, `launch`, `screenshot`: the changed flow is played through and evidenced).
+Compiling is not building, building is not installing, installing is not **using**: only using is the stage, and
+`phase8_complete` demands its receipt from `./scripts/sim.sh test-proof` (#145).
 `docs/reference/abnahme-und-arbeitsweise.md` has the reasoning and the commands. TestFlight is a distribution channel,
 not a stage: it gives no debugger and no live logs, so it stays dormant until people other than
 Henning test.
