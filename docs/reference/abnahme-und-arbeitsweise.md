@@ -50,6 +50,12 @@ Die Reihenfolge ist verbindlich, keine Stufe wird vorgezogen. Stufe 1 und 2 werd
 1. **Tests** — `./scripts/sim.sh unit` und der betroffene UI-Test müssen grün sein.
 2. **Simulator** — `./scripts/sim.sh build`, `launch`, `screenshot`: der betroffene Ablauf wird
    selbst durchgespielt und belegt. Nichts geht auf das Gerät, was hier nicht bewiesen ist.
+   **Übersetzen ist nicht bauen, bauen ist nicht installieren, installieren ist nicht benutzen.** Nur das Letzte
+   ist die Stufe: Die App läuft im Simulator, und der geänderte Ablauf wird als Nutzer durchgespielt (#136 ging
+   gebaut und installiert raus und griff ohne Apple Intelligence nie). Der Nachweis kommt aus
+   `./scripts/sim.sh test-proof <Klasse>` (Beleg `simulator-run.txt` plus Screenshots). Seit #145 Schnitt 2
+   verlangt `phase8_complete` diesen frischen Beleg, sobald eine Code-Datei außerhalb von `LooseEnds/Mac/` geändert
+   wurde (Plugin ab 3.42.0); ein Beleg von vor der letzten Änderung zählt nicht.
 3. **Hennings Gerät** — seit 2026-10-10 über TestFlight in seiner normalen App (`CLAUDE.md`, „Stufe 3
    läuft über TestFlight“). Nichts auf seinen Geräten ohne sein wörtliches „jetzt ist ein Test möglich“.
 
