@@ -169,10 +169,12 @@ ohne Uhrzeit grau „Seit gestern“ / „Seit N Tagen“ (`carried`, Kalenderta
 Ansichten, „Jetzt“ und die Zahl am App-Symbol zählen eine weitergetragene Aufgabe weiter als überfällig, „Jetzt“ und die
 Zahl am App-Symbol nur bis 7 Tage (siehe Mitteilungen).
 
-**Jetzt (nur Startbildschirm iPhone, #368):** „Heute fällig“ (`dueDate` vor Beginn von morgen) und „Als nächstes“ als eine
-Liste, jede Aufgabe einmal — dieselben zwei Mengen, die die Zahl am App-Symbol zählt. Zuerst überfällig (älteste zuerst), dann
-heute fällig (früheste Uhrzeit zuerst), dann der Rest von „Als nächstes“ nach nextRank. Eine vorgemerkte Aufgabe, die fällig
-ist, steht bei den fälligen (Zeitdruck gewinnt). Gleiche Fälligkeit: nextRank (ohne Rang zuletzt), dann capturedAt.
+**Jetzt (Startseite iPhone, iPad, Mac, #368, neu gefasst #637):** „Heute fällig“, „Als nächstes“ und alles, was ein neues
+Datum braucht (`leftovers`), als eine Liste, jede Aufgabe einmal. Das ist genau die Menge, die die Zahl am App-Symbol zählt,
+und die Zahl steht über „Jetzt“ und an „Start“ (`ViewRules.now(...).all.count`, `badgeCount` ruft dieselbe Funktion). Zuerst
+heute fällig (früheste Uhrzeit zuerst), dann alle Eingereihten nach nextRank (auch Liegengebliebene: das Einreihen von
+Hand gilt), zuletzt die Liegengebliebenen ohne Rang, älteste Frist zuerst, mit „Neues Datum“ am Rand. Gleiche Fälligkeit:
+nextRank (ohne Rang zuletzt), dann capturedAt.
 
 ## Aktionen auf einer Aufgabe
 
@@ -197,8 +199,8 @@ für KI-Verarbeitung.
 
 **Lose Enden am Abend und am Morgen (#414, neu gefasst #518, Henning 2026-10-17, `CarryReminders`):** Was vor heute fällig
 war und offen ist (`ViewRules.leftovers`: oberste Ebene, nicht blockiert, mit oder ohne Uhrzeit), wird nicht weitergetragen:
-es braucht eine neue Fälligkeit, Parken oder Erledigt. Bis dahin zählt es nicht in „Jetzt“, nicht in „Heute fällig“ und nicht
-in der Zahl am App-Symbol, auch vorgemerkt nicht. „Fällig“ und „Lose Enden“ (früher „Alle offenen“) zeigen es oben unter
+es braucht eine neue Fälligkeit, Parken oder Erledigt. Bis dahin steht es unten in „Jetzt“ mit „Neues Datum“ am Rand (seit #637; vorher blieb es draußen) und zählt in der Zahl am
+App-Symbol, die dieselbe ist wie die über „Jetzt“. „Fällig“ und „Lose Enden“ (früher „Alle offenen“) zeigen es oben unter
 „Neues Datum nötig“; Wisch links öffnet dort die Fälligkeit (Schnellwahl, Kalender). Zwei Mitteilungen, je ein Schalter in
 den Einstellungen, beide an (iCloud-Schlüsselwertspeicher, gespeichert als `quiet`/`morning`/`evening`/`both`):
 **Abends** zur Abendzeit (Vorgabe 20:00, `carry_evening_JJJJ-MM-TT`) „Neues Datum nötig: N“ mit allem, was an diesem Tag
