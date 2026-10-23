@@ -114,20 +114,83 @@ struct WeekString: View {
     }
 }
 
-/// "This week" on the start screen (#645): the caption and the string as two rows under "Now", only
-/// while the week has a bead.
+/// "This week" on the start screen (#645, #647): the caption, the string while the week has a bead,
+/// and "Dafür" while a sentence is set; nothing without either.
 struct WeekStringRows: View {
     let beads: [ViewRules.Bead]
     @Environment(\.dynamicTypeSize) private var typeSize
+    @Environment(FieldSettingsStore.self) private var fieldSettings: FieldSettingsStore?
 
     var body: some View {
-        if !beads.isEmpty {
+        let reward = fieldSettings?.reward ?? ""
+        if !beads.isEmpty || !reward.isEmpty {
             let metrics = StartMetrics(typeSize)
             ZoneCaption("This week")
-            WeekString(beads: beads)
-                .listRowSeparator(.hidden)
-                .startRow(metrics)
-                .paperRow()
+            if !beads.isEmpty {
+                WeekString(beads: beads)
+                    .listRowSeparator(.hidden)
+                    .startRow(metrics)
+                    .paperRow()
+            }
+            if !reward.isEmpty, let fieldSettings {
+                RewardLine(store: fieldSettings)
+                    .listRowSeparator(.hidden)
+                    .startRow(metrics)
+                    .paperRow()
+            }
         }
+    }
+}
+
+/// "Dafür: Samstag Kino." (#647, Milkman's bundling at its simplest): one free sentence for the week,
+/// in italics under the string. A tap puts the cursor into it; Return or leaving saves; nothing is
+/// checked. Empty means no line, so the first sentence is written in Settings › Fields.
+struct RewardLine: View {
+    let store: FieldSettingsStore
+    @State private var draft = ""
+    @State private var editing = false
+    @FocusState private var focused: Bool
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    var body: some View {
+        let metrics = StartMetrics(typeSize)
+        HStack(alignment: .firstTextBaseline, spacing: 4) {
+            Text("For it:")
+                .accessibilityHidden(true)
+            if editing {
+                TextField("For it", text: $draft)
+                    .textFieldStyle(.plain)
+                    .focused($focused)
+                    .submitLabel(.done)
+                    .onSubmit(commit)
+                    .accessibilityIdentifier("rewardField")
+            } else {
+                Text(verbatim: store.reward + ".")
+            }
+        }
+        .font(.system(size: metrics(16), design: .serif))
+        .italic()
+        .foregroundStyle(.secondary)
+        .padding(.vertical, 4)
+        .padding(.leading, 2)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            guard !editing else { return }
+            draft = store.reward
+            editing = true
+            focused = true
+        }
+        .onChange(of: focused) { _, isFocused in
+            if !isFocused, editing { commit() }
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(Text("For it: \(store.reward)"))
+        .accessibilityIdentifier("rewardLine")
+    }
+
+    private func commit() {
+        store.setReward(draft)
+        editing = false
+        focused = false
     }
 }

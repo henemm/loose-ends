@@ -107,6 +107,8 @@ import Testing
     final class Cloud: FieldSettingsCloud {
         var offeredFields: [String]?
         func setOfferedFields(_ fields: [String]) { offeredFields = fields }
+        var weekReward: String?
+        func setWeekReward(_ text: String) { weekReward = text }
     }
 
     @MainActor
@@ -138,6 +140,24 @@ import Testing
         #expect(store.takeCloud() == false)
         let fresh = FieldSettingsStore(defaults: defaults, cloud: cloud)
         #expect(fresh.settings.on == [.notes, .energy], "read back from the defaults")
+    }
+
+    @Test("Dafür (#647): trimmed, written to the defaults and iCloud, taken over from another device, read back")
+    @MainActor func reward() throws {
+        let (store, defaults, cloud) = try fixture()
+        #expect(store.reward.isEmpty)
+        store.setReward("  Samstag Kino ")
+        #expect(store.reward == "Samstag Kino")
+        #expect(defaults.string(forKey: FieldSettingsStore.rewardKey) == "Samstag Kino")
+        #expect(cloud.weekReward == "Samstag Kino")
+        cloud.weekReward = "Sonntag Kuchen"
+        #expect(store.takeCloud())
+        #expect(store.reward == "Sonntag Kuchen")
+        #expect(store.takeCloud() == false)
+        let fresh = FieldSettingsStore(defaults: defaults, cloud: cloud)
+        #expect(fresh.reward == "Sonntag Kuchen")
+        store.setReward("")
+        #expect(store.reward.isEmpty, "empty means no line")
     }
 
     @Test("Only the UI test process runs with every switch on; the unit tests see the standard")

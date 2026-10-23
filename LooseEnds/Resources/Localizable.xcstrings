@@ -452,6 +452,19 @@
     "A bead on the week's string once completed. At most five open at a time." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erledigt eine Perle auf der Schnur der Woche. Höchstens fünf offene zugleich." } } } },
     "Today untangled: %@." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute entwirrt: %@." } } } },
     "Today untangled: %@, and one more tied up." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute entwirrt: %@, dazu eine weitere." } } } },
-    "Today untangled: %1$@, and %2$@ more tied up." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute entwirrt: %1$@, dazu %2$@ weitere." } } } }
+    "Today untangled: %1$@, and %2$@ more tied up." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute entwirrt: %1$@, dazu %2$@ weitere." } } } },
+    "For it:" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Dafür:" } } } },
+    "For it" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Dafür" } } } },
+    "For it: Saturday, the movies" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Dafür: Samstag Kino" } } } },
+    "For it: %@" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Dafür: %@" } } } },
+    "One sentence for the week, under the string on the start page. Nothing is checked." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ein Satz für die Woche, auf der Startseite unter der Schnur. Nichts wird geprüft." } } } },
+    "The Knäuel · %@" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Das Knäuel · %@" } } } },
+    "Release" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Lösen" } } } },
+    "Counts always, it is the Knäuel" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Zählt immer, es ist das Knäuel" } } } },
+    "Not counting" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Zählt nicht mehr" } } } },
+    "since this morning" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "seit heute Morgen" } } } },
+    "since today" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "seit heute" } } } },
+    "since yesterday" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "seit gestern" } } } },
+    "since %@" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "seit %@" } } } }
   }
 }

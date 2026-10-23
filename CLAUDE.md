@@ -293,7 +293,9 @@ not scope creep on the current one.
   (date, thread, row as one list row, plays the completion moment, #644), the sentence of the day; `KnaeuelSince`),
   `KnaeuelThread.swift` (`KnaeuelThread`: two trochoid loops laid from the Knäuel's tail end to the row, `LooseningKnaeuel`:
   the Knäuel blended into the knot) and `Beads.swift` (`PearlGlyph`, `WeekString` with the sag and the 1.1 s green,
-  `WeekStringRows` under "Now"). The question before the Knäuel moves is `movesKnaeuel` in `TaskInteractions.swift`.
+  `WeekStringRows` under "Now" with `RewardLine`, the week's "Dafür" sentence from `FieldSettingsStore.reward`, #647). The
+  question before the Knäuel moves is `movesKnaeuel` in `TaskInteractions.swift`; the detail's lines under the raw text
+  ("The Knäuel · since Monday" with Release, "Counts always, it is the Knäuel") are `TaskDetailView.driveSection`.
 - `Shared/Models/RowKeyAction.swift` (#480 Schnitt 1, pure): which key does what in a Mac list (arrows choose, space completes only where the swipe offers done, delete asks first, nothing while a text field has focus); `TaskListView` wires it up on the Mac only (`onKeyPress`, `ChosenRows` keeps the chosen row per list so it survives detail and back), `Paper.wideListRow(selected:)` paints it accent 12 %, hover grey 7 %; Schnitt 2: the start page's "Now" rows take the same keys on the Mac only (`StartPage.macNowRow`/`keyed`, `ChosenRows.start`; only the visible rows, 5 folded; list focus only from a click or when the writing line lets go, never on appear; iPhone and iPad rows unchanged), main window at least 760 × 520 pt of content
 - `Shared/Persistence` — `ModelContainerFactory` (app group + private CloudKit; identifiers read from
   `Info.plist`, keys `LEAppGroup`/`LECloudContainer`, with the production constants as fallback —

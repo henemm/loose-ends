@@ -162,6 +162,20 @@ import Testing
         #expect(KnaeuelSince.days(from: now.addingTimeInterval(86_400), now: now, calendar: calendar) == 0, "never negative")
     }
 
+    @Test("Since when it is the Knäuel (#647): this morning, today, yesterday, the weekday, the date")
+    func setWords() throws {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = try #require(TimeZone(identifier: "Europe/Berlin"))
+        let en = Locale(identifier: "en_US")
+        let now = try #require(calendar.date(from: DateComponents(year: 2026, month: 10, day: 23, hour: 15)))
+        func at(day: Int, hour: Int) -> Date { calendar.date(from: DateComponents(year: 2026, month: 10, day: day, hour: hour))! }
+        #expect(KnaeuelSince.setWords(from: at(day: 23, hour: 8), now: now, calendar: calendar, locale: en) == "since this morning")
+        #expect(KnaeuelSince.setWords(from: at(day: 23, hour: 14), now: now, calendar: calendar, locale: en) == "since today")
+        #expect(KnaeuelSince.setWords(from: at(day: 22, hour: 8), now: now, calendar: calendar, locale: en) == "since yesterday")
+        #expect(KnaeuelSince.setWords(from: at(day: 20, hour: 8), now: now, calendar: calendar, locale: en) == "since Tuesday")
+        #expect(KnaeuelSince.setWords(from: at(day: 12, hour: 8), now: now, calendar: calendar, locale: en).hasPrefix("since Oct 12"))
+    }
+
     @Test("The Knäuel's curve is the canvas drawing: starts at the left, ends at the flat tail on the right, inside 40 × 20")
     func curve() {
         let points = ThreadShape.curvePoints(form: .knaeuel)

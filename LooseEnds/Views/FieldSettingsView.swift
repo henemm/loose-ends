@@ -5,6 +5,7 @@ import SwiftUI
 /// groups too. The choice goes to every device through the iCloud key-value store.
 struct FieldSettingsView: View {
     @Environment(FieldSettingsStore.self) private var store: FieldSettingsStore?
+    @State private var reward = ""
 
     private var settings: DetailFieldSettings { store?.settings ?? .standard }
 
@@ -17,6 +18,9 @@ struct FieldSettingsView: View {
                     }
                     ForEach(DetailField.allCases.filter { $0.group == group }, id: \.self) { field in
                         row(field)
+                    }
+                    if group == .drive {
+                        rewardRow
                     }
                 } header: {
                     Text(Self.groupTitle(group))
@@ -52,6 +56,21 @@ struct FieldSettingsView: View {
                         .foregroundStyle(.secondary)
                 }
             }
+        }
+    }
+
+    /// "Dafür" (#647): the week's sentence, saved on Return and when the page goes; shown on the start
+    /// page under the string while set.
+    private var rewardRow: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            TextField("For it", text: $reward, prompt: Text("For it: Saturday, the movies"))
+                .onSubmit { store?.setReward(reward) }
+                .onDisappear { store?.setReward(reward) }
+                .onAppear { reward = store?.reward ?? "" }
+                .accessibilityIdentifier("rewardField")
+            Text("One sentence for the week, under the string on the start page. Nothing is checked.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
         }
     }
 
