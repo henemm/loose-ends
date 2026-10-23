@@ -92,7 +92,7 @@ struct WeekString: View {
 
     /// The string as on the canvas: a quadratic curve from 10 pt in to 10 pt before the end, sagging
     /// 12 pt in the middle (the control point at 26 draws the curve down to 20).
-    static func string(width: CGFloat) -> Path {
+    nonisolated static func string(width: CGFloat) -> Path {
         var path = Path()
         path.move(to: CGPoint(x: inset, y: 14))
         path.addQuadCurve(to: CGPoint(x: width - inset, y: 14), control: CGPoint(x: width / 2, y: 26))
@@ -101,7 +101,7 @@ struct WeekString: View {
 
     /// Where the beads sit: from the left at 40 pt apart, closer only once the string is full, each
     /// on the curve.
-    static func centers(count: Int, width: CGFloat) -> [CGPoint] {
+    nonisolated static func centers(count: Int, width: CGFloat) -> [CGPoint] {
         guard count > 0 else { return [] }
         let room = width - firstBead - inset - radius
         let step = count > 1 ? min(spacing, room / CGFloat(count - 1)) : spacing

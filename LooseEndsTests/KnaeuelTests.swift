@@ -12,6 +12,11 @@ import Testing
         return task
     }
 
+    /// A to-many relationship keeps no order: the revisions by their time.
+    static func revisions(of task: TaskItem) -> [Revision] {
+        (task.revisions ?? []).sorted { $0.createdAt < $1.createdAt }
+    }
+
     @Test("Setting the Knäuel writes a user revision; a second task takes the mark off the first, with a revision on each")
     @MainActor func setAndMove() async throws {
         let store = try TestStore()
@@ -27,7 +32,7 @@ import Testing
         #expect(steuer.knaeuelAt?.ISO8601Format() == at.ISO8601Format(), "the codec keeps whole seconds")
         #expect(steuer.isKnaeuel)
         #expect(ViewRules.knaeuel(in: [steuer, hecke])?.id == steuer.id)
-        let first = try #require(steuer.revisions?.first)
+        let first = try #require(Self.revisions(of: steuer).first)
         #expect(first.field == .knaeuel)
         #expect(first.author == .user)
         #expect(first.oldValue == nil)
@@ -40,7 +45,7 @@ import Testing
         #expect(hecke.isKnaeuel)
         #expect(ViewRules.knaeuel(in: [steuer, hecke])?.id == hecke.id)
         #expect(steuer.revisions?.count == 2, "the release is a revision too")
-        #expect(steuer.revisions?.last?.newValue == nil)
+        #expect(Self.revisions(of: steuer).last?.newValue == nil)
 
         // The same task again changes nothing.
         let again = TaskActions.setKnaeuel(hecke, among: [steuer, hecke], contexts: [], projects: [])
@@ -62,7 +67,7 @@ import Testing
         TaskActions.setKnaeuel(task, among: [task], contexts: [], projects: [])
         TaskActions.park(task)
         #expect(task.knaeuelAt == nil, "a parked task is not the one being avoided")
-        #expect(task.revisions?.last?.field == .knaeuel)
+        #expect(Self.revisions(of: task).last?.field == .knaeuel)
 
         TaskActions.activate(task)
         TaskActions.setKnaeuel(task, among: [task], contexts: [], projects: [])
@@ -197,8 +202,8 @@ import Testing
             #expect(TaskActions.canCount(task, among: tasks))
             TaskActions.toggleCounts(task, among: tasks, contexts: [], projects: [])
             #expect(task.countsAt != nil)
-            #expect(task.revisions?.first?.field == .counts)
-            #expect(task.revisions?.first?.author == .user)
+            #expect(KnaeuelTests.revisions(of: task).first?.field == .counts)
+            #expect(KnaeuelTests.revisions(of: task).first?.author == .user)
         }
         #expect(ViewRules.counting(in: tasks).count == 5)
         let sixth = tasks[5]
