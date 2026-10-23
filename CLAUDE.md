@@ -197,7 +197,10 @@ Henning's Mac. The same job runs `MacDetailClickTests` (#544) in the **App Sandb
 app with the sandbox keys of `project.yml` (`scripts/mac_ci_entitlements.py`, minus what needs a profile) and tests without
 rebuilding. Each test starts fresh, opens the detail from Loose ends or the start page and clicks the visible words: title,
 note, subtask add and check, File and Photo. Without the sandbox the open panel opened in CI and not in TestFlight build 89.
-The helpers both share live in `MacUITestSupport.swift` (`mac` prefix).
+The helpers both share live in `MacUITestSupport.swift` (`mac` prefix). Every fetch of the main window there runs
+`macAssertWindowFitsScreen` (#593): a window wider than the screen, or past its right or bottom edge, fails the test with
+both sizes; the gallery notes `mac-gallery-*-window-size` name window and screen size, and `testWindowFromMenuBarFitsScreen`
+opens the window through the menu bar on every run.
 
 ## Ship
 
@@ -338,7 +341,9 @@ not scope creep on the current one.
 - `LooseEnds/Mac` — `MenuBarCapture` (Mac only, #356): the menu bar panel with the same `CaptureView`, Dock icon only
   while a list window is open (`DockPolicy`), login item via `SMAppService` (on from the first start, never under tests);
   `MenuBarThreadImage` (#366): the menu bar symbol is the logo's thread, drawn from `ThreadShape.curvePoints` into a
-  template `NSImage` (18 pt, 1x/2x, black on transparent; the raster in `MenuBarThreadRaster` is platform-neutral and unit-tested)
+  template `NSImage` (18 pt, 1x/2x, black on transparent; the raster in `MenuBarThreadRaster` is platform-neutral and unit-tested);
+  `MainWindowPlacement` (#593, pure, unit-tested): the main window's first frame via `.defaultWindowPlacement`, the wish
+  1200 × 780 cut to the screen's visible area and centred there, never below 760 × 520 (then at its top left corner)
 - `LooseEnds/App/LaunchTimings.swift` — cold-start measuring points (#22): signposts always, `Documents/launch-timings.json`
   only in the probe build (`.probe`); launch argument `-measureLaunch` opens the capture scene
 - `LooseEnds/Speech` — `SpeechCapture` (live recognition for the capture scene, skipped under `--ui-testing`; the transcriber
