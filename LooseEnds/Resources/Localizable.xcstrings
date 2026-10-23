@@ -2,6 +2,8 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "Shows the remaining tasks" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Zeigt die übrigen Aufgaben" } } } },
+    "Shows only the first five tasks" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Zeigt nur die ersten fünf Aufgaben" } } } },
     "Write a task" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufgabe schreiben" } } } },
     "Filed in New: %@" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "In Neu abgelegt: %@" } } } },
     "Which fields a task offers to fill in, for example note, place or project. Fields that are off are not offered; what a task already holds stays visible." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Welche Felder eine Aufgabe zum Ausfüllen anbietet, zum Beispiel Notiz, Ort oder Projekt. Ausgeschaltete Felder werden nicht angeboten; steht in einer Aufgabe schon etwas darin, bleibt es sichtbar." } } } },

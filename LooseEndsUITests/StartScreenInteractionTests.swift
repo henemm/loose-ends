@@ -251,6 +251,73 @@ final class StartScreenInteractionTests: XCTestCase {
         XCTAssertEqual(nowRows(in: app).count, 1)
     }
 
+    /// A tap on a "Now" row opens that task; Back brings the same row back (#398).
+    @MainActor
+    func testNowRowOpensItsTask() throws {
+        let app = launch()
+        captureAndLineUp("Rechnung bezahlen", in: app)
+
+        let row = firstElement(prefix: "nowRow_", in: app)
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "Start screen shows no Now row")
+        let id = row.identifier
+        row.tap()
+        XCTAssertTrue(element("detailTitleField", in: app).waitForExistence(timeout: 5), "The tap should open the detail")
+        let marker = element("detailRawTextMarker", in: app)
+        XCTAssertTrue(marker.waitForExistence(timeout: 5), "The detail lacks its raw text marker")
+        XCTAssertTrue(marker.label.contains("Rechnung bezahlen"), "The detail is another task: \(marker.label)")
+
+        let back = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(back.waitForExistence(timeout: 5), "No back button")
+        back.tap()
+        XCTAssertTrue(element(id, in: app).waitForExistence(timeout: 5), "Back on the start screen the same row stands in Now")
+    }
+
+    /// Something waits in New but nothing stands for now: the inbox bar, and Now with only its hint (#398).
+    @MainActor
+    func testNewWithoutNowKeepsTheHint() throws {
+        let app = launch()
+        capture("Rechnung bezahlen", in: app)
+
+        XCTAssertTrue(element("inboxBar", in: app).waitForExistence(timeout: 5), "A task in New should raise the inbox bar")
+        XCTAssertTrue(app.staticTexts["Swipe left on any task to line it up here."].waitForExistence(timeout: 5), "Now should keep its hint")
+        XCTAssertTrue(nowRows(in: app).isEmpty, "A task without a date is not for now")
+        XCTAssertFalse(element("nowMore", in: app).exists)
+    }
+
+    /// Unfolded, then down to five: the block folds, so two more tasks find it folded at "2 more" (#398).
+    @MainActor
+    func testNowFoldsAgainOnceFiveAreLeft() throws {
+        let app = launchWithShortDoneWindow()
+        for number in 1...7 { capture("Heute Aufgabe \(number)", in: app) }
+
+        let more = element("nowMore", in: app)
+        XCTAssertTrue(more.waitForExistence(timeout: 15), "Seven tasks should leave a \"more\" row")
+        more.tap()
+        XCTAssertTrue(waitForNowRows(7, in: app), "All seven rows after unfolding")
+
+        for left in [6, 5] {
+            let row = firstElement(prefix: "nowRow_", in: app)
+            row.swipeRight()
+            let complete = app.buttons["Complete"]
+            if complete.waitForExistence(timeout: 2) { complete.tap() }
+            XCTAssertTrue(waitForNowRows(left, in: app), "After the Done window \(left) rows should be left")
+        }
+        XCTAssertFalse(more.exists, "Five rows need no \"more\"")
+
+        for number in 8...9 { capture("Heute Aufgabe \(number)", in: app) }
+        XCTAssertTrue(more.waitForExistence(timeout: 15), "Seven tasks again should bring the \"more\" row back")
+        XCTAssertEqual(more.label, "2 more", "The block should stand folded, not unfolded from before")
+        XCTAssertEqual(nowRows(in: app).count, 5, "Folded, five rows")
+    }
+
+    /// Waits until Now shows exactly `count` rows; a completed row stays through its Done window.
+    @MainActor
+    private func waitForNowRows(_ count: Int, in app: XCUIApplication, timeout: TimeInterval = 15) -> Bool {
+        let rows = app.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH 'nowRow_'"))
+        let reached = XCTNSPredicateExpectation(predicate: NSPredicate(format: "count == %d", count), object: rows)
+        return XCTWaiter().wait(for: [reached], timeout: timeout) == .completed
+    }
+
     // MARK: - Tag words in the index (#368, #421: the chips became italic words under „Tags“)
 
     /// A task the rule files under Garden raises a chip with the list's count; the tap opens that list (AC-13).
