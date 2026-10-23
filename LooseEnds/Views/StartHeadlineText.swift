@@ -36,8 +36,9 @@ enum StartHeadlineText {
         case .dueToday(let title, let count):
             if count > 1 { return String(localized: "Today \(number(count)) things due.") }
             return String(localized: "Today: \(title).")
-        case .waiting(let title, let days):
-            return String(localized: "\(title) has been waiting for \(number(days)) days.")
+        case .needsNewDate(let title, let count):
+            if count > 1 { return String(localized: "\(number(count)) things need a new date.") }
+            return String(localized: "\(title) needs a new date.")
         case .pile(let label, let count):
             return String(localized: "\(number(count)) things under \(label).")
         case .old(let count):

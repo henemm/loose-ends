@@ -151,14 +151,48 @@ import Testing
         #expect(Self.headline([one], Self.at(7, day: 1)) != .dueToday(title: "Arzttermin", count: 1))
     }
 
-    // MARK: - 3 to 8
+    // MARK: - 3
 
-    @Test("Each quiet rung on its own: waiting, pile, old, yesterday")
+    @Test("3: one deadline from an earlier day is named, several are counted (#633)")
+    @MainActor func needsNewDate() async throws {
+        let store = try TestStore()
+        let yesterday = Self.task("Mama zurückrufen", due: Self.at(0, day: -1), in: store)
+        #expect(Self.headline([yesterday], Self.at(10)) == .needsNewDate(title: "Mama zurückrufen", count: 1))
+
+        // A time from yesterday and a day-only date three days back: the oldest first.
+        let timed = Self.task("Rechnung bezahlen", due: Self.at(15, day: -1), timed: true, in: store)
+        let older = Self.task("Fahrrad flicken", due: Self.at(0, day: -3), in: store)
+        #expect(Self.headline([yesterday, timed, older], Self.at(10)) == .needsNewDate(title: "Fahrrad flicken", count: 3))
+
+        let de = Locale(identifier: "de_DE")
+        #expect(StartHeadlineText.sentence(.needsNewDate(title: "Fahrrad flicken", count: 3), locale: de).hasPrefix("Drei "))
+        #expect(StartHeadlineText.sentence(.needsNewDate(title: "Fahrrad flicken", count: 1), locale: de).hasPrefix("Fahrrad flicken "))
+    }
+
+    @Test("3 comes after today's rungs and before the quiet ones; calm never hides it (#633)")
+    @MainActor func needsNewDateRank() async throws {
+        let store = try TestStore()
+        let leftover = Self.task("Mama zurückrufen", due: Self.at(0, day: -1), in: store)
+        let today = Self.task("Arzttermin", due: Self.at(0), in: store)
+        let ahead = Self.task("Anna abholen", due: Self.at(17), timed: true, in: store)
+        #expect(Self.headline([leftover, today, ahead], Self.at(10)) == .upcoming(title: "Anna abholen", at: Self.at(17), count: 1))
+        #expect(Self.headline([leftover, today], Self.at(10)) == .dueToday(title: "Arzttermin", count: 1))
+
+        let old = (1...3).map { Self.task("Alt \($0)", capturedDaysAgo: 40, in: store) }
+        let doneYesterday = Self.done("Steuer", at: Self.at(18, day: -1), in: store)
+        #expect(Self.headline([leftover, doneYesterday] + old, Self.at(10)) == .needsNewDate(title: "Mama zurückrufen", count: 1))
+
+        // A parked task needs no new date; then the ladder goes on to calm.
+        leftover.status = .parked
+        let open = Self.task("Steuer", in: store)
+        #expect(Self.headline([leftover, open], Self.at(10)) == .calm)
+    }
+
+    // MARK: - 4 to 8
+
+    @Test("Each quiet rung on its own: pile, old, yesterday")
     @MainActor func quietRungs() async throws {
         let store = try TestStore()
-        let carried = Self.task("Mama zurückrufen", due: Self.at(0, day: -3), in: store)
-        #expect(Self.headline([carried], Self.at(10)) == .waiting(title: "Mama zurückrufen", days: 3))
-
         let garden = TaskContext(name: "Garten")
         store.context.insert(garden)
         let pile = (1...4).map { Self.task("Beet \($0)", in: store) }
@@ -176,19 +210,19 @@ import Testing
     @Test("Several quiet rungs take turns from one day to the next")
     @MainActor func quietRotates() async throws {
         let store = try TestStore()
-        let carried = Self.task("Mama zurückrufen", due: Self.at(0, day: -3), in: store)
-        let old = (1...3).map { Self.task("Alt \($0)", capturedDaysAgo: 40, in: store) }
-        let all = [carried] + old
+        let garden = TaskContext(name: "Garten")
+        store.context.insert(garden)
+        let old = (1...4).map { Self.task("Alt \($0)", capturedDaysAgo: 40, in: store) }
+        old.forEach { $0.contexts = [garden] }
 
-        let today = Self.headline(all, Self.at(10))
-        // The next day the carried task is one day older; the kind of rung must change.
-        let tomorrow = Self.headline(all, Self.at(10, day: 1))
+        let today = Self.headline(old, Self.at(10))
+        let tomorrow = Self.headline(old, Self.at(10, day: 1))
         let kinds = [today, tomorrow].map { headline -> String in
-            if case .waiting = headline { return "waiting" }
+            if case .pile = headline { return "pile" }
             if case .old = headline { return "old" }
             return "other"
         }
-        #expect(Set(kinds) == ["waiting", "old"])
+        #expect(Set(kinds) == ["pile", "old"])
     }
 
     @Test("Calm with open tasks and nothing standing out; all tied up with nothing open")

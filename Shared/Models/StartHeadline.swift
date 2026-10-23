@@ -16,8 +16,10 @@ enum StartHeadline: Equatable {
     /// 2b: tasks due today without a time (Henning, 2026-10-16): the day-only date is today's fact;
     /// `title` is the first by rank, spoken only when it is the only one.
     case dueToday(title: String, count: Int)
-    /// 3: a day-only date carried for days.
-    case waiting(title: String, days: Int)
+    /// 3: deadlines from earlier days that passed (#633, Henning 2026-10-23: "nur weil die fälligen
+    /// Dinge noch nicht neu terminiert sind, heißt es ja nicht, dass heute nichts drängt"). `title` is
+    /// the oldest, spoken only when it is the only one.
+    case needsNewDate(title: String, count: Int)
     /// 4: a tag (label) holding many open tasks.
     case pile(label: String, count: Int)
     /// 5: tasks older than a month.
@@ -36,7 +38,6 @@ enum StartHeadline: Equatable {
 
     static let lookBackHour = 16
     static let titleLimit = 32
-    static let waitingDays = 2
     static let pileCount = 4
     static let oldCount = 3
 
@@ -73,17 +74,13 @@ enum StartHeadline: Equatable {
         if let first = dayOnlyToday.first {
             return .dueToday(title: short(first), count: dayOnlyToday.count)
         }
-        // 3 to 6: the quiet rungs take turns by day.
+        // 3: what needs a new date. A fixed time passed today has spoken as 1 already.
+        let leftovers = NewDateRule.tasks(in: all, now: now, calendar: calendar)
+        if let oldest = leftovers.first {
+            return .needsNewDate(title: short(oldest), count: leftovers.count)
+        }
+        // 4 to 6: the quiet rungs take turns by day.
         var quiet: [StartHeadline] = []
-        let carried = open.compactMap { task -> (TaskItem, Int)? in
-            if case .carried(let days) = ViewRules.dueState(of: task, now: now, calendar: calendar), days >= waitingDays {
-                return (task, days)
-            }
-            return nil
-        }
-        if let longest = carried.max(by: { $0.1 < $1.1 }) {
-            quiet.append(.waiting(title: short(longest.0), days: longest.1))
-        }
         var perLabel: [String: Int] = [:]
         for task in open where !task.isBlocked {
             for context in task.contexts ?? [] { perLabel[context.name, default: 0] += 1 }
