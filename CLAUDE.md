@@ -289,8 +289,10 @@ not scope creep on the current one.
   hand only as user revisions (`RevisedField.knaeuel`/`.counts`), both `DetailField`s of the group `drive`, off by default.
   `ViewRules.knaeuel(in:)` (latest mark wins), `counting(in:)`, `week(containing:)` (Monday to Sunday, whatever the locale)
   and `weekBeads(in:)` (every completion of a counting task in the week, a repeating one per record); "Now" leaves the
-  Knäuel out. Views: `LooseEnds/Views/Knaeuel.swift` (`StartHeaderRows`: date line with knot or Knäuel, the Knäuel's row,
-  the sentence of the day; `KnaeuelSince`) and `Beads.swift` (`PearlGlyph`, `WeekString` with the sag and the 1.1 s green,
+  Knäuel out. Views: `LooseEnds/Views/Knaeuel.swift` (`StartHeaderRows`: the knot's date line or the Knäuel's head `KnaeuelHead`
+  (date, thread, row as one list row, plays the completion moment, #644), the sentence of the day; `KnaeuelSince`),
+  `KnaeuelThread.swift` (`KnaeuelThread`: two trochoid loops laid from the Knäuel's tail end to the row, `LooseningKnaeuel`:
+  the Knäuel blended into the knot) and `Beads.swift` (`PearlGlyph`, `WeekString` with the sag and the 1.1 s green,
   `WeekStringRows` under "Now"). The question before the Knäuel moves is `movesKnaeuel` in `TaskInteractions.swift`.
 - `Shared/Models/RowKeyAction.swift` (#480 Schnitt 1, pure): which key does what in a Mac list (arrows choose, space completes only where the swipe offers done, delete asks first, nothing while a text field has focus); `TaskListView` wires it up on the Mac only (`onKeyPress`, `ChosenRows` keeps the chosen row per list so it survives detail and back), `Paper.wideListRow(selected:)` paints it accent 12 %, hover grey 7 %; Schnitt 2: the start page's "Now" rows take the same keys on the Mac only (`StartPage.macNowRow`/`keyed`, `ChosenRows.start`; only the visible rows, 5 folded; list focus only from a click or when the writing line lets go, never on appear; iPhone and iPad rows unchanged), main window at least 760 × 520 pt of content
 - `Shared/Persistence` — `ModelContainerFactory` (app group + private CloudKit; identifiers read from

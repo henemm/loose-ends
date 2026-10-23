@@ -90,7 +90,7 @@ Seitenleiste. Entwurf: https://claude.ai/artifact/AppBHrhym57SBMURaQck5P
 https://claude.ai/artifact/91YJuzqSFibDQNfS22soYK):** Solange eine Aufgabe das Knäuel ist, zeigt der Kopf am Datum statt des
 grauen Knotens das schwarze Knäuel (ein Fünftel größer, Strich wie der Knoten), das Datum beginnt 64 pt eingerückt, und die
 Aufgabe steht als eigene Zeile direkt unter dem Datum, vor dem Satz des Tages: Titel in New York, darunter „Seit N Tagen“
-und das Etikett, der Rand leer (dort läuft ab #644 der Faden). Tipp öffnet das Detail, Wisch rechts erledigt, Halten das
+und das Etikett; aus dem Ende des Knäuels läuft ein loser Faden in zwei lockeren Loops (dieselbe Trochoide wie der Logo-Faden, Strich 1,6, tangential angesetzt) durch den leeren Rand bis 6 pt vor das erste Wort (#644; bei Accessibility-Größen fällt der Faden weg). Beim Erledigen lockert sich das Knäuel 0,3 s grün und wird in 0,8 s der graue Knoten, der Faden zieht sich ein, die Zeile geht mit; Reduce Motion zeigt nur das Ende. Ab 16 Uhr heißt die Überschrift „Heute entwirrt: Titel.“ Tipp öffnet das Detail, Wisch rechts erledigt, Halten das
 Menü; „Jetzt“ zeigt die Aufgabe nicht noch einmal. Gesetzt wird sie über „Das Knäuel“ im Halten-Menü und im „…“ des
 Details („Kein Knäuel mehr“, wenn sie es schon ist); hat eine andere Aufgabe das Knäuel, fragt die App erst. Unter „Jetzt“
 steht „Diese Woche“ mit der Schnur, sobald die Woche eine Perle hat: eine Mulde, die Perlen (r = 6) von links ab 40 pt im

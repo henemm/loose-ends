@@ -9,6 +9,9 @@ enum StartHeadline: Equatable {
     /// A, A+: from 16:00 with something done today. Titles are the latest first, at most two;
     /// `next` is a fixed time within the next two hours.
     case doneToday(count: Int, titles: [String], next: Upcoming?)
+    /// A with the Knäuel among what got done (#644): "Today untangled: <title>." comes first; `count`
+    /// is everything done today, `next` as in `doneToday`.
+    case untangled(title: String, count: Int, next: Upcoming?)
     /// 1: fixed times today have passed; `title` and `at` are the latest, `count` how many.
     case missed(title: String, at: Date, count: Int)
     /// 2: fixed times still ahead today; `title` and `at` are the first.
@@ -56,8 +59,12 @@ enum StartHeadline: Equatable {
         let doneToday = completions(in: all, from: today, to: tomorrow)
         if calendar.component(.hour, from: now) >= lookBackHour, !doneToday.isEmpty {
             let soon = ahead.first { ($0.dueDate ?? now) <= now.addingTimeInterval(2 * 3600) }
-            return .doneToday(count: doneToday.count, titles: doneToday.prefix(2).map(short),
-                              next: soon.map { Upcoming(title: short($0), at: $0.dueDate ?? now) })
+            let next = soon.map { Upcoming(title: short($0), at: $0.dueDate ?? now) }
+            // The Knäuel done today speaks first (#644): it keeps its mark once done.
+            if let knaeuel = doneToday.first(where: { $0.knaeuelAt != nil }) {
+                return .untangled(title: short(knaeuel), count: doneToday.count, next: next)
+            }
+            return .doneToday(count: doneToday.count, titles: doneToday.prefix(2).map(short), next: next)
         }
         // 1, 2: time pressure.
         let passed = timedToday.filter { ($0.dueDate ?? now) < now }

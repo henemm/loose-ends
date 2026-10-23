@@ -87,6 +87,7 @@ final class DriveSmokeTests: XCTestCase {
 
         let rows = elements(prefix: "knaeuelRow_", in: app)
         XCTAssertTrue(rows.firstMatch.waitForExistence(timeout: 5), "The Knäuel does not stand under the date")
+        XCTAssertTrue(element("knaeuelHead", in: app).exists, "Date and row should stand as the Knäuel's head (#644)")
         XCTAssertTrue(rows.firstMatch.label.contains("Steuerberater"), "Wrong task under the date: \(rows.firstMatch.label)")
         XCTAssertEqual(rows.count, 1)
         XCTAssertFalse(app.descendants(matching: .any)
@@ -110,6 +111,9 @@ final class DriveSmokeTests: XCTestCase {
         XCTAssertTrue(complete.waitForExistence(timeout: 5), "Swipe right offers no Complete")
         complete.tap()
         XCTAssertTrue(rows.firstMatch.waitForNonExistence(timeout: 10), "The completed Knäuel still stands under the date")
+        // The moment (#644) keeps the head for 1.1 s, then the knot's date line stands alone.
+        XCTAssertTrue(element("knaeuelHead", in: app).waitForNonExistence(timeout: 10), "The head should go after the moment")
+        XCTAssertTrue(element("startHeader", in: app).exists)
     }
 
     /// "Counts" from the menu shows the bead in the row; with five open counting tasks the sixth sees

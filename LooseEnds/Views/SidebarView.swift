@@ -269,24 +269,20 @@ struct SidebarView: View {
     /// ends the entry (#601).
     @ViewBuilder
     private var headerRows: some View {
-        StartHeaderRows(tasks: tasks, onTap: { endRequest += 1 }) { knaeuelRow($0) }
+        StartHeaderRows(tasks: tasks, onTap: { endRequest += 1 }) { task, head in knaeuelRow(task, head) }
     }
 
-    /// The Knäuel's row (#643): a tap opens the task, swipe right completes it with the Undo window,
-    /// the long press holds the menu, as in "Now".
+    /// The Knäuel's head (#643, #644), date and row as one: a tap opens the task, swipe right completes
+    /// it with the Undo window, the long press holds the menu, as in "Now".
     @ViewBuilder
-    private func knaeuelRow(_ task: TaskItem) -> some View {
+    private func knaeuelRow(_ task: TaskItem, _ head: KnaeuelHead) -> some View {
         let actions = taskActions
-        let row = KnaeuelRow(task: task)
-            .padding(.top, 10)
-            .padding(.bottom, 2)
-            .environment(\.startMetrics, metrics)
         if actions.isPending(task) {
-            actions.pendingRow(task, row)
+            actions.pendingRow(task, head)
                 .listRowSeparator(.hidden)
                 .startRow(metrics)
         } else {
-            row
+            head
                 .startRow(metrics)
                 .tag(ViewSelection.task(task.id))
                 .listRowSeparator(.hidden)
