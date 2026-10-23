@@ -1,8 +1,8 @@
-# Modell-Latenz auf Mac und iPhone (#534, Schnitt 1 und 2)
+# Modell-Latenz auf Mac und iPhone (#534, Schnitt 1 bis 3)
 
 Wie lange braucht ein Aufruf des On-Device-Modells, kalt und warm? Grundlage für das Limit je Modellaufruf im
-`EnrichmentCoordinator` (heute 30 s, geschätzt in #530). Dieser Bericht **legt keine neue Zahl für das Produkt fest**; er macht einen
-Vorschlag für Schnitt 3, und das Limit richtet sich nach dem langsameren Gerät (iPhone).
+`EnrichmentCoordinator`: **25 s** (`EnrichmentCoordinator.defaultModelTimeout`, gesetzt in Schnitt 3, #534), abgeleitet aus dieser
+Messung; es ersetzt die in #530 geschätzten 30 s. Das Limit richtet sich nach dem langsameren Gerät (iPhone).
 
 ## Messaufbau Mac (Schnitt 1)
 
@@ -30,7 +30,7 @@ laden muss (nach Neustart, nach iOS-Update, nach langer Ruhe), lässt sich im Te
   Der Kaltstart des Prozesses kostet auf dem Mac keine messbare Zeit; die Last liegt im Aufruf selbst.
 - Das Verhältnis Kalt-Maximum zu Warm-Maximum ist 0,9, weit unter der Schwelle Faktor 5.
 - p95 beschreibt nur: bei n = 15 (kalt) ist es der größte Wert. Die Grenze trägt das Maximum.
-- Das heutige Limit von 30 s liegt beim 6,4-fachen des größten Messwerts (4,67 s).
+- Das Limit von 25 s liegt beim 5,4-fachen des größten Messwerts am Mac (4,67 s); das frühere geschätzte von 30 s lag beim 6,4-fachen.
 
 ## iPhone (Schnitt 2)
 
@@ -82,12 +82,14 @@ Sprachverstehen nötig ist; die Regel-Spalte entfällt hier, weil es für Latenz
 **Zwei Grenzen (Alternative B)?** Empfehlung: nein. Kalt und warm unterscheiden sich weder am Mac (Faktor 0,9) noch auf dem iPhone
 (Faktor 1,2) um mehr als die Schwelle 5; eine zweite Grenze würde nichts verkürzen.
 
-**Vorschlag für Schnitt 3, nicht festgelegt.** Regel: das Dreifache des größten gemessenen Werts beider Geräte, aufgerundet auf volle 5 s,
-mindestens 15 s; über 60 s geht die Frage an Henning zurück. Größter Wert ist 7,92 s (iPhone, kalt). 3 × 7,92 s = 23,8 s, aufgerundet
-**25 s**, im erlaubten Bereich. Das heutige Limit von 30 s bleibt dabei im Faktor 3,8 über dem größten Wert; 25 s ist der Vorschlag der Regel,
-kein Fehler der 30 s. Dieser Bericht setzt keine Zahl im Produkt; die Konstante in `EnrichmentCoordinator` ändert Schnitt 3 (Stufe 3).
+**Gesetzt in Schnitt 3: 25 s** (Henning, 2026-10-23: „25 s umsetzen“). Regel: das Dreifache des größten gemessenen Werts beider Geräte,
+aufgerundet auf volle 5 s, mindestens 15 s; über 60 s geht die Frage an Henning zurück. Größter Wert ist 7,92 s (iPhone, kalt).
+3 × 7,92 s = 23,8 s, aufgerundet **25 s**, im erlaubten Bereich; das ist das 3,2-fache des größten Werts. Die frühere Schätzung von 30 s
+(Faktor 3,8) war kein Fehler, hatte aber keinen Messbezug. Die Konstante heißt `EnrichmentCoordinator.defaultModelTimeout`; die Prüfung gegen
+das echte Modell (`RealModelTests`) liest dieselbe Konstante, und `ModelSeamTests.defaultLimitIsMeasured` hält Wert und Regelbereich fest.
 
-**Alternativen.** (a) 30 s lassen: kein Eingriff in eine Gerätepfad-Datei, Abstand 3,8; die Messung widerlegt sie nicht. (b) 25 s nach der Regel.
+**Alternativen (abgewogen).** (a) 30 s lassen: kein Eingriff in eine Gerätepfad-Datei, Abstand 3,8; die Messung widerlegt sie nicht, aber die
+Zahl bliebe geschätzt. (b) 25 s nach der Regel, gewählt.
 (c) Erst auf kühlem Gerät und mit längeren Notizen nachmessen, bevor die Zahl sich ändert: Die Messung lief fast ganz bei „serious“ und mit
 kurzen Notizen, also eher im ungünstigen Bereich für die Hitze, aber nicht für die Länge.
 
@@ -102,6 +104,4 @@ kurzen Notizen, also eher im ungünstigen Bereich für die Hitze, aber nicht fü
 
 ## Offen
 
-- **Schnitt 3:** die Konstante im `EnrichmentCoordinator` (Vorschlag 25 s, oder 30 s lassen) mit Verweis auf diesen Bericht. Stufe 3,
-  Abnahme über TestFlight; eigener Workflow.
 - `prewarm()` beim Start bleibt ein eigenes Ticket; die Messung zeigt auf dem Mac keinen Kaltstart-Aufschlag, den es verkürzen könnte.

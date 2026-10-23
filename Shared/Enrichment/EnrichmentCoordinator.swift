@@ -9,6 +9,11 @@ import SwiftData
 final class EnrichmentCoordinator {
     static let exampleLimit = 5
 
+    /// The time limit per model call, measured (#534, `docs/reference/modell-latenz.md`): three times the
+    /// largest value on Mac and iPhone (7.92 s, iPhone, cold), rounded up to full 5 s. Replaces the 30 s
+    /// estimated in #530. The real-model test checks against the same value.
+    nonisolated static let defaultModelTimeout: Duration = .seconds(25)
+
     /// What "Analyze again" (#34) reports back to the detail.
     enum ReanalysisResult: Equatable, Sendable {
         /// Another pass is running; nothing was done.
@@ -21,13 +26,17 @@ final class EnrichmentCoordinator {
 
     private let enricher: any TaskEnricher
     private let container: ModelContainer
-    /// How long one model call may take before it counts as failed (#530). Generous: a first call
-    /// loads the model, later ones take a few seconds; a hang must not hold the pass forever.
+    /// How long one model call may take before it counts as failed (#530); `defaultModelTimeout` unless a
+    /// test passes its own. Measured calls took at most 7.92 s (#534); a hang must not hold the pass forever.
     private let modelTimeout: Duration
     private let logger = Logger(subsystem: "com.henning.looseends", category: "Enrichment")
     private var isRunning = false
 
-    init(enricher: any TaskEnricher, container: ModelContainer, modelTimeout: Duration = .seconds(30)) {
+    init(
+        enricher: any TaskEnricher,
+        container: ModelContainer,
+        modelTimeout: Duration = EnrichmentCoordinator.defaultModelTimeout
+    ) {
         self.enricher = enricher
         self.container = container
         self.modelTimeout = modelTimeout
