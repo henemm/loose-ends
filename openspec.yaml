@@ -36,3 +36,14 @@ secrets_guard:
   # SwiftUI uses `.environment` and `.environmentObject` everywhere; the bare `\.env` pattern
   # blocks routine greps in Swift code. Word-boundary form until the plugin ships the same fix.
   sensitive_patterns: ["\\.env(rc)?\\b", "credentials\\.json", "service[_-]?account.*\\.json", "private[_.]key", "[_.]secret\\.", "\\.pem$", "\\.key$"]
+
+# #145: no phase8_complete without a simulator proof from `scripts/sim.sh test-proof`.
+# LooseEnds/Mac/ has no simulator UI test (the Mac proof runs through the Mac gallery in CI).
+# Takes effect only from the plugin release with henemm/agent-os-openspec#447; older plugins ignore this section.
+# Keys and nesting follow the plugin's form (#447) exactly: any other form blocks every completion,
+# since the plugin checks this config before `override`. exempt_paths are fnmatch patterns.
+evidence_checks:
+  phase8_complete:
+    - verifier: xcresult_proof
+      file: simulator-run.txt
+  exempt_paths: ["LooseEnds/Mac/*"]

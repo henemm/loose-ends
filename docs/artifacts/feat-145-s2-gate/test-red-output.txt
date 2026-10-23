@@ -1,0 +1,58 @@
+test_no_other_phase_is_gated (scripts.test_evidence_config.EvidenceConfigTests.test_no_other_phase_is_gated) ... FAIL
+test_only_mac_folder_is_exempt (scripts.test_evidence_config.EvidenceConfigTests.test_only_mac_folder_is_exempt) ... FAIL
+test_phase8_requires_xcresult_proof (scripts.test_evidence_config.EvidenceConfigTests.test_phase8_requires_xcresult_proof) ... FAIL
+test_gate_set_is_not_empty (scripts.test_evidence_config.ProducerCoversGateTests.test_gate_set_is_not_empty) ... ok
+test_mac_folder_is_exempt_from_gate (scripts.test_evidence_config.ProducerCoversGateTests.test_mac_folder_is_exempt_from_gate) ... FAIL
+test_producer_covers_every_gate_path (scripts.test_evidence_config.ProducerCoversGateTests.test_producer_covers_every_gate_path) ... ok
+
+======================================================================
+FAIL: test_no_other_phase_is_gated (scripts.test_evidence_config.EvidenceConfigTests.test_no_other_phase_is_gated)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zany-wiggling-tower/scripts/test_evidence_config.py", line 95, in test_no_other_phase_is_gated
+    self.assertEqual(set(self.section()), {"phase8_complete", "exempt_paths"},
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     "der Beleg sperrt nur „fertig“, keine Zwischenphase")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Items in the second set but not the first:
+'exempt_paths' : der Beleg sperrt nur „fertig“, keine Zwischenphase
+
+======================================================================
+FAIL: test_only_mac_folder_is_exempt (scripts.test_evidence_config.EvidenceConfigTests.test_only_mac_folder_is_exempt)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zany-wiggling-tower/scripts/test_evidence_config.py", line 91, in test_only_mac_folder_is_exempt
+    self.assertEqual(self.section().get("exempt_paths"), ["LooseEnds/Mac/*"],
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     "exempt_paths gehört neben phase8_complete, als fnmatch-Muster")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != ['LooseEnds/Mac/*'] : exempt_paths gehört neben phase8_complete, als fnmatch-Muster
+
+======================================================================
+FAIL: test_phase8_requires_xcresult_proof (scripts.test_evidence_config.EvidenceConfigTests.test_phase8_requires_xcresult_proof)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zany-wiggling-tower/scripts/test_evidence_config.py", line 87, in test_phase8_requires_xcresult_proof
+    self.assertEqual(self.checks(), {"verifier": "xcresult_proof", "file": "simulator-run.txt"},
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     "Eintrag braucht genau `verifier` und `file` (Form des Plugins)")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'type': 'xcresult_proof', 'artifact': 'sim[47 chars]c/']} != {'verifier': 'xcresult_proof', 'file': 'simulator-run.txt'}
++ {'file': 'simulator-run.txt', 'verifier': 'xcresult_proof'}
+- {'artifact': 'simulator-run.txt',
+-  'exempt_paths': ['LooseEnds/Mac/'],
+-  'type': 'xcresult_proof'} : Eintrag braucht genau `verifier` und `file` (Form des Plugins)
+
+======================================================================
+FAIL: test_mac_folder_is_exempt_from_gate (scripts.test_evidence_config.ProducerCoversGateTests.test_mac_folder_is_exempt_from_gate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/zany-wiggling-tower/scripts/test_evidence_config.py", line 124, in test_mac_folder_is_exempt_from_gate
+    self.assertNotIn("LooseEnds/Mac/MenuBarCapture.swift", self.gate_paths())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'LooseEnds/Mac/MenuBarCapture.swift' unexpectedly found in {'Shared/Services/CaptureService.swift', 'LooseEnds/Mac/MenuBarCapture.swift', 'LooseEnds/Views/InboxDrawerView.swift', 'LooseEndsWatch/WatchCapture.swift', 'LooseEnds/App/LaunchTimings.swift', 'Measurement/LeaveOneOut.swift', 'Shared/Models/RepeatRule.swift'}
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.010s
+
+FAILED (failures=4)
