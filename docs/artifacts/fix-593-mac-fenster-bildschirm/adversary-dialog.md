@@ -149,6 +149,64 @@ Confirmation:
 
 F001 behoben (MacUITestSupport.swift:40, :61). F002 geklaert. F003/F004 (LOW) bleiben offen; sie verletzen keinen AC und haben auf der Ein-Bildschirm-CI keine Wirkung; sie verhindern VERIFIED nicht.
 **Implementierer:**
+Validierung fand: Menueleistenweg von AC-6 ohne Laufbeleg, CI-Lauf auf altem Stand. Neuer Galerie-Test testWindowFromMenuBarFitsScreen (19cbc61), CI-Lauf 39977150337 auf genau diesem Stand.
+
+### Runde 3
+**Adversary:**
+Tests: CI "Mac Gallery (macOS)" auf 19cbc61 gruen (ci-mac-gallery-green-19cbc61.log): Galerie 14 Tests / 0 Fehler, testWindowFromMenuBarFitsScreen bestanden (34,155 s); Klicktest in der Sandbox 10 / 0; Tastaturtest 18 / 0, testWindowMinimumSize bestanden; 0 Treffer "does not fit". Code-Dateien seit Runde 2 unveraendert, sim-unit nicht wiederholt. Mac nie als Testziel genutzt.
+
+Confirmation:
+  AC: AC-6
+  Code reference: LooseEndsUITests/MacGalleryTests.swift:74
+  Evidence: Kein Falsch-Gruen moeglich: (1) Cmd-W, XCTWaiter bis 10 s, bis das Fenster weg ist, sonst Fehler "⌘W did not close the main window". (2) XCTAssertFalse(macOpenMainWindowIfNeeded(app)) liefert false nur, wenn das Startfeld 10 s fehlte, das Statussymbol gefunden und "Open Loose Ends" geklickt wurde und ein Fenster erschien (MacUITestSupport.swift:38-62). (3) App ueberlebt Cmd-W (MenuBarCapture.swift:167). (4) macMainWindow fuehrt die Passt-Pruefung aus. (5) Notiz mac-gallery-menu-bar-window-size: "1024 x 674 pt on screen 1024 x 768 pt; window at launch: no, opened from the menu bar". (6) Bild mac-gallery-menu-bar-window.png selbst geoeffnet: Fenster vollstaendig, runde Ecken, Ampel, Seitenleiste, "+" am rechten Rand, nichts abgeschnitten. Auch die dunkle Galerie nahm diesmal ungezwungen den Menueleistenweg (gleiche Groesse).
+  Status: CONFIRMED
+
+Confirmation:
+  AC: AC-7
+  Code reference: LooseEnds/App/LooseEndsApp.swift:122
+  Evidence: .defaultWindowPlacement mit MainWindowPlacement.frame(visible: context.defaultDisplay.visibleRect) unter #if os(macOS); .defaultSize(1200, 780) Z.119, Mindestrahmen und windowResizability unveraendert; testWindowMinimumSize gruen.
+  Status: CONFIRMED
+
+Confirmation:
+  AC: AC-1 bis AC-4
+  Code reference: LooseEnds/Mac/MainWindowPlacement.swift:19
+  Evidence: Regel seit Runde 2 unveraendert; wiedergeoeffnetes Fenster 1024 breit auf 1024-pt-Bildschirm, passend zu min(Wunsch, sichtbar).
+  Status: CONFIRMED
+
+Confirmation:
+  AC: AC-5
+  Code reference: LooseEndsUITests/MacUITestSupport.swift:38
+  Evidence: macOpenMainWindowIfNeeded ruft macMainWindow in beiden Zweigen; Pruefung laeuft auf Start- und Menueleistenweg, gruen in allen drei Mac-Klassen.
+  Status: CONFIRMED
+
+Confirmation:
+  AC: AC-8
+  Code reference: LooseEndsUITests/MacGalleryTests.swift:61
+  Evidence: git diff 4ead048..HEAD --stat: 5 Code-Dateien (LooseEndsApp.swift, MainWindowPlacement.swift, MainWindowPlacementTests.swift, MacGalleryTests.swift, MacUITestSupport.swift), Rest Doku/Belege; kein Geraetelistenpfad, kein project.yml, kein try?/print; addWindowSizeNote ca. 10 LoC, neuer Test ca. 17 LoC.
+  Status: CONFIRMED
+
+Finding:
+  ID: F005
+  Severity: LOW
+  Category: edge_case
+  Code reference: LooseEndsUITests/MacGalleryTests.swift:86
+  Description: Der Test belegt, dass das ueber die Menueleiste wiedergeoeffnete Fenster passt, nicht dass genau .defaultWindowPlacement die Ursache ist (gespeicherter Fensterrahmen moeglich).
+  Spec requirement: AC-6 verlangt nur "nicht breiter als der Bildschirm" auf beiden Wegen.
+  Conflict: keiner mit dem AC-Wortlaut.
+  Remediation: keine fuer dieses Ticket.
+
+Finding:
+  ID: F006
+  Severity: LOW
+  Category: edge_case
+  Code reference: LooseEndsUITests/MacGalleryTests.swift:80
+  Description: Die Schliess-Pruefung wartet auf ein abfragebasiertes Element; theoretisch koennte es auf ein anderes Fenster aufloesen. Die App hat ein Fenster, und das folgende XCTAssertFalse belegt unabhaengig, dass das Startfeld fehlte.
+  Spec requirement: AC-6
+  Conflict: keiner, redundante Absicherung vorhanden.
+  Remediation: keine.
+
+F003/F004 (LOW) bleiben offen, verletzen keinen AC. Restgrenze aus Runde 2 (Menueleistenweg ohne Laufbeleg) aufgehoben.
+**Implementierer:**
 
 ## Herkunft der Vorbedingungen
 
@@ -156,38 +214,21 @@ kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 
 ## Verdict
 
-**VERIFIED** (Runde 2): AC-1 bis AC-8 bewiesen. Offen nur LOW F003/F004. Restgrenze: Menueleistenweg von AC-6 im CI-Lauf nicht aufgetreten (per Code in beiden Zweigen geprueft).
+**VERIFIED** (Runde 3): AC-1 bis AC-8 bewiesen, Menueleistenweg von AC-6 durch CI-Test, Groessennotiz und geprueftes Bild belegt. Offen nur LOW F003 bis F006.
 
 ## Geprüfte Dateien
 
 - sha256:33f30556b1674a80afc0a4855f91eaf8a2c3ff6e4991aa19f345eee17a50caa7  LooseEnds/App/LooseEndsApp.swift
 - sha256:7382f04fe74017dcd1efcb0b4719070f6a5f519fa5262b61fb09fcaefab98b01  LooseEnds/Mac/MainWindowPlacement.swift
-- sha256:6106a60d309425d7150c529c275f0a5ee37f04df23494f6478f9715df9e7d8e6  LooseEndsUITests/MacGalleryTests.swift
-- sha256:2c2f3af15f8eda3008c6131dc43d03b3ba8b9f6fbcfecaa9d4643b5a93769dd1  LooseEndsUITests/MacKeyboardTests.swift
-- sha256:858eccd5a88ab75163b10062911c8cab3798dfef6eba5253d4b49db9380cbc5e  LooseEndsUITests/MacUITestSupport.swift
-
-## Prüfbasis
-
-- base: 996b88d4a1e47903481db59a790d9900a3677c82
-- blob:47202669e9845a38fef3f0604e7a3310c838cd4a  LooseEnds/App/LooseEndsApp.swift
-- blob:ea6e67a212886dbbb1f8ce85f7e63cf708c1aa8f  LooseEnds/Mac/MainWindowPlacement.swift
-- blob:09ad9fd5721efd44204b129a621a102ee790eb47  LooseEndsUITests/MacGalleryTests.swift
-- blob:1794813d3319289c54315cdc2cc28419e012bace  LooseEndsUITests/MacKeyboardTests.swift
-- blob:2cb056c6ff426234965214d6ca38565153e1d320  LooseEndsUITests/MacUITestSupport.swift
-
-## Geprüfte Dateien
-
-- sha256:33f30556b1674a80afc0a4855f91eaf8a2c3ff6e4991aa19f345eee17a50caa7  LooseEnds/App/LooseEndsApp.swift
-- sha256:7382f04fe74017dcd1efcb0b4719070f6a5f519fa5262b61fb09fcaefab98b01  LooseEnds/Mac/MainWindowPlacement.swift
-- sha256:6106a60d309425d7150c529c275f0a5ee37f04df23494f6478f9715df9e7d8e6  LooseEndsUITests/MacGalleryTests.swift
+- sha256:03b6c8b218e5b29abd5256d2e76b3614a1151568f995307f1d91c31e431b3a52  LooseEndsUITests/MacGalleryTests.swift
 - sha256:2c2f3af15f8eda3008c6131dc43d03b3ba8b9f6fbcfecaa9d4643b5a93769dd1  LooseEndsUITests/MacKeyboardTests.swift
 - sha256:96f1d570d4cd462e99d2c05edd07b1a18a7a280faa73ddc91beedad2732f0195  LooseEndsUITests/MacUITestSupport.swift
 
 ## Prüfbasis
 
-- base: 996b88d4a1e47903481db59a790d9900a3677c82
+- base: 4ead0487e1030dd2a82dc9d3f9731d34e9a87f06
 - blob:47202669e9845a38fef3f0604e7a3310c838cd4a  LooseEnds/App/LooseEndsApp.swift
 - blob:ea6e67a212886dbbb1f8ce85f7e63cf708c1aa8f  LooseEnds/Mac/MainWindowPlacement.swift
-- blob:09ad9fd5721efd44204b129a621a102ee790eb47  LooseEndsUITests/MacGalleryTests.swift
+- blob:4bed16886411e0169c4d1796028271b01add2a80  LooseEndsUITests/MacGalleryTests.swift
 - blob:1794813d3319289c54315cdc2cc28419e012bace  LooseEndsUITests/MacKeyboardTests.swift
 - blob:18945aa1a0d9ece6ace9d60adb65b0e87a4dc1b3  LooseEndsUITests/MacUITestSupport.swift
