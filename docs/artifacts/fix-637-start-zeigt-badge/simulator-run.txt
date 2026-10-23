@@ -1,16 +1,16 @@
 # Simulator-Beleg
-erzeugt: 2026-10-23T17:36:47+0200
+erzeugt: 2026-10-23T18:33:52+0200
 befehl: scripts/sim.sh test-proof StartNumberTests
 workflow: fix-637-start-zeigt-badge
-head: 4ead0487e1030dd2a82dc9d3f9731d34e9a87f06
-basis: 4ead0487e1030dd2a82dc9d3f9731d34e9a87f06 (merge-base origin/main HEAD)
+head: 1f0cda1a80e36d7ce6a8d0bac7abc6d2a3ef263f
+basis: dc39bec0be53ad3b68af7a784e91b47856d730b5 (merge-base origin/main HEAD)
 testklasse: StartNumberTests
 ergebnis: Passed
 xcodebuild: ** TEST SUCCEEDED **
 tests: 2 gesamt, 2 bestanden, 0 fehlgeschlagen, 0 übersprungen
-start: 1792769771.535  ende: 1792769806.437
+start: 1792773190.197  ende: 1792773232.101
 geraet: iPhone 17, iOS 27.0
-summary: docs/artifacts/fix-637-start-zeigt-badge/simulator-run/summary.json  sha256:9625e1ff61e6eecfdfbe3c0af3399fcc68bde18ab83c8da5d439227d545f98e5
+summary: docs/artifacts/fix-637-start-zeigt-badge/simulator-run/summary.json  sha256:e0db6a6ba13c5efeac290d571a6864a29aaeed9adb4f9583d2f2e6a348233969
 xcresult: docs/artifacts/fix-637-start-zeigt-badge/simulator-run/run.xcresult  (gitignored)
 screenshots: docs/artifacts/fix-637-start-zeigt-badge/simulator-run/*.png (2 Stück)
 
@@ -19,9 +19,11 @@ screenshots: docs/artifacts/fix-637-start-zeigt-badge/simulator-run/*.png (2 St�
 - sha256:8e917308f70b92e8c7e66c0c2b02d308142cdbeaa15d3ca58ce32e723d54d812  LooseEnds/Views/SidebarView.swift
 - sha256:211fd507988f69be55e07e944b7d6391f0c70a8103b675ae4e6e41c282a99d28  LooseEnds/Views/StartPage.swift
 - sha256:419d3028e2e55374795bf6ef307926d84f25e990a2f7cb10b0a7f520c67a80f8  LooseEnds/Views/StartZones.swift
-- sha256:d506a6b75ec67354754ee71d669141a239b66fe00ff370df05cb84fb25e019c6  LooseEndsTests/CarryRemindersTests.swift
+- sha256:8b36e5c71334894d4a4f673ad2c285427ee2fe5a45f0cc92e93c2011f56054ee  LooseEndsTests/CarryRemindersTests.swift
 - sha256:a6bb7e1d97c0decc09fb4b1ec08375ce38ed3794978aa82aac1617110b6fe2dd  LooseEndsTests/DueStateTests.swift
 - sha256:306c4c4f2fa7022dd12af304602ee6cb253b2bce2eaf798085bafc5aaff44f6c  LooseEndsTests/DueTodayTests.swift
 - sha256:3b357a40ab06e036fef0a217513e1bafa5fc08b87fb91124ebefff55a9ad4a6a  LooseEndsTests/NowRuleTests.swift
+- sha256:7ad2f34f3723396f8b86d1ad0b677c3e57c164bed685eee6cc6d926107149780  LooseEndsUITests/MacGalleryTests.swift
 - sha256:eb9ae706d6fb2289ad14a72716562be32a5f2cc9a4cfb0b6af95c6fd53bea797  LooseEndsUITests/StartNumberTests.swift
+- sha256:d7f0f9a1b2d0fc51ce39f725c200207ab7f8d77a47e2a990e0d7302df10b2600  Shared/Models/NewDateRule.swift
 - sha256:c55381f0eb94552814e1f661dc2bf69726e449c08e38ac8798b921b0dbf95ed5  Shared/Models/ViewRules.swift
