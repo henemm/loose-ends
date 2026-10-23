@@ -33,8 +33,10 @@ final class MacGalleryTests: XCTestCase {
         macShot(window, "mac-gallery-\(label)-1-start")
 
         let size = window.frame.size
+        let screen = macScreenSize()
         let sizeNote = XCTAttachment(
-            string: "\(Int(size.width)) x \(Int(size.height)) pt; window at launch: \(hadWindow ? "yes" : "no, opened from the menu bar")"
+            string: "\(Int(size.width)) x \(Int(size.height)) pt on screen \(Int(screen.width)) x \(Int(screen.height)) pt; "
+                + "window at launch: \(hadWindow ? "yes" : "no, opened from the menu bar")"
         )
         sizeNote.name = "mac-gallery-\(label)-window-size"
         sizeNote.lifetime = .keepAlways
