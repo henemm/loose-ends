@@ -228,7 +228,7 @@ import Testing
         #expect(ViewRules.postponeCount(a) == 1)
     }
 
-    @Test("Anything from before today leaves Now until it has a new date, not Due and not the badge (#518, #584)")
+    @Test("Anything from before today stays in Now, Due and the badge until it has a new date (#518, #584, #637)")
     @MainActor func weekOldLeavesNow() async throws {
         let store = try TestStore()
         let seven = Self.task("Sieben Tage", due: Self.day(-7), in: store)
@@ -240,8 +240,25 @@ import Testing
         #expect(today.isEmpty)
         #expect(Set(ViewRules.leftovers(in: all, now: Self.now, calendar: Self.calendar).map(\.id)) == [seven.id, eight.id, timed.id])
         #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 3)
-        #expect(ViewRules.now(in: all, now: Self.now, calendar: Self.calendar).all.contains { $0.id == eight.id } == false)
+        #expect(ViewRules.now(in: all, now: Self.now, calendar: Self.calendar).all.map(\.id) == [timed.id, eight.id, seven.id],
+                "last in Now, the oldest deadline first (#637)")
         #expect(ViewRules.tasks(for: .due, in: all, now: Self.now, calendar: Self.calendar).contains { $0.id == eight.id })
+    }
+
+    @Test("Henning's case: the morning's icon number is the number of rows in Now, 5 (#637, one number everywhere)")
+    @MainActor func carryReminderBadgeEqualsNow() async throws {
+        let store = try TestStore()
+        let paper = Self.task("Altpapier", due: Self.day(-2), in: store)
+        paper.nextRank = 1
+        let friederich = Self.task("Friederich", due: nil, in: store)
+        friederich.nextRank = 2
+        let all = [paper, friederich, Self.task("Steuer", due: Self.day(-3), in: store),
+                   Self.task("Karte", due: Self.day(-1), in: store), Self.task("Kette", due: Self.day(-4), in: store)]
+
+        let first = try #require(Self.mornings(all).first)
+        let rows = ViewRules.now(in: all, now: first.fireDate, calendar: Self.calendar).all.count
+        #expect(rows == 5)
+        #expect(first.badge == rows)
     }
 
     @Test("All to tomorrow moves what still needs a date; one given a new date meanwhile stays (#550)")

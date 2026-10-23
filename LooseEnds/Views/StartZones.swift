@@ -6,15 +6,30 @@ import SwiftUI
 /// A small grey heading above a zone, as a row of its own.
 struct ZoneCaption: View {
     private let title: LocalizedStringKey
+    /// The number after the caption (#637): "Now" carries the app icon's number. In ink, not accent:
+    /// it is not tappable (ADR-14).
+    private let count: Int?
+    private let countID: String?
     @Environment(\.dynamicTypeSize) private var typeSize
 
-    init(_ title: LocalizedStringKey) {
+    init(_ title: LocalizedStringKey, count: Int? = nil, countID: String? = nil) {
         self.title = title
+        self.count = count
+        self.countID = countID
     }
 
     var body: some View {
         let metrics = StartMetrics(typeSize)
-        ZoneCaptionText(title: title)
+        HStack(alignment: .firstTextBaseline, spacing: 8) {
+            ZoneCaptionText(title: title)
+            if let count {
+                Text(verbatim: "\(count)")
+                    .font(metrics.caption.monospacedDigit())
+                    .foregroundStyle(.primary)
+                    .accessibilityLabel(Text(verbatim: "\(count)"))
+                    .accessibilityIdentifier(countID ?? "")
+            }
+        }
             // Space above, little below: the caption belongs to what follows (draft: 22 above, 4 below, #463).
             .padding(.top, 22)
             .padding(.bottom, 4)
@@ -68,7 +83,8 @@ struct NowBlock<Row: View>: View {
     }
 
     var body: some View {
-        ZoneCaption("Now")
+        // The app icon's number, the same everywhere (#637): every task it counts stands below.
+        ZoneCaption("Now", count: tasks.count, countID: "nowCount")
             // On the caption, which always stands: the button is gone at five or fewer, the hint with rows.
             .onChange(of: tasks.count) { _, count in
                 if count <= Self.limit { expanded = false }

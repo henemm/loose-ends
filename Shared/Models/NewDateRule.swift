@@ -3,8 +3,9 @@ import Foundation
 /// A deadline that passed is no deadline (#548, Henning 2026-10-18: "Ich habe mir vorgenommen, etwas bis
 /// heute Mittag zu erledigen. Hat nicht geklappt. Nun muss ich mir eine neue Deadline überlegen, denn die
 /// alte kann ich nicht mehr einhalten."). The old time stays in the revisions; the views treat it as
-/// over: no red, a "New date" button with a grey trace of what was planned, out of "Now" and off the
-/// app icon until the user decides. Subtasks count like tasks. Pure rules, no model.
+/// over: no red, a "New date" button with a grey trace of what was planned, until the user decides.
+/// "Now" shows it (last, or by rank when lined up) and the app icon counts it, one number (#637).
+/// Subtasks count like tasks. Pure rules, no model.
 ///
 /// Two readings of "passed", on purpose: in the lists a day-only date is today's until the day ends, so
 /// "Now" keeps today's tasks all day (`needsNewDate`). The evening look is the end of the day: there a

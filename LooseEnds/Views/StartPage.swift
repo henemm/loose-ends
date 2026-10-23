@@ -61,6 +61,8 @@ struct StartPage: View {
     @State private var pendingTaskDelete: TaskItem?
     @State private var confirmingTaskDelete = false
     @State private var datingTask: TaskItem?
+    /// "New date" on a row in "Now" whose deadline passed (#637): the date choice "Due" uses.
+    @State private var redating: TaskItem?
     /// Complete with open subtasks asks first (#565).
     @State private var askingSubtasks: TaskItem?
     #if os(macOS)
@@ -90,6 +92,9 @@ struct StartPage: View {
         }
         .accessibilityIdentifier("startPage")
         .taskInteractionDialogs(actions)
+        .sheet(item: $redating) { task in
+            NewDateSheet(task: task) { redating = nil }
+        }
     }
 
     private var listColumn: some View {
@@ -145,7 +150,7 @@ struct StartPage: View {
         macNowRow(task)
         #else
         let actions = self.actions
-        let row = TaskRow(task: task, identifierPrefix: "startNowRow_")
+        let row = TaskRow(task: task, identifierPrefix: "startNowRow_", onNewDate: { redating = task })
         if actions.isPending(task) {
             actions.pendingRow(task, row)
         } else {
@@ -170,7 +175,7 @@ struct StartPage: View {
     @ViewBuilder
     private func macNowRow(_ task: TaskItem) -> some View {
         let actions = self.actions
-        let row = TaskRow(task: task, identifierPrefix: "startNowRow_")
+        let row = TaskRow(task: task, identifierPrefix: "startNowRow_", onNewDate: { redating = task })
         if actions.isPending(task) {
             actions.pendingRow(task, row).wideListRow(selected: isChosen(task))
         } else {

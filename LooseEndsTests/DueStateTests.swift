@@ -79,7 +79,7 @@ import Testing
         #expect(Self.state(due: Self.day(0), status: .unprocessed, in: store) == .today)
     }
 
-    @Test("A carried task stays out of Now until it has a new date; Due and the app icon keep it (#518, #584)")
+    @Test("A carried task stands in Now asking for a new date; Due and the app icon keep it (#518, #584, #637)")
     @MainActor func viewsUnchanged() async throws {
         let store = try TestStore()
         let carried = TaskItem(rawText: "Hecke schneiden")
@@ -87,7 +87,7 @@ import Testing
         carried.dueDate = Self.day(-3)
         store.context.insert(carried)
 
-        #expect(ViewRules.now(in: [carried], now: Self.now, calendar: Self.calendar).all.isEmpty)
+        #expect(ViewRules.now(in: [carried], now: Self.now, calendar: Self.calendar).waiting.map(\.id) == [carried.id])
         #expect(ViewRules.leftovers(in: [carried], now: Self.now, calendar: Self.calendar).map(\.id) == [carried.id])
         #expect(ViewRules.badgeCount(in: [carried], now: Self.now, calendar: Self.calendar) == 1)
         #expect(ViewRules.tasks(for: .due, in: [carried], now: Self.now, calendar: Self.calendar).map(\.id) == [carried.id])

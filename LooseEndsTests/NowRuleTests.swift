@@ -33,7 +33,7 @@ import Testing
         ViewRules.now(in: all, now: Self.now, calendar: Self.calendar)
     }
 
-    @Test("Due today before the rest of Next up; a task left from yesterday needs a new date first (#518)")
+    @Test("Due today before the rest of Next up; a task left from yesterday stands last, asking for a new date (#518, #637)")
     @MainActor func overdueBeforeTodayBeforeLined() async throws {
         let store = try TestStore()
         let lined = Self.task("Angebot schreiben", rank: 0)
@@ -43,7 +43,7 @@ import Testing
         all.forEach(store.context.insert)
 
         let result = Self.now(all)
-        #expect(result.all.map(\.id) == [today.id, lined.id])
+        #expect(result.all.map(\.id) == [today.id, lined.id, overdue.id])
         #expect(ViewRules.leftovers(in: all, now: Self.now, calendar: Self.calendar).map(\.id) == [overdue.id])
         #expect(result.today.map(\.id) == [today.id])
         #expect(result.lined.map(\.id) == [lined.id])
@@ -61,14 +61,30 @@ import Testing
         #expect(result.lined.isEmpty)
     }
 
-    @Test("Lined up and left from earlier: it stays out too, until it has a new date (#518)")
-    @MainActor func overdueAndLinedStaysInTimePressureGroup() async throws {
+    @Test("Lined up and left from earlier: the user's lining up counts, it stands with the lined-up tasks (#637)")
+    @MainActor func leftoverWithRankStandsInLined() async throws {
         let store = try TestStore()
         let both = Self.task("Paket abholen", due: Self.day(-3), rank: 0)
+        let other = Self.task("Angebot schreiben", rank: 1)
         store.context.insert(both)
+        store.context.insert(other)
 
-        #expect(Self.now([both]).all.isEmpty)
+        #expect(Self.now([both, other]).lined.map(\.id) == [both.id, other.id])
+        #expect(Self.now([both, other]).all.map(\.id) == [both.id, other.id])
         #expect(ViewRules.leftovers(in: [both], now: Self.now, calendar: Self.calendar).map(\.id) == [both.id])
+    }
+
+    @Test("Left from earlier without a rank stands last, the oldest deadline first (#637)")
+    @MainActor func leftoverWithoutRankStandsLastOldestFirst() async throws {
+        let store = try TestStore()
+        let today = Self.task("Müll rausbringen", due: Self.day(0, hour: 18))
+        let lined = Self.task("Angebot schreiben", rank: 0)
+        let twoDays = Self.task("Zwei Tage", due: Self.day(-2))
+        let fiveDays = Self.task("Fünf Tage", due: Self.day(-5))
+        let all = [twoDays, lined, fiveDays, today]
+        all.forEach(store.context.insert)
+
+        #expect(Self.now(all).all.map(\.id) == [today.id, lined.id, fiveDays.id, twoDays.id])
     }
 
     @Test("Due earlier today is today, not overdue: the day counts, not the hour")
@@ -167,7 +183,7 @@ import Testing
         #expect(result.today.isEmpty && result.lined.isEmpty)
     }
 
-    @Test("Now holds exactly Due today and Next up; the badge counts yesterday's task on top (#584)")
+    @Test("Now holds exactly Due today, Next up and what needs a new date; the icon counts the same (#584, #637)")
     @MainActor func unionMatchesTheTwoSources() async throws {
         let store = try TestStore()
         let all = [
@@ -179,11 +195,12 @@ import Testing
         let ids = Self.now(all).all.map(\.id)
         let next = ViewRules.tasks(for: .next, in: all, now: Self.now, calendar: Self.calendar).map(\.id)
         let due = ViewRules.dueToday(in: all, now: Self.now, calendar: Self.calendar).map(\.id)
-        #expect(Set(ids) == Set(next + due))
+        let left = ViewRules.leftovers(in: all, now: Self.now, calendar: Self.calendar).map(\.id)
+        #expect(Set(ids) == Set(next + due + left))
         #expect(ids.count == Set(ids).count, "each task once")
-        #expect(ids.count == 3)
-        #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 4,
-                "C from yesterday stands in Due, so on the icon, but not in Now (#518, #584)")
+        #expect(ids.count == 4)
+        #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == ids.count,
+                "C from yesterday stands in Now and on the icon (#518, #584, #637)")
     }
 
     @Test("Due today and the badge are unchanged: a lined-up task due today still stands in Due today (#299)")
@@ -197,5 +214,53 @@ import Testing
         #expect(ViewRules.dueToday(in: all, now: Self.now, calendar: Self.calendar).map(\.id) == [both.id])
         #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 2)
         #expect(Self.now(all).all.map(\.id) == [both.id, lined.id])
+    }
+
+    @Test("Henning's case: four deadlines passed, one of them lined up, one more lined up: icon and Now say 5 (#637)")
+    @MainActor func henningsCaseIsFiveEverywhere() async throws {
+        let store = try TestStore()
+        let all = [
+            Self.task("Altpapier", due: Self.day(-2), rank: 0), Self.task("Steuer", due: Self.day(-3)),
+            Self.task("Karte", due: Self.day(-1)), Self.task("Kette", due: Self.day(-4)),
+            Self.task("Friederich", rank: 1),
+        ]
+        all.forEach(store.context.insert)
+
+        #expect(Self.now(all).all.count == 5)
+        #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 5)
+        #expect(ViewRules.tasks(for: .due, in: all, now: Self.now, calendar: Self.calendar).count == 4)
+        #expect(ViewRules.tasks(for: .next, in: all, now: Self.now, calendar: Self.calendar).count == 2)
+    }
+
+    @Test("The icon number is the number of rows in Now, whatever the mix (#637, one number everywhere)")
+    @MainActor func badgeEqualsNowEverywhere() async throws {
+        let store = try TestStore()
+        let blocker = Self.task("Schlüssel holen")
+        let blocked = Self.task("Wohnung aufschließen", due: Self.day(-1))
+        blocked.blockedBy = [blocker]
+        let parked = Self.task("Keller", due: Self.day(-1), rank: 0)
+        parked.status = .parked
+        let done = Self.task("Erledigt", due: Self.day(-1), rank: 1)
+        done.status = .done
+        let parent = Self.task("Umzug")
+        let plainSub = Self.task("Kartons holen", rank: 2)
+        plainSub.parent = parent
+        let datedSub = Self.task("Kartons abholen", due: Self.day(-2))
+        datedSub.parent = parent
+        let scenes: [[TaskItem]] = [
+            [],
+            [Self.task("Heute", due: Self.day(0, hour: 18))],
+            [Self.task("Heute", due: Self.day(0, hour: 18), rank: 0), Self.task("Eingereiht", rank: 1)],
+            [Self.task("Gestern", due: Self.day(-1)), Self.task("Gestern eingereiht", due: Self.day(-1), rank: 0)],
+            [Self.task("Frühstück", due: Self.day(0, hour: 9)), Self.task("Brief", due: Self.day(0, hour: 0))],
+            [blocker, blocked, parked, done, parent, plainSub, datedSub],
+            [Self.task("Morgen", due: Self.day(1)), Self.task("Morgen eingereiht", due: Self.day(1), rank: 0)],
+        ]
+        scenes.forEach { $0.forEach(store.context.insert) }
+
+        for (index, scene) in scenes.enumerated() {
+            #expect(ViewRules.badgeCount(in: scene, now: Self.now, calendar: Self.calendar) == Self.now(scene).all.count,
+                    "scene \(index)")
+        }
     }
 }

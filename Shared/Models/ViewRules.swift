@@ -86,8 +86,8 @@ enum ViewRules {
 
     /// Whose deadline passed (#518, #548): open tasks, subtasks among them, whose due time is behind
     /// or whose day is over, oldest first. Not carried on: each needs a new date (or parking, or Done).
-    /// Until then they stay out of "Now"; "Due" and "Loose ends" show them on top with the "New date"
-    /// button, the app icon keeps counting them (#584), the evening notification asks for them.
+    /// Until then "Now" shows them last (lined up ones by rank, #637), "Due" and "Loose ends" on top,
+    /// all with the "New date" button; the app icon counts them (#584), the evening notification asks for them.
     static func leftovers(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [TaskItem] {
         NewDateRule.tasks(in: all, now: now, calendar: calendar)
     }
@@ -143,7 +143,7 @@ enum ViewRules {
         guard let due = task.dueDate else { return task.duration.map(MarginMark.duration) ?? .none }
         let today = calendar.startOfDay(for: now)
         let days = calendar.dateComponents([.day], from: today, to: calendar.startOfDay(for: due)).day ?? 0
-        // Behind, blocked or not: a waiting task shows its trace too, only "Now" leaves it out.
+        // Behind, blocked or not: a waiting task shows its trace too.
         if days < 0 || (task.dueHasTime && due < now), let trace = NewDateRule.trace(of: task, now: now, calendar: calendar) {
             return .passed(trace)
         }
@@ -155,39 +155,41 @@ enum ViewRules {
         }
     }
 
-    /// The number on the app icon (#299, Henning 2026-10-20, #584): "Due" plus "Next up" as the lists
-    /// count them, each task once. A passed time or an earlier day keeps counting until the task has a
-    /// new date: the icon said 3 while "Due" said 4. So the number changes only with an edit or a new
-    /// day, and the morning notification carries its day's number (`CarryReminders`).
+    /// The number on the app icon (#299, #584, #637): the number of rows in "Now", computed by `now`
+    /// and nowhere else. Henning, 2026-10-23: "Die Zahl aus der Badge muss sich IMMER genauso in der App
+    /// wiederfinden". It is "Due" plus "Next up", each task once; a passed time or an earlier day keeps
+    /// counting until the task has a new date. So the number changes only with an edit or a new day, and
+    /// the morning notification carries its day's number (`CarryReminders`).
     static func badgeCount(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> Int {
-        let due = tasks(for: .due, in: all, now: now, calendar: calendar).map(\.id)
-        let next = tasks(for: .next, in: all, now: now, calendar: calendar).map(\.id)
-        return Set(due + next).count
+        Self.now(in: all, now: now, calendar: calendar).all.count
     }
 
-    /// "Now" on the iPhone start screen (#368), split by time pressure.
+    /// "Now" on the start screen (#368), split by time pressure.
     struct NowTasks {
+        /// Due today, deadline still ahead.
         let today: [TaskItem]
+        /// Lined up, by rank, left ones with a rank among them (#637).
         let lined: [TaskItem]
-        var all: [TaskItem] { today + lined }
+        /// Left from earlier without a rank, oldest deadline first (#637).
+        var waiting: [TaskItem] = []
+        var all: [TaskItem] { today + lined + waiting }
     }
 
-    /// "Now" (#368): "Due today" and "Next up" as one list, each task once. Due today first (earliest
-    /// first), then the rest of "Next up" by rank. A task lined up and due stands with the due ones:
-    /// time pressure wins. A task left from an earlier day stays out, lined up or not, until it has a
-    /// new date (#518); the app icon still counts it (`badgeCount`, #584).
+    /// "Now" (#368, #637): "Due today", "Next up" and what needs a new date as one list, each task once,
+    /// the same set the app icon counts. Due today first (earliest first), then everything lined up by
+    /// rank (a task left from earlier that the user lined up stands there), then what was left from
+    /// earlier without a rank, oldest deadline first; it asks for a new date (#518). A task lined up and
+    /// due today stands with the due ones: time pressure wins. A due time passed today makes it a left one.
     static func now(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> NowTasks {
-        let left = Set(leftovers(in: all, now: now, calendar: calendar).map(\.id))
-        var seen = Set<UUID>()
-        let union = (dueToday(in: all, now: now, calendar: calendar)
-            + tasks(for: .next, in: all, now: now, calendar: calendar))
-            .filter { !left.contains($0.id) && seen.insert($0.id).inserted }
-        let today = calendar.startOfDay(for: now)
-        let end = calendar.date(byAdding: .day, value: 1, to: today) ?? now
-        let dueNow = union.filter { ($0.dueDate.map { $0 >= today && $0 < end } ?? false) }
-        let timed = Set(dueNow.map(\.id))
-        let lined = union.filter { !timed.contains($0.id) }
-        return NowTasks(today: dueNow.sorted(by: byDueThenRank), lined: lined.sorted(by: byRank))
+        let left = leftovers(in: all, now: now, calendar: calendar)
+        let leftIDs = Set(left.map(\.id))
+        let today = dueToday(in: all, now: now, calendar: calendar).filter { !leftIDs.contains($0.id) }
+        let todayIDs = Set(today.map(\.id))
+        var seen = todayIDs
+        let lined = (tasks(for: .next, in: all, now: now, calendar: calendar) + left.filter { $0.nextRank != nil })
+            .filter { seen.insert($0.id).inserted }
+        let waiting = left.filter { seen.insert($0.id).inserted }
+        return NowTasks(today: today.sorted(by: byDueThenRank), lined: lined.sorted(by: byRank), waiting: waiting)
     }
 
     /// Due date first, then rank (none last), then capture time (#368).

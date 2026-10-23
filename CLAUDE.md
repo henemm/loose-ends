@@ -20,6 +20,9 @@ Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, 
   completed tasks are never deleted.
 - **Revisions, not undo.** Every AI or user change to a derived field is a `Revision`. Nothing is deleted.
 - **Repeat without series.** `RepeatRule` on the task, roll forward on completion, `CompletionRecord` per cycle.
+- **One number, everywhere** (Henning, 2026-10-23, #637). The number on the app icon is the number over "Now" and on "Start",
+  the same on iPhone, iPad and Mac, and nobody has to add. One source (`ViewRules.now`), no place computes it again; a test
+  holds the icon number equal to the rows of "Now".
 - **Color budget.** Accent = tappable (incl. AI tint), red = time pressure, grey = hierarchy, green = the completion moment.
 - **SF Symbols only** (Henning, 2026-10-12, #350). Every sign in the app is an SF Symbol, outline where one exists:
   no emoji, no characters standing in for a symbol (»«, →), no own images. The one exception is the logo's thread
