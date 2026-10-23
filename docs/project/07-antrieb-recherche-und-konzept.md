@@ -1,7 +1,8 @@
 # Antrieb: Recherche und Konzept (Entwurf)
 
 > Erstellt: 2026-10-23, auf Hennings Wunsch nach „etwas Gamification, das beim Erledigen hilft“.
-> Status: Entwurf, noch keine Entscheidung. Zwei Ideen von Henning (der eine Frosch, Gummipunkte
+> Status: Teil 1 (Recherche) Entwurf; Teil 2 (Konzept) entschieden mit Henning am 2026-10-23 anhand der Mockups,
+> Leinwand https://claude.ai/artifact/91YJuzqSFibDQNfS22soYK. Zwei Ideen von Henning (die eine vermiedene Aufgabe, Gummipunkte
 > mit Wochenfeier), geprüft gegen die Studienlage, dann als Konzept im Duktus der App.
 > Rahmen aus `00-entscheidungen.md` und `03-design-briefing.md`: Farbbudget (Grün nur beim Erledigen),
 > nur SF Symbols, keine Serien, kein Lob, nie ein Satz über Nichterledigtes, „Disziplin-Statistiken“
@@ -97,121 +98,137 @@ seit #426 schon in der Überschriftenregel und bleibt.
   dem Montag, nehmen Menschen Ziele häufiger in Angriff. Die Woche ist die natürliche Einheit, der
   Montag ihr Anfang.
 
-## 2. Das Konzept
+## 2. Das Konzept (entschieden 2026-10-23)
 
-Zwei Bausteine, beide optional, beide ohne Modell (Regelpfad, es gibt nichts zu verstehen):
+Zwei Bausteine, beide optional, beide ohne Modell (Regelpfad, es gibt nichts zu verstehen). Die Namen
+und Zeichen sind am 23.10. mit Henning an den Mockups festgelegt worden; die Leinwand oben ist der
+Stand, dieses Dokument die Begründung.
 
-### 2.1 Der eine: eine Aufgabe trägt die Last des Tages
+### 2.1 Das Knäuel: eine Aufgabe, vor der man sich drückt
 
-**Was.** Genau eine offene Aufgabe trägt die Marke. Der Nutzer setzt sie selbst (Halten-Menü, Wisch,
-„…“-Menü im Detail: „Heute dran“). Setzt er eine zweite, wandert die Marke, ohne Rückfrage. Jede
-Änderung ist eine `Revision` mit `author == user`.
+**Was.** Genau eine offene Aufgabe ist „Das Knäuel“: nicht die schwerste, sondern die, vor der man sich
+drückt (Steel, 1.5). Der Nutzer setzt sie selbst: Halten-Menü und „…“ im Detail, Eintrag „Das Knäuel“;
+ist es schon diese Aufgabe, heißt der Eintrag „Kein Knäuel mehr“. Bekommt eine zweite Aufgabe das
+Knäuel, **fragt die App erst**, ob es von der bisherigen wandern soll (Henning, 23.10.). Jede Änderung
+ist eine `Revision` mit `author == user`.
 
-**Wo sie steht.** Ganz oben in „Jetzt“, vor dem Überfälligen, als einzige Zeile mit der Marke; in jeder
-Liste trägt die Zeile die Marke als Glyphe am Anfang der Merkmalzeile, schwarz, ohne Farbe, wie Fahne
-und Blitz. Morgens steht sie in der Überschrift: „Erst: Steuer anrufen.“ (vor „Heute: …“, die
-Uhrzeiten des Tages gehen weiter vor). Kein Lob, keine Zahl.
+**Wo es steht.** Im Kopf der Startseite, am Datum, wo sonst der Knoten des Logos steht: solange eine
+Aufgabe das Knäuel ist, zeigt der Kopf statt des grauen Knotens das schwarze Knäuel, ein Fünftel größer.
+Die Aufgabe steht als eigene Zeile direkt unter dem Datum, vor der Überschrift; die Überschrift bleibt
+der Satz des Tages. Aus dem Knäuel läuft ein loser Faden in zwei lockeren Loops hinunter bis vor das
+erste Wort der Zeile. In der Merkmalzeile steht „Seit 11 Tagen“. Das Datum beginnt bündig über dem
+Aufgabentext.
 
-**Wenn sie liegen bleibt.** Sie bleibt die Marke, auch morgen, still. Kein Satz darüber, kein Zähler,
+**Die Zeichnung.** Das Knäuel ist eine Linie aus der Familie des Logo-Fadens: drei dichte Schlingen und
+ein kurzes, flach nach rechts auslaufendes Ende (die Kurve steht in der Leinwand und in der Tafel „Die
+Zeichen“; in der App als `Shape`, Strich wie der Knoten). Knäuel und Faden sind **zwei Elemente**: das
+Knäuel steht für sich (Datum, Menü, Detail, Einstellungen, „Erledigt“), der Faden setzt tangential an
+seinem Ende an, in derselben Strichstärke, ohne Lücke, und existiert nur im Kopf der Startseite. Der
+Faden ist aus derselben Formel wie der Logo-Faden gerechnet (Trochoide, zwei Loops). Das Knäuel hat das
+Gewicht (dicht), der Faden ist locker. Zweite Ausnahme von #350 (nur SF Symbols), wie der Faden selbst.
+
+**Wenn es liegen bleibt.** Es bleibt das Knäuel, auch morgen, still. Kein Satz darüber, kein Zähler,
 kein Rot. Die Marke verfällt nur durch Erledigen, Parken oder Umsetzen. (Serienregel, 1.4.)
 
-**Der Moment.** Erledigen ist der eine grüne Moment der App. Für diese Aufgabe darf er ein wenig
-länger dauern: der Faden aus dem Logo zieht sich einmal glatt (Knoten → loser Faden, `ThreadShape`
-hat beide Formen, die `trim`-Animation gibt es schon). Reduce Motion: stehendes Bild. Danach steht
-in der Überschrift bis 16 Uhr nichts Besonderes mehr; ab 16 Uhr zählt der Rückblick sie wie jede
-andere, aber zuerst.
+**Der Moment.** Erledigen ist der eine grüne Moment der App. Das Knäuel lockert sich grün zum Knoten
+(dieselbe Linie, die Schlingen gehen auf), der Faden zieht sich ein, die Zeile geht mit; danach steht
+der Kopf wie an jedem Tag, der Knoten wieder grau. Reduce Motion zeigt nur das letzte Bild. Ab 16 Uhr
+nennt die Überschrift das Entwirrte zuerst: „Heute entwirrt: Steuer anrufen.“
 
-**Vorschlag, kein Zwang (Schnitt 2).** Hat der Nutzer morgens keine Marke gesetzt, darf die App eine
-Kandidatin nennen, regelbasiert: ohne Datum, Wichtigkeit hoch, am längsten getragen („Seit 11 Tagen“),
-in „Alt“. Eine Zeile unter „Jetzt“: „Seit 11 Tagen offen: Steuer anrufen. Heute dran?“ mit einem
-Tipp. Das ist Zhu et al.: der Wert im Moment der Wahl. Nie als Mitteilung, nie zweimal am Tag.
+**Im Detail.** Unter dem Rohtext eine Zeile „Das Knäuel · seit heute Morgen“ mit „Lösen“ (nimmt die
+Marke, ohne zu erledigen), nur solange die Aufgabe das Knäuel ist.
 
-**Daten.** `heavyMarkedAt: Date?` auf `TaskItem` (manueller Zustand wie `nextRank`, additiv in
-`cloudkit/schema.ckdb`). Eine Aufgabe kann zugleich „Als nächstes“ sein; die Marke sortiert vor.
+**Vorschlag, kein Zwang (später).** Hat der Nutzer morgens kein Knäuel gesetzt, darf die App eine
+Kandidatin nennen, regelbasiert: ohne Datum, Wichtigkeit hoch, am längsten getragen, in „Alt“. Eine
+Zeile unter „Jetzt“: „Seit 11 Tagen offen: Steuer anrufen. Das Knäuel?“ mit einem Tipp. Das ist Zhu et
+al.: der Wert im Moment der Wahl. Nie als Mitteilung, nie zweimal am Tag.
+
+**Daten.** `knaeuelAt: Date?` auf `TaskItem` (manueller Zustand wie `nextRank`, additiv in
+`cloudkit/schema.ckdb`). Eine Aufgabe kann zugleich „Als nächstes“ sein; das Knäuel sortiert vor.
 
 ### 2.2 Perlen: wenige Aufgaben zählen, die Woche zeigt sie
 
-**Was.** Der Nutzer markiert einzelne Aufgaben als zählend („Zählt“). Eine Aufgabe zählt oder nicht,
-keine Gewichte, keine Punktzahlen: Gewichte laden zum Rechnen ein, und Rechnen war Habiticas Fehler.
-Es gibt ein kleines Budget: höchstens fünf offene zählende Aufgaben gleichzeitig. Die Knappheit macht
-die Markierung zur Entscheidung („Das hier ist mir diese Woche etwas wert“), nicht zum Reflex.
+**Was.** Der Nutzer markiert einzelne Aufgaben als zählend („Zählt“, Halten-Menü und „…“). Eine Aufgabe
+zählt oder nicht, keine Gewichte, keine Punktzahlen: Gewichte laden zum Rechnen ein, und Rechnen war
+Habiticas Fehler. Höchstens fünf offene zählende Aufgaben gleichzeitig; die Knappheit macht die
+Markierung zur Entscheidung, nicht zum Reflex. Das Knäuel zählt immer. In der Merkmalzeile steht die
+Perle: eine kurze Schnur mit einer hohlen Perle mit Glanzpunkt (Zeichnung in der Leinwand).
 
-**Der Moment.** Beim Erledigen einer zählenden Aufgabe erscheint die Perle auf dem Faden der Woche,
-sofort (Woolley & Fishbach). Der Faden der Woche ist eine Zeile unter „Jetzt“: der lose Faden aus dem
-Logo, darauf je erledigter zählender Aufgabe ein kleiner Kreis (`circle.fill`, grau, der frischeste
-kurz grün). Leer bleibt die Zeile weg.
+**Der Moment.** Beim Erledigen einer zählenden Aufgabe erscheint die Perle auf der Schnur der Woche,
+sofort (Woolley & Fishbach), kurz grün. Die Schnur der Woche ist eine Zeile unter „Jetzt“: **eine
+durchhängende Schnur (eine Mulde)**, die Perlen von links dicht aufgereiht, gleiche Abstände, keine
+leeren Plätze (Fassung A, Henning 23.10.). Ohne Perle bleibt die Zeile weg.
 
-**Die Woche.** Montag bis Sonntag. Am Sonntag ab 16 Uhr und Montag bis zur ersten neuen Perle zeigt
-die Überschrift die Woche: „Diese Woche: vier Perlen.“ mit der Fadenzeile und den Titeln beim Tipp
-(öffnet „Erledigt“, nach Wochen gruppiert, die zählenden mit Perle). Kein Vergleich mit der Vorwoche,
-kein „nur“, keine Null-Woche in der Überschrift: ohne Perle kein Satz. Der Faden beginnt Montag leer,
-die alten Fäden bleiben in „Erledigt“ sichtbar.
+**Die Woche.** Montag bis Sonntag. Ab Sonntag 16 Uhr bis zur ersten neuen Perle am Montag zeigt die
+Überschrift die Woche: „Diese Woche: vier Perlen.“ mit der Schnur und den Titeln darunter; ein Tipp
+öffnet „Erledigt“, dort nach Wochen gruppiert, jede Woche mit ihrer Schnur, die zählenden Aufgaben mit
+Perle, die Knäuel-Aufgabe mit kleinem grauem Knäuel. Kein Vergleich mit der Vorwoche, kein „nur“,
+keine Null-Woche in der Überschrift: ohne Perle kein Satz. Die Schnur beginnt Montag leer, die alten
+bleiben in „Erledigt“.
 
-**Ein Ziel, das der Nutzer setzt (Option).** In den Einstellungen eine Zahl „Perlen pro Woche“ (leer
-oder 1–7). Ist sie gesetzt, zeigt der Faden die Lücken als leere Kreise (`circle`, grau): endowed
-progress, Zielgradient. Erreicht heißt nur: die Kreise sind voll. Nicht erreicht heißt: nichts.
+**Kein Wochenziel** (Henning, 23.10.): keine Zahl „Perlen pro Woche“, keine leeren Ringe. Die
+Zielgradienten-Idee (1.6) ist damit bewusst nicht gebaut; die Schnur zeigt nur, was da ist.
 
-**Belohnung, die man sich selbst nennt (Option, später).** Eine Zeile am Faden der Woche: „Dafür:
-Samstag Kino.“ Freitext, nichts wird geprüft. Das ist Milkmans Bündelung in ihrer einfachsten Form.
-Erst bauen, wenn 2.1 und der Faden ein paar Wochen gelaufen sind.
+**Dafür.** Eine Zeile unter der Schnur: „Dafür: Samstag Kino.“ Freitext, nichts wird geprüft, der
+Satz gehört zur Woche und bleibt stehen, bis er geändert wird. Ein Tipp auf die Zeile (Startseite) oder
+auf das Feld in den Einstellungen setzt den Cursor hinein; leer heißt keine Zeile. Milkmans Bündelung in
+ihrer einfachsten Form.
 
 **Daten.** `countsAt: Date?` auf `TaskItem`; die Perle liest `completedAt`. Bei Wiederholung zählt
-jeder `CompletionRecord` einer zählenden Aufgabe einmal in seiner Woche. Keine weitere Tabelle, kein
-Punktekonto: der Faden ist aus den Aufgaben berechnet (Regel 4 in `02-datenmodell-und-ansichten.md`).
+jeder `CompletionRecord` einer zählenden Aufgabe einmal in seiner Woche. „Dafür“ ein String im
+iCloud-Schlüsselwertspeicher wie die Feld-Einstellungen. Keine weitere Tabelle, kein Punktekonto: die
+Schnur ist aus den Aufgaben berechnet (Regel 4 in `02-datenmodell-und-ansichten.md`).
 
-### 2.3 Was bewusst nicht gebaut wird
+### 2.3 Einstellungen
+
+Keine eigene Seite „Antrieb“ (Henning, 23.10.): „Das Knäuel“ und „Zählt“ sind Felder einer Aufgabe wie
+Dauer oder Etiketten und stehen in derselben Liste „Felder“ (`DetailFieldSettings`, #538: aus heißt
+nicht angeboten, nie versteckt), mit je einem Satz darunter. Beides aus für neue Nutzer. „Dafür“ steht
+als Textfeld unter „Zählt“ und auf der Startseite.
+
+### 2.4 Was bewusst nicht gebaut wird
 
 | Nicht | Warum (Beleg) |
 |---|---|
 | Serien, „N Tage in Folge“ | Silverman & Barasch; Regel #426 |
 | Punkte für jede Aufgabe, XP, Level | Deci et al.; Diefenbach & Müssig |
 | Rangliste, Teilen des Wochenbilds | Vergleich untergräbt Autonomie (Li et al.) |
-| Mitteilungen über Frosch oder Perlen | Nag ist eine Rückschlag-Erinnerung (Amabile) |
-| Vorgeschriebene Uhrzeit für den Frosch | Ego-Depletion nicht repliziert |
+| Mitteilungen über Knäuel oder Perlen | Nag ist eine Rückschlag-Erinnerung (Amabile) |
+| Vorgeschriebene Uhrzeit für das Knäuel | Ego-Depletion nicht repliziert |
 | Lob-Wörter („Super!“) | Regel #426; Fogg’s „Celebration“ ohne Beleg |
-| Wochen-Vergleich, Zähler fürs Verpasste | Rückschlag wiegt doppelt (Amabile) |
+| Wochen-Vergleich, Zähler fürs Verpasste, Wochenziel | Rückschlag wiegt doppelt (Amabile); Henning 23.10. |
 
-### 2.4 Namen und Zeichen (Produktfrage)
+### 2.5 Verworfene Namen und Bilder
 
-Henning nennt es „Frosch“ und „Gummipunkte“. Beides ist im Gespräch gut, in der App gibt es zwei Wege:
-
-- **A, aus der Marke:** „Der Knoten“ (die eine verknotete Aufgabe, erledigen löst ihn) und „Perlen“
-  auf dem Faden der Woche. Zeichen: der Faden selbst (Knoten-Form als kleine Glyphe, wie der Mac-
-  Menüleisten-Faden `MenuBarThreadImage`). Passt zur Ausnahme in #350 (der Faden ist Marke), aber die
-  Glyphe in der Zeile wäre ein Zeichen, das kein SF Symbol ist. Das wäre eine zweite Ausnahme.
-- **B, aus SF Symbols:** „Heute dran“ mit `mountain.2` (der Berg vor einem) oder `tortoise`
-  (das Langsame), „Zählt“ mit `star` und Sternen auf dem Faden. Hält #350 wörtlich; der Faden der
-  Woche bliebe Marke, die Zeichen in der Zeile wären Symbole. Einen Frosch gibt es in SF Symbols nicht.
-
-Empfehlung: **B für die Zeile, der Faden für die Woche.** Die Zeile bleibt in der Symbolsprache, das
-Wochenbild trägt die Marke. Namen in der App: „Heute dran“ und „Zählt“; „Frosch“ und „Perlen“ bleiben
-die Wörter im Gespräch.
+Frosch (Bild gefiel nicht), Kröte, saurer Apfel, Stein im Schuh, bittere Pille, „Heute dran“, „Das
+Eine“, „Jetzt“ (zu nüchtern oder zu erdrückend), „Hängt raus“ und „Augen zu und durch“ (Faden allein
+zu unklar, Hennings Frau). Geblieben ist das Bild aus der Marke: lose Enden liegen ordentlich in der
+Kiste, eines hat sich vom täglichen Zurückstopfen verheddert. Der Knoten des Logos bleibt das Zeichen
+für „versorgt“, das Knäuel ist sein Gegenstück.
 
 ## 3. Schnitte
 
-Alles optional: ein Schalter „Antrieb“ in den Einstellungen, aus für neue Nutzer, zwei Zeilen darunter
-(„Heute dran“, „Zählt“). Beide Felder laufen über `DetailFields`: aus heißt nicht angeboten, nie
-versteckt.
+Alles optional über die Felder-Liste. Modelländerungen gebündelt in einem Schema-Deploy (#448).
 
 | Schnitt | Inhalt | Größe |
 |---|---|---|
-| 1 | `heavyMarkedAt`, Schema, `TaskActions.markHeavy`, Halten-Menü und „…“, Glyphe in der Zeile, oben in „Jetzt“, Überschrift „Erst: …“ | S–M |
-| 2 | Der Moment: Faden glatt ziehen beim Erledigen der Marke, Reduce Motion | S |
-| 3 | `countsAt`, Schema, „Zählt“ mit Budget 5, Glyphe, Faden der Woche unter „Jetzt“ | M |
-| 4 | Wochensatz Sonntag/Montag, „Erledigt“ nach Wochen mit Perlen | S |
-| 5 | Vorschlag der Kandidatin (Regel: ohne Datum, hoch, am längsten getragen) | S |
-| 6 | Wochenziel-Kreise, Belohnungszeile | S |
+| 1 | `knaeuelAt`, Schema, `TaskActions`, Halten-Menü und „…“ mit Rückfrage beim Wandern, Zeile unter dem Datum, Knäuel statt Knoten im Kopf (`ThreadShape`-Form), Datum bündig | M |
+| 2 | Der Faden mit zwei Loops aus dem Knäuel zur Zeile; der Moment beim Erledigen (lockern, einziehen), Reduce Motion; Überschrift „Heute entwirrt“ | S |
+| 3 | `countsAt`, Schema, „Zählt“ mit Budget 5, Perle in der Merkmalzeile, Schnur der Woche unter „Jetzt“, Knäuel zählt immer | M |
+| 4 | Wochensatz Sonntag/Montag, „Erledigt“ nach Wochen mit Schnur, Perlen und Knäuel-Marke | S |
+| 5 | „Dafür“ (Startseite und Einstellungen), Felder-Liste, Detail-Zeile „Das Knäuel“ mit „Lösen“ | S |
+| 6 | Vorschlag der Kandidatin (Regel: ohne Datum, hoch, am längsten getragen) | S |
 
-Schnitt 1 und 3 ändern `Shared/Models`: beide Felder gehören in **einen** Schema-Deploy (#448, Henning
-klickt selten). Keine Modelländerung berührt die Geräteliste außer dem Schema; Widget und Watch
-bekommen die Marke erst, wenn sie sich bewährt hat.
+Schnitt 1 und 3 ändern `Shared/Models`: beide Felder gehören in **einen** Schema-Deploy. Keine
+Modelländerung berührt die Geräteliste außer dem Schema; Widget und Watch bekommen das Knäuel erst,
+wenn es sich bewährt hat.
 
 ## 4. Messen, ob es hilft
 
 Ohne Vergleichsgruppe, wie in `06-annahmen-und-experimente.md` (Vertrauen): nach vier Wochen zählt die
-App lokal, an wie vielen Tagen eine Marke gesetzt und am selben Tag erledigt wurde, und wie viele
+App lokal, an wie vielen Tagen ein Knäuel gesetzt und am selben Tag erledigt wurde, und wie viele
 zählende Aufgaben erledigt wurden, gegen die Erledigungsquote aller Aufgaben. Keine Übertragung, nur
-ein Satz in den Einstellungen. Fällt die Marke an mehr als der Hälfte der Tage liegen, ist die
+ein Satz in den Einstellungen. Bleibt das Knäuel an mehr als der Hälfte der Tage liegen, ist die
 Mechanik falsch gebaut, nicht der Nutzer.
 
 ## Quellen
