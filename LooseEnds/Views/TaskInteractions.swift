@@ -156,16 +156,14 @@ struct TaskInteractions {
     @ViewBuilder
     func driveEntries(_ task: TaskItem) -> some View {
         if task.parent == nil {
+            // By its name alone: with the drawn Knäuel as its icon the entry was not to be found on
+            // iOS (UI smoke, PR #651); the sign stands on the start page, the word is enough here.
             if task.isKnaeuel {
-                Button { releaseKnaeuel(task) } label: {
-                    Label { Text("No longer the Knäuel") } icon: { ThreadShape.menuImage(form: .knaeuel) }
-                }
-                .accessibilityIdentifier("menuKnaeuelRelease")
+                Button("No longer the Knäuel") { releaseKnaeuel(task) }
+                    .accessibilityIdentifier("menuKnaeuelRelease")
             } else if fields.isOn(.knaeuel) {
-                Button { setKnaeuel(task) } label: {
-                    Label { Text("The Knäuel") } icon: { ThreadShape.menuImage(form: .knaeuel) }
-                }
-                .accessibilityIdentifier("menuKnaeuel")
+                Button("The Knäuel") { setKnaeuel(task) }
+                    .accessibilityIdentifier("menuKnaeuel")
             }
             if task.countsAt != nil {
                 Button("No longer counts", systemImage: "circle.slash") { toggleCounts(task) }

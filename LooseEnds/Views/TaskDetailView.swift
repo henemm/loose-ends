@@ -615,16 +615,13 @@ struct TaskDetailView: View {
     @ViewBuilder
     private var driveEntries: some View {
         if task.parent == nil {
+            // By its name alone, as in the list's menu (the drawn icon hid the entry from the UI test).
             if task.isKnaeuel {
-                Button(action: releaseKnaeuel) {
-                    Label { Text("No longer the Knäuel") } icon: { ThreadShape.menuImage(form: .knaeuel) }
-                }
-                .accessibilityIdentifier("menuKnaeuelRelease")
+                Button("No longer the Knäuel", action: releaseKnaeuel)
+                    .accessibilityIdentifier("menuKnaeuelRelease")
             } else if settings.isOn(.knaeuel) {
-                Button(action: setKnaeuel) {
-                    Label { Text("The Knäuel") } icon: { ThreadShape.menuImage(form: .knaeuel) }
-                }
-                .accessibilityIdentifier("menuKnaeuel")
+                Button("The Knäuel", action: setKnaeuel)
+                    .accessibilityIdentifier("menuKnaeuel")
             }
             if task.countsAt != nil {
                 Button("No longer counts", systemImage: "circle.slash", action: toggleCounts)

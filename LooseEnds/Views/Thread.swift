@@ -93,19 +93,6 @@ struct ThreadGlyph: View {
     }
 }
 
-extension ThreadShape {
-    /// The thread as a template image for a menu entry (#643): a menu takes an image, not a view.
-    /// `size` holds the glyph; the stroke stays inside it.
-    @MainActor static func menuImage(form: Form, size: CGSize = CGSize(width: 24, height: 12), lineWidth: CGFloat = 1.5) -> Image {
-        Image(size: size) { context in
-            let rect = CGRect(origin: .zero, size: size).insetBy(dx: lineWidth / 2, dy: lineWidth / 2)
-            context.stroke(ThreadShape(form: form).path(in: rect), with: .color(.primary),
-                           style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
-        }
-        .renderingMode(.template)
-    }
-}
-
 /// Counts completions so the knot can tie itself once per finished task, wherever it was
 /// finished (list swipe, menu or detail, which closes right after).
 @MainActor @Observable
