@@ -52,6 +52,31 @@ import Testing
         #expect(result == .doneToday(count: 2, titles: ["Mama zurückrufen", "Steuerbescheid prüfen"], next: nil))
     }
 
+    @Test("The Knäuel done today speaks first from 16:00 (#644): 'Today untangled'; the others count along")
+    @MainActor func untangled() async throws {
+        let store = try TestStore()
+        let knaeuel = Self.done("Steuerberater anrufen", at: Self.at(11), in: store)
+        knaeuel.knaeuelAt = Self.at(8)
+        let other = Self.done("Mama zurückrufen", at: Self.at(15), in: store)
+        let soon = Self.task("Anna abholen", due: Self.at(18), timed: true, in: store)
+
+        #expect(Self.headline([knaeuel], Self.at(16, minute: 30)) == .untangled(title: "Steuerberater anrufen", count: 1, next: nil))
+        let result = Self.headline([knaeuel, other, soon], Self.at(16, minute: 30))
+        #expect(result == .untangled(title: "Steuerberater anrufen", count: 2, next: .init(title: "Anna abholen", at: Self.at(18))))
+        #expect(Self.headline([knaeuel, other, soon], Self.at(15, minute: 59)) == .upcoming(title: "Anna abholen", at: Self.at(18), count: 1),
+                "before 16:00 the ladder goes on as before")
+
+        // The sentence names the Knäuel first; the number word follows the locale.
+        let de = Locale(identifier: "de_DE")
+        let one = StartHeadlineText.sentence(.untangled(title: "Steuerberater anrufen", count: 1, next: nil), locale: de)
+        #expect(one.contains("Steuerberater anrufen"))
+        #expect(one.hasSuffix("."))
+        let three = StartHeadlineText.sentence(.untangled(title: "Steuerberater anrufen", count: 4, next: nil), locale: de)
+        #expect(three.contains("Steuerberater anrufen") && three.contains("drei"))
+        let withNext = StartHeadlineText.sentence(result, locale: de)
+        #expect(withNext.contains("Anna abholen"))
+    }
+
     @Test("Before 16:00 the look back waits; the time pressure speaks")
     @MainActor func noLookBackBeforeFour() async throws {
         let store = try TestStore()

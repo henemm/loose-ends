@@ -239,7 +239,10 @@ steht im Kopf der Startseite am Datum statt des grauen Knotens das schwarze Knä
 Tages, nicht noch einmal in „Jetzt“. `knaeuelAt` auf `TaskItem`, jede Änderung eine Revision mit `author == user`
 (`RevisedField.knaeuel`); Erledigen lässt die Marke auf der erledigten Aufgabe (die Schnur liest sie), Parken, Zurückholen
 und Löschen nehmen sie, eine neue Runde einer Wiederholung auch. Das Knäuel ist eine von Hand gezeichnete Linie aus der
-Familie des Logo-Fadens (`ThreadShape.Form.knaeuel`): **zweite Ausnahme von #350** nach dem Faden selbst. Kein Satz
+Familie des Logo-Fadens (`ThreadShape.Form.knaeuel`): **zweite Ausnahme von #350** nach dem Faden selbst. Aus seinem Ende läuft
+der lose Faden (`KnaeuelThread`, #644: zwei Loops der Logo-Trochoide, a = 4,0, b = 4,9, tangential am Endpunkt, 1,6 pt) bis
+vor das erste Wort der Zeile; beim Erledigen lockert sich das Knäuel grün in den Knoten (`LooseningKnaeuel`, 0,3 s + 0,8 s),
+der Faden zieht sich ein, ab 16 Uhr sagt die Überschrift „Heute entwirrt: …“. Kein Satz
 darüber, kein Zähler, kein Rot, wenn es liegen bleibt. **Zählt** (#645): eine Aufgabe zählt oder nicht, keine Gewichte,
 keine Punkte, höchstens fünf offene zugleich (`TaskActions.countsBudget`; der Eintrag heißt dann „Zählt (5 von 5)“ und ist
 grau); das Knäuel zählt immer. `countsAt` auf `TaskItem`, Revision `RevisedField.counts`. Die Perle (Schnur mit hohler

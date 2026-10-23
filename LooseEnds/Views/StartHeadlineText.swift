@@ -23,6 +23,15 @@ enum StartHeadlineText {
             }
             guard let next else { return first }
             return first + " " + String(localized: "At \(time(next.at)) still: \(next.title).")
+        case .untangled(let title, let count, let next):
+            let first: String
+            switch count {
+            case 1: first = String(localized: "Today untangled: \(title).")
+            case 2: first = String(localized: "Today untangled: \(title), and one more tied up.")
+            default: first = String(localized: "Today untangled: \(title), and \(number(count - 1)) more tied up.")
+            }
+            guard let next else { return first }
+            return first + " " + String(localized: "At \(time(next.at)) still: \(next.title).")
         case .missed(let title, let at, let count):
             if count > 1 {
                 return String(localized: "\(number(count)) fixed times have passed, the last at \(time(at)).")

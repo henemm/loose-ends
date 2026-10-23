@@ -59,7 +59,7 @@ struct StartPage: View {
     private var listColumn: some View {
         let metrics = StartMetrics(typeSize)
         return keyed(List {
-            StartHeaderRows(tasks: tasks) { knaeuelRow($0, metrics) }
+            StartHeaderRows(tasks: tasks) { task, head in knaeuelRow(task, head, metrics) }
             // "New" with the writing line under it (#601): Return makes a task, the button opens
             // into a drawer that shows it, leaving the line folds it.
             InboxDrawerView(tasks: tasks, open: { selection = $0 }, selection: selection, focusRequest: focusRequest,
@@ -91,21 +91,18 @@ struct StartPage: View {
         )
     }
 
-    /// The Knäuel's row under the date (#643): a tap opens the task, swipe right completes it, the
-    /// menu holds the rest; on every platform the same, no Mac keys (they stay with "Now").
+    /// The Knäuel's head (#643, #644), date and row as one: a tap opens the task, swipe right completes
+    /// it, the menu holds the rest; on every platform the same, no Mac keys (they stay with "Now").
     @ViewBuilder
-    private func knaeuelRow(_ task: TaskItem, _ metrics: StartMetrics) -> some View {
+    private func knaeuelRow(_ task: TaskItem, _ head: KnaeuelHead, _ metrics: StartMetrics) -> some View {
         let actions = self.actions
-        let row = KnaeuelRow(task: task)
-            .padding(.top, 10)
-            .padding(.bottom, 2)
         if actions.isPending(task) {
-            actions.pendingRow(task, row)
+            actions.pendingRow(task, head)
                 .listRowSeparator(.hidden)
                 .startRow(metrics)
         } else {
             Button { selection = .task(task.id) } label: {
-                row.contentShape(Rectangle())
+                head.contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .listRowSeparator(.hidden)

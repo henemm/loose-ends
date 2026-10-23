@@ -449,6 +449,9 @@
     "The Knäuel, %@" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Das Knäuel, %@" } } } },
     "Drive" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Antrieb" } } } },
     "The one task you keep putting off, under the date on the start page." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Die eine Aufgabe, vor der man sich drückt, unter dem Datum auf der Startseite." } } } },
-    "A bead on the week's string once completed. At most five open at a time." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erledigt eine Perle auf der Schnur der Woche. Höchstens fünf offene zugleich." } } } }
+    "A bead on the week's string once completed. At most five open at a time." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erledigt eine Perle auf der Schnur der Woche. Höchstens fünf offene zugleich." } } } },
+    "Today untangled: %@." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute entwirrt: %@." } } } },
+    "Today untangled: %@, and one more tied up." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute entwirrt: %@, dazu eine weitere." } } } },
+    "Today untangled: %1$@, and %2$@ more tied up." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute entwirrt: %1$@, dazu %2$@ weitere." } } } }
   }
 }

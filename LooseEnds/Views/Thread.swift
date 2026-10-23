@@ -57,23 +57,40 @@ struct ThreadShape: Shape {
     }
 
     func path(in rect: CGRect) -> Path {
-        let points = Self.curvePoints(form: form)
+        Self.path(through: Self.mapped(Self.curvePoints(form: form), in: rect))
+    }
+
+    /// The curve fitted into `rect`, aspect kept, centered: the one mapping of the glyph, so the
+    /// thread of #644 finds the Knäuel's tail end exactly where it is drawn.
+    nonisolated static func mapped(_ points: [CGPoint], in rect: CGRect) -> [CGPoint] {
         let xs = points.map(\.x), ys = points.map(\.y)
         let minX = xs.min() ?? 0, maxX = xs.max() ?? 1
         let minY = ys.min() ?? 0, maxY = ys.max() ?? 1
         let scale = min(rect.width / max(maxX - minX, 1), rect.height / max(maxY - minY, 1))
         let offsetX = rect.midX - (minX + maxX) / 2 * scale
         let offsetY = rect.midY - (minY + maxY) / 2 * scale
+        return points.map { CGPoint(x: $0.x * scale + offsetX, y: $0.y * scale + offsetY) }
+    }
+
+    nonisolated static func path(through points: [CGPoint]) -> Path {
         var path = Path()
         for (index, point) in points.enumerated() {
-            let mapped = CGPoint(x: point.x * scale + offsetX, y: point.y * scale + offsetY)
             if index == 0 {
-                path.move(to: mapped)
+                path.move(to: point)
             } else {
-                path.addLine(to: mapped)
+                path.addLine(to: point)
             }
         }
         return path
+    }
+
+    /// Where the Knäuel's thread ends and which way it runs there (#644), in `rect`: the last point
+    /// of the drawn curve and the direction of its last segment.
+    nonisolated static func knaeuelTail(in rect: CGRect) -> (end: CGPoint, direction: CGVector) {
+        let points = mapped(curvePoints(form: .knaeuel), in: rect)
+        let end = points[points.count - 1]
+        let before = points[points.count - 2]
+        return (end, CGVector(dx: end.x - before.x, dy: end.y - before.y))
     }
 }
 
