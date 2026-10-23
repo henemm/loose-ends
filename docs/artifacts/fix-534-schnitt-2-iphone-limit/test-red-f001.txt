@@ -1,0 +1,46 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/MeasurementRunTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-10-23 09:25:25.468.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-23 09:25:25.470.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-23 09:25:25.470.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.003) seconds
+[1mTest run started.[0m
+Suite "Messlauf-Datei und Taktung" started
+    [32m✔[0m "Alte Ergebnisdatei ohne Ereignisse bleibt lesbar" (0.003 seconds)
+    [32m✔[0m "Ereignisse und Fehlerart überleben Schreiben und Lesen" (0.001 seconds)
+    [32m✔[0m "Nach einem Fehlschlag wird gewartet, nach dreien angehalten" (0.001 seconds)
+    [32m✔[0m "Die Labor-App meldet keine Hintergrundmodi mehr an" (0.002 seconds)
+    [32m✔[0m "Fehlerart wird typisiert erkannt, nicht per Textvergleich" (0.004 seconds)
+    [32m✔[0m "Zwei erfolgreiche Läufe: der dritte Lauf ist noch offen, mit aufsteigendem Index (AC-2)" (0.001 seconds)
+    [32m✔[0m "Drei erfolgreiche Läufe bei runsPerEntry 3: der Satz ist vollständig erledigt (AC-2)" (0.001 seconds)
+    [32m✔[0m "Alte Ergebnisdatei ohne runIndex-Feld dekodiert als 0 und gilt einlaufig als erledigt (AC-3)" (0.001 seconds)
+    [32m✔[0m "Gesamtzahl, erledigte und Fortschritt rechnen über Läufe, nicht über Sätze (AC-4)" (0.001 seconds)
+    [32m✔[0m "Aufeinanderfolgende Läufe desselben Satzes bekommen aufsteigende Indizes (AC-5)" (0.001 seconds)
+    [33m⚠️[0m  Test "Ein Latenz-Start mit --runs 2 misst alle 12 Aufrufe, erst dann endet er (#534 F001)" recorded an issue at MeasurementRunTests.swift:179:9: Expectation failed: calls.count == 12
+    [33m⚠️[0m  Test "Ein Latenz-Start mit --runs 2 misst alle 12 Aufrufe, erst dann endet er (#534 F001)" recorded an issue at MeasurementRunTests.swift:180:9: Expectation failed: calls.map(\.runIndex) == Array(repeating: 0, count: 6) + Array(repeating: 1, count: 6)
+    [33m⚠️[0m  Test "Ein Latenz-Start mit --runs 2 misst alle 12 Aufrufe, erst dann endet er (#534 F001)" recorded an issue at MeasurementRunTests.swift:181:9: Expectation failed: run.remaining(from: entries, runsPerEntry: 2).isEmpty
+    [31m✖[0m [31m"Ein Latenz-Start mit --runs 2 misst alle 12 Aufrufe, erst dann endet er (#534 F001)" (0.014 seconds) 3 issue(s)[0m
+    [32m✔[0m "Ohne --exit-when-done bleibt ein Start bei einem Durchgang, wie bisher (#534 F001)" (0.001 seconds)
+    [32m✔[0m "Ergebnisdatei ohne die fünf neuen Schlüssel dekodiert sie als nil/leer (AC-2)" (0.001 seconds)
+    [32m✔[0m "Alle fünf neuen Rohwerte überleben Schreiben und Lesen (AC-2)" (0.001 seconds)
+    [32m✔[0m "Der Selbstkonsistenz-Auszug eines EnrichmentDraft reicht alle vier Werte unverändert durch (Energie seit #112 nicht mehr) (AC-3)" (0.001 seconds)
+    [32m✔[0m "Fehlende Guesses ergeben nil/leer, kein Absturz (AC-3)" (0.001 seconds)
+Suite "Messlauf-Datei und Taktung" failed after 0.042 seconds with 3 issue(s)
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-epic-563-auswahl/Logs/Test/Test-LooseEnds-2026.10.23_09-25-16-+0200.xcresult
+[36;1mTesting started[0m

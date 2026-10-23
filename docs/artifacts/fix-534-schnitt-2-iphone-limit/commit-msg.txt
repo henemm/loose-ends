@@ -1,0 +1,10 @@
+feat: Modell-Latenz auf dem iPhone messen, Bericht und Vorschlag (#534, Schnitt 2)
+
+Die Labor-App fährt eine Messreihe selbstständig (--result, --context-words,
+--exit-when-done), ein neuer Befehl `sim.sh lab-latency <n>` startet n Läufe
+und holt die Ergebnisse. Die Auswertung liest das Labor-Format und trennt
+Hitze und Strom. Gemessen auf dem iPhone 16 Pro: kalt Max 7,92 s, warm Max
+6,72 s, keine Fehler. Vorschlag nach der Regel: 25 s; die Konstante ändert
+Schnitt 3. Unter Shared/ und LooseEnds/ nichts geändert.
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>

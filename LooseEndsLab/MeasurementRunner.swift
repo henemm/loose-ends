@@ -46,15 +46,20 @@ final class MeasurementRunner {
 
     private let store: MeasurementStore
     private let runsPerEntry: Int
+    private let contextVocabulary: [String]
+    private let exitWhenDone: Bool
     private let enricher = FoundationModelsEnricher()
     private let logger = Logger(subsystem: "com.henning.looseends.lab", category: "measurement")
     private var task: Task<Void, Never>?
 
     init(name: String = "date-title", arguments: [String] = CommandLine.arguments,
-         corpusFileName: String = Corpus.fileName, runsPerEntry: Int = 1) {
+         corpusFileName: String = Corpus.fileName, runsPerEntry: Int = 1,
+         contextVocabulary: [String] = [], exitWhenDone: Bool = false) {
         self.store = MeasurementStore(name: name, in: MeasurementStore.documents)
         self.run = store.load(name: name)
         self.runsPerEntry = runsPerEntry
+        self.contextVocabulary = contextVocabulary
+        self.exitWhenDone = exitWhenDone
         self.entries = (try? Corpus.load(fileName: corpusFileName)) ?? []
         if !entries.isEmpty && run.remaining(from: entries, runsPerEntry: runsPerEntry).isEmpty { state = .finished }
         log("app", "gestartet; Argumente: \(arguments.dropFirst().joined(separator: " ")); Korpus: \(entries.count) Sätze")
@@ -98,32 +103,40 @@ final class MeasurementRunner {
 
     private func measureRemaining() async {
         var consecutiveFailures = 0
-        for (entry, runIndex) in run.remaining(from: entries, runsPerEntry: runsPerEntry) {
-            if Task.isCancelled { return }
-            lastNote = entry.text
-            let result = await measure(entry, runIndex: runIndex)
-            run.results.append(result)
-            if let kind = result.errorKind { run.log("failure", "\(entry.id): \(kind)") }
-            save()
-            if Task.isCancelled { return }
+        var passes = 0
+        while true {
+            let pass = run.pass(after: passes, from: entries, runsPerEntry: runsPerEntry, untilDone: exitWhenDone)
+            if pass.isEmpty { break }
+            passes += 1
+            for (entry, runIndex) in pass {
+                if Task.isCancelled { return }
+                lastNote = entry.text
+                let result = await measure(entry, runIndex: runIndex)
+                run.results.append(result)
+                if let kind = result.errorKind { run.log("failure", "\(entry.id): \(kind)") }
+                save()
+                if Task.isCancelled { return }
 
-            consecutiveFailures = result.succeeded ? 0 : consecutiveFailures + 1
-            guard let delay = MeasurementPacing.delayBeforeNext(consecutiveFailures: consecutiveFailures) else {
-                stop(result.wasRateLimited
-                     ? "Apple drosselt gerade. Später weiter — der Stand bleibt erhalten."
-                     : "Das Modell antwortet nicht (\(result.errorKind ?? MeasurementErrorKind.other)). Später weiter — der Stand bleibt erhalten.")
-                return
-            }
-            if delay > 0 {
-                state = .waiting(Int(delay))
-                log("wait", "\(Int(delay)) s nach Fehlschlag")
-                do { try await Task.sleep(for: .seconds(delay)) } catch { return }
-                state = .running
+                consecutiveFailures = result.succeeded ? 0 : consecutiveFailures + 1
+                guard let delay = MeasurementPacing.delayBeforeNext(consecutiveFailures: consecutiveFailures) else {
+                    stop(result.wasRateLimited
+                         ? "Apple drosselt gerade. Später weiter — der Stand bleibt erhalten."
+                         : "Das Modell antwortet nicht (\(result.errorKind ?? MeasurementErrorKind.other)). Später weiter — der Stand bleibt erhalten.")
+                    return
+                }
+                if delay > 0 {
+                    state = .waiting(Int(delay))
+                    log("wait", "\(Int(delay)) s nach Fehlschlag")
+                    do { try await Task.sleep(for: .seconds(delay)) } catch { return }
+                    state = .running
+                }
             }
         }
         state = .finished
         UIApplication.shared.isIdleTimerDisabled = false
         log("finished", "\(done) von \(total)")
+        // A latency launch (#534) ends its own process once the last note is saved, so the next launch is cold.
+        if exitWhenDone { exit(0) }
     }
 
     private func measure(_ entry: Corpus.Entry, runIndex: Int) async -> MeasurementResult {
@@ -134,7 +147,7 @@ final class MeasurementRunner {
         let conditions = Conditions.current()
         let started = Date()
         let input = EnrichmentInput(rawText: entry.text, capturedAt: capturedAt,
-                                    contextVocabulary: [], projectNames: [], examples: [])
+                                    contextVocabulary: contextVocabulary, projectNames: [], examples: [])
         var result = MeasurementResult(entryID: entry.id, capturedAt: capturedAt, finishedAt: started,
                                        seconds: 0, conditions: conditions, runIndex: runIndex)
         do {
