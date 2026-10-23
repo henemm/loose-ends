@@ -1,0 +1,20 @@
+# Simulator-Beleg
+erzeugt: 2026-10-23T13:46:26+0200
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: fix-534-schnitt-3-konstante
+head: c0d061d06f9b1c5ed0a88558d173e3bb0680f365
+basis: 68a1e65d377d9fcd12592006dc05bdb05e7864ee (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 23 gesamt, 23 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1792755265.499  ende: 1792755985.009
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/fix-534-schnitt-3-konstante/simulator-run/summary.json  sha256:ddeba6812a1e9a2d0f546bf06e3010c4c50292391fe107c18c1c79a7b8965f49
+xcresult: docs/artifacts/fix-534-schnitt-3-konstante/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-534-schnitt-3-konstante/simulator-run/*.png (13 Stück)
+
+## Geprüfte Dateien
+- sha256:234df1d6628cc55c930a389d38e9b7e0f0f8fd6ae63503d007884be5ece64c5f  LooseEndsTests/ModelSeamTests.swift
+- sha256:c2f19b1794b86af3a79b131adc337f1633c5071d29fa0c5b9b2f46361a1eeea9  LooseEndsTests/RealModelTests.swift
+- sha256:3f2b8cc2a9fbce94f90dd93db033914acfb6c5ced9970a0fd56281a26dba2c16  Shared/Enrichment/EnrichmentCoordinator.swift

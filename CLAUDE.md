@@ -59,6 +59,7 @@ brew install xcodegen xcbeautify
 ./scripts/sim.sh launch-measure <n>   # Kaltstart-Messung, n Starts auf dem Gerät (#22)
 ./scripts/sim.sh real-model            # echtes On-Device-Modell auf diesem Mac, nur lokal (#531)
 ./scripts/sim.sh real-model-latency <n> # Latenz kalt/warm, n Prozesse auf dem Mac, Rohdaten + Auswertung (#534, docs/reference/modell-latenz.md)
+./scripts/sim.sh lab-latency <n>       # dasselbe auf dem iPhone über die Labor-App (#534 Schnitt 2); nur nach Hennings „jetzt ist ein Test möglich“
 ```
 
 `launch-measure` baut einen Release-Prüfbau und startet ihn per devicectl; es läuft nur nach Hennings
@@ -278,7 +279,7 @@ not scope creep on the current one.
   only with content, one word line for everything empty, dependent fields wait, off is not offered but never hidden;
   `DetailFieldSettings` with the standard on Note, Attachments, Calendar, Duration, Tags; the app's `FieldSettingsStore` in
   `LooseEnds/App` keeps the choice in defaults and the iCloud key-value store, everything on under UI tests)
-- `Shared/Models/RowKeyAction.swift` (#480 Schnitt 1, pure): which key does what in a Mac list (arrows choose, space completes only where the swipe offers done, delete asks first, nothing while a text field has focus); `TaskListView` wires it up on the Mac only (`onKeyPress`, `ChosenRows` keeps the chosen row per list so it survives detail and back), `Paper.wideListRow(selected:)` paints it accent 12 %, hover grey 7 %; the start page is Schnitt 2
+- `Shared/Models/RowKeyAction.swift` (#480 Schnitt 1, pure): which key does what in a Mac list (arrows choose, space completes only where the swipe offers done, delete asks first, nothing while a text field has focus); `TaskListView` wires it up on the Mac only (`onKeyPress`, `ChosenRows` keeps the chosen row per list so it survives detail and back), `Paper.wideListRow(selected:)` paints it accent 12 %, hover grey 7 %; Schnitt 2: the start page's "Now" rows take the same keys on the Mac only (`StartPage.macNowRow`/`keyed`, `ChosenRows.start`; only the visible rows, 5 folded; list focus only from a click or when the writing line lets go, never on appear; iPhone and iPad rows unchanged), main window at least 760 × 520 pt of content
 - `Shared/Persistence` — `ModelContainerFactory` (app group + private CloudKit; identifiers read from
   `Info.plist`, keys `LEAppGroup`/`LECloudContainer`, with the production constants as fallback —
   device builds carry their own via `BUNDLE_ID_SUFFIX`, #156), `ContextSeeder`,
@@ -304,7 +305,7 @@ not scope creep on the current one.
   folder on Done and Cancel, #442). All pure over the model objects; the
   caller saves.
 - `Shared/Enrichment` — `TaskEnricher` protocol (`StubEnricher` in the tests plays hang, empty answer, answer per note and
-  refusal, #530), `ModelDeadline` (time limit per model call, 30 s in the coordinator; a timeout counts as a failed call, #530), `EnrichmentWriter` (threshold + revisions; never writes the model's contexts or project, #215/#469), `EnrichmentCoordinator`
+  refusal, #530), `ModelDeadline` (time limit per model call, 25 s in the coordinator, from the measurement #534; a timeout counts as a failed call, #530), `EnrichmentWriter` (threshold + revisions; never writes the model's contexts or project, #215/#469), `EnrichmentCoordinator`
   (catch-up pass), `FoundationModelsEnricher` (on-device model, `#if canImport(FoundationModels)`), `DueDateRule`
   (combines the rule parsers into the due date, confidence 1.0, #95), `ImportanceUrgencyRule` (keyword
   match for importance/urgency, confidence 1.0, no default on miss, #117), `RecognitionRule` (equality of
@@ -326,6 +327,14 @@ not scope creep on the current one.
 - `LooseEndsWatchWidgets/` — watch complication (#355 Schnitt 3a): the logo's knot, families `accessoryCircular` and
   `accessoryCorner`, static (one entry, `.never`), no entitlements and no `Shared/`; it compiles `LooseEnds/Views/Thread.swift`
   as a single file, so that file must stay watchOS-safe (SwiftUI only). A tap opens the watch app's capture.
+- `LooseEnds/Places` — the place sheet's helpers (#241): `PlaceSearch` (MapKit, fixed hits under `--ui-testing`),
+  `SavedPlacesStore` (home and work, Schnitt 3b: `UserDefaults` plus the iCloud key-value store under the one key
+  `savedPlaces`, last writer wins, like `FieldSettingsStore`; the value `Shared/Models/SavedPlaces.swift` is pure, a slot never
+  touches a task that carries its place), `CurrentLocation` (`CurrentLocating`: one `requestLocation`, the "while using" prompt
+  once while undecided, the name by `MKReverseGeocodingRequest`; nil on the Mac, where the row is not offered; under
+  `--ui-testing` a fixed fix, `--ui-testing-location-here` on the Altona hit, `--ui-testing-location-refused`). The rules
+  (`isAlreadyThere`: haversine ≤ 150 m + accuracy, accuracy over 100 m or negative = unknown; the note order not watched >
+  location off > Mac) live in `PlaceEditing`. `./scripts/sim.sh location <lat> <lon>` fakes the simulator's location
 - `LooseEnds/Mac` — `MenuBarCapture` (Mac only, #356): the menu bar panel with the same `CaptureView`, Dock icon only
   while a list window is open (`DockPolicy`), login item via `SMAppService` (on from the first start, never under tests);
   `MenuBarThreadImage` (#366): the menu bar symbol is the logo's thread, drawn from `ThreadShape.curvePoints` into a

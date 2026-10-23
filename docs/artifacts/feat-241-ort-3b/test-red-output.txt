@@ -1,0 +1,133 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mCopy[0m LooseEndsWatchWidgets.appex -> LooseEndsWatchWidgets.appex
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mValidate Embedded Binary[0m LooseEndsWatchWidgets.appex
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsShare.appex -> LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftConstValuesFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.LinkFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-OutputFileMap.json
+[[36mLooseEndsTests[0m] [1mCompiling[0m SavedPlacesTests.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesTests.swift:8:105: [31mcannot find type 'SavedPlaces' in scope[0m
+ 6 | /// never reaches back into tasks that already carry its place.
+[36m 7 | @Suite("SavedPlaces (#241)") struct SavedPlacesTests {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesTests.swift:9:22: [31mcannot find 'SavedPlaces' in scope[0m
+ 7 | @Suite("SavedPlaces (#241)") struct SavedPlacesTests {
+[36m 8 |     private func spot(_ name: String = "Zuhause, Hamburg-Altona", latitude: Double = 53.5561) throws -> SavedPlaces.Spot {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesTests.swift:9:9: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+ 7 | @Suite("SavedPlaces (#241)") struct SavedPlacesTests {
+[32m 8 |     private func spot(_ name: String = "Zuhause, Hamburg-Altona", latitude: Double = 53.5561) throws -> SavedPlaces.Spot {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesTests.swift:14:17: [31mcannot find 'SavedPlaces' in scope[0m
+12 |     @Test("Nothing saved is empty in both slots")
+[36m13 |     func empty() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesTests.swift:15:17: [31mcannot find 'SavedPlaces' in scope[0m
+13 |     func empty() {
+[36m14 |         #expect(SavedPlaces.empty.spot(.home) == nil)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesTests.swift:21:21: [31mcannot find 'SavedPlaces' in scope[0m
+19 |     func settingOneSlot() throws {
+[36m20 |         let home = try spot()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesTests.swift:32:21: [31mcannot find 'SavedPlaces' in scope[0m
+30 |     @Test("Encoding and decoding round-trip; damaged or missing data reads as empty")
+[36m31 |     func coding() throws {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesTests.swift:33:17: [31mcannot find 'SavedPlaces' in scope[0m
+31 |     func coding() throws {
+[36m32 |         let saved = SavedPlaces.empty.setting(.home, to: try spot())[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesTests.swift:34:17: [31mcannot find 'SavedPlaces' in scope[0m
+32 |         let saved = SavedPlaces.empty.setting(.home, to: try spot())
+[36m33 |         #expect(SavedPlaces.decode(saved.encoded) == saved)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesTests.swift:35:17: [31mcannot find 'SavedPlaces' in scope[0m
+33 |         #expect(SavedPlaces.decode(saved.encoded) == saved)
+[36m34 |         #expect(SavedPlaces.decode(Data("{kaputt".utf8)) == .empty)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesTests.swift:40:17: [31mcannot find 'SavedPlaces' in scope[0m
+38 |     @Test("A spot with an impossible coordinate or an empty name is not made")
+[36m39 |     func invalidSpot() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesTests.swift:41:17: [31mcannot find 'SavedPlaces' in scope[0m
+39 |     func invalidSpot() {
+[36m40 |         #expect(SavedPlaces.Spot(name: "Nirgends", latitude: 91, longitude: 0) == nil)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesTests.swift:42:17: [31mcannot find 'SavedPlaces' in scope[0m
+40 |         #expect(SavedPlaces.Spot(name: "Nirgends", latitude: 91, longitude: 0) == nil)
+[36m41 |         #expect(SavedPlaces.Spot(name: "Nirgends", latitude: 0, longitude: 181) == nil)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesTests.swift:47:21: [31mcannot find 'SavedPlaces' in scope[0m
+45 |     @Test("A slot makes a valid task place with the asked event; an empty slot makes none")
+[36m46 |     func placeFromSlot() throws {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesTests.swift:50:33: [31mcannot infer contextual base in reference to member 'depart'[0m
+48 |         let place = try #require(saved.place(.home, event: .depart))
+[36m49 |         #expect(place.name == "Zuhause, Hamburg-Altona")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesTests.swift:48:21: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+46 |     func placeFromSlot() throws {
+[32m47 |         let saved = SavedPlaces.empty.setting(.home, to: try spot())[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/PlaceEditingTests.swift:94:64: [31mcannot find type 'LocationFix' in scope[0m
+ 92 |     // MARK: Schnitt 3b (#241): location off, already there, current location
+[36m 93 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/PlaceEditingTests.swift:227:30: [31mcannot find type 'CurrentLocating' in scope[0m
+225 | 
+[36m226 |     @MainActor[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/PlaceEditingTests.swift:230:28: [31mcannot find type 'LocationFix' in scope[0m
+228 |         var permission: PlaceNotifications.Permission
+[36m229 |         let answerToRequest: PlaceNotifications.Permission[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/PlaceEditingTests.swift:237:29: [31mcannot find type 'LocationFix' in scope[0m
+235 |         init(permission: PlaceNotifications.Permission,
+[36m236 |              answerToRequest: PlaceNotifications.Permission = .whenInUse,[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceEditingTests.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesStoreTests.swift:8:24: [31mcannot find type 'SavedPlacesCloud' in scope[0m
+ 6 | @Suite("SavedPlacesStore (#241)") struct SavedPlacesStoreTests {
+[36m 7 |     @MainActor[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesStoreTests.swift:14:46: [31mcannot find type 'SavedPlacesStore' in scope[0m
+12 | 
+[36m13 |     @MainActor[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesStoreTests.swift:20:49: [31mcannot find type 'SavedPlaces' in scope[0m
+18 |     }
+[36m19 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesStoreTests.swift:17:17: [31mcannot find 'SavedPlacesStore' in scope[0m
+15 |         let defaults = try #require(UserDefaults(suiteName: "SavedPlacesStoreTests-\(UUID().uuidString)"))
+[36m16 |         let cloud = Cloud()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesStoreTests.swift:21:22: [31mcannot find 'SavedPlaces' in scope[0m
+19 | 
+[36m20 |     private func spot(_ name: String) throws -> SavedPlaces.Spot {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesStoreTests.swift:21:9: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+19 | 
+[32m20 |     private func spot(_ name: String) throws -> SavedPlaces.Spot {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesStoreTests.swift:27:30: [31mgeneric parameter 'Element' could not be inferred[0m
+25 |     @MainActor func setWrites() throws {
+[36m26 |         let (store, defaults, cloud) = try fixture()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesStoreTests.swift:31:17: [31mcannot find 'SavedPlaces' in scope[0m
+29 |         store.set(.home, to: home)
+[36m30 |         #expect(store.places.spot(.home) == home)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesStoreTests.swift:31:58: [31mcannot find 'SavedPlacesStore' in scope[0m
+29 |         store.set(.home, to: home)
+[36m30 |         #expect(store.places.spot(.home) == home)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesStoreTests.swift:32:17: [31mcannot find 'SavedPlaces' in scope[0m
+30 |         #expect(store.places.spot(.home) == home)
+[36m31 |         #expect(SavedPlaces.decode(defaults.data(forKey: SavedPlacesStore.key)).spot(.home) == home)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesStoreTests.swift:33:21: [31mcannot find 'SavedPlacesStore' in scope[0m
+31 |         #expect(SavedPlaces.decode(defaults.data(forKey: SavedPlacesStore.key)).spot(.home) == home)
+[36m32 |         #expect(SavedPlaces.decode(cloud.savedPlaces).spot(.home) == home)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesStoreTests.swift:41:29: [31mcannot find 'SavedPlaces' in scope[0m
+39 |         let (store, defaults, cloud) = try fixture()
+[36m40 |         let work = try spot("Büro")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesStoreTests.swift:44:17: [31mcannot find 'SavedPlaces' in scope[0m
+42 |         #expect(store.takeCloud())
+[36m43 |         #expect(store.places.spot(.work) == work)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesStoreTests.swift:44:58: [31mcannot find 'SavedPlacesStore' in scope[0m
+42 |         #expect(store.takeCloud())
+[36m43 |         #expect(store.places.spot(.work) == work)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/SavedPlacesStoreTests.swift:52:29: [31mcannot find 'SavedPlaces' in scope[0m
+50 |         let (store, _, cloud) = try fixture()
+[36m51 |         store.set(.home, to: try spot("Hier"))[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m SavedPlacesStoreTests.swift
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-issue-145/Logs/Test/Test-LooseEnds-2026.10.23_12-38-08-+0200.xcresult

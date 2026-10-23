@@ -64,7 +64,10 @@ struct RealModelTests {
             let draft = try await enricher.enrich(input(note))
             let took = ContinuousClock.now - started
 
-            #expect(took < .seconds(30), "\(note): \(took), longer than the coordinator waits (#530)")
+            #expect(
+                took < EnrichmentCoordinator.defaultModelTimeout,
+                "\(note): \(took), longer than the coordinator waits (#530, #534)"
+            )
             let title = try #require(draft.title, "\(note): no title")
             #expect(!title.value.isEmpty)
             #expect(title.value.split(whereSeparator: \.isWhitespace).count <= 12, "\(note): \(title.value)")

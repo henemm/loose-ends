@@ -10,9 +10,13 @@ struct LabApp: App {
     @State private var runner: MeasurementRunner
 
     init() {
+        let arguments = CommandLine.arguments
         _runner = State(initialValue: MeasurementRunner(
-            corpusFileName: Corpus.corpusFileName(from: CommandLine.arguments),
-            runsPerEntry: Corpus.runsPerEntry(from: CommandLine.arguments)))
+            name: Corpus.resultName(from: arguments),
+            corpusFileName: Corpus.corpusFileName(from: arguments),
+            runsPerEntry: Corpus.runsPerEntry(from: arguments),
+            contextVocabulary: Corpus.contextWords(from: arguments),
+            exitWhenDone: Corpus.exitWhenDone(from: arguments)))
     }
 
     var body: some Scene {

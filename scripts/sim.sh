@@ -20,11 +20,13 @@
 #   ./scripts/sim.sh watch-test-proof <Class[/test]> # dasselbe im watchOS-Simulator (#409)
 #     LOOSEENDS_PUSH=<datei.apns> davor: spielt die Mitteilung während des Laufs alle 5 s ein (#295)
 #   ./scripts/sim.sh boot | status | launch | screenshot [pfad]
+#   ./scripts/sim.sh location <breite> <länge> # Standort des Simulators vortäuschen (#241), `location clear` hebt ihn auf
 #
 # Messreihen gegen das echte Modell (Spikes #65-#73), ohne das iPhone zu belegen:
 #   ./scripts/sim.sh lab                      # Labor-App aufs iPhone bringen
 #   ./scripts/sim.sh lab-run [sekunden]       # Messlauf vom Mac starten (iPhone entsperrt), Start/Stopp protokolliert
 #   ./scripts/sim.sh lab-fetch                # Ergebnisse vom iPhone holen (still, ohne Zutun)
+#   ./scripts/sim.sh lab-latency <n>          # Modell-Latenz auf dem iPhone, n Starts, nach docs/artifacts/534-modell-latenz/iphone/
 #   ./scripts/sim.sh report                   # Bericht aus den geholten Ergebnissen bauen
 #
 # Auf Hennings echtem iPhone — Stufe 2, erst nachdem der Simulator grün war:
@@ -893,6 +895,65 @@ cmd_lab_run() {
     cmd_lab_fetch
 }
 
+# Ein Start der Latenzreihe (#534 Schnitt 2): neuer Prozess, sechs Notizen zweimal, die App beendet sich nach dem
+# letzten Satz selbst. Danach liegt die Ergebnisdatei im Repo, sonst Abbruch mit Meldung.
+lab_latency_launch() {
+    local id="$1" name="$2" dest="$3"
+    local out status=0
+    out=$(timeout 300 $DEVICECTL device process launch --terminate-existing --console --device "$id" "$LAB_BUNDLE" \
+        --measure --corpus latency-corpus --runs 2 --result "$name" \
+        --context-words Computer,Telefon,Haus,Garten,Unterwegs,Besorgung --exit-when-done 2>&1) || status=$?
+    if echo "$out" | grep -q "BSErrorCodeDescription = Locked"; then
+        error "iPhone ist gesperrt — entsperren, dann erneut."; return 1
+    fi
+    case "$status" in
+        0) ;;
+        124) error "$name: nach 300 s nicht beendet — Abbruch."; return 1 ;;
+        *) error "$name: Start fehlgeschlagen (devicectl $status)"; echo "$out" | tail -5; return 1 ;;
+    esac
+    $DEVICECTL device copy from --device "$id" --user mobile --domain-type appDataContainer \
+        --domain-identifier "$LAB_BUNDLE" --source "Documents/$name.json" --destination "$dest" >/dev/null 2>&1 || true
+    [ -s "$dest" ] || { error "$name: Ergebnisdatei fehlt ($dest)."; return 1; }
+    # Eine alte oder halbe Datei zählt nicht als Start (#534 F002): 6 Notizen × 2 Läufe.
+    local count
+    count=$(python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1])).get("results", [])))' "$dest") || {
+        error "$name: Ergebnisdatei nicht lesbar ($dest)."; return 1; }
+    [ "$count" -ge 12 ] || { error "$name: nur $count von 12 Aufrufen in $dest — Abbruch."; return 1; }
+}
+
+# Latenz des Modells auf dem iPhone (#534 Schnitt 2): Labor-App einmal bauen und installieren, dann n Starts
+# nacheinander, je Start 12 Aufrufe (1 kalt, 11 warm). Nur die Labor-App, keine andere Kennung.
+cmd_lab_latency() {
+    local n="${1:-}"
+    [[ "$n" =~ ^[1-9][0-9]*$ ]] || { error "Aufruf: sim.sh lab-latency <n> (n Starts, z. B. 10)"; return 1; }
+    command -v timeout >/dev/null || { error "timeout fehlt: brew install coreutils"; return 1; }
+    local id; id=$(require_device) || return 1
+    ensure_project
+    signed_build "$id" "$LAB_SCHEME" || { error "Labor-App nicht gebaut"; return 1; }
+    local app="$(device_derived_data)/Build/Products/Debug-iphoneos/LooseEndsLab.app"
+    local bundle; bundle=$(plutil -extract CFBundleIdentifier raw "$app/Info.plist") || { error "Labor-App nicht gebaut"; return 1; }
+    [ "$bundle" = "$LAB_BUNDLE" ] || { error "$bundle ist nicht die Labor-App — Abbruch."; return 1; }
+    # Erst deinstallieren, damit der Container leer ist (#534 F002): eine fertige latency-NN.json aus einer früheren
+    # Reihe ließe die App sofort enden, und das Skript holte alte Werte als neue. Nur die Labor-App.
+    local rm_out rm_status=0
+    rm_out=$($DEVICECTL device uninstall app --device "$id" "$LAB_BUNDLE" 2>&1) || rm_status=$?
+    if [ "$rm_status" -ne 0 ] && ! echo "$rm_out" | grep -qiE "not installed|no app|not found|could not be found"; then
+        error "Labor-App nicht deinstalliert (devicectl $rm_status)"; echo "$rm_out" | tail -5; return 1
+    fi
+    $DEVICECTL device install app --device "$id" "$app" >/dev/null || {
+        error "Installation fehlgeschlagen — iPhone entsperren und ins selbe WLAN holen."; return 1; }
+    local out="$PROJECT_DIR/docs/artifacts/534-modell-latenz/iphone"
+    mkdir -p "$out"
+    local i name
+    for i in $(seq 1 "$n"); do
+        name="latency-$(printf '%02d' "$i")"
+        info "Start $i/$n ($name)"
+        rm -f "$out/$name.json"
+        lab_latency_launch "$id" "$name" "$out/$name.json" || return 1
+    done
+    python3 "$PROJECT_DIR/scripts/latency_summary.py" "$out"
+}
+
 cmd_report() {
     ensure_project
     info "Bericht aus den geholten Ergebnissen"
@@ -906,7 +967,24 @@ cmd_screenshot() {
     [ -f "$out" ] && success "Screenshot: $out" || { error "Screenshot fehlgeschlagen"; return 1; }
 }
 
-cmd_help() { sed -n '3,35p' "$0" | sed 's/^# \{0,1\}//'; }
+# Täuscht dem Simulator einen Standort vor (#241 Schnitt 3b): der echte Weg von „Aktueller Ort“ ohne
+# feste Ersatzumsetzung. `clear` hebt ihn wieder auf.
+cmd_location() {
+    local id; id=$(sim_id)
+    [ -n "$id" ] || { error "Kein passender Simulator"; return 1; }
+    if [ "${1:-}" = "clear" ]; then
+        $SIMCTL location "$id" clear && success "Standort aufgehoben."
+        return
+    fi
+    local lat="${1:-}" lon="${2:-}"
+    local number='^-?[0-9]+([.][0-9]+)?$'
+    if ! [[ "$lat" =~ $number && "$lon" =~ $number ]]; then
+        error "Usage: ./scripts/sim.sh location <breite> <länge>  (z. B. 53.5561 9.9285) | location clear"; return 1
+    fi
+    $SIMCTL location "$id" set "$lat,$lon" && success "Standort: $lat, $lon"
+}
+
+cmd_help() { sed -n '3,37p' "$0" | sed 's/^# \{0,1\}//'; }
 
 COMMAND="${1:-help}"; shift 2>/dev/null || true
 case "$COMMAND" in
@@ -926,6 +1004,7 @@ case "$COMMAND" in
     status)     cmd_status ;;
     launch)     cmd_launch "$@" ;;
     screenshot) cmd_screenshot "$@" ;;
+    location)   cmd_location "$@" ;;
     device-status)  cmd_device_status ;;
     device-build)   cmd_device_build ;;
     device-build-release) cmd_device_build_release ;;
@@ -937,6 +1016,7 @@ case "$COMMAND" in
     lab)            cmd_lab ;;
     lab-run)        cmd_lab_run "$@" ;;
     lab-fetch)      cmd_lab_fetch "$@" ;;
+    lab-latency)    cmd_lab_latency "$@" ;;
     report)         cmd_report ;;
     help|--help|-h) cmd_help ;;
     *) error "Unbekannter Befehl: $COMMAND"; cmd_help; exit 1 ;;

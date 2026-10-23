@@ -1,0 +1,57 @@
+FEEE.....
+======================================================================
+ERROR: test_errors_are_counted_apart (__main__.LabFormatTests.test_errors_are_counted_apart)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-auswahl/scripts/test_latency_summary.py", line 103, in test_errors_are_counted_apart
+    out = latency_summary.summarize(latency_summary.read_folder(d))
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-auswahl/scripts/latency_summary.py", line 28, in summarize
+    group = out.setdefault(r["gruppe"], {"werte": [], "fehler": 0})
+                           ~^^^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+
+======================================================================
+ERROR: test_first_result_per_file_is_cold (__main__.LabFormatTests.test_first_result_per_file_is_cold)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-auswahl/scripts/test_latency_summary.py", line 93, in test_first_result_per_file_is_cold
+    out = latency_summary.summarize(latency_summary.read_folder(d))
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-auswahl/scripts/latency_summary.py", line 28, in summarize
+    group = out.setdefault(r["gruppe"], {"werte": [], "fehler": 0})
+                           ~^^^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+
+======================================================================
+ERROR: test_max_by_thermal_and_power_counts (__main__.LabFormatTests.test_max_by_thermal_and_power_counts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-auswahl/scripts/test_latency_summary.py", line 113, in test_max_by_thermal_and_power_counts
+    out = latency_summary.summarize(latency_summary.read_folder(d))
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-auswahl/scripts/latency_summary.py", line 28, in summarize
+    group = out.setdefault(r["gruppe"], {"werte": [], "fehler": 0})
+                           ~^^^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+
+======================================================================
+FAIL: test_cli_prints_thermal_breakdown (__main__.LabFormatTests.test_cli_prints_thermal_breakdown)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-auswahl/scripts/test_latency_summary.py", line 121, in test_cli_prints_thermal_breakdown
+    self.assertEqual(run.returncode, 0, run.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-auswahl/scripts/latency_summary.py", line 80, in <module>
+    sys.exit(main(sys.argv))
+             ~~~~^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-auswahl/scripts/latency_summary.py", line 66, in main
+    out = summarize(rows)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-auswahl/scripts/latency_summary.py", line 28, in summarize
+    group = out.setdefault(r["gruppe"], {"werte": [], "fehler": 0})
+                           ~^^^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.242s
+
+FAILED (failures=1, errors=3)

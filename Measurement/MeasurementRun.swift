@@ -171,6 +171,16 @@ struct MeasurementRun: Codable, Sendable {
         }
         return open
     }
+
+    /// The notes one launch measures in its next pass, after `passesDone` passes in this launch. A normal slice makes
+    /// one pass, as before (#65). A latency launch (`untilDone`, #534) passes again until every note has all its runs,
+    /// so one process makes every call of `runsPerEntry` (6 notes × 2 = 12) before it quits; the failure brake of the
+    /// runner still stops it.
+    func pass(after passesDone: Int, from entries: [Corpus.Entry], runsPerEntry: Int = 1,
+              untilDone: Bool) -> [(entry: Corpus.Entry, runIndex: Int)] {
+        guard passesDone == 0 || untilDone else { return [] }
+        return remaining(from: entries, runsPerEntry: runsPerEntry)
+    }
 }
 
 /// How the run paces itself after failures. A rule, so it can be read and tested, instead of the
