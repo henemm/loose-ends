@@ -87,8 +87,7 @@ import Testing
         let open = Self.task("Steuer", in: store)
         let all = [bead, plain, open]
 
-        #expect(Self.headline(all, Self.at(15, minute: 59, day: 3)) == .doneToday(count: 1, titles: ["Mama zurückrufen"], next: nil),
-                "Sunday 15:59: the ladder as always")
+        #expect(Self.headline(all, Self.at(15, minute: 59, day: 3)) == .calm, "Sunday 15:59: the ladder as always, no look back yet")
         #expect(Self.headline(all, Self.at(16, day: 3)) == .week(count: 1, titles: ["Hecke schneiden"]))
         #expect(Self.headline(all, Self.at(9, day: 4)) == .week(count: 1, titles: ["Hecke schneiden"]), "Monday, no new bead yet")
         let monday = Self.done("Keller", at: Self.at(8, day: 4), in: store)

@@ -96,7 +96,9 @@ import Testing
         #expect(weeks[0].beads.map(\.title) == ["A"])
         #expect(weeks[1].beads.map(\.isKnaeuel) == [true])
         #expect(weeks[2].beads.isEmpty, "a week without a bead shows its empty string")
-        #expect(TaskListView.weekHead(weeks[2], calendar: calendar).contains("5"))
-        #expect(TaskListView.weekHead(weeks[2], calendar: calendar).contains("11"))
+        let en = Locale(identifier: "en_US")
+        let head = TaskListView.weekHead(weeks[2], calendar: calendar, locale: en)
+        #expect(head.contains("5") && head.contains("11"), "5 to 11 October in Berlin, not the UTC days: \(head)")
+        #expect(TaskListView.weekHead(weeks[0], calendar: calendar, locale: en).contains("19"))
     }
 }

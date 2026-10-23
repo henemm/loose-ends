@@ -337,9 +337,11 @@ struct TaskListView: View {
     }
 
     /// "20 to 26 October", "This week · 20 to 26 October" (#646).
-    static func weekHead(_ week: ViewRules.WeekGroup, calendar: Calendar = .current) -> String {
+    static func weekHead(_ week: ViewRules.WeekGroup, calendar: Calendar = .current, locale: Locale = .current) -> String {
         let last = calendar.date(byAdding: .day, value: -1, to: week.week.upperBound) ?? week.week.upperBound
-        let span = (week.week.lowerBound..<last).formatted(.interval.day().month(.wide))
+        // The style carries the calendar and its time zone: without them the days are read in UTC.
+        let style = Date.IntervalFormatStyle(locale: locale, calendar: calendar, timeZone: calendar.timeZone).day().month(.wide)
+        let span = (week.week.lowerBound..<last).formatted(style)
         return week.isCurrent ? String(localized: "This week · \(span)") : span
     }
 
