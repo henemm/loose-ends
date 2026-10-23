@@ -23,8 +23,13 @@ struct TaskInteractions {
     @Binding var datingTask: TaskItem?
     /// The task whose Complete asks about its open subtasks (#565).
     @Binding var askingSubtasks: TaskItem?
+    /// The task that wants to be the Knäuel while another holds it (#643): the app asks first.
+    @Binding var askingKnaeuel: TaskItem?
     /// Runs after a delete is saved, so the view can let go of a selection on that task.
     var didDelete: (UUID) -> Void = { _ in }
+    /// Which fields are offered (#538): "The Knäuel" and "Counts" stand in the menu only while on, or
+    /// while the task carries them (off is not offered, never hidden).
+    var fields: DetailFieldSettings = .standard
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "List")
 
     func isPending(_ task: TaskItem) -> Bool {
@@ -33,7 +38,7 @@ struct TaskInteractions {
 
     /// Done, waiting out its three seconds (#32): struck through, no link, no swipes. A second tap
     /// anywhere on the row takes it back; "Undo" says so. The long-press menu stays for Delete.
-    func pendingRow(_ task: TaskItem, _ row: TaskRow) -> some View {
+    func pendingRow(_ task: TaskItem, _ row: some View) -> some View {
         HStack {
             row
                 .strikethrough()
@@ -122,6 +127,7 @@ struct TaskInteractions {
             } else {
                 Button("Remove from Next up", systemImage: "star.slash") { toggleNext(task) }
             }
+            driveEntries(task)
             if isPending(task) {
                 Button("Undo", systemImage: "arrow.uturn.backward") { undoComplete(task) }
             } else {
@@ -145,7 +151,63 @@ struct TaskInteractions {
         .accessibilityIdentifier("menuDelete")
     }
 
+    /// "The Knäuel" and "Counts" (#643, #645), after Next up: each only while its field is on or the
+    /// task carries it. Over the budget "Counts (5 of 5)" stands grey. A subtask gets neither.
+    @ViewBuilder
+    func driveEntries(_ task: TaskItem) -> some View {
+        if task.parent == nil {
+            // By its name alone: with the drawn Knäuel as its icon the entry was not to be found on
+            // iOS (UI smoke, PR #651); the sign stands on the start page, the word is enough here.
+            if task.isKnaeuel {
+                Button("No longer the Knäuel") { releaseKnaeuel(task) }
+                    .accessibilityIdentifier("menuKnaeuelRelease")
+            } else if fields.isOn(.knaeuel) {
+                Button("The Knäuel") { setKnaeuel(task) }
+                    .accessibilityIdentifier("menuKnaeuel")
+            }
+            if task.countsAt != nil {
+                Button("No longer counts", systemImage: "circle.slash") { toggleCounts(task) }
+                    .accessibilityIdentifier("menuCountsRelease")
+            } else if fields.isOn(.counts) {
+                if TaskActions.canCount(task, among: tasks) {
+                    Button("Counts", systemImage: "circle") { toggleCounts(task) }
+                        .accessibilityIdentifier("menuCounts")
+                } else {
+                    Button("Counts (\(TaskActions.countsBudget) of \(TaskActions.countsBudget))", systemImage: "circle") {}
+                        .disabled(true)
+                        .accessibilityIdentifier("menuCountsFull")
+                }
+            }
+        }
+    }
+
     // MARK: - Actions
+
+    /// Makes the task the Knäuel (#643); while another task holds the mark the app asks first.
+    func setKnaeuel(_ task: TaskItem) {
+        if let holder = ViewRules.knaeuel(in: tasks), holder.id != task.id {
+            askingKnaeuel = task
+            return
+        }
+        moveKnaeuel(to: task)
+    }
+
+    /// The answer, or the first Knäuel: the mark goes onto the task, off any other.
+    func moveKnaeuel(to task: TaskItem) {
+        askingKnaeuel = nil
+        TaskActions.setKnaeuel(task, among: tasks, contexts: contexts, projects: projects)
+        save("knaeuel")
+    }
+
+    func releaseKnaeuel(_ task: TaskItem) {
+        TaskActions.releaseKnaeuel(task, contexts: contexts, projects: projects)
+        save("knaeuel")
+    }
+
+    func toggleCounts(_ task: TaskItem) {
+        TaskActions.toggleCounts(task, among: tasks, contexts: contexts, projects: projects)
+        save("counts")
+    }
 
     /// Starts the three-second window (#32); `ContentView` completes once it ran out. Without the
     /// window (previews) Done lands at once. With open subtasks it asks first (#565).
@@ -241,10 +303,31 @@ extension View {
         .completesWithSubtasks(asking: actions.$askingSubtasks) { task, withSubtasks in
             actions.complete(task, withSubtasks: withSubtasks)
         }
+        .movesKnaeuel(asking: actions.$askingKnaeuel, from: ViewRules.knaeuel(in: actions.tasks)) { task in
+            actions.moveKnaeuel(to: task)
+        }
         .sheet(item: actions.$datingTask) { task in
             MoveDateSheet(start: TaskActions.suggestedMoveDate(for: task)) { day in
                 actions.move(task, to: .date(day))
             }
+        }
+    }
+}
+
+extension View {
+    /// The question before the Knäuel moves (#643, Henning 2026-10-23): only one task can be it, so a
+    /// second one asks, naming the one that holds the mark so far.
+    func movesKnaeuel(asking: Binding<TaskItem?>, from holder: TaskItem?, move: @escaping (TaskItem) -> Void) -> some View {
+        confirmationDialog(
+            Text("Make “\(asking.wrappedValue?.displayTitle ?? "")” the Knäuel?"),
+            isPresented: Binding(get: { asking.wrappedValue != nil }, set: { if !$0 { asking.wrappedValue = nil } }),
+            titleVisibility: .visible,
+            presenting: asking.wrappedValue
+        ) { task in
+            Button("Move the Knäuel") { move(task) }
+                .accessibilityIdentifier("confirmKnaeuelMove")
+        } message: { _ in
+            Text("“\(holder?.displayTitle ?? "")” is the Knäuel so far. Only one task can be.")
         }
     }
 }

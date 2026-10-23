@@ -23,6 +23,10 @@ struct TaskListView: View {
     @State private var datingTask: TaskItem?
     /// Complete with open subtasks asks first (#565).
     @State private var askingSubtasks: TaskItem?
+    /// A second Knäuel asks first (#643).
+    @State private var askingKnaeuel: TaskItem?
+    /// "The Knäuel" and "Counts" stand in the menu only while on (#538).
+    @Environment(FieldSettingsStore.self) private var fieldSettings: FieldSettingsStore?
     /// A task left from an earlier day whose new date is being chosen (#518).
     @State private var redating: TaskItem?
     /// Parents whose subtasks are folded out in the project view (#28); folded by default.
@@ -86,7 +90,8 @@ struct TaskListView: View {
             kind: kind, tasks: tasks, contexts: contexts, projects: projects, modelContext: modelContext,
             pendingCompletions: pendingCompletions, completionPulse: completionPulse,
             pendingDelete: $pendingDelete, confirmingDelete: $confirmingDelete, datingTask: $datingTask,
-            askingSubtasks: $askingSubtasks
+            askingSubtasks: $askingSubtasks, askingKnaeuel: $askingKnaeuel,
+            fields: fieldSettings?.settings ?? .standard
         )
     }
 

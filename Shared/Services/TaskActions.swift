@@ -19,6 +19,7 @@ enum TaskActions {
             for subtask in lifted { subtask.parent = nil }
             task.status = .removed
             task.nextRank = nil
+            task.knaeuelAt = nil
         }
         try context.save()
         return lifted
@@ -47,17 +48,23 @@ enum TaskActions {
             rule.anchor = next
             task.repeatRule = rule
             task.placeRemindedAt = nil   // the place is armed again for the next round (#226)
+            // The next round is not the avoided one (#643): the mark falls, "Zählt" stays.
+            if task.knaeuelAt != nil { releaseKnaeuel(task, contexts: [], projects: [], now: now) }
             return
         }
         task.status = .done
         task.completedAt = now
         task.nextRank = nil
+        // The Knäuel mark stays on the done task (#643, #645): `isKnaeuel` reads false once it is
+        // not open, the week's string counts it as a bead, and "Completed" can show what it was.
     }
 
-    /// Back from Done. Completion records stay.
-    static func restore(_ task: TaskItem) {
+    /// Back from Done. Completion records stay; the Knäuel mark does not come back with the task
+    /// (#643): another task may hold it by now.
+    static func restore(_ task: TaskItem, now: Date = Date()) {
         task.status = .active
         task.completedAt = nil
+        if task.knaeuelAt != nil { releaseKnaeuel(task, contexts: [], projects: [], now: now) }
     }
 
     /// Into Next up at the end of the list, or out of it.
@@ -92,10 +99,70 @@ enum TaskActions {
         }
     }
 
+    /// Parking takes the Knäuel mark (#643): a parked task is not the one being avoided today.
     static func park(_ task: TaskItem, now: Date = Date()) {
         task.status = .parked
         task.parkedAt = now
         task.nextRank = nil
+        if task.knaeuelAt != nil { releaseKnaeuel(task, contexts: [], projects: [], now: now) }
+    }
+
+    // MARK: - Das Knäuel and Zählt (#643, #645)
+
+    /// At most this many open tasks count at a time (#645): the scarcity makes the mark a decision.
+    static let countsBudget = 5
+
+    /// Makes the task "Das Knäuel" (#643), taking the mark from any other task that holds it. Every
+    /// change is a user revision (ADR-6). Returns the task the mark came from, if any.
+    @discardableResult
+    static func setKnaeuel(
+        _ task: TaskItem,
+        among all: [TaskItem],
+        contexts: [TaskContext],
+        projects: [Project],
+        now: Date = Date()
+    ) -> TaskItem? {
+        let previous = ViewRules.knaeuel(in: all)
+        if let previous, previous.id != task.id {
+            RevisionService.set(.knaeuel, to: nil, on: previous, contexts: contexts, projects: projects, now: now)
+        }
+        guard task.knaeuelAt == nil else { return nil }
+        RevisionService.set(.knaeuel, to: now.ISO8601Format(), on: task, contexts: contexts, projects: projects, now: now)
+        return previous?.id == task.id ? nil : previous
+    }
+
+    /// "Kein Knäuel mehr" (#643): the mark goes, the task stays as it is. The catalogs are not read
+    /// for this field, so Done, Park and Restore pass none.
+    static func releaseKnaeuel(
+        _ task: TaskItem,
+        contexts: [TaskContext],
+        projects: [Project],
+        now: Date = Date()
+    ) {
+        RevisionService.set(.knaeuel, to: nil, on: task, contexts: contexts, projects: projects, now: now)
+    }
+
+    /// Whether "Zählt" can still be set on the task (#645): the budget of five open counting tasks is
+    /// not spent, or the task counts already (then the toggle takes the mark). The Knäuel counts on
+    /// its own and is not in the budget.
+    static func canCount(_ task: TaskItem, among all: [TaskItem]) -> Bool {
+        task.countsAt != nil || ViewRules.counting(in: all).count < countsBudget
+    }
+
+    /// "Zählt" on or off (#645), as a user revision. Over the budget nothing changes.
+    static func toggleCounts(
+        _ task: TaskItem,
+        among all: [TaskItem],
+        contexts: [TaskContext],
+        projects: [Project],
+        now: Date = Date()
+    ) {
+        if task.countsAt != nil {
+            RevisionService.set(.counts, to: nil, on: task, contexts: contexts, projects: projects, now: now)
+            return
+        }
+        guard canCount(task, among: all) else { return }
+        RevisionService.set(.counts, to: now.ISO8601Format(), on: task, contexts: contexts, projects: projects, now: now)
     }
 
     static func activate(_ task: TaskItem) {

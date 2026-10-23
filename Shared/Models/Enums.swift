@@ -64,6 +64,8 @@ enum RevisedField: String, Codable, CaseIterable, Sendable {
     case title, dueDate, importance, urgency, duration, energy, contexts, people, project, blockedBy, repeatRule, place
     /// The note (#439). Last, so existing orders stay as they are.
     case notes
+    /// "Das Knäuel" and "Zählt" (#643, #645): the mark's date or nil, set by hand only.
+    case knaeuel, counts
 }
 
 /// System and user views. Rules live in ViewRules.

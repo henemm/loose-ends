@@ -86,6 +86,17 @@ benennt um, Wischen löscht nach Rückfrage, unten „Neues Etikett“ bzw. „N
 auf. Bewusste Ausnahme von #180 Regel 2, nur auf diesen Seiten. iPad und Mac behalten die einklappbaren Gruppen der
 Seitenleiste. Entwurf: https://claude.ai/artifact/AppBHrhym57SBMURaQck5P
 
+**Das Knäuel und die Schnur der Woche (Henning, 2026-10-23, #642, Schnitte #643 und #645; Leinwand
+https://claude.ai/artifact/91YJuzqSFibDQNfS22soYK):** Solange eine Aufgabe das Knäuel ist, zeigt der Kopf am Datum statt des
+grauen Knotens das schwarze Knäuel (ein Fünftel größer, Strich wie der Knoten), das Datum beginnt 64 pt eingerückt, und die
+Aufgabe steht als eigene Zeile direkt unter dem Datum, vor dem Satz des Tages: Titel in New York, darunter „Seit N Tagen“
+und das Etikett, der Rand leer (dort läuft ab #644 der Faden). Tipp öffnet das Detail, Wisch rechts erledigt, Halten das
+Menü; „Jetzt“ zeigt die Aufgabe nicht noch einmal. Gesetzt wird sie über „Das Knäuel“ im Halten-Menü und im „…“ des
+Details („Kein Knäuel mehr“, wenn sie es schon ist); hat eine andere Aufgabe das Knäuel, fragt die App erst. Unter „Jetzt“
+steht „Diese Woche“ mit der Schnur, sobald die Woche eine Perle hat: eine Mulde, die Perlen (r = 6) von links ab 40 pt im
+Abstand 40 pt, die neueste 1,1 s grün; die Perle in der Merkmalzeile ist eine kurze Schnur mit hohler Perle und Glanzpunkt.
+Beides ist aus, bis es in „Felder“ (Gruppe „Antrieb“) eingeschaltet wird.
+
 Berechnungsregeln der Ansichten stehen in `02-datenmodell-und-ansichten.md`.
 
 ### 3. Ansicht (Aufgabenliste)

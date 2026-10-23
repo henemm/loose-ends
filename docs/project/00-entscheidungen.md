@@ -230,6 +230,26 @@ Zeile bleibt, was der Nutzer gegliedert hat, und bekommt kein zweites Konzept al
 (Wichtigkeit, Dringlichkeit, Wiedererkennen, Telefonnummer, Projekt) bleiben bei obersten Aufgaben; „Neu analysieren“
 an einer Zeile läuft nur über diese zwei Regeln.
 
+**ADR-20 Antrieb: Das Knäuel und die Perlen (Henning, 2026-10-23, #642, Recherche und Konzept in
+`07-antrieb-recherche-und-konzept.md`).** Zwei optionale Felder einer Aufgabe, beide aus für neue Nutzer, beide in der
+Felder-Liste (ADR-19), keine Seite „Antrieb“. **Das Knäuel** (#643): genau eine offene Aufgabe, vor der man sich drückt,
+von Hand gesetzt (Halten-Menü, „…“ im Detail); eine zweite Aufgabe fragt erst, ob es wandern soll. Solange es eins gibt,
+steht im Kopf der Startseite am Datum statt des grauen Knotens das schwarze Knäuel (ein Fünftel größer, das Datum beginnt
+64 pt eingerückt bündig über dem Aufgabentext), und die Aufgabe steht als eigene Zeile unter dem Datum, vor dem Satz des
+Tages, nicht noch einmal in „Jetzt“. `knaeuelAt` auf `TaskItem`, jede Änderung eine Revision mit `author == user`
+(`RevisedField.knaeuel`); Erledigen lässt die Marke auf der erledigten Aufgabe (die Schnur liest sie), Parken, Zurückholen
+und Löschen nehmen sie, eine neue Runde einer Wiederholung auch. Das Knäuel ist eine von Hand gezeichnete Linie aus der
+Familie des Logo-Fadens (`ThreadShape.Form.knaeuel`): **zweite Ausnahme von #350** nach dem Faden selbst. Kein Satz
+darüber, kein Zähler, kein Rot, wenn es liegen bleibt. **Zählt** (#645): eine Aufgabe zählt oder nicht, keine Gewichte,
+keine Punkte, höchstens fünf offene zugleich (`TaskActions.countsBudget`; der Eintrag heißt dann „Zählt (5 von 5)“ und ist
+grau); das Knäuel zählt immer. `countsAt` auf `TaskItem`, Revision `RevisedField.counts`. Die Perle (Schnur mit hohler
+Perle und Glanzpunkt, `PearlGlyph`, dritte Ausnahme von #350) steht an erster Stelle der Merkmalzeile. Die **Schnur der
+Woche** (`ViewRules.weekBeads`, Montag bis Sonntag unabhängig vom Gebietsschema) steht unter „Jetzt“, solange die Woche
+eine Perle hat: eine durchhängende Schnur, die Perlen von links dicht aufgereiht, keine leeren Plätze, kein Wochenziel, die
+neueste 1,1 s grün (der eine grüne Moment, ADR-14). Nichts wird gespeichert: die Schnur ist aus `completedAt` bzw. den
+`CompletionRecord`s zählender Aufgaben gerechnet. Bewusst nicht gebaut: Serien, Punkte für jede Aufgabe, Vergleich,
+Mitteilungen, Lob (Belege in 07, Teil 2.4).
+
 **ADR-17 Ergänzte Screens nach Lückenprüfung.** Als nächstes (manuell sortiert), Neu (Eingang),
 Feld-Picker statt Formular, Wisch- und Halten-Gesten mit Verschieben (Morgen, Wochenende, nächste Woche,
 Datum), Erledigt mit Zurückholen, Erfassung aus Mail, Bestätigung, Alt mit Parken, Mitteilung.
