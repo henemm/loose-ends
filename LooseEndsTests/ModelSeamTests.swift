@@ -41,6 +41,13 @@ import FoundationModels
         #expect(fast.processedAt != nil)
     }
 
+    @Test("The default limit is the measured 25 s, inside the rule's range of 15 to 60 s (#534)")
+    func defaultLimitIsMeasured() {
+        #expect(EnrichmentCoordinator.defaultModelTimeout == .seconds(25))
+        #expect(EnrichmentCoordinator.defaultModelTimeout >= .seconds(15))
+        #expect(EnrichmentCoordinator.defaultModelTimeout <= .seconds(60))
+    }
+
     @Test("A re-analysis whose model call hangs reports that the model did not run")
     @MainActor func reanalysisTimesOut() async throws {
         let store = try TestStore()
