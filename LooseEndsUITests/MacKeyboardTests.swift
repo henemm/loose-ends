@@ -459,6 +459,8 @@ final class MacKeyboardTests: XCTestCase {
 
         let field = macElement("startCaptureField", in: window)
         field.click()
+        let chosenBefore = selectedNowRows(in: window)
+        XCTAssertEqual(chosenBefore, [ids[1]], "The chosen row should still be marked while the writing line holds the focus")
         field.typeText("a b")
         app.typeKey(.delete, modifierFlags: [])
         app.typeKey(.downArrow, modifierFlags: [])
@@ -466,7 +468,7 @@ final class MacKeyboardTests: XCTestCase {
         XCTAssertTrue(value.hasPrefix("a") && !value.contains("b"), "Delete should take the last letter out of the field, it holds \"\(value)\"")
         XCTAssertFalse(undoButtons(in: window).firstMatch.exists, "Space in the writing line must not finish a task")
         XCTAssertFalse(macElement("confirmDeleteButton", in: app).exists, "Delete in the writing line must not ask to delete a task")
-        XCTAssertNotEqual(selectedNowRows(in: window), [ids[2]], "Down in the writing line must not move the choice")
+        XCTAssertEqual(selectedNowRows(in: window), chosenBefore, "Down in the writing line must not move the choice")
         XCTAssertEqual(nowRows(in: window).count, 4, "No task should have gone")
         app.terminate()
     }

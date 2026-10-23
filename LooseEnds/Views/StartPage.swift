@@ -63,9 +63,9 @@ struct StartPage: View {
     @State private var datingTask: TaskItem?
     /// Complete with open subtasks asks first (#565).
     @State private var askingSubtasks: TaskItem?
+    #if os(macOS)
     /// "N more" unfolded; here, so the Mac's keys choose among the rows "Now" shows (#480).
     @State private var nowExpanded = false
-    #if os(macOS)
     /// Never set on appear (#480): the writing line and ⌘N (#472) come first on the start page.
     @FocusState private var listFocused: Bool
     /// The writing line holds the focus: the row keys stay in the field.
@@ -108,7 +108,7 @@ struct StartPage: View {
                 .listRowSeparator(.hidden)
                 .startRow(metrics)
                 .paperRow()
-            NowBlock(tasks: ViewRules.now(in: tasks).all, expanded: $nowExpanded) { nowRow($0) }
+            NowBlock(tasks: ViewRules.now(in: tasks).all, expanded: nowExpandedBinding) { nowRow($0, metrics) }
         })
         .listStyle(.plain)
         .paperGround()
@@ -130,8 +130,45 @@ struct StartPage: View {
         )
     }
 
+    /// The fold state of "Now": the page's on the Mac (#480), `NowBlock`'s own elsewhere, as before.
+    private var nowExpandedBinding: Binding<Bool>? {
+        #if os(macOS)
+        $nowExpanded
+        #else
+        nil
+        #endif
+    }
+
     @ViewBuilder
-    private func nowRow(_ task: TaskItem) -> some View {
+    private func nowRow(_ task: TaskItem, _ metrics: StartMetrics) -> some View {
+        #if os(macOS)
+        macNowRow(task)
+        #else
+        let actions = self.actions
+        let row = TaskRow(task: task, identifierPrefix: "startNowRow_")
+        if actions.isPending(task) {
+            actions.pendingRow(task, row)
+        } else {
+            Button { selection = .task(task.id) } label: {
+                row
+                    .padding(.vertical, 11)
+                    .environment(\.startMetrics, metrics)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .startRow(metrics)
+            .swipeActions(edge: .leading, allowsFullSwipe: true) { actions.leadingActions(task) }
+            .swipeActions(edge: .trailing, allowsFullSwipe: true) { actions.trailingActions(task) }
+            .contextMenu { actions.menu(task) }
+            .paperRow()
+        }
+        #endif
+    }
+
+    #if os(macOS)
+    /// The Mac's "Now" row (#480): the chosen row is tinted and carries the selected trait.
+    @ViewBuilder
+    private func macNowRow(_ task: TaskItem) -> some View {
         let actions = self.actions
         let row = TaskRow(task: task, identifierPrefix: "startNowRow_")
         if actions.isPending(task) {
@@ -155,21 +192,16 @@ struct StartPage: View {
     }
 
     private func open(_ task: TaskItem) {
-        #if os(macOS)
         // A click marks the row too (#480), so the arrows go on from there after the task.
         selectedID = task.id
-        #endif
         selection = .task(task.id)
     }
 
-    /// Whether the row is the one chosen on the Mac (#480); iOS has no choosing.
+    /// Whether the row is the one chosen on the Mac (#480).
     private func isChosen(_ task: TaskItem) -> Bool {
-        #if os(macOS)
         selectedID == task.id
-        #else
-        false
-        #endif
     }
+    #endif
 
     private func writingFocusChanged(_ focused: Bool) {
         #if os(macOS)
