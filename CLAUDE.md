@@ -327,6 +327,14 @@ not scope creep on the current one.
 - `LooseEndsWatchWidgets/` — watch complication (#355 Schnitt 3a): the logo's knot, families `accessoryCircular` and
   `accessoryCorner`, static (one entry, `.never`), no entitlements and no `Shared/`; it compiles `LooseEnds/Views/Thread.swift`
   as a single file, so that file must stay watchOS-safe (SwiftUI only). A tap opens the watch app's capture.
+- `LooseEnds/Places` — the place sheet's helpers (#241): `PlaceSearch` (MapKit, fixed hits under `--ui-testing`),
+  `SavedPlacesStore` (home and work, Schnitt 3b: `UserDefaults` plus the iCloud key-value store under the one key
+  `savedPlaces`, last writer wins, like `FieldSettingsStore`; the value `Shared/Models/SavedPlaces.swift` is pure, a slot never
+  touches a task that carries its place), `CurrentLocation` (`CurrentLocating`: one `requestLocation`, the "while using" prompt
+  once while undecided, the name by `MKReverseGeocodingRequest`; nil on the Mac, where the row is not offered; under
+  `--ui-testing` a fixed fix, `--ui-testing-location-here` on the Altona hit, `--ui-testing-location-refused`). The rules
+  (`isAlreadyThere`: haversine ≤ 150 m + accuracy, accuracy over 100 m or negative = unknown; the note order not watched >
+  location off > Mac) live in `PlaceEditing`. `./scripts/sim.sh location <lat> <lon>` fakes the simulator's location
 - `LooseEnds/Mac` — `MenuBarCapture` (Mac only, #356): the menu bar panel with the same `CaptureView`, Dock icon only
   while a list window is open (`DockPolicy`), login item via `SMAppService` (on from the first start, never under tests);
   `MenuBarThreadImage` (#366): the menu bar symbol is the logo's thread, drawn from `ThreadShape.curvePoints` into a
