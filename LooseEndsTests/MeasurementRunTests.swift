@@ -154,6 +154,43 @@ struct MeasurementRunTests {
         #expect(run.remaining(from: entries, runsPerEntry: 2).isEmpty)
     }
 
+    /// Plays one launch the way `MeasurementRunner.measureRemaining` does, every call a success.
+    private static func callsOfOneLaunch(_ run: inout MeasurementRun, entries: [Corpus.Entry], runsPerEntry: Int,
+                                         untilDone: Bool) -> [(id: String, runIndex: Int)] {
+        var calls: [(id: String, runIndex: Int)] = []
+        var passes = 0
+        while true {
+            let pass = run.pass(after: passes, from: entries, runsPerEntry: runsPerEntry, untilDone: untilDone)
+            if pass.isEmpty { break }
+            passes += 1
+            for (entry, runIndex) in pass {
+                calls.append((id: entry.id, runIndex: runIndex))
+                run.results.append(Self.result(entryID: entry.id, runIndex: runIndex))
+            }
+        }
+        return calls
+    }
+
+    @Test("Ein Latenz-Start mit --runs 2 misst alle 12 Aufrufe, erst dann endet er (#534 F001)")
+    func latencyLaunchMakesEveryRun() {
+        var run = MeasurementRun(name: "t", startedAt: Date())
+        let entries = (1...6).map { Self.entry("lat-0\($0)") }
+        let calls = Self.callsOfOneLaunch(&run, entries: entries, runsPerEntry: 2, untilDone: true)
+        #expect(calls.count == 12)
+        #expect(calls.map(\.runIndex) == Array(repeating: 0, count: 6) + Array(repeating: 1, count: 6))
+        #expect(run.remaining(from: entries, runsPerEntry: 2).isEmpty)
+    }
+
+    @Test("Ohne --exit-when-done bleibt ein Start bei einem Durchgang, wie bisher (#534 F001)")
+    func normalSliceMakesOnePass() {
+        var run = MeasurementRun(name: "t", startedAt: Date())
+        let entries = (1...6).map { Self.entry("lat-0\($0)") }
+        let first = Self.callsOfOneLaunch(&run, entries: entries, runsPerEntry: 2, untilDone: false)
+        #expect(first.count == 6)
+        let second = Self.callsOfOneLaunch(&run, entries: entries, runsPerEntry: 2, untilDone: false)
+        #expect(second.map(\.runIndex) == Array(repeating: 1, count: 6))
+    }
+
     // MARK: - Spike #65 Schritt 2 (#108): Selbstkonsistenz-Rohwerte (AC-2, AC-3)
 
     @Test("Ergebnisdatei ohne die fünf neuen Schlüssel dekodiert sie als nil/leer (AC-2)")

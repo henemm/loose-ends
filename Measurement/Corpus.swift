@@ -147,6 +147,31 @@ enum Corpus {
         }
         return runs
     }
+
+    /// The name of the result file (`--result <name>`, #534): each latency launch writes its own, because a finished
+    /// file never starts again. Without the flag it stays `date-title`, the lab app's file so far.
+    static func resultName(from arguments: [String], flag: String = "--result") -> String {
+        guard let index = arguments.firstIndex(of: flag), arguments.indices.contains(index + 1) else {
+            return "date-title"
+        }
+        return arguments[index + 1]
+    }
+
+    /// The context vocabulary handed to the model (`--context-words a,b,c`, #534), the same words as the Mac
+    /// measurement. Without the flag it stays empty, as before.
+    static func contextWords(from arguments: [String], flag: String = "--context-words") -> [String] {
+        guard let index = arguments.firstIndex(of: flag), arguments.indices.contains(index + 1) else {
+            return []
+        }
+        return arguments[index + 1].split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+            .filter { !$0.isEmpty }
+    }
+
+    /// Whether the app quits after the last saved note (`--exit-when-done`, #534), so the next launch is a new,
+    /// process-cold one.
+    static func exitWhenDone(from arguments: [String], flag: String = "--exit-when-done") -> Bool {
+        arguments.contains(flag)
+    }
 }
 
 /// `Bundle(for:)` needs a class; Swift Testing suites are structs.

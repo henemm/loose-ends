@@ -1,0 +1,333 @@
+{
+  "events" : [
+    {
+      "at" : "2026-10-23T08:02:02Z",
+      "kind" : "app",
+      "note" : "gestartet; Argumente: --measure --corpus latency-corpus --runs 2 --result latency-10 --context-words Computer,Telefon,Haus,Garten,Unterwegs,Besorgung --exit-when-done; Korpus: 6 Sätze"
+    },
+    {
+      "at" : "2026-10-23T08:02:02Z",
+      "kind" : "model",
+      "note" : "verfügbar"
+    },
+    {
+      "at" : "2026-10-23T08:02:03Z",
+      "kind" : "start",
+      "note" : "--measure; 0 von 12 erledigt"
+    },
+    {
+      "at" : "2026-10-23T08:02:03Z",
+      "kind" : "scene",
+      "note" : "vordergrund"
+    },
+    {
+      "at" : "2026-10-23T08:03:01Z",
+      "kind" : "finished",
+      "note" : "12 von 12"
+    }
+  ],
+  "name" : "latency-10",
+  "results" : [
+    {
+      "capturedAt" : "2026-10-23T07:00:00Z",
+      "conditions" : {
+        "appState" : "inaktiv",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+        "Unterwegs"
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "lat-01",
+      "finishedAt" : "2026-10-23T08:02:07Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.7033549547195435,
+      "title" : "Morgen Zahnarzt anrufen wegen dem Termin"
+    },
+    {
+      "capturedAt" : "2026-10-23T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+        "Garten"
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "lat-02",
+      "finishedAt" : "2026-10-23T08:02:12Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.837553024291992,
+      "title" : "Garten Rasen mähen bevor es regnet"
+    },
+    {
+      "capturedAt" : "2026-10-23T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+        "Unterwegs"
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "lat-03",
+      "finishedAt" : "2026-10-23T08:02:17Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.825026988983154,
+      "title" : "Mail Frau Berger über Steuerunterlagen"
+    },
+    {
+      "capturedAt" : "2026-10-23T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+        "Unterwegs"
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes5",
+      "entryID" : "lat-04",
+      "finishedAt" : "2026-10-23T08:02:23Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 5.940046072006226,
+      "title" : "hole die Wäsche am Weg nach Hause"
+    },
+    {
+      "capturedAt" : "2026-10-23T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+        "Unterwegs"
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes5",
+      "entryID" : "lat-05",
+      "finishedAt" : "2026-10-23T08:02:28Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.932878017425537,
+      "title" : "Fahrradschloss ölen fünf Minuten"
+    },
+    {
+      "capturedAt" : "2026-10-23T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+        "Unterwegs"
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "lat-06",
+      "finishedAt" : "2026-10-23T08:02:33Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 5.345242977142334,
+      "title" : "Angebote der Schreinerei vergleichen"
+    },
+    {
+      "capturedAt" : "2026-10-23T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+        "Unterwegs"
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "lat-01",
+      "finishedAt" : "2026-10-23T08:02:38Z",
+      "people" : [
+
+      ],
+      "runIndex" : 1,
+      "seconds" : 4.432352900505066,
+      "title" : "Morgen Zahnarzt anrufen wegen dem Termin"
+    },
+    {
+      "capturedAt" : "2026-10-23T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+        "Garten"
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "lat-02",
+      "finishedAt" : "2026-10-23T08:02:42Z",
+      "people" : [
+
+      ],
+      "runIndex" : 1,
+      "seconds" : 4.390174984931946,
+      "title" : "Rasen mähen bevor es regnet"
+    },
+    {
+      "capturedAt" : "2026-10-23T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+        "Unterwegs"
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "lat-03",
+      "finishedAt" : "2026-10-23T08:02:47Z",
+      "people" : [
+
+      ],
+      "runIndex" : 1,
+      "seconds" : 4.923444032669067,
+      "title" : "Mail Frau Berger über die Steuerunterlagen"
+    },
+    {
+      "capturedAt" : "2026-10-23T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+        "Unterwegs"
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "lat-04",
+      "finishedAt" : "2026-10-23T08:02:52Z",
+      "people" : [
+
+      ],
+      "runIndex" : 1,
+      "seconds" : 4.828642010688782,
+      "title" : "hole das Wäsche waschen auf dem Weg nach Hause"
+    },
+    {
+      "capturedAt" : "2026-10-23T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+        "Garten"
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes5",
+      "entryID" : "lat-05",
+      "finishedAt" : "2026-10-23T08:02:56Z",
+      "people" : [
+
+      ],
+      "runIndex" : 1,
+      "seconds" : 4.604210019111633,
+      "title" : "Fahrradschloss ölen dauert fünf Minuten"
+    },
+    {
+      "capturedAt" : "2026-10-23T07:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 75,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+        "Unterwegs"
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "lat-06",
+      "finishedAt" : "2026-10-23T08:03:01Z",
+      "people" : [
+
+      ],
+      "runIndex" : 1,
+      "seconds" : 5.015008091926575,
+      "title" : "Preise der Schreinerei vergleichen"
+    }
+  ],
+  "startedAt" : "2026-10-23T08:02:02Z"
+}
