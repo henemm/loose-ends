@@ -1,0 +1,36 @@
+GREEN #480 Schnitt 2 — CI-Lauf 39916257254 (Commit b5a9fdd, iPad-Korrektur aus Prüfrunde 1), alle vier Jobs success
+Logs: ci-mac-gallery-green.log, ci-ui-smoke-green.log (dieser Ordner)
+Vorlauf 39825553494 (Commit c1991f1) ebenso grün.
+
+Mac Gallery (macOS):
+- MacGalleryTests: Executed 13 tests, with 0 failures
+- MacDetailClickTests (Sandbox): Executed 10 tests, with 0 failures
+- MacKeyboardTests (Sandbox): Executed 18 tests, with 0 failures
+  Schnitt 1: testArrowsSelectAndSpaceCompletes, testClickOpensAndMarks, testDeleteAsksFirst, testSelectionPhotoDark/Light,
+  testShortcutsAndContextMenu, testTextFocusKeepsKeys
+  Schnitt 2: testStartArrowsSelectAndSpaceCompletes, testStartDeleteAsksFirst, testStartHasNoListFocusOnAppear,
+  testStartMoreExtendsRows, testStartNewTaskShortcutFocusesWritingLine, testStartSelectionClearsWhenRowGoes,
+  testStartSelectionPhotoDark/Light, testStartSelectionSurvivesDetail, testStartWritingLineKeepsKeys, testWindowMinimumSize
+Build (iOS Simulator): success · Unit Tests (macOS destination): success
+UI Smoke (iOS Simulator): Executed 73 tests, with 6 tests skipped and 0 failures — Test Succeeded
+  übersprungen (brauchen eine eingespielte Mitteilung, LOOSEENDS_PUSH): DueNotificationTapTests x3, PlaceNotificationTapTests x3
+Lokal iPhone-Simulator: StartScreenInteractionTests 20 tests, 0 failures (start-screen-interaction-ios.txt)
+Lokal: ./scripts/sim.sh sim-unit grün (sim-unit-output.txt), mac-build und build OK.
+
+Zugprotokoll testWindowMinimumSize (Anhang mac-gallery-480-s2-window-drag):
+  screen (1024, 768), window (0, 31, 1024, 674) | moved: (148, 31, 1024, 674)
+  left edge: (412, 31, 760, 674) | bottom edge: (412, 31, 760, 572)
+  Breite hält bei 760; Höhe hält bei 572 = 520 pt Inhalt + 52 pt Titel-/Werkzeugleiste (Spec: Mindestgröße am Fensterinhalt).
+
+Fehlschläge auf dem Weg (Testmechanik, kein Produktfehler):
+- Lauf 39786681337: Fokusklick traf bei offener Schublade das Dock (Kontakte kam nach vorn); Oberkanten-Zug verschob das Fenster.
+- Lauf 39811214025: Zeilenabfrage lief in eine hinausgleitende Zeile ("Failed to get matching snapshot").
+Executed 10 tests, with 0 failures (0 unexpected) in 236.912 (236.918) seconds
+Executed 10 tests, with 0 failures (0 unexpected) in 236.912 (236.919) seconds
+Executed 10 tests, with 0 failures (0 unexpected) in 236.912 (236.920) seconds
+Executed 13 tests, with 0 failures (0 unexpected) in 518.948 (518.958) seconds
+Executed 13 tests, with 0 failures (0 unexpected) in 518.948 (518.960) seconds
+Executed 13 tests, with 0 failures (0 unexpected) in 518.948 (518.961) seconds
+Executed 18 tests, with 0 failures (0 unexpected) in 514.793 (514.809) seconds
+Executed 18 tests, with 0 failures (0 unexpected) in 514.793 (514.810) seconds
+Executed 18 tests, with 0 failures (0 unexpected) in 514.793 (514.811) seconds
