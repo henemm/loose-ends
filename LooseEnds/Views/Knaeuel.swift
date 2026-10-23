@@ -288,4 +288,23 @@ enum KnaeuelSince {
         case let days: String(localized: "Since \(days) days")
         }
     }
+
+    /// Since when the task is the Knäuel (#647, the detail's line): "since this morning" (set before
+    /// noon today), "since today", "since yesterday", the weekday within the week, else the date.
+    static func setWords(from set: Date, now: Date = Date(), calendar: Calendar = .current, locale: Locale = .current) -> String {
+        switch days(from: set, now: now, calendar: calendar) {
+        case 0:
+            return calendar.component(.hour, from: set) < 12 ? String(localized: "since this morning") : String(localized: "since today")
+        case 1:
+            return String(localized: "since yesterday")
+        case 2...6:
+            var style = Date.FormatStyle(date: .omitted, time: .omitted, locale: locale, calendar: calendar).weekday(.wide)
+            style.timeZone = calendar.timeZone
+            return String(localized: "since \(set.formatted(style))")
+        default:
+            var style = Date.FormatStyle(date: .abbreviated, time: .omitted, locale: locale, calendar: calendar)
+            style.timeZone = calendar.timeZone
+            return String(localized: "since \(set.formatted(style))")
+        }
+    }
 }

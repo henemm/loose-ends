@@ -116,6 +116,34 @@ final class DriveSmokeTests: XCTestCase {
         XCTAssertTrue(element("startHeader", in: app).exists)
     }
 
+    /// "Dafür" (#647): written in Settings › Fields, the sentence stands on the start page under
+    /// "This week"; a tap on it opens the field there.
+    @MainActor
+    func testRewardWrittenInSettingsShowsOnTheStartPage() throws {
+        let app = launch()
+        XCTAssertTrue(app.buttons["settingsButton"].waitForExistence(timeout: 10))
+        app.buttons["settingsButton"].tap()
+        let fieldsRow = element("fieldsRow", in: app)
+        for _ in 0..<4 where !(fieldsRow.exists && fieldsRow.isHittable) { app.swipeUp() }
+        XCTAssertTrue(fieldsRow.waitForExistence(timeout: 5), "Settings should offer Fields")
+        fieldsRow.tap()
+        let field = element("rewardField", in: app)
+        for _ in 0..<6 where !(field.exists && field.isHittable) { app.swipeUp() }
+        XCTAssertTrue(field.waitForExistence(timeout: 5), "Fields should hold the Dafür field under Counts")
+        field.tap()
+        field.typeText("Samstag Kino\n")
+
+        app.navigationBars.buttons.firstMatch.tap()
+        let done = app.buttons["settingsDoneButton"]
+        XCTAssertTrue(done.waitForExistence(timeout: 5))
+        done.tap()
+        let line = element("rewardLine", in: app)
+        XCTAssertTrue(line.waitForExistence(timeout: 5), "The start page should show Dafür under This week")
+        XCTAssertTrue(line.label.contains("Samstag Kino"), "Wrong sentence: \(line.label)")
+        line.tap()
+        XCTAssertTrue(element("rewardField", in: app).waitForExistence(timeout: 5), "A tap should put the cursor into the sentence")
+    }
+
     /// "Counts" from the menu shows the bead in the row; with five open counting tasks the sixth sees
     /// "Counts (5 of 5)" grey; completing a counting task puts its bead on the week's string under "Now".
     @MainActor

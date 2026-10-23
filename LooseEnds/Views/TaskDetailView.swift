@@ -148,6 +148,8 @@ struct TaskDetailView: View {
             }
             .detailRow()
 
+            driveSection
+
             if inReview {
                 Section {
                     ReviewNote(task: task, automaticFields: aiFields.count)
@@ -608,6 +610,52 @@ struct TaskDetailView: View {
     private func toggleNext() {
         TaskActions.toggleNext(task, among: allTasks)
         save("next")
+    }
+
+    /// Under the raw text (#647): "The Knäuel · since Monday" with "Release", only while the task is
+    /// the Knäuel; "Counts" with it, or "Counts always, it is the Knäuel". Nothing while neither holds.
+    @ViewBuilder
+    private var driveSection: some View {
+        if task.isKnaeuel || task.countsAt != nil {
+            Section {
+                if task.isKnaeuel, let at = task.knaeuelAt {
+                    HStack(alignment: .firstTextBaseline) {
+                        HStack(spacing: 8) {
+                            ThreadGlyph(form: .knaeuel, lineWidth: 1.5)
+                                .frame(width: 30, height: 15)
+                            Text("The Knäuel · \(KnaeuelSince.setWords(from: at))")
+                        }
+                        Spacer()
+                        Button("Release", action: releaseKnaeuel)
+                            .buttonStyle(.borderless)
+                            .accessibilityIdentifier("detailReleaseKnaeuel")
+                    }
+                    .accessibilityElement(children: .contain)
+                    .accessibilityIdentifier("detailKnaeuelLine")
+                }
+                HStack(alignment: .firstTextBaseline) {
+                    HStack(spacing: 8) {
+                        PearlGlyph()
+                            .frame(width: 30, height: 10)
+                        if task.isKnaeuel {
+                            Text("Counts always, it is the Knäuel")
+                        } else {
+                            Text("Counts")
+                        }
+                    }
+                    Spacer()
+                    if task.countsAt != nil {
+                        Button("Not counting", action: toggleCounts)
+                            .buttonStyle(.borderless)
+                            .accessibilityIdentifier("detailReleaseCounts")
+                    }
+                }
+                .accessibilityElement(children: .contain)
+                .accessibilityIdentifier("detailCountsLine")
+            }
+            .font(.subheadline)
+            .detailRow()
+        }
     }
 
     /// "The Knäuel" and "Counts" in the "…" menu (#643, #645), as in the list's long-press menu:
