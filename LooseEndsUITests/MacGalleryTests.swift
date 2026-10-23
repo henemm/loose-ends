@@ -155,8 +155,15 @@ final class MacGalleryTests: XCTestCase {
         XCTAssertTrue(start.waitForExistence(timeout: 10), "Sidebar shows no Start")
         let words = start.label + " " + ((start.value as? String) ?? "")
         XCTAssertTrue(words.contains("5"), "Start in the sidebar does not carry the 5: \(words)")
-        let newDates = window.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH %@", "newDate_"))
-        XCTAssertEqual(newDates.count, 4, "The four left tasks do not offer a new date")
+        // The row combines its children (`TaskRow`), so on the Mac the button may only show in the row's
+        // words; a separately reachable `newDate_` element counts as well.
+        let rows = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "startNowRow_")).allElementsBoundByIndex
+        let rowWords = rows.map { "\($0.identifier): label \"\($0.label)\", value \"\(($0.value as? String) ?? "")\"" }
+        let rowsOffering = rows.filter { $0.label.contains("New date") || (($0.value as? String) ?? "").contains("New date") }.count
+        let buttons = window.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH %@", "newDate_")).count
+        XCTAssertTrue(rowsOffering == 4 || buttons == 4,
+                      "The four left tasks do not offer a new date (rows \(rowsOffering), buttons \(buttons)): \(rowWords)")
         app.terminate()
     }
 
