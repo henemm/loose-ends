@@ -152,7 +152,8 @@ final class PlaceSmokeTests: XCTestCase {
         let placeRow = reveal("placeRow", in: app)
         XCTAssertTrue(placeRow.exists, "The place row should show the current location")
         XCTAssertTrue(placeRow.label.contains("Current location"), "Place row was \(placeRow.label)")
-        XCTAssertFalse(element("placeAlreadyHereNote", in: app).exists, "A fix far from the place says nothing")
+        // The current location is where the device stands, so it is already there: next arrival (spec, AC-8).
+        XCTAssertTrue(reveal("placeAlreadyHereNote", in: app).exists, "Standing at the current location says so")
         shot(app, "11-current-location-set")
     }
 

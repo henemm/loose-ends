@@ -1,0 +1,26 @@
+# Simulator-Beleg
+erzeugt: 2026-10-23T13:07:57+0200
+befehl: scripts/sim.sh test-proof PlaceSmokeTests
+workflow: feat-241-ort-3b
+head: 0d85b6a22a791782bcb67830f15b3490ebd72f42
+basis: 68a1e65d377d9fcd12592006dc05bdb05e7864ee (merge-base origin/main HEAD)
+testklasse: PlaceSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 7 gesamt, 7 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1792753393.073  ende: 1792753676.244
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/feat-241-ort-3b/simulator-run/summary.json  sha256:d56928efba1f4c9513da0dfad8e859ce54c6de305838c01c3a4374a83ee936dd
+xcresult: docs/artifacts/feat-241-ort-3b/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-241-ort-3b/simulator-run/*.png (9 Stück)
+
+## Geprüfte Dateien
+- sha256:8e2c8212aa95ae0e04cd7557ddcfafbcdf2f3e96f8c43e07b3a74c816993e163  LooseEnds/Places/CurrentLocation.swift
+- sha256:f6474b0150d1d8f14a302f196a2cad20117d5370e39072066c0bfe9d6bdc382e  LooseEnds/Places/SavedPlacesStore.swift
+- sha256:65c00a453d8a395af4e579d6f9fe226664aceb87005ee6549a709cb2cbd19387  LooseEnds/Views/PlaceSection.swift
+- sha256:1d12d42b887d6c2c954886c1fc9ab41162a2afe763f4fcf16d2a30bdf5a40c4d  LooseEndsTests/PlaceEditingTests.swift
+- sha256:57eec2166596cc1c51c99618ab5c6ece5dcf47a7913f55b92e122c3ce2627f06  LooseEndsTests/SavedPlacesStoreTests.swift
+- sha256:74e48623bcf52ebda44d8a52a7ee00118dead26da2439da20ca9a2398eda1716  LooseEndsTests/SavedPlacesTests.swift
+- sha256:02d48e91284e3134589d2f958fd3234adb1cbb6410eff8fd411e155598fcf871  LooseEndsUITests/PlaceSmokeTests.swift
+- sha256:5a8c9fee8ac8edac3134043587fb18a423bb58f28ea4735da838ec84fb5e408f  Shared/Models/SavedPlaces.swift
+- sha256:5caa38f69e83847038a3108efa96af9bd130c58352b4e6728053a4c81bd14d66  Shared/Services/PlaceEditing.swift

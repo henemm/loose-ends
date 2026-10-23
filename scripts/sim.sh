@@ -20,6 +20,7 @@
 #   ./scripts/sim.sh watch-test-proof <Class[/test]> # dasselbe im watchOS-Simulator (#409)
 #     LOOSEENDS_PUSH=<datei.apns> davor: spielt die Mitteilung während des Laufs alle 5 s ein (#295)
 #   ./scripts/sim.sh boot | status | launch | screenshot [pfad]
+#   ./scripts/sim.sh location <breite> <länge> # Standort des Simulators vortäuschen (#241), `location clear` hebt ihn auf
 #
 # Messreihen gegen das echte Modell (Spikes #65-#73), ohne das iPhone zu belegen:
 #   ./scripts/sim.sh lab                      # Labor-App aufs iPhone bringen
@@ -966,7 +967,24 @@ cmd_screenshot() {
     [ -f "$out" ] && success "Screenshot: $out" || { error "Screenshot fehlgeschlagen"; return 1; }
 }
 
-cmd_help() { sed -n '3,36p' "$0" | sed 's/^# \{0,1\}//'; }
+# Täuscht dem Simulator einen Standort vor (#241 Schnitt 3b): der echte Weg von „Aktueller Ort“ ohne
+# feste Ersatzumsetzung. `clear` hebt ihn wieder auf.
+cmd_location() {
+    local id; id=$(sim_id)
+    [ -n "$id" ] || { error "Kein passender Simulator"; return 1; }
+    if [ "${1:-}" = "clear" ]; then
+        $SIMCTL location "$id" clear && success "Standort aufgehoben."
+        return
+    fi
+    local lat="${1:-}" lon="${2:-}"
+    local number='^-?[0-9]+([.][0-9]+)?$'
+    if ! [[ "$lat" =~ $number && "$lon" =~ $number ]]; then
+        error "Usage: ./scripts/sim.sh location <breite> <länge>  (z. B. 53.5561 9.9285) | location clear"; return 1
+    fi
+    $SIMCTL location "$id" set "$lat,$lon" && success "Standort: $lat, $lon"
+}
+
+cmd_help() { sed -n '3,37p' "$0" | sed 's/^# \{0,1\}//'; }
 
 COMMAND="${1:-help}"; shift 2>/dev/null || true
 case "$COMMAND" in
@@ -986,6 +1004,7 @@ case "$COMMAND" in
     status)     cmd_status ;;
     launch)     cmd_launch "$@" ;;
     screenshot) cmd_screenshot "$@" ;;
+    location)   cmd_location "$@" ;;
     device-status)  cmd_device_status ;;
     device-build)   cmd_device_build ;;
     device-build-release) cmd_device_build_release ;;
