@@ -305,7 +305,7 @@ not scope creep on the current one.
   folder on Done and Cancel, #442). All pure over the model objects; the
   caller saves.
 - `Shared/Enrichment` — `TaskEnricher` protocol (`StubEnricher` in the tests plays hang, empty answer, answer per note and
-  refusal, #530), `ModelDeadline` (time limit per model call, 30 s in the coordinator; a timeout counts as a failed call, #530), `EnrichmentWriter` (threshold + revisions; never writes the model's contexts or project, #215/#469), `EnrichmentCoordinator`
+  refusal, #530), `ModelDeadline` (time limit per model call, 25 s in the coordinator, from the measurement #534; a timeout counts as a failed call, #530), `EnrichmentWriter` (threshold + revisions; never writes the model's contexts or project, #215/#469), `EnrichmentCoordinator`
   (catch-up pass), `FoundationModelsEnricher` (on-device model, `#if canImport(FoundationModels)`), `DueDateRule`
   (combines the rule parsers into the due date, confidence 1.0, #95), `ImportanceUrgencyRule` (keyword
   match for importance/urgency, confidence 1.0, no default on miss, #117), `RecognitionRule` (equality of
