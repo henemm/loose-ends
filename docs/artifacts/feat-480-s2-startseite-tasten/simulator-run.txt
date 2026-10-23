@@ -1,0 +1,23 @@
+# Simulator-Beleg
+erzeugt: 2026-10-23T10:39:15+0200
+befehl: scripts/sim.sh test-proof StartScreenInteractionTests
+workflow: feat-480-s2-startseite-tasten
+head: a521248b5c24643a2015d8bf0b80907fb802976a
+basis: 760f1f656b8f295b60dc134ebf5b5c27e51b9ce3 (merge-base origin/main HEAD)
+testklasse: StartScreenInteractionTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 20 gesamt, 20 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1792744123.509  ende: 1792744754.395
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/feat-480-s2-startseite-tasten/simulator-run/summary.json  sha256:da466cdbce5cc12f27781b50a4a98dfdd54e2fd2852ad905d7052f9cf2b49ec6
+xcresult: docs/artifacts/feat-480-s2-startseite-tasten/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-480-s2-startseite-tasten/simulator-run/*.png (3 Stück)
+
+## Geprüfte Dateien
+- sha256:25c7b8bce4eadaee07d9b707396015d7a7d4252bb0bafed7facfb8f355d66364  LooseEnds/App/LooseEndsApp.swift
+- sha256:17e00b3f23c3508d0f75597b2b067ac7457c7be8dbd362891436a0d11c272d7d  LooseEnds/Views/InboxDrawerView.swift
+- sha256:0c603d70fc3ce615bbb4bb090c1daec83f33ee78a982983bbae9bf66877b84ce  LooseEnds/Views/StartPage.swift
+- sha256:97540c4117032d49da0a7e67affd967fcbf384f3e5b5e873ac450b32d8bb24de  LooseEnds/Views/StartZones.swift
+- sha256:12b2cea395f06813088145b27f5d29c961db2720c0aebddbdb7f494ed97ef4ee  LooseEnds/Views/TaskListView.swift
+- sha256:2c2f3af15f8eda3008c6131dc43d03b3ba8b9f6fbcfecaa9d4643b5a93769dd1  LooseEndsUITests/MacKeyboardTests.swift

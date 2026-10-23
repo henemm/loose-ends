@@ -20,6 +20,8 @@ struct InboxDrawerView: View {
     var focusRequest = 0
     /// A tap beside the line on the iPhone (the sentence of the day): each change ends the entry.
     var endRequest = 0
+    /// Tells the host whether the line holds the focus, so the Mac's row keys leave it alone (#480).
+    var onWritingFocus: (Bool) -> Void = { _ in }
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -68,6 +70,7 @@ struct InboxDrawerView: View {
             Button("OK") {}
         }
         .onChange(of: writing) { _, focused in
+            onWritingFocus(focused)
             if !focused { endEntryAfterFocusSettles() }
         }
         .onChange(of: selection) { _, _ in endEntry(animated: true) }

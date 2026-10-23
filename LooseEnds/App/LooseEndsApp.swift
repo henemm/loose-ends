@@ -105,9 +105,15 @@ struct LooseEndsApp: App {
                 .environment(calendar)
                 .environment(fieldSettings)
                 .preferredColorScheme(Self.uiTestColorScheme)
+                #if os(macOS)
+                // The smallest main window (#480): sidebar 220 + a 540 pt page, the detail's 480 fit in it.
+                .frame(minWidth: 760, minHeight: 520)
+                #endif
         }
         .modelContainer(container)
         #if os(macOS)
+        // Said outright, not left to the default: the window takes the content's minimum (#480).
+        .windowResizability(.contentMinSize)
         // The start page with its right column needs about 1120 pt (sidebar 220 + page 900, #473); without
         // a size the window opened at 900 x 450 and the column and the sidebar's names were cut (#514).
         .defaultSize(width: 1200, height: 780)

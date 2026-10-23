@@ -573,9 +573,11 @@ struct TaskListView: View {
 /// way back from the detail, and its own state goes with it. Observed, so every instance of a list
 /// redraws when its choice changes. Nothing is stored past the app's run.
 @MainActor @Observable
-private final class ChosenRows {
+final class ChosenRows {
     static let shared = ChosenRows()
     var byList: [ViewSelection: UUID] = [:]
+    /// The start page's "Now" row (#480 Schnitt 2); the start page has no `ViewSelection` of its own.
+    var start: UUID?
 }
 #endif
 

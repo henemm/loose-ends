@@ -1,0 +1,41 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "CA8F3F1E-CF92-4798-9DC4-161CD09EE143.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "All open list_0_58FEBB2B-D313-4491-880E-0BAA47791C53.png",
+        "timestamp" : 1792744512.377
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "9237411C-B5BA-458C-AB89-F398AA0CF061.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Start screen with All open_0_68972F8B-F21D-4DF2-883B-1A55978B3F53.png",
+        "timestamp" : 1792744509.255
+      }
+    ],
+    "testIdentifier" : "StartScreenInteractionTests/testOpenRowShowsOpenAndParkedButNotDone()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/StartScreenInteractionTests/testOpenRowShowsOpenAndParkedButNotDone"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "1595E380-82C9-4852-8E53-8F9AE1B94480.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "All open by pressure_0_C6BA0066-7DAD-4A7B-89E9-7B6F00A0281F.png",
+        "timestamp" : 1792744584.181
+      }
+    ],
+    "testIdentifier" : "StartScreenInteractionTests/testOpenViewOrdersDueThenUnweightedThenParked()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/StartScreenInteractionTests/testOpenViewOrdersDueThenUnweightedThenParked"
+  }
+]
