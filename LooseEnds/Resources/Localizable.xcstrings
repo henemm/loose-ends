@@ -465,6 +465,10 @@
     "since this morning" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "seit heute Morgen" } } } },
     "since today" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "seit heute" } } } },
     "since yesterday" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "seit gestern" } } } },
-    "since %@" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "seit %@" } } } }
+    "since %@" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "seit %@" } } } },
+    "This week: one bead." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Diese Woche: eine Perle." } } } },
+    "This week: %@ beads." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Diese Woche: %@ Perlen." } } } },
+    "This week · %@" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Diese Woche · %@" } } } },
+    "Opens Completed" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Öffnet Erledigt" } } } }
   }
 }

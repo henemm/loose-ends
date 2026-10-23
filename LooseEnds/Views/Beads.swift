@@ -118,15 +118,19 @@ struct WeekString: View {
 /// and "Dafür" while a sentence is set; nothing without either.
 struct WeekStringRows: View {
     let beads: [ViewRules.Bead]
+    /// Every task, for the Sunday rule.
+    let all: [TaskItem]
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(FieldSettingsStore.self) private var fieldSettings: FieldSettingsStore?
 
     var body: some View {
         let reward = fieldSettings?.reward ?? ""
-        if !beads.isEmpty || !reward.isEmpty {
+        // While the sentence of the day carries the string (#646), it does not stand here again.
+        let spoken = ViewRules.weekToSpeakOf(in: all) != nil
+        if (!beads.isEmpty && !spoken) || !reward.isEmpty {
             let metrics = StartMetrics(typeSize)
             ZoneCaption("This week")
-            if !beads.isEmpty {
+            if !beads.isEmpty, !spoken {
                 WeekString(beads: beads)
                     .listRowSeparator(.hidden)
                     .startRow(metrics)

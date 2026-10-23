@@ -287,9 +287,10 @@ not scope creep on the current one.
 - `Shared/Models` — the drive fields (#642): `TaskItem.knaeuelAt` (#643, the one avoided task, `isKnaeuel` while open) and
   `countsAt` (#645, a bead once completed, at most `TaskActions.countsBudget` open; the Knäuel always `counts`), both set by
   hand only as user revisions (`RevisedField.knaeuel`/`.counts`), both `DetailField`s of the group `drive`, off by default.
-  `ViewRules.knaeuel(in:)` (latest mark wins), `counting(in:)`, `week(containing:)` (Monday to Sunday, whatever the locale)
-  and `weekBeads(in:)` (every completion of a counting task in the week, a repeating one per record); "Now" leaves the
-  Knäuel out. Views: `LooseEnds/Views/Knaeuel.swift` (`StartHeaderRows`: the knot's date line or the Knäuel's head `KnaeuelHead`
+  `ViewRules.knaeuel(in:)` (latest mark wins), `counting(in:)`, `week(containing:)` (Monday to Sunday, whatever the locale),
+  `weekBeads(in:)` (every completion of a counting task in the week, a repeating one per record), `weekToSpeakOf(in:)` (the
+  Sunday sentence's beads: this week's from Sunday 16:00, last week's on Monday until the first new bead, #646) and
+  `groupedByCompletionWeek` ("Completed" by weeks with each week's beads, the days inside); "Now" leaves the Knäuel out. Views: `LooseEnds/Views/Knaeuel.swift` (`StartHeaderRows`: the knot's date line or the Knäuel's head `KnaeuelHead`
   (date, thread, row as one list row, plays the completion moment, #644), the sentence of the day; `KnaeuelSince`),
   `KnaeuelThread.swift` (`KnaeuelThread`: two trochoid loops laid from the Knäuel's tail end to the row, `LooseningKnaeuel`:
   the Knäuel blended into the knot) and `Beads.swift` (`PearlGlyph`, `WeekString` with the sag and the 1.1 s green,

@@ -250,7 +250,12 @@ Perle und Glanzpunkt, `PearlGlyph`, dritte Ausnahme von #350) steht an erster St
 Woche** (`ViewRules.weekBeads`, Montag bis Sonntag unabhängig vom Gebietsschema) steht unter „Jetzt“, solange die Woche
 eine Perle hat: eine durchhängende Schnur, die Perlen von links dicht aufgereiht, keine leeren Plätze, kein Wochenziel, die
 neueste 1,1 s grün (der eine grüne Moment, ADR-14). Nichts wird gespeichert: die Schnur ist aus `completedAt` bzw. den
-`CompletionRecord`s zählender Aufgaben gerechnet. **Dafür** (#647): ein Satz für die Woche, Freitext, nichts wird geprüft; kursiv unter der Schnur („Dafür: Samstag Kino.“),
+`CompletionRecord`s zählender Aufgaben gerechnet. **Die Woche** (#646): ab Sonntag 16 Uhr und am Montag bis zur ersten neuen Perle sagt die Überschrift „Diese Woche: vier
+Perlen.“ (`StartHeadline.week`, `ViewRules.weekToSpeakOf`), darunter die Schnur und die Titel, ein Tipp öffnet „Erledigt“; die
+Schnur unter „Jetzt“ steht derweil nicht doppelt. Ohne Perle kein Satz, kein Vergleich, kein „nur“. „Erledigt“ ist nach Wochen
+gruppiert (`ViewRules.groupedByCompletionWeek`, Montag bis Sonntag, Kopf „20. bis 26. Oktober“, aktuelle Woche „Diese Woche ·
+…“), jede Woche mit ihrer Schnur, auch leer; die Tage bleiben innen, der Wochentag steht in der Randspalte; zählende Aufgaben
+tragen die Perle, die Knäuel-Aufgabe das kleine graue Knäuel (`TaskRow`, in jeder Liste). **Dafür** (#647): ein Satz für die Woche, Freitext, nichts wird geprüft; kursiv unter der Schnur („Dafür: Samstag Kino.“),
 ein Tipp setzt den Cursor hinein, leer heißt keine Zeile; geschrieben wird er in „Felder“ unter „Zählt“ und gehalten wie die
 Schalter (`FieldSettingsStore.reward`, Defaults und iCloud-Schlüsselwertspeicher); er bleibt über den Montag stehen. Im Detail
 steht unter dem Rohtext „Das Knäuel · seit Montag“ mit „Lösen“ und „Zählt immer, es ist das Knäuel“. Bewusst nicht gebaut:

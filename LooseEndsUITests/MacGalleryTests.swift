@@ -53,6 +53,27 @@ final class MacGalleryTests: XCTestCase {
         XCTAssertTrue(macElement("startCaptureField", in: window).waitForExistence(timeout: 10), "Start page did not come back")
         macShot(window, "mac-gallery-\(label)-4-start-again")
 
+        // "Completed" by weeks (#646): one task done from its detail, then the list with the week's head and string.
+        newRow.click()
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "New shows no task for Completed")
+        row.click()
+        let more = macElement("detailMoreMenu", in: window)
+        XCTAssertTrue(more.waitForExistence(timeout: 10), "Detail shows no … menu")
+        more.click()
+        let complete = macElement("menuCompleteButton", in: app)
+        XCTAssertTrue(complete.waitForExistence(timeout: 5), "The … menu offers no Complete")
+        complete.click()
+        let doneRow = macElement("viewRow_done", in: window)
+        XCTAssertTrue(doneRow.waitForExistence(timeout: 10), "Sidebar shows no Completed")
+        // The Done window (#32) takes three seconds; the list fills after it.
+        RunLoop.current.run(until: Date().addingTimeInterval(4))
+        doneRow.click()
+        let doneTask = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "taskRow_"))
+            .firstMatch
+        XCTAssertTrue(doneTask.waitForExistence(timeout: 10), "Completed shows no task")
+        macShot(window, "mac-gallery-\(label)-5-completed-weeks")
+
         // After the pictures, so a narrow window still delivers them.
         XCTAssertGreaterThanOrEqual(size.width, Self.minimumWidth, "Window \(size) too narrow for sidebar and list")
         app.terminate()
