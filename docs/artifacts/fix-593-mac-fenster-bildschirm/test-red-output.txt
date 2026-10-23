@@ -1,0 +1,68 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftConstValuesFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-OutputFileMap.json
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.LinkFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftFileList
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mCompiling[0m TaskListView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m StartZones.swift
+[[36mLooseEnds[0m] [1mCompiling[0m StartPage.swift
+[[36mLooseEnds[0m] [1mCompiling[0m InboxDrawerView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m LooseEndsApp.swift
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEnds.abi.json
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsUITests[0m] [1mCompiling[0m MacKeyboardTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m Corpus.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m MeasurementRun.swift
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsUITests.abi.json
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEndsUITests.swiftdoc
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsUITests.swiftmodule
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsTests[0m] [1mCopying[0m latency-corpus.json
+[[36mLooseEndsUITests[0m] [1mCompiling[0m LeaveOneOut.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRunTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m Corpus.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/LooseEndsTests/MainWindowPlacementTests.swift:12:21: [31mcannot find 'MainWindowPlacement' in scope[0m
+10 |     func smallScreenLimitsTheSize() {
+[36m11 |         let visible = CGRect(x: 0, y: 31, width: 1024, height: 737)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/LooseEndsTests/MainWindowPlacementTests.swift:19:21: [31mcannot find 'MainWindowPlacement' in scope[0m
+17 |     func largeScreenKeepsTheWish() {
+[36m18 |         let visible = CGRect(x: 0, y: 38, width: 2056, height: 1291)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/LooseEndsTests/MainWindowPlacementTests.swift:26:21: [31mcannot find 'MainWindowPlacement' in scope[0m
+24 |     func minimumSizeWins() {
+[36m25 |         let visible = CGRect(x: 0, y: 25, width: 700, height: 480)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/LooseEndsTests/MainWindowPlacementTests.swift:33:21: [31mcannot find 'MainWindowPlacement' in scope[0m
+31 |     func centredInVisibleArea() {
+[36m32 |         let visible = CGRect(x: 80, y: 38, width: 1600, height: 1000)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/LooseEndsTests/MainWindowPlacementTests.swift:42:21: [31mcannot find 'MainWindowPlacement' in scope[0m
+40 |     func fullSizeLiesOnTheArea() {
+[36m41 |         let visible = CGRect(x: 0, y: 31, width: 1024, height: 737)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/LooseEndsTests/MainWindowPlacementTests.swift:49:21: [31mcannot find 'MainWindowPlacement' in scope[0m
+47 |     func oversizeStartsTopLeft() {
+[36m48 |         let visible = CGRect(x: 10, y: 25, width: 700, height: 480)[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m MainWindowPlacementTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRun.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordLearningReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateParserCorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateExpressionParserTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateTitleReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistencyReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m LeaveOneOut.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleLeaveOneOutTests.swift
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-compressed-gathering-raven/Logs/Test/Test-LooseEnds-2026.10.23_15-10-18-+0200.xcresult

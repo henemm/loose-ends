@@ -117,6 +117,12 @@ struct LooseEndsApp: App {
         // The start page with its right column needs about 1120 pt (sidebar 220 + page 900, #473); without
         // a size the window opened at 900 x 450 and the column and the sidebar's names were cut (#514).
         .defaultSize(width: 1200, height: 780)
+        // The wish above was not always fitted to the screen: on the 1024 pt CI screen the window opened
+        // 1200 pt wide (#593). The placement limits it to the visible area and centres it there.
+        .defaultWindowPlacement { _, context in
+            let frame = MainWindowPlacement.frame(visible: context.defaultDisplay.visibleRect)
+            return WindowPlacement(frame.origin, size: frame.size)
+        }
         #endif
         #if os(macOS)
         Settings {

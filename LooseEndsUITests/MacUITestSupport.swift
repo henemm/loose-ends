@@ -1,4 +1,5 @@
 #if os(macOS)
+import AppKit
 import XCTest
 
 /// What every Mac UI test needs to reach the app (#511, shared since #544): launch with the gallery's
@@ -31,10 +32,12 @@ extension XCTestCase {
     /// On the fresh CI Mac the app opens no window at launch (run 39015688624), only its menu bar
     /// symbol. The test then opens the window the way a user would, via the menu bar symbol and
     /// "Open Loose Ends"; whether that is an app bug is for a ticket of its own.
-    /// Returns whether the start page was there without help.
+    /// Returns whether the start page was there without help. Either way the opened window goes
+    /// through `macMainWindow`, so every Mac test that opens it checks that it fits the screen (#593).
     @MainActor
     func macOpenMainWindowIfNeeded(_ app: XCUIApplication) -> Bool {
         if macElement("startCaptureField", in: app).waitForExistence(timeout: 10) {
+            _ = macMainWindow(of: app)
             return true
         }
         let statusItem = app.statusItems.firstMatch
@@ -55,6 +58,7 @@ extension XCTestCase {
             return false
         }
         openApp.click()
+        _ = macMainWindow(of: app)
         return false
     }
 
@@ -78,7 +82,33 @@ extension XCTestCase {
     func macMainWindow(of app: XCUIApplication) -> XCUIElement {
         let window = app.windows.containing(.any, identifier: "viewRow_new").firstMatch
         XCTAssertTrue(window.waitForExistence(timeout: 10), "No main window with New in its sidebar")
+        macAssertWindowFitsScreen(window)
         return window
+    }
+
+    /// The screen in points: `NSScreen` of the test process, else the screenshot's size (pixels on a
+    /// Retina screen, so only a fallback).
+    @MainActor
+    func macScreenSize() -> CGSize {
+        NSScreen.main?.frame.size ?? XCUIScreen.main.screenshot().image.size
+    }
+
+    /// The main window lies on the screen (#593): on the 1024 pt CI screen it opened 1200 pt wide in some
+    /// runs and the pictures were cut at the edge. Waits first, since the frame settles after opening.
+    @MainActor
+    func macAssertWindowFitsScreen(_ window: XCUIElement) {
+        let screen = macScreenSize()
+        let fits = macWait(timeout: 5) {
+            let frame = window.frame
+            return !frame.isEmpty && frame.width <= screen.width
+                && frame.maxX <= screen.width && frame.maxY <= screen.height
+        }
+        if fits { return }
+        let frame = window.frame
+        XCTFail("""
+            Main window \(Int(frame.width)) x \(Int(frame.height)) pt at \(Int(frame.minX)), \(Int(frame.minY)) \
+            does not fit the screen \(Int(screen.width)) x \(Int(screen.height)) pt
+            """)
     }
 
     /// Only the main window: `app.screenshot()` takes the whole screen on the Mac. Names starting with
