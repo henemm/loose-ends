@@ -159,13 +159,21 @@ struct TaskRow: View {
                             .accessibilityLabel("Urgent")
                     }
                     ForEach(traits) { trait in
-                        HStack(spacing: 3) {
-                            if let symbol = trait.symbol {
-                                Image(systemName: symbol)
+                        if trait.id == "counts" {
+                            // The bead (#645): the task counts on the week's string.
+                            PearlGlyph()
+                                .frame(width: 30, height: 10)
+                                .accessibilityLabel(Text("Counts"))
+                                .accessibilityIdentifier("countsMarker_\(task.id.uuidString)")
+                        } else {
+                            HStack(spacing: 3) {
+                                if let symbol = trait.symbol {
+                                    Image(systemName: symbol)
+                                }
+                                Text(trait.text)
                             }
-                            Text(trait.text)
+                            .foregroundStyle(trait.style)
                         }
-                        .foregroundStyle(trait.style)
                     }
                 }
                 .font(startMetrics?.rowMeta ?? .caption)
@@ -198,11 +206,15 @@ struct TaskRow: View {
         }
     }
 
-    /// Ranked: waiting, place, duration, subtasks, tag, person; the date moved to the margin (#424).
+    /// Ranked: the bead, waiting, place, duration, subtasks, tag; the date moved to the margin (#424).
     /// The first three win. A tag carries its symbol, as in the detail and on the start screen (#420).
+    /// The bead stands first (#645): a task that counts says so before anything else.
     private var traits: [Trait] {
         let unseen = task.hasUnseenAutomaticRevisions
         var all: [Trait] = []
+        if task.countsAt != nil, task.isOpen {
+            all.append(Trait(id: "counts", text: ""))
+        }
         if let waitingOn = WaitingOn.rowLabel(for: task) {
             all.append(Trait(id: "waiting", text: String(localized: "Waiting on: \(waitingOn)"), symbol: "lock"))
         }

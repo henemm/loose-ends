@@ -23,7 +23,9 @@ Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, 
 - **Color budget.** Accent = tappable (incl. AI tint), red = time pressure, grey = hierarchy, green = the completion moment.
 - **SF Symbols only** (Henning, 2026-10-12, #350). Every sign in the app is an SF Symbol, outline where one exists:
   no emoji, no characters standing in for a symbol (»«, →), no own images. The one exception is the logo's thread
-  (knot, loose thread, #180): it is the brand mark, not a control.
+  (knot, loose thread, #180): it is the brand mark, not a control. Since #642 (Henning, 2026-10-23) its family holds two
+  more drawn signs: the Knäuel (`ThreadShape.Form.knaeuel`, the one avoided task, #643) and the bead (`PearlGlyph`, a
+  task that counts on the week's string, #645); every other sign stays an SF Symbol.
 - **Rules before the model** (Henning, 2026-09-20). Every derived field is first attempted with rules,
   regex, calendar, contacts or a word list. The on-device model only gets what needs language
   understanding (refining the title: since #202 `TitleRule` sets it at capture from the cleaned raw
@@ -279,6 +281,14 @@ not scope creep on the current one.
   only with content, one word line for everything empty, dependent fields wait, off is not offered but never hidden;
   `DetailFieldSettings` with the standard on Note, Attachments, Calendar, Duration, Tags; the app's `FieldSettingsStore` in
   `LooseEnds/App` keeps the choice in defaults and the iCloud key-value store, everything on under UI tests)
+- `Shared/Models` — the drive fields (#642): `TaskItem.knaeuelAt` (#643, the one avoided task, `isKnaeuel` while open) and
+  `countsAt` (#645, a bead once completed, at most `TaskActions.countsBudget` open; the Knäuel always `counts`), both set by
+  hand only as user revisions (`RevisedField.knaeuel`/`.counts`), both `DetailField`s of the group `drive`, off by default.
+  `ViewRules.knaeuel(in:)` (latest mark wins), `counting(in:)`, `week(containing:)` (Monday to Sunday, whatever the locale)
+  and `weekBeads(in:)` (every completion of a counting task in the week, a repeating one per record); "Now" leaves the
+  Knäuel out. Views: `LooseEnds/Views/Knaeuel.swift` (`StartHeaderRows`: date line with knot or Knäuel, the Knäuel's row,
+  the sentence of the day; `KnaeuelSince`) and `Beads.swift` (`PearlGlyph`, `WeekString` with the sag and the 1.1 s green,
+  `WeekStringRows` under "Now"). The question before the Knäuel moves is `movesKnaeuel` in `TaskInteractions.swift`.
 - `Shared/Models/RowKeyAction.swift` (#480 Schnitt 1, pure): which key does what in a Mac list (arrows choose, space completes only where the swipe offers done, delete asks first, nothing while a text field has focus); `TaskListView` wires it up on the Mac only (`onKeyPress`, `ChosenRows` keeps the chosen row per list so it survives detail and back), `Paper.wideListRow(selected:)` paints it accent 12 %, hover grey 7 %; Schnitt 2: the start page's "Now" rows take the same keys on the Mac only (`StartPage.macNowRow`/`keyed`, `ChosenRows.start`; only the visible rows, 5 folded; list focus only from a click or when the writing line lets go, never on appear; iPhone and iPad rows unchanged), main window at least 760 × 520 pt of content
 - `Shared/Persistence` — `ModelContainerFactory` (app group + private CloudKit; identifiers read from
   `Info.plist`, keys `LEAppGroup`/`LECloudContainer`, with the production constants as fallback —

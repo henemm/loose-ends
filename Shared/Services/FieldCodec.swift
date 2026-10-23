@@ -22,6 +22,8 @@ enum FieldCodec {
         case .repeatRule: return task.repeatRule.flatMap(encode)
         case .place: return task.place.flatMap(encode)
         case .notes: return task.notes
+        case .knaeuel: return task.knaeuelAt?.ISO8601Format()
+        case .counts: return task.countsAt?.ISO8601Format()
         }
     }
 
@@ -82,6 +84,10 @@ enum FieldCodec {
         case .notes:
             task.notes = nonEmpty(encoded)
             task.notesSourceRaw = task.notes == nil ? nil : sourceRaw
+        case .knaeuel:
+            task.knaeuelAt = encoded.flatMap { ISO8601DateFormatter().date(from: $0) }
+        case .counts:
+            task.countsAt = encoded.flatMap { ISO8601DateFormatter().date(from: $0) }
         case .blockedBy:
             break
         }

@@ -175,13 +175,15 @@ enum ViewRules {
     /// "Now" (#368): "Due today" and "Next up" as one list, each task once. Due today first (earliest
     /// first), then the rest of "Next up" by rank. A task lined up and due stands with the due ones:
     /// time pressure wins. A task left from an earlier day stays out, lined up or not, until it has a
-    /// new date (#518); the app icon still counts it (`badgeCount`, #584).
+    /// new date (#518); the app icon still counts it (`badgeCount`, #584). The Knäuel stands under the
+    /// date and not here again (#643).
     static func now(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> NowTasks {
         let left = Set(leftovers(in: all, now: now, calendar: calendar).map(\.id))
+        let knaeuel = knaeuel(in: all)?.id
         var seen = Set<UUID>()
         let union = (dueToday(in: all, now: now, calendar: calendar)
             + tasks(for: .next, in: all, now: now, calendar: calendar))
-            .filter { !left.contains($0.id) && seen.insert($0.id).inserted }
+            .filter { !left.contains($0.id) && $0.id != knaeuel && seen.insert($0.id).inserted }
         let today = calendar.startOfDay(for: now)
         let end = calendar.date(byAdding: .day, value: 1, to: today) ?? now
         let dueNow = union.filter { ($0.dueDate.map { $0 >= today && $0 < end } ?? false) }
@@ -200,6 +202,61 @@ enum ViewRules {
     private static func byRank(_ a: TaskItem, _ b: TaskItem) -> Bool {
         let (ra, rb) = (a.nextRank ?? .infinity, b.nextRank ?? .infinity)
         return ra != rb ? ra < rb : a.capturedAt < b.capturedAt
+    }
+
+    // MARK: - Das Knäuel and the beads (#643, #645)
+
+    /// "Das Knäuel" (#643): the one open top-level task marked by hand. Should two carry the mark (a
+    /// second device set it before the sync), the latest mark wins on every device alike.
+    static func knaeuel(in all: [TaskItem]) -> TaskItem? {
+        all.filter { $0.parent == nil && $0.isKnaeuel }
+            .max { ($0.knaeuelAt ?? .distantPast, $0.id.uuidString) < ($1.knaeuelAt ?? .distantPast, $1.id.uuidString) }
+    }
+
+    /// The open tasks marked "Zählt" (#645), against the budget of five. The Knäuel counts on its own
+    /// and is not among them unless marked too.
+    static func counting(in all: [TaskItem]) -> [TaskItem] {
+        all.filter { $0.isOpen && $0.countsAt != nil }
+    }
+
+    /// One bead on the week's string (#645): a completion of a counting task.
+    struct Bead: Equatable, Identifiable {
+        let id: String
+        let taskID: UUID
+        let title: String
+        let at: Date
+        /// The task was the Knäuel: "Completed" shows it with the small grey Knäuel (Schnitt 4).
+        let isKnaeuel: Bool
+    }
+
+    /// Monday to Sunday around `now`, whatever the locale's first weekday: [start, end).
+    static func week(containing now: Date, calendar: Calendar = .current) -> Range<Date> {
+        let today = calendar.startOfDay(for: now)
+        let sinceMonday = (calendar.component(.weekday, from: today) + 5) % 7
+        let start = calendar.date(byAdding: .day, value: -sinceMonday, to: today) ?? today
+        let end = calendar.date(byAdding: .day, value: 7, to: start) ?? today
+        return start..<end
+    }
+
+    /// The beads of the week `now` lies in (#645), oldest first: every completion of a task that counts
+    /// (marked "Zählt", or the Knäuel), a done task by `completedAt`, a repeating one by each
+    /// `CompletionRecord` in the week. Nothing is stored for this: the string is read from the tasks.
+    static func weekBeads(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [Bead] {
+        let week = week(containing: now, calendar: calendar)
+        var beads: [Bead] = []
+        for task in all where task.counts && task.isPresent {
+            if task.repeatRule != nil {
+                for record in task.completions ?? [] where week.contains(record.completedAt) {
+                    beads.append(Bead(id: "\(task.id.uuidString)-\(record.completedAt.timeIntervalSinceReferenceDate)",
+                                      taskID: task.id, title: task.displayTitle, at: record.completedAt,
+                                      isKnaeuel: task.knaeuelAt != nil))
+                }
+            } else if task.status == .done, let at = task.completedAt, week.contains(at) {
+                beads.append(Bead(id: task.id.uuidString, taskID: task.id, title: task.displayTitle, at: at,
+                                  isKnaeuel: task.knaeuelAt != nil))
+            }
+        }
+        return beads.sorted { ($0.at, $0.id) < ($1.at, $1.id) }
     }
 
     /// The place of each task in "Next up": 1, 2, 3 … in that view's order (#509). Lists show it as a

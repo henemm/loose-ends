@@ -64,6 +64,8 @@ struct TaskDetailView: View {
     @State private var reanalysis: Reanalysis?
     /// Complete with open subtasks asks first (#565).
     @State private var askingSubtasks: TaskItem?
+    /// A second Knäuel asks first (#643).
+    @State private var askingKnaeuel: TaskItem?
     /// A subtask whose own detail is open (#565).
     @State private var openedSubtask: TaskItem?
     /// The parent, opened by "Part of" when this detail was not reached from it (#565).
@@ -274,6 +276,7 @@ struct TaskDetailView: View {
             TaskDetailView(task: parent)
         }
         .toolbar { actions }
+        .movesKnaeuel(asking: $askingKnaeuel, from: ViewRules.knaeuel(in: allTasks)) { _ in moveKnaeuel() }
         .completesWithSubtasks(asking: $askingSubtasks) { _, withSubtasks in
             finish(withSubtasks: withSubtasks)
         }
@@ -339,7 +342,9 @@ struct TaskDetailView: View {
     /// The set lines of one group (#538, rule 3), in the group's order; nothing while the group is empty.
     @ViewBuilder
     private func groupRows(_ group: DetailField.Group) -> some View {
-        let rows = DetailField.allCases.filter { $0.group == group && carried.contains($0) && $0.revisedField != nil }
+        // The Knäuel and "Counts" have no set line yet: the "…" menu says and takes them (the detail's
+        // own line comes with #647).
+        let rows = DetailField.allCases.filter { $0.group == group && $0.group != .drive && carried.contains($0) && $0.revisedField != nil }
         if !rows.isEmpty {
             Section {
                 ForEach(rows, id: \.self) { field in
@@ -363,7 +368,7 @@ struct TaskDetailView: View {
         case .contexts: FieldFormatting.value(FieldCodec.encode(.contexts, of: task), for: .contexts)
         case .project: task.project?.name
         case .repeatRule: FieldFormatting.value(FieldCodec.encode(.repeatRule, of: task), for: .repeatRule)
-        case .title, .people, .blockedBy, .place, .notes: nil
+        case .title, .people, .blockedBy, .place, .notes, .knaeuel, .counts: nil
         }
     }
 
@@ -405,8 +410,9 @@ struct TaskDetailView: View {
         .buttonStyle(.plain)
         .foregroundStyle(.tint)
         .accessibilityIdentifier("field_\(field.rawValue)")
-        // The note and the place have no field editor: their word opens the section and the search.
-        if let revised = field.revisedField, field != .notes, field != .place {
+        // The note and the place have no field editor: their word opens the section and the search;
+        // the Knäuel and "Counts" are set with one tap (#643, #645).
+        if let revised = field.revisedField, field != .notes, field != .place, field.group != .drive {
             button.editorPopover(revised, editing: $editingField) { editor(for: revised) }
         } else {
             button
@@ -427,6 +433,10 @@ struct TaskDetailView: View {
             switchCalendar(on: true)
         case .dueDate, .repeatRule, .importance, .urgency, .duration, .energy, .contexts, .project:
             if let revised = field.revisedField { editingField = revised }
+        case .knaeuel:
+            setKnaeuel()
+        case .counts:
+            toggleCounts()
         }
     }
 
@@ -536,6 +546,7 @@ struct TaskDetailView: View {
                     } else {
                         Button("Remove from Next up", systemImage: "star.slash", action: toggleNext)
                     }
+                    driveEntries
                     Button("Park", systemImage: "moon.zzz") {
                         TaskActions.park(task)
                         save("park")
@@ -597,6 +608,63 @@ struct TaskDetailView: View {
     private func toggleNext() {
         TaskActions.toggleNext(task, among: allTasks)
         save("next")
+    }
+
+    /// "The Knäuel" and "Counts" in the "…" menu (#643, #645), as in the list's long-press menu:
+    /// each while its field is on or the task carries it; over the budget "Counts (5 of 5)" is grey.
+    @ViewBuilder
+    private var driveEntries: some View {
+        if task.parent == nil {
+            if task.isKnaeuel {
+                Button(action: releaseKnaeuel) {
+                    Label { Text("No longer the Knäuel") } icon: { ThreadShape.menuImage(form: .knaeuel) }
+                }
+                .accessibilityIdentifier("menuKnaeuelRelease")
+            } else if settings.isOn(.knaeuel) {
+                Button(action: setKnaeuel) {
+                    Label { Text("The Knäuel") } icon: { ThreadShape.menuImage(form: .knaeuel) }
+                }
+                .accessibilityIdentifier("menuKnaeuel")
+            }
+            if task.countsAt != nil {
+                Button("No longer counts", systemImage: "circle.slash", action: toggleCounts)
+                    .accessibilityIdentifier("menuCountsRelease")
+            } else if settings.isOn(.counts) {
+                if TaskActions.canCount(task, among: allTasks) {
+                    Button("Counts", systemImage: "circle", action: toggleCounts)
+                        .accessibilityIdentifier("menuCounts")
+                } else {
+                    Button("Counts (\(TaskActions.countsBudget) of \(TaskActions.countsBudget))", systemImage: "circle") {}
+                        .disabled(true)
+                        .accessibilityIdentifier("menuCountsFull")
+                }
+            }
+        }
+    }
+
+    /// Makes the task the Knäuel (#643); while another holds the mark the app asks first.
+    private func setKnaeuel() {
+        if let holder = ViewRules.knaeuel(in: allTasks), holder.id != task.id {
+            askingKnaeuel = task
+            return
+        }
+        moveKnaeuel()
+    }
+
+    private func moveKnaeuel() {
+        askingKnaeuel = nil
+        TaskActions.setKnaeuel(task, among: allTasks, contexts: contexts, projects: projects)
+        save("knaeuel")
+    }
+
+    private func releaseKnaeuel() {
+        TaskActions.releaseKnaeuel(task, contexts: contexts, projects: projects)
+        save("knaeuel")
+    }
+
+    private func toggleCounts() {
+        TaskActions.toggleCounts(task, among: allTasks, contexts: contexts, projects: projects)
+        save("counts")
     }
 
     /// The nod (#349): the task leaves "New", and the detail returns to it for the next one.

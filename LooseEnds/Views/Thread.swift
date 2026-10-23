@@ -8,12 +8,44 @@ import SwiftUI
 struct ThreadShape: Shape {
     enum Form {
         case knot, loose
+        /// "Das Knäuel" (#643, Henning 2026-10-23): three dense loops and a short end running out flat
+        /// to the right, the one task being avoided. Drawn by hand on the design canvas, not from the
+        /// formula; the second exception to #350 after the thread itself.
+        case knaeuel
     }
 
     var form: Form = .knot
 
+    /// The Knäuel as decided on the canvas (board "Die Zeichen", viewBox 40 × 20): the start point
+    /// and six cubic segments, each as control 1, control 2, end.
+    nonisolated static let knaeuelStart = CGPoint(x: 6, y: 8)
+    nonisolated static let knaeuelCurves: [(CGPoint, CGPoint, CGPoint)] = [
+        (CGPoint(x: 8, y: 2), CGPoint(x: 16, y: 1), CGPoint(x: 19, y: 5.5)),
+        (CGPoint(x: 21, y: 9), CGPoint(x: 14, y: 12), CGPoint(x: 11, y: 8.5)),
+        (CGPoint(x: 9, y: 5.5), CGPoint(x: 15, y: 3.5), CGPoint(x: 18, y: 7)),
+        (CGPoint(x: 20, y: 10), CGPoint(x: 15, y: 12), CGPoint(x: 13, y: 9.5)),
+        (CGPoint(x: 12, y: 8), CGPoint(x: 15, y: 6.5), CGPoint(x: 17.5, y: 6.8)),
+        (CGPoint(x: 21, y: 7.2), CGPoint(x: 24, y: 8.6), CGPoint(x: 26, y: 11)),
+    ]
+
     /// The raw curve, unscaled, y pointing down: shared by this shape and the menu bar symbol (#366).
+    /// The Knäuel's curves are sampled finely enough to stroke as a polyline like the others.
     nonisolated static func curvePoints(form: Form) -> [CGPoint] {
+        if form == .knaeuel {
+            var points = [knaeuelStart]
+            var from = knaeuelStart
+            for (c1, c2, to) in knaeuelCurves {
+                for i in 1...24 {
+                    let t = Double(i) / 24
+                    let u = 1 - t
+                    let x = u * u * u * from.x + 3 * u * u * t * c1.x + 3 * u * t * t * c2.x + t * t * t * to.x
+                    let y = u * u * u * from.y + 3 * u * u * t * c1.y + 3 * u * t * t * c2.y + t * t * t * to.y
+                    points.append(CGPoint(x: x, y: y))
+                }
+                from = to
+            }
+            return points
+        }
         let a = 90.0
         let b = form == .knot ? 230.0 : 50.0
         let range = form == .knot ? -3.5...3.0 : -6.8...6.0
@@ -58,6 +90,19 @@ struct ThreadGlyph: View {
             .stroke(style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
             .padding(lineWidth / 2)
             .accessibilityHidden(true)
+    }
+}
+
+extension ThreadShape {
+    /// The thread as a template image for a menu entry (#643): a menu takes an image, not a view.
+    /// `size` holds the glyph; the stroke stays inside it.
+    @MainActor static func menuImage(form: Form, size: CGSize = CGSize(width: 24, height: 12), lineWidth: CGFloat = 1.5) -> Image {
+        Image(size: size) { context in
+            let rect = CGRect(origin: .zero, size: size).insetBy(dx: lineWidth / 2, dy: lineWidth / 2)
+            context.stroke(ThreadShape(form: form).path(in: rect), with: .color(.primary),
+                           style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
+        }
+        .renderingMode(.template)
     }
 }
 

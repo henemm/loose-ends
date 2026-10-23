@@ -21,7 +21,7 @@ struct FieldSettingsView: View {
                 } header: {
                     Text(Self.groupTitle(group))
                 } footer: {
-                    if group == .connection {
+                    if group == .drive {
                         Text("Fields that are off are not offered when filling in a task. What a task already holds stays visible.")
                     }
                 }
@@ -62,6 +62,7 @@ struct FieldSettingsView: View {
         case .weight: String(localized: "Weight")
         case .filing: String(localized: "Filing")
         case .connection: String(localized: "Connection")
+        case .drive: String(localized: "Drive")
         }
     }
 
@@ -93,6 +94,8 @@ struct FieldSettingsView: View {
         case .project: String(localized: "Projects")
         case .subtasks: String(localized: "Subtasks")
         case .waitingOn: String(localized: "Waiting on")
+        case .knaeuel: String(localized: "The Knäuel")
+        case .counts: String(localized: "Counts")
         }
     }
 
@@ -103,6 +106,8 @@ struct FieldSettingsView: View {
         case .importance, .urgency: String(localized: "The rules read it from your words even when off.")
         case .contexts, .project: String(localized: "Also the group on the start page.")
         case .waitingOn: String(localized: "A task that has to be done first.")
+        case .knaeuel: String(localized: "The one task you keep putting off, under the date on the start page.")
+        case .counts: String(localized: "A bead on the week's string once completed. At most five open at a time.")
         default: nil
         }
     }

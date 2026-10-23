@@ -17,9 +17,11 @@ enum DetailField: String, CaseIterable, Codable, Sendable {
     case contexts, project
     // Connection: what has to do with other tasks. Top level only.
     case subtasks, waitingOn
+    // Drive (#642): the Knäuel and the beads, both off until wanted. Last, so existing orders stay.
+    case knaeuel, counts
 
     enum Group: CaseIterable, Sendable {
-        case what, when, weight, filing, connection
+        case what, when, weight, filing, connection, drive
     }
 
     var group: Group {
@@ -29,6 +31,7 @@ enum DetailField: String, CaseIterable, Codable, Sendable {
         case .importance, .urgency, .duration, .energy: .weight
         case .contexts, .project: .filing
         case .subtasks, .waitingOn: .connection
+        case .knaeuel, .counts: .drive
         }
     }
 
@@ -40,8 +43,9 @@ enum DetailField: String, CaseIterable, Codable, Sendable {
     /// repeat, an event without a day no place in the calendar.
     var needsDueDate: Bool { self == .repeatRule || self == .calendar }
 
-    /// Offered only on a top-level task (rule 4, ADR-8): one level of subtasks, no chains.
-    var topLevelOnly: Bool { self == .subtasks || self == .waitingOn }
+    /// Offered only on a top-level task (rule 4, ADR-8): one level of subtasks, no chains. The Knäuel
+    /// and the beads are a task's, not a line's (#643, #645).
+    var topLevelOnly: Bool { self == .subtasks || self == .waitingOn || group == .drive }
 
     /// The field editor behind the word, where one exists; the others open their own section, sheet
     /// or picker.
@@ -57,6 +61,8 @@ enum DetailField: String, CaseIterable, Codable, Sendable {
         case .energy: .energy
         case .contexts: .contexts
         case .project: .project
+        case .knaeuel: .knaeuel
+        case .counts: .counts
         case .attachments, .calendar, .subtasks, .waitingOn: nil
         }
     }
@@ -75,6 +81,8 @@ enum DetailField: String, CaseIterable, Codable, Sendable {
         case .energy: self = .energy
         case .contexts: self = .contexts
         case .project: self = .project
+        case .knaeuel: self = .knaeuel
+        case .counts: self = .counts
         case .title, .people, .blockedBy: return nil
         }
     }
@@ -147,6 +155,8 @@ enum DetailFields {
         if task.project != nil { carried.insert(.project) }
         if !(task.subtasks ?? []).isEmpty { carried.insert(.subtasks) }
         if !(task.blockedBy ?? []).isEmpty { carried.insert(.waitingOn) }
+        if task.isKnaeuel { carried.insert(.knaeuel) }
+        if task.countsAt != nil { carried.insert(.counts) }
         return carried
     }
 

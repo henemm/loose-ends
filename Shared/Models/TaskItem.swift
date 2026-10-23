@@ -24,6 +24,14 @@ final class TaskItem {
     var nextRank: Double?
     var completedAt: Date?
     var parkedAt: Date?
+    /// "Das Knäuel" (#643): the one open task the user keeps avoiding, set by hand. The start page
+    /// shows it under the date. A manual state like `nextRank`; every change is a user revision
+    /// (`RevisedField.knaeuel`). Added 2026-10-23, additive for CloudKit.
+    var knaeuelAt: Date?
+    /// "Zählt" (#645): the task counts as a bead on the week's string once completed, set by hand,
+    /// at most five open at a time. A user revision per change (`RevisedField.counts`). Added
+    /// 2026-10-23, additive for CloudKit.
+    var countsAt: Date?
 
     // Calendar (ADR-13)
     var showInCalendar: Bool = false
@@ -152,6 +160,12 @@ extension TaskItem {
 
     /// What exists for the user (#605): every task but one removed with its subtasks.
     var isPresent: Bool { status != .removed }
+
+    /// The task is "Das Knäuel" (#643): open and marked. The mark falls with Done, Park and Delete.
+    var isKnaeuel: Bool { isOpen && knaeuelAt != nil }
+
+    /// Counts on the week's string (#645): marked by hand, or the Knäuel, which always counts.
+    var counts: Bool { countsAt != nil || knaeuelAt != nil }
 
     /// The same as a fetch predicate.
     static var present: Predicate<TaskItem> {
