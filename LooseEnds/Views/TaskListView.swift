@@ -27,6 +27,8 @@ struct TaskListView: View {
     @State private var askingKnaeuel: TaskItem?
     /// "The Knäuel" and "Counts" stand in the menu only while on (#538).
     @Environment(FieldSettingsStore.self) private var fieldSettings: FieldSettingsStore?
+    /// "Analyze again" in the long-press menu (#667); nil in previews, then it is not offered.
+    @Environment(\.enrichment) private var enrichment: EnrichmentCoordinator?
     /// A task left from an earlier day whose new date is being chosen (#518).
     @State private var redating: TaskItem?
     /// Parents whose subtasks are folded out in the project view (#28); folded by default.
@@ -91,7 +93,8 @@ struct TaskListView: View {
             pendingCompletions: pendingCompletions, completionPulse: completionPulse,
             pendingDelete: $pendingDelete, confirmingDelete: $confirmingDelete, datingTask: $datingTask,
             askingSubtasks: $askingSubtasks, askingKnaeuel: $askingKnaeuel,
-            fields: fieldSettings?.settings ?? .standard
+            fields: fieldSettings?.settings ?? .standard,
+            analyze: TaskInteractions.listAnalysis(enrichment)
         )
     }
 

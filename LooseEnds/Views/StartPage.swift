@@ -27,6 +27,8 @@ struct StartPage: View {
     @State private var askingKnaeuel: TaskItem?
     /// "The Knäuel" and "Counts" stand in the menu only while on (#538).
     @Environment(FieldSettingsStore.self) private var fieldSettings: FieldSettingsStore?
+    /// "Analyze again" in the long-press menu (#667); nil in previews, then it is not offered.
+    @Environment(\.enrichment) private var enrichment: EnrichmentCoordinator?
     #if os(macOS)
     /// "N more" unfolded; here, so the Mac's keys choose among the rows "Now" shows (#480).
     @State private var nowExpanded = false
@@ -87,7 +89,8 @@ struct StartPage: View {
             pendingDelete: $pendingTaskDelete, confirmingDelete: $confirmingTaskDelete, datingTask: $datingTask,
             askingSubtasks: $askingSubtasks, askingKnaeuel: $askingKnaeuel,
             didDelete: { id in if selection == .task(id) { selection = nil } },
-            fields: fieldSettings?.settings ?? .standard
+            fields: fieldSettings?.settings ?? .standard,
+            analyze: TaskInteractions.listAnalysis(enrichment)
         )
     }
 

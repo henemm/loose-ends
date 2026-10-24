@@ -700,7 +700,7 @@ final class CaptureSmokeTests: XCTestCase {
         let more = app.buttons["More"]
         XCTAssertTrue(more.waitForExistence(timeout: 5), "Detail should offer its menu")
         more.tap()
-        let complete = element("menuCompleteButton", in: app)
+        let complete = element("menuDone", in: app)
         XCTAssertTrue(complete.waitForExistence(timeout: 5), "The menu should offer Complete")
         complete.tap()
 
@@ -709,6 +709,31 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(element("completeAllSubtasks", in: app).exists, "The question should offer Complete all")
         element("completeAllSubtasks", in: app).tap()
         XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 10), "New should be empty after Complete all")
+    }
+
+    /// #667 (Henning, 2026-10-24): the detail's "…" menu is the list's menu, Delete included. Delete
+    /// asks, then the task is gone and the detail with it.
+    @MainActor
+    func testDeleteFromTheDetailLeavesIt() throws {
+        let app = launch()
+        let row = captureIntoNew("Alte Rechnung wegwerfen", in: app)
+        row.tap()
+        assertDetailRawText("Alte Rechnung wegwerfen", in: app)
+
+        let more = element("detailMoreMenu", in: app)
+        XCTAssertTrue(more.waitForExistence(timeout: 5), "Detail should offer the More menu")
+        more.tap()
+        let delete = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier == %@ OR label == %@", "menuDelete", "Delete"))
+            .firstMatch
+        XCTAssertTrue(delete.waitForExistence(timeout: 5), "The detail's menu should offer Delete")
+        delete.tap()
+        let confirm = app.buttons["confirmDeleteButton"].firstMatch
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5), "Delete should ask first")
+        confirm.tap()
+
+        XCTAssertTrue(element("detailRawTextMarker", in: app).waitForNonExistence(timeout: 5), "The detail should leave the deleted task")
+        XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 10), "New should be empty after the delete")
     }
 
     /// #605 (Henning, 2026-10-21): deleting a task with a subtask left the task standing; its

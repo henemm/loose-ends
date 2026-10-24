@@ -11,7 +11,8 @@ import SwiftUI
 /// reason and Reset. Opening the detail marks the AI changes as seen, except from "New" (#349):
 /// there a line under the title says why the task waits, and "Looks right" takes the place of
 /// Complete, which moves into the menu. Opened elsewhere, the bar carries Complete, "Looks right"
-/// while the task still needs a look (#318), and the briefing's menu (Next up, Park, Analyze again).
+/// while the task still needs a look (#318), and the "…" menu: the list's long-press menu, entry for
+/// entry (`TaskInteractions.menu`, #667), Delete included, which leaves the detail.
 struct TaskDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(CompletionPulse.self) private var completionPulse: CompletionPulse?
@@ -30,6 +31,9 @@ struct TaskDetailView: View {
     /// Opened by "Details" on its parent's line (#565): "Part of" goes back instead of stacking the
     /// parent once more.
     var fromParent = false
+    /// Runs after Delete from the menu (#667): the host lets go of its selection on the task. A pushed
+    /// detail needs nothing, `dismiss` pops it.
+    var onDeleted: () -> Void = {}
     /// Nil in previews and tests; the app passes its bridge for the access note.
     @Environment(CalendarBridge.self) private var calendar: CalendarBridge?
     /// Nil in previews; then "Analyze again" is not offered.
@@ -66,6 +70,13 @@ struct TaskDetailView: View {
     @State private var askingSubtasks: TaskItem?
     /// A second Knäuel asks first (#643).
     @State private var askingKnaeuel: TaskItem?
+    /// The menu's Delete (#667): the question, then the "Move → Date…" sheet's task, as in the lists.
+    @State private var pendingDelete: TaskItem?
+    @State private var confirmingDelete = false
+    @State private var datingTask: TaskItem?
+    /// Deleted from here: the view shows nothing more of the task (its model is gone from the store)
+    /// while it leaves.
+    @State private var deleted = false
     /// A subtask whose own detail is open (#565).
     @State private var openedSubtask: TaskItem?
     /// The parent, opened by "Part of" when this detail was not reached from it (#565).
@@ -258,8 +269,33 @@ struct TaskDetailView: View {
         }
     }
 
+    /// The list's gestures and menu on this one task (#667): Complete leaves the detail, Delete
+    /// empties it and leaves; "Analyze again" shows its note here.
+    private var actions: TaskInteractions {
+        TaskInteractions(
+            kind: nil, tasks: allTasks, contexts: contexts, projects: projects, modelContext: modelContext,
+            pendingCompletions: pendingCompletions, completionPulse: completionPulse,
+            pendingDelete: $pendingDelete, confirmingDelete: $confirmingDelete, datingTask: $datingTask,
+            askingSubtasks: $askingSubtasks, askingKnaeuel: $askingKnaeuel,
+            didDelete: { _ in
+                deleted = true
+                onDeleted()
+                dismiss()
+            },
+            fields: settings,
+            didComplete: { _ in dismiss() },
+            analyze: enrichment == nil ? nil : { _ in analyzeAgain() }
+        )
+    }
+
     var body: some View {
-        container
+        Group {
+            if deleted {
+                Paper.ground.ignoresSafeArea()
+            } else {
+                container
+            }
+        }
         .navigationTitle("")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
@@ -277,11 +313,8 @@ struct TaskDetailView: View {
         .navigationDestination(item: $openedParent) { parent in
             TaskDetailView(task: parent)
         }
-        .toolbar { actions }
-        .movesKnaeuel(asking: $askingKnaeuel, from: ViewRules.knaeuel(in: allTasks)) { _ in moveKnaeuel() }
-        .completesWithSubtasks(asking: $askingSubtasks) { _, withSubtasks in
-            finish(withSubtasks: withSubtasks)
-        }
+        .toolbar { toolbarActions }
+        .taskInteractionDialogs(actions)
         .onAppear {
             titleDraft = storedTitle
             if !reviewing { markSeen() }
@@ -508,12 +541,10 @@ struct TaskDetailView: View {
 
     /// The briefing's "…" menu (screen 4) with Complete first; completing leaves the detail. No
     /// checkmark in the bar: it reads as "close" (#349 for New, #435 everywhere). From "New" the
-    /// bar holds "Looks right".
+    /// bar holds "Looks right". The menu is the list's (#667), for a done or parked task too.
     @ToolbarContentBuilder
-    private var actions: some ToolbarContent {
-        // Deleting stays in the list's long-press menu: deleting from inside the open detail would
-        // leave the view on a destroyed model until it is gone.
-        if task.isOpen {
+    private var toolbarActions: some ToolbarContent {
+        if !deleted, task.isOpen {
             if inReview {
                 if ViewRules.canConfirm(task) {
                     ToolbarItem(placement: .primaryAction) {
@@ -537,27 +568,13 @@ struct TaskDetailView: View {
                     }
                 }
             }
+        }
+        if !deleted {
             ToolbarItem(placement: .primaryAction) {
+                // No checkmark in the bar (Henning, 2026-10-15): anyone taps it to close the
+                // detail and completes the task by accident. Complete lives in the menu, first, by name.
                 Menu("More", systemImage: "ellipsis") {
-                    // No checkmark in the bar (Henning, 2026-10-15): anyone taps it to close the
-                    // detail and completes the task by accident. Complete lives here, first, by name.
-                    Button("Complete", systemImage: "checkmark.circle", action: complete)
-                        .accessibilityIdentifier("menuCompleteButton")
-                    if task.nextRank == nil {
-                        Button("Next up", systemImage: "star", action: toggleNext)
-                    } else {
-                        Button("Remove from Next up", systemImage: "star.slash", action: toggleNext)
-                    }
-                    driveEntries
-                    Button("Park", systemImage: "moon.zzz") {
-                        TaskActions.park(task)
-                        save("park")
-                    }
-                    if enrichment != nil {
-                        Button("Analyze again", systemImage: "sparkles", action: analyzeAgain)
-                            .disabled(reanalysis == .running)
-                            .accessibilityIdentifier("analyzeAgainButton")
-                    }
+                    actions.menu(task)
                 }
                 .accessibilityIdentifier("detailMoreMenu")
             }
@@ -572,7 +589,7 @@ struct TaskDetailView: View {
     /// The second analysis, only because the user asked (ADR-4, #34). Changed fields come back
     /// accent-tinted with the spark, like after the first run; the title field follows the task.
     private func analyzeAgain() {
-        guard let enrichment else { return }
+        guard let enrichment, reanalysis != .running else { return }
         reanalysis = .running
         Task {
             let result = await enrichment.reanalyze(task)
@@ -607,11 +624,6 @@ struct TaskDetailView: View {
         }
     }
 
-    private func toggleNext() {
-        TaskActions.toggleNext(task, among: allTasks)
-        save("next")
-    }
-
     /// Under the raw text (#647): "The Knäuel · since Monday" with "Release", only while the task is
     /// the Knäuel; "Counts" with it, or "Counts always, it is the Knäuel". Nothing while neither holds.
     @ViewBuilder
@@ -626,7 +638,7 @@ struct TaskDetailView: View {
                             Text("The Knäuel · \(KnaeuelSince.setWords(from: at))")
                         }
                         Spacer()
-                        Button("Release", action: releaseKnaeuel)
+                        Button("Release") { actions.releaseKnaeuel(task) }
                             .buttonStyle(.borderless)
                             .accessibilityIdentifier("detailReleaseKnaeuel")
                     }
@@ -645,7 +657,7 @@ struct TaskDetailView: View {
                     }
                     Spacer()
                     if task.countsAt != nil {
-                        Button("No bead", action: toggleCounts)
+                        Button("Take the bead back") { actions.toggleCounts(task) }
                             .buttonStyle(.borderless)
                             .accessibilityIdentifier("detailReleaseCounts")
                     }
@@ -658,89 +670,10 @@ struct TaskDetailView: View {
         }
     }
 
-    /// "The Knäuel" and "Counts" in the "…" menu (#643, #645), as in the list's long-press menu:
-    /// each while its field is on or the task carries it; over the budget "Counts (5 of 5)" is grey.
-    @ViewBuilder
-    private var driveEntries: some View {
-        if task.parent == nil {
-            // By its name alone, as in the list's menu (the drawn icon hid the entry from the UI test).
-            if task.isKnaeuel {
-                Button("No longer the Knäuel", action: releaseKnaeuel)
-                    .accessibilityIdentifier("menuKnaeuelRelease")
-            } else if settings.isOn(.knaeuel) {
-                Button("The Knäuel", action: setKnaeuel)
-                    .accessibilityIdentifier("menuKnaeuel")
-            }
-            if task.countsAt != nil {
-                Button("No bead", systemImage: "circle.slash", action: toggleCounts)
-                    .accessibilityIdentifier("menuCountsRelease")
-            } else if settings.isOn(.counts) {
-                if TaskActions.canCount(task, among: allTasks) {
-                    Button("Collect a bead", systemImage: "circle", action: toggleCounts)
-                        .accessibilityIdentifier("menuCounts")
-                } else {
-                    Button("Collect a bead (\(TaskActions.countsBudget) of \(TaskActions.countsBudget))", systemImage: "circle") {}
-                        .disabled(true)
-                        .accessibilityIdentifier("menuCountsFull")
-                }
-            }
-        }
-    }
-
-    /// Makes the task the Knäuel (#643); while another holds the mark the app asks first.
-    private func setKnaeuel() {
-        if let holder = ViewRules.knaeuel(in: allTasks), holder.id != task.id {
-            askingKnaeuel = task
-            return
-        }
-        moveKnaeuel()
-    }
-
-    private func moveKnaeuel() {
-        askingKnaeuel = nil
-        TaskActions.setKnaeuel(task, among: allTasks, contexts: contexts, projects: projects)
-        save("knaeuel")
-    }
-
-    private func releaseKnaeuel() {
-        TaskActions.releaseKnaeuel(task, contexts: contexts, projects: projects)
-        save("knaeuel")
-    }
-
-    private func toggleCounts() {
-        TaskActions.toggleCounts(task, among: allTasks, contexts: contexts, projects: projects)
-        save("counts")
-    }
-
     /// The nod (#349): the task leaves "New", and the detail returns to it for the next one.
     private func confirmReview() {
         TaskActions.confirmReview(task)
         save("confirm")
-        dismiss()
-    }
-
-    /// Back to the list, where the row waits out its three seconds with Undo (#32). Without the
-    /// window (previews) Done lands at once. With open subtasks it asks first (#565).
-    private func complete() {
-        if !Subtasks.open(of: task).isEmpty {
-            askingSubtasks = task
-            return
-        }
-        finish(withSubtasks: false)
-    }
-
-    /// "Complete all" takes the open subtasks along (#565).
-    private func finish(withSubtasks: Bool) {
-        if let pendingCompletions {
-            pendingCompletions.schedule(task.id, withSubtasks: withSubtasks)
-        } else {
-            if withSubtasks {
-                for subtask in Subtasks.open(of: task) { TaskActions.complete(subtask) }
-            }
-            TaskActions.complete(task)
-            save("done")
-            completionPulse?.fire()
-        }
         dismiss()
     }
 
@@ -830,6 +763,7 @@ struct TaskDetailView: View {
     }
 
     private func commitTitle() {
+        guard !deleted else { return }
         let trimmed = titleDraft.trimmingCharacters(in: .whitespacesAndNewlines)
         guard trimmed != storedTitle else { return }
         RevisionService.set(.title, to: trimmed.isEmpty ? nil : trimmed, on: task, contexts: contexts, projects: projects)
