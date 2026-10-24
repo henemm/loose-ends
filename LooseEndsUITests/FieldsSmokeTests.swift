@@ -150,4 +150,87 @@ final class FieldsSmokeTests: XCTestCase {
         XCTAssertFalse(element("field_importance", in: app).exists, "The other switches stay off")
         shot(app, "538-5-project-offered-after-switch")
     }
+
+    /// #344: "Important" and "Urgent" in the list row are signs without words; the detail repeats each
+    /// sign behind the value of its register line. The words are sorted in by rules at capture.
+    /// Duration and project do not become register lines here (the capture text sets no duration, projects are
+    /// off in the standard); their signs are covered in FieldGlyphTests.
+    @MainActor
+    func testSignsStandInTheRowAndBehindTheValuesInTheDetail() throws {
+        let app = launch()
+        captureAndOpenDetail("Wichtig dringend Steuerbescheid morgen 20 Minuten prüfen", in: app)
+
+        for field in ["importance", "urgency", "dueDate"] {
+            let row = element("field_\(field)", in: app)
+            XCTAssertTrue(row.waitForExistence(timeout: 5), "The detail should hold field_\(field)")
+            XCTAssertTrue(element("fieldGlyph_\(field)", in: app).exists, "fieldGlyph_\(field) should stand in the line")
+        }
+        XCTAssertTrue(element("field_importance", in: app).label.contains("Importance"),
+                      "The line keeps its name for VoiceOver, was \(element("field_importance", in: app).label)")
+        shot(app, "344-1-detail-signs")
+
+        backToStart(in: app)
+        let newRow = element("viewRow_new", in: app)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
+        newRow.tap()
+        let importance = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH 'importanceMarker_'")).firstMatch
+        let urgency = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH 'urgencyMarker_'")).firstMatch
+        XCTAssertTrue(importance.waitForExistence(timeout: 5), "A high importance shows its sign in the row")
+        XCTAssertTrue(urgency.exists, "A high urgency shows its sign in the row")
+        XCTAssertEqual(importance.label, "Important")
+        XCTAssertEqual(urgency.label, "Urgent")
+        shot(app, "344-2-row-signs")
+    }
+
+    /// #344 UI test C (AC-4, AC-5): below High the row shows no sign, the detail still shows the ladder.
+    /// The rules only ever set High (`ImportanceUrgencyRule`), so the task is captured as High/High and
+    /// lowered in the register lines' editors to Medium, then Low, and its urgency to Low.
+    @MainActor
+    func testLowAndMediumShowNoSignInTheRowButTheLadderInTheDetail() throws {
+        let app = launch()
+        captureAndOpenDetail("Wichtig dringend Steuerbescheid prüfen", in: app)
+
+        let importanceRow = element("field_importance", in: app)
+        XCTAssertTrue(importanceRow.waitForExistence(timeout: 5), "The detail should hold field_importance")
+        choose("Medium", in: importanceRow, app: app)
+        XCTAssertTrue(element("fieldGlyph_importance", in: app).exists, "Medium keeps its sign behind the value")
+        shot(app, "344-3-detail-importance-medium")
+
+        choose("Low", in: importanceRow, app: app)
+        XCTAssertTrue(element("fieldGlyph_importance", in: app).exists, "Low keeps its sign behind the value")
+        let urgencyRow = element("field_urgency", in: app)
+        XCTAssertTrue(urgencyRow.waitForExistence(timeout: 5), "The detail should hold field_urgency")
+        choose("Low", in: urgencyRow, app: app)
+        XCTAssertTrue(element("fieldGlyph_urgency", in: app).exists, "Urgency keeps its sign behind the value")
+        shot(app, "344-4-detail-importance-low")
+
+        backToStart(in: app)
+        let newRow = element("viewRow_new", in: app)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
+        newRow.tap()
+        let row = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH 'taskRow_'")).firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "The task should stand in New")
+        let importance = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH 'importanceMarker_'")).firstMatch
+        let urgency = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH 'urgencyMarker_'")).firstMatch
+        XCTAssertFalse(importance.exists, "A low importance shows no sign in the row")
+        XCTAssertFalse(urgency.exists, "A low urgency shows no sign in the row")
+        shot(app, "344-5-row-without-signs")
+    }
+
+    /// Opens the editor of a register line, picks `level` and waits until the line says it.
+    @MainActor
+    private func choose(_ level: String, in line: XCUIElement, app: XCUIApplication) {
+        line.tap()
+        let option = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", level)).firstMatch
+        XCTAssertTrue(option.waitForExistence(timeout: 5), "The editor should offer \(level)")
+        option.tap()
+        // A single choice closes the editor by itself (#482).
+        let shows = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label CONTAINS %@", level), object: line)
+        XCTAssertEqual(XCTWaiter().wait(for: [shows], timeout: 5), .completed, "Line label was \(line.label)")
+    }
 }

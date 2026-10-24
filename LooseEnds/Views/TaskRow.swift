@@ -159,14 +159,16 @@ struct TaskRow: View {
             if task.importance == .high || task.urgency == .high || !traits.isEmpty {
                 HStack(spacing: 8) {
                     if task.importance == .high {
-                        Image(systemName: "flag.fill")
+                        Image(systemName: FieldGlyph.importance(.high))
                             .foregroundStyle(.primary)
                             .accessibilityLabel("Important")
+                            .accessibilityIdentifier("importanceMarker_\(task.id.uuidString)")
                     }
-                    if task.urgency == .high {
-                        Image(systemName: "bolt.fill")
+                    if task.urgency == .high, let flame = FieldGlyph.symbol(for: .urgency) {
+                        Image(systemName: flame)
                             .foregroundStyle(.primary)
                             .accessibilityLabel("Urgent")
+                            .accessibilityIdentifier("urgencyMarker_\(task.id.uuidString)")
                     }
                     ForEach(traits) { trait in
                         if trait.id == "counts" {
