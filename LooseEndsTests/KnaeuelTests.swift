@@ -294,6 +294,30 @@ import Testing
         #expect(ViewRules.weekBeads(in: all, now: Self.date(15), calendar: Self.calendar).map(\.title) == ["Rasen mähen", "Fenster putzen"])
     }
 
+    @Test("The start page's string holds the last seven beads of any age, oldest first (Henning, build 110)")
+    @MainActor func recentBeads() async throws {
+        let store = try TestStore()
+        var tasks: [TaskItem] = []
+        for day in 1...9 {
+            let task = KnaeuelTests.task("Perle \(day)")
+            task.countsAt = Self.date(1, 9)
+            store.context.insert(task)
+            TaskActions.complete(task, now: Self.date(day, 9, hour: 9))
+            tasks.append(task)
+        }
+        let open = KnaeuelTests.task("Offen")
+        open.countsAt = Self.date(1)
+        store.context.insert(open)
+        try store.context.save()
+
+        let recent = ViewRules.recentBeads(in: tasks + [open])
+        #expect(recent.count == ViewRules.stringLength)
+        #expect(recent.map(\.title) == (3...9).map { "Perle \($0)" }, "the two oldest fell off")
+        #expect(ViewRules.recentBeads(in: Array(tasks.prefix(2))).count == 2, "few beads stay a string")
+        #expect(ViewRules.recentBeads(in: [open]).isEmpty)
+        #expect(ViewRules.weekBeads(in: tasks, now: Self.now, calendar: Self.calendar).isEmpty, "September beads are not this week's")
+    }
+
     @Test("The beads sit from the left at 40 pt apart on the sagging string, closer only once the string is full")
     func centers() {
         #expect(WeekString.centers(count: 0, width: 350).isEmpty)

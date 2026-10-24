@@ -255,11 +255,18 @@ Perlen.“ (`StartHeadline.week`, `ViewRules.weekToSpeakOf`), darunter die Schnu
 Schnur unter „Jetzt“ steht derweil nicht doppelt. Ohne Perle kein Satz, kein Vergleich, kein „nur“. „Erledigt“ ist nach Wochen
 gruppiert (`ViewRules.groupedByCompletionWeek`, Montag bis Sonntag, Kopf „20. bis 26. Oktober“, aktuelle Woche „Diese Woche ·
 …“), jede Woche mit ihrer Schnur, auch leer; die Tage bleiben innen, der Wochentag steht in der Randspalte; zählende Aufgaben
-tragen die Perle, die Knäuel-Aufgabe das kleine graue Knäuel (`TaskRow`, in jeder Liste). **Dafür** (#647): ein Satz für die Woche, Freitext, nichts wird geprüft; kursiv unter der Schnur („Dafür: Samstag Kino.“),
-ein Tipp setzt den Cursor hinein, leer heißt keine Zeile; geschrieben wird er in „Felder“ unter „Zählt“ und gehalten wie die
+tragen die Perle, die Knäuel-Aufgabe das kleine graue Knäuel (`TaskRow`, in jeder Liste). **Für die Perlen** (#647, Wortlaut #655): ein Satz für die Perlen, Freitext, nichts wird geprüft; kursiv unter der Schnur („Für
+die Perlen: Samstag Kino.“), nur solange die Schnur eine Perle hat (Henning, 2026-10-24: allein stand der Satz ohne
+Zusammenhang), ein Tipp setzt den Cursor hinein, leer heißt keine Zeile; geschrieben wird er in „Felder“ unter „Zählt“ und gehalten wie die
 Schalter (`FieldSettingsStore.reward`, Defaults und iCloud-Schlüsselwertspeicher); er bleibt über den Montag stehen. Im Detail
 steht unter dem Rohtext „Das Knäuel · seit Montag“ mit „Lösen“ und „Zählt immer, es ist das Knäuel“. Bewusst nicht gebaut:
 Serien, Punkte für jede Aufgabe, Vergleich, Mitteilungen, Lob (Belege in 07, Teil 2.4).
+**Nachgeschärft nach Build 110 (Henning, 2026-10-24, #655):** Das Feature heißt **„Perle sammeln“** („Zählt“ sagte nichts):
+Menü „Perle sammeln“ / „Keine Perle“, über dem Budget „Perle sammeln (5 von 5)“, Einstellung „Perlen sammeln“, Detail „Sammelt
+eine Perle“ bzw. „Sammelt immer eine Perle, es ist das Knäuel“. Die Zeile unter dem Datum trägt als erstes Merkmal das graue
+Wort „Das Knäuel“ (das Zeichen allein sagte nicht, warum sie da steht). Die Schnur auf der Startseite zeigt **die letzten
+sieben Perlen ohne Zeitraum** (`ViewRules.recentBeads`, `stringLength`): zwei Perlen pro Woche ließen die Wochenschnur meist
+leer; die Zeile heißt „Perlen“. „Erledigt“ bleibt nach Wochen, der Sonntagssatz spricht weiter von der Woche.
 
 **ADR-17 Ergänzte Screens nach Lückenprüfung.** Als nächstes (manuell sortiert), Neu (Eingang),
 Feld-Picker statt Formular, Wisch- und Halten-Gesten mit Verschieben (Morgen, Wochenende, nächste Woche,

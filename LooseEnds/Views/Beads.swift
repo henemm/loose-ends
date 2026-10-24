@@ -34,7 +34,8 @@ struct PearlGlyph: View {
 struct WeekString: View {
     let beads: [ViewRules.Bead]
     @State private var fresh = false
-    @State private var seen: Int?
+    /// The newest bead the string has shown; a new one turns green, however the count changes.
+    @State private var seen: String?
     @Environment(\.dynamicTypeSize) private var typeSize
 
     static let height: CGFloat = 47
@@ -71,12 +72,13 @@ struct WeekString: View {
         }
         .frame(height: metrics(Self.height))
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("\(beads.count) beads this week"))
+        .accessibilityLabel(Text("\(beads.count) beads on the string"))
         .accessibilityIdentifier("weekString")
-        .onChange(of: beads.count, initial: true) { _, count in
-            // Green only for a bead that came while the string was on screen, never on appear.
-            defer { seen = count }
-            guard let seen, count > seen else { return }
+        .onChange(of: beads.last?.id, initial: true) { _, last in
+            // Green only for a bead that came while the string was on screen, never on appear. By
+            // the newest bead, not the count: a full string stays at seven when the eighth comes.
+            defer { seen = last ?? "" }
+            guard seen != nil, let last, last != seen else { return }
             fresh = true
         }
         .task(id: fresh) {
@@ -114,8 +116,9 @@ struct WeekString: View {
     }
 }
 
-/// "This week" on the start screen (#645, #647): the caption, the string while the week has a bead,
-/// and "Dafür" while a sentence is set; nothing without either.
+/// "Beads" on the start screen (#645, #647; Henning 2026-10-24, build 110): the caption, the string
+/// of the last seven beads, and "For the beads: …" under it while a sentence is set. Nothing without a
+/// bead: the sentence alone stood without its context.
 struct WeekStringRows: View {
     let beads: [ViewRules.Bead]
     /// Every task, for the Sunday rule.
@@ -127,15 +130,13 @@ struct WeekStringRows: View {
         let reward = fieldSettings?.reward ?? ""
         // While the sentence of the day carries the string (#646), it does not stand here again.
         let spoken = ViewRules.weekToSpeakOf(in: all) != nil
-        if (!beads.isEmpty && !spoken) || !reward.isEmpty {
+        if !beads.isEmpty, !spoken {
             let metrics = StartMetrics(typeSize)
-            ZoneCaption("This week")
-            if !beads.isEmpty, !spoken {
-                WeekString(beads: beads)
-                    .listRowSeparator(.hidden)
-                    .startRow(metrics)
-                    .paperRow()
-            }
+            ZoneCaption("Beads")
+            WeekString(beads: beads)
+                .listRowSeparator(.hidden)
+                .startRow(metrics)
+                .paperRow()
             if !reward.isEmpty, let fieldSettings {
                 RewardLine(store: fieldSettings)
                     .listRowSeparator(.hidden)
@@ -146,9 +147,9 @@ struct WeekStringRows: View {
     }
 }
 
-/// "Dafür: Samstag Kino." (#647, Milkman's bundling at its simplest): one free sentence for the week,
-/// in italics under the string. A tap puts the cursor into it; Return or leaving saves; nothing is
-/// checked. Empty means no line, so the first sentence is written in Settings › Fields.
+/// "Für die Perlen: Samstag Kino." (#647, Milkman's bundling at its simplest): one free sentence for
+/// the beads, in italics under the string. A tap puts the cursor into it; Return or leaving saves;
+/// nothing is checked. Empty means no line, so the first sentence is written in Settings › Fields.
 struct RewardLine: View {
     let store: FieldSettingsStore
     @State private var draft = ""
@@ -159,10 +160,10 @@ struct RewardLine: View {
     var body: some View {
         let metrics = StartMetrics(typeSize)
         HStack(alignment: .firstTextBaseline, spacing: 4) {
-            Text("For it:")
+            Text("For the beads:")
                 .accessibilityHidden(true)
             if editing {
-                TextField("For it", text: $draft)
+                TextField("For the beads", text: $draft)
                     .textFieldStyle(.plain)
                     .focused($focused)
                     .submitLabel(.done)
@@ -188,7 +189,7 @@ struct RewardLine: View {
             if !isFocused, editing { commit() }
         }
         .accessibilityElement(children: .contain)
-        .accessibilityLabel(Text("For it: \(store.reward)"))
+        .accessibilityLabel(Text("For the beads: \(store.reward)"))
         .accessibilityIdentifier("rewardLine")
     }
 

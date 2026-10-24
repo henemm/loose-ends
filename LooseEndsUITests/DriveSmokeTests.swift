@@ -116,11 +116,19 @@ final class DriveSmokeTests: XCTestCase {
         XCTAssertTrue(element("startHeader", in: app).exists)
     }
 
-    /// "Dafür" (#647): written in Settings › Fields, the sentence stands on the start page under
-    /// "This week"; a tap on it opens the field there.
+    /// "Für die Perlen" (#647, #655): written in Settings › Fields, the sentence stands on the start page
+    /// under the string, once the string has a bead; a tap on it opens the field there.
     @MainActor
     func testRewardWrittenInSettingsShowsOnTheStartPage() throws {
         let app = launch()
+        // One bead first: without it the sentence stays in Settings (Henning, build 110).
+        capture("Apfel kaufen", in: app)
+        openNew(in: app)
+        holdRow(titled: "Apfel", until: "menuCounts", in: app).tap()
+        holdRow(titled: "Apfel", until: "menuDone", in: app).tap()
+        back(in: app)
+        XCTAssertTrue(element("weekString", in: app).waitForExistence(timeout: 10), "No string with the bead")
+
         XCTAssertTrue(app.buttons["settingsButton"].waitForExistence(timeout: 10))
         app.buttons["settingsButton"].tap()
         let fieldsRow = element("fieldsRow", in: app)
@@ -138,7 +146,7 @@ final class DriveSmokeTests: XCTestCase {
         XCTAssertTrue(done.waitForExistence(timeout: 5))
         done.tap()
         let line = element("rewardLine", in: app)
-        XCTAssertTrue(line.waitForExistence(timeout: 5), "The start page should show Dafür under This week")
+        XCTAssertTrue(line.waitForExistence(timeout: 5), "The start page should show the sentence under the string")
         XCTAssertTrue(line.label.contains("Samstag Kino"), "Wrong sentence: \(line.label)")
         line.tap()
         XCTAssertTrue(element("rewardField", in: app).waitForExistence(timeout: 5), "A tap should put the cursor into the sentence")
@@ -173,5 +181,7 @@ final class DriveSmokeTests: XCTestCase {
         let string = element("weekString", in: app)
         XCTAssertTrue(string.waitForExistence(timeout: 10), "No week string under Now")
         XCTAssertTrue(string.label.contains("1 bead"), "Wrong beads: \(string.label)")
+        // The bead's words (#655): "Collect a bead" in the menu was found above; the row carries the bead.
+        XCTAssertTrue(elements(prefix: "countsMarker_", in: app).firstMatch.exists)
     }
 }

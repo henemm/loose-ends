@@ -68,7 +68,7 @@ struct StartPage: View {
                 .startRow(metrics)
                 .paperRow()
             NowBlock(tasks: ViewRules.now(in: tasks).all, expanded: nowExpandedBinding) { nowRow($0, metrics) }
-            WeekStringRows(beads: ViewRules.weekBeads(in: tasks), all: tasks)
+            WeekStringRows(beads: ViewRules.recentBeads(in: tasks), all: tasks)
         })
         .listStyle(.plain)
         .paperGround()
