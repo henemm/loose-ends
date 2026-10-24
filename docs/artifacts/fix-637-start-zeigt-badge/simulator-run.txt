@@ -1,57 +1,29 @@
 # Simulator-Beleg
-erzeugt: 2026-10-24T09:07:37+0200
+erzeugt: 2026-10-24T09:15:12+0200
 befehl: scripts/sim.sh test-proof StartNumberTests
 workflow: fix-637-start-zeigt-badge
-head: bcb9bbe13035d7a6f8332f589e22ac76a16935c5
-basis: dc39bec0be53ad3b68af7a784e91b47856d730b5 (merge-base origin/main HEAD)
+head: 4eb47e1e16bf3e99ae8b7cb8782d7fbb985eedda
+basis: 96f79e8be9c336d4bd7b17d5f82fde53582e7f4f (merge-base origin/main HEAD)
 testklasse: StartNumberTests
 ergebnis: Passed
 xcodebuild: ** TEST SUCCEEDED **
 tests: 2 gesamt, 2 bestanden, 0 fehlgeschlagen, 0 übersprungen
-start: 1792825624.045  ende: 1792825656.684
+start: 1792826084.496  ende: 1792826112.397
 geraet: iPhone 17, iOS 27.0
-summary: docs/artifacts/fix-637-start-zeigt-badge/simulator-run/summary.json  sha256:d6fe44078eda9b2f7f00d1949b6767b37a8e514425e85beca27b366928d7dd4b
+summary: docs/artifacts/fix-637-start-zeigt-badge/simulator-run/summary.json  sha256:3697fb4dd1676670f5b425ef949ed1a79c143598cd3366cc428162a7be061903
 xcresult: docs/artifacts/fix-637-start-zeigt-badge/simulator-run/run.xcresult  (gitignored)
 screenshots: docs/artifacts/fix-637-start-zeigt-badge/simulator-run/*.png (2 Stück)
 
 ## Geprüfte Dateien
-- sha256:5989d08cbb9d6878413efe8fc16c9f98c23b464f52efcdd7b13cbd330a05a40a  LooseEnds/App/FieldSettingsStore.swift
 - sha256:19b93c447061dffbe5c33177d31690e00d0b865e54cc4dfa99ad4c12ff58016d  LooseEnds/App/LooseEndsApp.swift
-- sha256:7382f04fe74017dcd1efcb0b4719070f6a5f519fa5262b61fb09fcaefab98b01  LooseEnds/Mac/MainWindowPlacement.swift
-- sha256:49f4905f57f54a10ea1816a04f3d95b0a51b25cc0fd0a8da27d5166a7edfa393  LooseEnds/Views/Beads.swift
-- sha256:fb91b6a656121efc063c530529389d109f0bb054b4fdabb40f7815e4aceb624f  LooseEnds/Views/FieldFormatting.swift
-- sha256:5118f7d6044e4328eddcd61e9d9f4d998f09d82e2f323cd2661db367bcc25ab8  LooseEnds/Views/FieldSettingsView.swift
-- sha256:e1cc2970fcc7a30ff781fcef96bda523a4b89921fc35f3c742dce5eb93f2aba3  LooseEnds/Views/Knaeuel.swift
-- sha256:4fc674e34d9c4734ce147dcf3f686b34aef37427b51aca1055666c2262860d72  LooseEnds/Views/KnaeuelThread.swift
 - sha256:c3eb10139afaa97c32ed589d185e49e8ff5b929458f8487a1271053f26a2db7b  LooseEnds/Views/SidebarView.swift
-- sha256:0122cc65dd2549984075788439fba2c82b9307e6049b5e70d0d888846d5d3401  LooseEnds/Views/StartHeadlineText.swift
 - sha256:a579a708761102f75f3a62edc9dda22090512d82474b666de6f94bfe4d2b2bdc  LooseEnds/Views/StartPage.swift
 - sha256:e90ce7fa1d00c1e45ad63fd0d397e8d51376639fc734e52379afc1afdb8ea0dd  LooseEnds/Views/StartZones.swift
-- sha256:1c7ca1809be0c204d7e674be7a4c588f09529771738e43f881c560792896b11b  LooseEnds/Views/TaskDetailView.swift
-- sha256:d89d17c55f327589bd60e463c194ac84d046c6fa43802c7f14310c2952bc2c1e  LooseEnds/Views/TaskInteractions.swift
-- sha256:ce7794c5f36a2ed388d494acd5ea1fe6d085166d5f635d74b53f54bf7c74207e  LooseEnds/Views/TaskListView.swift
-- sha256:1700f8ec52e3c07f5e6dbc8717a127e96a8d4b1b89f10b2c55c12f84bdfe7c8e  LooseEnds/Views/TaskRow.swift
-- sha256:e864d0d36edb07c056d85564f12d38f2fad07cac78fcf0ca0ff39c80ed3d2cd7  LooseEnds/Views/Thread.swift
 - sha256:8b36e5c71334894d4a4f673ad2c285427ee2fe5a45f0cc92e93c2011f56054ee  LooseEndsTests/CarryRemindersTests.swift
-- sha256:373ed1175ec6d3d0d1e4ca66f909368d3339cebd0b863ffcc8b9ea317c32550a  LooseEndsTests/DetailFieldsTests.swift
 - sha256:a6bb7e1d97c0decc09fb4b1ec08375ce38ed3794978aa82aac1617110b6fe2dd  LooseEndsTests/DueStateTests.swift
 - sha256:306c4c4f2fa7022dd12af304602ee6cb253b2bce2eaf798085bafc5aaff44f6c  LooseEndsTests/DueTodayTests.swift
-- sha256:6999729648aa89e1bc0ede32227b38f421d1f8a701b93c4a8eaa4bf92ee0c6a9  LooseEndsTests/KnaeuelTests.swift
-- sha256:2fbf8999d3215cbac2c2d0807468534df87dc8112792e33f81d8a5ca9460619d  LooseEndsTests/KnaeuelThreadTests.swift
-- sha256:151ec00449e52dd2df0331f2c0adb2ac98a9f3ac8db2b706b36df0592675daa7  LooseEndsTests/ListPolishTests.swift
-- sha256:73624dea6ab44f86aaaa7cc21b33708b6e1cb4bd7daaa08e22ff40bf63bce608  LooseEndsTests/MainWindowPlacementTests.swift
 - sha256:f69eb04a598e369098615337b8e25bb2cbc2c707da67de25c7b622a309a4cb94  LooseEndsTests/NowRuleTests.swift
-- sha256:1b3ce262e6686bba27ccd2aa8a25eaff9210d86eb47fea7920e7fe2583e7c019  LooseEndsTests/StartHeadlineTests.swift
-- sha256:7f1cf5df66fd5b41aa0f6939ea1dde9c9cb8b1df2d1c4bbd080a14a6d12ecb6a  LooseEndsUITests/DriveSmokeTests.swift
 - sha256:2e04743a5ecabf8cfa3a48a415184e7fa9ce16da1a474d138fb74eaa6219eb2b  LooseEndsUITests/MacGalleryTests.swift
-- sha256:96f1d570d4cd462e99d2c05edd07b1a18a7a280faa73ddc91beedad2732f0195  LooseEndsUITests/MacUITestSupport.swift
 - sha256:eb9ae706d6fb2289ad14a72716562be32a5f2cc9a4cfb0b6af95c6fd53bea797  LooseEndsUITests/StartNumberTests.swift
-- sha256:136006b1a6fdee2c281bde0f5d9418bc2a906bcc02cf916c0527b9f219931731  Shared/Models/DetailFields.swift
-- sha256:7224053077964796d7965774831b4b32cd07ed701db662c0e5df25417f394e72  Shared/Models/Enums.swift
 - sha256:d7f0f9a1b2d0fc51ce39f725c200207ab7f8d77a47e2a990e0d7302df10b2600  Shared/Models/NewDateRule.swift
-- sha256:f0a6842066e0777fb9b1702abc90613df9c39171e7a26f6a15d01b082c5e43b4  Shared/Models/StartHeadline.swift
-- sha256:b5484dac1a5ef3261ef89352c7de7df2b805e27b1bc7fb797c69f3df964ca055  Shared/Models/TaskItem.swift
 - sha256:17afc2fba7628ae97f441280af2862c46ee455ae2c86e48576934788b758181d  Shared/Models/ViewRules.swift
-- sha256:a29d4f6a15b977560edc274ab6334890f63bbf73434720c4f5980eaac45a4dab  Shared/Services/FieldCodec.swift
-- sha256:df3ddda5dd6cfd30ddffff62e2e5f47827425ff8e58eeac49a658bd223b19a0e  Shared/Services/RevisionService.swift
-- sha256:921b81e78f80c8cd1450917b2f2a4074dbe869b3ea536e907cd8b2bb34c0f8a7  Shared/Services/TaskActions.swift
