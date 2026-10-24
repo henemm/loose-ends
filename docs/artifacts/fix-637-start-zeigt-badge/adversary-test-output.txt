@@ -1,3 +1,5 @@
+[0;34m[sim][0m Testsperre belegt — warte (0 s, Platz 1 von 1 in der Warteliste). Halter: Worktree /Users/hem/Developer/loose-ends/.claude/worktrees/issue-659, Befehl sim-unit, PID 22241
+[0;34m[sim][0m Testsperre belegt — warte (31 s, Platz 1 von 2 in der Warteliste). Halter: Worktree /Users/hem/Developer/loose-ends/.claude/worktrees/issue-659, Befehl sim-unit, PID 22241
 Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
 [0;32m[sim][0m Simulator bereit (iPhone 17).
 [0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/NowRuleTests
@@ -9,80 +11,37 @@ Version: 3.2.1
 [36;1mnote: [0mBuilding targets in dependency order
 [36;1mnote: [0mTarget dependency graph (7 targets)
 [[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
-[[36mLooseEndsWidgets[0m] [1mCompiling[0m NewDateRule.swift
-[[36mLooseEndsWidgets[0m] [1mCompiling[0m ViewRules.swift
-[[36mLooseEndsWatch[0m] [1mCompiling[0m NewDateRule.swift
-[[36mLooseEndsWatch[0m] [1mCompiling[0m ViewRules.swift
-[[36mLooseEndsWatch[0m] [1mCompiling[0m ViewRules.swift
-[[36mLooseEndsWatch[0m] [1mCompiling[0m NewDateRule.swift
-[[36mLooseEndsShare[0m] [1mCompiling[0m ViewRules.swift
-[[36mLooseEndsShare[0m] [1mCompiling[0m NewDateRule.swift
-[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatch.swiftsourceinfo
-[[36mLooseEndsShare[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsShare.abi.json
-[[36mLooseEndsShare[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsShare.swiftsourceinfo
-[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos-simulator.abi.json -> LooseEndsWatch.abi.json
-[[36mLooseEndsWatch[0m] [1mCopy[0m x86_64-apple-watchos-simulator.abi.json -> LooseEndsWatch.abi.json
-[[36mLooseEndsWatch[0m] [1mCopy[0m x86_64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatch.swiftsourceinfo
-[[36mLooseEndsShare[0m] [1mExtract App Intents Metadata[0m
 [[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
-[[36mLooseEndsWatch[0m] [1mExtract App Intents Metadata[0m
-[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsWidgets.swiftsourceinfo
-[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsWidgets.abi.json
-[[36mLooseEndsWidgets[0m] [1mExtract App Intents Metadata[0m
 [[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
 [[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
-[[36mLooseEnds[0m] [1mCompiling[0m StartPage.swift
-[[36mLooseEnds[0m] [1mCompiling[0m NewDateRule.swift
-[[36mLooseEnds[0m] [1mCompiling[0m LooseEndsApp.swift
-[[36mLooseEnds[0m] [1mCompiling[0m ViewRules.swift
-[[36mLooseEnds[0m] [1mCompiling[0m SidebarView.swift
-[[36mLooseEnds[0m] [1mCompiling[0m StartZones.swift
-[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEnds.swiftsourceinfo
-[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEnds.abi.json
-[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
-[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
 [[36mLooseEnds[0m] [1mProcessing[0m Info.plist
-[[36mLooseEnds[0m] [1mExtract App Intents Metadata[0m
-[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
-[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWidgets.appex
-[[36mLooseEndsUITests[0m] [1mCompiling[0m MacGalleryTests.swift
-[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
-[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsUITests.abi.json
 [[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
-[[36mLooseEndsTests[0m] [1mCompiling[0m NowRuleTests.swift
-[[36mLooseEndsTests[0m] [1mCompiling[0m DueStateTests.swift
-[[36mLooseEndsTests[0m] [1mCompiling[0m DueTodayTests.swift
-[[36mLooseEndsTests[0m] [1mCompiling[0m CarryRemindersTests.swift
-[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsTests.swiftsourceinfo
-[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsTests.abi.json
-[[36mLooseEndsTests[0m] [1mExtract App Intents Metadata[0m
 [[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
-[[36mLooseEndsUITests[0m] [1mExtract App Intents Metadata[0m
-Test Suite 'Selected tests' started at 2026-10-23 18:30:07.000.
-Test Suite 'LooseEndsTests.xctest' started at 2026-10-23 18:30:07.001.
-Test Suite 'LooseEndsTests.xctest' passed at 2026-10-23 18:30:07.001.
+Test Suite 'Selected tests' started at 2026-10-24 09:13:50.084.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-24 09:13:50.087.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-24 09:13:50.087.
 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
-Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.004) seconds
 [1mTest run started.[0m
 Suite "Now on the start screen" started
-    [32m✔[0m "Due today before the rest of Next up; a task left from yesterday stands last, asking for a new date (#518, #637)" (0.016 seconds)
-    [32m✔[0m "A task lined up and due today stands once, in the today group" (0.011 seconds)
-    [32m✔[0m "Lined up and left from earlier: the user's lining up counts, it stands with the lined-up tasks (#637)" (0.003 seconds)
-    [32m✔[0m "Left from earlier without a rank stands last, the oldest deadline first (#637)" (0.003 seconds)
-    [32m✔[0m "Due earlier today is today, not overdue: the day counts, not the hour" (0.003 seconds)
+    [32m✔[0m "Due today before the rest of Next up; a task left from yesterday stands last, asking for a new date (#518, #637)" (0.015 seconds)
+    [32m✔[0m "A task lined up and due today stands once, in the today group" (0.004 seconds)
+    [32m✔[0m "Lined up and left from earlier: the user's lining up counts, it stands with the lined-up tasks (#637)" (0.004 seconds)
+    [32m✔[0m "Left from earlier without a rank stands last, the oldest deadline first (#637)" (0.004 seconds)
+    [32m✔[0m "Due earlier today is today, not overdue: the day counts, not the hour" (0.004 seconds)
     [32m✔[0m "Due today sorts by hour, earliest first" (0.003 seconds)
-    [32m✔[0m "The rest of Next up keeps its own order" (0.004 seconds)
-    [32m✔[0m "Loose ends: the oldest first, blocked, parked and done stay out (#518)" ([33m0.033[0m seconds)
+    [32m✔[0m "The rest of Next up keeps its own order" (0.003 seconds)
+    [32m✔[0m "Loose ends: the oldest first, blocked, parked and done stay out (#518)" (0.005 seconds)
     [32m✔[0m "Blocked, done and parked stay out, and so does a subtask without a date of its own, even lined up (#565)" (0.004 seconds)
-    [32m✔[0m "Due later without a rank stays out" (0.003 seconds)
+    [32m✔[0m "Due later without a rank stays out" (0.004 seconds)
     [32m✔[0m "Due later but lined up stands with the lined-up tasks" (0.003 seconds)
     [32m✔[0m "Nothing in, nothing out" (0.001 seconds)
-    [32m✔[0m "Now holds exactly Due today, Next up and what needs a new date; the icon counts the same (#584, #637)" (0.003 seconds)
-    [32m✔[0m "Due today and the badge are unchanged: a lined-up task due today still stands in Due today (#299)" (0.003 seconds)
-    [32m✔[0m "Henning's case: four deadlines passed, one of them lined up, one more lined up: icon and Now say 5 (#637)" (0.003 seconds)
-    [32m✔[0m "The icon number is the number of rows in Now, whatever the mix (#637, one number everywhere)" (0.004 seconds)
-Suite "Now on the start screen" passed after 0.106 seconds
-[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-wobbly-beaming-pie/Logs/Test/Test-LooseEnds-2026.10.23_18-29-32-+0200.xcresult
+    [32m✔[0m "Now holds exactly Due today, Next up and what needs a new date; the icon counts the same (#584, #637)" (0.004 seconds)
+    [32m✔[0m "Due today and the badge are unchanged: a lined-up task due today still stands in Due today (#299)" (0.011 seconds)
+    [32m✔[0m "Henning's case: four deadlines passed, one of them lined up, one more lined up: icon and Now say 5 (#637)" (0.004 seconds)
+    [32m✔[0m "The icon number is the number over Now, rows plus a counting Knäuel, whatever the mix (#637, #643)" (0.006 seconds)
+Suite "Now on the start screen" passed after 0.089 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-wobbly-beaming-pie/Logs/Test/Test-LooseEnds-2026.10.24_09-13-38-+0200.xcresult
 [32;1mTest Succeeded[0m
 [36;1mTesting started[0m
 [0;32m[sim][0m Unit-Tests bestanden.
@@ -91,7 +50,7 @@ Suite "Now on the start screen" passed after 0.106 seconds
 [sim] Latenzschutz (#274):
 [sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
 [sim]   The final text keeps the key words – NICHT gemessen: nicht im Log
-exit 0
+[0;34m[sim][0m Testsperre belegt — warte (0 s, Platz 2 von 2 in der Warteliste). Halter: keiner, Sperre frei, Vorrang hat 01792825998894052000-24878
 Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
 [0;32m[sim][0m Simulator bereit (iPhone 17).
 [0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/CarryRemindersTests
@@ -109,148 +68,30 @@ Version: 3.2.1
 [[36mLooseEnds[0m] [1mProcessing[0m Info.plist
 [[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
 [[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
-Test Suite 'Selected tests' started at 2026-10-23 18:30:45.502.
-Test Suite 'LooseEndsTests.xctest' started at 2026-10-23 18:30:45.508.
-Test Suite 'LooseEndsTests.xctest' passed at 2026-10-23 18:30:45.508.
+Test Suite 'Selected tests' started at 2026-10-24 09:14:19.249.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-24 09:14:19.249.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-24 09:14:19.250.
 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
-Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.007) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
 [1mTest run started.[0m
 Suite "CarryReminders" started
-    [32m✔[0m "Morning: every day at the morning time, an invitation only: the count, never what needs a new date (#551)" (0.014 seconds)
-    [32m✔[0m "Morning counts what one can act on: parked and waiting tasks neither count nor are named (#551)" (0.005 seconds)
-    [32m✔[0m "Same minute, one notification: the morning at the reminder time names today's day-only tasks (#551)" (0.003 seconds)
+    [32m✔[0m "Morning: every day at the morning time, an invitation only: the count, never what needs a new date (#551)" (0.013 seconds)
+    [32m✔[0m "Morning counts what one can act on: parked and waiting tasks neither count nor are named (#551)" (0.006 seconds)
+    [32m✔[0m "Same minute, one notification: the morning at the reminder time names today's day-only tasks (#551)" (0.004 seconds)
     [32m✔[0m "Evening: due that day, then the three evenings after, then Mondays, until a new date" (0.003 seconds)
-    [32m✔[0m "Evening: an older one comes back on Monday only; a passed evening time skips today" (0.004 seconds)
-    [32m✔[0m "A set evening time is used" (0.003 seconds)
-    [32m✔[0m "Done, parked, blocked and undated tasks never need a new date; a subtask does, like a task (#550)" (0.004 seconds)
+    [32m✔[0m "Evening: an older one comes back on Monday only; a passed evening time skips today" (0.003 seconds)
+    [32m✔[0m "A set evening time is used" (0.002 seconds)
+    [32m✔[0m "Done, parked, blocked and undated tasks never need a new date; a subtask does, like a task (#550)" (0.003 seconds)
     [32m✔[0m "Evening: a due time counts after it passed, a later one comes the next evening (#550)" (0.003 seconds)
-    [32m✔[0m "Evening: a day-only date counts after the reminder time; one later than the evening waits a day (#550)" (0.004 seconds)
-    [32m✔[0m "Switched off plans nothing; each switch plans only its own" (0.005 seconds)
+    [32m✔[0m "Evening: a day-only date counts after the reminder time; one later than the evening waits a day (#550)" (0.003 seconds)
+    [32m✔[0m "Switched off plans nothing; each switch plans only its own" (0.004 seconds)
     [32m✔[0m "The stored choice falls back to both; the switches map onto it" (0.001 seconds)
-    [32m✔[0m "Today again makes every listed open task due today, as a user revision without a time" (0.023 seconds)
-    [32m✔[0m "Anything from before today stays in Now, Due and the badge until it has a new date (#518, #584, #637)" (0.005 seconds)
+    [32m✔[0m "Today again makes every listed open task due today, as a user revision without a time" (0.009 seconds)
+    [32m✔[0m "Anything from before today stays in Now, Due and the badge until it has a new date (#518, #584, #637)" (0.003 seconds)
     [32m✔[0m "Henning's case: the morning's icon number is the number of rows in Now, 5 (#637, one number everywhere)" (0.004 seconds)
-    [32m✔[0m "All to tomorrow moves what still needs a date; one given a new date meanwhile stays (#550)" (0.003 seconds)
-Suite "CarryReminders" passed after 0.092 seconds
-[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-wobbly-beaming-pie/Logs/Test/Test-LooseEnds-2026.10.23_18-30-34-+0200.xcresult
-[32;1mTest Succeeded[0m
-[36;1mTesting started[0m
-[0;32m[sim][0m Unit-Tests bestanden.
-[sim] Messstrecken: 1 von 4 übersprungen (nicht gemessen, nicht bestanden):
-[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
-[sim] Latenzschutz (#274):
-[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
-[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log
-Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
-[0;32m[sim][0m Simulator bereit (iPhone 17).
-[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/DueTodayTests
-
------ xcbeautify -----
-Version: 3.2.1
-----------------------
-
-[36;1mnote: [0mBuilding targets in dependency order
-[36;1mnote: [0mTarget dependency graph (7 targets)
-[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
-[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
-[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
-[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
-[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
-[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
-[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
-Test Suite 'Selected tests' started at 2026-10-23 18:30:59.254.
-Test Suite 'LooseEndsTests.xctest' started at 2026-10-23 18:30:59.256.
-Test Suite 'LooseEndsTests.xctest' passed at 2026-10-23 18:30:59.256.
-Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
-Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.003) seconds
-[1mTest run started.[0m
-Suite "Due today and the app badge" started
-    [32m✔[0m "Today counts; earlier needs a new date first, tomorrow and later do not; done tasks and dateless subtasks stay out" (0.015 seconds)
-    [32m✔[0m "The badge counts Due and Next up as the lists do, a task in both once; a passed time and an earlier day keep counting (#584)" (0.011 seconds)
-    [32m✔[0m "A repeating task stands in Due only on its day, also after completing" (0.004 seconds)
-Suite "Due today and the app badge" passed after 0.033 seconds
-[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-wobbly-beaming-pie/Logs/Test/Test-LooseEnds-2026.10.23_18-30-49-+0200.xcresult
-[32;1mTest Succeeded[0m
-[36;1mTesting started[0m
-[0;32m[sim][0m Unit-Tests bestanden.
-[sim] Messstrecken: 1 von 4 übersprungen (nicht gemessen, nicht bestanden):
-[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
-[sim] Latenzschutz (#274):
-[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
-[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log
-Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
-[0;32m[sim][0m Simulator bereit (iPhone 17).
-[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/DueStateTests
-
------ xcbeautify -----
-Version: 3.2.1
-----------------------
-
-[36;1mnote: [0mBuilding targets in dependency order
-[36;1mnote: [0mTarget dependency graph (7 targets)
-[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
-[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
-[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
-[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
-[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
-[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
-[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
-Test Suite 'Selected tests' started at 2026-10-23 18:31:14.662.
-Test Suite 'LooseEndsTests.xctest' started at 2026-10-23 18:31:14.665.
-Test Suite 'LooseEndsTests.xctest' passed at 2026-10-23 18:31:14.665.
-Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
-Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.005) seconds
-[1mTest run started.[0m
-Suite "Due state in a row" started
-    [32m✔[0m "Due today is today while the deadline lies ahead; a due time that passed is missed (#548)" (0.013 seconds)
-    [32m✔[0m "A day-only date past its day is carried: one day reads as yesterday, then counts" (0.003 seconds)
-    [32m✔[0m "A day-only date stored at another hour still counts calendar days" (0.003 seconds)
-    [32m✔[0m "A task with a due time past its day stays red" (0.002 seconds)
-    [32m✔[0m "Future dates, no date, done and parked tasks carry no pressure" (0.003 seconds)
-    [32m✔[0m "Unchecked and unsorted tasks are open and read like active ones" (0.003 seconds)
-    [32m✔[0m "A carried task stands in Now asking for a new date; Due and the app icon keep it (#518, #584, #637)" (0.004 seconds)
-Suite "Due state in a row" passed after 0.036 seconds
-[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-wobbly-beaming-pie/Logs/Test/Test-LooseEnds-2026.10.23_18-31-03-+0200.xcresult
-[32;1mTest Succeeded[0m
-[36;1mTesting started[0m
-[0;32m[sim][0m Unit-Tests bestanden.
-[sim] Messstrecken: 1 von 4 übersprungen (nicht gemessen, nicht bestanden):
-[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
-[sim] Latenzschutz (#274):
-[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
-[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log
-Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
-[0;32m[sim][0m Simulator bereit (iPhone 17).
-[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/SubtaskListsTests
-
------ xcbeautify -----
-Version: 3.2.1
-----------------------
-
-[36;1mnote: [0mBuilding targets in dependency order
-[36;1mnote: [0mTarget dependency graph (7 targets)
-[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
-[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
-[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
-[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
-[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
-[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
-[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
-Test Suite 'Selected tests' started at 2026-10-23 18:31:28.281.
-Test Suite 'LooseEndsTests.xctest' started at 2026-10-23 18:31:28.283.
-Test Suite 'LooseEndsTests.xctest' passed at 2026-10-23 18:31:28.283.
-Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
-Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
-[1mTest run started.[0m
-Suite "Subtasks in the lists" started
-    [32m✔[0m "A subtask with its own date today stands in Due, Due today, Now and the badge; one without stays out" ([33m0.045[0m seconds)
-    [32m✔[0m "A done subtask with a date stays out, as a done task does" (0.004 seconds)
-    [32m✔[0m "A subtask with its own tag stands in that tag's list; one without stays out" (0.003 seconds)
-    [32m✔[0m "New and Next up keep to top-level tasks, whatever a subtask carries" (0.003 seconds)
-    [32m✔[0m "Moved to tomorrow, a dated subtask stands in Loose ends among the dated and in the Mac's Next days (#565)" (0.004 seconds)
-    [32m✔[0m "The start headline counts a subtask due today by its own date" (0.003 seconds)
-Suite "Subtasks in the lists" passed after 0.066 seconds
-[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-wobbly-beaming-pie/Logs/Test/Test-LooseEnds-2026.10.23_18-31-18-+0200.xcresult
+    [32m✔[0m "All to tomorrow moves what still needs a date; one given a new date meanwhile stays (#550)" (0.004 seconds)
+Suite "CarryReminders" passed after 0.071 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-wobbly-beaming-pie/Logs/Test/Test-LooseEnds-2026.10.24_09-14-13-+0200.xcresult
 [32;1mTest Succeeded[0m
 [36;1mTesting started[0m
 [0;32m[sim][0m Unit-Tests bestanden.

@@ -1,13 +1,13 @@
 # Adversary Dialog — fix-637-start-zeigt-badge
 Spec: docs/specs/fix-637-zahl-symbol-jetzt.md
-Datum: 2026-10-23 18:29
+Datum: 2026-10-24 09:09
 
 ## Checkliste
-- [x] **AC-1:** `ViewRules.badgeCount(in:)` ist für jede Eingabe gleich `ViewRules.now(in:).all.count`; beide kommen aus derselben Funktion (Unit-Test `badgeEqualsNowEverywhere` über alle genannten Eingabemengen, plus Quelltext: `badgeCount` ruft `now`).
+- [x] **AC-1:** `ViewRules.badgeCount(in:)` ist für jede Eingabe gleich `ViewRules.nowCount(in:)`, der Zahl über „Jetzt“: Zeilenzahl von `now(in:).all` plus 1, wenn das Knäuel zu „Fällig“ oder „Als nächstes“ gehört; beide kommen aus derselben Funktion (Unit-Test `badgeEqualsNowEverywhere` über alle genannten Eingabemengen, auch mit Knäuel, plus Quelltext: `badgeCount` ruft `nowCount`).
 - [x] **AC-2:** `now(...).all` enthält jede Aufgabe aus `dueToday`, `tasks(for: .next)` und `leftovers` genau einmal; blockierte, geparkte, erledigte und Teilaufgaben ohne eigenes Datum fehlen (Unit-Tests).
 - [x] **AC-3:** Reihenfolge: heute Fälliges, dann alle eingereihten nach Rang (Liegengebliebene mit Rang darunter), dann die Liegengebliebenen ohne Rang, älteste Frist zuerst (Unit-Tests `leftoverWithRankStandsInLined`, `leftoverWithoutRankStandsLastOldestFirst`).
 - [x] **AC-4:** Mit Hennings Fall (vier verstrichene Fristen, eine davon eingereiht, dazu eine eingereihte ohne Datum) ergibt die Regel 5 für Symbol und „Jetzt“, 4 für „Fällig“, 2 für „Als nächstes“ (Unit-Test; Wegwerf-Reproduktion vom 2026-10-23 zeigte vorher 1 und 5).
-- [x] **AC-5:** Die Startseite zeigt über „Jetzt“ die Zahl `all.count`, auf iPhone im Kopf, auf iPad und Mac außerdem an der Zeile „Start“; alle Zeilen der Menge stehen unter „Jetzt“, die Liegengebliebenen mit „Neues Datum“ und Spur am Rand, ohne Rot (UI-Test `StartNumberTests` im iPhone-Simulator; Mac-Galerie-Bild, angesehen).
+- [x] **AC-5:** Die Startseite zeigt über „Jetzt“ die Zahl `nowCount`, auf iPhone im Kopf, auf iPad und Mac außerdem an der Zeile „Start“; alle Zeilen der Menge stehen unter „Jetzt“, die Liegengebliebenen mit „Neues Datum“ und Spur am Rand, ohne Rot (UI-Test `StartNumberTests` im iPhone-Simulator; Mac-Galerie-Bild, angesehen).
 - [x] **AC-6:** Ein Tipp auf „Neues Datum“ in „Jetzt“ öffnet die Datumswahl; nach dem Setzen steht die Aufgabe nach der Regel am richtigen Platz und die Zahl über „Jetzt“ gleicht dem Symbol (UI-Test).
 - [x] **AC-7:** `StartHeadline`, die Zählung von „Fällig“ und „Als nächstes“ und `dueToday` liefern für dieselbe Eingabe dieselben Ergebnisse wie vorher (bestehende Tests grün); das Widget „Als nächstes“ ist unverändert.
 - [x] **AC-8:** ADR-16 trägt den Nachtrag: „Jetzt“ zeigt auch Liegengebliebenes (ändert #518), Symbol und „Jetzt“ sind dieselbe Zahl (ergänzt #584), mit Hennings Wortlaut vom 2026-10-23.
@@ -15,88 +15,103 @@ Datum: 2026-10-23 18:29
 ## Dialog
 
 ### Runde 1
-**Adversary:** Beweis je AC, nicht Behauptung. Eigener Lauf: `./scripts/sim.sh sim-unit NowRuleTests`, `CarryRemindersTests`, `DueTodayTests`, `DueStateTests`, `SubtaskListsTests` (alle "Test Succeeded", Ausgabe in `adversary-test-output.txt`; Lauf 1: 16 Tests der Suite "Now on the start screen" gruen, 0 Fehler; die 1 uebersprungene Messstrecke ist `SelfConsistencyReportTests`, eine Korpus-Messung ausserhalb dieses Schnitts, keine der Tests dieses Tickets).
-**Implementierer:**
-- AC-1: Code reference: Shared/Models/ViewRules.swift:163 — `badgeCount` ist `Self.now(...).all.count`, keine zweite Rechnung. Test `badgeEqualsNowEverywhere` (7 Eingabemengen) gruen. Aufrufer `DueNotificationCenter.swift:231` und `CarryReminders.swift:136` rufen weiter `badgeCount`.
-- AC-2: Code reference: Shared/Models/ViewRules.swift:180-190 — Menge = dueToday (ohne Liegengebliebene) + tasks(.next) + leftovers, dedupliziert ueber `seen`. Blockiert/geparkt/erledigt fallen in `dueToday`, `.next` und `NewDateRule.needsNewDate` (isOpen, !isBlocked) heraus; Teilaufgabe ohne eigenes Datum hat kein dueDate und ist nicht in `.next` (topLevel). Tests `unionMatchesTheTwoSources`, "Blocked, done and parked stay out ..." gruen.
-- AC-3: Code reference: Shared/Models/ViewRules.swift:185-190 — `today` nach Frist, `lined` nach Rang inkl. Liegengebliebener mit Rang, `waiting` in NewDateRule-Ordnung (aelteste zuerst). Tests `leftoverWithRankStandsInLined`, `leftoverWithoutRankStandsLastOldestFirst` gruen.
-- AC-4: Test `henningsCaseIsFiveEverywhere`: now 5, badge 5, `.due` 4, `.next` 2 — gruen. Simulator-Screenshot D07D8099...png (angesehen): "NOW 5", fuenf Zeilen, vier mit "New date", Ueberschrift "Four things need a new date.", Contents "Next up 2", "Due 4". Code reference: LooseEnds/App/LooseEndsApp.swift:97-126 (Seed).
-- AC-5: Code reference: LooseEnds/Views/StartZones.swift:83-86 (`ZoneCaption("Now", count: tasks.count, ...)`, `.foregroundStyle(.primary)`, kein Akzent), LooseEnds/Views/StartPage.swift:116 (iPad/Mac), LooseEnds/Views/SidebarView.swift:128 (iPhone-Kopf), SidebarView.swift:94-95 und :141 (Zeile "Start", Mac/iPad, `count: nowCount`). Test `testNumberOverNowIsTheNumberOfRows` (5 / 5 Zeilen / 4 newDate_) laut test-green-ui.txt gruen; Mac-Galerie `testStartNumberLight/Dark` (MacGalleryTests.swift:139-170) existiert, laeuft nur in der CI.
-- AC-6: Code reference: LooseEnds/Views/StartPage.swift:153 und :178 (`onNewDate: { redating = task }`), StartPage.swift:95-97 (`.sheet(item: $redating)` mit `NewDateSheet`), SidebarView.swift:215-217 und :290 (iPhone). Test `testNewDateFromNowLowersTheNumber` (Tipp, "Tomorrow", Zahl 5 -> 4, 4 Zeilen); Screenshot 8A85A3FC...png (angesehen): "NOW 4", vier Zeilen, Headline "Three things ...".
-- AC-7: Die Diffs beruehren `dueToday`, `tasks(for:)`, `leftovers`, `StartHeadline` nicht (nur Kommentare in NewDateRule.swift:3-8 und ViewRules.swift:87-90, :146). Bestehende Tests DueTodayTests, DueStateTests, CarryRemindersTests, SubtaskListsTests gruen. Widget/Watch: grep nach `badgeCount`/`ViewRules.now(` zeigt keine Treffer in LooseEndsWidgets/LooseEndsWatch*.
-- AC-8: Code reference: docs/project/00-entscheidungen.md (Nachtrag ADR-16, Diff: "Eine Zahl ueberall (Henning, 2026-10-23 ...)", nennt #518 geaendert, #584 ergaenzt, Wortlaut zitiert).
+**Adversary:** (a) Gibt es einen Eingabefall, in dem `badgeCount` != `nowCount` oder Zahl != Symbol? `badgeCount` koennte eine eigene Rechnung behalten haben; `now` koennte eine Aufgabe doppelt oder gar nicht fuehren; das Knaeuel (Frist heute, verstrichen, eingereiht, ohne Datum/Rang, geparkt, blockiert, zwei markiert) koennte doppelt oder falsch zaehlen.
+**Implementierer:** `badgeCount` ruft nur `nowCount` auf, keine zweite Rechnung. Code reference: Shared/Models/ViewRules.swift:163. `nowCount` = `now(...).all.count` plus 1, wenn `knaeuel(in:)` in `tasks(for:.due)` oder `.next` steht. Code reference: Shared/Models/ViewRules.swift:170. Mengen nachgerechnet: `.due` (ViewRules.swift:332-338) = dueToday (Datum heute) vereinigt mit leftovers (Code reference: Shared/Models/NewDateRule.swift:28-32, needsNewDate): jede Frist vor heute ist verstrichen (mit Uhrzeit due<now, ohne Uhrzeit Tag vorbei), heute mit verstrichener Uhrzeit ebenfalls. Blockiert/geparkt/erledigt fehlen in dueToday, leftovers (isOpen, !isBlocked) und `.next` (!isBlocked) gleichermassen. Teilaufgaben: `listedByDate` laesst nur solche mit eigenem Datum zu, `.next` nimmt nur Top-Level; `now` benutzt dieselben Quellen. `now` klammert das Knaeuel aus today, left und lined aus und `seen` verhindert Doppelte (ViewRules.swift:190-200). Das Knaeuel zaehlt +1 nur, wenn es in .due/.next steht, also genau dann, wenn es sonst als Zeile stuende: ohne Datum und Rang 0, sonst 1; geparkt/erledigt ist nach `isKnaeuel` (isOpen) keins; blockiert steht in keiner Menge, kein +1. Zwei Knaeuel: nur das juengste wird ausgeklammert und mit +1 gezaehlt, das andere steht als normale Zeile in `now`; jede Aufgabe genau einmal, Rechnung konsistent. Test `badgeEqualsNowEverywhere` deckt leer, heute, gestern, blockiert/geparkt/erledigt/Teilaufgaben, morgen und vier Knaeuel-Faelle ab (Code reference: LooseEndsTests/NowRuleTests.swift:235); selbst ausgefuehrt, gruen (adversary-test-output.txt). Luecke: der Zwei-Knaeuel-Fall hat im NowRuleTests keinen eigenen Test (F001, LOW; KnaeuelTests prueft nur "latest wins").
+**Adversary:** (b) Zeigen alle Oberflaechen `nowCount`, nirgends eine eigene Rechnung?
+**Implementierer:** iPhone: `NowBlock(..., count: nowCount)`, Code reference: LooseEnds/Views/SidebarView.swift:131, mit `nowCount = ViewRules.nowCount(in: tasks)` (SidebarView.swift:104). iPad/Mac Zeile "Start": SidebarView.swift:97 und :145, `count: nowCount` (vorher 0). iPad/Mac Startseite: Code reference: LooseEnds/Views/StartPage.swift:75, `count: ViewRules.nowCount(in: tasks)`. Der Kopf setzt die Zahl in Tinte, nicht Akzent: Code reference: LooseEnds/Views/StartZones.swift:92 (`ZoneCaption("Now", count: count, countID: "nowCount")`, Darstellung :27-31). Symbol: DueNotificationCenter.swift:231 und CarryReminders.swift:136 rufen `badgeCount`. Suche ueber Shared, LooseEnds, Widgets, Watch: keine weitere Zaehlung. "Neues Datum" in Jetzt: StartPage.swift:137/162 und SidebarView.swift:309 reichen `onNewDate` an `NewDateSheet` weiter (:59-61 / :219-221).
+**Adversary:** (c) `StartHeaderRows`: stimmt "Knaeuel + Zeilen = Zahl"?
+**Implementierer:** `StartHeaderRows` zeigt `ViewRules.knaeuel(in: tasks)` immer (Code reference: LooseEnds/Views/Knaeuel.swift:39), unabhaengig von Datum und Rang. "Knaeuel + Zeilen = Zahl" gilt also nur, wenn das Knaeuel zu Faellig/Als naechstes gehoert; ein Knaeuel ohne Datum und Rang steht da, wird aber nicht gezaehlt. Das ist so spezifiziert ("gehoert zu Faellig oder Als naechstes", Test-Szene 3 mit share 0) und deckt sich mit der Zahl des Symbols (nie eine zweite Zahl), aber fuer einen Leser, der addiert, ist es ein Randfall (F002, LOW). Knaeuel.swift ist im Diff gegenueber origin/main unveraendert.
 
 ### Runde 2
-**Adversary:** Angriffe, die der Implementierer nicht erwartet.
-(a) Gibt es einen Fall mit badgeCount != now.all.count? Alt = `.due` (listedByDate, offen, !blockiert, dueDate < morgen) + `.next`. `.due` minus `dueToday` = dueDate < heute; jede solche Aufgabe erfuellt `needsNewDate` (Uhrzeit: due < now, da due < Tagesbeginn <= now; ohne Uhrzeit: Tag < heute) und ist in `leftovers`. Heute verstrichene Uhrzeit: in `dueToday` und `leftovers`, wird aus `today` gefiltert (`leftIDs`), landet via `.next`/`waiting` genau einmal. Teilaufgabe mit eigenem Datum und verstrichen: in `leftovers` (kein listedByDate-Filter, aber dueDate gesetzt) und in `.due` — gleich. Teilaufgabe mit Rang aber ohne Datum: weder `.next` (topLevel) noch leftovers — fehlt in beiden. Eingereihte Teilaufgabe mit verstrichenem Datum: `left.filter nextRank != nil` — einmal, Zahl unveraendert. Blockiert/geparkt: aus allen drei Quellen draussen. Kein Gegenbeispiel; `badgeCount` ist ohnehin per Konstruktion `now.all.count` (ViewRules.swift:163), also gleich fuer jede Eingabe.
-**Implementierer:** Code reference: Shared/Models/ViewRules.swift:180-190, Shared/Models/NewDateRule.swift:28-38. Test `badgeEqualsNowEverywhere` deckt diese Szenen (blockiert, geparkt, erledigt, Teilaufgabe ohne/mit Datum, Frist heute 09:00 und 00:00) ab. Alt/neu-Gleichheit der Menge habe ich oben hergeleitet; die Zahl am Symbol aendert sich gegenueber vorher fuer keine Eingabe (nur "Jetzt" wuchs).
-
-**Adversary:** (b)/(c) Zahl an "Start" und im Kopf; doppelte Zeilen oder zwei Sheets?
-**Implementierer:** Code reference: LooseEnds/Views/SidebarView.swift:112-139 — Zweige `isCompact` (iPhone/kompaktes iPad: NowBlock im Sidebar-Listenkopf, keine Start-Zeile), `isMac` (ContentsIndex mit `start`-IndexLine, Zahl `nowCount`, Zeile `viewRow_start`), sonst iPad (Button-Zeile `countRow(... count: nowCount)`). Der NowBlock steht je Zustand genau einmal: kompakt in SidebarView, sonst in StartPage.swift:116. Damit existiert `nowCount` je Bildschirm einmal, `redating` ist je Host ein eigener State und nur der gerenderte Block loest ihn aus; `datingTask` (Faellig) ist ein getrennter State. Kein doppeltes Sheet. `IndexLineLabel` (StartZones.swift:290-294) zeigt die Zahl in `.secondary`, bei 0 unsichtbar — erwartet.
-
-**Adversary:** (d) Leckt der Seed in den Produktbetrieb?
-**Implementierer:** Code reference: LooseEnds/App/LooseEndsApp.swift:101-102 — `guard ModelContainerFactory.isUITesting && arguments.contains("--ui-testing-leftovers")`; `isUITesting` erzwingt den In-Memory-Container (ModelContainerFactory.swift:77). Ohne beide Argumente kehrt die Funktion sofort zurueck; Produktdaten und CloudKit nicht beruehrt. Kein Leck.
-
-**Adversary:** (e) Aendern sich StartHeadline, "Faellig"/"Als naechstes", Widget, Watch? (g) Shared/ fuer Watch/Widget?
-**Implementierer:** Der Diff in `Shared/` besteht aus ViewRules.swift und NewDateRule.swift, reine Foundation-Logik ohne SwiftUI (Code reference: Shared/Models/ViewRules.swift:1, Shared/Models/NewDateRule.swift:1: nur `import Foundation`). Die SwiftUI-Aenderungen liegen alle in LooseEnds/Views (StartZones, StartPage, SidebarView). Headline-Test ("Three things need a new date" im Screenshot unveraendert, Faellig 4, Als naechstes 2). Watch/Widget-Compile habe ich nicht gebaut; die Aenderung kann sie nicht brechen, da `NowTasks` nur um ein Feld mit Default erweitert wurde (`var waiting: [TaskItem] = []`) und `all` weiter existiert.
-
-**Adversary:** (f) Mac-Galerie und was bleibt unbelegt?
-**Implementierer:** Code reference: LooseEndsUITests/MacGalleryTests.swift:139-170 prueft `nowCount` == "5", `viewRow_start` enthaelt "5" und vier `newDate_`-Elemente, plus Foto light/dark. Das ist nur in der CI lauffaehig (Spec: "Mac-Galerie (CI)"), lokal nicht ausgefuehrt: unbelegt bis zur CI. iPad hat keinen eigenen Durchlauf (laut Spec: nur Rechenregel im Unit-Test).
-
-Auffaelligkeiten, kein Defekt: (1) Im Screenshot ist die Spur der Zeile "Geburtstagskarte" zu "was yeste..." abgeschnitten (schmale Randspalte) — kosmetisch, vorbestehende Spaltenbreite. (2) Der UI-Test kann das App-Symbol selbst nicht lesen; "Symbol = 4" nach dem Setzen belegt nur der Unit-Test ueber `badgeCount`. (3) `element(boundBy: 3)` im UI-Test haengt an der Reihenfolge (Rang, dann aelteste Frist), die der Unit-Test ebenfalls festlegt.
+**Adversary:** (d) Seed nur unter isUITesting? (e) Bleibt Shared/ Watch/Widget-tauglich? (f) Laufen die Tests? Stammt der rote Knaeuel-Test von #637? Stimmt AC-8 (ADR)?
+**Implementierer:** (d) `seedLeftoversIfAsked` bricht per `guard ModelContainerFactory.isUITesting, arguments.contains("--ui-testing-leftovers")` ab, schreibt in den In-Memory-Speicher, der Speicherfehler wird mit Logger gemeldet, kein `try?`. Code reference: LooseEnds/App/LooseEndsApp.swift:101 (Aufruf :33). (e) Aenderungen in Shared/ sind reine Foundation-Regeln ohne SwiftUI (Shared/Models/ViewRules.swift, in Shared/Models/NewDateRule.swift nur Kommentar, Code reference: Shared/Models/NewDateRule.swift:6-8); ZoneCaption/NowBlock liegen in LooseEnds/Views; Widget und `tasks(for:)`, `dueToday`, `StartHeadline` unveraendert. (f) Selbst ausgefuehrt mit `./scripts/sim.sh sim-unit`: NowRuleTests gruen (16 Tests, u.a. "Henning's case ... icon and Now say 5" und "The icon number is the number over Now"), CarryRemindersTests gruen, KnaeuelTests mit EINEM roten Test (`setWords`, 5 issues); Ausgabe in docs/artifacts/fix-637-start-zeigt-badge/adversary-test-output.txt. Der rote Test: `KnaeuelSince.setWords` liefert `String(localized: "since this morning")` usw. (Code reference: LooseEnds/Views/Knaeuel.swift:322-338), die Uebersetzung "seit heute Morgen" existiert (LooseEnds/Resources/Localizable.xcstrings:465), der Test erwartet englische Woerter und setzt nur das Datumsformat auf en: die Zeichenketten folgen der Sprache des Hosts. Meine Aenderung fasst weder Knaeuel.swift noch KnaeuelTests.swift an und der Test ruft weder `badgeCount` noch `nowCount` auf: kein Zusammenhang mit #637, der Fehler gehoert zu main (#647); er bleibt trotzdem rot (F003, MEDIUM, nicht dieses Ticket). Simulator-Belege angesehen: Bild 0AAAB709: "NOW 5", fuenf Zeilen, vier mit "New date" und Spur (was Thu/Tue/Wed/yesterday) in Akzentfarbe, kein Rot, Contents: Next up 2, Due 4, Ueberschrift "Four things need a new date"; nach dem Setzen eines neuen Datums (Bild 31505433): "NOW 4", Due 3, Next up 2. UI-Lauf: 2 Tests, 0 Fehler (test-green-ui.txt:35-38). AC-8: ADR-16 Nachtrag steht (docs/project/00-entscheidungen.md:205-212) mit Hennings Wortlaut vom 2026-10-23, aendert #518, ergaenzt #584; er sagt aber noch, `badgeCount` sei "die Zeilenzahl von now" und nennt das Knaeuel nicht (F004, LOW).
+**Adversary:** Regression?
+**Implementierer:** Bestehende Tests (DueTodayTests, DueStateTests, SubtaskListsTests, CarryRemindersTests) wurden nur in den Zahlen nachgezogen; `dueToday` und `tasks(for:)` sind unveraendert, der Rest der Suite laut test-green-unit.txt gruen bis auf den einen fremden Test.
 
 ## Herkunft der Vorbedingungen
 
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 
-
 ## Verdict
 
-VERDICT: VERIFIED
+VERDICT: VERIFIED — alle 8 ACs belegt; Symbol und Zahl ueber "Jetzt" kommen aus derselben Funktion, der rote KnaeuelTests-Test (Sprache des Hosts, Knaeuel.swift unveraendert) gehoert nicht zu #637.
 
-Alle 8 ACs belegt (Unit-Laeufe selbst gruen, Screenshots angesehen, Code gelesen). Offen nur CI-Belege fuer Mac (Galerie) und iPad (laut Spec nur Rechenregel). Befunde nur kosmetisch/LOW.
+Befunde (alle ausserhalb der ACs, kein Blocker):
+- F001 LOW edge_case, Code reference: LooseEndsTests/NowRuleTests.swift:261: kein Test fuer zwei markierte Knaeuel in nowCount.
+- F002 LOW edge_case, Code reference: LooseEnds/Views/Knaeuel.swift:39: Knaeuel ohne Datum/Rang wird gezeigt, aber nicht gezaehlt (laut Spec).
+- F003 MEDIUM regression-fremd, Code reference: LooseEnds/Views/Knaeuel.swift:322: setWords haengt an der Hostsprache, Test rot, nicht aus #637.
+- F004 LOW spec_violation(Doku), Code reference: docs/project/00-entscheidungen.md:209: ADR-Text nennt das Knaeuel in der Zahl nicht.
 
-Code reference: LooseEnds/App/LooseEndsApp.swift:101
-Code reference: LooseEnds/Views/SidebarView.swift:94
-Code reference: LooseEnds/Views/StartPage.swift:116
-Code reference: LooseEnds/Views/StartZones.swift:83
-Code reference: Shared/Models/NewDateRule.swift:28
-Code reference: Shared/Models/ViewRules.swift:163
+Confirmation:
+  AC: AC-1
+  Code reference: Shared/Models/ViewRules.swift:163
+  Evidence: badgeCount ruft nowCount; nowCount = now(...).all.count plus Knaeuel-Anteil.
+  Status: CONFIRMED
+
+Confirmation:
+  AC: AC-2
+  Code reference: Shared/Models/NewDateRule.swift:28
+  Evidence: leftovers nur offen und nicht blockiert; now vereinigt dueToday, next, leftovers einmal.
+  Status: CONFIRMED
+
+Confirmation:
+  AC: AC-5
+  Code reference: LooseEnds/Views/SidebarView.swift:131
+  Evidence: iPhone-Kopf und Start-Zeile (:97, :145) zeigen nowCount.
+  Status: CONFIRMED
+
+Confirmation:
+  AC: AC-5
+  Code reference: LooseEnds/Views/StartPage.swift:75
+  Evidence: Startseite iPad/Mac uebergibt ViewRules.nowCount.
+  Status: CONFIRMED
+
+Confirmation:
+  AC: AC-5
+  Code reference: LooseEnds/Views/StartZones.swift:92
+  Evidence: Kopf Jetzt traegt die Zahl in Tinte.
+  Status: CONFIRMED
+
+Confirmation:
+  AC: AC-4
+  Code reference: LooseEnds/App/LooseEndsApp.swift:101
+  Evidence: Seed nur unter isUITesting und --ui-testing-leftovers; Simulatorbild zeigt NOW 5 / Due 4 / Next up 2.
+  Status: CONFIRMED
 
 ## Geprüfte Dateien
 
-- sha256:4a6084638421e36b506a22aa2a43143987af3f1ab3065cc3f9892d28501ac04a  LooseEnds/App/LooseEndsApp.swift
-- sha256:8e917308f70b92e8c7e66c0c2b02d308142cdbeaa15d3ca58ce32e723d54d812  LooseEnds/Views/SidebarView.swift
-- sha256:211fd507988f69be55e07e944b7d6391f0c70a8103b675ae4e6e41c282a99d28  LooseEnds/Views/StartPage.swift
-- sha256:419d3028e2e55374795bf6ef307926d84f25e990a2f7cb10b0a7f520c67a80f8  LooseEnds/Views/StartZones.swift
+- sha256:19b93c447061dffbe5c33177d31690e00d0b865e54cc4dfa99ad4c12ff58016d  LooseEnds/App/LooseEndsApp.swift
+- sha256:c3eb10139afaa97c32ed589d185e49e8ff5b929458f8487a1271053f26a2db7b  LooseEnds/Views/SidebarView.swift
+- sha256:a579a708761102f75f3a62edc9dda22090512d82474b666de6f94bfe4d2b2bdc  LooseEnds/Views/StartPage.swift
+- sha256:e90ce7fa1d00c1e45ad63fd0d397e8d51376639fc734e52379afc1afdb8ea0dd  LooseEnds/Views/StartZones.swift
 - sha256:d7f0f9a1b2d0fc51ce39f725c200207ab7f8d77a47e2a990e0d7302df10b2600  Shared/Models/NewDateRule.swift
-- sha256:c55381f0eb94552814e1f661dc2bf69726e449c08e38ac8798b921b0dbf95ed5  Shared/Models/ViewRules.swift
+- sha256:17afc2fba7628ae97f441280af2862c46ee455ae2c86e48576934788b758181d  Shared/Models/ViewRules.swift
 
 ## Prüfbasis
 
-- base: dc39bec0be53ad3b68af7a784e91b47856d730b5
-- blob:c755a91b981525754ed0f57bcad3253bbc376a6a  LooseEnds/App/LooseEndsApp.swift
-- blob:49aadbb97bb29c039bb8756d6eb9c1cf7658be73  LooseEnds/Views/SidebarView.swift
-- blob:9c0e0184742d6c4fbbd2dc38b6be887c848086ab  LooseEnds/Views/StartPage.swift
-- blob:b22e0946b5daccec8e6b981f18d36d986832058a  LooseEnds/Views/StartZones.swift
+- base: 96f79e8be9c336d4bd7b17d5f82fde53582e7f4f
+- blob:5ab925aa8d8ec6ac637e31eb08b791d7edfed192  LooseEnds/App/LooseEndsApp.swift
+- blob:65dc10b72f8b2743d0968eff8a60468ac365219b  LooseEnds/Views/SidebarView.swift
+- blob:bdd6e9a22bff0b1a4c41285425be0afa91ba579d  LooseEnds/Views/StartPage.swift
+- blob:de4b3fc243a63c1bd29057b5ede967ebfafd6ebc  LooseEnds/Views/StartZones.swift
 - blob:68c6d514ea48e0529893d60623d237c147c8ba58  Shared/Models/NewDateRule.swift
-- blob:86e6e09d55d55b8d525ba5744266c40fe0f0b96f  Shared/Models/ViewRules.swift
+- blob:ac8edf3ba62f087a4e9c5d8b3e239c7a7d8c7d26  Shared/Models/ViewRules.swift
 
 ## Geprüfte Dateien
 
-- sha256:4a6084638421e36b506a22aa2a43143987af3f1ab3065cc3f9892d28501ac04a  LooseEnds/App/LooseEndsApp.swift
-- sha256:8e917308f70b92e8c7e66c0c2b02d308142cdbeaa15d3ca58ce32e723d54d812  LooseEnds/Views/SidebarView.swift
-- sha256:211fd507988f69be55e07e944b7d6391f0c70a8103b675ae4e6e41c282a99d28  LooseEnds/Views/StartPage.swift
-- sha256:419d3028e2e55374795bf6ef307926d84f25e990a2f7cb10b0a7f520c67a80f8  LooseEnds/Views/StartZones.swift
+- sha256:19b93c447061dffbe5c33177d31690e00d0b865e54cc4dfa99ad4c12ff58016d  LooseEnds/App/LooseEndsApp.swift
+- sha256:c3eb10139afaa97c32ed589d185e49e8ff5b929458f8487a1271053f26a2db7b  LooseEnds/Views/SidebarView.swift
+- sha256:a579a708761102f75f3a62edc9dda22090512d82474b666de6f94bfe4d2b2bdc  LooseEnds/Views/StartPage.swift
+- sha256:e90ce7fa1d00c1e45ad63fd0d397e8d51376639fc734e52379afc1afdb8ea0dd  LooseEnds/Views/StartZones.swift
 - sha256:d7f0f9a1b2d0fc51ce39f725c200207ab7f8d77a47e2a990e0d7302df10b2600  Shared/Models/NewDateRule.swift
-- sha256:c55381f0eb94552814e1f661dc2bf69726e449c08e38ac8798b921b0dbf95ed5  Shared/Models/ViewRules.swift
+- sha256:17afc2fba7628ae97f441280af2862c46ee455ae2c86e48576934788b758181d  Shared/Models/ViewRules.swift
 
 ## Prüfbasis
 
-- base: dc39bec0be53ad3b68af7a784e91b47856d730b5
-- blob:c755a91b981525754ed0f57bcad3253bbc376a6a  LooseEnds/App/LooseEndsApp.swift
-- blob:49aadbb97bb29c039bb8756d6eb9c1cf7658be73  LooseEnds/Views/SidebarView.swift
-- blob:9c0e0184742d6c4fbbd2dc38b6be887c848086ab  LooseEnds/Views/StartPage.swift
-- blob:b22e0946b5daccec8e6b981f18d36d986832058a  LooseEnds/Views/StartZones.swift
+- base: 96f79e8be9c336d4bd7b17d5f82fde53582e7f4f
+- blob:5ab925aa8d8ec6ac637e31eb08b791d7edfed192  LooseEnds/App/LooseEndsApp.swift
+- blob:65dc10b72f8b2743d0968eff8a60468ac365219b  LooseEnds/Views/SidebarView.swift
+- blob:bdd6e9a22bff0b1a4c41285425be0afa91ba579d  LooseEnds/Views/StartPage.swift
+- blob:de4b3fc243a63c1bd29057b5ede967ebfafd6ebc  LooseEnds/Views/StartZones.swift
 - blob:68c6d514ea48e0529893d60623d237c147c8ba58  Shared/Models/NewDateRule.swift
-- blob:86e6e09d55d55b8d525ba5744266c40fe0f0b96f  Shared/Models/ViewRules.swift
+- blob:ac8edf3ba62f087a4e9c5d8b3e239c7a7d8c7d26  Shared/Models/ViewRules.swift
