@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-10-24T14:12:02+0200
+befehl: scripts/sim.sh test-proof FieldsSmokeTests
+workflow: fix-638-field-settings-defaults
+head: 817316b7f9c3178f7b29af9f5f2549fbfaa71f2b
+basis: 10454ff9a0a30f2d8568c676fd582161a80ef17d (merge-base origin/main HEAD)
+testklasse: FieldsSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 3 gesamt, 3 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1792843824.864  ende: 1792843921.446
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/fix-638-field-settings-defaults/simulator-run/summary.json  sha256:7fb49a49126efbe64c523cd5fd5c610f1d061c4daa3e482300fa1dcb20c8775a
+xcresult: docs/artifacts/fix-638-field-settings-defaults/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-638-field-settings-defaults/simulator-run/*.png (5 Stück)
+
+## Geprüfte Dateien
+- sha256:365bbf8c7d214ba4380d4a5ef909ae806c2eaabae4cd427f0add8e1aa313b2a6  LooseEnds/App/FieldSettingsStore.swift
+- sha256:d60c75387595a19abe4f157a8ba7ce33bdad028b4c758faf379d8ffe18b1f274  LooseEndsTests/DetailFieldsTests.swift

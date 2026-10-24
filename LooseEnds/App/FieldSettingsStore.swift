@@ -29,9 +29,12 @@ import OSLog
 
     /// The app's own. Under the UI tests a fresh store each launch (their own defaults suite, wiped at
     /// start, no iCloud), so a switch one test flips never reaches the next; everything on unless the
-    /// test asks for the standard.
-    static func forApp(arguments: [String] = ProcessInfo.processInfo.arguments) -> FieldSettingsStore {
-        guard ModelContainerFactory.isUITesting else { return FieldSettingsStore() }
+    /// test asks for the standard. Outside them it reads the defaults handed in, so a unit test can pass
+    /// its own suite instead of the app's (#638).
+    static func forApp(
+        arguments: [String] = ProcessInfo.processInfo.arguments, defaults: UserDefaults = .standard
+    ) -> FieldSettingsStore {
+        guard ModelContainerFactory.isUITesting else { return FieldSettingsStore(defaults: defaults) }
         let suite = "com.henning.looseends.ui-testing-fields"
         let defaults = UserDefaults(suiteName: suite) ?? .standard
         defaults.removePersistentDomain(forName: suite)
