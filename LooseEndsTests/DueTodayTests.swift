@@ -78,8 +78,9 @@ import Testing
         all.forEach(store.context.insert)
 
         #expect(Set(ViewRules.dueToday(in: all, now: Self.now, calendar: Self.calendar).map(\.id)) == [both.id, passed.id],
-                "a task in Next up and due today stands in both lists; Now leaves the passed time out (#548)")
-        #expect(ViewRules.now(in: all, now: Self.now, calendar: Self.calendar).all.map(\.id) == [both.id, lined.id])
+                "a task in Next up and due today stands in both lists (#548)")
+        #expect(ViewRules.now(in: all, now: Self.now, calendar: Self.calendar).all.map(\.id) == [both.id, lined.id, dueOnly.id, passed.id],
+                "yesterday's and the passed time stand last in Now, the oldest first (#637)")
         #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 4,
                 "lined, both, yesterday's and the passed time: Due plus Next up, each once (#584)")
         TaskActions.move(dueOnly, to: .date(Self.now), contexts: [], projects: [], now: Self.now, calendar: Self.calendar)

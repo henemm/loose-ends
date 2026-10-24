@@ -21,6 +21,8 @@ struct StartPage: View {
     @State private var pendingTaskDelete: TaskItem?
     @State private var confirmingTaskDelete = false
     @State private var datingTask: TaskItem?
+    /// "New date" on a row in "Now" whose deadline passed (#637): the date choice "Due" uses.
+    @State private var redating: TaskItem?
     /// Complete with open subtasks asks first (#565).
     @State private var askingSubtasks: TaskItem?
     /// A second Knäuel asks first (#643).
@@ -54,6 +56,9 @@ struct StartPage: View {
         }
         .accessibilityIdentifier("startPage")
         .taskInteractionDialogs(actions)
+        .sheet(item: $redating) { task in
+            NewDateSheet(task: task) { redating = nil }
+        }
     }
 
     private var listColumn: some View {
@@ -67,7 +72,7 @@ struct StartPage: View {
                 .listRowSeparator(.hidden)
                 .startRow(metrics)
                 .paperRow()
-            NowBlock(tasks: ViewRules.now(in: tasks).all, expanded: nowExpandedBinding) { nowRow($0, metrics) }
+            NowBlock(tasks: ViewRules.now(in: tasks).all, count: ViewRules.nowCount(in: tasks), expanded: nowExpandedBinding) { nowRow($0, metrics) }
             WeekStringRows(string: ViewRules.currentString(in: tasks), all: tasks)
         })
         .listStyle(.plain)
@@ -129,7 +134,7 @@ struct StartPage: View {
         macNowRow(task)
         #else
         let actions = self.actions
-        let row = TaskRow(task: task, identifierPrefix: "startNowRow_")
+        let row = TaskRow(task: task, identifierPrefix: "startNowRow_", onNewDate: { redating = task })
         if actions.isPending(task) {
             actions.pendingRow(task, row)
         } else {
@@ -154,7 +159,7 @@ struct StartPage: View {
     @ViewBuilder
     private func macNowRow(_ task: TaskItem) -> some View {
         let actions = self.actions
-        let row = TaskRow(task: task, identifierPrefix: "startNowRow_")
+        let row = TaskRow(task: task, identifierPrefix: "startNowRow_", onNewDate: { redating = task })
         if actions.isPending(task) {
             actions.pendingRow(task, row).wideListRow(selected: isChosen(task))
         } else {

@@ -6,15 +6,30 @@ import SwiftUI
 /// A small grey heading above a zone, as a row of its own.
 struct ZoneCaption: View {
     private let title: LocalizedStringKey
+    /// The number after the caption (#637): "Now" carries the app icon's number. In ink, not accent:
+    /// it is not tappable (ADR-14).
+    private let count: Int?
+    private let countID: String?
     @Environment(\.dynamicTypeSize) private var typeSize
 
-    init(_ title: LocalizedStringKey) {
+    init(_ title: LocalizedStringKey, count: Int? = nil, countID: String? = nil) {
         self.title = title
+        self.count = count
+        self.countID = countID
     }
 
     var body: some View {
         let metrics = StartMetrics(typeSize)
-        ZoneCaptionText(title: title)
+        HStack(alignment: .firstTextBaseline, spacing: 8) {
+            ZoneCaptionText(title: title)
+            if let count {
+                Text(verbatim: "\(count)")
+                    .font(metrics.caption.monospacedDigit())
+                    .foregroundStyle(.primary)
+                    .accessibilityLabel(Text(verbatim: "\(count)"))
+                    .accessibilityIdentifier(countID ?? "")
+            }
+        }
             // Space above, little below: the caption belongs to what follows (draft: 22 above, 4 below, #463).
             .padding(.top, 22)
             .padding(.bottom, 4)
@@ -46,6 +61,8 @@ struct ZoneCaptionText: View {
 /// the swipes, the menu and the Done window stay with the caller.
 struct NowBlock<Row: View>: View {
     private let tasks: [TaskItem]
+    /// The number over "Now": `ViewRules.nowCount`, the rows plus the Knäuel when it counts (#637, #643).
+    private let count: Int
     private let row: (TaskItem) -> Row
     @State private var ownExpanded = false
     /// The host's fold state, so the Mac's keys see the same rows (#480); the sidebar keeps its own.
@@ -54,8 +71,10 @@ struct NowBlock<Row: View>: View {
 
     static var limit: Int { 5 }
 
-    init(tasks: [TaskItem], expanded: Binding<Bool>? = nil, @ViewBuilder row: @escaping (TaskItem) -> Row) {
+    init(tasks: [TaskItem], count: Int, expanded: Binding<Bool>? = nil,
+         @ViewBuilder row: @escaping (TaskItem) -> Row) {
         self.tasks = tasks
+        self.count = count
         self.hostExpanded = expanded
         self.row = row
     }
@@ -68,7 +87,9 @@ struct NowBlock<Row: View>: View {
     }
 
     var body: some View {
-        ZoneCaption("Now")
+        // The app icon's number, the same everywhere (#637): every task it counts stands below, the
+        // Knäuel above under the date (#643).
+        ZoneCaption("Now", count: count, countID: "nowCount")
             // On the caption, which always stands: the button is gone at five or fewer, the hint with rows.
             .onChange(of: tasks.count) { _, count in
                 if count <= Self.limit { expanded = false }

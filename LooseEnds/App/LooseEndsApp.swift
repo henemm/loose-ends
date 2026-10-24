@@ -30,6 +30,7 @@ struct LooseEndsApp: App {
             fatalError("Could not open the Loose Ends store: \(error)")
         }
         LaunchTimings.mark(.containerEnd)
+        Self.seedLeftoversIfAsked(in: container)
         let enricher: any TaskEnricher = ModelContainerFactory.isUITesting ? ModelOffEnricher() : FoundationModelsEnricher()
         enrichment = EnrichmentCoordinator(enricher: enricher, container: container)
         #if os(iOS)
@@ -92,6 +93,37 @@ struct LooseEndsApp: App {
         }
     }
     #endif
+
+    /// Henning's case of 2026-10-23 for `StartNumberTests` (#637), only under `--ui-testing-leftovers` and
+    /// only in the in-memory store: four deadlines passed (one lined up) and one more task lined up, so the
+    /// app icon and "Now" both say 5.
+    private static func seedLeftoversIfAsked(in container: ModelContainer) {
+        guard ModelContainerFactory.isUITesting,
+              ProcessInfo.processInfo.arguments.contains("--ui-testing-leftovers") else { return }
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let seeds: [(title: String, daysAgo: Int?, rank: Double?)] = [
+            ("Altpapier und Altglas zur Mülldeponie bringen", 2, 1),
+            ("Friederich zum Thema Apfel Champagner schreiben", nil, 2),
+            ("Steuerunterlagen sortieren", 3, nil),
+            ("Geburtstagskarte für Oma schreiben", 1, nil),
+            ("Fahrradkette ölen", 4, nil),
+        ]
+        for seed in seeds {
+            let task = TaskItem(rawText: seed.title)
+            task.title = seed.title
+            task.status = .active
+            task.nextRank = seed.rank
+            task.dueDate = seed.daysAgo.flatMap { calendar.date(byAdding: .day, value: -$0, to: today) }
+            container.mainContext.insert(task)
+        }
+        do {
+            try container.mainContext.save()
+        } catch {
+            Logger(subsystem: "com.henning.looseends", category: "App")
+                .error("Seeding the leftover test tasks failed: \(error, privacy: .public)")
+        }
+    }
 
     /// The design gallery (#182) asks for dark mode by launch argument: the device-wide switch
     /// from XCUITest did not reach the app on the CI simulator. Nil follows the system.

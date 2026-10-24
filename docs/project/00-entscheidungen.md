@@ -202,6 +202,14 @@ Listen zählen; eine vorbeigegangene Zeit und ein früherer Tag zählen weiter, 
 (seit #518 fielen sie heraus, und das Icon sagte 3, während „Fällig“ 4 zeigte). Die Zahl ändert sich damit nur beim
 Bearbeiten und beim Tageswechsel; den Tageswechsel bringt die Morgenmitteilung mit (`badge` im Inhalt), damit das Icon
 ohne App-Start stimmt. Der Abend trägt keine Zahl.
+Eine Zahl überall (Henning, 2026-10-23, #637: „Die Zahl aus der Badge (5) muss sich IMMER genauso in der App
+wiederfinden … auf allen Plattformen gleich“): „Jetzt“ zeigt auch Liegengebliebenes und ändert damit #518 —
+heute Fälliges zuerst, dann alles Eingereihte nach Rang (Liegengebliebenes mit Rang darunter), am Ende die
+Liegengebliebenen ohne Rang, älteste Frist zuerst, mit „Neues Datum“ und Spur am Rand, ohne Rot. Der Kern von #518
+bleibt: Liegengebliebenes braucht ein neues Datum, Abend und Morgen fragen weiter. Symbol und „Jetzt“ sind dieselbe
+Zahl und ergänzen #584: `ViewRules.badgeCount` ist `ViewRules.nowCount`, die Zeilenzahl von `ViewRules.now` plus das Knäuel (#643), wenn es
+zu „Fällig“ oder „Als nächstes“ gehört (Henning, 2026-10-24: „Zahl über Jetzt zählt das Knäuel mit“), keine zweite
+Rechnung. Die Zahl steht über „Jetzt“ (iPhone, iPad, Mac) und an der Zeile „Start“ (iPad, Mac), in Tinte, nicht im Akzent.
 Fallen Morgen- und Erinnerungszeit zusammen, kommt eine Mitteilung „Lose Enden: N · Heute: …“ statt zweier, und
 Aufgaben ohne Uhrzeit bekommen an dem Tag keine Einzelmitteilung. Jedes Gerät meldet für sich. Der Plan hält ohne
 App-Start: tägliche Hintergrund-Auffrischung und Neuplanung bei einem CloudKit-Import (#553).

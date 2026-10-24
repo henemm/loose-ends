@@ -185,6 +185,47 @@ final class MacGalleryTests: XCTestCase {
         app.terminate()
     }
 
+    /// #637 (Henning, 2026-10-23: one number on every platform): Henning's case from `--ui-testing-leftovers`,
+    /// four deadlines passed (one lined up) and one more lined up. "Now" and the sidebar's "Start" both say 5,
+    /// the icon's number; the four left ones offer "New date".
+    @MainActor
+    private func photographStartNumber(dark: Bool) {
+        let label = dark ? "dark" : "light"
+        let app = macLaunch(dark: dark, extra: ["--ui-testing-leftovers"])
+        _ = macOpenMainWindowIfNeeded(app)
+        let window = macMainWindow(of: app)
+        let number = macElement("nowCount", in: window)
+        XCTAssertTrue(number.waitForExistence(timeout: 20), "Now shows no number")
+        macShot(window, "mac-gallery-\(label)-10-start-number")
+        // A Mac `Text` may report its words as value with an empty label (#479), so both are read.
+        XCTAssertTrue(number.label == "5" || (number.value as? String) == "5",
+                      "The number over Now is not 5: label \(number.label), value \(String(describing: number.value))")
+        let start = macElement("viewRow_start", in: window)
+        XCTAssertTrue(start.waitForExistence(timeout: 10), "Sidebar shows no Start")
+        let words = start.label + " " + ((start.value as? String) ?? "")
+        XCTAssertTrue(words.contains("5"), "Start in the sidebar does not carry the 5: \(words)")
+        // The row combines its children (`TaskRow`), so on the Mac the button may only show in the row's
+        // words; a separately reachable `newDate_` element counts as well.
+        let rows = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "startNowRow_")).allElementsBoundByIndex
+        let rowWords = rows.map { "\($0.identifier): label \"\($0.label)\", value \"\(($0.value as? String) ?? "")\"" }
+        let rowsOffering = rows.filter { $0.label.contains("New date") || (($0.value as? String) ?? "").contains("New date") }.count
+        let buttons = window.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH %@", "newDate_")).count
+        XCTAssertTrue(rowsOffering == 4 || buttons == 4,
+                      "The four left tasks do not offer a new date (rows \(rowsOffering), buttons \(buttons)): \(rowWords)")
+        app.terminate()
+    }
+
+    @MainActor
+    func testStartNumberLight() throws {
+        photographStartNumber(dark: false)
+    }
+
+    @MainActor
+    func testStartNumberDark() throws {
+        photographStartNumber(dark: true)
+    }
+
     @MainActor
     func testCalendarAskLight() throws {
         photographCalendarAsk(dark: false)

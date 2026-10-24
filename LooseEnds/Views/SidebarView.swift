@@ -28,6 +28,8 @@ struct SidebarView: View {
     @State private var pendingTaskDelete: TaskItem?
     @State private var confirmingTaskDelete = false
     @State private var datingTask: TaskItem?
+    /// "New date" on a row in "Now" whose deadline passed (#637): the date choice "Due" uses.
+    @State private var redating: TaskItem?
     /// Complete with open subtasks asks first (#565).
     @State private var askingSubtasks: TaskItem?
     /// A second Knäuel asks first (#643).
@@ -91,11 +93,15 @@ struct SidebarView: View {
         let projectsLine = IndexLine(id: "projectsToggle", title: String(localized: "Projects"), count: projects.count,
                                      words: projectWords, target: .catalog(.projects)) { selection = .catalog(.projects) }
         let groups = [offersTags ? tagsLine : nil, offersProjects ? projectsLine : nil].compactMap { $0 }
-        let start = IndexLine(id: "viewRow_start", title: String(localized: "Start page"), count: 0, opensStart: true,
+        // The app icon's number, the same as over "Now" on the start page (#637).
+        let start = IndexLine(id: "viewRow_start", title: String(localized: "Start page"), count: nowCount, opensStart: true,
                               shortcut: KeyboardShortcut("1", modifiers: .command)) { selection = nil }
         let views = (isMac ? [start] : []) + ViewRules.indexViews(in: tasks).map(view)
         return [views, groups, [view(.open), view(.done)]].filter { !$0.isEmpty }
     }
+
+    /// The number on the app icon and over "Now" (#637), one rule: `ViewRules.now`.
+    private var nowCount: Int { ViewRules.nowCount(in: tasks) }
 
     /// The "Now" rows act as in "Next up" (#303): one set of actions carries them all (#368).
     private var taskActions: TaskInteractions { interactions(.next) }
@@ -122,7 +128,7 @@ struct SidebarView: View {
                         .listRowSeparator(.hidden)
                         .startRow(metrics)
                         .paperRow()
-                    NowBlock(tasks: ViewRules.now(in: tasks).all) { previewRow($0) }
+                    NowBlock(tasks: ViewRules.now(in: tasks).all, count: nowCount) { previewRow($0) }
                     WeekStringRows(string: ViewRules.currentString(in: tasks), all: tasks)
                     // Same section: a second one put the list's section gap above "Contents" (#463).
                     // iPad: the sidebar marks the open list (#334); iPhone: after Back selection is nil.
@@ -136,7 +142,7 @@ struct SidebarView: View {
                 Section {
                     // iPad: the start page shows while nothing is chosen; this row and ⌘1 lead back (#583).
                     Button { selection = nil } label: {
-                        countRow(String(localized: "Start page"), symbol: "house", count: 0, id: "viewRow_start")
+                        countRow(String(localized: "Start page"), symbol: "house", count: nowCount, id: "viewRow_start")
                     }
                     .buttonStyle(.plain)
                     .keyboardShortcut("1", modifiers: .command)
@@ -210,6 +216,9 @@ struct SidebarView: View {
             if selection == gone { selection = nil }
         }
         .taskInteractionDialogs(taskActions)
+        .sheet(item: $redating) { task in
+            NewDateSheet(task: task) { redating = nil }
+        }
     }
 
     /// The header of a foldable group: its name, how many it holds while folded, and the arrow.
@@ -297,7 +306,7 @@ struct SidebarView: View {
     @ViewBuilder
     private func previewRow(_ task: TaskItem) -> some View {
         let actions = taskActions
-        let row = TaskRow(task: task, identifierPrefix: "nowRow_")
+        let row = TaskRow(task: task, identifierPrefix: "nowRow_", onNewDate: { redating = task })
         if actions.isPending(task) {
             actions.pendingRow(task, row)
         } else {

@@ -1,0 +1,29 @@
+# Simulator-Beleg
+erzeugt: 2026-10-24T09:15:12+0200
+befehl: scripts/sim.sh test-proof StartNumberTests
+workflow: fix-637-start-zeigt-badge
+head: 4eb47e1e16bf3e99ae8b7cb8782d7fbb985eedda
+basis: 96f79e8be9c336d4bd7b17d5f82fde53582e7f4f (merge-base origin/main HEAD)
+testklasse: StartNumberTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 2 gesamt, 2 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1792826084.496  ende: 1792826112.397
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/fix-637-start-zeigt-badge/simulator-run/summary.json  sha256:3697fb4dd1676670f5b425ef949ed1a79c143598cd3366cc428162a7be061903
+xcresult: docs/artifacts/fix-637-start-zeigt-badge/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-637-start-zeigt-badge/simulator-run/*.png (2 Stück)
+
+## Geprüfte Dateien
+- sha256:19b93c447061dffbe5c33177d31690e00d0b865e54cc4dfa99ad4c12ff58016d  LooseEnds/App/LooseEndsApp.swift
+- sha256:c3eb10139afaa97c32ed589d185e49e8ff5b929458f8487a1271053f26a2db7b  LooseEnds/Views/SidebarView.swift
+- sha256:a579a708761102f75f3a62edc9dda22090512d82474b666de6f94bfe4d2b2bdc  LooseEnds/Views/StartPage.swift
+- sha256:e90ce7fa1d00c1e45ad63fd0d397e8d51376639fc734e52379afc1afdb8ea0dd  LooseEnds/Views/StartZones.swift
+- sha256:8b36e5c71334894d4a4f673ad2c285427ee2fe5a45f0cc92e93c2011f56054ee  LooseEndsTests/CarryRemindersTests.swift
+- sha256:a6bb7e1d97c0decc09fb4b1ec08375ce38ed3794978aa82aac1617110b6fe2dd  LooseEndsTests/DueStateTests.swift
+- sha256:306c4c4f2fa7022dd12af304602ee6cb253b2bce2eaf798085bafc5aaff44f6c  LooseEndsTests/DueTodayTests.swift
+- sha256:f69eb04a598e369098615337b8e25bb2cbc2c707da67de25c7b622a309a4cb94  LooseEndsTests/NowRuleTests.swift
+- sha256:2e04743a5ecabf8cfa3a48a415184e7fa9ce16da1a474d138fb74eaa6219eb2b  LooseEndsUITests/MacGalleryTests.swift
+- sha256:eb9ae706d6fb2289ad14a72716562be32a5f2cc9a4cfb0b6af95c6fd53bea797  LooseEndsUITests/StartNumberTests.swift
+- sha256:d7f0f9a1b2d0fc51ce39f725c200207ab7f8d77a47e2a990e0d7302df10b2600  Shared/Models/NewDateRule.swift
+- sha256:17afc2fba7628ae97f441280af2862c46ee455ae2c86e48576934788b758181d  Shared/Models/ViewRules.swift
