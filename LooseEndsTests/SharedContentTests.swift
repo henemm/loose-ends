@@ -35,6 +35,37 @@ import Testing
         #expect(SharedContent.subject(ofMail: "From: x\n\nSubject: not a header") == nil, "the body is not searched")
     }
 
+    // #580: the bytes `loadDataRepresentation` hands the share extension become text here.
+
+    @Test("Bytes in UTF-8 decode to the same text, umlauts unchanged")
+    func decodesUTF8() {
+        let text = "Überweisung für Müll"
+        #expect(SharedContent.decode(Data(text.utf8)) == text)
+    }
+
+    @Test("Bytes that are not UTF-8 fall back to Latin-1")
+    func decodesLatin1WhenNotUTF8() {
+        #expect(SharedContent.decode(Data([0xC4, 0x70, 0x66, 0x65, 0x6C])) == "Äpfel")
+    }
+
+    @Test("No bytes decode to an empty string")
+    func decodesEmptyToEmptyString() {
+        #expect(SharedContent.decode(Data()) == "")
+    }
+
+    @Test("An invalid sequence loses no byte: Latin-1 maps every one")
+    func decodesInvalidSequenceWithoutLoss() {
+        #expect(SharedContent.decode(Data([0xFF, 0xFE, 0x41])).count == 3)
+    }
+
+    @Test("Decoded mail bytes still give the subject and the message link")
+    func decodedMailKeepsSubjectAndLink() throws {
+        let raw = "Subject: =?UTF-8?B?w5xiZXJ3ZWlzdW5nIGbDvHIgTcO8bGw=?=\nMessage-ID: <abc123@example.com>\n\nBody"
+        let decoded = SharedContent.decode(Data(raw.utf8))
+        #expect(SharedContent.subject(ofMail: decoded) == "Überweisung für Müll")
+        #expect(SharedContent.messageURL(ofMail: decoded)?.absoluteString == "message://%3Cabc123@example.com%3E")
+    }
+
     @Test("A link with text keeps the text and attaches the link; a bare link becomes the text")
     func links() throws {
         let url = try #require(URL(string: "https://example.com/offer"))

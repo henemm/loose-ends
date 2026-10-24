@@ -1,0 +1,25 @@
+# Warnprüfung #580 (2026-10-24)
+
+Log: build-output.txt aus `./scripts/sim.sh build` (iOS-Simulator, iPhone 17, Build Succeeded).
+Vor dem Bau wurden die vier geänderten Quelldateien per `touch` aufgefrischt, damit sie sicher neu übersetzt werden.
+Im Log übersetzt:
+- [LooseEndsShare] ShareViewController.swift, SharedContent.swift
+- [LooseEnds] TaskDetailView.swift, BackgroundRefresh.swift, SharedContent.swift
+- [LooseEndsWidgets] SharedContent.swift, [LooseEndsWatch] SharedContent.swift (2x)
+
+## Muster der sechs Warnungen
+
+grep -n -E "loadItem\(forTypeIdentifier|'\+' was deprecated|'submit' was deprecated|was deprecated in iOS (26|27)" build-output.txt
+
+Treffer: 0
+
+## Übrige Warnungen in den vier geänderten Dateien
+
+grep -c -E "⚠️|warning:" build-output.txt
+
+Treffer: 0 (im gesamten Log keine Warnung)
+
+Hinweis: Ein Zwischenbau zeigte eine neue Warnung
+`BackgroundRefresh.swift:42:17: main actor-isolated static property 'logger' can not be referenced from a Sendable closure`
+(Handler von submitTaskRequest ist @Sendable). Behoben, indem der Logger vor dem Aufruf als lokale Konstante übernommen wird
+(`let log = Self.logger`); der finale Bau oben ist frei davon.

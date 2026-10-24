@@ -126,6 +126,13 @@ struct SharedContent: Equatable, Sendable {
         return Data(bytes)
     }
 
+    /// Shared bytes as text (#580): UTF-8, else ISO Latin-1, which maps every byte to the scalar of the same value,
+    /// so no byte is lost and the result is never nil. No bytes give "".
+    static func decode(_ data: Data) -> String {
+        if let text = String(data: data, encoding: .utf8) { return text }
+        return String(String.UnicodeScalarView(data.map { Unicode.Scalar($0) }))
+    }
+
     private static func decode(_ data: Data, charset: String) -> String? {
         switch charset.lowercased() {
         case "iso-8859-1", "latin1": String(data: data, encoding: .isoLatin1)
