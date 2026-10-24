@@ -271,9 +271,11 @@ Punkte. **Voll heißt gewonnen:** mit der fünften Perle (grün, der Moment) ste
 Perlen: Cognac bestellen.“, in der Tinte, bis die nächste Perle eine neue Schnur beginnt; gezählt wird aus allen Perlen in
 Runden von fünf, nichts wird gespeichert. Die Zeile heißt „Perlen“ und steht, sobald eine Perle oder ein Satz da ist.
 
-**Nachgeschärft nach Build 111 (Henning, 2026-10-24, #667):** Die Menüeinträge sind Handlungen, nicht Namen: **„Mein
-Knäuel“ / „Kein Knäuel“** und **„Perle vergeben“ / „Perle zurück“** („Das Knäuel“ und „Perle sammeln“ klangen falsch,
-denn der Nutzer löst etwas aus). Der Knäuel-Eintrag trägt ein SF-Symbol (`scribble.variable`; das gezeichnete Zeichen
+**Nachgeschärft nach Build 111 (Henning, 2026-10-24, #667):** Die Menüeinträge sind Handlungen, nicht Namen: **„Zum
+Knäuel machen“ / „Kein Knäuel mehr“** und **„Perle anhängen“ / „Perle abnehmen“** („Das Knäuel“ und „Perle sammeln“
+klangen falsch, denn der Nutzer löst etwas aus; verworfen nach Rückfrage: „Knäuel lösen“ klingt nach entwirren, „Perle
+aussetzen“ nach überspringen, „Perle zurück“ steht neben dem Zurück-Knopf). Dieselben Wörter unter dem Rohtext im Detail
+(kein „Lösen“ mehr). Der Knäuel-Eintrag trägt ein SF-Symbol (`scribble.variable`; das gezeichnete Zeichen
 war im Menü nicht auffindbar, PR #651). **Ein Menü für Liste und Detail:** das „…“ im Detail zeigt das Halten-Menü der
 Liste Eintrag für Eintrag (`TaskInteractions.menu`): Erledigen, Nächstes, Knäuel, Perle, Verschieben, Parken, Neu
 analysieren, Trennlinie, Löschen; Löschen aus dem Detail fragt wie in der Liste und verlässt es danach. Erledigte und

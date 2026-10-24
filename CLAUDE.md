@@ -300,8 +300,8 @@ not scope creep on the current one.
   fills, `FullStringLine` "The string is full. For the beads: …" once it is, #647/#655). The user-facing word for `countsAt` is "Perle sammeln" (#655), never "Zählt". The
   question before the Knäuel moves is `movesKnaeuel` in `TaskInteractions.swift`; the detail's lines under the raw text
   ("The Knäuel · since Monday" with Release, "Counts always, it is the Knäuel") are `TaskDetailView.driveSection`. The menu
-  entries are actions (#667): "My Knäuel" / "Not the Knäuel" (SF Symbol `scribble.variable`), "Give a bead" / "Take the bead
-  back". **One menu for list and detail** (#667): the detail's "…" renders `TaskInteractions.menu` (Complete, Next up, Knäuel,
+  entries are actions (#667): "Make it the Knäuel" / "No longer the Knäuel" (SF Symbol `scribble.variable`), "Attach a bead" /
+  "Take the bead off", the same words under the raw text in the detail. **One menu for list and detail** (#667): the detail's "…" renders `TaskInteractions.menu` (Complete, Next up, Knäuel,
   bead, Move, Park, Analyze again, Divider, Delete); `didComplete` and `didDelete` leave the detail, `analyze` is the
   detail's own run with its note or `TaskInteractions.listAnalysis` from a list; `onDeleted` on `TaskDetailView` lets
   `ContentView` drop its selection.

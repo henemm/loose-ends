@@ -624,7 +624,7 @@ struct TaskDetailView: View {
         }
     }
 
-    /// Under the raw text (#647): "The Knäuel · since Monday" with "Release", only while the task is
+    /// Under the raw text (#647): "The Knäuel · since Monday" with "No longer the Knäuel", only while the task is
     /// the Knäuel; "Counts" with it, or "Counts always, it is the Knäuel". Nothing while neither holds.
     @ViewBuilder
     private var driveSection: some View {
@@ -638,7 +638,7 @@ struct TaskDetailView: View {
                             Text("The Knäuel · \(KnaeuelSince.setWords(from: at))")
                         }
                         Spacer()
-                        Button("Release") { actions.releaseKnaeuel(task) }
+                        Button("No longer the Knäuel") { actions.releaseKnaeuel(task) }
                             .buttonStyle(.borderless)
                             .accessibilityIdentifier("detailReleaseKnaeuel")
                     }
@@ -657,7 +657,7 @@ struct TaskDetailView: View {
                     }
                     Spacer()
                     if task.countsAt != nil {
-                        Button("Take the bead back") { actions.toggleCounts(task) }
+                        Button("Take the bead off") { actions.toggleCounts(task) }
                             .buttonStyle(.borderless)
                             .accessibilityIdentifier("detailReleaseCounts")
                     }

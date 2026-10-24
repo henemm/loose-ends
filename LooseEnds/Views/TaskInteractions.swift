@@ -177,30 +177,30 @@ struct TaskInteractions {
         .accessibilityIdentifier("menuDelete")
     }
 
-    /// "My Knäuel" and "Give a bead" (#643, #645; the words as actions, Henning's look at build 111, #667),
-    /// after Next up: each only while its field is on or the task carries it. Over the budget "Give a
-    /// bead (5 of 5)" stands grey. A subtask gets neither.
+    /// "Make it the Knäuel" and "Attach a bead" (#643, #645; the words as actions, Henning's look at build
+    /// 111, #667), after Next up: each only while its field is on or the task carries it. Over the budget
+    /// "Attach a bead (5 of 5)" stands grey. A subtask gets neither.
     @ViewBuilder
     func driveEntries(_ task: TaskItem) -> some View {
         if task.parent == nil {
             // An SF Symbol, not the drawn Knäuel: with that as its icon the entry was not to be found
             // on iOS (UI smoke, PR #651); the sign itself stands on the start page.
             if task.isKnaeuel {
-                Button("Not the Knäuel", systemImage: Self.knaeuelSymbol) { releaseKnaeuel(task) }
+                Button("No longer the Knäuel", systemImage: Self.knaeuelSymbol) { releaseKnaeuel(task) }
                     .accessibilityIdentifier("menuKnaeuelRelease")
             } else if fields.isOn(.knaeuel) {
-                Button("My Knäuel", systemImage: Self.knaeuelSymbol) { setKnaeuel(task) }
+                Button("Make it the Knäuel", systemImage: Self.knaeuelSymbol) { setKnaeuel(task) }
                     .accessibilityIdentifier("menuKnaeuel")
             }
             if task.countsAt != nil {
-                Button("Take the bead back", systemImage: "circle.slash") { toggleCounts(task) }
+                Button("Take the bead off", systemImage: "circle.slash") { toggleCounts(task) }
                     .accessibilityIdentifier("menuCountsRelease")
             } else if fields.isOn(.counts) {
                 if TaskActions.canCount(task, among: tasks) {
-                    Button("Give a bead", systemImage: "circle") { toggleCounts(task) }
+                    Button("Attach a bead", systemImage: "circle") { toggleCounts(task) }
                         .accessibilityIdentifier("menuCounts")
                 } else {
-                    Button("Give a bead (\(TaskActions.countsBudget) of \(TaskActions.countsBudget))", systemImage: "circle") {}
+                    Button("Attach a bead (\(TaskActions.countsBudget) of \(TaskActions.countsBudget))", systemImage: "circle") {}
                         .disabled(true)
                         .accessibilityIdentifier("menuCountsFull")
                 }
