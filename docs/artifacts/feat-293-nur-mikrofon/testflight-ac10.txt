@@ -1,0 +1,7 @@
+# AC-10 TestFlight (2026-10-24)
+PR #661 MERGED, Merge-Commit 5031aacd9e38c4f6d20f72cebc93a6052ea4615e (gh pr view 661).
+TestFlight-Lauf https://github.com/henemm/loose-ends/actions/runs/40082235112 (gh run view): alle 5 Jobs grün
+  (CloudKit-Schema, Archive iOS, Archive macOS, Confirm Apple processed iOS und macOS). Build 112 laut Koordinator.
+Hennings Antwort auf dem iPhone (AskUserQuestion, wörtlich): "Kein/ein Dialog, Text kam"
+  (Optionstext: Höchstens der Mikrofon-Dialog, keine Frage nach Spracherkennung, "Ich höre …" und der Text erschienen).
+Nicht selbst prüfbar: Buildnummer 112 / "Was testen"-Text in App Store Connect (nur Angabe des Koordinators).
