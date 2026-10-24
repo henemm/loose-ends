@@ -447,7 +447,7 @@
     "The Knäuel, %@" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Das Knäuel, %@" } } } },
     "Drive" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Antrieb" } } } },
     "The one task you keep putting off, under the date on the start page." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Die eine Aufgabe, vor der man sich drückt, unter dem Datum auf der Startseite." } } } },
-    "Once done, the task lands as a bead on the string. At most five open at a time." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erledigt landet die Aufgabe als Perle auf der Schnur. Höchstens fünf offene zugleich." } } } },
+    "Once done, the task lands as a bead on the string. Five beads fill it, then the sentence below is due. At most five open at a time." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erledigt landet die Aufgabe als Perle auf der Schnur. Fünf Perlen füllen sie, dann ist der Satz darunter fällig. Höchstens fünf offene zugleich." } } } },
     "Today untangled: %@." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute entwirrt: %@." } } } },
     "Today untangled: %@, and one more tied up." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute entwirrt: %@, dazu eine weitere." } } } },
     "Today untangled: %1$@, and %2$@ more tied up." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute entwirrt: %1$@, dazu %2$@ weitere." } } } },
@@ -455,7 +455,7 @@
     "For the beads" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Für die Perlen" } } } },
     "For the beads: Saturday, the movies" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Für die Perlen: Samstag Kino" } } } },
     "For the beads: %@" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Für die Perlen: %@" } } } },
-    "One sentence for the beads, on the start page under the string. Nothing is checked." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Ein Satz für die Perlen, auf der Startseite unter der Schnur. Nichts wird geprüft." } } } },
+    "What you get once the string is full. On the start page under the string; nothing is checked." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Was es gibt, wenn die Schnur voll ist. Auf der Startseite unter der Schnur; nichts wird geprüft." } } } },
     "The Knäuel · %@" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Das Knäuel · %@" } } } },
     "Release" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Lösen" } } } },
     "Collects a bead always, it is the Knäuel" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Sammelt immer eine Perle, es ist das Knäuel" } } } },
@@ -471,6 +471,9 @@
     "Collects a bead" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Sammelt eine Perle" } } } },
     "Collect beads" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Perlen sammeln" } } } },
     "Bead" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Perle" } } } },
-    "Beads" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Perlen" } } } }
+    "Beads" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Perlen" } } } },
+    "The string is full." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Die Schnur ist voll." } } } },
+    "The string is full. For the beads: %@." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Die Schnur ist voll. Für die Perlen: %@." } } } },
+    "%lld of %lld beads on the string" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "%1$lld von %2$lld Perlen auf der Schnur" } } } }
   }
 }

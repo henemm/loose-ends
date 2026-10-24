@@ -180,7 +180,7 @@ final class DriveSmokeTests: XCTestCase {
         back(in: app)
         let string = element("weekString", in: app)
         XCTAssertTrue(string.waitForExistence(timeout: 10), "No week string under Now")
-        XCTAssertTrue(string.label.contains("1 bead"), "Wrong beads: \(string.label)")
+        XCTAssertTrue(string.label.hasPrefix("1 of 5"), "Wrong beads: \(string.label)")
         // The bead's words (#655): "Collect a bead" in the menu was found above; the row carries the bead.
         XCTAssertTrue(elements(prefix: "countsMarker_", in: app).firstMatch.exists)
     }

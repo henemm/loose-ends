@@ -123,7 +123,7 @@ struct SidebarView: View {
                         .startRow(metrics)
                         .paperRow()
                     NowBlock(tasks: ViewRules.now(in: tasks).all) { previewRow($0) }
-                    WeekStringRows(beads: ViewRules.recentBeads(in: tasks), all: tasks)
+                    WeekStringRows(string: ViewRules.currentString(in: tasks), all: tasks)
                     // Same section: a second one put the list's section gap above "Contents" (#463).
                     // iPad: the sidebar marks the open list (#334); iPhone: after Back selection is nil.
                     ContentsIndex(groups: indexGroups, selected: selection) { selection = $0 }

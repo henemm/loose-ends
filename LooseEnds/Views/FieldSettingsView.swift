@@ -68,7 +68,7 @@ struct FieldSettingsView: View {
                 .onDisappear { store?.setReward(reward) }
                 .onAppear { reward = store?.reward ?? "" }
                 .accessibilityIdentifier("rewardField")
-            Text("One sentence for the beads, on the start page under the string. Nothing is checked.")
+            Text("What you get once the string is full. On the start page under the string; nothing is checked.")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
         }
@@ -126,7 +126,7 @@ struct FieldSettingsView: View {
         case .contexts, .project: String(localized: "Also the group on the start page.")
         case .waitingOn: String(localized: "A task that has to be done first.")
         case .knaeuel: String(localized: "The one task you keep putting off, under the date on the start page.")
-        case .counts: String(localized: "Once done, the task lands as a bead on the string. At most five open at a time.")
+        case .counts: String(localized: "Once done, the task lands as a bead on the string. Five beads fill it, then the sentence below is due. At most five open at a time.")
         default: nil
         }
     }

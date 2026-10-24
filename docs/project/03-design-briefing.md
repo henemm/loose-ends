@@ -97,7 +97,8 @@ steht „Diese Woche“ mit der Schnur, sobald die Woche eine Perle hat: eine Mu
 Abstand 40 pt, die neueste 1,1 s grün; die Perle in der Merkmalzeile ist eine kurze Schnur mit hohler Perle und Glanzpunkt.
 Beides ist aus, bis es in „Felder“ (Gruppe „Antrieb“) eingeschaltet wird. Nach Build 110 (Henning, 2026-10-24, #655): das
 Feature heißt „Perle sammeln“, die Zeile unter dem Datum beginnt ihre Merkmale mit „Das Knäuel“, die Schnur auf der Startseite
-heißt „Perlen“ und hält die letzten sieben Perlen ohne Zeitraum, „Für die Perlen: …“ steht nur darunter, sobald sie eine Perle hat.
+heißt „Perlen“ und ist eine Schnur von fünf ohne Zeitraum, die leeren Plätze als feine Punkte; „Für die Perlen: …“ steht
+darunter, voll heißt gewonnen: „Die Schnur ist voll. Für die Perlen: …“ bis zur nächsten Perle, die eine neue Schnur beginnt.
 
 Berechnungsregeln der Ansichten stehen in `02-datenmodell-und-ansichten.md`.
 

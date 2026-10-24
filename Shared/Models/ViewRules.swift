@@ -245,12 +245,33 @@ enum ViewRules {
         beads(in: all, within: week(containing: now, calendar: calendar))
     }
 
-    /// How many beads the start page's string holds (Henning, 2026-10-24, build 110): the last seven,
-    /// whatever their age, so a string with few beads stays a string.
-    static let stringLength = 7
+    /// How many beads fill a string (Henning, 2026-10-24, #655): five, like the budget of open bead
+    /// tasks. A full string is the win: the sentence "Für die Perlen" is due. No calendar in it.
+    static let stringLength = 5
 
-    /// The last `limit` beads of all time, oldest first (#645, Henning 2026-10-24): the start page's
-    /// string. A week held too few: two tasks a week deserve a bead, and the week's line stayed away.
+    /// The string on the start page (#655): the beads since the last full string, oldest first, and
+    /// whether it is full right now. Counted from all beads ever, in rounds of `stringLength`: with
+    /// five, ten, fifteen beads the string stands full until the next bead starts a new one. Nothing
+    /// is stored for this; a deleted bead task shifts the rounds, which is the price of no table.
+    struct BeadString: Equatable {
+        let beads: [Bead]
+        let isFull: Bool
+        /// How many strings were filled before this one.
+        let filled: Int
+        static let empty = BeadString(beads: [], isFull: false, filled: 0)
+    }
+
+    static func currentString(in all: [TaskItem], length: Int = stringLength) -> BeadString {
+        let every = beads(in: all, within: nil)
+        guard !every.isEmpty, length > 0 else { return .empty }
+        let rest = every.count % length
+        if rest == 0 {
+            return BeadString(beads: Array(every.suffix(length)), isFull: true, filled: every.count / length - 1)
+        }
+        return BeadString(beads: Array(every.suffix(rest)), isFull: false, filled: every.count / length)
+    }
+
+    /// The last `limit` beads of all time, oldest first.
     static func recentBeads(in all: [TaskItem], limit: Int = stringLength) -> [Bead] {
         Array(beads(in: all, within: nil).suffix(limit))
     }

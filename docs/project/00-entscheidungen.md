@@ -264,9 +264,13 @@ Serien, Punkte für jede Aufgabe, Vergleich, Mitteilungen, Lob (Belege in 07, Te
 **Nachgeschärft nach Build 110 (Henning, 2026-10-24, #655):** Das Feature heißt **„Perle sammeln“** („Zählt“ sagte nichts):
 Menü „Perle sammeln“ / „Keine Perle“, über dem Budget „Perle sammeln (5 von 5)“, Einstellung „Perlen sammeln“, Detail „Sammelt
 eine Perle“ bzw. „Sammelt immer eine Perle, es ist das Knäuel“. Die Zeile unter dem Datum trägt als erstes Merkmal das graue
-Wort „Das Knäuel“ (das Zeichen allein sagte nicht, warum sie da steht). Die Schnur auf der Startseite zeigt **die letzten
-sieben Perlen ohne Zeitraum** (`ViewRules.recentBeads`, `stringLength`): zwei Perlen pro Woche ließen die Wochenschnur meist
-leer; die Zeile heißt „Perlen“. „Erledigt“ bleibt nach Wochen, der Sonntagssatz spricht weiter von der Woche.
+Wort „Das Knäuel“ (das Zeichen allein sagte nicht, warum sie da steht). Die Schnur auf der Startseite ist **eine Schnur von
+fünf ohne Zeitraum** (`ViewRules.currentString`, `stringLength` = 5; Henning, 2026-10-24: „Wann hat man gewonnen?“): zwei
+Perlen pro Woche ließen die Wochenschnur meist leer, und ohne Ende war es kein Prinzip. Die leeren Plätze stehen als feine
+Punkte. **Voll heißt gewonnen:** mit der fünften Perle (grün, der Moment) steht darunter „Die Schnur ist voll. Für die
+Perlen: Cognac bestellen.“, in der Tinte, bis die nächste Perle eine neue Schnur beginnt; gezählt wird aus allen Perlen in
+Runden von fünf, nichts wird gespeichert. Die Zeile heißt „Perlen“ und steht, sobald eine Perle oder ein Satz da ist.
+„Erledigt“ bleibt nach Wochen, der Sonntagssatz spricht weiter von der Woche.
 
 **ADR-17 Ergänzte Screens nach Lückenprüfung.** Als nächstes (manuell sortiert), Neu (Eingang),
 Feld-Picker statt Formular, Wisch- und Halten-Gesten mit Verschieben (Morgen, Wochenende, nächste Woche,
