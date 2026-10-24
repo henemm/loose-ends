@@ -1,0 +1,22 @@
+# Simulator-Beleg
+erzeugt: 2026-10-24T18:25:08+0200
+befehl: scripts/sim.sh test-proof CaptureSmokeTests/testLongCaptureKeepsFullTextBelowTwelveWordTitle
+workflow: fix-580-veraltete-schnittstellen
+head: 161fa4f2f8c40c70fb0094edabf523f0b5252975
+basis: 4d3649538149471671f607427c2746e762ac7d22 (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests/testLongCaptureKeepsFullTextBelowTwelveWordTitle
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1792859077.982  ende: 1792859107.497
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/fix-580-veraltete-schnittstellen/simulator-run/summary.json  sha256:ffd9aaa7104a3ee9c445391243955ba40827d09e01654aa6ad520a9d3adafa9e
+xcresult: docs/artifacts/fix-580-veraltete-schnittstellen/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-580-veraltete-schnittstellen/simulator-run/*.png (1 Stück)
+
+## Geprüfte Dateien
+- sha256:f8945d11529deb72fe611c11e6ef29fc2ddcf24f2d7537298497a632cb36ce22  LooseEnds/Notifications/BackgroundRefresh.swift
+- sha256:16ccee38f592d3e8b89d79558f71718549830e7aeb7f94e80de78522421971e3  LooseEnds/Views/TaskDetailView.swift
+- sha256:53bc2860f0f497844e497c1686cff9281a4a37156066458d032291141fce7790  LooseEndsShare/ShareViewController.swift
+- sha256:310912ff72cd65c8000115376bbb09c708b32c27474baba1c55d80f8dbf8317e  LooseEndsTests/SharedContentTests.swift
+- sha256:abfd31b0e9b33488e7fa52ecd423773678c2b93bd1b9b055045aab53b9312805  Shared/Services/SharedContent.swift

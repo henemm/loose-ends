@@ -36,10 +36,13 @@ enum BackgroundRefresh {
         guard !ModelContainerFactory.isRunningTests, !ModelContainerFactory.isUITesting else { return }
         let request = BGAppRefreshTaskRequest(identifier: identifier)
         request.earliestBeginDate = Date(timeIntervalSinceNow: earliest)
-        do {
-            try BGTaskScheduler.shared.submit(request)
-        } catch {
-            logger.error("Scheduling the background refresh failed: \(error, privacy: .public)")
+        // #580: the error the old `submit` threw arrives in the handler; Apple DTS confirms the main thread is fine.
+        // The handler may run off the main actor, so it takes the (Sendable) logger as a local.
+        let log = Self.logger
+        BGTaskScheduler.shared.submitTaskRequest(request) { error in
+            if let error {
+                log.error("Scheduling the background refresh failed: \(error, privacy: .public)")
+            }
         }
     }
 }

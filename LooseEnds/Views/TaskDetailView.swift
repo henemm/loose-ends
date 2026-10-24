@@ -145,13 +145,14 @@ struct TaskDetailView: View {
                 if DetailLayout.showsRawText(task.rawText, title: task.title) {
                     // The raw text as a quote: what was said, in the words it was said (#180). One
                     // running sentence behind a small head, so a second line starts at the edge (#438).
-                    (Text(String(localized: "Said").uppercased())
+                    // One Text by interpolation, not `+` (deprecated in iOS 26, #580).
+                    let head = Text(String(localized: "Said").uppercased())
                         .font(.caption2.weight(.semibold))
                         .tracking(1)
-                     + Text(verbatim: "  ")
-                     + Text(task.rawText)
+                    let said = Text(task.rawText)
                         .font(.system(.subheadline, design: .serif))
-                        .italic())
+                        .italic()
+                    Text("\(head)  \(said)")
                         .foregroundStyle(.secondary)
                         .accessibilityLabel(task.rawText)
                         .accessibilityIdentifier("detailRawText")
