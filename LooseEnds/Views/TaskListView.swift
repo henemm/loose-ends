@@ -239,12 +239,10 @@ struct TaskListView: View {
             return (shown.filter { !ViewRules.needsLook($0) } + shown.filter(ViewRules.needsLook)).map(\.id)
         }
         if kind == .due || kind == .open {
+            // `shown` already stands in the blocks' order (#657); only the leftovers move up.
             let needsDate = ViewRules.leftovers(in: tasks)
-            let parked = kind == .open ? shown.filter { $0.status == .parked } : []
-            if needsDate.isEmpty, parked.isEmpty { return shown.map(\.id) }
             let left = Set(needsDate.map(\.id))
-            let rest = shown.filter { !left.contains($0.id) && $0.status != .parked }
-            return (needsDate + rest + parked).map(\.id)
+            return (needsDate + shown.filter { !left.contains($0.id) }).map(\.id)
         }
         return shown.map(\.id)
     }
@@ -367,35 +365,55 @@ struct TaskListView: View {
 
     /// "Due" and "Loose ends" (#518, #548): whose deadline passed stands on top until it has a new date,
     /// subtasks among them with their parent named; the margin's button and the swipe open the date
-    /// choice. The rest follows in the view's order. In "Loose ends" the parked tasks close the list as
-    /// their own block under a grey head (#545): visible, but apart, and no colour of its own (grey is
-    /// hierarchy).
+    /// choice. The rest follows in the view's order. In "Loose ends" the rest stands in the blocks of
+    /// #657 (today, no date, later) and the parked tasks close the list (#545), each under a grey head
+    /// once more than one block shows: apart, but no colour of its own (grey is hierarchy).
     @ViewBuilder
     private var newDateSections: some View {
         let needsDate = ViewRules.leftovers(in: tasks)
         let left = Set(needsDate.map(\.id))
-        let parked = kind == .open ? shown.filter { $0.status == .parked } : []
-        let rest = shown.filter { !left.contains($0.id) && $0.status != .parked }
-        if needsDate.isEmpty, parked.isEmpty {
+        let rest = shown.filter { !left.contains($0.id) }
+        if kind == .open {
+            looseEndsSections(needsDate: needsDate, rest: rest)
+        } else if needsDate.isEmpty {
             openRows
         } else {
-            if !needsDate.isEmpty {
-                Section {
-                    ForEach(needsDate) { row($0) }
-                } header: {
-                    head(Text("Needs a new date"))
-                        .accessibilityIdentifier("newDateHead")
-                }
-            }
+            needsDateSection(needsDate)
             Section {
                 ForEach(rest) { row($0) }
             }
-            if !parked.isEmpty {
-                Section {
-                    ForEach(parked) { row($0) }
-                } header: {
-                    head(Text("Parked"))
-                        .accessibilityIdentifier("parkedHead")
+        }
+    }
+
+    private func needsDateSection(_ needsDate: [TaskItem]) -> some View {
+        Section {
+            ForEach(needsDate) { row($0) }
+        } header: {
+            head(Text("Needs a new date"))
+                .accessibilityIdentifier("newDateHead")
+        }
+    }
+
+    @ViewBuilder
+    private func looseEndsSections(needsDate: [TaskItem], rest: [TaskItem]) -> some View {
+        let stages = Dictionary(grouping: rest) { ViewRules.looseEndsStage($0) }
+        let shownBlocks = stages.count + (needsDate.isEmpty ? 0 : 1)
+        if !needsDate.isEmpty {
+            needsDateSection(needsDate)
+        }
+        ForEach([ViewRules.LooseEndsStage.today, .undated, .later, .parked], id: \.self) { stage in
+            if let block = stages[stage] {
+                if shownBlocks > 1 {
+                    Section {
+                        ForEach(block) { row($0) }
+                    } header: {
+                        head(Text(stage.headKey))
+                            .accessibilityIdentifier(stage.headIdentifier)
+                    }
+                } else {
+                    Section {
+                        ForEach(block) { row($0) }
+                    }
                 }
             }
         }
@@ -616,6 +634,27 @@ private struct ListSubtitle: ViewModifier {
             content.navigationSubtitle(text ?? "")
         } else {
             content
+        }
+    }
+}
+
+/// The grey heads of "Loose ends" (#657).
+private extension ViewRules.LooseEndsStage {
+    var headKey: LocalizedStringKey {
+        switch self {
+        case .today: "Today"
+        case .undated: "No date"
+        case .later: "Later"
+        case .parked: "Parked"
+        }
+    }
+
+    var headIdentifier: String {
+        switch self {
+        case .today: "todayHead"
+        case .undated: "undatedHead"
+        case .later: "laterHead"
+        case .parked: "parkedHead"
         }
     }
 }

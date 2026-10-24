@@ -93,6 +93,7 @@
     "Decide" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Entscheiden" } } } },
     "Contents" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Inhalt" } } } },
     "Today" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute" } } } },
+    "Later" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Später" } } } },
     "Yesterday" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Gestern" } } } },
     "Today tied up: %@." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute verknotet: %@." } } } },
     "Today %@ tied up, last %@." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute %1$@ verknotet, zuletzt %2$@." } } } },

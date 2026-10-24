@@ -109,9 +109,9 @@ import Testing
         // Not due yet: out of Due and Now, as a task due tomorrow is.
         #expect(ViewRules.tasks(for: .due, in: all, now: Self.now, calendar: Self.calendar).isEmpty)
         #expect(ViewRules.now(in: all, now: Self.now, calendar: Self.calendar).all.isEmpty)
-        // Loose ends: the dated line first, then the undated tasks; the bare and the done line out.
+        // Loose ends: the undated tasks, then the line dated tomorrow under "Later" (#657); the bare and the done line out.
         let open = ViewRules.tasks(for: .open, in: all, now: Self.now, calendar: Self.calendar).map(\.id)
-        #expect(open.first == tomorrow.id)
+        #expect(open.last == tomorrow.id)
         #expect(Set(open) == [tomorrow.id, parent.id, undated.id])
         // Next days on the Mac: the tile for tomorrow counts the line.
         let days = SideColumn.days(in: all, now: Self.now, calendar: Self.calendar)

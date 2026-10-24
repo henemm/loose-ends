@@ -3,9 +3,10 @@ import SwiftData
 import Testing
 @testable import LooseEnds
 
-/// "Loose ends" sorted by pressure (#545, Henning 2026-10-18: "Erst was drängt"): overdue and due
-/// today, then the coming days, then the undated by weight, and the parked ones as a block at the
-/// end in the order of "Parked". Parked tasks stay in the list (#319), but no longer in the middle.
+/// "Loose ends" sorted by pressure (#545, Henning 2026-10-18: "Erst was drängt"; #657, 2026-10-24):
+/// overdue and due today, then the undated by weight, then the coming days under "Later", and the
+/// parked ones as a block at the end in the order of "Parked". Parked tasks stay in the list (#319),
+/// but no longer in the middle. A far date no longer pushes an undated task down.
 @Suite("Loose ends by pressure (#545)") struct PressureOrderTests {
     static var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
@@ -39,7 +40,7 @@ import Testing
         ViewRules.tasks(for: .open, in: all, now: Self.now, calendar: Self.calendar).map(\.id)
     }
 
-    @Test("All four stages: overdue and today, the coming days, undated by weight, parked at the end")
+    @Test("All four stages: overdue and today, undated by weight, the coming days, parked at the end")
     @MainActor func fourStagesInOrder() async throws {
         let store = try TestStore()
         let parked = Self.task("Keller aufräumen", minute: 0, in: store)
@@ -53,7 +54,7 @@ import Testing
         TaskActions.park(parked, now: Self.now)
         let all = [parked, undatedLow, nextWeek, undatedHigh, today, tomorrow, overdue, undatedNone]
 
-        #expect(Self.open(all) == [overdue, today, tomorrow, nextWeek, undatedHigh, undatedLow, undatedNone, parked].map(\.id))
+        #expect(Self.open(all) == [overdue, today, undatedHigh, undatedLow, undatedNone, tomorrow, nextWeek, parked].map(\.id))
     }
 
     @Test("A parked task of high urgency and importance stands below everything, even below an unweighted one")
@@ -136,13 +137,50 @@ import Testing
         TaskActions.park(parked, now: Self.now)
         let dated = Self.task("Zahnarzt", due: Self.day(1), minute: 1, in: store)
         let undated = Self.task("Buch", urgency: .medium, minute: 2, in: store)
-        let all = [parked, dated, undated]
+        let today = Self.task("Müll", due: Self.day(0, hour: 18), minute: 3, in: store)
+        let all = [parked, dated, undated, today]
+        let order = ViewRules.byPressureThenWeight(now: Self.now, calendar: Self.calendar)
 
         for a in all {
-            #expect(!ViewRules.byPressureThenWeight(a, a))
+            #expect(!order(a, a))
             for b in all where a.id != b.id {
-                #expect(ViewRules.byPressureThenWeight(a, b) != ViewRules.byPressureThenWeight(b, a))
+                #expect(order(a, b) != order(b, a))
             }
         }
+    }
+
+    @Test("A far date rests below an undated task of no weight (#657)")
+    @MainActor func farDateBelowUndated() async throws {
+        let store = try TestStore()
+        let farUrgent = Self.task("Steuererklärung", due: Self.day(40), urgency: .high, importance: .high, minute: 0, in: store)
+        let plain = Self.task("Fahrrad flicken", minute: 1, in: store)
+        let all = [farUrgent, plain]
+
+        #expect(Self.open(all) == [plain, farUrgent].map(\.id))
+        #expect(ViewRules.looseEndsStage(farUrgent, now: Self.now, calendar: Self.calendar) == .later)
+    }
+
+    @Test("Tomorrow is Later today and Today tomorrow: the task moves up on its own (#657)")
+    @MainActor func tomorrowMovesUpOnItsDay() async throws {
+        let store = try TestStore()
+        let tomorrow = Self.task("Zahnarzt anrufen", due: Self.day(1, hour: 0), minute: 0, in: store)
+        let plain = Self.task("Buch zurückgeben", minute: 1, in: store)
+        let all = [tomorrow, plain]
+        let nextDay = Self.calendar.date(byAdding: .day, value: 1, to: Self.now)!
+
+        #expect(Self.open(all) == [plain, tomorrow].map(\.id))
+        #expect(ViewRules.looseEndsStage(tomorrow, now: Self.now, calendar: Self.calendar) == .later)
+        let moved = ViewRules.tasks(for: .open, in: all, now: nextDay, calendar: Self.calendar).map(\.id)
+        #expect(moved == [tomorrow, plain].map(\.id))
+        #expect(ViewRules.looseEndsStage(tomorrow, now: nextDay, calendar: Self.calendar) == .today)
+    }
+
+    @Test("A parked task with a date of today is parked, not today (#657)")
+    @MainActor func parkedBeatsToday() async throws {
+        let store = try TestStore()
+        let parked = Self.task("Keller", due: Self.day(0, hour: 18), minute: 0, in: store)
+        TaskActions.park(parked, now: Self.now)
+
+        #expect(ViewRules.looseEndsStage(parked, now: Self.now, calendar: Self.calendar) == .parked)
     }
 }
