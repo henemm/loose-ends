@@ -203,7 +203,8 @@ final class EnrichmentCoordinator {
     }
 
     /// The rule step, before and independent of the model (#95, #117, #136): it writes due date,
-    /// importance, urgency and — from a raw text captured before — duration and contexts the way
+    /// importance, urgency, a duration the user named (#673) and — from a raw text captured before —
+    /// duration and contexts the way
     /// `EnrichmentWriter` writes a model value — one revision per field — but with the origin `rule`
     /// instead of `ai`, read from the user's words rather than guessed (#101), and leaves
     /// `processedAt` alone, because that marker means "the model has seen this task" (ADR-4). Each
@@ -226,6 +227,8 @@ final class EnrichmentCoordinator {
         if applyImportanceRule(to: task, mode: mode) { matched.insert(.importance) }
         if applyUrgencyRule(to: task, mode: mode) { matched.insert(.urgency) }
         matched.formUnion(applyRecognitionRule(to: task, mode: mode, pool: recognitionPool, tasksByID: tasksByID))
+        // A named length only where recognition found nothing: recognition beats the word rule (#673).
+        if !matched.contains(.duration), applyDurationRule(to: task, mode: mode) { matched.insert(.duration) }
         // The word list only where recognition found nothing: a text captured before carries what
         // the user decided then, which beats a word list (#232).
         if !matched.contains(.contexts), applyContextWordRule(to: task, mode: mode, catalog: catalog, learned: learned) {
@@ -423,6 +426,30 @@ final class EnrichmentCoordinator {
         task.importanceSourceRaw = FieldSource.rule.rawValue
         task.importanceConfidence = guess.confidence
         logger.info("Rule set importance for \(task.id, privacy: .public)")
+        return true
+    }
+
+    /// A length the user named ("20 Minuten"), rounded up to its bucket (#441, #673). Same second
+    /// condition as the recognition: only a user `Revision` marks a duration the user cleared.
+    /// No catch-up over existing tasks: once the rule step ran (`rulesAppliedAt`), only a re-analysis
+    /// brings the duration — without the model `processedAt` stays empty and the pass comes back.
+    private func applyDurationRule(to task: TaskItem, mode: EnrichmentWriter.Mode) -> Bool {
+        if mode == .firstRun, task.rulesAppliedAt != nil { return false }
+        guard let guess = DurationRule.match(in: task.rawText)?.guess else { return false }
+        guard EnrichmentWriter.mayWrite(
+            .duration, on: task, mode: mode,
+            firstRun: task.duration == nil && !EnrichmentWriter.userHasTouched(.duration, on: task),
+            changes: guess.value != task.duration
+        ) else { return true }
+        let revision = Revision(
+            task: task, field: .duration, oldValue: task.durationRaw,
+            newValue: guess.value.rawValue, author: .rule, reason: guess.reason
+        )
+        task.revisions = (task.revisions ?? []) + [revision]
+        task.duration = guess.value
+        task.durationSourceRaw = FieldSource.rule.rawValue
+        task.durationConfidence = guess.confidence
+        logger.info("Rule set duration for \(task.id, privacy: .public)")
         return true
     }
 

@@ -1,22 +1,21 @@
 # Simulator-Beleg
-erzeugt: 2026-10-24T19:33:50+0200
-befehl: scripts/sim.sh test-proof FieldsSmokeTests/testRepro673DurationFromText
+erzeugt: 2026-10-24T20:00:13+0200
+befehl: scripts/sim.sh test-proof FieldsSmokeTests
 workflow: fix-673-duration-rule
-head: eb400186667d0739d6bbf305c3d098a2c0328347
-basis: 3db05994c8f31d5d63e3a0819576082673443668 (merge-base origin/main HEAD)
-testklasse: FieldsSmokeTests/testRepro673DurationFromText
-ergebnis: Failed
-xcodebuild: ** TEST FAILED **
-tests: 1 gesamt, 0 bestanden, 1 fehlgeschlagen, 0 übersprungen
-start: 1792863184.286  ende: 1792863229.54
+head: 436dd4fab4eb313889dea5486782720e4b72c879
+basis: 20b8649b675a62e478f7306ad489d2ca81b7c273 (merge-base origin/main HEAD)
+testklasse: FieldsSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 5 gesamt, 5 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1792864627.384  ende: 1792864812.457
 geraet: iPhone 17, iOS 27.0
-summary: docs/artifacts/fix-673-duration-rule/simulator-run/summary.json  sha256:ae7ffac53defb7d5a49b1296d1d808d66f367042bba1908ae7e6e56e2e421368
+summary: docs/artifacts/fix-673-duration-rule/simulator-run/summary.json  sha256:0ac10c77ea5a36bc5536aad60ead17d87dbde44d950686b880c339a4652b74f4
 xcresult: docs/artifacts/fix-673-duration-rule/simulator-run/run.xcresult  (gitignored)
-screenshots: docs/artifacts/fix-673-duration-rule/simulator-run/*.png (0 Stück)
+screenshots: docs/artifacts/fix-673-duration-rule/simulator-run/*.png (10 Stück)
 
 ## Geprüfte Dateien
-- sha256:57d32b967c4500ae6d6c46e044c4fafa28c1351e7ff9e8ffc53f07f12a86f598  LooseEnds/Views/TaskDetailView.swift
-- sha256:ba129b9279d51ba5be5c5116a4e79f9875964c782ea611a8da126e704b808462  LooseEnds/Views/TaskRow.swift
-- sha256:0600ae25a20f06a88097ee8accc62da828a6d37bcce102af271fee0cfee3cf65  LooseEndsTests/FieldGlyphTests.swift
-- sha256:026238aa2246cdcd88fdd8e2d5ace7b21e8243f203d14dc2dd90c09e0c30b657  LooseEndsUITests/FieldsSmokeTests.swift
-- sha256:f5bf44770a7a73b4e2b3a4a9b0f9d1898884267b5945ffdf6bfb9a1662f47473  Shared/Models/FieldGlyph.swift
+- sha256:6f070636f37a838ec376fae189e3d604ec2905e8a42d8be7dc16d3358b2942b2  LooseEndsTests/DurationRuleCoordinatorTests.swift
+- sha256:547d8fea38a5279fae108e09e4fb1814a2255370326d86010c08e333afc71aef  LooseEndsTests/EnrichmentTests.swift
+- sha256:8d7708a57bdd9d731f0311b1122828211377dc256569535528aaa0b0c74da827  LooseEndsUITests/FieldsSmokeTests.swift
+- sha256:54af401ce3f0ea58f452a095c29351040974c7d92d43edbd69909c4d4b3f87d9  Shared/Enrichment/EnrichmentCoordinator.swift
