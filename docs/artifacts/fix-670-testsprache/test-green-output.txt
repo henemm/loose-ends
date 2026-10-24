@@ -1,0 +1,27 @@
+test_build_action_keeps_its_arguments_unchanged (scripts.test_sim_run_xcodebuild.RunXcodebuildDiagnosticsTests.test_build_action_keeps_its_arguments_unchanged) ... ok
+test_test_action_switches_off_diagnostics_collection (scripts.test_sim_run_xcodebuild.RunXcodebuildDiagnosticsTests.test_test_action_switches_off_diagnostics_collection) ... ok
+test_hang_detected_without_pipefail (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_hang_detected_without_pipefail) ... ok
+test_hang_message_names_deadline_last_line_and_simulator_service (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_hang_message_names_deadline_last_line_and_simulator_service) ... ok
+test_lock_released_after_hang (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_lock_released_after_hang) ... ok
+test_no_leftovers_after_normal_run (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_no_leftovers_after_normal_run) ... ok
+test_other_session_xcodebuild_survives (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_other_session_xcodebuild_survives) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1313: ResourceWarning: subprocess 29599 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_silent_xcodebuild_is_killed_after_deadline (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_silent_xcodebuild_is_killed_after_deadline) ... ok
+test_talkative_run_is_not_aborted (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_talkative_run_is_not_aborted) ... ok
+test_term_ignoring_xcodebuild_is_killed_after_grace (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_term_ignoring_xcodebuild_is_killed_after_grace)
+F003: ein xcodebuild, der TERM ignoriert, endet 5 s später per KILL. ... ok
+test_watcher_ends_when_script_dies (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_watcher_ends_when_script_dies)
+F001: stirbt sim.sh per KILL, löst der Wächter nicht mehr aus; der xcodebuild bleibt bewusst als Waise. ... ok
+test_build_action_ignores_variable (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_build_action_ignores_variable) ... ok
+test_de_sets_de_region (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_de_sets_de_region) ... ok
+test_en_sets_language_and_region (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_en_sets_language_and_region) ... ok
+test_invalid_values_abort_loudly (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_invalid_values_abort_loudly) ... ok
+test_unknown_valid_code_sets_language_only (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_unknown_valid_code_sets_language_only) ... ok
+test_without_variable_arguments_are_unchanged (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_without_variable_arguments_are_unchanged) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 64.142s
+
+OK
