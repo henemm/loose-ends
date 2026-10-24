@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bessere Symbole</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#ecebe5;--fg:#22231f;--muted:#6b6d66;--line:#d5d3cb;--card:#f7f6f1;--accent:#0F6E73;
+--serif:"Source Serif 4","New York",Georgia,serif;--sans:"Inter Tight",-apple-system,system-ui,sans-serif}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#121311;--fg:#e8e8e3;--muted:#9a9c94;--line:#2c2e2a;--card:#1b1c1a;--accent:#5FC4C9;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121311;--fg:#e8e8e3;--muted:#9a9c94;--line:#2c2e2a;--card:#1b1c1a;--accent:#5FC4C9;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.5;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 16px 64px;display:flex;flex-direction:column;gap:36px}
+h1,h2{font-family:var(--serif);font-weight:600;margin:0;text-wrap:balance}
+h1{font-size:clamp(26px,4vw,36px);line-height:1.15}h2{font-size:22px}
+.lede{max-width:68ch;color:var(--muted);margin:6px 0 0}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.row{display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start;margin-top:12px}
+.col{display:flex;flex-direction:column;gap:8px;min-width:0}
+.cap{font-size:13px;color:var(--muted)}
+.facts{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;max-width:80ch}
+.facts ul{margin:6px 0 0;padding-left:18px}.facts li{margin:4px 0}
+.phone{--p-bg:#F4F3EE;--p-fg:#1c1c1e;--p-2:#6e6e73;--p-line:#dcdbd3;--p-red:#d70015;
+width:300px;max-width:100%;border-radius:28px;background:var(--p-bg);color:var(--p-fg);border:1px solid var(--line);
+padding:16px;font-family:-apple-system,"SF Pro Text",var(--sans);font-size:14px;box-sizing:border-box}
+.phone.dark{--p-bg:#171816;--p-fg:#f2f2f7;--p-2:#98989f;--p-line:#2e2f2b;--p-red:#ff6961}
+.t{padding:6px 0 14px;border-bottom:1px solid var(--p-line);margin-bottom:10px}
+.t .ti{font-family:var(--serif);font-size:16px}
+.meta{display:flex;gap:8px;align-items:center;font-size:12px;margin-top:3px}
+.meta .g{display:inline-flex;align-items:center;gap:3px}
+.meta .grey{color:var(--p-2)}
+svg.i{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+svg.f{fill:currentColor}
+.d{display:grid;grid-template-columns:86px 1fr;gap:6px 10px;padding:7px 0;border-bottom:1px solid var(--p-line);align-items:baseline}
+.d .l{font-size:12px;color:var(--p-2)}.d .v{font-family:var(--serif);font-size:15px;display:flex;gap:6px;align-items:center}
+.d .v svg.i{width:14px;height:14px;color:var(--p-2)}
+.dt{font-family:var(--serif);font-size:18px;margin:2px 0 8px}
+.red{color:var(--p-red)}
+</style></head><body>
+<div class="wrap">
+<header><div class="eyebrow">#344 · Entwurf vor Spec</div><h1>Bessere Symbole</h1>
+<p class="lede">Die Fahne und der Blitz unter dem Titel sagen nicht, was sie meinen. Dieselben Zeichen sollen im Detail hinter dem Wort stehen. Unten: heute, dein Vorschlag (A) und zwei Alternativen. Die Zeichen sind hier nachgezeichnet, in der App sind es echte SF Symbols.</p></header>
+
+<section class="facts"><div class="eyebrow">Recherche</div><ul>
+<li>Outlook: hohe Wichtigkeit = rotes Ausrufezeichen; die Fahne heißt dort „nachfassen“, nicht „wichtig“.</li>
+<li>Apple Erinnerungen: Fahne = „markiert“ (eigene Liste); Priorität = Ausrufezeichen, ein bis drei.</li>
+<li>Ayoa: Fahne = Wichtigkeit, Blitz = Dringlichkeit — genau unser Paar, und doch deutet es niemand ohne Beschriftung.</li>
+<li>Amazing Marvin: Stern = Wichtigkeit, Feuer = Dringlichkeit. Es gibt keinen Standard.</li>
+<li>FocusBlox (dein Vorgänger, Repo timebox-ios, <code>TaskMetadataUI.swift</code>): Wichtigkeit = <code>exclamationmark</code> / <code>.2</code> / <code>.3</code> für Niedrig / Mittel / Hoch, Dringlichkeit = <code>flame.fill</code>.</li>
+<li>Folge: Ein Zeichen allein erklärt sich nirgends. Was hilft: ein Wort daneben, oder dieselbe Zeichen-Wort-Paarung an einem zweiten Ort.</li></ul></section>
+
+<section><h2>Heute</h2><p class="lede">Fahne und Blitz ohne Text. Im Detail stehen nur Wörter.</p><div class="row" id="heute"></div></section>
+<section><h2>A · Dein Vorschlag: ! und !!</h2><p class="lede">Ein Ausrufezeichen für wichtig, zwei für dringend. Aber: Zwei Ausrufezeichen lesen sich als „noch wichtiger“, nicht als „eilig“. Ist beides hoch, stehen „! !!“ nebeneinander, und niemand weiß, was welches ist.</p><div class="row" id="a"></div></section>
+<section><h2>B · Zeichen aus FocusBlox, mit Wort (Empfehlung)</h2><p class="lede">So hast du es im Vorgänger gelöst: Wichtigkeit als Ausrufezeichen-Leiter (eins, zwei, drei = Niedrig, Mittel, Hoch), Dringlichkeit als Flamme. Hier zusätzlich das Wort in der Zeile, wie bei „30 Min.“ schon heute; im Detail dieselben Zeichen hinter dem Wort.</p><div class="row" id="b"></div></section>
+<section><h2>C · Nur Wörter in der Zeile</h2><p class="lede">Kein Zeichen unter dem Titel, nur „Wichtig · Dringend“. Die Zeichen gibt es nur im Detail.</p><div class="row" id="c"></div></section>
+</div>
+<script>
+const S={
+flag:'<svg class="i f" viewBox="0 0 16 16"><path d="M4 14V2.5M4 3h8l-2 3 2 3H4"/></svg>',
+bolt:'<svg class="i f" viewBox="0 0 16 16"><path d="M9 1.5 3.5 9H8l-1 5.5L12.5 7H8z"/></svg>',
+ex:'<svg class="i" viewBox="0 0 16 16"><path d="M8 2.5v7"/><circle cx="8" cy="13" r=".6"/></svg>',
+ex2:'<svg class="i" viewBox="0 0 16 16"><path d="M5 2.5v7M11 2.5v7"/><circle cx="5" cy="13" r=".6"/><circle cx="11" cy="13" r=".6"/></svg>',
+ex3:'<svg class="i" viewBox="0 0 16 16"><path d="M3 2.5v7M8 2.5v7M13 2.5v7"/><circle cx="3" cy="13" r=".6"/><circle cx="8" cy="13" r=".6"/><circle cx="13" cy="13" r=".6"/></svg>',
+flame:'<svg class="i" viewBox="0 0 16 16"><path d="M8 14c-2.8 0-4.5-1.9-4.5-4.2 0-2.2 1.6-3.4 2.4-5 .4 1 1 1.6 1.7 2C8 5.4 8.3 3.4 8.2 1.8c2.4 1.5 4.3 4 4.3 8 0 2.5-1.7 4.2-4.5 4.2z"/></svg>',
+hour:'<svg class="i" viewBox="0 0 16 16"><path d="M4 2h8M4 14h8M5 2c0 4 6 4 6 6s-6 2-6 6M11 2c0 4-6 4-6 6s6 2 6 6"/></svg>',
+star:'<svg class="i" viewBox="0 0 16 16"><path d="m8 1.8 1.9 4 4.3.5-3.2 3 .9 4.3L8 11.4 4.1 13.6 5 9.3l-3.2-3 4.3-.5z"/></svg>',
+clock:'<svg class="i" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 4.5V8l2.5 1.5"/></svg>',
+cal:'<svg class="i" viewBox="0 0 16 16"><rect x="2.5" y="3.5" width="11" height="10" rx="2"/><path d="M2.5 7h11M5.5 2v3M10.5 2v3"/></svg>',
+folder:'<svg class="i" viewBox="0 0 16 16"><path d="M2 5a1.5 1.5 0 0 1 1.5-1.5H6l1.5 1.5h5A1.5 1.5 0 0 1 14 6.5v5A1.5 1.5 0 0 1 12.5 13h-9A1.5 1.5 0 0 1 2 11.5z"/></svg>'};
+const T='Angebot an Frau Brandt schicken';
+const row=m=>`<div class="t"><div class="ti">${T}</div><div class="meta">${m}</div></div>`;
+const det=r=>`<div class="dt">${T}</div>`+r.map(([l,v,ic,cl])=>`<div class="d"><span class="l">${l}</span><span class="v ${cl||''}">${v}${ic||''}</span></div>`).join('');
+const show=(id,mk)=>{document.getElementById(id).innerHTML=[false,true].map(d=>`<div class="col"><div class="phone ${d?'dark':''}">${mk()}</div><div class="cap">${d?'Dunkel':'Hell'}</div></div>`).join('')};
+const ic={cal:S.cal,clock:S.clock,folder:S.folder},none={cal:'',clock:'',folder:''};
+const base=i=>[['Fällig','Morgen, 14:00',i.cal,'red'],['Dauer','30 Min.',i.clock],['Projekt','Vertrieb',i.folder]];
+show('heute',()=>row(`<span class="g">${S.flag}</span><span class="g">${S.bolt}</span><span class="g grey">${S.clock}30 Min.</span>`)+det([['Wichtigkeit','Hoch'],['Dringlichkeit','Hoch'],...base(none)]));
+show('a',()=>row(`<span class="g">${S.ex}</span><span class="g">${S.ex2}</span><span class="g grey">${S.clock}30 Min.</span>`)+det([['Wichtigkeit','Hoch',S.ex],['Dringlichkeit','Hoch',S.ex2],...base(ic)]));
+show('b',()=>row(`<span class="g">${S.ex3}Wichtig</span><span class="g">${S.flame}Dringend</span><span class="g grey">${S.clock}30 Min.</span>`)+det([['Wichtigkeit','Hoch',S.ex3],['Dringlichkeit','Hoch',S.flame],...base(ic)]));
+show('c',()=>row(`<span class="g">Wichtig · Dringend</span><span class="g grey">30 Min.</span>`)+det([['Wichtigkeit','Hoch',S.ex3],['Dringlichkeit','Hoch',S.flame],...base(ic)]));
+</script></body></html>
