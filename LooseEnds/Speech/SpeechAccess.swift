@@ -7,39 +7,25 @@ import UIKit
 /// Allow" (or an answer from an earlier build) the request returns no without any dialog, and the
 /// scene used to say only "not allowed" — on the Mac with no way to change it. Now it names the
 /// right and opens the matching page in Settings. Pure, so the mapping is testable without TCC.
+/// Since #293 only the microphone: SpeechAnalyzer does not need the speech recognition right
+/// (shown on the Mac, 2026-10-24).
 enum SpeechAccess: Equatable, Sendable {
     case microphone
-    case speechRecognition
-    case both
 
-    /// Nil when both rights are there.
-    static func missing(microphone: Bool, speech: Bool) -> SpeechAccess? {
-        switch (microphone, speech) {
-        case (true, true): nil
-        case (false, true): .microphone
-        case (true, false): .speechRecognition
-        case (false, false): .both
-        }
+    /// Nil when the microphone is allowed.
+    static func missing(microphone: Bool) -> SpeechAccess? {
+        microphone ? nil : .microphone
     }
 
     var message: String {
-        switch self {
-        case .microphone:
-            String(localized: "Microphone access is off. Type instead, or allow it in Settings.")
-        case .speechRecognition:
-            String(localized: "Speech recognition is off. Type instead, or allow it in Settings.")
-        case .both:
-            String(localized: "Microphone and speech recognition are off. Type instead, or allow them in Settings.")
-        }
+        String(localized: "Microphone access is off. Type instead, or allow it in Settings.")
     }
 
-    /// The page that switches the right on. On the Mac the privacy pane of the missing right (with
-    /// both missing, the microphone first: without it nothing is heard); on iPhone and iPad the
-    /// app's own page in Settings, which lists both switches.
+    /// The page that switches the right on: on the Mac the microphone's privacy pane, on iPhone and
+    /// iPad the app's own page in Settings.
     var settingsURL: URL? {
         #if os(macOS)
-        let pane = self == .speechRecognition ? "Privacy_SpeechRecognition" : "Privacy_Microphone"
-        return URL(string: "x-apple.systempreferences:com.apple.preference.security?\(pane)")
+        return URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone")
         #else
         return URL(string: UIApplication.openSettingsURLString)
         #endif

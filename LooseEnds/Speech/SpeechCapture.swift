@@ -47,7 +47,6 @@ final class SpeechCapture {
     private var timings: SpeechTimings?
     private var modelStatus = ""
     private var microphoneGranted = false
-    private var speechGranted = false
     /// Zählt jedes `stop()`. `start()` wartet auf Modell, Rechte und Analyzer; kam in der Zeit ein
     /// `stop()` (Abbrechen, Fertig, Tippen ins Textfeld), darf es danach kein Mikrofon mehr öffnen (#184).
     private var stopCount = 0
@@ -95,13 +94,10 @@ final class SpeechCapture {
             LaunchTimings.mark(.modelReady)
         }
         let microphone = await AVAudioApplication.requestRecordPermission()
-        let speech = await Self.requestSpeechAuthorization()
         let tRights = ContinuousClock.now
-        // Ob SpeechAnalyzer das Spracherkennungsrecht braucht, ist nicht dokumentiert; Stufe 7 liest es hier ab.
-        Self.logger.notice("Rechte: Mikrofon \(microphone, privacy: .public), Spracherkennung \(speech, privacy: .public)")
+        Self.logger.notice("Rechte: Mikrofon \(microphone, privacy: .public)")
         microphoneGranted = microphone
-        speechGranted = speech
-        if let missing = SpeechAccess.missing(microphone: microphone, speech: speech) {
+        if let missing = SpeechAccess.missing(microphone: microphone) {
             state = .accessDenied(missing)
             return
         }
@@ -317,7 +313,7 @@ final class SpeechCapture {
             buffers: box.bufferCount, results: resultCount,
             secondsAudible: firstAudibleAt.map { Self.seconds(ContinuousClock.now - $0) },
             showsReport: LaunchTimings.isProbeBuild(bundleID: Bundle.main.bundleIdentifier),
-            modelStatus: modelStatus, microphone: microphoneGranted, speech: speechGranted,
+            modelStatus: modelStatus, microphone: microphoneGranted,
             timings: timings
         )
     }
@@ -381,19 +377,6 @@ final class SpeechCapture {
             let buffer = AVAudioPCMBuffer(copying: readOnly)
             onLevel(Waveform.level(of: buffer))
             box.feed(buffer, at: time)
-        }
-    }
-
-    /// `nonisolated`, weil der TCC-Dienst seine Antwort auf einem Hintergrund-Strang zustellt
-    /// (`com.apple.root.default-qos`). In einer `@MainActor`-Klasse erbt der Abschluss sonst die
-    /// Hauptstrang-Bindung, Swift prüft sie beim Aufruf und bricht den Prozess ab
-    /// (`dispatch_assert_queue` → `brk #0x1`). Die App starb dadurch, sobald die Rechteabfrage
-    /// beantwortet war: der Erfassungs-Screen war danach tot, Abbrechen und Mikrofon eingeschlossen.
-    private nonisolated static func requestSpeechAuthorization() async -> Bool {
-        await withCheckedContinuation { (continuation: CheckedContinuation<Bool, Never>) in
-            SFSpeechRecognizer.requestAuthorization { status in
-                continuation.resume(returning: status == .authorized)
-            }
         }
     }
 }

@@ -1,0 +1,153 @@
+[0;34m[sim][0m Testsperre belegt — warte (0 s, Platz 1 von 1 in der Warteliste). Halter: Worktree /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie, Befehl sim-unit, PID 8318
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: SpeechDiagnosisLineTests/testDiagnosisLineShowsFixedState
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds.debug.dylib
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEnds' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsShare.appex -> LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWidgets.appex
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProjectNameRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m QuickDueTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RealModelGateTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RealModelLatencyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RealModelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReanalysisTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RecognitionRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReminderEntityTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReminderTranslationTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TaskActionsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TaskAttachmentModelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TaskPlaceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TextFormRuleReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ThreadShapeTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TimeExpressionParserTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TitleFidelityPromptTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TitleRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m WaitingOnTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m WaveformTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelContainerFactoryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelSeamTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NewDateRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NextRankTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NextUpWidgetTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NoteLinksTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NowRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m OnboardingFlowTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PendingCompletionsTests.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/LooseEndsTests/SpeechDiagnosisTests.swift:16:56: [31mmissing argument for parameter 'speech' in call[0m
+ 14 |         SpeechDiagnosis.hint(
+[36m 15 |             buffers: buffers, results: results, secondsAudible: seconds,[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/LooseEndsTests/SpeechDiagnosisTests.swift:95:55: [31mmissing argument for parameter 'speech' in call[0m
+ 93 |         SpeechDiagnosis.hint(
+[36m 94 |             buffers: 100, results: results, secondsAudible: seconds, showsReport: showsReport,[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/LooseEndsTests/SubtaskTests.swift:108:35: [33m'#require(_:_:)' is redundant because 'TaskPlace(name: "Markt", latitude: 53.55, longitude: 9.93, event: .arrive)' never equals 'nil' (from macro 'require')[0m
+106 |         milk.dueHasTime = true
+[32m107 |         milk.contexts = [garden, phone][0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechDiagnosisTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechLatencyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechReadinessTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m StartHeadlineTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m StartMetricsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m StartViewsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SubtaskListsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SubtaskRulesTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SubtaskTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SyncStatusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateTitleReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DetailFieldsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DetailLayoutTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueDateRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueNotificationCenterTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueStateTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueTodayTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueWordsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DurationRuleTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/LooseEndsTests/DueNotificationCenterTests.swift:65:39: [33m'#require(_:_:)' is redundant because 'TaskPlace(name: "Büro", latitude: 51.99563, longitude: 7.71357, event: .arrive)' never equals 'nil' (from macro 'require')[0m
+ 63 |         func placed(_ raw: String) throws -> TaskItem {
+[32m 64 |             let task = try task(raw)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/LooseEndsTests/DueNotificationCenterTests.swift:74:45: [33m'#require(_:_:)' is redundant because 'calendar.date(bySettingHour: hour, minute: minute, second: 0, of: tomorrow)' never equals 'nil' (from macro 'require')[0m
+ 72 |             task.status = .active
+[32m 73 |             if let hour {[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m AppVersionTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m AttachmentKindTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CalendarAskTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CalendarSyncTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureComplication.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureComplicationTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CarryRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CatalogServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CloudKitSchemaInitializerTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContentsIndexTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m EnergyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m EnrichmentTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m FieldEditTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m FieldOriginTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m GuardrailCorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ImportanceUrgencyRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m InboxDrawerTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRun.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRunTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MenuBarThreadImageTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordForgettingTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordLearningCoordinatorTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordLearningReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordLearningTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ConventionBaselineTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ConventionCorpus.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m Corpus.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateExpressionParserTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateParserCorpusTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/LooseEndsTests/PlaceNotificationCenterTests.swift:63:39: [33m'#require(_:_:)' is redundant because 'TaskPlace(name: name, latitude: 51.99563, longitude: 7.71357, event: event)' never equals 'nil' (from macro 'require')[0m
+ 61 |             let task = TaskItem(rawText: raw)
+[32m 62 |             task.status = .active[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m PeopleRetiredTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PhoneRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceDeliveryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceEditingTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceNotificationCenterTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceNotificationsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PressureOrderTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProcessCacheTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProjectLinesTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatAnchorTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatEditTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReviewTrayTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RevisionServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RowKeyActionTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SiriCaptureTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SiriFieldsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SiriRepeatMappingTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechAccessTests.swift
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-compressed-gathering-raven/Logs/Test/Test-LooseEnds-2026.10.24_08-55-38-+0200.xcresult
+
+== xcresult build errors (Test-LooseEnds-2026.10.24_08-55-38) ==
+error: SpeechDiagnosisTests.swift: Missing argument for parameter 'speech' in call
+Testing cancelled because the build failed. TEST FAILED (RED)
+Erwartet nach Umbau: label ohne "speech: yes"; heutige App liefert "microphone: yes · speech: yes · buffers: 62".

@@ -1,0 +1,38 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: SpeechDiagnosisLineTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-10-24 09:00:24.430.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-24 09:00:24.432.
+Test Suite 'SpeechDiagnosisLineTests' started at 2026-10-24 09:00:24.433.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.SpeechDiagnosisLineTests testDiagnosisLineShowsFixedState] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =     9.06s Waiting 10.0s for "captureTextField" Any to exist
+[32m    t =    10.09s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testDiagnosisLineShowsFixedState ([31m16.866[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.SpeechDiagnosisLineTests testNoDiagnosisLineWithoutArgument] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =     9.62s Waiting 10.0s for "captureTextField" Any to exist
+[32m    t =    10.65s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testNoDiagnosisLineWithoutArgument ([31m14.472[0m seconds)
+Executed 2 tests, with 0 failures (0 unexpected) in 31.337 (31.346) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-24 09:00:55.784.
+Executed 2 tests, with 0 failures (0 unexpected) in 31.337 (31.351) seconds
+Executed 2 tests, with 0 failures (0 unexpected) in 31.337 (31.354) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-compressed-gathering-raven/Logs/Test/Test-LooseEnds-2026.10.24_09-00-14-+0200.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden.
+=== xcresult-Summary (Test-LooseEnds-2026.10.24_09-00-14-+0200.xcresult) ===
+Ergebnis: Passed, Bestanden: 2, Fehlgeschlagen: 0, Uebersprungen: 0

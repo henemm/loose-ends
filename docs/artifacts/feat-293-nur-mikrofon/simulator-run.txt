@@ -1,0 +1,24 @@
+# Simulator-Beleg
+erzeugt: 2026-10-24T09:06:07+0200
+befehl: scripts/sim.sh test-proof SpeechDiagnosisLineTests
+workflow: feat-293-nur-mikrofon
+head: c238ebcc56a4edde491ba477fedd3a8db61e8fe4
+basis: 96f79e8be9c336d4bd7b17d5f82fde53582e7f4f (merge-base origin/main HEAD)
+testklasse: SpeechDiagnosisLineTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 2 gesamt, 2 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1792825523.94  ende: 1792825566.261
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/feat-293-nur-mikrofon/simulator-run/summary.json  sha256:118bf608110a0216df4c89c1723f1f09e17024510a9aa1435306e347dcee7390
+xcresult: docs/artifacts/feat-293-nur-mikrofon/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-293-nur-mikrofon/simulator-run/*.png (1 Stück)
+
+## Geprüfte Dateien
+- sha256:7363b9a08d920cb9733f0b7555f9a12728786d571d91f6b9d38e47c0ec217f62  LooseEnds/Speech/SpeechAccess.swift
+- sha256:e8816a7d35701eebf797d4eb07b83299e9f05953452e9531d2ba3ba4bf44d40a  LooseEnds/Speech/SpeechCapture.swift
+- sha256:49fb9bcf59483ca92199cbf15e62f24c11b5b60ef004e051c49b169031879437  LooseEnds/Speech/SpeechDiagnosis.swift
+- sha256:d0ff97b68a55c33719ac827ed41a3999fc3fd5614e622c26e7da2c06925a797e  LooseEnds/Views/CaptureView.swift
+- sha256:6c5c5b51f5b0e8eb2687372f3c05ab47ebbb4b9d921ada2a29875b17a8e80d8d  LooseEndsTests/SpeechAccessTests.swift
+- sha256:3cc751408a04f5431a2cccbe83f36f146ddf1f1ee5598d4c6b5859f0c78345f6  LooseEndsTests/SpeechDiagnosisTests.swift
+- sha256:d28837a832bcae7476032ec0550f4e00708d85ea352ca18fff0c6ba091aebd60  LooseEndsUITests/SpeechDiagnosisLineTests.swift

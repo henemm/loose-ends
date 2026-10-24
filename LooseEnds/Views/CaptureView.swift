@@ -67,7 +67,7 @@ struct CaptureView: View {
 
     private var diagnosis: SpeechDiagnosis? {
         guard diagnosisFixture else { return speech.diagnosis }
-        return SpeechDiagnosis(modelStatus: "installed", microphone: true, speech: true, buffers: 62, results: 0)
+        return SpeechDiagnosis(modelStatus: "installed", microphone: true, buffers: 62, results: 0)
     }
 
     var body: some View {
