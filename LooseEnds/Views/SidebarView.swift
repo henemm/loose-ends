@@ -43,6 +43,8 @@ struct SidebarView: View {
     @AppStorage("startShowsContexts") private var showsContexts = false
     /// Tags and Projects stand on the start page only while their field is on (#538, rule 7).
     @Environment(FieldSettingsStore.self) private var fieldSettings: FieldSettingsStore?
+    /// "Analyze again" in the long-press menu (#667); nil in previews, then it is not offered.
+    @Environment(\.enrichment) private var enrichment: EnrichmentCoordinator?
     private var offersTags: Bool { (fieldSettings?.settings ?? .standard).isOn(.contexts) }
     private var offersProjects: Bool { (fieldSettings?.settings ?? .standard).isOn(.project) }
 
@@ -113,7 +115,8 @@ struct SidebarView: View {
             pendingDelete: $pendingTaskDelete, confirmingDelete: $confirmingTaskDelete, datingTask: $datingTask,
             askingSubtasks: $askingSubtasks, askingKnaeuel: $askingKnaeuel,
             didDelete: { id in if selection == .task(id) { selection = nil } },
-            fields: fieldSettings?.settings ?? .standard
+            fields: fieldSettings?.settings ?? .standard,
+            analyze: TaskInteractions.listAnalysis(enrichment)
         )
     }
 

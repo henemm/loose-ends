@@ -57,7 +57,7 @@ struct ContentView: View {
         } detail: {
             if case .task(let id) = selection, let task = tasks.first(where: { $0.id == id }) {
                 NavigationStack {
-                    withMacCapture(TaskDetailView(task: task))
+                    withMacCapture(TaskDetailView(task: task, onDeleted: { selection = nil }))
                 }
             } else if case .catalog(let kind) = selection {
                 NavigationStack {

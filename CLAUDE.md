@@ -302,7 +302,12 @@ not scope creep on the current one.
   `WeekStringRows` "Beads" under "Now": the string of five with its empty places as dots, `RewardLine` "For the beads: …" while it
   fills, `FullStringLine` "The string is full. For the beads: …" once it is, #647/#655). The user-facing word for `countsAt` is "Perle sammeln" (#655), never "Zählt". The
   question before the Knäuel moves is `movesKnaeuel` in `TaskInteractions.swift`; the detail's lines under the raw text
-  ("The Knäuel · since Monday" with Release, "Counts always, it is the Knäuel") are `TaskDetailView.driveSection`.
+  ("The Knäuel · since Monday" with Release, "Counts always, it is the Knäuel") are `TaskDetailView.driveSection`. The menu
+  entries are actions (#667): "Make it the Knäuel" / "No longer the Knäuel" (SF Symbol `scribble.variable`), "Attach a bead" /
+  "Take the bead off", the same words under the raw text in the detail. **One menu for list and detail** (#667): the detail's "…" renders `TaskInteractions.menu` (Complete, Next up, Knäuel,
+  bead, Move, Park, Analyze again, Divider, Delete); `didComplete` and `didDelete` leave the detail, `analyze` is the
+  detail's own run with its note or `TaskInteractions.listAnalysis` from a list; `onDeleted` on `TaskDetailView` lets
+  `ContentView` drop its selection.
 - `Shared/Models/RowKeyAction.swift` (#480 Schnitt 1, pure): which key does what in a Mac list (arrows choose, space completes only where the swipe offers done, delete asks first, nothing while a text field has focus); `TaskListView` wires it up on the Mac only (`onKeyPress`, `ChosenRows` keeps the chosen row per list so it survives detail and back), `Paper.wideListRow(selected:)` paints it accent 12 %, hover grey 7 %; Schnitt 2: the start page's "Now" rows take the same keys on the Mac only (`StartPage.macNowRow`/`keyed`, `ChosenRows.start`; only the visible rows, 5 folded; list focus only from a click or when the writing line lets go, never on appear; iPhone and iPad rows unchanged), main window at least 760 × 520 pt of content
 - `Shared/Persistence` — `ModelContainerFactory` (app group + private CloudKit; identifiers read from
   `Info.plist`, keys `LEAppGroup`/`LECloudContainer`, with the production constants as fallback —

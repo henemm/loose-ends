@@ -6,6 +6,8 @@ import SwiftUI
 /// start screen's "Next up" preview (#303): swipe right Done (Restore in Done, Activate in Parked,
 /// "Looks right" in New), swipe left Next up (Park in Old; All open: Activate for a parked task), long press the full menu. The view owns the state behind the
 /// delete confirmation and the date sheet and attaches both with `taskInteractionDialogs`.
+/// The detail's "…" menu is the same `menu` (#667, Henning 2026-10-24: "both menus should be the same"),
+/// so Delete, Move and Analyze again stand in both.
 @MainActor
 struct TaskInteractions {
     /// The view the rows stand in; nil for a context or project.
@@ -30,7 +32,24 @@ struct TaskInteractions {
     /// Which fields are offered (#538): "The Knäuel" and "Counts" stand in the menu only while on, or
     /// while the task carries them (off is not offered, never hidden).
     var fields: DetailFieldSettings = .standard
+    /// Runs once Complete is through (the window started, or done at once): the detail leaves then.
+    var didComplete: @MainActor (TaskItem) -> Void = { _ in }
+    /// "Analyze again" (#34), nil without the pipeline (previews, tests): the detail shows what it
+    /// found, a list runs it quietly (`listAnalysis`).
+    var analyze: (@MainActor (TaskItem) -> Void)? = nil
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "List")
+
+    /// "Analyze again" from a list (#667): the run, and its result in the log; the fields change in
+    /// the row as they come. Nil without the pipeline, and the entry is not offered.
+    static func listAnalysis(_ enrichment: EnrichmentCoordinator?) -> (@MainActor (TaskItem) -> Void)? {
+        guard let enrichment else { return nil }
+        return { task in
+            Task {
+                let result = await enrichment.reanalyze(task)
+                logger.info("Analyzed again from a list: \(String(describing: result), privacy: .public)")
+            }
+        }
+    }
 
     func isPending(_ task: TaskItem) -> Bool {
         pendingCompletions?.isPending(task.id) == true
@@ -115,6 +134,9 @@ struct TaskInteractions {
 
     // MARK: - Long-press menu
 
+    /// One menu for the list's long press and the detail's "…" (#667): Complete first, by name (no
+    /// checkmark in the detail's bar, #435), Next up, the Knäuel and the bead, Move, Park, Analyze
+    /// again; Delete last, after the line. A done or parked task gets Restore or Activate and Delete.
     @ViewBuilder
     func menu(_ task: TaskItem) -> some View {
         if task.status == .done {
@@ -122,18 +144,18 @@ struct TaskInteractions {
         } else if task.status == .parked {
             Button("Activate", systemImage: "sun.max") { activate(task) }
         } else {
-            if task.nextRank == nil {
-                Button("Next up", systemImage: "star") { toggleNext(task) }
-            } else {
-                Button("Remove from Next up", systemImage: "star.slash") { toggleNext(task) }
-            }
-            driveEntries(task)
             if isPending(task) {
                 Button("Undo", systemImage: "arrow.uturn.backward") { undoComplete(task) }
             } else {
                 Button("Complete", systemImage: "checkmark.circle") { complete(task) }
                     .accessibilityIdentifier("menuDone")
             }
+            if task.nextRank == nil {
+                Button("Next up", systemImage: "star") { toggleNext(task) }
+            } else {
+                Button("Remove from Next up", systemImage: "star.slash") { toggleNext(task) }
+            }
+            driveEntries(task)
             Menu("Move", systemImage: "calendar") {
                 Button("Tomorrow") { move(task, to: .tomorrow) }
                 Button("Weekend") { move(task, to: .weekend) }
@@ -142,6 +164,10 @@ struct TaskInteractions {
                     .accessibilityIdentifier("menuMoveDate")
             }
             Button("Park", systemImage: "moon.zzz") { park(task) }
+            if let analyze {
+                Button("Analyze again", systemImage: "sparkles") { analyze(task) }
+                    .accessibilityIdentifier("analyzeAgainButton")
+            }
         }
         Divider()
         Button("Delete", systemImage: "trash", role: .destructive) {
@@ -151,36 +177,39 @@ struct TaskInteractions {
         .accessibilityIdentifier("menuDelete")
     }
 
-    /// "The Knäuel" and "Collect a bead" (#643, #645; the words from Henning's look at build 110), after
-    /// Next up: each only while its field is on or the task carries it. Over the budget "Collect a bead
-    /// (5 of 5)" stands grey. A subtask gets neither.
+    /// "Make it the Knäuel" and "Attach a bead" (#643, #645; the words as actions, Henning's look at build
+    /// 111, #667), after Next up: each only while its field is on or the task carries it. Over the budget
+    /// "Attach a bead (5 of 5)" stands grey. A subtask gets neither.
     @ViewBuilder
     func driveEntries(_ task: TaskItem) -> some View {
         if task.parent == nil {
-            // By its name alone: with the drawn Knäuel as its icon the entry was not to be found on
-            // iOS (UI smoke, PR #651); the sign stands on the start page, the word is enough here.
+            // An SF Symbol, not the drawn Knäuel: with that as its icon the entry was not to be found
+            // on iOS (UI smoke, PR #651); the sign itself stands on the start page.
             if task.isKnaeuel {
-                Button("No longer the Knäuel") { releaseKnaeuel(task) }
+                Button("No longer the Knäuel", systemImage: Self.knaeuelSymbol) { releaseKnaeuel(task) }
                     .accessibilityIdentifier("menuKnaeuelRelease")
             } else if fields.isOn(.knaeuel) {
-                Button("The Knäuel") { setKnaeuel(task) }
+                Button("Make it the Knäuel", systemImage: Self.knaeuelSymbol) { setKnaeuel(task) }
                     .accessibilityIdentifier("menuKnaeuel")
             }
             if task.countsAt != nil {
-                Button("No bead", systemImage: "circle.slash") { toggleCounts(task) }
+                Button("Take the bead off", systemImage: "circle.slash") { toggleCounts(task) }
                     .accessibilityIdentifier("menuCountsRelease")
             } else if fields.isOn(.counts) {
                 if TaskActions.canCount(task, among: tasks) {
-                    Button("Collect a bead", systemImage: "circle") { toggleCounts(task) }
+                    Button("Attach a bead", systemImage: "circle") { toggleCounts(task) }
                         .accessibilityIdentifier("menuCounts")
                 } else {
-                    Button("Collect a bead (\(TaskActions.countsBudget) of \(TaskActions.countsBudget))", systemImage: "circle") {}
+                    Button("Attach a bead (\(TaskActions.countsBudget) of \(TaskActions.countsBudget))", systemImage: "circle") {}
                         .disabled(true)
                         .accessibilityIdentifier("menuCountsFull")
                 }
             }
         }
     }
+
+    /// The Knäuel's sign in a menu (#667): the tangled line, the nearest SF Symbol to the drawn Knäuel.
+    static let knaeuelSymbol = "scribble.variable"
 
     // MARK: - Actions
 
@@ -224,6 +253,7 @@ struct TaskInteractions {
     func complete(_ task: TaskItem, withSubtasks: Bool) {
         if let pendingCompletions {
             pendingCompletions.schedule(task.id, withSubtasks: withSubtasks)
+            didComplete(task)
             return
         }
         if withSubtasks {
@@ -232,6 +262,7 @@ struct TaskInteractions {
         TaskActions.complete(task)
         save("done")
         completionPulse?.fire()
+        didComplete(task)
     }
 
     func undoComplete(_ task: TaskItem) {

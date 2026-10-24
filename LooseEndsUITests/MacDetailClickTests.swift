@@ -238,7 +238,7 @@ final class MacDetailClickTests: XCTestCase {
         if !more.isHittable { zoomWindow(of: app) }
         XCTAssertTrue(more.isHittable, "More should be in reach once the window fits the screen")
         more.click()
-        let complete = app.descendants(matching: .any).matching(identifier: "menuCompleteButton").firstMatch
+        let complete = app.descendants(matching: .any).matching(identifier: "menuDone").firstMatch
         XCTAssertTrue(complete.waitForExistence(timeout: 5), "More should offer Complete")
         complete.click()
 

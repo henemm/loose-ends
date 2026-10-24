@@ -60,7 +60,7 @@ final class MacGalleryTests: XCTestCase {
         let more = macElement("detailMoreMenu", in: window)
         XCTAssertTrue(more.waitForExistence(timeout: 10), "Detail shows no … menu")
         more.click()
-        let complete = macElement("menuCompleteButton", in: app)
+        let complete = macElement("menuDone", in: app)
         XCTAssertTrue(complete.waitForExistence(timeout: 5), "The … menu offers no Complete")
         complete.click()
         let doneRow = macElement("viewRow_done", in: window)
