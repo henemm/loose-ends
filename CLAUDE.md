@@ -338,7 +338,9 @@ not scope creep on the current one.
   refusal, #530), `ModelDeadline` (time limit per model call, 25 s in the coordinator, from the measurement #534; a timeout counts as a failed call, #530), `EnrichmentWriter` (threshold + revisions; never writes the model's contexts or project, #215/#469), `EnrichmentCoordinator`
   (catch-up pass), `FoundationModelsEnricher` (on-device model, `#if canImport(FoundationModels)`), `DueDateRule`
   (combines the rule parsers into the due date, confidence 1.0, #95), `ImportanceUrgencyRule` (keyword
-  match for importance/urgency, confidence 1.0, no default on miss, #117), `RecognitionRule` (equality of
+  match for importance/urgency, confidence 1.0, no default on miss, #117), `DurationRule` (a length the text names, "20 Minuten",
+  rounded up to its bucket, confidence 1.0; runs after recognition and only where it found no duration, never for a line
+  under a task, no catch-up once `rulesAppliedAt` is set, only "Analyze again", #441/#673), `RecognitionRule` (equality of
   `RawTextWords` sets contexts and duration from an earlier task, confidence 1.0, no energy, #136), `ContextWordRule`
   (a short word list per default context plus each context's own name sets the contexts; no hit stays empty, #232),
   `ContextWordLearning` (#233: the word list grows from the user's own tag assignments, N = 1 as measured in

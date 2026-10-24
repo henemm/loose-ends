@@ -584,7 +584,9 @@ struct RecognitionCoordinatorTests {
         await coordinator.processPending()
 
         #expect(tea.duration == nil, "Tee holen ist nicht Bad holen")
-        #expect(sport.duration == nil, "30 Minuten Sport ist nicht 60 Minuten Sport")
+        #expect(sport.duration == .minutes30,
+                "30 Minuten Sport nennt seine Länge selbst (Regel, #673), übernimmt aber nichts von 60 Minuten Sport")
+        #expect(sport.durationSourceRaw == FieldSource.rule.rawValue)
         #expect(unrelated.duration == nil)
     }
 
