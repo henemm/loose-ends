@@ -9,11 +9,11 @@ import Testing
     /// `seconds` sind die Sekunden seit dem ersten hörbaren Pegel (#402); `nil` heißt: bisher nur Stille.
     private func hint(
         seconds: TimeInterval?, buffers: Int, results: Int,
-        status: String = "installed", microphone: Bool = true, speech: Bool = true
+        status: String = "installed", microphone: Bool = true
     ) -> SpeechDiagnosis? {
         SpeechDiagnosis.hint(
             buffers: buffers, results: results, secondsAudible: seconds,
-            modelStatus: status, microphone: microphone, speech: speech
+            modelStatus: status, microphone: microphone
         )
     }
 
@@ -60,17 +60,21 @@ import Testing
 
     @Test("The text carries every fact")
     func textCarriesAllFacts() throws {
-        let micOnly = try #require(hint(seconds: 7, buffers: 62, results: 0, microphone: true, speech: false))
-        let speechOnly = try #require(hint(seconds: 7, buffers: 62, results: 0, microphone: false, speech: true))
-        let both = try #require(hint(seconds: 7, buffers: 62, results: 0, microphone: true, speech: true))
-        #expect(micOnly.text.contains("installed"))
-        #expect(micOnly.text.contains("62"))
-        // Mikrofon und Sprache sind getrennte Angaben in fester Reihenfolge: jede Belegung ergibt einen anderen Text.
-        #expect(micOnly.text != speechOnly.text)
-        #expect(micOnly.text != both.text)
-        #expect(speechOnly.text != both.text)
+        let withMic = try #require(hint(seconds: 7, buffers: 62, results: 0, microphone: true))
+        let withoutMic = try #require(hint(seconds: 7, buffers: 62, results: 0, microphone: false))
+        #expect(withMic.text.contains("installed"))
+        #expect(withMic.text.contains("62"))
+        // Das Mikrofon ist eine eigene Angabe: ja und nein ergeben verschiedene Texte.
+        #expect(withMic.text != withoutMic.text)
         // Ergebnisse stehen im Text: bei 0 Ergebnissen kommt die Null vor.
-        #expect(both.text.contains("0"))
+        #expect(withMic.text.contains("0"))
+    }
+
+    @Test("The text no longer names the speech recognition right (#293)")
+    func textHasNoSpeechField() throws {
+        let text = try #require(hint(seconds: 7, buffers: 62, results: 0)).text
+        #expect(!text.contains("speech:"))
+        #expect(!text.contains("Sprache:"))
     }
 
     // MARK: - Zeiten (#274 / #279 A, Schnitt 1)
@@ -88,7 +92,7 @@ import Testing
     ) -> SpeechDiagnosis? {
         SpeechDiagnosis.hint(
             buffers: 100, results: results, secondsAudible: seconds, showsReport: showsReport,
-            modelStatus: "installed", microphone: true, speech: true, timings: timings
+            modelStatus: "installed", microphone: true, timings: timings
         )
     }
 

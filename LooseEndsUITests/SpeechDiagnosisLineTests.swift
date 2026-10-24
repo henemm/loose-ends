@@ -35,7 +35,7 @@ final class SpeechDiagnosisLineTests: XCTestCase {
         XCTAssertTrue(line.waitForExistence(timeout: 10), "Diagnosezeile fehlt")
         XCTAssertEqual(
             line.label,
-            "No text yet — model: installed · microphone: yes · speech: yes · buffers: 62 · results: 0"
+            "No text yet — model: installed · microphone: yes · buffers: 62 · results: 0"
         )
         let shot = XCTAttachment(screenshot: app.screenshot())
         shot.name = "diagnosezeile"
