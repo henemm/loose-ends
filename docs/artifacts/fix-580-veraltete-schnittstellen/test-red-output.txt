@@ -1,0 +1,51 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/SharedContentTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/LooseEndsTests/SharedContentTests.swift:43:31: [31m'decode' is inaccessible due to 'private' protection level[0m
+ 41 |     func decodesUTF8() {
+[36m 42 |         let text = "Überweisung für Müll"[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/LooseEndsTests/SharedContentTests.swift:43:53: [31mmissing argument for parameter 'charset' in call[0m
+ 41 |     func decodesUTF8() {
+[36m 42 |         let text = "Überweisung für Müll"[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/LooseEndsTests/SharedContentTests.swift:48:31: [31m'decode' is inaccessible due to 'private' protection level[0m
+ 46 |     @Test("Bytes that are not UTF-8 fall back to Latin-1")
+[36m 47 |     func decodesLatin1WhenNotUTF8() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/LooseEndsTests/SharedContentTests.swift:48:74: [31mmissing argument for parameter 'charset' in call[0m
+ 46 |     @Test("Bytes that are not UTF-8 fall back to Latin-1")
+[36m 47 |     func decodesLatin1WhenNotUTF8() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/LooseEndsTests/SharedContentTests.swift:53:44: [31mmissing argument for parameter 'charset' in call[0m
+ 51 |     @Test("No bytes decode to an empty string")
+[36m 52 |     func decodesEmptyToEmptyString() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/LooseEndsTests/SharedContentTests.swift:53:31: [31m'decode' is inaccessible due to 'private' protection level[0m
+ 51 |     @Test("No bytes decode to an empty string")
+[36m 52 |     func decodesEmptyToEmptyString() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/LooseEndsTests/SharedContentTests.swift:58:62: [31mmissing argument for parameter 'charset' in call[0m
+ 56 |     @Test("An invalid sequence loses no byte: Latin-1 maps every one")
+[36m 57 |     func decodesInvalidSequenceWithoutLoss() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/LooseEndsTests/SharedContentTests.swift:58:31: [31m'decode' is inaccessible due to 'private' protection level[0m
+ 56 |     @Test("An invalid sequence loses no byte: Latin-1 maps every one")
+[36m 57 |     func decodesInvalidSequenceWithoutLoss() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/LooseEndsTests/SharedContentTests.swift:58:62: [31mvalue of optional type 'String?' must be unwrapped to refer to member 'count' of wrapped base type 'String'[0m
+ 56 |     @Test("An invalid sequence loses no byte: Latin-1 maps every one")
+[36m 57 |     func decodesInvalidSequenceWithoutLoss() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/LooseEndsTests/SharedContentTests.swift:64:37: [31m'decode' is inaccessible due to 'private' protection level[0m
+ 62 |     func decodedMailKeepsSubjectAndLink() throws {
+[36m 63 |         let raw = "Subject: =?UTF-8?B?w5xiZXJ3ZWlzdW5nIGbDvHIgTcO8bGw=?=\nMessage-ID: <abc123@example.com>\n\nBody"[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/LooseEndsTests/SharedContentTests.swift:64:58: [31mmissing argument for parameter 'charset' in call[0m
+ 62 |     func decodedMailKeepsSubjectAndLink() throws {
+[36m 63 |         let raw = "Subject: =?UTF-8?B?w5xiZXJ3ZWlzdW5nIGbDvHIgTcO8bGw=?=\nMessage-ID: <abc123@example.com>\n\nBody"[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m SharedContentTests.swift
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-epic-563-naechstes/Logs/Test/Test-LooseEnds-2026.10.24_17-28-54-+0200.xcresult
