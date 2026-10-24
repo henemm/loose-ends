@@ -1,0 +1,22 @@
+# AC-9 Mac-Lauf (2026-10-24, Hennings Mac, nach seinem wörtlichen „jetzt ist ein Test möglich“)
+
+Stand: Worktree compressed-gathering-raven, Umbau #293 (uncommittet, gleiche Dateien wie im Adversary-Stempel)
+Prüfkennung: com.henning.looseends.probe („LE Prüfbau“, ~/Applications/LE Prüfbau.app)
+
+1. 09:12:53  tccutil reset Microphone com.henning.looseends.probe       → Successfully reset
+             tccutil reset SpeechRecognition com.henning.looseends.probe → Successfully reset
+2. ./scripts/sim.sh mac → „LE Prüfbau läuft auf dem Mac (com.henning.looseends.probe)“
+   Installierter Bau enthält nur noch die Logzeile „Rechte: Mikrofon %{bool,public}d“ (strings), keine Spracherkennungs-Zeile.
+3. Henning öffnet die Erfassung, klickt das Mikrofon, erlaubt, spricht.
+
+Hennings Beobachtung (AskUserQuestion, 2026-10-24): „Ein Dialog, Text kam“ — nur der Mikrofon-Dialog, danach „Ich höre …“
+und der gesprochene Text im Feld.
+
+App-Protokoll (/usr/bin/log show --last 10m --info, Filter „Rechte: Mikrofon“):
+2026-10-24 09:25:28.197 Df LooseEnds[24612:9fb3f4] [com.henning.looseends:Speech] Rechte: Mikrofon true
+
+Systemprotokoll tccd, Einträge mit „looseends.probe“, gezählte Dienste:
+   2 kTCCServiceMicrophone
+   (kein kTCCServiceSpeechRecognition)
+
+Bildschirmfotos bewusst keine (Ganzbild zeigt Fremdes, siehe Lehre #402).

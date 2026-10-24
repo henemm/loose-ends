@@ -29,7 +29,6 @@ struct SpeechDiagnosis: Equatable {
 
     let modelStatus: String
     let microphone: Bool
-    let speech: Bool
     let buffers: Int
     let results: Int
     var timings: SpeechTimings?
@@ -40,14 +39,14 @@ struct SpeechDiagnosis: Equatable {
     /// Ohne Zeiten kein Fall B.
     static func hint(
         buffers: Int, results: Int, secondsAudible: TimeInterval?, showsReport: Bool = false,
-        modelStatus: String, microphone: Bool, speech: Bool,
+        modelStatus: String, microphone: Bool,
         timings: SpeechTimings? = nil
     ) -> SpeechDiagnosis? {
         let waiting = buffers > 0 && results == 0 && (secondsAudible.map { $0 >= threshold } ?? false)
         let report = showsReport && results > 0 && timings.map(isSlow) == true
         guard waiting || report else { return nil }
         return SpeechDiagnosis(
-            modelStatus: modelStatus, microphone: microphone, speech: speech,
+            modelStatus: modelStatus, microphone: microphone,
             buffers: buffers, results: results, timings: timings
         )
     }
@@ -75,8 +74,7 @@ struct SpeechDiagnosis: Equatable {
 
     private var waitingText: String {
         let mic = Self.word(microphone)
-        let rec = Self.word(speech)
-        return String(localized: "No text yet — model: \(modelStatus) · microphone: \(mic) · speech: \(rec) · buffers: \(buffers) · results: \(results)")
+        return String(localized: "No text yet — model: \(modelStatus) · microphone: \(mic) · buffers: \(buffers) · results: \(results)")
     }
 
     private static func startText(_ timings: SpeechTimings) -> String {

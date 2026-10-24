@@ -1,0 +1,45 @@
+[0;34m[sim][0m Testsperre belegt — warte (0 s, Platz 1 von 1 in der Warteliste). Halter: Worktree /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie, Befehl sim-unit, PID 14976
+[0;34m[sim][0m Testsperre belegt — warte (30 s, Platz 1 von 2 in der Warteliste). Halter: Worktree /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie, Befehl sim-unit, PID 14976
+[0;34m[sim][0m Testsperre belegt — warte (61 s, Platz 1 von 2 in der Warteliste). Halter: Worktree /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie, Befehl sim-unit, PID 14976
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/LooseEnds.xcodeproj
+[0;32m[sim][0m Projekt erzeugt.
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test mit Beleg: SpeechDiagnosisLineTests → docs/artifacts/feat-293-nur-mikrofon/simulator-run.txt
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-10-24 09:05:30.572.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-24 09:05:30.575.
+Test Suite 'SpeechDiagnosisLineTests' started at 2026-10-24 09:05:30.575.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.SpeechDiagnosisLineTests testDiagnosisLineShowsFixedState] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    10.81s Waiting 10.0s for "captureTextField" Any to exist
+[32m    t =    11.84s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testDiagnosisLineShowsFixedState ([31m18.924[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.SpeechDiagnosisLineTests testNoDiagnosisLineWithoutArgument] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    11.30s Waiting 10.0s for "captureTextField" Any to exist
+[32m    t =    12.33s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testNoDiagnosisLineWithoutArgument ([31m16.260[0m seconds)
+Executed 2 tests, with 0 failures (0 unexpected) in 35.184 (35.193) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-24 09:06:05.773.
+Executed 2 tests, with 0 failures (0 unexpected) in 35.184 (35.198) seconds
+Executed 2 tests, with 0 failures (0 unexpected) in 35.184 (35.201) seconds
+[1mTest session results:[0m /Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/docs/artifacts/feat-293-nur-mikrofon/simulator-run/run.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden, Beleg: docs/artifacts/feat-293-nur-mikrofon/simulator-run.txt
