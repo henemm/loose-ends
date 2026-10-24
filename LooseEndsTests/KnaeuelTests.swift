@@ -169,11 +169,17 @@ import Testing
         let en = Locale(identifier: "en_US")
         let now = try #require(calendar.date(from: DateComponents(year: 2026, month: 10, day: 23, hour: 15)))
         func at(day: Int, hour: Int) -> Date { calendar.date(from: DateComponents(year: 2026, month: 10, day: day, hour: hour))! }
-        #expect(KnaeuelSince.setWords(from: at(day: 23, hour: 8), now: now, calendar: calendar, locale: en) == "since this morning")
-        #expect(KnaeuelSince.setWords(from: at(day: 23, hour: 14), now: now, calendar: calendar, locale: en) == "since today")
-        #expect(KnaeuelSince.setWords(from: at(day: 22, hour: 8), now: now, calendar: calendar, locale: en) == "since yesterday")
-        #expect(KnaeuelSince.setWords(from: at(day: 20, hour: 8), now: now, calendar: calendar, locale: en) == "since Tuesday")
-        #expect(KnaeuelSince.setWords(from: at(day: 12, hour: 8), now: now, calendar: calendar, locale: en).hasPrefix("since Oct 12"))
+        // The frame text comes from the catalog in the system language (#659): compare with its own
+        // translation and keep the three branches apart, so the test holds in every simulator language.
+        let morning = KnaeuelSince.setWords(from: at(day: 23, hour: 8), now: now, calendar: calendar, locale: en)
+        let today = KnaeuelSince.setWords(from: at(day: 23, hour: 14), now: now, calendar: calendar, locale: en)
+        let yesterday = KnaeuelSince.setWords(from: at(day: 22, hour: 8), now: now, calendar: calendar, locale: en)
+        #expect(morning == String(localized: "since this morning"))
+        #expect(today == String(localized: "since today"))
+        #expect(yesterday == String(localized: "since yesterday"))
+        #expect(Set([morning, today, yesterday]).count == 3, "three branches, three texts")
+        #expect(KnaeuelSince.setWords(from: at(day: 20, hour: 8), now: now, calendar: calendar, locale: en).hasSuffix("Tuesday"))
+        #expect(KnaeuelSince.setWords(from: at(day: 12, hour: 8), now: now, calendar: calendar, locale: en).contains("Oct 12"))
     }
 
     @Test("The Knäuel's curve is the canvas drawing: starts at the left, ends at the flat tail on the right, inside 40 × 20")
