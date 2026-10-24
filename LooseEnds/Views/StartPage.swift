@@ -59,7 +59,7 @@ struct StartPage: View {
     private var listColumn: some View {
         let metrics = StartMetrics(typeSize)
         return keyed(List {
-            StartHeaderRows(tasks: tasks) { task, head in knaeuelRow(task, head, metrics) }
+            StartHeaderRows(tasks: tasks, openDone: { selection = .system(.done) }) { task, head in knaeuelRow(task, head, metrics) }
             // "New" with the writing line under it (#601): Return makes a task, the button opens
             // into a drawer that shows it, leaving the line folds it.
             InboxDrawerView(tasks: tasks, open: { selection = $0 }, selection: selection, focusRequest: focusRequest,
@@ -68,7 +68,7 @@ struct StartPage: View {
                 .startRow(metrics)
                 .paperRow()
             NowBlock(tasks: ViewRules.now(in: tasks).all, expanded: nowExpandedBinding) { nowRow($0, metrics) }
-            WeekStringRows(beads: ViewRules.weekBeads(in: tasks))
+            WeekStringRows(beads: ViewRules.weekBeads(in: tasks), all: tasks)
         })
         .listStyle(.plain)
         .paperGround()

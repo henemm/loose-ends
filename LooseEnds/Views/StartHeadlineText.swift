@@ -23,6 +23,9 @@ enum StartHeadlineText {
             }
             guard let next else { return first }
             return first + " " + String(localized: "At \(time(next.at)) still: \(next.title).")
+        case .week(let count, _):
+            if count == 1 { return String(localized: "This week: one bead.") }
+            return String(localized: "This week: \(number(count)) beads.")
         case .untangled(let title, let count, let next):
             let first: String
             switch count {

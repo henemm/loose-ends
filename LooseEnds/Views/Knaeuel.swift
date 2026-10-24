@@ -9,6 +9,8 @@ struct StartHeaderRows<Row: View>: View {
     let tasks: [TaskItem]
     /// A tap on the date or the sentence; the iPhone ends the entry in the writing line with it (#601).
     var onTap: (() -> Void)?
+    /// A tap on the Sunday sentence or its string opens "Completed" (#646).
+    var openDone: (() -> Void)?
     private let row: (TaskItem, KnaeuelHead) -> Row
     /// The Knäuel just completed, kept for its moment.
     @State private var leaving: Leaving?
@@ -21,9 +23,11 @@ struct StartHeaderRows<Row: View>: View {
         static func == (a: Leaving, b: Leaving) -> Bool { a.id == b.id }
     }
 
-    init(tasks: [TaskItem], onTap: (() -> Void)? = nil, @ViewBuilder row: @escaping (TaskItem, KnaeuelHead) -> Row) {
+    init(tasks: [TaskItem], onTap: (() -> Void)? = nil, openDone: (() -> Void)? = nil,
+         @ViewBuilder row: @escaping (TaskItem, KnaeuelHead) -> Row) {
         self.tasks = tasks
         self.onTap = onTap
+        self.openDone = openDone
         self.row = row
     }
 
@@ -48,7 +52,7 @@ struct StartHeaderRows<Row: View>: View {
                 .startRow(metrics)
                 .paperRow()
         }
-        tapping(StartHeadlineLine(tasks: tasks))
+        tapping(StartHeadlineLine(tasks: tasks, openDone: openDone))
             .padding(.top, 6)
             // The draft: 16 under the headline (#463).
             .padding(.bottom, 16)
@@ -206,23 +210,47 @@ struct StartDateLine: View {
     }
 }
 
-/// The one sentence of the day (#426): the fact that stands out, from 16:00 a look back.
+/// The one sentence of the day (#426): the fact that stands out, from 16:00 a look back. On Sunday
+/// evening and Monday morning the week's sentence (#646), with the string and the beads' titles under
+/// it; a tap on the sentence or the string opens "Completed".
 struct StartHeadlineLine: View {
     let tasks: [TaskItem]
+    var openDone: (() -> Void)?
     @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         let metrics = StartMetrics(typeSize)
         TimelineView(.periodic(from: .now, by: 60)) { timeline in
-            // Content, so New York.
-            Text(StartHeadlineText.sentence(StartHeadline.of(tasks, now: timeline.date)))
-                .font(metrics.headline)
-                .tracking(-0.3)
-                .lineSpacing(0)
-                .foregroundStyle(.primary)
-                .fixedSize(horizontal: false, vertical: true)
-                .accessibilityAddTraits(.isHeader)
-                .accessibilityIdentifier("startHeadline")
+            let headline = StartHeadline.of(tasks, now: timeline.date)
+            VStack(alignment: .leading, spacing: 0) {
+                // Content, so New York.
+                Text(StartHeadlineText.sentence(headline))
+                    .font(metrics.headline)
+                    .tracking(-0.3)
+                    .lineSpacing(0)
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("startHeadline")
+                if case .week(_, let titles) = headline, let beads = ViewRules.weekToSpeakOf(in: tasks, now: timeline.date) {
+                    Button(action: { openDone?() }) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            WeekString(beads: beads)
+                            ForEach(Array(titles.enumerated()), id: \.offset) { _, title in
+                                Text(title)
+                                    .font(metrics.rowMeta)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                            }
+                        }
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.top, 4)
+                    .accessibilityHint(Text("Opens Completed"))
+                    .accessibilityIdentifier("weekSentenceString")
+                }
+            }
         }
     }
 }

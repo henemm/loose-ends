@@ -259,6 +259,44 @@ enum ViewRules {
         return beads.sorted { ($0.at, $0.id) < ($1.at, $1.id) }
     }
 
+    /// "Completed" by weeks (#646): Monday to Sunday, newest week first, the days inside as before
+    /// (newest day first, the caller's order within a day), the week's beads with it. A week without
+    /// a bead shows its empty string, so it is in here too.
+    struct WeekGroup {
+        let week: Range<Date>
+        let days: [DayGroup]
+        let beads: [Bead]
+        /// The week `now` lies in: its head reads "This week · …".
+        let isCurrent: Bool
+    }
+
+    static func groupedByCompletionWeek(_ tasks: [TaskItem], all: [TaskItem], now: Date = Date(),
+                                        calendar: Calendar = .current) -> [WeekGroup] {
+        let current = week(containing: now, calendar: calendar)
+        let byWeek = Dictionary(grouping: tasks) { week(containing: $0.completedAt ?? .distantPast, calendar: calendar).lowerBound }
+        return byWeek.keys.sorted(by: >).map { start in
+            let week = week(containing: start, calendar: calendar)
+            return WeekGroup(week: week, days: groupedByCompletionDay(byWeek[start] ?? [], calendar: calendar),
+                             beads: weekBeads(in: all, now: start, calendar: calendar), isCurrent: week == current)
+        }
+    }
+
+    /// The beads the Sunday sentence speaks of (#646): this week's from Sunday 16:00, last week's on
+    /// Monday until the first new bead; nil otherwise or without a bead.
+    static func weekToSpeakOf(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [Bead]? {
+        let weekday = calendar.component(.weekday, from: now)
+        if weekday == 1, calendar.component(.hour, from: now) >= StartHeadline.lookBackHour {
+            let beads = weekBeads(in: all, now: now, calendar: calendar)
+            return beads.isEmpty ? nil : beads
+        }
+        if weekday == 2, weekBeads(in: all, now: now, calendar: calendar).isEmpty,
+           let lastWeek = calendar.date(byAdding: .day, value: -1, to: week(containing: now, calendar: calendar).lowerBound) {
+            let beads = weekBeads(in: all, now: lastWeek, calendar: calendar)
+            return beads.isEmpty ? nil : beads
+        }
+        return nil
+    }
+
     /// The place of each task in "Next up": 1, 2, 3 … in that view's order (#509). Lists show it as a
     /// star with the number at the row's end, so a task already lined up is seen in every list.
     static func nextRanks(in all: [TaskItem]) -> [UUID: Int] {

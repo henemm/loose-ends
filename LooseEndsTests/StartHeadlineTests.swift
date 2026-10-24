@@ -77,6 +77,31 @@ import Testing
         #expect(withNext.contains("Anna abholen"))
     }
 
+    @Test("The week's sentence (#646): Sunday from 16:00 with a bead, Monday until the first new bead; never without a bead")
+    @MainActor func weekSentence() async throws {
+        let store = try TestStore()
+        // Thursday 12 March: Sunday is day 3, Monday day 4.
+        let bead = Self.done("Hecke schneiden", at: Self.at(10, day: 1), in: store)
+        bead.countsAt = Self.at(9)
+        let plain = Self.done("Mama zurückrufen", at: Self.at(11, day: 3), in: store)
+        let open = Self.task("Steuer", in: store)
+        let all = [bead, plain, open]
+
+        #expect(Self.headline(all, Self.at(15, minute: 59, day: 3)) == .calm, "Sunday 15:59: the ladder as always, no look back yet")
+        #expect(Self.headline(all, Self.at(16, day: 3)) == .week(count: 1, titles: ["Hecke schneiden"]))
+        #expect(Self.headline(all, Self.at(9, day: 4)) == .week(count: 1, titles: ["Hecke schneiden"]), "Monday, no new bead yet")
+        let monday = Self.done("Keller", at: Self.at(8, day: 4), in: store)
+        monday.countsAt = Self.at(9)
+        #expect(Self.headline(all + [monday], Self.at(9, day: 4)) == .doneYesterday(count: 1), "the first new bead ends the week's sentence")
+        #expect(Self.headline([plain, open], Self.at(16, day: 3)) == .doneToday(count: 1, titles: ["Mama zurückrufen"], next: nil),
+                "without a bead no sentence about the week")
+        #expect(Self.headline(all, Self.at(9, day: 5)) == .calm, "Tuesday: over")
+
+        let de = Locale(identifier: "de_DE")
+        #expect(StartHeadlineText.sentence(.week(count: 4, titles: []), locale: de).contains("vier"))
+        #expect(StartHeadlineText.sentence(.week(count: 1, titles: []), locale: de).hasSuffix("."))
+    }
+
     @Test("Before 16:00 the look back waits; the time pressure speaks")
     @MainActor func noLookBackBeforeFour() async throws {
         let store = try TestStore()
