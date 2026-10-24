@@ -1,0 +1,22 @@
+# Simulator-Beleg
+erzeugt: 2026-10-24T19:33:50+0200
+befehl: scripts/sim.sh test-proof FieldsSmokeTests/testRepro673DurationFromText
+workflow: fix-673-duration-rule
+head: eb400186667d0739d6bbf305c3d098a2c0328347
+basis: 3db05994c8f31d5d63e3a0819576082673443668 (merge-base origin/main HEAD)
+testklasse: FieldsSmokeTests/testRepro673DurationFromText
+ergebnis: Failed
+xcodebuild: ** TEST FAILED **
+tests: 1 gesamt, 0 bestanden, 1 fehlgeschlagen, 0 übersprungen
+start: 1792863184.286  ende: 1792863229.54
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/fix-673-duration-rule/simulator-run/summary.json  sha256:ae7ffac53defb7d5a49b1296d1d808d66f367042bba1908ae7e6e56e2e421368
+xcresult: docs/artifacts/fix-673-duration-rule/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-673-duration-rule/simulator-run/*.png (0 Stück)
+
+## Geprüfte Dateien
+- sha256:57d32b967c4500ae6d6c46e044c4fafa28c1351e7ff9e8ffc53f07f12a86f598  LooseEnds/Views/TaskDetailView.swift
+- sha256:ba129b9279d51ba5be5c5116a4e79f9875964c782ea611a8da126e704b808462  LooseEnds/Views/TaskRow.swift
+- sha256:0600ae25a20f06a88097ee8accc62da828a6d37bcce102af271fee0cfee3cf65  LooseEndsTests/FieldGlyphTests.swift
+- sha256:026238aa2246cdcd88fdd8e2d5ace7b21e8243f203d14dc2dd90c09e0c30b657  LooseEndsUITests/FieldsSmokeTests.swift
+- sha256:f5bf44770a7a73b4e2b3a4a9b0f9d1898884267b5945ffdf6bfb9a1662f47473  Shared/Models/FieldGlyph.swift

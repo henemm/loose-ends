@@ -153,14 +153,14 @@ final class FieldsSmokeTests: XCTestCase {
 
     /// #344: "Important" and "Urgent" in the list row are signs without words; the detail repeats each
     /// sign behind the value of its register line. The words are sorted in by rules at capture.
-    /// Duration and project do not become register lines here (the capture text sets no duration, projects are
-    /// off in the standard); their signs are covered in FieldGlyphTests.
+    /// The duration is read from "20 Minuten" by the rule (#673). Project does not become a register line here
+    /// (projects are off in the standard); its sign is covered in FieldGlyphTests.
     @MainActor
     func testSignsStandInTheRowAndBehindTheValuesInTheDetail() throws {
         let app = launch()
         captureAndOpenDetail("Wichtig dringend Steuerbescheid morgen 20 Minuten prüfen", in: app)
 
-        for field in ["importance", "urgency", "dueDate"] {
+        for field in ["importance", "urgency", "dueDate", "duration"] {
             let row = element("field_\(field)", in: app)
             XCTAssertTrue(row.waitForExistence(timeout: 5), "The detail should hold field_\(field)")
             XCTAssertTrue(element("fieldGlyph_\(field)", in: app).exists, "fieldGlyph_\(field) should stand in the line")
