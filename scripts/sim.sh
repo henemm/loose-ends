@@ -292,6 +292,21 @@ run_xcodebuild() {
     # Ein roter Test startet sonst `simctl diagnose --timeout=600` und xcodebuild wartet darauf,
     # bei mehreren Simulatoren bis zu 19 Min (#298). Testergebnis und Ergebnisbündel bleiben gleich.
     [ "${1:-}" = test ] && set -- "$@" -collect-test-diagnostics never
+    # Testsprache (#670): LOOSEENDS_LANG=en läuft die Tests auf Englisch, der Simulator bleibt wie er ist.
+    # Gesetzt, aber kein Zwei-Buchstaben-Code: abbrechen, bevor xcodebuild startet (kein Wächter, keine Waise).
+    if [ "${1:-}" = test ] && [ -n "${LOOSEENDS_LANG+x}" ]; then
+        if ! [[ "$LOOSEENDS_LANG" =~ ^[a-z]{2}$ ]]; then
+            echo "LOOSEENDS_LANG=$LOOSEENDS_LANG ist keine Sprache: erwartet zwei Kleinbuchstaben, z. B. en" >&2
+            return 1
+        fi
+        local region=""
+        case "$LOOSEENDS_LANG" in
+            en) region=US ;; de) region=DE ;; fr) region=FR ;; es) region=ES ;;
+            it) region=IT ;; nl) region=NL ;; ja) region=JP ;;
+        esac
+        set -- "$@" -testLanguage "$LOOSEENDS_LANG"
+        [ -z "$region" ] || set -- "$@" -testRegion "$region"
+    fi
     # Stille-Wächter (#516): Bleibt das Log LOOSEENDS_SILENCE_MAX s stumm, endet nur der xcodebuild dieser
     # Sitzung (eigener -derivedDataPath) samt Kindern, sonst hielte er die rechnerweite Sperre unbegrenzt.
     # Der Wächter endet mit sim.sh ($$ in der Subshell): Ein xcodebuild einer per KILL gestorbenen sim.sh bleibt

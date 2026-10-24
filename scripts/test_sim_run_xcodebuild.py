@@ -68,6 +68,82 @@ class RunXcodebuildDiagnosticsTests(unittest.TestCase):
         self.assertEqual(args[:3], ["build", "-project", "P.xcodeproj"])
 
 
+class RunXcodebuildTestLanguageTests(unittest.TestCase):
+    """Testsprache (#670): `LOOSEENDS_LANG` wird bei `test` zu -testLanguage/-testRegion."""
+
+    def setUp(self):
+        self.root = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.root)
+        stubs = self.root / "stubs"
+        stubs.mkdir()
+        self.args_file = self.root / "xcodebuild-args"
+        xcodebuild = stubs / "xcodebuild"
+        xcodebuild.write_text(f'#!/bin/bash\nprintf "%s\\n" "$@" > "{self.args_file}"\n')
+        xcodebuild.chmod(0o755)
+        xcbeautify = stubs / "xcbeautify"
+        xcbeautify.write_text("#!/bin/bash\ncat >/dev/null\n")
+        xcbeautify.chmod(0o755)
+        self.base_env = {k: v for k, v in os.environ.items() if k != "LOOSEENDS_LANG"}
+        self.base_env["PATH"] = f"{stubs}:/usr/bin:/bin"
+
+    def run_with(self, lang, *args):
+        env = dict(self.base_env)
+        if lang is not None:
+            env["LOOSEENDS_LANG"] = lang
+        script = "\n".join([
+            "set -euo pipefail",
+            f'PROJECT_DIR="{self.root}"',
+            f'SESSION_DERIVED_DATA="{self.root}/DerivedData"',
+            run_xcodebuild_source(),
+            'run_xcodebuild "$@"',
+        ])
+        return subprocess.run(["bash", "-c", script, "sim.sh", *args], env=env,
+                              capture_output=True, text=True, timeout=30)
+
+    def args_of(self, lang, *args):
+        result = self.run_with(lang, *args)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        return self.args_file.read_text().splitlines()
+
+    def test_without_variable_arguments_are_unchanged(self):
+        args = self.args_of(None, "test", "-project", "P.xcodeproj")
+        self.assertEqual(args[:5], ["test", "-project", "P.xcodeproj", "-collect-test-diagnostics", "never"])
+        self.assertNotIn("-testLanguage", args)
+        self.assertNotIn("-testRegion", args)
+
+    def test_en_sets_language_and_region(self):
+        args = self.args_of("en", "test", "-project", "P.xcodeproj")
+        self.assertEqual(args[args.index("-testLanguage") + 1], "en")
+        self.assertEqual(args[args.index("-testRegion") + 1], "US")
+
+    def test_de_sets_de_region(self):
+        args = self.args_of("de", "test", "-project", "P.xcodeproj")
+        self.assertEqual(args[args.index("-testLanguage") + 1], "de")
+        self.assertEqual(args[args.index("-testRegion") + 1], "DE")
+
+    def test_unknown_valid_code_sets_language_only(self):
+        args = self.args_of("zz", "test", "-project", "P.xcodeproj")
+        self.assertEqual(args[args.index("-testLanguage") + 1], "zz")
+        self.assertNotIn("-testRegion", args)
+
+    def test_invalid_values_abort_loudly(self):
+        for value in ["", "EN", "en-US", "e n", "eng"]:
+            with self.subTest(value=value):
+                self.args_file.unlink(missing_ok=True)
+                result = self.run_with(value, "test", "-project", "P.xcodeproj")
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("LOOSEENDS_LANG", result.stderr)
+                self.assertIn(f"LOOSEENDS_LANG={value} ", result.stderr)
+                self.assertFalse(self.args_file.exists(), "xcodebuild lief trotz ungültiger Sprache")
+
+    def test_build_action_ignores_variable(self):
+        for value in ["en", ""]:
+            with self.subTest(value=value):
+                baseline = self.args_of(None, "build", "-project", "P.xcodeproj")
+                self.assertEqual(self.args_of(value, "build", "-project", "P.xcodeproj"), baseline)
+                self.assertNotIn("-testLanguage", baseline)
+
+
 class RunXcodebuildSilenceGuardTests(unittest.TestCase):
     """Stille-Wächter (#516): ein stummer xcodebuild hält die rechnerweite Sperre nicht unbegrenzt."""
 

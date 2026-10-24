@@ -1,0 +1,88 @@
+test_build_action_ignores_variable (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_build_action_ignores_variable) ... ok
+test_de_sets_de_region (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_de_sets_de_region) ... ERROR
+test_en_sets_language_and_region (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_en_sets_language_and_region) ... ERROR
+test_invalid_values_abort_loudly (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_invalid_values_abort_loudly) ... 
+  test_invalid_values_abort_loudly (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_invalid_values_abort_loudly) (value='') ... FAIL
+  test_invalid_values_abort_loudly (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_invalid_values_abort_loudly) (value='EN') ... FAIL
+  test_invalid_values_abort_loudly (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_invalid_values_abort_loudly) (value='en-US') ... FAIL
+  test_invalid_values_abort_loudly (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_invalid_values_abort_loudly) (value='e n') ... FAIL
+  test_invalid_values_abort_loudly (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_invalid_values_abort_loudly) (value='eng') ... FAIL
+test_unknown_valid_code_sets_language_only (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_unknown_valid_code_sets_language_only) ... ERROR
+test_without_variable_arguments_are_unchanged (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_without_variable_arguments_are_unchanged) ... ok
+
+======================================================================
+ERROR: test_de_sets_de_region (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_de_sets_de_region)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/scripts/test_sim_run_xcodebuild.py", line 121, in test_de_sets_de_region
+    self.assertEqual(args[args.index("-testLanguage") + 1], "de")
+                          ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+ValueError: list.index(x): x not in list
+
+======================================================================
+ERROR: test_en_sets_language_and_region (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_en_sets_language_and_region)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/scripts/test_sim_run_xcodebuild.py", line 116, in test_en_sets_language_and_region
+    self.assertEqual(args[args.index("-testLanguage") + 1], "en")
+                          ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+ValueError: list.index(x): x not in list
+
+======================================================================
+ERROR: test_unknown_valid_code_sets_language_only (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_unknown_valid_code_sets_language_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/scripts/test_sim_run_xcodebuild.py", line 126, in test_unknown_valid_code_sets_language_only
+    self.assertEqual(args[args.index("-testLanguage") + 1], "zz")
+                          ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+ValueError: list.index(x): x not in list
+
+======================================================================
+FAIL: test_invalid_values_abort_loudly (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_invalid_values_abort_loudly) (value='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/scripts/test_sim_run_xcodebuild.py", line 134, in test_invalid_values_abort_loudly
+    self.assertNotEqual(result.returncode, 0)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_invalid_values_abort_loudly (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_invalid_values_abort_loudly) (value='EN')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/scripts/test_sim_run_xcodebuild.py", line 134, in test_invalid_values_abort_loudly
+    self.assertNotEqual(result.returncode, 0)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_invalid_values_abort_loudly (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_invalid_values_abort_loudly) (value='en-US')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/scripts/test_sim_run_xcodebuild.py", line 134, in test_invalid_values_abort_loudly
+    self.assertNotEqual(result.returncode, 0)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_invalid_values_abort_loudly (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_invalid_values_abort_loudly) (value='e n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/scripts/test_sim_run_xcodebuild.py", line 134, in test_invalid_values_abort_loudly
+    self.assertNotEqual(result.returncode, 0)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_invalid_values_abort_loudly (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_invalid_values_abort_loudly) (value='eng')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/scripts/test_sim_run_xcodebuild.py", line 134, in test_invalid_values_abort_loudly
+    self.assertNotEqual(result.returncode, 0)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.716s
+
+FAILED (failures=5, errors=3)
