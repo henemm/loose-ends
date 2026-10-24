@@ -18,6 +18,8 @@ import UserNotifications
         var added: [UNNotificationRequest] = []
         var removed: [String] = []
         var failAdd = false
+        /// Identifiers whose `add` fails every time, like an invalid region.
+        var failFor: Set<String> = []
 
         func pendingIdentifiers() async -> [String] { Array(pending.keys) }
         func remove(_ identifiers: [String]) {
@@ -25,7 +27,7 @@ import UserNotifications
             identifiers.forEach { pending[$0] = nil }
         }
         func add(_ request: UNNotificationRequest) async throws {
-            if failAdd { throw AddFailed() }
+            if failAdd || failFor.contains(request.identifier) { throw AddFailed() }
             added.append(request)
             pending[request.identifier] = request
         }
@@ -177,6 +179,54 @@ import UserNotifications
         await fixture.center.reconcile()
         #expect(fixture.recorder.added.map(\.identifier) == ["place_" + task.id.uuidString])
         #expect(fixture.handoverWritten)
+    }
+
+    @Test("A request that fails for good does not block the places behind it; only the handed-over one is noted (#418)")
+    @MainActor func permanentFailureDoesNotBlockTheRest() async throws {
+        let fixture = try Fixture()
+        let first = try fixture.task("Drucker abholen")
+        let second = try fixture.task("Pflanzen gießen", place: "Zuhause")
+        let ids = ["place_" + first.id.uuidString, "place_" + second.id.uuidString].sorted()
+        let bad = ids[0], good = ids[1]
+        fixture.recorder.failFor = [bad]
+
+        await fixture.center.reconcile()
+        #expect(fixture.recorder.added.map(\.identifier) == [good])
+        let noted = try JSONDecoder().decode(
+            PlaceDelivery.Handover.self, from: try #require(fixture.defaults.data(forKey: PlaceNotificationCenter.handoverKey))
+        )
+        #expect(noted.entries.map { "place_" + $0.taskID.uuidString } == [good])
+
+        fixture.recorder.failFor = []
+        await fixture.center.reconcile()
+        #expect(fixture.recorder.added.map(\.identifier) == [good, bad], "the failed one is tried again, the good one is not")
+    }
+
+    @Test("A new title that fails to go over keeps the old handover entry; the next run hands the title over (#418)")
+    @MainActor func failedTitleChangeKeepsTheOldEntry() async throws {
+        let fixture = try Fixture()
+        let task = try fixture.task("Drucker abholen")
+        let oldTitle = task.displayTitle
+        await fixture.center.reconcile()
+
+        task.title = "Drucker und Papier abholen"
+        try fixture.store.context.save()
+        fixture.recorder.failFor = ["place_" + task.id.uuidString]
+        fixture.recorder.added = []
+        await fixture.center.reconcile()
+
+        let noted = try JSONDecoder().decode(
+            PlaceDelivery.Handover.self, from: try #require(fixture.defaults.data(forKey: PlaceNotificationCenter.handoverKey))
+        )
+        #expect(noted.entries.map(\.title) == [oldTitle])
+
+        fixture.recorder.failFor = []
+        await fixture.center.reconcile()
+        #expect(fixture.recorder.added.map(\.content.title) == [task.displayTitle])
+        let renewed = try JSONDecoder().decode(
+            PlaceDelivery.Handover.self, from: try #require(fixture.defaults.data(forKey: PlaceNotificationCenter.handoverKey))
+        )
+        #expect(renewed.entries.map(\.title) == [task.displayTitle])
     }
 
     // MARK: - AC-10
