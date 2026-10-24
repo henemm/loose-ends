@@ -726,6 +726,14 @@ struct TaskDetailView: View {
                     .foregroundStyle(pressing ? AnyShapeStyle(.red) : origin != nil ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
                     .multilineTextAlignment(.leading)
             }
+            if let glyph = glyph(for: field) {
+                // The field's sign behind the value (#344): grey, it only repeats what label and value say.
+                Image(systemName: glyph)
+                    .imageScale(.small)
+                    .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
+                    .accessibilityIdentifier("fieldGlyph_\(field.rawValue)")
+            }
             switch origin {
             case .rule:
                 Image(systemName: "quote.opening")
@@ -749,6 +757,12 @@ struct TaskDetailView: View {
             .accessibilityElement(children: .combine)
             .accessibilityIdentifier("field_\(field.rawValue)")
             .editorPopover(field, editing: $editingField) { editor(for: field) }
+    }
+
+    /// Importance by its level, the other fields by their one sign (#344).
+    private func glyph(for field: RevisedField) -> String? {
+        if field == .importance { return task.importance.map(FieldGlyph.importance) }
+        return FieldGlyph.symbol(for: field)
     }
 
     private func editor(for field: RevisedField) -> FieldEditorView {

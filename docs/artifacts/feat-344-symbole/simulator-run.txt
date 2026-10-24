@@ -1,0 +1,22 @@
+# Simulator-Beleg
+erzeugt: 2026-10-24T16:22:57+0200
+befehl: scripts/sim.sh test-proof FieldsSmokeTests
+workflow: feat-344-symbole
+head: 88e63b8633e5a5fe4467fef9696ec3ac5013f75b
+basis: 4d3649538149471671f607427c2746e762ac7d22 (merge-base origin/main HEAD)
+testklasse: FieldsSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 5 gesamt, 5 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1792851588.044  ende: 1792851776.665
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/feat-344-symbole/simulator-run/summary.json  sha256:20648b18895d89b2a3196cfa404d457f9fcaf6541bca14748f602b175452786d
+xcresult: docs/artifacts/feat-344-symbole/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-344-symbole/simulator-run/*.png (10 Stück)
+
+## Geprüfte Dateien
+- sha256:57d32b967c4500ae6d6c46e044c4fafa28c1351e7ff9e8ffc53f07f12a86f598  LooseEnds/Views/TaskDetailView.swift
+- sha256:ba129b9279d51ba5be5c5116a4e79f9875964c782ea611a8da126e704b808462  LooseEnds/Views/TaskRow.swift
+- sha256:cb2d691d2b0d8ce46dc4ecc236b5e3c9f08735eb46ebc84cc183956ed2a6ad15  LooseEndsTests/FieldGlyphTests.swift
+- sha256:8dec7f1bc1a96a8d594d402c64dc38892353c74200400a63f0025e054cb801d6  LooseEndsUITests/FieldsSmokeTests.swift
+- sha256:f5bf44770a7a73b4e2b3a4a9b0f9d1898884267b5945ffdf6bfb9a1662f47473  Shared/Models/FieldGlyph.swift
