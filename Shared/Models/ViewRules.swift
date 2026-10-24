@@ -344,7 +344,7 @@ enum ViewRules {
             // date of its own stands among the dated ones (Henning, 2026-10-21, #565): moved to
             // tomorrow, it had vanished from every list until its day.
             return all.filter { listedByDate($0) && $0.status != .done && $0.status != .removed }
-                .sorted(by: byPressureThenWeight)
+                .sorted(by: byPressureThenWeight(now: now, calendar: calendar))
         case .done:
             return topLevel.filter { $0.status == .done }
                 .sorted { ($0.completedAt ?? .distantPast) > ($1.completedAt ?? .distantPast) }
@@ -412,24 +412,41 @@ enum ViewRules {
         return groups.keys.sorted(by: >).map { DayGroup(day: $0, tasks: groups[$0] ?? []) }
     }
 
-    /// "Loose ends" (#545, Henning 2026-10-18: "Erst was drängt"): what presses stands first, what rests
-    /// stands last. A dated task before an undated one, dated by due date (overdue and today on top,
-    /// then the coming days), undated by urgency, importance and capture time as before. Parked
-    /// tasks close the list as one block in the order of "Parked" (last parked first), whatever
-    /// their weight: parked means no pressure. The same logic as "Now" on the start screen, without
-    /// the rank limit; #319 holds by half, parked tasks stay visible, at the end.
-    static func byPressureThenWeight(_ a: TaskItem, _ b: TaskItem) -> Bool {
-        let (parkedA, parkedB) = (a.status == .parked, b.status == .parked)
-        if parkedA != parkedB { return parkedB }
-        if parkedA {
-            let (pa, pb) = (a.parkedAt ?? .distantPast, b.parkedAt ?? .distantPast)
-            return pa != pb ? pa > pb : a.capturedAt < b.capturedAt
-        }
-        switch (a.dueDate, b.dueDate) {
-        case let (da?, db?): return da != db ? da < db : a.capturedAt < b.capturedAt
-        case (.some, nil): return true
-        case (nil, .some): return false
-        case (nil, nil): return byUrgencyThenImportance(a, b)
+    /// The blocks of "Loose ends" (#657, Henning 2026-10-24): a deadline counts only while it is
+    /// today. Due today or before stands on top, the undated follow, a date from tomorrow on rests in
+    /// "Later" below them: who set a far date said "not yet", an undated task may weigh more.
+    /// Parked closes the list (#545).
+    enum LooseEndsStage: Int, Comparable {
+        case today, undated, later, parked
+
+        static func < (a: Self, b: Self) -> Bool { a.rawValue < b.rawValue }
+    }
+
+    static func looseEndsStage(_ task: TaskItem, now: Date = Date(), calendar: Calendar = .current) -> LooseEndsStage {
+        if task.status == .parked { return .parked }
+        guard let due = task.dueDate else { return .undated }
+        let tomorrow = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: now)) ?? now
+        return due < tomorrow ? .today : .later
+    }
+
+    /// "Loose ends" (#545, Henning 2026-10-18: "Erst was drängt"; #657): the stages above in order.
+    /// Today and Later by due date, the undated by urgency, importance and capture time, parked
+    /// in the order of "Parked" (last parked first), whatever their weight: parked means no pressure.
+    /// #319 holds by half, parked tasks stay visible, at the end.
+    static func byPressureThenWeight(now: Date = Date(), calendar: Calendar = .current) -> (TaskItem, TaskItem) -> Bool {
+        { a, b in
+            let (stageA, stageB) = (looseEndsStage(a, now: now, calendar: calendar), looseEndsStage(b, now: now, calendar: calendar))
+            if stageA != stageB { return stageA < stageB }
+            switch stageA {
+            case .parked:
+                let (pa, pb) = (a.parkedAt ?? .distantPast, b.parkedAt ?? .distantPast)
+                return pa != pb ? pa > pb : a.capturedAt < b.capturedAt
+            case .undated:
+                return byUrgencyThenImportance(a, b)
+            case .today, .later:
+                let (da, db) = (a.dueDate ?? .distantFuture, b.dueDate ?? .distantFuture)
+                return da != db ? da < db : a.capturedAt < b.capturedAt
+            }
         }
     }
 
