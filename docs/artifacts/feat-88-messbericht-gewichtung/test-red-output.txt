@@ -1,0 +1,687 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/WeightedReportTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds.SwiftFileList
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds.SwiftConstValuesFileList
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds-OutputFileMap.json
+[[36mLooseEnds[0m] [1mWrite Auxiliary File[0m LooseEnds.LinkFileList
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.LinkFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests-OutputFileMap.json
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.SwiftFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.SwiftConstValuesFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftConstValuesFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.LinkFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-OutputFileMap.json
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatchWidgets[0m] [1mCompiling[0m Thread.swift
+[[36mLooseEndsWatchWidgets[0m] [1mCompiling[0m Thread.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m EnrichmentCoordinator.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m DetailFields.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m FieldCodec.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m RevisionService.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m StartHeadline.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m Enums.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEndsWatchWidgets[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatchWidgets.swiftsourceinfo
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m RevisionService.swift
+[[36mLooseEndsWatchWidgets[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftmodule -> LooseEndsWatchWidgets.swiftmodule
+[[36mLooseEndsWatchWidgets[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftdoc -> LooseEndsWatchWidgets.swiftdoc
+[[36mLooseEndsWatchWidgets[0m] [1mCopy[0m x86_64-apple-watchos-simulator.swiftmodule -> LooseEndsWatchWidgets.swiftmodule
+[[36mLooseEndsWatchWidgets[0m] [1mCopy[0m x86_64-apple-watchos-simulator.swiftdoc -> LooseEndsWatchWidgets.swiftdoc
+[[36mLooseEndsWatchWidgets[0m] [1mCopy[0m x86_64-apple-watchos-simulator.abi.json -> LooseEndsWatchWidgets.abi.json
+[[36mLooseEndsWatchWidgets[0m] [1mCopy[0m arm64-apple-watchos-simulator.abi.json -> LooseEndsWatchWidgets.abi.json
+[[36mLooseEndsWatchWidgets[0m] [1mCopy[0m x86_64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatchWidgets.swiftsourceinfo
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TaskItem.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m StartHeadline.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m DetailFields.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TaskActions.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m PlaceEditing.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m EnrichmentWriter.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m RuleTrigger.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m GuessedProjects.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m SiriCapture.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m Revision.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m FieldCodec.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m EnrichmentCoordinator.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CalendarAsk.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CatalogService.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m SiriRepeatMapping.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m MarginText.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m PendingCompletions.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m DueReminders.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m NextUpWidgetIntents.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m SideColumn.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m Subtasks.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TaskContext.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TaskAttachment.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m PlaceReminders.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m InboxDrawer.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ModelContainerFactory.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m NewDateRule.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CompletionRecord.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ContextSeeder.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CalendarSync.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CaptureService.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m PlaceNotifications.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m Project.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m Thread.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m WaitingOn.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CarryReminders.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m PlaceDelivery.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m SiriFields.swift
+[[36mLooseEndsWatchWidgets[0m] [1mCompiling[0m CaptureComplication.swift
+[[36mLooseEndsWatchWidgets[0m] [1mCompiling[0m CaptureComplication.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m TaskItem.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m TaskActions.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m NextUpWidget.swift
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m Enums.swift
+[[36mLooseEndsWatchWidgets[0m] [1mLinking[0m LooseEndsWatchWidgets.debug.dylib
+[[36mLooseEndsWatchWidgets[0m] [1mLinking[0m LooseEndsWatchWidgets.debug.dylib
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TaskItem.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m Enums.swift
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWatchWidgets' from project 'LooseEnds')
+[[36mLooseEndsWatchWidgets[0m] [1mCreate Universal Binary[0m LooseEndsWatchWidgets.debug.dylib
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWatchWidgets' from project 'LooseEnds')
+[[36mLooseEndsWatchWidgets[0m] [1mLinking[0m LooseEndsWatchWidgets
+[[36mLooseEndsWatchWidgets[0m] [1mLinking[0m LooseEndsWatchWidgets
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEndsWatchWidgets[0m] [1mCreate Universal Binary[0m LooseEndsWatchWidgets
+[[36mLooseEndsWatch[0m] [1mCompiling[0m EnrichmentCoordinator.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m DetailFields.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SiriCapture.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m PlaceEditing.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m EnrichmentWriter.swift
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsWidgets.swiftmodule
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEndsWidgets.swiftdoc
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsWidgets.abi.json
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsWidgets.swiftsourceinfo
+[[36mLooseEndsWatch[0m] [1mCompiling[0m NextUpWidgetIntents.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SiriFields.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m StartHeadline.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m StartHeadline.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TaskContext.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TaskAttachment.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m MarginText.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m InboxDrawer.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ModelContainerFactory.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m WatchCaptureView.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m NewDateRule.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m PendingCompletions.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m Subtasks.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CarryReminders.swift
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatch.swiftsourceinfo
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CarryReminders.swift
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftmodule -> LooseEndsWatch.swiftmodule
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftdoc -> LooseEndsWatch.swiftdoc
+[[36mLooseEndsWatch[0m] [1mCopy[0m x86_64-apple-watchos-simulator.swiftmodule -> LooseEndsWatch.swiftmodule
+[[36mLooseEndsWatch[0m] [1mCopy[0m x86_64-apple-watchos-simulator.swiftdoc -> LooseEndsWatch.swiftdoc
+[[36mLooseEndsWatch[0m] [1mCopy[0m x86_64-apple-watchos-simulator.abi.json -> LooseEndsWatch.abi.json
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos-simulator.abi.json -> LooseEndsWatch.abi.json
+[[36mLooseEndsWatch[0m] [1mCopy[0m x86_64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatch.swiftsourceinfo
+[[36mLooseEndsWatch[0m] [1mCompiling[0m EnrichmentCoordinator.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m Subtasks.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TaskActions.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ContextSeeder.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m DueReminders.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SideColumn.swift
+[[36mLooseEndsShare[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsShare.swiftsourceinfo
+[[36mLooseEndsWatch[0m] [1mCompiling[0m FieldCodec.swift
+[[36mLooseEndsShare[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsShare.swiftmodule
+[[36mLooseEndsShare[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEndsShare.swiftdoc
+[[36mLooseEndsShare[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsShare.abi.json
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CalendarAsk.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CatalogService.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CalendarSync.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CaptureService.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m Enums.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m GuessedProjects.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SiriRepeatMapping.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m RuleTrigger.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m PlaceDelivery.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m PlaceNotifications.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m DetailFields.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m RuleTrigger.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m GuessedProjects.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SiriFields.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SiriRepeatMapping.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m EnrichmentWriter.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m WaitingOn.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m PendingCompletions.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m RevisionService.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m PlaceEditing.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m NextUpWidgetIntents.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SiriCapture.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m RevisionService.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m MarginText.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m PlaceReminders.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m Project.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SideColumn.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TaskItem.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m Revision.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m DueReminders.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CalendarAsk.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CatalogService.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m FieldCodec.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m WaitingOn.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TaskActions.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CaptureTextIntent.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CompletionRecord.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m Revision.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m SiriRepeatMapping.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m TaskAttachment.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m PlaceEditing.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m NewDateRule.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m PlaceDelivery.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m CalendarSync.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m CaptureService.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m MarginText.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m GuessedProjects.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m CarryReminders.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m PendingCompletions.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m SiriFields.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m Project.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m CompletionRecord.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m ContextSeeder.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m InboxDrawer.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m ModelContainerFactory.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m EnrichmentWriter.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m WatchCaptureView.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ModelContainerFactory.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m NewDateRule.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TaskContext.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CalendarSync.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CaptureService.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TaskAttachment.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m Project.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m PlaceDelivery.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m PlaceNotifications.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ContextSeeder.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m InboxDrawer.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CaptureTextIntent.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CompletionRecord.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m PlaceReminders.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m Revision.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m ShareCaptureView.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m SideColumn.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m TaskContext.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m RuleTrigger.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m WaitingOn.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m SiriCapture.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m PlaceReminders.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m DueReminders.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m PlaceNotifications.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m Subtasks.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m CalendarAsk.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m CatalogService.swift
+[[36mLooseEndsWidgets[0m] [1mLinking[0m LooseEndsWidgets.debug.dylib
+[[36mLooseEndsWatchWidgets[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsWatch[0m] [1mCompile XCStrings[0m Localizable.xcstrings
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch.debug.dylib
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch.debug.dylib
+[[36mLooseEndsWatch[0m] [1mCopying[0m Localizable.strings
+[[36mLooseEndsWatch[0m] [1mCopying[0m Localizable.strings
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWidgets' from project 'LooseEnds')
+[[36mLooseEndsWidgets[0m] [1mLinking[0m LooseEndsWidgets
+[[36mLooseEndsWidgets[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsShare[0m] [1mLinking[0m LooseEndsShare.debug.dylib
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWatch' from project 'LooseEnds')
+[[36mLooseEndsWatch[0m] [1mCreate Universal Binary[0m LooseEndsWatch.debug.dylib
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWatch' from project 'LooseEnds')
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch
+[[36mLooseEnds[0m] [1mCompiling[0m Enums.swift
+[[36mLooseEnds[0m] [1mCompiling[0m FieldCodec.swift
+[[36mLooseEnds[0m] [1mCompiling[0m FieldFormatting.swift
+[[36mLooseEnds[0m] [1mCompiling[0m RevisionService.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SidebarView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m StartHeadline.swift
+[[36mLooseEnds[0m] [1mCompiling[0m StartHeadlineText.swift
+[[36mLooseEnds[0m] [1mCompiling[0m StartPage.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEnds/Views/Beads.swift:97:34: [33mmain actor-isolated static property 'inset' can not be referenced from a nonisolated context[0m
+ 40 |     static let height: CGFloat = 47
+[32m 41 |     /// The string's ends sit 10 pt in; the beads start 40 pt in and stand 40 pt apart while there is room.[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEnds/Views/Beads.swift:98:50: [33mmain actor-isolated static property 'inset' can not be referenced from a nonisolated context[0m
+ 40 |     static let height: CGFloat = 47
+[32m 41 |     /// The string's ends sit 10 pt in; the beads start 40 pt in and stand 40 pt apart while there is room.[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEnds/Views/Beads.swift:106:28: [33mmain actor-isolated static property 'firstBead' can not be referenced from a nonisolated context[0m
+ 41 |     /// The string's ends sit 10 pt in; the beads start 40 pt in and stand 40 pt apart while there is room.
+[32m 42 |     private static let inset: CGFloat = 10[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEnds/Views/Beads.swift:106:40: [33mmain actor-isolated static property 'inset' can not be referenced from a nonisolated context[0m
+ 40 |     static let height: CGFloat = 47
+[32m 41 |     /// The string's ends sit 10 pt in; the beads start 40 pt in and stand 40 pt apart while there is room.[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEnds/Views/Beads.swift:106:48: [33mmain actor-isolated static property 'radius' can not be referenced from a nonisolated context[0m
+ 43 |     private static let firstBead: CGFloat = 40
+[32m 44 |     private static let spacing: CGFloat = 40[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEnds/Views/Beads.swift:107:36: [33mmain actor-isolated static property 'spacing' can not be referenced from a nonisolated context[0m
+ 42 |     private static let inset: CGFloat = 10
+[32m 43 |     private static let firstBead: CGFloat = 40[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEnds/Views/Beads.swift:107:74: [33mmain actor-isolated static property 'spacing' can not be referenced from a nonisolated context[0m
+ 42 |     private static let inset: CGFloat = 10
+[32m 43 |     private static let firstBead: CGFloat = 40[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEnds/Views/Beads.swift:109:21: [33mmain actor-isolated static property 'firstBead' can not be referenced from a nonisolated context[0m
+ 41 |     /// The string's ends sit 10 pt in; the beads start 40 pt in and stand 40 pt apart while there is room.
+[32m 42 |     private static let inset: CGFloat = 10[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEnds/Views/Beads.swift:110:26: [33mmain actor-isolated static property 'inset' can not be referenced from a nonisolated context[0m
+ 40 |     static let height: CGFloat = 47
+[32m 41 |     /// The string's ends sit 10 pt in; the beads start 40 pt in and stand 40 pt apart while there is room.[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEnds/Views/Beads.swift:110:48: [33mmain actor-isolated static property 'inset' can not be referenced from a nonisolated context[0m
+ 40 |     static let height: CGFloat = 47
+[32m 41 |     /// The string's ends sit 10 pt in; the beads start 40 pt in and stand 40 pt apart while there is room.[0m
+[[36mLooseEnds[0m] [1mCompiling[0m Beads.swift
+[[36mLooseEnds[0m] [1mCompiling[0m DetailFields.swift
+[[36mLooseEnds[0m] [1mCompiling[0m EnrichmentCoordinator.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEnds/App/FieldSettingsStore.swift:51:23: [33mresult of call to 'assumeIsolated(_:file:line:)' is unused [#NoUsage][0m
+ 49 |             forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: NSUbiquitousKeyValueStore.default, queue: .main
+[32m 50 |         ) { [weak self] _ in[0m
+[[36mLooseEnds[0m] [1mCompiling[0m FieldSettingsStore.swift
+[[36mLooseEnds[0m] [1mCompiling[0m FieldSettingsView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Knaeuel.swift
+[[36mLooseEnds[0m] [1mCompiling[0m KnaeuelThread.swift
+[[36mLooseEnds[0m] [1mCompiling[0m LooseEndsApp.swift
+[[36mLooseEnds[0m] [1mCompiling[0m MainWindowPlacement.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEnds/Views/TaskDetailView.swift:141:22: [33m'+' was deprecated in iOS 26.0: Use string interpolation on `Text` instead: `Text("Hello \(name)")` [#DeprecatedDeclaration][0m
+139 |                         .tracking(1)
+[32m140 |                      + Text(verbatim: "  ")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEnds/Views/TaskDetailView.swift:140:22: [33m'+' was deprecated in iOS 26.0: Use string interpolation on `Text` instead: `Text("Hello \(name)")` [#DeprecatedDeclaration][0m
+138 |                         .font(.caption2.weight(.semibold))
+[32m139 |                         .tracking(1)[0m
+[[36mLooseEnds[0m] [1mCompiling[0m TaskActions.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskDetailView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Thread.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEndsWatch[0m] [1mCreate Universal Binary[0m LooseEndsWatch
+[36;1mnote: [0mUsing stub executor library without Swift entry point. (in target 'LooseEndsShare' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mCompiling[0m TaskInteractions.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskItem.swift
+[[36mLooseEndsShare[0m] [1mLinking[0m LooseEndsShare
+[[36mLooseEnds[0m] [1mCompiling[0m ContentView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m DetailLayout.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CalendarAsk.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CatalogService.swift
+[[36mLooseEnds[0m] [1mCompiling[0m EnrichmentWriter.swift
+[[36mLooseEnds[0m] [1mCompiling[0m FieldEditorView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m WaitingOnSection.swift
+[[36mLooseEnds[0m] [1mCompiling[0m MarginText.swift
+[[36mLooseEnds[0m] [1mCompiling[0m AttachmentsSection.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CalendarAskSheet.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CalendarBridge.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CalendarPickerSheet.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CalendarSync.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CaptureService.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CaptureTextIntent.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CaptureView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SiriFields.swift
+[[36mLooseEnds[0m] [1mCompiling[0m MenuBarThreadImage.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEnds/Views/SubtasksSection.swift:110:37: [33m'+' was deprecated in iOS 26.0: Use string interpolation on `Text` instead: `Text("Hello \(name)")` [#DeprecatedDeclaration][0m
+108 |         traits.enumerated().reduce(Text(verbatim: "")) { line, item in
+[32m109 |             let separator = item.offset == 0 ? Text(verbatim: "") : Text(verbatim: " · ").foregroundStyle(.secondary)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEnds/Views/SubtasksSection.swift:110:25: [33m'+' was deprecated in iOS 26.0: Use string interpolation on `Text` instead: `Text("Hello \(name)")` [#DeprecatedDeclaration][0m
+108 |         traits.enumerated().reduce(Text(verbatim: "")) { line, item in
+[32m109 |             let separator = item.offset == 0 ? Text(verbatim: "") : Text(verbatim: " · ").foregroundStyle(.secondary)[0m
+[[36mLooseEnds[0m] [1mCompiling[0m SubtasksSection.swift
+[[36mLooseEnds[0m] [1mCompiling[0m DocumentScanner.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CatalogEditing.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEnds/Places/SavedPlacesStore.swift:44:23: [33mresult of call to 'assumeIsolated(_:file:line:)' is unused [#NoUsage][0m
+42 |             forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: NSUbiquitousKeyValueStore.default, queue: .main
+[32m43 |         ) { [weak self] _ in[0m
+[[36mLooseEnds[0m] [1mCompiling[0m RecognitionRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ReminderSchema.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ReminderTranslation.swift
+[[36mLooseEnds[0m] [1mCompiling[0m RepeatRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m RowKeyAction.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SavedPlaces.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SavedPlacesStore.swift
+[[36mLooseEnds[0m] [1mCompiling[0m PlaceEditing.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Revision.swift
+[[36mLooseEnds[0m] [1mCompiling[0m MoveDateSheet.swift
+[[36mLooseEnds[0m] [1mCompiling[0m InboxDrawerView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskAttachment.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskContext.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskPlace.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TimeExpressionParser.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TitleRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ViewSelection.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Waveform.swift
+[[36mLooseEnds[0m] [1mCompiling[0m WaitingOn.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CarryReviewSheet.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CloudKitSchemaInitializer.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CompletionRecord.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ContextSeeder.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ContextWordLearning.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ContextWordRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CurrentLocation.swift
+[[36mLooseEnds[0m] [1mCompiling[0m DateExpressionParser.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ReviewNote.swift
+[[36mLooseEnds[0m] [1mCompiling[0m PlaceNotifications.swift
+[[36mLooseEnds[0m] [1mCompiling[0m PlaceReminders.swift
+[[36mLooseEnds[0m] [1mCompiling[0m PlaceSearch.swift
+[[36mLooseEnds[0m] [1mCompiling[0m PlaceSection.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Project.swift
+[[36mLooseEnds[0m] [1mCompiling[0m QuickDue.swift
+[[36mLooseEnds[0m] [1mCompiling[0m RawTextWords.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEnds/Notifications/DueNotificationCenter.swift:73:23: [33mresult of call to 'assumeIsolated(_:file:line:)' is unused [#NoUsage][0m
+ 71 |             forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: NSUbiquitousKeyValueStore.default, queue: .main
+[32m 72 |         ) { [weak self] _ in[0m
+[[36mLooseEnds[0m] [1mCompiling[0m DueNotificationCenter.swift
+[[36mLooseEnds[0m] [1mCompiling[0m EditorPage.swift
+[[36mLooseEnds[0m] [1mCompiling[0m LearnedWordsSheet.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CarryReminders.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CatalogPage.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ListSummary.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ListeningHint.swift
+[[36mLooseEnds[0m] [1mCompiling[0m MainThreadWatchdog.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ModelContainerFactory.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ModelDeadline.swift
+[[36mLooseEnds[0m] [1mCompiling[0m NewDateRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m NewDateSheet.swift
+[[36mLooseEnds[0m] [1mCompiling[0m NoteLinks.swift
+[[36mLooseEnds[0m] [1mCompiling[0m GuessedProjects.swift
+[[36mLooseEnds[0m] [1mCompiling[0m NoteSection.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SiriRepeatMapping.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SpeechAccess.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SpeechCapture.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SpeechDiagnosis.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SpeechReadiness.swift
+[[36mLooseEnds[0m] [1mCompiling[0m StartMetrics.swift
+[[36mLooseEnds[0m] [1mCompiling[0m StartZones.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SyncStatus.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Subtasks.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SideColumn.swift
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEnds.swiftmodule
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEnds.swiftdoc
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEnds.abi.json
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+[[36mLooseEnds[0m] [1mCompiling[0m DueDateRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m DueReminders.swift
+[[36mLooseEnds[0m] [1mCompiling[0m DurationRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m EnrichmentDraft.swift
+[[36mLooseEnds[0m] [1mCompiling[0m FoundationModelsEnricher.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ImportanceUrgencyRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m InboxDrawer.swift
+[[36mLooseEnds[0m] [1mCompiling[0m LaunchTimings.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskListView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskRow.swift
+[[36mLooseEnds[0m] [1mCompiling[0m NextUpWidgetIntents.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SavedView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ScanPDF.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SettingsView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SharedAttachment.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SharedAttachmentFile.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SharedContent.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SideColumnView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m OnboardingFlow.swift
+[[36mLooseEnds[0m] [1mCompiling[0m OnboardingView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Paper.swift
+[[36mLooseEnds[0m] [1mCompiling[0m PendingCompletions.swift
+[[36mLooseEnds[0m] [1mCompiling[0m PhoneRule.swift
+[[36mLooseEnds[0m] [1mCompiling[0m PlaceDelivery.swift
+[[36mLooseEnds[0m] [1mCompiling[0m PlaceNotificationCenter.swift
+[[36mLooseEnds[0m] [1mCompiling[0m RuleTrigger.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SiriCapture.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m MacGalleryTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m DriveSmokeTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m MacUITestSupport.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SubtaskCompletionDialog.swift
+[[36mLooseEndsWatch[0m] [1mCopy[0m LooseEndsWatchWidgets.appex -> LooseEndsWatchWidgets.appex
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsUITests.swiftmodule
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEndsUITests.swiftdoc
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsUITests.abi.json
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
+[[36mLooseEndsWatch[0m] [1mValidate Embedded Binary[0m LooseEndsWatchWidgets.appex
+[[36mLooseEndsWatch[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueNotificationCenterTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueStateTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueTodayTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueWordsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DurationRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m EnergyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m EnrichmentTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m FieldEditTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m FieldOriginTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m GuardrailCorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ImportanceUrgencyRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m InboxDrawerTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/DueNotificationCenterTests.swift:65:39: [33m'#require(_:_:)' is redundant because 'TaskPlace(name: "Büro", latitude: 51.99563, longitude: 7.71357, event: .arrive)' never equals 'nil' (from macro 'require')[0m
+ 63 |         func placed(_ raw: String) throws -> TaskItem {
+[32m 64 |             let task = try task(raw)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/DueNotificationCenterTests.swift:74:45: [33m'#require(_:_:)' is redundant because 'calendar.date(bySettingHour: hour, minute: minute, second: 0, of: tomorrow)' never equals 'nil' (from macro 'require')[0m
+ 72 |             task.status = .active
+[32m 73 |             if let hour {[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m SiriCaptureTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SiriFieldsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SiriRepeatMappingTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechAccessTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechDiagnosisTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechLatencyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechReadinessTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m StartHeadlineTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m StartMetricsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m StartViewsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SubtaskListsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SubtaskRulesTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SubtaskTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/TaskActionsTests.swift:172:37: [33m'#require(_:_:)' is redundant because 'calendar.date(byAdding: .hour, value: 5, to: wednesday)' never equals 'nil' (from macro 'require')[0m
+170 |         let task = TaskItem(rawText: "Zahnarzt anrufen")
+[32m171 |         let wednesday = try day(2026, 9, 16, in: calendar)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:28:54: [31mvalue of type 'DateTitleReportTests.FormTally' has no member 'ruleFacts'[0m
+ 26 |         report.byForm["frage", default: .init()].facts = tally(hits: 4, of: 5)
+[36m 27 |         // Titles, rule: keywords 1 of 2, every other form 10 of 10.[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:29:53: [31mvalue of type 'DateTitleReportTests.FormTally' has no member 'ruleFacts'[0m
+ 27 |         // Titles, rule: keywords 1 of 2, every other form 10 of 10.
+[36m 28 |         report.byForm["stichwort", default: .init()].ruleFacts = tally(hits: 1, of: 2)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:41:24: [31mtype 'Corpus' has no member 'Weights'[0m
+ 39 |     @Test("Die Gewichte sind Hennings Angabe, mit Quelle und eingefrorener Zählung")
+[36m 40 |     func weightsAreHennings() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:42:24: [31mtype 'Corpus' has no member 'Weights'[0m
+ 40 |     func weightsAreHennings() {
+[36m 41 |         #expect(Corpus.Weights.keywordShare == 1.0 / 3.0)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:43:24: [31mtype 'Corpus' has no member 'Weights'[0m
+ 41 |         #expect(Corpus.Weights.keywordShare == 1.0 / 3.0)
+[36m 42 |         #expect(Corpus.Weights.timeShare == 0.12)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:44:24: [31mtype 'Corpus' has no member 'Weights'[0m
+ 42 |         #expect(Corpus.Weights.timeShare == 0.12)
+[36m 43 |         #expect(Corpus.Weights.source.contains("Angabe Henning"))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:45:24: [31mtype 'Corpus' has no member 'Weights'[0m
+ 43 |         #expect(Corpus.Weights.source.contains("Angabe Henning"))
+[36m 44 |         #expect(Corpus.Weights.source.contains("nicht nachgezählt"))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:46:24: [31mtype 'Corpus' has no member 'Weights'[0m
+ 44 |         #expect(Corpus.Weights.source.contains("nicht nachgezählt"))
+[36m 45 |         #expect(Corpus.Weights.counted.titles == 287)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:51:55: [31mtype 'DateTitleReportTests' has no member 'weighted'[0m
+ 49 |     @Test("Titel: ein Drittel Stichwörter, zwei Drittel alle übrigen Formen zusammen")
+[36m 50 |     func titleWeighting() throws {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:52:21: [31mtype 'Corpus' has no member 'Weights'[0m
+ 50 |     func titleWeighting() throws {
+[36m 51 |         let value = try #require(DateTitleReportTests.weighted([[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:53:25: [31mtype 'Corpus' has no member 'Weights'[0m
+ 51 |         let value = try #require(DateTitleReportTests.weighted([
+[36m 52 |             (Corpus.Weights.keywordShare, Self.tally(hits: 2, of: 2)),[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:51:21: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+ 49 |     @Test("Titel: ein Drittel Stichwörter, zwei Drittel alle übrigen Formen zusammen")
+[32m 50 |     func titleWeighting() throws {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:61:55: [31mtype 'DateTitleReportTests' has no member 'weighted'[0m
+ 59 |     @Test("Datum: 12 % Sätze mit Datum, 88 % ohne")
+[36m 60 |     func dateWeighting() throws {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:62:21: [31mtype 'Corpus' has no member 'Weights'[0m
+ 60 |     func dateWeighting() throws {
+[36m 61 |         let value = try #require(DateTitleReportTests.weighted([[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:63:25: [31mtype 'Corpus' has no member 'Weights'[0m
+ 61 |         let value = try #require(DateTitleReportTests.weighted([
+[36m 62 |             (Corpus.Weights.timeShare, Self.tally(hits: 1, of: 2)),[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:61:21: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+ 59 |     @Test("Datum: 12 % Sätze mit Datum, 88 % ohne")
+[32m 60 |     func dateWeighting() throws {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:70:38: [31mtype 'DateTitleReportTests' has no member 'weighted'[0m
+ 68 |     @Test("Eine leere Gruppe wird nie still umnormiert")
+[36m 69 |     func emptyGroupIsNotRenormalised() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:71:21: [31mtype 'Corpus' has no member 'Weights'[0m
+ 69 |     func emptyGroupIsNotRenormalised() {
+[36m 70 |         #expect(DateTitleReportTests.weighted([[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:72:25: [31mtype 'Corpus' has no member 'Weights'[0m
+ 70 |         #expect(DateTitleReportTests.weighted([
+[36m 71 |             (Corpus.Weights.keywordShare, Tally()),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:77:44: [31mtype 'DateTitleReportTests' has no member 'weightedSection'[0m
+ 75 |         var report = Self.report()
+[36m 76 |         report.byForm["stichwort"] = nil[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:84:44: [31mtype 'DateTitleReportTests' has no member 'weightedSection'[0m
+ 82 |     @Test("Der Abschnitt nennt Gewichte, Quelle, Formel, Regel-Spalte und kein Gewicht für die übrigen Formen")
+[36m 83 |     func section() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:98:44: [31mtype 'DateTitleReportTests' has no member 'weightedSection'[0m
+ 96 |     @Test("Die Zählung steht als zweite Zeile, eingefroren, als Titel statt Rohsätze")
+[36m 97 |     func countLine() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:112:30: [31mtype 'DateTitleReportTests' has no member 'scoreTitleRule'[0m
+110 |         var report = DateTitleReportTests.Report()
+[36m111 |         DateTitleReportTests.scoreRuleParser(corpus, calendar: CorpusTests.calendar, reference: CorpusTests.reference, into: &report)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:113:44: [31mvalue of type 'DateTitleReportTests.FormTally' has no member 'ruleDate'[0m
+111 |         DateTitleReportTests.scoreRuleParser(corpus, calendar: CorpusTests.calendar, reference: CorpusTests.reference, into: &report)
+[36m112 |         DateTitleReportTests.scoreTitleRule(corpus, calendar: CorpusTests.calendar, reference: CorpusTests.reference, into: &report)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:114:44: [31mvalue of type 'DateTitleReportTests.FormTally' has no member 'ruleDate'[0m
+112 |         DateTitleReportTests.scoreTitleRule(corpus, calendar: CorpusTests.calendar, reference: CorpusTests.reference, into: &report)
+[36m113 |         #expect(report.byForm["standard"]?.ruleDate.total == 1)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:115:45: [31mvalue of type 'DateTitleReportTests.FormTally' has no member 'ruleInvented'[0m
+113 |         #expect(report.byForm["standard"]?.ruleDate.total == 1)
+[36m114 |         #expect(report.byForm["standard"]?.ruleDate.hit == 1)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:116:45: [31mvalue of type 'DateTitleReportTests.FormTally' has no member 'ruleInvented'[0m
+114 |         #expect(report.byForm["standard"]?.ruleDate.hit == 1)
+[36m115 |         #expect(report.byForm["stichwort"]?.ruleInvented.total == 1)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:117:44: [31mvalue of type 'DateTitleReportTests.FormTally' has no member 'ruleFacts'[0m
+115 |         #expect(report.byForm["stichwort"]?.ruleInvented.total == 1)
+[36m116 |         #expect(report.byForm["stichwort"]?.ruleInvented.hit == 1)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/WeightedReportTests.swift:118:45: [31mvalue of type 'DateTitleReportTests.FormTally' has no member 'ruleFacts'[0m
+116 |         #expect(report.byForm["stichwort"]?.ruleInvented.hit == 1)
+[36m117 |         #expect(report.byForm["standard"]?.ruleFacts.total == 1)[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m SyncStatusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TaskActionsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TaskAttachmentModelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TaskPlaceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TextFormRuleReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ThreadShapeTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TimeExpressionParserTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TitleFidelityPromptTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TitleRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m WaitingOnTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m WaveformTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m WeightedReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m AppVersionTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m AttachmentKindTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CalendarAskTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CalendarSyncTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureComplication.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureComplicationTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CarryRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CatalogServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CloudKitSchemaInitializerTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContentsIndexTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordForgettingTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordLearningCoordinatorTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleBaseline.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleLeaveOneOutTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleTriggerTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SavedPlacesStoreTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SavedPlacesTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ScanPDFTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistency.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistencyReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistencyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SharedAttachmentFileTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SharedAttachmentTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SharedContentTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SideColumnTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RealModelGateTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RealModelLatencyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RealModelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReanalysisTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RecognitionRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReminderEntityTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReminderTranslationTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatAnchorTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatEditTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReviewTrayTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RevisionServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RowKeyActionTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRun.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRunTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MenuBarThreadImageTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelContainerFactoryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelSeamTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NewDateRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NextRankTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NextUpWidgetTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NoteLinksTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NowRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m OnboardingFlowTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PendingCompletionsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m IntentExecutionTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m KnaeuelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m KnaeuelThreadTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m LaunchTimingsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m LeaveOneOut.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m LeftoversTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ListPolishTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ListSummaryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MainWindowPlacementTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MarginMarkTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementData.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementDataTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementFieldScopeTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordLearningReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordLearningTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ConventionBaselineTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ConventionCorpus.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m Corpus.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateExpressionParserTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateParserCorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateTitleReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DetailFieldsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DetailLayoutTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueDateRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PeopleRetiredTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PhoneRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceDeliveryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceEditingTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceNotificationCenterTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceNotificationsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PressureOrderTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProcessCacheTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProjectLinesTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProjectNameRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m QuickDueTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEndsShare[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsTests.swiftmodule
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEndsTests.swiftdoc
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsTests.abi.json
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsTests.swiftsourceinfo
+[[36mLooseEnds[0m] [1mCompile XCStrings[0m Localizable.xcstrings
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds.debug.dylib
+[[36mLooseEnds[0m] [1mCopying[0m Localizable.strings
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEnds' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mCopying[0m Localizable.strings
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsShare.appex -> LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-issue-145/Logs/Test/Test-LooseEnds-2026.10.24_08-41-01-+0200.xcresult

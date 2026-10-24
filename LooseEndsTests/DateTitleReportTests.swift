@@ -383,11 +383,15 @@ struct DateTitleFormSectionTests {
         report.byForm["stichwort", default: .init()].facts.record(hit: true)
         report.byForm["frage", default: .init()].invented.record(hit: false)
         report.byForm["frage", default: .init()].facts.record(hit: false)
+        report.byForm["stichwort", default: .init()].ruleDate.record(hit: true)
+        report.byForm["stichwort", default: .init()].ruleInvented.record(hit: true)
+        report.byForm["stichwort", default: .init()].ruleFacts.record(hit: false)
 
         let section = DateTitleReportTests.formSection(report)
         #expect(section.hasPrefix("## Nach Bauform"))
-        #expect(section.contains("| stichwort | 3 | 50.0 % von 2 | 0.0 % von 1 | 100.0 % |"))
-        #expect(section.contains("| frage | 1 | – | 100.0 % von 1 | 0.0 % |"))
+        #expect(section.contains("| Bauform | Sätze | Datum exakt | Datum erfunden | Titel ohne erfundene Fakten | Regel: Datum exakt | Regel: Datum erfunden | Regel: Titel |"))
+        #expect(section.contains("| stichwort | 3 | 50.0 % von 2 | 0.0 % von 1 | 100.0 % | 100.0 % von 1 | 0.0 % von 1 | 0.0 % |"))
+        #expect(section.contains("| frage | 1 | – | 100.0 % von 1 | 0.0 % | – | – | – |"))
         #expect(DateTitleReportTests.markdown(report, runs: [], corpus: []).contains("## Nach Bauform"))
     }
 }
