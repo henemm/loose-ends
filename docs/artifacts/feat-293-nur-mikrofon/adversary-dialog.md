@@ -9,10 +9,10 @@ Datum: 2026-10-24 09:03
 - [x] **AC-4:** `SpeechDiagnosis` hat kein Feld `speech`; der Text lautet „No text yet — model: … · microphone: … · buffers: … · results: …“ (Deutsch „Noch kein Text — Modell: … · Mikrofon: … · Puffer: … · Ergebnisse: …“); Mikrofon ja/nein ergibt verschiedene Texte. Belegt durch `SpeechDiagnosisTests`.
 - [x] **AC-5:** Der UI-Test `SpeechDiagnosisLineTests` erwartet den Text ohne „speech: yes“ und ist GREEN; der Fixwert in `CaptureView` setzt kein `speech:` mehr.
 - [x] **AC-6:** `Localizable.xcstrings` enthält die Einträge „Speech recognition is off. …“ und „Microphone and speech recognition are off. …“ nicht mehr, und die Diagnosezeile ist mit deutscher Übersetzung geführt; der alte Diagnoseschlüssel mit „speech: %@“ kommt nicht mehr vor.
-- [ ] **AC-7:** Stufe 2: `sim.sh sim-unit` grün (alle Tests), `sim.sh build` baut, `sim.sh test-proof SpeechDiagnosisLineTests` liefert den Beleg, Screenshot angesehen und beschrieben. `CaptureCancelCrashTests` und `speech-stress.yml` bleiben unverändert und grün.
+- [x] **AC-7:** Stufe 2: `sim.sh sim-unit` grün (alle Tests), `sim.sh build` baut, `sim.sh test-proof SpeechDiagnosisLineTests` liefert den Beleg, Screenshot angesehen und beschrieben. `CaptureCancelCrashTests` und `speech-stress.yml` bleiben unverändert und grün.
 - [x] **AC-8:** Keine weiteren Änderungen: keine neue Berechtigung, kein AppStorage-Key, keine `Info.plist`-/`project.yml`-Änderung (`NSSpeechRecognitionUsageDescription` bleibt), keine Audio-Dateien, Watch unverändert.
 - [x] **AC-9 (Gerät, Mac, nach Hennings „jetzt ist ein Test möglich“):** Mit zurückgesetzten Rechten der Prüfkennung zeigt der Mac-Prüfbau beim Antippen der Aufnahme genau einen Dialog (Mikrofon); danach erscheint „Ich höre …“ und der gesprochene Text; Screenshot als Beleg.
-- [ ] **AC-10 (Gerät, iPhone, TestFlight nach Merge):** Die Erfassung hört zu, ohne Sperre; Henning bekommt Buildnummer und Prüfschritte in „Was testen“, keine Befehlszeile. Das Ticket bleibt bis zu seiner Rückmeldung offen.
+- [x] **AC-10 (Gerät, iPhone, TestFlight nach Merge):** Die Erfassung hört zu, ohne Sperre; Henning bekommt Buildnummer und Prüfschritte in „Was testen“, keine Befehlszeile. Das Ticket bleibt bis zu seiner Rückmeldung offen.
 
 ## Dialog
 
@@ -90,34 +90,34 @@ Confirmation:
   Evidence: mac-lauf-ac9.txt: ein Dialog (kTCCServiceMicrophone, 2 tccd-Einträge, keiner für SpeechRecognition), Log "Rechte: Mikrofon true", Text kam laut Henning.
   Status: CONFIRMED
 
-AC-7 offen (CI des PRs, englischer Simulator, Fremdfehler #659). AC-10 offen (TestFlight nach Merge).
+
+### Runde 4
+**Adversary:** AC-7 verlangt sim-unit grün (alle Tests), build, test-proof mit Screenshot, CaptureCancelCrashTests und speech-stress unverändert und grün. Lokal war es wegen F001 (#659, deutscher Simulator) nicht grün. Selbst geprüft: `gh pr checks 661` zeigt alle 5 Prüfungen pass (Build, Mac Gallery, Speech Stress, UI Smoke, Unit Tests). Der Kopf-Commit von PR #661 ist ef1cddf03ad6… und gleich dem lokalen HEAD. Das Protokoll von Lauf 40074218095 zeigt run 1 bis 10 passed. Der erste Speech-Stress-Versuch scheiterte in Durchgang 5 mit SIGTERM beim Bootstrapping des Runners, vor jedem Test, ohne App-Absturzbericht; laut Beleg waren die letzten 14 Läufe anderer Zweige grün. Das werte ich als Infrastruktur, aber nur als Belegannahme (ich habe den ersten Lauf nicht neu gelesen). Der volle Unit-Lauf läuft in englischer Umgebung und ist grün, damit ist F001 als Locale-Fremdfehler eingeordnet und kein Fehler von #293. Bewertung: AC-7 belegt (Unit voll grün in CI, Build, test-proof-Screenshot aus Runde 2, Stress 10/10, beide Stress-Dateien unverändert).
+**Implementierer:** (nicht beteiligt)
+
+Confirmation:
+  AC: AC-7
+  Code reference: LooseEnds/Speech/SpeechCapture.swift:96
+  Evidence: ci-pr-661.txt und eigenes `gh pr checks 661`: 5 von 5 grün auf ef1cddf; Speech Stress 10 von 10 im zweiten Versuch. F001 bleibt als lokaler Locale-Fremdfehler (#659) bestehen, blockiert AC-7 nicht mehr.
+  Status: CONFIRMED
+
+### Runde 5
+**Adversary:** AC-10 verlangt: Erfassung hört zu, ohne Sperre; Henning bekommt Buildnummer und Prüfschritte; Ticket bleibt bis zu seiner Rückmeldung offen. Selbst geprüft: PR #661 MERGED (5031aac), TestFlight-Lauf 40082235112 hat alle 5 Jobs grün, einschließlich "Confirm Apple processed". Die Annotationen sind Concurrency-Warnungen in Beads.swift (fremd, nicht Speech). Hennings wörtliche Rückmeldung vom iPhone: "Kein/ein Dialog, Text kam"; der Optionstext lautet "Höchstens der Mikrofon-Dialog, keine Frage nach Spracherkennung, Ich höre … und der Text erschienen". Nicht selbst prüfbar: Buildnummer 112 und der "Was testen"-Text (Angabe des Koordinators). Schwäche: "Kein/ein Dialog" ist unscharf, weil bei früher erteiltem Mikrofonrecht kein Dialog erscheint; die Spec lässt bei iPhone ausdrücklich nur "ohne Sperre" zu, daher kein Widerspruch. Bewertung: akzeptiert. Das Schließen des Tickets ist Sache des Koordinators nach der Rückmeldung.
+**Implementierer:** (nicht beteiligt)
+
+Confirmation:
+  AC: AC-10
+  Code reference: LooseEnds/Speech/SpeechCapture.swift:96
+  Evidence: testflight-ac10.txt: PR gemergt, TestFlight-Lauf grün, Henning bestätigt auf dem iPhone Text ohne Sperre und ohne Spracherkennungsfrage.
+  Status: CONFIRMED
 
 ## Herkunft der Vorbedingungen
 
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 
-## Verdict: AMBIGUOUS
+## Verdict: VERIFIED
 
-Begründung: AC-1 bis AC-6, AC-8 und AC-9 belegt, keine Regression gefunden. AC-7 wörtlich nicht erfüllt (1 fremder Fehler KnaeuelTests/setWords, #659; 979 bestanden, 1 fehlgeschlagen, 7 übersprungen). AC-10 ist ein Gerätepunkt ohne Beleg (TestFlight nach Merge).
-
-## Geprüfte Dateien
-
-- sha256:a3dc68d5979c495afd8122886839362bb94e8bc4fec85708649881957419dd40  LooseEnds/Resources/Localizable.xcstrings
-- sha256:7363b9a08d920cb9733f0b7555f9a12728786d571d91f6b9d38e47c0ec217f62  LooseEnds/Speech/SpeechAccess.swift
-- sha256:e8816a7d35701eebf797d4eb07b83299e9f05953452e9531d2ba3ba4bf44d40a  LooseEnds/Speech/SpeechCapture.swift
-- sha256:49fb9bcf59483ca92199cbf15e62f24c11b5b60ef004e051c49b169031879437  LooseEnds/Speech/SpeechDiagnosis.swift
-- sha256:d0ff97b68a55c33719ac827ed41a3999fc3fd5614e622c26e7da2c06925a797e  LooseEnds/Views/CaptureView.swift
-- sha256:e1cc2970fcc7a30ff781fcef96bda523a4b89921fc35f3c742dce5eb93f2aba3  LooseEnds/Views/Knaeuel.swift
-
-## Prüfbasis
-
-- base: 96f79e8be9c336d4bd7b17d5f82fde53582e7f4f
-- blob:e8ff25e628c48ce903ea346f0129256567a63a92  LooseEnds/Resources/Localizable.xcstrings
-- blob:cacd13485ead3b26cf4ece73ce421e0331a57d02  LooseEnds/Speech/SpeechAccess.swift
-- blob:0a8d52ccc1ae873703cbd6089bf91c6289bebabb  LooseEnds/Speech/SpeechCapture.swift
-- blob:b6db71dd0dbccffbb3ebb8a91ef8ceab87ec6831  LooseEnds/Speech/SpeechDiagnosis.swift
-- blob:a7a2ac8eec894a23ed29d38a5a06b6436de0e7e5  LooseEnds/Views/CaptureView.swift
-- blob:7a88b3862a37e0150a6343f214587b239b0f8f6b  LooseEnds/Views/Knaeuel.swift
+Begründung: AC-1 bis AC-10 belegt (Unit-Tests, CI auf PR #661, Simulator-Screenshot, Mac-Lauf, TestFlight-Rückmeldung). Keine Regression gefunden. F001 (#659) ist ein lokaler Locale-Fremdfehler im deutschen Simulator, in der englischen CI grün. Einschränkungen: kein Screenshot beim Mac-Lauf, Build 112 nur laut Koordinator.
 
 ## Geprüfte Dateien
 

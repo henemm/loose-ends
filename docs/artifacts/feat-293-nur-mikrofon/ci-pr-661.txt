@@ -1,0 +1,24 @@
+# CI von PR #661 (Commit ef1cddf03ad699c6f4b3c514cae7392a91289449), 2026-10-24
+
+gh pr checks 661:
+Build (iOS Simulator)                        pass   2m20s   runs/40074218096/job/120814026558
+Mac Gallery (macOS)                          pass   26m54s  runs/40074218096/job/120814026714
+Speech Stress (CaptureCancelCrashTests × N)  pass   24m55s  runs/40074218095/job/120829119901
+UI Smoke (iOS Simulator)                     pass   1h15m32s runs/40074218096/job/120814026634
+Unit Tests (macOS destination)               pass   6m2s    runs/40074218096/job/120814026677
+
+Speech Stress, zweiter Versuch (job 120829119901):
+run 1: passed (291 s) … run 10: passed (56 s)
+passed 10, failed 0 of 10
+
+Speech Stress, erster Versuch (job 120814026619): runs 1–4 passed, run 5 FAILED:
+  "LooseEndsUITests-Runner (51662) encountered an error (Early unexpected exit, operation never
+  finished bootstrapping - no restart will be attempted. (Underlying Error: Test crashed with signal
+  term while preparing to run tests.))"
+  Danach: simctl "Unable to lookup in current state: Shutdown" (Simulator aus). Kein Test begonnen,
+  keine Anhänge, kein Absturzbericht der App → Infrastruktur, kein App-Fehler. Die letzten 14 Läufe
+  auf anderen Zweigen waren grün.
+
+Unit Tests (macOS destination) grün = voller Unit-Lauf in englischer Umgebung, einschließlich
+KnaeuelTests/setWords (lokal nur im deutschen Simulator rot, #659).
+CaptureCancelCrashTests und .github/workflows/speech-stress.yml im Diff gegen 96f79e8 unverändert.
