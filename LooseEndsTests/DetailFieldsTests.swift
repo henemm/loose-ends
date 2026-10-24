@@ -161,9 +161,17 @@ import Testing
     }
 
     @Test("Only the UI test process runs with every switch on; the unit tests see the standard")
-    @MainActor func uiTestsEverything() {
+    @MainActor func uiTestsEverything() throws {
+        let defaults = try #require(UserDefaults(suiteName: "FieldSettingsStoreTests-\(UUID().uuidString)"))
         #expect(!ModelContainerFactory.isUITesting)
-        #expect(FieldSettingsStore.forApp(arguments: ["--ui-testing"]).settings == .standard)
+        #expect(FieldSettingsStore.forApp(arguments: ["--ui-testing"], defaults: defaults).settings == .standard)
         #expect(FieldSettingsStore.standardArgument == "--ui-testing-fields-standard")
+    }
+
+    @Test("Outside the UI tests the app's store reads the defaults handed in (#638)")
+    @MainActor func forAppReadsTheDefaults() throws {
+        let defaults = try #require(UserDefaults(suiteName: "FieldSettingsStoreTests-\(UUID().uuidString)"))
+        defaults.set(["notes", "energy"], forKey: FieldSettingsStore.key)
+        #expect(FieldSettingsStore.forApp(arguments: [], defaults: defaults).settings.on == [.notes, .energy])
     }
 }
