@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-10-24T09:35:55+0200
+befehl: scripts/sim.sh test-proof PlaceSmokeTests
+workflow: fix-418-ortanmeldung
+head: a7968026d07f1f664d28c821b03fea9f2bf53517
+basis: 96f79e8be9c336d4bd7b17d5f82fde53582e7f4f (merge-base origin/main HEAD)
+testklasse: PlaceSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 7 gesamt, 7 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1792827074.264  ende: 1792827354.032
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/fix-418-ortanmeldung/simulator-run/summary.json  sha256:28542dc85b89a031dcb8f765170f34b0fab2be99daf6c7e8a27c9ff6e4de240d
+xcresult: docs/artifacts/fix-418-ortanmeldung/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-418-ortanmeldung/simulator-run/*.png (9 Stück)
+
+## Geprüfte Dateien
+- sha256:62a5d4f29c3915eb63f9489fe66dd3749da9469a5339ba7a96e84c7a0c25c921  LooseEnds/Notifications/PlaceNotificationCenter.swift
+- sha256:8cb07ae8a46212a5484410fb4dcbb75bc1c3ddee3606860bddb5881a29955cad  LooseEndsTests/PlaceNotificationCenterTests.swift

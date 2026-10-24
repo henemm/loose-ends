@@ -1,0 +1,119 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "6DBD7BA1-B926-460A-97C8-DA09C2EFEE4D.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "15-already-here_0_A67BF99A-40C6-4763-AE6D-13004CCC16E2.png",
+        "timestamp" : 1792827112.293
+      }
+    ],
+    "testIdentifier" : "PlaceSmokeTests/testAlreadyHereNoteOnlyAtThePlace()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/PlaceSmokeTests/testAlreadyHereNoteOnlyAtThePlace"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "578AB0AE-BE5D-4798-A56B-FB3D3F1DBBE9.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "12-current-location-refused_0_11FB65A3-A610-4CE5-9B78-A11F9BC1F820.png",
+        "timestamp" : 1792827173.52
+      }
+    ],
+    "testIdentifier" : "PlaceSmokeTests/testCurrentLocationRefusedKeepsSheetOpen()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/PlaceSmokeTests/testCurrentLocationRefusedKeepsSheetOpen"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "14751F06-727C-417E-9D8A-CB23911F6C7F.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "11-current-location-set_0_A63BC9A3-E1EC-4853-BB42-E4FC33A013EF.png",
+        "timestamp" : 1792827209.268
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "553833E2-76D7-4049-B522-E124C372F889.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "10-sheet-with-rows_0_02209646-5C07-46B6-B72D-1EF8358A95AC.png",
+        "timestamp" : 1792827199.909
+      }
+    ],
+    "testIdentifier" : "PlaceSmokeTests/testCurrentLocationSetsPlaceAndClosesSheet()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/PlaceSmokeTests/testCurrentLocationSetsPlaceAndClosesSheet"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "A3F984B4-C1CE-40E9-A423-C0EB06D62116.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "13-home-defined_0_067E4AE5-91CA-420A-AD67-3C7BE25B6D6E.png",
+        "timestamp" : 1792827240.752
+      }
+    ],
+    "testIdentifier" : "PlaceSmokeTests/testHomeCanBeDefinedFromSearch()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/PlaceSmokeTests/testHomeCanBeDefinedFromSearch"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "324D6A5F-1A49-49F4-9E43-1EC49E182D18.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "14-location-off_0_75A386F1-454E-4EFA-9B8C-D7DE8FAC0198.png",
+        "timestamp" : 1792827301.647
+      }
+    ],
+    "testIdentifier" : "PlaceSmokeTests/testLocationOffNoteWithRefusedPermission()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/PlaceSmokeTests/testLocationOffNoteWithRefusedPermission"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "733B3F86-7BFA-4E97-911B-B2493B473997.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "3-list-with-place_0_61289928-8FCF-4C73-9FD2-52A95852B1BC.png",
+        "timestamp" : 1792827341.61
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "7F5EB1B9-C3BB-468F-8626-9D08D2784206.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "2-place-detail_0_4E94658D-E039-49B5-A9B8-5002CFF96D14.png",
+        "timestamp" : 1792827339.77
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "626190E0-8A02-412D-94F4-7E4EDAC8B068.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "1-place-search_0_8B74BC3C-214F-4525-AAFB-FA4E20D93BEB.png",
+        "timestamp" : 1792827326.207
+      }
+    ],
+    "testIdentifier" : "PlaceSmokeTests/testSetSwitchAndRemovePlace()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/PlaceSmokeTests/testSetSwitchAndRemovePlace"
+  }
+]

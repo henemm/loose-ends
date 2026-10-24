@@ -164,10 +164,12 @@ Recorder statt System. Geräte-ACs stehen am Ende und sind als solche gekennzeic
   `reconcile` ein zweites Mal ohne Änderung an Aufgaben läuft / Then kommen weder `add` noch `remove`. Given
   der Ort einer Aufgabe ändert sich / Then wird nur diese Anfrage ersetzt; ändert sich nur der Titel, wird nur der
   Inhalt ersetzt. Nachweis: Unit-Test.
-- **AC-9:** **Fehler bei `add` bricht nichts und schreibt die Merkliste nicht:** Given `add` wirft (wie
-  UNErrorDomain 2003 im Simulator) / When `reconcile` läuft / Then wirft `reconcile` nicht, die Merkliste bleibt
-  ungeschrieben, der nächste Lauf versucht es erneut, und der Fälligkeitslauf (`reschedule()`, Abzeichen)
-  läuft vollständig durch, auch wenn der Ortsabgleich scheitert. Nachweis: Unit-Test.
+- **AC-9:** **Fehler bei `add` bricht nichts, je Anfrage; die Merkliste enthält nur Übergebenes (#418):** Given `add`
+  wirft für eine Anfrage (wie UNErrorDomain 2003 im Simulator) / When `reconcile` läuft / Then wirft `reconcile` nicht,
+  die übrigen Anfragen werden trotzdem übergeben, die gescheiterte Aufgabe behält in der Merkliste ihren vorherigen
+  Eintrag (oder keinen), geschrieben wird nur bei Änderung (scheitert alles bei leerer Merkliste, bleibt sie
+  ungeschrieben), der nächste Lauf versucht nur die gescheiterte erneut, und der Fälligkeitslauf (`reschedule()`,
+  Abzeichen) läuft vollständig durch, auch wenn der Ortsabgleich scheitert. Nachweis: Unit-Test.
 - **AC-10:** **Ohne Freigabe nur Zurücknehmen:** Given keine Freigabe (`refused`, `notDetermined` oder reduzierte
   Genauigkeit) / When `reconcile` läuft / Then wird nichts hinzugefügt und keine Merkliste geschrieben, aber
   veraltete `place_`-Anfragen (Aufgabe erledigt, Ort entfernt, Marke gesetzt) werden zurückgenommen. Nachweis:
@@ -298,3 +300,4 @@ Die Geräteliste greift (`LooseEnds/Notifications/`, `project.yml`). Läuft übe
 
 - 2026-10-14: Entwurf. Schnitt 2 aus `docs/context/feat-240-schnitt-2-zustellung.md`; „alles in einem Durchgang“
   als Ausnahme vom 250-Zeilen-Limit von Henning freigegeben.
+- 2026-10-24: AC-9 auf „je Anfrage; Merkliste enthält nur Übergebenes“ angepasst (#418, `docs/specs/fix-418-ortanmeldung.md`).

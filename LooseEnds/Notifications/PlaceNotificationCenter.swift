@@ -111,20 +111,48 @@ final class PlaceNotificationCenter: PlaceReconciling {
             askIfNeeded(location, hasWatched: !plan.watched.isEmpty)
             let authorized = PlaceNotifications.isAuthorized(location.permission, fullAccuracy: location.fullAccuracy)
             let pending = await scheduler.pendingIdentifiers()
+            let previous = loadHandover()
             let changes = PlaceDelivery.diff(
-                plan: plan, tasks: tasks, handover: loadHandover(),
+                plan: plan, tasks: tasks, handover: previous,
                 pending: PlaceNotifications.pendingPlaceIdentifiers(pending), authorized: authorized
             )
             if !changes.remove.isEmpty { scheduler.remove(changes.remove) }
-            // The same identifier replaces the open request, so a new title is simply added again.
-            for reminder in changes.add + changes.updateContent {
-                try await scheduler.add(Self.request(for: reminder))
-            }
+            let failed = await hand(changes.add + changes.updateContent, to: scheduler)
             // Without permission nothing was handed over, so nothing is noted.
-            if authorized { try saveHandover(changes.handover) }
+            guard authorized else { return }
+            let noted = Self.handover(changes.handover, failed: failed, previous: previous)
+            if noted != previous { try saveHandover(noted) }
         } catch {
             Self.logger.error("Reconciling place reminders failed: \(error, privacy: .public)")
         }
+    }
+
+    /// Hands each request over on its own, so one that fails for good does not block the rest (#418).
+    /// The same identifier replaces the open request, so a new title is simply added again.
+    /// Returns the tasks whose request failed.
+    private func hand(_ reminders: [PlaceReminders.Reminder], to scheduler: any PlaceScheduling) async -> Set<UUID> {
+        var failed: Set<UUID> = []
+        for reminder in reminders {
+            do {
+                try await scheduler.add(Self.request(for: reminder))
+            } catch {
+                Self.logger.error(
+                    "Handing over place reminder \(reminder.identifier, privacy: .public) failed: \(error, privacy: .public)"
+                )
+                failed.insert(reminder.taskID)
+            }
+        }
+        return failed
+    }
+
+    /// The list notes only what went over: a failed task keeps its previous entry, or none (#418).
+    nonisolated static func handover(
+        _ planned: PlaceDelivery.Handover, failed: Set<UUID>, previous: PlaceDelivery.Handover
+    ) -> PlaceDelivery.Handover {
+        guard !failed.isEmpty else { return planned }
+        let kept = planned.entries.filter { !failed.contains($0.taskID) }
+        let restored = previous.entries.filter { failed.contains($0.taskID) }
+        return .init(entries: (kept + restored).sorted { $0.taskID.uuidString < $1.taskID.uuidString })
     }
 
     /// The mark is set only after asking, so a run in the background leaves it for the next one in front.

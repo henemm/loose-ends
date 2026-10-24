@@ -1,0 +1,66 @@
+[0;34m[sim][0m Testsperre belegt — warte (0 s, Platz 1 von 1 in der Warteliste). Halter: Worktree /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie, Befehl test-proof, PID 6009
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/PlaceNotificationCenterTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mCopy[0m arm64-apple-watchos-simulator.abi.json -> LooseEndsWatchWidgets.abi.json
+[[36mLooseEndsWatchWidgets[0m] [1mCopy[0m x86_64-apple-watchos-simulator.abi.json -> LooseEndsWatchWidgets.abi.json
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos-simulator.abi.json -> LooseEndsWatch.abi.json
+[[36mLooseEndsWatch[0m] [1mCopy[0m x86_64-apple-watchos-simulator.abi.json -> LooseEndsWatch.abi.json
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsWidgets.abi.json
+[[36mLooseEndsShare[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsShare.abi.json
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/LooseEndsTests/PlaceNotificationCenterTests.swift:65:39: [33m'#require(_:_:)' is redundant because 'TaskPlace(name: name, latitude: 51.99563, longitude: 7.71357, event: event)' never equals 'nil' (from macro 'require')[0m
+ 63 |             let task = TaskItem(rawText: raw)
+[32m 64 |             task.status = .active[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/LooseEndsTests/PlaceNotificationCenterTests.swift:144:37: [33m'#require(_:_:)' is redundant because 'TaskPlace(name: "Büro", latitude: 52.0, longitude: 7.8, event: .arrive)' never equals 'nil' (from macro 'require')[0m
+142 |         #expect(fixture.recorder.removed.isEmpty)
+[32m143 | [0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceNotificationCenterTests.swift
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsTests.swiftmodule
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsTests.abi.json
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsTests.swiftsourceinfo
+[[36mLooseEndsTests[0m] [1mLinking[0m LooseEndsTests
+[[36mLooseEndsTests[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWidgets.appex
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-10-24 08:53:46.561.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-24 08:53:46.563.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-24 08:53:46.563.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
+[1mTest run started.[0m
+Suite "PlaceNotificationCenter (#240)" started
+    [32m✔[0m "Arriving: one request place_<id> in PLACE with taskID, title, „You're at Büro.“, 150 m, entry only, once" ([33m0.051[0m seconds)
+    [32m✔[0m "Leaving: the region fires on exit only" (0.007 seconds)
+    [32m✔[0m "Due requests are never read, replaced or withdrawn by the place reconcile" (0.008 seconds)
+    [32m✔[0m "A second run without a change hands over nothing; a moved place replaces only its request" (0.011 seconds)
+    [32m✔[0m "A new title replaces only the content: added again under the same identifier, nothing withdrawn" (0.008 seconds)
+    [32m✔[0m "A failing add does not throw and leaves the handover list unwritten, so the next run tries again" (0.012 seconds)
+    [33m⚠️[0m  Test "A request that fails for good does not block the places behind it; only the handed-over one is noted (#418)" recorded an issue at PlaceNotificationCenterTests.swift:194:9: Expectation failed: fixture.recorder.added.map(\.identifier) == [good]
+    [33m⚠️[0m  Test "A request that fails for good does not block the places behind it; only the handed-over one is noted (#418)" recorded an issue at PlaceNotificationCenterTests.swift:196:52: Expectation failed: fixture.defaults.data(forKey: PlaceNotificationCenter.handoverKey)
+    [31m✖[0m [31m"A request that fails for good does not block the places behind it; only the handed-over one is noted (#418)" (0.014 seconds) 2 issue(s)[0m
+    [32m✔[0m "A new title that fails to go over keeps the old handover entry; the next run hands the title over (#418)" (0.009 seconds)
+    [32m✔[0m "Without permission nothing is added or noted, but a stale place request is withdrawn" ([33m0.050[0m seconds)
+    [32m✔[0m "Asks for „while using“ once: only undecided, with a place, in the foreground, never again" (0.007 seconds)
+    [32m✔[0m "No question without a place, when already decided, or with reduced accuracy" (0.014 seconds)
+    [32m✔[0m "In the background it does not ask and keeps the mark unset; back in front it asks" (0.006 seconds)
+    [32m✔[0m "German text „Du bist bei %@.“ and the location purpose string in Info.plist, German and English" (0.001 seconds)
+Suite "PlaceNotificationCenter (#240)" failed after 0.207 seconds with 2 issue(s)
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-epic-563-naechstes/Logs/Test/Test-LooseEnds-2026.10.24_08-53-23-+0200.xcresult
+[36;1mTesting started[0m
