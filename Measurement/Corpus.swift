@@ -24,6 +24,32 @@ enum Corpus {
                         "zeit-hinten", "zwei-aufgaben", "denglisch", "tippfehler", "praefix",
                         "diktat-name"]
 
+    /// Henning's distribution of his notes (#88 Teil 1): the only two shares anyone stated. The report
+    /// weights over two groups per criterion with them, never over the twelve forms and never over
+    /// cross cells (keyword × time), because no other share exists and independence is not shown.
+    enum Weights {
+        /// The share of notes written as bare keywords (form `stichwort`).
+        static let keywordShare = 1.0 / 3.0
+        /// The share of notes that carry a time or date.
+        static let timeShare = 0.12
+        static let source = "Angabe Henning aus 108 FocusBlox-Rohsätzen, nicht nachgezählt"
+
+        /// A count with the same rules, frozen like `FrozenDetector` (#99, #148): the 287 titles of the
+        /// FocusBlox export lie only in Henning's main folder, so a report reading them live would not
+        /// be reproducible in CI. Keyword = at most three words; time = the rule parser finds one.
+        /// The counting script is not in the repository.
+        struct Count {
+            let titles: Int
+            let keywordTitles: Int
+            let timeTitles: Int
+            let measured: String
+            var keywordShare: Double { Double(keywordTitles) / Double(titles) }
+            var timeShare: Double { Double(timeTitles) / Double(titles) }
+        }
+
+        static let counted = Count(titles: 287, keywordTitles: 211, timeTitles: 1, measured: "2026-10-24")
+    }
+
     struct Entry: Decodable, Sendable, Identifiable {
         var id: String
         var lang: String

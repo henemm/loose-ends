@@ -62,22 +62,64 @@ Laufen die Zeilen auseinander, hängt die Qualität an Vordergrund, Strom oder W
 
 ## Nach Bauform
 
-| Bauform | Sätze | Datum exakt | Datum erfunden | Titel ohne erfundene Fakten |
-|---|---|---|---|---|
-| standard | 188 | 47.1 % von 102 | 95.3 % von 86 | 100.0 % |
-| stichwort | 12 | 50.0 % von 2 | 100.0 % von 10 | 100.0 % |
-| ich-satz | 11 | 33.3 % von 3 | 100.0 % von 8 | 100.0 % |
-| nebensatz | 11 | 100.0 % von 3 | 87.5 % von 8 | 100.0 % |
-| frage | 11 | 0.0 % von 1 | 90.0 % von 10 | 100.0 % |
-| diktat | 12 | 60.0 % von 5 | 100.0 % von 7 | 91.7 % |
-| zeit-hinten | 11 | 54.5 % von 11 | – | 100.0 % |
-| zwei-aufgaben | 11 | 50.0 % von 2 | 100.0 % von 9 | 100.0 % |
-| denglisch | 11 | 50.0 % von 2 | 88.9 % von 9 | 100.0 % |
-| tippfehler | 11 | 50.0 % von 2 | 88.9 % von 9 | 100.0 % |
-| praefix | 11 | 75.0 % von 4 | 100.0 % von 7 | 100.0 % |
-| diktat-name | 11 | 50.0 % von 2 | 100.0 % von 9 | 100.0 % |
+| Bauform | Sätze | Datum exakt | Datum erfunden | Titel ohne erfundene Fakten | Regel: Datum exakt | Regel: Datum erfunden | Regel: Titel |
+|---|---|---|---|---|---|---|---|
+| standard | 188 | 47.1 % von 102 | 95.3 % von 86 | 100.0 % | 100.0 % von 102 | 0.0 % von 86 | 100.0 % |
+| stichwort | 12 | 50.0 % von 2 | 100.0 % von 10 | 100.0 % | 100.0 % von 2 | 0.0 % von 10 | 100.0 % |
+| ich-satz | 11 | 33.3 % von 3 | 100.0 % von 8 | 100.0 % | 100.0 % von 3 | 0.0 % von 8 | 100.0 % |
+| nebensatz | 11 | 100.0 % von 3 | 87.5 % von 8 | 100.0 % | 100.0 % von 3 | 0.0 % von 8 | 100.0 % |
+| frage | 11 | 0.0 % von 1 | 90.0 % von 10 | 100.0 % | 100.0 % von 1 | 0.0 % von 10 | 100.0 % |
+| diktat | 12 | 60.0 % von 5 | 100.0 % von 7 | 91.7 % | 100.0 % von 5 | 0.0 % von 7 | 100.0 % |
+| zeit-hinten | 11 | 54.5 % von 11 | – | 100.0 % | 100.0 % von 11 | – | 100.0 % |
+| zwei-aufgaben | 11 | 50.0 % von 2 | 100.0 % von 9 | 100.0 % | 100.0 % von 2 | 0.0 % von 9 | 100.0 % |
+| denglisch | 11 | 50.0 % von 2 | 88.9 % von 9 | 100.0 % | 100.0 % von 2 | 0.0 % von 9 | 100.0 % |
+| tippfehler | 11 | 50.0 % von 2 | 88.9 % von 9 | 100.0 % | 50.0 % von 2 | 0.0 % von 9 | 100.0 % |
+| praefix | 11 | 75.0 % von 4 | 100.0 % von 7 | 100.0 % | 100.0 % von 4 | 0.0 % von 7 | 100.0 % |
+| diktat-name | 11 | 50.0 % von 2 | 100.0 % von 9 | 100.0 % | 100.0 % von 2 | 0.0 % von 9 | 100.0 % |
 
 „standard“ ist die Form der ersten 203 Sätze (Zeitangabe, Objekt, Verb); die übrigen sind Hennings Formen aus seinen FocusBlox-Rohsätzen.
+
+## Gewichtet nach Hennings Verteilung
+
+Gewichte: Angabe Henning, nicht nachgezählt (Angabe Henning aus 108 FocusBlox-Rohsätzen, nicht nachgezählt). Gewichtet wird je Kriterium über zwei Gruppen, nie über die zwölf Bauformen und nie über Kreuzzellen; ist eine Gruppe leer, entfällt die Gesamtzahl.
+
+- **Stichwort:** 1/3 der Sätze. Titel = 1/3 × Anteil(Bauform stichwort) + 2/3 × Anteil(alle übrigen Bauformen zusammen).
+  Zählung an 287 FocusBlox-Titeln, Stand 2026-10-24: 73.5 % mit höchstens 3 Wörtern (Titel, keine Rohsätze; Zählskript nicht im Repo, Zahlen nicht nachzählbar).
+- **Zeitangabe:** 12 % der Sätze. Datum = 0,12 × Anteil(Datum exakt, Sätze mit Datum) + 0,88 × Anteil(kein Datum erfunden, Sätze ohne Datum).
+  Zählung an 287 FocusBlox-Titeln, Stand 2026-10-24: 0.3 % mit Zeitangabe über den Regelparser, 1 von 287 (Titel, keine Rohsätze; Zählskript nicht im Repo, Zahlen nicht nachzählbar). Titel enthalten Zeitangaben kaum, die Zahl ist deshalb keine Gegenprobe der 12 % der Rohsätze.
+
+| Kriterium | Modell | Regel |
+|---|---|---|
+| Titel ohne erfundene Fakten | 99.8 % | 100.0 % |
+| Datum richtig behandelt | 10.0 % | 99.9 % |
+
+| Gruppe | Gewicht | Modell | Regel |
+|---|---|---|---|
+| Titel: Bauform stichwort | 0.33 | 12 von 12 | 12 von 12 |
+| Titel: alle übrigen Bauformen | 0.67 | 298 von 299 | 307 von 307 |
+| Datum: Sätze mit Datum (exakt) | 0.12 | 69 von 139 | 138 von 139 |
+| Datum: Sätze ohne Datum (kein Datum erfunden) | 0.88 | 8 von 172 | 172 von 172 |
+
+| Bauform | Gewicht |
+|---|---|
+| stichwort | 1/3 (Angabe Henning, nicht nachgezählt) |
+| standard | kein Gewicht |
+| ich-satz | kein Gewicht |
+| nebensatz | kein Gewicht |
+| frage | kein Gewicht |
+| diktat | kein Gewicht |
+| zeit-hinten | kein Gewicht |
+| zwei-aufgaben | kein Gewicht |
+| denglisch | kein Gewicht |
+| tippfehler | kein Gewicht |
+| praefix | kein Gewicht |
+| diktat-name | kein Gewicht |
+
+Die Formen ohne Gewicht zählen beim Titel zusammen als „alle übrigen Bauformen“ (2/3). Für das Datum zählt das Merkmal Zeitangabe, keine Bauform.
+
+Fußnoten:
+- Die Titel-Regel misst alle Sätze des Korpus (307 plus 12), das Modell ohne die 8 Wiederholungssätze (299 plus 12); die Zahlen von Modell und Regel sind nicht aus denselben Sätzen gebildet.
+- In „Nach Bauform“ ist „Datum erfunden“ die Erfindungsquote (kleiner ist besser); hier zählt „kein Datum erfunden“ die Treffer (größer ist besser).
 
 ## Titel
 

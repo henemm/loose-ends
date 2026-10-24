@@ -1,0 +1,20 @@
+# Simulator-Beleg
+erzeugt: 2026-10-24T11:52:48+0200
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: feat-88-messbericht-gewichtung
+head: 73b87fca7d1230add19cc858ed23e37feec8ada7
+basis: 96c7d2060f45b86ce9b25f87a8e66310980f766e (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 23 gesamt, 23 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1792834852.919  ende: 1792835566.619
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/feat-88-messbericht-gewichtung/simulator-run/summary.json  sha256:e51d38136175c8f440bdde389c1f08ca65b63824c143a19e85dba6e26032229a
+xcresult: docs/artifacts/feat-88-messbericht-gewichtung/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-88-messbericht-gewichtung/simulator-run/*.png (13 Stück)
+
+## Geprüfte Dateien
+- sha256:2e47564b7e18f4a6b671373d0181295186a826f0c9b5b0de41fcbe5f889af657  LooseEndsTests/DateTitleReportTests.swift
+- sha256:41358e571c516d0a7583914d3d8767ead1094edf19c36ef596a97f74b4d8942e  LooseEndsTests/WeightedReportTests.swift
+- sha256:bda31ebbc2db07375d794e908c304923860faa0343b254ef9233c5333cc092ee  Measurement/Corpus.swift
