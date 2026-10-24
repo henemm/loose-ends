@@ -4,8 +4,12 @@ import Foundation
 /// change is one user revision on `.place`; the same input again writes nothing. Pure over the
 /// model objects; the caller saves.
 enum PlaceEditing {
-    /// The grey line under the place row. The location permission note comes with Schnitt 3b.
+    /// The grey line under the place row.
     enum Note: Equatable, Sendable {
+        /// Location refused or restricted in Settings (#241 3b-1): the place is kept but cannot remind.
+        case locationOff
+        /// Allowed, but without precise location: the system delivers no location reminder then.
+        case preciseOff
         /// Open with a place, but beyond the 20 places the system watches.
         case notWatched
         /// The Mac does not deliver location reminders (`UNLocationNotificationTrigger` is iOS and watchOS only).
@@ -33,9 +37,18 @@ enum PlaceEditing {
     }
 
     /// `all` is every task, for the 20-place ranking. Beyond the limit wins over the Mac note: it is
-    /// true on every device.
-    static func note(for task: TaskItem, among all: [TaskItem], isMac: Bool) -> Note? {
+    /// true on every device. The location notes come first on iPhone and iPad, since nothing reminds
+    /// without them; not asked yet shows none (the question comes with the first place). The Mac never
+    /// asks for the location, so its permission stays out.
+    static func note(
+        for task: TaskItem, among all: [TaskItem], isMac: Bool,
+        permission: PlaceNotifications.Permission = .notDetermined, fullAccuracy: Bool = true
+    ) -> Note? {
         guard task.place != nil else { return nil }
+        if !isMac {
+            if permission == .refused { return .locationOff }
+            if permission != .notDetermined, !fullAccuracy { return .preciseOff }
+        }
         if PlaceReminders.plan(for: all).unwatched.contains(task.id) { return .notWatched }
         return isMac ? .macOnly : nil
     }

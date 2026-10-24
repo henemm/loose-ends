@@ -4,8 +4,8 @@ import SwiftUI
 
 /// "Place" in the detail (#241, Schnitt 3a): one row with the place, arrive or leave, a grey line
 /// that says when it reminds, and a note when it cannot. Tapping the row asks the detail for the
-/// place search; swiping removes it. Every change is a user revision (`PlaceEditing`). Reminding
-/// itself comes with Schnitt 4; "current location", home and work with Schnitt 3b.
+/// place search; swiping removes it. Every change is a user revision (`PlaceEditing`). The sheet
+/// offers "Current location" on iPhone and iPad (#241 3b-1); home and work come with Schnitt 3b-2.
 struct PlaceSection: View {
     @Environment(\.modelContext) private var modelContext
     /// Every task, for the 20-place ranking behind the "not watched" note.
@@ -59,15 +59,29 @@ struct PlaceSection: View {
     private var footer: some View {
         if let place = task.place {
             VStack(alignment: .leading, spacing: 4) {
-                Text(place.event == .arrive ? "Reminds you when you arrive." : "Reminds you when you leave.")
+                // "Next time": iOS does not remind a place you are already at (measured 2026-10-08, #241).
+                Text(place.event == .arrive ? "Reminds you the next time you arrive." : "Reminds you when you leave.")
                     .accessibilityIdentifier("placeEventNote")
-                switch PlaceEditing.note(for: task, among: allTasks, isMac: Self.isMac) {
+                switch note {
+                case .locationOff: Text("Location is off in Settings. The place is saved but does not remind you.")
+                case .preciseOff: Text("Precise location is off. The place is saved but does not remind you.")
                 case .notWatched: Text("Not watched right now: more than 20 places are open.")
                 case .macOnly: Text("Reminds you on iPhone and Watch.")
                 case nil: EmptyView()
                 }
             }
         }
+    }
+
+    private var note: PlaceEditing.Note? {
+        #if os(iOS)
+        PlaceEditing.note(
+            for: task, among: allTasks, isMac: false,
+            permission: CurrentPlace.permission, fullAccuracy: CurrentPlace.fullAccuracy
+        )
+        #else
+        PlaceEditing.note(for: task, among: allTasks, isMac: Self.isMac)
+        #endif
     }
 
     private func eventBinding(_ place: TaskPlace) -> Binding<TaskPlace.Event> {
@@ -103,12 +117,19 @@ struct PlaceSearchSheet: View {
     /// The query the current hits answer; "No places found." only shows once the search came back.
     @State private var answered = ""
     @State private var failed = false
+    #if os(iOS)
+    @State private var locating = false
+    @State private var locateFailure: CurrentPlace.Failure?
+    #endif
     private let search = PlaceSearch.current
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Place")
 
     var body: some View {
         NavigationStack {
             List {
+                #if os(iOS)
+                currentLocationRow
+                #endif
                 // A plain field, not `.searchable`: it stays visible and focused from the start, and
                 // UI tests find it by identifier on every OS layout of the search bar.
                 TextField("Address or name", text: $query)
@@ -155,6 +176,55 @@ struct PlaceSearchSheet: View {
         .frame(minWidth: 380, minHeight: 360)
         #endif
     }
+
+    #if os(iOS)
+    /// Above the search: the place where one stands, in one tap. A failure stays in the sheet, so
+    /// the search remains at hand.
+    @ViewBuilder
+    private var currentLocationRow: some View {
+        Button {
+            Task { await locate() }
+        } label: {
+            HStack {
+                Label("Current location", systemImage: "location")
+                if locating {
+                    Spacer()
+                    ProgressView()
+                }
+            }
+        }
+        .disabled(locating)
+        .accessibilityIdentifier("currentLocationButton")
+        if let locateFailure {
+            Group {
+                switch locateFailure {
+                case .locationOff: Text("Location is off.")
+                case .preciseOff: Text("Precise location is off.")
+                case .notFound: Text("Location not found.")
+                }
+            }
+            .foregroundStyle(.secondary)
+            .accessibilityIdentifier("currentLocationNote")
+        }
+    }
+
+    private func locate() async {
+        locating = true
+        locateFailure = nil
+        defer { locating = false }
+        do {
+            let hit = try await CurrentPlace.locate()
+            choose(hit)
+            dismiss()
+        } catch let failure as CurrentPlace.Failure {
+            Self.logger.notice("Current location not set: \(String(describing: failure), privacy: .public)")
+            locateFailure = failure
+        } catch {
+            Self.logger.error("Current location failed: \(error, privacy: .public)")
+            locateFailure = .notFound
+        }
+    }
+    #endif
 
     private func run(_ query: String) async {
         let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
