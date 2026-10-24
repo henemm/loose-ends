@@ -50,6 +50,10 @@ struct DateTitleReportTests {
         var date = Tally()
         var invented = Tally()
         var facts = Tally()
+        /// The rule path on the same sentences (#88): the rule parser's date and `TitleRule`'s title.
+        var ruleDate = Tally()
+        var ruleInvented = Tally()
+        var ruleFacts = Tally()
         var sentences: Int { date.total + invented.total }
     }
 
@@ -95,6 +99,7 @@ struct DateTitleReportTests {
             Self.scoreTitle(entry, result, into: &report)
         }
         Self.scoreRuleParser(corpus, calendar: calendar, reference: CorpusTests.reference, into: &report)
+        Self.scoreTitleRule(corpus, calendar: calendar, reference: CorpusTests.reference, into: &report)
 
         let markdown = Self.markdown(report, runs: runs, corpus: corpus)
         print(["DATE-TITLE-REPORT BEGIN", "", markdown, "", "DATE-TITLE-REPORT END"].joined(separator: "\n"))
@@ -169,14 +174,27 @@ struct DateTitleReportTests {
                     let miss = "`\(entry.text)` \u{2192} \(day(got, calendar)) statt \(day(accepted.min(), calendar)) \u{b7} \(ruleName(expectation))"
                     report.ruleParser.record(hit: hit, empty: got == nil, miss: miss)
                     report.ruleParserByRule[ruleName(expectation), default: Tally()].record(hit: hit, empty: got == nil)
+                    report.byForm[entry.form, default: FormTally()].ruleDate.record(hit: hit)
                 } else {
                     report.ruleParserInvented.record(hit: got == nil, miss: "`\(entry.text)` \u{2192} \(day(got, calendar))")
+                    report.byForm[entry.form, default: FormTally()].ruleInvented.record(hit: got == nil)
                 }
             }
             guard let expected = entry.time else { continue }
             let got = clock.time(in: entry.text).map { String(format: "%02d:%02d", $0.hour, $0.minute) }
             report.ruleParserTime.record(hit: got == expected, empty: got == nil,
                                          miss: "`\(entry.text)` \u{2192} \(got ?? "\u{2013}") statt \(expected)")
+        }
+    }
+
+    /// `TitleRule` on the whole corpus (#88), checked with the same `TitleCheck` tests as the model's
+    /// title, so the title criterion gets its rule column per form.
+    static func scoreTitleRule(_ corpus: [Corpus.Entry], calendar: Calendar, reference: Date, into report: inout Report) {
+        for entry in corpus {
+            guard let title = TitleRule.title(from: entry.text, reference: reference, calendar: calendar) else { continue }
+            let invented = TitleCheck.inventedNumbers(title: title, rawText: entry.text)
+                + TitleCheck.alteredNames(title: title, rawText: entry.text, people: entry.people)
+            report.byForm[entry.form, default: FormTally()].ruleFacts.record(hit: invented.isEmpty)
         }
     }
 
@@ -187,6 +205,7 @@ struct DateTitleReportTests {
          dateSection(report),
          conditionSection(report),
          formSection(report),
+         weightedSection(report),
          titleSection(report),
          verdictSection(report),
          missesSection(report)].joined(separator: "\n\n")
@@ -268,8 +287,8 @@ struct DateTitleReportTests {
     /// the form the note was written in. A dash means the form has no sentence of that kind.
     static func formSection(_ report: Report) -> String {
         var lines = ["## Nach Bauform", "",
-                     "| Bauform | Sätze | Datum exakt | Datum erfunden | Titel ohne erfundene Fakten |",
-                     "|---|---|---|---|---|"]
+                     "| Bauform | Sätze | Datum exakt | Datum erfunden | Titel ohne erfundene Fakten | Regel: Datum exakt | Regel: Datum erfunden | Regel: Titel |",
+                     "|---|---|---|---|---|---|---|---|"]
         // Every known form gets its row, measured or not: a missing row would read as "this form
         // is fine". Unknown keys follow, so nothing is swallowed.
         let unknown = report.byForm.keys.filter { !Corpus.forms.contains($0) }.sorted()
@@ -278,10 +297,66 @@ struct DateTitleReportTests {
             let date = tally.date.total == 0 ? "–" : "\(percent(tally.date.share)) von \(tally.date.total)"
             let facts = tally.facts.total == 0 ? "–" : percent(tally.facts.share)
             let invented = tally.invented.total == 0 ? "–" : inverse(tally.invented)
-            lines.append("| \(form) | \(tally.sentences) | \(date) | \(invented) | \(facts) |")
+            let ruleDate = tally.ruleDate.total == 0 ? "–" : "\(percent(tally.ruleDate.share)) von \(tally.ruleDate.total)"
+            let ruleInvented = tally.ruleInvented.total == 0 ? "–" : inverse(tally.ruleInvented)
+            let ruleFacts = tally.ruleFacts.total == 0 ? "–" : percent(tally.ruleFacts.share)
+            lines.append("| \(form) | \(tally.sentences) | \(date) | \(invented) | \(facts) | \(ruleDate) | \(ruleInvented) | \(ruleFacts) |")
         }
         lines += ["", "„standard“ ist die Form der ersten 203 Sätze (Zeitangabe, Objekt, Verb); die übrigen sind Hennings Formen aus seinen FocusBlox-Rohsätzen."]
         return lines.joined(separator: "\n")
+    }
+
+    /// The total once more, weighted by Henning's distribution (#88 Teil 1): two groups per criterion,
+    /// his two stated shares as weights. An empty group yields no total, never a renormalised one.
+    static func weightedSection(_ report: Report) -> String {
+        let weights = Corpus.Weights.self, counted = Corpus.Weights.counted
+        let others = report.byForm.filter { $0.key != "stichwort" }.values
+        func merged(_ path: KeyPath<FormTally, Tally>) -> Tally {
+            others.reduce(into: Tally()) { $0.total += $1[keyPath: path].total; $0.hit += $1[keyPath: path].hit }
+        }
+        let keyword = report.byForm["stichwort"] ?? FormTally()
+        let title = [(weight: weights.keywordShare, model: keyword.facts, rule: keyword.ruleFacts),
+                     (weight: 1 - weights.keywordShare, model: merged(\.facts), rule: merged(\.ruleFacts))]
+        let date = [(weight: weights.timeShare, model: report.model, rule: report.ruleParser),
+                    (weight: 1 - weights.timeShare, model: report.invented, rule: report.ruleParserInvented)]
+        func total(_ groups: [(weight: Double, tally: Tally)]) -> String {
+            weighted(groups).map(percent) ?? "– (Gruppe ohne Sätze, nicht gewichtet)"
+        }
+        func count(_ tally: Tally) -> String { tally.total == 0 ? "–" : "\(tally.hit) von \(tally.total)" }
+        let note = "Titel, keine Rohsätze; Zählskript nicht im Repo, Zahlen nicht nachzählbar"
+        let countLine = "Zählung an \(counted.titles) FocusBlox-Titeln, Stand \(counted.measured)"
+        var lines = [
+            "## Gewichtet nach Hennings Verteilung", "",
+            "Gewichte: Angabe Henning, nicht nachgezählt (\(weights.source)). Gewichtet wird je Kriterium über zwei Gruppen, nie über die zwölf Bauformen und nie über Kreuzzellen; ist eine Gruppe leer, entfällt die Gesamtzahl.", "",
+            "- **Stichwort:** 1/3 der Sätze. Titel = 1/3 × Anteil(Bauform stichwort) + 2/3 × Anteil(alle übrigen Bauformen zusammen).",
+            "  \(countLine): \(percent(counted.keywordShare)) mit höchstens 3 Wörtern (\(note)).",
+            "- **Zeitangabe:** 12 % der Sätze. Datum = 0,12 × Anteil(Datum exakt, Sätze mit Datum) + 0,88 × Anteil(kein Datum erfunden, Sätze ohne Datum).",
+            "  \(countLine): \(percent(counted.timeShare)) mit Zeitangabe über den Regelparser, \(counted.timeTitles) von \(counted.titles) (\(note)). Titel enthalten Zeitangaben kaum, die Zahl ist deshalb keine Gegenprobe der 12 % der Rohsätze.", "",
+            "| Kriterium | Modell | Regel |", "|---|---|---|",
+            "| Titel ohne erfundene Fakten | \(total(title.map { ($0.weight, $0.model) })) | \(total(title.map { ($0.weight, $0.rule) })) |",
+            "| Datum richtig behandelt | \(total(date.map { ($0.weight, $0.model) })) | \(total(date.map { ($0.weight, $0.rule) })) |", "",
+            "| Gruppe | Gewicht | Modell | Regel |", "|---|---|---|---|",
+        ]
+        let names = ["Titel: Bauform stichwort", "Titel: alle übrigen Bauformen", "Datum: Sätze mit Datum (exakt)", "Datum: Sätze ohne Datum (kein Datum erfunden)"]
+        for (name, group) in zip(names, title + date) {
+            lines.append("| \(name) | \(String(format: "%.2f", group.weight)) | \(count(group.model)) | \(count(group.rule)) |")
+        }
+        lines += ["", "| Bauform | Gewicht |", "|---|---|", "| stichwort | 1/3 (Angabe Henning, nicht nachgezählt) |"]
+        lines += Corpus.forms.filter { $0 != "stichwort" }.map { "| \($0) | kein Gewicht |" }
+        lines += ["", "Die Formen ohne Gewicht zählen beim Titel zusammen als „alle übrigen Bauformen“ (2/3). Für das Datum zählt das Merkmal Zeitangabe, keine Bauform."]
+        let (ruleOthers, modelOthers) = (merged(\.ruleFacts).total, merged(\.facts).total)
+        let repeats = ruleOthers + keyword.ruleFacts.total - modelOthers - keyword.facts.total
+        lines += ["", "Fußnoten:",
+                  "- Die Titel-Regel misst alle Sätze des Korpus (\(ruleOthers) plus \(keyword.ruleFacts.total)), das Modell ohne die \(repeats) Wiederholungssätze (\(modelOthers) plus \(keyword.facts.total)); die Zahlen von Modell und Regel sind nicht aus denselben Sätzen gebildet.",
+                  "- In „Nach Bauform“ ist „Datum erfunden“ die Erfindungsquote (kleiner ist besser); hier zählt „kein Datum erfunden“ die Treffer (größer ist besser)."]
+        return lines.joined(separator: "\n")
+    }
+
+    /// The weighted mean over the groups, or nil as soon as one group has no sentence: the remaining
+    /// weights are never scaled up to 1 (#88).
+    static func weighted(_ groups: [(weight: Double, tally: Tally)]) -> Double? {
+        guard !groups.contains(where: { $0.tally.total == 0 }) else { return nil }
+        return groups.reduce(0) { $0 + $1.weight * $1.tally.share }
     }
 
     static func titleSection(_ report: Report) -> String {
