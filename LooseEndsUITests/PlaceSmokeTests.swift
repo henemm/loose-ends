@@ -97,4 +97,47 @@ final class PlaceSmokeTests: XCTestCase {
         remove.tap()
         XCTAssertTrue(reveal("field_place", in: app).exists, "After removing, the word Place should be back")
     }
+
+    /// "Current location" on top of the sheet sets where one stands in one tap (#241 3b-1). Under
+    /// `--ui-testing` it answers with a fixed street, without Core Location or the permission dialog.
+    @MainActor
+    func testCurrentLocationSetsPlace() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["--ui-testing", "-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+        app.launch()
+
+        let capture = app.buttons["captureButton"]
+        XCTAssertTrue(capture.waitForExistence(timeout: 10))
+        capture.tap()
+        let field = element("captureTextField", in: app)
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText("Briefkasten leeren")
+        app.buttons["captureDoneButton"].tap()
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5))
+
+        let newRow = element("viewRow_new", in: app)
+        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
+        newRow.tap()
+        let row = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH 'taskRow_'")).firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        row.tap()
+
+        let add = reveal("field_place", in: app)
+        XCTAssertTrue(add.exists, "Detail should offer Place")
+        add.tap()
+
+        let current = element("currentLocationButton", in: app)
+        XCTAssertTrue(current.waitForExistence(timeout: 5), "The place sheet should offer Current location on top")
+        shot(app, "4-current-location-offered")
+        current.tap()
+
+        let placeRow = reveal("placeRow", in: app)
+        XCTAssertTrue(placeRow.exists, "Current location should set the place and close the sheet")
+        XCTAssertTrue(placeRow.label.contains("Teststraße 1, Hamburg"), "Place row was \(placeRow.label)")
+        let note = reveal("placeEventNote", in: app)
+        XCTAssertTrue(note.label.contains("next time you arrive"), "Arrive reminds the next time, note was \(note.label)")
+        shot(app, "5-current-location-set")
+    }
 }

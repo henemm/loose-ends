@@ -88,4 +88,34 @@ import Testing
         #expect(PlaceEditing.note(for: tasks[20], among: tasks, isMac: true) == .macOnly)
         #expect(PlaceEditing.note(for: bare, among: tasks + [bare], isMac: true) == nil)
     }
+
+    @Test("Location off, then precise location off, then the 20-place limit; the Mac never reads the location (#241 3b-1)")
+    @MainActor func locationNotes() throws {
+        let store = try TestStore()
+        var tasks: [TaskItem] = []
+        for index in 0..<21 {
+            let task = TaskItem(rawText: "Aufgabe \(index)")
+            task.capturedAt = start.addingTimeInterval(Double(index) * 60)
+            task.place = try place()
+            store.context.insert(task)
+            tasks.append(task)
+        }
+        let cut = tasks[0]
+        let watched = tasks[20]
+        let bare = TaskItem(rawText: "ohne Ort")
+        store.context.insert(bare)
+
+        #expect(PlaceEditing.note(for: watched, among: tasks, isMac: false, permission: .refused, fullAccuracy: true) == .locationOff)
+        #expect(PlaceEditing.note(for: cut, among: tasks, isMac: false, permission: .refused, fullAccuracy: false) == .locationOff)
+        #expect(PlaceEditing.note(for: watched, among: tasks, isMac: false, permission: .whenInUse, fullAccuracy: false) == .preciseOff)
+        #expect(PlaceEditing.note(for: cut, among: tasks, isMac: false, permission: .always, fullAccuracy: false) == .preciseOff)
+        #expect(PlaceEditing.note(for: cut, among: tasks, isMac: false, permission: .whenInUse, fullAccuracy: true) == .notWatched)
+        #expect(PlaceEditing.note(for: watched, among: tasks, isMac: false, permission: .whenInUse, fullAccuracy: true) == nil)
+        // Not asked yet: no note; the question comes with the first place, as before.
+        #expect(PlaceEditing.note(for: watched, among: tasks, isMac: false, permission: .notDetermined, fullAccuracy: false) == nil)
+        // The Mac never asks for the location, so whatever it reads stays out of its notes.
+        #expect(PlaceEditing.note(for: watched, among: tasks, isMac: true, permission: .refused, fullAccuracy: false) == .macOnly)
+        #expect(PlaceEditing.note(for: cut, among: tasks, isMac: true, permission: .refused, fullAccuracy: false) == .notWatched)
+        #expect(PlaceEditing.note(for: bare, among: tasks + [bare], isMac: false, permission: .refused, fullAccuracy: false) == nil)
+    }
 }
