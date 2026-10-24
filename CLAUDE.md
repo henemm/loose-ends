@@ -291,13 +291,16 @@ not scope creep on the current one.
   `countsAt` (#645, a bead once completed, at most `TaskActions.countsBudget` open; the Knäuel always `counts`), both set by
   hand only as user revisions (`RevisedField.knaeuel`/`.counts`), both `DetailField`s of the group `drive`, off by default.
   `ViewRules.knaeuel(in:)` (latest mark wins), `counting(in:)`, `week(containing:)` (Monday to Sunday, whatever the locale),
-  `weekBeads(in:)` (every completion of a counting task in the week, a repeating one per record), `weekToSpeakOf(in:)` (the
+  `weekBeads(in:)` (every completion of a counting task in the week, a repeating one per record), `currentString(in:)` (the start
+  page's string of `stringLength` = 5, #655: the beads since the last full string, counted from all beads in rounds of five;
+  full = the win, the next bead starts a new string; `recentBeads(in:limit:)` the last n beads), `weekToSpeakOf(in:)` (the
   Sunday sentence's beads: this week's from Sunday 16:00, last week's on Monday until the first new bead, #646) and
   `groupedByCompletionWeek` ("Completed" by weeks with each week's beads, the days inside); "Now" leaves the Knäuel out. Views: `LooseEnds/Views/Knaeuel.swift` (`StartHeaderRows`: the knot's date line or the Knäuel's head `KnaeuelHead`
   (date, thread, row as one list row, plays the completion moment, #644), the sentence of the day; `KnaeuelSince`),
   `KnaeuelThread.swift` (`KnaeuelThread`: two trochoid loops laid from the Knäuel's tail end to the row, `LooseningKnaeuel`:
   the Knäuel blended into the knot) and `Beads.swift` (`PearlGlyph`, `WeekString` with the sag and the 1.1 s green,
-  `WeekStringRows` under "Now" with `RewardLine`, the week's "Dafür" sentence from `FieldSettingsStore.reward`, #647). The
+  `WeekStringRows` "Beads" under "Now": the string of five with its empty places as dots, `RewardLine` "For the beads: …" while it
+  fills, `FullStringLine` "The string is full. For the beads: …" once it is, #647/#655). The user-facing word for `countsAt` is "Perle sammeln" (#655), never "Zählt". The
   question before the Knäuel moves is `movesKnaeuel` in `TaskInteractions.swift`; the detail's lines under the raw text
   ("The Knäuel · since Monday" with Release, "Counts always, it is the Knäuel") are `TaskDetailView.driveSection`.
 - `Shared/Models/RowKeyAction.swift` (#480 Schnitt 1, pure): which key does what in a Mac list (arrows choose, space completes only where the swipe offers done, delete asks first, nothing while a text field has focus); `TaskListView` wires it up on the Mac only (`onKeyPress`, `ChosenRows` keeps the chosen row per list so it survives detail and back), `Paper.wideListRow(selected:)` paints it accent 12 %, hover grey 7 %; Schnitt 2: the start page's "Now" rows take the same keys on the Mac only (`StartPage.macNowRow`/`keyed`, `ChosenRows.start`; only the visible rows, 5 folded; list focus only from a click or when the writing line lets go, never on appear; iPhone and iPad rows unchanged), main window at least 760 × 520 pt of content

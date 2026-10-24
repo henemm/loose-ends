@@ -283,6 +283,9 @@ struct KnaeuelRow: View {
                     .lineLimit(2)
                     .anchorPreference(key: KnaeuelAnchors.self, value: .bounds) { [.title: $0] }
                 HStack(spacing: 8) {
+                    // The word first (Henning, 2026-10-24, build 110): the sign alone did not say why
+                    // the task stands up here.
+                    Text("The Knäuel")
                     Text(KnaeuelSince.words(from: task.capturedAt))
                     if let context = (task.contexts ?? []).sorted(by: { $0.sortOrder < $1.sortOrder }).first {
                         HStack(spacing: 3) {

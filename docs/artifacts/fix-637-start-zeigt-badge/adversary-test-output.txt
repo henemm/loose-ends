@@ -1,5 +1,3 @@
-[0;34m[sim][0m Testsperre belegt — warte (0 s, Platz 1 von 1 in der Warteliste). Halter: Worktree /Users/hem/Developer/loose-ends/.claude/worktrees/issue-659, Befehl sim-unit, PID 22241
-[0;34m[sim][0m Testsperre belegt — warte (31 s, Platz 1 von 2 in der Warteliste). Halter: Worktree /Users/hem/Developer/loose-ends/.claude/worktrees/issue-659, Befehl sim-unit, PID 22241
 Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
 [0;32m[sim][0m Simulator bereit (iPhone 17).
 [0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/NowRuleTests
@@ -11,37 +9,351 @@ Version: 3.2.1
 [36;1mnote: [0mBuilding targets in dependency order
 [36;1mnote: [0mTarget dependency graph (7 targets)
 [[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mCompile XCStrings[0m Localizable.xcstrings
+[[36mLooseEndsWatch[0m] [1mCopying[0m Localizable.strings
+[[36mLooseEndsWatch[0m] [1mCopying[0m Localizable.strings
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SideColumn.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CarryReminders.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m StartHeadline.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m MarginText.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m NextUpWidgetIntents.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m Subtasks.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m Subtasks.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m TaskActions.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m StartHeadline.swift
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftmodule -> LooseEndsWatch.swiftmodule
+[[36mLooseEndsWatch[0m] [1mCopy[0m x86_64-apple-watchos-simulator.swiftmodule -> LooseEndsWatch.swiftmodule
+[[36mLooseEndsWatch[0m] [1mCopy[0m x86_64-apple-watchos-simulator.swiftdoc -> LooseEndsWatch.swiftdoc
+[[36mLooseEndsWatch[0m] [1mCopy[0m x86_64-apple-watchos-simulator.abi.json -> LooseEndsWatch.abi.json
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftdoc -> LooseEndsWatch.swiftdoc
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos-simulator.abi.json -> LooseEndsWatch.abi.json
+[[36mLooseEndsWatch[0m] [1mCopy[0m x86_64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatch.swiftsourceinfo
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatch.swiftsourceinfo
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m NextUpWidgetIntents.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m CarryReminders.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m MarginText.swift
+[[36mLooseEndsWidgets[0m] [1mCompiling[0m SideColumn.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m MarginText.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m Subtasks.swift
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsWidgets.swiftsourceinfo
+[[36mLooseEndsWatch[0m] [1mCompiling[0m CarryReminders.swift
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsWidgets.swiftmodule
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEndsWidgets.swiftdoc
+[[36mLooseEndsWidgets[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsWidgets.abi.json
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TaskActions.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m TaskActions.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m NextUpWidgetIntents.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m StartHeadline.swift
+[[36mLooseEndsWatch[0m] [1mCompiling[0m SideColumn.swift
+[[36mLooseEndsShare[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsShare.swiftsourceinfo
+[[36mLooseEndsShare[0m] [1mCompiling[0m CarryReminders.swift
+[[36mLooseEndsShare[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsShare.swiftmodule
+[[36mLooseEndsShare[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEndsShare.swiftdoc
+[[36mLooseEndsShare[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsShare.abi.json
+[[36mLooseEndsShare[0m] [1mCompiling[0m StartHeadline.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m MarginText.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m TaskActions.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m Subtasks.swift
+[[36mLooseEndsShare[0m] [1mCompiling[0m SideColumn.swift
+[[36mLooseEndsWidgets[0m] [1mLinking[0m LooseEndsWidgets.debug.dylib
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch.debug.dylib
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch.debug.dylib
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWidgets' from project 'LooseEnds')
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWatch' from project 'LooseEnds')
+[[36mLooseEndsWidgets[0m] [1mLinking[0m LooseEndsWidgets
+[[36mLooseEnds[0m] [1mCompiling[0m TaskDetailView.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEnds/Views/TaskDetailView.swift:141:22: [33m'+' was deprecated in iOS 26.0: Use string interpolation on `Text` instead: `Text("Hello \(name)")` [#DeprecatedDeclaration][0m
+139 |                         .tracking(1)
+[32m140 |                      + Text(verbatim: "  ")[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEnds/Views/TaskDetailView.swift:140:22: [33m'+' was deprecated in iOS 26.0: Use string interpolation on `Text` instead: `Text("Hello \(name)")` [#DeprecatedDeclaration][0m
+138 |                         .font(.caption2.weight(.semibold))
+[32m139 |                         .tracking(1)[0m
+[[36mLooseEnds[0m] [1mCompiling[0m Knaeuel.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SidebarView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m FieldSettingsView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskInteractions.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEnds/Views/Beads.swift:107:34: [33mmain actor-isolated static property 'inset' can not be referenced from a nonisolated context[0m
+ 43 |     static let height: CGFloat = 47
+[32m 44 |     /// The string's ends sit 10 pt in; the beads start 40 pt in and stand 40 pt apart while there is room.[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEnds/Views/Beads.swift:108:50: [33mmain actor-isolated static property 'inset' can not be referenced from a nonisolated context[0m
+ 43 |     static let height: CGFloat = 47
+[32m 44 |     /// The string's ends sit 10 pt in; the beads start 40 pt in and stand 40 pt apart while there is room.[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEnds/Views/Beads.swift:116:28: [33mmain actor-isolated static property 'firstBead' can not be referenced from a nonisolated context[0m
+ 44 |     /// The string's ends sit 10 pt in; the beads start 40 pt in and stand 40 pt apart while there is room.
+[32m 45 |     private static let inset: CGFloat = 10[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEnds/Views/Beads.swift:116:40: [33mmain actor-isolated static property 'inset' can not be referenced from a nonisolated context[0m
+ 43 |     static let height: CGFloat = 47
+[32m 44 |     /// The string's ends sit 10 pt in; the beads start 40 pt in and stand 40 pt apart while there is room.[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEnds/Views/Beads.swift:116:48: [33mmain actor-isolated static property 'radius' can not be referenced from a nonisolated context[0m
+ 46 |     private static let firstBead: CGFloat = 40
+[32m 47 |     private static let spacing: CGFloat = 40[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEnds/Views/Beads.swift:117:36: [33mmain actor-isolated static property 'spacing' can not be referenced from a nonisolated context[0m
+ 45 |     private static let inset: CGFloat = 10
+[32m 46 |     private static let firstBead: CGFloat = 40[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEnds/Views/Beads.swift:117:74: [33mmain actor-isolated static property 'spacing' can not be referenced from a nonisolated context[0m
+ 45 |     private static let inset: CGFloat = 10
+[32m 46 |     private static let firstBead: CGFloat = 40[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEnds/Views/Beads.swift:119:21: [33mmain actor-isolated static property 'firstBead' can not be referenced from a nonisolated context[0m
+ 44 |     /// The string's ends sit 10 pt in; the beads start 40 pt in and stand 40 pt apart while there is room.
+[32m 45 |     private static let inset: CGFloat = 10[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEnds/Views/Beads.swift:120:26: [33mmain actor-isolated static property 'inset' can not be referenced from a nonisolated context[0m
+ 43 |     static let height: CGFloat = 47
+[32m 44 |     /// The string's ends sit 10 pt in; the beads start 40 pt in and stand 40 pt apart while there is room.[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEnds/Views/Beads.swift:120:48: [33mmain actor-isolated static property 'inset' can not be referenced from a nonisolated context[0m
+ 43 |     static let height: CGFloat = 47
+[32m 44 |     /// The string's ends sit 10 pt in; the beads start 40 pt in and stand 40 pt apart while there is room.[0m
+[[36mLooseEnds[0m] [1mCompiling[0m Beads.swift
+[[36mLooseEnds[0m] [1mCompiling[0m StartPage.swift
+[[36mLooseEnds[0m] [1mCompiling[0m TaskRow.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ViewRules.swift
+[[36mLooseEndsWatch[0m] [1mCreate Universal Binary[0m LooseEndsWatch.debug.dylib
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWatch' from project 'LooseEnds')
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch
+[[36mLooseEndsWatch[0m] [1mCreate Universal Binary[0m LooseEndsWatch
+[[36mLooseEndsWidgets[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsShare[0m] [1mLinking[0m LooseEndsShare.debug.dylib
 [[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mCompiling[0m TaskListView.swift
 [[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
 [[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mCompiling[0m TaskActions.swift
+[[36mLooseEnds[0m] [1mCompiling[0m SideColumn.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEnds/Views/SubtasksSection.swift:110:37: [33m'+' was deprecated in iOS 26.0: Use string interpolation on `Text` instead: `Text("Hello \(name)")` [#DeprecatedDeclaration][0m
+108 |         traits.enumerated().reduce(Text(verbatim: "")) { line, item in
+[32m109 |             let separator = item.offset == 0 ? Text(verbatim: "") : Text(verbatim: " · ").foregroundStyle(.secondary)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEnds/Views/SubtasksSection.swift:110:25: [33m'+' was deprecated in iOS 26.0: Use string interpolation on `Text` instead: `Text("Hello \(name)")` [#DeprecatedDeclaration][0m
+108 |         traits.enumerated().reduce(Text(verbatim: "")) { line, item in
+[32m109 |             let separator = item.offset == 0 ? Text(verbatim: "") : Text(verbatim: " · ").foregroundStyle(.secondary)[0m
+[[36mLooseEnds[0m] [1mCompiling[0m SubtasksSection.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ReviewNote.swift
+[36;1mnote: [0mUsing stub executor library without Swift entry point. (in target 'LooseEndsShare' from project 'LooseEnds')
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEnds/Notifications/DueNotificationCenter.swift:73:23: [33mresult of call to 'assumeIsolated(_:file:line:)' is unused [#NoUsage][0m
+ 71 |             forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: NSUbiquitousKeyValueStore.default, queue: .main
+[32m 72 |         ) { [weak self] _ in[0m
+[[36mLooseEnds[0m] [1mCompiling[0m DueNotificationCenter.swift
+[[36mLooseEnds[0m] [1mCompiling[0m EditorPage.swift
+[[36mLooseEndsShare[0m] [1mLinking[0m LooseEndsShare
+[[36mLooseEnds[0m] [1mCompiling[0m StartHeadline.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CarryReminders.swift
+[[36mLooseEnds[0m] [1mCompiling[0m CatalogPage.swift
+[[36mLooseEnds[0m] [1mCompiling[0m MarginText.swift
+[[36mLooseEnds[0m] [1mCompiling[0m NextUpWidgetIntents.swift
+[[36mLooseEnds[0m] [1mCompiling[0m Subtasks.swift
+[[36mLooseEnds[0m] [1mCompiling[0m FieldEditorView.swift
+[[36mLooseEnds[0m] [1mCompiling[0m InboxDrawerView.swift
+[[36mLooseEndsShare[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEnds.abi.json
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEnds.swiftdoc
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEnds.swiftmodule
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds.debug.dylib
+[[36mLooseEnds[0m] [1mCompile XCStrings[0m Localizable.xcstrings
+[[36mLooseEnds[0m] [1mCopying[0m Localizable.strings
+[[36mLooseEnds[0m] [1mCopying[0m Localizable.strings
+[[36mLooseEndsUITests[0m] [1mCompiling[0m DriveSmokeTests.swift
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEnds' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsShare.appex -> LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEndsUITests.swiftdoc
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsUITests.abi.json
 [[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsShare.appex
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueNotificationCenterTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueStateTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueTodayTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueWordsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DurationRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m EnergyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m EnrichmentTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m FieldEditTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m FieldOriginTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m GuardrailCorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ImportanceUrgencyRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m InboxDrawerTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEndsTests/DueNotificationCenterTests.swift:65:39: [33m'#require(_:_:)' is redundant because 'TaskPlace(name: "Büro", latitude: 51.99563, longitude: 7.71357, event: .arrive)' never equals 'nil' (from macro 'require')[0m
+ 63 |         func placed(_ raw: String) throws -> TaskItem {
+[32m 64 |             let task = try task(raw)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEndsTests/DueNotificationCenterTests.swift:74:45: [33m'#require(_:_:)' is redundant because 'calendar.date(bySettingHour: hour, minute: minute, second: 0, of: tomorrow)' never equals 'nil' (from macro 'require')[0m
+ 72 |             task.status = .active
+[32m 73 |             if let hour {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEndsTests/DueNotificationCenterTests.swift:173:37: [33m'#require(_:_:)' is redundant because 'fixture.calendar.date(byAdding: .day, value: -2, to: fixture.tomorrow)' never equals 'nil' (from macro 'require')[0m
+171 |         let task = TaskItem(rawText: raw)
+[32m172 |         task.status = .active[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m AppVersionTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m AttachmentKindTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CalendarAskTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CalendarSyncTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureComplication.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureComplicationTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CarryRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CatalogServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CloudKitSchemaInitializerTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContentsIndexTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordForgettingTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordLearningCoordinatorTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m IntentExecutionTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m KnaeuelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m KnaeuelThreadTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m LaunchTimingsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m LeaveOneOut.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m LeftoversTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ListPolishTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ListSummaryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MainWindowPlacementTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MarginMarkTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementData.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementDataTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementFieldScopeTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordLearningReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordLearningTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ConventionBaselineTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ConventionCorpus.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m Corpus.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateExpressionParserTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateParserCorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateTitleReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DetailFieldsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DetailLayoutTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueDateRuleTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEndsTests/PlaceNotificationCenterTests.swift:63:39: [33m'#require(_:_:)' is redundant because 'TaskPlace(name: name, latitude: 51.99563, longitude: 7.71357, event: event)' never equals 'nil' (from macro 'require')[0m
+ 61 |             let task = TaskItem(rawText: raw)
+[32m 62 |             task.status = .active[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEndsTests/PlaceNotificationCenterTests.swift:142:37: [33m'#require(_:_:)' is redundant because 'TaskPlace(name: "Büro", latitude: 52.0, longitude: 7.8, event: .arrive)' never equals 'nil' (from macro 'require')[0m
+140 |         #expect(fixture.recorder.removed.isEmpty)
+[32m141 | [0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m PeopleRetiredTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PhoneRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceDeliveryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceEditingTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceNotificationCenterTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceNotificationsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PressureOrderTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProcessCacheTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProjectLinesTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProjectNameRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m QuickDueTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleBaseline.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleLeaveOneOutTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleTriggerTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SavedPlacesStoreTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SavedPlacesTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ScanPDFTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistency.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistencyReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistencyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SharedAttachmentFileTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SharedAttachmentTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SharedContentTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SideColumnTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRun.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRunTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MenuBarThreadImageTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelContainerFactoryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelSeamTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NewDateRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NextRankTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NextUpWidgetTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NoteLinksTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NowRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m OnboardingFlowTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PendingCompletionsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SiriCaptureTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SiriFieldsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SiriRepeatMappingTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechAccessTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechDiagnosisTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechLatencyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechReadinessTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m StartHeadlineTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m StartMetricsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m StartViewsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SubtaskListsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SubtaskRulesTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RealModelGateTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RealModelLatencyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RealModelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReanalysisTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RecognitionRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReminderEntityTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReminderTranslationTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatAnchorTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatEditTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReviewTrayTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RevisionServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RowKeyActionTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEndsTests/SubtaskTests.swift:108:35: [33m'#require(_:_:)' is redundant because 'TaskPlace(name: "Markt", latitude: 53.55, longitude: 9.93, event: .arrive)' never equals 'nil' (from macro 'require')[0m
+106 |         milk.dueHasTime = true
+[32m107 |         milk.contexts = [garden, phone][0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/LooseEndsTests/TaskActionsTests.swift:172:37: [33m'#require(_:_:)' is redundant because 'calendar.date(byAdding: .hour, value: 5, to: wednesday)' never equals 'nil' (from macro 'require')[0m
+170 |         let task = TaskItem(rawText: "Zahnarzt anrufen")
+[32m171 |         let wednesday = try day(2026, 9, 16, in: calendar)[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m SubtaskTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SyncStatusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TaskActionsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TaskAttachmentModelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TaskPlaceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TextFormRuleReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ThreadShapeTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TimeExpressionParserTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TitleFidelityPromptTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TitleRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m WaitingOnTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m WaveformTests.swift
 [[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsTests.swiftsourceinfo
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsTests.swiftmodule
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsTests.abi.json
+[[36mLooseEndsTests[0m] [1mLinking[0m LooseEndsTests
+[[36mLooseEndsTests[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEndsUITests[0m] [1mLinking[0m LooseEndsUITests
 [[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
-Test Suite 'Selected tests' started at 2026-10-24 09:13:50.084.
-Test Suite 'LooseEndsTests.xctest' started at 2026-10-24 09:13:50.087.
-Test Suite 'LooseEndsTests.xctest' passed at 2026-10-24 09:13:50.087.
+[[36mLooseEndsUITests[0m] [1mExtract App Intents Metadata[0m
+Test Suite 'Selected tests' started at 2026-10-24 09:55:17.968.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-24 09:55:17.969.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-24 09:55:17.969.
 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
-Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.004) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
 [1mTest run started.[0m
 Suite "Now on the start screen" started
-    [32m✔[0m "Due today before the rest of Next up; a task left from yesterday stands last, asking for a new date (#518, #637)" (0.015 seconds)
-    [32m✔[0m "A task lined up and due today stands once, in the today group" (0.004 seconds)
-    [32m✔[0m "Lined up and left from earlier: the user's lining up counts, it stands with the lined-up tasks (#637)" (0.004 seconds)
-    [32m✔[0m "Left from earlier without a rank stands last, the oldest deadline first (#637)" (0.004 seconds)
-    [32m✔[0m "Due earlier today is today, not overdue: the day counts, not the hour" (0.004 seconds)
-    [32m✔[0m "Due today sorts by hour, earliest first" (0.003 seconds)
-    [32m✔[0m "The rest of Next up keeps its own order" (0.003 seconds)
-    [32m✔[0m "Loose ends: the oldest first, blocked, parked and done stay out (#518)" (0.005 seconds)
-    [32m✔[0m "Blocked, done and parked stay out, and so does a subtask without a date of its own, even lined up (#565)" (0.004 seconds)
-    [32m✔[0m "Due later without a rank stays out" (0.004 seconds)
-    [32m✔[0m "Due later but lined up stands with the lined-up tasks" (0.003 seconds)
+    [32m✔[0m "Due today before the rest of Next up; a task left from yesterday stands last, asking for a new date (#518, #637)" (0.009 seconds)
+    [32m✔[0m "A task lined up and due today stands once, in the today group" (0.002 seconds)
+    [32m✔[0m "Lined up and left from earlier: the user's lining up counts, it stands with the lined-up tasks (#637)" (0.002 seconds)
+    [32m✔[0m "Left from earlier without a rank stands last, the oldest deadline first (#637)" (0.002 seconds)
+    [32m✔[0m "Due earlier today is today, not overdue: the day counts, not the hour" (0.002 seconds)
+    [32m✔[0m "Due today sorts by hour, earliest first" (0.002 seconds)
+    [32m✔[0m "The rest of Next up keeps its own order" (0.002 seconds)
+    [32m✔[0m "Loose ends: the oldest first, blocked, parked and done stay out (#518)" (0.004 seconds)
+    [32m✔[0m "Blocked, done and parked stay out, and so does a subtask without a date of its own, even lined up (#565)" (0.002 seconds)
+    [32m✔[0m "Due later without a rank stays out" (0.002 seconds)
+    [32m✔[0m "Due later but lined up stands with the lined-up tasks" (0.002 seconds)
     [32m✔[0m "Nothing in, nothing out" (0.001 seconds)
-    [32m✔[0m "Now holds exactly Due today, Next up and what needs a new date; the icon counts the same (#584, #637)" (0.004 seconds)
-    [32m✔[0m "Due today and the badge are unchanged: a lined-up task due today still stands in Due today (#299)" (0.011 seconds)
-    [32m✔[0m "Henning's case: four deadlines passed, one of them lined up, one more lined up: icon and Now say 5 (#637)" (0.004 seconds)
-    [32m✔[0m "The icon number is the number over Now, rows plus a counting Knäuel, whatever the mix (#637, #643)" (0.006 seconds)
-Suite "Now on the start screen" passed after 0.089 seconds
-[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-wobbly-beaming-pie/Logs/Test/Test-LooseEnds-2026.10.24_09-13-38-+0200.xcresult
+    [32m✔[0m "Now holds exactly Due today, Next up and what needs a new date; the icon counts the same (#584, #637)" (0.002 seconds)
+    [32m✔[0m "Due today and the badge are unchanged: a lined-up task due today still stands in Due today (#299)" (0.002 seconds)
+    [32m✔[0m "Henning's case: four deadlines passed, one of them lined up, one more lined up: icon and Now say 5 (#637)" (0.002 seconds)
+    [32m✔[0m "The icon number is the number over Now, rows plus a counting Knäuel, whatever the mix (#637, #643)" (0.004 seconds)
+Suite "Now on the start screen" passed after 0.050 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-wobbly-beaming-pie/Logs/Test/Test-LooseEnds-2026.10.24_09-54-38-+0200.xcresult
 [32;1mTest Succeeded[0m
 [36;1mTesting started[0m
 [0;32m[sim][0m Unit-Tests bestanden.
@@ -50,7 +362,6 @@ Suite "Now on the start screen" passed after 0.089 seconds
 [sim] Latenzschutz (#274):
 [sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
 [sim]   The final text keeps the key words – NICHT gemessen: nicht im Log
-[0;34m[sim][0m Testsperre belegt — warte (0 s, Platz 2 von 2 in der Warteliste). Halter: keiner, Sperre frei, Vorrang hat 01792825998894052000-24878
 Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
 [0;32m[sim][0m Simulator bereit (iPhone 17).
 [0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/CarryRemindersTests
@@ -68,30 +379,30 @@ Version: 3.2.1
 [[36mLooseEnds[0m] [1mProcessing[0m Info.plist
 [[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
 [[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
-Test Suite 'Selected tests' started at 2026-10-24 09:14:19.249.
-Test Suite 'LooseEndsTests.xctest' started at 2026-10-24 09:14:19.249.
-Test Suite 'LooseEndsTests.xctest' passed at 2026-10-24 09:14:19.250.
+Test Suite 'Selected tests' started at 2026-10-24 09:55:35.606.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-24 09:55:35.608.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-24 09:55:35.608.
 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
-Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
 [1mTest run started.[0m
 Suite "CarryReminders" started
-    [32m✔[0m "Morning: every day at the morning time, an invitation only: the count, never what needs a new date (#551)" (0.013 seconds)
+    [32m✔[0m "Morning: every day at the morning time, an invitation only: the count, never what needs a new date (#551)" (0.016 seconds)
     [32m✔[0m "Morning counts what one can act on: parked and waiting tasks neither count nor are named (#551)" (0.006 seconds)
     [32m✔[0m "Same minute, one notification: the morning at the reminder time names today's day-only tasks (#551)" (0.004 seconds)
-    [32m✔[0m "Evening: due that day, then the three evenings after, then Mondays, until a new date" (0.003 seconds)
-    [32m✔[0m "Evening: an older one comes back on Monday only; a passed evening time skips today" (0.003 seconds)
+    [32m✔[0m "Evening: due that day, then the three evenings after, then Mondays, until a new date" (0.002 seconds)
+    [32m✔[0m "Evening: an older one comes back on Monday only; a passed evening time skips today" (0.002 seconds)
     [32m✔[0m "A set evening time is used" (0.002 seconds)
-    [32m✔[0m "Done, parked, blocked and undated tasks never need a new date; a subtask does, like a task (#550)" (0.003 seconds)
-    [32m✔[0m "Evening: a due time counts after it passed, a later one comes the next evening (#550)" (0.003 seconds)
-    [32m✔[0m "Evening: a day-only date counts after the reminder time; one later than the evening waits a day (#550)" (0.003 seconds)
-    [32m✔[0m "Switched off plans nothing; each switch plans only its own" (0.004 seconds)
+    [32m✔[0m "Done, parked, blocked and undated tasks never need a new date; a subtask does, like a task (#550)" (0.002 seconds)
+    [32m✔[0m "Evening: a due time counts after it passed, a later one comes the next evening (#550)" (0.002 seconds)
+    [32m✔[0m "Evening: a day-only date counts after the reminder time; one later than the evening waits a day (#550)" (0.002 seconds)
+    [32m✔[0m "Switched off plans nothing; each switch plans only its own" (0.003 seconds)
     [32m✔[0m "The stored choice falls back to both; the switches map onto it" (0.001 seconds)
-    [32m✔[0m "Today again makes every listed open task due today, as a user revision without a time" (0.009 seconds)
-    [32m✔[0m "Anything from before today stays in Now, Due and the badge until it has a new date (#518, #584, #637)" (0.003 seconds)
-    [32m✔[0m "Henning's case: the morning's icon number is the number of rows in Now, 5 (#637, one number everywhere)" (0.004 seconds)
-    [32m✔[0m "All to tomorrow moves what still needs a date; one given a new date meanwhile stays (#550)" (0.004 seconds)
-Suite "CarryReminders" passed after 0.071 seconds
-[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-wobbly-beaming-pie/Logs/Test/Test-LooseEnds-2026.10.24_09-14-13-+0200.xcresult
+    [32m✔[0m "Today again makes every listed open task due today, as a user revision without a time" (0.007 seconds)
+    [32m✔[0m "Anything from before today stays in Now, Due and the badge until it has a new date (#518, #584, #637)" (0.002 seconds)
+    [32m✔[0m "Henning's case: the morning's icon number is the number of rows in Now, 5 (#637, one number everywhere)" (0.003 seconds)
+    [32m✔[0m "All to tomorrow moves what still needs a date; one given a new date meanwhile stays (#550)" (0.003 seconds)
+Suite "CarryReminders" passed after 0.067 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-wobbly-beaming-pie/Logs/Test/Test-LooseEnds-2026.10.24_09-55-28-+0200.xcresult
 [32;1mTest Succeeded[0m
 [36;1mTesting started[0m
 [0;32m[sim][0m Unit-Tests bestanden.

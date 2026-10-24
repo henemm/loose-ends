@@ -151,8 +151,9 @@ struct TaskInteractions {
         .accessibilityIdentifier("menuDelete")
     }
 
-    /// "The Knäuel" and "Counts" (#643, #645), after Next up: each only while its field is on or the
-    /// task carries it. Over the budget "Counts (5 of 5)" stands grey. A subtask gets neither.
+    /// "The Knäuel" and "Collect a bead" (#643, #645; the words from Henning's look at build 110), after
+    /// Next up: each only while its field is on or the task carries it. Over the budget "Collect a bead
+    /// (5 of 5)" stands grey. A subtask gets neither.
     @ViewBuilder
     func driveEntries(_ task: TaskItem) -> some View {
         if task.parent == nil {
@@ -166,14 +167,14 @@ struct TaskInteractions {
                     .accessibilityIdentifier("menuKnaeuel")
             }
             if task.countsAt != nil {
-                Button("No longer counts", systemImage: "circle.slash") { toggleCounts(task) }
+                Button("No bead", systemImage: "circle.slash") { toggleCounts(task) }
                     .accessibilityIdentifier("menuCountsRelease")
             } else if fields.isOn(.counts) {
                 if TaskActions.canCount(task, among: tasks) {
-                    Button("Counts", systemImage: "circle") { toggleCounts(task) }
+                    Button("Collect a bead", systemImage: "circle") { toggleCounts(task) }
                         .accessibilityIdentifier("menuCounts")
                 } else {
-                    Button("Counts (\(TaskActions.countsBudget) of \(TaskActions.countsBudget))", systemImage: "circle") {}
+                    Button("Collect a bead (\(TaskActions.countsBudget) of \(TaskActions.countsBudget))", systemImage: "circle") {}
                         .disabled(true)
                         .accessibilityIdentifier("menuCountsFull")
                 }

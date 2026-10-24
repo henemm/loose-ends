@@ -33,8 +33,11 @@ struct PearlGlyph: View {
 /// came (the completion moment, ADR-14), grey after. Without a bead the caller leaves the row out.
 struct WeekString: View {
     let beads: [ViewRules.Bead]
+    /// The string's length (#655): the places still empty stand as fine dots. Nil draws no dots.
+    var length: Int?
     @State private var fresh = false
-    @State private var seen: Int?
+    /// The newest bead the string has shown; a new one turns green, however the count changes.
+    @State private var seen: String?
     @Environment(\.dynamicTypeSize) private var typeSize
 
     static let height: CGFloat = 47
@@ -48,7 +51,8 @@ struct WeekString: View {
         let metrics = StartMetrics(typeSize)
         GeometryReader { geometry in
             let width = geometry.size.width
-            let centers = Self.centers(count: beads.count, width: width)
+            let places = Self.centers(count: max(beads.count, length ?? 0), width: width)
+            let centers = Array(places.prefix(beads.count))
             ZStack(alignment: .topLeading) {
                 Canvas { context, size in
                     context.stroke(Self.string(width: size.width), with: .color(.secondary),
@@ -57,6 +61,11 @@ struct WeekString: View {
                         let bead = Path(ellipseIn: CGRect(x: center.x - Self.radius, y: center.y - Self.radius,
                                                           width: 2 * Self.radius, height: 2 * Self.radius))
                         context.fill(bead, with: .color(.secondary))
+                    }
+                    // The places still to fill (#655, Henning: "feine Punkte"): the goal without a number.
+                    for place in places.dropFirst(beads.count) {
+                        let dot = Path(ellipseIn: CGRect(x: place.x - 1.5, y: place.y - 1.5, width: 3, height: 3))
+                        context.fill(dot, with: .color(.secondary.opacity(0.45)))
                     }
                 }
                 if let last = centers.last {
@@ -71,12 +80,13 @@ struct WeekString: View {
         }
         .frame(height: metrics(Self.height))
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("\(beads.count) beads this week"))
+        .accessibilityLabel(length.map { Text("\(beads.count) of \($0) beads on the string") } ?? Text("\(beads.count) beads on the string"))
         .accessibilityIdentifier("weekString")
-        .onChange(of: beads.count, initial: true) { _, count in
-            // Green only for a bead that came while the string was on screen, never on appear.
-            defer { seen = count }
-            guard let seen, count > seen else { return }
+        .onChange(of: beads.last?.id, initial: true) { _, last in
+            // Green only for a bead that came while the string was on screen, never on appear. By
+            // the newest bead, not the count: a full string stays at seven when the eighth comes.
+            defer { seen = last ?? "" }
+            guard seen != nil, let last, last != seen else { return }
             fresh = true
         }
         .task(id: fresh) {
@@ -114,10 +124,12 @@ struct WeekString: View {
     }
 }
 
-/// "This week" on the start screen (#645, #647): the caption, the string while the week has a bead,
-/// and "Dafür" while a sentence is set; nothing without either.
+/// "Beads" on the start screen (#645, #647, #655): the caption, the string of five with its empty
+/// places as dots, and under it the sentence: "For the beads: …" while the string fills, "The string is
+/// full. For the beads: …" once it is (the win, Henning 2026-10-24); the next bead starts a new string.
+/// Shown once a bead exists or a sentence is set; before that nothing, as before.
 struct WeekStringRows: View {
-    let beads: [ViewRules.Bead]
+    let string: ViewRules.BeadString
     /// Every task, for the Sunday rule.
     let all: [TaskItem]
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -125,18 +137,20 @@ struct WeekStringRows: View {
 
     var body: some View {
         let reward = fieldSettings?.reward ?? ""
-        // While the sentence of the day carries the string (#646), it does not stand here again.
-        let spoken = ViewRules.weekToSpeakOf(in: all) != nil
-        if (!beads.isEmpty && !spoken) || !reward.isEmpty {
+        let inUse = !string.beads.isEmpty || string.filled > 0 || !reward.isEmpty
+        if inUse {
             let metrics = StartMetrics(typeSize)
-            ZoneCaption("This week")
-            if !beads.isEmpty, !spoken {
-                WeekString(beads: beads)
+            ZoneCaption("Beads")
+            WeekString(beads: string.beads, length: ViewRules.stringLength)
+                .listRowSeparator(.hidden)
+                .startRow(metrics)
+                .paperRow()
+            if string.isFull {
+                FullStringLine(reward: reward)
                     .listRowSeparator(.hidden)
                     .startRow(metrics)
                     .paperRow()
-            }
-            if !reward.isEmpty, let fieldSettings {
+            } else if !reward.isEmpty, let fieldSettings {
                 RewardLine(store: fieldSettings)
                     .listRowSeparator(.hidden)
                     .startRow(metrics)
@@ -146,9 +160,33 @@ struct WeekStringRows: View {
     }
 }
 
-/// "Dafür: Samstag Kino." (#647, Milkman's bundling at its simplest): one free sentence for the week,
-/// in italics under the string. A tap puts the cursor into it; Return or leaving saves; nothing is
-/// checked. Empty means no line, so the first sentence is written in Settings › Fields.
+/// The win (#655): the string is full, the sentence is due. In the ink, not green: the green was the
+/// fifth bead's moment (ADR-14). It stands until the next bead starts a new string.
+struct FullStringLine: View {
+    let reward: String
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    var body: some View {
+        let metrics = StartMetrics(typeSize)
+        Group {
+            if reward.isEmpty {
+                Text("The string is full.")
+            } else {
+                Text("The string is full. For the beads: \(reward).")
+            }
+        }
+        .font(.system(size: metrics(16), design: .serif))
+        .italic()
+        .foregroundStyle(.primary)
+        .padding(.vertical, 4)
+        .padding(.leading, 2)
+        .accessibilityIdentifier("fullStringLine")
+    }
+}
+
+/// "Für die Perlen: Samstag Kino." (#647, Milkman's bundling at its simplest): one free sentence for
+/// the beads, in italics under the string. A tap puts the cursor into it; Return or leaving saves;
+/// nothing is checked. Empty means no line, so the first sentence is written in Settings › Fields.
 struct RewardLine: View {
     let store: FieldSettingsStore
     @State private var draft = ""
@@ -159,10 +197,10 @@ struct RewardLine: View {
     var body: some View {
         let metrics = StartMetrics(typeSize)
         HStack(alignment: .firstTextBaseline, spacing: 4) {
-            Text("For it:")
+            Text("For the beads:")
                 .accessibilityHidden(true)
             if editing {
-                TextField("For it", text: $draft)
+                TextField("For the beads", text: $draft)
                     .textFieldStyle(.plain)
                     .focused($focused)
                     .submitLabel(.done)
@@ -188,7 +226,7 @@ struct RewardLine: View {
             if !isFocused, editing { commit() }
         }
         .accessibilityElement(children: .contain)
-        .accessibilityLabel(Text("For it: \(store.reward)"))
+        .accessibilityLabel(Text("For the beads: \(store.reward)"))
         .accessibilityIdentifier("rewardLine")
     }
 

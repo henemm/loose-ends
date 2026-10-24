@@ -638,14 +638,14 @@ struct TaskDetailView: View {
                         PearlGlyph()
                             .frame(width: 30, height: 10)
                         if task.isKnaeuel {
-                            Text("Counts always, it is the Knäuel")
+                            Text("Collects a bead always, it is the Knäuel")
                         } else {
-                            Text("Counts")
+                            Text("Collects a bead")
                         }
                     }
                     Spacer()
                     if task.countsAt != nil {
-                        Button("Not counting", action: toggleCounts)
+                        Button("No bead", action: toggleCounts)
                             .buttonStyle(.borderless)
                             .accessibilityIdentifier("detailReleaseCounts")
                     }
@@ -672,14 +672,14 @@ struct TaskDetailView: View {
                     .accessibilityIdentifier("menuKnaeuel")
             }
             if task.countsAt != nil {
-                Button("No longer counts", systemImage: "circle.slash", action: toggleCounts)
+                Button("No bead", systemImage: "circle.slash", action: toggleCounts)
                     .accessibilityIdentifier("menuCountsRelease")
             } else if settings.isOn(.counts) {
                 if TaskActions.canCount(task, among: allTasks) {
-                    Button("Counts", systemImage: "circle", action: toggleCounts)
+                    Button("Collect a bead", systemImage: "circle", action: toggleCounts)
                         .accessibilityIdentifier("menuCounts")
                 } else {
-                    Button("Counts (\(TaskActions.countsBudget) of \(TaskActions.countsBudget))", systemImage: "circle") {}
+                    Button("Collect a bead (\(TaskActions.countsBudget) of \(TaskActions.countsBudget))", systemImage: "circle") {}
                         .disabled(true)
                         .accessibilityIdentifier("menuCountsFull")
                 }
