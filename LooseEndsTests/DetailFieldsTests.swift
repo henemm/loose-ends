@@ -10,16 +10,16 @@ import Testing
     func order() {
         #expect(DetailField.allCases.map(\.group) == [.what, .what, .when, .when, .when, .when,
                                                        .weight, .weight, .weight, .weight, .filing, .filing,
-                                                       .connection, .connection])
+                                                       .connection, .connection, .drive, .drive])
         #expect(DetailField.allCases.first == .notes)
-        #expect(DetailField.allCases.last == .waitingOn)
+        #expect(DetailField.allCases.last == .counts)
     }
 
     @Test("The standard: on only Note, Attachments, Calendar, Duration and Tags; Due is fixed and always on")
     func standard() {
         let standard = DetailFieldSettings.standard
         #expect(standard.on == [.notes, .attachments, .calendar, .duration, .contexts])
-        for field in [DetailField.importance, .urgency, .energy, .repeatRule, .place, .project, .subtasks, .waitingOn] {
+        for field in [DetailField.importance, .urgency, .energy, .repeatRule, .place, .project, .subtasks, .waitingOn, .knaeuel, .counts] {
             #expect(!standard.isOn(field), "\(field) is off by default")
         }
         #expect(standard.isOn(.dueDate), "fixed")
@@ -53,9 +53,10 @@ import Testing
         #expect(standard == [[.notes, .attachments], [.calendar], [.duration], [.contexts]])
         let everything = DetailFields.offered(settings: .everything, carried: [.dueDate], hasDueDate: true, topLevel: true)
         #expect(everything == [[.notes, .attachments], [.repeatRule, .calendar, .place],
-                               [.importance, .urgency, .duration, .energy], [.contexts, .project], [.subtasks, .waitingOn]])
+                               [.importance, .urgency, .duration, .energy], [.contexts, .project], [.subtasks, .waitingOn],
+                               [.knaeuel, .counts]])
         let subtask = DetailFields.offered(settings: .everything, carried: [], hasDueDate: false, topLevel: false)
-        #expect(subtask.last == [.contexts, .project], "no Connection on a subtask")
+        #expect(subtask.last == [.contexts, .project], "no Connection and no Drive on a subtask (#643)")
         #expect(subtask[1] == [.dueDate, .place], "no repeat and no calendar without a date")
     }
 
@@ -88,8 +89,11 @@ import Testing
         store.context.insert(blocker)
         task.blockedBy = [blocker]
 
+        task.knaeuelAt = Date()
+        task.countsAt = Date()
+
         let carried = DetailFields.carried(by: task)
-        #expect(carried == [.notes, .dueDate, .calendar, .importance, .duration, .project, .subtasks, .waitingOn])
+        #expect(carried == [.notes, .dueDate, .calendar, .importance, .duration, .project, .subtasks, .waitingOn, .knaeuel, .counts])
         // Off in the standard, carried anyway: importance, project, subtasks and waiting on stay out of the line
         // because they are set, not because they are off (rule 5).
         let offered = DetailFields.offered(settings: .standard, for: task)
@@ -103,6 +107,8 @@ import Testing
     final class Cloud: FieldSettingsCloud {
         var offeredFields: [String]?
         func setOfferedFields(_ fields: [String]) { offeredFields = fields }
+        var weekReward: String?
+        func setWeekReward(_ text: String) { weekReward = text }
     }
 
     @MainActor
@@ -134,6 +140,24 @@ import Testing
         #expect(store.takeCloud() == false)
         let fresh = FieldSettingsStore(defaults: defaults, cloud: cloud)
         #expect(fresh.settings.on == [.notes, .energy], "read back from the defaults")
+    }
+
+    @Test("Dafür (#647): trimmed, written to the defaults and iCloud, taken over from another device, read back")
+    @MainActor func reward() throws {
+        let (store, defaults, cloud) = try fixture()
+        #expect(store.reward.isEmpty)
+        store.setReward("  Samstag Kino ")
+        #expect(store.reward == "Samstag Kino")
+        #expect(defaults.string(forKey: FieldSettingsStore.rewardKey) == "Samstag Kino")
+        #expect(cloud.weekReward == "Samstag Kino")
+        cloud.weekReward = "Sonntag Kuchen"
+        #expect(store.takeCloud())
+        #expect(store.reward == "Sonntag Kuchen")
+        #expect(store.takeCloud() == false)
+        let fresh = FieldSettingsStore(defaults: defaults, cloud: cloud)
+        #expect(fresh.reward == "Sonntag Kuchen")
+        store.setReward("")
+        #expect(store.reward.isEmpty, "empty means no line")
     }
 
     @Test("Only the UI test process runs with every switch on; the unit tests see the standard")

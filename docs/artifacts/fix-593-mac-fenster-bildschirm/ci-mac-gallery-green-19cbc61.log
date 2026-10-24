@@ -1,0 +1,53 @@
+Mac Gallery (macOS)	Install XcodeGen	2026-10-23T15:23:11.8681900Z ✔︎ Bottle Manifest xcodegen (2.46.0)
+Mac Gallery (macOS)	Install XcodeGen	2026-10-23T15:23:13.4624270Z ✔︎ Bottle xcodegen (2.46.0)
+Mac Gallery (macOS)	Run Mac gallery	2026-10-23T15:33:31.3328250Z     ^[[32m✔^[[0m testCalendarAskDark (^[[31m44.514^[[0m seconds)
+Mac Gallery (macOS)	Run Mac gallery	2026-10-23T15:33:31.3328570Z     ^[[32m✔^[[0m testCalendarAskLight (^[[31m41.013^[[0m seconds)
+Mac Gallery (macOS)	Run Mac gallery	2026-10-23T15:33:31.3328870Z     ^[[32m✔^[[0m testGalleryDark (^[[31m46.148^[[0m seconds)
+Mac Gallery (macOS)	Run Mac gallery	2026-10-23T15:33:31.3329160Z     ^[[32m✔^[[0m testGalleryLight (^[[31m27.973^[[0m seconds)
+Mac Gallery (macOS)	Run Mac gallery	2026-10-23T15:33:31.3329900Z     ^[[32m✔^[[0m testLooseEndsTopDark (^[[31m102.331^[[0m seconds)
+Mac Gallery (macOS)	Run Mac gallery	2026-10-23T15:33:31.3330370Z     ^[[32m✔^[[0m testLooseEndsTopLight (^[[31m102.378^[[0m seconds)
+Mac Gallery (macOS)	Run Mac gallery	2026-10-23T15:33:31.3330720Z     ^[[32m✔^[[0m testPanelDark (^[[31m18.990^[[0m seconds)
+Mac Gallery (macOS)	Run Mac gallery	2026-10-23T15:33:31.3331030Z     ^[[32m✔^[[0m testPanelDiagnosis (^[[31m12.032^[[0m seconds)
+Mac Gallery (macOS)	Run Mac gallery	2026-10-23T15:33:31.3331360Z     ^[[32m✔^[[0m testPanelLight (^[[31m18.953^[[0m seconds)
+Mac Gallery (macOS)	Run Mac gallery	2026-10-23T15:33:31.3331700Z     ^[[32m✔^[[0m testPanelListening (^[[31m11.910^[[0m seconds)
+Mac Gallery (macOS)	Run Mac gallery	2026-10-23T15:33:31.3332130Z     ^[[32m✔^[[0m testPanelTypedGerman (^[[31m24.159^[[0m seconds)
+Mac Gallery (macOS)	Run Mac gallery	2026-10-23T15:33:31.3332530Z     ^[[32m✔^[[0m testSettingsDark (^[[31m16.239^[[0m seconds)
+Mac Gallery (macOS)	Run Mac gallery	2026-10-23T15:33:31.3332840Z     ^[[32m✔^[[0m testSettingsLight (^[[31m15.957^[[0m seconds)
+Mac Gallery (macOS)	Run Mac gallery	2026-10-23T15:33:31.3333220Z     ^[[32m✔^[[0m testWindowFromMenuBarFitsScreen (^[[31m34.155^[[0m seconds)
+Mac Gallery (macOS)	Run Mac gallery	2026-10-23T15:33:31.3333640Z Executed 14 tests, with 0 failures (0 unexpected) in 516.751 (516.762) seconds
+Mac Gallery (macOS)	Run Mac gallery	2026-10-23T15:33:31.3334490Z Executed 14 tests, with 0 failures (0 unexpected) in 516.751 (516.764) seconds
+Mac Gallery (macOS)	Run Mac gallery	2026-10-23T15:33:31.3334870Z Executed 14 tests, with 0 failures (0 unexpected) in 516.751 (516.765) seconds
+Mac Gallery (macOS)	Run the click test in the sandbox (#544)	2026-10-23T15:40:06.5171370Z     ^[[32m✔^[[0m testCompleteWithAnOpenSubtaskAsks (^[[31m50.839^[[0m seconds)
+Mac Gallery (macOS)	Run the click test in the sandbox (#544)	2026-10-23T15:40:06.5173490Z     ^[[32m✔^[[0m testFieldsOpensFromTheMiddleOfItsRow (^[[31m19.082^[[0m seconds)
+Mac Gallery (macOS)	Run the click test in the sandbox (#544)	2026-10-23T15:40:06.5174310Z     ^[[32m✔^[[0m testFileOpensTheOpenPanel (^[[31m30.706^[[0m seconds)
+Mac Gallery (macOS)	Run the click test in the sandbox (#544)	2026-10-23T15:40:06.5175330Z     ^[[32m✔^[[0m testFileOpensTheOpenPanelFromTheStartPage (^[[31m25.397^[[0m seconds)
+Mac Gallery (macOS)	Run the click test in the sandbox (#544)	2026-10-23T15:40:06.5175990Z     ^[[32m✔^[[0m testNoteTakesAClickAndIsSaved (^[[31m28.050^[[0m seconds)
+Mac Gallery (macOS)	Run the click test in the sandbox (#544)	2026-10-23T15:40:06.5176550Z     ^[[32m✔^[[0m testPhotoOpensThePhotoPicker (^[[31m25.624^[[0m seconds)
+Mac Gallery (macOS)	Run the click test in the sandbox (#544)	2026-10-23T15:40:06.5186580Z     ^[[32m✔^[[0m testSubtaskIsAddedByClickAndCheckedByClick (^[[31m27.253^[[0m seconds)
+Mac Gallery (macOS)	Run the click test in the sandbox (#544)	2026-10-23T15:40:06.5192170Z     ^[[32m✔^[[0m testSubtaskOpensItsOwnDetailAndLeadsBack (^[[31m34.346^[[0m seconds)
+Mac Gallery (macOS)	Run the click test in the sandbox (#544)	2026-10-23T15:40:06.5192810Z     ^[[32m✔^[[0m testTitleTakesAClickAndKeepsTheNewWords (^[[31m23.661^[[0m seconds)
+Mac Gallery (macOS)	Run the click test in the sandbox (#544)	2026-10-23T15:40:06.5193410Z     ^[[32m✔^[[0m testWritingLineOpensTheDrawerAndEscapeFoldsIt (^[[31m16.476^[[0m seconds)
+Mac Gallery (macOS)	Run the click test in the sandbox (#544)	2026-10-23T15:40:06.5193970Z Executed 10 tests, with 0 failures (0 unexpected) in 281.434 (281.444) seconds
+Mac Gallery (macOS)	Run the click test in the sandbox (#544)	2026-10-23T15:40:06.5195070Z Executed 10 tests, with 0 failures (0 unexpected) in 281.434 (281.445) seconds
+Mac Gallery (macOS)	Run the click test in the sandbox (#544)	2026-10-23T15:40:06.5195540Z Executed 10 tests, with 0 failures (0 unexpected) in 281.434 (281.446) seconds
+Mac Gallery (macOS)	Run the keyboard test in the sandbox (#480)	2026-10-23T15:49:45.6531660Z     ^[[32m✔^[[0m testArrowsSelectAndSpaceCompletes (^[[31m29.457^[[0m seconds)
+Mac Gallery (macOS)	Run the keyboard test in the sandbox (#480)	2026-10-23T15:49:45.6533090Z     ^[[32m✔^[[0m testClickOpensAndMarks (^[[31m32.716^[[0m seconds)
+Mac Gallery (macOS)	Run the keyboard test in the sandbox (#480)	2026-10-23T15:49:45.6534520Z     ^[[32m✔^[[0m testDeleteAsksFirst (^[[31m30.498^[[0m seconds)
+Mac Gallery (macOS)	Run the keyboard test in the sandbox (#480)	2026-10-23T15:49:45.6535550Z     ^[[32m✔^[[0m testSelectionPhotoDark (^[[31m25.127^[[0m seconds)
+Mac Gallery (macOS)	Run the keyboard test in the sandbox (#480)	2026-10-23T15:49:45.6537370Z     ^[[32m✔^[[0m testSelectionPhotoLight (^[[31m25.247^[[0m seconds)
+Mac Gallery (macOS)	Run the keyboard test in the sandbox (#480)	2026-10-23T15:49:45.6538460Z     ^[[32m✔^[[0m testShortcutsAndContextMenu (^[[31m28.315^[[0m seconds)
+Mac Gallery (macOS)	Run the keyboard test in the sandbox (#480)	2026-10-23T15:49:45.6540140Z     ^[[32m✔^[[0m testStartArrowsSelectAndSpaceCompletes (^[[31m39.386^[[0m seconds)
+Mac Gallery (macOS)	Run the keyboard test in the sandbox (#480)	2026-10-23T15:49:45.6541340Z     ^[[32m✔^[[0m testStartDeleteAsksFirst (^[[31m35.122^[[0m seconds)
+Mac Gallery (macOS)	Run the keyboard test in the sandbox (#480)	2026-10-23T15:49:45.6542710Z     ^[[32m✔^[[0m testStartHasNoListFocusOnAppear (^[[31m33.528^[[0m seconds)
+Mac Gallery (macOS)	Run the keyboard test in the sandbox (#480)	2026-10-23T15:49:45.6544280Z     ^[[32m✔^[[0m testStartMoreExtendsRows (^[[31m49.914^[[0m seconds)
+Mac Gallery (macOS)	Run the keyboard test in the sandbox (#480)	2026-10-23T15:49:45.6545080Z     ^[[32m✔^[[0m testStartNewTaskShortcutFocusesWritingLine (^[[31m31.682^[[0m seconds)
+Mac Gallery (macOS)	Run the keyboard test in the sandbox (#480)	2026-10-23T15:49:45.6546010Z     ^[[32m✔^[[0m testStartSelectionClearsWhenRowGoes (^[[31m37.242^[[0m seconds)
+Mac Gallery (macOS)	Run the keyboard test in the sandbox (#480)	2026-10-23T15:49:45.6547130Z     ^[[32m✔^[[0m testStartSelectionPhotoDark (^[[31m29.546^[[0m seconds)
+Mac Gallery (macOS)	Run the keyboard test in the sandbox (#480)	2026-10-23T15:49:45.6547720Z     ^[[32m✔^[[0m testStartSelectionPhotoLight (^[[31m28.998^[[0m seconds)
+Mac Gallery (macOS)	Run the keyboard test in the sandbox (#480)	2026-10-23T15:49:45.6548270Z     ^[[32m✔^[[0m testStartSelectionSurvivesDetail (^[[31m33.576^[[0m seconds)
+Mac Gallery (macOS)	Run the keyboard test in the sandbox (#480)	2026-10-23T15:49:45.6548800Z     ^[[32m✔^[[0m testStartWritingLineKeepsKeys (^[[31m32.448^[[0m seconds)
+Mac Gallery (macOS)	Run the keyboard test in the sandbox (#480)	2026-10-23T15:49:45.6549230Z     ^[[32m✔^[[0m testTextFocusKeepsKeys (^[[31m28.917^[[0m seconds)
+Mac Gallery (macOS)	Run the keyboard test in the sandbox (#480)	2026-10-23T15:49:45.6549890Z     ^[[32m✔^[[0m testWindowMinimumSize (^[[31m22.598^[[0m seconds)
+Mac Gallery (macOS)	Run the keyboard test in the sandbox (#480)	2026-10-23T15:49:45.6550530Z Executed 18 tests, with 0 failures (0 unexpected) in 574.319 (574.333) seconds
+Mac Gallery (macOS)	Run the keyboard test in the sandbox (#480)	2026-10-23T15:49:45.6551630Z Executed 18 tests, with 0 failures (0 unexpected) in 574.319 (574.333) seconds
+Mac Gallery (macOS)	Run the keyboard test in the sandbox (#480)	2026-10-23T15:49:45.6552100Z Executed 18 tests, with 0 failures (0 unexpected) in 574.319 (574.335) seconds

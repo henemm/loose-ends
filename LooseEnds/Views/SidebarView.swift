@@ -32,6 +32,8 @@ struct SidebarView: View {
     @State private var redating: TaskItem?
     /// Complete with open subtasks asks first (#565).
     @State private var askingSubtasks: TaskItem?
+    /// A second Knäuel asks first (#643).
+    @State private var askingKnaeuel: TaskItem?
     /// Each change ends the entry in the writing line (#601).
     @State private var endRequest = 0
     /// iPad and Mac: projects and tags start folded (Henning, 2026-10-05): most days need neither,
@@ -99,7 +101,7 @@ struct SidebarView: View {
     }
 
     /// The number on the app icon and over "Now" (#637), one rule: `ViewRules.now`.
-    private var nowCount: Int { ViewRules.now(in: tasks).all.count }
+    private var nowCount: Int { ViewRules.nowCount(in: tasks) }
 
     /// The "Now" rows act as in "Next up" (#303): one set of actions carries them all (#368).
     private var taskActions: TaskInteractions { interactions(.next) }
@@ -109,8 +111,9 @@ struct SidebarView: View {
             kind: kind, tasks: tasks, contexts: contexts, projects: projects, modelContext: modelContext,
             pendingCompletions: pendingCompletions, completionPulse: completionPulse,
             pendingDelete: $pendingTaskDelete, confirmingDelete: $confirmingTaskDelete, datingTask: $datingTask,
-            askingSubtasks: $askingSubtasks,
-            didDelete: { id in if selection == .task(id) { selection = nil } }
+            askingSubtasks: $askingSubtasks, askingKnaeuel: $askingKnaeuel,
+            didDelete: { id in if selection == .task(id) { selection = nil } },
+            fields: fieldSettings?.settings ?? .standard
         )
     }
 
@@ -119,13 +122,14 @@ struct SidebarView: View {
             if isCompact {
                 // One section: a plain list puts a tall gap above every section header.
                 Section {
-                    header
+                    headerRows
                     // "New" with the writing line under it (#601); a tap on the header ends the entry.
                     InboxDrawerView(tasks: tasks, open: { selection = $0 }, selection: selection, endRequest: endRequest)
                         .listRowSeparator(.hidden)
                         .startRow(metrics)
                         .paperRow()
-                    NowBlock(tasks: ViewRules.now(in: tasks).all) { previewRow($0) }
+                    NowBlock(tasks: ViewRules.now(in: tasks).all, count: nowCount) { previewRow($0) }
+                    WeekStringRows(beads: ViewRules.weekBeads(in: tasks), all: tasks)
                     // Same section: a second one put the list's section gap above "Contents" (#463).
                     // iPad: the sidebar marks the open list (#334); iPhone: after Back selection is nil.
                     ContentsIndex(groups: indexGroups, selected: selection) { selection = $0 }
@@ -269,18 +273,33 @@ struct SidebarView: View {
 
     // MARK: - Start (iPhone)
 
-    /// The date under the knot and the sentence of the day (#426), as the first row of the start list.
-    private var header: some View {
-        StartHeader(tasks: tasks)
-            // The draft: 14 above the date line, 16 under the headline (#463).
-            .padding(.top, 14)
-            .padding(.bottom, 16)
-            // A tap beside the writing line, on the sentence of the day, ends the entry (#601).
-            .contentShape(Rectangle())
-            .onTapGesture { endRequest += 1 }
-            .listRowSeparator(.hidden)
-            .startRow(metrics)
-            .paperRow()
+    /// The date at the knot or the Knäuel, the Knäuel's row, the sentence of the day (#426, #643), as
+    /// the first rows of the start list. A tap beside the writing line, on the date or the sentence,
+    /// ends the entry (#601).
+    @ViewBuilder
+    private var headerRows: some View {
+        StartHeaderRows(tasks: tasks, onTap: { endRequest += 1 }, openDone: { selection = .system(.done) }) { task, head in knaeuelRow(task, head) }
+    }
+
+    /// The Knäuel's head (#643, #644), date and row as one: a tap opens the task, swipe right completes
+    /// it with the Undo window, the long press holds the menu, as in "Now".
+    @ViewBuilder
+    private func knaeuelRow(_ task: TaskItem, _ head: KnaeuelHead) -> some View {
+        let actions = taskActions
+        if actions.isPending(task) {
+            actions.pendingRow(task, head)
+                .listRowSeparator(.hidden)
+                .startRow(metrics)
+        } else {
+            head
+                .startRow(metrics)
+                .tag(ViewSelection.task(task.id))
+                .listRowSeparator(.hidden)
+                .swipeActions(edge: .leading, allowsFullSwipe: true) { actions.leadingActions(task) }
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) { actions.trailingActions(task) }
+                .contextMenu { actions.menu(task) }
+                .paperRow()
+        }
     }
 
     /// A tap opens the task; while its Done window runs (#32) a tap takes it back instead.

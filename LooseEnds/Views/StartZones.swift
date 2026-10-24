@@ -61,6 +61,8 @@ struct ZoneCaptionText: View {
 /// the swipes, the menu and the Done window stay with the caller.
 struct NowBlock<Row: View>: View {
     private let tasks: [TaskItem]
+    /// The number over "Now": `ViewRules.nowCount`, the rows plus the Knäuel when it counts (#637, #643).
+    private let count: Int
     private let row: (TaskItem) -> Row
     @State private var ownExpanded = false
     /// The host's fold state, so the Mac's keys see the same rows (#480); the sidebar keeps its own.
@@ -69,8 +71,10 @@ struct NowBlock<Row: View>: View {
 
     static var limit: Int { 5 }
 
-    init(tasks: [TaskItem], expanded: Binding<Bool>? = nil, @ViewBuilder row: @escaping (TaskItem) -> Row) {
+    init(tasks: [TaskItem], count: Int, expanded: Binding<Bool>? = nil,
+         @ViewBuilder row: @escaping (TaskItem) -> Row) {
         self.tasks = tasks
+        self.count = count
         self.hostExpanded = expanded
         self.row = row
     }
@@ -83,8 +87,9 @@ struct NowBlock<Row: View>: View {
     }
 
     var body: some View {
-        // The app icon's number, the same everywhere (#637): every task it counts stands below.
-        ZoneCaption("Now", count: tasks.count, countID: "nowCount")
+        // The app icon's number, the same everywhere (#637): every task it counts stands below, the
+        // Knäuel above under the date (#643).
+        ZoneCaption("Now", count: count, countID: "nowCount")
             // On the caption, which always stands: the button is gone at five or fewer, the hint with rows.
             .onChange(of: tasks.count) { _, count in
                 if count <= Self.limit { expanded = false }

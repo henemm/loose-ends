@@ -8,9 +8,13 @@ import OSLog
 /// on, so every editor stays reachable; `--ui-testing-fields-standard` runs them with the standard.
 @MainActor @Observable final class FieldSettingsStore {
     static let key = "offeredFields"
+    /// "Dafür" (#647): one free sentence for the week, kept like the switches.
+    static let rewardKey = "weekReward"
     static let standardArgument = "--ui-testing-fields-standard"
 
     private(set) var settings: DetailFieldSettings
+    /// "Dafür: Samstag Kino." without the "Dafür"; empty means no line.
+    private(set) var reward: String
     @ObservationIgnored private let defaults: UserDefaults
     @ObservationIgnored private let cloud: any FieldSettingsCloud
     @ObservationIgnored private var observer: (any NSObjectProtocol)?
@@ -20,6 +24,7 @@ import OSLog
         self.defaults = defaults
         self.cloud = cloud
         settings = DetailFieldSettings(stored: defaults.stringArray(forKey: Self.key))
+        reward = defaults.string(forKey: Self.rewardKey) ?? ""
     }
 
     /// The app's own. Under the UI tests a fresh store each launch (their own defaults suite, wiped at
@@ -55,16 +60,34 @@ import OSLog
         cloud.setOfferedFields(settings.stored)
     }
 
-    /// Another device chose (or this launch is the first to see it): take it over. Returns whether
-    /// the local choice changed.
+    /// "Dafür" (#647): trimmed, nothing checked; the same sentence again writes nothing.
+    func setReward(_ text: String) {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard trimmed != reward else { return }
+        reward = trimmed
+        defaults.set(trimmed, forKey: Self.rewardKey)
+        cloud.setWeekReward(trimmed)
+    }
+
+    /// Another device chose (or this launch is the first to see it): take it over, the switches and
+    /// "Dafür" alike. Returns whether anything local changed.
     @discardableResult
     func takeCloud() -> Bool {
-        guard let stored = cloud.offeredFields else { return false }
-        let next = DetailFieldSettings(stored: stored)
-        guard next != settings else { return false }
-        settings = next
-        defaults.set(stored, forKey: Self.key)
-        return true
+        var changed = false
+        if let stored = cloud.offeredFields {
+            let next = DetailFieldSettings(stored: stored)
+            if next != settings {
+                settings = next
+                defaults.set(stored, forKey: Self.key)
+                changed = true
+            }
+        }
+        if let text = cloud.weekReward, text != reward {
+            reward = text
+            defaults.set(text, forKey: Self.rewardKey)
+            changed = true
+        }
+        return changed
     }
 }
 
@@ -73,6 +96,8 @@ import OSLog
 protocol FieldSettingsCloud {
     var offeredFields: [String]? { get }
     func setOfferedFields(_ fields: [String])
+    var weekReward: String? { get }
+    func setWeekReward(_ text: String)
 }
 
 /// No iCloud under the UI tests: nothing read, nothing written.
@@ -80,6 +105,8 @@ protocol FieldSettingsCloud {
 private final class SilentCloud: FieldSettingsCloud {
     var offeredFields: [String]? { nil }
     func setOfferedFields(_ fields: [String]) {}
+    var weekReward: String? { nil }
+    func setWeekReward(_ text: String) {}
 }
 
 extension NSUbiquitousKeyValueStore: FieldSettingsCloud {
@@ -87,5 +114,11 @@ extension NSUbiquitousKeyValueStore: FieldSettingsCloud {
 
     func setOfferedFields(_ fields: [String]) {
         set(fields, forKey: FieldSettingsStore.key)
+    }
+
+    var weekReward: String? { string(forKey: FieldSettingsStore.rewardKey) }
+
+    func setWeekReward(_ text: String) {
+        set(text, forKey: FieldSettingsStore.rewardKey)
     }
 }

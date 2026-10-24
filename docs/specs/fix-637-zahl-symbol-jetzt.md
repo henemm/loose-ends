@@ -31,7 +31,7 @@ und die Zahl ist nicht antippbar.
 
 ## Source
 
-- **Geändert:** `Shared/Models/ViewRules.swift` — `now` nimmt die Liegengebliebenen ans Ende; `badgeCount` = `now(...).all.count`
+- **Geändert:** `Shared/Models/ViewRules.swift` — `now` nimmt die Liegengebliebenen ans Ende; `badgeCount` = `nowCount` = `now(...).all.count` plus das Knäuel, falls es mitzählt
 - **Geändert:** `LooseEnds/Views/StartZones.swift` — Kopf „Jetzt“ trägt die Zahl
 - **Geändert:** `LooseEnds/Views/SidebarView.swift` — „Start“ trägt dieselbe Zahl (iPad, Mac); iPhone: Kopf „Jetzt“ derselbe Block
 - **Geändert:** `LooseEnds/Views/StartPage.swift` — Zeilen in „Jetzt“ bieten „Neues Datum“ (öffnet dieselbe Datumswahl)
@@ -68,10 +68,10 @@ Liegengebliebenen. Gruppen und Reihenfolge:
 `all = today + lined + waiting`. Eine Aufgabe, die heute um 09:00 verstrichen ist und bei 10:00 fällig war, ist Liegengebliebenes
 (`NewDateRule`), nicht „heute“; sie steht in `lined` oder `waiting`, nicht in `today`.
 
-**Symbol.** `badgeCount(in:now:calendar:)` = `now(in:now:calendar:).all.count`. Keine zweite Rechnung. Morgenmitteilung
+**Symbol.** `badgeCount(in:now:calendar:)` = `nowCount(in:now:calendar:)` = `now(...).all.count`, plus 1, wenn das Knäuel (#643: eine Aufgabe von Hand markiert, steht unter dem Datum und nicht in „Jetzt“) zu „Fällig“ oder „Als nächstes“ gehört (Henning, 2026-10-24, „Zahl über Jetzt zählt das Knäuel mit“). Keine zweite Rechnung. Morgenmitteilung
 (`CarryReminders`) und Symbol (`DueNotificationCenter`) rufen weiter `badgeCount` auf, ändern sich nicht.
 
-**Anzeige.** Über „Jetzt“ steht die Zahl (`all.count`), grau-schwarz, tabellarische Ziffern. Mac und iPad: die Zeile „Start“ in
+**Anzeige.** Über „Jetzt“ steht die Zahl `nowCount`, grau-schwarz, tabellarische Ziffern. Mac und iPad: die Zeile „Start“ in
 der Seitenleiste trägt dieselbe Zahl. iPhone: es gibt keine Zeile „Start“, die Zahl steht im Kopf „Jetzt“. Alle Zeilen stehen
 unter „Jetzt“ (bestehende Regel: fünf Zeilen, ab der sechsten „N weitere“). Liegengebliebene Zeilen zeigen „Neues Datum“ mit
 der Spur („war Di“) am Rand, kein Rot; der Knopf öffnet die Datumswahl, die „Fällig“ schon benutzt (`NewDateSheet`).
@@ -101,8 +101,9 @@ Gerät (Stufe 3): entfällt, „Kein Pfad der Geräteliste berührt.“
 
 ## Acceptance Criteria
 
-- **AC-1:** `ViewRules.badgeCount(in:)` ist für jede Eingabe gleich `ViewRules.now(in:).all.count`; beide kommen aus derselben
-  Funktion (Unit-Test `badgeEqualsNowEverywhere` über alle genannten Eingabemengen, plus Quelltext: `badgeCount` ruft `now`).
+- **AC-1:** `ViewRules.badgeCount(in:)` ist für jede Eingabe gleich `ViewRules.nowCount(in:)`, der Zahl über „Jetzt“: Zeilenzahl von
+  `now(in:).all` plus 1, wenn das Knäuel zu „Fällig“ oder „Als nächstes“ gehört; beide kommen aus derselben Funktion (Unit-Test
+  `badgeEqualsNowEverywhere` über alle genannten Eingabemengen, auch mit Knäuel, plus Quelltext: `badgeCount` ruft `nowCount`).
 - **AC-2:** `now(...).all` enthält jede Aufgabe aus `dueToday`, `tasks(for: .next)` und `leftovers` genau einmal; blockierte,
   geparkte, erledigte und Teilaufgaben ohne eigenes Datum fehlen (Unit-Tests).
 - **AC-3:** Reihenfolge: heute Fälliges, dann alle eingereihten nach Rang (Liegengebliebene mit Rang darunter), dann die
@@ -110,7 +111,7 @@ Gerät (Stufe 3): entfällt, „Kein Pfad der Geräteliste berührt.“
   `leftoverWithoutRankStandsLastOldestFirst`).
 - **AC-4:** Mit Hennings Fall (vier verstrichene Fristen, eine davon eingereiht, dazu eine eingereihte ohne Datum) ergibt die Regel
   5 für Symbol und „Jetzt“, 4 für „Fällig“, 2 für „Als nächstes“ (Unit-Test; Wegwerf-Reproduktion vom 2026-10-23 zeigte vorher 1 und 5).
-- **AC-5:** Die Startseite zeigt über „Jetzt“ die Zahl `all.count`, auf iPhone im Kopf, auf iPad und Mac außerdem an der Zeile
+- **AC-5:** Die Startseite zeigt über „Jetzt“ die Zahl `nowCount`, auf iPhone im Kopf, auf iPad und Mac außerdem an der Zeile
   „Start“; alle Zeilen der Menge stehen unter „Jetzt“, die Liegengebliebenen mit „Neues Datum“ und Spur am Rand, ohne Rot
   (UI-Test `StartNumberTests` im iPhone-Simulator; Mac-Galerie-Bild, angesehen).
 - **AC-6:** Ein Tipp auf „Neues Datum“ in „Jetzt“ öffnet die Datumswahl; nach dem Setzen steht die Aufgabe nach der Regel am
@@ -147,3 +148,4 @@ Gerät (Stufe 3): entfällt, „Kein Pfad der Geräteliste berührt.“
 ## Changelog
 
 - 2026-10-23: Spec nach Henning-Entscheidung (Entwurf A, eine Zahl auf allen Plattformen).
+- 2026-10-24: Das Knäuel (#643, neu auf main) zählt in der einen Zahl mit; `nowCount` statt `now.all.count` (Henning, override).

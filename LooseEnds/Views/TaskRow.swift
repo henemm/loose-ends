@@ -25,6 +25,8 @@ struct TaskRow: View {
     /// The evening look (#550) asks for a new date for every task it lists, a day-only date still
     /// standing on its day among them: the button shows regardless of the margin's own reading.
     var asksNewDate = false
+    /// "Completed" by weeks (#646): the weekday in the margin instead of the day heads.
+    var marginWords: String?
     /// The margin with the one time that counts (#424); wide enough for "12:00" and "Neues Datum" in two lines.
     @ScaledMetric(relativeTo: .caption) private var marginWidth: CGFloat = 54
     /// The start screen's draft sizes (#463); everywhere else the row keeps the text styles.
@@ -58,7 +60,15 @@ struct TaskRow: View {
     @ViewBuilder
     private var margin: some View {
         let mark = ViewRules.marginMark(of: task)
-        if let onNewDate, let trace = newDateTrace(mark) {
+        if let marginWords {
+            Text(marginWords)
+                .font(startMetrics?.margin ?? .caption)
+                .multilineTextAlignment(.trailing)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+                .foregroundStyle(.secondary)
+                .frame(width: startMetrics?.marginWidth ?? marginWidth, alignment: .trailing)
+        } else if let onNewDate, let trace = newDateTrace(mark) {
             newDateButton(trace, action: onNewDate)
         } else {
             let unseenAI = task.hasUnseenAutomaticRevisions
@@ -159,13 +169,28 @@ struct TaskRow: View {
                             .accessibilityLabel("Urgent")
                     }
                     ForEach(traits) { trait in
-                        HStack(spacing: 3) {
-                            if let symbol = trait.symbol {
-                                Image(systemName: symbol)
+                        if trait.id == "counts" {
+                            // The bead (#645): the task counts on the week's string.
+                            PearlGlyph()
+                                .frame(width: 30, height: 10)
+                                .accessibilityLabel(Text("Counts"))
+                                .accessibilityIdentifier("countsMarker_\(task.id.uuidString)")
+                        } else if trait.id == "knaeuel" {
+                            // The small grey Knäuel (#646): the task is, or was, the Knäuel.
+                            ThreadGlyph(form: .knaeuel, lineWidth: 1.2)
+                                .frame(width: 22, height: 11)
+                                .foregroundStyle(.secondary)
+                                .accessibilityLabel(Text("The Knäuel"))
+                                .accessibilityIdentifier("knaeuelMarker_\(task.id.uuidString)")
+                        } else {
+                            HStack(spacing: 3) {
+                                if let symbol = trait.symbol {
+                                    Image(systemName: symbol)
+                                }
+                                Text(trait.text)
                             }
-                            Text(trait.text)
+                            .foregroundStyle(trait.style)
                         }
-                        .foregroundStyle(trait.style)
                     }
                 }
                 .font(startMetrics?.rowMeta ?? .caption)
@@ -198,11 +223,20 @@ struct TaskRow: View {
         }
     }
 
-    /// Ranked: waiting, place, duration, subtasks, tag, person; the date moved to the margin (#424).
+    /// Ranked: the bead, waiting, place, duration, subtasks, tag; the date moved to the margin (#424).
     /// The first three win. A tag carries its symbol, as in the detail and on the start screen (#420).
+    /// The bead stands first (#645): a task that counts says so before anything else.
     private var traits: [Trait] {
         let unseen = task.hasUnseenAutomaticRevisions
         var all: [Trait] = []
+        // Open or done (#646): "Completed" shows what counted, the Knäuel among it.
+        if task.isOpen || task.status == .done {
+            if task.knaeuelAt != nil {
+                all.append(Trait(id: "knaeuel", text: ""))
+            } else if task.countsAt != nil {
+                all.append(Trait(id: "counts", text: ""))
+            }
+        }
         if let waitingOn = WaitingOn.rowLabel(for: task) {
             all.append(Trait(id: "waiting", text: String(localized: "Waiting on: \(waitingOn)"), symbol: "lock"))
         }

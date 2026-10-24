@@ -4,46 +4,6 @@ import SwiftUI
 import AppKit
 #endif
 
-/// The date under the knot and the one sentence of the day (#426). The iPhone start list and the
-/// wide start page (#408) show the same two lines.
-struct StartHeader: View {
-    let tasks: [TaskItem]
-    @Environment(\.dynamicTypeSize) private var typeSize
-
-    var body: some View {
-        let metrics = StartMetrics(typeSize)
-        // Once a minute, so the line turns to the look back at 16:00 without a save (#426).
-        TimelineView(.periodic(from: .now, by: 60)) { timeline in
-            VStack(alignment: .leading, spacing: 0) {
-                HStack(spacing: 8) {
-                    // The knot, first of its three places (#180, rule 1). Grey like the date: it is
-                    // the mark, not something to tap (ADR-14).
-                    ThreadGlyph(form: .knot, lineWidth: 1.5)
-                        .frame(width: metrics(30), height: metrics(16))
-                    Text(timeline.date, format: .dateTime.weekday(.wide).day().month(.wide))
-                        .font(metrics.caption)
-                        .textCase(.uppercase)
-                        .tracking(metrics.captionTracking)
-                }
-                .foregroundStyle(.secondary)
-                .accessibilityElement(children: .combine)
-                .accessibilityIdentifier("startHeader")
-                // The one fact that stands out today, from 16:00 a look back (#426). Content, so New York.
-                Text(StartHeadlineText.sentence(StartHeadline.of(tasks, now: timeline.date)))
-                    .font(metrics.headline)
-                    .tracking(-0.3)
-                    .lineSpacing(0)
-                    .foregroundStyle(.primary)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(.top, 6)
-                    .accessibilityAddTraits(.isHeader)
-                    .accessibilityIdentifier("startHeadline")
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-    }
-}
-
 /// What the wide window shows while no view is chosen (#408, draft "Papier und Faden", cut 1): the
 /// sentence of the day, a field to say something, and "Now". iPad in a wide window and the Mac;
 /// the iPhone opens its start list instead.
@@ -65,6 +25,10 @@ struct StartPage: View {
     @State private var redating: TaskItem?
     /// Complete with open subtasks asks first (#565).
     @State private var askingSubtasks: TaskItem?
+    /// A second Knäuel asks first (#643).
+    @State private var askingKnaeuel: TaskItem?
+    /// "The Knäuel" and "Counts" stand in the menu only while on (#538).
+    @Environment(FieldSettingsStore.self) private var fieldSettings: FieldSettingsStore?
     #if os(macOS)
     /// "N more" unfolded; here, so the Mac's keys choose among the rows "Now" shows (#480).
     @State private var nowExpanded = false
@@ -100,12 +64,7 @@ struct StartPage: View {
     private var listColumn: some View {
         let metrics = StartMetrics(typeSize)
         return keyed(List {
-            StartHeader(tasks: tasks)
-                .padding(.top, 14)
-                .padding(.bottom, 16)
-                .listRowSeparator(.hidden)
-                .startRow(metrics)
-                .paperRow()
+            StartHeaderRows(tasks: tasks, openDone: { selection = .system(.done) }) { task, head in knaeuelRow(task, head, metrics) }
             // "New" with the writing line under it (#601): Return makes a task, the button opens
             // into a drawer that shows it, leaving the line folds it.
             InboxDrawerView(tasks: tasks, open: { selection = $0 }, selection: selection, focusRequest: focusRequest,
@@ -113,7 +72,8 @@ struct StartPage: View {
                 .listRowSeparator(.hidden)
                 .startRow(metrics)
                 .paperRow()
-            NowBlock(tasks: ViewRules.now(in: tasks).all, expanded: nowExpandedBinding) { nowRow($0, metrics) }
+            NowBlock(tasks: ViewRules.now(in: tasks).all, count: ViewRules.nowCount(in: tasks), expanded: nowExpandedBinding) { nowRow($0, metrics) }
+            WeekStringRows(beads: ViewRules.weekBeads(in: tasks), all: tasks)
         })
         .listStyle(.plain)
         .paperGround()
@@ -130,9 +90,33 @@ struct StartPage: View {
             kind: .next, tasks: tasks, contexts: contexts, projects: projects, modelContext: modelContext,
             pendingCompletions: pendingCompletions, completionPulse: completionPulse,
             pendingDelete: $pendingTaskDelete, confirmingDelete: $confirmingTaskDelete, datingTask: $datingTask,
-            askingSubtasks: $askingSubtasks,
-            didDelete: { id in if selection == .task(id) { selection = nil } }
+            askingSubtasks: $askingSubtasks, askingKnaeuel: $askingKnaeuel,
+            didDelete: { id in if selection == .task(id) { selection = nil } },
+            fields: fieldSettings?.settings ?? .standard
         )
+    }
+
+    /// The Knäuel's head (#643, #644), date and row as one: a tap opens the task, swipe right completes
+    /// it, the menu holds the rest; on every platform the same, no Mac keys (they stay with "Now").
+    @ViewBuilder
+    private func knaeuelRow(_ task: TaskItem, _ head: KnaeuelHead, _ metrics: StartMetrics) -> some View {
+        let actions = self.actions
+        if actions.isPending(task) {
+            actions.pendingRow(task, head)
+                .listRowSeparator(.hidden)
+                .startRow(metrics)
+        } else {
+            Button { selection = .task(task.id) } label: {
+                head.contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .listRowSeparator(.hidden)
+            .startRow(metrics)
+            .swipeActions(edge: .leading, allowsFullSwipe: true) { actions.leadingActions(task) }
+            .swipeActions(edge: .trailing, allowsFullSwipe: true) { actions.trailingActions(task) }
+            .contextMenu { actions.menu(task) }
+            .paperRow()
+        }
     }
 
     /// The fold state of "Now": the page's on the Mac (#480), `NowBlock`'s own elsewhere, as before.

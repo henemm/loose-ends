@@ -26,7 +26,9 @@ Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, 
 - **Color budget.** Accent = tappable (incl. AI tint), red = time pressure, grey = hierarchy, green = the completion moment.
 - **SF Symbols only** (Henning, 2026-10-12, #350). Every sign in the app is an SF Symbol, outline where one exists:
   no emoji, no characters standing in for a symbol (»«, →), no own images. The one exception is the logo's thread
-  (knot, loose thread, #180): it is the brand mark, not a control.
+  (knot, loose thread, #180): it is the brand mark, not a control. Since #642 (Henning, 2026-10-23) its family holds two
+  more drawn signs: the Knäuel (`ThreadShape.Form.knaeuel`, the one avoided task, #643) and the bead (`PearlGlyph`, a
+  task that counts on the week's string, #645); every other sign stays an SF Symbol.
 - **Rules before the model** (Henning, 2026-09-20). Every derived field is first attempted with rules,
   regex, calendar, contacts or a word list. The on-device model only gets what needs language
   understanding (refining the title: since #202 `TitleRule` sets it at capture from the cleaned raw
@@ -200,7 +202,10 @@ Henning's Mac. The same job runs `MacDetailClickTests` (#544) in the **App Sandb
 app with the sandbox keys of `project.yml` (`scripts/mac_ci_entitlements.py`, minus what needs a profile) and tests without
 rebuilding. Each test starts fresh, opens the detail from Loose ends or the start page and clicks the visible words: title,
 note, subtask add and check, File and Photo. Without the sandbox the open panel opened in CI and not in TestFlight build 89.
-The helpers both share live in `MacUITestSupport.swift` (`mac` prefix).
+The helpers both share live in `MacUITestSupport.swift` (`mac` prefix). Every fetch of the main window there runs
+`macAssertWindowFitsScreen` (#593): a window wider than the screen, or past its right or bottom edge, fails the test with
+both sizes; the gallery notes `mac-gallery-*-window-size` name window and screen size, and `testWindowFromMenuBarFitsScreen`
+opens the window through the menu bar on every run.
 
 ## Ship
 
@@ -282,6 +287,19 @@ not scope creep on the current one.
   only with content, one word line for everything empty, dependent fields wait, off is not offered but never hidden;
   `DetailFieldSettings` with the standard on Note, Attachments, Calendar, Duration, Tags; the app's `FieldSettingsStore` in
   `LooseEnds/App` keeps the choice in defaults and the iCloud key-value store, everything on under UI tests)
+- `Shared/Models` — the drive fields (#642): `TaskItem.knaeuelAt` (#643, the one avoided task, `isKnaeuel` while open) and
+  `countsAt` (#645, a bead once completed, at most `TaskActions.countsBudget` open; the Knäuel always `counts`), both set by
+  hand only as user revisions (`RevisedField.knaeuel`/`.counts`), both `DetailField`s of the group `drive`, off by default.
+  `ViewRules.knaeuel(in:)` (latest mark wins), `counting(in:)`, `week(containing:)` (Monday to Sunday, whatever the locale),
+  `weekBeads(in:)` (every completion of a counting task in the week, a repeating one per record), `weekToSpeakOf(in:)` (the
+  Sunday sentence's beads: this week's from Sunday 16:00, last week's on Monday until the first new bead, #646) and
+  `groupedByCompletionWeek` ("Completed" by weeks with each week's beads, the days inside); "Now" leaves the Knäuel out. Views: `LooseEnds/Views/Knaeuel.swift` (`StartHeaderRows`: the knot's date line or the Knäuel's head `KnaeuelHead`
+  (date, thread, row as one list row, plays the completion moment, #644), the sentence of the day; `KnaeuelSince`),
+  `KnaeuelThread.swift` (`KnaeuelThread`: two trochoid loops laid from the Knäuel's tail end to the row, `LooseningKnaeuel`:
+  the Knäuel blended into the knot) and `Beads.swift` (`PearlGlyph`, `WeekString` with the sag and the 1.1 s green,
+  `WeekStringRows` under "Now" with `RewardLine`, the week's "Dafür" sentence from `FieldSettingsStore.reward`, #647). The
+  question before the Knäuel moves is `movesKnaeuel` in `TaskInteractions.swift`; the detail's lines under the raw text
+  ("The Knäuel · since Monday" with Release, "Counts always, it is the Knäuel") are `TaskDetailView.driveSection`.
 - `Shared/Models/RowKeyAction.swift` (#480 Schnitt 1, pure): which key does what in a Mac list (arrows choose, space completes only where the swipe offers done, delete asks first, nothing while a text field has focus); `TaskListView` wires it up on the Mac only (`onKeyPress`, `ChosenRows` keeps the chosen row per list so it survives detail and back), `Paper.wideListRow(selected:)` paints it accent 12 %, hover grey 7 %; Schnitt 2: the start page's "Now" rows take the same keys on the Mac only (`StartPage.macNowRow`/`keyed`, `ChosenRows.start`; only the visible rows, 5 folded; list focus only from a click or when the writing line lets go, never on appear; iPhone and iPad rows unchanged), main window at least 760 × 520 pt of content
 - `Shared/Persistence` — `ModelContainerFactory` (app group + private CloudKit; identifiers read from
   `Info.plist`, keys `LEAppGroup`/`LECloudContainer`, with the production constants as fallback —
@@ -341,7 +359,9 @@ not scope creep on the current one.
 - `LooseEnds/Mac` — `MenuBarCapture` (Mac only, #356): the menu bar panel with the same `CaptureView`, Dock icon only
   while a list window is open (`DockPolicy`), login item via `SMAppService` (on from the first start, never under tests);
   `MenuBarThreadImage` (#366): the menu bar symbol is the logo's thread, drawn from `ThreadShape.curvePoints` into a
-  template `NSImage` (18 pt, 1x/2x, black on transparent; the raster in `MenuBarThreadRaster` is platform-neutral and unit-tested)
+  template `NSImage` (18 pt, 1x/2x, black on transparent; the raster in `MenuBarThreadRaster` is platform-neutral and unit-tested);
+  `MainWindowPlacement` (#593, pure, unit-tested): the main window's first frame via `.defaultWindowPlacement`, the wish
+  1200 × 780 cut to the screen's visible area and centred there, never below 760 × 520 (then at its top left corner)
 - `LooseEnds/App/LaunchTimings.swift` — cold-start measuring points (#22): signposts always, `Documents/launch-timings.json`
   only in the probe build (`.probe`); launch argument `-measureLaunch` opens the capture scene
 - `LooseEnds/Speech` — `SpeechCapture` (live recognition for the capture scene, skipped under `--ui-testing`; the transcriber

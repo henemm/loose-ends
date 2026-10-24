@@ -9,6 +9,12 @@ enum StartHeadline: Equatable {
     /// A, A+: from 16:00 with something done today. Titles are the latest first, at most two;
     /// `next` is a fixed time within the next two hours.
     case doneToday(count: Int, titles: [String], next: Upcoming?)
+    /// Sunday from 16:00 and Monday until the first new bead (#646): "This week: four beads." with
+    /// the string and the titles under it. Without a bead no sentence, the ladder goes on.
+    case week(count: Int, titles: [String])
+    /// A with the Knäuel among what got done (#644): "Today untangled: <title>." comes first; `count`
+    /// is everything done today, `next` as in `doneToday`.
+    case untangled(title: String, count: Int, next: Upcoming?)
     /// 1: fixed times today have passed; `title` and `at` are the latest, `count` how many.
     case missed(title: String, at: Date, count: Int)
     /// 2: fixed times still ahead today; `title` and `at` are the first.
@@ -52,12 +58,20 @@ enum StartHeadline: Equatable {
             .sorted { ($0.dueDate ?? now) < ($1.dueDate ?? now) }
         let ahead = timedToday.filter { ($0.dueDate ?? now) >= now }
 
+        // The week's string speaks first on Sunday evening and Monday morning (#646).
+        if let beads = ViewRules.weekToSpeakOf(in: all, now: now, calendar: calendar) {
+            return .week(count: beads.count, titles: beads.map { short($0.title) })
+        }
         // A, A+: the look back wins once the afternoon has come and something got done.
         let doneToday = completions(in: all, from: today, to: tomorrow)
         if calendar.component(.hour, from: now) >= lookBackHour, !doneToday.isEmpty {
             let soon = ahead.first { ($0.dueDate ?? now) <= now.addingTimeInterval(2 * 3600) }
-            return .doneToday(count: doneToday.count, titles: doneToday.prefix(2).map(short),
-                              next: soon.map { Upcoming(title: short($0), at: $0.dueDate ?? now) })
+            let next = soon.map { Upcoming(title: short($0), at: $0.dueDate ?? now) }
+            // The Knäuel done today speaks first (#644): it keeps its mark once done.
+            if let knaeuel = doneToday.first(where: { $0.knaeuelAt != nil }) {
+                return .untangled(title: short(knaeuel), count: doneToday.count, next: next)
+            }
+            return .doneToday(count: doneToday.count, titles: doneToday.prefix(2).map(short), next: next)
         }
         // 1, 2: time pressure.
         let passed = timedToday.filter { ($0.dueDate ?? now) < now }

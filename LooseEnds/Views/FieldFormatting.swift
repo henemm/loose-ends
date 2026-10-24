@@ -17,6 +17,8 @@ enum FieldFormatting {
         case .repeatRule: String(localized: "Repeat")
         case .place: String(localized: "Place")
         case .notes: String(localized: "Note")
+        case .knaeuel: String(localized: "The Knäuel")
+        case .counts: String(localized: "Counts")
         }
     }
 
@@ -42,6 +44,10 @@ enum FieldFormatting {
             return FieldCodec.decodeRepeat(encoded).map { repeatDescription($0) }
         case .place:
             return FieldCodec.decodePlace(encoded)?.name
+        case .knaeuel, .counts:
+            // The mark's date (#643, #645): the revision list reads "set on …".
+            guard let date = ISO8601DateFormatter().date(from: encoded) else { return nil }
+            return date.formatted(date: .abbreviated, time: .omitted)
         }
     }
 

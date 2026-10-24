@@ -52,6 +52,56 @@ import Testing
         #expect(result == .doneToday(count: 2, titles: ["Mama zurückrufen", "Steuerbescheid prüfen"], next: nil))
     }
 
+    @Test("The Knäuel done today speaks first from 16:00 (#644): 'Today untangled'; the others count along")
+    @MainActor func untangled() async throws {
+        let store = try TestStore()
+        let knaeuel = Self.done("Steuerberater anrufen", at: Self.at(11), in: store)
+        knaeuel.knaeuelAt = Self.at(8)
+        let other = Self.done("Mama zurückrufen", at: Self.at(15), in: store)
+        let soon = Self.task("Anna abholen", due: Self.at(18), timed: true, in: store)
+
+        #expect(Self.headline([knaeuel], Self.at(16, minute: 30)) == .untangled(title: "Steuerberater anrufen", count: 1, next: nil))
+        let result = Self.headline([knaeuel, other, soon], Self.at(16, minute: 30))
+        #expect(result == .untangled(title: "Steuerberater anrufen", count: 2, next: .init(title: "Anna abholen", at: Self.at(18))))
+        #expect(Self.headline([knaeuel, other, soon], Self.at(15, minute: 59)) == .upcoming(title: "Anna abholen", at: Self.at(18), count: 1),
+                "before 16:00 the ladder goes on as before")
+
+        // The sentence names the Knäuel first; the number word follows the locale.
+        let de = Locale(identifier: "de_DE")
+        let one = StartHeadlineText.sentence(.untangled(title: "Steuerberater anrufen", count: 1, next: nil), locale: de)
+        #expect(one.contains("Steuerberater anrufen"))
+        #expect(one.hasSuffix("."))
+        let three = StartHeadlineText.sentence(.untangled(title: "Steuerberater anrufen", count: 4, next: nil), locale: de)
+        #expect(three.contains("Steuerberater anrufen") && three.contains("drei"))
+        let withNext = StartHeadlineText.sentence(result, locale: de)
+        #expect(withNext.contains("Anna abholen"))
+    }
+
+    @Test("The week's sentence (#646): Sunday from 16:00 with a bead, Monday until the first new bead; never without a bead")
+    @MainActor func weekSentence() async throws {
+        let store = try TestStore()
+        // Thursday 12 March: Sunday is day 3, Monday day 4.
+        let bead = Self.done("Hecke schneiden", at: Self.at(10, day: 1), in: store)
+        bead.countsAt = Self.at(9)
+        let plain = Self.done("Mama zurückrufen", at: Self.at(11, day: 3), in: store)
+        let open = Self.task("Steuer", in: store)
+        let all = [bead, plain, open]
+
+        #expect(Self.headline(all, Self.at(15, minute: 59, day: 3)) == .calm, "Sunday 15:59: the ladder as always, no look back yet")
+        #expect(Self.headline(all, Self.at(16, day: 3)) == .week(count: 1, titles: ["Hecke schneiden"]))
+        #expect(Self.headline(all, Self.at(9, day: 4)) == .week(count: 1, titles: ["Hecke schneiden"]), "Monday, no new bead yet")
+        let monday = Self.done("Keller", at: Self.at(8, day: 4), in: store)
+        monday.countsAt = Self.at(9)
+        #expect(Self.headline(all + [monday], Self.at(9, day: 4)) == .doneYesterday(count: 1), "the first new bead ends the week's sentence")
+        #expect(Self.headline([plain, open], Self.at(16, day: 3)) == .doneToday(count: 1, titles: ["Mama zurückrufen"], next: nil),
+                "without a bead no sentence about the week")
+        #expect(Self.headline(all, Self.at(9, day: 5)) == .calm, "Tuesday: over")
+
+        let de = Locale(identifier: "de_DE")
+        #expect(StartHeadlineText.sentence(.week(count: 4, titles: []), locale: de).contains("vier"))
+        #expect(StartHeadlineText.sentence(.week(count: 1, titles: []), locale: de).hasSuffix("."))
+    }
+
     @Test("Before 16:00 the look back waits; the time pressure speaks")
     @MainActor func noLookBackBeforeFour() async throws {
         let store = try TestStore()

@@ -232,7 +232,7 @@ import Testing
         #expect(ViewRules.tasks(for: .next, in: all, now: Self.now, calendar: Self.calendar).count == 2)
     }
 
-    @Test("The icon number is the number of rows in Now, whatever the mix (#637, one number everywhere)")
+    @Test("The icon number is the number over Now, rows plus a counting Knäuel, whatever the mix (#637, #643)")
     @MainActor func badgeEqualsNowEverywhere() async throws {
         let store = try TestStore()
         let blocker = Self.task("Schlüssel holen")
@@ -256,11 +256,28 @@ import Testing
             [blocker, blocked, parked, done, parent, plainSub, datedSub],
             [Self.task("Morgen", due: Self.day(1)), Self.task("Morgen eingereiht", due: Self.day(1), rank: 0)],
         ]
+        // With a Knäuel (#643): it stands under the date, not among the rows, and the number over "Now"
+        // counts it when it is "Due" or "Next up" (Henning, 2026-10-24). Its share is written out here.
+        let knaeuelScenes: [(scene: [TaskItem], share: Int)] = [
+            ([Self.knaeuel("Knäuel heute", due: Self.day(0, hour: 18)), Self.task("Heute", due: Self.day(0, hour: 18))], 1),
+            ([Self.knaeuel("Knäuel eingereiht", rank: 0), Self.task("Eingereiht", rank: 1)], 1),
+            ([Self.knaeuel("Knäuel ohne Datum"), Self.task("Eingereiht", rank: 0)], 0),
+            ([Self.knaeuel("Knäuel gestern", due: Self.day(-1)), Self.task("Gestern", due: Self.day(-1))], 1),
+        ]
         scenes.forEach { $0.forEach(store.context.insert) }
+        knaeuelScenes.forEach { $0.scene.forEach(store.context.insert) }
 
-        for (index, scene) in scenes.enumerated() {
-            #expect(ViewRules.badgeCount(in: scene, now: Self.now, calendar: Self.calendar) == Self.now(scene).all.count,
-                    "scene \(index)")
+        let all = scenes.map { ($0, 0) } + knaeuelScenes.map { ($0.scene, $0.share) }
+        for (index, (scene, share)) in all.enumerated() {
+            let badge = ViewRules.badgeCount(in: scene, now: Self.now, calendar: Self.calendar)
+            #expect(badge == ViewRules.nowCount(in: scene, now: Self.now, calendar: Self.calendar), "scene \(index)")
+            #expect(badge == Self.now(scene).all.count + share, "scene \(index)")
         }
+    }
+
+    static func knaeuel(_ text: String, due: Date? = nil, rank: Int? = nil) -> TaskItem {
+        let task = Self.task(text, due: due, rank: rank)
+        task.knaeuelAt = Self.now
+        return task
     }
 }

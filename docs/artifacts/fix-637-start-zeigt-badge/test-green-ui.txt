@@ -1,3 +1,6 @@
+[0;34m[sim][0m Testsperre belegt — warte (0 s, Platz 2 von 2 in der Warteliste). Halter: Worktree /Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven, Befehl test-proof, PID 15613
+[0;34m[sim][0m Testsperre belegt — warte (30 s, Platz 2 von 2 in der Warteliste). Halter: Worktree /Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven, Befehl test-proof, PID 15613
+[0;34m[sim][0m Testsperre belegt — warte (60 s, Platz 1 von 1 in der Warteliste). Halter: Worktree /Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes, Befehl sim-unit, PID 15751
 ⚙️  Generating plists...
 ⚙️  Generating project...
 ⚙️  Writing project...
@@ -17,18 +20,22 @@ Version: 3.2.1
 [[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
 [[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
 [[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
 [[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWidgets.appex
 [[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
 [[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
-Test Suite 'Selected tests' started at 2026-10-23 18:33:22.145.
-Test Suite 'LooseEndsUITests.xctest' started at 2026-10-23 18:33:22.159.
-Test Suite 'StartNumberTests' started at 2026-10-23 18:33:22.159.
-    [32m✔[0m testNewDateFromNowLowersTheNumber ([31m22.004[0m seconds)
-    [32m✔[0m testNumberOverNowIsTheNumberOfRows ([31m7.573[0m seconds)
-Executed 2 tests, with 0 failures (0 unexpected) in 29.576 (29.585) seconds
-Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-23 18:33:51.749.
-Executed 2 tests, with 0 failures (0 unexpected) in 29.576 (29.590) seconds
-Executed 2 tests, with 0 failures (0 unexpected) in 29.576 (29.605) seconds
+Test Suite 'Selected tests' started at 2026-10-24 09:07:13.225.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-24 09:07:13.226.
+Test Suite 'StartNumberTests' started at 2026-10-24 09:07:13.226.
+    [32m✔[0m testNewDateFromNowLowersTheNumber ([31m14.406[0m seconds)
+    [32m✔[0m testNumberOverNowIsTheNumberOfRows ([31m8.661[0m seconds)
+Executed 2 tests, with 0 failures (0 unexpected) in 23.067 (23.074) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-24 09:07:36.306.
+Executed 2 tests, with 0 failures (0 unexpected) in 23.067 (23.080) seconds
+Executed 2 tests, with 0 failures (0 unexpected) in 23.067 (23.081) seconds
 [1mTest session results:[0m /Users/hem/Developer/loose-ends/.claude/worktrees/wobbly-beaming-pie/docs/artifacts/fix-637-start-zeigt-badge/simulator-run/run.xcresult
 [32;1mTest Succeeded[0m
 [36;1mTesting started[0m

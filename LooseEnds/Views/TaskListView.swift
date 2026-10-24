@@ -23,6 +23,10 @@ struct TaskListView: View {
     @State private var datingTask: TaskItem?
     /// Complete with open subtasks asks first (#565).
     @State private var askingSubtasks: TaskItem?
+    /// A second Knäuel asks first (#643).
+    @State private var askingKnaeuel: TaskItem?
+    /// "The Knäuel" and "Counts" stand in the menu only while on (#538).
+    @Environment(FieldSettingsStore.self) private var fieldSettings: FieldSettingsStore?
     /// A task left from an earlier day whose new date is being chosen (#518).
     @State private var redating: TaskItem?
     /// Parents whose subtasks are folded out in the project view (#28); folded by default.
@@ -86,7 +90,8 @@ struct TaskListView: View {
             kind: kind, tasks: tasks, contexts: contexts, projects: projects, modelContext: modelContext,
             pendingCompletions: pendingCompletions, completionPulse: completionPulse,
             pendingDelete: $pendingDelete, confirmingDelete: $confirmingDelete, datingTask: $datingTask,
-            askingSubtasks: $askingSubtasks
+            askingSubtasks: $askingSubtasks, askingKnaeuel: $askingKnaeuel,
+            fields: fieldSettings?.settings ?? .standard
         )
     }
 
@@ -222,7 +227,7 @@ struct TaskListView: View {
     /// The rows as the sections below show them, top to bottom; subtask lines are no rows.
     private var rowIDs: [UUID] {
         if kind == .done {
-            return ViewRules.groupedByCompletionDay(shown).flatMap { $0.tasks.map(\.id) }
+            return ViewRules.groupedByCompletionWeek(shown, all: tasks).flatMap { $0.days.flatMap { $0.tasks.map(\.id) } }
         }
         if let project {
             return ViewRules.lines(inProject: project, in: tasks, unfolded: unfolded).compactMap { line in
@@ -309,17 +314,35 @@ struct TaskListView: View {
     }
 
     /// Completed, one section per day, newest day first.
+    /// "Completed" by weeks (#646): one section per week, Monday to Sunday, newest first, its string
+    /// with the beads under the head (empty without one), the rows day by day with the weekday in the
+    /// margin; what counted carries the bead, the Knäuel its small grey sign.
     private var doneSections: some View {
-        let groups = ViewRules.groupedByCompletionDay(shown)
-        return ForEach(groups, id: \.day) { group in
+        let weeks = ViewRules.groupedByCompletionWeek(shown, all: tasks)
+        return ForEach(weeks, id: \.week.lowerBound) { week in
             Section {
-                ForEach(group.tasks) { task in
-                    row(task)
+                WeekString(beads: week.beads)
+                    .listRowSeparator(.hidden)
+                    .paperRow()
+                    .accessibilityIdentifier("doneWeekString_\(week.week.lowerBound.timeIntervalSinceReferenceDate)")
+                ForEach(week.days, id: \.day) { day in
+                    ForEach(day.tasks) { task in
+                        row(task, marginWords: day.day.formatted(.dateTime.weekday(.abbreviated)))
+                    }
                 }
             } header: {
-                head(Text(group.day, format: .dateTime.weekday(.wide).day().month()))
+                head(Text(Self.weekHead(week)))
             }
         }
+    }
+
+    /// "20 to 26 October", "This week · 20 to 26 October" (#646).
+    static func weekHead(_ week: ViewRules.WeekGroup, calendar: Calendar = .current, locale: Locale = .current) -> String {
+        let last = calendar.date(byAdding: .day, value: -1, to: week.week.upperBound) ?? week.week.upperBound
+        // The style carries the calendar and its time zone: without them the days are read in UTC.
+        let style = Date.IntervalFormatStyle(locale: locale, calendar: calendar, timeZone: calendar.timeZone).day().month(.wide)
+        let span = (week.week.lowerBound..<last).formatted(style)
+        return week.isCurrent ? String(localized: "This week · \(span)") : span
     }
 
     /// "New" as the review tray (#188): on top what only needs a nod ("Looks right" by swipe),
@@ -492,11 +515,11 @@ struct TaskListView: View {
     }
 
     @ViewBuilder
-    private func row(_ task: TaskItem) -> some View {
+    private func row(_ task: TaskItem, marginWords: String? = nil) -> some View {
         if actions.isPending(task) {
             pendingRow(task).wideListRow(selected: isChosen(task))
         } else {
-            openRow(task)
+            openRow(task, marginWords: marginWords)
         }
     }
 
@@ -504,12 +527,12 @@ struct TaskListView: View {
         actions.pendingRow(task, TaskRow(task: task, hidesContext: context != nil, note: note(for: task), marksParked: kind == .open, nextRank: nextRank(of: task)))
     }
 
-    private func openRow(_ task: TaskItem) -> some View {
+    private func openRow(_ task: TaskItem, marginWords: String? = nil) -> some View {
         NavigationLink {
             detail(task, reviewing: kind == .new)
         } label: {
             TaskRow(task: task, hidesContext: context != nil, note: note(for: task), marksParked: kind == .open,
-                    nextRank: nextRank(of: task), onNewDate: { redating = task })
+                    nextRank: nextRank(of: task), onNewDate: { redating = task }, marginWords: marginWords)
                 .accessibilityAddTraits(isChosen(task) ? .isSelected : [])
         }
         // The whole row opens the task; the system's arrow at its end made room for the star (#509).

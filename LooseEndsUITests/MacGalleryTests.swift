@@ -33,12 +33,7 @@ final class MacGalleryTests: XCTestCase {
         macShot(window, "mac-gallery-\(label)-1-start")
 
         let size = window.frame.size
-        let sizeNote = XCTAttachment(
-            string: "\(Int(size.width)) x \(Int(size.height)) pt; window at launch: \(hadWindow ? "yes" : "no, opened from the menu bar")"
-        )
-        sizeNote.name = "mac-gallery-\(label)-window-size"
-        sizeNote.lifetime = .keepAlways
-        add(sizeNote)
+        addWindowSizeNote(size, hadWindow: hadWindow, name: "mac-gallery-\(label)-window-size")
 
         newRow.click()
         let row = window.descendants(matching: .any)
@@ -58,8 +53,62 @@ final class MacGalleryTests: XCTestCase {
         XCTAssertTrue(macElement("startCaptureField", in: window).waitForExistence(timeout: 10), "Start page did not come back")
         macShot(window, "mac-gallery-\(label)-4-start-again")
 
+        // "Completed" by weeks (#646): one task done from its detail, then the list with the week's head and string.
+        newRow.click()
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "New shows no task for Completed")
+        row.click()
+        let more = macElement("detailMoreMenu", in: window)
+        XCTAssertTrue(more.waitForExistence(timeout: 10), "Detail shows no … menu")
+        more.click()
+        let complete = macElement("menuCompleteButton", in: app)
+        XCTAssertTrue(complete.waitForExistence(timeout: 5), "The … menu offers no Complete")
+        complete.click()
+        let doneRow = macElement("viewRow_done", in: window)
+        XCTAssertTrue(doneRow.waitForExistence(timeout: 10), "Sidebar shows no Completed")
+        // The Done window (#32) takes three seconds; the list fills after it.
+        RunLoop.current.run(until: Date().addingTimeInterval(4))
+        doneRow.click()
+        let doneTask = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "taskRow_"))
+            .firstMatch
+        XCTAssertTrue(doneTask.waitForExistence(timeout: 10), "Completed shows no task")
+        macShot(window, "mac-gallery-\(label)-5-completed-weeks")
+
         // After the pictures, so a narrow window still delivers them.
         XCTAssertGreaterThanOrEqual(size.width, Self.minimumWidth, "Window \(size) too narrow for sidebar and list")
+        app.terminate()
+    }
+
+    /// Window and screen size as text, with the way the window opened (#593, AC-6).
+    @MainActor
+    private func addWindowSizeNote(_ size: CGSize, hadWindow: Bool, name: String) {
+        let screen = macScreenSize()
+        let sizeNote = XCTAttachment(
+            string: "\(Int(size.width)) x \(Int(size.height)) pt on screen \(Int(screen.width)) x \(Int(screen.height)) pt; "
+                + "window at launch: \(hadWindow ? "yes" : "no, opened from the menu bar")"
+        )
+        sizeNote.name = name
+        sizeNote.lifetime = .keepAlways
+        add(sizeNote)
+    }
+
+    /// #593 AC-6: which way `photograph` opens the window is up to the CI Mac, so this test forces the
+    /// menu bar way in every run. It closes the main window (the app stays, it lives in the menu bar),
+    /// opens it again via the symbol and "Open Loose Ends", and checks that it fits the screen.
+    @MainActor
+    func testWindowFromMenuBarFitsScreen() throws {
+        let app = macLaunch(dark: false)
+        _ = macOpenMainWindowIfNeeded(app)
+        let first = macMainWindow(of: app)
+        app.activate()
+        app.typeKey("w", modifierFlags: .command)
+        let closed = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: first)
+        XCTAssertEqual(XCTWaiter.wait(for: [closed], timeout: 10), .completed, "⌘W did not close the main window")
+
+        XCTAssertFalse(macOpenMainWindowIfNeeded(app), "The window came back without the menu bar")
+        let window = macMainWindow(of: app)
+        addWindowSizeNote(window.frame.size, hadWindow: false, name: "mac-gallery-menu-bar-window-size")
+        macShot(window, "mac-gallery-menu-bar-window")
         app.terminate()
     }
 

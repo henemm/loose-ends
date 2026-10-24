@@ -5,6 +5,7 @@ import SwiftUI
 /// groups too. The choice goes to every device through the iCloud key-value store.
 struct FieldSettingsView: View {
     @Environment(FieldSettingsStore.self) private var store: FieldSettingsStore?
+    @State private var reward = ""
 
     private var settings: DetailFieldSettings { store?.settings ?? .standard }
 
@@ -18,10 +19,13 @@ struct FieldSettingsView: View {
                     ForEach(DetailField.allCases.filter { $0.group == group }, id: \.self) { field in
                         row(field)
                     }
+                    if group == .drive {
+                        rewardRow
+                    }
                 } header: {
                     Text(Self.groupTitle(group))
                 } footer: {
-                    if group == .connection {
+                    if group == .drive {
                         Text("Fields that are off are not offered when filling in a task. What a task already holds stays visible.")
                     }
                 }
@@ -55,6 +59,21 @@ struct FieldSettingsView: View {
         }
     }
 
+    /// "Dafür" (#647): the week's sentence, saved on Return and when the page goes; shown on the start
+    /// page under the string while set.
+    private var rewardRow: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            TextField("For it", text: $reward, prompt: Text("For it: Saturday, the movies"))
+                .onSubmit { store?.setReward(reward) }
+                .onDisappear { store?.setReward(reward) }
+                .onAppear { reward = store?.reward ?? "" }
+                .accessibilityIdentifier("rewardField")
+            Text("One sentence for the week, under the string on the start page. Nothing is checked.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+        }
+    }
+
     static func groupTitle(_ group: DetailField.Group) -> String {
         switch group {
         case .what: String(localized: "What")
@@ -62,6 +81,7 @@ struct FieldSettingsView: View {
         case .weight: String(localized: "Weight")
         case .filing: String(localized: "Filing")
         case .connection: String(localized: "Connection")
+        case .drive: String(localized: "Drive")
         }
     }
 
@@ -93,6 +113,8 @@ struct FieldSettingsView: View {
         case .project: String(localized: "Projects")
         case .subtasks: String(localized: "Subtasks")
         case .waitingOn: String(localized: "Waiting on")
+        case .knaeuel: String(localized: "The Knäuel")
+        case .counts: String(localized: "Counts")
         }
     }
 
@@ -103,6 +125,8 @@ struct FieldSettingsView: View {
         case .importance, .urgency: String(localized: "The rules read it from your words even when off.")
         case .contexts, .project: String(localized: "Also the group on the start page.")
         case .waitingOn: String(localized: "A task that has to be done first.")
+        case .knaeuel: String(localized: "The one task you keep putting off, under the date on the start page.")
+        case .counts: String(localized: "A bead on the week's string once completed. At most five open at a time.")
         default: nil
         }
     }
