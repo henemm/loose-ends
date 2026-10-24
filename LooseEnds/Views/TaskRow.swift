@@ -173,7 +173,7 @@ struct TaskRow: View {
                             // The bead (#645): the task counts on the week's string.
                             PearlGlyph()
                                 .frame(width: 30, height: 10)
-                                .accessibilityLabel(Text("Counts"))
+                                .accessibilityLabel(Text("Bead"))
                                 .accessibilityIdentifier("countsMarker_\(task.id.uuidString)")
                         } else if trait.id == "knaeuel" {
                             // The small grey Knäuel (#646): the task is, or was, the Knäuel.

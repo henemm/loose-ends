@@ -95,7 +95,10 @@ Menü; „Jetzt“ zeigt die Aufgabe nicht noch einmal. Gesetzt wird sie über �
 Details („Kein Knäuel mehr“, wenn sie es schon ist); hat eine andere Aufgabe das Knäuel, fragt die App erst. Unter „Jetzt“
 steht „Diese Woche“ mit der Schnur, sobald die Woche eine Perle hat: eine Mulde, die Perlen (r = 6) von links ab 40 pt im
 Abstand 40 pt, die neueste 1,1 s grün; die Perle in der Merkmalzeile ist eine kurze Schnur mit hohler Perle und Glanzpunkt.
-Beides ist aus, bis es in „Felder“ (Gruppe „Antrieb“) eingeschaltet wird.
+Beides ist aus, bis es in „Felder“ (Gruppe „Antrieb“) eingeschaltet wird. Nach Build 110 (Henning, 2026-10-24, #655): das
+Feature heißt „Perle sammeln“, die Zeile unter dem Datum beginnt ihre Merkmale mit „Das Knäuel“, die Schnur auf der Startseite
+heißt „Perlen“ und ist eine Schnur von fünf ohne Zeitraum, die leeren Plätze als feine Punkte; „Für die Perlen: …“ steht
+darunter, voll heißt gewonnen: „Die Schnur ist voll. Für die Perlen: …“ bis zur nächsten Perle, die eine neue Schnur beginnt.
 
 Berechnungsregeln der Ansichten stehen in `02-datenmodell-und-ansichten.md`.
 

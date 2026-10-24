@@ -294,6 +294,43 @@ import Testing
         #expect(ViewRules.weekBeads(in: all, now: Self.date(15), calendar: Self.calendar).map(\.title) == ["Rasen mähen", "Fenster putzen"])
     }
 
+    @Test("The start page's string holds the last seven beads of any age, oldest first (Henning, build 110)")
+    @MainActor func recentBeads() async throws {
+        let store = try TestStore()
+        var tasks: [TaskItem] = []
+        for day in 1...9 {
+            let task = KnaeuelTests.task("Perle \(day)")
+            task.countsAt = Self.date(1, 9)
+            store.context.insert(task)
+            TaskActions.complete(task, now: Self.date(day, 9, hour: 9))
+            tasks.append(task)
+        }
+        let open = KnaeuelTests.task("Offen")
+        open.countsAt = Self.date(1)
+        store.context.insert(open)
+        try store.context.save()
+
+        let recent = ViewRules.recentBeads(in: tasks + [open], limit: 7)
+        #expect(recent.map(\.title) == (3...9).map { "Perle \($0)" }, "the two oldest fell off")
+        #expect(ViewRules.recentBeads(in: [open]).isEmpty)
+        #expect(ViewRules.weekBeads(in: tasks, now: Self.now, calendar: Self.calendar).isEmpty, "September beads are not this week's")
+
+        // The string of five (#655): nine beads are one full string and four on the second.
+        #expect(ViewRules.stringLength == 5)
+        let nine = ViewRules.currentString(in: tasks + [open])
+        #expect(nine.beads.map(\.title) == (6...9).map { "Perle \($0)" })
+        #expect(!nine.isFull && nine.filled == 1)
+        let five = ViewRules.currentString(in: Array(tasks.prefix(5)))
+        #expect(five.beads.count == 5 && five.isFull && five.filled == 0, "the fifth bead fills the string: the win")
+        let tenth = KnaeuelTests.task("Perle 10")
+        tenth.countsAt = Self.date(1)
+        store.context.insert(tenth)
+        TaskActions.complete(tenth, now: Self.date(10, 9, hour: 9))
+        let ten = ViewRules.currentString(in: tasks + [tenth])
+        #expect(ten.isFull && ten.filled == 1 && ten.beads.first?.title == "Perle 6", "the tenth bead fills the second string")
+        #expect(ViewRules.currentString(in: [open]) == .empty)
+    }
+
     @Test("The beads sit from the left at 40 pt apart on the sagging string, closer only once the string is full")
     func centers() {
         #expect(WeekString.centers(count: 0, width: 350).isEmpty)
