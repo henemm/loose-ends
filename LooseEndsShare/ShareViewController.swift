@@ -64,27 +64,29 @@ final class ShareViewController: UIViewController {
             }
             for provider in item.attachments ?? [] {
                 var kind: String?
-                do {
-                    if let folder, let type = SharedAttachmentFile.attachmentType(registered: provider.registeredTypeIdentifiers) {
-                        if let loaded = await attachment(from: provider, type: type, into: folder) {
-                            attachments.append(loaded.attachment)
-                            kind = loaded.kind
-                        }
-                    } else if provider.hasItemConformingToTypeIdentifier(UTType.emailMessage.identifier) {
-                        let loaded = try await provider.loadItem(forTypeIdentifier: UTType.emailMessage.identifier)
-                        kind = loadedKind(loaded, branch: "mail")
-                        if let raw = string(from: loaded) { mails.append(raw) }
-                    } else if provider.hasItemConformingToTypeIdentifier(UTType.url.identifier) {
-                        let loaded = try await provider.loadItem(forTypeIdentifier: UTType.url.identifier)
-                        kind = loadedKind(loaded, branch: "url")
-                        if let url = loaded as? URL { urls.append(url) }
-                    } else if provider.hasItemConformingToTypeIdentifier(UTType.plainText.identifier) {
-                        let loaded = try await provider.loadItem(forTypeIdentifier: UTType.plainText.identifier)
-                        kind = loadedKind(loaded, branch: "text")
-                        if let text = string(from: loaded) { texts.append(text) }
+                if let folder, let type = SharedAttachmentFile.attachmentType(registered: provider.registeredTypeIdentifiers) {
+                    if let loaded = await attachment(from: provider, type: type, into: folder) {
+                        attachments.append(loaded.attachment)
+                        kind = loaded.kind
                     }
-                } catch {
-                    logger.error("Reading a shared item failed: \(error, privacy: .public)")
+                } else if provider.hasItemConformingToTypeIdentifier(UTType.emailMessage.identifier) {
+                    if let data = await data(from: provider, type: UTType.emailMessage.identifier) {
+                        mails.append(SharedContent.decode(data))
+                        kind = "data"
+                    }
+                } else if provider.hasItemConformingToTypeIdentifier(UTType.url.identifier) {
+                    if let url = await object(URL.self, from: provider, type: UTType.url.identifier) {
+                        urls.append(url)
+                        kind = url.isFileURL ? "file" : "url"
+                    }
+                } else if provider.hasItemConformingToTypeIdentifier(UTType.plainText.identifier) {
+                    if let text = await object(String.self, from: provider, type: UTType.plainText.identifier) {
+                        texts.append(text)
+                        kind = "text"
+                    } else if let data = await data(from: provider, type: UTType.plainText.identifier) {
+                        texts.append(SharedContent.decode(data))
+                        kind = "data"
+                    }
                 }
                 // #24 AC-1: type identifiers and the loaded kind only, never the content.
                 let line = SharedContent.probeLine(typeIdentifiers: provider.registeredTypeIdentifiers, loaded: kind)
@@ -150,24 +152,44 @@ final class ShareViewController: UIViewController {
         logger.error("Shared \(step, privacy: .public) failed: type=\(type, privacy: .public) \(error.domain, privacy: .public) \(error.code, privacy: .public)")
     }
 
-    /// What an attachment delivered: raw `data`, a `file`, or else the branch's own kind (#24).
-    private static func loadedKind(_ loaded: any NSSecureCoding, branch: String) -> String {
-        if loaded is Data { return "data" }
-        if let url = loaded as? URL, url.isFileURL { return "file" }
-        return branch
+    /// A link or a text as the class the provider hands out (#580, replaces `loadItem`). A failure is logged with
+    /// domain and code only, never the content, and gives nil.
+    @MainActor
+    private static func object<T: _ObjectiveCBridgeable & Sendable>(
+        _ kind: T.Type, from provider: NSItemProvider, type: String
+    ) async -> T? where T._ObjectiveCType: NSItemProviderReading {
+        do {
+            return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<T, any Error>) in
+                _ = provider.loadObject(ofClass: kind) { object, error in
+                    if let object {
+                        continuation.resume(returning: object)
+                    } else {
+                        continuation.resume(throwing: error ?? CocoaError(.fileReadUnknown))
+                    }
+                }
+            }
+        } catch {
+            logFailure(error, type: type, step: "object")
+            return nil
+        }
     }
 
-    private static func string(from loaded: any NSSecureCoding) -> String? {
-        if let text = loaded as? String { return text }
-        if let attributed = loaded as? NSAttributedString { return attributed.string }
-        if let data = loaded as? Data { return String(data: data, encoding: .utf8) ?? String(data: data, encoding: .isoLatin1) }
-        if let url = loaded as? URL, url.isFileURL {
-            do {
-                return try String(contentsOf: url, encoding: .utf8)
-            } catch {
-                logger.error("Reading a shared file failed: \(error, privacy: .public)")
+    /// The provider's bytes for `type` (a mail, or a text no class could take, #580); a file is read by the system.
+    @MainActor
+    private static func data(from provider: NSItemProvider, type: String) async -> Data? {
+        do {
+            return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Data, any Error>) in
+                _ = provider.loadDataRepresentation(forTypeIdentifier: type) { data, error in
+                    if let data {
+                        continuation.resume(returning: data)
+                    } else {
+                        continuation.resume(throwing: error ?? CocoaError(.fileReadUnknown))
+                    }
+                }
             }
+        } catch {
+            logFailure(error, type: type, step: "data")
+            return nil
         }
-        return nil
     }
 }
