@@ -284,8 +284,14 @@ struct TaskDetailView: View {
             },
             fields: settings,
             didComplete: { _ in dismiss() },
-            analyze: enrichment == nil ? nil : { _ in analyzeAgain() }
+            analyze: analysis
         )
+    }
+
+    /// "Analyze again" for the menu: the detail's own run with its note; nil without the pipeline.
+    private var analysis: (@MainActor (TaskItem) -> Void)? {
+        guard enrichment != nil else { return nil }
+        return { _ in analyzeAgain() }
     }
 
     var body: some View {
@@ -469,9 +475,9 @@ struct TaskDetailView: View {
         case .dueDate, .repeatRule, .importance, .urgency, .duration, .energy, .contexts, .project:
             if let revised = field.revisedField { editingField = revised }
         case .knaeuel:
-            setKnaeuel()
+            actions.setKnaeuel(task)
         case .counts:
-            toggleCounts()
+            actions.toggleCounts(task)
         }
     }
 
