@@ -1,5 +1,9 @@
 import Testing
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 @testable import LooseEnds
 
 /// Which sign stands with which field (#344): one source for the list row and the detail's register line.
@@ -36,8 +40,16 @@ import UIKit
         let names = Importance.allCases.map(FieldGlyph.importance) + RevisedField.allCases.compactMap(FieldGlyph.symbol(for:))
         #expect(!names.isEmpty)
         for name in names {
-            #expect(UIImage(systemName: name) != nil, "\(name) is no SF Symbol")
+            #expect(isSystemSymbol(name), "\(name) is no SF Symbol")
             #expect(name != "flag.fill" && name != "bolt.fill")
         }
+    }
+
+    private func isSystemSymbol(_ name: String) -> Bool {
+        #if canImport(UIKit)
+        UIImage(systemName: name) != nil
+        #else
+        NSImage(systemSymbolName: name, accessibilityDescription: nil) != nil
+        #endif
     }
 }
