@@ -1,16 +1,16 @@
 # Simulator-Beleg
-erzeugt: 2026-10-24T20:00:13+0200
+erzeugt: 2026-10-24T20:08:39+0200
 befehl: scripts/sim.sh test-proof FieldsSmokeTests
 workflow: fix-673-duration-rule
-head: 436dd4fab4eb313889dea5486782720e4b72c879
+head: b1b4bd8081687e8743ee92d304f09c1f5b0679b3
 basis: 20b8649b675a62e478f7306ad489d2ca81b7c273 (merge-base origin/main HEAD)
 testklasse: FieldsSmokeTests
 ergebnis: Passed
 xcodebuild: ** TEST SUCCEEDED **
 tests: 5 gesamt, 5 bestanden, 0 fehlgeschlagen, 0 übersprungen
-start: 1792864627.384  ende: 1792864812.457
+start: 1792865142.149  ende: 1792865318.839
 geraet: iPhone 17, iOS 27.0
-summary: docs/artifacts/fix-673-duration-rule/simulator-run/summary.json  sha256:0ac10c77ea5a36bc5536aad60ead17d87dbde44d950686b880c339a4652b74f4
+summary: docs/artifacts/fix-673-duration-rule/simulator-run/summary.json  sha256:90fbb4fc16e4dea88923a41aab63bdec83b0f235dca6474a49b847d4013b9d6c
 xcresult: docs/artifacts/fix-673-duration-rule/simulator-run/run.xcresult  (gitignored)
 screenshots: docs/artifacts/fix-673-duration-rule/simulator-run/*.png (10 Stück)
 
