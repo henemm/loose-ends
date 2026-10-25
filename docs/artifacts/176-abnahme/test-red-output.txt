@@ -1,0 +1,149 @@
+test_belegt_names_ticket_and_build (__main__.AbnahmeListeTests.test_belegt_names_ticket_and_build) ... FAIL
+test_checker_rejects_bad_rows (__main__.AbnahmeListeTests.test_checker_rejects_bad_rows) ... ok
+test_every_row_has_source (__main__.AbnahmeListeTests.test_every_row_has_source) ... FAIL
+test_gap_and_waiting_have_no_proof (__main__.AbnahmeListeTests.test_gap_and_waiting_have_no_proof) ... FAIL
+test_list_exists_and_has_seven_columns (__main__.AbnahmeListeTests.test_list_exists_and_has_seven_columns) ... FAIL
+test_numbers_are_unique (__main__.AbnahmeListeTests.test_numbers_are_unique) ... FAIL
+test_proof_files_exist (__main__.AbnahmeListeTests.test_proof_files_exist) ... FAIL
+test_pruefblock_lists_all_gaps (__main__.AbnahmeListeTests.test_pruefblock_lists_all_gaps) ... FAIL
+test_required_coverage (__main__.AbnahmeListeTests.test_required_coverage) ... FAIL
+test_required_gap_steps_present (__main__.AbnahmeListeTests.test_required_gap_steps_present) ... FAIL
+test_status_is_allowed (__main__.AbnahmeListeTests.test_status_is_allowed) ... FAIL
+
+======================================================================
+FAIL: test_belegt_names_ticket_and_build (__main__.AbnahmeListeTests.test_belegt_names_ticket_and_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 89, in test_belegt_names_ticket_and_build
+    for r in self.rows():
+             ~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 73, in rows
+    return parse_table(load_text())[1]
+                       ~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 24, in load_text
+    raise AssertionError(f"{LIST.relative_to(ROOT)} fehlt")
+AssertionError: docs/reference/abnahme-testflight.md fehlt
+
+======================================================================
+FAIL: test_every_row_has_source (__main__.AbnahmeListeTests.test_every_row_has_source)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 114, in test_every_row_has_source
+    for r in self.rows():
+             ~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 73, in rows
+    return parse_table(load_text())[1]
+                       ~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 24, in load_text
+    raise AssertionError(f"{LIST.relative_to(ROOT)} fehlt")
+AssertionError: docs/reference/abnahme-testflight.md fehlt
+
+======================================================================
+FAIL: test_gap_and_waiting_have_no_proof (__main__.AbnahmeListeTests.test_gap_and_waiting_have_no_proof)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 95, in test_gap_and_waiting_have_no_proof
+    for r in self.rows():
+             ~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 73, in rows
+    return parse_table(load_text())[1]
+                       ~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 24, in load_text
+    raise AssertionError(f"{LIST.relative_to(ROOT)} fehlt")
+AssertionError: docs/reference/abnahme-testflight.md fehlt
+
+======================================================================
+FAIL: test_list_exists_and_has_seven_columns (__main__.AbnahmeListeTests.test_list_exists_and_has_seven_columns)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 76, in test_list_exists_and_has_seven_columns
+    header, rows = parse_table(load_text())
+                               ~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 24, in load_text
+    raise AssertionError(f"{LIST.relative_to(ROOT)} fehlt")
+AssertionError: docs/reference/abnahme-testflight.md fehlt
+
+======================================================================
+FAIL: test_numbers_are_unique (__main__.AbnahmeListeTests.test_numbers_are_unique)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 81, in test_numbers_are_unique
+    nrs = [r["Nr"] for r in self.rows()]
+                            ~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 73, in rows
+    return parse_table(load_text())[1]
+                       ~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 24, in load_text
+    raise AssertionError(f"{LIST.relative_to(ROOT)} fehlt")
+AssertionError: docs/reference/abnahme-testflight.md fehlt
+
+======================================================================
+FAIL: test_proof_files_exist (__main__.AbnahmeListeTests.test_proof_files_exist)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 100, in test_proof_files_exist
+    self.assertEqual(check_rows(self.rows()), [])
+                                ~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 73, in rows
+    return parse_table(load_text())[1]
+                       ~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 24, in load_text
+    raise AssertionError(f"{LIST.relative_to(ROOT)} fehlt")
+AssertionError: docs/reference/abnahme-testflight.md fehlt
+
+======================================================================
+FAIL: test_pruefblock_lists_all_gaps (__main__.AbnahmeListeTests.test_pruefblock_lists_all_gaps)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 119, in test_pruefblock_lists_all_gaps
+    text = load_text()
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 24, in load_text
+    raise AssertionError(f"{LIST.relative_to(ROOT)} fehlt")
+AssertionError: docs/reference/abnahme-testflight.md fehlt
+
+======================================================================
+FAIL: test_required_coverage (__main__.AbnahmeListeTests.test_required_coverage)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 109, in test_required_coverage
+    text = " ".join(r["Schritt"] + " " + r["Bedienweg"] for r in self.rows())
+                                                                 ~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 73, in rows
+    return parse_table(load_text())[1]
+                       ~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 24, in load_text
+    raise AssertionError(f"{LIST.relative_to(ROOT)} fehlt")
+AssertionError: docs/reference/abnahme-testflight.md fehlt
+
+======================================================================
+FAIL: test_required_gap_steps_present (__main__.AbnahmeListeTests.test_required_gap_steps_present)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 104, in test_required_gap_steps_present
+    hits = [r for r in self.rows() if ticket in " ".join(r.values())]
+                       ~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 73, in rows
+    return parse_table(load_text())[1]
+                       ~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 24, in load_text
+    raise AssertionError(f"{LIST.relative_to(ROOT)} fehlt")
+AssertionError: docs/reference/abnahme-testflight.md fehlt
+
+======================================================================
+FAIL: test_status_is_allowed (__main__.AbnahmeListeTests.test_status_is_allowed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 86, in test_status_is_allowed
+    self.assertEqual([r["Nr"] for r in self.rows() if r["Status"] not in STATUS], [])
+                                       ~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 73, in rows
+    return parse_table(load_text())[1]
+                       ~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_abnahme_liste.py", line 24, in load_text
+    raise AssertionError(f"{LIST.relative_to(ROOT)} fehlt")
+AssertionError: docs/reference/abnahme-testflight.md fehlt
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.002s
+
+FAILED (failures=10)
