@@ -29,17 +29,21 @@ final class EnrichmentCoordinator {
     /// How long one model call may take before it counts as failed (#530); `defaultModelTimeout` unless a
     /// test passes its own. Measured calls took at most 7.92 s (#534); a hang must not hold the pass forever.
     private let modelTimeout: Duration
+    /// Home and work as the user saved them (#680), read at each rule step; the app passes its store.
+    private let savedPlaces: @MainActor () -> SavedPlaces
     private let logger = Logger(subsystem: "com.henning.looseends", category: "Enrichment")
     private var isRunning = false
 
     init(
         enricher: any TaskEnricher,
         container: ModelContainer,
-        modelTimeout: Duration = EnrichmentCoordinator.defaultModelTimeout
+        modelTimeout: Duration = EnrichmentCoordinator.defaultModelTimeout,
+        savedPlaces: @escaping @MainActor () -> SavedPlaces = { .empty }
     ) {
         self.enricher = enricher
         self.container = container
         self.modelTimeout = modelTimeout
+        self.savedPlaces = savedPlaces
     }
 
     /// The model call with its time limit; a timeout throws like any other failure of the call.
@@ -236,6 +240,7 @@ final class EnrichmentCoordinator {
         }
         if applyPhoneRule(to: task, mode: mode) { matched.insert(.notes) }
         if applyProjectNameRule(to: task, mode: mode, projects: projects) { matched.insert(.project) }
+        if applyPlaceRule(to: task, mode: mode) { matched.insert(.place) }
         return matched
     }
 
@@ -387,6 +392,24 @@ final class EnrichmentCoordinator {
         task.revisions = (task.revisions ?? []) + [revision]
         task.project = project
         logger.info("Rule set the project of \(task.id, privacy: .public)")
+        return true
+    }
+
+    /// "zu Hause" or "im Büro" sets the saved place (#680), only while the task has none and the user
+    /// never set or cleared one; in a re-analysis only to a new place the user has not touched.
+    private func applyPlaceRule(to task: TaskItem, mode: EnrichmentWriter.Mode) -> Bool {
+        guard let guess = PlaceWordRule.match(in: task.rawText, places: savedPlaces()) else { return false }
+        guard EnrichmentWriter.mayWrite(
+            .place, on: task, mode: mode,
+            firstRun: task.place == nil && !EnrichmentWriter.userHasTouched(.place, on: task),
+            changes: guess.value != task.place
+        ) else { return true }
+        let revision = Revision(task: task, field: .place, oldValue: task.place.flatMap(FieldCodec.encode),
+                                newValue: FieldCodec.encode(guess.value), author: .rule, reason: guess.reason)
+        task.revisions = (task.revisions ?? []) + [revision]
+        task.place = guess.value
+        task.placeSourceRaw = FieldSource.rule.rawValue
+        logger.info("Rule set the place of \(task.id, privacy: .public)")
         return true
     }
 

@@ -339,6 +339,8 @@
     "The calendar couldn't be updated." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Der Kalender ließ sich nicht aktualisieren." } } } },
     "Speech recognition is not available. You can type instead." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Spracherkennung ist nicht verfügbar. Du kannst stattdessen tippen." } } } },
     "Not now" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Jetzt nicht" } } } },
+    "From “at home” in the note: your saved home." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus „zu Hause“ in der Notiz: dein gespeichertes Zuhause." } } } },
+    "From “at work” in the note: your saved work place." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus „Arbeit“ in der Notiz: dein gespeicherter Arbeitsort." } } } },
     "From a day count in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus einer Tagesangabe in der Notiz." } } } },
     "From the weekday named in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus dem Wochentag in der Notiz." } } } },
     "From a weekday of next week in the note." : { "extractionState" : "translated", "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus einem Wochentag der nächsten Woche in der Notiz." } } } },
