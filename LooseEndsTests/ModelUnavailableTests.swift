@@ -18,7 +18,7 @@ import Testing
     @MainActor func rulesRunAndModelCatchesUp(reason: String) async throws {
         let store = try TestStore()
         let context = store.context
-        let task = TaskItem(rawText: "Nächsten Freitag dringend die Miete überweisen")
+        let task = TaskItem(rawText: "Nächsten Freitag wichtig und dringend die Miete überweisen")
         task.capturedAt = try #require(Calendar.current.date(from: DateComponents(year: 2026, month: 3, day: 12, hour: 12)))
         context.insert(task)
         try context.save()
@@ -31,8 +31,9 @@ import Testing
         #expect(task.rulesAppliedAt != nil, "der Regelschritt lief (\(reason))")
         #expect(task.processedAt == nil, "das Modell hat die Aufgabe nicht gesehen (\(reason))")
         let dueAfterRule = try #require(task.dueDate, "das Datum setzt die Regel (\(reason))")
+        #expect(task.importance != nil, "die Wichtigkeit setzt die Stichwortregel (\(reason))")
         #expect(task.urgency != nil, "die Dringlichkeit setzt die Stichwortregel (\(reason))")
-        #expect(task.status != .done)
+        #expect(task.status == .unprocessed, "der Regelschritt lässt den Status, der Nachzügler findet sie (\(reason))")
 
         var draft = EnrichmentDraft()
         draft.title = EnrichmentDraft.Guess("Miete überweisen", confidence: 0.9, reason: "Stub.")
@@ -57,6 +58,7 @@ import Testing
         let context = store.context
         let garden = TaskContext(name: "Garten", isSystemDefault: true, sortOrder: 3)
         context.insert(garden)
+        context.insert(Project(name: "Haushalt"))
         let task = TaskItem(rawText: "Vitrine im Wohnzimmer abstauben")
         context.insert(task)
         try context.save()
@@ -67,6 +69,7 @@ import Testing
         first.title = EnrichmentDraft.Guess("Vitrine abstauben", confidence: 0.9, reason: "Stub.")
         first.duration = EnrichmentDraft.Guess(.hour1, confidence: 0.9, reason: "Stub.")
         first.contexts = EnrichmentDraft.Guess(["Garten"], confidence: 0.9, reason: "Stub.")
+        first.project = EnrichmentDraft.Guess("Haushalt", confidence: 0.9, reason: "Stub.")
         let stub = StubEnricher(draft: first)
         let coordinator = EnrichmentCoordinator(enricher: stub, container: store.container)
 
@@ -78,6 +81,7 @@ import Testing
         second.title = EnrichmentDraft.Guess("Vitrine entstauben", confidence: 0.9, reason: "Stub, anderes Gerät.")
         second.duration = EnrichmentDraft.Guess(.hours2plus, confidence: 0.9, reason: "Stub, anderes Gerät.")
         second.contexts = EnrichmentDraft.Guess(["Garten"], confidence: 0.9, reason: "Stub, anderes Gerät.")
+        second.project = EnrichmentDraft.Guess("Haushalt", confidence: 0.9, reason: "Stub, anderes Gerät.")
         stub.draft = second
         task.processedAt = nil
 
@@ -89,6 +93,7 @@ import Testing
         #expect((task.revisions ?? []).filter { $0.field == .duration }.count == 1,
                 "genau eine Revision auf der Dauer, die des Nutzers")
         #expect((task.contexts ?? []).isEmpty, "das Modell setzt nie Kontexte (#215)")
+        #expect(task.project == nil, "das Modell setzt nie ein Projekt (#469)")
         #expect((task.revisions ?? []).filter { $0.author == .user }.count == 1,
                 "der zweite Lauf legt keine Nutzer-Revision an")
     }

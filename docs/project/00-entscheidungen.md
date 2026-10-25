@@ -84,8 +84,8 @@ Enums als typsichere Swift-Enums mit String-Rohwert, keine losen Strings im Mode
 **ADR-3 Rohtext ist unveränderlich, alles andere ist abgeleitet.** Jedes abgeleitete Feld
 trägt Herkunft (KI oder Nutzer) und Konfidenz. Kein Feld ist Pflicht.
 
-**ADR-4 Veredelung genau einmal.** Bei der Erfassung, im Intent-Prozess (kein App-Start nötig),
-mit Nachzügler-Lauf beim nächsten App-Start für Aufgaben ohne `processedAt`.
+**ADR-4 Veredelung genau einmal.** In der App: nach der Erfassung und als Nachzügler-Lauf im Vordergrund für Aufgaben ohne `processedAt`
+(berichtigt 2026-10-24, #68: „im Intent-Prozess“ war nie gebaut, siehe unten).
 Erneute Analyse nur auf ausdrücklichen Nutzerwunsch.
 Seit #95 markiert `processedAt` nur noch den Modelllauf: Der Regelschritt für das Fälligkeitsdatum
 (`DueDateRule`) läuft unabhängig davon bei jeder Veredelung, weil er ohne Modell auskommt und
@@ -105,6 +105,15 @@ Feld neu setzen, das der Nutzer nie angefasst hat — von der KI gesetzt oder no
 Änderung als neue KI-Revision vom alten Wert aus. Was der Nutzer gesetzt hat, bleibt; ein gleicher
 Wert erzeugt keine Revision; fehlt ein Feld im neuen Ergebnis, wird nichts gelöscht. Regeln vor dem
 Modell gilt auch hier: Ein Feld, das eine Regel trifft, überschreibt das Modell nicht.
+
+Ergänzung 2026-10-24 (#68, Henning: „Ja, nur in der App“): **Das Modell läuft nur in der App** (Vordergrund und Nachzügler, auch Menüleiste und Teilaufgaben),
+nie in Intent, Share-Erweiterung, Widget oder Watch; diese Prozesse speichern nur Rohtext und Titel. Wer kein Modell hat (älteres iPad, Mac ohne Apple Intelligence),
+veredelt mit Regeln; die Watch hat keines (`FoundationModelsEnricher` ist für watchOS nicht übersetzt). Ein Doppellauf von iPhone und Mac wird **nicht gesperrt**:
+Der Schaden ist begrenzt (der Writer setzt nie Kontext oder Projekt, #215/#469; Nutzerwerte sind geschützt, #244; höchstens zusätzliche KI-Revisionen), belegt in
+`ModelUnavailableTests`. Zeigt er sich in den Messläufen, ist das Sperrfeld der Nachfolger. Matrix und offene Gerätezellen: `docs/reference/modell-verfuegbarkeit.md`.
+Verworfene Alternativen und was sie kippen würden: Modell auch im Intent-/Share-Prozess (kippt ADR-9); Sperrfeld `enrichingDevice` (macht „genau einmal“ zur harten Garantie,
+kostet Schema und CloudKit-Deploy); PCC-Fallback für iPad ohne Modell und Watch (kippt ADR-1 und den Datenschutztext in #342); nur Vordergrund mit sichtbarem „wird geprüft“
+(fügt UI hinzu, kippt den Nachzügler im Hintergrund); Modell für v1 streichen (kippt ADR-4 ganz und Epic #370).
 
 **ADR-5 Lernen ist Wiedererkennung, kein Training** (geändert 2026-09-27, Henning, nach #69/#131).
 Ursprünglich: ähnliche alte Aufgaben über Embeddings als Prompt-Beispiele. Die Messung hat das
