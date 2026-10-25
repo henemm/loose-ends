@@ -32,7 +32,8 @@ struct LooseEndsApp: App {
         LaunchTimings.mark(.containerEnd)
         Self.seedLeftoversIfAsked(in: container)
         let enricher: any TaskEnricher = ModelContainerFactory.isUITesting ? ModelOffEnricher() : FoundationModelsEnricher()
-        enrichment = EnrichmentCoordinator(enricher: enricher, container: container)
+        enrichment = EnrichmentCoordinator(enricher: enricher, container: container,
+                                           savedPlaces: { SavedPlacesStore.shared.places })
         #if os(iOS)
         Self.seedPlaceTaskIfAsked(in: container)
         let places: (any PlaceReconciling)? = PlaceNotificationCenter(container: container)
