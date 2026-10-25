@@ -294,6 +294,15 @@ der Titel. „Jetzt N“ und auf dem iPhone „Inhalt“ sind Randwörter in Gra
 Tinte (#637); die Zeilen des Inhalts stehen an der Titelkante. Die Seitenleiste auf Mac und iPad behält ihren Kopf. Abweichung
 vom Entwurf: Das Datum steht über dem Satz statt in der Randspalte, weil dort Knoten oder Knäuel stehen (#180).
 
+**Nachgeholt nach Build-Ansicht (Henning, 2026-10-25, #677: „noch nicht vollständig umgesetzt“).** Jetzt wie C3: Das Datum
+steht in der Randspalte (Wochentag über „25. Okt.“, darüber der Knoten, solange kein Knäuel da ist), daneben der Satz des
+Tages. Der Satz nennt keine Aufgabe, die in „Jetzt“ ohnehin steht („Heute eine feste Zeit, um 15:00.“ statt des Titels;
+nach dem Rückblick entfällt „Um 15:00 noch: …“); erledigte Titel bleiben. Das Knäuel folgt in eigener Zeile unter dem Satz,
+klein in der Randspalte neben dem Titel; der lange Faden (#644) entfällt, der grüne Moment beim Erledigen bleibt am Zeichen.
+„Jetzt N“ ist ein Randwort ohne Linie, die Schreibzeile rückt dicht unter den Satz. Eine Haarlinie an der Titelkante schließt
+„Jetzt“, „Inhalt“ steht in der Randspalte neben der ersten Zeile. Die Perlenschnur ist auf drei Fünftel verkleinert (Perlen
+3,6 pt, 24 pt Abstand), auch unter dem Sonntagssatz.
+
 ## Mac-App (Henning, 2026-10-16, Epic #467, ersetzt #408)
 
 Entwurf mit sieben Tafeln: `docs/artifacts/feat-408-mac-entwurf/` (Dateien) und https://claude.ai/artifact/RuLo7oxphcG4oJfTJ7HeLT (Ansicht, Kommentare). Die Mac-App ist dieselbe Papierwelt wie das iPhone; es gibt keine eigene Mac-Gestaltung (ADR-1), nur Fenster, Zeiger und Tastatur.

@@ -4,7 +4,7 @@ import SwiftUI
 /// are built to sit inside a `List` and carry their own row look (`paperRow`).
 
 /// The heading of a zone, as a row of its own: since #677 (draft C3) a word in the margin column, grey,
-/// with a hairline at the titles' edge instead of spaced capitals.
+/// instead of spaced capitals; no line beside it, the writing line just above is line enough.
 struct ZoneCaption: View {
     private let title: LocalizedStringKey
     /// The number after the caption (#637): "Now" carries the app icon's number. In ink, not accent:
@@ -31,8 +31,7 @@ struct ZoneCaption: View {
     }
 }
 
-/// The margin word and its hairline (#677): the word right-aligned in the rows' margin column, where
-/// the rows keep their time, the line from the titles' edge to the end. Shared by "Now" and "Contents".
+/// The margin word (#677): right-aligned in the rows' margin column, where the rows keep their time.
 struct MarginCaption: View {
     let title: LocalizedStringKey
     var count: Int?
@@ -41,27 +40,21 @@ struct MarginCaption: View {
 
     var body: some View {
         let metrics = StartMetrics(typeSize)
-        HStack(alignment: .center, spacing: 12) {
-            HStack(alignment: .firstTextBaseline, spacing: 4) {
-                Text(title)
-                    .foregroundStyle(.secondary)
-                if let count {
-                    Text(verbatim: "\(count)")
-                        .monospacedDigit()
-                        .foregroundStyle(.primary)
-                        .accessibilityLabel(Text(verbatim: "\(count)"))
-                        .accessibilityIdentifier(countID ?? "")
-                }
+        HStack(alignment: .firstTextBaseline, spacing: 4) {
+            Text(title)
+                .foregroundStyle(.secondary)
+            if let count {
+                Text(verbatim: "\(count)")
+                    .monospacedDigit()
+                    .foregroundStyle(.primary)
+                    .accessibilityLabel(Text(verbatim: "\(count)"))
+                    .accessibilityIdentifier(countID ?? "")
             }
-            .font(metrics.margin)
-            .lineLimit(1)
-            .minimumScaleFactor(0.7)
-            .frame(width: metrics.marginWidth, alignment: .trailing)
-            Rectangle()
-                .fill(.separator)
-                .frame(height: 0.5)
-                .accessibilityHidden(true)
         }
+        .font(metrics.margin)
+        .lineLimit(1)
+        .minimumScaleFactor(0.7)
+        .frame(width: metrics.marginWidth, alignment: .trailing)
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .contain)
         .accessibilityAddTraits(.isHeader)
@@ -212,18 +205,33 @@ struct ContentsIndex: View {
     var body: some View {
         let metrics = StartMetrics(typeSize)
         VStack(alignment: .leading, spacing: 0) {
-            // Inside the index's row, so no row inset lies between the caption and the first line (#433).
-            Group {
-                if inMargin {
-                    MarginCaption(title: "Contents")
-                } else {
-                    ZoneCaptionText(title: "Contents")
+            if inMargin {
+                // Draft C3 (#677): a hairline at the titles' edge closes "Now", the word "Contents" stands
+                // in the margin beside the first line.
+                Rectangle()
+                    .fill(.separator)
+                    .frame(height: 0.5)
+                    .padding(.leading, metrics.marginWidth + 12)
+                    .padding(.top, 18)
+                    .padding(.bottom, 14)
+                    .accessibilityHidden(true)
+                HStack(alignment: .firstTextBaseline, spacing: 12) {
+                    Text("Contents")
+                        .font(metrics.margin)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                        .frame(width: metrics.marginWidth, alignment: .trailing)
+                        .accessibilityAddTraits(.isHeader)
+                    lines(metrics)
                 }
+            } else {
+                // Inside the index's row, so no row inset lies between the caption and the first line (#433).
+                ZoneCaptionText(title: "Contents")
+                    .padding(.top, 22)
+                    .padding(.bottom, 4)
+                lines(metrics)
             }
-            .padding(.top, 22)
-            .padding(.bottom, 4)
-            lines(metrics)
-                .padding(.leading, inMargin ? metrics.marginWidth + 12 : 0)
         }
         .padding(.bottom, 28)
         .listRowSeparator(.hidden)

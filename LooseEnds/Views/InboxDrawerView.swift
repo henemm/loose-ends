@@ -122,8 +122,9 @@ struct InboxDrawerView: View {
             .focused($writing)
             .submitLabel(.return)
             .onSubmit(save)
-            .padding(.top, 13)
-            .padding(.bottom, 10)
+            // Close under the sentence (#677): an empty line must not open a gap above "Now".
+            .padding(.top, 4)
+            .padding(.bottom, 8)
             .overlay(alignment: .bottom) {
                 Rectangle()
                     .fill(Color.primary.opacity(0.22))

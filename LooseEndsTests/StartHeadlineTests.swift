@@ -293,4 +293,28 @@ import Testing
         let sentence = StartHeadlineText.sentence(.old(count: 3), locale: de)
         #expect(sentence.first?.isUppercase == true)
     }
+
+    @Test("The start page names no task that stands in Now anyway (#677); done titles stay")
+    func startPageDoesNotRepeatNow() {
+        let title = "Retoure für Apple Armbänder einleiten"
+        let at = Self.at(15)
+        let unnamed: [StartHeadline] = [
+            .upcoming(title: title, at: at, count: 1),
+            .missed(title: title, at: at, count: 1),
+            .dueToday(title: title, count: 1),
+            .needsNewDate(title: title, count: 1),
+            .doneToday(count: 1, titles: ["Steuer"], next: .init(title: title, at: at)),
+            .untangled(title: "Steuer", count: 1, next: .init(title: title, at: at)),
+        ]
+        for headline in unnamed {
+            let sentence = StartHeadlineText.sentence(headline, naming: false)
+            #expect(!sentence.contains("Retoure"), "Named again: \(sentence)")
+            #expect(sentence.first?.isUppercase == true)
+        }
+        let time = at.formatted(date: .omitted, time: .shortened)
+        #expect(StartHeadlineText.sentence(.upcoming(title: title, at: at, count: 1), naming: false).contains(time))
+        #expect(StartHeadlineText.sentence(.doneToday(count: 1, titles: ["Steuer"], next: nil), naming: false).contains("Steuer"))
+        // Elsewhere the sentence keeps naming it (#585).
+        #expect(StartHeadlineText.sentence(.upcoming(title: title, at: at, count: 1)).contains("Retoure"))
+    }
 }

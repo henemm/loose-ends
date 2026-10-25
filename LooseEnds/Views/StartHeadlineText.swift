@@ -2,12 +2,36 @@ import Foundation
 
 /// The words of the start screen's headline (#426). Facts stated, no praise, no exclamation marks.
 /// Numbers up to twelve are spelled out; times as the system writes them. Every sentence about a
-/// task names it (#585); only a count stands without a title.
+/// task names it (#585); only a count stands without a title. With `naming` off (the start page,
+/// #677) a task that stands in "Now" right below is not named again: an overdue, due or upcoming
+/// one is counted, the next fixed time after a look back is left out. Done titles stay, they stand
+/// nowhere else.
 enum StartHeadlineText {
-    static func sentence(_ headline: StartHeadline, locale: Locale = .current) -> String {
+    static func sentence(_ headline: StartHeadline, naming: Bool = true, locale: Locale = .current) -> String {
         // A spelled-out number or a lower-case title may open the sentence.
-        let text = words(headline, locale: locale)
+        let text = naming ? words(headline, locale: locale) : unnamed(headline, locale: locale)
         return text.prefix(1).uppercased() + text.dropFirst()
+    }
+
+    /// The start page's words (#677): what "Now" shows anyway is counted, not quoted.
+    private static func unnamed(_ headline: StartHeadline, locale: Locale) -> String {
+        func time(_ date: Date) -> String { date.formatted(date: .omitted, time: .shortened) }
+        switch headline {
+        case .doneToday(let count, let titles, _):
+            return words(.doneToday(count: count, titles: titles, next: nil), locale: locale)
+        case .untangled(let title, let count, _):
+            return words(.untangled(title: title, count: count, next: nil), locale: locale)
+        case .missed(_, let at, 1):
+            return String(localized: "The fixed time at \(time(at)) has passed.")
+        case .upcoming(_, let at, 1):
+            return String(localized: "Today one fixed time, at \(time(at)).")
+        case .dueToday(_, 1):
+            return String(localized: "Today one thing due.")
+        case .needsNewDate(_, 1):
+            return String(localized: "One thing needs a new date.")
+        default:
+            return words(headline, locale: locale)
+        }
     }
 
     private static func words(_ headline: StartHeadline, locale: Locale) -> String {
