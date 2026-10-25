@@ -17,6 +17,8 @@ import Testing
         #expect(trigger(.dueDate, in: "Miete bis Ende des Monats überweisen") == "Ende des Monats")
         #expect(trigger(.dueDate, in: "Pay rent by the end of the month") == "end of the month")
         #expect(trigger(.dueDate, in: "Geburtstag am 15. März feiern") == "15. März")
+        #expect(trigger(.dueDate, in: "Donauwellen rausnehmen um 10:00 Uhr") == "um 10:00 Uhr")  // #679
+        #expect(trigger(.dueDate, in: "In 1 Stunde Donauwellen rausnehmen") == "In 1 Stunde")
     }
 
     @Test("Umlauts and ß before the expression keep the words aligned")

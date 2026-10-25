@@ -91,6 +91,9 @@ import Testing
         ("Important: renew passport by Friday", "Renew passport"),
         ("Pay rent on the 12th", "Pay rent"),
         ("Urgent: call back the plumber", "Call back the plumber"),
+        ("Treffen um 15 Uhr", "Treffen"),                              // a time alone sets the due date (#679)
+        ("Donauwellen rausnehmen um 10:00 Uhr", "Donauwellen rausnehmen"),
+        ("In 1 Stunde Donauwellen rausnehmen", "Donauwellen rausnehmen"),
     ])
     func ruleWordsLeave(raw: String, title: String) {
         #expect(TitleRule.title(from: raw, reference: Self.wednesday) == title)
@@ -101,7 +104,6 @@ import Testing
         "Rechnung bezahlen",           // sets the importance, but is what the task is about
         "Kündigungsfrist prüfen",      // sets the urgency, same
         "Jeden Montag Blumen gießen",  // a repetition, no due date
-        "Treffen um 15 Uhr",           // a time without a day sets no due date
         "Nicht wichtig: Keller aufräumen",
         "Keller aufräumen, nicht dringend",  // negated: no urgency, so nothing is struck (#220)
     ])
