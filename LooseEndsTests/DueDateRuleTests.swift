@@ -59,7 +59,7 @@ struct DueDateRuleTests {
     /// `TaskItem.dueHasTime` ist ein Flag neben `dueDate`, kein eigener Zeit-Slot: eine Uhrzeit
     /// ohne Tag hat im Produktschema keinen Platz. Die Wiederholungs-Sperre des Datumsparsers
     /// verhindert ohnehin, dass „jeden Tag" einen Tag benennt (#92).
-    @Test("Uhrzeit ohne erkanntes Datum liefert kein Ergebnis (AC-6)")
+    @Test("Eine Wiederholung mit Uhrzeit liefert kein Ergebnis (AC-6)")
     func timeWithoutDateYieldsNothing() {
         let repetitions = [
             "Jeden Tag um 7 Uhr die Tabletten nehmen",
@@ -81,6 +81,94 @@ struct DueDateRuleTests {
         ]
         for sentence in traps {
             #expect(Self.match(sentence) == nil, "\(sentence) darf keinen Termin ergeben")
+        }
+    }
+
+    /// Donnerstag, 12. März 2026, 10:01:30 in Berlin: der Moment der Erfassung aus Hennings Bildschirmfoto (#679).
+    static func at(hour: Int, minute: Int, second: Int = 0) -> Date {
+        calendar.date(from: DateComponents(year: 2026, month: 3, day: 12, hour: hour, minute: minute, second: second))!
+    }
+
+    static func stamp(_ date: Date) -> String {
+        let parts = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
+        return String(format: "%04d-%02d-%02d %02d:%02d:%02d", parts.year!, parts.month!, parts.day!,
+                      parts.hour!, parts.minute!, parts.second!)
+    }
+
+    static func match(_ text: String, at reference: Date) -> DueDateRule.Match? {
+        DueDateRule.match(in: text, reference: reference, calendar: calendar)
+    }
+
+    /// Henning, 2026-10-25 (#679): „Erinnere mich zu Hause daran, Donauwellen rausnehmen um 10:00 Uhr“
+    /// bekam kein Datum. Eine Uhrzeit ohne Tag gilt heute, solange sie noch kommt, sonst morgen.
+    @Test("Uhrzeit ohne Tag: heute, solange sie noch kommt, sonst morgen (#679)", arguments: [
+        ("Donauwellen rausnehmen um 10:00 Uhr", 9, 55, "2026-03-12 10:00:00"),
+        ("Donauwellen rausnehmen um 10:00 Uhr", 10, 0, "2026-03-12 10:00:00"),
+        ("Donauwellen rausnehmen um 10:00 Uhr", 10, 1, "2026-03-13 10:00:00"),
+        ("Treffen um 15 Uhr", 10, 1, "2026-03-12 15:00:00"),
+        ("Oma anrufen 18:45", 10, 1, "2026-03-12 18:45:00"),
+        ("Um halb acht die Kinder abholen", 10, 1, "2026-03-13 07:30:00"),
+        ("Call the bank at 9am", 10, 1, "2026-03-13 09:00:00"),
+        ("Um acht Uhr die Tabletten", 10, 1, "2026-03-13 08:00:00"),
+    ])
+    func timeWithoutDay(text: String, hour: Int, minute: Int, expected: String) throws {
+        let match = try #require(Self.match(text, at: Self.at(hour: hour, minute: minute, second: 30)))
+        #expect(Self.stamp(match.guess.value) == expected)
+        #expect(match.hasTime)
+        #expect(match.guess.confidence == 1.0)
+        #expect(match.guess.reason == DueDateRule.timeOnlyReason)
+    }
+
+    /// Ohne Tag reicht das „um“ vor der Zahl nicht: „um 5 Euro bitten“ ist keine Uhrzeit.
+    @Test("Ohne Tag braucht die Uhrzeit ihr eigenes Wort: Uhr, Doppelpunkt, am/pm (#679)", arguments: [
+        "Andreas um 5 Euro bitten",
+        "Die Bestellung um 12 erhöhen",
+        "Jeden Tag um 7 Uhr die Tabletten nehmen",
+        "Every day at 8pm take the medication",
+    ])
+    func weakTimeWithoutDayYieldsNothing(text: String) {
+        #expect(Self.match(text, at: Self.at(hour: 10, minute: 1)) == nil, "\(text)")
+    }
+
+    /// „In 1 Stunde“ (Henning, 2026-10-25, #679): ab dem Moment der Erfassung, auf die Minute.
+    @Test("in N Stunden oder Minuten zählt ab der Erfassung (#679)", arguments: [
+        ("In 1 Stunde Donauwellen rausnehmen", 60),
+        ("Donauwellen in einer Stunde rausnehmen", 60),
+        ("in 2 Stunden den Ofen ausmachen", 120),
+        ("In 20 Minuten Wäsche aufhängen", 20),
+        ("in einer halben Stunde losfahren", 30),
+        ("in einer Viertelstunde Tee abgießen", 15),
+        ("in anderthalb Stunden Brot rausholen", 90),
+        ("Check the oven in an hour", 60),
+        ("Leave in half an hour", 30),
+        ("Call back in 10 minutes", 10),
+    ])
+    func relativeTime(text: String, minutes: Int) throws {
+        let reference = Self.at(hour: 10, minute: 1, second: 30)
+        let match = try #require(Self.match(text, at: reference), "\(text)")
+        let expected = Self.calendar.date(byAdding: .minute, value: minutes, to: Self.at(hour: 10, minute: 1))!
+        #expect(match.guess.value == expected, "\(text): \(Self.stamp(match.guess.value))")
+        #expect(match.hasTime)
+        #expect(match.guess.reason == DueDateRule.offsetReason)
+    }
+
+    @Test("Was kein Zeitpunkt ist, bleibt ohne Datum: Länge, Wiederholung, Raum (#679)", arguments: [
+        "20 Minuten Steuerberater beantworten",
+        "Eine Stunde Klavier üben",
+        "Jeden Tag in 10 Minuten aufräumen",
+        "Die Akte liegt in 3 Stapeln",
+    ])
+    func noRelativeTime(text: String) {
+        #expect(Self.match(text, at: Self.at(hour: 10, minute: 1)) == nil, "\(text)")
+    }
+
+    @Test("Die neuen Begründungssätze sind im deutschen Bundle übersetzt (#679)")
+    func newReasonsAreTranslated() throws {
+        let path = try #require(Bundle.main.path(forResource: "de", ofType: "lproj"))
+        let germanBundle = try #require(Bundle(path: path))
+        for key in ["From “in” plus hours or minutes in the note.",
+                    "From the time in the note: today, or tomorrow once it has passed."] {
+            #expect(germanBundle.localizedString(forKey: key, value: key, table: nil) != key, "\(key)")
         }
     }
 

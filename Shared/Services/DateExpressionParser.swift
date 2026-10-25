@@ -176,6 +176,12 @@ struct DateExpressionParser: Sendable {
                                       "werktags", "taglich", "wochentlich", "monatlich", "jahrlich",
                                       "daily", "weekly", "monthly"]
 
+    /// Whether the text names a repetition anywhere: then a time alone sets no due date either (#679),
+    /// "Jeden Tag um 7 Uhr" is the repeat rule's time, not today's.
+    static func mentionsRepetition(in text: String) -> Bool {
+        ExpressionText.words(in: text).contains { repetitions.contains($0.text) }
+    }
+
     /// A repetition is not a date (#92): "Jeden Montag" and "Every day" name no single day.
     /// The block reaches three words back, so "Jeden ersten Montag im Monat" is caught too.
     private static func isRepetition(before index: Int, in words: [ExpressionWord]) -> Bool {
