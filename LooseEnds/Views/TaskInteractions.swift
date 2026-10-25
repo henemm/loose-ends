@@ -134,8 +134,8 @@ struct TaskInteractions {
 
     // MARK: - Long-press menu
 
-    /// One menu for the list's long press and the detail's "…" (#667): Complete first, by name (no
-    /// checkmark in the detail's bar, #435), Next up, the Knäuel and the bead, Move, Park, Analyze
+    /// One menu for the list's long press and the detail's "…" (#667): in New "Looks right" first (#681),
+    /// then Complete, by name (no checkmark in the detail's bar, #435), Next up, the Knäuel and the bead, Move, Park, Analyze
     /// again; Delete last, after the line. A done or parked task gets Restore or Activate and Delete.
     @ViewBuilder
     func menu(_ task: TaskItem) -> some View {
@@ -144,6 +144,12 @@ struct TaskInteractions {
         } else if task.status == .parked {
             Button("Activate", systemImage: "sun.max") { activate(task) }
         } else {
+            // In New the menu opens with what the swipe offers (#681): "Looks right" for what the AI
+            // sorted, nothing for a task that needs a look. The detail has it in its bar (kind nil).
+            if kind == .new, !ViewRules.needsLook(task) {
+                Button("Looks right", systemImage: "hand.thumbsup") { confirm(task) }
+                    .accessibilityIdentifier("menuConfirm")
+            }
             if isPending(task) {
                 Button("Undo", systemImage: "arrow.uturn.backward") { undoComplete(task) }
             } else {
