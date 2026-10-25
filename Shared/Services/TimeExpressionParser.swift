@@ -14,6 +14,14 @@ struct TimeExpressionParser: Sendable {
         Self.earliest(in: ExpressionText.words(in: text)).map { (hour: $0.hour, minute: $0.minute) }
     }
 
+    /// The earliest time that names itself as one — "Uhr", a colon, am/pm, "halb", "half past" — or
+    /// nothing. Without a day the time alone sets the due date (#679), and there "um 5" may be "um 5
+    /// Euro": only the cue before the number is not enough.
+    func explicitTime(in text: String) -> (hour: Int, minute: Int)? {
+        guard let match = Self.earliest(in: ExpressionText.words(in: text)), match.isExplicit else { return nil }
+        return (hour: match.hour, minute: match.minute)
+    }
+
     /// The word indices of the time `time(in:)` picks, its cue ("um", "at") included, for striking
     /// it from the title (#217). Indices into `ExpressionText.words`.
     func span(in text: String) -> Range<Int>? {
@@ -23,12 +31,26 @@ struct TimeExpressionParser: Sendable {
         return start..<(match.index + match.count)
     }
 
+    /// "in 1 Stunde", "in 20 Minuten", "in einer halben Stunde", "in an hour" (#679): the minutes from
+    /// now and the word indices, "in" included. The first such phrase in the text.
+    func offset(in text: String) -> (minutes: Int, span: Range<Int>)? {
+        let words = ExpressionText.words(in: text)
+        for index in words.indices where words[index].text == "in" {
+            if let (minutes, count) = Self.offset(after: index, in: words) {
+                return (minutes, index..<(index + 1 + count))
+            }
+        }
+        return nil
+    }
+
     private struct Match {
         let hour: Int
         let minute: Int
         let index: Int
         /// How many words the time spans from `index`, without the cue before it.
         let count: Int
+        /// Named as a time by its own words, not only by a cue before it ("um 12").
+        var isExplicit = true
     }
 
     private static func earliest(in words: [ExpressionWord]) -> Match? {
@@ -64,22 +86,26 @@ struct TimeExpressionParser: Sendable {
         var minute = 0
         var marker = suffix
         var hasCue = suffix != nil
+        var isExplicit = hasCue
         var after = index + 1
         let minutes = ExpressionText.word(words, index + 1)
         if words[index].trailing == ":", minutes.count == 2, let parsed = Int(minutes) {
             minute = parsed
             hasCue = true
+            isExplicit = true
             after = index + 2
         }
         let following = ExpressionText.word(words, after)
         var end = after
         if following == "uhr" {
             hasCue = true
+            isExplicit = true
             end = after + 1
         }
         if marker == nil, following == "am" || following == "pm" {
             marker = following
             hasCue = true
+            isExplicit = true
             end = after + 1
         }
         if cues.contains(ExpressionText.word(words, index - 1)) { hasCue = true }
@@ -89,7 +115,7 @@ struct TimeExpressionParser: Sendable {
             hour = hour % 12 + (marker == "pm" ? 12 : 0)
         }
         guard (0...23).contains(hour), (0...59).contains(minute) else { return nil }
-        return Match(hour: hour, minute: minute, index: index, count: end - index)
+        return Match(hour: hour, minute: minute, index: index, count: end - index, isExplicit: isExplicit)
     }
 
     /// Hours dictation spells out: the shared number words reach twelve, "dreizehn" to "dreiundzwanzig"
@@ -109,6 +135,28 @@ struct TimeExpressionParser: Sendable {
         let article = ["ein", "eine", "einer", "einem", "einen"].contains(text)
         if article, ExpressionText.word(words, index - 1) != "um" { return nil }
         return Match(hour: hour, minute: 0, index: index, count: 2)
+    }
+
+    private static let hourUnits = ["stunde", "stunden", "std", "h", "hour", "hours"]
+    private static let minuteUnits = ["minute", "minuten", "min", "mins", "minutes"]
+    /// Lengths without a number after "in", in minutes, with the number of words each takes.
+    private static let spokenOffsets: [([String], Int)] = [
+        (["einer", "halben", "stunde"], 30), (["einer", "viertelstunde"], 15), (["einer", "dreiviertelstunde"], 45),
+        (["anderthalb", "stunden"], 90), (["eineinhalb", "stunden"], 90), (["einer", "stunde"], 60),
+        (["half", "an", "hour"], 30), (["an", "hour"], 60),
+    ]
+
+    /// The minutes and the number of words after "in" at `index`, or nothing.
+    private static func offset(after index: Int, in words: [ExpressionWord]) -> (Int, Int)? {
+        for (phrase, minutes) in spokenOffsets
+        where phrase.indices.allSatisfy({ ExpressionText.word(words, index + 1 + $0) == phrase[$0] }) {
+            return (minutes, phrase.count)
+        }
+        guard let count = ExpressionText.number(ExpressionText.word(words, index + 1)), count > 0 else { return nil }
+        let unit = ExpressionText.word(words, index + 2)
+        if hourUnits.contains(unit), count <= 23 { return (count * 60, 2) }
+        if minuteUnits.contains(unit), count <= 600 { return (count, 2) }
+        return nil
     }
 
     /// Leading digits plus an optional am/pm glued to them ("5pm"); "4th" is not a number here.

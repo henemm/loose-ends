@@ -11,7 +11,7 @@ enum RuleTrigger {
     ) -> Range<String.Index>? {
         switch field {
         case .dueDate:
-            guard let span = DateExpressionParser(calendar: calendar).span(in: rawText) else { return nil }
+            guard let span = DueDateRule.match(in: rawText, reference: .now, calendar: calendar)?.spans.first else { return nil }
             let words = ExpressionText.wordRanges(in: rawText)
             guard words.indices.contains(span.lowerBound), words.indices.contains(span.upperBound - 1) else { return nil }
             return words[span.lowerBound].lowerBound..<words[span.upperBound - 1].upperBound

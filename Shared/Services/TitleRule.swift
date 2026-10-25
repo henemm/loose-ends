@@ -104,12 +104,8 @@ enum TitleRule {
         guard words.count == ranges.count else { return text }
 
         var struck = Set<Int>()
-        if let due = DueDateRule.match(in: text, reference: reference, calendar: calendar),
-           let date = DateExpressionParser(calendar: calendar).span(in: text) {
-            struck.formUnion(withLeadIns(date, in: words))
-            if due.hasTime, let time = TimeExpressionParser().span(in: text) {
-                struck.formUnion(withLeadIns(time, in: words))
-            }
+        for span in DueDateRule.match(in: text, reference: reference, calendar: calendar)?.spans ?? [] {
+            struck.formUnion(withLeadIns(span, in: words))
         }
         let markers = [ImportanceUrgencyRule.importanceMarker(in: text), ImportanceUrgencyRule.urgencyMarker(in: text)]
         for marker in markers.compactMap({ $0 }) {
