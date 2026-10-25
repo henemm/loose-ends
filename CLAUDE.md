@@ -297,9 +297,10 @@ not scope creep on the current one.
   page's string of `stringLength` = 5, #655: the beads since the last full string, counted from all beads in rounds of five;
   full = the win, the next bead starts a new string; `recentBeads(in:limit:)` the last n beads), `weekToSpeakOf(in:)` (the
   Sunday sentence's beads: this week's from Sunday 16:00, last week's on Monday until the first new bead, #646) and
-  `groupedByCompletionWeek` ("Completed" by weeks with each week's beads, the days inside); "Now" leaves the Knäuel out. Views: `LooseEnds/Views/Knaeuel.swift` (`StartHeaderRows`: the knot's date line or the Knäuel's head `KnaeuelHead`
-  (date, thread, row as one list row, plays the completion moment, #644), the sentence of the day; `KnaeuelSince`),
-  `KnaeuelThread.swift` (`KnaeuelThread`: two trochoid loops laid from the Knäuel's tail end to the row, `LooseningKnaeuel`:
+  `groupedByCompletionWeek` ("Completed" by weeks with each week's beads, the days inside); "Now" leaves the Knäuel out. Views: `LooseEnds/Views/Knaeuel.swift` (`StartHeaderRows`: the date in the margin (`StartDateMargin`, the knot over it
+  while no task is the Knäuel) beside the sentence of the day, then the Knäuel's row `KnaeuelHead` (the Knäuel in the margin
+  beside the title, plays the completion moment, #644; draft C3, #677); `KnaeuelSince`),
+  `KnaeuelThread.swift` (`KnaeuelThread`: two trochoid loops from the Knäuel's tail end, no longer drawn since #677, `LooseningKnaeuel`:
   the Knäuel blended into the knot) and `Beads.swift` (`PearlGlyph`, `WeekString` with the sag and the 1.1 s green,
   `WeekStringRows` at the end of the start page without a caption (#677; iPhone under the contents): the string of five with its empty places as dots, `RewardLine` "For the beads: …" while it
   fills, `FullStringLine` "The string is full. For the beads: …" once it is, #647/#655). The user-facing word for `countsAt` is "Perle sammeln" (#655), never "Zählt". The

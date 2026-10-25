@@ -1,10 +1,10 @@
 import SwiftUI
 
-/// The head of the start screen (#426, #643, #644): the date at the knot, or, while a task is the
-/// Knäuel, the Knäuel's head (date at the Knäuel, the thread, the task's row), then the sentence of
-/// the day. Rows of the start list, so the Knäuel's head takes the swipes and the menu like any row;
-/// the host wraps it. When the Knäuel gets done, its head stays for the moment (#644): the Knäuel
-/// loosens green into the knot, the thread draws in, the row goes; Reduce Motion shows the end at once.
+/// The head of the start screen (#426, #643, #644; draft C3 since #677): the date in the margin
+/// column beside the sentence of the day, then, while a task is the Knäuel, its row with the Knäuel
+/// in the margin. Rows of the start list, so the Knäuel's row takes the swipes and the menu like any
+/// row; the host wraps it. When the Knäuel gets done, its row stays for the moment (#644): the Knäuel
+/// loosens green into the knot, the row goes; Reduce Motion shows the end at once.
 struct StartHeaderRows<Row: View>: View {
     let tasks: [TaskItem]
     /// A tap on the date or the sentence; the iPhone ends the entry in the writing line with it (#601).
@@ -37,6 +37,38 @@ struct StartHeaderRows<Row: View>: View {
     var body: some View {
         let metrics = StartMetrics(typeSize)
         let knaeuel = ViewRules.knaeuel(in: tasks)
+        HStack(alignment: .top, spacing: 12) {
+            // The knot only while no task is the Knäuel: the Knäuel takes its place below (#180 rule 1).
+            StartDateMargin(knot: knaeuel == nil && leaving == nil)
+                .frame(width: metrics.marginWidth, alignment: .trailing)
+            StartHeadlineLine(tasks: tasks, openDone: openDone)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .contentShape(Rectangle())
+        .onTapGesture { onTap?() }
+        // The draft: 14 above, a little air under the sentence (#463, #677).
+        .padding(.top, 14)
+        .padding(.bottom, 10)
+        .listRowSeparator(.hidden)
+        .startRow(metrics)
+        .paperRow()
+        .onChange(of: knaeuel?.id) { old, new in
+            // Gone because it got done: the moment. Released, parked or moved: no green.
+            if new == nil, let old, let task = tasks.first(where: { $0.id == old }), task.status == .done, !reduceMotion {
+                leaving = Leaving(task: task)
+            } else {
+                leaving = nil
+            }
+        }
+        .task(id: leaving) {
+            guard leaving != nil else { return }
+            do {
+                try await Task.sleep(for: Self.momentDuration + .milliseconds(150))
+            } catch {
+                return
+            }
+            withAnimation(.easeInOut(duration: 0.3)) { leaving = nil }
+        }
         if let knaeuel {
             row(knaeuel, KnaeuelHead(task: knaeuel, untangling: false))
         } else if let leaving {
@@ -44,161 +76,56 @@ struct StartHeaderRows<Row: View>: View {
                 .listRowSeparator(.hidden)
                 .startRow(metrics)
                 .paperRow()
-        } else {
-            tapping(StartDateLine(knaeuel: false))
-                // The draft: 14 above the date line (#463).
-                .padding(.top, 14)
-                .listRowSeparator(.hidden)
-                .startRow(metrics)
-                .paperRow()
         }
-        // At the titles' edge like the date and the Knäuel's row (#677): one edge for every word.
-        tapping(StartHeadlineLine(tasks: tasks, openDone: openDone).padding(.leading, metrics.marginWidth + 12))
-            .padding(.top, 6)
-            // The draft: 16 under the headline (#463).
-            .padding(.bottom, 16)
-            .listRowSeparator(.hidden)
-            .startRow(metrics)
-            .paperRow()
-            .onChange(of: knaeuel?.id) { old, new in
-                // Gone because it got done: the moment. Released, parked or moved: no green.
-                if new == nil, let old, let task = tasks.first(where: { $0.id == old }), task.status == .done, !reduceMotion {
-                    leaving = Leaving(task: task)
-                } else {
-                    leaving = nil
-                }
-            }
-            .task(id: leaving) {
-                guard leaving != nil else { return }
-                do {
-                    try await Task.sleep(for: Self.momentDuration + .milliseconds(150))
-                } catch {
-                    return
-                }
-                withAnimation(.easeInOut(duration: 0.3)) { leaving = nil }
-            }
-    }
-
-    private func tapping(_ line: some View) -> some View {
-        line
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .contentShape(Rectangle())
-            .onTapGesture { onTap?() }
     }
 }
 
-/// Where the glyph and the row's title stand, for the thread between them (#644).
-private struct KnaeuelAnchors: PreferenceKey {
-    enum Part: Hashable { case glyph, title }
-    static let defaultValue: [Part: Anchor<CGRect>] = [:]
-    static func reduce(value: inout [Part: Anchor<CGRect>], nextValue: () -> [Part: Anchor<CGRect>]) {
-        value.merge(nextValue()) { _, new in new }
-    }
-}
-
-/// The Knäuel's head (#643, #644, board "Morgen"): the date at the Knäuel, the task's row 64 pt in
-/// under it, and the loose thread from the Knäuel's tail end down to just before the first word. One
-/// row of the start list. At accessibility sizes the thread stays away, the Knäuel stays.
-/// `untangling` plays the completion moment: green loosening into the knot (0.3 s), then the grey
-/// knot (0.8 s), the thread drawing in by its trim, the row fading.
+/// The Knäuel's row (#643, #644; draft C3 since #677): the Knäuel in the ink in the margin column,
+/// beside it the task's title and how long it has been carried, at the titles' edge. One row of the
+/// start list. `untangling` plays the completion moment: green loosening into the knot (0.3 s), then
+/// the grey knot (0.8 s), the row fading.
 struct KnaeuelHead: View {
     let task: TaskItem
     let untangling: Bool
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var loosening: CGFloat = 0
-    @State private var drawn: CGFloat = 1
     @State private var green = false
 
     var body: some View {
         let metrics = StartMetrics(typeSize)
-        VStack(alignment: .leading, spacing: 0) {
-            StartDateLine(knaeuel: true, loosening: untangling ? loosening : nil, green: green)
-                .padding(.top, 14)
-            KnaeuelRow(task: task)
-                .padding(.top, 10)
-                .padding(.bottom, 2)
-                .opacity(untangling ? 0 : 1)
-        }
-        .overlayPreferenceValue(KnaeuelAnchors.self) { anchors in
-            if !typeSize.isAccessibilitySize, let glyph = anchors[.glyph], let title = anchors[.title] {
-                GeometryReader { geometry in
-                    let tail = ThreadShape.knaeuelTail(in: geometry[glyph].insetBy(dx: 0.75, dy: 0.75))
-                    let titleRect = geometry[title]
-                    // Just before the first word, at the middle of its first line.
-                    let end = CGPoint(x: titleRect.minX - 6, y: titleRect.minY + metrics(11))
-                    KnaeuelThread(start: tail.end, direction: tail.direction, end: end)
-                        .trim(from: 0, to: drawn)
-                        .stroke(.primary, style: StrokeStyle(lineWidth: 1.6, lineCap: .round, lineJoin: .round))
+        KnaeuelRow(task: task)
+            .opacity(untangling ? 0 : 1)
+            .overlay(alignment: .topLeading) {
+                glyph
+                    .frame(width: metrics(36), height: metrics(18))
+                    .frame(width: metrics.marginWidth, alignment: .trailing)
+                    .padding(.top, metrics(3))
+            }
+            .padding(.top, 6)
+            .padding(.bottom, 8)
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier("knaeuelHead")
+            .task(id: untangling) {
+                guard untangling else { return }
+                green = true
+                withAnimation(.easeInOut(duration: 0.3)) { loosening = 0.4 }
+                do {
+                    try await Task.sleep(for: .milliseconds(300))
+                } catch {
+                    return
                 }
-                .allowsHitTesting(false)
-                .accessibilityHidden(true)
-            }
-        }
-        .accessibilityElement(children: .contain)
-        .accessibilityIdentifier("knaeuelHead")
-        .task(id: untangling) {
-            guard untangling else { return }
-            green = true
-            withAnimation(.easeInOut(duration: 0.3)) {
-                loosening = 0.4
-                drawn = 0.6
-            }
-            do {
-                try await Task.sleep(for: .milliseconds(300))
-            } catch {
-                return
-            }
-            withAnimation(.easeInOut(duration: 0.8)) {
-                loosening = 1
-                drawn = 0
-                green = false
-            }
-        }
-    }
-}
-
-/// The date, small and grey, at the sign of the day (#180 rule 1, #643): the knot while every task
-/// lies in the box, the Knäuel in the ink and a fifth larger while one is being avoided. The sign
-/// stands in the margin column, the date flush over the titles, 64 pt in (Henning, 2026-10-23; the
-/// knot too since #677), in plain words instead of spaced capitals. During the moment (#644)
-/// `loosening` blends the Knäuel into the knot, green until it is the knot.
-struct StartDateLine: View {
-    let knaeuel: Bool
-    var loosening: CGFloat?
-    var green = false
-    @Environment(\.dynamicTypeSize) private var typeSize
-
-    var body: some View {
-        let metrics = StartMetrics(typeSize)
-        // Once a minute, so the line turns with the day without a save (#426).
-        TimelineView(.periodic(from: .now, by: 60)) { timeline in
-            HStack(spacing: 12) {
-                if knaeuel {
-                    glyph
-                        .frame(width: metrics(36), height: metrics(18))
-                        .anchorPreference(key: KnaeuelAnchors.self, value: .bounds) { [.glyph: $0] }
-                        .frame(width: metrics.marginWidth, alignment: .leading)
-                } else {
-                    // The knot, first of its three places (#180, rule 1). Grey like the date: it is
-                    // the mark, not something to tap (ADR-14).
-                    ThreadGlyph(form: .knot, lineWidth: 1.5)
-                        .frame(width: metrics(30), height: metrics(16))
-                        .frame(width: metrics.marginWidth, alignment: .leading)
+                withAnimation(.easeInOut(duration: 0.8)) {
+                    loosening = 1
+                    green = false
                 }
-                Text(timeline.date, format: .dateTime.weekday(.wide).day().month(.wide))
-                    .font(metrics.margin)
             }
-            .foregroundStyle(.secondary)
-            .accessibilityElement(children: .combine)
-            .accessibilityIdentifier("startHeader")
-        }
     }
 
     /// The Knäuel in the ink; during the moment the loosening line, green while it loosens (the one
     /// green moment, ADR-14), grey as the knot.
     @ViewBuilder
     private var glyph: some View {
-        if let loosening {
+        if untangling {
             LooseningKnaeuel(progress: loosening)
                 .stroke(style: StrokeStyle(lineWidth: 1.5, lineCap: .round, lineJoin: .round))
                 .padding(0.75)
@@ -207,6 +134,42 @@ struct StartDateLine: View {
         } else {
             ThreadGlyph(form: .knaeuel, lineWidth: 1.5)
                 .foregroundStyle(.primary)
+                .accessibilityHidden(true)
+        }
+    }
+}
+
+/// The date in the margin column (#426, draft C3 since #677): the weekday over the day and month,
+/// small and grey, right-aligned like the rows' times. Over it the knot while every task lies in the
+/// box (#180 rule 1); while one is the Knäuel, the Knäuel stands in its own row below.
+struct StartDateMargin: View {
+    let knot: Bool
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    var body: some View {
+        let metrics = StartMetrics(typeSize)
+        // Once a minute, so the line turns with the day without a save (#426).
+        TimelineView(.periodic(from: .now, by: 60)) { timeline in
+            VStack(alignment: .trailing, spacing: 2) {
+                if knot {
+                    // Grey like the date: it is the mark, not something to tap (ADR-14).
+                    ThreadGlyph(form: .knot, lineWidth: 1.5)
+                        .frame(width: metrics(30), height: metrics(16))
+                        .padding(.bottom, 4)
+                        .accessibilityHidden(true)
+                }
+                Text(timeline.date, format: .dateTime.weekday(.wide))
+                Text(timeline.date, format: .dateTime.day().month(.abbreviated))
+            }
+            .font(metrics.margin)
+            .multilineTextAlignment(.trailing)
+            .lineLimit(1)
+            .minimumScaleFactor(0.7)
+            .foregroundStyle(.secondary)
+            // The sentence's first line is larger: the date starts on its height, not above it.
+            .padding(.top, knot ? 0 : metrics(7))
+            .accessibilityElement(children: .combine)
+            .accessibilityIdentifier("startHeader")
         }
     }
 }
@@ -225,7 +188,8 @@ struct StartHeadlineLine: View {
             let headline = StartHeadline.of(tasks, now: timeline.date)
             VStack(alignment: .leading, spacing: 0) {
                 // Content, so New York.
-                Text(StartHeadlineText.sentence(headline))
+                // The sentence names no task that stands below anyway (#677): the rows say it.
+                Text(StartHeadlineText.sentence(headline, naming: false))
                     .font(metrics.headline)
                     .tracking(-0.3)
                     .lineSpacing(0)
@@ -236,7 +200,8 @@ struct StartHeadlineLine: View {
                 if case .week(_, let titles) = headline, let beads = ViewRules.weekToSpeakOf(in: tasks, now: timeline.date) {
                     Button(action: { openDone?() }) {
                         VStack(alignment: .leading, spacing: 2) {
-                            WeekString(beads: beads)
+                            QuietWeekString(beads: beads)
+                                .padding(.leading, -QuietWeekString.inset)
                             ForEach(Array(titles.enumerated()), id: \.offset) { _, title in
                                 Text(title)
                                     .font(metrics.rowMeta)
@@ -256,9 +221,9 @@ struct StartHeadlineLine: View {
     }
 }
 
-/// The Knäuel's row under the date (#643, Henning 2026-10-23, board "Morgen"): the title in New York
-/// 64 pt in, flush with the date, under it how long the task has been carried and its tag. The
-/// margin stays empty: the thread from the Knäuel runs there (#644).
+/// The Knäuel's row under the sentence (#643, Henning 2026-10-23, board "Morgen"): the title in New
+/// York at the titles' edge, under it how long the task has been carried and its tag. The margin stays
+/// empty here: `KnaeuelHead` sets the Knäuel into it (#677).
 struct KnaeuelRow: View {
     let task: TaskItem
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -282,7 +247,6 @@ struct KnaeuelRow: View {
                     .font(metrics.rowTitle)
                     .fontDesign(.serif)
                     .lineLimit(2)
-                    .anchorPreference(key: KnaeuelAnchors.self, value: .bounds) { [.title: $0] }
                 HStack(spacing: 8) {
                     // The word first (Henning, 2026-10-24, build 110): the sign alone did not say why
                     // the task stands up here.

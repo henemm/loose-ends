@@ -124,6 +124,30 @@ struct WeekString: View {
     }
 }
 
+/// The week's string as the start page draws it (draft C3, #677): at three fifths, so beads of 3.6 pt
+/// on a 0.9 pt line, 24 pt apart, five places within 200 pt, a shade lighter than the rows' grey as in
+/// the draft. Used at the end of the page and under the Sunday sentence.
+struct QuietWeekString: View {
+    let beads: [ViewRules.Bead]
+    var length: Int?
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    static let scale: CGFloat = 0.6
+    static let width: CGFloat = 340
+    /// The string's own 10 pt inset at this scale: where its line starts.
+    static var inset: CGFloat { 10 * scale }
+
+    var body: some View {
+        let metrics = StartMetrics(typeSize)
+        WeekString(beads: beads, length: length)
+            .frame(width: Self.width)
+            .scaleEffect(Self.scale, anchor: .topLeading)
+            .frame(width: Self.width * Self.scale, height: metrics(WeekString.height) * Self.scale, alignment: .topLeading)
+            // The draft's lighter grey (#9A9B93 on the paper instead of #77786F); the new bead's green stays clear.
+            .opacity(0.75)
+    }
+}
+
 /// "Beads" on the start screen (#645, #647, #655): the string of five with its empty places as dots,
 /// and under it the sentence: "For the beads: …" while the string fills, "The string is full. For the
 /// beads: …" once it is (the win, Henning 2026-10-24); the next bead starts a new string. Shown once a
@@ -136,19 +160,15 @@ struct WeekStringRows: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(FieldSettingsStore.self) private var fieldSettings: FieldSettingsStore?
 
-    /// Five places at 40 pt from 40 pt in end at 200; the string stops a little after them.
-    static let quietWidth: CGFloat = 240
-
     var body: some View {
         let reward = fieldSettings?.reward ?? ""
         let inUse = !string.beads.isEmpty || string.filled > 0 || !reward.isEmpty
         if inUse {
             let metrics = StartMetrics(typeSize)
             let titlesEdge = metrics.marginWidth + 12
-            WeekString(beads: string.beads, length: ViewRules.stringLength)
-                .frame(maxWidth: Self.quietWidth)
-                // The string's own 10 pt inset brings its start back to the titles' edge.
-                .padding(.leading, titlesEdge - 10)
+            QuietWeekString(beads: string.beads, length: ViewRules.stringLength)
+                // The string's own inset, scaled, brings its start back to the titles' edge.
+                .padding(.leading, titlesEdge - QuietWeekString.inset)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, 36)
                 .listRowSeparator(.hidden)
