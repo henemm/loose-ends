@@ -281,7 +281,8 @@ not scope creep on the current one.
 
 - `Shared/Models` — SwiftData model, enums, `InboxDrawer` (#601: the writing line under "New"; pure: `didCapture` opens and
   orders, `close` ends the sitting, `rows(in:)` this sitting's open tasks; the view `LooseEnds/Views/InboxDrawerView.swift`
-  is one row of both start lists with head, rows and line, soft 0.4 s motion, no spring), `RepeatRule` (its `anchor` holds the rhythm, a moved round does not shift it, #552),
+  is one row of both start lists: this sitting's rows above the line, "New N" in accent in the line's margin (no tinted head, #677),
+  the question only while the cursor is in the line, soft 0.4 s motion, no spring), `RepeatRule` (its `anchor` holds the rhythm, a moved round does not shift it, #552),
   `ViewRules` (pure view computation), `NewDateRule` (a deadline that passed is no deadline, #548: with a time after the
   time, without one after the day; the evening look reads a day-only date as passed after the reminder time; the trace
   "was 15:00" under the "New date" button), `DetailFields` (#538: what a task offers, five groups in one order, a section
@@ -300,7 +301,7 @@ not scope creep on the current one.
   (date, thread, row as one list row, plays the completion moment, #644), the sentence of the day; `KnaeuelSince`),
   `KnaeuelThread.swift` (`KnaeuelThread`: two trochoid loops laid from the Knäuel's tail end to the row, `LooseningKnaeuel`:
   the Knäuel blended into the knot) and `Beads.swift` (`PearlGlyph`, `WeekString` with the sag and the 1.1 s green,
-  `WeekStringRows` "Beads" under "Now": the string of five with its empty places as dots, `RewardLine` "For the beads: …" while it
+  `WeekStringRows` at the end of the start page without a caption (#677; iPhone under the contents): the string of five with its empty places as dots, `RewardLine` "For the beads: …" while it
   fills, `FullStringLine` "The string is full. For the beads: …" once it is, #647/#655). The user-facing word for `countsAt` is "Perle sammeln" (#655), never "Zählt". The
   question before the Knäuel moves is `movesKnaeuel` in `TaskInteractions.swift`; the detail's lines under the raw text
   ("The Knäuel · since Monday" with Release, "Counts always, it is the Knäuel") are `TaskDetailView.driveSection`. The menu

@@ -124,10 +124,11 @@ struct WeekString: View {
     }
 }
 
-/// "Beads" on the start screen (#645, #647, #655): the caption, the string of five with its empty
-/// places as dots, and under it the sentence: "For the beads: …" while the string fills, "The string is
-/// full. For the beads: …" once it is (the win, Henning 2026-10-24); the next bead starts a new string.
-/// Shown once a bead exists or a sentence is set; before that nothing, as before.
+/// "Beads" on the start screen (#645, #647, #655): the string of five with its empty places as dots,
+/// and under it the sentence: "For the beads: …" while the string fills, "The string is full. For the
+/// beads: …" once it is (the win, Henning 2026-10-24); the next bead starts a new string. Shown once a
+/// bead exists or a sentence is set; before that nothing, as before. Quiet since #677 (draft C3): no
+/// caption, at the end of the page, at the titles' edge, the string shorter, the sentence small.
 struct WeekStringRows: View {
     let string: ViewRules.BeadString
     /// Every task, for the Sunday rule.
@@ -135,23 +136,33 @@ struct WeekStringRows: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(FieldSettingsStore.self) private var fieldSettings: FieldSettingsStore?
 
+    /// Five places at 40 pt from 40 pt in end at 200; the string stops a little after them.
+    static let quietWidth: CGFloat = 240
+
     var body: some View {
         let reward = fieldSettings?.reward ?? ""
         let inUse = !string.beads.isEmpty || string.filled > 0 || !reward.isEmpty
         if inUse {
             let metrics = StartMetrics(typeSize)
-            ZoneCaption("Beads")
+            let titlesEdge = metrics.marginWidth + 12
             WeekString(beads: string.beads, length: ViewRules.stringLength)
+                .frame(maxWidth: Self.quietWidth)
+                // The string's own 10 pt inset brings its start back to the titles' edge.
+                .padding(.leading, titlesEdge - 10)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top, 36)
                 .listRowSeparator(.hidden)
                 .startRow(metrics)
                 .paperRow()
             if string.isFull {
                 FullStringLine(reward: reward)
+                    .padding(.leading, titlesEdge)
                     .listRowSeparator(.hidden)
                     .startRow(metrics)
                     .paperRow()
             } else if !reward.isEmpty, let fieldSettings {
                 RewardLine(store: fieldSettings)
+                    .padding(.leading, titlesEdge)
                     .listRowSeparator(.hidden)
                     .startRow(metrics)
                     .paperRow()
@@ -175,11 +186,10 @@ struct FullStringLine: View {
                 Text("The string is full. For the beads: \(reward).")
             }
         }
-        .font(.system(size: metrics(16), design: .serif))
+        .font(.system(size: metrics(14), design: .serif))
         .italic()
         .foregroundStyle(.primary)
         .padding(.vertical, 4)
-        .padding(.leading, 2)
         .accessibilityIdentifier("fullStringLine")
     }
 }
@@ -210,11 +220,10 @@ struct RewardLine: View {
                 Text(verbatim: store.reward + ".")
             }
         }
-        .font(.system(size: metrics(16), design: .serif))
+        .font(.system(size: metrics(14), design: .serif))
         .italic()
         .foregroundStyle(.secondary)
         .padding(.vertical, 4)
-        .padding(.leading, 2)
         .contentShape(Rectangle())
         .onTapGesture {
             guard !editing else { return }

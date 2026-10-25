@@ -27,6 +27,17 @@ final class DriveSmokeTests: XCTestCase {
         app.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH %@", prefix))
     }
 
+    /// The beads close the start page under the contents (#677): scroll down until `id` stands there.
+    @MainActor
+    private func scrolledTo(_ id: String, in app: XCUIApplication) -> XCUIElement {
+        let target = element(id, in: app)
+        for _ in 0..<6 {
+            if target.waitForExistence(timeout: 2), target.isHittable { break }
+            app.swipeUp()
+        }
+        return target
+    }
+
     /// Captures one task; it lands in "New".
     @MainActor
     private func capture(_ text: String, in app: XCUIApplication) {
@@ -127,7 +138,7 @@ final class DriveSmokeTests: XCTestCase {
         holdRow(titled: "Apfel", until: "menuCounts", in: app).tap()
         holdRow(titled: "Apfel", until: "menuDone", in: app).tap()
         back(in: app)
-        XCTAssertTrue(element("weekString", in: app).waitForExistence(timeout: 10), "No string with the bead")
+        XCTAssertTrue(scrolledTo("weekString", in: app).exists, "No string with the bead")
 
         XCTAssertTrue(app.buttons["settingsButton"].waitForExistence(timeout: 10))
         app.buttons["settingsButton"].tap()
@@ -145,7 +156,7 @@ final class DriveSmokeTests: XCTestCase {
         let done = app.buttons["settingsDoneButton"]
         XCTAssertTrue(done.waitForExistence(timeout: 5))
         done.tap()
-        let line = element("rewardLine", in: app)
+        let line = scrolledTo("rewardLine", in: app)
         XCTAssertTrue(line.waitForExistence(timeout: 5), "The start page should show the sentence under the string")
         XCTAssertTrue(line.label.contains("Samstag Kino"), "Wrong sentence: \(line.label)")
         line.tap()
@@ -178,8 +189,8 @@ final class DriveSmokeTests: XCTestCase {
         // Complete a counting task from the menu: the bead appears on the week's string.
         holdRow(titled: "Apfel", until: "menuDone", in: app).tap()
         back(in: app)
-        let string = element("weekString", in: app)
-        XCTAssertTrue(string.waitForExistence(timeout: 10), "No week string under Now")
+        let string = scrolledTo("weekString", in: app)
+        XCTAssertTrue(string.exists, "No week string at the end of the start page")
         XCTAssertTrue(string.label.hasPrefix("1 of 5"), "Wrong beads: \(string.label)")
     }
 }

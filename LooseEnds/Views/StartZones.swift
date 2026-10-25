@@ -3,7 +3,8 @@ import SwiftUI
 /// The zones of the iPhone start screen (#368). Each one is a few rows of the start list, so they
 /// are built to sit inside a `List` and carry their own row look (`paperRow`).
 
-/// A small grey heading above a zone, as a row of its own.
+/// The heading of a zone, as a row of its own: since #677 (draft C3) a word in the margin column, grey,
+/// with a hairline at the titles' edge instead of spaced capitals.
 struct ZoneCaption: View {
     private let title: LocalizedStringKey
     /// The number after the caption (#637): "Now" carries the app icon's number. In ink, not accent:
@@ -20,23 +21,50 @@ struct ZoneCaption: View {
 
     var body: some View {
         let metrics = StartMetrics(typeSize)
-        HStack(alignment: .firstTextBaseline, spacing: 8) {
-            ZoneCaptionText(title: title)
-            if let count {
-                Text(verbatim: "\(count)")
-                    .font(metrics.caption.monospacedDigit())
-                    .foregroundStyle(.primary)
-                    .accessibilityLabel(Text(verbatim: "\(count)"))
-                    .accessibilityIdentifier(countID ?? "")
-            }
-        }
+        MarginCaption(title: title, count: count, countID: countID)
             // Space above, little below: the caption belongs to what follows (draft: 22 above, 4 below, #463).
             .padding(.top, 22)
             .padding(.bottom, 4)
-            .frame(maxWidth: .infinity, alignment: .leading)
             .listRowSeparator(.hidden)
             .startRow(metrics)
             .paperRow()
+    }
+}
+
+/// The margin word and its hairline (#677): the word right-aligned in the rows' margin column, where
+/// the rows keep their time, the line from the titles' edge to the end. Shared by "Now" and "Contents".
+struct MarginCaption: View {
+    let title: LocalizedStringKey
+    var count: Int?
+    var countID: String?
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    var body: some View {
+        let metrics = StartMetrics(typeSize)
+        HStack(alignment: .center, spacing: 12) {
+            HStack(alignment: .firstTextBaseline, spacing: 4) {
+                Text(title)
+                    .foregroundStyle(.secondary)
+                if let count {
+                    Text(verbatim: "\(count)")
+                        .monospacedDigit()
+                        .foregroundStyle(.primary)
+                        .accessibilityLabel(Text(verbatim: "\(count)"))
+                        .accessibilityIdentifier(countID ?? "")
+                }
+            }
+            .font(metrics.margin)
+            .lineLimit(1)
+            .minimumScaleFactor(0.7)
+            .frame(width: metrics.marginWidth, alignment: .trailing)
+            Rectangle()
+                .fill(.separator)
+                .frame(height: 0.5)
+                .accessibilityHidden(true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .contain)
+        .accessibilityAddTraits(.isHeader)
     }
 }
 
@@ -175,6 +203,9 @@ struct ContentsIndex: View {
     /// The open view, marked in the sidebar on Mac and iPad (#334); nil on the iPhone after Back,
     /// where the index is a page and not a sidebar.
     var selected: ViewSelection?
+    /// The iPhone's page (#677): "Contents" as a margin word, the lines at the titles' edge. The Mac
+    /// sidebar keeps its caption and its full width.
+    var inMargin = false
     let select: (ViewSelection) -> Void
     @Environment(\.dynamicTypeSize) private var typeSize
 
@@ -182,9 +213,26 @@ struct ContentsIndex: View {
         let metrics = StartMetrics(typeSize)
         VStack(alignment: .leading, spacing: 0) {
             // Inside the index's row, so no row inset lies between the caption and the first line (#433).
-            ZoneCaptionText(title: "Contents")
-                .padding(.top, 22)
-                .padding(.bottom, 4)
+            Group {
+                if inMargin {
+                    MarginCaption(title: "Contents")
+                } else {
+                    ZoneCaptionText(title: "Contents")
+                }
+            }
+            .padding(.top, 22)
+            .padding(.bottom, 4)
+            lines(metrics)
+                .padding(.leading, inMargin ? metrics.marginWidth + 12 : 0)
+        }
+        .padding(.bottom, 28)
+        .listRowSeparator(.hidden)
+        .indexRow(metrics)
+        .paperRow()
+    }
+
+    private func lines(_ metrics: StartMetrics) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
             ForEach(Array(groups.enumerated()), id: \.offset) { index, group in
                 if index > 0 {
                     // The draft keeps the groups apart by 10 pt of space, not by a card or a line.
@@ -198,10 +246,6 @@ struct ContentsIndex: View {
                 }
             }
         }
-        .padding(.bottom, 28)
-        .listRowSeparator(.hidden)
-        .indexRow(metrics)
-        .paperRow()
     }
 
     /// Whether a line is marked as the open one: the Start line while nothing is chosen (#583), a
