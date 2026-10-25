@@ -319,7 +319,7 @@ final class MacDetailClickTests: XCTestCase {
         XCTAssertTrue(row.waitForExistence(timeout: 10), "Return should put the task into the drawer")
         XCTAssertTrue(row.label.contains("Reifen wechseln"), "The drawer row shows the sorted title, got \(row.label)")
         let head = macElement("inboxBar", in: window)
-        XCTAssertTrue(head.waitForExistence(timeout: 5), "The New button should head the drawer")
+        XCTAssertTrue(head.waitForExistence(timeout: 5), "New should stand in the line's margin")
         XCTAssertTrue(head.label.contains("1 to look over"), "New counts the task at once, got \(head.label)")
         XCTAssertTrue(hasKeyboardFocus(line), "The cursor should stay in the line after Return")
         macShot(window, "mac-gallery-601-1-schublade-offen")
@@ -329,7 +329,7 @@ final class MacDetailClickTests: XCTestCase {
         app.typeKey(.escape, modifierFlags: [])
         XCTAssertTrue(row.waitForNonExistence(timeout: 10), "Escape should fold the drawer")
         XCTAssertTrue(head.label.contains("2 to look over"), "The number keeps counting after folding, got \(head.label)")
-        XCTAssertTrue(line.exists, "The line stays under the button")
+        XCTAssertTrue(line.exists, "The line stays after folding")
         macShot(window, "mac-gallery-601-2-zugeklappt")
         app.terminate()
     }

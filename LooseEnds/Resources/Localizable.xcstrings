@@ -2,6 +2,7 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "New %lld" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Neu %lld" } } } },
     "Shows the remaining tasks" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Zeigt die übrigen Aufgaben" } } } },
     "Shows only the first five tasks" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Zeigt nur die ersten fünf Aufgaben" } } } },
     "Write a task" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufgabe schreiben" } } } },

@@ -43,7 +43,6 @@ struct StartMetrics: Equatable, Sendable {
     var caption: Font { .system(size: self(11), weight: .semibold) }
     /// 0.12 em of the 11 pt caption.
     var captionTracking: CGFloat { self(11) * 0.12 }
-    var inbox: Font { .system(size: self(15), weight: .semibold) }
     /// The Mac sidebar is 220 to 300 pt wide and sits beside the page's own text, so its index runs
     /// smaller there: at 19 pt "Als nächstes" and the others were cut off (#526).
     private static var isMac: Bool {

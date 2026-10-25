@@ -282,6 +282,15 @@ Schublade in den Knopf. Bewegung weich, 0,4 s, ohne Feder; die Zahl wechselt als
 Verworfen: Entwürfe mit Timer („Tablett“), Schreibleiste unten, Eingang als Liste; „Zuletzt erfasst“ rechts auf dem Mac
 entfällt. Entwurf: https://claude.ai/artifact/R8C6iLGAHXHrMqBvuyU6Zs; Spec `docs/specs/feat-601-schreibzeile.md`.
 
+**Startseite ruhiger (Henning, 2026-10-25, #677, Entwurf C3).** Mit allen Funktionen wirkte die Startseite unruhig.
+Entschieden aus drei Wegen und drei Fassungen: C3, „Randspalte, Schreibzeile still“
+(https://claude.ai/artifact/U4YX8SxTtVZZQPUktiL5MA). Schnitt 1: Der getönte Knopf „N zum Durchsehen“ entfällt; „Neu N“
+steht als Randwort in Akzent links neben der Schreibzeile, in der Randspalte der Zeilen, und öffnet „Neu“. Ohne Neues bleibt
+der Rand leer. Die Schreibzeile ist nur eine Haarlinie an der Kante der Titel; „Was soll ich aufnehmen?“ erscheint erst mit dem
+Cursor. Die Schublade zeigt ihre Zeilen über der Linie ohne Tönung und ohne Leuchten. Die Perlen stehen ohne Überschrift am
+Ende des Blatts (iPhone unter dem Inhalt), Schnur 240 pt und Satz (14 pt) an der Kante der Titel. Schnitt 2 folgt: Datum und
+Knäuel in die Randspalte, Zonenköpfe als Randwörter, Satz des Tages 26 pt.
+
 ## Mac-App (Henning, 2026-10-16, Epic #467, ersetzt #408)
 
 Entwurf mit sieben Tafeln: `docs/artifacts/feat-408-mac-entwurf/` (Dateien) und https://claude.ai/artifact/RuLo7oxphcG4oJfTJ7HeLT (Ansicht, Kommentare). Die Mac-App ist dieselbe Papierwelt wie das iPhone; es gibt keine eigene Mac-Gestaltung (ADR-1), nur Fenster, Zeiger und Tastatur.
