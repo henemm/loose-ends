@@ -34,7 +34,7 @@ alles in `FocusBloxMac/`, alle UI-Tests.
 | 3 | Kalender zurück? | Nur als Option: terminierte Aufgabe im Kalender anzeigen. |
 | 4 | Migration? | Nicht zwingend. Daten als Lernkorpus exportieren: ja. |
 | 5 | Kanäle zuerst | Siri, Watch, Control Center. |
-| 6 | E-Mail | Nur Apple Mail. Wege: Siri auf einer Mail und Teilen-Menü. Rücksprung zur Mail: ja. |
+| 6 | E-Mail | Nur Apple Mail. Wege: Siri auf einer Mail und Teilen-Menü. Rücksprung zur Mail: **Kann statt Muss** (Henning, 2026-10-25, #289): Teilen aus Mail liefert auf iOS 27.0 keine `message:`-URL, ein Weg ist nicht belegt; Betreff und Absender bleiben als Text. Ziehen aus Mail und der Siri-Weg werden erst nach der ersten Einladung geprüft. |
 | 7 | Erfassung | Ein Textfeld. Im Hintergrund die meisten FocusBlox-Attribute. App lernt aus alten Aufgaben. |
 | 8 | Modelle | On-device, Private Cloud Compute ok, Fremdmodell als Fallback optional. |
 | 9 | Wichtigkeit | Wörter, Historie, weitere Signale (siehe Datenmodell). |

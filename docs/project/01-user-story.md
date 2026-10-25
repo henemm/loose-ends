@@ -55,7 +55,7 @@ Was liegt schon ewig herum. Worauf warte ich. Diese Fragen beantwortet keine man
 - Manuelle Sortierung nur in "Als nächstes"
 - Projekte als Listen, Unteraufgaben eine Ebene tief
 - Einfache Wiederholung
-- Rücksprung zur Quell-Mail
+- Rücksprung zur Quell-Mail (Kann seit 2026-10-25, #289: kein belegter Weg auf iOS 27.0; Betreff und Absender stehen als Text)
 - Terminierte Aufgabe optional im Kalender anzeigen
 
 ### Emotional
@@ -89,7 +89,7 @@ Was liegt schon ewig herum. Worauf warte ich. Diese Fragen beantwortet keine man
 - [ ] Ich öffne "Schnell" und alles darin dauert unter fünfzehn Minuten
 - [ ] Ich öffne "Alt" und erkenne, was ich seit Wochen vor mir herschiebe
 - [ ] Blockierte Aufgaben tauchen in "Als nächstes" nicht auf
-- [ ] Eine Aufgabe aus einer Mail bringt mich mit einem Tipp zurück zur Mail
+- [ ] ~~Eine Aufgabe aus einer Mail bringt mich mit einem Tipp zurück zur Mail~~ — Kann, nicht mehr Teil der ersten Einladung (Henning, 2026-10-25, #289)
 - [ ] Die Oberfläche ist auf iPhone und Mac dieselbe Codebasis
 - [ ] Die App ist auf Englisch und Deutsch bedienbar
 
@@ -101,7 +101,8 @@ Was liegt schon ewig herum. Worauf warte ich. Diese Fragen beantwortet keine man
 | Erfassung: Watch mit Diktat | Must | Offen |
 | Erfassung: Control Center in Erfassungs-Szene mit sofortigem Mikrofon | Must | Offen |
 | Erfassung: Textfeld in der App | Must | Offen |
-| Erfassung: Teilen-Menü und Siri aus Mail, Rücksprung | Must | Offen |
+| Erfassung: Teilen-Menü und Siri aus Mail | Must | Offen |
+| Rücksprung zur Quell-Mail (#289) | Kann | Zurückgestellt, M4 |
 | Veredelung mit Retrieval-Beispielen und Konfidenzschwelle | Must | Offen |
 | Revisionen, Marker, Rückgängig pro Feld | Must | Offen |
 | Ansichten: Als nächstes, Neu, Fällig, Schnell, Alt, Wartet, Kontext | Must | Offen |
