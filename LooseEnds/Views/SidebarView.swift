@@ -134,7 +134,7 @@ struct SidebarView: View {
                     NowBlock(tasks: ViewRules.now(in: tasks).all, count: nowCount) { previewRow($0) }
                     // Same section: a second one put the list's section gap above "Contents" (#463).
                     // iPad: the sidebar marks the open list (#334); iPhone: after Back selection is nil.
-                    ContentsIndex(groups: indexGroups, selected: selection) { selection = $0 }
+                    ContentsIndex(groups: indexGroups, selected: selection, inMargin: true) { selection = $0 }
                     // The beads close the page, quiet and without a caption (#677).
                     WeekStringRows(string: ViewRules.currentString(in: tasks), all: tasks)
                 }

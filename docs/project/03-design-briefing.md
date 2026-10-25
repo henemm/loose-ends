@@ -288,8 +288,11 @@ Entschieden aus drei Wegen und drei Fassungen: C3, „Randspalte, Schreibzeile s
 steht als Randwort in Akzent links neben der Schreibzeile, in der Randspalte der Zeilen, und öffnet „Neu“. Ohne Neues bleibt
 der Rand leer. Die Schreibzeile ist nur eine Haarlinie an der Kante der Titel; „Was soll ich aufnehmen?“ erscheint erst mit dem
 Cursor. Die Schublade zeigt ihre Zeilen über der Linie ohne Tönung und ohne Leuchten. Die Perlen stehen ohne Überschrift am
-Ende des Blatts (iPhone unter dem Inhalt), Schnur 240 pt und Satz (14 pt) an der Kante der Titel. Schnitt 2 folgt: Datum und
-Knäuel in die Randspalte, Zonenköpfe als Randwörter, Satz des Tages 26 pt.
+Ende des Blatts (iPhone unter dem Inhalt), Schnur 240 pt und Satz (14 pt) an der Kante der Titel. Schnitt 2: eine Textkante.
+Knoten und Knäuel stehen in der Randspalte, Datum (in Worten statt Versalien) und Satz des Tages (26 statt 30 pt) an der Kante
+der Titel. „Jetzt N“ und auf dem iPhone „Inhalt“ sind Randwörter in Grau mit einer Haarlinie ab der Titelkante, die Zahl in
+Tinte (#637); die Zeilen des Inhalts stehen an der Titelkante. Die Seitenleiste auf Mac und iPad behält ihren Kopf. Abweichung
+vom Entwurf: Das Datum steht über dem Satz statt in der Randspalte, weil dort Knoten oder Knäuel stehen (#180).
 
 ## Mac-App (Henning, 2026-10-16, Epic #467, ersetzt #408)
 

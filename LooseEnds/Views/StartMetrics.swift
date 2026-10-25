@@ -39,7 +39,8 @@ struct StartMetrics: Equatable, Sendable {
     func callAsFunction(_ points: CGFloat) -> CGFloat { (points * factor).rounded() }
 
     // The draft's type, in points at the standard size.
-    var headline: Font { .system(size: self(30), weight: .medium, design: .serif) }
+    /// 26 since #677 (draft C3): the sentence leads without shouting over the rows.
+    var headline: Font { .system(size: self(26), weight: .medium, design: .serif) }
     var caption: Font { .system(size: self(11), weight: .semibold) }
     /// 0.12 em of the 11 pt caption.
     var captionTracking: CGFloat { self(11) * 0.12 }

@@ -52,7 +52,8 @@ struct StartHeaderRows<Row: View>: View {
                 .startRow(metrics)
                 .paperRow()
         }
-        tapping(StartHeadlineLine(tasks: tasks, openDone: openDone))
+        // At the titles' edge like the date and the Knäuel's row (#677): one edge for every word.
+        tapping(StartHeadlineLine(tasks: tasks, openDone: openDone).padding(.leading, metrics.marginWidth + 12))
             .padding(.top, 6)
             // The draft: 16 under the headline (#463).
             .padding(.bottom, 16)
@@ -157,9 +158,10 @@ struct KnaeuelHead: View {
 }
 
 /// The date, small and grey, at the sign of the day (#180 rule 1, #643): the knot while every task
-/// lies in the box, the Knäuel in the ink and a fifth larger while one is being avoided. With the
-/// Knäuel the date starts flush over the task's words, 64 pt in (Henning, 2026-10-23). During the
-/// moment (#644) `loosening` blends the Knäuel into the knot, green until it is the knot.
+/// lies in the box, the Knäuel in the ink and a fifth larger while one is being avoided. The sign
+/// stands in the margin column, the date flush over the titles, 64 pt in (Henning, 2026-10-23; the
+/// knot too since #677), in plain words instead of spaced capitals. During the moment (#644)
+/// `loosening` blends the Knäuel into the knot, green until it is the knot.
 struct StartDateLine: View {
     let knaeuel: Bool
     var loosening: CGFloat?
@@ -170,7 +172,7 @@ struct StartDateLine: View {
         let metrics = StartMetrics(typeSize)
         // Once a minute, so the line turns with the day without a save (#426).
         TimelineView(.periodic(from: .now, by: 60)) { timeline in
-            HStack(spacing: knaeuel ? 12 : 8) {
+            HStack(spacing: 12) {
                 if knaeuel {
                     glyph
                         .frame(width: metrics(36), height: metrics(18))
@@ -181,11 +183,10 @@ struct StartDateLine: View {
                     // the mark, not something to tap (ADR-14).
                     ThreadGlyph(form: .knot, lineWidth: 1.5)
                         .frame(width: metrics(30), height: metrics(16))
+                        .frame(width: metrics.marginWidth, alignment: .leading)
                 }
                 Text(timeline.date, format: .dateTime.weekday(.wide).day().month(.wide))
-                    .font(metrics.caption)
-                    .textCase(.uppercase)
-                    .tracking(metrics.captionTracking)
+                    .font(metrics.margin)
             }
             .foregroundStyle(.secondary)
             .accessibilityElement(children: .combine)
