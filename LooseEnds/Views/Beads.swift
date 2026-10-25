@@ -125,8 +125,8 @@ struct WeekString: View {
 }
 
 /// The week's string as the start page draws it (draft C3, #677): at three fifths, so beads of 3.6 pt
-/// on a 0.9 pt line, 24 pt apart, five places within 200 pt. Used at the end of the page and under
-/// the Sunday sentence.
+/// on a 0.9 pt line, 24 pt apart, five places within 200 pt, a shade lighter than the rows' grey as in
+/// the draft. Used at the end of the page and under the Sunday sentence.
 struct QuietWeekString: View {
     let beads: [ViewRules.Bead]
     var length: Int?
@@ -143,6 +143,8 @@ struct QuietWeekString: View {
             .frame(width: Self.width)
             .scaleEffect(Self.scale, anchor: .topLeading)
             .frame(width: Self.width * Self.scale, height: metrics(WeekString.height) * Self.scale, alignment: .topLeading)
+            // The draft's lighter grey (#9A9B93 on the paper instead of #77786F); the new bead's green stays clear.
+            .opacity(0.75)
     }
 }
 
