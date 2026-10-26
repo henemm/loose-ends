@@ -107,6 +107,8 @@ enum NextUpWidgetActions {
         let title: String
         let margin: String
         let pressing: Bool
+        /// The Knäuel (#643): its sign stands in the margin, as in the app's head.
+        var isKnaeuel = false
         /// Just completed from the widget: the knot stands in place of the check (#521).
         var done = false
     }
@@ -115,10 +117,12 @@ enum NextUpWidgetActions {
     /// "Due today" and "Next up" as one list, and how many that makes in all (the number in the head).
     static func nextUp(in context: ModelContext, limit: Int, now: Date = Date(), calendar: Calendar = .current) throws -> (lines: [Line], total: Int) {
         let all = try context.fetch(FetchDescriptor<TaskItem>())
-        let shown = (ViewRules.knaeuel(in: all).map { [$0] } ?? []) + ViewRules.now(in: all, now: now, calendar: calendar).all
+        let knaeuel = ViewRules.knaeuel(in: all)
+        let shown = (knaeuel.map { [$0] } ?? []) + ViewRules.now(in: all, now: now, calendar: calendar).all
         let lines = shown.prefix(limit).map { task in
             let mark = ViewRules.marginMark(of: task, now: now, calendar: calendar)
-            return Line(id: task.id, title: task.displayTitle, margin: mark.text, pressing: mark.pressing)
+            return Line(id: task.id, title: task.displayTitle, margin: mark.text, pressing: mark.pressing,
+                        isKnaeuel: task.id == knaeuel?.id)
         }
         return (Array(lines), shown.count)
     }

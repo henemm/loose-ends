@@ -134,7 +134,10 @@ struct NextUpWidgetView: View {
     /// One task, set large, its time above it; the check at the foot finishes it.
     private func small(_ line: NextUpEntry.Line) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            if !margin(of: line).isEmpty {
+            if line.isKnaeuel && !line.done {
+                knaeuelSign
+                    .padding(.top, 13)
+            } else if !margin(of: line).isEmpty {
                 Text(margin(of: line))
                     .font(.system(size: 12, weight: .semibold).monospacedDigit())
                     .foregroundStyle(marginStyle(of: line))
@@ -196,13 +199,19 @@ struct NextUpWidgetView: View {
 
     private func row(_ line: NextUpEntry.Line) -> some View {
         HStack(alignment: .center, spacing: Self.columnGap) {
-            Text(margin(of: line))
-                .font(.system(size: 11.5, weight: .medium).monospacedDigit())
-                .foregroundStyle(marginStyle(of: line))
-                .lineLimit(2)
-                .multilineTextAlignment(.trailing)
-                .minimumScaleFactor(0.85)
-                .frame(width: Self.marginWidth, alignment: .trailing)
+            Group {
+                if line.isKnaeuel && !line.done {
+                    knaeuelSign
+                } else {
+                    Text(margin(of: line))
+                        .font(.system(size: 11.5, weight: .medium).monospacedDigit())
+                        .foregroundStyle(marginStyle(of: line))
+                        .lineLimit(2)
+                        .multilineTextAlignment(.trailing)
+                        .minimumScaleFactor(0.85)
+                }
+            }
+            .frame(width: Self.marginWidth, alignment: .trailing)
             Button(intent: OpenTaskIntent(taskID: line.id)) {
                 Text(line.title)
                     .font(.system(size: 15, design: .serif))
@@ -260,6 +269,14 @@ struct NextUpWidgetView: View {
             .frame(width: 32, height: 23)
             .transition(KnotTying())
             .accessibilityLabel(Text("Completed"))
+    }
+
+    /// The Knäuel's sign, the one the app draws in its head (`ThreadGlyph(form: .knaeuel)`, #643).
+    private var knaeuelSign: some View {
+        ThreadGlyph(form: .knaeuel, lineWidth: 1.4)
+            .frame(width: 30, height: 15)
+            .foregroundStyle(.primary)
+            .accessibilityLabel(Text("The Knäuel"))
     }
 
     private func margin(of line: NextUpEntry.Line) -> String {

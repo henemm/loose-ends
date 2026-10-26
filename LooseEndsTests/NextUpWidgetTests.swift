@@ -99,6 +99,7 @@ import Testing
         let result = try NextUpWidgetActions.nextUp(in: store.context, limit: 6, now: now, calendar: calendar)
 
         #expect(result.lines.map(\.id) == [knaeuel.id, due.id, queued.id])
+        #expect(result.lines.map(\.isKnaeuel) == [true, false, false])
         #expect(result.total == 3)
     }
 
