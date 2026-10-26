@@ -79,6 +79,29 @@ import Testing
         #expect(lines.map(\.id) == [first.id, second.id])
     }
 
+    @Test("The widget shows what the start screen's Now shows: the Knäuel first, then due today and lined up")
+    @MainActor func followsTheStartScreen() throws {
+        let store = try TestStore()
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = try #require(TimeZone(identifier: "Europe/Berlin"))
+        let queued = lined("Vorgemerkt", rank: 1, in: store)
+        let due = TaskItem(rawText: "Heute fällig")
+        due.status = .active
+        due.dueDate = now.addingTimeInterval(60 * 60)
+        due.dueHasTime = true
+        store.context.insert(due)
+        let knaeuel = TaskItem(rawText: "Das Knäuel")
+        knaeuel.status = .active
+        knaeuel.knaeuelAt = now
+        store.context.insert(knaeuel)
+        try store.context.save()
+
+        let result = try NextUpWidgetActions.nextUp(in: store.context, limit: 6, now: now, calendar: calendar)
+
+        #expect(result.lines.map(\.id) == [knaeuel.id, due.id, queued.id])
+        #expect(result.total == 3)
+    }
+
     @Test("A title tapped in the widget asks the app to open that task")
     @MainActor func openTaskSignalsTheApp() async throws {
         OpenTaskRequest.shared.taskID = nil
