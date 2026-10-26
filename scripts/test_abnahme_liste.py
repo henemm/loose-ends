@@ -119,9 +119,10 @@ class AbnahmeListeTests(unittest.TestCase):
         text = load_text()
         self.assertEqual(len(re.findall(r"^#+\s*Prüfblock", text, re.M)), 1)
         block = re.split(r"^#+\s*Prüfblock", text, flags=re.M)[1]
+        bullets = set(re.findall(r"^>\s*-\s*(S\d{2}):", block, re.M))
         for r in self.rows():
             if r["Status"] in ("Lücke", "wartet auf Hennings Wort"):
-                self.assertIn(r["Nr"], block, f"{r['Nr']} fehlt im Prüfblock")
+                self.assertIn(r["Nr"], bullets, f"{r['Nr']} fehlt als Punkt im Prüfblock")
 
     def test_checker_rejects_bad_rows(self):
         ok = {"Nr": "S01", "Schritt": "a", "Bedienweg": "b", "Quelle": "c", "Status": "belegt", "Beleg": "#1", "Build": "5"}

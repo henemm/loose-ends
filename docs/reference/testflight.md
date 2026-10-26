@@ -145,6 +145,14 @@ still mit einer älteren oder Beta-Version zu bauen (siehe „Wenn es hakt").
    anmelden, Einladung annehmen, **Loose Ends** installieren.
 3. Jeder weitere Build aus Schritt 5 landet automatisch bei den internen Testern.
 
+Die Testgruppen werden **unter #342 Teil 3** angelegt, nicht unter #176: die interne Gruppe `Familie` (interne Tests) und
+die externen Gruppen für die Einladung.
+
+**Prüfliste vor der Einladung (#176):** Bevor externe Tester eingeladen werden, wird
+[`abnahme-testflight.md`](abnahme-testflight.md) auf den Build bezogen durchgegangen. Belegte Schritte tragen Ticket und
+Buildnummer; die Lücken gehen gebündelt als ein Prüfblock („Was testen“) in einen Build, erst nach Hennings wörtlichem
+„jetzt ist ein Test möglich“.
+
 ## Wenn es hakt
 
 - **"No profiles for 'com.henning.looseends' were found"** oder ein Fehler mit

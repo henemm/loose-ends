@@ -59,6 +59,11 @@ Die Reihenfolge ist verbindlich, keine Stufe wird vorgezogen. Stufe 1 und 2 werd
 3. **Hennings Gerät** — seit 2026-10-10 über TestFlight in seiner normalen App (`CLAUDE.md`, „Stufe 3
    läuft über TestFlight“). Nichts auf seinen Geräten ohne sein wörtliches „jetzt ist ein Test möglich“.
 
+   **Vor jeder Einladungswelle** wird die Prüfliste `docs/reference/abnahme-testflight.md` auf den Build bezogen
+   durchgegangen (#176). Was Henning in einem Build bestätigt hat, steht dort mit Ticket und Buildnummer; die Lücken kommen
+   gebündelt in einen Prüfblock und laufen erst nach seinem wörtlichen Satz. Der PR dazu schreibt `Refs #176`, nicht
+   `Closes #176`: Das Ticket bleibt offen, bis seine Rückmeldung zum Prüfblock da ist.
+
 Die frühere Stufe 3 (`device-status` und die Labor-App) ist abgelöst. Zur Geschichte:
 
 Stufe 3 fuhr seit #153 keinen nachgespielten Bedienablauf mehr. Der erste echte Versuch dafür —
