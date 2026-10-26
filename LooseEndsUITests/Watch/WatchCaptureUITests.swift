@@ -38,7 +38,7 @@ final class WatchCaptureUITests: XCTestCase {
         let app = launch()
         for text in ["Milch kaufen", "Brot holen"] {
             capture(text, in: app)
-            XCTAssertTrue(confirmation(in: app).waitForExistence(timeout: 5), "„Gespeichert“ fehlt nach „\(text)“")
+            XCTAssertTrue(try sawConfirmation(in: app), "„Gespeichert“ fehlt nach „\(text)“")
             snapshot("gespeichert: \(text)", of: app)
             XCTAssertTrue(field(in: app).waitForExistence(timeout: 5), "Feld kommt nach „\(text)“ nicht zurück")
             XCTAssertFalse(confirmation(in: app).exists, "Bestätigung steht noch neben dem Feld")
@@ -64,6 +64,17 @@ final class WatchCaptureUITests: XCTestCase {
         } while !seen.confirmation && Date() < deadline
         XCTAssertTrue(seen.confirmation, "„Gespeichert“ fehlt")
         XCTAssertFalse(seen.field, "Feld ist sofort wieder da, ohne sichtbare Bestätigung")
+    }
+
+    /// Polls snapshots until the confirmation shows. It stands 1.5 s; `waitForExistence` first looks after a second
+    /// and missed it on the second capture (video: "Gespeichert" is on screen, the query came too late).
+    @MainActor
+    private func sawConfirmation(in app: XCUIApplication) throws -> Bool {
+        let deadline = Date().addingTimeInterval(5)
+        repeat {
+            if contents(of: try app.snapshot()).confirmation { return true }
+        } while Date() < deadline
+        return false
     }
 
     /// What one snapshot shows at the same instant: the confirmation, a text field.
