@@ -1,0 +1,47 @@
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEnds.xcodeproj
+[0;32m[sim][0m Projekt erzeugt.
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test mit Beleg: OnboardingTests → docs/artifacts/342-sprache-und-start-ohne-modell/simulator-run.txt
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+[[36mLooseEndsUITests[0m] [1mCompiling[0m OnboardingTests.swift
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsUITests.swiftmodule
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsUITests.abi.json
+[[36mLooseEndsUITests[0m] [1mLinking[0m LooseEndsUITests
+[[36mLooseEndsUITests[0m] [1mExtract App Intents Metadata[0m
+Test Suite 'Selected tests' started at 2026-10-26 08:45:08.226.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-26 08:45:08.230.
+Test Suite 'OnboardingTests' started at 2026-10-26 08:45:08.230.
+    [31m✖[0m testNoModelNoteSaysWhatStillWorksInEnglish, XCTAssertTrue failed - The model note should stand on step one
+    [31m✖[0m testNoModelNoteSaysWhatStillWorksInGerman, XCTAssertTrue failed - The model note should stand on step one
+    [32m✔[0m testNoNoteWhileTheModelIsThere ([31m6.510[0m seconds)
+    [31m✖[0m testNotReadyNoteStandsOnTheScreen, XCTAssertTrue failed - The model note should stand on step one
+    [32m✔[0m testSkipEndsTheOnboardingAtOnce ([31m10.913[0m seconds)
+    [31m✖[0m testTurnedOffNoteStandsOnTheScreen, XCTAssertTrue failed - The model note should stand on step one
+    [32m✔[0m testWalkThroughThreeStepsToTheStartScreen ([31m13.719[0m seconds)
+Executed 7 tests, with 4 failures (0 unexpected) in 86.811 (86.819) seconds
+Test Suite 'LooseEndsUITests.xctest' failed at 2026-10-26 08:46:35.055.
+Executed 7 tests, with 4 failures (0 unexpected) in 86.811 (86.825) seconds
+Executed 7 tests, with 4 failures (0 unexpected) in 86.811 (86.829) seconds
+[1mTest session results:[0m /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/docs/artifacts/342-sprache-und-start-ohne-modell/simulator-run/run.xcresult
+[36;1mTesting started[0m
+[sim_proof] ergebnis: Failed
+[0;31m[sim][0m UI-Test fehlgeschlagen (xcodebuild 65), Beleg: docs/artifacts/342-sprache-und-start-ohne-modell/simulator-run.txt
