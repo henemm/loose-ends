@@ -1,0 +1,45 @@
+{
+  "fill-specializations" : [
+    {
+      "value" : {
+        "solid" : "srgb:0.95686,0.95294,0.93333,1.00000"
+      }
+    },
+    {
+      "appearance" : "dark",
+      "value" : {
+        "solid" : "srgb:0.06275,0.09412,0.09804,1.00000"
+      }
+    }
+  ],
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "glass" : true,
+          "image-name-specializations" : [
+            {
+              "value" : "layer-thread.svg"
+            },
+            {
+              "appearance" : "dark",
+              "value" : "layer-thread-dark.svg"
+            }
+          ],
+          "name" : "layer-thread"
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "specular" : true
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

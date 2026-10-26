@@ -1,0 +1,14 @@
+test_dark_appearance_has_its_own_ground_and_thread_image (scripts.test_app_icon_package.AppIconPackageTests.test_dark_appearance_has_its_own_ground_and_thread_image) ... ok
+test_every_named_image_exists (scripts.test_app_icon_package.AppIconPackageTests.test_every_named_image_exists) ... ok
+test_group_has_specular_and_neutral_shadow_and_layers_are_glass (scripts.test_app_icon_package.AppIconPackageTests.test_group_has_specular_and_neutral_shadow_and_layers_are_glass) ... ok
+test_icon_name_matches_the_build_setting (scripts.test_app_icon_package.AppIconPackageTests.test_icon_name_matches_the_build_setting) ... ok
+test_light_fill_is_the_flat_ground (scripts.test_app_icon_package.AppIconPackageTests.test_light_fill_is_the_flat_ground) ... ok
+test_logo_readme_no_longer_sends_the_reader_to_the_gui (scripts.test_app_icon_package.AppIconPackageTests.test_logo_readme_no_longer_sends_the_reader_to_the_gui) ... ok
+test_manifest_has_one_group_with_the_thread_layer (scripts.test_app_icon_package.AppIconPackageTests.test_manifest_has_one_group_with_the_thread_layer) ... ok
+test_plain_keys_are_absent_because_they_switch_dark_off (scripts.test_app_icon_package.AppIconPackageTests.test_plain_keys_are_absent_because_they_switch_dark_off) ... ok
+test_thread_images_differ_from_the_source_only_in_stroke_colour (scripts.test_app_icon_package.AppIconPackageTests.test_thread_images_differ_from_the_source_only_in_stroke_colour) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.009s
+
+OK

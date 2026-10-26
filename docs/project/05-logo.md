@@ -48,13 +48,15 @@ die Tiefe von selbst.
 
 ## Technische Form (iOS 26 / macOS 26 / watchOS 26)
 
-- **Icon Composer-Format `.icon`**: ein Paket aus `icon.json` plus SVG-Ebenen (Hintergrund,
-  Faden). Xcode 26 kompiliert daraus alle Darstellungen: Licht, Dunkel, getönt, klar, Mac
-  und Watch. Das Paket ist Textdateien, also im Repo versionierbar und ohne GUI erzeugbar.
-- **Ebenen**: Ebene 1 Hintergrundfläche, Ebene 2 der Faden als SVG-Pfad mit fester
-  Strichstärke. Zwei Ebenen reichen für Parallaxe und Glas.
-- **Fallback**: `AppIcon-1024.png` bleibt für ältere Werkzeuge; die Watch bekommt das Motiv
-  ohne Rand, weil sie rund maskiert.
+- **Icon Composer-Format `.icon`** (seit #40, 2026-10-26): `LooseEnds/Resources/AppIcon.icon`, ein Paket aus
+  `icon.json` plus zwei SVG des Fadens (hell `#0F6E73`, dunkel `#5FC4C9`). Xcode kompiliert daraus alle
+  Darstellungen: Licht, Dunkel, getönt, klar, Mac und Watch. Das Paket ist Textdateien, im Repo versioniert und
+  von Hand geschrieben, ohne Icon-Composer-Oberfläche.
+- **Eine Gruppe mit Fill**: Der Grund ist keine Ebene, sondern ein Fill (`#F4F3EE` hell, `#101819` dunkel); darüber
+  eine Gruppe mit der Faden-Ebene (Glas, Specular, neutraler Schatten). Das reicht für Glas und Tiefe; die früher
+  geplanten zwei Ebenen braucht es nicht.
+- **PNG-Sätze ungenutzt**: Die PNGs in `AppIcon.appiconset` (App und Watch) liegen noch im Projekt, das Paket gewinnt
+  aber gegen sie. Die Watch nimmt dasselbe Paket, das System passt es rund an.
 - **Akzentfarbe**: `AccentColor.colorset` bekommt die Logo-Farbe mit Licht- und Dunkelwert.
 - **Kein Icon-Text**, kein Schriftzug im Icon. Der Name steht darunter.
 
@@ -74,5 +76,5 @@ Aufwand: Schritte 2 bis 4 sind je ein kurzer Schnitt; Schritt 5 braucht ein Ger�
 ## Entscheidung
 
 Henning, 2026-09-17, auf der Design-Leinwand: **Motiv B (der Knoten) in Petrol**, heller Grund.
-Schritte 2 bis 4 sind damit erledigt (PNG-Fallbacks und Akzentfarbe im Projekt); Schritt 5,
-das Icon-Composer-Paket, läuft auf dem Mac nach `docs/design/logo/README.md`.
+Schritte 2 bis 4 sind damit erledigt (PNG-Fallbacks und Akzentfarbe im Projekt). Das Icon-Composer-Paket
+kam mit #40 (2026-10-26), Aufbau in `docs/design/logo/README.md`; offen ist nur die Prüfung auf dem Gerät (#176).

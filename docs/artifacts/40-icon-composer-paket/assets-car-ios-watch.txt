@@ -1,0 +1,24 @@
+== /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-compressed-gathering-raven/Build/Products/Debug-iphonesimulator/LooseEnds.app/Assets.car
+   {'AssetType': 'Color', 'Name': 'AppIcon_Assets/Color-1', 'Idiom': 'universal', 'Color components': [1, 1]}
+   {'AssetType': 'Color', 'Name': 'AppIcon_Assets/Color-2', 'Idiom': 'universal', 'Color components': [0.9570000171661377, 0.953000009059906, 0.9330000281333923, 1]}
+   {'AssetType': 'Color', 'Name': 'AppIcon_Assets/Color-3', 'Idiom': 'universal', 'Color components': [0.06300000101327896, 0.09399999678134918, 0.09799999743700027, 1]}
+   {'AssetType': 'Icon Image', 'Name': 'AppIcon', 'Idiom': 'phone', 'PixelWidth': 1024, 'RenditionName': 'AppIcon1024x1024_UIAppearanceAny_2528926D-1ADB-48F9-BD6E-110A58F3A0A7-38865-00000A208EBD0EB5.png'}
+   {'AssetType': 'Icon Image', 'Name': 'AppIcon', 'Appearance': 'UIAppearanceDark', 'Idiom': 'phone', 'PixelWidth': 1024, 'RenditionName': 'AppIcon1024x1024_UIAppearanceDark_D6A108E0-81F9-4A20-A7F1-A2FF7F013B0B-38865-00000A208F01F528.png'}
+   {'AssetType': 'Icon Image', 'Name': 'AppIcon', 'Appearance': 'ISAppearanceTintable', 'Idiom': 'phone', 'PixelWidth': 1024, 'RenditionName': 'AppIcon1024x1024_ISAppearanceTintable_23EB01CC-9BDE-46D4-A84A-2A35C943AF3F-38865-00000A208F761405.png'}
+   {'AssetType': 'IconGroup', 'Name': 'AppIcon/Group', 'Appearance': 'UIAppearanceDark', 'Idiom': 'universal', 'RenditionName': 'IconGroup'}
+   {'AssetType': 'IconGroup', 'Name': 'AppIcon/Group', 'Appearance': 'UIAppearanceLight', 'Idiom': 'universal', 'RenditionName': 'IconGroup'}
+   {'AssetType': 'IconGroup', 'Name': 'AppIcon/Group', 'Appearance': 'ISAppearanceTintable', 'Idiom': 'universal', 'RenditionName': 'IconGroup'}
+   {'AssetType': 'IconImageStack', 'Name': 'AppIcon', 'Appearance': 'UIAppearanceDark', 'Idiom': 'universal', 'RenditionName': 'AppIcon.iconstack'}
+   {'AssetType': 'IconImageStack', 'Name': 'AppIcon', 'Appearance': 'UIAppearanceLight', 'Idiom': 'universal', 'RenditionName': 'AppIcon.iconstack'}
+   {'AssetType': 'IconImageStack', 'Name': 'AppIcon', 'Appearance': 'ISAppearanceTintable', 'Idiom': 'universal', 'RenditionName': 'AppIcon.iconstack'}
+   {'AssetType': 'MultiSized Image', 'Name': 'AppIcon', 'Idiom': 'phone'}
+   {'AssetType': 'Vector', 'Name': 'AppIcon_Assets/layer-thread', 'Idiom': 'universal', 'RenditionName': 'image.svg'}
+   {'AssetType': 'Vector', 'Name': 'AppIcon_Assets/layer-thread-dark', 'Idiom': 'universal', 'RenditionName': 'image.svg'}
+== /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-compressed-gathering-raven/Build/Products/Debug-iphonesimulator/LooseEnds.app/Watch/LooseEndsWatch.app/Assets.car
+   {'AssetType': 'Color', 'Name': 'AppIcon_Assets/Color-1', 'Idiom': 'universal', 'Color components': [1, 1]}
+   {'AssetType': 'Color', 'Name': 'AppIcon_Assets/Color-2', 'Idiom': 'universal', 'Color components': [0.9570000171661377, 0.953000009059906, 0.9330000281333923, 1]}
+   {'AssetType': 'Icon Image', 'Name': 'AppIcon', 'Idiom': 'watch', 'PixelWidth': 1024, 'RenditionName': 'AppIcon1024x1024_UIAppearanceAny_80E18CC5-9B34-4F4C-831D-943CDC9FC171-38866-00000A208D863086.png'}
+   {'AssetType': 'IconGroup', 'Name': 'AppIcon/Group', 'Appearance': 'UIAppearanceLight', 'Idiom': 'watch', 'RenditionName': 'IconGroup'}
+   {'AssetType': 'IconImageStack', 'Name': 'AppIcon', 'Appearance': 'UIAppearanceLight', 'Idiom': 'watch', 'RenditionName': 'AppIcon.iconstack'}
+   {'AssetType': 'MultiSized Image', 'Name': 'AppIcon', 'Idiom': 'watch'}
+   {'AssetType': 'Vector', 'Name': 'AppIcon_Assets/layer-thread', 'Idiom': 'universal', 'RenditionName': 'image.svg'}

@@ -1,0 +1,77 @@
+EE.EFEE
+======================================================================
+ERROR: test_dark_appearance_has_its_own_ground_and_thread_image (__main__.AppIconPackageTests.test_dark_appearance_has_its_own_ground_and_thread_image)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_app_icon_package.py", line 45, in test_dark_appearance_has_its_own_ground_and_thread_image
+    icon = manifest()
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_app_icon_package.py", line 23, in manifest
+    with open(PACKAGE / "icon.json", encoding="utf-8") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/LooseEnds/Resources/AppIcon.icon/icon.json'
+
+======================================================================
+ERROR: test_every_named_image_exists (__main__.AppIconPackageTests.test_every_named_image_exists)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_app_icon_package.py", line 54, in test_every_named_image_exists
+    icon = manifest()
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_app_icon_package.py", line 23, in manifest
+    with open(PACKAGE / "icon.json", encoding="utf-8") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/LooseEnds/Resources/AppIcon.icon/icon.json'
+
+======================================================================
+ERROR: test_light_fill_is_the_flat_ground (__main__.AppIconPackageTests.test_light_fill_is_the_flat_ground)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_app_icon_package.py", line 42, in test_light_fill_is_the_flat_ground
+    self.assertEqual(manifest()["fill"], {"solid": "srgb:0.95686,0.95294,0.93333,1.00000"}, "Grund #F4F3EE")
+                     ~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_app_icon_package.py", line 23, in manifest
+    with open(PACKAGE / "icon.json", encoding="utf-8") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/LooseEnds/Resources/AppIcon.icon/icon.json'
+
+======================================================================
+ERROR: test_manifest_has_one_group_with_the_thread_layer (__main__.AppIconPackageTests.test_manifest_has_one_group_with_the_thread_layer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_app_icon_package.py", line 37, in test_manifest_has_one_group_with_the_thread_layer
+    icon = manifest()
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_app_icon_package.py", line 23, in manifest
+    with open(PACKAGE / "icon.json", encoding="utf-8") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/LooseEnds/Resources/AppIcon.icon/icon.json'
+
+======================================================================
+ERROR: test_thread_images_differ_from_the_source_only_in_stroke_colour (__main__.AppIconPackageTests.test_thread_images_differ_from_the_source_only_in_stroke_colour)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_app_icon_package.py", line 63, in test_thread_images_differ_from_the_source_only_in_stroke_colour
+    self.assertEqual(read_asset("layer-thread.svg"), source, "hell = die Quelle aus docs/design/logo")
+                     ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_app_icon_package.py", line 32, in read_asset
+    return (PACKAGE / "Assets" / name).read_text(encoding="utf-8")
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 986, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 970, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/LooseEnds/Resources/AppIcon.icon/Assets/layer-thread.svg'
+
+======================================================================
+FAIL: test_logo_readme_no_longer_sends_the_reader_to_the_gui (__main__.AppIconPackageTests.test_logo_readme_no_longer_sends_the_reader_to_the_gui)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_app_icon_package.py", line 74, in test_logo_readme_no_longer_sends_the_reader_to_the_gui
+    self.assertNotIn("Nächster Schritt auf dem Mac", readme, "das Paket ist von Hand erzeugt, der GUI-Schritt entfällt")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'Nächster Schritt auf dem Mac' unexpectedly found in '# Logo und App-Icon\n\nMotiv B aus `docs/project/05-logo.md`: ein Faden mit zwei freien Enden, dessen Schlaufe sich\neinmal kreuzt. Farbe Petrol `#0F6E73` (hell) und `#5FC4C9` (dunkel), Grund `#F4F3EE`.\nDie Kurve ist eine Trochoide (`x = a·t − b·sin t`, `y = −b·cos t` mit a = 90, b = 230 auf\neinem 1024-Raster, t von −3,5 bis 3,0), Strichstärke 72, runde Enden. `generate.py.txt`\nerzeugt daraus die SVGs; umbenennen nach `.py` und mit Python 3 ausführen.\n\n| Datei | Zweck |\n|-------|-------|\n| `loose-ends-icon.svg` | Das ganze Icon, heller Grund, für Marketing und als Vorlage |\n| `layer-background.svg` | Ebene 1 für Icon Composer: der Grund |\n| `layer-thread.svg` | Ebene 2 für Icon Composer: der Faden, transparent |\n\n## Was im Projekt liegt\n\n- `LooseEnds/Resources/Assets.xcassets/AppIcon.appiconset`: iOS hell (deckend, ohne Alpha,\n  so verlangt es App Store Connect), dunkel und getönt (transparent, das System legt seinen\n  Grund darunter), Mac hell.\n- `LooseEndsWatch/Assets.xcassets/AppIcon.appiconset`: hell, das System maskiert rund.\n- `AccentColor.colorset`: Petrol hell und dunkel; damit ist "tippbar" in der App dieselbe\n  Farbe wie das Logo (ADR-14).\n\n## Nächster Schritt auf dem Mac: Icon Composer\n\nXcode 26 bringt Icon Composer mit. Damit wird aus den zwei Ebenen ein `AppIcon.icon`-Paket,\nund das System rendert daraus Liquid Glass in Hell, Dunkel, Getönt und Klar, Mac und Watch:\n\n1. Icon Composer öffnen, neues Icon, Name `AppIcon`.\n2. `layer-background.svg` als unterste Ebene, `layer-thread.svg` darüber; dem Faden etwas\n   Höhe ("Specular", "Shadow") geben, den Grund flach lassen.\n3. Als `AppIcon.icon` nach `LooseEnds/Resources/` sichern und in `project.yml` beim Target\n   `LooseEnds` unter `sources` eintragen; `ASSETCATALOG_COMPILER_APPICON_NAME` bleibt `AppIcon`.\n4. `./scripts/sim.sh build` und Home-Screen in allen vier Darstellungen prüfen.\n\nBis dahin gelten die PNGs; sie sehen auf iOS 26 korrekt aus, nur ohne Ebenentiefe.\n' : das Paket ist von Hand erzeugt, der GUI-Schritt entfällt
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.016s
+
+FAILED (failures=1, errors=5)
