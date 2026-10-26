@@ -175,6 +175,16 @@ enum ViewRules {
         return rows + (counted ? 1 : 0)
     }
 
+    /// Since when the task is open (#701): a repeating one since its last round was completed, not
+    /// since the series was captured; everything else since capture. "Old", "longest open" and the
+    /// headline's old count all read this.
+    static func openSince(_ task: TaskItem) -> Date {
+        guard task.repeatRule != nil, let last = task.completions?.map(\.completedAt).max() else {
+            return task.capturedAt
+        }
+        return max(last, task.capturedAt)
+    }
+
     /// "Now" on the start screen (#368), split by time pressure.
     struct NowTasks {
         /// Due today, deadline still ahead.
@@ -377,8 +387,8 @@ enum ViewRules {
                 .sorted(by: byUrgencyThenImportance)
         case .old:
             let cutoff = calendar.date(byAdding: .day, value: -oldAfterDays, to: now) ?? now
-            return topLevel.filter { $0.isOpen && $0.capturedAt < cutoff }
-                .sorted { $0.capturedAt < $1.capturedAt }
+            return topLevel.filter { $0.isOpen && openSince($0) < cutoff }
+                .sorted { openSince($0) < openSince($1) }
         case .waiting:
             return topLevel.filter { $0.isOpen && $0.isBlocked }
         case .repeating:

@@ -598,7 +598,7 @@ struct TaskListView: View {
             }
         }
         guard kind == .old else { return nil }
-        var parts = [task.capturedAt.formatted(.relative(presentation: .named))]
+        var parts = [ViewRules.openSince(task).formatted(.relative(presentation: .named))]
         let postponed = ViewRules.postponeCount(task)
         if postponed > 0 {
             parts.append(String(localized: "postponed \(postponed) times"))

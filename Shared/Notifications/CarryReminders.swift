@@ -98,6 +98,13 @@ enum CarryReminders {
         mode.remindsMorning && time == reminderTime
     }
 
+    /// The longest open by `ViewRules.openSince` (#701), only those without a date ahead: a task with a
+    /// date is planned, not loose; once its deadline passed (#548) it can be named again.
+    static func longestOpen(_ byAge: [TaskItem], at fire: Date, calendar: Calendar = .current) -> [String] {
+        byAge.filter { $0.dueDate == nil || NewDateRule.needsNewDate($0, now: fire, calendar: calendar) }
+            .prefix(longestNamed).map(\.displayTitle)
+    }
+
     /// One reminder per coming day and switched-on kind. Planned ahead as if nothing changes; every
     /// save replans, so a task done, parked or given a new date meanwhile drops out.
     /// The evening asks only once a deadline is behind (#550, Henning 2026-10-18: "erst nach der
@@ -118,8 +125,7 @@ enum CarryReminders {
         // The morning counts what one can act on (#551): "Loose ends" holds parked tasks too, the number does not.
         let loose = ViewRules.tasks(for: .open, in: tasks, now: now, calendar: calendar)
             .filter { $0.status != .parked && !$0.isBlocked }
-        let longest = loose.sorted { $0.capturedAt < $1.capturedAt }
-            .prefix(longestNamed).map(\.displayTitle)
+        let byAge = loose.sorted { ViewRules.openSince($0) < ViewRules.openSince($1) }
         let merges = mergesReminders(mode: mode, time: time, reminderTime: reminderTime)
         let today = calendar.startOfDay(for: now)
         var reminders: [Reminder] = []
@@ -131,7 +137,8 @@ enum CarryReminders {
                     ? withDeadline.filter { !$0.dueHasTime && calendar.isDate($0.dueDate ?? .distantPast, inSameDayAs: day) }
                     : []
                 reminders.append(Reminder(kind: .morning, day: day, fireDate: fire, taskIDs: [], titles: [],
-                                          openCount: loose.count, longestOpen: Array(longest),
+                                          openCount: loose.count,
+                                          longestOpen: longestOpen(byAge, at: fire, calendar: calendar),
                                           today: dueThatDay.map(\.displayTitle),
                                           badge: ViewRules.badgeCount(in: tasks, now: fire, calendar: calendar),
                                           identifier: identifierPrefix + stamp))
