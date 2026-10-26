@@ -281,8 +281,8 @@ not scope creep on the current one.
 
 - `Shared/Models` — SwiftData model, enums, `InboxDrawer` (#601: the writing line under "New"; pure: `didCapture` opens and
   orders, `close` ends the sitting, `rows(in:)` this sitting's open tasks; the view `LooseEnds/Views/InboxDrawerView.swift`
-  is one row of both start lists: this sitting's rows above the line, "New N" in accent in the line's margin (no tinted head, #677),
-  the question only while the cursor is in the line, soft 0.4 s motion, no spring), `RepeatRule` (its `anchor` holds the rhythm, a moved round does not shift it, #552),
+  is one row of both start lists: "New" in accent in the margin with "N to look over" beside it at row-title size (#693, variant B;
+  no tinted head, #677), this sitting's rows between that head and the line, the question always shown in italics, soft 0.4 s motion, no spring), `RepeatRule` (its `anchor` holds the rhythm, a moved round does not shift it, #552),
   `ViewRules` (pure view computation), `NewDateRule` (a deadline that passed is no deadline, #548: with a time after the
   time, without one after the day; the evening look reads a day-only date as passed after the reminder time; the trace
   "was 15:00" under the "New date" button), `DetailFields` (#538: what a task offers, five groups in one order, a section

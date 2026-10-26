@@ -2,10 +2,11 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-/// The writing line with "New" in its margin, and the drawer the first Return opens (#601, form 2,
-/// Henning 2026-10-21; calm since #677, draft C3): no tinted surface, the margin word "New 3" in
-/// accent opens "New", the rows of this sitting rise above the line, and the end of the entry folds
-/// them away. One row of the start list, so the whole thing moves as one piece. Every sentence is a task the moment
+/// "New" with its sentence, the writing line, and the drawer the first Return opens (#601, form 2,
+/// Henning 2026-10-21; calm since #677, draft C3; variant B since #693): no tinted surface, "New" in
+/// the margin and "3 to look over" beside it in accent open "New", the rows of this sitting rise
+/// between that head and the line, and the end of the entry folds them away. One row of the start
+/// list, so the whole thing moves as one piece. Every sentence is a task the moment
 /// Return is pressed (`CaptureService`, the rules read it at once), so the number counts it honestly
 /// and the row shows it sorted. The rows are the lists' rows; a tap opens the task. Shared by the
 /// iPhone start list and the wide start page. Only for typing: no microphone (the keyboard has one,
@@ -41,15 +42,13 @@ struct InboxDrawerView: View {
     var body: some View {
         let metrics = StartMetrics(typeSize)
         VStack(spacing: 0) {
+            head(metrics)
             ForEach(rows) { task in
                 row(task, metrics)
                     .transition(rowTransition)
             }
-            HStack(alignment: .firstTextBaseline, spacing: 12) {
-                newWord(metrics)
-                    .frame(width: metrics.marginWidth, alignment: .trailing)
-                line(metrics)
-            }
+            line(metrics)
+                .padding(.leading, metrics.marginWidth + 12)
         }
         // No identifier on the stack: with the line as its only child it is transparent to
         // accessibility, and an outer identifier replaced the line's own (CI run 39556748082).
@@ -68,31 +67,39 @@ struct InboxDrawerView: View {
         .onChange(of: endRequest) { _, _ in writing = false }
     }
 
-    /// "New 3" in the line's margin (#677): accent, because a tap opens "New"; gone while nothing
-    /// waits there. The label keeps the old words, so VoiceOver still says what waits.
+    /// "New" in the margin, "3 to look over" beside it at the rows' title size (#693, variant B,
+    /// Henning 2026-10-26): the small margin word alone went under on the page. Accent, because a
+    /// tap on either opens "New"; gone while nothing waits there.
     @ViewBuilder
-    private func newWord(_ metrics: StartMetrics) -> some View {
+    private func head(_ metrics: StartMetrics) -> some View {
         if count > 0 {
             Button {
                 open(.system(.new))
             } label: {
-                Text("New \(count)")
-                    .font(metrics.margin.weight(.semibold))
-                    .foregroundStyle(.tint)
-                    .contentTransition(.numericText(value: Double(count)))
-                    .animation(motion, value: count)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
-                    // A thumb-sized target around the small word.
-                    .padding(.vertical, 12)
-                    .contentShape(Rectangle())
+                HStack(alignment: .firstTextBaseline, spacing: 12) {
+                    Text("New")
+                        .font(metrics.margin.weight(.semibold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                        .frame(width: metrics.marginWidth, alignment: .trailing)
+                    HStack(alignment: .firstTextBaseline, spacing: 6) {
+                        Text("\(count) to look over")
+                            .font(metrics.rowTitle)
+                            .contentTransition(.numericText(value: Double(count)))
+                            .animation(motion, value: count)
+                        Image(systemName: "chevron.right")
+                            .font(metrics.margin.weight(.semibold))
+                    }
+                    Spacer(minLength: 0)
+                }
+                .foregroundStyle(.tint)
+                .padding(.vertical, 8)
+                .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .accessibilityLabel(Text("\(count) to look over"))
             .accessibilityIdentifier("inboxBar")
             .transition(.opacity)
-        } else {
-            Color.clear.frame(height: 1)
         }
     }
 
@@ -113,10 +120,10 @@ struct InboxDrawerView: View {
     }
 
     /// The line on the paper: no box, the text at the rows' titles' edge, a hairline under it. The
-    /// question shows only while the cursor is in the line (#677): unfocused it is just the line.
+    /// question always shows, in italics (#693): without it the empty line read as a divider.
     /// Return saves and keeps the cursor; an empty Return does nothing.
     private func line(_ metrics: StartMetrics) -> some View {
-        TextField("", text: $text, prompt: writing ? Text("What should I remember?") : nil)
+        TextField("", text: $text, prompt: Text("What should I remember?").italic())
             .textFieldStyle(.plain)
             .font(metrics.rowTitle)
             .focused($writing)
