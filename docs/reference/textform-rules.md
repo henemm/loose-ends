@@ -2,7 +2,27 @@
 
 Messung der Regeln (Datum, Uhrzeit, Wichtigkeit, Dringlichkeit, Kontexte, Titel) auf demselben
 Inhalt in fünf Formen. Korpus: `Measurement/textform-corpus.json`, 40 Inhalte. Bericht:
-`TextFormRuleReportTests`, Referenztag 2026-10-07. Die Modellspalte fehlt noch (iPhone-Laborlauf).
+`TextFormRuleReportTests`, Referenztag 2026-10-07.
+
+**Stand 2026-10-25: Die Modellspalte wird bewusst nicht gemessen.** Gründe:
+
+1. Das Modell schreibt im Produkt nur Titelverfeinerung und Dauer (`EnrichmentWriter`; Kontexte nie, #215;
+   Projekt nie, #469). Datum, Uhrzeit, Wichtigkeit, Dringlichkeit und Kontexte kommen aus Regeln.
+2. Der Mail-Körper erreicht weder Modell noch Regeln, nur der Betreff (`SharedContent.subject(ofMail:)`).
+   Der Test `SharedContentTests.mailBodyNeverPrefilled` hält diesen Produktpfad fest.
+3. Die Titel-Regel (`TitleRule`, #202) hält die Schlüsselwörter in allen Formen zu 100 %.
+4. Der Korpus hat keine Wahrheit für die Dauer; eine Modellmessung wäre nur Selbstkonsistenz Form gegen Form.
+
+Die Formtreue des Modells für Titel und Dauer wird als Spalte im Laborlauf von #88 gemessen. Der Lauf
+braucht Hennings wörtliches „jetzt ist ein Test möglich“.
+
+**Ohne Modell geht es nicht, weil …** für kein Feld belegt:
+
+- **Titel:** Die Regel hält die Schlüsselwörter in allen Formen zu 100 % (Tabelle unten).
+- **Dauer:** Offen ist sie nur dort, wo der Text keine Länge nennt. Das ist die Frage von #88 und #72,
+  nicht der Textform.
+
+Deshalb ist der Regelweg der Vorschlag.
 
 ## Treffer gegen die Wahrheit (richtig / verpasst / falsch / erfunden)
 
@@ -37,3 +57,14 @@ in `mailCut` keiner.
 - **Mail (zugeschnitten):** Auf den eigenen Text gekürzt gibt es 0 erfundene Felder. Die Share-Erweiterung
   reicht heute nur den Betreff weiter; ein Körper muss vorher zugeschnitten werden, nicht roh.
 - **Englisch:** wie getippt (Dringlichkeit 38/40, Kontexte 37/40).
+
+Festlegung (Stand 2026-10-25):
+
+- **Getippt:** roh an die Regeln.
+- **Diktat:** roh an die Regeln. Eine Diktat-Normalisierung ist nicht nötig.
+- **Englisch:** roh an die Regeln.
+- **Mail:** nur Betreff (Produktpfad, `SharedContent.subject(ofMail:)`). Der Körper geht nie roh weiter.
+  Kommt je ein Körper-Feature (#342 Teil 5, Epic #371), wird er zuerst auf den eigenen Text zugeschnitten
+  (Regelspalte `mailCut`: 0 erfunden).
+
+Das Diktat des Korpus ist geschrieben, nicht gesprochen; die Spracherkennung selbst ist nicht gemessen.
