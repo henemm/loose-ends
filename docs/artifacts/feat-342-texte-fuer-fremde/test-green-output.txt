@@ -1,0 +1,42 @@
+test_a_missing_german_value_is_found (__main__.CatalogLanguageTests.test_a_missing_german_value_is_found)
+Selbstprüfung: eine Lücke macht den Test rot, sonst prüfte er nichts. ... ok
+test_every_catalog_entry_has_german (__main__.CatalogLanguageTests.test_every_catalog_entry_has_german) ... ok
+test_every_usage_description_has_german (__main__.InfoPlistLanguageTests.test_every_usage_description_has_german) ... ok
+test_project_declares_the_usage_descriptions (__main__.InfoPlistLanguageTests.test_project_declares_the_usage_descriptions)
+Ohne Schlüssel prüft der Test nichts: Mikrofon, Sprache und Kalender müssen vorkommen. ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.039s
+
+OK
+[0;34m[sim][0m UI-Test mit Beleg: OnboardingTests → docs/artifacts/feat-342-texte-fuer-fremde/simulator-run.txt
+    [32m✔[0m testNoteWithoutModelSaysWhatStillWorksInEnglish ([31m11.318[0m seconds)
+    [32m✔[0m testNoteWithoutModelSaysWhatStillWorksInGerman ([31m7.958[0m seconds)
+    [32m✔[0m testSkipEndsTheOnboardingAtOnce ([31m11.756[0m seconds)
+    [32m✔[0m testWalkThroughThreeStepsToTheStartScreen ([31m13.657[0m seconds)
+Executed 4 tests, with 0 failures (0 unexpected) in 44.689 (44.701) seconds
+Executed 4 tests, with 0 failures (0 unexpected) in 44.689 (44.707) seconds
+Executed 4 tests, with 0 failures (0 unexpected) in 44.689 (44.710) seconds
+[32;1mTest Succeeded[0m
+[sim_proof] Testklasse liefert keinen Screenshot, Beleg ungültig
+[0;31m[sim][0m Beleg ungültig (sim_proof 1): docs/artifacts/feat-342-texte-fuer-fremde/simulator-run.txt
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests
+[32;1mTest Succeeded[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 2 von 5 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: Sprache de_DE wird hier nicht unterstützt (isAvailable false, supportedLocales.count 0, installedLocales.count 0)
+[sim]   The final text keeps the key words – NICHT gemessen: Sprache de_DE wird hier nicht unterstützt (isAvailable false, supportedLocales.count 0, installedLocales.count 0)
+[0;34m[sim][0m UI-Test mit Beleg: OnboardingTests → docs/artifacts/feat-342-texte-fuer-fremde/simulator-run.txt
+    [32m✔[0m testNoteWithoutModelSaysWhatStillWorksInEnglish ([31m9.416[0m seconds)
+    [32m✔[0m testNoteWithoutModelSaysWhatStillWorksInGerman ([31m8.091[0m seconds)
+    [32m✔[0m testSkipEndsTheOnboardingAtOnce ([31m10.870[0m seconds)
+    [32m✔[0m testWalkThroughThreeStepsToTheStartScreen ([31m13.914[0m seconds)
+Executed 4 tests, with 0 failures (0 unexpected) in 42.291 (42.300) seconds
+Executed 4 tests, with 0 failures (0 unexpected) in 42.291 (42.306) seconds
+Executed 4 tests, with 0 failures (0 unexpected) in 42.291 (42.308) seconds
+[32;1mTest Succeeded[0m
+[0;32m[sim][0m UI-Test bestanden, Beleg: docs/artifacts/feat-342-texte-fuer-fremde/simulator-run.txt

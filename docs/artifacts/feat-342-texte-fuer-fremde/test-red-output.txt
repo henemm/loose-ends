@@ -1,0 +1,61 @@
+test_a_missing_german_value_is_found (__main__.CatalogLanguageTests.test_a_missing_german_value_is_found)
+Selbstprüfung: eine Lücke macht den Test rot, sonst prüfte er nichts. ... ok
+test_every_catalog_entry_has_german (__main__.CatalogLanguageTests.test_every_catalog_entry_has_german) ... ok
+test_every_usage_description_has_german (__main__.InfoPlistLanguageTests.test_every_usage_description_has_german) ... 
+  test_every_usage_description_has_german (__main__.InfoPlistLanguageTests.test_every_usage_description_has_german) (target='LooseEnds', key='NSCalendarsFullAccessUsageDescription') ... FAIL
+  test_every_usage_description_has_german (__main__.InfoPlistLanguageTests.test_every_usage_description_has_german) (target='LooseEnds', key='NSMicrophoneUsageDescription') ... FAIL
+  test_every_usage_description_has_german (__main__.InfoPlistLanguageTests.test_every_usage_description_has_german) (target='LooseEnds', key='NSSpeechRecognitionUsageDescription') ... FAIL
+  test_every_usage_description_has_german (__main__.InfoPlistLanguageTests.test_every_usage_description_has_german) (target='LooseEndsWatch', key='NSMicrophoneUsageDescription') ... FAIL
+  test_every_usage_description_has_german (__main__.InfoPlistLanguageTests.test_every_usage_description_has_german) (target='LooseEndsWatch', key='NSSpeechRecognitionUsageDescription') ... FAIL
+test_project_declares_the_usage_descriptions (__main__.InfoPlistLanguageTests.test_project_declares_the_usage_descriptions)
+Ohne Schlüssel prüft der Test nichts: Mikrofon, Sprache und Kalender müssen vorkommen. ... ok
+
+======================================================================
+FAIL: test_every_usage_description_has_german (__main__.InfoPlistLanguageTests.test_every_usage_description_has_german) (target='LooseEnds', key='NSCalendarsFullAccessUsageDescription')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_infoplist_languages.py", line 96, in test_every_usage_description_has_german
+    self.assertIn(key, german, f"{DE_STRINGS.relative_to(ROOT)}: {key} fehlt ({target} zeigt den Dialog englisch)")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'NSCalendarsFullAccessUsageDescription' not found in {'LE_ALT_NAME_2', 'LE_ALT_HINT_1', 'LE_ALT_HINT_3', 'LE_ALT_NAME_1', 'NSCameraUsageDescription', 'NSLocationWhenInUseUsageDescription', 'LE_ALT_NAME_3', 'CFBundleSpokenName', 'LE_ALT_HINT_2'} : LooseEnds/Resources/de.lproj/InfoPlist.strings: NSCalendarsFullAccessUsageDescription fehlt (LooseEnds zeigt den Dialog englisch)
+
+======================================================================
+FAIL: test_every_usage_description_has_german (__main__.InfoPlistLanguageTests.test_every_usage_description_has_german) (target='LooseEnds', key='NSMicrophoneUsageDescription')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_infoplist_languages.py", line 96, in test_every_usage_description_has_german
+    self.assertIn(key, german, f"{DE_STRINGS.relative_to(ROOT)}: {key} fehlt ({target} zeigt den Dialog englisch)")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'NSMicrophoneUsageDescription' not found in {'LE_ALT_NAME_2', 'LE_ALT_HINT_1', 'LE_ALT_HINT_3', 'LE_ALT_NAME_1', 'NSCameraUsageDescription', 'NSLocationWhenInUseUsageDescription', 'LE_ALT_NAME_3', 'CFBundleSpokenName', 'LE_ALT_HINT_2'} : LooseEnds/Resources/de.lproj/InfoPlist.strings: NSMicrophoneUsageDescription fehlt (LooseEnds zeigt den Dialog englisch)
+
+======================================================================
+FAIL: test_every_usage_description_has_german (__main__.InfoPlistLanguageTests.test_every_usage_description_has_german) (target='LooseEnds', key='NSSpeechRecognitionUsageDescription')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_infoplist_languages.py", line 96, in test_every_usage_description_has_german
+    self.assertIn(key, german, f"{DE_STRINGS.relative_to(ROOT)}: {key} fehlt ({target} zeigt den Dialog englisch)")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'NSSpeechRecognitionUsageDescription' not found in {'LE_ALT_NAME_2', 'LE_ALT_HINT_1', 'LE_ALT_HINT_3', 'LE_ALT_NAME_1', 'NSCameraUsageDescription', 'NSLocationWhenInUseUsageDescription', 'LE_ALT_NAME_3', 'CFBundleSpokenName', 'LE_ALT_HINT_2'} : LooseEnds/Resources/de.lproj/InfoPlist.strings: NSSpeechRecognitionUsageDescription fehlt (LooseEnds zeigt den Dialog englisch)
+
+======================================================================
+FAIL: test_every_usage_description_has_german (__main__.InfoPlistLanguageTests.test_every_usage_description_has_german) (target='LooseEndsWatch', key='NSMicrophoneUsageDescription')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_infoplist_languages.py", line 96, in test_every_usage_description_has_german
+    self.assertIn(key, german, f"{DE_STRINGS.relative_to(ROOT)}: {key} fehlt ({target} zeigt den Dialog englisch)")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'NSMicrophoneUsageDescription' not found in {'LE_ALT_NAME_2', 'LE_ALT_HINT_1', 'LE_ALT_HINT_3', 'LE_ALT_NAME_1', 'NSCameraUsageDescription', 'NSLocationWhenInUseUsageDescription', 'LE_ALT_NAME_3', 'CFBundleSpokenName', 'LE_ALT_HINT_2'} : LooseEnds/Resources/de.lproj/InfoPlist.strings: NSMicrophoneUsageDescription fehlt (LooseEndsWatch zeigt den Dialog englisch)
+
+======================================================================
+FAIL: test_every_usage_description_has_german (__main__.InfoPlistLanguageTests.test_every_usage_description_has_german) (target='LooseEndsWatch', key='NSSpeechRecognitionUsageDescription')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_infoplist_languages.py", line 96, in test_every_usage_description_has_german
+    self.assertIn(key, german, f"{DE_STRINGS.relative_to(ROOT)}: {key} fehlt ({target} zeigt den Dialog englisch)")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'NSSpeechRecognitionUsageDescription' not found in {'LE_ALT_NAME_2', 'LE_ALT_HINT_1', 'LE_ALT_HINT_3', 'LE_ALT_NAME_1', 'NSCameraUsageDescription', 'NSLocationWhenInUseUsageDescription', 'LE_ALT_NAME_3', 'CFBundleSpokenName', 'LE_ALT_HINT_2'} : LooseEnds/Resources/de.lproj/InfoPlist.strings: NSSpeechRecognitionUsageDescription fehlt (LooseEndsWatch zeigt den Dialog englisch)
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.011s
+
+FAILED (failures=5)

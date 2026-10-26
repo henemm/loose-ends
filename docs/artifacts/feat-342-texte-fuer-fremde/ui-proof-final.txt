@@ -1,0 +1,40 @@
+[0;34m[sim][0m Testsperre belegt — warte (1 s, Platz 1 von 1 in der Warteliste). Halter: Worktree /Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven, Befehl test-proof, PID 58380
+[0;34m[sim][0m Testsperre belegt — warte (32 s, Platz 1 von 1 in der Warteliste). Halter: Worktree /Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven, Befehl test-proof, PID 58380
+[0;34m[sim][0m Testsperre belegt — warte (64 s, Platz 1 von 1 in der Warteliste). Halter: Worktree /Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven, Befehl test-proof, PID 58380
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/LooseEnds.xcodeproj
+[0;32m[sim][0m Projekt erzeugt.
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test mit Beleg: OnboardingTests → docs/artifacts/feat-342-texte-fuer-fremde/simulator-run.txt
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-10-26 13:24:07.713.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-10-26 13:24:07.714.
+Test Suite 'OnboardingTests' started at 2026-10-26 13:24:07.714.
+    [32m✔[0m testNoteWithoutModelSaysWhatStillWorksInEnglish ([31m20.163[0m seconds)
+    [32m✔[0m testNoteWithoutModelSaysWhatStillWorksInGerman ([31m18.919[0m seconds)
+    [32m✔[0m testSkipEndsTheOnboardingAtOnce ([31m11.975[0m seconds)
+    [32m✔[0m testWalkThroughThreeStepsToTheStartScreen ([31m14.031[0m seconds)
+Executed 4 tests, with 0 failures (0 unexpected) in 65.088 (65.097) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-10-26 13:25:12.814.
+Executed 4 tests, with 0 failures (0 unexpected) in 65.088 (65.100) seconds
+Executed 4 tests, with 0 failures (0 unexpected) in 65.088 (65.102) seconds
+[1mTest session results:[0m /Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/docs/artifacts/feat-342-texte-fuer-fremde/simulator-run/run.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden, Beleg: docs/artifacts/feat-342-texte-fuer-fremde/simulator-run.txt

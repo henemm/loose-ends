@@ -9,3 +9,6 @@
 "LE_ALT_HINT_3" = "Lose Enden";
 "NSLocationWhenInUseUsageDescription" = "Nur wenn eine Aufgabe einen Ort hat, bittet Loose Ends das System, dich beim Ankommen oder Verlassen zu erinnern.";
 "NSCameraUsageDescription" = "Die Kamera scannt ein Dokument, das du an eine Aufgabe hängst.";
+"NSMicrophoneUsageDescription" = "Loose Ends hört zu, damit du eine Aufgabe sagen kannst, statt sie zu tippen.";
+"NSSpeechRecognitionUsageDescription" = "Sprache wird auf deinem Gerät in Text umgewandelt, um eine Aufgabe zu erfassen.";
+"NSCalendarsFullAccessUsageDescription" = "Nur wenn du es einschaltest, erscheint eine Aufgabe mit Fälligkeit in „Loose Ends“ oder in einem Kalender deiner Wahl. Die App ändert nur ihre eigenen Termine.";
