@@ -99,8 +99,8 @@ import Testing
         #expect(ViewRules.knaeuel(in: [task, line]) == nil)
     }
 
-    @Test("Now leaves the Knäuel out: it stands under the date; the badge still counts it")
-    @MainActor func nowLeavesItOut() async throws {
+    @Test("Now leads with the Knäuel on its own row, never among the others; the badge counts it")
+    @MainActor func nowLeadsWithIt() async throws {
         let store = try TestStore()
         let knaeuel = Self.task("Steuerberater anrufen")
         knaeuel.nextRank = 1
@@ -110,9 +110,33 @@ import Testing
         store.context.insert(other)
         TaskActions.setKnaeuel(knaeuel, among: [knaeuel, other], contexts: [], projects: [])
 
-        #expect(ViewRules.now(in: [knaeuel, other]).all.map(\.id) == [other.id])
+        let now = ViewRules.now(in: [knaeuel, other])
+        #expect(now.knaeuel?.id == knaeuel.id)
+        #expect(now.all.map(\.id) == [other.id])
+        #expect(now.count == 2)
         #expect(ViewRules.badgeCount(in: [knaeuel, other]) == 2)
         #expect(ViewRules.tasks(for: .next, in: [knaeuel, other]).map(\.id) == [knaeuel.id, other.id])
+    }
+
+    @Test("A Knäuel without a date or rank still counts (#703, Henning 2026-10-26: Icon = Jetzt = Zeilen)")
+    @MainActor func dateLessKnaeuelCounts() async throws {
+        let store = try TestStore()
+        let knaeuel = Self.task("Zu Jeggle wegen Matratzenopper fahren")
+        let lined = Self.task("Retoure zu 2rad-hansen bringen")
+        lined.nextRank = 1
+        store.context.insert(knaeuel)
+        store.context.insert(lined)
+        TaskActions.setKnaeuel(knaeuel, among: [knaeuel, lined], contexts: [], projects: [])
+
+        let now = ViewRules.now(in: [knaeuel, lined])
+        #expect(now.knaeuel?.id == knaeuel.id)
+        #expect(now.all.map(\.id) == [lined.id])
+        #expect(ViewRules.nowCount(in: [knaeuel, lined]) == 2)
+        #expect(ViewRules.badgeCount(in: [knaeuel, lined]) == 2)
+
+        knaeuel.status = .done
+        #expect(ViewRules.now(in: [knaeuel, lined]).knaeuel == nil)
+        #expect(ViewRules.badgeCount(in: [knaeuel, lined]) == 1)
     }
 
     @Test("Two marks after a sync: the latest wins, on every device alike; a subtask never is the Knäuel")

@@ -27,6 +27,14 @@ final class DriveSmokeTests: XCTestCase {
         app.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH %@", prefix))
     }
 
+    @MainActor
+    private func shot(_ app: XCUIApplication, _ name: String) {
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
     /// The beads close the start page under the contents (#677): scroll down until `id` stands there.
     @MainActor
     private func scrolledTo(_ id: String, in app: XCUIApplication) -> XCUIElement {
@@ -84,10 +92,10 @@ final class DriveSmokeTests: XCTestCase {
         back.tap()
     }
 
-    /// Set from the menu, the task stands under the date; a second one asks and takes the mark; swipe
-    /// right completes it and the row goes.
+    /// Set from the menu, the task stands first under "Now" and counts there, without a date (#703); a
+    /// second one asks and takes the mark; swipe right completes it and the row goes.
     @MainActor
-    func testKnaeuelUnderTheDateMovesWithAQuestionAndGoesWhenDone() throws {
+    func testKnaeuelUnderNowCountsMovesWithAQuestionAndGoesWhenDone() throws {
         let app = launch()
         capture("Steuerberater anrufen", in: app)
         capture("Hecke schneiden", in: app)
@@ -97,9 +105,15 @@ final class DriveSmokeTests: XCTestCase {
         back(in: app)
 
         let rows = elements(prefix: "knaeuelRow_", in: app)
-        XCTAssertTrue(rows.firstMatch.waitForExistence(timeout: 5), "The Knäuel does not stand under the date")
-        XCTAssertTrue(element("knaeuelHead", in: app).exists, "Date and row should stand as the Knäuel's head (#644)")
-        XCTAssertTrue(rows.firstMatch.label.contains("Steuerberater"), "Wrong task under the date: \(rows.firstMatch.label)")
+        XCTAssertTrue(rows.firstMatch.waitForExistence(timeout: 5), "The Knäuel does not stand under Now")
+        XCTAssertTrue(element("knaeuelHead", in: app).exists, "The Knäuel's row should stand as its head (#644)")
+        XCTAssertTrue(rows.firstMatch.label.contains("Steuerberater"), "Wrong task as the Knäuel: \(rows.firstMatch.label)")
+        // No date, not lined up: it still counts, and the number over "Now" is the rows (#703).
+        let number = element("nowCount", in: app)
+        XCTAssertTrue(number.waitForExistence(timeout: 5), "Now shows no number")
+        XCTAssertEqual(number.label, "1", "The Knäuel should count in Now")
+        XCTAssertGreaterThan(rows.firstMatch.frame.minY, number.frame.minY, "The Knäuel should stand under the number over Now")
+        shot(app, "703-knaeuel-unter-jetzt")
         XCTAssertEqual(rows.count, 1)
         XCTAssertFalse(app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH %@ AND label CONTAINS %@", "nowRow_", "Steuerberater"))
@@ -112,7 +126,7 @@ final class DriveSmokeTests: XCTestCase {
         XCTAssertTrue(move.waitForExistence(timeout: 5), "No question before the Knäuel moves")
         move.tap()
         back(in: app)
-        XCTAssertTrue(rows.firstMatch.waitForExistence(timeout: 5), "No Knäuel under the date after the move")
+        XCTAssertTrue(rows.firstMatch.waitForExistence(timeout: 5), "No Knäuel under Now after the move")
         XCTAssertTrue(rows.firstMatch.label.contains("Hecke"), "The Knäuel did not move: \(rows.firstMatch.label)")
         XCTAssertEqual(rows.count, 1)
 
@@ -121,10 +135,11 @@ final class DriveSmokeTests: XCTestCase {
         let complete = app.buttons["Complete"]
         XCTAssertTrue(complete.waitForExistence(timeout: 5), "Swipe right offers no Complete")
         complete.tap()
-        XCTAssertTrue(rows.firstMatch.waitForNonExistence(timeout: 10), "The completed Knäuel still stands under the date")
+        XCTAssertTrue(rows.firstMatch.waitForNonExistence(timeout: 10), "The completed Knäuel still stands under Now")
         // The moment (#644) keeps the head for 1.1 s, then the knot's date line stands alone.
         XCTAssertTrue(element("knaeuelHead", in: app).waitForNonExistence(timeout: 10), "The head should go after the moment")
         XCTAssertTrue(element("startHeader", in: app).exists)
+        XCTAssertEqual(number.label, "0", "The completed Knäuel should leave the number over Now")
     }
 
     /// "Für die Perlen" (#647, #655): written in Settings › Fields, the sentence stands on the start page

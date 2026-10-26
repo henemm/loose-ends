@@ -297,9 +297,10 @@ not scope creep on the current one.
   page's string of `stringLength` = 5, #655: the beads since the last full string, counted from all beads in rounds of five;
   full = the win, the next bead starts a new string; `recentBeads(in:limit:)` the last n beads), `weekToSpeakOf(in:)` (the
   Sunday sentence's beads: this week's from Sunday 16:00, last week's on Monday until the first new bead, #646) and
-  `groupedByCompletionWeek` ("Completed" by weeks with each week's beads, the days inside); "Now" leaves the Knäuel out. Views: `LooseEnds/Views/Knaeuel.swift` (`StartHeaderRows`: the date in the margin (`StartDateMargin`, the knot over it
-  while no task is the Knäuel) beside the sentence of the day, then the Knäuel's row `KnaeuelHead` (the Knäuel in the margin
-  beside the title, plays the completion moment, #644; draft C3, #677); `KnaeuelSince`),
+  `groupedByCompletionWeek` ("Completed" by weeks with each week's beads, the days inside); "Now" leads with the Knäuel (#703, Henning 2026-10-26: it always counts, with or without a date; `NowTasks.knaeuel`, never in
+  `all`, `count` = rows + Knäuel = `nowCount`). Views: `LooseEnds/Views/Knaeuel.swift` (`StartHeaderRows`: the date in the margin (`StartDateMargin`, the knot over it
+  while no task is the Knäuel) beside the sentence of the day; the Knäuel's row `KnaeuelHead` (the Knäuel in the margin
+  beside the title, plays the completion moment, #644; draft C3, #677) stands first under "Now", built and kept for its moment by `NowBlock` in `StartZones.swift`; `KnaeuelSince`),
   `KnaeuelThread.swift` (`KnaeuelThread`: two trochoid loops from the Knäuel's tail end, no longer drawn since #677, `LooseningKnaeuel`:
   the Knäuel blended into the knot) and `Beads.swift` (`PearlGlyph`, `WeekString` with the sag and the 1.1 s green,
   `WeekStringRows` at the end of the start page without a caption (#677; iPhone under the contents): the string of five with its empty places as dots, `RewardLine` "For the beads: …" while it

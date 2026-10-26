@@ -66,7 +66,7 @@ struct StartPage: View {
     private var listColumn: some View {
         let metrics = StartMetrics(typeSize)
         return keyed(List {
-            StartHeaderRows(tasks: tasks, openDone: { selection = .system(.done) }) { task, head in knaeuelRow(task, head, metrics) }
+            StartHeaderRows(tasks: tasks, openDone: { selection = .system(.done) })
             // "New" with the writing line under it (#601): Return makes a task, the button opens
             // into a drawer that shows it, leaving the line folds it.
             InboxDrawerView(tasks: tasks, open: { selection = $0 }, selection: selection, focusRequest: focusRequest,
@@ -74,7 +74,9 @@ struct StartPage: View {
                 .listRowSeparator(.hidden)
                 .startRow(metrics)
                 .paperRow()
-            NowBlock(tasks: ViewRules.now(in: tasks).all, count: ViewRules.nowCount(in: tasks), expanded: nowExpandedBinding) { nowRow($0, metrics) }
+            NowBlock(tasks: tasks, expanded: nowExpandedBinding) { nowRow($0, metrics) } knaeuelRow: { task, head in
+                knaeuelRow(task, head, metrics)
+            }
             WeekStringRows(string: ViewRules.currentString(in: tasks), all: tasks)
         })
         .listStyle(.plain)
@@ -99,8 +101,9 @@ struct StartPage: View {
         )
     }
 
-    /// The Knäuel's head (#643, #644), date and row as one: a tap opens the task, swipe right completes
-    /// it, the menu holds the rest; on every platform the same, no Mac keys (they stay with "Now").
+    /// The Knäuel's row, first under "Now" (#643, #644, #703): a tap opens the task, swipe right
+    /// completes it, the menu holds the rest; on every platform the same, no Mac keys (they stay with
+    /// the other rows).
     @ViewBuilder
     private func knaeuelRow(_ task: TaskItem, _ head: KnaeuelHead, _ metrics: StartMetrics) -> some View {
         let actions = self.actions
@@ -276,7 +279,7 @@ struct StartPage: View {
     /// The "Now" rows as shown, top to bottom: the first five while folded. Not "New" nor the right column.
     private var rowIDs: [UUID] {
         let now = ViewRules.now(in: tasks).all
-        return (nowExpanded ? now : Array(now.prefix(NowBlock<EmptyView>.limit))).map(\.id)
+        return (nowExpanded ? now : Array(now.prefix(NowBlock<EmptyView, EmptyView>.limit))).map(\.id)
     }
     #endif
 }
