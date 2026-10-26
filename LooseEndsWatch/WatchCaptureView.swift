@@ -3,8 +3,13 @@ import SwiftData
 import SwiftUI
 
 /// Voice in, nothing else (v1). Dictation is the system text input on watchOS.
+/// Opening the app goes straight into the input, without a tap on the field (#696); the system
+/// remembers the last input mode, so after one dictation that is the microphone. After "Saved" the
+/// field waits (#409 AC-6).
 struct WatchCaptureView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.scenePhase) private var scenePhase
+    @FocusState private var fieldFocused: Bool
     @State private var text = ""
     @State private var saved = false
     @State private var saveFailed = false
@@ -18,6 +23,7 @@ struct WatchCaptureView: View {
                     .accessibilityIdentifier("watch.capture.saved")
             } else {
                 TextField("I'm listening", text: $text)
+                    .focused($fieldFocused)
                     .accessibilityIdentifier("watch.capture.field")
                 Button("Done", action: save)
                     .buttonStyle(.borderedProminent)
@@ -29,6 +35,11 @@ struct WatchCaptureView: View {
             }
         }
         .padding()
+        .onAppear { fieldFocused = true }
+        .onChange(of: scenePhase) { old, new in
+            // Back from the background is an opening; a raised wrist (inactive → active) is not.
+            if old == .background, new == .active, !saved, text.isEmpty { fieldFocused = true }
+        }
         .task(id: saved) {
             // #409: show "Saved" about 1.5 s, then the empty field again. A cancelled sleep changes nothing.
             guard saved else { return }

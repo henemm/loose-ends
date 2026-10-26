@@ -33,6 +33,14 @@ final class WatchCaptureUITests: XCTestCase {
         }
     }
 
+    /// #696: opening the app goes straight into the input, no tap on the field.
+    @MainActor
+    func testOpeningGoesStraightIntoInput() throws {
+        let app = launch()
+        XCTAssertTrue(keyboardFocus(in: app).waitForExistence(timeout: 10), "Eingabe öffnet sich nicht beim Start")
+        snapshot("Start: Eingabe offen", of: app)
+    }
+
     /// AC-2: directly after "Done" the confirmation shows and the field is not there yet.
     ///
     /// Both facts come from one snapshot. Two separate queries ran 2.1 s after the tap under load (F002), past the
@@ -116,8 +124,10 @@ final class WatchCaptureUITests: XCTestCase {
         let input = field(in: app)
         XCTAssertTrue(input.waitForExistence(timeout: 10), "Eingabefeld fehlt")
         XCTAssertTrue(waitUntil("isHittable == true", on: input, timeout: 10), "Eingabefeld nicht antippbar")
-        let focused = app.descendants(matching: .any)
-            .matching(NSPredicate(format: "hasKeyboardFocus == true")).firstMatch
+        let focused = keyboardFocus(in: app)
+        // At start the input opens by itself (#696): a tap would land on its keys. After the reset it does
+        // not (AC-6), and the wait only costs those seconds.
+        if focused.waitForExistence(timeout: 3) { return focused }
         input.tap()
         if focused.waitForExistence(timeout: 10) {
             return focused
@@ -127,6 +137,11 @@ final class WatchCaptureUITests: XCTestCase {
         }
         XCTAssertTrue(focused.waitForExistence(timeout: 10), "Eingabeblatt hat keinen Fokus")
         return focused
+    }
+
+    @MainActor
+    private func keyboardFocus(in app: XCUIApplication) -> XCUIElement {
+        app.descendants(matching: .any).matching(NSPredicate(format: "hasKeyboardFocus == true")).firstMatch
     }
 
     @MainActor
