@@ -1,16 +1,16 @@
 # Simulator-Beleg
-erzeugt: 2026-10-26T09:29:08+0100
+erzeugt: 2026-10-26T16:48:52+0100
 befehl: scripts/sim.sh test-proof OnboardingTests
 workflow: 342-sprache-und-start-ohne-modell
-head: b94599195912c702f71e2ba9fc0a2a2e555d434a
-basis: c4790a534e0bd827548a4991a4d0e3163560c7bb (merge-base origin/main HEAD)
+head: ae0395b194cc775a044a5f149f13347de0862156
+basis: aac10f217041f16739833370855905313f521bc4 (merge-base origin/main HEAD)
 testklasse: OnboardingTests
 ergebnis: Passed
 xcodebuild: ** TEST SUCCEEDED **
 tests: 7 gesamt, 7 bestanden, 0 fehlgeschlagen, 0 übersprungen
-start: 1793003263.198  ende: 1793003348.092
+start: 1793029604.91  ende: 1793029730.114
 geraet: iPhone 17, iOS 27.0
-summary: docs/artifacts/342-sprache-und-start-ohne-modell/simulator-run/summary.json  sha256:2e5fec717cdee8c8f3cdffba32c5701c605bca00109de4d1a8b2ef482a6d46bf
+summary: docs/artifacts/342-sprache-und-start-ohne-modell/simulator-run/summary.json  sha256:fb1b312d2da45eac22eba1c8846a01023d12f8bda5c88b81c3e6f753d853eefa
 xcresult: docs/artifacts/342-sprache-und-start-ohne-modell/simulator-run/run.xcresult  (gitignored)
 screenshots: docs/artifacts/342-sprache-und-start-ohne-modell/simulator-run/*.png (5 Stück)
 
