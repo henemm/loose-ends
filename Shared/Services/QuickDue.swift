@@ -64,4 +64,15 @@ enum QuickDue {
         let start = calendar.dateInterval(of: .weekOfYear, for: today)?.start ?? today
         return (0..<14).compactMap { calendar.date(byAdding: .day, value: $0, to: start) }
     }
+
+    /// One month for the due editor's calendar (Henning, 2026-10-26: the system picker did not belong to
+    /// the page): the days of the month `date` lies in, each at the start of its day, and how many empty
+    /// places come before the first, counted from the calendar's first weekday.
+    static func month(containing date: Date, calendar: Calendar = .current) -> (blanks: Int, days: [Date]) {
+        guard let interval = calendar.dateInterval(of: .month, for: date),
+              let count = calendar.range(of: .day, in: .month, for: date)?.count else { return (0, []) }
+        let first = interval.start
+        let blanks = (calendar.component(.weekday, from: first) - calendar.firstWeekday + 7) % 7
+        return (blanks, (0..<count).compactMap { calendar.date(byAdding: .day, value: $0, to: first) })
+    }
 }

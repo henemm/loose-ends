@@ -264,6 +264,8 @@
     "Move" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Verschieben" } } } },
     "Tomorrow" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Morgen" } } } },
     "Weekend" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Wochenende" } } } },
+    "Previous month" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Voriger Monat" } } } },
+    "Next month" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nächster Monat" } } } },
     "Next week" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Nächste Woche" } } } },
     "Park" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Parken" } } } },
     "Activate" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aktivieren" } } } },

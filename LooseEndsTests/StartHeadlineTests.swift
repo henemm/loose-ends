@@ -77,7 +77,7 @@ import Testing
         #expect(withNext.contains("Anna abholen"))
     }
 
-    @Test("The week's sentence (#646): Sunday from 16:00 with a bead, Monday until the first new bead; never without a bead")
+    @Test("The week's sentence (#646): Sunday from 16:00 with a bead, gone on Monday; never without a bead")
     @MainActor func weekSentence() async throws {
         let store = try TestStore()
         // Thursday 12 March: Sunday is day 3, Monday day 4.
@@ -89,10 +89,7 @@ import Testing
 
         #expect(Self.headline(all, Self.at(15, minute: 59, day: 3)) == .calm, "Sunday 15:59: the ladder as always, no look back yet")
         #expect(Self.headline(all, Self.at(16, day: 3)) == .week(count: 1, titles: ["Hecke schneiden"]))
-        #expect(Self.headline(all, Self.at(9, day: 4)) == .week(count: 1, titles: ["Hecke schneiden"]), "Monday, no new bead yet")
-        let monday = Self.done("Keller", at: Self.at(8, day: 4), in: store)
-        monday.countsAt = Self.at(9)
-        #expect(Self.headline(all + [monday], Self.at(9, day: 4)) == .doneYesterday(count: 1), "the first new bead ends the week's sentence")
+        #expect(Self.headline(all, Self.at(9, day: 4)) == .calm, "Monday: the week is over, the ladder speaks again")
         #expect(Self.headline([plain, open], Self.at(16, day: 3)) == .doneToday(count: 1, titles: ["Mama zurückrufen"], next: nil),
                 "without a bead no sentence about the week")
         #expect(Self.headline(all, Self.at(9, day: 5)) == .calm, "Tuesday: over")

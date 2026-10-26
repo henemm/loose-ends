@@ -334,20 +334,14 @@ enum ViewRules {
         }
     }
 
-    /// The beads the Sunday sentence speaks of (#646): this week's from Sunday 16:00, last week's on
-    /// Monday until the first new bead; nil otherwise or without a bead.
+    /// The beads the Sunday sentence speaks of (#646): this week's, on Sunday from 16:00 only
+    /// (Henning, 2026-10-26: on Monday "This week" meant the one just over, and the sentence kept the
+    /// time-pressure ones from speaking); nil otherwise or without a bead.
     static func weekToSpeakOf(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [Bead]? {
-        let weekday = calendar.component(.weekday, from: now)
-        if weekday == 1, calendar.component(.hour, from: now) >= StartHeadline.lookBackHour {
-            let beads = weekBeads(in: all, now: now, calendar: calendar)
-            return beads.isEmpty ? nil : beads
-        }
-        if weekday == 2, weekBeads(in: all, now: now, calendar: calendar).isEmpty,
-           let lastWeek = calendar.date(byAdding: .day, value: -1, to: week(containing: now, calendar: calendar).lowerBound) {
-            let beads = weekBeads(in: all, now: lastWeek, calendar: calendar)
-            return beads.isEmpty ? nil : beads
-        }
-        return nil
+        guard calendar.component(.weekday, from: now) == 1,
+              calendar.component(.hour, from: now) >= StartHeadline.lookBackHour else { return nil }
+        let beads = weekBeads(in: all, now: now, calendar: calendar)
+        return beads.isEmpty ? nil : beads
     }
 
     /// The place of each task in "Next up": 1, 2, 3 … in that view's order (#509). Lists show it as a

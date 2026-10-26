@@ -63,6 +63,18 @@ import Testing
         #expect(days.last == Self.date(25))
     }
 
+    @Test("The month starts under its weekday, counted from the first weekday, and holds every day")
+    func month() {
+        var calendar = Self.calendar
+        calendar.firstWeekday = 2   // Monday: October 2026 starts on a Thursday
+        let october = QuickDue.month(containing: Self.date(15), calendar: calendar)
+        #expect(october.blanks == 3)
+        #expect(october.days.count == 31)
+        #expect(october.days.first == Self.date(1))
+        calendar.firstWeekday = 1   // Sunday
+        #expect(QuickDue.month(containing: Self.date(15), calendar: calendar).blanks == 4)
+    }
+
     @Test("The time words are the four full hours when the due time is one of them or there is none (#556)")
     func timeChoicesPresets() {
         let day = Self.date(19)

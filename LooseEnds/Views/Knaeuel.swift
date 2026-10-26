@@ -128,7 +128,7 @@ struct StartDateMargin: View {
 }
 
 /// The one sentence of the day (#426): the fact that stands out, from 16:00 a look back. On Sunday
-/// evening and Monday morning the week's sentence (#646), with the string and the beads' titles under
+/// evening the week's sentence (#646), with the string and the beads' titles under
 /// it; a tap on the sentence or the string opens "Completed".
 struct StartHeadlineLine: View {
     let tasks: [TaskItem]
