@@ -71,6 +71,10 @@ final class OnboardingTests: XCTestCase {
         for word in ["Tags", "durations", "title"] {
             XCTAssertTrue(text.contains(word), "The note should name \(word): \(text)")
         }
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = "model-note-en"
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 
     @MainActor
@@ -84,5 +88,9 @@ final class OnboardingTests: XCTestCase {
         for word in ["Tags", "Dauer", "Titel"] {
             XCTAssertTrue(text.contains(word), "The note should name \(word): \(text)")
         }
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = "model-note-de"
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 }

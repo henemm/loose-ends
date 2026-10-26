@@ -1,18 +1,20 @@
 # Simulator-Beleg
-erzeugt: 2026-10-26T12:46:02+0100
+erzeugt: 2026-10-26T13:11:12+0100
 befehl: scripts/sim.sh test-proof OnboardingTests
 workflow: feat-342-texte-fuer-fremde
-head: 3103dc9ccde1a3c9e8e37abdd165cfd69b8bb2cf
-basis: 3103dc9ccde1a3c9e8e37abdd165cfd69b8bb2cf (merge-base origin/main HEAD)
+head: 1ab4226ab052411aa24e3d3f4d50e0f73836d92d
+basis: f0e84ffbc92e3b5d6cb9be6eb6b118c8ba1d9799 (merge-base origin/main HEAD)
 testklasse: OnboardingTests
-ergebnis: Failed
-xcodebuild: ** TEST FAILED **
-tests: 4 gesamt, 2 bestanden, 2 fehlgeschlagen, 0 übersprungen
-start: 1793015037.708  ende: 1793015161.841
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 4 gesamt, 4 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793016618.335  ende: 1793016671.12
 geraet: iPhone 17, iOS 27.0
-summary: docs/artifacts/feat-342-texte-fuer-fremde/simulator-run/summary.json  sha256:73297be6e8da89e6f094b0d3cc39298741903bf5110674e5b750257ca5de9c97
+summary: docs/artifacts/feat-342-texte-fuer-fremde/simulator-run/summary.json  sha256:82ea9a4aca2ae41f93ed9bc94cdcb9b6963661477219618403d8ea78b8f7d6bf
 xcresult: docs/artifacts/feat-342-texte-fuer-fremde/simulator-run/run.xcresult  (gitignored)
-screenshots: docs/artifacts/feat-342-texte-fuer-fremde/simulator-run/*.png (0 Stück)
+screenshots: docs/artifacts/feat-342-texte-fuer-fremde/simulator-run/*.png (2 Stück)
 
 ## Geprüfte Dateien
-- sha256:de9787f6d166aadcd4471f31a161df8f561711a6b14aa31b64113146f4e9eb7c  LooseEndsUITests/OnboardingTests.swift
+- sha256:375a2f268367f5ac265b12b1dfa0adc96ecf5ca294413f19e3d53685acead7cd  LooseEnds/App/ContentView.swift
+- sha256:96643afa44745b8a535281adcdf7aa6a77b5de5b8b1d6c3612543b96f67ef90f  LooseEnds/Views/OnboardingView.swift
+- sha256:14a9ffb620bb3154794f516607b276bdfdb74628bdf70120f598d33ae55b35d7  LooseEndsUITests/OnboardingTests.swift

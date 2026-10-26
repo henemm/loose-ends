@@ -188,7 +188,8 @@ struct ContentView: View {
     /// whether it is there when a pass runs.
     private var onboarding: some View {
         OnboardingView(
-            modelUnavailableReason: FoundationModelsEnricher().unavailableReason,
+            modelUnavailableReason: ModelContainerFactory.isUITesting
+                ? "Apple Intelligence is off under UI testing." : FoundationModelsEnricher().unavailableReason,
             requestNotifications: { await notifications?.requestAuthorization() },
             onFinish: {
                 OnboardingFlow.finish()
