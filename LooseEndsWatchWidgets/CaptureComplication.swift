@@ -82,6 +82,9 @@ private struct CaptureComplicationFamilyView: View {
     var body: some View {
         CaptureComplicationView(face: family == .accessoryCorner ? .corner : .circular)
             .containerBackground(.clear, for: .widget)
+            // The app opens on "Now"; the complication goes to capture (#699). Same link as
+            // `NextUpWidgetActions.captureURL`, which this target cannot see (no `Shared/`).
+            .widgetURL(URL(string: "looseends://capture"))
     }
 }
 

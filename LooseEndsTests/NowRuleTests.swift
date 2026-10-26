@@ -274,6 +274,11 @@ import Testing
             #expect(badge == ViewRules.nowCount(in: scene, now: Self.now, calendar: Self.calendar), "scene \(index)")
             #expect(badge == Self.now(scene).all.count + share, "scene \(index)")
             #expect(badge == Self.now(scene).count, "scene \(index)")
+            // The watch lists the same tasks the icon counts, the Knäuel first when it counts (#699).
+            let rows = ViewRules.nowRows(in: scene, now: Self.now, calendar: Self.calendar)
+            #expect(rows.count == badge, "scene \(index)")
+            #expect(Array(rows.dropFirst(share).map(\.id)) == Self.now(scene).all.map(\.id), "scene \(index)")
+            if share == 1 { #expect(rows.first?.isKnaeuel == true, "scene \(index)") }
         }
     }
 

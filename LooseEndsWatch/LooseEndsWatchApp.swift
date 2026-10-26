@@ -10,7 +10,7 @@ struct LooseEndsWatchApp: App {
     }
 
     var body: some Scene {
-        WindowGroup { WatchCaptureView() }
+        WindowGroup { WatchNowView() }
             .modelContainer(container)
     }
 }

@@ -171,6 +171,13 @@ enum ViewRules {
         Self.now(in: all, now: now, calendar: calendar).count
     }
 
+    /// "Now" as one list, the Knäuel first (#699): the watch has no start page header, so the Knäuel
+    /// stands among the rows there. Its length is `nowCount`.
+    static func nowRows(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [TaskItem] {
+        let now = Self.now(in: all, now: now, calendar: calendar)
+        return (now.knaeuel.map { [$0] } ?? []) + now.all
+    }
+
     /// Since when the task is open (#701): a repeating one since its last round was completed, not
     /// since the series was captured; everything else since capture. "Old", "longest open" and the
     /// headline's old count all read this.
