@@ -9,7 +9,7 @@ struct NextUpEntry: TimelineEntry {
 
     let date: Date
     let lines: [Line]
-    /// How many tasks "Now" holds in all, the Knäuel included: the number in the head.
+    /// How many tasks "Next up" holds in all: the number in the head.
     let total: Int
 }
 
@@ -75,7 +75,7 @@ struct NextUpWidgetView: View {
         Array(entry.lines.prefix(family.lineLimit))
     }
 
-    /// Tasks "Now" holds beyond the lines shown; the line tying its knot is no longer counted.
+    /// Tasks "Next up" holds beyond the lines shown; the line tying its knot is no longer counted.
     private var more: Int {
         max(entry.total - shown.filter { !$0.done }.count, 0)
     }
@@ -104,7 +104,7 @@ struct NextUpWidgetView: View {
         HStack(spacing: 7) {
             ThreadGlyph(form: .knot, lineWidth: 1.4)
                 .frame(width: 21, height: 15)
-            Text("Now")
+            Text("Next up")
                 .font(.system(size: 10.5, weight: .semibold))
                 .textCase(.uppercase)
                 .tracking(1.2)
@@ -314,8 +314,8 @@ struct NextUpWidget: Widget {
         StaticConfiguration(kind: "NextUp", provider: NextUpProvider()) { entry in
             NextUpWidgetView(entry: entry)
         }
-        .configurationDisplayName("Now")
-        .description("The Knäuel and what is on now, one tap to finish it.")
+        .configurationDisplayName("Next up")
+        .description("What you lined up, one tap to finish it.")
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }
