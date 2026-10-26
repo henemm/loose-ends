@@ -2,7 +2,16 @@
 
 Messung der Regeln (Datum, Uhrzeit, Wichtigkeit, Dringlichkeit, Kontexte, Titel) auf demselben
 Inhalt in fünf Formen. Korpus: `Measurement/textform-corpus.json`, 40 Inhalte. Bericht:
-`TextFormRuleReportTests`, Referenztag 2026-10-07. Die Modellspalte fehlt noch (iPhone-Laborlauf).
+`TextFormRuleReportTests`, Referenztag 2026-10-07.
+
+**Modellspalte (#88):** Die Labor-App liest den Korpus direkt und macht aus jedem Inhalt drei Notizen
+(`typed`, `dictated`, `english`; der Mail-Körper bleibt draußen, das Produkt reicht nur den Betreff weiter).
+Aufruf: `--corpus textform-corpus --runs <n> --result textform-run`, danach `sim.sh lab-fetch`; die
+Auswertung ist `TextFormModelReportTests` (ohne Ergebnisdatei laut übersprungen). Lesart: Titel = Anteil der
+Notizen, deren Titel alle Schlüsselwörter trägt, die Regelspalte (`TitleRule`) steht daneben, fehlgeschlagene
+Aufrufe zählen als verfehlt und werden ausgewiesen; Dauer = Übereinstimmung von `dictated` und `english` mit
+`typed`, keine Wahrheit und keine Trefferquote. Der Lauf auf dem iPhone läuft nur nach Hennings
+ausdrücklichem „jetzt ist ein Test möglich“.
 
 ## Treffer gegen die Wahrheit (richtig / verpasst / falsch / erfunden)
 

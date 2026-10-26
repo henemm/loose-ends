@@ -145,12 +145,36 @@ enum Corpus {
     /// Bundled as a test resource on device; on the Mac the file next to this source also works,
     /// which keeps the corpus usable from a plain script run.
     static func load(fileName: String = Corpus.fileName, calendar: Calendar = .current) throws -> [Entry] {
+        let data = try Data(contentsOf: url(fileName: fileName))
+        if let object = try JSONSerialization.jsonObject(with: data) as? [String: Any], object["entries"] != nil {
+            return try textFormEntries(from: data)
+        }
+        return try JSONDecoder().decode([Entry].self, from: data)
+    }
+
+    /// Where a corpus file lives: the bundled resource, or the file next to this source.
+    static func url(fileName: String) throws -> URL {
         let bundled = Bundle(for: CorpusAnchor.self).url(forResource: fileName, withExtension: "json")
         let onDisk = URL(fileURLWithPath: #filePath).deletingLastPathComponent().appendingPathComponent("\(fileName).json")
         guard let url = bundled ?? (FileManager.default.fileExists(atPath: onDisk.path) ? onDisk : nil) else {
             throw CocoaError(.fileNoSuchFile)
         }
-        return try JSONDecoder().decode([Entry].self, from: Data(contentsOf: url))
+        return url
+    }
+
+    /// The text-form corpus (#70, #88) is an object with `entries[].forms{…}`: one content in several
+    /// forms. It is recognized by its content, not its name, and becomes one note per content × form in
+    /// `TextFormColumn.forms`. `mail` stays out: the product hands only the subject on, never the body.
+    private static func textFormEntries(from data: Data) throws -> [Entry] {
+        struct File: Decodable {
+            struct Content: Decodable { var id: String; var forms: [String: String] }
+            var entries: [Content]
+        }
+        return try JSONDecoder().decode(File.self, from: data).entries.flatMap { content in
+            TextFormColumn.forms.compactMap { form in
+                content.forms[form].map { Entry(id: "\(content.id).\(form)", lang: form == "english" ? "en" : "de", text: $0) }
+            }
+        }
     }
 
     /// Which corpus a run measures against, taken from the launch arguments (`--corpus <name>`).
@@ -197,6 +221,16 @@ enum Corpus {
     /// process-cold one.
     static func exitWhenDone(from arguments: [String], flag: String = "--exit-when-done") -> Bool {
         arguments.contains(flag)
+    }
+}
+
+extension Corpus.Entry {
+    /// A note with only the fields the runner reads, for corpora that are not a list of entries (#88).
+    /// In an extension, so the synthesized decoding stays untouched.
+    init(id: String, lang: String, text: String) {
+        self.id = id
+        self.lang = lang
+        self.text = text
     }
 }
 
