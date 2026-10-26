@@ -211,7 +211,7 @@ bis sie gesehen wurde.
 | # | Annahme | Experiment | Abbruch | Alternative | Issue |
 |---|---|---|---|---|---|
 | B1 | ~~Retrieval lernt wirklich~~ **entschieden 2026-09-27: Wiedererkennung ja, Lernen nein** | Regel-Auslass-Test über Wortüberlappung, drei Merkmale, k = 1/3/5, gegen die Konstante | — (gelaufen) | umgesetzt wird die Alternative „Regeln ohne Modell": Textabgleich setzt die früheren Werte, Prompt-Beispiele nach Ähnlichkeit gestrichen | #69, #131, #136 |
-| B2 | Die Textform ist egal | Gleicher Inhalt in vier Formen: getippt, diktiert, Mail-Auszug, Englisch | < 80 % Übereinstimmung getippt/diktiert; Mail setzt Felder aus Signatur | Vorverarbeitung ohne Modell (kürzen, Signatur weg, Diktat normalisieren); kanalspezifische Prompts | #70 |
+| B2 | Die Textform ist egal | Gleicher Inhalt in vier Formen: getippt, diktiert, Mail-Auszug, Englisch | < 80 % Übereinstimmung getippt/diktiert; Mail setzt Felder aus Signatur. **Entschieden (2026-10-25):** die Struktur entsteht aus allen Formen durch Regeln, das Abbruchkriterium greift nicht (Diktat 39–40/40, Mail setzt im Produkt nichts, nur der Betreff wird vorbelegt; siehe `docs/reference/textform-rules.md`). Berichtigter Wortlaut der Annahme: „Die Struktur entsteht aus allen Formen“ statt „das Modell muss aus allen Formen dieselbe Struktur machen“. Modell-Formtreue für Titel und Dauer in #88 | Vorverarbeitung ohne Modell (kürzen, Signatur weg, Diktat normalisieren); kanalspezifische Prompts | #70 |
 | B3 | Guardrails lassen Alltag durch | Korpus plus 100 heikle Alltagstexte, Mac und iPhone getrennt | > 1 % Verweigerung | Verweigerung als sichtbarer Zustand; zweiter Versuch gekürzt; Parser-Fallback | #71 |
 | B4 | Der Lauf ist bezahlbar | Token je Prompt/Antwort, Sekunden je Aufgabe, Nachzügler mit 50 Aufgaben | > 2500 Token oder > 10 s je Aufgabe | Schema ohne Begründungen und ohne Konfidenz; zwei Läufe (Titel/Datum zuerst, weiche Felder später); Beispiele als Kurzform | #72 |
 | B5 | Das Modell bleibt, wie gemessen | Dauerlauf: Messreihe je OS-Stand, Vergleich zur letzten | Feld fällt um > 10 Punkte | Apples Evaluations-Framework; eigenes lokales Modell über die `LanguageModel`-Schnittstelle, selbst versioniert | #73 |
@@ -234,7 +234,7 @@ bis sie gesehen wurde.
 | Still setzen, Schwelle 0,6, Marker danach | ADR-3, R2-3 | Vorschlag statt Setzen je Feld; oder Schwelle durch Selbstkonsistenz ersetzen (#65) |
 | Veredelung im Intent-Prozess, Nachzügler beim App-Start | ADR-4, ADR-9 | Ein Gerät veredelt, alle anderen liefern Rohtext (#68) |
 | Lernen über Prompt-Beispiele | ADR-5 | Regelmotor aus Korrekturen, Retrieval-Mehrheit (#69) |
-| Ein Prompt, ein Schema für alle Felder und Kanäle | `FoundationModelsEnricher` | Zwei Läufe; Parser für Datum; kanalspezifische Vorverarbeitung (#67, #70, #72) |
+| Ein Prompt, ein Schema für alle Felder und Kanäle | `FoundationModelsEnricher` | Zwei Läufe; Parser für Datum; kanalspezifische Vorverarbeitung (#67, #70, #72; #70 entschieden 2026-10-25: alle Formen roh an die Regeln, Mail nur Betreff) |
 | Apples Gerätemodell als einziges Modell | Antwort 8 | PCC als Fallback; Fremdmodell über die neue Schnittstelle; eigenes lokales Modell (#73, #74) |
 | Zehn abgeleitete Felder | Datenmodell | Weniger Felder in v1: nur die, deren Signal trägt. Ansichten folgen den Feldern, nicht umgekehrt |
 
