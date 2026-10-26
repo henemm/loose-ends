@@ -35,6 +35,8 @@ final class CalendarBridge {
     private static let calendarKey = "calendarIdentifier"
     /// The calendars this device ever wrote an event into: where a deleted task's event is looked for.
     private static let writtenCalendarsKey = "calendarIdentifiersWritten"
+    /// The events this device wrote (#691): only these may it write again when they are gone.
+    private static let writtenEventsKey = "calendarEventIdentifiersWritten"
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Calendar")
 
     /// The calendar UI test (#203) lets the bridge run against the simulator's calendar while the
@@ -191,6 +193,8 @@ final class CalendarBridge {
         for task in changes.create + changes.update {
             guard let plan = CalendarSync.plan(for: task) else { continue }
             let own = task.calendarEventID.flatMap { store.event(withIdentifier: $0) }
+            // An event id resolves on the device that wrote it only: written by builds before #691.
+            if let own { rememberWritten(event: own) }
             guard let destination = destination(for: task, appCalendar: appCalendar) else {
                 // The chosen calendar is not on this device: no event from here (#203 Teil C).
                 if let own { try remove([own]) }
@@ -207,6 +211,10 @@ final class CalendarBridge {
             try remove(here.filter { gone.contains($0.eventIdentifier ?? "") })
             let keep = here.first { !gone.contains($0.eventIdentifier ?? "") }
             let existing = keep
+            if existing == nil, !CalendarSync.writesNew(eventID: task.calendarEventID, writtenHere: writtenEvents) {
+                // Another device wrote it, and it has not arrived here yet (#691).
+                continue
+            }
             if let existing, Self.matches(existing, plan, mark: CalendarSync.mark(for: task)) { continue }
             let event = existing ?? EKEvent(eventStore: store)
             event.calendar = destination
@@ -218,6 +226,7 @@ final class CalendarBridge {
             event.url = CalendarSync.mark(for: task)
             try store.save(event, span: .thisEvent, commit: false)
             rememberWritten(destination)
+            if existing == nil { rememberWritten(event: event) }
             // An adopted event keeps the id its own device wrote; overwriting it would flip the field
             // between devices on every sync.
             let ownWentAsDuplicate = own.map { isHere($0) && $0.eventIdentifier != keep?.eventIdentifier } ?? false
@@ -264,6 +273,20 @@ final class CalendarBridge {
         guard !written.contains(calendar.calendarIdentifier) else { return }
         written.append(calendar.calendarIdentifier)
         defaults.set(written, forKey: Self.writtenCalendarsKey)
+    }
+
+    private var writtenEvents: Set<String> {
+        Set(UserDefaults.standard.stringArray(forKey: Self.writtenEventsKey) ?? [])
+    }
+
+    /// The newest 500 are plenty: an id older than that belongs to a task long done.
+    private func rememberWritten(event: EKEvent) {
+        guard let id = event.eventIdentifier else { return }
+        let defaults = UserDefaults.standard
+        var written = defaults.stringArray(forKey: Self.writtenEventsKey) ?? []
+        guard !written.contains(id) else { return }
+        written.append(id)
+        defaults.set(Array(written.suffix(500)), forKey: Self.writtenEventsKey)
     }
 
     /// Calendars an event can be written into: no subscriptions, no birthdays, nothing read-only.

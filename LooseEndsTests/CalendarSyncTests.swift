@@ -240,6 +240,13 @@ import Testing
         #expect(CalendarSync.duplicates(among: events).isEmpty)
     }
 
+    @Test("Only the device that wrote a task's event writes it again; another waits for it to arrive (#691)")
+    func onlyTheWriterWritesNew() {
+        #expect(CalendarSync.writesNew(eventID: nil, writtenHere: []), "no event yet: this device writes it")
+        #expect(CalendarSync.writesNew(eventID: "mine", writtenHere: ["mine"]), "its own event is gone: again")
+        #expect(!CalendarSync.writesNew(eventID: "theirs", writtenHere: ["mine"]), "another device's: wait")
+    }
+
     @Test("A calendar missing on this device is the note, after the due date and any sync problem (#203 Teil C)")
     @MainActor func noteForMissingCalendar() async throws {
         let store = try TestStore()

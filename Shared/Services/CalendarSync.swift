@@ -170,6 +170,15 @@ enum CalendarSync {
         }
     }
 
+    /// Whether this device writes a new event for a task that has none here (#691). The device that
+    /// switched the task on writes it; another device that already sees its id waits for the event
+    /// to arrive through the calendar. Its own event gone (removed in the calendar, the choice
+    /// changed) it writes again.
+    static func writesNew(eventID: String?, writtenHere: Set<String>) -> Bool {
+        guard let eventID else { return true }
+        return writtenHere.contains(eventID)
+    }
+
     /// Marked events whose task is gone. A marked event of a task that still exists stays, even when
     /// this device does not hold its id: another device may have written it.
     static func orphanedMarks(_ marked: [String: UUID], taskIDs: Set<UUID>) -> [String] {
