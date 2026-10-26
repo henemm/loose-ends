@@ -128,8 +128,10 @@ targets:
       # Siri phrases, dialogs and the app's spoken names in German (#355): the watch inherits none of
       # them from the iOS app (WWDC23 10102; SiriKit "Specifying synonyms for your app name").
       # Same files as the app, no copy; the iOS assets stay out.
+      # The app icon package too (#40): one AppIcon.icon for iPhone, Mac and Watch; it wins over the watch's PNG set.
       - path: LooseEnds/Resources
         includes:
+          - AppIcon.icon
           - AppShortcuts.xcstrings
           - Localizable.xcstrings
           - "*.lproj/InfoPlist.strings"
