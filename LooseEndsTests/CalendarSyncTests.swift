@@ -212,6 +212,41 @@ import Testing
         #expect(CalendarSync.orphanedMarks(marked, taskIDs: [living, gone]).isEmpty)
     }
 
+    @Test("Of one task's events in one calendar, every device keeps the one with the smallest shared id (#691)")
+    func duplicatesAreTheSameOnEveryDevice() {
+        // The same three events, each device with its own local ids and its own order.
+        let iPhone = [
+            CalendarSync.EventKey(local: "p-1", shared: "C"),
+            CalendarSync.EventKey(local: "p-2", shared: "A"),
+            CalendarSync.EventKey(local: "p-3", shared: "B"),
+        ]
+        let mac = [
+            CalendarSync.EventKey(local: "m-9", shared: "B"),
+            CalendarSync.EventKey(local: "m-1", shared: "C"),
+            CalendarSync.EventKey(local: "m-5", shared: "A"),
+        ]
+        #expect(Set(CalendarSync.duplicates(among: iPhone).compactMap(\.shared)) == ["B", "C"])
+        #expect(Set(CalendarSync.duplicates(among: mac).compactMap(\.shared)) == ["B", "C"])
+        #expect(CalendarSync.duplicates(among: [iPhone[0]]).isEmpty, "a single event stays")
+        #expect(CalendarSync.duplicates(among: []).isEmpty)
+    }
+
+    @Test("Without a shared id on every event nothing goes, so no two devices remove each other's (#691)")
+    func noDuplicatesWithoutSharedIDs() {
+        let events = [
+            CalendarSync.EventKey(local: "a", shared: "A"),
+            CalendarSync.EventKey(local: "b", shared: nil),
+        ]
+        #expect(CalendarSync.duplicates(among: events).isEmpty)
+    }
+
+    @Test("Only the device that wrote a task's event writes it again; another waits for it to arrive (#691)")
+    func onlyTheWriterWritesNew() {
+        #expect(CalendarSync.writesNew(eventID: nil, writtenHere: []), "no event yet: this device writes it")
+        #expect(CalendarSync.writesNew(eventID: "mine", writtenHere: ["mine"]), "its own event is gone: again")
+        #expect(!CalendarSync.writesNew(eventID: "theirs", writtenHere: ["mine"]), "another device's: wait")
+    }
+
     @Test("A calendar missing on this device is the note, after the due date and any sync problem (#203 Teil C)")
     @MainActor func noteForMissingCalendar() async throws {
         let store = try TestStore()

@@ -149,6 +149,36 @@ enum CalendarSync {
         return UUID(uuidString: url.lastPathComponent)
     }
 
+    /// An event as the bridge sees it: its id on this device and the id every device shares
+    /// (`calendarItemExternalIdentifier`, nil when the calendar has none).
+    struct EventKey: Equatable {
+        let local: String
+        let shared: String?
+    }
+
+    /// One event per task (#691): the task reaches another device before its event does, so each
+    /// device writes one and they meet later in the same calendar. All but the one with the smallest
+    /// shared id go, so every device keeps the same event and none removes what another kept. Without
+    /// a shared id on each, devices could pick differently and remove each other's: then none goes.
+    static func duplicates(among events: [EventKey]) -> [EventKey] {
+        let shared = events.compactMap(\.shared)
+        guard events.count > 1, shared.count == events.count, let keep = shared.min() else { return [] }
+        var kept = false
+        return events.filter { event in
+            if event.shared == keep, !kept { kept = true; return false }
+            return true
+        }
+    }
+
+    /// Whether this device writes a new event for a task that has none here (#691). The device that
+    /// switched the task on writes it; another device that already sees its id waits for the event
+    /// to arrive through the calendar. Its own event gone (removed in the calendar, the choice
+    /// changed) it writes again.
+    static func writesNew(eventID: String?, writtenHere: Set<String>) -> Bool {
+        guard let eventID else { return true }
+        return writtenHere.contains(eventID)
+    }
+
     /// Marked events whose task is gone. A marked event of a task that still exists stays, even when
     /// this device does not hold its id: another device may have written it.
     static func orphanedMarks(_ marked: [String: UUID], taskIDs: Set<UUID>) -> [String] {
