@@ -64,9 +64,10 @@ def default_routes():
 class FakeASC:
     """Antwortet je Pfad-Anfang mit (Status, Rumpf); merkt sich jede Anfrage mit Methode."""
 
-    def __init__(self, routes=None, status_for=None):
+    def __init__(self, routes=None, status_for=None, truncated=()):
         self.routes = dict(default_routes() if routes is None else routes)
         self.status_for = status_for  # (Status, Rumpf) für alles außer der App-Suche
+        self.truncated = truncated  # Pfad-Anfänge, deren Antwort mitten im Rumpf abbricht
         self.requests = []
         fake = self
 
@@ -76,9 +77,10 @@ class FakeASC:
 
             def reply(self, status, body=None):
                 raw = json.dumps(body if body is not None else {}).encode()
+                cut = any(self.path.startswith(prefix) for prefix in fake.truncated)
                 self.send_response(status)
                 self.send_header("Content-Type", "application/json")
-                self.send_header("Content-Length", str(len(raw)))
+                self.send_header("Content-Length", str(len(raw) + (100 if cut else 0)))
                 self.end_headers()
                 self.wfile.write(raw)
 
@@ -156,6 +158,7 @@ class ProbeTests(unittest.TestCase):
             self.assertIn(name, detail)
         self.assertIn("contactFirstName=gesetzt", detail)
         self.assertIn("demoAccountName=leer", detail)
+        self.assertIn("demoAccountRequired=aus", detail)
         build_line, = self.lines(result, "build nummer=42")
         for part in ("processingState=VALID", "intern=IN_BETA_TESTING", "extern=READY_FOR_BETA_SUBMISSION"):
             self.assertIn(part, build_line)
@@ -170,6 +173,15 @@ class ProbeTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         line, = [l for l in self.lines(result, "zugriff") if "abfrage=betaGroups" in l]
         self.assertIn("http=403", line)
+        self.assertIn("befund=", line)
+        self.assertTrue(self.lines(result, "reviewdetail"), result.stdout)
+        self.assertTrue(self.lines(result, "build nummer="), result.stdout)
+
+    def test_broken_answer_on_groups_is_a_finding(self):
+        result = self.probe(self.fake(truncated=("/v1/apps/APP1/betaGroups",)))
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        line, = [l for l in self.lines(result, "zugriff") if "abfrage=betaGroups" in l]
+        self.assertIn("http=keine", line)
         self.assertIn("befund=", line)
         self.assertTrue(self.lines(result, "reviewdetail"), result.stdout)
         self.assertTrue(self.lines(result, "build nummer="), result.stdout)
@@ -258,7 +270,7 @@ class WorkflowTests(unittest.TestCase):
             self.assertNotIn(trigger, workflow)
         for needle in ("ASC_KEY_ID", "ASC_ISSUER_ID", "ASC_PRIVATE_KEY", "platform: [IOS, MAC_OS]",
                        "ASC_PLATFORM: ${{ matrix.platform }}", "runs-on: ubuntu-latest",
-                       "scripts/asc_beta_probe.py", "umask 077", "rm -f"):
+                       "scripts/asc_beta_probe.py", "umask 077", "rm -f", 'ASC_POLL_SECONDS: "5"'):
             self.assertIn(needle, workflow)
         self.assertNotIn("asc_beta_probe", (WORKFLOWS / "testflight.yml").read_text())
 

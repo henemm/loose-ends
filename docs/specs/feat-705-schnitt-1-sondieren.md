@@ -164,7 +164,7 @@ bestehende Satz in Abschnitt 6 „unter #342 Teil 3“ bleibt; der neue Abschnit
 Der Nachbau prüft **nur die Form**: Dass die Probe die erwarteten Pfade abfragt, nur liest, Befunde statt Fehler meldet und nichts
 Persönliches druckt. Er prüft **nicht**, ob Apple diese Pfade, Attributnamen und Rollen so beantwortet; er ist von denselben
 Drittquellen abgeleitet wie die Analyse. Apples echte Antworten zeigt erst der echte Handlauf nach dem Merge. Darum verlangt
-AC-9 einen dokumentierten Handlauf als Beleg im Ticket, und das Ticket bleibt offen (`Refs #705`).
+N-1 einen dokumentierten Handlauf als Beleg im Ticket, und das Ticket bleibt offen (`Refs #705`).
 
 ### Alternativen, nicht gewählt
 
@@ -195,7 +195,7 @@ Alle in `scripts/test_asc_beta_probe.py`. Zuerst geschrieben; ohne `scripts/asc_
 
 ### Manuelle Tests
 
-Keine auf Hennings Geräten (Apple-Seite braucht kein Gerät). Der Handlauf in GitHub Actions ist der Nachweis aus AC-9, kein manueller Gerätetest.
+Keine auf Hennings Geräten (Apple-Seite braucht kein Gerät). Der Handlauf in GitHub Actions ist der Nachweis aus N-1, kein manueller Gerätetest.
 
 ## Acceptance Criteria
 
@@ -207,13 +207,18 @@ Keine auf Hennings Geräten (Apple-Seite braucht kein Gerät). Der Handlauf in G
 - **AC-6:** Weder Schlüssel, Token, Signatur noch persönliche Daten (Kontaktwerte, Feedback-E-Mail, Beschreibungstext, Datenschutz-URL) stehen in stdout oder stderr. Belegt durch `test_output_has_no_contact_values_and_no_key`.
 - **AC-7:** Exit 0 bei Befunden einzelner Abfragen; Exit 1 mit `::error::` nur bei Konfigurationsfehler oder wenn keine Abfrage antwortet. Belegt durch `test_forbidden_on_groups_is_a_finding`, `test_all_404_is_findings_exit_0`, `test_nothing_answers_exits_1`, `test_app_not_found_exits_1`, `test_missing_environment_exits_1`.
 - **AC-8:** `.github/workflows/asc-beta.yml` startet nur per `workflow_dispatch`, nutzt die Secrets `ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_PRIVATE_KEY`, läuft die Probe je Plattform (IOS, MAC_OS) auf `ubuntu-latest` und entfernt die Schlüsseldatei; `.github/workflows/testflight.yml` ist unverändert. Belegt durch `test_workflow_file` und `git diff --stat` (testflight.yml nicht im Diff).
-- **AC-9:** Nach dem Merge läuft der Workflow `asc-beta` einmal von Hand (Matrix IOS und MAC_OS), und der Befund steht als Beleg im Ticket #705: Status je Abfrage, Gruppen, gesetzt/leer der Felder, Builds. Dort steht ausdrücklich, was Apples echte Antworten von der Analyse und vom Nachbau unterscheidet (Pfade, Attributnamen, Rolle des Schlüssels); Abweichungen gehen in die Spec von Schnitt 2. Belegt durch Ticketkommentar mit Link auf den Lauf. Der Nachbau allein belegt dies **nicht**.
 - **AC-10:** `docs/reference/testflight.md` enthält den Abschnitt „Einladung: Apple-Seite (#705)“ mit den zehn Teilen (Exportnachweis, Beta-App-Beschreibung, Feedback-E-Mail, Kontaktangaben, Datenschutz-URL, interne Gruppe `Familie`, externe Gruppe mit öffentlichem Link, Build-Zuordnung iOS und macOS, Beta-Review, Rückmeldeweg TestFlight-Feedback), Status „offen“ und leerer Spalte „Beleg“ (Exportnachweis „erledigt“ mit Verweis auf `project.yml`), dazu den Hinweis auf Schnitt 2 (nur auf ausdrücklichen Lauf, `submit` aus als Standard, Eingaben von Henning). Belegt durch Diff (`grep -n "Apple-Seite (#705)" docs/reference/testflight.md` ein Treffer, `grep -n "submit" docs/reference/testflight.md` mindestens ein Treffer).
 - **AC-11:** Der Diff berührt genau die vier Dateien des Scopes, kein `project.yml`, kein App-Code, kein `testflight.yml`, kein Pfad der Geräteliste, und liegt bei höchstens ±250 LoC. Belegt durch `git diff --stat` im Abschlussbericht, mit dem Satz „Kein Pfad der Geräteliste berührt.“
 - **AC-12:** Während der Umsetzung läuft nichts auf Hennings Geräten (kein `devicectl`, `sim.sh device*`, `launch-measure`, `lab`), kein TestFlight-Lauf und kein schreibender Aufruf gegen App Store Connect. Belegt durch Abschlussbericht (Befehlsliste).
-- **AC-13:** Der PR trägt `Refs #705`, nicht `Closes #705`; das Ticket bleibt offen bis Schnitt 2 und der Einladungstest. Belegt durch PR-Text.
 
 Kein Pfad der Geräteliste berührt.
+
+## Nachweise nach dem Merge
+
+Diese zwei Punkte sind keine Abnahmekriterien der Umsetzung, weil sie vor dem Merge nicht belegbar sind (Henning, `override` 2026-10-26: aus der AC-Liste genommen, damit das Gate nicht an Unbeweisbarem hängt). Sie bleiben Pflicht, und das Ticket bleibt bis dahin offen.
+
+- **N-1:** Nach dem Merge läuft der Workflow `asc-beta` einmal von Hand (Matrix IOS und MAC_OS), und der Befund steht als Beleg im Ticket #705: Status je Abfrage, Gruppen, gesetzt/leer der Felder, Builds. Dort steht ausdrücklich, was Apples echte Antworten von der Analyse und vom Nachbau unterscheidet (Pfade, Attributnamen, Rolle des Schlüssels); Abweichungen gehen in die Spec von Schnitt 2. Belegt durch Ticketkommentar mit Link auf den Lauf. Der Nachbau allein belegt dies **nicht**.
+- **N-2:** Der PR trägt `Refs #705`, nicht `Closes #705`; das Ticket bleibt offen bis Schnitt 2 und der Einladungstest. Belegt durch PR-Text.
 
 ## Out of Scope
 
@@ -233,7 +238,7 @@ Kein Pfad der Geräteliste berührt.
 - [ ] `scripts/test_asc_beta_probe.py` war vor Skript und Workflow rot und ist danach grün (12 Tests).
 - [ ] Alle vorhandenen Skripttests (`python3 scripts/test_*.py`) bleiben grün.
 - [ ] Der Diff berührt nur die vier Dateien des Scopes; `testflight.yml` unverändert.
-- [ ] Nach dem Merge: Handlauf `asc-beta` je Plattform, Befund als Beleg im Ticket #705 (AC-9); Schnitt 2 wird auf Grundlage dieses Befunds spezifiziert.
+- [ ] Nach dem Merge: Handlauf `asc-beta` je Plattform, Befund als Beleg im Ticket #705 (N-1); Schnitt 2 wird auf Grundlage dieses Befunds spezifiziert.
 - [ ] Ticket #705 bleibt offen (`Refs #705`).
 
 ## Architektur-Entscheidung (ADR)

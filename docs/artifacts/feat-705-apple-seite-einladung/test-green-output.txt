@@ -1,0 +1,42 @@
+test_all_404_is_findings_exit_0 (__main__.ProbeTests.test_all_404_is_findings_exit_0) ... ok
+test_app_not_found_exits_1 (__main__.ProbeTests.test_app_not_found_exits_1) ... ok
+test_both_platforms (__main__.ProbeTests.test_both_platforms) ... ok
+test_broken_answer_on_groups_is_a_finding (__main__.ProbeTests.test_broken_answer_on_groups_is_a_finding) ... ok
+test_empty_description_is_reported_as_empty (__main__.ProbeTests.test_empty_description_is_reported_as_empty) ... ok
+test_everything_present (__main__.ProbeTests.test_everything_present) ... ok
+test_forbidden_on_groups_is_a_finding (__main__.ProbeTests.test_forbidden_on_groups_is_a_finding) ... ok
+test_missing_environment_exits_1 (__main__.ProbeTests.test_missing_environment_exits_1) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:2069: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 54313)>
+  for k, v in env.items():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:2069: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 54319)>
+  for k, v in env.items():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:2069: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 54321)>
+  for k, v in env.items():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:2069: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 54330)>
+  for k, v in env.items():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:2069: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 54339)>
+  for k, v in env.items():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:2069: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 54352)>
+  for k, v in env.items():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:2069: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 54361)>
+  for k, v in env.items():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:2069: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 54370)>
+  for k, v in env.items():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_no_group (__main__.ProbeTests.test_no_group) ... ok
+test_nothing_answers_exits_1 (__main__.ProbeTests.test_nothing_answers_exits_1) ... ok
+test_only_get_requests (__main__.ProbeTests.test_only_get_requests) ... ok
+test_output_has_no_contact_values_and_no_key (__main__.ProbeTests.test_output_has_no_contact_values_and_no_key) ... ok
+test_workflow_file (__main__.WorkflowTests.test_workflow_file) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 8.412s
+
+OK

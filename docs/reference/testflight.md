@@ -153,6 +153,41 @@ die externen Gruppen für die Einladung.
 Buildnummer; die Lücken gehen gebündelt als ein Prüfblock („Was testen“) in einen Build, erst nach Hennings wörtlichem
 „jetzt ist ein Test möglich“.
 
+## Einladung: Apple-Seite (#705)
+
+Was Apple vor der ersten externen Einladung braucht. Die Gruppen (oben unter #342 Teil 3 genannt) richtet #705 ein. Status
+bleibt `offen` und Beleg leer, bis ein Lauf ihn füllt.
+
+| Teil | Status | Beleg |
+|------|--------|-------|
+| Exportnachweis | erledigt: `ITSAppUsesNonExemptEncryption=false` in `project.yml`, im Archiv geprüft (Verify-Schritt) | `project.yml`, Verify-Schritt |
+| Beta-App-Beschreibung | offen | |
+| Feedback-E-Mail | offen | |
+| Kontaktangaben (Beta-Review-Detail) | offen | |
+| Datenschutz-URL | offen | |
+| Interne Gruppe `Familie` | offen | |
+| Externe Gruppe mit öffentlichem Link | offen | |
+| Build-Zuordnung iOS und macOS | offen | |
+| Beta-Review (Einreichung) | offen | |
+| Rückmeldeweg: TestFlight-Feedback | offen | |
+
+**Handlauf `asc-beta.yml` (Schnitt 1, nur lesend):** GitHub → Actions → **ASC Beta Probe** → **Run workflow**. Er läuft je
+Plattform einmal (Matrix `IOS` und `MAC_OS`, auf `ubuntu-latest`) und schreibt nichts in App Store Connect. Im Log belegen:
+
+- `zugriff abfrage=… http=…`: ob der Schlüssel die Abfrage darf; `befund=` bei 403/404 (kein Zugriff oder Pfad unbekannt).
+- `gruppe name=… intern=ja|nein link=an|aus url=… feedback=an|aus`: interne Gruppe `Familie`, externe Gruppe, öffentlicher
+  Link, Rückmeldeweg TestFlight-Feedback.
+- `lokalisierung locale=… beschreibung=… feedbackEmail=… datenschutzUrl=…`: Beschreibung, Feedback-E-Mail, Datenschutz-URL
+  (nur `gesetzt`/`leer`).
+- `reviewdetail attribute=…`: Kontaktangaben, Attributnamen und je Feld `gesetzt`/`leer`, nie die Werte.
+- `build nummer=… plattform=… processingState=… intern=… extern=… einreichung=…` und `einreichung build=… zustand=…`:
+  Build-Zuordnung je Plattform und Beta-Review.
+- `zusammenfassung antworten=… von=… befunde=…`: Exit 1 nur, wenn gar keine Abfrage antwortet.
+
+**Schnitt 2 (Einrichten und Einreichen) folgt separat:** nur auf ausdrücklichen Lauf, der Schalter `submit` ist
+standardmäßig aus (die Einreichung an Apple ist per API nicht zurückziehbar). Beschreibung, Kontaktangaben und Feedback-E-Mail
+kommen von Henning, nie aus dem Repo geraten.
+
 ## Wenn es hakt
 
 - **"No profiles for 'com.henning.looseends' were found"** oder ein Fehler mit

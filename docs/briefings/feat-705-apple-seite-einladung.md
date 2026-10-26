@@ -1,7 +1,6 @@
 ---
 spec_file: docs/specs/feat-705-schnitt-1-sondieren.md
-spec_sha256: 4b8984ff02b1b77e7df8897f5195204cc93bc97a14e24bdd3943aad28d9861e5
-spec_frozen_sha256: 6775c664873b5503d13f80c076f8e70d68e70f1a359d2e79f43c9ccc8654fcb4
+spec_sha256: 85393ff3172f55ea08cf1e54351115c0472e05f907268848ab0c1ff1c825e0b5
 ---
 
 # PO-Briefing: feat-705-apple-seite-einladung
@@ -16,17 +15,17 @@ Ein Prüflauf liest bei Apple nur aus, was für die erste externe Einladung scho
 
 ## Definition of Done
 
-Nach einem Probelauf für iPhone und Mac steht Apples tatsächlicher Stand als Beleg im Ticket; bei Apple wurde nichts verändert.
+Die Prüfung ist gebaut und getestet; nach dem Merge liefert ein Probelauf Apples tatsächlichen Stand als Beleg.
 
 ## Wie geprüft wird
 
-Tests gegen einen Apple-Nachbau belegen Lesen und Datenschutz der Ausgabe; Apples echte Antworten belegt erst der Lauf nach dem Merge.
+Tests gegen einen Apple-Nachbau belegen reines Lesen und Datenschutz; Apples echte Antworten zeigt erst der Probelauf.
 
 ## Kritische Anmerkungen
 
-- Nur lesender Schnitt 1: Nichts wird eingerichtet oder eingereicht; das Ticket bleibt offen.
-- Schnitt 2 (Einrichten, Einreichen) braucht deinen Beschreibungstext und deine Kontaktdaten; ohne sie keine Beta-Review-Einreichung.
-- Die Datenschutz-Adresse ist nicht enthalten; die Probe meldet nur, ob sie bei Apple gesetzt ist.
+- Nur lesender Schnitt 1, Ticket bleibt offen. Schnitt 2 braucht deinen Wortlaut und Kontaktdaten; Datenschutz-Adresse nicht enthalten.
+- Probelauf und Pull-Request-Text sind Nachweise nach dem Merge, keine Abnahmekriterien mehr (auf dein `override`).
+- Umfang über der Schätzung: rund 250 Zeilen Produktionscode plus rund 280 Zeilen Tests.
 
 ## Freigabe-Frage
 
