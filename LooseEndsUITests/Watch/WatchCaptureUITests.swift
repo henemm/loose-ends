@@ -8,12 +8,28 @@ final class WatchCaptureUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    /// The app opens on "Now" (#699); capture is one tap on "Capture", as from the complication.
     @MainActor
     private func launch() -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = ["--ui-testing"]
         app.launch()
+        let capture = app.buttons["watch.now.capture"]
+        XCTAssertTrue(capture.waitForExistence(timeout: 10), "„Erfassen“ fehlt auf „Jetzt“")
+        capture.tap()
         return app
+    }
+
+    /// #699: the app icon opens "Now" with "Capture" on top; with nothing due the list says so.
+    @MainActor
+    func testAppOpensOnNow() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["--ui-testing"]
+        app.launch()
+        XCTAssertTrue(app.buttons["watch.now.capture"].waitForExistence(timeout: 10), "„Erfassen“ fehlt")
+        XCTAssertTrue(app.staticTexts["watch.now.empty"].waitForExistence(timeout: 5), "Leere Liste ohne Satz")
+        XCTAssertFalse(field(in: app).exists, "Die App startet in der Erfassung statt in „Jetzt“")
+        snapshot("Start: Jetzt", of: app)
     }
 
     /// AC-1, AC-3, AC-6: two captures in a row, each confirmed, each followed by the empty field.
@@ -22,7 +38,7 @@ final class WatchCaptureUITests: XCTestCase {
         let app = launch()
         for text in ["Milch kaufen", "Brot holen"] {
             capture(text, in: app)
-            XCTAssertTrue(confirmation(in: app).waitForExistence(timeout: 5), "„Gespeichert“ fehlt nach „\(text)“")
+            XCTAssertTrue(try sawConfirmation(in: app), "„Gespeichert“ fehlt nach „\(text)“")
             snapshot("gespeichert: \(text)", of: app)
             XCTAssertTrue(field(in: app).waitForExistence(timeout: 5), "Feld kommt nach „\(text)“ nicht zurück")
             XCTAssertFalse(confirmation(in: app).exists, "Bestätigung steht noch neben dem Feld")
@@ -48,6 +64,17 @@ final class WatchCaptureUITests: XCTestCase {
         } while !seen.confirmation && Date() < deadline
         XCTAssertTrue(seen.confirmation, "„Gespeichert“ fehlt")
         XCTAssertFalse(seen.field, "Feld ist sofort wieder da, ohne sichtbare Bestätigung")
+    }
+
+    /// Polls snapshots until the confirmation shows. It stands 1.5 s; `waitForExistence` first looks after a second
+    /// and missed it on the second capture (video: "Gespeichert" is on screen, the query came too late).
+    @MainActor
+    private func sawConfirmation(in app: XCUIApplication) throws -> Bool {
+        let deadline = Date().addingTimeInterval(5)
+        repeat {
+            if contents(of: try app.snapshot()).confirmation { return true }
+        } while Date() < deadline
+        return false
     }
 
     /// What one snapshot shows at the same instant: the confirmation, a text field.
@@ -116,8 +143,7 @@ final class WatchCaptureUITests: XCTestCase {
         let input = field(in: app)
         XCTAssertTrue(input.waitForExistence(timeout: 10), "Eingabefeld fehlt")
         XCTAssertTrue(waitUntil("isHittable == true", on: input, timeout: 10), "Eingabefeld nicht antippbar")
-        let focused = app.descendants(matching: .any)
-            .matching(NSPredicate(format: "hasKeyboardFocus == true")).firstMatch
+        let focused = keyboardFocus(in: app)
         input.tap()
         if focused.waitForExistence(timeout: 10) {
             return focused
@@ -127,6 +153,11 @@ final class WatchCaptureUITests: XCTestCase {
         }
         XCTAssertTrue(focused.waitForExistence(timeout: 10), "Eingabeblatt hat keinen Fokus")
         return focused
+    }
+
+    @MainActor
+    private func keyboardFocus(in app: XCUIApplication) -> XCUIElement {
+        app.descendants(matching: .any).matching(NSPredicate(format: "hasKeyboardFocus == true")).firstMatch
     }
 
     @MainActor
