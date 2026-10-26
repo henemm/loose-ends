@@ -31,6 +31,7 @@ final class CalendarBridge {
     @ObservationIgnored private let container: ModelContainer
     @ObservationIgnored private let store = EKEventStore()
     @ObservationIgnored private var debounce: Task<Void, Never>?
+    @ObservationIgnored private var storeChanges: Task<Void, Never>?
     private static let calendarKey = "calendarIdentifier"
     /// The calendars this device ever wrote an event into: where a deleted task's event is looked for.
     private static let writtenCalendarsKey = "calendarIdentifiersWritten"
@@ -45,6 +46,13 @@ final class CalendarBridge {
 
     init(container: ModelContainer) {
         self.container = container
+        // Another device's event arrives through the calendar, not through a save here: the sync
+        // after it finds the duplicates (#691). Its own commits come back too and change nothing.
+        storeChanges = Task { [weak self, store] in
+            for await _ in NotificationCenter.default.notifications(named: .EKEventStoreChanged, object: store) {
+                self?.syncSoon()
+            }
+        }
     }
 
     /// Where the task's event goes on this device: its chosen calendar, else the app's own. Nil before
@@ -193,7 +201,13 @@ final class CalendarBridge {
             let candidates = [own].compactMap { $0 } + (markedByTask[task.id] ?? [])
             let isHere: (EKEvent) -> Bool = { $0.calendar.calendarIdentifier == destination.calendarIdentifier }
             try remove(candidates.filter { !isHere($0) })
-            let existing = candidates.first(where: isHere)
+            let here = Self.distinct(candidates.filter(isHere))
+            let keep = CalendarSync.survivor(among: here.map(Self.key)).flatMap { kept in
+                here.first { Self.key($0) == kept }
+            }
+            // Two or more devices wrote one each before they saw the other's (#691): one stays.
+            try remove(here.filter { $0.eventIdentifier != keep?.eventIdentifier })
+            let existing = keep
             if let existing, Self.matches(existing, plan, mark: CalendarSync.mark(for: task)) { continue }
             let event = existing ?? EKEvent(eventStore: store)
             event.calendar = destination
@@ -207,7 +221,8 @@ final class CalendarBridge {
             rememberWritten(destination)
             // An adopted event keeps the id its own device wrote; overwriting it would flip the field
             // between devices on every sync.
-            if existing == nil || own != nil, task.calendarEventID != event.eventIdentifier {
+            let ownWentAsDuplicate = own.map { isHere($0) && $0.eventIdentifier != keep?.eventIdentifier } ?? false
+            if existing == nil || (own != nil && !ownWentAsDuplicate), task.calendarEventID != event.eventIdentifier {
                 task.calendarEventID = event.eventIdentifier
             }
         }
@@ -218,6 +233,16 @@ final class CalendarBridge {
         for event in events where seen.insert(event.eventIdentifier ?? "").inserted {
             try store.remove(event, span: .thisEvent, commit: false)
         }
+    }
+
+    /// Its own event can also carry the mark: one entry per event id.
+    private static func distinct(_ events: [EKEvent]) -> [EKEvent] {
+        var seen: Set<String> = []
+        return events.filter { seen.insert($0.eventIdentifier ?? "").inserted }
+    }
+
+    private static func key(_ event: EKEvent) -> CalendarSync.EventKey {
+        CalendarSync.EventKey(local: event.eventIdentifier ?? "", shared: event.calendarItemExternalIdentifier)
     }
 
     /// The task's calendar on this device; nil when it chose one this device does not have.

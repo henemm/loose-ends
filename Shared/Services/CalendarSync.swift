@@ -149,6 +149,20 @@ enum CalendarSync {
         return UUID(uuidString: url.lastPathComponent)
     }
 
+    /// An event as the bridge sees it: its id on this device and the id every device shares
+    /// (`calendarItemExternalIdentifier`, nil when the calendar has none).
+    struct EventKey: Equatable {
+        let local: String
+        let shared: String?
+    }
+
+    /// One event per task (#691): the task reaches another device before its event does, so each
+    /// device writes one and they meet later in the same calendar. The one kept has the smallest
+    /// shared id, so every device keeps the same event and none removes what another kept.
+    static func survivor(among events: [EventKey]) -> EventKey? {
+        events.min { ($0.shared ?? $0.local, $0.local) < ($1.shared ?? $1.local, $1.local) }
+    }
+
     /// Marked events whose task is gone. A marked event of a task that still exists stays, even when
     /// this device does not hold its id: another device may have written it.
     static func orphanedMarks(_ marked: [String: UUID], taskIDs: Set<UUID>) -> [String] {
