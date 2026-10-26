@@ -1,0 +1,32 @@
+# Handlauf (#705 Schnitt 1): fragt Apples Beta-Seite der App nur lesend ab und druckt die Belegtabelle
+# je Plattform in den Lauf-Log. Schreibt nichts in App Store Connect; läuft nie automatisch.
+name: ASC Beta Probe
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    name: Probe Apple's beta side (${{ matrix.platform }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [IOS, MAC_OS]
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_PLATFORM: ${{ matrix.platform }}
+      ASC_POLL_SECONDS: "5"
+    steps:
+      - uses: actions/checkout@v7
+      - name: Read groups, localizations, review detail, builds and submissions
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT
+          umask 077
+          printf '%s\n' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"
+          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_probe.py
