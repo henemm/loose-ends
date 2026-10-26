@@ -99,7 +99,10 @@ Berechtigungen gehören in `project.yml` (`entitlements.properties`), nie nur in
 `generate` überschreibt sie (#311). `scripts/test_entitlements_sync.py` und die Archivprüfung `entitled` sichern das ab
 (`docs/reference/testflight.md`). Dasselbe gilt für jede `Info.plist`: Quelle ist `info.properties` in `project.yml`, die Datei im Repo
 nur das Abbild (#499); `scripts/test_info_plist_sync.py` vergleicht beide, und der CI-Schritt „Generate leaves the tree clean“
-schlägt fehl, wenn `generate` einen Diff hinterlässt.
+schlägt fehl, wenn `generate` einen Diff hinterlässt. Berechtigungstexte brauchen zusätzlich einen deutschen Eintrag in
+`LooseEnds/Resources/de.lproj/InfoPlist.strings` (App und Watch bündeln dieselbe Datei), sonst zeigt ein deutsches Gerät den
+Dialog englisch; `scripts/test_infoplist_languages.py` prüft das und die Vollständigkeit der vier `*.xcstrings` (#342).
+Der Datenschutztext liegt als Entwurf in `docs/reference/datenschutz-entwurf.md` (Freigabe Henning, URL #705).
 
 `DEVELOPMENT_TEAM` steht in `project.yml` (`XK87E2B3VR`) und darf dort nicht geleert werden: Xcode
 legt das Team in der erzeugten Projektdatei ab, die bei jedem `generate` neu geschrieben wird — ein
