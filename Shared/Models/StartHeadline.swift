@@ -103,7 +103,7 @@ enum StartHeadline: Equatable {
             quiet.append(.pile(label: biggest.key, count: biggest.value))
         }
         let monthAgo = calendar.date(byAdding: .day, value: -ViewRules.oldAfterDays, to: today) ?? now
-        let oldCount = open.filter { $0.capturedAt < monthAgo }.count
+        let oldCount = open.filter { ViewRules.openSince($0) < monthAgo }.count
         if oldCount >= Self.oldCount {
             quiet.append(.old(count: oldCount))
         }

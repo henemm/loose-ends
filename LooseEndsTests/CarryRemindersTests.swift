@@ -87,6 +87,30 @@ import Testing
         #expect(Self.mornings([parked]).isEmpty, "only parked: nothing to invite to")
     }
 
+    @Test("Longest open: a series counts from its last round, a task with a date ahead is not named (#701)")
+    @MainActor func longestOpenReadsTheRoundAndSkipsPlanned() async throws {
+        let store = try TestStore()
+        let series = Self.task("Fußnagel behandeln", due: Self.day(0, hour: 8), hasTime: true, in: store)
+        series.capturedAt = Self.day(-60)
+        series.repeatRule = RepeatRule(frequency: .weekly)
+        series.completions = [CompletionRecord(task: series, completedAt: Self.day(-7), dueDateAtCompletion: Self.day(-7))]
+        let planned = Self.task("FindPinguins Buch erstellen", due: Self.day(3), in: store)
+        planned.capturedAt = Self.day(-50)
+        let missed = Self.task("Reifen wechseln", due: Self.day(-2), in: store)
+        missed.capturedAt = Self.day(-20)
+        let plain = Self.task("Fotos sortieren", due: nil, in: store)
+        plain.capturedAt = Self.day(-10)
+
+        #expect(ViewRules.openSince(series) == Self.day(-7), "the round, not the series")
+        #expect(ViewRules.openSince(plain) == Self.day(-10))
+        let first = try #require(Self.mornings([series, planned, missed, plain]).first)
+        #expect(first.openCount == 4, "the number stays: every loose end counts")
+        #expect(first.longestOpen == ["Reifen wechseln", "Fotos sortieren"],
+                "a missed date is loose again (#548); the planned one and this week's round are not the longest")
+        #expect(!ViewRules.tasks(for: .old, in: [series], now: Self.now, calendar: Self.calendar).contains { $0.id == series.id },
+                "a series done last week is not old")
+    }
+
     @Test("Same minute, one notification: the morning at the reminder time names today's day-only tasks (#551)")
     @MainActor func morningCarriesTodayAtTheReminderTime() async throws {
         let store = try TestStore()
