@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-10-26T12:46:02+0100
+befehl: scripts/sim.sh test-proof OnboardingTests
+workflow: feat-342-texte-fuer-fremde
+head: 3103dc9ccde1a3c9e8e37abdd165cfd69b8bb2cf
+basis: 3103dc9ccde1a3c9e8e37abdd165cfd69b8bb2cf (merge-base origin/main HEAD)
+testklasse: OnboardingTests
+ergebnis: Failed
+xcodebuild: ** TEST FAILED **
+tests: 4 gesamt, 2 bestanden, 2 fehlgeschlagen, 0 übersprungen
+start: 1793015037.708  ende: 1793015161.841
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/feat-342-texte-fuer-fremde/simulator-run/summary.json  sha256:73297be6e8da89e6f094b0d3cc39298741903bf5110674e5b750257ca5de9c97
+xcresult: docs/artifacts/feat-342-texte-fuer-fremde/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-342-texte-fuer-fremde/simulator-run/*.png (0 Stück)
+
+## Geprüfte Dateien
+- sha256:de9787f6d166aadcd4471f31a161df8f561711a6b14aa31b64113146f4e9eb7c  LooseEndsUITests/OnboardingTests.swift
