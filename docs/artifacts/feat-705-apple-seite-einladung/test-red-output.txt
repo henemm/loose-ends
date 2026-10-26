@@ -1,0 +1,158 @@
+test_all_404_is_findings_exit_0 (__main__.ProbeTests.test_all_404_is_findings_exit_0) ... FAIL
+test_app_not_found_exits_1 (__main__.ProbeTests.test_app_not_found_exits_1) ... FAIL
+test_both_platforms (__main__.ProbeTests.test_both_platforms) ... FAIL
+test_empty_description_is_reported_as_empty (__main__.ProbeTests.test_empty_description_is_reported_as_empty) ... FAIL
+test_everything_present (__main__.ProbeTests.test_everything_present) ... FAIL
+test_forbidden_on_groups_is_a_finding (__main__.ProbeTests.test_forbidden_on_groups_is_a_finding) ... FAIL
+test_missing_environment_exits_1 (__main__.ProbeTests.test_missing_environment_exits_1) ... FAIL
+test_no_group (__main__.ProbeTests.test_no_group) ... FAIL
+test_nothing_answers_exits_1 (__main__.ProbeTests.test_nothing_answers_exits_1) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:611: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 53042)>
+  def _push_exit_callback(self, callback, is_sync=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:611: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 53043)>
+  def _push_exit_callback(self, callback, is_sync=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:611: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 53044)>
+  def _push_exit_callback(self, callback, is_sync=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:611: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 53045)>
+  def _push_exit_callback(self, callback, is_sync=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:611: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 53046)>
+  def _push_exit_callback(self, callback, is_sync=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:611: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 53047)>
+  def _push_exit_callback(self, callback, is_sync=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:611: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 53049)>
+  def _push_exit_callback(self, callback, is_sync=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:611: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 53051)>
+  def _push_exit_callback(self, callback, is_sync=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_only_get_requests (__main__.ProbeTests.test_only_get_requests) ... FAIL
+test_output_has_no_contact_values_and_no_key (__main__.ProbeTests.test_output_has_no_contact_values_and_no_key) ... FAIL
+test_workflow_file (__main__.WorkflowTests.test_workflow_file) ... FAIL
+
+======================================================================
+FAIL: test_all_404_is_findings_exit_0 (__main__.ProbeTests.test_all_404_is_findings_exit_0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_probe.py", line 232, in test_all_404_is_findings_exit_0
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/asc_beta_probe.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_app_not_found_exits_1 (__main__.ProbeTests.test_app_not_found_exits_1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_probe.py", line 243, in test_app_not_found_exits_1
+    self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/asc_beta_probe.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_both_platforms (__main__.ProbeTests.test_both_platforms)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_probe.py", line 202, in test_both_platforms
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/asc_beta_probe.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_empty_description_is_reported_as_empty (__main__.ProbeTests.test_empty_description_is_reported_as_empty)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_probe.py", line 181, in test_empty_description_is_reported_as_empty
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/asc_beta_probe.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_everything_present (__main__.ProbeTests.test_everything_present)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_probe.py", line 140, in test_everything_present
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/asc_beta_probe.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_forbidden_on_groups_is_a_finding (__main__.ProbeTests.test_forbidden_on_groups_is_a_finding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_probe.py", line 170, in test_forbidden_on_groups_is_a_finding
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/asc_beta_probe.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_missing_environment_exits_1 (__main__.ProbeTests.test_missing_environment_exits_1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_probe.py", line 248, in test_missing_environment_exits_1
+    self.assertEqual(result.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_no_group (__main__.ProbeTests.test_no_group)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_probe.py", line 191, in test_no_group
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/asc_beta_probe.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_nothing_answers_exits_1 (__main__.ProbeTests.test_nothing_answers_exits_1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_probe.py", line 227, in test_nothing_answers_exits_1
+    self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/asc_beta_probe.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_only_get_requests (__main__.ProbeTests.test_only_get_requests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_probe.py", line 213, in test_only_get_requests
+    self.assertTrue(fake.requests)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+AssertionError: [] is not true
+
+======================================================================
+FAIL: test_output_has_no_contact_values_and_no_key (__main__.ProbeTests.test_output_has_no_contact_values_and_no_key)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_probe.py", line 218, in test_output_has_no_contact_values_and_no_key
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/asc_beta_probe.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_workflow_file (__main__.WorkflowTests.test_workflow_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_probe.py", line 254, in test_workflow_file
+    self.assertTrue(WORKFLOW.exists(), f"{WORKFLOW} fehlt")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : /Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/.github/workflows/asc-beta.yml fehlt
+
+----------------------------------------------------------------------
+Ran 12 tests in 5.802s
+
+FAILED (failures=12)
