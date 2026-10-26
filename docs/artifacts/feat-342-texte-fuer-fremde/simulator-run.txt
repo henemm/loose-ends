@@ -1,16 +1,16 @@
 # Simulator-Beleg
-erzeugt: 2026-10-26T13:11:12+0100
+erzeugt: 2026-10-26T13:25:14+0100
 befehl: scripts/sim.sh test-proof OnboardingTests
 workflow: feat-342-texte-fuer-fremde
-head: 1ab4226ab052411aa24e3d3f4d50e0f73836d92d
+head: bbdd73e56129cdaf18800d2e4ebbeabcf28091f3
 basis: f0e84ffbc92e3b5d6cb9be6eb6b118c8ba1d9799 (merge-base origin/main HEAD)
 testklasse: OnboardingTests
 ergebnis: Passed
 xcodebuild: ** TEST SUCCEEDED **
 tests: 4 gesamt, 4 bestanden, 0 fehlgeschlagen, 0 übersprungen
-start: 1793016618.335  ende: 1793016671.12
+start: 1793017433.464  ende: 1793017513.218
 geraet: iPhone 17, iOS 27.0
-summary: docs/artifacts/feat-342-texte-fuer-fremde/simulator-run/summary.json  sha256:82ea9a4aca2ae41f93ed9bc94cdcb9b6963661477219618403d8ea78b8f7d6bf
+summary: docs/artifacts/feat-342-texte-fuer-fremde/simulator-run/summary.json  sha256:e4e98fc0ad59992a5dd52065f3184bfd3b76f735f92d27b13ed3361c262c28a0
 xcresult: docs/artifacts/feat-342-texte-fuer-fremde/simulator-run/run.xcresult  (gitignored)
 screenshots: docs/artifacts/feat-342-texte-fuer-fremde/simulator-run/*.png (2 Stück)
 
