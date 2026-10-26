@@ -1,0 +1,60 @@
+<title>Icon mit Ebenen</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: zwei Icons nebeneinander, darunter die Wahl für die dunkle Darstellung */
+:root { --bg:#F4F3EE; --fg:#1C2A2B; --muted:#5B6B6C; --accent:#0F6E73; --line:#D9D8D0; --card:#FFFFFF; --display:"Fraunces", Georgia, serif; --body:"IBM Plex Sans", system-ui, sans-serif; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#101819; --fg:#E6EEEE; --muted:#93A5A6; --accent:#5FC4C9; --line:#2A3A3B; --card:#172122; color-scheme:dark } }
+:root[data-theme="dark"] { --bg:#101819; --fg:#E6EEEE; --muted:#93A5A6; --accent:#5FC4C9; --line:#2A3A3B; --card:#172122; color-scheme:dark }
+body { background:var(--bg); color:var(--fg); font-family:var(--body); line-height:1.5; padding-inline:max(16px, env(safe-area-inset-left,0px)) max(16px, env(safe-area-inset-right,0px)); padding-block:32px 48px; }
+main { max-width:760px; margin:0 auto; display:flex; flex-direction:column; gap:32px; }
+h1 { font-family:var(--display); font-size:2rem; line-height:1.15; margin:0; text-wrap:balance; }
+h2 { font-family:var(--display); font-size:1.25rem; margin:0 0 8px; text-wrap:balance; }
+p { margin:0; max-width:65ch; }
+.sub { color:var(--muted); }
+.pair { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; }
+figure { margin:0; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px; display:flex; flex-direction:column; align-items:center; gap:12px; }
+figure img { width:200px; max-width:100%; height:auto; border-radius:8px; }
+figcaption { text-align:center; font-size:.9rem; }
+figcaption b { display:block; font-size:1rem; }
+.opts { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; }
+.opt { border:1px solid var(--line); border-radius:12px; padding:16px; }
+.opt.rec { border-color:var(--accent); }
+.tag { font-size:.75rem; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); }
+</style>
+<main>
+  <header>
+    <h1>Das App-Icon bekommt Tiefe</h1>
+    <p class="sub">Motiv und Farbe bleiben. Neu ist nur, wie das System den Faden zeichnet: mit Glanz und Kantenlicht statt flach.</p>
+  </header>
+
+  <section>
+    <h2>Heute und Entwurf auf dem iPhone-Home-Screen (hell)</h2>
+    <div class="pair">
+      <figure>
+        <img alt="Heutiges Icon, flach" src="data:image/png;base64,__H__">
+        <figcaption><b>Heute</b>Bild-Datei, flach</figcaption>
+      </figure>
+      <figure>
+        <img alt="Entwurf, Icon mit Ebene" src="data:image/png;base64,__E__">
+        <figcaption><b>Entwurf</b>Faden als Glas-Ebene über flachem Grund</figcaption>
+      </figure>
+    </div>
+    <p class="sub" style="margin-top:12px">Beide Bilder stammen aus einem echten Lauf im iOS-27-Simulator, nicht aus einem Mockup. Dunkel, Getönt und Klar kann der Simulator nicht zeigen; dafür gibt es unten die Entscheidung und später den Gerätedurchgang.</p>
+  </section>
+
+  <section>
+    <h2>Wahl für die dunkle Darstellung</h2>
+    <div class="opts">
+      <div class="opt rec">
+        <span class="tag">Empfehlung</span>
+        <h2>Eigener dunkler Grund</h2>
+        <p>Dunkles Petrol-Schwarz, Faden in hellem Petrol (#5FC4C9). Das Icon sieht bei dunklem Home-Screen in sich geschlossen aus und liest sich wie das helle.</p>
+      </div>
+      <div class="opt">
+        <span class="tag">Alternative</span>
+        <h2>Durchsichtiger Grund wie heute</h2>
+        <p>Das System legt seinen eigenen dunklen Grund darunter, nur der Faden bleibt. Das ist die heutige Bilddatei und die Linie aus der Logo-Entscheidung. Weniger eigene Farbe, dafür vom System abhängig.</p>
+      </div>
+    </div>
+  </section>
+</main>
