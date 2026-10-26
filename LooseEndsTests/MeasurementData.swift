@@ -37,6 +37,8 @@ enum MeasurementData {
 
     static var focusBloxCorpus: URL { reference("focusblox-corpus.json") }
     static var selfConsistencyRun: URL { reference("selfconsistency-run.json") }
+    /// The text-form lab run (#88), written only by a device run.
+    static var textFormRun: URL { reference("textform-run.json") }
 
     static func exists(_ url: URL) -> Bool { FileManager.default.fileExists(atPath: url.path) }
 

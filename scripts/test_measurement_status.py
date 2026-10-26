@@ -33,7 +33,7 @@ class StatusTests(unittest.TestCase):
 
     def test_without_data_every_suite_is_named_as_skipped(self):
         text = ms.render(ms.status(self.worktree), markdown=False)
-        self.assertIn("4 von 4 übersprungen", text)
+        self.assertIn("5 von 5 übersprungen", text)
         self.assertIn("RecognitionRuleCorpusTests – fehlt: focusblox-corpus.json", text)
         self.assertIn("SelfConsistencyReportTests – fehlt: focusblox-corpus.json, selfconsistency-run.json", text)
 
@@ -46,11 +46,12 @@ class StatusTests(unittest.TestCase):
     def test_everything_present_says_so(self):
         self.put(self.worktree, "focusblox-corpus.json")
         self.put(self.worktree, "selfconsistency-run.json")
-        self.assertEqual(ms.render(ms.status(self.worktree), markdown=False), "[sim] Messstrecken: alle 4 liefen mit Daten.")
+        self.put(self.worktree, "textform-run.json")
+        self.assertEqual(ms.render(ms.status(self.worktree), markdown=False), "[sim] Messstrecken: alle 5 liefen mit Daten.")
 
     def test_markdown_puts_the_count_in_bold(self):
         text = ms.render(ms.status(self.worktree), markdown=True)
-        self.assertIn("**4 von 4 Messstrecken übersprungen**", text)
+        self.assertIn("**5 von 5 Messstrecken übersprungen**", text)
         self.assertIn("| `RuleLeaveOneOutReportTests` | übersprungen, fehlt: focusblox-corpus.json |", text)
 
 
@@ -70,7 +71,8 @@ class RegistryMatchesSwiftTests(unittest.TestCase):
         return found
 
     def test_every_gate_is_listed_and_nothing_else(self):
-        files = {"focusBloxCorpus": "focusblox-corpus.json", "selfConsistencyRun": "selfconsistency-run.json"}
+        files = {"focusBloxCorpus": "focusblox-corpus.json", "selfConsistencyRun": "selfconsistency-run.json",
+                 "textFormRun": "textform-run.json"}
         swift = {files[key]: sorted(value) for key, value in self.gated_suites_in_swift().items()}
         self.assertEqual(swift, {name: sorted(suites) for name, suites in ms.GATES.items()})
 

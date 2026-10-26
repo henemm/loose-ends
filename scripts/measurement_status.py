@@ -27,6 +27,9 @@ GATES = {
     "selfconsistency-run.json": [
         "SelfConsistencyReportTests",
     ],
+    "textform-run.json": [
+        "TextFormModelReportTests",
+    ],
 }
 
 
