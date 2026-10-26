@@ -59,7 +59,7 @@ Regelweg-Vermerk (Regeln vor Modell): Kein Modell beteiligt; Konfiguration und B
 | Entity | Type | Purpose |
 |--------|------|---------|
 | #19 | Vorarbeit | Motiv und Farbe des Icons sind entschieden und bleiben |
-| #176 | Gerätedurchgang | Hell/Dunkel/Getönt/Klar, Watch und Dock werden im selben TestFlight-Durchgang geprüft (AC-9) |
+| #176 | Gerätedurchgang | Hell/Dunkel/Getönt/Klar, Watch und Dock werden im selben TestFlight-Durchgang geprüft (N-2) |
 | `docs/design/logo/layer-thread.svg` | Quelle | Faden-Ebene mit Maske, Ausgangspunkt der beiden SVG im Paket |
 | XcodeGen 2.46, `actool` Xcode 27 | Werkzeug | Paket als Quelle des Targets, Übersetzung zu `Assets.car` |
 
@@ -92,9 +92,13 @@ Regelweg-Vermerk (Regeln vor Modell): Kein Modell beteiligt; Konfiguration und B
 - **AC-5:** Das Watch-Target baut mit demselben Paket (keine Kopie der SVGs, Leinwand 1088 vom System angepasst); `watch`-Bau läuft durch.
 - **AC-6:** `scripts/test_app_icon_package.py` läuft in der CI im Schritt „Script tests“ und prüft: Manifest lesbar, Bilder vorhanden,
   Hell- und Dunkel-SVG unterscheiden sich nur in der Strichfarbe, Fill-Spezialisierung für Dunkel vorhanden.
-- **AC-7:** Das Archiv des TestFlight-Laufs (Prüfschritt „Verify the archive“) findet das Icon weiter; der Probe-Bau (`BUNDLE_ID_SUFFIX`) baut.
 - **AC-8:** README und `05-logo.md` nennen den Ist-Stand (eine Gruppe mit Fill, PNG-Sätze ungenutzt) statt „zwei Ebenen / Icon Composer per GUI“.
-- **AC-9 (Gerät, Stufe 3):** Home-Screen in Hell, Dunkel, Getönt und Klar, Watch und Mac-Dock im selben TestFlight-Durchgang wie #176.
+### Nachgelagert (kein AC, Ticket bleibt offen; Henning, 2026-10-26)
+
+Beides ist erst nach dem Merge belegbar und blockiert die Abnahme nicht. Das Ticket bleibt bis zum Beleg offen.
+
+- **N-1 (früher AC-7):** Das Archiv des TestFlight-Laufs (Prüfschritt „Verify the archive“) findet das Icon weiter; der Probe-Bau (`BUNDLE_ID_SUFFIX`) baut.
+- **N-2 (früher AC-9, Gerät, Stufe 3):** Home-Screen in Hell, Dunkel, Getönt und Klar, Watch und Mac-Dock im selben TestFlight-Durchgang wie #176.
   Gilt, weil `project.yml` auf der Geräteliste steht; nichts auf Hennings Geräten, bevor er „jetzt ist ein Test möglich“ schreibt.
 
 ## Test Plan
@@ -105,7 +109,7 @@ Regelweg-Vermerk (Regeln vor Modell): Kein Modell beteiligt; Konfiguration und B
 
 ## Risiken
 
-1. `Assets.car`-Auslese für Dunkel/Getönt ist unerprobt; fällt sie aus, bleibt AC-9 der Beleg (dann ehrlich so benannt).
+1. `Assets.car`-Auslese für Dunkel/Getönt ist unerprobt; fällt sie aus, bleibt N-2 der Beleg (dann ehrlich so benannt).
 2. `ictool` hat keine dokumentierten Argumente (`man ictool`).
 3. CI pinnt Xcode 27.0, der Spike lief mit 27.1; AC-2 muss in der CI grün sein.
 4. Forum-Fall `Exception while running actool` mit `.icon` unter Xcode 27 Beta ([Apple Forum 831309](https://developer.apple.com/forums/thread/831309)) — im Spike nicht aufgetreten.
@@ -116,7 +120,7 @@ Regelweg-Vermerk (Regeln vor Modell): Kein Modell beteiligt; Konfiguration und B
 - [ ] `./scripts/sim.sh build`, `mac-build` und der Watch-Bau laufen durch; CI grün.
 - [ ] Gerenderte Bilder (hell, dunkel) und der Home-Screen-Screenshot sind geöffnet und beschrieben (AC-3, AC-4).
 - [ ] README und `05-logo.md` nennen den Ist-Stand.
-- [ ] Gerätepunkte (AC-9) mit Hennings Rückmeldung zum TestFlight-Durchgang abgehakt; bis dahin bleibt das Ticket offen.
+- [ ] Nachgelagerte Punkte N-1 und N-2 mit Hennings Rückmeldung zum TestFlight-Durchgang abgehakt; bis dahin bleibt das Ticket offen.
 
 ## Architektur-Entscheidung (ADR)
 
