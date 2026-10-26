@@ -1,0 +1,22 @@
+# Simulator-Beleg
+erzeugt: 2026-10-26T07:35:35+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: feat-88-textform-spalte
+head: 7f7053817d12b4e8f8933c177fb96179446f46d9
+basis: eb61b1b24504a220d08480ef3a09c706fd164e79 (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 24 gesamt, 24 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1792995811.143  ende: 1792996533.623
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/feat-88-textform-spalte/simulator-run/summary.json  sha256:898a1a11a55f3c72415cadcd9dc0cdad60843100e3365671377206cfeb147d26
+xcresult: docs/artifacts/feat-88-textform-spalte/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-88-textform-spalte/simulator-run/*.png (13 Stück)
+
+## Geprüfte Dateien
+- sha256:26330a5942a67fa329f60b95316fbc02468fa7f677369af235936a7b239d78d9  LooseEndsTests/MeasurementData.swift
+- sha256:500a4247ca2bd5eb46dd61738364eab0e33d4e12ae263ce32dcc346b8d0f82dc  LooseEndsTests/TextFormColumnTests.swift
+- sha256:9edf832d2c6b2d7f0d70a3e78cfb52a028df840f4801ae85d3808fc53b32b912  LooseEndsTests/TextFormModelReportTests.swift
+- sha256:e8948e5190f1db08c4254573c7ac1eaf0cdc473531a60776976b53d4fa1bb796  Measurement/Corpus.swift
+- sha256:3a2a2f5a4a67564dfa6d826c9fbd41925f530dbfbac3967d5616f9de09cc9fb2  Measurement/TextFormColumn.swift
