@@ -202,11 +202,10 @@ final class CalendarBridge {
             let isHere: (EKEvent) -> Bool = { $0.calendar.calendarIdentifier == destination.calendarIdentifier }
             try remove(candidates.filter { !isHere($0) })
             let here = Self.distinct(candidates.filter(isHere))
-            let keep = CalendarSync.survivor(among: here.map(Self.key)).flatMap { kept in
-                here.first { Self.key($0) == kept }
-            }
             // Two or more devices wrote one each before they saw the other's (#691): one stays.
-            try remove(here.filter { $0.eventIdentifier != keep?.eventIdentifier })
+            let gone = Set(CalendarSync.duplicates(among: here.map(Self.key)).map(\.local))
+            try remove(here.filter { gone.contains($0.eventIdentifier ?? "") })
+            let keep = here.first { !gone.contains($0.eventIdentifier ?? "") }
             let existing = keep
             if let existing, Self.matches(existing, plan, mark: CalendarSync.mark(for: task)) { continue }
             let event = existing ?? EKEvent(eventStore: store)

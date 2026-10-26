@@ -157,10 +157,17 @@ enum CalendarSync {
     }
 
     /// One event per task (#691): the task reaches another device before its event does, so each
-    /// device writes one and they meet later in the same calendar. The one kept has the smallest
-    /// shared id, so every device keeps the same event and none removes what another kept.
-    static func survivor(among events: [EventKey]) -> EventKey? {
-        events.min { ($0.shared ?? $0.local, $0.local) < ($1.shared ?? $1.local, $1.local) }
+    /// device writes one and they meet later in the same calendar. All but the one with the smallest
+    /// shared id go, so every device keeps the same event and none removes what another kept. Without
+    /// a shared id on each, devices could pick differently and remove each other's: then none goes.
+    static func duplicates(among events: [EventKey]) -> [EventKey] {
+        let shared = events.compactMap(\.shared)
+        guard events.count > 1, shared.count == events.count, let keep = shared.min() else { return [] }
+        var kept = false
+        return events.filter { event in
+            if event.shared == keep, !kept { kept = true; return false }
+            return true
+        }
     }
 
     /// Marked events whose task is gone. A marked event of a task that still exists stays, even when

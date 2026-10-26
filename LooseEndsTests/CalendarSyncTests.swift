@@ -213,7 +213,7 @@ import Testing
     }
 
     @Test("Of one task's events in one calendar, every device keeps the one with the smallest shared id (#691)")
-    func survivorIsTheSameOnEveryDevice() {
+    func duplicatesAreTheSameOnEveryDevice() {
         // The same three events, each device with its own local ids and its own order.
         let iPhone = [
             CalendarSync.EventKey(local: "p-1", shared: "C"),
@@ -225,11 +225,19 @@ import Testing
             CalendarSync.EventKey(local: "m-1", shared: "C"),
             CalendarSync.EventKey(local: "m-5", shared: "A"),
         ]
-        #expect(CalendarSync.survivor(among: iPhone)?.shared == "A")
-        #expect(CalendarSync.survivor(among: mac)?.shared == "A")
-        // Without a shared id the local one decides; nothing is no survivor.
-        #expect(CalendarSync.survivor(among: [.init(local: "z", shared: nil), .init(local: "y", shared: nil)])?.local == "y")
-        #expect(CalendarSync.survivor(among: []) == nil)
+        #expect(Set(CalendarSync.duplicates(among: iPhone).compactMap(\.shared)) == ["B", "C"])
+        #expect(Set(CalendarSync.duplicates(among: mac).compactMap(\.shared)) == ["B", "C"])
+        #expect(CalendarSync.duplicates(among: [iPhone[0]]).isEmpty, "a single event stays")
+        #expect(CalendarSync.duplicates(among: []).isEmpty)
+    }
+
+    @Test("Without a shared id on every event nothing goes, so no two devices remove each other's (#691)")
+    func noDuplicatesWithoutSharedIDs() {
+        let events = [
+            CalendarSync.EventKey(local: "a", shared: "A"),
+            CalendarSync.EventKey(local: "b", shared: nil),
+        ]
+        #expect(CalendarSync.duplicates(among: events).isEmpty)
     }
 
     @Test("A calendar missing on this device is the note, after the due date and any sync problem (#203 Teil C)")
