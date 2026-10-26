@@ -1,0 +1,20 @@
+# Simulator-Beleg
+erzeugt: 2026-10-26T16:48:52+0100
+befehl: scripts/sim.sh test-proof OnboardingTests
+workflow: 342-sprache-und-start-ohne-modell
+head: ae0395b194cc775a044a5f149f13347de0862156
+basis: aac10f217041f16739833370855905313f521bc4 (merge-base origin/main HEAD)
+testklasse: OnboardingTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 7 gesamt, 7 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793029604.91  ende: 1793029730.114
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/342-sprache-und-start-ohne-modell/simulator-run/summary.json  sha256:fb1b312d2da45eac22eba1c8846a01023d12f8bda5c88b81c3e6f753d853eefa
+xcresult: docs/artifacts/342-sprache-und-start-ohne-modell/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/342-sprache-und-start-ohne-modell/simulator-run/*.png (5 Stück)
+
+## Geprüfte Dateien
+- sha256:ba7afe517df606a5eb63fb575cd7cba7c85a59c4c86aedf7d8164af3ecf9528d  LooseEnds/App/ContentView.swift
+- sha256:5d6afeda7ff74cdffee0952a201e04b5c2bfe0c786a8f2b57de5e5c7a56b5934  LooseEnds/Views/OnboardingView.swift
+- sha256:9197a8cf36aadfad7e93e187283055d512b96006453e7645f5bf0bba0c1cf333  LooseEndsUITests/OnboardingTests.swift

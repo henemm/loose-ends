@@ -8,11 +8,32 @@ final class OnboardingTests: XCTestCase {
     }
 
     @MainActor
-    private func launch(language: String = "en", locale: String = "en_US") -> XCUIApplication {
+    private func launch(reason: String? = nil, language: String = "en", locale: String = "en_US") -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["--ui-testing", "--ui-testing-onboarding", "-AppleLanguages", "(\(language))", "-AppleLocale", locale]
+        var arguments = ["--ui-testing", "--ui-testing-onboarding", "-AppleLanguages", "(\(language))", "-AppleLocale", locale]
+        // #342: the simulator has a model, so the note never shows; this brings each case up (only under --ui-testing).
+        if let reason { arguments.append("--ui-testing-model-reason=\(reason)") }
+        app.launchArguments = arguments
         app.launch()
         return app
+    }
+
+    /// The note's words as the screen shows them; fails when the note is not on step one.
+    @MainActor
+    private func modelNoteText(_ app: XCUIApplication, shot name: String) -> String {
+        XCTAssertTrue(element("onboardingStep_siri", in: app).waitForExistence(timeout: 10), "The onboarding should open on Siri")
+        let note = element("onboardingModelNote", in: app)
+        XCTAssertTrue(note.waitForExistence(timeout: 5), "The model note should stand on step one")
+        shot(app, name)
+        return note.label
+    }
+
+    @MainActor
+    private func shot(_ app: XCUIApplication, _ name: String) {
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 
     @MainActor
@@ -58,39 +79,37 @@ final class OnboardingTests: XCTestCase {
         XCTAssertTrue(app.buttons["captureButton"].isHittable, "The start screen should be usable")
     }
 
-    /// #342 Teil 5: on a device without Apple Intelligence the first start says what still works and what is missing.
-    /// Under `--ui-testing` the model counts as off (as in the enrichment), so the note is there; the text must name the rules' work (tags, duration) and the gap (title).
-    @MainActor
-    func testNoteWithoutModelSaysWhatStillWorksInEnglish() throws {
-        let app = launch()
+    // MARK: - The model note on the screen (#342, Schnitt 1a)
 
-        XCTAssertTrue(element("onboardingStep_siri", in: app).waitForExistence(timeout: 10))
-        let note = element("onboardingModelNote", in: app)
-        XCTAssertTrue(note.waitForExistence(timeout: 5), "Without a model the Siri step carries a note")
-        let text = note.label
-        for word in ["Tags", "durations", "title"] {
-            XCTAssertTrue(text.contains(word), "The note should name \(word): \(text)")
-        }
-        let attachment = XCTAttachment(screenshot: app.screenshot())
-        attachment.name = "model-note-en"
-        attachment.lifetime = .keepAlways
-        add(attachment)
+    @MainActor
+    func testNoModelNoteSaysWhatStillWorksInEnglish() throws {
+        let text = modelNoteText(launch(reason: "deviceNotEligible"), shot: "onboarding-342-not-eligible-en")
+        XCTAssertEqual(text, "This device has no Apple Intelligence. Due dates, importance, urgency and tags are still found; a duration only when you name it or the task came up before.")
     }
 
     @MainActor
-    func testNoteWithoutModelSaysWhatStillWorksInGerman() throws {
-        let app = launch(language: "de", locale: "de_DE")
+    func testNoModelNoteSaysWhatStillWorksInGerman() throws {
+        let text = modelNoteText(launch(reason: "deviceNotEligible", language: "de", locale: "de_DE"), shot: "onboarding-342-not-eligible-de")
+        XCTAssertEqual(text, "Dieses Gerät hat kein Apple Intelligence. Fälligkeit, Wichtigkeit, Dringlichkeit und Etiketten werden trotzdem erkannt; eine Dauer nur, wenn du sie nennst oder die Aufgabe schon einmal da war.")
+    }
 
+    @MainActor
+    func testTurnedOffNoteStandsOnTheScreen() throws {
+        let text = modelNoteText(launch(reason: "appleIntelligenceNotEnabled"), shot: "onboarding-342-turned-off-en")
+        XCTAssertEqual(text, "Apple Intelligence is off. Turn it on in Settings so new tasks get a title and a duration.")
+    }
+
+    @MainActor
+    func testNotReadyNoteStandsOnTheScreen() throws {
+        let text = modelNoteText(launch(reason: "modelNotReady"), shot: "onboarding-342-not-ready-en")
+        XCTAssertEqual(text, "Apple Intelligence is still getting ready. Tasks captured meanwhile are sorted once it is.")
+    }
+
+    @MainActor
+    func testNoNoteWhileTheModelIsThere() throws {
+        let app = launch()
         XCTAssertTrue(element("onboardingStep_siri", in: app).waitForExistence(timeout: 10))
-        let note = element("onboardingModelNote", in: app)
-        XCTAssertTrue(note.waitForExistence(timeout: 5), "Without a model the Siri step carries a note")
-        let text = note.label
-        for word in ["Tags", "Dauer", "Titel"] {
-            XCTAssertTrue(text.contains(word), "The note should name \(word): \(text)")
-        }
-        let attachment = XCTAttachment(screenshot: app.screenshot())
-        attachment.name = "model-note-de"
-        attachment.lifetime = .keepAlways
-        add(attachment)
+        shot(app, "onboarding-342-no-note-en")
+        XCTAssertFalse(element("onboardingModelNote", in: app).exists, "The simulator has a model: no note")
     }
 }
