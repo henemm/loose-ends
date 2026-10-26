@@ -21,6 +21,30 @@ import Testing
         #expect(content.sourceURL?.absoluteString == "message://%3Cabc123@example.com%3E")
     }
 
+    // #70: B2 rests on this path. Greeting, signature, quote and legal text never reach the rules or the model.
+    @Test("Mail: only the subject is prefilled, never the body")
+    func mailBodyNeverPrefilled() {
+        let raw = """
+        From: Anna <anna@example.com>
+        Subject: Angebot Dachrinne
+        Message-ID: <abc123@example.com>
+
+        Hallo Henning, ruf mich dringend morgen um 9 Uhr an.
+
+        Viele Grüße
+        Anna Beispiel, Geschäftsführerin
+
+        > Am Montag schrieb Karl: Die Webseite ist wichtig.
+
+        Diese E-Mail enthält vertrauliche Angaben. Datenschutzhinweis auf unserer Webseite.
+        """
+        let content = SharedContent.make(texts: [], urls: [], mails: [raw])
+        #expect(content.prefill == "Angebot Dachrinne")
+        for noise in ["Hallo", "dringend", "Viele Grüße", "Karl", "vertraulich", "Webseite"] {
+            #expect(!content.prefill.contains(noise), "\(noise) comes from the body")
+        }
+    }
+
     @Test("Encoded subjects are decoded, base64 and quoted-printable alike")
     func encodedSubjects() {
         let base64 = "Subject: =?UTF-8?B?w5xiZXJ3ZWlzdW5nIGbDvHIgTcO8bGw=?=\n\nBody"
