@@ -308,7 +308,9 @@ leere Schreibzeile las sich wie die Trennlinie über „Inhalt“. Entschieden a
 Im Rand steht „Neu“ in Akzent, daneben in der Titelspalte „N zum Durchsehen“ in New York in Zeilentitelgröße, in Akzent,
 mit `chevron.right`; Wort und Satz sind ein Knopf und öffnen „Neu“. Ohne Neues entfallen beide. Die Schreibzeile zeigt
 „Was soll ich aufnehmen?“ immer, kursiv und grau (hebt „erst mit dem Cursor“ aus #677 auf). Die Zeilen der Schublade stehen
-zwischen Satz und Schreibzeile.
+zwischen Satz und Schreibzeile. Beim Zuklappen gleiten sie nach oben in den Kopf, und der Satz leuchtet einmal kurz
+auf (Akzent 14 % hinter den Worten, gut 0,6 s; Henning, 2026-10-26), damit man sieht, wohin sie gehen; bei reduzierter
+Bewegung nur Überblenden ohne Leuchten.
 
 ## Mac-App (Henning, 2026-10-16, Epic #467, ersetzt #408)
 

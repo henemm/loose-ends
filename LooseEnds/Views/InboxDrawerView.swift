@@ -31,6 +31,8 @@ struct InboxDrawerView: View {
     @State private var drawer = InboxDrawer()
     @State private var text = ""
     @State private var saveFailed = false
+    /// The sentence lights up once as the folded rows reach it (#693).
+    @State private var headGlow = false
     @FocusState private var writing: Bool
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "StartPage")
     /// Opening, folding and a new row take one soft curve, no spring: paper, not rubber.
@@ -90,6 +92,13 @@ struct InboxDrawerView: View {
                         Image(systemName: "chevron.right")
                             .font(metrics.margin.weight(.semibold))
                     }
+                    // The glow reaches past the words, so the text keeps the titles' edge.
+                    .padding(.horizontal, 6)
+                    .background(
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(Color.accentColor.opacity(headGlow ? 0.14 : 0))
+                    )
+                    .padding(.horizontal, -6)
                     Spacer(minLength: 0)
                 }
                 .foregroundStyle(.tint)
@@ -190,10 +199,28 @@ struct InboxDrawerView: View {
 
     private func endEntry(animated: Bool) {
         guard drawer.isOpen else { return }
+        let hadRows = !rows.isEmpty
         if animated {
             withAnimation(motion) { drawer.close() }
+            if hadRows && !reduceMotion { glowHead() }
         } else {
             drawer.close()
+        }
+    }
+
+    /// The folded rows slide up into the head; as they arrive the sentence lights up once and fades,
+    /// so the eye follows them into "New" (#693, Henning 2026-10-26). Not under reduced motion.
+    private func glowHead() {
+        Task { @MainActor in
+            do {
+                try await Task.sleep(for: .milliseconds(250))
+                withAnimation(.easeOut(duration: 0.2)) { headGlow = true }
+                try await Task.sleep(for: .milliseconds(200))
+            } catch {
+                headGlow = false
+                return
+            }
+            withAnimation(.easeIn(duration: 0.4)) { headGlow = false }
         }
     }
 }
