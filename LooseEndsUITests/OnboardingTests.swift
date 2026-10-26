@@ -20,11 +20,20 @@ final class OnboardingTests: XCTestCase {
 
     /// The note's words as the screen shows them; fails when the note is not on step one.
     @MainActor
-    private func modelNoteText(_ app: XCUIApplication) -> String {
+    private func modelNoteText(_ app: XCUIApplication, shot name: String) -> String {
         XCTAssertTrue(element("onboardingStep_siri", in: app).waitForExistence(timeout: 10), "The onboarding should open on Siri")
         let note = element("onboardingModelNote", in: app)
         XCTAssertTrue(note.waitForExistence(timeout: 5), "The model note should stand on step one")
+        shot(app, name)
         return note.label
+    }
+
+    @MainActor
+    private func shot(_ app: XCUIApplication, _ name: String) {
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 
     @MainActor
@@ -74,25 +83,25 @@ final class OnboardingTests: XCTestCase {
 
     @MainActor
     func testNoModelNoteSaysWhatStillWorksInEnglish() throws {
-        let text = modelNoteText(launch(reason: "deviceNotEligible"))
+        let text = modelNoteText(launch(reason: "deviceNotEligible"), shot: "onboarding-342-not-eligible-en")
         XCTAssertEqual(text, "This device has no Apple Intelligence. Due dates, importance, urgency and tags are still found; a duration only when you name it or the task came up before.")
     }
 
     @MainActor
     func testNoModelNoteSaysWhatStillWorksInGerman() throws {
-        let text = modelNoteText(launch(reason: "deviceNotEligible", language: "de", locale: "de_DE"))
+        let text = modelNoteText(launch(reason: "deviceNotEligible", language: "de", locale: "de_DE"), shot: "onboarding-342-not-eligible-de")
         XCTAssertEqual(text, "Dieses Gerät hat kein Apple Intelligence. Fälligkeit, Wichtigkeit, Dringlichkeit und Etiketten werden trotzdem erkannt; eine Dauer nur, wenn du sie nennst oder die Aufgabe schon einmal da war.")
     }
 
     @MainActor
     func testTurnedOffNoteStandsOnTheScreen() throws {
-        let text = modelNoteText(launch(reason: "appleIntelligenceNotEnabled"))
+        let text = modelNoteText(launch(reason: "appleIntelligenceNotEnabled"), shot: "onboarding-342-turned-off-en")
         XCTAssertEqual(text, "Apple Intelligence is off. Turn it on in Settings so new tasks get a title and a duration.")
     }
 
     @MainActor
     func testNotReadyNoteStandsOnTheScreen() throws {
-        let text = modelNoteText(launch(reason: "modelNotReady"))
+        let text = modelNoteText(launch(reason: "modelNotReady"), shot: "onboarding-342-not-ready-en")
         XCTAssertEqual(text, "Apple Intelligence is still getting ready. Tasks captured meanwhile are sorted once it is.")
     }
 
@@ -100,6 +109,7 @@ final class OnboardingTests: XCTestCase {
     func testNoNoteWhileTheModelIsThere() throws {
         let app = launch()
         XCTAssertTrue(element("onboardingStep_siri", in: app).waitForExistence(timeout: 10))
+        shot(app, "onboarding-342-no-note-en")
         XCTAssertFalse(element("onboardingModelNote", in: app).exists, "The simulator has a model: no note")
     }
 }

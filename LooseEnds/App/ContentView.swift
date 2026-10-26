@@ -28,6 +28,17 @@ struct ContentView: View {
         ProcessInfo.processInfo.arguments.contains("--ui-testing-long-done-window") ? 20 : PendingCompletions.defaultWindow
     }
 
+    /// The simulator has a model, so the onboarding's note never shows there (#342). Under `--ui-testing`,
+    /// `--ui-testing-model-reason=<reason>` stands in for the system's reason; otherwise the real one applies.
+    private static var modelUnavailableReason: String? {
+        let prefix = "--ui-testing-model-reason="
+        if ModelContainerFactory.isUITesting,
+           let argument = ProcessInfo.processInfo.arguments.first(where: { $0.hasPrefix(prefix) }) {
+            return String(argument.dropFirst(prefix.count))
+        }
+        return FoundationModelsEnricher().unavailableReason
+    }
+
     /// Nil only in previews; the app always passes its coordinator and notification center.
     var enrichment: EnrichmentCoordinator?
     var notifications: DueNotificationCenter?
@@ -188,7 +199,7 @@ struct ContentView: View {
     /// whether it is there when a pass runs.
     private var onboarding: some View {
         OnboardingView(
-            modelUnavailableReason: FoundationModelsEnricher().unavailableReason,
+            modelUnavailableReason: Self.modelUnavailableReason,
             requestNotifications: { await notifications?.requestAuthorization() },
             onFinish: {
                 OnboardingFlow.finish()

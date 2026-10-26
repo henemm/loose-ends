@@ -87,7 +87,7 @@ struct OnboardingView: View {
             case .notReady:
                 Text("Apple Intelligence is still getting ready. Tasks captured meanwhile are sorted once it is.")
             case .notEligible:
-                Text("This device has no Apple Intelligence. Tasks keep the words you said; due dates, importance and urgency are still found.")
+                Text("This device has no Apple Intelligence. Due dates, importance, urgency and tags are still found; a duration only when you name it or the task came up before.")
             }
         }
         .font(.footnote)

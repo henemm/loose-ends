@@ -1,19 +1,20 @@
 # Simulator-Beleg
-erzeugt: 2026-10-26T08:46:36+0100
+erzeugt: 2026-10-26T08:54:43+0100
 befehl: scripts/sim.sh test-proof OnboardingTests
 workflow: 342-sprache-und-start-ohne-modell
-head: 60485a8d39641732dea257066decf685026f6f20
-basis: eb61b1b24504a220d08480ef3a09c706fd164e79 (merge-base origin/main HEAD)
+head: fc5c408572f97c7c3cbf89029c8a64aba8e4ee9c
+basis: c4790a534e0bd827548a4991a4d0e3163560c7bb (merge-base origin/main HEAD)
 testklasse: OnboardingTests
-ergebnis: Failed
-xcodebuild: ** TEST FAILED **
-tests: 7 gesamt, 3 bestanden, 4 fehlgeschlagen, 0 übersprungen
-start: 1793000690.201  ende: 1793000795.488
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 7 gesamt, 7 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793001211.328  ende: 1793001282.755
 geraet: iPhone 17, iOS 27.0
-summary: docs/artifacts/342-sprache-und-start-ohne-modell/simulator-run/summary.json  sha256:5b9d7b504caf553b2737ce9598e08e50f4437b4e66eb876cf7b4903f6721fb9d
+summary: docs/artifacts/342-sprache-und-start-ohne-modell/simulator-run/summary.json  sha256:dc01c61826d06a097089fd9c56cb2ec9e014477e2a1eb1696a07870f69b152a0
 xcresult: docs/artifacts/342-sprache-und-start-ohne-modell/simulator-run/run.xcresult  (gitignored)
-screenshots: docs/artifacts/342-sprache-und-start-ohne-modell/simulator-run/*.png (0 Stück)
+screenshots: docs/artifacts/342-sprache-und-start-ohne-modell/simulator-run/*.png (5 Stück)
 
 ## Geprüfte Dateien
-- sha256:de93731e4581fa4cc474077d84fec7f2f1167bffe26936fc3a7dd798cca98f1d  LooseEndsTests/SharedContentTests.swift
-- sha256:70bdb9cd2565a30446edb7dee58e1f5a211b2c3ac1e4393ee3e460ed5da29bda  LooseEndsUITests/OnboardingTests.swift
+- sha256:ba7afe517df606a5eb63fb575cd7cba7c85a59c4c86aedf7d8164af3ecf9528d  LooseEnds/App/ContentView.swift
+- sha256:5d6afeda7ff74cdffee0952a201e04b5c2bfe0c786a8f2b57de5e5c7a56b5934  LooseEnds/Views/OnboardingView.swift
+- sha256:9197a8cf36aadfad7e93e187283055d512b96006453e7645f5bf0bba0c1cf333  LooseEndsUITests/OnboardingTests.swift
