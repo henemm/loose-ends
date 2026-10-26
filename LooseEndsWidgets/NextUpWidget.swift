@@ -9,7 +9,7 @@ struct NextUpEntry: TimelineEntry {
 
     let date: Date
     let lines: [Line]
-    /// How many tasks "Next up" holds in all: the number in the head.
+    /// How many tasks "Now" holds in all, the Knäuel included: the number in the head.
     let total: Int
 }
 
@@ -75,7 +75,7 @@ struct NextUpWidgetView: View {
         Array(entry.lines.prefix(family.lineLimit))
     }
 
-    /// Tasks "Next up" holds beyond the lines shown; the line tying its knot is no longer counted.
+    /// Tasks "Now" holds beyond the lines shown; the line tying its knot is no longer counted.
     private var more: Int {
         max(entry.total - shown.filter { !$0.done }.count, 0)
     }
@@ -104,7 +104,7 @@ struct NextUpWidgetView: View {
         HStack(spacing: 7) {
             ThreadGlyph(form: .knot, lineWidth: 1.4)
                 .frame(width: 21, height: 15)
-            Text("Next up")
+            Text("Now")
                 .font(.system(size: 10.5, weight: .semibold))
                 .textCase(.uppercase)
                 .tracking(1.2)
@@ -134,7 +134,10 @@ struct NextUpWidgetView: View {
     /// One task, set large, its time above it; the check at the foot finishes it.
     private func small(_ line: NextUpEntry.Line) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            if !margin(of: line).isEmpty {
+            if line.isKnaeuel && !line.done {
+                knaeuelSign
+                    .padding(.top, 13)
+            } else if !margin(of: line).isEmpty {
                 Text(margin(of: line))
                     .font(.system(size: 12, weight: .semibold).monospacedDigit())
                     .foregroundStyle(marginStyle(of: line))
@@ -196,13 +199,19 @@ struct NextUpWidgetView: View {
 
     private func row(_ line: NextUpEntry.Line) -> some View {
         HStack(alignment: .center, spacing: Self.columnGap) {
-            Text(margin(of: line))
-                .font(.system(size: 11.5, weight: .medium).monospacedDigit())
-                .foregroundStyle(marginStyle(of: line))
-                .lineLimit(2)
-                .multilineTextAlignment(.trailing)
-                .minimumScaleFactor(0.85)
-                .frame(width: Self.marginWidth, alignment: .trailing)
+            Group {
+                if line.isKnaeuel && !line.done {
+                    knaeuelSign
+                } else {
+                    Text(margin(of: line))
+                        .font(.system(size: 11.5, weight: .medium).monospacedDigit())
+                        .foregroundStyle(marginStyle(of: line))
+                        .lineLimit(2)
+                        .multilineTextAlignment(.trailing)
+                        .minimumScaleFactor(0.85)
+                }
+            }
+            .frame(width: Self.marginWidth, alignment: .trailing)
             Button(intent: OpenTaskIntent(taskID: line.id)) {
                 Text(line.title)
                     .font(.system(size: 15, design: .serif))
@@ -262,6 +271,14 @@ struct NextUpWidgetView: View {
             .accessibilityLabel(Text("Completed"))
     }
 
+    /// The Knäuel's sign, the one the app draws in its head (`ThreadGlyph(form: .knaeuel)`, #643).
+    private var knaeuelSign: some View {
+        ThreadGlyph(form: .knaeuel, lineWidth: 1.4)
+            .frame(width: 30, height: 15)
+            .foregroundStyle(.primary)
+            .accessibilityLabel(Text("The Knäuel"))
+    }
+
     private func margin(of line: NextUpEntry.Line) -> String {
         line.done ? String(localized: "Completed") : line.margin
     }
@@ -314,8 +331,8 @@ struct NextUpWidget: Widget {
         StaticConfiguration(kind: "NextUp", provider: NextUpProvider()) { entry in
             NextUpWidgetView(entry: entry)
         }
-        .configurationDisplayName("Next up")
-        .description("What you lined up, one tap to finish it.")
+        .configurationDisplayName("Now")
+        .description("The Knäuel and what is on now, one tap to finish it.")
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }

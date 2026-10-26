@@ -2,6 +2,9 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "The Knäuel" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Das Knäuel" } } } },
+    "Now" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Jetzt" } } } },
+    "The Knäuel and what is on now, one tap to finish it." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Das Knäuel und was jetzt dran ist, mit einem Tipp erledigt." } } } },
     "Next up" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Als nächstes" } } } },
     "Nothing lined up yet." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Noch nichts vorgemerkt." } } } },
     "What you lined up, one tap to finish it." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Was du dir vorgemerkt hast, mit einem Tipp erledigt." } } } },
