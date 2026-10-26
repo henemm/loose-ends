@@ -111,16 +111,16 @@ enum NextUpWidgetActions {
         var done = false
     }
 
-    /// What the widget shows: the first tasks of "Next up", the same rule as in the app, and how many
-    /// "Next up" holds in all (the number in the head).
+    /// What the widget shows: the same as the start screen's "Now" (#368): the Knäuel first (#643), then
+    /// "Due today" and "Next up" as one list, and how many that makes in all (the number in the head).
     static func nextUp(in context: ModelContext, limit: Int, now: Date = Date(), calendar: Calendar = .current) throws -> (lines: [Line], total: Int) {
         let all = try context.fetch(FetchDescriptor<TaskItem>())
-        let next = ViewRules.tasks(for: .next, in: all, now: now, calendar: calendar)
-        let lines = next.prefix(limit).map { task in
+        let shown = (ViewRules.knaeuel(in: all).map { [$0] } ?? []) + ViewRules.now(in: all, now: now, calendar: calendar).all
+        let lines = shown.prefix(limit).map { task in
             let mark = ViewRules.marginMark(of: task, now: now, calendar: calendar)
             return Line(id: task.id, title: task.displayTitle, margin: mark.text, pressing: mark.pressing)
         }
-        return (Array(lines), next.count)
+        return (Array(lines), shown.count)
     }
 
     /// The line a tap on the check just completed, kept in the app group for the widget's next reload.
