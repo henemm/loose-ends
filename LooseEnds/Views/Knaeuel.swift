@@ -1,45 +1,21 @@
 import SwiftUI
 
-/// The head of the start screen (#426, #643, #644; draft C3 since #677): the date in the margin
-/// column beside the sentence of the day, then, while a task is the Knäuel, its row with the Knäuel
-/// in the margin. Rows of the start list, so the Knäuel's row takes the swipes and the menu like any
-/// row; the host wraps it. When the Knäuel gets done, its row stays for the moment (#644): the Knäuel
-/// loosens green into the knot, the row goes; Reduce Motion shows the end at once.
-struct StartHeaderRows<Row: View>: View {
+/// The head of the start screen (#426, #643; draft C3 since #677): the date in the margin column
+/// beside the sentence of the day; the knot over the date while no task is the Knäuel. The Knäuel's
+/// own row stands first under "Now" since #703 (`NowBlock`).
+struct StartHeaderRows: View {
     let tasks: [TaskItem]
     /// A tap on the date or the sentence; the iPhone ends the entry in the writing line with it (#601).
     var onTap: (() -> Void)?
     /// A tap on the Sunday sentence or its string opens "Completed" (#646).
     var openDone: (() -> Void)?
-    private let row: (TaskItem, KnaeuelHead) -> Row
-    /// The Knäuel just completed, kept for its moment.
-    @State private var leaving: Leaving?
     @Environment(\.dynamicTypeSize) private var typeSize
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
-    private struct Leaving: Equatable {
-        let task: TaskItem
-        let id = UUID()
-        static func == (a: Leaving, b: Leaving) -> Bool { a.id == b.id }
-    }
-
-    init(tasks: [TaskItem], onTap: (() -> Void)? = nil, openDone: (() -> Void)? = nil,
-         @ViewBuilder row: @escaping (TaskItem, KnaeuelHead) -> Row) {
-        self.tasks = tasks
-        self.onTap = onTap
-        self.openDone = openDone
-        self.row = row
-    }
-
-    /// How long the moment takes: 0.3 s loosening, 0.8 s into the knot (#644).
-    static var momentDuration: Duration { .milliseconds(1100) }
 
     var body: some View {
         let metrics = StartMetrics(typeSize)
-        let knaeuel = ViewRules.knaeuel(in: tasks)
         HStack(alignment: .top, spacing: 12) {
-            // The knot only while no task is the Knäuel: the Knäuel takes its place below (#180 rule 1).
-            StartDateMargin(knot: knaeuel == nil && leaving == nil)
+            // The knot only while no task is the Knäuel: the Knäuel stands for it under "Now" (#180 rule 1).
+            StartDateMargin(knot: ViewRules.knaeuel(in: tasks) == nil)
                 .frame(width: metrics.marginWidth, alignment: .trailing)
             StartHeadlineLine(tasks: tasks, openDone: openDone)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -52,31 +28,6 @@ struct StartHeaderRows<Row: View>: View {
         .listRowSeparator(.hidden)
         .startRow(metrics)
         .paperRow()
-        .onChange(of: knaeuel?.id) { old, new in
-            // Gone because it got done: the moment. Released, parked or moved: no green.
-            if new == nil, let old, let task = tasks.first(where: { $0.id == old }), task.status == .done, !reduceMotion {
-                leaving = Leaving(task: task)
-            } else {
-                leaving = nil
-            }
-        }
-        .task(id: leaving) {
-            guard leaving != nil else { return }
-            do {
-                try await Task.sleep(for: Self.momentDuration + .milliseconds(150))
-            } catch {
-                return
-            }
-            withAnimation(.easeInOut(duration: 0.3)) { leaving = nil }
-        }
-        if let knaeuel {
-            row(knaeuel, KnaeuelHead(task: knaeuel, untangling: false))
-        } else if let leaving {
-            KnaeuelHead(task: leaving.task, untangling: true)
-                .listRowSeparator(.hidden)
-                .startRow(metrics)
-                .paperRow()
-        }
     }
 }
 
@@ -87,6 +38,8 @@ struct StartHeaderRows<Row: View>: View {
 struct KnaeuelHead: View {
     let task: TaskItem
     let untangling: Bool
+    /// How long the moment takes: 0.3 s loosening, 0.8 s into the knot (#644).
+    static var momentDuration: Duration { .milliseconds(1100) }
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var loosening: CGFloat = 0
     @State private var green = false
@@ -175,7 +128,7 @@ struct StartDateMargin: View {
 }
 
 /// The one sentence of the day (#426): the fact that stands out, from 16:00 a look back. On Sunday
-/// evening and Monday morning the week's sentence (#646), with the string and the beads' titles under
+/// evening the week's sentence (#646), with the string and the beads' titles under
 /// it; a tap on the sentence or the string opens "Completed".
 struct StartHeadlineLine: View {
     let tasks: [TaskItem]

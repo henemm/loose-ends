@@ -164,15 +164,11 @@ enum ViewRules {
         nowCount(in: all, now: now, calendar: calendar)
     }
 
-    /// The number over "Now" (#637), on every platform: the rows of `now` plus the Knäuel when it is
-    /// "Due" or "Next up" (#643; Henning, 2026-10-24: the number over "Now" counts the Knäuel). The
-    /// Knäuel stands under the date, not among the rows, but it stays one of the icon's tasks.
+    /// The number over "Now" (#637), on every platform: every task "Now" shows, the Knäuel included
+    /// whatever its date (#703; Henning, 2026-10-26: the Knäuel always counts and stands as the first
+    /// row under "Now"). Nobody adds: the number is the rows.
     static func nowCount(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> Int {
-        let rows = Self.now(in: all, now: now, calendar: calendar).all.count
-        guard let knaeuel = knaeuel(in: all) else { return rows }
-        let counted = (tasks(for: .due, in: all, now: now, calendar: calendar)
-            + tasks(for: .next, in: all, now: now, calendar: calendar)).contains { $0.id == knaeuel.id }
-        return rows + (counted ? 1 : 0)
+        Self.now(in: all, now: now, calendar: calendar).count
     }
 
     /// Since when the task is open (#701): a repeating one since its last round was completed, not
@@ -187,13 +183,19 @@ enum ViewRules {
 
     /// "Now" on the start screen (#368), split by time pressure.
     struct NowTasks {
+        /// The Knäuel (#643, #703): the first row of "Now", with or without a date; it has its own row,
+        /// so it is not in `all`.
+        var knaeuel: TaskItem?
         /// Due today, deadline still ahead.
         let today: [TaskItem]
         /// Lined up, by rank, left ones with a rank among them (#637).
         let lined: [TaskItem]
         /// Left from earlier without a rank, oldest deadline first (#637).
         var waiting: [TaskItem] = []
+        /// The rows under the Knäuel.
         var all: [TaskItem] { today + lined + waiting }
+        /// Every task "Now" shows, the Knäuel first: the number over "Now" and on the icon (#637, #703).
+        var count: Int { all.count + (knaeuel == nil ? 0 : 1) }
     }
 
     /// "Now" (#368, #637): "Due today", "Next up" and what needs a new date as one list, each task once,
@@ -201,9 +203,10 @@ enum ViewRules {
     /// rank (a task left from earlier that the user lined up stands there), then what was left from
     /// earlier without a rank, oldest deadline first; it asks for a new date (#518). A task lined up and
     /// due today stands with the due ones: time pressure wins. A due time passed today makes it a left one.
-    /// The Knäuel stands under the date and not here again (#643); `nowCount` adds it back to the number.
+    /// The Knäuel leads, on its own row and never again among the others (#643, #703).
     static func now(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> NowTasks {
-        let knaeuel = knaeuel(in: all)?.id
+        let knaeuelTask = knaeuel(in: all)
+        let knaeuel = knaeuelTask?.id
         let left = leftovers(in: all, now: now, calendar: calendar).filter { $0.id != knaeuel }
         let leftIDs = Set(left.map(\.id))
         let today = dueToday(in: all, now: now, calendar: calendar).filter { !leftIDs.contains($0.id) && $0.id != knaeuel }
@@ -212,7 +215,8 @@ enum ViewRules {
         let lined = (tasks(for: .next, in: all, now: now, calendar: calendar) + left.filter { $0.nextRank != nil })
             .filter { $0.id != knaeuel && seen.insert($0.id).inserted }
         let waiting = left.filter { seen.insert($0.id).inserted }
-        return NowTasks(today: today.sorted(by: byDueThenRank), lined: lined.sorted(by: byRank), waiting: waiting)
+        return NowTasks(knaeuel: knaeuelTask, today: today.sorted(by: byDueThenRank), lined: lined.sorted(by: byRank),
+                        waiting: waiting)
     }
 
     /// Due date first, then rank (none last), then capture time (#368).
@@ -340,20 +344,14 @@ enum ViewRules {
         }
     }
 
-    /// The beads the Sunday sentence speaks of (#646): this week's from Sunday 16:00, last week's on
-    /// Monday until the first new bead; nil otherwise or without a bead.
+    /// The beads the Sunday sentence speaks of (#646): this week's, on Sunday from 16:00 only
+    /// (Henning, 2026-10-26: on Monday "This week" meant the one just over, and the sentence kept the
+    /// time-pressure ones from speaking); nil otherwise or without a bead.
     static func weekToSpeakOf(in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [Bead]? {
-        let weekday = calendar.component(.weekday, from: now)
-        if weekday == 1, calendar.component(.hour, from: now) >= StartHeadline.lookBackHour {
-            let beads = weekBeads(in: all, now: now, calendar: calendar)
-            return beads.isEmpty ? nil : beads
-        }
-        if weekday == 2, weekBeads(in: all, now: now, calendar: calendar).isEmpty,
-           let lastWeek = calendar.date(byAdding: .day, value: -1, to: week(containing: now, calendar: calendar).lowerBound) {
-            let beads = weekBeads(in: all, now: lastWeek, calendar: calendar)
-            return beads.isEmpty ? nil : beads
-        }
-        return nil
+        guard calendar.component(.weekday, from: now) == 1,
+              calendar.component(.hour, from: now) >= StartHeadline.lookBackHour else { return nil }
+        let beads = weekBeads(in: all, now: now, calendar: calendar)
+        return beads.isEmpty ? nil : beads
     }
 
     /// The place of each task in "Next up": 1, 2, 3 … in that view's order (#509). Lists show it as a

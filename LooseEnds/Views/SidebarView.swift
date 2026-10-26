@@ -131,7 +131,7 @@ struct SidebarView: View {
                         .listRowSeparator(.hidden)
                         .startRow(metrics)
                         .paperRow()
-                    NowBlock(tasks: ViewRules.now(in: tasks).all, count: nowCount) { previewRow($0) }
+                    NowBlock(tasks: tasks) { previewRow($0) } knaeuelRow: { task, head in knaeuelRow(task, head) }
                     // Same section: a second one put the list's section gap above "Contents" (#463).
                     // iPad: the sidebar marks the open list (#334); iPhone: after Back selection is nil.
                     ContentsIndex(groups: indexGroups, selected: selection, inMargin: true) { selection = $0 }
@@ -277,16 +277,16 @@ struct SidebarView: View {
 
     // MARK: - Start (iPhone)
 
-    /// The date at the knot or the Knäuel, the Knäuel's row, the sentence of the day (#426, #643), as
-    /// the first rows of the start list. A tap beside the writing line, on the date or the sentence,
-    /// ends the entry (#601).
+    /// The date at the knot and the sentence of the day (#426, #643), as the first row of the start
+    /// list; the Knäuel's row stands first under "Now" (#703). A tap beside the writing line, on the
+    /// date or the sentence, ends the entry (#601).
     @ViewBuilder
     private var headerRows: some View {
-        StartHeaderRows(tasks: tasks, onTap: { endRequest += 1 }, openDone: { selection = .system(.done) }) { task, head in knaeuelRow(task, head) }
+        StartHeaderRows(tasks: tasks, onTap: { endRequest += 1 }, openDone: { selection = .system(.done) })
     }
 
-    /// The Knäuel's head (#643, #644), date and row as one: a tap opens the task, swipe right completes
-    /// it with the Undo window, the long press holds the menu, as in "Now".
+    /// The Knäuel's row, first under "Now" (#643, #644, #703): a tap opens the task, swipe right
+    /// completes it with the Undo window, the long press holds the menu, as the other rows.
     @ViewBuilder
     private func knaeuelRow(_ task: TaskItem, _ head: KnaeuelHead) -> some View {
         let actions = taskActions

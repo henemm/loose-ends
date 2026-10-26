@@ -267,7 +267,7 @@ Perle und Glanzpunkt, `PearlGlyph`, dritte Ausnahme von #350) steht an erster St
 Woche** (`ViewRules.weekBeads`, Montag bis Sonntag unabhängig vom Gebietsschema) steht unter „Jetzt“, solange die Woche
 eine Perle hat: eine durchhängende Schnur, die Perlen von links dicht aufgereiht, keine leeren Plätze, kein Wochenziel, die
 neueste 1,1 s grün (der eine grüne Moment, ADR-14). Nichts wird gespeichert: die Schnur ist aus `completedAt` bzw. den
-`CompletionRecord`s zählender Aufgaben gerechnet. **Die Woche** (#646): ab Sonntag 16 Uhr und am Montag bis zur ersten neuen Perle sagt die Überschrift „Diese Woche: vier
+`CompletionRecord`s zählender Aufgaben gerechnet. **Die Woche** (#646): ab Sonntag 16 Uhr bis Mitternacht (nicht mehr am Montag, Henning 2026-10-26: „Diese Woche“ war dort die vorige) sagt die Überschrift „Diese Woche: vier
 Perlen.“ (`StartHeadline.week`, `ViewRules.weekToSpeakOf`), darunter die Schnur und die Titel, ein Tipp öffnet „Erledigt“; die
 Schnur unter „Jetzt“ steht derweil nicht doppelt. Ohne Perle kein Satz, kein Vergleich, kein „nur“. „Erledigt“ ist nach Wochen
 gruppiert (`ViewRules.groupedByCompletionWeek`, Montag bis Sonntag, Kopf „20. bis 26. Oktober“, aktuelle Woche „Diese Woche ·

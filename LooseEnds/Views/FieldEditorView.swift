@@ -19,6 +19,8 @@ struct FieldEditorView: View {
     /// "Other date …" and "Other time …" open their pickers in place (#482).
     @State private var showsOtherDate = false
     @State private var showsOtherTime = false
+    /// The month the calendar shows once "Other date …" opened it; nil is the due day's, else today's.
+    @State private var shownMonth: Date?
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Detail")
 
     private var automaticRevision: Revision? {
@@ -177,17 +179,10 @@ struct FieldEditorView: View {
                     }
                 }
             }
-            fortnight(calendar: calendar)
             if showsOtherDate {
-                DatePicker("Date", selection: Binding(
-                    get: { task.dueDate ?? Self.tomorrow },
-                    set: { setDue(QuickDue.move(task.dueDate, hasTime: task.dueHasTime, to: calendar.startOfDay(for: $0)),
-                                  hasTime: task.dueHasTime) }
-                ), displayedComponents: .date)
-                .datePickerStyle(.graphical)
-                .labelsHidden()
-                .accessibilityIdentifier("dueOtherDatePicker")
+                monthCalendar(calendar: calendar)
             } else {
+                fortnight(calendar: calendar)
                 Button("Other date …", systemImage: "calendar") { showsOtherDate = true }
                     .buttonStyle(.borderless)
                     .accessibilityIdentifier("dueOtherDate")
@@ -197,6 +192,48 @@ struct FieldEditorView: View {
                 Button("No date") { setDue(nil, hasTime: false); dismiss() }
                     .buttonStyle(.borderless)
                     .accessibilityIdentifier("dueNone")
+            }
+        }
+    }
+
+    /// One month, any month from this one on, in the fortnight's own hand (the system's picker shrank to
+    /// a grey grid on the Mac): the month in New York with two chevrons, then the same weekday heads and
+    /// day cells; empty places before the first day keep each date under its weekday.
+    private func monthCalendar(calendar: Calendar) -> some View {
+        let today = calendar.startOfDay(for: Date())
+        let due = task.dueDate.map { calendar.startOfDay(for: $0) }
+        let shown = shownMonth ?? due.map { max($0, today) } ?? today
+        let month = QuickDue.month(containing: shown, calendar: calendar)
+        let isFirst = calendar.isDate(shown, equalTo: today, toGranularity: .month)
+        let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: 7)
+        func step(_ by: Int) {
+            shownMonth = calendar.date(byAdding: .month, value: by, to: shown)
+        }
+        return VStack(spacing: 8) {
+            HStack {
+                Text(shown.formatted(.dateTime.month(.wide).year()))
+                    .font(.system(.title3, design: .serif))
+                    .accessibilityAddTraits(.isHeader)
+                Spacer()
+                Button { step(-1) } label: { Image(systemName: "chevron.left").frame(width: 36, height: 36) }
+                    .disabled(isFirst)
+                    .accessibilityLabel(Text("Previous month"))
+                    .accessibilityIdentifier("dueMonthBack")
+                Button { step(1) } label: { Image(systemName: "chevron.right").frame(width: 36, height: 36) }
+                    .accessibilityLabel(Text("Next month"))
+                    .accessibilityIdentifier("dueMonthForward")
+            }
+            .buttonStyle(.borderless)
+            LazyVGrid(columns: columns, spacing: 0) {
+                ForEach(Array(QuickDue.fortnight(calendar: calendar).prefix(7)), id: \.self) { day in
+                    Text(day.formatted(.dateTime.weekday(.abbreviated)).uppercased())
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                }
+            }
+            LazyVGrid(columns: columns, spacing: 4) {
+                ForEach(0..<month.blanks, id: \.self) { _ in Color.clear.frame(height: 38) }
+                fortnightDays(month.days, today: today, due: due)
             }
         }
     }
@@ -333,11 +370,6 @@ struct FieldEditorView: View {
         .buttonStyle(.plain)
         .accessibilityAddTraits(on ? .isSelected : [])
         .accessibilityIdentifier(id)
-    }
-
-    private static var tomorrow: Date {
-        let calendar = Calendar.current
-        return calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: Date())) ?? Date()
     }
 
     // MARK: - Energy (#112, #482)

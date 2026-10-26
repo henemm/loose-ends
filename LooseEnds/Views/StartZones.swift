@@ -76,29 +76,44 @@ struct ZoneCaptionText: View {
     }
 }
 
-/// What stands for now: the first five of the "Now" rule, the rest behind "N more", which unfolds
-/// in place. The unfolded state is local and not kept: once five or fewer are left it folds again,
-/// so a later sixth task never finds the block open unasked (#398). `row` builds one task's row, so
-/// the swipes, the menu and the Done window stay with the caller.
-struct NowBlock<Row: View>: View {
-    private let tasks: [TaskItem]
-    /// The number over "Now": `ViewRules.nowCount`, the rows plus the Knäuel when it counts (#637, #643).
-    private let count: Int
+/// What stands for now: the Knäuel first (#703), then the first five of the "Now" rule, the rest
+/// behind "N more", which unfolds in place. The unfolded state is local and not kept: once five or
+/// fewer are left it folds again, so a later sixth task never finds the block open unasked (#398).
+/// `row` builds one task's row and `knaeuelRow` the Knäuel's, so the swipes, the menu and the Done
+/// window stay with the caller. When the Knäuel gets done its row stays for the moment (#644): the
+/// state sits on the caption, which always stands.
+struct NowBlock<Row: View, KnaeuelRow: View>: View {
+    private let now: ViewRules.NowTasks
+    private let all: [TaskItem]
     private let row: (TaskItem) -> Row
+    private let knaeuelRow: (TaskItem, KnaeuelHead) -> KnaeuelRow
     @State private var ownExpanded = false
+    /// The Knäuel just completed, kept for its moment.
+    @State private var leaving: Leaving?
     /// The host's fold state, so the Mac's keys see the same rows (#480); the sidebar keeps its own.
     private let hostExpanded: Binding<Bool>?
     @Environment(\.dynamicTypeSize) private var typeSize
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    private struct Leaving: Equatable {
+        let task: TaskItem
+        let id = UUID()
+        static func == (a: Leaving, b: Leaving) -> Bool { a.id == b.id }
+    }
 
     static var limit: Int { 5 }
 
-    init(tasks: [TaskItem], count: Int, expanded: Binding<Bool>? = nil,
-         @ViewBuilder row: @escaping (TaskItem) -> Row) {
-        self.tasks = tasks
-        self.count = count
+    init(tasks all: [TaskItem], expanded: Binding<Bool>? = nil,
+         @ViewBuilder row: @escaping (TaskItem) -> Row,
+         @ViewBuilder knaeuelRow: @escaping (TaskItem, KnaeuelHead) -> KnaeuelRow) {
+        self.now = ViewRules.now(in: all)
+        self.all = all
         self.hostExpanded = expanded
         self.row = row
+        self.knaeuelRow = knaeuelRow
     }
+
+    private var tasks: [TaskItem] { now.all }
 
     private var expanded: Bool {
         get { hostExpanded?.wrappedValue ?? ownExpanded }
@@ -108,20 +123,48 @@ struct NowBlock<Row: View>: View {
     }
 
     var body: some View {
+        let metrics = StartMetrics(typeSize)
         // The app icon's number, the same everywhere (#637): every task it counts stands below, the
-        // Knäuel above under the date (#643).
-        ZoneCaption("Now", count: count, countID: "nowCount")
+        // Knäuel first (#703).
+        ZoneCaption("Now", count: now.count, countID: "nowCount")
             // On the caption, which always stands: the button is gone at five or fewer, the hint with rows.
             .onChange(of: tasks.count) { _, count in
                 if count <= Self.limit { expanded = false }
             }
-        if tasks.isEmpty {
-            Text("Swipe left on any task to line it up here.")
-                .font(StartMetrics(typeSize).rowMeta)
-                .foregroundStyle(.secondary)
-                .padding(.vertical, 11)
-                .startRow(StartMetrics(typeSize))
+            .onChange(of: now.knaeuel?.id) { old, new in
+                // Gone because it got done: the moment. Released, parked or moved: no green.
+                if new == nil, let old, let task = all.first(where: { $0.id == old }), task.status == .done, !reduceMotion {
+                    leaving = Leaving(task: task)
+                } else {
+                    leaving = nil
+                }
+            }
+            .task(id: leaving) {
+                guard leaving != nil else { return }
+                do {
+                    try await Task.sleep(for: KnaeuelHead.momentDuration + .milliseconds(150))
+                } catch {
+                    return
+                }
+                withAnimation(.easeInOut(duration: 0.3)) { leaving = nil }
+            }
+        if let knaeuel = now.knaeuel {
+            knaeuelRow(knaeuel, KnaeuelHead(task: knaeuel, untangling: false))
+        } else if let leaving {
+            KnaeuelHead(task: leaving.task, untangling: true)
+                .listRowSeparator(.hidden)
+                .startRow(metrics)
                 .paperRow()
+        }
+        if tasks.isEmpty {
+            if now.knaeuel == nil && leaving == nil {
+                Text("Swipe left on any task to line it up here.")
+                    .font(metrics.rowMeta)
+                    .foregroundStyle(.secondary)
+                    .padding(.vertical, 11)
+                    .startRow(metrics)
+                    .paperRow()
+            }
         } else {
             ForEach(expanded ? tasks : Array(tasks.prefix(Self.limit))) { task in
                 row(task)

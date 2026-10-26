@@ -281,8 +281,8 @@ not scope creep on the current one.
 
 - `Shared/Models` — SwiftData model, enums, `InboxDrawer` (#601: the writing line under "New"; pure: `didCapture` opens and
   orders, `close` ends the sitting, `rows(in:)` this sitting's open tasks; the view `LooseEnds/Views/InboxDrawerView.swift`
-  is one row of both start lists: this sitting's rows above the line, "New N" in accent in the line's margin (no tinted head, #677),
-  the question only while the cursor is in the line, soft 0.4 s motion, no spring), `RepeatRule` (its `anchor` holds the rhythm, a moved round does not shift it, #552),
+  is one row of both start lists: "New" in accent in the margin with "N to look over" beside it at row-title size (#693, variant B;
+  no tinted head, #677), this sitting's rows between that head and the line, the question always shown in italics, soft 0.4 s motion, no spring; on folding the rows slide up into the head and the sentence lights up once, not under reduced motion), `RepeatRule` (its `anchor` holds the rhythm, a moved round does not shift it, #552),
   `ViewRules` (pure view computation), `NewDateRule` (a deadline that passed is no deadline, #548: with a time after the
   time, without one after the day; the evening look reads a day-only date as passed after the reminder time; the trace
   "was 15:00" under the "New date" button), `DetailFields` (#538: what a task offers, five groups in one order, a section
@@ -297,9 +297,10 @@ not scope creep on the current one.
   page's string of `stringLength` = 5, #655: the beads since the last full string, counted from all beads in rounds of five;
   full = the win, the next bead starts a new string; `recentBeads(in:limit:)` the last n beads), `weekToSpeakOf(in:)` (the
   Sunday sentence's beads: this week's from Sunday 16:00, last week's on Monday until the first new bead, #646) and
-  `groupedByCompletionWeek` ("Completed" by weeks with each week's beads, the days inside); "Now" leaves the Knäuel out. Views: `LooseEnds/Views/Knaeuel.swift` (`StartHeaderRows`: the date in the margin (`StartDateMargin`, the knot over it
-  while no task is the Knäuel) beside the sentence of the day, then the Knäuel's row `KnaeuelHead` (the Knäuel in the margin
-  beside the title, plays the completion moment, #644; draft C3, #677); `KnaeuelSince`),
+  `groupedByCompletionWeek` ("Completed" by weeks with each week's beads, the days inside); "Now" leads with the Knäuel (#703, Henning 2026-10-26: it always counts, with or without a date; `NowTasks.knaeuel`, never in
+  `all`, `count` = rows + Knäuel = `nowCount`). Views: `LooseEnds/Views/Knaeuel.swift` (`StartHeaderRows`: the date in the margin (`StartDateMargin`, the knot over it
+  while no task is the Knäuel) beside the sentence of the day; the Knäuel's row `KnaeuelHead` (the Knäuel in the margin
+  beside the title, plays the completion moment, #644; draft C3, #677) stands first under "Now", built and kept for its moment by `NowBlock` in `StartZones.swift`; `KnaeuelSince`),
   `KnaeuelThread.swift` (`KnaeuelThread`: two trochoid loops from the Knäuel's tail end, no longer drawn since #677, `LooseningKnaeuel`:
   the Knäuel blended into the knot) and `Beads.swift` (`PearlGlyph`, `WeekString` with the sag and the 1.1 s green,
   `WeekStringRows` at the end of the start page without a caption (#677; iPhone under the contents): the string of five with its empty places as dots, `RewardLine` "For the beads: …" while it

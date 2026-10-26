@@ -319,7 +319,7 @@ final class MacDetailClickTests: XCTestCase {
         XCTAssertTrue(row.waitForExistence(timeout: 10), "Return should put the task into the drawer")
         XCTAssertTrue(row.label.contains("Reifen wechseln"), "The drawer row shows the sorted title, got \(row.label)")
         let head = macElement("inboxBar", in: window)
-        XCTAssertTrue(head.waitForExistence(timeout: 5), "New should stand in the line's margin")
+        XCTAssertTrue(head.waitForExistence(timeout: 5), "New and its sentence should stand above the rows")
         XCTAssertTrue(head.label.contains("1 to look over"), "New counts the task at once, got \(head.label)")
         XCTAssertTrue(hasKeyboardFocus(line), "The cursor should stay in the line after Return")
         macShot(window, "mac-gallery-601-1-schublade-offen")

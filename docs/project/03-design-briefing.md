@@ -303,6 +303,21 @@ klein in der Randspalte neben dem Titel; der lange Faden (#644) entfällt, der g
 „Jetzt“, „Inhalt“ steht in der Randspalte neben der ersten Zeile. Die Perlenschnur ist auf drei Fünftel verkleinert (Perlen
 3,6 pt, 24 pt Abstand), auch unter dem Sonntagssatz.
 
+**„Neu“ als Satz (Henning, 2026-10-26, #693, Variante B).** Das Randwort „Neu N“ allein ging auf der Seite unter, und die
+leere Schreibzeile las sich wie die Trennlinie über „Inhalt“. Entschieden aus drei Tafeln (https://claude.ai/artifact/RMJRkKtExasZtEU3Mbu9Gm):
+Im Rand steht „Neu“ in Akzent, daneben in der Titelspalte „N zum Durchsehen“ in New York in Zeilentitelgröße, in Akzent,
+mit `chevron.right`; Wort und Satz sind ein Knopf und öffnen „Neu“. Ohne Neues entfallen beide. Die Schreibzeile zeigt
+„Was soll ich aufnehmen?“ immer, kursiv und grau (hebt „erst mit dem Cursor“ aus #677 auf). Die Zeilen der Schublade stehen
+zwischen Satz und Schreibzeile. Beim Zuklappen gleiten sie nach oben in den Kopf, und der Satz leuchtet einmal kurz
+auf (Akzent 14 % hinter den Worten, gut 0,6 s; Henning, 2026-10-26), damit man sieht, wohin sie gehen; bei reduzierter
+Bewegung nur Überblenden ohne Leuchten.
+
+**Das Knäuel unter „Jetzt“ (Henning, 2026-10-26, #703).** Das Knäuel zählt immer, mit oder ohne Datum, und steht als erste
+Zeile unter „Jetzt“ (Knäuel im Rand, Titel, „Das Knäuel · Seit …“, der Moment beim Erledigen wie in #644). Zahl am Icon =
+Zahl über „Jetzt“ = Zeilen darunter; niemand rechnet (#637). Unter dem Datum steht nur noch der Satz des Tages, darunter
+„Neu“ (#693). Ohne Knäuel steht der Knoten über dem Datum wie bisher. Tafeln: https://claude.ai/artifact/RMJRkKtExasZtEU3Mbu9Gm
+(zweite Reihe).
+
 ## Mac-App (Henning, 2026-10-16, Epic #467, ersetzt #408)
 
 Entwurf mit sieben Tafeln: `docs/artifacts/feat-408-mac-entwurf/` (Dateien) und https://claude.ai/artifact/RuLo7oxphcG4oJfTJ7HeLT (Ansicht, Kommentare). Die Mac-App ist dieselbe Papierwelt wie das iPhone; es gibt keine eigene Mac-Gestaltung (ADR-1), nur Fenster, Zeiger und Tastatur.

@@ -9,7 +9,7 @@ enum StartHeadline: Equatable {
     /// A, A+: from 16:00 with something done today. Titles are the latest first, at most two;
     /// `next` is a fixed time within the next two hours.
     case doneToday(count: Int, titles: [String], next: Upcoming?)
-    /// Sunday from 16:00 and Monday until the first new bead (#646): "This week: four beads." with
+    /// Sunday from 16:00 until midnight (#646): "This week: four beads." with
     /// the string and the titles under it. Without a bead no sentence, the ladder goes on.
     case week(count: Int, titles: [String])
     /// A with the Knäuel among what got done (#644): "Today untangled: <title>." comes first; `count`
@@ -58,7 +58,7 @@ enum StartHeadline: Equatable {
             .sorted { ($0.dueDate ?? now) < ($1.dueDate ?? now) }
         let ahead = timedToday.filter { ($0.dueDate ?? now) >= now }
 
-        // The week's string speaks first on Sunday evening and Monday morning (#646).
+        // The week's string speaks first on Sunday evening (#646).
         if let beads = ViewRules.weekToSpeakOf(in: all, now: now, calendar: calendar) {
             return .week(count: beads.count, titles: beads.map { short($0.title) })
         }
