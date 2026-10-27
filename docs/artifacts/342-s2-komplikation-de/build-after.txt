@@ -1,0 +1,30 @@
+Bau-Beleg NACHHER (AC-3), ./scripts/sim.sh generate + ./scripts/sim.sh build, Stand mit LooseEndsWatchWidgets/Localizable.xcstrings.
+Commit-Basis: d9cad89 (Katalog uncommitted), Zeit: 2026-10-27T13:55:06Z
+
+Build-Ende:
+Build Succeeded
+[sim] Build erfolgreich.
+
+Paket: ~/Library/Developer/Xcode/DerivedData/LooseEnds-session-issue-145/Build/Products/Debug-watchsimulator/LooseEndsWatchWidgets.appex
+
+ls -lR:
+total 1760
+-rwxr-xr-x@ 1 hem  staff   33152 23 Okt. 12:14 __preview.dylib
+drwxr-xr-x@ 3 hem  staff      96 27 Okt. 14:54 de.lproj
+-rw-r--r--@ 1 hem  staff     877 23 Okt. 12:14 Info.plist
+-rwxr-xr-x@ 1 hem  staff   73000 26 Okt. 16:46 LooseEndsWatchWidgets
+-rwxr-xr-x@ 1 hem  staff  778592 26 Okt. 16:46 LooseEndsWatchWidgets.debug.dylib
+-rw-r--r--@ 1 hem  staff     373 23 Okt. 12:14 PrivacyInfo.xcprivacy
+
+/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-issue-145/Build/Products/Debug-watchsimulator/LooseEndsWatchWidgets.appex/de.lproj:
+total 8
+-rw-r--r--@ 1 hem  staff  127 27 Okt. 14:54 Localizable.strings
+
+plutil -p de.lproj/Localizable.strings:
+{
+  "Capture" => "Erfassen"
+  "Opens capture." => "Öffnet die Erfassung."
+}
+
+Eingebettet in der App (LooseEnds.app/Watch/LooseEndsWatch.app/PlugIns):
+/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-issue-145/Build/Products/Debug-iphonesimulator/LooseEnds.app/Watch/LooseEndsWatch.app/PlugIns/LooseEndsWatchWidgets.appex/de.lproj/Localizable.strings
