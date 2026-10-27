@@ -1,6 +1,8 @@
 # Handlauf (#705): `aktion=probe` (Standard, Schnitt 1) fragt Apples Beta-Seite der App nur lesend ab und druckt die
 # Belegtabelle je Plattform in den Lauf-Log. `aktion=einrichten` (Schnitt 2a) setzt vorher Beta-Beschreibung,
 # Feedback-E-Mail und Review-Kontakt (nur aus Secrets, das Repo ist öffentlich); die Probe danach ist der Beleg.
+# `aktion=zuordnen` (Schnitt 2b-1) legt die externe Gruppe `Tester` an (Link aus) und ordnet ihr je Plattform den
+# neuesten gültigen Build zu; keine Einreichung zum Review. Die Probe danach ist der Beleg.
 # Läuft nie automatisch.
 name: ASC Beta Probe
 
@@ -8,11 +10,12 @@ on:
   workflow_dispatch:
     inputs:
       aktion:
-        description: "probe = nur lesen, einrichten = Texte und Kontakt setzen, dann lesen"
+        description: "probe = nur lesen, einrichten = Texte und Kontakt setzen, zuordnen = Gruppe und Builds, dann lesen"
         type: choice
         options:
           - probe
           - einrichten
+          - zuordnen
         default: probe
 
 permissions:
@@ -42,10 +45,30 @@ jobs:
           printf '%s\n' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"
           ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_setup.py
 
+  assign:
+    name: Create external group Tester and assign the newest valid builds
+    # setup ist bei `zuordnen` übersprungen; ohne !cancelled() würde assign mit übersprungen
+    needs: setup
+    if: ${{ !cancelled() && inputs.aktion == 'zuordnen' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_POLL_SECONDS: "5"
+    steps:
+      - uses: actions/checkout@v7
+      - name: Create the group if missing, assign builds where missing
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT
+          umask 077
+          printf '%s\n' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"
+          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_invite.py
+
   probe:
     name: Probe Apple's beta side (${{ matrix.platform }})
-    needs: setup
-    if: ${{ !cancelled() && (needs.setup.result == 'success' || needs.setup.result == 'skipped') }}
+    needs: [setup, assign]
+    if: ${{ !cancelled() && (needs.setup.result == 'success' || needs.setup.result == 'skipped') && (needs.assign.result == 'success' || needs.assign.result == 'skipped') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:

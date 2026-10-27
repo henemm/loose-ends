@@ -34,11 +34,12 @@ def group(gid, name="Tester", internal=False):
 class FakeASC:
     """GET liest den Zustand, POST schreibt hinein; jede Anfrage wird mit Methode, Pfad und Rumpf gemerkt."""
 
-    def __init__(self, groups=(), builds=BUILDS, assigned=None, fail=None):
+    def __init__(self, groups=(), builds=BUILDS, assigned=None, fail=None, fail_get=None):
         self.groups = [json.loads(json.dumps(item)) for item in groups]
         self.builds = dict(builds)
         self.assigned = {gid: set(ids) for gid, ids in (assigned or {}).items()}
         self.fail = fail or (lambda method, path, body: None)
+        self.fail_get = fail_get or (lambda path: None)
         self.requests = []
         fake = self
 
@@ -59,7 +60,8 @@ class FakeASC:
                 body = json.loads(self.rfile.read(length)) if length else None
                 fake.requests.append((self.command, self.path, body))
                 if self.command == "GET":
-                    return self.reply(*fake.read(self.path))
+                    status = fake.fail_get(self.path)
+                    return self.reply(status, {}) if status else self.reply(*fake.read(self.path))
                 status = fake.fail(self.command, self.path, body)
                 if status:
                     return self.reply(status, {"errors": [{"status": str(status)}]})
@@ -232,6 +234,33 @@ class InviteTests(unittest.TestCase):
             self.assertNotIn(secret, output)
         for word in ("name=Tester", "plattform=", "zustand=", "extern=", "geschrieben="):
             self.assertIn(word, output)
+
+    def test_unreadable_beta_detail_keeps_the_count(self):
+        result = self.invite(self.fake(fail_get=lambda p: 404 if p.endswith("/buildBetaDetail") else None))
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        for platform in ("IOS", "MAC_OS"):
+            self.assertIn(f"zuordnung plattform={platform} zustand=gesetzt extern=unbekannt", result.stdout)
+        self.assertIn("zusammenfassung geschrieben=3", result.stdout)
+
+    def test_retry_lines_carry_no_ids(self):
+        seen = []
+        def once(path):
+            hit = path.endswith("/betaGroups") and path.startswith("/v1/builds/") and not seen
+            return seen.append(path) or 503 if hit else None
+        fake = self.fake(fail_get=once)
+        result = self.invite(fake)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertTrue(seen and "retrying" in result.stdout, result.stdout)
+        self.assertEqual(fake.assigned["G-7c41-1"], {BUILDS["IOS"]["id"], BUILDS["MAC_OS"]["id"]})
+        for secret in ("B-91f3", "G-7c41", "APP1"):
+            self.assertNotIn(secret, result.stdout + result.stderr)
+
+    def test_message_masks_query_values_only(self):
+        from asc_beta_invite import message
+        self.assertEqual(message("GET /v1/builds?filter[app]=APP1&limit=1 failed"),
+                         "GET /v1/builds?filter[app]=…&limit=… failed")
+        line = "zuordnung plattform=IOS zustand=gesetzt extern=unbekannt"
+        self.assertEqual(message(line), line)
 
 
 class WorkflowTests(unittest.TestCase):
