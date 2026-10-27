@@ -4,12 +4,12 @@ Datum: 2026-10-27 12:14
 
 ## Checkliste
 - [x] **AC-1:** `scripts/asc_beta_invite.py` legt die externe Gruppe `Tester` an, wenn sie fehlt (`isInternalGroup=false`, `feedbackEnabled=true`, `publicLinkEnabled=false`, Beziehung `app`), und ordnet je Plattform `IOS` und `MAC_OS` den Build zu. Belegt durch `test_first_run_creates_group_and_assigns_both_platforms`.
-  - am echten Apple bisher nicht bestätigt (Lauf 40516649071 scheiterte vor der Zuordnung); nur durch Nachbau belegt
+  - am echten Apple belegt: Lauf 40534641955 und 40535068594 (siehe Runde 5)
 - [x] **AC-2:** Als Build gilt je Plattform der neueste mit `processingState=VALID` und `expired=false` (`sort=-uploadedDate`, `limit=1`, Plattformfilter); ist er der Gruppe schon zugeordnet, wird nur der fehlende zugeordnet. Belegt durch `test_newest_valid_build_is_chosen_per_platform`, `test_existing_group_only_assigns_missing_build`.
-  - am echten Apple bisher nicht bestätigt (Lauf 40516649071 scheiterte vor der Zuordnung); nur durch Nachbau belegt
+  - am echten Apple belegt: Lauf 40534641955 und 40535068594 (siehe Runde 5)
 - [x] **AC-3:** Das Skript sendet nie eine Einreichung (`betaAppReviewSubmissions`), nie `publicLinkEnabled=true`, nie ein Link-Limit, nie DELETE oder PATCH; der Workflow nennt beides ebenfalls nicht. Belegt durch `test_never_submits_and_never_enables_link`, `test_workflow_file`; im echten Lauf zeigt die Probe `einreichung` leer und `link=aus` für `Tester`.
 - [x] **AC-4:** Idempotent: stimmen Gruppe und Zuordnung bei Apple schon, sendet das Skript keinen Schreibaufruf und meldet `zusammenfassung geschrieben=0`; ein zweiter Lauf nach einem ersten ändert nichts. Belegt durch `test_second_run_sends_no_write`; am echten Apple durch den zweiten Handlauf `aktion=zuordnen` mit `geschrieben=0`.
-  - am echten Apple bisher nicht bestätigt (Lauf 40516649071 scheiterte vor der Zuordnung); nur durch Nachbau belegt
+  - am echten Apple belegt: Lauf 40534641955 und 40535068594 (siehe Runde 5)
 - [x] **AC-5:** Ein Fehler bei einer Plattform verdeckt die andere nicht: die andere Plattform wird trotzdem bearbeitet, die Zusammenfassung wird gedruckt, der Lauf endet mit Exit 1 und einer Meldung mit Plattform. Belegt durch `test_one_platform_failing_does_not_hide_the_other`.
 - [x] **AC-6:** Hat eine Plattform keinen gültigen Build, meldet das Skript `kein-gültiger-build`, schreibt dafür nichts und endet nicht allein deshalb mit Fehler. Belegt durch `test_platform_without_valid_build_is_reported_not_failed`.
 - [x] **AC-7:** Antwortet Apple auf einen Schreibaufruf mit 403, endet das Skript mit Exit ≠ 0 und der Meldung „Schlüssel ohne Schreibrecht“. Belegt durch `test_forbidden_write_is_reported_clearly`.
@@ -19,8 +19,8 @@ Datum: 2026-10-27 12:14
 - [x] **AC-11:** `docs/reference/testflight.md` beschreibt den Handlauf `zuordnen` (kein Review, kein Link, umkehrbar, 403-Rückfall, spätere Builds brauchen einen neuen Lauf) und führt externe Gruppe, Zuordnung und Exportnachweis mit Beleg. Belegt durch Diff (`grep -n "zuordnen" docs/reference/testflight.md` mindestens ein Treffer).
 - [x] **AC-12:** Der Diff berührt genau die vier Dateien des Scopes, kein `project.yml`, kein App-Code, kein `testflight.yml`, keine Änderung an `asc_beta_probe.py`, `asc_wait_build.py`, `asc_what_to_test.py`, kein Pfad der Geräteliste, höchstens ±250 LoC, jede Funktion ≤ 50 Zeilen. Belegt durch `git diff --stat` im Abschlussbericht mit dem Satz „Kein Pfad der Geräteliste berührt.“
 - [x] **AC-13:** Alle Skripttests (`python3 scripts/test_*.py`) sind grün und liefen vor Skript und Workflow-Änderung rot (TDD RED). Belegt durch die Testausgabe im Abschlussbericht.
-- [ ] **AC-14:** Echter Lauf nach dem Merge: `aktion=zuordnen` auf `main`, danach zeigt die Probe desselben Laufs `gruppe name=Tester intern=nein link=aus` und je Plattform eine `build …`-Zeile, und das Skript meldet je Plattform `zustand=gesetzt` (ein zweiter Lauf `zustand=vorhanden`, `geschrieben=0`; die Probe selbst druckt keine Gruppenzuordnung); der Lauf-Link und der beobachtete Build-Zustand (`extern=…`) stehen in #705 und in der Prüfliste. Belegt durch Lauf-Link im Ticket #705 und die ausgefüllte Spalte „Beleg“. Vorher läuft kein schreibender Aufruf gegen App Store Connect und nichts auf Hennings Geräten.
-  - offen bis zum echten Lauf aktion=zuordnen
+- [x] **AC-14:** Echter Lauf nach dem Merge: `aktion=zuordnen` auf `main`, danach zeigt die Probe desselben Laufs `gruppe name=Tester intern=nein link=aus` und je Plattform eine `build …`-Zeile, und das Skript meldet je Plattform `zustand=gesetzt` (ein zweiter Lauf `zustand=vorhanden`, `geschrieben=0`; die Probe selbst druckt keine Gruppenzuordnung); der Lauf-Link und der beobachtete Build-Zustand (`extern=…`) stehen in #705 und in der Prüfliste. Belegt durch Lauf-Link im Ticket #705 und die ausgefüllte Spalte „Beleg“. Vorher läuft kein schreibender Aufruf gegen App Store Connect und nichts auf Hennings Geräten.
+  - belegt durch Läufe 40534641955 und 40535068594; offen bleibt nur der Kommentar in #705 (Aufgabe des Koordinators)
 
 ## Dialog
 
@@ -82,6 +82,19 @@ Jeder Aufruf des Skripts gegen die Apple-Doku und den echten Lauf:
 Der Nachbau kann weiterhin Pfade erlauben, die Apple ablehnt: er prüft Query-Parameter der Relationsliste nicht (Route wird vor `?` abgeschnitten, `limit` ungeprüft), kennt keine Seitenführung und akzeptiert POST auf bereits enthaltene Builds. Undokumentierte Routen antworten dort mit 404 statt 403, beides ist für das Skript ein `Fatal`, der Unterschied bleibt folgenlos. Ein Pfad, den der Nachbau erlaubt und Apple verbietet, ist nach der Durchsicht nicht mehr erkennbar; die zwei nicht gelaufenen Aufrufe sind aber nur dokumentiert, nicht erprobt.
 
 Reicht 200? Apples Obergrenze für `limit` ist 200; das Skript liest nur `data` (`get_data` in `asc_what_to_test.py:45-53`) und folgt `links.next` nicht, die Reihenfolge der Beziehungsliste ist nicht sortierbar. Eine Gruppe, die mehr als 200 Builds enthält, könnte den neuesten Build außerhalb der ersten Seite haben: dann würde er erneut per POST gesendet (Idempotenzbruch, `geschrieben≠0`). Heute enthält die Gruppe höchstens 2 Builds und wächst nur durch Handläufe, also im Moment folgenlos, aber latent (F005, LOW).
+
+**Implementierer:** (keine Antwort; beide Seiten führt der Prüfer)
+
+### Runde 5
+**Adversary:** Belege vom echten Apple selbst gelesen (`gh run view <id> --repo henemm/loose-ends --log`, nur lesend, nichts gestartet).
+- Lauf 40516649071 (vor Fix): `gruppe name=Tester zustand=angelegt`, danach `##[error]platform=IOS|MAC_OS ASC answered HTTP 403 for /v1/builds/…/betaGroups`, `zusammenfassung geschrieben=1`, Exit 1. Bestätigt den Defekt der alten Route; die Maskierung der IDs (`…`) hat im echten Log funktioniert.
+- Lauf 40534641955 (zuordnen nach #721): `gruppe name=Tester zustand=vorhanden`, `zuordnung plattform=IOS zustand=gesetzt extern=READY_FOR_BETA_SUBMISSION`, dieselbe Zeile für MAC_OS, `zusammenfassung geschrieben=2`. Probe danach je Plattform: `gruppe name=Familie intern=ja link=aus url=- feedback=an`, `gruppe name=Tester intern=nein link=aus url=- feedback=an`, `build nummer=122 plattform=IOS|MAC_OS ... extern=READY_FOR_BETA_SUBMISSION einreichung=keine`, `einreichung keine`, `antworten=19 von=19 befunde=0`. Damit sind am echten Apple belegt: AC-1 (Gruppe angelegt in 40516649071, Zuordnung je Plattform gesetzt), AC-2 (neuester gültiger Build 122 je Plattform; die positive Relationsliste und der POST laufen jetzt echt), AC-3 (`link=aus`, `einreichung keine`, kein Review ausgelöst).
+- Lauf 40535068594 (zweiter Lauf): `gruppe name=Tester zustand=vorhanden`, beide Plattformen `zustand=vorhanden`, `zusammenfassung geschrieben=0`. AC-4 am echten Apple belegt (die Relationsliste erkennt die Mitglieder).
+- Die Probe dieses Laufs meldet `befunde=1` je Plattform: `zugriff abfrage=buildBetaDetail build=118 http=404` (iOS) bzw. `build=121 http=404` (macOS), Zeile `intern=? extern=?`. Bewertung: Es betrifft nicht die zugeordneten Builds (122 lieferte in demselben Lauf `extern=READY_FOR_BETA_SUBMISSION`), die Probe ist unverändert, und im Lauf davor (40534641955) lieferten dieselben Builds 118 und 121 den Zustand ohne Befund. Es ist also ein nicht reproduzierbarer 404 von Apple auf einer älteren Build-Zeile, kein Einfluss auf Gruppe, Zuordnung oder Link. AC-14 verlangt Gruppe, je Plattform eine `build …`-Zeile und `zustand=gesetzt`/`vorhanden`, `geschrieben=0`: alles erfüllt. Nicht beanstandet; als Beobachtung zu vermerken.
+- Prüfliste `docs/reference/testflight.md:168-173` gegen die Logs: Familie `intern=ja link=aus feedback=an` (Lauf 40387004899 und 40534641955 bestätigt), Tester angelegt/`intern=nein link=aus` (40516649071, 40534641955 bestätigt), Zuordnung `gesetzt` IOS und MAC_OS, `geschrieben=2` (bestätigt) und `vorhanden`, `geschrieben=0` (40535068594 bestätigt), `einreichung keine` (bestätigt), Öffentlicher Link und Beta-Review offen (richtig, noch nicht getan). Alle Lauf-Links und Zahlen stimmen. Einzige Anmerkung: „Rückmeldeweg erledigt auf Apples Seite“ stützt sich nur auf `feedback=an` der Gruppe, nicht auf eine Rückmeldung eines Testers; für Schnitt 2b-1 vertretbar.
+- Gesamtlauf `for t in scripts/test_*.py` neu in `adversary-test-output.txt`: 27 Dateien, 27 OK, 0 FAIL.
+- F005 (LOW, Seitenbegrenzung 200) bleibt offen und ohne Folge (Gruppe enthält 2 Builds).
+- Voraussetzung: Der Kommentar in #705 mit den Lauf-Links fehlt noch; er ist Teil der Belegform von AC-14 (Ticket), nicht des Codes. Ich setze den Haken auf Grundlage der Läufe und der Prüfliste und verlange, dass der Kommentar folgt.
 
 **Implementierer:** (keine Antwort; beide Seiten führt der Prüfer)
 
@@ -219,6 +232,18 @@ Confirmation:
 
 Runde 3: F001, F002, F003 behoben und nachgestellt, AC-9 bestätigt (Code reference: scripts/asc_beta_invite.py:54). F004 (LOW) bewusst offen. AC-14: offen bis zum echten Lauf aktion=zuordnen.
 
+Confirmation:
+  AC: AC-14
+  Code reference: docs/reference/testflight.md:168
+  Evidence: Läufe 40534641955 (gesetzt, geschrieben=2, Probe link=aus, einreichung keine, befunde=0) und 40535068594 (vorhanden, geschrieben=0) gelesen; Prüfliste Zeilen 168-173 stimmt mit den Logs überein; befunde=1 im zweiten Lauf betrifft ältere Builds 118/121, nicht AC-14.
+  Status: CONFIRMED
+
+Confirmation:
+  AC: AC-4
+  Code reference: scripts/asc_beta_invite.py:91
+  Evidence: am echten Apple: zweiter Lauf geschrieben=0 (Lauf 40535068594), Relationsliste erkennt die Mitglieder.
+  Status: CONFIRMED
+
 ## Herkunft der Vorbedingungen
 
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
@@ -227,19 +252,22 @@ kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 
 ## Verdict Runde 3 (überholt durch Runde 4)
 
-## Verdict Runde 4 (vorläufig, AC-14 offen): VERIFIED-bis-auf-AC-14
+## Verdict Runde 4 (überholt durch Runde 5)
+
+## Verdict
+VERDICT: VERIFIED
 
 ## Geprüfte Dateien
 
 - sha256:8538db3ad5052dc58df0728543ae1ed09c99670513eafdf09c6230b16f3b1065  .github/workflows/asc-beta.yml
-- sha256:54d9068d6357df72d51d4f8ef4019d367d26003facbecc61fb478f69106fc8e6  docs/reference/testflight.md
+- sha256:47b46fc4c632ac888885936ebda6976b9a163e0203e3bdadc423a4e4ad4e828a  docs/reference/testflight.md
 - sha256:d9623e4af2f5888516af3f1892269825328b551ab09e2265f92b3106362a9ea4  scripts/asc_beta_invite.py
 - sha256:db75cc6a80a371ab69d76c4b80bead4537f19a0dd2d54a034b4551a2371305df  scripts/test_asc_beta_invite.py
 
 ## Prüfbasis
 
-- base: 50d06000c2e184b197c0b33c18a6fafa3da5092c
+- base: 3c691acdf80551de881128d403ba4139419ea674
 - blob:7499e6aae68b2127befd02f780ff6efd364de73a  .github/workflows/asc-beta.yml
-- blob:e8544b1599ddaa82ec5ad7b5fb10a8306eb7f1c1  docs/reference/testflight.md
+- blob:03926bf929b7f9483ff48bbf5c82a50aab79b2c6  docs/reference/testflight.md
 - blob:dbbe98ddd43d7f48d4aa76168fad443ecada144c  scripts/asc_beta_invite.py
 - blob:41d664d08831ae388806d7098faca505aa060ecf  scripts/test_asc_beta_invite.py
