@@ -1,0 +1,18 @@
+test_bad_stdin_is_silent (__main__.HookTest.test_bad_stdin_is_silent) ... ok
+test_foreign_project_is_silent (__main__.HookTest.test_foreign_project_is_silent) ... ok
+test_label_without_number_is_silent (__main__.HookTest.test_label_without_number_is_silent) ... ok
+test_no_herdr_workspace_is_silent (__main__.HookTest.test_no_herdr_workspace_is_silent) ... ok
+test_none_is_passed_on (__main__.HookTest.test_none_is_passed_on) ... ok
+test_normal_case_outputs_additional_context_with_notice (__main__.HookTest.test_normal_case_outputs_additional_context_with_notice) ... ok
+test_other_source_is_silent (__main__.HookTest.test_other_source_is_silent) ... ok
+test_script_failure_is_silent (__main__.HookTest.test_script_failure_is_silent) ... ok
+test_session_id_from_stdin_reaches_script (__main__.HookTest.test_session_id_from_stdin_reaches_script) ... ok
+test_settings_has_third_entry_and_keeps_others (__main__.HookTest.test_settings_has_third_entry_and_keeps_others) ... ok
+test_startup_source_is_served_too (__main__.HookTest.test_startup_source_is_served_too) ... ok
+test_timeout_is_silent_and_bounded (__main__.HookTest.test_timeout_is_silent_and_bounded) ... ok
+test_unknown_is_silent (__main__.HookTest.test_unknown_is_silent) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 2.784s
+
+OK
