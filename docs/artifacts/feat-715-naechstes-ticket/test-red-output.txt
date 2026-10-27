@@ -1,0 +1,171 @@
+test_all_blocked_gives_none_and_notifies (__main__.NextTicket.test_all_blocked_gives_none_and_notifies) ... FAIL
+test_api_failure_gives_unknown_exit_zero (__main__.NextTicket.test_api_failure_gives_unknown_exit_zero) ... FAIL
+test_blocked_by_is_skipped_and_named (__main__.NextTicket.test_blocked_by_is_skipped_and_named) ... FAIL
+test_claude_md_names_script_and_epic_rule (__main__.NextTicket.test_claude_md_names_script_and_epic_rule) ... FAIL
+test_epic_from_label_with_epic_number (__main__.NextTicket.test_epic_from_label_with_epic_number) ... FAIL
+test_epic_from_label_with_ticket_number (__main__.NextTicket.test_epic_from_label_with_ticket_number) ... FAIL
+test_first_line_is_machine_readable (__main__.NextTicket.test_first_line_is_machine_readable) ... FAIL
+test_in_progress_and_pr_are_skipped (__main__.NextTicket.test_in_progress_and_pr_are_skipped) ... FAIL
+test_live_session_lock_blocks_finished_lock_does_not (__main__.NextTicket.test_live_session_lock_blocks_finished_lock_does_not) ... FAIL
+test_missing_workspace_gives_none (__main__.NextTicket.test_missing_workspace_gives_none) ... FAIL
+test_no_epic_gives_none (__main__.NextTicket.test_no_epic_gives_none) ... FAIL
+test_order_priority_then_board_position (__main__.NextTicket.test_order_priority_then_board_position) ... FAIL
+test_overlap_with_live_session_branch_is_reported (__main__.NextTicket.test_overlap_with_live_session_branch_is_reported) ... FAIL
+test_overlap_with_open_pr_is_reported (__main__.NextTicket.test_overlap_with_open_pr_is_reported) ... FAIL
+test_own_lock_does_not_block (__main__.NextTicket.test_own_lock_does_not_block) ... FAIL
+
+======================================================================
+FAIL: test_all_blocked_gives_none_and_notifies (__main__.NextTicket.test_all_blocked_gives_none_and_notifies)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_next_ticket.py", line 230, in test_all_blocked_gives_none_and_notifies
+    self.assertEqual(r.returncode, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 127 != 0
+
+======================================================================
+FAIL: test_api_failure_gives_unknown_exit_zero (__main__.NextTicket.test_api_failure_gives_unknown_exit_zero)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_next_ticket.py", line 238, in test_api_failure_gives_unknown_exit_zero
+    self.assertEqual(r.returncode, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 127 != 0
+
+======================================================================
+FAIL: test_blocked_by_is_skipped_and_named (__main__.NextTicket.test_blocked_by_is_skipped_and_named)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_next_ticket.py", line 197, in test_blocked_by_is_skipped_and_named
+    self.assertEqual(self.first_line(r), "NEXT=#176", r.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '' != 'NEXT=#176'
++ NEXT=#176
+ : 
+
+======================================================================
+FAIL: test_claude_md_names_script_and_epic_rule (__main__.NextTicket.test_claude_md_names_script_and_epic_rule)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_next_ticket.py", line 258, in test_claude_md_names_script_and_epic_rule
+    self.assertIn("scripts/next-ticket.sh", process)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'scripts/next-ticket.sh' not found in '\n\nPlugin `henemm/agent-os-openspec`. Fast-track for scaffolding, standard workflow with the 250-LoC limit after that.\nIt lives in Henning\'s own marketplace, not the official one, so register that first:\n\n```bash\nclaude plugin marketplace add henemm/agent-os-openspec@main\nclaude plugin install agent-os-openspec\n```\nUnit tests for enrichment, view rules, repeat rules and revisions come first; UI tests only after the design freeze, and only as smoke tests.\n\n**GitHub Issues is the one and only backlog.** Every open task — feature, bug, spike — is a GitHub\nissue with its own Definition of Done, not a bullet in a markdown file. **The priority order lives in\nthe milestones** (M1 Alltag stabil → M2 Orte und Mail-Rücksprung → M3 Bereit für externe Tester → M4 Nach der\nersten Einladung; the order inside each is in the milestone description), not in a document. M2 was „Siri und Orte“\nuntil 2026-10-19: after #25 (Siri via the Reminders schema) was rolled back on 2026-10-17, the Siri epic #369 moved\nto M4 and Siri stays on the App Shortcut „Aufgabe erfassen“.\n**The GitHub Project "loose ends" (henemm, project 1) is the Kanban view of those issues** (Henning, 2026-10-12):\nStatus (Backlog → Ready → In progress → In review → Done), Priority (P0–P2) and Size (XS–XL) live there.\nPriority follows the milestone (M1 = P0, M2 and M3 = P1, M4 = P2; without milestone by content). Claude keeps the board\ncurrent without being asked: a new issue goes onto the board with Priority and Size, In progress when work starts\n(`/00-intake`), In review when the PR opens, Done on merge. Commands: `gh project item-edit` (field and option ids from\n`gh project field-list 1 --owner henemm --format json`); the token needs the `project` scope. A cloud session cannot reach\nthe board directly; it dispatches `.github/workflows/board.yml` (`list`, `set`) and reads the result as an annotation\n(`docs/reference/board.md`, #385).\nHenning orders cards by dragging (view without sort): `gh project item-list` returns the manual order, top = most\nrelevant. Pick the next ticket by Priority first, then by that order; his drag beats the milestone order inside a\npriority (2026-10-12: #355 moved to the top). Raw notes from him (no body yet) get Priority and Size at `/00-intake`.\n`docs/project/04-stand.md`\nis dissolved (2026-10-12): never recreate a status or priority file, and never resurrect a status column in\n`docs/project/01-user-story.md` (it\'s a one-time snapshot from the briefing, not maintained). The first\ninvitation of external testers waits for everything in the user story, places included\n(Henning, 2026-10-12; the Siri schema left that list with #369 → M4, 2026-10-19). Opening a PR for an issue: reference it (`Closes #N`) so it auto-closes on\nmerge; if it doesn\'t auto-close, close it by hand. New work discovered mid-task becomes a new issue,\nnot scope creep on the current one.\n'
+
+======================================================================
+FAIL: test_epic_from_label_with_epic_number (__main__.NextTicket.test_epic_from_label_with_epic_number)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_next_ticket.py", line 147, in test_epic_from_label_with_epic_number
+    self.assertEqual(r.returncode, 0, r.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 127 != 0 : bash: /Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/next-ticket.sh: No such file or directory
+
+
+======================================================================
+FAIL: test_epic_from_label_with_ticket_number (__main__.NextTicket.test_epic_from_label_with_ticket_number)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_next_ticket.py", line 153, in test_epic_from_label_with_ticket_number
+    self.assertEqual(self.first_line(r), "NEXT=#342", r.stdout + r.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '' != 'NEXT=#342'
++ NEXT=#342
+ : bash: /Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/next-ticket.sh: No such file or directory
+
+
+======================================================================
+FAIL: test_first_line_is_machine_readable (__main__.NextTicket.test_first_line_is_machine_readable)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_next_ticket.py", line 252, in test_first_line_is_machine_readable
+    self.assertRegex(self.first_line(r), pattern)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Regex didn't match: '^NEXT=(#[0-9]+|none|unknown)$' not found in ''
+
+======================================================================
+FAIL: test_in_progress_and_pr_are_skipped (__main__.NextTicket.test_in_progress_and_pr_are_skipped)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_next_ticket.py", line 172, in test_in_progress_and_pr_are_skipped
+    self.assertEqual(self.first_line(r), "NEXT=#40", r.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '' != 'NEXT=#40'
++ NEXT=#40
+ : 
+
+======================================================================
+FAIL: test_live_session_lock_blocks_finished_lock_does_not (__main__.NextTicket.test_live_session_lock_blocks_finished_lock_does_not)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_next_ticket.py", line 184, in test_live_session_lock_blocks_finished_lock_does_not
+    self.assertEqual(self.first_line(r), "NEXT=#176", r.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '' != 'NEXT=#176'
++ NEXT=#176
+ : 
+
+======================================================================
+FAIL: test_missing_workspace_gives_none (__main__.NextTicket.test_missing_workspace_gives_none)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_next_ticket.py", line 244, in test_missing_workspace_gives_none
+    self.assertEqual(r.returncode, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 127 != 0
+
+======================================================================
+FAIL: test_no_epic_gives_none (__main__.NextTicket.test_no_epic_gives_none)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_next_ticket.py", line 158, in test_no_epic_gives_none
+    self.assertEqual(r.returncode, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 127 != 0
+
+======================================================================
+FAIL: test_order_priority_then_board_position (__main__.NextTicket.test_order_priority_then_board_position)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_next_ticket.py", line 204, in test_order_priority_then_board_position
+    self.assertEqual(self.first_line(self.run_script(fx)), "NEXT=#40")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '' != 'NEXT=#40'
++ NEXT=#40
+
+
+======================================================================
+FAIL: test_overlap_with_live_session_branch_is_reported (__main__.NextTicket.test_overlap_with_live_session_branch_is_reported)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_next_ticket.py", line 223, in test_overlap_with_live_session_branch_is_reported
+    self.assertIn("cloudkit/schema.ckdb", r.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'cloudkit/schema.ckdb' not found in ''
+
+======================================================================
+FAIL: test_overlap_with_open_pr_is_reported (__main__.NextTicket.test_overlap_with_open_pr_is_reported)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_next_ticket.py", line 215, in test_overlap_with_open_pr_is_reported
+    self.assertEqual(self.first_line(r), "NEXT=#342", r.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '' != 'NEXT=#342'
++ NEXT=#342
+ : 
+
+======================================================================
+FAIL: test_own_lock_does_not_block (__main__.NextTicket.test_own_lock_does_not_block)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_next_ticket.py", line 190, in test_own_lock_does_not_block
+    self.assertEqual(self.first_line(r), "NEXT=#342", r.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '' != 'NEXT=#342'
++ NEXT=#342
+ : 
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.055s
+
+FAILED (failures=15)
