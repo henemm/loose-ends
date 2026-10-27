@@ -1,0 +1,125 @@
+FFEFFFFFFFFF
+======================================================================
+ERROR: test_description_file_is_sent_verbatim (__main__.SetupTests.test_description_file_is_sent_verbatim)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_setup.py", line 224, in test_description_file_is_sent_verbatim
+    text = DESCRIPTION_FILE.read_text().strip()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 986, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 970, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/docs/reference/beta-beschreibung.md'
+
+======================================================================
+FAIL: test_ambiguous_or_missing_state_aborts (__main__.SetupTests.test_ambiguous_or_missing_state_aborts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_setup.py", line 219, in test_ambiguous_or_missing_state_aborts
+    self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/asc_beta_setup.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_creates_missing_localization_and_patches_review_detail (__main__.SetupTests.test_creates_missing_localization_and_patches_review_detail)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_setup.py", line 135, in test_creates_missing_localization_and_patches_review_detail
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/asc_beta_setup.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_forbidden_write_is_reported_clearly (__main__.SetupTests.test_forbidden_write_is_reported_clearly)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_setup.py", line 205, in test_forbidden_write_is_reported_clearly
+    self.assertIn("Schlüssel ohne Schreibrecht", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'Schlüssel ohne Schreibrecht' not found in ''
+
+======================================================================
+FAIL: test_missing_secret_aborts_before_any_write (__main__.SetupTests.test_missing_secret_aborts_before_any_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_setup.py", line 189, in test_missing_secret_aborts_before_any_write
+    self.assertEqual(result.returncode, 1, name)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1 : ASC_REVIEW_FIRST_NAME
+
+======================================================================
+FAIL: test_output_has_no_values_and_no_key (__main__.SetupTests.test_output_has_no_values_and_no_key)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_setup.py", line 209, in test_output_has_no_values_and_no_key
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/asc_beta_setup.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_patches_existing_localization_only_where_different (__main__.SetupTests.test_patches_existing_localization_only_where_different)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_setup.py", line 153, in test_patches_existing_localization_only_where_different
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/asc_beta_setup.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_phone_without_plus_aborts_before_any_write (__main__.SetupTests.test_phone_without_plus_aborts_before_any_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_setup.py", line 197, in test_phone_without_plus_aborts_before_any_write
+    self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/asc_beta_setup.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_privacy_url_only_when_given (__main__.SetupTests.test_privacy_url_only_when_given)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_setup.py", line 176, in test_privacy_url_only_when_given
+    self.assertEqual(self.run_setup(fake).returncode, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0
+
+======================================================================
+FAIL: test_second_run_sends_no_write (__main__.SetupTests.test_second_run_sends_no_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_setup.py", line 159, in test_second_run_sends_no_write
+    self.assertEqual(self.run_setup(fake).returncode, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0
+
+======================================================================
+FAIL: test_unchanged_state_writes_nothing (__main__.SetupTests.test_unchanged_state_writes_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_setup.py", line 170, in test_unchanged_state_writes_nothing
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/asc_beta_setup.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_workflow_file (__main__.WorkflowTests.test_workflow_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_setup.py", line 244, in test_workflow_file
+    self.assertIn(needle, workflow)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+AssertionError: 'aktion:' not found in '# Handlauf (#705 Schnitt 1): fragt Apples Beta-Seite der App nur lesend ab und druckt die Belegtabelle\n# je Plattform in den Lauf-Log. Schreibt nichts in App Store Connect; läuft nie automatisch.\nname: ASC Beta Probe\n\non:\n  workflow_dispatch:\n\npermissions:\n  contents: read\n\njobs:\n  probe:\n    name: Probe Apple\'s beta side (${{ matrix.platform }})\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    strategy:\n      fail-fast: false\n      matrix:\n        platform: [IOS, MAC_OS]\n    env:\n      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}\n      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}\n      ASC_PLATFORM: ${{ matrix.platform }}\n      ASC_POLL_SECONDS: "5"\n    steps:\n      - uses: actions/checkout@v7\n      - name: Read groups, localizations, review detail, builds and submissions\n        run: |\n          trap \'rm -f "$RUNNER_TEMP/asc_key.p8"\' EXIT\n          umask 077\n          printf \'%s\\n\' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"\n          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_probe.py\n'
+
+----------------------------------------------------------------------
+Ran 12 tests in 5.896s
+
+FAILED (failures=11, errors=1)
