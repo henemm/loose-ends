@@ -375,7 +375,8 @@ enum ViewRules {
         let topLevel = all.filter { $0.parent == nil }
         // What a subtask carries of its own is the entry to these views (#565, Henning 2026-10-27: lined
         // up as next, it did not stand in "Now"): a rank, a duration, a repeat, a park. Only the views
-        // that ask for nothing of the task itself (New, Old, Done, Waiting) stay top level.
+        // that ask for nothing of the task itself (New, Old, Waiting) stay top level. Done lists a checked line
+        // that carried something of its own: it stood in a list before, so it stands in "Done" after.
         switch kind {
         case .next:
             return all.filter { $0.isOpen && $0.nextRank != nil && !$0.isBlocked }
@@ -414,7 +415,7 @@ enum ViewRules {
             return all.filter { listedByDate($0) && $0.status != .done && $0.status != .removed }
                 .sorted(by: byPressureThenWeight(now: now, calendar: calendar))
         case .done:
-            return topLevel.filter { $0.status == .done }
+            return all.filter { $0.status == .done && ($0.parent == nil || Subtasks.carriesOwn($0)) }
                 .sorted { ($0.completedAt ?? .distantPast) > ($1.completedAt ?? .distantPast) }
         case .context, .project:
             return [] // resolved by the caller with the concrete context or project

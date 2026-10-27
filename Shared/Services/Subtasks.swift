@@ -76,6 +76,11 @@ enum Subtasks {
         return traits
     }
 
+    /// Something of its own: a date, a tag, a place, a duration or a note. A bare line is only a step of its task.
+    static func carriesOwn(_ subtask: TaskItem) -> Bool {
+        subtask.dueDate != nil || !traits(of: subtask).isEmpty
+    }
+
     /// Checks a line off, or reopens it.
     static func toggle(_ subtask: TaskItem, now: Date = Date()) {
         if subtask.status == .done {

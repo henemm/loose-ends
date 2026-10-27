@@ -173,9 +173,10 @@ extension TaskItem {
         return #Predicate { $0.statusRaw != removed }
     }
 
-    /// Blocked means at least one blocker is still open.
+    /// Blocked means at least one blocker is still open. A subtask waits as long as its task does
+    /// (Henning, 2026-10-27): the lines of a task that waits on someone do not stand in the day's lists.
     var isBlocked: Bool {
-        (blockedBy ?? []).contains { $0.isOpen }
+        (blockedBy ?? []).contains { $0.isOpen } || (parent?.isBlocked ?? false)
     }
 
     /// Unseen revisions by the model or a rule drive the marker in the list (Variante C, #101).
