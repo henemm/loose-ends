@@ -27,9 +27,9 @@ def plan_group(groups):
     return ("vorhanden", mine[0]) if mine else ("anlegen",)
 
 
-def plan_assignment(build_id, build_groups, group_id):
-    """build_groups: Gruppen, in denen der Build liegt. Plan: None oder ("POST", Pfad, Rumpf)."""
-    if any(g.get("id") == group_id for g in build_groups):
+def plan_assignment(build_id, assigned_ids, group_id):
+    """assigned_ids: IDs der Builds, die schon in der Gruppe liegen. Plan: None oder ("POST", Pfad, Rumpf)."""
+    if build_id in assigned_ids:
         return None
     return ("POST", f"/v1/betaGroups/{group_id}/relationships/builds", {"data": [{"type": "builds", "id": build_id}]})
 
@@ -88,7 +88,9 @@ def assign_platform(config, app_id, group_id, platform):
     if not found:
         return 0, f"zuordnung plattform={platform} zustand=kein-gültiger-build"
     build_id = found[0]["id"]
-    plan = plan_assignment(build_id, get_data(config, f"/v1/builds/{build_id}/betaGroups"), group_id)
+    # Apple kennt kein GET /v1/builds/{id}/betaGroups (403), nur die Build-Liste der Gruppe (Lauf 40516649071)
+    members = get_data(config, f"/v1/betaGroups/{group_id}/relationships/builds?limit=200")
+    plan = plan_assignment(build_id, {m.get("id") for m in members}, group_id)
     written = apply_plan(config, plan)
     try:
         detail = (get_json(config, f"/v1/builds/{build_id}/buildBetaDetail") or {}).get("data") or {}

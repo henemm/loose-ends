@@ -84,9 +84,14 @@ class FakeASC:
             platform = params.pop("filter[preReleaseVersion.platform]", [""])[0]
             hit = self.builds.get(platform) if params == WANTED_QUERY else None
             return 200, {"data": [{"id": hit["id"], "attributes": {"version": hit["version"]}}] if hit else []}
+        for g in self.groups:
+            if route == f"/v1/betaGroups/{g['id']}/relationships/builds":
+                ids = sorted(self.assigned.get(g["id"], ()))
+                return 200, {"data": [{"type": "builds", "id": i} for i in ids]}
         for build in self.builds.values():
             if route == f"/v1/builds/{build['id']}/betaGroups":
-                return 200, {"data": [g for g in self.groups if build["id"] in self.assigned.get(g["id"], ())]}
+                # wie Apple: für builds→betaGroups gibt es kein GET (nur POST/DELETE auf relationships)
+                return 403, {"errors": [{"status": "403", "code": "FORBIDDEN_ERROR"}]}
             if route == f"/v1/builds/{build['id']}/buildBetaDetail":
                 return 200, {"data": {"id": "BD", "attributes": {"externalBuildState": "READY_FOR_BETA_SUBMISSION"}}}
         return 404, {}
@@ -245,7 +250,7 @@ class InviteTests(unittest.TestCase):
     def test_retry_lines_carry_no_ids(self):
         seen = []
         def once(path):
-            hit = path.endswith("/betaGroups") and path.startswith("/v1/builds/") and not seen
+            hit = path.partition("?")[0] == "/v1/betaGroups/G-7c41-1/relationships/builds" and not seen
             return seen.append(path) or 503 if hit else None
         fake = self.fake(fail_get=once)
         result = self.invite(fake)

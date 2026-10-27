@@ -3,31 +3,31 @@ Ran 11 tests in 0.002s
 
 OK
 == scripts/test_app_icon_package.py
-Ran 9 tests in 0.010s
+Ran 9 tests in 0.009s
 
 OK
 == scripts/test_asc_beta_invite.py
-Ran 14 tests in 9.198s
+Ran 14 tests in 9.225s
 
 OK
 == scripts/test_asc_beta_probe.py
-Ran 13 tests in 8.061s
+Ran 13 tests in 8.153s
 
 OK
 == scripts/test_asc_beta_setup.py
-Ran 12 tests in 9.101s
+Ran 12 tests in 9.156s
 
 OK
 == scripts/test_asc_cleanup_certs.py
-Ran 19 tests in 13.180s
+Ran 19 tests in 13.177s
 
 OK
 == scripts/test_asc_wait_build.py
-Ran 21 tests in 17.611s
+Ran 21 tests in 17.945s
 
 OK
 == scripts/test_asc_what_to_test.py
-Ran 6 tests in 1.946s
+Ran 6 tests in 2.003s
 
 OK
 == scripts/test_board.py
@@ -35,23 +35,23 @@ OK
 ::error title=board::Usage: board.py list | board.py set <issue> <Field=Value,...>
 ::error title=board::Usage: board.py list | board.py set <issue> <Field=Value,...>
 == scripts/test_check_cloudkit_production.py
-Ran 14 tests in 0.016s
+Ran 14 tests in 0.008s
 
 OK
 == scripts/test_ci_xcode27.py
-Ran 27 tests in 1.821s
+Ran 27 tests in 1.784s
 
 OK
 == scripts/test_cloudkit_schema.py
-Ran 2 tests in 0.006s
+Ran 2 tests in 0.002s
 
 OK
 == scripts/test_compare_reports.py
-Ran 13 tests in 0.162s
+Ran 13 tests in 0.156s
 
 OK
 == scripts/test_entitlements_sync.py
-Ran 4 tests in 0.025s
+Ran 4 tests in 0.018s
 
 OK
 == scripts/test_evidence_config.py
@@ -63,19 +63,23 @@ Ran 4 tests in 0.013s
 
 OK
 == scripts/test_infoplist_languages.py
-Ran 6 tests in 0.049s
+Ran 6 tests in 0.051s
 
 OK
 == scripts/test_latency_summary.py
-Ran 9 tests in 0.137s
+Ran 9 tests in 0.173s
 
 OK
 == scripts/test_mac_ci_entitlements.py
-Ran 5 tests in 0.087s
+Ran 5 tests in 0.109s
 
 OK
 == scripts/test_measurement_status.py
-Ran 19 tests in 0.191s
+Ran 19 tests in 0.048s
+
+OK
+== scripts/test_next_ticket.py
+Ran 23 tests in 27.045s
 
 OK
 == scripts/test_real_model_result.py
@@ -83,22 +87,22 @@ Ran 7 tests in 0.000s
 
 OK
 == scripts/test_sim_lock.py
-Ran 32 tests in 47.838s
+Ran 32 tests in 49.064s
 
 OK
 == scripts/test_sim_proof.py
-Ran 14 tests in 0.724s
+Ran 14 tests in 1.498s
 
 OK
 == scripts/test_sim_run_xcodebuild.py
-Ran 17 tests in 63.403s
+Ran 17 tests in 62.587s
 
 OK
 == scripts/test_siri_phrases.py
-Ran 6 tests in 0.049s
+Ran 6 tests in 0.098s
 
 OK
 == scripts/test_tags_wording.py
-Ran 2 tests in 0.003s
+Ran 2 tests in 0.044s
 
 OK
