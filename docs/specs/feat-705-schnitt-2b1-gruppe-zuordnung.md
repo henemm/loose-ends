@@ -96,8 +96,9 @@ Kopie der Konfiguration, in der `platform` gesetzt ist). Konstanten: `GROUP_NAME
    a. Neuesten gültigen Build suchen: `GET /v1/builds?filter[app]=APP&filter[processingState]=VALID&filter[expired]=false&sort=-uploadedDate&limit=1`
       plus `platform_filter`. Kein Treffer: Zustandswort `zuordnung plattform=P zustand=kein-gültiger-build`, kein Schreiben,
       **kein Fehler** (eine Plattform ohne gültigen Build ist ein Befund, kein Abbruch); der Lauf geht zur nächsten Plattform.
-   b. `GET /v1/builds/ID/betaGroups`. `plan_assignment(build_id, build_groups, group_id)` (rein): nennt die Liste die Gruppe
-      schon, ist der Plan leer; sonst `POST /v1/betaGroups/GROUP/relationships/builds` mit `{"data":[{"type":"builds","id":ID}]}`.
+   b. `GET /v1/betaGroups/GROUP/relationships/builds?limit=200` (Build-IDs der Gruppe; `GET /v1/builds/ID/betaGroups` gibt
+      es bei Apple nicht, Antwort 403). `plan_assignment(build_id, assigned_ids, group_id)` (rein): liegt der Build schon in
+      der Gruppe, ist der Plan leer; ein Lesefehler gilt als Fehler dieser Plattform (Schritt 5); sonst `POST /v1/betaGroups/GROUP/relationships/builds` mit `{"data":[{"type":"builds","id":ID}]}`.
       Wurde die Gruppe in diesem Lauf eben angelegt, ist die Liste leer und die Zuordnung folgt.
    c. Nach der Zuordnung `GET /v1/builds/ID/buildBetaDetail` und das Zustandswort `externalBuildState` ausgeben.
 5. **Fehler einer Plattform verdeckt die andere nicht:** ein `Fatal` in Schritt 4 wird mit Plattform gemeldet
@@ -249,3 +250,4 @@ Abnahmestufe: Skripttests plus echter CI-Lauf, kein Simulator- oder Geräteschri
 ## Changelog
 
 - 2026-10-27: Initial spec created
+- 2026-10-27: Zuordnung über GET /v1/betaGroups/{id}/relationships/builds, weil Apple GET /v1/builds/{id}/betaGroups mit 403 ablehnt (Lauf 40516649071, Apple-Doku Builds/Beta Groups)

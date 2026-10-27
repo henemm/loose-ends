@@ -4,9 +4,12 @@ Datum: 2026-10-27 12:14
 
 ## Checkliste
 - [x] **AC-1:** `scripts/asc_beta_invite.py` legt die externe Gruppe `Tester` an, wenn sie fehlt (`isInternalGroup=false`, `feedbackEnabled=true`, `publicLinkEnabled=false`, Beziehung `app`), und ordnet je Plattform `IOS` und `MAC_OS` den Build zu. Belegt durch `test_first_run_creates_group_and_assigns_both_platforms`.
+  - am echten Apple bisher nicht bestätigt (Lauf 40516649071 scheiterte vor der Zuordnung); nur durch Nachbau belegt
 - [x] **AC-2:** Als Build gilt je Plattform der neueste mit `processingState=VALID` und `expired=false` (`sort=-uploadedDate`, `limit=1`, Plattformfilter); ist er der Gruppe schon zugeordnet, wird nur der fehlende zugeordnet. Belegt durch `test_newest_valid_build_is_chosen_per_platform`, `test_existing_group_only_assigns_missing_build`.
+  - am echten Apple bisher nicht bestätigt (Lauf 40516649071 scheiterte vor der Zuordnung); nur durch Nachbau belegt
 - [x] **AC-3:** Das Skript sendet nie eine Einreichung (`betaAppReviewSubmissions`), nie `publicLinkEnabled=true`, nie ein Link-Limit, nie DELETE oder PATCH; der Workflow nennt beides ebenfalls nicht. Belegt durch `test_never_submits_and_never_enables_link`, `test_workflow_file`; im echten Lauf zeigt die Probe `einreichung` leer und `link=aus` für `Tester`.
 - [x] **AC-4:** Idempotent: stimmen Gruppe und Zuordnung bei Apple schon, sendet das Skript keinen Schreibaufruf und meldet `zusammenfassung geschrieben=0`; ein zweiter Lauf nach einem ersten ändert nichts. Belegt durch `test_second_run_sends_no_write`; am echten Apple durch den zweiten Handlauf `aktion=zuordnen` mit `geschrieben=0`.
+  - am echten Apple bisher nicht bestätigt (Lauf 40516649071 scheiterte vor der Zuordnung); nur durch Nachbau belegt
 - [x] **AC-5:** Ein Fehler bei einer Plattform verdeckt die andere nicht: die andere Plattform wird trotzdem bearbeitet, die Zusammenfassung wird gedruckt, der Lauf endet mit Exit 1 und einer Meldung mit Plattform. Belegt durch `test_one_platform_failing_does_not_hide_the_other`.
 - [x] **AC-6:** Hat eine Plattform keinen gültigen Build, meldet das Skript `kein-gültiger-build`, schreibt dafür nichts und endet nicht allein deshalb mit Fehler. Belegt durch `test_platform_without_valid_build_is_reported_not_failed`.
 - [x] **AC-7:** Antwortet Apple auf einen Schreibaufruf mit 403, endet das Skript mit Exit ≠ 0 und der Meldung „Schlüssel ohne Schreibrecht“. Belegt durch `test_forbidden_write_is_reported_clearly`.
@@ -65,6 +68,23 @@ Randfälle, selbst nachgestellt (Wegwerf-Skript im Scratchpad, Nachbau `FakeASC`
 
 **Implementierer:** (keine Antwort; beide Seiten führt der Prüfer)
 
+### Runde 4
+**Adversary:** Anlass: Lauf 40516649071 (aktion=zuordnen nach PR #720) endete mit `HTTP 403` auf `GET /v1/builds/…/betaGroups`, `geschrieben=1`, Exit 1; der Nachbau hatte die undokumentierte Route erlaubt. Fix geprüft: `scripts/asc_beta_invite.py:90-92` liest die Mitglieder jetzt über `GET /v1/betaGroups/{gid}/relationships/builds?limit=200` (dokumentiert), `plan_assignment` (`:28-33`) vergleicht Build-ID gegen die ID-Menge. `scripts/test_asc_beta_invite.py:92-95` antwortet auf die alte Route jetzt mit 403, `:88-90` kennt die neue. `test_asc_beta_invite.py` Ran 14 OK; RED-Beleg `test-red-403-output.txt` endet mit `failures=10, errors=1`, GREEN-Beleg vorhanden.
+
+Jeder Aufruf des Skripts gegen die Apple-Doku und den echten Lauf:
+- `GET /v1/apps?filter[bundleId]` (`asc_wait_build.py:93`): dokumentiert, im echten Lauf erfolgreich (App gefunden).
+- `GET /v1/apps/{id}/betaGroups` (`asc_beta_invite.py:69`): dokumentiert; im echten Lauf erfolgreich (`zustand=angelegt` setzt die erneute Lesung voraus).
+- `POST /v1/betaGroups` (`:76`): dokumentiert; im echten Lauf erfolgreich (`geschrieben=1`, Gruppe angelegt). AC-1 Gruppenteil damit am echten Apple belegt.
+- `GET /v1/builds?filter[app]&filter[processingState]&filter[expired]&sort=-uploadedDate&limit=1&filter[preReleaseVersion.platform]` (`:87`): dokumentiert; im echten Lauf beide Plattformen bis zum nächsten Schritt durchgelaufen, also akzeptiert.
+- `GET /v1/betaGroups/{gid}/relationships/builds?limit=200` (`:91`): dokumentiert (Beziehungsliste), im echten Lauf NOCH NICHT gelaufen.
+- `POST /v1/betaGroups/{gid}/relationships/builds` (`:34`): dokumentiert, NOCH NICHT gelaufen; mögliche Ablehnung (409/422 für nicht zuordenbare Builds) bleibt offen.
+- `GET /v1/builds/{id}/buildBetaDetail` (`:94`): dokumentiert und von `asc_beta_probe.py:136` im echten Lauf benutzt; ein Fehler wird abgefangen.
+Der Nachbau kann weiterhin Pfade erlauben, die Apple ablehnt: er prüft Query-Parameter der Relationsliste nicht (Route wird vor `?` abgeschnitten, `limit` ungeprüft), kennt keine Seitenführung und akzeptiert POST auf bereits enthaltene Builds. Undokumentierte Routen antworten dort mit 404 statt 403, beides ist für das Skript ein `Fatal`, der Unterschied bleibt folgenlos. Ein Pfad, den der Nachbau erlaubt und Apple verbietet, ist nach der Durchsicht nicht mehr erkennbar; die zwei nicht gelaufenen Aufrufe sind aber nur dokumentiert, nicht erprobt.
+
+Reicht 200? Apples Obergrenze für `limit` ist 200; das Skript liest nur `data` (`get_data` in `asc_what_to_test.py:45-53`) und folgt `links.next` nicht, die Reihenfolge der Beziehungsliste ist nicht sortierbar. Eine Gruppe, die mehr als 200 Builds enthält, könnte den neuesten Build außerhalb der ersten Seite haben: dann würde er erneut per POST gesendet (Idempotenzbruch, `geschrieben≠0`). Heute enthält die Gruppe höchstens 2 Builds und wächst nur durch Handläufe, also im Moment folgenlos, aber latent (F005, LOW).
+
+**Implementierer:** (keine Antwort; beide Seiten führt der Prüfer)
+
 ## Befunde
 
 Finding:
@@ -106,6 +126,16 @@ Finding:
   Spec requirement: AC-8 (Doppel führt zum Abbruch)
   Conflict: der Folgelauf bricht ab statt zu heilen; kein Datenverlust, händisches Löschen nötig.
   Remediation: vor jeder Wiederholung die Gruppenliste neu lesen, oder dokumentieren.
+
+Finding:
+  ID: F005
+  Severity: LOW
+  Category: edge_case
+  Code reference: scripts/asc_beta_invite.py:91
+  Description: Die Mitgliederliste der Gruppe wird mit `limit=200` einmal gelesen; `links.next` wird nicht verfolgt, der Nachbau kennt weder Limit noch Seiten.
+  Spec requirement: AC-4 — Idempotenz
+  Conflict: bei über 200 Builds in der Gruppe könnte der neueste fehlen und erneut gesendet werden. Aktuell höchstens 2 Builds, daher ohne Folge.
+  Remediation: `links.next` folgen oder `meta.paging.total` gegen die gelesene Zahl prüfen und bei Abweichung abbrechen.
 
 ## Bestätigungen
 
@@ -195,19 +225,21 @@ kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 
 ## Verdict Runde 2 (überholt durch Runde 3)
 
-## Verdict Runde 3 (vorläufig, AC-14 offen): VERIFIED-bis-auf-AC-14
+## Verdict Runde 3 (überholt durch Runde 4)
+
+## Verdict Runde 4 (vorläufig, AC-14 offen): VERIFIED-bis-auf-AC-14
 
 ## Geprüfte Dateien
 
 - sha256:8538db3ad5052dc58df0728543ae1ed09c99670513eafdf09c6230b16f3b1065  .github/workflows/asc-beta.yml
 - sha256:54d9068d6357df72d51d4f8ef4019d367d26003facbecc61fb478f69106fc8e6  docs/reference/testflight.md
-- sha256:0f9b3f40913b432f3c81043a45bcd89e79827531f0ef6e8f8363d658347a394c  scripts/asc_beta_invite.py
-- sha256:320d83bb9e83e4a44b7edab10981a894389ed4cca27e845578498bab6c79cf7e  scripts/test_asc_beta_invite.py
+- sha256:d9623e4af2f5888516af3f1892269825328b551ab09e2265f92b3106362a9ea4  scripts/asc_beta_invite.py
+- sha256:db75cc6a80a371ab69d76c4b80bead4537f19a0dd2d54a034b4551a2371305df  scripts/test_asc_beta_invite.py
 
 ## Prüfbasis
 
 - base: 50d06000c2e184b197c0b33c18a6fafa3da5092c
 - blob:7499e6aae68b2127befd02f780ff6efd364de73a  .github/workflows/asc-beta.yml
 - blob:e8544b1599ddaa82ec5ad7b5fb10a8306eb7f1c1  docs/reference/testflight.md
-- blob:7197fea9b7d7d1ca81259fb912106b88d2010cf6  scripts/asc_beta_invite.py
-- blob:dd45190328dab8160e7404daa72d2ba74b8fde28  scripts/test_asc_beta_invite.py
+- blob:dbbe98ddd43d7f48d4aa76168fad443ecada144c  scripts/asc_beta_invite.py
+- blob:41d664d08831ae388806d7098faca505aa060ecf  scripts/test_asc_beta_invite.py

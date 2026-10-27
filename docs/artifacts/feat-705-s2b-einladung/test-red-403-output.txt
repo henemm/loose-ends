@@ -1,0 +1,166 @@
+FFF.<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 57990)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 57993)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 58000)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 58007)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 58016)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.FFEFFF/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 58020)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 58021)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 58022)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 58051)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 58060)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 58069)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 58078)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 58086)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FF.
+======================================================================
+ERROR: test_one_platform_failing_does_not_hide_the_other (__main__.InviteTests.test_one_platform_failing_does_not_hide_the_other)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 203, in test_one_platform_failing_does_not_hide_the_other
+    self.assertEqual(fake.assigned["G-7c41-1"], {BUILDS["MAC_OS"]["id"]})
+                     ~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'G-7c41-1'
+
+======================================================================
+FAIL: test_duplicate_external_groups_abort_before_any_write (__main__.InviteTests.test_duplicate_external_groups_abort_before_any_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 225, in test_duplicate_external_groups_abort_before_any_write
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : gruppe name=Tester zustand=vorhanden
+::error::platform=IOS ASC answered HTTP 403 for /v1/builds/…/betaGroups (check ASC_KEY_ID, ASC_ISSUER_ID, ASC_PRIVATE_KEY and the key's role)
+::error::platform=MAC_OS ASC answered HTTP 403 for /v1/builds/…/betaGroups (check ASC_KEY_ID, ASC_ISSUER_ID, ASC_PRIVATE_KEY and the key's role)
+zusammenfassung geschrieben=0
+
+
+======================================================================
+FAIL: test_existing_group_only_assigns_missing_build (__main__.InviteTests.test_existing_group_only_assigns_missing_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 177, in test_existing_group_only_assigns_missing_build
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : gruppe name=Tester zustand=vorhanden
+::error::platform=IOS ASC answered HTTP 403 for /v1/builds/…/betaGroups (check ASC_KEY_ID, ASC_ISSUER_ID, ASC_PRIVATE_KEY and the key's role)
+::error::platform=MAC_OS ASC answered HTTP 403 for /v1/builds/…/betaGroups (check ASC_KEY_ID, ASC_ISSUER_ID, ASC_PRIVATE_KEY and the key's role)
+zusammenfassung geschrieben=0
+
+
+======================================================================
+FAIL: test_first_run_creates_group_and_assigns_both_platforms (__main__.InviteTests.test_first_run_creates_group_and_assigns_both_platforms)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 147, in test_first_run_creates_group_and_assigns_both_platforms
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : gruppe name=Tester zustand=angelegt
+::error::platform=IOS ASC answered HTTP 403 for /v1/builds/…/betaGroups (check ASC_KEY_ID, ASC_ISSUER_ID, ASC_PRIVATE_KEY and the key's role)
+::error::platform=MAC_OS ASC answered HTTP 403 for /v1/builds/…/betaGroups (check ASC_KEY_ID, ASC_ISSUER_ID, ASC_PRIVATE_KEY and the key's role)
+zusammenfassung geschrieben=1
+
+
+======================================================================
+FAIL: test_never_submits_and_never_enables_link (__main__.InviteTests.test_never_submits_and_never_enables_link)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 214, in test_never_submits_and_never_enables_link
+    self.assertTrue(all(fake.writes() for fake in fakes), "jedes Szenario muss schreiben, sonst prüft es nichts")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : jedes Szenario muss schreiben, sonst prüft es nichts
+
+======================================================================
+FAIL: test_newest_valid_build_is_chosen_per_platform (__main__.InviteTests.test_newest_valid_build_is_chosen_per_platform)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 184, in test_newest_valid_build_is_chosen_per_platform
+    self.assertEqual(self.invite(fake).returncode, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_output_has_only_state_words (__main__.InviteTests.test_output_has_only_state_words)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 236, in test_output_has_only_state_words
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : gruppe name=Tester zustand=angelegt
+::error::platform=IOS ASC answered HTTP 403 for /v1/builds/…/betaGroups (check ASC_KEY_ID, ASC_ISSUER_ID, ASC_PRIVATE_KEY and the key's role)
+::error::platform=MAC_OS ASC answered HTTP 403 for /v1/builds/…/betaGroups (check ASC_KEY_ID, ASC_ISSUER_ID, ASC_PRIVATE_KEY and the key's role)
+zusammenfassung geschrieben=1
+
+
+======================================================================
+FAIL: test_platform_without_valid_build_is_reported_not_failed (__main__.InviteTests.test_platform_without_valid_build_is_reported_not_failed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 192, in test_platform_without_valid_build_is_reported_not_failed
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : gruppe name=Tester zustand=angelegt
+::error::platform=IOS ASC answered HTTP 403 for /v1/builds/…/betaGroups (check ASC_KEY_ID, ASC_ISSUER_ID, ASC_PRIVATE_KEY and the key's role)
+zuordnung plattform=MAC_OS zustand=kein-gültiger-build
+zusammenfassung geschrieben=1
+
+
+======================================================================
+FAIL: test_retry_lines_carry_no_ids (__main__.InviteTests.test_retry_lines_carry_no_ids)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 257, in test_retry_lines_carry_no_ids
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : gruppe name=Tester zustand=angelegt
+::error::platform=IOS ASC answered HTTP 403 for /v1/builds/…/betaGroups (check ASC_KEY_ID, ASC_ISSUER_ID, ASC_PRIVATE_KEY and the key's role)
+::error::platform=MAC_OS ASC answered HTTP 403 for /v1/builds/…/betaGroups (check ASC_KEY_ID, ASC_ISSUER_ID, ASC_PRIVATE_KEY and the key's role)
+zusammenfassung geschrieben=1
+
+
+======================================================================
+FAIL: test_second_run_sends_no_write (__main__.InviteTests.test_second_run_sends_no_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 164, in test_second_run_sends_no_write
+    self.assertEqual(self.invite(fake).returncode, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_unreadable_beta_detail_keeps_the_count (__main__.InviteTests.test_unreadable_beta_detail_keeps_the_count)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 245, in test_unreadable_beta_detail_keeps_the_count
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : gruppe name=Tester zustand=angelegt
+::error::platform=IOS ASC answered HTTP 403 for /v1/builds/…/betaGroups (check ASC_KEY_ID, ASC_ISSUER_ID, ASC_PRIVATE_KEY and the key's role)
+::error::platform=MAC_OS ASC answered HTTP 403 for /v1/builds/…/betaGroups (check ASC_KEY_ID, ASC_ISSUER_ID, ASC_PRIVATE_KEY and the key's role)
+zusammenfassung geschrieben=1
+
+
+----------------------------------------------------------------------
+Ran 14 tests in 8.859s
+
+FAILED (failures=10, errors=1)
