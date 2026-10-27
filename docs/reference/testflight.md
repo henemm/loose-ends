@@ -165,12 +165,12 @@ bleibt `offen` und Beleg leer, bis ein Lauf ihn füllt.
 | Feedback-E-Mail | erledigt (2026-10-27) | Lauf 40466472742 `feedbackEmail=gesetzt` |
 | Kontaktangaben (Beta-Review-Detail) | erledigt: vier Felder, `demoAccountRequired=aus` (2026-10-27) | Lauf 40466472742 `contactFirstName…contactEmail=gesetzt` |
 | Datenschutz-URL | offen | |
-| Interne Gruppe `Familie` | offen | Lauf 40387004899 |
-| Externe Gruppe `Tester` | offen | Lauf `zuordnen`: `gruppe name=Tester` |
+| Interne Gruppe `Familie` | erledigt: besteht, Link aus, Feedback an | Lauf 40387004899; [Lauf 40534641955](https://github.com/henemm/loose-ends/actions/runs/40534641955) `gruppe name=Familie intern=ja` |
+| Externe Gruppe `Tester` | erledigt: angelegt 2026-10-27, Link aus, Feedback an | [Lauf 40516649071](https://github.com/henemm/loose-ends/actions/runs/40516649071) `zustand=angelegt` (Zuordnung dort 403, behoben in #721); Lauf 40534641955 `gruppe name=Tester intern=nein link=aus` |
 | Öffentlicher Link | offen (Schnitt 2b-2) | |
-| Build-Zuordnung iOS und macOS | offen | Lauf `zuordnen`, sobald er stattfand |
-| Beta-Review (Einreichung) | offen | |
-| Rückmeldeweg: TestFlight-Feedback | offen | |
+| Build-Zuordnung iOS und macOS | erledigt: neuester gültiger Build je Plattform (2026-10-27), `extern=READY_FOR_BETA_SUBMISSION` | Lauf 40534641955 `zustand=gesetzt` IOS und MAC_OS, `geschrieben=2`; [Lauf 40535068594](https://github.com/henemm/loose-ends/actions/runs/40535068594) `zustand=vorhanden`, `geschrieben=0` |
+| Beta-Review (Einreichung) | offen (Schnitt 2b-2) | Lauf 40535068594 `einreichung keine` |
+| Rückmeldeweg: TestFlight-Feedback | erledigt auf Apples Seite: Gruppe `Tester` `feedback=an` | Lauf 40534641955 |
 
 **Handlauf `asc-beta.yml` (Schnitt 1, nur lesend):** GitHub → Actions → **ASC Beta Probe** → **Run workflow**. Er läuft je
 Plattform einmal (Matrix `IOS` und `MAC_OS`, auf `ubuntu-latest`) und schreibt nichts in App Store Connect. Im Log belegen:
