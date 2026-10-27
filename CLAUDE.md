@@ -65,6 +65,7 @@ LOOSEENDS_LANG=en ./scripts/sim.sh sim-unit <Klasse>  # Testsprache en (-testLan
 ./scripts/sim.sh launch-measure <n>   # Kaltstart-Messung, n Starts auf dem Gerät (#22)
 ./scripts/sim.sh real-model            # echtes On-Device-Modell auf diesem Mac, nur lokal (#531)
 ./scripts/sim.sh real-model-latency <n> # Latenz kalt/warm, n Prozesse auf dem Mac, Rohdaten + Auswertung (#534, docs/reference/modell-latenz.md)
+./scripts/sim.sh real-model-guardrail   # Verweigerungsrate auf dem Mac, 2 Durchläufe je Text, Rohdaten nach docs/artifacts/71-guardrails/ (#71)
 ./scripts/sim.sh lab-latency <n>       # dasselbe auf dem iPhone über die Labor-App (#534 Schnitt 2); nur nach Hennings „jetzt ist ein Test möglich“
 ```
 
