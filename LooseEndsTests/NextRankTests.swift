@@ -27,7 +27,7 @@ import Testing
         #expect(ranks[none.id] == nil)
     }
 
-    @Test("Blocked, done, parked tasks and subtasks take no place")
+    @Test("Blocked, done and parked tasks take no place; a lined up subtask takes its own")
     @MainActor func onlyWhatShowsInNextUp() throws {
         let store = try TestStore()
         let first = task("Erste", rank: 10, store: store)
@@ -42,10 +42,10 @@ import Testing
         let last = task("Letzte", rank: 20, store: store)
         let ranks = ViewRules.nextRanks(in: [first, blocker, blocked, done, parked, parent, sub, last])
         #expect(ranks[first.id] == 1)
-        #expect(ranks[last.id] == 2)
+        #expect(ranks[sub.id] == 2, "a subtask lined up as next stands in Next up like a task (Henning, 2026-10-27)")
+        #expect(ranks[last.id] == 3)
         #expect(ranks[blocked.id] == nil)
         #expect(ranks[done.id] == nil)
         #expect(ranks[parked.id] == nil)
-        #expect(ranks[sub.id] == nil)
     }
 }

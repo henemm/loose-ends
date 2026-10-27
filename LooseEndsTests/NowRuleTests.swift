@@ -139,7 +139,7 @@ import Testing
         #expect(ViewRules.leftovers(in: all, now: Self.now, calendar: Self.calendar).map(\.id) == [fiveDays.id, twoDays.id])
     }
 
-    @Test("Blocked, done and parked stay out, and so does a subtask without a date of its own, even lined up (#565)")
+    @Test("Blocked, done and parked stay out; a subtask lined up as next stands in Now (#565, Henning 2026-10-27)")
     @MainActor func blockedSubtasksDoneParkedStayOut() async throws {
         let store = try TestStore()
         let blocker = Self.task("Schlüssel holen")
@@ -155,7 +155,7 @@ import Testing
         let all = [blocker, blocked, parent, sub, done, parked]
         all.forEach(store.context.insert)
 
-        #expect(Self.now(all).all.isEmpty)
+        #expect(Self.now(all).all.map(\.id) == [sub.id])
     }
 
     @Test("Due later without a rank stays out")
