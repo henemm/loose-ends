@@ -1,7 +1,7 @@
 ---
 spec_file: docs/specs/tooling/feat-715-s2-voraussetzungen-hook.md
-spec_sha256: 5239efa0de7fe47bea97370a51e3bfa767796e3deeab6cf9b7362d8fab57b464
-spec_frozen_sha256: 8c578b21e8b123be6ede193d3431337bdb5a219c76cfea2e9a3693f5ae08e39b
+spec_sha256: 2624650701cacef9a4c63e70ad766afcbffc8d536d4f988ad08fe140dc3d632c
+spec_frozen_sha256: 4304ce08f4a7f576f06571d502b5485b6956833fdb22f651e4d66015f046b53b
 ---
 
 # PO-Briefing: feat-715-s2-voraussetzungen-hook
@@ -12,22 +12,22 @@ spec_frozen_sha256: 8c578b21e8b123be6ede193d3431337bdb5a219c76cfea2e9a3693f5ae08
 
 ## Was gebaut wird
 
-Nach /clear erscheint automatisch das nächste freie Ticket des Epics; Reihenfolgen stehen als Voraussetzungen auf GitHub.
+Nach /clear nennt jede Epic-Sitzung automatisch das nächste freie Ticket; die Reihenfolge steht dafür auf GitHub.
 
 ## Definition of Done
 
-Nach /clear erscheint der Vorschlag, Ticket 176 kommt nicht mehr vor seinen Voraussetzungen, Wartezeit ist gemessen.
+Ticket 176 wird nicht mehr vorgeschlagen, und der Hinweis erscheint nach /clear in unter 30 Sekunden.
 
 ## Wie geprüft wird
 
-Skripttests mit Attrappen prüfen Hinweis und Stille; Voraussetzungen und Wartezeit werden nur einmal von Hand geprüft.
+13 Skripttests, ein echter Durchlauf (14–17 s) und GitHub-Abfragen belegen es; nicht geprüft: Erscheinen in einer echten neuen Sitzung.
 
 ## Kritische Anmerkungen
 
-- Bis zu 14 Sekunden Wartezeit bei jedem /clear in Epic-Sitzungen; Beschleunigung nur als Folge-Ticket.
-- Zusätzlich zu Ticket 176 trägt die Spec Epic 612 ein; eine falsche Voraussetzung sperrt Arbeit.
-- Der Einstellungseintrag liegt außerhalb des Projekts, unversioniert, und wirkt erst nach dem nächsten Abgleich.
+- Abweichung: 176 erscheint nicht mehr als blockiert in der Ausgabe; Folge-Ticket 723.
+- Epic 612 erhält nur Abhängigkeiten der Stufen 1→2 und 2→3, spätere Stufen bleiben ungeordnet.
+- Hook-Eintrag liegt außerhalb des Projekts, unversioniert; jedes /clear wartet bis 17 Sekunden.
 
 ## Freigabe-Frage
 
-Soll der Vorschlag nach /clear automatisch erscheinen, auch wenn dafür bis zu 14 Sekunden Wartezeit entstehen können?
+Ist es für dich in Ordnung, dass nach /clear bis zu 17 Sekunden gewartet wird?

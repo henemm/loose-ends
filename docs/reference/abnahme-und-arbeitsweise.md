@@ -131,3 +131,28 @@ Branch, kein Netz —, bleibt alles unangetastet und der Grund steht in der Ausg
 
 Das Skript liegt außerhalb des Repos, damit es nicht davon abhängt, wie alt der Checkout gerade
 ist. Auf einem neuen Rechner muss es einmal neu angelegt werden.
+
+## Der Vorschlag für das nächste Ticket steht nach `/clear` im Kontext (#715)
+
+Je Sitzung ein Epic (2026-10-26): Der herdr-Name der Sitzung beginnt mit der Nummer des Epics, und
+`scripts/next-ticket.sh` schlägt dessen nächstes freies Teil-Ticket vor. Damit dieser Vorschlag nach
+`/clear` und beim Start einer Sitzung nicht erst gesucht werden muss, legt ein dritter SessionStart-Hook
+ihn in den Kontext: `scripts/next-ticket-hook.sh`, eingetragen in `~/.claude/settings.json` unter
+`hooks.SessionStart` mit dem Matcher `^(startup|clear)$`, dem Befehl
+`bash /Users/hem/Developer/loose-ends/scripts/next-ticket-hook.sh` und `timeout` 30.
+
+Er greift nur, wenn alles zusammenkommt: Quelle `startup` oder `clear` (bei `resume` und `compact` steht
+der Stand schon im Gespräch), die Sitzung liegt im Hauptcheckout oder einem Arbeitsordner darunter, und
+der herdr-Name beginnt mit `#N`. Er reicht die Sitzungskennung aus dem Hook weiter, damit sich die
+eigene Sitzung nicht selbst als belegt abzieht, und wartet höchstens 25 Sekunden
+(`LOOSEENDS_NEXT_TIMEOUT`). Bei `NEXT=#N` oder `NEXT=none` steht im Kontext:
+
+> Vorschlag für das nächste Ticket dieses Epics (Hinweis, kein Auftrag; ist ein Workflow aktiv, geht
+> dessen Pflicht-Schritt vor):
+
+und darunter der Klartext des Skripts. Der Vorschlag ist ein Hinweis, kein Auftrag.
+
+Der Hook blockiert nie: Bei `NEXT=unknown`, Zeitüberschreitung, Fehler des Skripts oder unlesbarer
+Eingabe bleibt er stumm und endet mit Exit 0, die Sitzung startet wie ohne ihn. Er schreibt nichts,
+weder nach GitHub noch in Dateien. Abschalten: den Eintrag mit `next-ticket-hook.sh` aus
+`hooks.SessionStart` in `~/.claude/settings.json` entfernen; die beiden anderen Einträge bleiben stehen.

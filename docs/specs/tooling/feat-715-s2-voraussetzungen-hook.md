@@ -90,18 +90,17 @@ Geschätzt +130 LoC, 3 Dateien im Repo. Kein Produktcode, keine Berechtigungen, 
 **Teil 2 — Voraussetzungen eintragen (einmalige Datenpflege, von Hand per `gh api`).**
 1. Vor jedem Schreiben `GET …/dependencies/blocked_by` lesen; was schon steht, wird übersprungen.
 2. `issue_id` = `gh api repos/henemm/loose-ends/issues/<Nummer> --jq .id`. Zwischen zwei Schreibaufrufen 2 s Pause (Sekundärlimit, sonst 422).
-3. Kanten: `#176` ← `#342`, `#71`, `#88`, `#40`. Für Epic #612 die Stufengrenzen laut Epic-Text, vor dem Eintragen gegen den aktuellen Text
-   gelesen: `#614`, `#615` ← `#613`; `#616` ← `#614`, `#615`; `#617`, `#618`, `#619` ← `#616`; `#620` ← `#617`, `#618`, `#619`; `#621` ← `#616`;
-   `#622` ← `#621`; `#623`, `#624` ← `#622`; `#625` ← `#620`, `#622`, `#623`, `#624`. Steht eine Kante im Epic-Text anders oder gar nicht, wird sie
-   weggelassen: die Kante ist nur Reihenfolge-Hilfe, eine falsche sperrt Arbeit.
+3. Kanten: `#176` ← `#342`, `#71`, `#88`, `#40`. Für Epic #612 nur die Übergänge Stufe 1→2 und 2→3, die der Epic-Text mit seinen fünf Stufen trägt:
+   `#614`, `#615` ← `#613`; `#616` ← `#614`, `#615`. Der Text nennt keine Kanten zwischen einzelnen Tickets und keine zwischen Stufe 3→4 und 4→5;
+   sie werden nicht eingetragen: die Kante ist nur Reihenfolge-Hilfe, eine falsche sperrt Arbeit. (Nachbesserung 2026-10-27, Henning „override“.)
 4. Danach `GET` je Ticket: die Liste entspricht Punkt 3. Das ist der Beleg für AC-1 und AC-2.
 
 **Teil 4 — `scripts/next-ticket-hook.sh`.**
 1. stdin-JSON lesen (`python3`): `source`, `session_id`, `cwd`. Nicht lesbar: Ausgabe leer, Exit 0.
 2. Nur bei `source` ∈ {`startup`, `clear`}. `resume` und `compact` bleiben still (dort steht der Stand schon im Gespräch).
-3. Nur wenn `cwd` unter dem Loose-Ends-Hauptcheckout liegt (Worktrees darunter zählen; `LOOSEENDS_REPO` überschreibt wie in `loose-ends-sync-main.sh`).
+3. Nur wenn `cwd` unter dem Loose-Ends-Hauptcheckout liegt (Worktrees darunter zählen; `LOOSEENDS_CHECKOUT` überschreibt den Pfad. `LOOSEENDS_REPO` ist schon das GitHub-Repo von `next-ticket.sh` und wird weder gelesen noch durchgereicht).
 4. Nur wenn `HERDR_WORKSPACE_ID` gesetzt ist und `herdr workspace get` ein Label mit führendem `#N` liefert. Sonst leer, Exit 0.
-5. `CLAUDE_SESSION_ID=<session_id> LOOSEENDS_REPO=… scripts/next-ticket.sh` mit Zeitgrenze (`LOOSEENDS_NEXT_TIMEOUT`, Vorgabe 25 s,
+5. `CLAUDE_SESSION_ID=<session_id> scripts/next-ticket.sh` (Pfad überschreibbar mit `LOOSEENDS_NEXT_TICKET`) mit Zeitgrenze (`LOOSEENDS_NEXT_TIMEOUT`, Vorgabe 25 s,
    unter dem `timeout` 30 des Eintrags). Zeitüberschreitung, Exit ≠ 0 oder erste Zeile `NEXT=unknown`: Ausgabe leer, Exit 0.
 6. Ausgabe bei `NEXT=#N` oder `NEXT=none`: JSON `{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"…"}}` mit dem Satz
    „Vorschlag für das nächste Ticket dieses Epics (Hinweis, kein Auftrag; ist ein Workflow aktiv, geht dessen Pflicht-Schritt vor):“ und danach
@@ -137,7 +136,7 @@ herdr-Sitzung, Laufzeit mit `time` gemessen.
 
 - **AC-1:** Given `#176` hat kein „blocked by“, When Teil 2 durchgeführt ist, Then liefert `GET …/issues/176/dependencies/blocked_by` genau #342, #71, #88 und #40, und ein zweiter Durchlauf legt nichts doppelt an.
 - **AC-2:** Given Epic #612 nennt seine Reihenfolge in Stufen, When Teil 2 durchgeführt ist, Then entspricht die Liste „blocked by“ je Ticket den Kanten aus Implementation Details Punkt 3, soweit der Epic-Text sie trägt; nicht getragene Kanten sind nicht eingetragen.
-- **AC-3:** Given AC-1 erfüllt, When `scripts/next-ticket.sh` in der Sitzung von Epic #371 läuft, Then ist `#176` nicht der Vorschlag und der Blocker steht in der Ausgabe.
+- **AC-3:** Given AC-1 erfüllt, When `scripts/next-ticket.sh` in der Sitzung von Epic #371 läuft, Then ist `#176` nicht der Vorschlag. (Nachbesserung 2026-10-27: Der Zusatz „der Blocker steht in der Ausgabe“ entfällt. `#176` hat offene Teil-Tickets und ist nie Kandidat; die Blocker eines Sammeltickets nennt das Skript erst nach einer Änderung an `next-ticket.sh`, siehe #723 und Known Limitations.)
 - **AC-4:** Given die stdin-JSON trägt eine `session_id`, When der Adapter das Skript ruft, Then ist `CLAUDE_SESSION_ID` im Skript diese `session_id` (die Sitzung sperrt sich nicht selbst).
 - **AC-5:** Given Quelle `startup` oder `clear`, eine Loose-Ends-Sitzung mit `#N` im herdr-Namen und `NEXT=#N` oder `NEXT=none`, When der Adapter läuft, Then gibt er gültiges SessionStart-JSON mit `additionalContext` aus, der den Hinweissatz („Hinweis, kein Auftrag; ein aktiver Workflow geht vor“) und den Klartext des Skripts enthält.
 - **AC-6:** Given Quelle `resume` oder `compact`, ein fremdes Projekt oder ein herdr-Name ohne führende `#N`, When der Adapter läuft, Then ist die Ausgabe leer, das Skript wird nicht aufgerufen, Exit 0.
@@ -157,6 +156,14 @@ Der Hook läuft bei jedem Start in allen Projekten; Schutz sind die Filter (Quel
 Die bis zu 14 s Wartezeit bei `/clear` in Epic-Sitzungen werden im echten Durchlauf gemessen (AC-10).
 Der Settings-Eintrag liegt außerhalb des Repos und ist nicht versioniert; die Doku (AC-11) hält den Wortlaut fest.
 
+## Known Limitations
+
+- **AC-3, zweiter Teil („der Blocker steht in der Ausgabe“):** nicht erfüllbar in diesem Schnitt. `#176` hat offene Teil-Tickets (#601, #605, #607)
+  und ist deshalb nie Kandidat; `next-ticket.sh` fragt „blocked by“ nur für Kandidaten ab. Der erste Teil (`#176` ist nicht der Vorschlag) gilt.
+  Die Blocker eines Sammeltickets an seine Teil-Tickets weiterzugeben ist eine Änderung an `next-ticket.sh` und damit ein Folge-Ticket
+  (Adversary-Befund F001, 2026-10-27).
+
 ## Changelog
 
 - 2026-10-27: Spec erstellt (Schnitt 2 von #715: Teile 2 und 4).
+- 2026-10-27: Nachbesserung nach Adversary-Befund (Henning „override“): AC-3 ohne Blocker-Zusatz, Variable `LOOSEENDS_CHECKOUT` statt `LOOSEENDS_REPO`, Epic-#612-Kanten auf die Stufenübergänge 1→2 und 2→3 beschränkt.
