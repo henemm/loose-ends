@@ -183,4 +183,43 @@ import Testing
 
         #expect(ViewRules.looseEndsStage(parked, now: Self.now, calendar: Self.calendar) == .parked)
     }
+
+    @Test("Quick, a tag and a project stand in the same blocks: today, no date by weight, later (#657, 2026-10-27)")
+    @MainActor func otherListsInTheSameBlocks() async throws {
+        let store = try TestStore()
+        let phone = TaskContext(name: "Telefon")
+        let house = Project(name: "Haus")
+        store.context.insert(phone)
+        store.context.insert(house)
+        let farUrgent = Self.task("Schnupperkurs buchen", due: Self.day(50), urgency: .high, minute: 0, in: store)
+        let plain = Self.task("Massage buchen", minute: 1, in: store)
+        let weighty = Self.task("Fußnagel behandeln", importance: .high, minute: 2, in: store)
+        let today = Self.task("Rhea schreiben", due: Self.day(0, hour: 18), minute: 3, in: store)
+        let all = [farUrgent, plain, weighty, today]
+        for task in all {
+            task.duration = .minutes15
+            task.contexts = [phone]
+            task.project = house
+        }
+        let expected = [today, weighty, plain, farUrgent].map(\.id)
+
+        #expect(ViewRules.tasks(for: .quick, in: all, now: Self.now, calendar: Self.calendar).map(\.id) == expected)
+        #expect(ViewRules.tasks(inContext: phone, in: all, now: Self.now, calendar: Self.calendar).map(\.id) == expected)
+        #expect(ViewRules.tasks(inProject: house, in: all, now: Self.now, calendar: Self.calendar).map(\.id) == expected)
+    }
+
+    @Test("A project's subtask line stands in the block of its task (#657)")
+    @MainActor func subtaskLineFollowsItsTask() async throws {
+        let store = try TestStore()
+        let house = Project(name: "Haus")
+        store.context.insert(house)
+        let later = Self.task("Umzug", due: Self.day(5), minute: 0, in: store)
+        let sub = Self.task("Kartons holen", minute: 1, in: store)
+        sub.parent = later
+        later.project = house
+        let line = ViewRules.ProjectLine.subtask(sub, parent: later)
+
+        #expect(line.owner.id == later.id)
+        #expect(ViewRules.looseEndsStage(line.owner, now: Self.now, calendar: Self.calendar) == .later)
+    }
 }

@@ -388,8 +388,9 @@ enum ViewRules {
             return all.filter { listedByDate($0) && $0.isOpen && ($0.dueDate.map { $0 < limit } ?? false) && !$0.isBlocked }
                 .sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
         case .quick:
+            // In the blocks of "Loose ends" (#657, Henning 2026-10-27): a far date does not stand first.
             return topLevel.filter { $0.isOpen && ($0.duration?.isQuick ?? false) && !$0.isBlocked }
-                .sorted(by: byUrgencyThenImportance)
+                .sorted(by: byPressureThenWeight(now: now, calendar: calendar))
         case .old:
             let cutoff = calendar.date(byAdding: .day, value: -oldAfterDays, to: now) ?? now
             return topLevel.filter { $0.isOpen && openSince($0) < cutoff }
@@ -417,17 +418,17 @@ enum ViewRules {
         }
     }
 
-    /// Open tasks carrying the context, urgency then importance; a subtask with that tag of its own
-    /// among them (#565).
-    static func tasks(inContext context: TaskContext, in all: [TaskItem]) -> [TaskItem] {
+    /// Open tasks carrying the context in the blocks of "Loose ends" (#657: today, no date by weight,
+    /// later); a subtask with that tag of its own among them (#565).
+    static func tasks(inContext context: TaskContext, in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [TaskItem] {
         all.filter { $0.isOpen && ($0.contexts ?? []).contains { $0.id == context.id } }
-            .sorted(by: byUrgencyThenImportance)
+            .sorted(by: byPressureThenWeight(now: now, calendar: calendar))
     }
 
-    /// Open top-level tasks of the project, urgency then importance (manual order comes later).
-    static func tasks(inProject project: Project, in all: [TaskItem]) -> [TaskItem] {
+    /// Open top-level tasks of the project in the blocks of "Loose ends" (#657; manual order comes later).
+    static func tasks(inProject project: Project, in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [TaskItem] {
         all.filter { $0.parent == nil && $0.isOpen && $0.project?.id == project.id }
-            .sorted(by: byUrgencyThenImportance)
+            .sorted(by: byPressureThenWeight(now: now, calendar: calendar))
     }
 
     /// One line of the project view (#28): a task, or one of its subtasks folded out below it.
@@ -439,6 +440,14 @@ enum ViewRules {
             switch self {
             case .task(let task): task.id
             case .subtask(let subtask, _): subtask.id
+            }
+        }
+
+        /// The project's task the line belongs to: its block decides where a subtask stands (#657).
+        var owner: TaskItem {
+            switch self {
+            case .task(let task): task
+            case .subtask(_, let parent): parent
             }
         }
     }
@@ -479,7 +488,7 @@ enum ViewRules {
     /// The blocks of "Loose ends" (#657, Henning 2026-10-24): a deadline counts only while it is
     /// today. Due today or before stands on top, the undated follow, a date from tomorrow on rests in
     /// "Later" below them: who set a far date said "not yet", an undated task may weigh more.
-    /// Parked closes the list (#545).
+    /// Parked closes the list (#545). Since 2026-10-27 "Quick", tags and projects stand in them too.
     enum LooseEndsStage: Int, Comparable {
         case today, undated, later, parked
 
