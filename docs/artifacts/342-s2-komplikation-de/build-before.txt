@@ -1,0 +1,12 @@
+Bau-Beleg VORHER (AC-3, Reproduktion), ./scripts/sim.sh build, Build Succeeded, Stand ohne Katalog in LooseEndsWatchWidgets/.
+
+Paket: ~/Library/Developer/Xcode/DerivedData/LooseEnds-session-issue-145/Build/Products/Debug-watchsimulator/LooseEndsWatchWidgets.appex
+
+ls -R:
+__preview.dylib
+Info.plist
+LooseEndsWatchWidgets
+LooseEndsWatchWidgets.debug.dylib
+PrivacyInfo.xcprivacy
+
+Ergebnis: kein de.lproj, kein Localizable.strings im Paket. "Capture" und "Opens capture." haben keinen deutschen Eintrag und erscheinen auf Deutsch englisch.
