@@ -116,5 +116,44 @@ class CatalogLanguageTests(unittest.TestCase):
             self.assertEqual(sorted(missing_german(path)), ["Later", "Open"])
 
 
+CODE_FOLDERS = ["LooseEnds", "Shared"]
+# Text-Literale, die SwiftUI und `String(localized:)` im Katalog nachschlagen; Interpolationen (`\(`) sind dynamisch.
+LITERAL = re.compile(
+    r'(?:String\(localized:\s*|\bText\(|\bButton\(|\bLabel\(|\bLabeledContent\(|navigationTitle\()"((?:[^"\\]|\\.)+)"'
+)
+
+
+def literals_missing_from_catalog(catalog_path, folders):
+    """Text-Literale im Code, deren Schlüssel im Katalog fehlt (dort steht dann auf jedem Gerät Englisch)."""
+    with open(catalog_path, encoding="utf-8") as handle:
+        keys = set(json.load(handle)["strings"])
+    missing = {}
+    for folder in folders:
+        for source in sorted(Path(folder).rglob("*.swift")):
+            for match in LITERAL.finditer(source.read_text(encoding="utf-8")):
+                key = match.group(1)
+                if "\\(" not in key and key not in keys:
+                    missing.setdefault(key, source.relative_to(ROOT) if source.is_relative_to(ROOT) else source)
+    return missing
+
+
+class CodeLiteralTests(unittest.TestCase):
+    def test_every_code_literal_has_a_catalog_entry(self):
+        missing = literals_missing_from_catalog(
+            ROOT / "LooseEnds/Resources/Localizable.xcstrings", [ROOT / folder for folder in CODE_FOLDERS])
+        self.assertEqual(missing, {}, "Text im Code ohne Katalogeintrag (zeigt auf Deutsch Englisch)")
+
+    def test_scanner_finds_a_missing_key(self):
+        """Selbstprüfung: ein Schlüssel ohne Eintrag wird gemeldet, ein vorhandener nicht."""
+        with tempfile.TemporaryDirectory() as folder:
+            folder = Path(folder)
+            catalog = {"sourceLanguage": "en", "version": "1.0", "strings": {"Done": {}}}
+            (folder / "Localizable.xcstrings").write_text(json.dumps(catalog), encoding="utf-8")
+            (folder / "View.swift").write_text(
+                'Text("Done")\nString(localized: "Counts")\nText("Hello \\(name)")\n', encoding="utf-8")
+            found = literals_missing_from_catalog(folder / "Localizable.xcstrings", [folder])
+            self.assertEqual(sorted(found), ["Counts"])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -10,9 +10,9 @@ final class DriveSmokeTests: XCTestCase {
     }
 
     @MainActor
-    private func launch() -> XCUIApplication {
+    private func launch(language: String = "en", locale: String = "en_US") -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["--ui-testing", "-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+        app.launchArguments = ["--ui-testing", "-AppleLanguages", "(\(language))", "-AppleLocale", locale]
         app.launch()
         return app
     }
@@ -207,5 +207,25 @@ final class DriveSmokeTests: XCTestCase {
         let string = scrolledTo("weekString", in: app)
         XCTAssertTrue(string.exists, "No week string at the end of the start page")
         XCTAssertTrue(string.label.hasPrefix("1 of 5"), "Wrong beads: \(string.label)")
+    }
+
+    /// The change list names the bead mark in the user's language (#342): on a German device it reads
+    /// "Perle sammeln", not the English key. The task carries a rule-set date, so the list is offered.
+    @MainActor
+    func testChangeListNamesTheBeadMarkInGerman() throws {
+        let app = launch(language: "de", locale: "de_DE")
+        capture("Steuerberater anrufen morgen", in: app)
+        openNew(in: app)
+        holdRow(titled: "Steuerberater", until: "menuCounts", in: app).tap()
+        let row = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@ AND label CONTAINS %@", "taskRow_", "Steuerberater"))
+            .firstMatch
+        row.tap()
+        let show = element("revisionsButton", in: app)
+        XCTAssertTrue(show.waitForExistence(timeout: 10), "The detail offers no change list")
+        show.tap()
+        XCTAssertTrue(app.staticTexts["Perle sammeln"].waitForExistence(timeout: 5), "The change list does not say \"Perle sammeln\"")
+        XCTAssertFalse(app.staticTexts["Counts"].exists, "The English key shows on a German device")
+        shot(app, "342-aenderungsliste-perle-sammeln")
     }
 }

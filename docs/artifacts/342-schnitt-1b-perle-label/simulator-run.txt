@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-10-27T05:51:32+0100
+befehl: scripts/sim.sh test-proof DriveSmokeTests
+workflow: 342-schnitt-1b-perle-label
+head: 457b0ff1348cfeef4639342efdc85e1b0ac793a9
+basis: 457b0ff1348cfeef4639342efdc85e1b0ac793a9 (merge-base origin/main HEAD)
+testklasse: DriveSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 4 gesamt, 4 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793076430.686  ende: 1793076691.207
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/342-schnitt-1b-perle-label/simulator-run/summary.json  sha256:9e9e8258f506316223a484d4356f856cfece225788771760efbae6d9b0b77186
+xcresult: docs/artifacts/342-schnitt-1b-perle-label/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/342-schnitt-1b-perle-label/simulator-run/*.png (2 Stück)
+
+## Geprüfte Dateien
+- sha256:a28d65a0ed515ccd4ac1a4a6768cd987fe072b3e2a5042045366f9622ffb438d  LooseEnds/Views/FieldFormatting.swift
+- sha256:fb396151843b8011577458ee24872210f9d166608753660d43777ad4852a9152  LooseEndsUITests/DriveSmokeTests.swift
