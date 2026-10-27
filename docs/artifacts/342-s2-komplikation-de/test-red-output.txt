@@ -1,0 +1,60 @@
+test_a_missing_german_value_is_found (scripts.test_infoplist_languages.CatalogLanguageTests.test_a_missing_german_value_is_found)
+Selbstprüfung: eine Lücke macht den Test rot, sonst prüfte er nichts. ... ok
+test_every_catalog_entry_has_german (scripts.test_infoplist_languages.CatalogLanguageTests.test_every_catalog_entry_has_german) ... 
+  test_every_catalog_entry_has_german (scripts.test_infoplist_languages.CatalogLanguageTests.test_every_catalog_entry_has_german) (catalog='LooseEndsWatchWidgets/Localizable.xcstrings') ... ERROR
+test_every_code_literal_has_a_catalog_entry (scripts.test_infoplist_languages.CodeLiteralTests.test_every_code_literal_has_a_catalog_entry) ... ok
+test_scanner_finds_a_missing_key (scripts.test_infoplist_languages.CodeLiteralTests.test_scanner_finds_a_missing_key)
+Selbstprüfung: ein Schlüssel ohne Eintrag wird gemeldet, ein vorhandener nicht. ... ok
+test_complication_literals_have_a_catalog_entry (scripts.test_infoplist_languages.ComplicationLiteralTests.test_complication_literals_have_a_catalog_entry) ... ERROR
+test_modifier_scanner_finds_a_missing_key (scripts.test_infoplist_languages.ComplicationLiteralTests.test_modifier_scanner_finds_a_missing_key)
+Selbstprüfung: die vier Modifier melden einen fehlenden Schlüssel, ein vorhandener bleibt still. ... ok
+test_every_usage_description_has_german (scripts.test_infoplist_languages.InfoPlistLanguageTests.test_every_usage_description_has_german) ... ok
+test_project_declares_the_usage_descriptions (scripts.test_infoplist_languages.InfoPlistLanguageTests.test_project_declares_the_usage_descriptions)
+Ohne Schlüssel prüft der Test nichts: Mikrofon, Sprache und Kalender müssen vorkommen. ... ok
+
+======================================================================
+ERROR: test_every_catalog_entry_has_german (scripts.test_infoplist_languages.CatalogLanguageTests.test_every_catalog_entry_has_german) (catalog='LooseEndsWatchWidgets/Localizable.xcstrings')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/scripts/test_infoplist_languages.py", line 104, in test_every_catalog_entry_has_german
+    self.assertEqual(missing_german(ROOT / catalog), [], f"{catalog}: ohne deutschen Wert")
+                     ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/scripts/test_infoplist_languages.py", line 67, in missing_german
+    with open(catalog_path, encoding="utf-8") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsWatchWidgets/Localizable.xcstrings'
+
+======================================================================
+ERROR: test_complication_literals_have_a_catalog_entry (scripts.test_infoplist_languages.ComplicationLiteralTests.test_complication_literals_have_a_catalog_entry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/scripts/test_infoplist_languages.py", line 167, in test_complication_literals_have_a_catalog_entry
+    missing = literals_missing_from_catalog(
+        ROOT / WATCH_WIDGET_FOLDER / "Localizable.xcstrings", [ROOT / WATCH_WIDGET_FOLDER],
+        (LITERAL, MODIFIER_LITERAL))
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/scripts/test_infoplist_languages.py", line 134, in literals_missing_from_catalog
+    with open(catalog_path, encoding="utf-8") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsWatchWidgets/Localizable.xcstrings'
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.078s
+
+FAILED (errors=2)
+F.
+======================================================================
+FAIL: test_complication_literals_have_a_catalog_entry (scripts.test_infoplist_languages.ComplicationLiteralTests.test_complication_literals_have_a_catalog_entry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/scripts/test_infoplist_languages.py", line 170, in test_complication_literals_have_a_catalog_entry
+    self.assertEqual(missing, {}, "Text der Komplikation ohne Katalogeintrag (zeigt auf Deutsch Englisch)")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'Capture': PosixPath('LooseEndsWatchWidge[106 chars]ft')} != {}
++ {}
+- {'Capture': PosixPath('LooseEndsWatchWidgets/CaptureComplication.swift'),
+-  'Opens capture.': PosixPath('LooseEndsWatchWidgets/CaptureComplication.swift')} : Text der Komplikation ohne Katalogeintrag (zeigt auf Deutsch Englisch)
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.003s
+
+FAILED (failures=1)

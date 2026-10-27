@@ -24,6 +24,7 @@ CATALOGS = [
     "LooseEnds/Resources/AppShortcuts.xcstrings",
     "LooseEndsWidgets/Localizable.xcstrings",
     "LooseEndsShare/Localizable.xcstrings",
+    "LooseEndsWatchWidgets/Localizable.xcstrings",
 ]
 USAGE_KEY = re.compile(r"^NS\w+UsageDescription$")
 STRINGS_LINE = re.compile(r'^\s*"([^"]+)"\s*=\s*"((?:[^"\\]|\\.)*)"\s*;', re.MULTILINE)
@@ -121,16 +122,22 @@ CODE_FOLDERS = ["LooseEnds", "Shared"]
 LITERAL = re.compile(
     r'(?:String\(localized:\s*|\bText\(|\bButton\(|\bLabel\(|\bLabeledContent\(|navigationTitle\()"((?:[^"\\]|\\.)+)"'
 )
+# Die Komplikation benennt sich über Modifier, nicht über `Text(`; nur für ihren Ordner gescannt, damit fremde `description(` nicht auffallen (#342 S2).
+WATCH_WIDGET_FOLDER = "LooseEndsWatchWidgets"
+MODIFIER_LITERAL = re.compile(
+    r'\b(?:accessibilityLabel|widgetLabel|configurationDisplayName|description)\("((?:[^"\\]|\\.)+)"'
+)
 
 
-def literals_missing_from_catalog(catalog_path, folders):
+def literals_missing_from_catalog(catalog_path, folders, patterns=(LITERAL,)):
     """Text-Literale im Code, deren Schlüssel im Katalog fehlt (dort steht dann auf jedem Gerät Englisch)."""
     with open(catalog_path, encoding="utf-8") as handle:
         keys = set(json.load(handle)["strings"])
     missing = {}
     for folder in folders:
         for source in sorted(Path(folder).rglob("*.swift")):
-            for match in LITERAL.finditer(source.read_text(encoding="utf-8")):
+            text = source.read_text(encoding="utf-8")
+            for match in (m for pattern in patterns for m in pattern.finditer(text)):
                 key = match.group(1)
                 if "\\(" not in key and key not in keys:
                     missing.setdefault(key, source.relative_to(ROOT) if source.is_relative_to(ROOT) else source)
@@ -153,6 +160,28 @@ class CodeLiteralTests(unittest.TestCase):
                 'Text("Done")\nString(localized: "Counts")\nText("Hello \\(name)")\n', encoding="utf-8")
             found = literals_missing_from_catalog(folder / "Localizable.xcstrings", [folder])
             self.assertEqual(sorted(found), ["Counts"])
+
+
+class ComplicationLiteralTests(unittest.TestCase):
+    def test_complication_literals_have_a_catalog_entry(self):
+        missing = literals_missing_from_catalog(
+            ROOT / WATCH_WIDGET_FOLDER / "Localizable.xcstrings", [ROOT / WATCH_WIDGET_FOLDER],
+            (LITERAL, MODIFIER_LITERAL))
+        self.assertEqual(missing, {}, "Text der Komplikation ohne Katalogeintrag (zeigt auf Deutsch Englisch)")
+
+    def test_modifier_scanner_finds_a_missing_key(self):
+        """Selbstprüfung: die vier Modifier melden einen fehlenden Schlüssel, ein vorhandener bleibt still."""
+        source = ('.accessibilityLabel("Capture")\ncontent.widgetLabel("Capture")\n'
+                  '.configurationDisplayName("Capture")\n.description("Opens capture.")\n')
+        with tempfile.TemporaryDirectory() as folder:
+            folder = Path(folder)
+            (folder / "View.swift").write_text(source, encoding="utf-8")
+            for strings, expected in (({}, ["Capture", "Opens capture."]),
+                                      ({"Capture": {}, "Opens capture.": {}}, [])):
+                catalog = {"sourceLanguage": "en", "version": "1.0", "strings": strings}
+                (folder / "Localizable.xcstrings").write_text(json.dumps(catalog), encoding="utf-8")
+                found = literals_missing_from_catalog(folder / "Localizable.xcstrings", [folder], (MODIFIER_LITERAL,))
+                self.assertEqual(sorted(found), expected)
 
 
 if __name__ == "__main__":
