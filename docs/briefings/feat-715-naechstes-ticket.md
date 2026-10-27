@@ -1,7 +1,7 @@
 ---
 spec_file: docs/specs/tooling/feat-715-s1-next-ticket-skript.md
-spec_sha256: 8c22acbe2bd5cb9aa089f920c36aa41a36582f73b78a0d86ac7976ec037ce9e2
-spec_frozen_sha256: f4c95bdf367e881ff97ac3043e655b1268564255aeec35458018dbaf64d0c574
+spec_sha256: 74ec580529cd4a074745c58d5678b31d864f8975bdc91e459c0abb82df21bddd
+spec_frozen_sha256: eb85641384f197bf1f9119e85be2fab452beea95be60d9b1cd9abe588266f7fc
 ---
 
 # PO-Briefing: feat-715-naechstes-ticket
@@ -12,22 +12,22 @@ spec_frozen_sha256: f4c95bdf367e881ff97ac3043e655b1268564255aeec35458018dbaf64d0
 
 ## Was gebaut wird
 
-Ein Skript schlägt nach einem fertigen Ticket das nächste startbare Ticket des Epics vor, mit Begründung, Blockern und Überschneidungen.
+Ein Skript schlägt nach einem fertigen Ticket das nächste freie Ticket des Epics vor, mit Begründung und Überschneidungshinweis.
 
 ## Definition of Done
 
-Das Skript nennt für ein Epic das oberste freie Ticket oder erklärt verständlich, warum keines startbar ist, ohne GitHub zu verändern.
+In allen Testfällen nennt das Skript das richtige nächste Ticket oder verständlich „keins“ und ändert nichts auf GitHub.
 
 ## Wie geprüft wird
 
-Tests mit nachgebauten Antworten von GitHub und Sitzungen belegen Auswahl und Reihenfolge; ein echter Lauf gegen GitHub ist nicht enthalten.
+14 Skripttests mit Attrappen decken jede Anforderung ab; ein echter Lauf gegen GitHub gehört nicht dazu.
 
 ## Kritische Anmerkungen
 
-- Ohne gepflegte Blocker-Einträge schlägt es heute für #371 fälschlich #176 vor; diese Pflege ist nicht Teil der Spec.
-- Das Ablegen des Vorschlags nach /clear fehlt hier; Henning ist erst mit dem zweiten Schnitt entlastet.
-- Die Liste der Überschneidungs-Dateien ist geschätzt; Treffer warnen nur, streichen nichts.
+- Spec heute nachgebessert: Epic ist das oberste Eltern-Ticket, vorgeschlagen wird nur die unterste Ebene (neu AC-12, getestet).
+- Ohne eingetragene Blocker schlägt das Skript heute Unpassendes vor; diese Pflege liegt außerhalb der Spec.
+- Vorschlag nach /clear fehlt noch: kommt erst mit Schnitt 2, bis dahin tippt Henning weiter.
 
 ## Freigabe-Frage
 
-Soll zuerst nur das Skript gebaut werden, obwohl die Entlastung erst mit Hook und Blocker-Pflege eintritt?
+Soll zuerst nur das Skript ohne den automatischen Vorschlag nach /clear gebaut werden?

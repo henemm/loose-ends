@@ -71,7 +71,7 @@ Geschätzt +230 LoC, 3 Dateien. Kein Produktcode, keine Berechtigungen, keine Ap
 
 ## Definition of Done
 
-- [ ] Epic wird aus dem herdr-Namen bestimmt, auch wenn dort ein Ticket steht (AC-1, AC-2)
+- [ ] Epic wird aus dem herdr-Namen bestimmt, auch wenn dort ein Ticket steht (AC-1, AC-2, AC-12)
 - [ ] Belegte, blockierte und fremde Tickets werden nicht vorgeschlagen (AC-3 bis AC-5)
 - [ ] Reihenfolge nach Priority, dann Board-Reihenfolge (AC-6)
 - [ ] Überschneidung mit offenen Zweigen steht im Vorschlag (AC-7)
@@ -82,10 +82,13 @@ Geschätzt +230 LoC, 3 Dateien. Kein Produktcode, keine Berechtigungen, keine Ap
 
 ## Implementation Details
 
-1. **Epic.** Label aus `herdr workspace get "$HERDR_WORKSPACE_ID"`. Führende `#N` (Regex `^#([0-9]+)`) lesen. Hat N Teil-Tickets
-   (`sub_issues` nicht leer), ist N der Epic. Sonst ist `parent` von N der Epic. Ohne führende Nummer, ohne Eltern oder ohne
-   `HERDR_WORKSPACE_ID`: `NEXT=none`, Grund „kein Epic“, keine Suche in fremden Epics.
-2. **Kandidaten.** Offene Teil-Tickets des Epics.
+1. **Epic.** Label aus `herdr workspace get "$HERDR_WORKSPACE_ID"`. Führende `#N` (Regex `^#([0-9]+)`) lesen. Der Epic ist das **oberste Eltern-Ticket**
+   von N: `parent` wiederholen, bis es keines mehr gibt (404). Hat N kein Eltern-Ticket, aber Teil-Tickets, ist N selbst der Epic.
+   Ohne führende Nummer, ohne Eltern und ohne Teil-Tickets oder ohne `HERDR_WORKSPACE_ID`: `NEXT=none`, Grund „kein Epic“, keine Suche
+   in fremden Epics. (Nachbesserung 2026-10-27, Henning „override“: #176 hat Teil-Tickets und hängt unter #371; die Regel „Ticket mit
+   Teil-Tickets ist der Epic“ hätte #176 zum Epic gemacht und alles Freie in #371 übersehen.)
+2. **Kandidaten.** Offene Tickets im ganzen Baum unter dem Epic, die selbst **keine offenen Teil-Tickets** haben (unterste Ebene).
+   Ein Sammelticket wie #176 wird nicht vorgeschlagen, seine offenen Teil-Tickets sind die Kandidaten.
 3. **Abzug.** Ein Kandidat entfällt, wenn (a) sein Board-Status In progress oder In review ist, (b) ein offener PR auf ihn verweist,
    (c) eine **lebende** andere Sitzung ihn hält (Lock mit `pid` läuft, Phase kleiner `phase8_complete`, nicht die eigene Sitzung),
    (d) er ein offenes „blocked by“ hat. Locks fertiger Sitzungen (`phase8_complete`) oder toter Prozesse sperren nichts.
@@ -110,6 +113,8 @@ JSON-Antworten, Lock-Verzeichnis im Temp-Ordner. RED zuerst.
 |---|---|
 | `test_epic_from_label_with_epic_number` | Label „#371 Texte“, #371 hat Teil-Tickets: Epic 371 (AC-1) |
 | `test_epic_from_label_with_ticket_number` | Label „#176 Abnahme“, `parent` = 371: Epic 371 (AC-2) |
+| `test_epic_is_topmost_parent_when_ticket_has_sub_issues` | #176 hat selbst Teil-Tickets 601, 605, 607 und `parent` 371: Epic 371, nicht 176 (AC-2) |
+| `test_only_lowest_level_tickets_are_candidates` | #176 (mit offenen Teil-Tickets) wird nie vorgeschlagen; freie Blätter 342 und 40 sind Kandidaten, Teil-Tickets von 176 zählen mit (AC-12) |
 | `test_no_epic_gives_none` | Label „Restock“ und #715 ohne Eltern: `NEXT=none`, „kein Epic“, Exit 0 (AC-8) |
 | `test_in_progress_and_pr_are_skipped` | Board-Status In progress, offener PR: nicht vorgeschlagen, Grund genannt (AC-3) |
 | `test_live_session_lock_blocks_finished_lock_does_not` | Lock mit lebender PID sperrt, Lock mit `phase8_complete` und Lock mit toter PID nicht; eigene Sitzung sperrt sich nicht (AC-4) |
@@ -126,8 +131,9 @@ folgt nach Teil 2 und ist nicht Teil dieser Tests.
 
 ## Acceptance Criteria
 
-- **AC-1:** Given das herdr-Label beginnt mit `#N` und N hat Teil-Tickets, When das Skript läuft, Then ist N der Epic.
-- **AC-2:** Given das Label beginnt mit `#N` und N hat keine Teil-Tickets, aber einen Eltern-Epic, When das Skript läuft, Then ist dieser Eltern-Epic der Epic.
+- **AC-1:** Given das herdr-Label beginnt mit `#N`, N hat kein Eltern-Ticket, aber Teil-Tickets, When das Skript läuft, Then ist N der Epic.
+- **AC-2:** Given das Label beginnt mit `#N` und N hat ein Eltern-Ticket (mit oder ohne eigene Teil-Tickets), When das Skript läuft, Then ist das oberste Eltern-Ticket der Epic.
+- **AC-12:** Given der Epic hat verschachtelte Teil-Tickets, When die Kandidaten bestimmt werden, Then sind es die offenen Tickets der untersten Ebene; ein Ticket mit offenen Teil-Tickets wird nicht vorgeschlagen.
 - **AC-3:** Given ein Teil-Ticket steht auf dem Board In progress oder In review oder hat einen offenen PR, When das Skript läuft, Then wird es nicht vorgeschlagen und der Grund steht in der Ausgabe.
 - **AC-4:** Given eine andere Sitzung mit laufender `pid` und Phase kleiner `phase8_complete` hält ein Ticket, When das Skript läuft, Then wird es nicht vorgeschlagen; Locks fertiger Sitzungen, toter Prozesse und der eigenen Sitzung sperren nichts.
 - **AC-5:** Given ein Teil-Ticket hat ein offenes „blocked by“, When das Skript läuft, Then wird es nicht vorgeschlagen und der Blocker steht in der Ausgabe.
@@ -150,3 +156,4 @@ Ohne gepflegte „blocked by“-Einträge (Teil 2) schlägt das Skript heute etw
 ## Changelog
 
 - 2026-10-27: Spec erstellt (Schnitt 1 von #715; Hook folgt als Schnitt 2).
+- 2026-10-27: Nachbesserung nach echtem Lauf (Henning „override“): Epic = oberstes Eltern-Ticket, Kandidaten = unterste offene Ebene (AC-2, neu AC-12).

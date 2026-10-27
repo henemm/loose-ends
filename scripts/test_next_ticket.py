@@ -25,6 +25,8 @@ if os.environ.get("GH_FAIL"):
     sys.stderr.write("gh: simulated failure\n")
     sys.exit(1)
 fx = json.load(open(os.environ["FIXTURE"]))
+if os.environ.get("GH_HANG"):
+    import time; time.sleep(30)
 a = " ".join(sys.argv[1:])
 def out(v):
     print(json.dumps(v)); sys.exit(0)
@@ -60,7 +62,9 @@ HERDR_STUB = r'''#!/usr/bin/env python3
 import json, os, sys
 a = sys.argv[1:]
 if a[:2] == ["workspace", "get"]:
-    print(json.dumps({"workspace": {"label": os.environ.get("HERDR_LABEL", "")}}))
+    # echte Form (herdr 2026-10-27): {"id":..., "result": {"type": "workspace_info", "workspace": {...}}}
+    print(json.dumps({"id": "cli:workspace:get", "result": {"type": "workspace_info",
+                      "workspace": {"label": os.environ.get("HERDR_LABEL", ""), "workspace_id": a[2]}}}))
     sys.exit(0)
 if a[:1] == ["notification"]:
     with open(os.environ["HERDR_LOG"], "a") as f:
@@ -112,7 +116,7 @@ class NextTicket(unittest.TestCase):
     def tearDown(self):
         self.tmp.cleanup()
 
-    def run_script(self, fixture, label="#371 Texte", fail=False, workspace="w3"):
+    def run_script(self, fixture, label="#371 Texte", fail=False, workspace="w3", cwd=None, hang=False):
         fx = self.dir / "fixture.json"
         fx.write_text(json.dumps(fixture))
         env = {
@@ -128,11 +132,14 @@ class NextTicket(unittest.TestCase):
         env.pop("GH_FAIL", None)
         if fail:
             env["GH_FAIL"] = "1"
+        if hang:
+            env["GH_HANG"] = "1"
+            env["LOOSEENDS_GH_TIMEOUT"] = "2"
         if workspace:
             env["HERDR_WORKSPACE_ID"] = workspace
         else:
             env.pop("HERDR_WORKSPACE_ID", None)
-        return subprocess.run(["bash", str(SCRIPT)], env=env, capture_output=True, text=True, timeout=60)
+        return subprocess.run(["bash", str(SCRIPT)], env=env, capture_output=True, text=True, timeout=60, cwd=cwd)
 
     def lock(self, session, issue, phase, pid, branch=""):
         (self.locks / f"{session}.json").write_text(json.dumps(
@@ -151,6 +158,35 @@ class NextTicket(unittest.TestCase):
     def test_epic_from_label_with_ticket_number(self):
         r = self.run_script(epic_fixture(), label="#176 Abnahme")
         self.assertEqual(self.first_line(r), "NEXT=#342", r.stdout + r.stderr)
+
+    # AC-2, echte Lage 2026-10-27: #176 hat selbst Teil-Tickets und hängt unter #371
+    def nested_fixture(self, **over):
+        fx = epic_fixture(
+            sub_issues={
+                "371": [{"number": n, "title": f"Ticket {n}", "state": "open"} for n in (342, 176, 40)],
+                "176": [{"number": n, "title": f"Ticket {n}", "state": "open"} for n in (601, 605, 607)]},
+            board=[{"number": 342, "priority": "P1"}, {"number": 176, "priority": "P1"},
+                   {"number": 601, "status": "In review", "priority": "P1"},
+                   {"number": 605, "status": "In progress", "priority": "P1"},
+                   {"number": 607, "status": "In review", "priority": "P1"}, {"number": 40, "priority": "P1"}])
+        fx.update(over)
+        return fx
+
+    def test_epic_is_topmost_parent_when_ticket_has_sub_issues(self):
+        r = self.run_script(self.nested_fixture(), label="#176 Abnahme")
+        self.assertEqual(self.first_line(r), "NEXT=#342", r.stdout + r.stderr)
+        self.assertIn("Epic #371", r.stdout)
+
+    # AC-12
+    def test_only_lowest_level_tickets_are_candidates(self):
+        fx = self.nested_fixture(blocked_by={"342": [{"number": 999, "state": "open"}]})
+        r = self.run_script(fx, label="#176 Abnahme")
+        self.assertEqual(self.first_line(r), "NEXT=#40", r.stdout + r.stderr)
+        fx["board"][2] = {"number": 601, "priority": "P1"}
+        fx["board"][5] = {"number": 40, "status": "In progress", "priority": "P1"}
+        r = self.run_script(fx, label="#176 Abnahme")
+        self.assertEqual(self.first_line(r), "NEXT=#601", r.stdout + r.stderr)
+        self.assertNotEqual(self.first_line(r), "NEXT=#176")
 
     # AC-8
     def test_no_epic_gives_none(self):
@@ -222,6 +258,64 @@ class NextTicket(unittest.TestCase):
         r = self.run_script(epic_fixture(git={"work/500": ["cloudkit/schema.ckdb"]}))
         self.assertIn("cloudkit/schema.ckdb", r.stdout)
         self.assertIn("work/500", r.stdout)
+
+    # F001 (Adversary): PR-Bezug über Titel und Nummernlisten
+    def test_pr_reference_in_title_and_in_closes_list(self):
+        fx = epic_fixture(prs=[{"number": 910, "title": "fix: Dinge (#342)", "body": "", "files": []}])
+        r = self.run_script(fx)
+        self.assertEqual(self.first_line(r), "NEXT=#176", r.stdout)
+        fx = epic_fixture(prs=[{"number": 911, "title": "x", "body": "Closes #176, #40", "files": []}])
+        r = self.run_script(fx)
+        self.assertEqual(self.first_line(r), "NEXT=#342", r.stdout)
+        self.assertIn("#176", r.stdout)
+        self.assertIn("#40", r.stdout)
+
+    # F002 (Adversary): ein Lock ohne Objekt darf die folgenden nicht verdecken
+    def test_non_object_lock_does_not_hide_later_locks(self):
+        (self.locks / "a.json").write_text("[]")
+        (self.locks / "b.json").write_text("null")
+        (self.locks / "c.json").write_text("{not json")
+        self.lock("z-live", 342, "phase6_implement", os.getpid())
+        r = self.run_script(epic_fixture())
+        self.assertEqual(self.first_line(r), "NEXT=#176", r.stdout + r.stderr)
+
+    # F003 (Adversary): Hotspot-Muster dürfen nicht gegen das Arbeitsverzeichnis expandieren
+    def test_hotspot_globs_do_not_depend_on_working_directory(self):
+        cwd = self.dir / "work" / "LooseEnds" / "Views"
+        cwd.mkdir(parents=True)
+        (cwd / "StartPageOld.swift").write_text("")
+        fx = epic_fixture(prs=[{"number": 920, "body": "Closes #500", "branch": "work/500",
+                                "files": ["LooseEnds/Views/StartPageNew.swift"]}])
+        r = self.run_script(fx, cwd=self.dir / "work")
+        self.assertIn("StartPageNew.swift", r.stdout)
+
+    # F004 (Adversary): ein hängendes gh darf das Skript nicht hängen lassen
+    def test_hanging_gh_gives_unknown(self):
+        r = self.run_script(epic_fixture(), hang=True)
+        self.assertEqual(r.returncode, 0)
+        self.assertEqual(self.first_line(r), "NEXT=unknown", r.stdout)
+
+    # F006 (Adversary): Zahlen in Zweignamen (Datum, Version) sind kein Ticketbezug
+    def test_branch_numbers_only_count_right_after_prefix(self):
+        for branch in ("feat/ios-40-update", "work/2026-10-40", "release-40"):
+            fx = epic_fixture(board=[{"number": 40, "priority": "P0"}, {"number": 342}, {"number": 176}],
+                              prs=[{"number": 930, "body": "", "branch": branch, "files": []}])
+            r = self.run_script(fx)
+            self.assertEqual(self.first_line(r), "NEXT=#40", branch + ": " + r.stdout)
+        fx = epic_fixture(prs=[{"number": 931, "body": "", "branch": "work/342-skript", "files": []}])
+        self.assertEqual(self.first_line(self.run_script(fx)), "NEXT=#176")
+
+    # AC-9: fehlendes Werkzeug
+    def test_missing_gh_gives_unknown(self):
+        (self.bin / "gh").unlink()
+        env_path = f"{self.bin}:/usr/bin:/bin"
+        fx = self.dir / "fixture.json"
+        fx.write_text(json.dumps(epic_fixture()))
+        env = {**os.environ, "PATH": env_path, "FIXTURE": str(fx), "HERDR_LABEL": "#371 Texte",
+               "HERDR_WORKSPACE_ID": "w3", "LOOSEENDS_LOCKS_DIR": str(self.locks)}
+        r = subprocess.run(["bash", str(SCRIPT)], env=env, capture_output=True, text=True, timeout=60)
+        self.assertEqual(r.returncode, 0)
+        self.assertEqual(r.stdout.splitlines()[0], "NEXT=unknown")
 
     # AC-8
     def test_all_blocked_gives_none_and_notifies(self):

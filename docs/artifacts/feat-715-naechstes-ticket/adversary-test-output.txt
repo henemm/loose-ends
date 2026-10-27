@@ -1,0 +1,28 @@
+test_all_blocked_gives_none_and_notifies (__main__.NextTicket.test_all_blocked_gives_none_and_notifies) ... ok
+test_api_failure_gives_unknown_exit_zero (__main__.NextTicket.test_api_failure_gives_unknown_exit_zero) ... ok
+test_blocked_by_is_skipped_and_named (__main__.NextTicket.test_blocked_by_is_skipped_and_named) ... ok
+test_branch_numbers_only_count_right_after_prefix (__main__.NextTicket.test_branch_numbers_only_count_right_after_prefix) ... ok
+test_claude_md_names_script_and_epic_rule (__main__.NextTicket.test_claude_md_names_script_and_epic_rule) ... ok
+test_epic_from_label_with_epic_number (__main__.NextTicket.test_epic_from_label_with_epic_number) ... ok
+test_epic_from_label_with_ticket_number (__main__.NextTicket.test_epic_from_label_with_ticket_number) ... ok
+test_epic_is_topmost_parent_when_ticket_has_sub_issues (__main__.NextTicket.test_epic_is_topmost_parent_when_ticket_has_sub_issues) ... ok
+test_first_line_is_machine_readable (__main__.NextTicket.test_first_line_is_machine_readable) ... ok
+test_hanging_gh_gives_unknown (__main__.NextTicket.test_hanging_gh_gives_unknown) ... ok
+test_hotspot_globs_do_not_depend_on_working_directory (__main__.NextTicket.test_hotspot_globs_do_not_depend_on_working_directory) ... ok
+test_in_progress_and_pr_are_skipped (__main__.NextTicket.test_in_progress_and_pr_are_skipped) ... ok
+test_live_session_lock_blocks_finished_lock_does_not (__main__.NextTicket.test_live_session_lock_blocks_finished_lock_does_not) ... ok
+test_missing_gh_gives_unknown (__main__.NextTicket.test_missing_gh_gives_unknown) ... ok
+test_missing_workspace_gives_none (__main__.NextTicket.test_missing_workspace_gives_none) ... ok
+test_no_epic_gives_none (__main__.NextTicket.test_no_epic_gives_none) ... ok
+test_non_object_lock_does_not_hide_later_locks (__main__.NextTicket.test_non_object_lock_does_not_hide_later_locks) ... ok
+test_only_lowest_level_tickets_are_candidates (__main__.NextTicket.test_only_lowest_level_tickets_are_candidates) ... ok
+test_order_priority_then_board_position (__main__.NextTicket.test_order_priority_then_board_position) ... ok
+test_overlap_with_live_session_branch_is_reported (__main__.NextTicket.test_overlap_with_live_session_branch_is_reported) ... ok
+test_overlap_with_open_pr_is_reported (__main__.NextTicket.test_overlap_with_open_pr_is_reported) ... ok
+test_own_lock_does_not_block (__main__.NextTicket.test_own_lock_does_not_block) ... ok
+test_pr_reference_in_title_and_in_closes_list (__main__.NextTicket.test_pr_reference_in_title_and_in_closes_list) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 21.616s
+
+OK
