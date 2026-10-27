@@ -1,0 +1,75 @@
+=== scripts/test_abnahme_liste.py
+Ran 11 tests in 0.002s
+OK
+=== scripts/test_app_icon_package.py
+Ran 9 tests in 0.010s
+OK
+=== scripts/test_asc_beta_probe.py
+Ran 13 tests in 8.261s
+OK
+=== scripts/test_asc_beta_setup.py
+Ran 12 tests in 9.186s
+OK
+=== scripts/test_asc_cleanup_certs.py
+Ran 19 tests in 13.221s
+OK
+=== scripts/test_asc_wait_build.py
+Ran 21 tests in 17.834s
+OK
+=== scripts/test_asc_what_to_test.py
+Ran 6 tests in 1.936s
+OK
+=== scripts/test_board.py
+Ran 8 tests in 0.000s
+OK
+=== scripts/test_check_cloudkit_production.py
+Ran 14 tests in 0.007s
+OK
+=== scripts/test_ci_xcode27.py
+Ran 27 tests in 1.972s
+OK
+=== scripts/test_cloudkit_schema.py
+Ran 2 tests in 0.003s
+OK
+=== scripts/test_compare_reports.py
+Ran 13 tests in 0.147s
+OK
+=== scripts/test_entitlements_sync.py
+Ran 4 tests in 0.017s
+OK
+=== scripts/test_evidence_config.py
+Ran 6 tests in 0.009s
+OK
+=== scripts/test_info_plist_sync.py
+Ran 4 tests in 0.010s
+OK
+=== scripts/test_infoplist_languages.py
+Ran 6 tests in 0.046s
+OK
+=== scripts/test_latency_summary.py
+Ran 9 tests in 0.117s
+OK
+=== scripts/test_mac_ci_entitlements.py
+Ran 5 tests in 0.079s
+OK
+=== scripts/test_measurement_status.py
+Ran 19 tests in 0.032s
+OK
+=== scripts/test_real_model_result.py
+Ran 7 tests in 0.000s
+OK
+=== scripts/test_sim_lock.py
+Ran 32 tests in 49.915s
+OK
+=== scripts/test_sim_proof.py
+Ran 14 tests in 0.590s
+OK
+=== scripts/test_sim_run_xcodebuild.py
+Ran 17 tests in 65.176s
+OK
+=== scripts/test_siri_phrases.py
+Ran 6 tests in 0.048s
+OK
+=== scripts/test_tags_wording.py
+Ran 2 tests in 0.003s
+OK

@@ -161,9 +161,9 @@ bleibt `offen` und Beleg leer, bis ein Lauf ihn füllt.
 | Teil | Status | Beleg |
 |------|--------|-------|
 | Exportnachweis | erledigt: `ITSAppUsesNonExemptEncryption=false` in `project.yml`, im Archiv geprüft (Verify-Schritt) | `project.yml`, Verify-Schritt |
-| Beta-App-Beschreibung | offen | |
-| Feedback-E-Mail | offen | |
-| Kontaktangaben (Beta-Review-Detail) | offen | |
+| Beta-App-Beschreibung | erledigt: `de-DE` aus `beta-beschreibung.md` (2026-10-27) | [Lauf 40466472742](https://github.com/henemm/loose-ends/actions/runs/40466472742) `beschreibung=gesetzt`; [Lauf 40466601395](https://github.com/henemm/loose-ends/actions/runs/40466601395) `geschrieben=0` |
+| Feedback-E-Mail | erledigt (2026-10-27) | Lauf 40466472742 `feedbackEmail=gesetzt` |
+| Kontaktangaben (Beta-Review-Detail) | erledigt: vier Felder, `demoAccountRequired=aus` (2026-10-27) | Lauf 40466472742 `contactFirstName…contactEmail=gesetzt` |
 | Datenschutz-URL | offen | |
 | Interne Gruppe `Familie` | offen | |
 | Externe Gruppe mit öffentlichem Link | offen | |
@@ -184,9 +184,22 @@ Plattform einmal (Matrix `IOS` und `MAC_OS`, auf `ubuntu-latest`) und schreibt n
   Build-Zuordnung je Plattform und Beta-Review.
 - `zusammenfassung antworten=… von=… befunde=…`: Exit 1 nur, wenn gar keine Abfrage antwortet.
 
-**Schnitt 2 (Einrichten und Einreichen) folgt separat:** nur auf ausdrücklichen Lauf, der Schalter `submit` ist
-standardmäßig aus (die Einreichung an Apple ist per API nicht zurückziehbar). Beschreibung, Kontaktangaben und Feedback-E-Mail
-kommen von Henning, nie aus dem Repo geraten.
+**Handlauf `einrichten` (Schnitt 2a):** GitHub → Actions → **ASC Beta Probe** → **Run workflow** → `aktion=einrichten`.
+Der Job `setup` (`scripts/asc_beta_setup.py`) legt die Sprachfassung `de-DE` an oder schreibt nur abweichende Felder:
+Beschreibung aus [`beta-beschreibung.md`](beta-beschreibung.md), Feedback-E-Mail und die vier Kontaktfelder des
+Review-Details aus den Secrets `ASC_REVIEW_FIRST_NAME`, `ASC_REVIEW_LAST_NAME`, `ASC_REVIEW_PHONE` (mit `+`),
+`ASC_REVIEW_EMAIL`, dazu `demoAccountRequired=false`. Kontaktdaten nie als Eingabe: das Repo ist öffentlich, Eingaben stehen
+in der Laufansicht. Danach läuft die Probe als Beleg (`beschreibung=gesetzt feedbackEmail=gesetzt`, im `reviewdetail` die
+Kontaktfelder `gesetzt`). Ein zweiter Lauf schreibt nichts (`zusammenfassung geschrieben=0`).
+
+- Die Kontaktfelder sind nach dem ersten Setzen bei Apple nicht mehr leerbar, nur überschreibbar.
+- `Schlüssel ohne Schreibrecht` (HTTP 403): der API-Schlüssel darf nicht schreiben; Rückfall ist die Oberfläche von App Store
+  Connect, nicht das Umgehen.
+- Die Datenschutz-URL wird nur gesetzt, wenn die Repo-Variable `ASC_PRIVACY_POLICY_URL` existiert (gehört zu #342).
+
+**Schnitt 2:** 2a (Texte und Kontakt) ist der Handlauf oben. 2b (externe Gruppe, Build-Zuordnung, Beta-Review einreichen,
+öffentlicher Link) folgt separat, nur auf ausdrücklichen Lauf; der Schalter `submit` ist standardmäßig aus (die Einreichung
+an Apple ist per API nicht zurückziehbar).
 
 ## Wenn es hakt
 
