@@ -1,0 +1,16 @@
+..F...
+======================================================================
+FAIL: test_every_code_literal_has_a_catalog_entry (scripts.test_infoplist_languages.CodeLiteralTests.test_every_code_literal_has_a_catalog_entry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/scripts/test_infoplist_languages.py", line 144, in test_every_code_literal_has_a_catalog_entry
+    self.assertEqual(missing, {}, "Text im Code ohne Katalogeintrag (zeigt auf Deutsch Englisch)")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'Counts': PosixPath('LooseEnds/Views/FieldFormatting.swift')} != {}
+- {'Counts': PosixPath('LooseEnds/Views/FieldFormatting.swift')}
++ {} : Text im Code ohne Katalogeintrag (zeigt auf Deutsch Englisch)
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.069s
+
+FAILED (failures=1)

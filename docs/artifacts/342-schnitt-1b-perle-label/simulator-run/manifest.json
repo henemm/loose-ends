@@ -1,0 +1,32 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "10E76E47-0BAC-4B79-B03E-CC3F4E153C79.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "342-aenderungsliste-perle-sammeln_0_E251CD22-A0F4-413E-BC6D-015309B6CABB.png",
+        "timestamp" : 1793076480.203
+      }
+    ],
+    "testIdentifier" : "DriveSmokeTests/testChangeListNamesTheBeadMarkInGerman()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/DriveSmokeTests/testChangeListNamesTheBeadMarkInGerman"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "8242040E-4E49-455A-8D4E-A58FD2151D23.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "703-knaeuel-unter-jetzt_0_F0525383-B9B2-4263-86E1-2DC7120624F8.png",
+        "timestamp" : 1793076614.973
+      }
+    ],
+    "testIdentifier" : "DriveSmokeTests/testKnaeuelUnderNowCountsMovesWithAQuestionAndGoesWhenDone()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/DriveSmokeTests/testKnaeuelUnderNowCountsMovesWithAQuestionAndGoesWhenDone"
+  }
+]
