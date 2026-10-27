@@ -10,6 +10,7 @@
 #   ./scripts/sim.sh unit [Suite[/test]]      # Unit-Tests im iOS-Simulator; Mac als Host nur mit LOOSEENDS_MAC_HOST=1
 #   ./scripts/sim.sh real-model               # Tests gegen das echte Modell auf diesem Mac (Apple Intelligence an, #531)
 #   ./scripts/sim.sh real-model-latency <n>   # Modell-Latenz kalt/warm, n Testprozesse, nach docs/artifacts/534-modell-latenz/
+#   ./scripts/sim.sh real-model-guardrail     # Verweigerungsrate des Modells, 2 Durchläufe je Text, nach docs/artifacts/71-guardrails/ (#71)
 #   ./scripts/sim.sh build                    # iOS-App für den Simulator bauen
 #   ./scripts/sim.sh mac-build                # macOS-App bauen
 #   ./scripts/sim.sh mac-schema-init          # CloudKit-Schema in Development anlegen (#175, schreibt in iCloud)
@@ -446,6 +447,38 @@ cmd_real_model_latency() {
         [ -s "$file" ] || { error "Lauf $i hat keine Rohdaten geschrieben ($file fehlt). Ist Apple Intelligence an? Log: $BUILD_LOG"; return 1; }
     done
     python3 "$PROJECT_DIR/scripts/latency_summary.py" "$out"
+}
+
+# Verweigerungsrate des echten Modells auf diesem Mac (#71, Schnitt 1): die 100 heiklen Texte und, wenn der
+# FocusBlox-Korpus da ist, dessen Rohsätze, je zweimal. Rohdaten ohne Alltagswortlaut ins Repo; die Auswertung mit
+# dem Wortlaut jedes Treffers nur nach $TMPDIR, nie ins Repo (persönliche Daten). Fasst kein iPhone, iPad, keine Watch an.
+cmd_real_model_guardrail() {
+    acquire_testlock "real-model-guardrail"
+    ensure_project
+    mac_hosts_tests || { error "macOS $(sw_vers -productVersion) < Deployment Target $(deployment_target macOS): das Modell läuft nur auf dem Mac selbst"; return 1; }
+    [ "$(uname -m)" = arm64 ] || { error "Apple Intelligence braucht einen Mac mit Apple Silicon"; return 1; }
+    local only="$UNIT_TARGET/RealModelGuardrailTests" file="$PROJECT_DIR/docs/artifacts/71-guardrails/mac-rohdaten.json"
+    local local_dir="${TMPDIR:-/tmp}/loose-ends-71-guardrails"
+    local local_file="$local_dir/mac-rohdaten.json.auswertung.txt"
+    local corpus="${LOOSEENDS_FOCUSBLOX_CORPUS:-/Users/hem/Developer/loose-ends/docs/reference/focusblox-corpus.json}"
+    mkdir -p "$(dirname "$file")" "$local_dir"
+    rm -f "$file" "$local_file"
+    if [ -f "$corpus" ]; then
+        info "Menge: 100 heikle Texte + FocusBlox-Rohsätze ($corpus), je 2 Durchläufe"
+    else
+        corpus=""
+        info "Menge: nur die 100 heiklen Texte (kein FocusBlox-Korpus), je 2 Durchläufe"
+    fi
+    run_xcodebuild build-for-testing -project "$PROJECT" -scheme "$SCHEME" -destination 'platform=macOS' \
+        -only-testing:"$only" || { error "build-for-testing fehlgeschlagen: $BUILD_LOG"; return 1; }
+    TEST_RUNNER_LOOSEENDS_REAL_MODEL=1 TEST_RUNNER_LOOSEENDS_GUARDRAIL_OUT="$file" \
+        TEST_RUNNER_LOOSEENDS_GUARDRAIL_LOCAL="$local_file" TEST_RUNNER_LOOSEENDS_FOCUSBLOX_CORPUS="$corpus" \
+        run_xcodebuild test-without-building -project "$PROJECT" -scheme "$SCHEME" -destination 'platform=macOS' \
+        -only-testing:"$only" -parallel-testing-enabled NO || { error "Lauf fehlgeschlagen: $BUILD_LOG"; return 1; }
+    [ -s "$file" ] || { error "Keine Rohdaten geschrieben ($file fehlt). Ist Apple Intelligence an? Log: $BUILD_LOG"; return 1; }
+    success "Rohdaten: $file"
+    [ -s "$local_file" ] && info "Lokale Auswertung (nicht im Repo): $local_file"
+    return 0
 }
 
 # Ein Satz am Ende statt „siehe Ausgabe“ (Henning, 2026-10-19: aus dem Log war nicht zu erkennen, ob die
@@ -999,7 +1032,7 @@ cmd_location() {
     $SIMCTL location "$id" set "$lat,$lon" && success "Standort: $lat, $lon"
 }
 
-cmd_help() { sed -n '3,37p' "$0" | sed 's/^# \{0,1\}//'; }
+cmd_help() { sed -n '3,38p' "$0" | sed 's/^# \{0,1\}//'; }
 
 COMMAND="${1:-help}"; shift 2>/dev/null || true
 case "$COMMAND" in
@@ -1007,6 +1040,7 @@ case "$COMMAND" in
     unit)       cmd_unit "$@" ;;
     real-model) cmd_real_model ;;
     real-model-latency) cmd_real_model_latency "$@" ;;
+    real-model-guardrail) cmd_real_model_guardrail ;;
     build)      cmd_build ;;
     mac-build)  cmd_mac_build ;;
     mac-schema-init) cmd_mac_schema_init ;;
