@@ -164,7 +164,7 @@ bleibt `offen` und Beleg leer, bis ein Lauf ihn füllt.
 | Beta-App-Beschreibung | erledigt: `de-DE` aus `beta-beschreibung.md` (2026-10-27) | [Lauf 40466472742](https://github.com/henemm/loose-ends/actions/runs/40466472742) `beschreibung=gesetzt`; [Lauf 40466601395](https://github.com/henemm/loose-ends/actions/runs/40466601395) `geschrieben=0` |
 | Feedback-E-Mail | erledigt (2026-10-27) | Lauf 40466472742 `feedbackEmail=gesetzt` |
 | Kontaktangaben (Beta-Review-Detail) | erledigt: vier Felder, `demoAccountRequired=aus` (2026-10-27) | Lauf 40466472742 `contactFirstName…contactEmail=gesetzt` |
-| Datenschutz-URL | offen | |
+| Datenschutz-URL | erledigt: https://www.henemm.com/legal/loose-ends/privacy-policy/ veröffentlicht und bei Apple gesetzt, Repo-Variable `ASC_PRIVACY_POLICY_URL` (2026-10-27) | [Lauf 40583033733](https://github.com/henemm/loose-ends/actions/runs/40583033733) `lokalisierung locale=de-DE beschreibung=unverändert feedbackEmail=unverändert datenschutzUrl=gesetzt`, `zusammenfassung geschrieben=1`, Probe `datenschutzUrl=gesetzt`, `link=aus` für `Tester`, `einreichung keine`; [Lauf 40583443351](https://github.com/henemm/loose-ends/actions/runs/40583443351) `datenschutzUrl=unverändert`, `geschrieben=0` |
 | Interne Gruppe `Familie` | erledigt: besteht, Link aus, Feedback an | Lauf 40387004899; [Lauf 40534641955](https://github.com/henemm/loose-ends/actions/runs/40534641955) `gruppe name=Familie intern=ja` |
 | Externe Gruppe `Tester` | erledigt: angelegt 2026-10-27, Link aus, Feedback an | [Lauf 40516649071](https://github.com/henemm/loose-ends/actions/runs/40516649071) `zustand=angelegt` (Zuordnung dort 403, behoben in #721); Lauf 40534641955 `gruppe name=Tester intern=nein link=aus` |
 | Öffentlicher Link | offen (Schnitt 2b-2) | |
@@ -196,7 +196,8 @@ Kontaktfelder `gesetzt`). Ein zweiter Lauf schreibt nichts (`zusammenfassung ges
 - Die Kontaktfelder sind nach dem ersten Setzen bei Apple nicht mehr leerbar, nur überschreibbar.
 - `Schlüssel ohne Schreibrecht` (HTTP 403): der API-Schlüssel darf nicht schreiben; Rückfall ist die Oberfläche von App Store
   Connect, nicht das Umgehen.
-- Die Datenschutz-URL wird nur gesetzt, wenn die Repo-Variable `ASC_PRIVACY_POLICY_URL` existiert (gehört zu #342).
+- Die Datenschutz-URL wird nur gesetzt, wenn die Repo-Variable `ASC_PRIVACY_POLICY_URL` existiert. Sie besteht seit
+  2026-10-27 mit dem Wert https://www.henemm.com/legal/loose-ends/privacy-policy/ (#705 Schnitt 2b-2a).
 
 **Handlauf `zuordnen` (Schnitt 2b-1):** GitHub → Actions → **ASC Beta Probe** → **Run workflow** → `aktion=zuordnen`.
 Der Job `assign` (`scripts/asc_beta_invite.py`) legt die externe Gruppe `Tester` an, falls sie fehlt (Feedback an, Link

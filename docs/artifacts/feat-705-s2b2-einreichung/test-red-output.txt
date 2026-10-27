@@ -1,0 +1,15 @@
+FAIL AC-4 HTTP 200 (404)
+FAIL AC-2/3 enthält „HENEMM GmbH“
+FAIL AC-2/3 enthält „Eichenaue 14“
+FAIL AC-2/3 enthält „48157 Münster“
+FAIL AC-2/3 enthält „Henning Emmrich“
+FAIL AC-2/3 enthält „henning@henemm.com“
+FAIL AC-2/3 enthält „/footer-information/imprint/“
+FAIL AC-2/3 enthält „Mikrofon“
+FAIL AC-2/3 enthält „Apple Intelligence“
+PASS AC-3 keine Code-Belege
+FAIL AC-5 Variable = URL
+FAIL AC-8 docs/reference/datenschutz-entwurf.md nennt legal/loose-ends
+FAIL AC-8 docs/reference/testflight.md nennt legal/loose-ends
+FAIL AC-8 Entwurf nennt HENEMM GmbH
+ERGEBNIS: ROT

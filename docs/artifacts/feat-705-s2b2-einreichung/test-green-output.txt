@@ -1,0 +1,45 @@
+PASS AC-4 HTTP 200 (200)
+PASS AC-2/3 enthält „HENEMM GmbH“
+PASS AC-2/3 enthält „Eichenaue 14“
+PASS AC-2/3 enthält „48157 Münster“
+PASS AC-2/3 enthält „Henning Emmrich“
+PASS AC-2/3 enthält „henning@henemm.com“
+PASS AC-2/3 enthält „/footer-information/imprint/“
+PASS AC-2/3 enthält „Mikrofon“
+PASS AC-2/3 enthält „Apple Intelligence“
+PASS AC-3 keine Code-Belege
+PASS AC-5 Variable = URL
+PASS AC-8 docs/reference/datenschutz-entwurf.md nennt legal/loose-ends
+PASS AC-8 docs/reference/testflight.md nennt legal/loose-ends
+PASS AC-8 Entwurf nennt HENEMM GmbH
+ERGEBNIS: GRÜN
+--- Skripttests (AC-10)
+scripts/test_abnahme_liste.py: rc=0 OK
+scripts/test_app_icon_package.py: rc=0 OK
+scripts/test_asc_beta_invite.py: rc=0 OK
+scripts/test_asc_beta_probe.py: rc=0 OK
+scripts/test_asc_beta_setup.py: rc=0 OK
+scripts/test_asc_cleanup_certs.py: rc=0 OK
+scripts/test_asc_wait_build.py: rc=0 OK
+scripts/test_asc_what_to_test.py: rc=0 OK
+scripts/test_board.py: rc=0 ::error title=board::Usage: board.py list | board.py set <issue> <Field=Value,...>
+scripts/test_check_cloudkit_production.py: rc=0 OK
+scripts/test_ci_xcode27.py: rc=0 OK
+scripts/test_cloudkit_schema.py: rc=0 OK
+scripts/test_compare_reports.py: rc=0 OK
+scripts/test_entitlements_sync.py: rc=0 OK
+scripts/test_evidence_config.py: rc=0 OK
+scripts/test_info_plist_sync.py: rc=0 OK
+scripts/test_infoplist_languages.py: rc=0 OK
+scripts/test_latency_summary.py: rc=0 OK
+scripts/test_mac_ci_entitlements.py: rc=0 OK
+scripts/test_measurement_status.py: rc=0 OK
+scripts/test_next_ticket_hook.py: rc=0 OK
+scripts/test_next_ticket.py: rc=0 OK
+scripts/test_real_model_result.py: rc=0 OK
+scripts/test_sim_lock.py: rc=0 OK
+scripts/test_sim_proof.py: rc=0 OK
+scripts/test_sim_run_xcodebuild.py: rc=0 OK
+scripts/test_siri_phrases.py: rc=0 OK
+scripts/test_tags_wording.py: rc=0 OK
+abnahme=0 skripttests_fail=0
