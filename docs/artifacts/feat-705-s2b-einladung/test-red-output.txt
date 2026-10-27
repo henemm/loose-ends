@@ -1,0 +1,143 @@
+FFFFFFFFF/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51103)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 51104)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 51105)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 51106)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 51107)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 51108)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 51109)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 51110)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 51111)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=13, family=2, type=1, proto=0, laddr=('127.0.0.1', 51112)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=14, family=2, type=1, proto=0, laddr=('127.0.0.1', 51113)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FF
+======================================================================
+FAIL: test_duplicate_external_groups_abort_before_any_write (__main__.InviteTests.test_duplicate_external_groups_abort_before_any_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 212, in test_duplicate_external_groups_abort_before_any_write
+    self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/asc_beta_invite.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_existing_group_only_assigns_missing_build (__main__.InviteTests.test_existing_group_only_assigns_missing_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 170, in test_existing_group_only_assigns_missing_build
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/asc_beta_invite.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_first_run_creates_group_and_assigns_both_platforms (__main__.InviteTests.test_first_run_creates_group_and_assigns_both_platforms)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 140, in test_first_run_creates_group_and_assigns_both_platforms
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/asc_beta_invite.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_forbidden_write_is_reported_clearly (__main__.InviteTests.test_forbidden_write_is_reported_clearly)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 224, in test_forbidden_write_is_reported_clearly
+    self.assertIn("Schlüssel ohne Schreibrecht", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'Schlüssel ohne Schreibrecht' not found in ''
+
+======================================================================
+FAIL: test_never_submits_and_never_enables_link (__main__.InviteTests.test_never_submits_and_never_enables_link)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 207, in test_never_submits_and_never_enables_link
+    self.assertTrue(all(fake.writes() for fake in fakes), "jedes Szenario muss schreiben, sonst prüft es nichts")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : jedes Szenario muss schreiben, sonst prüft es nichts
+
+======================================================================
+FAIL: test_newest_valid_build_is_chosen_per_platform (__main__.InviteTests.test_newest_valid_build_is_chosen_per_platform)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 177, in test_newest_valid_build_is_chosen_per_platform
+    self.assertEqual(self.invite(fake).returncode, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0
+
+======================================================================
+FAIL: test_one_platform_failing_does_not_hide_the_other (__main__.InviteTests.test_one_platform_failing_does_not_hide_the_other)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 194, in test_one_platform_failing_does_not_hide_the_other
+    self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/asc_beta_invite.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_output_has_only_state_words (__main__.InviteTests.test_output_has_only_state_words)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 229, in test_output_has_only_state_words
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/asc_beta_invite.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_platform_without_valid_build_is_reported_not_failed (__main__.InviteTests.test_platform_without_valid_build_is_reported_not_failed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 185, in test_platform_without_valid_build_is_reported_not_failed
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/asc_beta_invite.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_second_run_sends_no_write (__main__.InviteTests.test_second_run_sends_no_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 157, in test_second_run_sends_no_write
+    self.assertEqual(self.invite(fake).returncode, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0
+
+======================================================================
+FAIL: test_workflow_file (__main__.WorkflowTests.test_workflow_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 245, in test_workflow_file
+    self.assertIn(needle, workflow)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+AssertionError: '- zuordnen' not found in '# Handlauf (#705): `aktion=probe` (Standard, Schnitt 1) fragt Apples Beta-Seite der App nur lesend ab und druckt die\n# Belegtabelle je Plattform in den Lauf-Log. `aktion=einrichten` (Schnitt 2a) setzt vorher Beta-Beschreibung,\n# Feedback-E-Mail und Review-Kontakt (nur aus Secrets, das Repo ist öffentlich); die Probe danach ist der Beleg.\n# Läuft nie automatisch.\nname: ASC Beta Probe\n\non:\n  workflow_dispatch:\n    inputs:\n      aktion:\n        description: "probe = nur lesen, einrichten = Texte und Kontakt setzen, dann lesen"\n        type: choice\n        options:\n          - probe\n          - einrichten\n        default: probe\n\npermissions:\n  contents: read\n\njobs:\n  setup:\n    name: Set beta description, feedback email and review contact\n    if: ${{ inputs.aktion == \'einrichten\' }}\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    env:\n      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}\n      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}\n      ASC_REVIEW_FIRST_NAME: ${{ secrets.ASC_REVIEW_FIRST_NAME }}\n      ASC_REVIEW_LAST_NAME: ${{ secrets.ASC_REVIEW_LAST_NAME }}\n      ASC_REVIEW_PHONE: ${{ secrets.ASC_REVIEW_PHONE }}\n      ASC_REVIEW_EMAIL: ${{ secrets.ASC_REVIEW_EMAIL }}\n      ASC_PRIVACY_POLICY_URL: ${{ vars.ASC_PRIVACY_POLICY_URL }}\n      ASC_POLL_SECONDS: "5"\n    steps:\n      - uses: actions/checkout@v7\n      - name: Write localization de-DE and review detail where they differ\n        run: |\n          trap \'rm -f "$RUNNER_TEMP/asc_key.p8"\' EXIT\n          umask 077\n          printf \'%s\\n\' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"\n          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_setup.py\n\n  probe:\n    name: Probe Apple\'s beta side (${{ matrix.platform }})\n    needs: setup\n    if: ${{ !cancelled() && (needs.setup.result == \'success\' || needs.setup.result == \'skipped\') }}\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    strategy:\n      fail-fast: false\n      matrix:\n        platform: [IOS, MAC_OS]\n    env:\n      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}\n      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}\n      ASC_PLATFORM: ${{ matrix.platform }}\n      ASC_POLL_SECONDS: "5"\n    steps:\n      - uses: actions/checkout@v7\n      - name: Read groups, localizations, review detail, builds and submissions\n        run: |\n          trap \'rm -f "$RUNNER_TEMP/asc_key.p8"\' EXIT\n          umask 077\n          printf \'%s\\n\' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"\n          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_probe.py\n'
+
+----------------------------------------------------------------------
+Ran 11 tests in 6.237s
+
+FAILED (failures=11)

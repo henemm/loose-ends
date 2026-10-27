@@ -160,14 +160,15 @@ bleibt `offen` und Beleg leer, bis ein Lauf ihn füllt.
 
 | Teil | Status | Beleg |
 |------|--------|-------|
-| Exportnachweis | erledigt: `ITSAppUsesNonExemptEncryption=false` in `project.yml`, im Archiv geprüft (Verify-Schritt) | `project.yml`, Verify-Schritt |
+| Exportnachweis | erledigt: `ITSAppUsesNonExemptEncryption=false` in `project.yml`, im Archiv geprüft (Verify-Schritt) | `project.yml`, Verify-Schritt; [Lauf 40387004899](https://github.com/henemm/loose-ends/actions/runs/40387004899) `extern=READY_FOR_BETA_SUBMISSION` (nicht `MISSING_EXPORT_COMPLIANCE`) |
 | Beta-App-Beschreibung | erledigt: `de-DE` aus `beta-beschreibung.md` (2026-10-27) | [Lauf 40466472742](https://github.com/henemm/loose-ends/actions/runs/40466472742) `beschreibung=gesetzt`; [Lauf 40466601395](https://github.com/henemm/loose-ends/actions/runs/40466601395) `geschrieben=0` |
 | Feedback-E-Mail | erledigt (2026-10-27) | Lauf 40466472742 `feedbackEmail=gesetzt` |
 | Kontaktangaben (Beta-Review-Detail) | erledigt: vier Felder, `demoAccountRequired=aus` (2026-10-27) | Lauf 40466472742 `contactFirstName…contactEmail=gesetzt` |
 | Datenschutz-URL | offen | |
-| Interne Gruppe `Familie` | offen | |
-| Externe Gruppe mit öffentlichem Link | offen | |
-| Build-Zuordnung iOS und macOS | offen | |
+| Interne Gruppe `Familie` | offen | Lauf 40387004899 |
+| Externe Gruppe `Tester` | offen | Lauf `zuordnen`: `gruppe name=Tester` |
+| Öffentlicher Link | offen (Schnitt 2b-2) | |
+| Build-Zuordnung iOS und macOS | offen | Lauf `zuordnen`, sobald er stattfand |
 | Beta-Review (Einreichung) | offen | |
 | Rückmeldeweg: TestFlight-Feedback | offen | |
 
@@ -197,9 +198,18 @@ Kontaktfelder `gesetzt`). Ein zweiter Lauf schreibt nichts (`zusammenfassung ges
   Connect, nicht das Umgehen.
 - Die Datenschutz-URL wird nur gesetzt, wenn die Repo-Variable `ASC_PRIVACY_POLICY_URL` existiert (gehört zu #342).
 
-**Schnitt 2:** 2a (Texte und Kontakt) ist der Handlauf oben. 2b (externe Gruppe, Build-Zuordnung, Beta-Review einreichen,
-öffentlicher Link) folgt separat, nur auf ausdrücklichen Lauf; der Schalter `submit` ist standardmäßig aus (die Einreichung
-an Apple ist per API nicht zurückziehbar).
+**Handlauf `zuordnen` (Schnitt 2b-1):** GitHub → Actions → **ASC Beta Probe** → **Run workflow** → `aktion=zuordnen`.
+Der Job `assign` (`scripts/asc_beta_invite.py`) legt die externe Gruppe `Tester` an, falls sie fehlt (Feedback an, Link
+aus), und ordnet ihr je Plattform den neuesten `VALID`-Build zu (`zuordnung plattform=… zustand=gesetzt|vorhanden|kein-gültiger-build
+extern=…`). Er reicht **nichts** zum Review ein und schaltet **keinen** Link ein; die Zuordnung ist umkehrbar. Danach läuft
+die Probe als Beleg; ein zweiter Lauf schreibt nichts (`zusammenfassung geschrieben=0`).
+
+- Jeder spätere Build braucht wieder einen Lauf `zuordnen` (Automatisierung in `testflight.yml` ist ein Folgeticket).
+- `Schlüssel ohne Schreibrecht` (HTTP 403): Rückfall ist die Oberfläche von App Store Connect.
+
+**Schnitt 2:** 2a (Texte und Kontakt) und 2b-1 (externe Gruppe, Build-Zuordnung) sind die Handläufe oben. 2b-2 (Beta-Review
+einreichen, öffentlicher Link) ist der nächste Schnitt, nur auf ausdrücklichen Lauf (die Einreichung an Apple ist per API
+nicht zurückziehbar).
 
 ## Wenn es hakt
 
