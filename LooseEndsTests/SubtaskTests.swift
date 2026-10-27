@@ -56,7 +56,7 @@ import Testing
         #expect(Subtasks.progress(of: parent) == Subtasks.Progress(done: 0, total: 2))
     }
 
-    @Test("A subtask without a date of its own never shows in a view of its own, open or done (#565)")
+    @Test("A subtask with nothing of its own never shows in a view of its own, open or done (#565)")
     @MainActor func staysOutOfViews() async throws {
         let store = try TestStore()
         let project = Project(name: "Haushalt", sortOrder: 0)
@@ -68,8 +68,8 @@ import Testing
         parent.project = project
         store.context.insert(parent)
         let milk = try Subtasks.add("Milch", to: parent, in: store.context)
-        // Lined up, but no date of its own: with one it stands in "Due" (#565, SubtaskListsTests).
-        milk.nextRank = 2
+        // Nothing of its own: with a date, a rank, a duration, a repeat or a park it stands in a list
+        // (#565, SubtaskListsTests).
         let bread = try Subtasks.add("Brot", to: parent, in: store.context)
         Subtasks.toggle(bread)
         try store.context.save()
