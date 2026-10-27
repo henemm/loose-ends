@@ -117,6 +117,8 @@ struct TaskListView: View {
                 reviewSections
             } else if kind == .due || kind == .open {
                 newDateSections
+            } else if context != nil || kind == .quick {
+                stagedSections(shown, stage: { ViewRules.looseEndsStage($0) }) { row($0) }
             } else {
                 openRows
             }
@@ -369,8 +371,7 @@ struct TaskListView: View {
     /// "Due" and "Loose ends" (#518, #548): whose deadline passed stands on top until it has a new date,
     /// subtasks among them with their parent named; the margin's button and the swipe open the date
     /// choice. The rest follows in the view's order. In "Loose ends" the rest stands in the blocks of
-    /// #657 (today, no date, later) and the parked tasks close the list (#545), each under a grey head
-    /// once more than one block shows: apart, but no colour of its own (grey is hierarchy).
+    /// #657 (today, no date, later) and the parked tasks close the list (#545).
     @ViewBuilder
     private var newDateSections: some View {
         let needsDate = ViewRules.leftovers(in: tasks)
@@ -399,19 +400,30 @@ struct TaskListView: View {
 
     @ViewBuilder
     private func looseEndsSections(needsDate: [TaskItem], rest: [TaskItem]) -> some View {
-        let stages = Dictionary(grouping: rest) { ViewRules.looseEndsStage($0) }
-        let shownBlocks = stages.count + (needsDate.isEmpty ? 0 : 1)
         if !needsDate.isEmpty {
             needsDateSection(needsDate)
         }
-        ForEach([ViewRules.LooseEndsStage.today, .undated, .later, .parked], id: \.self) { stage in
-            if let block = stages[stage] {
+        stagedSections(rest, stage: { ViewRules.looseEndsStage($0) }, extraBlocks: needsDate.isEmpty ? 0 : 1) { row($0) }
+    }
+
+    /// The blocks of #657 (today, no date, later, parked) in "Loose ends", "Quick", a tag and a project
+    /// (Henning, 2026-10-27), each under a grey head once more than one block shows: apart, but no
+    /// colour of its own (grey is hierarchy). `items` already stand in the blocks' order.
+    @ViewBuilder
+    private func stagedSections<Item: Identifiable, Row: View>(
+        _ items: [Item], stage: (Item) -> ViewRules.LooseEndsStage, extraBlocks: Int = 0,
+        @ViewBuilder row: @escaping (Item) -> Row
+    ) -> some View {
+        let stages = Dictionary(grouping: items, by: stage)
+        let shownBlocks = stages.count + extraBlocks
+        ForEach([ViewRules.LooseEndsStage.today, .undated, .later, .parked], id: \.self) { step in
+            if let block = stages[step] {
                 if shownBlocks > 1 {
                     Section {
                         ForEach(block) { row($0) }
                     } header: {
-                        head(Text(stage.headKey))
-                            .accessibilityIdentifier(stage.headIdentifier)
+                        head(Text(step.headKey))
+                            .accessibilityIdentifier(step.headIdentifier)
                     }
                 } else {
                     Section {
@@ -436,7 +448,9 @@ struct TaskListView: View {
     @ViewBuilder
     private var projectRows: some View {
         if let project {
-            ForEach(ViewRules.lines(inProject: project, in: tasks, unfolded: unfolded)) { line in
+            // A subtask line stands in the block of its task (#657).
+            stagedSections(ViewRules.lines(inProject: project, in: tasks, unfolded: unfolded),
+                           stage: { ViewRules.looseEndsStage($0.owner) }) { line in
                 switch line {
                 case .task(let task):
                     // The Done window (#32) holds here too: struck through with Undo for three seconds.
