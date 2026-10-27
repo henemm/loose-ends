@@ -3,7 +3,7 @@ entity_id: feat-705-schnitt-2b1-gruppe-zuordnung
 type: feature
 created: 2026-10-27
 updated: 2026-10-27
-status: draft
+status: done
 workflow: feat-705-s2b-einladung
 ---
 
@@ -11,7 +11,7 @@ workflow: feat-705-s2b-einladung
 
 ## Approval
 
-- [ ] Approved
+- [x] Approved (Henning, 2026-10-27)
 
 ## Purpose
 
@@ -251,3 +251,8 @@ Abnahmestufe: Skripttests plus echter CI-Lauf, kein Simulator- oder Geräteschri
 
 - 2026-10-27: Initial spec created
 - 2026-10-27: Zuordnung über GET /v1/betaGroups/{id}/relationships/builds, weil Apple GET /v1/builds/{id}/betaGroups mit 403 ablehnt (Lauf 40516649071, Apple-Doku Builds/Beta Groups)
+- 2026-10-27: Umfang (AC-12) gemessen: Skript, Workflow und Doku +181/−19 (unter ±250); die Tests kamen mit 294 Zeilen statt
+  der geschätzten ~100 dazu, zusammen 494 in den vier Scope-Dateien. Bewusst nicht weiter geteilt: der Produktivteil liegt
+  unter der Grenze, Schnitt 2a (3763e57) hatte dasselbe Verhältnis (131 Skript, 253 Test). Weitere Dateien in den Commits
+  sind nur Workflow-Artefakte (Spec, Briefing, Kontext, Protokolle).
+- 2026-10-27: Abgeschlossen, echte Läufe 40534641955 (`geschrieben=2`) und 40535068594 (`geschrieben=0`); Folgeticket #724.
