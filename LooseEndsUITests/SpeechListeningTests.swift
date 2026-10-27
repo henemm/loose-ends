@@ -56,7 +56,7 @@ final class SpeechListeningTests: XCTestCase {
         let deadline = Date().addingTimeInterval(15)
         var ergebnis = "nichts"
         while Date() < deadline {
-            if let text = field.value as? String, !text.isEmpty, text != "Was soll ich aufnehmen?" {
+            if let text = field.value as? String, !text.isEmpty, text != "Was möchtest du hinzufügen?" {
                 ergebnis = "erkannt: \(text)"
                 break
             }

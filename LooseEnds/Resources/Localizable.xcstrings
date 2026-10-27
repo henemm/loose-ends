@@ -209,7 +209,7 @@
     "Out and about" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Unterwegs" } } } },
     "Capture" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erfassen" } } } },
     "Capture a task" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufgabe erfassen" } } } },
-    "What should I remember?" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Was soll ich aufnehmen?" } } } },
+    "What should I remember?" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Was möchtest du hinzufügen?" } } } },
     "Say it, it's saved. Loose Ends sorts it out afterwards." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Sag es, und es ist gespeichert. Loose Ends sortiert es danach." } } } },
     "Saved: %@" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Gespeichert: %@" } } } },
     "Open capture" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erfassung öffnen" } } } },

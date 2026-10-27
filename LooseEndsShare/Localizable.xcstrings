@@ -3,7 +3,7 @@
   "version" : "1.0",
   "strings" : {
     "Capture" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erfassen" } } } },
-    "What should I remember?" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Was soll ich aufnehmen?" } } } },
+    "What should I remember?" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Was möchtest du hinzufügen?" } } } },
     "Cancel" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Abbrechen" } } } },
     "Done" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Fertig" } } } },
     "OK" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "OK" } } } },
