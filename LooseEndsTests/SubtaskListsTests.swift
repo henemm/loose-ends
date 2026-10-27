@@ -6,8 +6,11 @@ import Testing
 /// Subtasks in the lists (#565, Henning 2026-10-20, concept D): a subtask stands outside its task
 /// only with something of its own. Its own date puts it wherever a dated task stands: "Due", "Now",
 /// the badge, the start headline, "Loose ends" and the Mac's "Next days" (Henning, 2026-10-21: moved
-/// to tomorrow, it had vanished until its day); its own tag in that tag's list. "New" and "Next up"
-/// stay top level.
+/// to tomorrow, it had vanished until its day); its own tag in that tag's list. Lined up as next, with a
+/// duration, repeating or parked it stands in "Next up", "Now", "Quick", "Repeating" and "Parked" too
+/// (Henning, 2026-10-27: a subtask lined up as next did not show in "Now"). A done subtask that carried
+/// something of its own stands in "Done"; a subtask waits as long as its task does. Only "New" and
+/// "Old" stay top level.
 @Suite("Subtasks in the lists") struct SubtaskListsTests {
     static var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
@@ -75,22 +78,136 @@ import Testing
         #expect(ViewRules.tasks(inContext: phone, in: all).map(\.id) == [tagged.id])
     }
 
-    @Test("New and Next up keep to top-level tasks, whatever a subtask carries")
+    @Test("New and Old keep to top-level tasks, whatever a subtask carries")
     @MainActor func topLevelViewsStay() async throws {
+        let store = try TestStore()
+        let parent = Self.task("Umzug", in: store)
+        parent.capturedAt = Self.day(-60)
+        let sub = try Subtasks.add("Vermieter anrufen", to: parent, in: store.context, now: Self.day(-60))
+        sub.status = .unverified
+        let all = [parent, sub]
+
+        for kind in [ViewKind.new, .old] {
+            #expect(!ViewRules.tasks(for: kind, in: all, now: Self.now, calendar: Self.calendar).contains { $0.id == sub.id },
+                    "\(kind) should keep to top-level tasks")
+        }
+    }
+
+    @Test("A done subtask that carried something of its own stands in Done; a bare line stays in its task's progress")
+    @MainActor func doneSubtaskWithOwnStandsInDone() async throws {
         let store = try TestStore()
         let phone = TaskContext(name: "Telefon", sortOrder: 0)
         store.context.insert(phone)
         let parent = Self.task("Umzug", in: store)
-        let sub = try Subtasks.add("Vermieter anrufen", to: parent, in: store.context)
-        sub.dueDate = Self.day(0)
-        sub.contexts = [phone]
-        sub.nextRank = 0
+        let dated = try Subtasks.add("Kartons holen", to: parent, in: store.context, now: Self.day(-1))
+        dated.dueDate = Self.day(0)
+        let tagged = try Subtasks.add("Vermieter anrufen", to: parent, in: store.context, now: Self.day(-1))
+        tagged.contexts = [phone]
+        let timed = try Subtasks.add("Schlüssel abgeben", to: parent, in: store.context, now: Self.day(-1))
+        timed.duration = .minutes15
+        let bare = try Subtasks.add("Kisten packen", to: parent, in: store.context, now: Self.day(-1))
+        for line in [dated, tagged, timed, bare] { Subtasks.toggle(line, now: Self.now) }
+        let all = [parent, dated, tagged, timed, bare]
+
+        let done = Set(ViewRules.tasks(for: .done, in: all, now: Self.now, calendar: Self.calendar).map(\.id))
+        #expect(done == [dated.id, tagged.id, timed.id])
+        #expect(Subtasks.progress(of: parent) == Subtasks.Progress(done: 4, total: 4))
+    }
+
+    @Test("A subtask waits as long as its task does: out of Due, Now, Next up, Next days and the badge")
+    @MainActor func subtaskInheritsWaiting() async throws {
+        let store = try TestStore()
+        let blocker = Self.task("Handwerker meldet sich", in: store)
+        let parent = Self.task("Umzug", in: store)
+        parent.blockedBy = [blocker]
+        let dated = try Subtasks.add("Kartons holen", to: parent, in: store.context, now: Self.day(-1))
+        dated.dueDate = Self.day(0, hour: 15)
+        let lined = try Subtasks.add("Kisten packen", to: parent, in: store.context, now: Self.day(-1))
+        lined.nextRank = 1
+        let all = [blocker, parent, dated, lined]
+
+        #expect(dated.isBlocked && lined.isBlocked)
+        #expect(ViewRules.tasks(for: .due, in: all, now: Self.now, calendar: Self.calendar).isEmpty)
+        #expect(ViewRules.tasks(for: .next, in: all, now: Self.now, calendar: Self.calendar).isEmpty)
+        #expect(ViewRules.now(in: all, now: Self.now, calendar: Self.calendar).all.isEmpty)
+        #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 0)
+        #expect(SideColumn.days(in: all, now: Self.now, calendar: Self.calendar).map(\.count) == [0, 0, 0, 0, 0])
+        #expect(ViewRules.tasks(for: .waiting, in: all, now: Self.now, calendar: Self.calendar).map(\.id) == [parent.id],
+                "Waiting lists the task, not its lines")
+
+        blocker.status = .done
+        #expect(!dated.isBlocked && !lined.isBlocked, "the lines are back when the waiting ends")
+    }
+
+    @Test("A subtask lined up as next stands in Next up, in Now, in the badge and in the widget's list (Henning, 2026-10-27)")
+    @MainActor func nextUpSubtaskStandsInNow() async throws {
+        let store = try TestStore()
+        let parent = Self.task("Umzug", in: store)
+        let sub = try Subtasks.add("Kartons holen", to: parent, in: store.context, now: Self.day(-1))
+        let bare = try Subtasks.add("Kisten packen", to: parent, in: store.context, now: Self.day(-1))
+        TaskActions.toggleNext(sub, among: [parent, sub, bare])
+        let all = [parent, sub, bare]
+
+        #expect(ViewRules.tasks(for: .next, in: all, now: Self.now, calendar: Self.calendar).map(\.id) == [sub.id])
+        #expect(ViewRules.now(in: all, now: Self.now, calendar: Self.calendar).all.map(\.id) == [sub.id])
+        #expect(ViewRules.badgeCount(in: all, now: Self.now, calendar: Self.calendar) == 1)
+        #expect(ViewRules.nextRanks(in: all)[sub.id] == 1, "the star with its number stands on the line too")
+    }
+
+    @Test("A subtask lined up as next and due today stands once in Now, a done or parked one not at all")
+    @MainActor func nextUpSubtaskOnceOrNot() async throws {
+        let store = try TestStore()
+        let parent = Self.task("Umzug", in: store)
+        let both = try Subtasks.add("Kartons holen", to: parent, in: store.context, now: Self.day(-1))
+        both.dueDate = Self.day(0, hour: 15)
+        both.nextRank = 1
+        let done = try Subtasks.add("Schlüssel abgeben", to: parent, in: store.context, now: Self.day(-1))
+        done.nextRank = 2
+        Subtasks.toggle(done, now: Self.now)
+        let parked = try Subtasks.add("Keller räumen", to: parent, in: store.context, now: Self.day(-1))
+        parked.nextRank = 3
+        TaskActions.park(parked, now: Self.now)
+        let all = [parent, both, done, parked]
+
+        #expect(ViewRules.now(in: all, now: Self.now, calendar: Self.calendar).all.map(\.id) == [both.id])
+        #expect(ViewRules.tasks(for: .next, in: all, now: Self.now, calendar: Self.calendar).map(\.id) == [both.id])
+    }
+
+    @Test("A subtask with its own duration stands in Quick, a repeating one in Repeating, a parked one in Parked")
+    @MainActor func ownAttributesStandInTheirViews() async throws {
+        let store = try TestStore()
+        let parent = Self.task("Umzug", in: store)
+        let quick = try Subtasks.add("Vermieter anrufen", to: parent, in: store.context, now: Self.day(-1))
+        quick.duration = .minutes5
+        let long = try Subtasks.add("Wohnung streichen", to: parent, in: store.context, now: Self.day(-1))
+        long.duration = .hours2plus
+        let repeating = try Subtasks.add("Pflanzen gießen", to: parent, in: store.context, now: Self.day(-1))
+        repeating.repeatRule = RepeatRule(frequency: .weekly, interval: 1)
+        repeating.dueDate = Self.day(3)
+        let parked = try Subtasks.add("Keller räumen", to: parent, in: store.context, now: Self.day(-1))
+        TaskActions.park(parked, now: Self.now)
+        let all = [parent, quick, long, repeating, parked]
+
+        func ids(_ kind: ViewKind) -> [UUID] {
+            ViewRules.tasks(for: kind, in: all, now: Self.now, calendar: Self.calendar).map(\.id)
+        }
+        #expect(ids(.quick) == [quick.id])
+        #expect(ids(.repeating) == [repeating.id])
+        #expect(ids(.parked) == [parked.id])
+    }
+
+    @Test("A subtask's own project is not read: it stands in its task's project block only, folded under it")
+    @MainActor func projectStaysWithTask() async throws {
+        let store = try TestStore()
+        let project = Project(name: "Haushalt", sortOrder: 0)
+        store.context.insert(project)
+        let parent = Self.task("Umzug", in: store)
+        parent.project = project
+        let sub = try Subtasks.add("Kartons holen", to: parent, in: store.context, now: Self.day(-1))
         let all = [parent, sub]
 
-        for kind in [ViewKind.new, .next] {
-            #expect(!ViewRules.tasks(for: kind, in: all, now: Self.now, calendar: Self.calendar).contains { $0.id == sub.id },
-                    "\(kind) should keep to top-level tasks")
-        }
+        #expect(sub.project?.id == project.id)
+        #expect(ViewRules.tasks(inProject: project, in: all, now: Self.now, calendar: Self.calendar).map(\.id) == [parent.id])
     }
 
     @Test("Moved to tomorrow, a dated subtask stands in Loose ends among the dated and in the Mac's Next days (#565)")

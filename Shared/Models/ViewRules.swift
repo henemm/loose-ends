@@ -373,9 +373,13 @@ enum ViewRules {
 
     static func tasks(for kind: ViewKind, in all: [TaskItem], now: Date = Date(), calendar: Calendar = .current) -> [TaskItem] {
         let topLevel = all.filter { $0.parent == nil }
+        // What a subtask carries of its own is the entry to these views (#565, Henning 2026-10-27: lined
+        // up as next, it did not stand in "Now"): a rank, a duration, a repeat, a park. Only the views
+        // that ask for nothing of the task itself (New, Old, Waiting) stay top level. Done lists a checked line
+        // that carried something of its own: it stood in a list before, so it stands in "Done" after.
         switch kind {
         case .next:
-            return topLevel.filter { $0.isOpen && $0.nextRank != nil && !$0.isBlocked }
+            return all.filter { $0.isOpen && $0.nextRank != nil && !$0.isBlocked }
                 .sorted { ($0.nextRank ?? 0) < ($1.nextRank ?? 0) }
         case .new:
             return topLevel.filter(isInNew)
@@ -389,7 +393,7 @@ enum ViewRules {
                 .sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
         case .quick:
             // In the blocks of "Loose ends" (#657, Henning 2026-10-27): a far date does not stand first.
-            return topLevel.filter { $0.isOpen && ($0.duration?.isQuick ?? false) && !$0.isBlocked }
+            return all.filter { $0.isOpen && ($0.duration?.isQuick ?? false) && !$0.isBlocked }
                 .sorted(by: byPressureThenWeight(now: now, calendar: calendar))
         case .old:
             let cutoff = calendar.date(byAdding: .day, value: -oldAfterDays, to: now) ?? now
@@ -398,10 +402,10 @@ enum ViewRules {
         case .waiting:
             return topLevel.filter { $0.isOpen && $0.isBlocked }
         case .repeating:
-            return topLevel.filter { $0.isOpen && $0.repeatRule != nil }
+            return all.filter { $0.isOpen && $0.repeatRule != nil }
                 .sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
         case .parked:
-            return topLevel.filter { $0.status == .parked }
+            return all.filter { $0.status == .parked }
                 .sorted { ($0.parkedAt ?? .distantPast) > ($1.parkedAt ?? .distantPast) }
         case .open:
             // Not `isOpen`: that leaves parked tasks out, and "Loose ends" means all of them (#319);
@@ -411,7 +415,7 @@ enum ViewRules {
             return all.filter { listedByDate($0) && $0.status != .done && $0.status != .removed }
                 .sorted(by: byPressureThenWeight(now: now, calendar: calendar))
         case .done:
-            return topLevel.filter { $0.status == .done }
+            return all.filter { $0.status == .done && ($0.parent == nil || Subtasks.carriesOwn($0)) }
                 .sorted { ($0.completedAt ?? .distantPast) > ($1.completedAt ?? .distantPast) }
         case .context, .project:
             return [] // resolved by the caller with the concrete context or project
