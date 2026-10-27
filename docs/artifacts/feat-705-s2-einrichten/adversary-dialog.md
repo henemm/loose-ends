@@ -129,6 +129,21 @@ Confirmation:
 F001 und F003: erledigt. F002 bleibt bewusst offen (LOW, am echten zweiten Lauf in Phase 8 zu belegen).
 **Implementierer:** (nicht anwesend)
 
+### Runde 4
+**Adversary:** Echte Läufe selbst lesend nachgeprüft (Protokollzeilen der Läufe, nichts gestartet). Tests neu gelaufen (docs/artifacts/feat-705-s2-einrichten/adversary-test-output.txt): Ran 12 tests, OK; alle scripts/test_*.py OK (test_board.py wie zuvor kein unittest).
+Confirmation:
+  AC: AC-12
+  Code reference: docs/reference/testflight.md:164
+  Evidence: Lauf 40466472742 (einrichten): lokalisierung locale=de-DE beschreibung=gesetzt feedbackEmail=gesetzt datenschutzUrl=leer, reviewdetail kontakt=gesetzt demoAccountRequired=aus, geschrieben=2; Probe IOS und MAC_OS danach contactFirstName/LastName/Phone/Email=gesetzt, beschreibung/feedbackEmail=gesetzt, befunde=0. Die Läufe liefen nach der getippten Freigabe; die Belegspalte in testflight.md:164-166 verweist auf die Läufe (Zeile 164 Beschreibung mit beiden Links, 165 Feedback-E-Mail, 166 Kontaktangaben). Datenschutz-URL bleibt offen (#342), gehört nicht zu 2a.
+  Status: CONFIRMED
+Confirmation:
+  AC: AC-3
+  Code reference: scripts/asc_beta_setup.py:66
+  Evidence: F002 widerlegt am echten Apple: Lauf 40466601395 meldet alles unverändert, zusammenfassung geschrieben=0, Probe danach weiterhin gesetzt. Apple normalisiert die Werte nicht so, dass erneut geschrieben würde.
+  Status: CONFIRMED
+Log-Prüfung: In den Ausgaben beider Läufe stehen nur Zustandswörter, keine Kontaktwerte, Beschreibung oder Token (AC-7 am echten Lauf bestätigt). F001, F003 erledigt (Runde 3), F002 widerlegt.
+**Implementierer:** (nicht anwesend)
+
 ## Herkunft der Vorbedingungen
 
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`). Kein verdächtiger Schreibort (Skript und Workflow, kein Modellfeld).
@@ -140,14 +155,14 @@ VERDICT: VERIFIED
 ## Geprüfte Dateien
 
 - sha256:6bf937f0a7f65e685a9c424985b2b98fdfda361aa1dd07b77d5da1a6e1e93ae7  .github/workflows/asc-beta.yml
-- sha256:a78e94a5bab927a21ad1019625ffeaa2a8b5e06ecb4115cc915943d33241b493  docs/reference/testflight.md
+- sha256:a043655c4ce82b2c1333d05ee8b0f00f79e65d4f63c1692f1f0017e45fb5f31a  docs/reference/testflight.md
 - sha256:674b1f68a9f515c1fde24f2244236b0d00e6293a14075f0003ae70d03556859f  scripts/asc_beta_setup.py
 - sha256:28e5579cbd8936660583e2f9663ca4a25c0e01736819365e8a1f066f30d63f6e  scripts/test_asc_beta_setup.py
 
 ## Prüfbasis
 
-- base: ff461d1711b2b0e689425211490bc4842e2f523e
+- base: 582126e0e266453605b6a182b9420be2d1590e93
 - blob:2ceb6ffabf623a6bc1a06fa4634785ab3d408e3c  .github/workflows/asc-beta.yml
-- blob:ca450ae9eb81243e94a90b982c4fb1db412e5edf  docs/reference/testflight.md
+- blob:647739898e9a442e3659685ad00c45773166ba20  docs/reference/testflight.md
 - blob:7f8820cfa68b762d4555c370b7b6ef359912757d  scripts/asc_beta_setup.py
 - blob:f9f8c280cde1579518ebd56904cc00de74c35aa4  scripts/test_asc_beta_setup.py

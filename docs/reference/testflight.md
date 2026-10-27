@@ -161,9 +161,9 @@ bleibt `offen` und Beleg leer, bis ein Lauf ihn füllt.
 | Teil | Status | Beleg |
 |------|--------|-------|
 | Exportnachweis | erledigt: `ITSAppUsesNonExemptEncryption=false` in `project.yml`, im Archiv geprüft (Verify-Schritt) | `project.yml`, Verify-Schritt |
-| Beta-App-Beschreibung | offen | |
-| Feedback-E-Mail | offen | |
-| Kontaktangaben (Beta-Review-Detail) | offen | |
+| Beta-App-Beschreibung | erledigt: `de-DE` aus `beta-beschreibung.md` (2026-10-27) | [Lauf 40466472742](https://github.com/henemm/loose-ends/actions/runs/40466472742) `beschreibung=gesetzt`; [Lauf 40466601395](https://github.com/henemm/loose-ends/actions/runs/40466601395) `geschrieben=0` |
+| Feedback-E-Mail | erledigt (2026-10-27) | Lauf 40466472742 `feedbackEmail=gesetzt` |
+| Kontaktangaben (Beta-Review-Detail) | erledigt: vier Felder, `demoAccountRequired=aus` (2026-10-27) | Lauf 40466472742 `contactFirstName…contactEmail=gesetzt` |
 | Datenschutz-URL | offen | |
 | Interne Gruppe `Familie` | offen | |
 | Externe Gruppe mit öffentlichem Link | offen | |
