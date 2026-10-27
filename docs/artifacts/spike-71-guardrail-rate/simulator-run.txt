@@ -1,0 +1,21 @@
+# Simulator-Beleg
+erzeugt: 2026-10-27T20:31:30+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: spike-71-guardrail-rate
+head: 2f2e4447d1d21829f531ddfbf1b1fac6c09f2ba7
+basis: 8213e7312a9d916df1a1431eaaf922ebdcc140bb (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 24 gesamt, 24 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793128705.757  ende: 1793129488.091
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/spike-71-guardrail-rate/simulator-run/summary.json  sha256:a039780e3dbe6e82049956909a955be03d968f3389773f6f18772c14f040591c
+xcresult: docs/artifacts/spike-71-guardrail-rate/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/spike-71-guardrail-rate/simulator-run/*.png (13 Stück)
+
+## Geprüfte Dateien
+- sha256:5e2125a155336e783011068a65bb50c6b429207ac3d833e27b9c81906fe47718  LooseEndsTests/GuardrailReportTests.swift
+- sha256:a77bac074b9aa32759455e8fb22d94c79f5b7744cb6e94b6977adae64be1b283  LooseEndsTests/RealModelGateTests.swift
+- sha256:c97dc28755a19de3b88c002716c21523776c01f831cafbaf34f85b7350f06c4a  LooseEndsTests/RealModelGuardrailTests.swift
+- sha256:a920d306b1b619e72d53b28260a5903f7ff9162211837ffcea2ec44e7ef67145  Measurement/GuardrailReport.swift
