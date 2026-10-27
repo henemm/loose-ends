@@ -1,6 +1,7 @@
 # Datenschutz – Entwurf
 
-**Status:** Entwurf, Freigabe Henning. Nicht in die App eingebaut und nicht veröffentlicht. Die öffentliche
+**Status:** Inhalt von Henning freigegeben am 2026-10-27 (Verantwortlicher, Kontaktadresse und Umgang mit den
+Apple-Diensten entschieden, siehe unten). Noch nicht in die App eingebaut und nicht veröffentlicht. Die öffentliche
 Adresse, die Apple für TestFlight verlangt, ist #705.
 
 Geschrieben aus dem, was der Code am 2026-10-26 belegt (#342, Teil 2). Jede Aussage hat unten einen Beleg im
@@ -11,6 +12,24 @@ Code; was der Code nicht beweist, steht unter „Offen, nicht belegt“.
 Loose Ends speichert deine Aufgaben auf deinem Gerät und, wenn du iCloud nutzt, in deinem privaten iCloud.
 Es gibt keinen eigenen Server, kein Konto bei uns, keine Werbung und kein Tracking. Gesprochenes wird auf deinem
 Gerät in Text umgewandelt. Die App fragt nur nach Rechten, wenn du die Funktion benutzt, die sie braucht.
+
+## Verantwortlicher und Kontakt
+
+Henning Emmrich, Henning@henemm.com (Henning, 2026-10-27; der Name steht nicht in seiner Antwort, er ist der
+Git-Autor des Projekts). Fragen zu deinen Daten und zur Löschung: an diese Adresse. Deine Daten löschst du selbst:
+Aufgaben in der App; den iCloud-Bereich der App in den iCloud-Einstellungen unter „Speicher verwalten“.
+
+## Was Apple dabei übernimmt
+
+An vier Stellen handelt Apples System, nicht die App. Dort gilt Apples Datenschutz, und wir sagen nicht mehr zu,
+als der Code belegt:
+
+- **Karten:** Ortssuche und der Name deines aktuellen Ortes laufen über Apple Karten.
+- **Apple Intelligence:** Der Titel wird, wo das Gerät es kann, vom Modell des Geräts verfeinert; was Apple dabei
+  zusagt, ist Apples Sache.
+- **Siri und Kurzbefehle:** Beim Erfassen per Siri gilt Apples Verhalten.
+- **Diktat auf der Watch:** Die Watch nimmt Text über das Diktat von watchOS auf; wohin Apple das Gesprochene
+  schickt, regelt Apple.
 
 ## Was erfasst wird
 
@@ -77,5 +96,7 @@ Die App fragt **nicht** nach Kontakten. Sie liest keine Kontakte.
   (`Shared/Enrichment/FoundationModelsEnricher.swift`). Dass dabei nichts das Gerät verlässt, ist Apples
   Zusage, nicht im Code prüfbar.
 - **Siri und Kurzbefehle:** Was Siri bei „Aufgabe erfassen“ an Apple schickt, ist Apples Verhalten.
-- **Verantwortlicher, Kontaktadresse, Löschung des iCloud-Bereichs:** fehlen noch; Henning ergänzt sie vor
-  der Veröffentlichung (#705).
+- **Verantwortlicher, Kontaktadresse:** entschieden (oben). Der Löschhinweis zum iCloud-Bereich beschreibt die
+  Systemeinstellung und ist vor der Veröffentlichung auf einem Gerät gegenzulesen (#705).
+- **Die vier Apple-Punkte** stehen jetzt im Text als „Was Apple dabei übernimmt“ (Entscheidung Henning,
+  2026-10-27); sie bleiben hier als Hinweis, dass der Code sie nicht belegen kann.
