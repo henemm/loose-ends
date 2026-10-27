@@ -14,7 +14,7 @@ check "AC-4 HTTP 200 ($code)" '[ "$code" = "200" ]'
 for s in "HENEMM GmbH" "Eichenaue 14" "48157 Münster" "Henning Emmrich" "henning@henemm.com" "/footer-information/imprint/" "Mikrofon" "Apple Intelligence"; do
   check "AC-2/3 enthält „${s}“" 'grep -qF "$s" <<<"$body"'
 done
-check "AC-3 keine Code-Belege" '! grep -qE "project\.yml|xcprivacy|\.swift|#[0-9]{3}" <<<"$(sed "s/<[^>]*>//g" <<<"$body")"'
+check "AC-3 keine Code-Belege" '! grep -qE "project\.yml|xcprivacy|\.swift|#[0-9]{3}" <<<"$(sed -e "s/<[^>]*>//g" -e "s/&#[0-9]*;//g" <<<"$body")"'
 
 var="$(gh variable get ASC_PRIVACY_POLICY_URL --repo henemm/loose-ends 2>/dev/null)"
 check "AC-5 Variable = URL" '[ "$var" = "$URL" ]'

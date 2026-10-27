@@ -1,8 +1,11 @@
 # Datenschutz – Entwurf
 
 **Status:** Inhalt von Henning freigegeben am 2026-10-27 (Verantwortlicher, Kontaktadresse und Umgang mit den
-Apple-Diensten entschieden, siehe unten). Noch nicht in die App eingebaut und nicht veröffentlicht. Die öffentliche
-Adresse, die Apple für TestFlight verlangt, ist #705.
+Apple-Diensten entschieden, siehe unten). Veröffentlicht am 2026-10-27 unter
+https://www.henemm.com/legal/loose-ends/privacy-policy/ (Website-PR henemm/henemm-website#75), bei Apple als
+Datenschutz-URL der Beta-Lokalisierung de-DE eingetragen (#705). Noch nicht in die App eingebaut. Die öffentliche Seite
+ist die Fassung ohne die Abschnitte „Beleg im Code“ und „Offen, nicht belegt“; eine Änderung an diesem Text gilt erst,
+wenn auch die Website-Seite angepasst ist.
 
 Geschrieben aus dem, was der Code am 2026-10-26 belegt (#342, Teil 2). Jede Aussage hat unten einen Beleg im
 Code; was der Code nicht beweist, steht unter „Offen, nicht belegt“.
@@ -15,9 +18,16 @@ Gerät in Text umgewandelt. Die App fragt nur nach Rechten, wenn du die Funktion
 
 ## Verantwortlicher und Kontakt
 
-Henning Emmrich, Henning@henemm.com (Henning, 2026-10-27; der Name steht nicht in seiner Antwort, er ist der
-Git-Autor des Projekts). Fragen zu deinen Daten und zur Löschung: an diese Adresse. Deine Daten löschst du selbst:
+HENEMM GmbH, Eichenaue 14, 48157 Münster, Deutschland, vertreten durch den Geschäftsführer Henning Emmrich;
+E-Mail henning@henemm.com; weitere Angaben im Impressum (https://www.henemm.com/footer-information/imprint/)
+(Henning, 2026-10-27, Auswahl „HENEMM GmbH“, wie bei Gregor Zwanzig). Fragen zu deinen Daten und zur Löschung: an
+diese Adresse. Deine Daten löschst du selbst:
 Aufgaben in der App; den iCloud-Bereich der App in den iCloud-Einstellungen unter „Speicher verwalten“.
+
+Du kannst jederzeit Auskunft verlangen, falsche Daten berichtigen und Daten löschen lassen; für alles andere als
+das Löschen in der App und im iCloud-Bereich genügt eine E-Mail an die Adresse oben. Du kannst dich außerdem bei
+einer Datenschutz-Aufsichtsbehörde beschweren, zum Beispiel bei der Landesbeauftragten für Datenschutz und
+Informationsfreiheit Nordrhein-Westfalen. (Henning, 2026-10-27: Rechte wie Gregor Zwanzig)
 
 ## Was Apple dabei übernimmt
 
@@ -52,7 +62,7 @@ als der Code belegt:
 | Recht | Wann gefragt | Wozu |
 |---|---|---|
 | Mikrofon | beim Sprechen einer Aufgabe | damit du eine Aufgabe sagen kannst |
-| Spracherkennung | Text ist hinterlegt (siehe Offen) | Umwandlung auf dem Gerät |
+| Spracherkennung | nur, falls das System danach fragt; ein Erklärungstext ist hinterlegt (siehe Offen) | Umwandlung auf dem Gerät |
 | Kamera | beim Scannen eines Dokuments | ein Dokument an eine Aufgabe hängen |
 | Standort „beim Verwenden“ | nur wenn du „Hier“ für einen Ort wählst | den aktuellen Ort für eine Ortserinnerung |
 | Kalender (voller Zugriff) | nur wenn du die Kalenderanzeige einschaltest | Aufgaben mit Fälligkeit als Termine zeigen; die App ändert nur ihre eigenen Termine |
@@ -97,6 +107,7 @@ Die App fragt **nicht** nach Kontakten. Sie liest keine Kontakte.
   Zusage, nicht im Code prüfbar.
 - **Siri und Kurzbefehle:** Was Siri bei „Aufgabe erfassen“ an Apple schickt, ist Apples Verhalten.
 - **Verantwortlicher, Kontaktadresse:** entschieden (oben). Der Löschhinweis zum iCloud-Bereich beschreibt die
-  Systemeinstellung und ist vor der Veröffentlichung auf einem Gerät gegenzulesen (#705).
+  Systemeinstellung. Die Seite ist seit 2026-10-27 veröffentlicht; das Gegenlesen des Hinweises auf einem Gerät ist
+  weiter offen und vor dem App Store nötig, nur auf Hennings ausdrückliches Wort (#705).
 - **Die vier Apple-Punkte** stehen jetzt im Text als „Was Apple dabei übernimmt“ (Entscheidung Henning,
   2026-10-27); sie bleiben hier als Hinweis, dass der Code sie nicht belegen kann.
