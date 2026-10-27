@@ -1,0 +1,92 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/GuardrailReportTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftConstValuesFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.LinkFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-OutputFileMap.json
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:12:51: [31mcannot find type 'GuardrailProbe' in scope[0m
+ 10 |     private func texts(_ set: String, count: Int, lang: String = "de", group: String = "g1", runs: Int = 2,
+[36m 11 |                        refused: Int = 0, kind: String = MeasurementErrorKind.guardrail,[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:24:79: [31mcannot find type 'GuardrailProbe' in scope[0m
+ 22 | 
+[36m 23 |     /// The full corpus of the spec: 100 touchy and 287 everyday texts.[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:16:17: [31mcannot find 'GuardrailProbe' in scope[0m
+ 14 |         return (0..<count).flatMap { index in
+[36m 15 |             (1...runs).map { run in[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:33:13: [31mcannot find 'GuardrailProbe' in scope[0m
+ 31 |                      MeasurementErrorKind.timeout, MeasurementErrorKind.contextWindow, MeasurementErrorKind.other]
+[36m 32 |         let probes = kinds.enumerated().map { index, kind in[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:35:21: [31mcannot find 'GuardrailReport' in scope[0m
+ 33 |             GuardrailProbe(id: "k-\(index)", menge: "alltag", sprache: "de", gruppe: "g", text: nil, durchlauf: 1, fehlerart: kind)
+[36m 34 |         } + texts("alltag", count: 4, runs: 1, prefix: "ok")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:53:21: [31mcannot find 'GuardrailReport' in scope[0m
+ 51 |             + texts("alltag", count: 10, runs: 1, refused: 2, kind: MeasurementErrorKind.timeout, prefix: "to")
+[36m 52 |             + texts("alltag", count: 20, runs: 1, prefix: "ok")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:65:21: [31mcannot find 'GuardrailReport' in scope[0m
+ 63 |     @Test("No hit in 387 texts: rate 0, Wilson bound about 1.0 %, rule-of-three hint 3/387")
+[36m 64 |     func zeroHits() throws {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:77:21: [31mcannot find 'GuardrailReport' in scope[0m
+ 75 |     @Test("One hit in 387 texts: about 0.26 %, Wilson bound about 1.4 %, no rule-of-three hint")
+[36m 76 |     func oneHit() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:87:22: [31mcannot find 'GuardrailReport' in scope[0m
+ 85 |     @Test("A hundred texts alone cannot carry the threshold: zero hits still leave the bound at about 3.7 %")
+[36m 86 |     func hundredAlone() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:103:22: [31mcannot find 'GuardrailReport' in scope[0m
+101 |             return copy
+[36m102 |         }[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:114:41: [31mcannot infer contextual base in reference to member 'sometimes'[0m
+112 |         #expect(always.kindsPerRun == [MeasurementErrorKind.guardrail, MeasurementErrorKind.guardrail])
+[36m113 |         let sometimes = try #require(report.hits.first { $0.id == "heikel-1" })[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:106:22: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+104 | 
+[32m105 |         #expect(report.total.hitTexts == 2)[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:113:25: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+111 |         #expect(always.sprache == "de")
+[32m112 |         #expect(always.kindsPerRun == [MeasurementErrorKind.guardrail, MeasurementErrorKind.guardrail])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:127:22: [31mcannot find 'GuardrailReport' in scope[0m
+125 |             + texts("heikel", count: 10, lang: "en", group: "medizin")
+[36m126 |             + texts("alltag", count: 20, lang: "de", group: "alltag")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:143:20: [31mcannot find 'GuardrailReport' in scope[0m
+141 |     @Test("The 1 % threshold is judged on the total: 4 of 387 is over, 3 of 387 is under but not ruled out")
+[36m142 |     func threshold() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:147:21: [31mcannot find 'GuardrailReport' in scope[0m
+145 |         #expect(four.upperBoundAbove == true)
+[36m146 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:152:22: [31mcannot find 'GuardrailReport' in scope[0m
+150 | 
+[36m151 |         // Both sets are shown next to it, but the touchy ones alone do not decide.[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:159:22: [31mcannot find 'GuardrailReport' in scope[0m
+157 |     @Test("An empty list gives an empty report, not a crash or NaN")
+[36m158 |     func emptyReport() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:168:21: [31mcannot find 'GuardrailProbe' in scope[0m
+166 |     @Test("Probes survive a round trip through JSON in the raw-data format")
+[36m167 |     func probeRoundTrip() throws {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:170:38: [31mtype 'Any' cannot conform to 'Encodable' [#ProtocolTypeNonConformance][0m
+168 |         let probe = GuardrailProbe(id: "gr-001", menge: "heikel", sprache: "de", gruppe: "kuendigung",
+[36m169 |                                    text: "Kündigung verschicken", durchlauf: 2, fehlerart: MeasurementErrorKind.refusal)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:174:46: [31mcannot find 'GuardrailProbe' in scope[0m
+172 |         #expect(json.contains("\"menge\""))
+[36m173 |         #expect(json.contains("\"fehlerart\""))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:174:38: [31mfailed to produce diagnostic for expression; please submit a bug report (https://swift.org/contributing/#reporting-bugs)[0m
+172 |         #expect(json.contains("\"menge\""))
+[36m173 |         #expect(json.contains("\"fehlerart\""))[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/issue-145/LooseEndsTests/GuardrailReportTests.swift:171:20: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+169 |                                    text: "Kündigung verschicken", durchlauf: 2, fehlerart: MeasurementErrorKind.refusal)
+[32m170 |         let data = try JSONEncoder().encode([probe])[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m GuardrailReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RealModelGateTests.swift
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-issue-145/Logs/Test/Test-LooseEnds-2026.10.27_18-40-57-+0100.xcresult
