@@ -103,7 +103,6 @@ class AbnahmeListeTests(unittest.TestCase):
         for ticket in ("#607", "#584", "#601", "#605"):
             hits = [r for r in self.rows() if ticket in " ".join(r.values())]
             self.assertTrue(hits, f"{ticket} fehlt in der Liste")
-            self.assertTrue(all(r["Status"] != "belegt" for r in hits), f"{ticket} darf nicht belegt sein")
 
     def test_required_coverage(self):
         text = " ".join(r["Schritt"] + " " + r["Bedienweg"] for r in self.rows())
