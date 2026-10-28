@@ -269,3 +269,77 @@ struct TitleCheckTests {
         #expect(TitleCheck.editDistance("", "abc") == 3)
     }
 }
+
+/// Hennings Rohsatz-Datei muss den Läufer erreichen, und ein Korpus, der nicht lädt, muss das laut sagen
+/// (#88 Schnitt B1a). Die Dateien sind Kunstdaten in Documents bzw. `docs/reference/`, nie echte Sätze.
+@Suite("Korpus laden, laut scheitern (#88 B1a)", .serialized)
+struct CorpusLoadReportTests {
+    static let marker = "Zahnarztmarker"
+
+    /// Legt `<name>.json` in Documents ab und räumt danach auf.
+    private func withDocumentsFile(_ contents: String, _ body: (String) throws -> Void) throws {
+        let name = "b1a-test-\(UUID().uuidString)"
+        let url = try #require(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first)
+            .appendingPathComponent("\(name).json")
+        try contents.write(to: url, atomically: true, encoding: .utf8)
+        defer { try? FileManager.default.removeItem(at: url) }
+        try body(name)
+    }
+
+    @Test("Fehlende Datei: Grund „fehlt“ mit Korpusnamen (AC-1, AC-2)")
+    func missingFileNamesCorpus() {
+        let report = Corpus.loadReport(fileName: "does-not-exist-corpus")
+        guard case .problem(let problem) = report else { Issue.record("erwartet: Grund, bekommen: \(report)"); return }
+        #expect(problem == .missing("does-not-exist-corpus"))
+        #expect(problem.message.contains("does-not-exist-corpus"))
+        #expect(problem.message.contains("fehlt"))
+    }
+
+    @Test("Kaputte Datei: Grund „unlesbar“, ohne Dateiinhalt (AC-3, AC-10)")
+    func corruptFileIsUnreadable() throws {
+        try withDocumentsFile("\(Self.marker) {{ kein json") { name in
+            guard case .problem(let problem) = Corpus.loadReport(fileName: name) else { Issue.record("erwartet: Grund"); return }
+            guard case .unreadable(let named, _) = problem else { Issue.record("erwartet: unlesbar, bekommen: \(problem)"); return }
+            #expect(named == name)
+            #expect(problem.message.contains(name))
+            #expect(problem.message.contains("unlesbar"))
+            #expect(!problem.message.contains(Self.marker))
+        }
+    }
+
+    @Test("Leere Liste: Grund „leer“ (AC-4)")
+    func emptyListIsEmpty() throws {
+        try withDocumentsFile("[]") { name in
+            guard case .problem(let problem) = Corpus.loadReport(fileName: name) else { Issue.record("erwartet: Grund"); return }
+            #expect(problem == .empty(name))
+            #expect(problem.message.contains("leer"))
+        }
+    }
+
+    @Test("Gültige Datei: dieselben Einträge wie Corpus.load, kein Grund (AC-1, AC-5)")
+    func validFileMatchesLoad() throws {
+        let expected = try Corpus.load()
+        guard case .entries(let entries) = Corpus.loadReport(fileName: Corpus.fileName) else { Issue.record("erwartet: Einträge"); return }
+        #expect(entries.map(\.id) == expected.map(\.id))
+        #expect(!entries.isEmpty)
+    }
+
+    @Test("Rohsatz-Datei nur in docs/reference/ wird gefunden (AC-6)")
+    func urlFindsDocsReference() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let name = "b1a-ref-\(UUID().uuidString)"
+        let file = root.appendingPathComponent("docs/reference/\(name).json")
+        try "[]".write(to: file, atomically: true, encoding: .utf8)
+        defer { try? FileManager.default.removeItem(at: file) }
+        #expect(try Corpus.url(fileName: name).standardizedFileURL == file.standardizedFileURL)
+    }
+
+    @Test("Grund-Texte enthalten nur Name, Art, Zahl, nie Sätze (AC-10)")
+    func messagesCarryNoSentences() {
+        let problems: [Corpus.Problem] = [.missing("x-corpus"), .unreadable("x-corpus", "Fehler 3840"), .empty("x-corpus")]
+        for problem in problems {
+            #expect(!problem.message.contains(Self.marker))
+            #expect(problem.message.contains("x-corpus"))
+        }
+    }
+}
