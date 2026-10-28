@@ -419,7 +419,11 @@ not scope creep on the current one.
 - `Measurement/` — measurement-only code against the fidelity, self-consistency and convention corpora
   (e.g. `RuleBaseline` for the word→context convention test, spike #69; `LeaveOneOut` for the rule-based
   leave-one-out test — Jaccard word overlap as neighbor search against a corpus-derived baseline, #131);
-  compiles into `LooseEndsTests` and the lab app only, no product path
+  compiles into `LooseEndsTests` and the lab app only, no product path; `RawSentenceColumn` (#88 Teil 2, Schnitt A) reads
+  Henning's own captures from the gitignored `docs/reference/loose-ends-rawtexts.json` (third format of `Corpus.load`, recognized
+  by `rawText` + `titleBefore` + `capturedAt`): duplicates folded by word set, only his corrections count as truth (uncorrected =
+  no evidence), rule column beside the model, under 30 corrected sentences the report says "zu wenig", counts only and never a
+  sentence. The export and the lab run are Schnitt B and wait for his "jetzt ist ein Test möglich"
 
 ## Naming
 
