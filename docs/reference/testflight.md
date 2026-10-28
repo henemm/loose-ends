@@ -169,7 +169,7 @@ bleibt `offen` und Beleg leer, bis ein Lauf ihn füllt.
 | Externe Gruppe `Tester` | erledigt: angelegt 2026-10-27, Link aus, Feedback an | [Lauf 40516649071](https://github.com/henemm/loose-ends/actions/runs/40516649071) `zustand=angelegt` (Zuordnung dort 403, behoben in #721); Lauf 40534641955 `gruppe name=Tester intern=nein link=aus` |
 | Öffentlicher Link | offen (Schnitt 2b-2) | |
 | Build-Zuordnung iOS und macOS | erledigt: neuester gültiger Build je Plattform (2026-10-27), `extern=READY_FOR_BETA_SUBMISSION` | Lauf 40534641955 `zustand=gesetzt` IOS und MAC_OS, `geschrieben=2`; [Lauf 40535068594](https://github.com/henemm/loose-ends/actions/runs/40535068594) `zustand=vorhanden`, `geschrieben=0` |
-| Beta-Review (Einreichung) | offen (Schnitt 2b-2b, Handlauf `einreichen`) | Lauf 40535068594 `einreichung keine` |
+| Beta-Review (Einreichung) | eingereicht 2026-10-28, iOS (mit Watch-App) und macOS, wartet auf Apple | Lauf 40676055317 `einreichung … zustand=eingereicht review=WAITING_FOR_REVIEW` je Plattform, `geschrieben=4`; Gegenprobe 40676188405 `zustand=vorhanden`, `geschrieben=0` |
 | Rückmeldeweg: TestFlight-Feedback | erledigt auf Apples Seite: Gruppe `Tester` `feedback=an` | Lauf 40534641955 |
 
 **Handlauf `asc-beta.yml` (Schnitt 1, nur lesend):** GitHub → Actions → **ASC Beta Probe** → **Run workflow**. Er läuft je
