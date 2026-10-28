@@ -1,0 +1,191 @@
+test_assignment_happens_before_submission (__main__.InviteTests.test_assignment_happens_before_submission) ... FAIL
+test_conflict_is_a_state_not_a_crash (__main__.InviteTests.test_conflict_is_a_state_not_a_crash) ... FAIL
+test_duplicate_external_groups_abort_before_any_write (__main__.InviteTests.test_duplicate_external_groups_abort_before_any_write) ... ok
+test_existing_group_only_assigns_missing_build (__main__.InviteTests.test_existing_group_only_assigns_missing_build) ... ok
+test_existing_submission_in_any_state_is_not_repeated (__main__.InviteTests.test_existing_submission_in_any_state_is_not_repeated) ... FAIL
+test_first_run_creates_group_and_assigns_both_platforms (__main__.InviteTests.test_first_run_creates_group_and_assigns_both_platforms) ... ok
+test_forbidden_submission_uses_existing_text (__main__.InviteTests.test_forbidden_submission_uses_existing_text) ... <frozen _collections_abc>:835: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 58784)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:835: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 58795)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:835: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 58808)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:835: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 58811)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:835: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 58821)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:835: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 58831)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:835: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 58844)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_forbidden_write_is_reported_clearly (__main__.InviteTests.test_forbidden_write_is_reported_clearly) ... ok
+test_message_masks_query_values_only (__main__.InviteTests.test_message_masks_query_values_only) ... ok
+test_missing_contract_names_the_account_holder (__main__.InviteTests.test_missing_contract_names_the_account_holder) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py:333: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 58870)>
+  @property
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_never_submits_and_never_enables_link (__main__.InviteTests.test_never_submits_and_never_enables_link) ... ok
+test_newest_valid_build_is_chosen_per_platform (__main__.InviteTests.test_newest_valid_build_is_chosen_per_platform) ... ok
+test_not_ready_build_is_not_submitted (__main__.InviteTests.test_not_ready_build_is_not_submitted) ... FAIL
+test_one_platform_failing_does_not_hide_the_other (__main__.InviteTests.test_one_platform_failing_does_not_hide_the_other) ... ok
+test_one_platform_failing_does_not_hide_the_other_submission (__main__.InviteTests.test_one_platform_failing_does_not_hide_the_other_submission) ... FAIL
+test_output_has_only_state_words (__main__.InviteTests.test_output_has_only_state_words) ... ok
+test_platform_without_valid_build_is_reported (__main__.InviteTests.test_platform_without_valid_build_is_reported) ... FAIL
+test_platform_without_valid_build_is_reported_not_failed (__main__.InviteTests.test_platform_without_valid_build_is_reported_not_failed) ... ok
+test_retry_lines_carry_no_ids (__main__.InviteTests.test_retry_lines_carry_no_ids) ... ok
+test_second_run_sends_no_submission (__main__.InviteTests.test_second_run_sends_no_submission) ... FAIL
+test_second_run_sends_no_write (__main__.InviteTests.test_second_run_sends_no_write) ... ok
+test_submission_output_has_only_state_words (__main__.InviteTests.test_submission_output_has_only_state_words) ... FAIL
+test_unreadable_beta_detail_keeps_the_count (__main__.InviteTests.test_unreadable_beta_detail_keeps_the_count) ... ok
+test_with_flag_submits_each_platform_once (__main__.InviteTests.test_with_flag_submits_each_platform_once) ... FAIL
+test_without_flag_never_submits (__main__.InviteTests.test_without_flag_never_submits) ... ok
+test_workflow_file (__main__.WorkflowTests.test_workflow_file) ... FAIL
+
+======================================================================
+FAIL: test_assignment_happens_before_submission (__main__.InviteTests.test_assignment_happens_before_submission)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 331, in test_assignment_happens_before_submission
+    self.assertEqual(steps, ["/v1/betaGroups/G-7c41-1/relationships/builds", "/v1/betaAppReviewSubmissions"])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['/v1/betaGroups/G-7c41-1/relationships/builds'] != ['/v1/betaGroups/G-7c41-1/relationships/builds', '/v1/betaAppReviewSubmissions']
+
+Second list contains 1 additional elements.
+First extra element 1:
+'/v1/betaAppReviewSubmissions'
+
+- ['/v1/betaGroups/G-7c41-1/relationships/builds']
++ ['/v1/betaGroups/G-7c41-1/relationships/builds', '/v1/betaAppReviewSubmissions']
+?                                                ++++++++++++++++++++++++++++++++
+
+
+======================================================================
+FAIL: test_conflict_is_a_state_not_a_crash (__main__.InviteTests.test_conflict_is_a_state_not_a_crash)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 382, in test_conflict_is_a_state_not_a_crash
+    self.assertIn("einreichung plattform=IOS zustand=konflikt", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'einreichung plattform=IOS zustand=konflikt' not found in 'gruppe name=Tester zustand=angelegt\nzuordnung plattform=IOS zustand=gesetzt extern=READY_FOR_BETA_SUBMISSION\nzuordnung plattform=MAC_OS zustand=gesetzt extern=READY_FOR_BETA_SUBMISSION\nzusammenfassung geschrieben=3\n'
+
+======================================================================
+FAIL: test_existing_submission_in_any_state_is_not_repeated (__main__.InviteTests.test_existing_submission_in_any_state_is_not_repeated)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 352, in test_existing_submission_in_any_state_is_not_repeated
+    self.assertIn(f"einreichung plattform={platform} zustand=vorhanden review={state}", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'einreichung plattform=IOS zustand=vorhanden review=IN_REVIEW' not found in 'gruppe name=Tester zustand=angelegt\nzuordnung plattform=IOS zustand=gesetzt extern=READY_FOR_BETA_SUBMISSION\nzuordnung plattform=MAC_OS zustand=gesetzt extern=READY_FOR_BETA_SUBMISSION\nzusammenfassung geschrieben=3\n'
+
+======================================================================
+FAIL: test_forbidden_submission_uses_existing_text (__main__.InviteTests.test_forbidden_submission_uses_existing_text)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 398, in test_forbidden_submission_uses_existing_text
+    self.assertNotEqual(result.returncode, 0)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_missing_contract_names_the_account_holder (__main__.InviteTests.test_missing_contract_names_the_account_holder)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 388, in test_missing_contract_names_the_account_holder
+    self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : gruppe name=Tester zustand=angelegt
+zuordnung plattform=IOS zustand=gesetzt extern=READY_FOR_BETA_SUBMISSION
+zuordnung plattform=MAC_OS zustand=gesetzt extern=READY_FOR_BETA_SUBMISSION
+zusammenfassung geschrieben=3
+
+
+======================================================================
+FAIL: test_not_ready_build_is_not_submitted (__main__.InviteTests.test_not_ready_build_is_not_submitted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 358, in test_not_ready_build_is_not_submitted
+    self.assertIn("einreichung plattform=IOS zustand=nicht-bereit extern=PROCESSING", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'einreichung plattform=IOS zustand=nicht-bereit extern=PROCESSING' not found in 'gruppe name=Tester zustand=angelegt\nzuordnung plattform=IOS zustand=gesetzt extern=PROCESSING\nzuordnung plattform=MAC_OS zustand=gesetzt extern=READY_FOR_BETA_SUBMISSION\nzusammenfassung geschrieben=3\n'
+
+======================================================================
+FAIL: test_one_platform_failing_does_not_hide_the_other_submission (__main__.InviteTests.test_one_platform_failing_does_not_hide_the_other_submission)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 404, in test_one_platform_failing_does_not_hide_the_other_submission
+    self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : gruppe name=Tester zustand=angelegt
+zuordnung plattform=IOS zustand=gesetzt extern=READY_FOR_BETA_SUBMISSION
+zuordnung plattform=MAC_OS zustand=gesetzt extern=READY_FOR_BETA_SUBMISSION
+zusammenfassung geschrieben=3
+
+
+======================================================================
+FAIL: test_platform_without_valid_build_is_reported (__main__.InviteTests.test_platform_without_valid_build_is_reported)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 371, in test_platform_without_valid_build_is_reported
+    self.assertIn("einreichung plattform=MAC_OS zustand=kein-gültiger-build", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'einreichung plattform=MAC_OS zustand=kein-gültiger-build' not found in 'gruppe name=Tester zustand=angelegt\nzuordnung plattform=IOS zustand=gesetzt extern=READY_FOR_BETA_SUBMISSION\nzuordnung plattform=MAC_OS zustand=kein-gültiger-build\nzusammenfassung geschrieben=2\n'
+
+======================================================================
+FAIL: test_second_run_sends_no_submission (__main__.InviteTests.test_second_run_sends_no_submission)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 342, in test_second_run_sends_no_submission
+    self.assertIn(f"einreichung plattform={platform} zustand=vorhanden review=WAITING_FOR_REVIEW", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'einreichung plattform=IOS zustand=vorhanden review=WAITING_FOR_REVIEW' not found in 'gruppe name=Tester zustand=vorhanden\nzuordnung plattform=IOS zustand=vorhanden extern=READY_FOR_BETA_SUBMISSION\nzuordnung plattform=MAC_OS zustand=vorhanden extern=READY_FOR_BETA_SUBMISSION\nzusammenfassung geschrieben=0\n'
+
+======================================================================
+FAIL: test_submission_output_has_only_state_words (__main__.InviteTests.test_submission_output_has_only_state_words)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 416, in test_submission_output_has_only_state_words
+    self.assertIn(word, output)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 'einreichung plattform=' not found in 'gruppe name=Tester zustand=angelegt\nzuordnung plattform=IOS zustand=gesetzt extern=READY_FOR_BETA_SUBMISSION\nzuordnung plattform=MAC_OS zustand=gesetzt extern=READY_FOR_BETA_SUBMISSION\nzusammenfassung geschrieben=3\ngruppe name=Tester zustand=angelegt\nzuordnung plattform=IOS zustand=gesetzt extern=READY_FOR_BETA_SUBMISSION\nzuordnung plattform=MAC_OS zustand=gesetzt extern=READY_FOR_BETA_SUBMISSION\nzusammenfassung geschrieben=3\ngruppe name=Tester zustand=angelegt\nzuordnung plattform=IOS zustand=gesetzt extern=READY_FOR_BETA_SUBMISSION\nzuordnung plattform=MAC_OS zustand=gesetzt extern=READY_FOR_BETA_SUBMISSION\nzusammenfassung geschrieben=3\n'
+
+======================================================================
+FAIL: test_with_flag_submits_each_platform_once (__main__.InviteTests.test_with_flag_submits_each_platform_once)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 316, in test_with_flag_submits_each_platform_once
+    self.assertEqual(self.submitted(fake), [
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        {"data": {"type": "betaAppReviewSubmissions",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  "relationships": {"build": {"data": {"type": "builds", "id": BUILDS[p]["id"]}}}}}
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        for p in ("IOS", "MAC_OS")])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != [{'data': {'type': 'betaAppReviewSubmissio[205 chars]}}}}]
+
+Second list contains 2 additional elements.
+First extra element 0:
+{'data': {'type': 'betaAppReviewSubmissions', 'relationships': {'build': {'data': {'type': 'builds', 'id': 'B-91f3-IOS'}}}}}
+
+- []
++ [{'data': {'relationships': {'build': {'data': {'id': 'B-91f3-IOS',
++                                                 'type': 'builds'}}},
++            'type': 'betaAppReviewSubmissions'}},
++  {'data': {'relationships': {'build': {'data': {'id': 'B-91f3-MAC',
++                                                 'type': 'builds'}}},
++            'type': 'betaAppReviewSubmissions'}}]
+
+======================================================================
+FAIL: test_workflow_file (__main__.WorkflowTests.test_workflow_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/epic-563-naechstes/scripts/test_asc_beta_invite.py", line 428, in test_workflow_file
+    self.assertIn(needle, workflow)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+AssertionError: '- einreichen' not found in '# Handlauf (#705): `aktion=probe` (Standard, Schnitt 1) fragt Apples Beta-Seite der App nur lesend ab und druckt die\n# Belegtabelle je Plattform in den Lauf-Log. `aktion=einrichten` (Schnitt 2a) setzt vorher Beta-Beschreibung,\n# Feedback-E-Mail und Review-Kontakt (nur aus Secrets, das Repo ist öffentlich); die Probe danach ist der Beleg.\n# `aktion=zuordnen` (Schnitt 2b-1) legt die externe Gruppe `Tester` an (Link aus) und ordnet ihr je Plattform den\n# neuesten gültigen Build zu; keine Einreichung zum Review. Die Probe danach ist der Beleg.\n# Läuft nie automatisch.\nname: ASC Beta Probe\n\non:\n  workflow_dispatch:\n    inputs:\n      aktion:\n        description: "probe = nur lesen, einrichten = Texte und Kontakt setzen, zuordnen = Gruppe und Builds, dann lesen"\n        type: choice\n        options:\n          - probe\n          - einrichten\n          - zuordnen\n        default: probe\n\npermissions:\n  contents: read\n\njobs:\n  setup:\n    name: Set beta description, feedback email and review contact\n    if: ${{ inputs.aktion == \'einrichten\' }}\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    env:\n      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}\n      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}\n      ASC_REVIEW_FIRST_NAME: ${{ secrets.ASC_REVIEW_FIRST_NAME }}\n      ASC_REVIEW_LAST_NAME: ${{ secrets.ASC_REVIEW_LAST_NAME }}\n      ASC_REVIEW_PHONE: ${{ secrets.ASC_REVIEW_PHONE }}\n      ASC_REVIEW_EMAIL: ${{ secrets.ASC_REVIEW_EMAIL }}\n      ASC_PRIVACY_POLICY_URL: ${{ vars.ASC_PRIVACY_POLICY_URL }}\n      ASC_POLL_SECONDS: "5"\n    steps:\n      - uses: actions/checkout@v7\n      - name: Write localization de-DE and review detail where they differ\n        run: |\n          trap \'rm -f "$RUNNER_TEMP/asc_key.p8"\' EXIT\n          umask 077\n          printf \'%s\\n\' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"\n          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_setup.py\n\n  assign:\n    name: Create external group Tester and assign the newest valid builds\n    # setup ist bei `zuordnen` übersprungen; ohne !cancelled() würde assign mit übersprungen\n    needs: setup\n    if: ${{ !cancelled() && inputs.aktion == \'zuordnen\' }}\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    env:\n      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}\n      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}\n      ASC_POLL_SECONDS: "5"\n    steps:\n      - uses: actions/checkout@v7\n      - name: Create the group if missing, assign builds where missing\n        run: |\n          trap \'rm -f "$RUNNER_TEMP/asc_key.p8"\' EXIT\n          umask 077\n          printf \'%s\\n\' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"\n          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_invite.py\n\n  probe:\n    name: Probe Apple\'s beta side (${{ matrix.platform }})\n    needs: [setup, assign]\n    if: ${{ !cancelled() && (needs.setup.result == \'success\' || needs.setup.result == \'skipped\') && (needs.assign.result == \'success\' || needs.assign.result == \'skipped\') }}\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    strategy:\n      fail-fast: false\n      matrix:\n        platform: [IOS, MAC_OS]\n    env:\n      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}\n      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}\n      ASC_PLATFORM: ${{ matrix.platform }}\n      ASC_POLL_SECONDS: "5"\n    steps:\n      - uses: actions/checkout@v7\n      - name: Read groups, localizations, review detail, builds and submissions\n        run: |\n          trap \'rm -f "$RUNNER_TEMP/asc_key.p8"\' EXIT\n          umask 077\n          printf \'%s\\n\' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"\n          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_probe.py\n'
+
+----------------------------------------------------------------------
+Ran 26 tests in 20.705s
+
+FAILED (failures=12)

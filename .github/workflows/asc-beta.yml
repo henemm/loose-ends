@@ -3,6 +3,8 @@
 # Feedback-E-Mail und Review-Kontakt (nur aus Secrets, das Repo ist öffentlich); die Probe danach ist der Beleg.
 # `aktion=zuordnen` (Schnitt 2b-1) legt die externe Gruppe `Tester` an (Link aus) und ordnet ihr je Plattform den
 # neuesten gültigen Build zu; keine Einreichung zum Review. Die Probe danach ist der Beleg.
+# `aktion=einreichen` (Schnitt 2b-2b) ordnet ebenso zu und reicht den Build je Plattform einmal zum Beta-Review ein
+# (nicht rücknehmbar, nur nach Hennings Wort). Die Probe danach ist der Beleg.
 # Läuft nie automatisch.
 name: ASC Beta Probe
 
@@ -10,12 +12,13 @@ on:
   workflow_dispatch:
     inputs:
       aktion:
-        description: "probe = nur lesen, einrichten = Texte und Kontakt setzen, zuordnen = Gruppe und Builds, dann lesen"
+        description: "probe = nur lesen, einrichten = Texte und Kontakt setzen, zuordnen = Gruppe und Builds, dann lesen, einreichen = Zuordnen und Beta-Review einreichen (nicht rücknehmbar)"
         type: choice
         options:
           - probe
           - einrichten
           - zuordnen
+          - einreichen
         default: probe
 
 permissions:
@@ -65,10 +68,29 @@ jobs:
           printf '%s\n' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"
           ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_invite.py
 
+  submit:
+    name: Assign the newest valid builds and submit them to Beta App Review
+    needs: setup
+    if: ${{ !cancelled() && inputs.aktion == 'einreichen' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_POLL_SECONDS: "5"
+    steps:
+      - uses: actions/checkout@v7
+      - name: Assign where missing, submit where ready and not yet submitted
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT
+          umask 077
+          printf '%s\n' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"
+          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_invite.py --einreichen
+
   probe:
     name: Probe Apple's beta side (${{ matrix.platform }})
-    needs: [setup, assign]
-    if: ${{ !cancelled() && (needs.setup.result == 'success' || needs.setup.result == 'skipped') && (needs.assign.result == 'success' || needs.assign.result == 'skipped') }}
+    needs: [setup, assign, submit]
+    if: ${{ !cancelled() && (needs.setup.result == 'success' || needs.setup.result == 'skipped') && (needs.assign.result == 'success' || needs.assign.result == 'skipped') && (needs.submit.result == 'success' || needs.submit.result == 'skipped') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:

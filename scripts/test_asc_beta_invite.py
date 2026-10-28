@@ -1,9 +1,9 @@
-"""Tests für asc_beta_invite.py und den Job `assign` in .github/workflows/asc-beta.yml (#705 Schnitt 2b-1).
+"""Tests für asc_beta_invite.py und die Jobs `assign` und `submit` in .github/workflows/asc-beta.yml (#705 Schnitt 2b-1, 2b-2b).
 
 Aufruf: python3 scripts/test_asc_beta_invite.py
 Gegen einen lokalen Nachbau mit Zustand: er prüft nur die Form (welche Aufrufe, nichts vor der Gruppenprüfung, kein
-Schreiben ohne Abweichung, nie Einreichung oder Link). Ob Apple Gruppe und Zuordnung annimmt, zeigt nur der echte Lauf
-`aktion=zuordnen`.
+Schreiben ohne Abweichung, nie Link, Einreichung nur mit --einreichen). Ob Apple Gruppe, Zuordnung und Einreichung
+annimmt, zeigt nur der echte Lauf `aktion=zuordnen` bzw. `aktion=einreichen`.
 """
 import json
 import os
@@ -33,11 +33,14 @@ def group(gid, name="Tester", internal=False):
 
 class FakeASC:
     """GET liest den Zustand, POST schreibt hinein; jede Anfrage wird mit Methode, Pfad und Rumpf gemerkt."""
+    body201 = None  # abweichender Rumpf der Einreichungsantwort; die Einreichung entsteht trotzdem
 
-    def __init__(self, groups=(), builds=BUILDS, assigned=None, fail=None, fail_get=None):
+    def __init__(self, groups=(), builds=BUILDS, assigned=None, fail=None, fail_get=None, submissions=None, extern=None):
         self.groups = [json.loads(json.dumps(item)) for item in groups]
         self.builds = dict(builds)
         self.assigned = {gid: set(ids) for gid, ids in (assigned or {}).items()}
+        self.submissions = dict(submissions or {})  # Build-ID → betaReviewState
+        self.extern = dict(extern or {})  # Build-ID → externalBuildState, sonst READY_FOR_BETA_SUBMISSION
         self.fail = fail or (lambda method, path, body: None)
         self.fail_get = fail_get or (lambda path: None)
         self.requests = []
@@ -64,7 +67,10 @@ class FakeASC:
                     return self.reply(status, {}) if status else self.reply(*fake.read(self.path))
                 status = fake.fail(self.command, self.path, body)
                 if status:
-                    return self.reply(status, {"errors": [{"status": str(status)}]})
+                    # fail liefert einen Code oder (Code, Fehlercode von Apple)
+                    status, code = status if isinstance(status, tuple) else (status, None)
+                    error = {"status": str(status), **({"code": code} if code else {})}
+                    return self.reply(status, {"errors": [error]})
                 return self.reply(*fake.write(self.command, self.path, body))
 
             do_GET = do_POST = do_PATCH = do_DELETE = handle_any
@@ -79,6 +85,10 @@ class FakeASC:
             return 200, {"data": [{"id": "APP1"}]}
         if route == "/v1/apps/APP1/betaGroups":
             return 200, {"data": self.groups}
+        if route == "/v1/betaAppReviewSubmissions":
+            build = urllib.parse.parse_qs(query).get("filter[build]", [""])[0]
+            state = self.submissions.get(build)
+            return 200, {"data": [self.submission(build, state)] if isinstance(state, str) else state or []}
         if route == "/v1/builds":
             params = urllib.parse.parse_qs(query)
             platform = params.pop("filter[preReleaseVersion.platform]", [""])[0]
@@ -93,10 +103,21 @@ class FakeASC:
                 # wie Apple: für builds→betaGroups gibt es kein GET (nur POST/DELETE auf relationships)
                 return 403, {"errors": [{"status": "403", "code": "FORBIDDEN_ERROR"}]}
             if route == f"/v1/builds/{build['id']}/buildBetaDetail":
-                return 200, {"data": {"id": "BD", "attributes": {"externalBuildState": "READY_FOR_BETA_SUBMISSION"}}}
+                state = self.extern.get(build["id"], "READY_FOR_BETA_SUBMISSION")
+                return 200, {"data": {"id": "BD", "attributes": {"externalBuildState": state}}}
         return 404, {}
 
+    @staticmethod
+    def submission(build, state):
+        return {"type": "betaAppReviewSubmissions", "id": f"S-5d2e-{build}", "attributes": {"betaReviewState": state}}
+
     def write(self, method, path, body):
+        if method == "POST" and path == "/v1/betaAppReviewSubmissions":
+            build = body["data"]["relationships"]["build"]["data"]["id"]
+            if build in self.submissions:
+                return 409, {"errors": [{"status": "409"}]}
+            self.submissions[build] = "WAITING_FOR_REVIEW"
+            return 201, {"data": self.submission(build, "WAITING_FOR_REVIEW")} if self.body201 is None else self.body201
         if method == "POST" and path == "/v1/betaGroups":
             record = {"id": f"G-7c41-{len(self.groups) + 1}", "attributes": dict(body["data"]["attributes"])}
             self.groups.append(record)
@@ -128,15 +149,23 @@ class InviteTests(unittest.TestCase):
         self.addCleanup(fake.close)
         return fake
 
-    def invite(self, fake):
+    def invite(self, fake, *args):
         env = dict(os.environ, ASC_KEY_ID="K", ASC_ISSUER_ID="I", ASC_KEY_FILE=str(self.key), ASC_API_BASE=fake.base,
                    ASC_POLL_SECONDS="0", ASC_TIMEOUT_SECONDS="2", ASC_PLATFORM="")
-        return subprocess.run([sys.executable, str(SCRIPT)], env=env, capture_output=True, text=True, timeout=120)
+        return subprocess.run([sys.executable, str(SCRIPT), *args], env=env, capture_output=True, text=True, timeout=120)
 
-    def assert_clean(self, fake):
+    def submit(self, fake):
+        return self.invite(fake, "--einreichen")
+
+    def assert_clean(self, fake, submitting=False):
+        """Ohne Schalter kein Aufruf auf betaAppReviewSubmissions; mit Schalter nur das Lesen und der POST darauf."""
         for method, path, body in fake.requests:
             sent = json.dumps(body or {})
-            self.assertNotIn("betaAppReviewSubmissions", path)
+            if not submitting:
+                self.assertNotIn("betaAppReviewSubmissions", path)
+            elif "betaAppReviewSubmissions" in path:
+                self.assertTrue((method, path) == ("POST", "/v1/betaAppReviewSubmissions")
+                                or (method == "GET" and path.startswith("/v1/betaAppReviewSubmissions?")), path)
             self.assertNotIn(method, ("PATCH", "DELETE"), path)
             self.assertNotIn('"publicLinkEnabled": true', sent)
             self.assertNotIn("publicLinkLimit", sent)
@@ -267,6 +296,123 @@ class InviteTests(unittest.TestCase):
         line = "zuordnung plattform=IOS zustand=gesetzt extern=unbekannt"
         self.assertEqual(message(line), line)
 
+    # Schnitt 2b-2b: Einreichung zum Beta-App-Review, nur mit --einreichen
+
+    def submitted(self, fake):
+        return [b for m, p, b in fake.writes() if p == "/v1/betaAppReviewSubmissions"]
+
+    def submit_ok(self, fake, *lines):
+        """--einreichen mit Exit 0; jede Zeile muss in stdout stehen, {p} je Plattform IOS und MAC_OS."""
+        result = self.submit(fake)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        for line, platform in ((line, p) for line in lines for p in ("IOS", "MAC_OS")):
+            self.assertIn(line.format(p=platform), result.stdout)
+        return result
+
+    def test_without_flag_never_submits(self):
+        ios = BUILDS["IOS"]["id"]
+        for fake in (self.fake(), self.fake(groups=[group("G-7c41-1")], assigned={"G-7c41-1": {ios}}),
+                     self.fake(fail=lambda m, p, b: 422 if ios in json.dumps(b) else None)):
+            self.invite(fake)
+            self.invite(fake)
+            self.assert_clean(fake)
+            self.assertEqual(fake.submissions, {})
+
+    def test_with_flag_submits_each_platform_once(self):
+        fake = self.fake()
+        self.submit_ok(fake, "einreichung plattform={p} zustand=eingereicht review=WAITING_FOR_REVIEW")
+        self.assertEqual(self.submitted(fake), [
+            {"data": {"type": "betaAppReviewSubmissions",
+                      "relationships": {"build": {"data": {"type": "builds", "id": BUILDS[p]["id"]}}}}}
+            for p in ("IOS", "MAC_OS")])
+        self.assert_clean(fake, submitting=True)
+
+    def test_assignment_happens_before_submission(self):
+        fake = self.fake(groups=[group("G-7c41-1")], assigned={"G-7c41-1": {"B-91f3-OLD"}})
+        self.submit_ok(fake)
+        writes = [(p, json.dumps(b)) for m, p, b in fake.writes()]
+        for platform in ("IOS", "MAC_OS"):
+            build = BUILDS[platform]["id"]
+            steps = [p for p, sent in writes if build in sent]
+            self.assertEqual(steps, ["/v1/betaGroups/G-7c41-1/relationships/builds", "/v1/betaAppReviewSubmissions"])
+
+    def test_second_run_sends_no_submission(self):
+        fake = self.fake()
+        self.submit_ok(fake)
+        before = len(fake.requests)
+        self.submit_ok(fake, "einreichung plattform={p} zustand=vorhanden review=WAITING_FOR_REVIEW",
+                       "zusammenfassung geschrieben=0")
+        self.assertEqual({m for m, _, _ in fake.requests[before:]}, {"GET"})
+
+    def test_existing_submission_in_any_state_is_not_repeated(self):
+        for state in ("IN_REVIEW", "APPROVED", "REJECTED", ["x"], [None], [{"attributes": "x"}]):
+            fake = self.fake(submissions={BUILDS["IOS"]["id"]: state})
+            review = state if isinstance(state, str) else "unbekannt"
+            result = self.submit_ok(fake, "einreichung plattform=IOS zustand=vorhanden review=" + review,
+                                    "einreichung plattform=MAC_OS zustand=eingereicht review=WAITING_FOR_REVIEW")
+            self.assertEqual((result.stdout.splitlines()[-1], len(self.submitted(fake))), ("zusammenfassung geschrieben=4", 1))
+            self.assertNotIn("Traceback", result.stderr)
+
+    def test_not_ready_build_is_not_submitted(self):
+        fake = self.fake(extern={BUILDS["IOS"]["id"]: "PROCESSING"})
+        self.submit_ok(fake, "einreichung plattform=IOS zustand=nicht-bereit extern=PROCESSING")
+        self.assertEqual(set(fake.submissions), {BUILDS["MAC_OS"]["id"]})
+        fake = self.fake(fail_get=lambda p: 404 if p.endswith("/buildBetaDetail") else None)
+        self.submit_ok(fake, "einreichung plattform={p} zustand=nicht-bereit extern=unbekannt")
+        self.assertEqual(self.submitted(fake), [])
+
+    def test_platform_without_valid_build_is_reported(self):
+        fake = self.fake(builds={"IOS": BUILDS["IOS"]})
+        self.submit_ok(fake, "einreichung plattform=MAC_OS zustand=kein-gültiger-build")
+        self.assertEqual(set(fake.submissions), {BUILDS["IOS"]["id"]})
+
+    def fail_submission(self, platform, answer):
+        build = BUILDS[platform]["id"]
+        return lambda m, p, b: answer if p == "/v1/betaAppReviewSubmissions" and build in json.dumps(b) else None
+
+    def test_conflict_is_a_state_not_a_crash(self):
+        fake = self.fake(fail=self.fail_submission("IOS", 409))
+        self.submit_ok(fake, "einreichung plattform=IOS zustand=konflikt")
+        self.assertEqual(set(fake.submissions), {BUILDS["MAC_OS"]["id"]})
+
+    def test_missing_contract_names_the_account_holder(self):
+        fake = self.fake(fail=self.fail_submission("IOS", (422, "ENTITY_UNPROCESSABLE.BETA_CONTRACT_MISSING")))
+        result = self.submit(fake)
+        errors = [l for l in result.stdout.splitlines() if l.startswith("::error::platform=IOS")]
+        self.assertEqual((result.returncode, errors), (1, ["::error::platform=IOS Beta-Vereinbarung bei Apple fehlt: der "
+                                                         "Konto-Inhaber muss sie in App Store Connect annehmen"]), result.stdout)
+        self.assertEqual(sum(BUILDS["IOS"]["id"] in json.dumps(b) for b in self.submitted(fake)), 1)
+
+    def test_forbidden_submission_uses_existing_text(self):
+        result = self.submit(self.fake(fail=self.fail_submission("IOS", 403)))
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Schlüssel ohne Schreibrecht: Rolle des API-Schlüssels in App Store Connect prüfen", result.stdout)
+
+    def test_one_platform_failing_does_not_hide_the_other_submission(self):
+        fake = self.fake(fail=self.fail_submission("IOS", (422, "ENTITY_UNPROCESSABLE")))
+        result = self.submit(fake)
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertTrue(any(l.startswith("::error::platform=IOS") for l in result.stdout.splitlines()), result.stdout)
+        self.assertIn("einreichung plattform=MAC_OS zustand=eingereicht", result.stdout)
+        self.assertTrue(result.stdout.strip().splitlines()[-1].startswith("zusammenfassung geschrieben="))
+
+    def test_submission_output_has_only_state_words(self):
+        outputs = [self.submit(self.fake()), self.submit(self.fake(fail=self.fail_submission("IOS", 409))),
+                   self.submit(self.fake(fail=self.fail_submission("MAC_OS", (422, "X.BETA_CONTRACT_MISSING"))))]
+        output = "".join(r.stdout + r.stderr for r in outputs)
+        for secret in ("G-7c41", "B-91f3", "S-5d2e", "4711", "4712", "APP1", LINK, "BEGIN", "PRIVATE KEY", "Bearer", "eyJ"):
+            self.assertNotIn(secret, output)
+        for word in ("einreichung plattform=", "zustand=", "review=", "geschrieben="):
+            self.assertIn(word, output)
+
+    def test_unexpected_submission_body_is_still_reported(self):
+        for body in (["x"], {"data": [1]}, {"data": {"attributes": {"betaReviewState": None}}}):
+            fake = self.fake()
+            fake.body201 = body
+            result = self.submit_ok(fake, "einreichung plattform={p} zustand=eingereicht review=unbekannt")
+            self.assertEqual((result.stdout.splitlines()[-1], len(self.submitted(fake))), ("zusammenfassung geschrieben=5", 2))
+            self.assertNotIn("Traceback", result.stderr)
+
 
 class WorkflowTests(unittest.TestCase):
     def test_workflow_file(self):
@@ -274,12 +420,19 @@ class WorkflowTests(unittest.TestCase):
         self.assertIn("workflow_dispatch", workflow)
         for trigger in ("push:", "schedule:", "workflow_run:"):
             self.assertNotIn(trigger, workflow)
-        for needle in ("- probe", "- einrichten", "- zuordnen", "default: probe", "inputs.aktion == 'zuordnen'",
-                       "needs: [setup, assign]", "needs.assign.result"):
+        for needle in ("- probe", "- einrichten", "- zuordnen", "- einreichen", "default: probe",
+                       "inputs.aktion == 'zuordnen'", "inputs.aktion == 'einreichen'",
+                       "needs: [setup, assign, submit]", "needs.assign.result", "needs.submit.result"):
             self.assertIn(needle, workflow)
-        assign = workflow.split("\n  assign:", 1)[1].split("\n  probe:", 1)[0]
-        for needle in ("scripts/asc_beta_invite.py", "umask 077", "rm -f", "runs-on: ubuntu-latest"):
-            self.assertIn(needle, assign)
+        assign = workflow.split("\n  assign:", 1)[1].split("\n  submit:", 1)[0]
+        submit = workflow.split("\n  submit:", 1)[1].split("\n  probe:", 1)[0]
+        for job in (assign, submit):
+            for needle in ("scripts/asc_beta_invite.py", "umask 077", "rm -f", "runs-on: ubuntu-latest"):
+                self.assertIn(needle, job)
+        self.assertNotIn("--einreichen", assign)
+        self.assertIn("python3 scripts/asc_beta_invite.py --einreichen", submit)
+        self.assertIn("inputs.aktion == 'einreichen'", submit)
+        self.assertEqual(workflow.count("--einreichen"), 1)
         self.assertEqual(workflow.count("inputs."), workflow.count("inputs.aktion"))
         for forbidden in ("betaAppReviewSubmissions", "publicLinkEnabled"):
             self.assertNotIn(forbidden, workflow)
