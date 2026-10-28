@@ -286,6 +286,23 @@ targets:
       # Der geteilte Tokenizer (#136): Measurement/ trägt bewusst kein `import LooseEnds`, ruft aber
       # RawTextWords auf — die Datei muss deshalb in jedes Ziel, das Measurement/ als Quelle listet.
       - path: Shared/Services/RawTextWords.swift
+    # Hennings Rohsätze (#88 B1a): gitignoriert, nur im Lab-Ziel, nie in App oder Test-Bündeln. Bewusst keine
+    # Quelle: XcodeGen legt auch mit `optional: true` eine Referenz an, und der Bau scheitert dann an der
+    # fehlenden Datei (CpResource). Das Skript prüft erst beim Bau: liegt die Datei da (auch als Link aus dem
+    # Hauptordner, `cp -L`), kommt sie in die Bündelwurzel, wo `Corpus.url` sie findet; fehlt sie (CI, frischer
+    # Worktree), wird eine alte Kopie entfernt, der Bau gelingt, und der Läufer meldet „Korpus … fehlt“.
+    # Ohne Ein-/Ausgabedateien (eine fehlende Eingabe wäre ein Baufehler), daher läuft es bei jedem Bau.
+    postBuildScripts:
+      - name: Rohsätze ins Lab-Bündel
+        basedOnDependencyAnalysis: false
+        script: |
+          src="$SRCROOT/docs/reference/loose-ends-rawtexts.json"
+          dest="$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/loose-ends-rawtexts.json"
+          if [ -f "$src" ]; then
+            cp -L "$src" "$dest"
+          else
+            rm -f "$dest"
+          fi
     info:
       path: LooseEndsLab/Info.plist
       properties:
@@ -300,6 +317,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends.lab
+        # Das Rohsatz-Skript oben liest außerhalb deklarierter Eingaben (#88 B1a); mit Sandbox schlüge es fehl.
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
 
   LooseEndsTests:
     type: bundle.unit-test

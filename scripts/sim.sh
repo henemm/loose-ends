@@ -880,9 +880,27 @@ LAB_SCHEME="LooseEndsLab"
 LAB_BUNDLE="com.henning.looseends.lab"
 LAB_RESULTS="Measurement/results"
 
+# Hennings Rohsatz-Datei (#88 B1a) ist gitignoriert und liegt nur im Hauptordner. Fehlt sie im Arbeitsstand
+# (Worktree), wird sie von dort verlinkt — nie überschrieben, nie bei eigener Datei. Ins Bündel kommt sie über
+# das Skript im Lab-Ziel (project.yml), das beim Bau prüft, ob sie da ist; ein älteres Projekt kennt dieses
+# Skript noch nicht, deshalb erzeugt `cmd_lab` das Projekt vor jedem Bau neu.
+link_rawtexts_from_main() {
+    local rel="docs/reference/loose-ends-rawtexts.json"
+    local own="$PROJECT_DIR/$rel"
+    if [ -e "$own" ] || [ -L "$own" ]; then return 1; fi
+    local common; common=$(git -C "$PROJECT_DIR" rev-parse --path-format=absolute --git-common-dir 2>/dev/null) \
+        || { info "Hauptordner nicht ermittelbar, Rohsatz-Datei nicht verlinkt."; return 1; }
+    local main="$(dirname "$common")/$rel"
+    [ "$main" = "$own" ] && return 1
+    [ -f "$main" ] || { info "Keine Rohsatz-Datei im Hauptordner, der Läufer meldet „fehlt“."; return 1; }
+    ln -s "$main" "$own" && info "Rohsatz-Datei aus dem Hauptordner verlinkt."
+}
+
 cmd_lab() {
     local id; id=$(require_device) || return 1
-    ensure_project
+    link_rawtexts_from_main || true
+    # Immer neu erzeugen, nicht nur bei fehlendem Projekt: ein älteres Projekt hätte das Rohsatz-Skript nicht.
+    cmd_generate || return 1
     signed_build "$id" "$LAB_SCHEME" || { error "Labor-App nicht gebaut"; return 1; }
     local app="$(device_derived_data)/Build/Products/Debug-iphoneos/LooseEndsLab.app"
     [ -d "$app" ] || { error "Labor-App nicht gebaut"; return 1; }

@@ -166,13 +166,51 @@ enum Corpus {
         return try JSONDecoder().decode([Entry].self, from: data)
     }
 
-    /// Where a corpus file lives: the bundled resource, or the file next to this source.
+    /// Why a corpus gave no entries (#88 B1a). The message names corpus, kind and code, never a sentence.
+    enum Problem: Equatable, Sendable {
+        case missing(String)
+        case unreadable(String, String)
+        case empty(String)
+
+        var message: String {
+            switch self {
+            case .missing(let name): return "Korpus \(name) fehlt: keine Datei im Bündel, in Measurement/, docs/reference/ oder Documents."
+            case .unreadable(let name, let kind): return "Korpus \(name) unlesbar (\(kind))."
+            case .empty(let name): return "Korpus \(name) ist leer: 0 Einträge."
+            }
+        }
+    }
+
+    /// Entries or exactly one named reason, never silently an empty list (#88 B1a).
+    enum LoadReport: Sendable {
+        case entries([Entry])
+        case problem(Problem)
+    }
+
+    /// Like `load`, but a corpus that does not load says why instead of throwing.
+    static func loadReport(fileName: String) -> LoadReport {
+        let found: [Entry]
+        do {
+            found = try entries(from: Data(contentsOf: url(fileName: fileName)))
+        } catch let error as CocoaError where error.code == .fileNoSuchFile || error.code == .fileReadNoSuchFile {
+            return .problem(.missing(fileName))
+        } catch {
+            let nsError = error as NSError
+            return .problem(.unreadable(fileName, "\(type(of: error)) \(nsError.domain) \(nsError.code)"))
+        }
+        return found.isEmpty ? .problem(.empty(fileName)) : .entries(found)
+    }
+
+    /// Where a corpus file lives: the bundled resource first, then the file next to this source, then
+    /// `docs/reference/` of the same working copy (#88 B1a), then Documents.
     static func url(fileName: String) throws -> URL {
         let bundled = Bundle(for: CorpusAnchor.self).url(forResource: fileName, withExtension: "json")
-        let onDisk = URL(fileURLWithPath: #filePath).deletingLastPathComponent().appendingPathComponent("\(fileName).json")
+        let sourceFolder = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+        let onDisk = sourceFolder.appendingPathComponent("\(fileName).json")
+        let reference = sourceFolder.deletingLastPathComponent().appendingPathComponent("docs/reference/\(fileName).json")
         let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?
             .appendingPathComponent("\(fileName).json")
-        let local = [onDisk, documents].compactMap { $0 }.first { FileManager.default.fileExists(atPath: $0.path) }
+        let local = [onDisk, reference, documents].compactMap { $0 }.first { FileManager.default.fileExists(atPath: $0.path) }
         guard let url = bundled ?? local else {
             throw CocoaError(.fileNoSuchFile)
         }

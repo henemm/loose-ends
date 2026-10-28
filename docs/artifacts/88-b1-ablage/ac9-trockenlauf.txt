@@ -1,0 +1,18 @@
+# Trockenlauf AC-9 (F002/F005), 2026-10-28: link_rawtexts_from_main frisch aus scripts/sim.sh extrahiert
+# (sed -n '/^link_rawtexts_from_main()/,/^}/p'), in einem Wegwerf-Repo mit Worktree im Scratchpad ausgeführt.
+# Kein sim.sh lab, kein devicectl. Ausgabe wörtlich:
+== Fall C: weder Worktree noch Hauptordner
+INFO: Keine Rohsatz-Datei im Hauptordner, der Läufer meldet „fehlt“.
+rc=1 link=nein
+== Fall A: Hauptordner hat Datei, Worktree nicht
+INFO: Rohsatz-Datei aus dem Hauptordner verlinkt.
+rc=0 istLink=ja inhalt=Kiwi Zebra Lama
+== Fall A2: zweiter Aufruf (Link schon da)
+rc=1
+== Fall B: eigene Datei vorhanden
+rc=1 inhalt=eigene Datei istLink=nein
+== Fall D: Aufruf im Hauptordner selbst
+rc=1 hauptdatei=Kiwi Zebra Lama
+== Fall E: Hauptordner nicht ermittelbar (kein Git-Arbeitsstand, steht für rev-parse-Fehler)
+INFO: Hauptordner nicht ermittelbar, Rohsatz-Datei nicht verlinkt.
+rc=1 link=nein

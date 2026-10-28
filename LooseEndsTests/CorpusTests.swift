@@ -334,6 +334,30 @@ struct CorpusLoadReportTests {
         #expect(try Corpus.url(fileName: name).standardizedFileURL == file.standardizedFileURL)
     }
 
+    @Test("Gleichnamige Datei: Measurement/ vor docs/reference/ (AC-6)")
+    func urlPrefersMeasurementOverDocsReference() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let name = "b1a-order-\(UUID().uuidString)"
+        let measurement = root.appendingPathComponent("Measurement/\(name).json")
+        let reference = root.appendingPathComponent("docs/reference/\(name).json")
+        defer {
+            try? FileManager.default.removeItem(at: measurement)
+            try? FileManager.default.removeItem(at: reference)
+        }
+        try #"[{"id":"m","text":"Zebra"}]"#.write(to: measurement, atomically: true, encoding: .utf8)
+        try #"[{"id":"r","text":"Kiwi"}]"#.write(to: reference, atomically: true, encoding: .utf8)
+        #expect(try Corpus.url(fileName: name).standardizedFileURL == measurement.standardizedFileURL)
+    }
+
+    @Test("Gebündelte Datei geht vor Measurement/ (AC-6)")
+    func urlPrefersBundle() throws {
+        let bundle = Bundle(for: CorpusAnchor.self).bundleURL.standardizedFileURL.path
+        let source = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+            .appendingPathComponent("Measurement/\(Corpus.fileName).json")
+        #expect(FileManager.default.fileExists(atPath: source.path))
+        #expect(try Corpus.url(fileName: Corpus.fileName).standardizedFileURL.path.hasPrefix(bundle + "/"))
+    }
+
     @Test("Grund-Texte enthalten nur Name, Art, Zahl, nie Sätze (AC-10)")
     func messagesCarryNoSentences() {
         let problems: [Corpus.Problem] = [.missing("x-corpus"), .unreadable("x-corpus", "Fehler 3840"), .empty("x-corpus")]
