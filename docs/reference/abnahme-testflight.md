@@ -31,16 +31,16 @@ gesetzt. Abweichungen aus dem Prüfblock werden je eigenes Ticket. Geprüft wird
 
 | Nr | Schritt | Bedienweg | Quelle | Status | Beleg | Build |
 |----|---------|-----------|--------|--------|-------|-------|
-| S01 | Erfassung per Text (iPhone) | Startseite „+“, Satz tippen, „Fertig“; die Aufgabe steht in „Neu“ (`CaptureSmokeTests.testCapturedTaskShowsUpInNew`) | User Story, Funktional: Erfassung über Textfeld in der App | Lücke | – | – |
+| S01 | Erfassung per Text (iPhone) | Startseite „+“, Satz tippen, „Fertig“; die Aufgabe steht in „Neu“ (`CaptureSmokeTests.testCapturedTaskShowsUpInNew`) | User Story, Funktional: Erfassung über Textfeld in der App | belegt | #176 (Henning: „1 - 5 positiv getestet“, 2026-10-28, ohne Bildschirmfoto) | 125 |
 | S02 | Erfassung per Sprache (iPhone), nur Mikrofonrecht | Startseite „+“, sprechen; höchstens der Mikrofon-Dialog erscheint, „Ich höre …“, der Text kommt (#293) | Funktionsübersicht, Erfassung: Live-Spracherkennung mit Wellenform | belegt | #293 (Rückmeldung in PR #666, `docs/artifacts/feat-293-nur-mikrofon/testflight-ac10.txt`) | 112 |
 | S03 | Veredelung: Titel vom Modell mit Zeitgrenze | Satz erfassen, kurz warten; die Aufgabe bekommt wie bisher ihren Titel, ein hängender Modellaufruf endet nach 25 s | User Story, Funktional: Stille Veredelung genau einmal nach der Erfassung | belegt | #534 | 107 |
-| S04 | Veredelung: Datum aus Regel, Kontexte und Dauer bei Wiedererkennung | „Morgen Zahnarzt anrufen“ erfassen: Fälligkeit morgen; denselben Satz noch einmal erfassen: Kontexte und Dauer der ersten Aufgabe (`RecognitionWalkthroughTests`) | User Story, Erfolgskriterium: Kontext nach drei manuellen Zuordnungen automatisch | Lücke | – | – |
+| S04 | Veredelung: Datum aus Regel, Kontexte und Dauer bei Wiedererkennung | „Morgen Zahnarzt anrufen“ erfassen: Fälligkeit morgen; denselben Satz noch einmal erfassen: Kontexte und Dauer der ersten Aufgabe (`RecognitionWalkthroughTests`) | User Story, Erfolgskriterium: Kontext nach drei manuellen Zuordnungen automatisch | belegt | #176 (Henning: „1 - 5 positiv getestet“, 2026-10-28, ohne Bildschirmfoto) | 125 |
 | S05 | Veredelung: Dauer-Regel | „20 Minuten Rasen mähen“ erfassen; im Detail steht die Dauer aus dem Text | Funktionsübersicht, Veredelung | belegt | #673 | 115 |
-| S06 | Ansichten und Startseite | Startseite: Zahl über „Jetzt“, „Neu“, „Fällig“; Projekte und Kontexte aufklappen und öffnen (`StartScreenInteractionTests`) | User Story, Funktional: Berechnete Ansichten | Lücke | – | – |
-| S07 | Erledigt mit Rücknahme, Parken | Zeile nach rechts wischen, innerhalb von drei Sekunden auf die Zeile tippen: bleibt; Halten-Menü „Parken“: Aufgabe unter „Geparkt“ (`CaptureSmokeTests.testUndoInsideTheDoneWindowKeepsTheTask`) | Funktionsübersicht, Liste: Erledigt drei Sekunden abbrechbar, Parken | Lücke | – | – |
+| S06 | Ansichten und Startseite | Startseite: Zahl über „Jetzt“, „Neu“, „Fällig“; Projekte und Kontexte aufklappen und öffnen (`StartScreenInteractionTests`) | User Story, Funktional: Berechnete Ansichten | belegt | #176 (Henning: „1 - 5 positiv getestet“, 2026-10-28, ohne Bildschirmfoto) | 125 |
+| S07 | Erledigt mit Rücknahme, Parken | Zeile nach rechts wischen, innerhalb von drei Sekunden auf die Zeile tippen: bleibt; Halten-Menü „Parken“: Aufgabe unter „Geparkt“ (`CaptureSmokeTests.testUndoInsideTheDoneWindowKeepsTheTask`) | Funktionsübersicht, Liste: Erledigt drei Sekunden abbrechbar, Parken | belegt | #176 (Henning: „1 - 5 positiv getestet“, 2026-10-28, ohne Bildschirmfoto) | 125 |
 | S08 | Mitteilung „Heute fällig“ | Aufgabe für heute; zur eingestellten Zeit kommt die tägliche Mitteilung „Heute fällig“ (`DueNotificationTapTests`) | User Story, Funktional: Mitteilung am Fälligkeitstag mit drei Aktionen | belegt | #580 | 114 |
 | S09 | Teilen-Menü | Aus Safari einen Link, aus Notizen Text, eine Mail, ein Foto und eine Datei an Loose Ends teilen; die Aufgabe steht in „Neu“ | User Story, Funktional: Erfassung über Teilen-Menü | belegt | #580 | 114 |
-| S10 | Kalender-Schalter | Detail, Schalter „Im Kalender anzeigen“ an; Termin im Kalender „Loose Ends“, Schalter bleibt an (`CaptureSmokeTests.testCalendarSwitchStaysOn`) | User Story, Funktional: Terminierte Aufgabe optional im Kalender anzeigen | Lücke | – | – |
+| S10 | Kalender-Schalter | Detail, Schalter „Im Kalender anzeigen“ an; Termin im Kalender „Loose Ends“, Schalter bleibt an (`CaptureSmokeTests.testCalendarSwitchStaysOn`) | User Story, Funktional: Terminierte Aufgabe optional im Kalender anzeigen | belegt | #176 (Henning: „1 - 5 positiv getestet“, 2026-10-28, ohne Bildschirmfoto) | 125 |
 | S11 | Watch-Diktat mit Rücksprung | Watch-App öffnen, Feld tippen, diktieren, „Fertig“; Bestätigung, danach wieder das leere Feld (`WatchCaptureUITests`) | User Story, Funktional: Erfassung über Watch | belegt | #409 | 64 |
 | S12 | Watch-Komplikation | Zifferblatt, Komplikation „Loose Ends“ wählen: Knoten; antippen öffnet die Erfassung | User Story, Erfolgskriterium: Erfassung per Watch ohne die App zu sehen | belegt | #355 (Abschlusskommentar 2026-10-18: Komplikation wird regelmäßig genutzt) | 57 |
 | S13 | Widget „Als nächstes“ | Widget „Next up“ auf den Home-Bildschirm legen; es zeigt die Aufgaben aus „Als nächstes“ | User Story, Abgeleitete Features: Widgets „Als nächstes“ | belegt | #176 (Henning: „sieht gut aus“, 2026-10-28, ohne Bildschirmfoto) | 125 |
@@ -55,9 +55,10 @@ gesetzt. Abweichungen aus dem Prüfblock werden je eigenes Ticket. Geprüft wird
 | S22 | Löschen mit Unteraufgaben (#605) | Aufgabe mit einer Unteraufgabe löschen; die Aufgabe ist weg, die Unteraufgabe steht als eigene Zeile (`CaptureSmokeTests.testDeletingATaskLiftsItsSubtask`) | User Story, Funktional: Unteraufgaben eine Ebene tief | belegt | #176 (Henning: „sieht gut aus“, 2026-10-28, ohne Bildschirmfoto) | 125 |
 | S23 | Mac aus TestFlight: Listentasten | Mac, eine Liste öffnen; Pfeile wählen eine Zeile, Leertaste erledigt (`MacKeyboardTests`) | User Story, Erfolgskriterium: Oberfläche auf iPhone und Mac dieselbe Codebasis | belegt | #176 (Henning: „sieht gut aus“, 2026-10-28, ohne Bildschirmfoto) | 125 |
 
-**Prüfblock vom 2026-10-28 (Build 125):** Henning wählte „Nur 9 plus Icon“: S01, S04, S06, S07 und S10 blieben aus dem
-Durchgang, weil Simulator-Tests und sein Alltag sie abdecken; sie stehen weiter auf `Lücke`. Seine Rückmeldung zu den
-übrigen neun lautete „sieht gut aus“, ohne Bildschirmfotos; das Icon (#40) ist darin eingeschlossen.
+**Prüfblock vom 2026-10-28 (Build 125):** Henning wählte zuerst „Nur 9 plus Icon“ (S01, S04, S06, S07 und S10 blieben
+aus dem Durchgang) und meldete zu den übrigen neun „sieht gut aus“, das Icon (#40) eingeschlossen. Nach seinem
+„jetzt ist ein Test möglich“ spielte er die fünf zurückgestellten Schritte im selben Build durch: „1 - 5 positiv
+getestet“, ohne Bildschirmfotos. Damit steht keine Zeile mehr auf `Lücke`.
 
 ## Prüfblock
 
