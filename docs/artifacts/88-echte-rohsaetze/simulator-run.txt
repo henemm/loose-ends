@@ -1,0 +1,20 @@
+# Simulator-Beleg
+erzeugt: 2026-10-28T14:58:15+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: 88-echte-rohsaetze
+head: bf3dda5c5880e99d44b61f287defceae17840759
+basis: 8211af4b2e85ecb42e4a82c4a29dc484c1d90f9e (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 24 gesamt, 24 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793194628.325  ende: 1793195891.775
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/88-echte-rohsaetze/simulator-run/summary.json  sha256:3bc66c3f9d52b7750a6628704e9b3dc0ab6835a325066f17e4cf54639f49ba0b
+xcresult: docs/artifacts/88-echte-rohsaetze/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/88-echte-rohsaetze/simulator-run/*.png (13 Stück)
+
+## Geprüfte Dateien
+- sha256:653a9f041135f1b000d963425a60bbfa505265264eeeffd865b86b776febea32  LooseEndsTests/RawSentenceReportTests.swift
+- sha256:6c5c370341851ca0e73048b891bdab2959dffc5009eb335504eac6cf4329b9f3  Measurement/Corpus.swift
+- sha256:a7ff278d25896264c3807c49b8f8768dcb522eeb0df301bc69cdf7c0b881aa70  Measurement/RawSentenceColumn.swift
