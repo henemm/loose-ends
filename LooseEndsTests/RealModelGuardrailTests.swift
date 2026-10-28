@@ -113,11 +113,7 @@ struct RealModelGuardrailTests {
             Self.logger.info("LOOSEENDS_GUARDRAIL_OUT not set, probes not written")
             return
         }
-        let stored = probes.map { probe -> GuardrailProbe in
-            var copy = probe
-            if copy.menge != "heikel" { copy.text = nil }
-            return copy
-        }
+        let stored = GuardrailProbe.withoutEverydayWording(probes)
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         encoder.dateEncodingStrategy = .iso8601
@@ -139,7 +135,7 @@ struct RealModelGuardrailTests {
         Self.logger.info("Local summary written to \(path, privacy: .public)")
     }
 
-    private static func summary(head: Head, report: GuardrailReport) -> String {
+    static func summary(head: Head, report: GuardrailReport) -> String {
         var lines = ["Gerät \(head.geraet), \(head.system), \(head.datum.ISO8601Format())",
                      "Durchläufe \(head.durchlaeufe), \(head.nurHeikel ? "nur 100er-Menge" : "heikel + FocusBlox")",
                      "Schwelle 1 %: \(report.threshold.isUnder ? "unter" : "über"), obere Grenze über 1 %: \(report.threshold.upperBoundAbove ? "ja" : "nein")",
@@ -154,7 +150,7 @@ struct RealModelGuardrailTests {
         return lines.joined(separator: "\n") + "\n"
     }
 
-    private static func line(_ title: String, _ slice: GuardrailReport.Slice) -> String {
+    static func line(_ title: String, _ slice: GuardrailReport.Slice) -> String {
         let kinds = slice.byKind.keys.sorted().map { "\($0) \(slice.byKind[$0] ?? 0)" }.joined(separator: ", ")
         let three = slice.ruleOfThree.map { String(format: ", 3/n %.2f %%", $0 * 100) } ?? ""
         return "\(title): " + String(format: "%d/%d Texte = %.2f %% (Grenze %.2f %%",

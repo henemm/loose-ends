@@ -127,3 +127,57 @@ struct GuardrailReport: Sendable {
         return (centre + spread) / (1 + z2 / count)
     }
 }
+
+/// From the runner's result file to probes (#71 Schnitt 2b-1). Pure: no file, no model.
+extension GuardrailProbe {
+    struct Translation: Equatable {
+        var probes: [GuardrailProbe]
+        /// Calls of the corpus × runs that have no result at all.
+        var missing: Int
+        /// Results that belong to no entry of the corpus or to a run outside `0..<runsPerEntry`.
+        var unknown: Int
+    }
+
+    /// One probe per entry and run, in corpus order. Of several results for the same call the last one in the file
+    /// counts (the file is chronological; a repeat after a rate limit replaces the earlier one).
+    static func probes(from run: MeasurementRun, corpus: [Corpus.Entry], runsPerEntry: Int) -> Translation {
+        let ids = Set(corpus.map(\.id))
+        var latest: [String: [Int: MeasurementResult]] = [:]
+        var unknown = 0
+        for result in run.results {
+            guard ids.contains(result.entryID), (0..<max(runsPerEntry, 0)).contains(result.runIndex) else {
+                unknown += 1
+                continue
+            }
+            latest[result.entryID, default: [:]][result.runIndex] = result
+        }
+        var probes: [GuardrailProbe] = []
+        var missing = 0
+        for entry in corpus {
+            for runIndex in 0..<max(runsPerEntry, 0) {
+                guard let result = latest[entry.id]?[runIndex] else {
+                    missing += 1
+                    continue
+                }
+                probes.append(probe(entry: entry, result: result))
+            }
+        }
+        return Translation(probes: probes, missing: missing, unknown: unknown)
+    }
+
+    private static func probe(entry: Corpus.Entry, result: MeasurementResult) -> GuardrailProbe {
+        let kind = result.error == nil && result.errorKind == nil ? nil : (result.errorKind ?? MeasurementErrorKind.other)
+        return GuardrailProbe(id: entry.id, menge: entry.id.hasPrefix("alltag-") ? "alltag" : "heikel",
+                              sprache: entry.lang, gruppe: entry.form, text: entry.text,
+                              durchlauf: result.runIndex + 1, fehlerart: kind)
+    }
+
+    /// The raw data never carries the everyday wording (personal sentences); the touchy texts keep theirs.
+    static func withoutEverydayWording(_ probes: [GuardrailProbe]) -> [GuardrailProbe] {
+        probes.map { probe in
+            var copy = probe
+            if copy.menge != "heikel" { copy.text = nil }
+            return copy
+        }
+    }
+}
