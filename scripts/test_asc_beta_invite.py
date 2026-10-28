@@ -33,6 +33,7 @@ def group(gid, name="Tester", internal=False):
 
 class FakeASC:
     """GET liest den Zustand, POST schreibt hinein; jede Anfrage wird mit Methode, Pfad und Rumpf gemerkt."""
+    body201 = None  # abweichender Rumpf der Einreichungsantwort; die Einreichung entsteht trotzdem
 
     def __init__(self, groups=(), builds=BUILDS, assigned=None, fail=None, fail_get=None, submissions=None, extern=None):
         self.groups = [json.loads(json.dumps(item)) for item in groups]
@@ -87,7 +88,7 @@ class FakeASC:
         if route == "/v1/betaAppReviewSubmissions":
             build = urllib.parse.parse_qs(query).get("filter[build]", [""])[0]
             state = self.submissions.get(build)
-            return 200, {"data": [self.submission(build, state)] if state else []}
+            return 200, {"data": [self.submission(build, state)] if isinstance(state, str) else state or []}
         if route == "/v1/builds":
             params = urllib.parse.parse_qs(query)
             platform = params.pop("filter[preReleaseVersion.platform]", [""])[0]
@@ -116,7 +117,7 @@ class FakeASC:
             if build in self.submissions:
                 return 409, {"errors": [{"status": "409"}]}
             self.submissions[build] = "WAITING_FOR_REVIEW"
-            return 201, {"data": self.submission(build, "WAITING_FOR_REVIEW")}
+            return 201, {"data": self.submission(build, "WAITING_FOR_REVIEW")} if self.body201 is None else self.body201
         if method == "POST" and path == "/v1/betaGroups":
             record = {"id": f"G-7c41-{len(self.groups) + 1}", "attributes": dict(body["data"]["attributes"])}
             self.groups.append(record)
@@ -300,6 +301,14 @@ class InviteTests(unittest.TestCase):
     def submitted(self, fake):
         return [b for m, p, b in fake.writes() if p == "/v1/betaAppReviewSubmissions"]
 
+    def submit_ok(self, fake, *lines):
+        """--einreichen mit Exit 0; jede Zeile muss in stdout stehen, {p} je Plattform IOS und MAC_OS."""
+        result = self.submit(fake)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        for line, platform in ((line, p) for line in lines for p in ("IOS", "MAC_OS")):
+            self.assertIn(line.format(p=platform), result.stdout)
+        return result
+
     def test_without_flag_never_submits(self):
         ios = BUILDS["IOS"]["id"]
         for fake in (self.fake(), self.fake(groups=[group("G-7c41-1")], assigned={"G-7c41-1": {ios}}),
@@ -311,64 +320,50 @@ class InviteTests(unittest.TestCase):
 
     def test_with_flag_submits_each_platform_once(self):
         fake = self.fake()
-        result = self.submit(fake)
-        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.submit_ok(fake, "einreichung plattform={p} zustand=eingereicht review=WAITING_FOR_REVIEW")
         self.assertEqual(self.submitted(fake), [
             {"data": {"type": "betaAppReviewSubmissions",
                       "relationships": {"build": {"data": {"type": "builds", "id": BUILDS[p]["id"]}}}}}
             for p in ("IOS", "MAC_OS")])
-        for platform in ("IOS", "MAC_OS"):
-            self.assertIn(f"einreichung plattform={platform} zustand=eingereicht review=WAITING_FOR_REVIEW", result.stdout)
         self.assert_clean(fake, submitting=True)
 
     def test_assignment_happens_before_submission(self):
         fake = self.fake(groups=[group("G-7c41-1")], assigned={"G-7c41-1": {"B-91f3-OLD"}})
-        self.assertEqual(self.submit(fake).returncode, 0)
+        self.submit_ok(fake)
         writes = [(p, json.dumps(b)) for m, p, b in fake.writes()]
         for platform in ("IOS", "MAC_OS"):
             build = BUILDS[platform]["id"]
             steps = [p for p, sent in writes if build in sent]
             self.assertEqual(steps, ["/v1/betaGroups/G-7c41-1/relationships/builds", "/v1/betaAppReviewSubmissions"])
-        self.assertEqual(set(fake.submissions), {BUILDS["IOS"]["id"], BUILDS["MAC_OS"]["id"]})
 
     def test_second_run_sends_no_submission(self):
         fake = self.fake()
-        self.assertEqual(self.submit(fake).returncode, 0)
+        self.submit_ok(fake)
         before = len(fake.requests)
-        result = self.submit(fake)
-        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.submit_ok(fake, "einreichung plattform={p} zustand=vorhanden review=WAITING_FOR_REVIEW",
+                       "zusammenfassung geschrieben=0")
         self.assertEqual({m for m, _, _ in fake.requests[before:]}, {"GET"})
-        for platform in ("IOS", "MAC_OS"):
-            self.assertIn(f"einreichung plattform={platform} zustand=vorhanden review=WAITING_FOR_REVIEW", result.stdout)
-        self.assertIn("zusammenfassung geschrieben=0", result.stdout)
 
     def test_existing_submission_in_any_state_is_not_repeated(self):
-        for state in ("IN_REVIEW", "APPROVED", "REJECTED"):
-            fake = self.fake(submissions={b["id"]: state for b in BUILDS.values()})
-            result = self.submit(fake)
-            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            self.assertEqual(self.submitted(fake), [])
-            for platform in ("IOS", "MAC_OS"):
-                self.assertIn(f"einreichung plattform={platform} zustand=vorhanden review={state}", result.stdout)
+        for state in ("IN_REVIEW", "APPROVED", "REJECTED", ["x"], [None], [{"attributes": "x"}]):
+            fake = self.fake(submissions={BUILDS["IOS"]["id"]: state})
+            review = state if isinstance(state, str) else "unbekannt"
+            result = self.submit_ok(fake, "einreichung plattform=IOS zustand=vorhanden review=" + review,
+                                    "einreichung plattform=MAC_OS zustand=eingereicht review=WAITING_FOR_REVIEW")
+            self.assertEqual((result.stdout.splitlines()[-1], len(self.submitted(fake))), ("zusammenfassung geschrieben=4", 1))
+            self.assertNotIn("Traceback", result.stderr)
 
     def test_not_ready_build_is_not_submitted(self):
         fake = self.fake(extern={BUILDS["IOS"]["id"]: "PROCESSING"})
-        result = self.submit(fake)
-        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("einreichung plattform=IOS zustand=nicht-bereit extern=PROCESSING", result.stdout)
+        self.submit_ok(fake, "einreichung plattform=IOS zustand=nicht-bereit extern=PROCESSING")
         self.assertEqual(set(fake.submissions), {BUILDS["MAC_OS"]["id"]})
         fake = self.fake(fail_get=lambda p: 404 if p.endswith("/buildBetaDetail") else None)
-        result = self.submit(fake)
-        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        for platform in ("IOS", "MAC_OS"):
-            self.assertIn(f"einreichung plattform={platform} zustand=nicht-bereit extern=unbekannt", result.stdout)
+        self.submit_ok(fake, "einreichung plattform={p} zustand=nicht-bereit extern=unbekannt")
         self.assertEqual(self.submitted(fake), [])
 
     def test_platform_without_valid_build_is_reported(self):
         fake = self.fake(builds={"IOS": BUILDS["IOS"]})
-        result = self.submit(fake)
-        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("einreichung plattform=MAC_OS zustand=kein-gültiger-build", result.stdout)
+        self.submit_ok(fake, "einreichung plattform=MAC_OS zustand=kein-gültiger-build")
         self.assertEqual(set(fake.submissions), {BUILDS["IOS"]["id"]})
 
     def fail_submission(self, platform, answer):
@@ -377,21 +372,16 @@ class InviteTests(unittest.TestCase):
 
     def test_conflict_is_a_state_not_a_crash(self):
         fake = self.fake(fail=self.fail_submission("IOS", 409))
-        result = self.submit(fake)
-        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("einreichung plattform=IOS zustand=konflikt", result.stdout)
+        self.submit_ok(fake, "einreichung plattform=IOS zustand=konflikt")
         self.assertEqual(set(fake.submissions), {BUILDS["MAC_OS"]["id"]})
 
     def test_missing_contract_names_the_account_holder(self):
         fake = self.fake(fail=self.fail_submission("IOS", (422, "ENTITY_UNPROCESSABLE.BETA_CONTRACT_MISSING")))
         result = self.submit(fake)
-        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
         errors = [l for l in result.stdout.splitlines() if l.startswith("::error::platform=IOS")]
-        self.assertEqual(len(errors), 1, result.stdout)
-        self.assertIn("Beta-Vereinbarung bei Apple fehlt", errors[0])
-        self.assertIn("Konto-Inhaber", errors[0])
-        ios_posts = [b for b in self.submitted(fake) if BUILDS["IOS"]["id"] in json.dumps(b)]
-        self.assertEqual(len(ios_posts), 1)
+        self.assertEqual((result.returncode, errors), (1, ["::error::platform=IOS Beta-Vereinbarung bei Apple fehlt: der "
+                                                         "Konto-Inhaber muss sie in App Store Connect annehmen"]), result.stdout)
+        self.assertEqual(sum(BUILDS["IOS"]["id"] in json.dumps(b) for b in self.submitted(fake)), 1)
 
     def test_forbidden_submission_uses_existing_text(self):
         result = self.submit(self.fake(fail=self.fail_submission("IOS", 403)))
@@ -414,6 +404,14 @@ class InviteTests(unittest.TestCase):
             self.assertNotIn(secret, output)
         for word in ("einreichung plattform=", "zustand=", "review=", "geschrieben="):
             self.assertIn(word, output)
+
+    def test_unexpected_submission_body_is_still_reported(self):
+        for body in (["x"], {"data": [1]}, {"data": {"attributes": {"betaReviewState": None}}}):
+            fake = self.fake()
+            fake.body201 = body
+            result = self.submit_ok(fake, "einreichung plattform={p} zustand=eingereicht review=unbekannt")
+            self.assertEqual((result.stdout.splitlines()[-1], len(self.submitted(fake))), ("zusammenfassung geschrieben=5", 2))
+            self.assertNotIn("Traceback", result.stderr)
 
 
 class WorkflowTests(unittest.TestCase):

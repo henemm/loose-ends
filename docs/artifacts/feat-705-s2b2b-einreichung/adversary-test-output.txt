@@ -1,0 +1,95 @@
+== Adversary Runde 3, 2026-10-28T10:04:45 ==
+== python3 scripts/test_asc_beta_invite.py -v (exit=0) ==
+test_assignment_happens_before_submission (__main__.InviteTests.test_assignment_happens_before_submission) ... ok
+test_conflict_is_a_state_not_a_crash (__main__.InviteTests.test_conflict_is_a_state_not_a_crash) ... ok
+test_duplicate_external_groups_abort_before_any_write (__main__.InviteTests.test_duplicate_external_groups_abort_before_any_write) ... ok
+test_existing_group_only_assigns_missing_build (__main__.InviteTests.test_existing_group_only_assigns_missing_build) ... ok
+test_existing_submission_in_any_state_is_not_repeated (__main__.InviteTests.test_existing_submission_in_any_state_is_not_repeated) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 57687)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 57704)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 57724)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 57727)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 57736)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_first_run_creates_group_and_assigns_both_platforms (__main__.InviteTests.test_first_run_creates_group_and_assigns_both_platforms) ... ok
+test_forbidden_submission_uses_existing_text (__main__.InviteTests.test_forbidden_submission_uses_existing_text) ... ok
+test_forbidden_write_is_reported_clearly (__main__.InviteTests.test_forbidden_write_is_reported_clearly) ... ok
+test_message_masks_query_values_only (__main__.InviteTests.test_message_masks_query_values_only) ... <frozen importlib._bootstrap>:549: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 57782)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap>:549: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 57800)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap>:549: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 57818)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap>:549: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 57836)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap>:549: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 57854)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap>:549: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 57867)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap>:549: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 57886)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_missing_contract_names_the_account_holder (__main__.InviteTests.test_missing_contract_names_the_account_holder) ... ok
+test_never_submits_and_never_enables_link (__main__.InviteTests.test_never_submits_and_never_enables_link) ... ok
+test_newest_valid_build_is_chosen_per_platform (__main__.InviteTests.test_newest_valid_build_is_chosen_per_platform) ... ok
+test_not_ready_build_is_not_submitted (__main__.InviteTests.test_not_ready_build_is_not_submitted) ... ok
+test_one_platform_failing_does_not_hide_the_other (__main__.InviteTests.test_one_platform_failing_does_not_hide_the_other) ... ok
+test_one_platform_failing_does_not_hide_the_other_submission (__main__.InviteTests.test_one_platform_failing_does_not_hide_the_other_submission) ... ok
+test_output_has_only_state_words (__main__.InviteTests.test_output_has_only_state_words) ... ok
+test_platform_without_valid_build_is_reported (__main__.InviteTests.test_platform_without_valid_build_is_reported) ... ok
+test_platform_without_valid_build_is_reported_not_failed (__main__.InviteTests.test_platform_without_valid_build_is_reported_not_failed) ... ok
+test_retry_lines_carry_no_ids (__main__.InviteTests.test_retry_lines_carry_no_ids) ... ok
+test_second_run_sends_no_submission (__main__.InviteTests.test_second_run_sends_no_submission) ... ok
+test_second_run_sends_no_write (__main__.InviteTests.test_second_run_sends_no_write) ... ok
+test_submission_output_has_only_state_words (__main__.InviteTests.test_submission_output_has_only_state_words) ... ok
+test_unexpected_submission_body_is_still_reported (__main__.InviteTests.test_unexpected_submission_body_is_still_reported) ... ok
+test_unreadable_beta_detail_keeps_the_count (__main__.InviteTests.test_unreadable_beta_detail_keeps_the_count) ... ok
+test_with_flag_submits_each_platform_once (__main__.InviteTests.test_with_flag_submits_each_platform_once) ... ok
+test_without_flag_never_submits (__main__.InviteTests.test_without_flag_never_submits) ... ok
+test_workflow_file (__main__.WorkflowTests.test_workflow_file) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 24.509s
+
+OK
+
+== Regression: for f in scripts/test_*.py ==
+PASS scripts/test_abnahme_liste.py
+PASS scripts/test_app_icon_package.py
+PASS scripts/test_asc_beta_invite.py
+PASS scripts/test_asc_beta_probe.py
+PASS scripts/test_asc_beta_setup.py
+PASS scripts/test_asc_cleanup_certs.py
+PASS scripts/test_asc_wait_build.py
+PASS scripts/test_asc_what_to_test.py
+PASS scripts/test_board.py
+PASS scripts/test_check_cloudkit_production.py
+PASS scripts/test_ci_xcode27.py
+PASS scripts/test_cloudkit_schema.py
+PASS scripts/test_compare_reports.py
+PASS scripts/test_entitlements_sync.py
+PASS scripts/test_evidence_config.py
+PASS scripts/test_info_plist_sync.py
+PASS scripts/test_infoplist_languages.py
+PASS scripts/test_latency_summary.py
+PASS scripts/test_mac_ci_entitlements.py
+PASS scripts/test_measurement_status.py
+PASS scripts/test_next_ticket_hook.py
+PASS scripts/test_next_ticket.py
+PASS scripts/test_real_model_result.py
+PASS scripts/test_sim_lock.py
+PASS scripts/test_sim_proof.py
+PASS scripts/test_sim_run_xcodebuild.py
+PASS scripts/test_siri_phrases.py
+PASS scripts/test_tags_wording.py
+
+Gesamt: 28 Testdateien PASS, 0 FAIL; test_asc_beta_invite.py: 27 passed, 0 failed, 0 skipped

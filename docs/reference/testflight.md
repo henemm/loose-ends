@@ -169,7 +169,7 @@ bleibt `offen` und Beleg leer, bis ein Lauf ihn füllt.
 | Externe Gruppe `Tester` | erledigt: angelegt 2026-10-27, Link aus, Feedback an | [Lauf 40516649071](https://github.com/henemm/loose-ends/actions/runs/40516649071) `zustand=angelegt` (Zuordnung dort 403, behoben in #721); Lauf 40534641955 `gruppe name=Tester intern=nein link=aus` |
 | Öffentlicher Link | offen (Schnitt 2b-2) | |
 | Build-Zuordnung iOS und macOS | erledigt: neuester gültiger Build je Plattform (2026-10-27), `extern=READY_FOR_BETA_SUBMISSION` | Lauf 40534641955 `zustand=gesetzt` IOS und MAC_OS, `geschrieben=2`; [Lauf 40535068594](https://github.com/henemm/loose-ends/actions/runs/40535068594) `zustand=vorhanden`, `geschrieben=0` |
-| Beta-Review (Einreichung) | offen (Schnitt 2b-2) | Lauf 40535068594 `einreichung keine` |
+| Beta-Review (Einreichung) | offen (Schnitt 2b-2b, Handlauf `einreichen`) | Lauf 40535068594 `einreichung keine` |
 | Rückmeldeweg: TestFlight-Feedback | erledigt auf Apples Seite: Gruppe `Tester` `feedback=an` | Lauf 40534641955 |
 
 **Handlauf `asc-beta.yml` (Schnitt 1, nur lesend):** GitHub → Actions → **ASC Beta Probe** → **Run workflow**. Er läuft je
@@ -208,9 +208,17 @@ die Probe als Beleg; ein zweiter Lauf schreibt nichts (`zusammenfassung geschrie
 - Jeder spätere Build braucht wieder einen Lauf `zuordnen` (Automatisierung in `testflight.yml` ist ein Folgeticket).
 - `Schlüssel ohne Schreibrecht` (HTTP 403): Rückfall ist die Oberfläche von App Store Connect.
 
-**Schnitt 2:** 2a (Texte und Kontakt) und 2b-1 (externe Gruppe, Build-Zuordnung) sind die Handläufe oben. 2b-2 (Beta-Review
-einreichen, öffentlicher Link) ist der nächste Schnitt, nur auf ausdrücklichen Lauf (die Einreichung an Apple ist per API
-nicht zurückziehbar).
+**Handlauf `einreichen` (Schnitt 2b-2b), nicht rücknehmbar, nur nach Hennings Wort:** `aktion=einreichen`. Der Job `submit`
+(`scripts/asc_beta_invite.py --einreichen`) ordnet wie `zuordnen` zu und reicht danach genau diesen Build je Plattform einmal
+zum Beta-Review ein. Erwartete Zeilen: `einreichung plattform=IOS|MAC_OS zustand=eingereicht review=WAITING_FOR_REVIEW`, beim
+zweiten Lauf `zustand=vorhanden` und `geschrieben=0`; sonst `nicht-bereit extern=…`, `kein-gültiger-build` oder `konflikt`
+(409). `Beta-Vereinbarung bei Apple fehlt` (422): der Konto-Inhaber nimmt sie in App Store Connect an. Die Watch-App steckt im
+iOS-Build und wird mit ihm geprüft; eine eigene watchOS-Einreichung gibt es nicht. Scheitert eine Plattform (Exit 1), ist die
+andere womöglich schon eingereicht, und die Probe desselben Laufs fällt aus: danach `aktion=probe` laufen lassen, um den Stand
+beider Plattformen zu lesen. Ein unerwarteter Antwortrumpf nach erfolgreicher Einreichung ergibt `review=unbekannt`.
+
+**Schnitt 2:** 2a (Texte und Kontakt), 2b-1 (externe Gruppe, Build-Zuordnung) und 2b-2b (Einreichung) sind die Handläufe
+oben. Der öffentliche Link (2b-2c) folgt erst nach `APPROVED`.
 
 ## Wenn es hakt
 

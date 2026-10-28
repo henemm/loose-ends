@@ -105,7 +105,7 @@ schlägt fehl, wenn `generate` einen Diff hinterlässt. Berechtigungstexte brauc
 Dialog englisch; `scripts/test_infoplist_languages.py` prüft das und die Vollständigkeit der vier `*.xcstrings` (#342).
 Der Datenschutztext liegt in `docs/reference/datenschutz-entwurf.md` (Freigabe Henning); öffentlich steht er seit 2026-10-27
 unter https://www.henemm.com/legal/loose-ends/privacy-policy/ (Website-Repo `henemm/henemm-website`, `content/legal/loose-ends/`),
-bei Apple gesetzt über die Repo-Variable `ASC_PRIVACY_POLICY_URL` und `asc-beta.yml` `aktion=einrichten` (#705). Eine Änderung
+bei Apple gesetzt über die Repo-Variable `ASC_PRIVACY_POLICY_URL` und `asc-beta.yml` `aktion=einrichten` (#705; `aktion=einreichen` reicht zum Beta-Review ein, nur nach Hennings Wort). Eine Änderung
 am Text gilt erst, wenn auch die Website-Seite angepasst ist.
 
 `DEVELOPMENT_TEAM` steht in `project.yml` (`XK87E2B3VR`) und darf dort nicht geleert werden: Xcode
