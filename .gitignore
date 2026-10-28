@@ -11,6 +11,7 @@ xcuserdata/
 
 # Real personal task data — never commit (see scripts/export-focusblox-corpus.swift)
 docs/reference/focusblox-corpus.json
+docs/reference/loose-ends-rawtexts.json
 
 # Never in the repo: keys, environment files, the hook staging switch
 *.p8

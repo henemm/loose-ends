@@ -33,7 +33,7 @@ class StatusTests(unittest.TestCase):
 
     def test_without_data_every_suite_is_named_as_skipped(self):
         text = ms.render(ms.status(self.worktree), markdown=False)
-        self.assertIn("5 von 5 übersprungen", text)
+        self.assertIn("6 von 6 übersprungen", text)
         self.assertIn("RecognitionRuleCorpusTests – fehlt: focusblox-corpus.json", text)
         self.assertIn("SelfConsistencyReportTests – fehlt: focusblox-corpus.json, selfconsistency-run.json", text)
 
@@ -47,11 +47,12 @@ class StatusTests(unittest.TestCase):
         self.put(self.worktree, "focusblox-corpus.json")
         self.put(self.worktree, "selfconsistency-run.json")
         self.put(self.worktree, "textform-run.json")
-        self.assertEqual(ms.render(ms.status(self.worktree), markdown=False), "[sim] Messstrecken: alle 5 liefen mit Daten.")
+        self.put(self.worktree, "loose-ends-rawtexts.json")
+        self.assertEqual(ms.render(ms.status(self.worktree), markdown=False), "[sim] Messstrecken: alle 6 liefen mit Daten.")
 
     def test_markdown_puts_the_count_in_bold(self):
         text = ms.render(ms.status(self.worktree), markdown=True)
-        self.assertIn("**5 von 5 Messstrecken übersprungen**", text)
+        self.assertIn("**6 von 6 Messstrecken übersprungen**", text)
         self.assertIn("| `RuleLeaveOneOutReportTests` | übersprungen, fehlt: focusblox-corpus.json |", text)
 
 
@@ -72,9 +73,13 @@ class RegistryMatchesSwiftTests(unittest.TestCase):
 
     def test_every_gate_is_listed_and_nothing_else(self):
         files = {"focusBloxCorpus": "focusblox-corpus.json", "selfConsistencyRun": "selfconsistency-run.json",
-                 "textFormRun": "textform-run.json"}
+                 "textFormRun": "textform-run.json", "rawSentences": "loose-ends-rawtexts.json"}
         swift = {files[key]: sorted(value) for key, value in self.gated_suites_in_swift().items()}
         self.assertEqual(swift, {name: sorted(suites) for name, suites in ms.GATES.items()})
+
+    def test_rawtexts_file_is_gitignored(self):
+        lines = (ms.ROOT / ".gitignore").read_text().splitlines()
+        self.assertIn("docs/reference/loose-ends-rawtexts.json", lines)
 
     def test_no_suite_gates_on_a_corpus_path_of_its_own(self):
         for path in TESTS.glob("*.swift"):

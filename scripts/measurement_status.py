@@ -30,6 +30,9 @@ GATES = {
     "textform-run.json": [
         "TextFormModelReportTests",
     ],
+    "loose-ends-rawtexts.json": [
+        "RawSentenceReportTests",
+    ],
 }
 
 
