@@ -16,7 +16,8 @@ struct LabApp: App {
             corpusFileName: Corpus.corpusFileName(from: arguments),
             runsPerEntry: Corpus.runsPerEntry(from: arguments),
             contextVocabulary: Corpus.contextWords(from: arguments),
-            exitWhenDone: Corpus.exitWhenDone(from: arguments)))
+            exitWhenDone: Corpus.exitWhenDone(from: arguments),
+            countRefusals: Corpus.countRefusals(from: arguments)))
     }
 
     var body: some Scene {

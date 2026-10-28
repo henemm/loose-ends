@@ -33,7 +33,7 @@ final class MeasurementRunner {
     private(set) var entries: [Corpus.Entry] = []
     private(set) var lastNote: String = ""
 
-    var done: Int { MeasurementProgress.done(in: run) }
+    var done: Int { MeasurementProgress.done(in: run, countRefusals: countRefusals) }
     var total: Int { MeasurementProgress.total(entries: entries.count, runsPerEntry: runsPerEntry) }
     var progress: Double { MeasurementProgress.progress(done: done, total: total) }
     var resultPath: String { store.url.lastPathComponent }
@@ -48,20 +48,22 @@ final class MeasurementRunner {
     private let runsPerEntry: Int
     private let contextVocabulary: [String]
     private let exitWhenDone: Bool
+    private let countRefusals: Bool
     private let enricher = FoundationModelsEnricher()
     private let logger = Logger(subsystem: "com.henning.looseends.lab", category: "measurement")
     private var task: Task<Void, Never>?
 
     init(name: String = "date-title", arguments: [String] = CommandLine.arguments,
          corpusFileName: String = Corpus.fileName, runsPerEntry: Int = 1,
-         contextVocabulary: [String] = [], exitWhenDone: Bool = false) {
+         contextVocabulary: [String] = [], exitWhenDone: Bool = false, countRefusals: Bool = false) {
         self.store = MeasurementStore(name: name, in: MeasurementStore.documents)
         self.run = store.load(name: name)
         self.runsPerEntry = runsPerEntry
         self.contextVocabulary = contextVocabulary
         self.exitWhenDone = exitWhenDone
+        self.countRefusals = countRefusals
         self.entries = (try? Corpus.load(fileName: corpusFileName)) ?? []
-        if !entries.isEmpty && run.remaining(from: entries, runsPerEntry: runsPerEntry).isEmpty { state = .finished }
+        if !entries.isEmpty && run.remaining(from: entries, runsPerEntry: runsPerEntry, countRefusals: countRefusals).isEmpty { state = .finished }
         log("app", "gestartet; Argumente: \(arguments.dropFirst().joined(separator: " ")); Korpus: \(entries.count) Sätze")
         log("model", enricher.unavailableReason.map { "nicht verfügbar: \($0)" } ?? "verfügbar")
     }
@@ -105,7 +107,8 @@ final class MeasurementRunner {
         var consecutiveFailures = 0
         var passes = 0
         while true {
-            let pass = run.pass(after: passes, from: entries, runsPerEntry: runsPerEntry, untilDone: exitWhenDone)
+            let pass = run.pass(after: passes, from: entries, runsPerEntry: runsPerEntry, untilDone: exitWhenDone,
+                                countRefusals: countRefusals)
             if pass.isEmpty { break }
             passes += 1
             for (entry, runIndex) in pass {
@@ -117,7 +120,7 @@ final class MeasurementRunner {
                 save()
                 if Task.isCancelled { return }
 
-                consecutiveFailures = result.succeeded ? 0 : consecutiveFailures + 1
+                consecutiveFailures = MeasurementPacing.countsAsFailure(result, countRefusals: countRefusals) ? consecutiveFailures + 1 : 0
                 guard let delay = MeasurementPacing.delayBeforeNext(consecutiveFailures: consecutiveFailures) else {
                     stop(result.wasRateLimited
                          ? "Apple drosselt gerade. Später weiter — der Stand bleibt erhalten."

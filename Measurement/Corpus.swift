@@ -156,7 +156,10 @@ enum Corpus {
     static func url(fileName: String) throws -> URL {
         let bundled = Bundle(for: CorpusAnchor.self).url(forResource: fileName, withExtension: "json")
         let onDisk = URL(fileURLWithPath: #filePath).deletingLastPathComponent().appendingPathComponent("\(fileName).json")
-        guard let url = bundled ?? (FileManager.default.fileExists(atPath: onDisk.path) ? onDisk : nil) else {
+        let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?
+            .appendingPathComponent("\(fileName).json")
+        let local = [onDisk, documents].compactMap { $0 }.first { FileManager.default.fileExists(atPath: $0.path) }
+        guard let url = bundled ?? local else {
             throw CocoaError(.fileNoSuchFile)
         }
         return url
@@ -220,6 +223,12 @@ enum Corpus {
     /// Whether the app quits after the last saved note (`--exit-when-done`, #534), so the next launch is a new,
     /// process-cold one.
     static func exitWhenDone(from arguments: [String], flag: String = "--exit-when-done") -> Bool {
+        arguments.contains(flag)
+    }
+
+    /// Whether a refusal of the model counts as a measured run (`--count-failures`, #71): for the guardrail
+    /// measurement the refusal is the result. Without the flag every other run stays as it was.
+    static func countRefusals(from arguments: [String], flag: String = "--count-failures") -> Bool {
         arguments.contains(flag)
     }
 }

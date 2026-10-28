@@ -97,6 +97,10 @@ struct MeasurementResult: Codable, Sendable {
         if let errorKind { return errorKind == MeasurementErrorKind.rateLimited }
         return error?.localizedCaseInsensitiveContains("rate limit") ?? false
     }
+    /// The model said no (#71): for a guardrail measurement that is the result, not a failed try.
+    var wasRefused: Bool { errorKind == MeasurementErrorKind.guardrail || errorKind == MeasurementErrorKind.refusal }
+    /// Whether this run of the note is done. A refusal counts only with the switch, so #88 and #534 stay as they were.
+    func countsAsMeasured(countRefusals: Bool) -> Bool { succeeded || (countRefusals && wasRefused) }
 }
 
 /// The state of the device at the moment of one measurement. Plain strings: this type is written
@@ -162,8 +166,10 @@ struct MeasurementRun: Codable, Sendable {
     /// stays on the list and is tried again in a later slice, which is exactly how a throttled run
     /// finishes itself over time. Counting successes per note instead of mere membership is what
     /// allows several runs of the same note (#65); with `runsPerEntry = 1` nothing changes.
-    func remaining(from entries: [Corpus.Entry], runsPerEntry: Int = 1) -> [(entry: Corpus.Entry, runIndex: Int)] {
-        let done = succeeded
+    /// With `countRefusals` a refused run counts as measured too, so an always refused note cannot hold a launch (#71).
+    func remaining(from entries: [Corpus.Entry], runsPerEntry: Int = 1,
+                   countRefusals: Bool = false) -> [(entry: Corpus.Entry, runIndex: Int)] {
+        let done = results.filter { $0.countsAsMeasured(countRefusals: countRefusals) }
         var open: [(entry: Corpus.Entry, runIndex: Int)] = []
         for entry in entries {
             let runs = done.filter { $0.entryID == entry.id }.count
@@ -177,9 +183,9 @@ struct MeasurementRun: Codable, Sendable {
     /// so one process makes every call of `runsPerEntry` (6 notes × 2 = 12) before it quits; the failure brake of the
     /// runner still stops it.
     func pass(after passesDone: Int, from entries: [Corpus.Entry], runsPerEntry: Int = 1,
-              untilDone: Bool) -> [(entry: Corpus.Entry, runIndex: Int)] {
+              untilDone: Bool, countRefusals: Bool = false) -> [(entry: Corpus.Entry, runIndex: Int)] {
         guard passesDone == 0 || untilDone else { return [] }
-        return remaining(from: entries, runsPerEntry: runsPerEntry)
+        return remaining(from: entries, runsPerEntry: runsPerEntry, countRefusals: countRefusals)
     }
 }
 
@@ -194,13 +200,20 @@ enum MeasurementPacing {
         if consecutiveFailures >= giveUpAfterConsecutiveFailures { return nil }
         return consecutiveFailures == 0 ? 0 : waitAfterFailure
     }
+
+    /// Whether a result adds to the failure count. With `countRefusals` a refusal is the measurement (#71), not a failure.
+    static func countsAsFailure(_ result: MeasurementResult, countRefusals: Bool) -> Bool {
+        !result.countsAsMeasured(countRefusals: countRefusals)
+    }
 }
 
 /// How far a run has come, counted in runs rather than notes: with several runs per note the
 /// number of finished notes is no longer the number of finished measurements (#65).
 enum MeasurementProgress {
     static func total(entries: Int, runsPerEntry: Int) -> Int { entries * runsPerEntry }
-    static func done(in run: MeasurementRun) -> Int { run.succeeded.count }
+    static func done(in run: MeasurementRun, countRefusals: Bool = false) -> Int {
+        run.results.filter { $0.countsAsMeasured(countRefusals: countRefusals) }.count
+    }
     static func progress(done: Int, total: Int) -> Double { total == 0 ? 0 : Double(done) / Double(total) }
 }
 
