@@ -145,9 +145,23 @@ enum Corpus {
     /// Bundled as a test resource on device; on the Mac the file next to this source also works,
     /// which keeps the corpus usable from a plain script run.
     static func load(fileName: String = Corpus.fileName, calendar: Calendar = .current) throws -> [Entry] {
-        let data = try Data(contentsOf: url(fileName: fileName))
-        if let object = try JSONSerialization.jsonObject(with: data) as? [String: Any], object["entries"] != nil {
+        try entries(from: Data(contentsOf: url(fileName: fileName)))
+    }
+
+    /// The format is recognized by the content, never the file name: the text-form object (#70), the
+    /// raw-sentence list whose first object carries `rawText`, `titleBefore` and `capturedAt` (#88 Teil 2,
+    /// folded once per word set; FocusBlox carries `rawText` too, but no `titleBefore`), otherwise the
+    /// plain list of entries.
+    static func entries(from data: Data) throws -> [Entry] {
+        let object = try JSONSerialization.jsonObject(with: data)
+        if let file = object as? [String: Any], file["entries"] != nil {
             return try textFormEntries(from: data)
+        }
+        if let list = object as? [[String: Any]], let first = list.first,
+           ["rawText", "titleBefore", "capturedAt"].allSatisfy({ first[$0] != nil }) {
+            return RawSentenceColumn.distinct(try RawSentenceColumn.decode(data)).kept.map {
+                Entry(id: $0.id, lang: $0.lang ?? "de", text: $0.rawText)
+            }
         }
         return try JSONDecoder().decode([Entry].self, from: data)
     }

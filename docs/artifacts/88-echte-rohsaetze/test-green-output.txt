@@ -1,0 +1,36 @@
+# ./scripts/sim.sh sim-unit (ganze Suite), 2026-10-28, nach F001-F003
+xcresult (Test-LooseEnds-2026.10.28_14-29-50-+0100.xcresult): Passed, totalTestCount 1090, passed 1080, failed 0, skipped 10
+
+## RawSentenceColumnTests (aus dem Lauf)
+Suite RawSentenceColumnTests started
+    ✔ "AC-1: das dritte Format wird am Inhalt erkannt und als Entry geliefert" (0.001 seconds)
+    ✔ "AC-2: bisherige Korpusse laden wie zuvor, das neue Format greift bei keinem" (0.005 seconds)
+    ✔ "AC-2: eine FocusBlox-geformte Liste (rawText, ohne titleBefore) lädt als Entry wie zuvor (F001)" (0.006 seconds)
+    ✔ "AC-3: Sätze ohne Wörter fallen nicht zu einer Dublette zusammen (F003)" (0.001 seconds)
+    ✔ "AC-4: ein leerer titleUser zählt nicht als Korrektur (F002)" (0.001 seconds)
+    ✔ "AC-5: ein fehlgeschlagener Lauf ist nie ein Treffer, Mehrheit nur über erfolgreiche Läufe (F002)" (0.001 seconds)
+    ✔ "AC-3: Dubletten falten, Vertreter mit Korrektur, vor und nach gezählt" (0.001 seconds)
+    ✔ "AC-3: ohne Korrektur bleibt der erste der Datei" (0.001 seconds)
+    ✔ "AC-4: Wahrheitsstufen, keine Doppelzählung" (0.001 seconds)
+    ✔ "AC-5: Titel-Spalte mit Regel über dieselben Sätze, Fehler gezählt, Unkorrigierte gesondert" (0.001 seconds)
+    ✔ "AC-6: Dauer-Spalte, Mehrheit gegen durationUser, Regel daneben, Unkorrigierte nur gezählt" (0.001 seconds)
+    ✔ "AC-7: unter der Mindestmenge steht „zu wenig“ statt einer Rate, ab ihr die Rate" (0.001 seconds)
+    ✔ "AC-8: ohne korrigierte Sätze zeigt die Zelle „–“" (0.001 seconds)
+    ✔ "AC-9: der Bericht enthält keinen Satz, nur Zählungen" (0.001 seconds)
+Suite RawSentenceColumnTests passed after 0.015 seconds
+
+## Ende des Laufs
+Test Succeeded
+[sim] Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: Sprache de_DE wird hier nicht unterstützt (isAvailable false, supportedLocales.count 0, installedLocales.count 0)
+[sim]   The final text keeps the key words – NICHT gemessen: Sprache de_DE wird hier nicht unterstützt (isAvailable false, supportedLocales.count 0, installedLocales.count 0)
+
+# python3 scripts/test_measurement_status.py
+Ran 20 tests in 0.037s
+
+OK

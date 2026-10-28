@@ -33,7 +33,7 @@ class StatusTests(unittest.TestCase):
 
     def test_without_data_every_suite_is_named_as_skipped(self):
         text = ms.render(ms.status(self.worktree), markdown=False)
-        self.assertIn("5 von 5 übersprungen", text)
+        self.assertIn("6 von 6 übersprungen", text)
         self.assertIn("RecognitionRuleCorpusTests – fehlt: focusblox-corpus.json", text)
         self.assertIn("SelfConsistencyReportTests – fehlt: focusblox-corpus.json, selfconsistency-run.json", text)
 

@@ -50,7 +50,56 @@ struct RawSentenceColumnTests {
         }
     }
 
+    @Test("AC-2: eine FocusBlox-geformte Liste (rawText, ohne titleBefore) lädt als Entry wie zuvor (F001)")
+    func focusBloxShapedListUnchanged() throws {
+        let data = try json([
+            ["id": "fb-1", "lang": "de", "text": "Rechnung prüfen", "rawText": "Rechnung prüfen", "capturedAt": "2026-01-01T08:00:00Z"],
+            ["id": "fb-2", "lang": "en", "text": "call the bank", "rawText": "call the bank"],
+        ])
+        let direct = try JSONDecoder().decode([Corpus.Entry].self, from: data)
+        let loaded = try Corpus.entries(from: data)
+        #expect(loaded.map(\.id) == direct.map(\.id))
+        #expect(loaded.map(\.text) == direct.map(\.text))
+        let real = MeasurementData.focusBloxCorpus
+        if MeasurementData.exists(real) {
+            let realData = try Data(contentsOf: real)
+            let realDirect = try JSONDecoder().decode([Corpus.Entry].self, from: realData)
+            let realLoaded = try Corpus.entries(from: realData)
+            #expect(realLoaded.count == realDirect.count)
+            #expect(realLoaded.map(\.id) == realDirect.map(\.id))
+        }
+    }
+
     // MARK: AC-3, AC-4
+
+    @Test("AC-3: Sätze ohne Wörter fallen nicht zu einer Dublette zusammen (F003)")
+    func sentencesWithoutWordsStay() {
+        let folded = RawSentenceColumn.distinct([sentence("a", "?!"), sentence("b", "..."), sentence("c", ""),
+                                                 sentence("d", "eins"), sentence("e", "Eins")])
+        #expect(folded.kept.map(\.id) == ["a", "b", "c", "d"])
+        #expect(folded.after == 4)
+    }
+
+    @Test("AC-4: ein leerer titleUser zählt nicht als Korrektur (F002)")
+    func emptyUserTitleIsNoCorrection() {
+        let tiers = RawSentenceColumn.tiers([sentence("a", "eins", before: "x", user: ""),
+                                             sentence("b", "zwei", before: "x", user: "?!")])
+        #expect(tiers.titleCorrected.isEmpty)
+        #expect(tiers.titleUncorrected.map(\.id) == ["a", "b"])
+    }
+
+    @Test("AC-5: ein fehlgeschlagener Lauf ist nie ein Treffer, Mehrheit nur über erfolgreiche Läufe (F002)")
+    func failedRunsNeverHit() {
+        let sentences = [sentence("a", "alpha", user: ""), sentence("b", "beta", user: "Beta"),
+                         sentence("c", "gamma", user: "Gamma")]
+        let results = [result("a", error: "refused"),
+                       result("b", title: "beta", run: 0), result("b", error: "x", run: 1), result("b", error: "x", run: 2),
+                       result("c", error: "x", run: 0), result("c", error: "x", run: 1)]
+        let row = RawSentenceColumn.titleRow(results: results, sentences: sentences, ruleTitle: { _ in nil })
+        #expect(row.corrected == 2)
+        #expect(row.modelHits == 1)
+        #expect(row.errors == 4)
+    }
 
     @Test("AC-3: Dubletten falten, Vertreter mit Korrektur, vor und nach gezählt")
     func duplicatesFoldWithCounts() {
