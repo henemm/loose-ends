@@ -1,0 +1,20 @@
+# Simulator-Beleg
+erzeugt: 2026-10-28T21:46:16+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: feat-71-guardrail-iphone-lauf
+head: 7ba5045ee7a522506ef0cc0e0fe62117a7f9f211
+basis: 793fcf6da25bb6b29e62adba4d9b2935ef1114a2 (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 24 gesamt, 24 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793219531.43  ende: 1793220374.3
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/feat-71-guardrail-iphone-lauf/simulator-run/summary.json  sha256:4d4697b1d7668e5c7dbb853b1ce0b8fcb9580790baa24b5d8cc0f3bbee47842d
+xcresult: docs/artifacts/feat-71-guardrail-iphone-lauf/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-71-guardrail-iphone-lauf/simulator-run/*.png (13 Stück)
+
+## Geprüfte Dateien
+- sha256:c04c6c9c1e7e4ee41f173a8bd27c3376972af5ecb4f837c5e09ebc187ff4aa6b  LooseEndsTests/GuardrailReportTests.swift
+- sha256:abb655e10a6c6bea91f14a69e75e4c39d499de498409eaf147f268195fd435a7  LooseEndsTests/RealModelGuardrailTests.swift
+- sha256:8c3a7c16246a6302164bf8d6e36a75eeb6b1da38633c4a5da0ebc2835db3aafb  Measurement/GuardrailReport.swift

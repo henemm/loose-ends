@@ -174,4 +174,201 @@ struct GuardrailReportTests {
         let back = try JSONDecoder().decode([GuardrailProbe].self, from: data)
         #expect(back == [probe])
     }
+
+    // MARK: - #71 Schnitt 2b-1: Ergebnisse des Läufers werden zu Proben (AC-1 bis AC-5)
+
+    private func entry(_ id: String, lang: String = "de", form: String = "g1", text: String? = nil) throws -> Corpus.Entry {
+        let json: [String: String] = ["id": id, "lang": lang, "text": text ?? "Satz \(id)", "form": form]
+        return try JSONDecoder().decode(Corpus.Entry.self, from: JSONSerialization.data(withJSONObject: json))
+    }
+
+    private func conditions(device: String = "iPhone17,1") -> Conditions {
+        Conditions(appState: "vordergrund", power: "strom", batteryPercent: 80, lowPowerMode: false,
+                   thermal: "normal", device: device, systemVersion: "27.0")
+    }
+
+    private func outcome(_ id: String, run: Int, kind: String? = nil, error: String? = nil, second: TimeInterval = 0) -> MeasurementResult {
+        let at = Date(timeIntervalSince1970: 1_800_000_000 + second)
+        return MeasurementResult(entryID: id, capturedAt: at, finishedAt: at, seconds: 1, conditions: conditions(),
+                                 title: kind == nil && error == nil ? "T" : nil,
+                                 error: error ?? (kind == nil ? nil : "boom"), errorKind: kind, runIndex: run)
+    }
+
+    private func run(_ results: [MeasurementResult]) -> MeasurementRun {
+        var run = MeasurementRun(name: "guardrail-iphone", startedAt: Date(timeIntervalSince1970: 1_800_000_000))
+        run.results = results
+        return run
+    }
+
+    @Test("Erfolg, guardrail und refusal werden zu fehlerart nil, guardrail, refusal (AC-1)")
+    func translatesSuccessAndRefusals() throws {
+        let entries = [try entry("a"), try entry("b"), try entry("c")]
+        let translation = GuardrailProbe.probes(
+            from: run([outcome("a", run: 0), outcome("b", run: 0, kind: MeasurementErrorKind.guardrail),
+                       outcome("c", run: 0, kind: MeasurementErrorKind.refusal)]),
+            corpus: entries, runsPerEntry: 1)
+        #expect(translation.probes.map(\.fehlerart) == [nil, MeasurementErrorKind.guardrail, MeasurementErrorKind.refusal])
+        #expect(translation.probes.map(\.isRefused) == [false, true, true])
+        #expect(translation.missing == 0)
+        #expect(translation.unknown == 0)
+    }
+
+    @Test("Menge, Sprache, Gruppe, Text und Durchlauf kommen aus dem Korpuseintrag (AC-1)")
+    func translatesFieldsFromTheEntry() throws {
+        let entries = [try entry("gr-001", lang: "de", form: "kuendigung", text: "Vertrag kündigen"),
+                       try entry("alltag-3", lang: "en", form: "alltag", text: "Call the dentist")]
+        let translation = GuardrailProbe.probes(
+            from: run([outcome("gr-001", run: 0), outcome("gr-001", run: 1), outcome("alltag-3", run: 0), outcome("alltag-3", run: 1)]),
+            corpus: entries, runsPerEntry: 2)
+        let touchy = translation.probes.filter { $0.id == "gr-001" }
+        let everyday = translation.probes.filter { $0.id == "alltag-3" }
+        #expect(touchy.map(\.menge) == ["heikel", "heikel"])
+        #expect(touchy.map(\.durchlauf) == [1, 2])
+        #expect(touchy.first?.sprache == "de")
+        #expect(touchy.first?.gruppe == "kuendigung")
+        #expect(touchy.first?.text == "Vertrag kündigen")
+        #expect(everyday.map(\.menge) == ["alltag", "alltag"])
+        #expect(everyday.first?.sprache == "en")
+        #expect(everyday.first?.gruppe == "alltag")
+        #expect(everyday.first?.text == "Call the dentist")
+    }
+
+    @Test("Drosselung und Zeitüberschreitung sind keine Ablehnung, ein Fehler ohne Typ heißt andere (AC-2)")
+    func otherFailuresAreExcludedNotRefused() throws {
+        let ids = ["rl", "to", "as", "cw", "none"]
+        let entries = try ids.map { try entry($0) }
+        let kinds = [MeasurementErrorKind.rateLimited, MeasurementErrorKind.timeout,
+                     MeasurementErrorKind.assetsUnavailable, MeasurementErrorKind.contextWindow]
+        let results = zip(ids, kinds).map { outcome($0, run: 0, kind: $1) } + [outcome("none", run: 0, error: "kaputt")]
+        let probes = GuardrailProbe.probes(from: run(results), corpus: entries, runsPerEntry: 1).probes
+        #expect(probes.count == 5)
+        #expect(probes.allSatisfy { $0.isExcluded && !$0.isRefused })
+        #expect(probes.last?.fehlerart == MeasurementErrorKind.other)
+    }
+
+    @Test("Fehlende Aufrufe und fremde Ergebnisse werden gezählt, nicht verschluckt (AC-3)")
+    func missingAndUnknownAreCounted() throws {
+        let entries = [try entry("a"), try entry("b")]
+        let translation = GuardrailProbe.probes(
+            from: run([outcome("a", run: 0), outcome("a", run: 1), outcome("b", run: 0),
+                       outcome("zzz", run: 0), outcome("b", run: 2)]),
+            corpus: entries, runsPerEntry: 2)
+        #expect(translation.probes.count == 3)
+        #expect(translation.missing == 1)
+        #expect(translation.unknown == 2)
+        #expect(!translation.probes.contains { $0.id == "b" && $0.durchlauf == 2 })
+    }
+
+    @Test("Bei zwei Ergebnissen desselben Aufrufs zählt das letzte (AC-3)")
+    func lastResultOfACallWins() throws {
+        let translation = GuardrailProbe.probes(
+            from: run([outcome("a", run: 0, kind: MeasurementErrorKind.rateLimited, second: 0), outcome("a", run: 0, second: 60)]),
+            corpus: [try entry("a")], runsPerEntry: 1)
+        #expect(translation.probes.count == 1)
+        #expect(translation.probes.first?.fehlerart == nil)
+        #expect(translation.missing == 0)
+    }
+
+    @Test("Der Alltagswortlaut wird entfernt, die heiklen Texte bleiben (AC-4)")
+    func everydayWordingIsDropped() {
+        let probes = [GuardrailProbe(id: "gr-1", menge: "heikel", sprache: "de", gruppe: "g", text: "Heikel", durchlauf: 1, fehlerart: nil),
+                      GuardrailProbe(id: "alltag-1", menge: "alltag", sprache: "de", gruppe: "alltag", text: "Privat", durchlauf: 1, fehlerart: nil)]
+        let stored = GuardrailProbe.withoutEverydayWording(probes)
+        #expect(stored.map(\.text) == ["Heikel", nil])
+        #expect(stored.map(\.id) == ["gr-1", "alltag-1"])
+    }
+
+    @Test("Kette ohne Gerät: 774 Ergebnisse, ein Treffer; Rohdaten ohne Alltagswort, Zusammenfassung mit Treffer (AC-5)")
+    func chainFromResultsToRawAndSummary() throws {
+        var entries: [Corpus.Entry] = []
+        for index in 1...100 { entries.append(try entry(String(format: "gr-%03d", index), form: "kuendigung", text: "Heikler Satz \(index)")) }
+        for index in 0..<287 { entries.append(try entry("alltag-\(index)", form: "alltag", text: "Erkennungswort Alltagssatz \(index)")) }
+        var results: [MeasurementResult] = []
+        for item in entries {
+            for runIndex in 0..<2 {
+                let refused = item.id == "alltag-5"
+                results.append(outcome(item.id, run: runIndex, kind: refused ? MeasurementErrorKind.guardrail : nil))
+            }
+        }
+        #expect(results.count == 774)
+
+        let translation = GuardrailProbe.probes(from: run(results), corpus: entries, runsPerEntry: 2)
+        #expect(translation.missing == 0)
+        #expect(translation.unknown == 0)
+        let report = GuardrailReport(probes: translation.probes)
+        #expect(report.total.texts == 387)
+        #expect(report.total.hitTexts == 1)
+        #expect(report.total.excludedProbes == 0)
+
+        let head = RealModelGuardrailTests.Head(geraet: "iPhone17,1", system: "27.0", datum: Date(timeIntervalSince1970: 1_800_000_000),
+                                                nurHeikel: false, durchlaeufe: 2)
+        let raw = RealModelGuardrailTests.RawFile(kopf: head, proben: GuardrailProbe.withoutEverydayWording(translation.probes))
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        let rawText = String(decoding: try encoder.encode(raw), as: UTF8.self)
+        #expect(!rawText.contains("Erkennungswort"))
+        #expect(!rawText.contains("Alltagssatz"))
+        #expect(rawText.contains("alltag-5"))
+        #expect(rawText.contains("Heikler Satz 1"))
+
+        let summary = RealModelGuardrailTests.summary(head: head, report: report)
+        #expect(summary.contains("Erkennungswort Alltagssatz 5"))
+        #expect(summary.contains("alltag-5"))
+    }
 }
+
+#if canImport(FoundationModels) && !os(watchOS)
+/// Der Bericht aus einer vom iPhone geholten Ergebnisdatei (#71 Schnitt 2b-1). Läuft nur mit gesetzten Pfaden und nie
+/// im normalen Testlauf: ein Berichttest ohne Daten würde den Bericht im Simulator mit Nullen entwerten.
+/// `LOOSEENDS_GUARDRAIL_IPHONE_RESULT` = Ergebnisdatei, `LOOSEENDS_GUARDRAIL_CORPUS` = Gerätekorpus (außerhalb des Repos),
+/// `LOOSEENDS_GUARDRAIL_OUT` = Rohdaten (ohne Alltagswortlaut), `LOOSEENDS_GUARDRAIL_LOCAL` = Zusammenfassung mit Wortlaut.
+private enum IphoneReportGate {
+    static var environment: [String: String] { ProcessInfo.processInfo.environment }
+
+    static var filesGiven: Bool {
+        ["LOOSEENDS_GUARDRAIL_IPHONE_RESULT", "LOOSEENDS_GUARDRAIL_CORPUS"].allSatisfy { key in
+            environment[key].map { !$0.isEmpty && FileManager.default.fileExists(atPath: $0) } ?? false
+        }
+    }
+}
+
+@Suite(
+    "Guardrail report from the iPhone result file (#71)",
+    .enabled(if: IphoneReportGate.filesGiven, "LOOSEENDS_GUARDRAIL_IPHONE_RESULT and LOOSEENDS_GUARDRAIL_CORPUS are not set")
+)
+struct IphoneGuardrailReportTests {
+    private static var environment: [String: String] { IphoneReportGate.environment }
+
+    @Test("Ergebnisdatei und Korpus werden vollständig zu Rohdaten und Zusammenfassung")
+    func reportFromResultFile() throws {
+        let resultPath = try #require(Self.environment["LOOSEENDS_GUARDRAIL_IPHONE_RESULT"])
+        let corpusPath = try #require(Self.environment["LOOSEENDS_GUARDRAIL_CORPUS"])
+        let run = try MeasurementStore.coder.decoder.decode(MeasurementRun.self, from: Data(contentsOf: URL(fileURLWithPath: resultPath)))
+        let entries = try Corpus.entries(from: Data(contentsOf: URL(fileURLWithPath: corpusPath)))
+        let translation = GuardrailProbe.probes(from: run, corpus: entries, runsPerEntry: 2)
+        #expect(translation.missing == 0)
+        #expect(translation.unknown == 0)
+
+        let first = try #require(run.results.first)
+        let last = try #require(run.results.last)
+        let head = RealModelGuardrailTests.Head(geraet: first.conditions.device, system: first.conditions.systemVersion,
+                                                datum: last.finishedAt, nurHeikel: false, durchlaeufe: 2)
+        let report = GuardrailReport(probes: translation.probes)
+
+        if let path = Self.environment["LOOSEENDS_GUARDRAIL_OUT"], !path.isEmpty {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+            encoder.dateEncodingStrategy = .iso8601
+            let url = URL(fileURLWithPath: path)
+            try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+            let raw = RealModelGuardrailTests.RawFile(kopf: head, proben: GuardrailProbe.withoutEverydayWording(translation.probes))
+            try encoder.encode(raw).write(to: url, options: .atomic)
+        }
+        if let path = Self.environment["LOOSEENDS_GUARDRAIL_LOCAL"], !path.isEmpty {
+            let url = URL(fileURLWithPath: path)
+            try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+            try RealModelGuardrailTests.summary(head: head, report: report).write(to: url, atomically: true, encoding: .utf8)
+        }
+    }
+}
+#endif

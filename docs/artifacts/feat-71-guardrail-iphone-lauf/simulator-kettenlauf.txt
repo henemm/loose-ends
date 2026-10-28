@@ -1,0 +1,19 @@
+Kettenlauf Schnitt 2b-1 (#71), nur Simulator, nichts auf einem Gerät. Datum 2026-10-28.
+
+Eingaben (Wegwerf, außerhalb des Repos, erzeugt mit make_chain.py):
+- Korpus: 100 heikle Sätze (gr-001..gr-100) + 287 erfundene Alltagssätze (alltag-0..alltag-286), alle mit dem Erkennungswort "Wegwerfwort"
+- Ergebnisdatei: 774 Ergebnisse (387 Einträge x 2 Durchläufe), eine Ablehnung (guardrail) bei alltag-5, beide Durchläufe
+
+Befehl: ./scripts/sim.sh sim-unit IphoneGuardrailReportTests
+  mit TEST_RUNNER_LOOSEENDS_GUARDRAIL_IPHONE_RESULT / _CORPUS / _OUT / _LOCAL
+
+Ergebnis des Laufs:
+  Suite "Guardrail report from the iPhone result file (#71)" passed after 0.022 seconds
+  ✔ "Ergebnisdatei und Korpus werden vollständig zu Rohdaten und Zusammenfassung"
+  Test Succeeded / Unit-Tests bestanden.
+
+Prüfung der Ausgaben:
+- Rohdaten (raw-out.json): grep -c "Wegwerfwort" = 0 (kein Alltagswortlaut); Treffer-Id alltag-5 kommt 2x vor (zwei Durchläufe)
+- Lokale Zusammenfassung enthält: "gesamt: 1/387 Texte = 0.26 %", "Proben 2/774 gemessen", "ausgenommen 0",
+  "Treffer: 1" und "alltag-5 ... Wegwerfwort Alltagssatz 5" (Wortlaut nur hier, außerhalb des Repos)
+- Kopf aus Conditions der Ergebnisdatei: "Gerät SimuliertesGeraet, 27.0"
