@@ -1,0 +1,39 @@
+# F001 (AC-8): Bündelkopie entsteht wirklich, 2026-10-28
+# Lab-Bauten: xcodebuild build -scheme LooseEndsLab, iPhone 17 / iOS 27.0, CODE_SIGNING_ALLOWED=NO,
+#   -derivedDataPath <Scratchpad>/lab-dd2 (inkrementell, derselbe Ordner für alle drei Bauten)
+# Wegwerf-Datei: zwei erfundene Sätze („Zebra Kiwi füttern“, „Lama Quokka bürsten“), 270 Byte, keine echten Rohsätze.
+
+== Bau 1: ohne Datei (docs/reference/ und Measurement/ ohne loose-ends-rawtexts.json)
+** BUILD SUCCEEDED **
+LooseEndsLab.app, Einträge in der Wurzel: 12
+rawtexts-Zeilen: 0
+
+== Bau 2: mit Wegwerf-Datei in docs/reference/
+** BUILD SUCCEEDED **
+LooseEndsLab.app, Einträge in der Wurzel: 13
+rawtexts-Zeilen: 1
+-rw-r--r--@  1 hem  wheel      270 28 Okt. 22:08 loose-ends-rawtexts.json
+
+== Andere Ziele bei liegender Wegwerf-Datei
+xcodebuild build-for-testing -scheme LooseEnds (App + LooseEndsTests + LooseEndsUITests), eigener -derivedDataPath <Scratchpad>/app-dd
+** TEST BUILD SUCCEEDED **
+Produkte: LooseEnds.app, LooseEndsUITests-Runner.app; PlugIns: LooseEndsShare.appex, LooseEndsTests.xctest, LooseEndsWidgets.appex
+find . -name 'loose-ends-rawtexts*'  -> 0 Treffer (LooseEnds.app, LooseEndsTests.xctest, LooseEndsUITests-Runner.app/PlugIns/LooseEndsUITests.xctest)
+Gegenprobe, dass find in die Bündel sieht: die fünf *-corpus.json liegen je in LooseEndsTests.xctest und LooseEndsUITests.xctest.
+
+== Lauf: Datei NUR im Bündel
+Kopie von LooseEndsLab.app aus Bau 2 gesichert, danach docs/reference/loose-ends-rawtexts.json gelöscht.
+ls Measurement/loose-ends-rawtexts.json docs/reference/loose-ends-rawtexts.json -> beide „No such file or directory“ (die #filePath-Orte von Corpus.url)
+simctl install 3066F2CC… (iPhone 17) -> App-Container enthält loose-ends-rawtexts.json in der Bündelwurzel
+Documents der App: nur date-title.json (Ergebnisdatei des Läufers), keine Rohsatz-Datei
+simctl launch com.henning.looseends.lab --corpus loose-ends-rawtexts
+Bildschirmfoto lab-nur-buendel.png: „Loose Ends Labor“, Messreihe „Sätze 0 von 2“, Zustand „Bereit.“, „Messen“ aktiv
+  -> der Korpus kam nur aus dem Bündel.
+simctl uninstall 3066F2CC… com.henning.looseends.lab -> deinstalliert
+
+== Bau 3: wieder ohne Datei (inkrementell, rm -f-Zweig des Skripts)
+** BUILD SUCCEEDED **
+PhaseScriptExecution Rohsätze\ ins\ Lab-Bündel lief
+LooseEndsLab.app, Einträge in der Wurzel: 12
+rawtexts-Zeilen: 0
+  -> die Kopie aus Bau 2 ist entfernt.

@@ -62,9 +62,18 @@ final class MeasurementRunner {
         self.contextVocabulary = contextVocabulary
         self.exitWhenDone = exitWhenDone
         self.countRefusals = countRefusals
-        self.entries = (try? Corpus.load(fileName: corpusFileName)) ?? []
+        var corpusProblem: Corpus.Problem?
+        switch Corpus.loadReport(fileName: corpusFileName) {
+        case .entries(let loaded): self.entries = loaded
+        case .problem(let problem): corpusProblem = problem
+        }
         if !entries.isEmpty && run.remaining(from: entries, runsPerEntry: runsPerEntry, countRefusals: countRefusals).isEmpty { state = .finished }
         log("app", "gestartet; Argumente: \(arguments.dropFirst().joined(separator: " ")); Korpus: \(entries.count) Sätze")
+        if let corpusProblem {
+            state = .paused(corpusProblem.message)
+            log("korpus", corpusProblem.message)
+            logger.error("\(corpusProblem.message, privacy: .public)")
+        }
         log("model", enricher.unavailableReason.map { "nicht verfügbar: \($0)" } ?? "verfügbar")
     }
 
@@ -73,7 +82,11 @@ final class MeasurementRunner {
     // MARK: - Starting and stopping
 
     func start(trigger: String) {
-        guard !isActive, !entries.isEmpty else { return }
+        guard !isActive else { return }
+        guard !entries.isEmpty else {
+            log("start", "abgelehnt: \(trigger); Korpus ohne Einträge")
+            return
+        }
         state = .running
         UIApplication.shared.isIdleTimerDisabled = true
         log("start", "\(trigger); \(done) von \(total) erledigt")
