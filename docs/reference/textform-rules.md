@@ -77,3 +77,20 @@ Festlegung (Stand 2026-10-25):
   (Regelspalte `mailCut`: 0 erfunden).
 
 Das Diktat des Korpus ist geschrieben, nicht gesprochen; die Spracherkennung selbst ist nicht gemessen.
+
+## Modellspalte auf dem iPhone (#88, 2026-10-29)
+
+Lauf `--corpus textform-corpus --runs 1 --count-failures` auf dem iPhone 16 Pro: 119 von 120 Notizen gemessen, eine verweigert
+(`tf-20.typed`, Guardrail, vier Versuche). 3,8 s je Notiz.
+
+| Form | Titel Modell | Titel Regel | Dauer gleich wie typed |
+|---|---|---|---|
+| typed | 38 von 39 gemessenen (Bericht zeigt 38/43, siehe unten) | 40/40 | – |
+| dictated | 37/40 (92 %) | 40/40 | 28/39 (72 %) |
+| english | 4/40 (10 %) | 1/40 (2 %) | 20/39 (51 %) |
+
+- Die Regel hält die Schlüsselwörter getippt und diktiert zu 100 %. Das Modell liegt darunter, nirgends darüber.
+- „english“ (10 % und 2 %) prüft englische Notizen gegen die Schlüsselwörter des Korpus. Das ist kein Maß für die Titelgüte,
+  solange die Wörter nicht je Sprache geführt sind; nicht als Modellschwäche lesen.
+- Die Dauer-Übereinstimmung ist keine Trefferquote (keine Wahrheit im Korpus).
+- Zählfehler im Bericht: Die verweigerte Notiz steht mit allen vier Fehlversuchen in der Nenner-Zahl (43 statt 40).
