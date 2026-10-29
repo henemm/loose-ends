@@ -101,6 +101,14 @@ class BuildTests(unittest.TestCase):
         target = Path(self.dir) / "out.json"
         self.assert_refused(str(focusblox(self.dir)), str(target), "--heikel", str(heikel_file), target=target)
 
+    def test_refuses_empty_alltag(self):
+        target = Path(self.dir) / "out.json"
+        proc = run_script("build", str(focusblox(self.dir, sentences=[])), str(target))
+        self.assertEqual(proc.returncode, 1)
+        self.assertIn("guardrail_corpus:", proc.stderr)
+        self.assertEqual(proc.stdout, "")
+        self.assertFalse(target.exists(), "Zieldatei darf nicht angelegt sein")
+
 
 class CountTests(unittest.TestCase):
     def count(self, results):
@@ -186,6 +194,17 @@ class CommandTextTests(unittest.TestCase):
         self.assertIn("${TMPDIR", self.body)
         for path in re.findall(r"(?:/|\")(docs/[A-Za-z0-9_./-]+)", self.body):
             self.assertTrue(path.startswith("docs/artifacts/71-guardrails/"), path)
+
+    def test_stale_result_is_removed_before_the_slices(self):
+        self.assertIn('rm -f "$result"', self.body)
+        self.assertLess(self.body.index('rm -f "$result"'), self.body.index("lab_guardrail_slices"))
+
+    def test_existing_raw_data_survives_until_report_succeeds(self):
+        self.assertNotIn('rm -f "$raw"', self.body)
+        self.assertIn('TEST_RUNNER_LOOSEENDS_GUARDRAIL_OUT="$scratch/iphone-rohdaten.json"', self.body)
+        move = self.body.index('mv "$scratch/iphone-rohdaten.json" "$raw"')
+        self.assertLess(self.body.index("cmd_sim_unit IphoneGuardrailReportTests"), move)
+        self.assertLess(self.body.index('[ -s "$scratch/iphone-rohdaten.json" ]'), move)
 
     def test_require_device_comes_after_the_announcement(self):
         self.assertIn("require_device", self.body)

@@ -28,6 +28,7 @@
 #   ./scripts/sim.sh lab-run [sekunden]       # Messlauf vom Mac starten (iPhone entsperrt), Start/Stopp protokolliert
 #   ./scripts/sim.sh lab-fetch                # Ergebnisse vom iPhone holen (still, ohne Zutun)
 #   ./scripts/sim.sh lab-latency <n>          # Modell-Latenz auf dem iPhone, n Starts, nach docs/artifacts/534-modell-latenz/iphone/
+#   ./scripts/sim.sh lab-guardrail [--dry-run] # Guardrail-Rate auf dem iPhone (#71), nur nach „jetzt ist ein Test möglich“
 #   ./scripts/sim.sh report                   # Bericht aus den geholten Ergebnissen bauen
 #
 # Auf Hennings echtem iPhone — Stufe 2, erst nachdem der Simulator grün war:
@@ -1020,6 +1021,88 @@ cmd_lab_latency() {
     python3 "$PROJECT_DIR/scripts/latency_summary.py" "$out"
 }
 
+# Quelle der persönlichen Sätze für den Gerätekorpus (#71): gitignoriert, liegt nur im Hauptordner.
+guardrail_focusblox_corpus() {
+    echo "${LOOSEENDS_FOCUSBLOX_CORPUS:-/Users/hem/Developer/loose-ends/docs/reference/focusblox-corpus.json}"
+}
+
+# Scheiben des Guardrail-Laufs (#71 Schnitt 2b-2): je Scheibe ein Start unter timeout (20 min), danach die
+# Ergebnisdatei holen und zählen. Bis alle Aufrufe gemessen sind, höchstens 6 Scheiben; der Stand bleibt auf dem Gerät.
+lab_guardrail_slices() {
+    local id="$1" want="$2" dest="$3"; shift 3
+    local slice out status done_count=0
+    for slice in 1 2 3 4 5 6; do
+        info "Scheibe $slice/6: $done_count von $want Aufrufen gemessen"
+        status=0
+        out=$(timeout 1200 xcrun devicectl device process launch --terminate-existing --console --device "$id" \
+            "$LAB_BUNDLE" "$@" 2>&1) || status=$?
+        if echo "$out" | grep -q "BSErrorCodeDescription = Locked"; then
+            error "iPhone ist gesperrt — entsperren, dann erneut; der Lauf setzt fort."; return 1
+        fi
+        case "$status" in
+            0|124) ;;
+            *) error "Scheibe $slice: Start fehlgeschlagen (devicectl $status)"; echo "$out" | tail -5; return 1 ;;
+        esac
+        xcrun devicectl device copy from --device "$id" --user mobile --domain-type appDataContainer \
+            --domain-identifier "$LAB_BUNDLE" --source "Documents/guardrail-iphone.json" --destination "$dest" >/dev/null 2>&1 || true
+        [ -s "$dest" ] || { error "Scheibe $slice: Ergebnisdatei fehlt ($dest)."; return 1; }
+        done_count=$(python3 -I "$PROJECT_DIR/scripts/guardrail_corpus.py" count "$dest") || {
+            error "Ergebnisdatei nicht lesbar ($dest)."; return 1; }
+        [ "$done_count" -ge "$want" ] && { success "Alle $want Aufrufe gemessen."; return 0; }
+    done
+    error "Nach 6 Scheiben $done_count von $want Aufrufen — Abbruch; ein erneuter Aufruf setzt fort."
+    return 1
+}
+
+# Guardrail-Rate auf dem iPhone (#71 Schnitt 2b-2): nur nach Hennings wörtlichem „jetzt ist ein Test möglich“.
+# Fasst nur die Labor-App an, deinstalliert nichts (der Läufer setzt einen begonnenen Lauf fort).
+cmd_lab_guardrail() {
+    local dry=0
+    case "${1:-}" in
+        --dry-run) dry=1 ;;
+        "") ;;
+        *) error "Aufruf: sim.sh lab-guardrail [--dry-run]"; return 1 ;;
+    esac
+    local tmp="${TMPDIR:-/tmp}"; tmp="${tmp%/}"
+    local scratch="$tmp/loose-ends-71-guardrails"
+    local corpus="$scratch/guardrail-geraet.json" result="$scratch/guardrail-iphone.json"
+    local script="$PROJECT_DIR/scripts/guardrail_corpus.py" focusblox; focusblox=$(guardrail_focusblox_corpus)
+    [ -f "$focusblox" ] || { error "FocusBlox-Korpus fehlt ($focusblox); LOOSEENDS_FOCUSBLOX_CORPUS setzen."; return 1; }
+    python3 -I "$script" build "$focusblox" "$corpus" || { error "Gerätekorpus nicht gebaut."; return 1; }
+    local calls
+    calls=$(python3 -I -c 'import json,sys; print(2 * len(json.load(open(sys.argv[1]))))' "$corpus") || {
+        error "Gerätekorpus nicht lesbar ($corpus)."; return 1; }
+    info "$calls Aufrufe (je Text 2 Durchläufe), geschätzt $(( (calls * 483 + 5999) / 6000 )) Minuten reine Modellzeit (Median 4,83 s, höchstens 25 s je Aufruf)."
+    info "iPhone entsperrt lassen, im selben WLAN."
+    [ "$dry" -eq 1 ] && { success "Trockenlauf: Korpus unter $corpus, nichts auf dem Gerät."; return 0; }
+    command -v timeout >/dev/null || { error "timeout fehlt: brew install coreutils"; return 1; }
+    local id; id=$(require_device) || return 1
+    ensure_project
+    signed_build "$id" "$LAB_SCHEME" || { error "Labor-App nicht gebaut"; return 1; }
+    local app="$(device_derived_data)/Build/Products/Debug-iphoneos/LooseEndsLab.app"
+    local bundle; bundle=$(plutil -extract CFBundleIdentifier raw "$app/Info.plist") || { error "Labor-App nicht gebaut"; return 1; }
+    [ "$bundle" = "$LAB_BUNDLE" ] || { error "$bundle ist nicht die Labor-App — Abbruch."; return 1; }
+    xcrun devicectl device install app --device "$id" "$app" >/dev/null || {
+        error "Installation fehlgeschlagen — iPhone entsperren und ins selbe WLAN holen."; return 1; }
+    xcrun devicectl device copy to --device "$id" --user mobile --domain-type appDataContainer \
+        --domain-identifier "$LAB_BUNDLE" --source "$corpus" --destination Documents/guardrail-geraet.json >/dev/null || {
+        error "Korpus nicht in die Labor-App kopiert."; return 1; }
+    rm -f "$result"  # Fortsetzungsstand liegt auf dem Gerät; ein gescheiterter Abruf endet so als „Ergebnisdatei fehlt“
+    lab_guardrail_slices "$id" "$calls" "$result" --measure --corpus guardrail-geraet --runs 2 --result guardrail-iphone \
+        --count-failures --exit-when-done --context-words Computer,Telefon,Haus,Garten,Unterwegs,Besorgung || return 1
+    local raw="$PROJECT_DIR/docs/artifacts/71-guardrails/iphone-rohdaten.json" summary="$scratch/iphone-auswertung.txt"
+    rm -f "$scratch/iphone-rohdaten.json" "$summary"
+    TEST_RUNNER_LOOSEENDS_GUARDRAIL_IPHONE_RESULT="$result" TEST_RUNNER_LOOSEENDS_GUARDRAIL_CORPUS="$corpus" \
+        TEST_RUNNER_LOOSEENDS_GUARDRAIL_OUT="$scratch/iphone-rohdaten.json" TEST_RUNNER_LOOSEENDS_GUARDRAIL_LOCAL="$summary" \
+        cmd_sim_unit IphoneGuardrailReportTests || { error "Berichttest fehlgeschlagen: $BUILD_LOG"; return 1; }
+    [ -s "$scratch/iphone-rohdaten.json" ] && [ -s "$summary" ] || {
+        error "Bericht nicht geschrieben ($scratch/iphone-rohdaten.json, $summary)."; return 1; }
+    mkdir -p "$(dirname "$raw")" && mv "$scratch/iphone-rohdaten.json" "$raw" || {
+        error "Rohdaten nicht nach $raw verschoben."; return 1; }
+    success "Rohdaten: $raw"
+    info "Lokale Auswertung (nicht im Repo): $summary"
+}
+
 cmd_report() {
     ensure_project
     info "Bericht aus den geholten Ergebnissen"
@@ -1050,7 +1133,7 @@ cmd_location() {
     $SIMCTL location "$id" set "$lat,$lon" && success "Standort: $lat, $lon"
 }
 
-cmd_help() { sed -n '3,38p' "$0" | sed 's/^# \{0,1\}//'; }
+cmd_help() { sed -n '3,39p' "$0" | sed 's/^# \{0,1\}//'; }
 
 COMMAND="${1:-help}"; shift 2>/dev/null || true
 case "$COMMAND" in
@@ -1084,6 +1167,7 @@ case "$COMMAND" in
     lab-run)        cmd_lab_run "$@" ;;
     lab-fetch)      cmd_lab_fetch "$@" ;;
     lab-latency)    cmd_lab_latency "$@" ;;
+    lab-guardrail)  cmd_lab_guardrail "$@" ;;
     report)         cmd_report ;;
     help|--help|-h) cmd_help ;;
     *) error "Unbekannter Befehl: $COMMAND"; cmd_help; exit 1 ;;
