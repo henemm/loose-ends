@@ -2,8 +2,8 @@
 
 | | |
 |---|---|
-| Gerät | iPhone17,1, iOS 27.0 |
-| Messtage | 2026-09-20, 2026-09-25 |
+| Gerät | iPhone17,1, iOS 27.0, 27.0.1 |
+| Messtage | 2026-09-20, 2026-09-25, 2026-10-29 |
 | Korpus | 319 Sätze; ausgewertet: 139 mit Datum, 172 ohne Datum als Kontrolle |
 | Fehlversuche | 23, davon gedrosselt: 11 |
 | Sekunden je Satz | 8.8 |
