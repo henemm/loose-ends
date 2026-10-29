@@ -54,7 +54,24 @@ struct RawTextExportTests {
         }
         try context.save()
         withExtendedLifetime(container) {}
+        try settle(url)
         return url
+    }
+
+    /// SwiftData closes its connection some time after the container goes, and that close checkpoints the WAL
+    /// into the main file. Checkpointing here (waiting for its lock) moves everything into the main file first,
+    /// so nothing changes the store after this returns and the read-only check of AC-8 sees a settled file.
+    static func settle(_ url: URL) throws {
+        var db: OpaquePointer?
+        guard sqlite3_open_v2(url.path, &db, SQLITE_OPEN_READWRITE, nil) == SQLITE_OK else {
+            sqlite3_close(db)
+            throw CocoaError(.fileReadUnknown)
+        }
+        defer { sqlite3_close(db) }
+        sqlite3_busy_timeout(db, 5_000)
+        guard sqlite3_exec(db, "PRAGMA wal_checkpoint(TRUNCATE);", nil, nil, nil) == SQLITE_OK else {
+            throw CocoaError(.fileWriteUnknown)
+        }
     }
 
     static func titleEdit(_ old: String?, _ new: String?, by author: FieldSource = .user, at: Double = 10) -> (field: RevisedField, old: String?, new: String?, author: FieldSource, at: Date) {
@@ -140,12 +157,62 @@ struct RawTextExportTests {
 
     @Test("Dauer: letzter Nutzerwert; andere Autoren und leerer Wert lassen das Feld weg")
     func durationFromLastUserRevision() throws {
+        // Inserted newest first, so only the order by createdAt picks "hour1".
         let result = try Self.rows([
             Seed(rawText: "Zeta eins", capturedAt: Self.at(1), title: "eins", duration: .hour1, revisions: [
-                Self.durationEdit("minutes15", at: 10), Self.durationEdit("hour1", at: 20),
+                Self.durationEdit("hour1", at: 20), Self.durationEdit("minutes15", at: 10),
             ]),
         ])
         #expect(try #require(result.first).durationUser == "hour1")
+    }
+
+    @Test("Dauer: leerer Text als letzter Nutzerwert lässt durationUser weg")
+    func emptyDurationTextIsOmitted() throws {
+        let result = try Self.rows([
+            Seed(rawText: "Zeta zwei", capturedAt: Self.at(1), title: "zwei", revisions: [
+                Self.durationEdit("minutes15", at: 10), Self.durationEdit("", at: 20),
+            ]),
+        ])
+        #expect(try #require(result.first).durationUser == nil)
+    }
+
+    @Test("Gleiche createdAt: die Zeilenreihenfolge (Z_PK) entscheidet")
+    func equalCreatedAtFallsBackToRowOrder() throws {
+        // SwiftData does not promise which primary key an insert gets, so the test reads the row order from the
+        // store itself: on a tie the export takes the revision with the larger Z_PK as the later one.
+        let directory = try Self.scratchDirectory()
+        let store = try Self.makeStore([
+            Seed(rawText: "Rho Tür ölen", capturedAt: Self.at(1), title: "Tür ölen", revisions: [
+                Self.titleEdit("Rho Tür", "Tür ölen", at: 10), Self.titleEdit("Rho Tür", "Tür schmieren", at: 10),
+                Self.durationEdit("minutes5", at: 10), Self.durationEdit("minutes15", at: 10),
+            ]),
+        ], in: directory)
+        let titles = try Self.newValuesByRowOrder(in: store, field: RevisedField.title.rawValue)
+        let durations = try Self.newValuesByRowOrder(in: store, field: RevisedField.duration.rawValue)
+        #expect(titles.count == 2 && durations.count == 2)
+        let row = try #require(try RawTextExport.sentences(fromStoreAt: store).first)
+        #expect(row.titleUser == titles.last)
+        #expect(row.durationUser == durations.last)
+        #expect(try RawTextExport.sentences(fromStoreAt: store).first == row, "the same store gives the same row")
+    }
+
+    /// `ZNEWVALUE` of one field's revisions in `Z_PK` order, read straight from the file.
+    static func newValuesByRowOrder(in store: URL, field: String) throws -> [String] {
+        var db: OpaquePointer?
+        guard sqlite3_open_v2(store.path, &db, SQLITE_OPEN_READONLY, nil) == SQLITE_OK else {
+            sqlite3_close(db)
+            throw CocoaError(.fileReadUnknown)
+        }
+        defer { sqlite3_close(db) }
+        var statement: OpaquePointer?
+        let sql = "SELECT ZNEWVALUE FROM ZREVISION WHERE ZFIELDRAW = '\(field)' ORDER BY Z_PK"
+        guard sqlite3_prepare_v2(db, sql, -1, &statement, nil) == SQLITE_OK else { throw CocoaError(.fileReadUnknown) }
+        defer { sqlite3_finalize(statement) }
+        var values: [String] = []
+        while sqlite3_step(statement) == SQLITE_ROW {
+            values.append(sqlite3_column_text(statement, 0).map { String(cString: $0) } ?? "")
+        }
+        return values
     }
 
     @Test("Dauer: Modell, Regel und geleerter Wert ergeben kein durationUser")
@@ -247,11 +314,36 @@ struct RawTextExportTests {
         #expect(!FileManager.default.fileExists(atPath: out.path), "no output file after a failure")
     }
 
-    /// A valid SQLite file that has none of the app's tables.
-    static func makeForeignDatabase(at url: URL) throws {
+    @Test("WAL-Speicher ohne Nebendateien: Code 14 mit benanntem Hinweis, nichts geschrieben")
+    func walStoreWithoutSideFilesNamesTheCause() throws {
+        let directory = try Self.scratchDirectory()
+        let store = directory.appendingPathComponent("wal.store")
+        try Self.makeForeignDatabase(at: store, walMode: true)
+        // Apple's SQLite keeps an emptied -wal after the last close; removing both side files after that close
+        // leaves the state of a store whose app is closed and whose side files are gone (the WAL is checkpointed).
+        for suffix in ["-wal", "-shm"] where FileManager.default.fileExists(atPath: store.path + suffix) {
+            try FileManager.default.removeItem(atPath: store.path + suffix)
+        }
+        let listing = try FileManager.default.contentsOfDirectory(atPath: directory.path).sorted()
+        #expect(listing == ["wal.store"])
+        do {
+            _ = try RawTextExport.sentences(fromStoreAt: store)
+            Issue.record("a WAL store without side files must not open read only")
+        } catch let failure as RawTextExport.Failure {
+            #expect(failure == .readFailed(code: SQLITE_CANTOPEN, path: store.path))
+            #expect(failure.message.contains("Nebendateien"))
+        }
+        #expect(try FileManager.default.contentsOfDirectory(atPath: directory.path).sorted() == listing)
+    }
+
+    /// A valid SQLite file that has none of the app's tables; `walMode` leaves it in WAL mode.
+    static func makeForeignDatabase(at url: URL, walMode: Bool = false) throws {
         var db: OpaquePointer?
         guard sqlite3_open(url.path, &db) == SQLITE_OK else { throw CocoaError(.fileWriteUnknown) }
         defer { sqlite3_close(db) }
+        if walMode, sqlite3_exec(db, "PRAGMA journal_mode=WAL;", nil, nil, nil) != SQLITE_OK {
+            throw CocoaError(.fileWriteUnknown)
+        }
         guard sqlite3_exec(db, "CREATE TABLE ZSOMETHINGELSE (ZVALUE TEXT); INSERT INTO ZSOMETHINGELSE VALUES ('x');", nil, nil, nil) == SQLITE_OK else {
             throw CocoaError(.fileWriteUnknown)
         }
@@ -287,11 +379,60 @@ struct RawTextExportTests {
             }
         }
 
+        // root itself a symlink (#88 F001): link -> repo. Over either spelling, a target outside docs/reference
+        // is refused and one inside it is allowed.
+        let link = directory.appendingPathComponent("link", isDirectory: true)
+        try FileManager.default.createSymbolicLink(at: link, withDestinationURL: root)
+        for spelling in [link, root] {
+            #expect(throws: RawTextExport.Failure.self, "\(spelling.path)/other/x.json with root link is refused") {
+                try RawTextExport.checkTarget(spelling.appendingPathComponent("other/x.json"), root: link)
+            }
+            try RawTextExport.checkTarget(spelling.appendingPathComponent("docs/reference/x.json"), root: link)
+        }
+        try RawTextExport.checkTarget(outside.appendingPathComponent("x.json"), root: link)
+        #expect(throws: RawTextExport.Failure.self, "a .. behind a symlink is taken physically") {
+            try RawTextExport.checkTarget(reference.appendingPathComponent("escape/../x.json"), root: root)
+        }
+
         // run writes nothing when the target is refused
         let store = try Self.makeStore([Seed(rawText: "Xi eins", capturedAt: Self.at(1), title: "eins")], in: directory)
         let target = other.appendingPathComponent("x.json")
         #expect(throws: RawTextExport.Failure.self) { try RawTextExport.run(store: store, out: target, root: root) }
         #expect(!FileManager.default.fileExists(atPath: target.path))
+    }
+
+    @Test("Ziel mit .. als letzter Komponente unter fehlendem Ordner endet und wird verweigert",
+          .timeLimit(.minutes(1)))
+    func trailingDotDotBelowMissingFolderTerminates() throws {
+        let directory = try Self.scratchDirectory()
+        let root = directory.appendingPathComponent("repo", isDirectory: true)
+        let reference = root.appendingPathComponent("docs/reference", isDirectory: true)
+        let other = root.appendingPathComponent("other", isDirectory: true)
+        for folder in [reference, other] {
+            try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        }
+        // #88 F002: both used to loop forever. other/nonexist/.. is other itself: refused. docs/reference/nonexist/..
+        // is docs/reference itself, a folder and not a file below it: refused as well.
+        for target in ["other/nonexist/..", "docs/reference/nonexist/.."] {
+            let out = URL(fileURLWithPath: root.path + "/" + target)
+            #expect(throws: RawTextExport.Failure.targetRefused(path: out.path), "\(target) is refused") {
+                try RawTextExport.checkTarget(out, root: root)
+            }
+        }
+        // A plain file below a missing folder in docs/reference stays allowed (lexical rest, no loop).
+        try RawTextExport.checkTarget(URL(fileURLWithPath: reference.path + "/missing/deeper/x.json"), root: root)
+        try RawTextExport.checkTarget(URL(fileURLWithPath: reference.path + "/missing/../x.json"), root: root)
+    }
+
+    @Test("Repo-Stamm nur aus absolutem Skriptpfad")
+    func rootNeedsAbsoluteScriptPath() throws {
+        let relative = "scripts/export-loose-ends-rawtexts.swift"
+        #expect(throws: RawTextExport.Failure.scriptPathRelative(path: relative)) {
+            try RawTextExport.root(fromScriptPath: relative)
+        }
+        #expect(RawTextExport.Failure.scriptPathRelative(path: relative).message.contains("absolutem Skriptpfad"))
+        let root = try RawTextExport.root(fromScriptPath: "/Users/someone/repo/scripts/export-loose-ends-rawtexts.swift")
+        #expect(root.path == "/Users/someone/repo")
     }
 
     // MARK: - AC-11: no sentences in messages

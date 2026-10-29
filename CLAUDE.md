@@ -425,6 +425,10 @@ not scope creep on the current one.
   by `rawText` + `titleBefore` + `capturedAt`): duplicates folded by word set, only his corrections count as truth (uncorrected =
   no evidence), rule column beside the model, under 30 corrected sentences the report says "zu wenig", counts only and never a
   sentence. The export and the lab run are Schnitt B and wait for his "jetzt ist ein Test möglich". Schnitt B1a (#88): `Corpus.loadReport` names a missing, unreadable or empty corpus (`Corpus.Problem`), the lab runner pauses with that reason instead of reporting "0 Sätze"; `Corpus.url` also looks in `docs/reference/`; the lab target copies the raw-text file into its bundle only if it exists (post-build script in `project.yml`), `sim.sh lab` links it from the main folder
+  Schnitt B1b (#88): `RawTextExport` reads a store read only (`SQLITE_OPEN_READONLY`, tables `ZTASKITEM`/`ZREVISION`) and writes that file:
+  the user's first title revision gives `titleBefore`, the last `titleUser`, the last duration revision `durationUser`; ids are numbers in
+  capture order; it writes only below `docs/reference/` or outside the repo; built alone with `swiftc` together with
+  `scripts/export-loose-ends-rawtexts.swift` (call in `docs/reference/messung-rohsaetze.md`); Henning's real store only after his word (B2)
 
 ## Naming
 
