@@ -222,6 +222,13 @@ und sein echter Speicher nicht gelesen** — das gehört zu B2 nach seinem wört
 
 ## Changelog
 
+- 2026-10-29: Nach der Umsetzung (zwei Adversary-Nachbesserungen, der freigegebene Teil bleibt unverändert, hier der
+  geltende Stand): (1) Der Bau erfolgt mit **absolutem** Skriptpfad (`"$PWD/scripts/…"`); `root` kommt aus
+  `RawTextExport.root(fromScriptPath:)` (zwei Ebenen von der Datei aus nach oben), ein relativer Pfad bricht mit benannter
+  Meldung ab. (2) Die Pfadprüfung vergleicht über `realpath` (Symlinks auf jeder Stufe, auch `root`), nicht über
+  `standardizedFileURL`; sie terminiert auch bei einem `..` am Pfadende. (3) Eine WAL-Datenbank ohne `-wal`/`-shm` meldet
+  Code 14 mit Hinweis. (4) **Umfang:** 5 Dateien, aber 382 Zeilen ohne Tests und 873 mit Tests statt der geschätzten +230
+  (Tests 491, weil jede Pfadumgehung ein eigener Test ist). Zeilengrenze überschritten, Dateigrenze eingehalten.
 - 2026-10-29: Vierter Validator-Befund: AC-1 prüft `Corpus.entries(from:)` auf den Dateidaten statt `loadReport` (dessen Suchort
   fände einen temporären Ordner nie), Hilfstests für Stufe 2 in die Testliste, AC-12 in der Definition of Done ehrlich per `grep`.
 - 2026-10-29: Dritter Validator-Befund: eigenes Ausgabe-Struct statt `RawSentenceColumn.swift` im Bau (diese Datei

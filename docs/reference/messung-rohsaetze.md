@@ -21,7 +21,9 @@ swiftc -parse-as-library "$PWD/Measurement/RawTextExport.swift" "$PWD/scripts/ex
   wenn sie schreibgeschützt ist, und ein Symlink als Ziel wird durch die Datei ersetzt, sein Linkziel bleibt unberührt.
 - **Ausgabe**: nur Zahlen („N Sätze, davon M mit Titelkorrektur, K mit Dauer“) und der Zielpfad, nie ein Satz. Bei einem Fehler
   (Speicher fehlt, keine Datenbank, Tabelle fehlt, keine Aufgaben, Ziel verweigert) nennt sie Art und Pfad, schreibt nichts und
-  endet mit einem Code ungleich 0.
+  endet mit einem Code ungleich 0. „M mit Titelkorrektur“ ist ein einfacher Textvergleich (`titleUser` nicht leer und ungleich
+  `titleBefore`); die Auswertung vergleicht wortweise (Groß-/Kleinschreibung und Satzzeichen zählen dort nicht) und kann
+  weniger Korrekturen zählen. Maßgeblich ist die Auswertung, nicht die Zahl im Terminal.
 - **Ableitung**: `titleBefore` ist der alte Wert der ersten Titelkorrektur des Nutzers (ohne Korrektur der aktuelle Titel),
   `titleUser` der neue Wert der letzten, `durationUser` der Wert der letzten Daueränderung des Nutzers; Ids sind laufende Nummern
   in der Reihenfolge der Erfassung.
