@@ -1,8 +1,8 @@
 # Guardrails des On-Device-Modells auf Alltagstext (#71, Annahme B3, Schnitt 1: Mac)
 
 Lässt das Modell Alltagsaufgaben durch? Gemessen ist die Verweigerungsrate des Produktaufrufs (`FoundationModelsEnricher`) auf 387 Texten,
-je Text zweimal. Abbruchkriterium aus B3: **über 1 % auf Alltagstext**. Dieser Bericht trägt nur die **Mac-Spalte**; die iPhone-Spalte folgt in
-Schnitt 2 und erst dann wird B3 entschieden.
+je Text zweimal. Abbruchkriterium aus B3: **über 1 % auf Alltagstext**. Dieser Bericht trägt nur die **Mac-Spalte**; die iPhone-Spalte entfällt
+(Entscheidung unten, 2026-10-29).
 
 ## Messaufbau Mac (Schnitt 1)
 
@@ -94,7 +94,7 @@ und `rateLimited` kamen nicht vor.
 ## Entscheidung für die Mac-Spalte
 
 **≤ 1 % (0,52 %): B3 trägt auf dem Mac**, mit Vorbehalt der oberen Grenze von 1,86 %. **Kein Folgeticket „Modell hat abgelehnt“ aus dieser Spalte.**
-B3 selbst wird **nicht** entschieden: das geschieht erst mit der iPhone-Spalte (Schnitt 2). Kippte sie über 1 %, gelten die Alternativen:
+B3 wurde später ohne iPhone-Spalte entschieden (siehe unten). Läge ein iPhone-Wert über 1 %, gälten die Alternativen:
 
 - **A. Nicht messen, nur absichern:** erledigt sich mit dieser Messung.
 - **B. Sichtbarer Zustand „Modell hat abgelehnt“ statt stummem „ungeprüft“:** nur bei Überschreitung bauen (Folgeticket). Kippt ADR-4 (Anreicherung läuft einmal) nicht.
@@ -104,7 +104,13 @@ B3 selbst wird **nicht** entschieden: das geschieht erst mit der iPhone-Spalte (
 Beobachtung ohne eigene Entscheidung: beide Treffer sind Themen aus Gruppen, die Apple am ehesten schützt (Kinder; Rauschmittel). Zwei Treffer sind kein
 Muster, aber bei Schnitt 2 lohnt der Blick, ob das iPhone dieselben beiden Texte ablehnt.
 
-## Offen: iPhone (Schnitt 2)
+## Entscheidung (2026-10-29): B3 mit dem Mac-Wert abgeschlossen
 
-Die iPhone-Spalte läuft in der Labor-App (Schalter `--count-failures`, `Corpus` mit `rawText`) **nur nach Hennings wörtlichem „jetzt ist ein Test möglich“**,
-gebündelt mit #88 Teil 2 in einem einzigen Gerätedurchgang. Bis dahin bleibt #71 offen.
+Henning hat die iPhone-Spalte gestrichen („ist das wirklich notwendig und sinnvoll?“). **B3 ist nicht widerlegt: 0,52 % auf dem Mac, obere Grenze 1,86 %.**
+Begründung: Das Ergebnis der iPhone-Messung änderte nichts, was gebaut wird. Eine endgültige Ablehnung ist im Produkt seit #535 abgefangen
+(`ModelFailure.isPermanent`, `processedAt` gesetzt, Regelwerte und Titel bleiben); das Modell verfeinert nur. Über 1 % hieße „Ablehnung sichtbarer machen“, unter 1 %
+„nichts tun“, und eine sichtbare Anzeige wäre auch bei den zwei bekannten Treffern berechtigt. Kein Folgeticket.
+
+Offen bleibt, was oben unter „Einordnung des Geräts“ steht: Ob das iPhone dieselben Texte ablehnt, ist nicht gemessen. Wiedereinstieg: eine abgelehnte
+Aufgabe in der Hand eines Testers (TestFlight) oder Hennings. Der Messweg bleibt gebaut: `./scripts/sim.sh lab-guardrail` (Trockenlauf `--dry-run`), Lauf nur nach
+Hennings „jetzt ist ein Test möglich“. Die Alternativen B und C von oben gelten dann unverändert.
