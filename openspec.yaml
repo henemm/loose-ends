@@ -47,3 +47,8 @@ evidence_checks:
     - verifier: xcresult_proof
       file: simulator-run.txt
   exempt_paths: ["LooseEnds/Mac/*"]
+
+# herdr: clear the session automatically when a message carries the clear marker.
+herdr:
+  auto_clear:
+    enabled: true
