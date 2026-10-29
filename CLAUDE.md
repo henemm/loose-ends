@@ -67,6 +67,7 @@ LOOSEENDS_LANG=en ./scripts/sim.sh sim-unit <Klasse>  # Testsprache en (-testLan
 ./scripts/sim.sh real-model-latency <n> # Latenz kalt/warm, n Prozesse auf dem Mac, Rohdaten + Auswertung (#534, docs/reference/modell-latenz.md)
 ./scripts/sim.sh real-model-guardrail   # Verweigerungsrate auf dem Mac, 2 Durchläufe je Text, Rohdaten nach docs/artifacts/71-guardrails/ (#71)
 ./scripts/sim.sh lab-latency <n>       # dasselbe auf dem iPhone über die Labor-App (#534 Schnitt 2); nur nach Hennings „jetzt ist ein Test möglich“
+./scripts/sim.sh lab-guardrail [--dry-run] # Guardrail-Rate auf dem iPhone (#71 Schnitt 2b-2): Korpus bauen, Scheiben fahren, Bericht; --dry-run baut nur den Korpus und rührt kein Gerät an; Lauf nur nach „jetzt ist ein Test möglich“
 ```
 
 `launch-measure` baut einen Release-Prüfbau und startet ihn per devicectl; es läuft nur nach Hennings
