@@ -1,0 +1,133 @@
+F....FEFFF.F
+======================================================================
+ERROR: setUpClass (__main__.CommandTextTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_guardrail_corpus.py", line 166, in setUpClass
+    assert match, "cmd_lab_guardrail fehlt in sim.sh"
+           ^^^^^
+AssertionError: cmd_lab_guardrail fehlt in sim.sh
+
+======================================================================
+FAIL: test_builds_103_entries_with_alltag_ids (__main__.BuildTests.test_builds_103_entries_with_alltag_ids)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_guardrail_corpus.py", line 60, in test_builds_103_entries_with_alltag_ids
+    self.assertEqual(proc.returncode, 0, proc.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/guardrail_corpus.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_stdout_has_numbers_but_no_sentence (__main__.BuildTests.test_stdout_has_numbers_but_no_sentence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_guardrail_corpus.py", line 74, in test_stdout_has_numbers_but_no_sentence
+    self.assertIn("103", proc.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: '103' not found in ''
+
+======================================================================
+FAIL: test_counts_success_guardrail_and_refusal_only (__main__.CountTests.test_counts_success_guardrail_and_refusal_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_guardrail_corpus.py", line 114, in test_counts_success_guardrail_and_refusal_only
+    self.assertEqual(self.count([
+                     ~~~~~~~~~~^^
+        result("a", 0),
+        ^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        result("c", 0, kind="timeout", error="x"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ]), 3)
+    ^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_guardrail_corpus.py", line 110, in count
+    self.assertEqual(proc.returncode, 0, proc.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/guardrail_corpus.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_duplicate_of_entry_and_run_counts_once (__main__.CountTests.test_duplicate_of_entry_and_run_counts_once)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_guardrail_corpus.py", line 123, in test_duplicate_of_entry_and_run_counts_once
+    self.assertEqual(self.count([
+                     ~~~~~~~~~~^^
+        result("a", 0, kind="rateLimited", error="x"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        result("a", 0),
+        ^^^^^^^^^^^^^^^
+        result("a", 0),
+        ^^^^^^^^^^^^^^^
+    ]), 1)
+    ^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_guardrail_corpus.py", line 110, in count
+    self.assertEqual(proc.returncode, 0, proc.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/guardrail_corpus.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_missing_run_index_is_run_zero (__main__.CountTests.test_missing_run_index_is_run_zero)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_guardrail_corpus.py", line 130, in test_missing_run_index_is_run_zero
+    self.assertEqual(self.count([{"entryID": "a"}, {"entryID": "a"}]), 1)
+                     ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_guardrail_corpus.py", line 110, in count
+    self.assertEqual(proc.returncode, 0, proc.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/guardrail_corpus.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_dry_run_reports_and_touches_no_device (__main__.LabGuardrailCommandTests.test_dry_run_reports_and_touches_no_device)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_guardrail_corpus.py", line 147, in test_dry_run_reports_and_touches_no_device
+    self.assertEqual(proc.returncode, 0, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : sim.sh — Build- und Test-Toolkit für Loose Ends
+
+EINE Anlaufstelle für Build, Tests, Simulator. Die Workflow-Hooks blocken
+direktes xcodebuild/simctl; Bau- und Testläufe holen die rechnerweite Sperre /tmp/loose-ends-testlauf.lock.
+
+Usage:
+  ./scripts/sim.sh generate                 # Xcode-Projekt aus project.yml erzeugen
+  ./scripts/sim.sh unit [Suite[/test]]      # Unit-Tests im iOS-Simulator; Mac als Host nur mit LOOSEENDS_MAC_HOST=1
+  ./scripts/sim.sh real-model               # Tests gegen das echte Modell auf diesem Mac (Apple Intelligence an, #531)
+  ./scripts/sim.sh real-model-latency <n>   # Modell-Latenz kalt/warm, n Testprozesse, nach docs/artifacts/534-modell-latenz/
+  ./scripts/sim.sh real-model-guardrail     # Verweigerungsrate des Modells, 2 Durchläufe je Text, nach docs/artifacts/71-guardrails/ (#71)
+  ./scripts/sim.sh build                    # iOS-App für den Simulator bauen
+  ./scripts/sim.sh mac-build                # macOS-App bauen
+  ./scripts/sim.sh mac-schema-init          # CloudKit-Schema in Development anlegen (#175, schreibt in iCloud)
+  ./scripts/sim.sh mac                      # „LE Prüfbau“ auf dem Mac: signiert bauen, nach ~/Applications, starten (#287)
+  ./scripts/sim.sh sim-unit [Suite[/test]]  # Unit-Tests im iOS-Simulator
+  ./scripts/sim.sh test <Class[/test]>      # UI-Test im iOS-Simulator
+  ./scripts/sim.sh test-proof <Class[/test]> # UI-Test + Simulator-Beleg in docs/artifacts/<workflow>/ (#145)
+  ./scripts/sim.sh watch-test-proof <Class[/test]> # dasselbe im watchOS-Simulator (#409)
+    LOOSEENDS_PUSH=<datei.apns> davor: spielt die Mitteilung während des Laufs alle 5 s ein (#295)
+  ./scripts/sim.sh boot | status | launch | screenshot [pfad]
+  ./scripts/sim.sh location <breite> <länge> # Standort des Simulators vortäuschen (#241), `location clear` hebt ihn auf
+
+Messreihen gegen das echte Modell (Spikes #65-#73), ohne das iPhone zu belegen:
+  ./scripts/sim.sh lab                      # Labor-App aufs iPhone bringen
+  ./scripts/sim.sh lab-run [sekunden]       # Messlauf vom Mac starten (iPhone entsperrt), Start/Stopp protokolliert
+  ./scripts/sim.sh lab-fetch                # Ergebnisse vom iPhone holen (still, ohne Zutun)
+  ./scripts/sim.sh lab-latency <n>          # Modell-Latenz auf dem iPhone, n Starts, nach docs/artifacts/534-modell-latenz/iphone/
+  ./scripts/sim.sh report                   # Bericht aus den geholten Ergebnissen bauen
+
+Auf Hennings echtem iPhone — Stufe 2, erst nachdem der Simulator grün war:
+  ./scripts/sim.sh device-status            # verbundenes Gerät und Verbindungsweg zeigen
+  ./scripts/sim.sh device                   # signiert bauen, drahtlos installieren, starten
+  ./scripts/sim.sh device-console [sek]     # dasselbe, aber Logausgabe live mitlesen (Vorgabe 30 s)
+  ./scripts/sim.sh device-build-release     # Prüfbau in Release (für Startzeiten, #22)
+  ./scripts/sim.sh launch-measure <n>       # n Kaltstarts des Release-Prüfbaus, Zeiten nach build/launch-timings/
+[0;31m[sim][0m Unbekannter Befehl: lab-guardrail
+
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.856s
+
+FAILED (failures=6, errors=1)
