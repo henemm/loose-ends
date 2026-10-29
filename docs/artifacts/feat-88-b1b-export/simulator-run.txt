@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-10-29T14:29:48+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: feat-88-b1b-export
+head: 04dcf94bec9ea3d32faea7b2df54cc5cc035b325
+basis: 952b5bc656fa65adea0548a1f10eb0c9ff355116 (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 24 gesamt, 24 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793279826.133  ende: 1793280586.534
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/feat-88-b1b-export/simulator-run/summary.json  sha256:2d474b72503f785e8c51da68a0d469c95b57e5b0fe0a4e87cc5c4e59d97248b8
+xcresult: docs/artifacts/feat-88-b1b-export/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-88-b1b-export/simulator-run/*.png (13 Stück)
+
+## Geprüfte Dateien
+- sha256:0e243f5930816e67feeac20f876a0f19a1f2b5c22273ea587ef5598be82eb58c  LooseEndsTests/RawTextExportTests.swift
+- sha256:a5f0645edd62893456651b94f9200addc9c7f3d18caa69f46443b1bd7d8b7a20  Measurement/RawTextExport.swift
