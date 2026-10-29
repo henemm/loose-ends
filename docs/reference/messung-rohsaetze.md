@@ -38,3 +38,15 @@ swiftc -parse-as-library "$PWD/Measurement/RawTextExport.swift" "$PWD/scripts/ex
 Der Lauf auf Hennings echtem Speicher ist Zugriff auf sein Gerät. Er geschieht erst, nachdem Henning wörtlich
 „jetzt ist ein Test möglich“ geschrieben hat, und nur für diesen einen Durchgang (Schnitt B2). Bis dahin läuft der Export
 nur gegen Wegwerf-Speicher, immer mit ausdrücklich gesetztem `--store`.
+
+## Ergebnis des Gerätedurchgangs (B2, 2026-10-29, iPhone 16 Pro, iOS 27.0.1)
+
+Export aus dem echten Speicher: 115 Sätze, 105 nach Entduplizierung, 25 mit Dauerkorrektur. Laborlauf: 105 von 105 Sätzen
+gemessen, 3,8 s je Satz.
+
+Der Bericht sagt für beide Kriterien „zu wenig“ (Titel 18 korrigierte Sätze, Dauer 25, Mindestmenge 30): Es gibt
+keine Quote, weder für das Modell noch für die Regel. 87 Titel und 80 Dauern sind unkorrigiert und zählen als „kein Beleg“.
+Die Rohdaten (`loose-ends-rawtexts-run.json`) enthalten Titel aus Hennings Sätzen und sind gitignoriert.
+
+Ein Lauf, der das Modell verweigert, bricht nach vier Fehlversuchen ab und gibt den Bildschirm frei (das iPhone schläft dann
+ein). Für Läufe mit möglichen Verweigerungen gehört `--count-failures` in den Aufruf.
