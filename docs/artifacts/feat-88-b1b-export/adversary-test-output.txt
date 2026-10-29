@@ -1,0 +1,53 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/RawTextExportTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-10-29 14:06:59.044.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-29 14:06:59.046.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-29 14:06:59.046.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.003) seconds
+[1mTest run started.[0m
+Suite "Rohsatz-Export" started
+    [32m✔[0m "Kette: Modell schreibt, Export liest, Auswertung lädt" ([33m0.081[0m seconds)
+    [32m✔[0m "Korrigierter Titel trägt vorher und nachher" ([33m0.038[0m seconds)
+    [32m✔[0m "Mehrere Korrekturen: erstes alt, letztes neu, nach createdAt statt Speicherreihenfolge" (0.014 seconds)
+    [32m✔[0m "Unkorrigiert: aktueller Titel, Revisionen anderer Autoren zählen nicht" (0.011 seconds)
+    [32m✔[0m "Dauer: letzter Nutzerwert; andere Autoren und leerer Wert lassen das Feld weg" (0.010 seconds)
+    [32m✔[0m "Dauer: leerer Text als letzter Nutzerwert lässt durationUser weg" (0.010 seconds)
+    [32m✔[0m "Gleiche createdAt: die Zeilenreihenfolge (Z_PK) entscheidet" (0.013 seconds)
+    [32m✔[0m "Dauer: Modell, Regel und geleerter Wert ergeben kein durationUser" (0.011 seconds)
+    [32m✔[0m "Geleerter Titel: leerer Text statt weggelassen, aber keine Korrektur" (0.010 seconds)
+    [32m✔[0m "Sätze nach capturedAt geordnet, Ids 1, 2, 3" (0.009 seconds)
+    [32m✔[0m "Keine App-Id und keine Uuid in der Datei" (0.011 seconds)
+    [32m✔[0m "Der Speicher bleibt unverändert, es entstehen keine Nebendateien" (0.011 seconds)
+    [32m✔[0m "Fehlende Datei, keine Datenbank, fehlende Tabellen und keine Aufgaben brechen laut ab" (0.021 seconds)
+    [32m✔[0m "WAL-Speicher ohne Nebendateien: Code 14 mit benanntem Hinweis, nichts geschrieben" (0.003 seconds)
+    [32m✔[0m "Ziel: docs/reference und außerhalb erlaubt, sonst unter root verweigert" (0.014 seconds)
+    [32m✔[0m "Ziel mit .. als letzter Komponente unter fehlendem Ordner endet und wird verweigert" (0.001 seconds)
+    [32m✔[0m "Repo-Stamm nur aus absolutem Skriptpfad" (0.001 seconds)
+    [32m✔[0m "Fehlertexte und Zusammenfassung tragen keine Sätze" (0.013 seconds)
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-floating-noodling-shannon/Logs/Test/Test-LooseEnds-2026.10.29_14-06-47-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
+[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log

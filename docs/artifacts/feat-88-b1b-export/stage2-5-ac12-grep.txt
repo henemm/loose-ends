@@ -1,0 +1,3 @@
+11:swiftc -parse-as-library Measurement/RawTextExport.swift scripts/export-loose-ends-rawtexts.swift -o "$TMPDIR/rawtext-export" && "$TMPDIR/rawtext-export" --store "$HOME/Library/Group Containers/group.com.henning.looseends/Library/Application Support/LooseEnds.store" --out docs/reference/loose-ends-rawtexts.json
+14:- **Speicher** (`--store`, Standard): `~/Library/Group Containers/group.com.henning.looseends/Library/Application Support/LooseEnds.store`
+28:„jetzt ist ein Test möglich“ geschrieben hat, und nur für diesen einen Durchgang (Schnitt B2). Bis dahin läuft der Export
