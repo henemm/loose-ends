@@ -1,0 +1,3188 @@
+{
+  "events" : [
+    {
+      "at" : "2026-10-29T14:50:43Z",
+      "kind" : "app",
+      "note" : "gestartet; Argumente: --measure --corpus textform-corpus --runs 1 --result textform-run --exit-when-done; Korpus: 120 Sätze"
+    },
+    {
+      "at" : "2026-10-29T14:50:43Z",
+      "kind" : "model",
+      "note" : "verfügbar"
+    },
+    {
+      "at" : "2026-10-29T14:50:44Z",
+      "kind" : "start",
+      "note" : "--measure; 0 von 120 erledigt"
+    },
+    {
+      "at" : "2026-10-29T14:50:44Z",
+      "kind" : "scene",
+      "note" : "vordergrund"
+    },
+    {
+      "at" : "2026-10-29T14:54:24Z",
+      "kind" : "failure",
+      "note" : "tf-20.typed: guardrail"
+    },
+    {
+      "at" : "2026-10-29T14:54:24Z",
+      "kind" : "wait",
+      "note" : "60 s nach Fehlschlag"
+    },
+    {
+      "at" : "2026-10-29T14:59:19Z",
+      "kind" : "failure",
+      "note" : "tf-20.typed: guardrail"
+    },
+    {
+      "at" : "2026-10-29T14:59:19Z",
+      "kind" : "wait",
+      "note" : "60 s nach Fehlschlag"
+    },
+    {
+      "at" : "2026-10-29T15:00:23Z",
+      "kind" : "failure",
+      "note" : "tf-20.typed: guardrail"
+    },
+    {
+      "at" : "2026-10-29T15:00:23Z",
+      "kind" : "wait",
+      "note" : "60 s nach Fehlschlag"
+    },
+    {
+      "at" : "2026-10-29T15:01:27Z",
+      "kind" : "failure",
+      "note" : "tf-20.typed: guardrail"
+    },
+    {
+      "at" : "2026-10-29T15:01:27Z",
+      "kind" : "stop",
+      "note" : "Das Modell antwortet nicht (guardrail). Später weiter — der Stand bleibt erhalten."
+    },
+    {
+      "at" : "2026-10-29T15:03:28Z",
+      "kind" : "scene",
+      "note" : "inaktiv"
+    },
+    {
+      "at" : "2026-10-29T15:03:28Z",
+      "kind" : "scene",
+      "note" : "vordergrund"
+    },
+    {
+      "at" : "2026-10-29T15:03:28Z",
+      "kind" : "scene",
+      "note" : "hintergrund"
+    },
+    {
+      "at" : "2026-10-29T15:06:57Z",
+      "kind" : "scene",
+      "note" : "inaktiv"
+    },
+    {
+      "at" : "2026-10-29T15:06:58Z",
+      "kind" : "scene",
+      "note" : "vordergrund"
+    },
+    {
+      "at" : "2026-10-29T15:08:12Z",
+      "kind" : "app",
+      "note" : "gestartet; Argumente: --measure --corpus textform-corpus --runs 1 --result textform-run --count-failures --exit-when-done; Korpus: 120 Sätze"
+    },
+    {
+      "at" : "2026-10-29T15:08:12Z",
+      "kind" : "model",
+      "note" : "verfügbar"
+    },
+    {
+      "at" : "2026-10-29T15:08:13Z",
+      "kind" : "start",
+      "note" : "--measure; 123 von 120 erledigt"
+    },
+    {
+      "at" : "2026-10-29T15:08:13Z",
+      "kind" : "finished",
+      "note" : "123 von 120"
+    }
+  ],
+  "name" : "textform-run",
+  "results" : [
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "inaktiv",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-01.typed",
+      "finishedAt" : "2026-10-29T14:50:48Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.655524969100952,
+      "title" : "Morgen um 14 Uhr Zahnarzt konsultieren"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-01.dictated",
+      "finishedAt" : "2026-10-29T14:50:51Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.457291007041931,
+      "title" : "zum zahnarzt um 14 uhr morgen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-01.english",
+      "finishedAt" : "2026-10-29T14:50:54Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.1662020683288574,
+      "title" : "Visit dentist tomorrow at 2 pm"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-02.typed",
+      "finishedAt" : "2026-10-29T14:50:58Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.534208059310913,
+      "title" : "Kinder um 19 Uhr Elternabend Grundschule"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-02.dictated",
+      "finishedAt" : "2026-10-29T14:51:02Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.9284290075302124,
+      "title" : "machen Elternabend am Freitag um 17 uhr"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "hours2plus",
+      "entryID" : "tf-02.english",
+      "finishedAt" : "2026-10-29T14:51:05Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.7224689722061157,
+      "title" : "Parents' evening at primary school Friday at 7 pm"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes5",
+      "entryID" : "tf-03.typed",
+      "finishedAt" : "2026-10-29T14:51:09Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.967602014541626,
+      "title" : "Bring Auto um 10 Uhr in die Werkstatt"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-03.dictated",
+      "finishedAt" : "2026-10-29T14:51:13Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.8903340101242065,
+      "title" : "Das Auto muss Samstag um 10 Uhr in die Werkstatt."
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-03.english",
+      "finishedAt" : "2026-10-29T14:51:18Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.270576000213623,
+      "title" : "Bringe das Auto am Samstag 10 Uhr ins Garagenhaus"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-04.typed",
+      "finishedAt" : "2026-10-29T14:51:22Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.060395956039429,
+      "title" : "Heute um 16 Uhr Videocall mit Frau Lenz"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-04.dictated",
+      "finishedAt" : "2026-10-29T14:51:26Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.813006043434143,
+      "title" : "bitte videocall mit Frau Lenz um 16:00 Uhr vereinbaren"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-04.english",
+      "finishedAt" : "2026-10-29T14:51:30Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.620043992996216,
+      "title" : "Video call with Ms Lenz today at 4 pm"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-05.typed",
+      "finishedAt" : "2026-10-29T14:51:34Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.7105109691619873,
+      "title" : "Um 11:30 Friseur Termin vereinbaren"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-05.dictated",
+      "finishedAt" : "2026-10-29T14:51:38Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.3464109897613525,
+      "title" : "um 11 uhr 30 beim Friseur bin ich"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes5",
+      "entryID" : "tf-05.english",
+      "finishedAt" : "2026-10-29T14:51:42Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.925868034362793,
+      "title" : "Haare am Freitag um 11:30 schneiden"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-06.typed",
+      "finishedAt" : "2026-10-29T14:51:46Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.0043909549713135,
+      "title" : "Montag um 18 Uhr Yoga-Kurs machen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-06.dictated",
+      "finishedAt" : "2026-10-29T14:51:51Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.818064093589783,
+      "title" : "Melden Sie sich für den Yoga-Kurs an"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-06.english",
+      "finishedAt" : "2026-10-29T14:51:54Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.5078070163726807,
+      "title" : "Yoga class Monday at 6 pm"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-07.typed",
+      "finishedAt" : "2026-10-29T14:51:58Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.5367820262908936,
+      "title" : "Morgen um 9 Uhr Paket abholen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "hour1",
+      "entryID" : "tf-07.dictated",
+      "finishedAt" : "2026-10-29T14:52:02Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.83643901348114,
+      "title" : "Das Paket um neun Uhr abholen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "hours2plus",
+      "entryID" : "tf-07.english",
+      "finishedAt" : "2026-10-29T14:52:05Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.585176944732666,
+      "title" : "Pick up the parcel tomorrow at 9 am"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-08.typed",
+      "finishedAt" : "2026-10-29T14:52:09Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.9227819442749023,
+      "title" : "Oma zum Geburtstag am 15. Oktober anrufen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-08.dictated",
+      "finishedAt" : "2026-10-29T14:52:13Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.8140289783477783,
+      "title" : "Ruf Oma am 15. Oktober an"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-08.english",
+      "finishedAt" : "2026-10-29T14:52:17Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.893522024154663,
+      "title" : "Call Grandma for her birthday on October 15"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes5",
+      "entryID" : "tf-09.typed",
+      "finishedAt" : "2026-10-29T14:52:21Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.7250590324401855,
+      "title" : "Altglas am Freitag wegbringen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-09.dictated",
+      "finishedAt" : "2026-10-29T14:52:25Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.875012993812561,
+      "title" : "entfernen Sie das alte Glas Flaschen."
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes5",
+      "entryID" : "tf-09.english",
+      "finishedAt" : "2026-10-29T14:52:28Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.7425789833068848,
+      "title" : "Take the glass to the bottle bank on Friday"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-10.typed",
+      "finishedAt" : "2026-10-29T14:52:32Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.8715070486068726,
+      "title" : "Ab Donnerstag Mülltonne rausstellen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes5",
+      "entryID" : "tf-10.dictated",
+      "finishedAt" : "2026-10-29T14:52:36Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.007284998893738,
+      "title" : "die mülltonne am Donnerstag herauszuholen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes5",
+      "entryID" : "tf-10.english",
+      "finishedAt" : "2026-10-29T14:52:40Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.6729400157928467,
+      "title" : "Put the bin out the day after tomorrow"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-11.typed",
+      "finishedAt" : "2026-10-29T14:52:44Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.8036580085754395,
+      "title" : "In drei Tagen Reifenwechsel vereinbaren"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-11.dictated",
+      "finishedAt" : "2026-10-29T14:52:47Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.8474520444869995,
+      "title" : "in drei Tagen einen Reifenwechsel vereinbaren"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-11.english",
+      "finishedAt" : "2026-10-29T14:52:51Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.886968970298767,
+      "title" : "Booken Sie die Reifenwechsel in drei Tagen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "hour1",
+      "entryID" : "tf-12.typed",
+      "finishedAt" : "2026-10-29T14:52:55Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.6520919799804688,
+      "title" : "Ende Oktober Bibliotheksbücher zurückbringen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-12.dictated",
+      "finishedAt" : "2026-10-29T14:52:59Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.5803449153900146,
+      "title" : "die bücher in die bibliothek zurückbringen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "hours2plus",
+      "entryID" : "tf-12.english",
+      "finishedAt" : "2026-10-29T14:53:02Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.437648057937622,
+      "title" : "Return the library books at the end of the month"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-13.typed",
+      "finishedAt" : "2026-10-29T14:53:06Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.680608034133911,
+      "title" : "Samstag Geburtstagsgeschenk für Jonas besorgen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-13.dictated",
+      "finishedAt" : "2026-10-29T14:53:10Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.9465399980545044,
+      "title" : "ein geburtstagsgeschenk für jonas besorgen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-13.english",
+      "finishedAt" : "2026-10-29T14:53:13Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.721099019050598,
+      "title" : "Get a birthday present for Jonas on Saturday"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes5",
+      "entryID" : "tf-14.typed",
+      "finishedAt" : "2026-10-29T14:53:17Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.709792971611023,
+      "title" : "Morgen Blumen gießen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-14.dictated",
+      "finishedAt" : "2026-10-29T14:53:21Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.796270966529846,
+      "title" : "die blumen morgen gießen nicht vergessen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes5",
+      "entryID" : "tf-14.english",
+      "finishedAt" : "2026-10-29T14:53:25Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.606153964996338,
+      "title" : "Water the flowers tomorrow"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "hours2plus",
+      "entryID" : "tf-15.typed",
+      "finishedAt" : "2026-10-29T14:53:29Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.405379056930542,
+      "title" : "Steuererklärung 2025 fertig machen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "hours2plus",
+      "entryID" : "tf-15.dictated",
+      "finishedAt" : "2026-10-29T14:53:33Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.495284914970398,
+      "title" : "die steuererklärung für 2025 fertig machen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "hours2plus",
+      "entryID" : "tf-15.english",
+      "finishedAt" : "2026-10-29T14:53:37Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.8509559631347656,
+      "title" : "Finish the 2025 tax return"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-16.typed",
+      "finishedAt" : "2026-10-29T14:53:41Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.6939719915390015,
+      "title" : "Rezept beim Hausarzt abholen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-16.dictated",
+      "finishedAt" : "2026-10-29T14:53:45Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.982487916946411,
+      "title" : "hole das Rezept beim Hausarzt ab"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-16.english",
+      "finishedAt" : "2026-10-29T14:53:49Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.755658984184265,
+      "title" : "Pick up the prescription at the GP urgently"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-17.typed",
+      "finishedAt" : "2026-10-29T14:53:53Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.827322006225586,
+      "title" : "Rechnung vom Elektriker prüfen und bezahlen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-17.dictated",
+      "finishedAt" : "2026-10-29T14:53:57Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.000880002975464,
+      "title" : "die rechnung vom elektriker prüfen und bezahlen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-17.english",
+      "finishedAt" : "2026-10-29T14:54:00Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.6573299169540405,
+      "title" : "Check and pay the electrician's invoice"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-18.typed",
+      "finishedAt" : "2026-10-29T14:54:04Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.169079065322876,
+      "title" : "Kündigungsfrist Fitnessstudio verpassen nicht"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-18.dictated",
+      "finishedAt" : "2026-10-29T14:54:08Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.0146870613098145,
+      "title" : "Ich muss die kündigungsfrist vom fitnessstudio einhalten"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-18.english",
+      "finishedAt" : "2026-10-29T14:54:13Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.150749921798706,
+      "title" : "Verpassen Sie keine Fitness-Studiokündigung"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-19.typed",
+      "finishedAt" : "2026-10-29T14:54:16Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.741679072380066,
+      "title" : "Anwalt wegen Mietvertrag zurückrufen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-19.dictated",
+      "finishedAt" : "2026-10-29T14:54:20Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.106892108917236,
+      "title" : "den anwalt wegen dem mietvertrag zurückrufen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-19.english",
+      "finishedAt" : "2026-10-29T14:54:24Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.6498180627822876,
+      "title" : "Call the lawyer back about the lease"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "entryID" : "tf-20.typed",
+      "error" : "May contain unsafe content",
+      "errorKind" : "guardrail",
+      "finishedAt" : "2026-10-29T14:54:24Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 0.34963905811309814
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-20.dictated",
+      "finishedAt" : "2026-10-29T14:55:32Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.6271040439605713,
+      "title" : "ich muss das Passwort fürs Bankkonto ändern"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-20.english",
+      "finishedAt" : "2026-10-29T14:55:35Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.1881790161132812,
+      "title" : "Change the bank account password right away"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-21.typed",
+      "finishedAt" : "2026-10-29T14:55:38Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.1457890272140503,
+      "title" : "Rasen mähen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-21.dictated",
+      "finishedAt" : "2026-10-29T14:55:41Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.322472929954529,
+      "title" : "mähen Sie den Rasen wieder"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-21.english",
+      "finishedAt" : "2026-10-29T14:55:44Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.224390983581543,
+      "title" : "Mow the lawn"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-22.typed",
+      "finishedAt" : "2026-10-29T14:55:48Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.354948043823242,
+      "title" : "Wäsche aufhängen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-22.dictated",
+      "finishedAt" : "2026-10-29T14:55:52Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.892845034599304,
+      "title" : "die Wäsche muss aufgehängt werden"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes5",
+      "entryID" : "tf-22.english",
+      "finishedAt" : "2026-10-29T14:55:55Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.0201549530029297,
+      "title" : "Hang up the laundry"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-23.typed",
+      "finishedAt" : "2026-10-29T14:55:58Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.3101919889450073,
+      "title" : "Drucker-Patrone bestellen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-23.dictated",
+      "finishedAt" : "2026-10-29T14:56:02Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.502692937850952,
+      "title" : "bestelle eine neue patrone für den drucker"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-23.english",
+      "finishedAt" : "2026-10-29T14:56:05Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.260583996772766,
+      "title" : "Order a new cartridge for the printer"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-24.typed",
+      "finishedAt" : "2026-10-29T14:56:08Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.4610750675201416,
+      "title" : "Eine Glühbirne beim Baumarkt kaufen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-24.dictated",
+      "finishedAt" : "2026-10-29T14:56:12Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.4461129903793335,
+      "title" : "Ich muss eine Glühbirne kaufen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes5",
+      "entryID" : "tf-24.english",
+      "finishedAt" : "2026-10-29T14:56:15Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.3307440280914307,
+      "title" : "Buy a light bulb at the DIY store"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-25.typed",
+      "finishedAt" : "2026-10-29T14:56:18Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.1289000511169434,
+      "title" : "Tanken auf dem Rückweg"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-25.dictated",
+      "finishedAt" : "2026-10-29T14:56:22Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.3682090044021606,
+      "title" : "auf dem rückweg muss ich noch tanken"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes5",
+      "entryID" : "tf-25.english",
+      "finishedAt" : "2026-10-29T14:56:25Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.213932991027832,
+      "title" : "Get gas on the way back"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-26.typed",
+      "finishedAt" : "2026-10-29T14:56:28Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.336148977279663,
+      "title" : "Fotos von Donnerstag, 29. Oktober, überprüfen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-26.dictated",
+      "finishedAt" : "2026-10-29T14:56:32Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.499809980392456,
+      "title" : "prüfe das Backup von den Fotos"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-26.english",
+      "finishedAt" : "2026-10-29T14:56:35Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.689087986946106,
+      "title" : "Check the photo backup"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-27.typed",
+      "finishedAt" : "2026-10-29T14:56:39Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.4170279502868652,
+      "title" : "Morgen dringend Mama anrufen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-27.dictated",
+      "finishedAt" : "2026-10-29T14:56:42Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.7339730262756348,
+      "title" : "morgen muss ich dringend die mama anrufen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "fair"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-27.english",
+      "finishedAt" : "2026-10-29T14:56:46Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.6106650829315186,
+      "title" : "Call Mum urgently tomorrow"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-28.typed",
+      "finishedAt" : "2026-10-29T14:56:50Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.8573360443115234,
+      "title" : "Rechnung fürs Dach um 8 Uhr überweisen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-28.dictated",
+      "finishedAt" : "2026-10-29T14:56:54Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.9512630701065063,
+      "title" : "überwende die Rechnung fürs Dach am Freitag um acht Uhr"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-28.english",
+      "finishedAt" : "2026-10-29T14:56:58Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.6128910779953003,
+      "title" : "Pay the roof invoice Friday at 8 am"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-29.typed",
+      "finishedAt" : "2026-10-29T14:57:02Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.062382936477661,
+      "title" : "Heute noch Rasen mähen, spätestens bis 18 Uhr"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-29.dictated",
+      "finishedAt" : "2026-10-29T14:57:06Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.961804986000061,
+      "title" : "den Rasen heute noch mähen spätestens bis 18 uhr"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-29.english",
+      "finishedAt" : "2026-10-29T14:57:09Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.9010839462280273,
+      "title" : "Mow the lawn today, by 6 pm at the latest"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-30.typed",
+      "finishedAt" : "2026-10-29T14:57:13Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.580591082572937,
+      "title" : "Samstag Hecke schneiden und Laub zusammenkehren"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-30.dictated",
+      "finishedAt" : "2026-10-29T14:57:17Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.088225960731506,
+      "title" : "die hecke geschnitten werden und das laub zusammengekehrt"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-30.english",
+      "finishedAt" : "2026-10-29T14:57:21Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.845073938369751,
+      "title" : "Trim the hedge and sweep up the leaves on Saturday"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-31.typed",
+      "finishedAt" : "2026-10-29T14:57:25Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.9298280477523804,
+      "title" : "15 Uhr wichtiger Termin beim Notar am nächsten Tag"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-31.dictated",
+      "finishedAt" : "2026-10-29T14:57:29Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.344584941864014,
+      "title" : "um 15 uhr Termin beim notar vereinbaren"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-31.english",
+      "finishedAt" : "2026-10-29T14:57:33Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.8695050477981567,
+      "title" : "Important appointment at the notary 3 pm"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-32.typed",
+      "finishedAt" : "2026-10-29T14:57:37Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.7842490673065186,
+      "title" : "Montag Wäsche waschen und Wohnung putzen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-32.dictated",
+      "finishedAt" : "2026-10-29T14:57:41Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.8709789514541626,
+      "title" : "Am Montag Wäsche waschen und Wohnung putzen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 50,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-32.english",
+      "finishedAt" : "2026-10-29T14:57:45Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.432220935821533,
+      "title" : "Do the laundry and clean the flat on Monday"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-33.typed",
+      "finishedAt" : "2026-10-29T14:57:49Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.17958402633667,
+      "title" : "Buch über Bienen lesen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-33.dictated",
+      "finishedAt" : "2026-10-29T14:57:53Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.8662641048431396,
+      "title" : "lese ein buch über bienen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-33.english",
+      "finishedAt" : "2026-10-29T14:57:57Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.7289620637893677,
+      "title" : "Read a book about bees"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-34.typed",
+      "finishedAt" : "2026-10-29T14:58:01Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.8659340143203735,
+      "title" : "Idee für Lenas Geburtstag überlegen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-34.dictated",
+      "finishedAt" : "2026-10-29T14:58:05Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.034519910812378,
+      "title" : "eine idee für lenas geburtstag überlegen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-34.english",
+      "finishedAt" : "2026-10-29T14:58:09Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.1521430015563965,
+      "title" : "Idee für Lenas Geburtstag finden"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-35.typed",
+      "finishedAt" : "2026-10-29T14:58:13Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.6847180128097534,
+      "title" : "Gitarre neu stimmen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-35.dictated",
+      "finishedAt" : "2026-10-29T14:58:16Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.730760097503662,
+      "title" : "die gitarre müsste neu gestimmt werden"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-35.english",
+      "finishedAt" : "2026-10-29T14:58:21Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.051340937614441,
+      "title" : "Retune the guitar"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-36.typed",
+      "finishedAt" : "2026-10-29T14:58:24Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.7652039527893066,
+      "title" : "Urlaubsfotos sortieren"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "hours2plus",
+      "entryID" : "tf-36.dictated",
+      "finishedAt" : "2026-10-29T14:58:28Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.8895809650421143,
+      "title" : "sortiere die urlaubsfotos endlich"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-36.english",
+      "finishedAt" : "2026-10-29T14:58:32Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.672558069229126,
+      "title" : "Sort the holiday photos"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-37.typed",
+      "finishedAt" : "2026-10-29T14:58:35Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.5873979330062866,
+      "title" : "Neue Wanderschuhe ausprobieren"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-37.dictated",
+      "finishedAt" : "2026-10-29T14:58:39Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.9071000814437866,
+      "title" : "die neuen wanderschuhe ausprobieren"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-37.english",
+      "finishedAt" : "2026-10-29T14:58:43Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.657750964164734,
+      "title" : "Try out the new hiking boots"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-38.typed",
+      "finishedAt" : "2026-10-29T14:58:47Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.065366983413696,
+      "title" : "Rezept für Linsensuppe suchen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-38.dictated",
+      "finishedAt" : "2026-10-29T14:58:52Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 5.125878930091858,
+      "title" : "hole das rezept für die linsensuppe heraus"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-38.english",
+      "finishedAt" : "2026-10-29T14:58:57Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 4.2966591119766235,
+      "title" : "Look up the lentil soup recipe"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes15",
+      "entryID" : "tf-39.typed",
+      "finishedAt" : "2026-10-29T14:59:00Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.6882399320602417,
+      "title" : "Spanisch Vokabeln wiederholen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-39.dictated",
+      "finishedAt" : "2026-10-29T14:59:04Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.5119069814682007,
+      "title" : "spanisch vokabeln wiederholen"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-39.english",
+      "finishedAt" : "2026-10-29T14:59:07Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.53473699092865,
+      "title" : "Review Spanish vocabulary"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "hours2plus",
+      "entryID" : "tf-40.typed",
+      "finishedAt" : "2026-10-29T14:59:11Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.49277400970459,
+      "title" : "Balkon neu gestalten"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "hours2plus",
+      "entryID" : "tf-40.dictated",
+      "finishedAt" : "2026-10-29T14:59:15Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.882028102874756,
+      "title" : "gestalte den balkon neu"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "duration" : "minutes30",
+      "entryID" : "tf-40.english",
+      "finishedAt" : "2026-10-29T14:59:18Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 3.7473549842834473,
+      "title" : "Redesigne den Balkon"
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "entryID" : "tf-20.typed",
+      "error" : "May contain unsafe content",
+      "errorKind" : "guardrail",
+      "finishedAt" : "2026-10-29T14:59:19Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 0.5667819976806641
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "serious"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "entryID" : "tf-20.typed",
+      "error" : "May contain unsafe content",
+      "errorKind" : "guardrail",
+      "finishedAt" : "2026-10-29T15:00:23Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 0.48165106773376465
+    },
+    {
+      "capturedAt" : "2026-10-29T08:00:00Z",
+      "conditions" : {
+        "appState" : "vordergrund",
+        "batteryPercent" : 45,
+        "device" : "iPhone17,1",
+        "lowPowerMode" : false,
+        "power" : "akku",
+        "systemVersion" : "27.0.1",
+        "thermal" : "normal"
+      },
+      "contexts" : [
+
+      ],
+      "dueHasTime" : false,
+      "entryID" : "tf-20.typed",
+      "error" : "May contain unsafe content",
+      "errorKind" : "guardrail",
+      "finishedAt" : "2026-10-29T15:01:27Z",
+      "people" : [
+
+      ],
+      "runIndex" : 0,
+      "seconds" : 0.3958399295806885
+    }
+  ],
+  "startedAt" : "2026-10-29T14:50:43Z"
+}
