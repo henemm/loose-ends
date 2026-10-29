@@ -1,0 +1,20 @@
+# Simulator-Beleg
+erzeugt: 2026-10-29T06:40:39+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: 88-b1-ablage
+head: 9cc9167a26214c1dfc7bd049fd4ad9becb84cbd8
+basis: 3b96045a5a1f4c664c6df3e74429e400d7d553bf (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 24 gesamt, 24 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793251558.604  ende: 1793252437.595
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/88-b1-ablage/simulator-run/summary.json  sha256:564fc572f51ce92bd703e249556af224efa16faf99871eca75dea7465aa6cc74
+xcresult: docs/artifacts/88-b1-ablage/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/88-b1-ablage/simulator-run/*.png (13 Stück)
+
+## Geprüfte Dateien
+- sha256:8999c90096fd1f16466b0e1f060d8dec38b115fdf24bd3836547942b59ac7561  LooseEndsLab/MeasurementRunner.swift
+- sha256:59467ebdcfa373064280db57484330e8cade50c887f99b4d7e7640727a6dbf86  LooseEndsTests/CorpusTests.swift
+- sha256:7f661ba0623c0c787bbdb1bf1a0e0346e3fd6e224a5e86b34956369621653dbb  Measurement/Corpus.swift
