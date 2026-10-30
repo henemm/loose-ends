@@ -1,3 +1,4 @@
+#if os(iOS)
 import XCTest
 
 /// The paper ground on the iPad (#746): in a wide window the detail column's rows stood on the system's white, only as
@@ -120,3 +121,4 @@ final class PaperGroundTests: XCTestCase {
             "Completed")
     }
 }
+#endif
