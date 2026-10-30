@@ -22,6 +22,11 @@ extension View {
         modifier(PaperRow())
     }
 
+    /// A row of the sidebar: painted only in the compact list, a wide sidebar keeps its selection highlight (#746).
+    func sidebarRow() -> some View {
+        modifier(SidebarRow())
+    }
+
     /// A row of the task detail (#477): paper behind it on every size, so a wide window and the Mac
     /// show lines on paper instead of cards. In a compact window the same as `paperRow()`.
     func detailRow() -> some View {
@@ -79,6 +84,18 @@ private struct PaperList: ViewModifier {
 }
 
 private struct PaperRow: ViewModifier {
+    /// A paper row takes the ground in every window width (#746).
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        #if os(iOS)
+        content.listRowBackground(Paper.ground)
+        #else
+        content
+        #endif
+    }
+}
+
+private struct SidebarRow: ViewModifier {
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var sizeClass
     #endif
