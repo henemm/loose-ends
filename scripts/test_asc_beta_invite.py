@@ -422,7 +422,8 @@ class WorkflowTests(unittest.TestCase):
             self.assertNotIn(trigger, workflow)
         for needle in ("- probe", "- einrichten", "- zuordnen", "- einreichen", "default: probe",
                        "inputs.aktion == 'zuordnen'", "inputs.aktion == 'einreichen'",
-                       "needs: [setup, assign, submit]", "needs.assign.result", "needs.submit.result"):
+                       "needs: [setup, assign, submit, link]", "needs.assign.result", "needs.submit.result",
+                       "needs.link.result"):
             self.assertIn(needle, workflow)
         assign = workflow.split("\n  assign:", 1)[1].split("\n  submit:", 1)[0]
         submit = workflow.split("\n  submit:", 1)[1].split("\n  probe:", 1)[0]
