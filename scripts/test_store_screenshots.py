@@ -6,9 +6,12 @@ Aufruf: python3 -m unittest scripts/test_store_screenshots.py
 """
 import json
 import shutil
+import struct
+import subprocess
 import sys
 import tempfile
 import unittest
+import zlib
 from pathlib import Path
 
 SCRIPTS = Path(__file__).resolve().parent
@@ -118,6 +121,94 @@ class ManifestTests(NeedsModule):
     def test_manifest_without_ipad_is_refused(self):
         with self.assertRaises(ss.StoreError):
             ss.build_manifest({"iphone": ORDER}, commit="abc1234", created="2026-10-30T12:00:00Z")
+
+
+PAPER = (244, 243, 238)
+GRIP = (2008, 2696, 2054, 2742)   # gemessener Griff auf den iPad-Bildern: x0, y0, x1, y1 (einschließlich)
+
+
+def write_png(path, size, color, boxes=()):
+    """RGB-PNG ohne Alpha: Fläche `color`, darüber Rechtecke (x0, y0, x1, y1, farbe), Grenzen einschließlich."""
+    width, height = size
+    rows = [bytearray(bytes(color) * width) for _ in range(height)]
+    for x0, y0, x1, y1, fill in boxes:
+        for y in range(y0, y1 + 1):
+            rows[y][x0 * 3:(x1 + 1) * 3] = bytes(fill) * (x1 - x0 + 1)
+    raw = b"".join(b"\0" + bytes(row) for row in rows)
+
+    def chunk(kind, data):
+        return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data))
+    Path(path).write_bytes(b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0))
+                           + chunk(b"IDAT", zlib.compress(raw, 1)) + chunk(b"IEND", b""))
+
+
+def pixels(path):
+    """Liest ein Bild über `sips` als BMP: Funktion (x, y) → (r, g, b) und alle Pixeldaten zum Vergleich."""
+    with tempfile.TemporaryDirectory() as tmp:
+        bmp = Path(tmp) / "bild.bmp"
+        subprocess.run(["sips", "-s", "format", "bmp", str(path), "--out", str(bmp)], capture_output=True, check=True)
+        data = bmp.read_bytes()
+    offset, = struct.unpack_from("<I", data, 10)
+    width, height, _, bits = struct.unpack_from("<iiHH", data, 18)
+    step, stride = bits // 8, (width * bits // 8 + 3) // 4 * 4
+
+    def at(x, y):
+        i = offset + (y if height < 0 else abs(height) - 1 - y) * stride + x * step
+        return data[i + 2], data[i + 1], data[i]
+    return at, data[offset:]
+
+
+@unittest.skipUnless(shutil.which("sips"), "sips fehlt (nur macOS)")
+class WindowGripTests(NeedsModule):
+    """Der graue Bogen des iPadOS-Fenstergriffs unten rechts wird zur Papierfarbe der Umgebung (#742)."""
+
+    def image(self, color, boxes=()):
+        path = self.root / "bild.png"
+        write_png(path, IPAD, color, boxes)
+        return path
+
+    def test_grip_on_plain_paper_becomes_background(self):
+        for color in (PAPER, (255, 255, 254)):   # Farbe aus der Umgebung, nicht fest verdrahtet
+            with self.subTest(color=color):
+                path = self.image(color, [(*GRIP, (142, 142, 147))])
+                ss.sips_clear_grip(path)
+                at, _ = pixels(path)
+                corner = {at(x, y) for y in range(GRIP[1] - 10, IPAD[1]) for x in range(GRIP[0] - 10, IPAD[0])}
+                self.assertEqual(corner, {color})
+
+    def test_rest_of_image_untouched(self):
+        mark = (10, 20, 30)
+        path = self.image(PAPER, [(*GRIP, (142, 142, 147)), (1900, 2600, 1905, 2605, mark)])
+        ss.sips_clear_grip(path)
+        at, _ = pixels(path)
+        self.assertEqual(at(1902, 2602), mark)
+
+    def test_busy_corner_stays_identical(self):
+        keys = [(1700 + 90 * i, 2560, 1770 + 90 * i, 2751, (252, 252, 254)) for i in range(4)]
+        cases = {
+            "Tastatur": self.image((209, 212, 217), keys + [(*GRIP, (142, 142, 147))]),
+            "Inhalt links der Ecke": self.image(PAPER, [(1960, 2700, 1995, 2720, (30, 30, 30)), (*GRIP, (142, 142, 147))]),
+        }
+        for name, path in cases.items():
+            with self.subTest(name):
+                _, before = pixels(path)
+                ss.sips_clear_grip(path)
+                _, after = pixels(path)
+                self.assertEqual(before, after)
+
+    def test_size_kept_and_no_alpha(self):
+        path = self.image(PAPER, [(*GRIP, (142, 142, 147))])
+        ss.sips_clear_grip(path)
+        self.assertEqual(ss.sips_info(path), (IPAD[0], IPAD[1], False))
+
+
+class GripHookTests(NeedsModule):
+    def test_grip_cleared_on_ipad_only(self):
+        for device, size, calls in (("ipad", IPAD, 5), ("iphone", IPHONE, 0)):
+            with self.subTest(device):
+                cleared = []
+                ss.finish_device(device, self.attachments(), self.out, self.info(size), self.keep, cleared.append)
+                self.assertEqual(len(cleared), calls)
 
 
 if __name__ == "__main__":

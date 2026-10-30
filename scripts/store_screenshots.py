@@ -6,6 +6,7 @@ Ein Exportordner kommt von `xcresulttool export attachments` (mit manifest.json)
 """
 import json
 import shutil
+import struct
 import subprocess
 import sys
 import tempfile
@@ -36,10 +37,11 @@ def size_text(size):
     return f"{size[0]}x{size[1]}"
 
 
-def finish_device(device, attachments, out_root, info, strip_alpha):
+def finish_device(device, attachments, out_root, info, strip_alpha, clear_grip=lambda path: None):
     """Schreibt die fünf Bilder eines Geräts nach <out_root>/<gerät>/<nn>-<name>.png und prüft sie.
 
-    attachments: Anhangsname `store-<nn>-<name>` → Datei; info(path) → (breite, höhe, alpha); strip_alpha(path).
+    attachments: Anhangsname `store-<nn>-<name>` → Datei; info(path) → (breite, höhe, alpha); strip_alpha(path);
+    clear_grip(path) nur auf dem iPad (Fenstergriff unten rechts).
     """
     missing = [name for name in ORDER if f"store-{name}" not in attachments]
     if missing:
@@ -56,6 +58,8 @@ def finish_device(device, attachments, out_root, info, strip_alpha):
             target = staging / f"{name}.png"
             shutil.copyfile(attachments[f"store-{name}"], target)
             strip_alpha(target)
+            if device == "ipad":
+                clear_grip(target)
             width, height, alpha = info(target)
             if (width, height) != want:
                 raise StoreError(f"{device}/{target.name}: {size_text((width, height))} statt {size_text(want)}")
@@ -101,6 +105,45 @@ def sips_strip_alpha(path):
         subprocess.run(["sips", "-s", "format", "png", str(bmp), "--out", str(path)], capture_output=True, check=True)
 
 
+GRIP_CORNER = 72      # Kante des Eckquadrats unten rechts in Pixeln; der Griff liegt bei x 2008–2054, y 2696–2742
+GRIP_BAND = 8         # Breite des Streifens links und über der Ecke, aus dem die Hintergrundfarbe kommt
+GRIP_TOLERANCE = 2    # größte Abweichung je Farbkanal, die im Streifen noch als einfarbig gilt
+
+
+def clear_grip_bmp(data):
+    """Färbt die Ecke unten rechts in die Farbe ihrer Umgebung, wenn die Umgebung einfarbig ist; sonst unverändert.
+
+    data: BMP mit 24 oder 32 Bit je Pixel (Ausgabe von `sips`). Gibt das neue BMP zurück.
+    """
+    offset, = struct.unpack_from("<I", data, 10)
+    width, height, _, bits = struct.unpack_from("<iiHH", data, 18)
+    step, stride, rows = bits // 8, (width * bits // 8 + 3) // 4 * 4, abs(height)
+
+    def index(x, y):   # y von oben gezählt; BMP liegt mit positiver Höhe von unten nach oben
+        return offset + (y if height < 0 else rows - 1 - y) * stride + x * step
+
+    left, top = width - GRIP_CORNER, rows - GRIP_CORNER
+    band = [(x, y) for y in range(top - GRIP_BAND, rows) for x in range(left - GRIP_BAND, left)]
+    band += [(x, y) for y in range(top - GRIP_BAND, top) for x in range(left, width)]
+    colors = [data[index(x, y):index(x, y) + 3] for x, y in band]
+    if any(max(abs(a - b) for a, b in zip(color, colors[0])) > GRIP_TOLERANCE for color in colors):
+        return data
+    out = bytearray(data)
+    for y in range(top, rows):
+        for x in range(left, width):
+            out[index(x, y):index(x, y) + 3] = colors[0]
+    return bytes(out)
+
+
+def sips_clear_grip(path):
+    """PNG → BMP → Griff entfernen → PNG, verlustfrei und ohne Alphakanal (#742)."""
+    with tempfile.TemporaryDirectory() as tmp:
+        bmp = Path(tmp) / "bild.bmp"
+        subprocess.run(["sips", "-s", "format", "bmp", str(path), "--out", str(bmp)], capture_output=True, check=True)
+        bmp.write_bytes(clear_grip_bmp(bmp.read_bytes()))
+        subprocess.run(["sips", "-s", "format", "png", str(bmp), "--out", str(path)], capture_output=True, check=True)
+
+
 def read_export(folder):
     """Anhänge `store-*` aus einem xcresulttool-Export: Name ohne Zusatz `_<n>_<uuid>` → Datei."""
     folder = Path(folder)
@@ -121,7 +164,8 @@ def main(argv):
     for device in DEVICES:
         if device not in exports:
             raise StoreError(f"Kein Export für {device}")
-        written = finish_device(device, read_export(exports[device]), out_root, sips_info, sips_strip_alpha)
+        written = finish_device(device, read_export(exports[device]), out_root, sips_info, sips_strip_alpha,
+                                sips_clear_grip)
         names[device] = [path.stem for path in written]
     commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT, capture_output=True, text=True,
                             check=True).stdout.strip()

@@ -1,3 +1,4 @@
+#if os(iOS)   // orientation and UIDevice: the UI test target compiles for the Mac too
 import XCTest
 
 /// #742 Schnitt 1: the App Store pictures for iPhone and iPad, German and light, portrait. The whole
@@ -65,6 +66,7 @@ final class StoreScreenshotsTests: XCTestCase {
         if !field.waitForExistence(timeout: 5), line.exists {
             app.typeText(text)
             if let photograph {
+                XCTAssertTrue(field.exists, "\(photograph): the capture sheet is not open")
                 putKeyboardAway(in: app)
                 shot(photograph)
             }
@@ -133,6 +135,34 @@ final class StoreScreenshotsTests: XCTestCase {
         XCTAssertFalse(onScreen(), "A keyboard covers the picture (frame \(keyboard.frame))")
     }
 
+    /// `01-start` with one start page: the iPad's sidebar repeats the start beside the detail column, so
+    /// its system button hides it for the picture and shows it again after. The iPhone has no such button.
+    @MainActor
+    private func photographStart(in app: XCUIApplication) {
+        let nowRows = rows("nowRow_", in: app)
+        XCTAssertTrue(nowRows.firstMatch.waitForExistence(timeout: 15), "Jetzt shows no row")
+        XCTAssertGreaterThanOrEqual(nowRows.count, 2, "Jetzt should show at least two rows")
+        putKeyboardAway(in: app)
+        let hide = sidebarButton(["Seitenleiste ausblenden", "Hide Sidebar"], in: app)
+        let hidden = hide.exists
+        if hidden {
+            hide.tap()
+            XCTAssertTrue(sidebarButton(["Seitenleiste einblenden", "Show Sidebar"], in: app)
+                .waitForExistence(timeout: 5), "Sidebar did not hide")
+        }
+        let lines = app.descendants(matching: .any).matching(identifier: "startCaptureField").count
+        XCTAssertEqual(lines, 1, "01-start shows \(lines) start pages")
+        shot("01-start")
+        guard hidden else { return }
+        sidebarButton(["Seitenleiste einblenden", "Show Sidebar"], in: app).tap()
+        XCTAssertTrue(element("viewRow_new", in: app).waitForExistence(timeout: 5), "Sidebar did not come back")
+    }
+
+    @MainActor
+    private func sidebarButton(_ labels: [String], in app: XCUIApplication) -> XCUIElement {
+        app.buttons.matching(NSPredicate(format: "label IN %@", labels)).firstMatch
+    }
+
     /// Back until the start's "Neu" row can be tapped: two steps on the iPhone (detail, list), one on the
     /// iPad, where the detail replaces the list and the first button brings the sidebar back.
     @MainActor
@@ -171,13 +201,18 @@ final class StoreScreenshotsTests: XCTestCase {
             capture(text, in: app)
         }
         complete("Blumen", in: app)
-        capture(Self.typed, in: app, photograph: "02-erfassen")
-
-        let nowRows = rows("nowRow_", in: app)
-        XCTAssertTrue(nowRows.firstMatch.waitForExistence(timeout: 15), "Jetzt shows no row")
-        XCTAssertGreaterThanOrEqual(nowRows.count, 2, "Jetzt should show at least two rows")
-        putKeyboardAway(in: app)
-        shot("01-start")
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            // The iPad's "+" opens the sheet only while a view is chosen, and its start page does not
+            // come back once one is: the start is photographed first, then "Fällig" is chosen.
+            photographStart(in: app)
+            let dueRow = element("viewRow_due", in: app)
+            XCTAssertTrue(dueRow.waitForExistence(timeout: 5), "Sidebar shows no Fällig")
+            dueRow.tap()
+            capture(Self.typed, in: app, photograph: "02-erfassen")
+        } else {
+            capture(Self.typed, in: app, photograph: "02-erfassen")
+            photographStart(in: app)
+        }
 
         let newRow = element("viewRow_new", in: app)
         XCTAssertTrue(newRow.waitForExistence(timeout: 5), "Start screen shows no Neu")
@@ -213,3 +248,4 @@ final class StoreScreenshotsTests: XCTestCase {
         shot("05-erledigt")
     }
 }
+#endif

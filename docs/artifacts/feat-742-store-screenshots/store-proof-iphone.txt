@@ -1,18 +1,18 @@
 # Simulator-Beleg
-erzeugt: 2026-10-30T10:26:34+0100
+erzeugt: 2026-10-30T17:35:00+0100
 befehl: scripts/sim.sh test-proof StoreScreenshotsTests
 workflow: feat-742-store-screenshots
-head: 14106bb74a17a5dbfed7ea6af3721aa9a8f6ad7f
-basis: 754b4f0cc9ce98e20deecfe2e3f8ff79108f5b73 (merge-base origin/main HEAD)
+head: 668da03664d6354facab5d0bfe3eba3cf8010bbc
+basis: 991c2e62abc40f2122c9a9da0afb67f14b6a9d47 (merge-base origin/main HEAD)
 testklasse: StoreScreenshotsTests
 ergebnis: Passed
 xcodebuild: ** TEST SUCCEEDED **
 tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
-start: 1793352285.693  ende: 1793352392.893
+start: 1793377989.073  ende: 1793378099.793
 geraet: iPhone 17, iOS 27.0
-summary: docs/artifacts/feat-742-store-screenshots/simulator-run/summary.json  sha256:3809129035c99cd5d1eff6e1a6ef1e89e5f0f2510849afb6aa9d1e5ba701f9c1
+summary: docs/artifacts/feat-742-store-screenshots/simulator-run/summary.json  sha256:16b979e264a0c04c153ddf947db2ad3cd6e342b9b83c991d6d238ed3607c2b4b
 xcresult: docs/artifacts/feat-742-store-screenshots/simulator-run/run.xcresult  (gitignored)
 screenshots: docs/artifacts/feat-742-store-screenshots/simulator-run/*.png (5 Stück)
 
 ## Geprüfte Dateien
-- sha256:9e340577aca267acc1b58e67d295d6ef2e0e39ae9a423d8c6b78a712d6cd6fbf  LooseEndsUITests/StoreScreenshotsTests.swift
+- sha256:971db4179bd2eb24b6f3b8dd4b6b0d134c3c6e9af60c0aca0dccfaaacfff7d3f  LooseEndsUITests/StoreScreenshotsTests.swift
