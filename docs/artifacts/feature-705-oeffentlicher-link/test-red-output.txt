@@ -1,0 +1,210 @@
+test_build_missing_in_group_is_not_ready (__main__.LinkTests.test_build_missing_in_group_is_not_ready) ... FAIL
+test_enable_sends_one_patch_with_limit_50 (__main__.LinkTests.test_enable_sends_one_patch_with_limit_50) ... FAIL
+test_forbidden_and_other_errors_are_reported (__main__.LinkTests.test_forbidden_and_other_errors_are_reported) ... FAIL
+test_limit_mismatch_switches_back_off (__main__.LinkTests.test_limit_mismatch_switches_back_off) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/textwrap.py:440: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 58319)>
+  for margin, c in enumerate(l1):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/textwrap.py:440: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 58320)>
+  for margin, c in enumerate(l1):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/textwrap.py:440: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 58321)>
+  for margin, c in enumerate(l1):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_missing_group_aborts_before_any_write (__main__.LinkTests.test_missing_group_aborts_before_any_write) ... FAIL
+test_not_ready_build_is_not_enabled (__main__.LinkTests.test_not_ready_build_is_not_enabled) ... 
+  test_not_ready_build_is_not_enabled (__main__.LinkTests.test_not_ready_build_is_not_enabled) (state='READY_FOR_BETA_SUBMISSION') ... FAIL
+  test_not_ready_build_is_not_enabled (__main__.LinkTests.test_not_ready_build_is_not_enabled) (state='PROCESSING') ... FAIL
+  test_not_ready_build_is_not_enabled (__main__.LinkTests.test_not_ready_build_is_not_enabled) (state='unlesbar') ... FAIL
+test_off_switches_link_off_and_is_idempotent (__main__.LinkTests.test_off_switches_link_off_and_is_idempotent) ... FAIL
+test_output_has_only_state_words (__main__.LinkTests.test_output_has_only_state_words) ... FAIL
+test_second_run_writes_nothing (__main__.LinkTests.test_second_run_writes_nothing) ... FAIL
+test_unreadable_readback_switches_back_off (__main__.LinkTests.test_unreadable_readback_switches_back_off) ... FAIL
+test_invite_script_untouched (__main__.WorkflowTests.test_invite_script_untouched) ... ok
+test_testflight_doc_lists_link_row (__main__.WorkflowTests.test_testflight_doc_lists_link_row) ... FAIL
+test_workflow_file (__main__.WorkflowTests.test_workflow_file) ... FAIL
+
+======================================================================
+FAIL: test_build_missing_in_group_is_not_ready (__main__.LinkTests.test_build_missing_in_group_is_not_ready)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/test_asc_beta_link.py", line 152, in test_build_missing_in_group_is_not_ready
+    self.assertEqual((run.returncode, fake.patches()), (0, []))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (2, []) != (0, [])
+
+First differing element 0:
+2
+0
+
+- (2, [])
+?  ^
+
++ (0, [])
+?  ^
+
+
+======================================================================
+FAIL: test_enable_sends_one_patch_with_limit_50 (__main__.LinkTests.test_enable_sends_one_patch_with_limit_50)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/test_asc_beta_link.py", line 158, in test_enable_sends_one_patch_with_limit_50
+    self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/asc_beta_link.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_forbidden_and_other_errors_are_reported (__main__.LinkTests.test_forbidden_and_other_errors_are_reported)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/test_asc_beta_link.py", line 212, in test_forbidden_and_other_errors_are_reported
+    self.assertEqual(run.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_limit_mismatch_switches_back_off (__main__.LinkTests.test_limit_mismatch_switches_back_off)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/test_asc_beta_link.py", line 176, in test_limit_mismatch_switches_back_off
+    self.assertEqual(run.returncode, 1, run.stdout + run.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/asc_beta_link.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_missing_group_aborts_before_any_write (__main__.LinkTests.test_missing_group_aborts_before_any_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/test_asc_beta_link.py", line 205, in test_missing_group_aborts_before_any_write
+    self.assertEqual(run.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_not_ready_build_is_not_enabled (__main__.LinkTests.test_not_ready_build_is_not_enabled) (state='READY_FOR_BETA_SUBMISSION')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/test_asc_beta_link.py", line 139, in test_not_ready_build_is_not_enabled
+    self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/asc_beta_link.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_not_ready_build_is_not_enabled (__main__.LinkTests.test_not_ready_build_is_not_enabled) (state='PROCESSING')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/test_asc_beta_link.py", line 139, in test_not_ready_build_is_not_enabled
+    self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/asc_beta_link.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_not_ready_build_is_not_enabled (__main__.LinkTests.test_not_ready_build_is_not_enabled) (state='unlesbar')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/test_asc_beta_link.py", line 146, in test_not_ready_build_is_not_enabled
+    self.assertEqual((run.returncode, fake.patches()), (0, []))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (2, []) != (0, [])
+
+First differing element 0:
+2
+0
+
+- (2, [])
+?  ^
+
++ (0, [])
+?  ^
+
+
+======================================================================
+FAIL: test_off_switches_link_off_and_is_idempotent (__main__.LinkTests.test_off_switches_link_off_and_is_idempotent)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/test_asc_beta_link.py", line 194, in test_off_switches_link_off_and_is_idempotent
+    self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/asc_beta_link.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_output_has_only_state_words (__main__.LinkTests.test_output_has_only_state_words)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/test_asc_beta_link.py", line 230, in test_output_has_only_state_words
+    self.assertIn("link zustand=", text)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'link zustand=' not found in "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/asc_beta_link.py': [Errno 2] No such file or directory\n"
+
+======================================================================
+FAIL: test_second_run_writes_nothing (__main__.LinkTests.test_second_run_writes_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/test_asc_beta_link.py", line 169, in test_second_run_writes_nothing
+    self.assertEqual((run.returncode, len(fake.patches())), (0, before))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (2, 0) != (0, 0)
+
+First differing element 0:
+2
+0
+
+- (2, 0)
+?  ^
+
++ (0, 0)
+?  ^
+
+
+======================================================================
+FAIL: test_unreadable_readback_switches_back_off (__main__.LinkTests.test_unreadable_readback_switches_back_off)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/test_asc_beta_link.py", line 185, in test_unreadable_readback_switches_back_off
+    self.assertEqual(run.returncode, 1, run.stdout + run.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/asc_beta_link.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_testflight_doc_lists_link_row (__main__.WorkflowTests.test_testflight_doc_lists_link_row)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/test_asc_beta_link.py", line 257, in test_testflight_doc_lists_link_row
+    self.assertTrue(review and "APPROVED" in review[0] and "41019692346" in review[0], review)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : ['| Beta-Review (Einreichung) | eingereicht 2026-10-28, iOS (mit Watch-App) und macOS, wartet auf Apple | Lauf 40676055317 `einreichung … zustand=eingereicht review=WAITING_FOR_REVIEW` je Plattform, `geschrieben=4`; Gegenprobe 40676188405 `zustand=vorhanden`, `geschrieben=0` |']
+
+======================================================================
+FAIL: test_workflow_file (__main__.WorkflowTests.test_workflow_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/test_asc_beta_link.py", line 239, in test_workflow_file
+    self.assertIn(needle, workflow)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+AssertionError: '- link\n' not found in '# Handlauf (#705): `aktion=probe` (Standard, Schnitt 1) fragt Apples Beta-Seite der App nur lesend ab und druckt die\n# Belegtabelle je Plattform in den Lauf-Log. `aktion=einrichten` (Schnitt 2a) setzt vorher Beta-Beschreibung,\n# Feedback-E-Mail und Review-Kontakt (nur aus Secrets, das Repo ist öffentlich); die Probe danach ist der Beleg.\n# `aktion=zuordnen` (Schnitt 2b-1) legt die externe Gruppe `Tester` an (Link aus) und ordnet ihr je Plattform den\n# neuesten gültigen Build zu; keine Einreichung zum Review. Die Probe danach ist der Beleg.\n# `aktion=einreichen` (Schnitt 2b-2b) ordnet ebenso zu und reicht den Build je Plattform einmal zum Beta-Review ein\n# (nicht rücknehmbar, nur nach Hennings Wort). Die Probe danach ist der Beleg.\n# Läuft nie automatisch.\nname: ASC Beta Probe\n\non:\n  workflow_dispatch:\n    inputs:\n      aktion:\n        description: "probe = nur lesen, einrichten = Texte und Kontakt setzen, zuordnen = Gruppe und Builds, dann lesen, einreichen = Zuordnen und Beta-Review einreichen (nicht rücknehmbar)"\n        type: choice\n        options:\n          - probe\n          - einrichten\n          - zuordnen\n          - einreichen\n        default: probe\n\npermissions:\n  contents: read\n\njobs:\n  setup:\n    name: Set beta description, feedback email and review contact\n    if: ${{ inputs.aktion == \'einrichten\' }}\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    env:\n      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}\n      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}\n      ASC_REVIEW_FIRST_NAME: ${{ secrets.ASC_REVIEW_FIRST_NAME }}\n      ASC_REVIEW_LAST_NAME: ${{ secrets.ASC_REVIEW_LAST_NAME }}\n      ASC_REVIEW_PHONE: ${{ secrets.ASC_REVIEW_PHONE }}\n      ASC_REVIEW_EMAIL: ${{ secrets.ASC_REVIEW_EMAIL }}\n      ASC_PRIVACY_POLICY_URL: ${{ vars.ASC_PRIVACY_POLICY_URL }}\n      ASC_POLL_SECONDS: "5"\n    steps:\n      - uses: actions/checkout@v7\n      - name: Write localization de-DE and review detail where they differ\n        run: |\n          trap \'rm -f "$RUNNER_TEMP/asc_key.p8"\' EXIT\n          umask 077\n          printf \'%s\\n\' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"\n          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_setup.py\n\n  assign:\n    name: Create external group Tester and assign the newest valid builds\n    # setup ist bei `zuordnen` übersprungen; ohne !cancelled() würde assign mit übersprungen\n    needs: setup\n    if: ${{ !cancelled() && inputs.aktion == \'zuordnen\' }}\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    env:\n      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}\n      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}\n      ASC_POLL_SECONDS: "5"\n    steps:\n      - uses: actions/checkout@v7\n      - name: Create the group if missing, assign builds where missing\n        run: |\n          trap \'rm -f "$RUNNER_TEMP/asc_key.p8"\' EXIT\n          umask 077\n          printf \'%s\\n\' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"\n          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_invite.py\n\n  submit:\n    name: Assign the newest valid builds and submit them to Beta App Review\n    needs: setup\n    if: ${{ !cancelled() && inputs.aktion == \'einreichen\' }}\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    env:\n      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}\n      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}\n      ASC_POLL_SECONDS: "5"\n    steps:\n      - uses: actions/checkout@v7\n      - name: Assign where missing, submit where ready and not yet submitted\n        run: |\n          trap \'rm -f "$RUNNER_TEMP/asc_key.p8"\' EXIT\n          umask 077\n          printf \'%s\\n\' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"\n          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_invite.py --einreichen\n\n  probe:\n    name: Probe Apple\'s beta side (${{ matrix.platform }})\n    needs: [setup, assign, submit]\n    if: ${{ !cancelled() && (needs.setup.result == \'success\' || needs.setup.result == \'skipped\') && (needs.assign.result == \'success\' || needs.assign.result == \'skipped\') && (needs.submit.result == \'success\' || needs.submit.result == \'skipped\') }}\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    strategy:\n      fail-fast: false\n      matrix:\n        platform: [IOS, MAC_OS]\n    env:\n      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}\n      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}\n      ASC_PLATFORM: ${{ matrix.platform }}\n      ASC_POLL_SECONDS: "5"\n    steps:\n      - uses: actions/checkout@v7\n      - name: Read groups, localizations, review detail, builds and submissions\n        run: |\n          trap \'rm -f "$RUNNER_TEMP/asc_key.p8"\' EXIT\n          umask 077\n          printf \'%s\\n\' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"\n          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_probe.py\n'
+
+----------------------------------------------------------------------
+Ran 13 tests in 6.282s
+
+FAILED (failures=14)
+test_workflow_file (__main__.WorkflowTests.test_workflow_file) ... FAIL
+
+======================================================================
+FAIL: test_workflow_file (__main__.WorkflowTests.test_workflow_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/test_asc_beta_invite.py", line 427, in test_workflow_file
+    self.assertIn(needle, workflow)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+AssertionError: 'needs: [setup, assign, submit, link]' not found in '# Handlauf (#705): `aktion=probe` (Standard, Schnitt 1) fragt Apples Beta-Seite der App nur lesend ab und druckt die\n# Belegtabelle je Plattform in den Lauf-Log. `aktion=einrichten` (Schnitt 2a) setzt vorher Beta-Beschreibung,\n# Feedback-E-Mail und Review-Kontakt (nur aus Secrets, das Repo ist öffentlich); die Probe danach ist der Beleg.\n# `aktion=zuordnen` (Schnitt 2b-1) legt die externe Gruppe `Tester` an (Link aus) und ordnet ihr je Plattform den\n# neuesten gültigen Build zu; keine Einreichung zum Review. Die Probe danach ist der Beleg.\n# `aktion=einreichen` (Schnitt 2b-2b) ordnet ebenso zu und reicht den Build je Plattform einmal zum Beta-Review ein\n# (nicht rücknehmbar, nur nach Hennings Wort). Die Probe danach ist der Beleg.\n# Läuft nie automatisch.\nname: ASC Beta Probe\n\non:\n  workflow_dispatch:\n    inputs:\n      aktion:\n        description: "probe = nur lesen, einrichten = Texte und Kontakt setzen, zuordnen = Gruppe und Builds, dann lesen, einreichen = Zuordnen und Beta-Review einreichen (nicht rücknehmbar)"\n        type: choice\n        options:\n          - probe\n          - einrichten\n          - zuordnen\n          - einreichen\n        default: probe\n\npermissions:\n  contents: read\n\njobs:\n  setup:\n    name: Set beta description, feedback email and review contact\n    if: ${{ inputs.aktion == \'einrichten\' }}\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    env:\n      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}\n      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}\n      ASC_REVIEW_FIRST_NAME: ${{ secrets.ASC_REVIEW_FIRST_NAME }}\n      ASC_REVIEW_LAST_NAME: ${{ secrets.ASC_REVIEW_LAST_NAME }}\n      ASC_REVIEW_PHONE: ${{ secrets.ASC_REVIEW_PHONE }}\n      ASC_REVIEW_EMAIL: ${{ secrets.ASC_REVIEW_EMAIL }}\n      ASC_PRIVACY_POLICY_URL: ${{ vars.ASC_PRIVACY_POLICY_URL }}\n      ASC_POLL_SECONDS: "5"\n    steps:\n      - uses: actions/checkout@v7\n      - name: Write localization de-DE and review detail where they differ\n        run: |\n          trap \'rm -f "$RUNNER_TEMP/asc_key.p8"\' EXIT\n          umask 077\n          printf \'%s\\n\' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"\n          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_setup.py\n\n  assign:\n    name: Create external group Tester and assign the newest valid builds\n    # setup ist bei `zuordnen` übersprungen; ohne !cancelled() würde assign mit übersprungen\n    needs: setup\n    if: ${{ !cancelled() && inputs.aktion == \'zuordnen\' }}\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    env:\n      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}\n      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}\n      ASC_POLL_SECONDS: "5"\n    steps:\n      - uses: actions/checkout@v7\n      - name: Create the group if missing, assign builds where missing\n        run: |\n          trap \'rm -f "$RUNNER_TEMP/asc_key.p8"\' EXIT\n          umask 077\n          printf \'%s\\n\' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"\n          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_invite.py\n\n  submit:\n    name: Assign the newest valid builds and submit them to Beta App Review\n    needs: setup\n    if: ${{ !cancelled() && inputs.aktion == \'einreichen\' }}\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    env:\n      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}\n      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}\n      ASC_POLL_SECONDS: "5"\n    steps:\n      - uses: actions/checkout@v7\n      - name: Assign where missing, submit where ready and not yet submitted\n        run: |\n          trap \'rm -f "$RUNNER_TEMP/asc_key.p8"\' EXIT\n          umask 077\n          printf \'%s\\n\' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"\n          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_invite.py --einreichen\n\n  probe:\n    name: Probe Apple\'s beta side (${{ matrix.platform }})\n    needs: [setup, assign, submit]\n    if: ${{ !cancelled() && (needs.setup.result == \'success\' || needs.setup.result == \'skipped\') && (needs.assign.result == \'success\' || needs.assign.result == \'skipped\') && (needs.submit.result == \'success\' || needs.submit.result == \'skipped\') }}\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    strategy:\n      fail-fast: false\n      matrix:\n        platform: [IOS, MAC_OS]\n    env:\n      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}\n      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}\n      ASC_PLATFORM: ${{ matrix.platform }}\n      ASC_POLL_SECONDS: "5"\n    steps:\n      - uses: actions/checkout@v7\n      - name: Read groups, localizations, review detail, builds and submissions\n        run: |\n          trap \'rm -f "$RUNNER_TEMP/asc_key.p8"\' EXIT\n          umask 077\n          printf \'%s\\n\' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"\n          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_probe.py\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+FAILED (failures=1)

@@ -1,0 +1,93 @@
+=== python3 -W ignore scripts/test_asc_beta_link.py -v
+test_build_missing_in_group_is_not_ready (__main__.LinkTests.test_build_missing_in_group_is_not_ready) ... ok
+test_enable_sends_one_patch_with_limit_50 (__main__.LinkTests.test_enable_sends_one_patch_with_limit_50) ... ok
+test_failed_switch_back_off_is_loud (__main__.LinkTests.test_failed_switch_back_off_is_loud) ... ok
+test_forbidden_and_other_errors_are_reported (__main__.LinkTests.test_forbidden_and_other_errors_are_reported) ... ok
+test_limit_mismatch_switches_back_off (__main__.LinkTests.test_limit_mismatch_switches_back_off) ... ok
+test_malformed_readback_after_failed_enable_switches_back_off (__main__.LinkTests.test_malformed_readback_after_failed_enable_switches_back_off) ... ok
+test_malformed_readback_switches_back_off (__main__.LinkTests.test_malformed_readback_switches_back_off) ... ok
+test_missing_group_aborts_before_any_write (__main__.LinkTests.test_missing_group_aborts_before_any_write) ... ok
+test_not_ready_build_is_not_enabled (__main__.LinkTests.test_not_ready_build_is_not_enabled) ... ok
+test_off_switches_link_off_and_is_idempotent (__main__.LinkTests.test_off_switches_link_off_and_is_idempotent) ... ok
+test_off_with_odd_enabled_value_still_patches (__main__.LinkTests.test_off_with_odd_enabled_value_still_patches) ... ok
+test_output_has_only_state_words (__main__.LinkTests.test_output_has_only_state_words) ... ok
+test_second_run_writes_nothing (__main__.LinkTests.test_second_run_writes_nothing) ... ok
+test_server_error_on_enable_still_switches_off (__main__.LinkTests.test_server_error_on_enable_still_switches_off) ... ok
+test_unknown_argument_never_enables (__main__.LinkTests.test_unknown_argument_never_enables) ... ok
+test_unreadable_readback_switches_back_off (__main__.LinkTests.test_unreadable_readback_switches_back_off) ... ok
+test_invite_script_untouched (__main__.WorkflowTests.test_invite_script_untouched) ... ok
+test_testflight_doc_lists_link_row (__main__.WorkflowTests.test_testflight_doc_lists_link_row) ... ok
+test_workflow_file (__main__.WorkflowTests.test_workflow_file) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 18.567s
+
+OK
+exit=0
+
+=== python3 -W ignore scripts/test_asc_beta_invite.py -v
+test_assignment_happens_before_submission (__main__.InviteTests.test_assignment_happens_before_submission) ... ok
+test_conflict_is_a_state_not_a_crash (__main__.InviteTests.test_conflict_is_a_state_not_a_crash) ... ok
+test_duplicate_external_groups_abort_before_any_write (__main__.InviteTests.test_duplicate_external_groups_abort_before_any_write) ... ok
+test_existing_group_only_assigns_missing_build (__main__.InviteTests.test_existing_group_only_assigns_missing_build) ... ok
+test_existing_submission_in_any_state_is_not_repeated (__main__.InviteTests.test_existing_submission_in_any_state_is_not_repeated) ... ok
+test_first_run_creates_group_and_assigns_both_platforms (__main__.InviteTests.test_first_run_creates_group_and_assigns_both_platforms) ... ok
+test_forbidden_submission_uses_existing_text (__main__.InviteTests.test_forbidden_submission_uses_existing_text) ... ok
+test_forbidden_write_is_reported_clearly (__main__.InviteTests.test_forbidden_write_is_reported_clearly) ... ok
+test_message_masks_query_values_only (__main__.InviteTests.test_message_masks_query_values_only) ... ok
+test_missing_contract_names_the_account_holder (__main__.InviteTests.test_missing_contract_names_the_account_holder) ... ok
+test_never_submits_and_never_enables_link (__main__.InviteTests.test_never_submits_and_never_enables_link) ... ok
+test_newest_valid_build_is_chosen_per_platform (__main__.InviteTests.test_newest_valid_build_is_chosen_per_platform) ... ok
+test_not_ready_build_is_not_submitted (__main__.InviteTests.test_not_ready_build_is_not_submitted) ... ok
+test_one_platform_failing_does_not_hide_the_other (__main__.InviteTests.test_one_platform_failing_does_not_hide_the_other) ... ok
+test_one_platform_failing_does_not_hide_the_other_submission (__main__.InviteTests.test_one_platform_failing_does_not_hide_the_other_submission) ... ok
+test_output_has_only_state_words (__main__.InviteTests.test_output_has_only_state_words) ... ok
+test_platform_without_valid_build_is_reported (__main__.InviteTests.test_platform_without_valid_build_is_reported) ... ok
+test_platform_without_valid_build_is_reported_not_failed (__main__.InviteTests.test_platform_without_valid_build_is_reported_not_failed) ... ok
+test_retry_lines_carry_no_ids (__main__.InviteTests.test_retry_lines_carry_no_ids) ... ok
+test_second_run_sends_no_submission (__main__.InviteTests.test_second_run_sends_no_submission) ... ok
+test_second_run_sends_no_write (__main__.InviteTests.test_second_run_sends_no_write) ... ok
+test_submission_output_has_only_state_words (__main__.InviteTests.test_submission_output_has_only_state_words) ... ok
+test_unexpected_submission_body_is_still_reported (__main__.InviteTests.test_unexpected_submission_body_is_still_reported) ... ok
+test_unreadable_beta_detail_keeps_the_count (__main__.InviteTests.test_unreadable_beta_detail_keeps_the_count) ... ok
+test_with_flag_submits_each_platform_once (__main__.InviteTests.test_with_flag_submits_each_platform_once) ... ok
+test_without_flag_never_submits (__main__.InviteTests.test_without_flag_never_submits) ... ok
+test_workflow_file (__main__.WorkflowTests.test_workflow_file) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 25.484s
+
+OK
+exit=0
+
+=== jede scripts/test_*.py einzeln
+ok   scripts/test_abnahme_liste.py
+ok   scripts/test_app_icon_package.py
+ok   scripts/test_asc_beta_invite.py
+ok   scripts/test_asc_beta_link.py
+ok   scripts/test_asc_beta_probe.py
+ok   scripts/test_asc_beta_setup.py
+ok   scripts/test_asc_cleanup_certs.py
+ok   scripts/test_asc_wait_build.py
+ok   scripts/test_asc_what_to_test.py
+ok   scripts/test_board.py
+ok   scripts/test_check_cloudkit_production.py
+ok   scripts/test_ci_xcode27.py
+ok   scripts/test_cloudkit_schema.py
+ok   scripts/test_compare_reports.py
+ok   scripts/test_entitlements_sync.py
+ok   scripts/test_evidence_config.py
+ok   scripts/test_guardrail_corpus.py
+ok   scripts/test_info_plist_sync.py
+ok   scripts/test_infoplist_languages.py
+ok   scripts/test_latency_summary.py
+ok   scripts/test_mac_ci_entitlements.py
+ok   scripts/test_measurement_status.py
+ok   scripts/test_next_ticket_hook.py
+ok   scripts/test_next_ticket.py
+ok   scripts/test_real_model_result.py
+ok   scripts/test_sim_lock.py
+ok   scripts/test_sim_proof.py
+ok   scripts/test_sim_run_xcodebuild.py
+ok   scripts/test_siri_phrases.py
+ok   scripts/test_tags_wording.py

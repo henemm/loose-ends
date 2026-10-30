@@ -1,0 +1,60 @@
+test_all_404_is_findings_exit_0 (__main__.ProbeTests.test_all_404_is_findings_exit_0) ... ok
+test_app_not_found_exits_1 (__main__.ProbeTests.test_app_not_found_exits_1) ... ok
+test_both_platforms (__main__.ProbeTests.test_both_platforms) ... ok
+test_broken_answer_on_groups_is_a_finding (__main__.ProbeTests.test_broken_answer_on_groups_is_a_finding) ... ok
+test_empty_description_is_reported_as_empty (__main__.ProbeTests.test_empty_description_is_reported_as_empty) ... ok
+test_everything_present (__main__.ProbeTests.test_everything_present) ... FAIL
+test_forbidden_on_groups_is_a_finding (__main__.ProbeTests.test_forbidden_on_groups_is_a_finding) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:489: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 59007)>
+  self._cur.set_raw(*self.policy.header_source_parse(lastvalue))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:489: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 59013)>
+  self._cur.set_raw(*self.policy.header_source_parse(lastvalue))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:489: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 59015)>
+  self._cur.set_raw(*self.policy.header_source_parse(lastvalue))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:489: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 59024)>
+  self._cur.set_raw(*self.policy.header_source_parse(lastvalue))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:489: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 59033)>
+  self._cur.set_raw(*self.policy.header_source_parse(lastvalue))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:489: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 59047)>
+  self._cur.set_raw(*self.policy.header_source_parse(lastvalue))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:489: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 59056)>
+  self._cur.set_raw(*self.policy.header_source_parse(lastvalue))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_link_off_prints_dash_and_never_the_link (__main__.ProbeTests.test_link_off_prints_dash_and_never_the_link) ... ok
+test_missing_environment_exits_1 (__main__.ProbeTests.test_missing_environment_exits_1) ... ok
+test_no_group (__main__.ProbeTests.test_no_group) ... ok
+test_nothing_answers_exits_1 (__main__.ProbeTests.test_nothing_answers_exits_1) ... ok
+test_only_get_requests (__main__.ProbeTests.test_only_get_requests) ... ok
+test_output_has_no_contact_values_and_no_key (__main__.ProbeTests.test_output_has_no_contact_values_and_no_key) ... FAIL
+test_workflow_file (__main__.WorkflowTests.test_workflow_file) ... ok
+
+======================================================================
+FAIL: test_everything_present (__main__.ProbeTests.test_everything_present)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/rippling-inventing-snowflake/scripts/test_asc_beta_probe.py", line 151, in test_everything_present
+    self.assertTrue(external and "link=an" in external[0] and "url=gesetzt" in external[0]
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    and "feedback=an" in external[0], groups)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : ['gruppe name=Familie intern=ja link=aus url=- feedback=an', 'gruppe name=Einladung intern=nein link=an url=https://testflight.apple.com/join/ABCDEF feedback=an']
+
+======================================================================
+FAIL: test_output_has_no_contact_values_and_no_key (__main__.ProbeTests.test_output_has_no_contact_values_and_no_key)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/rippling-inventing-snowflake/scripts/test_asc_beta_probe.py", line 233, in test_output_has_no_contact_values_and_no_key
+    self.assertNotIn(secret, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+AssertionError: 'https://testflight.apple.com/join/ABCDEF' unexpectedly found in 'zugriff abfrage=betaGroups http=200\ngruppe name=Familie intern=ja link=aus url=- feedback=an\ngruppe name=Einladung intern=nein link=an url=https://testflight.apple.com/join/ABCDEF feedback=an\nzugriff abfrage=betaAppReviewDetail http=200\nreviewdetail attribute=contactFirstName,contactLastName,contactPhone,contactEmail,demoAccountName,demoAccountRequired contactFirstName=gesetzt contactLastName=gesetzt contactPhone=gesetzt contactEmail=gesetzt demoAccountName=leer demoAccountRequired=aus\nzugriff abfrage=betaAppLocalizations http=200\nlokalisierung locale=de-DE beschreibung=gesetzt feedbackEmail=gesetzt datenschutzUrl=gesetzt\nzugriff abfrage=builds http=200\nzugriff abfrage=buildBetaDetail build=42 http=200\nzugriff abfrage=betaAppReviewSubmission build=42 http=200\nbuild nummer=42 plattform=IOS processingState=VALID intern=IN_BETA_TESTING extern=READY_FOR_BETA_SUBMISSION einreichung=keine\nzugriff abfrage=betaAppReviewSubmissions build=42 http=200\neinreichung build=42 zustand=WAITING_FOR_REVIEW\nzusammenfassung antworten=7 von=7 befunde=0\n'
+
+----------------------------------------------------------------------
+Ran 14 tests in 9.405s
+
+FAILED (failures=2)

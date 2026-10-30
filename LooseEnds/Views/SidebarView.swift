@@ -130,7 +130,7 @@ struct SidebarView: View {
                     InboxDrawerView(tasks: tasks, open: { selection = $0 }, selection: selection, endRequest: endRequest)
                         .listRowSeparator(.hidden)
                         .startRow(metrics)
-                        .paperRow()
+                        .sidebarRow()
                     NowBlock(tasks: tasks) { previewRow($0) } knaeuelRow: { task, head in knaeuelRow(task, head) }
                     // Same section: a second one put the list's section gap above "Contents" (#463).
                     // iPad: the sidebar marks the open list (#334); iPhone: after Back selection is nil.
@@ -171,7 +171,7 @@ struct SidebarView: View {
                         }
                         Button("New project", systemImage: "plus") { catalog.begin(NameEdit(target: .newProject)) }
                             .accessibilityIdentifier("newProjectButton")
-                            .paperRow()
+                            .sidebarRow()
                     }
                 } header: {
                     foldHeader("Projects", count: projects.count, isOpen: $showsProjects, id: "projectsToggle")
@@ -189,7 +189,7 @@ struct SidebarView: View {
                         }
                         Button("New tag", systemImage: "plus") { catalog.begin(NameEdit(target: .newContext)) }
                             .accessibilityIdentifier("newContextButton")
-                            .paperRow()
+                            .sidebarRow()
                     }
                 } header: {
                     foldHeader("Tags", count: contexts.count, isOpen: $showsContexts, id: "contextsToggle")
@@ -272,7 +272,7 @@ struct SidebarView: View {
         .badge(count)
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier(id)
-        .paperRow()
+        .sidebarRow()
     }
 
     // MARK: - Start (iPhone)
@@ -302,7 +302,7 @@ struct SidebarView: View {
                 .swipeActions(edge: .leading, allowsFullSwipe: true) { actions.leadingActions(task) }
                 .swipeActions(edge: .trailing, allowsFullSwipe: true) { actions.trailingActions(task) }
                 .contextMenu { actions.menu(task) }
-                .paperRow()
+                .sidebarRow()
         }
     }
 
@@ -323,7 +323,7 @@ struct SidebarView: View {
                 .swipeActions(edge: .leading, allowsFullSwipe: true) { actions.leadingActions(task) }
                 .swipeActions(edge: .trailing, allowsFullSwipe: true) { actions.trailingActions(task) }
                 .contextMenu { actions.menu(task) }
-                .paperRow()
+                .sidebarRow()
         }
     }
 }

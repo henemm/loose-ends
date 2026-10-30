@@ -1,0 +1,20 @@
+# Simulator-Beleg
+erzeugt: 2026-10-30T14:02:29+0100
+befehl: scripts/sim.sh test-proof PaperGroundTests
+workflow: fix-746-ipad-weisse-flaechen
+head: c44eaaed328ba42e9f44fe59b8930a70946405ae
+basis: 556bb5badb6ce9bb1421dd9da5f55fbfee9e2c37 (merge-base origin/main HEAD)
+testklasse: PaperGroundTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 2 gesamt, 2 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793365287.211  ende: 1793365348.612
+geraet: iPad Pro 13-inch (M5), iOS 27.0
+summary: docs/artifacts/fix-746-ipad-weisse-flaechen/simulator-run/summary.json  sha256:0c973a1f5f03484c912187d2cadfa6f4f05ed6ca730c8c9b1b1dbdeef2206fd3
+xcresult: docs/artifacts/fix-746-ipad-weisse-flaechen/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-746-ipad-weisse-flaechen/simulator-run/*.png (2 Stück)
+
+## Geprüfte Dateien
+- sha256:d1320da082d8d5a9c1e806599dd82258c2af16c75ce7d3695adc9acba89048b0  LooseEnds/Views/Paper.swift
+- sha256:afa08556e084f543c3624a27a77dfef78ec6817faca3ec38770c57167f0d3dbc  LooseEnds/Views/SidebarView.swift
+- sha256:9afb5e5d7365a4420d2271f52d34c0026290509b882e2042caaaa72e24ddd6ad  LooseEndsUITests/PaperGroundTests.swift

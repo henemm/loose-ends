@@ -5,6 +5,9 @@
 # neuesten gültigen Build zu; keine Einreichung zum Review. Die Probe danach ist der Beleg.
 # `aktion=einreichen` (Schnitt 2b-2b) ordnet ebenso zu und reicht den Build je Plattform einmal zum Beta-Review ein
 # (nicht rücknehmbar, nur nach Hennings Wort). Die Probe danach ist der Beleg.
+# `aktion=link` (Schnitt 2b-2c) schaltet den öffentlichen Link der Gruppe `Tester` mit Limit 50 ein, nur wenn je Plattform
+# der neueste gültige Build in der Gruppe liegt und freigegeben ist (nur nach Hennings Wort); `aktion=link-aus` schaltet
+# ihn wieder aus. Der Link steht nie im Log. Die Probe danach ist der Beleg.
 # Läuft nie automatisch.
 name: ASC Beta Probe
 
@@ -12,13 +15,15 @@ on:
   workflow_dispatch:
     inputs:
       aktion:
-        description: "probe = nur lesen, einrichten = Texte und Kontakt setzen, zuordnen = Gruppe und Builds, dann lesen, einreichen = Zuordnen und Beta-Review einreichen (nicht rücknehmbar)"
+        description: "probe = nur lesen, einrichten = Texte und Kontakt setzen, zuordnen = Gruppe und Builds, dann lesen, einreichen = Zuordnen und Beta-Review einreichen (nicht rücknehmbar), link = öffentlichen Link einschalten (Limit 50, nur nach Hennings Wort), link-aus = wieder ausschalten"
         type: choice
         options:
           - probe
           - einrichten
           - zuordnen
           - einreichen
+          - link
+          - link-aus
         default: probe
 
 permissions:
@@ -87,10 +92,37 @@ jobs:
           printf '%s\n' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"
           ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_invite.py --einreichen
 
+  link:
+    name: Switch the public link of group Tester on (limit 50) or off
+    needs: setup
+    if: ${{ !cancelled() && (inputs.aktion == 'link' || inputs.aktion == 'link-aus') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_POLL_SECONDS: "5"
+    steps:
+      - uses: actions/checkout@v7
+      - name: Switch the link on where every platform is approved
+        if: ${{ inputs.aktion == 'link' }}
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT
+          umask 077
+          printf '%s\n' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"
+          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_link.py
+      - name: Switch the link off
+        if: ${{ inputs.aktion == 'link-aus' }}
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT
+          umask 077
+          printf '%s\n' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"
+          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_beta_link.py --aus
+
   probe:
     name: Probe Apple's beta side (${{ matrix.platform }})
-    needs: [setup, assign, submit]
-    if: ${{ !cancelled() && (needs.setup.result == 'success' || needs.setup.result == 'skipped') && (needs.assign.result == 'success' || needs.assign.result == 'skipped') && (needs.submit.result == 'success' || needs.submit.result == 'skipped') }}
+    needs: [setup, assign, submit, link]
+    if: ${{ !cancelled() && (needs.setup.result == 'success' || needs.setup.result == 'skipped') && (needs.assign.result == 'success' || needs.assign.result == 'skipped') && (needs.submit.result == 'success' || needs.submit.result == 'skipped') && (needs.link.result == 'success' || needs.link.result == 'skipped') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
