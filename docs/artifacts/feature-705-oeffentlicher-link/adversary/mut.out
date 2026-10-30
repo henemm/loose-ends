@@ -1,0 +1,6 @@
+M1 readback except Fatal -> ['Ran 19 tests in 18.378s', 'OK'] []
+M2 read_group ohne Uebersetzung -> ['Ran 19 tests in 18.265s', 'OK'] []
+M3 confirmed ohne dict-Pruefung -> ['Ran 19 tests in 18.351s', 'OK'] []
+M4 undo except Fatal -> ['Ran 19 tests in 18.142s', 'OK'] []
+M5 Einschalt-PATCH except Fatal -> ['Ran 19 tests in 18.259s', 'OK'] []
+M6 attributes nicht dict durchgereicht -> ['Ran 19 tests in 18.858s', 'OK'] []

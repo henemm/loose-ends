@@ -1,0 +1,61 @@
+patches before signal [{'publicLinkEnabled': True, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}]
+EXIT -2
+OUT 
+ERR Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/asc_beta_link.py", line 160, in <module>
+    sys.exit(main(sys.argv))
+             ~~~~^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/asc_beta_link.py", line 149, in main
+    line, ok = enable(config, app_id, group_id, attributes, sent)
+               ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/asc_beta_link.py", line 124, in enable
+    return switch_on(config, app_id, group_id, sent)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/asc_beta_link.py", line 98, in switch_on
+    _, attributes = read_group(config, app_id)
+                    ~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/asc_beta_link.py", line 46, in read_group
+    groups = get_data(config, f"/v1/apps/{app_id}/betaGroups")
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/asc_what_to_test.py", line 48, in get_data
+    body = get_json(config, path)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/breezy-yawning-panda/scripts/asc_wait_build.py", line 68, in get_json
+    with urllib.request.urlopen(request, timeout=30) as response:
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/urllib/request.py", line 187, in urlopen
+    return opener.open(url, data, timeout)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/urllib/request.py", line 489, in open
+    response = self._open(req, data)
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/urllib/request.py", line 506, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+                              '_open', req)
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/urllib/request.py", line 466, in _call_chain
+    result = func(*args)
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/urllib/request.py", line 1364, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/urllib/request.py", line 1339, in do_open
+    r = h.getresponse()
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/http/client.py", line 1490, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/http/client.py", line 350, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/http/client.py", line 306, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/socket.py", line 738, in readinto
+    return self._sock.recv_into(b)
+           ~~~~~~~~~~~~~~~~~~~~^^^
+KeyboardInterrupt
+
+PATCHES [{'publicLinkEnabled': True, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': True, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}
+
+===== on-wrong-limit-notready
+EXIT 0
+OUT link zustand=nicht-bereit plattform=IOS extern=IN_BETA_TESTING
+link zustand=nicht-bereit plattform=MAC_OS extern=IN_BETA_TESTING
+zusammenfassung geschrieben=0
+
+ERR 
+PATCHES [] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': True, 'publicLinkLimitEnabled': False, 'publicLinkLimit': None}
