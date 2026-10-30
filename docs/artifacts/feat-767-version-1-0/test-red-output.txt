@@ -1,0 +1,56 @@
+test_empty_version_aborts (__main__.MarketingVersionTests.test_empty_version_aborts) ... FAIL
+test_marketing_version_is_1_0 (__main__.MarketingVersionTests.test_marketing_version_is_1_0) ... FAIL
+test_no_version_literal_in_workflow (__main__.MarketingVersionTests.test_no_version_literal_in_workflow) ... FAIL
+test_workflow_reads_version_from_project_yml (__main__.MarketingVersionTests.test_workflow_reads_version_from_project_yml) ... FAIL
+
+======================================================================
+FAIL: test_empty_version_aborts (__main__.MarketingVersionTests.test_empty_version_aborts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/mellow-waddling-flamingo/scripts/test_marketing_version.py", line 63, in test_empty_version_aborts
+    self.assertIsNotNone(block, "keine Auslesezeile in testflight.yml")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : keine Auslesezeile in testflight.yml
+
+======================================================================
+FAIL: test_marketing_version_is_1_0 (__main__.MarketingVersionTests.test_marketing_version_is_1_0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/mellow-waddling-flamingo/scripts/test_marketing_version.py", line 40, in test_marketing_version_is_1_0
+    self.assertEqual(values[0].strip(), '"1.0"')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '"0.1.0"' != '"1.0"'
+- "0.1.0"
+?  --
++ "1.0"
+
+
+======================================================================
+FAIL: test_no_version_literal_in_workflow (__main__.MarketingVersionTests.test_no_version_literal_in_workflow)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/mellow-waddling-flamingo/scripts/test_marketing_version.py", line 44, in test_no_version_literal_in_workflow
+    self.assertEqual(literals, [], "testflight.yml trägt die Version noch fest eingetragen")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['MARKETING="0.1.0"', 'MARKETING="0.1.0"'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'MARKETING="0.1.0"'
+
+- ['MARKETING="0.1.0"', 'MARKETING="0.1.0"']
++ [] : testflight.yml trägt die Version noch fest eingetragen
+
+======================================================================
+FAIL: test_workflow_reads_version_from_project_yml (__main__.MarketingVersionTests.test_workflow_reads_version_from_project_yml)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/mellow-waddling-flamingo/scripts/test_marketing_version.py", line 48, in test_workflow_reads_version_from_project_yml
+    self.assertEqual(len(lines), 2, "beide Archivprüfungen (iOS, macOS) müssen die Version aus project.yml lesen")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : beide Archivprüfungen (iOS, macOS) müssen die Version aus project.yml lesen
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.008s
+
+FAILED (failures=4)
