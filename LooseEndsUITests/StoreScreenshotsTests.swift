@@ -85,6 +85,37 @@ final class StoreScreenshotsTests: XCTestCase {
         XCTAssertTrue(field.waitForNonExistence(timeout: 5), "Capture sheet did not close")
     }
 
+    /// The detail as after sorting (F004, Henning 2026-10-30): duration and a tag set by hand, then "Passt".
+    /// No model, no stub; opened from "Fällig", the detail shows no review note.
+    @MainActor
+    private func fillDetail(in app: XCUIApplication) {
+        let duration = element("field_duration", in: app)
+        XCTAssertTrue(duration.waitForExistence(timeout: 5), "Detail offers no duration")
+        duration.tap()
+        let thirty = app.buttons.matching(NSPredicate(format: "label == %@", "30 Min.")).firstMatch
+        XCTAssertTrue(thirty.waitForExistence(timeout: 5), "Duration editor offers no 30 Min.")
+        thirty.tap()   // a single choice closes the editor by itself (#482)
+
+        let tags = element("field_contexts", in: app)
+        XCTAssertTrue(tags.waitForExistence(timeout: 5), "Detail offers no tags")
+        tags.tap()
+        let computer = app.buttons.matching(NSPredicate(format: "label == %@", "Computer")).firstMatch
+        XCTAssertTrue(computer.waitForExistence(timeout: 5), "Tags editor offers no Computer")
+        if !computer.isSelected { computer.tap() }
+        let back = app.navigationBars.buttons
+            .matching(NSPredicate(format: "identifier == 'BackButton' OR label IN {'Zurück', 'Back'}")).firstMatch
+        XCTAssertTrue(back.waitForExistence(timeout: 5), "Tags editor has no back button")
+        back.tap()
+
+        // "Passt" vouches for the title; the task stays in "Jetzt", so the detail stays open.
+        let confirm = element("detailConfirmButton", in: app)
+        if confirm.waitForExistence(timeout: 3) { confirm.tap() }
+        XCTAssertTrue(confirm.waitForNonExistence(timeout: 5), "Passt stays in the bar")
+        XCTAssertFalse(element("reviewNote", in: app).exists, "The detail shows the review note")
+        XCTAssertTrue(tags.waitForExistence(timeout: 5) && tags.label.contains("Computer"), "Tag not set: \(tags.label)")
+        XCTAssertTrue(duration.label.contains("30"), "Duration not set: \(duration.label)")
+    }
+
     /// The iPad's writing line keeps its focus after Return. Its keyboard sometimes stands over the page and
     /// sometimes waits below the screen (then it exists, but its frame starts under the window). Only a keyboard
     /// on the screen is put away, with its own key; a picture with a keyboard fails the test.
@@ -156,11 +187,19 @@ final class StoreScreenshotsTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(taskRows.count, 2, "Neu should show at least two tasks")
         shot("03-neu")
 
+        // From "Fällig", not from "Neu": only the "Neu" list opens a detail for review, with the grey
+        // "Noch nicht sortiert" note (TaskListView `reviewing: kind == .new`, F004). A "Jetzt" row of the
+        // iPad's sidebar would stay selected in the picture, white on a frame.
+        backToStart(in: app)
+        let dueRow = element("viewRow_due", in: app)
+        XCTAssertTrue(dueRow.waitForExistence(timeout: 5), "Start screen shows no Fällig")
+        dueRow.tap()
         let taxRow = rows("taskRow_", containing: "Steuerbescheid", in: app).firstMatch
-        XCTAssertTrue(taxRow.waitForExistence(timeout: 10), "Neu shows no Steuerbescheid")
+        XCTAssertTrue(taxRow.waitForExistence(timeout: 10), "Fällig shows no Steuerbescheid")
         taxRow.tap()
         XCTAssertTrue(element("detailRawTextMarker", in: app).waitForExistence(timeout: 5), "Detail did not open")
         XCTAssertTrue(element("field_dueDate", in: app).waitForExistence(timeout: 5), "Detail shows no due date")
+        fillDetail(in: app)
         shot("04-detail")
         backToStart(in: app)
 

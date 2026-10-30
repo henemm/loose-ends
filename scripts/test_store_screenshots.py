@@ -84,6 +84,26 @@ class FinishDeviceTests(NeedsModule):
         self.assertFalse(old.exists())
 
 
+    def test_failed_check_keeps_previous_folder(self):
+        old = self.out / "iphone" / "01-start.png"
+        old.parent.mkdir(parents=True)
+        old.write_bytes(b"alt")
+        with self.assertRaises(ss.StoreError):
+            ss.finish_device("iphone", self.attachments(), self.out, self.info((1179, 2556)), self.keep)
+        self.assertEqual(old.read_bytes(), b"alt")
+        self.assertEqual([p.name for p in self.out.iterdir()], ["iphone"])
+
+
+class ReadExportTests(NeedsModule):
+    def test_duplicate_attachment_aborts(self):
+        items = [{"suggestedHumanReadableName": f"store-01-start_{n}_X.png", "exportedFileName": f"{n}.png"}
+                 for n in (0, 1)]
+        (self.root / "manifest.json").write_text(json.dumps([{"attachments": items}]))
+        with self.assertRaises(ss.StoreError) as ctx:
+            ss.read_export(self.root)
+        self.assertIn("store-01-start", str(ctx.exception))
+
+
 class ManifestTests(NeedsModule):
     def test_manifest_lists_both_sizes(self):
         manifest = ss.build_manifest({"iphone": ORDER, "ipad": ORDER}, commit="abc1234", created="2026-10-30T12:00:00Z")

@@ -1,6 +1,6 @@
 # Adversary Dialog — feat-742-store-screenshots
 Spec: docs/specs/feat-742-schnitt-1-iphone-ipad.md
-Datum: 2026-10-30 10:15
+Datum: 2026-10-30 10:29
 
 ## Checkliste
 - [x] **AC-1:** `./scripts/sim.sh store-screenshots` erzeugt je Gerät fünf PNG-Dateien `01-start` … `05-erledigt` unter `docs/store/screenshots/de/iphone/` und `…/ipad/`. Belegt durch Lauf und Dateiliste.
@@ -15,106 +15,85 @@ Datum: 2026-10-30 10:15
 ## Dialog
 
 ### Runde 1
-**Adversary:** Tests: `python3 -m unittest scripts/test_store_screenshots.py` -> 8 Tests, OK (adversary-test-output.txt). sips je Datei: iPhone alle 1206x2622, iPad alle 2064x2752, hasAlpha überall no. Manifest zwei Geräte mit korrekten Pixelmaßen und 01..05 in Reihenfolge, README nennt Zuordnung. Alle zehn Bilder geöffnet. iPhone: 01 Startseite "Heute zwei Dinge fällig", Jetzt 2 mit Steuerbescheid und Anna (Telefon); 02 Erfassen-Sheet mit Text "Fahrrad zur Inspektion bringen" und Tastatur (gewollt, iPhone); 03 Neu mit vier Aufgaben; 04 Detail Steuerbescheid mit Fällig "Heute"; 05 Erledigt mit "Blumen gießen". Alle deutsch, hell, 09:41, Akku voll, WLAN/Balken, keine Rahmen/Bildunterzeilen. iPad: 01 bis 05 ohne Tastatur, Statusleiste 09:41, untere Bildhälfte leer (Inhalt nur oben), 02 zeigt getippte Zeile statt Fenster (bekannte Abweichung), ein kleiner grauer Bogen unten rechts auf allen iPad-Bildern (vermutlich Fenstergriff des Simulators), weiße Flächenreste im Detailbereich von 01/02/05. Persönliche Daten: keine; nur Testsätze, Datum "Freitag 30. Okt." ist das Tagesdatum. Belege: store-proof-iphone.txt (Passed, 1/1, head e9d8869, 10:04) und simulator-run.txt = iPad (Passed, 10:06); Testdatei-Hash im Beleg gleich der Arbeitskopie, Test (09:58) und sim.sh (09:58) sind älter als die Läufe, Bilder (10:06) jünger: Bilder stammen vom aktuellen Stand. Keine Gerätezugriffe: Suche nach devicectl/device in store_screenshots.py und StoreScreenshotsTests.swift ohne Treffer; der sim.sh-Befehl nutzt nur $SIMCTL auf Simulatoren. simctl status_bar list beider Simulatoren: keine Überschreibung mehr. test-proof löscht vorher den alten Beleg und das xcresult (sim.sh:649), also keine veralteten Exporte.
-**Implementierer:** Abweichungen sind bekannt und vom PO freigegeben (discharging statt charged, iPad-02 ohne Fenster, Perle fehlt, Umfang über 250 LoC).
+**Adversary:** Ich behaupte, die Lieferung ist kaputt. Gepruefte Punkte mit Belegen:
+- AC-1/AC-2: `sips` je Datei: iPhone 01-05 je 1206x2622 hasAlpha no, iPad 01-05 je 2064x2752 hasAlpha no. Je fuenf Dateien pro Geraet, kein Zwischenordner `.iphone-neu`/`.ipad-neu` (ls -a zeigt nur ipad, iphone, manifest.json, README.md). Code reference: scripts/store_screenshots.py:48 (Staging, Pruefung Zeile 59-63, Austausch Zeile 67-69). `python3 -m unittest scripts/test_store_screenshots.py` -> "Ran 10 tests ... OK" (adversary-test-output.txt). Code reference: scripts/test_store_screenshots.py:1
+- AC-3/AC-4/AC-5 (alle zehn PNG geoeffnet): iPhone 01 deutsch, hell, 09:41, voller Akku, "Heute zwei Dinge faellig", Jetzt 2 Zeilen, erfundene Saetze, keine Tastatur; 02 Erfassen-Sheet mit Tastatur (gewollt) und getipptem Satz; 03 Neu mit vier Aufgaben; 04 Detail Steuerbescheid mit Faellig Heute, Dauer 30 Min., Etiketten Computer, KEINE Karte "Noch nicht sortiert"; 05 Erledigt mit "Blumen giessen". iPad 01 und 02 ohne Tastatur (02 zeigt die getippte Zeile statt Fenster, freigegebene Abweichung), 03 Neu mit vier Aufgaben, 04 Detail mit Faellig/30 Min./Computer, keine Karte, 05 Erledigt mit einer Aufgabe. Keine persoenlichen Daten, kein Rahmen, keine Bildunterzeile. Kosmetisch: iPad 01/05 zeigen einen weissen Panel-Streifen (App-Verhalten, kein Spec-Verstoss).
+- AC-6: manifest.json nennt beide Groessen, Pixelmass und Dateien 01..05; README erklaert die Zuordnung. Code reference: scripts/store_screenshots.py:73
+- AC-7: Statusleiste per trap auch bei Fehler/Abbruch zurueckgesetzt, Altbilder werden durch Austausch des ganzen Ordners entfernt. Code reference: scripts/sim.sh:1141 (trap Zeile 1143-1144)
+- AC-8: Belege store-proof-iphone.txt (10:26:34) und store-proof-ipad.txt/simulator-run.txt (10:28:43): Passed, 1 bestanden, 0 uebersprungen; Hash der Testdatei im Beleg 9e3405... = shasum der Arbeitskopie; mtime StoreScreenshotsTests.swift 10:24:42, store_screenshots.py 10:17:18, sim.sh 09:58:47, alle aelter als beide Belege; Bilder 10:28 aus demselben Lauf. Code reference: LooseEndsUITests/StoreScreenshotsTests.swift:91 (fillDetail prueft Computer in Zeile 115, 30 in 116, keine reviewNote in 114).
+- Kein Geraetezugriff: grep devicectl in sim.sh trifft nur alte Geraetebefehle (Zeilen 799-1088), nicht den neuen Block 1137-1163. CLAUDE.md nennt den Befehl. Code reference: CLAUDE.md:64
+
+Finding:
+  ID: F003
+  Severity: LOW
+  Category: edge_case
+  Code reference: scripts/store_screenshots.py:124
+  Description: main() ersetzt den iPhone-Ordner, bevor der iPad-Export geprueft ist. Scheitert iPad danach, liegen neue iPhone-Bilder neben altem iPad-Ordner und altem manifest.json (Commit-Feld veraltet).
+  Spec requirement: AC-7 — zweiter Lauf laesst keine Altbilder zurueck
+  Conflict: Teilzustand nach Abbruch; Nutzer sieht Fehlermeldung, Exit 1, kein stiller Erfolg.
+  Remediation: Beide Staging-Ordner pruefen, dann beide tauschen. Nicht blockierend.
+
+Finding:
+  ID: F004
+  Severity: LOW
+  Category: edge_case
+  Code reference: LooseEndsUITests/StoreScreenshotsTests.swift:113
+  Description: waitForNonExistence(confirm) besteht auch, wenn "Passt" nie erschien; die Pruefung auf Dauer/Etikett (Zeile 115-116) und fehlende reviewNote (114) faengt das Ergebnis aber ab.
+  Spec requirement: AC-5 — Detail mit Faelligkeit
+  Conflict: schwache Zwischenpruefung, Ergebnis dennoch abgesichert.
+  Remediation: keine noetig.
+
+**Implementierer:** F003/F004 sind LOW, F001/F002 aus dem ersten Durchgang sind behoben (Staging Zeile 48-69, Doppelanhang Zeile 112-113).
 
 ### Runde 2
-**Adversary:** Randfälle. (a) Fehlender Anhang: `finish_device` bricht mit "Bild fehlt" ab (store_screenshots.py:44-46), getestet. (b) Falsche Größe/Alpha: Abbruch mit beiden Größen (:58-61), getestet. (c) Doppelte Anhänge: `read_export` überschreibt still, letzter gewinnt (:101-105); LOW. (d) `finish_device` löscht den Geräteordner vor der Prüfung (:48-50): ein Fehlschlag hinterlässt Teilbilder und vernichtet die letzten guten; LOW, wiederherstellbar über die Versionsverwaltung. (e) Manifest-"commit" ist HEAD (e9d8869), obwohl der Arbeitsstand nicht eingecheckt ist (:117); LOW, belegt durch Testdatei-Prüfsumme. (f) Tastatur: `putKeyboardAway` lehnt ein Bild mit sichtbarer Tastatur per XCTAssertFalse ab (StoreScreenshotsTests.swift:95-102), Prüfung über Rahmen gegen App-Rahmen; plausibel, iPad-Bilder 01/02 belegen es. (g) Fehlerpfad: `trap 'store_clear_bars; release_testlock' EXIT` und INT/TERM -> exit 130; Fehler in test-proof und xcresulttool schlagen durch, der Trap läuft; Zustand nach Erfolgslauf: keine Überschreibung. Ein absichtlich abgebrochener Lauf wurde laut Auftrag nicht gefahren; Nachweis nur über Code und Zustand. (h) Inhalt: 04-detail zeigt auf beiden Geräten die Karte "Noch nicht sortiert ... sobald Apple Intelligence bereitsteht"; für Store-Bilder fragwürdig, nicht Teil der AC; MEDIUM als Hinweis an den PO. iPad: untere Bildhälfte leer, Bogen unten rechts; kosmetisch.
-**Implementierer:** (c) bis (e) sind Randfälle des Werkzeugs, kein Produktcode; Bilder sind versioniert wiederherstellbar.
+**Adversary:** Nachgebohrt: Zwischenordner-Fehlerpfad raeumt per `except BaseException` (store_screenshots.py:64) auf, alter Ordner bleibt unberuehrt; alter `.xxx-neu` wird beim Start entfernt (Zeile 50). Doppelanhang bricht ab (test dazu in den 10 Tests gruen). Frueher bekannte Abweichungen (discharging, iPad-02 getippte Zeile, keine Perle, Umfang) vom PO freigegeben. Keine Regression: Aufrufer von finish_device nur main (Zeile 124). Detail oeffnet ueber "Faellig", dadurch nie die Karte.
+**Implementierer:** Keine weiteren Einwaende. Sichtbare Bilder und Belege decken alle ACs.
 
 ## Herkunft der Vorbedingungen
 
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 
-## Findings und Confirmations
+## Verdict
+VERDICT: VERIFIED
+Tests: 10 Python passed, 0 failed; UI-Test StoreScreenshotsTests je Geraet 1 bestanden, 0 uebersprungen (Belege). Edge cases: nur LOW F003/F004. Checklist 8/8.
 
 Confirmation:
   AC: AC-1
-  Code reference: scripts/store_screenshots.py:39
-  Evidence: finish_device schreibt fünf Dateien, prüft Größe und Alpha; build_manifest (Zeile 66) liefert beide Größen; sips-Werte aller zehn Bilder stimmen.
+  Code reference: scripts/sim.sh:1141
+  Evidence: cmd_store_screenshots fuehrt je Geraet test-proof aus, trap setzt Statusleiste zurueck.
   Status: CONFIRMED
 
 Confirmation:
-  AC: AC-6
+  AC: AC-2
   Code reference: scripts/test_store_screenshots.py:1
-  Evidence: 8 Tests laufen grün (Ran 8 tests, OK).
-  Status: CONFIRMED
-
-Confirmation:
-  AC: AC-7
-  Code reference: scripts/sim.sh:1137
-  Evidence: cmd_store_screenshots mit trap (EXIT/INT/TERM), status_bar override und clear je Gerät, test-proof je Gerät, Beleg-Kopien; kein devicectl; Statusleiste danach ohne Überschreibung.
+  Evidence: 10 Tests OK inkl. Groesse/Alpha/Doppelanhang/Altbilder.
   Status: CONFIRMED
 
 Confirmation:
   AC: AC-5
-  Code reference: LooseEndsUITests/StoreScreenshotsTests.swift:137
-  Evidence: --ui-testing, Deutsch, Zwischenprüfungen (Jetzt >= 2, Neu >= 2, field_dueDate, Erledigt nicht leer), Tastaturprüfung Zeile 95; Bilder bestätigen es.
+  Code reference: LooseEndsUITests/StoreScreenshotsTests.swift:91
+  Evidence: fillDetail prueft Computer, 30, keine reviewNote.
   Status: CONFIRMED
 
 Confirmation:
-  AC: AC-8
+  AC: AC-6
   Code reference: CLAUDE.md:64
-  Evidence: Befehlszeile store-screenshots im Abschnitt Build vorhanden; Belege store-proof-iphone.txt und simulator-run.txt Passed.
+  Evidence: Befehl dokumentiert; manifest.json und README gelesen.
   Status: CONFIRMED
-
-Finding:
-  ID: F001
-  Severity: LOW
-  Category: edge_case
-  Code reference: scripts/store_screenshots.py:48
-  Description: Geräteordner wird vor Größen- und Alphaprüfung gelöscht, bei Abbruch bleiben ungeprüfte Teilbilder.
-  Spec requirement: AC-7 — keine Altbilder; Abbruch bei falscher Größe
-  Conflict: Keine Verletzung der AC, aber Teilzustand nach Abbruch.
-  Remediation: In Temp-Ordner schreiben, nach erfolgreicher Prüfung austauschen.
-
-Finding:
-  ID: F002
-  Severity: LOW
-  Category: edge_case
-  Code reference: scripts/store_screenshots.py:105
-  Description: Doppelte Anhänge gleichen Namens überschreiben sich still.
-  Spec requirement: AC-1 — genau fünf Bilder je Gerät
-  Conflict: Keine Warnung bei Wiederholungsläufen.
-  Remediation: Bei Duplikat abbrechen oder bewusst den neuesten wählen.
-
-Finding:
-  ID: F003
-  Severity: LOW
-  Category: spec_violation
-  Code reference: scripts/sim.sh:1157
-  Description: batteryState discharging statt charged (vom PO freigegeben), iPad-02 ohne Fenster (freigegeben); abgebrochener Lauf nicht gefahren.
-  Spec requirement: AC-3 / AC-7
-  Conflict: Bekannte Abweichungen; Akku im Bild voll.
-  Remediation: Im Abschlussbericht nennen.
-
-Finding:
-  ID: F004
-  Severity: MEDIUM
-  Category: anti_pattern
-  Code reference: LooseEndsUITests/StoreScreenshotsTests.swift:162
-  Description: 04-detail zeigt die Karte "Noch nicht sortiert ... Apple Intelligence bereitsteht" (Simulator ohne Modell); iPad-Bilder mit leerer unterer Hälfte.
-  Spec requirement: keine AC betroffen
-  Conflict: Inhaltliche Qualität, nicht Spec.
-  Remediation: PO entscheiden lassen.
-
-## Verdict
-
-VERDICT: VERIFIED
 
 ## Geprüfte Dateien
 
 - sha256:c235ee148ce5bfca493f0723781f306644610ca7992719c15f0e5196159acf94  CLAUDE.md
-- sha256:b72440389bd69caee76e509aba872dd7aa5b1112cce6ad552c0bede2f73403f5  LooseEndsUITests/StoreScreenshotsTests.swift
+- sha256:9e340577aca267acc1b58e67d295d6ef2e0e39ae9a423d8c6b78a712d6cd6fbf  LooseEndsUITests/StoreScreenshotsTests.swift
 - sha256:be8c36caa35a4feed8d8572e6ee464fd87e68225f6f3b75b34aba1f423de0690  scripts/sim.sh
-- sha256:3765a050afb3df18759840f4c6e5dece34e793567134a832c1edc06b134b5355  scripts/store_screenshots.py
-- sha256:3cc501551f3df9db078fd832b766968c49fd6ca2162f9395b3422a7c3be7acab  scripts/test_store_screenshots.py
+- sha256:289611bedcdb08ecaf527b2a54f76f8a0469fa3a518cf4ced0f9e0ab0a98e6f5  scripts/store_screenshots.py
+- sha256:c18c4a36a776a63089561296dd64cbb2ab05979960c204c655d488322485f154  scripts/test_store_screenshots.py
 
 ## Prüfbasis
 
 - base: 754b4f0cc9ce98e20deecfe2e3f8ff79108f5b73
 - blob:209ef1a70b8f7443ca9298aab1a2fd3f9ec53303  CLAUDE.md
-- blob:622fb777ac0252d4c13b4f0049518ca93a3c1c52  LooseEndsUITests/StoreScreenshotsTests.swift
+- blob:82cf762fdeab98d221b5ac6aaee0b0966ce24173  LooseEndsUITests/StoreScreenshotsTests.swift
 - blob:d773e2a8b2dd010b9e9d1249ffb3702a6b258f6b  scripts/sim.sh
-- blob:6f4b020c8dfa34f04372d462e5d8839af67111ea  scripts/store_screenshots.py
-- blob:9acdd410c2089eada9f9f20a6c87218cf3db61cd  scripts/test_store_screenshots.py
+- blob:29ea28dd53f2c0a353408d9d4e957540c34060f9  scripts/store_screenshots.py
+- blob:eb960acabfaf8e4c0d380fd2e8e60a40314686d1  scripts/test_store_screenshots.py

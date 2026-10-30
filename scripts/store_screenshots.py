@@ -45,22 +45,29 @@ def finish_device(device, attachments, out_root, info, strip_alpha):
     if missing:
         raise StoreError(f"{device}: Bild fehlt: {', '.join(missing)}")
     folder = Path(out_root) / device
+    # Erst prüfen, dann ersetzen (F001): ein Fehler lässt den bisherigen Geräteordner unberührt.
+    staging = Path(out_root) / f".{device}-neu"
+    if staging.exists():
+        shutil.rmtree(staging)
+    staging.mkdir(parents=True)
+    want = DEVICES[device]["pixel"]
+    try:
+        for name in ORDER:
+            target = staging / f"{name}.png"
+            shutil.copyfile(attachments[f"store-{name}"], target)
+            strip_alpha(target)
+            width, height, alpha = info(target)
+            if (width, height) != want:
+                raise StoreError(f"{device}/{target.name}: {size_text((width, height))} statt {size_text(want)}")
+            if alpha:
+                raise StoreError(f"{device}/{target.name}: Alphakanal nicht entfernt")
+    except BaseException:
+        shutil.rmtree(staging)
+        raise
     if folder.exists():
         shutil.rmtree(folder)
-    folder.mkdir(parents=True)
-    want = DEVICES[device]["pixel"]
-    written = []
-    for name in ORDER:
-        target = folder / f"{name}.png"
-        shutil.copyfile(attachments[f"store-{name}"], target)
-        strip_alpha(target)
-        width, height, alpha = info(target)
-        if (width, height) != want:
-            raise StoreError(f"{device}/{target.name}: {size_text((width, height))} statt {size_text(want)}")
-        if alpha:
-            raise StoreError(f"{device}/{target.name}: Alphakanal nicht entfernt")
-        written.append(target)
-    return written
+    staging.rename(folder)
+    return [folder / f"{name}.png" for name in ORDER]
 
 
 def build_manifest(names_by_device, commit, created):
@@ -102,6 +109,8 @@ def read_export(folder):
         for item in test.get("attachments", []):
             stem = item.get("suggestedHumanReadableName", "").split("_")[0]
             if stem.startswith("store-"):
+                if stem in found:   # F002: zwei Anhänge gleichen Namens, keiner ist eindeutig der richtige
+                    raise StoreError(f"Anhang doppelt: {stem}")
                 found[stem] = folder / item["exportedFileName"]
     return found
 
