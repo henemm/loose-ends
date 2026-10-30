@@ -1,0 +1,85 @@
+test_alpha_aborts_when_not_removed (scripts.test_store_screenshots.FinishDeviceTests.test_alpha_aborts_when_not_removed) ... FAIL
+test_alpha_removal_is_called_for_every_image (scripts.test_store_screenshots.FinishDeviceTests.test_alpha_removal_is_called_for_every_image) ... FAIL
+test_missing_image_aborts (scripts.test_store_screenshots.FinishDeviceTests.test_missing_image_aborts) ... FAIL
+test_names_follow_order (scripts.test_store_screenshots.FinishDeviceTests.test_names_follow_order) ... FAIL
+test_old_files_removed (scripts.test_store_screenshots.FinishDeviceTests.test_old_files_removed) ... FAIL
+test_wrong_size_aborts (scripts.test_store_screenshots.FinishDeviceTests.test_wrong_size_aborts) ... FAIL
+test_manifest_lists_both_sizes (scripts.test_store_screenshots.ManifestTests.test_manifest_lists_both_sizes) ... FAIL
+test_manifest_without_ipad_is_refused (scripts.test_store_screenshots.ManifestTests.test_manifest_without_ipad_is_refused) ... FAIL
+
+======================================================================
+FAIL: test_alpha_aborts_when_not_removed (scripts.test_store_screenshots.FinishDeviceTests.test_alpha_aborts_when_not_removed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_store_screenshots.py", line 29, in setUp
+    self.fail("scripts/store_screenshots.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/store_screenshots.py fehlt
+
+======================================================================
+FAIL: test_alpha_removal_is_called_for_every_image (scripts.test_store_screenshots.FinishDeviceTests.test_alpha_removal_is_called_for_every_image)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_store_screenshots.py", line 29, in setUp
+    self.fail("scripts/store_screenshots.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/store_screenshots.py fehlt
+
+======================================================================
+FAIL: test_missing_image_aborts (scripts.test_store_screenshots.FinishDeviceTests.test_missing_image_aborts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_store_screenshots.py", line 29, in setUp
+    self.fail("scripts/store_screenshots.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/store_screenshots.py fehlt
+
+======================================================================
+FAIL: test_names_follow_order (scripts.test_store_screenshots.FinishDeviceTests.test_names_follow_order)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_store_screenshots.py", line 29, in setUp
+    self.fail("scripts/store_screenshots.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/store_screenshots.py fehlt
+
+======================================================================
+FAIL: test_old_files_removed (scripts.test_store_screenshots.FinishDeviceTests.test_old_files_removed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_store_screenshots.py", line 29, in setUp
+    self.fail("scripts/store_screenshots.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/store_screenshots.py fehlt
+
+======================================================================
+FAIL: test_wrong_size_aborts (scripts.test_store_screenshots.FinishDeviceTests.test_wrong_size_aborts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_store_screenshots.py", line 29, in setUp
+    self.fail("scripts/store_screenshots.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/store_screenshots.py fehlt
+
+======================================================================
+FAIL: test_manifest_lists_both_sizes (scripts.test_store_screenshots.ManifestTests.test_manifest_lists_both_sizes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_store_screenshots.py", line 29, in setUp
+    self.fail("scripts/store_screenshots.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/store_screenshots.py fehlt
+
+======================================================================
+FAIL: test_manifest_without_ipad_is_refused (scripts.test_store_screenshots.ManifestTests.test_manifest_without_ipad_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_store_screenshots.py", line 29, in setUp
+    self.fail("scripts/store_screenshots.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/store_screenshots.py fehlt
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.001s
+
+FAILED (failures=8)
