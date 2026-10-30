@@ -1,0 +1,23 @@
+name: Probe 742 display
+on:
+  push:
+    branches: [probe/742-mac-display]
+jobs:
+  display:
+    runs-on: xcode-27
+    timeout-minutes: 15
+    steps:
+      - name: Display before
+        run: system_profiler SPDisplaysDataType
+      - name: Try to raise the resolution
+        continue-on-error: true
+        run: |
+          brew install displayplacer
+          displayplacer list
+          id="$(displayplacer list | sed -n 's/^Persistent screen id: //p' | head -1)"
+          for res in 2560x1600 2880x1800 1920x1200 1680x1050 1440x900 1280x800; do
+            echo "== try $res"
+            displayplacer "id:$id res:$res" && break
+          done
+      - name: Display after
+        run: system_profiler SPDisplaysDataType | grep -i -A3 resolution
