@@ -1,0 +1,20 @@
+test_alpha_aborts_when_not_removed (scripts.test_store_screenshots.FinishDeviceTests.test_alpha_aborts_when_not_removed) ... ok
+test_alpha_removal_is_called_for_every_image (scripts.test_store_screenshots.FinishDeviceTests.test_alpha_removal_is_called_for_every_image) ... ok
+test_failed_check_keeps_previous_folder (scripts.test_store_screenshots.FinishDeviceTests.test_failed_check_keeps_previous_folder) ... ok
+test_missing_image_aborts (scripts.test_store_screenshots.FinishDeviceTests.test_missing_image_aborts) ... ok
+test_names_follow_order (scripts.test_store_screenshots.FinishDeviceTests.test_names_follow_order) ... ok
+test_old_files_removed (scripts.test_store_screenshots.FinishDeviceTests.test_old_files_removed) ... ok
+test_wrong_size_aborts (scripts.test_store_screenshots.FinishDeviceTests.test_wrong_size_aborts) ... ok
+test_grip_cleared_on_ipad_only (scripts.test_store_screenshots.GripHookTests.test_grip_cleared_on_ipad_only) ... ok
+test_manifest_lists_both_sizes (scripts.test_store_screenshots.ManifestTests.test_manifest_lists_both_sizes) ... ok
+test_manifest_without_ipad_is_refused (scripts.test_store_screenshots.ManifestTests.test_manifest_without_ipad_is_refused) ... ok
+test_duplicate_attachment_aborts (scripts.test_store_screenshots.ReadExportTests.test_duplicate_attachment_aborts) ... ok
+test_busy_corner_stays_identical (scripts.test_store_screenshots.WindowGripTests.test_busy_corner_stays_identical) ... ok
+test_grip_on_plain_paper_becomes_background (scripts.test_store_screenshots.WindowGripTests.test_grip_on_plain_paper_becomes_background) ... ok
+test_rest_of_image_untouched (scripts.test_store_screenshots.WindowGripTests.test_rest_of_image_untouched) ... ok
+test_size_kept_and_no_alpha (scripts.test_store_screenshots.WindowGripTests.test_size_kept_and_no_alpha) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 2.151s
+
+OK

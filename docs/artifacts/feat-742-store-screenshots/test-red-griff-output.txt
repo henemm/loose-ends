@@ -1,0 +1,77 @@
+.......EE...EEEEEE
+======================================================================
+ERROR: test_grip_cleared_on_ipad_only (scripts.test_store_screenshots.GripHookTests.test_grip_cleared_on_ipad_only) [ipad]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_store_screenshots.py", line 210, in test_grip_cleared_on_ipad_only
+    ss.finish_device(device, self.attachments(), self.out, self.info(size), self.keep, cleared.append)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: finish_device() takes 5 positional arguments but 6 were given
+
+======================================================================
+ERROR: test_grip_cleared_on_ipad_only (scripts.test_store_screenshots.GripHookTests.test_grip_cleared_on_ipad_only) [iphone]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_store_screenshots.py", line 210, in test_grip_cleared_on_ipad_only
+    ss.finish_device(device, self.attachments(), self.out, self.info(size), self.keep, cleared.append)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: finish_device() takes 5 positional arguments but 6 were given
+
+======================================================================
+ERROR: test_busy_corner_stays_identical (scripts.test_store_screenshots.WindowGripTests.test_busy_corner_stays_identical) [Tastatur]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_store_screenshots.py", line 195, in test_busy_corner_stays_identical
+    ss.sips_clear_grip(path)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: module 'store_screenshots' has no attribute 'sips_clear_grip'
+
+======================================================================
+ERROR: test_busy_corner_stays_identical (scripts.test_store_screenshots.WindowGripTests.test_busy_corner_stays_identical) [Inhalt links der Ecke]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_store_screenshots.py", line 195, in test_busy_corner_stays_identical
+    ss.sips_clear_grip(path)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: module 'store_screenshots' has no attribute 'sips_clear_grip'
+
+======================================================================
+ERROR: test_grip_on_plain_paper_becomes_background (scripts.test_store_screenshots.WindowGripTests.test_grip_on_plain_paper_becomes_background) (color=(244, 243, 238))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_store_screenshots.py", line 174, in test_grip_on_plain_paper_becomes_background
+    ss.sips_clear_grip(path)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: module 'store_screenshots' has no attribute 'sips_clear_grip'
+
+======================================================================
+ERROR: test_grip_on_plain_paper_becomes_background (scripts.test_store_screenshots.WindowGripTests.test_grip_on_plain_paper_becomes_background) (color=(255, 255, 254))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_store_screenshots.py", line 174, in test_grip_on_plain_paper_becomes_background
+    ss.sips_clear_grip(path)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: module 'store_screenshots' has no attribute 'sips_clear_grip'
+
+======================================================================
+ERROR: test_rest_of_image_untouched (scripts.test_store_screenshots.WindowGripTests.test_rest_of_image_untouched)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_store_screenshots.py", line 182, in test_rest_of_image_untouched
+    ss.sips_clear_grip(path)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: module 'store_screenshots' has no attribute 'sips_clear_grip'
+
+======================================================================
+ERROR: test_size_kept_and_no_alpha (scripts.test_store_screenshots.WindowGripTests.test_size_kept_and_no_alpha)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/compressed-gathering-raven/scripts/test_store_screenshots.py", line 201, in test_size_kept_and_no_alpha
+    ss.sips_clear_grip(path)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: module 'store_screenshots' has no attribute 'sips_clear_grip'
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.327s
+
+FAILED (errors=8)
