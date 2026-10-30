@@ -148,7 +148,7 @@ class ProbeTests(unittest.TestCase):
         groups = self.lines(result, "gruppe")
         self.assertTrue(any("intern=ja" in line for line in groups), groups)
         external = [line for line in groups if "intern=nein" in line]
-        self.assertTrue(external and "link=an" in external[0] and f"url={GROUP_LINK}" in external[0]
+        self.assertTrue(external and "link=an" in external[0] and "url=gesetzt" in external[0]
                         and "feedback=an" in external[0], groups)
         self.assertTrue(any("beschreibung=gesetzt" in line for line in self.lines(result, "lokalisierung")),
                         result.stdout)
@@ -229,10 +229,21 @@ class ProbeTests(unittest.TestCase):
         result = self.probe(self.fake())
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         output = result.stdout + result.stderr
-        for secret in (*CONTACT_VALUES, DESCRIPTION, PRIVACY_URL, "BEGIN", "PRIVATE KEY", "Bearer", "eyJ"):
+        for secret in (*CONTACT_VALUES, DESCRIPTION, PRIVACY_URL, GROUP_LINK, "BEGIN", "PRIVATE KEY", "Bearer", "eyJ"):
             self.assertNotIn(secret, output)
         self.assertIn("gesetzt", output)
-        self.assertIn(GROUP_LINK, output)  # der öffentliche Einladungslink darf stehen
+
+    def test_link_off_prints_dash_and_never_the_link(self):
+        routes = default_routes()
+        routes["/v1/apps/APP1/betaGroups"] = (200, {"data": [
+            {"id": "G2", "attributes": {"name": "Einladung", "isInternalGroup": False, "publicLinkEnabled": False,
+                                        "publicLink": GROUP_LINK, "feedbackEnabled": True}}]})
+        result = self.probe(self.fake(routes=routes))
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        group, = self.lines(result, "gruppe name=")
+        self.assertIn("link=aus", group)
+        self.assertIn("url=-", group)
+        self.assertNotIn(GROUP_LINK, result.stdout + result.stderr)
 
     def test_nothing_answers_exits_1(self):
         result = self.probe(self.fake(status_for=(500, {})))

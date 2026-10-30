@@ -101,8 +101,9 @@ def report_groups(run, app_id):
     for group in groups:
         a = attributes(group)
         link = a.get("publicLink") if a.get("publicLinkEnabled") else None
+        url = "gesetzt" if filled(link) == "gesetzt" else "-"
         print(f"gruppe name={a.get('name', '?')} intern={'ja' if a.get('isInternalGroup') else 'nein'} "
-              f"link={on_off(a.get('publicLinkEnabled'))} url={link or '-'} "
+              f"link={on_off(a.get('publicLinkEnabled'))} url={url} "
               f"feedback={on_off(a.get('feedbackEnabled'))}", flush=True)
 
 
