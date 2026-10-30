@@ -1,0 +1,33 @@
+{
+  "sprache": "de-DE",
+  "erzeugt": "2026-10-30T09:06:04Z",
+  "commit": "e9d8869",
+  "geraete": [
+    {
+      "geraet": "iphone",
+      "anzeige": "iPhone 6.3\" (Dynamic Island)",
+      "pixel": "1206x2622",
+      "ordner": "iphone",
+      "dateien": [
+        "01-start.png",
+        "02-erfassen.png",
+        "03-neu.png",
+        "04-detail.png",
+        "05-erledigt.png"
+      ]
+    },
+    {
+      "geraet": "ipad",
+      "anzeige": "iPad 13\"",
+      "pixel": "2064x2752",
+      "ordner": "ipad",
+      "dateien": [
+        "01-start.png",
+        "02-erfassen.png",
+        "03-neu.png",
+        "04-detail.png",
+        "05-erledigt.png"
+      ]
+    }
+  ]
+}

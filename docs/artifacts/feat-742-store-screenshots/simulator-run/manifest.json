@@ -1,0 +1,53 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "05983CA3-84C9-49F2-A029-344F51CAC2BE",
+        "deviceName" : "iPad Pro 13-inch (M5)",
+        "exportedFileName" : "0EC8E7EB-BAC8-4B06-BA20-9E7B7E80D585.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "store-05-erledigt_0_063EFBFF-48C4-4660-BAE8-B46599145790.png",
+        "timestamp" : 1793351160.318
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "05983CA3-84C9-49F2-A029-344F51CAC2BE",
+        "deviceName" : "iPad Pro 13-inch (M5)",
+        "exportedFileName" : "1C0035B2-5694-4820-BC2A-E9DC03DA9163.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "store-04-detail_0_3DF9E938-ABE9-4E28-85D5-B2278713EA26.png",
+        "timestamp" : 1793351152.426
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "05983CA3-84C9-49F2-A029-344F51CAC2BE",
+        "deviceName" : "iPad Pro 13-inch (M5)",
+        "exportedFileName" : "B3F75F63-9A89-4451-81D0-5BD640B60B90.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "store-03-neu_0_F133FEED-9FD5-4FEB-9AC8-8ED44D59AE5D.png",
+        "timestamp" : 1793351147.935
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "05983CA3-84C9-49F2-A029-344F51CAC2BE",
+        "deviceName" : "iPad Pro 13-inch (M5)",
+        "exportedFileName" : "9E9CD3ED-ECF8-4DE4-9B47-E612399FA19F.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "store-01-start_0_4482018C-E28B-4534-82C8-1C3CA2954B85.png",
+        "timestamp" : 1793351144.256
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "05983CA3-84C9-49F2-A029-344F51CAC2BE",
+        "deviceName" : "iPad Pro 13-inch (M5)",
+        "exportedFileName" : "81A6C795-E0A2-4FA2-82CB-F9F7838B3699.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "store-02-erfassen_0_1546ED5E-D16F-491D-968E-9857F3ECA4C9.png",
+        "timestamp" : 1793351140.838
+      }
+    ],
+    "testIdentifier" : "StoreScreenshotsTests/testPhotographStoreScreens()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/StoreScreenshotsTests/testPhotographStoreScreens"
+  }
+]

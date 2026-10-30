@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-10-30T10:06:01+0100
+befehl: scripts/sim.sh test-proof StoreScreenshotsTests
+workflow: feat-742-store-screenshots
+head: e9d8869e78cadc4f63b8de82a5147b0d93fda858
+basis: 754b4f0cc9ce98e20deecfe2e3f8ff79108f5b73 (merge-base origin/main HEAD)
+testklasse: StoreScreenshotsTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793351067.067  ende: 1793351161.134
+geraet: iPad Pro 13-inch (M5), iOS 27.0
+summary: docs/artifacts/feat-742-store-screenshots/simulator-run/summary.json  sha256:6e3b9fd1375ca229170087644f0a1b9c6374a1d174ce2ca1717ab996606d836b
+xcresult: docs/artifacts/feat-742-store-screenshots/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-742-store-screenshots/simulator-run/*.png (5 Stück)
+
+## Geprüfte Dateien
+- sha256:b72440389bd69caee76e509aba872dd7aa5b1112cce6ad552c0bede2f73403f5  LooseEndsUITests/StoreScreenshotsTests.swift

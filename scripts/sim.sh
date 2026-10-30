@@ -19,6 +19,7 @@
 #   ./scripts/sim.sh test <Class[/test]>      # UI-Test im iOS-Simulator
 #   ./scripts/sim.sh test-proof <Class[/test]> # UI-Test + Simulator-Beleg in docs/artifacts/<workflow>/ (#145)
 #   ./scripts/sim.sh watch-test-proof <Class[/test]> # dasselbe im watchOS-Simulator (#409)
+#   ./scripts/sim.sh store-screenshots        # App-Store-Bilder iPhone 17 + iPad Pro 13″ (de, hell, 9:41) nach docs/store/screenshots/de/ (#742)
 #     LOOSEENDS_PUSH=<datei.apns> davor: spielt die Mitteilung während des Laufs alle 5 s ein (#295)
 #   ./scripts/sim.sh boot | status | launch | screenshot [pfad]
 #   ./scripts/sim.sh location <breite> <länge> # Standort des Simulators vortäuschen (#241), `location clear` hebt ihn auf
@@ -1133,7 +1134,35 @@ cmd_location() {
     $SIMCTL location "$id" set "$lat,$lon" && success "Standort: $lat, $lon"
 }
 
-cmd_help() { sed -n '3,39p' "$0" | sed 's/^# \{0,1\}//'; }
+# App-Store-Bilder (#742): je Simulator Statusleiste 9:41/voll, StoreScreenshotsTests per test-proof, Anhänge aus dem
+# Ergebnisbündel exportieren; die Statusleiste wird auch bei Fehlschlag oder Abbruch zurückgesetzt (trap).
+STORE_BARS=""
+store_clear_bars() { local id; for id in $STORE_BARS; do $SIMCTL status_bar "$id" clear 2>/dev/null || true; done; STORE_BARS=""; }
+cmd_store_screenshots() {
+    cd "$PROJECT_DIR"
+    trap 'store_clear_bars; release_testlock' EXIT
+    trap 'exit 130' INT TERM
+    local wf; wf=$(tr -d '[:space:]' < .claude/active_workflow 2>/dev/null || true)
+    local tmp; tmp=$(mktemp -d); local exports=() entry device id
+    for entry in "iphone:iPhone 17:iPhone" "ipad:iPad Pro 13-inch (M5):iPad"; do
+        IFS=: read -r device SIM_NAME SIM_FAMILY <<< "$entry"
+        acquire_testlock "store-screenshots"   # test-proof gibt die Sperre nach jedem Gerät frei
+        cmd_boot; id=$(sim_id); [ -n "$id" ] || { error "Kein Simulator '$SIM_NAME'"; return 1; }
+        STORE_BARS="$STORE_BARS $id"
+        $SIMCTL status_bar "$id" override --time 9:41 --batteryState discharging --batteryLevel 100 \
+            --cellularMode active --cellularBars 4 --wifiBars 3
+        cmd_test_proof StoreScreenshotsTests
+        xcrun xcresulttool export attachments --path "docs/artifacts/$wf/simulator-run/run.xcresult" --output-path "$tmp/$device"
+        cp "docs/artifacts/$wf/simulator-run.txt" "docs/artifacts/$wf/store-proof-$device.txt"
+        store_clear_bars
+        exports+=("$device=$tmp/$device")
+    done
+    python3 scripts/store_screenshots.py docs/store/screenshots/de "${exports[@]}"
+    rm -rf "$tmp"
+    success "Store-Bilder in docs/store/screenshots/de/, Belege docs/artifacts/$wf/store-proof-{iphone,ipad}.txt"
+}
+
+cmd_help() { sed -n '3,40p' "$0" | sed 's/^# \{0,1\}//'; }
 
 COMMAND="${1:-help}"; shift 2>/dev/null || true
 case "$COMMAND" in
@@ -1150,6 +1179,7 @@ case "$COMMAND" in
     test)       cmd_test "$@" ;;
     test-proof) cmd_test_proof "$@" ;;
     watch-test-proof) cmd_watch_test_proof "$@" ;;
+    store-screenshots) cmd_store_screenshots ;;
     boot)       cmd_boot ;;
     status)     cmd_status ;;
     launch)     cmd_launch "$@" ;;
