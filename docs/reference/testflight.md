@@ -167,9 +167,9 @@ bleibt `offen` und Beleg leer, bis ein Lauf ihn füllt.
 | Datenschutz-URL | erledigt: https://www.henemm.com/legal/loose-ends/privacy-policy/ veröffentlicht und bei Apple gesetzt, Repo-Variable `ASC_PRIVACY_POLICY_URL` (2026-10-27) | [Lauf 40583033733](https://github.com/henemm/loose-ends/actions/runs/40583033733) `lokalisierung locale=de-DE beschreibung=unverändert feedbackEmail=unverändert datenschutzUrl=gesetzt`, `zusammenfassung geschrieben=1`, Probe `datenschutzUrl=gesetzt`, `link=aus` für `Tester`, `einreichung keine`; [Lauf 40583443351](https://github.com/henemm/loose-ends/actions/runs/40583443351) `datenschutzUrl=unverändert`, `geschrieben=0` |
 | Interne Gruppe `Familie` | erledigt: besteht, Link aus, Feedback an | Lauf 40387004899; [Lauf 40534641955](https://github.com/henemm/loose-ends/actions/runs/40534641955) `gruppe name=Familie intern=ja` |
 | Externe Gruppe `Tester` | erledigt: angelegt 2026-10-27, Link aus, Feedback an | [Lauf 40516649071](https://github.com/henemm/loose-ends/actions/runs/40516649071) `zustand=angelegt` (Zuordnung dort 403, behoben in #721); Lauf 40534641955 `gruppe name=Tester intern=nein link=aus` |
-| Öffentlicher Link | offen (Schnitt 2b-2) | |
+| Öffentlicher Link | offen (Schnitt 2b-2c, Handlauf `aktion=link`, Limit 50); Vorbedingung des echten Laufs: #743 (die Probe maskiert `url=` noch nicht) | |
 | Build-Zuordnung iOS und macOS | erledigt: neuester gültiger Build je Plattform (2026-10-27), `extern=READY_FOR_BETA_SUBMISSION` | Lauf 40534641955 `zustand=gesetzt` IOS und MAC_OS, `geschrieben=2`; [Lauf 40535068594](https://github.com/henemm/loose-ends/actions/runs/40535068594) `zustand=vorhanden`, `geschrieben=0` |
-| Beta-Review (Einreichung) | eingereicht 2026-10-28, iOS (mit Watch-App) und macOS, wartet auf Apple | Lauf 40676055317 `einreichung … zustand=eingereicht review=WAITING_FOR_REVIEW` je Plattform, `geschrieben=4`; Gegenprobe 40676188405 `zustand=vorhanden`, `geschrieben=0` |
+| Beta-Review (Einreichung) | erledigt: `APPROVED`, iOS (mit Watch-App) und macOS, Build 125 (gemessen 2026-10-30); eingereicht 2026-10-28 | [Lauf 41019692346](https://github.com/henemm/loose-ends/actions/runs/41019692346) `einreichung build=125 zustand=APPROVED`, `extern=BETA_APPROVED` je Plattform; Einreichung: Lauf 40676055317 `zustand=eingereicht review=WAITING_FOR_REVIEW`, `geschrieben=4`; Gegenprobe 40676188405 `zustand=vorhanden`, `geschrieben=0` |
 | Rückmeldeweg: TestFlight-Feedback | erledigt auf Apples Seite: Gruppe `Tester` `feedback=an` | Lauf 40534641955 |
 
 **Handlauf `asc-beta.yml` (Schnitt 1, nur lesend):** GitHub → Actions → **ASC Beta Probe** → **Run workflow**. Er läuft je
@@ -217,8 +217,22 @@ iOS-Build und wird mit ihm geprüft; eine eigene watchOS-Einreichung gibt es nic
 andere womöglich schon eingereicht, und die Probe desselben Laufs fällt aus: danach `aktion=probe` laufen lassen, um den Stand
 beider Plattformen zu lesen. Ein unerwarteter Antwortrumpf nach erfolgreicher Einreichung ergibt `review=unbekannt`.
 
-**Schnitt 2:** 2a (Texte und Kontakt), 2b-1 (externe Gruppe, Build-Zuordnung) und 2b-2b (Einreichung) sind die Handläufe
-oben. Der öffentliche Link (2b-2c) folgt erst nach `APPROVED`.
+**Handlauf `link` / `link-aus` (Schnitt 2b-2c), wirkt nach außen, nur nach Hennings Wort:** `aktion=link`. Erst nach #743
+(die Probe zeigt `url=` sonst unmaskiert). Der Job `link` (`scripts/asc_beta_link.py`) schaltet den öffentlichen Link der
+Gruppe `Tester` mit Limit 50 ein, aber nur, wenn je Plattform der neueste gültige Build in der Gruppe liegt und
+`extern=BETA_APPROVED` ist. Erwartete Zeilen: `link zustand=eingeschaltet limit=50` und `zusammenfassung geschrieben=1`, beim
+zweiten Lauf `link zustand=vorhanden limit=50` und `geschrieben=0`; sonst `link zustand=nicht-bereit plattform=… extern=…`
+(kein Schreiben, Exit 0) oder `link plattform=… zustand=kein-gültiger-build`. Nach dem Einschalten liest das Skript die Gruppe
+erneut; steht das Limit nicht auf 50 oder ist die Antwort nicht lesbar, schaltet es den Link sofort wieder aus
+(`link zustand=abgebrochen grund=limit`, Exit 1). `aktion=link-aus` schaltet ihn ab (`link zustand=ausgeschaltet`, beim zweiten
+Lauf `link zustand=vorhanden aus`). Der Link steht nie im Log (das Repo und seine Läufe sind öffentlich): Henning holt ihn in
+App Store Connect, TestFlight → Gruppe `Tester`. Die Probe danach belegt `link=an`.
+
+- Rückfall, falls Apple den PATCH oder das Limit ablehnt (`Schlüssel ohne Schreibrecht`, `::error::` oder
+  `abgebrochen grund=limit`): den Link in App Store Connect bei der Gruppe `Tester` von Hand einschalten, Limit 50.
+
+**Schnitt 2:** 2a (Texte und Kontakt), 2b-1 (externe Gruppe, Build-Zuordnung), 2b-2b (Einreichung) und 2b-2c (öffentlicher
+Link) sind die Handläufe oben.
 
 ## Wenn es hakt
 

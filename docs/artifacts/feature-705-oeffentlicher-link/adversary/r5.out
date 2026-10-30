@@ -1,0 +1,194 @@
+
+===== PRE build-no-id
+EXIT 1
+OUT ::error::'id'
+zusammenfassung geschrieben=0
+
+ERR 
+PATCHES [] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': False, 'publicLinkLimitEnabled': False, 'publicLinkLimit': None}
+
+===== PRE build-str
+EXIT 1
+OUT ::error::string indices must be integers, not 'str'
+zusammenfassung geschrieben=0
+
+ERR 
+PATCHES [] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': False, 'publicLinkLimitEnabled': False, 'publicLinkLimit': None}
+
+===== PRE members-none
+EXIT 1
+OUT ::error::'NoneType' object has no attribute 'get'
+zusammenfassung geschrieben=0
+
+ERR 
+PATCHES [] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': False, 'publicLinkLimitEnabled': False, 'publicLinkLimit': None}
+
+===== PRE detail-list
+EXIT 1
+OUT ::error::'list' object has no attribute 'get'
+zusammenfassung geschrieben=0
+
+ERR 
+PATCHES [] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': False, 'publicLinkLimitEnabled': False, 'publicLinkLimit': None}
+
+===== PRE detail-attrs-list
+EXIT 1
+OUT ::error::'list' object has no attribute 'get'
+zusammenfassung geschrieben=0
+
+ERR 
+PATCHES [] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': False, 'publicLinkLimitEnabled': False, 'publicLinkLimit': None}
+
+===== PRE detail-state-int
+EXIT 0
+OUT link zustand=nicht-bereit plattform=IOS extern=5
+link zustand=nicht-bereit plattform=MAC_OS extern=5
+zusammenfassung geschrieben=0
+
+ERR 
+PATCHES [] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': False, 'publicLinkLimitEnabled': False, 'publicLinkLimit': None}
+
+===== PRE detail-state-list
+EXIT 0
+OUT link zustand=nicht-bereit plattform=IOS extern=['BETA_APPROVED']
+link zustand=nicht-bereit plattform=MAC_OS extern=['BETA_APPROVED']
+zusammenfassung geschrieben=0
+
+ERR 
+PATCHES [] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': False, 'publicLinkLimitEnabled': False, 'publicLinkLimit': None}
+
+===== PRE groups-dict
+EXIT 1
+OUT ::error::App Store Connect did not answer /v1/apps/…/betaGroups
+zusammenfassung geschrieben=0
+
+ERR 
+PATCHES [] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': False, 'publicLinkLimitEnabled': False, 'publicLinkLimit': None}
+
+===== PRE groups-str
+EXIT 1
+OUT ::error::App Store Connect did not answer /v1/apps/…/betaGroups
+zusammenfassung geschrieben=0
+
+ERR 
+PATCHES [] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': False, 'publicLinkLimitEnabled': False, 'publicLinkLimit': None}
+
+===== READBACK limit50.0
+EXIT 1
+OUT link zustand=abgebrochen grund=limit
+zusammenfassung geschrieben=2
+
+ERR 
+PATCHES [{'publicLinkEnabled': True, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}, {'publicLinkEnabled': False}] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': False, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}
+
+===== READBACK limit-str50
+EXIT 1
+OUT link zustand=abgebrochen grund=limit
+zusammenfassung geschrieben=2
+
+ERR 
+PATCHES [{'publicLinkEnabled': True, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}, {'publicLinkEnabled': False}] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': False, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}
+
+===== READBACK limitTrue
+EXIT 1
+OUT link zustand=abgebrochen grund=limit
+zusammenfassung geschrieben=2
+
+ERR 
+PATCHES [{'publicLinkEnabled': True, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}, {'publicLinkEnabled': False}] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': False, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}
+
+===== READBACK limit51
+EXIT 1
+OUT link zustand=abgebrochen grund=limit
+zusammenfassung geschrieben=2
+
+ERR 
+PATCHES [{'publicLinkEnabled': True, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}, {'publicLinkEnabled': False}] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': False, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}
+
+===== READBACK limitEnabledFalse
+EXIT 1
+OUT link zustand=abgebrochen grund=limit
+zusammenfassung geschrieben=2
+
+ERR 
+PATCHES [{'publicLinkEnabled': True, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}, {'publicLinkEnabled': False}] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': False, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}
+
+===== READBACK enabled-str-true
+EXIT 1
+OUT link zustand=abgebrochen grund=limit
+zusammenfassung geschrieben=2
+
+ERR 
+PATCHES [{'publicLinkEnabled': True, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}, {'publicLinkEnabled': False}] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': False, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}
+
+===== READBACK enabled1
+EXIT 1
+OUT link zustand=abgebrochen grund=limit
+zusammenfassung geschrieben=2
+
+ERR 
+PATCHES [{'publicLinkEnabled': True, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}, {'publicLinkEnabled': False}] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': False, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}
+
+===== READBACK two-external
+EXIT 1
+OUT link zustand=abgebrochen grund=limit
+zusammenfassung geschrieben=2
+
+ERR 
+PATCHES [{'publicLinkEnabled': True, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}, {'publicLinkEnabled': False}] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': False, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}
+
+===== READBACK internal-extra
+EXIT 0
+OUT link zustand=eingeschaltet limit=50
+zusammenfassung geschrieben=1
+
+ERR 
+PATCHES [{'publicLinkEnabled': True, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': True, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}
+
+===== READBACK data-null
+EXIT 1
+OUT link zustand=abgebrochen grund=limit
+zusammenfassung geschrieben=2
+
+ERR 
+PATCHES [{'publicLinkEnabled': True, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}, {'publicLinkEnabled': False}] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': False, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}
+
+===== READBACK body-list
+EXIT 1
+OUT link zustand=abgebrochen grund=limit
+zusammenfassung geschrieben=2
+
+ERR 
+PATCHES [{'publicLinkEnabled': True, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}, {'publicLinkEnabled': False}] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': False, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}
+
+===== READBACK good
+EXIT 0
+OUT link zustand=eingeschaltet limit=50
+zusammenfassung geschrieben=1
+
+ERR 
+PATCHES [{'publicLinkEnabled': True, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': True, 'publicLinkLimitEnabled': True, 'publicLinkLimit': 50}
+
+===== aus-enabled-missing
+EXIT 0
+OUT link zustand=ausgeschaltet
+zusammenfassung geschrieben=1
+
+ERR 
+PATCHES [{'publicLinkEnabled': False}] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkLimitEnabled': False, 'publicLinkLimit': None, 'publicLinkEnabled': False}
+
+===== aus-enabled-None
+EXIT 0
+OUT link zustand=ausgeschaltet
+zusammenfassung geschrieben=1
+
+ERR 
+PATCHES [{'publicLinkEnabled': False}] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': False, 'publicLinkLimitEnabled': False, 'publicLinkLimit': None}
+
+===== aus-on
+EXIT 0
+OUT link zustand=ausgeschaltet
+zusammenfassung geschrieben=1
+
+ERR 
+PATCHES [{'publicLinkEnabled': False}] final {'name': 'Tester', 'isInternalGroup': False, 'publicLinkEnabled': False, 'publicLinkLimitEnabled': False, 'publicLinkLimit': None}
