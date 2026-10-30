@@ -1,7 +1,7 @@
 ---
 spec_file: docs/specs/tooling/feat-767-version-1-0.md
-spec_sha256: a065557eedd4a02b4eda4a9d89648967ced09c336403d40da939ddfdd8fa29e9
-spec_frozen_sha256: ea5bb1ecfbd6032f8046361800a716ee4d1c83f235ec4b0197e1bc2ae2b7b1f6
+spec_sha256: a7891d4828e42c11912ac990549d06c52214cf854f818e4dc411ce864edbf82d
+spec_frozen_sha256: c38bcdbbf013af329fff100cb1317ee47dbcf9c245a4b8c92c9eb29c5ec32e33
 ---
 
 # PO-Briefing: feat-767-version-1-0
@@ -24,7 +24,7 @@ Skripttests und Simulator belegen Version 1.0; ob Apple den Build zuordnen läss
 
 ## Kritische Anmerkungen
 
-- Zusatz: Die Versionsnummer wird nur noch an einer Stelle gepflegt; nicht verlangt, aber klein und begründet.
+- Zusatz: Die Versionsnummer wird nur noch an einer Stelle gepflegt; dafür wurde auch ein bestehender Schutztest gelockert. Nicht verlangt, aber begründet.
 - Externe Tester brauchen für 1.0 vermutlich eine neue Beta-Prüfung; Build-Auswahl in App Store Connect bleibt bei Henning.
 
 ## Freigabe-Frage

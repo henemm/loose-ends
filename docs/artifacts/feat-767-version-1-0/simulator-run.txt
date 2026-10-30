@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-10-30T20:22:25+0100
+befehl: scripts/sim.sh test-proof SettingsSmokeTests
+workflow: feat-767-version-1-0
+head: 54076659dca4bc37781ba6516c1dcf4122237dac
+basis: 991c2e62abc40f2122c9a9da0afb67f14b6a9d47 (merge-base origin/main HEAD)
+testklasse: SettingsSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793388123.46  ende: 1793388145.148
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/feat-767-version-1-0/simulator-run/summary.json  sha256:ff12e7f68536517991f497cd5717a9de5ef8938c76f4c2200879d02d5cbae3aa
+xcresult: docs/artifacts/feat-767-version-1-0/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-767-version-1-0/simulator-run/*.png (1 Stück)
+
+## Geprüfte Dateien
+(keine Code-Dateien geändert)

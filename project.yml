@@ -21,7 +21,7 @@ settings:
     # heißt deshalb: nach jedem neuen Stand verweigert Xcode den Start auf einem
     # echten Gerät ("requires a development team"). Darum steht das Team hier.
     DEVELOPMENT_TEAM: "XK87E2B3VR"
-    MARKETING_VERSION: "0.1.0"
+    MARKETING_VERSION: "1.0"
     CURRENT_PROJECT_VERSION: 1
     SWIFT_EMIT_LOC_STRINGS: true
     LOCALIZATION_PREFERS_STRING_CATALOGS: true

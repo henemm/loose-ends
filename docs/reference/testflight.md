@@ -285,11 +285,12 @@ die Build-Kennung wird nur protokolliert. Die Deployment-Ziele aus `project.yml`
 abgesenkt. Dann: Projekt generieren, mit `xcodebuild archive` und Apple-verwalteter Signatur
 (`-allowProvisioningUpdates` plus API-Schlüssel) archivieren, mit `-exportArchive` direkt zu App
 Store Connect hochladen. Die Build-Nummer ist die laufende Nummer des Workflow-Laufs; die
-Versionsnummer steht in `project.yml` (`MARKETING_VERSION`).
+Versionsnummer steht in `project.yml` (`MARKETING_VERSION`). Beide Archivprüfungen (iOS und macOS)
+lesen sie von dort; im Workflow ist keine Version mehr fest eingetragen (#767).
 
 Zwischen Archiv und Upload prüft der Schritt „Verify the archive is built against the iOS 27 SDK"
 App, Watch-App, Widgets und Teilen-Erweiterung (gefunden über ihre Bundle-Kennung): SDK
-(`iphoneos27.`/`watchos27.`), Mindestversion 27.0, Version `0.1.0 (<Lauf-Nummer>)`, dSYM im
+(`iphoneos27.`/`watchos27.`), Mindestversion 27.0, Version `1.0 (<Lauf-Nummer>)`, dSYM im
 Archiv, Datenschutz-Zweckbeschreibungen nicht leer, `ITSAppUsesNonExemptEncryption` = `false`. Das
 Ergebnis steht als Tabelle in der Zusammenfassung des Laufs und im Protokoll des Schritts (abrufbar
 mit `gh run view <id> --log`); jede Abweichung stoppt den Upload.

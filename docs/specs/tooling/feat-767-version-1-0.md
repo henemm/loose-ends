@@ -58,10 +58,11 @@ Ohne Modell: Konfigurationswert und Shell-Auslese, kein Modellweg.
 | .github/workflows/testflight.yml | MODIFY | beide Archivprüfungen lesen `MARKETING` aus `project.yml` und brechen ab, wenn leer; Kommentar Z. 6 `v0.1.0` → `v1.0` |
 | scripts/test_marketing_version.py | CREATE | Tests: Version ist 1.0, kein Versions-Literal in `testflight.yml`, Auslese-Befehl liefert den Wert aus `project.yml`, leerer Wert bricht ab |
 | docs/reference/testflight.md | MODIFY | erwartete Version `1.0 (<Lauf-Nummer>)`; Hinweis, dass die Archivprüfung die Version aus `project.yml` liest |
+| scripts/test_ci_xcode27.py | MODIFY | `test_no_lowering_anywhere_in_github` erlaubt genau die zwei lesenden Zeilen (Auslese, Abbruch); jede andere Erwähnung von `project.yml` und jedes `sed -i` unter `.github/` bleibt verboten |
 
 ### Estimated Changes
 
-4 Dateien, ca. +45/−5 LoC. Funktionen ≤ 50 LoC.
+5 Dateien, ca. +60/−6 LoC. Funktionen ≤ 50 LoC.
 **Berührt die Geräteliste:** `project.yml` steht dort (Signierung, Berechtigungen, Targets). Stufe 3 ist damit Pflicht und läuft über
 TestFlight (siehe Abnahme).
 
@@ -88,6 +89,13 @@ Beide Jobs laufen aus der Repo-Wurzel; ein lokaler Lauf (`ARCHIVE=… BUILD=… 
 
 `unittest`, ohne Netz, liest die echten Dateien. Den Auslese-Befehl nimmt der Test aus `testflight.yml` (die Zeile, die mit
 `MARKETING=$(sed` beginnt), damit er genau das prüft, was läuft.
+
+### 3b. Schutztest `scripts/test_ci_xcode27.py`
+
+`test_no_lowering_anywhere_in_github` (#178) verbietet jede Erwähnung von `project.yml` unter `.github/`, gedacht gegen das frühere
+`sed -i` auf `project.yml`. Die neue Auslese liest nur. Der Test nimmt die grep-Treffer und lässt genau die Treffer durch, deren Zeileninhalt
+(ohne Einrückung) einer der beiden Zeilen aus Abschnitt 2 gleicht; jeder andere Treffer, auch ein zusätzliches `sed -i`, lässt ihn scheitern.
+Kein Verschleiern des Dateinamens im Workflow.
 
 ### 4. Doku
 
@@ -139,19 +147,16 @@ Manueller TestFlight-Lauf auf `main` mit deutschem `what_to_test`. Kein Lauf auf
   `1.0`; Temp-Kopie mit anderem Wert: dieser Wert). Geprüft durch `test_workflow_reads_version_from_project_yml`.
 - **AC-4:** Fehlt der Wert oder ist er leer, bricht der Prüfblock mit Exit ≠ 0 und `::error::MARKETING_VERSION not found in project.yml`
   ab, der Upload findet nicht statt. Geprüft durch `test_empty_version_aborts`.
-- **AC-5:** `scripts/test_asc_wait_build.py` bleibt grün (jeder Block von `testflight.yml` besteht `bash -n`), und
+- **AC-5:** `scripts/test_ci_xcode27.py` lässt unter `.github/` genau die zwei lesenden Zeilen zu und schlägt bei jeder anderen Erwähnung von
+  `project.yml` oder einem `sed -i` weiter an; `scripts/test_asc_wait_build.py` bleibt grün (jeder Block von `testflight.yml` besteht `bash -n`), und
   `python3 -m unittest discover -s scripts` ist grün. Geprüft durch diesen Lauf.
 - **AC-6:** `docs/reference/testflight.md` nennt die erwartete Version `1.0 (<Lauf-Nummer>)` und dass die Archivprüfung sie aus
   `project.yml` liest; `0.1.0` steht dort nicht mehr als erwartete Version. Geprüft durch Lesen der Datei im Diff und
   `grep -n "0\.1\.0" docs/reference/testflight.md` (kein Treffer als erwartete Version).
 - **AC-7:** Simulator-Stufe: Die frisch generierte App baut, und die Einstellungen zeigen Version 1.0. Nachweis: Screenshot per
   `./scripts/sim.sh screenshot`, geöffnet und beschrieben.
-- **AC-8:** Stufe 3 über TestFlight (nach Merge): Der manuelle Lauf auf `main` mit deutschem `what_to_test` ist grün, beide Archivprüfungen
-  (iOS und macOS) melden `1.0 (<Lauf-Nummer>)` in der Tabelle der Lauf-Zusammenfassung, und der Build erscheint in App Store Connect unter
-  Version 1.0 und ist dort der App-Store-Version 1.0 zuordenbar. Nachweis: Lauf-Link, Ausschnitt der Archivprüfung, App-Store-Connect-Abfrage
-  (`asc_wait_build`-Ausgabe oder Probe).
 
-Umfang (höchstens die vier Dateien der Tabelle, ±250 LoC) ist ein Gate der Definition of Done, kein AC.
+Umfang (höchstens die fünf Dateien der Tabelle, ±250 LoC) ist ein Gate der Definition of Done, kein AC.
 
 ## Out of Scope
 
@@ -164,13 +169,13 @@ Umfang (höchstens die vier Dateien der Tabelle, ±250 LoC) ist ein Gate der Def
 
 ## Definition of Done
 
-- [ ] Änderungen in den vier Dateien per PR gemergt (`Closes #767`); AC-1 bis AC-7 erfüllt.
-- [ ] Gate: `python3 -m unittest discover -s scripts` grün; `git diff --stat` zeigt höchstens die vier Dateien der Tabelle, ±250 LoC.
+- [ ] Änderungen in den fünf Dateien per PR gemergt (`Closes #767`); AC-1 bis AC-7 erfüllt.
+- [ ] Gate: `python3 -m unittest discover -s scripts` grün; `git diff --stat` zeigt höchstens die fünf Dateien der Tabelle, ±250 LoC.
 - [ ] Simulator-Beleg (AC-7) als Screenshot geöffnet und beschrieben.
-- [ ] Nach dem Merge: manueller TestFlight-Lauf mit deutschem `what_to_test`; AC-8 belegt (Lauf grün, Archivprüfung `1.0 (N)` für iOS und
+- [ ] Nach dem Merge: manueller TestFlight-Lauf mit deutschem `what_to_test` belegt (Lauf grün, Archivprüfung `1.0 (N)` für iOS und
   macOS, Build unter Version 1.0 in App Store Connect). Henning bekommt die Buildnummer in Alltagssprache; er wählt den Build in der
   App-Store-Version selbst oder gibt das Wort dafür.
-- [ ] Ticket erst schließen, wenn AC-8 belegt ist.
+- [ ] Ticket erst schließen, wenn dieser TestFlight-Nachweis vorliegt (Lauf-Link, Ausschnitt der Archivprüfung, App-Store-Connect-Abfrage).
 
 ## Architektur-Entscheidung (ADR)
 
@@ -179,3 +184,5 @@ Umfang (höchstens die vier Dateien der Tabelle, ±250 LoC) ist ein Gate der Def
 ## Changelog
 
 - 2026-10-30: Initial spec created
+- 2026-10-30: Nach override: `scripts/test_ci_xcode27.py` aufgenommen (Schutztest #178 verbot jede Erwähnung von `project.yml` unter `.github/`; AC-5 sonst nicht erfüllbar)
+- 2026-10-30: AC-8 (TestFlight-Lauf nach dem Merge) in die Definition of Done verschoben; vor dem Merge unbelegbar, das QA-Gate kennt keinen Aufschub. Inhalt unverändert in der DoD.
