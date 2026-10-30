@@ -3,7 +3,7 @@ name: TestFlight
 # Archives the iOS app and then the Mac app (#389) with cloud-managed signing and uploads it to TestFlight.
 # Needs four repository secrets (docs/reference/testflight.md walks through creating them):
 #   APPLE_TEAM_ID, ASC_KEY_ID, ASC_ISSUER_ID, ASC_PRIVATE_KEY
-# Run it by hand from the Actions tab, or push a tag like v0.1.0.
+# Run it by hand from the Actions tab, or push a tag like v1.0.
 # Builds on the xcode-27 preview image with Xcode 27.0 pinned; stops instead of building with
 # another toolchain (#174).
 
@@ -145,7 +145,8 @@ jobs:
         run: |
           ARCHIVE="${ARCHIVE:-build/LooseEnds.xcarchive}"
           BUILD="${BUILD:?BUILD (build number) must be set}"
-          MARKETING="0.1.0"
+          MARKETING=$(sed -n 's/^ *MARKETING_VERSION: *"\(.*\)"$/\1/p' project.yml)
+          [ -n "$MARKETING" ] || { echo "::error::MARKETING_VERSION not found in project.yml"; exit 1; }
           SUMMARY="${GITHUB_STEP_SUMMARY:-/dev/null}"
           row() { printf '%s\n' "$1" | tee -a "$SUMMARY"; }   # Protokoll und Zusammenfassung (#183)
           APPS="$ARCHIVE/Products/Applications"
@@ -420,7 +421,8 @@ jobs:
         run: |
           ARCHIVE="${ARCHIVE:-build/LooseEndsMac.xcarchive}"
           BUILD="${BUILD:?BUILD (build number) must be set}"
-          MARKETING="0.1.0"
+          MARKETING=$(sed -n 's/^ *MARKETING_VERSION: *"\(.*\)"$/\1/p' project.yml)
+          [ -n "$MARKETING" ] || { echo "::error::MARKETING_VERSION not found in project.yml"; exit 1; }
           SUMMARY="${GITHUB_STEP_SUMMARY:-/dev/null}"
           row() { printf '%s\n' "$1" | tee -a "$SUMMARY"; }
           APP="$ARCHIVE/Products/Applications/Loose Ends.app"

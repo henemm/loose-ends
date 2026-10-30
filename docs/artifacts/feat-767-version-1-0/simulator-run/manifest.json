@@ -1,0 +1,17 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "1D9714CC-A52D-4867-BB9B-DE3670249BAD.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "settings-icloud-row_0_850DB75D-3F3B-4B69-BD78-432227A560E0.png",
+        "timestamp" : 1793388142.531
+      }
+    ],
+    "testIdentifier" : "SettingsSmokeTests/testGearOpensSettingsWithReminderTime()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/SettingsSmokeTests/testGearOpensSettingsWithReminderTime"
+  }
+]

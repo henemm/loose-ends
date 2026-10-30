@@ -22,6 +22,11 @@ STRESS = GITHUB / "workflows" / "speech-stress.yml"
 ACTION_REF = "./.github/actions/select-xcode-27"
 RUNTIME_27 = "com.apple.CoreSimulator.SimRuntime.iOS-27-0"
 RUNTIME_26 = "com.apple.CoreSimulator.SimRuntime.iOS-26-0"
+# #767: the archive checks read MARKETING_VERSION from project.yml; these two lines only read, never write.
+READS_PROJECT_YML = (
+    """MARKETING=$(sed -n 's/^ *MARKETING_VERSION: *"\\(.*\\)"$/\\1/p' project.yml)""",
+    """[ -n "$MARKETING" ] || { echo "::error::MARKETING_VERSION not found in project.yml"; exit 1; }""",
+)
 
 
 def load(path):
@@ -86,7 +91,8 @@ class Workflows(unittest.TestCase):
     def test_no_lowering_anywhere_in_github(self):
         result = subprocess.run(["grep", "-rnE", r"sed -i|26\.0|macos-26|project\.yml", str(GITHUB)],
                                 capture_output=True, text=True)
-        self.assertEqual(result.stdout, "", "Absenkung noch vorhanden")
+        rest = [hit for hit in result.stdout.splitlines() if hit.split(":", 2)[2].strip() not in READS_PROJECT_YML]
+        self.assertEqual(rest, [], "Absenkung noch vorhanden")
 
     def test_unit_job_runs_every_script_test(self):
         """#185: every scripts/test_*.py runs in CI, in one step, before Xcode."""
