@@ -1,0 +1,32 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "05983CA3-84C9-49F2-A029-344F51CAC2BE",
+        "deviceName" : "iPad Pro 13-inch (M5)",
+        "exportedFileName" : "9BA6C344-9617-4CF8-A98A-136990B1B208.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "746-erledigt_0_18984DDD-BF00-42D0-8DA2-FB1566FE208A.png",
+        "timestamp" : 1793365336.675
+      }
+    ],
+    "testIdentifier" : "PaperGroundTests/testDoneRowsShareThePaperGround()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/PaperGroundTests/testDoneRowsShareThePaperGround"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "05983CA3-84C9-49F2-A029-344F51CAC2BE",
+        "deviceName" : "iPad Pro 13-inch (M5)",
+        "exportedFileName" : "5A7691F2-F37D-4D86-90C0-DF92AF6CB63A.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "746-start_0_DD114469-C310-4436-BC4F-4D88E593AC7D.png",
+        "timestamp" : 1793365347.18
+      }
+    ],
+    "testIdentifier" : "PaperGroundTests/testStartPageRowsShareThePaperGround()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/PaperGroundTests/testStartPageRowsShareThePaperGround"
+  }
+]
