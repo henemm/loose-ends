@@ -1,0 +1,53 @@
+=== 2026-10-31 19:27:44 ./server/scripts/test-local.sh ===
+Postgres on 127.0.0.1:56955, data in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.oRucPWi1K3
+
+> typecheck
+> tsc --noEmit
+
+
+> test
+> node --test test/
+
+✔ AC-1: applies migrations in number order and returns their names in that order (15.525792ms)
+✔ AC-2: a second run applies nothing, a new file alone is applied (9.286708ms)
+✔ AC-3: a broken migration rolls back completely and rethrows the Postgres error (7.668542ms)
+✔ AC-4: a gap in the numbers is refused before anything is applied (4.182625ms)
+✔ AC-4: a duplicate number is refused before anything is applied (8.899583ms)
+✔ AC-5: without DATABASE_URL the test run fails and names the variable (217.831083ms)
+✖ deliberately red (AC-7 cleanup proof, removed after the run) (0.85175ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 6
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 404.811209
+
+✖ failing tests:
+
+test at test/zz_red.test.ts:4:1
+✖ deliberately red (AC-7 cleanup proof, removed after the run) (0.85175ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 2
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/zz_red.test.ts:5:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+=== exit code: 1 ===
+=== postgres processes (ps -axo pid,command | grep '[p]ostgres') ===
+(none)
+=== data folder from the run: /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.oRucPWi1K3 ===
+ls: /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.oRucPWi1K3: gone
+=== postgres processes using that folder ===
+(none)

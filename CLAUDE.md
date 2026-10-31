@@ -73,6 +73,10 @@ LOOSEENDS_LANG=en ./scripts/sim.sh sim-unit <Klasse>  # Testsprache en (-testLan
 ./scripts/sim.sh lab-guardrail [--dry-run] # Guardrail-Rate auf dem iPhone (#71 Schnitt 2b-2): Korpus bauen, Scheiben fahren, Bericht; --dry-run baut nur den Korpus und rührt kein Gerät an; Lauf nur nach „jetzt ist ein Test möglich“
 ```
 
+The server (`server/`, #613) has its own chain, no Xcode: `./server/scripts/test-local.sh` starts a throwaway Postgres 18
+(temp data folder, free port, TCP only), runs `npm run typecheck` and `npm test` in `server/` against it and always cleans up;
+with a `DATABASE_URL` set, both run directly in `server/`.
+
 `launch-measure` baut einen Release-Prüfbau und startet ihn per devicectl; es läuft nur nach Hennings
 ausdrücklichem „jetzt ist ein Test möglich“ (Regel im Stufe-3-Absatz unten, nicht umgehen).
 
@@ -435,6 +439,10 @@ not scope creep on the current one.
   the user's first title revision gives `titleBefore`, the last `titleUser`, the last duration revision `durationUser`; ids are numbers in
   capture order; it writes only below `docs/reference/` or outside the repo; built alone with `swiftc` together with
   `scripts/export-loose-ends-rawtexts.swift` (call in `docs/reference/messung-rohsaetze.md`); Henning's real store only after his word (B2)
+- `server/` — the service for Claude (Weg B, #613): TypeScript that Node 26 runs directly (type stripping, no build step), Postgres.
+  `src/migrate.ts` applies numbered `NNN_name.sql` exactly once, each in its own transaction with its row in `schema_migrations`;
+  a gap or a duplicate number is refused before the database is touched. The schema exists only as numbered migrations, and once
+  the service runs they are only ever added. CI: `.github/workflows/server.yml` on Linux with `postgres:18`
 
 ## Naming
 

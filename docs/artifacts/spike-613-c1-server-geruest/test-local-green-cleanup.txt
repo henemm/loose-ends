@@ -1,0 +1,31 @@
+=== 2026-10-31 19:27:35 ./server/scripts/test-local.sh ===
+Postgres on 127.0.0.1:56919, data in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.afEklmRtu9
+
+> typecheck
+> tsc --noEmit
+
+
+> test
+> node --test test/
+
+✔ AC-1: applies migrations in number order and returns their names in that order (18.843542ms)
+✔ AC-2: a second run applies nothing, a new file alone is applied (9.410625ms)
+✔ AC-3: a broken migration rolls back completely and rethrows the Postgres error (8.091958ms)
+✔ AC-4: a gap in the numbers is refused before anything is applied (4.1575ms)
+✔ AC-4: a duplicate number is refused before anything is applied (8.756834ms)
+✔ AC-5: without DATABASE_URL the test run fails and names the variable (217.930875ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 426.282
+=== exit code: 0 ===
+=== postgres processes (ps -axo pid,command | grep '[p]ostgres') ===
+(none)
+=== data folder from the run: /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.afEklmRtu9 ===
+ls: /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.afEklmRtu9: gone
+=== postgres processes using that folder ===
+(none)

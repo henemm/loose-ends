@@ -124,9 +124,44 @@ test("AC-4: a duplicate number is refused before anything is applied", async (t)
   assert.equal(await tableExists(pool, "schema_migrations"), false);
 });
 
+test("AC-4: a misnamed .sql file is refused before anything is applied, README.md is ignored", async (t) => {
+  const pool = await freshPool(t);
+  const dir = await migrationDir([
+    ["001_first.sql", "CREATE TABLE first (id int);"],
+    ["01_x.sql", "CREATE TABLE x (id int);"],
+    ["README.md", "not a migration"],
+  ]);
+
+  await assert.rejects(migrate(pool, dir), /falsch benannt.*01_x\.sql/);
+
+  assert.equal(await tableExists(pool, "first"), false);
+  assert.equal(await tableExists(pool, "schema_migrations"), false);
+});
+
+test("AC-4: a README.md beside the migrations does not disturb the run", async (t) => {
+  const pool = await freshPool(t);
+  const dir = await migrationDir([...three, ["README.md", "not a migration"]]);
+
+  assert.deepEqual(await migrate(pool, dir), ["001_first.sql", "002_second.sql", "003_uses_second.sql"]);
+});
+
+test("AC-4: number 000 is refused as invalid, not as a duplicate", async (t) => {
+  const pool = await freshPool(t);
+  const dir = await migrationDir([
+    ["000_a.sql", "CREATE TABLE a (id int);"],
+    ["001_first.sql", "CREATE TABLE first (id int);"],
+  ]);
+
+  await assert.rejects(migrate(pool, dir), /000.*ungültig/);
+
+  assert.equal(await tableExists(pool, "schema_migrations"), false);
+});
+
 test("AC-5: without DATABASE_URL the test run fails and names the variable", () => {
   const env = { ...process.env };
   delete env.DATABASE_URL;
+  // Inherited from node --test, it would make the child report to us and exit 0.
+  delete env.NODE_TEST_CONTEXT;
   const child = spawnSync(process.execPath, ["--test", import.meta.filename], { env, encoding: "utf8" });
 
   assert.notEqual(child.status, 0);

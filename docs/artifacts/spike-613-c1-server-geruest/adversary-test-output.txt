@@ -1,0 +1,26 @@
+Postgres on 127.0.0.1:62464, data in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.o7baPTFnV0
+
+> typecheck
+> tsc --noEmit
+
+
+> test
+> node --test test/
+
+✔ AC-1: applies migrations in number order and returns their names in that order (46.403416ms)
+✔ AC-2: a second run applies nothing, a new file alone is applied (20.176333ms)
+✔ AC-3: a broken migration rolls back completely and rethrows the Postgres error (16.282667ms)
+✔ AC-4: a gap in the numbers is refused before anything is applied (7.707917ms)
+✔ AC-4: a duplicate number is refused before anything is applied (18.29325ms)
+✔ AC-4: a misnamed .sql file is refused before anything is applied, README.md is ignored (7.826542ms)
+✔ AC-4: a README.md beside the migrations does not disturb the run (15.640625ms)
+✔ AC-4: number 000 is refused as invalid, not as a duplicate (7.557709ms)
+✔ AC-5: without DATABASE_URL the test run fails and names the variable (518.117459ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1015.66525
