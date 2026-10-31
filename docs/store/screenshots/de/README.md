@@ -7,3 +7,5 @@ Hochladen in der Reihenfolge der Dateinamen (01 zuerst), ohne Bildunterzeilen un
 Erzeugt mit `./scripts/sim.sh store-screenshots` (#742), nie von Hand.
 
 Die Bilder in `watch/` gehören zu „Apple Watch Series 12/11/10“ (416×496), mit Beispielaufgaben aus dem Testmodus; Erzeugung mit `./scripts/sim.sh store-watch`.
+
+Die Bilder in `mac/` (1280×800, 16:10) gehören zu „Mac“; sie entstehen im CI-Lauf `store-mac.yml` (Fenster 1280×800, nur das Fenster aufgenommen), nie auf Hennings Mac.
