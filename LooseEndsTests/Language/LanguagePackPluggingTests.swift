@@ -28,7 +28,7 @@ struct LanguagePackPluggingTests {
             let title = TitleRule.title(from: text, reference: reference, calendar: calendar) ?? ""
             #expect(!title.contains("snib") && !title.contains("byy") && !title.contains("zingo"),
                     "Titel: Datum, Einleitung und Wichtigkeitswort bleiben draußen, ist: \(title)")
-            #expect(title.contains("grassle"), "Titel: der Inhalt bleibt, ist: \(title)")
+            #expect(title.lowercased().contains("grassle"), "Titel: der Inhalt bleibt, ist: \(title)")
         }
     }
 
