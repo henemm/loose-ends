@@ -4,29 +4,10 @@ import { spawnSync } from "node:child_process";
 import { mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { randomUUID } from "node:crypto";
-import pg from "pg";
+import type pg from "pg";
 import { migrate } from "../src/migrate.ts";
-
-// AC-5: without a database the run fails, it is never skipped.
-const databaseUrl = process.env.DATABASE_URL;
-if (!databaseUrl) {
-  throw new Error("DATABASE_URL fehlt: die Tests laufen nur gegen echtes Postgres");
-}
-
-// Each test gets its own schema, so runs never see each other's tables.
-async function freshPool(t: { after: (fn: () => Promise<void>) => void }): Promise<pg.Pool> {
-  const schema = `t_${randomUUID().replaceAll("-", "")}`;
-  const admin = new pg.Pool({ connectionString: databaseUrl });
-  await admin.query(`CREATE SCHEMA ${schema}`);
-  const pool = new pg.Pool({ connectionString: databaseUrl, options: `-c search_path=${schema}` });
-  t.after(async () => {
-    await pool.end();
-    await admin.query(`DROP SCHEMA ${schema} CASCADE`);
-    await admin.end();
-  });
-  return pool;
-}
+// AC-5: db.ts fails the run without DATABASE_URL, it is never skipped.
+import { freshPool } from "./db.ts";
 
 // Files are written in the given order, which is deliberately not the number order.
 async function migrationDir(files: Array<[string, string]>): Promise<string> {

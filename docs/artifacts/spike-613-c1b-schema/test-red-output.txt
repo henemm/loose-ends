@@ -1,0 +1,146 @@
+Postgres on 127.0.0.1:54433, data in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.TAj7hJjNjx
+
+> typecheck
+> tsc --noEmit
+
+
+> test
+> node --test test/
+
+✔ AC-1: applies migrations in number order and returns their names in that order (20.121042ms)
+✔ AC-2: a second run applies nothing, a new file alone is applied (10.004792ms)
+✔ AC-3: a broken migration rolls back completely and rethrows the Postgres error (8.197958ms)
+✔ AC-4: a gap in the numbers is refused before anything is applied (3.775ms)
+✔ AC-4: a duplicate number is refused before anything is applied (8.602916ms)
+✔ AC-4: a misnamed .sql file is refused before anything is applied, README.md is ignored (3.8125ms)
+✔ AC-4: a README.md beside the migrations does not disturb the run (6.619666ms)
+✔ AC-4: number 000 is refused as invalid, not as a duplicate (3.694291ms)
+✔ AC-5: without DATABASE_URL the test run fails and names the variable (216.64625ms)
+✖ AC-1: the real migrations folder applies 001 once and creates the three tables (9.978459ms)
+✖ AC-2: the three contract examples are accepted in contract order (3.431ms)
+✖ AC-3: transcripts refuse what the contract does not allow (3.111208ms)
+✖ AC-4: orders refuse a wrong version, kind, id, account or half a claim, and take all three kinds (2.717791ms)
+✖ AC-5: order results belong to exactly one existing order and carry a reason only when rejected (2.328125ms)
+✖ AC-6: ids keep their case in the document, the uuid columns compare regardless of case (1.997708ms)
+✖ AC-6: known limit, version 1.0 is accepted because jsonb compares numbers numerically (1.851833ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 9
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 454.902166
+
+✖ failing tests:
+
+test at test/schema.test.ts:56:1
+✖ AC-1: the real migrations folder applies 001 once and creates the three tables (9.978459ms)
+  Error: ENOENT: no such file or directory, scandir '/Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/migrations'
+      at async readdir (node:internal/fs/promises:1786:18)
+      at async loadMigrations (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/src/migrate.ts:16:18)
+      at async migrate (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/src/migrate.ts:67:22)
+      at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/schema.test.ts:59:20)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'scandir',
+    path: '/Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/migrations'
+  }
+
+test at test/schema.test.ts:68:1
+✖ AC-2: the three contract examples are accepted in contract order (3.431ms)
+  Error: ENOENT: no such file or directory, scandir '/Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/migrations'
+      at async readdir (node:internal/fs/promises:1786:18)
+      at async loadMigrations (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/src/migrate.ts:16:18)
+      at async migrate (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/src/migrate.ts:67:22)
+      at async migrated (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/schema.test.ts:25:3)
+      at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/schema.test.ts:69:16)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'scandir',
+    path: '/Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/migrations'
+  }
+
+test at test/schema.test.ts:81:1
+✖ AC-3: transcripts refuse what the contract does not allow (3.111208ms)
+  Error: ENOENT: no such file or directory, scandir '/Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/migrations'
+      at async readdir (node:internal/fs/promises:1786:18)
+      at async loadMigrations (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/src/migrate.ts:16:18)
+      at async migrate (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/src/migrate.ts:67:22)
+      at async migrated (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/schema.test.ts:25:3)
+      at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/schema.test.ts:82:16)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'scandir',
+    path: '/Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/migrations'
+  }
+
+test at test/schema.test.ts:102:1
+✖ AC-4: orders refuse a wrong version, kind, id, account or half a claim, and take all three kinds (2.717791ms)
+  Error: ENOENT: no such file or directory, scandir '/Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/migrations'
+      at async readdir (node:internal/fs/promises:1786:18)
+      at async loadMigrations (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/src/migrate.ts:16:18)
+      at async migrate (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/src/migrate.ts:67:22)
+      at async migrated (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/schema.test.ts:25:3)
+      at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/schema.test.ts:103:16)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'scandir',
+    path: '/Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/migrations'
+  }
+
+test at test/schema.test.ts:131:1
+✖ AC-5: order results belong to exactly one existing order and carry a reason only when rejected (2.328125ms)
+  Error: ENOENT: no such file or directory, scandir '/Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/migrations'
+      at async readdir (node:internal/fs/promises:1786:18)
+      at async loadMigrations (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/src/migrate.ts:16:18)
+      at async migrate (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/src/migrate.ts:67:22)
+      at async migrated (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/schema.test.ts:25:3)
+      at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/schema.test.ts:132:16)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'scandir',
+    path: '/Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/migrations'
+  }
+
+test at test/schema.test.ts:156:1
+✖ AC-6: ids keep their case in the document, the uuid columns compare regardless of case (1.997708ms)
+  Error: ENOENT: no such file or directory, scandir '/Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/migrations'
+      at async readdir (node:internal/fs/promises:1786:18)
+      at async loadMigrations (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/src/migrate.ts:16:18)
+      at async migrate (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/src/migrate.ts:67:22)
+      at async migrated (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/schema.test.ts:25:3)
+      at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/schema.test.ts:157:16)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'scandir',
+    path: '/Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/migrations'
+  }
+
+test at test/schema.test.ts:167:1
+✖ AC-6: known limit, version 1.0 is accepted because jsonb compares numbers numerically (1.851833ms)
+  Error: ENOENT: no such file or directory, scandir '/Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/migrations'
+      at async readdir (node:internal/fs/promises:1786:18)
+      at async loadMigrations (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/src/migrate.ts:16:18)
+      at async migrate (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/src/migrate.ts:67:22)
+      at async migrated (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/schema.test.ts:25:3)
+      at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/schema.test.ts:169:16)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'scandir',
+    path: '/Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/migrations'
+  }

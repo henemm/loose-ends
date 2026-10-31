@@ -1,0 +1,7 @@
+AC-8 Befund in RED (2026-10-31): Läuft `node --test test/` ohne DATABASE_URL, scheitern genau zwei Dateien:
+  ✖ test/migrate.test.ts
+  ✖ test/schema.test.ts
+  ℹ tests 2
+db.ts wirft ohne DATABASE_URL beim Laden; würde node --test es als Testdatei laden, stünde dort ein drittes ✖ test/db.ts.
+Es fehlt -> Node 26 wählt in test/ nur *.test.ts. Die 7. Datei (server/package.json, Muster test/*.test.ts) entfällt laut Spec.
+Gegenprobe mit 'test/*.test.ts': dieselben zwei Dateien.
