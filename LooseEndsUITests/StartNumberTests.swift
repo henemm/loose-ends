@@ -12,7 +12,7 @@ final class StartNumberTests: XCTestCase {
     @MainActor
     private func launch() -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["--ui-testing", "--ui-testing-leftovers", "-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+        app.launchArguments = ["--ui-testing", "--ui-testing-leftovers"] + LaunchLanguage.arguments
         app.launch()
         return app
     }

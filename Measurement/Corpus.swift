@@ -163,7 +163,19 @@ enum Corpus {
                 Entry(id: $0.id, lang: $0.lang ?? "de", text: $0.rawText)
             }
         }
+        // An entry without `lang` is named by its id instead of failing as an anonymous decoding error (#759).
+        if let list = object as? [[String: Any]] {
+            for item in list where !(item["lang"] is String) {
+                throw MissingLanguage(id: item["id"] as? String ?? "?")
+            }
+        }
         return try JSONDecoder().decode([Entry].self, from: data)
+    }
+
+    /// A corpus entry in the plain list format without a language: the per-language report cannot place it.
+    struct MissingLanguage: Error, Equatable, CustomStringConvertible {
+        let id: String
+        var description: String { "Korpuseintrag \(id) hat kein lang." }
     }
 
     /// Why a corpus gave no entries (#88 B1a). The message names corpus, kind and code, never a sentence.

@@ -86,7 +86,7 @@ benennt um, Wischen löscht nach Rückfrage, unten „Neues Etikett“ bzw. „N
 auf. Bewusste Ausnahme von #180 Regel 2, nur auf diesen Seiten. iPad und Mac behalten die einklappbaren Gruppen der
 Seitenleiste. Entwurf: https://claude.ai/artifact/AppBHrhym57SBMURaQck5P
 
-**Das Knäuel und die Schnur der Woche (Henning, 2026-10-23, #642, Schnitte #643 und #645; Leinwand
+**Das Knäuel (englisch „the Tangle“, Henning 2026-10-30, #758) und die Schnur der Woche (Henning, 2026-10-23, #642, Schnitte #643 und #645; Leinwand
 https://claude.ai/artifact/91YJuzqSFibDQNfS22soYK):** Solange eine Aufgabe das Knäuel ist, zeigt der Kopf am Datum statt des
 grauen Knotens das schwarze Knäuel (ein Fünftel größer, Strich wie der Knoten), das Datum beginnt 64 pt eingerückt, und die
 Aufgabe steht als eigene Zeile direkt unter dem Datum, vor dem Satz des Tages: Titel in New York, darunter „Seit N Tagen“

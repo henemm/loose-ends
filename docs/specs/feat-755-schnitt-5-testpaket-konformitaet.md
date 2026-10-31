@@ -90,3 +90,4 @@ Kommentar nennt den Satz, der kippte. Keine dritte Option.
 ## Changelog
 
 - 2026-10-30: Spec erstellt.
+- 2026-10-31: Faltung entschieden: `Locale(identifier: "en_US_POSIX")` in `ExpressionText.folded` und `RawTextWords.normalized`; `RuleGoldenTests` blieb grün ohne Fixture-Änderung (CI-Lauf 41221740523). `active` ist ein Task-Local (`LanguagePacks.pluggedIn`, `withPacks`) statt `nonisolated(unsafe) var`, weil Swift Testing Tests im selben Prozess parallel fährt.

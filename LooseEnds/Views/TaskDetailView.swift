@@ -642,10 +642,10 @@ struct TaskDetailView: View {
                         HStack(spacing: 8) {
                             ThreadGlyph(form: .knaeuel, lineWidth: 1.5)
                                 .frame(width: 30, height: 15)
-                            Text("The Knäuel · \(KnaeuelSince.setWords(from: at))")
+                            Text("The Tangle · \(KnaeuelSince.setWords(from: at))")
                         }
                         Spacer()
-                        Button("No longer the Knäuel") { actions.releaseKnaeuel(task) }
+                        Button("No longer the Tangle") { actions.releaseKnaeuel(task) }
                             .buttonStyle(.borderless)
                             .accessibilityIdentifier("detailReleaseKnaeuel")
                     }
@@ -657,7 +657,7 @@ struct TaskDetailView: View {
                         PearlGlyph()
                             .frame(width: 30, height: 10)
                         if task.isKnaeuel {
-                            Text("Collects a bead always, it is the Knäuel")
+                            Text("Collects a bead always, it is the Tangle")
                         } else {
                             Text("Collects a bead")
                         }

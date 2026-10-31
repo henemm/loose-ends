@@ -35,6 +35,18 @@ struct ContextWordRuleTests {
         #expect(names("Stop at the gas station", englishCatalog) == ["Out and about"])
     }
 
+    @Test("Der Standardname findet die Wörter in jeder ausgelieferten Sprache")
+    func defaultNamesResolveInEveryShippedLanguage() {
+        #expect(names("Rasen mähen", ["Garten"]) == ["Garten"])
+        #expect(names("Rasen mähen", ["Garden"]) == ["Garden"])
+        #expect(names("Mow the lawn", ["Garten"]) == ["Garten"])
+    }
+
+    @Test("Stehen beide Namen da, bekommt nur der erste die Wörter (#157)")
+    func bothNamesPresentClaimOnlyFirst() {
+        #expect(names("Rasen mähen", ["Garden", "Garten"]) == ["Garden"])
+    }
+
     @Test("Der Gerätetest aus #215 bleibt leer")
     func taxLetterStaysEmpty() {
         #expect(names("Morgen wichtig Steuerbescheid prüfen", germanCatalog) == nil)

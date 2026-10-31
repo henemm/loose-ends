@@ -113,7 +113,7 @@ struct FieldSettingsView: View {
         case .project: String(localized: "Projects")
         case .subtasks: String(localized: "Subtasks")
         case .waitingOn: String(localized: "Waiting on")
-        case .knaeuel: String(localized: "The Knäuel")
+        case .knaeuel: String(localized: "The Tangle")
         case .counts: String(localized: "Collect beads")
         }
     }

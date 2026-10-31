@@ -17,7 +17,7 @@ enum FieldFormatting {
         case .repeatRule: String(localized: "Repeat")
         case .place: String(localized: "Place")
         case .notes: String(localized: "Note")
-        case .knaeuel: String(localized: "The Knäuel")
+        case .knaeuel: String(localized: "The Tangle")
         case .counts: String(localized: "Collect bead")
         }
     }

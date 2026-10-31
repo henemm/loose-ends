@@ -15,10 +15,10 @@ enum TitleRule {
 
     /// Small words that only lead into the date or time and go with it (Henning, 2026-10-06, #217):
     /// "bis Freitag", "bis zum 15.", "ab Montag", "by Friday", "at 5pm".
-    private static let leadIns: Set<String> = ["bis", "am", "um", "ab", "zum", "by", "on", "at"]
+    private static var leadIns: Set<String> { Set(LanguagePacks.titleLeadIns) }
 
     /// Left alone between two struck words: "dringend und wichtig".
-    private static let connectors: Set<String> = ["und", "and"]
+    private static var connectors: Set<String> { Set(LanguagePacks.titleConnectors) }
 
     /// Punctuation right after a struck word goes with it ("Morgen, wichtig: …"); quotes and
     /// brackets stay, they belong to the next word.
@@ -65,12 +65,7 @@ enum TitleRule {
 
     /// Month and weekday names the model may not bring into a title on its own (#507): it was handed the
     /// capture day and wrote it into "Blumen gießen muss" as "Blumen 17. Oktober, gießen".
-    private static let dateWords: Set<String> = Set([
-        "januar", "februar", "märz", "april", "mai", "juni", "juli", "august", "september", "oktober", "november", "dezember",
-        "montag", "dienstag", "mittwoch", "donnerstag", "freitag", "samstag", "sonntag",
-        "january", "february", "march", "june", "july", "october", "december",
-        "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",
-    ].map(RawTextWords.normalized))
+    private static var dateWords: Set<String> { Set(LanguagePacks.titleDateWords.map(RawTextWords.normalized)) }
 
     /// Whether a model title names a date the note does not: a month or weekday name, or a number, that
     /// does not stand in the note (#507). The due date is the rules' job (#95); a date in the title is the

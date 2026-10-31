@@ -1,0 +1,47 @@
+name: Prepare the UI-test simulator
+description: Picks the iPhone 17 with iOS 27.0, boots it, prepares it (#578) and lets it settle (#228). Sets SIM_UDID.
+# #761: the language matrix `ui-smoke-lang` needs the same simulator as `ui-smoke`. The job `ui-smoke` keeps its own
+# copy of these steps untouched; a change here belongs there too (and the other way round).
+runs:
+  using: composite
+  steps:
+    - name: Pick a simulator (iPhone 17, iOS 27.0 only)
+      shell: bash
+      run: |
+        udid=$(xcrun simctl list devices available -j | python3 -c 'import json,sys
+        devs=json.load(sys.stdin).get("devices", {}).get("com.apple.CoreSimulator.SimRuntime.iOS-27-0", [])
+        hit=next((d for d in devs if d["name"]=="iPhone 17"), None)
+        print(hit["udid"] if hit else "")')
+        if [ -z "$udid" ]; then
+          echo "::error::No iPhone 17 simulator with iOS 27.0 on this image. Available devices:"
+          xcrun simctl list devices available
+          exit 1
+        fi
+        xcrun simctl list devices available | grep "$udid"
+        xcrun simctl boot "$udid" || true
+        echo "SIM_UDID=$udid" >> "$GITHUB_ENV"
+    - name: Wait until the simulator has finished booting
+      shell: bash
+      run: xcrun simctl bootstatus "$SIM_UDID" -b
+    - name: Prepare the simulator (#578)
+      shell: bash
+      run: scripts/sim_prepare.sh "$SIM_UDID"
+    - name: Let the simulator settle (#228)
+      shell: bash
+      run: |
+        for svc in com.apple.PosterBoard com.apple.contacts.postersyncd; do
+          xcrun simctl spawn "$SIM_UDID" launchctl disable "system/$svc" 2>&1 || true
+          xcrun simctl spawn "$SIM_UDID" launchctl bootout "system/$svc" 2>&1 \
+            || xcrun simctl spawn "$SIM_UDID" launchctl stop "$svc" 2>&1 || true
+        done
+        sleep 3
+        quiet=0
+        waited=0
+        while [ "$waited" -lt 180 ]; do
+          busy=$(ps -A -o pcpu=,comm= | grep -i poster | awk '$1 > 5' | wc -l | tr -d ' ')
+          if [ "$busy" = 0 ]; then quiet=$((quiet + 1)); else quiet=0; fi
+          [ "$quiet" -ge 3 ] && break
+          sleep 5
+          waited=$((waited + 5))
+        done
+        echo "settled after about ${waited} s (quiet samples in a row: ${quiet})"

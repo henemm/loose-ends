@@ -52,7 +52,7 @@ LoC Produkt ≈ 16 geänderte Zeilen.
   und Screenshot der Widget-Galerie im Simulator.“
 - Vorgehen Katalog: Literale ändern, `./scripts/sim.sh generate && ./scripts/sim.sh build` (zieht neue Schlüssel in die
   Kataloge), dann je neuem Schlüssel die `de`-Einheit vom alten Schlüssel kopieren, alte Schlüssel löschen. Prüfen mit
-  `python3 -m unittest scripts.test_catalog_languages` (oder `test_infoplist_languages`, je nach Stand von #756).
+  `python3 -m unittest scripts.test_catalog_languages` .
 - Widget-Galerie-Screenshot: Simulator, Home-Bildschirm lange drücken → „+“ → Loose Ends; alternativ der UI-Test
   `NextUpWidgetTests`, falls er die Beschreibung rendert. Bild im PR.
 

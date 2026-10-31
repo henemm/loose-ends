@@ -57,6 +57,12 @@ struct DateTitleReportTests {
         var sentences: Int { date.total + invented.total }
     }
 
+    struct LanguageTally {
+        var ruleDate = Tally()
+        var ruleInvented = Tally()
+        var sentences: Int { ruleDate.total + ruleInvented.total }
+    }
+
     struct Report {
         var model = Tally()
         var invented = Tally()
@@ -72,6 +78,8 @@ struct DateTitleReportTests {
         var ruleParserByRule: [String: Tally] = [:]
         var byCondition: [String: Tally] = [:]
         var byForm: [String: FormTally] = [:]
+        /// The rule column per corpus language (#759): the bar for a shipped language is read from here.
+        var byLanguage: [String: LanguageTally] = [:]
         var seconds: [Double] = []
         var failures = 0
         var throttled = 0
@@ -175,9 +183,11 @@ struct DateTitleReportTests {
                     report.ruleParser.record(hit: hit, empty: got == nil, miss: miss)
                     report.ruleParserByRule[ruleName(expectation), default: Tally()].record(hit: hit, empty: got == nil)
                     report.byForm[entry.form, default: FormTally()].ruleDate.record(hit: hit)
+                    report.byLanguage[entry.lang, default: LanguageTally()].ruleDate.record(hit: hit)
                 } else {
                     report.ruleParserInvented.record(hit: got == nil, miss: "`\(entry.text)` \u{2192} \(day(got, calendar))")
                     report.byForm[entry.form, default: FormTally()].ruleInvented.record(hit: got == nil)
+                    report.byLanguage[entry.lang, default: LanguageTally()].ruleInvented.record(hit: got == nil)
                 }
             }
             guard let expected = entry.time else { continue }
@@ -203,6 +213,7 @@ struct DateTitleReportTests {
     static func markdown(_ report: Report, runs: [MeasurementRun], corpus: [Corpus.Entry]) -> String {
         [head(report, runs: runs, corpus: corpus),
          dateSection(report),
+         languageSection(report),
          conditionSection(report),
          formSection(report),
          weightedSection(report),
@@ -271,6 +282,23 @@ struct DateTitleReportTests {
         }
         return lines.joined(separator: "\n")
     }
+
+    /// The rule parser per corpus language (#759): a language counts as shipped only above the bar in
+    /// `docs/reference/date-title-fidelity.md`, so each language gets its own row.
+    static func languageSection(_ report: Report) -> String {
+        var lines = ["## Regelparser je Sprache", "",
+                     "| Sprache | Sätze | Regel exakt | Regel erfunden |", "|---|---|---|---|"]
+        for lang in report.byLanguage.keys.sorted() {
+            guard let tally = report.byLanguage[lang] else { continue }
+            let exact = tally.ruleDate.total == 0 ? "–" : "\(percent(tally.ruleDate.share)) von \(tally.ruleDate.total)"
+            lines.append("| \(lang) | \(tally.sentences) | \(exact) | \(inverse(tally.ruleInvented)) |")
+        }
+        lines += ["", threshold]
+        return lines.joined(separator: "\n")
+    }
+
+    /// The bar for a shipped language (#759); `docs/reference/neue-sprache.md` point 3 repeats it.
+    static let threshold = "**Schwelle:** Eine Sprache gilt als ausgeliefert, wenn ihre Regelspalte auf mindestens 50 Korpussätzen Datum ≥ 99 % exakt und 0 % erfunden erreicht und ihre Textform-Werte für Dringlichkeit und Etiketten nicht unter den englischen liegen (38/40, 37/40, `textform-rules.md`). Darunter bleibt das Pack im Code, aber nicht in `shipped`. Bekannte Lücke ohne Korpussatz: „in a/an <Einheit>“ im Englischen (#783)."
 
     /// The answer to "was this measured under realistic conditions?" — not argued, measured.
     static func conditionSection(_ report: Report) -> String {
@@ -519,6 +547,23 @@ struct DateTitleRuleParserSectionTests {
         #expect(section.contains("| Ausdruck | Sätze | Modell exakt | Leer gelassen | Regelparser exakt |"))
         #expect(section.contains("| Wochentag | 1 | 100.0 % | 0 | 50.0 % |"))
         #expect(section.contains("**Uhrzeit Regelparser:** 100.0 % exakt bei 1 Sätzen mit Uhrzeit."))
+    }
+
+    @Test("Der Regelparser wird je Sprache gezählt und je Sprache ausgewiesen (#759)")
+    func perLanguage() throws {
+        let corpus = try Self.corpus("""
+        [{"id": "a", "lang": "de", "text": "Morgen die Kita anrufen", "date": {"rule": "offsetDays", "value": 1}},
+         {"id": "b", "lang": "de", "text": "Rechnung 4711 reklamieren"},
+         {"id": "c", "lang": "en", "text": "Call the landlord tomorrow", "date": {"rule": "offsetDays", "value": 1}},
+         {"id": "d", "lang": "en", "text": "Replace the batteries in the doorbell"}]
+        """)
+        var report = DateTitleReportTests.Report()
+        DateTitleReportTests.scoreRuleParser(corpus, calendar: CorpusTests.calendar, reference: CorpusTests.reference, into: &report)
+        #expect(Set(report.byLanguage.keys) == ["de", "en"])
+        let section = DateTitleReportTests.languageSection(report)
+        #expect(section.hasPrefix("## Regelparser je Sprache"))
+        #expect(section.contains("| de | 2 | 100.0 % von 1 | 0.0 % von 1 |"))
+        #expect(section.contains("| en | 2 | 100.0 % von 1 | 0.0 % von 1 |"))
     }
 
     @Test("Was der Regelparser verfehlt, steht mit Ausdrucksart im Bericht")

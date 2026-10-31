@@ -70,6 +70,18 @@ class SummaryParsingTests(NeedsModule):
         self.assertNotEqual(sim_proof.parse_summary(empty, xcodebuild_exit=0)["ergebnis"], "Passed")
 
 
+class ScreenshotSuffixTests(NeedsModule):
+    def test_language_is_appended_once_and_only_when_set(self):
+        with tempfile.TemporaryDirectory() as folder:
+            out = Path(folder)
+            (out / "start.png").write_bytes(b"x")
+            sim_proof.suffix_screenshots(out, "")
+            self.assertEqual([p.name for p in out.glob("*.png")], ["start.png"])
+            sim_proof.suffix_screenshots(out, "de")
+            sim_proof.suffix_screenshots(out, "de")
+            self.assertEqual([p.name for p in out.glob("*.png")], ["start-de.png"])
+
+
 class CodeFilterTests(NeedsModule):
     """Spiegel von is_gated_code_path (Plugin hook_utils.py:710) mit den Vorgabelisten."""
 

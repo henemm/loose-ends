@@ -276,7 +276,7 @@ struct NextUpWidgetView: View {
         ThreadGlyph(form: .knaeuel, lineWidth: 1.4)
             .frame(width: 30, height: 15)
             .foregroundStyle(.primary)
-            .accessibilityLabel(Text("The Knäuel"))
+            .accessibilityLabel(Text("The Tangle"))
     }
 
     private func margin(of line: NextUpEntry.Line) -> String {
@@ -332,7 +332,7 @@ struct NextUpWidget: Widget {
             NextUpWidgetView(entry: entry)
         }
         .configurationDisplayName("Now")
-        .description("The Knäuel and what is on now, one tap to finish it.")
+        .description("The Tangle and what is on now, one tap to finish it.")
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }

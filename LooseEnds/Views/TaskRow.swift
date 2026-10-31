@@ -182,7 +182,7 @@ struct TaskRow: View {
                             ThreadGlyph(form: .knaeuel, lineWidth: 1.2)
                                 .frame(width: 22, height: 11)
                                 .foregroundStyle(.secondary)
-                                .accessibilityLabel(Text("The Knäuel"))
+                                .accessibilityLabel(Text("The Tangle"))
                                 .accessibilityIdentifier("knaeuelMarker_\(task.id.uuidString)")
                         } else {
                             HStack(spacing: 3) {
