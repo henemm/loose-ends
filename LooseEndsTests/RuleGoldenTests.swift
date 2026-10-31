@@ -77,11 +77,13 @@ struct RuleGoldenTests {
         if update || stored == nil {
             let encoder = JSONEncoder()
             encoder.outputFormatting = [.sortedKeys]
-            // Eine Zeile je Satz im Log, damit eine CI ohne Dateizugriff die Fixture daraus bauen kann.
+            // Eine Zeile je Satz im Log (CI kopiert `*-REPORT`-Blöcke in den Job), damit die Fixture daraus gebaut werden kann.
+            print("RULEGOLDEN-REPORT BEGIN")
             for id in rows.keys.sorted() {
                 let line = String(decoding: try encoder.encode(["id": id].merging(rows[id] ?? [:]) { a, _ in a }), as: UTF8.self)
                 print("RULE-GOLDEN-ROW \(line)")
             }
+            print("RULEGOLDEN-REPORT END")
             if update {
                 let pretty = JSONEncoder()
                 pretty.outputFormatting = [.sortedKeys, .prettyPrinted]
