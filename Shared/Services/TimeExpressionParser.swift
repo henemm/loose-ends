@@ -120,7 +120,7 @@ struct TimeExpressionParser: Sendable {
 
     /// Hours dictation spells out: the shared number words reach twelve, "dreizehn" to "dreiundzwanzig"
     /// and "null" come on top. Folded like `ExpressionText` folds words (no diacritics).
-    private static let spelledHours: [String: Int] = ExpressionText.numbers.merging([
+    private static let spelledHours: [String: Int] = LanguagePacks.numbers.merging([
         "null": 0, "dreizehn": 13, "vierzehn": 14, "funfzehn": 15, "sechzehn": 16, "siebzehn": 17,
         "achtzehn": 18, "neunzehn": 19, "zwanzig": 20, "einundzwanzig": 21, "zweiundzwanzig": 22,
         "dreiundzwanzig": 23,

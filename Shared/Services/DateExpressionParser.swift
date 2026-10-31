@@ -71,16 +71,9 @@ enum ExpressionText {
         words.indices.contains(index) ? words[index].text : ""
     }
 
-    static let numbers: [String: Int] = [
-        "ein": 1, "eine": 1, "einer": 1, "einem": 1, "einen": 1, "eins": 1, "one": 1,
-        "zwei": 2, "two": 2, "drei": 3, "three": 3, "vier": 4, "four": 4, "funf": 5, "five": 5,
-        "sechs": 6, "six": 6, "sieben": 7, "seven": 7, "acht": 8, "eight": 8, "neun": 9, "nine": 9,
-        "zehn": 10, "ten": 10, "elf": 11, "eleven": 11, "zwolf": 12, "twelve": 12,
-    ]
-
     /// A digit group or a number word, nothing else: "4711" stays a number, "A-2291" never becomes one.
     static func number(_ text: String) -> Int? {
-        Int(text) ?? numbers[text]
+        Int(text) ?? LanguagePacks.numbers[text]
     }
 }
 
@@ -153,28 +146,16 @@ struct DateExpressionParser: Sendable {
         var count = 1
     }
 
-    private static let weekdays: [String: Int] = [
-        "sonntag": 1, "sunday": 1, "montag": 2, "monday": 2, "dienstag": 3, "tuesday": 3,
-        "mittwoch": 4, "wednesday": 4, "donnerstag": 5, "thursday": 5, "freitag": 6, "friday": 6,
-        "samstag": 7, "sonnabend": 7, "saturday": 7,
-    ]
-
-    private static let months: [String: Int] = [
-        "januar": 1, "january": 1, "februar": 2, "february": 2, "marz": 3, "march": 3,
-        "april": 4, "mai": 5, "may": 5, "juni": 6, "june": 6, "juli": 7, "july": 7,
-        "august": 8, "september": 9, "oktober": 10, "october": 10, "november": 11,
-        "dezember": 12, "december": 12,
-    ]
-
-    private static let relativeDays = ["heute": 0, "today": 0, "morgen": 1, "tomorrow": 1, "ubermorgen": 2]
-    private static let nextWords = ["nachste", "nachsten", "nachster", "nachstes", "nachstem", "next"]
-    private static let dayUnits = ["tag", "tage", "tagen", "day", "days"]
-    private static let weekUnits = ["woche", "wochen", "week", "weeks"]
-    private static let dayPrepositions = ["am", "zum", "bis"]
-    private static let ordinalSuffixes = ["st", "nd", "rd", "th"]
-    private static let repetitions = ["jeden", "jede", "jeder", "jedes", "jedem", "every",
-                                      "werktags", "taglich", "wochentlich", "monatlich", "jahrlich",
-                                      "daily", "weekly", "monthly"]
+    // The words live in `Shared/Language/` (Epic #750); these are the merged views of all shipped packs.
+    private static var weekdays: [String: Int] { LanguagePacks.weekdays }
+    private static var months: [String: Int] { LanguagePacks.months }
+    private static var relativeDays: [String: Int] { LanguagePacks.relativeDays }
+    private static var nextWords: [String] { LanguagePacks.nextWords }
+    private static var dayUnits: [String] { LanguagePacks.dayUnits }
+    private static var weekUnits: [String] { LanguagePacks.weekUnits }
+    private static var dayPrepositions: [String] { LanguagePacks.dayPrepositions }
+    private static var ordinalSuffixes: [String] { LanguagePacks.ordinalSuffixes }
+    private static var repetitions: [String] { LanguagePacks.repetitions }
 
     /// Whether the text names a repetition anywhere: then a time alone sets no due date either (#679),
     /// "Jeden Tag um 7 Uhr" is the repeat rule's time, not today's.
