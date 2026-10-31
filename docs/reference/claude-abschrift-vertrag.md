@@ -95,6 +95,13 @@ Aufgabe, die schon weitergerollt ist, kein zweites Mal ab. Verglichen wird in ga
 Bekannte Grenze von Version 1: `dueHasTime` gehört nicht zum erwarteten Stand. Ein `setDue` mit demselben Zeitpunkt und
 anderem `hasTime` ändert nur `dueHasTime`, ohne Revision.
 
+Ebenso offen in Version 1 (Validierung 2026-10-31, Folgeschnitt C3):
+
+- `setDue` prüft den Status nicht. Wurde eine Aufgabe nach der Abschrift erledigt und blieb ihre Fälligkeit gleich, setzt der
+  Auftrag die Fälligkeit trotzdem (als Revision, nichts geht verloren). Vorgesehen: ablehnen als `stale`.
+- Ein Auftrag ohne `version` ist kein gültiges JSON für die App: Das Dekodieren scheitert, bevor der Ausführer ihn als
+  `invalid` ablehnen kann. Der Dienst prüft deshalb `version` schon beim Annehmen.
+
 Beispiel:
 
 ```json

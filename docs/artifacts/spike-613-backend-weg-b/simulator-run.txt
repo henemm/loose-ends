@@ -1,0 +1,22 @@
+# Simulator-Beleg
+erzeugt: 2026-10-31T16:06:12+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: spike-613-backend-weg-b
+head: 358edf23020cfce531a05c1cef5b65b16a7f6be2
+basis: a23121411718e003968988fde019de1bfb1ba869 (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 24 gesamt, 24 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793458399.648  ende: 1793459169.56
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/spike-613-backend-weg-b/simulator-run/summary.json  sha256:adfc0e35916c83e60e978145f612cec23118bd99c3533bfdf364fe02e5cb2541
+xcresult: docs/artifacts/spike-613-backend-weg-b/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/spike-613-backend-weg-b/simulator-run/*.png (13 Stück)
+
+## Geprüfte Dateien
+- sha256:f502ca586056ee7e4d2add6b4e2e2ffb98b418f1bb070b9a6a02363cf85a09a1  LooseEndsTests/OrderExecutorTests.swift
+- sha256:90e242692a02224d52c25487aa220731bf8e83062f5e33731ca3897d8c8c8d4a  LooseEndsTests/TranscriptCodecTests.swift
+- sha256:64b37b113c8c4d459cda032bea30cd9da79983832b69a426401f0522b84af319  Shared/Models/Enums.swift
+- sha256:39d15ed826148c8778b480e9643bcbf81606b792074f64df65fe5c3befa60684  Shared/Services/OrderExecutor.swift
+- sha256:8e6898f6f9193dbcda9bb13b3b37e6d46a4b8ed6d2af3ef36f43fc2decdc80b8  Shared/Services/TranscriptCodec.swift
