@@ -106,7 +106,7 @@ Berechtigungen gehören in `project.yml` (`entitlements.properties`), nie nur in
 nur das Abbild (#499); `scripts/test_info_plist_sync.py` vergleicht beide, und der CI-Schritt „Generate leaves the tree clean“
 schlägt fehl, wenn `generate` einen Diff hinterlässt. Berechtigungstexte brauchen zusätzlich einen deutschen Eintrag in
 `LooseEnds/Resources/de.lproj/InfoPlist.strings` (App und Watch bündeln dieselbe Datei), sonst zeigt ein deutsches Gerät den
-Dialog englisch; `scripts/test_infoplist_languages.py` prüft das und die Vollständigkeit der vier `*.xcstrings` (#342).
+Dialog englisch; `scripts/test_catalog_languages.py` prüft das für jede Sprache aus `LanguagePacks.shipped` und die Vollständigkeit der fünf `*.xcstrings` (#342, #756).
 Der Datenschutztext liegt in `docs/reference/datenschutz-entwurf.md` (Freigabe Henning); öffentlich steht er seit 2026-10-27
 unter https://www.henemm.com/legal/loose-ends/privacy-policy/ (Website-Repo `henemm/henemm-website`, `content/legal/loose-ends/`),
 bei Apple gesetzt über die Repo-Variable `ASC_PRIVACY_POLICY_URL` und `asc-beta.yml` `aktion=einrichten` (#705; `aktion=einreichen` reicht zum Beta-Review ein, nur nach Hennings Wort). Eine Änderung
