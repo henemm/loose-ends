@@ -14,7 +14,7 @@ import time
 import urllib.parse
 from pathlib import Path
 
-from asc_wait_build import Fatal, find_app_id, get_json, read_config
+from asc_wait_build import Fatal, get_json, read_config
 
 ATTEMPTS = 5
 SAFE_ID = re.compile(r"^[A-Za-z0-9._-]+$")
@@ -30,6 +30,16 @@ def fetch(config, path, valid=lambda body: True):
         if attempt < ATTEMPTS:
             time.sleep(config["poll"])
     raise Fatal(f"No answer from App Store Connect for {path.split('?')[0]}")
+
+
+def app_id(config):
+    """Id der App zur Bundle-ID über fetch (höchstens fünf Versuche); keine App ist Fatal."""
+    query = urllib.parse.quote(config["bundle_id"], safe="")
+    body = fetch(config, f"/v1/apps?filter[bundleId]={query}", lambda b: isinstance(b.get("data"), list) and (
+        not b["data"] or (isinstance(b["data"][0], dict) and b["data"][0].get("id"))))
+    if not body["data"]:
+        raise Fatal(f"No app with bundle id {config['bundle_id']} in App Store Connect")
+    return body["data"][0]["id"]
 
 
 def next_path(body):
@@ -112,7 +122,7 @@ def main(argv):
     try:
         target.mkdir(parents=True, exist_ok=True)
         config = read_config()
-        entries = collect(config, fetch_all(config, find_app_id(config)))
+        entries = collect(config, fetch_all(config, app_id(config)))
         if not entries:
             print("keine Absturzmeldungen", flush=True)
             return 0

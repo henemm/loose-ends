@@ -167,6 +167,14 @@ class CrashesTests(unittest.TestCase):
         self.assertIn("::error::", result.stdout)
         self.assertEqual(len(fake.hits(LIST)), 5)
 
+    def test_app_lookup_server_error_exits_1(self):
+        fake = self.fake([[submission("S1")]], logs={"S1": LOG}, statuses={"/v1/apps": [500]})
+        result = self.run_script(fake, ASC_TIMEOUT_SECONDS="1")
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("::error::", result.stdout)
+        self.assertEqual(len(fake.hits("/v1/apps")), 5)
+        self.assertEqual(list(self.out.glob("*")) if self.out.exists() else [], [])
+
     def test_forbidden_exits_1(self):
         for statuses in ({LIST: [403]}, {"/v1/betaFeedbackCrashSubmissions/S1/crashLog": [403]}):
             with self.subTest(statuses=statuses):
