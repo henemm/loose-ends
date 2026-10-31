@@ -1,0 +1,9 @@
+--- using: nil (wie im App-Code)
+/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/docs/artifacts/fix-780-bgrefresh-queue/repro/run.sh: line 6: 59201 Trace/BPT trap: 5       ./repro nil
+exit=133
+--- using: .main
+main-actor work done
+exit=0
+--- using: nil, Closure @Sendable
+main-actor work done
+exit=0
