@@ -66,6 +66,31 @@ final class WatchCaptureUITests: XCTestCase {
         XCTAssertFalse(seen.field, "Feld ist sofort wieder da, ohne sichtbare Bestätigung")
     }
 
+    /// #742 Schnitt 2: App-Store-Bilder der Uhr (Series 12, 416 × 496), ganzer Bildschirm, Namen `store-<nn>-<name>`.
+    /// Sichtprüfung nach `./scripts/sim.sh watch-test WatchCaptureUITests/testPhotographStoreScreens`.
+    @MainActor
+    func testPhotographStoreScreens() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["--ui-testing", "--ui-testing-store-sample", "-AppleLanguages", "(de)", "-AppleLocale", "de_DE"]
+        app.launch()
+        XCTAssertTrue(app.buttons["watch.now.capture"].waitForExistence(timeout: 10), "„Erfassen“ fehlt")
+        XCTAssertTrue(app.buttons["watch.now.row"].firstMatch.waitForExistence(timeout: 10), "Beispielaufgaben fehlen")
+        XCTAssertGreaterThanOrEqual(app.buttons.matching(identifier: "watch.now.row").count, 2, "weniger als zwei Zeilen unter „Jetzt“")
+        storeShot("01-jetzt")
+        app.buttons["watch.now.capture"].tap()
+        capture("Steuerbescheid heute prüfen", in: app)
+        XCTAssertTrue(try sawConfirmation(in: app), "„Gespeichert“ fehlt")
+        storeShot("02-gespeichert")
+    }
+
+    @MainActor
+    private func storeShot(_ name: String) {
+        let shot = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        shot.name = "store-\(name)"
+        shot.lifetime = .keepAlways
+        add(shot)
+    }
+
     /// Polls snapshots until the confirmation shows. It stands 1.5 s; `waitForExistence` first looks after a second
     /// and missed it on the second capture (video: "Gespeichert" is on screen, the query came too late).
     @MainActor

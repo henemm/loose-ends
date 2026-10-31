@@ -28,6 +28,28 @@
         "04-detail.png",
         "05-erledigt.png"
       ]
+    },
+    {
+      "geraet": "watch",
+      "anzeige": "Apple Watch Series 12/11/10",
+      "pixel": "416x496",
+      "ordner": "watch",
+      "dateien": [
+        "01-jetzt.png",
+        "02-gespeichert.png"
+      ]
+    },
+    {
+      "geraet": "mac",
+      "anzeige": "Mac (16:10)",
+      "pixel": "1280x800",
+      "ordner": "mac",
+      "dateien": [
+        "01-start.png",
+        "03-neu.png",
+        "04-detail.png",
+        "05-erledigt.png"
+      ]
     }
   ]
 }

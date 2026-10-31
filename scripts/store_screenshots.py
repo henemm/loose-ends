@@ -2,6 +2,8 @@
 
 Aufruf (nur aus sim.sh store-screenshots):
   store_screenshots.py <ziel> iphone=<exportordner> ipad=<exportordner>
+  store_screenshots.py --watch <ziel> <exportordner>   # Uhr-Bilder nachtragen, Manifest bleibt sonst unberührt
+  store_screenshots.py --mac <ziel> <exportordner>     # Mac-Bilder (16:10, eine der Apple-Größen) nachtragen
 Ein Exportordner kommt von `xcresulttool export attachments` (mit manifest.json). Nur Standardbibliothek und `sips`.
 """
 import json
@@ -10,6 +12,7 @@ import struct
 import subprocess
 import sys
 import tempfile
+import zlib
 import time
 from pathlib import Path
 
@@ -19,6 +22,9 @@ DEVICES = {
     "iphone": {"anzeige": "iPhone 6.3\" (Dynamic Island)", "pixel": (1206, 2622)},
     "ipad": {"anzeige": "iPad 13\"", "pixel": (2064, 2752)},
 }
+WATCH = {"anzeige": "Apple Watch Series 12/11/10", "pixel": (416, 496), "order": ["01-jetzt", "02-gespeichert"]}
+MAC = {"anzeige": "Mac (16:10)", "sizes": [(1280, 800), (1440, 900), (2560, 1600), (2880, 1800)],
+       "order": ["01-start", "03-neu", "04-detail", "05-erledigt"]}
 README = """# App-Store-Bilder (Deutsch)
 
 Für App Store Connect, Sprache Deutsch (de-DE): Die Bilder in `iphone/` gehören zur Größe „iPhone 6.3\" Display“
@@ -37,13 +43,14 @@ def size_text(size):
     return f"{size[0]}x{size[1]}"
 
 
-def finish_device(device, attachments, out_root, info, strip_alpha, clear_grip=lambda path: None):
+def finish_device(device, attachments, out_root, info, strip_alpha, clear_grip=lambda path: None, order=None):
     """Schreibt die fünf Bilder eines Geräts nach <out_root>/<gerät>/<nn>-<name>.png und prüft sie.
 
     attachments: Anhangsname `store-<nn>-<name>` → Datei; info(path) → (breite, höhe, alpha); strip_alpha(path);
     clear_grip(path) nur auf dem iPad (Fenstergriff unten rechts).
     """
-    missing = [name for name in ORDER if f"store-{name}" not in attachments]
+    order = order or ORDER
+    missing = [name for name in order if f"store-{name}" not in attachments]
     if missing:
         raise StoreError(f"{device}: Bild fehlt: {', '.join(missing)}")
     folder = Path(out_root) / device
@@ -52,16 +59,22 @@ def finish_device(device, attachments, out_root, info, strip_alpha, clear_grip=l
     if staging.exists():
         shutil.rmtree(staging)
     staging.mkdir(parents=True)
-    want = DEVICES[device]["pixel"]
+    want = (DEVICES.get(device) or WATCH)["pixel"] if device != "mac" else None
+    sizes_seen = {}
     try:
-        for name in ORDER:
+        for name in order:
             target = staging / f"{name}.png"
             shutil.copyfile(attachments[f"store-{name}"], target)
             strip_alpha(target)
             if device == "ipad":
                 clear_grip(target)
             width, height, alpha = info(target)
-            if (width, height) != want:
+            if device == "mac":
+                if (width, height) not in MAC["sizes"]:
+                    raise StoreError(f"mac/{target.name}: {size_text((width, height))} ist keine Mac-Größe von Apple")
+                if sizes_seen.setdefault("mac", (width, height)) != (width, height):
+                    raise StoreError(f"mac/{target.name}: Größe weicht von den anderen Bildern ab")
+            elif (width, height) != want:
                 raise StoreError(f"{device}/{target.name}: {size_text((width, height))} statt {size_text(want)}")
             if alpha:
                 raise StoreError(f"{device}/{target.name}: Alphakanal nicht entfernt")
@@ -71,7 +84,7 @@ def finish_device(device, attachments, out_root, info, strip_alpha, clear_grip=l
     if folder.exists():
         shutil.rmtree(folder)
     staging.rename(folder)
-    return [folder / f"{name}.png" for name in ORDER]
+    return [folder / f"{name}.png" for name in order]
 
 
 def build_manifest(names_by_device, commit, created):
@@ -103,6 +116,52 @@ def sips_strip_alpha(path):
         bmp = Path(tmp) / "bild.bmp"
         subprocess.run(["sips", "-s", "format", "bmp", str(path), "--out", str(bmp)], capture_output=True, check=True)
         subprocess.run(["sips", "-s", "format", "png", str(bmp), "--out", str(path)], capture_output=True, check=True)
+
+
+def png_flatten_alpha(path):
+    """RGBA-PNG (8 Bit, ohne Zeilensprung) → RGB-PNG, Transparenz auf Weiß gerechnet; die Fensterecken des Mac sind rund."""
+    data = Path(path).read_bytes()
+    pos, chunks, header = 8, [], None
+    while pos < len(data):
+        length, kind = struct.unpack(">I4s", data[pos:pos + 8])
+        body = data[pos + 8:pos + 8 + length]
+        pos += 12 + length
+        if kind == b"IHDR":
+            header = struct.unpack(">IIBBBBB", body)
+        elif kind == b"IDAT":
+            chunks.append(body)
+    width, height, depth, color, _, _, interlace = header
+    if (depth, color, interlace) != (8, 6, 0):
+        raise StoreError(f"{path}: nur RGBA mit 8 Bit ohne Zeilensprung, nicht {depth}/{color}/{interlace}")
+    raw, stride = zlib.decompress(b"".join(chunks)), width * 4
+    rows, prev = [], bytearray(stride)
+    for y in range(height):
+        filt, line = raw[y * (stride + 1)], bytearray(raw[y * (stride + 1) + 1:(y + 1) * (stride + 1)])
+        for i in range(stride):
+            a = line[i - 4] if i >= 4 else 0
+            b, c = prev[i], (prev[i - 4] if i >= 4 else 0)
+            if filt == 1:
+                line[i] = (line[i] + a) & 255
+            elif filt == 2:
+                line[i] = (line[i] + b) & 255
+            elif filt == 3:
+                line[i] = (line[i] + (a + b) // 2) & 255
+            elif filt == 4:
+                pa, pb, pc = abs(b - c), abs(a - c), abs(a + b - 2 * c)
+                line[i] = (line[i] + (a if pa <= pb and pa <= pc else b if pb <= pc else c)) & 255
+        rows.append(line)
+        prev = line
+    out = bytearray()
+    for line in rows:
+        out.append(0)
+        for x in range(0, stride, 4):
+            alpha = line[x + 3]
+            out += bytes((v * alpha + 255 * (255 - alpha)) // 255 for v in line[x:x + 3])
+
+    def chunk(kind, body):
+        return struct.pack(">I", len(body)) + kind + body + struct.pack(">I", zlib.crc32(kind + body))
+    Path(path).write_bytes(b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0))
+                           + chunk(b"IDAT", zlib.compress(bytes(out), 9)) + chunk(b"IEND", b""))
 
 
 GRIP_CORNER = 72      # Kante des Eckquadrats unten rechts in Pixeln; der Griff liegt bei x 2008–2054, y 2696–2742
@@ -158,7 +217,38 @@ def read_export(folder):
     return found
 
 
+def main_watch(out_root, export):
+    """Trägt die Uhr-Bilder in Ordner und Manifest nach; die übrigen Einträge bleiben stehen."""
+    out_root = Path(out_root)
+    written = finish_device("watch", read_export(export), out_root, sips_info, sips_strip_alpha, order=WATCH["order"])
+    manifest_path = out_root / "manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    manifest["geraete"] = [g for g in manifest["geraete"] if g["geraet"] != "watch"] + [
+        {"geraet": "watch", "anzeige": WATCH["anzeige"], "pixel": size_text(WATCH["pixel"]), "ordner": "watch",
+         "dateien": [path.name for path in written]}]
+    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+    print(f"[store] {len(written)} Uhr-Bilder in {out_root / 'watch'}")
+
+
+def main_mac(out_root, export):
+    """Trägt die Mac-Bilder in Ordner und Manifest nach; die übrigen Einträge bleiben stehen."""
+    out_root = Path(out_root)
+    written = finish_device("mac", read_export(export), out_root, sips_info, png_flatten_alpha, order=MAC["order"])
+    width, height, _ = sips_info(written[0])
+    manifest_path = out_root / "manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    manifest["geraete"] = [g for g in manifest["geraete"] if g["geraet"] != "mac"] + [
+        {"geraet": "mac", "anzeige": MAC["anzeige"], "pixel": size_text((width, height)), "ordner": "mac",
+         "dateien": [path.name for path in written]}]
+    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+    print(f"[store] {len(written)} Mac-Bilder ({size_text((width, height))}) in {out_root / 'mac'}")
+
+
 def main(argv):
+    if argv[0] == "--mac":
+        return main_mac(argv[1], argv[2])
+    if argv[0] == "--watch":
+        return main_watch(argv[1], argv[2])
     out_root, exports = Path(argv[0]), dict(arg.split("=", 1) for arg in argv[1:])
     names = {}
     for device in DEVICES:

@@ -1,0 +1,53 @@
+# #742 Schnitt 2b: App-Store-Bilder des Mac in der CI (nie auf Hennings Mac). Von Hand startbar, oder beim Push auf store/mac.
+name: Store Mac
+on:
+  workflow_dispatch:
+  push:
+    branches: [store/mac]
+jobs:
+  store-mac:
+    runs-on: xcode-27
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - name: Select Xcode 27.0
+        uses: ./.github/actions/select-xcode-27
+      - name: Install tools
+        run: brew install xcodegen displayplacer
+      - name: Generate project
+        run: xcodegen generate
+      - name: Enable UI automation
+        run: |
+          sudo automationmodetool enable-automationmode-without-authentication
+          sudo DevToolsSecurity -enable || true
+      - name: Raise the screen to 1920x1080
+        continue-on-error: true
+        run: |
+          id="$(displayplacer list | sed -n 's/^Persistent screen id: //p' | head -1)"
+          displayplacer "id:$id res:1920x1080" || true
+          system_profiler SPDisplaysDataType | grep -i resolution || true
+      - name: Photograph the Mac app
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project LooseEnds.xcodeproj \
+            -scheme LooseEnds \
+            -destination 'platform=macOS' \
+            -only-testing:LooseEndsUITests/MacStoreScreenshotsTests \
+            -parallel-testing-enabled NO \
+            -resultBundlePath MacStore.xcresult \
+            CODE_SIGN_IDENTITY=- \
+            CODE_SIGN_STYLE=Manual \
+            DEVELOPMENT_TEAM= \
+            CODE_SIGN_ENTITLEMENTS= \
+            2>&1 | tee mac-store.log | xcbeautify
+      - name: Export the pictures
+        if: always()
+        run: xcrun xcresulttool export attachments --path MacStore.xcresult --output-path StoreMac
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: StoreMac
+          path: |
+            StoreMac
+            mac-store.log
