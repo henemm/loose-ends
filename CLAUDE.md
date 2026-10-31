@@ -353,7 +353,10 @@ not scope creep on the current one.
   `CaptureService.save(attachments:)` reads each once, #399), `SharedAttachmentFile` (the share extension's file I/O: which
   registered type is an attachment, copy out of the provider's handler into a temp folder, over 50 MB not copied, remove the
   folder on Done and Cancel, #442). All pure over the model objects; the
-  caller saves.
+  caller saves. Exception: `OrderExecutor` (#613, Weg B) runs an order from Claude (`capture`, `complete`, `setDue`) as a user
+  change with the reason "Claude", checks the expected state before the first write (`stale`, `missing`, `invalid`) and saves
+  itself; `TranscriptCodec` builds the transcript for Claude (open tasks, "Now" and its count from `ViewRules`, no raw text or
+  note). Contract version 1: `docs/reference/claude-abschrift-vertrag.md`. Nothing in the app calls either yet.
 - `Shared/Enrichment` — `TaskEnricher` protocol (`StubEnricher` in the tests plays hang, empty answer, answer per note and
   refusal, #530), `ModelDeadline` (time limit per model call, 25 s in the coordinator, from the measurement #534; a timeout counts as a failed call, #530), `EnrichmentWriter` (threshold + revisions; never writes the model's contexts or project, #215/#469), `EnrichmentCoordinator`
   (catch-up pass), `FoundationModelsEnricher` (on-device model, `#if canImport(FoundationModels)`), `DueDateRule`

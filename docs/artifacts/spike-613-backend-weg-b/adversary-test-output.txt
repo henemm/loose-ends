@@ -1,0 +1,96 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/TranscriptCodecTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-10-31 15:03:28.295.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-31 15:03:28.304.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-31 15:03:28.304.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.010) seconds
+[1mTest run started.[0m
+Suite "Transcript for Claude" started
+    [32m✔[0m "The JSON carries exactly the agreed keys, top level, Now and every task (AC-1)" ([33m0.052[0m seconds)
+    [32m✔[0m "Completed and removed tasks stay out, parked ones are in; the Knäuel says so (AC-1)" (0.004 seconds)
+    [32m✔[0m "Raw text and note never leave the device (AC-1)" (0.002 seconds)
+    [32m✔[0m "Now and its number are ViewRules' own, in its order (AC-2)" (0.002 seconds)
+    [32m✔[0m "Without a Knäuel the key stays out of Now (AC-2)" (0.002 seconds)
+    [32m✔[0m "Encoding meets the fixed example, decoding gives it back, dates are ISO 8601 (AC-3)" (0.010 seconds)
+    [32m✔[0m "A transcript built from the store survives the round trip (AC-3)" (0.004 seconds)
+    [32m✔[0m "The contract document carries the transcript example word for word (AC-10)" (0.001 seconds)
+Suite "Transcript for Claude" passed after 0.082 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-spike-613-backend-weg-b/Logs/Test/Test-LooseEnds-2026.10.31_15-03-15-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
+[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log
+EXIT_TRANSCRIPT=0
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/OrderExecutorTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-10-31 15:03:41.135.
+Test Suite 'LooseEndsTests.xctest' started at 2026-10-31 15:03:41.136.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-10-31 15:03:41.136.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.003) seconds
+[1mTest run started.[0m
+Suite "Orders from Claude" started
+    [32m✔[0m "Capture saves a task through the channel Claude and names it (AC-4)" ([31m0.101[0m seconds)
+    [32m✔[0m "Complete with the expected status marks a one-off task done (AC-5)" (0.008 seconds)
+    [32m✔[0m "Complete rolls a repeating task forward with a completion record, as in the app (AC-5)" (0.015 seconds)
+    [32m✔[0m "Set due writes a user revision with the reason Claude; a day-only date starts the day (AC-6)" (0.018 seconds)
+    [32m✔[0m "Set due with a time keeps the time (AC-6)" (0.005 seconds)
+    [32m✔[0m "Set due without a date removes it, again as a revision (AC-6)" (0.005 seconds)
+    [32m✔[0m "An expected due date read from the transcript matches a stored date with fractions of a second (AC-6, AC-8)" (0.010 seconds)
+    [32m✔[0m "A status that changed meanwhile makes the order stale, nothing changes (AC-7)" (0.005 seconds)
+    [32m✔[0m "A due date that changed meanwhile makes the order stale, nothing changes (AC-7)" (0.004 seconds)
+    [32m✔[0m "An order without its fields or of another version is invalid, nothing changes (AC-7)" (0.004 seconds)
+    [32m✔[0m "Complete without the due date the task has is stale; a repeating task does not roll (AC-7, AC-8)" (0.006 seconds)
+    [32m✔[0m "Order and result meet their fixed examples both ways (AC-3, AC-10)" (0.004 seconds)
+    [32m✔[0m "The contract document carries the order and result examples word for word (AC-10)" (0.005 seconds)
+Suite "Orders from Claude" passed after 0.259 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-spike-613-backend-weg-b/Logs/Test/Test-LooseEnds-2026.10.31_15-03-32-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
+[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log
+EXIT_ORDER=0
