@@ -1,0 +1,29 @@
+test_app_lookup_server_error_exits_1 (__main__.CrashesTests.test_app_lookup_server_error_exits_1) ... ok
+test_both_platforms_in_one_run (__main__.CrashesTests.test_both_platforms_in_one_run) ... ok
+test_empty_logtext_counts_as_without_report (__main__.CrashesTests.test_empty_logtext_counts_as_without_report) ... ok
+test_files_have_expected_content (__main__.CrashesTests.test_files_have_expected_content) ... ok
+test_forbidden_exits_1 (__main__.CrashesTests.test_forbidden_exits_1) ... ok
+test_log_has_no_personal_data (__main__.CrashesTests.test_log_has_no_personal_data) ... ok
+test_missing_crashlog_counts_as_without_report (__main__.CrashesTests.test_missing_crashlog_counts_as_without_report) ... ok
+test_no_submissions (__main__.CrashesTests.test_no_submissions) ... ok
+test_non_string_attribute_becomes_unbekannt (__main__.CrashesTests.test_non_string_attribute_becomes_unbekannt) ... ok
+test_only_get_requests (__main__.CrashesTests.test_only_get_requests) ... ok
+test_only_own_error_line_starts_with_colons (__main__.CrashesTests.test_only_own_error_line_starts_with_colons) ... ok
+test_pagination_loop_exits_1 (__main__.CrashesTests.test_pagination_loop_exits_1) ... ok
+test_server_error_always_exits_1 (__main__.CrashesTests.test_server_error_always_exits_1) ... ok
+test_server_error_once_is_retried (__main__.CrashesTests.test_server_error_once_is_retried) ... ok
+test_target_is_a_file_exits_1 (__main__.CrashesTests.test_target_is_a_file_exits_1) ... ok
+test_two_pages_via_links_next (__main__.CrashesTests.test_two_pages_via_links_next) ... ok
+test_unsafe_attribute_becomes_unbekannt (__main__.CrashesTests.test_unsafe_attribute_becomes_unbekannt) ... ok
+test_unsafe_id_exits_1 (__main__.CrashesTests.test_unsafe_id_exits_1) ... ok
+test_usage_and_missing_environment (__main__.CrashesTests.test_usage_and_missing_environment) ... ok
+test_encrypt_with_recipient_file_hides_content (__main__.EncryptionTests.test_encrypt_with_recipient_file_hides_content) ... ok
+test_recipient_file_is_one_public_key (__main__.EncryptionTests.test_recipient_file_is_one_public_key) ... ok
+test_roundtrip_with_local_key (__main__.EncryptionTests.test_roundtrip_with_local_key) ... ok
+test_workflow_keeps_secrets_out_of_scripts (__main__.WorkflowTests.test_workflow_keeps_secrets_out_of_scripts) ... ok
+test_workflow_structure (__main__.WorkflowTests.test_workflow_structure) ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 13.001s
+
+OK

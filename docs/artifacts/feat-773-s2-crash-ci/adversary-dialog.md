@@ -3,7 +3,7 @@ Spec: docs/specs/tooling/feat-773-schnitt-2-crash-ci.md
 Datum: 2026-10-31 14:28
 
 ## Checkliste
-- [ ] **Eingabe:** `gh workflow run asc-crashes.yml` (nach dem Merge auf `main`).
+- [x] **Eingabe:** `gh workflow run asc-crashes.yml` (nach dem Merge auf `main`).
 - [x] **Ausgabe:** Gibt es Meldungen, ein Artefakt `crashes` mit der einen Datei `crashes.tar.gpg` (7 Tage); gibt es keine, nur die
 - [x] **Seiteneffekte:** nur lesende Aufrufe an App Store Connect; kein Schreiben ins Repo; keine App-Datei, kein Pfad der Geräteliste.
 - [x] **AC-1:** Die Kennzeile (`bundle`, `plattform`, `datum`) druckt nur `str`-Werte aus `^[A-Za-z0-9][A-Za-z0-9._:+-]{0,63}$` ohne `::`; alles andere (Zahl, Objekt, Zeilenumbruch, Leerzeichen, `::`, zu lang) wird `unbekannt`; `<id>.json` bleibt unverändert. Belegt durch `test_non_string_attribute_becomes_unbekannt`, `test_unsafe_attribute_becomes_unbekannt`, `test_only_own_error_line_starts_with_colons`.
@@ -16,7 +16,7 @@ Datum: 2026-10-31 14:28
 - [x] **AC-8:** `FakeASC.close()` schließt den Socket (`server_close()`); der Testlauf mit `-W error::ResourceWarning` ist grün. Belegt durch `python3 -W error::ResourceWarning scripts/test_asc_crashes.py`.
 - [x] **AC-9:** Die Doku `docs/reference/testflight.md` hat den Abschnitt „Absturzberichte abholen (#773)“ mit den sieben Punkten aus Implementation Details 5 (Lauf starten, `gh run download`, `gpg --decrypt` in einen Wegwerf-Ordner, Symbolisierung, Ticket-Regel, Schlüsselverlust und Passphrase-Hinweis, Start erst nach Merge). Belegt durch Diff-Durchsicht und `grep -n "Absturzberichte abholen" docs/reference/testflight.md`.
 - [x] **AC-10:** Scope: höchstens 5 Dateien (genau die fünf des Scopes) und ±250 LoC; `scripts/asc_wait_build.py` und `.github/workflows/ci.yml` unverändert; alle vorhandenen Skripttests grün (`python3 -m unittest discover -s scripts -p 'test_*.py'`); nichts auf Hennings Geräten, kein TestFlight-Lauf. Belegt durch `git diff --stat` im Abschlussbericht mit dem Satz „Kein Pfad der Geräteliste berührt.“ und die Befehlsliste. Stufe 2 (Simulator) entfällt, die App wird nicht berührt.
-- [ ] **AC-11:** Deploy-Abnahme nach dem Merge. Dies ist ein eigener Abnahmeschritt der Phase Deploy/Abnahme und **kein offenes AC der Validierung**: `workflow_dispatch` lässt sich erst starten, wenn die Datei auf `main` liegt. Nach dem Merge läuft `gh workflow run asc-crashes.yml` grün, das Log zeigt nur erlaubte Zeilen (Schnitt-1-Kennzeilen, Zusammenfassung, `::notice::`; keine E-Mail, kein Kommentar, kein Berichtstext, kein Schlüssel); das Artefakt wird mit `gh run download` geholt, im Scratchpad entschlüsselt und der Inhalt gelesen. Liegt **mindestens eine Meldung mit Bericht** vor: Die Absturzstelle im Code ist benannt, der Befund steht als eigenes Ticket, der Kommentar in #773 enthält keine Personendaten. Liegt **keine oder keine mit Bericht** vor: Ticket #773 bleibt offen (Hinweis 1 der Validierung von Schnitt 1), und der Abschlussbericht sagt das so. Belegt durch Lauf-ID, Log-Auszug (ohne Personendaten), Kommentar in #773.
+- [x] **AC-11:** Deploy-Abnahme nach dem Merge. Dies ist ein eigener Abnahmeschritt der Phase Deploy/Abnahme und **kein offenes AC der Validierung**: `workflow_dispatch` lässt sich erst starten, wenn die Datei auf `main` liegt. Nach dem Merge läuft `gh workflow run asc-crashes.yml` grün, das Log zeigt nur erlaubte Zeilen (Schnitt-1-Kennzeilen, Zusammenfassung, `::notice::`; keine E-Mail, kein Kommentar, kein Berichtstext, kein Schlüssel); das Artefakt wird mit `gh run download` geholt, im Scratchpad entschlüsselt und der Inhalt gelesen. Liegt **mindestens eine Meldung mit Bericht** vor: Die Absturzstelle im Code ist benannt, der Befund steht als eigenes Ticket, der Kommentar in #773 enthält keine Personendaten. Liegt **keine oder keine mit Bericht** vor: Ticket #773 bleibt offen (Hinweis 1 der Validierung von Schnitt 1), und der Abschlussbericht sagt das so. Belegt durch Lauf-ID, Log-Auszug (ohne Personendaten), Kommentar in #773.
 
 ## Dialog
 
@@ -38,6 +38,11 @@ Ehrlich offen, per Texttest nicht belegbar: dass der trap auf dem Runner greift,
 ### Runde 3
 **Implementierer:** PO-Freigabe zu F001 (Henning, 2026-10-31, Auswahl "So lassen"): Die Überschreitung auf rund 301 Zeilen bleibt, weil der Mehrumfang reiner Prüfcode ist (Produktanteil rund 100 Zeilen); keine Straffung. F002 bis F004 bleiben LOW und sind bewusst nicht umgesetzt: F002 folgt der Spec (Job-env), F003 und F004 sind heute kein Verstoß.
 **Adversary:** Neubewertung. AC-10: Dateien (genau fünf), Unverändertheit von asc_wait_build.py und ci.yml und grüne Tests waren schon belegt; das LoC-Limit ist jetzt durch die ausdrückliche PO-Ausnahme gedeckt, F001 gilt als entschieden und nicht mehr blockierend (Code reference: scripts/test_asc_crashes.py:1). AC-10 wird abgehakt. Testausgabe frisch neu erzeugt. Nicht abgehakt bleiben Eingabe und AC-11: Sie sind erst nach dem Merge auf main belegbar (workflow_dispatch); ebenso unbewiesen bis dahin sind trap auf dem Runner, Wirkung von retention-days, gpg 2.4.x mit der Schlüsseldatei, Pfad für upload-artifact und die Logzeilen des echten Laufs. Kein Fund in der Umsetzung; der offene Teil ist nachmerge-pflichtig und kann nicht vor dem Merge geschlossen werden, daher AMBIGUOUS.
+
+### Runde 4
+**Implementierer:** Abnahme nach dem Merge (PR #778, 28d57cb). `gh workflow run asc-crashes.yml --ref main` → Lauf 41216707696, Ergebnis success. Log: nur `meldung id=… bundle=com.henning.looseends plattform=IOS datum=… bericht=ja` (5×) und `zusammenfassung meldungen=5 mit_bericht=5 ohne_bericht=0`; Secrets als `***`; Suche nach E-Mail-Mustern im ganzen Log: 0 Treffer; kein Kommentar, kein Berichtstext. `gh run download 41216707696 -n crashes` → eine Datei `crashes.tar.gpg` (18159 Byte); `gpg --decrypt` mit dem Mac-Schlüssel (cv25519 D5BB4927B5F934DB, „Loose Ends Crash Intake“) und `tar -x` im Scratchpad → 10 Dateien (5× `.json`, 5× `.crash`). Damit belegt auf dem Runner: gpg mit `--recipient-file`, Upload-Pfad `${{runner.temp}}/crashes.tar.gpg`, nur Chiffrat hochgeladen.
+Befund gelesen: 2× `closure #1 in static BackgroundRefresh.register(_:)` (Build 98, Build 126), `_swift_task_checkIsolatedSwift` → `EXC_BREAKPOINT`, Absturzstelle `LooseEnds/Notifications/BackgroundRefresh.swift` (Handler erbt `@MainActor`, `using: nil` = Hintergrund-Queue) → eigenes Ticket #780 (P0, M1). 2× `SpeechCapture.requestSpeechAuthorization` (Build 1), Funktion im aktuellen Code nicht mehr vorhanden. 1× SwiftUI-`UICollectionView` „Invalid number of items“ (Build 87), kein App-Rahmen. Kommentar in #773 (issuecomment-6545668527) ohne Personendaten. #773 bleibt offen bis #780 ausgeliefert ist.
+**Adversary:** Eingabe und AC-11 sind mit Lauf-ID, Log-Auszug, Artefakt und Kommentar belegt; die in Runde 2 offen genannten Punkte (gpg 2.4.x mit der Schlüsseldatei, Upload-Pfad, Logzeilen des echten Laufs) sind damit gezeigt. Nicht direkt beobachtbar bleibt die Wirkung von `retention-days` (erst nach 7 Tagen) und das Aufräumen durch `trap` auf dem Wegwerf-Runner; beides ist durch Text und Tests belegt und kein offenes AC.
 
 ## Herkunft der Vorbedingungen
 
@@ -122,10 +127,26 @@ Confirmation:
   Status: CONFIRMED
 
 ## Verdict
-VERDICT: AMBIGUOUS
-Ambiguous (Mensch/Nachmerge): Eingabe und AC-11 sind vor dem Merge nicht belegbar; Spec ordnet AC-11 der Deploy-Abnahme zu. F001 per PO-Ausnahme entschieden (2026-10-31). F002 bis F004 LOW, bewusst nicht umgesetzt.
-Proven points: alle ACs ausser AC-11 und Eingabe.
+VERDICT: VERIFIED
+Proven points: alle ACs inklusive Eingabe und AC-11 (Lauf 41216707696 nach dem Merge). F001 per PO-Ausnahme entschieden (2026-10-31). F002 bis F004 LOW, bewusst nicht umgesetzt.
 Tests: 434 bestanden (Discover), 24 bestanden (-W error::ResourceWarning), 0 fehlgeschlagen, 0 übersprungen in test_asc_crashes.
+
+## Geprüfte Dateien
+
+- sha256:caa0b90e0b485be2bf7f8a32c59e22253688e4263786655d00c7ef25c2cff7a0  .github/crash-recipient.asc
+- sha256:1880cbc56d2ff8124d49eec1502fe87afdf5bef6be8e2129f19ffeec22a2a30d  .github/workflows/asc-crashes.yml
+- sha256:9e58e0cbba9cd8a740ec91381656ac5eff3365115e941eeb2f475d08d6922abd  docs/reference/testflight.md
+- sha256:6c078a10f86b8afe9c66238c166b3a23b68a23f4d223656909aca81a3773a213  scripts/asc_crashes.py
+- sha256:4ec991a3b84928f7fb7684a3610f7e0e081f7aa7fc84bd50a625fb5fce276f5d  scripts/test_asc_crashes.py
+
+## Prüfbasis
+
+- base: a23121411718e003968988fde019de1bfb1ba869
+- blob:99eda3118a19daaebca8664f933f531eb1a61741  .github/crash-recipient.asc
+- blob:cdc3477dff529436ab27888afcd6d6ae8d5ada9c  .github/workflows/asc-crashes.yml
+- blob:bc68da66997e6bcc0ae35832418afb91c3ee9aad  docs/reference/testflight.md
+- blob:944e064d0eaccb9d45b5afa610cd35192aba1c45  scripts/asc_crashes.py
+- blob:75305cbd82f3ed7046a3e0c1a04d9942f5c3421d  scripts/test_asc_crashes.py
 
 ## Geprüfte Dateien
 
