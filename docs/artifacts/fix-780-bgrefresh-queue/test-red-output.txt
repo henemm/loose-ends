@@ -1,0 +1,288 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/BackgroundRefreshTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m ProductTypeInfoPlistAdditions.plist
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m empty-LooseEndsUITests.plist
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests_const_extract_protocols.json
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests-OutputFileMap.json
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.hmap
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.SwiftConstValuesFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.LinkFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.SwiftFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.DependencyStaticMetadataFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.DependencyMetadataFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests-project-headers.hmap
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests-generated-files.hmap
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests-own-target-headers.hmap
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests-all-target-headers.hmap
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests-all-non-framework-target-headers.hmap
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftConstValuesFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests_const_extract_protocols.json
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.LinkFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-OutputFileMap.json
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.hmap
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.DependencyStaticMetadataFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.DependencyMetadataFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-project-headers.hmap
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-own-target-headers.hmap
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-generated-files.hmap
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-all-target-headers.hmap
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-all-non-framework-target-headers.hmap
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mCopy[0m LooseEndsWatchWidgets.appex -> LooseEndsWatchWidgets.appex
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mValidate Embedded Binary[0m LooseEndsWatchWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsShare.appex -> LooseEndsShare.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m empty-LooseEndsTests.plist
+[[36mLooseEndsTests[0m] [1mCopying[0m textform-corpus.json
+[[36mLooseEndsTests[0m] [1mCopying[0m textform-run.json
+[[36mLooseEndsTests[0m] [1mCopying[0m speech-de.m4a
+[[36mLooseEndsTests[0m] [1mCopying[0m latency-corpus.json
+[[36mLooseEndsTests[0m] [1mCopying[0m lab-run.log
+[[36mLooseEndsTests[0m] [1mCopying[0m guardrail-corpus.json
+[[36mLooseEndsTests[0m] [1mCopying[0m date-title.json
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsTests[0m] [1mCopying[0m date-title-corpus.json
+[[36mLooseEndsTests[0m] [1mCopying[0m convention-corpus.json
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/LooseEndsTests/BackgroundRefreshTests.swift:71:38: [31mcannot find type 'RefreshTask' in scope[0m
+69 | 
+[36m70 | /// Stands in for `BGTask`, which has no public initializer and no scheduler in the simulator.[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m SiriCaptureTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SiriFieldsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SiriRepeatMappingTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechAccessTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechDiagnosisTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechLatencyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SpeechReadinessTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m StartHeadlineTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m StartMetricsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m StartViewsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SubtaskListsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SubtaskRulesTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SubtaskTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SyncStatusTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m OnboardingTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m PaperGroundTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m PlaceNotificationTapTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m PlaceSmokeTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m ProjectSubtasksTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RawSentenceColumn.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RawTextExport.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RecognitionWalkthroughTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RuleBaseline.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SelfConsistency.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SettingsSmokeTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/LooseEndsUITests/SpeechListeningTests.swift:19:47: [33mcall to main actor-isolated instance method 'screenshot()' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+16 |     }
+[32m17 | [0m
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SpeechDiagnosisLineTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SpeechListeningIndicatorTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SpeechListeningTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m StartNumberTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m LaunchArgumentTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m LeaveOneOut.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m MacDetailClickTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m MacGalleryTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m DueNotificationTapTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m FieldsSmokeTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m GuardrailReport.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m InboxDrawerSmokeTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/LooseEndsUITests/StartScreenInteractionTests.swift:444:16: [33mmain actor-isolated property 'label' can not be referenced from a nonisolated context[0m
+441 | 
+[32m442 |     /// The row count as the badge shows it, read from the combined row ("All open, 2").[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/LooseEndsUITests/StartScreenInteractionTests.swift:444:29: [33mmain actor-isolated property 'value' can not be referenced from a nonisolated context[0m
+441 | 
+[32m442 |     /// The row count as the badge shows it, read from the combined row ("All open, 2").[0m
+[[36mLooseEndsUITests[0m] [1mCompiling[0m StartScreenInteractionTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m StoreScreenshotsTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m TextFormColumn.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/LooseEndsUITests/CalendarTargetTests.swift:263:87: [33mmain actor-isolated property 'firstMatch' can not be referenced from a nonisolated context[0m
+260 |     /// 3 s search for the prompt stays as a fallback only: under iOS 27 the interruption handler does not see
+[32m261 |     /// SpringBoard alerts reliably (https://developer.apple.com/forums/thread/737880).[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/LooseEndsUITests/CalendarTargetTests.swift:263:80: [33mmain actor-isolated property 'alerts' can not be referenced from a nonisolated context[0m
+260 |     /// 3 s search for the prompt stays as a fallback only: under iOS 27 the interruption handler does not see
+[32m261 |     /// SpringBoard alerts reliably (https://developer.apple.com/forums/thread/737880).[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/LooseEndsUITests/CalendarTargetTests.swift:263:21: [33mcall to main actor-isolated initializer 'init(bundleIdentifier:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+260 |     /// 3 s search for the prompt stays as a fallback only: under iOS 27 the interruption handler does not see
+[32m261 |     /// SpringBoard alerts reliably (https://developer.apple.com/forums/thread/737880).[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/LooseEndsUITests/CalendarTargetTests.swift:264:21: [33mcall to main actor-isolated instance method 'waitForExistence(timeout:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+260 |     /// 3 s search for the prompt stays as a fallback only: under iOS 27 the interruption handler does not see
+[32m261 |     /// SpringBoard alerts reliably (https://developer.apple.com/forums/thread/737880).[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/LooseEndsUITests/CalendarTargetTests.swift:265:98: [33mmain actor-isolated property 'exists' can not be referenced from a nonisolated context[0m
+260 |     /// 3 s search for the prompt stays as a fallback only: under iOS 27 the interruption handler does not see
+[32m261 |     /// SpringBoard alerts reliably (https://developer.apple.com/forums/thread/737880).[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/LooseEndsUITests/CalendarTargetTests.swift:265:90: [33mmain actor-isolated subscript 'subscript(_:)' can not be referenced from a nonisolated context[0m
+260 |     /// 3 s search for the prompt stays as a fallback only: under iOS 27 the interruption handler does not see
+[32m261 |     /// SpringBoard alerts reliably (https://developer.apple.com/forums/thread/737880).[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/LooseEndsUITests/CalendarTargetTests.swift:265:83: [33mmain actor-isolated property 'buttons' can not be referenced from a nonisolated context[0m
+260 |     /// 3 s search for the prompt stays as a fallback only: under iOS 27 the interruption handler does not see
+[32m261 |     /// SpringBoard alerts reliably (https://developer.apple.com/forums/thread/737880).[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/LooseEndsUITests/CalendarTargetTests.swift:266:34: [33mcall to main actor-isolated instance method 'tap()' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+260 |     /// 3 s search for the prompt stays as a fallback only: under iOS 27 the interruption handler does not see
+[32m261 |     /// SpringBoard alerts reliably (https://developer.apple.com/forums/thread/737880).[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/LooseEndsUITests/CalendarTargetTests.swift:266:26: [33mmain actor-isolated subscript 'subscript(_:)' can not be referenced from a nonisolated context[0m
+260 |     /// 3 s search for the prompt stays as a fallback only: under iOS 27 the interruption handler does not see
+[32m261 |     /// SpringBoard alerts reliably (https://developer.apple.com/forums/thread/737880).[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/LooseEndsUITests/CalendarTargetTests.swift:266:19: [33mmain actor-isolated property 'buttons' can not be referenced from a nonisolated context[0m
+260 |     /// 3 s search for the prompt stays as a fallback only: under iOS 27 the interruption handler does not see
+[32m261 |     /// SpringBoard alerts reliably (https://developer.apple.com/forums/thread/737880).[0m
+[[36mLooseEndsUITests[0m] [1mCompiling[0m CalendarTargetTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m CaptureCancelCrashTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m CaptureSmokeTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m ContextUniquenessTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m ConventionCorpus.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m Corpus.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m DesignGalleryTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m DriveSmokeTests.swift
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsUITests.swiftmodule
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEndsUITests.swiftdoc
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsUITests.abi.json
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
+[[36mLooseEndsUITests[0m] [1mCompiling[0m MacKeyboardTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m MacStoreScreenshotsTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m MacUITestSupport.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m MeasurementRun.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueTodayTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueWordsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DurationRuleCoordinatorTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DurationRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m EnergyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m EnrichmentTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m FieldEditTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m FieldGlyphTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m FieldOriginTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m GuardrailCorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m GuardrailReport.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m GuardrailReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ImportanceUrgencyRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m InboxDrawerTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m IntentExecutionTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordLearningTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ConventionBaselineTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ConventionCorpus.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m Corpus.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateExpressionParserTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateParserCorpusTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DateTitleReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DetailFieldsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DetailLayoutTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueDateRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueNotificationCenterTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueStateTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RowKeyActionTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleBaseline.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleLeaveOneOutTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleTriggerTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SavedPlacesStoreTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SavedPlacesTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ScanPDFTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistency.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistencyReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SelfConsistencyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SharedAttachmentFileTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SharedAttachmentTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SharedContentTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SideColumnTests.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/LooseEndsTests/BackgroundRefreshTests.swift:71:38: [31mcannot find type 'RefreshTask' in scope[0m
+69 | 
+[36m70 | /// Stands in for `BGTask`, which has no public initializer and no scheduler in the simulator.[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/LooseEndsTests/BackgroundRefreshTests.swift:14:41: [31mtype 'BackgroundRefresh' has no member 'launchHandler'[0m
+12 |         task.onComplete = { done.fulfill() }
+[36m13 |         let counter = Counter()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/LooseEndsTests/BackgroundRefreshTests.swift:27:41: [31mtype 'BackgroundRefresh' has no member 'launchHandler'[0m
+25 |         let gate = Gate()
+[36m26 |         // The work hangs until the test lets go: the expiration ends the task first.[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m AppVersionTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m AttachmentKindTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m BackgroundRefreshTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CalendarAskTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CalendarSyncTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureComplication.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureComplicationTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CarryRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CatalogServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CloudKitSchemaInitializerTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContentsIndexTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordForgettingTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordLearningCoordinatorTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ContextWordLearningReportTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/LooseEndsTests/PlaceNotificationCenterTests.swift:65:39: [33m'#require(_:_:)' is redundant because 'TaskPlace(name: name, latitude: 51.99563, longitude: 7.71357, event: event)' never equals 'nil' (from macro 'require')[0m
+ 63 |             let task = TaskItem(rawText: raw)
+[32m 64 |             task.status = .active[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceEditingTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceNotificationCenterTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceNotificationsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceWordRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PressureOrderTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProcessCacheTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProjectLinesTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProjectNameRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m QuickDueTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RawSentenceColumn.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RawSentenceReportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RawTextExport.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RawTextExportTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m KnaeuelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m KnaeuelThreadTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m LaunchTimingsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m LeaveOneOut.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m LeftoversTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ListPolishTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ListSummaryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MainWindowPlacementTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MarginMarkTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementData.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementDataTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementFieldScopeTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRun.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MeasurementRunTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MenuBarTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MenuBarThreadImageTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelContainerFactoryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelSeamTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelUnavailableTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NewDateRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NextRankTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NextUpWidgetTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NoteLinksTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NowRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m OnboardingFlowTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PendingCompletionsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PeopleRetiredTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PhoneRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceDeliveryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RealModelGateTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RealModelGuardrailTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RealModelLatencyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RealModelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReanalysisTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RecognitionRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReminderEntityTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReminderTranslationTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatAnchorTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatEditTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReviewTrayTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RevisionServiceTests.swift
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-generic-giggling-reddy/Logs/Test/Test-LooseEnds-2026.10.31_17-39-35-+0100.xcresult
