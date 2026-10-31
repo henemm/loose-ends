@@ -78,18 +78,21 @@ class RunXcodebuildTestLanguageTests(unittest.TestCase):
         stubs.mkdir()
         self.args_file = self.root / "xcodebuild-args"
         xcodebuild = stubs / "xcodebuild"
-        xcodebuild.write_text(f'#!/bin/bash\nprintf "%s\\n" "$@" > "{self.args_file}"\n')
+        xcodebuild.write_text(f'#!/bin/bash\nprintf "%s\\n" "$@" > "{self.args_file}"\nenv > "{self.args_file}.env"\n')
         xcodebuild.chmod(0o755)
         xcbeautify = stubs / "xcbeautify"
         xcbeautify.write_text("#!/bin/bash\ncat >/dev/null\n")
         xcbeautify.chmod(0o755)
-        self.base_env = {k: v for k, v in os.environ.items() if k != "LOOSEENDS_LANG"}
+        self.base_env = {k: v for k, v in os.environ.items()
+                         if k not in ("LOOSEENDS_LANG", "LOOSEENDS_UPDATE_GOLDEN")}
         self.base_env["PATH"] = f"{stubs}:/usr/bin:/bin"
 
-    def run_with(self, lang, *args):
+    def run_with(self, lang, *args, golden=None):
         env = dict(self.base_env)
         if lang is not None:
             env["LOOSEENDS_LANG"] = lang
+        if golden is not None:
+            env["LOOSEENDS_UPDATE_GOLDEN"] = golden
         script = "\n".join([
             "set -euo pipefail",
             f'PROJECT_DIR="{self.root}"',
@@ -135,6 +138,14 @@ class RunXcodebuildTestLanguageTests(unittest.TestCase):
                 self.assertIn("LOOSEENDS_LANG", result.stderr)
                 self.assertIn(f"LOOSEENDS_LANG={value} ", result.stderr)
                 self.assertFalse(self.args_file.exists(), "xcodebuild lief trotz ungültiger Sprache")
+
+    def test_update_golden_is_passed_through(self):
+        env_file = Path(f"{self.args_file}.env")
+        self.assertEqual(self.run_with(None, "test", "-project", "P.xcodeproj", golden="1").returncode, 0)
+        self.assertIn("TEST_RUNNER_LOOSEENDS_UPDATE_GOLDEN=1", env_file.read_text().splitlines())
+        env_file.unlink()
+        self.assertEqual(self.run_with(None, "test", "-project", "P.xcodeproj").returncode, 0)
+        self.assertNotIn("TEST_RUNNER_LOOSEENDS_UPDATE_GOLDEN", env_file.read_text())
 
     def test_build_action_ignores_variable(self):
         for value in ["en", ""]:
