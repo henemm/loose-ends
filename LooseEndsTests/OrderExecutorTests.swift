@@ -233,6 +233,43 @@ import Testing
         #expect(try Snapshot(store) == before)
     }
 
+    @Test("Complete without the due date the task has is stale; a repeating task does not roll (AC-7, AC-8)")
+    @MainActor func completeWithoutExpectedDueIsStale() throws {
+        let store = try TestStore()
+        let task = try Self.insert("Blumen gießen", due: Self.day(0), in: store)
+        task.repeatRule = RepeatRule(frequency: .daily)
+        try store.context.save()
+        let before = try Snapshot(store)
+        let order = Order(id: UUID(), kind: .complete, taskID: task.id, expectedStatus: .active)
+
+        let result = try Self.run(order, in: store)
+
+        #expect(result == OrderResult(orderID: order.id, outcome: .rejected, reason: .stale, taskID: task.id))
+        #expect(try Snapshot(store) == before)
+
+        let fitting = Order(id: UUID(), kind: .complete, taskID: task.id, expectedStatus: .active,
+                            expectedDueDate: Self.day(0))
+        #expect(try Self.run(fitting, in: store).outcome == .done)
+        #expect(try Self.run(fitting, in: store).reason == .stale)
+        #expect(try store.context.fetchCount(FetchDescriptor<CompletionRecord>()) == 1)
+    }
+
+    @Test("Complete expecting a done or removed task is invalid, nothing changes (AC-7)",
+          arguments: [TaskStatus.done, .removed])
+    @MainActor func completeExpectingClosedIsInvalid(status: TaskStatus) throws {
+        let store = try TestStore()
+        let task = try Self.insert("Schon erledigt", in: store)
+        task.status = status
+        try store.context.save()
+        let before = try Snapshot(store)
+        let order = Order(id: UUID(), kind: .complete, taskID: task.id, expectedStatus: status)
+
+        let result = try Self.run(order, in: store)
+
+        #expect(result == OrderResult(orderID: order.id, outcome: .rejected, reason: .invalid))
+        #expect(try Snapshot(store) == before)
+    }
+
     // MARK: AC-8
 
     @Test("An order built from store A's transcript alone runs on store B; a second run is stale (AC-8)",

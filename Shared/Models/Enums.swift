@@ -15,6 +15,8 @@ enum TaskStatus: String, Codable, CaseIterable, Sendable {
 
 enum CaptureChannel: String, Codable, CaseIterable, Sendable {
     case siri, watch, control, share, mail, app, actionButton
+    /// An order from Claude (#613), through `OrderExecutor`.
+    case claude
 }
 
 /// Who set a derived field last. `rule` is read from the user's own words (`DueDateRule`,
