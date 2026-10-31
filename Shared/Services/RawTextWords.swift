@@ -12,7 +12,7 @@ enum RawTextWords {
     /// Lowercased and stripped of diacritics, so "Özdemir" matches "özdemir" and "Muell" is still
     /// not "Müll" (a real change of the text, which should count).
     static func normalized(_ text: String) -> String {
-        text.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: Locale(identifier: "de_DE"))
+        text.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: Locale(identifier: "en_US_POSIX"))  // language-neutral, checked against the golden output (#755)
     }
 
     /// Splits on everything that is neither letter, digit nor hyphen, so "Mutter-Kind-Kur" stays one

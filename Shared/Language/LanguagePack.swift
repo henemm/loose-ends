@@ -68,9 +68,12 @@ struct LanguagePack: Sendable {
 enum LanguagePacks {
     static let shipped: [LanguagePack] = [.english, .german]
 
-    /// Test hook (#755): tests plug a pack in. Product code reads only `active`. Written from tests on
-    /// the main thread before any rule runs, never from the product, hence `nonisolated(unsafe)`.
-    nonisolated(unsafe) static var active: [LanguagePack] = shipped
+    /// Test hook (#755): a test plugs packs in for the length of one closure (`withPacks` in the tests). A task-local
+    /// value, so tests running side by side in one process never see each other's packs. Product code never sets it.
+    @TaskLocal static var pluggedIn: [LanguagePack]? = nil
+
+    /// The packs every rule reads: the shipped ones, unless a test plugged others in.
+    static var active: [LanguagePack] { pluggedIn ?? shipped }
 
     static var numbers: [String: Int] { merged(\.numbers) }
     static var weekdays: [String: Int] { merged(\.weekdays) }

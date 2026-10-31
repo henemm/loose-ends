@@ -29,7 +29,7 @@ enum ExpressionText {
     /// ("ähm nächste woche freitag") read the same as written ones. Everything downstream works on
     /// the folded string, so folding can never shift a position out from under a match.
     static func folded(_ text: String) -> String {
-        text.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: Locale(identifier: "de_DE"))
+        text.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: Locale(identifier: "en_US_POSIX"))  // language-neutral, checked against the golden output (#755)
     }
 
     /// Letters and digits form words; every other character ends one. "1,5" and "18:45" therefore
