@@ -10,7 +10,7 @@ Datum: 2026-10-31 19:34
 - [x] **AC-5:** Die Tests laufen gegen echtes Postgres über `DATABASE_URL`. Fehlt die Variable, **schlägt** der Test fehl (mit Meldung, die `DATABASE_URL` nennt); er wird nie übersprungen (`skip`/`todo` kommen im Test nicht vor). Jeder Test nutzt ein eigenes frisches Schema oder eine frische Datenbank, so dass Läufe sich nicht beeinflussen. Belegt durch `migrate.test.ts` (ein Test, der den Fall ohne Variable in einem Kindprozess ausführt, erwartet Exit-Code ≠ 0) und durch Durchsicht auf `skip`.
 - [x] **AC-6:** `npm run typecheck` (`tsc --noEmit` mit `strict`, `erasableSyntaxOnly`, `verbatimModuleSyntax`, `allowImportingTsExtensions`) läuft in `server/` ohne Fehler; der Code verwendet nur Syntax, die Node 26 per Typ-Entfernung ausführt (kein `enum`, kein `namespace`, keine Parameter-Properties), kein `any` ohne Begründung, kein `catch`, der den Fehler verschluckt. Belegt durch den Typprüflauf und `npm test` (Node führt die `.ts`-Dateien direkt aus, ohne Build-Schritt).
 - [x] **AC-7:** `./server/scripts/test-local.sh` startet ein Wegwerf-Postgres (temporärer Datenordner, freier Port, kein Eingriff in vorhandene Postgres-Dienste), setzt `DATABASE_URL`, führt Typprüfung und Tests aus, gibt deren Exit-Code zurück und räumt in jedem Fall auf (Server gestoppt, Datenordner gelöscht, auch bei roten Tests). Belegt durch einen Lauf grün und einen Lauf mit absichtlich rotem Test, jeweils danach `pg_ctl`-Prozess und Ordner weg.
-- [ ] **AC-8:** `.github/workflows/server.yml` läuft auf `ubuntu-latest` mit Dienstcontainer `postgres:18` (`pg_isready`-Healthcheck, `DATABASE_URL` auf `127.0.0.1:5432`), `actions/setup-node` mit Node 26, `npm ci`, `npm run typecheck`, `npm test`. Pfadfilter `server/**` und der Workflow selbst; `main` hat keinen Branchschutz, ein nicht gestarteter Lauf blockiert also keinen PR. Belegt durch einen grünen Lauf des Workflows auf dem PR und `python3 -m unittest discover -s scripts` (insbesondere `test_ci_xcode27.py` bleibt grün, es prüft nur `ci.yml` und `speech-stress.yml`).
+- [x] **AC-8:** `.github/workflows/server.yml` läuft auf `ubuntu-latest` mit Dienstcontainer `postgres:18` (`pg_isready`-Healthcheck, `DATABASE_URL` auf `127.0.0.1:5432`), `actions/setup-node` mit Node 26, `npm ci`, `npm run typecheck`, `npm test`. Pfadfilter `server/**` und der Workflow selbst; `main` hat keinen Branchschutz, ein nicht gestarteter Lauf blockiert also keinen PR. Belegt durch einen grünen Lauf des Workflows auf dem PR und `python3 -m unittest discover -s scripts` (insbesondere `test_ci_xcode27.py` bleibt grün, es prüft nur `ci.yml` und `speech-stress.yml`).
 - [x] **AC-9:** `server/package-lock.json` ist eingecheckt und passt zu `package.json` (`npm ci` läuft ohne Änderung); `package.json` hat `"type": "module"`, `engines.node` `>=26` und exakt die Abhängigkeiten aus der Tabelle oben. `.gitignore` enthält `node_modules/`; `git status` zeigt nach `npm ci` keine unversionierten Dateien in `server/`. Belegt durch `npm ci`, `git status` und Durchsicht der `package.json`.
 - [x] **AC-10:** `CLAUDE.md` nennt `server/` unter „Where things live“ (Zweck, Läufer, Regel „Schema nur als nummerierte Migrationen, ab dem Betrieb nur ergänzen“) und die Befehle (`./server/scripts/test-local.sh`, `npm run typecheck`, `npm test`) unter „Build“. Die App, das Xcode-Projekt (`project.yml`) und die bestehenden CI-Jobs sind unverändert. Belegt durch Diff-Durchsicht: Die Dateiliste des PR enthält außer den unter Scope genannten nichts.
 
@@ -80,14 +80,48 @@ Code reference: server/src/migrate.ts:45
 
 Hinweis: Die Zeilenangaben in Runde 1 und 2 beziehen sich auf die Fassung vor den Korrekturen; maßgeblich sind die Angaben in Runde 3.
 
+### Runde 4
+**Adversary:** Nachprüfung von AC-8 gegen den echten Lauf, selbst abgefragt.
+- Letzter Commit: 47db7adda868cda17089904fdef7c05109bc7c40; für server/, .github und CLAUDE.md gibt es keine ungestagten Abweichungen, der Stand ist derselbe wie in Runde 3.
+- `gh run view 41233222385`: Workflow "Server", Ereignis pull_request, Status completed, Ergebnis success, headSha 47db7adda868cda17089904fdef7c05109bc7c40 (identisch mit dem Commit). Ein Job "Server (Node 26, Postgres 18)", alle Schritte success: Initialize containers, actions/checkout@v7, actions/setup-node@v7, npm ci, npm run typecheck, npm test.
+- Log (docs/artifacts/spike-613-c1-server-geruest/ci-server-run.txt): Image `postgres:18` gezogen; Node v26.13.0 per setup-node (node-version: 26); `npm ci` mit 19 Paketen, 0 Schwachstellen; `tsc --noEmit` ohne Ausgabe; `node --test test/` mit `DATABASE_URL` auf 127.0.0.1:5432, 9 Tests bestanden, 0 fehlgeschlagen, 0 übersprungen. Die Actions existieren: actions/checkout@v7 (SHA 3d3c42e5aac5ba805825da76410c181273ba90b1) und actions/setup-node@v7 (SHA 949feb2413d6458794dcd2491c4babbbce0c15c1).
+- Skript-Tests: scripts-unittest.txt, "Ran 434 tests in 256.263s", OK. Die `::error title=board::Usage`-Zeilen stammen von bestehenden Board-Tests, kein Fehlschlag.
+- Damit sind die in Runde 1 offenen Punkte erledigt: grüner Lauf auf dem PR und Existenz der Action-Versionen.
+Code reference: .github/workflows/server.yml:35
+Code reference: server/package.json:10
+Code reference: server/src/migrate.ts:55
+Code reference: server/test/migrate.test.ts:160
+Code reference: server/scripts/test-local.sh:25
+Code reference: CLAUDE.md:76
+**Implementierer:**
+
 ## Herkunft der Vorbedingungen
 
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 
 ## Verdict
-AMBIGUOUS
+**VERIFIED**
 
-Begründung: AC-1 bis AC-7, AC-9, AC-10 belegt, F001, F002, F003 behoben und nachgeprüft, F005 dokumentiert. AC-8 bleibt offen, weil der grüne Lauf von server.yml auf dem PR vor dem Commit nicht existieren kann. Offene Hinweise ohne Spec-Verstoß: F004 (kein Advisory-Lock, C7), F006 (LOW, kein 'error'-Listener am ausgeliehenen Client). Tests: 9 bestanden, 0 fehlgeschlagen, 0 übersprungen.
+Begründung: AC-1 bis AC-10 belegt, AC-8 jetzt auch durch den grünen Lauf von server.yml auf PR #785 (Commit 47db7ad, Node 26.13.0, postgres:18, 9 von 9 Tests grün) und die Skript-Tests (434 OK). Keine CRITICAL- oder HIGH-Befunde. F001, F002, F003 behoben, F005 dokumentiert, F004 (Advisory-Lock) bewusst für C7 vorgemerkt, F006 (LOW, kein 'error'-Listener am ausgeliehenen Client) offen als Hinweis ohne Spec-Verstoß. Tests lokal: 9 bestanden, 0 fehlgeschlagen, 0 übersprungen.
+
+## Geprüfte Dateien
+
+- sha256:77d9afee60b4d1ecd6d06a1fc24077e1fe5c4670adef74e6544dd827871681b6  .github/workflows/server.yml
+- sha256:a46cfea65782bf2b52d587829b742344124b893b50934e7248076698243f58a1  CLAUDE.md
+- sha256:5778cb00678f4799e558d6e253eeb88c0b9618d2ff971691c9630ee719378745  server/package.json
+- sha256:f8fcd4e694bb038c2df4a67b81b25ecc2638555c1f35d9e38a4566980089cea7  server/scripts/test-local.sh
+- sha256:5fa29a35716a7d6ea4805cca5ff5ab64c5b659f736797dee417e04068a922319  server/src/migrate.ts
+- sha256:64a7899eb0615132edd5719c9fb9daf74da6aa91464775462cbefb603b48ef19  server/test/migrate.test.ts
+
+## Prüfbasis
+
+- base: f0f44506bb6e49e460512e0afc6369c39e539897
+- blob:f05059f94d1aa18f1048be48b4c408f0340f1fb2  .github/workflows/server.yml
+- blob:79ac4b6bcc391f164a18197599c3c48eee5012d2  CLAUDE.md
+- blob:30271772cb9ee24cc09a384b9ec08f5a0a3f5fb3  server/package.json
+- blob:801b9e49ce7d6cf3387f7386c8cd062015f529b5  server/scripts/test-local.sh
+- blob:b52ed72d6d761789c174ccea38d99bed40d7c9a3  server/src/migrate.ts
+- blob:68da87917940e6d9d8ecafc9ce49ffdfa9277826  server/test/migrate.test.ts
 
 ## Geprüfte Dateien
 
