@@ -1,5 +1,8 @@
 """Tests: `shipped_languages` liest die ausgelieferten Sprachen aus dem Swift-Code (#756)."""
+import json
 import shutil
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -43,6 +46,11 @@ class ShippedLanguagesTests(unittest.TestCase):
             pack.write_text(pack.read_text(encoding="utf-8").replace("[.english, .german]", "[.english, .german, .test]"),
                             encoding="utf-8")
             self.assertEqual(shipped_languages(folder), ["en", "de", "zz"])
+
+    def test_command_line_prints_the_list_as_json(self):
+        result = subprocess.run([sys.executable, str(ROOT / "scripts" / "shipped_languages.py")], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(json.loads(result.stdout), shipped_languages())
 
 
 if __name__ == "__main__":

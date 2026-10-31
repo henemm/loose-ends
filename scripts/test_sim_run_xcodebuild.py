@@ -84,11 +84,13 @@ class RunXcodebuildTestLanguageTests(unittest.TestCase):
         xcbeautify.write_text("#!/bin/bash\ncat >/dev/null\n")
         xcbeautify.chmod(0o755)
         self.base_env = {k: v for k, v in os.environ.items()
-                         if k not in ("LOOSEENDS_LANG", "LOOSEENDS_UPDATE_GOLDEN")}
+                         if k not in ("LOOSEENDS_LANG", "LOOSEENDS_UPDATE_GOLDEN", "LOOSEENDS_UI_LANG")}
         self.base_env["PATH"] = f"{stubs}:/usr/bin:/bin"
 
-    def run_with(self, lang, *args, golden=None):
+    def run_with(self, lang, *args, golden=None, ui_lang=None):
         env = dict(self.base_env)
+        if ui_lang is not None:
+            env["LOOSEENDS_UI_LANG"] = ui_lang
         if lang is not None:
             env["LOOSEENDS_LANG"] = lang
         if golden is not None:
@@ -146,6 +148,14 @@ class RunXcodebuildTestLanguageTests(unittest.TestCase):
         env_file.unlink()
         self.assertEqual(self.run_with(None, "test", "-project", "P.xcodeproj").returncode, 0)
         self.assertNotIn("TEST_RUNNER_LOOSEENDS_UPDATE_GOLDEN", env_file.read_text())
+
+    def test_ui_lang_is_passed_through(self):
+        env_file = Path(f"{self.args_file}.env")
+        self.assertEqual(self.run_with(None, "test", "-project", "P.xcodeproj", ui_lang="de").returncode, 0)
+        self.assertIn("TEST_RUNNER_LOOSEENDS_UI_LANG=de", env_file.read_text().splitlines())
+        env_file.unlink()
+        self.assertEqual(self.run_with(None, "test", "-project", "P.xcodeproj").returncode, 0)
+        self.assertNotIn("TEST_RUNNER_LOOSEENDS_UI_LANG", env_file.read_text())
 
     def test_build_action_ignores_variable(self):
         for value in ["en", ""]:

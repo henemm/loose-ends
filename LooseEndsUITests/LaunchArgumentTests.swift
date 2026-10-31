@@ -10,7 +10,7 @@ final class LaunchArgumentTests: XCTestCase {
     @MainActor
     private func launch(extra: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["--ui-testing", "-AppleLanguages", "(en)", "-AppleLocale", "en_US"] + extra
+        app.launchArguments = ["--ui-testing"] + LaunchLanguage.arguments + extra
         app.launch()
         return app
     }

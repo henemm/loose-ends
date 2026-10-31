@@ -314,6 +314,8 @@ run_xcodebuild() {
     fi
     # Goldene Regelausgabe (#764): LOOSEENDS_UPDATE_GOLDEN=1 schreibt LooseEndsTests/Fixtures/rule-golden.json neu.
     [ "${1:-}" = test ] && [ -n "${LOOSEENDS_UPDATE_GOLDEN:-}" ] && export TEST_RUNNER_LOOSEENDS_UPDATE_GOLDEN="$LOOSEENDS_UPDATE_GOLDEN"
+    # Sprache der UI-Tests (#761): LOOSEENDS_UI_LANG=de startet die App der UI-Tests auf Deutsch (LooseEndsUITests/LaunchLanguage.swift).
+    [ "${1:-}" = test ] && [ -n "${LOOSEENDS_UI_LANG:-}" ] && export TEST_RUNNER_LOOSEENDS_UI_LANG="$LOOSEENDS_UI_LANG"
     # Stille-Wächter (#516): Bleibt das Log LOOSEENDS_SILENCE_MAX s stumm, endet nur der xcodebuild dieser
     # Sitzung (eigener -derivedDataPath) samt Kindern, sonst hielte er die rechnerweite Sperre unbegrenzt.
     # Der Wächter endet mit sim.sh ($$ in der Subshell): Ein xcodebuild einer per KILL gestorbenen sim.sh bleibt

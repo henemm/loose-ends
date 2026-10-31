@@ -11,7 +11,7 @@ final class InboxDrawerSmokeTests: XCTestCase {
     @MainActor
     private func launch() -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["--ui-testing", "-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+        app.launchArguments = ["--ui-testing"] + LaunchLanguage.arguments
         app.launch()
         return app
     }
@@ -41,7 +41,7 @@ final class InboxDrawerSmokeTests: XCTestCase {
         XCTAssertTrue(line.waitForExistence(timeout: 10), "The start screen shows no writing line")
         XCTAssertFalse(element("inboxBar", in: app).exists, "Nothing to look over yet, so no New above the line")
         // The question shows before the line is used (#693): without it the empty line read as a divider.
-        XCTAssertEqual(line.placeholderValue, "What should I remember?", "The unused line should ask")
+        XCTAssertEqual(line.placeholderValue, LaunchLanguage.phrase("question"), "The unused line should ask")
         shot(app, "601-1-leer")
 
         line.tap()
@@ -51,13 +51,13 @@ final class InboxDrawerSmokeTests: XCTestCase {
         XCTAssertTrue(first.label.contains("Reifen wechseln"), "The drawer row shows the sorted title, got \(first.label)")
         let head = element("inboxBar", in: app)
         XCTAssertTrue(head.waitForExistence(timeout: 5), "New and its sentence should stand above the rows")
-        XCTAssertTrue(head.label.contains("1 to look over"), "New counts the task at once, got \(head.label)")
+        XCTAssertTrue(head.label.contains("1 \(LaunchLanguage.phrase("lookOver"))"), "New counts the task at once, got \(head.label)")
         XCTAssertTrue(line.exists, "The line stays as the drawer's last row")
         shot(app, "601-2-erste-zeile-in-der-schublade")
 
         line.typeText("Mama anrufen\n")
         XCTAssertTrue(rows(in: app).count == 2 || rows(in: app).element(boundBy: 1).waitForExistence(timeout: 10), "The second task should follow the first")
-        XCTAssertTrue(head.label.contains("2 to look over"), "New counts both, got \(head.label)")
+        XCTAssertTrue(head.label.contains("2 \(LaunchLanguage.phrase("lookOver"))"), "New counts both, got \(head.label)")
         shot(app, "601-3-zwei-zeilen")
 
         // A tap on the sentence of the day ends the entry: the drawer folds, the number stays.
@@ -65,7 +65,7 @@ final class InboxDrawerSmokeTests: XCTestCase {
         XCTAssertTrue(header.waitForExistence(timeout: 5))
         header.tap()
         XCTAssertTrue(first.waitForNonExistence(timeout: 10), "Ending the entry should fold the drawer")
-        XCTAssertTrue(head.label.contains("2 to look over"), "The number keeps counting after folding, got \(head.label)")
+        XCTAssertTrue(head.label.contains("2 \(LaunchLanguage.phrase("lookOver"))"), "The number keeps counting after folding, got \(head.label)")
         XCTAssertTrue(line.exists, "The line stays after folding")
         shot(app, "601-4-zugeklappt")
 

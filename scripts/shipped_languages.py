@@ -48,3 +48,14 @@ def shipped_languages(root=ROOT):
             raise ShippedLanguagesError(f"{LANGUAGE_FOLDER}: keine Datei mit `static let {name}`")
         codes.append(code)
     return codes
+
+
+if __name__ == "__main__":
+    # `python3 scripts/shipped_languages.py` gibt die Liste als JSON aus, etwa `["en","de"]` (Matrix in ci.yml, #761).
+    import json
+    import sys
+    try:
+        print(json.dumps(shipped_languages(), separators=(",", ":")))
+    except ShippedLanguagesError as error:
+        print(f"::error::{error}")
+        sys.exit(1)
