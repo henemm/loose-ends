@@ -18,6 +18,7 @@ from asc_wait_build import Fatal, get_json, read_config
 
 ATTEMPTS = 5
 SAFE_ID = re.compile(r"^[A-Za-z0-9._-]+$")
+SAFE_FIELD = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:+-]{0,63}")
 NOT_FOUND = "ASC answered HTTP 404 for "
 
 
@@ -53,12 +54,16 @@ def next_path(body):
 
 
 def fetch_all(config, app_id):
-    """Alle Meldungen über alle Seiten, ohne Plattformfilter."""
+    """Alle Meldungen über alle Seiten, ohne Plattformfilter; ein schon angefragter Pfad als links.next ist Fatal."""
     path, submissions = f"/v1/apps/{app_id}/betaFeedbackCrashSubmissions?limit=200", []
+    seen = set()
     while path:
+        seen.add(path)
         body = fetch(config, path, lambda b: isinstance(b.get("data"), list))
         submissions.extend(body["data"])
         path = next_path(body)
+        if path in seen:
+            raise Fatal(f"Pagination loop at {path.split('?')[0]}")
     return submissions
 
 
@@ -97,6 +102,13 @@ def collect(config, submissions):
     return entries
 
 
+def safe_field(value):
+    """Nur ein sicherer str kommt in die Kennzeile (kein Zeilenumbruch, kein `::`, höchstens 64 Zeichen)."""
+    if isinstance(value, str) and SAFE_FIELD.fullmatch(value) and "::" not in value:
+        return value
+    return "unbekannt"
+
+
 def store(target, entries):
     """Schreibt die Dateien und druckt je Meldung die Kennzeile; gibt die Zahl mit Bericht zurück."""
     with_report = 0
@@ -108,7 +120,7 @@ def store(target, entries):
         else:
             write_private(crash, log)
             with_report += 1
-        fields = [str(attributes.get(name) or "unbekannt") for name in ("buildBundleId", "appPlatform", "createdDate")]
+        fields = [safe_field(attributes.get(name)) for name in ("buildBundleId", "appPlatform", "createdDate")]
         print(f"meldung id={sid} bundle={fields[0]} plattform={fields[1]} datum={fields[2]} "
               f"bericht={'nein' if log is None else 'ja'}", flush=True)
     return with_report

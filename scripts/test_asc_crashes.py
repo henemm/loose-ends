@@ -1,10 +1,12 @@
-"""Tests für asc_crashes.py (#773 Schnitt 1).
+"""Tests für asc_crashes.py (#773 Schnitt 1) und den Handlauf asc-crashes.yml (#773 Schnitt 2).
 
 Aufruf: python3 scripts/test_asc_crashes.py
 Gegen einen lokalen Nachbau der App-Store-Connect-API; ob Apple die Pfade so beantwortet, zeigt nur der echte Lauf.
+Der Workflow wird als Text geprüft, der Verschlüsselungsweg mit gpg und dem öffentlichen Schlüssel im Repo.
 """
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -14,6 +16,10 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
 SCRIPT = Path(__file__).resolve().parent / "asc_crashes.py"
+REPO = Path(__file__).resolve().parents[1]
+WORKFLOW = REPO / ".github" / "workflows" / "asc-crashes.yml"
+RECIPIENT = REPO / ".github" / "crash-recipient.asc"
+PLAIN_MARKER = b"CRASH-PLAIN-MARKER"
 LIST = "/v1/apps/APP1/betaFeedbackCrashSubmissions"
 MARKERS = ("tester-MARKER@example.test", "COMMENT-MARKER", "iPhone-MARKER", "LOG-MARKER", "LOCALE-MARKER",
            "ZONE-MARKER", "BEGIN", "PRIVATE KEY", "Bearer", "eyJ")
@@ -27,11 +33,18 @@ def submission(sid, platform="IOS"):
         "locale": "LOCALE-MARKER", "timeZone": "ZONE-MARKER", "batteryPercentage": 80}}
 
 
+def with_attributes(sid, **attributes):
+    record = submission(sid)
+    record["attributes"].update(attributes)
+    return record
+
+
 class FakeASC:
     """Liste in Seiten, Bericht je Id; `statuses[pfad]` spielt eine Statusfolge ab (letzter Wert bleibt)."""
 
-    def __init__(self, pages, logs=None, statuses=None):
+    def __init__(self, pages, logs=None, statuses=None, loop=False):
         self.pages, self.logs, self.statuses, self.requests = pages, logs or {}, statuses or {}, []
+        self.loop = loop
         fake = self
 
         class Handler(BaseHTTPRequestHandler):
@@ -60,6 +73,8 @@ class FakeASC:
                     body = {"data": fake.pages[index]}
                     if index + 1 < len(fake.pages):
                         body["links"] = {"next": f"{fake.base}{LIST}?limit=200&page={index + 1}"}
+                    elif fake.loop:
+                        body["links"] = {"next": f"{fake.base}{LIST}?limit=200"}
                     return self.reply(200, body)
                 sid = path.split("/")[3] if path.endswith("/crashLog") else None
                 if sid in fake.logs:
@@ -79,6 +94,7 @@ class FakeASC:
 
     def close(self):
         self.server.shutdown()
+        self.server.server_close()
 
     def hits(self, path):
         return [p for _, p in self.requests if p.split("?")[0] == path]
@@ -97,12 +113,13 @@ class CrashesTests(unittest.TestCase):
     def tearDown(self):
         self.tmp.cleanup()
 
-    def run_script(self, fake, args=None, **overrides):
+    def run_script(self, fake, args=None, timeout=None, **overrides):
         env = dict(os.environ, ASC_KEY_ID="K", ASC_ISSUER_ID="I", ASC_KEY_FILE=str(self.key),
                    ASC_API_BASE=fake.base if fake else "http://127.0.0.1:9", ASC_POLL_SECONDS="0")
         env.update(overrides)
         args = [str(self.out)] if args is None else args
-        return subprocess.run([sys.executable, str(SCRIPT), *args], env=env, capture_output=True, text=True)
+        return subprocess.run([sys.executable, str(SCRIPT), *args], env=env, capture_output=True, text=True,
+                              timeout=timeout)
 
     def fake(self, *args, **kwargs):
         fake = FakeASC(*args, **kwargs)
@@ -229,6 +246,182 @@ class CrashesTests(unittest.TestCase):
         result = self.run_script(None, ASC_KEY_ID="")
         self.assertEqual(result.returncode, 1)
         self.assertIn("Missing environment", result.stdout)
+
+    def test_non_string_attribute_becomes_unbekannt(self):
+        record = with_attributes("S1", buildBundleId=42, appPlatform={"name": "IOS"}, createdDate=["2026"])
+        result = self.run_script(self.fake([[record]], logs={"S1": LOG}))
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        line = next(l for l in result.stdout.splitlines() if l.startswith("meldung "))
+        self.assertIn("bundle=unbekannt plattform=unbekannt datum=unbekannt", line)
+        self.assertEqual(json.loads((self.out / "S1.json").read_text(encoding="utf-8")), record["attributes"])
+
+    def test_unsafe_attribute_becomes_unbekannt(self):
+        unsafe = with_attributes("S1", buildBundleId="a\n::add-mask::x", appPlatform="::error::boom",
+                                 createdDate="2026 10 30")
+        too_long = with_attributes("S2", buildBundleId="a" * 65)
+        result = self.run_script(self.fake([[unsafe, too_long]]))
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        lines = result.stdout.splitlines()
+        self.assertEqual([l for l in lines if l.startswith("::")], [], result.stdout)
+        first = next(l for l in lines if "id=S1 " in l)
+        self.assertIn("bundle=unbekannt plattform=unbekannt datum=unbekannt", first)
+        second = next(l for l in lines if "id=S2 " in l)
+        self.assertIn("bundle=unbekannt plattform=IOS datum=2026-10-30T08:00:00Z", second)
+
+    def test_only_own_error_line_starts_with_colons(self):
+        record = with_attributes("S1", appPlatform="IOS\n::error::injected")
+        result = self.run_script(self.fake([[record]]))
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual([l for l in result.stdout.splitlines() if l.startswith("::")], [], result.stdout)
+        result = self.run_script(self.fake([[record]], statuses={LIST: [403]}))
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        colons = [l for l in result.stdout.splitlines() if l.startswith("::")]
+        self.assertEqual(len(colons), 1, result.stdout)
+        self.assertTrue(colons[0].startswith("::error::") and "HTTP 403" in colons[0], colons[0])
+
+    def test_pagination_loop_exits_1(self):
+        pages = [[submission("S1")], [submission("S2")]]
+        fake = self.fake(pages, logs={"S1": LOG}, loop=True)
+        try:
+            result = self.run_script(fake, timeout=20)
+        except subprocess.TimeoutExpired:
+            self.fail(f"no stop after {len(fake.hits(LIST))} list requests")
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("::error::", result.stdout)
+        self.assertIn("Pagination loop", result.stdout)
+        self.assertLessEqual(len(fake.hits(LIST)), len(pages))
+        self.assertEqual([p for p in self.out.rglob("*") if p.is_file()] if self.out.exists() else [], [])
+
+
+def gpg(*args, home=None, check=True):
+    env = dict(os.environ, GNUPGHOME=str(home)) if home else None
+    return subprocess.run(["gpg", "--batch", *args], env=env, capture_output=True, check=check)
+
+
+def encrypt_like_workflow(folder, tar, cipher, home=None):
+    """Packt und verschlüsselt mit denselben Schaltern wie asc-crashes.yml (Aufruf aus der Repo-Wurzel)."""
+    subprocess.run(["tar", "-C", str(folder), "-cf", str(tar), "."], check=True)
+    if not tar.exists():
+        raise AssertionError(f"plain tar missing: {tar}")
+    return gpg("--trust-model", "always", "--recipient-file", ".github/crash-recipient.asc",
+               "--output", str(cipher), "--encrypt", str(tar), home=home, check=False)
+
+
+def recipient_fingerprint():
+    with tempfile.TemporaryDirectory() as home:
+        listing = gpg("--show-keys", "--with-colons", str(RECIPIENT), home=home).stdout.decode()
+    return next(l.split(":")[9] for l in listing.splitlines() if l.startswith("fpr:"))
+
+
+class EncryptionTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+        self.home = self.root / "gnupg"
+        self.home.mkdir(mode=0o700)
+        self.folder = self.root / "crashes"
+        self.folder.mkdir()
+        (self.folder / "P1.json").write_text('{"appPlatform": "IOS"}', encoding="utf-8")
+        (self.folder / "P1.crash").write_bytes(b"Exception Type: EXC_CRASH\n" + PLAIN_MARKER + b"\n")
+        self.tar, self.cipher = self.root / "crashes.tar", self.root / "crashes.tar.gpg"
+        self.cwd = os.getcwd()
+        os.chdir(REPO)
+
+    def tearDown(self):
+        os.chdir(self.cwd)
+        self.tmp.cleanup()
+
+    def test_recipient_file_is_one_public_key(self):
+        text = RECIPIENT.read_text(encoding="ascii")
+        self.assertIn("BEGIN PGP PUBLIC KEY BLOCK", text)
+        self.assertNotIn("PRIVATE KEY", text)
+        listing = gpg("--show-keys", "--with-colons", str(RECIPIENT), home=self.home).stdout.decode()
+        kinds = [l.split(":")[0] for l in listing.splitlines()]
+        self.assertEqual(kinds.count("pub"), 1, listing)
+        self.assertNotIn("sec", kinds)
+        self.assertNotIn("ssb", kinds)
+
+    def test_encrypt_with_recipient_file_hides_content(self):
+        self.assertTrue(RECIPIENT.exists(), RECIPIENT)
+        result = encrypt_like_workflow(self.folder, self.tar, self.cipher, home=self.home)
+        self.assertEqual(result.returncode, 0, result.stderr.decode())
+        data = self.cipher.read_bytes()
+        self.assertTrue(data)
+        self.assertNotIn(PLAIN_MARKER, data)
+
+    def test_roundtrip_with_local_key(self):
+        self.assertTrue(RECIPIENT.exists(), RECIPIENT)
+        if gpg("--list-secret-keys", recipient_fingerprint(), check=False).returncode != 0:
+            self.skipTest("secret key of the recipient is not in this keyring (CI)")
+        self.assertEqual(encrypt_like_workflow(self.folder, self.tar, self.cipher).returncode, 0)
+        plain, unpacked = self.root / "back.tar", self.root / "back"
+        unpacked.mkdir()
+        decrypted = gpg("--output", str(plain), "--decrypt", str(self.cipher), check=False)
+        self.assertEqual(decrypted.returncode, 0, decrypted.stderr.decode())
+        subprocess.run(["tar", "-C", str(unpacked), "-xf", str(plain)], check=True)
+        for original in self.folder.iterdir():
+            self.assertEqual((unpacked / original.name).read_bytes(), original.read_bytes(), original.name)
+
+
+def run_blocks(text):
+    """Inhalt jedes `run:`-Schlüssels, einzeilig oder als eingerückter Block."""
+    blocks, lines = [], text.splitlines()
+    for index, line in enumerate(lines):
+        match = re.match(r"^(\s*)(?:- )?run:\s*(.*)$", line)
+        if not match:
+            continue
+        if match.group(2) not in ("|", ">", "|-", ">-"):
+            blocks.append(match.group(2))
+            continue
+        indent, body = len(match.group(1)), []
+        for following in lines[index + 1:]:
+            if following.strip() and len(following) - len(following.lstrip()) <= indent:
+                break
+            body.append(following)
+        blocks.append("\n".join(body))
+    return blocks
+
+
+def upload_paths(text):
+    return re.findall(r"^\s*path:\s*(\S+)\s*$", text, re.M)
+
+
+class WorkflowTests(unittest.TestCase):
+    def setUp(self):
+        self.assertTrue(WORKFLOW.exists(), WORKFLOW)
+        self.text = WORKFLOW.read_text(encoding="utf-8")
+
+    def test_workflow_structure(self):
+        text = self.text
+        on = re.search(r"^on:\s*\n((?:[ \t]+.*\n|[ \t]*\n)*)", text, re.M)
+        self.assertIsNotNone(on, "no on: block")
+        self.assertIn("workflow_dispatch", on.group(1))
+        for trigger in ("push", "pull_request", "schedule", "workflow_run", "release"):
+            self.assertNotRegex(on.group(1), rf"\b{trigger}\b")
+        permissions = re.search(r"^permissions:\s*\n\s+contents:\s*read\s*$", text, re.M)
+        self.assertIsNotNone(permissions, "no permissions: contents: read")
+        self.assertLess(permissions.start(), text.index("\njobs:"))
+        self.assertIn("retention-days: 7", text)
+        self.assertIn("if-no-files-found: error", text)
+        self.assertTrue(upload_paths(text))
+        self.assertTrue(all(p.endswith(".gpg") for p in upload_paths(text)), upload_paths(text))
+        self.assertRegex(text, r"if:\s*steps\.[\w-]+\.outputs\.encrypted\s*==\s*'true'")
+        script = "\n".join(run_blocks(text))
+        for needed in ("--recipient-file .github/crash-recipient.asc", "set -euo pipefail", "umask 077", "trap ",
+                       "::notice::", "encrypted=false", "encrypted=true"):
+            self.assertIn(needed, script)
+        self.assertRegex(script, r'scripts/asc_crashes\.py\s+"?\$RUNNER_TEMP/')
+
+    def test_workflow_keeps_secrets_out_of_scripts(self):
+        blocks = run_blocks(self.text)
+        self.assertTrue(blocks)
+        for block in blocks:
+            self.assertNotIn("${{ secrets.", block)
+        for name in ("ASC_KEY_ID", "ASC_ISSUER_ID", "ASC_PRIVATE_KEY"):
+            self.assertRegex(self.text, rf"(?m)^\s+{name}:\s*\$\{{\{{\s*secrets\.{name}\s*\}}\}}\s*$")
+        for path in upload_paths(self.text):
+            self.assertNotIn("crashes/", path)
+            self.assertTrue(path.endswith("crashes.tar.gpg"), path)
 
 
 if __name__ == "__main__":
