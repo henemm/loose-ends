@@ -34,9 +34,9 @@ final class BackgroundRefreshTests: XCTestCase {
 
         let expired = expectation(description: "expired")
         task.onComplete = { expired.fulfill() }
-        let expiration = task.expirationHandler
-        XCTAssertNotNil(expiration)
-        DispatchQueue.global().async { expiration?() }
+        let expiration = ExpirationBox(task.expirationHandler)
+        XCTAssertNotNil(expiration.run)
+        DispatchQueue.global().async { expiration.run?() }
         await fulfillment(of: [expired], timeout: 5)
 
         XCTAssertEqual(task.completions.first, false)
@@ -65,6 +65,12 @@ private final class Gate {
 @MainActor
 private final class Counter {
     var count = 0
+}
+
+/// Carries the task's expiration handler onto a background queue, as the system would call it.
+private final class ExpirationBox: @unchecked Sendable {
+    let run: (() -> Void)?
+    init(_ run: (() -> Void)?) { self.run = run }
 }
 
 /// Stands in for `BGTask`, which has no public initializer and no scheduler in the simulator.

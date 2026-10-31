@@ -17,17 +17,31 @@ enum BackgroundRefresh {
 
     static func register(_ notifications: DueNotificationCenter) {
         guard !ModelContainerFactory.isRunningTests, !ModelContainerFactory.isUITesting else { return }
-        let registered = BGTaskScheduler.shared.register(forTaskWithIdentifier: identifier, using: nil) { task in
-            let handle = RefreshHandle(task)
-            task.expirationHandler = { handle.task.setTaskCompleted(success: false) }
-            Task { @MainActor in
-                await notifications.reschedule()
-                schedule()
-                handle.task.setTaskCompleted(success: true)
-            }
+        let handler = launchHandler(reschedule: {
+            await notifications.reschedule()
+            schedule()
+        })
+        // #780: the system calls this on a background queue (`using: nil`); `@Sendable` keeps it off the main actor.
+        let registered = BGTaskScheduler.shared.register(forTaskWithIdentifier: identifier, using: nil) { @Sendable task in
+            handler(task)
         }
         if !registered {
             logger.error("Background refresh \(identifier, privacy: .public) could not be registered")
+        }
+    }
+
+    /// The handler's body, callable from any queue (#780): it inherits no actor and hops to the main actor
+    /// only for the work. On expiry the task ends without success.
+    nonisolated static func launchHandler(
+        reschedule: @escaping @MainActor @Sendable () async -> Void
+    ) -> @Sendable (any RefreshTask) -> Void {
+        { task in
+            let handle = RefreshHandle(task)
+            task.expirationHandler = { @Sendable in handle.task.setTaskCompleted(success: false) }
+            Task { @MainActor in
+                await reschedule()
+                handle.task.setTaskCompleted(success: true)
+            }
         }
     }
 
@@ -39,7 +53,7 @@ enum BackgroundRefresh {
         // #580: the error the old `submit` threw arrives in the handler; Apple DTS confirms the main thread is fine.
         // The handler may run off the main actor, so it takes the (Sendable) logger as a local.
         let log = Self.logger
-        BGTaskScheduler.shared.submitTaskRequest(request) { error in
+        BGTaskScheduler.shared.submitTaskRequest(request) { @Sendable error in
             if let error {
                 log.error("Scheduling the background refresh failed: \(error, privacy: .public)")
             }
@@ -47,9 +61,17 @@ enum BackgroundRefresh {
     }
 }
 
+/// What the refresh handler needs of a `BGTask`; the seam lets tests stand in for it (#780).
+protocol RefreshTask: AnyObject {
+    var expirationHandler: (() -> Void)? { get set }
+    func setTaskCompleted(success: Bool)
+}
+
+extension BGTask: RefreshTask {}
+
 /// The system hands the task to a background queue; the box carries it onto the main actor.
 private final class RefreshHandle: @unchecked Sendable {
-    let task: BGTask
-    init(_ task: BGTask) { self.task = task }
+    let task: any RefreshTask
+    init(_ task: any RefreshTask) { self.task = task }
 }
 #endif
