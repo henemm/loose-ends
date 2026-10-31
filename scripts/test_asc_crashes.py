@@ -200,10 +200,19 @@ class CrashesTests(unittest.TestCase):
         self.assertEqual({method for method, _ in fake.requests}, {"GET"})
 
     def test_unsafe_id_exits_1(self):
-        result = self.run_script(self.fake([[submission("../evil")]], logs={"../evil": LOG}))
-        self.assertEqual(result.returncode, 1)
+        for sid in ("../evil", "x\n", "a/b"):
+            with self.subTest(sid=sid):
+                result = self.run_script(self.fake([[submission(sid)]], logs={sid: LOG}))
+                self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+                self.assertIn("::error::", result.stdout)
+                self.assertEqual(sorted(p.name for p in self.root.rglob("*") if p.is_file()), ["key.p8", "key.pem"])
+
+    def test_target_is_a_file_exits_1(self):
+        self.out.parent.mkdir(parents=True)
+        self.out.write_text("")
+        result = self.run_script(self.fake([[submission("S1")]], logs={"S1": LOG}))
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
         self.assertIn("::error::", result.stdout)
-        self.assertEqual(sorted(p.name for p in self.root.rglob("*") if p.is_file()), ["key.p8", "key.pem"])
 
     def test_usage_and_missing_environment(self):
         result = self.run_script(None, args=[])
