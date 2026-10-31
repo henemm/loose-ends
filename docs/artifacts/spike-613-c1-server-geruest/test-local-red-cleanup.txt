@@ -1,0 +1,54 @@
+=== 2026-10-31 20:21:00 ./server/scripts/test-local.sh ===
+Postgres on 127.0.0.1:65102, data in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.vgaSrra3JV
+
+> typecheck
+> tsc --noEmit
+
+
+> test
+> node --test test/
+
+✔ AC-1: applies migrations in number order and returns their names in that order (36.787916ms)
+✔ AC-2: a second run applies nothing, a new file alone is applied (11.114542ms)
+✔ AC-3: a broken migration rolls back completely and rethrows the Postgres error (9.153125ms)
+✔ AC-4: a gap in the numbers is refused before anything is applied (4.691125ms)
+✔ AC-4: a duplicate number is refused before anything is applied (9.203041ms)
+✔ AC-4: a misnamed .sql file is refused before anything is applied, README.md is ignored (4.611375ms)
+✔ AC-4: a README.md beside the migrations does not disturb the run (7.696334ms)
+✔ AC-4: number 000 is refused as invalid, not as a duplicate (4.221208ms)
+✔ AC-5: without DATABASE_URL the test run fails and names the variable (245.395291ms)
+✖ deliberately red (AC-7 cleanup proof, only in a throwaway copy) (0.525125ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 9
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 518.327625
+
+✖ failing tests:
+
+test at test/migrate.test.ts:171:1
+✖ deliberately red (AC-7 cleanup proof, only in a throwaway copy) (0.525125ms)
+  AssertionError [ERR_ASSERTION]: deliberately red
+      at TestContext.<anonymous> (file:///private/tmp/claude-501/-Users-hem-Developer-loose-ends--claude-worktrees-spike-613-backend-weg-b/9d73d7ef-2ce8-4ae4-afc6-16f8c190227b/scratchpad/redcopy/server/test/migrate.test.ts:172:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'fail',
+    diff: 'simple'
+  }
+=== exit code: 1 ===
+=== postgres processes (ps -axo pid,command | grep '[p]ostgres') ===
+(none)
+=== data folder from the run: /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.vgaSrra3JV ===
+gone

@@ -1,0 +1,406 @@
+Server (Node 26, Postgres 18)	Set up job	﻿2026-10-31T19:13:55.7022928Z Current runner version: '2.338.2'
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7060988Z ##[group]Runner Image Provisioner
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7062432Z Hosted Compute Agent
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7063379Z Version: 20261021.618
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7064515Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7065842Z Build Date: 2026-10-21T00:45:21Z
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7066925Z Worker ID: {cf859051-9aa2-44b2-a0b8-610f188c299f}
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7068472Z Region: eastus
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7069484Z Cloud: Azure
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7070443Z ##[endgroup]
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7073244Z ##[group]Operating System
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7074256Z Ubuntu
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7075255Z 24.04.5
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7076171Z LTS
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7077044Z ##[endgroup]
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7078353Z ##[group]Runner Image
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7079453Z Image: ubuntu-24.04
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7080416Z Version: 20261025.353.1
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7082285Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261025.353/images/ubuntu/Ubuntu2404-Readme.md
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7085340Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261025.353
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7087074Z ##[endgroup]
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7089309Z ##[group]GITHUB_TOKEN Permissions
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7092389Z Contents: read
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7093364Z Metadata: read
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7094224Z Packages: read
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7095257Z ##[endgroup]
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7098516Z Secret source: Actions
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7100290Z Cache mode: write
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7101651Z Prepare workflow directory
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7742810Z Prepare all required actions
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.7817100Z Getting action download info
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:55.9663952Z Download action repository 'actions/checkout@v7' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:56.0869348Z Download action repository 'actions/setup-node@v7' (SHA:949feb2413d6458794dcd2491c4babbbce0c15c1)
+Server (Node 26, Postgres 18)	Set up job	2026-10-31T19:13:56.2824759Z Complete job name: Server (Node 26, Postgres 18)
+Server (Node 26, Postgres 18)	Initialize containers	﻿2026-10-31T19:13:56.3478669Z ##[group]Checking docker version
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.3491724Z ##[command]/usr/bin/docker version --format '{{.Server.APIVersion}}'
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.4386691Z '1.48'
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.4410585Z Docker daemon API version: '1.48'
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.4411443Z ##[command]/usr/bin/docker version --format '{{.Client.APIVersion}}'
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.4608409Z '1.48'
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.4626268Z Docker client API version: '1.48'
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.4633187Z ##[endgroup]
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.4636759Z ##[group]Clean up resources from previous jobs
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.4643593Z ##[command]/usr/bin/docker ps --all --quiet --no-trunc --filter "label=499e0b"
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.4823038Z ##[command]/usr/bin/docker network prune --force --filter "label=499e0b"
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.4981236Z ##[endgroup]
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.4981817Z ##[group]Create local container network
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.4992354Z ##[command]/usr/bin/docker network create --label 499e0b github_network_06e85e1ed4594c5ba9ad3523d1cb3ec0
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.5524146Z a36d95904494b20ec49fd34c08c9bf11a3683440a5b4d9e63fd5e42f82b097ad
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.5548432Z ##[endgroup]
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.5573449Z ##[group]Starting postgres service container
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.5595801Z ##[command]/usr/bin/docker pull postgres:18
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.8118416Z 18: Pulling from library/postgres
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9148096Z 6fc242d221a6: Pulling fs layer
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9149006Z d06edb2e3f43: Pulling fs layer
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9149560Z 3795839385bc: Pulling fs layer
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9150092Z cea4f0db46a6: Pulling fs layer
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9150621Z 9b1a18996a22: Pulling fs layer
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9151147Z fbc84e711712: Pulling fs layer
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9151656Z 879995175298: Pulling fs layer
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9152160Z d89068781d71: Pulling fs layer
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9152676Z ef90fb83cca5: Pulling fs layer
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9153194Z 7e6d71cb0490: Pulling fs layer
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9153702Z 7c25aa4e8a77: Pulling fs layer
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9154558Z 00ff7a4924f2: Pulling fs layer
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9155088Z d0fbcb0db440: Pulling fs layer
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9155594Z cea4f0db46a6: Waiting
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9156054Z d89068781d71: Waiting
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9156501Z fbc84e711712: Waiting
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9156965Z ef90fb83cca5: Waiting
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9157410Z 879995175298: Waiting
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9158308Z 7e6d71cb0490: Waiting
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9158817Z d0fbcb0db440: Waiting
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9159377Z 7c25aa4e8a77: Waiting
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9159921Z 9b1a18996a22: Waiting
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9160377Z 00ff7a4924f2: Waiting
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9674348Z d06edb2e3f43: Verifying Checksum
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9675403Z d06edb2e3f43: Download complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9934529Z 3795839385bc: Verifying Checksum
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:56.9936033Z 3795839385bc: Download complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:57.0089726Z cea4f0db46a6: Verifying Checksum
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:57.0091295Z cea4f0db46a6: Download complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:57.0529157Z fbc84e711712: Verifying Checksum
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:57.0535537Z fbc84e711712: Download complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:57.0559047Z 9b1a18996a22: Verifying Checksum
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:57.0560509Z 9b1a18996a22: Download complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:57.0783063Z 6fc242d221a6: Verifying Checksum
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:57.0785032Z 6fc242d221a6: Download complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:57.0829769Z 879995175298: Download complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:57.0871639Z d89068781d71: Verifying Checksum
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:57.0876286Z d89068781d71: Download complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:57.1114281Z 7e6d71cb0490: Verifying Checksum
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:57.1115867Z 7e6d71cb0490: Download complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:57.1142587Z 7c25aa4e8a77: Verifying Checksum
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:57.1144024Z 7c25aa4e8a77: Download complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:57.1399521Z 00ff7a4924f2: Verifying Checksum
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:57.1401095Z 00ff7a4924f2: Download complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:57.1418870Z d0fbcb0db440: Verifying Checksum
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:57.1428987Z d0fbcb0db440: Download complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:57.5059776Z ef90fb83cca5: Verifying Checksum
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:57.5062452Z ef90fb83cca5: Download complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:58.1354157Z 6fc242d221a6: Pull complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:58.9836331Z d06edb2e3f43: Pull complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:59.1456303Z 3795839385bc: Pull complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:59.1790944Z cea4f0db46a6: Pull complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:59.4776362Z 9b1a18996a22: Pull complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:59.5357628Z fbc84e711712: Pull complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:59.5431464Z 879995175298: Pull complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:13:59.5532755Z d89068781d71: Pull complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.6063072Z ef90fb83cca5: Pull complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.6194224Z 7e6d71cb0490: Pull complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.6283192Z 7c25aa4e8a77: Pull complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.6373124Z 00ff7a4924f2: Pull complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.6471784Z d0fbcb0db440: Pull complete
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.6513953Z Digest: sha256:979bccfde35445db618c65107d27d08c6c21339d8dc3ad4c830c6633947be0e4
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.6526953Z Status: Downloaded newer image for postgres:18
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.6535336Z docker.io/library/postgres:18
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.6601470Z ##[command]/usr/bin/docker create --name 7ef11caea3d341f59e57e8ccb298f8d8_postgres18_eebe97 --label 499e0b --network github_network_06e85e1ed4594c5ba9ad3523d1cb3ec0 --network-alias postgres -p 5432:5432 --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10 -e "POSTGRES_PASSWORD=postgres" -e GITHUB_ACTIONS=true -e CI=true postgres:18
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.6875491Z bb75b952f27da06733b19a444a7fb59d0f8269ab8a81e83c221cb4dee90d2609
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.6902285Z ##[command]/usr/bin/docker start bb75b952f27da06733b19a444a7fb59d0f8269ab8a81e83c221cb4dee90d2609
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.8944109Z bb75b952f27da06733b19a444a7fb59d0f8269ab8a81e83c221cb4dee90d2609
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.8996370Z ##[command]/usr/bin/docker ps --all --filter id=bb75b952f27da06733b19a444a7fb59d0f8269ab8a81e83c221cb4dee90d2609 --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.9168481Z bb75b952f27da06733b19a444a7fb59d0f8269ab8a81e83c221cb4dee90d2609 Up Less than a second (health: starting)
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.9182859Z ##[command]/usr/bin/docker port bb75b952f27da06733b19a444a7fb59d0f8269ab8a81e83c221cb4dee90d2609
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.9342904Z 5432/tcp -> 0.0.0.0:5432
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.9343899Z 5432/tcp -> [::]:5432
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.9405714Z ##[endgroup]
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.9414737Z ##[group]Waiting for all services to be ready
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.9429041Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" bb75b952f27da06733b19a444a7fb59d0f8269ab8a81e83c221cb4dee90d2609
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.9608722Z starting
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:02.9637206Z postgres service is starting, waiting 2 seconds before checking again.
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:04.9644299Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" bb75b952f27da06733b19a444a7fb59d0f8269ab8a81e83c221cb4dee90d2609
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:04.9796903Z starting
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:04.9816102Z postgres service is starting, waiting 4 seconds before checking again.
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:09.2505544Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" bb75b952f27da06733b19a444a7fb59d0f8269ab8a81e83c221cb4dee90d2609
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:09.2663731Z healthy
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:09.2682865Z postgres service is healthy.
+Server (Node 26, Postgres 18)	Initialize containers	2026-10-31T19:14:09.2683562Z ##[endgroup]
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	﻿2026-10-31T19:14:09.3066745Z ##[group]Run actions/checkout@v7
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.3067346Z with:
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.3067581Z   repository: henemm/loose-ends
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.3070236Z   token: ***
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.3070441Z   ssh-strict: true
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.3070641Z   ssh-user: git
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.3070878Z   persist-credentials: true
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.3071115Z   clean: true
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.3071326Z   sparse-checkout-cone-mode: true
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.3071578Z   fetch-depth: 1
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.3071772Z   fetch-tags: false
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.3071989Z   show-progress: true
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.3072200Z   lfs: false
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.3072378Z   submodules: false
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.3072583Z   set-safe-directory: true
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.3072826Z   allow-unsafe-pr-checkout: false
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.3073318Z ##[endgroup]
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5461809Z Syncing repository: henemm/loose-ends
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5463951Z ##[group]Getting Git version info
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5464486Z Working directory is '/home/runner/work/loose-ends/loose-ends'
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5465160Z [command]/usr/bin/git version
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5504342Z git version 2.56.0
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5532069Z ##[endgroup]
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5545120Z Temporarily overriding HOME='/home/runner/work/_temp/90e67d24-eb99-454b-bdbe-3eb4fedb13c2' before making global git config changes
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5546754Z Adding repository directory to the temporary git global config as a safe directory
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5551717Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/loose-ends/loose-ends
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5604744Z Deleting the contents of '/home/runner/work/loose-ends/loose-ends'
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5608169Z ##[group]Determining repository object format
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5609876Z ##[endgroup]
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5610609Z ##[group]Initializing the repository
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5614283Z [command]/usr/bin/git init /home/runner/work/loose-ends/loose-ends
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5728992Z hint: Using 'master' as the name for the initial branch. This default branch name
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5730123Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5731123Z hint: to use in all of your new repositories, which will suppress this warning,
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5731712Z hint: call:
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5731911Z hint:
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5732242Z hint: 	git config --global init.defaultBranch <name>
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5732581Z hint:
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5732911Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5733703Z hint: 'development'. The just-created branch can be renamed via this command:
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5734117Z hint:
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5734330Z hint: 	git branch -m <name>
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5734570Z hint:
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5734914Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5748185Z Initialized empty Git repository in /home/runner/work/loose-ends/loose-ends/.git/
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5759005Z [command]/usr/bin/git remote add origin https://github.com/henemm/loose-ends
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5805968Z ##[endgroup]
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5806654Z ##[group]Disabling automatic garbage collection
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5810977Z [command]/usr/bin/git config --local gc.auto 0
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5847550Z ##[endgroup]
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5848638Z ##[group]Setting up auth
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5849260Z Removing SSH command configuration
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5855426Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.5899695Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.6300376Z Removing HTTP extra header
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.6307422Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.6380840Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.6631269Z Removing includeIf entries pointing to credentials config files
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.6637451Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.6686200Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.6935258Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-ed82d8fe-68ca-4942-bbfb-d409b53e2c65.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.7016788Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path /home/runner/work/_temp/git-credentials-ed82d8fe-68ca-4942-bbfb-d409b53e2c65.config
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.7061511Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-ed82d8fe-68ca-4942-bbfb-d409b53e2c65.config
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.7106715Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-ed82d8fe-68ca-4942-bbfb-d409b53e2c65.config
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.7152228Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-ed82d8fe-68ca-4942-bbfb-d409b53e2c65.config
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.7193848Z ##[endgroup]
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.7194535Z ##[group]Fetching the repository
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:09.7201298Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +48f272d1eafeafbca245f0d08403fba53362bed8:refs/remotes/pull/785/merge
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:11.7420507Z From https://github.com/henemm/loose-ends
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:11.7421330Z  * [new ref]         48f272d1eafeafbca245f0d08403fba53362bed8 -> pull/785/merge
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:11.7426896Z ##[endgroup]
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:11.7427410Z ##[group]Determining the checkout info
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:11.7428625Z ##[endgroup]
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:11.7435624Z [command]/usr/bin/git sparse-checkout disable
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:11.7501742Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:11.7546989Z ##[group]Checking out the ref
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:11.7552154Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/785/merge
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:12.2819215Z Note: switching to 'refs/remotes/pull/785/merge'.
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:12.2819822Z 
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:12.2820223Z You are in 'detached HEAD' state. You can look around, make experimental
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:12.2821252Z changes and commit them, and you can discard any commits you make in this
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:12.2822518Z state without impacting any branches by switching back to a branch.
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:12.2823186Z 
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:12.2823626Z If you want to create a new branch to retain commits you create, you may
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:12.2824653Z do so (now or later) by using -c with the switch command. Example:
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:12.2825172Z 
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:12.2825411Z   git switch -c <new-branch-name>
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:12.2825780Z 
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:12.2825992Z Or undo this operation with:
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:12.2826275Z 
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:12.2826452Z   git switch -
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:12.2826749Z 
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:12.2827212Z Turn off this advice by setting config variable advice.detachedHead to false
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:12.2828231Z 
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:12.2829001Z HEAD is now at 48f272d Merge 47db7adda868cda17089904fdef7c05109bc7c40 into f0f44506bb6e49e460512e0afc6369c39e539897
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:12.2852066Z ##[endgroup]
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:12.2915727Z [command]/usr/bin/git log -1 --format=%H
+Server (Node 26, Postgres 18)	Run actions/checkout@v7	2026-10-31T19:14:12.2953990Z 48f272d1eafeafbca245f0d08403fba53362bed8
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	﻿2026-10-31T19:14:12.3231045Z ##[group]Run actions/setup-node@v7
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	2026-10-31T19:14:12.3231346Z with:
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	2026-10-31T19:14:12.3231536Z   node-version: 26
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	2026-10-31T19:14:12.3231734Z   cache: npm
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	2026-10-31T19:14:12.3231968Z   cache-dependency-path: server/package-lock.json
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	2026-10-31T19:14:12.3232289Z   check-latest: false
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	2026-10-31T19:14:12.3234694Z   token: ***
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	2026-10-31T19:14:12.3234905Z   package-manager-cache: true
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	2026-10-31T19:14:12.3235151Z ##[endgroup]
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	2026-10-31T19:14:12.4552514Z Attempting to download 26...
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	2026-10-31T19:14:13.0032555Z Acquiring 26.13.0 - x64 from https://github.com/actions/node-versions/releases/download/26.13.0-40806794713/node-26.13.0-linux-x64.tar.gz
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	2026-10-31T19:14:13.4323827Z Extracting ...
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	2026-10-31T19:14:13.4474207Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/132fd01b-35ed-4ce7-868d-06eeaf7693f8 -f /home/runner/work/_temp/e4695652-6f46-45aa-b2a7-8d3365f38065
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	2026-10-31T19:14:14.7639557Z Adding to the cache ...
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	2026-10-31T19:14:16.5406818Z ##[group]Environment details
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	2026-10-31T19:14:16.7668130Z node: v26.13.0
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	2026-10-31T19:14:16.7668611Z npm: 11.20.0
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	2026-10-31T19:14:16.7668945Z yarn: 1.22.22
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	2026-10-31T19:14:16.7669760Z ##[endgroup]
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	2026-10-31T19:14:16.7688321Z [command]/opt/hostedtoolcache/node/26.13.0/x64/bin/npm config get cache
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	2026-10-31T19:14:16.8716678Z /home/runner/.npm
+Server (Node 26, Postgres 18)	Run actions/setup-node@v7	2026-10-31T19:14:16.9643029Z npm cache is not found
+Server (Node 26, Postgres 18)	Run npm ci	﻿2026-10-31T19:14:16.9852729Z ##[group]Run npm ci
+Server (Node 26, Postgres 18)	Run npm ci	2026-10-31T19:14:16.9853035Z ^[[36;1mnpm ci^[[0m
+Server (Node 26, Postgres 18)	Run npm ci	2026-10-31T19:14:16.9879356Z shell: /usr/bin/bash -e {0}
+Server (Node 26, Postgres 18)	Run npm ci	2026-10-31T19:14:16.9879639Z ##[endgroup]
+Server (Node 26, Postgres 18)	Run npm ci	2026-10-31T19:14:17.9802703Z 
+Server (Node 26, Postgres 18)	Run npm ci	2026-10-31T19:14:17.9811943Z added 19 packages, and audited 20 packages in 935ms
+Server (Node 26, Postgres 18)	Run npm ci	2026-10-31T19:14:17.9813431Z 
+Server (Node 26, Postgres 18)	Run npm ci	2026-10-31T19:14:17.9813941Z found 0 vulnerabilities
+Server (Node 26, Postgres 18)	Run npm run typecheck	﻿2026-10-31T19:14:18.0279131Z ##[group]Run npm run typecheck
+Server (Node 26, Postgres 18)	Run npm run typecheck	2026-10-31T19:14:18.0279484Z ^[[36;1mnpm run typecheck^[[0m
+Server (Node 26, Postgres 18)	Run npm run typecheck	2026-10-31T19:14:18.0300969Z shell: /usr/bin/bash -e {0}
+Server (Node 26, Postgres 18)	Run npm run typecheck	2026-10-31T19:14:18.0301236Z ##[endgroup]
+Server (Node 26, Postgres 18)	Run npm run typecheck	2026-10-31T19:14:18.1425019Z 
+Server (Node 26, Postgres 18)	Run npm run typecheck	2026-10-31T19:14:18.1425444Z > typecheck
+Server (Node 26, Postgres 18)	Run npm run typecheck	2026-10-31T19:14:18.1425861Z > tsc --noEmit
+Server (Node 26, Postgres 18)	Run npm run typecheck	2026-10-31T19:14:18.1426104Z 
+Server (Node 26, Postgres 18)	Run npm test	﻿2026-10-31T19:14:18.3132054Z ##[group]Run npm test
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:18.3132349Z ^[[36;1mnpm test^[[0m
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:18.3152833Z shell: /usr/bin/bash -e {0}
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:18.3153090Z env:
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:18.3153527Z   DATABASE_URL: ***127.0.0.1:5432/postgres
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:18.3153828Z ##[endgroup]
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:18.4117060Z 
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:18.4117628Z > test
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:18.4118313Z > node --test test/
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:18.4118520Z 
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:18.6710549Z ✔ AC-1: applies migrations in number order and returns their names in that order (66.517619ms)
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:18.7050748Z ✔ AC-2: a second run applies nothing, a new file alone is applied (36.914454ms)
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:18.7305448Z ✔ AC-3: a broken migration rolls back completely and rethrows the Postgres error (25.667216ms)
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:18.7468251Z ✔ AC-4: a gap in the numbers is refused before anything is applied (15.760943ms)
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:18.7689234Z ✔ AC-4: a duplicate number is refused before anything is applied (23.30405ms)
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:18.7859024Z ✔ AC-4: a misnamed .sql file is refused before anything is applied, README.md is ignored (16.631741ms)
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:18.8111762Z ✔ AC-4: a README.md beside the migrations does not disturb the run (25.337161ms)
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:18.9955121Z ✔ AC-4: number 000 is refused as invalid, not as a duplicate (18.476875ms)
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:18.9957419Z ✔ AC-5: without DATABASE_URL the test run fails and names the variable (166.183666ms)
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:19.0093160Z ℹ tests 9
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:19.0093733Z ℹ suites 0
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:19.0094176Z ℹ pass 9
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:19.0094576Z ℹ fail 0
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:19.0094987Z ℹ cancelled 0
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:19.0095445Z ℹ skipped 0
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:19.0096032Z ℹ todo 0
+Server (Node 26, Postgres 18)	Run npm test	2026-10-31T19:14:19.0096533Z ℹ duration_ms 564.4836
+Server (Node 26, Postgres 18)	Post Run actions/setup-node@v7	﻿2026-10-31T19:14:19.0281200Z Post job cleanup.
+Server (Node 26, Postgres 18)	Post Run actions/setup-node@v7	2026-10-31T19:14:19.1672586Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/loose-ends/loose-ends --files-from manifest.txt --use-compress-program zstdmt
+Server (Node 26, Postgres 18)	Post Run actions/setup-node@v7	2026-10-31T19:14:19.5923336Z Sent 10683243 of 10683243 (100.0%), 32.6 MBs/sec
+Server (Node 26, Postgres 18)	Post Run actions/setup-node@v7	2026-10-31T19:14:19.6974329Z Cache saved with the key: node-cache-Linux-x64-npm-ccced8539d08b64faa03fa632f6f5e856c3e73c4b718374b78ed68e643bf6372
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	﻿2026-10-31T19:14:19.7123227Z Post job cleanup.
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.8047600Z [command]/usr/bin/git version
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.8101512Z git version 2.56.0
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.8149467Z Temporarily overriding HOME='/home/runner/work/_temp/578d1dac-68cf-43ff-968d-f0717eb70dae' before making global git config changes
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.8151180Z Adding repository directory to the temporary git global config as a safe directory
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.8159300Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/loose-ends/loose-ends
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.8192530Z Removing SSH command configuration
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.8200683Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.8243915Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.8514012Z Removing HTTP extra header
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.8521257Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.8564042Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.8860488Z Removing includeIf entries pointing to credentials config files
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.8868413Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.8928136Z includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.8929611Z includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.8936696Z includeif.gitdir:/github/workspace/.git.path
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.8938772Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.8941272Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.8976572Z /home/runner/work/_temp/git-credentials-ed82d8fe-68ca-4942-bbfb-d409b53e2c65.config
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.8988113Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-ed82d8fe\-68ca\-4942\-bbfb\-d409b53e2c65\.config
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.9050931Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.9109104Z /home/runner/work/_temp/git-credentials-ed82d8fe-68ca-4942-bbfb-d409b53e2c65.config
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.9120036Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-ed82d8fe\-68ca\-4942\-bbfb\-d409b53e2c65\.config
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.9177159Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.9212961Z /github/runner_temp/git-credentials-ed82d8fe-68ca-4942-bbfb-d409b53e2c65.config
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.9223377Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-ed82d8fe\-68ca\-4942\-bbfb\-d409b53e2c65\.config
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.9275951Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.9311192Z /github/runner_temp/git-credentials-ed82d8fe-68ca-4942-bbfb-d409b53e2c65.config
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.9319593Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-ed82d8fe\-68ca\-4942\-bbfb\-d409b53e2c65\.config
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.9371678Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Server (Node 26, Postgres 18)	Post Run actions/checkout@v7	2026-10-31T19:14:19.9639647Z Removing credentials config '/home/runner/work/_temp/git-credentials-ed82d8fe-68ca-4942-bbfb-d409b53e2c65.config'
+Server (Node 26, Postgres 18)	Stop containers	﻿2026-10-31T19:14:19.9774836Z Print service container logs: 7ef11caea3d341f59e57e8ccb298f8d8_postgres18_eebe97
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9780417Z ##[command]/usr/bin/docker logs --details bb75b952f27da06733b19a444a7fb59d0f8269ab8a81e83c221cb4dee90d2609
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9934469Z  The files belonging to this database system will be owned by user "postgres".
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9935443Z  This user must also own the server process.
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9937264Z  initdb: warning: enabling "trust" authentication for local connections
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9938762Z  initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9940127Z  2026-10-31 19:14:03.801 UTC [1] LOG:  starting PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9940917Z  2026-10-31 19:14:03.802 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9941431Z  2026-10-31 19:14:03.802 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9942049Z  2026-10-31 19:14:03.803 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9942658Z  2026-10-31 19:14:03.806 UTC [73] LOG:  database system was shut down at 2026-10-31 19:14:03 UTC
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9943184Z  2026-10-31 19:14:03.810 UTC [1] LOG:  database system is ready to accept connections
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9943652Z  2026-10-31 19:14:07.956 UTC [84] FATAL:  role "root" does not exist
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9944076Z  2026-10-31 19:14:13.028 UTC [92] FATAL:  role "root" does not exist
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9944471Z  2026-10-31 19:14:18.100 UTC [100] FATAL:  role "root" does not exist
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9944956Z  2026-10-31 19:14:18.721 UTC [106] ERROR:  relation "no_such_table" does not exist at character 47
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9945497Z  2026-10-31 19:14:18.721 UTC [106] STATEMENT:  CREATE TABLE kept_out (id int);
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9945869Z  	SELECT * FROM no_such_table;
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9946112Z  
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9946384Z  The database cluster will be initialized with locale "en_US.utf8".
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9946834Z  The default database encoding has accordingly been set to "UTF8".
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9947506Z  The default text search configuration will be set to "english".
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9948157Z  
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9948392Z  Data page checksums are enabled.
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9948647Z  
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9948961Z  fixing permissions on existing directory /var/lib/postgresql/18/docker ... ok
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9949397Z  creating subdirectories ... ok
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9949719Z  selecting dynamic shared memory implementation ... posix
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9950082Z  selecting default "max_connections" ... 100
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9950391Z  selecting default "shared_buffers" ... 128MB
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9950691Z  selecting default time zone ... Etc/UTC
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9950970Z  creating configuration files ... ok
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9951238Z  running bootstrap script ... ok
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9951549Z  performing post-bootstrap initialization ... ok
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9951854Z  syncing data to disk ... ok
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9952082Z  
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9952259Z  
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9952483Z  Success. You can now start the database server using:
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9952782Z  
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9953023Z      pg_ctl -D /var/lib/postgresql/18/docker -l logfile start
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9953355Z  
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9954009Z  waiting for server to start....2026-10-31 19:14:03.562 UTC [53] LOG:  starting PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9954915Z  2026-10-31 19:14:03.563 UTC [53] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9955500Z  2026-10-31 19:14:03.567 UTC [59] LOG:  database system was shut down at 2026-10-31 19:14:03 UTC
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9956040Z  2026-10-31 19:14:03.570 UTC [53] LOG:  database system is ready to accept connections
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9956642Z   done
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9956836Z  server started
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9957068Z  
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9957394Z  /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9958054Z  
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9958323Z  2026-10-31 19:14:03.678 UTC [53] LOG:  received fast shutdown request
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9958865Z  waiting for server to shut down....2026-10-31 19:14:03.679 UTC [53] LOG:  aborting any active transactions
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9959591Z  2026-10-31 19:14:03.681 UTC [53] LOG:  background worker "logical replication launcher" (PID 62) exited with exit code 1
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9960140Z  2026-10-31 19:14:03.682 UTC [57] LOG:  shutting down
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9960536Z  2026-10-31 19:14:03.683 UTC [57] LOG:  checkpoint starting: shutdown immediate
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9962110Z  2026-10-31 19:14:03.685 UTC [57] LOG:  checkpoint complete: wrote 0 buffers (0.0%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.003 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/1761918, redo lsn=0/1761918
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9964129Z  2026-10-31 19:14:03.693 UTC [53] LOG:  database system is shut down
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9964708Z   done
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9965149Z  server stopped
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9965975Z  
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9966657Z  PostgreSQL init process complete; ready for start up.
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9967193Z  
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9972828Z Stop and remove container: 7ef11caea3d341f59e57e8ccb298f8d8_postgres18_eebe97
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:19.9978065Z ##[command]/usr/bin/docker rm --force bb75b952f27da06733b19a444a7fb59d0f8269ab8a81e83c221cb4dee90d2609
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:21.0935450Z bb75b952f27da06733b19a444a7fb59d0f8269ab8a81e83c221cb4dee90d2609
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:21.0967286Z Remove container network: github_network_06e85e1ed4594c5ba9ad3523d1cb3ec0
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:21.0972507Z ##[command]/usr/bin/docker network rm github_network_06e85e1ed4594c5ba9ad3523d1cb3ec0
+Server (Node 26, Postgres 18)	Stop containers	2026-10-31T19:14:21.1878480Z github_network_06e85e1ed4594c5ba9ad3523d1cb3ec0
+Server (Node 26, Postgres 18)	Complete job	﻿2026-10-31T19:14:21.1964075Z Cleaning up orphan processes
