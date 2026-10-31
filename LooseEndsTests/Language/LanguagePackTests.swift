@@ -32,7 +32,7 @@ struct LanguagePackTests {
     func wordsAreFolded() {
         for pack in LanguagePacks.shipped {
             let words = Array(pack.numbers.keys) + pack.weekdays.keys + pack.months.keys + pack.relativeDays.keys
-                + pack.nextWords + pack.dayUnits + pack.weekUnits + pack.dayPrepositions
+                + pack.nextWords + pack.dayUnits + pack.weekUnits + pack.offsetArticles + pack.dayPrepositions
                 + pack.ordinalSuffixes + pack.repetitions
             for word in words {
                 #expect(ExpressionText.folded(word) == word, "\(pack.code): \(word) ist nicht gefaltet")

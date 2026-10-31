@@ -20,7 +20,7 @@ struct LanguagePackConformanceTests {
 
     /// Listen aus gefalteten Wörtern (`ExpressionText.folded`), wie die Datums- und Zeitregeln sie vergleichen.
     static var wordLists: [(name: String, words: KeyPath<LanguagePack, [String]>)] { [
-        ("nextWords", \.nextWords), ("dayUnits", \.dayUnits), ("weekUnits", \.weekUnits),
+        ("nextWords", \.nextWords), ("dayUnits", \.dayUnits), ("weekUnits", \.weekUnits), ("offsetArticles", \.offsetArticles),
         ("dayPrepositions", \.dayPrepositions), ("ordinalSuffixes", \.ordinalSuffixes), ("repetitions", \.repetitions),
         ("timeCues", \.timeCues), ("clockWords", \.clockWords), ("timeArticles", \.timeArticles),
         ("articleCues", \.articleCues), ("hourUnits", \.hourUnits), ("abbreviatedHourUnits", \.abbreviatedHourUnits),
@@ -71,7 +71,7 @@ struct LanguagePackConformanceTests {
     /// Wo ein Paket eine Tabelle leer lassen darf (die Sprache kennt die Sache nicht).
     static let allowedEmpty: [String: Set<String>] = [
         "en": ["dayPrepositions", "clockWords", "timeArticles", "articleCues", "spelledHours"],
-        "de": ["ordinalSuffixes", "abbreviatedHourUnits"],
+        "de": ["ordinalSuffixes", "abbreviatedHourUnits", "offsetArticles"],
     ]
 
     @Test("Keine Tabelle ist leer, außer wo die Sprache die Sache nicht kennt")

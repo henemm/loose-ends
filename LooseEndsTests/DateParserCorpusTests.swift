@@ -47,7 +47,7 @@ struct DateParserCorpusTests {
                 inventedByLanguage[entry.lang, default: Score()].record(got == nil, miss: "`\(entry.text)` → \(day)")
             }
         }
-        #expect(exact.total == 156, "Korpus hat \(exact.total) Datumssätze statt 156")
+        #expect(exact.total == 157, "Korpus hat \(exact.total) Datumssätze statt 157")
         #expect(invented.total == 188, "Korpus hat \(invented.total) Kontrollsätze statt 188")
         // The bar for a shipped language (#759): at least 99 % exact and none invented, each language on its own.
         for (lang, score) in exactByLanguage {
