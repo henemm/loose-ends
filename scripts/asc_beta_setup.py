@@ -2,7 +2,8 @@
 
 Aufruf: asc_beta_setup.py
 Umgebung wie asc_wait_build.py plus ASC_REVIEW_FIRST_NAME, ASC_REVIEW_LAST_NAME, ASC_REVIEW_PHONE, ASC_REVIEW_EMAIL
-(Pflicht, die E-Mail ist auch feedbackEmail), ASC_PRIVACY_POLICY_URL (leer = nicht anfassen) und BETA_DESCRIPTION_FILE.
+(Pflicht, die E-Mail ist auch feedbackEmail), ASC_PRIVACY_POLICY_URL (de-DE; leer = nicht anfassen), ASC_PRIVACY_POLICY_URL_EN
+(en-US; leer = die Seite `PRIVACY_URL_EN`, #763) und BETA_DESCRIPTION_FILE.
 Die Beschreibung darf je Sprachfassung einen Abschnitt `## de-DE`, `## en-US` haben (Fassungen der ausgelieferten Sprachen,
 #760); eine Datei ohne Überschrift gilt als `de-DE`.
 Liest zuerst, schreibt nur Abweichungen (idempotent). Ausgegeben werden nur „gesetzt/leer/unverändert“, nie Werte.
@@ -20,6 +21,7 @@ from asc_what_to_test import ATTEMPTS, MAX_LENGTH, get_data, send_json
 CONTACT = {"contactFirstName": "ASC_REVIEW_FIRST_NAME", "contactLastName": "ASC_REVIEW_LAST_NAME",
            "contactPhone": "ASC_REVIEW_PHONE", "contactEmail": "ASC_REVIEW_EMAIL"}
 DEFAULT_DESCRIPTION = Path(__file__).resolve().parent.parent / "docs" / "reference" / "beta-beschreibung.md"
+PRIVACY_URL_EN = "https://www.henemm.com/legal/loose-ends/privacy-policy-en/"
 FORBIDDEN = "Schlüssel ohne Schreibrecht: Rolle des API-Schlüssels in App Store Connect prüfen"
 
 
@@ -59,12 +61,13 @@ def wanted_values():
     for locale, part in sections.items():
         if not part or len(part) > MAX_LENGTH:
             raise Fatal(f"BETA_DESCRIPTION_FILE ({locale}) must hold 1 to {MAX_LENGTH} characters, has {len(part)}")
-    privacy = os.environ.get("ASC_PRIVACY_POLICY_URL", "").strip()
+    privacy = {GERMAN: os.environ.get("ASC_PRIVACY_POLICY_URL", "").strip(),
+               "en-US": os.environ.get("ASC_PRIVACY_POLICY_URL_EN", "").strip() or PRIVACY_URL_EN}
     localizations = {}
     for locale, part in sections.items():
         localizations[locale] = {"description": part, "feedbackEmail": env["ASC_REVIEW_EMAIL"]}
-        if privacy:
-            localizations[locale]["privacyPolicyUrl"] = privacy
+        if privacy.get(locale):
+            localizations[locale]["privacyPolicyUrl"] = privacy[locale]
     detail = {field: env[name] for field, name in CONTACT.items()} | {"demoAccountRequired": False}
     return localizations, detail
 

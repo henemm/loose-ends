@@ -19,7 +19,7 @@ from pathlib import Path
 SCRIPTS = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPTS))
 
-from asc_beta_setup import split_description  # noqa: E402
+from asc_beta_setup import PRIVACY_URL_EN, split_description  # noqa: E402
 from asc_wait_build import Fatal  # noqa: E402
 
 SCRIPT = SCRIPTS / "asc_beta_setup.py"
@@ -186,6 +186,33 @@ class SetupTests(unittest.TestCase):
         post, = [b for m, _, b in fake.writes() if m == "POST"]
         self.assertEqual(post["data"]["attributes"]["privacyPolicyUrl"], PRIVACY_URL)
         self.assertIn("datenschutzUrl=gesetzt", result.stdout)
+
+    def two_languages(self):
+        both = Path(self.tmp.name) / "both.md"
+        both.write_text("## de-DE\n\nDeutsch\n\n## en-US\n\nEnglish\n")
+        return both
+
+    def posted_privacy(self, fake):
+        return {b["data"]["attributes"]["locale"]: b["data"]["attributes"].get("privacyPolicyUrl")
+                for m, _, b in fake.writes() if m == "POST"}
+
+    def test_privacy_url_per_locale(self):
+        fake = self.fake()
+        result = self.run_setup(fake, description=self.two_languages(), ASC_PRIVACY_POLICY_URL=PRIVACY_URL,
+                                ASC_PRIVACY_POLICY_URL_EN=PRIVACY_URL + "-en")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.posted_privacy(fake), {"de-DE": PRIVACY_URL, "en-US": PRIVACY_URL + "-en"})
+
+    def test_en_falls_back_to_constant(self):
+        fake = self.fake()
+        result = self.run_setup(fake, description=self.two_languages(), ASC_PRIVACY_POLICY_URL=PRIVACY_URL)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.posted_privacy(fake), {"de-DE": PRIVACY_URL, "en-US": PRIVACY_URL_EN})
+
+    def test_german_url_stays_untouched_without_variable(self):
+        fake = self.fake()
+        self.assertEqual(self.run_setup(fake, description=self.two_languages()).returncode, 0)
+        self.assertEqual(self.posted_privacy(fake), {"de-DE": None, "en-US": PRIVACY_URL_EN})
 
     def test_missing_secret_aborts_before_any_write(self):
         for name in CONTACT:
