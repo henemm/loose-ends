@@ -1,0 +1,187 @@
+test_both_platforms_in_one_run (__main__.CrashesTests.test_both_platforms_in_one_run) ... FAIL
+test_empty_logtext_counts_as_without_report (__main__.CrashesTests.test_empty_logtext_counts_as_without_report) ... FAIL
+test_files_have_expected_content (__main__.CrashesTests.test_files_have_expected_content) ... FAIL
+test_forbidden_exits_1 (__main__.CrashesTests.test_forbidden_exits_1) ... 
+  test_forbidden_exits_1 (__main__.CrashesTests.test_forbidden_exits_1) (statuses={'/v1/apps/APP1/betaFeedbackCrashSubmissions': [403]}) ... FAIL
+  test_forbidden_exits_1 (__main__.CrashesTests.test_forbidden_exits_1) (statuses={'/v1/betaFeedbackCrashSubmissions/S1/crashLog': [403]}) ... FAIL
+test_log_has_no_personal_data (__main__.CrashesTests.test_log_has_no_personal_data) ... FAIL
+test_missing_crashlog_counts_as_without_report (__main__.CrashesTests.test_missing_crashlog_counts_as_without_report) ... FAIL
+test_no_submissions (__main__.CrashesTests.test_no_submissions) ... FAIL
+test_only_get_requests (__main__.CrashesTests.test_only_get_requests) ... FAIL
+test_server_error_always_exits_1 (__main__.CrashesTests.test_server_error_always_exits_1) ... FAIL
+test_server_error_once_is_retried (__main__.CrashesTests.test_server_error_once_is_retried) ... FAIL
+test_two_pages_via_links_next (__main__.CrashesTests.test_two_pages_via_links_next) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:575: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 58332)>
+  def format_frame_summary(self, frame_summary, **kwargs):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:575: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 58334)>
+  def format_frame_summary(self, frame_summary, **kwargs):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:575: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 58335)>
+  def format_frame_summary(self, frame_summary, **kwargs):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:575: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 58336)>
+  def format_frame_summary(self, frame_summary, **kwargs):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:575: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 58337)>
+  def format_frame_summary(self, frame_summary, **kwargs):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:575: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 58338)>
+  def format_frame_summary(self, frame_summary, **kwargs):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:575: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 58343)>
+  def format_frame_summary(self, frame_summary, **kwargs):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:575: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 58344)>
+  def format_frame_summary(self, frame_summary, **kwargs):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:575: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 58345)>
+  def format_frame_summary(self, frame_summary, **kwargs):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:575: ResourceWarning: unclosed <socket.socket fd=13, family=2, type=1, proto=0, laddr=('127.0.0.1', 58346)>
+  def format_frame_summary(self, frame_summary, **kwargs):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:575: ResourceWarning: unclosed <socket.socket fd=14, family=2, type=1, proto=0, laddr=('127.0.0.1', 58347)>
+  def format_frame_summary(self, frame_summary, **kwargs):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_unsafe_id_exits_1 (__main__.CrashesTests.test_unsafe_id_exits_1) ... FAIL
+test_usage_and_missing_environment (__main__.CrashesTests.test_usage_and_missing_environment) ... FAIL
+
+======================================================================
+FAIL: test_both_platforms_in_one_run (__main__.CrashesTests.test_both_platforms_in_one_run)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/test_asc_crashes.py", line 191, in test_both_platforms_in_one_run
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/asc_crashes.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_empty_logtext_counts_as_without_report (__main__.CrashesTests.test_empty_logtext_counts_as_without_report)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/test_asc_crashes.py", line 153, in test_empty_logtext_counts_as_without_report
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/asc_crashes.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_files_have_expected_content (__main__.CrashesTests.test_files_have_expected_content)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/test_asc_crashes.py", line 135, in test_files_have_expected_content
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/asc_crashes.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_forbidden_exits_1 (__main__.CrashesTests.test_forbidden_exits_1) (statuses={'/v1/apps/APP1/betaFeedbackCrashSubmissions': [403]})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/test_asc_crashes.py", line 174, in test_forbidden_exits_1
+    self.assertEqual(result.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_forbidden_exits_1 (__main__.CrashesTests.test_forbidden_exits_1) (statuses={'/v1/betaFeedbackCrashSubmissions/S1/crashLog': [403]})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/test_asc_crashes.py", line 174, in test_forbidden_exits_1
+    self.assertEqual(result.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_log_has_no_personal_data (__main__.CrashesTests.test_log_has_no_personal_data)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/test_asc_crashes.py", line 182, in test_log_has_no_personal_data
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/asc_crashes.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_missing_crashlog_counts_as_without_report (__main__.CrashesTests.test_missing_crashlog_counts_as_without_report)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/test_asc_crashes.py", line 144, in test_missing_crashlog_counts_as_without_report
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/asc_crashes.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_no_submissions (__main__.CrashesTests.test_no_submissions)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/test_asc_crashes.py", line 118, in test_no_submissions
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/asc_crashes.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_only_get_requests (__main__.CrashesTests.test_only_get_requests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/test_asc_crashes.py", line 198, in test_only_get_requests
+    self.assertEqual(self.run_script(fake).returncode, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0
+
+======================================================================
+FAIL: test_server_error_always_exits_1 (__main__.CrashesTests.test_server_error_always_exits_1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/test_asc_crashes.py", line 166, in test_server_error_always_exits_1
+    self.assertEqual(result.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_server_error_once_is_retried (__main__.CrashesTests.test_server_error_once_is_retried)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/test_asc_crashes.py", line 160, in test_server_error_once_is_retried
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/asc_crashes.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_two_pages_via_links_next (__main__.CrashesTests.test_two_pages_via_links_next)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/test_asc_crashes.py", line 126, in test_two_pages_via_links_next
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/asc_crashes.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_unsafe_id_exits_1 (__main__.CrashesTests.test_unsafe_id_exits_1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/test_asc_crashes.py", line 204, in test_unsafe_id_exits_1
+    self.assertEqual(result.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_usage_and_missing_environment (__main__.CrashesTests.test_usage_and_missing_environment)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/test_asc_crashes.py", line 211, in test_usage_and_missing_environment
+    self.assertIn("usage:", result.stderr)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'usage:' not found in "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/sleepy-napping-whistle/scripts/asc_crashes.py': [Errno 2] No such file or directory\n"
+
+----------------------------------------------------------------------
+Ran 13 tests in 6.969s
+
+FAILED (failures=14)
