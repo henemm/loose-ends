@@ -136,3 +136,14 @@ Kein Pfad der Geräteliste berührt, kein Simulator-Ablauf ändert sich. `phase8
 
 ### Open Questions
 - keine an Henning (Abhängigkeiten folgen aus seiner Wahl „Postgres + TypeScript-Dienst“; Teilung ist eine Scoping-Entscheidung)
+
+## Erkenntnisse aus TDD RED (2026-10-31)
+
+- `postgresql@18` ist per Homebrew installiert (`/opt/homebrew/opt/postgresql@18/bin`), kein Dienst gestartet.
+- `test-local.sh`: Liegt der Datenordner unter einem langen Pfad (Scratchpad, `mktemp` unter `/private/tmp/claude-…`), scheitert der Start mit
+  „Unix-Domain-Socket-Pfad … ist zu lang (maximal 103 Bytes)“. Lösung: `pg_ctl … -o "-p <port> -c unix_socket_directories= -c listen_addresses=127.0.0.1"`, nur TCP.
+  `initdb -U postgres -A trust`; `DATABASE_URL=postgres://postgres@127.0.0.1:<port>/postgres`.
+- Die Tests legen ihre Migrationsordner selbst in `mkdtemp` an (Anlage-Reihenfolge steuerbar); ein statischer Ordner `server/test/fixtures/` entfällt.
+- Fehlermeldungen, die die Tests erwarten: Lücke → Meldung passt auf `/Lücke.*002/`, doppelte Nummer → `/doppelt.*002/`; beides vor `CREATE TABLE schema_migrations`.
+- Jeder Test hat ein eigenes Schema per `search_path`; `migrate` legt `schema_migrations` ohne Schema-Präfix an (Spalte `name`).
+- AC-5 hängt an der Prüfung oben in `migrate.test.ts`; sie greift erst, wenn `src/migrate.ts` existiert (ESM-Importe laufen vor dem Modulcode).
