@@ -1,0 +1,163 @@
+test_app_lookup_server_error_exits_1 (__main__.CrashesTests.test_app_lookup_server_error_exits_1) ... ok
+test_both_platforms_in_one_run (__main__.CrashesTests.test_both_platforms_in_one_run) ... ok
+test_empty_logtext_counts_as_without_report (__main__.CrashesTests.test_empty_logtext_counts_as_without_report) ... ok
+test_files_have_expected_content (__main__.CrashesTests.test_files_have_expected_content) ... ok
+test_forbidden_exits_1 (__main__.CrashesTests.test_forbidden_exits_1) ... ok
+test_log_has_no_personal_data (__main__.CrashesTests.test_log_has_no_personal_data) ... ok
+test_missing_crashlog_counts_as_without_report (__main__.CrashesTests.test_missing_crashlog_counts_as_without_report) ... ok
+test_no_submissions (__main__.CrashesTests.test_no_submissions) ... ok
+test_non_string_attribute_becomes_unbekannt (__main__.CrashesTests.test_non_string_attribute_becomes_unbekannt) ... FAIL
+test_only_get_requests (__main__.CrashesTests.test_only_get_requests) ... ok
+test_only_own_error_line_starts_with_colons (__main__.CrashesTests.test_only_own_error_line_starts_with_colons) ... FAIL
+test_pagination_loop_exits_1 (__main__.CrashesTests.test_pagination_loop_exits_1) ... FAIL
+test_server_error_always_exits_1 (__main__.CrashesTests.test_server_error_always_exits_1) ... ok
+test_server_error_once_is_retried (__main__.CrashesTests.test_server_error_once_is_retried) ... ok
+test_target_is_a_file_exits_1 (__main__.CrashesTests.test_target_is_a_file_exits_1) ... ok
+test_two_pages_via_links_next (__main__.CrashesTests.test_two_pages_via_links_next) ... ok
+test_unsafe_attribute_becomes_unbekannt (__main__.CrashesTests.test_unsafe_attribute_becomes_unbekannt) ... FAIL
+test_unsafe_id_exits_1 (__main__.CrashesTests.test_unsafe_id_exits_1) ... ok
+test_usage_and_missing_environment (__main__.CrashesTests.test_usage_and_missing_environment) ... ok
+test_encrypt_with_recipient_file_hides_content (__main__.EncryptionTests.test_encrypt_with_recipient_file_hides_content) ... FAIL
+test_recipient_file_is_one_public_key (__main__.EncryptionTests.test_recipient_file_is_one_public_key) ... ERROR
+test_roundtrip_with_local_key (__main__.EncryptionTests.test_roundtrip_with_local_key) ... FAIL
+test_workflow_keeps_secrets_out_of_scripts (__main__.WorkflowTests.test_workflow_keeps_secrets_out_of_scripts) ... FAIL
+test_workflow_structure (__main__.WorkflowTests.test_workflow_structure) ... FAIL
+
+======================================================================
+ERROR: test_recipient_file_is_one_public_key (__main__.EncryptionTests.test_recipient_file_is_one_public_key)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_crashes.py", line 335, in test_recipient_file_is_one_public_key
+    text = RECIPIENT.read_text(encoding="ascii")
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 986, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 970, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/.github/crash-recipient.asc'
+
+======================================================================
+FAIL: test_non_string_attribute_becomes_unbekannt (__main__.CrashesTests.test_non_string_attribute_becomes_unbekannt)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_crashes.py", line 255, in test_non_string_attribute_becomes_unbekannt
+    self.assertIn("bundle=unbekannt plattform=unbekannt datum=unbekannt", line)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'bundle=unbekannt plattform=unbekannt datum=unbekannt' not found in "meldung id=S1 bundle=42 plattform={'name': 'IOS'} datum=['2026'] bericht=ja"
+
+======================================================================
+FAIL: test_only_own_error_line_starts_with_colons (__main__.CrashesTests.test_only_own_error_line_starts_with_colons)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_crashes.py", line 275, in test_only_own_error_line_starts_with_colons
+    self.assertEqual([l for l in result.stdout.splitlines() if l.startswith("::")], [], result.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['::error::injected datum=2026-10-30T08:00:00Z bericht=nein'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'::error::injected datum=2026-10-30T08:00:00Z bericht=nein'
+
+- ['::error::injected datum=2026-10-30T08:00:00Z bericht=nein']
++ [] : meldung id=S1 bundle=com.henning.looseends plattform=IOS
+::error::injected datum=2026-10-30T08:00:00Z bericht=nein
+zusammenfassung meldungen=1 mit_bericht=0 ohne_bericht=1
+
+
+======================================================================
+FAIL: test_pagination_loop_exits_1 (__main__.CrashesTests.test_pagination_loop_exits_1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_crashes.py", line 286, in test_pagination_loop_exits_1
+    result = self.run_script(fake, timeout=20)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_crashes.py", line 121, in run_script
+    return subprocess.run([sys.executable, str(SCRIPT), *args], env=env, capture_output=True, text=True,
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                          timeout=timeout)
+                          ^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 671, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 1395, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 2424, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        skip_check_and_raise=True)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 1434, in _check_timeout
+    raise TimeoutExpired(
+    ...<2 lines>...
+            stderr=b''.join(stderr_seq) if stderr_seq else None)
+subprocess.TimeoutExpired: Command '['/opt/homebrew/opt/python@3.15/bin/python3.15', '/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/asc_crashes.py', '/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpf02hudda/out/crashes']' timed out after 20 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_crashes.py", line 288, in test_pagination_loop_exits_1
+    self.fail(f"no stop after {len(fake.hits(LIST))} list requests")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: no stop after 2583 list requests
+
+======================================================================
+FAIL: test_unsafe_attribute_becomes_unbekannt (__main__.CrashesTests.test_unsafe_attribute_becomes_unbekannt)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_crashes.py", line 265, in test_unsafe_attribute_becomes_unbekannt
+    self.assertEqual([l for l in lines if l.startswith("::")], [], result.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['::add-mask::x plattform=::error::boom datum=2026 10 30 bericht=nein'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'::add-mask::x plattform=::error::boom datum=2026 10 30 bericht=nein'
+
+- ['::add-mask::x plattform=::error::boom datum=2026 10 30 bericht=nein']
++ [] : meldung id=S1 bundle=a
+::add-mask::x plattform=::error::boom datum=2026 10 30 bericht=nein
+meldung id=S2 bundle=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa plattform=IOS datum=2026-10-30T08:00:00Z bericht=nein
+zusammenfassung meldungen=2 mit_bericht=0 ohne_bericht=2
+
+
+======================================================================
+FAIL: test_encrypt_with_recipient_file_hides_content (__main__.EncryptionTests.test_encrypt_with_recipient_file_hides_content)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_crashes.py", line 345, in test_encrypt_with_recipient_file_hides_content
+    self.assertTrue(RECIPIENT.exists(), RECIPIENT)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/.github/crash-recipient.asc
+
+======================================================================
+FAIL: test_roundtrip_with_local_key (__main__.EncryptionTests.test_roundtrip_with_local_key)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_crashes.py", line 353, in test_roundtrip_with_local_key
+    self.assertTrue(RECIPIENT.exists(), RECIPIENT)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/.github/crash-recipient.asc
+
+======================================================================
+FAIL: test_workflow_keeps_secrets_out_of_scripts (__main__.WorkflowTests.test_workflow_keeps_secrets_out_of_scripts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_crashes.py", line 391, in setUp
+    self.assertTrue(WORKFLOW.exists(), WORKFLOW)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/.github/workflows/asc-crashes.yml
+
+======================================================================
+FAIL: test_workflow_structure (__main__.WorkflowTests.test_workflow_structure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_crashes.py", line 391, in setUp
+    self.assertTrue(WORKFLOW.exists(), WORKFLOW)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : /Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/.github/workflows/asc-crashes.yml
+
+----------------------------------------------------------------------
+Ran 24 tests in 32.780s
+
+FAILED (failures=8, errors=1)
