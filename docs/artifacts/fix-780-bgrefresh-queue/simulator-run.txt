@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-10-31T19:28:40+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: fix-780-bgrefresh-queue
+head: ca1ce02fd09eff9ddd64e1bfe74421bffb927c59
+basis: f0f44506bb6e49e460512e0afc6369c39e539897 (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 24 gesamt, 24 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793470425.178  ende: 1793471317.791
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/fix-780-bgrefresh-queue/simulator-run/summary.json  sha256:b465fc8672adbd5f7cb42ea734510d9832146a9b1ffd0a561ca1035300279b2e
+xcresult: docs/artifacts/fix-780-bgrefresh-queue/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-780-bgrefresh-queue/simulator-run/*.png (13 Stück)
+
+## Geprüfte Dateien
+- sha256:48352848d289b95435062862b764db4b6f8236f6e558d65039030c695e58d99d  LooseEnds/Notifications/BackgroundRefresh.swift
+- sha256:66d7099f16ae62180414e338ed556266049aca0f98613b21e0a73a6b70f8269e  LooseEndsTests/BackgroundRefreshTests.swift
