@@ -13,20 +13,20 @@ struct LanguagePackConformanceTests {
     static let allowedCrossings: [String: String] = [:]
 
     /// Tabellen Wort → Zahl: ein Wort darf in zwei Paketen nicht zwei Werte haben (die Sichten brechen sonst ab).
-    static let valueTables: [(name: String, table: KeyPath<LanguagePack, [String: Int]>)] = [
+    static var valueTables: [(name: String, table: KeyPath<LanguagePack, [String: Int]>)] { [
         ("numbers", \.numbers), ("weekdays", \.weekdays), ("months", \.months), ("relativeDays", \.relativeDays),
         ("spelledHours", \.spelledHours), ("durationPhrases", \.durationPhrases),
-    ]
+    ] }
 
     /// Listen aus gefalteten Wörtern (`ExpressionText.folded`), wie die Datums- und Zeitregeln sie vergleichen.
-    static let wordLists: [(name: String, words: KeyPath<LanguagePack, [String]>)] = [
+    static var wordLists: [(name: String, words: KeyPath<LanguagePack, [String]>)] { [
         ("nextWords", \.nextWords), ("dayUnits", \.dayUnits), ("weekUnits", \.weekUnits),
         ("dayPrepositions", \.dayPrepositions), ("ordinalSuffixes", \.ordinalSuffixes), ("repetitions", \.repetitions),
         ("timeCues", \.timeCues), ("clockWords", \.clockWords), ("timeArticles", \.timeArticles),
         ("articleCues", \.articleCues), ("hourUnits", \.hourUnits), ("abbreviatedHourUnits", \.abbreviatedHourUnits),
         ("minuteUnits", \.minuteUnits), ("pointInTime", \.pointInTime), ("titleLeadIns", \.titleLeadIns),
         ("titleConnectors", \.titleConnectors),
-    ]
+    ] }
 
     /// Alle gefalteten Wörter eines Pakets, je Feld; Zahlentabellen mit ihrem Wert als Rolle.
     static func foldedWords(of pack: LanguagePack) -> [(field: String, word: String, role: String)] {
