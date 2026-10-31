@@ -61,6 +61,8 @@ struct LanguagePack: Sendable {
     let titleConnectors: [String]
     /// Month and weekday names a model title may not bring in on its own (#507), as `TitleRule` knew them.
     let titleDateWords: [String]
+    /// Words per default context, keyed by the context's English catalog key ("Garden", "Out and about").
+    let contextWords: [String: [String]]
 }
 
 enum LanguagePacks {
@@ -106,6 +108,17 @@ enum LanguagePacks {
     static var titleConnectors: [String] { list(\.titleConnectors) }
     static var titleDateWords: [String] { list(\.titleDateWords) }
     static var placePhrases: [PlacePhrase] { active.flatMap(\.placePhrases) }
+
+    /// The English catalog keys of the default contexts that any active pack has words for.
+    static var contextKeys: [String] { Array(Set(active.flatMap { $0.contextWords.keys })).sorted() }
+
+    /// The words of one default context over all active packs, longest first: of two words that start at
+    /// the same place ("installieren", "install") the longer one is the hit.
+    static func contextWords(for key: String) -> [String] {
+        var seen = Set<String>()
+        return active.flatMap { $0.contextWords[key] ?? [] }.filter { seen.insert($0).inserted }
+            .sorted { $0.count > $1.count }
+    }
 
     /// The keywords of one importance signal over all active packs, in pack order (the tie order).
     static func importanceWords(for signal: String) -> [String] { ordered(\.importanceWords, signal) }

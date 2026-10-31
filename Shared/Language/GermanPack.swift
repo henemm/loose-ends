@@ -72,6 +72,16 @@ extension LanguagePack {
         titleDateWords: [
             "januar", "februar", "märz", "april", "mai", "juni", "juli", "august", "september", "oktober",
             "november", "dezember", "montag", "dienstag", "mittwoch", "donnerstag", "freitag", "samstag", "sonntag",
+        ],
+        contextWords: [
+            "Computer": ["laptop", "rechner", "drucker", "ausdrucken", "drucken", "website", "webseite", "online",
+                         "backup", "software", "installieren"],
+            "Phone": ["anruf", "anrufen", "telefonieren", "telefonat", "zurückrufen", "rückruf"],
+            "Home": ["putzen", "staubsaugen", "aufräumen", "wäsche", "waschmaschine", "bügeln", "spülmaschine",
+                     "geschirr", "keller", "dachboden", "glühbirne"],
+            "Garden": ["rasen", "hecke", "unkraut", "beet", "beete", "kompost", "laub", "umtopfen", "einpflanzen"],
+            "Errands": ["kaufen", "einkauf", "einkaufen", "besorgen", "abholen", "apotheke", "supermarkt", "baumarkt"],
+            "Out and about": ["unterwegs", "tanken", "tankstelle", "zur post", "zur bank", "waschanlage"],
         ]
     )
 }

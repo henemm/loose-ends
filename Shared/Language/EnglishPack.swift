@@ -56,6 +56,14 @@ extension LanguagePack {
         titleDateWords: [
             "january", "february", "march", "june", "july", "october", "december",
             "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",
+        ],
+        contextWords: [
+            "Computer": ["computer", "printer", "print out", "install", "spreadsheet"],
+            "Phone": ["call", "phone", "ring back"],
+            "Home": ["vacuum", "laundry", "dishes", "tidy up"],
+            "Garden": ["lawn", "hedge", "weeds", "mow"],
+            "Errands": ["buy", "pick up", "groceries", "pharmacy"],
+            "Out and about": ["on the way", "gas station"],
         ]
     )
 }
