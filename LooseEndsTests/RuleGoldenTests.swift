@@ -101,6 +101,7 @@ struct RuleGoldenTests {
                 diffs.append("\(id): \(field) war \(old[field] ?? "?") → ist \(rows[id]?[field] ?? "?")")
             }
         }
-        #expect(diffs.isEmpty, "\(diffs.count) Abweichungen, erste 20:\n" + diffs.prefix(20).joined(separator: "\n"))
+        let shown = diffs.prefix(20).joined(separator: "\n")
+        #expect(diffs.isEmpty, "\(diffs.count) Abweichungen, erste 20:\n\(shown)")
     }
 }
