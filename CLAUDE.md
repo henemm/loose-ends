@@ -339,6 +339,13 @@ not scope creep on the current one.
   `Info.plist`, keys `LEAppGroup`/`LECloudContainer`, with the production constants as fallback —
   device builds carry their own via `BUNDLE_ID_SUFFIX`, #156), `ContextSeeder`,
   `CloudKitSchemaInitializer` (Debug only: writes the full CloudKit schema into Development, never opens the app-group store, #175)
+- `Shared/Language` — language packs (#750, #751–#755): `LanguagePack` holds every rule word of one language (weekdays, months, time and
+  duration words, importance/urgency, place phrases, title lead-ins, context words); `GermanPack` and `EnglishPack` are the shipped ones.
+  `LanguagePacks.shipped` is the one list of shipped languages (scripts read it with `scripts/shipped_languages.py`); the rules read all
+  of them at once (no language field in the product). Tests plug a pack in with the task-local hook `LanguagePacks.pluggedIn` (`active` reads
+  it, `withPacks` in `LooseEndsTests/Language`); `LanguagePackConformanceTests` hold the tables clean, `RuleGoldenTests` hold the rule output
+  of every corpus sentence equal (`LooseEndsTests/Fixtures/rule-golden.json`, refreshed with `LOOSEENDS_UPDATE_GOLDEN=1`). The way a
+  third language gets in is the eight-point list in `docs/reference/neue-sprache.md`; it enters `shipped` last.
 - `Shared/Services` — `CaptureService`, `FieldCodec` (one encoding per field), `RevisionService` (reset = user revision),
   `TaskActions` (done, next up, park, move, restore), `DateExpressionParser`/`TimeExpressionParser` (rule-based
   date/time extraction DE/EN, moved from `Measurement/` in #95), `RawTextWords` (the one tokenizer for word-set
