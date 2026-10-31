@@ -103,6 +103,18 @@ struct RuleGoldenTests {
                 diffs.append("\(id): \(field) war \(old[field] ?? "?") → ist \(rows[id]?[field] ?? "?")")
             }
         }
+        // New sentences: their rows go to the log the same way, so the fixture can be extended without a local run (#759).
+        let missing = rows.keys.filter { golden[$0] == nil }.sorted()
+        if !missing.isEmpty {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = [.sortedKeys]
+            print("RULEGOLDEN-REPORT BEGIN")
+            for id in missing {
+                let line = String(decoding: try encoder.encode(["id": id].merging(rows[id] ?? [:]) { a, _ in a }), as: UTF8.self)
+                print("RULE-GOLDEN-ROW \(line)")
+            }
+            print("RULEGOLDEN-REPORT END")
+        }
         let shown = diffs.prefix(20).joined(separator: "\n")
         #expect(diffs.isEmpty, "\(diffs.count) Abweichungen, erste 20:\n\(shown)")
     }
