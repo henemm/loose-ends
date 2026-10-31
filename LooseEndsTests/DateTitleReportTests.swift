@@ -293,8 +293,12 @@ struct DateTitleReportTests {
             let exact = tally.ruleDate.total == 0 ? "–" : "\(percent(tally.ruleDate.share)) von \(tally.ruleDate.total)"
             lines.append("| \(lang) | \(tally.sentences) | \(exact) | \(inverse(tally.ruleInvented)) |")
         }
+        lines += ["", threshold]
         return lines.joined(separator: "\n")
     }
+
+    /// The bar for a shipped language (#759); `docs/reference/neue-sprache.md` point 3 repeats it.
+    static let threshold = "**Schwelle:** Eine Sprache gilt als ausgeliefert, wenn ihre Regelspalte auf mindestens 50 Korpussätzen Datum ≥ 99 % exakt und 0 % erfunden erreicht und ihre Textform-Werte für Dringlichkeit und Etiketten nicht unter den englischen liegen (38/40, 37/40, `textform-rules.md`). Darunter bleibt das Pack im Code, aber nicht in `shipped`. Bekannte Lücke ohne Korpussatz: „in a/an <Einheit>“ im Englischen (#783)."
 
     /// The answer to "was this measured under realistic conditions?" — not argued, measured.
     static func conditionSection(_ report: Report) -> String {

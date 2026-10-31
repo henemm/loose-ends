@@ -74,3 +74,4 @@ LoC Python ≈ +25 / −5.
 ## Changelog
 
 - 2026-10-30: Spec erstellt.
+- 2026-10-31: Website-PR henemm/henemm-website#76 gemergt (Seite `/legal/loose-ends/privacy-policy-en/`). Das `curl -sI` aus AC-1 lief in der Cloud-Sitzung nicht: Das Netz der Sitzung sperrt `www.henemm.com` (Proxy 403). Der Beleg steht aus; Lauf `asc-beta.yml` `aktion=einrichten` (AC-3) ebenso, er braucht die ASC-Secrets, die die Cloud-Sitzung nicht bedient.

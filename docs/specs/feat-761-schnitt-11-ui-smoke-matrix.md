@@ -68,3 +68,4 @@ LoC Swift ≈ +25 / −16; YAML ≈ +40.
 ## Changelog
 
 - 2026-10-30: Spec erstellt.
+- 2026-10-31: Umgesetzt mit zwei Abweichungen: (1) `LaunchLanguage.arguments` ersetzt die festen Argumente in den acht genannten Klassen; weitere Klassen (z. B. `PaperGroundTests`, `CaptureSmokeTests`) tragen `(en)` noch fest, sie laufen nur im vollen englischen `ui-smoke` und nicht in der Matrix, daher trifft AC-1 nicht nur die drei parametrisierten Klassen. (2) Die Simulator-Schritte stehen für den neuen Job im Composite `.github/actions/prepare-ui-simulator`; der bestehende Job `ui-smoke` bleibt unverändert.

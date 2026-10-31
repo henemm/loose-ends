@@ -4,7 +4,7 @@
 |---|---|
 | Gerät | iPhone17,1, iOS 27.0, 27.0.1 |
 | Messtage | 2026-09-20, 2026-09-25, 2026-10-29 |
-| Korpus | 319 Sätze; ausgewertet: 139 mit Datum, 172 ohne Datum als Kontrolle |
+| Korpus | 344 Sätze; ausgewertet: 139 mit Datum, 172 ohne Datum als Kontrolle |
 | Fehlversuche | 23, davon gedrosselt: 11 |
 | Sekunden je Satz | 8.8 |
 
@@ -20,9 +20,9 @@ Alternative aus dem Issue, auf denselben Sätzen.
 
 | Messung | Modell | NSDataDetector | Regelparser |
 |---|---|---|---|
-| Exakt getroffen | 49.6 % von 139 | 67.6 % von 139 | 99.3 % von 139 |
+| Exakt getroffen | 49.6 % von 139 | 67.6 % von 139 | 99.4 % von 156 |
 | Feld leer gelassen statt geraten | 2 | 41 | 1 |
-| Erfundene Daten bei Sätzen ohne Datum | 95.3 % von 172 | 0.0 % von 172 | 0.0 % von 172 |
+| Erfundene Daten bei Sätzen ohne Datum | 95.3 % von 172 | 0.0 % von 172 | 0.0 % von 178 |
 
 `NSDataDetector` rechnet immer gegen die echte Uhr und lässt sich auf keinen Bezugstag festlegen; je nach Wochentag des Laufs traf er 65.5 % bis 68.3 %. Die Spalte ist der eingefrorene Stand vom 2026-09-25 und wird nicht neu berechnet (#148).
 
@@ -32,7 +32,7 @@ Alternative aus dem Issue, auf denselben Sätzen.
 |---|---|---|---|---|
 | Wochenende | 8 | 0.0 % | 0 | 100.0 % |
 | nächste Woche <Tag> | 7 | 0.0 % | 0 | 100.0 % |
-| Wochentag | 27 | 18.5 % | 0 | 96.3 % |
+| Wochentag | 27 | 18.5 % | 0 | 96.7 % |
 | bis zum N. | 9 | 22.2 % | 0 | 100.0 % |
 | nächster <Tag> | 9 | 22.2 % | 0 | 100.0 % |
 | festes Datum | 6 | 33.3 % | 0 | 100.0 % |
@@ -42,7 +42,16 @@ Alternative aus dem Issue, auf denselben Sätzen.
 
 **Uhrzeit:** 57.1 % exakt bei 21 Sätzen mit Uhrzeit.
 
-**Uhrzeit Regelparser:** 100.0 % exakt bei 24 Sätzen mit Uhrzeit.
+**Uhrzeit Regelparser:** 100.0 % exakt bei 27 Sätzen mit Uhrzeit.
+
+## Regelparser je Sprache
+
+| Sprache | Sätze | Regel exakt | Regel erfunden |
+|---|---|---|---|
+| de | 239 | 99.0 % von 104 | 0.0 % von 135 |
+| en | 95 | 100.0 % von 52 | 0.0 % von 43 |
+
+**Schwelle:** Eine Sprache gilt als ausgeliefert, wenn ihre Regelspalte auf mindestens 50 Korpussätzen Datum ≥ 99 % exakt und 0 % erfunden erreicht und ihre Textform-Werte für Dringlichkeit und Etiketten nicht unter den englischen liegen (38/40, 37/40, `textform-rules.md`). Darunter bleibt das Pack im Code, aber nicht in `shipped`. Bekannte Lücke ohne Korpussatz: „in a/an <Einheit>“ im Englischen (#783).
 
 ## Nach Bedingung gemessen
 
@@ -64,12 +73,12 @@ Laufen die Zeilen auseinander, hängt die Qualität an Vordergrund, Strom oder W
 
 | Bauform | Sätze | Datum exakt | Datum erfunden | Titel ohne erfundene Fakten | Regel: Datum exakt | Regel: Datum erfunden | Regel: Titel |
 |---|---|---|---|---|---|---|---|
-| standard | 188 | 47.1 % von 102 | 95.3 % von 86 | 100.0 % | 100.0 % von 102 | 0.0 % von 86 | 100.0 % |
+| standard | 188 | 47.1 % von 102 | 95.3 % von 86 | 100.0 % | 100.0 % von 118 | 0.0 % von 92 | 100.0 % |
 | stichwort | 12 | 50.0 % von 2 | 100.0 % von 10 | 100.0 % | 100.0 % von 2 | 0.0 % von 10 | 100.0 % |
 | ich-satz | 11 | 33.3 % von 3 | 100.0 % von 8 | 100.0 % | 100.0 % von 3 | 0.0 % von 8 | 100.0 % |
 | nebensatz | 11 | 100.0 % von 3 | 87.5 % von 8 | 100.0 % | 100.0 % von 3 | 0.0 % von 8 | 100.0 % |
 | frage | 11 | 0.0 % von 1 | 90.0 % von 10 | 100.0 % | 100.0 % von 1 | 0.0 % von 10 | 100.0 % |
-| diktat | 12 | 60.0 % von 5 | 100.0 % von 7 | 91.7 % | 100.0 % von 5 | 0.0 % von 7 | 100.0 % |
+| diktat | 12 | 60.0 % von 5 | 100.0 % von 7 | 91.7 % | 100.0 % von 6 | 0.0 % von 7 | 100.0 % |
 | zeit-hinten | 11 | 54.5 % von 11 | – | 100.0 % | 100.0 % von 11 | – | 100.0 % |
 | zwei-aufgaben | 11 | 50.0 % von 2 | 100.0 % von 9 | 100.0 % | 100.0 % von 2 | 0.0 % von 9 | 100.0 % |
 | denglisch | 11 | 50.0 % von 2 | 88.9 % von 9 | 100.0 % | 100.0 % von 2 | 0.0 % von 9 | 100.0 % |
@@ -96,9 +105,9 @@ Gewichte: Angabe Henning, nicht nachgezählt (Angabe Henning aus 108 FocusBlox-R
 | Gruppe | Gewicht | Modell | Regel |
 |---|---|---|---|
 | Titel: Bauform stichwort | 0.33 | 12 von 12 | 12 von 12 |
-| Titel: alle übrigen Bauformen | 0.67 | 298 von 299 | 307 von 307 |
-| Datum: Sätze mit Datum (exakt) | 0.12 | 69 von 139 | 138 von 139 |
-| Datum: Sätze ohne Datum (kein Datum erfunden) | 0.88 | 8 von 172 | 172 von 172 |
+| Titel: alle übrigen Bauformen | 0.67 | 298 von 299 | 332 von 332 |
+| Datum: Sätze mit Datum (exakt) | 0.12 | 69 von 139 | 155 von 156 |
+| Datum: Sätze ohne Datum (kein Datum erfunden) | 0.88 | 8 von 172 | 178 von 178 |
 
 | Bauform | Gewicht |
 |---|---|
@@ -118,7 +127,7 @@ Gewichte: Angabe Henning, nicht nachgezählt (Angabe Henning aus 108 FocusBlox-R
 Die Formen ohne Gewicht zählen beim Titel zusammen als „alle übrigen Bauformen“ (2/3). Für das Datum zählt das Merkmal Zeitangabe, keine Bauform.
 
 Fußnoten:
-- Die Titel-Regel misst alle Sätze des Korpus (307 plus 12), das Modell ohne die 8 Wiederholungssätze (299 plus 12); die Zahlen von Modell und Regel sind nicht aus denselben Sätzen gebildet.
+- Die Titel-Regel misst alle Sätze des Korpus (332 plus 12), das Modell ohne die 33 Wiederholungssätze (299 plus 12); die Zahlen von Modell und Regel sind nicht aus denselben Sätzen gebildet.
 - In „Nach Bauform“ ist „Datum erfunden“ die Erfindungsquote (kleiner ist besser); hier zählt „kein Datum erfunden“ die Treffer (größer ist besser).
 
 ## Titel
