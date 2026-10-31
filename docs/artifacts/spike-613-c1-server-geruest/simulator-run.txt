@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-10-31T20:30:59+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: spike-613-c1-server-geruest
+head: 48760e8073ca829e50533618668083da936d8d19
+basis: f0f44506bb6e49e460512e0afc6369c39e539897 (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 24 gesamt, 24 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793474274.572  ende: 1793475055.151
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/spike-613-c1-server-geruest/simulator-run/summary.json  sha256:1552489300027341c68f3422682cd5ee5a2d8c4be98bd172b2df42eb6b86e209
+xcresult: docs/artifacts/spike-613-c1-server-geruest/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/spike-613-c1-server-geruest/simulator-run/*.png (13 Stück)
+
+## Geprüfte Dateien
+- sha256:5fa29a35716a7d6ea4805cca5ff5ab64c5b659f736797dee417e04068a922319  server/src/migrate.ts
