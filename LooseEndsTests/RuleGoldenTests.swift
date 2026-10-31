@@ -9,8 +9,8 @@ import Testing
 /// schreibt die Datei neu und endet absichtlich rot; den Diff prüfen, den Schalter entfernen.
 @Suite("Goldene Regelausgabe über alle Korpora")
 struct RuleGoldenTests {
-    /// Feste Zeilenzahl, damit ein stillschweigend kleinerer Korpus auffällt (aus dem Stand vor #751).
-    static let expectedRows = 519
+    /// Feste Zeilenzahl, damit ein stillschweigend kleinerer Korpus auffällt (aus dem Stand vor #751, 544 seit #759).
+    static let expectedRows = 544
 
     static let fields = ["date", "time", "duration", "importance", "urgency", "place", "contexts", "title"]
 

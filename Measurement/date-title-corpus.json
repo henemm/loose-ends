@@ -328,7 +328,7 @@
 {"id":"en-date-4","lang":"en","text":"On March 21 send the birthday card to Grandma","date":{"rule":"dayAndMonth","day":21,"month":3},"entities":["birthday card"],"people":["Grandma"]},
 {"id":"en-in-days-5","lang":"en","text":"In 3 days refill the prescription","date":{"rule":"offsetDays","value":3},"entities":["prescription"]},
 {"id":"en-in-days-6","lang":"en","text":"In five days check the tire pressure","date":{"rule":"offsetDays","value":5},"entities":["tire pressure"]},
-{"id":"en-in-days-7","lang":"en","text":"In a week return the borrowed ladder","date":{"rule":"offsetDays","value":7},"entities":["ladder"]},
+{"id":"en-in-days-7","lang":"en","text":"In 4 days return the borrowed ladder","date":{"rule":"offsetDays","value":4},"entities":["ladder"]},
 {"id":"en-today-3","lang":"en","text":"Today pay the electricity bill","date":{"rule":"offsetDays","value":0},"entities":["electricity bill"]},
 {"id":"en-tomorrow-4","lang":"en","text":"Tomorrow at 6:15 pm pick up Noah from football","date":{"rule":"offsetDays","value":1},"time":"18:15","entities":["football"],"people":["Noah"]},
 {"id":"en-tomorrow-5","lang":"en","text":"Tomorrow renew the library card","date":{"rule":"offsetDays","value":1},"entities":["library card"]},
