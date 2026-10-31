@@ -19,6 +19,8 @@
 #   ./scripts/sim.sh test <Class[/test]>      # UI-Test im iOS-Simulator
 #   ./scripts/sim.sh test-proof <Class[/test]> # UI-Test + Simulator-Beleg in docs/artifacts/<workflow>/ (#145)
 #   ./scripts/sim.sh watch-test-proof <Class[/test]> # dasselbe im watchOS-Simulator (#409)
+#   ./scripts/sim.sh watch-test <Class[/test]> # UI-Test im Watch-Simulator ohne Beleg (Bilder, Sichtprüfung, #742)
+#   ./scripts/sim.sh store-watch              # App-Store-Bilder Apple Watch 416×496 nach docs/store/screenshots/de/watch/ (#742)
 #   ./scripts/sim.sh store-screenshots        # App-Store-Bilder iPhone 17 + iPad Pro 13″ (de, hell, 9:41) nach docs/store/screenshots/de/ (#742)
 #     LOOSEENDS_PUSH=<datei.apns> davor: spielt die Mitteilung während des Laufs alle 5 s ein (#295)
 #   ./scripts/sim.sh boot | status | launch | screenshot [pfad]
@@ -626,7 +628,7 @@ cmd_test() {
     acquire_testlock "test"; ensure_project; cmd_boot
     local id; id=$(sim_id)
     info "UI-Test: $1"
-    run_xcodebuild test -project "$PROJECT" -scheme "$SCHEME" -destination "platform=iOS Simulator,id=$id" -only-testing:"$UI_TARGET/$1" -parallel-testing-enabled NO -disable-concurrent-destination-testing
+    run_xcodebuild test -project "$PROJECT" -scheme "$SCHEME" -destination "platform=$SIM_OS Simulator,id=$id" -only-testing:"$UI_TARGET/$1" -parallel-testing-enabled NO -disable-concurrent-destination-testing
     success "UI-Test bestanden."
 }
 
@@ -684,6 +686,24 @@ cmd_watch_test_proof() {
     SIM_OS="watchOS"; SIM_FAMILY="Apple Watch"; SIM_NAME="${LOOSEENDS_WATCH_SIM:-Apple Watch Series 12 (46mm)}"
     SCHEME="LooseEndsWatch"; UI_TARGET="LooseEndsWatchUITests"; WATCH_APP_ID="com.henning.looseends.watchkitapp"
     cmd_test_proof "$@"
+}
+
+# Apple-Watch-Store-Bilder (#742): Foto-Test im Watch-Simulator, dann nach docs/store/screenshots/de/watch/ samt Manifest.
+cmd_store_watch() {
+    local tmp; tmp=$(mktemp -d)
+    cmd_watch_test WatchCaptureUITests/testPhotographStoreScreens
+    local result; result=$(ls -dt "$SESSION_DERIVED_DATA"/Logs/Test/Test-LooseEndsWatch-*.xcresult | head -1)
+    xcrun xcresulttool export attachments --path "$result" --output-path "$tmp"
+    python3 scripts/store_screenshots.py --watch docs/store/screenshots/de "$tmp"
+    rm -rf "$tmp"
+}
+
+# Watch-UI-Test ohne Beleg (Bilder, Sichtprüfung): derselbe Simulator wie `watch-test-proof`, kein Workflow nötig.
+cmd_watch_test() {
+    [ -z "${1:-}" ] && { error "Usage: ./scripts/sim.sh watch-test Class[/test]"; return 1; }
+    SIM_OS="watchOS"; SIM_FAMILY="Apple Watch"; SIM_NAME="${LOOSEENDS_WATCH_SIM:-Apple Watch Series 12 (46mm)}"
+    SCHEME="LooseEndsWatch"; UI_TARGET="LooseEndsWatchUITests"; WATCH_APP_ID="com.henning.looseends.watchkitapp"
+    cmd_test "$@"
 }
 
 cmd_launch() {
@@ -1179,6 +1199,8 @@ case "$COMMAND" in
     test)       cmd_test "$@" ;;
     test-proof) cmd_test_proof "$@" ;;
     watch-test-proof) cmd_watch_test_proof "$@" ;;
+    watch-test) cmd_watch_test "$@" ;;
+    store-watch) cmd_store_watch ;;
     store-screenshots) cmd_store_screenshots ;;
     boot)       cmd_boot ;;
     status)     cmd_status ;;

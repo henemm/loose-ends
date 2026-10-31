@@ -2,6 +2,7 @@
 
 Aufruf (nur aus sim.sh store-screenshots):
   store_screenshots.py <ziel> iphone=<exportordner> ipad=<exportordner>
+  store_screenshots.py --watch <ziel> <exportordner>   # Uhr-Bilder nachtragen, Manifest bleibt sonst unberührt
 Ein Exportordner kommt von `xcresulttool export attachments` (mit manifest.json). Nur Standardbibliothek und `sips`.
 """
 import json
@@ -19,6 +20,7 @@ DEVICES = {
     "iphone": {"anzeige": "iPhone 6.3\" (Dynamic Island)", "pixel": (1206, 2622)},
     "ipad": {"anzeige": "iPad 13\"", "pixel": (2064, 2752)},
 }
+WATCH = {"anzeige": "Apple Watch Series 12/11/10", "pixel": (416, 496), "order": ["01-jetzt", "02-gespeichert"]}
 README = """# App-Store-Bilder (Deutsch)
 
 Für App Store Connect, Sprache Deutsch (de-DE): Die Bilder in `iphone/` gehören zur Größe „iPhone 6.3\" Display“
@@ -37,13 +39,14 @@ def size_text(size):
     return f"{size[0]}x{size[1]}"
 
 
-def finish_device(device, attachments, out_root, info, strip_alpha, clear_grip=lambda path: None):
+def finish_device(device, attachments, out_root, info, strip_alpha, clear_grip=lambda path: None, order=None):
     """Schreibt die fünf Bilder eines Geräts nach <out_root>/<gerät>/<nn>-<name>.png und prüft sie.
 
     attachments: Anhangsname `store-<nn>-<name>` → Datei; info(path) → (breite, höhe, alpha); strip_alpha(path);
     clear_grip(path) nur auf dem iPad (Fenstergriff unten rechts).
     """
-    missing = [name for name in ORDER if f"store-{name}" not in attachments]
+    order = order or ORDER
+    missing = [name for name in order if f"store-{name}" not in attachments]
     if missing:
         raise StoreError(f"{device}: Bild fehlt: {', '.join(missing)}")
     folder = Path(out_root) / device
@@ -52,9 +55,9 @@ def finish_device(device, attachments, out_root, info, strip_alpha, clear_grip=l
     if staging.exists():
         shutil.rmtree(staging)
     staging.mkdir(parents=True)
-    want = DEVICES[device]["pixel"]
+    want = (DEVICES.get(device) or WATCH)["pixel"]
     try:
-        for name in ORDER:
+        for name in order:
             target = staging / f"{name}.png"
             shutil.copyfile(attachments[f"store-{name}"], target)
             strip_alpha(target)
@@ -71,7 +74,7 @@ def finish_device(device, attachments, out_root, info, strip_alpha, clear_grip=l
     if folder.exists():
         shutil.rmtree(folder)
     staging.rename(folder)
-    return [folder / f"{name}.png" for name in ORDER]
+    return [folder / f"{name}.png" for name in order]
 
 
 def build_manifest(names_by_device, commit, created):
@@ -158,7 +161,22 @@ def read_export(folder):
     return found
 
 
+def main_watch(out_root, export):
+    """Trägt die Uhr-Bilder in Ordner und Manifest nach; die übrigen Einträge bleiben stehen."""
+    out_root = Path(out_root)
+    written = finish_device("watch", read_export(export), out_root, sips_info, sips_strip_alpha, order=WATCH["order"])
+    manifest_path = out_root / "manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    manifest["geraete"] = [g for g in manifest["geraete"] if g["geraet"] != "watch"] + [
+        {"geraet": "watch", "anzeige": WATCH["anzeige"], "pixel": size_text(WATCH["pixel"]), "ordner": "watch",
+         "dateien": [path.name for path in written]}]
+    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+    print(f"[store] {len(written)} Uhr-Bilder in {out_root / 'watch'}")
+
+
 def main(argv):
+    if argv[0] == "--watch":
+        return main_watch(argv[1], argv[2])
     out_root, exports = Path(argv[0]), dict(arg.split("=", 1) for arg in argv[1:])
     names = {}
     for device in DEVICES:
