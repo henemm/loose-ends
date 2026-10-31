@@ -10,21 +10,14 @@ enum DurationRule {
     static let confidence = 1.0
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Enrichment")
 
-    /// Spoken lengths without a number, in minutes. Longer phrases first, so "eine halbe Stunde"
-    /// is not read as "eine Stunde".
-    private static let phrases: [(String, Int)] = [
-        ("eine dreiviertelstunde", 45), ("dreiviertelstunde", 45), ("eineinhalb stunden", 90),
-        ("anderthalb stunden", 90), ("eine halbe stunde", 30), ("halbe stunde", 30),
-        ("eine viertelstunde", 15), ("viertelstunde", 15), ("eine stunde", 60), ("ein paar minuten", 5),
-        ("half an hour", 30), ("half hour", 30), ("quarter of an hour", 15), ("an hour and a half", 90),
-        ("an hour", 60), ("one hour", 60), ("a few minutes", 5),
-    ]
-
-    private static let minuteUnits = ["minuten", "minute", "minutes", "min", "mins"]
-    private static let hourUnits = ["stunden", "stunde", "std", "hours", "hour", "hrs", "hr", "h"]
+    // The words live in `Shared/Language/` (Epic #750). Spoken lengths come longest phrase first, so
+    // "eine halbe Stunde" is not read as "eine Stunde".
+    private static var phrases: [(phrase: String, minutes: Int)] { LanguagePacks.durationPhrases }
+    private static var minuteUnits: [String] { LanguagePacks.minuteUnits }
+    private static var hourUnits: [String] { LanguagePacks.hourUnits + LanguagePacks.abbreviatedHourUnits }
 
     /// Words that turn a length into a point in time: "in 2 Stunden", "nach 10 Minuten".
-    private static let pointInTime: Set<String> = ["in", "nach", "after"]
+    private static var pointInTime: Set<String> { Set(LanguagePacks.pointInTime) }
 
     /// The bucket the text names, with the words that said it.
     static func match(in text: String) -> (guess: EnrichmentDraft.Guess<DurationBucket>, range: Range<String.Index>)? {

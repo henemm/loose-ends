@@ -39,4 +39,21 @@ struct LanguagePackTests {
             }
         }
     }
+
+    @Test("Jedes Pack nennt Einheiten und Dauer-Wendungen")
+    func everyPackNamesUnits() {
+        for pack in LanguagePacks.shipped {
+            #expect(!pack.hourUnits.isEmpty, "\(pack.code): hourUnits")
+            #expect(!pack.minuteUnits.isEmpty, "\(pack.code): minuteUnits")
+            #expect(!pack.durationPhrases.isEmpty, "\(pack.code): durationPhrases")
+        }
+    }
+
+    @Test("Dauer-Wendungen kommen längste zuerst")
+    func durationPhrasesLongestFirst() {
+        let counts = LanguagePacks.durationPhrases.map { $0.phrase.split(separator: " ").count }
+        #expect(counts == counts.sorted(by: >))
+        let offsets = LanguagePacks.spokenOffsets.map(\.words.count)
+        #expect(offsets == offsets.sorted(by: >))
+    }
 }

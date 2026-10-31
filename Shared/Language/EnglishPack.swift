@@ -19,6 +19,20 @@ extension LanguagePack {
         weekUnits: ["week", "weeks"],
         dayPrepositions: [],
         ordinalSuffixes: ["st", "nd", "rd", "th"],
-        repetitions: ["every", "daily", "weekly", "monthly"]
+        repetitions: ["every", "daily", "weekly", "monthly"],
+        timeCues: ["at"],
+        clockWords: [],
+        timeArticles: [],
+        articleCues: [],
+        spelledHours: [:],
+        hourUnits: ["hour", "hours", "h"],
+        abbreviatedHourUnits: ["hrs", "hr"],
+        minuteUnits: ["minutes", "min", "mins"],
+        spokenOffsets: [["half", "an", "hour"]: 30, ["an", "hour"]: 60],
+        durationPhrases: [
+            "half an hour": 30, "half hour": 30, "quarter of an hour": 15, "an hour and a half": 90,
+            "an hour": 60, "one hour": 60, "a few minutes": 5,
+        ],
+        pointInTime: ["in", "after"]
     )
 }

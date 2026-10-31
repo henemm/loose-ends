@@ -22,6 +22,28 @@ extension LanguagePack {
         dayPrepositions: ["am", "zum", "bis"],
         ordinalSuffixes: [],
         repetitions: ["jeden", "jede", "jeder", "jedes", "jedem", "werktags", "taglich", "wochentlich",
-                      "monatlich", "jahrlich"]
+                      "monatlich", "jahrlich"],
+        timeCues: ["um", "auf"],
+        clockWords: ["uhr"],
+        timeArticles: ["ein", "eine", "einer", "einem", "einen"],
+        articleCues: ["um"],
+        spelledHours: [
+            "null": 0, "dreizehn": 13, "vierzehn": 14, "funfzehn": 15, "sechzehn": 16, "siebzehn": 17,
+            "achtzehn": 18, "neunzehn": 19, "zwanzig": 20, "einundzwanzig": 21, "zweiundzwanzig": 22,
+            "dreiundzwanzig": 23,
+        ],
+        hourUnits: ["stunden", "stunde", "std", "h"],
+        abbreviatedHourUnits: [],
+        minuteUnits: ["minuten", "minute", "min"],
+        spokenOffsets: [
+            ["einer", "halben", "stunde"]: 30, ["einer", "viertelstunde"]: 15, ["einer", "dreiviertelstunde"]: 45,
+            ["anderthalb", "stunden"]: 90, ["eineinhalb", "stunden"]: 90, ["einer", "stunde"]: 60,
+        ],
+        durationPhrases: [
+            "eine dreiviertelstunde": 45, "dreiviertelstunde": 45, "eineinhalb stunden": 90,
+            "anderthalb stunden": 90, "eine halbe stunde": 30, "halbe stunde": 30,
+            "eine viertelstunde": 15, "viertelstunde": 15, "eine stunde": 60, "ein paar minuten": 5,
+        ],
+        pointInTime: ["in", "nach"]
     )
 }
