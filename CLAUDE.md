@@ -27,7 +27,7 @@ Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, 
 - **SF Symbols only** (Henning, 2026-10-12, #350). Every sign in the app is an SF Symbol, outline where one exists:
   no emoji, no characters standing in for a symbol (»«, →), no own images. The one exception is the logo's thread
   (knot, loose thread, #180): it is the brand mark, not a control. Since #642 (Henning, 2026-10-23) its family holds two
-  more drawn signs: the Knäuel (`ThreadShape.Form.knaeuel`, the one avoided task, #643) and the bead (`PearlGlyph`, a
+  more drawn signs: the Knäuel (English UI: “the Tangle”, #758; `ThreadShape.Form.knaeuel`, the one avoided task, #643) and the bead (`PearlGlyph`, a
   task that counts on the week's string, #645); every other sign stays an SF Symbol.
 - **Rules before the model** (Henning, 2026-09-20). Every derived field is first attempted with rules,
   regex, calendar, contacts or a word list. The on-device model only gets what needs language
@@ -139,6 +139,8 @@ touches any of these paths:
 | `LooseEnds/Speech/` | Mikrofon und Spracherkennung |
 | `LooseEnds/Notifications/` | Zustellung echter Mitteilungen |
 | `project.yml`, jede `*.entitlements`, jede `Info.plist` | Signierung, Berechtigungen, Targets — die Klasse des App-Group-Absturzes |
+
+Ausnahme (Henning, 2026-10-30, #758): Änderungen in `LooseEndsWidgets/`, die nur Katalogschlüssel oder Textliterale betreffen (kein Layout, keine Logik, keine Intents, keine `Info.plist`), enden nach Stufe 2. Beleg: Katalogwächter grün und Screenshot der Widget-Galerie im Simulator.
 
 Berührt der Schnitt keinen dieser Pfade, endet die Abnahme nach Stufe 2, und das wird im
 Abschlussbericht mit genau diesem Satz begründet: „Kein Pfad der Geräteliste berührt." **⛔ Nichts
@@ -306,7 +308,7 @@ not scope creep on the current one.
   only with content, one word line for everything empty, dependent fields wait, off is not offered but never hidden;
   `DetailFieldSettings` with the standard on Note, Attachments, Calendar, Duration, Tags; the app's `FieldSettingsStore` in
   `LooseEnds/App` keeps the choice in defaults and the iCloud key-value store, everything on under UI tests)
-- `Shared/Models` — the drive fields (#642): `TaskItem.knaeuelAt` (#643, the one avoided task, `isKnaeuel` while open) and
+- `Shared/Models` — the drive fields (#642; the Knäuel is “the Tangle” in the English UI, German keeps “das Knäuel”, #758): `TaskItem.knaeuelAt` (#643, the one avoided task, `isKnaeuel` while open) and
   `countsAt` (#645, a bead once completed, at most `TaskActions.countsBudget` open; the Knäuel always `counts`), both set by
   hand only as user revisions (`RevisedField.knaeuel`/`.counts`), both `DetailField`s of the group `drive`, off by default.
   `ViewRules.knaeuel(in:)` (latest mark wins), `counting(in:)`, `week(containing:)` (Monday to Sunday, whatever the locale),

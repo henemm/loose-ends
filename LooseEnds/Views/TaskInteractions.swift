@@ -192,10 +192,10 @@ struct TaskInteractions {
             // An SF Symbol, not the drawn Knäuel: with that as its icon the entry was not to be found
             // on iOS (UI smoke, PR #651); the sign itself stands on the start page.
             if task.isKnaeuel {
-                Button("No longer the Knäuel", systemImage: Self.knaeuelSymbol) { releaseKnaeuel(task) }
+                Button("No longer the Tangle", systemImage: Self.knaeuelSymbol) { releaseKnaeuel(task) }
                     .accessibilityIdentifier("menuKnaeuelRelease")
             } else if fields.isOn(.knaeuel) {
-                Button("Make it the Knäuel", systemImage: Self.knaeuelSymbol) { setKnaeuel(task) }
+                Button("Make it the Tangle", systemImage: Self.knaeuelSymbol) { setKnaeuel(task) }
                     .accessibilityIdentifier("menuKnaeuel")
             }
             if task.countsAt != nil {
@@ -357,15 +357,15 @@ extension View {
     /// second one asks, naming the one that holds the mark so far.
     func movesKnaeuel(asking: Binding<TaskItem?>, from holder: TaskItem?, move: @escaping (TaskItem) -> Void) -> some View {
         confirmationDialog(
-            Text("Make “\(asking.wrappedValue?.displayTitle ?? "")” the Knäuel?"),
+            Text("Make “\(asking.wrappedValue?.displayTitle ?? "")” the Tangle?"),
             isPresented: Binding(get: { asking.wrappedValue != nil }, set: { if !$0 { asking.wrappedValue = nil } }),
             titleVisibility: .visible,
             presenting: asking.wrappedValue
         ) { task in
-            Button("Move the Knäuel") { move(task) }
+            Button("Move the Tangle") { move(task) }
                 .accessibilityIdentifier("confirmKnaeuelMove")
         } message: { _ in
-            Text("“\(holder?.displayTitle ?? "")” is the Knäuel so far. Only one task can be.")
+            Text("“\(holder?.displayTitle ?? "")” is the Tangle so far. Only one task can be.")
         }
     }
 }

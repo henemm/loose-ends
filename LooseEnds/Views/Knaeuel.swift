@@ -203,7 +203,7 @@ struct KnaeuelRow: View {
                 HStack(spacing: 8) {
                     // The word first (Henning, 2026-10-24, build 110): the sign alone did not say why
                     // the task stands up here.
-                    Text("The Knäuel")
+                    Text("The Tangle")
                     Text(KnaeuelSince.words(from: task.capturedAt))
                     if let context = (task.contexts ?? []).sorted(by: { $0.sortOrder < $1.sortOrder }).first {
                         HStack(spacing: 3) {
@@ -219,7 +219,7 @@ struct KnaeuelRow: View {
             }
         }
         .accessibilityElement(children: .combine)
-        .accessibilityLabel(Text("The Knäuel, \(task.displayTitle)"))
+        .accessibilityLabel(Text("The Tangle, \(task.displayTitle)"))
         .accessibilityIdentifier("knaeuelRow_\(task.id.uuidString)")
     }
 }

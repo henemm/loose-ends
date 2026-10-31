@@ -105,29 +105,29 @@ final class DriveSmokeTests: XCTestCase {
         back(in: app)
 
         let rows = elements(prefix: "knaeuelRow_", in: app)
-        XCTAssertTrue(rows.firstMatch.waitForExistence(timeout: 5), "The Knäuel does not stand under Now")
-        XCTAssertTrue(element("knaeuelHead", in: app).exists, "The Knäuel's row should stand as its head (#644)")
-        XCTAssertTrue(rows.firstMatch.label.contains("Steuerberater"), "Wrong task as the Knäuel: \(rows.firstMatch.label)")
+        XCTAssertTrue(rows.firstMatch.waitForExistence(timeout: 5), "The Tangle does not stand under Now")
+        XCTAssertTrue(element("knaeuelHead", in: app).exists, "The Tangle's row should stand as its head (#644)")
+        XCTAssertTrue(rows.firstMatch.label.contains("Steuerberater"), "Wrong task as the Tangle: \(rows.firstMatch.label)")
         // No date, not lined up: it still counts, and the number over "Now" is the rows (#703).
         let number = element("nowCount", in: app)
         XCTAssertTrue(number.waitForExistence(timeout: 5), "Now shows no number")
-        XCTAssertEqual(number.label, "1", "The Knäuel should count in Now")
-        XCTAssertGreaterThan(rows.firstMatch.frame.minY, number.frame.minY, "The Knäuel should stand under the number over Now")
+        XCTAssertEqual(number.label, "1", "The Tangle should count in Now")
+        XCTAssertGreaterThan(rows.firstMatch.frame.minY, number.frame.minY, "The Tangle should stand under the number over Now")
         shot(app, "703-knaeuel-unter-jetzt")
         XCTAssertEqual(rows.count, 1)
         XCTAssertFalse(app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH %@ AND label CONTAINS %@", "nowRow_", "Steuerberater"))
-            .firstMatch.exists, "Now must not show the Knäuel again")
+            .firstMatch.exists, "Now must not show the Tangle again")
 
         // The second task asks first and then takes the mark.
         openNew(in: app)
         holdRow(titled: "Hecke", until: "menuKnaeuel", in: app).tap()
         let move = element("confirmKnaeuelMove", in: app)
-        XCTAssertTrue(move.waitForExistence(timeout: 5), "No question before the Knäuel moves")
+        XCTAssertTrue(move.waitForExistence(timeout: 5), "No question before the Tangle moves")
         move.tap()
         back(in: app)
-        XCTAssertTrue(rows.firstMatch.waitForExistence(timeout: 5), "No Knäuel under Now after the move")
-        XCTAssertTrue(rows.firstMatch.label.contains("Hecke"), "The Knäuel did not move: \(rows.firstMatch.label)")
+        XCTAssertTrue(rows.firstMatch.waitForExistence(timeout: 5), "No Tangle under Now after the move")
+        XCTAssertTrue(rows.firstMatch.label.contains("Hecke"), "The Tangle did not move: \(rows.firstMatch.label)")
         XCTAssertEqual(rows.count, 1)
 
         // Swipe right completes it; after the Done window the row is gone.
@@ -135,11 +135,11 @@ final class DriveSmokeTests: XCTestCase {
         let complete = app.buttons["Complete"]
         XCTAssertTrue(complete.waitForExistence(timeout: 5), "Swipe right offers no Complete")
         complete.tap()
-        XCTAssertTrue(rows.firstMatch.waitForNonExistence(timeout: 10), "The completed Knäuel still stands under Now")
+        XCTAssertTrue(rows.firstMatch.waitForNonExistence(timeout: 10), "The completed Tangle still stands under Now")
         // The moment (#644) keeps the head for 1.1 s, then the knot's date line stands alone.
         XCTAssertTrue(element("knaeuelHead", in: app).waitForNonExistence(timeout: 10), "The head should go after the moment")
         XCTAssertTrue(element("startHeader", in: app).exists)
-        XCTAssertEqual(number.label, "0", "The completed Knäuel should leave the number over Now")
+        XCTAssertEqual(number.label, "0", "The completed Tangle should leave the number over Now")
     }
 
     /// "Für die Perlen" (#647, #655): written in Settings › Fields, the sentence stands on the start page
