@@ -17,6 +17,11 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
 SCRIPTS = Path(__file__).resolve().parent
+sys.path.insert(0, str(SCRIPTS))
+
+from asc_beta_setup import split_description  # noqa: E402
+from asc_wait_build import Fatal  # noqa: E402
+
 SCRIPT = SCRIPTS / "asc_beta_setup.py"
 REPO = SCRIPTS.parent
 WORKFLOW = REPO / ".github" / "workflows" / "asc-beta.yml"
@@ -221,16 +226,41 @@ class SetupTests(unittest.TestCase):
             self.assertEqual(fake.writes(), [])
 
     def test_description_file_is_sent_verbatim(self):
-        text = DESCRIPTION_FILE.read_text().strip()
-        self.assertTrue(text.startswith("Loose Ends nimmt auf"), text[:40])
-        self.assertTrue(text.endswith("„Feedback senden“ antippen."), text[-40:])
-        self.assertEqual(text.count("\n\n"), 2)
-        self.assertLessEqual(len(text), 4000)
+        sections = split_description(DESCRIPTION_FILE.read_text().strip())
+        self.assertEqual(sorted(sections), ["de-DE", "en-US"])
+        german, english = sections["de-DE"], sections["en-US"]
+        self.assertTrue(german.startswith("Loose Ends nimmt auf"), german[:40])
+        self.assertTrue(german.endswith("„Feedback senden“ antippen."), german[-40:])
+        self.assertTrue(english.startswith("Loose Ends takes in"), english[:40])
+        self.assertNotIn("!", english)
+        for text in sections.values():
+            self.assertEqual(text.count("\n\n"), 2)
+            self.assertLessEqual(len(text), 4000)
         fake = self.fake()
         result = self.run_setup(fake, description=DESCRIPTION_FILE)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        post, = [b for m, _, b in fake.writes() if m == "POST"]
-        self.assertEqual(post["data"]["attributes"]["description"], text)
+        posts = {b["data"]["attributes"]["locale"]: b["data"]["attributes"]["description"]
+                 for m, _, b in fake.writes() if m == "POST"}
+        self.assertEqual(posts, sections)
+
+    def test_description_sections_per_locale(self):
+        sections = Path(self.tmp.name) / "sections.md"
+        sections.write_text("## de-DE\n\nDeutsch\n\n## en-US\n\nEnglish\n")
+        fake = self.fake(localizations=[localization("L1", "alt", CONTACT["ASC_REVIEW_EMAIL"])], detail=FULL_DETAIL)
+        result = self.run_setup(fake, description=sections)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        writes = {(m, p): b["data"]["attributes"] for m, p, b in fake.writes()}
+        self.assertEqual(writes[("PATCH", "/v1/betaAppLocalizations/L1")], {"description": "Deutsch"})
+        self.assertEqual(writes[("POST", "/v1/betaAppLocalizations")]["locale"], "en-US")
+        self.assertEqual(writes[("POST", "/v1/betaAppLocalizations")]["description"], "English")
+        self.assertIn("locale=en-US", result.stdout)
+
+    def test_file_without_headings_is_german(self):
+        self.assertEqual(split_description("Nur Text\n\nzweiter Absatz"), {"de-DE": "Nur Text\n\nzweiter Absatz"})
+
+    def test_heading_of_an_unknown_locale_fails(self):
+        with self.assertRaises(Fatal):
+            split_description("## fr-FR\n\nTexte")
 
 
 class WorkflowTests(unittest.TestCase):

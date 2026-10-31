@@ -232,8 +232,10 @@ version, dSYM, privacy strings) and stops the upload on any mismatch.
 **Every TestFlight build says what to test (Henning, 2026-10-12, #347).** A manual run requires the
 input `what_to_test`; a `v*` tag uses the tagged commit's message. After Apple reports the build as
 `VALID`, `scripts/asc_what_to_test.py` writes the text into TestFlight's „Was testen“ (every existing
-localization, `de-DE` created if missing). Write it for Henning, in German: which flow, which steps,
-what he should see. The run fails without it.
+localization, plus one for every shipped language that has none). Write it for Henning, in German: which flow, which steps,
+what he should see. The run fails without it. Since #760 the text may carry one section per shipped language: lines starting `de:` or `en:` open one;
+text without a marker is German, and a language without a section gets the German text. The beta description in `docs/reference/beta-beschreibung.md`
+has one `## de-DE` / `## en-US` section per language, and `scripts/asc_locales.py` maps each language code of `LanguagePacks.shipped` to its App Store Connect locale.
 
 **CloudKit schema through CI (#448, Henning 2026-10-15: „Bündeln + CI-Weg“).** The schema lives in
 `cloudkit/schema.ckdb`; a model change adds its fields there in the same PR (`scripts/test_cloudkit_schema.py` fails
