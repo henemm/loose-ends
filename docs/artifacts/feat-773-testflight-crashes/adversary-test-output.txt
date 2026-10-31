@@ -1,0 +1,62 @@
+test_app_lookup_server_error_exits_1 (scripts.test_asc_crashes.CrashesTests.test_app_lookup_server_error_exits_1) ... ok
+test_both_platforms_in_one_run (scripts.test_asc_crashes.CrashesTests.test_both_platforms_in_one_run) ... ok
+test_empty_logtext_counts_as_without_report (scripts.test_asc_crashes.CrashesTests.test_empty_logtext_counts_as_without_report) ... ok
+test_files_have_expected_content (scripts.test_asc_crashes.CrashesTests.test_files_have_expected_content) ... ok
+test_forbidden_exits_1 (scripts.test_asc_crashes.CrashesTests.test_forbidden_exits_1) ... ok
+test_log_has_no_personal_data (scripts.test_asc_crashes.CrashesTests.test_log_has_no_personal_data) ... ok
+test_missing_crashlog_counts_as_without_report (scripts.test_asc_crashes.CrashesTests.test_missing_crashlog_counts_as_without_report) ... ok
+test_no_submissions (scripts.test_asc_crashes.CrashesTests.test_no_submissions) ... ok
+test_only_get_requests (scripts.test_asc_crashes.CrashesTests.test_only_get_requests) ... ok
+test_server_error_always_exits_1 (scripts.test_asc_crashes.CrashesTests.test_server_error_always_exits_1) ... ok
+test_server_error_once_is_retried (scripts.test_asc_crashes.CrashesTests.test_server_error_once_is_retried) ... ok
+test_target_is_a_file_exits_1 (scripts.test_asc_crashes.CrashesTests.test_target_is_a_file_exits_1) ... ok
+test_two_pages_via_links_next (scripts.test_asc_crashes.CrashesTests.test_two_pages_via_links_next) ... ok
+test_unsafe_id_exits_1 (scripts.test_asc_crashes.CrashesTests.test_unsafe_id_exits_1) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1205: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 56706)>
+  self.stdout = io.TextIOWrapper(self.stdout,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1205: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 56712)>
+  self.stdout = io.TextIOWrapper(self.stdout,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1205: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 56717)>
+  self.stdout = io.TextIOWrapper(self.stdout,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1205: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 56721)>
+  self.stdout = io.TextIOWrapper(self.stdout,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1205: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 56725)>
+  self.stdout = io.TextIOWrapper(self.stdout,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1205: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 56728)>
+  self.stdout = io.TextIOWrapper(self.stdout,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1205: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 56732)>
+  self.stdout = io.TextIOWrapper(self.stdout,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1205: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 56736)>
+  self.stdout = io.TextIOWrapper(self.stdout,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1205: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 56741)>
+  self.stdout = io.TextIOWrapper(self.stdout,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1205: ResourceWarning: unclosed <socket.socket fd=13, family=2, type=1, proto=0, laddr=('127.0.0.1', 56744)>
+  self.stdout = io.TextIOWrapper(self.stdout,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1205: ResourceWarning: unclosed <socket.socket fd=14, family=2, type=1, proto=0, laddr=('127.0.0.1', 56749)>
+  self.stdout = io.TextIOWrapper(self.stdout,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1205: ResourceWarning: unclosed <socket.socket fd=15, family=2, type=1, proto=0, laddr=('127.0.0.1', 56756)>
+  self.stdout = io.TextIOWrapper(self.stdout,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1205: ResourceWarning: unclosed <socket.socket fd=16, family=2, type=1, proto=0, laddr=('127.0.0.1', 56763)>
+  self.stdout = io.TextIOWrapper(self.stdout,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1205: ResourceWarning: unclosed <socket.socket fd=17, family=2, type=1, proto=0, laddr=('127.0.0.1', 56764)>
+  self.stdout = io.TextIOWrapper(self.stdout,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_usage_and_missing_environment (scripts.test_asc_crashes.CrashesTests.test_usage_and_missing_environment) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 10.312s
+
+OK
