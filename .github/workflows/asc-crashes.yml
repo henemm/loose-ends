@@ -1,0 +1,50 @@
+# Handlauf (#773 Schnitt 2): holt die TestFlight-Absturzmeldungen mit scripts/asc_crashes.py nur lesend ab, packt den
+# Ordner und verschlüsselt ihn an den öffentlichen Schlüssel .github/crash-recipient.asc. Hochgeladen wird nur das
+# Chiffrat crashes.tar.gpg (7 Tage); Schlüssel, Klartextordner und Klartext-Tar löscht der trap. Ohne Meldung kein
+# Artefakt. Das Repo ist öffentlich: Secrets nur über env, nie im Skripttext. Läuft nie automatisch.
+name: ASC Crashes
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  crashes:
+    name: Fetch TestFlight crash submissions (encrypted)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+      ASC_POLL_SECONDS: "5"
+    steps:
+      - uses: actions/checkout@v7
+      - name: Fetch, pack and encrypt
+        id: pack
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          trap 'rm -rf "$RUNNER_TEMP/asc_key.p8" "$RUNNER_TEMP/crashes" "$RUNNER_TEMP/crashes.tar"' EXIT
+          printf '%s\n' "$ASC_PRIVATE_KEY" > "$RUNNER_TEMP/asc_key.p8"
+          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_crashes.py "$RUNNER_TEMP/crashes"
+          if [ -z "$(find "$RUNNER_TEMP/crashes" -type f)" ]; then
+            echo "::notice::Keine Absturzmeldungen, es wird kein Artefakt angelegt"
+            echo "encrypted=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          tar -C "$RUNNER_TEMP/crashes" -cf "$RUNNER_TEMP/crashes.tar" .
+          gpg --batch --trust-model always --recipient-file .github/crash-recipient.asc --output "$RUNNER_TEMP/crashes.tar.gpg" --encrypt "$RUNNER_TEMP/crashes.tar"
+          rm -f "$RUNNER_TEMP/crashes.tar"
+          echo "encrypted=true" >> "$GITHUB_OUTPUT"
+      - name: Upload
+        if: steps.pack.outputs.encrypted == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: crashes
+          path: ${{runner.temp}}/crashes.tar.gpg
+          retention-days: 7
+          if-no-files-found: error

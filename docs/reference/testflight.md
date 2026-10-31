@@ -234,6 +234,26 @@ App Store Connect, TestFlight → Gruppe `Tester`. Die Probe danach belegt `link
 **Schnitt 2:** 2a (Texte und Kontakt), 2b-1 (externe Gruppe, Build-Zuordnung), 2b-2b (Einreichung) und 2b-2c (öffentlicher
 Link) sind die Handläufe oben.
 
+## Absturzberichte abholen (#773)
+
+Der Handlauf **ASC Crashes** (`.github/workflows/asc-crashes.yml`) holt die TestFlight-Absturzmeldungen mit
+`scripts/asc_crashes.py` nur lesend ab, packt sie und verschlüsselt sie an den öffentlichen Schlüssel
+`.github/crash-recipient.asc`. Hochgeladen wird nur `crashes.tar.gpg`; ohne Meldung steht im Log nur eine `::notice::`-Zeile
+und es gibt kein Artefakt.
+
+1. **Lauf starten:** `gh workflow run asc-crashes.yml`, den Lauf finden mit `gh run list --workflow asc-crashes.yml`, das
+   Ergebnis abwarten mit `gh run watch <id>`.
+2. **Holen:** `gh run download <id> --name crashes --dir <wegwerf-ordner>`.
+3. **Entschlüsseln:** im Wegwerf-Ordner `gpg --decrypt --output crashes.tar crashes.tar.gpg`, dann `tar -xf crashes.tar` in
+   einen Wegwerf-Ordner im Scratchpad, nie ins Repo. Nach der Auswertung den Ordner löschen.
+4. **Auswerten:** `<id>.json` trägt die Attribute der Meldung, `<id>.crash` den Bericht. Symbolisiert wird erst, wenn ein
+   Bericht es braucht (`atos` gegen das dSYM aus dem Archiv); ob Apple den Bericht schon symbolisiert liefert, ist offen.
+5. **Was ins Ticket darf:** Absturzstelle, Version, Plattform. Nie E-Mail, Kommentar, Gerätedaten oder Zeitzone der Tester.
+6. **Schlüssel:** Der geheime Teil liegt nur im GnuPG-Schlüsselbund des Macs, ohne Passphrase: Wer den Mac hat, liest die
+   Artefakte. Das Artefakt lebt 7 Tage. Geht der Schlüssel verloren: neuen Schlüssel erzeugen, den öffentlichen Teil in
+   `.github/crash-recipient.asc` ersetzen, neuen Lauf starten. Apple hält die Meldungen 120 Tage, es geht nichts verloren.
+7. **Erst nach dem Merge:** `workflow_dispatch` startet erst, wenn die Workflow-Datei auf `main` liegt.
+
 ## Wenn es hakt
 
 - **"No profiles for 'com.henning.looseends' were found"** oder ein Fehler mit
