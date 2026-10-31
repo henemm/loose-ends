@@ -47,9 +47,7 @@ final class RecognitionWalkthroughTests: XCTestCase {
     @MainActor
     private func launch() -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = [
-            "--ui-testing",
-            "-AppleLanguages", "(en)", "-AppleLocale", "en_US",
+        app.launchArguments = ["--ui-testing"] + LaunchLanguage.arguments + [
             "-contextsEmptiedByUser", "NO",
         ]
         app.launch()

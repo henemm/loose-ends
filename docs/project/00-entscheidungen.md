@@ -58,7 +58,7 @@ alles in `FocusBloxMac/`, alle UI-Tests.
 | R2-12 | Blockierte Aufgaben | Aus "Als nächstes" ausgeblendet. |
 | R2-13 | Projekte, Hierarchie | Ja, beides. Braucht exzellente UI. |
 | R2-14 | Wiederholung in v1 | Ja, aber einfach gedacht. |
-| R2-15 | Sprachen | Englisch Default, Deutsch von Anfang an. |
+| R2-15 | Sprachen | Englisch Default, Deutsch von Anfang an. Seit #750 über Sprachpakete, `LanguagePacks.shipped` als einzige Liste (ADR-10). |
 | R2-17 | Identität | Alles neu: Name, Bundle-ID, CloudKit-Container. |
 | R2-18 | Tests/Prozess | Fast-Track für Gerüst, Unit-Tests statt UI-Tests bis die UI steht. |
 | R3-1 | Navigation iPhone | Startscreen mit Kacheln (Option A). Tab-Leiste verworfen. |
@@ -146,8 +146,13 @@ spätere Sharing-Einheit.
   Annahme zu prüfen im Spike: ob iOS 27 Controls mit Werteabfrage erlaubt. Falls ja, entfällt der App-Start.
 - Mail: App-Schema für "mach daraus eine Aufgabe" plus Share-Extension. Aufgabe speichert die `message:`-URL.
 
-**ADR-10 Lokalisierung ab Tag eins.** String Catalog, Englisch Basis, Deutsch parallel.
-Prompts an das Modell in der Sprache des Nutzers, Ergebnisstruktur sprachunabhängig.
+**ADR-10 Lokalisierung ab Tag eins.** String Catalog, Englisch Basis, Deutsch parallel. Seit #750 (2026-10-30) tragen
+Sprachpakete in `Shared/Language/` jedes Regelwort; `LanguagePacks.shipped` ist die einzige Sprachliste, Skripte lesen sie.
+Regeln prüfen alle ausgelieferten Sprachen zugleich (Denglisch im Korpus, kein Sprachfeld im Produkt). Der Prompt an das Modell
+ist englisch, die Antwort folgt der Sprache der Notiz (berichtigt „Prompts in der Sprache des Nutzers“); die Ergebnisstruktur bleibt
+sprachunabhängig. Das Knäuel heißt je Sprache anders (englisch „the Tangle“, #758). Die Datenschutzseite gibt es je Sprache (#763).
+Eine Sprache gilt als ausgeliefert, wenn sie die Schwelle aus `docs/reference/date-title-fidelity.md` erreicht (#759); der Weg dahin
+steht in `docs/reference/neue-sprache.md`.
 
 **ADR-11 Tests.** Unit-Tests für Veredelung (mit Fake-Modell über das `LanguageModel`-Protokoll),
 Ansichtsberechnung, Wiederholungsregel, Revisionen. Evaluations-Framework für Prompts mit dem

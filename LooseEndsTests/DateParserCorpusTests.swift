@@ -23,11 +23,13 @@ struct DateParserCorpusTests {
         var summary: String { "\(hit) von \(total)\n" + misses.map { "  - \($0)" }.joined(separator: "\n") }
     }
 
-    @Test("Datum: mindestens 95 % exakt, kein einziges erfunden")
+    @Test("Datum: mindestens 95 % exakt, kein einziges erfunden, je Sprache mindestens 99 %")
     func dates() throws {
         let parser = DateExpressionParser(calendar: Self.calendar)
         var exact = Score()
         var invented = Score()
+        var exactByLanguage: [String: Score] = [:]
+        var inventedByLanguage: [String: Score] = [:]
         // Every sentence, repetitions included: "Jeden Montag den Müll rausstellen" is exactly the
         // kind of sentence a parser must not turn into a date, so it belongs in the control group
         // (AC-2: 170 plain controls plus the 8 repetitions).
@@ -36,14 +38,26 @@ struct DateParserCorpusTests {
             let day = got.map { DateTitleReportTests.day($0, Self.calendar) } ?? "–"
             if let expectation = entry.date {
                 let accepted = expectation.acceptedDays(reference: Self.reference, calendar: Self.calendar)
-                exact.record(got.map(accepted.contains) ?? false,
-                             miss: "`\(entry.text)` → \(day) statt \(CorpusTests.days(expectation).sorted().joined(separator: "|")) · \(DateTitleReportTests.ruleName(expectation))")
+                let isHit = got.map(accepted.contains) ?? false
+                let miss = "`\(entry.text)` → \(day) statt \(CorpusTests.days(expectation).sorted().joined(separator: "|")) · \(DateTitleReportTests.ruleName(expectation))"
+                exact.record(isHit, miss: miss)
+                exactByLanguage[entry.lang, default: Score()].record(isHit, miss: miss)
             } else {
                 invented.record(got == nil, miss: "`\(entry.text)` → \(day)")
+                inventedByLanguage[entry.lang, default: Score()].record(got == nil, miss: "`\(entry.text)` → \(day)")
             }
         }
-        #expect(exact.total == 139, "Korpus hat \(exact.total) Datumssätze statt 139")
-        #expect(invented.total == 180, "Korpus hat \(invented.total) Kontrollsätze statt 180")
+        #expect(exact.total == 156, "Korpus hat \(exact.total) Datumssätze statt 156")
+        #expect(invented.total == 188, "Korpus hat \(invented.total) Kontrollsätze statt 188")
+        // The bar for a shipped language (#759): at least 99 % exact and none invented, each language on its own.
+        for (lang, score) in exactByLanguage {
+            #expect(score.share >= 0.99, "Datum exakt (\(lang)): \(score.summary)")
+        }
+        for (lang, score) in inventedByLanguage {
+            #expect(score.misses.isEmpty, "Datum erfunden (\(lang)): \(score.summary)")
+        }
+        #expect(Set(exactByLanguage.keys) == ["de", "en"])
+        #expect((exactByLanguage["en"]?.total ?? 0) >= 50, "Englisch hat zu wenig Datumssätze für die Schwelle")
         #expect(exact.share >= 0.95, "Datum exakt: \(exact.summary)")
         #expect(invented.misses.isEmpty, "Datum erfunden: \(invented.summary)")
     }

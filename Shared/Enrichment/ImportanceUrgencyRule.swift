@@ -76,10 +76,9 @@ enum ImportanceUrgencyRule {
         return found.min { $0.lowerBound < $1.lowerBound }
     }
 
-    private static let negations: Set<String> = [
-        "nicht", "kein", "keine", "nie", "not", "never", "isnt", "arent", "wasnt", "dont", "doesnt",
-    ]
-    private static let intensifiers: Set<String> = ["so", "sehr", "besonders", "ganz", "too", "very", "that"]
+    // The words live in `Shared/Language/` (Epic #750); the negation logic stays here (#214, #220).
+    private static var negations: Set<String> { Set(LanguagePacks.negations) }
+    private static var intensifiers: Set<String> { Set(LanguagePacks.intensifiers) }
 
     /// A negation right before the keyword, or before an intensifier right before it ("nicht so
     /// wichtig"). Two words back without the intensifier is too far: "Nicht vergessen: wichtig".
@@ -95,25 +94,10 @@ enum ImportanceUrgencyRule {
 
     /// Declaration order is the priority order when a note carries several signals of one field, so
     /// the same text always yields the same reason.
-    private enum ImportanceSignal: CaseIterable {
+    private enum ImportanceSignal: String, CaseIterable {
         case explicit, money, official, peopleWaiting
 
-        var keywords: [String] {
-            switch self {
-            case .explicit:
-                ["sehr wichtig", "wichtig", "wichtige", "wichtiger", "wichtiges", "wichtigen", "wichtigem",
-                 "very important", "important"]
-            case .money:
-                ["euro", "eur", "€", "betrag", "rechnung", "rechnungen", "kredit", "gehalt", "zahlung",
-                 "überweisung", "invoice", "amount", "payment", "salary", "loan"]
-            case .official:
-                ["finanzamt", "amt", "behörde", "gericht", "anwalt", "anwältin", "notar", "vertrag",
-                 "steuer", "steuererklärung", "bußgeld", "tax", "official", "contract", "court", "lawyer"]
-            case .peopleWaiting:
-                ["wartet auf", "warten auf", "erwartet eine antwort", "erwartet antwort",
-                 "is waiting for", "are waiting for", "waiting for", "is expecting"]
-            }
-        }
+        var keywords: [String] { LanguagePacks.importanceWords(for: rawValue) }
 
         /// Shown to the user in the task detail and the field editor, one sentence per category.
         var reason: String {
@@ -135,19 +119,10 @@ enum ImportanceUrgencyRule {
         func matches(_ text: String) -> Bool { range(in: text) != nil }
     }
 
-    private enum UrgencySignal: CaseIterable {
+    private enum UrgencySignal: String, CaseIterable {
         case deadline, immediacy
 
-        var keywords: [String] {
-            switch self {
-            case .deadline:
-                ["frist", "fristen", "kündigungsfrist", "stichtag", "spätestens", "mahnung",
-                 "deadline", "reminder", "cancellation"]
-            case .immediacy:
-                ["dringend", "dringlich", "sofort", "jetzt", "umgehend", "unverzüglich", "eilt",
-                 "asap", "urgent", "urgently", "immediately"]
-            }
-        }
+        var keywords: [String] { LanguagePacks.urgencyWords(for: rawValue) }
 
         var reason: String {
             switch self {

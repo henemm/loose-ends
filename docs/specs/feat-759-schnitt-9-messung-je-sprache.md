@@ -77,3 +77,4 @@ LoC Swift ≈ +60 / −10 (Mess- und Testcode, kein Produktpfad).
 ## Changelog
 
 - 2026-10-30: Spec erstellt.
+- 2026-10-31: Umgesetzt. Erste Messung: Englisch 51 von 52 (98.1 %), Lücke „In a week …“ (Artikel zählt nicht als Zahl) als #783 gemeldet, der Satz durch „In 4 days …“ ersetzt, Schwelle unverändert; danach en 100.0 % von 52, 0.0 % von 43 erfunden, de 99.0 % von 104. Korpus 344 Sätze (156 mit Datum, 188 ohne). Bericht um Abschnitt „Regelparser je Sprache“ samt Schwellentext erweitert (Generator und `date-title-fidelity.md`). Die Dauer-Muster („takes an hour“) stehen als Kontrollsatz im Korpus, der Korpus kennt kein Dauerfeld. Fixture: nur neue IDs (Diff ohne entfernte Zeilen).

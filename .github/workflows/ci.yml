@@ -330,6 +330,87 @@ jobs:
             hang-reports
           if-no-files-found: warn
 
+  # #761: the shipped languages, read from the code (`LanguagePacks.shipped`), as the matrix of `ui-smoke-lang`.
+  languages:
+    name: Shipped languages
+    runs-on: xcode-27
+    outputs:
+      list: ${{ steps.read.outputs.list }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Select Xcode 27.0
+        uses: ./.github/actions/select-xcode-27
+      - id: read
+        run: echo "list=$(python3 scripts/shipped_languages.py)" >> "$GITHUB_OUTPUT"
+
+  # #761: two UI smoke classes per shipped language, because the design briefing asks for both languages (text
+  # lengths) and the full `ui-smoke` run launches in English only. The tests take the language from
+  # LOOSEENDS_UI_LANG (LooseEndsUITests/LaunchLanguage.swift); screenshots carry `-<lang>` in their name.
+  ui-smoke-lang:
+    name: ui-smoke-lang
+    needs: languages
+    runs-on: xcode-27
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        lang: ${{ fromJson(needs.languages.outputs.list) }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Select Xcode 27.0
+        uses: ./.github/actions/select-xcode-27
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        run: xcodegen generate
+      - name: Prepare the simulator
+        uses: ./.github/actions/prepare-ui-simulator
+      - name: Run the language smoke classes (${{ matrix.lang }})
+        env:
+          TEST_RUNNER_LOOSEENDS_UI_LANG: ${{ matrix.lang }}
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project LooseEnds.xcodeproj \
+            -scheme LooseEnds \
+            -destination "platform=iOS Simulator,id=$SIM_UDID" \
+            -only-testing:LooseEndsUITests/InboxDrawerSmokeTests \
+            -only-testing:LooseEndsUITests/StartNumberTests \
+            -parallel-testing-enabled NO \
+            -resultBundlePath UITestResults.xcresult \
+            CODE_SIGNING_ALLOWED=NO \
+            DEVELOPMENT_TEAM= \
+            2>&1 | tee ui-smoke.log | xcbeautify
+      - name: Show failure details
+        if: failure()
+        run: grep -n -E -i "crash|fatal error|restarting after|failed|error:" ui-smoke.log | head -80 || true
+      - name: Export the screenshots
+        if: always()
+        continue-on-error: true
+        run: |
+          mkdir -p shots
+          xcrun xcresulttool export attachments --path UITestResults.xcresult --output-path shots-raw
+          python3 - "${{ matrix.lang }}" <<'PY'
+          import json, pathlib, shutil, sys
+          lang = sys.argv[1]
+          raw, out = pathlib.Path("shots-raw"), pathlib.Path("shots")
+          for test in json.loads((raw / "manifest.json").read_text()):
+              for a in test.get("attachments", []):
+                  stem = a.get("suggestedHumanReadableName", "shot").split("_")[0]
+                  shutil.copy(raw / a["exportedFileName"], out / f"{stem}-{lang}.png")
+          print("\n".join(sorted(p.name for p in out.iterdir())) or "no screenshots")
+          PY
+      - name: Upload the language results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ui-smoke-${{ matrix.lang }}
+          path: |
+            UITestResults.xcresult
+            ui-smoke.log
+            shots
+          if-no-files-found: warn
+
   # #511: the Mac app photographed in CI (MacGalleryTests), never on Henning's Mac. The app is signed
   # ad hoc for this run only, without restricted entitlements (iCloud, push), so macOS lets it start.
   # An experiment: whether the xcode-27 runner allows Mac UI automation is shown by the first run.

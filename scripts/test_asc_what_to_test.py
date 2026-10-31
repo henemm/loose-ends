@@ -14,6 +14,11 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
 SCRIPTS = Path(__file__).resolve().parent
+sys.path.insert(0, str(SCRIPTS))
+
+from asc_wait_build import Fatal  # noqa: E402
+from asc_what_to_test import split_sections  # noqa: E402
+
 SCRIPT = SCRIPTS / "asc_what_to_test.py"
 WORKFLOW = SCRIPTS.parent / ".github" / "workflows" / "testflight.yml"
 BUILD = "42"
@@ -93,15 +98,27 @@ class WhatToTestTests(unittest.TestCase):
                          [("PATCH", "/v1/betaBuildLocalizations/L1"), ("PATCH", "/v1/betaBuildLocalizations/L2")])
         self.assertTrue(all(body["data"]["attributes"]["whatsNew"] == TEXT for _, _, body in fake.writes))
 
-    def test_creates_german_localization_when_missing(self):
+    def test_creates_the_localization_of_every_shipped_language_when_missing(self):
         fake = FakeASC([])
         self.addCleanup(fake.close)
         result = self.run_script(fake)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        (method, path, body), = fake.writes
-        self.assertEqual((method, path), ("POST", "/v1/betaBuildLocalizations"))
-        self.assertEqual(body["data"]["attributes"], {"locale": "de-DE", "whatsNew": TEXT})
-        self.assertEqual(body["data"]["relationships"]["build"]["data"], {"type": "builds", "id": "B42"})
+        self.assertEqual({(m, p) for m, p, _ in fake.writes}, {("POST", "/v1/betaBuildLocalizations")})
+        created = {body["data"]["attributes"]["locale"]: body["data"]["attributes"]["whatsNew"] for _, _, body in fake.writes}
+        self.assertEqual(created, {"de-DE": TEXT, "en-US": TEXT})
+        for _, _, body in fake.writes:
+            self.assertEqual(body["data"]["relationships"]["build"]["data"], {"type": "builds", "id": "B42"})
+        self.assertIn("whatToTest gesetzt für", result.stdout)
+
+    def test_each_localization_gets_its_own_section(self):
+        fake = FakeASC([{"id": "L1", "attributes": {"locale": "en-US"}},
+                        {"id": "L2", "attributes": {"locale": "de-DE"}},
+                        {"id": "L3", "attributes": {"locale": "fr-FR"}}])
+        self.addCleanup(fake.close)
+        result = self.run_script(fake, text="de: Deutscher Text\nen: English text")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        sent = {p.rsplit("/", 1)[1]: body["data"]["attributes"]["whatsNew"] for _, p, body in fake.writes}
+        self.assertEqual(sent, {"L1": "English text", "L2": "Deutscher Text", "L3": "Deutscher Text"})
 
     def test_empty_text_fails_before_any_request(self):
         result = self.run_script(None, text="  ")
@@ -119,6 +136,40 @@ class WhatToTestTests(unittest.TestCase):
         result = self.run_script(fake)
         self.assertEqual(result.returncode, 1)
         self.assertIn("HTTP 409", result.stdout)
+
+
+class SectionTests(unittest.TestCase):
+    def test_sections_split_by_language_marker(self):
+        self.assertEqual(split_sections("de: A\nen: B"), {"de-DE": "A", "en-US": "B"})
+        self.assertEqual(split_sections("de: A\nweiter\nen: B"), {"de-DE": "A\nweiter", "en-US": "B"})
+
+    def test_text_without_marker_is_german(self):
+        self.assertEqual(split_sections("A"), {"de-DE": "A"})
+        self.assertEqual(split_sections("Hinweis: A"), {"de-DE": "Hinweis: A"})
+
+    def test_missing_section_falls_back_to_german(self):
+        fake = FakeASC([{"id": "L1", "attributes": {"locale": "de-DE"}}])
+        self.addCleanup(fake.close)
+        tester = WhatToTestTests()
+        tester.setUp()
+        self.addCleanup(tester.tearDown)
+        result = tester.run_script(fake, text="de: A")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        sent = {(m, body["data"]["attributes"].get("locale", p.rsplit("/", 1)[1])): body["data"]["attributes"]["whatsNew"]
+                for m, p, body in fake.writes}
+        self.assertEqual(sent, {("PATCH", "L1"): "A", ("POST", "en-US"): "A"})
+
+    def test_unknown_language_code_fails(self):
+        import shutil
+        with tempfile.TemporaryDirectory() as folder:
+            shutil.copytree(SCRIPTS.parent / "Shared/Language", Path(folder) / "Shared/Language")
+            pack = Path(folder) / "Shared/Language/LanguagePack.swift"
+            pack.write_text(pack.read_text(encoding="utf-8").replace("[.english, .german]", "[.english, .german, .test]"),
+                            encoding="utf-8")
+            (pack.parent / "TestPack.swift").write_text('extension LanguagePack {\n    static let test = LanguagePack(\n        code: "zz",\n')
+            with self.assertRaises(Fatal) as raised:
+                split_sections("de: A", folder)
+            self.assertIn("zz", str(raised.exception))
 
 
 class WorkflowTests(unittest.TestCase):

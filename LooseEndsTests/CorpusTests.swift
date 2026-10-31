@@ -111,6 +111,12 @@ struct CorpusTests {
         #expect(controls.count >= 80)
     }
 
+    @Test("Ein Eintrag ohne lang im Hauptformat wirft mit seiner ID (#759)")
+    func entryWithoutLangFails() {
+        let json = #"[{"id":"x-1","lang":"en","text":"a"},{"id":"x-2","text":"b"}]"#
+        #expect(throws: Corpus.MissingLanguage(id: "x-2")) { try Corpus.entries(from: Data(json.utf8)) }
+    }
+
     /// Issue #82: the corpus must carry Henning's sentence forms, not only "time, object, verb".
     /// Every form is named, every named form is known, and each one is thick enough to give a
     /// rate of its own in the report.

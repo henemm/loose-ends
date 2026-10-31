@@ -105,7 +105,17 @@ def export_screenshots(bundle, out_dir):
     if bundle.is_dir():
         subprocess.run(["xcrun", "xcresulttool", "export", "attachments", "--path", str(bundle),
                         "--output-path", str(out_dir), "--filter", "*.png"], capture_output=True, check=True)
+    suffix_screenshots(out_dir, os.environ.get("LOOSEENDS_UI_LANG", ""))
     return len(list(out_dir.glob("*.png")))
+
+
+def suffix_screenshots(out_dir, lang):
+    """Hängt `-<lang>` an jeden Bildnamen, wenn die UI-Test-Sprache gesetzt ist (#761); ohne Sprache bleibt alles."""
+    if not lang:
+        return
+    for png in sorted(out_dir.glob("*.png")):
+        if not png.stem.endswith(f"-{lang}"):
+            png.rename(png.with_name(f"{png.stem}-{lang}{png.suffix}"))
 
 
 def write_atomic(path, text):

@@ -64,7 +64,7 @@ struct TimeExpressionParser: Sendable {
 
     // MARK: - Rules
 
-    private static let cues = ["um", "auf", "at"]
+    private static var cues: [String] { LanguagePacks.timeCues }
 
     /// "halb zwölf" = 11:30, "half past seven" = 07:30.
     private static func half(at index: Int, in words: [ExpressionWord]) -> Match? {
@@ -97,7 +97,7 @@ struct TimeExpressionParser: Sendable {
         }
         let following = ExpressionText.word(words, after)
         var end = after
-        if following == "uhr" {
+        if LanguagePacks.clockWords.contains(following) {
             hasCue = true
             isExplicit = true
             end = after + 1
@@ -120,35 +120,28 @@ struct TimeExpressionParser: Sendable {
 
     /// Hours dictation spells out: the shared number words reach twelve, "dreizehn" to "dreiundzwanzig"
     /// and "null" come on top. Folded like `ExpressionText` folds words (no diacritics).
-    private static let spelledHours: [String: Int] = ExpressionText.numbers.merging([
-        "null": 0, "dreizehn": 13, "vierzehn": 14, "funfzehn": 15, "sechzehn": 16, "siebzehn": 17,
-        "achtzehn": 18, "neunzehn": 19, "zwanzig": 20, "einundzwanzig": 21, "zweiundzwanzig": 22,
-        "dreiundzwanzig": 23,
-    ]) { current, _ in current }
+    private static var spelledHours: [String: Int] {
+        LanguagePacks.numbers.merging(LanguagePacks.spelledHours) { current, _ in current }
+    }
 
     /// "um neunzehn Uhr", "acht Uhr" (#70: dictation writes numbers out). Only with "Uhr" after it,
     /// and "ein/eine … Uhr" only after "um": "eine Uhr kaufen" is a clock, not a time.
     private static func spelled(at index: Int, in words: [ExpressionWord]) -> Match? {
         let text = ExpressionText.word(words, index)
         guard let hour = spelledHours[text], (0...23).contains(hour),
-              ExpressionText.word(words, index + 1) == "uhr" else { return nil }
-        let article = ["ein", "eine", "einer", "einem", "einen"].contains(text)
-        if article, ExpressionText.word(words, index - 1) != "um" { return nil }
+              LanguagePacks.clockWords.contains(ExpressionText.word(words, index + 1)) else { return nil }
+        // An article hour ("eine Uhr") counts only right after its cue ("um"): "eine Uhr kaufen" is a clock.
+        if LanguagePacks.timeArticles.contains(text),
+           !LanguagePacks.articleCues.contains(ExpressionText.word(words, index - 1)) { return nil }
         return Match(hour: hour, minute: 0, index: index, count: 2)
     }
 
-    private static let hourUnits = ["stunde", "stunden", "std", "h", "hour", "hours"]
-    private static let minuteUnits = ["minute", "minuten", "min", "mins", "minutes"]
-    /// Lengths without a number after "in", in minutes, with the number of words each takes.
-    private static let spokenOffsets: [([String], Int)] = [
-        (["einer", "halben", "stunde"], 30), (["einer", "viertelstunde"], 15), (["einer", "dreiviertelstunde"], 45),
-        (["anderthalb", "stunden"], 90), (["eineinhalb", "stunden"], 90), (["einer", "stunde"], 60),
-        (["half", "an", "hour"], 30), (["an", "hour"], 60),
-    ]
+    private static var hourUnits: [String] { LanguagePacks.hourUnits }
+    private static var minuteUnits: [String] { LanguagePacks.minuteUnits }
 
     /// The minutes and the number of words after "in" at `index`, or nothing.
     private static func offset(after index: Int, in words: [ExpressionWord]) -> (Int, Int)? {
-        for (phrase, minutes) in spokenOffsets
+        for (phrase, minutes) in LanguagePacks.spokenOffsets
         where phrase.indices.allSatisfy({ ExpressionText.word(words, index + 1 + $0) == phrase[$0] }) {
             return (minutes, phrase.count)
         }

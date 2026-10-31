@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
     inputs:
       what_to_test:
-        description: Was testen (TestFlight „Was testen“, höchstens 4000 Zeichen)
+        description: Was testen (TestFlight „Was testen“, höchstens 4000 Zeichen je Sprache; Zeilen mit „de:“ oder „en:“ eröffnen die Fassung der Sprache, Text ohne Marker ist Deutsch)
         type: string
         required: true
       cleanup_dry_run:

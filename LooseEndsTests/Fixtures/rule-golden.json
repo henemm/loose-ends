@@ -1,0 +1,5442 @@
+{
+  "conv.Angebot.c0": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Angebot für den Kunden schreiben",
+    "urgency": "–"
+  },
+  "conv.Angebot.c1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Angebot noch einmal durchrechnen",
+    "urgency": "–"
+  },
+  "conv.Angebot.c2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Angebot nachfassen, es kam keine Antwort",
+    "urgency": "–"
+  },
+  "conv.Angebot.probe": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Angebot rausschicken",
+    "urgency": "–"
+  },
+  "conv.Blutdruck.c0": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Blutdruck morgens messen",
+    "urgency": "–"
+  },
+  "conv.Blutdruck.c1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Blutdruck Werte in die Liste eintragen",
+    "urgency": "–"
+  },
+  "conv.Blutdruck.c2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Blutdruck beim Hausarzt kontrollieren lassen",
+    "urgency": "–"
+  },
+  "conv.Blutdruck.probe": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Blutdruck Tabletten nachbestellen",
+    "urgency": "–"
+  },
+  "conv.Fenster.c0": {
+    "contexts": "Home",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Fenster putzen, solange es trocken ist",
+    "urgency": "–"
+  },
+  "conv.Fenster.c1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Fenster Dichtungen erneuern",
+    "urgency": "–"
+  },
+  "conv.Fenster.c2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Fenster im Bad reparieren lassen",
+    "urgency": "–"
+  },
+  "conv.Fenster.probe": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Fenster abdichten vor dem Winter",
+    "urgency": "–"
+  },
+  "conv.Heizung.c0": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Heizung entlüften, bevor es kalt wird",
+    "urgency": "–"
+  },
+  "conv.Heizung.c1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Heizung für die Abrechnung ablesen",
+    "urgency": "–"
+  },
+  "conv.Heizung.c2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Heizung auf Sommerbetrieb stellen",
+    "urgency": "–"
+  },
+  "conv.Heizung.probe": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Heizung nachfüllen, der Druck ist zu niedrig",
+    "urgency": "–"
+  },
+  "conv.Katze.c0": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Katze zur Impfung bringen",
+    "urgency": "–"
+  },
+  "conv.Katze.c1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Katze entwurmen",
+    "urgency": "–"
+  },
+  "conv.Katze.c2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Katze Krallen schneiden lassen",
+    "urgency": "–"
+  },
+  "conv.Katze.probe": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Katze beim Tierarzt anmelden",
+    "urgency": "–"
+  },
+  "conv.Koffer.c0": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Koffer aus der Abstellkammer holen",
+    "urgency": "–"
+  },
+  "conv.Koffer.c1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Koffer packen, es geht früh los",
+    "urgency": "–"
+  },
+  "conv.Koffer.c2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Koffer wiegen, sonst wird es am Schalter teuer",
+    "urgency": "–"
+  },
+  "conv.Koffer.probe": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Koffer noch beschriften",
+    "urgency": "–"
+  },
+  "conv.Rasen.c0": {
+    "contexts": "Garden",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Rasen mähen, bevor die Nachbarn sich beschweren",
+    "urgency": "–"
+  },
+  "conv.Rasen.c1": {
+    "contexts": "Garden",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Rasen düngen am Samstagmorgen",
+    "urgency": "–"
+  },
+  "conv.Rasen.c2": {
+    "contexts": "Garden",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Rasen nachsäen, wo er kahl ist",
+    "urgency": "–"
+  },
+  "conv.Rasen.probe": {
+    "contexts": "Garden",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Rasen wässern, bevor es zu heiß wird",
+    "urgency": "–"
+  },
+  "conv.Rechnung.c0": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Rechnung von der Werkstatt bezahlen",
+    "urgency": "–"
+  },
+  "conv.Rechnung.c1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Rechnung einscannen und ablegen",
+    "urgency": "–"
+  },
+  "conv.Rechnung.c2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Rechnung reklamieren, der Betrag stimmt nicht",
+    "urgency": "–"
+  },
+  "conv.Rechnung.probe": {
+    "contexts": "–",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Rechnung noch überweisen",
+    "urgency": "–"
+  },
+  "conv.Reifen.c0": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Reifen wechseln, bevor der Schnee kommt",
+    "urgency": "–"
+  },
+  "conv.Reifen.c1": {
+    "contexts": "Out and about",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Reifen an der Tankstelle aufpumpen",
+    "urgency": "–"
+  },
+  "conv.Reifen.c2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Reifen einlagern lassen",
+    "urgency": "–"
+  },
+  "conv.Reifen.probe": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Reifen prüfen vor der langen Fahrt",
+    "urgency": "–"
+  },
+  "conv.Spülmaschine.c0": {
+    "contexts": "Home",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Spülmaschine ausräumen",
+    "urgency": "–"
+  },
+  "conv.Spülmaschine.c1": {
+    "contexts": "Home",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Spülmaschine einmal leer durchlaufen lassen",
+    "urgency": "–"
+  },
+  "conv.Spülmaschine.c2": {
+    "contexts": "Home",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Spülmaschine Sieb säubern",
+    "urgency": "–"
+  },
+  "conv.Spülmaschine.probe": {
+    "contexts": "Home",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Spülmaschine Salz nachfüllen",
+    "urgency": "–"
+  },
+  "de-datum-1": {
+    "contexts": "–",
+    "date": "2026-05-04",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Anmeldung für den Kurs abgeben",
+    "urgency": "–"
+  },
+  "de-datum-2": {
+    "contexts": "–",
+    "date": "2026-12-24",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Geschenke einpacken",
+    "urgency": "–"
+  },
+  "de-datum-3": {
+    "contexts": "–",
+    "date": "2027-03-01",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Den Beitrag für den Verein zahlen",
+    "urgency": "–"
+  },
+  "de-datum-4": {
+    "contexts": "–",
+    "date": "2026-07-31",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Zählerstände melden",
+    "urgency": "–"
+  },
+  "de-denglisch-1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Meeting mit Sales canceln",
+    "urgency": "–"
+  },
+  "de-denglisch-10": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Invite für den Workshop rausschicken",
+    "urgency": "–"
+  },
+  "de-denglisch-11": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ticket im Support-System updaten",
+    "urgency": "–"
+  },
+  "de-denglisch-2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Slides für das Quarterly Review fertig machen",
+    "urgency": "–"
+  },
+  "de-denglisch-3": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "10:00",
+    "title": "Das Standup verschieben",
+    "urgency": "–"
+  },
+  "de-denglisch-4": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Feedback zum Deck an Sven schicken",
+    "urgency": "–"
+  },
+  "de-denglisch-5": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Onboarding für die neue Kollegin planen",
+    "urgency": "–"
+  },
+  "de-denglisch-6": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Budget-Freigabe beim Lead abklären",
+    "urgency": "–"
+  },
+  "de-denglisch-7": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Follow-up zum Call mit Özdemir schreiben",
+    "urgency": "–"
+  },
+  "de-denglisch-8": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Deadline für das Rollout checken",
+    "urgency": "high"
+  },
+  "de-denglisch-9": {
+    "contexts": "Computer",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Backup vom Laptop machen",
+    "urgency": "–"
+  },
+  "de-diktat-1": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Äh anruf bei andrea wegen der rechnung über 250 euro",
+    "urgency": "–"
+  },
+  "de-diktat-2": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "07:30",
+    "title": "Also die kinder zur schule bringen",
+    "urgency": "–"
+  },
+  "de-diktat-3": {
+    "contexts": "–",
+    "date": "2026-03-20",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ähm den zahnarzttermin verschieben",
+    "urgency": "–"
+  },
+  "de-diktat-4": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Kundennummer äh acht acht drei vier zwei notieren",
+    "urgency": "–"
+  },
+  "de-diktat-5": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Also termin beim augenarzt machen halt",
+    "urgency": "–"
+  },
+  "de-diktat-6": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Äh also dann die reifen wechseln lassen",
+    "urgency": "–"
+  },
+  "de-diktat-7": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Die rechnung über 250 euro ähm bei der buchhaltung reklamieren",
+    "urgency": "–"
+  },
+  "de-diktat-8": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Halt den zählerstand melden",
+    "urgency": "–"
+  },
+  "de-diktat-9": {
+    "contexts": "Errands",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Milch und äh kaffee einkaufen",
+    "urgency": "–"
+  },
+  "de-diktat-name-1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Unterlagen für den dativ vorbereiten",
+    "urgency": "–"
+  },
+  "de-diktat-name-10": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Steuererklärung über elstar einreichen",
+    "urgency": "–"
+  },
+  "de-diktat-name-2": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Anruf bei öz demir wegen des angebots",
+    "urgency": "–"
+  },
+  "de-diktat-name-3": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Termin mit frau kowalsky bestätigen",
+    "urgency": "–"
+  },
+  "de-diktat-name-4": {
+    "contexts": "Phone",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Andreas anrufen wegen der abrechnung",
+    "urgency": "–"
+  },
+  "de-diktat-name-5": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Rechnung von sven maier prüfen",
+    "urgency": "–"
+  },
+  "de-diktat-name-6": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Rückruf bei der spar kasse wegen der finanzierung",
+    "urgency": "–"
+  },
+  "de-diktat-name-7": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Vertrag mit der telekomm prüfen",
+    "urgency": "–"
+  },
+  "de-diktat-name-8": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Rechnung an die debecca schicken",
+    "urgency": "–"
+  },
+  "de-diktat-name-9": {
+    "contexts": "Phone, Telefon",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Mit herrn bier hoff telefonieren",
+    "urgency": "–"
+  },
+  "de-eigenname-1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Bei der Sparkasse den Dauerauftrag ändern",
+    "urgency": "–"
+  },
+  "de-eigenname-10": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Bei der Stadtwerke Bochum den Tarif wechseln",
+    "urgency": "–"
+  },
+  "de-eigenname-2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Termin bei Fielmann für neue Gläser",
+    "urgency": "–"
+  },
+  "de-eigenname-3": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Kita Sonnenschein wegen der Betreuung anrufen",
+    "urgency": "–"
+  },
+  "de-eigenname-4": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ersatzteil bei Miele nachbestellen",
+    "urgency": "–"
+  },
+  "de-eigenname-5": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Bei der AOK die Bescheinigung anfordern",
+    "urgency": "–"
+  },
+  "de-eigenname-6": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Fahrkarte für die Deutsche Bahn stornieren",
+    "urgency": "–"
+  },
+  "de-eigenname-7": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Bei Obi Schrauben für das Regal holen",
+    "urgency": "–"
+  },
+  "de-eigenname-8": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Den Tesla zur Inspektion anmelden",
+    "urgency": "–"
+  },
+  "de-eigenname-9": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Wohnung in Wuppertal zur Besichtigung anmelden",
+    "urgency": "–"
+  },
+  "de-frage-1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Habe ich die Rechnung schon bezahlt",
+    "urgency": "–"
+  },
+  "de-frage-10": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Schaffe ich den Bericht",
+    "urgency": "–"
+  },
+  "de-frage-2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Muss ich für den Kindergarten noch was mitbringen",
+    "urgency": "–"
+  },
+  "de-frage-3": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Wann läuft der Vertrag mit der Telekom aus",
+    "urgency": "–"
+  },
+  "de-frage-4": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Wer kümmert sich um den Rauchmelder",
+    "urgency": "–"
+  },
+  "de-frage-5": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Hat Sven die Präsentation schon gesehen",
+    "urgency": "–"
+  },
+  "de-frage-6": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Brauche ich für die Steuererklärung die Belege von 2025",
+    "urgency": "–"
+  },
+  "de-frage-7": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ist der Winterreifen-Termin schon gebucht",
+    "urgency": "–"
+  },
+  "de-frage-8": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Soll ich das Fahrrad wirklich reparieren lassen",
+    "urgency": "–"
+  },
+  "de-frage-9": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Wie hoch war die Nachzahlung bei der Sparkasse",
+    "urgency": "–"
+  },
+  "de-gemischt-1": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Die Rechnung 4711 bei der Sparkasse reklamieren",
+    "urgency": "–"
+  },
+  "de-gemischt-2": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Andrea die 250 Euro zurückgeben",
+    "urgency": "–"
+  },
+  "de-gemischt-3": {
+    "contexts": "Phone",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Andreas wegen Zimmer 12 anrufen",
+    "urgency": "–"
+  },
+  "de-gemischt-4": {
+    "contexts": "–",
+    "date": "2026-03-26",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Bei Miele das Ersatzteil nachfassen",
+    "urgency": "–"
+  },
+  "de-gemischt-5": {
+    "contexts": "–",
+    "date": "2026-03-31",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Herrn Özdemir die Abrechnung schicken",
+    "urgency": "–"
+  },
+  "de-gemischt-6": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "09:15",
+    "title": "Bei der AOK die Bescheinigung holen",
+    "urgency": "–"
+  },
+  "de-gemischt-7": {
+    "contexts": "Home",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Mit Katrin die 7 Kartons in den Keller tragen",
+    "urgency": "–"
+  },
+  "de-gemischt-8": {
+    "contexts": "–",
+    "date": "2026-03-15",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Police 30021988 umschreiben lassen",
+    "urgency": "–"
+  },
+  "de-heute-1": {
+    "contexts": "–",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Noch die Mülltonne rausstellen",
+    "urgency": "–"
+  },
+  "de-heute-2": {
+    "contexts": "Phone",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "20:00",
+    "title": "Abend Oma anrufen",
+    "urgency": "–"
+  },
+  "de-heute-3": {
+    "contexts": "Out and about",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Paket noch zur Post bringen",
+    "urgency": "–"
+  },
+  "de-ich-1": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich muss die Unterlagen für die Finanzierung raussuchen",
+    "urgency": "–"
+  },
+  "de-ich-10": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich muss die Reisekosten abrechnen",
+    "urgency": "high"
+  },
+  "de-ich-11": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich sollte die Passbilder machen lassen",
+    "urgency": "–"
+  },
+  "de-ich-2": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich sollte den Steuerberater endlich zurückrufen",
+    "urgency": "–"
+  },
+  "de-ich-3": {
+    "contexts": "Home",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich will den Keller aufräumen",
+    "urgency": "–"
+  },
+  "de-ich-4": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich brauche noch einen Termin beim Augenarzt",
+    "urgency": "–"
+  },
+  "de-ich-5": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich habe Frau Kowalski noch nicht geantwortet",
+    "urgency": "–"
+  },
+  "de-ich-6": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich muss die Vertragsnummer A-2291 nachtragen",
+    "urgency": "–"
+  },
+  "de-ich-7": {
+    "contexts": "–",
+    "date": "2026-03-15",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich darf die Abrechnung nicht vergessen",
+    "urgency": "–"
+  },
+  "de-ich-8": {
+    "contexts": "Garden",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich glaube der Rasenmäher braucht neues Öl",
+    "urgency": "–"
+  },
+  "de-ich-9": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich möchte das Angebot von Özdemir noch vergleichen",
+    "urgency": "–"
+  },
+  "de-in-tagen-1": {
+    "contexts": "–",
+    "date": "2026-03-15",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Die Rechnung bezahlen",
+    "urgency": "–"
+  },
+  "de-in-tagen-2": {
+    "contexts": "–",
+    "date": "2026-03-22",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Katze impfen lassen",
+    "urgency": "–"
+  },
+  "de-in-tagen-3": {
+    "contexts": "–",
+    "date": "2026-03-26",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Den Termin beim Amt bestätigen",
+    "urgency": "–"
+  },
+  "de-in-tagen-4": {
+    "contexts": "–",
+    "date": "2026-04-02",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Läuft die Garantie ab, Beleg suchen",
+    "urgency": "–"
+  },
+  "de-in-tagen-5": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Bestellung nachverfolgen",
+    "urgency": "–"
+  },
+  "de-in-woche-1": {
+    "contexts": "–",
+    "date": "2026-03-19",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Beim Vermieter nachhaken",
+    "urgency": "–"
+  },
+  "de-in-woche-2": {
+    "contexts": "–",
+    "date": "2026-03-26",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Die Zahlung von 250 Euro prüfen",
+    "urgency": "–"
+  },
+  "de-in-woche-3": {
+    "contexts": "–",
+    "date": "2026-04-09",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Den Vertrag kündigen",
+    "urgency": "–"
+  },
+  "de-kommender-wt-1": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Kommenden die Tonne an die Straße stellen",
+    "urgency": "–"
+  },
+  "de-kommender-wt-2": {
+    "contexts": "–",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Diesen das Protokoll verschicken",
+    "urgency": "–"
+  },
+  "de-kontrolle-1": {
+    "contexts": "Home",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Glühbirne im Flur wechseln",
+    "urgency": "–"
+  },
+  "de-kontrolle-10": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Idee: einen Wasserfilter für die Küche anschaffen",
+    "urgency": "–"
+  },
+  "de-kontrolle-11": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Rezept für Linsensuppe von Oma aufschreiben",
+    "urgency": "–"
+  },
+  "de-kontrolle-12": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Das Regal im Arbeitszimmer anbohren",
+    "urgency": "–"
+  },
+  "de-kontrolle-13": {
+    "contexts": "Home",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Preise für eine neue Waschmaschine vergleichen",
+    "urgency": "–"
+  },
+  "de-kontrolle-14": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Den Ölstand im Auto kontrollieren",
+    "urgency": "–"
+  },
+  "de-kontrolle-15": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Fahrradschloss ersetzen, der Schlüssel klemmt",
+    "urgency": "–"
+  },
+  "de-kontrolle-16": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Frau Kowalski wegen der Nebenkosten anschreiben",
+    "urgency": "–"
+  },
+  "de-kontrolle-17": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Steuerbescheide der letzten Jahre sortieren",
+    "urgency": "–"
+  },
+  "de-kontrolle-18": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Einen Platz im Fitnessstudio anfragen",
+    "urgency": "–"
+  },
+  "de-kontrolle-19": {
+    "contexts": "Computer",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Notiz: der Drucker zieht kein Papier ein",
+    "urgency": "–"
+  },
+  "de-kontrolle-2": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Rückruf bei der Werkstatt wegen des Kostenvoranschlags",
+    "urgency": "–"
+  },
+  "de-kontrolle-20": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Nachbarn wegen des Zauns ansprechen",
+    "urgency": "–"
+  },
+  "de-kontrolle-21": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ein Geschenk für Svens Geburtstag überlegen",
+    "urgency": "–"
+  },
+  "de-kontrolle-22": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Fotos vom Handy auf die Festplatte kopieren",
+    "urgency": "–"
+  },
+  "de-kontrolle-23": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Bei der VHS nach einem Spanischkurs fragen",
+    "urgency": "–"
+  },
+  "de-kontrolle-24": {
+    "contexts": "Garden",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Den Rasenmäher zur Reparatur geben",
+    "urgency": "–"
+  },
+  "de-kontrolle-25": {
+    "contexts": "Errands",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Wasserhahn im Bad tropft, Dichtung kaufen",
+    "urgency": "–"
+  },
+  "de-kontrolle-3": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Neue Filter für den Staubsauger bestellen",
+    "urgency": "–"
+  },
+  "de-kontrolle-4": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Mit Andrea über den Umzug sprechen",
+    "urgency": "–"
+  },
+  "de-kontrolle-5": {
+    "contexts": "Garten",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Den Gartenschlauch reparieren",
+    "urgency": "–"
+  },
+  "de-kontrolle-6": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Festplatte sichern",
+    "urgency": "high"
+  },
+  "de-kontrolle-7": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "So schnell wie möglich das Passwort ändern",
+    "urgency": "–"
+  },
+  "de-kontrolle-8": {
+    "contexts": "Home",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Irgendwann den Dachboden entrümpeln",
+    "urgency": "–"
+  },
+  "de-kontrolle-9": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Bald mal wieder die Bremsen prüfen lassen",
+    "urgency": "–"
+  },
+  "de-lang-1": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Bitte nicht vergessen: früh die Unterlagen für die Finanzierung bei der Sparkasse",
+    "urgency": "–"
+  },
+  "de-lang-2": {
+    "contexts": "–",
+    "date": "2026-03-31",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Mir ist eingefallen, dass wir noch die Nebenkostenabrechnung von Frau Kowalski prüfen",
+    "urgency": "–"
+  },
+  "de-lang-3": {
+    "contexts": "Garden",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Der Rasenmäher springt nicht an, ich müsste ihn zur Reparatur bringen, am",
+    "urgency": "–"
+  },
+  "de-lang-4": {
+    "contexts": "Phone, Telefon",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Nach dem Telefonat mit Andreas: er braucht die Vertragsnummer A-2291 und den",
+    "urgency": "–"
+  },
+  "de-monatsende-1": {
+    "contexts": "–",
+    "date": "2026-03-31",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Miete überweisen",
+    "urgency": "–"
+  },
+  "de-monatsende-2": {
+    "contexts": "–",
+    "date": "2026-03-31",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Den Zählerstand ablesen",
+    "urgency": "–"
+  },
+  "de-monatsende-3": {
+    "contexts": "–",
+    "date": "2026-03-31",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Abrechnung an Sven schicken",
+    "urgency": "–"
+  },
+  "de-morgen-1": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Beim Zahnarzt einen Termin machen",
+    "urgency": "–"
+  },
+  "de-morgen-2": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "07:30",
+    "title": "Früh den Hund zum Tierarzt",
+    "urgency": "–"
+  },
+  "de-morgen-3": {
+    "contexts": "Phone",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Kita anrufen wegen der Ferienbetreuung",
+    "urgency": "–"
+  },
+  "de-morgen-4": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Präsentation für Sven fertig machen",
+    "urgency": "–"
+  },
+  "de-morgen-5": {
+    "contexts": "Phone",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "14:00",
+    "title": "Rückruf bei der Sparkasse",
+    "urgency": "–"
+  },
+  "de-naechste-woche-wt-1": {
+    "contexts": "–",
+    "date": "2026-03-20",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Die Steuererklärung einreichen",
+    "urgency": "–"
+  },
+  "de-naechste-woche-wt-2": {
+    "contexts": "–",
+    "date": "2026-03-17",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Den Kundentermin bestätigen",
+    "urgency": "–"
+  },
+  "de-naechste-woche-wt-3": {
+    "contexts": "–",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Den Urlaubsantrag stellen",
+    "urgency": "–"
+  },
+  "de-naechste-woche-wt-4": {
+    "contexts": "–",
+    "date": "2026-03-18",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Tickets für Hamburg buchen",
+    "urgency": "–"
+  },
+  "de-naechster-monat-1": {
+    "contexts": "–",
+    "date": "2026-04-01",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Versicherung prüfen",
+    "urgency": "–"
+  },
+  "de-naechster-monat-2": {
+    "contexts": "–",
+    "date": "2026-04-01",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Einen Termin bei Fielmann machen",
+    "urgency": "–"
+  },
+  "de-naechster-monat-3": {
+    "contexts": "–",
+    "date": "2026-04-01",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Im die Reise nach Rom planen",
+    "urgency": "–"
+  },
+  "de-naechster-wt-1": {
+    "contexts": "–",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Reifen wechseln lassen",
+    "urgency": "–"
+  },
+  "de-naechster-wt-2": {
+    "contexts": "–",
+    "date": "2026-03-18",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Den Antrag bei der Stadt einreichen",
+    "urgency": "–"
+  },
+  "de-naechster-wt-3": {
+    "contexts": "–",
+    "date": "2026-03-20",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Den Zuschuss beantragen",
+    "urgency": "–"
+  },
+  "de-naechster-wt-4": {
+    "contexts": "–",
+    "date": "2026-03-19",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "11:00",
+    "title": "Zur Physiotherapie",
+    "urgency": "–"
+  },
+  "de-name-1": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Andrea wegen der Abrechnung anrufen",
+    "urgency": "–"
+  },
+  "de-name-10": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Merle das Buch zurückgeben",
+    "urgency": "–"
+  },
+  "de-name-2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Andreas die Unterlagen für die Bank schicken",
+    "urgency": "–"
+  },
+  "de-name-3": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Mit Herrn Özdemir den Liefertermin klären",
+    "urgency": "–"
+  },
+  "de-name-4": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Frau Dr. Reinhardt die Befunde faxen",
+    "urgency": "–"
+  },
+  "de-name-5": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Katrin fragen, ob sie die Kinder abholt",
+    "urgency": "–"
+  },
+  "de-name-6": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Jan-Philipp die Zugangsdaten schicken",
+    "urgency": "–"
+  },
+  "de-name-7": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Bei Familie Schmitz nach dem Schlüssel fragen",
+    "urgency": "–"
+  },
+  "de-name-8": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Thea an die Impfung erinnern",
+    "urgency": "–"
+  },
+  "de-name-9": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Mit Herrn Bloch über die Kündigung reden",
+    "urgency": "–"
+  },
+  "de-nebensatz-10": {
+    "contexts": "–",
+    "date": "2026-03-31",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Es wäre gut, wenn ich die Nebenkosten prüfe",
+    "urgency": "–"
+  },
+  "de-nebensatz-11": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Solange das Auto in der Werkstatt steht, brauche ich einen Ersatzwagen",
+    "urgency": "–"
+  },
+  "de-nebensatz-5": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Mir fällt gerade ein, dass ich die Reifen noch wechseln lassen muss",
+    "urgency": "–"
+  },
+  "de-nebensatz-6": {
+    "contexts": "Errands",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Wenn ich in der Stadt bin, kann ich die Passbilder abholen",
+    "urgency": "–"
+  },
+  "de-nebensatz-7": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Ich weiß nicht mehr, ob die Rechnung von Özdemir schon bezahlt ist",
+    "urgency": "–"
+  },
+  "de-nebensatz-8": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Bevor der Urlaub anfängt, müsste ich noch die Nachbarn wegen der Blumen",
+    "urgency": "–"
+  },
+  "de-nebensatz-9": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Nachdem der Techniker da war, soll ich den Zählerstand melden",
+    "urgency": "–"
+  },
+  "de-praefix-1": {
+    "contexts": "–",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Mülltonne rausstellen",
+    "urgency": "high"
+  },
+  "de-praefix-10": {
+    "contexts": "–",
+    "date": "2026-03-31",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Büro: Reisekosten abrechnen",
+    "urgency": "–"
+  },
+  "de-praefix-11": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Familie: Laternenumzug",
+    "urgency": "–"
+  },
+  "de-praefix-2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Privat: Termin beim Augenarzt machen",
+    "urgency": "–"
+  },
+  "de-praefix-3": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Büro Angebot für Özdemir fertig machen",
+    "urgency": "–"
+  },
+  "de-praefix-4": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Steuerberater zurückrufen",
+    "urgency": "–"
+  },
+  "de-praefix-5": {
+    "contexts": "Errands",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Einkauf: Batterien und Kaffee",
+    "urgency": "–"
+  },
+  "de-praefix-6": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Erinnerung: Zählerstand melden",
+    "urgency": "–"
+  },
+  "de-praefix-7": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Unbedingt: die Präsentation für Sven fertig machen",
+    "urgency": "–"
+  },
+  "de-praefix-8": {
+    "contexts": "Garden",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Kurz notiert: Rasenmäher braucht neues Öl",
+    "urgency": "–"
+  },
+  "de-praefix-9": {
+    "contexts": "Errands",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Nicht vergessen: Passbilder abholen",
+    "urgency": "–"
+  },
+  "de-stichwort-1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Müll rausstellen",
+    "urgency": "–"
+  },
+  "de-stichwort-10": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Laternenumzug",
+    "urgency": "–"
+  },
+  "de-stichwort-11": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Werkstatt Termin",
+    "urgency": "–"
+  },
+  "de-stichwort-2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Rechnung Meier",
+    "urgency": "–"
+  },
+  "de-stichwort-3": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Zahnarzt anrufen",
+    "urgency": "–"
+  },
+  "de-stichwort-4": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Reifen wechseln",
+    "urgency": "–"
+  },
+  "de-stichwort-5": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Kita Ferienbetreuung",
+    "urgency": "–"
+  },
+  "de-stichwort-6": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Steuerberater",
+    "urgency": "–"
+  },
+  "de-stichwort-7": {
+    "contexts": "Errands",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Batterien kaufen",
+    "urgency": "–"
+  },
+  "de-stichwort-8": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Angebot Özdemir",
+    "urgency": "–"
+  },
+  "de-stichwort-9": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Passbilder",
+    "urgency": "–"
+  },
+  "de-tag-im-monat-1": {
+    "contexts": "–",
+    "date": "2026-04-03",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Den Vertrag kündigen",
+    "urgency": "–"
+  },
+  "de-tag-im-monat-2": {
+    "contexts": "–",
+    "date": "2026-03-15",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Unterlagen einreichen",
+    "urgency": "–"
+  },
+  "de-tag-im-monat-3": {
+    "contexts": "–",
+    "date": "2026-03-20",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Den Beitrag überweisen",
+    "urgency": "–"
+  },
+  "de-tag-im-monat-4": {
+    "contexts": "–",
+    "date": "2026-04-08",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Zählerkarte abgeben",
+    "urgency": "–"
+  },
+  "de-tippfehler-1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Rechnug an Meier schikcen",
+    "urgency": "–"
+  },
+  "de-tippfehler-10": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Nebenkostenabrechnug prüfen",
+    "urgency": "–"
+  },
+  "de-tippfehler-2": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Zahnartz anrufen wegen dem Termin",
+    "urgency": "–"
+  },
+  "de-tippfehler-3": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Untelagen raussuchen",
+    "urgency": "–"
+  },
+  "de-tippfehler-4": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Steuerbrater zurückrufen",
+    "urgency": "–"
+  },
+  "de-tippfehler-5": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Kita anrufen wegen Ferinbetreuung",
+    "urgency": "–"
+  },
+  "de-tippfehler-6": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Angebot an Özdemri schicken",
+    "urgency": "–"
+  },
+  "de-tippfehler-7": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Reifne wechseln lassen",
+    "urgency": "–"
+  },
+  "de-tippfehler-8": {
+    "contexts": "Home",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Rauchmleder im Keller prüfen",
+    "urgency": "–"
+  },
+  "de-tippfehler-9": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Am Freitga den Zählerstand melden",
+    "urgency": "–"
+  },
+  "de-uebermorgen-1": {
+    "contexts": "Garden",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Den Rasen mähen",
+    "urgency": "–"
+  },
+  "de-uebermorgen-2": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Das Auto in die Werkstatt bringen",
+    "urgency": "–"
+  },
+  "de-uebermorgen-3": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "09:00",
+    "title": "Die Zählerstände durchgeben",
+    "urgency": "–"
+  },
+  "de-wdh-1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Jeden Montag den Müll rausstellen",
+    "urgency": "–"
+  },
+  "de-wdh-2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "07:00",
+    "title": "Jeden Tag um 7 Uhr die Tabletten nehmen",
+    "urgency": "–"
+  },
+  "de-wdh-3": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Jeden ersten Montag im Monat den Rauchmelder prüfen",
+    "urgency": "–"
+  },
+  "de-wdh-4": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Jedes Jahr im April die Reifen wechseln",
+    "urgency": "–"
+  },
+  "de-wdh-5": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "06:30",
+    "title": "Werktags um 6:30 den Wecker für die Schule stellen",
+    "urgency": "–"
+  },
+  "de-wochenende-1": {
+    "contexts": "Home",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Garage aufräumen",
+    "urgency": "–"
+  },
+  "de-wochenende-2": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Fotos von Kreta sortieren",
+    "urgency": "–"
+  },
+  "de-wochenende-3": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Dieses den Grill sauber machen",
+    "urgency": "–"
+  },
+  "de-wochentag-1": {
+    "contexts": "–",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Bewerbung abschicken",
+    "urgency": "–"
+  },
+  "de-wochentag-2": {
+    "contexts": "–",
+    "date": "2026-03-17",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Den Vertrag von Frau Kowalski gegenzeichnen",
+    "urgency": "–"
+  },
+  "de-wochentag-3": {
+    "contexts": "Errands",
+    "date": "2026-03-18",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Blumen für Andrea besorgen",
+    "urgency": "–"
+  },
+  "de-wochentag-4": {
+    "contexts": "–",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Fahrräder zum Service bringen",
+    "urgency": "–"
+  },
+  "de-wochentag-5": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Den Bericht an die Geschäftsführung geben",
+    "urgency": "–"
+  },
+  "de-wochentag-6": {
+    "contexts": "Home",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Den Keller aufräumen",
+    "urgency": "–"
+  },
+  "de-wochentag-7": {
+    "contexts": "–",
+    "date": "2026-03-15",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Den Braten für 6 Personen vorbereiten",
+    "urgency": "–"
+  },
+  "de-wochentag-8": {
+    "contexts": "Phone",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "15:30",
+    "title": "Rückruf bei Dr. Behrens",
+    "urgency": "–"
+  },
+  "de-wochentag-9": {
+    "contexts": "–",
+    "date": "2026-03-17",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "08:00",
+    "title": "Das Angebot verschicken",
+    "urgency": "–"
+  },
+  "de-zahl-1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Rechnung 4711 bei der Buchhaltung reklamieren",
+    "urgency": "–"
+  },
+  "de-zahl-10": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Police 30021988 auf die neue Adresse ändern",
+    "urgency": "–"
+  },
+  "de-zahl-2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "250 Euro an den Verein überweisen",
+    "urgency": "–"
+  },
+  "de-zahl-3": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Zimmer 12 im Hotel Adler reservieren",
+    "urgency": "–"
+  },
+  "de-zahl-4": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "3 Kisten Mineralwasser bestellen",
+    "urgency": "–"
+  },
+  "de-zahl-5": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Kundennummer 88342 beim Anruf bereithalten",
+    "urgency": "–"
+  },
+  "de-zahl-6": {
+    "contexts": "Home",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die 7 Kartons in den Keller tragen",
+    "urgency": "–"
+  },
+  "de-zahl-7": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Vertragsnummer A-2291 kündigen",
+    "urgency": "–"
+  },
+  "de-zahl-8": {
+    "contexts": "Errands",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "1,5 Liter Farbe für das Treppenhaus kaufen",
+    "urgency": "–"
+  },
+  "de-zahl-9": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Zwei Tickets für Gleis 9 umbuchen",
+    "urgency": "–"
+  },
+  "de-zeit-1": {
+    "contexts": "Errands",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "18:45",
+    "title": "Die Kinder vom Training abholen",
+    "urgency": "–"
+  },
+  "de-zeit-2": {
+    "contexts": "Phone",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "11:30",
+    "title": "Beim Arzt anrufen",
+    "urgency": "–"
+  },
+  "de-zeit-3": {
+    "contexts": "–",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "09:00",
+    "title": "Teamrunde vorbereiten",
+    "urgency": "–"
+  },
+  "de-zeit-4": {
+    "contexts": "Errands",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "16:00",
+    "title": "Das Paket bei der Nachbarin abholen",
+    "urgency": "–"
+  },
+  "de-zeit-5": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "12:00",
+    "title": "Mittag die Bestellung für 3 Kisten Wasser aufgeben",
+    "urgency": "–"
+  },
+  "de-zeit-hinten-1": {
+    "contexts": "Phone",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Steuerberater anrufen",
+    "urgency": "–"
+  },
+  "de-zeit-hinten-10": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Kinder zur Schule bringen",
+    "urgency": "–"
+  },
+  "de-zeit-hinten-2": {
+    "contexts": "–",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Müll rausstellen Abend",
+    "urgency": "–"
+  },
+  "de-zeit-hinten-3": {
+    "contexts": "–",
+    "date": "2026-03-17",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Reifen wechseln",
+    "urgency": "–"
+  },
+  "de-zeit-hinten-4": {
+    "contexts": "–",
+    "date": "2026-03-31",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Nebenkosten prüfen",
+    "urgency": "–"
+  },
+  "de-zeit-hinten-5": {
+    "contexts": "Phone",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Zahnarzt anrufen",
+    "urgency": "–"
+  },
+  "de-zeit-hinten-6": {
+    "contexts": "Home",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Keller aufräumen",
+    "urgency": "–"
+  },
+  "de-zeit-hinten-7": {
+    "contexts": "–",
+    "date": "2026-03-20",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Angebot an Özdemir schicken",
+    "urgency": "–"
+  },
+  "de-zeit-hinten-8": {
+    "contexts": "–",
+    "date": "2026-04-01",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Vertrag kündigen",
+    "urgency": "–"
+  },
+  "de-zeit-hinten-9": {
+    "contexts": "Phone",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "14:00",
+    "title": "Sparkasse anrufen",
+    "urgency": "–"
+  },
+  "de-zweck-1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Termin bei Auto Senger machen für Inspektion und Reifenwechsel",
+    "urgency": "–"
+  },
+  "de-zweck-2": {
+    "contexts": "Phone, Home",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Bei der Hausverwaltung anrufen wegen Heizungsablesung und Kellerschlüssel",
+    "urgency": "–"
+  },
+  "de-zwei-1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Müll raus und Katze füttern",
+    "urgency": "–"
+  },
+  "de-zwei-10": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Fahrrad reparieren und den Helm ersetzen",
+    "urgency": "–"
+  },
+  "de-zwei-2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Rechnung an Meier schicken und den Termin bestätigen",
+    "urgency": "–"
+  },
+  "de-zwei-3": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Zahnarzt anrufen und die Reifen wechseln lassen",
+    "urgency": "–"
+  },
+  "de-zwei-4": {
+    "contexts": "Phone",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die Kita anrufen und Passbilder machen lassen",
+    "urgency": "–"
+  },
+  "de-zwei-5": {
+    "contexts": "Errands",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Batterien kaufen und den Rauchmelder prüfen",
+    "urgency": "–"
+  },
+  "de-zwei-6": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Steuerberater zurückrufen und die Belege sortieren",
+    "urgency": "–"
+  },
+  "de-zwei-7": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Den Zählerstand melden und die Nebenkosten prüfen",
+    "urgency": "–"
+  },
+  "de-zwei-8": {
+    "contexts": "Garden",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Öl nachfüllen und den Rasenmäher zur Reparatur bringen",
+    "urgency": "–"
+  },
+  "de-zwei-9": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Angebot vergleichen und Özdemir eine Antwort geben",
+    "urgency": "–"
+  },
+  "en-control-1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Replace the batteries in the doorbell",
+    "urgency": "–"
+  },
+  "en-control-10": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Check the oil level in the car",
+    "urgency": "–"
+  },
+  "en-control-11": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Look for a Spanish course nearby",
+    "urgency": "–"
+  },
+  "en-control-12": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Sort the tax documents from the last years",
+    "urgency": "–"
+  },
+  "en-control-13": {
+    "contexts": "Home",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Order new filters for the vacuum cleaner",
+    "urgency": "–"
+  },
+  "en-control-14": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Talk to Miriam about the move",
+    "urgency": "–"
+  },
+  "en-control-15": {
+    "contexts": "Computer",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "The printer does not pull paper, note it down",
+    "urgency": "–"
+  },
+  "en-control-16": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Call the plumber about the kitchen tap",
+    "urgency": "–"
+  },
+  "en-control-17": {
+    "contexts": "Errands",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Buy a birthday present for the neighbour",
+    "urgency": "–"
+  },
+  "en-control-18": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Find the warranty card for the washing machine",
+    "urgency": "–"
+  },
+  "en-control-19": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Throw away the old paint cans",
+    "urgency": "–"
+  },
+  "en-control-2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Ask Paul about the invoice from the roofer",
+    "urgency": "–"
+  },
+  "en-control-20": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "hour1",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Cleaning the garage takes an hour",
+    "urgency": "–"
+  },
+  "en-control-21": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Update the router firmware",
+    "urgency": "–"
+  },
+  "en-control-3": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Compare prices for a new dishwasher",
+    "urgency": "–"
+  },
+  "en-control-4": {
+    "contexts": "Computer",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Back up the laptop",
+    "urgency": "high"
+  },
+  "en-control-5": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "At some point clear out the attic",
+    "urgency": "–"
+  },
+  "en-control-6": {
+    "contexts": "Errands",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Idea: buy a water filter for the kitchen",
+    "urgency": "–"
+  },
+  "en-control-7": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Fix the squeaking door in the hallway",
+    "urgency": "–"
+  },
+  "en-control-8": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Write down the recipe for lentil soup",
+    "urgency": "–"
+  },
+  "en-control-9": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ask the neighbours about the fence",
+    "urgency": "–"
+  },
+  "en-date-1": {
+    "contexts": "–",
+    "date": "2026-05-04",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Register for the course",
+    "urgency": "–"
+  },
+  "en-date-2": {
+    "contexts": "–",
+    "date": "2026-11-11",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Pay the club fee",
+    "urgency": "–"
+  },
+  "en-date-3": {
+    "contexts": "–",
+    "date": "2026-06-03",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Book the ferry to the island",
+    "urgency": "–"
+  },
+  "en-date-4": {
+    "contexts": "–",
+    "date": "2026-03-21",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Send the birthday card to Grandma",
+    "urgency": "–"
+  },
+  "en-dayafter-1": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "The return the rental car",
+    "urgency": "–"
+  },
+  "en-dayafter-2": {
+    "contexts": "Errands",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Pick up the suit the",
+    "urgency": "–"
+  },
+  "en-dayofmonth-1": {
+    "contexts": "–",
+    "date": "2026-04-05",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Transfer the deposit",
+    "urgency": "–"
+  },
+  "en-dayofmonth-2": {
+    "contexts": "–",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Collect the parcel",
+    "urgency": "–"
+  },
+  "en-dictation-1": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Uh call ravi about the invoice for two hundred fifty euros",
+    "urgency": "–"
+  },
+  "en-dictation-2": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "07:30",
+    "title": "Okay take the kids to school",
+    "urgency": "–"
+  },
+  "en-dictation-3": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Uh call the landlord about the heating like",
+    "urgency": "–"
+  },
+  "en-dictation-4": {
+    "contexts": "Phone",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "08:30",
+    "title": "Okay call the dentist",
+    "urgency": "–"
+  },
+  "en-dictation-name-1": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Call mister o brian about the contract",
+    "urgency": "–"
+  },
+  "en-endofmonth-1": {
+    "contexts": "–",
+    "date": "2026-03-31",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Pay the rent at the",
+    "urgency": "–"
+  },
+  "en-endofmonth-2": {
+    "contexts": "–",
+    "date": "2026-03-31",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Send the report to the board",
+    "urgency": "–"
+  },
+  "en-endofmonth-3": {
+    "contexts": "–",
+    "date": "2026-03-31",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "At the cancel the newspaper",
+    "urgency": "–"
+  },
+  "en-endofmonth-4": {
+    "contexts": "–",
+    "date": "2026-03-31",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Check the bank statements at the",
+    "urgency": "–"
+  },
+  "en-frage-1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Did I already cancel the gym membership",
+    "urgency": "–"
+  },
+  "en-in-days-1": {
+    "contexts": "–",
+    "date": "2026-03-15",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Check the delivery",
+    "urgency": "–"
+  },
+  "en-in-days-2": {
+    "contexts": "–",
+    "date": "2026-03-22",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Renew the domain",
+    "urgency": "–"
+  },
+  "en-in-days-3": {
+    "contexts": "–",
+    "date": "2026-03-26",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Send the reminder to Paul",
+    "urgency": "high"
+  },
+  "en-in-days-4": {
+    "contexts": "–",
+    "date": "2026-03-19",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Cancel the trial subscription",
+    "urgency": "–"
+  },
+  "en-in-days-5": {
+    "contexts": "–",
+    "date": "2026-03-15",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Refill the prescription",
+    "urgency": "–"
+  },
+  "en-in-days-6": {
+    "contexts": "–",
+    "date": "2026-03-17",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Check the tire pressure",
+    "urgency": "–"
+  },
+  "en-in-days-7": {
+    "contexts": "–",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Return the borrowed ladder",
+    "urgency": "–"
+  },
+  "en-long-1": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Reminder to myself: morning hand in the financing papers at the Sparkasse",
+    "urgency": "high"
+  },
+  "en-long-2": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "After the call with Ravi: he needs contract number A-2291 and the",
+    "urgency": "–"
+  },
+  "en-mixed-1": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Query invoice 4711 with the Sparkasse",
+    "urgency": "–"
+  },
+  "en-mixed-2": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Give Tom back the 250 euros",
+    "urgency": "–"
+  },
+  "en-mixed-3": {
+    "contexts": "Phone",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Call Ravi about room 12",
+    "urgency": "–"
+  },
+  "en-mixed-4": {
+    "contexts": "–",
+    "date": "2026-03-31",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "At the send Mrs. Hargreaves the statement",
+    "urgency": "–"
+  },
+  "en-name-1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ask Ravi for the updated floor plan",
+    "urgency": "–"
+  },
+  "en-name-2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Send Mrs. Hargreaves the signed lease",
+    "urgency": "–"
+  },
+  "en-name-3": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Remind Tom about the parking permit",
+    "urgency": "–"
+  },
+  "en-name-4": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Return the drill to Yusuf",
+    "urgency": "–"
+  },
+  "en-nebensatz-1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "I keep forgetting that the insurance for the car needs renewing",
+    "urgency": "–"
+  },
+  "en-next-weekday-1": {
+    "contexts": "–",
+    "date": "2026-03-17",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Hand in the application",
+    "urgency": "–"
+  },
+  "en-next-weekday-2": {
+    "contexts": "–",
+    "date": "2026-03-20",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Submit the form",
+    "urgency": "–"
+  },
+  "en-next-weekday-3": {
+    "contexts": "–",
+    "date": "2026-03-19",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "10:00",
+    "title": "Meet the accountant",
+    "urgency": "–"
+  },
+  "en-next-weekday-4": {
+    "contexts": "Garden",
+    "date": "2026-03-18",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Water the lawn",
+    "urgency": "–"
+  },
+  "en-next-weekday-5": {
+    "contexts": "–",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Return the library books",
+    "urgency": "–"
+  },
+  "en-nextmonth-1": {
+    "contexts": "–",
+    "date": "2026-04-01",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Renew the passport",
+    "urgency": "–"
+  },
+  "en-nextmonth-2": {
+    "contexts": "–",
+    "date": "2026-04-01",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Book the dentist for Lea",
+    "urgency": "–"
+  },
+  "en-nextmonth-3": {
+    "contexts": "–",
+    "date": "2026-04-01",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Service the boiler",
+    "urgency": "–"
+  },
+  "en-number-1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Query invoice 4711 with accounting",
+    "urgency": "–"
+  },
+  "en-number-2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Transfer 250 euros to the club",
+    "urgency": "–"
+  },
+  "en-number-3": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Reserve room 12 at the Adler hotel",
+    "urgency": "–"
+  },
+  "en-number-4": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Keep customer number 88342 ready for the call",
+    "urgency": "–"
+  },
+  "en-number-5": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Cancel contract A-2291",
+    "urgency": "–"
+  },
+  "en-proper-1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Change the standing order at the Sparkasse",
+    "urgency": "–"
+  },
+  "en-proper-2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Order a spare part from Miele",
+    "urgency": "–"
+  },
+  "en-proper-3": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Book the Tesla for its service",
+    "urgency": "–"
+  },
+  "en-proper-4": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ask the AOK for the certificate",
+    "urgency": "–"
+  },
+  "en-repeat-1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Every Monday water the plants",
+    "urgency": "–"
+  },
+  "en-repeat-2": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "20:00",
+    "title": "Every day at 8pm take the medication",
+    "urgency": "–"
+  },
+  "en-repeat-3": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Every month check the smoke detector",
+    "urgency": "–"
+  },
+  "en-repeat-4": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Every Sunday call my sister",
+    "urgency": "–"
+  },
+  "en-repeat-5": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Every Friday take out the recycling",
+    "urgency": "–"
+  },
+  "en-stichwort-1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Renew passport",
+    "urgency": "–"
+  },
+  "en-tippfehler-1": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Cancle the gym mebership",
+    "urgency": "–"
+  },
+  "en-today-1": {
+    "contexts": "Phone",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Call the insurance company",
+    "urgency": "–"
+  },
+  "en-today-2": {
+    "contexts": "–",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "17:00",
+    "title": "Send the invoice",
+    "urgency": "–"
+  },
+  "en-today-3": {
+    "contexts": "–",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Pay the electricity bill",
+    "urgency": "–"
+  },
+  "en-tomorrow-1": {
+    "contexts": "Phone",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Call the landlord about the heating",
+    "urgency": "–"
+  },
+  "en-tomorrow-2": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "work",
+    "time": "09:00",
+    "title": "Drop the keys at the office",
+    "urgency": "–"
+  },
+  "en-tomorrow-3": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Book the flight to Lisbon",
+    "urgency": "–"
+  },
+  "en-tomorrow-4": {
+    "contexts": "Errands",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "18:15",
+    "title": "Pick up Noah from football",
+    "urgency": "–"
+  },
+  "en-tomorrow-5": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Renew the library card",
+    "urgency": "–"
+  },
+  "en-weekday-1": {
+    "contexts": "–",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Send the contract to Miriam",
+    "urgency": "–"
+  },
+  "en-weekday-2": {
+    "contexts": "–",
+    "date": "2026-03-18",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Review the budget",
+    "urgency": "–"
+  },
+  "en-weekday-3": {
+    "contexts": "Phone",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "14:30",
+    "title": "Call the clinic",
+    "urgency": "–"
+  },
+  "en-weekday-4": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Clean the gutters",
+    "urgency": "–"
+  },
+  "en-weekday-5": {
+    "contexts": "–",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Finish the slides for the workshop",
+    "urgency": "–"
+  },
+  "en-weekday-6": {
+    "contexts": "Phone",
+    "date": "2026-03-17",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "18:00",
+    "title": "Call the electrician",
+    "urgency": "–"
+  },
+  "en-weekend-1": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "This fix the bike",
+    "urgency": "–"
+  },
+  "en-weekend-2": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Over the sort the photos",
+    "urgency": "–"
+  },
+  "en-weekend-3": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Repaint the shed",
+    "urgency": "–"
+  },
+  "en-zeit-hinten-1": {
+    "contexts": "–",
+    "date": "2026-03-20",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Send the invoice to Ravi",
+    "urgency": "–"
+  },
+  "en-zwei-1": {
+    "contexts": "Errands",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Pick up the parcel and cancel the gym membership",
+    "urgency": "–"
+  },
+  "tf-01.dictated": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "14:00",
+    "title": "Ähm muss ich zum zahnarzt",
+    "urgency": "–"
+  },
+  "tf-01.english": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "14:00",
+    "title": "Dentist",
+    "urgency": "–"
+  },
+  "tf-01.mail": {
+    "contexts": "Computer, Garten",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "14:00",
+    "title": "Hallo Henning, wegen des Termins beim Zahnarzt: Bitte bestätige mir kurz, dass",
+    "urgency": "high"
+  },
+  "tf-01.typed": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "14:00",
+    "title": "Zahnarzt",
+    "urgency": "–"
+  },
+  "tf-02.dictated": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "19:00",
+    "title": "Also ist elternabend in der grundschule",
+    "urgency": "–"
+  },
+  "tf-02.english": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "19:00",
+    "title": "Parents' evening at primary school",
+    "urgency": "–"
+  },
+  "tf-02.mail": {
+    "contexts": "Computer, Telefon",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "19:00",
+    "title": "Hallo Henning, zur Erinnerung an den Elternabend der Grundschule: Er findet in",
+    "urgency": "high"
+  },
+  "tf-02.typed": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "19:00",
+    "title": "Elternabend Grundschule",
+    "urgency": "–"
+  },
+  "tf-03.dictated": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "10:00",
+    "title": "Muss das auto in die werkstatt ich darf das nicht vergessen",
+    "urgency": "–"
+  },
+  "tf-03.english": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "10:00",
+    "title": "Take the car to the garage",
+    "urgency": "–"
+  },
+  "tf-03.mail": {
+    "contexts": "Computer",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "10:00",
+    "title": "Hallo Henning, das Auto kann in die Werkstatt gebracht werden, wir haben",
+    "urgency": "high"
+  },
+  "tf-03.typed": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "10:00",
+    "title": "Auto in die Werkstatt bringen",
+    "urgency": "–"
+  },
+  "tf-04.dictated": {
+    "contexts": "–",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "16:00",
+    "title": "Hab ich noch einen videocall mit frau lenz",
+    "urgency": "–"
+  },
+  "tf-04.english": {
+    "contexts": "Phone",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "16:00",
+    "title": "Video call with Ms Lenz",
+    "urgency": "–"
+  },
+  "tf-04.mail": {
+    "contexts": "Computer, Garten",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "16:00",
+    "title": "Hallo Henning, wir hatten einen Videocall mit Frau Lenz vereinbart, den Link",
+    "urgency": "–"
+  },
+  "tf-04.typed": {
+    "contexts": "–",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "16:00",
+    "title": "Videocall mit Frau Lenz",
+    "urgency": "–"
+  },
+  "tf-05.dictated": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "11:00",
+    "title": "30 bin ich beim friseur",
+    "urgency": "–"
+  },
+  "tf-05.english": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "11:30",
+    "title": "Hairdresser the",
+    "urgency": "–"
+  },
+  "tf-05.mail": {
+    "contexts": "Computer, Telefon",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "11:30",
+    "title": "Hallo Henning, für den Friseur habe ich dir einen Termin gebucht. Viele",
+    "urgency": "high"
+  },
+  "tf-05.typed": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "11:30",
+    "title": "Friseur",
+    "urgency": "–"
+  },
+  "tf-06.dictated": {
+    "contexts": "–",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "18:00",
+    "title": "Ist wieder der yoga kurs",
+    "urgency": "–"
+  },
+  "tf-06.english": {
+    "contexts": "–",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "18:00",
+    "title": "Yoga class",
+    "urgency": "–"
+  },
+  "tf-06.mail": {
+    "contexts": "Computer",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "18:00",
+    "title": "Hallo Henning, der Yoga-Kurs startet im Studio, bring bitte eine Matte mit",
+    "urgency": "high"
+  },
+  "tf-06.typed": {
+    "contexts": "–",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "18:00",
+    "title": "Yoga-Kurs",
+    "urgency": "–"
+  },
+  "tf-07.dictated": {
+    "contexts": "Errands",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "09:00",
+    "title": "Kann ich das paket abholen",
+    "urgency": "–"
+  },
+  "tf-07.english": {
+    "contexts": "Errands",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "09:00",
+    "title": "Pick up the parcel",
+    "urgency": "–"
+  },
+  "tf-07.mail": {
+    "contexts": "Computer, Garten",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "09:00",
+    "title": "Hallo Henning, dein Paket liegt bereit und kann abgeholt werden. Viele Grüße",
+    "urgency": "high"
+  },
+  "tf-07.typed": {
+    "contexts": "Errands",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "09:00",
+    "title": "Paket abholen",
+    "urgency": "–"
+  },
+  "tf-08.dictated": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Am fünfzehnten oktober hat oma geburtstag da muss ich anrufen",
+    "urgency": "–"
+  },
+  "tf-08.english": {
+    "contexts": "Phone",
+    "date": "2026-10-15",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Call Grandma for her birthday",
+    "urgency": "–"
+  },
+  "tf-08.mail": {
+    "contexts": "Computer, Phone, Telefon",
+    "date": "2026-10-15",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "17:00",
+    "title": "Hallo Henning, denk bitte daran, dass Oma Geburtstag hat und sich über",
+    "urgency": "high"
+  },
+  "tf-08.typed": {
+    "contexts": "Phone",
+    "date": "2026-10-15",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Oma zum Geburtstag anrufen",
+    "urgency": "–"
+  },
+  "tf-09.dictated": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Muss das altglas weg ähm die flaschen",
+    "urgency": "–"
+  },
+  "tf-09.english": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Take the glass to the bottle bank",
+    "urgency": "–"
+  },
+  "tf-09.mail": {
+    "contexts": "Computer",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "09:02",
+    "title": "Hallo Henning, das Altglas muss weggebracht werden, die Container werden danach geleert",
+    "urgency": "high"
+  },
+  "tf-09.typed": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Altglas wegbringen",
+    "urgency": "–"
+  },
+  "tf-10.dictated": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Nicht vergessen die mülltonne rauszustellen",
+    "urgency": "–"
+  },
+  "tf-10.english": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Put the bin out the",
+    "urgency": "–"
+  },
+  "tf-10.mail": {
+    "contexts": "Computer, Garten",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "16:00",
+    "title": "Hallo Henning, die Mülltonne bitte rausstellen, die Abholung ist früh am Morgen",
+    "urgency": "–"
+  },
+  "tf-10.typed": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Mülltonne rausstellen",
+    "urgency": "–"
+  },
+  "tf-11.dictated": {
+    "contexts": "–",
+    "date": "2026-03-15",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Sollte ich einen reifenwechsel vereinbaren",
+    "urgency": "–"
+  },
+  "tf-11.english": {
+    "contexts": "–",
+    "date": "2026-03-15",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Book the tyre change",
+    "urgency": "–"
+  },
+  "tf-11.mail": {
+    "contexts": "Computer, Telefon",
+    "date": "2026-03-15",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "17:00",
+    "title": "Hallo Henning, wegen des Reifenwechsels: sollte der Termin stehen, sonst sind die",
+    "urgency": "high"
+  },
+  "tf-11.typed": {
+    "contexts": "–",
+    "date": "2026-03-15",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Reifenwechsel vereinbaren",
+    "urgency": "–"
+  },
+  "tf-12.dictated": {
+    "contexts": "–",
+    "date": "2026-03-31",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Muss ich die bücher in die bibliothek zurückbringen",
+    "urgency": "–"
+  },
+  "tf-12.english": {
+    "contexts": "–",
+    "date": "2026-03-31",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Return the library books at the",
+    "urgency": "–"
+  },
+  "tf-12.mail": {
+    "contexts": "Computer",
+    "date": "2026-03-31",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "09:14",
+    "title": "Hallo Henning, die entliehenen Bibliotheksbücher bitte zurückbringen. Viele Grüße Anna Schulz Teamassistenz",
+    "urgency": "high"
+  },
+  "tf-12.typed": {
+    "contexts": "–",
+    "date": "2026-03-31",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Bibliotheksbücher zurückbringen",
+    "urgency": "–"
+  },
+  "tf-13.dictated": {
+    "contexts": "Errands",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Muss ich noch ein geburtstagsgeschenk für jonas besorgen",
+    "urgency": "–"
+  },
+  "tf-13.english": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Get a birthday present for Jonas",
+    "urgency": "–"
+  },
+  "tf-13.mail": {
+    "contexts": "Computer, Errands, Garten",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "16:00",
+    "title": "Hallo Henning, für Jonas fehlt noch ein Geburtstagsgeschenk, das solltest du besorgen",
+    "urgency": "high"
+  },
+  "tf-13.typed": {
+    "contexts": "Errands",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Geburtstagsgeschenk für Jonas besorgen",
+    "urgency": "–"
+  },
+  "tf-14.dictated": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die blumen gießen nicht vergessen",
+    "urgency": "–"
+  },
+  "tf-14.english": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Water the flowers",
+    "urgency": "–"
+  },
+  "tf-14.mail": {
+    "contexts": "Computer, Telefon",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "17:00",
+    "title": "Hallo Henning, die Blumen bei den Nachbarn bitte gießen, sie sind noch",
+    "urgency": "high"
+  },
+  "tf-14.typed": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Blumen gießen",
+    "urgency": "–"
+  },
+  "tf-15.dictated": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Ganz ich muss die steuererklärung für 2025 fertig machen",
+    "urgency": "–"
+  },
+  "tf-15.english": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Finish the 2025 tax return",
+    "urgency": "–"
+  },
+  "tf-15.mail": {
+    "contexts": "Computer",
+    "date": "2026-03-17",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "09:14",
+    "title": "Hallo Henning, die Steuererklärung für 2025 ist und sollte bald abgeschlossen werden",
+    "urgency": "high"
+  },
+  "tf-15.typed": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Steuererklärung 2025 fertig machen",
+    "urgency": "–"
+  },
+  "tf-16.dictated": {
+    "contexts": "Errands",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich muss das rezept beim hausarzt abholen",
+    "urgency": "high"
+  },
+  "tf-16.english": {
+    "contexts": "Errands",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Pick up the prescription at the GP",
+    "urgency": "high"
+  },
+  "tf-16.mail": {
+    "contexts": "Computer, Garten",
+    "date": "2026-10-01",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "16:00",
+    "title": "Hallo Henning, das Rezept liegt beim Hausarzt und muss abgeholt werden. Viele",
+    "urgency": "high"
+  },
+  "tf-16.typed": {
+    "contexts": "Errands",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Rezept beim Hausarzt abholen",
+    "urgency": "high"
+  },
+  "tf-17.dictated": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Die rechnung vom elektriker muss ich noch prüfen und dann bezahlen",
+    "urgency": "–"
+  },
+  "tf-17.english": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Check and pay the electrician's invoice",
+    "urgency": "–"
+  },
+  "tf-17.mail": {
+    "contexts": "Computer, Telefon",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "17:00",
+    "title": "Hallo Henning, die Rechnung des Elektrikers ist eingegangen, bitte prüfen und bezahlen",
+    "urgency": "high"
+  },
+  "tf-17.typed": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Rechnung vom Elektriker prüfen und bezahlen",
+    "urgency": "–"
+  },
+  "tf-18.dictated": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich darf die kündigungsfrist vom fitnessstudio nicht verpassen",
+    "urgency": "high"
+  },
+  "tf-18.english": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Do not miss the gym cancellation deadline",
+    "urgency": "high"
+  },
+  "tf-18.mail": {
+    "contexts": "Computer",
+    "date": "2026-03-17",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "09:14",
+    "title": "Hallo Henning, die Kündigungsfrist für das Fitnessstudio läuft aus, daran solltest du",
+    "urgency": "high"
+  },
+  "tf-18.typed": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Kündigungsfrist Fitnessstudio nicht verpassen",
+    "urgency": "high"
+  },
+  "tf-19.dictated": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Ich muss den anwalt wegen dem mietvertrag zurückrufen",
+    "urgency": "–"
+  },
+  "tf-19.english": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Call the lawyer back about the lease",
+    "urgency": "–"
+  },
+  "tf-19.mail": {
+    "contexts": "Computer, Phone, Garten",
+    "date": "2026-10-01",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "16:00",
+    "title": "Hallo Henning, der Anwalt hat wegen des Mietvertrags angerufen, du sollst ihn",
+    "urgency": "high"
+  },
+  "tf-19.typed": {
+    "contexts": "Phone",
+    "date": "–",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "–",
+    "title": "Anwalt wegen Mietvertrag zurückrufen",
+    "urgency": "–"
+  },
+  "tf-20.dictated": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich muss das passwort fürs bankkonto ändern",
+    "urgency": "high"
+  },
+  "tf-20.english": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Change the bank account password right away",
+    "urgency": "–"
+  },
+  "tf-20.mail": {
+    "contexts": "Computer, Telefon",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "17:00",
+    "title": "Hallo Henning, das Passwort für das Bankkonto sollte geändert werden, es war",
+    "urgency": "high"
+  },
+  "tf-20.typed": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Passwort beim Bankkonto ändern",
+    "urgency": "high"
+  },
+  "tf-21.dictated": {
+    "contexts": "Garden",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ähm den rasen muss ich mal wieder mähen",
+    "urgency": "–"
+  },
+  "tf-21.english": {
+    "contexts": "Garden",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Mow the lawn",
+    "urgency": "–"
+  },
+  "tf-21.mail": {
+    "contexts": "Computer, Garden",
+    "date": "2026-03-17",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "09:02",
+    "title": "Hallo Henning, der Rasen müsste mal wieder gemäht werden, das Gras steht",
+    "urgency": "high"
+  },
+  "tf-21.typed": {
+    "contexts": "Garden",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Rasen mähen",
+    "urgency": "–"
+  },
+  "tf-22.dictated": {
+    "contexts": "Home",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Die wäsche muss noch aufgehängt werden",
+    "urgency": "–"
+  },
+  "tf-22.english": {
+    "contexts": "Home",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Hang up the laundry",
+    "urgency": "–"
+  },
+  "tf-22.mail": {
+    "contexts": "Computer, Home, Garten",
+    "date": "2026-10-01",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "16:00",
+    "title": "Hallo Henning, die Wäsche liegt noch in der Maschine und muss aufgehängt",
+    "urgency": "–"
+  },
+  "tf-22.typed": {
+    "contexts": "Home",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Wäsche aufhängen",
+    "urgency": "–"
+  },
+  "tf-23.dictated": {
+    "contexts": "Computer",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich muss eine neue patrone für den drucker bestellen",
+    "urgency": "–"
+  },
+  "tf-23.english": {
+    "contexts": "Computer",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Order a new cartridge for the printer",
+    "urgency": "–"
+  },
+  "tf-23.mail": {
+    "contexts": "Computer, Telefon",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "17:00",
+    "title": "Hallo Henning, für den Drucker ist keine Patrone mehr da, bitte eine",
+    "urgency": "high"
+  },
+  "tf-23.typed": {
+    "contexts": "Computer",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Drucker-Patrone bestellen",
+    "urgency": "–"
+  },
+  "tf-24.dictated": {
+    "contexts": "Home, Errands",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich muss im baumarkt eine glühbirne kaufen",
+    "urgency": "–"
+  },
+  "tf-24.english": {
+    "contexts": "Errands",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Buy a light bulb at the DIY store",
+    "urgency": "–"
+  },
+  "tf-24.mail": {
+    "contexts": "Computer, Home, Errands",
+    "date": "2026-03-17",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "09:14",
+    "title": "Hallo Henning, im Flur ist die Glühbirne kaputt, kannst du im Baumarkt",
+    "urgency": "high"
+  },
+  "tf-24.typed": {
+    "contexts": "Home, Errands",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Beim Baumarkt eine Glühbirne kaufen",
+    "urgency": "–"
+  },
+  "tf-25.dictated": {
+    "contexts": "Out and about",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Auf dem rückweg müsste ich noch tanken",
+    "urgency": "–"
+  },
+  "tf-25.english": {
+    "contexts": "Out and about",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Get gas on the way back",
+    "urgency": "–"
+  },
+  "tf-25.mail": {
+    "contexts": "Computer, Out and about, Garten",
+    "date": "2026-03-18",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "16:00",
+    "title": "Hallo Henning, auf dem Rückweg bitte noch tanken, der Tank ist fast",
+    "urgency": "high"
+  },
+  "tf-25.typed": {
+    "contexts": "Out and about",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Auf dem Rückweg tanken",
+    "urgency": "–"
+  },
+  "tf-26.dictated": {
+    "contexts": "Computer",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich sollte mal das backup von den fotos prüfen",
+    "urgency": "–"
+  },
+  "tf-26.english": {
+    "contexts": "Computer",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Check the photo backup",
+    "urgency": "–"
+  },
+  "tf-26.mail": {
+    "contexts": "Computer, Telefon",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "17:00",
+    "title": "Hallo Henning, das Backup der Fotos sollte einmal geprüft werden, damit nichts",
+    "urgency": "high"
+  },
+  "tf-26.typed": {
+    "contexts": "Computer",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Backup der Fotos prüfen",
+    "urgency": "–"
+  },
+  "tf-27.dictated": {
+    "contexts": "Phone",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Muss ich die mama anrufen",
+    "urgency": "high"
+  },
+  "tf-27.english": {
+    "contexts": "Phone",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Call Mum",
+    "urgency": "high"
+  },
+  "tf-27.mail": {
+    "contexts": "Computer",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "09:14",
+    "title": "Hallo Henning, ruf bitte deine Mama an, es ist Viele Grüße Anna",
+    "urgency": "high"
+  },
+  "tf-27.typed": {
+    "contexts": "Phone",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Mama anrufen",
+    "urgency": "high"
+  },
+  "tf-28.dictated": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "08:00",
+    "title": "Muss ich die rechnung fürs dach überweisen",
+    "urgency": "–"
+  },
+  "tf-28.english": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "08:00",
+    "title": "Pay the roof invoice",
+    "urgency": "–"
+  },
+  "tf-28.mail": {
+    "contexts": "Computer, Garten",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "08:00",
+    "title": "Hallo Henning, die Rechnung für das Dach bitte überweisen, der Dachdecker wartet",
+    "urgency": "–"
+  },
+  "tf-28.typed": {
+    "contexts": "–",
+    "date": "2026-03-13",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "08:00",
+    "title": "Rechnung fürs Dach überweisen",
+    "urgency": "–"
+  },
+  "tf-29.dictated": {
+    "contexts": "Garden",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "18:00",
+    "title": "Noch den rasen mähen spätestens",
+    "urgency": "high"
+  },
+  "tf-29.english": {
+    "contexts": "Garden",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "18:00",
+    "title": "Mow the lawn at the latest",
+    "urgency": "–"
+  },
+  "tf-29.mail": {
+    "contexts": "Computer, Garden, Telefon",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "high",
+    "place": "home",
+    "time": "18:00",
+    "title": "Hallo Henning, der Rasen sollte noch gemäht werden, spätestens danach sind die",
+    "urgency": "high"
+  },
+  "tf-29.typed": {
+    "contexts": "Garden",
+    "date": "2026-03-12",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "18:00",
+    "title": "Noch Rasen mähen, spätestens",
+    "urgency": "high"
+  },
+  "tf-30.dictated": {
+    "contexts": "Garden",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Muss die hecke geschnitten werden und das laub zusammengekehrt",
+    "urgency": "–"
+  },
+  "tf-30.english": {
+    "contexts": "Garden",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Trim the hedge and sweep up the leaves",
+    "urgency": "–"
+  },
+  "tf-30.mail": {
+    "contexts": "Computer, Garden",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "09:14",
+    "title": "Hallo Henning, steht die Hecke an: schneiden und danach das Laub zusammenkehren",
+    "urgency": "high"
+  },
+  "tf-30.typed": {
+    "contexts": "Garden",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Hecke schneiden und Laub zusammenkehren",
+    "urgency": "–"
+  },
+  "tf-31.dictated": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "15:00",
+    "title": "Hab ich einen termin beim notar",
+    "urgency": "–"
+  },
+  "tf-31.english": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "15:00",
+    "title": "Appointment at the notary the",
+    "urgency": "–"
+  },
+  "tf-31.mail": {
+    "contexts": "Computer, Garten",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "15:00",
+    "title": "Hallo Henning, der Termin beim Notar ist bitte bring den Ausweis mit",
+    "urgency": "high"
+  },
+  "tf-31.typed": {
+    "contexts": "–",
+    "date": "2026-03-14",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "15:00",
+    "title": "Termin beim Notar",
+    "urgency": "–"
+  },
+  "tf-32.dictated": {
+    "contexts": "Home",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Muss ich die wäsche waschen und die wohnung putzen",
+    "urgency": "–"
+  },
+  "tf-32.english": {
+    "contexts": "Home",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Do the laundry and clean the flat",
+    "urgency": "–"
+  },
+  "tf-32.mail": {
+    "contexts": "Computer, Home, Telefon",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "17:00",
+    "title": "Hallo Henning, steht die Wäsche an und die Wohnung wird geputzt. Viele",
+    "urgency": "high"
+  },
+  "tf-32.typed": {
+    "contexts": "Home",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Wäsche waschen und Wohnung putzen",
+    "urgency": "–"
+  },
+  "tf-33.dictated": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich wollte mal ein buch über bienen lesen",
+    "urgency": "–"
+  },
+  "tf-33.english": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Read a book about bees",
+    "urgency": "–"
+  },
+  "tf-33.mail": {
+    "contexts": "Computer",
+    "date": "2026-03-17",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "09:02",
+    "title": "Hallo Henning, das Buch über Bienen, von dem ich dir erzählt habe",
+    "urgency": "high"
+  },
+  "tf-33.typed": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Buch über Bienen lesen",
+    "urgency": "–"
+  },
+  "tf-34.dictated": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich muss mir noch eine idee für lenas geburtstag überlegen",
+    "urgency": "–"
+  },
+  "tf-34.english": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Think of an idea for Lena's birthday",
+    "urgency": "–"
+  },
+  "tf-34.mail": {
+    "contexts": "Computer, Garten",
+    "date": "2026-10-01",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "16:00",
+    "title": "Hallo Henning, für Lenas Geburtstag fehlt noch eine Idee, überlege dir etwas",
+    "urgency": "–"
+  },
+  "tf-34.typed": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Idee für Lenas Geburtstag überlegen",
+    "urgency": "–"
+  },
+  "tf-35.dictated": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ähm die gitarre müsste mal neu gestimmt werden",
+    "urgency": "–"
+  },
+  "tf-35.english": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Retune the guitar",
+    "urgency": "–"
+  },
+  "tf-35.mail": {
+    "contexts": "Computer, Telefon",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "17:00",
+    "title": "Hallo Henning, die Gitarre klingt schief und müsste neu gestimmt werden. Viele",
+    "urgency": "high"
+  },
+  "tf-35.typed": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Gitarre neu stimmen",
+    "urgency": "–"
+  },
+  "tf-36.dictated": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich will die urlaubsfotos endlich sortieren",
+    "urgency": "–"
+  },
+  "tf-36.english": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Sort the holiday photos",
+    "urgency": "–"
+  },
+  "tf-36.mail": {
+    "contexts": "Computer",
+    "date": "2026-03-17",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "09:14",
+    "title": "Hallo Henning, die Urlaubsfotos liegen noch unsortiert herum, sortiere sie doch mal",
+    "urgency": "high"
+  },
+  "tf-36.typed": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Urlaubsfotos sortieren",
+    "urgency": "–"
+  },
+  "tf-37.dictated": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich wollte die neuen wanderschuhe mal ausprobieren",
+    "urgency": "–"
+  },
+  "tf-37.english": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Try out the new hiking boots",
+    "urgency": "–"
+  },
+  "tf-37.mail": {
+    "contexts": "Computer, Garten",
+    "date": "2026-03-18",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "16:00",
+    "title": "Hallo Henning, die neuen Wanderschuhe musst du noch einlaufen, probiere sie aus",
+    "urgency": "high"
+  },
+  "tf-37.typed": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Neue Wanderschuhe ausprobieren",
+    "urgency": "–"
+  },
+  "tf-38.dictated": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich such mal das rezept für die linsensuppe raus",
+    "urgency": "–"
+  },
+  "tf-38.english": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Look up the lentil soup recipe",
+    "urgency": "–"
+  },
+  "tf-38.mail": {
+    "contexts": "Computer, Telefon",
+    "date": "2026-03-16",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "17:00",
+    "title": "Hallo Henning, das Rezept für die Linsensuppe von Tante Gerda, such es",
+    "urgency": "high"
+  },
+  "tf-38.typed": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Rezept für Linsensuppe raussuchen",
+    "urgency": "–"
+  },
+  "tf-39.dictated": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich sollte die spanisch vokabeln wiederholen",
+    "urgency": "–"
+  },
+  "tf-39.english": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Review the Spanish vocabulary",
+    "urgency": "–"
+  },
+  "tf-39.mail": {
+    "contexts": "Computer",
+    "date": "2026-03-17",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "09:14",
+    "title": "Hallo Henning, die spanischen Vokabeln solltest du mal wiederholen, sonst vergisst du",
+    "urgency": "high"
+  },
+  "tf-39.typed": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Spanisch Vokabeln wiederholen",
+    "urgency": "–"
+  },
+  "tf-40.dictated": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Ich möchte den balkon neu gestalten",
+    "urgency": "–"
+  },
+  "tf-40.english": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Redesign the balcony",
+    "urgency": "–"
+  },
+  "tf-40.mail": {
+    "contexts": "Computer, Garten",
+    "date": "2026-10-01",
+    "duration": "–",
+    "importance": "high",
+    "place": "–",
+    "time": "16:00",
+    "title": "Hallo Henning, der Balkon sieht trist aus, gestalte ihn doch einmal neu",
+    "urgency": "–"
+  },
+  "tf-40.typed": {
+    "contexts": "–",
+    "date": "–",
+    "duration": "–",
+    "importance": "–",
+    "place": "–",
+    "time": "–",
+    "title": "Balkon neu gestalten",
+    "urgency": "–"
+  }
+}

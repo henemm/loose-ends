@@ -18,9 +18,7 @@ final class DesignGalleryTests: XCTestCase {
     @MainActor
     private func launch(dark: Bool) -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = [
-            "--ui-testing",
-            "-AppleLanguages", "(en)", "-AppleLocale", "en_US",
+        app.launchArguments = ["--ui-testing"] + LaunchLanguage.arguments + [
             "-contextsEmptiedByUser", "NO",
             // The start screen as it opens by default: projects and contexts folded.
             "-startShowsProjects", "NO", "-startShowsContexts", "NO",

@@ -111,3 +111,84 @@ Die App fragt **nicht** nach Kontakten. Sie liest keine Kontakte.
   weiter offen und vor dem App Store nötig, nur auf Hennings ausdrückliches Wort (#705).
 - **Die vier Apple-Punkte** stehen jetzt im Text als „Was Apple dabei übernimmt“ (Entscheidung Henning,
   2026-10-27); sie bleiben hier als Hinweis, dass der Code sie nicht belegen kann.
+
+## English
+
+**Status:** wortgetreue Übersetzung der öffentlichen deutschen Fassung vom 2026-10-27, keine Zusätze, keine Kürzungen
+(Henning, 2026-10-30, pauschal über #750 freigegeben, #763). Veröffentlicht am 2026-10-31 unter
+https://www.henemm.com/legal/loose-ends/privacy-policy-en/ (Website-PR henemm/henemm-website#76); bei Apple als
+Datenschutz-URL der Beta-Lokalisierung en-US gesetzt, wenn `asc-beta.yml` mit `aktion=einrichten` läuft (Vorgabe im Skript
+`PRIVACY_URL_EN`, die Repo-Variable `ASC_PRIVACY_POLICY_URL_EN` darf sie überstimmen). Eine Änderung am deutschen Text
+gilt erst, wenn auch dieser Abschnitt und die englische Website-Seite angepasst sind.
+
+*Last updated: October 27, 2026*
+
+### 1. Who is responsible?
+
+HENEMM GmbH, Eichenaue 14, 48157 Münster, Germany
+
+Represented by the managing director: Henning Emmrich
+
+Email: henning@henemm.com
+
+You will find more details in the [imprint](/footer-information/imprint/).
+
+### 2. In short, and what is collected
+
+Loose Ends stores your tasks on your device and, if you use iCloud, in your private iCloud.
+There is no server of our own, no account with us, no advertising and no tracking. What you say is turned into text on your
+device. The app only asks for permissions when you use the function that needs them.
+
+What is collected:
+
+- The text you type or say (the raw text of the task), and what you add to a task: note,
+  subtasks, tags, project, due date, place, attachments (files, photos, scanned documents).
+- What the app derives from it (title, duration, tags, due date, importance, urgency), together with the history of
+  changes. Deriving happens on the device: by rules, and where available with Apple Intelligence on the device.
+- What you say is used only to turn it into text; the text is what is stored.
+
+### 3. Where your data lives
+
+- On your device, in the app's app group.
+- In your private iCloud database (CloudKit, private area), so that iPhone, iPad, Mac and Watch have the same
+  state. Only your Apple account has access to it.
+- The reminder time you choose is synced between your devices through the iCloud key-value store.
+- No backend of our own, no analytics or advertising services, no tracking.
+
+### 4. Which permissions the app needs and why
+
+| Permission | When asked | What for |
+|---|---|---|
+| Microphone | when you speak a task | so that you can say a task |
+| Speech recognition | only if the system asks for it; an explanatory text is provided | conversion on the device |
+| Camera | when scanning a document | attaching a document to a task |
+| Location "while using" | only when you choose "Here" for a place | the current place for a place reminder |
+| Calendar (full access) | only when you switch on the calendar display | showing tasks with a due date as events; the app only changes its own events |
+| Notifications | during onboarding or when you switch them on | reminding you of due dates and places |
+
+Photos and files need **no** permission: through the system picker the app only receives what you select.
+
+The app does **not** ask for contacts. It does not read contacts.
+
+### 5. What Apple takes over
+
+In four places Apple's system acts, not the app. There Apple's privacy rules apply, and we promise no more
+than the app's code proves:
+
+- **Maps:** Place search and the name of your current place go through Apple Maps.
+- **Apple Intelligence:** Where the device can do it, the title is refined by the device's model; what Apple
+  promises in doing so is Apple's matter.
+- **Siri and Shortcuts:** When capturing through Siri, Apple's behavior applies.
+- **Dictation on the Watch:** The Watch takes in text through watchOS dictation; where Apple sends what is said
+  is for Apple to regulate.
+
+### 6. Your rights, deletion and changes
+
+You can ask for information, have wrong data corrected and have data deleted at any time.
+You delete your tasks in the app itself, and the app's iCloud area in the iCloud settings under
+"Manage Storage". For everything else an email to the address above is enough.
+
+You can also complain to a data protection supervisory authority, for example
+to the State Commissioner for Data Protection and Freedom of Information of North Rhine-Westphalia.
+
+If anything material changes, we adjust this page and name the date at the top.

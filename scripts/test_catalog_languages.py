@@ -1,11 +1,12 @@
-"""Tests: Deutsch ist vollständig — Berechtigungstexte und String-Kataloge (#342, Teil 4).
+"""Tests: jede ausgelieferte Sprache ist vollständig — Berechtigungstexte und String-Kataloge (#342, #756).
 
-Aufruf: python3 scripts/test_infoplist_languages.py
+Aufruf: python3 scripts/test_catalog_languages.py
 
 Die englischen Berechtigungstexte stehen in project.yml (`info.properties`); ein deutsches Gerät zeigt sie nur
 dann deutsch, wenn `de.lproj/InfoPlist.strings` denselben Schlüssel hat, sonst fällt der Dialog auf Englisch zurück
 (2026-10-26: Mikrofon, Spracherkennung und Kalender fehlten, auch auf der Watch, die dieselbe Datei bündelt, #355).
-Die vier String-Kataloge sind Quelle `en`; jeder übersetzbare Eintrag braucht einen übersetzten `de`-Wert.
+Die String-Kataloge sind Quelle `en`; jeder übersetzbare Eintrag braucht einen übersetzten Wert je weiterer Sprache.
+Die Sprachen kommen aus `LanguagePacks.shipped` (`shipped_languages.py`), nicht aus einer festen Liste (#756).
 Der Lauf braucht kein Xcode; die CI führt alle `scripts/test_*.py` per `unittest discover` aus.
 """
 import json
@@ -16,9 +17,17 @@ from pathlib import Path
 
 import yaml
 
+from shipped_languages import shipped_languages
+
 ROOT = Path(__file__).resolve().parent.parent
 
-DE_STRINGS = ROOT / "LooseEnds/Resources/de.lproj/InfoPlist.strings"
+LANGUAGES = [code for code in shipped_languages(ROOT) if code != "en"]
+
+
+def info_plist_strings(lang):
+    return ROOT / f"LooseEnds/Resources/{lang}.lproj/InfoPlist.strings"
+
+
 CATALOGS = [
     "LooseEnds/Resources/Localizable.xcstrings",
     "LooseEnds/Resources/AppShortcuts.xcstrings",
@@ -41,7 +50,7 @@ def usage_keys(project):
     return result
 
 
-def german_keys(path):
+def translated_keys(path):
     """Schlüssel mit nichtleerem Wert in einer InfoPlist.strings."""
     text = path.read_text(encoding="utf-8")
     return {key for key, value in STRINGS_LINE.findall(text) if value.strip()}
@@ -57,21 +66,21 @@ def _units(node):
                 yield from _units(value)
 
 
-def _has_german(localization):
+def _is_translated(localization):
     units = list(_units(localization))
     return bool(units) and all(u.get("state") == "translated" and u.get("value", "").strip() for u in units)
 
 
-def missing_german(catalog_path):
-    """Schlüssel der Katalogdatei, die übersetzt werden sollen und keinen übersetzten `de`-Wert haben."""
+def missing_translation(catalog_path, lang):
+    """Schlüssel der Katalogdatei, die übersetzt werden sollen und keinen übersetzten Wert in `lang` haben."""
     with open(catalog_path, encoding="utf-8") as handle:
         catalog = json.load(handle)
     missing = []
     for key, entry in catalog["strings"].items():
         if entry.get("shouldTranslate") is False:
             continue
-        german = (entry.get("localizations") or {}).get("de")
-        if german is None or not _has_german(german):
+        localized = (entry.get("localizations") or {}).get(lang)
+        if localized is None or not _is_translated(localized):
             missing.append(key)
     return missing
 
@@ -89,21 +98,26 @@ class InfoPlistLanguageTests(unittest.TestCase):
                     "NSCalendarsFullAccessUsageDescription"):
             self.assertIn(key, app)
 
-    def test_every_usage_description_has_german(self):
-        german = german_keys(DE_STRINGS)
-        for target, keys in self.usage.items():
-            for key in sorted(keys):
-                with self.subTest(target=target, key=key):
-                    self.assertIn(key, german, f"{DE_STRINGS.relative_to(ROOT)}: {key} fehlt ({target} zeigt den Dialog englisch)")
+    def test_every_usage_description_is_translated(self):
+        for lang in LANGUAGES:
+            path = info_plist_strings(lang)
+            self.assertTrue(path.is_file(), f"{lang}: {path.relative_to(ROOT)} fehlt")
+            present = translated_keys(path)
+            for target, keys in self.usage.items():
+                for key in sorted(keys):
+                    with self.subTest(lang=lang, target=target, key=key):
+                        self.assertIn(key, present, f"{lang}: {path.relative_to(ROOT)}: {key} fehlt ({target} zeigt den Dialog englisch)")
 
 
 class CatalogLanguageTests(unittest.TestCase):
-    def test_every_catalog_entry_has_german(self):
-        for catalog in CATALOGS:
-            with self.subTest(catalog=catalog):
-                self.assertEqual(missing_german(ROOT / catalog), [], f"{catalog}: ohne deutschen Wert")
+    def test_every_catalog_entry_is_translated(self):
+        for lang in LANGUAGES:
+            for catalog in CATALOGS:
+                with self.subTest(lang=lang, catalog=catalog):
+                    missing = missing_translation(ROOT / catalog, lang)
+                    self.assertEqual(missing, [], f"{lang}: {catalog}: ohne übersetzten Wert, erster Schlüssel: {missing[:1]}")
 
-    def test_a_missing_german_value_is_found(self):
+    def test_a_missing_value_is_found(self):
         """Selbstprüfung: eine Lücke macht den Test rot, sonst prüfte er nichts."""
         catalog = {"sourceLanguage": "en", "version": "1.0", "strings": {
             "Done": {"localizations": {"de": {"stringUnit": {"state": "translated", "value": "Erledigt"}}}},
@@ -114,10 +128,10 @@ class CatalogLanguageTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / "Localizable.xcstrings"
             path.write_text(json.dumps(catalog), encoding="utf-8")
-            self.assertEqual(sorted(missing_german(path)), ["Later", "Open"])
+            self.assertEqual(sorted(missing_translation(path, "de")), ["Later", "Open"])
 
 
-CODE_FOLDERS = ["LooseEnds", "Shared"]
+CODE_FOLDERS = ["LooseEnds", "LooseEndsWatch", "Shared"]
 # Text-Literale, die SwiftUI und `String(localized:)` im Katalog nachschlagen; Interpolationen (`\(`) sind dynamisch.
 LITERAL = re.compile(
     r'(?:String\(localized:\s*|\bText\(|\bButton\(|\bLabel\(|\bLabeledContent\(|navigationTitle\()"((?:[^"\\]|\\.)+)"'

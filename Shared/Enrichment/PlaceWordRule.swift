@@ -8,12 +8,8 @@ import Foundation
 enum PlaceWordRule {
     static let confidence = 1.0
 
-    /// Folded like `ExpressionText`, so "zu Hause", "Zuhause" and "im Büro" read alike.
-    static let phrases: [(words: [String], slot: SavedPlaces.Slot)] = [
-        (["zu", "hause"], .home), (["zuhause"], .home), (["daheim"], .home), (["at", "home"], .home),
-        (["im", "buro"], .work), (["auf", "der", "arbeit"], .work), (["bei", "der", "arbeit"], .work),
-        (["at", "work"], .work), (["at", "the", "office"], .work),
-    ]
+    /// Folded like `ExpressionText`, so "zu Hause", "Zuhause" and "im Büro" read alike. The phrases live in `Shared/Language/`.
+    static var phrases: [PlacePhrase] { LanguagePacks.placePhrases }
 
     /// The slot the first such phrase in the text names, or nothing.
     static func slot(in text: String) -> SavedPlaces.Slot? {

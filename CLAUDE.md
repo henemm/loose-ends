@@ -27,7 +27,7 @@ Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, 
 - **SF Symbols only** (Henning, 2026-10-12, #350). Every sign in the app is an SF Symbol, outline where one exists:
   no emoji, no characters standing in for a symbol (»«, →), no own images. The one exception is the logo's thread
   (knot, loose thread, #180): it is the brand mark, not a control. Since #642 (Henning, 2026-10-23) its family holds two
-  more drawn signs: the Knäuel (`ThreadShape.Form.knaeuel`, the one avoided task, #643) and the bead (`PearlGlyph`, a
+  more drawn signs: the Knäuel (English UI: “the Tangle”, #758; `ThreadShape.Form.knaeuel`, the one avoided task, #643) and the bead (`PearlGlyph`, a
   task that counts on the week's string, #645); every other sign stays an SF Symbol.
 - **Rules before the model** (Henning, 2026-09-20). Every derived field is first attempted with rules,
   regex, calendar, contacts or a word list. The on-device model only gets what needs language
@@ -106,10 +106,10 @@ Berechtigungen gehören in `project.yml` (`entitlements.properties`), nie nur in
 nur das Abbild (#499); `scripts/test_info_plist_sync.py` vergleicht beide, und der CI-Schritt „Generate leaves the tree clean“
 schlägt fehl, wenn `generate` einen Diff hinterlässt. Berechtigungstexte brauchen zusätzlich einen deutschen Eintrag in
 `LooseEnds/Resources/de.lproj/InfoPlist.strings` (App und Watch bündeln dieselbe Datei), sonst zeigt ein deutsches Gerät den
-Dialog englisch; `scripts/test_infoplist_languages.py` prüft das und die Vollständigkeit der vier `*.xcstrings` (#342).
+Dialog englisch; `scripts/test_catalog_languages.py` prüft das für jede Sprache aus `LanguagePacks.shipped` und die Vollständigkeit der fünf `*.xcstrings` (#342, #756).
 Der Datenschutztext liegt in `docs/reference/datenschutz-entwurf.md` (Freigabe Henning); öffentlich steht er seit 2026-10-27
 unter https://www.henemm.com/legal/loose-ends/privacy-policy/ (Website-Repo `henemm/henemm-website`, `content/legal/loose-ends/`),
-bei Apple gesetzt über die Repo-Variable `ASC_PRIVACY_POLICY_URL` und `asc-beta.yml` `aktion=einrichten` (#705; `aktion=einreichen` reicht zum Beta-Review ein, nur nach Hennings Wort). Eine Änderung
+bei Apple gesetzt über die Repo-Variable `ASC_PRIVACY_POLICY_URL` (en-US: Konstante `PRIVACY_URL_EN` im Skript, englische Seite `…/privacy-policy-en/`, #763) und `asc-beta.yml` `aktion=einrichten` (#705; `aktion=einreichen` reicht zum Beta-Review ein, nur nach Hennings Wort). Eine Änderung
 am Text gilt erst, wenn auch die Website-Seite angepasst ist.
 
 `DEVELOPMENT_TEAM` steht in `project.yml` (`XK87E2B3VR`) und darf dort nicht geleert werden: Xcode
@@ -139,6 +139,8 @@ touches any of these paths:
 | `LooseEnds/Speech/` | Mikrofon und Spracherkennung |
 | `LooseEnds/Notifications/` | Zustellung echter Mitteilungen |
 | `project.yml`, jede `*.entitlements`, jede `Info.plist` | Signierung, Berechtigungen, Targets — die Klasse des App-Group-Absturzes |
+
+Ausnahme (Henning, 2026-10-30, #758): Änderungen in `LooseEndsWidgets/`, die nur Katalogschlüssel oder Textliterale betreffen (kein Layout, keine Logik, keine Intents, keine `Info.plist`), enden nach Stufe 2. Beleg: Katalogwächter grün und Screenshot der Widget-Galerie im Simulator.
 
 Berührt der Schnitt keinen dieser Pfade, endet die Abnahme nach Stufe 2, und das wird im
 Abschlussbericht mit genau diesem Satz begründet: „Kein Pfad der Geräteliste berührt." **⛔ Nichts
@@ -206,6 +208,7 @@ CI runs on GitHub's preview label `xcode-27` with Xcode 27.0 pinned: every job u
 `.github/actions/select-xcode-27`, which selects `/Applications/Xcode_27.app` and stops the run if it
 reports any other version. The deployment target stays at 27.0, nothing in `project.yml` is changed, and
 UI Smoke and Speech Stress run only on an iPhone 17 simulator with iOS 27.0 (otherwise the step stops).
+The job `ui-smoke-lang` runs `InboxDrawerSmokeTests` and `StartNumberTests` once per shipped language (matrix from `LanguagePacks.shipped`, `LOOSEENDS_UI_LANG`, `LooseEndsUITests/LaunchLanguage.swift`, #761).
 If the label goes away or is renamed, follow `docs/reference/testflight.md` and adjust `runs-on` in
 `ci.yml`, `speech-stress.yml` and `testflight.yml`.
 The job „Mac Gallery (macOS)“ photographs the Mac app (`MacGalleryTests`, start page, New, detail, light and dark) and
@@ -230,8 +233,10 @@ version, dSYM, privacy strings) and stops the upload on any mismatch.
 **Every TestFlight build says what to test (Henning, 2026-10-12, #347).** A manual run requires the
 input `what_to_test`; a `v*` tag uses the tagged commit's message. After Apple reports the build as
 `VALID`, `scripts/asc_what_to_test.py` writes the text into TestFlight's „Was testen“ (every existing
-localization, `de-DE` created if missing). Write it for Henning, in German: which flow, which steps,
-what he should see. The run fails without it.
+localization, plus one for every shipped language that has none). Write it for Henning, in German: which flow, which steps,
+what he should see. The run fails without it. Since #760 the text may carry one section per shipped language: lines starting `de:` or `en:` open one;
+text without a marker is German, and a language without a section gets the German text. The beta description in `docs/reference/beta-beschreibung.md`
+has one `## de-DE` / `## en-US` section per language, and `scripts/asc_locales.py` maps each language code of `LanguagePacks.shipped` to its App Store Connect locale.
 
 **CloudKit schema through CI (#448, Henning 2026-10-15: „Bündeln + CI-Weg“).** The schema lives in
 `cloudkit/schema.ckdb`; a model change adds its fields there in the same PR (`scripts/test_cloudkit_schema.py` fails
@@ -306,7 +311,7 @@ not scope creep on the current one.
   only with content, one word line for everything empty, dependent fields wait, off is not offered but never hidden;
   `DetailFieldSettings` with the standard on Note, Attachments, Calendar, Duration, Tags; the app's `FieldSettingsStore` in
   `LooseEnds/App` keeps the choice in defaults and the iCloud key-value store, everything on under UI tests)
-- `Shared/Models` — the drive fields (#642): `TaskItem.knaeuelAt` (#643, the one avoided task, `isKnaeuel` while open) and
+- `Shared/Models` — the drive fields (#642; the Knäuel is “the Tangle” in the English UI, German keeps “das Knäuel”, #758): `TaskItem.knaeuelAt` (#643, the one avoided task, `isKnaeuel` while open) and
   `countsAt` (#645, a bead once completed, at most `TaskActions.countsBudget` open; the Knäuel always `counts`), both set by
   hand only as user revisions (`RevisedField.knaeuel`/`.counts`), both `DetailField`s of the group `drive`, off by default.
   `ViewRules.knaeuel(in:)` (latest mark wins), `counting(in:)`, `week(containing:)` (Monday to Sunday, whatever the locale),
@@ -334,6 +339,13 @@ not scope creep on the current one.
   `Info.plist`, keys `LEAppGroup`/`LECloudContainer`, with the production constants as fallback —
   device builds carry their own via `BUNDLE_ID_SUFFIX`, #156), `ContextSeeder`,
   `CloudKitSchemaInitializer` (Debug only: writes the full CloudKit schema into Development, never opens the app-group store, #175)
+- `Shared/Language` — language packs (#750, #751–#755): `LanguagePack` holds every rule word of one language (weekdays, months, time and
+  duration words, importance/urgency, place phrases, title lead-ins, context words); `GermanPack` and `EnglishPack` are the shipped ones.
+  `LanguagePacks.shipped` is the one list of shipped languages (scripts read it with `scripts/shipped_languages.py`); the rules read all
+  of them at once (no language field in the product). Tests plug a pack in with the task-local hook `LanguagePacks.pluggedIn` (`active` reads
+  it, `withPacks` in `LooseEndsTests/Language`); `LanguagePackConformanceTests` hold the tables clean, `RuleGoldenTests` hold the rule output
+  of every corpus sentence equal (`LooseEndsTests/Fixtures/rule-golden.json`, refreshed with `LOOSEENDS_UPDATE_GOLDEN=1`). The way a
+  third language gets in is the eight-point list in `docs/reference/neue-sprache.md`; it enters `shipped` last.
 - `Shared/Services` — `CaptureService`, `FieldCodec` (one encoding per field), `RevisionService` (reset = user revision),
   `TaskActions` (done, next up, park, move, restore), `DateExpressionParser`/`TimeExpressionParser` (rule-based
   date/time extraction DE/EN, moved from `Measurement/` in #95), `RawTextWords` (the one tokenizer for word-set

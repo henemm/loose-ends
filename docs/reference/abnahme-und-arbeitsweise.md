@@ -156,3 +156,12 @@ Der Hook blockiert nie: Bei `NEXT=unknown`, Zeitüberschreitung, Fehler des Skri
 Eingabe bleibt er stumm und endet mit Exit 0, die Sitzung startet wie ohne ihn. Er schreibt nichts,
 weder nach GitHub noch in Dateien. Abschalten: den Eintrag mit `next-ticket-hook.sh` aus
 `hooks.SessionStart` in `~/.claude/settings.json` entfernen; die beiden anderen Einträge bleiben stehen.
+
+## UI-Smoke je Sprache (#761)
+
+Der volle Lauf `ui-smoke` startet die App englisch. Zusätzlich fährt die CI den Job `ui-smoke-lang` einmal je ausgelieferter
+Sprache (Matrix aus `LanguagePacks.shipped`, gelesen von `scripts/shipped_languages.py`) mit `InboxDrawerSmokeTests` und
+`StartNumberTests`. Die Sprache kommt aus `LOOSEENDS_UI_LANG` (`LooseEndsUITests/LaunchLanguage.swift`); `sim.sh` reicht sie bei
+`test` als `TEST_RUNNER_LOOSEENDS_UI_LANG` durch, `LOOSEENDS_UI_LANG=de ./scripts/sim.sh test-proof StartNumberTests` fährt eine
+Klasse lokal deutsch, Bildnamen tragen dann `-de`. Wörter, die ein Test vom Bildschirm liest, stehen in `LaunchLanguage.phrase`;
+eine neue Sprache ohne Eintrag dort scheitert mit ihrem Namen.

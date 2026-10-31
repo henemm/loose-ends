@@ -3,7 +3,9 @@
 Aufruf: asc_what_to_test.py <build-nummer>
 Umgebung: WHAT_TO_TEST (der Text, höchstens 4000 Zeichen) und dieselben Variablen wie
 asc_wait_build.py. Läuft nach asc_wait_build.py, der Build ist also schon gelistet.
-Jede vorhandene Sprachfassung des Builds bekommt den Text; fehlt de-DE, wird sie angelegt.
+Der Text darf je Sprache einen Abschnitt haben: Zeilen, die mit `de:` oder `en:` beginnen (Code aus `LanguagePacks.shipped`),
+eröffnen einen. Text ohne Marker ist Deutsch; eine Fassung ohne eigenen Abschnitt bekommt den deutschen Text.
+Jede vorhandene Sprachfassung des Builds bekommt ihren Text; fehlt die Fassung einer ausgelieferten Sprache, wird sie angelegt.
 Nur Standardbibliothek plus `openssl`. Schlüssel, Token und Signatur werden nie ausgegeben.
 """
 import json
@@ -14,9 +16,11 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
+from asc_locales import GERMAN, asc_locales, language_locales
 from asc_wait_build import Fatal, find_app_id, get_json, make_token, platform_filter, read_config
+from shipped_languages import ROOT
 
-LOCALE = "de-DE"
+LOCALE = GERMAN
 MAX_LENGTH = 4000
 ATTEMPTS = 5
 
@@ -61,19 +65,50 @@ def find_build_id(config, app_id, number):
     raise Fatal(f"Build {number} is not listed in App Store Connect")
 
 
-def write_what_to_test(config, build_id, text):
-    """Setzt whatsNew in jeder Sprachfassung und legt de-DE an, wenn sie fehlt. Gibt die Sprachen zurück."""
+def split_sections(text, root=ROOT):
+    """{Locale: Text} aus `de: …` / `en: …`-Abschnitten; Text ohne Marker ist Deutsch."""
+    by_code = dict(language_locales(root))
+    sections, current, prefix = {}, None, []
+    for line in text.splitlines():
+        code, _, rest = line.partition(":")
+        if code in by_code:
+            current = by_code[code]
+            sections[current] = [rest.lstrip()]
+        elif current is None:
+            prefix.append(line)
+        else:
+            sections[current].append(line)
+    joined = {locale: "\n".join(lines).strip() for locale, lines in sections.items()}
+    lead = "\n".join(prefix).strip()
+    if lead:
+        if GERMAN in joined:
+            raise Fatal("WHAT_TO_TEST has text before the first language marker and a de: section as well")
+        joined[GERMAN] = lead
+    joined = {locale: part for locale, part in joined.items() if part}
+    if GERMAN not in joined:
+        raise Fatal("WHAT_TO_TEST has no German text (every other language falls back to it)")
+    return joined
+
+
+def write_what_to_test(config, build_id, sections, root=ROOT):
+    """Setzt whatsNew je Sprachfassung (Abschnitt der Sprache, sonst der deutsche) und legt die Fassungen
+    der ausgelieferten Sprachen an, die fehlen. Gibt die Sprachen zurück."""
+    def text_for(locale):
+        return sections.get(locale) or sections[GERMAN]
+
     locales = []
     for record in get_data(config, f"/v1/builds/{build_id}/betaBuildLocalizations"):
+        locale = (record.get("attributes") or {}).get("locale", "?")
         send_json(config, "PATCH", f"/v1/betaBuildLocalizations/{record['id']}", {"data": {
-            "type": "betaBuildLocalizations", "id": record["id"], "attributes": {"whatsNew": text}}})
-        locales.append((record.get("attributes") or {}).get("locale", "?"))
-    if LOCALE not in locales:
-        send_json(config, "POST", "/v1/betaBuildLocalizations", {"data": {
-            "type": "betaBuildLocalizations",
-            "attributes": {"locale": LOCALE, "whatsNew": text},
-            "relationships": {"build": {"data": {"type": "builds", "id": build_id}}}}})
-        locales.append(LOCALE)
+            "type": "betaBuildLocalizations", "id": record["id"], "attributes": {"whatsNew": text_for(locale)}}})
+        locales.append(locale)
+    for locale in asc_locales(root):
+        if locale not in locales:
+            send_json(config, "POST", "/v1/betaBuildLocalizations", {"data": {
+                "type": "betaBuildLocalizations",
+                "attributes": {"locale": locale, "whatsNew": text_for(locale)},
+                "relationships": {"build": {"data": {"type": "builds", "id": build_id}}}}})
+            locales.append(locale)
     return locales
 
 
@@ -86,10 +121,12 @@ def main(argv):
     try:
         if not text:
             raise Fatal("WHAT_TO_TEST is empty: every TestFlight build says what to test (#347)")
-        if len(text) > MAX_LENGTH:
-            raise Fatal(f"WHAT_TO_TEST has {len(text)} characters, TestFlight takes at most {MAX_LENGTH}")
+        sections = split_sections(text)
+        for locale, part in sections.items():
+            if len(part) > MAX_LENGTH:
+                raise Fatal(f"WHAT_TO_TEST ({locale}) has {len(part)} characters, TestFlight takes at most {MAX_LENGTH}")
         config = read_config()
-        locales = write_what_to_test(config, find_build_id(config, find_app_id(config), number), text)
+        locales = write_what_to_test(config, find_build_id(config, find_app_id(config), number), sections)
         print(f"build={number} whatToTest gesetzt für {', '.join(locales)}", flush=True)
         return 0
     except Fatal as error:

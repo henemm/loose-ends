@@ -197,7 +197,9 @@ Kontaktfelder `gesetzt`). Ein zweiter Lauf schreibt nichts (`zusammenfassung ges
 - `Schlüssel ohne Schreibrecht` (HTTP 403): der API-Schlüssel darf nicht schreiben; Rückfall ist die Oberfläche von App Store
   Connect, nicht das Umgehen.
 - Die Datenschutz-URL wird nur gesetzt, wenn die Repo-Variable `ASC_PRIVACY_POLICY_URL` existiert. Sie besteht seit
-  2026-10-27 mit dem Wert https://www.henemm.com/legal/loose-ends/privacy-policy/ (#705 Schnitt 2b-2a).
+  2026-10-27 mit dem Wert https://www.henemm.com/legal/loose-ends/privacy-policy/ (#705 Schnitt 2b-2a). Für `en-US` setzt das
+  Skript https://www.henemm.com/legal/loose-ends/privacy-policy-en/ (Konstante `PRIVACY_URL_EN`, überstimmbar mit der
+  Repo-Variable `ASC_PRIVACY_POLICY_URL_EN`), ohne dass Henning etwas anlegen muss (#763).
 
 **Handlauf `zuordnen` (Schnitt 2b-1):** GitHub → Actions → **ASC Beta Probe** → **Run workflow** → `aktion=zuordnen`.
 Der Job `assign` (`scripts/asc_beta_invite.py`) legt die externe Gruppe `Tester` an, falls sie fehlt (Feedback an, Link

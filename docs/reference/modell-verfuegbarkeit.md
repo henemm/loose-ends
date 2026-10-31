@@ -75,6 +75,10 @@ Fällt das Modell aus, verliert die Aufgabe nur die Titelverfeinerung und Dauer/
 Eine Watch-Aufgabe wartet nicht aufs Modell, sondern auf **irgendein Gerät mit geöffneter App**; auch das iPad ohne Modell genügt, weil die Regeln keines brauchen.
 Bis dahin zeigt sie Rohtext und Titel, ohne Datum, Kontext, Dringlichkeit. Das schließt ein Folgeticket („Regeln ohne App-Start“, hängt an #619 und #342 Teil 5), nicht #68.
 
+## Sprache
+
+Apple Intelligence antwortet nur in den unter „Apple Intelligence & Siri“ eingestellten Sprachen (`docs/project/06-annahmen-und-experimente.md`). Eine Notiz in einer anderen Sprache kann die Verweigerung auslösen, die als fehlgeschlagener Aufruf zählt (#530); die Regelwerte bleiben (#757, Epic #750). Der Prompt nennt Deutsch und Englisch; `ModelPromptLanguagesTests` hält ihn an `LanguagePacks.shipped`.
+
 ## Alternativen
 
 Siehe ADR-4: Modell auch im Intent-/Share-Prozess, Sperrfeld `enrichingDevice`, PCC-Fallback, nur Vordergrund mit sichtbarem „wird geprüft“, Modell für v1 streichen.

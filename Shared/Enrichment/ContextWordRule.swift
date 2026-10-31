@@ -14,28 +14,22 @@ enum ContextWordRule {
     /// A word is there or not; an in-between number would be invented, as in `DueDateRule`.
     static let confidence = 1.0
 
-    /// The default contexts by their English and German names (`TaskContext.defaultNameKeys` and
-    /// their translations), each with its words. A renamed default context keeps only its new name.
-    private static let lists: [(names: [String], words: [String])] = [
-        (["Computer"],
-         ["computer", "laptop", "rechner", "drucker", "ausdrucken", "drucken", "website", "webseite",
-          "online", "backup", "software", "installieren", "printer", "print out", "install", "spreadsheet"]),
-        (["Phone", "Telefon"],
-         ["anruf", "anrufen", "telefonieren", "telefonat", "zurückrufen", "rückruf",
-          "call", "phone", "ring back"]),
-        (["Home", "Haus"],
-         ["putzen", "staubsaugen", "aufräumen", "wäsche", "waschmaschine", "bügeln", "spülmaschine",
-          "geschirr", "keller", "dachboden", "glühbirne", "vacuum", "laundry", "dishes", "tidy up"]),
-        (["Garden", "Garten"],
-         ["rasen", "hecke", "unkraut", "beet", "beete", "kompost", "laub", "umtopfen", "einpflanzen",
-          "lawn", "hedge", "weeds", "mow"]),
-        (["Errands", "Besorgung"],
-         ["kaufen", "einkauf", "einkaufen", "besorgen", "abholen", "apotheke", "supermarkt", "baumarkt",
-          "buy", "pick up", "groceries", "pharmacy"]),
-        (["Out and about", "Unterwegs"],
-         ["unterwegs", "tanken", "tankstelle", "zur post", "zur bank", "waschanlage",
-          "on the way", "gas station"]),
-    ]
+    /// The names a default context goes by, one per shipped language: its English catalog key ("Garden")
+    /// and the catalog's translation into each language ("Garten"). A renamed default context keeps only
+    /// its new name. The words come from `Shared/Language/` (Epic #750).
+    private static func names(of key: String) -> [String] {
+        [key] + LanguagePacks.active.map { translation(of: key, in: $0.code) }
+    }
+
+    /// The catalog's text for `key` in one language, read from that language's resources in the main bundle;
+    /// where the target has none (a widget, the share extension carry their own catalog) the key itself,
+    /// which is the English name.
+    private static func translation(of key: String, in code: String) -> String {
+        guard let path = Bundle.main.path(forResource: code, ofType: "lproj"), let bundle = Bundle(path: path) else {
+            return key
+        }
+        return bundle.localizedString(forKey: key, value: key, table: nil)
+    }
 
     /// The names of `available` the note points at, in catalog order, with the reason naming the
     /// first word that hit. `nil` when nothing hits. A word list belongs to the first context in
@@ -44,11 +38,11 @@ enum ContextWordRule {
     static func match(in text: String, available: [String]) -> EnrichmentDraft.Guess<[String]>? {
         var names: [String] = []
         var first: Range<String.Index>?
-        var claimed = Set<Int>()
+        var claimed = Set<String>()
         for name in available {
             var keywords = [name.trimmingCharacters(in: .whitespaces)]
-            if let list = listIndex(for: name), claimed.insert(list).inserted {
-                keywords += lists[list].words
+            if let key = key(for: name), claimed.insert(key).inserted {
+                keywords += LanguagePacks.contextWords(for: key)
             }
             guard let hit = earliest(of: keywords, in: text) else { continue }
             names.append(name)
@@ -68,11 +62,12 @@ enum ContextWordRule {
 
     /// The context's own name plus the list of the default context it is, if any.
     private static func keywords(for name: String) -> [String] {
-        [name.trimmingCharacters(in: .whitespaces)] + (listIndex(for: name).map { lists[$0].words } ?? [])
+        [name.trimmingCharacters(in: .whitespaces)] + (key(for: name).map(LanguagePacks.contextWords(for:)) ?? [])
     }
 
-    private static func listIndex(for name: String) -> Int? {
-        lists.firstIndex { entry in entry.names.contains { same($0, name) } }
+    /// The default context a name belongs to, in any shipped language.
+    private static func key(for name: String) -> String? {
+        LanguagePacks.contextKeys.first { key in names(of: key).contains { same($0, name) } }
     }
 
     private static func same(_ lhs: String, _ rhs: String) -> Bool {
