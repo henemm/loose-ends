@@ -153,7 +153,11 @@ struct LooseEndsApp: App {
         // The wish above was not always fitted to the screen: on the 1024 pt CI screen the window opened
         // 1200 pt wide (#593). The placement limits it to the visible area and centres it there.
         .defaultWindowPlacement { _, context in
-            let frame = MainWindowPlacement.frame(visible: context.defaultDisplay.visibleRect)
+            // App Store pictures need a 16:10 window (#742): 1280 x 800, only under this test argument.
+            let storeWindow = ProcessInfo.processInfo.arguments.contains("--ui-testing-store-window")
+            let frame = MainWindowPlacement.frame(
+                visible: context.defaultDisplay.visibleRect,
+                preferred: storeWindow ? CGSize(width: 1280, height: 800) : MainWindowPlacement.preferredSize)
             return WindowPlacement(frame.origin, size: frame.size)
         }
         #endif
