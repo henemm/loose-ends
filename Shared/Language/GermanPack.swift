@@ -44,6 +44,34 @@ extension LanguagePack {
             "anderthalb stunden": 90, "eine halbe stunde": 30, "halbe stunde": 30,
             "eine viertelstunde": 15, "viertelstunde": 15, "eine stunde": 60, "ein paar minuten": 5,
         ],
-        pointInTime: ["in", "nach"]
+        pointInTime: ["in", "nach"],
+        importanceWords: [
+            "explicit": ["sehr wichtig", "wichtig", "wichtige", "wichtiger", "wichtiges", "wichtigen", "wichtigem"],
+            "money": ["euro", "eur", "€", "betrag", "rechnung", "rechnungen", "kredit", "gehalt", "zahlung",
+                      "überweisung"],
+            "official": ["finanzamt", "amt", "behörde", "gericht", "anwalt", "anwältin", "notar", "vertrag",
+                         "steuer", "steuererklärung", "bußgeld"],
+            "peopleWaiting": ["wartet auf", "warten auf", "erwartet eine antwort", "erwartet antwort"],
+        ],
+        urgencyWords: [
+            "deadline": ["frist", "fristen", "kündigungsfrist", "stichtag", "spätestens", "mahnung"],
+            "immediacy": ["dringend", "dringlich", "sofort", "jetzt", "umgehend", "unverzüglich", "eilt"],
+        ],
+        negations: ["nicht", "kein", "keine", "nie"],
+        intensifiers: ["so", "sehr", "besonders", "ganz"],
+        placePhrases: [
+            PlacePhrase(words: ["zu", "hause"], slot: .home),
+            PlacePhrase(words: ["zuhause"], slot: .home),
+            PlacePhrase(words: ["daheim"], slot: .home),
+            PlacePhrase(words: ["im", "buro"], slot: .work),
+            PlacePhrase(words: ["auf", "der", "arbeit"], slot: .work),
+            PlacePhrase(words: ["bei", "der", "arbeit"], slot: .work),
+        ],
+        titleLeadIns: ["bis", "am", "um", "ab", "zum"],
+        titleConnectors: ["und"],
+        titleDateWords: [
+            "januar", "februar", "märz", "april", "mai", "juni", "juli", "august", "september", "oktober",
+            "november", "dezember", "montag", "dienstag", "mittwoch", "donnerstag", "freitag", "samstag", "sonntag",
+        ]
     )
 }

@@ -1,5 +1,11 @@
 import Foundation
 
+/// One phrase that names a saved place ("zu hause"), folded and split into words.
+struct PlacePhrase: Sendable {
+    let words: [String]
+    let slot: SavedPlaces.Slot
+}
+
 /// The words one language contributes to the rules (Epic #750). One file per language holds them;
 /// `LanguagePacks.shipped` is the one list of shipped languages. Every word is stored folded
 /// (lowercase, no diacritics: "nachste", "ubermorgen"), exactly as `ExpressionText.folded` yields it.
@@ -40,6 +46,21 @@ struct LanguagePack: Sendable {
     let durationPhrases: [String: Int]
     /// Words before a length that make it a point in time: "in 2 Stunden".
     let pointInTime: [String]
+    /// Keyword lists by signal name (`ImportanceUrgencyRule`'s case raw values); a pack may leave a signal out.
+    /// Unfolded and lowercase, matched at word boundaries; the list order is the tie order.
+    let importanceWords: [String: [String]]
+    let urgencyWords: [String: [String]]
+    /// Words right before a keyword that turn it around: "nicht wichtig".
+    let negations: [String]
+    /// Words between a negation and its keyword: "nicht so wichtig".
+    let intensifiers: [String]
+    let placePhrases: [PlacePhrase]
+    /// Words that lead into a date or time and go with it out of the title: "bis Freitag", "by Friday".
+    let titleLeadIns: [String]
+    /// Left alone between two struck words: "dringend und wichtig".
+    let titleConnectors: [String]
+    /// Month and weekday names a model title may not bring in on its own (#507), as `TitleRule` knew them.
+    let titleDateWords: [String]
 }
 
 enum LanguagePacks {
@@ -77,6 +98,22 @@ enum LanguagePacks {
     static var durationPhrases: [(phrase: String, minutes: Int)] {
         merged(\.durationPhrases).map { (phrase: $0.key, minutes: $0.value) }
             .sorted { (wordCount($0.phrase), $0.phrase.count) > (wordCount($1.phrase), $1.phrase.count) }
+    }
+
+    static var negations: [String] { list(\.negations) }
+    static var intensifiers: [String] { list(\.intensifiers) }
+    static var titleLeadIns: [String] { list(\.titleLeadIns) }
+    static var titleConnectors: [String] { list(\.titleConnectors) }
+    static var titleDateWords: [String] { list(\.titleDateWords) }
+    static var placePhrases: [PlacePhrase] { active.flatMap(\.placePhrases) }
+
+    /// The keywords of one importance signal over all active packs, in pack order (the tie order).
+    static func importanceWords(for signal: String) -> [String] { ordered(\.importanceWords, signal) }
+    static func urgencyWords(for signal: String) -> [String] { ordered(\.urgencyWords, signal) }
+
+    private static func ordered(_ key: KeyPath<LanguagePack, [String: [String]]>, _ signal: String) -> [String] {
+        var seen = Set<String>()
+        return active.flatMap { $0[keyPath: key][signal] ?? [] }.filter { seen.insert($0).inserted }
     }
 
     private static func wordCount(_ phrase: String) -> Int { phrase.split(separator: " ").count }

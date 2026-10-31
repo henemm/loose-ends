@@ -33,6 +33,29 @@ extension LanguagePack {
             "half an hour": 30, "half hour": 30, "quarter of an hour": 15, "an hour and a half": 90,
             "an hour": 60, "one hour": 60, "a few minutes": 5,
         ],
-        pointInTime: ["in", "after"]
+        pointInTime: ["in", "after"],
+        importanceWords: [
+            "explicit": ["very important", "important"],
+            "money": ["invoice", "amount", "payment", "salary", "loan"],
+            "official": ["tax", "official", "contract", "court", "lawyer"],
+            "peopleWaiting": ["is waiting for", "are waiting for", "waiting for", "is expecting"],
+        ],
+        urgencyWords: [
+            "deadline": ["deadline", "reminder", "cancellation"],
+            "immediacy": ["asap", "urgent", "urgently", "immediately"],
+        ],
+        negations: ["not", "never", "isnt", "arent", "wasnt", "dont", "doesnt"],
+        intensifiers: ["too", "very", "that"],
+        placePhrases: [
+            PlacePhrase(words: ["at", "home"], slot: .home),
+            PlacePhrase(words: ["at", "work"], slot: .work),
+            PlacePhrase(words: ["at", "the", "office"], slot: .work),
+        ],
+        titleLeadIns: ["by", "on", "at"],
+        titleConnectors: ["and"],
+        titleDateWords: [
+            "january", "february", "march", "june", "july", "october", "december",
+            "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",
+        ]
     )
 }

@@ -56,4 +56,22 @@ struct LanguagePackTests {
         let offsets = LanguagePacks.spokenOffsets.map(\.words.count)
         #expect(offsets == offsets.sorted(by: >))
     }
+
+    @Test("Jedes Pack kennt Verneinung und die ausdrücklichen Signale")
+    func everyPackHasNegationAndSignals() {
+        for pack in LanguagePacks.shipped {
+            #expect(!pack.negations.isEmpty, "\(pack.code): negations")
+            #expect(!(pack.importanceWords["explicit"] ?? []).isEmpty, "\(pack.code): Wichtigkeit ausdrücklich")
+            #expect(!(pack.urgencyWords["immediacy"] ?? []).isEmpty, "\(pack.code): Dringlichkeit ausdrücklich")
+        }
+    }
+
+    @Test("Jedes Pack hat Ortswendungen für beide Plätze")
+    func everyPackHasPlacePhrasesForBothSlots() {
+        for pack in LanguagePacks.shipped {
+            for slot in SavedPlaces.Slot.allCases {
+                #expect(pack.placePhrases.contains { $0.slot == slot }, "\(pack.code): \(slot)")
+            }
+        }
+    }
 }
