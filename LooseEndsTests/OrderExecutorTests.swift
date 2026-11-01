@@ -198,6 +198,37 @@ import Testing
         #expect(try Snapshot(store) == before)
     }
 
+    @Test("Set due on a done or removed task is stale, nothing changes (#613 C3a, AC-19, AC-20)",
+          arguments: [TaskStatus.done, .removed])
+    @MainActor func setDueOnClosedTaskIsStale(status: TaskStatus) throws {
+        let store = try TestStore()
+        let task = try Self.insert("Schon erledigt", due: Self.day(1, hour: 9), in: store)
+        task.status = status
+        try store.context.save()
+        let before = try Snapshot(store)
+        let order = Order(id: UUID(), kind: .setDue, taskID: task.id, date: Self.day(4), hasTime: false,
+                          expectedDueDate: Self.day(1, hour: 9))
+
+        let result = try Self.run(order, in: store)
+
+        #expect(result == OrderResult(orderID: order.id, outcome: .rejected, reason: .stale, taskID: task.id))
+        #expect(try Snapshot(store) == before)
+    }
+
+    @Test("Set due on a parked task still sets it (#613 C3a, AC-21)")
+    @MainActor func setDueOnParkedTask() throws {
+        let store = try TestStore()
+        let task = try Self.insert("Später", in: store)
+        task.status = .parked
+        try store.context.save()
+        let order = Order(id: UUID(), kind: .setDue, taskID: task.id, date: Self.day(2), hasTime: false)
+
+        let result = try Self.run(order, in: store)
+
+        #expect(result == OrderResult(orderID: order.id, outcome: .done, taskID: task.id))
+        #expect((task.revisions ?? []).first { $0.field == .dueDate }?.reason == "Claude")
+    }
+
     @Test("An unknown task is missing, nothing changes (AC-7)", arguments: [Order.Kind.complete, .setDue])
     @MainActor func unknownTaskIsMissing(kind: Order.Kind) throws {
         let store = try TestStore()

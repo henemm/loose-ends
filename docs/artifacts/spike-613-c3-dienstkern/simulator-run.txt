@@ -1,0 +1,20 @@
+# Simulator-Beleg
+erzeugt: 2026-11-01T12:35:28+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: spike-613-c3-dienstkern
+head: 25dc8b0a4098aa28de36aa296391fd8d82fe8184
+basis: 6bb98b225f3d418f6cf52fc602ece09cda6f1816 (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 24 gesamt, 24 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793532173.171  ende: 1793532924.074
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/spike-613-c3-dienstkern/simulator-run/summary.json  sha256:0c526627a5625f54abc842251b2f7ac35c1923976c0c46e9a3e83f910f7c6a6a
+xcresult: docs/artifacts/spike-613-c3-dienstkern/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/spike-613-c3-dienstkern/simulator-run/*.png (13 Stück)
+
+## Geprüfte Dateien
+- sha256:e0dde6093b14146df1347040365cd7d3875e14cef8f367d2b5f6905598cf3c04  LooseEndsTests/OrderExecutorTests.swift
+- sha256:1c9d521adeead90aa481a5f11af1e3de324dbb85283aad2c08085f1a0e3f689f  Shared/Services/OrderExecutor.swift
+- sha256:40f11563474ef15f194be2dc0defb89cfac8131e9b641060c889dd1b543fa67f  server/src/transcripts.ts

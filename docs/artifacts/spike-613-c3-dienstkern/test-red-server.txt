@@ -1,0 +1,61 @@
+Postgres on 127.0.0.1:50409, data in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.JIDlBi5phg
+
+> typecheck
+> tsc --noEmit
+
+test/transcripts.test.ts(7,48): error TS2307: Cannot find module '../src/transcripts.ts' or its corresponding type declarations.
+
+> test
+> node --test 'test/*.test.ts'
+
+✔ AC-1: applies migrations in number order and returns their names in that order (24.662541ms)
+✔ AC-2: a second run applies nothing, a new file alone is applied (10.378834ms)
+✔ AC-3: a broken migration rolls back completely and rethrows the Postgres error (8.348875ms)
+✔ AC-4: a gap in the numbers is refused before anything is applied (5.923042ms)
+✔ AC-4: a duplicate number is refused before anything is applied (16.084125ms)
+✔ AC-4: a misnamed .sql file is refused before anything is applied, README.md is ignored (7.072917ms)
+✔ AC-4: a README.md beside the migrations does not disturb the run (8.6135ms)
+✔ AC-4: number 000 is refused as invalid, not as a duplicate (4.7055ms)
+✔ AC-5: without DATABASE_URL the test run fails and names the variable (231.67375ms)
+✔ AC-1: the real migrations folder applies 001 once and creates the three tables (27.060833ms)
+✔ AC-2: the three contract examples are accepted in contract order (13.396083ms)
+✔ AC-3: transcripts refuse what the contract does not allow (44.282125ms)
+✔ AC-4: orders refuse a wrong version, kind, id, account or half a claim, and take all three kinds (27.076792ms)
+✔ AC-5: order results belong to exactly one existing order and carry a reason only when rejected (23.641292ms)
+✔ AC-6: ids keep their case in the document, the uuid columns compare regardless of case (10.553917ms)
+✔ AC-6: known limit, version 1.0 is accepted because jsonb compares numbers numerically (11.31075ms)
+node:internal/modules/esm/resolve:241
+    throw new ERR_MODULE_NOT_FOUND(
+          ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/src/transcripts.ts' imported from /Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/transcripts.test.ts
+    at finalizeResolution (node:internal/modules/esm/resolve:241:11)
+    at moduleResolve (node:internal/modules/esm/resolve:846:10)
+    at defaultResolve (node:internal/modules/esm/resolve:973:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:708:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:728:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:766:56)
+    at #resolve (node:internal/modules/esm/loader:690:17)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:610:35)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:277:33)
+    at ModuleJob.link (node:internal/modules/esm/module_job:389:17) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/src/transcripts.ts'
+}
+
+Node.js v26.13.0
+✖ test/transcripts.test.ts (183.895292ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 16
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 549.118458
+
+✖ failing tests:
+
+test at test/transcripts.test.ts:1:1
+✖ test/transcripts.test.ts (183.895292ms)
+  'test failed'

@@ -75,6 +75,7 @@ enum OrderExecutor {
     private static func setDue(_ order: Order, in context: ModelContext, now: Date, calendar: Calendar) throws -> OrderResult {
         guard let id = order.taskID, let hasTime = order.hasTime else { return refuse(order, .invalid) }
         guard let task = try find(id, in: context) else { return refuse(order, .missing) }
+        guard completable.contains(task.status) else { return refuse(order, .stale, task: id) }
         guard same(order.expectedDueDate, task.dueDate) else { return refuse(order, .stale, task: id) }
         // As `TaskActions.setDue` does it, but the revision is kept to carry the reason.
         let stored = order.date.map { hasTime ? $0 : calendar.startOfDay(for: $0) }

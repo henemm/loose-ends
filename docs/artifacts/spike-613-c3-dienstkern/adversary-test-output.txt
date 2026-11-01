@@ -1,0 +1,55 @@
+Postgres on 127.0.0.1:60000, data in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.eeA2OY9wft
+
+> typecheck
+> tsc --noEmit
+
+
+> test
+> node --test 'test/*.test.ts'
+
+✔ AC-1: applies migrations in number order and returns their names in that order (26.021833ms)
+✔ AC-2: a second run applies nothing, a new file alone is applied (12.952291ms)
+✔ AC-3: a broken migration rolls back completely and rethrows the Postgres error (10.691958ms)
+✔ AC-4: a gap in the numbers is refused before anything is applied (5.124ms)
+✔ AC-4: a duplicate number is refused before anything is applied (10.313458ms)
+✔ AC-4: a misnamed .sql file is refused before anything is applied, README.md is ignored (4.890459ms)
+✔ AC-4: a README.md beside the migrations does not disturb the run (10.678084ms)
+✔ AC-4: number 000 is refused as invalid, not as a duplicate (5.798542ms)
+✔ AC-5: without DATABASE_URL the test run fails and names the variable (219.525042ms)
+✔ AC-1: the real migrations folder applies 001 once and creates the three tables (30.996625ms)
+✔ AC-2: the three contract examples are accepted in contract order (14.1215ms)
+✔ AC-3: transcripts refuse what the contract does not allow (37.983917ms)
+✔ AC-4: orders refuse a wrong version, kind, id, account or half a claim, and take all three kinds (31.521709ms)
+✔ AC-5: order results belong to exactly one existing order and carry a reason only when rejected (27.475917ms)
+✔ AC-6: ids keep their case in the document, the uuid columns compare regardless of case (9.792541ms)
+✔ AC-6: known limit, version 1.0 is accepted because jsonb compares numbers numerically (10.702625ms)
+✔ AC-1: the contract example and a lower-case one without optional fields are accepted (2.086ms)
+▶ AC-2 to AC-11: the deviation table is refused with the field path, nothing is stored
+  ✔ AC-2 (Z1) version (2.28375ms)
+  ✔ AC-3 (Z2) generatedAt (1.141209ms)
+  ✔ AC-4 (Z3) now is no object (0.689167ms)
+  ✔ AC-5 (Z4) keys of now (0.924125ms)
+  ✔ AC-6 (Z5) now.knaeuel (0.574584ms)
+  ✔ AC-7 (Z6) lists of now (1.078708ms)
+  ✔ AC-8 (Z7) contexts (0.460916ms)
+  ✔ AC-9 (Z8) title and project (0.515375ms)
+  ✔ AC-10 (Z9) raw text and note anywhere (0.900834ms)
+  ✔ AC-11 (Z10) root keys and nowCount (0.95975ms)
+  ✔ F001 inherited key names are unknown keys (0.949792ms)
+  ✔ F002 times Postgres refuses or that are no ISO (1.860791ms)
+  ✔ F003 NUL and lone surrogates (0.550792ms)
+✔ AC-2 to AC-11: the deviation table is refused with the field path, nothing is stored (39.875583ms)
+✔ AC-6: without now.knaeuel the transcript is accepted (0.177083ms)
+✔ AC-12/13/14: the first is stored, a newer replaces it, an older or equally old one leaves it (15.090708ms)
+✔ AC-15: two concurrent uploads over two connections always leave the newer one (21.271583ms)
+✔ AC-16: two accounts keep their transcripts apart (12.885417ms)
+✔ AC-17: the service does not recount, a mismatching nowCount and unknown now ids are stored (12.626292ms)
+✔ F002: offsets up to ±15:59 are stored, as Postgres takes them (10.958834ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 489.556
