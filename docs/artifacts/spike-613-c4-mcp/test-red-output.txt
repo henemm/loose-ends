@@ -1,0 +1,112 @@
+Postgres on 127.0.0.1:56954, data in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.p9whsszNlB
+
+> typecheck
+> tsc --noEmit
+
+test/mcp.test.ts(8,10): error TS2724: '"../src/transcripts.ts"' has no exported member named 'getTranscript'. Did you mean 'Transcript'?
+test/mcp.test.ts(9,28): error TS2307: Cannot find module '../src/mcp.ts' or its corresponding type declarations.
+
+=== Laufzeit: Tests trotz Typfehler ausgeführt (Kopie von test-local.sh mit 'npm run typecheck || true') ===
+> test
+> node --test 'test/*.test.ts'
+
+node:internal/modules/esm/resolve:241
+    throw new ERR_MODULE_NOT_FOUND(
+          ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/src/mcp.ts' imported from /Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/mcp.test.ts
+    at finalizeResolution (node:internal/modules/esm/resolve:241:11)
+    at moduleResolve (node:internal/modules/esm/resolve:846:10)
+    at defaultResolve (node:internal/modules/esm/resolve:973:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:708:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:728:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:766:56)
+    at #resolve (node:internal/modules/esm/loader:690:17)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:610:35)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:277:33)
+    at ModuleJob.link (node:internal/modules/esm/module_job:389:17) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/src/mcp.ts'
+}
+
+Node.js v26.13.0
+✖ test/mcp.test.ts (290.818833ms)
+✔ AC-1: applies migrations in number order and returns their names in that order (43.484667ms)
+✔ AC-2: a second run applies nothing, a new file alone is applied (24.127375ms)
+✔ AC-3: a broken migration rolls back completely and rethrows the Postgres error (17.7925ms)
+✔ AC-4: a gap in the numbers is refused before anything is applied (7.576042ms)
+✔ AC-4: a duplicate number is refused before anything is applied (13.873417ms)
+✔ AC-4: a misnamed .sql file is refused before anything is applied, README.md is ignored (7.276541ms)
+✔ AC-4: a README.md beside the migrations does not disturb the run (16.060625ms)
+✔ AC-4: number 000 is refused as invalid, not as a duplicate (8.615041ms)
+✔ AC-5: without DATABASE_URL the test run fails and names the variable (281.578875ms)
+✔ AC-1: the contract order is stored, ON CONFLICT works on the generated id (47.75525ms)
+✔ AC-2: contract examples and small orders and results are accepted (0.663125ms)
+▶ AC-3 to AC-8: orders off the table are refused with the field path, nothing is stored
+  ✔ AC-3 (Z1) version (2.100791ms)
+  ✔ AC-4 (Z2) id (1.209416ms)
+  ✔ AC-4 (Z3) kind (2.070834ms)
+  ✔ AC-5 (Z4) capture (1.222042ms)
+  ✔ AC-6 (Z5) complete (1.244ms)
+  ✔ AC-7 (Z6) complete times and keys (0.659416ms)
+  ✔ AC-8 (Z7) setDue (1.589417ms)
+✔ AC-3 to AC-8: orders off the table are refused with the field path, nothing is stored (31.1115ms)
+✔ AC-7: complete without expectedDueDate is accepted (0.203375ms)
+✔ AC-9: an order that is no object names the root (0.276792ms)
+▶ AC-10/11: results off the table are refused with the field path, nothing is stored
+  ✔ AC-10 (Z9) result (2.771041ms)
+  ✔ AC-11 (Z10) reason (1.589541ms)
+✔ AC-10/11: results off the table are refused with the field path, nothing is stored (22.512ms)
+✔ AC-12: transcript messages stay, other errors carry no prefix (1.700458ms)
+✔ AC-13: a new order is stored for the account, unclaimed (20.049083ms)
+✔ AC-14: the same id again, even upper case with other content, changes nothing (23.689625ms)
+✔ AC-15: a claimed order is not reset by a second put (23.580458ms)
+✔ AC-16: three orders are claimed one by one, then nothing (21.7775ms)
+✔ AC-17: two connections claim ten orders, each exactly once (26.967416ms)
+✔ AC-18: two accounts never cross (21.534459ms)
+✔ AC-19: the result of the holding device is stored (16.983833ms)
+✔ AC-20: results for orders not held by the reporter are refused (19.149416ms)
+✔ AC-21: a second result changes nothing (14.08425ms)
+✔ AC-1: the real migrations folder applies 001 once and creates the three tables (49.261125ms)
+✔ AC-2: the three contract examples are accepted in contract order (22.708959ms)
+✔ AC-3: transcripts refuse what the contract does not allow (60.107083ms)
+✔ AC-4: orders refuse a wrong version, kind, id, account or half a claim, and take all three kinds (52.305292ms)
+✔ AC-5: order results belong to exactly one existing order and carry a reason only when rejected (47.250292ms)
+✔ AC-6: ids keep their case in the document, the uuid columns compare regardless of case (15.908625ms)
+✔ AC-6: known limit, version 1.0 is accepted because jsonb compares numbers numerically (19.77675ms)
+✔ AC-1: the contract example and a lower-case one without optional fields are accepted (2.002042ms)
+▶ AC-2 to AC-11: the deviation table is refused with the field path, nothing is stored
+  ✔ AC-2 (Z1) version (3.377958ms)
+  ✔ AC-3 (Z2) generatedAt (6.195ms)
+  ✔ AC-4 (Z3) now is no object (1.552625ms)
+  ✔ AC-5 (Z4) keys of now (2.43975ms)
+  ✔ AC-6 (Z5) now.knaeuel (1.375334ms)
+  ✔ AC-7 (Z6) lists of now (2.6025ms)
+  ✔ AC-8 (Z7) contexts (1.124125ms)
+  ✔ AC-9 (Z8) title and project (0.861459ms)
+  ✔ AC-10 (Z9) raw text and note anywhere (1.283083ms)
+  ✔ AC-11 (Z10) root keys and nowCount (1.091458ms)
+  ✔ F001 inherited key names are unknown keys (2.170792ms)
+  ✔ F002 times Postgres refuses or that are no ISO (4.808292ms)
+  ✔ F003 NUL and lone surrogates (0.996333ms)
+✔ AC-2 to AC-11: the deviation table is refused with the field path, nothing is stored (72.037208ms)
+✔ AC-6: without now.knaeuel the transcript is accepted (0.164833ms)
+✔ AC-12/13/14: the first is stored, a newer replaces it, an older or equally old one leaves it (24.860417ms)
+✔ AC-15: two concurrent uploads over two connections always leave the newer one (34.190167ms)
+✔ AC-16: two accounts keep their transcripts apart (18.744125ms)
+✔ AC-17: the service does not recount, a mismatching nowCount and unknown now ids are stored (20.608791ms)
+✔ F002: offsets up to ±15:59 are stored, as Postgres takes them (19.492084ms)
+ℹ tests 63
+ℹ suites 0
+ℹ pass 62
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 665.777583
+
+✖ failing tests:
+
+test at test/mcp.test.ts:1:1
+✖ test/mcp.test.ts (290.818833ms)
+  'test failed'

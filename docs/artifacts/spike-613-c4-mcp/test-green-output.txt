@@ -1,0 +1,107 @@
+Postgres on 127.0.0.1:58056, data in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.wwPXo9wxig
+
+> typecheck
+> tsc --noEmit
+
+
+> test
+> node --test 'test/*.test.ts'
+
+✔ AC-1: tools/list names exactly get_now and list_tasks (73.576208ms)
+▶ AC-2: without an account every tool refuses and reads nothing
+  ✔ get_now (2.271459ms)
+  ✔ list_tasks (1.258042ms)
+✔ AC-2: without an account every tool refuses and reads nothing (22.038708ms)
+▶ AC-3/AC-4: another account and an account without transcript get „noch keine Abschrift“
+  ✔ AC-3 fremdes Konto (16.091084ms)
+  ✔ AC-4 keine Abschrift (14.578666ms)
+✔ AC-3/AC-4: another account and an account without transcript get „noch keine Abschrift“ (31.000917ms)
+▶ AC-5: get_now passes nowCount through and never recounts
+  ✔ Vertrag (14.139834ms)
+  ✔ 7 bei drei Zeilen (13.230917ms)
+✔ AC-5: get_now passes nowCount through and never recounts (27.808459ms)
+▶ AC-6: get_now orders knaeuel, today, lined, waiting and keeps the order inside a group
+  ✔ Vertrag (12.898042ms)
+  ✔ ohne Knäuel, mehrere je Gruppe (11.820291ms)
+✔ AC-6: get_now orders knaeuel, today, lined, waiting and keeps the order inside a group (25.293584ms)
+✔ AC-7: each row of get_now carries the task's fields; an id without task stays id and group (13.177334ms)
+▶ AC-8: list_tasks returns every task as delivered, with generatedAt
+  ✔ Vertrag (12.534708ms)
+  ✔ vertauscht (14.099875ms)
+✔ AC-8: list_tasks returns every task as delivered, with generatedAt (26.933042ms)
+✔ AC-9: no raw text or note in any answer, nothing on console or stdout (12.950708ms)
+✔ AC-10: a newer upload is read on the next call, nothing is cached (13.609584ms)
+✔ AC-13: getTranscript returns the stored document or undefined (11.699292ms)
+✔ AC-1: applies migrations in number order and returns their names in that order (29.4385ms)
+✔ AC-2: a second run applies nothing, a new file alone is applied (18.663667ms)
+✔ AC-3: a broken migration rolls back completely and rethrows the Postgres error (17.98ms)
+✔ AC-4: a gap in the numbers is refused before anything is applied (7.829709ms)
+✔ AC-4: a duplicate number is refused before anything is applied (18.219875ms)
+✔ AC-4: a misnamed .sql file is refused before anything is applied, README.md is ignored (8.266166ms)
+✔ AC-4: a README.md beside the migrations does not disturb the run (12.482125ms)
+✔ AC-4: number 000 is refused as invalid, not as a duplicate (5.798417ms)
+✔ AC-5: without DATABASE_URL the test run fails and names the variable (233.538417ms)
+✔ AC-1: the contract order is stored, ON CONFLICT works on the generated id (33.336709ms)
+✔ AC-2: contract examples and small orders and results are accepted (0.396958ms)
+▶ AC-3 to AC-8: orders off the table are refused with the field path, nothing is stored
+  ✔ AC-3 (Z1) version (2.272833ms)
+  ✔ AC-4 (Z2) id (0.974291ms)
+  ✔ AC-4 (Z3) kind (1.132125ms)
+  ✔ AC-5 (Z4) capture (0.701916ms)
+  ✔ AC-6 (Z5) complete (0.734ms)
+  ✔ AC-7 (Z6) complete times and keys (0.572958ms)
+  ✔ AC-8 (Z7) setDue (0.765084ms)
+✔ AC-3 to AC-8: orders off the table are refused with the field path, nothing is stored (21.907917ms)
+✔ AC-7: complete without expectedDueDate is accepted (0.186542ms)
+✔ AC-9: an order that is no object names the root (0.072583ms)
+▶ AC-10/11: results off the table are refused with the field path, nothing is stored
+  ✔ AC-10 (Z9) result (2.799125ms)
+  ✔ AC-11 (Z10) reason (0.826833ms)
+✔ AC-10/11: results off the table are refused with the field path, nothing is stored (22.088834ms)
+✔ AC-12: transcript messages stay, other errors carry no prefix (1.891291ms)
+✔ AC-13: a new order is stored for the account, unclaimed (19.410333ms)
+✔ AC-14: the same id again, even upper case with other content, changes nothing (17.366375ms)
+✔ AC-15: a claimed order is not reset by a second put (15.508084ms)
+✔ AC-16: three orders are claimed one by one, then nothing (16.028334ms)
+✔ AC-17: two connections claim ten orders, each exactly once (20.629375ms)
+✔ AC-18: two accounts never cross (12.493292ms)
+✔ AC-19: the result of the holding device is stored (11.874375ms)
+✔ AC-20: results for orders not held by the reporter are refused (14.260125ms)
+✔ AC-21: a second result changes nothing (13.968417ms)
+✔ AC-1: the real migrations folder applies 001 once and creates the three tables (36.621875ms)
+✔ AC-2: the three contract examples are accepted in contract order (19.612583ms)
+✔ AC-3: transcripts refuse what the contract does not allow (56.094458ms)
+✔ AC-4: orders refuse a wrong version, kind, id, account or half a claim, and take all three kinds (38.821667ms)
+✔ AC-5: order results belong to exactly one existing order and carry a reason only when rejected (33.675292ms)
+✔ AC-6: ids keep their case in the document, the uuid columns compare regardless of case (11.0565ms)
+✔ AC-6: known limit, version 1.0 is accepted because jsonb compares numbers numerically (12.190625ms)
+✔ AC-1: the contract example and a lower-case one without optional fields are accepted (2.063583ms)
+▶ AC-2 to AC-11: the deviation table is refused with the field path, nothing is stored
+  ✔ AC-2 (Z1) version (1.799084ms)
+  ✔ AC-3 (Z2) generatedAt (1.051875ms)
+  ✔ AC-4 (Z3) now is no object (1.297708ms)
+  ✔ AC-5 (Z4) keys of now (1.4345ms)
+  ✔ AC-6 (Z5) now.knaeuel (0.966083ms)
+  ✔ AC-7 (Z6) lists of now (2.088125ms)
+  ✔ AC-8 (Z7) contexts (0.84375ms)
+  ✔ AC-9 (Z8) title and project (0.622625ms)
+  ✔ AC-10 (Z9) raw text and note anywhere (1.0695ms)
+  ✔ AC-11 (Z10) root keys and nowCount (1.2535ms)
+  ✔ F001 inherited key names are unknown keys (1.434917ms)
+  ✔ F002 times Postgres refuses or that are no ISO (2.219583ms)
+  ✔ F003 NUL and lone surrogates (0.6535ms)
+✔ AC-2 to AC-11: the deviation table is refused with the field path, nothing is stored (47.472208ms)
+✔ AC-6: without now.knaeuel the transcript is accepted (0.184875ms)
+✔ AC-12/13/14: the first is stored, a newer replaces it, an older or equally old one leaves it (20.977167ms)
+✔ AC-15: two concurrent uploads over two connections always leave the newer one (31.411958ms)
+✔ AC-16: two accounts keep their transcripts apart (18.256625ms)
+✔ AC-17: the service does not recount, a mismatching nowCount and unknown now ids are stored (12.546458ms)
+✔ F002: offsets up to ±15:59 are stored, as Postgres takes them (17.061125ms)
+ℹ tests 82
+ℹ suites 0
+ℹ pass 82
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 565.882792
