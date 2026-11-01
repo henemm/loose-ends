@@ -1,0 +1,6 @@
+Postgres on 127.0.0.1:51008, data in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.qJo92kyJUD
+
+> typecheck
+> tsc --noEmit
+
+test/orders.test.ts(7,74): error TS2307: Cannot find module '../src/orders.ts' or its corresponding type declarations.
