@@ -1,0 +1,43 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/PhoneRuleScannerTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-01 19:58:17.811.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-01 19:58:17.813.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-01 19:58:17.813.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.003) seconds
+[1mTest run started.[0m
+Suite "Phone rule without the detector" started
+    [33m⚠️[0m  Test "A digit run that is no number stays out" recorded an issue with 1 argument(s)
+    [33m⚠️[0m  Test "A digit run that is no number stays out" recorded an issue with 1 argument(s)
+    [33m⚠️[0m  Test "A digit run that is no number stays out" recorded an issue with 1 argument(s)
+    [33m⚠️[0m  Test "A digit run that is no number stays out" recorded an issue with 1 argument(s)
+    [33m⚠️[0m  Test "A digit run that is no number stays out" recorded an issue with 1 argument(s)
+    [33m⚠️[0m  Test "Digit runs only the iOS detector took for numbers are ignored" recorded an issue at PhoneRuleTests.swift:81:9: Expectation failed: PhoneRule.numbers(in: "Kunde 1234567 anrufen").isEmpty
+    [33m⚠️[0m  Test "Digit runs only the iOS detector took for numbers are ignored" recorded an issue at PhoneRuleTests.swift:82:9: Expectation failed: PhoneRule.numbers(in: "Auftrag 12345678 prüfen").isEmpty
+    [33m⚠️[0m  Test "Digit runs only the iOS detector took for numbers are ignored" recorded an issue at PhoneRuleTests.swift:83:9: Expectation failed: PhoneRule.numbers(in: "Die Police 30021988 umschreiben lassen").isEmpty
+    [31m✖[0m [31m"Digit runs only the iOS detector took for numbers are ignored" (0.001 seconds) 3 issue(s)[0m
+    [33m⚠️[0m  Test "A policy number stays in the title" recorded an issue at PhoneRuleTests.swift:89:9: Expectation failed: TitleRule.title(from: text)?.contains("30021988") == true
+    [33m⚠️[0m  Test "A policy number stays in the title" recorded an issue at PhoneRuleTests.swift:90:9: Expectation failed: PhoneRule.numbers(in: text).isEmpty
+    [31m✖[0m [31m"A policy number stays in the title" (0.033 seconds) 2 issue(s)[0m
+    [32m✔[0m "Two numbers come in order, one per line in the note" (0.002 seconds)
+    [33m⚠️[0m  Test "The rule step leaves a policy number alone: no note" recorded an issue at PhoneRuleTests.swift:117:9: Expectation failed: task.notes == nil
+    [33m⚠️[0m  Test "The rule step leaves a policy number alone: no note" recorded an issue at PhoneRuleTests.swift:118:9: Expectation failed: !(task.revisions ?? []).contains { $0.field == .notes && $0.author == .rule }
+    [31m✖[0m [31m"The rule step leaves a policy number alone: no note" (0.090 seconds) 2 issue(s)[0m
+Suite "Phone rule without the detector" failed after 0.216 seconds with 12 issue(s)
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-generic-giggling-reddy/Logs/Test/Test-LooseEnds-2026.11.01_19-58-05-+0100.xcresult
+[36;1mTesting started[0m
