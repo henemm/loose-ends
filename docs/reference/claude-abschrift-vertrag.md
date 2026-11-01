@@ -12,7 +12,8 @@ Die Beispiele unten stehen wörtlich auch in den Tests (`LooseEndsTests/Transcri
 - JSON, Schlüssel sortiert. Datumsangaben in ISO 8601, UTC, ganze Sekunden (`2026-03-12T17:00:00Z`).
 - Kennungen sind UUIDs in Großbuchstaben, wie die App sie führt.
 - Ein fehlender optionaler Wert fehlt als Schlüssel; er wird nicht als `null` geschrieben.
-- `version` ist 1. Ein Auftrag mit anderer Version wird abgelehnt (`invalid`).
+- `version` ist 1. Ein Auftrag mit anderer Version weist schon der Dienst beim Annehmen ab; `invalid` der App bleibt die
+  zweite Wand für Aufträge, die den Dienst nicht durchlaufen haben.
 
 ## Abschrift
 
@@ -101,10 +102,12 @@ anderem `hasTime` ändert nur `dueHasTime`, ohne Revision.
 Der Status zählt bei `setDue` zum erwarteten Stand: Ist die Aufgabe auf dem Gerät inzwischen erledigt oder gelöscht, wird der
 Auftrag als `stale` abgelehnt, auch wenn ihre Fälligkeit gleich blieb (C3a).
 
-Ebenso offen in Version 1 (Validierung 2026-10-31, Folgeschnitt C3):
+Der Dienst nimmt einen Auftrag nur mit `version` = 1 und der Form seiner Art an (C3b): je Art genau die Felder oben, die
+Pflichtfelder vorhanden, kein weiterer Schlüssel. Ein Auftrag ohne `version`, den die App nicht dekodieren könnte, erreicht sie
+so nicht. Bedeutung prüft der Dienst nicht: `expectedStatus` `done` oder `removed` reicht er durch, `invalid` ist Sache der App.
 
-- Ein Auftrag ohne `version` ist kein gültiges JSON für die App: Das Dekodieren scheitert, bevor der Ausführer ihn als
-  `invalid` ablehnen kann. Der Dienst prüft deshalb `version` schon beim Annehmen.
+Der Dienst vergibt jeden Auftrag an genau ein Gerät, **genau einmal und ohne zugesagte Reihenfolge**. Ein Ergebnis kann nur
+das Gerät melden, das den Auftrag hält; ein zweites Ergebnis zum selben Auftrag ändert nichts.
 
 Beispiel:
 
@@ -124,7 +127,8 @@ Beispiel:
 Jeder Auftrag bekommt ein Ergebnis: `orderID`, `outcome` (`done` oder `rejected`), bei Ablehnung `reason` und, wo eine Aufgabe
 betroffen ist, `taskID`.
 
-- `invalid`: falsche Version, ein Pflichtfeld fehlt, oder der Text einer Erfassung ist leer.
+- `invalid`: falsche Version, ein Pflichtfeld fehlt, oder der Text einer Erfassung ist leer. Version und Pflichtfelder weist
+  schon der Dienst beim Annehmen ab; `invalid` der App bleibt die zweite Wand für Aufträge, die den Dienst nicht durchlaufen haben.
 - `missing`: Auf dem Gerät gibt es keine Aufgabe mit dieser Kennung.
 - `stale`: Der erwartete Stand stimmt nicht mehr; Claude liest die Abschrift neu und entscheidet erneut.
 

@@ -26,8 +26,21 @@ const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const iso = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?(?:Z|[+-](\d{2}):(\d{2}))$/;
 const statuses = new Set(["unprocessed", "unverified", "active", "parked"]);
 
+// A form deviation names only path and reason; reporting() puts the subject in front.
+export class FormError extends Error {}
+
 function fail(path: string, reason: string): never {
-  throw new Error(`Abschrift ungültig: ${path}: ${reason}`);
+  throw new FormError(`${path}: ${reason}`);
+}
+
+// Runs a form check and names its subject ("Abschrift", "Auftrag", "Ergebnis"); any other error passes untouched.
+export function reporting<T>(subject: string, run: () => T): T {
+  try {
+    return run();
+  } catch (error) {
+    if (error instanceof FormError) throw new Error(`${subject} ungültig: ${error.message}`);
+    throw error;
+  }
 }
 
 const isObject = (value: unknown): value is Record<string, unknown> =>
@@ -98,8 +111,10 @@ const version: Check = (v, p) => { if (v !== 1) fail(p, "nicht 1"); };
 
 // The form of the contract (version 1); the service does not recount nowCount or match now against tasks.
 export function checkTranscript(doc: unknown): asserts doc is Transcript {
-  privacy(doc, "");
-  shape(doc, "", { version, generatedAt: time, nowCount: rank, now, tasks: list(task) });
+  reporting("Abschrift", () => {
+    privacy(doc, "");
+    shape(doc, "", { version, generatedAt: time, nowCount: rank, now, tasks: list(task) });
+  });
 }
 
 // One statement: the first transcript is stored, a newer one replaces it, an older or equally old one leaves it.
@@ -114,3 +129,5 @@ export async function putTranscript(pool: pg.Pool, account: string, doc: unknown
   );
   return result.rowCount === 1 ? "stored" : "older";
 }
+
+export { shape, id, text, flag, time, list, fail, type Check };
