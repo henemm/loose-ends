@@ -63,6 +63,17 @@ Datum: 2026-11-01 12:09
 - Funktionen weiter höchstens 50 Zeilen, keine neue Abhängigkeit; geändert sind nur transcripts.ts und transcripts.test.ts gegenüber Runde 1, nichts unter server/migrations.
 **Implementierer:** (nicht beteiligt)
 
+### Runde 4
+**Adversary:** Nachprüfung der Korrektur von F005 aus der Validierung (Versatz auf ±15:59 begrenzt).
+- `./server/scripts/test-local.sh`: 37 Tests, 37 bestanden, 0 fehlgeschlagen, 0 übersprungen, Exit 0 (adversary-test-output.txt), darunter `F002 times Postgres refuses or that are no ISO` und `F002: offsets up to ±15:59 are stored, as Postgres takes them`.
+- Grenzwerte in `generatedAt` gegen echtes Postgres 18: `+15:59`, `-15:59`, `+00:00`, `-00:00`, `Z`, `.123456+15:59`, `.5-15:59`, `.123456789Z` gespeichert; `+16:00`, `-16:00`, `+15:60`, `+01:60`, `+99:00` und ohne Zone: „Abschrift ungültig: generatedAt: kein Zeitpunkt mit Zeitzone“, kein SQLSTATE, nichts gespeichert.
+- Erschöpfender Abgleich aller 20.000 Versätze (± × 00–99 × 00–99) gegen `$1::timestamptz`: Prüfer nimmt 1920 an (2 × 16 × 60), davon lehnt Postgres 0 ab; Postgres nähme keinen an, den der Prüfer ablehnt. Grenze deckt sich exakt.
+- `Z` ohne Versatzgruppen: `x ?? 0` ergibt 0, kein NaN (transcripts.ts:48-52), `Z` wird gespeichert.
+- `dueDate` `+99:00` abgelehnt mit „tasks[0].dueDate: kein Zeitpunkt mit Zeitzone“; `+15:59` und `Z` angenommen.
+- Reihenfolge unverändert: gleiche Zeit anderer Schreibweise (`+02:00`, `-15:59`, `+15:59`) → "older", eine Minute später → "stored".
+- Diff gegenüber Runde 3: nur transcripts.ts (Muster Zeile 26, `time` Zeilen 46–55) und transcripts.test.ts; alle Funktionen ≤ 50 Zeilen.
+**Implementierer:** (nicht beteiligt)
+
 Bestätigungen:
 
 Confirmation: AC-1 bis AC-11 (Form, Pfad-Meldungen, Fremdschlüssel inkl. Prototype-Namen, Zeitwerte, Zeichen)
@@ -143,10 +154,16 @@ Finding:
 ID: F005
 Severity: LOW
 Category: edge_case
-Code reference: server/src/transcripts.ts:26
-Description: Der Zeitzonenversatz wird nicht auf den Bereich geprüft: +99:99, +24:00, +00:60 in generatedAt geben SQLSTATE 22009 aus Postgres, in dueDate wird +99:99 gespeichert
-Evidence: Runde 3 Probe, Codec erzeugt nur Z (TranscriptCodec.swift:74)
-Remediation: Versatz auf Stunden <= 15 und Minuten <= 59 begrenzen (Postgres nimmt bis +15:59)
+Code reference: server/src/transcripts.ts:51
+Description: Der Zeitzonenversatz wurde nicht auf den Bereich geprüft (+99:99 gab SQLSTATE 22009, in dueDate gespeichert); jetzt prüft `time` zusätzlich `oh <= 15 && om <= 59`, das Muster in Zeile 26 fängt den Versatz in eigenen Gruppen
+Evidence: Runde 4: Abgleich aller 20.000 Versätze gegen Postgres deckungsgleich, 37/37 Tests grün
+Remediation: erledigt
+Status: FIXED
+
+Confirmation: AC-19 bis AC-21 (setDue-Status)
+Code reference: Shared/Services/OrderExecutor.swift:78
+Evidence: OrderExecutorTests 14/14 grün in der Validierung, Statusprüfung vor dem Fälligkeitsvergleich
+Status: CONFIRMED
 
 ## Herkunft der Vorbedingungen
 
@@ -160,8 +177,8 @@ kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 - sha256:e0dde6093b14146df1347040365cd7d3875e14cef8f367d2b5f6905598cf3c04  LooseEndsTests/OrderExecutorTests.swift
 - sha256:1c9d521adeead90aa481a5f11af1e3de324dbb85283aad2c08085f1a0e3f689f  Shared/Services/OrderExecutor.swift
 - sha256:4ffa4c4d734e9a2002db5631f43c60626d094c60d228dff052bac5c30fd5f04d  docs/reference/claude-abschrift-vertrag.md
-- sha256:9e9fa1a9adf604304b10cfedd00b107d648fda3144dbe312003614059f75729a  server/src/transcripts.ts
-- sha256:663b1ce31d9853f8f57984e5d8a4ee358970b9b02eebcee5d4046a4831fa09b2  server/test/transcripts.test.ts
+- sha256:40f11563474ef15f194be2dc0defb89cfac8131e9b641060c889dd1b543fa67f  server/src/transcripts.ts
+- sha256:fc05f2ccee0cad1713e21e0a2b20f187fd0a412e8350923d44844503da85fc1b  server/test/transcripts.test.ts
 
 ## Prüfbasis
 
@@ -169,5 +186,5 @@ kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 - blob:0af95f999b27e84ff0f7eaf7e4496aa9ab7f7432  LooseEndsTests/OrderExecutorTests.swift
 - blob:5761990382a429a672edd8bcb05f4b75382ea1a6  Shared/Services/OrderExecutor.swift
 - blob:14532c9cbf3f5681909c74864dd6bdff7ca42629  docs/reference/claude-abschrift-vertrag.md
-- blob:2a956e6ce3363d560f44b27f936b4ef190c03fd0  server/src/transcripts.ts
-- blob:b0bdd652a50eb82f0ab2ac6d1862b5035cffa785  server/test/transcripts.test.ts
+- blob:f3c314d24f952c47b8d85ddf5002182ec2fa6bac  server/src/transcripts.ts
+- blob:248f14d3bbae91bb7b0eaf9c828fc95cd6680116  server/test/transcripts.test.ts

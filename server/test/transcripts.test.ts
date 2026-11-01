@@ -74,8 +74,10 @@ const table: Array<[string, Array<[(d: Doc) => void, string]>]> = [
   ]],
   ["F002 times Postgres refuses or that are no ISO", [
     ...["2026-02-30T00:00:00Z", "0000-01-01T00:00:00Z", "+275760-09-13T00:00:00Z", "March 12 2026 09:00 UTC+01:00",
-      "2026-03-12Z", "2026-03-12T24:00:00Z"].map((v): [(d: Doc) => void, string] => [(d) => { d.generatedAt = v; }, "generatedAt"]),
+      "2026-03-12Z", "2026-03-12T24:00:00Z", "2026-03-12T09:00:00+16:00", "2026-03-12T09:00:00-16:00",
+      "2026-03-12T09:00:00+01:60"].map((v): [(d: Doc) => void, string] => [(d) => { d.generatedAt = v; }, "generatedAt"]),
     [(d) => { d.tasks[0].dueDate = "2026-02-30T09:00:00+01:00"; }, "tasks[0].dueDate"],
+    [(d) => { d.tasks[0].dueDate = "2026-03-12T09:00:00+99:00"; }, "tasks[0].dueDate"],
   ]],
   ["F003 NUL and lone surrogates", [
     [(d) => { d.tasks[0].title = "a\u0000b"; }, "tasks[0].title"], [(d) => { d.tasks[1].contexts = ["\uD800"]; }, "tasks[1].contexts"],
@@ -153,4 +155,10 @@ test("AC-17: the service does not recount, a mismatching nowCount and unknown no
   const pool = await migrated(t);
   const doc = changed((d) => { d.nowCount = 7; d.now.today = ["11111111-2222-4333-8444-555555555555"]; });
   assert.equal(await putTranscript(pool, "henning", doc), "stored");
+});
+
+test("F002: offsets up to ±15:59 are stored, as Postgres takes them", async (t) => {
+  const pool = await migrated(t);
+  assert.equal(await putTranscript(pool, "henning", at("2026-03-12T09:00:00+15:59", 1)), "stored");
+  assert.equal(await putTranscript(pool, "anna", at("2026-03-12T09:00:00-15:59", 1)), "stored");
 });

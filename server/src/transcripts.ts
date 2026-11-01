@@ -23,7 +23,7 @@ export type Transcript = {
 type Check = (value: unknown, path: string) => void;
 
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const iso = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(\.\d+)?(Z|[+-]\d{2}:\d{2})$/;
+const iso = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?(?:Z|[+-](\d{2}):(\d{2}))$/;
 const statuses = new Set(["unprocessed", "unverified", "active", "parked"]);
 
 function fail(path: string, reason: string): never {
@@ -43,12 +43,13 @@ const flag: Check = (v, p) => { if (typeof v !== "boolean") fail(p, "kein Wahrhe
 const id: Check = (v, p) => { if (typeof v !== "string" || !uuid.test(v)) fail(p, "keine UUID"); };
 const rank: Check = (v, p) => { if (!count(v)) fail(p, "keine ganze Zahl ≥ 0"); };
 const status: Check = (v, p) => { if (typeof v !== "string" || !statuses.has(v)) fail(p, "unbekannter Status"); };
-// Strict ISO 8601 with zone, a real calendar day from year 1 to 9999: what Postgres timestamptz also takes.
+// Strict ISO 8601 with zone, a real calendar day from year 1 to 9999, an offset up to ±15:59: what Postgres timestamptz also takes.
 const time: Check = (v, p) => {
-  const [y, mo, d, h, mi, s] = (typeof v === "string" ? iso.exec(v)?.slice(1, 7) ?? [] : []).map(Number);
+  const [y, mo, d, h, mi, s, oh, om] = (typeof v === "string" ? iso.exec(v)?.slice(1, 9) ?? [] : []).map((x) => Number(x ?? 0));
   const day = new Date(Date.UTC(y, mo - 1, d));
   day.setUTCFullYear(y);
-  if (!(y >= 1 && day.getUTCMonth() === mo - 1 && day.getUTCDate() === d && h <= 23 && mi <= 59 && s <= 59)) {
+  const clock = h <= 23 && mi <= 59 && s <= 59 && oh <= 15 && om <= 59;
+  if (!(y >= 1 && day.getUTCMonth() === mo - 1 && day.getUTCDate() === d && clock)) {
     fail(p, "kein Zeitpunkt mit Zeitzone");
   }
 };
