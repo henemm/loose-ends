@@ -1074,6 +1074,37 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(again.label.contains("4711"), "Saved note was \(again.label)")
     }
 
+    /// #786: a policy number is no phone number. It stays in the title, and the rule writes no note,
+    /// on the iPhone as on the Mac (the iOS `NSDataDetector` took the bare digit run for a number).
+    @MainActor
+    func testPolicyNumberStaysInTitleAndNoteStaysEmpty() throws {
+        let app = launch()
+        let titleField = captureAndOpenDetail("Die Police 30021988 umschreiben lassen", in: app)
+
+        XCTAssertTrue(waitForValue("Die Police 30021988 umschreiben lassen", of: titleField),
+                      "Title should keep the number, was \(String(describing: titleField.value))")
+        let note = element("noteText", in: app)
+        for _ in 0..<3 where !note.exists { app.swipeUp() }
+        XCTAssertFalse(note.waitForExistence(timeout: 3), "No note expected, found \(note.label)")
+        attachScreenshot(app, "786-police-im-titel")
+    }
+
+    /// #786 (#439): a dictated phone number leaves the title and goes into the note.
+    @MainActor
+    func testPhoneNumberGoesToNoteNotTitle() throws {
+        let app = launch()
+        let titleField = captureAndOpenDetail("Ruf 040 1234567 an", in: app)
+
+        let note = element("noteText", in: app)
+        for _ in 0..<5 where !note.waitForExistence(timeout: 2) { app.swipeUp() }
+        XCTAssertTrue(note.waitForExistence(timeout: 5), "The rule should write the number into the note")
+        XCTAssertTrue(note.label.contains("040 1234567"), "Note was \(note.label)")
+        for _ in 0..<5 where !titleField.isHittable { app.swipeDown() }
+        let title = (titleField.value as? String) ?? ""
+        XCTAssertFalse(title.contains("040"), "Title should leave the number out, was \(title)")
+        attachScreenshot(app, "786-nummer-in-notiz")
+    }
+
     /// #544: "File" opens the document picker and "Photo" the photo picker. Both are system sheets
     /// with a Cancel button the detail itself never has; Cancel closes them again.
     @MainActor

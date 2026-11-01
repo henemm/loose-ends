@@ -1,0 +1,21 @@
+# Simulator-Beleg
+erzeugt: 2026-11-01T21:28:30+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: fix-786-telefonregel
+head: a141cd070ad7aaa16883faa0b0c3df753abceace
+basis: a06508986771be14e93834ae57ddf6bb3ebe8345 (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 26 gesamt, 26 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793563756.895  ende: 1793564904.892
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/fix-786-telefonregel/simulator-run/summary.json  sha256:d33f4840b6d0d491cedec8753ea932bd9c14707e28a7151abe51b9a2a2e79e2f
+xcresult: docs/artifacts/fix-786-telefonregel/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-786-telefonregel/simulator-run/*.png (15 Stück)
+
+## Geprüfte Dateien
+- sha256:9fb2556f27bbbee1f113d2021ab797ff91dd9e253bc9565fed1284485dac90fc  LooseEndsTests/PhoneRuleTests.swift
+- sha256:a773a335789277ce45ef93d24de2e9d129c14fb8ee7e2eef5e1bbdf19bd18594  LooseEndsUITests/CaptureSmokeTests.swift
+- sha256:2d8ed413e90623b60be98911bafb1f3aa5cafe735a4bca100a086e1da56cdde0  Shared/Enrichment/PhoneRule.swift
+- sha256:c6e7c7606a8b7311794205b4bac99d8d21fda6e955107269b88177f89e3ba75c  Shared/Services/NoteLinks.swift

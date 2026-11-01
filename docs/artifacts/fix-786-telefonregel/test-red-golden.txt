@@ -1,0 +1,29 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/RuleGoldenTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-01 20:00:51.537.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-01 20:00:51.538.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-01 20:00:51.538.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.004) seconds
+[1mTest run started.[0m
+Suite "Goldene Regelausgabe über alle Korpora" started
+    [33m⚠️[0m  Test "Jede Regel liefert über jeden Korpussatz dieselbe Ausgabe wie die Fixture" recorded an issue at RuleGoldenTests.swift:119:9: Expectation failed: diffs.isEmpty
+    [31m✖[0m [31m"Jede Regel liefert über jeden Korpussatz dieselbe Ausgabe wie die Fixture" (46.751 seconds) 1 issue(s)[0m
+Suite "Goldene Regelausgabe über alle Korpora" failed after 46.752 seconds with 1 issue(s)
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-generic-giggling-reddy/Logs/Test/Test-LooseEnds-2026.11.01_20-00-28-+0100.xcresult
+[36;1mTesting started[0m
