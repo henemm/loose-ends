@@ -236,6 +236,35 @@ App Store Connect, TestFlight → Gruppe `Tester`. Die Probe danach belegt `link
 **Schnitt 2:** 2a (Texte und Kontakt), 2b-1 (externe Gruppe, Build-Zuordnung), 2b-2b (Einreichung) und 2b-2c (öffentlicher
 Link) sind die Handläufe oben.
 
+## App Review: Notizen für Version 1.0 (#788)
+
+Apple hat die Einreichung von Version 1.0 (iOS) am 2026-10-31 mit „Guideline 2.1 – Information Needed“ zurückgegeben. Der
+Text für das Feld „Notes“ der App-Review-Informationen steht im ersten Codeblock von
+[`app-review-notizen.md`](app-review-notizen.md). Status bleibt `offen` und Beleg leer, bis ein Lauf ihn füllt.
+
+| Teil | Status | Beleg |
+|------|--------|-------|
+| Zustand vorher (`lesen`) | offen (erst nach dem Merge startbar) | |
+| Notizen setzen (`notizen`) | offen | |
+| Zustand danach (`lesen`) | offen | |
+| Zweiter Lauf `notizen` (`unverändert`) | offen | |
+| Bildschirmaufnahme als Anhang | offen (Schnitt 2, `aktion=video`) | |
+
+**Handlauf `asc-review-notes.yml`:** GitHub → Actions → **ASC Review Notes** → **Run workflow** → `aktion=lesen` oder
+`aktion=notizen` (oder `gh workflow run asc-review-notes.yml -f aktion=lesen`). Er führt zuerst
+`scripts/test_asc_review_notes.py` aus, dann `scripts/asc_review_notes.py`. Er reicht **nichts** ein; das erneute Einreichen
+geschieht nur nach Hennings Wort.
+
+- `lesen` schreibt nichts: `version 1.0 IOS appStoreState=…`, `notizen gesetzt bytes=…` oder `notizen leer`, je Anhang
+  `anhang name=… groesse=… assetDeliveryState=…` (ohne Anhang `anhang keine`), `zusammenfassung geschrieben=0`.
+- `notizen` prüft vor jedem Schreibaufruf: höchstens 4000 Byte (Apple zählt Byte, „ä“ zählt 2) und kein Platzhalter
+  `<HIER_`. Gleicher Text: `notizen unverändert bytes=…`, kein Schreiben. Sonst genau ein PATCH auf `notes`,
+  `notizen gesetzt bytes=…`, Gegenprobe `gegenprobe gleich=ja`, `zusammenfassung geschrieben=1`.
+- Notes-Text und Kontaktfelder stehen nie im Log (das Repo und seine Läufe sind öffentlich), nur Zustände und Bytezahlen.
+- `keine iOS-Version 1.0` oder `hat keine App-Review-Informationen`: Abbruch, das Skript legt nichts an.
+  `Apple lässt die Notizen im Zustand … nicht zu` (HTTP 403/409): Rückfall ist die Oberfläche von App Store Connect.
+- **Erst nach dem Merge:** `workflow_dispatch` startet erst, wenn die Workflow-Datei auf `main` liegt.
+
 ## Absturzberichte abholen (#773)
 
 Der Handlauf **ASC Crashes** (`.github/workflows/asc-crashes.yml`) holt die TestFlight-Absturzmeldungen mit

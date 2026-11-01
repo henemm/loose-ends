@@ -1,0 +1,37 @@
+# Handlauf (#788 Schnitt 1): liest die App-Review-Informationen von Version 1.0 (iOS) oder setzt deren Notizen aus
+# docs/reference/app-review-notizen.md. Schreibt nur das Feld `notes` und nur bei Abweichung; reicht nichts ein.
+name: ASC Review Notes
+
+on:
+  workflow_dispatch:
+    inputs:
+      aktion:
+        description: "lesen = nur Zustand zeigen, notizen = Notizen setzen (nur bei Abweichung)"
+        type: choice
+        options:
+          - lesen
+          - notizen
+        default: lesen
+
+permissions:
+  contents: read
+
+jobs:
+  review-notes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_POLL_SECONDS: "5"
+      AKTION: ${{ inputs.aktion }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Unit tests
+        run: python3 scripts/test_asc_review_notes.py
+      - name: Review notes
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT
+          umask 077
+          printf '%s\n' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"
+          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_review_notes.py "$AKTION"

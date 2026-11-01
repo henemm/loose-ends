@@ -1,0 +1,185 @@
+EFFEFFFFF.FFFFFE
+======================================================================
+ERROR: test_notes_file_has_no_placeholder_and_fits (__main__.NotesFileTests.test_notes_file_has_no_placeholder_and_fits)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 296, in test_notes_file_has_no_placeholder_and_fits
+    from asc_review_notes import extract_notes
+ModuleNotFoundError: No module named 'asc_review_notes'. Did you mean: 'test_asc_review_notes'?
+
+======================================================================
+ERROR: test_extracts_first_code_block (__main__.ReviewNotesTests.test_extracts_first_code_block)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 144, in test_extracts_first_code_block
+    from asc_review_notes import extract_notes
+ModuleNotFoundError: No module named 'asc_review_notes'. Did you mean: 'test_asc_review_notes'?
+
+======================================================================
+ERROR: test_workflow_has_choice_unit_tests_and_secrets (__main__.WorkflowTests.test_workflow_has_choice_unit_tests_and_secrets)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 306, in test_workflow_has_choice_unit_tests_and_secrets
+    workflow = WORKFLOW.read_text()
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 986, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 970, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/.github/workflows/asc-review-notes.yml'
+
+======================================================================
+FAIL: test_4001_bytes_aborts_before_any_write (__main__.ReviewNotesTests.test_4001_bytes_aborts_before_any_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 170, in test_4001_bytes_aborts_before_any_write
+    self.assert_failed(result)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 140, in assert_failed
+    self.assertIn("::error::", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '::error::' not found in ''
+
+======================================================================
+FAIL: test_different_text_exactly_one_patch_then_verified (__main__.ReviewNotesTests.test_different_text_exactly_one_patch_then_verified)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 200, in test_different_text_exactly_one_patch_then_verified
+    self.assert_ok(result)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 136, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/asc_review_notes.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_lesen_reports_states_and_never_writes (__main__.ReviewNotesTests.test_lesen_reports_states_and_never_writes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 218, in test_lesen_reports_states_and_never_writes
+    self.assert_ok(result)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 136, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/asc_review_notes.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_lesen_without_attachments_and_with_empty_notes (__main__.ReviewNotesTests.test_lesen_without_attachments_and_with_empty_notes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 234, in test_lesen_without_attachments_and_with_empty_notes
+    self.assert_ok(result)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 136, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/asc_review_notes.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_limit_4000_bytes_passes (__main__.ReviewNotesTests.test_limit_4000_bytes_passes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 163, in test_limit_4000_bytes_passes
+    self.assert_ok(result)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 136, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/asc_review_notes.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_missing_review_detail_has_clear_error_and_no_post (__main__.ReviewNotesTests.test_missing_review_detail_has_clear_error_and_no_post)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 273, in test_missing_review_detail_has_clear_error_and_no_post
+    self.assert_failed(result)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 140, in assert_failed
+    self.assertIn("::error::", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '::error::' not found in ''
+
+======================================================================
+FAIL: test_missing_version_has_clear_error (__main__.ReviewNotesTests.test_missing_version_has_clear_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 259, in test_missing_version_has_clear_error
+    self.assert_failed(result)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 140, in assert_failed
+    self.assertIn("::error::", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '::error::' not found in ''
+
+======================================================================
+FAIL: test_patch_refused_has_own_message (__main__.ReviewNotesTests.test_patch_refused_has_own_message)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 281, in test_patch_refused_has_own_message
+    self.assert_failed(result)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 140, in assert_failed
+    self.assertIn("::error::", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '::error::' not found in ''
+
+======================================================================
+FAIL: test_placeholder_aborts (__main__.ReviewNotesTests.test_placeholder_aborts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 155, in test_placeholder_aborts
+    self.assert_failed(result)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 140, in assert_failed
+    self.assertIn("::error::", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '::error::' not found in ''
+
+======================================================================
+FAIL: test_same_text_is_unchanged_no_patch (__main__.ReviewNotesTests.test_same_text_is_unchanged_no_patch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 190, in test_same_text_is_unchanged_no_patch
+    self.assert_ok(result)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 136, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/asc_review_notes.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_umlauts_count_two_bytes (__main__.ReviewNotesTests.test_umlauts_count_two_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 178, in test_umlauts_count_two_bytes
+    self.assert_ok(self.run_notes(fake, "notizen", text="ä" * 2000))
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 136, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/asc_review_notes.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_unknown_action_aborts_before_any_request (__main__.ReviewNotesTests.test_unknown_action_aborts_before_any_request)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 289, in test_unknown_action_aborts_before_any_request
+    self.assert_failed(result)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_asc_review_notes.py", line 140, in assert_failed
+    self.assertIn("::error::", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '::error::' not found in ''
+
+----------------------------------------------------------------------
+Ran 16 tests in 8.885s
+
+FAILED (failures=12, errors=3)
