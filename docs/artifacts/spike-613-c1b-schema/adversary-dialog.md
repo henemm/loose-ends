@@ -1,6 +1,6 @@
 # Adversary Dialog — spike-613-c1b-schema
 Spec: docs/specs/spike-613-schnitt-c1b-schema.md
-Datum: 2026-11-01 07:23
+Datum: 2026-11-01 08:18
 
 ## Checkliste
 - [x] **AC-1:** `migrate(pool, "server/migrations")` auf einem frischen Schema wendet genau `001_claude_schema.sql` an und legt die Tabellen `transcripts`, `orders` und `order_results` an; `schema_migrations` hat danach eine Zeile; ein zweiter Lauf liefert eine leere Liste und ändert nichts. Belegt durch `server/test/schema.test.ts` (`to_regclass` je Tabelle, zweiter Lauf `[]`).
@@ -17,106 +17,134 @@ Datum: 2026-11-01 07:23
 ## Dialog
 
 ### Runde 1
-**Adversary:** Tests frisch gelaufen (test-local.sh, Ausgabe in docs/artifacts/spike-613-c1b-schema/adversary-test-output.txt; 16 pass, 0 fail, 0 skipped; unittest 453 OK). F001 bis F003 gezielt angegriffen in einer Wegwerf-Postgres-Instanz (Port 54999, danach gestoppt und gelöscht), Sitzungszeitzone je Fall gesetzt, Spalte `generated_at` mit passendem Text:
-- generatedAt als JSON-Zahl 1700000000 → abgewiesen (22008, Cast scheitert).
-- `"...Z "` mit Leerzeichen am Ende → 23514. `"...+0100"` ohne Doppelpunkt → 23514. kleines `z` → 23514. Zeilenumbruch am Ende → 23514. Zonenname `" UTC"` → 23514. JSON null → 23514.
-- Gültige Form, aber ungültiges Datum `2026-13-45T09:00:00Z` → 22008 abgewiesen. `hello Z`, `xx+01:00`, `...+01:00Z` → 22007 abgewiesen (Cast).
-- Zeitzonenunabhängigkeit: `...Z` unter Europe/Berlin und Asia/Tokyo angenommen, `+01:00` unter Asia/Tokyo angenommen, `-05:00` angenommen; Gleichheit gilt als Zeitpunkt (andere Schreibweise desselben Moments angenommen, korrekt).
-- App-Formen: JSONEncoder `.iso8601` (Code reference: Shared/Services/TranscriptCodec.swift:74) erzeugt `yyyy-MM-dd'T'HH:mm:ssZZZZZ`, also `Z` oder `+01:00`; beides wird angenommen, auch mit Bruchteilen `.123Z`. Der Regex weist keine App-Form ab.
-**Implementierer:** Spec-Änderung und Migration decken F001 bis F003 ab (Code reference: server/migrations/001_claude_schema.sql:15, :30, :47).
+**Adversary:** Frische Läufe. `./server/scripts/test-local.sh`: typecheck ohne Fehler, 16 von 16 Tests grün, 0 übersprungen (docs/artifacts/spike-613-c1b-schema/adversary-test-output.txt). `python3 -m unittest discover -s scripts`: 453 Tests, OK (docs/artifacts/spike-613-c1b-schema/adversary-unittest-output.txt). Angriff auf F004 in eigener Wegwerf-Postgres (Port 54399, danach gestoppt und gelöscht), 19 Fälle direkt gegen die `transcripts`-Constraints:
+- angenommen: `Z`, `+01:00`, `-05:00`, Bruchteile `.123456Z` (alle mit passendem `generated_at`).
+- 23514: `generatedAt` als Array, verschachteltes Array, `null`, fehlend, ohne Zeitzone, `rawText` an einer Aufgabe, `revisions` oben.
+- abgewiesen mit 22007 (Cast scheitert in der ersten CHECK, also ebenfalls nicht angenommen): Objekt, Zahl, Array mit zwei Elementen, leeres Array, `"...Z junk"`.
+- 2203C: `tasks:["Text"]` und `tasks:null` (Klasse 2203x, wie AC-3 verlangt).
+Der F004-Fix wirkt: `jsonb_typeof(doc->'generatedAt') = 'string'` (server/migrations/001_claude_schema.sql:15) schließt das einelementige Array. Die RED/GREEN-Belege passen dazu (test-red-f004: "Missing expected rejection: generatedAt als Array"; test-green-f004: 16/16). F001 bis F003 aus Runde 1 des Vorgängerlaufs bleiben geschlossen (Großschreibung/uuid AC-6, Zeitzone AC-3, 2203x bei Nicht-Objekt in tasks, alle durch die Tests und die Direktfälle bestätigt). Die drei Vertragsbeispiele werden angenommen (Test AC-2).
+**Implementierer:** (nicht beteiligt, Kontextisolation)
 
 ### Runde 2
-**Adversary:** Eigene Gegenbeispiele, die die Spec nicht nennt, fanden eine Lücke:
-- Code reference: server/migrations/001_claude_schema.sql:15. `generatedAt` als Array `["2026-03-12T09:00:00Z"]` wird ANGENOMMEN: `jsonb_path_exists` läuft im lax-Modus und entpackt das Array, der Regex trifft den Eintrag; `doc->>'generatedAt'` liefert den Text `["2026-03-12T09:00:00Z"]`, und Postgres liest den Cast samt Klammern (Zeile gespeichert, `jsonb_typeof` = array). Die App dekodiert so ein Dokument nicht als Date. Mit `@.type() == "string" &&` im Filter wird das Array abgewiesen (geprüft, die Zeichenkette bleibt angenommen).
-- Weitere lockere Formen, angenommen, aber harmlos: Leerzeichen statt `T` (`2026-03-12 09:00:00Z`), reines Datum mit Zone (`2026-03-12Z`). Die App erzeugt sie nicht. Nur Hinweis.
-- Bestand gebrochen? Die drei Vertragsbeispiele werden angenommen (AC-2 grün), kein weiterer Test rot, migrate.test.ts unverändert grün.
-- RED-Nachweis der Zeile `generatedAt ohne Zeitzone` (Frage 3): Im RED-Lauf (test-red2-output.txt:39) bricht die Schleife bei `generatedAt fehlt` ab, die Zeitzonenzeile wurde dort nicht erreicht. Der getrennte Nachweis gegen die alte Migration genügt als Beleg, weil die Zeilen unabhängig sind; er ist aber schwächer als ein Lauf je Zeile. Zusätzlich zeigt meine Probe, dass die Zeile gegen die neue Migration wirklich 23514 liefert (Zonenname, Zeilenumbruch, Leerzeichen scheitern am selben CHECK). Ausreichend; Empfehlung: ein Test je Tabellenzeile, dann bricht kein Fehlschlag die übrigen ab.
-- Scope: keine App-Datei in der Dateiliste. Die Spec schiebt verschachtelten rawText und die Formprüfung des Auftrags nach C3, kein Finding.
-**Implementierer:** Offen, für den Menschen.
+**Adversary:** Zweiter Angriff auf Lücken außerhalb von `generatedAt`. Fund: Ein Objekt `now` mit fremdem Inhalt oder eine `now`-Eintragsliste mit `rawText` wird angenommen (Fall `nowRaw`: `"now":[{"rawText":"x"}]` ACCEPTED). Der Vertrag (docs/reference/claude-abschrift-vertrag.md:23) definiert `now` als Kennungen, die Spec (AC-3) verlangt die Schlüsselprüfung aber ausdrücklich nur oben und je Aufgabe in `tasks`. Das ist also keine Spec-Verletzung, sondern eine dokumentierte Grenze des Datenschutz-Zauns; als LOW vermerkt (F005). Weiter geprüft: Test-Infrastruktur. `freshPool` samt `DATABASE_URL`-Pflicht liegt in server/test/db.ts:11 und wird von server/test/migrate.test.ts:10 importiert (keine Kopie); der Kindprozess-Test ohne `DATABASE_URL` ist grün (AC-5 C1a). `server/package.json:10` wählt `test/*.test.ts`, die Ausgabe zeigt 16 Tests aus zwei Dateien, kein Lauf für db.ts. `.github/workflows/server.yml:9` und `:15` ergänzen den Vertragspfad für `pull_request` und `push`; der Vertrag nennt `server/test/schema.test.ts` (docs/reference/claude-abschrift-vertrag.md:8). Regression: TranscriptCodec (Shared/Services/TranscriptCodec.swift:13) ist unverändert, die Schlüssel `version`, `generatedAt`, `nowCount`, `now`, `tasks` stimmen mit dem Zaun überein. Die Testtabelle enthält die neue Zeile (server/test/schema.test.ts:93). Dateiliste der Änderung: nur server/, docs/, .github/workflows/server.yml, keine App-Datei, kein project.yml, kein CloudKit-Schema, keine CLAUDE.md. Offen und bekannt, kein Defekt: AC-9/AC-10 Teil „CI-Lauf auf dem PR“, solange es keinen PR gibt.
+**Implementierer:** (nicht beteiligt, Kontextisolation)
 
-**Findings (strukturiert):**
-
+### Findings
 Finding:
   ID: F004
-  Severity: MEDIUM
+  Severity: HIGH
   Category: edge_case
   Code reference: server/migrations/001_claude_schema.sql:15
-  Description: Der CHECK auf generatedAt nutzt `jsonb_path_exists(doc, '$.generatedAt ? (@ like_regex ...)')` ohne Typprüfung im lax-Modus; ein einelementiges Array mit gültiger Zeichenkette passiert Regex und Cast.
-  Spec requirement: AC-3 — generatedAt muss vorhanden sein und mit einer Zeitzone enden, der Vergleich darf nicht von der Sitzung abhängen.
-  Conflict: Das Dokument mit `"generatedAt":["2026-03-12T09:00:00Z"]` wird gespeichert, obwohl der Vertrag eine Zeichenkette verlangt und die App kein Array dekodiert. Nicht durch die Spec-Tabelle abgedeckt, daher AMBIGUOUS statt BROKEN.
-  Remediation: Filter auf `@.type() == "string" && @ like_regex ...` (geprüft), dazu eine Tabellenzeile `generatedAt als Array` mit 23514.
+  Description: generatedAt als einelementiges Array wurde angenommen; jetzt mit jsonb_typeof = 'string' ausgeschlossen. Neu geprüft: Array, verschachtelt, Objekt, Zahl, null, fehlend alle abgewiesen.
+  Spec requirement: AC-3 — generatedAt ohne Zeitzone/ungültig abweisen
+  Conflict: keiner mehr, Status GESCHLOSSEN
+  Remediation: keine
 
-Geschlossen: F001 (kind NOT NULL, Zeile 30, Test 111), F002 (outcome NOT NULL, Zeile 47, Test 146), F003 (Zeile 15, Test 91 und 92), mit der Einschränkung F004.
+Finding:
+  ID: F005
+  Severity: LOW
+  Category: anti_pattern
+  Code reference: server/migrations/001_claude_schema.sql:20
+  Description: Der Schlüsselzaun prüft nur oben und je Aufgabe in tasks; Inhalt von now bleibt ungeprüft ("now":[{"rawText":"x"}] wird angenommen).
+  Spec requirement: AC-3 — Schlüssel oben und je Aufgabe (nicht in now)
+  Conflict: kein Spec-Konflikt; Datenschutz-Zaun hat eine dokumentierbare Lücke, die in C3 (Aufnahme-Endpunkt) zu schließen ist
+  Remediation: C3 validiert now als Objekt mit Kennungen, oder CHECK auf Typ der Werte
 
-Offen, ausdrücklich: AC-9 und AC-10 brauchen den CI-Lauf auf dem PR (es gibt noch keinen PR).
+## Bestätigungen
+Confirmation:
+  AC: AC-1
+  Code reference: server/test/schema.test.ts:93
+  Evidence: Test "AC-1: the real migrations folder applies 001 once and creates the three tables" grün
+  Status: CONFIRMED
 
+Confirmation:
+  AC: AC-2
+  Code reference: docs/reference/claude-abschrift-vertrag.md:8
+  Evidence: Drei Vertragsbeispiele zur Laufzeit gelesen und angenommen, Test AC-2 grün
+  Status: CONFIRMED
 
-**Bestätigungen (Confirmation, Status CONFIRMED):**
+Confirmation:
+  AC: AC-3
+  Code reference: server/migrations/001_claude_schema.sql:15
+  Evidence: 19 Direktfälle und Tabellentest grün, SQLSTATEs wie in der Spec
+  Status: CONFIRMED
 
-- AC-1: Code reference: server/migrations/001_claude_schema.sql:6 — drei CREATE TABLE (transcripts, orders, order_results); Code reference: server/test/schema.test.ts:56 prüft to_regclass und zweiten Lauf `[]`. Evidence: Testlauf grün (16 von 16).
-- AC-2: Code reference: server/test/schema.test.ts:68 — Beispiele zur Laufzeit aus dem Vertrag. Evidence: grün; die neuen Zeilen haben die drei Vertragsbeispiele nicht gebrochen (NOT NULL und Zeitzonen-CHECK akzeptieren `...Z`).
-- AC-3: Code reference: server/test/schema.test.ts:81 (Zeilen 91 und 92 neu) und server/migrations/001_claude_schema.sql:15. Evidence: grün; eigene Gegenbeispiele in Runde 1 und 2, mit Einschränkung F004.
-- AC-4: Code reference: server/migrations/001_claude_schema.sql:30 (`kind ... NOT NULL`), server/test/schema.test.ts:111 (`kind fehlt` → 23502). Evidence: grün.
-- AC-5: Code reference: server/migrations/001_claude_schema.sql:47 (`outcome ... NOT NULL`), server/test/schema.test.ts:146 (`outcome fehlt` → 23502). Evidence: grün.
-- AC-6: Code reference: server/test/schema.test.ts:160 und server/test/schema.test.ts:171. Evidence: grün.
-- AC-7: Code reference: server/test/db.ts:5 (DATABASE_URL-Pflicht, `throw`), server/test/migrate.test.ts:10 (`import { freshPool } from "./db.ts"`). Evidence: migrate.test.ts ist gegenüber HEAD unverändert, 9 migrate-Tests grün inkl. Kindprozess-Test ohne DATABASE_URL.
-- AC-8: Code reference: server/package.json:10 (`node --test 'test/*.test.ts'`). Evidence: Lauf meldet `tests 16`, nur migrate- und schema-Tests, kein Lauf für db.ts.
-- AC-9: Code reference: .github/workflows/server.yml:9 (pull_request-Filter) und .github/workflows/server.yml:15 (push-Filter); Code reference: docs/reference/claude-abschrift-vertrag.md:8 (Satz nennt schema.test.ts). Evidence: Diff-Durchsicht, `python3 -m unittest discover -s scripts`: 453 Tests OK. OFFEN: der CI-Lauf auf dem PR, es gibt den PR noch nicht.
-- AC-10: Evidence: `./server/scripts/test-local.sh` Exit 0 (Typprüfung ohne Fehler, 16 von 16 grün, 0 übersprungen), Aufräumen per trap. Dateiliste gegen HEAD: nur server.yml, Vertrag, Spec, Briefing, server/package.json, schema.test.ts plus neu server/migrations/; keine App-Datei, kein project.yml, kein CloudKit-Schema, keine CLAUDE.md. OFFEN: server.yml grün auf dem PR (kein PR).
+Confirmation:
+  AC: AC-4
+  Code reference: server/migrations/001_claude_schema.sql:36
+  Evidence: Test AC-4 orders grün, alle drei Arten angenommen
+  Status: CONFIRMED
 
+Confirmation:
+  AC: AC-5
+  Code reference: server/migrations/001_claude_schema.sql:50
+  Evidence: Test AC-5 order_results grün, Primary Key = Foreign Key
+  Status: CONFIRMED
 
-**Belegstellen je Datei (Confirmation, Status CONFIRMED):**
+Confirmation:
+  AC: AC-6
+  Code reference: server/migrations/001_claude_schema.sql:37
+  Evidence: beide AC-6-Tests grün (Großschreibung, uuid klein, 1.0 als bekannte Grenze)
+  Status: CONFIRMED
 
-Code reference: server/migrations/001_claude_schema.sql:15
-Evidence: AC-3/F003 und F004: CHECK auf generatedAt
+Confirmation:
+  AC: AC-7
+  Code reference: server/test/db.ts:11
+  Evidence: freshPool zentral, migrate.test.ts:10 importiert nur; 9 migrate-Tests grün
+  Status: CONFIRMED
 
-Code reference: server/test/schema.test.ts:81
-Evidence: AC-3 bis AC-5: Abweichungstabellen
+Confirmation:
+  AC: AC-8
+  Code reference: server/package.json:10
+  Evidence: Auswahl test/*.test.ts, 16 Tests, kein db.ts-Lauf
+  Status: CONFIRMED
 
-Code reference: server/test/db.ts:5
-Evidence: AC-7: DATABASE_URL-Pflicht
+Confirmation:
+  AC: AC-9
+  Code reference: .github/workflows/server.yml:9
+  Evidence: Vertragspfad in beiden Auslösern; unittest 453 OK; CI-Lauf auf dem PR offen (kein PR, bekannt)
+  Status: CONFIRMED
 
-Code reference: server/test/migrate.test.ts:10
-Evidence: AC-7: Import von freshPool
+Confirmation:
+  AC: AC-10
+  Code reference: server/test/migrate.test.ts:10
+  Evidence: test-local.sh grün, Aufräumen ok, Dateiliste ohne App-Dateien; CI auf PR offen (bekannt)
+  Status: CONFIRMED
 
-Code reference: server/package.json:10
-Evidence: AC-8: Testauswahl test/*.test.ts
-
-Code reference: .github/workflows/server.yml:9
-Evidence: AC-9: Pfadfilter
-
-Code reference: docs/reference/claude-abschrift-vertrag.md:8
-Evidence: AC-9: Satz zu den Beispielen
-
-Code reference: Shared/Services/TranscriptCodec.swift:74
-Evidence: App-Datumsformat iso8601
+Confirmation:
+  AC: Privacy/Regression
+  Code reference: Shared/Services/TranscriptCodec.swift:13
+  Evidence: Codec-Schlüssel unverändert und deckungsgleich mit Zaun
+  Status: CONFIRMED
 
 ## Herkunft der Vorbedingungen
 
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 
 ## Verdict
-**AMBIGUOUS**
+
+VERDICT: VERIFIED
+Tests: 16 passed, 0 failed, 0 übersprungen (server); 453 passed (scripts)
 
 ## Geprüfte Dateien
 
 - sha256:3bfab5d3e214e45cc29164595d9d3610e9695b3055f8f961d8779a85931ba73b  .github/workflows/server.yml
 - sha256:8e6898f6f9193dbcda9bb13b3b37e6d46a4b8ed6d2af3ef36f43fc2decdc80b8  Shared/Services/TranscriptCodec.swift
 - sha256:0d38398683ad7f0b122a0863cad90306d9f6530285f26a0c90cc63cc3f0e9ed5  docs/reference/claude-abschrift-vertrag.md
-- sha256:3ca8f2da5ff4b1dfed71fe81ac2062b9111df4d009063ea0adf7bec548b36926  server/migrations/001_claude_schema.sql
+- sha256:4bec8caef895e9e0e5979bdbe31177237574d1084ccd81da097e979e7c085e6a  server/migrations/001_claude_schema.sql
 - sha256:ef2bc1acb7cb27d3dbdd5ff3c5caf8143a742710c2f05f29be96b8ced86f1f1f  server/package.json
 - sha256:40281a1aed6430c433b7ebcec2561f29459dba1914d2132d1cc010c2b18b5d5a  server/test/db.ts
 - sha256:29bc4c47a9e1317c8cdb81ec4c1ebb0de39b862629b63dc12f8ca06744bd9f8f  server/test/migrate.test.ts
-- sha256:f2780193bb53c6b796832e23571978a2e1aaf2e79cef4ecd4bc01cd4b84c6c1e  server/test/schema.test.ts
+- sha256:7fafebf17c993e352491f665c6f0aee09f9a86d8301faf2aac54c2286e53c11b  server/test/schema.test.ts
 
 ## Prüfbasis
 
-- base: 20e250a4a5faf9dab675465a7d43c0816662931b
+- base: fe1097a1514ab02599f485582004973f9779c097
 - blob:7af0e18c36dc0da7ebdc77db1915bca4e1adb584  .github/workflows/server.yml
 - blob:9ee5ccfc0057a00dbaa52b8c71527e5d36aaa4eb  Shared/Services/TranscriptCodec.swift
 - blob:29d170353f3c6982341825f69034fe6911a63945  docs/reference/claude-abschrift-vertrag.md
-- blob:ce7361296490f2d748a3b299bdbcaa8f5d20b8a1  server/migrations/001_claude_schema.sql
+- blob:acb202e7e7ec7d4a90a7288b5214cd7897c6bfba  server/migrations/001_claude_schema.sql
 - blob:39fa6d49b407ceb440026f84d0fdef384d27c511  server/package.json
 - blob:d745feabf6ec0724ad7ebdb89673a74ae86e65e1  server/test/db.ts
 - blob:4e75f13b1102eb4b84ea444deba20ef6a31b23d2  server/test/migrate.test.ts
-- blob:9c1afbb0cd222d82986c8dda8fa311f79f271b47  server/test/schema.test.ts
+- blob:816bdd57cadebb01fd0e61bb2d9f5d9fd48f25c9  server/test/schema.test.ts

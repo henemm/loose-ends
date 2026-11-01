@@ -11,8 +11,10 @@ CREATE TABLE transcripts (
   received_at timestamptz NOT NULL DEFAULT now(),
   CHECK (generated_at = (doc->>'generatedAt')::timestamptz),
   -- generatedAt must be there and end in a zone (Z or +hh:mm), or the cast above, and with it the
-  -- comparison, would depend on the time zone of the session.
-  CHECK (jsonb_path_exists(doc, '$.generatedAt ? (@ like_regex "(Z|[+-][0-9]{2}:[0-9]{2})$")')),
+  -- comparison, would depend on the time zone of the session. Lax mode unwraps an array before the filter,
+  -- so the type is tested on its own.
+  CHECK (jsonb_typeof(doc->'generatedAt') = 'string'
+    AND jsonb_path_exists(doc, '$.generatedAt ? (@ like_regex "(Z|[+-][0-9]{2}:[0-9]{2})$")')),
   CHECK (doc @> '{"version":1}'),
   -- The privacy line (#625): only these keys on top and per task, so no raw text, note, attachment or revision
   -- gets in. A non-object in tasks makes keyvalue() raise a 2203x error, so it is refused as well.

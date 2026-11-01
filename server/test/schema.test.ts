@@ -90,6 +90,7 @@ test("AC-3: transcripts refuse what the contract does not allow", async (t) => {
     { name: "generated_at weicht ab", at: "2026-03-12T10:00:00Z", expect: "23514" },
     { name: "generatedAt fehlt", doc: changed(transcript, (d) => { delete d.generatedAt; }), at: transcript.generatedAt, expect: "23514" },
     { name: "generatedAt ohne Zeitzone", doc: changed(transcript, (d) => { d.generatedAt = "2026-03-12T09:00:00"; }), at: "2026-03-12T09:00:00", expect: "23514" },
+    { name: "generatedAt als Array", doc: changed(transcript, (d) => { d.generatedAt = [transcript.generatedAt]; }), at: transcript.generatedAt, expect: "23514" },
     { name: "Nicht-Objekt in tasks", doc: changed(transcript, (d) => { d.tasks = ["Text"]; }), expect: /^2203/ },
     { name: "account_id fehlt", account: null, expect: "23502" },
   ];

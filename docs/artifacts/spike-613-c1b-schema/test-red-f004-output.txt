@@ -1,0 +1,50 @@
+Postgres on 127.0.0.1:50221, data in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.pRC26X1GgU
+
+> typecheck
+> tsc --noEmit
+
+
+> test
+> node --test 'test/*.test.ts'
+
+✔ AC-1: applies migrations in number order and returns their names in that order (21.39275ms)
+✔ AC-2: a second run applies nothing, a new file alone is applied (11.026625ms)
+✔ AC-3: a broken migration rolls back completely and rethrows the Postgres error (10.489041ms)
+✔ AC-4: a gap in the numbers is refused before anything is applied (6.490791ms)
+✔ AC-4: a duplicate number is refused before anything is applied (12.276875ms)
+✔ AC-4: a misnamed .sql file is refused before anything is applied, README.md is ignored (6.969ms)
+✔ AC-4: a README.md beside the migrations does not disturb the run (8.80725ms)
+✔ AC-4: number 000 is refused as invalid, not as a duplicate (4.506166ms)
+✔ AC-5: without DATABASE_URL the test run fails and names the variable (221.628584ms)
+✔ AC-1: the real migrations folder applies 001 once and creates the three tables (24.64875ms)
+✔ AC-2: the three contract examples are accepted in contract order (13.288416ms)
+✖ AC-3: transcripts refuse what the contract does not allow (36.278542ms)
+✔ AC-4: orders refuse a wrong version, kind, id, account or half a claim, and take all three kinds (29.928542ms)
+✔ AC-5: order results belong to exactly one existing order and carry a reason only when rejected (26.324542ms)
+✔ AC-6: ids keep their case in the document, the uuid columns compare regardless of case (11.1755ms)
+✔ AC-6: known limit, version 1.0 is accepted because jsonb compares numbers numerically (11.336042ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 15
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 481.943333
+
+✖ failing tests:
+
+test at test/schema.test.ts:81:1
+✖ AC-3: transcripts refuse what the contract does not allow (36.278542ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: generatedAt als Array
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async refused (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/schema.test.ts:49:3)
+      at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/schema.test.ts:98:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'rejects',
+    diff: 'simple'
+  }
