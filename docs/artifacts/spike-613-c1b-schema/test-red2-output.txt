@@ -1,0 +1,80 @@
+Postgres on 127.0.0.1:62797, data in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.S6rdAc8kmb
+
+> typecheck
+> tsc --noEmit
+
+
+> test
+> node --test 'test/*.test.ts'
+
+✔ AC-1: applies migrations in number order and returns their names in that order (22.606958ms)
+✔ AC-2: a second run applies nothing, a new file alone is applied (10.3265ms)
+✔ AC-3: a broken migration rolls back completely and rethrows the Postgres error (8.734833ms)
+✔ AC-4: a gap in the numbers is refused before anything is applied (4.382625ms)
+✔ AC-4: a duplicate number is refused before anything is applied (9.525459ms)
+✔ AC-4: a misnamed .sql file is refused before anything is applied, README.md is ignored (6.035083ms)
+✔ AC-4: a README.md beside the migrations does not disturb the run (8.236166ms)
+✔ AC-4: number 000 is refused as invalid, not as a duplicate (4.640375ms)
+✔ AC-5: without DATABASE_URL the test run fails and names the variable (223.336542ms)
+✔ AC-1: the real migrations folder applies 001 once and creates the three tables (26.361ms)
+✔ AC-2: the three contract examples are accepted in contract order (12.5685ms)
+✖ AC-3: transcripts refuse what the contract does not allow (24.62525ms)
+✖ AC-4: orders refuse a wrong version, kind, id, account or half a claim, and take all three kinds (16.180208ms)
+✖ AC-5: order results belong to exactly one existing order and carry a reason only when rejected (22.55625ms)
+✔ AC-6: ids keep their case in the document, the uuid columns compare regardless of case (9.910083ms)
+✔ AC-6: known limit, version 1.0 is accepted because jsonb compares numbers numerically (10.640042ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 13
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 465.060291
+
+✖ failing tests:
+
+test at test/schema.test.ts:81:1
+✖ AC-3: transcripts refuse what the contract does not allow (24.62525ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: generatedAt fehlt
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async refused (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/schema.test.ts:49:3)
+      at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/schema.test.ts:97:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at test/schema.test.ts:104:1
+✖ AC-4: orders refuse a wrong version, kind, id, account or half a claim, and take all three kinds (16.180208ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: kind fehlt
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async refused (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/schema.test.ts:49:3)
+      at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/schema.test.ts:120:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at test/schema.test.ts:134:1
+✖ AC-5: order results belong to exactly one existing order and carry a reason only when rejected (22.55625ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: outcome fehlt
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async refused (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/schema.test.ts:49:3)
+      at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/schema.test.ts:150:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'rejects',
+    diff: 'simple'
+  }

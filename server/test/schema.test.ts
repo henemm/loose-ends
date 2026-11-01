@@ -88,6 +88,8 @@ test("AC-3: transcripts refuse what the contract does not allow", async (t) => {
     { name: "version fehlt", doc: changed(transcript, (d) => { delete d.version; }), expect: "23514" },
     { name: "version als Text", doc: changed(transcript, (d) => { d.version = "1"; }), expect: "23514" },
     { name: "generated_at weicht ab", at: "2026-03-12T10:00:00Z", expect: "23514" },
+    { name: "generatedAt fehlt", doc: changed(transcript, (d) => { delete d.generatedAt; }), at: transcript.generatedAt, expect: "23514" },
+    { name: "generatedAt ohne Zeitzone", doc: changed(transcript, (d) => { d.generatedAt = "2026-03-12T09:00:00"; }), at: "2026-03-12T09:00:00", expect: "23514" },
     { name: "Nicht-Objekt in tasks", doc: changed(transcript, (d) => { d.tasks = ["Text"]; }), expect: /^2203/ },
     { name: "account_id fehlt", account: null, expect: "23502" },
   ];
@@ -106,6 +108,7 @@ test("AC-4: orders refuse a wrong version, kind, id, account or half a claim, an
     { name: "version fehlt", doc: changed(order, (d) => { delete d.version; }), expect: "23514" },
     { name: "version als Text", doc: changed(order, (d) => { d.version = "1"; }), expect: "23514" },
     { name: "kind unbekannt", doc: changed(order, (d) => { d.kind = "delete"; }), expect: "23514" },
+    { name: "kind fehlt", doc: changed(order, (d) => { delete d.kind; }), expect: "23502" },
     { name: "id fehlt", doc: changed(order, (d) => { delete d.id; }), expect: "23502" },
     { name: "id keine UUID", doc: changed(order, (d) => { d.id = "kein-uuid"; }), expect: "22P02" },
     { name: "account_id fehlt", account: null, expect: "23502" },
@@ -140,6 +143,7 @@ test("AC-5: order results belong to exactly one existing order and carry a reaso
     { name: "done mit reason", doc: { ...done, reason: "stale" }, expect: "23514" },
     { name: "reason unbekannt", doc: changed(result, (d) => { d.reason = "gone"; }), expect: "23514" },
     { name: "outcome unbekannt", doc: { ...done, outcome: "maybe" }, expect: "23514" },
+    { name: "outcome fehlt", doc: changed(done, (d) => { delete d.outcome; }), expect: "23502" },
     { name: "reported_by fehlt", doc: result, reportedBy: null, expect: "23502" },
   ];
   for (const c of cases) {

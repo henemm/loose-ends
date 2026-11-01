@@ -2,7 +2,7 @@
 entity_id: spike-613-schnitt-c1b-schema
 type: feature
 created: 2026-10-31
-updated: 2026-10-31
+updated: 2026-11-01
 status: draft
 workflow: spike-613-c1b-schema
 ---
@@ -43,16 +43,17 @@ Schema (Variante A der Analyse in allen Zeilen; PG-13-tauglich, nichts aus PG 18
 
 - `transcripts`: `account_id text PRIMARY KEY` (eine Zeile je Konto, keine Historie); `doc jsonb NOT NULL`;
   `generated_at timestamptz NOT NULL` mit CHECK `generated_at = (doc->>'generatedAt')::timestamptz`
-  (`timestamptz` aus Text ist nicht `immutable`, deshalb keine erzeugte Spalte); `received_at timestamptz NOT NULL DEFAULT now()`.
+  (`timestamptz` aus Text ist nicht `immutable`, deshalb keine erzeugte Spalte); dazu CHECK, dass `doc.generatedAt` vorhanden ist und mit einer Zeitzone endet
+  (`Z` oder `±hh:mm`, per `jsonb_path_exists` und `like_regex`), damit der Vergleich nicht von der Zeitzone der Sitzung abhängt (Adversary-Runde 1, F003); `received_at timestamptz NOT NULL DEFAULT now()`.
   CHECKs auf `doc`: `doc @> '{"version":1}'`; Schlüssel oben nur `version`, `generatedAt`, `nowCount`, `now`, `tasks`; Schlüssel je Aufgabe nur
   `id`, `title`, `status`, `dueDate`, `dueHasTime`, `contexts`, `project`, `nextRank`, `isKnaeuel` (beide per `jsonb_path_exists` mit `keyvalue()` und `like_regex`;
   ein Unterabfrage-CHECK ist in Postgres nicht erlaubt, ein Nicht-Objekt in `tasks` bricht `keyvalue()` mit einem Fehler der Klasse 2203x ab, wird also ebenfalls abgewiesen).
 - `orders`: `doc jsonb NOT NULL`; `id uuid GENERATED ALWAYS AS ((doc->>'id')::uuid) STORED PRIMARY KEY`;
-  `kind text GENERATED ALWAYS AS (doc->>'kind') STORED` mit CHECK `kind IN ('capture','complete','setDue')`; `account_id text NOT NULL` (ohne Fremdschlüssel bis C6);
+  `kind text GENERATED ALWAYS AS (doc->>'kind') STORED NOT NULL` (ein Auftrag ohne Art wäre nie ausführbar, F001) mit CHECK `kind IN ('capture','complete','setDue')`; `account_id text NOT NULL` (ohne Fremdschlüssel bis C6);
   CHECK `doc @> '{"version":1}'`; `created_at timestamptz NOT NULL DEFAULT now()`; `claimed_by text`, `claimed_at timestamptz` mit CHECK „beide gesetzt oder beide leer“
   (die Vergabe selbst, `FOR UPDATE SKIP LOCKED`, ist C3).
 - `order_results`: `doc jsonb NOT NULL`; `order_id uuid GENERATED ALWAYS AS ((doc->>'orderID')::uuid) STORED PRIMARY KEY REFERENCES orders(id)` (höchstens ein Ergebnis je Auftrag, nur zu einem bestehenden);
-  `outcome text GENERATED ALWAYS AS (doc->>'outcome') STORED` mit CHECK `outcome IN ('done','rejected')`;
+  `outcome text GENERATED ALWAYS AS (doc->>'outcome') STORED NOT NULL` (ein Ergebnis ohne Ausgang belegte den Auftrag, F002) mit CHECK `outcome IN ('done','rejected')`;
   `reason text GENERATED ALWAYS AS (doc->>'reason') STORED` mit CHECK `reason IN ('invalid','missing','stale')` und `(outcome = 'rejected') = (reason IS NOT NULL)`;
   `task_id uuid GENERATED ALWAYS AS ((doc->>'taskID')::uuid) STORED` (optional); `reported_by text NOT NULL`; `reported_at timestamptz NOT NULL DEFAULT now()`.
   Das Konto steht über den Auftrag, keine eigene `account_id`-Spalte.
@@ -75,13 +76,13 @@ Schema (Variante A der Analyse in allen Zeilen; PG-13-tauglich, nichts aus PG 18
   Der Test schlägt fehl, wenn der Vertrag nicht genau drei ```json-Blöcke enthält. Belegt durch `schema.test.ts`.
 - **AC-3:** `transcripts` weist Abweichungen mit dem erwarteten SQLSTATE ab (eine Abweichungstabelle in `schema.test.ts`, je Zeile eine Änderung am Vertragsbeispiel):
   `rawText` oder `note` an einer Aufgabe → 23514; fremder Schlüssel oben (z. B. `revisions`) → 23514; `version` fehlt → 23514; `version` als `"1"` → 23514;
-  `generated_at` ≠ `doc.generatedAt` → 23514; `tasks` enthält ein Nicht-Objekt (`"tasks":["Text"]`) → Fehler der Klasse 2203x (abgewiesen, ohne 23514 zu behaupten); `account_id` NULL → 23502;
+  `generated_at` ≠ `doc.generatedAt` → 23514; `generatedAt` fehlt → 23514; `generatedAt` ohne Zeitzone (`2026-03-12T09:00:00`, `generated_at` mit demselben Text) → 23514; `tasks` enthält ein Nicht-Objekt (`"tasks":["Text"]`) → Fehler der Klasse 2203x (abgewiesen, ohne 23514 zu behaupten); `account_id` NULL → 23502;
   eine zweite Zeile desselben Kontos → 23505 (das Überschreiben bei neuerem `generatedAt` ist C3).
-- **AC-4:** `orders` weist Abweichungen mit dem erwarteten SQLSTATE ab: `version` fehlt → 23514; `version` als `"1"` → 23514; `kind` unbekannt (`"delete"`) → 23514;
+- **AC-4:** `orders` weist Abweichungen mit dem erwarteten SQLSTATE ab: `version` fehlt → 23514; `version` als `"1"` → 23514; `kind` unbekannt (`"delete"`) → 23514; `kind` fehlt → 23502;
   doppelte `id` → 23505; fehlende `id` → 23502; ungültige UUID als `id` → 22P02; `account_id` NULL → 23502;
   `claimed_by` ohne `claimed_at` → 23514 und `claimed_at` ohne `claimed_by` → 23514; beide gesetzt wird angenommen. Alle drei Arten (`capture`, `complete`, `setDue`) werden angenommen. Belegt durch `schema.test.ts`.
 - **AC-5:** `order_results` weist Abweichungen mit dem erwarteten SQLSTATE ab: Ergebnis zu unbekanntem Auftrag → 23503; zweites Ergebnis zum selben Auftrag → 23505; fehlende `orderID` → 23502;
-  `rejected` ohne `reason` → 23514; `done` mit `reason` → 23514; unbekannter `reason` → 23514; unbekannter `outcome` → 23514; `reported_by` NULL → 23502.
+  `rejected` ohne `reason` → 23514; `done` mit `reason` → 23514; unbekannter `reason` → 23514; unbekannter `outcome` → 23514; fehlender `outcome` → 23502; `reported_by` NULL → 23502.
   Ein `done` ohne `taskID` (z. B. nach `capture`) wird angenommen. Belegt durch `schema.test.ts`.
 - **AC-6:** Kennungen behalten im Dokument die Großschreibung des Vertrags; die erzeugten `uuid`-Spalten liefern Kleinbuchstaben; ein Abgleich per `id = '…'::uuid` findet den Auftrag unabhängig von der Schreibweise.
   Als bekannte Grenze wird festgehalten (eigener Test mit Kommentar): `"version": 1.0` wird angenommen, weil `jsonb`-Zahlen numerisch vergleichen; das ist harmlos (die App dekodiert `1.0` als 1) und kein Fehler des Schemas.
@@ -170,3 +171,4 @@ Stufe 2: Kein Simulator-Ablauf ändert sich; die App wird weder geändert noch b
 ## Changelog
 
 - 2026-10-31: Initial spec created (Schnitt C1b)
+- 2026-11-01: Nach Adversary-Runde 1 (AMBIGUOUS, F001–F003) ergänzt: `kind` und `outcome` NOT NULL, `generatedAt` Pflicht mit Zeitzone; AC-3, AC-4, AC-5 um je die Abweisung erweitert (Override Henning)

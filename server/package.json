@@ -7,7 +7,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "node --test test/",
+    "test": "node --test 'test/*.test.ts'",
     "test:local": "./scripts/test-local.sh"
   },
   "dependencies": {
