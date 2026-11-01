@@ -5,7 +5,7 @@ zwei Dinge, die ein eigener Dienst nur weiterreicht: eine **Abschrift** und eine
 aussehen. Der Dienst übernimmt ihn unverändert; eine Änderung am Format ist eine neue Version, keine stille Anpassung.
 
 Die Beispiele unten stehen wörtlich auch in den Tests (`LooseEndsTests/TranscriptCodecTests.swift`,
-`LooseEndsTests/OrderExecutorTests.swift`); weicht eines ab, schlagen die Tests fehl.
+`LooseEndsTests/OrderExecutorTests.swift`), und `server/test/schema.test.ts` liest sie zur Laufzeit aus diesem Text; weicht eines ab, schlagen die Tests fehl.
 
 ## Allgemein
 

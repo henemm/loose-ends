@@ -6,11 +6,13 @@ on:
     paths:
       - "server/**"
       - ".github/workflows/server.yml"
+      - "docs/reference/claude-abschrift-vertrag.md"
   push:
     branches: [main]
     paths:
       - "server/**"
       - ".github/workflows/server.yml"
+      - "docs/reference/claude-abschrift-vertrag.md"
 
 jobs:
   test:
