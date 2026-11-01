@@ -19,6 +19,7 @@ extension LanguagePack {
         nextWords: ["nachste", "nachsten", "nachster", "nachstes", "nachstem"],
         dayUnits: ["tag", "tage", "tagen"],
         weekUnits: ["woche", "wochen"],
+        offsetArticles: [],
         dayPrepositions: ["am", "zum", "bis"],
         ordinalSuffixes: [],
         repetitions: ["jeden", "jede", "jeder", "jedes", "jedem", "werktags", "taglich", "wochentlich",

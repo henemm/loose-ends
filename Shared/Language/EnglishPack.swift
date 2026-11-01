@@ -17,6 +17,7 @@ extension LanguagePack {
         nextWords: ["next"],
         dayUnits: ["day", "days"],
         weekUnits: ["week", "weeks"],
+        offsetArticles: ["a", "an"],
         dayPrepositions: [],
         ordinalSuffixes: ["st", "nd", "rd", "th"],
         repetitions: ["every", "daily", "weekly", "monthly"],

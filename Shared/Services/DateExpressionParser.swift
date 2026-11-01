@@ -153,6 +153,7 @@ struct DateExpressionParser: Sendable {
     private static var nextWords: [String] { LanguagePacks.nextWords }
     private static var dayUnits: [String] { LanguagePacks.dayUnits }
     private static var weekUnits: [String] { LanguagePacks.weekUnits }
+    private static var offsetArticles: [String] { LanguagePacks.offsetArticles }
     private static var dayPrepositions: [String] { LanguagePacks.dayPrepositions }
     private static var ordinalSuffixes: [String] { LanguagePacks.ordinalSuffixes }
     private static var repetitions: [String] { LanguagePacks.repetitions }
@@ -178,8 +179,12 @@ struct DateExpressionParser: Sendable {
         if let days = relativeDays[text] {
             return Candidate(index: index, priority: 4, expression: .offsetDays(days))
         }
-        guard text == "in", let count = ExpressionText.number(ExpressionText.word(words, index + 1)) else { return nil }
+        guard text == "in" else { return nil }
+        let amount = ExpressionText.word(words, index + 1)
         let unit = ExpressionText.word(words, index + 2)
+        // "in a week" counts one week; the article is a number only in front of a day or week unit.
+        let article = offsetArticles.contains(amount) && (dayUnits + weekUnits).contains(unit) ? 1 : nil
+        guard let count = ExpressionText.number(amount) ?? article else { return nil }
         if dayUnits.contains(unit) { return Candidate(index: index, priority: 4, expression: .offsetDays(count), count: 3) }
         if weekUnits.contains(unit) { return Candidate(index: index, priority: 4, expression: .offsetDays(count * 7), count: 3) }
         return nil

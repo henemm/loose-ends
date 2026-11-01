@@ -23,6 +23,8 @@ struct LanguagePack: Sendable {
     let nextWords: [String]
     let dayUnits: [String]
     let weekUnits: [String]
+    /// Words that read as the number 1 after "in" before a day or week unit: "in a week", nothing else, so "in an hour" stays a length (#783).
+    let offsetArticles: [String]
     let dayPrepositions: [String]
     let ordinalSuffixes: [String]
     let repetitions: [String]
@@ -82,6 +84,7 @@ enum LanguagePacks {
     static var nextWords: [String] { list(\.nextWords) }
     static var dayUnits: [String] { list(\.dayUnits) }
     static var weekUnits: [String] { list(\.weekUnits) }
+    static var offsetArticles: [String] { list(\.offsetArticles) }
     static var dayPrepositions: [String] { list(\.dayPrepositions) }
     static var ordinalSuffixes: [String] { list(\.ordinalSuffixes) }
     static var repetitions: [String] { list(\.repetitions) }

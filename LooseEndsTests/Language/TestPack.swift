@@ -17,6 +17,7 @@ extension LanguagePack {
         nextWords: ["nexo"],
         dayUnits: ["dayo"],
         weekUnits: ["weeko"],
+        offsetArticles: ["unix"],
         dayPrepositions: ["ayo"],
         ordinalSuffixes: ["zth"],
         repetitions: ["everio"],

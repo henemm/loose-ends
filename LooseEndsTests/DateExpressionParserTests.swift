@@ -56,6 +56,16 @@ struct DateExpressionParserTests {
         #expect(Self.day("Pick up the suit the day after tomorrow") == "2026-03-14")
     }
 
+    @Test("in a / an <Einheit> zählt als 1 (#783), nur vor Tag und Woche")
+    func offsetArticleEnglish() {
+        #expect(Self.expression("In a week return the borrowed ladder") == .offsetDays(7))
+        #expect(Self.expression("In a day check the oven") == .offsetDays(1))
+        #expect(Self.expression("In an hour call the dentist") == nil)
+        #expect(Self.expression("Put a note in a box") == nil)
+        #expect(Self.expression("Buy a week pass") == nil)
+        #expect(Self.day("In a week return the borrowed ladder") == "2026-03-19")
+    }
+
     @Test("Wochentag mit und ohne Präposition, am Anfang, in der Mitte, am Ende")
     func weekday() {
         #expect(Self.expression("Am Montag die Bewerbung abschicken") == .weekday(2))
