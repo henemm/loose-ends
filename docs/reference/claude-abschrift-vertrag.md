@@ -26,6 +26,9 @@ Der Dienst rechnet nichts nach: So zeigt Claude dieselbe Zahl wie das App-Symbol
   `id`, `title`, `status` (`unprocessed`, `unverified`, `active`, `parked`), `dueDate` (optional), `dueHasTime`,
   `contexts` (Namen der Tags, alphabetisch), `project` (Name, optional), `nextRank` (optional), `isKnaeuel`.
 
+Der Dienst nimmt eine Abschrift nur an, wenn ihre Form genau dieser entspricht, und ersetzt eine vorhandene nur durch eine mit
+neuerem `generatedAt`; eine ältere oder gleich alte bleibt ohne Wirkung.
+
 Die Abschrift trägt **keinen Rohtext, keine Notiz, keine Anhänge und keine Revisionen**. Mehr Felder sind eine Version 2 und
 brauchen vorher die Freigabe im Datenschutztext (#625).
 
@@ -95,10 +98,11 @@ Aufgabe, die schon weitergerollt ist, kein zweites Mal ab. Verglichen wird in ga
 Bekannte Grenze von Version 1: `dueHasTime` gehört nicht zum erwarteten Stand. Ein `setDue` mit demselben Zeitpunkt und
 anderem `hasTime` ändert nur `dueHasTime`, ohne Revision.
 
+Der Status zählt bei `setDue` zum erwarteten Stand: Ist die Aufgabe auf dem Gerät inzwischen erledigt oder gelöscht, wird der
+Auftrag als `stale` abgelehnt, auch wenn ihre Fälligkeit gleich blieb (C3a).
+
 Ebenso offen in Version 1 (Validierung 2026-10-31, Folgeschnitt C3):
 
-- `setDue` prüft den Status nicht. Wurde eine Aufgabe nach der Abschrift erledigt und blieb ihre Fälligkeit gleich, setzt der
-  Auftrag die Fälligkeit trotzdem (als Revision, nichts geht verloren). Vorgesehen: ablehnen als `stale`.
 - Ein Auftrag ohne `version` ist kein gültiges JSON für die App: Das Dekodieren scheitert, bevor der Ausführer ihn als
   `invalid` ablehnen kann. Der Dienst prüft deshalb `version` schon beim Annehmen.
 

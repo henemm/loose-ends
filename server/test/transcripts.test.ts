@@ -66,6 +66,20 @@ const table: Array<[string, Array<[(d: Doc) => void, string]>]> = [
     [(d) => { d.revisions = []; }, "revisions"],
     [(d) => { d.nowCount = "3"; }, "nowCount"], [(d) => { d.nowCount = -1; }, "nowCount"], [(d) => { d.nowCount = 1.5; }, "nowCount"],
   ]],
+  ["F001 inherited key names are unknown keys", [
+    [(d) => { d.now.toString = "x"; }, "now.toString"], [(d) => { d.tasks[0].constructor = "x"; }, "tasks[0].constructor"],
+    [(d) => { Object.assign(d, { toString: 1 }); }, "toString"], [(d) => { Object.assign(d, { hasOwnProperty: 1 }); }, "hasOwnProperty"],
+    [(d) => { Object.defineProperty(d.now, "__proto__", { value: [], enumerable: true }); }, "now.__proto__"],
+    [(d) => { Object.defineProperty(d, "__proto__", { value: {}, enumerable: true }); }, "__proto__"],
+  ]],
+  ["F002 times Postgres refuses or that are no ISO", [
+    ...["2026-02-30T00:00:00Z", "0000-01-01T00:00:00Z", "+275760-09-13T00:00:00Z", "March 12 2026 09:00 UTC+01:00",
+      "2026-03-12Z", "2026-03-12T24:00:00Z"].map((v): [(d: Doc) => void, string] => [(d) => { d.generatedAt = v; }, "generatedAt"]),
+    [(d) => { d.tasks[0].dueDate = "2026-02-30T09:00:00+01:00"; }, "tasks[0].dueDate"],
+  ]],
+  ["F003 NUL and lone surrogates", [
+    [(d) => { d.tasks[0].title = "a\u0000b"; }, "tasks[0].title"], [(d) => { d.tasks[1].contexts = ["\uD800"]; }, "tasks[1].contexts"],
+  ]],
 ];
 
 test("AC-2 to AC-11: the deviation table is refused with the field path, nothing is stored", async (t) => {
