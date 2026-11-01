@@ -1,0 +1,82 @@
+Postgres on 127.0.0.1:51462, data in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.o86ADbC3Mn
+
+> typecheck
+> tsc --noEmit
+
+
+> test
+> node --test 'test/*.test.ts'
+
+✔ AC-1: applies migrations in number order and returns their names in that order (34.942083ms)
+✔ AC-2: a second run applies nothing, a new file alone is applied (15.114917ms)
+✔ AC-3: a broken migration rolls back completely and rethrows the Postgres error (11.795334ms)
+✔ AC-4: a gap in the numbers is refused before anything is applied (6.444083ms)
+✔ AC-4: a duplicate number is refused before anything is applied (12.347875ms)
+✔ AC-4: a misnamed .sql file is refused before anything is applied, README.md is ignored (5.841875ms)
+✔ AC-4: a README.md beside the migrations does not disturb the run (10.951292ms)
+✔ AC-4: number 000 is refused as invalid, not as a duplicate (6.456917ms)
+✔ AC-5: without DATABASE_URL the test run fails and names the variable (337.656666ms)
+✔ AC-1: the contract order is stored, ON CONFLICT works on the generated id (39.083167ms)
+✔ AC-2: contract examples and small orders and results are accepted (0.3945ms)
+▶ AC-3 to AC-8: orders off the table are refused with the field path, nothing is stored
+  ✔ AC-3 (Z1) version (1.82825ms)
+  ✔ AC-4 (Z2) id (1.103875ms)
+  ✔ AC-4 (Z3) kind (0.6515ms)
+  ✔ AC-5 (Z4) capture (1.082417ms)
+  ✔ AC-6 (Z5) complete (0.814042ms)
+  ✔ AC-7 (Z6) complete times and keys (0.421542ms)
+  ✔ AC-8 (Z7) setDue (0.890666ms)
+✔ AC-3 to AC-8: orders off the table are refused with the field path, nothing is stored (20.572833ms)
+✔ AC-7: complete without expectedDueDate is accepted (0.170916ms)
+✔ AC-9: an order that is no object names the root (0.072833ms)
+▶ AC-10/11: results off the table are refused with the field path, nothing is stored
+  ✔ AC-10 (Z9) result (1.659583ms)
+  ✔ AC-11 (Z10) reason (1.174791ms)
+✔ AC-10/11: results off the table are refused with the field path, nothing is stored (16.102459ms)
+✔ AC-12: transcript messages stay, other errors carry no prefix (0.778084ms)
+✔ AC-13: a new order is stored for the account, unclaimed (15.006625ms)
+✔ AC-14: the same id again, even upper case with other content, changes nothing (16.292875ms)
+✔ AC-15: a claimed order is not reset by a second put (15.812083ms)
+✔ AC-16: three orders are claimed one by one, then nothing (16.808167ms)
+✔ AC-17: two connections claim ten orders, each exactly once (58.501542ms)
+✔ AC-18: two accounts never cross (63.361333ms)
+✔ AC-19: the result of the holding device is stored (34.147875ms)
+✔ AC-20: results for orders not held by the reporter are refused (22.199208ms)
+✔ AC-21: a second result changes nothing (14.031708ms)
+✔ AC-1: the real migrations folder applies 001 once and creates the three tables (40.87375ms)
+✔ AC-2: the three contract examples are accepted in contract order (14.713625ms)
+✔ AC-3: transcripts refuse what the contract does not allow (40.552584ms)
+✔ AC-4: orders refuse a wrong version, kind, id, account or half a claim, and take all three kinds (44.02675ms)
+✔ AC-5: order results belong to exactly one existing order and carry a reason only when rejected (110.333625ms)
+✔ AC-6: ids keep their case in the document, the uuid columns compare regardless of case (38.921ms)
+✔ AC-6: known limit, version 1.0 is accepted because jsonb compares numbers numerically (26.69525ms)
+✔ AC-1: the contract example and a lower-case one without optional fields are accepted (3.074625ms)
+▶ AC-2 to AC-11: the deviation table is refused with the field path, nothing is stored
+  ✔ AC-2 (Z1) version (1.95425ms)
+  ✔ AC-3 (Z2) generatedAt (0.942583ms)
+  ✔ AC-4 (Z3) now is no object (0.705792ms)
+  ✔ AC-5 (Z4) keys of now (1.307333ms)
+  ✔ AC-6 (Z5) now.knaeuel (0.815375ms)
+  ✔ AC-7 (Z6) lists of now (1.504375ms)
+  ✔ AC-8 (Z7) contexts (0.690708ms)
+  ✔ AC-9 (Z8) title and project (0.4395ms)
+  ✔ AC-10 (Z9) raw text and note anywhere (1.089ms)
+  ✔ AC-11 (Z10) root keys and nowCount (0.720041ms)
+  ✔ F001 inherited key names are unknown keys (1.156458ms)
+  ✔ F002 times Postgres refuses or that are no ISO (1.907959ms)
+  ✔ F003 NUL and lone surrogates (0.355959ms)
+✔ AC-2 to AC-11: the deviation table is refused with the field path, nothing is stored (48.03825ms)
+✔ AC-6: without now.knaeuel the transcript is accepted (0.166208ms)
+✔ AC-12/13/14: the first is stored, a newer replaces it, an older or equally old one leaves it (16.65925ms)
+✔ AC-15: two concurrent uploads over two connections always leave the newer one (23.388375ms)
+✔ AC-16: two accounts keep their transcripts apart (16.128958ms)
+✔ AC-17: the service does not recount, a mismatching nowCount and unknown now ids are stored (15.433ms)
+✔ F002: offsets up to ±15:59 are stored, as Postgres takes them (16.815417ms)
+ℹ tests 62
+ℹ suites 0
+ℹ pass 62
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 622.35525
