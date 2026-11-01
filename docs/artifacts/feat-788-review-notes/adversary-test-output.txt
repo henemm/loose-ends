@@ -1,5 +1,21 @@
-................
+test_notes_file_has_no_placeholder_and_fits (__main__.NotesFileTests.test_notes_file_has_no_placeholder_and_fits) ... ok
+test_4001_bytes_aborts_before_any_write (__main__.ReviewNotesTests.test_4001_bytes_aborts_before_any_write) ... ok
+test_different_text_exactly_one_patch_then_verified (__main__.ReviewNotesTests.test_different_text_exactly_one_patch_then_verified) ... ok
+test_extracts_first_code_block (__main__.ReviewNotesTests.test_extracts_first_code_block) ... ok
+test_lesen_reports_states_and_never_writes (__main__.ReviewNotesTests.test_lesen_reports_states_and_never_writes) ... ok
+test_lesen_without_attachments_and_with_empty_notes (__main__.ReviewNotesTests.test_lesen_without_attachments_and_with_empty_notes) ... ok
+test_limit_4000_bytes_passes (__main__.ReviewNotesTests.test_limit_4000_bytes_passes) ... ok
+test_missing_review_detail_has_clear_error_and_no_post (__main__.ReviewNotesTests.test_missing_review_detail_has_clear_error_and_no_post) ... ok
+test_missing_version_has_clear_error (__main__.ReviewNotesTests.test_missing_version_has_clear_error) ... ok
+test_output_never_contains_notes_text_or_contacts (__main__.ReviewNotesTests.test_output_never_contains_notes_text_or_contacts) ... ok
+test_patch_refused_has_own_message (__main__.ReviewNotesTests.test_patch_refused_has_own_message) ... ok
+test_placeholder_aborts (__main__.ReviewNotesTests.test_placeholder_aborts) ... ok
+test_same_text_is_unchanged_no_patch (__main__.ReviewNotesTests.test_same_text_is_unchanged_no_patch) ... ok
+test_umlauts_count_two_bytes (__main__.ReviewNotesTests.test_umlauts_count_two_bytes) ... ok
+test_unknown_action_aborts_before_any_request (__main__.ReviewNotesTests.test_unknown_action_aborts_before_any_request) ... ok
+test_workflow_has_choice_unit_tests_and_secrets (__main__.WorkflowTests.test_workflow_has_choice_unit_tests_and_secrets) ... ok
+
 ----------------------------------------------------------------------
-Ran 16 tests in 14.553s
+Ran 16 tests in 14.149s
 
 OK

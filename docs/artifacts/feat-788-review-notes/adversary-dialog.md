@@ -11,7 +11,7 @@ Datum: 2026-11-01 11:24
 - [x] **AC-6:** Given beliebige Aktion und beliebiger Ausgang (Erfolg, Abbruch, Fehler), When das Protokoll gelesen wird, Then enthält es weder den Notes-Text noch Kontaktdaten. Belegt durch `test_output_never_contains_notes_text_or_contacts`.
 - [x] **AC-7:** Given keine Version 1.0 iOS, kein Review-Detail oder ein vom Zustand verweigertes PATCH, When `notizen` oder `lesen` läuft, Then jeweils Exit ≠ 0 mit eigener, erklärender Meldung und ohne anderen Schreibaufruf (insbesondere kein POST zum Anlegen des Details). Belegt durch `test_missing_version_has_clear_error`, `test_missing_review_detail_has_clear_error_and_no_post`, `test_patch_refused_has_own_message`.
 - [x] **AC-8:** Given `.github/workflows/asc-review-notes.yml`, When geprüft, Then ist es ein `workflow_dispatch` mit Eingabe `aktion` (`lesen`, `notizen`), nutzt `ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_PRIVATE_KEY`, löscht die Schlüsseldatei per `trap` und führt die Unit-Tests vor dem Aufruf aus. Belegt durch `test_workflow_has_choice_unit_tests_and_secrets`.
-- [ ] **AC-9:** Given der Merge auf `main`, When der Handlauf `lesen` startet, Then zeigt das Lauf-Protokoll den echten Zustand von Version 1.0 (`appStoreState`, Notizen vorher, Anhänge); When danach `notizen` und erneut `lesen` laufen, Then zeigt das Protokoll `notizen gesetzt` mit `gegenprobe gleich=ja` und im zweiten `lesen` `notizen gesetzt bytes=<N>` mit derselben Zahl wie die Datei, ein weiteres `notizen` meldet `unverändert`. Belegt durch die Lauf-Links, die in `docs/reference/testflight.md` eingetragen werden (Abnahme ohne Gerät, siehe unten).
+- [x] **AC-9:** Given der Merge auf `main`, When der Handlauf `lesen` startet, Then zeigt das Lauf-Protokoll den echten Zustand von Version 1.0 (`appStoreState`, Notizen vorher, Anhänge); When danach `notizen` und erneut `lesen` laufen, Then zeigt das Protokoll `notizen gesetzt` mit `gegenprobe gleich=ja` und im zweiten `lesen` `notizen gesetzt bytes=<N>` mit derselben Zahl wie die Datei, ein weiteres `notizen` meldet `unverändert`. Belegt durch die Lauf-Links, die in `docs/reference/testflight.md` eingetragen werden (Abnahme ohne Gerät, siehe unten).
 - [x] **AC-10:** Given `docs/reference/app-review-notizen.md`, When geprüft, Then steht dort kein `<HIER_VIDEO_LINK>` mehr, Punkt 1 spricht von der Aufnahme „attached to this submission“, der Textblock hat höchstens 4000 Byte, und der Kopf nennt den neuen Stand. `testflight.md` enthält den Handlauf (Aufruf, Aktionen, Beleg-Lauf-Links). Belegt durch Diff und den Byte-Test in AC-2.
 
 ## Dialog
@@ -37,15 +37,25 @@ Findings (beide ohne Blockade):
 - F001 LOW edge_case, scripts/asc_review_notes.py:115 vergleicht strikt `==`. Normalisiert Apple einen Zeilenumbruch am Ende, meldet der erste Lauf nach dem PATCH die Gegenprobe als Abbruch (Zeile 126-127) und jeder Folgelauf PATCHt erneut. Entspricht der Spec („Gleich“), kann erst im echten Lauf (AC-9) auftreten. Abhilfe: falls AC-9 es zeigt, nur am Ende `rstrip("\n")` auf beiden Seiten vergleichen.
 - F002 LOW edge_case, scripts/asc_review_notes.py:28 erkennt keinen Zaun mit Sprachangabe. Folge ist ein sicherer Abbruch („keinen Codeblock“), kein Schaden; die Datei nutzt einen blanken Zaun. Spec-konform.
 
+### Runde 3
+**Adversary:** AC-9 war vor dem Merge offen. Ist es jetzt mit echten Läufen gegen App Store Connect belegt, oder nur behauptet? Stimmt die Bytezahl bei Apple mit der Datei überein, und schreibt ein zweiter `notizen`-Lauf wirklich nichts?
+**Implementierer:** Nach dem Merge von PR #790 (d37d582) vier Handläufe auf `main`, Protokollzeilen wörtlich:
+1. `lesen`, Lauf 41305445974: `version 1.0 IOS appStoreState=REJECTED`, `notizen gesetzt bytes=417`, `anhang keine`, `zusammenfassung geschrieben=0`.
+2. `notizen`, Lauf 41305507863: `notizen gesetzt bytes=2514`, `gegenprobe gleich=ja`, `zusammenfassung geschrieben=1`.
+3. `lesen`, Lauf 41305554506: `notizen gesetzt bytes=2514` (gleich dem ersten Codeblock der Datei, 2514 Byte), `anhang keine`, `zusammenfassung geschrieben=0`.
+4. `notizen`, Lauf 41305602758: `notizen unverändert bytes=2514`, `zusammenfassung geschrieben=0`.
+F001 (Zeilenumbruch am Ende) ist damit widerlegt: Apple gibt den Text unverändert zurück, die Gegenprobe ist gleich, der zweite Lauf schreibt nicht. Die Läufe sind in docs/reference/testflight.md verlinkt.
+Code reference: scripts/asc_review_notes.py:115 (Gleichheitsvergleich, im echten Lauf 4 bestätigt).
+
 ## Herkunft der Vorbedingungen
 
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 
 ## Verdict
 
-**AMBIGUOUS**
+**VERIFIED**
 
-AC-9 erst nach dem Merge belegbar. AC-1 bis AC-8 und AC-10 sind bewiesen (16 neue und 64 bestehende Tests grün, Randfälle ohne Defekt). F001/F002 sind LOW und keine Spec-Verstöße.
+AC-1 bis AC-10 bewiesen: 16 neue und 469 Python-Tests insgesamt grün, CI von PR #790 grün, AC-9 durch vier echte Läufe gegen App Store Connect (Runde 3). F001 im echten Lauf widerlegt, F002 LOW und spec-konform.
 
 ## Geprüfte Dateien
 
@@ -57,6 +67,21 @@ AC-9 erst nach dem Merge belegbar. AC-1 bis AC-8 und AC-10 sind bewiesen (16 neu
 ## Prüfbasis
 
 - base: 6bb98b225f3d418f6cf52fc602ece09cda6f1816
+- blob:9cd7cdadae62ceb01da659104836094eb762175f  .github/workflows/asc-review-notes.yml
+- blob:284edbcc2fa7de9a57fdb6e49db692c3df77c0e8  docs/reference/app-review-notizen.md
+- blob:18d6f9e6dd3752d3e7b72c5518bb4cf20be21b11  scripts/asc_review_notes.py
+- blob:cfcd65400a49aec96d41fca671f429c523b7b3b4  scripts/test_asc_review_notes.py
+
+## Geprüfte Dateien
+
+- sha256:472fb9affa401c9e15e86025f34c4595d95d0e05807bb4b7110e17d5821233c7  .github/workflows/asc-review-notes.yml
+- sha256:1d5581ad738dfd0f6fb2454f21a5c45e9fd067cca77ae8797724a052f0670f43  docs/reference/app-review-notizen.md
+- sha256:b7b6d847cb70e0139dfa1e310454862d772f61b7749ff0345a8d91cd6a9d0711  scripts/asc_review_notes.py
+- sha256:9b5546b46e4b52b062dc510eb34ff8c834253f88dd4d2c3bad023c30db485608  scripts/test_asc_review_notes.py
+
+## Prüfbasis
+
+- base: d37d582c2a60f6b01124d2c948ad50ba2faf0959
 - blob:9cd7cdadae62ceb01da659104836094eb762175f  .github/workflows/asc-review-notes.yml
 - blob:284edbcc2fa7de9a57fdb6e49db692c3df77c0e8  docs/reference/app-review-notizen.md
 - blob:18d6f9e6dd3752d3e7b72c5518bb4cf20be21b11  scripts/asc_review_notes.py

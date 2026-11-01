@@ -244,10 +244,10 @@ Text für das Feld „Notes“ der App-Review-Informationen steht im ersten Code
 
 | Teil | Status | Beleg |
 |------|--------|-------|
-| Zustand vorher (`lesen`) | offen (erst nach dem Merge startbar) | |
-| Notizen setzen (`notizen`) | offen | |
-| Zustand danach (`lesen`) | offen | |
-| Zweiter Lauf `notizen` (`unverändert`) | offen | |
+| Zustand vorher (`lesen`) | erledigt 2026-11-01: `appStoreState=REJECTED`, `notizen gesetzt bytes=417`, `anhang keine` | [Lauf 41305445974](https://github.com/henemm/loose-ends/actions/runs/41305445974) |
+| Notizen setzen (`notizen`) | erledigt 2026-11-01: `notizen gesetzt bytes=2514`, `gegenprobe gleich=ja` | [Lauf 41305507863](https://github.com/henemm/loose-ends/actions/runs/41305507863) |
+| Zustand danach (`lesen`) | erledigt 2026-11-01: `notizen gesetzt bytes=2514` (= Datei), `anhang keine` | [Lauf 41305554506](https://github.com/henemm/loose-ends/actions/runs/41305554506) |
+| Zweiter Lauf `notizen` (`unverändert`) | erledigt 2026-11-01: `notizen unverändert bytes=2514`, `geschrieben=0` | [Lauf 41305602758](https://github.com/henemm/loose-ends/actions/runs/41305602758) |
 | Bildschirmaufnahme als Anhang | offen (Schnitt 2, `aktion=video`) | |
 
 **Handlauf `asc-review-notes.yml`:** GitHub → Actions → **ASC Review Notes** → **Run workflow** → `aktion=lesen` oder
