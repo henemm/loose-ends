@@ -1,18 +1,17 @@
 # Notizen für App Review (Entwurf, Antwort auf „Guideline 2.1 – Information Needed“, Version 1.0 iOS)
 
 Stand 2026-11-01. Apple hat die Einreichung vom 2026-10-31 (ID b8154b09-0fff-4147-8354-a1e72a14aa4c) nicht abgelehnt, sondern
-um Angaben gebeten. Der Text unten kommt in das Feld „Notes“ der App-Review-Informationen. Er ist nicht eingetragen und die App
-ist nicht neu eingereicht; beides folgt erst nach Hennings Wort. Punkt 1 (Bildschirmaufnahme auf einem echten Gerät) ist nicht
-erfüllt, solange kein Gerätedurchgang freigegeben ist.
+um Angaben gebeten. Der Text unten (erster Codeblock) kommt in das Feld „Notes“ der App-Review-Informationen. Gesetzt wird er
+per Handlauf `asc-review-notes.yml` mit `aktion=notizen` (#788 Schnitt 1, höchstens 4000 Byte, ohne Platzhalter). Die
+Bildschirmaufnahme, auf die Punkt 1 verweist, hängt Schnitt 2 an die Version; `notizen` läuft darum erst unmittelbar vor diesem
+Schritt. Neu eingereicht wird erst nach Hennings Wort.
 
-Jede Aussage unten ist am Repo geprüft (`LooseEnds/Info.plist`, `CLAUDE.md`, `docs/reference/beta-beschreibung.md`). Offen für
-Henning sind nur die Punkte, die kein Repo belegt: Video-Link und Kontakt.
+Jede Aussage unten ist am Repo geprüft (`LooseEnds/Info.plist`, `CLAUDE.md`, `docs/reference/beta-beschreibung.md`).
 
 ```
 1. SCREEN RECORDING
-Link: <HIER_VIDEO_LINK>
-Recorded on a physical iPhone 16 Pro running the latest iOS. It starts with launching the app and shows the typical flow:
-capture a task by voice (title, due date and tag are filled in from the spoken sentence), capture one by typing, the "New"
+Screen recording of a physical iPhone 16 Pro, attached to this submission. The device runs the latest iOS.
+It starts with launching the app and shows the typical flow: capture a task by voice (title, due date and tag are filled in from the spoken sentence), capture one by typing, the "New"
 list, a task's detail view and the list of loose ends.
 The app has no account registration, login or account deletion, no user-generated content that is shared with other users
 (so no reporting or blocking), and no paid content or in-app purchases.
