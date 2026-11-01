@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-11-01T22:24:03+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: spike-613-c4-mcp
+head: fde9f4003f9868a0d599d0a92f58ca85a8fcc102
+basis: a06508986771be14e93834ae57ddf6bb3ebe8345 (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 24 gesamt, 24 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793566125.465  ende: 1793568238.572
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/spike-613-c4-mcp/simulator-run/summary.json  sha256:00fbd07855c8d1ea5cb31bae80b243f6565226b007bc0413b1d4736d242088ab
+xcresult: docs/artifacts/spike-613-c4-mcp/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/spike-613-c4-mcp/simulator-run/*.png (13 Stück)
+
+## Geprüfte Dateien
+- sha256:b64ca27acfdfc800a5039b9d505cfa14fc24111a5f2117610adb84e72db661bd  server/src/mcp.ts
+- sha256:bcb95e94d1e511c8e74d0ad44ab4e84e62483ed5ba85341b6cd7e2c5dd2dce72  server/src/transcripts.ts
