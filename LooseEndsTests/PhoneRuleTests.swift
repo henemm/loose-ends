@@ -76,6 +76,29 @@ import Testing
         #expect(PhoneRule.numbers(in: "Bitte \(text) prüfen").isEmpty)
     }
 
+    @Test("A date with slashes or dashes is no number", arguments: [
+        "Termin 01/02/2026", "Termin 01-02-2026", "Termin 1/2/2026", "05-03-2026 bis 07-03-2026",
+        "Termin 01/02/2026 10:30", "Termin 01/02/26 12 Uhr",
+    ])
+    func slashedDatesAreIgnored(text: String) {
+        #expect(PhoneRule.numbers(in: text).isEmpty)
+    }
+
+    @Test("A slashed date stays in the title")
+    func slashedDateStaysInTitle() {
+        #expect(TitleRule.title(from: "Termin 01/02/2026")?.contains("01/02/2026") == true)
+        // The date stays whole; the time goes to the due date like any time word.
+        #expect(TitleRule.title(from: "Termin 01/02/2026 10:30") == "Termin 01/02/2026")
+    }
+
+    @Test("A short number with spaces between its groups is no date", arguments: [
+        ("Ruf 01 23 4567 an", "01 23 4567"), ("Bitte 02 51 4565 anrufen", "02 51 4565"),
+        ("Bitte +49 30 1234 anrufen", "+49 30 1234"), ("Bitte +1 23 4567 anrufen", "+1 23 4567"),
+    ])
+    func shortSpacedNumbersAreFound(text: String, number: String) {
+        #expect(PhoneRule.numbers(in: text) == [number])
+    }
+
     @Test("Digit runs only the iOS detector took for numbers are ignored")
     func detectorOnlyDigitRunsAreIgnored() {
         #expect(PhoneRule.numbers(in: "Kunde 1234567 anrufen").isEmpty)

@@ -3,6 +3,8 @@ import OSLog
 
 /// What in a note can be tapped (#439): phone numbers, links, mail addresses and street addresses,
 /// found by `NSDataDetector` — a rule, not the model. Pure; the view turns the hits into links.
+/// The links shown in a note stay with the detector; capture (title, note) uses `PhoneRule`, so it
+/// comes out the same on every device (#786).
 enum NoteLinks {
     enum Kind: Equatable, Sendable {
         case phone, link, mail, address
