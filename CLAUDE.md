@@ -456,6 +456,7 @@ not scope creep on the current one.
   `src/migrate.ts` applies numbered `NNN_name.sql` exactly once, each in its own transaction with its row in `schema_migrations`;
   a gap or a duplicate number is refused before the database is touched. The schema exists only as numbered migrations, and once
   the service runs they are only ever added. CI: `.github/workflows/server.yml` on Linux with `postgres:18`
+  `src/mcp.ts` (`mcpHandler`, C4a): stateless MCP handler with the read tools `get_now` and `list_tasks`, account only from `authInfo`; no port and no sign-in yet
 
 ## Naming
 

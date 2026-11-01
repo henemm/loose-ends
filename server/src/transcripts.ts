@@ -130,4 +130,10 @@ export async function putTranscript(pool: pg.Pool, account: string, doc: unknown
   return result.rowCount === 1 ? "stored" : "older";
 }
 
+// One statement: the stored transcript of this account, or undefined; its form was checked when it was taken in.
+export async function getTranscript(pool: pg.Pool, account: string): Promise<Transcript | undefined> {
+  const result = await pool.query<{ doc: Transcript }>("SELECT doc FROM transcripts WHERE account_id = $1", [account]);
+  return result.rows[0]?.doc;
+}
+
 export { shape, id, text, flag, time, list, fail, type Check };
