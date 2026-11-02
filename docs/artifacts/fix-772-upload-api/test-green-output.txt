@@ -1,0 +1,15 @@
+test_lesen_prints_raw_specs_and_never_writes (scripts.test_asc_header_upload.LesenTests.test_lesen_prints_raw_specs_and_never_writes) ... ok
+test_match_by_dimension_range_and_placement (scripts.test_asc_header_upload.MatchTests.test_match_by_dimension_range_and_placement) ... ok
+test_partial_match_uploads_fitting_and_reports_rest (scripts.test_asc_header_upload.MatchTests.test_partial_match_uploads_fitting_and_reports_rest) ... ok
+test_refdata_read_as_single_record (scripts.test_asc_header_upload.MatchTests.test_refdata_read_as_single_record) ... ok
+test_stops_without_matching_spec (scripts.test_asc_header_upload.MatchTests.test_stops_without_matching_spec) ... ok
+test_state_check_reads_ready_state (scripts.test_asc_header_upload.StateTests.test_state_check_reads_ready_state) ... ok
+test_wait_reaches_ready_and_stops_on_failed (scripts.test_asc_header_upload.StateTests.test_wait_reaches_ready_and_stops_on_failed) ... ok
+test_never_places_or_submits (scripts.test_asc_header_upload.UploadTests.test_never_places_or_submits) ... ok
+test_skips_existing_reference_name (scripts.test_asc_header_upload.UploadTests.test_skips_existing_reference_name) ... ok
+test_uses_library_id_and_relationship (scripts.test_asc_header_upload.UploadTests.test_uses_library_id_and_relationship) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.008s
+
+OK
