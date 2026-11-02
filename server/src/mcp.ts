@@ -1,6 +1,8 @@
 import type pg from "pg";
 import { createMcpHandler, McpServer, type CallToolResult, type McpHttpHandler, type ServerContext } from "@modelcontextprotocol/server";
 import { z } from "zod";
+import { randomUUID } from "node:crypto";
+import { checkOrder, getResult, putOrder } from "./orders.ts";
 import { getTranscript, type Transcript } from "./transcripts.ts";
 
 type Group = "knaeuel" | "today" | "lined" | "waiting";
@@ -38,7 +40,33 @@ function reading(pool: pg.Pool, render: (doc: Transcript) => unknown) {
   };
 }
 
-// Stateless: a fresh server with the two read tools for every request, so nothing is cached between calls.
+// The service gives the id; the form check is checkOrder's, its message goes back as it is. Neither text nor id is logged.
+function capturing(pool: pg.Pool) {
+  return async ({ text }: { text: string }, ctx: ServerContext): Promise<CallToolResult> => {
+    const owner = account(ctx);
+    if (owner === undefined) return { ...reply("kein Konto"), isError: true };
+    if (text.trim() === "") return { ...reply("Text fehlt"), isError: true };
+    const doc = { version: 1, id: randomUUID().toUpperCase(), kind: "capture", text };
+    try {
+      checkOrder(doc);
+    } catch (error) {
+      return { ...reply((error as Error).message), isError: true };
+    }
+    await putOrder(pool, owner, doc);
+    return reply(JSON.stringify({ orderID: doc.id, state: "waiting" }));
+  };
+}
+
+// Only the state and the result document go out, never the order's text.
+function resulting(pool: pg.Pool) {
+  return async ({ orderID }: { orderID: string }, ctx: ServerContext): Promise<CallToolResult> => {
+    const owner = account(ctx);
+    if (owner === undefined) return { ...reply("kein Konto"), isError: true };
+    return reply(JSON.stringify(await getResult(pool, owner, orderID)));
+  };
+}
+
+// Stateless: a fresh server with the read tools, capture_task and get_order_result for every request, so nothing is cached.
 export function mcpHandler(pool: pg.Pool): McpHttpHandler {
   return createMcpHandler(() => {
     const server = new McpServer({ name: "loose-ends", version: "1" });
@@ -50,6 +78,17 @@ export function mcpHandler(pool: pg.Pool): McpHttpHandler {
       description: "Alle Aufgaben der letzten Abschrift samt generatedAt",
       inputSchema: z.object({}),
     }, reading(pool, (doc) => ({ generatedAt: doc.generatedAt, tasks: doc.tasks })));
+    server.registerTool("capture_task", {
+      description: "Legt einen Auftrag zum Erfassen einer Aufgabe an; erfasst wird sie auf einem Gerät, sobald eines den Auftrag "
+        + "abholt. Den Stand liefert get_order_result mit der zurückgegebenen orderID",
+      inputSchema: z.object({ text: z.string() }),
+      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
+    }, capturing(pool));
+    server.registerTool("get_order_result", {
+      description: "Stand eines Auftrags: unknown, waiting (wartet auf ein Gerät), claimed (bei einem Gerät) oder result mit dem Ergebnis",
+      inputSchema: z.object({ orderID: z.string() }),
+      annotations: { readOnlyHint: true },
+    }, resulting(pool));
     return server;
   });
 }

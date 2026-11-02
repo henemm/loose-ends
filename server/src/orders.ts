@@ -99,3 +99,26 @@ export async function putResult(pool: pg.Pool, account: string, device: string, 
   );
   return known.rowCount === 1 ? "duplicate" : "refused";
 }
+
+export type OrderState =
+  | { state: "unknown" }
+  | { state: "waiting" }
+  | { state: "claimed" }
+  | { state: "result"; result: OrderResult };
+
+const uuidForm = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+// One statement: the state of an order of this account. Another account's order is unknown, the same as none;
+// a text that is no UUID never reaches Postgres. Result first, then claim, then waiting.
+export async function getResult(pool: pg.Pool, account: string, orderID: string): Promise<OrderState> {
+  if (!uuidForm.test(orderID)) return { state: "unknown" };
+  const found = await pool.query(
+    `SELECT o.claimed_by, r.doc AS result FROM orders o LEFT JOIN order_results r ON r.order_id = o.id
+     WHERE o.account_id = $1 AND o.id = $2::uuid`,
+    [account, orderID],
+  );
+  const row = found.rows[0];
+  if (row === undefined) return { state: "unknown" };
+  if (row.result !== null) return { state: "result", result: row.result };
+  return row.claimed_by === null ? { state: "waiting" } : { state: "claimed" };
+}
