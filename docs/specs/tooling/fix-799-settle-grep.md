@@ -95,4 +95,4 @@ Der Test wird zuerst rot geschrieben (beide Zeilen heute ungeschützt).
 - **AC-2:** Given kein Poster-Prozess läuft, When der Schritt im Job `ui-smoke` läuft, Then ist `grep` ebenfalls geschützt und das Warten bricht nicht ab.
 - **AC-3:** Given beide Kopien, When `scripts/test_ci_settle_sync.py` läuft, Then sind die `busy=`-Zeilen gleich, und der Kopf der Action nennt den Fall.
 - **AC-4:** Given der Stand vor dem Fix, When der Test läuft, Then ist er rot; nach dem Fix grün, ebenso alle übrigen Skripttests in `scripts/`.
-- **AC-5:** Given der PR, When die CI läuft, Then passiert `ui-smoke-lang` für alle Sprachen den Schritt grün (Beleg im Schritt-Log, „settled after about … s“).
+Der CI-Beleg („settled after about … s“ im Schritt-Log von `ui-smoke-lang`, alle Sprachen) steht in der Definition of Done und im Testplan, nicht hier: er entsteht erst nach dem PR und würde das QA-Gate vor dem Commit sperren.

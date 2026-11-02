@@ -1,7 +1,7 @@
 ---
 spec_file: docs/specs/tooling/fix-799-settle-grep.md
-spec_sha256: 7ebf330a9f1089b8b8a869f068489a4dd0a6d073246c3ad9f6917357f364639b
-spec_frozen_sha256: 2213569cda53b2c56486d70aec0ba31b82bc2ed6fcc33ceccba4b20ad0462a67
+spec_sha256: 1ea10956b2ef7200278e695734a1e355f6b99d1c453ae90cf06323f0e82feb00
+spec_frozen_sha256: dce8a0fd34b3ec6993859eaa4e29ee5b7215c7f0324b6934e354a2e79c21bf8c
 ---
 
 # PO-Briefing: fix-799-settle-grep
@@ -12,19 +12,20 @@ spec_frozen_sha256: 2213569cda53b2c56486d70aec0ba31b82bc2ed6fcc33ceccba4b20ad046
 
 ## Was gebaut wird
 
-Der CI-Schritt „Simulator beruhigen“ bricht nicht mehr ab, wenn kein Poster-Prozess läuft.
+Der automatische Testlauf bricht nicht mehr ab, wenn der Simulator beim Warten schon ruhig ist.
 
 ## Definition of Done
 
-Der Prüflauf der CI besteht diesen Schritt in allen Sprachen, und beide Kopien des Schritts sind gleich abgesichert.
+Der Testlauf auf dem PR geht in allen Sprachen am Warteschritt vorbei, und die Prüfskripte sind grün.
 
 ## Wie geprüft wird
 
-Ein Skripttest vergleicht beide Kopien und spielt den Fall ohne Prozess nach; ob die echte CI grün läuft, zeigt erst der PR-Lauf.
+Ein neuer Skripttest belegt das Verhalten ohne Poster-Prozess lokal; der echte Nachweis folgt erst im Testlauf auf dem PR.
 
 ## Kritische Anmerkungen
 
-- Keine — Spec deckt die Anfrage ab, jede Anforderung hat einen Test.
+- Der Lauf auf dem PR ist nur noch Definition of Done, kein Acceptance Criterion; das Ziel bleibt, wird aber nicht vorab vom Gate erzwungen.
+- Der Fehler hängt vom Zeitpunkt ab; ein einzelner grüner Lauf beweist wenig, der lokale Nachstellversuch trägt den Beweis.
 
 ## Freigabe-Frage
 
