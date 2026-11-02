@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-11-02T16:04:18+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests/testPlusButtonProof
+workflow: feat-613-c4b2-mcp-complete-setdue
+head: c918ed7c227d73591a97c6ccefcec0cae53dcf9a
+basis: 88ff20aabf2189977f5a2d8a2f50821cae1b0a1e (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests/testPlusButtonProof
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793631797.154  ende: 1793631856.953
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/feat-613-c4b2-mcp-complete-setdue/simulator-run/summary.json  sha256:bf8db73b6dc8eaa886ccbda34af8e21b1eea3b80901f704b9fdf9f0cd82d1b2f
+xcresult: docs/artifacts/feat-613-c4b2-mcp-complete-setdue/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-613-c4b2-mcp-complete-setdue/simulator-run/*.png (4 Stück)
+
+## Geprüfte Dateien
+- sha256:5a3235120bd8de6f0a0a1e641a942f8c5dc593d9cb9971a39e3472f21c042755  server/src/mcp.ts
