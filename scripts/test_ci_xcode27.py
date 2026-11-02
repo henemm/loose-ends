@@ -6,6 +6,7 @@ zeigt nur der echte CI-Lauf.
 """
 import json
 import os
+import shutil
 import stat
 import subprocess
 import tempfile
@@ -54,6 +55,15 @@ def run_bash(script, fakes, extra_env=None):
                           capture_output=True, text=True, env=env)
 
 
+# #768: writing sed in every spelling (-ni, -i.bak, two spaces, -n -i, --in-place); [[:space:]] for BSD and GNU grep.
+LOWERING = r"sed([[:space:]]+-[A-Za-z]+)*[[:space:]]+(-[A-Za-z]*i|--in-place)|26\.0|macos-26|project\.yml"
+
+
+def lowering_hits(directory):
+    result = subprocess.run(["grep", "-rnE", LOWERING, str(directory)], capture_output=True, text=True)
+    return [hit for hit in result.stdout.splitlines() if hit.split(":", 2)[2].strip() not in READS_PROJECT_YML]
+
+
 class SelectXcodeAction(unittest.TestCase):
     def run_check(self, reported):
         script = load(ACTION)["runs"]["steps"][0]["run"]
@@ -89,10 +99,24 @@ class Workflows(unittest.TestCase):
             self.assertIn(ACTION_REF, uses, f"{name}:{key}")
 
     def test_no_lowering_anywhere_in_github(self):
-        result = subprocess.run(["grep", "-rnE", r"sed -i|26\.0|macos-26|project\.yml", str(GITHUB)],
-                                capture_output=True, text=True)
-        rest = [hit for hit in result.stdout.splitlines() if hit.split(":", 2)[2].strip() not in READS_PROJECT_YML]
-        self.assertEqual(rest, [], "Absenkung noch vorhanden")
+        self.assertEqual(lowering_hits(GITHUB), [], "Absenkung noch vorhanden")
+
+    def test_sed_pattern_catches_every_writing_spelling(self):
+        spellings = ("sed -i 's/a/b/' f", "sed -ni 's/a/b/p' f", "sed -i.bak 's/a/b/' f",
+                     "sed  -i 's/a/b/' f", "sed -n -i 's/a/b/p' f", "sed --in-place 's/a/b/' f")
+        for line in spellings:
+            with self.subTest(line=line), tempfile.TemporaryDirectory() as tmp:
+                copy = Path(tmp) / ".github"
+                shutil.copytree(GITHUB, copy)
+                (copy / "probe.sh").write_text(line + "\n")
+                self.assertNotEqual(lowering_hits(copy), [], line)
+
+    def test_sed_pattern_ignores_reading_sed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            copy = Path(tmp) / ".github"
+            shutil.copytree(GITHUB, copy)
+            (copy / "probe.sh").write_text("sed -n 1p f\nsed -n 's/a/b/p' f\n")
+            self.assertEqual(lowering_hits(copy), [])
 
     def test_unit_job_runs_every_script_test(self):
         """#185: every scripts/test_*.py runs in CI, in one step, before Xcode."""
