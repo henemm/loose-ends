@@ -1,0 +1,7 @@
+Inline-Prüfungen aus docs/specs/fast/feat-613-c8-adr-21.md
+
+[x] grep -c "ADR-21" docs/project/00-entscheidungen.md -> 2 (Eintrag nach ADR-20, Zusatz an ADR-2)
+[x] git diff --stat -> docs/project/00-entscheidungen.md | 18 +++ (nur diese Datei, 18 Zeilen hinzugefügt)
+[x] Skripte, die die Entscheidungsdatei lesen: grep "00-entscheidungen" scripts/*.py -> keine Treffer
+
+All checks PASSED
