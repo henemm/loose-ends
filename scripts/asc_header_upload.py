@@ -39,7 +39,7 @@ def fits(spec, item):
 
 def match_specs(refdata, files):
     """Kategorie je Datei, deren Maß in den Spannen einer Kopf-Spec liegt; dazu die Dateien ohne passende Spec."""
-    accepted = [c for t in refdata.get("placementTypes") or [] if t.get("placementType") == HEADER_TYPE
+    accepted = [c for t in refdata.get("placementTypes") or [] if t.get("placementTypeId") == HEADER_TYPE
                 for c in t.get("acceptsAssetCategories") or []]
     specs = refdata.get("imageSpecs") or []
     found, unmatched = {}, []
@@ -125,9 +125,8 @@ def lesen(client, app_id):
     for spec in refdata.get("imageSpecs") or []:
         print(f"spec {describe(spec)}", flush=True)
     for kind in refdata.get("placementTypes") or []:
-        print(f"platzierungstyp {kind.get('placementType', '?')} "
-              f"kategorien={','.join(kind.get('acceptsAssetCategories') or []) or '-'} roh={json.dumps(kind, sort_keys=True)}",
-              flush=True)
+        print(f"platzierungstyp {kind.get('placementTypeId', '?')} "
+              f"kategorien={','.join(kind.get('acceptsAssetCategories') or []) or '-'}", flush=True)
     library = client.get(f"/v1/apps/{app_id}/assetLibrary")
     print(f"bibliothek id={library.get('id', '?')} felder={','.join(sorted(library)) or '-'}", flush=True)
     for image in client.get(f"/v1/appAssetLibraries/{library.get('id')}/images")["items"]:

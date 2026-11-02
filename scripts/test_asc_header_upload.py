@@ -34,8 +34,8 @@ ULTRA = {"specId": "S219", "alphaAllowed": False, "fileExtensions": ["png"], "co
          "dimensions": {"minWidth": 3840, "maxWidth": 3840, "minHeight": 1600, "maxHeight": 1700}}
 OTHER = {"specId": "SX", "compatiblePlacementTypes": ["SEARCH_RESULT_ASSET"],
          "dimensions": {"minWidth": 5000, "maxWidth": 5300, "minHeight": 2900, "maxHeight": 3000}}
-PLACEMENT_TYPES = [{"placementType": HEADER_TYPE, "acceptsAssetCategories": [CATEGORY]},
-                   {"placementType": "SEARCH_RESULT_ASSET", "acceptsAssetCategories": ["OTHER_ASSETS"]}]
+PLACEMENT_TYPES = [{"placementTypeId": HEADER_TYPE, "acceptsAssetCategories": [CATEGORY]},
+                   {"placementTypeId": "SEARCH_RESULT_ASSET", "acceptsAssetCategories": ["OTHER_ASSETS"]}]
 NAMES = [("hell-16x9", 5244, 2950), ("dunkel-16x9", 5244, 2950), ("hell-21x9", 3840, 1646), ("dunkel-21x9", 3840, 1646)]
 
 
