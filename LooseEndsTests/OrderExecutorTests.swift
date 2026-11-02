@@ -229,6 +229,63 @@ import Testing
         #expect((task.revisions ?? []).first { $0.field == .dueDate }?.reason == "Claude")
     }
 
+    @Test("Set due on the same instant with another hasTime is invalid, nothing changes (#777, AC-1, AC-2)",
+          arguments: [(true, false), (false, true)])
+    @MainActor func setDueSameInstantOtherHasTimeIsInvalid(has: Bool, order wants: Bool) throws {
+        let store = try TestStore()
+        let midnight = Self.calendar.startOfDay(for: Self.day(2))
+        let task = try Self.insert("Mitternacht", due: midnight, in: store)
+        task.dueHasTime = has
+        try store.context.save()
+        let before = try Snapshot(store)
+        let order = Order(id: UUID(), kind: .setDue, taskID: task.id, date: midnight, hasTime: wants,
+                          expectedDueDate: midnight)
+
+        let result = try Self.run(order, in: store)
+
+        #expect(result == OrderResult(orderID: order.id, outcome: .rejected, reason: .invalid, taskID: task.id))
+        #expect(try Snapshot(store) == before)
+        #expect(task.dueHasTime == has)
+    }
+
+    @Test("Set due on the same instant with the same hasTime changes nothing (#777, AC-3)", arguments: [true, false])
+    @MainActor func setDueSameInstantSameHasTimeChangesNothing(hasTime: Bool) throws {
+        let store = try TestStore()
+        let midnight = Self.calendar.startOfDay(for: Self.day(2))
+        let task = try Self.insert("Mitternacht", due: midnight, in: store)
+        task.dueHasTime = hasTime
+        try store.context.save()
+        let revisions = try store.context.fetchCount(FetchDescriptor<Revision>())
+        let order = Order(id: UUID(), kind: .setDue, taskID: task.id, date: midnight, hasTime: hasTime,
+                          expectedDueDate: midnight)
+
+        let result = try Self.run(order, in: store)
+
+        #expect(result == OrderResult(orderID: order.id, outcome: .done, taskID: task.id))
+        #expect(try store.context.fetchCount(FetchDescriptor<Revision>()) == revisions)
+        #expect(task.dueDate == midnight)
+        #expect(task.dueHasTime == hasTime)
+    }
+
+    @Test("Set due on another instant may change hasTime, with one revision (#777, AC-4)")
+    @MainActor func setDueOtherInstantMayChangeHasTime() throws {
+        let store = try TestStore()
+        let midnight = Self.calendar.startOfDay(for: Self.day(2))
+        let task = try Self.insert("Mitternacht", due: midnight, in: store)
+        task.dueHasTime = true
+        try store.context.save()
+        let order = Order(id: UUID(), kind: .setDue, taskID: task.id, date: Self.day(3, hour: 15), hasTime: false,
+                          expectedDueDate: midnight)
+
+        let result = try Self.run(order, in: store)
+
+        #expect(result == OrderResult(orderID: order.id, outcome: .done, taskID: task.id))
+        #expect(task.dueHasTime == false)
+        let revisions = (task.revisions ?? []).filter { $0.field == .dueDate }
+        #expect(revisions.count == 1)
+        #expect(revisions.first?.reason == "Claude")
+    }
+
     @Test("An unknown task is missing, nothing changes (AC-7)", arguments: [Order.Kind.complete, .setDue])
     @MainActor func unknownTaskIsMissing(kind: Order.Kind) throws {
         let store = try TestStore()
