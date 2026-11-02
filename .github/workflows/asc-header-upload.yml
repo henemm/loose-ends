@@ -1,0 +1,36 @@
+# Handlauf (#772): Kopfbilder aus docs/store/header/ in Apples Asset-Bibliothek. `lesen` schreibt nichts bei Apple,
+# `hochladen` legt nur Bilder in der Bibliothek an. Nie platzieren, nie einreichen.
+name: ASC Header Upload
+
+on:
+  workflow_dispatch:
+    inputs:
+      aktion:
+        description: "lesen (nur Referenzdaten und Bibliothek) oder hochladen (Bilder in die Bibliothek)"
+        required: true
+        default: lesen
+        type: choice
+        options:
+          - lesen
+          - hochladen
+
+permissions:
+  contents: read
+
+jobs:
+  header:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_POLL_SECONDS: "5"
+      AKTION: ${{ inputs.aktion }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Header images in the asset library
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT
+          umask 077
+          printf '%s\n' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"
+          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_header_upload.py "$AKTION"

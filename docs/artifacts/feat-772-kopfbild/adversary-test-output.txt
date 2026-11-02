@@ -1,0 +1,63 @@
+test_colors_light_and_dark (scripts.test_store_header.HeaderTests.test_colors_light_and_dark) ... ok
+test_deterministic (scripts.test_store_header.HeaderTests.test_deterministic) ... ok
+test_no_alpha (scripts.test_store_header.HeaderTests.test_no_alpha) ... /Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_store_header.py:62: ResourceWarning: unclosed file <_io.BufferedReader name='/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpmo4d9xdz/header/hell-16x9.png'>
+  image = self.image(variant, ratio)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_store_header.py:62: ResourceWarning: unclosed file <_io.BufferedReader name='/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpmo4d9xdz/header/hell-21x9.png'>
+  image = self.image(variant, ratio)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_store_header.py:62: ResourceWarning: unclosed file <_io.BufferedReader name='/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpmo4d9xdz/header/dunkel-16x9.png'>
+  image = self.image(variant, ratio)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/case.py:637: ResourceWarning: unclosed file <_io.BufferedReader name='/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpmo4d9xdz/header/dunkel-21x9.png'>
+  result = method()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_safe_margin_is_empty (scripts.test_store_header.HeaderTests.test_safe_margin_is_empty) ... ok
+test_sizes_and_manifest (scripts.test_store_header.HeaderTests.test_sizes_and_manifest) ... /Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_store_header.py:54: ResourceWarning: unclosed file <_io.BufferedReader name='/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpmo4d9xdz/header/hell-16x9.png'>
+  self.assertEqual(self.image(variant, ratio).size, (w, h), name)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_store_header.py:54: ResourceWarning: unclosed file <_io.BufferedReader name='/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpmo4d9xdz/header/hell-21x9.png'>
+  self.assertEqual(self.image(variant, ratio).size, (w, h), name)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_store_header.py:54: ResourceWarning: unclosed file <_io.BufferedReader name='/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpmo4d9xdz/header/dunkel-16x9.png'>
+  self.assertEqual(self.image(variant, ratio).size, (w, h), name)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_store_header.py:54: ResourceWarning: unclosed file <_io.BufferedReader name='/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpmo4d9xdz/header/dunkel-21x9.png'>
+  self.assertEqual(self.image(variant, ratio).size, (w, h), name)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_never_places_or_submits (scripts.test_asc_header_upload.UploadTests.test_never_places_or_submits) ... bild hell-16x9 hochgeladen
+bild dunkel-16x9 hochgeladen
+bild hell-21x9 hochgeladen
+bild dunkel-21x9 hochgeladen
+ok
+test_skips_existing_reference_name (scripts.test_asc_header_upload.UploadTests.test_skips_existing_reference_name) ... bild hell-16x9 schon vorhanden, übersprungen
+bild dunkel-16x9 hochgeladen
+bild hell-21x9 hochgeladen
+bild dunkel-21x9 hochgeladen
+ok
+test_state_check_reads_ready_state (scripts.test_asc_header_upload.UploadTests.test_state_check_reads_ready_state) ... ok
+test_stops_without_matching_spec (scripts.test_asc_header_upload.UploadTests.test_stops_without_matching_spec) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 4.954s
+
+OK
+------ FULL SUITE
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..................
+----------------------------------------------------------------------
+Ran 484 tests in 275.470s
+
+OK
+::error title=board::Usage: board.py list | board.py set <issue> <Field=Value,...>
+::error title=board::Usage: board.py list | board.py set <issue> <Field=Value,...>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..................
+----------------------------------------------------------------------
+Ran 484 tests in 270.957s
+
+OK
+::error title=board::Usage: board.py list | board.py set <issue> <Field=Value,...>
+::error title=board::Usage: board.py list | board.py set <issue> <Field=Value,...>
