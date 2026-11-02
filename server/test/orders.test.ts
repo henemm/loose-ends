@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import pg from "pg";
 import { migrate } from "../src/migrate.ts";
-import { checkOrder, checkResult, claimOrder, putOrder, putResult } from "../src/orders.ts";
+import { checkOrder, checkResult, claimOrder, getResult, putOrder, putResult } from "../src/orders.ts";
 import { checkTranscript } from "../src/transcripts.ts";
 import { freshPool } from "./db.ts";
 
@@ -263,4 +263,36 @@ test("AC-21: a second result changes nothing", async (t) => {
   const [before] = await results(pool);
   assert.equal(await putResult(pool, "henning", "iphone", resultFor(doc)), "duplicate");
   assert.deepEqual(await results(pool), [before]);
+});
+
+const ORDER_ID = uuid(77).toUpperCase();
+const open = (): Doc => ({ ...capture(77), id: ORDER_ID });
+
+test("AC-1 (C4b-1): getResult is unknown for a never stored id, another account's id and a non-UUID", async (t) => {
+  const pool = await migrated(t);
+  await putOrder(pool, "henning", open());
+  assert.deepEqual(await getResult(pool, "henning", uuid(1)), { state: "unknown" });
+  assert.deepEqual(await getResult(pool, "anna", ORDER_ID), { state: "unknown" });
+  for (const bad of ["", "keine-uuid", "'; DROP TABLE orders; --"]) {
+    assert.deepEqual(await getResult(pool, "henning", bad), { state: "unknown" }, bad);
+  }
+});
+
+test("AC-2 (C4b-1): getResult goes waiting, claimed, result and reads the id in any case", async (t) => {
+  for (const [label, result] of [
+    ["done", { orderID: ORDER_ID, outcome: "done" }],
+    ["rejected mit Grund", { orderID: ORDER_ID, outcome: "rejected", reason: "stale" }],
+  ] as const) {
+    await t.test(label, async (t) => {
+      const pool = await migrated(t);
+      await putOrder(pool, "henning", open());
+      assert.deepEqual(await getResult(pool, "henning", ORDER_ID), { state: "waiting" });
+      assert.deepEqual(await getResult(pool, "henning", ORDER_ID.toLowerCase()), { state: "waiting" });
+      assert.ok(await claimOrder(pool, "henning", "iphone"));
+      assert.deepEqual(await getResult(pool, "henning", ORDER_ID), { state: "claimed" });
+      assert.equal(await putResult(pool, "henning", "iphone", result), "stored");
+      assert.deepEqual(await getResult(pool, "henning", ORDER_ID.toLowerCase()), { state: "result", result });
+      assert.deepEqual(await getResult(pool, "anna", ORDER_ID), { state: "unknown" });
+    });
+  }
 });

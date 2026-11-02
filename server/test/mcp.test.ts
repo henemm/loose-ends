@@ -6,6 +6,7 @@ import pg from "pg";
 import { Client, StreamableHTTPClientTransport } from "@modelcontextprotocol/client";
 import { migrate } from "../src/migrate.ts";
 import { getTranscript, putTranscript } from "../src/transcripts.ts";
+import { checkOrder, claimOrder, putResult } from "../src/orders.ts";
 import { mcpHandler } from "../src/mcp.ts";
 import { freshPool } from "./db.ts";
 
@@ -46,20 +47,25 @@ async function connect(t: T, pool: pg.Pool, account?: string): Promise<Client> {
   return client;
 }
 
-async function call(client: Client, name: string): Promise<{ text: string; isError: boolean }> {
-  const result: Doc = await client.callTool({ name, arguments: {} });
+async function call(client: Client, name: string, args: Doc = {}): Promise<{ text: string; isError: boolean }> {
+  const result: Doc = await client.callTool({ name, arguments: args });
   return { text: result.content.map((part: Doc) => part.text).join(""), isError: result.isError === true };
 }
 const json = async (client: Client, name: string) => JSON.parse((await call(client, name)).text);
 const titles = (doc: Doc) => doc.tasks.map((task: Doc) => task.title as string);
 
-test("AC-1: tools/list names exactly get_now and list_tasks", async (t) => {
+test("AC-1/AC-3: tools/list names the four tools, with the annotations of the write and read tools", async (t) => {
   const client = await connect(t, await migrated(t), "henning");
-  const names = (await client.listTools()).tools.map((tool) => tool.name).sort();
-  assert.deepEqual(names, ["get_now", "list_tasks"]);
+  const tools = (await client.listTools()).tools;
+  assert.deepEqual(tools.map((tool) => tool.name).sort(), ["capture_task", "get_now", "get_order_result", "list_tasks"]);
+  const note = (name: string) => tools.find((tool) => tool.name === name)?.annotations;
+  assert.equal(note("capture_task")?.readOnlyHint, false);
+  assert.equal(note("capture_task")?.destructiveHint, false);
+  assert.equal(note("capture_task")?.idempotentHint, false);
+  assert.equal(note("get_order_result")?.readOnlyHint, true);
 });
 
-test("AC-2: without an account every tool refuses and reads nothing", async (t) => {
+test("AC-2: without an account the read tools refuse and reads nothing", async (t) => {
   const pool = await migrated(t);
   await putTranscript(pool, "henning", example());
   const client = await connect(t, pool);
@@ -183,4 +189,90 @@ test("AC-13: getTranscript returns the stored document or undefined", async (t) 
   await putTranscript(pool, "henning", example());
   assert.deepEqual(await getTranscript(pool, "henning"), example());
   assert.equal(await getTranscript(pool, "anna"), undefined);
+});
+
+const orderCount = async (pool: pg.Pool) => Number((await pool.query("SELECT count(*) AS n FROM orders")).rows[0].n);
+const capture = (client: Client, text: string) => call(client, "capture_task", { text });
+const result = (client: Client, orderID: string) => call(client, "get_order_result", { orderID });
+const UUID = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/;
+
+test("AC-4 (C4b-1): without an account both new tools refuse and capture_task stores nothing", async (t) => {
+  const pool = await migrated(t);
+  const client = await connect(t, pool);
+  for (const [name, args] of [["capture_task", { text: "Milch kaufen" }], ["get_order_result", { orderID: fakeID(1) }]] as const) {
+    const { text, isError } = await call(client, name, args);
+    assert.equal(isError, true, name);
+    assert.match(text, /kein Konto/, name);
+  }
+  assert.equal(await orderCount(pool), 0);
+});
+
+test("AC-5/AC-6 (C4b-1): capture_task stores one capture order per call, waiting, for the account from authInfo", async (t) => {
+  const pool = await migrated(t);
+  const client = await connect(t, pool, "henning");
+  const first = await capture(client, "Milch kaufen");
+  assert.equal(first.isError, false);
+  const { orderID, state } = JSON.parse(first.text);
+  assert.match(orderID, UUID);
+  assert.equal(state, "waiting");
+  assert.equal(await orderCount(pool), 1);
+  const row = (await pool.query("SELECT * FROM orders WHERE id = $1", [orderID])).rows[0];
+  assert.equal(row.kind, "capture");
+  assert.equal(row.account_id, "henning");
+  assert.equal(row.claimed_by, null);
+  assert.equal(row.doc.text, "Milch kaufen");
+  assert.doesNotThrow(() => checkOrder(row.doc));
+  const second = JSON.parse((await capture(client, "Milch kaufen")).text);
+  assert.notEqual(second.orderID, orderID);
+  assert.equal(await orderCount(pool), 2);
+});
+
+test("AC-7 (C4b-1): empty, blank and invalid text store nothing and answer isError", async (t) => {
+  const pool = await migrated(t);
+  const client = await connect(t, pool, "henning");
+  for (const text of ["", "   \n\t"]) {
+    const answer = await capture(client, text);
+    assert.equal(answer.isError, true, JSON.stringify(text));
+    assert.match(answer.text, /Text fehlt/);
+  }
+  for (const text of ["Milch\u0000kaufen", "Milch\ud800kaufen"]) {
+    const answer = await capture(client, text);
+    assert.equal(answer.isError, true, JSON.stringify(text));
+    assert.match(answer.text, /Auftrag/);
+  }
+  assert.equal(await orderCount(pool), 0);
+});
+
+test("AC-8/AC-9 (C4b-1): get_order_result goes waiting, claimed, result; unknown and foreign ids are unknown, no order text", async (t) => {
+  const pool = await migrated(t);
+  const client = await connect(t, pool, "henning");
+  const { orderID } = JSON.parse((await capture(client, "Geheimer Auftragstext")).text);
+  const state = async (c: Client, id = orderID) => {
+    const answer = await result(c, id);
+    assert.equal(answer.isError, false);
+    assert.ok(!answer.text.includes("Geheimer Auftragstext"), answer.text);
+    return JSON.parse(answer.text);
+  };
+  assert.deepEqual(await state(client), { state: "waiting" });
+  assert.ok(await claimOrder(pool, "henning", "iphone"));
+  assert.deepEqual(await state(client), { state: "claimed" });
+  const doc = { orderID, outcome: "rejected", reason: "stale" };
+  assert.equal(await putResult(pool, "henning", "iphone", doc), "stored");
+  assert.deepEqual(await state(client), { state: "result", result: doc });
+  assert.deepEqual(await state(client, fakeID(5)), { state: "unknown" });
+  assert.deepEqual(await state(await connect(t, pool, "anna")), { state: "unknown" });
+});
+
+test("AC-10 (C4b-1): neither new tool writes to console or stdout", async (t) => {
+  const pool = await migrated(t);
+  const client = await connect(t, pool, "henning");
+  const log = t.mock.method(console, "log");
+  const write = t.mock.method(process.stdout, "write");
+  const { orderID } = JSON.parse((await capture(client, "Milch kaufen")).text);
+  await result(client, orderID);
+  await capture(client, "");
+  const [logs, writes] = [log.mock.callCount(), write.mock.callCount()];
+  t.mock.restoreAll();
+  assert.equal(logs, 0, "console.log");
+  assert.equal(writes, 0, "process.stdout.write");
 });
