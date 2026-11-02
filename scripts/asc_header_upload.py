@@ -126,7 +126,8 @@ def lesen(client, app_id):
         print(f"spec {describe(spec)}", flush=True)
     for kind in refdata.get("placementTypes") or []:
         print(f"platzierungstyp {kind.get('placementType', '?')} "
-              f"kategorien={','.join(kind.get('acceptsAssetCategories') or []) or '-'}", flush=True)
+              f"kategorien={','.join(kind.get('acceptsAssetCategories') or []) or '-'} roh={json.dumps(kind, sort_keys=True)}",
+              flush=True)
     library = client.get(f"/v1/apps/{app_id}/assetLibrary")
     print(f"bibliothek id={library.get('id', '?')} felder={','.join(sorted(library)) or '-'}", flush=True)
     for image in client.get(f"/v1/appAssetLibraries/{library.get('id')}/images")["items"]:
