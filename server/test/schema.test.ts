@@ -56,12 +56,12 @@ async function refused(promise: Promise<unknown>, expected: Expect, name: string
 test("AC-1: the real migrations folder applies 001 once and creates the three tables", async (t) => {
   const pool = await freshPool(t);
 
-  assert.deepEqual(await migrate(pool, migrations), ["001_claude_schema.sql"]);
+  assert.deepEqual(await migrate(pool, migrations), ["001_claude_schema.sql", "002_accounts.sql"]);
   for (const table of ["transcripts", "orders", "order_results"]) {
     const result = await pool.query("SELECT to_regclass($1) AS oid", [table]);
     assert.notEqual(result.rows[0].oid, null, table);
   }
-  assert.equal((await pool.query("SELECT name FROM schema_migrations")).rowCount, 1);
+  assert.equal((await pool.query("SELECT name FROM schema_migrations")).rowCount, 2);
   assert.deepEqual(await migrate(pool, migrations), []);
 });
 
