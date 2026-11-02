@@ -79,6 +79,8 @@ enum OrderExecutor {
         guard same(order.expectedDueDate, task.dueDate) else { return refuse(order, .stale, task: id) }
         // As `TaskActions.setDue` does it, but the revision is kept to carry the reason.
         let stored = order.date.map { hasTime ? $0 : calendar.startOfDay(for: $0) }
+        // The same instant with another `hasTime` could only change `dueHasTime`, which is no revision field.
+        if let stored, same(stored, task.dueDate), task.dueHasTime != hasTime { return refuse(order, .invalid, task: id) }
         let revision = RevisionService.set(
             .dueDate, to: stored?.ISO8601Format(), on: task, contexts: [], projects: [], now: now
         )
