@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-11-02T22:27:31+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: feat-796-dienst-hetzner
+head: c0495da5cd2215eab6b3fcbc9f59e9395b721d2d
+basis: 49d576f22144df439b2e780a4a54526fdd09e647 (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 26 gesamt, 26 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793653876.781  ende: 1793654845.656
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/feat-796-dienst-hetzner/simulator-run/summary.json  sha256:1a70e9a662db668c6616f9a0f9a391157b800244cf529e2af97553a407c83107
+xcresult: docs/artifacts/feat-796-dienst-hetzner/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-796-dienst-hetzner/simulator-run/*.png (15 Stück)
+
+## Geprüfte Dateien
+- sha256:81ba94db90d00c705316c7847df3f45e4b6d6dc9025fb066141ca3bc2c9c4ddc  server/src/health.ts
+- sha256:7b3974818b4112be9b1af31fa032d37bd5a011692f55eb1e3d8e816ffa712188  server/src/main.ts
