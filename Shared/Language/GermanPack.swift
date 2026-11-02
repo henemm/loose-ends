@@ -83,6 +83,19 @@ extension LanguagePack {
             "Garden": ["rasen", "hecke", "unkraut", "beet", "beete", "kompost", "laub", "umtopfen", "einpflanzen"],
             "Errands": ["kaufen", "einkauf", "einkaufen", "besorgen", "abholen", "apotheke", "supermarkt", "baumarkt"],
             "Out and about": ["unterwegs", "tanken", "tankstelle", "zur post", "zur bank", "waschanlage"],
+        ],
+        dayAfterTomorrow: [],
+        fillerWords: [
+            "eine", "einen", "einem", "einer", "eines", "dass", "oder", "aber", "auch", "noch", "wenn",
+            "dann", "denn", "doch", "mich", "dich", "sich", "mein", "meine", "meinen", "meinem", "meiner",
+            "dein", "deine", "sein", "seine", "ihre", "ihren", "unser", "unsere", "nach", "uber", "unter",
+            "beim", "gegen", "ohne", "durch", "bitte", "schon", "nicht", "mehr", "ganz", "alle", "alles",
+            "diese", "dieser", "dieses", "diesen", "wieder", "haben", "habe", "machen", "muss", "mussen",
+            "soll", "sollte", "kann", "konnen", "werden", "wird", "will", "etwas", "jetzt", "immer", "bald",
+            "sofort", "spater", "heute", "morgen", "ubermorgen", "gestern", "woche", "wochenende", "abend",
+            "abends", "fruh", "mittag", "nachste", "nachsten", "nachstes", "kommenden", "montag",
+            "dienstag", "mittwoch", "donnerstag", "freitag", "samstag", "sonntag", "zwei", "drei", "vier",
+            "funf",
         ]
     )
 }

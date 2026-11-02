@@ -172,9 +172,11 @@ struct DateExpressionParser: Sendable {
 
     private static func offsetMatch(at index: Int, in words: [ExpressionWord]) -> Candidate? {
         let text = ExpressionText.word(words, index)
-        if text == "day", ExpressionText.word(words, index + 1) == "after",
-           ExpressionText.word(words, index + 2) == "tomorrow" {
-            return Candidate(index: index, priority: 4, expression: .offsetDays(2), count: 3)
+        // "the day after tomorrow" is two days out, in the words the active packs name it with (#750).
+        if let phrase = LanguagePacks.dayAfterTomorrowPhrases.first(where: { candidate in
+            candidate.indices.allSatisfy { ExpressionText.word(words, index + $0) == candidate[$0] }
+        }) {
+            return Candidate(index: index, priority: 4, expression: .offsetDays(2), count: phrase.count)
         }
         if let days = relativeDays[text] {
             return Candidate(index: index, priority: 4, expression: .offsetDays(days))

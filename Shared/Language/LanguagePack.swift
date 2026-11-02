@@ -65,6 +65,11 @@ struct LanguagePack: Sendable {
     let titleDateWords: [String]
     /// Words per default context, keyed by the context's English catalog key ("Garden", "Out and about").
     let contextWords: [String: [String]]
+    /// The words of "the day after tomorrow" in a language that names that day in words ("day", "after", "tomorrow").
+    /// Empty where it has none: "übermorgen" is a single word in `relativeDays`.
+    let dayAfterTomorrow: [String]
+    /// Words that never become a context word (`ContextWordLearning`): function words, days and times, folded.
+    let fillerWords: [String]
 }
 
 enum LanguagePacks {
@@ -88,6 +93,9 @@ enum LanguagePacks {
     static var dayPrepositions: [String] { list(\.dayPrepositions) }
     static var ordinalSuffixes: [String] { list(\.ordinalSuffixes) }
     static var repetitions: [String] { list(\.repetitions) }
+    /// Every active pack's phrase for "the day after tomorrow", in pack order; a pack with none adds nothing.
+    static var dayAfterTomorrowPhrases: [[String]] { active.map(\.dayAfterTomorrow).filter { !$0.isEmpty } }
+    static var fillerWords: [String] { list(\.fillerWords) }
 
     static var timeCues: [String] { list(\.timeCues) }
     static var clockWords: [String] { list(\.clockWords) }

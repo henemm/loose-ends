@@ -112,22 +112,7 @@ enum ContextWordLearning {
     }
 
     /// Words of four letters or more that say nothing about where a task is done: function words,
-    /// days and times. Normalized spelling ("uber", "fruh"), because they are compared after
-    /// `RawTextWords.normalized`. Shorter function words fall to the length filter already.
-    static let fillerWords: Set<String> = [
-        "eine", "einen", "einem", "einer", "eines", "dass", "oder", "aber", "auch", "noch", "wenn",
-        "dann", "denn", "doch", "mich", "dich", "sich", "mein", "meine", "meinen", "meinem", "meiner",
-        "dein", "deine", "sein", "seine", "ihre", "ihren", "unser", "unsere", "nach", "uber", "unter",
-        "beim", "gegen", "ohne", "durch", "bitte", "schon", "nicht", "mehr", "ganz", "alle", "alles",
-        "diese", "dieser", "dieses", "diesen", "wieder", "haben", "habe", "machen", "muss", "mussen",
-        "soll", "sollte", "kann", "konnen", "werden", "wird", "will", "etwas", "jetzt", "immer", "bald",
-        "sofort", "spater", "heute", "morgen", "ubermorgen", "gestern", "woche", "wochenende", "abend",
-        "abends", "fruh", "mittag", "nachste", "nachsten", "nachstes", "kommenden", "montag",
-        "dienstag", "mittwoch", "donnerstag", "freitag", "samstag", "sonntag", "zwei", "drei", "vier",
-        "funf",
-        "that", "this", "with", "from", "have", "need", "make", "some", "then", "there", "they", "them",
-        "your", "about", "into", "over", "also", "again", "please", "today", "tomorrow", "week",
-        "weekend", "next", "later", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday",
-        "sunday",
-    ]
+    /// days and times. The active packs hold them (`LanguagePack.fillerWords`), normalized spelling
+    /// ("uber", "fruh"), because they are compared after `RawTextWords.normalized`.
+    static var fillerWords: Set<String> { Set(LanguagePacks.fillerWords) }
 }

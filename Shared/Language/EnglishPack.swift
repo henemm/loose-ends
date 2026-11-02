@@ -65,6 +65,13 @@ extension LanguagePack {
             "Garden": ["lawn", "hedge", "weeds", "mow"],
             "Errands": ["buy", "pick up", "groceries", "pharmacy"],
             "Out and about": ["on the way", "gas station"],
+        ],
+        dayAfterTomorrow: ["day", "after", "tomorrow"],
+        fillerWords: [
+            "that", "this", "with", "from", "have", "need", "make", "some", "then", "there", "they", "them",
+            "your", "about", "into", "over", "also", "again", "please", "today", "tomorrow", "week",
+            "weekend", "next", "later", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday",
+            "sunday",
         ]
     )
 }

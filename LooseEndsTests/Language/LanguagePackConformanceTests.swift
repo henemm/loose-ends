@@ -71,7 +71,8 @@ struct LanguagePackConformanceTests {
     /// Wo ein Paket eine Tabelle leer lassen darf (die Sprache kennt die Sache nicht).
     static let allowedEmpty: [String: Set<String>] = [
         "en": ["dayPrepositions", "clockWords", "timeArticles", "articleCues", "spelledHours"],
-        "de": ["ordinalSuffixes", "abbreviatedHourUnits", "offsetArticles"],
+        // dayAfterTomorrow: Deutsch hat „übermorgen“ als ein Wort in relativeDays, keine Phrase (#801).
+        "de": ["ordinalSuffixes", "abbreviatedHourUnits", "offsetArticles", "dayAfterTomorrow"],
     ]
 
     @Test("Keine Tabelle ist leer, außer wo die Sprache die Sache nicht kennt")
