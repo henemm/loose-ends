@@ -1,0 +1,194 @@
+Postgres on 127.0.0.1:52113, data in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.yY3pE1Swvb
+
+> typecheck
+> tsc --noEmit
+
+test/orders.test.ts(7,47): error TS2305: Module '"../src/orders.ts"' has no exported member 'getResult'.
+TYPECHECK FEHLGESCHLAGEN (erwartet, RED)
+
+> test
+> node --test 'test/*.test.ts'
+
+✖ AC-1/AC-3: tools/list names the four tools, with the annotations of the write and read tools (66.763833ms)
+▶ AC-2: without an account the read tools refuse and reads nothing
+  ✔ get_now (2.18775ms)
+  ✔ list_tasks (0.805042ms)
+✔ AC-2: without an account the read tools refuse and reads nothing (24.52175ms)
+▶ AC-3/AC-4: another account and an account without transcript get „noch keine Abschrift“
+  ✔ AC-3 fremdes Konto (18.625625ms)
+  ✔ AC-4 keine Abschrift (13.930792ms)
+✔ AC-3/AC-4: another account and an account without transcript get „noch keine Abschrift“ (32.8065ms)
+▶ AC-5: get_now passes nowCount through and never recounts
+  ✔ Vertrag (13.553792ms)
+  ✔ 7 bei drei Zeilen (14.624833ms)
+✔ AC-5: get_now passes nowCount through and never recounts (28.564ms)
+▶ AC-6: get_now orders knaeuel, today, lined, waiting and keeps the order inside a group
+  ✔ Vertrag (13.966291ms)
+  ✔ ohne Knäuel, mehrere je Gruppe (18.72475ms)
+✔ AC-6: get_now orders knaeuel, today, lined, waiting and keeps the order inside a group (33.105709ms)
+✔ AC-7: each row of get_now carries the task's fields; an id without task stays id and group (15.5265ms)
+▶ AC-8: list_tasks returns every task as delivered, with generatedAt
+  ✔ Vertrag (15.210167ms)
+  ✔ vertauscht (16.619792ms)
+✔ AC-8: list_tasks returns every task as delivered, with generatedAt (32.19ms)
+✔ AC-9: no raw text or note in any answer, nothing on console or stdout (14.538ms)
+✔ AC-10: a newer upload is read on the next call, nothing is cached (16.838958ms)
+✔ AC-13: getTranscript returns the stored document or undefined (14.908792ms)
+✖ AC-4 (C4b-1): without an account both new tools refuse and capture_task stores nothing (12.887959ms)
+✖ AC-5/AC-6 (C4b-1): capture_task stores one capture order per call, waiting, for the account from authInfo (11.195208ms)
+✖ AC-7 (C4b-1): empty, blank and invalid text store nothing and answer isError (10.889333ms)
+✖ AC-8/AC-9 (C4b-1): get_order_result goes waiting, claimed, result; unknown and foreign ids are unknown, no order text (10.480792ms)
+✖ AC-10 (C4b-1): neither new tool writes to console or stdout (11.431708ms)
+✔ AC-1: applies migrations in number order and returns their names in that order (26.673167ms)
+✔ AC-2: a second run applies nothing, a new file alone is applied (16.837167ms)
+✔ AC-3: a broken migration rolls back completely and rethrows the Postgres error (12.018666ms)
+✔ AC-4: a gap in the numbers is refused before anything is applied (4.87375ms)
+✔ AC-4: a duplicate number is refused before anything is applied (12.160667ms)
+✔ AC-4: a misnamed .sql file is refused before anything is applied, README.md is ignored (5.903625ms)
+✔ AC-4: a README.md beside the migrations does not disturb the run (13.020083ms)
+✔ AC-4: number 000 is refused as invalid, not as a duplicate (5.91375ms)
+✔ AC-5: without DATABASE_URL the test run fails and names the variable (237.765166ms)
+file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/orders.test.ts:7
+import { checkOrder, checkResult, claimOrder, getResult, putOrder, putResult } from "../src/orders.ts";
+                                              ^^^^^^^^^
+SyntaxError: The requested module '../src/orders.ts' does not provide an export named 'getResult'
+    at #asyncInstantiate (node:internal/modules/esm/module_job:463:21)
+    at async ModuleJob.run (node:internal/modules/esm/module_job:561:5)
+    at async node:internal/modules/esm/loader:650:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+
+Node.js v26.13.0
+✖ test/orders.test.ts (174.854834ms)
+✔ AC-1: the real migrations folder applies 001 once and creates the three tables (30.751583ms)
+✔ AC-2: the three contract examples are accepted in contract order (16.709ms)
+✔ AC-3: transcripts refuse what the contract does not allow (46.5185ms)
+✔ AC-4: orders refuse a wrong version, kind, id, account or half a claim, and take all three kinds (35.212708ms)
+✔ AC-5: order results belong to exactly one existing order and carry a reason only when rejected (36.913708ms)
+✔ AC-6: ids keep their case in the document, the uuid columns compare regardless of case (13.600292ms)
+✔ AC-6: known limit, version 1.0 is accepted because jsonb compares numbers numerically (12.585917ms)
+✔ AC-1: the contract example and a lower-case one without optional fields are accepted (1.901334ms)
+▶ AC-2 to AC-11: the deviation table is refused with the field path, nothing is stored
+  ✔ AC-2 (Z1) version (2.022917ms)
+  ✔ AC-3 (Z2) generatedAt (0.764208ms)
+  ✔ AC-4 (Z3) now is no object (0.610042ms)
+  ✔ AC-5 (Z4) keys of now (0.923834ms)
+  ✔ AC-6 (Z5) now.knaeuel (1.233709ms)
+  ✔ AC-7 (Z6) lists of now (2.80225ms)
+  ✔ AC-8 (Z7) contexts (1.021625ms)
+  ✔ AC-9 (Z8) title and project (0.9365ms)
+  ✔ AC-10 (Z9) raw text and note anywhere (1.254375ms)
+  ✔ AC-11 (Z10) root keys and nowCount (1.278542ms)
+  ✔ F001 inherited key names are unknown keys (1.391917ms)
+  ✔ F002 times Postgres refuses or that are no ISO (2.0555ms)
+  ✔ F003 NUL and lone surrogates (0.629083ms)
+✔ AC-2 to AC-11: the deviation table is refused with the field path, nothing is stored (44.973209ms)
+✔ AC-6: without now.knaeuel the transcript is accepted (0.151125ms)
+✔ AC-12/13/14: the first is stored, a newer replaces it, an older or equally old one leaves it (18.607042ms)
+✔ AC-15: two concurrent uploads over two connections always leave the newer one (29.338666ms)
+✔ AC-16: two accounts keep their transcripts apart (14.465916ms)
+✔ AC-17: the service does not recount, a mismatching nowCount and unknown now ids are stored (15.56475ms)
+✔ F002: offsets up to ±15:59 are stored, as Postgres takes them (14.0095ms)
+ℹ tests 63
+ℹ suites 0
+ℹ pass 56
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 611.250708
+
+✖ failing tests:
+
+test at test/mcp.test.ts:57:1
+✖ AC-1/AC-3: tools/list names the four tools, with the annotations of the write and read tools (66.763833ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  -   'capture_task',
+      'get_now',
+  -   'get_order_result',
+      'list_tasks'
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/test/mcp.test.ts:60:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'get_now', 'list_tasks' ],
+    expected: [ 'capture_task', 'get_now', 'get_order_result', 'list_tasks' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/mcp.test.ts:199:1
+✖ AC-4 (C4b-1): without an account both new tools refuse and capture_task stores nothing (12.887959ms)
+  Error [ProtocolError]: Tool capture_task not found
+      at ProtocolError.fromError (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:3507:10)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:6068:30)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/public-CvV4ZHkX.mjs:3803:9)
+      at _transport.onmessage (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:5859:82)
+      at processStream (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/index.mjs:1624:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+    code: -32602,
+    data: undefined
+  }
+
+test at test/mcp.test.ts:210:1
+✖ AC-5/AC-6 (C4b-1): capture_task stores one capture order per call, waiting, for the account from authInfo (11.195208ms)
+  Error [ProtocolError]: Tool capture_task not found
+      at ProtocolError.fromError (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:3507:10)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:6068:30)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/public-CvV4ZHkX.mjs:3803:9)
+      at _transport.onmessage (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:5859:82)
+      at processStream (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/index.mjs:1624:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+    code: -32602,
+    data: undefined
+  }
+
+test at test/mcp.test.ts:230:1
+✖ AC-7 (C4b-1): empty, blank and invalid text store nothing and answer isError (10.889333ms)
+  Error [ProtocolError]: Tool capture_task not found
+      at ProtocolError.fromError (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:3507:10)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:6068:30)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/public-CvV4ZHkX.mjs:3803:9)
+      at _transport.onmessage (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:5859:82)
+      at processStream (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/index.mjs:1624:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+    code: -32602,
+    data: undefined
+  }
+
+test at test/mcp.test.ts:246:1
+✖ AC-8/AC-9 (C4b-1): get_order_result goes waiting, claimed, result; unknown and foreign ids are unknown, no order text (10.480792ms)
+  Error [ProtocolError]: Tool capture_task not found
+      at ProtocolError.fromError (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:3507:10)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:6068:30)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/public-CvV4ZHkX.mjs:3803:9)
+      at _transport.onmessage (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:5859:82)
+      at processStream (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/index.mjs:1624:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+    code: -32602,
+    data: undefined
+  }
+
+test at test/mcp.test.ts:266:1
+✖ AC-10 (C4b-1): neither new tool writes to console or stdout (11.431708ms)
+  Error [ProtocolError]: Tool capture_task not found
+      at ProtocolError.fromError (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:3507:10)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:6068:30)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/public-CvV4ZHkX.mjs:3803:9)
+      at _transport.onmessage (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:5859:82)
+      at processStream (file:///Users/hem/Developer/loose-ends/.claude/worktrees/spike-613-backend-weg-b/server/node_modules/@modelcontextprotocol/client/dist/index.mjs:1624:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+    code: -32602,
+    data: undefined
+  }
+
+test at test/orders.test.ts:1:1
+✖ test/orders.test.ts (174.854834ms)
+  'test failed'
+TESTS FEHLGESCHLAGEN (erwartet, RED)
