@@ -1,0 +1,150 @@
+test_lesen_prints_raw_specs_and_never_writes (scripts.test_asc_header_upload.LesenTests.test_lesen_prints_raw_specs_and_never_writes) ... ERROR
+test_match_by_dimension_range_and_placement (scripts.test_asc_header_upload.MatchTests.test_match_by_dimension_range_and_placement) ... ERROR
+test_partial_match_uploads_fitting_and_reports_rest (scripts.test_asc_header_upload.MatchTests.test_partial_match_uploads_fitting_and_reports_rest) ... FAIL
+test_refdata_read_as_single_record (scripts.test_asc_header_upload.MatchTests.test_refdata_read_as_single_record) ... FAIL
+test_stops_without_matching_spec (scripts.test_asc_header_upload.MatchTests.test_stops_without_matching_spec) ... FAIL
+test_state_check_reads_ready_state (scripts.test_asc_header_upload.StateTests.test_state_check_reads_ready_state) ... ERROR
+test_wait_reaches_ready_and_stops_on_failed (scripts.test_asc_header_upload.StateTests.test_wait_reaches_ready_and_stops_on_failed) ... FAIL
+test_never_places_or_submits (scripts.test_asc_header_upload.UploadTests.test_never_places_or_submits) ... FAIL
+test_skips_existing_reference_name (scripts.test_asc_header_upload.UploadTests.test_skips_existing_reference_name) ... FAIL
+test_uses_library_id_and_relationship (scripts.test_asc_header_upload.UploadTests.test_uses_library_id_and_relationship) ... FAIL
+
+======================================================================
+ERROR: test_lesen_prints_raw_specs_and_never_writes (scripts.test_asc_header_upload.LesenTests.test_lesen_prints_raw_specs_and_never_writes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 239, in test_lesen_prints_raw_specs_and_never_writes
+    hu.lesen(client, APP)
+    ^^^^^^^^
+AttributeError: module 'asc_header_upload' has no attribute 'lesen'
+
+======================================================================
+ERROR: test_match_by_dimension_range_and_placement (scripts.test_asc_header_upload.MatchTests.test_match_by_dimension_range_and_placement)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 134, in test_match_by_dimension_range_and_placement
+    found, unmatched = hu.match_specs(FakeClient().refdata, self.files)
+                       ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/asc_header_upload.py", line 30, in match_specs
+    hits = [s for s in specs if (s.get("width"), s.get("height")) == (item["width"], item["height"])]
+                                 ^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+======================================================================
+ERROR: test_state_check_reads_ready_state (scripts.test_asc_header_upload.StateTests.test_state_check_reads_ready_state)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 222, in test_state_check_reads_ready_state
+    self.assertEqual(hu.check_state(FakeClient(images=images), LIBRARY, names), "bereit")
+                     ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: check_state() takes 2 positional arguments but 3 were given
+
+======================================================================
+FAIL: test_partial_match_uploads_fitting_and_reports_rest (scripts.test_asc_header_upload.MatchTests.test_partial_match_uploads_fitting_and_reports_rest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 156, in test_partial_match_uploads_fitting_and_reports_rest
+    state, out = self.run_upload(client)
+                 ~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 121, in run_upload
+    state = hu.upload(client, APP, files or self.files, sleep=lambda seconds: None)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/asc_header_upload.py", line 52, in upload
+    categories = match_specs(client.get(REFDATA).get("imageSpecs") or [], files)
+                             ~~~~~~~~~~^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 67, in get
+    raise AssertionError(f"unbekannter Pfad {path}")
+AssertionError: unbekannter Pfad /v1/appAssetLibraryRefData
+
+======================================================================
+FAIL: test_refdata_read_as_single_record (scripts.test_asc_header_upload.MatchTests.test_refdata_read_as_single_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 128, in test_refdata_read_as_single_record
+    self.run_upload(client)
+    ~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 121, in run_upload
+    state = hu.upload(client, APP, files or self.files, sleep=lambda seconds: None)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/asc_header_upload.py", line 52, in upload
+    categories = match_specs(client.get(REFDATA).get("imageSpecs") or [], files)
+                             ~~~~~~~~~~^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 67, in get
+    raise AssertionError(f"unbekannter Pfad {path}")
+AssertionError: unbekannter Pfad /v1/appAssetLibraryRefData
+
+======================================================================
+FAIL: test_stops_without_matching_spec (scripts.test_asc_header_upload.MatchTests.test_stops_without_matching_spec)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 149, in test_stops_without_matching_spec
+    self.run_upload(client)
+    ~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 121, in run_upload
+    state = hu.upload(client, APP, files or self.files, sleep=lambda seconds: None)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/asc_header_upload.py", line 52, in upload
+    categories = match_specs(client.get(REFDATA).get("imageSpecs") or [], files)
+                             ~~~~~~~~~~^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 67, in get
+    raise AssertionError(f"unbekannter Pfad {path}")
+AssertionError: unbekannter Pfad /v1/appAssetLibraryRefData
+
+======================================================================
+FAIL: test_wait_reaches_ready_and_stops_on_failed (scripts.test_asc_header_upload.StateTests.test_wait_reaches_ready_and_stops_on_failed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 216, in test_wait_reaches_ready_and_stops_on_failed
+    self.assertIn("Bild entspricht keiner Spec", str(caught.exception))
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'Bild entspricht keiner Spec' not found in 'Bild B nach 40 Abfragen nicht PREPARE_FOR_SUBMISSION, zuletzt FAILED'
+
+======================================================================
+FAIL: test_never_places_or_submits (scripts.test_asc_header_upload.UploadTests.test_never_places_or_submits)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 189, in test_never_places_or_submits
+    self.run_upload(client)
+    ~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 121, in run_upload
+    state = hu.upload(client, APP, files or self.files, sleep=lambda seconds: None)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/asc_header_upload.py", line 52, in upload
+    categories = match_specs(client.get(REFDATA).get("imageSpecs") or [], files)
+                             ~~~~~~~~~~^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 67, in get
+    raise AssertionError(f"unbekannter Pfad {path}")
+AssertionError: unbekannter Pfad /v1/appAssetLibraryRefData
+
+======================================================================
+FAIL: test_skips_existing_reference_name (scripts.test_asc_header_upload.UploadTests.test_skips_existing_reference_name)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 182, in test_skips_existing_reference_name
+    self.run_upload(client)
+    ~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 121, in run_upload
+    state = hu.upload(client, APP, files or self.files, sleep=lambda seconds: None)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/asc_header_upload.py", line 52, in upload
+    categories = match_specs(client.get(REFDATA).get("imageSpecs") or [], files)
+                             ~~~~~~~~~~^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 67, in get
+    raise AssertionError(f"unbekannter Pfad {path}")
+AssertionError: unbekannter Pfad /v1/appAssetLibraryRefData
+
+======================================================================
+FAIL: test_uses_library_id_and_relationship (scripts.test_asc_header_upload.UploadTests.test_uses_library_id_and_relationship)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 169, in test_uses_library_id_and_relationship
+    self.run_upload(client)
+    ~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 121, in run_upload
+    state = hu.upload(client, APP, files or self.files, sleep=lambda seconds: None)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/asc_header_upload.py", line 52, in upload
+    categories = match_specs(client.get(REFDATA).get("imageSpecs") or [], files)
+                             ~~~~~~~~~~^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 67, in get
+    raise AssertionError(f"unbekannter Pfad {path}")
+AssertionError: unbekannter Pfad /v1/appAssetLibraryRefData
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.011s
+
+FAILED (failures=7, errors=3)

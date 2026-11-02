@@ -2,9 +2,9 @@
 
 Aufruf: asc_header_upload.py lesen|hochladen
 Umgebung wie asc_wait_build.py. `lesen` holt nur Referenzdaten und Bibliothek (GET). `hochladen` nimmt die Bilder aus
-docs/store/header/manifest.json, sucht je Bild die passende Spec über die Maße (sonst Abbruch vor jedem Schreiben),
-legt fehlende an (POST, Bytes, `uploaded: true`) und wartet auf PREPARE_FOR_SUBMISSION. Schlüssel und Token werden nie
-ausgegeben.
+docs/store/header/manifest.json, sucht je Bild eine Kopf-Spec, in deren Maßspannen es liegt (passt keines, Abbruch vor
+jedem Schreiben; übrige als ::warning::), legt fehlende an (POST, Bytes, `uploaded: true`) und wartet auf
+PREPARE_FOR_SUBMISSION. Form nach App Store Connect API 4.5.0. Schlüssel und Token werden nie ausgegeben.
 """
 import json
 import sys
@@ -19,70 +19,121 @@ ROOT = Path(__file__).resolve().parent.parent
 HEADER = ROOT / "docs/store/header"
 READY = "PREPARE_FOR_SUBMISSION"
 POLLS = 40
-REFDATA = "/v1/appAssetLibraryRefData"
+REFDATA = "/v1/appAssetLibraryRefData/1"
 IMAGES = "/v1/appAssetLibraryImages"
+HEADER_TYPE = "PRODUCT_PAGE_HEADER_ASSET"
 
 
-def match_specs(specs, files):
-    """Spec je Datei über Breite und Höhe; fehlt eine, Fatal mit allen vorhandenen Specs."""
-    found = {}
+def describe(spec):
+    d = spec.get("dimensions") or {}
+    return (f"{spec.get('specId', '?')} {d.get('minWidth', '?')}-{d.get('maxWidth', '?')}x"
+            f"{d.get('minHeight', '?')}-{d.get('maxHeight', '?')} {','.join(spec.get('compatiblePlacementTypes') or [])}")
+
+
+def fits(spec, item):
+    d = spec.get("dimensions") or {}
+    return (HEADER_TYPE in (spec.get("compatiblePlacementTypes") or [])
+            and d.get("minWidth", 0) <= item["width"] <= d.get("maxWidth", -1)
+            and d.get("minHeight", 0) <= item["height"] <= d.get("maxHeight", -1))
+
+
+def match_specs(refdata, files):
+    """Kategorie je Datei, deren Maß in den Spannen einer Kopf-Spec liegt; dazu die Dateien ohne passende Spec."""
+    accepted = [c for t in refdata.get("placementTypes") or [] if t.get("placementTypeId") == HEADER_TYPE
+                for c in t.get("acceptsAssetCategories") or []]
+    specs = refdata.get("imageSpecs") or []
+    found, unmatched = {}, []
     for item in files:
-        hits = [s for s in specs if (s.get("width"), s.get("height")) == (item["width"], item["height"])]
-        if not hits:
-            listed = ", ".join(f"{s.get('category', '?')} {s.get('width', '?')}x{s.get('height', '?')}" for s in specs)
-            raise Fatal(f"Keine Spec für {item['reference']} ({item['width']}x{item['height']}); "
-                        f"vorhanden: {listed or 'keine'}")
-        found[item["reference"]] = hits[0]["category"]
-    return found
+        if accepted and any(fits(spec, item) for spec in specs):
+            found[item["reference"]] = accepted[0]
+        else:
+            unmatched.append(item)
+    return found, unmatched
 
 
 def wait_ready(client, image_id, sleep):
     for _ in range(POLLS):
-        state = client.get(f"{IMAGES}/{image_id}").get("state")
+        image = client.get(f"{IMAGES}/{image_id}")
+        state = image.get("state")
         if state == READY:
             return
+        if state == "FAILED":
+            raise Fatal(f"Bild {image_id} ist FAILED: {image.get('stateDetails', '?')}")
         sleep(15)
     raise Fatal(f"Bild {image_id} nach {POLLS} Abfragen nicht {READY}, zuletzt {state}")
 
 
+def put_bytes(client, created, data):
+    for operation in created.get("uploadOperations") or []:
+        start = operation.get("offset", 0)
+        chunk = data[start:start + operation.get("length", len(data))]
+        headers = {h["name"]: h["value"] for h in operation.get("requestHeaders") or []}
+        if headers:
+            client.put(operation["url"], chunk, headers)
+        else:
+            client.put(operation["url"], chunk)
+
+
 def upload(client, app_id, files, sleep=time.sleep):
     """Nur Asset-Bibliothek: Anlegen, Bytes, `uploaded: true`, warten. Gibt das Ergebnis von check_state zurück."""
-    library_path = f"/v1/apps/{app_id}/assetLibrary"
-    library = client.get(library_path)
-    categories = match_specs(client.get(REFDATA).get("imageSpecs") or [], files)
-    existing = {image.get("referenceName") for image in library.get("images") or []}
-    for item in files:
+    refdata = client.get(REFDATA)
+    categories, unmatched = match_specs(refdata, files)
+    if not categories:
+        names = ", ".join(f"{i['reference']} ({i['width']}x{i['height']})" for i in files)
+        listed = "; ".join(describe(s) for s in refdata.get("imageSpecs") or [])
+        raise Fatal(f"Keine Spec für {names}; vorhanden: {listed or 'keine'}")
+    for item in unmatched:
+        print(f"::warning::Keine Kopf-Spec für {item['reference']} ({item['width']}x{item['height']}), nicht hochgeladen",
+              flush=True)
+    library_id = client.get(f"/v1/apps/{app_id}/assetLibrary")["id"]
+    existing = {i.get("referenceName") for i in client.get(f"/v1/appAssetLibraries/{library_id}/images")["items"]}
+    relationship = {"assetLibrary": {"data": {"type": "appAssetLibraries", "id": library_id}}}
+    fitting = [item for item in files if item["reference"] in categories]
+    for item in fitting:
         if item["reference"] in existing:
             print(f"bild {item['reference']} schon vorhanden, übersprungen", flush=True)
             continue
         data = Path(item["path"]).read_bytes()
         created = client.post(IMAGES, {"fileName": Path(item["path"]).name, "fileSize": len(data),
-                                       "category": categories[item["reference"]], "referenceName": item["reference"]})
-        for operation in created.get("uploadOperations") or []:
-            start = operation.get("offset", 0)
-            chunk = data[start:start + operation.get("length", len(data))]
-            headers = {h["name"]: h["value"] for h in operation.get("requestHeaders") or []}
-            if headers:
-                client.put(operation["url"], chunk, headers)
-            else:
-                client.put(operation["url"], chunk)
+                                       "category": categories[item["reference"]], "referenceName": item["reference"]},
+                              relationship)
+        put_bytes(client, created, data)
         client.patch(f"{IMAGES}/{created['id']}", {"uploaded": True})
         wait_ready(client, created["id"], sleep)
         print(f"bild {item['reference']} hochgeladen", flush=True)
-    return check_state(client.get(library_path), [item["reference"] for item in files])
+    return check_state(client, library_id, [item["reference"] for item in fitting])
 
 
-def check_state(library, names):
+def check_state(client, library_id, names):
     """„bereit“ nur, wenn jedes Bild da ist, PREPARE_FOR_SUBMISSION trägt und nichts platziert ist; sonst Fatal."""
-    if library.get("placements"):
-        raise Fatal(f"Bibliothek hat {len(library['placements'])} Platzierung(en); dieses Skript platziert nie")
-    states = {image.get("referenceName"): image.get("state") for image in library.get("images") or []}
+    images = {i.get("referenceName"): i for i in client.get(f"/v1/appAssetLibraries/{library_id}/images")["items"]}
     for name in names:
-        if name not in states:
+        if name not in images:
             raise Fatal(f"Bild {name} fehlt in der Bibliothek")
-        if states[name] != READY:
-            raise Fatal(f"Bild {name} ist {states[name]}, nicht {READY}")
+        if images[name].get("state") != READY:
+            raise Fatal(f"Bild {name} ist {images[name].get('state')}, nicht {READY}")
+        placements = client.get(f"{IMAGES}/{images[name]['id']}/placements")["items"]
+        if placements:
+            raise Fatal(f"Bild {name} hat {len(placements)} Platzierung(en); dieses Skript platziert nie")
     return "bereit"
+
+
+def lesen(client, app_id):
+    """Nur GET: rohe Specs, Platzierungstypen mit Kategorien, Bilder mit Zustand und Zahl der Platzierungen."""
+    refdata = client.get(REFDATA)
+    print(f"refdata felder={','.join(sorted(refdata)) or '-'}", flush=True)
+    for spec in refdata.get("imageSpecs") or []:
+        print(f"spec {describe(spec)}", flush=True)
+    for kind in refdata.get("placementTypes") or []:
+        print(f"platzierungstyp {kind.get('placementTypeId', '?')} "
+              f"kategorien={','.join(kind.get('acceptsAssetCategories') or []) or '-'}", flush=True)
+    library = client.get(f"/v1/apps/{app_id}/assetLibrary")
+    print(f"bibliothek id={library.get('id', '?')} felder={','.join(sorted(library)) or '-'}", flush=True)
+    for image in client.get(f"/v1/appAssetLibraries/{library.get('id')}/images")["items"]:
+        placements = client.get(f"{IMAGES}/{image.get('id')}/placements")["items"]
+        print(f"bild name={image.get('referenceName', '?')} zustand={image.get('state', '?')} "
+              f"details={image.get('stateDetails', '-')} platzierungen={len(placements)} "
+              f"felder={','.join(sorted(image))}", flush=True)
 
 
 def flat(record):
@@ -113,19 +164,12 @@ class Client:
         return self.send(method, self.config["base"] + path, data, headers)
 
     def get(self, path):
-        body = self.api("GET", path)
-        data = body.get("data")
+        data = self.api("GET", path).get("data")
         if isinstance(data, list):
             return {"items": [flat(r) for r in data]}
-        result = flat(data) if isinstance(data, dict) else {}
-        for record in body.get("included") or []:
-            key = "images" if "Image" in record.get("type", "") else "placements" if "lacement" in record.get("type", "") else None
-            if key:
-                result.setdefault(key, []).append(flat(record))
-        return result
+        return flat(data) if isinstance(data, dict) else {}
 
-    def post(self, path, attributes):
-        relationships = {"app": {"data": {"type": "apps", "id": self.app_id}}}
+    def post(self, path, attributes, relationships):
         kind = path.rsplit("/", 1)[1]
         return flat(self.api("POST", path, {"data": {"type": kind, "attributes": attributes,
                                                      "relationships": relationships}}).get("data"))
@@ -154,14 +198,7 @@ def main(argv):
         app_id = find_app_id(config)
         client = Client(config, app_id)
         if argv[1] == "lesen":
-            for spec in client.get(REFDATA).get("imageSpecs") or []:
-                print(f"spec kategorie={spec.get('category', '?')} maß={spec.get('width', '?')}x{spec.get('height', '?')}",
-                      flush=True)
-            library = client.get(f"/v1/apps/{app_id}/assetLibrary")
-            for image in library.get("images") or []:
-                print(f"bild name={image.get('referenceName', '?')} zustand={image.get('state', '?')}", flush=True)
-            print(f"bibliothek felder={','.join(sorted(library)) or '-'} platzierungen={len(library.get('placements') or [])}",
-                  flush=True)
+            lesen(client, app_id)
             return 0
         print(f"zustand {upload(client, app_id, header_files())}", flush=True)
         return 0
