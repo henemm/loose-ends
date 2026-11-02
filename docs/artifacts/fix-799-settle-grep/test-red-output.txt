@@ -1,0 +1,38 @@
+test_action_header_names_the_case (__main__.SettleStepTests.test_action_header_names_the_case) ... FAIL
+test_busy_lines_identical (__main__.SettleStepTests.test_busy_lines_identical) ... ok
+test_grep_is_guarded (__main__.SettleStepTests.test_grep_is_guarded) ... FAIL
+test_no_match_exits_zero_under_pipefail (__main__.SettleStepTests.test_no_match_exits_zero_under_pipefail) ... FAIL
+
+======================================================================
+FAIL: test_action_header_names_the_case (__main__.SettleStepTests.test_action_header_names_the_case)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_ci_settle_sync.py", line 32, in test_action_header_names_the_case
+    self.assertIn("pipefail", header)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pipefail' not found in 'name: Prepare the UI-test simulator\ndescription: Picks the iPhone 17 with iOS 27.0, boots it, prepares it (#578) and lets it settle (#228). Sets SIM_UDID.\n# #761: the language matrix `ui-smoke-lang` needs the same simulator as `ui-smoke`. The job `ui-smoke` keeps its own\n# copy of these steps untouched; a change here belongs there too (and the other way round).\nruns:\n  using: composite\n  steps:\n    - name: Pick a simulator (iPhone 17, iOS 27.0 only)'
+
+======================================================================
+FAIL: test_grep_is_guarded (__main__.SettleStepTests.test_grep_is_guarded)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_ci_settle_sync.py", line 39, in test_grep_is_guarded
+    self.assertRegex(line[max(0, match.start() - 2):], r"^\{ grep [^}]*\|\| true; \}",
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     f"{path.name}: grep ohne `|| true` in der busy=-Zeile")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Regex didn't match: '^\\{ grep [^}]*\\|\\| true; \\}' not found in "| grep -i poster | awk '$1 > 5' | wc -l | tr -d ' ')" : action.yml: grep ohne `|| true` in der busy=-Zeile
+
+======================================================================
+FAIL: test_no_match_exits_zero_under_pipefail (__main__.SettleStepTests.test_no_match_exits_zero_under_pipefail)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-giggling-reddy/scripts/test_ci_settle_sync.py", line 47, in test_no_match_exits_zero_under_pipefail
+    self.assertEqual(run.returncode, 0, f"{path.name}: Exit {run.returncode}, {run.stderr}")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : action.yml: Exit 1, 
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.052s
+
+FAILED (failures=3)
