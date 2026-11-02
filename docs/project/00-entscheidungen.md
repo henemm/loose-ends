@@ -80,6 +80,7 @@ Zusätzliche Targets: Watch-App, Widgets/Controls-Extension, App-Intents-Extensi
 **ADR-2 SwiftData mit CloudKit, private Datenbank, neuer Container.** Alle Entities mit UUID
 und Besitzer-Feld, damit Projekt-Sharing später ohne Schema-Bruch möglich ist.
 Enums als typsichere Swift-Enums mit String-Rohwert, keine losen Strings im Modell.
+Ergänzt durch ADR-21: für Claude zusätzlich eine Abschrift auf dem eigenen Dienst, die Datenhaltung der App bleibt CloudKit.
 
 **ADR-3 Rohtext ist unveränderlich, alles andere ist abgeleitet.** Jedes abgeleitete Feld
 trägt Herkunft (KI oder Nutzer) und Konfidenz. Kein Feld ist Pflicht.
@@ -303,6 +304,23 @@ Liste Eintrag für Eintrag (`TaskInteractions.menu`): Erledigen, Nächstes, Knä
 analysieren, Trennlinie, Löschen; Löschen aus dem Detail fragt wie in der Liste und verlässt es danach. Erledigte und
 geparkte Aufgaben bekommen auch im Detail Wiederherstellen bzw. Aktivieren und Löschen.
 „Erledigt“ bleibt nach Wochen, der Sonntagssatz spricht weiter von der Woche.
+
+**ADR-21 Claude bekommt ein Fenster, die Datenhaltung bleibt in iCloud (Henning, 2026-10-31, #613, Weg B; ergänzt ADR-2).**
+CloudKit bleibt der Abgleich zwischen den Geräten. Der eigene Dienst (`server/`, TypeScript, Postgres, Hetzner) hält nur die
+**Abschrift** (offene Aufgaben, „Jetzt“ und seine Zahl aus `ViewRules`, ohne Rohtext und Notiz) und die **Aufträge**
+(`capture`, `complete`, `setDue`), die ein Gerät später als Nutzeränderung mit dem Grund „Claude“ ausführt (Vertrag:
+`docs/reference/claude-abschrift-vertrag.md`). **Warum nicht das Backend an die Stelle von CloudKit:** PowerSync unterstützt
+offiziell nur GRDB, 54 von 149 Dateien der App hängen an SwiftData; der OAuth-Server von Supabase nennt CIMD nicht;
+Weg B spart die Untertickets #616–#620 (ca. 20 Arbeitstage). Quellen und Rechnung im Kommentar von #613 vom 2026-10-31.
+**Alternative (Weg A):** Ein Backend löst CloudKit ganz ab (Supabase oder eigener Dienst mit PowerSync als Offline-Schicht).
+Das würde ADR-2 vollständig kippen und „privat in deiner iCloud“ für alle streichen; es bleibt die Option, sollten Nutzer
+ohne Apple-Geräte dazukommen. **Make or Buy:** Ein OAuth-Server und eine Konfliktlösung werden nie selbst geschrieben;
+Rückfall für den OAuth-Teil ist Supabase Pro. **Folge für das Versprechen:** „Privat in deiner iCloud“ gilt unverändert für
+alle, die Claude nicht verbinden. Wer Claude verbindet, legt die Abschrift (ohne Rohtext und Notiz) auf dem Dienst ab. Der
+Datenschutztext (`docs/reference/datenschutz-entwurf.md`, öffentlich auf henemm.com, heute „kein eigener Server, kein Konto bei
+uns“) ist deshalb zu ändern, **bevor** ein externer Nutzer Claude verbinden kann (#625, #615); bis dahin ruft die App den
+Dienst nirgends auf. **Betrieb:** zuerst der bestehende Hetzner-Server, vor externen Nutzern ein eigener Server im selben
+Projekt (#796, #625).
 
 **ADR-17 Ergänzte Screens nach Lückenprüfung.** Als nächstes (manuell sortiert), Neu (Eingang),
 Feld-Picker statt Formular, Wisch- und Halten-Gesten mit Verschieben (Morgen, Wochenende, nächste Woche,
