@@ -57,6 +57,57 @@ function capturing(pool: pg.Pool) {
   };
 }
 
+type Target = { owner: string; taskID: string; expectedStatus: string; expectedDueDate?: string };
+
+// The expected state comes from the latest transcript, and only if Claude read that one; the id is the transcript's.
+// A string is the refusal, before anything is written.
+async function expected(pool: pg.Pool, ctx: ServerContext, taskID: string, generatedAt: string): Promise<Target | string> {
+  const owner = account(ctx);
+  if (owner === undefined) return "kein Konto";
+  const doc = await getTranscript(pool, owner);
+  if (doc === undefined) return "noch keine Abschrift";
+  if (doc.generatedAt !== generatedAt) return "Abschrift hat sich geändert, bitte neu lesen";
+  const task = doc.tasks.find((x) => x.id.toUpperCase() === taskID.toUpperCase());
+  if (task === undefined) return "Aufgabe nicht in der Abschrift";
+  const { id, status, dueDate } = task;
+  return { owner, taskID: id, expectedStatus: status, ...(dueDate === undefined ? {} : { expectedDueDate: dueDate }) };
+}
+
+// checkOrder's message goes back as it is; nothing is logged.
+async function storing(pool: pg.Pool, owner: string, doc: Record<string, unknown> & { id: string }): Promise<CallToolResult> {
+  try {
+    checkOrder(doc);
+  } catch (error) {
+    return { ...reply((error as Error).message), isError: true };
+  }
+  await putOrder(pool, owner, doc);
+  return reply(JSON.stringify({ orderID: doc.id, state: "waiting" }));
+}
+
+function completing(pool: pg.Pool) {
+  return async ({ taskID, generatedAt }: { taskID: string; generatedAt: string }, ctx: ServerContext): Promise<CallToolResult> => {
+    const target = await expected(pool, ctx, taskID, generatedAt);
+    if (typeof target === "string") return { ...reply(target), isError: true };
+    const { owner, ...state } = target;
+    return storing(pool, owner, { version: 1, id: randomUUID().toUpperCase(), kind: "complete", ...state });
+  };
+}
+
+// Without a date the due date is removed, and then hasTime is always false.
+function setting(pool: pg.Pool) {
+  return async (args: { taskID: string; generatedAt: string; date?: string; hasTime?: boolean }, ctx: ServerContext): Promise<CallToolResult> => {
+    const target = await expected(pool, ctx, args.taskID, args.generatedAt);
+    if (typeof target === "string") return { ...reply(target), isError: true };
+    const { owner, taskID, expectedDueDate } = target;
+    const { date } = args;
+    const hasTime = date !== undefined && (args.hasTime ?? false);
+    return storing(pool, owner, {
+      version: 1, id: randomUUID().toUpperCase(), kind: "setDue", taskID, hasTime,
+      ...(date === undefined ? {} : { date }), ...(expectedDueDate === undefined ? {} : { expectedDueDate }),
+    });
+  };
+}
+
 // Only the state and the result document go out, never the order's text.
 function resulting(pool: pg.Pool) {
   return async ({ orderID }: { orderID: string }, ctx: ServerContext): Promise<CallToolResult> => {
@@ -66,7 +117,7 @@ function resulting(pool: pg.Pool) {
   };
 }
 
-// Stateless: a fresh server with the read tools, capture_task and get_order_result for every request, so nothing is cached.
+// Stateless: a fresh server with the read tools, the order tools and get_order_result for every request, so nothing is cached.
 export function mcpHandler(pool: pg.Pool): McpHttpHandler {
   return createMcpHandler(() => {
     const server = new McpServer({ name: "loose-ends", version: "1" });
@@ -89,6 +140,20 @@ export function mcpHandler(pool: pg.Pool): McpHttpHandler {
       inputSchema: z.object({ orderID: z.string() }),
       annotations: { readOnlyHint: true },
     }, resulting(pool));
+    server.registerTool("complete_task", {
+      description: "Legt einen Auftrag zum Abhaken einer Aufgabe an. Zuerst list_tasks oder get_now lesen und deren generatedAt "
+        + "mitgeben; abgehakt wird auf einem Gerät, den Stand liefert get_order_result mit der zurückgegebenen orderID",
+      inputSchema: z.object({ taskID: z.string(), generatedAt: z.string() }),
+      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
+    }, completing(pool));
+    server.registerTool("set_due", {
+      description: "Legt einen Auftrag zum Setzen der Fälligkeit an; ohne date wird sie entfernt. date als Zeitpunkt in UTC, ganze "
+        + "Sekunden, mit Z (z. B. 2026-03-14T08:30:00Z); hasTime sagt, ob die Uhrzeit gilt. Zuerst list_tasks oder get_now lesen "
+        + "und deren generatedAt mitgeben; ausgeführt wird auf einem Gerät, den Stand liefert get_order_result. Derselbe "
+        + "Zeitpunkt, den die Aufgabe schon hat, mit nur geändertem hasTime wird vom Gerät als invalid abgelehnt",
+      inputSchema: z.object({ taskID: z.string(), generatedAt: z.string(), date: z.string().optional(), hasTime: z.boolean().optional() }),
+      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
+    }, setting(pool));
     return server;
   });
 }
