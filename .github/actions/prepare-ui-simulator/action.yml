@@ -2,6 +2,8 @@ name: Prepare the UI-test simulator
 description: Picks the iPhone 17 with iOS 27.0, boots it, prepares it (#578) and lets it settle (#228). Sets SIM_UDID.
 # #761: the language matrix `ui-smoke-lang` needs the same simulator as `ui-smoke`. The job `ui-smoke` keeps its own
 # copy of these steps untouched; a change here belongs there too (and the other way round).
+# #799: the `busy=` line of the settle step stays identical in both copies, and its `grep` must be guarded with
+# `|| true`: composite steps run with `-e -o pipefail`, so a grep without a hit would end the step.
 runs:
   using: composite
   steps:
@@ -38,7 +40,7 @@ runs:
         quiet=0
         waited=0
         while [ "$waited" -lt 180 ]; do
-          busy=$(ps -A -o pcpu=,comm= | grep -i poster | awk '$1 > 5' | wc -l | tr -d ' ')
+          busy=$(ps -A -o pcpu=,comm= | { grep -i poster || true; } | awk '$1 > 5' | wc -l | tr -d ' ')
           if [ "$busy" = 0 ]; then quiet=$((quiet + 1)); else quiet=0; fi
           [ "$quiet" -ge 3 ] && break
           sleep 5

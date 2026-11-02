@@ -1,0 +1,12 @@
+Ran 4 tests in 0.101s
+
+OK
+test_action_header_names_the_case (scripts.test_ci_settle_sync.SettleStepTests.test_action_header_names_the_case) ... ok
+test_busy_lines_identical (scripts.test_ci_settle_sync.SettleStepTests.test_busy_lines_identical) ... ok
+test_grep_is_guarded (scripts.test_ci_settle_sync.SettleStepTests.test_grep_is_guarded) ... ok
+test_no_match_exits_zero_under_pipefail (scripts.test_ci_settle_sync.SettleStepTests.test_no_match_exits_zero_under_pipefail) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.101s
+
+OK

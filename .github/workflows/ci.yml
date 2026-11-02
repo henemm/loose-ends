@@ -172,7 +172,7 @@ jobs:
           quiet=0
           waited=0
           while [ "$waited" -lt 180 ]; do
-            busy=$(ps -A -o pcpu=,comm= | grep -i poster | awk '$1 > 5' | wc -l | tr -d ' ')
+            busy=$(ps -A -o pcpu=,comm= | { grep -i poster || true; } | awk '$1 > 5' | wc -l | tr -d ' ')
             if [ "$busy" = 0 ]; then quiet=$((quiet + 1)); else quiet=0; fi
             [ "$quiet" -ge 3 ] && break
             sleep 5
