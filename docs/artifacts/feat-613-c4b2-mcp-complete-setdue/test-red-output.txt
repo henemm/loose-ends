@@ -1,0 +1,294 @@
+Postgres on 127.0.0.1:58519, data in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.kpaKtta4GL
+
+> typecheck
+> tsc --noEmit
+
+
+> test
+> node --test 'test/*.test.ts'
+
+✖ AC-1/AC-3: tools/list names the six tools, with the annotations of the write and read tools (142.771583ms)
+▶ AC-2: without an account the read tools refuse and reads nothing
+  ✔ get_now (5.177417ms)
+  ✔ list_tasks (3.807666ms)
+✔ AC-2: without an account the read tools refuse and reads nothing (51.409167ms)
+▶ AC-3/AC-4: another account and an account without transcript get „noch keine Abschrift“
+  ✔ AC-3 fremdes Konto (40.864583ms)
+  ✔ AC-4 keine Abschrift (53.553458ms)
+✔ AC-3/AC-4: another account and an account without transcript get „noch keine Abschrift“ (95.765334ms)
+▶ AC-5: get_now passes nowCount through and never recounts
+  ✔ Vertrag (40.491625ms)
+  ✔ 7 bei drei Zeilen (20.661333ms)
+✔ AC-5: get_now passes nowCount through and never recounts (63.253542ms)
+▶ AC-6: get_now orders knaeuel, today, lined, waiting and keeps the order inside a group
+  ✔ Vertrag (19.000542ms)
+  ✔ ohne Knäuel, mehrere je Gruppe (22.155ms)
+✔ AC-6: get_now orders knaeuel, today, lined, waiting and keeps the order inside a group (42.022667ms)
+✔ AC-7: each row of get_now carries the task's fields; an id without task stays id and group (22.062125ms)
+▶ AC-8: list_tasks returns every task as delivered, with generatedAt
+  ✔ Vertrag (21.806791ms)
+  ✔ vertauscht (25.832291ms)
+✔ AC-8: list_tasks returns every task as delivered, with generatedAt (48.3695ms)
+✔ AC-9: no raw text or note in any answer, nothing on console or stdout (28.218709ms)
+✔ AC-10: a newer upload is read on the next call, nothing is cached (17.810583ms)
+✔ AC-13: getTranscript returns the stored document or undefined (20.46625ms)
+✔ AC-4 (C4b-1): without an account both new tools refuse and capture_task stores nothing (15.586541ms)
+✔ AC-5/AC-6 (C4b-1): capture_task stores one capture order per call, waiting, for the account from authInfo (19.462417ms)
+✔ AC-7 (C4b-1): empty, blank and invalid text store nothing and answer isError (18.457958ms)
+✔ AC-8/AC-9 (C4b-1): get_order_result goes waiting, claimed, result; unknown and foreign ids are unknown, no order text (31.714083ms)
+✔ AC-10 (C4b-1): neither new tool writes to console or stdout (21.74ms)
+✖ AC-1 (C4b-2): complete_task and set_due are write tools without idempotence and point to list_tasks and get_order_result (22.728542ms)
+▶ AC-2/AC-3 (C4b-2): without an account or without a transcript both tools refuse and store nothing
+  ✖ AC-2 kein Konto (15.9645ms)
+  ✖ AC-3 keine Abschrift (19.43925ms)
+✖ AC-2/AC-3 (C4b-2): without an account or without a transcript both tools refuse and store nothing (35.782417ms)
+✖ AC-4 (C4b-2): a generatedAt that differs from the stored transcript stores nothing; the same one stores an order (13.679292ms)
+✖ AC-5 (C4b-2): a task the transcript no longer carries is refused; a lowercase id finds a task and the order carries the transcript's id (19.819958ms)
+✖ AC-6 (C4b-2): complete_task stores one complete order with the expected state from the transcript (15.864083ms)
+✖ AC-7 (C4b-2): set_due stores the date and hasTime as given, with the expected due date; without date the key is missing (17.342167ms)
+✖ AC-8 (C4b-2): set_due with an invalid date stores nothing and answers with checkOrder's message (14.950667ms)
+✖ AC-9/AC-10 (C4b-2): equal calls give two orders; no title in an answer; another account changes nothing (18.95925ms)
+✖ AC-11 (C4b-2): neither new tool writes to console or stdout (23.635667ms)
+✔ AC-1: applies migrations in number order and returns their names in that order (116.364458ms)
+✔ AC-2: a second run applies nothing, a new file alone is applied (34.791166ms)
+✔ AC-3: a broken migration rolls back completely and rethrows the Postgres error (30.737125ms)
+✔ AC-4: a gap in the numbers is refused before anything is applied (10.502583ms)
+✔ AC-4: a duplicate number is refused before anything is applied (33.560041ms)
+✔ AC-4: a misnamed .sql file is refused before anything is applied, README.md is ignored (17.727708ms)
+✔ AC-4: a README.md beside the migrations does not disturb the run (29.930208ms)
+✔ AC-4: number 000 is refused as invalid, not as a duplicate (8.9415ms)
+✔ AC-5: without DATABASE_URL the test run fails and names the variable (425.145833ms)
+✔ AC-1: the contract order is stored, ON CONFLICT works on the generated id (122.189375ms)
+✔ AC-2: contract examples and small orders and results are accepted (0.806875ms)
+▶ AC-3 to AC-8: orders off the table are refused with the field path, nothing is stored
+  ✔ AC-3 (Z1) version (2.80275ms)
+  ✔ AC-4 (Z2) id (3.730459ms)
+  ✔ AC-4 (Z3) kind (3.711333ms)
+  ✔ AC-5 (Z4) capture (3.323917ms)
+  ✔ AC-6 (Z5) complete (7.727791ms)
+  ✔ AC-7 (Z6) complete times and keys (2.137542ms)
+  ✔ AC-8 (Z7) setDue (3.321042ms)
+✔ AC-3 to AC-8: orders off the table are refused with the field path, nothing is stored (51.625708ms)
+✔ AC-7: complete without expectedDueDate is accepted (0.210542ms)
+✔ AC-9: an order that is no object names the root (0.300208ms)
+▶ AC-10/11: results off the table are refused with the field path, nothing is stored
+  ✔ AC-10 (Z9) result (5.69825ms)
+  ✔ AC-11 (Z10) reason (4.160291ms)
+✔ AC-10/11: results off the table are refused with the field path, nothing is stored (33.934458ms)
+✔ AC-12: transcript messages stay, other errors carry no prefix (1.623083ms)
+✔ AC-13: a new order is stored for the account, unclaimed (36.928666ms)
+✔ AC-14: the same id again, even upper case with other content, changes nothing (33.759708ms)
+✔ AC-15: a claimed order is not reset by a second put (32.963042ms)
+✔ AC-16: three orders are claimed one by one, then nothing (36.282ms)
+✔ AC-17: two connections claim ten orders, each exactly once (46.574667ms)
+✔ AC-18: two accounts never cross (23.115666ms)
+✔ AC-19: the result of the holding device is stored (36.742792ms)
+✔ AC-20: results for orders not held by the reporter are refused (64.447ms)
+✔ AC-21: a second result changes nothing (20.403541ms)
+✔ AC-1 (C4b-1): getResult is unknown for a never stored id, another account's id and a non-UUID (18.935625ms)
+▶ AC-2 (C4b-1): getResult goes waiting, claimed, result and reads the id in any case
+  ✔ done (17.379208ms)
+  ✔ rejected mit Grund (20.72025ms)
+✔ AC-2 (C4b-1): getResult goes waiting, claimed, result and reads the id in any case (38.47875ms)
+✔ AC-1: the real migrations folder applies 001 once and creates the three tables (127.031459ms)
+✔ AC-2: the three contract examples are accepted in contract order (40.115959ms)
+✔ AC-3: transcripts refuse what the contract does not allow (103.313167ms)
+✔ AC-4: orders refuse a wrong version, kind, id, account or half a claim, and take all three kinds (74.316041ms)
+✔ AC-5: order results belong to exactly one existing order and carry a reason only when rejected (64.880042ms)
+✔ AC-6: ids keep their case in the document, the uuid columns compare regardless of case (35.44125ms)
+✔ AC-6: known limit, version 1.0 is accepted because jsonb compares numbers numerically (58.189917ms)
+✔ AC-1: the contract example and a lower-case one without optional fields are accepted (2.815417ms)
+▶ AC-2 to AC-11: the deviation table is refused with the field path, nothing is stored
+  ✔ AC-2 (Z1) version (4.537042ms)
+  ✔ AC-3 (Z2) generatedAt (1.382541ms)
+  ✔ AC-4 (Z3) now is no object (1.576375ms)
+  ✔ AC-5 (Z4) keys of now (2.965875ms)
+  ✔ AC-6 (Z5) now.knaeuel (2.637292ms)
+  ✔ AC-7 (Z6) lists of now (9.846208ms)
+  ✔ AC-8 (Z7) contexts (2.485458ms)
+  ✔ AC-9 (Z8) title and project (0.963292ms)
+  ✔ AC-10 (Z9) raw text and note anywhere (1.704125ms)
+  ✔ AC-11 (Z10) root keys and nowCount (1.674542ms)
+  ✔ F001 inherited key names are unknown keys (2.860708ms)
+  ✔ F002 times Postgres refuses or that are no ISO (11.715625ms)
+  ✔ F003 NUL and lone surrogates (3.84275ms)
+✔ AC-2 to AC-11: the deviation table is refused with the field path, nothing is stored (165.307917ms)
+✔ AC-6: without now.knaeuel the transcript is accepted (0.447083ms)
+✔ AC-12/13/14: the first is stored, a newer replaces it, an older or equally old one leaves it (35.255333ms)
+✔ AC-15: two concurrent uploads over two connections always leave the newer one (49.394916ms)
+✔ AC-16: two accounts keep their transcripts apart (37.938833ms)
+✔ AC-17: the service does not recount, a mismatching nowCount and unknown now ids are stored (28.951958ms)
+✔ F002: offsets up to ±15:59 are stored, as Postgres takes them (31.486667ms)
+ℹ tests 102
+ℹ suites 0
+ℹ pass 90
+ℹ fail 12
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1354.640209
+
+✖ failing tests:
+
+test at test/mcp.test.ts:57:1
+✖ AC-1/AC-3: tools/list names the six tools, with the annotations of the write and read tools (142.771583ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      'capture_task',
+  -   'complete_task',
+      'get_now',
+      'get_order_result',
+      'list_tasks',
+  -   'set_due'
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/test/mcp.test.ts:60:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'capture_task', 'get_now', 'get_order_result', 'list_tasks' ],
+    expected: [ 'capture_task', 'complete_task', 'get_now', 'get_order_result', 'list_tasks', 'set_due' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/mcp.test.ts:287:1
+✖ AC-1 (C4b-2): complete_task and set_due are write tools without idempotence and point to list_tasks and get_order_result (22.728542ms)
+  AssertionError [ERR_ASSERTION]: complete_task
+  + actual - expected
+  
+  + undefined
+  - false
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/test/mcp.test.ts:291:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/mcp.test.ts:301:13
+✖ AC-2 kein Konto (15.9645ms)
+  Error [ProtocolError]: Tool complete_task not found
+      at ProtocolError.fromError (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:3507:10)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:6068:30)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/public-CvV4ZHkX.mjs:3803:9)
+      at _transport.onmessage (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:5859:82)
+      at processStream (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/index.mjs:1624:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+    code: -32602,
+    data: undefined
+  }
+
+test at test/mcp.test.ts:301:13
+✖ AC-3 keine Abschrift (19.43925ms)
+  Error [ProtocolError]: Tool complete_task not found
+      at ProtocolError.fromError (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:3507:10)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:6068:30)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/public-CvV4ZHkX.mjs:3803:9)
+      at _transport.onmessage (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:5859:82)
+      at processStream (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/index.mjs:1624:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+    code: -32602,
+    data: undefined
+  }
+
+test at test/mcp.test.ts:314:1
+✖ AC-4 (C4b-2): a generatedAt that differs from the stored transcript stores nothing; the same one stores an order (13.679292ms)
+  Error [ProtocolError]: Tool complete_task not found
+      at ProtocolError.fromError (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:3507:10)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:6068:30)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/public-CvV4ZHkX.mjs:3803:9)
+      at _transport.onmessage (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:5859:82)
+      at processStream (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/index.mjs:1624:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+    code: -32602,
+    data: undefined
+  }
+
+test at test/mcp.test.ts:328:1
+✖ AC-5 (C4b-2): a task the transcript no longer carries is refused; a lowercase id finds a task and the order carries the transcript's id (19.819958ms)
+  Error [ProtocolError]: Tool complete_task not found
+      at ProtocolError.fromError (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:3507:10)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:6068:30)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/public-CvV4ZHkX.mjs:3803:9)
+      at _transport.onmessage (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:5859:82)
+      at processStream (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/index.mjs:1624:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+    code: -32602,
+    data: undefined
+  }
+
+test at test/mcp.test.ts:347:1
+✖ AC-6 (C4b-2): complete_task stores one complete order with the expected state from the transcript (15.864083ms)
+  Error [ProtocolError]: Tool complete_task not found
+      at ProtocolError.fromError (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:3507:10)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:6068:30)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/public-CvV4ZHkX.mjs:3803:9)
+      at _transport.onmessage (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:5859:82)
+      at processStream (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/index.mjs:1624:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+    code: -32602,
+    data: undefined
+  }
+
+test at test/mcp.test.ts:369:1
+✖ AC-7 (C4b-2): set_due stores the date and hasTime as given, with the expected due date; without date the key is missing (17.342167ms)
+  Error [ProtocolError]: Tool set_due not found
+      at ProtocolError.fromError (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:3507:10)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:6068:30)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/public-CvV4ZHkX.mjs:3803:9)
+      at _transport.onmessage (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:5859:82)
+      at processStream (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/index.mjs:1624:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+    code: -32602,
+    data: undefined
+  }
+
+test at test/mcp.test.ts:389:1
+✖ AC-8 (C4b-2): set_due with an invalid date stores nothing and answers with checkOrder's message (14.950667ms)
+  Error [ProtocolError]: Tool set_due not found
+      at ProtocolError.fromError (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:3507:10)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:6068:30)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/public-CvV4ZHkX.mjs:3803:9)
+      at _transport.onmessage (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:5859:82)
+      at processStream (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/index.mjs:1624:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+    code: -32602,
+    data: undefined
+  }
+
+test at test/mcp.test.ts:401:1
+✖ AC-9/AC-10 (C4b-2): equal calls give two orders; no title in an answer; another account changes nothing (18.95925ms)
+  Error [ProtocolError]: Tool complete_task not found
+      at ProtocolError.fromError (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:3507:10)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:6068:30)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/public-CvV4ZHkX.mjs:3803:9)
+      at _transport.onmessage (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:5859:82)
+      at processStream (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/index.mjs:1624:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+    code: -32602,
+    data: undefined
+  }
+
+test at test/mcp.test.ts:419:1
+✖ AC-11 (C4b-2): neither new tool writes to console or stdout (23.635667ms)
+  Error [ProtocolError]: Tool complete_task not found
+      at ProtocolError.fromError (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:3507:10)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:6068:30)
+      at Client._onresponse (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/public-CvV4ZHkX.mjs:3803:9)
+      at _transport.onmessage (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/src-CeKsbNLO.mjs:5859:82)
+      at processStream (file:///Users/hem/Developer/loose-ends/.claude/worktrees/fix-777-order-duehastime/server/node_modules/@modelcontextprotocol/client/dist/index.mjs:1624:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+    code: -32602,
+    data: undefined
+  }

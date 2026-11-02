@@ -54,10 +54,10 @@ async function call(client: Client, name: string, args: Doc = {}): Promise<{ tex
 const json = async (client: Client, name: string) => JSON.parse((await call(client, name)).text);
 const titles = (doc: Doc) => doc.tasks.map((task: Doc) => task.title as string);
 
-test("AC-1/AC-3: tools/list names the four tools, with the annotations of the write and read tools", async (t) => {
+test("AC-1/AC-3: tools/list names the six tools, with the annotations of the write and read tools", async (t) => {
   const client = await connect(t, await migrated(t), "henning");
   const tools = (await client.listTools()).tools;
-  assert.deepEqual(tools.map((tool) => tool.name).sort(), ["capture_task", "get_now", "get_order_result", "list_tasks"]);
+  assert.deepEqual(tools.map((tool) => tool.name).sort(), ["capture_task", "complete_task", "get_now", "get_order_result", "list_tasks", "set_due"]);
   const note = (name: string) => tools.find((tool) => tool.name === name)?.annotations;
   assert.equal(note("capture_task")?.readOnlyHint, false);
   assert.equal(note("capture_task")?.destructiveHint, false);
@@ -271,6 +271,161 @@ test("AC-10 (C4b-1): neither new tool writes to console or stdout", async (t) =>
   const { orderID } = JSON.parse((await capture(client, "Milch kaufen")).text);
   await result(client, orderID);
   await capture(client, "");
+  const [logs, writes] = [log.mock.callCount(), write.mock.callCount()];
+  t.mock.restoreAll();
+  assert.equal(logs, 0, "console.log");
+  assert.equal(writes, 0, "process.stdout.write");
+});
+
+const mutate = (client: Client, name: "complete_task" | "set_due", input: Doc) => call(client, name, input);
+const rowOf = async (pool: pg.Pool, answer: { text: string }) => (await pool.query("SELECT * FROM orders WHERE id = $1", [JSON.parse(answer.text).orderID])).rows[0];
+const tools2 = [["complete_task", {}], ["set_due", { date: "2026-03-13T10:00:00Z", hasTime: true }]] as const;
+// One task with a due date and one without, from the contract's example.
+const [dated, undated] = [byEnd(example(), muell), byEnd(example(), angebot)];
+const input = (taskID: string, extra: Doc = {}, generatedAt = example().generatedAt) => ({ taskID, generatedAt, ...extra });
+
+test("AC-1 (C4b-2): complete_task and set_due are write tools without idempotence and point to list_tasks and get_order_result", async (t) => {
+  const tools = (await (await connect(t, await migrated(t), "henning")).listTools()).tools;
+  for (const name of ["complete_task", "set_due"]) {
+    const found = tools.find((x) => x.name === name);
+    assert.equal(found?.annotations?.readOnlyHint, false, name);
+    assert.equal(found?.annotations?.destructiveHint, false, name);
+    assert.equal(found?.annotations?.idempotentHint, false, name);
+    assert.match(found?.description ?? "", /list_tasks/, name);
+    assert.match(found?.description ?? "", /get_order_result/, name);
+  }
+});
+
+test("AC-2/AC-3 (C4b-2): without an account or without a transcript both tools refuse and store nothing", async (t) => {
+  for (const [label, account, text] of [["AC-2 kein Konto", undefined, /kein Konto/], ["AC-3 keine Abschrift", "henning", /noch keine Abschrift/]] as const) {
+    await t.test(label, async (t) => {
+      const pool = await migrated(t);
+      const client = await connect(t, pool, account);
+      for (const [name, extra] of tools2) {
+        const answer = await mutate(client, name, input(dated, extra));
+        assert.equal(answer.isError, true, name);
+        assert.match(answer.text, text, name);
+      }
+      assert.equal(await orderCount(pool), 0);
+    });
+  }
+});
+
+test("AC-4 (C4b-2): a generatedAt that differs from the stored transcript stores nothing; the same one stores an order", async (t) => {
+  const pool = await migrated(t);
+  await putTranscript(pool, "henning", example());
+  const client = await connect(t, pool, "henning");
+  for (const [name, extra] of tools2) {
+    const stale = await mutate(client, name, input(dated, extra, "2026-03-12T08:00:00Z"));
+    assert.equal(stale.isError, true, name);
+    assert.match(stale.text, /Abschrift hat sich geändert, bitte neu lesen/, name);
+  }
+  assert.equal(await orderCount(pool), 0);
+  for (const [name, extra] of tools2) assert.equal((await mutate(client, name, input(dated, extra))).isError, false, name);
+  assert.equal(await orderCount(pool), 2);
+});
+
+test("AC-5 (C4b-2): a task the transcript no longer carries is refused; a lowercase id finds a task and the order carries the transcript's id", async (t) => {
+  const pool = await migrated(t);
+  await putTranscript(pool, "henning", changed((d) => { d.tasks.push({ ...d.tasks[0], id: fakeID(7) }); }));
+  const newer = changed((d) => { d.generatedAt = "2026-03-13T09:00:00Z"; });
+  assert.equal(await putTranscript(pool, "henning", newer), "stored");
+  const client = await connect(t, pool, "henning");
+  for (const [name, extra] of tools2) {
+    for (const id of [fakeID(7), fakeID(8)]) {
+      const answer = await mutate(client, name, input(id, extra, newer.generatedAt));
+      assert.equal(answer.isError, true, name);
+      assert.match(answer.text, /Aufgabe nicht in der Abschrift/, name);
+    }
+  }
+  assert.equal(await orderCount(pool), 0);
+  const found = await mutate(client, "complete_task", input(dated.toLowerCase(), {}, newer.generatedAt));
+  assert.equal(found.isError, false);
+  assert.equal((await rowOf(pool, found)).doc.taskID, dated);
+});
+
+test("AC-6 (C4b-2): complete_task stores one complete order with the expected state from the transcript", async (t) => {
+  const pool = await migrated(t);
+  await putTranscript(pool, "henning", changed((d) => { d.tasks.find((task: Doc) => task.id === undated).status = "parked"; }));
+  const client = await connect(t, pool, "henning");
+  const first = await mutate(client, "complete_task", input(dated));
+  assert.equal(first.isError, false);
+  const { orderID, state, ...rest } = JSON.parse(first.text);
+  assert.match(orderID, UUID);
+  assert.equal(state, "waiting");
+  assert.deepEqual(rest, {}, "nur orderID und state");
+  const row = await rowOf(pool, first);
+  assert.equal(row.kind, "complete");
+  assert.equal(row.account_id, "henning");
+  assert.equal(row.claimed_by, null);
+  assert.deepEqual(row.doc, { version: 1, id: orderID, kind: "complete", taskID: dated, expectedStatus: "active", expectedDueDate: "2026-03-12T17:00:00Z" });
+  assert.doesNotThrow(() => checkOrder(row.doc));
+  const bare = (await rowOf(pool, await mutate(client, "complete_task", input(undated)))).doc;
+  assert.equal(bare.expectedStatus, "parked");
+  assert.ok(!Object.hasOwn(bare, "expectedDueDate"), "Schlüssel fehlt ohne Fälligkeit");
+  assert.doesNotThrow(() => checkOrder(bare));
+});
+
+test("AC-7 (C4b-2): set_due stores the date and hasTime as given, with the expected due date; without date the key is missing", async (t) => {
+  const pool = await migrated(t);
+  await putTranscript(pool, "henning", example());
+  const client = await connect(t, pool, "henning");
+  const when = "2026-03-14T08:30:00Z";
+  const cases: Array<[string, string, Doc, Doc]> = [
+    ["mit Datum und hasTime", dated, { date: when, hasTime: true }, { date: when, hasTime: true, expectedDueDate: "2026-03-12T17:00:00Z" }],
+    ["ohne hasTime", undated, { date: when }, { date: when, hasTime: false }],
+    ["ohne Datum, hasTime wahr", dated, { hasTime: true }, { hasTime: false, expectedDueDate: "2026-03-12T17:00:00Z" }],
+  ];
+  for (const [label, id, extra, expected] of cases) {
+    const answer = await mutate(client, "set_due", input(id, extra));
+    assert.equal(answer.isError, false, label);
+    const row = await rowOf(pool, answer);
+    assert.equal(row.kind, "setDue", label);
+    assert.deepEqual(row.doc, { version: 1, id: JSON.parse(answer.text).orderID, kind: "setDue", taskID: id, ...expected }, label);
+    assert.doesNotThrow(() => checkOrder(row.doc), label);
+  }
+});
+
+test("AC-8 (C4b-2): set_due with an invalid date stores nothing and answers with checkOrder's message", async (t) => {
+  const pool = await migrated(t);
+  await putTranscript(pool, "henning", example());
+  const client = await connect(t, pool, "henning");
+  for (const date of ["", "morgen", "2026-03-12T17:00:00", "2026-02-30T10:00:00Z"]) {
+    const answer = await mutate(client, "set_due", input(dated, { date }));
+    assert.equal(answer.isError, true, date);
+    const form = { version: 1, id: fakeID(1), kind: "setDue", taskID: dated, hasTime: false, date, expectedDueDate: "2026-03-12T17:00:00Z" };
+    assert.throws(() => checkOrder(form), (error: Error) => { assert.equal(answer.text, error.message, date); return true; });
+  }
+  assert.equal(await orderCount(pool), 0);
+});
+
+test("AC-9/AC-10 (C4b-2): equal calls give two orders; no title in an answer; another account changes nothing", async (t) => {
+  const pool = await migrated(t);
+  await putTranscript(pool, "henning", example());
+  const client = await connect(t, pool, "henning");
+  const [a, b] = [await mutate(client, "complete_task", input(dated)), await mutate(client, "complete_task", input(dated))];
+  const [first, second] = [JSON.parse(a.text).orderID, JSON.parse(b.text).orderID];
+  assert.notEqual(first, second);
+  assert.deepEqual(JSON.parse((await result(client, first)).text), { state: "waiting" });
+  for (const text of [a.text, b.text]) for (const title of titles(example())) assert.ok(!text.includes(title), title);
+  const anna = await connect(t, pool, "anna");
+  for (const [name, extra] of tools2) {
+    const answer = await mutate(anna, name, input(dated, extra));
+    assert.equal(answer.isError, true, name);
+    assert.match(answer.text, /noch keine Abschrift|Aufgabe nicht in der Abschrift/, name);
+  }
+  assert.equal(await orderCount(pool), 2);
+});
+
+test("AC-11 (C4b-2): neither new tool writes to console or stdout", async (t) => {
+  const pool = await migrated(t);
+  await putTranscript(pool, "henning", example());
+  const client = await connect(t, pool, "henning");
+  const log = t.mock.method(console, "log");
+  const write = t.mock.method(process.stdout, "write");
+  await mutate(client, "complete_task", input(dated));
+  await mutate(client, "set_due", input(dated, { date: "2026-03-14T08:30:00Z" }));
+  await mutate(client, "set_due", input(dated, { date: "morgen" }));
   const [logs, writes] = [log.mock.callCount(), write.mock.callCount()];
   t.mock.restoreAll();
   assert.equal(logs, 0, "console.log");
