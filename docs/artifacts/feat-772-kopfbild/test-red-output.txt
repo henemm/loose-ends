@@ -1,0 +1,54 @@
+setUpClass (scripts.test_store_header.HeaderTests) ... ERROR
+test_never_places_or_submits (scripts.test_asc_header_upload.UploadTests.test_never_places_or_submits) ... FAIL
+test_skips_existing_reference_name (scripts.test_asc_header_upload.UploadTests.test_skips_existing_reference_name) ... FAIL
+test_state_check_reads_ready_state (scripts.test_asc_header_upload.UploadTests.test_state_check_reads_ready_state) ... FAIL
+test_stops_without_matching_spec (scripts.test_asc_header_upload.UploadTests.test_stops_without_matching_spec) ... FAIL
+
+======================================================================
+ERROR: setUpClass (scripts.test_store_header.HeaderTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_store_header.py", line 32, in setUpClass
+    raise AssertionError("scripts/store_header.py fehlt")
+AssertionError: scripts/store_header.py fehlt
+
+======================================================================
+FAIL: test_never_places_or_submits (scripts.test_asc_header_upload.UploadTests.test_never_places_or_submits)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 75, in setUp
+    self.fail("scripts/asc_header_upload.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/asc_header_upload.py fehlt
+
+======================================================================
+FAIL: test_skips_existing_reference_name (scripts.test_asc_header_upload.UploadTests.test_skips_existing_reference_name)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 75, in setUp
+    self.fail("scripts/asc_header_upload.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/asc_header_upload.py fehlt
+
+======================================================================
+FAIL: test_state_check_reads_ready_state (scripts.test_asc_header_upload.UploadTests.test_state_check_reads_ready_state)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 75, in setUp
+    self.fail("scripts/asc_header_upload.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/asc_header_upload.py fehlt
+
+======================================================================
+FAIL: test_stops_without_matching_spec (scripts.test_asc_header_upload.UploadTests.test_stops_without_matching_spec)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/scripts/test_asc_header_upload.py", line 75, in setUp
+    self.fail("scripts/asc_header_upload.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/asc_header_upload.py fehlt
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.001s
+
+FAILED (failures=4, errors=1)
