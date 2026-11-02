@@ -43,6 +43,8 @@ extension LanguagePack {
         titleLeadIns: ["byy"],
         titleConnectors: ["unt"],
         titleDateWords: ["janx", "mondu"],
-        contextWords: ["Garden": ["grassle"]]
+        contextWords: ["Garden": ["grassle"]],
+        dayAfterTomorrow: ["zday", "zafter", "zmorrow"],
+        fillerWords: ["zfill"]
     )
 }
