@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-11-02T08:07:42+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: fix-777-order-duehastime
+head: daf381379426040dad064704bdb89e8a7b504938
+basis: 3ac92e4030284d3dd01af7d468262cb237050193 (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 26 gesamt, 26 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793602325.234  ende: 1793603255.901
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/fix-777-order-duehastime/simulator-run/summary.json  sha256:e68fd6a245cd07b8f0f2d3a6f8452ca19d932078e038525c8cd2cccafd57f3e1
+xcresult: docs/artifacts/fix-777-order-duehastime/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-777-order-duehastime/simulator-run/*.png (15 Stück)
+
+## Geprüfte Dateien
+- sha256:e5ce8511b3a4e8da207d565ecb643bf85304b6b361c07ea0bab19a8fc1a51362  LooseEndsTests/OrderExecutorTests.swift
+- sha256:843d9062ddd3af6a5082e86cd015dce7ac1c025b769e1e2f09f65fbe04e223c5  Shared/Services/OrderExecutor.swift
