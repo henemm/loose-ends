@@ -96,8 +96,9 @@ in diesem Sinn: Der Wert wird aus der Abschrift übernommen, und fehlt er, heiß
 Die Abschrift sagt nicht, ob eine Aufgabe wiederkehrt; nur über die Fälligkeit hakt derselbe Auftrag eine wiederkehrende
 Aufgabe, die schon weitergerollt ist, kein zweites Mal ab. Verglichen wird in ganzen Sekunden, der Genauigkeit der Abschrift.
 
-Bekannte Grenze von Version 1: `dueHasTime` gehört nicht zum erwarteten Stand. Ein `setDue` mit demselben Zeitpunkt und
-anderem `hasTime` ändert nur `dueHasTime`, ohne Revision.
+`dueHasTime` gehört nicht zum erwarteten Stand und ist kein Revisionsfeld. Ein `setDue`, das denselben Zeitpunkt träfe und nur
+`hasTime` ändern würde (möglich nur um Mitternacht), wird deshalb als `invalid` abgelehnt; sonst geschähe die Änderung ohne
+Revision (#777).
 
 Der Status zählt bei `setDue` zum erwarteten Stand: Ist die Aufgabe auf dem Gerät inzwischen erledigt oder gelöscht, wird der
 Auftrag als `stale` abgelehnt, auch wenn ihre Fälligkeit gleich blieb (C3a).
@@ -127,7 +128,8 @@ Beispiel:
 Jeder Auftrag bekommt ein Ergebnis: `orderID`, `outcome` (`done` oder `rejected`), bei Ablehnung `reason` und, wo eine Aufgabe
 betroffen ist, `taskID`.
 
-- `invalid`: falsche Version, ein Pflichtfeld fehlt, oder der Text einer Erfassung ist leer. Version und Pflichtfelder weist
+- `invalid`: falsche Version, ein Pflichtfeld fehlt, der Text einer Erfassung ist leer, oder ein `setDue` träfe denselben
+  Zeitpunkt und änderte nur `hasTime`. Version und Pflichtfelder weist
   schon der Dienst beim Annehmen ab; `invalid` der App bleibt die zweite Wand für Aufträge, die den Dienst nicht durchlaufen haben.
 - `missing`: Auf dem Gerät gibt es keine Aufgabe mit dieser Kennung.
 - `stale`: Der erwartete Stand stimmt nicht mehr; Claude liest die Abschrift neu und entscheidet erneut.
