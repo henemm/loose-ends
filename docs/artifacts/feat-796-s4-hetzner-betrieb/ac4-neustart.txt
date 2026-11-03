@@ -1,0 +1,61 @@
+# AC-4 Neustart — 2026-11-03T15:01:12.153Z, per SSH auf rennwienix, Prüfung über 127.0.0.1:8780
+
+## Teil 1: docker compose restart server
+StartedAt vorher: 2026-11-03T14:52:38.256888102Z running restarts=0
+[2026-11-03T15:01:12.188Z] $ curl http://127.0.0.1:8780/health → {"status":"ok","db":"up","migrated":true,"errorRate":0,"requests":0} HTTP 200
+[2026-11-03T15:01:12.212Z] $ LE_TAG=e62f0d5 docker compose -f loose-ends/docker-compose.yml restart server
+ Container loose-ends-server Restarting 
+ Container loose-ends-server Started 
+[2026-11-03T15:01:13.845Z] /health 200 nach 1 s
+[2026-11-03T15:01:13.848Z] $ curl http://127.0.0.1:8780/health → {"status":"ok","db":"up","migrated":true,"errorRate":0,"requests":0} HTTP 200
+StartedAt nachher: 2026-11-03T15:01:12.55816741Z running restarts=0
+
+## Teil 2: docker kill loose-ends-server (Restart-Policy unless-stopped)
+StartedAt vorher: 2026-11-03T15:01:12.55816741Z running restarts=0
+[2026-11-03T15:01:13.947Z] $ docker kill loose-ends-server
+loose-ends-server
+[2026-11-03T15:01:15.219Z] Status kurz danach: 2026-11-03T15:01:12.55816741Z exited restarts=0
+[2026-11-03T15:02:15.906Z] /health binnen 60 s NICHT 200
+StartedAt nachher: 2026-11-03T15:01:12.55816741Z exited restarts=0
+loose-ends-db unberührt: 2026-11-03T14:52:27.562113422Z running restarts=0
+
+## Befund Teil 2: NICHT ERFÜLLT
+$ docker version --format "Docker Engine {{.Server.Version}}"; docker inspect --format "{{.HostConfig.RestartPolicy.Name}} exit={{.State.ExitCode}} oom={{.State.OOMKilled}}" loose-ends-server
+Docker Engine 29.9.1
+unless-stopped exit=137 oom=false
+docker kill wertet Docker als manuelles Anhalten (Doku: docs.docker.com/engine/containers/start-containers-automatically/), daher Absturz per kill -9 der Prozess-ID
+(RestartCount blieb 0, Status exited; Entscheidung des Orchestrators: Absicht des AC ist ein Absturz, siehe Teil 2b).
+
+## Wiederherstellung des eigenen Dienstes (nur Stapel loose-ends)
+[2026-11-03T15:02:30Z] $ LE_TAG=e62f0d5 docker compose -f loose-ends/docker-compose.yml start server
+ Container loose-ends-db Waiting
+ Container loose-ends-db Healthy
+ Container loose-ends-server Starting
+ Container loose-ends-server Started
+[2026-11-03T15:02:34Z] {"status":"ok","db":"up","migrated":true,"errorRate":0,"requests":0} HTTP 200
+2026-11-03T15:02:31.553116554Z running
+
+## Teil 2b: Absturz per kill -9 der Prozess-ID (Restart-Policy unless-stopped)
+StartedAt vorher: 2026-11-03T15:02:31.553116554Z running restarts=0
+[2026-11-03T15:37:07.934Z] $ curl http://127.0.0.1:8780/health → {"status":"ok","db":"up","migrated":true,"errorRate":0,"requests":0} HTTP 200
+[2026-11-03T15:37:08.050Z] $ docker inspect -f "{{.State.Pid}}" loose-ends-server
+4165768
+$ ps -o pid,cmd -p 4165768
+    PID CMD
+4165768 node src/main.ts
+$ grep -c <Container-ID von loose-ends-server> /proc/4165768/cgroup
+1
+  (Nachtrag Phase 7, 2026-11-03T17:05Z: Im Lauf stand die volle ID des damaligen Containers; beim Abschreiben wurde
+  sie durch diesen Platzhalter ersetzt. Sie ist nicht mehr abrufbar: der Stapel wurde um 16:57:59Z aus dem
+  Haupt-Checkout neu angelegt (endstand-haupt-checkout.txt), heute ID d2ea2533ddb3…, restarts=0. Unabhängig davon
+  belegen die ps-Zeile oben (PID 4165768 = node src/main.ts) und StartedAt/restarts=1 danach den Neustart.)
+[2026-11-03T15:37:08.173Z] $ sudo kill -9 4165768
+[2026-11-03T15:37:10.230Z] /health 200 nach 2 s
+[2026-11-03T15:37:10.233Z] $ curl http://127.0.0.1:8780/health → {"status":"ok","db":"up","migrated":true,"errorRate":0,"requests":0} HTTP 200
+StartedAt nachher: 2026-11-03T15:37:08.611761457Z running restarts=1
+$ docker inspect --format "exit={{.State.ExitCode}} oom={{.State.OOMKilled}}" loose-ends-server
+exit=0 oom=false
+loose-ends-db unberührt: 2026-11-03T15:11:38.740976025Z running
+
+## Ergebnis AC-4: erfüllt. Teil 1 (compose restart) 200 nach 1 s; Teil 2b (Absturz per kill -9) Restart-Policy
+startet neu: RestartCount 0 → 1, StartedAt neu, Status running, /health 200 nach 2 s.

@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-11-03T18:15:55+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: feat-796-s4-hetzner-betrieb
+head: cd264ba43e6b035da923a032002b62d7e0778608
+basis: b72604927f6f6d7467ee1442f08cce3f39462f99 (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 26 gesamt, 26 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793725267.424  ende: 1793726150.367
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/feat-796-s4-hetzner-betrieb/simulator-run/summary.json  sha256:0992a3f87da038d0aa1eded5b974b5259fc0dcb53a1010e2467369cf3605fe13
+xcresult: docs/artifacts/feat-796-s4-hetzner-betrieb/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-796-s4-hetzner-betrieb/simulator-run/*.png (15 Stück)
+
+## Geprüfte Dateien
+(keine Code-Dateien geändert)

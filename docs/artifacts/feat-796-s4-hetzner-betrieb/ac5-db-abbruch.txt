@@ -1,0 +1,20 @@
+# AC-5 DB-Abbruch — 2026-11-03T15:11:33.106Z, per SSH auf rennwienix, Prüfung über 127.0.0.1:8780
+Dienst StartedAt vorher: 2026-11-03T15:02:31.553116554Z running restarts=0
+[2026-11-03T15:11:33.199Z] $ curl http://127.0.0.1:8780/health → {"status":"ok","db":"up","migrated":true,"errorRate":0,"requests":0} HTTP 200
+[2026-11-03T15:11:33.229Z] $ LE_TAG=e62f0d5 docker compose -f loose-ends/docker-compose.yml stop db
+ Container loose-ends-db Stopping 
+ Container loose-ends-db Stopped 
+[2026-11-03T15:11:35.538Z] $ curl http://127.0.0.1:8780/health → {"status":"unavailable","db":"down","migrated":true,"errorRate":0,"requests":0} HTTP 503
+[2026-11-03T15:11:38.564Z] $ curl http://127.0.0.1:8780/health → {"status":"unavailable","db":"down","migrated":true,"errorRate":0,"requests":0} HTTP 503
+Dienst während DB-Abbruch: 2026-11-03T15:02:31.553116554Z running restarts=0
+DB: 2026-11-03T14:52:27.562113422Z exited restarts=0
+[2026-11-03T15:11:38.630Z] $ LE_TAG=e62f0d5 docker compose -f loose-ends/docker-compose.yml start db
+ Container loose-ends-db Starting 
+ Container loose-ends-db Started 
+[2026-11-03T15:11:39.964Z] /health 200 nach 1 s
+[2026-11-03T15:11:39.969Z] $ curl http://127.0.0.1:8780/health → {"status":"ok","db":"up","migrated":true,"errorRate":0,"requests":0} HTTP 200
+Dienst StartedAt nachher: 2026-11-03T15:02:31.553116554Z running restarts=0
+ERGEBNIS: StartedAt des Dienstes unverändert (2026-11-03T15:02:31.553116554Z), kein Dienst-Neustart
+
+$ docker logs --since 5m loose-ends-server (Auszug, letzte 15 Zeilen)
+2026-11-03T15:11:33.383Z pool error

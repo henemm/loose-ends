@@ -1,0 +1,41 @@
+# AC-9 Dateiliste (final) — 2026-11-03T16:38:34Z
+
+$ gh pr view 380 --repo henemm/henemm-infra --json files,state,mergeCommit
+state: MERGED  merge: 69c7a62b5517961697671442e90e2d83b3a755ba
+loose-ends/.gitignore +1 -0
+loose-ends/docker-compose.yml +77 -0
+nginx/loose-ends.henemm.com.conf +57 -0
+scripts/deploy-loose-ends.sh +95 -0
+scripts/monitor.sh +1 -0
+
+$ git diff --stat origin/main ; git status --short --untracked-files=all (ohne .claude/)
+ CLAUDE.md                                          |   1 +
+ .../feat-796-s4-hetzner-betrieb/ac1-vorher.txt     |  11 ++
+ .../feat-796-s4-hetzner-betrieb/ausgangsstand.txt  |  95 ++++++++++
+ docs/briefings/feat-796-s4-hetzner-betrieb.md      |  37 ++++
+ docs/context/feat-796-s4-hetzner-betrieb.md        | 106 +++++++++++
+ docs/specs/feat-796-schnitt-4a-betrieb.md          | 201 +++++++++++++++++++++
+ 6 files changed, 451 insertions(+)
+ M CLAUDE.md
+ M docs/specs/feat-796-schnitt-4a-betrieb.md
+?? docs/artifacts/feat-796-s4-hetzner-betrieb/ac1-health.txt
+?? docs/artifacts/feat-796-s4-hetzner-betrieb/ac10-deploy-skript.txt
+?? docs/artifacts/feat-796-s4-hetzner-betrieb/ac2-zugang.txt
+?? docs/artifacts/feat-796-s4-hetzner-betrieb/ac3-grenzen.txt
+?? docs/artifacts/feat-796-s4-hetzner-betrieb/ac4-neustart.txt
+?? docs/artifacts/feat-796-s4-hetzner-betrieb/ac5-db-abbruch.txt
+?? docs/artifacts/feat-796-s4-hetzner-betrieb/ac6-ueberwachung.txt
+?? docs/artifacts/feat-796-s4-hetzner-betrieb/ac7-unberuehrt.txt
+?? docs/artifacts/feat-796-s4-hetzner-betrieb/ac8-secrets.txt
+?? docs/artifacts/feat-796-s4-hetzner-betrieb/ac9-dateiliste.txt
+?? docs/artifacts/feat-796-s4-hetzner-betrieb/adversary-dialog.md
+?? docs/artifacts/feat-796-s4-hetzner-betrieb/adversary-test-output.txt
+?? docs/artifacts/feat-796-s4-hetzner-betrieb/test-green-output.txt
+
+Treffer in server/, project.yml, .github/, *.swift: 0
+
+## Nachtrag Phase 7 (2026-11-03T17:05Z) — aktueller Stand nach dem Festschreiben der Belege
+$ git diff --stat origin/main...HEAD | tail -1
+ 20 files changed, 1357 insertions(+)
+Alle 20 Dateien: CLAUDE.md (+1) und 19 Dateien unter docs/ (Spec, Context, Briefing, Belege). Keine Datei unter
+server/, .github/, kein project.yml, kein *.swift. Infra-PR #380 unverändert: 5 Dateien, +231/-0, monitor.sh +1/-0.

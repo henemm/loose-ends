@@ -1,0 +1,20 @@
+# GREEN-Lauf #796 S4a — 2026-11-03T15:49:25Z, Mac des Workflows + ssh rennwienix
+
+$ curl --silent --show-error --fail https://loose-ends.henemm.com/health
+{"status":"ok","db":"up","migrated":true,"errorRate":0,"requests":0} (Exit 0)
+$ curl -s -o /dev/null -w '%{http_code}' https://loose-ends.henemm.com/mcp
+404
+$ curl -s -o /dev/null -w '%{http_code}' https://loose-ends.henemm.com/irgendein-pfad
+404
+
+$ ssh rennwienix docker inspect (Name Status Memory MemorySwap RestartCount); docker port loose-ends-db | wc -l
+/loose-ends-db running 536870912 536870912 0
+/loose-ends-server running 402653184 402653184 1
+0
+
+Belege je AC unter docs/artifacts/feat-796-s4-hetzner-betrieb (AC-6 offen bis Merge des Infra-PR, AC-9 vorläufig bis PR):
+## Ergebnis: Lauf 2 baute vollständig aus dem Cache (alle Schritte CACHED), Container nicht neu gestartet
+## Ergebnis AC-2: erfüllt (Server-Teil oben, äußerer Teil: /mcp, /irgendein-pfad und / liefern 404, nur /health geht durch).
+## Ergebnis AC-4: erfüllt. Teil 1 (compose restart) 200 nach 1 s; Teil 2b (Absturz per kill -9) Restart-Policy
+ERGEBNIS: StartedAt des Dienstes unverändert (2026-11-03T15:02:31.553116554Z), kein Dienst-Neustart
+## Ergebnis AC-7: erfüllt
