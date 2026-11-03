@@ -1,0 +1,319 @@
+node:internal/modules/esm/resolve:241
+    throw new ERR_MODULE_NOT_FOUND(
+          ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/apple-jwks.ts' imported from /Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple-jwks.test.ts
+    at finalizeResolution (node:internal/modules/esm/resolve:241:11)
+    at moduleResolve (node:internal/modules/esm/resolve:846:10)
+    at defaultResolve (node:internal/modules/esm/resolve:973:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:708:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:728:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:766:56)
+    at #resolve (node:internal/modules/esm/loader:690:17)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:610:35)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:277:33)
+    at ModuleJob.link (node:internal/modules/esm/module_job:389:17) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/apple-jwks.ts'
+}
+
+Node.js v26.13.0
+✖ test/apple-jwks.test.ts (163.31825ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 171.004708
+
+✖ failing tests:
+
+test at test/apple-jwks.test.ts:1:1
+✖ test/apple-jwks.test.ts (163.31825ms)
+  'test failed'
+===== Lauf 2: gegen leere Attrappe (immer keys_unavailable, kein Abruf), danach gelöscht =====
+✖ cache: laden und wiederverwenden (1.306459ms)
+✖ kid: unbekannt lädt einmal nach (0.128375ms)
+✖ sperre: 59 s und 60 s (0.073666ms)
+✖ parallel: ein Abruf (0.092625ms)
+✖ fehlschlag: ohne Cache (0.072042ms)
+✖ fehlschlag: alter Cache bleibt (0.079834ms)
+✖ sperre: auch nach Fehlschlag (0.07225ms)
+✖ ttl: nach einer Stunde neuer Stand (0.1005ms)
+✖ ttl: abgelaufen und Abruf misslingt (0.081083ms)
+✖ rotation: entfernter kid (0.128542ms)
+✖ einträge: ungültige übersprungen (0.101625ms)
+✖ fetch: url und signal (0.07675ms)
+✖ zusammenspiel: verifyIdentityToken (7.247041ms)
+✔ silence und feste Werte (0.493ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 1
+ℹ fail 13
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 227.401834
+
+✖ failing tests:
+
+test at test/apple-jwks.test.ts:46:1
+✖ cache: laden und wiederverwenden (1.306459ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + 'keys_unavailable'
+  - {
+  -   alg: 'RS256',
+  -   e: 'AQAB',
+  -   kid: 'k1',
+  -   kty: 'RSA',
+  -   n: 'n-k1',
+  -   use: 'sig'
+  - }
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple-jwks.test.ts:48:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'keys_unavailable',
+    expected: { kty: 'RSA', kid: 'k1', alg: 'RS256', use: 'sig', n: 'n-k1', e: 'AQAB' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple-jwks.test.ts:55:1
+✖ kid: unbekannt lädt einmal nach (0.128375ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'keys_unavailable'
+  - 'unknown_kid'
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple-jwks.test.ts:59:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'keys_unavailable',
+    expected: 'unknown_kid',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple-jwks.test.ts:65:1
+✖ sperre: 59 s und 60 s (0.073666ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'keys_unavailable'
+  - 'unknown_kid'
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple-jwks.test.ts:69:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'keys_unavailable',
+    expected: 'unknown_kid',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple-jwks.test.ts:79:1
+✖ parallel: ein Abruf (0.092625ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple-jwks.test.ts:82:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple-jwks.test.ts:92:1
+✖ fehlschlag: ohne Cache (0.072042ms)
+  AssertionError [ERR_ASSERTION]: Ausnahme
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple-jwks.test.ts:96:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple-jwks.test.ts:100:1
+✖ fehlschlag: alter Cache bleibt (0.079834ms)
+  AssertionError [ERR_ASSERTION]: Ausnahme
+  + actual - expected
+  
+  + 'keys_unavailable'
+  - 'unknown_kid'
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple-jwks.test.ts:106:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'keys_unavailable',
+    expected: 'unknown_kid',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple-jwks.test.ts:114:1
+✖ sperre: auch nach Fehlschlag (0.07225ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple-jwks.test.ts:119:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple-jwks.test.ts:137:1
+✖ ttl: nach einer Stunde neuer Stand (0.1005ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + 'keys_unavailable'
+  - {
+  -   alg: 'RS256',
+  -   e: 'AQAB',
+  -   kid: 'k1',
+  -   kty: 'RSA',
+  -   n: 'n-k1',
+  -   use: 'sig'
+  - }
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple-jwks.test.ts:142:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'keys_unavailable',
+    expected: { kty: 'RSA', kid: 'k1', alg: 'RS256', use: 'sig', n: 'n-k1', e: 'AQAB' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple-jwks.test.ts:151:1
+✖ ttl: abgelaufen und Abruf misslingt (0.081083ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 2
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple-jwks.test.ts:157:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple-jwks.test.ts:168:1
+✖ rotation: entfernter kid (0.128542ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + 'keys_unavailable'
+  - {
+  -   alg: 'RS256',
+  -   e: 'AQAB',
+  -   kid: 'k4',
+  -   kty: 'RSA',
+  -   n: 'n-k4',
+  -   use: 'sig'
+  - }
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple-jwks.test.ts:173:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'keys_unavailable',
+    expected: { kty: 'RSA', kid: 'k4', alg: 'RS256', use: 'sig', n: 'n-k4', e: 'AQAB' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple-jwks.test.ts:179:1
+✖ einträge: ungültige übersprungen (0.101625ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + 'keys_unavailable'
+  - {
+  -   alg: 'RS256',
+  -   e: 'AQAB',
+  -   kid: 'gut',
+  -   kty: 'RSA',
+  -   n: 'n-gut',
+  -   use: 'sig'
+  - }
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple-jwks.test.ts:182:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'keys_unavailable',
+    expected: { kty: 'RSA', kid: 'gut', alg: 'RS256', use: 'sig', n: 'n-gut', e: 'AQAB' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple-jwks.test.ts:187:1
+✖ fetch: url und signal (0.07675ms)
+  TypeError [Error]: Cannot read properties of undefined (reading '0')
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple-jwks.test.ts:190:34)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at test/apple-jwks.test.ts:198:1
+✖ zusammenspiel: verifyIdentityToken (7.247041ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   ok: false,
+  +   reason: 'keys_unavailable'
+  -   ok: true,
+  -   sub: '001.abc.002'
+    }
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple-jwks.test.ts:217:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { ok: false, reason: 'keys_unavailable' },
+    expected: { ok: true, sub: '001.abc.002' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
