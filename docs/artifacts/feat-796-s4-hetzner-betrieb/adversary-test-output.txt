@@ -1,0 +1,14 @@
+Nachpruefung 2026-11-03 (lesend), Details in adversary-dialog.md
+curl https://loose-ends.henemm.com/health -> 200, verify ok, Let's Encrypt YE1, Ablauf 2027-02-01, body status ok db up migrated true
+/mcp 404, /irgendwas 404, /health/ 404, /secrets 404, POST /health 200, /health?x=1 200, http:80 301
+sha256 lokal == Server-Worktree == installierter nginx-Host; bash -n ok
+docker: db 536870912/536870912, server 402653184/402653184, NODE_OPTIONS 256, shared_buffers 128MB, max_connections 20, PG 18.6, internes Netz true, db ohne Host-Port, ss nur 127.0.0.1:8780
+Secrets 700/600/600, check-ignore Treffer loose-ends/.gitignore:1, postgres:// in Logs 0/0
+Tests: 0 Unit-Tests (Infra-Schnitt), 0 fehlgeschlagen, 0 uebersprungen
+
+$ ssh rennwienix cd /home/hem/henemm-infra-le796 && python3 -m pytest tests/ -q  (2026-11-03, Infra-Repo-Suite ueber den geprueften Stand)
+........................................................................ [ 54%]
+........................................................................ [ 72%]
+........................................................................ [ 90%]
+..............................sss..s.ss                                  [100%]
+393 passed, 6 skipped in 42.51s

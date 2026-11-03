@@ -1,0 +1,155 @@
+# AC-6 Überwachung — 2026-11-03T15:50:54Z, monitor.sh aus /home/hem/henemm-infra-le796 (Haupt-Stand + Zeile Loose-Ends), per SSH auf rennwienix
+Unit server-monitor.service: User=root, ExecStart=/home/hem/henemm-infra/scripts/monitor.sh (ohne Argumente);
+nachgestellt mit sudo und leerer Umgebung. Die Zeile Loose-Ends ist nur in der Worktree-Fassung, der Timer-Lauf
+(Haupt-Checkout) fasst den Zustand http-Loose-Ends nicht an. Läufe nur, wenn server-monitor.service nicht aktiv ist.
+Volle Ausgaben der Läufe: /home/hem/backups/le796-ac6-raw-20261103T155054Z.log (Server, nicht im Repo)
+
+$ grep -n Loose-Ends /home/hem/henemm-infra-le796/scripts/monitor.sh
+62:    "https://loose-ends.henemm.com/health|200|Loose-Ends"
+
+## Trockentest --status
+  HTTP-Endpoints
+    ✗ Loose-Ends (HTTP 000000)
+$ sudo cat /var/lib/server-monitor/http-Loose-Ends → (fehlt)
+
+Dienst StartedAt vorher: 2026-11-03T15:37:08.611761457Z running restarts=1
+
+## Lauf 1: Dienst läuft
+[2026-11-03T15:51:01Z] $ curl https://loose-ends.henemm.com/health →  HTTP 000
+[2026-11-03T15:51:01Z] $ sudo env -i PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin /home/hem/henemm-infra-le796/scripts/monitor.sh   (Lauf 1)
+(Exit 0)
+Auszug (Loose-Ends, ALERT, RECOVERY, Agent, Telegram):
+  [monitor] 2026-11-03 15:51:05: Prüfe Telegram-Bot...
+  [monitor] 2026-11-03 15:51:06: ALERT: 🟡 Frieda: Rückmeldedienst test-135 nicht erreichbar (429)
+  [monitor] 2026-11-03 15:51:07: ALERT: 🟡 Frieda: Rückmeldedienst test-14 nicht erreichbar (429)
+  [monitor] 2026-11-03 15:51:07: ALERT: 🟡 Frieda: Rückmeldedienst testreise-abnahme-223-erfunden-2027 nicht erreichbar (429)
+  [monitor] 2026-11-03 15:51:07: ALERT: 🟡 Frieda: Rückmeldedienst testreise-karten-225-erfunden-2027 nicht erreichbar (429)
+Anzahl ALERT/RECOVERY-Zeilen zu Loose-Ends in diesem Lauf: 0
+$ sudo cat /var/lib/server-monitor/http-Loose-Ends → ok
+
+## DB-Abbruch
+[2026-11-03T15:51:08Z] $ LE_TAG=e62f0d5 docker compose -f loose-ends/docker-compose.yml stop db
+ Container loose-ends-db Stopping 
+ Container loose-ends-db Stopped 
+[2026-11-03T15:51:10Z] $ curl https://loose-ends.henemm.com/health → {"status":"unavailable","db":"down","migrated":true,"errorRate":0,"requests":0} HTTP 503
+
+## Lauf 2: DB weg → Zustand fail, Meldung
+[2026-11-03T15:51:10Z] $ sudo env -i PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin /home/hem/henemm-infra-le796/scripts/monitor.sh   (Lauf 2)
+(Exit 0)
+Auszug (Loose-Ends, ALERT, RECOVERY, Agent, Telegram):
+  [monitor] 2026-11-03 15:51:10: ALERT: 🔴 Loose-Ends nicht erreichbar (HTTP 503, erwartet 200)\nURL: https://loose-ends.henemm.com/health
+  [monitor] 2026-11-03 15:51:11: Agent getriggert für http-Loose-Ends (PID 260346)
+  [monitor] 2026-11-03 15:51:14: Prüfe Telegram-Bot...
+  [monitor] 2026-11-03 15:51:16: RECOVERY: ✅ Frieda: Rückmeldedienst testreise-karten-225-erfunden-2027 wieder erreichbar
+Anzahl ALERT/RECOVERY-Zeilen zu Loose-Ends in diesem Lauf: 1
+$ sudo cat /var/lib/server-monitor/http-Loose-Ends → fail
+
+## Lauf 3: gleicher Zustand → keine neue Meldung
+[2026-11-03T15:51:16Z] $ curl https://loose-ends.henemm.com/health → {"status":"unavailable","db":"down","migrated":true,"errorRate":0,"requests":0} HTTP 503
+[2026-11-03T15:51:16Z] $ sudo env -i PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin /home/hem/henemm-infra-le796/scripts/monitor.sh   (Lauf 3)
+(Exit 0)
+Auszug (Loose-Ends, ALERT, RECOVERY, Agent, Telegram):
+  [monitor] 2026-11-03 15:51:20: Prüfe Telegram-Bot...
+Anzahl ALERT/RECOVERY-Zeilen zu Loose-Ends in diesem Lauf: 0
+$ sudo cat /var/lib/server-monitor/http-Loose-Ends → fail
+
+## Erholung
+[2026-11-03T15:51:22Z] $ LE_TAG=e62f0d5 docker compose -f loose-ends/docker-compose.yml start db
+ Container loose-ends-db Starting 
+ Container loose-ends-db Started 
+[2026-11-03T15:51:23Z] $ curl https://loose-ends.henemm.com/health → {"status":"ok","db":"up","migrated":true,"errorRate":0,"requests":0} HTTP 200
+
+## Lauf 4: Zustand ok, Erholungsmeldung
+[2026-11-03T15:51:23Z] $ sudo env -i PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin /home/hem/henemm-infra-le796/scripts/monitor.sh   (Lauf 4)
+(Exit 0)
+Auszug (Loose-Ends, ALERT, RECOVERY, Agent, Telegram):
+  [monitor] 2026-11-03 15:51:23: RECOVERY: ✅ Loose-Ends wieder erreichbar
+  [monitor] 2026-11-03 15:51:27: Prüfe Telegram-Bot...
+  [monitor] 2026-11-03 15:51:29: ALERT: 🟡 Frieda: Rückmeldedienst testreise-karten-225-erfunden-2027 nicht erreichbar (429)
+Anzahl ALERT/RECOVERY-Zeilen zu Loose-Ends in diesem Lauf: 1
+$ sudo cat /var/lib/server-monitor/http-Loose-Ends → ok
+
+Dienst StartedAt nachher: 2026-11-03T15:37:08.611761457Z running restarts=1
+
+## Incident-Agent
+$ tail -n 30 /tmp/incident-agent.log (Zeilen seit Beginn der Probe)
+  Mon Nov  2 08:25:08 PM UTC 2026: Telegram: Nur-Diagnose gesendet.
+  Mon Nov  2 08:25:08 PM UTC 2026: === Agent beendet (Check: systemd-gregor-api-staging, Ergebnis: not_needed) ===
+  Mon Nov  2 09:46:07 PM UTC 2026: === Agent gestartet für 'disk-full': ⚠️ Festplatte 85% voll — nur noch 23G frei ===
+  Mon Nov  2 09:46:07 PM UTC 2026: Phase 1: Diagnose...
+  --dangerously-skip-permissions cannot be used with root/sudo privileges for security reasons
+  Mon Nov  2 09:46:07 PM UTC 2026: Diagnose: 
+  Mon Nov  2 09:46:07 PM UTC 2026: Keine Aktion empfohlen.
+  Mon Nov  2 09:46:08 PM UTC 2026: Telegram: Nur-Diagnose gesendet.
+  Mon Nov  2 09:46:08 PM UTC 2026: === Agent beendet (Check: disk-full, Ergebnis: not_needed) ===
+  Tue Nov  3 05:28:21 AM UTC 2026: === Agent gestartet für 'disk-full': ⚠️ Festplatte 85% voll — nur noch 23G frei ===
+  Tue Nov  3 05:28:21 AM UTC 2026: Phase 1: Diagnose...
+  --dangerously-skip-permissions cannot be used with root/sudo privileges for security reasons
+  Tue Nov  3 05:28:22 AM UTC 2026: Diagnose: 
+  Tue Nov  3 05:28:22 AM UTC 2026: Keine Aktion empfohlen.
+  Tue Nov  3 07:55:36 AM UTC 2026: === Agent gestartet für 'telegram-bot': 🔴 Telegram-Bot antwortet nicht — ALLE Benachrichtigungen ausgefallen! ===
+  Tue Nov  3 07:55:36 AM UTC 2026: Phase 1: Diagnose...
+  --dangerously-skip-permissions cannot be used with root/sudo privileges for security reasons
+  Tue Nov  3 07:55:36 AM UTC 2026: Diagnose: 
+  Tue Nov  3 07:55:36 AM UTC 2026: Keine Aktion empfohlen.
+  Tue Nov  3 07:55:36 AM UTC 2026: Telegram: Nur-Diagnose gesendet.
+  Tue Nov  3 07:55:36 AM UTC 2026: === Agent beendet (Check: telegram-bot, Ergebnis: not_needed) ===
+  Tue Nov  3 15:51:11 UTC 2026: === Agent gestartet für 'http-Loose-Ends': 🔴 Loose-Ends nicht erreichbar (HTTP 503, erwartet 200)\nURL: https://loose-ends.henemm.com/health ===
+  Tue Nov  3 15:51:11 UTC 2026: Phase 1: Diagnose...
+  Ignoring 16 permissions.allow entries from .claude/settings.json: this workspace has not been trusted. Run Claude Code interactively here once and accept the trust dialog, or set projects["/home/hem"].hasTrustDialogAccepted: true in /root/.claude.json.
+  --dangerously-skip-permissions cannot be used with root/sudo privileges for security reasons
+  Tue Nov  3 15:51:11 UTC 2026: Diagnose: 
+  Tue Nov  3 15:51:11 UTC 2026: Keine Aktion empfohlen.
+  Tue Nov  3 15:51:13 UTC 2026: GitHub Issue: https://github.com/henemm/henemm-infra/issues/379
+  Tue Nov  3 15:51:13 UTC 2026: Telegram: Nur-Diagnose gesendet.
+  Tue Nov  3 15:51:13 UTC 2026: === Agent beendet (Check: http-Loose-Ends, Ergebnis: not_needed) ===
+$ ps -ef | grep run-agent | grep -v grep
+  (kein Agent-Prozess aktiv)
+
+## Hinweise zur Probe
+- Vorbereitung: Die Worktree-Fassung lädt `${SCRIPT_DIR}/../.env` wie der Haupt-Checkout. Damit die übrigen Checks
+  dieselben Zugangsdaten haben wie im Timer-Lauf (sonst Fehlalarme), lag für die Dauer der Probe ein Symlink
+  /home/hem/henemm-infra-le796/<env-Datei> → /home/hem/henemm-infra/<env-Datei> (git-ignoriert); um ~15:53Z entfernt.
+- Trockentest --status (~15:50:55Z) und der erste curl vor Lauf 1 (15:51:01Z) zeigten 000: der Server-Resolver hatte
+  den Namen noch negativ gecacht (vor dem A-Eintrag). Ab 15:51:02Z löste er auf; Lauf 1 sah 200. Jetzt:
+  `dig +short loose-ends.henemm.com` auf dem Server → 178.104.143.19.
+- Zustandsmaschine belegt: Lauf 1 ok (still), Lauf 2 ok→fail mit genau einer Meldung (ALERT + Telegram-Aufruf
+  "$NOTIFY", Incident-Agent), Lauf 3 fail→fail ohne Meldung, Lauf 4 fail→ok mit Erholungsmeldung.
+- Dienst-StartedAt vor und nach der Probe gleich (15:37:08.61Z, restarts=1): kein Dienst-Neustart. DB war von
+  15:51:08Z bis 15:51:22Z angehalten (14 s).
+
+## Incident-Agent
+- Gestartet 15:51:11Z für http-Loose-Ends, Diagnose leer ("--dangerously-skip-permissions cannot be used with root/sudo"),
+  "Keine Aktion empfohlen", Ergebnis not_needed. Kein Eingriff in loose-ends-Container (StartedAt unverändert).
+- Er legte das Issue https://github.com/henemm/henemm-infra/issues/379 ("🔴 Incident: http-Loose-Ends") an, Stand
+  nach der Probe OPEN.
+- Der Agent läuft als root nie mit Diagnose (vorbestehend, auch in den Einträgen vom 02./03.11.); das betrifft alle Checks.
+
+## Nebenwirkung der Probe
+- Die schnell aufeinanderfolgenden Läufe (plus Timer-Lauf 15:51:01Z) überschritten die nginx-Zone frieda_reisen_api
+  (30r/m je IP) für die Frieda-Rückmeldeprüfungen: 429 und gelbe Meldungen für test-135, test-14,
+  testreise-abnahme-223, testreise-karten-225 (karten-225 dazu einmal Erholung und erneuter Ausfall).
+  Ursache ist die Probe, nicht Frieda. Erholung siehe Nachtrag.
+
+## Telegram
+Belegt ist nur die Senderseite: ALERT- und RECOVERY-Zeile von monitor.sh, beide rufen notify-telegram.sh auf
+(kein "Telegram-Versand fehlgeschlagen" im Lauf). Ankunft bestätigt Henning.
+
+## Nachtrag Erholung Frieda (Timer-Lauf 15:56Z, sudo journalctl -u server-monitor --since 15:55 | grep -E "ALERT|RECOVERY")
+Nov 03 15:56:07 Rennwienix monitor.sh[287472]: [monitor] 2026-11-03 15:56:07: RECOVERY: ✅ Frieda: Rückmeldedienst test-135 wieder erreichbar
+Nov 03 15:56:07 Rennwienix monitor.sh[287472]: [monitor] 2026-11-03 15:56:07: RECOVERY: ✅ Frieda: Rückmeldedienst test-14 wieder erreichbar
+Nov 03 15:56:08 Rennwienix monitor.sh[287472]: [monitor] 2026-11-03 15:56:08: RECOVERY: ✅ Frieda: Rückmeldedienst testreise-abnahme-223-erfunden-2027 wieder erreichbar
+Nov 03 15:56:08 Rennwienix monitor.sh[287472]: [monitor] 2026-11-03 15:56:08: RECOVERY: ✅ Frieda: Rückmeldedienst testreise-karten-225-erfunden-2027 wieder erreichbar
+test-135 ok
+test-14 ok
+testreise-abnahme-223-erfunden-2027 ok
+testreise-karten-225-erfunden-2027 ok
+http-Loose-Ends ok
+Alle vier Frieda-Zustände wieder ok, http-Loose-Ends ok. Erneuter Abruf: {"status":"ok","db":"up","migrated":true,"errorRate":0,"requests":0} HTTP 200
+
+## Nachtrag Phase 7 — Zeile „Loose-Ends (200)“ (2026-11-03T17:03Z, Haupt-Checkout main 69c7a62 = Merge #380)
+Der Lauf 1 oben lief ohne --status; die Statuszeilen schreibt monitor.sh nur im Statusmodus. Der Statusmodus schreibt
+keinen Zustand und sendet nichts (monitor.sh: „Im Status-Modus kein State schreiben und keine Alerts senden“).
+$ ssh rennwienix 'cd /home/hem/henemm-infra && ./scripts/monitor.sh --status | grep Loose-Ends'
+  ✓ Kotoba (200)
+  ✓ Loose-Ends (200)

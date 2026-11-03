@@ -1,0 +1,79 @@
+# AC-2 Zugang, Server-Teil — 2026-11-03T14:53:45Z, per SSH auf rennwienix
+
+$ docker port loose-ends-db
+(Exit 0, leere Ausgabe = kein Host-Port)
+
+$ docker port loose-ends-server
+8080/tcp -> 127.0.0.1:8780
+
+$ ss -ltn | grep 8780
+LISTEN 0      4096       127.0.0.1:8780      0.0.0.0:*          
+
+$ ss -ltn | grep -E "(0\.0\.0\.0|\*|\[::\]):8780" | wc -l
+0
+
+$ ss -ltn (vollständig, Vergleich mit ausgangsstand.txt)
+State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess
+LISTEN 0      2048       127.0.0.1:8000      0.0.0.0:*          
+LISTEN 0      2048       127.0.0.1:8001      0.0.0.0:*          
+LISTEN 0      4096       127.0.0.1:8100      0.0.0.0:*          
+LISTEN 0      4096       127.0.0.1:8090      0.0.0.0:*          
+LISTEN 0      4096       127.0.0.1:8091      0.0.0.0:*          
+LISTEN 0      4096       127.0.0.1:8080      0.0.0.0:*          
+LISTEN 0      4096       127.0.0.1:8082      0.0.0.0:*          
+LISTEN 0      4096      127.0.0.54:53        0.0.0.0:*          
+LISTEN 0      5          127.0.0.1:3457      0.0.0.0:*          
+LISTEN 0      511        127.0.0.1:3000      0.0.0.0:*          
+LISTEN 0      511        127.0.0.1:3001      0.0.0.0:*          
+LISTEN 0      4096       127.0.0.1:5678      0.0.0.0:*          
+LISTEN 0      5          127.0.0.1:9876      0.0.0.0:*          
+LISTEN 0      4096   127.0.0.53%lo:53        0.0.0.0:*          
+LISTEN 0      4096       127.0.0.1:8780      0.0.0.0:*          
+LISTEN 0      5          127.0.0.1:8771      0.0.0.0:*          
+LISTEN 0      5          127.0.0.1:8772      0.0.0.0:*          
+LISTEN 0      5          127.0.0.1:8773      0.0.0.0:*          
+LISTEN 0      5          127.0.0.1:8795      0.0.0.0:*          
+LISTEN 0      4096         0.0.0.0:587       0.0.0.0:*          
+LISTEN 0      4096         0.0.0.0:993       0.0.0.0:*          
+LISTEN 0      2048       127.0.0.1:5050      0.0.0.0:*          
+LISTEN 0      4096         0.0.0.0:22        0.0.0.0:*          
+LISTEN 0      4096         0.0.0.0:25        0.0.0.0:*          
+LISTEN 0      511          0.0.0.0:80        0.0.0.0:*          
+LISTEN 0      4096       127.0.0.1:8443      0.0.0.0:*          
+LISTEN 0      511          0.0.0.0:443       0.0.0.0:*          
+LISTEN 0      4096         0.0.0.0:465       0.0.0.0:*          
+LISTEN 0      4096            [::]:587          [::]:*          
+LISTEN 0      4096            [::]:993          [::]:*          
+LISTEN 0      4096            [::]:22           [::]:*          
+LISTEN 0      4096            [::]:25           [::]:*          
+LISTEN 0      511             [::]:80           [::]:*          
+LISTEN 0      511             [::]:443          [::]:*          
+LISTEN 0      4096            [::]:465          [::]:*          
+
+$ Vergleich der Listener (Local Address:Port) gegen ausgangsstand.txt (2026-11-03T13:48:21Z), lokal ausgewertet
+neu:
+  + 127.0.0.1:8780
+weggefallen:
+  - 127.0.0.1:44181
+
+## Ergebnis Server-Teil: Postgres ohne Host-Port; Dienst nur auf 127.0.0.1:8780; einziger neuer Listener ist 127.0.0.1:8780.
+
+## Äußerer Teil (GET /mcp und /irgendein-pfad über https://loose-ends.henemm.com → 404): erster Stand 14:57Z, offen bis DNS; erfüllt im zweiten Durchgang unten
+dig +short loose-ends.henemm.com am 2026-11-03T14:57:39Z: '' (leer = kein A-Eintrag).
+Port-80-Block steht bereits (lokal mit Host-Header: / und /health → 404, siehe ac7-unberuehrt.txt).
+
+## Äußerer Teil — 2026-11-03T15:47:03Z, Mac des Workflows, curl ohne -k
+$ curl -s -o /dev/null -w '%{http_code}' https://loose-ends.henemm.com/mcp
+404
+$ curl -s -o /dev/null -w '%{http_code}' https://loose-ends.henemm.com/irgendein-pfad
+404
+$ curl -s -o /dev/null -w '%{http_code}' https://loose-ends.henemm.com/
+404
+$ curl -s -o /dev/null -w '%{http_code} -> %{redirect_url}' http://loose-ends.henemm.com/health
+301 -> https://loose-ends.henemm.com/health
+$ curl -sI https://loose-ends.henemm.com/health | grep -iE '^(strict-transport|x-content-type|x-frame)'   (security-headers)
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+## Ergebnis AC-2: erfüllt (Server-Teil oben, äußerer Teil: /mcp, /irgendein-pfad und / liefern 404, nur /health geht durch).
