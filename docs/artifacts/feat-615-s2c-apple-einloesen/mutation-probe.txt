@@ -1,0 +1,8 @@
+DER statt r||s: fail=2
+fremder Apple-Fehler übernommen: fail=3
+aud nicht geprüft: fail=3
+exp 3600: fail=3
+redirect_uri gesetzt: fail=1
+kein Zeitlimit: fail=2
+access_token im Ergebnis: fail=1
+fetch vor Code-Prüfung: fail=1
