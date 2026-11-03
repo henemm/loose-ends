@@ -4,7 +4,7 @@ import { spawnSync } from "node:child_process";
 import { mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import type pg from "pg";
+import pg from "pg";
 import * as migrations from "../src/migrate.ts";
 // AC-5: db.ts fails the run without DATABASE_URL, it is never skipped.
 import { freshPool } from "./db.ts";
@@ -183,9 +183,12 @@ async function within<T>(ms: number, work: Promise<T>): Promise<T> {
   }
 }
 
-// Other test files migrate at the same time and may hold the lock for a moment, so the probe retries briefly.
-async function lockIsFree(pool: pg.Pool): Promise<boolean> {
-  const client = await pool.connect();
+// Advisory locks are reentrant per session: a pooled connection that still held the lock would report it free.
+// So the probe opens its own new connection. Other test files migrate at the same time and may hold the lock
+// for a moment, so the probe retries briefly.
+async function lockIsFree(): Promise<boolean> {
+  const client = new pg.Client({ connectionString: process.env.DATABASE_URL });
+  await client.connect();
   try {
     for (let attempt = 0; attempt < 50; attempt++) {
       const result = await client.query("SELECT pg_try_advisory_lock($1) AS got", [MIGRATE_LOCK_ID]);
@@ -197,7 +200,7 @@ async function lockIsFree(pool: pg.Pool): Promise<boolean> {
     }
     return false;
   } finally {
-    client.release();
+    await client.end();
   }
 }
 
@@ -210,10 +213,35 @@ test("AC-3: after a failed run the lock is free and a repaired run finishes (S3)
   await assert.rejects(migrate(pool, dir), /no_such_table/);
 
   assert.equal(typeof MIGRATE_LOCK_ID, "number");
-  assert.equal(await lockIsFree(pool), true);
+  assert.equal(await lockIsFree(), true);
   await writeFile(join(dir, "002_broken.sql"), "CREATE TABLE second (id int);");
   assert.deepEqual(await within(5000, migrate(pool, dir)), ["002_broken.sql"]);
   assert.deepEqual(await remembered(pool), ["001_first.sql", "002_broken.sql"]);
+});
+
+test("AC-3: a failed ROLLBACK keeps the original error, discards the connection and skips the unlock (S3)", async () => {
+  const dir = await migrationDir([["001_first.sql", "BROKEN"]]);
+  const original = new Error("migration kaputt");
+  const sent: string[] = [];
+  const released: unknown[] = [];
+  const client = {
+    query: async (sql: string) => {
+      sent.push(sql);
+      if (sql === "BROKEN") throw original;
+      if (sql === "ROLLBACK") throw new Error("rollback kaputt");
+      return { rows: [] };
+    },
+    release: (arg?: unknown) => {
+      released.push(arg);
+    },
+  };
+  const fake = { connect: async () => client } as unknown as pg.Pool;
+
+  await assert.rejects(migrate(fake, dir), (error: unknown) => error === original);
+  assert.equal(released.length, 1);
+  assert.ok(released[0]);
+  assert.ok(sent.includes("ROLLBACK"));
+  assert.equal(sent.some((sql) => sql.includes("pg_advisory_unlock")), false);
 });
 
 test("AC-4: a gap is refused without ever connecting to the database (S3)", async () => {

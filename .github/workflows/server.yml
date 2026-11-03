@@ -45,3 +45,74 @@ jobs:
       - run: npm test
         env:
           DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/postgres
+
+  # #796 S2: the image starts against Postgres 18, migrates, answers /health and ends cleanly on SIGTERM.
+  image:
+    name: Image (Docker, Postgres 18)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v7
+      - name: Bauen
+        run: docker build -t loose-ends-server:ci server
+      - name: Image prüfen
+        run: |
+          uid=$(docker run --rm --entrypoint id loose-ends-server:ci -u)
+          echo "uid=$uid"
+          test "$uid" != "0"
+          docker run --rm --entrypoint sh loose-ends-server:ci -c 'test ! -e /app/test && test ! -e /app/scripts && ! ls -a /app | grep -q "^\.env"'
+      - name: Starten
+        run: >-
+          docker run -d --name le-server --network host
+          -e DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres
+          -e PORT=18080 -e HOST=127.0.0.1 loose-ends-server:ci
+      - name: Health abfragen
+        run: |
+          for i in $(seq 1 60); do
+            code=$(curl --silent --output body.json --write-out '%{http_code}' http://127.0.0.1:18080/health || true)
+            if [ "$code" = "200" ]; then
+              echo "200 nach ${i} s"; cat body.json; echo
+              jq -e '.status == "ok" and .db == "up" and .migrated == true' body.json
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "kein 200 binnen 60 s (zuletzt $code)"
+          docker logs le-server
+          exit 1
+      - name: Log prüfen
+        run: |
+          docker logs le-server > server.log 2>&1
+          cat server.log
+          if grep -v '^$' server.log | grep -Ev '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]+)?Z '; then
+            echo "Zeile ohne ISO-Zeitpunkt vorn"; exit 1
+          fi
+          if grep -q 'postgres' server.log; then echo "Verbindungsdaten oder Passwort im Log"; exit 1; fi
+          grep -q ' migrated$' server.log
+      - name: Beenden
+        run: |
+          docker stop --time 20 le-server
+          code=$(docker inspect --format '{{.State.ExitCode}}' le-server)
+          docker logs le-server > server.log 2>&1
+          cat server.log
+          echo "exit=$code"
+          test "$code" = "0"
+          grep -q ' shutting down$' server.log
+          grep -q ' stopped$' server.log
+      - name: Log bei Fehlschlag
+        if: failure()
+        run: docker logs le-server || true
+      - name: Aufräumen
+        if: always()
+        run: docker rm -f le-server || true
