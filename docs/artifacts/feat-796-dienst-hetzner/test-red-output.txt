@@ -1,0 +1,159 @@
+== npm run typecheck
+
+> typecheck
+> tsc --noEmit
+
+test/main.test.ts(10,23): error TS2307: Cannot find module '../src/main.ts' or its corresponding type declarations.
+test/main.test.ts(11,44): error TS2307: Cannot find module '../src/health.ts' or its corresponding type declarations.
+== npm test
+
+> test
+> node --test 'test/*.test.ts'
+
+node:internal/modules/esm/resolve:241
+    throw new ERR_MODULE_NOT_FOUND(
+          ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/src/main.ts' imported from /Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/test/main.test.ts
+    at finalizeResolution (node:internal/modules/esm/resolve:241:11)
+    at moduleResolve (node:internal/modules/esm/resolve:846:10)
+    at defaultResolve (node:internal/modules/esm/resolve:973:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:708:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:728:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:766:56)
+    at #resolve (node:internal/modules/esm/loader:690:17)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:610:35)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:277:33)
+    at ModuleJob.link (node:internal/modules/esm/module_job:389:17) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/src/main.ts'
+}
+
+Node.js v26.13.0
+✖ test/main.test.ts (345.594125ms)
+✔ AC-1/AC-3: tools/list names the six tools, with the annotations of the write and read tools (75.428125ms)
+▶ AC-2: without an account the read tools refuse and reads nothing
+  ✔ get_now (4.816333ms)
+  ✔ list_tasks (2.131041ms)
+✔ AC-2: without an account the read tools refuse and reads nothing (34.446541ms)
+▶ AC-3/AC-4: another account and an account without transcript get „noch keine Abschrift“
+  ✔ AC-3 fremdes Konto (25.393917ms)
+  ✔ AC-4 keine Abschrift (20.655083ms)
+✔ AC-3/AC-4: another account and an account without transcript get „noch keine Abschrift“ (46.564667ms)
+▶ AC-5: get_now passes nowCount through and never recounts
+  ✔ Vertrag (26.736333ms)
+  ✔ 7 bei drei Zeilen (21.063834ms)
+✔ AC-5: get_now passes nowCount through and never recounts (48.297875ms)
+▶ AC-6: get_now orders knaeuel, today, lined, waiting and keeps the order inside a group
+  ✔ Vertrag (16.552833ms)
+  ✔ ohne Knäuel, mehrere je Gruppe (15.064042ms)
+✔ AC-6: get_now orders knaeuel, today, lined, waiting and keeps the order inside a group (32.313334ms)
+✔ AC-7: each row of get_now carries the task's fields; an id without task stays id and group (21.011583ms)
+▶ AC-8: list_tasks returns every task as delivered, with generatedAt
+  ✔ Vertrag (23.226667ms)
+  ✔ vertauscht (17.282959ms)
+✔ AC-8: list_tasks returns every task as delivered, with generatedAt (40.959791ms)
+✔ AC-9: no raw text or note in any answer, nothing on console or stdout (36.198709ms)
+✔ AC-10: a newer upload is read on the next call, nothing is cached (33.520125ms)
+✔ AC-13: getTranscript returns the stored document or undefined (22.330542ms)
+✔ AC-4 (C4b-1): without an account both new tools refuse and capture_task stores nothing (16.013667ms)
+✔ AC-5/AC-6 (C4b-1): capture_task stores one capture order per call, waiting, for the account from authInfo (19.25525ms)
+✔ AC-7 (C4b-1): empty, blank and invalid text store nothing and answer isError (28.467583ms)
+✔ AC-8/AC-9 (C4b-1): get_order_result goes waiting, claimed, result; unknown and foreign ids are unknown, no order text (38.905334ms)
+✔ AC-10 (C4b-1): neither new tool writes to console or stdout (32.116833ms)
+✔ AC-1 (C4b-2): complete_task and set_due are write tools without idempotence and point to list_tasks and get_order_result (33.1915ms)
+▶ AC-2/AC-3 (C4b-2): without an account or without a transcript both tools refuse and store nothing
+  ✔ AC-2 kein Konto (60.871916ms)
+  ✔ AC-3 keine Abschrift (33.045625ms)
+✔ AC-2/AC-3 (C4b-2): without an account or without a transcript both tools refuse and store nothing (94.502917ms)
+✔ AC-4 (C4b-2): a generatedAt that differs from the stored transcript stores nothing; the same one stores an order (27.520708ms)
+✔ AC-5 (C4b-2): a task the transcript no longer carries is refused; a lowercase id finds a task and the order carries the transcript's id (43.30275ms)
+✔ AC-6 (C4b-2): complete_task stores one complete order with the expected state from the transcript (30.075792ms)
+✔ AC-7 (C4b-2): set_due stores the date and hasTime as given, with the expected due date; without date the key is missing (25.997542ms)
+✔ AC-8 (C4b-2): set_due with an invalid date stores nothing and answers with checkOrder's message (26.602792ms)
+✔ AC-9/AC-10 (C4b-2): equal calls give two orders; no title in an answer; another account changes nothing (33.520792ms)
+✔ AC-11 (C4b-2): neither new tool writes to console or stdout (27.858583ms)
+✔ AC-1: applies migrations in number order and returns their names in that order (42.181875ms)
+✔ AC-2: a second run applies nothing, a new file alone is applied (29.755334ms)
+✔ AC-3: a broken migration rolls back completely and rethrows the Postgres error (20.606875ms)
+✔ AC-4: a gap in the numbers is refused before anything is applied (8.330625ms)
+✔ AC-4: a duplicate number is refused before anything is applied (18.056833ms)
+✔ AC-4: a misnamed .sql file is refused before anything is applied, README.md is ignored (8.132458ms)
+✔ AC-4: a README.md beside the migrations does not disturb the run (24.061417ms)
+✔ AC-4: number 000 is refused as invalid, not as a duplicate (9.0105ms)
+✔ AC-5: without DATABASE_URL the test run fails and names the variable (320.861625ms)
+✔ AC-1: the contract order is stored, ON CONFLICT works on the generated id (48.524833ms)
+✔ AC-2: contract examples and small orders and results are accepted (0.4245ms)
+▶ AC-3 to AC-8: orders off the table are refused with the field path, nothing is stored
+  ✔ AC-3 (Z1) version (2.574208ms)
+  ✔ AC-4 (Z2) id (2.859208ms)
+  ✔ AC-4 (Z3) kind (1.677333ms)
+  ✔ AC-5 (Z4) capture (2.407833ms)
+  ✔ AC-6 (Z5) complete (2.075625ms)
+  ✔ AC-7 (Z6) complete times and keys (0.64575ms)
+  ✔ AC-8 (Z7) setDue (2.15125ms)
+✔ AC-3 to AC-8: orders off the table are refused with the field path, nothing is stored (37.915875ms)
+✔ AC-7: complete without expectedDueDate is accepted (0.219167ms)
+✔ AC-9: an order that is no object names the root (0.092958ms)
+▶ AC-10/11: results off the table are refused with the field path, nothing is stored
+  ✔ AC-10 (Z9) result (3.540458ms)
+  ✔ AC-11 (Z10) reason (2.912417ms)
+✔ AC-10/11: results off the table are refused with the field path, nothing is stored (26.149458ms)
+✔ AC-12: transcript messages stay, other errors carry no prefix (2.241209ms)
+✔ AC-13: a new order is stored for the account, unclaimed (21.044666ms)
+✔ AC-14: the same id again, even upper case with other content, changes nothing (23.736084ms)
+✔ AC-15: a claimed order is not reset by a second put (26.847792ms)
+✔ AC-16: three orders are claimed one by one, then nothing (25.122458ms)
+✔ AC-17: two connections claim ten orders, each exactly once (27.664833ms)
+✔ AC-18: two accounts never cross (16.37275ms)
+✔ AC-19: the result of the holding device is stored (24.833709ms)
+✔ AC-20: results for orders not held by the reporter are refused (19.735708ms)
+✔ AC-21: a second result changes nothing (15.833166ms)
+✔ AC-1 (C4b-1): getResult is unknown for a never stored id, another account's id and a non-UUID (13.525584ms)
+▶ AC-2 (C4b-1): getResult goes waiting, claimed, result and reads the id in any case
+  ✔ done (17.120458ms)
+  ✔ rejected mit Grund (22.164458ms)
+✔ AC-2 (C4b-1): getResult goes waiting, claimed, result and reads the id in any case (39.807792ms)
+✔ AC-1: the real migrations folder applies 001 once and creates the three tables (51.22625ms)
+✔ AC-2: the three contract examples are accepted in contract order (29.56275ms)
+✔ AC-3: transcripts refuse what the contract does not allow (64.993417ms)
+✔ AC-4: orders refuse a wrong version, kind, id, account or half a claim, and take all three kinds (62.680625ms)
+✔ AC-5: order results belong to exactly one existing order and carry a reason only when rejected (44.911625ms)
+✔ AC-6: ids keep their case in the document, the uuid columns compare regardless of case (18.129542ms)
+✔ AC-6: known limit, version 1.0 is accepted because jsonb compares numbers numerically (21.748375ms)
+✔ AC-1: the contract example and a lower-case one without optional fields are accepted (3.953083ms)
+▶ AC-2 to AC-11: the deviation table is refused with the field path, nothing is stored
+  ✔ AC-2 (Z1) version (3.81425ms)
+  ✔ AC-3 (Z2) generatedAt (1.569584ms)
+  ✔ AC-4 (Z3) now is no object (1.48625ms)
+  ✔ AC-5 (Z4) keys of now (2.121875ms)
+  ✔ AC-6 (Z5) now.knaeuel (0.661209ms)
+  ✔ AC-7 (Z6) lists of now (2.430416ms)
+  ✔ AC-8 (Z7) contexts (1.256166ms)
+  ✔ AC-9 (Z8) title and project (1.262458ms)
+  ✔ AC-10 (Z9) raw text and note anywhere (4.917709ms)
+  ✔ AC-11 (Z10) root keys and nowCount (4.390125ms)
+  ✔ F001 inherited key names are unknown keys (2.215584ms)
+  ✔ F002 times Postgres refuses or that are no ISO (4.138917ms)
+  ✔ F003 NUL and lone surrogates (0.915792ms)
+✔ AC-2 to AC-11: the deviation table is refused with the field path, nothing is stored (73.839375ms)
+✔ AC-6: without now.knaeuel the transcript is accepted (0.348291ms)
+✔ AC-12/13/14: the first is stored, a newer replaces it, an older or equally old one leaves it (23.056125ms)
+✔ AC-15: two concurrent uploads over two connections always leave the newer one (42.861875ms)
+✔ AC-16: two accounts keep their transcripts apart (20.987125ms)
+✔ AC-17: the service does not recount, a mismatching nowCount and unknown now ids are stored (22.930125ms)
+✔ F002: offsets up to ±15:59 are stored, as Postgres takes them (23.563375ms)
+ℹ tests 103
+ℹ suites 0
+ℹ pass 102
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1267.209125
+
+✖ failing tests:
+
+test at test/main.test.ts:1:1
+✖ test/main.test.ts (345.594125ms)
+  'test failed'

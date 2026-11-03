@@ -1,0 +1,35 @@
+AC-11 echter Lauf, 2026-11-02, Stand c0495da (feat-796-dienst-hetzner)
+Wegwerf-Postgres 18 wie server/scripts/test-local.sh, Dienst per `npm start` in server/
+
+== Postgres on 127.0.0.1:55410, service on 55411
+== 1) curl /health (Postgres läuft)
+HTTP/1.1 200 OK
+content-type: application/json
+
+{"status":"ok","db":"up","migrated":true,"errorRate":0,"requests":0}
+== 2) pg_ctl stop
+Server angehalten
+== curl /health (Postgres gestoppt)
+HTTP/1.1 503 Service Unavailable
+content-type: application/json
+
+{"status":"unavailable","db":"down","migrated":true,"errorRate":0,"requests":0}
+Prozess 27534 läuft weiter
+== 3) pg_ctl start
+== curl /health (Postgres wieder da, ohne Neustart)
+HTTP/1.1 200 OK
+content-type: application/json
+
+{"status":"ok","db":"up","migrated":true,"errorRate":0,"requests":0}
+== 4) kill -TERM
+npm pid 27534, node pid 27566
+Exit-Code: 0
+== Dienst-Ausgabe
+> start
+> node src/main.ts
+
+2026-11-02T21:10:59.468Z listening
+2026-11-02T21:10:59.560Z migrated
+2026-11-02T21:11:00.908Z pool error
+2026-11-02T21:11:04.057Z shutting down
+2026-11-02T21:11:04.060Z stopped

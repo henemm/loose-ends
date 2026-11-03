@@ -456,7 +456,9 @@ not scope creep on the current one.
   `src/migrate.ts` applies numbered `NNN_name.sql` exactly once, each in its own transaction with its row in `schema_migrations`;
   a gap or a duplicate number is refused before the database is touched. The schema exists only as numbered migrations, and once
   the service runs they are only ever added. CI: `.github/workflows/server.yml` on Linux with `postgres:18`
-  `src/mcp.ts` (`mcpHandler`, C4a): stateless MCP handler with the read tools `get_now` and `list_tasks`, account only from `authInfo`; C4b-1 adds `capture_task`, `get_order_result` (`getResult` in `src/orders.ts`: unknown, waiting, claimed, result; another account's order is unknown); C4b-2 adds `complete_task`, `set_due` (expected state from the transcript, `generatedAt` required); no port and no sign-in yet
+  `src/mcp.ts` (`mcpHandler`, C4a): stateless MCP handler with the read tools `get_now` and `list_tasks`, account only from `authInfo`; C4b-1 adds `capture_task`, `get_order_result` (`getResult` in `src/orders.ts`: unknown, waiting, claimed, result; another account's order is unknown); C4b-2 adds `complete_task`, `set_due` (expected state from the transcript, `generatedAt` required); no sign-in yet
+  `src/main.ts` (#796 S1): process entry with a route table (`/health`, `/mcp`), pool with an error listener, migrate with retry at
+  start, `/health` 200 only after migrate + `SELECT 1`, 503 at > 50 % 5xx in 5 min (≥ 20 requests); `npm start` in `server/`
   `migrations/002_accounts.sql` (#615 S1): accounts keyed by `apple_sub`, sessions stored only as SHA-256, a column for the encrypted Apple refresh token;
   `src/accounts.ts` (`findOrCreate`, `createSession`, `resolveSession`, `endSession`, `deleteAccount`: one transaction, removes the account's transcript, orders and results too); nothing calls it yet
 
