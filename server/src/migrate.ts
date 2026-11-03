@@ -39,12 +39,20 @@ export async function loadMigrations(dir: string): Promise<Migration[]> {
   return migrations;
 }
 
+// The migrate run lock: one session advisory lock for the whole service, so two processes starting at once
+// never apply the same migration twice; a second run waits here and then finds everything done.
+export const MIGRATE_LOCK_ID = 7_960_613_001;
+
+// Set when a ROLLBACK or the unlock failed: the connection is unusable and release(error) makes pg discard it.
+type Run = { broken: Error | boolean };
+
+function asBroken(error: unknown): Error | boolean {
+  return error instanceof Error ? error : true;
+}
+
 // One transaction per migration: its SQL and its row in schema_migrations commit together or not at all.
 // A migration never steers its own transaction: no BEGIN or COMMIT inside the file.
-async function applyOne(pool: pg.Pool, migration: Migration): Promise<void> {
-  const client = await pool.connect();
-  // A failed ROLLBACK leaves the connection unusable; handing the error to release makes pg discard it.
-  let broken: Error | boolean = false;
+async function applyOne(client: pg.PoolClient, migration: Migration, run: Run): Promise<void> {
   try {
     await client.query("BEGIN");
     await client.query(migration.sql);
@@ -54,27 +62,47 @@ async function applyOne(pool: pg.Pool, migration: Migration): Promise<void> {
     try {
       await client.query("ROLLBACK");
     } catch (rollbackError) {
-      broken = rollbackError instanceof Error ? rollbackError : true;
+      run.broken = asBroken(rollbackError);
     }
     throw error;
-  } finally {
-    client.release(broken);
   }
 }
 
-// Applies every migration not yet remembered and returns the names applied in this run, in order.
-export async function migrate(pool: pg.Pool, dir: string): Promise<string[]> {
-  const migrations = await loadMigrations(dir);
-  await pool.query(
+// Reads the state only after the lock, so a run that waited sees everything the first one applied.
+async function applyPending(client: pg.PoolClient, migrations: Migration[], run: Run): Promise<string[]> {
+  await client.query(
     "CREATE TABLE IF NOT EXISTS schema_migrations (name text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())",
   );
-  const result = await pool.query<{ name: string }>("SELECT name FROM schema_migrations");
+  const result = await client.query<{ name: string }>("SELECT name FROM schema_migrations");
   const done = new Set(result.rows.map((row) => row.name));
   const applied: string[] = [];
   for (const migration of migrations) {
     if (done.has(migration.name)) continue;
-    await applyOne(pool, migration);
+    await applyOne(client, migration, run);
     applied.push(migration.name);
   }
   return applied;
+}
+
+// Applies every migration not yet remembered and returns the names applied in this run, in order.
+// One client holds the lock for the whole run; a failed unlock never hides the original error. A discarded
+// connection ends its session, and with it Postgres releases the lock.
+export async function migrate(pool: pg.Pool, dir: string): Promise<string[]> {
+  const migrations = await loadMigrations(dir);
+  const client = await pool.connect();
+  const run: Run = { broken: false };
+  try {
+    await client.query("SELECT pg_advisory_lock($1)", [MIGRATE_LOCK_ID]);
+    try {
+      return await applyPending(client, migrations, run);
+    } finally {
+      if (run.broken === false) {
+        await client.query("SELECT pg_advisory_unlock($1)", [MIGRATE_LOCK_ID]).catch((unlockError: unknown) => {
+          run.broken = asBroken(unlockError);
+        });
+      }
+    }
+  } finally {
+    client.release(run.broken);
+  }
 }

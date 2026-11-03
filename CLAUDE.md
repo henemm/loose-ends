@@ -459,6 +459,10 @@ not scope creep on the current one.
   `src/mcp.ts` (`mcpHandler`, C4a): stateless MCP handler with the read tools `get_now` and `list_tasks`, account only from `authInfo`; C4b-1 adds `capture_task`, `get_order_result` (`getResult` in `src/orders.ts`: unknown, waiting, claimed, result; another account's order is unknown); C4b-2 adds `complete_task`, `set_due` (expected state from the transcript, `generatedAt` required); no sign-in yet
   `src/main.ts` (#796 S1): process entry with a route table (`/health`, `/mcp`), pool with an error listener, migrate with retry at
   start, `/health` 200 only after migrate + `SELECT 1`, 503 at > 50 % 5xx in 5 min (≥ 20 requests); `npm start` in `server/`
+  `migrate` (#796 S3) runs on one client under the session advisory lock `MIGRATE_LOCK_ID` and reads the state only after it, so
+  parallel starts apply each migration once; a broken connection is discarded, which frees the lock. `server/Dockerfile` (#796 S2):
+  `node:26-slim`, user `node`, `npm ci --omit=dev`, no `HEALTHCHECK` (Compose and `monitor.sh` check `/health`); the CI job `image`
+  starts it against Postgres 18 (health, log without secrets, SIGTERM → exit 0). Deploy on `rennwienix` is S4
   `migrations/002_accounts.sql` (#615 S1): accounts keyed by `apple_sub`, sessions stored only as SHA-256, a column for the encrypted Apple refresh token;
   `src/accounts.ts` (`findOrCreate`, `createSession`, `resolveSession`, `endSession`, `deleteAccount`: one transaction, removes the account's transcript, orders and results too); nothing calls it yet
   `src/apple.ts` (#615 S2a): `loadAppleConfig` (five `APPLE_*` variables, an error names only the variable) and `verifyIdentityToken` (RS256 only, iss, aud exact, exp/iat with 60 s leeway, nonce as SHA-256; key lookup passed in, JWKS cache in S2b); nothing calls it yet
