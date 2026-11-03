@@ -146,3 +146,10 @@ testreise-abnahme-223-erfunden-2027 ok
 testreise-karten-225-erfunden-2027 ok
 http-Loose-Ends ok
 Alle vier Frieda-Zustände wieder ok, http-Loose-Ends ok. Erneuter Abruf: {"status":"ok","db":"up","migrated":true,"errorRate":0,"requests":0} HTTP 200
+
+## Nachtrag Phase 7 — Zeile „Loose-Ends (200)“ (2026-11-03T17:03Z, Haupt-Checkout main 69c7a62 = Merge #380)
+Der Lauf 1 oben lief ohne --status; die Statuszeilen schreibt monitor.sh nur im Statusmodus. Der Statusmodus schreibt
+keinen Zustand und sendet nichts (monitor.sh: „Im Status-Modus kein State schreiben und keine Alerts senden“).
+$ ssh rennwienix 'cd /home/hem/henemm-infra && ./scripts/monitor.sh --status | grep Loose-Ends'
+  ✓ Kotoba (200)
+  ✓ Loose-Ends (200)

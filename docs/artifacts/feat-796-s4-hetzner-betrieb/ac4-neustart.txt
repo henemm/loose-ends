@@ -45,6 +45,10 @@ $ ps -o pid,cmd -p 4165768
 4165768 node src/main.ts
 $ grep -c <Container-ID von loose-ends-server> /proc/4165768/cgroup
 1
+  (Nachtrag Phase 7, 2026-11-03T17:05Z: Im Lauf stand die volle ID des damaligen Containers; beim Abschreiben wurde
+  sie durch diesen Platzhalter ersetzt. Sie ist nicht mehr abrufbar: der Stapel wurde um 16:57:59Z aus dem
+  Haupt-Checkout neu angelegt (endstand-haupt-checkout.txt), heute ID d2ea2533ddb3…, restarts=0. Unabhängig davon
+  belegen die ps-Zeile oben (PID 4165768 = node src/main.ts) und StartedAt/restarts=1 danach den Neustart.)
 [2026-11-03T15:37:08.173Z] $ sudo kill -9 4165768
 [2026-11-03T15:37:10.230Z] /health 200 nach 2 s
 [2026-11-03T15:37:10.233Z] $ curl http://127.0.0.1:8780/health → {"status":"ok","db":"up","migrated":true,"errorRate":0,"requests":0} HTTP 200

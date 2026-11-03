@@ -33,3 +33,9 @@ $ git diff --stat origin/main ; git status --short --untracked-files=all (ohne .
 ?? docs/artifacts/feat-796-s4-hetzner-betrieb/test-green-output.txt
 
 Treffer in server/, project.yml, .github/, *.swift: 0
+
+## Nachtrag Phase 7 (2026-11-03T17:05Z) — aktueller Stand nach dem Festschreiben der Belege
+$ git diff --stat origin/main...HEAD | tail -1
+ 20 files changed, 1357 insertions(+)
+Alle 20 Dateien: CLAUDE.md (+1) und 19 Dateien unter docs/ (Spec, Context, Briefing, Belege). Keine Datei unter
+server/, .github/, kein project.yml, kein *.swift. Infra-PR #380 unverändert: 5 Dateien, +231/-0, monitor.sh +1/-0.
