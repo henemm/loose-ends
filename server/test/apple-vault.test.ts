@@ -161,11 +161,12 @@ test("store: blob gehört zum konto", async (t) => {
 test("silence", async (t) => {
   const out: unknown[] = [];
   const record = (...a: unknown[]) => { out.push(a); return true; };
+  const pool = await migrated(t);
+  const id = await findOrCreate(pool, "apple-sub-1");
+  // Mocks only after the setup: the test runner sends its own messages over stdout while setup is awaited.
   for (const name of ["log", "info", "warn", "error", "debug"] as const) t.mock.method(console, name, record);
   t.mock.method(process.stdout, "write", record);
   t.mock.method(process.stderr, "write", record);
-  const pool = await migrated(t);
-  const id = await findOrCreate(pool, "apple-sub-1");
   const results: unknown[] = [decryptToken(KEY, ID, blob()), decryptToken(KEY, ID, seal(""))];
   for (const [, args] of ATTACKS) results.push(decryptToken(...args()));
   for (const [, value] of FOREIGN) results.push(decryptToken(KEY, ID, value()));
