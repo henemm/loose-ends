@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { generateKeyPairSync, randomBytes, sign, verify } from "node:crypto";
 import { loadAppleConfig } from "../src/apple.ts";
-import { clientSecret, redeemCode } from "../src/apple-client.ts";
+import { clientSecret, redeemCode, revokeToken } from "../src/apple-client.ts";
 
 type Doc = Record<string, unknown>;
 type Answer = (...a: unknown[]) => Response | Promise<Response>;
@@ -10,6 +10,7 @@ type Answer = (...a: unknown[]) => Response | Promise<Response>;
 const NOW = 1_800_000_000_000;
 const SEC = NOW / 1000;
 const URL_APPLE = "https://appleid.apple.com/auth/token";
+const URL_REVOKE = "https://appleid.apple.com/auth/revoke";
 const IDS = ["com.henning.looseends", "com.henning.looseends.connector"];
 const CODE = "GEHEIM-CODE";
 const TOKEN = "GEHEIM-TOKEN";
@@ -129,6 +130,22 @@ const UNAVAILABLE: [string, Answer][] = [
   }), { status })]),
 ];
 
+async function revoke(name: string, answer: Answer, clientId = IDS[0], url?: string) {
+  const r = rig(answer);
+  const result = await revokeToken(TOKEN, clientId, { config, fetch: r.fetch, now: () => NOW, ...(url ? { url } : {}) });
+  seen.push({ name, text: JSON.stringify(result) });
+  for (const a of r.args) secrets.push(new URLSearchParams(String((a[1] as RequestInit).body)).get("client_secret") ?? "");
+  return { r, result: result as Doc };
+}
+const MISUSE_REVOKE: [string, unknown, string][] = [
+  ["revoke: leeres Token", "", IDS[0]],
+  ["revoke: Token Zahl", 42, IDS[0]],
+  ["revoke: Token undefined", undefined, IDS[0]],
+  ["revoke: fremde ID", TOKEN, "com.fremd.app"],
+  ["revoke: anders geschrieben", TOKEN, "Com.Henning.LooseEnds"],
+];
+const REVOKE_NET = UNAVAILABLE.filter(([name]) => name !== "Rumpf bricht ab 200");
+
 test("secret: kopf, nutzlast, signatur", () => {
   for (const id of IDS) checkSecret(clientSecret(config, id, NOW), id);
   checkSecret(clientSecret(config, IDS[0], NOW + 999), IDS[0], NOW + 999);
@@ -219,6 +236,69 @@ test("redeem: unavailable und zeitlimit (Fallliste)", async (t) => {
   assert.ok(limits[0] > 0 && limits[0] <= 5000);
 });
 
+test("revoke: anfrage", async () => {
+  for (const [id, url] of [[IDS[0], undefined], [IDS[1], "https://stub.test/revoke"]] as const) {
+    const { r } = await revoke(`revoke anfrage ${id}`, () => json(""), id, url);
+    assert.equal(r.calls, 1);
+    const [target, init] = r.args[0] as [string, RequestInit];
+    assert.equal(target, url ?? URL_REVOKE);
+    assert.equal(init.method, "POST");
+    assert.deepEqual(init.headers, { "content-type": "application/x-www-form-urlencoded" });
+    assert.ok(init.signal instanceof AbortSignal && !init.signal.aborted);
+    const form = new URLSearchParams(String(init.body));
+    assert.deepEqual([...form.keys()].sort(), ["client_id", "client_secret", "token", "token_type_hint"]);
+    assert.equal(form.get("token_type_hint"), "refresh_token");
+    assert.equal(form.get("client_id"), id);
+    assert.equal(form.get("token"), TOKEN);
+    checkSecret(form.get("client_secret") ?? "", id);
+  }
+});
+
+test("revoke: erfolg", async () => {
+  const bodies: [string, Answer][] = [["leer", () => json("")], ["JSON", () => json({ a: 1 })], ["kein JSON", () => json("GEHEIM-123 <html>")], ["bricht ab", UNAVAILABLE[4][1]]];
+  for (const [name, answer] of bodies) assert.deepEqual((await revoke(`revoke erfolg ${name}`, answer)).result, { ok: true }, name);
+});
+
+test("revoke: apple-fehler und status (Fallliste)", async () => {
+  for (const [name, answer] of STATUS) {
+    const known = /^40[01] (\w+)$/.exec(name);
+    const reason = known && APPLE_ERRORS.includes(known[1]) ? `apple:${known[1]}` : "apple_status";
+    assert.deepEqual((await revoke(`revoke ${name}`, answer)).result, { ok: false, reason }, name);
+  }
+});
+
+test("revoke: unavailable und zeitlimit (Fallliste)", async (t) => {
+  for (const [name, answer] of REVOKE_NET) assert.deepEqual((await revoke(`revoke ${name}`, answer)).result, { ok: false, reason: "unavailable" }, name);
+  const limits: number[] = [];
+  const ctrl = new AbortController();
+  t.mock.method(AbortSignal, "timeout", (ms: number) => { limits.push(ms); return ctrl.signal; });
+  const hang: Answer = (_url, init) => new Promise<Response>((_, reject) => {
+    const signal = (init as RequestInit).signal as AbortSignal;
+    signal.addEventListener("abort", () => reject(signal.reason));
+  });
+  const pending = revoke("revoke hängt bis zum Zeitlimit", hang);
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(ctrl.signal.aborted, false);
+  ctrl.abort(new DOMException("GEHEIM-123", "TimeoutError"));
+  assert.deepEqual((await pending).result, { ok: false, reason: "unavailable" });
+  t.mock.restoreAll();
+  assert.equal(limits.length, 1);
+  assert.ok(limits[0] > 0 && limits[0] <= 5000);
+});
+
+test("revoke fehlbedienung: wirft ohne netz", async () => {
+  const leaks = (m: string) => ["GEHEIM", "com.fremd", "COM.", "Com.", PEM.split("\n")[1]].some((x) => m.includes(x));
+  const nan = rig();
+  await assert.rejects(async () => revokeToken(TOKEN, IDS[0], { config, fetch: nan.fetch, now: () => NaN }), (e: Error) => !leaks(e.message));
+  assert.equal(nan.calls, 0);
+  for (const [name, token, id] of MISUSE_REVOKE) {
+    const r = rig();
+    await assert.rejects(async () => revokeToken(token as string, id, { config, fetch: r.fetch, now: () => NOW }),
+      (e: Error) => { seen.push({ name, text: e.message }); return !leaks(e.message) && !e.message.includes(id); }, name);
+    assert.equal(r.calls, 0, name);
+  }
+});
+
 test("reason: feste menge, keine geheimnisse", () => {
   assert.ok(seen.length >= 60 && secrets.length >= 4);
   const parts = secrets.flatMap((s) => [s, ...s.split(".")]).filter((s) => s.length > 8);
@@ -242,6 +322,18 @@ test("silence", async (t) => {
   for (const [, code, id] of MISUSE_REDEEM) await redeemCode(code, id, { config, fetch: rig().fetch, now: () => NOW }).catch(() => null);
   for (const [name, answer] of [["ok", ok()] as [string, Answer], ...STATUS, ...MALFORMED, ...UNAVAILABLE]) await redeem(name, answer);
   for (const [name, token] of BAD_ID) await redeem(name, () => json(success({ id_token: token() })));
+  t.mock.restoreAll();
+  assert.deepEqual(out, []);
+});
+
+test("revoke: silence", async (t) => {
+  const out: unknown[] = [];
+  const record = (...a: unknown[]) => { out.push(a); return true; };
+  for (const name of ["log", "info", "warn", "error", "debug"] as const) t.mock.method(console, name, record);
+  t.mock.method(process.stdout, "write", record);
+  t.mock.method(process.stderr, "write", record);
+  for (const [, token, id] of MISUSE_REVOKE) await revokeToken(token as string, id, { config, fetch: rig().fetch, now: () => NOW }).catch(() => null);
+  for (const [name, answer] of [["ok", ok()] as [string, Answer], ...STATUS, ...UNAVAILABLE]) await revoke(name, answer);
   t.mock.restoreAll();
   assert.deepEqual(out, []);
 });
