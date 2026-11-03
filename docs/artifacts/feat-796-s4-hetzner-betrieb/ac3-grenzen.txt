@@ -1,0 +1,23 @@
+# AC-3 Speichergrenzen — 2026-11-03T14:58:08Z, per SSH auf rennwienix
+
+$ docker inspect --format "{{.HostConfig.Memory}} {{.HostConfig.MemorySwap}}" loose-ends-db
+536870912 536870912
+
+$ docker inspect --format "{{.HostConfig.Memory}} {{.HostConfig.MemorySwap}}" loose-ends-server
+402653184 402653184
+
+$ docker exec loose-ends-server printenv NODE_OPTIONS
+--max-old-space-size=256
+
+$ docker exec loose-ends-db psql -U looseends -d looseends -tAc "SHOW shared_buffers"
+128MB
+
+$ docker exec loose-ends-db psql -U looseends -d looseends -tAc "SHOW max_connections"
+20
+
+$ docker exec loose-ends-db postgres --version
+postgres (PostgreSQL) 18.6 (Debian 18.6-1.pgdg13+2)
+
+$ docker stats --no-stream loose-ends-db loose-ends-server
+loose-ends-db 50.32MiB / 512MiB
+loose-ends-server 61.5MiB / 384MiB

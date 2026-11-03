@@ -1,0 +1,258 @@
+# AC-7 Andere Dienste unberührt — ZWISCHENSTAND (vor certbot), Vergleich gegen ausgangsstand.txt (2026-11-03T13:48:21Z)
+
+## nginx: Port-80-Block installiert, nginx -t vorher/nachher, nur reload
+--- VORHER 2026-11-03T14:53:30Z
+$ sudo nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+https://frieda.henemm.com/gesund 200
+https://n8n.henemm.com 200
+$ systemctl show nginx -p ActiveEnterTimestamp -p MainPID
+MainPID=3859697
+ActiveEnterTimestamp=Wed 2026-10-28 06:34:35 UTC
+$ sudo install -m 644 ... /etc/nginx/sites-available/loose-ends.henemm.com; ln -s ... sites-enabled
+# Loose Ends (henemm/loose-ends#796): zunächst nur Port 80; certbot ergänzt 443 erst, wenn der A-Eintrag steht.
+# Vollständige Fassung: henemm-infra nginx/loose-ends.henemm.com.conf
+server {
+    listen 80;
+    listen [::]:80;
+    server_name loose-ends.henemm.com;
+    location / {
+        return 404;
+    }
+}
+$ sudo nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+$ sudo systemctl reload nginx
+reload rc=0
+--- NACHHER 2026-11-03T14:53:33Z
+$ sudo nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+https://frieda.henemm.com/gesund 200
+https://n8n.henemm.com 200
+$ systemctl show nginx -p ActiveEnterTimestamp -p MainPID
+MainPID=3859697
+ActiveEnterTimestamp=Wed 2026-10-28 06:34:35 UTC
+--- Port 80 lokal: 404 (Host loose-ends.henemm.com)
+--- /health über Port 80 lokal: 404
+
+## Zwischenstand 2026-11-03T15:19:39Z
+$ StartedAt aller laufenden Container
+/loose-ends-server 2026-11-03T15:02:31.553116554Z
+/loose-ends-db 2026-11-03T15:11:38.740976025Z
+/ops-api-1 2026-11-01T09:55:05.29335383Z
+/obsidian-mcp-obsidian-mcp-1 2026-11-01T09:14:52.80026772Z
+/n8n 2026-11-01T09:12:37.912587913Z
+/obsidian-mcp-obsidian-sync-1 2026-10-19T16:09:14.828065029Z
+/stalwart-mail 2026-10-21T04:52:42.272772642Z
+/nightjet-monitor 2026-10-16T18:14:53.710459401Z
+/watchtower 2026-10-16T18:14:53.711886957Z
+$ systemctl show nginx -p ActiveEnterTimestamp -p MainPID
+MainPID=3859697
+ActiveEnterTimestamp=Wed 2026-10-28 06:34:35 UTC
+$ systemctl show docker -p ActiveEnterTimestamp
+ActiveEnterTimestamp=Fri 2026-10-16 18:14:54 UTC
+$ sudo nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+https://frieda.henemm.com/gesund 200
+https://n8n.henemm.com 200
+
+## Vergleich StartedAt der fremden Container (ohne loose-ends-*), lokal ausgewertet
+$ diff <ausgangsstand> <jetzt>
+(kein Unterschied: alle 7 fremden Container mit identischem StartedAt)
+
+## Ergebnis Zwischenstand
+- nginx ActiveEnterTimestamp unverändert (Wed 2026-10-28 06:34:35 UTC), MainPID unverändert 3859697: nur reload, kein restart.
+- Docker-Daemon ActiveEnterTimestamp Fri 2026-10-16 18:14:54 UTC: kein Neustart.
+- frieda /gesund und n8n vor und nach dem Reload und jetzt 200 (Ausgangswert 200).
+- Offen bis DNS: certbot mit zweitem nginx -t/reload und die Prüfungen danach (zweiter Durchgang dieses Belegs).
+
+# ZWEITER DURCHGANG (certbot und vollständige Datei) — Vergleich gegen ausgangsstand.txt
+
+## Schritt 1: AC-7-Vorher und certbot (certbot --nginx lädt nginx selbst per reload neu)
+--- VORHER certbot 2026-11-03T15:46:01Z
+$ sudo nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+https://frieda.henemm.com/gesund 200
+https://n8n.henemm.com 200
+$ systemctl show nginx -p ActiveEnterTimestamp -p MainPID
+MainPID=3859697
+ActiveEnterTimestamp=Wed 2026-10-28 06:34:35 UTC
+$ StartedAt aller laufenden Container
+/loose-ends-server 2026-11-03T15:37:08.611761457Z
+/loose-ends-db 2026-11-03T15:11:38.740976025Z
+/ops-api-1 2026-11-01T09:55:05.29335383Z
+/obsidian-mcp-obsidian-mcp-1 2026-11-01T09:14:52.80026772Z
+/n8n 2026-11-01T09:12:37.912587913Z
+/obsidian-mcp-obsidian-sync-1 2026-10-19T16:09:14.828065029Z
+/stalwart-mail 2026-10-21T04:52:42.272772642Z
+/nightjet-monitor 2026-10-16T18:14:53.710459401Z
+/watchtower 2026-10-16T18:14:53.711886957Z
+$ sudo certbot --version
+certbot 2.9.0
+[2026-11-03T15:46:01Z] $ sudo certbot --nginx -d loose-ends.henemm.com --non-interactive
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Requesting a certificate for loose-ends.henemm.com
+
+Successfully received certificate.
+Certificate is saved at: /etc/letsencrypt/live/loose-ends.henemm.com/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/loose-ends.henemm.com/privkey.pem
+This certificate expires on 2027-02-01.
+These files will be updated when the certificate renews.
+Certbot has set up a scheduled task to automatically renew this certificate in the background.
+
+Deploying certificate
+Successfully deployed certificate for loose-ends.henemm.com to /etc/nginx/sites-enabled/loose-ends.henemm.com
+Congratulations! You have successfully enabled HTTPS on https://loose-ends.henemm.com
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+If you like Certbot, please consider supporting our work by:
+ * Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
+ * Donating to EFF:                    https://eff.org/donate-le
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(certbot Exit 0)
+$ cat /etc/nginx/sites-available/loose-ends.henemm.com (nach certbot)
+# Loose Ends (henemm/loose-ends#796): zunächst nur Port 80; certbot ergänzt 443 erst, wenn der A-Eintrag steht.
+# Vollständige Fassung: henemm-infra nginx/loose-ends.henemm.com.conf
+server {
+    server_name loose-ends.henemm.com;
+    location / {
+        return 404;
+    }
+
+    listen [::]:443 ssl; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/loose-ends.henemm.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/loose-ends.henemm.com/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+server {
+    if ($host = loose-ends.henemm.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80;
+    listen [::]:80;
+    server_name loose-ends.henemm.com;
+    return 404; # managed by Certbot
+
+
+}--- NACH certbot 2026-11-03T15:46:17Z
+$ sudo nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+https://frieda.henemm.com/gesund 200
+https://n8n.henemm.com 200
+$ systemctl show nginx -p ActiveEnterTimestamp -p MainPID
+MainPID=3859697
+ActiveEnterTimestamp=Wed 2026-10-28 06:34:35 UTC
+$ StartedAt aller laufenden Container
+/loose-ends-server 2026-11-03T15:37:08.611761457Z
+/loose-ends-db 2026-11-03T15:11:38.740976025Z
+/ops-api-1 2026-11-01T09:55:05.29335383Z
+/obsidian-mcp-obsidian-mcp-1 2026-11-01T09:14:52.80026772Z
+/n8n 2026-11-01T09:12:37.912587913Z
+/obsidian-mcp-obsidian-sync-1 2026-10-19T16:09:14.828065029Z
+/stalwart-mail 2026-10-21T04:52:42.272772642Z
+/nightjet-monitor 2026-10-16T18:14:53.710459401Z
+/watchtower 2026-10-16T18:14:53.711886957Z
+
+## Schritt 2: vollständige Repo-Fassung installiert, nginx -t, reload, AC-7-Nachher
+Angleichung: die Repo-Fassung ordnet den von certbot verwalteten Port-80-Block wie certbot (listen vor server_name);
+443-Zeilen sind zeichengleich mit certbots Ausgabe. Lokaler Infra-Klon und Server-Worktree tragen dieselbe Fassung.
+Ort der Zone loose_ends_health: Kopf von /etc/nginx/sites-available/loose-ends.henemm.com (Zeile 7), nicht conf.d/limit-req.conf.
+--- 2026-11-03T15:46:45Z Vollständige Datei installieren
+$ sudo cp /etc/nginx/sites-available/loose-ends.henemm.com /home/hem/backups/nginx-loose-ends.henemm.com.certbot-20261103T154645Z (Stand nach certbot, Sicherung)
+$ diff <Stand nach certbot> <Repo-Fassung>
+1,2c1,8
+< # Loose Ends (henemm/loose-ends#796): zunächst nur Port 80; certbot ergänzt 443 erst, wenn der A-Eintrag steht.
+< # Vollständige Fassung: henemm-infra nginx/loose-ends.henemm.com.conf
+---
+> # Loose Ends: Dienst für Claude (henemm/loose-ends#796, henemm-infra#336). Container loose-ends-server auf 127.0.0.1:8780.
+> # Nach außen geht nur /health. /mcp und alles andere bleiben 404, bis Anmeldung (loose-ends#615) und
+> # Konnektor (loose-ends#621) da sind; erst dann wird hier geöffnet.
+> # Installiert als /etc/nginx/sites-available/loose-ends.henemm.com (Link in sites-enabled); 443-Blöcke von certbot.
+> 
+> # Eigene Zone hier statt in conf.d/limit-req.conf (Schnitt auf fünf Dateien begrenzt); monitor.sh fragt alle 5 min.
+> limit_req_zone $binary_remote_addr zone=loose_ends_health:1m rate=30r/m;
+> 
+4a11,31
+> 
+>     include snippets/security-headers.conf;
+> 
+>     # BREACH-Mitigation wie Frieda
+>     gzip off;
+> 
+>     location = /health {
+>         limit_req zone=loose_ends_health burst=10 nodelay;
+>         limit_req_status 429;
+>         proxy_pass http://127.0.0.1:8780;
+>         proxy_set_header Host $host;
+>         proxy_set_header X-Real-IP $remote_addr;
+>         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+>         proxy_set_header X-Forwarded-Proto $scheme;
+>     }
+> 
+>     # Gesperrt bis loose-ends#615 (Anmeldung) und #621 (Konnektor)
+>     location = /mcp {
+>         return 404;
+>     }
+> 
+30c57
+< }
+\ No newline at end of file
+---
+> }
+$ sudo install -m 644 -o root -g root /home/hem/henemm-infra-le796/nginx/loose-ends.henemm.com.conf /etc/nginx/sites-available/loose-ends.henemm.com
+$ sudo nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+$ sudo systemctl reload nginx
+(reload Exit 0)
+$ diff /home/hem/henemm-infra-le796/nginx/loose-ends.henemm.com.conf /etc/nginx/sites-available/loose-ends.henemm.com (installiert vs. Repo-Fassung)
+(identisch)
+$ sha256sum Repo-Fassung / installiert
+3cd64dca75cb2fab
+3cd64dca75cb2fab
+$ grep -rn loose_ends_health /etc/nginx/ (Ort der Zone)
+/etc/nginx/sites-available/loose-ends.henemm.com:7:limit_req_zone $binary_remote_addr zone=loose_ends_health:1m rate=30r/m;
+/etc/nginx/sites-available/loose-ends.henemm.com:18:        limit_req zone=loose_ends_health burst=10 nodelay;
+--- NACHHER 2026-11-03T15:46:47Z
+$ sudo nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+https://frieda.henemm.com/gesund 200
+https://n8n.henemm.com 200
+$ systemctl show nginx -p ActiveEnterTimestamp -p MainPID
+MainPID=3859697
+ActiveEnterTimestamp=Wed 2026-10-28 06:34:35 UTC
+$ systemctl show docker -p ActiveEnterTimestamp
+ActiveEnterTimestamp=Fri 2026-10-16 18:14:54 UTC
+$ StartedAt aller laufenden Container
+/loose-ends-server 2026-11-03T15:37:08.611761457Z
+/loose-ends-db 2026-11-03T15:11:38.740976025Z
+/ops-api-1 2026-11-01T09:55:05.29335383Z
+/obsidian-mcp-obsidian-mcp-1 2026-11-01T09:14:52.80026772Z
+/n8n 2026-11-01T09:12:37.912587913Z
+/obsidian-mcp-obsidian-sync-1 2026-10-19T16:09:14.828065029Z
+/stalwart-mail 2026-10-21T04:52:42.272772642Z
+/nightjet-monitor 2026-10-16T18:14:53.710459401Z
+/watchtower 2026-10-16T18:14:53.711886957Z
+
+## Vergleich StartedAt der fremden Container nach Schritt 2 (ohne loose-ends-*), lokal ausgewertet
+$ diff <ausgangsstand> <jetzt>
+(kein Unterschied: alle 7 fremden Container mit identischem StartedAt)
+
+## Ergebnis AC-7: erfüllt
+- nginx -t vor und nach jedem Reload grün (Port-80-Block, certbot, vollständige Datei).
+- frieda /gesund und n8n zu jedem Zeitpunkt 200 (Ausgangswert 200).
+- nginx ActiveEnterTimestamp Wed 2026-10-28 06:34:35 UTC und MainPID 3859697 unverändert: nur reload, kein restart.
+- Docker-Daemon ActiveEnterTimestamp Fri 2026-10-16 18:14:54 UTC: kein Neustart. StartedAt aller 7 fremden Container unverändert.

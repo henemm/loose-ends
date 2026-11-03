@@ -191,6 +191,11 @@ Dieser Schnitt ändert Konfiguration und Betrieb. **Keine Unit- und keine UI-Tes
 - [ ] `test-proof CaptureSmokeTests`-Beleg für `phase8_complete` registriert
 - [ ] #796 kommentiert (Stand S4a, S4b offen), Board-Karte aktuell; Issue bleibt offen
 
+## Known Limitations
+
+- **AC-4, Auslöser des Absturzes:** `docker kill loose-ends-server` taugt nicht, um die Restart-Policy zu belegen. Docker wertet es als manuelles Anhalten, `unless-stopped` startet den Container danach nicht neu (Befund 2026-11-03, Docker Engine 29.9.1: Exit 137, `RestartCount` 0, Status `exited`; Doku: https://docs.docker.com/engine/containers/start-containers-automatically/). Der Absturz wird deshalb mit `kill -9` der Prozess-ID des Containers auf dem Host nachgestellt (`docker inspect -f '{{.State.Pid}}'`); Beleg in `ac4-neustart.txt`, der `docker kill`-Versuch steht dort als Befund.
+
 ## Changelog
 
 - 2026-11-03: Initial spec created (Schnitt S4a)
+- 2026-11-03: Known Limitations: Auslöser für AC-4 Teil 2 (`kill -9` der Prozess-ID statt `docker kill`)

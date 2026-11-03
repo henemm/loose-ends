@@ -1,0 +1,18 @@
+# Endstand aus dem Haupt-Checkout — 2026-11-03T16:58:21Z
+Deploy-Lauf aus Haupt-Checkout: Exit 0; [deploy-loose-ends] /health 200: {"status":"ok","db":"up","migrated":true,"errorRate":0,"requests":0} [deploy-loose-ends] fertig: loose-ends-server:e62f0d5 
+StartedAt vorher: 2026-11-03T16:57:59.531564728Z 2026-11-03T16:57:48.875568548Z 
+StartedAt nachher: 2026-11-03T16:57:59.531564728Z 2026-11-03T16:57:48.875568548Z 
+Container unverändert
+Migrationen in der DB: 2
+Prüf-Worktree entfernt
+/home/hem/henemm-infra                                                 69c7a62 [main]
+/home/hem/henemm-infra-wt-2047                                         3ac7102 [gregor-2047-deploy-idempotenz]
+/home/hem/henemm-infra-wt-2439                                         544008e [feat/gregor-2439-missed-total]
+/home/hem/henemm-infra/.claude/worktrees/encapsulated-purring-crystal  93e3bb3 [infra-einarbeiten-path]
+Arbeitsbaum Haupt-Checkout (getrackt): 0 Änderungen
+700 loose-ends/secrets
+600 loose-ends/secrets/db-password
+600 loose-ends/secrets/server.env
+loose-ends/.gitignore:1:secrets/	loose-ends/secrets/db-password
+Monitor-Zeile: 1
+Zustand http-Loose-Ends: ok

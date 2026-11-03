@@ -1,0 +1,26 @@
+# AC-1 Health von außen — 2026-11-03T15:47:03Z, Mac des Workflows (nicht rennwienix), curl ohne -k
+
+$ dig +short loose-ends.henemm.com @1.1.1.1
+178.104.143.19
+
+$ curl --silent --show-error --fail https://loose-ends.henemm.com/health
+{"status":"ok","db":"up","migrated":true,"errorRate":0,"requests":0}
+(Exit 0)
+
+$ curl -sS -o /dev/null -w '%{http_code} %{ssl_verify_result}\n' https://loose-ends.henemm.com/health   (ssl_verify_result 0 = ok)
+200 0
+
+$ curl -v https://loose-ends.henemm.com/health 2>&1 | grep -E 'SSL certificate verify|subject:|issuer:|expire date:|start date:|^< HTTP|SSL connection'
+* SSL connection using TLSv1.3 / AEAD-CHACHA20-POLY1305-SHA256 / [blank] / UNDEF
+*  subject: CN=loose-ends.henemm.com
+*  start date: Nov  3 14:47:41 2026 GMT
+*  expire date: Feb  1 14:47:40 2027 GMT
+*  issuer: C=US; O=Let's Encrypt; CN=YE1
+*  SSL certificate verify ok.
+< HTTP/1.1 200 OK
+
+$ openssl s_client -connect loose-ends.henemm.com:443 -servername loose-ends.henemm.com | openssl x509 -noout -issuer -subject -dates
+issuer=C=US, O=Let's Encrypt, CN=YE1
+subject=CN=loose-ends.henemm.com
+notBefore=Nov  3 14:47:41 2026 GMT
+notAfter=Feb  1 14:47:40 2027 GMT
