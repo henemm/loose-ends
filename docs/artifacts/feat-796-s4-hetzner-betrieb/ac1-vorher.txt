@@ -1,0 +1,11 @@
+# AC-1 Vorher-Nachweis (RED) — 2026-11-03T13:48:19Z, von außerhalb des Servers (Mac des Workflows)
+
+$ dig +short loose-ends.henemm.com
+(Exit 0; leere Ausgabe = kein A-Eintrag)
+
+$ dig +short loose-ends.henemm.com @1.1.1.1
+(Exit 0)
+
+$ curl --silent --show-error --fail --max-time 15 https://loose-ends.henemm.com/health
+curl: (6) Could not resolve host: loose-ends.henemm.com
+(Exit 6)

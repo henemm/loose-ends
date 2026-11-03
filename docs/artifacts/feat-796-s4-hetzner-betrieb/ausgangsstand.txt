@@ -1,0 +1,95 @@
+# Ausgangsstand rennwienix vor S4a (für AC-2 und AC-7) — 2026-11-03T13:48:21Z, nur lesend per SSH
+
+$ hostname; date
+Rennwienix
+Tue Nov  3 01:48:23 PM UTC 2026
+
+$ free -m
+               total        used        free      shared  buff/cache   available
+Mem:            7745        3912         163          16        3996        3833
+Swap:           2047        1407         640
+
+$ df -h /
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       150G  125G   20G  87% /
+
+$ ss -ltn
+State  Recv-Q Send-Q Local Address:Port  Peer Address:PortProcess
+LISTEN 0      2048       127.0.0.1:8000       0.0.0.0:*          
+LISTEN 0      2048       127.0.0.1:8001       0.0.0.0:*          
+LISTEN 0      4096       127.0.0.1:8100       0.0.0.0:*          
+LISTEN 0      4096       127.0.0.1:8090       0.0.0.0:*          
+LISTEN 0      4096       127.0.0.1:8091       0.0.0.0:*          
+LISTEN 0      4096       127.0.0.1:8080       0.0.0.0:*          
+LISTEN 0      4096       127.0.0.1:8082       0.0.0.0:*          
+LISTEN 0      4096      127.0.0.54:53         0.0.0.0:*          
+LISTEN 0      4096       127.0.0.1:44181      0.0.0.0:*          
+LISTEN 0      5          127.0.0.1:3457       0.0.0.0:*          
+LISTEN 0      511        127.0.0.1:3000       0.0.0.0:*          
+LISTEN 0      511        127.0.0.1:3001       0.0.0.0:*          
+LISTEN 0      4096       127.0.0.1:5678       0.0.0.0:*          
+LISTEN 0      5          127.0.0.1:9876       0.0.0.0:*          
+LISTEN 0      4096   127.0.0.53%lo:53         0.0.0.0:*          
+LISTEN 0      5          127.0.0.1:8771       0.0.0.0:*          
+LISTEN 0      5          127.0.0.1:8772       0.0.0.0:*          
+LISTEN 0      5          127.0.0.1:8773       0.0.0.0:*          
+LISTEN 0      5          127.0.0.1:8795       0.0.0.0:*          
+LISTEN 0      4096         0.0.0.0:587        0.0.0.0:*          
+LISTEN 0      4096         0.0.0.0:993        0.0.0.0:*          
+LISTEN 0      2048       127.0.0.1:5050       0.0.0.0:*          
+LISTEN 0      4096         0.0.0.0:22         0.0.0.0:*          
+LISTEN 0      4096         0.0.0.0:25         0.0.0.0:*          
+LISTEN 0      511          0.0.0.0:80         0.0.0.0:*          
+LISTEN 0      4096       127.0.0.1:8443       0.0.0.0:*          
+LISTEN 0      511          0.0.0.0:443        0.0.0.0:*          
+LISTEN 0      4096         0.0.0.0:465        0.0.0.0:*          
+LISTEN 0      4096            [::]:587           [::]:*          
+LISTEN 0      4096            [::]:993           [::]:*          
+LISTEN 0      4096            [::]:22            [::]:*          
+LISTEN 0      4096            [::]:25            [::]:*          
+LISTEN 0      511             [::]:80            [::]:*          
+LISTEN 0      511             [::]:443           [::]:*          
+LISTEN 0      4096            [::]:465           [::]:*          
+
+$ docker ps --format ...
+ops-api-1	kotoba-line-server	Up 2 days (healthy)	127.0.0.1:8080->8080/tcp
+obsidian-mcp-obsidian-mcp-1	obsidian-mcp-local:2ac6c680b185-r2	Up 2 days (healthy)	127.0.0.1:8100->8000/tcp
+n8n	n8nio/n8n:2.45.7	Up 2 days	127.0.0.1:5678->5678/tcp
+obsidian-mcp-obsidian-sync-1	3444bbba908b	Up 2 weeks	
+stalwart-mail	stalwartlabs/stalwart:v0.16.27	Up 13 days (healthy)	110/tcp, 0.0.0.0:25->25/tcp, [::]:25->25/tcp, 0.0.0.0:465->465/tcp, [::]:465->465/tcp, 0.0.0.0:587->587/tcp, [::]:587->587/tcp, 143/tcp, 995/tcp, 0.0.0.0:993->993/tcp, [::]:993->993/tcp, 4190/tcp, 127.0.0.1:8443->443/tcp, 127.0.0.1:8082->8080/tcp
+nightjet-monitor	oebb-nightjet-monitor-nightjet-monitor	Up 2 weeks	
+watchtower	containrrr/watchtower:1.7.1	Up 2 weeks (healthy)	
+
+$ StartedAt aller laufenden Container
+/ops-api-1 2026-11-01T09:55:05.29335383Z
+/obsidian-mcp-obsidian-mcp-1 2026-11-01T09:14:52.80026772Z
+/n8n 2026-11-01T09:12:37.912587913Z
+/obsidian-mcp-obsidian-sync-1 2026-10-19T16:09:14.828065029Z
+/stalwart-mail 2026-10-21T04:52:42.272772642Z
+/nightjet-monitor 2026-10-16T18:14:53.710459401Z
+/watchtower 2026-10-16T18:14:53.711886957Z
+
+$ systemctl show nginx -p ActiveEnterTimestamp
+ActiveEnterTimestamp=Wed 2026-10-28 06:34:35 UTC
+
+$ ls /etc/nginx/sites-enabled
+autoconfig.henemm.com
+autodiscover.henemm.com
+fotos.henemm.com
+frieda.henemm.com
+gregor20.henemm.com
+henemm.com
+mail.henemm.com
+mcp.henemm.com
+mta-sts.henemm.com
+n8n.henemm.com
+staging.gregor20.henemm.com.conf
+ua-auto-config.henemm.com
+
+$ docker ps -a --filter name=loose-ends
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+(SSH-Exit 0)
+
+# Statuscodes der Nachbardienste von außen (AC-7 Ausgangswert)
+https://frieda.henemm.com/gesund 200
+https://n8n.henemm.com 200
