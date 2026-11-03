@@ -124,6 +124,9 @@ const UNAVAILABLE: [string, Answer][] = [
   ["synchroner Wurf", () => { throw new Error("GEHEIM-123"); }],
   ["TimeoutError", () => Promise.reject(new DOMException("GEHEIM-123", "TimeoutError"))],
   ["abgelehnt ohne Fehler", () => Promise.reject("GEHEIM-123")],
+  ...[200, 400].map((status): [string, Answer] => [`Rumpf bricht ab ${status}`, () => new Response(new ReadableStream({
+    pull() { throw new Error("GEHEIM-123"); },
+  }), { status })]),
 ];
 
 test("secret: kopf, nutzlast, signatur", () => {
