@@ -1,0 +1,482 @@
+Image (Docker, Postgres 18)	UNKNOWN STEP	﻿2026-11-03T06:30:43.7691802Z Current runner version: '2.338.2'
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7713460Z ##[group]Runner Image Provisioner
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7714226Z Hosted Compute Agent
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7714738Z Version: 20261021.618
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7715372Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7716007Z Build Date: 2026-10-21T00:45:21Z
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7716620Z Worker ID: {2b01b67d-4142-47cd-ab23-97509c7c0c7b}
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7717225Z Region: westus3
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7717712Z Cloud: Azure
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7718213Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7719442Z ##[group]Operating System
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7719980Z Ubuntu
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7720505Z 24.04.5
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7721208Z LTS
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7721832Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7722343Z ##[group]Runner Image
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7722848Z Image: ubuntu-24.04
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7723392Z Version: 20261025.353.1
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7724445Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261025.353/images/ubuntu/Ubuntu2404-Readme.md
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7725828Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261025.353
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7726626Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7727683Z ##[group]GITHUB_TOKEN Permissions
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7729323Z Contents: read
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7729939Z Metadata: read
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7730459Z Packages: read
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7731186Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7733048Z Secret source: Actions
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7733909Z Cache mode: write
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.7734549Z Prepare workflow directory
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.8119284Z Prepare all required actions
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:43.8157781Z Getting action download info
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:44.0964193Z Download action repository 'actions/checkout@v7' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:44.3124625Z Complete job name: Image (Docker, Postgres 18)
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:44.3682462Z ##[group]Checking docker version
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:44.3693425Z ##[command]/usr/bin/docker version --format '{{.Server.APIVersion}}'
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:44.4483200Z '1.48'
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:44.4491405Z Docker daemon API version: '1.48'
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:44.4492292Z ##[command]/usr/bin/docker version --format '{{.Client.APIVersion}}'
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:44.4666891Z '1.48'
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:44.4681200Z Docker client API version: '1.48'
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:44.4686179Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:44.4688194Z ##[group]Clean up resources from previous jobs
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:44.4693049Z ##[command]/usr/bin/docker ps --all --quiet --no-trunc --filter "label=a7a92a"
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:44.4840054Z ##[command]/usr/bin/docker network prune --force --filter "label=a7a92a"
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:44.4984164Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:44.4984608Z ##[group]Create local container network
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:44.4994431Z ##[command]/usr/bin/docker network create --label a7a92a github_network_c285479f79ec4ab7956c054a6030fa18
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:44.5554963Z e0ba167254c2b1856e658397d8891142942341d97f36af0254f01db4b6a931fc
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:44.5574039Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:44.5595643Z ##[group]Starting postgres service container
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:44.5614230Z ##[command]/usr/bin/docker pull postgres:18
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.4448310Z 18: Pulling from library/postgres
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8270434Z 6fc242d221a6: Pulling fs layer
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8271772Z d06edb2e3f43: Pulling fs layer
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8272585Z 3795839385bc: Pulling fs layer
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8273001Z cea4f0db46a6: Pulling fs layer
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8273418Z 9b1a18996a22: Pulling fs layer
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8273721Z fbc84e711712: Pulling fs layer
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8273996Z 879995175298: Pulling fs layer
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8274281Z d89068781d71: Pulling fs layer
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8274558Z ef90fb83cca5: Pulling fs layer
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8274820Z 7e6d71cb0490: Pulling fs layer
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8275093Z 7c25aa4e8a77: Pulling fs layer
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8275448Z 00ff7a4924f2: Pulling fs layer
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8275725Z d0fbcb0db440: Pulling fs layer
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8276348Z 9b1a18996a22: Waiting
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8276606Z fbc84e711712: Waiting
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8276851Z 879995175298: Waiting
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8277089Z d89068781d71: Waiting
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8277327Z ef90fb83cca5: Waiting
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8277568Z 7e6d71cb0490: Waiting
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8277815Z 7c25aa4e8a77: Waiting
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8278064Z 00ff7a4924f2: Waiting
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8278300Z d0fbcb0db440: Waiting
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:45.8278534Z cea4f0db46a6: Waiting
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.0256676Z d06edb2e3f43: Verifying Checksum
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.0257218Z d06edb2e3f43: Download complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.0569384Z 3795839385bc: Verifying Checksum
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.0569860Z 3795839385bc: Download complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.1282785Z 6fc242d221a6: Verifying Checksum
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.1283979Z 6fc242d221a6: Download complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.2343107Z cea4f0db46a6: Download complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.2889773Z 9b1a18996a22: Verifying Checksum
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.2891564Z 9b1a18996a22: Download complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.3267931Z fbc84e711712: Verifying Checksum
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.3269003Z fbc84e711712: Download complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.4334589Z 879995175298: Verifying Checksum
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.4335381Z 879995175298: Download complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.4645659Z d89068781d71: Verifying Checksum
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.4647343Z d89068781d71: Download complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.6469469Z 7e6d71cb0490: Verifying Checksum
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.6473502Z 7e6d71cb0490: Download complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.6666195Z 7c25aa4e8a77: Verifying Checksum
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.6666733Z 7c25aa4e8a77: Download complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.8217467Z 00ff7a4924f2: Verifying Checksum
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.8217960Z 00ff7a4924f2: Download complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.8373848Z ef90fb83cca5: Verifying Checksum
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.8374481Z ef90fb83cca5: Download complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.8642740Z d0fbcb0db440: Verifying Checksum
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.8650531Z d0fbcb0db440: Download complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:46.9860847Z 6fc242d221a6: Pull complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:49.9313126Z d06edb2e3f43: Pull complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:50.6845578Z 3795839385bc: Pull complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:51.1054623Z cea4f0db46a6: Pull complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:51.4793765Z 9b1a18996a22: Pull complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:51.5460224Z fbc84e711712: Pull complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:51.5532634Z 879995175298: Pull complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:51.5627753Z d89068781d71: Pull complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:55.7129819Z ef90fb83cca5: Pull complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:56.3716522Z 7e6d71cb0490: Pull complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:56.3829587Z 7c25aa4e8a77: Pull complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:56.3934554Z 00ff7a4924f2: Pull complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:56.4039071Z d0fbcb0db440: Pull complete
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:56.4073473Z Digest: sha256:3a4264520e121176619f54ff867d12774bc81e95e7b84db58d63bccdb6144b81
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:56.4085930Z Status: Downloaded newer image for postgres:18
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:56.4093826Z docker.io/library/postgres:18
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:56.4153791Z ##[command]/usr/bin/docker create --name d3d9a0f5380a4337bfc314169d9cfa8e_postgres18_ad85aa --label a7a92a --network github_network_c285479f79ec4ab7956c054a6030fa18 --network-alias postgres -p 5432:5432 --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10 -e "POSTGRES_PASSWORD=postgres" -e GITHUB_ACTIONS=true -e CI=true postgres:18
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:56.8788134Z 893b56adfb55cd19b88202631e3fa5e128f206a6e90f67f8ab4341859c88317f
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:56.8813936Z ##[command]/usr/bin/docker start 893b56adfb55cd19b88202631e3fa5e128f206a6e90f67f8ab4341859c88317f
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:57.4312388Z 893b56adfb55cd19b88202631e3fa5e128f206a6e90f67f8ab4341859c88317f
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:57.4334374Z ##[command]/usr/bin/docker ps --all --filter id=893b56adfb55cd19b88202631e3fa5e128f206a6e90f67f8ab4341859c88317f --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:57.4485325Z 893b56adfb55cd19b88202631e3fa5e128f206a6e90f67f8ab4341859c88317f Up Less than a second (health: starting)
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:57.4506968Z ##[command]/usr/bin/docker port 893b56adfb55cd19b88202631e3fa5e128f206a6e90f67f8ab4341859c88317f
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:57.4652902Z 5432/tcp -> 0.0.0.0:5432
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:57.4653215Z 5432/tcp -> [::]:5432
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:57.4699234Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:57.4707132Z ##[group]Waiting for all services to be ready
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:57.4718009Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 893b56adfb55cd19b88202631e3fa5e128f206a6e90f67f8ab4341859c88317f
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:57.4852694Z starting
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:57.4877903Z postgres service is starting, waiting 2 seconds before checking again.
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:59.4868438Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 893b56adfb55cd19b88202631e3fa5e128f206a6e90f67f8ab4341859c88317f
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:59.5001725Z starting
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:30:59.5015657Z postgres service is starting, waiting 4 seconds before checking again.
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:03.8658946Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 893b56adfb55cd19b88202631e3fa5e128f206a6e90f67f8ab4341859c88317f
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:03.8786039Z healthy
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:03.8803733Z postgres service is healthy.
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:03.8804457Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:03.9126562Z ##[group]Run actions/checkout@v7
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:03.9126982Z with:
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:03.9127177Z   repository: henemm/loose-ends
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:03.9129693Z   token: ***
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:03.9129879Z   ssh-strict: true
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:03.9130056Z   ssh-user: git
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:03.9130239Z   persist-credentials: true
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:03.9130436Z   clean: true
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:03.9130617Z   sparse-checkout-cone-mode: true
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:03.9130832Z   fetch-depth: 1
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:03.9131318Z   fetch-tags: false
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:03.9131524Z   show-progress: true
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:03.9131697Z   lfs: false
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:03.9131860Z   submodules: false
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:03.9132060Z   set-safe-directory: true
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:03.9132277Z   allow-unsafe-pr-checkout: false
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:03.9132692Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.3977392Z Syncing repository: henemm/loose-ends
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.3978831Z ##[group]Getting Git version info
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.3979341Z Working directory is '/home/runner/work/loose-ends/loose-ends'
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.3980064Z [command]/usr/bin/git version
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4013909Z git version 2.56.0
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4033109Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4042972Z Temporarily overriding HOME='/home/runner/work/_temp/438f3ea0-da90-4f99-a602-f89ef978492e' before making global git config changes
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4043959Z Adding repository directory to the temporary git global config as a safe directory
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4048595Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/loose-ends/loose-ends
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4095664Z Deleting the contents of '/home/runner/work/loose-ends/loose-ends'
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4098361Z ##[group]Determining repository object format
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4099876Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4100369Z ##[group]Initializing the repository
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4104741Z [command]/usr/bin/git init /home/runner/work/loose-ends/loose-ends
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4179601Z hint: Using 'master' as the name for the initial branch. This default branch name
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4181176Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4181674Z hint: to use in all of your new repositories, which will suppress this warning,
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4182068Z hint: call:
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4182320Z hint:
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4182642Z hint: 	git config --global init.defaultBranch <name>
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4183000Z hint:
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4183244Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4183837Z hint: 'development'. The just-created branch can be renamed via this command:
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4184379Z hint:
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4184553Z hint: 	git branch -m <name>
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4184844Z hint:
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4185254Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4188494Z Initialized empty Git repository in /home/runner/work/loose-ends/loose-ends/.git/
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4197680Z [command]/usr/bin/git remote add origin https://github.com/henemm/loose-ends
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4241115Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4241625Z ##[group]Disabling automatic garbage collection
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4245635Z [command]/usr/bin/git config --local gc.auto 0
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4283609Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4284364Z ##[group]Setting up auth
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4284926Z Removing SSH command configuration
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4290137Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.4522621Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.5024152Z Removing HTTP extra header
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.5029172Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.5068683Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.5277010Z Removing includeIf entries pointing to credentials config files
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.5282036Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.5320499Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.5537005Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-2bba7607-70b3-4c75-833d-10ebbaecb4a8.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.5584252Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path /home/runner/work/_temp/git-credentials-2bba7607-70b3-4c75-833d-10ebbaecb4a8.config
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.5624002Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-2bba7607-70b3-4c75-833d-10ebbaecb4a8.config
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.5664373Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-2bba7607-70b3-4c75-833d-10ebbaecb4a8.config
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.5704320Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-2bba7607-70b3-4c75-833d-10ebbaecb4a8.config
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.5800129Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.5800481Z ##[group]Fetching the repository
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:04.5806495Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +80fd042d7493aadf290dacd5aa02ddf9718fbe8f:refs/remotes/pull/814/merge
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.1153654Z From https://github.com/henemm/loose-ends
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.1154298Z  * [new ref]         80fd042d7493aadf290dacd5aa02ddf9718fbe8f -> pull/814/merge
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.1156989Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.1157346Z ##[group]Determining the checkout info
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.1157931Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.1162743Z [command]/usr/bin/git sparse-checkout disable
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.1220071Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.1257850Z ##[group]Checking out the ref
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.1278375Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/814/merge
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.6381733Z Note: switching to 'refs/remotes/pull/814/merge'.
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.6382080Z 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.6382334Z You are in 'detached HEAD' state. You can look around, make experimental
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.6383013Z changes and commit them, and you can discard any commits you make in this
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.6383388Z state without impacting any branches by switching back to a branch.
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.6383611Z 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.6383978Z If you want to create a new branch to retain commits you create, you may
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.6384445Z do so (now or later) by using -c with the switch command. Example:
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.6384715Z 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.6384839Z   git switch -c <new-branch-name>
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.6385019Z 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.6385128Z Or undo this operation with:
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.6385299Z 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.6385398Z   git switch -
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.6385536Z 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.6385777Z Turn off this advice by setting config variable advice.detachedHead to false
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.6386109Z 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.6386466Z HEAD is now at 80fd042 Merge 39b3e3cae2c1e47e76431ed2581a7c1545478405 into bc66568373eb78859d157a6b78ac9c39297b1aaa
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.8121059Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.8171316Z [command]/usr/bin/git log -1 --format=%H
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.8203828Z 80fd042d7493aadf290dacd5aa02ddf9718fbe8f
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.8390504Z ##[group]Run docker build -t loose-ends-server:ci server
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.8390898Z ^[[36;1mdocker build -t loose-ends-server:ci server^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.8412109Z shell: /usr/bin/bash -e {0}
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:10.8412333Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:11.8759985Z #0 building with "default" instance using docker driver
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:11.8760258Z 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:11.8760389Z #1 [internal] load build definition from Dockerfile
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:11.8760776Z #1 transferring dockerfile: 326B done
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:11.8761201Z #1 DONE 0.0s
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:11.8761310Z 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:11.8761449Z #2 [internal] load metadata for docker.io/library/node:26-slim
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:12.0583994Z #2 ...
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:12.0584157Z 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:12.0584367Z #3 [auth] library/node:pull token for registry-1.docker.io
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:12.0584813Z #3 DONE 0.0s
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:12.2086709Z 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:12.2087221Z #2 [internal] load metadata for docker.io/library/node:26-slim
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:12.6038775Z #2 DONE 0.9s
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:12.7546839Z 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:12.7547362Z #4 [internal] load .dockerignore
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:12.8346065Z #4 transferring context:
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:12.9508866Z #4 transferring context: 78B done
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:12.9509397Z #4 DONE 0.2s
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:12.9509554Z 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:12.9509669Z #5 [internal] load build context
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:12.9510017Z #5 transferring context: 68.83kB done
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:12.9510330Z #5 DONE 0.0s
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:12.9510431Z 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:12.9510857Z #6 [1/6] FROM docker.io/library/node:26-slim@sha256:e4db4c914bf8ad241bd24804fc25d272d89bad97e68cdc8a1414862790a02c39
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:12.9512015Z #6 resolve docker.io/library/node:26-slim@sha256:e4db4c914bf8ad241bd24804fc25d272d89bad97e68cdc8a1414862790a02c39 0.0s done
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:12.9512675Z #6 extracting sha256:06483f20f3445a49e67f92ccb9219ed04fef1d9eac3110c74a9b4faca8ac55fc
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:13.0644599Z #6 extracting sha256:06483f20f3445a49e67f92ccb9219ed04fef1d9eac3110c74a9b4faca8ac55fc done
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:13.0645394Z #6 sha256:9429b0e9bd8936506b878826c07e964170380317331ecfd7a2a2739bd6215a5b 7.34MB / 55.88MB 0.2s
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:13.0646093Z #6 sha256:59b2771de99b8ff6e3e0198c49c5a430c66653a9636618aa913eca60f98be548 0B / 448B 0.2s
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:13.0646783Z #6 sha256:e4db4c914bf8ad241bd24804fc25d272d89bad97e68cdc8a1414862790a02c39 5.15kB / 5.15kB done
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:13.0647584Z #6 sha256:18f03e4b532a63baf09809fe8349c2171807f1818cb6c5230fb12aecd5beda65 1.72kB / 1.72kB done
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:13.0648111Z #6 sha256:039cbee6c76a8343b9fe32f54c3e008a39c602b54c01c214dc1f522880d5fed9 4.47kB / 4.47kB done
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:13.0648630Z #6 sha256:06483f20f3445a49e67f92ccb9219ed04fef1d9eac3110c74a9b4faca8ac55fc 3.31kB / 3.31kB 0.1s done
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:13.1747113Z #6 sha256:9429b0e9bd8936506b878826c07e964170380317331ecfd7a2a2739bd6215a5b 52.43MB / 55.88MB 0.3s
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:13.1750270Z #6 sha256:59b2771de99b8ff6e3e0198c49c5a430c66653a9636618aa913eca60f98be548 448B / 448B 0.3s
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:13.3648398Z #6 sha256:9429b0e9bd8936506b878826c07e964170380317331ecfd7a2a2739bd6215a5b 55.88MB / 55.88MB 0.5s
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:13.6653839Z #6 sha256:59b2771de99b8ff6e3e0198c49c5a430c66653a9636618aa913eca60f98be548 448B / 448B 0.7s done
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:13.9153206Z #6 sha256:9429b0e9bd8936506b878826c07e964170380317331ecfd7a2a2739bd6215a5b 55.88MB / 55.88MB 0.8s done
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:14.8568367Z #6 extracting sha256:9429b0e9bd8936506b878826c07e964170380317331ecfd7a2a2739bd6215a5b
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:16.0196428Z #6 extracting sha256:9429b0e9bd8936506b878826c07e964170380317331ecfd7a2a2739bd6215a5b 1.0s done
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:17.1683076Z #6 extracting sha256:59b2771de99b8ff6e3e0198c49c5a430c66653a9636618aa913eca60f98be548
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:17.4041525Z #6 extracting sha256:59b2771de99b8ff6e3e0198c49c5a430c66653a9636618aa913eca60f98be548 done
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:17.4042155Z #6 DONE 4.4s
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:17.4042305Z 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:17.4042407Z #7 [2/6] WORKDIR /app
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:17.4042661Z #7 DONE 0.0s
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:17.4043268Z 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:17.4043517Z #8 [3/6] COPY --chown=node:node package.json package-lock.json ./
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:17.4043934Z #8 DONE 0.0s
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:17.4044068Z 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:17.4044191Z #9 [4/6] RUN npm ci --omit=dev
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.1579742Z #9 0.904 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.1580148Z #9 0.904 added 17 packages, and audited 18 packages in 757ms
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.1580443Z #9 0.904 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.3104200Z #9 0.904 1 package is looking for funding
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.3104665Z #9 0.904   run `npm fund` for details
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.3104986Z #9 0.905 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.3105237Z #9 0.905 found 0 vulnerabilities
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.3105529Z #9 0.906 npm notice
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.3105936Z #9 0.906 npm notice New major version of npm available! 11.20.0 -> 12.2.1
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.3106609Z #9 0.906 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.3107116Z #9 0.906 npm notice To update run: npm install -g npm@12.2.1
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.3107395Z #9 0.906 npm notice
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.4008992Z #9 DONE 1.1s
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.6079943Z 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.6102037Z #10 [5/6] COPY --chown=node:node src ./src
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.6102452Z #10 DONE 0.0s
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.6102599Z 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.6102784Z #11 [6/6] COPY --chown=node:node migrations ./migrations
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.6103177Z #11 DONE 0.0s
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.6103326Z 
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.6103431Z #12 exporting to image
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:18.6103703Z #12 exporting layers
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:19.1339559Z #12 exporting layers 0.7s done
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:19.1495947Z #12 writing image sha256:b4340e6586bd60bbb9d3ab6cfbfba54db15221e8fe54e99e5cffaebc57dfd368 done
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:19.1496509Z #12 naming to docker.io/library/loose-ends-server:ci done
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:19.1496935Z #12 DONE 0.7s
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:19.1588013Z ##[group]Run uid=$(docker run --rm --entrypoint id loose-ends-server:ci -u)
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:19.1588480Z ^[[36;1muid=$(docker run --rm --entrypoint id loose-ends-server:ci -u)^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:19.1588789Z ^[[36;1mecho "uid=$uid"^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:19.1588984Z ^[[36;1mtest "$uid" != "0"^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:19.1589450Z ^[[36;1mdocker run --rm --entrypoint sh loose-ends-server:ci -c 'test ! -e /app/test && test ! -e /app/scripts && ! ls -a /app | grep -q "^\.env"'^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:19.1607776Z shell: /usr/bin/bash -e {0}
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:19.1607999Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:19.5510154Z uid=1000
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:19.8018229Z ##[group]Run docker run -d --name le-server --network host -e DATABASE_URL=***127.0.0.1:5432/postgres -e PORT=18080 -e HOST=127.0.0.1 loose-ends-server:ci
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:19.8019171Z ^[[36;1mdocker run -d --name le-server --network host -e DATABASE_URL=***127.0.0.1:5432/postgres -e PORT=18080 -e HOST=127.0.0.1 loose-ends-server:ci^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:19.8037266Z shell: /usr/bin/bash -e {0}
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:19.8037488Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:19.8279924Z 6430bf327dac705d8d87b438bb6b579cf51dde020860b069484a33b2925b0cf1
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:20.1824540Z ##[group]Run for i in $(seq 1 60); do
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:20.1824949Z ^[[36;1mfor i in $(seq 1 60); do^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:20.1825585Z ^[[36;1m  code=$(curl --silent --output body.json --write-out '%{http_code}' http://127.0.0.1:18080/health || true)^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:20.1826228Z ^[[36;1m  if [ "$code" = "200" ]; then^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:20.1826609Z ^[[36;1m    echo "200 nach ${i} s"; cat body.json; echo^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:20.1827125Z ^[[36;1m    jq -e '.status == "ok" and .db == "up" and .migrated == true' body.json^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:20.1827589Z ^[[36;1m    exit 0^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:20.1827843Z ^[[36;1m  fi^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:20.1828087Z ^[[36;1m  sleep 1^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:20.1828343Z ^[[36;1mdone^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:20.1828640Z ^[[36;1mecho "kein 200 binnen 60 s (zuletzt $code)"^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:20.1829044Z ^[[36;1mdocker logs le-server^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:20.1829342Z ^[[36;1mexit 1^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:20.1852897Z shell: /usr/bin/bash -e {0}
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:20.1853280Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2199029Z 200 nach 2 s
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2202505Z {"status":"ok","db":"up","migrated":true,"errorRate":0,"requests":0}
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2223713Z true
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2256487Z ##[group]Run docker logs le-server > server.log 2>&1
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2256819Z ^[[36;1mdocker logs le-server > server.log 2>&1^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2257071Z ^[[36;1mcat server.log^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2257421Z ^[[36;1mif grep -v '^$' server.log | grep -Ev '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]+)?Z '; then^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2257823Z ^[[36;1m  echo "Zeile ohne ISO-Zeitpunkt vorn"; exit 1^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2258070Z ^[[36;1mfi^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2258395Z ^[[36;1mif grep -q 'postgres' server.log; then echo "Verbindungsdaten oder Passwort im Log"; exit 1; fi^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2258795Z ^[[36;1mgrep -q ' migrated$' server.log^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2275801Z shell: /usr/bin/bash -e {0}
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2276012Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2452155Z 2026-11-03T06:31:20.365Z listening
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2452556Z 2026-11-03T06:31:20.400Z migrated
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2518651Z ##[group]Run docker stop --time 20 le-server
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2518959Z ^[[36;1mdocker stop --time 20 le-server^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2519261Z ^[[36;1mcode=$(docker inspect --format '{{.State.ExitCode}}' le-server)^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2519591Z ^[[36;1mdocker logs le-server > server.log 2>&1^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2519845Z ^[[36;1mcat server.log^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2520043Z ^[[36;1mecho "exit=$code"^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2520244Z ^[[36;1mtest "$code" = "0"^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2520471Z ^[[36;1mgrep -q ' shutting down$' server.log^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2520718Z ^[[36;1mgrep -q ' stopped$' server.log^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2537919Z shell: /usr/bin/bash -e {0}
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2538152Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.2669920Z Flag --time has been deprecated, use --timeout instead
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.3867037Z le-server
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.4149361Z 2026-11-03T06:31:20.365Z listening
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.4149720Z 2026-11-03T06:31:20.400Z migrated
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.4150146Z 2026-11-03T06:31:21.334Z shutting down
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.4150471Z 2026-11-03T06:31:21.335Z stopped
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.4150770Z exit=0
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.4217307Z ##[group]Run docker rm -f le-server || true
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.4217597Z ^[[36;1mdocker rm -f le-server || true^[[0m
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.4234589Z shell: /usr/bin/bash -e {0}
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.4234802Z ##[endgroup]
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.4422532Z le-server
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.4539184Z Post job cleanup.
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.5268196Z [command]/usr/bin/git version
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.5305582Z git version 2.56.0
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.5333083Z Temporarily overriding HOME='/home/runner/work/_temp/38656dff-310e-4e95-ac69-d0f5da3ebc75' before making global git config changes
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.5334448Z Adding repository directory to the temporary git global config as a safe directory
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.5336745Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/loose-ends/loose-ends
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.5367082Z Removing SSH command configuration
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.5372397Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.5405306Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.5630799Z Removing HTTP extra header
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.5636819Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.5702772Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.5909893Z Removing includeIf entries pointing to credentials config files
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.5918963Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.5954866Z includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.5955741Z includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.5956554Z includeif.gitdir:/github/workspace/.git.path
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.5957134Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.5965624Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.5997524Z /home/runner/work/_temp/git-credentials-2bba7607-70b3-4c75-833d-10ebbaecb4a8.config
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6025155Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-2bba7607\-70b3\-4c75\-833d\-10ebbaecb4a8\.config
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6073972Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6096769Z /home/runner/work/_temp/git-credentials-2bba7607-70b3-4c75-833d-10ebbaecb4a8.config
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6107234Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-2bba7607\-70b3\-4c75\-833d\-10ebbaecb4a8\.config
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6149533Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6183276Z /github/runner_temp/git-credentials-2bba7607-70b3-4c75-833d-10ebbaecb4a8.config
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6203148Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-2bba7607\-70b3\-4c75\-833d\-10ebbaecb4a8\.config
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6237541Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6268197Z /github/runner_temp/git-credentials-2bba7607-70b3-4c75-833d-10ebbaecb4a8.config
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6275406Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-2bba7607\-70b3\-4c75\-833d\-10ebbaecb4a8\.config
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6315290Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6539041Z Removing credentials config '/home/runner/work/_temp/git-credentials-2bba7607-70b3-4c75-833d-10ebbaecb4a8.config'
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6660301Z Print service container logs: d3d9a0f5380a4337bfc314169d9cfa8e_postgres18_ad85aa
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6665019Z ##[command]/usr/bin/docker logs --details 893b56adfb55cd19b88202631e3fa5e128f206a6e90f67f8ab4341859c88317f
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6793270Z  initdb: warning: enabling "trust" authentication for local connections
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6794267Z  initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6795169Z  The files belonging to this database system will be owned by user "postgres".
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6795910Z  2026-11-03 06:30:58.567 UTC [1] LOG:  starting PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6796519Z  2026-11-03 06:30:58.567 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6796961Z  2026-11-03 06:30:58.567 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6797392Z  2026-11-03 06:30:58.579 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6797830Z  2026-11-03 06:30:58.585 UTC [74] LOG:  database system was shut down at 2026-11-03 06:30:58 UTC
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6798232Z  2026-11-03 06:30:58.588 UTC [1] LOG:  database system is ready to accept connections
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6798578Z  2026-11-03 06:31:02.481 UTC [85] FATAL:  role "root" does not exist
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6798888Z  2026-11-03 06:31:07.532 UTC [93] FATAL:  role "root" does not exist
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6799194Z  2026-11-03 06:31:12.585 UTC [101] FATAL:  role "root" does not exist
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6799500Z  2026-11-03 06:31:17.644 UTC [109] FATAL:  role "root" does not exist
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6799778Z  This user must also own the server process.
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6799999Z  
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6800245Z  The database cluster will be initialized with locale "en_US.utf8".
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6800609Z  The default database encoding has accordingly been set to "UTF8".
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6801171Z  The default text search configuration will be set to "english".
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6801438Z  
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6801598Z  Data page checksums are enabled.
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6801805Z  
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6802073Z  fixing permissions on existing directory /var/lib/postgresql/18/docker ... ok
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6802411Z  creating subdirectories ... ok
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6802680Z  selecting dynamic shared memory implementation ... posix
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6802970Z  selecting default "max_connections" ... 100
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6803217Z  selecting default "shared_buffers" ... 128MB
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6803463Z  selecting default time zone ... Etc/UTC
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6803701Z  creating configuration files ... ok
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6803924Z  running bootstrap script ... ok
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6804170Z  performing post-bootstrap initialization ... ok
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6804422Z  syncing data to disk ... ok
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6804611Z  
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6804759Z  
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6804956Z  Success. You can now start the database server using:
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6805205Z  
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6805413Z      pg_ctl -D /var/lib/postgresql/18/docker -l logfile start
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6805670Z  
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6806166Z  waiting for server to start....2026-11-03 06:30:58.338 UTC [54] LOG:  starting PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6806825Z  2026-11-03 06:30:58.339 UTC [54] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6807274Z  2026-11-03 06:30:58.342 UTC [60] LOG:  database system was shut down at 2026-11-03 06:30:57 UTC
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6807668Z  2026-11-03 06:30:58.344 UTC [54] LOG:  database system is ready to accept connections
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6807961Z   done
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6808119Z  server started
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6808281Z  
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6808862Z  /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6809188Z  
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6809397Z  2026-11-03 06:30:58.447 UTC [54] LOG:  received fast shutdown request
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6809956Z  waiting for server to shut down....2026-11-03 06:30:58.447 UTC [54] LOG:  aborting any active transactions
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6810483Z  2026-11-03 06:30:58.449 UTC [54] LOG:  background worker "logical replication launcher" (PID 63) exited with exit code 1
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6810904Z  2026-11-03 06:30:58.449 UTC [58] LOG:  shutting down
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6811509Z  2026-11-03 06:30:58.490 UTC [58] LOG:  checkpoint starting: shutdown immediate
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6812390Z  2026-11-03 06:30:58.492 UTC [58] LOG:  checkpoint complete: wrote 0 buffers (0.0%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.043 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/1761918, redo lsn=0/1761918
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6813244Z  2026-11-03 06:30:58.499 UTC [54] LOG:  database system is shut down
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6813503Z   done
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6813659Z  server stopped
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6813821Z  
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6814033Z  PostgreSQL init process complete; ready for start up.
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6814280Z  
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6833389Z Stop and remove container: d3d9a0f5380a4337bfc314169d9cfa8e_postgres18_ad85aa
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.6837335Z ##[command]/usr/bin/docker rm --force 893b56adfb55cd19b88202631e3fa5e128f206a6e90f67f8ab4341859c88317f
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.7992291Z 893b56adfb55cd19b88202631e3fa5e128f206a6e90f67f8ab4341859c88317f
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.8020667Z Remove container network: github_network_c285479f79ec4ab7956c054a6030fa18
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.8024503Z ##[command]/usr/bin/docker network rm github_network_c285479f79ec4ab7956c054a6030fa18
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.8960784Z github_network_c285479f79ec4ab7956c054a6030fa18
+Image (Docker, Postgres 18)	UNKNOWN STEP	2026-11-03T06:31:21.9028567Z Cleaning up orphan processes
