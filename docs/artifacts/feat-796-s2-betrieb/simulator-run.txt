@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-11-03T09:19:42+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: feat-796-s2-betrieb
+head: c079e3a9ce486118789d65122e4d99d428461584
+basis: bc66568373eb78859d157a6b78ac9c39297b1aaa (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 26 gesamt, 26 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793693129.475  ende: 1793693977.429
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/feat-796-s2-betrieb/simulator-run/summary.json  sha256:4560aa13ef3cd73ca05adab1aa12c5ff1ead0c3198df1cde2d90f4fafbbbc029
+xcresult: docs/artifacts/feat-796-s2-betrieb/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-796-s2-betrieb/simulator-run/*.png (15 Stück)
+
+## Geprüfte Dateien
+- sha256:dbf8eccc88183ff503537e305befa204cb3edd492a297fa97fe9d2c52dc9f577  server/src/migrate.ts
