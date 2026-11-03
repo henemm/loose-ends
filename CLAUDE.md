@@ -462,6 +462,7 @@ not scope creep on the current one.
   `migrations/002_accounts.sql` (#615 S1): accounts keyed by `apple_sub`, sessions stored only as SHA-256, a column for the encrypted Apple refresh token;
   `src/accounts.ts` (`findOrCreate`, `createSession`, `resolveSession`, `endSession`, `deleteAccount`: one transaction, removes the account's transcript, orders and results too); nothing calls it yet
   `src/apple.ts` (#615 S2a): `loadAppleConfig` (five `APPLE_*` variables, an error names only the variable) and `verifyIdentityToken` (RS256 only, iss, aud exact, exp/iat with 60 s leeway, nonce as SHA-256; key lookup passed in, JWKS cache in S2b); nothing calls it yet
+  `src/apple-jwks.ts` (#615 S2b-1): `createJwks` fetches Apple's keys (fetch and clock passed in), cache 1 h, a reload for an unknown kid at most once in 60 s (a failed one counts too), one shared fetch for concurrent callers, fail-closed once expired (`keys_unavailable`); nothing calls it yet
 
 ## Naming
 
