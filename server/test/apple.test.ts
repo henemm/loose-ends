@@ -61,6 +61,7 @@ async function expectReason(name: string, reason: string, token: unknown, raw = 
   seen.push({ name, result });
   assert.deepEqual(result, { ok: false, reason }, name);
 }
+const direct = (token: string, raw: unknown, now = NOW) => verifyIdentityToken(token, raw as string, { config, keys: stub().keys, now });
 async function table(rows: [string, unknown, string?][], reason: string) {
   for (const [name, token, raw] of rows) await expectReason(name, reason, token, raw ?? RAW);
 }
@@ -176,6 +177,7 @@ test("attack: abgelaufen", async () => {
     ["exp now-60s", jwt(claims({ exp: SEC - 60 }))], ["exp now-1h", jwt(claims({ exp: SEC - 3600 }))],
     ["exp fehlt", jwt(drop("exp"))], ["exp Text", jwt(claims({ exp: String(SEC + 600) }))], ["exp NaN", jwt(claims({ exp: NaN }))],
   ], "expired");
+  assert.deepEqual(await direct(jwt(), RAW, NaN), { ok: false, reason: "expired" }, "now NaN");
 });
 
 test("attack: iat", async () => {
@@ -194,6 +196,8 @@ test("attack: nonce", async () => {
     ["nonce Array", jwt(claims({ nonce: [hash(RAW)] }))], ["nonce andere Länge", jwt(claims({ nonce: hash(RAW).slice(0, 10) }))],
     ["falscher Rohwert", jwt(), "anderer-rohwert"],
   ], "nonce");
+  assert.deepEqual(await direct(jwt(), Object.create(null)), { ok: false, reason: "nonce" }, "rawNonce ohne Prototyp");
+  assert.deepEqual(await direct(jwt(claims({ nonce: hash("undefined") })), undefined), { ok: false, reason: "nonce" }, "rawNonce undefined");
 });
 
 test("reasons: feste Liste", () => {
