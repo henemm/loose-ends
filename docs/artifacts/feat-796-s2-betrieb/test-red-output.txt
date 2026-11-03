@@ -1,0 +1,251 @@
+=== npm run typecheck ===
+
+> typecheck
+> tsc --noEmit
+
+test/migrate.test.ts(12,18): error TS2339: Property 'MIGRATE_LOCK_ID' does not exist on type 'typeof import("/Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/src/migrate")'.
+typecheck exit=1
+=== node --test test/migrate.test.ts ===
+✔ AC-1: applies migrations in number order and returns their names in that order (19.568917ms)
+✔ AC-2: a second run applies nothing, a new file alone is applied (9.942208ms)
+✔ AC-3: a broken migration rolls back completely and rethrows the Postgres error (9.440208ms)
+✔ AC-4: a gap in the numbers is refused before anything is applied (4.588625ms)
+✔ AC-4: a duplicate number is refused before anything is applied (9.097ms)
+✔ AC-4: a misnamed .sql file is refused before anything is applied, README.md is ignored (4.115459ms)
+✔ AC-4: a README.md beside the migrations does not disturb the run (7.195084ms)
+✔ AC-4: number 000 is refused as invalid, not as a duplicate (3.87ms)
+✖ AC-2: two runs at once apply every migration exactly once (S3) (315.854833ms)
+✖ AC-2: three runs at once apply every migration exactly once (S3) (317.26375ms)
+✖ AC-3: after a failed run the lock is free and a repaired run finishes (S3) (14.125708ms)
+✔ AC-4: a gap is refused without ever connecting to the database (S3) (0.939458ms)
+✔ AC-5: without DATABASE_URL the test run fails and names the variable (224.177417ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 10
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1109.03975
+
+✖ failing tests:
+
+test at test/migrate.test.ts:166:1
+✖ AC-2: two runs at once apply every migration exactly once (S3) (315.854833ms)
+  AssertionError [ERR_ASSERTION]: every parallel run succeeds
+  + actual - expected
+  
+  + [
+  +   {
+  +     reason: error: doppelter Schlüsselwert verletzt Unique-Constraint »pg_type_typname_nsp_index«
+  +         at /Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/node_modules/pg-pool/index.js:45:11
+  +         at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+  +         at async migrate (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/src/migrate.ts:68:3)
+  +         at async Promise.allSettled (index 1)
+  +         at async parallelRuns (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/test/migrate.test.ts:154:19)
+  +         at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/test/migrate.test.ts:167:3)
+  +         at async Test.run (node:internal/test_runner/test:1409:7)
+  +         at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+  +       code: '23505',
+  +       column: undefined,
+  +       constraint: 'pg_type_typname_nsp_index',
+  +       dataType: undefined,
+  +       detail: 'Schlüssel »(typname, typnamespace)=(schema_migrations, 16459)« existiert bereits.',
+  +       file: 'nbtinsert.c',
+  +       hint: undefined,
+  +       internalPosition: undefined,
+  +       internalQuery: undefined,
+  +       length: 280,
+  +       line: '673',
+  +       position: undefined,
+  +       routine: '_bt_check_unique',
+  +       schema: 'pg_catalog',
+  +       severity: 'FEHLER',
+  +       table: 'pg_type',
+  +       where: undefined
+  +     },
+  +     status: 'rejected'
+  +   }
+  + ]
+  - []
+  
+      at parallelRuns (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/test/migrate.test.ts:157:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/test/migrate.test.ts:167:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [
+      {
+        status: 'rejected',
+        reason: error: doppelter Schlüsselwert verletzt Unique-Constraint »pg_type_typname_nsp_index«
+            at /Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/node_modules/pg-pool/index.js:45:11
+            at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+            at async migrate (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/src/migrate.ts:68:3)
+            at async Promise.allSettled (index 1)
+            at async parallelRuns (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/test/migrate.test.ts:154:19)
+            at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/test/migrate.test.ts:167:3)
+            at async Test.run (node:internal/test_runner/test:1409:7)
+            at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+      }
+    ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/migrate.test.ts:170:1
+✖ AC-2: three runs at once apply every migration exactly once (S3) (317.26375ms)
+  AssertionError [ERR_ASSERTION]: every parallel run succeeds
+  + actual - expected
+  
+  + [
+  +   {
+  +     reason: error: doppelter Schlüsselwert verletzt Unique-Constraint »pg_type_typname_nsp_index«
+  +         at /Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/node_modules/pg-pool/index.js:45:11
+  +         at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+  +         at async migrate (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/src/migrate.ts:68:3)
+  +         at async Promise.allSettled (index 1)
+  +         at async parallelRuns (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/test/migrate.test.ts:154:19)
+  +         at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/test/migrate.test.ts:171:3)
+  +         at async Test.run (node:internal/test_runner/test:1409:7)
+  +         at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+  +       code: '23505',
+  +       column: undefined,
+  +       constraint: 'pg_type_typname_nsp_index',
+  +       dataType: undefined,
+  +       detail: 'Schlüssel »(typname, typnamespace)=(schema_migrations, 16479)« existiert bereits.',
+  +       file: 'nbtinsert.c',
+  +       hint: undefined,
+  +       internalPosition: undefined,
+  +       internalQuery: undefined,
+  +       length: 280,
+  +       line: '673',
+  +       position: undefined,
+  +       routine: '_bt_check_unique',
+  +       schema: 'pg_catalog',
+  +       severity: 'FEHLER',
+  +       table: 'pg_type',
+  +       where: undefined
+  +     },
+  +     status: 'rejected'
+  +   },
+  +   {
+  +     reason: error: doppelter Schlüsselwert verletzt Unique-Constraint »pg_type_typname_nsp_index«
+  +         at /Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/node_modules/pg-pool/index.js:45:11
+  +         at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+  +         at async migrate (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/src/migrate.ts:68:3)
+  +         at async Promise.allSettled (index 2)
+  +         at async parallelRuns (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/test/migrate.test.ts:154:19)
+  +         at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/test/migrate.test.ts:171:3)
+  +         at async Test.run (node:internal/test_runner/test:1409:7)
+  +         at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+  +       code: '23505',
+  +       column: undefined,
+  +       constraint: 'pg_type_typname_nsp_index',
+  +       dataType: undefined,
+  +       detail: 'Schlüssel »(typname, typnamespace)=(schema_migrations, 16479)« existiert bereits.',
+  +       file: 'nbtinsert.c',
+  +       hint: undefined,
+  +       internalPosition: undefined,
+  +       internalQuery: undefined,
+  +       length: 280,
+  +       line: '673',
+  +       position: undefined,
+  +       routine: '_bt_check_unique',
+  +       schema: 'pg_catalog',
+  +       severity: 'FEHLER',
+  +       table: 'pg_type',
+  +       where: undefined
+  +     },
+  +     status: 'rejected'
+  +   }
+  + ]
+  - []
+  
+      at parallelRuns (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/test/migrate.test.ts:157:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/test/migrate.test.ts:171:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [
+      {
+        status: 'rejected',
+        reason: error: doppelter Schlüsselwert verletzt Unique-Constraint »pg_type_typname_nsp_index«
+            at /Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/node_modules/pg-pool/index.js:45:11
+            at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+            at async migrate (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/src/migrate.ts:68:3)
+            at async Promise.allSettled (index 1)
+            at async parallelRuns (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/test/migrate.test.ts:154:19)
+            at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/test/migrate.test.ts:171:3)
+            at async Test.run (node:internal/test_runner/test:1409:7)
+            at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+      },
+      {
+        status: 'rejected',
+        reason: error: doppelter Schlüsselwert verletzt Unique-Constraint »pg_type_typname_nsp_index«
+            at /Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/node_modules/pg-pool/index.js:45:11
+            at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+            at async migrate (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/src/migrate.ts:68:3)
+            at async Promise.allSettled (index 2)
+            at async parallelRuns (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/test/migrate.test.ts:154:19)
+            at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/test/migrate.test.ts:171:3)
+            at async Test.run (node:internal/test_runner/test:1409:7)
+            at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+      }
+    ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/migrate.test.ts:204:1
+✖ AC-3: after a failed run the lock is free and a repaired run finishes (S3) (14.125708ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'number'
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/test/migrate.test.ts:212:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'number',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+migrate tests exit=1
+=== npm test (alle Dateien) ===
+    ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/migrate.test.ts:204:1
+✖ AC-3: after a failed run the lock is free and a repaired run finishes (S3) (7.327167ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'number'
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/feat-772-kopfbild/server/test/migrate.test.ts:212:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'number',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+npm test exit=1
