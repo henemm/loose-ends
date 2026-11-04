@@ -1,0 +1,62 @@
+test_appinfo_line_has_both_states_separately (__main__.StoreProbeTests.test_appinfo_line_has_both_states_separately) ... FAIL
+test_appinfo_line_lists_attribute_and_relationship_names_sorted (__main__.StoreProbeTests.test_appinfo_line_lists_attribute_and_relationship_names_sorted) ... ERROR
+test_appinfo_without_localization_says_keine (__main__.StoreProbeTests.test_appinfo_without_localization_says_keine) ... FAIL
+test_probe_never_writes (__main__.StoreProbeTests.test_probe_never_writes) ... ok
+test_subtitle_lines_carry_appinfo_number (__main__.StoreProbeTests.test_subtitle_lines_carry_appinfo_number) ... FAIL
+test_summary_line_still_present (__main__.StoreProbeTests.test_summary_line_still_present) ... ok
+
+======================================================================
+ERROR: test_appinfo_line_lists_attribute_and_relationship_names_sorted (__main__.StoreProbeTests.test_appinfo_line_lists_attribute_and_relationship_names_sorted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_store_probe.py", line 70, in test_appinfo_line_lists_attribute_and_relationship_names_sorted
+    line, = self.lines(result, "appinfo nr=1 ")
+    ^^^^^
+ValueError: not enough values to unpack (expected 1, got 0)
+
+======================================================================
+FAIL: test_appinfo_line_has_both_states_separately (__main__.StoreProbeTests.test_appinfo_line_has_both_states_separately)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_store_probe.py", line 64, in test_appinfo_line_has_both_states_separately
+    self.assertEqual((len(first), len(second)), (1, 1), result.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (0, 0) != (1, 1)
+
+First differing element 0:
+0
+1
+
+- (0, 0)
++ (1, 1) : zugriff abfrage=appInfos http=200
+zugriff abfrage=appInfoLocalizations http=200
+untertitel info=READY_FOR_DISTRIBUTION sprache=de-DE name=Loose Ends untertitel=Sortiert zeichen=8
+zugriff abfrage=appInfoLocalizations http=200
+untertitel info=IN_REVIEW sprache=de-DE name=Loose Ends untertitel=Einfach sagen. zeichen=14
+zugriff abfrage=appStoreVersions http=200
+version keine
+zusammenfassung antworten=4 von=4 befunde=0
+
+
+======================================================================
+FAIL: test_appinfo_without_localization_says_keine (__main__.StoreProbeTests.test_appinfo_without_localization_says_keine)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_store_probe.py", line 87, in test_appinfo_without_localization_says_keine
+    self.assertIn("untertitel appinfo=2 keine", result.stdout.splitlines())
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'untertitel appinfo=2 keine' not found in ['zugriff abfrage=appInfos http=200', 'zugriff abfrage=appInfoLocalizations http=200', 'untertitel info=READY_FOR_DISTRIBUTION sprache=de-DE name=Loose Ends untertitel=Sortiert zeichen=8', 'zugriff abfrage=appInfoLocalizations http=200', 'zugriff abfrage=appStoreVersions http=200', 'version keine', 'zusammenfassung antworten=4 von=4 befunde=0']
+
+======================================================================
+FAIL: test_subtitle_lines_carry_appinfo_number (__main__.StoreProbeTests.test_subtitle_lines_carry_appinfo_number)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_store_probe.py", line 79, in test_subtitle_lines_carry_appinfo_number
+    self.assertTrue(lines[0].startswith("untertitel appinfo=1 sprache=de-DE"), lines)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : ['untertitel info=READY_FOR_DISTRIBUTION sprache=de-DE name=Loose Ends untertitel=Sortiert zeichen=8', 'untertitel info=IN_REVIEW sprache=de-DE name=Loose Ends untertitel=Einfach sagen. zeichen=14']
+
+----------------------------------------------------------------------
+Ran 6 tests in 3.714s
+
+FAILED (failures=3, errors=1)
