@@ -109,6 +109,8 @@ import Testing
         func setOfferedFields(_ fields: [String]) { offeredFields = fields }
         var weekReward: String?
         func setWeekReward(_ text: String) { weekReward = text }
+        var beadsPerString: Int?
+        func setBeadsPerString(_ count: Int) { beadsPerString = count }
     }
 
     @MainActor
@@ -158,6 +160,32 @@ import Testing
         #expect(fresh.reward == "Sonntag Kuchen")
         store.setReward("")
         #expect(store.reward.isEmpty, "empty means no line")
+    }
+
+    @Test("Beads per string (#824): five unless set, kept within 3 to 20, written to the defaults and iCloud, taken over, read back")
+    @MainActor func beadsPerString() throws {
+        let (store, defaults, cloud) = try fixture()
+        #expect(store.stringLength == 5, "nothing stored is the standard")
+        store.setStringLength(8)
+        #expect(store.stringLength == 8)
+        #expect(defaults.integer(forKey: FieldSettingsStore.stringLengthKey) == 8)
+        #expect(cloud.beadsPerString == 8)
+        store.setStringLength(1)
+        #expect(store.stringLength == 3, "the least a string holds")
+        store.setStringLength(99)
+        #expect(store.stringLength == 20, "the most a string holds")
+        store.setStringLength(12)
+        cloud.beadsPerString = 7
+        #expect(store.takeCloud())
+        #expect(store.stringLength == 7)
+        #expect(store.takeCloud() == false)
+        cloud.beadsPerString = 500
+        #expect(store.takeCloud())
+        #expect(store.stringLength == 20, "another device's value is held to the same bounds")
+        let fresh = FieldSettingsStore(defaults: defaults, cloud: cloud)
+        #expect(fresh.stringLength == 20, "read back from the defaults")
+        defaults.set(0, forKey: FieldSettingsStore.stringLengthKey)
+        #expect(FieldSettingsStore(defaults: defaults, cloud: cloud).stringLength == 5, "zero means never set")
     }
 
     @Test("Only the UI test process runs with every switch on; the unit tests see the standard")

@@ -10,11 +10,15 @@ import OSLog
     static let key = "offeredFields"
     /// "Dafür" (#647): one free sentence for the week, kept like the switches.
     static let rewardKey = "weekReward"
+    /// "Perlen je Schnur" (#824): how many beads fill a string.
+    static let stringLengthKey = "beadsPerString"
     static let standardArgument = "--ui-testing-fields-standard"
 
     private(set) var settings: DetailFieldSettings
     /// "Dafür: Samstag Kino." without the "Dafür"; empty means no line.
     private(set) var reward: String
+    /// Beads that fill a string (#824), always within `ViewRules.stringLengths`; five until set.
+    private(set) var stringLength: Int
     @ObservationIgnored private let defaults: UserDefaults
     @ObservationIgnored private let cloud: any FieldSettingsCloud
     @ObservationIgnored private var observer: (any NSObjectProtocol)?
@@ -25,6 +29,13 @@ import OSLog
         self.cloud = cloud
         settings = DetailFieldSettings(stored: defaults.stringArray(forKey: Self.key))
         reward = defaults.string(forKey: Self.rewardKey) ?? ""
+        stringLength = Self.length(defaults.integer(forKey: Self.stringLengthKey))
+    }
+
+    /// A stored or handed-in count held to the allowed range; zero (never set) is the standard.
+    private static func length(_ stored: Int) -> Int {
+        guard stored != 0 else { return ViewRules.stringLength }
+        return min(max(stored, ViewRules.stringLengths.lowerBound), ViewRules.stringLengths.upperBound)
     }
 
     /// The app's own. Under the UI tests a fresh store each launch (their own defaults suite, wiped at
@@ -72,8 +83,18 @@ import OSLog
         cloud.setWeekReward(trimmed)
     }
 
-    /// Another device chose (or this launch is the first to see it): take it over, the switches and
-    /// "Dafür" alike. Returns whether anything local changed.
+    /// "Perlen je Schnur" (#824): held to 3...20; the same number again writes nothing. The beads
+    /// are not touched: the string is read from them with the new length (`ViewRules.currentString`).
+    func setStringLength(_ count: Int) {
+        let next = Self.length(count)
+        guard next != stringLength else { return }
+        stringLength = next
+        defaults.set(next, forKey: Self.stringLengthKey)
+        cloud.setBeadsPerString(next)
+    }
+
+    /// Another device chose (or this launch is the first to see it): take it over, the switches,
+    /// "Dafür" and the string's length alike. Returns whether anything local changed.
     @discardableResult
     func takeCloud() -> Bool {
         var changed = false
@@ -90,6 +111,14 @@ import OSLog
             defaults.set(text, forKey: Self.rewardKey)
             changed = true
         }
+        if let count = cloud.beadsPerString {
+            let next = Self.length(count)
+            if next != stringLength {
+                stringLength = next
+                defaults.set(next, forKey: Self.stringLengthKey)
+                changed = true
+            }
+        }
         return changed
     }
 }
@@ -101,6 +130,8 @@ protocol FieldSettingsCloud {
     func setOfferedFields(_ fields: [String])
     var weekReward: String? { get }
     func setWeekReward(_ text: String)
+    var beadsPerString: Int? { get }
+    func setBeadsPerString(_ count: Int)
 }
 
 /// No iCloud under the UI tests: nothing read, nothing written.
@@ -110,6 +141,8 @@ private final class SilentCloud: FieldSettingsCloud {
     func setOfferedFields(_ fields: [String]) {}
     var weekReward: String? { nil }
     func setWeekReward(_ text: String) {}
+    var beadsPerString: Int? { nil }
+    func setBeadsPerString(_ count: Int) {}
 }
 
 extension NSUbiquitousKeyValueStore: FieldSettingsCloud {
@@ -123,5 +156,14 @@ extension NSUbiquitousKeyValueStore: FieldSettingsCloud {
 
     func setWeekReward(_ text: String) {
         set(text, forKey: FieldSettingsStore.rewardKey)
+    }
+
+    /// Absent reads as nil (an `Int64` of 0 is "never set"), so a device that never chose follows the others.
+    var beadsPerString: Int? {
+        object(forKey: FieldSettingsStore.stringLengthKey) == nil ? nil : Int(longLong(forKey: FieldSettingsStore.stringLengthKey))
+    }
+
+    func setBeadsPerString(_ count: Int) {
+        set(Int64(count), forKey: FieldSettingsStore.stringLengthKey)
     }
 }

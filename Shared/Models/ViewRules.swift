@@ -273,9 +273,12 @@ enum ViewRules {
         beads(in: all, within: week(containing: now, calendar: calendar))
     }
 
-    /// How many beads fill a string (Henning, 2026-10-24, #655): five, like the budget of open bead
-    /// tasks. A full string is the win: the sentence "Für die Perlen" is due. No calendar in it.
+    /// How many beads fill a string unless the user set it (Henning, 2026-10-24, #655): five. A full
+    /// string is the win: the sentence "Für die Perlen" is due. No calendar in it. Since #824 the
+    /// number is a setting (`FieldSettingsStore.stringLength`), held within `stringLengths`.
     static let stringLength = 5
+    /// The lengths the setting allows (#824): a string of two is no string, past twenty it never fills.
+    static let stringLengths = 3...20
 
     /// The string on the start page (#655): the beads since the last full string, oldest first, and
     /// whether it is full right now. Counted from all beads ever, in rounds of `stringLength`: with
