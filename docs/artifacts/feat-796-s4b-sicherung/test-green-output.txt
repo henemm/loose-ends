@@ -1,0 +1,67 @@
+Zusammenfassung: tests/test_backup_loose_ends.py: 13 passed in 0.21s
+Erzeugt (UTC): 2026-11-04T08:11:27Z
+Arbeitsstand: rennwienix:/home/hem/henemm-infra-le796b (Zweig feat/loose-ends-796-s4b)
+Commit: 5b1bf36285fb256ef23e35e58d11d1ec0d155d39
+
+$ python3 -m pytest tests/test_backup_loose_ends.py -v
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.3, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/hem/henemm-infra-le796b
+plugins: anyio-4.13.0
+collecting ... collected 13 items
+
+tests/test_backup_loose_ends.py::test_skript_existiert PASSED            [  7%]
+tests/test_backup_loose_ends.py::test_erfolg_legt_plain_sql_mit_rechten_ab PASSED [ 15%]
+tests/test_backup_loose_ends.py::test_vorhandener_ordner_bekommt_700 PASSED [ 23%]
+tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[abgeschnitten] PASSED [ 30%]
+tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[tabelle_fehlt] PASSED [ 38%]
+tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[migrationen_leer] PASSED [ 46%]
+tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[docker_exec] PASSED [ 53%]
+tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[abgeschnitten] PASSED [ 61%]
+tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[tabelle_fehlt] PASSED [ 69%]
+tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[migrationen_leer] PASSED [ 76%]
+tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[docker_exec] PASSED [ 84%]
+tests/test_backup_loose_ends.py::test_backup_sh_sichert_dump_offsite_vor_heartbeat PASSED [ 92%]
+tests/test_backup_loose_ends.py::test_backup_sh_bricht_bei_dump_fehler_ab PASSED [100%]
+
+============================== 13 passed in 0.24s ==============================
+exit=0
+
+$ python3 -m pytest tests/ -q
+........................................................................ [ 17%]
+........................................................................ [ 34%]
+........................................................................ [ 52%]
+........................................................................ [ 69%]
+........................................................................ [ 87%]
+...........................................sss..s.ss                     [100%]
+406 passed, 6 skipped in 37.51s
+exit=0
+
+$ bash -n scripts/backup-loose-ends-snapshot.sh
+exit=0
+$ bash -n scripts/backup.sh
+exit=0
+
+shellcheck: auf rennwienix nicht installiert; lokal (Mac) ShellCheck 0.11.0 gegen dieselben Dateien
+(scripts/backup-loose-ends-snapshot.sh: Blob 394f10243836b056ee8ec4a393c2a3d0aaf5dac7 = Commit 5b1bf36;
+ scripts/backup.sh per ssh cat aus dem Arbeitsstand, Vergleich gegen git show 69c7a62:scripts/backup.sh)
+
+$ shellcheck scripts/backup-loose-ends-snapshot.sh
+exit=0  (kein Befund)
+
+$ shellcheck scripts/backup.sh   (neu, 5b1bf36)
+line 71  SC2086 (info)    $GZ_DATA_ROOTS ungequotet
+line 91  SC2086 (info)    $GZ_DATA_ROOTS ungequotet
+line 123 SC2086 (info)   $FR_DATA_ROOTS ungequotet
+line 134 SC2086 (info)   $FR_DATA_ROOTS ungequotet
+line 174 SC1090 (warning) source "$RESTIC_ENV" nicht verfolgbar
+exit=1
+
+$ shellcheck scripts/backup.sh   (vorher, 69c7a62)
+dieselben fuenf Befunde an denselben Zeilen 71, 91, 123, 134, 174
+exit=1
+
+=> Kein neuer Befund durch diesen Schnitt; die fuenf Befunde in backup.sh bestanden vorher (nicht Teil dieses Schnitts).
+
+Funktionslaenge backup-loose-ends-snapshot.sh: fail() 5 Zeilen (Limit 50).

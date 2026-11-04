@@ -1,0 +1,72 @@
+Beleg AC-2 (Erfolgsfall) — #796 Schnitt S4b-1
+Erzeugt (UTC): 2026-11-04T08:35:00Z
+Server: rennwienix, /home/hem/henemm-infra auf Merge-Commit 3abf17bf6589d17d52e2e488ea58e4752a24906c
+(PR henemm/henemm-infra#383, gemergt 2026-11-04T08:22:05Z, Auto-Deploy 2026-11-04T08:25:02Z:
+ "Deployed 69c7a62b -> 3abf17bf: docs/backup-offsite.md scripts/backup-loose-ends-snapshot.sh scripts/backup.sh tests/test_backup_loose_ends.py")
+Zeilen '# <Zeit>' = UTC-Startzeit des Befehls darueber, '# exit=N' = Exit-Code.
+
+== Teil 1: pytest mit docker-Attrappe (aus test-green-output.txt, Commit 5b1bf36, inhaltsgleich gemergt) ==
+Zusammenfassung: tests/test_backup_loose_ends.py: 13 passed in 0.21s
+Erzeugt (UTC): 2026-11-04T08:11:27Z
+Arbeitsstand: rennwienix:/home/hem/henemm-infra-le796b (Zweig feat/loose-ends-796-s4b)
+Commit: 5b1bf36285fb256ef23e35e58d11d1ec0d155d39
+$ python3 -m pytest tests/test_backup_loose_ends.py -v
+tests/test_backup_loose_ends.py::test_erfolg_legt_plain_sql_mit_rechten_ab PASSED [ 15%]
+tests/test_backup_loose_ends.py::test_vorhandener_ordner_bekommt_700 PASSED [ 23%]
+============================== 13 passed in 0.24s ==============================
+
+== Teil 1b: dieselben Tests frisch im Live-Stand auf rennwienix ==
+$ cd /home/hem/henemm-infra && python3 -m pytest tests/test_backup_loose_ends.py -v   (Ausschnitt)
+tests/test_backup_loose_ends.py::test_erfolg_legt_plain_sql_mit_rechten_ab PASSED [ 15%]
+tests/test_backup_loose_ends.py::test_vorhandener_ordner_bekommt_700 PASSED [ 23%]
+============================== 13 passed in 0.18s ==============================
+
+== Teil 2: echter Lauf auf rennwienix (loose-ends-db) ==
+=== B: Dump schreiben ===
+
+$ OUT_DIR=/home/hem/backups/loose-ends bash /home/hem/henemm-infra/scripts/backup-loose-ends-snapshot.sh
+# 2026-11-04T08:28:07Z
+==> Loose-Ends-Dump ok (7 Tabellen, 2 Migrationen, 12K)
+# exit=0
+
+$ stat -c '%a %U %n' /home/hem/backups/loose-ends /home/hem/backups/loose-ends/looseends.sql
+# 2026-11-04T08:28:07Z
+700 hem /home/hem/backups/loose-ends
+600 hem /home/hem/backups/loose-ends/looseends.sql
+# exit=0
+
+$ file /home/hem/backups/loose-ends/looseends.sql
+# 2026-11-04T08:28:07Z
+/home/hem/tmp-le-probe.sh: line 6: file: command not found
+# exit=127
+
+$ tail -n 5 /home/hem/backups/loose-ends/looseends.sql | sed -E 's/^(.unrestrict ).*/\1<Schluessel>/'
+# 2026-11-04T08:28:07Z
+-- PostgreSQL database dump complete
+--
+
+\unrestrict <Schluessel>
+
+# exit=0
+
+$ grep -c '^CREATE TABLE ' /home/hem/backups/loose-ends/looseends.sql
+# 2026-11-04T08:28:07Z
+7
+# exit=0
+
+$ ls -la /home/hem/backups/loose-ends/
+# 2026-11-04T08:28:07Z
+total 36
+drwx------  2 hem hem  4096 Nov  4 08:28 .
+drwxrwxr-x 13 hem hem 20480 Nov  4 08:28 ..
+-rw-------  1 hem hem  8615 Nov  4 08:28 looseends.sql
+# exit=0
+
+'file' ist auf rennwienix nicht installiert (exit 127 oben); Ersatzpruefung derselben Datei:
+$ python3 -c 'import sys; b=open(sys.argv[1],"rb").read(); b.decode("utf-8"); print("bytes=%d nul=%d gzip_magic=%s utf8=ok erste_zeile=%r" % (len(b), b.count(0), b[:2]==bytes([31,139]), b.splitlines()[0].decode()))' /home/hem/backups/loose-ends/looseends.sql
+# 2026-11-04T08:28:47Z
+bytes=8615 nul=0 gzip_magic=False utf8=ok erste_zeile='--'
+# exit=0
+
+
+Befund: Exit 0; Ordner 700, Datei 600 (Eigentuemer hem); Textdatei (UTF-8, 0 NUL-Bytes, keine gzip-Kennung 1f 8b, also unkomprimiertes Plain-SQL); Endmarke '-- PostgreSQL database dump complete' unter den letzten fuenf Zeilen, gefolgt von '--' und '\unrestrict <Schluessel>' (Schluessel maskiert); 7 CREATE TABLE = 7 Tabellen live; im Ordner nur looseends.sql, kein .tmp-Rest. -> AC-2 erfuellt.

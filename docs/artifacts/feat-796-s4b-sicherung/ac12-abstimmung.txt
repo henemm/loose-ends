@@ -1,0 +1,18 @@
+Beleg AC-12 (Abstimmung) — #796 Schnitt S4b-1
+Erzeugt (UTC): 2026-11-04T08:35:00Z
+Server: rennwienix, /home/hem/henemm-infra auf Merge-Commit 3abf17bf6589d17d52e2e488ea58e4752a24906c
+(PR henemm/henemm-infra#383, gemergt 2026-11-04T08:22:05Z, Auto-Deploy 2026-11-04T08:25:02Z:
+ "Deployed 69c7a62b -> 3abf17bf: docs/backup-offsite.md scripts/backup-loose-ends-snapshot.sh scripts/backup.sh tests/test_backup_loose_ends.py")
+Zeilen '# <Zeit>' = UTC-Startzeit des Befehls darueber, '# exit=N' = Exit-Code.
+
+# 2026-11-04T08:34:49Z
+$ gh api repos/henemm/henemm-infra/issues/comments/6626018826 --jq .created_at
+2026-11-04T08:14:45Z
+# exit=0
+$ gh api repos/henemm/henemm-infra/issues/comments/6626018826 --jq .html_url
+https://github.com/henemm/henemm-infra/issues/336#issuecomment-6626018826
+$ gh pr view 383 --repo henemm/henemm-infra --json createdAt,url,mergedAt
+{"createdAt":"2026-11-04T08:15:09Z","mergedAt":"2026-11-04T08:22:05Z","url":"https://github.com/henemm/henemm-infra/pull/383"}
+# exit=0
+
+Befund: Kommentar https://github.com/henemm/henemm-infra/issues/336#issuecomment-6626018826 um 2026-11-04T08:14:45Z, PR https://github.com/henemm/henemm-infra/pull/383 um 2026-11-04T08:15:09Z erstellt: Kommentar 24 s vor dem PR. Benachrichtigung, auf Antwort nicht gewartet. -> AC-12 erfuellt.

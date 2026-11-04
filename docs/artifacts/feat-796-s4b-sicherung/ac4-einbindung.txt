@@ -1,0 +1,60 @@
+Beleg AC-4 (Einbindung) — #796 Schnitt S4b-1
+Erzeugt (UTC): 2026-11-04T08:35:00Z
+Server: rennwienix, /home/hem/henemm-infra auf Merge-Commit 3abf17bf6589d17d52e2e488ea58e4752a24906c
+(PR henemm/henemm-infra#383, gemergt 2026-11-04T08:22:05Z, Auto-Deploy 2026-11-04T08:25:02Z:
+ "Deployed 69c7a62b -> 3abf17bf: docs/backup-offsite.md scripts/backup-loose-ends-snapshot.sh scripts/backup.sh tests/test_backup_loose_ends.py")
+Zeilen '# <Zeit>' = UTC-Startzeit des Befehls darueber, '# exit=N' = Exit-Code.
+
+$ gh pr diff 383 --repo henemm/henemm-infra   (Ausschnitt scripts/backup.sh)
+diff --git a/scripts/backup.sh b/scripts/backup.sh
+index 0556c2b..0bddc3e 100755
+--- a/scripts/backup.sh
++++ b/scripts/backup.sh
+@@ -192,10 +192,19 @@ SECRET_FILES+=("/etc/henemm/secrets.env" "$RESTIC_ENV")
+ N8N_SNAPSHOT_DIR="${BACKUP_DIR}/n8n"
+ OUT_DIR="$N8N_SNAPSHOT_DIR" bash /home/hem/henemm-infra/scripts/backup-n8n-snapshot.sh
+ 
++# Loose-Ends-Datenbank (henemm/loose-ends#796 S4b-1): seit S4a laeuft
++# loose-ends-db auf diesem Server; der Plain-SQL-Dump geht mit restic
++# off-site. Dump unvollstaendig oder docker exec gescheitert -> kein Ping.
++LE_SNAPSHOT_DIR="${BACKUP_DIR}/loose-ends"
++if ! OUT_DIR="$LE_SNAPSHOT_DIR" bash /home/hem/henemm-infra/scripts/backup-loose-ends-snapshot.sh; then
++    echo "FEHLER: Loose-Ends-Dump fehlgeschlagen. Heartbeat NICHT gepingt." >&2
++    exit 1
++fi
++
+ echo "==> Off-Site-Backup (restic -> Heimserver, append-only, verschluesselt)"
+ set +e
+ restic backup --tag offsite --tag daily --host henemm-hetzner \
+-    "$BACKUP_FILE" "$DATA_FILE" "$FR_DATA_FILE" "$N8N_SNAPSHOT_DIR" "${SECRET_FILES[@]}"
++    "$BACKUP_FILE" "$DATA_FILE" "$FR_DATA_FILE" "$N8N_SNAPSHOT_DIR" "$LE_SNAPSHOT_DIR" "${SECRET_FILES[@]}"
+ RC=$?
+ set -e
+ # restic-Exit-Codes: 0 = ok, 3 = ok, aber einzelne Quelldateien unlesbar
+
+$ diff <(gh api 'repos/henemm/henemm-infra/contents/scripts/backup.sh?ref=69c7a62b' raw) <(ssh rennwienix cat /home/hem/henemm-infra/scripts/backup.sh)
+194a195,203
+> # Loose-Ends-Datenbank (henemm/loose-ends#796 S4b-1): seit S4a laeuft
+> # loose-ends-db auf diesem Server; der Plain-SQL-Dump geht mit restic
+> # off-site. Dump unvollstaendig oder docker exec gescheitert -> kein Ping.
+> LE_SNAPSHOT_DIR="${BACKUP_DIR}/loose-ends"
+> if ! OUT_DIR="$LE_SNAPSHOT_DIR" bash /home/hem/henemm-infra/scripts/backup-loose-ends-snapshot.sh; then
+>     echo "FEHLER: Loose-Ends-Dump fehlgeschlagen. Heartbeat NICHT gepingt." >&2
+>     exit 1
+> fi
+> 
+198c207
+<     "$BACKUP_FILE" "$DATA_FILE" "$FR_DATA_FILE" "$N8N_SNAPSHOT_DIR" "${SECRET_FILES[@]}"
+---
+>     "$BACKUP_FILE" "$DATA_FILE" "$FR_DATA_FILE" "$N8N_SNAPSHOT_DIR" "$LE_SNAPSHOT_DIR" "${SECRET_FILES[@]}"
+# exit=1 (1 = Unterschiede wie gezeigt)
+
+== Einbindungstests (pytest, live auf rennwienix) ==
+tests/test_backup_loose_ends.py::test_backup_sh_sichert_dump_offsite_vor_heartbeat PASSED [ 92%]
+tests/test_backup_loose_ends.py::test_backup_sh_bricht_bei_dump_fehler_ab PASSED [100%]
+============================== 13 passed in 0.18s ==============================
+== dieselben aus test-green-output.txt ==
+tests/test_backup_loose_ends.py::test_backup_sh_sichert_dump_offsite_vor_heartbeat PASSED [ 92%]
+tests/test_backup_loose_ends.py::test_backup_sh_bricht_bei_dump_fehler_ab PASSED [100%]
+
+Befund: Abschnitt (9 Zeilen inkl. Leerzeile, 3 Zeilen Kommentar mit Ticket) nach dem n8n-Aufruf und vor 'restic backup'; "$LE_SNAPSHOT_DIR" direkt nach "$N8N_SNAPSHOT_DIR" im restic-Aufruf, Tags und Host unveraendert; Fehler -> 'FEHLER: Loose-Ends-Dump fehlgeschlagen. Heartbeat NICHT gepingt.' + exit 1, vor dem Heartbeat. Diff +10/-1, sonst nichts geaendert (find -mtime +30 -delete unberuehrt). -> AC-4 erfuellt.
