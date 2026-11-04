@@ -143,9 +143,6 @@ final class MacAppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        #if DEBUG
-        TopStripProbe.startIfAsked()
-        #endif
         LoginItem.enableOnFirstStart()
         if launchedAsLoginItem {
             // SwiftUI puts its first window up after this call; close it on the next turn.

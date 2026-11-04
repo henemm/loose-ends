@@ -265,7 +265,7 @@ struct TaskListView: View {
             #if os(macOS)
             // The Mac lays its scroll pocket (`NSScrollPocket`) over the top of the scroll view, down to below the
             // pinned head, and shows it when the pointer comes near. A list 720 pt wide made it a light box over
-            // the column alone (#829, found by `MacTopStripProbeTests`). The list now spans the detail column,
+            // the column alone (#829, found by a view-tree probe in CI, run 41902581639). The list now spans the detail column,
             // so the pocket runs with the title bar as in any Mac app; insets keep the rows in the 720 pt column.
             list
                 .listStyle(.plain)
