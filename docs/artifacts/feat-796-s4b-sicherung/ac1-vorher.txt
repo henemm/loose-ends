@@ -1,0 +1,46 @@
+# AC-1 vorher (RED) — 2026-11-04T08:05:10Z
+Infra-Arbeitsstand /home/hem/henemm-infra-le796b, Zweig feat/loose-ends-796-s4b, Basis 69c7a62 (= origin/main)
+
+$ python3 -m pytest tests/test_backup_loose_ends.py -v
+============================== 13 failed in 0.09s ==============================
+E       AssertionError: /home/hem/henemm-infra-le796b/scripts/backup-loose-ends-snapshot.sh fehlt
+FAILED tests/test_backup_loose_ends.py::test_backup_sh_bricht_bei_dump_fehler_ab
+FAILED tests/test_backup_loose_ends.py::test_backup_sh_sichert_dump_offsite_vor_heartbeat
+FAILED tests/test_backup_loose_ends.py::test_erfolg_legt_plain_sql_mit_rechten_ab
+FAILED tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[abgeschnitten]
+FAILED tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[docker_exec]
+FAILED tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[migrationen_leer]
+FAILED tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[tabelle_fehlt]
+FAILED tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[abgeschnitten]
+FAILED tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[docker_exec]
+FAILED tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[migrationen_leer]
+FAILED tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[tabelle_fehlt]
+FAILED tests/test_backup_loose_ends.py::test_skript_existiert - AssertionErro...
+FAILED tests/test_backup_loose_ends.py::test_vorhandener_ordner_bekommt_700
+tests/test_backup_loose_ends.py::test_backup_sh_bricht_bei_dump_fehler_ab FAILED [100%]
+tests/test_backup_loose_ends.py::test_backup_sh_sichert_dump_offsite_vor_heartbeat FAILED [ 92%]
+tests/test_backup_loose_ends.py::test_erfolg_legt_plain_sql_mit_rechten_ab FAILED [ 15%]
+tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[abgeschnitten] FAILED [ 30%]
+tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[docker_exec] FAILED [ 53%]
+tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[migrationen_leer] FAILED [ 46%]
+tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[tabelle_fehlt] FAILED [ 38%]
+tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[abgeschnitten] FAILED [ 61%]
+tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[docker_exec] FAILED [ 84%]
+tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[migrationen_leer] FAILED [ 76%]
+tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[tabelle_fehlt] FAILED [ 69%]
+tests/test_backup_loose_ends.py::test_skript_existiert FAILED            [  7%]
+tests/test_backup_loose_ends.py::test_vorhandener_ordner_bekommt_700 FAILED [ 23%]
+
+$ restic snapshots --tag offsite --latest 1   (Umgebung aus /etc/henemm/restic.*, wie backup.sh)
+                                               daily
+f458ab48  2026-11-04 03:00:09  henemm-hetzner  offsite
+                                               daily
+----------------------------------------------------------
+74 snapshots
+jüngster Off-Site-Snapshot: f458ab48
+$ restic ls f458ab48 | grep -c looseends
+0
+$ restic ls f458ab48 | grep -c /home/hem/backups/n8n/   (Gegenprobe: n8n-Dump ist drin)
+3
+
+Infra-Zweig: feat/loose-ends-796-s4b, RED-Commit 210bb1c (gepusht), Arbeitsstand auf rennwienix: /home/hem/henemm-infra-le796b
