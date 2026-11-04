@@ -1,0 +1,573 @@
+Postgres on 127.0.0.1:64422
+
+> test
+> node --test 'test/*.test.ts'
+
+✖ AC-1: the migrations apply 001 and 002 once, and the three account tables exist (80.172542ms)
+✔ AC-2: findOrCreate gives one account per apple_sub, also when called at the same time (109.996875ms)
+✔ AC-3: createSession hands out 43-character tokens and stores only their SHA-256 (122.814083ms)
+✔ AC-4/AC-5: resolveSession finds a valid session, refreshes it, and ends only the one session (55.69075ms)
+✔ AC-6: createSession for an unknown account is refused by the foreign key (56.787416ms)
+✖ AC-7/AC-8/AC-10: deleteAccount removes every row of the account and leaves the other one untouched (64.08575ms)
+✖ AC-9: deleteAccount without an Apple token deletes all, an unknown account changes nothing (379.2755ms)
+✖ delete: rundweg mit client_id (411.311708ms)
+✔ AC-12: the account functions write nothing to the console, and an error names neither token nor apple_sub (69.417333ms)
+✔ secret: kopf, nutzlast, signatur (1.583ms)
+✔ secret: je aufruf neu, manipulation fällt auf (0.607875ms)
+✔ fehlbedienung: wirft ohne netz (1.352875ms)
+✔ redeem: anfrage (17.285083ms)
+✔ redeem: erfolg (2.580208ms)
+✔ redeem: apple-fehler und status (Fallliste) (6.934334ms)
+✔ redeem: malformed 200 (Fallliste) (4.171583ms)
+✔ redeem: id_token geprüft (Fallliste) (15.724625ms)
+✔ redeem: unavailable und zeitlimit (Fallliste) (4.563292ms)
+✔ revoke: anfrage (0.579167ms)
+✔ revoke: erfolg (0.548292ms)
+✔ revoke: apple-fehler und status (Fallliste) (6.788083ms)
+✔ revoke: unavailable und zeitlimit (Fallliste) (7.192166ms)
+✔ revoke fehlbedienung: wirft ohne netz (0.733ms)
+✔ reason: feste menge, keine geheimnisse (11.094208ms)
+✔ silence (29.784542ms)
+✔ revoke: silence (3.032875ms)
+✔ cache: laden und wiederverwenden (21.059167ms)
+✔ kid: unbekannt lädt einmal nach (1.233417ms)
+✔ sperre: 59 s und 60 s (0.736708ms)
+✔ parallel: ein Abruf (1.125125ms)
+✔ fehlschlag: ohne Cache (1.509792ms)
+✔ fehlschlag: alter Cache bleibt (1.396041ms)
+✔ sperre: auch nach Fehlschlag (0.3755ms)
+✔ ttl: nach einer Stunde neuer Stand (0.487541ms)
+✔ ttl: abgelaufen und Abruf misslingt (1.230625ms)
+✔ rotation: entfernter kid (0.401416ms)
+✔ einträge: ungültige übersprungen (0.334084ms)
+✔ fetch: url und signal (0.292583ms)
+✖ zusammenspiel: verifyIdentityToken (4.146333ms)
+✔ silence und feste Werte (0.859125ms)
+✔ roundtrip: blobform (4.561083ms)
+✔ attack: manipuliert, falsch, zu kurz (1.160875ms)
+✔ attack: kein Buffer (0.300958ms)
+✔ decrypt: schlüssellänge (0.20675ms)
+✔ decrypt: 29 Byte (0.1955ms)
+✔ encrypt: wirft bei Fehleingabe (0.828041ms)
+✔ encrypt: iv je blob verschieden (7.693125ms)
+✔ encrypt: kein klartext im blob (0.787ms)
+✔ store: überschreibt (92.81525ms)
+✖ vault: client_id wird abgelegt und ersetzt (96.925292ms)
+✖ vault fehlbedienung: client_id (119.92375ms)
+✔ store: unbekanntes konto (48.697083ms)
+✔ store: rundweg über deleteAccount (57.331334ms)
+✔ store: blob gehört zum konto (64.319292ms)
+✔ silence (382.453375ms)
+✔ config: gültige Umgebung (1.934458ms)
+✔ config: fehlend und ungültig (3.942792ms)
+✖ verify: aud im erfolg (3.759959ms)
+✖ verify: gültiges Token (1.936417ms)
+✔ attack: malformed (4.324ms)
+✔ attack: alg none (2.601584ms)
+✔ attack: HS256 mit öffentlichem Schlüssel (0.793167ms)
+✔ attack: ES256 (0.135416ms)
+✔ attack: kid und Schlüsselsuche (1.172958ms)
+✔ attack: JWK mit fremdem alg oder kty (0.817833ms)
+✔ attack: Signatur (1.80175ms)
+✔ attack: iss (2.362ms)
+✔ attack: aud (4.539041ms)
+✖ attack: abgelaufen (0.60825ms)
+✖ attack: iat (0.501208ms)
+✖ attack: nonce (0.975167ms)
+✖ reasons: feste Liste (0.689833ms)
+✔ verify: fehlerformen (1.062667ms)
+✔ silence (3.236167ms)
+2026-11-04T08:01:27.787Z listening
+2026-11-04T08:01:27.879Z migrated
+✔ AC-1 (S1): after ready, /health answers 200 with exactly five keys (147.503791ms)
+2026-11-04T08:01:27.910Z listening
+2026-11-04T08:01:27.918Z migrate failed, retrying (1/20)
+2026-11-04T08:01:27.970Z migrate failed, retrying (2/20)
+2026-11-04T08:01:28.022Z migrate failed, retrying (3/20)
+2026-11-04T08:01:28.073Z migrate failed, retrying (4/20)
+2026-11-04T08:01:28.125Z migrate failed, retrying (5/20)
+2026-11-04T08:01:28.177Z migrate failed, retrying (6/20)
+2026-11-04T08:01:28.229Z migrate failed, retrying (7/20)
+2026-11-04T08:01:28.281Z migrate failed, retrying (8/20)
+2026-11-04T08:01:28.333Z migrate failed, retrying (9/20)
+2026-11-04T08:01:28.385Z migrate failed, retrying (10/20)
+2026-11-04T08:01:28.437Z migrate failed, retrying (11/20)
+2026-11-04T08:01:28.489Z migrate failed, retrying (12/20)
+2026-11-04T08:01:28.541Z migrate failed, retrying (13/20)
+2026-11-04T08:01:28.593Z migrate failed, retrying (14/20)
+2026-11-04T08:01:28.645Z migrate failed, retrying (15/20)
+2026-11-04T08:01:28.696Z migrate failed, retrying (16/20)
+2026-11-04T08:01:28.749Z migrate failed, retrying (17/20)
+2026-11-04T08:01:28.801Z migrate failed, retrying (18/20)
+2026-11-04T08:01:28.853Z migrate failed, retrying (19/20)
+✔ AC-2 (S1): without a database /health and /mcp answer 503, ready is refused, close does not throw (995.783834ms)
+2026-11-04T08:01:28.908Z listening
+2026-11-04T08:01:28.974Z migrated
+✔ AC-3 (S1): /mcp answers initialize with serverInfo and refuses get_now without an account (100.446166ms)
+2026-11-04T08:01:29.008Z listening
+2026-11-04T08:01:29.038Z migrated
+✔ AC-4 (S1): an unknown path answers 404 and counts in the next /health (37.852584ms)
+2026-11-04T08:01:29.046Z listening
+2026-11-04T08:01:29.080Z migrated
+✔ AC-5 (S1): terminated pool connections leave the process alive and /health recovers within 5 s, without error text (46.99225ms)
+2026-11-04T08:01:29.095Z listening
+2026-11-04T08:01:29.109Z migrated
+✔ AC-6 (S1): close ends server and pool, a second close does not throw, keep-alive does not hold it (25.070167ms)
+✔ AC-7 (S1): ErrorWindow trips only above half of at least 20 answers and forgets after five minutes (0.206833ms)
+2026-11-04T08:01:29.119Z listening
+2026-11-04T08:01:29.133Z migrated
+✔ AC-8 (S1): /health turns 503 on a high error rate and recovers when the window passes (30.805875ms)
+✔ AC-9 (S1): a database that never answers gives 503 with db down within a second, no exception (51.041167ms)
+✔ AC-10 (S1): no title, order id, database error text or URL in any answer or log line; every log line starts ISO (242.649292ms)
+✔ AC-1/AC-3: tools/list names the six tools, with the annotations of the write and read tools (162.805042ms)
+▶ AC-2: without an account the read tools refuse and reads nothing
+  ✔ get_now (2.261083ms)
+  ✔ list_tasks (1.288667ms)
+✔ AC-2: without an account the read tools refuse and reads nothing (55.068667ms)
+▶ AC-3/AC-4: another account and an account without transcript get „noch keine Abschrift“
+  ✔ AC-3 fremdes Konto (54.742333ms)
+  ✔ AC-4 keine Abschrift (54.058292ms)
+✔ AC-3/AC-4: another account and an account without transcript get „noch keine Abschrift“ (109.070875ms)
+▶ AC-5: get_now passes nowCount through and never recounts
+  ✔ Vertrag (383.403625ms)
+  ✔ 7 bei drei Zeilen (409.629708ms)
+✔ AC-5: get_now passes nowCount through and never recounts (793.852167ms)
+▶ AC-6: get_now orders knaeuel, today, lined, waiting and keeps the order inside a group
+  ✔ Vertrag (71.353458ms)
+  ✔ ohne Knäuel, mehrere je Gruppe (55.098458ms)
+✔ AC-6: get_now orders knaeuel, today, lined, waiting and keeps the order inside a group (127.189417ms)
+✔ AC-7: each row of get_now carries the task's fields; an id without task stays id and group (49.8795ms)
+▶ AC-8: list_tasks returns every task as delivered, with generatedAt
+  ✔ Vertrag (39.223125ms)
+  ✔ vertauscht (22.531875ms)
+✔ AC-8: list_tasks returns every task as delivered, with generatedAt (62.5705ms)
+✔ AC-9: no raw text or note in any answer, nothing on console or stdout (31.549584ms)
+✔ AC-10: a newer upload is read on the next call, nothing is cached (24.835208ms)
+✔ AC-13: getTranscript returns the stored document or undefined (15.797583ms)
+✔ AC-4 (C4b-1): without an account both new tools refuse and capture_task stores nothing (23.525833ms)
+✔ AC-5/AC-6 (C4b-1): capture_task stores one capture order per call, waiting, for the account from authInfo (21.861167ms)
+✔ AC-7 (C4b-1): empty, blank and invalid text store nothing and answer isError (19.861875ms)
+✔ AC-8/AC-9 (C4b-1): get_order_result goes waiting, claimed, result; unknown and foreign ids are unknown, no order text (31.1955ms)
+✔ AC-10 (C4b-1): neither new tool writes to console or stdout (29.166375ms)
+✔ AC-1 (C4b-2): complete_task and set_due are write tools without idempotence and point to list_tasks and get_order_result (25.820333ms)
+▶ AC-2/AC-3 (C4b-2): without an account or without a transcript both tools refuse and store nothing
+  ✔ AC-2 kein Konto (40.58775ms)
+  ✔ AC-3 keine Abschrift (22.961458ms)
+✔ AC-2/AC-3 (C4b-2): without an account or without a transcript both tools refuse and store nothing (63.905875ms)
+✔ AC-4 (C4b-2): a generatedAt that differs from the stored transcript stores nothing; the same one stores an order (23.504917ms)
+✔ AC-5 (C4b-2): a task the transcript no longer carries is refused; a lowercase id finds a task and the order carries the transcript's id (27.388208ms)
+✔ AC-6 (C4b-2): complete_task stores one complete order with the expected state from the transcript (21.727875ms)
+✔ AC-7 (C4b-2): set_due stores the date and hasTime as given, with the expected due date; without date the key is missing (24.542458ms)
+✔ AC-8 (C4b-2): set_due with an invalid date stores nothing and answers with checkOrder's message (24.955666ms)
+✔ AC-9/AC-10 (C4b-2): equal calls give two orders; no title in an answer; another account changes nothing (21.824417ms)
+✔ AC-11 (C4b-2): neither new tool writes to console or stdout (17.399625ms)
+✔ AC-1: applies migrations in number order and returns their names in that order (98.721666ms)
+✔ AC-2: a second run applies nothing, a new file alone is applied (230.942167ms)
+✔ AC-3: a broken migration rolls back completely and rethrows the Postgres error (40.372875ms)
+✔ AC-4: a gap in the numbers is refused before anything is applied (5.674208ms)
+✔ AC-4: a duplicate number is refused before anything is applied (10.478125ms)
+✔ AC-4: a misnamed .sql file is refused before anything is applied, README.md is ignored (6.744584ms)
+✔ AC-4: a README.md beside the migrations does not disturb the run (34.314ms)
+✔ AC-4: number 000 is refused as invalid, not as a duplicate (6.404ms)
+✔ AC-2: two runs at once apply every migration exactly once (S3) (368.3545ms)
+✔ AC-2: three runs at once apply every migration exactly once (S3) (415.662583ms)
+✔ AC-3: after a failed run the lock is free and a repaired run finishes (S3) (384.947875ms)
+✔ AC-3: a failed ROLLBACK keeps the original error, discards the connection and skips the unlock (S3) (1.39325ms)
+✔ AC-4: a gap is refused without ever connecting to the database (S3) (0.72625ms)
+✔ AC-5: without DATABASE_URL the test run fails and names the variable (269.775375ms)
+✔ AC-1: the contract order is stored, ON CONFLICT works on the generated id (59.975292ms)
+✔ AC-2: contract examples and small orders and results are accepted (0.903542ms)
+▶ AC-3 to AC-8: orders off the table are refused with the field path, nothing is stored
+  ✔ AC-3 (Z1) version (4.55575ms)
+  ✔ AC-4 (Z2) id (3.925625ms)
+  ✔ AC-4 (Z3) kind (9.313959ms)
+  ✔ AC-5 (Z4) capture (7.02025ms)
+  ✔ AC-6 (Z5) complete (7.987458ms)
+  ✔ AC-7 (Z6) complete times and keys (4.633208ms)
+  ✔ AC-8 (Z7) setDue (7.101167ms)
+✔ AC-3 to AC-8: orders off the table are refused with the field path, nothing is stored (119.321167ms)
+✔ AC-7: complete without expectedDueDate is accepted (1.113916ms)
+✔ AC-9: an order that is no object names the root (0.268541ms)
+▶ AC-10/11: results off the table are refused with the field path, nothing is stored
+  ✔ AC-10 (Z9) result (7.882334ms)
+  ✔ AC-11 (Z10) reason (8.373208ms)
+✔ AC-10/11: results off the table are refused with the field path, nothing is stored (112.7945ms)
+✔ AC-12: transcript messages stay, other errors carry no prefix (1.046375ms)
+✔ AC-13: a new order is stored for the account, unclaimed (37.164167ms)
+✔ AC-14: the same id again, even upper case with other content, changes nothing (46.367458ms)
+✔ AC-15: a claimed order is not reset by a second put (58.895417ms)
+✔ AC-16: three orders are claimed one by one, then nothing (67.337167ms)
+✔ AC-17: two connections claim ten orders, each exactly once (412.389ms)
+✔ AC-18: two accounts never cross (388.105917ms)
+✔ AC-19: the result of the holding device is stored (53.735584ms)
+✔ AC-20: results for orders not held by the reporter are refused (38.308291ms)
+✔ AC-21: a second result changes nothing (40.840042ms)
+✔ AC-1 (C4b-1): getResult is unknown for a never stored id, another account's id and a non-UUID (37.454291ms)
+▶ AC-2 (C4b-1): getResult goes waiting, claimed, result and reads the id in any case
+  ✔ done (23.734334ms)
+  ✔ rejected mit Grund (34.304167ms)
+✔ AC-2 (C4b-1): getResult goes waiting, claimed, result and reads the id in any case (58.423583ms)
+✖ AC-1: the real migrations folder applies 001 once and creates the three tables (58.3725ms)
+✔ AC-2: the three contract examples are accepted in contract order (57.290209ms)
+✔ AC-3: transcripts refuse what the contract does not allow (89.57075ms)
+✔ AC-4: orders refuse a wrong version, kind, id, account or half a claim, and take all three kinds (409.118708ms)
+✔ AC-5: order results belong to exactly one existing order and carry a reason only when rejected (410.277625ms)
+✔ AC-6: ids keep their case in the document, the uuid columns compare regardless of case (45.351917ms)
+✔ AC-6: known limit, version 1.0 is accepted because jsonb compares numbers numerically (36.824916ms)
+✖ migration 003: additiv auf bestandsdaten (41.607792ms)
+✔ AC-1: the contract example and a lower-case one without optional fields are accepted (1.76075ms)
+▶ AC-2 to AC-11: the deviation table is refused with the field path, nothing is stored
+  ✔ AC-2 (Z1) version (1.314459ms)
+  ✔ AC-3 (Z2) generatedAt (0.563875ms)
+  ✔ AC-4 (Z3) now is no object (0.615292ms)
+  ✔ AC-5 (Z4) keys of now (1.085875ms)
+  ✔ AC-6 (Z5) now.knaeuel (0.626041ms)
+  ✔ AC-7 (Z6) lists of now (1.717375ms)
+  ✔ AC-8 (Z7) contexts (0.72075ms)
+  ✔ AC-9 (Z8) title and project (0.481917ms)
+  ✔ AC-10 (Z9) raw text and note anywhere (0.729917ms)
+  ✔ AC-11 (Z10) root keys and nowCount (1.47675ms)
+  ✔ F001 inherited key names are unknown keys (2.524292ms)
+  ✔ F002 times Postgres refuses or that are no ISO (2.881958ms)
+  ✔ F003 NUL and lone surrogates (0.74375ms)
+✔ AC-2 to AC-11: the deviation table is refused with the field path, nothing is stored (65.515333ms)
+✔ AC-6: without now.knaeuel the transcript is accepted (0.175917ms)
+✔ AC-12/13/14: the first is stored, a newer replaces it, an older or equally old one leaves it (59.678209ms)
+✔ AC-15: two concurrent uploads over two connections always leave the newer one (393.869333ms)
+✔ AC-16: two accounts keep their transcripts apart (402.416209ms)
+✔ AC-17: the service does not recount, a mismatching nowCount and unknown now ids are stored (67.976083ms)
+✔ F002: offsets up to ±15:59 are stored, as Postgres takes them (56.692167ms)
+ℹ tests 192
+ℹ suites 0
+ℹ pass 177
+ℹ fail 15
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2301.642625
+
+✖ failing tests:
+
+test at test/accounts.test.ts:57:1
+✖ AC-1: the migrations apply 001 and 002 once, and the three account tables exist (80.172542ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      '001_claude_schema.sql',
+      '002_accounts.sql',
+  -   '003_apple_client_id.sql'
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/accounts.test.ts:60:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ '001_claude_schema.sql', '002_accounts.sql' ],
+    expected: [ '001_claude_schema.sql', '002_accounts.sql', '003_apple_client_id.sql' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/accounts.test.ts:129:1
+✖ AC-7/AC-8/AC-10: deleteAccount removes every row of the account and leaves the other one untouched (64.08575ms)
+  error: Spalte »client_id« von Relation »apple_tokens« existiert nicht
+      at /Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async filled (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/accounts.test.ts:35:19)
+      at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/accounts.test.ts:132:17)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    length: 141,
+    severity: 'FEHLER',
+    code: '42703',
+    detail: undefined,
+    hint: undefined,
+    position: '58',
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    file: 'parse_target.c',
+    line: '1073',
+    routine: 'checkInsertTargets'
+  }
+
+test at test/accounts.test.ts:144:1
+✖ AC-9: deleteAccount without an Apple token deletes all, an unknown account changes nothing (379.2755ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      appleToken: null,
+  -   clientId: null,
+      deleted: true
+    }
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/accounts.test.ts:148:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { deleted: true, appleToken: null },
+    expected: { deleted: true, appleToken: null, clientId: null },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/accounts.test.ts:158:1
+✖ delete: rundweg mit client_id (411.311708ms)
+  error: Spalte »client_id« von Relation »apple_tokens« existiert nicht
+      at /Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async filled (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/accounts.test.ts:35:19)
+      at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/accounts.test.ts:167:21)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    length: 141,
+    severity: 'FEHLER',
+    code: '42703',
+    detail: undefined,
+    hint: undefined,
+    position: '58',
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    file: 'parse_target.c',
+    line: '1073',
+    routine: 'checkInsertTargets'
+  }
+
+test at test/apple-jwks.test.ts:198:1
+✖ zusammenspiel: verifyIdentityToken (4.146333ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  -   aud: 'com.henning.looseends',
+      ok: true,
+      sub: '001.abc.002'
+    }
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple-jwks.test.ts:217:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { ok: true, sub: '001.abc.002' },
+    expected: { ok: true, sub: '001.abc.002', aud: 'com.henning.looseends' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple-vault.test.ts:132:1
+✖ vault: client_id wird abgelegt und ersetzt (96.925292ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - 'com.henning.looseends'
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple-vault.test.ts:137:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'com.henning.looseends',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple-vault.test.ts:150:1
+✖ vault fehlbedienung: client_id (119.92375ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: leer
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple-vault.test.ts:162:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at test/apple.test.ts:98:1
+✖ verify: aud im erfolg (3.759959ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  -   aud: 'com.henning.looseends',
+      ok: true,
+      sub: '001234.abcdef0123456789.0042'
+    }
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple.test.ts:101:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { ok: true, sub: '001234.abcdef0123456789.0042' },
+    expected: { ok: true, sub: '001234.abcdef0123456789.0042', aud: 'com.henning.looseends' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple.test.ts:106:1
+✖ verify: gültiges Token (1.936417ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  -   aud: 'com.henning.looseends',
+      ok: true,
+      sub: '001234.abcdef0123456789.0042'
+    }
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple.test.ts:107:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { ok: true, sub: '001234.abcdef0123456789.0042' },
+    expected: { ok: true, sub: '001234.abcdef0123456789.0042', aud: 'com.henning.looseends' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple.test.ts:182:1
+✖ attack: abgelaufen (0.60825ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  -   aud: 'com.henning.looseends',
+      ok: true,
+      sub: '001234.abcdef0123456789.0042'
+    }
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple.test.ts:183:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { ok: true, sub: '001234.abcdef0123456789.0042' },
+    expected: { ok: true, sub: '001234.abcdef0123456789.0042', aud: 'com.henning.looseends' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple.test.ts:191:1
+✖ attack: iat (0.501208ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  -   aud: 'com.henning.looseends',
+      ok: true,
+      sub: '001234.abcdef0123456789.0042'
+    }
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple.test.ts:192:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { ok: true, sub: '001234.abcdef0123456789.0042' },
+    expected: { ok: true, sub: '001234.abcdef0123456789.0042', aud: 'com.henning.looseends' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple.test.ts:199:1
+✖ attack: nonce (0.975167ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  -   aud: 'com.henning.looseends',
+      ok: true,
+      sub: '001234.abcdef0123456789.0042'
+    }
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple.test.ts:200:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { ok: true, sub: '001234.abcdef0123456789.0042' },
+    expected: { ok: true, sub: '001234.abcdef0123456789.0042', aud: 'com.henning.looseends' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple.test.ts:211:1
+✖ reasons: feste Liste (0.689833ms)
+  AssertionError [ERR_ASSERTION]: zu wenige Fälle gesammelt: 41
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple.test.ts:212:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test/schema.test.ts:57:1
+✖ AC-1: the real migrations folder applies 001 once and creates the three tables (58.3725ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      '001_claude_schema.sql',
+      '002_accounts.sql',
+  -   '003_apple_client_id.sql'
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/schema.test.ts:60:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ '001_claude_schema.sql', '002_accounts.sql' ],
+    expected: [ '001_claude_schema.sql', '002_accounts.sql', '003_apple_client_id.sql' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/schema.test.ts:183:1
+✖ migration 003: additiv auf bestandsdaten (41.607792ms)
+  Error: ENOENT: no such file or directory, copyfile '/Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/migrations/003_apple_client_id.sql' -> '/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/le-mig-AGk2vk/003_apple_client_id.sql'
+      at copyFileSync (node:fs:3823:11)
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/schema.test.ts:193:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'copyfile',
+    path: '/Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/migrations/003_apple_client_id.sql',
+    dest: '/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/le-mig-AGk2vk/003_apple_client_id.sql'
+  }
