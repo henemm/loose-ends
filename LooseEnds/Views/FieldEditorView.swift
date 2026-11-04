@@ -21,6 +21,8 @@ struct FieldEditorView: View {
     @State private var showsOtherTime = false
     /// The month the calendar shows once "Other date …" opened it; nil is the due day's, else today's.
     @State private var shownMonth: Date?
+    /// The same "New tag" dialog as the tag pages (#818): a name that exists is refused there too.
+    @State private var catalog = CatalogEditor()
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Detail")
 
     private var automaticRevision: Revision? {
@@ -30,6 +32,7 @@ struct FieldEditorView: View {
 
     var body: some View {
         paperPage
+            .catalogDialogs(catalog, contexts: contexts, projects: projects, didAddContext: { putOnTask($0) })
             .onAppear { energyPosition = task.energy?.rawValue }
     }
 
@@ -101,7 +104,7 @@ struct FieldEditorView: View {
             DurationTape(current: task.duration) { choose($0?.rawValue) }
         case .contexts:
             TagSentence(contexts: contexts, chosen: Set((task.contexts ?? []).map(\.id)), toggle: { toggle($0) },
-                        create: { addTyped($0) })
+                        addNew: { catalog.begin(NameEdit(target: .newContext)) })
         case .project:
             ProjectIndex(projects: projects, current: task.project) { choose($0?.name) }
         case .dueDate:
@@ -607,23 +610,13 @@ struct FieldEditorView: View {
         apply(FieldCodec.encode(names))
     }
 
-    /// A name typed under the tags (#818): the tag is found or created, then put on the task. A blank
-    /// name does nothing; a tag the task carries already stays as it is.
-    private func addTyped(_ raw: String) {
-        do {
-            let context = try CatalogService.contextNamed(raw, in: modelContext, existing: contexts)
-            guard !(task.contexts ?? []).contains(where: { $0.name == context.name }) else { return }
-            // `contexts` is the query's array and lacks a tag inserted a moment ago: the codec matches by
-            // name against what it is given, so hand it the new tag too.
-            let names = (task.contexts ?? []).map(\.name) + [context.name]
-            let available = contexts.contains { $0.id == context.id } ? contexts : contexts + [context]
-            guard RevisionService.set(field, to: FieldCodec.encode(names), on: task, contexts: available, projects: projects) != nil else { return }
-            save()
-        } catch CatalogError.emptyName {
-            return
-        } catch {
-            Self.logger.error("Adding a tag failed: \(error, privacy: .public)")
-        }
+    /// A tag added from here goes onto the task at once (#818). The query's `contexts` lacks it for a
+    /// moment and the codec matches by name against what it is given, so it is handed over too.
+    private func putOnTask(_ context: TaskContext) {
+        let names = (task.contexts ?? []).map(\.name) + [context.name]
+        let available = contexts.contains { $0.id == context.id } ? contexts : contexts + [context]
+        guard RevisionService.set(field, to: FieldCodec.encode(names), on: task, contexts: available, projects: projects) != nil else { return }
+        save()
     }
 
     private func apply(_ encoded: String?) {

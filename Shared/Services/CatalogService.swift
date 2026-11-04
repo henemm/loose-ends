@@ -39,18 +39,6 @@ enum CatalogService {
         return item
     }
 
-    /// The tag a typed name stands for (#818): the existing one with that name (trimmed, case- and
-    /// accent-insensitive, #157) or a new one. Typing a name that exists is not an error here: the
-    /// field editor then just puts that tag on the task.
-    @discardableResult
-    static func contextNamed(
-        _ raw: String, in context: ModelContext, existing: [TaskContext], defaults: UserDefaults = .standard
-    ) throws -> TaskContext {
-        let name = try cleaned(raw)
-        if let found = existing.first(where: { sameName($0.name, name) }) { return found }
-        return try addContext(named: name, in: context, existing: existing, defaults: defaults)
-    }
-
     static func rename(_ project: Project, to raw: String) throws {
         project.name = try cleaned(raw)
     }

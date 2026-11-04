@@ -27,45 +27,6 @@ import Testing
         #expect(count == 2)
     }
 
-    @Test("A typed tag name finds the existing tag instead of adding a second one (#818)")
-    @MainActor func typedNameFindsExisting() async throws {
-        let store = try TestStore()
-        let garden = TaskContext(name: "Garden", sortOrder: 0)
-        store.context.insert(garden)
-
-        let found = try CatalogService.contextNamed(" garden ", in: store.context, existing: [garden], defaults: scratchDefaults())
-
-        #expect(found.id == garden.id)
-        let count = try store.context.fetchCount(FetchDescriptor<TaskContext>())
-        #expect(count == 1)
-    }
-
-    @Test("A typed tag name that is new is added after the existing ones (#818)")
-    @MainActor func typedNameAddsNew() async throws {
-        let store = try TestStore()
-        let garden = TaskContext(name: "Garden", sortOrder: 3)
-        store.context.insert(garden)
-
-        let added = try CatalogService.contextNamed("  Reading ", in: store.context, existing: [garden], defaults: scratchDefaults())
-
-        #expect(added.name == "Reading")
-        #expect(added.sortOrder == 4)
-        let count = try store.context.fetchCount(FetchDescriptor<TaskContext>())
-        #expect(count == 2)
-    }
-
-    @Test("A blank typed tag name is still rejected (#818)")
-    @MainActor func typedBlankRejected() async throws {
-        let store = try TestStore()
-        var thrown: CatalogError?
-        do {
-            try CatalogService.contextNamed("  ", in: store.context, existing: [], defaults: scratchDefaults())
-        } catch let error as CatalogError {
-            thrown = error
-        }
-        #expect(thrown == .emptyName)
-    }
-
     @Test("A blank name is rejected and nothing is inserted")
     @MainActor func blankNameRejected() async throws {
         let store = try TestStore()
