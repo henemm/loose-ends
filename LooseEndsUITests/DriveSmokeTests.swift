@@ -178,8 +178,8 @@ final class DriveSmokeTests: XCTestCase {
         XCTAssertTrue(element("rewardField", in: app).waitForExistence(timeout: 5), "A tap should put the cursor into the sentence")
     }
 
-    /// "Counts" from the menu shows the bead in the row; with five open counting tasks the sixth sees
-    /// "Counts (5 of 5)" grey; completing a counting task puts its bead on the week's string under "Now".
+    /// "Counts" from the menu shows the bead in the row, for as many tasks as you like (#818: no limit);
+    /// completing a counting task puts its bead on the week's string under "Now".
     @MainActor
     func testCountsShowsTheBeadAndTheWeekString() throws {
         let app = launch()
@@ -194,12 +194,9 @@ final class DriveSmokeTests: XCTestCase {
         }
         XCTAssertEqual(elements(prefix: "countsMarker_", in: app).count, 5)
 
-        // The sixth: the entry stands grey as "Counts (5 of 5)"; Complete in the same menu closes it
-        // without a bead, since Feige does not count.
-        let full = holdRow(titled: "Feige", until: "menuCountsFull", in: app)
-        XCTAssertFalse(full.isEnabled, "The sixth mark must not be possible")
-        XCTAssertFalse(element("menuCounts", in: app).exists)
-        element("menuDone", in: app).tap()
+        // The sixth takes a bead like the first.
+        holdRow(titled: "Feige", until: "menuCounts", in: app).tap()
+        XCTAssertEqual(elements(prefix: "countsMarker_", in: app).count, 6)
 
         // Complete a counting task from the menu: the bead appears on the week's string.
         holdRow(titled: "Apfel", until: "menuDone", in: app).tap()

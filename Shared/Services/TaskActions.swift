@@ -109,9 +109,6 @@ enum TaskActions {
 
     // MARK: - Das Knäuel and Zählt (#643, #645)
 
-    /// At most this many open tasks count at a time (#645): the scarcity makes the mark a decision.
-    static let countsBudget = 5
-
     /// Makes the task "Das Knäuel" (#643), taking the mark from any other task that holds it. Every
     /// change is a user revision (ADR-6). Returns the task the mark came from, if any.
     @discardableResult
@@ -142,27 +139,17 @@ enum TaskActions {
         RevisionService.set(.knaeuel, to: nil, on: task, contexts: contexts, projects: projects, now: now)
     }
 
-    /// Whether "Zählt" can still be set on the task (#645): the budget of five open counting tasks is
-    /// not spent, or the task counts already (then the toggle takes the mark). The Knäuel counts on
-    /// its own and is not in the budget.
-    static func canCount(_ task: TaskItem, among all: [TaskItem]) -> Bool {
-        task.countsAt != nil || ViewRules.counting(in: all).count < countsBudget
-    }
-
-    /// "Zählt" on or off (#645), as a user revision. Over the budget nothing changes.
+    /// "Perle sammeln" on or off (#645), as a user revision. No limit on how many open tasks carry a
+    /// bead (Henning, 2026-11-04, #818): a limit needed a dialog for "used up", and the string is
+    /// what counts, not the number of marks.
     static func toggleCounts(
         _ task: TaskItem,
-        among all: [TaskItem],
         contexts: [TaskContext],
         projects: [Project],
         now: Date = Date()
     ) {
-        if task.countsAt != nil {
-            RevisionService.set(.counts, to: nil, on: task, contexts: contexts, projects: projects, now: now)
-            return
-        }
-        guard canCount(task, among: all) else { return }
-        RevisionService.set(.counts, to: now.ISO8601Format(), on: task, contexts: contexts, projects: projects, now: now)
+        let encoded = task.countsAt == nil ? now.ISO8601Format() : nil
+        RevisionService.set(.counts, to: encoded, on: task, contexts: contexts, projects: projects, now: now)
     }
 
     static func activate(_ task: TaskItem) {

@@ -267,8 +267,8 @@ der lose Faden (`KnaeuelThread`, #644: zwei Loops der Logo-Trochoide, a = 4,0, b
 vor das erste Wort der Zeile; beim Erledigen lockert sich das Knäuel grün in den Knoten (`LooseningKnaeuel`, 0,3 s + 0,8 s),
 der Faden zieht sich ein, ab 16 Uhr sagt die Überschrift „Heute entwirrt: …“. Kein Satz
 darüber, kein Zähler, kein Rot, wenn es liegen bleibt. **Zählt** (#645): eine Aufgabe zählt oder nicht, keine Gewichte,
-keine Punkte, höchstens fünf offene zugleich (`TaskActions.countsBudget`; der Eintrag heißt dann „Zählt (5 von 5)“ und ist
-grau); das Knäuel zählt immer. `countsAt` auf `TaskItem`, Revision `RevisedField.counts`. Die Perle (Schnur mit hohler
+keine Punkte, und seit #818 (Henning, 2026-11-04) keine Obergrenze offener Perlen: eine Grenze bräuchte einen Hinweis „aufgebraucht“,
+und zählen soll die Schnur, nicht die Zahl der Marken; das Knäuel zählt immer. `countsAt` auf `TaskItem`, Revision `RevisedField.counts`. Die Perle (Schnur mit hohler
 Perle und Glanzpunkt, `PearlGlyph`, dritte Ausnahme von #350) steht an erster Stelle der Merkmalzeile. Die **Schnur der
 Woche** (`ViewRules.weekBeads`, Montag bis Sonntag unabhängig vom Gebietsschema) steht unter „Jetzt“, solange die Woche
 eine Perle hat: eine durchhängende Schnur, die Perlen von links dicht aufgereiht, keine leeren Plätze, kein Wochenziel, die
@@ -285,7 +285,7 @@ Schalter (`FieldSettingsStore.reward`, Defaults und iCloud-Schlüsselwertspeiche
 steht unter dem Rohtext „Das Knäuel · seit Montag“ mit „Lösen“ und „Zählt immer, es ist das Knäuel“. Bewusst nicht gebaut:
 Serien, Punkte für jede Aufgabe, Vergleich, Mitteilungen, Lob (Belege in 07, Teil 2.4).
 **Nachgeschärft nach Build 110 (Henning, 2026-10-24, #655):** Das Feature heißt **„Perle sammeln“** („Zählt“ sagte nichts):
-Menü „Perle sammeln“ / „Keine Perle“, über dem Budget „Perle sammeln (5 von 5)“, Einstellung „Perlen sammeln“, Detail „Sammelt
+Menü „Perle sammeln“ / „Keine Perle“, (die Obergrenze „5 von 5“ ist seit #818 entfallen), Einstellung „Perlen sammeln“, Detail „Sammelt
 eine Perle“ bzw. „Sammelt immer eine Perle, es ist das Knäuel“. Die Zeile unter dem Datum trägt als erstes Merkmal das graue
 Wort „Das Knäuel“ (das Zeichen allein sagte nicht, warum sie da steht). Die Schnur auf der Startseite ist **eine Schnur von
 fünf ohne Zeitraum** (`ViewRules.currentString`, `stringLength` = 5; Henning, 2026-10-24: „Wann hat man gewonnen?“): zwei

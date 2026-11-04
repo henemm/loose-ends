@@ -184,8 +184,8 @@ struct TaskInteractions {
     }
 
     /// "Make it the Knäuel" and "Attach a bead" (#643, #645; the words as actions, Henning's look at build
-    /// 111, #667), after Next up: each only while its field is on or the task carries it. Over the budget
-    /// "Attach a bead (5 of 5)" stands grey. A subtask gets neither.
+    /// 111, #667), after Next up: each only while its field is on or the task carries it. A bead has
+    /// no limit (#818). A subtask gets neither.
     @ViewBuilder
     func driveEntries(_ task: TaskItem) -> some View {
         if task.parent == nil {
@@ -202,14 +202,8 @@ struct TaskInteractions {
                 Button("Take the bead off", systemImage: "circle.slash") { toggleCounts(task) }
                     .accessibilityIdentifier("menuCountsRelease")
             } else if fields.isOn(.counts) {
-                if TaskActions.canCount(task, among: tasks) {
-                    Button("Attach a bead", systemImage: "circle") { toggleCounts(task) }
-                        .accessibilityIdentifier("menuCounts")
-                } else {
-                    Button("Attach a bead (\(TaskActions.countsBudget) of \(TaskActions.countsBudget))", systemImage: "circle") {}
-                        .disabled(true)
-                        .accessibilityIdentifier("menuCountsFull")
-                }
+                Button("Attach a bead", systemImage: "circle") { toggleCounts(task) }
+                    .accessibilityIdentifier("menuCounts")
             }
         }
     }
@@ -241,7 +235,7 @@ struct TaskInteractions {
     }
 
     func toggleCounts(_ task: TaskItem) {
-        TaskActions.toggleCounts(task, among: tasks, contexts: contexts, projects: projects)
+        TaskActions.toggleCounts(task, contexts: contexts, projects: projects)
         save("counts")
     }
 
