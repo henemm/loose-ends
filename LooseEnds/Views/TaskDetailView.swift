@@ -576,17 +576,45 @@ struct TaskDetailView: View {
                 }
             }
         }
+        if !deleted, showsBarActions {
+            // The wide detail's empty bar holds the four daily actions (#831, Henning 2026-11-04). Complete as a word,
+            // never a checkmark (2026-10-15): a checkmark reads as "close" and completed tasks by accident.
+            ToolbarItemGroup(placement: .primaryAction) {
+                if actions.isPending(task) {
+                    Button("Undo") { actions.undoComplete(task) }
+                        .accessibilityIdentifier("detailUndoButton")
+                } else {
+                    Button("Complete") { actions.complete(task) }
+                        .help(Text("Complete"))
+                        .accessibilityIdentifier("detailCompleteButton")
+                }
+                actions.nextUpEntry(task)
+                    .help(task.nextRank == nil ? Text("Next up") : Text("Remove from Next up"))
+                    .accessibilityIdentifier("detailNextButton")
+                actions.moveMenu(task)
+                    .help(Text("Move"))
+                    .accessibilityIdentifier("detailMoveMenu")
+                Button("Park", systemImage: "moon.zzz") { actions.park(task) }
+                    .help(Text("Park"))
+                    .accessibilityIdentifier("detailParkButton")
+            }
+        }
         if !deleted {
             ToolbarItem(placement: .primaryAction) {
                 // No checkmark in the bar (Henning, 2026-10-15): anyone taps it to close the
-                // detail and completes the task by accident. Complete lives in the menu, first, by name.
+                // detail and completes the task by accident. Complete lives in the menu, first, by name;
+                // in the wide detail as a word in the bar (#831).
                 Menu("More", systemImage: "ellipsis") {
-                    actions.menu(task)
+                    actions.menu(task, inBar: showsBarActions)
                 }
                 .accessibilityIdentifier("detailMoreMenu")
             }
         }
     }
+
+    /// Complete, Next up, Move and Park as buttons of their own: wide windows and the Mac only, an open task
+    /// only (#831). The iPhone's bar has no room; done and parked tasks keep the "…" with Restore or Activate.
+    private var showsBarActions: Bool { isWide && task.isOpen }
 
     private enum Reanalysis: Equatable {
         case running

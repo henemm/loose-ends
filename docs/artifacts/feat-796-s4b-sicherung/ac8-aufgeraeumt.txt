@@ -1,0 +1,140 @@
+Beleg AC-8 (aufgeraeumt und unberuehrt) — #796 Schnitt S4b-1
+Erzeugt (UTC): 2026-11-04T08:35:00Z
+Server: rennwienix, /home/hem/henemm-infra auf Merge-Commit 3abf17bf6589d17d52e2e488ea58e4752a24906c
+(PR henemm/henemm-infra#383, gemergt 2026-11-04T08:22:05Z, Auto-Deploy 2026-11-04T08:25:02Z:
+ "Deployed 69c7a62b -> 3abf17bf: docs/backup-offsite.md scripts/backup-loose-ends-snapshot.sh scripts/backup.sh tests/test_backup_loose_ends.py")
+Zeilen '# <Zeit>' = UTC-Startzeit des Befehls darueber, '# exit=N' = Exit-Code.
+
+== Vorher (vor jedem Eingriff) ==
+=== A: Vorher ===
+
+$ sudo -n docker ps -a --format '{{.Names}}' | sort
+# 2026-11-04T08:28:06Z
+loose-ends-db
+loose-ends-server
+n8n
+nightjet-monitor
+obsidian-mcp-obsidian-mcp-1
+obsidian-mcp-obsidian-sync-1
+ops-api-1
+stalwart-mail
+watchtower
+# exit=0
+
+$ started | tee /home/hem/tmp-le-probe-state/started-before.txt
+# 2026-11-04T08:28:06Z
+/loose-ends-db 2026-11-03T16:57:48.875568548Z
+/loose-ends-server 2026-11-03T16:57:59.531564728Z
+/n8n 2026-11-01T09:12:37.912587913Z
+/nightjet-monitor 2026-10-16T18:14:53.710459401Z
+/obsidian-mcp-obsidian-mcp-1 2026-11-01T09:14:52.80026772Z
+/obsidian-mcp-obsidian-sync-1 2026-10-19T16:09:14.828065029Z
+/ops-api-1 2026-11-01T09:55:05.29335383Z
+/stalwart-mail 2026-10-21T04:52:42.272772642Z
+/watchtower 2026-10-16T18:14:53.711886957Z
+# exit=0
+
+$ live_rows | tee /home/hem/tmp-le-probe-state/rows-before.txt
+# 2026-11-04T08:28:06Z
+accounts 0
+apple_tokens 0
+order_results 0
+orders 0
+sessions 0
+transcripts 0
+schema_migrations 2
+# exit=0
+
+$ uptime -s | tee /home/hem/tmp-le-probe-state/uptime-before.txt
+# 2026-11-04T08:28:07Z
+2026-10-16 18:14:09
+# exit=0
+
+== Aufraeumen am Ende des Rueckspiels ==
+=== Aufraeumen (trap) 2026-11-04T08:28:54Z ===
+$ sudo -n docker stop le-restore-probe
+le-restore-probe
+# exit=0
+$ rm -rf /tmp/tmp.IBDJtVAi5z
+# exit=0
+
+== Nachher ==
+=== D: Nachher ===
+
+$ sudo -n docker ps -a | grep le-restore-probe
+# 2026-11-04T08:29:17Z
+# exit=1
+
+$ test -e /tmp/tmp.IBDJtVAi5z && echo vorhanden || echo 'Temp-Ordner /tmp/tmp.IBDJtVAi5z existiert nicht'
+# 2026-11-04T08:29:17Z
+Temp-Ordner /tmp/tmp.IBDJtVAi5z existiert nicht
+# exit=0
+
+$ started > /home/hem/tmp-le-probe-state/started-after.txt; cat /home/hem/tmp-le-probe-state/started-after.txt
+# 2026-11-04T08:29:17Z
+/loose-ends-db 2026-11-03T16:57:48.875568548Z
+/loose-ends-server 2026-11-03T16:57:59.531564728Z
+/n8n 2026-11-01T09:12:37.912587913Z
+/nightjet-monitor 2026-10-16T18:14:53.710459401Z
+/obsidian-mcp-obsidian-mcp-1 2026-11-01T09:14:52.80026772Z
+/obsidian-mcp-obsidian-sync-1 2026-10-19T16:09:14.828065029Z
+/ops-api-1 2026-11-01T09:55:05.29335383Z
+/stalwart-mail 2026-10-21T04:52:42.272772642Z
+/watchtower 2026-10-16T18:14:53.711886957Z
+# exit=0
+
+$ diff /home/hem/tmp-le-probe-state/started-before.txt /home/hem/tmp-le-probe-state/started-after.txt
+# 2026-11-04T08:29:17Z
+# exit=0
+
+$ live_rows > /home/hem/tmp-le-probe-state/rows-after.txt; cat /home/hem/tmp-le-probe-state/rows-after.txt
+# 2026-11-04T08:29:17Z
+accounts 0
+apple_tokens 0
+order_results 0
+orders 0
+sessions 0
+transcripts 0
+schema_migrations 2
+# exit=0
+
+$ diff /home/hem/tmp-le-probe-state/rows-before.txt /home/hem/tmp-le-probe-state/rows-after.txt
+# 2026-11-04T08:29:18Z
+# exit=0
+
+$ uptime -s > /home/hem/tmp-le-probe-state/uptime-after.txt; cat /home/hem/tmp-le-probe-state/uptime-before.txt /home/hem/tmp-le-probe-state/uptime-after.txt
+# 2026-11-04T08:29:18Z
+2026-10-16 18:14:09
+2026-10-16 18:14:09
+# exit=0
+
+$ diff /home/hem/tmp-le-probe-state/uptime-before.txt /home/hem/tmp-le-probe-state/uptime-after.txt
+# 2026-11-04T08:29:18Z
+# exit=0
+
+$ systemctl show docker nginx -p Id -p ActiveEnterTimestamp
+# 2026-11-04T08:29:18Z
+Id=docker.service
+ActiveEnterTimestamp=Fri 2026-10-16 18:14:54 UTC
+
+Id=nginx.service
+ActiveEnterTimestamp=Wed 2026-10-28 06:34:35 UTC
+# exit=0
+# Anonymes Volume des Images (VOLUME /var/lib/postgresql) muss mit --rm weg sein: verwaiste Volumes, angelegt heute ab 08:28 UTC
+
+$ for v in $(sudo -n docker volume ls -q -f dangling=true); do sudo -n docker volume inspect -f '{{.Name}} {{.CreatedAt}}' $v; done | grep '2026-11-04T08:2[89]' || echo 'kein verwaistes Volume aus dem Probelauf'
+# 2026-11-04T08:29:18Z
+kein verwaistes Volume aus dem Probelauf
+# exit=0
+
+$ ls -d /home/hem/tmp-le-probe* 2>&1
+# 2026-11-04T08:29:18Z
+/home/hem/tmp-le-probe.sh
+/home/hem/tmp-le-probe-state
+# exit=0
+
+$ rm -rf /home/hem/tmp-le-probe-state /home/hem/tmp-le-probe.sh; ls -d /home/hem/tmp-le-probe*
+ls: cannot access '/home/hem/tmp-le-probe*': No such file or directory
+(Probe-Skript und Zustandsordner danach entfernt, 2026-11-04T08:29:30Z)
+
+Befund: le-restore-probe nicht mehr in docker ps -a (grep exit 1); Temp-Ordner /tmp/tmp.IBDJtVAi5z existiert nicht; kein verwaistes Volume aus dem Lauf; StartedAt aller 9 Container vorher = nachher (diff leer); Live-DB vorher = nachher: 0 Zeilen in accounts, apple_tokens, order_results, orders, sessions, transcripts, 2 in schema_migrations (diff leer); uptime -s unveraendert 2026-10-16 18:14:09 (kein Reboot); docker.service seit 2026-10-16 18:14:54 UTC, nginx.service seit 2026-10-28 06:34:35 UTC aktiv (kein Neustart). Auf die Live-DB nur lesende psql-Abfragen (count, information_schema, select * from schema_migrations) und pg_dump. -> AC-8 erfuellt.

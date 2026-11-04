@@ -137,8 +137,10 @@ struct TaskInteractions {
     /// One menu for the list's long press and the detail's "…" (#667): in New "Looks right" first (#681),
     /// then Complete, by name (no checkmark in the detail's bar, #435), Next up, the Knäuel and the bead, Move, Park, Analyze
     /// again; Delete last, after the line. A done or parked task gets Restore or Activate and Delete.
+    /// `inBar`: the wide detail carries Complete, Next up, Move and Park as buttons of their own (#831), so its
+    /// "…" leaves them out.
     @ViewBuilder
-    func menu(_ task: TaskItem) -> some View {
+    func menu(_ task: TaskItem, inBar: Bool = false) -> some View {
         if task.status == .done {
             Button("Restore", systemImage: "arrow.uturn.backward") { restore(task) }
         } else if task.status == .parked {
@@ -150,26 +152,20 @@ struct TaskInteractions {
                 Button("Looks right", systemImage: "hand.thumbsup") { confirm(task) }
                     .accessibilityIdentifier("menuConfirm")
             }
-            if isPending(task) {
-                Button("Undo", systemImage: "arrow.uturn.backward") { undoComplete(task) }
-            } else {
-                Button("Complete", systemImage: "checkmark.circle") { complete(task) }
-                    .accessibilityIdentifier("menuDone")
-            }
-            if task.nextRank == nil {
-                Button("Next up", systemImage: "star") { toggleNext(task) }
-            } else {
-                Button("Remove from Next up", systemImage: "star.slash") { toggleNext(task) }
+            if !inBar {
+                if isPending(task) {
+                    Button("Undo", systemImage: "arrow.uturn.backward") { undoComplete(task) }
+                } else {
+                    Button("Complete", systemImage: "checkmark.circle") { complete(task) }
+                        .accessibilityIdentifier("menuDone")
+                }
+                nextUpEntry(task)
             }
             driveEntries(task)
-            Menu("Move", systemImage: "calendar") {
-                Button("Tomorrow") { move(task, to: .tomorrow) }
-                Button("Weekend") { move(task, to: .weekend) }
-                Button("Next week") { move(task, to: .nextWeek) }
-                Button("Date…") { datingTask = task }
-                    .accessibilityIdentifier("menuMoveDate")
+            if !inBar {
+                moveMenu(task)
+                Button("Park", systemImage: "moon.zzz") { park(task) }
             }
-            Button("Park", systemImage: "moon.zzz") { park(task) }
             if let analyze {
                 Button("Analyze again", systemImage: "sparkles") { analyze(task) }
                     .accessibilityIdentifier("analyzeAgainButton")
@@ -181,6 +177,27 @@ struct TaskInteractions {
             confirmingDelete = true
         }
         .accessibilityIdentifier("menuDelete")
+    }
+
+    /// "Next up", or "Remove from Next up" once the task is lined up; the menu's entry and the detail's button (#831).
+    @ViewBuilder
+    func nextUpEntry(_ task: TaskItem) -> some View {
+        if task.nextRank == nil {
+            Button("Next up", systemImage: "star") { toggleNext(task) }
+        } else {
+            Button("Remove from Next up", systemImage: "star.slash") { toggleNext(task) }
+        }
+    }
+
+    /// "Move" with its four targets; the menu's entry and the detail's button (#831).
+    func moveMenu(_ task: TaskItem) -> some View {
+        Menu("Move", systemImage: "calendar") {
+            Button("Tomorrow") { move(task, to: .tomorrow) }
+            Button("Weekend") { move(task, to: .weekend) }
+            Button("Next week") { move(task, to: .nextWeek) }
+            Button("Date…") { datingTask = task }
+                .accessibilityIdentifier("menuMoveDate")
+        }
     }
 
     /// "Make it the Knäuel" and "Attach a bead" (#643, #645; the words as actions, Henning's look at build

@@ -1,0 +1,60 @@
+# AC-9 Nachtlauf (Heartbeat) — vorgezogen, 2026-11-04T08:55:17Z bis 08:55:43Z
+Server rennwienix, Live-Stand /home/hem/henemm-infra = Merge 3abf17bf (Auto-Deploy 08:25:02Z).
+
+Abweichung von der Spec-Formulierung („der reguläre Lauf von 03:00 nach dem Merge“), offen benannt:
+Henning (PO) am 2026-11-04: „Entweder Nachtlauf vorziehen oder DU merkst es dir.“ Der Lauf wurde
+vorgezogen und mit exakt dem Befehl der Crontab-Zeile 1 gestartet (gleiches Skript, gleicher Logpfad,
+Nutzer hem), nur zu anderer Uhrzeit, außerhalb 02:45–03:30. Am Wochentag Mittwoch entfällt der
+Sonntags-Restore-Test in beiden Fällen gleich.
+
+$ crontab -l | grep backup.sh
+0 3 * * * /home/hem/henemm-infra/scripts/backup.sh 2>&1 | /home/hem/henemm-infra/scripts/log-timestamp.sh >> /home/hem/backups/backup.log
+
+Gestartet (setsid nohup, Wrapper schreibt eine Kennzeile und danach den Exit-Code von backup.sh):
+  echo "VORGEZOGENER LAUF (manuell, loose-ends#796 AC-9)" | log-timestamp.sh >> backup.log
+  /home/hem/henemm-infra/scripts/backup.sh 2>&1 | log-timestamp.sh >> /home/hem/backups/backup.log
+  echo "rc=${PIPESTATUS[0]}"
+
+$ awk '/VORGEZOGENER LAUF/{f=1} f' /home/hem/backups/backup.log   (Liste der server-config-Archive gekürzt)
+2026-11-04T08:55:17Z  VORGEZOGENER LAUF (manuell, loose-ends#796 AC-9)
+2026-11-04T08:55:17Z  ==> Server-Config-Backup: /home/hem/backups/server-config_2026-11-04_0855.tar.gz
+2026-11-04T08:55:18Z  ==> Backup fertig (164K)
+2026-11-04T08:55:18Z  ==> Backups im Ordner:
+           [... 31 Zeilen server-config_*.tar.gz, 2026-10-05 bis 2026-11-04_0855 ...]
+2026-11-04T08:55:18Z  ==> Gregor-Datenbaeume: /home/hem/backups/gregor-data_2026-11-04_0855.tar.gz
+2026-11-04T08:55:22Z  ==> Datenbackup vollstaendig (3313 Eintraege)
+2026-11-04T08:55:22Z  ==> Frieda-Datenbaeume: /home/hem/backups/frieda-data_2026-11-04_0855.tar.gz
+2026-11-04T08:55:22Z  ==> Frieda-Datenbackup vollstaendig (46 Eintraege)
+2026-11-04T08:55:26Z  ==> n8n-Snapshot ok (7 Workflows, 711M)
+2026-11-04T08:55:26Z  ==> Loose-Ends-Dump ok (7 Tabellen, 2 Migrationen, 12K)
+2026-11-04T08:55:26Z  ==> Off-Site-Backup (restic -> Heimserver, append-only, verschluesselt)
+2026-11-04T08:55:28Z  no parent snapshot found, will read all files
+2026-11-04T08:55:30Z  Files:          31 new,     0 changed,     0 unmodified
+2026-11-04T08:55:30Z  Dirs:           22 new,     0 changed,     0 unmodified
+2026-11-04T08:55:30Z  Added to the repository: 373.786 MiB (65.620 MiB stored)
+2026-11-04T08:55:30Z  processed 31 files, 750.072 MiB in 0:02
+2026-11-04T08:55:30Z  snapshot e6eb86d0 saved
+2026-11-04T08:55:30Z  ==> Off-Site-Backup erfolgreich
+
+$ cat /home/hem/le-nachtlauf.rc
+rc=0
+
+Heartbeat: backup.sh pingt mit `curl -s -o /dev/null https://uptime.betterstack.com/api/v1/heartbeat/…`
+als letztem Befehl (Zeile 251) und schreibt dazu keine Logzeile (vor S4b-1 genauso, siehe Lauf
+2026-11-04T03:00: auch dort folgt nach „Off-Site-Backup erfolgreich“ keine Zeile). Das Skript läuft
+mit `set -e`; der Exit-Code ist der des curl-Aufrufs. rc=0 heißt: der Abschnitt Loose Ends lief durch,
+kein Abbruch mit „Heartbeat NICHT gepingt“, und curl hat den Ping ohne Fehler abgesetzt.
+Vergleich: der Lauf von 03:00 (vor dem Merge) endete mit derselben Zeile „Off-Site-Backup erfolgreich“
+und hatte 30 Dateien, dieser 31 (+ looseends.sql), Dirs 21 → 22 (+ /home/hem/backups/loose-ends).
+
+$ ls -la /home/hem/backups/loose-ends/
+drwx------  2 hem hem  4096 Nov  4 08:55 .
+-rw-------  1 hem hem  8615 Nov  4 08:55 looseends.sql
+
+Befund: kein Fehler. Neuer Abschnitt im Lauf vorhanden („Loose-Ends-Dump ok“), vor restic, Ordner im
+Off-Site-Snapshot e6eb86d0 (Tag daily), Heartbeat-Befehl erreicht und erfolgreich (rc=0).
+Hilfsdateien auf dem Server (Wrapper, rc-Datei) entfernt.
+Nebenwirkung: ein zusätzlicher Satz Tagesarchive (_0855) und ein zusätzlicher Off-Site-Snapshot; die
+30-Tage-Aufbewahrung räumt die Archive wie gewohnt ab. Der reguläre Lauf 2026-11-05 03:00 läuft
+unverändert zusätzlich.
+-> AC-9 erfüllt (vorgezogen, auf Wunsch des PO).

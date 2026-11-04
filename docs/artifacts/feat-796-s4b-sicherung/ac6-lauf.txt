@@ -1,0 +1,103 @@
+Beleg AC-6 (echter Lauf, 08:28 UTC = 09:28 Ortszeit, ausserhalb 02:45-03:30) — #796 Schnitt S4b-1
+Erzeugt (UTC): 2026-11-04T08:35:00Z
+Server: rennwienix, /home/hem/henemm-infra auf Merge-Commit 3abf17bf6589d17d52e2e488ea58e4752a24906c
+(PR henemm/henemm-infra#383, gemergt 2026-11-04T08:22:05Z, Auto-Deploy 2026-11-04T08:25:02Z:
+ "Deployed 69c7a62b -> 3abf17bf: docs/backup-offsite.md scripts/backup-loose-ends-snapshot.sh scripts/backup.sh tests/test_backup_loose_ends.py")
+Zeilen '# <Zeit>' = UTC-Startzeit des Befehls darueber, '# exit=N' = Exit-Code.
+
+=== B: AC-6 Vorpruefung ===
+
+$ free -m
+# 2026-11-04T08:28:07Z
+               total        used        free      shared  buff/cache   available
+Mem:            7745        3653        1407          20        3015        4092
+Swap:           2047        1733         314
+# exit=0
+
+$ df -h /
+# 2026-11-04T08:28:07Z
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       150G  127G   18G  88% /
+# exit=0
+# available=4092 MB, free_root=17729 MB (Grenzen: 600 MB, 2048 MB)
+=== B: Dump schreiben ===
+
+$ OUT_DIR=/home/hem/backups/loose-ends bash /home/hem/henemm-infra/scripts/backup-loose-ends-snapshot.sh
+# 2026-11-04T08:28:07Z
+==> Loose-Ends-Dump ok (7 Tabellen, 2 Migrationen, 12K)
+# exit=0
+
+$ stat -c '%a %U %n' /home/hem/backups/loose-ends /home/hem/backups/loose-ends/looseends.sql
+# 2026-11-04T08:28:07Z
+700 hem /home/hem/backups/loose-ends
+600 hem /home/hem/backups/loose-ends/looseends.sql
+# exit=0
+
+$ file /home/hem/backups/loose-ends/looseends.sql
+# 2026-11-04T08:28:07Z
+/home/hem/tmp-le-probe.sh: line 6: file: command not found
+# exit=127
+
+$ tail -n 5 /home/hem/backups/loose-ends/looseends.sql | sed -E 's/^(.unrestrict ).*/\1<Schluessel>/'
+# 2026-11-04T08:28:07Z
+-- PostgreSQL database dump complete
+--
+
+\unrestrict <Schluessel>
+
+# exit=0
+
+$ grep -c '^CREATE TABLE ' /home/hem/backups/loose-ends/looseends.sql
+# 2026-11-04T08:28:07Z
+7
+# exit=0
+
+$ ls -la /home/hem/backups/loose-ends/
+# 2026-11-04T08:28:07Z
+total 36
+drwx------  2 hem hem  4096 Nov  4 08:28 .
+drwxrwxr-x 13 hem hem 20480 Nov  4 08:28 ..
+-rw-------  1 hem hem  8615 Nov  4 08:28 looseends.sql
+# exit=0
+=== B: restic ===
+# Umgebung wie backup.sh: RESTIC_ENV=/etc/henemm/restic.env; set -a; source "$RESTIC_ENV"; set +a (Inhalt nicht ausgegeben)
+
+$ restic backup --tag offsite --tag manual --host henemm-hetzner /home/hem/backups/loose-ends 2>&1
+# 2026-11-04T08:28:07Z
+no parent snapshot found, will read all files
+
+Files:           1 new,     0 changed,     0 unmodified
+Dirs:            4 new,     0 changed,     0 unmodified
+Added to the repository: 10.336 KiB (3.580 KiB stored)
+
+processed 1 files, 8.413 KiB in 0:00
+snapshot 67bcf30a saved
+# exit=0
+
+$ restic snapshots --tag offsite --latest 1 2>&1
+# 2026-11-04T08:28:09Z
+ID        Time                 Host            Tags                 Paths
+--------------------------------------------------------------------------------------------------------------------------
+[... gekuerzt: --latest 1 gilt je Gruppe aus Host und Pfaden, die Liste nennt die juengsten Snapshots aller 75 Gruppen nach Zeit sortiert; letzter Eintrag:]
+67bcf30a  2026-11-04 08:28:07  henemm-hetzner  offsite,manual       /home/hem/backups/loose-ends
+--------------------------------------------------------------------------------------------------------------------------
+75 snapshots
+# exit=0
+# juengster offsite-Snapshot: 67bcf30a 67bcf30aa7062193f17957c685e9347c43e90fd29d3bb22a6e883d594d59218b offsite,manual 2026-11-04T08:28:07.98492891Z
+
+$ restic ls 67bcf30aa7062193f17957c685e9347c43e90fd29d3bb22a6e883d594d59218b 2>&1 | grep looseends
+# 2026-11-04T08:28:11Z
+/home/hem/backups/loose-ends/looseends.sql
+# exit=0
+
+== eindeutige Abfrage des eben geschriebenen Snapshots ==
+$ restic snapshots --tag offsite,manual --host henemm-hetzner --path /home/hem/backups/loose-ends 2>&1
+# 2026-11-04T08:28:47Z
+ID        Time                 Host            Tags            Paths
+-------------------------------------------------------------------------------------------
+67bcf30a  2026-11-04 08:28:07  henemm-hetzner  offsite,manual  /home/hem/backups/loose-ends
+-------------------------------------------------------------------------------------------
+1 snapshots
+# exit=0
+
+Befund: available 4092 MB (>= 600), frei auf / 18 GB (>= 2 GB); Skript Exit 0; restic backup Exit 0, Snapshot 67bcf30a (id 67bcf30aa7062193f17957c685e9347c43e90fd29d3bb22a6e883d594d59218b, Tags offsite,manual, 2026-11-04T08:28:07Z) ist der juengste offsite-Snapshot; restic ls zeigt /home/hem/backups/loose-ends/looseends.sql. Umgebung wie backup.sh (RESTIC_ENV aus backup.sh, set -a; source; set +a), keine Secrets ausgegeben. -> AC-6 erfuellt.

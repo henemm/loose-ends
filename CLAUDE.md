@@ -320,7 +320,7 @@ not scope creep on the current one.
   hand only as user revisions (`RevisedField.knaeuel`/`.counts`), both `DetailField`s of the group `drive`, off by default.
   `ViewRules.knaeuel(in:)` (latest mark wins), `week(containing:)` (Monday to Sunday, whatever the locale),
   `weekBeads(in:)` (every completion of a counting task in the week, a repeating one per record), `currentString(in:)` (the start
-  page's string of `stringLength` = 5, #655: the beads since the last full string, counted from all beads in rounds of five;
+  page's string of `length` beads (#824: `FieldSettingsStore.stringLength`, "Beads per string" in Settings › Fields, 3 to 20 = `ViewRules.stringLengths`, 5 until set, defaults plus iCloud key-value store; `stringLength` = 5 is the standard), #655: the beads since the last full string, counted from all beads in rounds of that length;
   full = the win, the next bead starts a new string; `recentBeads(in:limit:)` the last n beads), `weekToSpeakOf(in:)` (the
   Sunday sentence's beads: this week's from Sunday 16:00, last week's on Monday until the first new bead, #646) and
   `groupedByCompletionWeek` ("Completed" by weeks with each week's beads, the days inside); "Now" leads with the Knäuel (#703, Henning 2026-10-26: it always counts, with or without a date; `NowTasks.knaeuel`, never in
@@ -339,6 +339,10 @@ not scope creep on the current one.
   detail's own run with its note or `TaskInteractions.listAnalysis` from a list; `onDeleted` on `TaskDetailView` lets
   `ContentView` drop its selection.
 - `Shared/Models/RowKeyAction.swift` (#480 Schnitt 1, pure): which key does what in a Mac list (arrows choose, space completes only where the swipe offers done, delete asks first, nothing while a text field has focus); `TaskListView` wires it up on the Mac only (`onKeyPress`, `ChosenRows` keeps the chosen row per list so it survives detail and back), `Paper.wideListRow(selected:)` paints it accent 12 %, hover grey 7 %; Schnitt 2: the start page's "Now" rows take the same keys on the Mac only (`StartPage.macNowRow`/`keyed`, `ChosenRows.start`; only the visible rows, 5 folded; list focus only from a click or when the writing line lets go, never on appear; iPhone and iPad rows unchanged), main window at least 760 × 520 pt of content
+- `Shared/Models/DetailBack.swift` (#830, pure): where "Back" leads from a task the sidebar's selection opened (start page, writing
+  line, side column, widget); `ContentView` follows every change of the selection and shows `detailBackButton` on Mac and wide iPad.
+  The wide iPad's sidebar is the Mac's index (#828): `ContentView` hands the window's size class into the sidebar column, which
+  itself always reports compact on the iPad. The wide detail's bar holds Complete (a word), Next up, Move and Park (#831).
 - `Shared/Persistence` — `ModelContainerFactory` (app group + private CloudKit; identifiers read from
   `Info.plist`, keys `LEAppGroup`/`LECloudContainer`, with the production constants as fallback —
   device builds carry their own via `BUNDLE_ID_SUFFIX`, #156), `ContextSeeder`,
@@ -470,7 +474,7 @@ not scope creep on the current one.
   `src/apple-vault.ts` (#615 S2b-2): `encryptToken`/`decryptToken` (AES-256-GCM, blob `[0x01 | iv 12 | tag 16 | ct]`, the account as AAD, `authTagLength: 16`; decrypt gives `null` on any failure and never throws) and `storeRefreshToken` (upsert into `apple_tokens` with the token's `client_id`, column from `migrations/003_apple_client_id.sql`, S3a; an empty client id throws before the database; `created_at = now()`, `false` for an unknown account/23503); nothing calls it yet
   `src/apple-client.ts` (#615 S2c-1): `clientSecret` (ES256 JWT per call, 5 min, `ieee-p1363`) and `redeemCode` (POST /auth/token, form without redirect_uri, 5 s timeout, `sub` read from `id_token`; reasons `apple:<error>`, `apple_status`, `unavailable`, `malformed_response`, never throws on Apple's answer); S2c-2 `revokeToken` (POST /auth/revoke, same secret and shared POST; `ok` on 200 only means "not refused", Apple may answer 200 for an invalid token; reasons `apple:<error>`, `apple_status`, `unavailable`); nothing calls them yet
   `src/auth.ts` (#615 S3b): `authRoutes(deps)` with `POST /auth/apple` (order: 503 without config or keys, 405, 415, 413 at 16 KiB counted while reading, 400, identity token, code redeemed once the token holds, same `sub`, `findOrCreate`, `storeRefreshToken`, `createSession` last → 200 `{sessionToken}`, `no-store`; every refusal a bare 401, only Apple unreachable 503) and `POST /auth/logout` (ends exactly this session, 204 also for an unknown one); `bearerToken(request)`; no logging; nothing calls them yet
-  Betrieb (#796 S4a): `https://loose-ends.henemm.com`, only `/health` public (`/mcp` 404 until #615/#621); stack and nginx host live in `henemm-infra` (`loose-ends/`, `nginx/loose-ends.henemm.com.conf`, service on `127.0.0.1:8780`, `postgres:18.6`); rolled out by hand on `rennwienix` with `scripts/deploy-loose-ends.sh` at a fixed commit (`LE_COMMIT`)
+  Betrieb (#796 S4a): `https://loose-ends.henemm.com`, only `/health` public (`/mcp` 404 until #615/#621); stack and nginx host live in `henemm-infra` (`loose-ends/`, `nginx/loose-ends.henemm.com.conf`, service on `127.0.0.1:8780`, `postgres:18.6`); rolled out by hand on `rennwienix` with `scripts/deploy-loose-ends.sh` at a fixed commit (`LE_COMMIT`); nightly plain-SQL dump of `loose-ends-db` in rennwienix's backup (`scripts/backup-loose-ends-snapshot.sh` from `backup.sh`, local `/home/hem/backups/loose-ends/` keeps only the latest, history off-site via restic; tests in `henemm-infra`), restore proven 2026-11-04 from the off-site snapshot; the weekly automatic restore test follows with S4b-2
 
 ## Naming
 

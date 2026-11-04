@@ -157,6 +157,8 @@ struct WeekStringRows: View {
     let string: ViewRules.BeadString
     /// Every task, for the Sunday rule.
     let all: [TaskItem]
+    /// Beads that fill a string (#824), the setting the caller counted `string` with; its empty places are drawn from it.
+    var length: Int = ViewRules.stringLength
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(FieldSettingsStore.self) private var fieldSettings: FieldSettingsStore?
 
@@ -166,7 +168,7 @@ struct WeekStringRows: View {
         if inUse {
             let metrics = StartMetrics(typeSize)
             let titlesEdge = metrics.marginWidth + 12
-            QuietWeekString(beads: string.beads, length: ViewRules.stringLength)
+            QuietWeekString(beads: string.beads, length: length)
                 // The string's own inset, scaled, brings its start back to the titles' edge.
                 .padding(.leading, titlesEdge - QuietWeekString.inset)
                 .frame(maxWidth: .infinity, alignment: .leading)

@@ -12,6 +12,10 @@ struct ContentView: View {
     /// Without the tasks removed with their subtasks (#605); filtered here, not in `@Query` (see TaskDetailView).
     private var tasks: [TaskItem] { storedTasks.filter(\.isPresent) }
     @State private var selection: ViewSelection?
+    /// The way back from a task the selection opened (#830).
+    @State private var detailBack = DetailBack()
+    /// Mac and iPad keep both columns, in portrait too (#828, Henning 2026-11-04); the button still hides the sidebar.
+    @State private var columns: NavigationSplitViewVisibility = .all
     @State private var isCapturing = false
     /// ⌘N while the wide start page is open puts the cursor in its field instead of opening the sheet (#472).
     @State private var startFocusRequest = 0
@@ -49,8 +53,13 @@ struct ContentView: View {
     private var openViewRequest: OpenViewRequest { .shared }
 
     var body: some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: $columns) {
             SidebarView(selection: $selection, tasks: tasks)
+                #if os(iOS)
+                // The sidebar column reports compact on the iPad whatever the window (#828): it then built the
+                // iPhone's start page beside the start page. It takes the window's width class instead.
+                .environment(\.horizontalSizeClass, sizeClass)
+                #endif
                 #if os(macOS)
                 // 220 to 300 pt, 250 by default (#476): "Wiederkehrend" and "Neues Etikett" were cut off.
                 .navigationSplitViewColumnWidth(min: 220, ideal: 250, max: 300)
@@ -61,7 +70,10 @@ struct ContentView: View {
                     // ended up behind the toolbar's overflow arrow (build 71).
                     settingsToolbarItem
                     #else
-                    captureToolbarItem
+                    // The wide iPad has its "+" in the detail column, as the Mac (#828); one is enough.
+                    if sizeClass == .compact {
+                        captureToolbarItem
+                    }
                     settingsToolbarItem
                     #endif
                 }
@@ -69,6 +81,7 @@ struct ContentView: View {
             if case .task(let id) = selection, let task = tasks.first(where: { $0.id == id }) {
                 NavigationStack {
                     withMacCapture(TaskDetailView(task: task, onDeleted: { selection = nil }))
+                        .toolbar { backToolbarItem }
                 }
             } else if case .catalog(let kind) = selection {
                 NavigationStack {
@@ -85,6 +98,10 @@ struct ContentView: View {
                     .toolbar { captureToolbarItem }
             }
         }
+        #if os(iOS)
+        .navigationSplitViewStyle(.balanced)
+        #endif
+        .onChange(of: selection) { old, new in detailBack.follow(from: old, to: new) }
         .environment(completionPulse)
         .environment(pendingCompletions)
         .environment(\.enrichment, enrichment)
@@ -162,6 +179,18 @@ struct ContentView: View {
         #else
         content
         #endif
+    }
+
+    /// "Back" on a task the selection opened (#830, Henning 2026-11-04: everywhere): to the start page or the
+    /// list it came from. The iPhone collapses the columns and has the system's own back button there.
+    @ToolbarContentBuilder
+    private var backToolbarItem: some ToolbarContent {
+        if detailBack.isOffered, sizeClass != .compact {
+            ToolbarItem(placement: .navigation) {
+                Button("Back", systemImage: "chevron.left") { selection = detailBack.destination }
+                    .accessibilityIdentifier("detailBackButton")
+            }
+        }
     }
 
     /// The capture button sits in the same place on every screen (design briefing, screen 2).

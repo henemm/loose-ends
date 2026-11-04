@@ -1,0 +1,52 @@
+Beleg AC-10 (Doku) — #796 Schnitt S4b-1
+Erzeugt (UTC): 2026-11-04T08:35:00Z
+Server: rennwienix, /home/hem/henemm-infra auf Merge-Commit 3abf17bf6589d17d52e2e488ea58e4752a24906c
+(PR henemm/henemm-infra#383, gemergt 2026-11-04T08:22:05Z, Auto-Deploy 2026-11-04T08:25:02Z:
+ "Deployed 69c7a62b -> 3abf17bf: docs/backup-offsite.md scripts/backup-loose-ends-snapshot.sh scripts/backup.sh tests/test_backup_loose_ends.py")
+Zeilen '# <Zeit>' = UTC-Startzeit des Befehls darueber, '# exit=N' = Exit-Code.
+
+$ gh pr diff 383 --repo henemm/henemm-infra   (Ausschnitt docs/backup-offsite.md)
+diff --git a/docs/backup-offsite.md b/docs/backup-offsite.md
+index 4cbbf6b..42c5f38 100644
+--- a/docs/backup-offsite.md
++++ b/docs/backup-offsite.md
+@@ -49,6 +49,22 @@ Restore: Snapshot-Dateien nach `/var/lib/docker/volumes/n8n_n8n_data/_data/`
+ (`database.sqlite`, `config`; Owner UID 1000), Key nach `henemm-infra/n8n/secrets/`,
+ dann `docker compose up -d` in `henemm-infra/n8n`.
+ 
++## Loose Ends (henemm/loose-ends#796)
++
++`scripts/backup-loose-ends-snapshot.sh` schreibt vor dem restic-Lauf jede Nacht einen
++Plain-SQL-Dump von `loose-ends-db` (`pg_dump`, unkomprimiert für restic-Dedup) nach
++`/home/hem/backups/loose-ends/looseends.sql`, lokal nur der jüngste Stand; der Verlauf
++liegt off-site in jedem restic-Snapshot mit Tag `offsite`. Ordner 700, Datei 600: der
++Dump enthält verschlüsselte Apple-Token und Sitzungs-Hashes. Fehlschlag (Endmarke fehlt,
++Tabellenzahl weicht von live ab, `schema_migrations` leer, `docker exec` scheitert) →
++kein Heartbeat-Ping, die ältere Datei bleibt.
++
++Restore: in eine leere Datenbank, in der die Rolle `looseends` schon existiert (der Dump
++enthält `ALTER TABLE … OWNER TO looseends`); ein neuer Container `postgres:18.6` mit
++`POSTGRES_USER=looseends` und `POSTGRES_DB=looseends` legt beides an. Dann
++`psql -v ON_ERROR_STOP=1 -U looseends -d looseends < looseends.sql` (`psql` ≥ 17.6 wegen
++`\restrict`/`\unrestrict` im Dump).
++
+ ## Bausteine
+ 
+ | Komponente | Ort | Zweck |
+
+$ git diff -- CLAUDE.md   (Loose-Ends-Worktree, Zweig feat-796-s4b-sicherung)
+diff --git a/CLAUDE.md b/CLAUDE.md
+index 7aa5414..948db21 100644
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -469,7 +469,7 @@ not scope creep on the current one.
+   `src/apple-jwks.ts` (#615 S2b-1): `createJwks` fetches Apple's keys (fetch and clock passed in), cache 1 h, a reload for an unknown kid at most once in 60 s (a failed one counts too), one shared fetch for concurrent callers, fail-closed once expired (`keys_unavailable`); nothing calls it yet
+   `src/apple-vault.ts` (#615 S2b-2): `encryptToken`/`decryptToken` (AES-256-GCM, blob `[0x01 | iv 12 | tag 16 | ct]`, the account as AAD, `authTagLength: 16`; decrypt gives `null` on any failure and never throws) and `storeRefreshToken` (upsert into `apple_tokens`, `created_at = now()`, `false` for an unknown account/23503); nothing calls it yet
+   `src/apple-client.ts` (#615 S2c-1): `clientSecret` (ES256 JWT per call, 5 min, `ieee-p1363`) and `redeemCode` (POST /auth/token, form without redirect_uri, 5 s timeout, `sub` read from `id_token`; reasons `apple:<error>`, `apple_status`, `unavailable`, `malformed_response`, never throws on Apple's answer); S2c-2 `revokeToken` (POST /auth/revoke, same secret and shared POST; `ok` on 200 only means "not refused", Apple may answer 200 for an invalid token; reasons `apple:<error>`, `apple_status`, `unavailable`); nothing calls them yet
+-  Betrieb (#796 S4a): `https://loose-ends.henemm.com`, only `/health` public (`/mcp` 404 until #615/#621); stack and nginx host live in `henemm-infra` (`loose-ends/`, `nginx/loose-ends.henemm.com.conf`, service on `127.0.0.1:8780`, `postgres:18.6`); rolled out by hand on `rennwienix` with `scripts/deploy-loose-ends.sh` at a fixed commit (`LE_COMMIT`)
++  Betrieb (#796 S4a): `https://loose-ends.henemm.com`, only `/health` public (`/mcp` 404 until #615/#621); stack and nginx host live in `henemm-infra` (`loose-ends/`, `nginx/loose-ends.henemm.com.conf`, service on `127.0.0.1:8780`, `postgres:18.6`); rolled out by hand on `rennwienix` with `scripts/deploy-loose-ends.sh` at a fixed commit (`LE_COMMIT`); nightly plain-SQL dump of `loose-ends-db` in rennwienix's backup (`scripts/backup-loose-ends-snapshot.sh` from `backup.sh`, local `/home/hem/backups/loose-ends/` keeps only the latest, history off-site via restic; tests in `henemm-infra`), restore proven 2026-11-04 from the off-site snapshot; the weekly automatic restore test follows with S4b-2
+ 
+ ## Naming
+ 
+
+Befund: backup-offsite.md hat den Abschnitt 'Loose Ends' mit Ablage, Rechten (700/600, verschluesselte Apple-Token und Sitzungs-Hashes), Fehlerfaellen, Rolle looseends muss existieren, Rueckspielbefehl 'psql -v ON_ERROR_STOP=1 -U looseends -d looseends < looseends.sql'; CLAUDE.md nennt in der Betriebszeile die Sicherung und den Rueckspielbeweis vom 2026-11-04; kein Platzhalter. -> AC-10 erfuellt.

@@ -1,0 +1,186 @@
+Beleg AC-7 (Rueckspielbeweis aus dem Off-Site-Snapshot) — #796 Schnitt S4b-1
+Erzeugt (UTC): 2026-11-04T08:35:00Z
+Server: rennwienix, /home/hem/henemm-infra auf Merge-Commit 3abf17bf6589d17d52e2e488ea58e4752a24906c
+(PR henemm/henemm-infra#383, gemergt 2026-11-04T08:22:05Z, Auto-Deploy 2026-11-04T08:25:02Z:
+ "Deployed 69c7a62b -> 3abf17bf: docs/backup-offsite.md scripts/backup-loose-ends-snapshot.sh scripts/backup.sh tests/test_backup_loose_ends.py")
+Zeilen '# <Zeit>' = UTC-Startzeit des Befehls darueber, '# exit=N' = Exit-Code.
+
+Ablauf in einem Skript: umask 077; TMP=$(mktemp -d); trap cleanup EXIT (stoppt le-restore-probe falls vorhanden, rm -rf $TMP).
+Bereitschaft: bis 60 s im Sekundentakt pg_isready -U looseends -d looseends und psql -tAc 'select 1' = 1; erst zwei Treffer hintereinander im Abstand 2 s gelten.
+
+=== C: Dump aus Off-Site-Snapshot 67bcf30a 67bcf30aa7062193f17957c685e9347c43e90fd29d3bb22a6e883d594d59218b offsite,manual 2026-11-04T08:28:07.98492891Z ===
+
+$ restic snapshots --tag offsite --latest 1 2>&1
+# 2026-11-04T08:28:45Z
+ID        Time                 Host            Tags                 Paths
+--------------------------------------------------------------------------------------------------------------------------
+[... gekuerzt: --latest 1 gilt je Gruppe aus Host und Pfaden, die Liste nennt die juengsten Snapshots aller 75 Gruppen nach Zeit sortiert; letzter Eintrag:]
+67bcf30a  2026-11-04 08:28:07  henemm-hetzner  offsite,manual       /home/hem/backups/loose-ends
+--------------------------------------------------------------------------------------------------------------------------
+75 snapshots
+# exit=0
+
+$ restic restore 67bcf30aa7062193f17957c685e9347c43e90fd29d3bb22a6e883d594d59218b --target /tmp/tmp.IBDJtVAi5z --include /home/hem/backups/loose-ends 2>&1
+# 2026-11-04T08:28:46Z
+restoring <Snapshot 67bcf30a of [/home/hem/backups/loose-ends] at 2026-11-04 08:28:07.98492891 +0000 UTC by hem@henemm-hetzner> to /tmp/tmp.IBDJtVAi5z
+Summary: Restored 5 / 2 files/dirs (8.413 KiB / 8.413 KiB) in 0:00
+# exit=0
+
+$ ls -la /tmp/tmp.IBDJtVAi5z/home/hem/backups/loose-ends/
+# 2026-11-04T08:28:47Z
+total 20
+drwx------ 2 hem hem 4096 Nov  4 08:28 .
+drwxrwxr-x 3 hem hem 4096 Nov  4 08:28 ..
+-rw------- 1 hem hem 8615 Nov  4 08:28 looseends.sql
+# exit=0
+
+$ sha256sum /tmp/tmp.IBDJtVAi5z/home/hem/backups/loose-ends/looseends.sql /home/hem/backups/loose-ends/looseends.sql | sed 's#/tmp/tmp.IBDJtVAi5z#$TMP#'
+# 2026-11-04T08:28:47Z
+944d7015744e6e1942ceaabd777c740a22aefd3c9b5193b6fdd6c18f825e833d  $TMP/home/hem/backups/loose-ends/looseends.sql
+944d7015744e6e1942ceaabd777c740a22aefd3c9b5193b6fdd6c18f825e833d  /home/hem/backups/loose-ends/looseends.sql
+# exit=0
+
+$ command -v file || echo 'file nicht installiert -> Ersatzpruefung mit python3'
+# 2026-11-04T08:28:47Z
+file nicht installiert -> Ersatzpruefung mit python3
+# exit=0
+
+$ python3 -c 'import sys; b=open(sys.argv[1],"rb").read(); b.decode("utf-8"); print("bytes=%d nul=%d gzip_magic=%s utf8=ok erste_zeile=%r" % (len(b), b.count(0), b[:2]==bytes([31,139]), b.splitlines()[0].decode()))' /home/hem/backups/loose-ends/looseends.sql
+# 2026-11-04T08:28:47Z
+bytes=8615 nul=0 gzip_magic=False utf8=ok erste_zeile='--'
+# exit=0
+
+$ restic snapshots --tag offsite,manual --host henemm-hetzner --path /home/hem/backups/loose-ends 2>&1
+# 2026-11-04T08:28:47Z
+ID        Time                 Host            Tags            Paths
+-------------------------------------------------------------------------------------------
+67bcf30a  2026-11-04 08:28:07  henemm-hetzner  offsite,manual  /home/hem/backups/loose-ends
+-------------------------------------------------------------------------------------------
+1 snapshots
+# exit=0
+=== C: Wegwerf-Container ===
+
+$ sudo -n docker run -d --rm --name le-restore-probe --network none --memory 256m --memory-swap 256m -e POSTGRES_USER=looseends -e POSTGRES_DB=looseends -e POSTGRES_PASSWORD="$(openssl rand -hex 16)" postgres:18.6
+# 2026-11-04T08:28:48Z
+eb3d4b1d9952a101db8bc0da656dda7698d92a964c151de796c7369671002f54
+# exit=0
+
+$ sudo -n docker inspect -f 'Network={{.HostConfig.NetworkMode}} Memory={{.HostConfig.Memory}} MemorySwap={{.HostConfig.MemorySwap}} AutoRemove={{.HostConfig.AutoRemove}} Mounts={{len .Mounts}}' le-restore-probe
+# 2026-11-04T08:28:49Z
+Network=none Memory=268435456 MemorySwap=268435456 AutoRemove=true Mounts=1
+# exit=0
+
+# Bereitschaft: bis 60 s im Sekundentakt pg_isready + select 1, zweimal hintereinander im Abstand 2 s
+# 2026-11-04T08:28:51Z bereit-Treffer 1
+# 2026-11-04T08:28:54Z bereit-Treffer 2
+# bereit nach 5 s
+
+$ sudo -n docker exec -i le-restore-probe psql -v ON_ERROR_STOP=1 -U looseends -d looseends < "$TMP/home/hem/backups/loose-ends/looseends.sql"
+# 2026-11-04T08:28:54Z
+# exit=0
+# stdout (psql-Rueckmeldungen, Zeilen): 50
+SET
+SET
+SET
+SET
+SET
+SET
+ set_config 
+------------
+ 
+(1 row)
+
+SET
+SET
+SET
+SET
+SET
+SET
+CREATE TABLE
+ALTER TABLE
+CREATE TABLE
+ALTER TABLE
+CREATE TABLE
+ALTER TABLE
+CREATE TABLE
+ALTER TABLE
+CREATE TABLE
+ALTER TABLE
+CREATE TABLE
+ALTER TABLE
+CREATE TABLE
+ALTER TABLE
+COPY 0
+COPY 0
+COPY 0
+COPY 0
+COPY 2
+COPY 0
+COPY 0
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+CREATE INDEX
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+# stderr (Bytes): 0
+=== C: Vergleich ===
+
+$ sudo -n docker exec loose-ends-db psql -U looseends -d looseends -tA -c "select table_name from information_schema.tables where table_schema = 'public' and table_type = 'BASE TABLE' order by 1" | tee /home/hem/tmp-le-probe-state/tables-loose-ends-db.txt
+# 2026-11-04T08:28:54Z
+accounts
+apple_tokens
+order_results
+orders
+schema_migrations
+sessions
+transcripts
+# exit=0
+
+$ sudo -n docker exec loose-ends-db psql -U looseends -d looseends -tA -c "select * from schema_migrations order by 1" | tee /home/hem/tmp-le-probe-state/migr-loose-ends-db.txt
+# 2026-11-04T08:28:54Z
+001_claude_schema.sql|2026-11-03 14:52:38.870182+00
+002_accounts.sql|2026-11-03 14:52:38.876289+00
+# exit=0
+
+$ sudo -n docker exec le-restore-probe psql -U looseends -d looseends -tA -c "select table_name from information_schema.tables where table_schema = 'public' and table_type = 'BASE TABLE' order by 1" | tee /home/hem/tmp-le-probe-state/tables-le-restore-probe.txt
+# 2026-11-04T08:28:54Z
+accounts
+apple_tokens
+order_results
+orders
+schema_migrations
+sessions
+transcripts
+# exit=0
+
+$ sudo -n docker exec le-restore-probe psql -U looseends -d looseends -tA -c "select * from schema_migrations order by 1" | tee /home/hem/tmp-le-probe-state/migr-le-restore-probe.txt
+# 2026-11-04T08:28:54Z
+001_claude_schema.sql|2026-11-03 14:52:38.870182+00
+002_accounts.sql|2026-11-03 14:52:38.876289+00
+# exit=0
+
+$ diff /home/hem/tmp-le-probe-state/tables-loose-ends-db.txt /home/hem/tmp-le-probe-state/tables-le-restore-probe.txt
+# 2026-11-04T08:28:54Z
+# exit=0
+
+$ diff /home/hem/tmp-le-probe-state/migr-loose-ends-db.txt /home/hem/tmp-le-probe-state/migr-le-restore-probe.txt
+# 2026-11-04T08:28:54Z
+# exit=0
+
+=== Aufraeumen (trap) 2026-11-04T08:28:54Z ===
+$ sudo -n docker stop le-restore-probe
+le-restore-probe
+# exit=0
+$ rm -rf /tmp/tmp.IBDJtVAi5z
+# exit=0
+
+Hinweis Mounts=1: kein -v/--mount angegeben; das Image postgres:18.6 erklaert VOLUME /var/lib/postgresql, Docker legt dafuer ein anonymes Volume an, das --rm mit dem Container entfernt (nachgeprueft in ac8-aufgeraeumt.txt).
+
+Befund: Dump aus Snapshot 67bcf30a (restic restore, nicht die lokale Datei; sha256 gleich der lokalen); Container --network none, 256 MiB hart (Memory = MemorySwap = 268435456), AutoRemove=true; bereit nach 5 s; psql -v ON_ERROR_STOP=1 Exit 0, stderr 0 Bytes (7x CREATE TABLE, COPY 2 fuer schema_migrations); Tabellenliste (7) und schema_migrations (001_claude_schema.sql, 002_accounts.sql samt Zeitstempeln) beider Seiten gleich, beide diff leer (exit 0). -> AC-7 erfuellt.

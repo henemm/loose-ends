@@ -1,0 +1,31 @@
+Beleg AC-11 (Dateiliste) — #796 Schnitt S4b-1
+Erzeugt (UTC): 2026-11-04T08:35:00Z
+Server: rennwienix, /home/hem/henemm-infra auf Merge-Commit 3abf17bf6589d17d52e2e488ea58e4752a24906c
+(PR henemm/henemm-infra#383, gemergt 2026-11-04T08:22:05Z, Auto-Deploy 2026-11-04T08:25:02Z:
+ "Deployed 69c7a62b -> 3abf17bf: docs/backup-offsite.md scripts/backup-loose-ends-snapshot.sh scripts/backup.sh tests/test_backup_loose_ends.py")
+Zeilen '# <Zeit>' = UTC-Startzeit des Befehls darueber, '# exit=N' = Exit-Code.
+
+$ gh pr view 383 --repo henemm/henemm-infra --json files --jq '.files[] | "\(.changeType) \(.path) +\(.additions) -\(.deletions)"'
+# 2026-11-04T08:34:48Z
+MODIFIED docs/backup-offsite.md +16 -0
+ADDED scripts/backup-loose-ends-snapshot.sh +65 -0
+MODIFIED scripts/backup.sh +10 -1
+ADDED tests/test_backup_loose_ends.py +199 -0
+# exit=0
+
+$ git diff --stat origin/main...HEAD   (Loose-Ends-Worktree, committet)
+ .../feat-796-s4b-sicherung/ac1-vorher.txt          |  46 +++++
+ docs/briefings/feat-796-s4b-sicherung.md           |  37 ++++
+ docs/context/feat-796-s4b-sicherung.md             | 127 +++++++++++++
+ docs/specs/feat-796-schnitt-4b1-sicherung.md       | 207 +++++++++++++++++++++
+ 4 files changed, 417 insertions(+)
+$ git diff --stat   (Loose-Ends-Worktree, noch nicht committet)
+ CLAUDE.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+$ git status --short
+ M CLAUDE.md
+?? .claude/
+?? docs/artifacts/feat-796-s4b-sicherung/test-green-output.txt
+# Zusaetzlich entstehen in diesem Lauf die Belegdateien docs/artifacts/feat-796-s4b-sicherung/ac{2..8,10,11,12}-*.txt (unter docs/).
+
+Befund: PR #383 enthaelt genau die vier Dateien docs/backup-offsite.md, scripts/backup-loose-ends-snapshot.sh, scripts/backup.sh, tests/test_backup_loose_ends.py. Loose Ends: committet nur docs/ (Artifacts, Briefing, Context, Spec), ungesichert CLAUDE.md und docs/artifacts/...; '.claude/' ist nicht versioniert und kein Teil des Diffs. server/, project.yml, .github/ und Swift-Dateien unberuehrt. -> AC-11 erfuellt (sofern der Orchestrator nur CLAUDE.md und docs/ committet).
