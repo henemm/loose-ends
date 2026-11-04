@@ -165,8 +165,30 @@ struct TagSentence: View {
     let contexts: [TaskContext]
     let chosen: Set<UUID>
     let toggle: (TaskContext) -> Void
+    /// A typed name becomes a tag on the task, new or existing (#818); nil offers no field.
+    var create: ((String) -> Void)?
+    @State private var typed = ""
 
     var body: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            sentence
+            if let create {
+                TextField("New tag", text: $typed)
+                    .font(.system(.title3, design: .serif))
+                    .textFieldStyle(.plain)
+                    .submitLabel(.done)
+                    .onSubmit {
+                        create(typed)
+                        typed = ""
+                    }
+                    .padding(.vertical, 6)
+                    .overlay(alignment: .bottom) { Rectangle().fill(.quaternary).frame(height: 1) }
+                    .accessibilityIdentifier("newContextField")
+            }
+        }
+    }
+
+    private var sentence: some View {
         FlowLayout(spacing: 6) {
             ForEach(Array(contexts.enumerated()), id: \.element.id) { index, context in
                 let on = chosen.contains(context.id)
