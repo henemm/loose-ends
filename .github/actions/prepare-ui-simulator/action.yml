@@ -1,21 +1,34 @@
 name: Prepare the UI-test simulator
-description: Picks the iPhone 17 with iOS 27.0, boots it, prepares it (#578) and lets it settle (#228). Sets SIM_UDID.
+description: Picks the iPhone 17 (or the given device) with iOS 27.0, boots it, prepares it (#578) and lets it settle (#228). Sets SIM_UDID.
 # #761: the language matrix `ui-smoke-lang` needs the same simulator as `ui-smoke`. The job `ui-smoke` keeps its own
 # copy of these steps untouched; a change here belongs there too (and the other way round).
 # #799: the `busy=` line of the settle step stays identical in both copies, and its `grep` must be guarded with
 # `|| true`: composite steps run with `-e -o pipefail`, so a grep without a hit would end the step.
+# #828: `device: ipad` picks the largest iPad Pro with iOS 27.0 (else any iPad), for the iPad job `ui-ipad`.
+inputs:
+  device:
+    description: "iphone (iPhone 17) or ipad"
+    required: false
+    default: iphone
 runs:
   using: composite
   steps:
-    - name: Pick a simulator (iPhone 17, iOS 27.0 only)
+    - name: Pick a simulator (${{ inputs.device }}, iOS 27.0 only)
       shell: bash
+      env:
+        DEVICE_KIND: ${{ inputs.device }}
       run: |
-        udid=$(xcrun simctl list devices available -j | python3 -c 'import json,sys
+        udid=$(xcrun simctl list devices available -j | python3 -c 'import json,os,sys
         devs=json.load(sys.stdin).get("devices", {}).get("com.apple.CoreSimulator.SimRuntime.iOS-27-0", [])
-        hit=next((d for d in devs if d["name"]=="iPhone 17"), None)
+        if os.environ.get("DEVICE_KIND") == "ipad":
+            pads=[d for d in devs if d["name"].startswith("iPad")]
+            pros=[d for d in pads if "Pro 13" in d["name"]] or [d for d in pads if "Pro" in d["name"]] or pads
+            hit=pros[0] if pros else None
+        else:
+            hit=next((d for d in devs if d["name"]=="iPhone 17"), None)
         print(hit["udid"] if hit else "")')
         if [ -z "$udid" ]; then
-          echo "::error::No iPhone 17 simulator with iOS 27.0 on this image. Available devices:"
+          echo "::error::No $DEVICE_KIND simulator with iOS 27.0 on this image. Available devices:"
           xcrun simctl list devices available
           exit 1
         fi
