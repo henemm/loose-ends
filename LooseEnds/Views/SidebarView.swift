@@ -114,7 +114,8 @@ struct SidebarView: View {
                     // iPad: the sidebar marks the open list (#334); iPhone: after Back selection is nil.
                     ContentsIndex(groups: indexGroups, selected: selection, inMargin: true) { selection = $0 }
                     // The beads close the page, quiet and without a caption (#677).
-                    WeekStringRows(string: ViewRules.currentString(in: tasks), all: tasks)
+                    let stringLength = fieldSettings?.stringLength ?? ViewRules.stringLength
+                    WeekStringRows(string: ViewRules.currentString(in: tasks, length: stringLength), all: tasks, length: stringLength)
                 }
             } else {
                 // Mac and the wide iPad (#476, #828): the sidebar is the index alone, the start page stands

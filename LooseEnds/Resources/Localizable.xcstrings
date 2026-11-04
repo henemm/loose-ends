@@ -457,7 +457,7 @@
     "The Tangle, %@" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Das Knäuel, %@" } } } },
     "Drive" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Antrieb" } } } },
     "The one task you keep putting off, under the date on the start page." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Die eine Aufgabe, vor der man sich drückt, unter dem Datum auf der Startseite." } } } },
-    "Once done, the task lands as a bead on the string. Five beads fill it, then the sentence below is due." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erledigt landet die Aufgabe als Perle auf der Schnur. Fünf Perlen füllen sie, dann ist der Satz darunter fällig." } } } },
+    "Once done, the task lands as a bead on the string. Once the string is full, the sentence below is due." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Erledigt landet die Aufgabe als Perle auf der Schnur. Ist die Schnur voll, ist der Satz darunter fällig." } } } },
     "Today untangled: %@." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute entwirrt: %@." } } } },
     "Today untangled: %@, and one more tied up." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute entwirrt: %@, dazu eine weitere." } } } },
     "Today untangled: %1$@, and %2$@ more tied up." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute entwirrt: %1$@, dazu %2$@ weitere." } } } },
@@ -484,6 +484,8 @@
     "Beads" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Perlen" } } } },
     "The string is full." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Die Schnur ist voll." } } } },
     "The string is full. For the beads: %@." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Die Schnur ist voll. Für die Perlen: %@." } } } },
-    "%lld of %lld beads on the string" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "%1$lld von %2$lld Perlen auf der Schnur" } } } }
+    "%lld of %lld beads on the string" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "%1$lld von %2$lld Perlen auf der Schnur" } } } },
+    "Beads per string" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Perlen je Schnur" } } } },
+    "This many beads fill a string." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "So viele Perlen füllen eine Schnur." } } } }
   }
 }

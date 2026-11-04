@@ -320,7 +320,7 @@ not scope creep on the current one.
   hand only as user revisions (`RevisedField.knaeuel`/`.counts`), both `DetailField`s of the group `drive`, off by default.
   `ViewRules.knaeuel(in:)` (latest mark wins), `week(containing:)` (Monday to Sunday, whatever the locale),
   `weekBeads(in:)` (every completion of a counting task in the week, a repeating one per record), `currentString(in:)` (the start
-  page's string of `stringLength` = 5, #655: the beads since the last full string, counted from all beads in rounds of five;
+  page's string of `length` beads (#824: `FieldSettingsStore.stringLength`, "Beads per string" in Settings › Fields, 3 to 20 = `ViewRules.stringLengths`, 5 until set, defaults plus iCloud key-value store; `stringLength` = 5 is the standard), #655: the beads since the last full string, counted from all beads in rounds of that length;
   full = the win, the next bead starts a new string; `recentBeads(in:limit:)` the last n beads), `weekToSpeakOf(in:)` (the
   Sunday sentence's beads: this week's from Sunday 16:00, last week's on Monday until the first new bead, #646) and
   `groupedByCompletionWeek` ("Completed" by weeks with each week's beads, the days inside); "Now" leads with the Knäuel (#703, Henning 2026-10-26: it always counts, with or without a date; `NowTasks.knaeuel`, never in

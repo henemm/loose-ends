@@ -77,7 +77,8 @@ struct StartPage: View {
             NowBlock(tasks: tasks, expanded: nowExpandedBinding) { nowRow($0, metrics) } knaeuelRow: { task, head in
                 knaeuelRow(task, head, metrics)
             }
-            WeekStringRows(string: ViewRules.currentString(in: tasks), all: tasks)
+            let stringLength = fieldSettings?.stringLength ?? ViewRules.stringLength
+            WeekStringRows(string: ViewRules.currentString(in: tasks, length: stringLength), all: tasks, length: stringLength)
         })
         .listStyle(.plain)
         .paperGround()
