@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-11-04T10:22:33+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: feat-796-s4b-sicherung
+head: 97473cd07ddc9d9f37f34e5ba8583829c667d0bc
+basis: 0e0501aa188c1445350fd460aef780ff5cd729fd (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 26 gesamt, 26 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1793783303.615  ende: 1793784151.057
+geraet: iPhone 17, iOS 27.0
+summary: docs/artifacts/feat-796-s4b-sicherung/simulator-run/summary.json  sha256:9e62281478ef25246c73fe5f67895ca92f8758917a44f278f855dcb819ef78a0
+xcresult: docs/artifacts/feat-796-s4b-sicherung/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-796-s4b-sicherung/simulator-run/*.png (15 Stück)
+
+## Geprüfte Dateien
+(keine Code-Dateien geändert)
