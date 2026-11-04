@@ -1,0 +1,18 @@
+RED-Beleg Schnitt 3b (#615), 2026-11-04. server/src/auth.ts existiert noch nicht.
+
+## 1. ./server/scripts/test-local.sh  (Exit 1, bricht am Typecheck ab)
+
+> typecheck
+> tsc --noEmit
+
+test/auth.test.ts(9,56): error TS2307: Cannot find module '../src/auth.ts' or its corresponding type declarations.
+test/auth.test.ts(56,55): error TS7006: Parameter 'kid' implicitly has an 'any' type.
+
+## 2. Gleicher Lauf ohne Typecheck: node --test test/auth.test.ts  (Exit 1, echtes Wegwerf-Postgres)
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/auth.ts' imported from /Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/auth.test.ts
+Node.js v26.13.0
+✖ test/auth.test.ts (165.614792ms)
+ℹ tests 1
+ℹ pass 0
+ℹ fail 1
