@@ -175,6 +175,12 @@ private struct WideListRow: ViewModifier {
         return content
             .padding(.vertical, 11)
             .environment(\.startMetrics, metrics)
+            #if os(macOS)
+            // The line between rows runs across the 720 pt column, not the whole detail column (#829):
+            // from the row's edge, the side inset before the content.
+            .alignmentGuide(.listRowSeparatorLeading) { _ in -metrics.edge }
+            .alignmentGuide(.listRowSeparatorTrailing) { d in d.width + metrics.edge }
+            #endif
             .startRow(metrics)
     }
 }

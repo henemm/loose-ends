@@ -298,6 +298,10 @@ struct TaskListView: View {
     private func head(_ text: Text) -> some View {
         if isWide {
             text.captionHead().startRow(StartMetrics(typeSize))
+                #if os(macOS)
+                // A Mac section head ignores the row insets; the column inset comes as padding (#829).
+                .padding(.leading, max(0, (listWidth - 720) / 2))
+                #endif
         } else {
             text
         }
