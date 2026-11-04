@@ -22,11 +22,40 @@ def report_set(run, version_label, locale, screenshot_set):
               f"zustand={state}", flush=True)
 
 
+def report_subtitles(run, app_id):
+    """Je App-Info Zustände, Feld- und Relationsnamen, dann Name und Untertitel je Sprache (#837).
+
+    Nur Zustandswörter und Namen, nie andere Werte; ein leerer Untertitel steht als `keiner`.
+    `keine` heißt: Antwort ohne Eintrag; `fehler` heißt: die Abfrage ist gescheitert.
+    """
+    body = run.ask("appInfos", f"/v1/apps/{app_id}/appInfos")
+    if body is not None and not records(body):
+        print("appinfo keine", flush=True)
+    for number, info in enumerate(records(body), start=1):
+        attrs = attributes(info)
+        relations = info.get("relationships") if isinstance(info.get("relationships"), dict) else {}
+        print(f"appinfo nr={number} state={attrs.get('state') or '?'} appStoreState={attrs.get('appStoreState') or '?'} "
+              f"felder={','.join(sorted(attrs))} relationen={','.join(sorted(relations))}", flush=True)
+        answer = run.ask("appInfoLocalizations", f"/v1/appInfos/{info['id']}/appInfoLocalizations?limit=50")
+        if answer is None:
+            print(f"untertitel appinfo={number} fehler", flush=True)
+            continue
+        locales = records(answer)
+        if not locales:
+            print(f"untertitel appinfo={number} keine", flush=True)
+        for locale in locales:
+            a = attributes(locale)
+            subtitle = a.get("subtitle") or "keiner"
+            print(f"untertitel appinfo={number} sprache={a.get('locale', '?')} name={a.get('name', '?')} "
+                  f"untertitel={subtitle} zeichen={len(a.get('subtitle') or '')}", flush=True)
+
+
 def main():
     try:
         config = read_config()
         app_id = find_app_id(config)
         run = Probe(config)
+        report_subtitles(run, app_id)
         versions = records(run.ask("appStoreVersions", f"/v1/apps/{app_id}/appStoreVersions?limit=5"))
         if not versions:
             print("version keine", flush=True)
