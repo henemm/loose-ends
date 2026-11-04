@@ -21,6 +21,8 @@ struct FieldEditorView: View {
     @State private var showsOtherTime = false
     /// The month the calendar shows once "Other date …" opened it; nil is the due day's, else today's.
     @State private var shownMonth: Date?
+    /// The same "New tag" dialog as the tag pages (#818): a name that exists is refused there too.
+    @State private var catalog = CatalogEditor()
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Detail")
 
     private var automaticRevision: Revision? {
@@ -30,6 +32,7 @@ struct FieldEditorView: View {
 
     var body: some View {
         paperPage
+            .catalogDialogs(catalog, contexts: contexts, projects: projects, didAddContext: { putOnTask($0) })
             .onAppear { energyPosition = task.energy?.rawValue }
     }
 
@@ -100,7 +103,8 @@ struct FieldEditorView: View {
         case .duration:
             DurationTape(current: task.duration) { choose($0?.rawValue) }
         case .contexts:
-            TagSentence(contexts: contexts, chosen: Set((task.contexts ?? []).map(\.id))) { toggle($0) }
+            TagSentence(contexts: contexts, chosen: Set((task.contexts ?? []).map(\.id)), toggle: { toggle($0) },
+                        addNew: { catalog.begin(NameEdit(target: .newContext)) })
         case .project:
             ProjectIndex(projects: projects, current: task.project) { choose($0?.name) }
         case .dueDate:
@@ -604,6 +608,15 @@ struct FieldEditorView: View {
             names.append(context.name)
         }
         apply(FieldCodec.encode(names))
+    }
+
+    /// A tag added from here goes onto the task at once (#818). The query's `contexts` lacks it for a
+    /// moment and the codec matches by name against what it is given, so it is handed over too.
+    private func putOnTask(_ context: TaskContext) {
+        let names = (task.contexts ?? []).map(\.name) + [context.name]
+        let available = contexts.contains { $0.id == context.id } ? contexts : contexts + [context]
+        guard RevisionService.set(field, to: FieldCodec.encode(names), on: task, contexts: available, projects: projects) != nil else { return }
+        save()
     }
 
     private func apply(_ encoded: String?) {

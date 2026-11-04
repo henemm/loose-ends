@@ -32,9 +32,11 @@ extension View {
         _ editor: CatalogEditor,
         contexts: [TaskContext],
         projects: [Project],
-        willDelete: @escaping (ViewSelection) -> Void = { _ in }
+        willDelete: @escaping (ViewSelection) -> Void = { _ in },
+        didAddContext: @escaping (TaskContext) -> Void = { _ in }
     ) -> some View {
-        modifier(CatalogDialogs(editor: editor, contexts: contexts, projects: projects, willDelete: willDelete))
+        modifier(CatalogDialogs(editor: editor, contexts: contexts, projects: projects, willDelete: willDelete,
+                                didAddContext: didAddContext))
     }
 
     /// Rename and Delete, for a row's long-press menu.
@@ -61,6 +63,8 @@ private struct CatalogDialogs: ViewModifier {
     let contexts: [TaskContext]
     let projects: [Project]
     let willDelete: (ViewSelection) -> Void
+    /// Hears a tag that was just added (#818): the task's tag page puts it on the task.
+    let didAddContext: (TaskContext) -> Void
     @Environment(\.modelContext) private var modelContext
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "Catalog")
 
@@ -93,7 +97,10 @@ private struct CatalogDialogs: ViewModifier {
             case .newProject:
                 try CatalogService.addProject(named: editor.editName, in: modelContext, existing: projects)
             case .newContext:
-                try CatalogService.addContext(named: editor.editName, in: modelContext, existing: contexts)
+                let added = try CatalogService.addContext(named: editor.editName, in: modelContext, existing: contexts)
+                try modelContext.save()
+                didAddContext(added)
+                return
             case .project(let project):
                 try CatalogService.rename(project, to: editor.editName)
             case .context(let context):

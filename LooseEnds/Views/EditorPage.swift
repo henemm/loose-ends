@@ -165,6 +165,8 @@ struct TagSentence: View {
     let contexts: [TaskContext]
     let chosen: Set<UUID>
     let toggle: (TaskContext) -> Void
+    /// "New tag" after the last one (#818); nil offers none.
+    var addNew: (() -> Void)?
 
     var body: some View {
         FlowLayout(spacing: 6) {
@@ -190,6 +192,13 @@ struct TagSentence: View {
                             .accessibilityHidden(true)
                     }
                 }
+            }
+            if let addNew {
+                Button("New tag", systemImage: "plus", action: addNew)
+                    .font(.callout)
+                    .buttonStyle(.borderless)
+                    .padding(.vertical, 3)
+                    .accessibilityIdentifier("newContextButton")
             }
         }
     }
