@@ -320,8 +320,8 @@ not scope creep on the current one.
   hand only as user revisions (`RevisedField.knaeuel`/`.counts`), both `DetailField`s of the group `drive`, off by default.
   `ViewRules.knaeuel(in:)` (latest mark wins), `week(containing:)` (Monday to Sunday, whatever the locale),
   `weekBeads(in:)` (every completion of a counting task in the week, a repeating one per record), `currentString(in:)` (the start
-  page's string of `length` beads (#824: `FieldSettingsStore.stringLength`, "Beads per string" in Settings › Fields, 3 to 20 = `ViewRules.stringLengths`, 5 until set, defaults plus iCloud key-value store; `stringLength` = 5 is the standard), #655: the beads since the last full string, counted from all beads in rounds of that length;
-  full = the win, the next bead starts a new string; `recentBeads(in:limit:)` the last n beads), `weekToSpeakOf(in:)` (the
+  page's string of `length` beads (#824: `FieldSettingsStore.stringLength`, "Beads per string" in Settings › Fields, 3 to 20 = `ViewRules.stringLengths`, 5 until set, defaults plus iCloud key-value store; `stringLength` = 5 is the standard), #655/#825: the first `length` beads after `since` (the moment of the last confirmation, nil = never);
+  full = the win, it stands until the user confirms (`BeadString.confirmed` = a string was confirmed before); `recentBeads(in:limit:)` the last n beads), `weekToSpeakOf(in:)` (the
   Sunday sentence's beads: this week's from Sunday 16:00, last week's on Monday until the first new bead, #646) and
   `groupedByCompletionWeek` ("Completed" by weeks with each week's beads, the days inside); "Now" leads with the Knäuel (#703, Henning 2026-10-26: it always counts, with or without a date; `NowTasks.knaeuel`, never in
   `all`, `count` = rows + Knäuel = `nowCount`). Views: `LooseEnds/Views/Knaeuel.swift` (`StartHeaderRows`: the date in the margin (`StartDateMargin`, the knot over it
@@ -330,7 +330,7 @@ not scope creep on the current one.
   `KnaeuelThread.swift` (`KnaeuelThread`: two trochoid loops from the Knäuel's tail end, no longer drawn since #677, `LooseningKnaeuel`:
   the Knäuel blended into the knot) and `Beads.swift` (`PearlGlyph`, `WeekString` with the sag and the 1.1 s green,
   `WeekStringRows` at the end of the start page without a caption (#677; iPhone under the contents): the string of five with its empty places as dots, `RewardLine` "For the beads: …" while it
-  fills, `FullStringLine` "The string is full. For the beads: …" once it is, #647/#655). The user-facing word for `countsAt` is "Perle sammeln" (#655), never "Zählt". The
+  fills, `FullStringLine` "The string is full. For the beads: …" once it is, with the button "Begin a new string" (#825): a full string stands until it is tapped; beads completed meanwhile do not count into the next one; the moment is `FieldSettingsStore.stringSince`, defaults plus iCloud key-value store, no model field; #647/#655). The user-facing word for `countsAt` is "Perle sammeln" (#655), never "Zählt". The
   question before the Knäuel moves is `movesKnaeuel` in `TaskInteractions.swift`; the detail's lines under the raw text
   ("The Knäuel · since Monday" with Release, "Counts always, it is the Knäuel") are `TaskDetailView.driveSection`. The menu
   entries are actions (#667): "Make it the Knäuel" / "No longer the Knäuel" (SF Symbol `scribble.variable`), "Attach a bead" /
