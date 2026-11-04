@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { copyFileSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type pg from "pg";
 import { migrate } from "../src/migrate.ts";
@@ -56,12 +57,12 @@ async function refused(promise: Promise<unknown>, expected: Expect, name: string
 test("AC-1: the real migrations folder applies 001 once and creates the three tables", async (t) => {
   const pool = await freshPool(t);
 
-  assert.deepEqual(await migrate(pool, migrations), ["001_claude_schema.sql", "002_accounts.sql"]);
+  assert.deepEqual(await migrate(pool, migrations), ["001_claude_schema.sql", "002_accounts.sql", "003_apple_client_id.sql"]);
   for (const table of ["transcripts", "orders", "order_results"]) {
     const result = await pool.query("SELECT to_regclass($1) AS oid", [table]);
     assert.notEqual(result.rows[0].oid, null, table);
   }
-  assert.equal((await pool.query("SELECT name FROM schema_migrations")).rowCount, 2);
+  assert.equal((await pool.query("SELECT name FROM schema_migrations")).rowCount, 3);
   assert.deepEqual(await migrate(pool, migrations), []);
 });
 
@@ -177,4 +178,28 @@ test("AC-6: known limit, version 1.0 is accepted because jsonb compares numbers 
   await insertOrder(pool, JSON.stringify(order).replace('"version":1', '"version":1.0'));
   await insertTranscript(pool, JSON.stringify(transcript).replace('"version":1', '"version":1.0'));
   assert.equal((await pool.query("SELECT doc->>'version' AS v FROM orders")).rows[0].v, "1.0");
+});
+
+test("migration 003: additiv auf bestandsdaten", async (t) => {
+  const pool = await freshPool(t);
+  const old = mkdtempSync(join(tmpdir(), "le-mig-"));
+  t.after(() => rmSync(old, { recursive: true, force: true }));
+  for (const name of ["001_claude_schema.sql", "002_accounts.sql"]) copyFileSync(join(migrations, name), join(old, name));
+  assert.deepEqual(await migrate(pool, old), ["001_claude_schema.sql", "002_accounts.sql"]);
+  const account = (await pool.query("INSERT INTO accounts (apple_sub) VALUES ('sub.alt') RETURNING id")).rows[0].id;
+  await pool.query("INSERT INTO apple_tokens (account_id, refresh_token_enc) VALUES ($1, $2)", [account, Buffer.from([1, 2, 3])]);
+  const before = (await pool.query("SELECT refresh_token_enc, created_at FROM apple_tokens")).rows[0];
+
+  copyFileSync(join(migrations, "003_apple_client_id.sql"), join(old, "003_apple_client_id.sql"));
+  assert.deepEqual(await migrate(pool, old), ["003_apple_client_id.sql"]);
+  const after = (await pool.query("SELECT refresh_token_enc, created_at, client_id FROM apple_tokens")).rows;
+  assert.equal(after.length, 1);
+  assert.deepEqual(after[0].refresh_token_enc, before.refresh_token_enc);
+  assert.deepEqual(after[0].created_at, before.created_at);
+  assert.equal(after[0].client_id, null);
+  const column = (await pool.query(
+    "SELECT data_type, is_nullable FROM information_schema.columns WHERE table_schema = current_schema() AND table_name = 'apple_tokens' AND column_name = 'client_id'",
+  )).rows;
+  assert.deepEqual(column, [{ data_type: "text", is_nullable: "YES" }]);
+  assert.deepEqual(await migrate(pool, old), []);
 });

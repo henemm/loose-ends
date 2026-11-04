@@ -13,6 +13,7 @@ const KEY = randomBytes(32);
 const ID = "0b7d5e3c-1111-4000-8000-000000000001";
 const OTHER = "0b7d5e3c-2222-4000-8000-000000000002";
 const TOKEN = "r.GEHEIM-123.refresh-token-abc";
+const CLIENT = "com.henning.looseends";
 
 // A blob built by hand in the agreed format, so the test does not trust the code under test.
 function seal(plain: string, tagLength = 16, key = KEY, id = ID): Buffer {
@@ -118,29 +119,69 @@ test("store: überschreibt", async (t) => {
   const pool = await migrated(t);
   const id = await findOrCreate(pool, "apple-sub-1");
   const [a, b] = [encryptToken(KEY, id, "A-token"), encryptToken(KEY, id, "B-token")];
-  assert.equal(await storeRefreshToken(pool, id, a), true);
+  assert.equal(await storeRefreshToken(pool, id, a, CLIENT), true);
   await pool.query("UPDATE apple_tokens SET created_at = now() - interval '1 hour'");
   const before: Date = (await rows(pool))[0].created_at;
-  assert.equal(await storeRefreshToken(pool, id, b), true);
+  assert.equal(await storeRefreshToken(pool, id, b, CLIENT), true);
   const after = await rows(pool);
   assert.equal(after.length, 1);
   assert.deepEqual(after[0].refresh_token_enc, b);
   assert.ok(after[0].created_at > before, "created_at rückt beim Überschreiben vor");
 });
 
+test("vault: client_id wird abgelegt und ersetzt", async (t) => {
+  const pool = await migrated(t);
+  const id = await findOrCreate(pool, "apple-sub-1");
+  const [a, b] = [encryptToken(KEY, id, "A-token"), encryptToken(KEY, id, "B-token")];
+  assert.equal(await storeRefreshToken(pool, id, a, CLIENT), true);
+  assert.equal((await rows(pool))[0].client_id, CLIENT);
+  await pool.query("UPDATE apple_tokens SET created_at = now() - interval '1 hour'");
+  const before: Date = (await rows(pool))[0].created_at;
+  assert.equal(await storeRefreshToken(pool, id, b, `${CLIENT}.web`), true);
+  const after = await rows(pool);
+  assert.equal(after.length, 1);
+  assert.deepEqual(after[0].refresh_token_enc, b);
+  assert.equal(after[0].client_id, `${CLIENT}.web`);
+  assert.ok(after[0].created_at > before, "created_at rückt beim Überschreiben vor");
+  assert.equal(await storeRefreshToken(pool, OTHER, blob(), CLIENT), false);
+  assert.equal((await rows(pool)).length, 1);
+});
+
+test("vault fehlbedienung: client_id", async (t) => {
+  const pool = await migrated(t);
+  const id = await findOrCreate(pool, "apple-sub-1");
+  const dead = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+  await dead.end();
+  const cases: [string, unknown][] = [
+    ["leer", ""], ["undefined", undefined], ["null", null], ["Zahl", 42],
+    ["Objekt", { v: "GEHEIM-CLIENT" }], ["Array", ["GEHEIM-CLIENT"]],
+  ];
+  // The dead pool would fail with its own message if the database were touched: the check must throw first.
+  for (const [name, value] of cases) {
+    for (const target of [pool, dead]) {
+      await assert.rejects(async () => storeRefreshToken(target, id, blob(), value as string), (e: Error) => {
+        assert.ok(!`${e.message}\n${e.stack}`.includes("GEHEIM-CLIENT"), `${name}: Wert im Fehlertext`);
+        assert.doesNotMatch(e.message, /pool|closed|ended/i, `${name}: Datenbank berührt`);
+        return true;
+      }, name);
+    }
+  }
+  assert.equal((await rows(pool)).length, 0);
+});
+
 test("store: unbekanntes konto", async (t) => {
   const pool = await migrated(t);
-  assert.equal(await storeRefreshToken(pool, OTHER, blob()), false);
+  assert.equal(await storeRefreshToken(pool, OTHER, blob(), CLIENT), false);
   assert.equal((await rows(pool)).length, 0);
   const dead = new pg.Pool({ connectionString: process.env.DATABASE_URL });
   await dead.end();
-  await assert.rejects(storeRefreshToken(dead, OTHER, blob()));
+  await assert.rejects(storeRefreshToken(dead, OTHER, blob(), CLIENT));
 });
 
 test("store: rundweg über deleteAccount", async (t) => {
   const pool = await migrated(t);
   const id = await findOrCreate(pool, "apple-sub-1");
-  assert.equal(await storeRefreshToken(pool, id, encryptToken(KEY, id, TOKEN)), true);
+  assert.equal(await storeRefreshToken(pool, id, encryptToken(KEY, id, TOKEN), CLIENT), true);
   const gone = await deleteAccount(pool, id);
   assert.ok(Buffer.isBuffer(gone.appleToken));
   assert.equal(decryptToken(KEY, id, gone.appleToken), TOKEN);
@@ -150,10 +191,10 @@ test("store: rundweg über deleteAccount", async (t) => {
 test("store: blob gehört zum konto", async (t) => {
   const pool = await migrated(t);
   const [one, two] = [await findOrCreate(pool, "apple-sub-1"), await findOrCreate(pool, "apple-sub-2")];
-  await storeRefreshToken(pool, one, encryptToken(KEY, one, TOKEN));
+  await storeRefreshToken(pool, one, encryptToken(KEY, one, TOKEN), CLIENT);
   const read = async (id: string) => (await pool.query("SELECT refresh_token_enc FROM apple_tokens WHERE account_id = $1", [id])).rows[0].refresh_token_enc;
   const copied: Buffer = await read(one);
-  assert.equal(await storeRefreshToken(pool, two, copied), true);
+  assert.equal(await storeRefreshToken(pool, two, copied, CLIENT), true);
   assert.equal(decryptToken(KEY, two, await read(two)), null);
   assert.equal(decryptToken(KEY, one, await read(one)), TOKEN);
 });
@@ -172,7 +213,7 @@ test("silence", async (t) => {
   for (const [, value] of FOREIGN) results.push(decryptToken(KEY, ID, value()));
   for (const key of BAD_KEYS) results.push(decryptToken(key, ID, blob()));
   for (const [k, i, tok] of [[BAD_KEYS[0], ID, TOKEN], [KEY, ID, ""], [KEY, "", TOKEN]] as const) assert.throws(() => encryptToken(k, i, tok));
-  const stored = [await storeRefreshToken(pool, id, encryptToken(KEY, id, TOKEN)), await storeRefreshToken(pool, OTHER, blob())];
+  const stored = [await storeRefreshToken(pool, id, encryptToken(KEY, id, TOKEN), CLIENT), await storeRefreshToken(pool, OTHER, blob(), CLIENT)];
   await deleteAccount(pool, id);
   t.mock.restoreAll();
   assert.deepEqual(out, []);

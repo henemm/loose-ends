@@ -95,11 +95,19 @@ test("config: fehlend und ungültig", () => {
   }
 });
 
+test("verify: aud im erfolg", async () => {
+  for (const aud of IDS) {
+    const result = await verify(jwt(claims({ aud })));
+    assert.deepEqual(result, { ok: true, sub: SUB, aud });
+    assert.deepEqual(Object.keys(result).sort(), ["aud", "ok", "sub"]);
+  }
+});
+
 test("verify: gültiges Token", async () => {
-  assert.deepEqual(await verify(jwt()), { ok: true, sub: SUB });
-  assert.deepEqual(await verify(jwt(claims({ aud: IDS[1] }))), { ok: true, sub: SUB });
+  assert.deepEqual(await verify(jwt()), { ok: true, sub: SUB, aud: IDS[0] });
+  assert.deepEqual(await verify(jwt(claims({ aud: IDS[1] }))), { ok: true, sub: SUB, aud: IDS[1] });
   const { alg: _alg, ...noAlg } = JWK;
-  assert.deepEqual(await verify(jwt(), RAW, stub(() => noAlg).keys), { ok: true, sub: SUB });
+  assert.deepEqual(await verify(jwt(), RAW, stub(() => noAlg).keys), { ok: true, sub: SUB, aud: IDS[0] });
 });
 
 test("attack: malformed", async () => {
@@ -172,7 +180,7 @@ test("attack: aud", async () => {
 });
 
 test("attack: abgelaufen", async () => {
-  assert.deepEqual(await verify(jwt(claims({ exp: SEC - 59 }))), { ok: true, sub: SUB });
+  assert.deepEqual(await verify(jwt(claims({ exp: SEC - 59 }))), { ok: true, sub: SUB, aud: IDS[0] });
   await table([
     ["exp now-60s", jwt(claims({ exp: SEC - 60 }))], ["exp now-1h", jwt(claims({ exp: SEC - 3600 }))],
     ["exp fehlt", jwt(drop("exp"))], ["exp Text", jwt(claims({ exp: String(SEC + 600) }))], ["exp NaN", jwt(claims({ exp: NaN }))],
@@ -181,7 +189,7 @@ test("attack: abgelaufen", async () => {
 });
 
 test("attack: iat", async () => {
-  assert.deepEqual(await verify(jwt(claims({ iat: SEC + 60 }))), { ok: true, sub: SUB });
+  assert.deepEqual(await verify(jwt(claims({ iat: SEC + 60 }))), { ok: true, sub: SUB, aud: IDS[0] });
   await table([
     ["iat now+61s", jwt(claims({ iat: SEC + 61 }))], ["iat now+1d", jwt(claims({ iat: SEC + 86400 }))],
     ["iat fehlt", jwt(drop("iat"))], ["iat Text", jwt(claims({ iat: String(SEC) }))],
@@ -189,7 +197,7 @@ test("attack: iat", async () => {
 });
 
 test("attack: nonce", async () => {
-  assert.deepEqual(await verify(jwt()), { ok: true, sub: SUB });
+  assert.deepEqual(await verify(jwt()), { ok: true, sub: SUB, aud: IDS[0] });
   await table([
     ["nonce fehlt", jwt(drop("nonce"))], ["nonce Rohwert", jwt(claims({ nonce: RAW }))],
     ["nonce falscher Hash", jwt(claims({ nonce: hash("anders") }))], ["nonce Zahl", jwt(claims({ nonce: 42 }))],
@@ -207,6 +215,10 @@ test("reasons: feste Liste", () => {
     assert.ok(REASONS.includes(result.reason as string), `${name}: ${String(result.reason)}`);
   }
   for (const r of REASONS) assert.ok(seen.some((s) => s.result.reason === r), `Grund ${r} kommt nie vor`);
+});
+
+test("verify: fehlerformen", () => {
+  for (const { name, result } of seen) assert.deepEqual(Object.keys(result), ["ok", "reason"], `${name}: genau ok und reason`);
 });
 
 test("silence", async () => {

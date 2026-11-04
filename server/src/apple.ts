@@ -2,7 +2,7 @@ import { createHash, createPrivateKey, createPublicKey, timingSafeEqual, verify,
 
 export type AppleConfig = { teamId: string; keyId: string; clientIds: string[]; privateKey: KeyObject; tokenKey: Buffer };
 export type KeyLookup = (kid: string) => Promise<JsonWebKey | "unknown_kid" | "keys_unavailable">;
-export type Verdict = { ok: true; sub: string } | { ok: false; reason: string };
+export type Verdict = { ok: true; sub: string; aud: string } | { ok: false; reason: string };
 type Doc = Record<string, unknown>;
 
 const ISSUER = "https://appleid.apple.com";
@@ -95,5 +95,6 @@ export async function verifyIdentityToken(
   if (!jwk || typeof jwk !== "object" || jwk.kty !== "RSA" || (jwk.alg !== undefined && jwk.alg !== "RS256")) return fail("unknown_kid");
   if (!signatureValid(jwk, parsed.data, parsed.signature)) return fail("signature");
   const reason = claimsReason(parsed.payload, rawNonce, opts.config, opts.now);
-  return reason ? fail(reason) : { ok: true, sub: parsed.payload.sub as string };
+  // aud is the checked client id the token was issued for; the revocation needs exactly this one.
+  return reason ? fail(reason) : { ok: true, sub: parsed.payload.sub as string, aud: parsed.payload.aud as string };
 }

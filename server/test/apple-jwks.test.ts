@@ -214,7 +214,7 @@ test("zusammenspiel: verifyIdentityToken", async () => {
   };
   const good = rig(() => body([jwk]));
   const opts = { config, keys: good.keys, now: T0 };
-  assert.deepEqual(await verifyIdentityToken(token("R1"), "roh", opts), { ok: true, sub: "001.abc.002" });
+  assert.deepEqual(await verifyIdentityToken(token("R1"), "roh", opts), { ok: true, sub: "001.abc.002", aud: "com.henning.looseends" });
   good.clock += LOCK;
   assert.deepEqual(await verifyIdentityToken(token("R9"), "roh", opts), { ok: false, reason: "unknown_kid" });
   const bad = rig(FAILURES[0][1]);

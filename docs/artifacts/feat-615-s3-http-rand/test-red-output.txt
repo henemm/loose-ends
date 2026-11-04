@@ -1,0 +1,18 @@
+Postgres on 127.0.0.1:64417, data in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.1eD1UTNJCS
+
+> typecheck
+> tsc --noEmit
+
+test/apple-vault.test.ts(122,53): error TS2554: Expected 3 arguments, but got 4.
+test/apple-vault.test.ts(125,53): error TS2554: Expected 3 arguments, but got 4.
+test/apple-vault.test.ts(136,53): error TS2554: Expected 3 arguments, but got 4.
+test/apple-vault.test.ts(140,53): error TS2554: Expected 3 arguments, but got 4.
+test/apple-vault.test.ts(146,61): error TS2554: Expected 3 arguments, but got 4.
+test/apple-vault.test.ts(162,78): error TS2554: Expected 3 arguments, but got 4.
+test/apple-vault.test.ts(174,61): error TS2554: Expected 3 arguments, but got 4.
+test/apple-vault.test.ts(178,63): error TS2554: Expected 3 arguments, but got 4.
+test/apple-vault.test.ts(184,80): error TS2554: Expected 3 arguments, but got 4.
+test/apple-vault.test.ts(194,69): error TS2554: Expected 3 arguments, but got 4.
+test/apple-vault.test.ts(197,59): error TS2554: Expected 3 arguments, but got 4.
+test/apple-vault.test.ts(216,83): error TS2554: Expected 3 arguments, but got 4.
+test/apple-vault.test.ts(216,137): error TS2554: Expected 3 arguments, but got 4.
