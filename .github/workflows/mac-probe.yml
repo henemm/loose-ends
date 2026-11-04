@@ -1,0 +1,53 @@
+name: Mac probe (#829)
+
+# Diagnosis only, removed once #829 is understood: which element lies over the top of a wide Mac list and
+# reacts to the pointer. Runs MacTopStripProbeTests (debug build, ad hoc signed like the Mac gallery) and
+# prints its PROBE lines and the app's view dumps from /tmp into the log.
+on:
+  push:
+    branches: [claude/cool-faraday-0v6s43]
+  workflow_dispatch:
+
+jobs:
+  probe:
+    name: Mac probe (macOS)
+    runs-on: xcode-27
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v7
+      - name: Select Xcode 27.0
+        uses: ./.github/actions/select-xcode-27
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        run: xcodegen generate
+      - name: Enable UI automation
+        run: |
+          sudo automationmodetool enable-automationmode-without-authentication
+          sudo DevToolsSecurity -enable || true
+      - name: Run the probe
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project LooseEnds.xcodeproj \
+            -scheme LooseEnds \
+            -destination 'platform=macOS' \
+            -only-testing:LooseEndsUITests/MacTopStripProbeTests \
+            -parallel-testing-enabled NO \
+            -resultBundlePath MacProbe.xcresult \
+            CODE_SIGN_IDENTITY=- \
+            CODE_SIGN_STYLE=Manual \
+            DEVELOPMENT_TEAM= \
+            CODE_SIGN_ENTITLEMENTS= \
+            2>&1 | tee mac-probe.log | xcbeautify
+      - name: Probe lines
+        if: always()
+        run: grep -a 'PROBE|' mac-probe.log || echo "no PROBE lines"
+      - name: View dumps
+        if: always()
+        run: |
+          for f in /tmp/loose-ends-probe-*.txt; do
+            [ -e "$f" ] || { echo "no view dumps"; break; }
+            echo "===== $f"
+            cat "$f"
+          done
