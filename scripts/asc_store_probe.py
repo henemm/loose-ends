@@ -22,11 +22,24 @@ def report_set(run, version_label, locale, screenshot_set):
               f"zustand={state}", flush=True)
 
 
+def report_subtitles(run, app_id):
+    """Name und Untertitel je Sprache der App-Info (#837); ein leerer Untertitel steht als `keiner`."""
+    for info in records(run.ask("appInfos", f"/v1/apps/{app_id}/appInfos")):
+        state = attributes(info).get("state") or attributes(info).get("appStoreState") or "?"
+        for locale in records(run.ask("appInfoLocalizations",
+                                      f"/v1/appInfos/{info['id']}/appInfoLocalizations?limit=50")):
+            a = attributes(locale)
+            subtitle = a.get("subtitle") or "keiner"
+            print(f"untertitel info={state} sprache={a.get('locale', '?')} name={a.get('name', '?')} "
+                  f"untertitel={subtitle} zeichen={len(a.get('subtitle') or '')}", flush=True)
+
+
 def main():
     try:
         config = read_config()
         app_id = find_app_id(config)
         run = Probe(config)
+        report_subtitles(run, app_id)
         versions = records(run.ask("appStoreVersions", f"/v1/apps/{app_id}/appStoreVersions?limit=5"))
         if not versions:
             print("version keine", flush=True)
