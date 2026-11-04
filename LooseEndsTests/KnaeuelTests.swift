@@ -331,23 +331,64 @@ import Testing
         #expect(ViewRules.recentBeads(in: [open]).isEmpty)
         #expect(ViewRules.weekBeads(in: tasks, now: Self.now, calendar: Self.calendar).isEmpty, "September beads are not this week's")
 
-        // The string of five (#655): nine beads are one full string and four on the second.
+        // The string of five (#655, #825): the first five beads fill it, and it stays full.
         #expect(ViewRules.stringLength == 5)
         let nine = ViewRules.currentString(in: tasks + [open])
-        #expect(nine.beads.map(\.title) == (6...9).map { "Perle \($0)" })
-        #expect(!nine.isFull && nine.filled == 1)
+        #expect(nine.beads.map(\.title) == (1...5).map { "Perle \($0)" }, "later beads do not count into the next round")
+        #expect(nine.isFull && !nine.confirmed)
         let five = ViewRules.currentString(in: Array(tasks.prefix(5)))
-        #expect(five.beads.count == 5 && five.isFull && five.filled == 0, "the fifth bead fills the string: the win")
-        let tenth = KnaeuelTests.task("Perle 10")
-        tenth.countsAt = Self.date(1)
-        store.context.insert(tenth)
-        TaskActions.complete(tenth, now: Self.date(10, 9, hour: 9))
-        let ten = ViewRules.currentString(in: tasks + [tenth])
-        #expect(ten.isFull && ten.filled == 1 && ten.beads.first?.title == "Perle 6", "the tenth bead fills the second string")
+        #expect(five.beads.count == 5 && five.isFull, "the fifth bead fills the string: the win")
+        let four = ViewRules.currentString(in: Array(tasks.prefix(4)))
+        #expect(four.beads.count == 4 && !four.isFull)
         #expect(ViewRules.currentString(in: [open]) == .empty)
     }
 
-    @Test("The string's length is set, not fixed (#824): 3, 5 and 12 beads fill it; a changed length re-counts the beads there are")
+    @Test("A full string stands until it is confirmed (#825); then the count starts empty and only newer beads count")
+    @MainActor func fullStringStaysUntilConfirmed() async throws {
+        let store = try TestStore()
+        var tasks: [TaskItem] = []
+        for day in 1...9 {
+            let task = KnaeuelTests.task("Perle \(day)")
+            task.countsAt = Self.date(1, 9)
+            store.context.insert(task)
+            TaskActions.complete(task, now: Self.date(day, 9, hour: 9))
+            tasks.append(task)
+        }
+        try store.context.save()
+
+        // Seven beads on a string of five: the first five stay, the string is full and stays so.
+        let seven = ViewRules.currentString(in: Array(tasks.prefix(7)))
+        #expect(seven.isFull && seven.beads.map(\.title) == (1...5).map { "Perle \($0)" })
+        #expect(seven == ViewRules.currentString(in: Array(tasks.prefix(5))), "beads six and seven change nothing")
+
+        // Confirmed after bead seven: beads one to seven are behind it, eight and nine are the new string.
+        let confirmedAt = Self.date(7, 9, hour: 12)
+        let next = ViewRules.currentString(in: tasks, since: confirmedAt)
+        #expect(next.beads.map(\.title) == ["Perle 8", "Perle 9"])
+        #expect(!next.isFull && next.confirmed)
+
+        // Straight after the tap nothing is on the string; it is not the pristine .empty, a string was confirmed.
+        let afterAll = ViewRules.currentString(in: tasks, since: Self.date(10, 9))
+        #expect(afterAll.beads.isEmpty && !afterAll.isFull && afterAll.confirmed)
+        #expect(afterAll != .empty)
+
+        // A bead completed at the very moment of the confirmation does not count (strictly after).
+        let atTheMoment = ViewRules.currentString(in: tasks, since: Self.date(9, 9, hour: 9))
+        #expect(atTheMoment.beads.isEmpty)
+
+        // The second string fills and stays full as well.
+        for day in 10...16 {
+            let task = KnaeuelTests.task("Perle \(day)")
+            task.countsAt = Self.date(1, 9)
+            store.context.insert(task)
+            TaskActions.complete(task, now: Self.date(day, 9, hour: 9))
+            tasks.append(task)
+        }
+        let second = ViewRules.currentString(in: tasks, since: confirmedAt)
+        #expect(second.isFull && second.beads.map(\.title) == ["Perle 8", "Perle 9", "Perle 10", "Perle 11", "Perle 12"])
+    }
+
+    @Test("The string's length is set, not fixed (#824): 3, 5 and 12 beads fill it; a changed length re-reads the beads there are")
     @MainActor func stringLengths() async throws {
         let store = try TestStore()
         var tasks: [TaskItem] = []
@@ -360,31 +401,29 @@ import Testing
         }
         try store.context.save()
 
-        // Length 3: nine beads are three full strings, the tenth starts the fourth.
+        // Length 3: the first three beads fill it, more do not move it.
         let nine = ViewRules.currentString(in: Array(tasks.prefix(9)), length: 3)
-        #expect(nine.isFull && nine.filled == 2 && nine.beads.map(\.title) == ["Perle 7", "Perle 8", "Perle 9"], "full: the win")
-        let ten = ViewRules.currentString(in: Array(tasks.prefix(10)), length: 3)
-        #expect(!ten.isFull && ten.filled == 3 && ten.beads.map(\.title) == ["Perle 10"], "half: one bead on the new string")
-        let eight = ViewRules.currentString(in: Array(tasks.prefix(8)), length: 3)
-        #expect(!eight.isFull && eight.filled == 2 && eight.beads.count == 2)
+        #expect(nine.isFull && nine.beads.map(\.title) == ["Perle 1", "Perle 2", "Perle 3"], "full: the win")
+        let two = ViewRules.currentString(in: Array(tasks.prefix(2)), length: 3)
+        #expect(!two.isFull && two.beads.count == 2)
 
-        // Length 12: twelve beads fill the first string, eleven do not.
+        // Length 12: twelve beads fill the string, eleven do not.
         let twelve = ViewRules.currentString(in: tasks, length: 12)
-        #expect(twelve.isFull && twelve.filled == 0 && twelve.beads.count == 12)
+        #expect(twelve.isFull && twelve.beads.count == 12)
         let eleven = ViewRules.currentString(in: Array(tasks.prefix(11)), length: 12)
-        #expect(!eleven.isFull && eleven.filled == 0 && eleven.beads.count == 11)
+        #expect(!eleven.isFull && eleven.beads.count == 11)
         #expect(ViewRules.currentString(in: [], length: 12) == .empty, "empty")
 
         // The same seven beads on three lengths: the length alone decides (nothing is stored per string).
         let seven = Array(tasks.prefix(7))
-        #expect(ViewRules.currentString(in: seven, length: 3).beads.count == 1)
-        #expect(ViewRules.currentString(in: seven, length: 5).beads.count == 2)
+        #expect(ViewRules.currentString(in: seven, length: 3).beads.count == 3)
+        #expect(ViewRules.currentString(in: seven, length: 5).beads.count == 5)
         #expect(ViewRules.currentString(in: seven, length: 12).beads.count == 7)
-        // Length changed with beads present: five beads fill a string of five, then a string of four
-        // holds one and a string of ten holds all five.
+        // Length changed with beads present: five beads fill a string of five, a string of four is full
+        // with the first four, and a string of ten holds all five without being full.
         let five = Array(tasks.prefix(5))
         #expect(ViewRules.currentString(in: five, length: 5).isFull)
-        #expect(ViewRules.currentString(in: five, length: 4).beads.map(\.title) == ["Perle 5"])
+        #expect(ViewRules.currentString(in: five, length: 4).beads.map(\.title) == ["Perle 1", "Perle 2", "Perle 3", "Perle 4"])
         #expect(!ViewRules.currentString(in: five, length: 10).isFull)
         // No default beyond the constant, and a length below one is no string.
         #expect(ViewRules.stringLength == 5 && ViewRules.stringLengths == 3...20)

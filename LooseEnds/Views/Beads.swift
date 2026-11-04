@@ -150,7 +150,7 @@ struct QuietWeekString: View {
 
 /// "Beads" on the start screen (#645, #647, #655): the string of five with its empty places as dots,
 /// and under it the sentence: "For the beads: …" while the string fills, "The string is full. For the
-/// beads: …" once it is (the win, Henning 2026-10-24); the next bead starts a new string. Shown once a
+/// beads: …" once it is (the win, Henning 2026-10-24); it stands until "Begin a new string" is tapped (#825). Shown once a
 /// bead exists or a sentence is set; before that nothing, as before. Quiet since #677 (draft C3): no
 /// caption, at the end of the page, at the titles' edge, the string shorter, the sentence small.
 struct WeekStringRows: View {
@@ -164,7 +164,7 @@ struct WeekStringRows: View {
 
     var body: some View {
         let reward = fieldSettings?.reward ?? ""
-        let inUse = !string.beads.isEmpty || string.filled > 0 || !reward.isEmpty
+        let inUse = !string.beads.isEmpty || string.confirmed || !reward.isEmpty
         if inUse {
             let metrics = StartMetrics(typeSize)
             let titlesEdge = metrics.marginWidth + 12
@@ -177,7 +177,7 @@ struct WeekStringRows: View {
                 .startRow(metrics)
                 .paperRow()
             if string.isFull {
-                FullStringLine(reward: reward)
+                FullStringLine(reward: reward) { fieldSettings?.beginNewString() }
                     .padding(.leading, titlesEdge)
                     .listRowSeparator(.hidden)
                     .startRow(metrics)
@@ -194,25 +194,36 @@ struct WeekStringRows: View {
 }
 
 /// The win (#655): the string is full, the sentence is due. In the ink, not green: the green was the
-/// fifth bead's moment (ADR-14). It stands until the next bead starts a new string.
+/// fifth bead's moment (ADR-14). It stands until the user taps "Begin a new string" (#825): nobody
+/// overlooks the win, and beads completed meanwhile do not count into the next string.
 struct FullStringLine: View {
     let reward: String
+    var begin: () -> Void = {}
     @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         let metrics = StartMetrics(typeSize)
-        Group {
-            if reward.isEmpty {
-                Text("The string is full.")
-            } else {
-                Text("The string is full. For the beads: \(reward).")
+        VStack(alignment: .leading, spacing: 6) {
+            Group {
+                if reward.isEmpty {
+                    Text("The string is full.")
+                } else {
+                    Text("The string is full. For the beads: \(reward).")
+                }
             }
+            .font(.system(size: metrics(14), design: .serif))
+            .italic()
+            .foregroundStyle(.primary)
+            .accessibilityIdentifier("fullStringLine")
+            Button(action: begin) {
+                Text("Begin a new string")
+                    .font(.system(size: metrics(14), design: .serif))
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(Color.accentColor)
+            .accessibilityIdentifier("newStringButton")
         }
-        .font(.system(size: metrics(14), design: .serif))
-        .italic()
-        .foregroundStyle(.primary)
         .padding(.vertical, 4)
-        .accessibilityIdentifier("fullStringLine")
     }
 }
 

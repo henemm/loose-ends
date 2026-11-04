@@ -78,7 +78,8 @@ struct StartPage: View {
                 knaeuelRow(task, head, metrics)
             }
             let stringLength = fieldSettings?.stringLength ?? ViewRules.stringLength
-            WeekStringRows(string: ViewRules.currentString(in: tasks, length: stringLength), all: tasks, length: stringLength)
+            WeekStringRows(string: ViewRules.currentString(in: tasks, length: stringLength, since: fieldSettings?.stringSince),
+                           all: tasks, length: stringLength)
         })
         .listStyle(.plain)
         .paperGround()
