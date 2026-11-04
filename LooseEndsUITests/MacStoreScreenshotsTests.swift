@@ -34,11 +34,9 @@ final class MacStoreScreenshotsTests: XCTestCase {
         XCTAssertTrue(macElement("detailRawTextMarker", in: window).waitForExistence(timeout: 10), "Detail öffnet nicht")
         shot(window, "04-detail")
 
-        let more = macElement("detailMoreMenu", in: window)
-        XCTAssertTrue(more.waitForExistence(timeout: 10), "Detail zeigt kein „…“-Menü")
-        more.click()
-        let complete = macElement("menuDone", in: app)
-        XCTAssertTrue(complete.waitForExistence(timeout: 5), "Das „…“-Menü bietet kein „Erledigt“")
+        // „Erledigt“ steht auf dem Mac in der Leiste des Details (#831).
+        let complete = macElement("detailCompleteButton", in: window)
+        XCTAssertTrue(complete.waitForExistence(timeout: 10), "Die Leiste des Details bietet kein „Erledigt“")
         complete.click()
         let doneRow = macElement("viewRow_done", in: window)
         XCTAssertTrue(doneRow.waitForExistence(timeout: 10), "Seitenleiste zeigt kein „Erledigt“")

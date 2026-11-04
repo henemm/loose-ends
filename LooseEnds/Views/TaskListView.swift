@@ -260,6 +260,11 @@ struct TaskListView: View {
         if isWide {
             list
                 .listStyle(.plain)
+                #if os(macOS)
+                // The Mac drew its hard scroll edge over the title and the first pinned head: a light strip with
+                // a line, as wide as the column (#829). The soft edge lets the paper run through.
+                .scrollEdgeEffectStyle(.soft, for: .top)
+                #endif
                 .paperGround()
                 .frame(maxWidth: 720)
                 .frame(maxWidth: .infinity)

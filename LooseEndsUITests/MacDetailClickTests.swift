@@ -231,15 +231,13 @@ final class MacDetailClickTests: XCTestCase {
             .firstMatch
         XCTAssertTrue(line.waitForExistence(timeout: 5), "Return should list the subtask")
 
-        let more = app.descendants(matching: .any).matching(identifier: "detailMoreMenu").firstMatch
-        XCTAssertTrue(more.waitForExistence(timeout: 5), "The detail's toolbar should offer More")
+        // Complete stands in the detail's bar on the Mac (#831).
+        let complete = app.descendants(matching: .any).matching(identifier: "detailCompleteButton").firstMatch
+        XCTAssertTrue(complete.waitForExistence(timeout: 5), "The detail's toolbar should offer Complete")
         // The CI screen is 1024 pt wide, the window opens at 1200 pt when it opens at launch (run
-        // 39463321124): More sits off screen then. Window ▸ Zoom fits it, as a person would.
-        if !more.isHittable { zoomWindow(of: app) }
-        XCTAssertTrue(more.isHittable, "More should be in reach once the window fits the screen")
-        more.click()
-        let complete = app.descendants(matching: .any).matching(identifier: "menuDone").firstMatch
-        XCTAssertTrue(complete.waitForExistence(timeout: 5), "More should offer Complete")
+        // 39463321124): the bar's end sits off screen then. Window ▸ Zoom fits it, as a person would.
+        if !complete.isHittable { zoomWindow(of: app) }
+        XCTAssertTrue(complete.isHittable, "Complete should be in reach once the window fits the screen")
         complete.click()
 
         let keepOpen = app.descendants(matching: .any).matching(identifier: "completeKeepOpenSubtasks").firstMatch
@@ -284,6 +282,28 @@ final class MacDetailClickTests: XCTestCase {
         XCTAssertTrue(waitForPicker(true, baseline: baseline, in: app, timeout: 15), "File should open the open panel")
         macShot(window, "mac-gallery-544-6-file-panel-from-start")
         dismissPicker(in: app)
+        app.terminate()
+    }
+
+    /// A task opened from "Now" offers Back, and Back leads to the start page (#830).
+    @MainActor
+    func testTaskFromTheStartPageLeadsBack() throws {
+        let app = macLaunch(dark: false)
+        _ = macOpenMainWindowIfNeeded(app)
+        XCTAssertTrue(macElement("startCaptureField", in: app).waitForExistence(timeout: 20), "No start page")
+        macCapture("Heute Rechnung bezahlen", in: app)
+        let window = macMainWindow(of: app)
+        let now = window.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "startNowRow_"))
+            .firstMatch
+        XCTAssertTrue(now.waitForExistence(timeout: 10), "The task due today should stand in Now")
+        now.click()
+        XCTAssertTrue(macElement("detailRawTextMarker", in: window).waitForExistence(timeout: 10), "Detail did not open")
+        let back = macElement("detailBackButton", in: window)
+        XCTAssertTrue(back.waitForExistence(timeout: 5), "The detail offers no Back")
+        macShot(window, "mac-gallery-830-detail-back")
+        back.click()
+        XCTAssertTrue(macElement("startCaptureField", in: window).waitForExistence(timeout: 10), "Back did not lead to the start page")
         app.terminate()
     }
 

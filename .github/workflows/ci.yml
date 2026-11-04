@@ -412,6 +412,67 @@ jobs:
             shots
           if-no-files-found: warn
 
+  # #828: the iPad's own layout (sidebar = index beside one start page, Back from the start page, paper ground).
+  # The other UI jobs run on an iPhone only, where these tests skip themselves; pictures as the artifact `ui-ipad`.
+  ui-ipad:
+    name: UI iPad (iOS Simulator)
+    runs-on: xcode-27
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - name: Select Xcode 27.0
+        uses: ./.github/actions/select-xcode-27
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        run: xcodegen generate
+      - name: Prepare the simulator
+        uses: ./.github/actions/prepare-ui-simulator
+        with:
+          device: ipad
+      - name: Run the iPad classes
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project LooseEnds.xcodeproj \
+            -scheme LooseEnds \
+            -destination "platform=iOS Simulator,id=$SIM_UDID" \
+            -only-testing:LooseEndsUITests/IPadSidebarTests \
+            -only-testing:LooseEndsUITests/PaperGroundTests \
+            -parallel-testing-enabled NO \
+            -resultBundlePath UITestResults.xcresult \
+            CODE_SIGNING_ALLOWED=NO \
+            DEVELOPMENT_TEAM= \
+            2>&1 | tee ui-ipad.log | xcbeautify
+      - name: Show failure details
+        if: failure()
+        run: grep -n -E -i "crash|fatal error|restarting after|failed|error:" ui-ipad.log | head -80 || true
+      - name: Export the screenshots
+        if: always()
+        continue-on-error: true
+        run: |
+          mkdir -p shots
+          xcrun xcresulttool export attachments --path UITestResults.xcresult --output-path shots-raw
+          python3 - <<'PY'
+          import json, pathlib, shutil
+          raw, out = pathlib.Path("shots-raw"), pathlib.Path("shots")
+          for test in json.loads((raw / "manifest.json").read_text()):
+              for a in test.get("attachments", []):
+                  stem = a.get("suggestedHumanReadableName", "shot").split("_")[0]
+                  shutil.copy(raw / a["exportedFileName"], out / f"{stem}.png")
+          print("\n".join(sorted(p.name for p in out.iterdir())) or "no screenshots")
+          PY
+      - name: Upload the iPad results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ui-ipad
+          path: |
+            UITestResults.xcresult
+            ui-ipad.log
+            shots
+          if-no-files-found: warn
+
   # #511: the Mac app photographed in CI (MacGalleryTests), never on Henning's Mac. The app is signed
   # ad hoc for this run only, without restricted entitlements (iCloud, push), so macOS lets it start.
   # An experiment: whether the xcode-27 runner allows Mac UI automation is shown by the first run.
