@@ -316,9 +316,9 @@ not scope creep on the current one.
   `DetailFieldSettings` with the standard on Note, Attachments, Calendar, Duration, Tags; the app's `FieldSettingsStore` in
   `LooseEnds/App` keeps the choice in defaults and the iCloud key-value store, everything on under UI tests)
 - `Shared/Models` — the drive fields (#642; the Knäuel is “the Tangle” in the English UI, German keeps “das Knäuel”, #758): `TaskItem.knaeuelAt` (#643, the one avoided task, `isKnaeuel` while open) and
-  `countsAt` (#645, a bead once completed, at most `TaskActions.countsBudget` open; the Knäuel always `counts`), both set by
+  `countsAt` (#645, a bead once completed, no limit on how many open tasks carry one (#818); the Knäuel always `counts`), both set by
   hand only as user revisions (`RevisedField.knaeuel`/`.counts`), both `DetailField`s of the group `drive`, off by default.
-  `ViewRules.knaeuel(in:)` (latest mark wins), `counting(in:)`, `week(containing:)` (Monday to Sunday, whatever the locale),
+  `ViewRules.knaeuel(in:)` (latest mark wins), `week(containing:)` (Monday to Sunday, whatever the locale),
   `weekBeads(in:)` (every completion of a counting task in the week, a repeating one per record), `currentString(in:)` (the start
   page's string of `stringLength` = 5, #655: the beads since the last full string, counted from all beads in rounds of five;
   full = the win, the next bead starts a new string; `recentBeads(in:limit:)` the last n beads), `weekToSpeakOf(in:)` (the

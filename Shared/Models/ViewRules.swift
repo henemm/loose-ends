@@ -247,12 +247,6 @@ enum ViewRules {
             .max { ($0.knaeuelAt ?? .distantPast, $0.id.uuidString) < ($1.knaeuelAt ?? .distantPast, $1.id.uuidString) }
     }
 
-    /// The open tasks marked "Zählt" (#645), against the budget of five. The Knäuel counts on its own
-    /// and is not among them unless marked too.
-    static func counting(in all: [TaskItem]) -> [TaskItem] {
-        all.filter { $0.isOpen && $0.countsAt != nil }
-    }
-
     /// One bead on the week's string (#645): a completion of a counting task.
     struct Bead: Equatable, Identifiable {
         let id: String

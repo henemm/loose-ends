@@ -218,7 +218,7 @@ import Testing
     }
 }
 
-/// "Zählt" and the week's string (#645): a mark by hand with a budget of five open, the beads read
+/// "Zählt" and the week's string (#645): a mark by hand without a limit, the beads read
 /// from the completions of the week, Monday to Sunday.
 @Suite("Perlen (#645)") struct BeadsTests {
     static var calendar: Calendar {
@@ -236,42 +236,28 @@ import Testing
         calendar.date(from: DateComponents(year: 2026, month: month, day: day, hour: hour))!
     }
 
-    @Test("Counts is a user revision; the budget is five open tasks; the sixth cannot be set; taking the mark frees a place")
-    @MainActor func budget() async throws {
+    @Test("Counts is a user revision; any number of open tasks can carry a bead; taking the mark is a revision too (#818)")
+    @MainActor func marksHaveNoLimit() async throws {
         let store = try TestStore()
-        let tasks = (1...6).map { KnaeuelTests.task("Aufgabe \($0)") }
+        let tasks = (1...8).map { KnaeuelTests.task("Aufgabe \($0)") }
         tasks.forEach(store.context.insert)
 
-        for task in tasks.prefix(5) {
-            #expect(TaskActions.canCount(task, among: tasks))
-            TaskActions.toggleCounts(task, among: tasks, contexts: [], projects: [])
-            #expect(task.countsAt != nil)
+        for task in tasks {
+            TaskActions.toggleCounts(task, contexts: [], projects: [])
+            #expect(task.countsAt != nil, "no budget: the eighth is marked like the first")
             #expect(KnaeuelTests.revisions(of: task).first?.field == .counts)
             #expect(KnaeuelTests.revisions(of: task).first?.author == .user)
         }
-        #expect(ViewRules.counting(in: tasks).count == 5)
-        let sixth = tasks[5]
-        #expect(!TaskActions.canCount(sixth, among: tasks))
-        TaskActions.toggleCounts(sixth, among: tasks, contexts: [], projects: [])
-        #expect(sixth.countsAt == nil, "over the budget nothing changes")
-        #expect(sixth.revisions?.isEmpty ?? true)
 
-        // A counting task that is already marked can always be unmarked.
-        #expect(TaskActions.canCount(tasks[0], among: tasks))
-        TaskActions.toggleCounts(tasks[0], among: tasks, contexts: [], projects: [])
+        TaskActions.toggleCounts(tasks[0], contexts: [], projects: [])
         #expect(tasks[0].countsAt == nil)
         #expect(tasks[0].revisions?.count == 2)
-        #expect(TaskActions.canCount(sixth, among: tasks))
 
-        // Done tasks leave the budget; the Knäuel is not in it.
-        TaskActions.toggleCounts(sixth, among: tasks, contexts: [], projects: [])
-        TaskActions.complete(tasks[1])
-        #expect(ViewRules.counting(in: tasks).count == 4)
+        // The Knäuel counts on its own.
         let knaeuel = KnaeuelTests.task("Steuer")
         store.context.insert(knaeuel)
         TaskActions.setKnaeuel(knaeuel, among: tasks + [knaeuel], contexts: [], projects: [])
         #expect(knaeuel.counts)
-        #expect(ViewRules.counting(in: tasks + [knaeuel]).count == 4)
         try store.context.save()
     }
 
