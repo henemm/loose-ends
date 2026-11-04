@@ -1,0 +1,35 @@
+Beleg AC-3 (Fehlerfaelle) — #796 Schnitt S4b-1
+Erzeugt (UTC): 2026-11-04T08:35:00Z
+Server: rennwienix, /home/hem/henemm-infra auf Merge-Commit 3abf17bf6589d17d52e2e488ea58e4752a24906c
+(PR henemm/henemm-infra#383, gemergt 2026-11-04T08:22:05Z, Auto-Deploy 2026-11-04T08:25:02Z:
+ "Deployed 69c7a62b -> 3abf17bf: docs/backup-offsite.md scripts/backup-loose-ends-snapshot.sh scripts/backup.sh tests/test_backup_loose_ends.py")
+Zeilen '# <Zeit>' = UTC-Startzeit des Befehls darueber, '# exit=N' = Exit-Code.
+
+== pytest aus test-green-output.txt (Commit 5b1bf36) ==
+Zusammenfassung: tests/test_backup_loose_ends.py: 13 passed in 0.21s
+Erzeugt (UTC): 2026-11-04T08:11:27Z
+Arbeitsstand: rennwienix:/home/hem/henemm-infra-le796b (Zweig feat/loose-ends-796-s4b)
+Commit: 5b1bf36285fb256ef23e35e58d11d1ec0d155d39
+$ python3 -m pytest tests/test_backup_loose_ends.py -v
+tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[abgeschnitten] PASSED [ 30%]
+tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[tabelle_fehlt] PASSED [ 38%]
+tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[migrationen_leer] PASSED [ 46%]
+tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[docker_exec] PASSED [ 53%]
+tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[abgeschnitten] PASSED [ 61%]
+tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[tabelle_fehlt] PASSED [ 69%]
+tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[migrationen_leer] PASSED [ 76%]
+tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[docker_exec] PASSED [ 84%]
+============================== 13 passed in 0.24s ==============================
+
+== dieselben Tests frisch im Live-Stand auf rennwienix (/home/hem/henemm-infra, 3abf17bf) ==
+tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[abgeschnitten] PASSED [ 30%]
+tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[tabelle_fehlt] PASSED [ 38%]
+tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[migrationen_leer] PASSED [ 46%]
+tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[docker_exec] PASSED [ 53%]
+tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[abgeschnitten] PASSED [ 61%]
+tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[tabelle_fehlt] PASSED [ 69%]
+tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[migrationen_leer] PASSED [ 76%]
+tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[docker_exec] PASSED [ 84%]
+============================== 13 passed in 0.18s ==============================
+
+Zuordnung: test_fehler_hinterlaesst_keine_datei[...] prueft Exit != 0, Meldung auf stderr, keine looseends.sql, kein .tmp-Rest; test_fehler_laesst_aeltere_datei_unveraendert[...] prueft, dass eine vorhandene aeltere looseends.sql dieselbe Pruefsumme behaelt. Faelle: abgeschnitten (Endmarke fehlt), tabelle_fehlt (CREATE TABLE < live), migrationen_leer (schema_migrations ohne Datenzeile), docker_exec (docker exec scheitert). 8 Tests, alle PASSED. -> AC-3 erfuellt.

@@ -1,0 +1,56 @@
+Beleg AC-5 (Statik) — #796 Schnitt S4b-1
+Erzeugt (UTC): 2026-11-04T08:35:00Z
+Server: rennwienix, /home/hem/henemm-infra auf Merge-Commit 3abf17bf6589d17d52e2e488ea58e4752a24906c
+(PR henemm/henemm-infra#383, gemergt 2026-11-04T08:22:05Z, Auto-Deploy 2026-11-04T08:25:02Z:
+ "Deployed 69c7a62b -> 3abf17bf: docs/backup-offsite.md scripts/backup-loose-ends-snapshot.sh scripts/backup.sh tests/test_backup_loose_ends.py")
+Zeilen '# <Zeit>' = UTC-Startzeit des Befehls darueber, '# exit=N' = Exit-Code.
+
+$ cd /home/hem/henemm-infra && bash -n scripts/backup-loose-ends-snapshot.sh
+# 2026-11-04T08:33:13Z
+# exit=0
+$ bash -n scripts/backup.sh
+# exit=0
+$ command -v shellcheck
+(nicht installiert)
+
+# 2026-11-04T08:34:48Z  lokal (Mac), version: 0.11.0
+# Dateien per 'ssh rennwienix cat /home/hem/henemm-infra/scripts/<Datei>' geholt (Live-Stand 3abf17bf);
+# Vergleichsstand: gh api 'repos/henemm/henemm-infra/contents/scripts/backup.sh?ref=69c7a62b' (raw)
+$ shellcheck backup-loose-ends-snapshot.sh
+# exit=0
+$ shellcheck -f gcc backup.sh   (Live-Stand 3abf17bf)
+backup.sh:71:27: note: Double quote to prevent globbing and word splitting. [SC2086]
+backup.sh:91:23: note: Double quote to prevent globbing and word splitting. [SC2086]
+backup.sh:123:66: note: Double quote to prevent globbing and word splitting. [SC2086]
+backup.sh:134:21: note: Double quote to prevent globbing and word splitting. [SC2086]
+backup.sh:174:16: warning: ShellCheck can't follow non-constant source. Use a directive to specify location. [SC1090]
+# exit=1
+$ shellcheck -f gcc backup-69c7a62.sh   (vor dem Schnitt)
+backup-69c7a62.sh:71:27: note: Double quote to prevent globbing and word splitting. [SC2086]
+backup-69c7a62.sh:91:23: note: Double quote to prevent globbing and word splitting. [SC2086]
+backup-69c7a62.sh:123:66: note: Double quote to prevent globbing and word splitting. [SC2086]
+backup-69c7a62.sh:134:21: note: Double quote to prevent globbing and word splitting. [SC2086]
+backup-69c7a62.sh:174:16: warning: ShellCheck can't follow non-constant source. Use a directive to specify location. [SC1090]
+# exit=1
+$ diff <(shellcheck -f gcc backup-69c7a62.sh | sed 's/^[^:]*://') <(shellcheck -f gcc backup.sh | sed 's/^[^:]*://')
+# exit=0 (leer = dieselben Befunde an denselben Zeilen)
+
+$ cd /home/hem/henemm-infra && python3 -m pytest tests/ -q
+# 2026-11-04T08:33:13Z
+........................................................................ [ 17%]
+........................................................................ [ 34%]
+........................................................................ [ 52%]
+........................................................................ [ 69%]
+........................................................................ [ 87%]
+....................................................                     [100%]
+412 passed in 52.81s
+# exit=0
+
+$ awk '/^name() {/ ... /^}/' (Funktionslaengen)
+backup-loose-ends-snapshot.sh:
+  fail() 5 Zeilen (Z.27-31)
+backup.sh:
+$ grep -c '() *{' backup.sh
+0
+
+Befund: bash -n beider Skripte ohne Befund; shellcheck (lokal 0.11.0, auf rennwienix nicht installiert): backup-loose-ends-snapshot.sh ohne Befund; backup.sh mit fuenf Befunden (SC2086 Z. 71/91/123/134, SC1090 Z. 174), identisch auf 69c7a62 vor dem Schnitt, alle oberhalb des neuen Abschnitts (Z. 195-203) -> kein neuer Befund. Ganze Suite live: 412 passed (im Zweig-Lauf 5b1bf36: 406 passed, 6 skipped). Einzige Funktion fail() 5 Zeilen; backup.sh hat keine Funktionen. -> AC-5 erfuellt (shellcheck-Altbefunde benannt).

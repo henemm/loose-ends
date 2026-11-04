@@ -1,0 +1,30 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.3, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/hem/henemm-infra
+plugins: anyio-4.13.0
+collecting ... collected 13 items
+
+tests/test_backup_loose_ends.py::test_skript_existiert PASSED            [  7%]
+tests/test_backup_loose_ends.py::test_erfolg_legt_plain_sql_mit_rechten_ab PASSED [ 15%]
+tests/test_backup_loose_ends.py::test_vorhandener_ordner_bekommt_700 PASSED [ 23%]
+tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[abgeschnitten] PASSED [ 30%]
+tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[tabelle_fehlt] PASSED [ 38%]
+tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[migrationen_leer] PASSED [ 46%]
+tests/test_backup_loose_ends.py::test_fehler_hinterlaesst_keine_datei[docker_exec] PASSED [ 53%]
+tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[abgeschnitten] PASSED [ 61%]
+tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[tabelle_fehlt] PASSED [ 69%]
+tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[migrationen_leer] PASSED [ 76%]
+tests/test_backup_loose_ends.py::test_fehler_laesst_aeltere_datei_unveraendert[docker_exec] PASSED [ 84%]
+tests/test_backup_loose_ends.py::test_backup_sh_sichert_dump_offsite_vor_heartbeat PASSED [ 92%]
+tests/test_backup_loose_ends.py::test_backup_sh_bricht_bei_dump_fehler_ab PASSED [100%]
+
+============================== 13 passed in 0.29s ==============================
+---FULL
+........................................................................ [ 17%]
+........................................................................ [ 34%]
+........................................................................ [ 52%]
+........................................................................ [ 69%]
+........................................................................ [ 87%]
+....................................................                     [100%]
+412 passed in 53.71s
