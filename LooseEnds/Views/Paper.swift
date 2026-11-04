@@ -138,6 +138,8 @@ private struct WideListRow: ViewModifier {
     @Environment(\.horizontalSizeClass) private var sizeClass
     #else
     @State private var hovering = false
+    /// The wide Mac list spans the detail column; the highlight stays in the 720 pt column (#829).
+    @Environment(\.listColumnInset) private var column
     #endif
 
     @ViewBuilder
@@ -155,11 +157,14 @@ private struct WideListRow: ViewModifier {
             // row is accent 12 % and wins over the pointer (#480): accent = tappable or chosen.
             .listRowBackground(
                 Paper.ground.overlay {
-                    if selected {
-                        RoundedRectangle(cornerRadius: 10).fill(Color.accentColor.opacity(0.12))
-                    } else if hovering {
-                        RoundedRectangle(cornerRadius: 10).fill(Color.primary.opacity(0.07))
+                    Group {
+                        if selected {
+                            RoundedRectangle(cornerRadius: 10).fill(Color.accentColor.opacity(0.12))
+                        } else if hovering {
+                            RoundedRectangle(cornerRadius: 10).fill(Color.primary.opacity(0.07))
+                        }
                     }
+                    .padding(.horizontal, column)
                 }
             )
         #endif

@@ -266,10 +266,12 @@ struct TaskListView: View {
             // The Mac lays its scroll pocket (`NSScrollPocket`) over the top of the scroll view, down to below the
             // pinned head, and shows it when the pointer comes near. A list 720 pt wide made it a light box over
             // the column alone (#829, found by `MacTopStripProbeTests`). The list now spans the detail column,
-            // so the pocket runs with the title bar as in any Mac app; margins keep the rows in the 720 pt column.
+            // so the pocket runs with the title bar as in any Mac app; insets keep the rows in the 720 pt column.
             list
                 .listStyle(.plain)
-                .contentMargins(.horizontal, max(0, (listWidth - 720) / 2), for: .scrollContent)
+                // `contentMargins` does not reach the rows of a Mac list (probe run 41907458406): the rows'
+                // own insets carry the column, `StartRowInsets` and `WideListRow` read it.
+                .environment(\.listColumnInset, max(0, (listWidth - 720) / 2))
                 .paperGround()
                 .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { listWidth = $0 }
                 .background(Paper.ground.ignoresSafeArea())
@@ -343,6 +345,9 @@ struct TaskListView: View {
             Section {
                 WeekString(beads: week.beads)
                     .listRowSeparator(.hidden)
+                    #if os(macOS)
+                    .modifier(MacColumnRow(wide: isWide, metrics: StartMetrics(typeSize)))
+                    #endif
                     .paperRow()
                     .accessibilityIdentifier("doneWeekString_\(week.week.lowerBound.timeIntervalSinceReferenceDate)")
                 ForEach(week.days, id: \.day) { day in
@@ -658,6 +663,24 @@ final class ChosenRows {
 
 /// The list's subtitle under its title, wide only (#477); compact stays exactly as it was. On wide
 /// it stays attached while empty, so the list keeps its identity when the last task is done.
+#if os(macOS)
+/// A wide Mac list's row without `wideListRow` (the week's string in "Completed"): the start row's
+/// insets, which carry the 720 pt column (#829).
+private struct MacColumnRow: ViewModifier {
+    let wide: Bool
+    let metrics: StartMetrics
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if wide {
+            content.startRow(metrics)
+        } else {
+            content
+        }
+    }
+}
+#endif
+
 private struct ListSubtitle: ViewModifier {
     let wide: Bool
     let text: String?

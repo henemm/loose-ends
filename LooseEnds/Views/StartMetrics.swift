@@ -72,6 +72,9 @@ struct StartMetrics: Equatable, Sendable {
 extension EnvironmentValues {
     /// Set on the start screen's rows only, so a list opened from there keeps the system sizes.
     @Entry var startMetrics: StartMetrics?
+    /// Extra room at both sides of a wide Mac list's rows (#829): the list spans the detail column, so the
+    /// Mac's scroll pocket runs with the title bar; this keeps the rows in the 720 pt column. 0 elsewhere.
+    @Entry var listColumnInset: CGFloat = 0
 }
 
 extension View {
@@ -83,6 +86,16 @@ extension View {
     /// A start screen row: no list inset above or below, the draft's edges at the sides; the row sets
     /// its own space, so the gaps are the draft's and not the list's (#463).
     func startRow(_ metrics: StartMetrics) -> some View {
-        listRowInsets(EdgeInsets(top: 0, leading: metrics.edge, bottom: 0, trailing: metrics.edge))
+        modifier(StartRowInsets(edge: metrics.edge))
+    }
+}
+
+/// The start row's insets plus the column inset of a wide Mac list (#829).
+private struct StartRowInsets: ViewModifier {
+    let edge: CGFloat
+    @Environment(\.listColumnInset) private var column
+
+    func body(content: Content) -> some View {
+        content.listRowInsets(EdgeInsets(top: 0, leading: edge + column, bottom: 0, trailing: edge + column))
     }
 }
