@@ -12,6 +12,8 @@ import OSLog
     static let rewardKey = "weekReward"
     /// "Perlen je Schnur" (#824): how many beads fill a string.
     static let stringLengthKey = "beadsPerString"
+    /// "Neue Schnur beginnen" (#825): the moment of the last confirmation of a full string.
+    static let stringSinceKey = "beadsStringSince"
     static let standardArgument = "--ui-testing-fields-standard"
 
     private(set) var settings: DetailFieldSettings
@@ -19,6 +21,8 @@ import OSLog
     private(set) var reward: String
     /// Beads that fill a string (#824), always within `ViewRules.stringLengths`; five until set.
     private(set) var stringLength: Int
+    /// When the user last confirmed a full string (#825); only beads after it count. Nil: never.
+    private(set) var stringSince: Date?
     @ObservationIgnored private let defaults: UserDefaults
     @ObservationIgnored private let cloud: any FieldSettingsCloud
     @ObservationIgnored private var observer: (any NSObjectProtocol)?
@@ -30,6 +34,7 @@ import OSLog
         settings = DetailFieldSettings(stored: defaults.stringArray(forKey: Self.key))
         reward = defaults.string(forKey: Self.rewardKey) ?? ""
         stringLength = Self.length(defaults.integer(forKey: Self.stringLengthKey))
+        stringSince = defaults.object(forKey: Self.stringSinceKey) as? Date
     }
 
     /// A stored or handed-in count held to the allowed range; zero (never set) is the standard.
@@ -93,6 +98,15 @@ import OSLog
         cloud.setBeadsPerString(next)
     }
 
+    /// "Neue Schnur beginnen" (#825): the full string is confirmed, the count starts empty. The mark
+    /// never moves back (a device with a slow clock), and the later of two devices' taps wins.
+    func beginNewString(now: Date = Date()) {
+        let next = max(now, stringSince ?? now)
+        stringSince = next
+        defaults.set(next, forKey: Self.stringSinceKey)
+        cloud.setStringSince(next)
+    }
+
     /// Another device chose (or this launch is the first to see it): take it over, the switches,
     /// "Dafür" and the string's length alike. Returns whether anything local changed.
     @discardableResult
@@ -119,6 +133,11 @@ import OSLog
                 changed = true
             }
         }
+        if let date = cloud.stringSince, date > (stringSince ?? .distantPast) {
+            stringSince = date
+            defaults.set(date, forKey: Self.stringSinceKey)
+            changed = true
+        }
         return changed
     }
 }
@@ -132,6 +151,8 @@ protocol FieldSettingsCloud {
     func setWeekReward(_ text: String)
     var beadsPerString: Int? { get }
     func setBeadsPerString(_ count: Int)
+    var stringSince: Date? { get }
+    func setStringSince(_ date: Date)
 }
 
 /// No iCloud under the UI tests: nothing read, nothing written.
@@ -143,6 +164,8 @@ private final class SilentCloud: FieldSettingsCloud {
     func setWeekReward(_ text: String) {}
     var beadsPerString: Int? { nil }
     func setBeadsPerString(_ count: Int) {}
+    var stringSince: Date? { nil }
+    func setStringSince(_ date: Date) {}
 }
 
 extension NSUbiquitousKeyValueStore: FieldSettingsCloud {
@@ -165,5 +188,15 @@ extension NSUbiquitousKeyValueStore: FieldSettingsCloud {
 
     func setBeadsPerString(_ count: Int) {
         set(Int64(count), forKey: FieldSettingsStore.stringLengthKey)
+    }
+
+    /// Stored as seconds since the reference date; absent reads as nil.
+    var stringSince: Date? {
+        object(forKey: FieldSettingsStore.stringSinceKey) == nil
+            ? nil : Date(timeIntervalSinceReferenceDate: double(forKey: FieldSettingsStore.stringSinceKey))
+    }
+
+    func setStringSince(_ date: Date) {
+        set(date.timeIntervalSinceReferenceDate, forKey: FieldSettingsStore.stringSinceKey)
     }
 }

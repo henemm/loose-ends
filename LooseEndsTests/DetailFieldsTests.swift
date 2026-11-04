@@ -111,6 +111,8 @@ import Testing
         func setWeekReward(_ text: String) { weekReward = text }
         var beadsPerString: Int?
         func setBeadsPerString(_ count: Int) { beadsPerString = count }
+        var stringSince: Date?
+        func setStringSince(_ date: Date) { stringSince = date }
     }
 
     @MainActor
@@ -186,6 +188,31 @@ import Testing
         #expect(fresh.stringLength == 20, "read back from the defaults")
         defaults.set(0, forKey: FieldSettingsStore.stringLengthKey)
         #expect(FieldSettingsStore(defaults: defaults, cloud: cloud).stringLength == 5, "zero means never set")
+    }
+
+    @Test("A new string (#825): nothing until confirmed, the moment is written to the defaults and iCloud, the later one wins across devices")
+    @MainActor func newString() throws {
+        let (store, defaults, cloud) = try fixture()
+        let first = Date(timeIntervalSinceReferenceDate: 1_000_000)
+        #expect(store.stringSince == nil, "never confirmed")
+        store.beginNewString(now: first)
+        #expect(store.stringSince == first)
+        #expect(defaults.object(forKey: FieldSettingsStore.stringSinceKey) as? Date == first)
+        #expect(cloud.stringSince == first)
+        // An older confirmation from another device changes nothing; a newer one is taken over.
+        cloud.stringSince = first.addingTimeInterval(-60)
+        #expect(store.takeCloud() == false)
+        #expect(store.stringSince == first)
+        let later = first.addingTimeInterval(3600)
+        cloud.stringSince = later
+        #expect(store.takeCloud())
+        #expect(store.stringSince == later)
+        #expect(store.takeCloud() == false)
+        let fresh = FieldSettingsStore(defaults: defaults, cloud: cloud)
+        #expect(fresh.stringSince == later, "read back from the defaults")
+        // A tap never moves the mark back, whatever the clock says.
+        store.beginNewString(now: first)
+        #expect(store.stringSince == later)
     }
 
     @Test("Only the UI test process runs with every switch on; the unit tests see the standard")

@@ -274,32 +274,32 @@ enum ViewRules {
     }
 
     /// How many beads fill a string unless the user set it (Henning, 2026-10-24, #655): five. A full
-    /// string is the win: the sentence "Für die Perlen" is due. No calendar in it. Since #824 the
+    /// string is the win: the sentence "Für die Perlen" is due, and it stands until the user begins a new one (#825). No calendar in it. Since #824 the
     /// number is a setting (`FieldSettingsStore.stringLength`), held within `stringLengths`.
     static let stringLength = 5
     /// The lengths the setting allows (#824): a string of two is no string, past twenty it never fills.
     static let stringLengths = 3...20
 
-    /// The string on the start page (#655): the beads since the last full string, oldest first, and
-    /// whether it is full right now. Counted from all beads ever, in rounds of `stringLength`: with
-    /// five, ten, fifteen beads the string stands full until the next bead starts a new one. Nothing
-    /// is stored for this; a deleted bead task shifts the rounds, which is the price of no table.
+    /// The string on the start page (#655, #825): the beads since the last confirmation, oldest first,
+    /// at most `length`, and whether it is full right now. A full string stands, with the same beads,
+    /// until the user confirms it ("Begin a new string"); beads completed meanwhile do not count into
+    /// the next one. Nothing is stored for this but the moment of the last confirmation (a setting,
+    /// `FieldSettingsStore.stringSince`); a deleted bead task shifts the string, which is the price of no table.
     struct BeadString: Equatable {
         let beads: [Bead]
         let isFull: Bool
-        /// How many strings were filled before this one.
-        let filled: Int
-        static let empty = BeadString(beads: [], isFull: false, filled: 0)
+        /// A string was confirmed before this one: the page keeps showing the (empty) string after the win.
+        let confirmed: Bool
+        static let empty = BeadString(beads: [], isFull: false, confirmed: false)
     }
 
-    static func currentString(in all: [TaskItem], length: Int = stringLength) -> BeadString {
-        let every = beads(in: all, within: nil)
-        guard !every.isEmpty, length > 0 else { return .empty }
-        let rest = every.count % length
-        if rest == 0 {
-            return BeadString(beads: Array(every.suffix(length)), isFull: true, filled: every.count / length - 1)
-        }
-        return BeadString(beads: Array(every.suffix(rest)), isFull: false, filled: every.count / length)
+    /// `since` is the moment of the last confirmation; only beads strictly after it count. Without it
+    /// (never confirmed) every bead counts.
+    static func currentString(in all: [TaskItem], length: Int = stringLength, since: Date? = nil) -> BeadString {
+        guard length > 0 else { return .empty }
+        let counted = beads(in: all, within: nil).filter { bead in since.map { bead.at > $0 } ?? true }
+        let held = Array(counted.prefix(length))
+        return BeadString(beads: held, isFull: held.count == length, confirmed: since != nil)
     }
 
     /// The last `limit` beads of all time, oldest first.

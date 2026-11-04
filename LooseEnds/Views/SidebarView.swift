@@ -137,7 +137,8 @@ struct SidebarView: View {
                     ContentsIndex(groups: indexGroups, selected: selection, inMargin: true) { selection = $0 }
                     // The beads close the page, quiet and without a caption (#677).
                     let stringLength = fieldSettings?.stringLength ?? ViewRules.stringLength
-                    WeekStringRows(string: ViewRules.currentString(in: tasks, length: stringLength), all: tasks, length: stringLength)
+                    WeekStringRows(string: ViewRules.currentString(in: tasks, length: stringLength, since: fieldSettings?.stringSince),
+                           all: tasks, length: stringLength)
                 }
             } else if isMac {
                 Section {
