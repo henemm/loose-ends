@@ -3,7 +3,8 @@
 Aufruf: python3 scripts/test_asc_store_probe.py
 Gegen den lokalen Nachbau aus test_asc_beta_probe.py. Zeilenformat:
 `appinfo nr=<n> state=<Wert|?> appStoreState=<Wert|?> felder=<Namen> relationen=<Namen>`
-`untertitel appinfo=<n> sprache=… name=… untertitel=… zeichen=…` bzw. `untertitel appinfo=<n> keine`.
+`untertitel appinfo=<n> sprache=… name=… untertitel=… zeichen=…` bzw. `untertitel appinfo=<n> keine`
+(Antwort leer) oder `untertitel appinfo=<n> fehler` (Abfrage gescheitert); ohne App-Info `appinfo keine`.
 """
 import subprocess
 import sys
@@ -26,12 +27,13 @@ def loc(locale, name, subtitle):
     return {"data": [{"id": "L", "attributes": {"locale": locale, "name": name, "subtitle": subtitle}}]}
 
 
-def routes(first=None, second=None):
+def routes(first=None, second=None, second_status=200, infos=None):
     return {
         "/v1/apps?": (200, {"data": [{"id": "APP1"}]}),
-        "/v1/apps/APP1/appInfos": (200, INFOS),
+        "/v1/apps/APP1/appInfos": (200, INFOS if infos is None else infos),
         "/v1/appInfos/I1/appInfoLocalizations": (200, first or loc("de-DE", "Loose Ends", "Sortiert")),
-        "/v1/appInfos/I2/appInfoLocalizations": (200, second or loc("de-DE", "Loose Ends", "Einfach sagen.")),
+        "/v1/appInfos/I2/appInfoLocalizations": (second_status,
+                                                 second or loc("de-DE", "Loose Ends", "Einfach sagen.")),
         "/v1/apps/APP1/appStoreVersions": (200, {"data": []}),
     }
 
@@ -86,6 +88,21 @@ class StoreProbeTests(unittest.TestCase):
         _, result = self.run_probe(second={"data": []})
         self.assertIn("untertitel appinfo=2 keine", result.stdout.splitlines())
 
+    def test_failed_localization_query_says_fehler_not_keine(self):
+        _, result = self.run_probe(second_status=500)
+        lines = self.lines(result, "untertitel appinfo=2 ")
+        self.assertEqual(lines, ["untertitel appinfo=2 fehler"], result.stdout)
+
+    def test_empty_subtitle_says_keiner(self):
+        _, result = self.run_probe(first=loc("en-US", "Loose Ends", ""))
+        line, = self.lines(result, "untertitel appinfo=1 ")
+        self.assertIn("untertitel=keiner zeichen=0", line)
+
+    def test_no_appinfo_says_appinfo_keine(self):
+        _, result = self.run_probe(infos={"data": []})
+        self.assertIn("appinfo keine", result.stdout.splitlines())
+        self.assertFalse(self.lines(result, "untertitel "), result.stdout)
+
     def test_probe_never_writes(self):
         fake, _ = self.run_probe()
         self.assertTrue(fake.requests)
@@ -96,6 +113,7 @@ class StoreProbeTests(unittest.TestCase):
         lines = result.stdout.splitlines()
         self.assertTrue(lines[-1].startswith("zusammenfassung antworten="), lines[-1])
         self.assertEqual(len(self.lines(result, "zusammenfassung")), 1)
+        self.assertEqual(lines[-1], "zusammenfassung antworten=4 von=4 befunde=0")
 
 
 if __name__ == "__main__":

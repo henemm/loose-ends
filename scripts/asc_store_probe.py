@@ -23,14 +23,30 @@ def report_set(run, version_label, locale, screenshot_set):
 
 
 def report_subtitles(run, app_id):
-    """Name und Untertitel je Sprache der App-Info (#837); ein leerer Untertitel steht als `keiner`."""
-    for info in records(run.ask("appInfos", f"/v1/apps/{app_id}/appInfos")):
-        state = attributes(info).get("state") or attributes(info).get("appStoreState") or "?"
-        for locale in records(run.ask("appInfoLocalizations",
-                                      f"/v1/appInfos/{info['id']}/appInfoLocalizations?limit=50")):
+    """Je App-Info Zustände, Feld- und Relationsnamen, dann Name und Untertitel je Sprache (#837).
+
+    Nur Zustandswörter und Namen, nie andere Werte; ein leerer Untertitel steht als `keiner`.
+    `keine` heißt: Antwort ohne Eintrag; `fehler` heißt: die Abfrage ist gescheitert.
+    """
+    body = run.ask("appInfos", f"/v1/apps/{app_id}/appInfos")
+    if body is not None and not records(body):
+        print("appinfo keine", flush=True)
+    for number, info in enumerate(records(body), start=1):
+        attrs = attributes(info)
+        relations = info.get("relationships") if isinstance(info.get("relationships"), dict) else {}
+        print(f"appinfo nr={number} state={attrs.get('state') or '?'} appStoreState={attrs.get('appStoreState') or '?'} "
+              f"felder={','.join(sorted(attrs))} relationen={','.join(sorted(relations))}", flush=True)
+        answer = run.ask("appInfoLocalizations", f"/v1/appInfos/{info['id']}/appInfoLocalizations?limit=50")
+        if answer is None:
+            print(f"untertitel appinfo={number} fehler", flush=True)
+            continue
+        locales = records(answer)
+        if not locales:
+            print(f"untertitel appinfo={number} keine", flush=True)
+        for locale in locales:
             a = attributes(locale)
             subtitle = a.get("subtitle") or "keiner"
-            print(f"untertitel info={state} sprache={a.get('locale', '?')} name={a.get('name', '?')} "
+            print(f"untertitel appinfo={number} sprache={a.get('locale', '?')} name={a.get('name', '?')} "
                   f"untertitel={subtitle} zeichen={len(a.get('subtitle') or '')}", flush=True)
 
 
