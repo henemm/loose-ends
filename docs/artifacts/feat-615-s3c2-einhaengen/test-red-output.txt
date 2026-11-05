@@ -1,0 +1,553 @@
+=== typecheck ===
+
+> typecheck
+> tsc --noEmit
+
+test/main.test.ts(332,5): error TS2353: Object literal may only specify known properties, and 'auth' does not exist in type 'StartOptions'.
+test/main.test.ts(345,35): error TS2353: Object literal may only specify known properties, and 'auth' does not exist in type 'Partial<StartOptions>'.
+test/main.test.ts(352,38): error TS2353: Object literal may only specify known properties, and 'auth' does not exist in type 'Partial<StartOptions>'.
+test/main.test.ts(369,38): error TS2353: Object literal may only specify known properties, and 'auth' does not exist in type 'Partial<StartOptions>'.
+test/main.test.ts(383,38): error TS2353: Object literal may only specify known properties, and 'auth' does not exist in type 'Partial<StartOptions>'.
+test/main.test.ts(390,38): error TS2353: Object literal may only specify known properties, and 'auth' does not exist in type 'Partial<StartOptions>'.
+test/main.test.ts(397,11): error TS2339: Property 'appleConfigFromEnv' does not exist on type 'typeof import("/Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/main")'.
+test/main.test.ts(483,38): error TS2353: Object literal may only specify known properties, and 'auth' does not exist in type 'Partial<StartOptions>'.
+test/main.test.ts(522,38): error TS2353: Object literal may only specify known properties, and 'auth' does not exist in type 'Partial<StartOptions>'.
+test/main.test.ts(537,38): error TS2353: Object literal may only specify known properties, and 'auth' does not exist in type 'Partial<StartOptions>'.
+test/main.test.ts(553,38): error TS2353: Object literal may only specify known properties, and 'auth' does not exist in type 'Partial<StartOptions>'.
+test/main.test.ts(567,38): error TS2353: Object literal may only specify known properties, and 'auth' does not exist in type 'Partial<StartOptions>'.
+test/main.test.ts(583,38): error TS2353: Object literal may only specify known properties, and 'auth' does not exist in type 'Partial<StartOptions>'.
+typecheck exit: 1
+=== node --test test/*.test.ts ===
+✔ AC-1: the migrations apply 001 and 002 once, and the three account tables exist (71.079834ms)
+✔ AC-2: findOrCreate gives one account per apple_sub, also when called at the same time (37.513125ms)
+✔ AC-3: createSession hands out 43-character tokens and stores only their SHA-256 (51.821084ms)
+✔ AC-4/AC-5: resolveSession finds a valid session, refreshes it, and ends only the one session (45.098916ms)
+✔ AC-6: createSession for an unknown account is refused by the foreign key (362.775791ms)
+✔ AC-7/AC-8/AC-10: deleteAccount removes every row of the account and leaves the other one untouched (390.446042ms)
+✔ AC-9: deleteAccount without an Apple token deletes all, an unknown account changes nothing (59.596042ms)
+✔ delete: rundweg mit client_id (67.10025ms)
+✔ AC-12: the account functions write nothing to the console, and an error names neither token nor apple_sub (56.72375ms)
+✔ secret: kopf, nutzlast, signatur (2.030666ms)
+✔ secret: je aufruf neu, manipulation fällt auf (0.303666ms)
+✔ fehlbedienung: wirft ohne netz (0.381ms)
+✔ redeem: anfrage (14.912459ms)
+✔ redeem: erfolg (3.46325ms)
+✔ redeem: apple-fehler und status (Fallliste) (4.108416ms)
+✔ redeem: malformed 200 (Fallliste) (12.460667ms)
+✔ redeem: id_token geprüft (Fallliste) (21.378625ms)
+✔ redeem: unavailable und zeitlimit (Fallliste) (6.68325ms)
+✔ revoke: anfrage (5.053084ms)
+✔ revoke: erfolg (1.477875ms)
+✔ revoke: apple-fehler und status (Fallliste) (2.545792ms)
+✔ revoke: unavailable und zeitlimit (Fallliste) (5.72875ms)
+✔ revoke fehlbedienung: wirft ohne netz (0.244042ms)
+✔ reason: feste menge, keine geheimnisse (4.280333ms)
+✔ silence (13.602125ms)
+✔ revoke: silence (3.531833ms)
+✔ cache: laden und wiederverwenden (14.704833ms)
+✔ kid: unbekannt lädt einmal nach (0.701375ms)
+✔ sperre: 59 s und 60 s (0.319ms)
+✔ parallel: ein Abruf (0.387292ms)
+✔ fehlschlag: ohne Cache (0.576041ms)
+✔ fehlschlag: alter Cache bleibt (0.751959ms)
+✔ sperre: auch nach Fehlschlag (0.275ms)
+✔ ttl: nach einer Stunde neuer Stand (0.195542ms)
+✔ ttl: abgelaufen und Abruf misslingt (0.149208ms)
+✔ rotation: entfernter kid (0.655833ms)
+✔ einträge: ungültige übersprungen (0.092875ms)
+✔ fetch: url und signal (0.093458ms)
+✔ zusammenspiel: verifyIdentityToken (3.684958ms)
+✔ silence und feste Werte (1.92875ms)
+✔ roundtrip: blobform (2.238625ms)
+✔ attack: manipuliert, falsch, zu kurz (1.008708ms)
+✔ attack: kein Buffer (0.496375ms)
+✔ decrypt: schlüssellänge (0.231917ms)
+✔ decrypt: 29 Byte (0.277458ms)
+✔ encrypt: wirft bei Fehleingabe (1.267041ms)
+✔ encrypt: iv je blob verschieden (10.505375ms)
+✔ encrypt: kein klartext im blob (0.11725ms)
+✔ store: überschreibt (56.680833ms)
+✔ vault: client_id wird abgelegt und ersetzt (49.999583ms)
+✔ vault fehlbedienung: client_id (45.923209ms)
+✔ store: unbekanntes konto (44.178375ms)
+✔ store: rundweg über deleteAccount (364.807125ms)
+✔ store: blob gehört zum konto (394.958708ms)
+✔ silence (57.760833ms)
+✔ config: gültige Umgebung (1.777625ms)
+✔ config: fehlend und ungültig (1.528416ms)
+✔ verify: aud im erfolg (1.977042ms)
+✔ verify: gültiges Token (1.3085ms)
+✔ attack: malformed (1.038792ms)
+✔ attack: alg none (0.80175ms)
+✔ attack: HS256 mit öffentlichem Schlüssel (0.541ms)
+✔ attack: ES256 (0.148ms)
+✔ attack: kid und Schlüsselsuche (1.164708ms)
+✔ attack: JWK mit fremdem alg oder kty (0.82925ms)
+✔ attack: Signatur (1.806667ms)
+✔ attack: iss (1.554208ms)
+✔ attack: aud (2.719792ms)
+✔ attack: abgelaufen (3.751792ms)
+✔ attack: iat (1.996792ms)
+✔ attack: nonce (3.785167ms)
+✔ reasons: feste Liste (0.139666ms)
+✔ verify: fehlerformen (0.058375ms)
+✔ silence (3.950084ms)
+✔ auth: rundweg anmelden (385.385583ms)
+✔ auth: zweite anmeldung ersetzt schluessel (398.050875ms)
+✔ auth: eingabe abgelehnt, nichts angefasst (55.454ms)
+✔ auth: identity-token abgelehnt (65.379875ms)
+✔ auth: einloesen scheitert, nichts abgelegt (58.26675ms)
+✔ auth: sub weicht ab (43.071ms)
+✔ auth: createSession zuletzt (49.062625ms)
+✔ auth: ohne apple-konfiguration (31.919542ms)
+✔ auth: abmelden (33.030541ms)
+✔ auth: bearerToken (0.254ms)
+✔ auth: stille und einheitliche ablehnung (35.889042ms)
+✔ auth: rundweg loeschen (25.832334ms)
+✔ auth: loeschen widerruft einmal (26.7595ms)
+✔ auth: loeschen beruehrt kein anderes konto (28.059417ms)
+✔ auth: loeschen abgelehnt, nichts angefasst (28.109583ms)
+✔ auth: loeschen rennen (23.711834ms)
+✔ auth: zwei loeschungen gleichzeitig (31.800083ms)
+✔ auth: widerruf scheitert, konto weg (5048.778708ms)
+✔ auth: widerruf entfaellt, konto weg (49.727917ms)
+✔ auth: log ohne geheimnisse (33.412125ms)
+✔ auth: stille und einheitliche ablehnung loeschen (30.345875ms)
+2026-11-05T11:29:31.643Z listening
+2026-11-05T11:29:31.647Z migrated
+✔ auth: loeschen datenbankfehler (31.372666ms)
+2026-11-05T11:29:25.150Z listening
+2026-11-05T11:29:25.499Z migrated
+✔ AC-1 (S1): after ready, /health answers 200 with exactly five keys (386.395292ms)
+2026-11-05T11:29:25.519Z listening
+2026-11-05T11:29:25.522Z migrate failed, retrying (1/20)
+2026-11-05T11:29:25.574Z migrate failed, retrying (2/20)
+2026-11-05T11:29:25.625Z migrate failed, retrying (3/20)
+2026-11-05T11:29:25.677Z migrate failed, retrying (4/20)
+2026-11-05T11:29:25.728Z migrate failed, retrying (5/20)
+2026-11-05T11:29:25.780Z migrate failed, retrying (6/20)
+2026-11-05T11:29:25.832Z migrate failed, retrying (7/20)
+2026-11-05T11:29:25.885Z migrate failed, retrying (8/20)
+2026-11-05T11:29:25.937Z migrate failed, retrying (9/20)
+2026-11-05T11:29:25.989Z migrate failed, retrying (10/20)
+2026-11-05T11:29:26.039Z migrate failed, retrying (11/20)
+2026-11-05T11:29:26.091Z migrate failed, retrying (12/20)
+2026-11-05T11:29:26.142Z migrate failed, retrying (13/20)
+2026-11-05T11:29:26.194Z migrate failed, retrying (14/20)
+2026-11-05T11:29:26.245Z migrate failed, retrying (15/20)
+2026-11-05T11:29:26.297Z migrate failed, retrying (16/20)
+2026-11-05T11:29:26.348Z migrate failed, retrying (17/20)
+2026-11-05T11:29:26.399Z migrate failed, retrying (18/20)
+2026-11-05T11:29:26.451Z migrate failed, retrying (19/20)
+✔ AC-2 (S1): without a database /health and /mcp answer 503, ready is refused, close does not throw (985.17325ms)
+2026-11-05T11:29:26.506Z listening
+2026-11-05T11:29:26.517Z migrated
+✔ AC-3 (S1): /mcp answers initialize with serverInfo and refuses get_now without an account (40.529875ms)
+2026-11-05T11:29:26.546Z listening
+2026-11-05T11:29:26.557Z migrated
+✔ AC-4 (S1): an unknown path answers 404 and counts in the next /health (18.800875ms)
+2026-11-05T11:29:26.565Z listening
+2026-11-05T11:29:26.576Z migrated
+✔ AC-5 (S1): terminated pool connections leave the process alive and /health recovers within 5 s, without error text (23.175ms)
+2026-11-05T11:29:26.588Z listening
+2026-11-05T11:29:26.600Z migrated
+✔ AC-6 (S1): close ends server and pool, a second close does not throw, keep-alive does not hold it (21.815958ms)
+✔ AC-7 (S1): ErrorWindow trips only above half of at least 20 answers and forgets after five minutes (0.221083ms)
+2026-11-05T11:29:26.611Z listening
+2026-11-05T11:29:26.622Z migrated
+✔ AC-8 (S1): /health turns 503 on a high error rate and recovers when the window passes (25.112375ms)
+✔ AC-9 (S1): a database that never answers gives 503 with db down within a second, no exception (49.952417ms)
+✔ AC-10 (S1): no title, order id, database error text or URL in any answer or log line; every log line starts ISO (226.164625ms)
+2026-11-05T11:29:26.910Z listening
+2026-11-05T11:29:26.912Z migrate failed, retrying (1/40)
+✖ einhaengen: auth vor migrate 503 (3.898542ms)
+2026-11-05T11:29:26.917Z listening
+2026-11-05T11:29:26.926Z migrated
+✖ einhaengen: ohne config logout und delete laufen (17.479625ms)
+2026-11-05T11:29:26.933Z listening
+2026-11-05T11:29:26.943Z migrated
+✖ einhaengen: anmelden und abmelden mit config (16.299458ms)
+2026-11-05T11:29:26.949Z listening
+2026-11-05T11:29:26.959Z migrated
+✖ einhaengen: jwks lazy und einmal (16.617541ms)
+✖ einhaengen: weiche apple env (0.381875ms)
+✖ einhaengen: prozess bricht bei falscher config ab (5003.771167ms)
+2026-11-05T11:29:31.979Z listening
+2026-11-05T11:29:32.000Z migrated
+✖ einhaengen: body ueber 1 mib 413 (38.22575ms)
+2026-11-05T11:29:32.009Z listening
+2026-11-05T11:29:32.019Z migrated
+✖ einhaengen: luegende content-length (18.414208ms)
+2026-11-05T11:29:32.028Z listening
+2026-11-05T11:29:32.037Z migrated
+✖ einhaengen: 413 kippt health nicht (17.557167ms)
+2026-11-05T11:29:32.044Z listening
+2026-11-05T11:29:32.053Z migrated
+✖ einhaengen: health und mcp nicht ueberschreibbar (17.850458ms)
+2026-11-05T11:29:32.063Z listening
+2026-11-05T11:29:32.071Z migrated
+✖ einhaengen: log wirft nie (15.644459ms)
+✖ einhaengen: log ohne geheimnisse (15.588291ms)
+✖ einhaengen: grenze und doku (1.115583ms)
+✔ AC-1/AC-3: tools/list names the six tools, with the annotations of the write and read tools (84.671833ms)
+▶ AC-2: without an account the read tools refuse and reads nothing
+  ✔ get_now (2.072959ms)
+  ✔ list_tasks (0.782875ms)
+✔ AC-2: without an account the read tools refuse and reads nothing (53.967625ms)
+▶ AC-3/AC-4: another account and an account without transcript get „noch keine Abschrift“
+  ✔ AC-3 fremdes Konto (359.153125ms)
+  ✔ AC-4 keine Abschrift (396.314584ms)
+✔ AC-3/AC-4: another account and an account without transcript get „noch keine Abschrift“ (755.728167ms)
+▶ AC-5: get_now passes nowCount through and never recounts
+  ✔ Vertrag (65.478375ms)
+  ✔ 7 bei drei Zeilen (61.9555ms)
+✔ AC-5: get_now passes nowCount through and never recounts (127.903083ms)
+▶ AC-6: get_now orders knaeuel, today, lined, waiting and keeps the order inside a group
+  ✔ Vertrag (51.770958ms)
+  ✔ ohne Knäuel, mehrere je Gruppe (34.719792ms)
+✔ AC-6: get_now orders knaeuel, today, lined, waiting and keeps the order inside a group (86.933958ms)
+✔ AC-7: each row of get_now carries the task's fields; an id without task stays id and group (47.529375ms)
+▶ AC-8: list_tasks returns every task as delivered, with generatedAt
+  ✔ Vertrag (32.17125ms)
+  ✔ vertauscht (32.566833ms)
+✔ AC-8: list_tasks returns every task as delivered, with generatedAt (65.093125ms)
+✔ AC-9: no raw text or note in any answer, nothing on console or stdout (33.657666ms)
+✔ AC-10: a newer upload is read on the next call, nothing is cached (26.803875ms)
+✔ AC-13: getTranscript returns the stored document or undefined (22.625292ms)
+✔ AC-4 (C4b-1): without an account both new tools refuse and capture_task stores nothing (27.318875ms)
+✔ AC-5/AC-6 (C4b-1): capture_task stores one capture order per call, waiting, for the account from authInfo (26.797208ms)
+✔ AC-7 (C4b-1): empty, blank and invalid text store nothing and answer isError (28.78925ms)
+✔ AC-8/AC-9 (C4b-1): get_order_result goes waiting, claimed, result; unknown and foreign ids are unknown, no order text (39.500917ms)
+✔ AC-10 (C4b-1): neither new tool writes to console or stdout (18.8455ms)
+✔ AC-1 (C4b-2): complete_task and set_due are write tools without idempotence and point to list_tasks and get_order_result (17.406084ms)
+▶ AC-2/AC-3 (C4b-2): without an account or without a transcript both tools refuse and store nothing
+  ✔ AC-2 kein Konto (18.465083ms)
+  ✔ AC-3 keine Abschrift (18.392417ms)
+✔ AC-2/AC-3 (C4b-2): without an account or without a transcript both tools refuse and store nothing (37.145708ms)
+✔ AC-4 (C4b-2): a generatedAt that differs from the stored transcript stores nothing; the same one stores an order (22.097792ms)
+✔ AC-5 (C4b-2): a task the transcript no longer carries is refused; a lowercase id finds a task and the order carries the transcript's id (23.17825ms)
+✔ AC-6 (C4b-2): complete_task stores one complete order with the expected state from the transcript (20.6745ms)
+✔ AC-7 (C4b-2): set_due stores the date and hasTime as given, with the expected due date; without date the key is missing (20.500208ms)
+✔ AC-8 (C4b-2): set_due with an invalid date stores nothing and answers with checkOrder's message (20.694083ms)
+✔ AC-9/AC-10 (C4b-2): equal calls give two orders; no title in an answer; another account changes nothing (19.230709ms)
+✔ AC-11 (C4b-2): neither new tool writes to console or stdout (17.23075ms)
+✔ AC-1: applies migrations in number order and returns their names in that order (49.561083ms)
+✔ AC-2: a second run applies nothing, a new file alone is applied (29.865167ms)
+✔ AC-3: a broken migration rolls back completely and rethrows the Postgres error (39.317416ms)
+✔ AC-4: a gap in the numbers is refused before anything is applied (10.737209ms)
+✔ AC-4: a duplicate number is refused before anything is applied (17.504333ms)
+✔ AC-4: a misnamed .sql file is refused before anything is applied, README.md is ignored (9.557916ms)
+✔ AC-4: a README.md beside the migrations does not disturb the run (18.628708ms)
+✔ AC-4: number 000 is refused as invalid, not as a duplicate (9.169208ms)
+✔ AC-2: two runs at once apply every migration exactly once (S3) (344.319708ms)
+✔ AC-2: three runs at once apply every migration exactly once (S3) (399.667875ms)
+✔ AC-3: after a failed run the lock is free and a repaired run finishes (S3) (883.767375ms)
+✔ AC-3: a failed ROLLBACK keeps the original error, discards the connection and skips the unlock (S3) (0.704541ms)
+✔ AC-4: a gap is refused without ever connecting to the database (S3) (0.628958ms)
+✔ AC-5: without DATABASE_URL the test run fails and names the variable (221.9135ms)
+✔ AC-1: the contract order is stored, ON CONFLICT works on the generated id (305.857875ms)
+✔ AC-2: contract examples and small orders and results are accepted (0.396458ms)
+▶ AC-3 to AC-8: orders off the table are refused with the field path, nothing is stored
+  ✔ AC-3 (Z1) version (1.519ms)
+  ✔ AC-4 (Z2) id (0.553625ms)
+  ✔ AC-4 (Z3) kind (0.472708ms)
+  ✔ AC-5 (Z4) capture (0.363125ms)
+  ✔ AC-6 (Z5) complete (0.491875ms)
+  ✔ AC-7 (Z6) complete times and keys (0.251416ms)
+  ✔ AC-8 (Z7) setDue (0.586625ms)
+✔ AC-3 to AC-8: orders off the table are refused with the field path, nothing is stored (390.075416ms)
+✔ AC-7: complete without expectedDueDate is accepted (0.133542ms)
+✔ AC-9: an order that is no object names the root (0.0645ms)
+▶ AC-10/11: results off the table are refused with the field path, nothing is stored
+  ✔ AC-10 (Z9) result (1.52ms)
+  ✔ AC-11 (Z10) reason (0.495708ms)
+✔ AC-10/11: results off the table are refused with the field path, nothing is stored (63.604292ms)
+✔ AC-12: transcript messages stay, other errors carry no prefix (0.736958ms)
+✔ AC-13: a new order is stored for the account, unclaimed (60.360875ms)
+✔ AC-14: the same id again, even upper case with other content, changes nothing (52.308834ms)
+✔ AC-15: a claimed order is not reset by a second put (45.778875ms)
+✔ AC-16: three orders are claimed one by one, then nothing (34.542791ms)
+✔ AC-17: two connections claim ten orders, each exactly once (37.539083ms)
+✔ AC-18: two accounts never cross (30.734833ms)
+✔ AC-19: the result of the holding device is stored (31.71175ms)
+✔ AC-20: results for orders not held by the reporter are refused (28.280333ms)
+✔ AC-21: a second result changes nothing (24.294583ms)
+✔ AC-1 (C4b-1): getResult is unknown for a never stored id, another account's id and a non-UUID (24.989833ms)
+▶ AC-2 (C4b-1): getResult goes waiting, claimed, result and reads the id in any case
+  ✔ done (26.784708ms)
+  ✔ rejected mit Grund (33.604625ms)
+✔ AC-2 (C4b-1): getResult goes waiting, claimed, result and reads the id in any case (60.801625ms)
+✔ AC-1: the real migrations folder applies 001 once and creates the three tables (677.790042ms)
+✔ AC-2: the three contract examples are accepted in contract order (64.100791ms)
+✔ AC-3: transcripts refuse what the contract does not allow (75.095958ms)
+✔ AC-4: orders refuse a wrong version, kind, id, account or half a claim, and take all three kinds (59.324791ms)
+✔ AC-5: order results belong to exactly one existing order and carry a reason only when rejected (52.307417ms)
+✔ AC-6: ids keep their case in the document, the uuid columns compare regardless of case (36.768166ms)
+✔ AC-6: known limit, version 1.0 is accepted because jsonb compares numbers numerically (32.820209ms)
+✔ migration 003: additiv auf bestandsdaten (75.042375ms)
+✔ AC-1: the contract example and a lower-case one without optional fields are accepted (1.287875ms)
+▶ AC-2 to AC-11: the deviation table is refused with the field path, nothing is stored
+  ✔ AC-2 (Z1) version (1.789334ms)
+  ✔ AC-3 (Z2) generatedAt (0.622083ms)
+  ✔ AC-4 (Z3) now is no object (0.553583ms)
+  ✔ AC-5 (Z4) keys of now (0.823875ms)
+  ✔ AC-6 (Z5) now.knaeuel (0.418917ms)
+  ✔ AC-7 (Z6) lists of now (1.032708ms)
+  ✔ AC-8 (Z7) contexts (0.459292ms)
+  ✔ AC-9 (Z8) title and project (0.516333ms)
+  ✔ AC-10 (Z9) raw text and note anywhere (0.734084ms)
+  ✔ AC-11 (Z10) root keys and nowCount (0.741834ms)
+  ✔ F001 inherited key names are unknown keys (0.856ms)
+  ✔ F002 times Postgres refuses or that are no ISO (1.280916ms)
+  ✔ F003 NUL and lone surrogates (0.459375ms)
+✔ AC-2 to AC-11: the deviation table is refused with the field path, nothing is stored (265.781709ms)
+✔ AC-6: without now.knaeuel the transcript is accepted (0.112166ms)
+✔ AC-12/13/14: the first is stored, a newer replaces it, an older or equally old one leaves it (380.098875ms)
+✔ AC-15: two concurrent uploads over two connections always leave the newer one (69.939125ms)
+✔ AC-16: two accounts keep their transcripts apart (57.333875ms)
+✔ AC-17: the service does not recount, a mismatching nowCount and unknown now ids are stored (51.68625ms)
+✔ F002: offsets up to ±15:59 are stored, as Postgres takes them (44.623542ms)
+ℹ tests 227
+ℹ suites 0
+ℹ pass 214
+ℹ fail 13
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7393.482125
+
+✖ failing tests:
+
+test at test/main.test.ts:327:1
+✖ einhaengen: auth vor migrate 503 (3.898542ms)
+  AssertionError [ERR_ASSERTION]: http://127.0.0.1:64556/auth/apple
+  
+  404 !== 503
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/main.test.ts:339:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 503,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/main.test.ts:350:1
+✖ einhaengen: ohne config logout und delete laufen (17.479625ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  404 !== 503
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/main.test.ts:356:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 503,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/main.test.ts:367:1
+✖ einhaengen: anmelden und abmelden mit config (16.299458ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  404 !== 200
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/main.test.ts:373:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/main.test.ts:381:1
+✖ einhaengen: jwks lazy und einmal (16.617541ms)
+  AssertionError [ERR_ASSERTION]: Anmeldung 1
+  
+  404 !== 200
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/main.test.ts:387:38)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/main.test.ts:396:1
+✖ einhaengen: weiche apple env (0.381875ms)
+  AssertionError [ERR_ASSERTION]: appleConfigFromEnv fehlt
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/main.test.ts:398:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/main.test.ts:440:1
+✖ einhaengen: prozess bricht bei falscher config ab (5003.771167ms)
+  AssertionError [ERR_ASSERTION]: APPLE_TOKEN_KEY fehlt: Exit-Code
+  
+  'late' !== 1
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/main.test.ts:457:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'late',
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/main.test.ts:481:1
+✖ einhaengen: body ueber 1 mib 413 (38.22575ms)
+  AssertionError [ERR_ASSERTION]: /auth/apple 1048577
+  
+  404 !== 413
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/main.test.ts:489:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 413,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/main.test.ts:520:1
+✖ einhaengen: luegende content-length (18.414208ms)
+  AssertionError [ERR_ASSERTION]: chunked über 1 MiB
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/main.test.ts:526:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test/main.test.ts:535:1
+✖ einhaengen: 413 kippt health nicht (17.557167ms)
+  AssertionError [ERR_ASSERTION]: Anfrage 1
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/main.test.ts:542:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test/main.test.ts:551:1
+✖ einhaengen: health und mcp nicht ueberschreibbar (17.850458ms)
+  AssertionError [ERR_ASSERTION]: auth daneben eingehängt
+  
+  404 !== 401
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/main.test.ts:562:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/main.test.ts:565:1
+✖ einhaengen: log wirft nie (15.644459ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  404 !== 200
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/main.test.ts:570:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/main.test.ts:580:1
+✖ einhaengen: log ohne geheimnisse (15.588291ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  404 !== 200
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/main.test.ts:587:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/main.test.ts:600:1
+✖ einhaengen: grenze und doku (1.115583ms)
+  AssertionError [ERR_ASSERTION]: The input was expected to not match the regular expression /nothing calls them yet/. Input:
+  
+  '  `src/auth.ts` (#615 S3b): `authRoutes(deps)` with `POST /auth/apple` (order: 503 without config or keys, 405, 415, 413 at 16 KiB counted while reading, 400, identity token, code redeemed once the token holds, same `sub`, `findOrCreate`, `storeRefreshToken`, `createSession` last → 200 `{sessionToken}`, `no-store`; every refusal a bare 401, only Apple unreachable 503) and `POST /auth/logout` (ends exactly this session, 204 also for an unknown one); `bearerToken(request)`; no console output; nothing calls them yet'
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/main.test.ts:604:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '  `src/auth.ts` (#615 S3b): `authRoutes(deps)` with `POST /auth/apple` (order: 503 without config or keys, 405, 415, 413 at 16 KiB counted while reading, 400, identity token, code redeemed once the token holds, same `sub`, `findOrCreate`, `storeRefreshToken`, `createSession` last → 200 `{sessionToken}`, `no-store`; every refusal a bare 401, only Apple unreachable 503) and `POST /auth/logout` (ends exactly this session, 204 also for an unknown one); `bearerToken(request)`; no console output; nothing calls them yet',
+    expected: /nothing calls them yet/,
+    operator: 'doesNotMatch',
+    diff: 'simple'
+  }
+test exit: 1
