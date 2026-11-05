@@ -86,3 +86,15 @@ Empfehlung (Plan-Agent, Befunde nachgeprüft):
 
 ### Open Questions
 - keine PO-Fragen (rein technisch, nichts Sichtbares; die Abweichung bei `extraRoutes` ist eine Tech-Lead-Entscheidung)
+
+## Freigabe Zeilengrenze (2026-11-05, nach RED)
+
+Tests 380 Zeilen statt geschätzt 120–140, Schnitt gesamt ≈ 470 statt ≈ 210 (Grenze 250). Henning per Auswahl: „Annehmen, so bauen“.
+
+## Abweichungen der Tests von den AC-Texten (Tech Lead, RED 2026-11-05)
+
+- AC-6: „Pool nicht geöffnet“ wird mit einem eigenen TCP-Lauscher als Datenbankadresse belegt (0 Verbindungen), statt per `pg_stat_activity`; das ist auch nach dem Prozessende noch prüfbar.
+- AC-8: Bei einer `Content-Length` unter der wahren Länge übergibt der HTTP-Parser der Route nur die angegebenen Bytes; der Rest wird nie als Body gepuffert. Der Test belegt „Route bekam ≤ 1 MiB“ und `/health` 200, nicht „Route läuft nicht“ (das ist dort nicht erreichbar).
+- AC-9: Das Fehlerfenster zählt nur 5xx; 404 kippt `/health` nicht. Belegt wird: 413 erhöht `requests` nicht (läuft an `dispatch` vorbei); Gegenprobe mit 25 × 500 über `/boom`.
+- AC-13/AC-14: `git diff`-Prüfungen laufen in /60-validate; der Doku-Teil von AC-14 ist der Test „einhaengen: grenze und doku“.
+- Commit dieser Notiz kommt mit der Umsetzung (bash_gate blockt Commits in phase6).
