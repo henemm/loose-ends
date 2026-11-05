@@ -56,6 +56,11 @@ export async function deleteAccount(pool: pg.Pool, accountId: string): Promise<D
     await client.query("DELETE FROM order_results WHERE order_id IN (SELECT id FROM orders WHERE account_id = $1)", [accountId]);
     await client.query("DELETE FROM orders WHERE account_id = $1", [accountId]);
     await client.query("DELETE FROM transcripts WHERE account_id = $1", [accountId]);
+    // OAuth rows known only by one of the account's grants (Interaction); rows with account_id follow by cascade.
+    await client.query(
+      "DELETE FROM oauth_records WHERE grant_id IN (SELECT grant_id FROM oauth_records WHERE account_id = $1 AND grant_id IS NOT NULL)",
+      [accountId],
+    );
     await client.query("DELETE FROM accounts WHERE id = $1", [accountId]);
     await client.query("COMMIT");
     return { deleted: true, appleToken: found.rows[0].refresh_token_enc, clientId: found.rows[0].client_id };
