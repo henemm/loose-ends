@@ -181,3 +181,4 @@ RED: Die Option `auth`, `appleConfigFromEnv` und die Körpergrenze existieren ni
 ## Changelog
 
 - 2026-11-05: Initial spec created (Schnitt 3c-2)
+- 2026-11-05 (Validierung): Drei Abweichungen im Beleg, keine im Verhalten. AC-9: Das Fehlerfenster zählt nur Antworten ≥ 500 (`health.ts`), 404 kippt `/health` nicht; die Gegenprobe läuft deshalb mit 25 × 500. AC-8: Bei einer zu kleinen `Content-Length` übergibt der HTTP-Parser der Route nur die behaupteten Bytes, der Rest wird nie als Körper gepuffert; belegt ist, dass die Route nie mehr als 1 MiB bekommt und `/health` danach 200 bleibt. AC-7: `/auth/apple` hat seine eigene Grenze von 16 KiB, deshalb ist „genau 1 MiB geht durch“ an den anderen Routen belegt; die Brücke prüft unabhängig vom Pfad. Zeilengrenze: ≈ 456 statt ≈ 210, von Henning nach RED angenommen (Kontext-Dokument).

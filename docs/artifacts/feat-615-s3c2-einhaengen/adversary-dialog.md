@@ -28,6 +28,10 @@ Datum: 2026-11-05 12:46
 **Adversary:** Early-Agreement-Skepsis: nicht nur gruen, jede AC an Code UND Test geprueft. Tests: AC-1 main.test.ts:327, AC-2 :350, AC-3 :367, AC-4 :381, AC-5 :396, AC-6 :440 (eigener TCP-Lauscher als Pool-Beleg, festgelegte Abweichung), AC-7 :481, AC-8 :520 (Route bekommt <= 1 MiB, /health 200, festgelegte Abweichung), AC-9 :535 (Gegenprobe 25x500 statt 404, festgelegte Abweichung), AC-10 :551, AC-11 :565, AC-12 :580, AC-13/14 :600. Versuche zu brechen: (1) Leerzeichen-Variablen: `!env[name]?.trim()` behandelt "   " als ungesetzt, bei Teilmenge prueft loadAppleConfig mit gleichem trim (required in apple.ts), Meldung nennt den Variablennamen, nie den Wert; (2) Wert in Fehlermeldung: main.ts:178 haengt nur error.message an, apple.ts unveraendert; (3) 503 vor migrate auch fuer GET/PUT/DELETE: gated prueft die Methode nicht, also ja; 405 kommt erst nach ready aus auth.ts; (4) JWKS nur mit config: :120; ohne config ist keys undefined und /auth/apple antwortet 503 aus auth.ts; (5) 413 an dispatch vorbei: :97 liegt in bridge, dispatch sieht die Anfrage nie; (6) logError-try/catch faengt synchrone Fehler, ausreichend fuer console.error; (7) Spreizungsreihenfolge: extraRoutes mit /health und /mcp sowie Auth-Pfade werden von :137-138 ueberschrieben, Test :551 belegt es. Keine reale Luecke gefunden ausser F001 (LOW). Verdict VERIFIED.
 **Implementierer:** keine Aenderung.
 
+### Runde 3
+**Adversary:** Seit Runde 2 nur Doku geaendert (Diff: CLAUDE.md 5 Zeilen, Spec-Changelog, kein server/-Code). Alle fuenf Aussagen gegen Imports und Aufrufstellen geprueft: accounts.ts "called by src/auth.ts" stimmt, server/src/auth.ts:68 findOrCreate, :72 createSession, :118 resolveSession, :94 endSession, :120 deleteAccount; kein anderer Importeur. apple.ts: loadAppleConfig nur in server/src/main.ts:36, verifyIdentityToken nur in server/src/auth.ts:63, Aussage genau. apple-jwks.ts "one instance per start() in main.ts": server/src/main.ts:120 createJwks, einziger Aufrufer. apple-vault.ts: server/src/auth.ts:69/71/104 encryptToken, storeRefreshToken, decryptToken, nur dort. apple-client.ts: server/src/auth.ts:65 redeemCode, :109 revokeToken; clientSecret wird nur intern in server/src/apple-client.ts:89/102 gerufen, die Zeile gilt fuer die Exporte redeemCode/revokeToken zutreffend, kein Fehler. AC-14 (CLAUDE.md-Teil): die auth.ts-, delete- und main.ts-Zeilen (CLAUDE.md:476-478) unveraendert, kein "nothing calls" mehr im Server-Abschnitt; der Diff zeigt ausschliesslich die fuenf Zeilen, kein anderer Teil beschaedigt. Suite neu: ./server/scripts/test-local.sh Exit 0, 227 tests, 227 pass, 0 fail, 0 skipped, Ausgabe in docs/artifacts/feat-615-s3c2-einhaengen/adversary-test-output.txt. Kein neuer Befund.
+**Implementierer:** keine Aenderung.
+
 ## Herkunft der Vorbedingungen
 
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
@@ -53,7 +57,7 @@ kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 
 VERDICT: VERIFIED
 
-Tests: 227 passed, 0 failed, 0 uebersprungen (test-local.sh Exit 0)
+Tests: 227 passed, 0 failed, 0 uebersprungen (test-local.sh Exit 0, Lauf Runde 3)
 
 Code reference: server/src/main.ts:76
 Code reference: server/test/main.test.ts:327
@@ -84,5 +88,18 @@ Confirmation: AC-14 Code reference: CLAUDE.md:478 (drei Dateien gegen Basis 253e
 
 - base: 253e90847bde572875e7dc004086d380e01a1c55
 - blob:94070d7035deccc79a36c767121878d218e70d60  CLAUDE.md
+- blob:65103f692e18dbbccba52d23fe015a910ea17d87  server/src/main.ts
+- blob:4537b33e9e1be8491ae56eb6810f761ff4d88d10  server/test/main.test.ts
+
+## Geprüfte Dateien
+
+- sha256:38c58c3e052002b3f3bdaa3b7cb6ba0fd15bf893e4b5572521ccdf8d6c86ed64  CLAUDE.md
+- sha256:87799cf75b2c1a89bec5cb9279742f2dadbe4dcdbac6bfa65772fd865b4b941d  server/src/main.ts
+- sha256:cf01043432a23a22240464090dd9176f42853834e457c51299bde6f61d1601e9  server/test/main.test.ts
+
+## Prüfbasis
+
+- base: 883effadf3e7ffd5835837c8e8f016d02b4e80e2
+- blob:090de3b5569c35ab440adbd5c32adc56b4546069  CLAUDE.md
 - blob:65103f692e18dbbccba52d23fe015a910ea17d87  server/src/main.ts
 - blob:4537b33e9e1be8491ae56eb6810f761ff4d88d10  server/test/main.test.ts
