@@ -145,3 +145,4 @@ entsteht erst nach dem PR und würde das QA-Gate vor dem Commit sperren.
 ## Changelog
 
 - 2026-11-05 — Spec angelegt (#846), Zeilengrenze 300 LoC zur Freigabe vorgeschlagen.
+- 2026-11-05 — Validierung: 374 LoC (Skript 77, Tests 239, Workflow 58), 74 über der Grenze von 300; Henning gab den Überhang frei (Tests tragen ihn). 13 neue Tests und 526 Skripttests grün.
