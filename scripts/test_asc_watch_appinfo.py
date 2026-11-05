@@ -220,6 +220,20 @@ class WorkflowTests(unittest.TestCase):
         self.assertLess(marker_check, text.index("gh issue comment 837"))
         self.assertTrue(re.search(r"GITHUB_TOKEN", text))
 
+    # AC-5: 5xx-Wiederholung endet weit vor dem 10-min-Limit
+    def test_workflow_sets_short_asc_timeout(self):
+        found = re.search(r"ASC_TIMEOUT_SECONDS:\s*\"?(\d+)\"?", self.text)
+        self.assertIsNotNone(found)
+        self.assertLessEqual(int(found.group(1)), 120)
+
+    # AC-10: Marker-Suche ohne Pipe (SIGPIPE unter pipefail), gh-Fehler bricht ab
+    def test_marker_search_without_pipe(self):
+        for line in self.text.splitlines():
+            if "gh issue view 837" in line or "$MARKER" in line:
+                self.assertNotRegex(line, r"\|\s*grep")
+        self.assertIn('> "$RUNNER_TEMP/comments.txt"', self.text)
+        self.assertIn('grep -qF "$MARKER" "$RUNNER_TEMP/comments.txt"', self.text)
+
 
 if __name__ == "__main__":
     unittest.main()

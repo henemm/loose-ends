@@ -1,0 +1,58 @@
+# Täglicher Wächter (#846): liest in App Store Connect, ob eine App-Info schreibbar ist oder Mac 1.0 die Prüfung verlassen hat,
+# und kommentiert dann genau einmal je Lage in #837 (Marker im Kommentar). Schreibt nichts in ASC. Wird nach #837 AC-9 entfernt.
+name: ASC Watch App Info
+
+on:
+  schedule:
+    - cron: "17 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: asc-watch-appinfo
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_POLL_SECONDS: "5"
+      ASC_TIMEOUT_SECONDS: "60"
+    steps:
+      - uses: actions/checkout@v7
+      - name: Unit tests
+        run: python3 scripts/test_asc_watch_appinfo.py
+      - name: Watch
+        id: watch
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT
+          umask 077
+          printf '%s\n' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"
+          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_watch_appinfo.py
+      - name: Comment in #837 once per Lage
+        if: steps.watch.outputs.LAGE != 'warten'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          LAGE: ${{ steps.watch.outputs.LAGE }}
+          MAC_STATE: ${{ steps.watch.outputs.MAC_STATE }}
+        run: |
+          MARKER="<!-- wachter-846:${LAGE} -->"
+          gh issue view 837 --json comments --jq '.comments[].body' > "$RUNNER_TEMP/comments.txt"
+          if grep -qF "$MARKER" "$RUNNER_TEMP/comments.txt"; then
+            echo "Marker ${LAGE} steht schon in #837, kein Kommentar"
+            exit 0
+          fi
+          case "$LAGE" in
+            editierbar) TEXT="Eine App-Info steht auf PREPARE_FOR_SUBMISSION. #837 AC-9 kann laufen: \`asc-app-info.yml aktion=untertitel\`." ;;
+            mac_fertig) TEXT="Mac 1.0 hat die Prüfung verlassen (Zustand ${MAC_STATE}), App-Infos prüfen." ;;
+            *) echo "Unbekannte Lage ${LAGE}, kein Kommentar"; exit 0 ;;
+          esac
+          printf '%s\n%s\n' "$MARKER" "$TEXT" > "$RUNNER_TEMP/comment.md"
+          gh issue comment 837 --body-file "$RUNNER_TEMP/comment.md"
