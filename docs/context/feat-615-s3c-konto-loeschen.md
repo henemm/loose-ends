@@ -102,3 +102,7 @@ Feature (Dienst, nur `server/`)
 
 ### Open Questions
 - keine (alles technisch; kein Pfad der Geräteliste berührt)
+
+## Freigabe Zeilengrenze (2026-11-05, nach RED)
+
+Tests 265 Zeilen statt geschätzt 110, Schnitt gesamt ≈ 300 statt ≈ 145 (Grenze 250). Henning per Auswahl: „Annehmen, so bauen“.
