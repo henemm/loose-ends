@@ -33,6 +33,10 @@ struct TaskListView: View {
     @State private var redating: TaskItem?
     /// Parents whose subtasks are folded out in the project view (#28); folded by default.
     @State private var unfolded: Set<UUID> = []
+    #if os(macOS)
+    /// The list's width on the Mac (#829): the margins that keep its rows in the 720 pt column.
+    @State private var listWidth: CGFloat = 0
+    #endif
     /// The disclosure arrow's width, so titles line up with and without one.
     @ScaledMetric(relativeTo: .body) private var disclosureWidth: CGFloat = 22
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -258,17 +262,27 @@ struct TaskListView: View {
     @ViewBuilder
     private func hull(_ list: some View) -> some View {
         if isWide {
+            #if os(macOS)
+            // The Mac lays its scroll pocket (`NSScrollPocket`) over the top of the scroll view, down to below the
+            // pinned head, and shows it when the pointer comes near. A list 720 pt wide made it a light box over
+            // the column alone (#829, found by a view-tree probe in CI, run 41902581639). The list now spans the detail column,
+            // so the pocket runs with the title bar as in any Mac app; insets keep the rows in the 720 pt column.
             list
                 .listStyle(.plain)
-                #if os(macOS)
-                // The Mac drew its hard scroll edge over the title and the first pinned head: a light strip with
-                // a line, as wide as the column (#829). The soft edge lets the paper run through.
-                .scrollEdgeEffectStyle(.soft, for: .top)
-                #endif
+                // `contentMargins` does not reach the rows of a Mac list (probe run 41907458406): the rows'
+                // own insets carry the column, `StartRowInsets` and `WideListRow` read it.
+                .environment(\.listColumnInset, max(0, (listWidth - 720) / 2))
+                .paperGround()
+                .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { listWidth = $0 }
+                .background(Paper.ground.ignoresSafeArea())
+            #else
+            list
+                .listStyle(.plain)
                 .paperGround()
                 .frame(maxWidth: 720)
                 .frame(maxWidth: .infinity)
                 .background(Paper.ground.ignoresSafeArea())
+            #endif
         } else {
             list.paperList()
         }
@@ -284,6 +298,10 @@ struct TaskListView: View {
     private func head(_ text: Text) -> some View {
         if isWide {
             text.captionHead().startRow(StartMetrics(typeSize))
+                #if os(macOS)
+                // A Mac section head ignores the row insets; the column inset comes as padding (#829).
+                .padding(.leading, max(0, (listWidth - 720) / 2))
+                #endif
         } else {
             text
         }
@@ -331,6 +349,9 @@ struct TaskListView: View {
             Section {
                 WeekString(beads: week.beads)
                     .listRowSeparator(.hidden)
+                    #if os(macOS)
+                    .modifier(MacColumnRow(wide: isWide, metrics: StartMetrics(typeSize)))
+                    #endif
                     .paperRow()
                     .accessibilityIdentifier("doneWeekString_\(week.week.lowerBound.timeIntervalSinceReferenceDate)")
                 ForEach(week.days, id: \.day) { day in
@@ -646,6 +667,24 @@ final class ChosenRows {
 
 /// The list's subtitle under its title, wide only (#477); compact stays exactly as it was. On wide
 /// it stays attached while empty, so the list keeps its identity when the last task is done.
+#if os(macOS)
+/// A wide Mac list's row without `wideListRow` (the week's string in "Completed"): the start row's
+/// insets, which carry the 720 pt column (#829).
+private struct MacColumnRow: ViewModifier {
+    let wide: Bool
+    let metrics: StartMetrics
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if wide {
+            content.startRow(metrics)
+        } else {
+            content
+        }
+    }
+}
+#endif
+
 private struct ListSubtitle: ViewModifier {
     let wide: Bool
     let text: String?
