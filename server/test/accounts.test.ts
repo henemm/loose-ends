@@ -6,6 +6,7 @@ import { join } from "node:path";
 import type pg from "pg";
 import { createSession, deleteAccount, endSession, findOrCreate, resolveSession } from "../src/accounts.ts";
 import { migrate } from "../src/migrate.ts";
+import { PgAdapter } from "../src/oauth-adapter.ts";
 import { freshPool } from "./db.ts";
 
 type Doc = Record<string, any>;
@@ -57,7 +58,7 @@ const totalResults = async (pool: pg.Pool) => (await pool.query("SELECT count(*)
 test("AC-1: the migrations apply 001 and 002 once, and the three account tables exist", async (t) => {
   const pool = await freshPool(t);
 
-  assert.deepEqual(await migrate(pool, migrations), ["001_claude_schema.sql", "002_accounts.sql", "003_apple_client_id.sql"]);
+  assert.deepEqual(await migrate(pool, migrations), ["001_claude_schema.sql", "002_accounts.sql", "003_apple_client_id.sql", "004_oauth.sql"]);
   assert.deepEqual(await migrate(pool, migrations), []);
   for (const table of ["accounts", "sessions", "apple_tokens"]) {
     assert.notEqual((await pool.query("SELECT to_regclass($1) AS oid", [table])).rows[0].oid, null, table);
@@ -169,6 +170,33 @@ test("delete: rundweg mit client_id", async (t) => {
     assert.deepEqual(await counts(pool, account.id), Object.fromEntries(TABLES.map((table) => [table, 0])), name);
   }
   assert.deepEqual(await deleteAccount(pool, "kein-konto"), { deleted: false, appleToken: null, clientId: null });
+});
+
+test("accounts: delete nimmt oauth zeilen mit", async (t) => {
+  const pool = await migrated(t);
+  const first = await filled(pool, "sub.oauth-a", 30, Buffer.from([1]));
+  const second = await filled(pool, "sub.oauth-b", 31, Buffer.from([2]));
+  const store = (model: string) => new PgAdapter(pool, model);
+  // Per account: its grant, a token of that grant, an interaction known only by the grant, a session by account.
+  const oauthRows = (account: string, tag: string): Array<[string, string, Record<string, unknown>]> => [
+    ["Grant", `grant-${tag}`, { accountId: account, clientId: "claude" }],
+    ["AccessToken", `at-${tag}`, { accountId: account, grantId: `grant-${tag}` }],
+    ["Interaction", `i-${tag}`, { grantId: `grant-${tag}`, uid: `uid-i-${tag}` }],
+    ["Session", `s-${tag}`, { accountId: account, uid: `uid-s-${tag}` }],
+  ];
+  for (const [model, id, payload] of [...oauthRows(first.id, "a"), ...oauthRows(second.id, "b")]) await store(model).upsert(id, payload, 3600);
+  await store("Client").upsert("claude", { client_id: "claude" });
+  const kept = (await pool.query(
+    "SELECT * FROM oauth_records WHERE account_id IS DISTINCT FROM $1 AND grant_id IS DISTINCT FROM 'grant-a' ORDER BY model, id_hash", [first.id],
+  )).rows;
+  assert.equal(kept.length, 5, "vier Zeilen von B und der Client");
+  const before = await counts(pool, second.id);
+
+  assert.deepEqual(await deleteAccount(pool, first.id), { deleted: true, appleToken: Buffer.from([1]), clientId: null });
+  for (const [model, id] of oauthRows(first.id, "a")) assert.equal(await store(model).find(id), undefined, model);
+  assert.deepEqual((await pool.query("SELECT * FROM oauth_records ORDER BY model, id_hash")).rows, kept);
+  assert.deepEqual(await counts(pool, first.id), Object.fromEntries(TABLES.map((table) => [table, 0])));
+  assert.deepEqual(await counts(pool, second.id), before);
 });
 
 test("AC-12: the account functions write nothing to the console, and an error names neither token nor apple_sub", async (t) => {

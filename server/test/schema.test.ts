@@ -57,12 +57,12 @@ async function refused(promise: Promise<unknown>, expected: Expect, name: string
 test("AC-1: the real migrations folder applies 001 once and creates the three tables", async (t) => {
   const pool = await freshPool(t);
 
-  assert.deepEqual(await migrate(pool, migrations), ["001_claude_schema.sql", "002_accounts.sql", "003_apple_client_id.sql"]);
+  assert.deepEqual(await migrate(pool, migrations), ["001_claude_schema.sql", "002_accounts.sql", "003_apple_client_id.sql", "004_oauth.sql"]);
   for (const table of ["transcripts", "orders", "order_results"]) {
     const result = await pool.query("SELECT to_regclass($1) AS oid", [table]);
     assert.notEqual(result.rows[0].oid, null, table);
   }
-  assert.equal((await pool.query("SELECT name FROM schema_migrations")).rowCount, 3);
+  assert.equal((await pool.query("SELECT name FROM schema_migrations")).rowCount, 4);
   assert.deepEqual(await migrate(pool, migrations), []);
 });
 
@@ -202,4 +202,48 @@ test("migration 003: additiv auf bestandsdaten", async (t) => {
   )).rows;
   assert.deepEqual(column, [{ data_type: "text", is_nullable: "YES" }]);
   assert.deepEqual(await migrate(pool, old), []);
+});
+
+test("migration 004: additiv auf bestandsdaten", async (t) => {
+  const pool = await freshPool(t);
+  const old = mkdtempSync(join(tmpdir(), "le-mig-"));
+  t.after(() => rmSync(old, { recursive: true, force: true }));
+  for (const name of ["001_claude_schema.sql", "002_accounts.sql", "003_apple_client_id.sql"]) copyFileSync(join(migrations, name), join(old, name));
+  await migrate(pool, old);
+  const [transcript, order] = contractExamples();
+  const account = (await pool.query("INSERT INTO accounts (apple_sub) VALUES ('sub.alt') RETURNING id")).rows[0].id;
+  await pool.query("INSERT INTO sessions (token_hash, account_id) VALUES ($1, $2)", [Buffer.from([4, 5]), account]);
+  await pool.query("INSERT INTO apple_tokens (account_id, refresh_token_enc, client_id) VALUES ($1, $2, 'web')", [account, Buffer.from([1, 2, 3])]);
+  await insertTranscript(pool, transcript, account);
+  await insertOrder(pool, order, account);
+  const tables = ["accounts", "sessions", "apple_tokens", "transcripts", "orders"];
+  const snapshot = () => Promise.all(tables.map(async (table) => (await pool.query(`SELECT * FROM ${table} ORDER BY 1`)).rows));
+  const before = await snapshot();
+
+  copyFileSync(join(migrations, "004_oauth.sql"), join(old, "004_oauth.sql"));
+  assert.deepEqual(await migrate(pool, old), ["004_oauth.sql"]);
+  assert.deepEqual(await snapshot(), before);
+  assert.deepEqual(await migrate(pool, old), []);
+
+  const columns = (await pool.query(
+    `SELECT column_name, data_type, is_nullable FROM information_schema.columns
+     WHERE table_schema = current_schema() AND table_name = 'oauth_records' ORDER BY column_name`,
+  )).rows;
+  const tz = "timestamp with time zone";
+  assert.deepEqual(columns, [
+    ["account_id", "text", "YES"], ["consumed_at", tz, "YES"], ["created_at", tz, "NO"], ["expires_at", tz, "YES"],
+    ["grant_id", "text", "YES"], ["id_hash", "bytea", "NO"], ["model", "text", "NO"], ["payload", "jsonb", "NO"], ["uid", "text", "YES"],
+  ].map(([column_name, data_type, is_nullable]) => ({ column_name, data_type, is_nullable })));
+  const keys = (await pool.query(
+    `SELECT contype, confdeltype, pg_get_constraintdef(oid) AS def FROM pg_constraint
+     WHERE conrelid = 'oauth_records'::regclass AND contype IN ('p', 'f') ORDER BY contype`,
+  )).rows;
+  assert.equal(keys.length, 2);
+  assert.equal(keys[0].def, "FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE");
+  assert.equal(keys[0].confdeltype, "c");
+  assert.equal(keys[1].def, "PRIMARY KEY (model, id_hash)");
+  const indexes = (await pool.query("SELECT indexdef FROM pg_indexes WHERE schemaname = current_schema() AND tablename = 'oauth_records'")).rows;
+  for (const column of ["grant_id", "uid", "account_id", "expires_at"]) {
+    assert.ok(indexes.some((index: { indexdef: string }) => index.indexdef.endsWith(`(${column})`)), `Index auf ${column}`);
+  }
 });
