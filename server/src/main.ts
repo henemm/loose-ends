@@ -12,12 +12,15 @@ import { authRoutes } from "./auth.ts";
 import { ErrorWindow, healthHandler } from "./health.ts";
 import { mcpHandler } from "./mcp.ts";
 import { migrate } from "./migrate.ts";
+import type { OAuthTokenVerifier } from "@modelcontextprotocol/server";
+import { bearerGate, DEFAULT_PUBLIC_URL, METADATA_PATH, metadataRoute, publicUrlFromEnv, rejectAll } from "./oauth-resource.ts";
 
 export type Route = (request: Request) => Promise<Response>;
 export type StartOptions = {
   databaseUrl: string; port: number; host?: string; migrationsDir: string; retryMs?: number; maxAttempts?: number;
   now?: () => number; applicationName?: string; extraRoutes?: Record<string, Route>;
   auth?: { config?: AppleConfig; fetch?: typeof fetch };
+  oauth?: { publicUrl?: string; verifier?: OAuthTokenVerifier };
 };
 export type Running = { url: string; ready: Promise<void>; close: () => Promise<void> };
 
@@ -130,12 +133,18 @@ export async function start(options: StartOptions): Promise<Running> {
   const mcp = mcpHandler(pool);
   let migrated = false;
   const isReady = () => migrated;
-  // /health and /mcp last: neither auth nor extraRoutes can replace them.
+  const { publicUrl = DEFAULT_PUBLIC_URL, verifier = rejectAll } = options.oauth ?? {};
+  const gate = bearerGate(publicUrl, verifier);
+  // Metadata, /health and /mcp last: neither auth nor extraRoutes can replace them. Metadata needs no database.
   const routes: Record<string, Route> = {
     ...mountAuth(options, pool, isReady),
     ...options.extraRoutes,
+    [METADATA_PATH]: metadataRoute(publicUrl),
     "/health": healthHandler({ pool, isMigrated: isReady, window }),
-    "/mcp": gated(isReady, (request) => mcp.fetch(request)),
+    "/mcp": gated(isReady, async (request) => {
+      const checked = await gate(request);
+      return checked instanceof Response ? checked : mcp.fetch(request, { authInfo: checked });
+    }),
   };
   const server = http.createServer((req, res) => void bridge(req, res, (request) => dispatch(routes, window, request)));
   try {
@@ -178,9 +187,16 @@ async function main(): Promise<void> {
     logError(`apple config invalid: ${(error as Error).message}`);
     process.exit(1);
   }
+  let publicUrl: string;
+  try {
+    publicUrl = publicUrlFromEnv(process.env);
+  } catch {
+    logError("public url invalid");
+    process.exit(1);
+  }
   const running = await start({
     databaseUrl, port: Number(process.env.PORT ?? 8080), host: process.env.HOST ?? "127.0.0.1",
-    migrationsDir: join(import.meta.dirname, "../migrations"), auth: { config },
+    migrationsDir: join(import.meta.dirname, "../migrations"), auth: { config }, oauth: { publicUrl },
   });
   let stopping = false;
   const stop = async (code: number) => {

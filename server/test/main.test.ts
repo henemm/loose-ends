@@ -16,6 +16,7 @@ import { createHash, generateKeyPairSync, randomBytes, sign } from "node:crypto"
 import { connect } from "node:net";
 import { createSession, findOrCreate, resolveSession } from "../src/accounts.ts";
 import { loadAppleConfig } from "../src/apple.ts";
+import { OAuthError, OAuthErrorCode, type AuthInfo } from "@modelcontextprotocol/server";
 
 type Doc = Record<string, any>;
 type T = { after: (fn: () => Promise<void>) => void; mock: any };
@@ -95,11 +96,26 @@ test("AC-2 (S1): without a database /health and /mcp answer 503, ready is refuse
   await assert.doesNotReject(running.close());
 });
 
+// #621 S1: /mcp sits behind the bearer check; this verifier knows one token for the configured resource, without an account.
+const MCP_TOKEN = "test-token-ohne-konto";
+const tokenVerifier = {
+  verifyAccessToken: async (token: string): Promise<AuthInfo> => {
+    if (token !== MCP_TOKEN) throw new OAuthError(OAuthErrorCode.InvalidToken, "unknown token");
+    return { token, clientId: "test", scopes: [], expiresAt: Math.floor(Date.now() / 1000) + 3600,
+      resource: new URL("https://loose-ends.henemm.com/mcp"), extra: {} };
+  },
+};
+const bearerTransport = (url: string) =>
+  new StreamableHTTPClientTransport(new URL(`${url}/mcp`), { requestInit: { headers: { Authorization: `Bearer ${MCP_TOKEN}` } } });
+
 test("AC-3 (S1): /mcp answers initialize with serverInfo and refuses get_now without an account", async (t) => {
-  const { url, ready } = await service(t);
+  const { url, ready } = await service(t, { oauth: { verifier: tokenVerifier } } as Options);
   await ready;
+  const bare = await fetch(`${url}/mcp`, { method: "POST", headers: { "content-type": "application/json" }, body: "{}" });
+  assert.equal(bare.status, 401, "ohne Token");
+  assert.match(bare.headers.get("www-authenticate") ?? "", /^Bearer /);
   const client = new Client({ name: "test", version: "1" });
-  await client.connect(new StreamableHTTPClientTransport(new URL(`${url}/mcp`)));
+  await client.connect(bearerTransport(url));
   t.after(async () => { await client.close(); });
   assert.equal(client.getServerVersion()?.name, "loose-ends");
   const result: Doc = await client.callTool({ name: "get_now", arguments: {} });
@@ -550,13 +566,15 @@ test("einhaengen: 413 kippt health nicht", async (t) => {
 
 test("einhaengen: health und mcp nicht ueberschreibbar", async (t) => {
   const fake = async () => new Response("gefaelscht", { status: 418 });
-  const running = await service(t, { auth: {}, extraRoutes: { "/health": fake, "/mcp": fake } });
+  const running = await service(t, { auth: {}, extraRoutes: { "/health": fake, "/mcp": fake }, oauth: { verifier: tokenVerifier } } as Options);
   await running.ready;
   const { status, body } = await health(running.url);
   assert.equal(status, 200);
   assert.deepEqual(Object.keys(body).sort(), ["db", "errorRate", "migrated", "requests", "status"]);
+  const bare = await fetch(`${running.url}/mcp`, { method: "POST", headers: { "content-type": "application/json" }, body: "{}" });
+  assert.equal(bare.status, 401, "/mcp ohne Token 401 statt 418");
   const client = new Client({ name: "test", version: "1" });
-  await client.connect(new StreamableHTTPClientTransport(new URL(`${running.url}/mcp`)));
+  await client.connect(bearerTransport(running.url));
   t.after(async () => { await client.close(); });
   assert.equal(client.getServerVersion()?.name, "loose-ends");
   assert.equal((await fetch(`${running.url}/auth/logout`, { method: "POST" })).status, 401, "auth daneben eingehängt");

@@ -1,0 +1,26 @@
+=== GET /health
+200
+=== POST /mcp ohne Token
+HTTP/1.1 401 Unauthorized
+content-type: application/json
+www-authenticate: Bearer error="invalid_token", error_description="Missing Authorization header", resource_metadata="https://loose-ends.henemm.com/.well-known/oauth-protected-resource/mcp"
+Date: Thu, 05 Nov 2026 15:16:33 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+{"error":"invalid_token","error_description":"Missing Authorization header"}
+=== GET Metadaten
+HTTP/1.1 200 OK
+content-type: application/json
+Date: Thu, 05 Nov 2026 15:16:33 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+{"resource":"https://loose-ends.henemm.com/mcp","authorization_servers":["https://loose-ends.henemm.com"],"bearer_methods_supported":["header"]}
+=== GET AS-Metadaten (erwartet 404)
+404
+=== Dienst-Log
+2026-11-05T15:16:33.768Z listening
+2026-11-05T15:16:33.789Z migrated
