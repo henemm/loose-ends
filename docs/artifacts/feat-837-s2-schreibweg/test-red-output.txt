@@ -1,0 +1,209 @@
+FFFFFFF/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:597: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 53402)>
+  self._cond = Condition(Lock())
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:597: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 53403)>
+  self._cond = Condition(Lock())
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:597: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 53404)>
+  self._cond = Condition(Lock())
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:597: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 53405)>
+  self._cond = Condition(Lock())
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:597: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 53406)>
+  self._cond = Condition(Lock())
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:597: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 53407)>
+  self._cond = Condition(Lock())
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:597: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 53408)>
+  self._cond = Condition(Lock())
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FFFFF/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/typing.py:538: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 53413)>
+  def __init__(self, getitem):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/typing.py:538: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 53414)>
+  def __init__(self, getitem):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/typing.py:538: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 53415)>
+  def __init__(self, getitem):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/typing.py:538: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 53416)>
+  def __init__(self, getitem):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/typing.py:538: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 53417)>
+  def __init__(self, getitem):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+EE
+======================================================================
+ERROR: test_repo_text_file_parses_and_fits_limit (__main__.TextFileTests.test_repo_text_file_parses_and_fits_limit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 291, in test_repo_text_file_parses_and_fits_limit
+    from asc_app_info import MAX_CHARS, wanted_texts
+ModuleNotFoundError: No module named 'asc_app_info'. Did you mean: 'test_asc_app_info'?
+
+======================================================================
+ERROR: test_workflow_has_choice_unit_tests_and_secrets (__main__.WorkflowTests.test_workflow_has_choice_unit_tests_and_secrets)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 304, in test_workflow_has_choice_unit_tests_and_secrets
+    workflow = WORKFLOW.read_text()
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 986, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 970, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/.github/workflows/asc-app-info.yml'
+
+======================================================================
+FAIL: test_403_and_409_give_clear_message (__main__.AppInfoTests.test_403_and_409_give_clear_message)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 239, in test_403_and_409_give_clear_message
+    self.assert_failed(result)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 152, in assert_failed
+    self.assertIn("::error::", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '::error::' not found in ''
+
+======================================================================
+FAIL: test_different_subtitle_patches_once_with_subtitle_only (__main__.AppInfoTests.test_different_subtitle_patches_once_with_subtitle_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 192, in test_different_subtitle_patches_once_with_subtitle_only
+    self.assert_ok(result)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 148, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/asc_app_info.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_equal_values_write_nothing (__main__.AppInfoTests.test_equal_values_write_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 182, in test_equal_values_write_nothing
+    self.assert_ok(result)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 148, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/asc_app_info.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_lesen_never_writes_and_prints_values (__main__.AppInfoTests.test_lesen_never_writes_and_prints_values)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 259, in test_lesen_never_writes_and_prints_values
+    self.assert_ok(result)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 148, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/asc_app_info.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_locked_appinfos_abort_with_zero_writes (__main__.AppInfoTests.test_locked_appinfos_abort_with_zero_writes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 163, in test_locked_appinfos_abort_with_zero_writes
+    self.assert_failed(result)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 152, in assert_failed
+    self.assertIn("::error::", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '::error::' not found in ''
+
+======================================================================
+FAIL: test_missing_en_us_posts_once_with_locale_name_subtitle_and_appinfo (__main__.AppInfoTests.test_missing_en_us_posts_once_with_locale_name_subtitle_and_appinfo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 206, in test_missing_en_us_posts_once_with_locale_name_subtitle_and_appinfo
+    self.assert_ok(result)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 148, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/asc_app_info.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_missing_section_aborts_before_any_request (__main__.AppInfoTests.test_missing_section_aborts_before_any_request)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 228, in test_missing_section_aborts_before_any_request
+    self.assert_failed(result)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 152, in assert_failed
+    self.assertIn("::error::", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '::error::' not found in ''
+
+======================================================================
+FAIL: test_output_has_no_secrets (__main__.AppInfoTests.test_output_has_no_secrets)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 277, in test_output_has_no_secrets
+    self.assertTrue("::error::" in result.stdout or "zusammenfassung geschrieben=" in result.stdout, output)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/asc_app_info.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_several_editable_appinfos_abort (__main__.AppInfoTests.test_several_editable_appinfos_abort)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 174, in test_several_editable_appinfos_abort
+    self.assert_failed(result)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 152, in assert_failed
+    self.assertIn("::error::", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '::error::' not found in ''
+
+======================================================================
+FAIL: test_too_long_text_aborts_before_any_request (__main__.AppInfoTests.test_too_long_text_aborts_before_any_request)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 220, in test_too_long_text_aborts_before_any_request
+    self.assert_failed(result)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 152, in assert_failed
+    self.assertIn("::error::", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '::error::' not found in ''
+
+======================================================================
+FAIL: test_unknown_action_aborts_before_any_request (__main__.AppInfoTests.test_unknown_action_aborts_before_any_request)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 284, in test_unknown_action_aborts_before_any_request
+    self.assert_failed(result)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 152, in assert_failed
+    self.assertIn("::error::", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '::error::' not found in ''
+
+======================================================================
+FAIL: test_verification_mismatch_is_error (__main__.AppInfoTests.test_verification_mismatch_is_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 249, in test_verification_mismatch_is_error
+    self.assert_failed(result)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 152, in assert_failed
+    self.assertIn("::error::", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '::error::' not found in ''
+
+----------------------------------------------------------------------
+Ran 14 tests in 8.452s
+
+FAILED (failures=12, errors=2)
