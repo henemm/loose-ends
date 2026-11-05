@@ -204,3 +204,4 @@ Kein Pfad der Geräteliste berührt (nur `server/`). Die Abnahme endet nach den 
 ## Changelog
 
 - 2026-11-05: Initial spec created (Schnitt 2)
+- 2026-11-05: Validation (/60-validate): 259/259 grün, 6 Dateien wie geplant, längste Funktion 17 Zeilen. Abweichungen, angenommen und für S3 vermerkt: AC-11/AC-12 laufen über den Standard-Pool (max. 10 Verbindungen), also 10-fach statt 20-fach gleichzeitig; die Atomarität liegt im SQL-Statement und ist damit belegt. AC-17 schneidet eine Folge aller Adapter-Methoden samt Fehlerpfaden mit, nicht jeden Testfall einzeln; der Adapter hat keine Ausgabe. AC-16: `message` ohne IDs, aber `detail` des Postgres-Fehlers nennt die Konto-ID; der Dienst protokolliert heute nur feste Texte, S3 muss den Fehler neutral weiterreichen oder nie das Fehlerobjekt protokollieren.
