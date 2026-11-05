@@ -11,6 +11,11 @@ import { start } from "../src/main.ts";
 import { ErrorWindow, healthHandler } from "../src/health.ts";
 import { putTranscript } from "../src/transcripts.ts";
 import { putOrder } from "../src/orders.ts";
+import { spawn } from "node:child_process";
+import { createHash, generateKeyPairSync, randomBytes, sign } from "node:crypto";
+import { connect } from "node:net";
+import { createSession, findOrCreate, resolveSession } from "../src/accounts.ts";
+import { loadAppleConfig } from "../src/apple.ts";
 
 type Doc = Record<string, any>;
 type T = { after: (fn: () => Promise<void>) => void; mock: any };
@@ -225,4 +230,379 @@ test("AC-10 (S1): no title, order id, database error text or URL in any answer o
   for (const text of [...bodies, ...lines]) for (const word of forbidden) assert.ok(!text.includes(word), `${word} in ${text}`);
   assert.ok(lines.length > 0, "keine Logzeile aufgefangen");
   for (const line of lines) assert.match(line, ISO);
+});
+
+// Schnitt 3c-2: the auth routes mounted by start(); Apple is a self-made key pair behind a counting fetch, no network.
+const KEYS_URL = "https://appleid.apple.com/auth/keys";
+const TOKEN_URL = "https://appleid.apple.com/auth/token";
+const A_IDS = ["com.henning.looseends", "com.henning.looseends.connector"];
+const A_SUB = "001234.feedface0123456789.0815";
+const A_NONCE = "nonce-einhaengen-4711";
+const A_CODE = "CODE-EINHAENGEN-4711";
+const A_REFRESH = "REFRESH-EINHAENGEN-4711";
+const MIB = 1024 * 1024;
+const aRsa = generateKeyPairSync("rsa", { modulusLength: 2048 });
+const aEc = generateKeyPairSync("ec", { namedCurve: "P-256" });
+const A_JWK = { ...aRsa.publicKey.export({ format: "jwk" }), kid: "E1", alg: "RS256", use: "sig" };
+const A_ENV: Record<string, string> = {
+  APPLE_TEAM_ID: "TEAMEINH01", APPLE_KEY_ID: "KEYEINH001", APPLE_CLIENT_IDS: A_IDS.join(","),
+  APPLE_PRIVATE_KEY: (aEc.privateKey.export({ type: "pkcs8", format: "pem" }) as string).replace(/\n/g, "\\n"),
+  APPLE_TOKEN_KEY: randomBytes(32).toString("base64"),
+};
+const aConfig = loadAppleConfig(A_ENV);
+// Every value of the environment, and the key body alone, must never reach a log line or a message.
+const A_VALUES = [...Object.values(A_ENV), ...A_IDS, A_ENV.APPLE_PRIVATE_KEY.split("\\n")[1]];
+
+const aSeg = (x: unknown) => Buffer.from(JSON.stringify(x)).toString("base64url");
+function idToken(sub = A_SUB): string {
+  const now = Math.floor(Date.now() / 1000);
+  const nonce = createHash("sha256").update(A_NONCE).digest("hex");
+  const data = `${aSeg({ alg: "RS256", kid: "E1" })}.${aSeg({ iss: "https://appleid.apple.com", aud: A_IDS[0], sub, iat: now, exp: now + 600, nonce })}`;
+  return `${data}.${sign("sha256", Buffer.from(data), aRsa.privateKey).toString("base64url")}`;
+}
+
+// Fake Apple: keys, token and revoke; counts every call by URL.
+function fakeApple(revoke: "ok" | "throws" = "ok") {
+  const urls: string[] = [];
+  const fetch = (async (input: string | URL) => {
+    const url = String(input);
+    urls.push(url);
+    if (url === KEYS_URL) return Response.json({ keys: [A_JWK] });
+    if (url === TOKEN_URL) return Response.json({ refresh_token: A_REFRESH, id_token: idToken() });
+    if (revoke === "throws") throw new Error("netz-weg-4711");
+    return new Response(null, { status: 200 });
+  }) as unknown as typeof globalThis.fetch;
+  return { urls, fetch, keyCalls: () => urls.filter((url) => url === KEYS_URL).length };
+}
+
+const signIn = (url: string) => fetch(`${url}/auth/apple`, {
+  method: "POST", headers: { "content-type": "application/json" },
+  body: JSON.stringify({ identityToken: idToken(), nonce: A_NONCE, code: A_CODE }),
+});
+const withBearer = (url: string, path: string, token: string) =>
+  fetch(`${url}${path}`, { method: "POST", headers: { authorization: `Bearer ${token}` } });
+
+// A data pool on the service's own schema, ended after the test.
+function dataPool(t: T, databaseUrl: string): pg.Pool {
+  const pool = new pg.Pool({ connectionString: databaseUrl });
+  t.after(async () => { await pool.end(); });
+  return pool;
+}
+async function member(pool: pg.Pool, sub = A_SUB) {
+  const id = await findOrCreate(pool, sub);
+  return { id, token: await createSession(pool, id) };
+}
+
+// A counting route that reads the whole body; maxSeen is the largest body it ever got.
+function counter() {
+  const c = { calls: 0, maxSeen: 0, route: async (request: Request) => {
+    c.calls++;
+    c.maxSeen = Math.max(c.maxSeen, (await request.arrayBuffer()).byteLength);
+    return new Response(null, { status: 204 });
+  } };
+  return c;
+}
+
+type Sent = { status: number; connection: string | undefined; body: string } | { aborted: true };
+// POST over node:http with a keep-alive agent (so "connection: close" comes from the service); an error after the answer is ignored.
+function send(url: string, path: string, parts: Buffer[], headers: Record<string, string> = {}): Promise<Sent> {
+  const agent = new http.Agent({ keepAlive: true });
+  return new Promise<Sent>((done) => {
+    const request = http.request(`${url}${path}`, { method: "POST", headers, agent }, (answer) => {
+      let body = "";
+      answer.setEncoding("utf8");
+      answer.on("data", (chunk) => { body += chunk; });
+      const finish = () => done({ status: answer.statusCode!, connection: answer.headers.connection, body });
+      answer.on("end", finish);
+      answer.on("error", finish);
+    });
+    request.on("error", () => done({ aborted: true }));
+    for (const part of parts) request.write(part);
+    request.end();
+  }).finally(() => agent.destroy());
+}
+const sized = (url: string, path: string, size: number) =>
+  send(url, path, [Buffer.alloc(size, 0x61)], { "content-type": "application/json", "content-length": String(size) });
+
+test("einhaengen: auth vor migrate 503", async (t) => {
+  const port = await freePort();
+  const apple = fakeApple();
+  const running = await start({
+    databaseUrl: `postgres://postgres@127.0.0.1:${port}/postgres`, port: 0, migrationsDir: migrations, retryMs: 50, maxAttempts: 40,
+    auth: { config: aConfig, fetch: apple.fetch },
+  });
+  t.after(running.close);
+  const refused = assert.rejects(running.ready);
+  const answers = [await signIn(running.url), await withBearer(running.url, "/auth/logout", "x"), await withBearer(running.url, "/auth/delete", "x"),
+    await fetch(`${running.url}/mcp`, { method: "POST", headers: { "content-type": "application/json" }, body: "{}" })];
+  for (const answer of answers) {
+    assert.equal(answer.status, 503, answer.url);
+    assert.equal(await answer.text(), "", answer.url);
+  }
+  assert.equal(apple.urls.length, 0);
+  await refused;
+  await running.close();
+  const live = await service(t, { auth: { config: aConfig, fetch: apple.fetch } });
+  await live.ready;
+  assert.equal((await fetch(`${live.url}/auth/logout`, { method: "POST" })).status, 401, "nach ready läuft logout");
+});
+
+test("einhaengen: ohne config logout und delete laufen", async (t) => {
+  const apple = fakeApple();
+  const running = await service(t, { auth: { fetch: apple.fetch } });
+  await running.ready;
+  const pool = dataPool(t, running.databaseUrl);
+  const refused = await signIn(running.url);
+  assert.equal(refused.status, 503);
+  assert.equal(await refused.text(), "");
+  const leaving = await member(pool, `${A_SUB}.a`);
+  assert.equal((await withBearer(running.url, "/auth/logout", leaving.token)).status, 204);
+  assert.equal(await resolveSession(pool, leaving.token), null);
+  const gone = await member(pool, `${A_SUB}.b`);
+  assert.equal((await withBearer(running.url, "/auth/delete", gone.token)).status, 204);
+  assert.equal((await pool.query("SELECT count(*)::int AS n FROM accounts WHERE id = $1", [gone.id])).rows[0].n, 0);
+  assert.equal(apple.urls.length, 0, "ohne config kein Apple-Aufruf, auch kein JWKS");
+});
+
+test("einhaengen: anmelden und abmelden mit config", async (t) => {
+  const apple = fakeApple();
+  const running = await service(t, { auth: { config: aConfig, fetch: apple.fetch } });
+  await running.ready;
+  const pool = dataPool(t, running.databaseUrl);
+  const answer = await signIn(running.url);
+  assert.equal(answer.status, 200);
+  const { sessionToken } = (await answer.json()) as { sessionToken: string };
+  assert.ok(typeof sessionToken === "string" && sessionToken !== "");
+  assert.notEqual(await resolveSession(pool, sessionToken), null);
+  assert.equal((await withBearer(running.url, "/auth/logout", sessionToken)).status, 204);
+  assert.equal(await resolveSession(pool, sessionToken), null);
+});
+
+test("einhaengen: jwks lazy und einmal", async (t) => {
+  const apple = fakeApple();
+  const running = await service(t, { auth: { config: aConfig, fetch: apple.fetch } });
+  await running.ready;
+  await health(running.url);
+  assert.equal(apple.keyCalls(), 0, "kein Vorladen");
+  for (let i = 0; i < 2; i++) assert.equal((await signIn(running.url)).status, 200, `Anmeldung ${i + 1}`);
+  assert.equal(apple.keyCalls(), 1, "eine Instanz, Cache");
+  const bare = fakeApple();
+  const without = await service(t, { auth: { fetch: bare.fetch } });
+  await without.ready;
+  assert.equal((await signIn(without.url)).status, 503);
+  assert.equal(bare.keyCalls(), 0, "ohne config nie");
+});
+
+test("einhaengen: weiche apple env", async () => {
+  const { appleConfigFromEnv } = await import("../src/main.ts");
+  assert.equal(typeof appleConfigFromEnv, "function", "appleConfigFromEnv fehlt");
+  const blank = Object.fromEntries(Object.keys(A_ENV).map((name) => [name, "  "]));
+  const cases: [string, Record<string, string>, RegExp | "none" | "config"][] = [
+    ["keine", {}, "none"],
+    ["nur Leerzeichen", blank, "none"],
+    ["alle gültig", A_ENV, "config"],
+    ...Object.keys(A_ENV).map((name): [string, Record<string, string>, RegExp] => {
+      const env = { ...A_ENV };
+      delete env[name];
+      return [`${name} fehlt`, env, new RegExp(name)];
+    }),
+    ["Schlüssel unlesbar", { ...A_ENV, APPLE_PRIVATE_KEY: "kein-schluessel-4711" }, /APPLE_PRIVATE_KEY/],
+    ["Token-Schlüssel 16 Byte", { ...A_ENV, APPLE_TOKEN_KEY: randomBytes(16).toString("base64") }, /APPLE_TOKEN_KEY/],
+  ];
+  for (const [name, env, expected] of cases) {
+    if (expected === "none") { assert.equal(appleConfigFromEnv(env), undefined, name); continue; }
+    if (expected === "config") { assert.equal(appleConfigFromEnv(env)?.teamId, A_ENV.APPLE_TEAM_ID, name); continue; }
+    assert.throws(() => appleConfigFromEnv(env), (error: Error) => {
+      assert.match(error.message, expected, name);
+      for (const value of [...A_VALUES, ...Object.values(env)]) assert.ok(!error.message.includes(value), `${name}: Wert in der Meldung`);
+      return true;
+    }, name);
+  }
+});
+
+// The real process: main.ts as a child, without the test runner's context and without any APPLE_* of this shell.
+const MAIN = join(import.meta.dirname, "../src/main.ts");
+function child(env: Record<string, string>) {
+  const base = Object.fromEntries(Object.entries(process.env).filter(([k]) => !k.startsWith("APPLE_") && k !== "NODE_TEST_CONTEXT"));
+  const proc = spawn(process.execPath, [MAIN], { env: { ...base, HOST: "127.0.0.1", ...env }, stdio: ["ignore", "pipe", "pipe"] });
+  let output = "";
+  proc.stdout.on("data", (chunk) => { output += chunk; });
+  proc.stderr.on("data", (chunk) => { output += chunk; });
+  const exited = new Promise<number | null>((done) => proc.on("exit", (code) => done(code)));
+  return { proc, exited, output: () => output };
+}
+async function within<V>(promise: Promise<V>, ms: number, onLate: () => void): Promise<V | "late"> {
+  let timer: NodeJS.Timeout | undefined;
+  const late = new Promise<"late">((done) => { timer = setTimeout(() => { onLate(); done("late"); }, ms); });
+  try { return await Promise.race([promise, late]); } finally { clearTimeout(timer); }
+}
+
+test("einhaengen: prozess bricht bei falscher config ab", async (t) => {
+  const dbHits: number[] = [];
+  const fakeDb = createServer((socket) => { dbHits.push(1); socket.destroy(); });
+  await new Promise<void>((done) => fakeDb.listen(0, "127.0.0.1", done));
+  t.after(() => new Promise<void>((done) => fakeDb.close(() => done())));
+  const dbUrl = `postgres://postgres@127.0.0.1:${(fakeDb.address() as { port: number }).port}/postgres`;
+  const partial = { ...A_ENV };
+  delete partial.APPLE_TOKEN_KEY;
+  const cases: [string, Record<string, string>, RegExp][] = [
+    ["APPLE_TOKEN_KEY fehlt", partial, /apple config invalid: .*APPLE_TOKEN_KEY/],
+    ["Schlüssel unlesbar", { ...A_ENV, APPLE_PRIVATE_KEY: "kein-schluessel-4711" }, /apple config invalid: .*APPLE_PRIVATE_KEY/],
+    ["Token-Schlüssel 16 Byte", { ...A_ENV, APPLE_TOKEN_KEY: randomBytes(16).toString("base64") }, /apple config invalid: .*APPLE_TOKEN_KEY/],
+  ];
+  for (const [name, env, line] of cases) {
+    dbHits.length = 0;
+    const run = child({ ...env, DATABASE_URL: dbUrl, PORT: String(await freePort()) });
+    const code = await within(run.exited, 5000, () => run.proc.kill("SIGKILL"));
+    assert.equal(code, 1, `${name}: Exit-Code`);
+    assert.doesNotMatch(run.output(), /listening/, `${name}: hat gelauscht`);
+    assert.equal(dbHits.length, 0, `${name}: Pool geöffnet`);
+    assert.match(run.output(), line, name);
+    for (const value of [...A_VALUES, ...Object.values(env)]) assert.ok(!run.output().includes(value), `${name}: Wert in der Ausgabe`);
+  }
+  const admin = new pg.Pool({ connectionString: databaseUrl });
+  const schema = `t_${randomUUID().replaceAll("-", "")}`;
+  await admin.query(`CREATE SCHEMA ${schema}`);
+  t.after(async () => { await admin.query(`DROP SCHEMA ${schema} CASCADE`); await admin.end(); });
+  const url = new URL(databaseUrl!);
+  url.searchParams.set("options", `-c search_path=${schema}`);
+  const port = await freePort();
+  const run = child({ DATABASE_URL: url.toString(), PORT: String(port) });
+  let status = 0;
+  for (let i = 0; i < 100 && status !== 200; i++) {
+    await new Promise((done) => setTimeout(done, 100));
+    status = await fetch(`http://127.0.0.1:${port}/health`).then((answer) => answer.status, () => 0);
+  }
+  run.proc.kill("SIGTERM");
+  assert.equal(status, 200, `ohne APPLE_* kein /health 200: ${run.output()}`);
+  assert.equal(await within(run.exited, 5000, () => run.proc.kill("SIGKILL")), 0);
+});
+
+test("einhaengen: body ueber 1 mib 413", async (t) => {
+  const probe = counter();
+  const running = await service(t, { auth: {}, extraRoutes: { "/zaehler": probe.route } });
+  await running.ready;
+  for (const size of [MIB + 1, 2 * MIB]) {
+    for (const path of ["/auth/apple", "/auth/logout", "/auth/delete", "/mcp", "/zaehler"]) {
+      const sent = await sized(running.url, path, size);
+      assert.ok(!("aborted" in sent), `${path} ${size}: Verbindung abgebrochen statt 413`);
+      assert.equal(sent.status, 413, `${path} ${size}`);
+      assert.equal(sent.body, "", `${path} ${size}`);
+      assert.equal(sent.connection, "close", `${path} ${size}`);
+    }
+  }
+  assert.equal(probe.calls, 0, "Route trotz zu großem Body aufgerufen");
+  const exact = await sized(running.url, "/zaehler", MIB);
+  assert.ok(!("aborted" in exact) && exact.status === 204, "genau 1 MiB geht durch");
+  assert.equal(probe.maxSeen, MIB);
+  // /auth/apple keeps its own 16 KiB limit, so exactly 1 MiB is shown on the other three: their route answers, not the bridge.
+  for (const [path, expected] of [["/auth/logout", 401], ["/auth/delete", 401]] as const) {
+    const sent = await sized(running.url, path, MIB);
+    assert.ok(!("aborted" in sent) && sent.status === expected, `${path} genau 1 MiB`);
+  }
+  const mcp = await sized(running.url, "/mcp", MIB);
+  assert.ok(!("aborted" in mcp) && mcp.status !== 413, "/mcp genau 1 MiB");
+});
+
+// Raw HTTP/1.1 with a Content-Length that claims less than is sent; resolves with all bytes the service answered.
+function rawPost(url: string, path: string, claimed: number, size: number): Promise<string> {
+  return new Promise((done) => {
+    const socket = connect(Number(new URL(url).port), "127.0.0.1");
+    let text = "";
+    socket.on("data", (chunk) => { text += chunk; });
+    socket.on("close", () => done(text));
+    socket.on("error", () => {});
+    socket.write(`POST ${path} HTTP/1.1\r\nHost: x\r\nContent-Type: application/json\r\nContent-Length: ${claimed}\r\n\r\n`);
+    socket.end(Buffer.alloc(size, 0x61));
+  });
+}
+
+test("einhaengen: luegende content-length", async (t) => {
+  const probe = counter();
+  const running = await service(t, { auth: {}, extraRoutes: { "/zaehler": probe.route } });
+  await running.ready;
+  const chunk = Buffer.alloc(64 * 1024, 0x61);
+  const chunked = await send(running.url, "/zaehler", Array.from({ length: 20 }, () => chunk), { "content-type": "application/json" });
+  assert.ok("aborted" in chunked || (chunked.status === 413 && chunked.connection === "close"), "chunked über 1 MiB");
+  assert.equal(probe.calls, 0, "chunked: Route aufgerufen");
+  // A Content-Length below the body: the parser hands the route only the claimed bytes, the rest is never buffered as body.
+  await rawPost(running.url, "/zaehler", 100, 2 * MIB);
+  assert.ok(probe.maxSeen <= MIB, `Route bekam ${probe.maxSeen} Bytes`);
+  const after = await health(running.url);
+  assert.equal(after.status, 200);
+});
+
+test("einhaengen: 413 kippt health nicht", async (t) => {
+  const boom = async (): Promise<Response> => { throw new Error("kaputt"); };
+  const running = await service(t, { auth: {}, extraRoutes: { "/boom": boom } });
+  await running.ready;
+  const before = (await health(running.url)).body.requests;
+  for (let i = 0; i < 25; i++) {
+    const sent = await sized(running.url, "/boom", MIB + 1);
+    assert.ok(!("aborted" in sent) && sent.status === 413, `Anfrage ${i + 1}`);
+  }
+  const still = await health(running.url);
+  assert.equal(still.status, 200);
+  assert.equal(still.body.requests, before, "413 läuft am Fehlerfenster vorbei");
+  for (let i = 0; i < 25; i++) await (await fetch(`${running.url}/boom`)).arrayBuffer();
+  assert.equal((await health(running.url)).status, 503, "Gegenprobe: 25 × 500 kippen /health");
+});
+
+test("einhaengen: health und mcp nicht ueberschreibbar", async (t) => {
+  const fake = async () => new Response("gefaelscht", { status: 418 });
+  const running = await service(t, { auth: {}, extraRoutes: { "/health": fake, "/mcp": fake } });
+  await running.ready;
+  const { status, body } = await health(running.url);
+  assert.equal(status, 200);
+  assert.deepEqual(Object.keys(body).sort(), ["db", "errorRate", "migrated", "requests", "status"]);
+  const client = new Client({ name: "test", version: "1" });
+  await client.connect(new StreamableHTTPClientTransport(new URL(`${running.url}/mcp`)));
+  t.after(async () => { await client.close(); });
+  assert.equal(client.getServerVersion()?.name, "loose-ends");
+  assert.equal((await fetch(`${running.url}/auth/logout`, { method: "POST" })).status, 401, "auth daneben eingehängt");
+});
+
+test("einhaengen: log wirft nie", async (t) => {
+  const apple = fakeApple("throws");
+  const running = await service(t, { auth: { config: aConfig, fetch: apple.fetch } });
+  await running.ready;
+  const answer = await signIn(running.url);
+  assert.equal(answer.status, 200);
+  const { sessionToken } = (await answer.json()) as { sessionToken: string };
+  t.mock.method(console, "error", () => { throw new Error("EPIPE"); });
+  await running.admin.query("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE application_name = $1", [running.applicationName]);
+  await new Promise((done) => setTimeout(done, 300));
+  const deleted = await withBearer(running.url, "/auth/delete", sessionToken);
+  assert.equal(deleted.status, 204, "Löschen trotz werfendem Log");
+  assert.ok(apple.urls.some((url) => url.endsWith("/auth/revoke")), "Widerruf versucht");
+});
+
+test("einhaengen: log ohne geheimnisse", async (t) => {
+  const lines = capturedLines(t);
+  const apple = fakeApple("throws");
+  const running = await service(t, { auth: { config: aConfig, fetch: apple.fetch } });
+  await running.ready;
+  const pool = dataPool(t, running.databaseUrl);
+  const answer = await signIn(running.url);
+  assert.equal(answer.status, 200);
+  const { sessionToken } = (await answer.json()) as { sessionToken: string };
+  const account = (await resolveSession(pool, sessionToken))!;
+  assert.equal((await withBearer(running.url, "/auth/delete", sessionToken)).status, 204);
+  await running.close();
+  assert.ok(lines.some((line) => line.endsWith(" apple revoke failed")), "Log der Auth-Routen nicht angeschlossen");
+  const secrets = [sessionToken, account, A_SUB, A_CODE, A_REFRESH, A_NONCE, "netz-weg-4711", ...A_VALUES];
+  for (const line of lines) {
+    assert.match(line, ISO);
+    for (const secret of secrets) assert.ok(!line.includes(secret), `Logzeile enthält ${secret}`);
+  }
+});
+
+test("einhaengen: grenze und doku", () => {
+  const doc = readFileSync(join(import.meta.dirname, "../../CLAUDE.md"), "utf8").split("\n");
+  const authLine = doc.find((line) => line.includes("`src/auth.ts` (#615 S3b)")) ?? "";
+  const deleteLine = doc.find((line) => line.includes("`POST /auth/delete` (#615 S3c-1)")) ?? "";
+  assert.doesNotMatch(authLine, /nothing calls them yet/);
+  assert.doesNotMatch(deleteLine, /nothing calls the route yet/);
+  const mainLines = doc.filter((line) => line.includes("`src/main.ts`")).join("\n");
+  for (const word of ["auth", "APPLE_", "1 MiB", "413", "logError"]) assert.ok(mainLines.includes(word), `CLAUDE.md main.ts-Zeile ohne ${word}`);
 });
