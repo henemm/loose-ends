@@ -1,6 +1,6 @@
 # Adversary Dialog — feat-621-mcp-anmeldung
 Spec: docs/specs/feat-621-schnitt-1-ressourcenseite.md
-Datum: 2026-11-05 16:11
+Datum: 2026-11-05 (Fassung 2, nach Aenderung am Test grenze und doku)
 
 ## Checkliste
 - [x] **AC-1:** Metadaten-Dokument: `GET /.well-known/oauth-protected-resource/mcp` antwortet 200 mit `content-type: application/json` und einem Körper, der als JSON genau gleich `{ "resource": "<RESOURCE>", "authorization_servers": ["https://loose-ends.henemm.com"], "bearer_methods_supported": ["header"] }` ist (`deepEqual`, keine weiteren Schlüssel); kein `access-control-allow-origin`-Header. Test: „oauth-resource: metadaten dokument“.
@@ -23,68 +23,68 @@ Datum: 2026-11-05 16:11
 ## Dialog
 
 ### Runde 1
-**Adversary:** Forderung: Beweis je AC, nicht nur gruene Tests. Selbst beschafft: voller Lauf `./server/scripts/test-local.sh` (docs/artifacts/feat-621-mcp-anmeldung/adversary-test-output.txt): 242 Tests, 242 bestanden, 0 fehlgeschlagen, 0 uebersprungen, typecheck gruen; alle 15 Tests `oauth-resource: ...` einzeln im Log gruen. Eigene Proben gegen `publicUrlFromEnv`: `https://example.org?` wirft, `https://example.org//` wirft, `http://localhost.` wirft, `HTTPS://Example.ORG` wird `https://example.org`, Port 443 entfaellt, `:8443` bleibt, `http://LOCALHOST:9` wird `http://localhost:9`, Leerraum wird getrimmt, `http://[::1]` wirft (strenger als Spec, F001). Probe `bearerGate` mit eigenem Verifizierer: kein Header, `Bearer`, `Bearer ` (leer), `Bearer  ok` (zwei Leerzeichen), `Basic` je 401 mit `WWW-Authenticate: Bearer error=invalid_token`; `bearer ok` und `BEARER ok` (Schema laut RFC 7235 case-insensitive) werden angenommen, `Bearer ok x` reicht Token `ok` durch (SDK-Verhalten, F002). Metadaten-Route: GET 200, HEAD/OPTIONS/POST 405 mit `allow: GET`. Lebender Dienst (start() mit unerreichbarer DB, Port 0): Metadaten 200 vor migrate, auch mit `?x=1`; `/.well-known/oauth-protected-resource` (ohne /mcp), `.../mcp/` und `/mcp/` 404; `POST/HEAD/OPTIONS /mcp` vor migrate 503. Host-Spoofing: Konfiguration bestimmt Ressource (oauth-resource.ts:11-13; Test ab Zeile 316 mit node:http und Host evil.example). Ueberschreibbarkeit: main.ts:140-147 setzt Metadaten, /health, /mcp nach `...extraRoutes`. Dateigrenze: Diff gegen origin/main plus die untracked Datei ergibt exakt die fuenf Dateien; keine Funktion ueber 50 Zeilen (awk-Pruefung).
-**Implementierer:** Belege liegen vor (Tests, Code-Pfade, Proben). Bewertung: AKZEPTIERT fuer AC-1 bis AC-16. Nachfragen ohne Schaden: Schema `bearer` und Mehrfachtoken (SDK, nicht Teil der Spec), `[::1]` (Spec nennt nur localhost und 127.0.0.1).
+**Adversary:** Beweise selbst beschafft. Voller Lauf `./server/scripts/test-local.sh` (docs/artifacts/feat-621-mcp-anmeldung/adversary-test-output.txt): Exit 0, typecheck (tsc --noEmit) gruen, tests 242, pass 242, fail 0, cancelled 0, skipped 0, todo 0. Alle 15 Tests `oauth-resource: ...` einzeln gruen (Log-Zeilen 282-358). Je AC: AC-1/2/3/14 Tests metadaten dokument/nur get/vor migrate/nicht ueberschreibbar gruen, Code oauth-resource.ts:21-30 (nur GET 200 mit drei Schluesseln, sonst 405 allow GET ohne Koerper, kein CORS), main.ts Routentabelle setzt METADATA_PATH nach `...extraRoutes`. AC-4..7 Tests mcp ohne token 401, ablehnungstabelle, verifizierer wirft 500, app-sitzung abgelehnt gruen; Code bearerGate oauth-resource.ts:33-36 (SDK requireBearerAuth, expectedResource aus Konfiguration), Standard `rejectAll` :16-18. AC-8/9 Tests konto durchgereicht/konten getrennt gruen, main.ts reicht `authInfo: checked` an mcp.fetch. AC-10 gated steht aussen (main.ts `gated(isReady, ...)`), Test mcp vor migrate 503 gruen. AC-11 Ressource aus publicUrl, Test ressource folgt public url gruen. AC-12 oauth-resource.ts:41-50, Tabellentest gruen; AC-13 main() prueft publicUrlFromEnv vor start() (also vor Pool/listen), Kindprozess-Test gruen. AC-15: Der Diff gegen origin/main zeigt in main.test.ts nur Zusaetze/Umstellungen (Import, Test-Verifizierer, Bearer-Transport, 401-Pruefungen); die 413-Pruefungen und die 503-vor-migrate-Tests erscheinen nicht im Diff, sind also unveraendert; mcp.test.ts nicht im Diff. Lebender Dienst: probe-run.txt zeigt POST /mcp ohne Token 401 mit `www-authenticate: Bearer error="invalid_token", ... resource_metadata="https://loose-ends.henemm.com/.well-known/oauth-protected-resource/mcp"`, Metadaten-GET 200 mit exakt dem AC-1-Dokument, AS-Metadaten 404, Log ohne Inhalte.
+**Implementierer:** Belege akzeptiert fuer AC-1 bis AC-15.
 
 ### Runde 2
-**Adversary:** Zweiter Angriff auf Luecken. (1) Token-Passthrough: Standard-Verifizierer `rejectAll` (oauth-resource.ts:16-18) wirft immer InvalidToken; Test `app-sitzung abgelehnt` nutzt ein echtes `createSession`-Token, Ergebnis 401 mit resource_metadata. (2) Log-Leck: dispatch (main.ts:64-75) faengt Ausnahmen ohne Logzeile; Test `verifizierer wirft 500` prueft 500 und dass Log weder Token noch Ausnahmetext enthaelt, gruen (nur ueber den Test belegt, keine eigene Probe). (3) Reihenfolge: gated (main.ts:113-115) steht vor der Pruefung; Verifizierer-Zaehler 0 vor migrate (Test mcp vor migrate 503, gruen); eigene Probe: POST/HEAD/OPTIONS /mcp vor migrate 503. (4) PUBLIC_URL im Prozess: Kindprozess-Test bricht mit Exit 1 und Zeile `public url invalid` ohne Wert ab; main() prueft vor start(), also vor Pool und listen (main.ts:190-196). (5) Query-String an der Metadaten-URL wird ignoriert (dispatch nutzt pathname), harmlos. (6) Doku: CLAUDE.md:479 nennt src/oauth-resource.ts mit Metadaten-Route, Pruefor, rejectAll, publicUrlFromEnv, 401 ohne Token, noch kein Aussteller. (7) Umgestellte Altfaelle (main.test.ts:111, 497-520, 567): 413-Pruefungen unveraendert, /mcp ohne Token 401 statt 418. Keine Spec-Abweichung gefunden.
-**Implementierer:** Alle Punkte belegt; AKZEPTIERT. F001 und F002 sind Strengeres bzw. SDK-Verhalten und brechen nichts.
+**Adversary:** Schwerpunkt Aenderung seit Fassung 1 (AC-16). (1) Die Dateimengen-Abfrage der Spec (Namensliste des Diffs gegen origin/main ohne docs und .claude) selbst ausgefuehrt, Ausgabe genau: CLAUDE.md, server/src/main.ts, server/src/oauth-resource.ts, server/test/main.test.ts, server/test/oauth-resource.test.ts. Damit sind mcp.ts, auth.ts, accounts.ts, apple*.ts, server/migrations/, package.json und Lockfile unveraendert (nicht im Diff). Diffstat: 528 Zeilen hinzu, 7 weg ueber diese fuenf Dateien. (2) Der Test `oauth-resource: grenze und doku` (oauth-resource.test.ts:420-436) prueft jetzt nur noch Laenge pro Top-Level-Block <= 50, kein `console.` und die CLAUDE.md-Zeile mit publicUrlFromEnv, 401 und dem Metadatenpfad; er ruft keinen Diff mehr auf. Der Kommentar Zeile 426 begruendet das: ein Diff gegen origin/main bricht im flachen CI-Klon und waere nach dem Merge leer. Die Begruendung ist stichhaltig (server.yml checkt ohne fetch-depth aus). (3) Bewertung AC-16: Inhalt erfuellt (fuenf Dateien, Unveraendert-Liste, Laenge, Gesamtlauf gruen, Doku-Zeile CLAUDE.md:479). Wortlaut weicht ab: Die Spec nennt als Nachweis einen Test mit Dateidiff; dieser Teil ist nun eine einmalige Pruefung (hier), kein dauerhafter Test. Der Test prueft die Laenge ausserdem nur grob (Split an Top-Level-Deklarationen, nicht je Funktion). Ich werte das nicht als stilles Ok: Die Abweichung ist begruendet, der Wortlaut der Spec sollte angepasst werden. (4) CLAUDE.md-Zeile mit Pflichtwoertern vorhanden (Zeile 479). Keine Funktion in main.ts ueber 50 Zeilen (start 129-165, main ab 177).
+**Implementierer:** Aenderung am Test ist notwendig (flacher CI-Klon, Dauerrot nach Merge). Dateigrenze einmalig belegt. Spec-Wortlaut von AC-16 wird nachgezogen.
 
 ### Findings
 Finding:
   ID: F001
-  Severity: LOW
-  Category: edge_case
-  Code reference: server/src/oauth-resource.ts:38-45
-  Description: LOCAL_HOSTS enthaelt nur localhost und 127.0.0.1; `http://[::1]` wird mit PUBLIC_URL invalid abgelehnt.
-  Spec requirement: AC-12 - nennt nur localhost und 127.0.0.1 als erlaubte http-Hosts
-  Conflict: kein Konflikt, strenger als noetig.
-  Remediation: keine noetig; bei Bedarf `[::1]` ergaenzen.
+  Severity: MEDIUM
+  Category: spec_violation
+  Code reference: server/test/oauth-resource.test.ts:426-436
+  Description: Der Test `oauth-resource: grenze und doku` enthaelt keine Diff-Pruefung mehr; die Dateigrenze von AC-16 ist nur einmalig (durch den Adversary, Ergebnis genau die fuenf Dateien) belegt. Die Laengenpruefung ist grob (Top-Level-Split).
+  Spec requirement: AC-16 - Test: `oauth-resource: grenze und doku` (Pruefung per Dateidiff und `grep` auf `CLAUDE.md`)
+  Conflict: Der Spec-Wortlaut verlangt einen Test mit Dateidiff; die Umsetzung weicht begruendet ab (flacher CI-Klon ohne origin/main, nach Merge leere Menge). Inhaltlich ist AC-16 erfuellt, wortlich nicht.
+  Remediation: Spec AC-16 und Test-Plan-Zeile anpassen (Dateigrenze einmalig bei Validierung, Test nur Laenge, console, Doku) oder PO die Abweichung bestaetigen lassen.
 
 Finding:
   ID: F002
   Severity: LOW
   Category: edge_case
-  Code reference: server/src/main.ts:145-148
-  Description: Das SDK-Tor (requireBearerAuth) akzeptiert das Schema `bearer`/`BEARER` und reicht bei `Bearer ok x` das erste Token durch; publicUrlFromEnv normalisiert `https://example.org/%2e` auf den Origin.
-  Spec requirement: AC-4, AC-5 - Ablehnung ohne Token und bei Schema Basic
-  Conflict: kein Konflikt (RFC 7235: Schema case-insensitive; der Verifizierer prueft das Token weiter); nur Hinweis.
+  Code reference: server/src/oauth-resource.ts:38-45
+  Description: LOCAL_HOSTS enthaelt nur localhost und 127.0.0.1; `http://[::1]` wird abgelehnt. Strenger als die Spec, kein Konflikt.
+  Spec requirement: AC-12
+  Conflict: keiner.
   Remediation: keine.
 
 Confirmation:
   AC: AC-1, AC-2, AC-3, AC-14
   Code reference: server/src/oauth-resource.ts:21-30
-  Evidence: metadataRoute liefert nur bei GET 200 mit genau drei Schluesseln, sonst 405 mit allow GET ohne Koerper; vor migrate lebender Dienst 200; Route steht nach extraRoutes.
+  Evidence: metadataRoute nur GET 200 mit genau drei Schluesseln, sonst 405 allow GET ohne Koerper; Tests gruen (Log 282-308, 357); probe-run.txt 200 und AS-Metadaten 404.
   Status: CONFIRMED
 
 Confirmation:
   AC: AC-4, AC-5, AC-6, AC-7, AC-8, AC-9, AC-10, AC-11
   Code reference: server/src/main.ts:133-148
-  Evidence: bearerGate vor mcp.fetch mit authInfo, gated davor, rejectAll als Standard, Ressource aus publicUrl; Tests gruen.
+  Evidence: gated aussen, bearerGate dann mcp.fetch mit authInfo, rejectAll als Standard, Ressource aus publicUrl; Tests gruen, probe-run.txt 401 mit resource_metadata.
   Status: CONFIRMED
 
 Confirmation:
   AC: AC-12, AC-13
   Code reference: server/src/oauth-resource.ts:41-50
-  Evidence: publicUrlFromEnv Tabelle und Probe; main() bricht mit public url invalid ab (main.ts:190-196).
+  Evidence: publicUrlFromEnv wirft PUBLIC_URL invalid ohne Wert; main() bricht vor start() mit public url invalid und Exit 1 ab; Kindprozess-Test gruen.
   Status: CONFIRMED
 
 Confirmation:
   AC: AC-1 bis AC-14 (Testabdeckung)
   Code reference: server/test/oauth-resource.test.ts:138
-  Evidence: 15 Tests oauth-resource gruen im Gesamtlauf (242/242).
+  Evidence: 15 Tests oauth-resource gruen im Gesamtlauf, 242 von 242, 0 uebersprungen.
   Status: CONFIRMED
 
 Confirmation:
   AC: AC-15
   Code reference: server/test/main.test.ts:111
-  Evidence: umgestellte Faelle AC-3 (S1), 413 (Zeile 497-520), nicht ueberschreibbar (Zeile 567) gruen, 413-Pruefungen unveraendert.
+  Evidence: AC-3 (S1) mit 401 ohne Token und Bearer-Client (get_now weiter ohne Konto), health-und-mcp-Test mit 401 statt 418; 413- und 503-Tests nicht im Diff, mcp.test.ts nicht im Diff.
   Status: CONFIRMED
 
 Confirmation:
-  AC: AC-16
+  AC: AC-16 (Doku, Dateimenge, Gesamtlauf)
   Code reference: CLAUDE.md:479
-  Evidence: server-Abschnitt nennt src/oauth-resource.ts in einer Zeile; genau die fuenf Dateien geaendert; keine Funktion ueber 50 Zeilen; test-local.sh gruen.
+  Evidence: eine Zeile unter server/ nennt src/oauth-resource.ts mit allen geforderten Merkmalen; Dateimenge genau fuenf; test-local.sh gruen. Offen nur der Wortlaut (F001).
   Status: CONFIRMED
 
 ## Herkunft der Vorbedingungen
@@ -93,7 +93,9 @@ kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 
 ## Verdict
 
-VERDICT: VERIFIED
+VERDICT: AMBIGUOUS
+
+PO-Freigabe (Henning, 2026-11-05, getippt „override“): F001 betrifft nur den Wortlaut von AC-16. Inhalt belegt: Dateigrenze per `git diff --name-only origin/main` genau fünf Dateien (Lauf des Adversary), Länge, `console` und CLAUDE.md-Zeile im Test. AC-16 deshalb abgehakt.
 
 ## Geprüfte Dateien
 
@@ -101,7 +103,7 @@ VERDICT: VERIFIED
 - sha256:f6c70eaabcde9343ffb82894014d622fa6a90025b5a708154790aa76dce93384  server/src/main.ts
 - sha256:558c8313e48d87ed701bfabf1d1d440ea8d4438f88e773e5280aa46b236a819d  server/src/oauth-resource.ts
 - sha256:19733a08afa1e3b008726a041d3f056a040b48fa90a8ab4539eee67aa75c38ed  server/test/main.test.ts
-- sha256:4c5434cd10d5a6a2e40b9a444008b327ef13ba1634deb4c29bb8aaea0b3de592  server/test/oauth-resource.test.ts
+- sha256:074bd8dc65f9ab5ccf8148a2dfe8219df0063e8a79138dfbeac0259ee396f4fc  server/test/oauth-resource.test.ts
 
 ## Prüfbasis
 
@@ -110,4 +112,4 @@ VERDICT: VERIFIED
 - blob:f5b48d59803ab275d28665c6073e18037e7c2532  server/src/main.ts
 - blob:bff3d0f7fa3a89ac77902814755a932d92b8ee5f  server/src/oauth-resource.ts
 - blob:475d6c5eaf134026374bd8e00005841c62fc6327  server/test/main.test.ts
-- blob:3e17d1bf9b68b8104df46e388cb02dd648ddabf2  server/test/oauth-resource.test.ts
+- blob:74bd4298e054b83cd063fea7bb9417dce066ff0a  server/test/oauth-resource.test.ts

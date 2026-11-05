@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { execFileSync, spawn } from "node:child_process";
+import { spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import http from "node:http";
@@ -423,15 +423,9 @@ function longestTopLevel(source: string): number {
   return Math.max(...parts.map((part) => part.trimEnd().split("\n").length));
 }
 
+// The file boundary of S1 is checked once at validation, not here: a diff against origin/main fails in a shallow CI
+// checkout and on main itself after the merge.
 test("oauth-resource: grenze und doku", () => {
-  const git = (...args: string[]) => execFileSync("git", args, { cwd: ROOT, encoding: "utf8" }).split("\n").filter(Boolean);
-  const changed = new Set([
-    ...git("diff", "--name-only", "origin/main", "--", ".", ":!docs", ":!.claude"),
-    ...git("ls-files", "--others", "--exclude-standard", "--", ".", ":!docs", ":!.claude"),
-  ]);
-  assert.deepEqual([...changed].sort(), [
-    "CLAUDE.md", "server/src/main.ts", "server/src/oauth-resource.ts", "server/test/main.test.ts", "server/test/oauth-resource.test.ts",
-  ]);
   const resource = readFileSync(join(ROOT, "server/src/oauth-resource.ts"), "utf8");
   assert.ok(longestTopLevel(resource) <= 50, `Funktion über 50 Zeilen: ${longestTopLevel(resource)}`);
   assert.doesNotMatch(resource, /console\./, "kein console.* in oauth-resource.ts");
