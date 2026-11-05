@@ -1,12 +1,14 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createHash, generateKeyPairSync, randomBytes, sign } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type pg from "pg";
-import { createSession, deleteAccount, findOrCreate, resolveSession } from "../src/accounts.ts";
+import { createSession, deleteAccount, endSession, findOrCreate, resolveSession } from "../src/accounts.ts";
 import { type AppleConfig, loadAppleConfig } from "../src/apple.ts";
 import { decryptToken } from "../src/apple-vault.ts";
 import { authRoutes, bearerToken, type AuthDeps } from "../src/auth.ts";
+import { start } from "../src/main.ts";
 import { migrate } from "../src/migrate.ts";
 import { freshPool } from "./db.ts";
 
@@ -50,8 +52,12 @@ async function migrated(t: Parameters<typeof freshPool>[0]): Promise<pg.Pool> {
 // Fake Apple: a counting fetch with a replaceable answer; keys and clock are fixed.
 function rig(pool: pg.Pool, answer: Answer = appleOk(), over: Partial<AuthDeps> = {}) {
   const r = {
-    calls: 0, answer,
-    fetch: (() => { r.calls++; return Promise.resolve(r.answer()); }) as unknown as typeof fetch,
+    calls: 0, answer, urls: [] as string[], forms: [] as URLSearchParams[], signals: [] as AbortSignal[],
+    fetch: ((url: string, init?: RequestInit) => {
+      r.calls++; r.urls.push(String(url)); r.forms.push(new URLSearchParams(String(init?.body ?? "")));
+      if (init?.signal) r.signals.push(init.signal);
+      return Promise.resolve(r.answer());
+    }) as unknown as typeof fetch,
   };
   const deps: AuthDeps = { pool, config, keys: async (kid) => (kid === "K1" ? JWK : "unknown_kid"), fetch: r.fetch, now: () => NOW, ...over };
   return { r, routes: authRoutes(deps) };
@@ -289,4 +295,260 @@ test("auth: stille und einheitliche ablehnung", async (t) => {
   assert.deepEqual(written, []);
   assert.equal(seen.length, 4);
   for (const s of seen) assert.deepEqual(s, { status: 401, headers: seen[0].headers, body: "" });
+});
+
+// Deleting (S3c-1): a member signs in through /auth/apple and carries a transcript and an answered order.
+const REVOKE = "https://appleid.apple.com/auth/revoke";
+const DATA = ["accounts", "sessions", "apple_tokens", "transcripts", "orders", "order_results"];
+const LOG_WORDS = ["apple revoke skipped", "apple revoke failed"];
+const revokes = (r: { urls: string[] }) => r.urls.filter((url) => url === REVOKE).length;
+const ok200: Answer = () => new Response(null, { status: 200 });
+const del = (token?: string, method = "POST", scheme = "Bearer") => bearer(token, method, scheme);
+
+async function member(pool: pg.Pool, n: number, aud = IDS[0]) {
+  const sub = `${SUB}.${n}`;
+  const res = await rig(pool, appleOk(sub, aud)).routes["/auth/apple"](login({ identityToken: jwt({ sub }, undefined, undefined, aud) }));
+  const { sessionToken } = (await res.json()) as { sessionToken: string };
+  const id = (await resolveSession(pool, sessionToken))!;
+  const order = `0b7d5e3c-0000-4000-8000-${String(n).padStart(12, "0")}`;
+  const at = "2026-11-05T06:00:00Z";
+  await pool.query("INSERT INTO transcripts (account_id, doc, generated_at) VALUES ($1, $2::jsonb, $3)", [id, JSON.stringify({ version: 1, generatedAt: at }), at]);
+  await pool.query("INSERT INTO orders (doc, account_id) VALUES ($1::jsonb, $2)", [JSON.stringify({ version: 1, id: order, kind: "capture" }), id]);
+  await pool.query("INSERT INTO order_results (doc, reported_by) VALUES ($1::jsonb, 'iphone')", [JSON.stringify({ orderID: order, outcome: "done" })]);
+  return { id, token: sessionToken, sub };
+}
+
+// Rows per table of one account, in the order of DATA.
+async function rows(pool: pg.Pool, id: string): Promise<number[]> {
+  const result: number[] = [];
+  for (const table of DATA) {
+    const sql = table === "accounts" ? "SELECT count(*)::int AS n FROM accounts WHERE id = $1"
+      : table === "order_results" ? "SELECT count(*)::int AS n FROM order_results r JOIN orders o ON o.id = r.order_id WHERE o.account_id = $1"
+      : `SELECT count(*)::int AS n FROM ${table} WHERE account_id = $1`;
+    result.push((await pool.query(sql, [id])).rows[0].n);
+  }
+  return result;
+}
+const totals = async (pool: pg.Pool) => Promise.all(DATA.map((table) => count(pool, table)));
+
+// The delete route with fake Apple and the log lines it writes.
+function deleter(pool: pg.Pool, answer: Answer = ok200, over: Partial<AuthDeps> = {}) {
+  const lines: string[] = [];
+  const { r, routes } = rig(pool, answer, { log: (event: string) => void lines.push(event), ...over } as Partial<AuthDeps>);
+  return { r, lines, route: routes["/auth/delete"] };
+}
+
+// A pool whose first connect (the deletion's transaction) first runs `before`; the client is released if it throws.
+function onConnect(pool: pg.Pool, before: () => Promise<void>): pg.Pool {
+  let armed = true;
+  return new Proxy(pool, {
+    get(target, prop) {
+      const value = Reflect.get(target, prop, target);
+      if (prop !== "connect") return typeof value === "function" ? value.bind(target) : value;
+      return async () => {
+        const client = await target.connect();
+        if (armed) {
+          armed = false;
+          try { await before(); } catch (error) { client.release(); throw error; }
+        }
+        return client;
+      };
+    },
+  });
+}
+
+test("auth: rundweg loeschen", async (t) => {
+  const pool = await migrated(t);
+  const me = await member(pool, 1);
+  const res = await deleter(pool).route(del(me.token));
+  assert.equal(res.status, 204);
+  assert.equal(await res.text(), "");
+  assert.deepEqual(await rows(pool, me.id), [0, 0, 0, 0, 0, 0]);
+  assert.equal(await resolveSession(pool, me.token), null);
+});
+
+test("auth: loeschen widerruft einmal", async (t) => {
+  const pool = await migrated(t);
+  const me = await member(pool, 1, IDS[1]);
+  const seen = { accounts: -1, answered: false };
+  const d = deleter(pool, async () => {
+    seen.accounts = await count(pool, "accounts");
+    seen.answered = true;
+    return new Response(null, { status: 200 });
+  });
+  assert.equal((await d.route(del(me.token))).status, 204);
+  assert.equal(seen.answered, true, "der Widerruf ist vor der Antwort fertig");
+  assert.equal(seen.accounts, 0, "beim Widerruf ist das Konto schon weg");
+  assert.deepEqual(d.r.urls, [REVOKE]);
+  assert.equal(d.r.forms[0].get("token"), REFRESH);
+  assert.equal(d.r.forms[0].get("client_id"), IDS[1]);
+  assert.equal(d.r.forms[0].get("token_type_hint"), "refresh_token");
+  assert.deepEqual(d.lines, []);
+});
+
+test("auth: loeschen beruehrt kein anderes konto", async (t) => {
+  const pool = await migrated(t);
+  const [me, other] = [await member(pool, 1), await member(pool, 2)];
+  const second = await createSession(pool, me.id);
+  assert.equal((await deleter(pool).route(del(me.token))).status, 204);
+  assert.equal(await resolveSession(pool, second), null);
+  assert.deepEqual(await rows(pool, other.id), [1, 1, 1, 1, 1, 1]);
+  assert.equal(await resolveSession(pool, other.token), other.id);
+});
+
+test("auth: loeschen abgelehnt, nichts angefasst", async (t) => {
+  const pool = await migrated(t);
+  const me = await member(pool, 1);
+  const ended = await createSession(pool, me.id);
+  await endSession(pool, ended);
+  const refused: [string, () => Request, number][] = [
+    ...["GET", "PUT", "DELETE"].map((m): [string, () => Request, number] => [m, () => del(me.token, m), 405]),
+    ["ohne Header", () => del(), 401], ["Basic", () => del(me.token, "POST", "Basic"), 401], ["leer", () => del(""), 401],
+    ["zwei Token", () => del(`${me.token} ${me.token}`), 401], ["unbekannt", () => del("unbekannt"), 401],
+    ["beendet", () => del(ended), 401], ["erfunden", () => del(randomBytes(32).toString("base64url")), 401],
+  ];
+  const before = await totals(pool);
+  for (const [name, request, code] of refused) {
+    const d = deleter(pool);
+    const res = await d.route(request());
+    assert.equal(res.status, code, name);
+    assert.equal(await res.text(), "", name);
+    if (code === 405) assert.equal(res.headers.get("allow"), "POST", name);
+    assert.equal(d.r.calls, 0, name);
+    assert.deepEqual(d.lines, [], name);
+    assert.deepEqual(await totals(pool), before, name);
+  }
+});
+
+test("auth: loeschen rennen", async (t) => {
+  const pool = await migrated(t);
+  const me = await member(pool, 1);
+  const d = deleter(onConnect(pool, async () => { await pool.query("DELETE FROM accounts WHERE id = $1", [me.id]); }));
+  const res = await d.route(del(me.token));
+  assert.equal(res.status, 401);
+  assert.equal(await res.text(), "");
+  assert.equal(revokes(d.r), 0);
+  assert.deepEqual(d.lines, []);
+});
+
+test("auth: zwei loeschungen gleichzeitig", async (t) => {
+  const pool = await migrated(t);
+  const me = await member(pool, 1);
+  const d = deleter(pool);
+  const answers = await Promise.all([d.route(del(me.token)), d.route(del(me.token))]);
+  assert.deepEqual(answers.map((a) => a.status).sort(), [204, 401]);
+  assert.equal(await count(pool, "accounts"), 0);
+  assert.equal(revokes(d.r), 1);
+});
+
+test("auth: widerruf scheitert, konto weg", async (t) => {
+  const pool = await migrated(t);
+  const failures: [string, (r: { signals: AbortSignal[] }) => Answer][] = [
+    ["Netz weg", () => () => { throw new Error("netz"); }],
+    ["invalid_grant", () => appleError("invalid_grant")],
+    ["Zeitüberschreitung", (r) => () => new Promise<Response>((_, reject) => {
+      const signal = r.signals.at(-1)!;
+      signal.addEventListener("abort", () => reject(signal.reason));
+    })],
+  ];
+  for (const [i, [name, answer]] of failures.entries()) {
+    const me = await member(pool, i + 1);
+    const d = deleter(pool);
+    d.r.answer = answer(d.r);
+    const res = await d.route(del(me.token));
+    assert.equal(res.status, 204, name);
+    assert.deepEqual(await rows(pool, me.id), [0, 0, 0, 0, 0, 0], name);
+    assert.equal(revokes(d.r), 1, name);
+    assert.deepEqual(d.lines, ["apple revoke failed"], name);
+  }
+});
+
+test("auth: widerruf entfaellt, konto weg", async (t) => {
+  const pool = await migrated(t);
+  const cases: [string, Partial<AuthDeps>, (id: string) => Promise<unknown>][] = [
+    ["ohne config und keys", { config: undefined, keys: undefined }, async () => {}],
+    ["client_id NULL", {}, (id) => pool.query("UPDATE apple_tokens SET client_id = NULL WHERE account_id = $1", [id])],
+    ["anderer tokenKey", { config: { ...config, tokenKey: randomBytes(32) } }, async () => {}],
+    ["keine apple_tokens-Zeile", {}, (id) => pool.query("DELETE FROM apple_tokens WHERE account_id = $1", [id])],
+  ];
+  for (const [i, [name, over, prepare]] of cases.entries()) {
+    const me = await member(pool, i + 1);
+    await prepare(me.id);
+    const d = deleter(pool, ok200, over);
+    const res = await d.route(del(me.token));
+    assert.equal(res.status, 204, name);
+    assert.deepEqual(await rows(pool, me.id), [0, 0, 0, 0, 0, 0], name);
+    assert.equal(d.r.calls, 0, name);
+    assert.deepEqual(d.lines, ["apple revoke skipped"], name);
+  }
+});
+
+test("auth: log ohne geheimnisse", async (t) => {
+  const pool = await migrated(t);
+  const secrets: string[] = [REFRESH, CODE, "invalid_grant", ...IDS];
+  const lines: string[] = [];
+  const runs: [Answer, Partial<AuthDeps>][] = [
+    [appleError("invalid_grant"), {}], [() => { throw new Error("netz"); }, {}], [ok200, { config: undefined }],
+  ];
+  for (const [i, [answer, over]] of runs.entries()) {
+    for (const [j, log] of [undefined, (event: string) => void lines.push(event)].entries()) {
+      const me = await member(pool, 10 * i + j + 1);
+      secrets.push(me.id, me.token, me.sub);
+      const res = await rig(pool, answer, { ...over, log } as Partial<AuthDeps>).routes["/auth/delete"](del(me.token));
+      assert.equal(res.status, 204);
+    }
+  }
+  assert.deepEqual(lines, ["apple revoke failed", "apple revoke failed", "apple revoke skipped"]);
+  for (const line of lines) {
+    assert.ok(LOG_WORDS.includes(line), line);
+    for (const secret of secrets) assert.ok(!line.includes(secret), `Logzeile enthält ${secret}`);
+  }
+});
+
+test("auth: stille und einheitliche ablehnung loeschen", async (t) => {
+  const pool = await migrated(t);
+  const written: string[] = [];
+  const { log, error, out, err } = { log: console.log, error: console.error, out: process.stdout.write, err: process.stderr.write };
+  const grab = ((chunk: unknown) => { written.push(String(chunk)); return true; }) as typeof process.stdout.write;
+  const [a, b, c] = [await member(pool, 1), await member(pool, 2), await member(pool, 3)];
+  const seen: { status: number; headers: string; body: string }[] = [];
+  process.stdout.write = grab; process.stderr.write = grab;
+  console.log = console.error = (...x: unknown[]) => void written.push(x.join(" "));
+  try {
+    for (const request of [del(), del(a.token, "POST", "Basic"), del("unbekannt"), del("a b")]) {
+      const res = await deleter(pool).route(request);
+      seen.push({ status: res.status, headers: JSON.stringify([...res.headers]), body: await res.text() });
+    }
+    await deleter(pool).route(del(a.token));
+    await deleter(pool, appleError("invalid_grant")).route(del(b.token));
+    await deleter(pool, ok200, { config: undefined }).route(del(c.token));
+  } finally {
+    Object.assign(console, { log, error });
+    process.stdout.write = out; process.stderr.write = err;
+  }
+  assert.deepEqual(written, []);
+  assert.equal(seen.length, 4);
+  for (const s of seen) assert.deepEqual(s, { status: 401, headers: seen[0].headers, body: "" });
+  assert.doesNotMatch(readFileSync(join(import.meta.dirname, "../src/auth.ts"), "utf8"), /console|process\.(stdout|stderr)/);
+});
+
+test("auth: loeschen datenbankfehler", async (t) => {
+  const pool = await migrated(t);
+  const me = await member(pool, 1);
+  const d = deleter(onConnect(pool, async () => { throw new Error("db"); }));
+  const schema = (await pool.query("SELECT current_schema() AS s")).rows[0].s as string;
+  const url = new URL(process.env.DATABASE_URL!);
+  url.searchParams.set("options", `-c search_path=${schema}`);
+  const running = await start({ databaseUrl: url.toString(), port: 0, migrationsDir: migrations, extraRoutes: { "/auth/delete": d.route } });
+  try {
+    await running.ready;
+    const res = await fetch(`${running.url}/auth/delete`, { method: "POST", headers: { authorization: `Bearer ${me.token}` } });
+    assert.equal(res.status, 500);
+    assert.equal(await res.text(), "");
+  } finally {
+    await running.close();
+  }
+  assert.deepEqual(d.lines, []);
+  assert.equal(revokes(d.r), 0);
+  assert.equal(await resolveSession(pool, me.token), me.id);
 });
