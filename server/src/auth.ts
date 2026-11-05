@@ -1,11 +1,14 @@
 import type pg from "pg";
-import { createSession, endSession, findOrCreate } from "./accounts.ts";
+import { createSession, type Deletion, deleteAccount, endSession, findOrCreate, resolveSession } from "./accounts.ts";
 import { type AppleConfig, type KeyLookup, verifyIdentityToken } from "./apple.ts";
-import { redeemCode } from "./apple-client.ts";
-import { encryptToken, storeRefreshToken } from "./apple-vault.ts";
+import { redeemCode, revokeToken } from "./apple-client.ts";
+import { decryptToken, encryptToken, storeRefreshToken } from "./apple-vault.ts";
 import type { Route } from "./main.ts";
 
-export type AuthDeps = { pool: pg.Pool; config?: AppleConfig; keys?: KeyLookup; fetch: typeof fetch; now: () => number };
+// log gets only the fixed events "apple revoke skipped" and "apple revoke failed"; silent without it.
+export type AuthDeps = {
+  pool: pg.Pool; config?: AppleConfig; keys?: KeyLookup; fetch: typeof fetch; now: () => number; log?: (event: string) => void;
+};
 type Login = { identityToken: string; nonce: string; code: string };
 
 const BODY_LIMIT = 16 * 1024;
@@ -92,10 +95,40 @@ async function logout(deps: AuthDeps, request: Request): Promise<Response> {
   return status(204);
 }
 
+// Best effort once the account is gone: Apple's answer never changes the response.
+async function revokeAfterDelete(deps: AuthDeps, accountId: string, deletion: Deletion): Promise<void> {
+  const { config } = deps;
+  const { appleToken, clientId } = deletion;
+  // An unconfigured client id would make clientSecret throw after the commit.
+  const known = config !== undefined && clientId !== null && config.clientIds.includes(clientId);
+  const token = known && appleToken !== null ? decryptToken(config.tokenKey, accountId, appleToken) : null;
+  if (!known || token === null || token === "") {
+    deps.log?.("apple revoke skipped");
+    return;
+  }
+  const revoked = await revokeToken(token, clientId, { config, fetch: deps.fetch, now: deps.now });
+  if (!revoked.ok) deps.log?.("apple revoke failed");
+}
+
+// Session, then delete, then revoke at Apple; needs no Apple config, deleting never waits on Apple's setup.
+async function deleteAccountRoute(deps: AuthDeps, request: Request): Promise<Response> {
+  if (request.method !== "POST") return notAllowed();
+  const token = bearerToken(request);
+  if (token === null) return status(401);
+  const accountId = await resolveSession(deps.pool, token);
+  if (accountId === null) return status(401);
+  const deletion = await deleteAccount(deps.pool, accountId);
+  // false: a concurrent deletion won; no second revoke.
+  if (!deletion.deleted) return status(401);
+  await revokeAfterDelete(deps, accountId, deletion);
+  return status(204);
+}
+
 // Exceptions are not caught here: dispatch in main.ts turns them into 500 without a body.
 export function authRoutes(deps: AuthDeps): Record<string, Route> {
   return {
     "/auth/apple": (request) => apple(deps, request),
     "/auth/logout": (request) => logout(deps, request),
+    "/auth/delete": (request) => deleteAccountRoute(deps, request),
   };
 }
