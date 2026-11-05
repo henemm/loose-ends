@@ -470,6 +470,7 @@ test("auth: widerruf entfaellt, konto weg", async (t) => {
     ["client_id NULL", {}, (id) => pool.query("UPDATE apple_tokens SET client_id = NULL WHERE account_id = $1", [id])],
     ["anderer tokenKey", { config: { ...config, tokenKey: randomBytes(32) } }, async () => {}],
     ["keine apple_tokens-Zeile", {}, (id) => pool.query("DELETE FROM apple_tokens WHERE account_id = $1", [id])],
+    ["client_id nicht mehr konfiguriert", { config: { ...config, clientIds: ["com.example.other"] } }, async () => {}],
   ];
   for (const [i, [name, over, prepare]] of cases.entries()) {
     const me = await member(pool, i + 1);
