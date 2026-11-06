@@ -1,7 +1,7 @@
 ---
 spec_file: docs/specs/feat-621-schnitt-4b2b-finish.md
-spec_sha256: 538ffb0fd02b9dc1030f1f649b541661d62821c48293bf3dcd421725191a2313
-spec_frozen_sha256: 4644d41743e8eff8677b9ce2484e7df7e0acecf8924fa7e6825ec21bd048bd09
+spec_sha256: cd0c4705ccc0d2018480f73569cd2a8cba7d91c5e532314b3340670ed7ca7377
+spec_frozen_sha256: 0049e050161b7987ebac59d59fe74223b43cf5f700679f9f25465b497aa0c765
 ---
 
 # PO-Briefing: feat-621-s4b-2b-finish
@@ -16,7 +16,7 @@ Nach der Apple-Anmeldung im Browser schließt der Dienst die Anmeldung ab, nur f
 
 ## Definition of Done
 
-Die Tests laufen grün, und ein Durchlauf endet im Dienst bei der festen Absage der Zustimmung, mit angelegter Anmeldung.
+Die Tests laufen grün, und ein Durchlauf endet bei der festen Absage der Zustimmung, mit angelegter Browser-Anmeldung des Kontos.
 
 ## Wie geprüft wird
 

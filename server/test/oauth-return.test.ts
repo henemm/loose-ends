@@ -518,11 +518,12 @@ async function accountOf(pool: pg.Pool, sub = "apple-sub-1"): Promise<string> {
   note(id);
   return id;
 }
-// finish succeeded: 303 to the issuer's resume of exactly this interaction, the resume cookie, no body.
+// finish succeeded: 303 to the issuer's resume of exactly this interaction, no body. The resume cookie is
+// not set here: the library sets it once at /oauth/auth, and the browser carries it since then.
 function assertFinished(answer: Raw, uid: string, name: string) {
   assert.equal(answer.status, 303, `${name}: ${answer.status} ${answer.body.slice(0, 160)}`);
   assert.equal(new URL(String(answer.headers.location), ORIGIN).href, `${ORIGIN}/oauth/auth/${uid}`, name);
-  assert.match(cookiesOf(answer), /(^|; )_interaction_resume=/, name);
+  assert.doesNotMatch(cookiesOf(answer), /(^|; )_interaction_resume=/, name);
   assert.equal(answer.body, "", name);
   note(...valuesOf(cookiesOf(answer)));
 }
@@ -551,6 +552,7 @@ test("finish: erfolg legt sitzung des kontos an und endet bei der zustimmung", a
   const running = await withApple(t, apple);
   const f = await flow(running, apple);
   const accountId = await accountOf(running.pool);
+  assert.match(f.at.cookie, /(^|; )_interaction_resume=/, "Browser traegt kein Resume-Cookie aus /oauth/auth");
   const done = await finish(running, f.path, f.at.cookie);
   assertFinished(done, f.at.uid, "finish");
   assert.equal(await consumed(running.pool, f.ticket), true, "Ticket nicht verbraucht");
