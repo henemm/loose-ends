@@ -1,8 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { generateKeyPairSync, randomBytes, sign, verify } from "node:crypto";
-import { loadAppleConfig } from "../src/apple.ts";
-import { clientSecret, redeemCode, revokeToken } from "../src/apple-client.ts";
+import { createHash, generateKeyPairSync, randomBytes, sign, verify } from "node:crypto";
+import { loadAppleConfig, verifyIdentityToken, type AppleConfig } from "../src/apple.ts";
+import { appleReturnUrl, authorizeUrl, clientSecret, redeemCode, revokeToken } from "../src/apple-client.ts";
 
 type Doc = Record<string, unknown>;
 type Answer = (...a: unknown[]) => Response | Promise<Response>;
@@ -20,10 +20,13 @@ const REASONS = new Set([...APPLE_ERRORS.map((e) => `apple:${e}`), "apple_status
 const ec = generateKeyPairSync("ec", { namedCurve: "P-256" });
 const rsa = generateKeyPairSync("rsa", { modulusLength: 2048 });
 const PEM = ec.privateKey.export({ type: "pkcs8", format: "pem" }) as string;
-const config = loadAppleConfig({
+const ENV = {
   APPLE_TEAM_ID: "TEAM123456", APPLE_KEY_ID: "KEY1234567", APPLE_CLIENT_IDS: IDS.join(","),
   APPLE_PRIVATE_KEY: PEM.replace(/\n/g, "\\n"), APPLE_TOKEN_KEY: randomBytes(32).toString("base64"),
-});
+};
+const config = loadAppleConfig(ENV);
+const WEB = "com.henning.looseends.web";
+const webConfig = loadAppleConfig({ ...ENV, APPLE_WEB_CLIENT_ID: WEB });
 const seen: { name: string; text: string }[] = [];
 const secrets: string[] = [];
 
@@ -336,4 +339,122 @@ test("revoke: silence", async (t) => {
   for (const [name, answer] of [["ok", ok()] as [string, Answer], ...STATUS, ...UNAVAILABLE]) await revoke(name, answer);
   t.mock.restoreAll();
   assert.deepEqual(out, []);
+});
+
+// #621 S4a: the web flow's building blocks. Every misuse message is collected and checked for values at the end.
+const RETURN = "https://loose-ends.test/oauth/apple/return";
+const AUTH = { redirectUri: RETURN, state: "state-123", nonce: "roh-456" };
+const sha = (s: string) => createHash("sha256").update(s).digest("hex");
+const misuse: string[] = [];
+const collect = (e: Error) => { misuse.push(e.message); return true; };
+async function redeemWeb(name: string, answer: Answer, extra: { redirectUri?: string } = { redirectUri: RETURN }) {
+  const r = rig(answer);
+  const result = await redeemCode(CODE, WEB, { config: webConfig, fetch: r.fetch, now: () => NOW, ...extra });
+  seen.push({ name, text: JSON.stringify(result) });
+  return { r, result: result as Doc };
+}
+const bodyOf = (r: ReturnType<typeof rig>) => String((r.args[0][1] as RequestInit).body);
+
+test("redeem: app-formular bytegleich ohne redirect_uri", async () => {
+  const { r } = await redeem("app bytegleich", ok());
+  const secret = new URLSearchParams(bodyOf(r)).get("client_secret") ?? "";
+  assert.equal(bodyOf(r), `client_id=${IDS[0]}&client_secret=${secret}&code=${CODE}&grant_type=authorization_code`);
+});
+
+test("redeem: redirect_uri nur mit option, leer wirft", async () => {
+  const { r, result } = await redeemWeb("web mit redirect_uri", ok(WEB));
+  assert.deepEqual(result, { ok: true, refreshToken: TOKEN, sub: SUB });
+  assert.equal(bodyOf(r).split("redirect_uri=https%3A%2F%2Floose-ends.test%2Foauth%2Fapple%2Freturn").length, 2);
+  const form = new URLSearchParams(bodyOf(r));
+  assert.deepEqual([...form.keys()].sort(), ["client_id", "client_secret", "code", "grant_type", "redirect_uri"]);
+  assert.equal(form.get("client_id"), WEB);
+  checkSecret(form.get("client_secret") ?? "", WEB);
+  const empty = rig();
+  await assert.rejects(redeemCode(CODE, WEB, { config: webConfig, fetch: empty.fetch, now: () => NOW, redirectUri: "" }), collect);
+  assert.equal(empty.calls, 0);
+});
+
+test("redeem: id_token aud gleich web-id", async () => {
+  assert.deepEqual((await redeemWeb("web aud web", ok(WEB))).result, { ok: true, refreshToken: TOKEN, sub: SUB });
+  assert.deepEqual((await redeemWeb("web aud app", ok(IDS[0]))).result, { ok: false, reason: "malformed_response" });
+});
+
+test("client: web-id zugelassen, fremde id wirft", async () => {
+  checkSecret(clientSecret(webConfig, WEB, NOW), WEB);
+  const r = rig(() => json(""));
+  assert.deepEqual(await revokeToken(TOKEN, WEB, { config: webConfig, fetch: r.fetch, now: () => NOW }), { ok: true });
+  const form = new URLSearchParams(bodyOf(r));
+  assert.equal(form.get("client_id"), WEB);
+  checkSecret(form.get("client_secret") ?? "", WEB);
+  const refused = (e: Error) => collect(e) && e.message === "client id is not configured";
+  for (const [name, cfg, id] of [["fremde ID", webConfig, "com.fremd.app"], ["web-id ohne webClientId", config, WEB]] as const) {
+    const net = rig();
+    assert.throws(() => clientSecret(cfg, id, NOW), refused, name);
+    await assert.rejects(redeemCode(CODE, id, { config: cfg, fetch: net.fetch, now: () => NOW }), refused, name);
+    await assert.rejects(revokeToken(TOKEN, id, { config: cfg, fetch: net.fetch, now: () => NOW }), refused, name);
+    assert.equal(net.calls, 0, name);
+  }
+});
+
+test("authorizeUrl: parameter vollständig, ohne scope", () => {
+  const url = authorizeUrl(webConfig, AUTH);
+  assert.ok(url.startsWith("https://appleid.apple.com/auth/authorize?"), url);
+  const params = new URL(url).searchParams;
+  assert.equal([...params.keys()].length, 6);
+  assert.deepEqual(Object.fromEntries(params), {
+    client_id: WEB, redirect_uri: RETURN, response_type: "code", response_mode: "form_post", state: "state-123", nonce: sha("roh-456"),
+  });
+  assert.match(params.get("nonce") ?? "", /^[0-9a-f]{64}$/);
+  assert.equal(params.has("scope"), false);
+});
+
+test("authorizeUrl: nonce passt zu verifyIdentityToken", async () => {
+  const nonce = new URL(authorizeUrl(webConfig, AUTH)).searchParams.get("nonce");
+  const token = idToken({ nonce }, WEB);
+  const jwk = { ...rsa.publicKey.export({ format: "jwk" }), kid: "K1", alg: "RS256" } as JsonWebKey;
+  const check = (raw: string) => verifyIdentityToken(token, raw, { config: webConfig, keys: async () => jwk, now: NOW, audiences: [WEB] });
+  assert.deepEqual(await check("roh-456"), { ok: true, sub: SUB, aud: WEB });
+  assert.deepEqual(await check("anders"), { ok: false, reason: "nonce" });
+});
+
+test("authorizeUrl: wirft ohne web-id und bei leeren feldern", () => {
+  const cases: [string, AppleConfig, typeof AUTH][] = [
+    ["webClientId", config, AUTH], ["redirectUri", webConfig, { ...AUTH, redirectUri: "" }],
+    ["state", webConfig, { ...AUTH, state: "" }], ["nonce", webConfig, { ...AUTH, nonce: "" }],
+  ];
+  for (const [field, cfg, input] of cases) {
+    assert.throws(() => authorizeUrl(cfg, input), (e: Error) => collect(e) && e.message.includes(field), field);
+  }
+});
+
+test("appleReturnUrl: origin plus fester pfad", () => {
+  const live = "https://loose-ends.henemm.com/oauth/apple/return";
+  const rows: [string, string][] = [
+    ["https://loose-ends.henemm.com", live], ["https://loose-ends.henemm.com/", live],
+    ["https://loose-ends.henemm.com/mcp?x=1", live], ["http://localhost:8780", "http://localhost:8780/oauth/apple/return"],
+  ];
+  for (const [input, expected] of rows) assert.equal(appleReturnUrl(input), expected, input);
+  for (const bad of ["kein-url", ""]) assert.throws(() => appleReturnUrl(bad), collect, JSON.stringify(bad));
+});
+
+test("silence: web-bausteine", async (t) => {
+  const out: unknown[] = [];
+  const record = (...a: unknown[]) => { out.push(a); return true; };
+  for (const name of ["log", "info", "warn", "error", "debug"] as const) t.mock.method(console, name, record);
+  t.mock.method(process.stdout, "write", record);
+  t.mock.method(process.stderr, "write", record);
+  clientSecret(webConfig, WEB, NOW);
+  authorizeUrl(webConfig, AUTH);
+  appleReturnUrl("https://loose-ends.henemm.com/mcp");
+  for (const call of [() => authorizeUrl(config, AUTH), () => appleReturnUrl("kein-url"), () => clientSecret(config, WEB, NOW)]) {
+    try { call(); } catch { /* expected */ }
+  }
+  await redeemWeb("silence web", ok(WEB)).catch(() => null);
+  await redeemWeb("silence leer", ok(WEB), { redirectUri: "" }).catch(() => null);
+  t.mock.restoreAll();
+  assert.deepEqual(out, []);
+  assert.ok(misuse.length >= 13, `zu wenige Meldungen gesammelt: ${misuse.length}`);
+  const values = [WEB, IDS[0], "com.fremd.app", "state-123", "roh-456", sha("roh-456"), RETURN, "loose-ends.test", "kein-url",
+    PEM.split("\n")[1], ENV.APPLE_TOKEN_KEY];
+  for (const m of misuse) for (const v of values) assert.ok(!m.includes(v), `Wert in der Meldung: ${m}`);
 });

@@ -244,3 +244,59 @@ test("silence", async () => {
   assert.deepEqual(written, []);
   for (const m of messages) for (const secret of ["GEHEIM", SUB, "BEGIN", jwt().slice(0, 20)]) assert.ok(!m.includes(secret), m);
 });
+
+// #621 S4a: the web client id (a Services ID) stands beside the app ids and never joins them.
+const APP = "com.henning.looseends";
+const WEB = "com.henning.looseends.web";
+const webEnv = (web: string | undefined) => validEnv({ APPLE_CLIENT_IDS: APP, APPLE_WEB_CLIENT_ID: web });
+const webConfig = loadAppleConfig(webEnv(WEB));
+const verifyWith = (token: string, audiences?: string[]) =>
+  verifyIdentityToken(token, RAW, { config: webConfig, keys: stub().keys, now: NOW, ...(audiences ? { audiences } : {}) }) as Promise<Doc>;
+
+test("config: web-id leer", () => {
+  for (const web of [undefined, "", "   "]) {
+    const c = loadAppleConfig(webEnv(web));
+    assert.equal(c.webClientId, undefined, JSON.stringify(web));
+    assert.deepEqual(c.clientIds, [APP], JSON.stringify(web));
+  }
+});
+
+test("config: web-id gültig und nicht in clientIds", () => {
+  const c = loadAppleConfig(webEnv(` ${WEB} `));
+  assert.equal(c.webClientId, WEB);
+  assert.deepEqual(c.clientIds, [APP]);
+});
+
+test("config: web-id gleich app-id oder mit komma wirft", () => {
+  const cases: [string, Record<string, string | undefined>][] = [
+    ["gleich App-ID", webEnv(APP)], ["gleich App-ID mit Blanks", webEnv(`  ${APP} `)], ["mit Komma", webEnv("a.web,b.web")],
+    ["gleich zweiter App-ID", validEnv({ APPLE_WEB_CLIENT_ID: WEB })],
+  ];
+  for (const [name, env] of cases) {
+    assert.throws(() => loadAppleConfig(env), (e: Error) => {
+      assert.ok(e.message.includes("APPLE_WEB_CLIENT_ID"), `${name}: Name fehlt in „${e.message}“`);
+      for (const value of [APP, "a.web", WEB]) assert.ok(!e.message.includes(value), `${name}: Wert im Fehlertext`);
+      return true;
+    }, name);
+  }
+});
+
+test("verify: web-token ohne audiences abgelehnt", async () => {
+  assert.deepEqual(await verifyWith(jwt(claims({ aud: WEB }))), { ok: false, reason: "aud" });
+});
+
+test("verify: web-token mit audiences angenommen", async () => {
+  assert.deepEqual(await verifyWith(jwt(claims({ aud: WEB })), [WEB]), { ok: true, sub: SUB, aud: WEB });
+});
+
+test("verify: app-token mit web-audiences abgelehnt, Standard unverändert", async () => {
+  assert.deepEqual(await verifyWith(jwt(claims({ aud: APP })), [WEB]), { ok: false, reason: "aud" });
+  assert.deepEqual(await verifyWith(jwt(claims({ aud: APP }))), { ok: true, sub: SUB, aud: APP });
+});
+
+// /auth/apple calls verifyIdentityToken without audiences; a web token must fail there like a foreign one.
+test("auth: web-token am app-weg abgelehnt", async () => {
+  const web = await verifyWith(jwt(claims({ aud: WEB })));
+  assert.deepEqual(web, await verifyWith(jwt(claims({ aud: "com.fremd.app" }))));
+  assert.deepEqual(web, { ok: false, reason: "aud" });
+});
