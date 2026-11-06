@@ -495,6 +495,25 @@ test("einhaengen: prozess bricht bei falscher config ab", async (t) => {
   assert.equal(await within(run.exited, 5000, () => run.proc.kill("SIGKILL")), 0);
 });
 
+// #621 S4a, AC-4: a web client id alone counts as partly set and stops the start, naming a required variable.
+test("einhaengen: allein gesetzte web-id bricht start ab", async (t) => {
+  const web = "com.henning.looseends.web";
+  const { appleConfigFromEnv } = await import("../src/main.ts");
+  assert.throws(() => appleConfigFromEnv({ APPLE_WEB_CLIENT_ID: web }), (error: Error) => !error.message.includes(web));
+  const dbHits: number[] = [];
+  const fakeDb = createServer((socket) => { dbHits.push(1); socket.destroy(); });
+  await new Promise<void>((done) => fakeDb.listen(0, "127.0.0.1", done));
+  t.after(() => new Promise<void>((done) => fakeDb.close(() => done())));
+  const dbUrl = `postgres://postgres@127.0.0.1:${(fakeDb.address() as { port: number }).port}/postgres`;
+  const run = child({ APPLE_WEB_CLIENT_ID: web, DATABASE_URL: dbUrl, PORT: String(await freePort()) });
+  const code = await within(run.exited, 5000, () => run.proc.kill("SIGKILL"));
+  assert.equal(code, 1, `Exit-Code: ${run.output()}`);
+  assert.match(run.output(), /apple config invalid: .*APPLE_(TEAM_ID|KEY_ID|CLIENT_IDS|PRIVATE_KEY|TOKEN_KEY)/);
+  assert.ok(!run.output().includes(web), "Wert in der Ausgabe");
+  assert.doesNotMatch(run.output(), /listening/);
+  assert.equal(dbHits.length, 0, "Pool geöffnet");
+});
+
 // #621 S3, AC-14: invalid issuer keys stop the process before pool and listen, naming only the variable.
 test("main: ungueltige oauth schluessel brechen start ab", async (t) => {
   const dbHits: number[] = [];

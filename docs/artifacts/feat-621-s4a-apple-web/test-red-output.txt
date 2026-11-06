@@ -1,0 +1,285 @@
+=== npm run typecheck
+
+> typecheck
+> tsc --noEmit
+
+test/apple-client.test.ts(5,10): error TS2305: Module '"../src/apple-client.ts"' has no exported member 'appleReturnUrl'.
+test/apple-client.test.ts(5,26): error TS2305: Module '"../src/apple-client.ts"' has no exported member 'authorizeUrl'.
+test/apple-client.test.ts(373,103): error TS2353: Object literal may only specify known properties, and 'redirectUri' does not exist in type '{ config: AppleConfig; fetch: { (input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response>; (input: string | ... 1 more ... | URL, init?: RequestInit | undefined): Promise<...>; }; now: () => number; url?: string | undefined; }'.
+test/apple-client.test.ts(415,120): error TS2353: Object literal may only specify known properties, and 'audiences' does not exist in type '{ config: AppleConfig; keys: KeyLookup; now: number; }'.
+test/apple.test.ts(259,20): error TS2551: Property 'webClientId' does not exist on type 'AppleConfig'. Did you mean 'clientIds'?
+test/apple.test.ts(266,18): error TS2551: Property 'webClientId' does not exist on type 'AppleConfig'. Did you mean 'clientIds'?
+typecheck exit: 1
+=== node --test test/apple.test.ts test/apple-client.test.ts test/main.test.ts
+file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple-client.test.ts:5
+import { appleReturnUrl, authorizeUrl, clientSecret, redeemCode, revokeToken } from "../src/apple-client.ts";
+         ^^^^^^^^^^^^^^
+SyntaxError: The requested module '../src/apple-client.ts' does not provide an export named 'appleReturnUrl'
+    at #asyncInstantiate (node:internal/modules/esm/module_job:463:21)
+    at async ModuleJob.run (node:internal/modules/esm/module_job:561:5)
+    at async node:internal/modules/esm/loader:650:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+
+Node.js v26.13.0
+✖ test/apple-client.test.ts (160.3585ms)
+✔ config: gültige Umgebung (0.818375ms)
+✔ config: fehlend und ungültig (1.554708ms)
+✔ verify: aud im erfolg (2.443208ms)
+✔ verify: gültiges Token (1.2955ms)
+✔ attack: malformed (1.02575ms)
+✔ attack: alg none (0.80675ms)
+✔ attack: HS256 mit öffentlichem Schlüssel (0.332625ms)
+✔ attack: ES256 (0.109833ms)
+✔ attack: kid und Schlüsselsuche (1.118417ms)
+✔ attack: JWK mit fremdem alg oder kty (0.793292ms)
+✔ attack: Signatur (1.757625ms)
+✔ attack: iss (1.522375ms)
+✔ attack: aud (2.637375ms)
+✔ attack: abgelaufen (2.845167ms)
+✔ attack: iat (1.864208ms)
+✔ attack: nonce (3.725917ms)
+✔ reasons: feste Liste (0.13025ms)
+✔ verify: fehlerformen (0.049709ms)
+✔ silence (1.689334ms)
+✔ config: web-id leer (0.184625ms)
+✖ config: web-id gültig und nicht in clientIds (0.819292ms)
+✖ config: web-id gleich app-id oder mit komma wirft (0.199625ms)
+✔ verify: web-token ohne audiences abgelehnt (0.4055ms)
+✖ verify: web-token mit audiences angenommen (0.608833ms)
+✖ verify: app-token mit web-audiences abgelehnt, Standard unverändert (0.464791ms)
+✔ auth: web-token am app-weg abgelehnt (0.765625ms)
+2026-11-06T08:17:43.883Z listening
+2026-11-06T08:17:43.915Z migrated
+✔ AC-1 (S1): after ready, /health answers 200 with exactly five keys (66.792791ms)
+2026-11-06T08:17:43.935Z listening
+2026-11-06T08:17:43.939Z migrate failed, retrying (1/20)
+2026-11-06T08:17:43.991Z migrate failed, retrying (2/20)
+2026-11-06T08:17:44.043Z migrate failed, retrying (3/20)
+2026-11-06T08:17:44.095Z migrate failed, retrying (4/20)
+2026-11-06T08:17:44.147Z migrate failed, retrying (5/20)
+2026-11-06T08:17:44.200Z migrate failed, retrying (6/20)
+2026-11-06T08:17:44.251Z migrate failed, retrying (7/20)
+2026-11-06T08:17:44.304Z migrate failed, retrying (8/20)
+2026-11-06T08:17:44.356Z migrate failed, retrying (9/20)
+2026-11-06T08:17:44.408Z migrate failed, retrying (10/20)
+2026-11-06T08:17:44.459Z migrate failed, retrying (11/20)
+2026-11-06T08:17:44.511Z migrate failed, retrying (12/20)
+2026-11-06T08:17:44.563Z migrate failed, retrying (13/20)
+2026-11-06T08:17:44.614Z migrate failed, retrying (14/20)
+2026-11-06T08:17:44.666Z migrate failed, retrying (15/20)
+2026-11-06T08:17:44.718Z migrate failed, retrying (16/20)
+2026-11-06T08:17:44.770Z migrate failed, retrying (17/20)
+2026-11-06T08:17:44.822Z migrate failed, retrying (18/20)
+2026-11-06T08:17:44.875Z migrate failed, retrying (19/20)
+✔ AC-2 (S1): without a database /health and /mcp answer 503, ready is refused, close does not throw (993.254042ms)
+2026-11-06T08:17:44.932Z listening
+2026-11-06T08:17:44.956Z migrated
+✔ AC-3 (S1): /mcp answers initialize with serverInfo and refuses get_now without an account (57.25425ms)
+2026-11-06T08:17:44.988Z listening
+2026-11-06T08:17:44.999Z migrated
+✔ AC-4 (S1): an unknown path answers 404 and counts in the next /health (20.524541ms)
+2026-11-06T08:17:45.007Z listening
+2026-11-06T08:17:45.018Z migrated
+✔ AC-5 (S1): terminated pool connections leave the process alive and /health recovers within 5 s, without error text (131.182792ms)
+2026-11-06T08:17:45.141Z listening
+2026-11-06T08:17:45.161Z migrated
+✔ AC-6 (S1): close ends server and pool, a second close does not throw, keep-alive does not hold it (33.907125ms)
+✔ AC-7 (S1): ErrorWindow trips only above half of at least 20 answers and forgets after five minutes (0.343458ms)
+2026-11-06T08:17:45.175Z listening
+2026-11-06T08:17:45.200Z migrated
+✔ AC-8 (S1): /health turns 503 on a high error rate and recovers when the window passes (43.439833ms)
+✔ AC-9 (S1): a database that never answers gives 503 with db down within a second, no exception (51.724792ms)
+✔ AC-10 (S1): no title, order id, database error text or URL in any answer or log line; every log line starts ISO (248.4025ms)
+2026-11-06T08:17:45.516Z listening
+2026-11-06T08:17:45.519Z migrate failed, retrying (1/40)
+2026-11-06T08:17:45.570Z migrate failed, retrying (2/40)
+2026-11-06T08:17:45.622Z migrate failed, retrying (3/40)
+2026-11-06T08:17:45.674Z migrate failed, retrying (4/40)
+2026-11-06T08:17:45.726Z migrate failed, retrying (5/40)
+2026-11-06T08:17:45.778Z migrate failed, retrying (6/40)
+2026-11-06T08:17:45.830Z migrate failed, retrying (7/40)
+2026-11-06T08:17:45.882Z migrate failed, retrying (8/40)
+2026-11-06T08:17:45.935Z migrate failed, retrying (9/40)
+2026-11-06T08:17:45.986Z migrate failed, retrying (10/40)
+2026-11-06T08:17:46.038Z migrate failed, retrying (11/40)
+2026-11-06T08:17:46.090Z migrate failed, retrying (12/40)
+2026-11-06T08:17:46.142Z migrate failed, retrying (13/40)
+2026-11-06T08:17:46.194Z migrate failed, retrying (14/40)
+2026-11-06T08:17:46.245Z migrate failed, retrying (15/40)
+2026-11-06T08:17:46.296Z migrate failed, retrying (16/40)
+2026-11-06T08:17:46.348Z migrate failed, retrying (17/40)
+2026-11-06T08:17:46.400Z migrate failed, retrying (18/40)
+2026-11-06T08:17:46.452Z migrate failed, retrying (19/40)
+2026-11-06T08:17:46.504Z migrate failed, retrying (20/40)
+2026-11-06T08:17:46.555Z migrate failed, retrying (21/40)
+2026-11-06T08:17:46.608Z migrate failed, retrying (22/40)
+2026-11-06T08:17:46.661Z migrate failed, retrying (23/40)
+2026-11-06T08:17:46.714Z migrate failed, retrying (24/40)
+2026-11-06T08:17:46.768Z migrate failed, retrying (25/40)
+2026-11-06T08:17:46.821Z migrate failed, retrying (26/40)
+2026-11-06T08:17:46.875Z migrate failed, retrying (27/40)
+2026-11-06T08:17:46.929Z migrate failed, retrying (28/40)
+2026-11-06T08:17:46.981Z migrate failed, retrying (29/40)
+2026-11-06T08:17:47.032Z migrate failed, retrying (30/40)
+2026-11-06T08:17:47.084Z migrate failed, retrying (31/40)
+2026-11-06T08:17:47.135Z migrate failed, retrying (32/40)
+2026-11-06T08:17:47.188Z migrate failed, retrying (33/40)
+2026-11-06T08:17:47.240Z migrate failed, retrying (34/40)
+2026-11-06T08:17:47.293Z migrate failed, retrying (35/40)
+2026-11-06T08:17:47.346Z migrate failed, retrying (36/40)
+2026-11-06T08:17:47.400Z migrate failed, retrying (37/40)
+2026-11-06T08:17:47.454Z migrate failed, retrying (38/40)
+2026-11-06T08:17:47.506Z migrate failed, retrying (39/40)
+2026-11-06T08:17:47.570Z listening
+2026-11-06T08:17:47.588Z migrated
+✔ einhaengen: auth vor migrate 503 (2079.429042ms)
+2026-11-06T08:17:47.597Z listening
+2026-11-06T08:17:47.620Z migrated
+2026-11-06T08:17:47.641Z apple revoke skipped
+✔ einhaengen: ohne config logout und delete laufen (55.146625ms)
+2026-11-06T08:17:47.655Z listening
+2026-11-06T08:17:47.668Z migrated
+✔ einhaengen: anmelden und abmelden mit config (30.78325ms)
+2026-11-06T08:17:47.683Z listening
+2026-11-06T08:17:47.696Z migrated
+2026-11-06T08:17:47.709Z listening
+2026-11-06T08:17:47.720Z migrated
+✔ einhaengen: jwks lazy und einmal (48.628ms)
+✔ einhaengen: weiche apple env (0.751709ms)
+✔ einhaengen: prozess bricht bei falscher config ab (1179.7775ms)
+✖ einhaengen: allein gesetzte web-id bricht start ab (0.542917ms)
+✔ main: ungueltige oauth schluessel brechen start ab (679.909209ms)
+2026-11-06T08:17:49.592Z listening
+2026-11-06T08:17:49.603Z migrated
+✔ einhaengen: body ueber 1 mib 413 (35.898584ms)
+2026-11-06T08:17:49.629Z listening
+2026-11-06T08:17:49.642Z migrated
+✔ einhaengen: luegende content-length (23.500458ms)
+2026-11-06T08:17:49.652Z listening
+2026-11-06T08:17:49.662Z migrated
+✔ einhaengen: 413 kippt health nicht (46.819708ms)
+2026-11-06T08:17:49.699Z listening
+2026-11-06T08:17:49.710Z migrated
+✔ einhaengen: health und mcp nicht ueberschreibbar (22.04725ms)
+2026-11-06T08:17:49.720Z listening
+2026-11-06T08:17:49.731Z migrated
+✔ einhaengen: log wirft nie (329.219125ms)
+✔ einhaengen: log ohne geheimnisse (25.491792ms)
+✔ einhaengen: grenze und doku (1.160958ms)
+ℹ tests 52
+ℹ suites 0
+ℹ pass 46
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6638.318
+
+✖ failing tests:
+
+test at test/apple-client.test.ts:1:1
+✖ test/apple-client.test.ts (160.3585ms)
+  'test failed'
+
+test at test/apple.test.ts:264:1
+✖ config: web-id gültig und nicht in clientIds (0.819292ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - 'com.henning.looseends.web'
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple.test.ts:266:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'com.henning.looseends.web',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple.test.ts:270:1
+✖ config: web-id gleich app-id oder mit komma wirft (0.199625ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception: gleich App-ID
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple.test.ts:276:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at test/apple.test.ts:288:1
+✖ verify: web-token mit audiences angenommen (0.608833ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   ok: false,
+  +   reason: 'aud'
+  -   aud: 'com.henning.looseends.web',
+  -   ok: true,
+  -   sub: '001234.abcdef0123456789.0042'
+    }
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple.test.ts:289:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { ok: false, reason: 'aud' },
+    expected: { ok: true, sub: '001234.abcdef0123456789.0042', aud: 'com.henning.looseends.web' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple.test.ts:292:1
+✖ verify: app-token mit web-audiences abgelehnt, Standard unverändert (0.464791ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   aud: 'com.henning.looseends',
+  +   ok: true,
+  +   sub: '001234.abcdef0123456789.0042'
+  -   ok: false,
+  -   reason: 'aud'
+    }
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/apple.test.ts:293:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { ok: true, sub: '001234.abcdef0123456789.0042', aud: 'com.henning.looseends' },
+    expected: { ok: false, reason: 'aud' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/main.test.ts:499:1
+✖ einhaengen: allein gesetzte web-id bricht start ab (0.542917ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/main.test.ts:502:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'throws',
+    diff: 'simple'
+  }
+test exit: 1
