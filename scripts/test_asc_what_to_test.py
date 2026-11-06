@@ -173,6 +173,17 @@ class WhatToTestTests(unittest.TestCase):
             self.assertIn("ASC answered HTTP 409 for PATCH", result.stdout)
             self.assertNotIn("codes", result.stdout)
 
+    # AC-3
+    def test_numeric_error_code_keeps_old_message(self):
+        body = {"errors": [{"code": 409}]}
+        fake = FakeASC([{"id": "L1", "attributes": {"locale": "de-DE"}}], patch_status=409, error_body=body)
+        self.addCleanup(fake.close)
+        result = self.run_script(fake)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("ASC answered HTTP 409 for PATCH", result.stdout)
+        self.assertNotIn("codes", result.stdout)
+        self.assertNotIn("TypeError", result.stderr)
+
 
 class SectionTests(unittest.TestCase):
     def test_sections_split_by_language_marker(self):
