@@ -10,6 +10,7 @@ Nur Standardbibliothek plus `openssl`. Schlüssel, Token und Signatur werden nie
 """
 import json
 import os
+import re
 import sys
 import time
 import urllib.error
@@ -25,6 +26,17 @@ MAX_LENGTH = 4000
 ATTEMPTS = 5
 
 
+def error_codes(error):
+    """Apples Fehlercodes aus dem Rumpf (nie title/detail); jede Störung ergibt eine leere Liste."""
+    try:
+        errors = json.loads(error.read(8192)).get("errors", [])
+        codes = [e["code"] for e in errors
+                 if isinstance(e.get("code"), str) and re.fullmatch(r"[A-Z0-9_.]+", e["code"])]
+    except (ValueError, AttributeError, TypeError, KeyError, OSError):
+        return []
+    return codes[:5]
+
+
 def send_json(config, method, path, payload):
     """PATCH/POST gegen die ASC-API. 5xx, 408, 429 und Netzfehler werden wiederholt, andere 4xx sind Fatal."""
     for attempt in range(1, ATTEMPTS + 1):
@@ -37,7 +49,9 @@ def send_json(config, method, path, payload):
                 return
         except urllib.error.HTTPError as error:
             if not (error.code >= 500 or error.code in (408, 429)):
-                raise Fatal(f"ASC answered HTTP {error.code} for {method} {path}")
+                codes = error_codes(error)
+                suffix = f" (codes: {', '.join(codes)})" if codes else ""
+                raise Fatal(f"ASC answered HTTP {error.code} for {method} {path}{suffix}")
             print(f"ASC answered HTTP {error.code} for {method} {path}, retrying", flush=True)
         except (urllib.error.URLError, TimeoutError, OSError) as error:
             print(f"No answer from ASC for {method} {path} ({type(error).__name__}), retrying", flush=True)
