@@ -1,8 +1,10 @@
 """Liest nur, welche App-Store-Bilder in App Store Connect stehen (#742): je Version, Sprache und Bildgröße.
 
 Aufruf: asc_store_probe.py
-Umgebung wie asc_beta_probe.py. Nur GET. Druckt Zähler, Dateinamen, Pixelmaß und Lieferstatus, keine Schlüssel.
+Umgebung wie asc_beta_probe.py. Nur GET. Druckt Zähler, Dateinamen, Pixelmaß und Lieferstatus, keine Schlüssel;
+seit #842 auch die öffentlichen Store-Texte und Bildplatzierungen je Versions-Lokalisierung.
 """
+import json
 import sys
 
 from asc_beta_probe import Probe, attributes, records
@@ -20,6 +22,57 @@ def report_set(run, version_label, locale, screenshot_set):
         state = (a.get("assetDeliveryState") or {}).get("state", "?")
         print(f"bild typ={display} datei={a.get('fileName', '?')} maß={asset.get('width', '?')}x{asset.get('height', '?')} "
               f"zustand={state}", flush=True)
+
+
+TEXT_FIELDS = (("beschreibung", "description"), ("schluesselwoerter", "keywords"), ("werbetext", "promotionalText"))
+
+
+def report_version_texts(run, label, locale_name, record):
+    """Zeichenzahlen und Wortlaut der Store-Texte einer Versions-Lokalisierung (#842), aus der schon geholten Liste.
+
+    Die Texte sind öffentlich; jeder steht als JSON-String in einer Zeile (`\\n` maskiert, Umlaute nicht).
+    Ein leeres Feld steht als `keiner`, eine leere URL als `keine`.
+    """
+    a = attributes(record)
+    where = f"version={label} sprache={locale_name}"
+    counts = " ".join(f"{name}={len(a.get(key) or '')}" for name, key in TEXT_FIELDS[:2])
+    print(f"text {where} {counts} supporturl={a.get('supportUrl') or 'keine'} "
+          f"werbetext={len(a.get('promotionalText') or '')} marketingurl={a.get('marketingUrl') or 'keine'}",
+          flush=True)
+    for name, key in TEXT_FIELDS:
+        value = a.get(key) or ""
+        shown = json.dumps(value, ensure_ascii=False) if value else "keiner"
+        print(f"{name} {where} zeichen={len(value)} text={shown}", flush=True)
+
+
+def report_placements(run, label, locale_name, locale_id):
+    """Bildplatzierungen der Asset Library je Versions-Lokalisierung (#842); der Pfad ist aus der Recherche, unerprobt.
+
+    `keine` heißt: Antwort ohne Eintrag; `fehler` heißt: die Abfrage ist gescheitert, der Lauf geht weiter.
+    """
+    where = f"version={label} sprache={locale_name}"
+    body = run.ask("appAssetLibraryPlacements",
+                   f"/v1/appStoreVersionLocalizations/{locale_id}/appAssetLibraryPlacements")
+    if body is None:
+        print(f"platzierung fehler {where}", flush=True)
+        return
+    placements = records(body)
+    if not placements:
+        print(f"platzierung keine {where}", flush=True)
+    for placement in placements:
+        a = attributes(placement)
+        print(f"platzierung {where} gruppe={a.get('placementGroup') or '?'} typ={a.get('placementType') or '?'} "
+              f"zustand={a.get('state') or '?'}", flush=True)
+
+
+def report_refdata(run):
+    """Einmal pro Lauf die Gruppennamen der Asset Library (#842), sortiert; die Form der Antwort ist unbestätigt."""
+    body = run.ask("appAssetLibraryRefData", "/v1/appAssetLibraryRefData")
+    if body is None:
+        print("refdaten fehler", flush=True)
+        return
+    groups = sorted({attributes(r).get("placementGroup") for r in records(body)} - {None, ""})
+    print(f"refdaten gruppen={','.join(groups)}" if groups else "refdaten keine", flush=True)
 
 
 def report_subtitles(run, app_id):
@@ -59,6 +112,8 @@ def main():
         versions = records(run.ask("appStoreVersions", f"/v1/apps/{app_id}/appStoreVersions?limit=5"))
         if not versions:
             print("version keine", flush=True)
+        else:
+            report_refdata(run)
         for version in versions:
             a = attributes(version)
             label = f"{a.get('versionString', '?')}/{a.get('platform', '?')}/{a.get('appStoreState', '?')}"
@@ -68,6 +123,8 @@ def main():
                 print(f"sprache keine version={label}", flush=True)
             for locale in locales:
                 name = attributes(locale).get("locale", "?")
+                report_version_texts(run, label, name, locale)
+                report_placements(run, label, name, locale["id"])
                 sets = records(run.ask("appScreenshotSets",
                                        f"/v1/appStoreVersionLocalizations/{locale['id']}/appScreenshotSets"))
                 if not sets:
