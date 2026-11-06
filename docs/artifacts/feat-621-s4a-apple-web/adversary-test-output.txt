@@ -1,0 +1,523 @@
+Postgres on 127.0.0.1:61107, data in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.ugMTwRQwWh
+
+> typecheck
+> tsc --noEmit
+
+
+> test
+> node --test 'test/*.test.ts'
+
+✔ AC-1: the migrations apply 001 and 002 once, and the three account tables exist (94.3875ms)
+✔ AC-2: findOrCreate gives one account per apple_sub, also when called at the same time (36.473084ms)
+✔ AC-3: createSession hands out 43-character tokens and stores only their SHA-256 (67.399458ms)
+✔ AC-4/AC-5: resolveSession finds a valid session, refreshes it, and ends only the one session (49.423042ms)
+✔ AC-6: createSession for an unknown account is refused by the foreign key (357.5355ms)
+✔ AC-7/AC-8/AC-10: deleteAccount removes every row of the account and leaves the other one untouched (428.965916ms)
+✔ AC-9: deleteAccount without an Apple token deletes all, an unknown account changes nothing (263.94675ms)
+✔ delete: rundweg mit client_id (91.759167ms)
+✔ accounts: delete nimmt oauth zeilen mit (83.686208ms)
+✔ AC-12: the account functions write nothing to the console, and an error names neither token nor apple_sub (103.126708ms)
+✔ secret: kopf, nutzlast, signatur (1.60625ms)
+✔ secret: je aufruf neu, manipulation fällt auf (0.263875ms)
+✔ fehlbedienung: wirft ohne netz (1.014208ms)
+✔ redeem: anfrage (19.283875ms)
+✔ redeem: erfolg (11.650334ms)
+✔ redeem: apple-fehler und status (Fallliste) (11.866834ms)
+✔ redeem: malformed 200 (Fallliste) (18.964084ms)
+✔ redeem: id_token geprüft (Fallliste) (23.101125ms)
+✔ redeem: unavailable und zeitlimit (Fallliste) (7.914417ms)
+✔ revoke: anfrage (1.935625ms)
+✔ revoke: erfolg (0.897334ms)
+✔ revoke: apple-fehler und status (Fallliste) (7.032209ms)
+✔ revoke: unavailable und zeitlimit (Fallliste) (1.49425ms)
+✔ revoke fehlbedienung: wirft ohne netz (1.88075ms)
+✔ reason: feste menge, keine geheimnisse (6.145583ms)
+✔ silence (12.714792ms)
+✔ revoke: silence (3.577541ms)
+✔ redeem: app-formular bytegleich ohne redirect_uri (1.721041ms)
+✔ redeem: redirect_uri nur mit option, leer wirft (2.095375ms)
+✔ redeem: id_token aud gleich web-id (2.450458ms)
+✔ client: web-id zugelassen, fremde id wirft (0.802167ms)
+✔ authorizeUrl: parameter vollständig, ohne scope (0.4735ms)
+✔ authorizeUrl: nonce passt zu verifyIdentityToken (1.285791ms)
+✔ authorizeUrl: wirft ohne web-id und bei leeren feldern (0.186334ms)
+✔ appleReturnUrl: origin plus fester pfad (0.178834ms)
+✔ silence: web-bausteine (1.752917ms)
+✔ cache: laden und wiederverwenden (16.336125ms)
+✔ kid: unbekannt lädt einmal nach (1.21775ms)
+✔ sperre: 59 s und 60 s (1.073667ms)
+✔ parallel: ein Abruf (0.823625ms)
+✔ fehlschlag: ohne Cache (2.995625ms)
+✔ fehlschlag: alter Cache bleibt (1.495709ms)
+✔ sperre: auch nach Fehlschlag (0.4935ms)
+✔ ttl: nach einer Stunde neuer Stand (3.613041ms)
+✔ ttl: abgelaufen und Abruf misslingt (0.436167ms)
+✔ rotation: entfernter kid (4.556875ms)
+✔ einträge: ungültige übersprungen (3.798167ms)
+✔ fetch: url und signal (0.448542ms)
+✔ zusammenspiel: verifyIdentityToken (15.783042ms)
+✔ silence und feste Werte (5.003167ms)
+✔ roundtrip: blobform (1.590459ms)
+✔ attack: manipuliert, falsch, zu kurz (0.842583ms)
+✔ attack: kein Buffer (0.13825ms)
+✔ decrypt: schlüssellänge (0.080084ms)
+✔ decrypt: 29 Byte (0.076875ms)
+✔ encrypt: wirft bei Fehleingabe (0.434917ms)
+✔ encrypt: iv je blob verschieden (8.1615ms)
+✔ encrypt: kein klartext im blob (0.138292ms)
+✔ store: überschreibt (81.354917ms)
+✔ vault: client_id wird abgelegt und ersetzt (54.362333ms)
+✔ vault fehlbedienung: client_id (57.78875ms)
+✔ store: unbekanntes konto (60.607667ms)
+✔ store: rundweg über deleteAccount (360.173875ms)
+✔ store: blob gehört zum konto (408.157125ms)
+✔ silence (287.94725ms)
+✔ config: gültige Umgebung (1.671625ms)
+✔ config: fehlend und ungültig (1.434709ms)
+✔ verify: aud im erfolg (3.070417ms)
+✔ verify: gültiges Token (1.5125ms)
+✔ attack: malformed (1.064041ms)
+✔ attack: alg none (0.835666ms)
+✔ attack: HS256 mit öffentlichem Schlüssel (0.715542ms)
+✔ attack: ES256 (0.145875ms)
+✔ attack: kid und Schlüsselsuche (1.155959ms)
+✔ attack: JWK mit fremdem alg oder kty (0.812583ms)
+✔ attack: Signatur (2.853ms)
+✔ attack: iss (1.938333ms)
+✔ attack: aud (3.269625ms)
+✔ attack: abgelaufen (2.983041ms)
+✔ attack: iat (1.911084ms)
+✔ attack: nonce (5.353458ms)
+✔ reasons: feste Liste (0.363625ms)
+✔ verify: fehlerformen (0.257583ms)
+✔ silence (4.517875ms)
+✔ config: web-id leer (0.3255ms)
+✔ config: web-id gültig und nicht in clientIds (0.088125ms)
+✔ config: web-id gleich app-id oder mit komma wirft (1.379292ms)
+✔ verify: web-token ohne audiences abgelehnt (1.581334ms)
+✔ verify: web-token mit audiences angenommen (1.940334ms)
+✔ verify: app-token mit web-audiences abgelehnt, Standard unverändert (1.007875ms)
+✔ auth: web-token am app-weg abgelehnt (3.198292ms)
+✔ auth: rundweg anmelden (387.972792ms)
+✔ auth: zweite anmeldung ersetzt schluessel (470.463ms)
+✔ auth: eingabe abgelehnt, nichts angefasst (222.915291ms)
+✔ auth: identity-token abgelehnt (60.947958ms)
+✔ auth: einloesen scheitert, nichts abgelegt (73.185833ms)
+✔ auth: sub weicht ab (101.734375ms)
+✔ auth: createSession zuletzt (78.685583ms)
+✔ auth: ohne apple-konfiguration (112.397584ms)
+✔ auth: abmelden (72.160875ms)
+✔ auth: bearerToken (0.391875ms)
+✔ auth: stille und einheitliche ablehnung (72.943791ms)
+✔ auth: rundweg loeschen (69.824959ms)
+✔ auth: loeschen widerruft einmal (84.193125ms)
+✔ auth: loeschen beruehrt kein anderes konto (65.350917ms)
+✔ auth: loeschen abgelehnt, nichts angefasst (101.966ms)
+✔ auth: loeschen rennen (70.062042ms)
+✔ auth: zwei loeschungen gleichzeitig (111.44725ms)
+✔ auth: widerruf scheitert, konto weg (5115.44475ms)
+✔ auth: widerruf entfaellt, konto weg (56.803ms)
+✔ auth: log ohne geheimnisse (34.044459ms)
+✔ auth: stille und einheitliche ablehnung loeschen (25.57875ms)
+2026-11-06T08:24:40.463Z listening
+2026-11-06T08:24:40.466Z migrated
+✔ auth: loeschen datenbankfehler (31.447166ms)
+2026-11-06T08:24:33.035Z listening
+2026-11-06T08:24:33.385Z migrated
+✔ AC-1 (S1): after ready, /health answers 200 with exactly five keys (377.63775ms)
+2026-11-06T08:24:33.403Z listening
+2026-11-06T08:24:33.407Z migrate failed, retrying (1/20)
+2026-11-06T08:24:33.458Z migrate failed, retrying (2/20)
+2026-11-06T08:24:33.510Z migrate failed, retrying (3/20)
+2026-11-06T08:24:33.561Z migrate failed, retrying (4/20)
+2026-11-06T08:24:33.613Z migrate failed, retrying (5/20)
+2026-11-06T08:24:33.666Z migrate failed, retrying (6/20)
+2026-11-06T08:24:33.719Z migrate failed, retrying (7/20)
+2026-11-06T08:24:33.771Z migrate failed, retrying (8/20)
+2026-11-06T08:24:33.825Z migrate failed, retrying (9/20)
+2026-11-06T08:24:33.881Z migrate failed, retrying (10/20)
+2026-11-06T08:24:33.941Z migrate failed, retrying (11/20)
+2026-11-06T08:24:33.995Z migrate failed, retrying (12/20)
+2026-11-06T08:24:34.050Z migrate failed, retrying (13/20)
+2026-11-06T08:24:34.102Z migrate failed, retrying (14/20)
+2026-11-06T08:24:34.154Z migrate failed, retrying (15/20)
+2026-11-06T08:24:34.207Z migrate failed, retrying (16/20)
+2026-11-06T08:24:34.259Z migrate failed, retrying (17/20)
+2026-11-06T08:24:34.321Z migrate failed, retrying (18/20)
+2026-11-06T08:24:34.373Z migrate failed, retrying (19/20)
+✔ AC-2 (S1): without a database /health and /mcp answer 503, ready is refused, close does not throw (1021.555375ms)
+2026-11-06T08:24:34.427Z listening
+2026-11-06T08:24:34.464Z migrated
+✔ AC-3 (S1): /mcp answers initialize with serverInfo and refuses get_now without an account (97.888875ms)
+2026-11-06T08:24:34.525Z listening
+2026-11-06T08:24:34.596Z migrated
+✔ AC-4 (S1): an unknown path answers 404 and counts in the next /health (81.139375ms)
+2026-11-06T08:24:34.605Z listening
+2026-11-06T08:24:34.662Z migrated
+✔ AC-5 (S1): terminated pool connections leave the process alive and /health recovers within 5 s, without error text (70.3505ms)
+2026-11-06T08:24:34.676Z listening
+2026-11-06T08:24:34.747Z migrated
+✔ AC-6 (S1): close ends server and pool, a second close does not throw, keep-alive does not hold it (81.000667ms)
+✔ AC-7 (S1): ErrorWindow trips only above half of at least 20 answers and forgets after five minutes (0.212542ms)
+2026-11-06T08:24:34.757Z listening
+2026-11-06T08:24:34.825Z migrated
+✔ AC-8 (S1): /health turns 503 on a high error rate and recovers when the window passes (82.635458ms)
+✔ AC-9 (S1): a database that never answers gives 503 with db down within a second, no exception (51.450458ms)
+✔ AC-10 (S1): no title, order id, database error text or URL in any answer or log line; every log line starts ISO (298.495208ms)
+2026-11-06T08:24:35.189Z listening
+2026-11-06T08:24:35.196Z migrate failed, retrying (1/40)
+2026-11-06T08:24:35.249Z migrate failed, retrying (2/40)
+2026-11-06T08:24:35.302Z migrate failed, retrying (3/40)
+2026-11-06T08:24:35.353Z migrate failed, retrying (4/40)
+2026-11-06T08:24:35.405Z migrate failed, retrying (5/40)
+2026-11-06T08:24:35.457Z migrate failed, retrying (6/40)
+2026-11-06T08:24:35.509Z migrate failed, retrying (7/40)
+2026-11-06T08:24:35.561Z migrate failed, retrying (8/40)
+2026-11-06T08:24:35.612Z migrate failed, retrying (9/40)
+2026-11-06T08:24:35.663Z migrate failed, retrying (10/40)
+2026-11-06T08:24:35.714Z migrate failed, retrying (11/40)
+2026-11-06T08:24:35.766Z migrate failed, retrying (12/40)
+2026-11-06T08:24:35.818Z migrate failed, retrying (13/40)
+2026-11-06T08:24:35.869Z migrate failed, retrying (14/40)
+2026-11-06T08:24:35.921Z migrate failed, retrying (15/40)
+2026-11-06T08:24:35.973Z migrate failed, retrying (16/40)
+2026-11-06T08:24:36.024Z migrate failed, retrying (17/40)
+2026-11-06T08:24:36.076Z migrate failed, retrying (18/40)
+2026-11-06T08:24:36.128Z migrate failed, retrying (19/40)
+2026-11-06T08:24:36.179Z migrate failed, retrying (20/40)
+2026-11-06T08:24:36.231Z migrate failed, retrying (21/40)
+2026-11-06T08:24:36.283Z migrate failed, retrying (22/40)
+2026-11-06T08:24:36.334Z migrate failed, retrying (23/40)
+2026-11-06T08:24:36.388Z migrate failed, retrying (24/40)
+2026-11-06T08:24:36.442Z migrate failed, retrying (25/40)
+2026-11-06T08:24:36.495Z migrate failed, retrying (26/40)
+2026-11-06T08:24:36.550Z migrate failed, retrying (27/40)
+2026-11-06T08:24:36.603Z migrate failed, retrying (28/40)
+2026-11-06T08:24:36.655Z migrate failed, retrying (29/40)
+2026-11-06T08:24:36.707Z migrate failed, retrying (30/40)
+2026-11-06T08:24:36.758Z migrate failed, retrying (31/40)
+2026-11-06T08:24:36.810Z migrate failed, retrying (32/40)
+2026-11-06T08:24:36.862Z migrate failed, retrying (33/40)
+2026-11-06T08:24:36.913Z migrate failed, retrying (34/40)
+2026-11-06T08:24:36.965Z migrate failed, retrying (35/40)
+2026-11-06T08:24:37.017Z migrate failed, retrying (36/40)
+2026-11-06T08:24:37.069Z migrate failed, retrying (37/40)
+2026-11-06T08:24:37.120Z migrate failed, retrying (38/40)
+2026-11-06T08:24:37.172Z migrate failed, retrying (39/40)
+2026-11-06T08:24:37.225Z listening
+2026-11-06T08:24:37.236Z migrated
+✔ einhaengen: auth vor migrate 503 (2052.178291ms)
+2026-11-06T08:24:37.242Z listening
+2026-11-06T08:24:37.253Z migrated
+2026-11-06T08:24:37.259Z apple revoke skipped
+✔ einhaengen: ohne config logout und delete laufen (22.955083ms)
+2026-11-06T08:24:37.265Z listening
+2026-11-06T08:24:37.275Z migrated
+✔ einhaengen: anmelden und abmelden mit config (21.982875ms)
+2026-11-06T08:24:37.287Z listening
+2026-11-06T08:24:37.298Z migrated
+2026-11-06T08:24:37.306Z listening
+2026-11-06T08:24:37.331Z migrated
+✔ einhaengen: jwks lazy und einmal (53.654166ms)
+✔ einhaengen: weiche apple env (0.729875ms)
+✔ einhaengen: prozess bricht bei falscher config ab (1018.790583ms)
+✔ einhaengen: allein gesetzte web-id bricht start ab (222.083583ms)
+✔ main: ungueltige oauth schluessel brechen start ab (740.203375ms)
+2026-11-06T08:24:39.323Z listening
+2026-11-06T08:24:39.336Z migrated
+✔ einhaengen: body ueber 1 mib 413 (36.993583ms)
+2026-11-06T08:24:39.360Z listening
+2026-11-06T08:24:39.371Z migrated
+✔ einhaengen: luegende content-length (20.106ms)
+2026-11-06T08:24:39.380Z listening
+2026-11-06T08:24:39.391Z migrated
+✔ einhaengen: 413 kippt health nicht (46.365708ms)
+2026-11-06T08:24:39.427Z listening
+2026-11-06T08:24:39.438Z migrated
+✔ einhaengen: health und mcp nicht ueberschreibbar (25.349792ms)
+2026-11-06T08:24:39.452Z listening
+2026-11-06T08:24:39.463Z migrated
+✔ einhaengen: log wirft nie (349.507333ms)
+✔ einhaengen: log ohne geheimnisse (26.79025ms)
+✔ einhaengen: grenze und doku (0.418167ms)
+✔ AC-1/AC-3: tools/list names the six tools, with the annotations of the write and read tools (136.637375ms)
+▶ AC-2: without an account the read tools refuse and reads nothing
+  ✔ get_now (3.021667ms)
+  ✔ list_tasks (1.065125ms)
+✔ AC-2: without an account the read tools refuse and reads nothing (361.970292ms)
+▶ AC-3/AC-4: another account and an account without transcript get „noch keine Abschrift“
+  ✔ AC-3 fremdes Konto (420.29825ms)
+  ✔ AC-4 keine Abschrift (228.395459ms)
+✔ AC-3/AC-4: another account and an account without transcript get „noch keine Abschrift“ (649.006584ms)
+▶ AC-5: get_now passes nowCount through and never recounts
+  ✔ Vertrag (121.77775ms)
+  ✔ 7 bei drei Zeilen (65.664083ms)
+✔ AC-5: get_now passes nowCount through and never recounts (188.26925ms)
+▶ AC-6: get_now orders knaeuel, today, lined, waiting and keeps the order inside a group
+  ✔ Vertrag (90.116291ms)
+  ✔ ohne Knäuel, mehrere je Gruppe (121.786542ms)
+✔ AC-6: get_now orders knaeuel, today, lined, waiting and keeps the order inside a group (212.954125ms)
+✔ AC-7: each row of get_now carries the task's fields; an id without task stays id and group (80.2685ms)
+▶ AC-8: list_tasks returns every task as delivered, with generatedAt
+  ✔ Vertrag (87.136791ms)
+  ✔ vertauscht (66.451209ms)
+✔ AC-8: list_tasks returns every task as delivered, with generatedAt (154.232625ms)
+✔ AC-9: no raw text or note in any answer, nothing on console or stdout (73.676291ms)
+✔ AC-10: a newer upload is read on the next call, nothing is cached (78.936125ms)
+✔ AC-13: getTranscript returns the stored document or undefined (69.280709ms)
+✔ AC-4 (C4b-1): without an account both new tools refuse and capture_task stores nothing (84.206792ms)
+✔ AC-5/AC-6 (C4b-1): capture_task stores one capture order per call, waiting, for the account from authInfo (81.23175ms)
+✔ AC-7 (C4b-1): empty, blank and invalid text store nothing and answer isError (103.8335ms)
+✔ AC-8/AC-9 (C4b-1): get_order_result goes waiting, claimed, result; unknown and foreign ids are unknown, no order text (89.495792ms)
+✔ AC-10 (C4b-1): neither new tool writes to console or stdout (75.17025ms)
+✔ AC-1 (C4b-2): complete_task and set_due are write tools without idempotence and point to list_tasks and get_order_result (60.113125ms)
+▶ AC-2/AC-3 (C4b-2): without an account or without a transcript both tools refuse and store nothing
+  ✔ AC-2 kein Konto (55.233042ms)
+  ✔ AC-3 keine Abschrift (63.562834ms)
+✔ AC-2/AC-3 (C4b-2): without an account or without a transcript both tools refuse and store nothing (119.137958ms)
+✔ AC-4 (C4b-2): a generatedAt that differs from the stored transcript stores nothing; the same one stores an order (49.490667ms)
+✔ AC-5 (C4b-2): a task the transcript no longer carries is refused; a lowercase id finds a task and the order carries the transcript's id (28.568542ms)
+✔ AC-6 (C4b-2): complete_task stores one complete order with the expected state from the transcript (20.733083ms)
+✔ AC-7 (C4b-2): set_due stores the date and hasTime as given, with the expected due date; without date the key is missing (19.5915ms)
+✔ AC-8 (C4b-2): set_due with an invalid date stores nothing and answers with checkOrder's message (18.978958ms)
+✔ AC-9/AC-10 (C4b-2): equal calls give two orders; no title in an answer; another account changes nothing (20.50925ms)
+✔ AC-11 (C4b-2): neither new tool writes to console or stdout (20.619792ms)
+✔ AC-1: applies migrations in number order and returns their names in that order (73.558708ms)
+✔ AC-2: a second run applies nothing, a new file alone is applied (25.709709ms)
+✔ AC-3: a broken migration rolls back completely and rethrows the Postgres error (48.011541ms)
+✔ AC-4: a gap in the numbers is refused before anything is applied (8.377292ms)
+✔ AC-4: a duplicate number is refused before anything is applied (18.357583ms)
+✔ AC-4: a misnamed .sql file is refused before anything is applied, README.md is ignored (6.929125ms)
+✔ AC-4: a README.md beside the migrations does not disturb the run (30.379875ms)
+✔ AC-4: number 000 is refused as invalid, not as a duplicate (9.84625ms)
+✔ AC-2: two runs at once apply every migration exactly once (S3) (350.119458ms)
+✔ AC-2: three runs at once apply every migration exactly once (S3) (410.6895ms)
+✔ AC-3: after a failed run the lock is free and a repaired run finishes (S3) (2010.028208ms)
+✔ AC-3: a failed ROLLBACK keeps the original error, discards the connection and skips the unlock (S3) (0.82825ms)
+✔ AC-4: a gap is refused without ever connecting to the database (S3) (0.95ms)
+✔ AC-5: without DATABASE_URL the test run fails and names the variable (234.136416ms)
+✔ oauth-adapter: upsert und find (369.60825ms)
+✔ oauth-adapter: unbekannt und modelle getrennt (411.272958ms)
+✔ oauth-adapter: find by uid (272.88275ms)
+✔ oauth-adapter: destroy (69.249833ms)
+✔ oauth-adapter: revoke by grant id (76.318042ms)
+✔ oauth-adapter: ids nur als hash (106.643083ms)
+✔ oauth-adapter: abgelaufenes verborgen (74.358542ms)
+✔ oauth-adapter: ohne ablauf bleibt (101.024916ms)
+✔ oauth-adapter: consume einmal (88.873041ms)
+✔ oauth-adapter: zwei gleichzeitige consume (73.501333ms)
+✔ oauth-adapter: replay detection atomar (70.818333ms)
+✔ oauth-adapter: find by user code nicht unterstuetzt (0.293125ms)
+✔ oauth-adapter: aufraeumen hoechstens alle 10 minuten (82.236708ms)
+✔ oauth-adapter: unbekanntes konto wirft (49.595334ms)
+✔ oauth-adapter: nichts im log (85.29425ms)
+2026-11-06T08:24:33.214Z listening
+2026-11-06T08:24:33.441Z migrated
+✔ oauth-provider: metadaten unter beiden pfaden (272.843166ms)
+✔ oauth-provider: voller durchlauf bis get_now (651.248167ms)
+2026-11-06T08:24:34.110Z listening
+2026-11-06T08:24:34.159Z migrated
+✔ oauth-provider: code nur einmal (93.592292ms)
+2026-11-06T08:24:34.203Z listening
+2026-11-06T08:24:34.276Z migrated
+✔ oauth-provider: ohne pkce abgelehnt (86.340791ms)
+2026-11-06T08:24:34.289Z listening
+2026-11-06T08:24:34.394Z migrated
+✔ oauth-provider: cimd und resource streng (137.989916ms)
+2026-11-06T08:24:34.429Z listening
+2026-11-06T08:24:34.511Z migrated
+2026-11-06T08:24:34.567Z oauth server error
+2026-11-06T08:24:34.569Z oauth server error
+2026-11-06T08:24:34.572Z oauth server error
+2026-11-06T08:24:34.576Z oauth server error
+2026-11-06T08:24:34.579Z oauth server error
+2026-11-06T08:24:34.582Z oauth server error
+2026-11-06T08:24:34.584Z oauth server error
+2026-11-06T08:24:34.586Z oauth server error
+2026-11-06T08:24:34.589Z oauth server error
+2026-11-06T08:24:34.591Z oauth server error
+2026-11-06T08:24:34.593Z oauth server error
+2026-11-06T08:24:34.595Z oauth server error
+2026-11-06T08:24:34.597Z oauth server error
+2026-11-06T08:24:34.600Z oauth server error
+2026-11-06T08:24:34.602Z oauth server error
+2026-11-06T08:24:34.604Z oauth server error
+2026-11-06T08:24:34.606Z oauth server error
+2026-11-06T08:24:34.609Z oauth server error
+2026-11-06T08:24:34.611Z oauth server error
+2026-11-06T08:24:34.613Z oauth server error
+✔ oauth-provider: vor bridge und im fehlerfenster (195.850334ms)
+2026-11-06T08:24:34.623Z listening
+2026-11-06T08:24:34.675Z migrated
+✔ oauth-provider: refresh rotiert, altes invalid_grant (96.437625ms)
+2026-11-06T08:24:34.719Z listening
+2026-11-06T08:24:34.781Z migrated
+✔ oauth-provider: verifizierer streng (144.226833ms)
+2026-11-06T08:24:34.863Z listening
+2026-11-06T08:24:34.908Z migrated
+✔ oauth-provider: app-sitzung an mcp weiter 401 (56.696709ms)
+2026-11-06T08:24:34.920Z listening
+2026-11-06T08:24:35.000Z migrated
+✔ oauth-provider: produkt-interaction meldet niemanden an (92.779542ms)
+✔ oauth-provider: dev interactions aus (56.739291ms)
+✔ oauth-provider: schluessel aus der umgebung (47.24725ms)
+2026-11-06T08:24:35.122Z listening
+2026-11-06T08:24:35.215Z migrated
+2026-11-06T08:24:35.227Z listening
+2026-11-06T08:24:35.291Z migrated
+2026-11-06T08:24:35.300Z listening
+✔ oauth-provider: ohne schluessel 503 und mcp bleibt zu (184.608208ms)
+2026-11-06T08:24:35.355Z migrated
+✔ oauth-provider: 503 vor migrate (78.451417ms)
+✔ oauth-provider: nichts im log, auch nicht beim fk fehler (79.518417ms)
+✔ oauth-provider: abhaengigkeit exakt gepinnt (0.200667ms)
+2026-11-06T08:24:33.366Z listening
+2026-11-06T08:24:33.775Z migrated
+✔ oauth-resource: metadaten dokument (428.41625ms)
+2026-11-06T08:24:33.788Z listening
+2026-11-06T08:24:33.967Z migrated
+✔ oauth-resource: metadaten nur get (197.914541ms)
+2026-11-06T08:24:33.986Z listening
+2026-11-06T08:24:33.992Z migrate failed, retrying (1/20)
+2026-11-06T08:24:34.044Z migrate failed, retrying (2/20)
+2026-11-06T08:24:34.096Z migrate failed, retrying (3/20)
+2026-11-06T08:24:34.148Z migrate failed, retrying (4/20)
+2026-11-06T08:24:34.200Z migrate failed, retrying (5/20)
+2026-11-06T08:24:34.252Z migrate failed, retrying (6/20)
+2026-11-06T08:24:34.307Z migrate failed, retrying (7/20)
+2026-11-06T08:24:34.359Z migrate failed, retrying (8/20)
+2026-11-06T08:24:34.410Z migrate failed, retrying (9/20)
+2026-11-06T08:24:34.462Z migrate failed, retrying (10/20)
+2026-11-06T08:24:34.516Z migrate failed, retrying (11/20)
+2026-11-06T08:24:34.567Z migrate failed, retrying (12/20)
+2026-11-06T08:24:34.619Z migrate failed, retrying (13/20)
+2026-11-06T08:24:34.671Z migrate failed, retrying (14/20)
+2026-11-06T08:24:34.723Z migrate failed, retrying (15/20)
+2026-11-06T08:24:34.775Z migrate failed, retrying (16/20)
+2026-11-06T08:24:34.826Z migrate failed, retrying (17/20)
+2026-11-06T08:24:34.878Z migrate failed, retrying (18/20)
+2026-11-06T08:24:34.929Z migrate failed, retrying (19/20)
+2026-11-06T08:24:34.983Z listening
+2026-11-06T08:24:35.049Z migrated
+✔ oauth-resource: metadaten vor migrate (1071.934041ms)
+2026-11-06T08:24:35.058Z listening
+2026-11-06T08:24:35.159Z migrated
+✔ oauth-resource: mcp ohne token 401 (111.102375ms)
+2026-11-06T08:24:35.170Z listening
+2026-11-06T08:24:35.237Z migrated
+✔ oauth-resource: ablehnungstabelle (78.741708ms)
+✔ oauth-resource: verifizierer wirft 500 (85.524708ms)
+2026-11-06T08:24:35.334Z listening
+2026-11-06T08:24:35.383Z migrated
+2026-11-06T08:24:35.390Z listening
+2026-11-06T08:24:35.449Z migrated
+✔ oauth-resource: app-sitzung abgelehnt (129.512ms)
+2026-11-06T08:24:35.463Z listening
+2026-11-06T08:24:35.498Z migrated
+✔ oauth-resource: konto durchgereicht (94.25275ms)
+2026-11-06T08:24:35.558Z listening
+2026-11-06T08:24:35.570Z migrated
+✔ oauth-resource: konten getrennt (30.454458ms)
+2026-11-06T08:24:35.586Z listening
+2026-11-06T08:24:35.588Z migrate failed, retrying (1/20)
+2026-11-06T08:24:35.639Z migrate failed, retrying (2/20)
+2026-11-06T08:24:35.690Z migrate failed, retrying (3/20)
+2026-11-06T08:24:35.742Z migrate failed, retrying (4/20)
+2026-11-06T08:24:35.793Z migrate failed, retrying (5/20)
+2026-11-06T08:24:35.845Z migrate failed, retrying (6/20)
+2026-11-06T08:24:35.897Z migrate failed, retrying (7/20)
+2026-11-06T08:24:35.948Z migrate failed, retrying (8/20)
+2026-11-06T08:24:35.999Z migrate failed, retrying (9/20)
+2026-11-06T08:24:36.052Z migrate failed, retrying (10/20)
+2026-11-06T08:24:36.103Z migrate failed, retrying (11/20)
+2026-11-06T08:24:36.155Z migrate failed, retrying (12/20)
+2026-11-06T08:24:36.206Z migrate failed, retrying (13/20)
+2026-11-06T08:24:36.258Z migrate failed, retrying (14/20)
+2026-11-06T08:24:36.310Z migrate failed, retrying (15/20)
+2026-11-06T08:24:36.363Z migrate failed, retrying (16/20)
+2026-11-06T08:24:36.417Z migrate failed, retrying (17/20)
+2026-11-06T08:24:36.472Z migrate failed, retrying (18/20)
+2026-11-06T08:24:36.526Z migrate failed, retrying (19/20)
+2026-11-06T08:24:36.589Z listening
+2026-11-06T08:24:36.622Z migrated
+✔ oauth-resource: mcp vor migrate 503 (1044.477125ms)
+2026-11-06T08:24:36.633Z listening
+2026-11-06T08:24:36.647Z migrated
+✔ oauth-resource: ressource folgt public url (23.454209ms)
+✔ oauth-resource: public url aus env (0.490583ms)
+✔ oauth-resource: prozess bricht bei falscher public url ab (552.662583ms)
+2026-11-06T08:24:37.209Z listening
+2026-11-06T08:24:37.220Z migrated
+✔ oauth-resource: nicht ueberschreibbar (18.150125ms)
+✔ oauth-resource: grenze und doku (1.318167ms)
+✔ AC-1: the contract order is stored, ON CONFLICT works on the generated id (111.448667ms)
+✔ AC-2: contract examples and small orders and results are accepted (0.441166ms)
+▶ AC-3 to AC-8: orders off the table are refused with the field path, nothing is stored
+  ✔ AC-3 (Z1) version (2.017042ms)
+  ✔ AC-4 (Z2) id (0.701542ms)
+  ✔ AC-4 (Z3) kind (0.594333ms)
+  ✔ AC-5 (Z4) capture (0.696042ms)
+  ✔ AC-6 (Z5) complete (0.751083ms)
+  ✔ AC-7 (Z6) complete times and keys (0.361ms)
+  ✔ AC-8 (Z7) setDue (0.587541ms)
+✔ AC-3 to AC-8: orders off the table are refused with the field path, nothing is stored (73.754292ms)
+✔ AC-7: complete without expectedDueDate is accepted (0.166917ms)
+✔ AC-9: an order that is no object names the root (0.08175ms)
+▶ AC-10/11: results off the table are refused with the field path, nothing is stored
+  ✔ AC-10 (Z9) result (1.967ms)
+  ✔ AC-11 (Z10) reason (1.543875ms)
+✔ AC-10/11: results off the table are refused with the field path, nothing is stored (116.297875ms)
+✔ AC-12: transcript messages stay, other errors carry no prefix (0.88975ms)
+✔ AC-13: a new order is stored for the account, unclaimed (66.456834ms)
+✔ AC-14: the same id again, even upper case with other content, changes nothing (70.359875ms)
+✔ AC-15: a claimed order is not reset by a second put (79.191334ms)
+✔ AC-16: three orders are claimed one by one, then nothing (74.587125ms)
+✔ AC-17: two connections claim ten orders, each exactly once (66.68675ms)
+✔ AC-18: two accounts never cross (95.38925ms)
+✔ AC-19: the result of the holding device is stored (76.743333ms)
+✔ AC-20: results for orders not held by the reporter are refused (87.756625ms)
+✔ AC-21: a second result changes nothing (85.946084ms)
+✔ AC-1 (C4b-1): getResult is unknown for a never stored id, another account's id and a non-UUID (63.977292ms)
+▶ AC-2 (C4b-1): getResult goes waiting, claimed, result and reads the id in any case
+  ✔ done (60.435625ms)
+  ✔ rejected mit Grund (70.44575ms)
+✔ AC-2 (C4b-1): getResult goes waiting, claimed, result and reads the id in any case (131.199583ms)
+✔ AC-1: the real migrations folder applies 001 once and creates the three tables (145.513417ms)
+✔ AC-2: the three contract examples are accepted in contract order (74.221917ms)
+✔ AC-3: transcripts refuse what the contract does not allow (108.392125ms)
+✔ AC-4: orders refuse a wrong version, kind, id, account or half a claim, and take all three kinds (59.344625ms)
+✔ AC-5: order results belong to exactly one existing order and carry a reason only when rejected (104.663167ms)
+✔ AC-6: ids keep their case in the document, the uuid columns compare regardless of case (60.919584ms)
+✔ AC-6: known limit, version 1.0 is accepted because jsonb compares numbers numerically (102.802333ms)
+✔ migration 003: additiv auf bestandsdaten (193.540583ms)
+✔ migration 004: additiv auf bestandsdaten (148.857209ms)
+✔ AC-1: the contract example and a lower-case one without optional fields are accepted (1.859125ms)
+▶ AC-2 to AC-11: the deviation table is refused with the field path, nothing is stored
+  ✔ AC-2 (Z1) version (1.388584ms)
+  ✔ AC-3 (Z2) generatedAt (0.685375ms)
+  ✔ AC-4 (Z3) now is no object (0.799708ms)
+  ✔ AC-5 (Z4) keys of now (1.1795ms)
+  ✔ AC-6 (Z5) now.knaeuel (0.642792ms)
+  ✔ AC-7 (Z6) lists of now (1.359042ms)
+  ✔ AC-8 (Z7) contexts (0.508208ms)
+  ✔ AC-9 (Z8) title and project (0.670084ms)
+  ✔ AC-10 (Z9) raw text and note anywhere (1.184375ms)
+  ✔ AC-11 (Z10) root keys and nowCount (1.116166ms)
+  ✔ F001 inherited key names are unknown keys (2.229417ms)
+  ✔ F002 times Postgres refuses or that are no ISO (2.03875ms)
+  ✔ F003 NUL and lone surrogates (0.415417ms)
+✔ AC-2 to AC-11: the deviation table is refused with the field path, nothing is stored (108.363208ms)
+✔ AC-6: without now.knaeuel the transcript is accepted (0.193709ms)
+✔ AC-12/13/14: the first is stored, a newer replaces it, an older or equally old one leaves it (64.715ms)
+✔ AC-15: two concurrent uploads over two connections always leave the newer one (64.821041ms)
+✔ AC-16: two accounts keep their transcripts apart (65.234792ms)
+✔ AC-17: the service does not recount, a mismatching nowCount and unknown now ids are stored (43.836917ms)
+✔ F002: offsets up to ±15:59 are stored, as Postgres takes them (36.460459ms)
+ℹ tests 293
+ℹ suites 0
+ℹ pass 293
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7957.830917

@@ -1,6 +1,6 @@
 import { createHash, createPrivateKey, createPublicKey, timingSafeEqual, verify, type KeyObject } from "node:crypto";
 
-export type AppleConfig = { teamId: string; keyId: string; clientIds: string[]; privateKey: KeyObject; tokenKey: Buffer };
+export type AppleConfig = { teamId: string; keyId: string; clientIds: string[]; webClientId?: string; privateKey: KeyObject; tokenKey: Buffer };
 export type KeyLookup = (kid: string) => Promise<JsonWebKey | "unknown_kid" | "keys_unavailable">;
 export type Verdict = { ok: true; sub: string; aud: string } | { ok: false; reason: string };
 type Doc = Record<string, unknown>;
@@ -37,7 +37,16 @@ export function loadAppleConfig(env: NodeJS.ProcessEnv = process.env): AppleConf
   const raw = required(env, "APPLE_TOKEN_KEY");
   const tokenKey = Buffer.from(raw, "base64");
   if (!/^[A-Za-z0-9+/]+={0,2}$/.test(raw) || tokenKey.length !== 32) throw new Error("APPLE_TOKEN_KEY is not 32 bytes of base64");
-  return { teamId, keyId, clientIds, privateKey, tokenKey };
+  return { teamId, keyId, clientIds, webClientId: webClientId(env, clientIds), privateKey, tokenKey };
+}
+
+// The web flow's Services ID: optional and kept apart from the app ids, so /auth/apple never accepts a web token.
+function webClientId(env: NodeJS.ProcessEnv, clientIds: string[]): string | undefined {
+  const value = env.APPLE_WEB_CLIENT_ID?.trim();
+  if (!value) return undefined;
+  if (value.includes(",")) throw new Error("APPLE_WEB_CLIENT_ID must be a single id");
+  if (clientIds.includes(value)) throw new Error("APPLE_WEB_CLIENT_ID must differ from APPLE_CLIENT_IDS");
+  return value;
 }
 
 function jsonObject(segment: string): Doc | null {
@@ -56,9 +65,9 @@ function parse(token: unknown): { header: Doc; payload: Doc; data: string; signa
   return { header, payload, data: `${parts[0]}.${parts[1]}`, signature: Buffer.from(parts[2], "base64url") };
 }
 
-function claimsReason(p: Doc, rawNonce: string, config: AppleConfig, now: number): string | null {
+function claimsReason(p: Doc, rawNonce: string, audiences: string[], now: number): string | null {
   if (p.iss !== ISSUER) return "iss";
-  if (typeof p.aud !== "string" || !config.clientIds.includes(p.aud)) return "aud";
+  if (typeof p.aud !== "string" || !audiences.includes(p.aud)) return "aud";
   if (typeof now !== "number" || !Number.isFinite(now)) return "expired";
   if (typeof p.exp !== "number" || !Number.isFinite(p.exp) || p.exp * 1000 <= now - LEEWAY_MS) return "expired";
   if (typeof p.iat !== "number" || !Number.isFinite(p.iat) || p.iat * 1000 > now + LEEWAY_MS) return "iat";
@@ -79,8 +88,9 @@ function signatureValid(jwk: JsonWebKey, data: string, signature: Buffer): boole
 }
 
 // Order: malformed, alg (before any key lookup), kid, signature, then the claims. Never throws on input.
+// audiences defaults to the app ids; the web flow passes [webClientId].
 export async function verifyIdentityToken(
-  token: string, rawNonce: string, opts: { config: AppleConfig; keys: KeyLookup; now: number },
+  token: string, rawNonce: string, opts: { config: AppleConfig; keys: KeyLookup; now: number; audiences?: string[] },
 ): Promise<Verdict> {
   const fail = (reason: string): Verdict => ({ ok: false, reason });
   let parsed;
@@ -94,7 +104,7 @@ export async function verifyIdentityToken(
   if (jwk === "unknown_kid" || jwk === "keys_unavailable") return fail(jwk);
   if (!jwk || typeof jwk !== "object" || jwk.kty !== "RSA" || (jwk.alg !== undefined && jwk.alg !== "RS256")) return fail("unknown_kid");
   if (!signatureValid(jwk, parsed.data, parsed.signature)) return fail("signature");
-  const reason = claimsReason(parsed.payload, rawNonce, opts.config, opts.now);
+  const reason = claimsReason(parsed.payload, rawNonce, opts.audiences ?? opts.config.clientIds, opts.now);
   // aud is the checked client id the token was issued for; the revocation needs exactly this one.
   return reason ? fail(reason) : { ok: true, sub: parsed.payload.sub as string, aud: parsed.payload.aud as string };
 }

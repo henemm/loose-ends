@@ -33,9 +33,9 @@ const logError = (event: string) => {
   try { console.error(`${new Date().toISOString()} ${event}`); } catch {}
 };
 const BODY_LIMIT = 1024 * 1024;
-const APPLE_VARS = ["APPLE_TEAM_ID", "APPLE_KEY_ID", "APPLE_CLIENT_IDS", "APPLE_PRIVATE_KEY", "APPLE_TOKEN_KEY"];
+const APPLE_VARS = ["APPLE_TEAM_ID", "APPLE_KEY_ID", "APPLE_CLIENT_IDS", "APPLE_PRIVATE_KEY", "APPLE_TOKEN_KEY", "APPLE_WEB_CLIENT_ID"];
 
-// None of the five set (blank counts as unset) → undefined; otherwise the full config, or a throw naming the variable.
+// None of them set (blank counts as unset) → undefined; otherwise the full config, or a throw naming the variable.
 export function appleConfigFromEnv(env: NodeJS.ProcessEnv): AppleConfig | undefined {
   if (APPLE_VARS.every((name) => !env[name]?.trim())) return undefined;
   return loadAppleConfig(env);
