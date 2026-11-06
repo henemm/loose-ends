@@ -1,0 +1,239 @@
+......./opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 63711)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 63717)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 63723)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 63729)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 63735)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 63745)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 63749)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+....FFFF.FF/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 63761)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 63767)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 63779)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 63791)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 63803)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 63815)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 63828)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 63840)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=13, family=2, type=1, proto=0, laddr=('127.0.0.1', 63856)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py:937: ResourceWarning: unclosed <socket.socket fd=14, family=2, type=1, proto=0, laddr=('127.0.0.1', 63868)>
+  def setup_positions(expr, force_valid=True):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F.
+======================================================================
+FAIL: test_placement_error_shows_reason_and_does_not_abort (__main__.StoreTextTests.test_placement_error_shows_reason_and_does_not_abort)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/shimmying-conjuring-trinket/scripts/test_asc_store_probe.py", line 238, in test_placement_error_shows_reason_and_does_not_abort
+    self.assertTrue(access, result.stdout)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : zugriff abfrage=appInfos http=200
+appinfo nr=1 state=READY_FOR_DISTRIBUTION appStoreState=? felder=alpha,state,zebra relationen=ageRatingDeclaration,primaryCategory
+zugriff abfrage=appInfoLocalizations http=200
+untertitel appinfo=1 sprache=de-DE name=Loose Ends untertitel=Sortiert zeichen=8
+appinfo nr=2 state=? appStoreState=IN_REVIEW felder=appStoreState relationen=appInfoLocalizations
+zugriff abfrage=appInfoLocalizations http=200
+untertitel appinfo=2 sprache=de-DE name=Loose Ends untertitel=Einfach sagen. zeichen=14
+zugriff abfrage=appStoreVersions http=200
+zugriff abfrage=appAssetLibraryRefData http=200
+refdaten keine
+zugriff abfrage=appStoreVersionLocalizations http=200
+text version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE beschreibung=117 schluesselwoerter=60 supporturl=https://example.org/hilfe werbetext=0 marketingurl=keine
+beschreibung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE zeichen=117 text="Erste Zeile.\nZweite Zeile mit Ärger und Übung. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+schluesselwoerter version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE zeichen=60 text="kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
+werbetext version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE zeichen=0 text=keiner
+zugriff abfrage=appAssetLibraryPlacements http=404 befund="Schlüssel hat keinen Zugriff oder Pfad unbekannt"
+platzierung fehler version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE
+zugriff abfrage=appScreenshotSets http=200
+bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE
+text version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US beschreibung=0 schluesselwoerter=0 supporturl=keine werbetext=0 marketingurl=keine
+beschreibung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US zeichen=0 text=keiner
+schluesselwoerter version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US zeichen=0 text=keiner
+werbetext version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US zeichen=0 text=keiner
+zugriff abfrage=appAssetLibraryPlacements http=404 befund="Schlüssel hat keinen Zugriff oder Pfad unbekannt"
+platzierung fehler version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US
+zugriff abfrage=appScreenshotSets http=200
+bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US
+zusammenfassung antworten=10 von=10 befunde=2
+
+
+======================================================================
+FAIL: test_placement_line_prints_attribute_keys (__main__.StoreTextTests.test_placement_line_prints_attribute_keys)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/shimmying-conjuring-trinket/scripts/test_asc_store_probe.py", line 228, in test_placement_line_prints_attribute_keys
+    self.assertEqual(len(lines), 2, result.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : zugriff abfrage=appInfos http=200
+appinfo nr=1 state=READY_FOR_DISTRIBUTION appStoreState=? felder=alpha,state,zebra relationen=ageRatingDeclaration,primaryCategory
+zugriff abfrage=appInfoLocalizations http=200
+untertitel appinfo=1 sprache=de-DE name=Loose Ends untertitel=Sortiert zeichen=8
+appinfo nr=2 state=? appStoreState=IN_REVIEW felder=appStoreState relationen=appInfoLocalizations
+zugriff abfrage=appInfoLocalizations http=200
+untertitel appinfo=2 sprache=de-DE name=Loose Ends untertitel=Einfach sagen. zeichen=14
+zugriff abfrage=appStoreVersions http=200
+zugriff abfrage=appAssetLibraryRefData http=200
+refdaten keine
+zugriff abfrage=appStoreVersionLocalizations http=200
+text version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE beschreibung=117 schluesselwoerter=60 supporturl=https://example.org/hilfe werbetext=0 marketingurl=keine
+beschreibung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE zeichen=117 text="Erste Zeile.\nZweite Zeile mit Ärger und Übung. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+schluesselwoerter version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE zeichen=60 text="kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
+werbetext version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE zeichen=0 text=keiner
+zugriff abfrage=appAssetLibraryPlacements http=404 befund="Schlüssel hat keinen Zugriff oder Pfad unbekannt"
+platzierung fehler version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE
+zugriff abfrage=appScreenshotSets http=200
+bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE
+text version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US beschreibung=0 schluesselwoerter=0 supporturl=keine werbetext=0 marketingurl=keine
+beschreibung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US zeichen=0 text=keiner
+schluesselwoerter version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US zeichen=0 text=keiner
+werbetext version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US zeichen=0 text=keiner
+zugriff abfrage=appAssetLibraryPlacements http=404 befund="Schlüssel hat keinen Zugriff oder Pfad unbekannt"
+platzierung fehler version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US
+zugriff abfrage=appScreenshotSets http=200
+bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US
+zusammenfassung antworten=10 von=10 befunde=2
+
+
+======================================================================
+FAIL: test_placement_lines_per_localization (__main__.StoreTextTests.test_placement_lines_per_localization)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/shimmying-conjuring-trinket/scripts/test_asc_store_probe.py", line 218, in test_placement_lines_per_localization
+    self.assertEqual(len(lines), 2, result.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : zugriff abfrage=appInfos http=200
+appinfo nr=1 state=READY_FOR_DISTRIBUTION appStoreState=? felder=alpha,state,zebra relationen=ageRatingDeclaration,primaryCategory
+zugriff abfrage=appInfoLocalizations http=200
+untertitel appinfo=1 sprache=de-DE name=Loose Ends untertitel=Sortiert zeichen=8
+appinfo nr=2 state=? appStoreState=IN_REVIEW felder=appStoreState relationen=appInfoLocalizations
+zugriff abfrage=appInfoLocalizations http=200
+untertitel appinfo=2 sprache=de-DE name=Loose Ends untertitel=Einfach sagen. zeichen=14
+zugriff abfrage=appStoreVersions http=200
+zugriff abfrage=appAssetLibraryRefData http=200
+refdaten keine
+zugriff abfrage=appStoreVersionLocalizations http=200
+text version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE beschreibung=117 schluesselwoerter=60 supporturl=https://example.org/hilfe werbetext=0 marketingurl=keine
+beschreibung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE zeichen=117 text="Erste Zeile.\nZweite Zeile mit Ärger und Übung. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+schluesselwoerter version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE zeichen=60 text="kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
+werbetext version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE zeichen=0 text=keiner
+zugriff abfrage=appAssetLibraryPlacements http=404 befund="Schlüssel hat keinen Zugriff oder Pfad unbekannt"
+platzierung fehler version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE
+zugriff abfrage=appScreenshotSets http=200
+bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE
+text version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US beschreibung=0 schluesselwoerter=0 supporturl=keine werbetext=0 marketingurl=keine
+beschreibung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US zeichen=0 text=keiner
+schluesselwoerter version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US zeichen=0 text=keiner
+werbetext version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US zeichen=0 text=keiner
+zugriff abfrage=appAssetLibraryPlacements http=404 befund="Schlüssel hat keinen Zugriff oder Pfad unbekannt"
+platzierung fehler version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US
+zugriff abfrage=appScreenshotSets http=200
+bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US
+zusammenfassung antworten=10 von=10 befunde=2
+
+
+======================================================================
+FAIL: test_placement_path_is_placements_and_old_path_is_404 (__main__.StoreTextTests.test_placement_path_is_placements_and_old_path_is_404)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/shimmying-conjuring-trinket/scripts/test_asc_store_probe.py", line 210, in test_placement_path_is_placements_and_old_path_is_404
+    self.assertTrue(any(p.startswith("/v1/appStoreVersionLocalizations/LDE/placements") for p in paths), paths)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : ['/v1/apps?filter[bundleId]=com.henning.looseends', '/v1/apps/APP1/appInfos', '/v1/appInfos/I1/appInfoLocalizations?limit=50', '/v1/appInfos/I2/appInfoLocalizations?limit=50', '/v1/apps/APP1/appStoreVersions?limit=5', '/v1/appAssetLibraryRefData', '/v1/appStoreVersions/V1/appStoreVersionLocalizations', '/v1/appStoreVersionLocalizations/LDE/appAssetLibraryPlacements', '/v1/appStoreVersionLocalizations/LDE/appScreenshotSets', '/v1/appStoreVersionLocalizations/LEN/appAssetLibraryPlacements', '/v1/appStoreVersionLocalizations/LEN/appScreenshotSets']
+
+======================================================================
+FAIL: test_refdata_group_entries_read_defensively (__main__.StoreTextTests.test_refdata_group_entries_read_defensively)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/shimmying-conjuring-trinket/scripts/test_asc_store_probe.py", line 254, in test_refdata_group_entries_read_defensively
+    self.assertIn("refdaten gruppen=5 namen=BOTH_E,ID_C,ID_D,NAME_A,STRING_B", mixed.stdout.splitlines())
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'refdaten gruppen=5 namen=BOTH_E,ID_C,ID_D,NAME_A,STRING_B' not found in ['zugriff abfrage=appInfos http=200', 'appinfo nr=1 state=READY_FOR_DISTRIBUTION appStoreState=? felder=alpha,state,zebra relationen=ageRatingDeclaration,primaryCategory', 'zugriff abfrage=appInfoLocalizations http=200', 'untertitel appinfo=1 sprache=de-DE name=Loose Ends untertitel=Sortiert zeichen=8', 'appinfo nr=2 state=? appStoreState=IN_REVIEW felder=appStoreState relationen=appInfoLocalizations', 'zugriff abfrage=appInfoLocalizations http=200', 'untertitel appinfo=2 sprache=de-DE name=Loose Ends untertitel=Einfach sagen. zeichen=14', 'zugriff abfrage=appStoreVersions http=200', 'zugriff abfrage=appAssetLibraryRefData http=200', 'refdaten keine', 'zugriff abfrage=appStoreVersionLocalizations http=200', 'text version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE beschreibung=117 schluesselwoerter=60 supporturl=https://example.org/hilfe werbetext=0 marketingurl=keine', 'beschreibung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE zeichen=117 text="Erste Zeile.\\nZweite Zeile mit Ärger und Übung. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"', 'schluesselwoerter version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE zeichen=60 text="kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"', 'werbetext version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE zeichen=0 text=keiner', 'zugriff abfrage=appAssetLibraryPlacements http=404 befund="Schlüssel hat keinen Zugriff oder Pfad unbekannt"', 'platzierung fehler version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE', 'zugriff abfrage=appScreenshotSets http=200', 'bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE', 'text version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US beschreibung=0 schluesselwoerter=0 supporturl=keine werbetext=0 marketingurl=keine', 'beschreibung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US zeichen=0 text=keiner', 'schluesselwoerter version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US zeichen=0 text=keiner', 'werbetext version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US zeichen=0 text=keiner', 'zugriff abfrage=appAssetLibraryPlacements http=404 befund="Schlüssel hat keinen Zugriff oder Pfad unbekannt"', 'platzierung fehler version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US', 'zugriff abfrage=appScreenshotSets http=200', 'bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US', 'zusammenfassung antworten=10 von=10 befunde=2']
+
+======================================================================
+FAIL: test_refdata_groups_from_placement_profile_groups (__main__.StoreTextTests.test_refdata_groups_from_placement_profile_groups)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/shimmying-conjuring-trinket/scripts/test_asc_store_probe.py", line 246, in test_refdata_groups_from_placement_profile_groups
+    self.assertIn("refdaten gruppen=3 namen=IPAD_13,IPHONE_67,WATCH_ULTRA", result.stdout.splitlines())
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'refdaten gruppen=3 namen=IPAD_13,IPHONE_67,WATCH_ULTRA' not found in ['zugriff abfrage=appInfos http=200', 'appinfo nr=1 state=READY_FOR_DISTRIBUTION appStoreState=? felder=alpha,state,zebra relationen=ageRatingDeclaration,primaryCategory', 'zugriff abfrage=appInfoLocalizations http=200', 'untertitel appinfo=1 sprache=de-DE name=Loose Ends untertitel=Sortiert zeichen=8', 'appinfo nr=2 state=? appStoreState=IN_REVIEW felder=appStoreState relationen=appInfoLocalizations', 'zugriff abfrage=appInfoLocalizations http=200', 'untertitel appinfo=2 sprache=de-DE name=Loose Ends untertitel=Einfach sagen. zeichen=14', 'zugriff abfrage=appStoreVersions http=200', 'zugriff abfrage=appAssetLibraryRefData http=200', 'refdaten keine', 'zugriff abfrage=appStoreVersionLocalizations http=200', 'text version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE beschreibung=117 schluesselwoerter=60 supporturl=https://example.org/hilfe werbetext=0 marketingurl=keine', 'beschreibung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE zeichen=117 text="Erste Zeile.\\nZweite Zeile mit Ärger und Übung. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"', 'schluesselwoerter version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE zeichen=60 text="kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"', 'werbetext version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE zeichen=0 text=keiner', 'zugriff abfrage=appAssetLibraryPlacements http=404 befund="Schlüssel hat keinen Zugriff oder Pfad unbekannt"', 'platzierung fehler version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE', 'zugriff abfrage=appScreenshotSets http=200', 'bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE', 'text version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US beschreibung=0 schluesselwoerter=0 supporturl=keine werbetext=0 marketingurl=keine', 'beschreibung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US zeichen=0 text=keiner', 'schluesselwoerter version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US zeichen=0 text=keiner', 'werbetext version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US zeichen=0 text=keiner', 'zugriff abfrage=appAssetLibraryPlacements http=404 befund="Schlüssel hat keinen Zugriff oder Pfad unbekannt"', 'platzierung fehler version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US', 'zugriff abfrage=appScreenshotSets http=200', 'bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US', 'zusammenfassung antworten=10 von=10 befunde=2']
+
+======================================================================
+FAIL: test_refdata_none_and_error (__main__.StoreTextTests.test_refdata_none_and_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/shimmying-conjuring-trinket/scripts/test_asc_store_probe.py", line 267, in test_refdata_none_and_error
+    self.assertTrue(access and "grund=NOT_FOUND/The specified resource does not exist" in access[0], access)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : ['zugriff abfrage=appAssetLibraryRefData http=404 befund="Schlüssel hat keinen Zugriff oder Pfad unbekannt"']
+
+----------------------------------------------------------------------
+Ran 20 tests in 14.522s
+
+FAILED (failures=7)
+..F.../opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:476: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 63942)>
+  for lineno, line in enumerate(lines):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:476: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 63948)>
+  for lineno, line in enumerate(lines):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:476: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 63950)>
+  for lineno, line in enumerate(lines):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:476: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 63959)>
+  for lineno, line in enumerate(lines):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:476: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 63968)>
+  for lineno, line in enumerate(lines):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:476: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 63977)>
+  for lineno, line in enumerate(lines):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:476: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 63990)>
+  for lineno, line in enumerate(lines):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.........
+======================================================================
+FAIL: test_ask_prints_error_reason_and_never_detail (__main__.ProbeTests.test_ask_prints_error_reason_and_never_detail)
+#842 S2: Zugriffszeile nennt code/title des ersten Fehlers, nie detail; probe() behält seinen Vertrag.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/shimmying-conjuring-trinket/scripts/test_asc_beta_probe.py", line 288, in test_ask_prints_error_reason_and_never_detail
+    self.assertIn("grund=NOT_FOUND/Not found", access["betaGroups"])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'grund=NOT_FOUND/Not found' not found in 'zugriff abfrage=betaGroups http=404 befund="Schlüssel hat keinen Zugriff oder Pfad unbekannt"'
+
+----------------------------------------------------------------------
+Ran 15 tests in 9.722s
+
+FAILED (failures=1)
