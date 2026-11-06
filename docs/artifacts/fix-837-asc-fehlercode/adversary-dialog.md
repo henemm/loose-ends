@@ -7,7 +7,7 @@ Datum: 2026-11-06 (Durchlauf 2)
 - [x] **AC-2:** Given `title`/`detail` oder Codes außerhalb `[A-Z0-9_.]+`, When die Meldung entsteht, Then erscheinen sie nie; höchstens fünf Codes. Belegt durch `test_error_code_filter_and_limit`, `test_409_message_keeps_code`.
 - [x] **AC-3:** Given ein nicht lesbarer oder fremd geformter Rumpf, When `send_json` scheitert, Then ist die Meldung wie bisher. Belegt durch `test_unreadable_error_body_keeps_old_message`.
 - [x] **AC-4:** Given 403 oder 409 an `asc_app_info.send`, Then bleibt der 403-Text unverändert und der 409-Text nennt zusätzlich den Code. Belegt durch `test_403_message_unchanged`, `test_409_message_keeps_code`.
-- [ ] **AC-5:** Given der Merge auf `main`, When `asc-app-info aktion=untertitel` erneut läuft, Then nennt das Protokoll Apples Fehlercode des 409 (oder der Lauf gelingt), und der Abschlussbericht benennt daraus die Ursache (#842 oder anders). Belegt durch den Lauf-Link. (nachgelagert, CI-Lauf nach Merge; kein Befund)
+- [x] **AC-5:** Given der Merge auf `main`, When `asc-app-info aktion=untertitel` erneut läuft, Then nennt das Protokoll Apples Fehlercode des 409 (oder der Lauf gelingt), und der Abschlussbericht benennt daraus die Ursache (#842 oder anders). Belegt durch den Lauf https://github.com/henemm/loose-ends/actions/runs/42183585381 nach Merge von PR #850: HTTP 409, codes: ENTITY_ERROR.ATTRIBUTE.INVALID.DUPLICATE.DIFFERENT_ACCOUNT (App-Info im Zustand PREPARE_FOR_SUBMISSION, en-US fehlt noch).
 
 ## Dialog
 
