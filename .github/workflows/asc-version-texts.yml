@@ -1,0 +1,38 @@
+# Handlauf (#842 Schnitt 3): liest die Texte der App-Store-Versionen oder setzt sie aus docs/reference/app-store-texte.md.
+# Schreibt je Plattform nur in die eine Version im Zustand PREPARE_FOR_SUBMISSION, nur die Sprachen der Datei und nur bei
+# Abweichung; reicht nichts ein.
+name: ASC Version Texts
+
+on:
+  workflow_dispatch:
+    inputs:
+      aktion:
+        description: "lesen = nur Zustand zeigen, texte = Store-Texte setzen (nur bei Abweichung)"
+        type: choice
+        options:
+          - lesen
+          - texte
+        default: lesen
+
+permissions:
+  contents: read
+
+jobs:
+  version-texts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_POLL_SECONDS: "5"
+      AKTION: ${{ inputs.aktion }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Unit tests
+        run: python3 scripts/test_asc_version_texts.py
+      - name: Version texts
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT
+          umask 077
+          printf '%s\n' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"
+          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_version_texts.py "$AKTION"
