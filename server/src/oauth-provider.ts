@@ -27,7 +27,8 @@ const ROUTES = {
 const COOKIE_VAR = "OAUTH_COOKIE_KEYS";
 const JWK_VAR = "OAUTH_SIGNING_JWK";
 
-// Until S4b nobody signs in: a fixed answer without values, the interaction never ends with an account.
+// A fixed answer without values, the interaction never ends with an account. Since S4b-1 the fallback without an Apple
+// web client id and for every prompt but login (consent until S5).
 export const productInteraction: Interaction = async (_provider, _req, res) => {
   res.writeHead(501, { "content-type": "text/plain; charset=utf-8", "cache-control": "no-store" }).end("sign-in not available");
 };

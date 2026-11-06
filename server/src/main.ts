@@ -7,15 +7,18 @@ import { pipeline } from "node:stream/promises";
 import { setTimeout as sleep } from "node:timers/promises";
 import type { ReadableStream as NodeReadableStream } from "node:stream/web";
 import pg from "pg";
-import { type AppleConfig, loadAppleConfig } from "./apple.ts";
+import { type AppleConfig, type KeyLookup, loadAppleConfig } from "./apple.ts";
 import { createJwks } from "./apple-jwks.ts";
 import { authRoutes } from "./auth.ts";
 import { ErrorWindow, healthHandler } from "./health.ts";
 import { mcpHandler } from "./mcp.ts";
+import { appleInteraction } from "./oauth-interaction.ts";
 import { migrate } from "./migrate.ts";
 import type { OAuthTokenVerifier } from "@modelcontextprotocol/server";
 import { bearerGate, DEFAULT_PUBLIC_URL, METADATA_PATH, metadataRoute, publicUrlFromEnv, rejectAll } from "./oauth-resource.ts";
-import { createProvider, type Interaction, type OAuthKeys, oauthKeysFromEnv, providerVerifier } from "./oauth-provider.ts";
+import {
+  createProvider, type Interaction, type OAuthKeys, oauthKeysFromEnv, productInteraction, providerVerifier,
+} from "./oauth-provider.ts";
 
 export type Route = (request: Request) => Promise<Response>;
 export type StartOptions = {
@@ -116,13 +119,18 @@ function gated(isReady: () => boolean, route: Route): Route {
   return async (request) => (isReady() ? route(request) : new Response(null, { status: 503 }));
 }
 
-// The auth routes, each gated; one lazy JWKS instance per start, only with a config.
-function mountAuth(options: StartOptions, pool: pg.Pool, isReady: () => boolean): Record<string, Route> {
+// One lazy JWKS instance per start, only with a config; shared by the auth routes and the issuer's interaction.
+function appleKeys(options: StartOptions): KeyLookup | undefined {
+  if (options.auth?.config === undefined) return undefined;
+  return createJwks({ fetch: options.auth.fetch ?? globalThis.fetch, now: options.now ?? Date.now }).keys;
+}
+
+// The auth routes, each gated.
+function mountAuth(options: StartOptions, pool: pg.Pool, isReady: () => boolean, keys: KeyLookup | undefined): Record<string, Route> {
   if (options.auth === undefined) return {};
   const { config } = options.auth;
   const fetch = options.auth.fetch ?? globalThis.fetch;
   const now = options.now ?? Date.now;
-  const keys = config === undefined ? undefined : createJwks({ fetch, now }).keys;
   const routes = authRoutes({ pool, config, keys, fetch, now, log: logError });
   return Object.fromEntries(Object.entries(routes).map(([path, route]) => [path, gated(isReady, route)]));
 }
@@ -137,14 +145,25 @@ function isIssuerPath(url: string | undefined): boolean {
   return path.startsWith("/oauth/") || DISCOVERY.has(path);
 }
 
+// A handed-in interaction wins (tests); with an Apple web client id the login goes to Apple; else the fixed 501.
+function interactionFor(options: StartOptions, pool: pg.Pool, now: () => Date, keys: KeyLookup | undefined): Interaction {
+  const { publicUrl = DEFAULT_PUBLIC_URL, interaction } = options.oauth ?? {};
+  const config = options.auth?.config;
+  if (interaction !== undefined) return interaction;
+  if (config?.webClientId === undefined || keys === undefined) return productInteraction;
+  return appleInteraction({ pool, config, publicUrl, now, fallback: productInteraction, keys, log: logError });
+}
+
 // The issuer gets the raw request (it reads the body itself); 503 without a body before migrate or without keys.
 // Its answers count in the error window, except the product interaction's deliberate 501. Library errors are logged
 // as fixed event names only: an error object can carry values (the FK detail names the account).
-function mountIssuer(options: StartOptions, pool: pg.Pool, isReady: () => boolean, window: ErrorWindow) {
-  const { publicUrl = DEFAULT_PUBLIC_URL, keys, fetch = globalThis.fetch, interaction } = options.oauth ?? {};
+function mountIssuer(options: StartOptions, pool: pg.Pool, isReady: () => boolean, window: ErrorWindow, jwks: KeyLookup | undefined) {
+  const { publicUrl = DEFAULT_PUBLIC_URL, keys, fetch = globalThis.fetch } = options.oauth ?? {};
   if (keys === undefined) return { handle: unavailable, provider: undefined };
-  const now = options.now ?? Date.now;
-  const provider = createProvider({ publicUrl, pool, now: () => new Date(now()), fetch, keys, interaction });
+  const clock = options.now ?? Date.now;
+  const now = () => new Date(clock());
+  const interaction = interactionFor(options, pool, now, jwks);
+  const provider = createProvider({ publicUrl, pool, now, fetch, keys, interaction });
   provider.on("server_error", () => logError("oauth server error"));
   // Koa's own "error" event (missing from the provider's types); a listener replaces Koa's default console output.
   (provider as unknown as EventEmitter).on("error", () => logError("oauth error"));
@@ -166,12 +185,13 @@ export async function start(options: StartOptions): Promise<Running> {
   let migrated = false;
   const isReady = () => migrated;
   const { publicUrl = DEFAULT_PUBLIC_URL } = options.oauth ?? {};
-  const issuer = mountIssuer(options, pool, isReady, window);
+  const jwks = appleKeys(options);
+  const issuer = mountIssuer(options, pool, isReady, window, jwks);
   const verifier = options.oauth?.verifier ?? (issuer.provider ? providerVerifier(issuer.provider, publicUrl) : rejectAll);
   const gate = bearerGate(publicUrl, verifier);
   // Metadata, /health and /mcp last: neither auth nor extraRoutes can replace them. Metadata needs no database.
   const routes: Record<string, Route> = {
-    ...mountAuth(options, pool, isReady),
+    ...mountAuth(options, pool, isReady, jwks),
     ...options.extraRoutes,
     [METADATA_PATH]: metadataRoute(publicUrl),
     "/health": healthHandler({ pool, isMigrated: isReady, window }),

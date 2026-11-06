@@ -151,3 +151,7 @@ Signierung; Ticket reicht (einmalig, 60 s, ohne Interaktions-Cookie wertlos). AD
 
 ### Open Questions
 - keine für den PO (Teilung und Token-Ablage sind technisch entschieden; für Henning ändert sich bis S6 nichts Sichtbares)
+
+## Umfang beim Bauen (2026-11-06)
+
+RED-Testdatei 381 Zeilen statt ≈ 190, mit Code ≈ 460 LoC statt ≈ 270–300. Henning hat am 2026-11-06 per Auswahl entschieden: „Ja, so weiterbauen“ (kein Auslagern gemeinsamer Helfer, keine Kürzung). Befund für die Umsetzung: `interactionDetails` vergleicht die Pfad-uid nicht mit der Cookie-uid; AC-7 verlangt die eigene Prüfung `details.uid === uid aus dem Pfad`, sonst 400.
