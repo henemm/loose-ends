@@ -1,0 +1,4 @@
+Adversary-Lauf 2026-11-06, je Datei python3 scripts/test_asc_<x>.py
+app_info 16 OK | beta_invite 27 OK | beta_link 19 OK | beta_probe 14 OK | beta_setup 18 OK | cleanup_certs 19 OK | crashes 24 OK
+header_upload 10 OK | review_notes 16 OK | store_probe 9 OK | wait_build 21 OK | watch_appinfo 13 OK | what_to_test 15 OK
+Summe: 221 Tests, 0 failed, 0 skipped (13 Dateien)

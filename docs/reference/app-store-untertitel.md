@@ -11,5 +11,5 @@ Untertitel: Einfach sagen. Kopf frei.
 
 ## en-US
 
-Name: Loose Ends
+Name: Loose Ends: Voice Tasks
 Untertitel: Say it. Clear your head.
