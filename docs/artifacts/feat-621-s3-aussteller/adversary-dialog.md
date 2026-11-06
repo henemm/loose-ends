@@ -39,6 +39,10 @@ Datum: 2026-11-06 07:26
 **Adversary:** Probe 1: Mutation main.ts:75 (/health zaehlt im Fenster) → Test "vor bridge und im fehlerfenster" ROT ("Fehlerfenster: Aussteller-Fehler nicht gezaehlt oder /health mitgezaehlt"), sauber GRUEN. Probe 2: Mutation main.ts:154 (res.once("finish") auskommentiert, Aussteller-Antworten nicht gezaehlt) → ROT. Quellcode danach unveraendert. Volltest: Exit 0, 276 Tests, 276 bestanden, 0 fehlgeschlagen, 0 uebersprungen (adversary-test-output.txt). F007 behoben.
 **Implementierer:** Keine weitere Aenderung.
 
+### Runde 5
+**Adversary:** Anlass: CI (Linux, postgres:18) rot in "503 vor migrate" mit "terminating connection due to administrator command". Diagnose reproduziert: pg-pool end() loest auf, bevor client.end() die Verbindungen geschlossen hat (race.sh: 0/20 ohne Verzoegerung, 60 ungefangene Abbrueche mit um 500 ms verzoegertem client.end); DROP DATABASE ... WITH (FORCE) kappte die noch schliessenden Verbindungen des Testpools. Korrektur nur im Test: spaet angelegtes Schema im search_path statt spaet angelegter Datenbank, Aufraeumen mit DROP SCHEMA ... CASCADE ohne FORCE. AC-15 bleibt echt: migrate scheitert ohne Schema ("migrate failed, retrying"), legt nichts in public an (Probe: leere Tabellenliste), danach 200/200/400 und voller Durchlauf an derselben Instanz. Keine weitere Teststelle betroffen (pg_terminate_backend in main.test.ts kappt laufende Dienste, ohne vorheriges pool.end()). Volltest 276/276, 0 uebersprungen.
+**Implementierer:** Keine weitere Aenderung.
+
 ### Findings
 Finding:
   ID: F007
@@ -114,7 +118,12 @@ Confirmation:
 Confirmation:
   AC: AC-4, AC-15
   Code reference: server/test/oauth-provider.test.ts:332
-  Evidence: Runde 3: error_description per Regex geprueft; AC-15 an derselben Instanz vor und nach migrate (Datenbank erst nach den 503-Pruefungen angelegt), gruen.
+  Evidence: Runde 3: error_description per Regex geprueft; AC-15 an derselben Instanz vor und nach migrate, gruen.
+  Status: CONFIRMED
+Confirmation:
+  AC: AC-15
+  Code reference: server/test/oauth-provider.test.ts:569
+  Evidence: Runde 5: Schema erst nach den 503-Pruefungen angelegt, migrate wiederholt bis dahin und legt nichts in public an; Aufraeumen ohne FORCE vermeidet die belegte pool.end()-Race; 276/276.
   Status: CONFIRMED
 Confirmation:
   AC: AC-6
@@ -140,7 +149,7 @@ VERDICT: VERIFIED
 - sha256:bba816bc793220b0feb3a30f16c4eb7f5cd39e39e60ec796fa0eed2167d795f1  server/src/main.ts
 - sha256:496c70a6fc4842ad17a502ebc14513d8c5b61ce355109eeb110e943c41ef653f  server/src/oauth-provider.ts
 - sha256:a962172b4b1a09f9e1b51da2e3931a56ba8f2a5a21530150caecc64661a934bc  server/test/main.test.ts
-- sha256:7a99ec1b5d3d8f04f4168f48ba0acb8ae19f00938c42132008eddcade68def71  server/test/oauth-provider.test.ts
+- sha256:0b8f19cf8cd61a7a4dd786e755939828a727ee42efa6ec715c75c44397b0d4e6  server/test/oauth-provider.test.ts
 - sha256:1e8fd7eb3434d11afaea349b43d7989aa8bae6312f357d07b904766022d0cd4b  server/test/oauth-resource.test.ts
 
 ## Prüfbasis
@@ -149,22 +158,5 @@ VERDICT: VERIFIED
 - blob:8476254667e5b3325ad4fb5e8aa4d6f2b04d1c03  server/src/main.ts
 - blob:083c78182ac90ec1bcf720f903a72c17c6135280  server/src/oauth-provider.ts
 - blob:1d6be876a6d569c6aae43edf4e955b3c1e78f205  server/test/main.test.ts
-- blob:a541f83882371235eae7bf9a3cf6906120c21781  server/test/oauth-provider.test.ts
-- blob:7c06297410857f6264ee717664be0ced8f887cc3  server/test/oauth-resource.test.ts
-
-## Geprüfte Dateien
-
-- sha256:bba816bc793220b0feb3a30f16c4eb7f5cd39e39e60ec796fa0eed2167d795f1  server/src/main.ts
-- sha256:496c70a6fc4842ad17a502ebc14513d8c5b61ce355109eeb110e943c41ef653f  server/src/oauth-provider.ts
-- sha256:a962172b4b1a09f9e1b51da2e3931a56ba8f2a5a21530150caecc64661a934bc  server/test/main.test.ts
-- sha256:581ca1f3ff8dca2498de56fb37c2ecdf60f0fd7890dec9818a66e5908e411abb  server/test/oauth-provider.test.ts
-- sha256:1e8fd7eb3434d11afaea349b43d7989aa8bae6312f357d07b904766022d0cd4b  server/test/oauth-resource.test.ts
-
-## Prüfbasis
-
-- base: d5b8c961eee06b98f6ac17993c4bf0f19c2417f5
-- blob:8476254667e5b3325ad4fb5e8aa4d6f2b04d1c03  server/src/main.ts
-- blob:083c78182ac90ec1bcf720f903a72c17c6135280  server/src/oauth-provider.ts
-- blob:1d6be876a6d569c6aae43edf4e955b3c1e78f205  server/test/main.test.ts
-- blob:a30b6b41a043d7ce89615459347cd05053d72c63  server/test/oauth-provider.test.ts
+- blob:984bee331bf6a1d96ff1e6cabee6d2042c523785  server/test/oauth-provider.test.ts
 - blob:7c06297410857f6264ee717664be0ced8f887cc3  server/test/oauth-resource.test.ts

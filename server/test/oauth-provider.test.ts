@@ -564,12 +564,13 @@ test("oauth-provider: ohne schluessel 503 und mcp bleibt zu", async (t) => {
   assert.equal((await raw(bare.url, "/health")).status, 200);
 });
 
-// The database does not exist yet, so migrate retries; once it is created, the same instance answers.
+// The schema on the search path does not exist yet, so migrate retries; once it is created, the same instance answers.
+// A schema, not a late database: dropping a database with FORCE cuts connections pool.end() has not finished closing.
 test("oauth-provider: 503 vor migrate", async (t) => {
   const admin = new pg.Pool({ connectionString: databaseUrl });
-  const name = `le_late_${randomUUID().replaceAll("-", "")}`;
+  const name = `t_late_${randomUUID().replaceAll("-", "")}`;
   const late = new URL(databaseUrl!);
-  late.pathname = `/${name}`;
+  late.searchParams.set("options", `-c search_path=${name}`);
   let pool: pg.Pool | undefined;
   const flow = testInteraction(() => pool!, `001234.${randomUUID()}.0815`);
   const running = await start({
@@ -579,7 +580,7 @@ test("oauth-provider: 503 vor migrate", async (t) => {
   t.after(async () => {
     await running.close();
     await pool?.end();
-    await admin.query(`DROP DATABASE IF EXISTS ${name} WITH (FORCE)`);
+    await admin.query(`DROP SCHEMA IF EXISTS ${name} CASCADE`);
     await admin.end();
   });
   const calls = () => [raw(running.url, "/.well-known/oauth-authorization-server"), raw(running.url, "/.well-known/openid-configuration"),
@@ -592,7 +593,7 @@ test("oauth-provider: 503 vor migrate", async (t) => {
   const meta = await raw(running.url, META_PATH);
   assert.equal(meta.status, 200, "Metadaten der Ressource brauchen keine Datenbank");
   assert.equal((await raw(running.url, "/health")).status, 503);
-  await admin.query(`CREATE DATABASE ${name}`);
+  await admin.query(`CREATE SCHEMA ${name}`);
   pool = new pg.Pool({ connectionString: late.toString() });
   await running.ready;
   const [discovery, openid, token] = await Promise.all(calls());
