@@ -5,16 +5,19 @@ import Provider, { type Configuration, errors, type JWK, type KoaContextWithOIDC
 import type pg from "pg";
 import { PgAdapter } from "./oauth-adapter.ts";
 import { resourceFor } from "./oauth-resource.ts";
+import type { ReturnHandler } from "./oauth-return.ts";
 
 // The OAuth issuer for /mcp (#621 S3): oidc-provider with Client ID Metadata Documents, opaque tokens, PKCE S256.
 export type OAuthKeys = { cookieKeys: string[]; signingJwk: JsonWebKey };
 export type Interaction = (provider: Provider, req: IncomingMessage, res: ServerResponse) => Promise<void>;
 export type ProviderOptions = {
   publicUrl: string; pool: pg.Pool; now: () => Date; fetch: typeof fetch; keys: OAuthKeys; interaction?: Interaction;
+  appleReturn?: ReturnHandler;
 };
 
 const SCOPE = "tasks";
 const INTERACTION_PATH = "/oauth/interaction/";
+const RETURN_PATH = "/oauth/apple/return";
 const DAY = 24 * 3600;
 const TTL = { AuthorizationCode: 60, Interaction: 600, AccessToken: 3600, RefreshToken: 30 * DAY, Grant: 30 * DAY, Session: 14 * DAY };
 const ROUTES = {
@@ -98,6 +101,11 @@ export function createProvider(options: ProviderOptions): Provider {
   const handle = options.interaction ?? productInteraction;
   // The interaction writes to the raw response; a throw goes to Koa (status text only, "error" event, no value).
   provider.use(async (ctx, next) => {
+    // Apple's way back (S4b-2a): exactly this path, only with a handler; without one the issuer's 404 stays.
+    if (ctx.path === RETURN_PATH && options.appleReturn !== undefined) {
+      ctx.respond = false;
+      return options.appleReturn(ctx.req, ctx.res);
+    }
     if (!ctx.path.startsWith(INTERACTION_PATH)) return next();
     ctx.respond = false;
     await handle(provider, ctx.req, ctx.res);

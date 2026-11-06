@@ -141,7 +141,7 @@ before(() => {
     restore.push(() => { (stream as Doc).write = write; });
   }
 });
-const EVENT = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z (oauth return refused|oauth return store failed|oauth interaction refused|oauth interaction store failed|oauth server error|oauth error|pool error|pool end failed|mcp close failed)$/;
+const EVENT = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z (oauth return refused|oauth return store failed|oauth interaction refused|oauth interaction store failed|oauth server error|oauth error|pool error|pool end failed|mcp close failed|listening|migrated)$/;
 function assertQuiet() {
   for (const line of lines) {
     assert.match(line, EVENT, `kein festes Ereignis: ${line.slice(0, 160)}`);

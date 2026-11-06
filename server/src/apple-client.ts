@@ -1,7 +1,7 @@
 import { createHash, sign } from "node:crypto";
 import type { AppleConfig } from "./apple.ts";
 
-export type Redeemed = { ok: true; refreshToken: string; sub: string } | { ok: false; reason: string };
+export type Redeemed = { ok: true; refreshToken: string; sub: string; idToken: string } | { ok: false; reason: string };
 export type Revoked = { ok: true } | { ok: false; reason: string };
 type Doc = Record<string, unknown>;
 
@@ -79,8 +79,9 @@ async function readAnswer(response: Response, clientId: string): Promise<Redeeme
   if (body === undefined) return { ok: false, reason: "unavailable" };
   if (response.status !== 200) return { ok: false, reason: appleReason(body) };
   const sub = idTokenSub(body?.id_token, clientId);
-  if (!body || !text(body.refresh_token) || !sub) return { ok: false, reason: "malformed_response" };
-  return { ok: true, refreshToken: body.refresh_token, sub };
+  if (!body || !text(body.refresh_token) || !sub || !text(body.id_token)) return { ok: false, reason: "malformed_response" };
+  // The web flow verifies the id_token itself (nonce), so it is handed on.
+  return { ok: true, refreshToken: body.refresh_token, sub, idToken: body.id_token };
 }
 
 // Redeems an authorization code. Throws only on own misuse; Apple's answer, network and timeout give a reason.

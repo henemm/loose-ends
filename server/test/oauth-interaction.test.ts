@@ -350,20 +350,6 @@ test("einhaengen: gesetzte interaktion hat vorrang", async (t) => {
   assert.equal(typeof (await interactionModule()).appleInteraction, "function", "appleInteraction fehlt");
 });
 
-test("hinweg: rueckweg noch nicht behandelt", async (t) => {
-  const running = await service(t, { auth: { config: withWeb } });
-  const before = Number((await running.pool.query("SELECT count(*) FROM oauth_records")).rows[0].count);
-  for (const body of ["", "state=abc&code=def"]) {
-    const answer = await raw(running.url, "/oauth/apple/return", { method: "POST", body, headers: { "content-type": "application/x-www-form-urlencoded" } });
-    assert.equal(answer.status, 404, `${JSON.stringify(body)}: ${answer.status}`);
-    for (const value of ["abc", "def"]) assert.ok(!answer.body.includes(value), "Wert im Körper");
-  }
-  assert.equal(Number((await running.pool.query("SELECT count(*) FROM oauth_records")).rows[0].count), before);
-  assert.equal(Number((await running.pool.query("SELECT count(*) FROM accounts")).rows[0].count), 0);
-  const at = await begin(running.url);
-  assert.equal((await visit(running.url, at)).status, 303, "hinweg fehlt");
-});
-
 test("einhaengen: eine jwks-instanz je start", async (t) => {
   const apple = fakeApple();
   const running = await service(t, { auth: { config: withWeb, fetch: apple.fetch } });
