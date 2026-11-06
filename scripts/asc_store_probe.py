@@ -46,13 +46,13 @@ def report_version_texts(run, label, locale_name, record):
 
 
 def report_placements(run, label, locale_name, locale_id):
-    """Bildplatzierungen der Asset Library je Versions-Lokalisierung (#842); der Pfad ist aus der Recherche, unerprobt.
+    """Bildplatzierungen der Asset Library je Versions-Lokalisierung (#842), Pfad laut Apple `/placements`.
 
+    `felder=` nennt die Attribut-Schlüssel, weil die Antwortform nur aus der Doku bekannt ist.
     `keine` heißt: Antwort ohne Eintrag; `fehler` heißt: die Abfrage ist gescheitert, der Lauf geht weiter.
     """
     where = f"version={label} sprache={locale_name}"
-    body = run.ask("appAssetLibraryPlacements",
-                   f"/v1/appStoreVersionLocalizations/{locale_id}/appAssetLibraryPlacements")
+    body = run.ask("placements", f"/v1/appStoreVersionLocalizations/{locale_id}/placements")
     if body is None:
         print(f"platzierung fehler {where}", flush=True)
         return
@@ -62,17 +62,42 @@ def report_placements(run, label, locale_name, locale_id):
     for placement in placements:
         a = attributes(placement)
         print(f"platzierung {where} gruppe={a.get('placementGroup') or '?'} typ={a.get('placementType') or '?'} "
-              f"zustand={a.get('state') or '?'}", flush=True)
+              f"zustand={a.get('state') or '?'} felder={','.join(sorted(a)) or '-'}", flush=True)
+
+
+NAME_KEYS = ("name", "identifier", "id")
+
+
+def group_name(entry):
+    """Name eines Eintrags aus `placementProfileGroups`: ein String oder das erste nichtleere Namensfeld."""
+    if isinstance(entry, str):
+        return entry.strip() or None
+    values = [entry.get(key) for key in NAME_KEYS] if isinstance(entry, dict) else []
+    return next((value for value in values if isinstance(value, str) and value.strip()), None)
 
 
 def report_refdata(run):
-    """Einmal pro Lauf die Gruppennamen der Asset Library (#842), sortiert; die Form der Antwort ist unbestätigt."""
-    body = run.ask("appAssetLibraryRefData", "/v1/appAssetLibraryRefData")
+    """Einmal pro Lauf die Gruppennamen der Asset Library (#842) aus `attributes.placementProfileGroups`.
+
+    Die Form der Listeneinträge ist unbestätigt: ohne lesbaren Namen stehen die Schlüssel der Einträge da.
+    """
+    body = run.ask("appAssetLibraryRefData", "/v1/appAssetLibraryRefData"
+                   "?fields[appAssetLibraryRefData]=placementProfileGroups")
     if body is None:
         print("refdaten fehler", flush=True)
         return
-    groups = sorted({attributes(r).get("placementGroup") for r in records(body)} - {None, ""})
-    print(f"refdaten gruppen={','.join(groups)}" if groups else "refdaten keine", flush=True)
+    data = body.get("data")
+    record = records(body)[0] if records(body) else data
+    groups = attributes(record).get("placementProfileGroups")
+    if not isinstance(groups, list) or not groups:
+        print("refdaten keine", flush=True)
+        return
+    names = sorted({name for name in map(group_name, groups) if name})
+    if names:
+        print(f"refdaten gruppen={len(groups)} namen={','.join(names)}", flush=True)
+        return
+    keys = sorted({key for entry in groups if isinstance(entry, dict) for key in entry})
+    print(f"refdaten gruppen={len(groups)} felder={','.join(keys) or '-'}", flush=True)
 
 
 def report_subtitles(run, app_id):

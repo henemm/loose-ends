@@ -163,7 +163,7 @@ def store_routes(de=None, en=None, placements=None, refdata=None):
         f"{base}/LEN/appScreenshotSets": (200, {"data": []}),
         f"{base}/LDE/appAssetLibraryPlacements": (404, APPLE_404),
         f"{base}/LEN/appAssetLibraryPlacements": (404, APPLE_404),
-        f"{base}/LDE/placements": (200, PLACEMENTS if placements is None else placements),
+        f"{base}/LDE/placements": (200, PLACEMENTS) if placements is None else placements,
         f"{base}/LEN/placements": (200, {"data": []}),
         "/v1/appAssetLibraryRefData": (200, REFDATA) if refdata is None else refdata,
     }
