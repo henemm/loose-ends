@@ -271,6 +271,76 @@ class ProbeTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertIn("Missing environment", result.stdout)
 
+    def test_ask_prints_error_reason_and_never_detail(self):
+        """#842 S2: Zugriffszeile nennt code/title des ersten Fehlers, nie detail; probe() behält seinen Vertrag."""
+        routes = default_routes()
+        routes["/v1/apps/APP1/betaGroups"] = (404, {"errors": [
+            {"code": "NOT_FOUND", "title": "Not found", "detail": "Resource 123-SECRET-ID"}]})
+        routes["/v1/apps/APP1/betaAppReviewDetail"] = (400, {"unrelated": 1})  # keine errors-Liste
+        routes["/v1/apps/APP1/betaAppLocalizations"] = (404, "kein Objekt")  # Rumpf ist kein Dict
+        result = self.probe(self.fake(routes=routes))
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        access = {}
+        for line in self.lines(result, "zugriff"):
+            access.update({name: line for name in ("betaGroups", "betaAppReviewDetail", "betaAppLocalizations")
+                           if f"abfrage={name}" in line})
+        self.assertIn("http=404", access["betaGroups"])
+        self.assertIn("grund=NOT_FOUND/Not found", access["betaGroups"])
+        self.assertNotIn("grund=", access["betaAppReviewDetail"])
+        self.assertNotIn("grund=", access["betaAppLocalizations"])
+        self.assertNotIn("SECRET", result.stdout + result.stderr)
+        self.assertNotIn("Resource", result.stdout + result.stderr)
+
+        sys.path.insert(0, str(SCRIPTS))
+        import asc_beta_probe
+        fake = self.fake(routes=routes)
+        config = {"key_id": "K", "issuer": "I", "key_file": str(self.key), "base": fake.base, "poll": 0.0,
+                  "platform": ""}
+        self.assertEqual(asc_beta_probe.probe(config, "/v1/apps/APP1/betaGroups"), (404, None))
+        status, body = asc_beta_probe.probe(config, "/v1/apps/APP1/betaAppReviewDetail?x=1")
+        self.assertEqual((status, body), (400, None))
+        ok = self.fake()
+        status, body = asc_beta_probe.probe(dict(config, base=ok.base), "/v1/apps/APP1/betaGroups")
+        self.assertEqual(status, 200)
+        self.assertIsInstance(body, dict)
+        self.assertEqual(asc_beta_probe.fetch(config, "/v1/apps/APP1/betaAppReviewDetail")[2], {"unrelated": 1})
+
+    def test_unreadable_error_body_stays_a_finding(self):
+        """#842 S2 F001: bricht das Lesen von Apples Fehlerrumpf ab, bleibt es (4xx, None), kein Absturz."""
+        sys.path.insert(0, str(SCRIPTS))
+        import http.client
+        import io
+        import urllib.error
+        from contextlib import redirect_stdout
+        from unittest import mock
+        import asc_beta_probe
+        config = {"key_id": "K", "issuer": "I", "key_file": "-", "base": "http://asc.invalid", "poll": 0.0,
+                  "platform": ""}
+        for failure in (http.client.IncompleteRead(b"{\"err"), ConnectionResetError(), TimeoutError(), OSError()):
+            def refuse(*args, **kwargs):
+                error = urllib.error.HTTPError("http://asc.invalid/x", 404, "Not Found", {}, io.BytesIO())
+                error.read = mock.Mock(side_effect=failure)
+                raise error
+            with self.subTest(failure=type(failure).__name__), \
+                    mock.patch.object(asc_beta_probe, "make_token", return_value="T"), \
+                    mock.patch.object(asc_beta_probe.urllib.request, "urlopen", side_effect=refuse):
+                self.assertEqual(asc_beta_probe.fetch(config, "/v1/apps/APP1/betaGroups"), (404, None, None))
+                self.assertEqual(asc_beta_probe.probe(config, "/v1/apps/APP1/betaGroups"), (404, None))
+                out = io.StringIO()
+                with redirect_stdout(out):
+                    self.assertIsNone(asc_beta_probe.Probe(config).ask("betaGroups", "/v1/apps/APP1/betaGroups"))
+                self.assertIn("http=404", out.getvalue())
+                self.assertNotIn("grund=", out.getvalue())
+
+    def test_reason_keeps_only_printable_characters(self):
+        """#842 S2 F002: Steuerzeichen (ESC, Tab, U+2028) und Anführungszeichen kommen nicht in die Zeile."""
+        sys.path.insert(0, str(SCRIPTS))
+        import asc_beta_probe
+        text = asc_beta_probe.reason({"errors": [
+            {"code": "NOT_FOUND", "title": "Not\x1b[31m\tfound \"x'\r\n"}]})
+        self.assertEqual(text, " grund=NOT_FOUND/Not[31mfoundx")
+        self.assertTrue(text.isprintable())
+
 
 class WorkflowTests(unittest.TestCase):
     def test_workflow_file(self):

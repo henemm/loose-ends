@@ -19,8 +19,18 @@ ATTEMPTS = 5
 FINDING = '"Schlüssel hat keinen Zugriff oder Pfad unbekannt"'
 
 
-def probe(config, path):
-    """GET; (200, dict) bei Erfolg, (4xx, None) als Befund, (None, None) ohne Antwort nach allen Versuchen."""
+def read_json(raw):
+    """Rumpf als Dict, sonst None (kein JSON oder kein Objekt)."""
+    try:
+        body = json.loads(raw)
+    except ValueError:
+        return None
+    return body if isinstance(body, dict) else None
+
+
+def fetch(config, path):
+    """GET; (Status, Rumpf, Fehlerrumpf). 2xx: (200, dict, None); 4xx: (4xx, None, dict|None) mit Apples
+    Fehlerrumpf (#842); ohne Antwort nach allen Versuchen (None, None, None)."""
     url_path = path.split("?")[0]
     for attempt in range(1, ATTEMPTS + 1):
         token = make_token(config["key_id"], config["issuer"], config["key_file"])
@@ -28,20 +38,38 @@ def probe(config, path):
         try:
             with urllib.request.urlopen(request, timeout=30) as response:
                 status, raw = response.status, response.read()
-            try:
-                body = json.loads(raw)
-            except ValueError:
-                body = None
-            return status, body if isinstance(body, dict) else {}
+            return status, read_json(raw) or {}, None
         except urllib.error.HTTPError as error:
             if not (error.code >= 500 or error.code in (408, 429)):
-                return error.code, None
+                try:
+                    raw_error = error.read()
+                except (OSError, http.client.HTTPException):
+                    # Der Status ist der Befund; ein abgebrochener Fehlerrumpf nimmt nur den Grund weg (#842 F001).
+                    raw_error = None
+                return error.code, None, read_json(raw_error) if raw_error is not None else None
             print(f"ASC answered HTTP {error.code} for {url_path}, retrying", flush=True)
         except (urllib.error.URLError, TimeoutError, OSError, http.client.HTTPException) as error:
             print(f"No answer from ASC for {url_path} ({type(error).__name__}), retrying", flush=True)
         if attempt < ATTEMPTS:
             time.sleep(config["poll"])
-    return None, None
+    return None, None, None
+
+
+def probe(config, path):
+    """GET; (200, dict) bei Erfolg, (4xx, None) als Befund, (None, None) ohne Antwort nach allen Versuchen."""
+    status, body, _ = fetch(config, path)
+    return status, body
+
+
+def reason(error_body):
+    """` grund=<code>/<title>` des ersten Fehlers aus Apples Rumpf, nie `detail` (kann IDs nennen); sonst leer."""
+    errors = (error_body or {}).get("errors")
+    first = errors[0] if isinstance(errors, list) and errors and isinstance(errors[0], dict) else {}
+    parts = [first.get(key) for key in ("code", "title")]
+    if not all(isinstance(part, str) and part.strip() for part in parts):
+        return ""
+    text = "".join(char for char in "/".join(parts) if char.isprintable() and char not in "\"'")
+    return f" grund={text.strip()[:80]}"
 
 
 class Probe:
@@ -52,7 +80,7 @@ class Probe:
         self.asked = self.answered = self.findings = 0
 
     def ask(self, name, path, build=None):
-        status, body = probe(self.config, path)
+        status, body, error_body = fetch(self.config, path)
         self.asked += 1
         where = f" build={build}" if build is not None else ""
         if status is None:
@@ -62,7 +90,7 @@ class Probe:
         if not 200 <= status < 300:
             self.findings += 1
             hint = FINDING if status in (403, 404) else '"Apple lehnt die Abfrage ab"'
-            print(f"zugriff abfrage={name}{where} http={status} befund={hint}", flush=True)
+            print(f"zugriff abfrage={name}{where} http={status} befund={hint}{reason(error_body)}", flush=True)
             return None
         print(f"zugriff abfrage={name}{where} http={status}", flush=True)
         return body

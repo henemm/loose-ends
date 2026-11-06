@@ -133,28 +133,40 @@ def version_locales(de=None, en=None):
     return {"data": [{"id": "LDE", "attributes": de}, {"id": "LEN", "attributes": en}]}
 
 
+PLACEMENTS = {"data": [
+    {"id": "P1", "attributes": {"placementGroup": "IPHONE_67", "placementType": "SCREENSHOT",
+                                "state": "COMPLETE"}},
+    {"id": "P2", "attributes": {"placementGroup": "IPAD_13"}}]}
+# Apples Form (Discovering asset specifications): ein Datensatz, sechs Listen in `attributes`.
+REFDATA = {"data": [{"id": "REF", "type": "appAssetLibraryRefData", "attributes": {
+    "placementProfileGroups": ["WATCH_ULTRA", "IPAD_13", "IPHONE_67"], "features": [], "imageSpecs": []}}]}
+APPLE_404 = {"errors": [{"status": "404", "code": "NOT_FOUND", "title": "The specified resource does not exist",
+                         "detail": "There is no resource of type 'appAssetLibraryPlacements'"}]}
+
+
+def refdata_with(groups):
+    return (200, {"data": [{"id": "REF", "attributes": {"placementProfileGroups": groups}}]})
+
+
 def store_routes(de=None, en=None, placements=None, refdata=None):
-    """Eine Version mit de-DE und en-US; `placements` und `refdata` sind (Status, Rumpf)."""
+    """Eine Version mit de-DE und en-US; `placements` und `refdata` sind (Status, Rumpf).
+
+    Der Nachbau kennt nur Apples echte Pfade und Formen (Lehre #136): `/placements` unter der
+    Versions-Lokalisierung und einen Refdata-Datensatz mit Listen in `attributes`. Der alte Pfad
+    `/appAssetLibraryPlacements` antwortet 404 mit einem Apple-Fehlerrumpf.
+    """
     base = "/v1/appStoreVersionLocalizations"
     found = {
         "/v1/apps/APP1/appStoreVersions": (200, VERSION),
         "/v1/appStoreVersions/V1/appStoreVersionLocalizations": (200, version_locales(de, en)),
         f"{base}/LDE/appScreenshotSets": (200, {"data": []}),
         f"{base}/LEN/appScreenshotSets": (200, {"data": []}),
-        f"{base}/LDE/appAssetLibraryPlacements": (200, {"data": [
-            {"id": "P1", "attributes": {"placementGroup": "IPHONE_67", "placementType": "SCREENSHOT",
-                                        "state": "COMPLETE"}},
-            {"id": "P2", "attributes": {"placementGroup": "IPAD_13"}}]}),
-        f"{base}/LEN/appAssetLibraryPlacements": (200, {"data": []}),
-        "/v1/appAssetLibraryRefData": (200, {"data": [
-            {"id": "R1", "attributes": {"placementGroup": "WATCH_ULTRA"}},
-            {"id": "R2", "attributes": {"placementGroup": "IPAD_13"}},
-            {"id": "R3", "attributes": {"placementGroup": "IPHONE_67"}}]}),
+        f"{base}/LDE/appAssetLibraryPlacements": (404, APPLE_404),
+        f"{base}/LEN/appAssetLibraryPlacements": (404, APPLE_404),
+        f"{base}/LDE/placements": (200, PLACEMENTS) if placements is None else placements,
+        f"{base}/LEN/placements": (200, {"data": []}),
+        "/v1/appAssetLibraryRefData": (200, REFDATA) if refdata is None else refdata,
     }
-    if placements is not None:
-        found[f"{base}/LDE/appAssetLibraryPlacements"] = placements
-    if refdata is not None:
-        found["/v1/appAssetLibraryRefData"] = refdata
     return found
 
 
@@ -192,6 +204,14 @@ class StoreTextTests(ProbeCase):
             self.assertIn("text=keiner", line)
             self.assertIn("zeichen=0", line)
 
+    def test_placement_path_is_placements_and_old_path_is_404(self):
+        fake, result = self.probe()
+        paths = [path for _, path in fake.requests]
+        self.assertTrue(any(p.startswith("/v1/appStoreVersionLocalizations/LDE/placements") for p in paths), paths)
+        self.assertFalse(any("appAssetLibraryPlacements" in p for p in paths), paths)
+        self.assertTrue(any("abfrage=placements http=200" in l for l in self.lines(result, "zugriff")), result.stdout)
+        self.assertNotIn("abfrage=appAssetLibraryPlacements", result.stdout)
+
     def test_placement_lines_per_localization(self):
         _, result = self.probe()
         lines = self.lines(result, f"platzierung version={LABEL} sprache=de-DE ")
@@ -200,19 +220,51 @@ class StoreTextTests(ProbeCase):
         self.assertIn("gruppe=IPAD_13 typ=? zustand=?", lines[1])
         self.assertIn(f"platzierung keine version={LABEL} sprache=en-US", result.stdout.splitlines())
 
-    def test_placement_error_does_not_abort(self):
-        _, result = self.probe(placements=(404, {}))
+    def test_placement_line_prints_attribute_keys(self):
+        _, result = self.probe(placements=(200, {"data": [
+            {"id": "P", "attributes": {"placementType": "SCREENSHOT", "state": "COMPLETE", "locale": "de-DE"}},
+            {"id": "Q"}]}))
+        lines = self.lines(result, f"platzierung version={LABEL} sprache=de-DE ")
+        self.assertEqual(len(lines), 2, result.stdout)
+        self.assertTrue(lines[0].endswith("felder=locale,placementType,state"), lines[0])
+        self.assertTrue(lines[1].endswith("felder=-"), lines[1])
+
+    def test_placement_error_shows_reason_and_does_not_abort(self):
+        body = {"errors": [{"code": "PARAMETER_ERROR.INVALID", "title": "Invalid parameter",
+                            "detail": "Parameter x of resource 99-SECRET"}]}
+        _, result = self.probe(placements=(400, body))
         self.assertIn(f"platzierung fehler version={LABEL} sprache=de-DE", result.stdout.splitlines())
+        access = [l for l in self.lines(result, "zugriff") if "abfrage=placements" in l and "http=400" in l]
+        self.assertTrue(access, result.stdout)
+        self.assertIn("grund=PARAMETER_ERROR.INVALID/Invalid parameter", access[0])
+        self.assertNotIn("99-SECRET", result.stdout)
         self.assertTrue(self.lines(result, f"text version={LABEL} sprache=en-US "), result.stdout)
         self.assertEqual(len(self.lines(result, "zusammenfassung")), 1)
 
-    def test_refdata_group_names_sorted(self):
-        _, result = self.probe()
-        self.assertIn("refdaten gruppen=IPAD_13,IPHONE_67,WATCH_ULTRA", result.stdout.splitlines())
-        _, none = self.probe(refdata=(200, {"data": [{"id": "R", "attributes": {"x": 1}}]}))
-        self.assertIn("refdaten keine", none.stdout.splitlines())
-        _, failed = self.probe(refdata=(404, {}))
+    def test_refdata_groups_from_placement_profile_groups(self):
+        fake, result = self.probe()
+        self.assertIn("refdaten gruppen=3 namen=IPAD_13,IPHONE_67,WATCH_ULTRA", result.stdout.splitlines())
+        asked = [path for _, path in fake.requests if path.startswith("/v1/appAssetLibraryRefData")]
+        self.assertEqual(len(asked), 1, asked)
+        self.assertIn("fields[appAssetLibraryRefData]=placementProfileGroups", asked[0])
+
+    def test_refdata_group_entries_read_defensively(self):
+        _, mixed = self.probe(refdata=refdata_with(["STRING_B", {"name": "NAME_A"}, {"identifier": "ID_C"},
+                                                    {"id": "ID_D", "x": 1}, {"name": "", "identifier": "BOTH_E"}]))
+        self.assertIn("refdaten gruppen=5 namen=BOTH_E,ID_C,ID_D,NAME_A,STRING_B", mixed.stdout.splitlines())
+        _, unnamed = self.probe(refdata=refdata_with([{"zebra": 1, "alpha": 2}, {"mid": 3}]))
+        self.assertIn("refdaten gruppen=2 felder=alpha,mid,zebra", unnamed.stdout.splitlines())
+        self.assertNotIn("namen=", "\n".join(self.lines(unnamed, "refdaten")))
+
+    def test_refdata_none_and_error(self):
+        for body in ({"data": [{"id": "R", "attributes": {"placementProfileGroups": []}}]},
+                     {"data": [{"id": "R", "attributes": {"x": 1}}]}, {"data": []}):
+            _, none = self.probe(refdata=(200, body))
+            self.assertIn("refdaten keine", none.stdout.splitlines())
+        _, failed = self.probe(refdata=(404, APPLE_404))
         self.assertIn("refdaten fehler", failed.stdout.splitlines())
+        access = [l for l in self.lines(failed, "zugriff") if "abfrage=appAssetLibraryRefData" in l]
+        self.assertTrue(access and "grund=NOT_FOUND/The specified resource does not exist" in access[0], access)
 
     def test_probe_never_writes_and_keeps_old_lines(self):
         fake, result = self.probe()
@@ -220,6 +272,7 @@ class StoreTextTests(ProbeCase):
         self.assertTrue(self.lines(result, "untertitel "), result.stdout)
         self.assertTrue(self.lines(result, "bildsatz keine "), result.stdout)
         self.assertTrue(self.lines(result, "platzierung "), result.stdout)
+        self.assertTrue(self.lines(result, "bild") or self.lines(result, "bildsatz keine "), result.stdout)
         self.assertEqual(len(self.lines(result, "zusammenfassung antworten=")), 1)
 
 
