@@ -171,12 +171,28 @@ before(() => {
     restore.push(() => { (stream as Doc).write = write; });
   }
 });
+// The fixed events this file may print (AC-15 of S4b-2b): anything else, a lower-case error text too, fails.
+const EVENTS = ["oauth interaction refused", "oauth interaction store failed", "oauth server error", "oauth error",
+  "oauth return refused", "oauth return store failed", "listening", "migrated", "pool error", "pool end failed", "mcp close failed"];
+function fixedEvent(line: string): boolean {
+  const event = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z (.+)$/.exec(line)?.[1];
+  return event !== undefined && (EVENTS.includes(event) || /^migrate failed, retrying \(\d+\/\d+\)$/.test(event));
+}
 after(() => {
   for (const undo of restore.reverse()) undo();
   for (const line of lines) {
-    assert.match(line, /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z [a-z][a-z ,]*(\(\d+\/\d+\))?$/, `kein festes Ereignis: ${line.slice(0, 160)}`);
+    assert.ok(fixedEvent(line), `kein festes Ereignis: ${line.slice(0, 160)}`);
     for (const secret of secrets) assert.ok(!line.includes(secret), `Wert im Log: ${line.slice(0, 160)}`);
   }
+});
+
+test("protokoll: pruefer laesst nur feste ereignisse durch", () => {
+  const at = "2026-11-06T12:00:00.000Z";
+  assert.equal(fixedEvent(`${at} oauth interaction refused`), true);
+  assert.equal(fixedEvent(`${at} migrate failed, retrying (2/60)`), true);
+  assert.equal(fixedEvent(`${at} invalid input syntax for type uuid`), false, "freier Kleinbuchstabentext");
+  assert.equal(fixedEvent(`${at} oauth interaction refused 4711`), false, "Ereignis mit Wert");
+  assert.equal(fixedEvent("oauth interaction refused"), false, "ohne Zeit");
 });
 function remember(answer: Raw, at?: { uid?: string; cookie?: string }) {
   for (const value of [at?.uid, ...(at?.cookie ?? "").split("; ").map((pair) => pair.split("=")[1])]) if (value) secrets.add(value);
@@ -323,20 +339,30 @@ test("hinweg: protokoll ohne werte", async (t) => {
 test("hinweg: fehlerfenster unberuehrt", async (t) => {
   const c = clock();
   let helper = true;
+  let explode = false;
   const apple = appleWith();
   const running = await service(t, { auth: { config: withWeb }, now: c.now,
-    interaction: (pool) => async (provider: any, req: any, res: any) => (helper ? loginThenApple(apple)(pool) : await apple(pool()))(provider, req, res) });
+    interaction: (pool) => async (provider: any, req: any, res: any) => {
+      if (explode) throw new Error("kaputt-4711");
+      return (helper ? loginThenApple(apple)(pool) : await apple(pool()))(provider, req, res);
+    } });
   const { at } = await toConsent(running.url);
-  for (let i = 0; i < 25; i++) assert.equal((await visit(running.url, at)).status, 501, `consent ${i}`);
   helper = false;
-  for (let i = 0; i < 12; i++) {
-    const next = await begin(running.url);
-    const answer = await visit(running.url, next);
+  const nexts = [];
+  for (let i = 0; i < 20; i++) nexts.push(await begin(running.url));
+  // Only what follows counts: the preparation's 303s drop out of the 5-minute window and cannot dilute it.
+  c.offset = 301_000;
+  for (let i = 0; i < 25; i++) assert.equal((await visit(running.url, at)).status, 501, `consent ${i}`);
+  for (const [i, next] of nexts.entries()) {
+    const answer = await visit(running.url, next, "");
     remember(answer, next);
-    assert.equal(answer.status, 303, `hinweg ${i}: ${answer.status}`);
-    assert.equal((await visit(running.url, next, "")).status, 400, `400 ${i}`);
+    assert.equal(answer.status, 400, `400 ${i}`);
   }
   assert.equal((await raw(running.url, "/health")).status, 200, "501 oder 400 im Fehlerfenster gezählt");
+  // Counter-check: the same 400s plus 25 answers of 500 trip the window, so the test sees a filled one.
+  explode = true;
+  for (let i = 0; i < 25; i++) assert.equal((await visit(running.url, nexts[i % nexts.length])).status, 500, `500 ${i}`);
+  assert.equal((await raw(running.url, "/health")).status, 503, "5xx nicht gezählt: das Fenster ist nicht scharf");
 });
 
 test("einhaengen: gesetzte interaktion hat vorrang", async (t) => {

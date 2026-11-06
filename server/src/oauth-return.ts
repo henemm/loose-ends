@@ -7,15 +7,17 @@ import { appleReturnUrl, redeemCode } from "./apple-client.ts";
 import { PgAdapter } from "./oauth-adapter.ts";
 
 // The way back from Apple (#621 S4b-2a): Apple's form_post is checked and ends in a one-time ticket and a 303 to
-// finish. finish itself, which needs the interaction cookie and the ticket, is S4b-2b; until then nobody signs in.
+// finish. finish closes the sign-in with the interaction cookie and the ticket (oauth-interaction.ts, S4b-2b).
 export type ReturnHandler = (req: IncomingMessage, res: ServerResponse) => Promise<void>;
 export type AppleReturnDeps = {
   pool: pg.Pool; config: AppleConfig; publicUrl: string; now: () => Date; fetch: typeof fetch; keys: KeyLookup;
   log: (event: string) => void;
 };
-type Ticket = { uid: string; accountId: string } | { uid: string; error: "access_denied" | "temporarily_unavailable" };
+export type Ticket = { uid: string; accountId: string } | { uid: string; error: "access_denied" | "temporarily_unavailable" };
 type Fields = { state: string; code?: string; error?: string };
 
+// One source for the ticket's model: written here, read by finish.
+export const TICKET_MODEL = "AppleTicket";
 const LIMIT = 16 * 1024;
 const TICKET_TTL = 60;
 const FORM = "application/x-www-form-urlencoded";
@@ -107,7 +109,7 @@ async function finishReturn(deps: AppleReturnDeps, fields: Fields, res: ServerRe
   const ticket = randomBytes(32).toString("base64url");
   try {
     const payload = await outcome(deps, fields, at.uid, at.nonce);
-    await new PgAdapter(deps.pool, "AppleTicket", deps.now).upsert(ticket, payload, TICKET_TTL);
+    await new PgAdapter(deps.pool, TICKET_MODEL, deps.now).upsert(ticket, payload, TICKET_TTL);
   } catch {
     deps.log(STORE_FAILED);
     return badRequest(res);

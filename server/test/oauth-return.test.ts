@@ -4,15 +4,16 @@ import { createHash, generateKeyPairSync, randomBytes, randomUUID, sign } from "
 import http from "node:http";
 import { join } from "node:path";
 import pg from "pg";
-import { deleteAccount } from "../src/accounts.ts";
+import { deleteAccount, findOrCreate } from "../src/accounts.ts";
 import { loadAppleConfig } from "../src/apple.ts";
 import { createJwks } from "../src/apple-jwks.ts";
 import { start } from "../src/main.ts";
 import { PgAdapter } from "../src/oauth-adapter.ts";
-import { oauthKeysFromEnv } from "../src/oauth-provider.ts";
+import { oauthKeysFromEnv, productInteraction } from "../src/oauth-provider.ts";
 
 // Schnitt 4b-2a of #621: Apple's form_post comes back, is checked strictly and ends in a one-time ticket and a 303 to finish.
-// The whole path runs through the real issuer and a throwaway Postgres; only Apple is faked. finish itself is S4b-2b.
+// Schnitt 4b-2b: finish needs the interaction cookie and the ticket, both bound to the path's uid, and signs the browser in.
+// The whole path runs through the real issuer and a throwaway Postgres; only Apple is faked.
 
 type Doc = Record<string, any>;
 type T = { after: (fn: () => Promise<void>) => void; mock: any };
@@ -35,6 +36,7 @@ const CODE = "CODE-RUECK-4711";
 const BAD = "bad request";
 
 const returnModule = () => import("../src/oauth-return.ts" as string) as Promise<Doc>;
+const interactionModule = () => import("../src/oauth-interaction.ts" as string) as Promise<Doc>;
 const COOKIE_KEY = `geheim-cookie-schluessel-${randomBytes(16).toString("hex")}`;
 const ES256 = generateKeyPairSync("ec", { namedCurve: "P-256" });
 const keys = oauthKeysFromEnv({ OAUTH_COOKIE_KEYS: COOKIE_KEY, OAUTH_SIGNING_JWK: JSON.stringify(ES256.privateKey.export({ format: "jwk" })) })!;
@@ -88,8 +90,10 @@ type Apple = ReturnType<typeof fakeApple>;
 
 const clock = () => { const c = { offset: 0, now: () => Date.now() + c.offset }; return c; };
 
-// Each service gets its own schema; ret replaces the return handler (AC-13, AC-18), built from the pool the test gets back.
-async function service(t: T, options: { auth?: Doc; interaction?: any; ret?: (pool: () => pg.Pool) => any; now?: () => number } = {}) {
+// Each service gets its own schema; ret replaces the return handler (AC-13, AC-18), inter the interaction, both built
+// from the pool the test gets back.
+type Options = { auth?: Doc; interaction?: any; inter?: (pool: () => pg.Pool) => any; ret?: (pool: () => pg.Pool) => any; now?: () => number };
+async function service(t: T, options: Options = {}) {
   const admin = new pg.Pool({ connectionString: databaseUrl });
   const schema = `t_${randomUUID().replaceAll("-", "")}`;
   await admin.query(`CREATE SCHEMA ${schema}`);
@@ -97,6 +101,7 @@ async function service(t: T, options: { auth?: Doc; interaction?: any; ret?: (po
   parsed.searchParams.set("options", `-c search_path=${schema}`);
   let pool: pg.Pool | undefined;
   const appleReturn = options.ret?.(() => pool!);
+  if (options.inter) options = { ...options, interaction: options.inter(() => pool!) };
   const running = await start({ databaseUrl: parsed.toString(), port: 0, migrationsDir: migrations, now: options.now,
     applicationName: `le-rue-${randomUUID().slice(0, 8)}`, auth: options.auth as never,
     oauth: { publicUrl: ORIGIN, keys, fetch: cimdFetch, ...(options.interaction ? { interaction: options.interaction } : {}), ...(appleReturn ? { appleReturn } : {}) } as never });
@@ -128,7 +133,7 @@ const post = (url: string, body: string, headers: Record<string, string> = FORM)
 const countOf = async (pool: pg.Pool, table: string, where = "true") => Number((await pool.query(`SELECT count(*) FROM ${table} WHERE ${where}`)).rows[0].count);
 
 // Values of the whole file: only fixed event names may reach the output, never one of these (AC-17).
-const secrets = new Set<string>([COOKIE_KEY, WEB, REFRESH, CODE]);
+const secrets = new Set<string>([COOKIE_KEY, WEB, REFRESH, CODE, "apple-sub-1", "apple-sub-2", "appleid.apple.com"]);
 const lines: string[] = [];
 const restore: (() => void)[] = [];
 before(() => {
@@ -490,19 +495,295 @@ test("rueckweg: ohne rueckweg und bei fremden pfaden 404 des ausstellers", async
   assert.equal(apple.forms.length, 0);
 });
 
-test("rueckweg: finish ist noch nicht behandelt und verbraucht nichts", async (t) => {
+// finish (S4b-2b): later cookies replace earlier ones of the same name, as a browser's jar would.
+const jar = (...cookies: string[]) =>
+  [...new Map(cookies.join("; ").split("; ").filter(Boolean).map((pair) => [pair.split("=")[0], pair])).values()].join("; ");
+const valuesOf = (cookie: string) => cookie.split("; ").map((pair) => pair.split("=")[1]);
+const finishPath = (answer: Raw) => { const url = new URL(String(answer.headers.location)); return `${url.pathname}${url.search}`; };
+type Flow = { at: { uid: string; cookie: string }; ticket: string; path: string };
+// Hinweg and Rückweg up to the 303 to finish: the ticket and finish's path with its query.
+async function flow(running: Running, apple: Apple, extra?: [string, string][]): Promise<Flow & { at: Awaited<ReturnType<typeof hinweg>> }> {
+  const { at, answer } = await through(running, apple, extra);
+  return { at, ticket: ticketOf(answer, at), path: finishPath(answer) };
+}
+const finish = (running: Running, path: string, cookie?: string, method = "GET") =>
+  raw(running.url, path, { method, ...(cookie ? { headers: { cookie } } : {}) });
+const consumed = async (pool: pg.Pool, ticket: string) => (await ticketRow(pool, ticket)).consumed_at !== null;
+const interactionOf = async (pool: pg.Pool, uid: string) =>
+  (await pool.query("SELECT payload FROM oauth_records WHERE model = 'Interaction' AND id_hash = $1", [sha(uid)])).rows[0]?.payload;
+const resultOf = async (pool: pg.Pool, uid: string) => (await interactionOf(pool, uid))?.result;
+const sessionsOf = (pool: pg.Pool, where = "true") => countOf(pool, "oauth_records", `model = 'Session' AND ${where}`);
+async function accountOf(pool: pg.Pool, sub = "apple-sub-1"): Promise<string> {
+  const id = (await pool.query("SELECT id FROM accounts WHERE apple_sub = $1", [sub])).rows[0].id as string;
+  note(id);
+  return id;
+}
+// finish succeeded: 303 to the issuer's resume of exactly this interaction, no body. The resume cookie is
+// not set here: the library sets it once at /oauth/auth, and the browser carries it since then.
+function assertFinished(answer: Raw, uid: string, name: string) {
+  assert.equal(answer.status, 303, `${name}: ${answer.status} ${answer.body.slice(0, 160)}`);
+  assert.equal(new URL(String(answer.headers.location), ORIGIN).href, `${ORIGIN}/oauth/auth/${uid}`, name);
+  assert.doesNotMatch(cookiesOf(answer), /(^|; )_interaction_resume=/, name);
+  assert.equal(answer.body, "", name);
+  note(...valuesOf(cookiesOf(answer)));
+}
+// Weiterlaufen: GET of finish's location with the browser's cookies and the resume cookie.
+async function resume(running: Running, answer: Raw, cookie: string) {
+  const jarred = jar(cookie, cookiesOf(answer));
+  const to = new URL(String(answer.headers.location), ORIGIN);
+  const next = await raw(running.url, `${to.pathname}${to.search}`, { headers: { cookie: jarred } });
+  const all = jar(jarred, cookiesOf(next));
+  note(...valuesOf(all));
+  return { next, cookie: all };
+}
+// A refused finish: the fixed 400, the ticket unconsumed, no new session, no result in the interaction.
+async function assertRefused(running: Running, answer: Raw, f: Pick<Flow, "at" | "ticket">, name: string, sessions = 0) {
+  assertFixed(answer, 400, BAD, name);
+  assert.equal(answer.headers["content-type"], "text/plain; charset=utf-8", name);
+  assert.equal(await consumed(running.pool, f.ticket), false, `${name}: Ticket verbraucht`);
+  assert.equal(await sessionsOf(running.pool), sessions, `${name}: Sitzung`);
+  assert.equal(await resultOf(running.pool, f.at.uid), undefined, `${name}: result`);
+}
+const finishOf = (uid: string, ticket: string) => `/oauth/interaction/${uid}/finish?ticket=${ticket}`;
+const anyTicket = () => { const ticket = randomBytes(32).toString("base64url"); note(ticket); return ticket; };
+
+test("finish: erfolg legt sitzung des kontos an und endet bei der zustimmung", async (t) => {
   const apple = fakeApple();
   const running = await withApple(t, apple);
-  const { at, answer } = await through(running, apple);
-  const ticket = ticketOf(answer, at);
-  const before = await countOf(running.pool, "oauth_records");
-  const location = new URL(String(answer.headers.location));
-  const path = `${location.pathname}${location.search}`;
-  assertFixed(await raw(running.url, path), 400, BAD, "ohne cookie");
-  assertFixed(await raw(running.url, path, { headers: { cookie: at.cookie } }), 400, BAD, "mit cookie");
-  assert.equal(await countOf(running.pool, "oauth_records"), before, "finish hat etwas angelegt");
-  assert.equal(await countOf(running.pool, "oauth_records", "model IN ('Session', 'AuthorizationCode', 'Grant')"), 0);
-  assert.equal((await ticketRow(running.pool, ticket)).consumed_at, null, "Ticket verbraucht");
+  const f = await flow(running, apple);
+  const accountId = await accountOf(running.pool);
+  assert.match(f.at.cookie, /(^|; )_interaction_resume=/, "Browser traegt kein Resume-Cookie aus /oauth/auth");
+  const done = await finish(running, f.path, f.at.cookie);
+  assertFinished(done, f.at.uid, "finish");
+  assert.equal(await consumed(running.pool, f.ticket), true, "Ticket nicht verbraucht");
+  const { next, cookie } = await resume(running, done, f.at.cookie);
+  assert.equal(next.status, 303, `weiter: ${next.status} ${next.body.slice(0, 160)}`);
+  const consent = new URL(String(next.headers.location), ORIGIN).pathname;
+  assert.match(consent, /^\/oauth\/interaction\/[^/]+$/);
+  const uid = consent.split("/").at(-1)!;
+  note(uid);
+  assert.notEqual(uid, f.at.uid, "keine neue Interaktion");
+  assert.equal((await interactionOf(running.pool, uid))?.prompt?.name, "consent");
+  const sessions = (await running.pool.query("SELECT account_id FROM oauth_records WHERE model = 'Session'")).rows;
+  assert.deepEqual(sessions.map((row) => row.account_id), [accountId]);
+  assertFixed(await raw(running.url, consent, { headers: { cookie } }), 501, "sign-in not available", "zustimmung");
+  assert.equal(await countOf(running.pool, "oauth_records", "model IN ('AuthorizationCode', 'AccessToken', 'RefreshToken')"), 0);
+});
+
+test("finish: fehler-tickets enden als oauth-fehler beim client ohne beschreibung", async (t) => {
+  const apple = fakeApple();
+  const running = await withApple(t, apple);
+  const cases: [string, () => void, [string, string][]][] = [
+    ["access_denied", () => { apple.token = undefined; }, [["error", "user_cancelled_authorize"]]],
+    ["temporarily_unavailable", () => { apple.token = () => Promise.reject(new Error("netz-4711")) as never; }, [["code", CODE]]],
+  ];
+  for (const [error, arrange, extra] of cases) {
+    arrange();
+    const f = await flow(running, apple, extra);
+    const done = await finish(running, f.path, f.at.cookie);
+    assertFinished(done, f.at.uid, error);
+    assert.equal(await consumed(running.pool, f.ticket), true, `${error}: Ticket`);
+    const { next } = await resume(running, done, f.at.cookie);
+    assert.equal(next.status, 303, `${error}: ${next.status} ${next.body.slice(0, 160)}`);
+    const to = new URL(String(next.headers.location));
+    assert.equal(`${to.origin}${to.pathname}`, CB, error);
+    assert.equal(to.searchParams.get("error"), error);
+    assert.equal(to.searchParams.get("state"), "s1", error);
+    for (const key of ["error_description", "code"]) assert.equal(to.searchParams.has(key), false, `${error}: ${key}`);
+  }
+  assert.equal(await sessionsOf(running.pool, "account_id IS NOT NULL"), 0);
+  assert.equal(await countOf(running.pool, "oauth_records", "model = 'AuthorizationCode'"), 0);
+});
+
+test("finish: ohne cookie und mit fremdem cookie 400 und ticket bleibt", async (t) => {
+  const apple = fakeApple();
+  const running = await withApple(t, apple);
+  const a = await flow(running, apple);
+  const b = await flow(running, apple);
+  const invented = a.at.cookie.split("; ").map((pair) => `${pair.split("=")[0]}=${anyTicket()}`).join("; ");
+  for (const [name, cookie] of [["ohne cookie", undefined], ["cookie von b", b.at.cookie], ["erfundenes cookie", invented]] as const) {
+    await assertRefused(running, await finish(running, a.path, cookie), a, name);
+  }
+  assert.equal(await resultOf(running.pool, b.at.uid), undefined, "result bei b");
+  assert.equal(await consumed(running.pool, b.ticket), false, "Ticket von b verbraucht");
+  assertFinished(await finish(running, a.path, a.at.cookie), a.at.uid, "richtiges cookie");
+});
+
+test("finish: ticket einer anderen interaktion 400 und ticket bleibt", async (t) => {
+  const apple = fakeApple();
+  const running = await withApple(t, apple);
+  const a = await flow(running, apple);
+  apple.sub = "apple-sub-2";
+  const b = await flow(running, apple);
+  await assertRefused(running, await finish(running, finishOf(a.at.uid, b.ticket), a.at.cookie), b, "ticket von b");
+  assert.equal(await resultOf(running.pool, a.at.uid), undefined, "result bei a");
+  await assertRefused(running, await finish(running, b.path, a.at.cookie), b, "pfad von b, cookie von a");
+  for (const f of [a, b]) assert.equal(await consumed(running.pool, f.ticket), false, "Ticket verbraucht");
+  assertFinished(await finish(running, a.path, a.at.cookie), a.at.uid, "a");
+  assertFinished(await finish(running, b.path, b.at.cookie), b.at.uid, "b");
+});
+
+test("finish: replay abgelaufen unbekannt und fremdes modell 400", async (t) => {
+  const c = clock();
+  const apple = fakeApple();
+  const running = await withApple(t, apple, { now: c.now });
+  const once = await flow(running, apple);
+  const done = await finish(running, once.path, once.at.cookie);
+  assertFinished(done, once.at.uid, "erster abruf");
+  assertFixed(await finish(running, once.path, once.at.cookie), 400, BAD, "zweiter abruf");
+  await resume(running, done, once.at.cookie);
+  assert.equal(await sessionsOf(running.pool), 1, "nicht genau eine Sitzung");
+  const late = await flow(running, apple);
+  c.offset = 61_000;
+  await assertRefused(running, await finish(running, late.path, late.at.cookie), late, "abgelaufen", 1);
+  c.offset = 0;
+  const fresh = await flow(running, apple);
+  await assertRefused(running, await finish(running, finishOf(fresh.at.uid, anyTicket()), fresh.at.cookie), fresh, "unbekannt", 1);
+  const other = await hinweg(running, apple);
+  assertFixed(await finish(running, finishOf(other.uid, other.state), other.cookie), 400, BAD, "state als ticket");
+  const login = (await running.pool.query("SELECT consumed_at FROM oauth_records WHERE model = 'AppleLogin' AND id_hash = $1", [sha(other.state)])).rows[0];
+  assert.equal(login.consumed_at, null, "AppleLogin verbraucht");
+  assert.equal(await resultOf(running.pool, other.uid), undefined, "result nach state als ticket");
+  assert.equal(await sessionsOf(running.pool), 1, "weitere Sitzung");
+});
+
+test("finish: ticket genau einmal und nicht leer", async (t) => {
+  const apple = fakeApple();
+  const running = await withApple(t, apple);
+  const f = await flow(running, apple);
+  const base = `/oauth/interaction/${f.at.uid}/finish`;
+  const cases: [string, string][] = [
+    ["ohne ticket", base], ["leeres ticket", `${base}?ticket=`], ["zwei gleiche", `${base}?ticket=${f.ticket}&ticket=${f.ticket}`],
+    ["gueltig und erfunden", `${base}?ticket=${f.ticket}&ticket=${anyTicket()}`],
+  ];
+  for (const [name, path] of cases) await assertRefused(running, await finish(running, path, f.at.cookie), f, name);
+  assertFinished(await finish(running, `${base}?x=1&ticket=${f.ticket}&state=s1`, f.at.cookie), f.at.uid, "weitere parameter");
+});
+
+test("finish: ticket in falscher form wird abgelehnt und nicht verbraucht", async (t) => {
+  const apple = fakeApple();
+  const running = await withApple(t, apple);
+  const at = await hinweg(running, apple);
+  const accountId = await findOrCreate(running.pool, "apple-sub-1");
+  note(accountId);
+  assert.equal((await returnModule()).TICKET_MODEL, "AppleTicket", "eine Quelle für das Modell des Tickets");
+  const adapter = new PgAdapter(running.pool, "AppleTicket");
+  const cases: [string, Doc][] = [
+    ["ohne uid", { accountId }], ["weder konto noch fehler", { uid: at.uid }],
+    ["konto und fehler", { uid: at.uid, accountId, error: "access_denied" }], ["anderer fehler", { uid: at.uid, error: "server_error" }],
+    ["konto als zahl", { uid: at.uid, accountId: 42 }], ["leere strings", { uid: "", accountId: "" }],
+  ];
+  for (const [name, payload] of cases) {
+    const ticket = anyTicket();
+    // The adapter writes account_id from the payload; a number or an empty string has no account row, so straight in.
+    if (typeof payload.accountId === "number" || payload.accountId === "") {
+      await running.pool.query("INSERT INTO oauth_records (model, id_hash, payload, uid, expires_at) VALUES ('AppleTicket', $1, $2, $3, now() + interval '60 seconds')",
+        [sha(ticket), payload, payload.uid]);
+    } else await adapter.upsert(ticket, payload, 60);
+    await assertRefused(running, await finish(running, finishOf(at.uid, ticket), at.cookie), { at, ticket }, name);
+  }
+});
+
+test("finish: anderer pfadrest falsche methode und anderer prompt 400", async (t) => {
+  const apple = fakeApple();
+  const running = await withApple(t, apple);
+  const f = await flow(running, apple);
+  for (const rest of ["/finishx", "/finish/x", "/x", "/", "/finish/"]) {
+    await assertRefused(running, await finish(running, `/oauth/interaction/${f.at.uid}${rest}?ticket=${f.ticket}`, f.at.cookie), f, rest);
+  }
+  for (const method of ["POST", "PUT", "DELETE"]) {
+    const answer = await finish(running, f.path, f.at.cookie, method);
+    assert.equal(answer.status, 405, `${method}: ${answer.status}`);
+    assert.equal(answer.headers.allow, "GET", method);
+    assert.equal(answer.headers["cache-control"], "no-store", method);
+    assert.equal(answer.body, "", method);
+    assert.equal(await consumed(running.pool, f.ticket), false, `${method}: Ticket verbraucht`);
+  }
+  const done = await finish(running, f.path, f.at.cookie);
+  assertFinished(done, f.at.uid, "finish");
+  const { next, cookie } = await resume(running, done, f.at.cookie);
+  const consent = new URL(String(next.headers.location), ORIGIN).pathname;
+  const uid = consent.split("/").at(-1)!;
+  note(uid);
+  const ticket = anyTicket();
+  await new PgAdapter(running.pool, "AppleTicket").upsert(ticket, { uid, accountId: await accountOf(running.pool) }, 60);
+  assertFixed(await finish(running, finishOf(uid, ticket), cookie), 400, BAD, "prompt consent");
+  assert.equal(await consumed(running.pool, ticket), false, "consent: Ticket verbraucht");
+  await hinweg(running, apple);
+});
+
+test("finish: geloeschtes konto raeumt das ticket ab und ergibt 400", async (t) => {
+  const apple = fakeApple();
+  const running = await withApple(t, apple);
+  const f = await flow(running, apple);
+  const accountId = await accountOf(running.pool);
+  await deleteAccount(running.pool, accountId);
+  assert.equal(await countOf(running.pool, "oauth_records", "model = 'AppleTicket'"), 0, "Ticket nicht abgeräumt");
+  assertFixed(await finish(running, f.path, f.at.cookie), 400, BAD, "konto gelöscht");
+  assert.equal(await sessionsOf(running.pool), 0, "Sitzung");
+  assert.equal(await countOf(running.pool, "oauth_records", `account_id = '${accountId}'`), 0, "Eintrag mit Konto");
+  assert.equal(await resultOf(running.pool, f.at.uid), undefined, "result");
+});
+
+let storeFailures = 0;
+test("finish: speicherfehler 400 store failed ohne werte", async (t) => {
+  const apple = fakeApple();
+  const logged: string[] = [];
+  let mode = "";
+  let leak = "";
+  // The pool finish reads through: reading or redeeming the ticket fails with values in the text, or the interaction
+  // vanishes right after the redemption, so the library throws.
+  const swap = (real: pg.Pool) => ({ query: async (sql: string, params?: any[]) => {
+    if (params?.[0] !== "AppleTicket") return real.query(sql, params);
+    if (mode === "read" && /^\s*SELECT/.test(sql)) throw new Error(`lesen kaputt ${leak}`);
+    if (mode === "consume" && /^\s*UPDATE/.test(sql)) throw new Error(`einloesen kaputt ${leak}`);
+    const result = await real.query(sql, params);
+    if (mode === "gone" && /^\s*UPDATE/.test(sql)) await real.query("DELETE FROM oauth_records WHERE model = 'Interaction'");
+    return result;
+  } });
+  const jwks = createJwks({ fetch: apple.fetch, now: Date.now }).keys;
+  const base = { config: withWeb, publicUrl: ORIGIN, now: () => new Date(), keys: jwks };
+  const log = (event: string) => { logged.push(event); if (event === "oauth interaction store failed") storeFailures++; };
+  const running = await service(t, { auth: { config: withWeb, fetch: apple.fetch },
+    inter: (pool) => async (provider: any, req: any, res: any) =>
+      (await interactionModule()).appleInteraction({ ...base, pool: swap(pool()), fallback: productInteraction, log })(provider, req, res),
+    ret: (pool) => async (req: any, res: any) => (await returnModule()).appleReturn({ ...base, pool: pool(), fetch: apple.fetch, log: () => {} })(req, res) });
+  for (const name of ["read", "consume", "gone"]) {
+    const f = await flow(running, apple);
+    leak = `${await accountOf(running.pool)} ${f.ticket}`;
+    logged.length = 0;
+    mode = name;
+    const answer = await finish(running, f.path, f.at.cookie);
+    mode = "";
+    assertFixed(answer, 400, BAD, name);
+    for (const value of leak.split(" ")) assert.ok(!answer.body.includes(value) && !JSON.stringify(answer.headers).includes(value), `${name}: Wert`);
+    assert.deepEqual(logged, ["oauth interaction store failed"], name);
+    if (name !== "gone") assert.equal(await consumed(running.pool, f.ticket), false, `${name}: Ticket verbraucht`);
+    assert.equal(await sessionsOf(running.pool), 0, `${name}: Sitzung`);
+  }
+});
+
+test("finish: fehlerfenster zaehlt weder 400 noch 303", async (t) => {
+  const c = clock();
+  const apple = fakeApple();
+  const running = await withApple(t, apple, { now: c.now });
+  const ats = [];
+  for (let i = 0; i < 5; i++) ats.push(await hinweg(running, apple));
+  // Only what follows counts: the preparation drops out of the 5-minute window.
+  c.offset = 301_000;
+  for (const at of ats) {
+    const answer = await post(running.url, form([["state", at.state], ["code", CODE]]));
+    ticketOf(answer, at);
+    assertFinished(await finish(running, finishPath(answer), at.cookie), at.uid, "erfolg");
+  }
+  const refused = finishOf(ats[0].uid, "x");
+  for (let i = 0; i < 20; i++) assert.equal((await finish(running, refused)).status, 400, `400 ${i}`);
+  for (let i = 0; i < 5; i++) assert.equal((await finish(running, refused, undefined, "POST")).status, 405, `405 ${i}`);
+  assert.equal((await raw(running.url, "/health")).status, 200, "400, 405 oder 303 im Fehlerfenster gezählt");
+
+  const failing = await service(t, { auth: { config: withWeb, fetch: apple.fetch }, interaction: async () => { throw new Error("kaputt-4711"); } });
+  for (let i = 0; i < 25; i++) assert.equal((await finish(failing, finishOf("x", "y"))).status, 500, `500 ${i}`);
+  assert.equal((await raw(failing.url, "/health")).status, 503, "5xx nicht gezählt");
 });
 
 test("rueckweg: fehlerfenster zaehlt 5xx und nicht die 303", async (t) => {
@@ -538,5 +819,11 @@ test("rueckweg: eine jwks-instanz je start fuer rueckweg und app-weg", async (t)
 
 test("rueckweg: protokoll nur feste ereignisse ohne werte", () => {
   assert.ok(lines.some((line) => line.endsWith("oauth return refused")), "kein abgelehnter Rückweg protokolliert");
+  assertQuiet();
+});
+
+test("finish: protokoll nur feste ereignisse ohne werte", () => {
+  assert.ok(lines.some((line) => line.endsWith("oauth interaction refused")), "kein abgelehnter Abschluss protokolliert");
+  assert.ok(storeFailures > 0, "kein Speicherfehler protokolliert");
   assertQuiet();
 });
