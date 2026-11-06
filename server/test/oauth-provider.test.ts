@@ -1,9 +1,8 @@
-import { test } from "node:test";
+import { after, before, test } from "node:test";
 import assert from "node:assert/strict";
 import { createHash, generateKeyPairSync, randomBytes, randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import http from "node:http";
-import { createServer } from "node:net";
 import { join } from "node:path";
 import pg from "pg";
 import { Client, StreamableHTTPClientTransport } from "@modelcontextprotocol/client";
@@ -57,7 +56,7 @@ function cimd(extra: Record<string, Doc> = {}) {
 }
 
 // login → account via findOrCreate → consent with a grant for every missing scope. Only tests hand this in.
-function testInteraction(pool: () => pg.Pool, sub: string, hooks: { afterGrant?: (account: string) => Promise<void> } = {}) {
+function testInteraction(pool: () => pg.Pool, sub: string, hooks: { beforeGrant?: (account: string) => Promise<void> } = {}) {
   const state = { account: undefined as string | undefined, stopped: false };
   const handle = async (provider: any, req: http.IncomingMessage, res: http.ServerResponse) => {
     if (state.stopped) return void res.writeHead(403).end();
@@ -71,8 +70,9 @@ function testInteraction(pool: () => pg.Pool, sub: string, hooks: { afterGrant?:
     for (const [resource, scopes] of Object.entries(details.prompt.details.missingResourceScopes ?? {})) {
       grant.addResourceScope(resource, (scopes as string[]).join(" "));
     }
+    // The account goes between sign-in and grant, so the Grant's upsert meets the foreign key (23503).
+    if (hooks.beforeGrant) { await hooks.beforeGrant(details.session.accountId); state.stopped = true; }
     const grantId = await grant.save();
-    if (hooks.afterGrant) { await hooks.afterGrant(details.session.accountId); state.stopped = true; }
     await provider.interactionFinished(req, res, { consent: { grantId } }, { mergeWithLastSubmission: true });
   };
   return { handle, state };
@@ -104,10 +104,10 @@ async function service(t: T, options: Options = {}, joinUrl?: string) {
 
 // A keyed service with Claude's document and, unless switched off, the test interaction for `sub`.
 async function issuer(t: T, options: { sub?: string; interaction?: boolean; now?: () => number; cimd?: ReturnType<typeof cimd>;
-  afterGrant?: (account: string) => Promise<void> } = {}) {
+  beforeGrant?: (account: string) => Promise<void> } = {}) {
   const docs = options.cimd ?? cimd();
   let pool: pg.Pool | undefined;
-  const flow = testInteraction(() => pool!, options.sub ?? `001234.${randomUUID()}.0815`, { afterGrant: options.afterGrant });
+  const flow = testInteraction(() => pool!, options.sub ?? `001234.${randomUUID()}.0815`, { beforeGrant: options.beforeGrant });
   const running = await service(t, {
     now: options.now,
     oauth: { publicUrl: ORIGIN, keys: await keys(), fetch: docs.fetch, ...(options.interaction === false ? {} : { interaction: flow.handle }) },
@@ -221,26 +221,43 @@ function example(): Doc {
 const otherIds = (doc: Doc): Doc => JSON.parse(JSON.stringify(doc).replaceAll("6F1C2B0A", "9B9B9B9B"));
 const ids = (doc: Doc): string[] => doc.tasks.map((task: Doc) => task.id);
 
+// console.* and every text written to stdout or stderr (passed on); the test runner's own frames are buffers, not text.
+function tapStreams(lines: string[], mock: (target: object, name: string, fn: (...args: any[]) => unknown) => void) {
+  for (const stream of [process.stdout, process.stderr]) {
+    const write = stream.write.bind(stream);
+    mock(stream, "write", (chunk: unknown, ...rest: any[]) => {
+      if (typeof chunk === "string") lines.push(...chunk.split("\n").filter(Boolean));
+      return write(chunk as never, ...rest);
+    });
+  }
+}
 function capturedLines(t: T): string[] {
   const lines: string[] = [];
   for (const name of ["log", "error", "warn", "info", "debug"]) {
     t.mock.method(console, name, (...args: unknown[]) => { lines.push(args.map((a) => (typeof a === "string" ? a : JSON.stringify(a) ?? String(a))).join(" ")); });
   }
+  tapStreams(lines, (target, name, fn) => t.mock.method(target, name, fn));
   return lines;
 }
+// Over the whole file (AC-16): only the service's fixed event names, "<ISO time> <event>", ever reach the output.
+const fileLines: string[] = [];
+const restore: (() => void)[] = [];
+before(() => tapStreams(fileLines, (target, name, fn) => {
+  const original = (target as Doc)[name];
+  (target as Doc)[name] = fn;
+  restore.push(() => { (target as Doc)[name] = original; });
+}));
+after(() => {
+  for (const undo of restore.reverse()) undo();
+  const event = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z [a-z][a-z ,]*(\(\d+\/\d+\))?$/;
+  assert.ok(fileLines.some((line) => line.endsWith(" listening")), "Mitschnitt hat nichts gesehen");
+  for (const line of fileLines) assert.match(line, event, `kein festes Ereignis im Log: ${line.slice(0, 160)}`);
+});
 function assertClean(lines: string[], secrets: (string | undefined)[], name: string) {
   for (const line of lines) {
     for (const secret of secrets) if (secret) assert.ok(!line.includes(secret), `${name}: Wert im Log: ${line.slice(0, 160)}`);
     assert.doesNotMatch(line, /23503|violates|detail|Key \(/i, `${name}: Postgres-Fehler im Log: ${line.slice(0, 160)}`);
   }
-}
-
-async function freePort(): Promise<number> {
-  const probe = createServer();
-  await new Promise<void>((done) => probe.listen(0, "127.0.0.1", done));
-  const port = (probe.address() as { port: number }).port;
-  await new Promise((done) => probe.close(done));
-  return port;
 }
 
 test("oauth-provider: metadaten unter beiden pfaden", async (t) => {
@@ -312,14 +329,15 @@ test("oauth-provider: code nur einmal", async (t) => {
 test("oauth-provider: ohne pkce abgelehnt", async (t) => {
   const running = await issuer(t);
   const { challenge } = pkce();
-  const cases: [string, Record<string, string | undefined>][] = [
-    ["ohne code_challenge", { code_challenge: undefined, code_challenge_method: undefined }],
-    ["plain", { code_challenge: challenge, code_challenge_method: "plain" }],
+  const cases: [string, Record<string, string | undefined>, RegExp][] = [
+    ["ohne code_challenge", { code_challenge: undefined, code_challenge_method: undefined }, /PKCE/],
+    ["plain", { code_challenge: challenge, code_challenge_method: "plain" }, /code_challenge_method/],
   ];
-  for (const [name, params] of cases) {
+  for (const [name, params, hint] of cases) {
     const trail = await drive(running.url, authQuery(params));
     assert.ok(trail.callback?.href.startsWith(CB), `${name}: kein Rücksprung: ${trail.last.status} ${trail.last.body.slice(0, 160)}`);
     assert.equal(trail.callback!.searchParams.get("error"), "invalid_request", name);
+    assert.match(trail.callback!.searchParams.get("error_description") ?? "", hint, `${name}: kein Hinweis auf PKCE`);
     assert.equal(trail.callback!.searchParams.get("code"), null, name);
   }
   const all = await rows(running.pool);
@@ -373,14 +391,15 @@ test("oauth-provider: vor bridge und im fehlerfenster", async (t) => {
   assert.ok(large.status >= 400 && large.status < 500, `über 56 KiB: ${large.status}`);
   assert.ok(large.body.length > 0 && JSON.parse(large.body).error, `über 56 KiB nicht von der Bibliothek beantwortet: ${large.status} ${large.body}`);
   assert.notEqual(large.headers.connection, "close", "die Brücke hat geantwortet");
-  assert.equal((await raw(running.url, "/health")).status, 200, "vor der Fehlerserie");
+  // 30 calls to /health while it answers 200: if they counted as successes, only 20 of about 58 answers would fail and the
+  // window would stay at 200. After the series they would prove nothing, since a counted 503 keeps the window failing.
+  for (let i = 0; i < 30; i++) assert.equal((await raw(running.url, "/health")).status, 200, "vor der Fehlerserie");
   await running.pool.query("ALTER TABLE oauth_records RENAME TO oauth_records_weg");
   for (let i = 0; i < 20; i++) {
     const broken = await tokenCall(running.url, { grant_type: "authorization_code", code: `code-${i}`, redirect_uri: CB, client_id: CID, code_verifier: "v".repeat(43) });
     assert.ok(broken.status >= 500, `erzwungener server_error ${i}: ${broken.status}`);
   }
-  for (let i = 0; i < 5; i++) await raw(running.url, "/health");
-  assert.equal((await raw(running.url, "/health")).status, 503, "Fehlerfenster zählt Aussteller-Antworten nicht");
+  assert.equal((await raw(running.url, "/health")).status, 503, "Fehlerfenster: Aussteller-Fehler nicht gezählt oder /health mitgezählt");
   await running.pool.query("ALTER TABLE oauth_records_weg RENAME TO oauth_records");
 });
 
@@ -545,39 +564,62 @@ test("oauth-provider: ohne schluessel 503 und mcp bleibt zu", async (t) => {
   assert.equal((await raw(bare.url, "/health")).status, 200);
 });
 
+// The database does not exist yet, so migrate retries; once it is created, the same instance answers.
 test("oauth-provider: 503 vor migrate", async (t) => {
-  const port = await freePort();
+  const admin = new pg.Pool({ connectionString: databaseUrl });
+  const name = `le_late_${randomUUID().replaceAll("-", "")}`;
+  const late = new URL(databaseUrl!);
+  late.pathname = `/${name}`;
+  let pool: pg.Pool | undefined;
+  const flow = testInteraction(() => pool!, `001234.${randomUUID()}.0815`);
   const running = await start({
-    databaseUrl: `postgres://postgres@127.0.0.1:${port}/postgres`, port: 0, migrationsDir: migrations, retryMs: 50, maxAttempts: 40,
-    oauth: { publicUrl: ORIGIN, keys: await keys(), fetch: cimd().fetch },
+    databaseUrl: late.toString(), port: 0, migrationsDir: migrations, retryMs: 50, maxAttempts: 200,
+    oauth: { publicUrl: ORIGIN, keys: await keys(), fetch: cimd().fetch, interaction: flow.handle },
   } as never);
-  t.after(running.close);
-  const refused = assert.rejects(running.ready);
-  for (const answer of [await raw(running.url, "/.well-known/oauth-authorization-server"), await raw(running.url, "/.well-known/openid-configuration"),
-    await raw(running.url, "/oauth/token", { method: "POST", body: form({ grant_type: "authorization_code", code: "x" }),
-      headers: { "content-type": "application/x-www-form-urlencoded" } })]) {
+  t.after(async () => {
+    await running.close();
+    await pool?.end();
+    await admin.query(`DROP DATABASE IF EXISTS ${name} WITH (FORCE)`);
+    await admin.end();
+  });
+  const calls = () => [raw(running.url, "/.well-known/oauth-authorization-server"), raw(running.url, "/.well-known/openid-configuration"),
+    raw(running.url, "/oauth/token", { method: "POST", body: form({ grant_type: "authorization_code", code: "x" }),
+      headers: { "content-type": "application/x-www-form-urlencoded" } })];
+  for (const answer of await Promise.all(calls())) {
     assert.equal(answer.status, 503, `${answer.status} ${answer.body.slice(0, 120)}`);
     assert.equal(answer.body, "");
   }
   const meta = await raw(running.url, META_PATH);
   assert.equal(meta.status, 200, "Metadaten der Ressource brauchen keine Datenbank");
   assert.equal((await raw(running.url, "/health")).status, 503);
-  await refused;
-  await running.close();
-  const live = await issuer(t);
-  assert.equal((await raw(live.url, "/.well-known/oauth-authorization-server")).status, 200, "nach migrate fachlich");
-  assert.equal((await signIn(live.url)).token.status, 200, "nach migrate Durchlauf");
+  await admin.query(`CREATE DATABASE ${name}`);
+  pool = new pg.Pool({ connectionString: late.toString() });
+  await running.ready;
+  const [discovery, openid, token] = await Promise.all(calls());
+  assert.equal(discovery.status, 200, "nach migrate fachlich");
+  assert.equal(openid.status, 200, "nach migrate fachlich");
+  assert.equal(token.status, 400, `nach migrate antwortet die Bibliothek: ${token.status} ${token.body}`);
+  assert.equal((await signIn(running.url)).token.status, 200, "nach migrate Durchlauf");
 });
 
 test("oauth-provider: nichts im log, auch nicht beim fk fehler", async (t) => {
   const lines = capturedLines(t);
+  // Every Postgres error code the service's pool meets, to prove the flow really hit the foreign key (23503).
+  const codes: string[] = [];
+  const query = pg.Pool.prototype.query;
+  t.mock.method(pg.Pool.prototype, "query", function (this: pg.Pool, ...args: unknown[]) {
+    const answer = (query as (...a: unknown[]) => unknown).apply(this, args);
+    if (answer instanceof Promise) answer.catch((error: { code?: string }) => { if (error?.code) codes.push(error.code); });
+    return answer;
+  });
   let deleted: string | undefined;
   let pool: pg.Pool | undefined;
-  const running = await issuer(t, { afterGrant: async (account) => { deleted = account; await deleteAccount(pool!, account); } });
+  const running = await issuer(t, { beforeGrant: async (account) => { deleted = account; await deleteAccount(pool!, account); } });
   pool = running.pool;
   const { verifier, challenge } = pkce();
   const trail = await drive(running.url, authQuery({ code_challenge: challenge }));
   assert.ok(deleted, "Konto wurde nicht zwischen Anmeldung und Grant gelöscht");
+  assert.ok(codes.includes("23503"), `kein FK-Fehler 23503 erreicht: ${codes.join(", ")}`);
   assert.equal(trail.callback?.searchParams.get("code") ?? null, null, `Code trotz gelöschtem Konto: ${trail.callback?.href}`);
   const all = await rows(running.pool);
   for (const model of ["AuthorizationCode", "AccessToken", "RefreshToken"]) assert.ok(!all.some((row) => row.model === model), `${model} entstanden`);

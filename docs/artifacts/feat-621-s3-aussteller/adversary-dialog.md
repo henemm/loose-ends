@@ -31,7 +31,25 @@ Datum: 2026-11-06 07:26
 **Adversary:** Eigene Probe-Tests (temporaer, wieder geloescht) gegen den laufenden Dienst: Token-Missbrauch: Refresh-Token als Access-Token an /mcp 401; Access-Token als Refresh invalid_grant; Refresh mit fremder resource invalid_target; Refresh mit Scope admin invalid_scope; client_credentials unsupported_grant_type; Token-Austausch mit fremder resource invalid_target; kein id_token, nur Scope tasks; Auth mit Scope `tasks admin openid` ergibt Code, Token traegt nur tasks. 60 fehlerhafte Token-Aufrufe (400) lassen /health bei 200 (4xx zaehlt nicht ins Fehlerfenster). /oauth/jwks enthaelt kein `d`. Pfade: /OAUTH/token, /oauth/%61uth, /oauth//token, /oauth/interaction ohne Slash alle 404 aus Bibliothek oder Bruecke, kein Umgehen; introspection, registration, backchannel, device 404. Mitschnitt von console.* ueber einen vollen Durchlauf: 0 Zeilen. Funde: F001, F002 (beide LOW).
 **Implementierer:** F001: nginx muss X-Forwarded-Host/Proto selbst setzen (Betrieb S6), im Code kein Eingriff noetig, issuer bleibt fest. F002: /oauth/session/end und /oauth/me sind Bibliotheks-Standard, keine Spec-Vorgabe; niedriges Risiko, kann in S4/S5 deaktiviert werden.
 
+### Runde 3
+**Adversary:** Nach der Nachschaerfung der Tests in /60-validate (nur server/test/oauth-provider.test.ts, Produktcode unveraendert). Volltest sauber: 276 bestanden, 0 fehlgeschlagen, 0 uebersprungen. Dateiweiter Mitschnitt stoert die anderen Tests nicht (nur Text, Runner-Frames sind Buffer), die `listening`-Zusicherung belegt, dass er etwas sieht. M1 (AC-16): Fehlerobjekt samt detail am error- und server_error-Listener ausgegeben → Test "nichts im log, auch nicht beim fk fehler" ROT mit 23503 und Konto-ID im Mitschnitt; der FK-Fehler wird also wirklich erreicht. M2 (AC-6): /health im Fehlerfenster mitgezaehlt → Test blieb GRUEN, weil die 30 /health-Aufrufe nach der Fehlerserie lagen und ein gezaehltes 503 das Fenster selbst rot haelt (F007). M2b: Aufrufe vor der Fehlerserie → Mutation ROT, sauber GRUEN. AC-4 (error_description) und AC-15 (dieselbe Instanz nach migrate) halten.
+**Implementierer:** F007 angenommen: Die 30 /health-Aufrufe stehen jetzt vor dem Umbenennen von oauth_records und verlangen je 200, die Aufrufe danach sind entfernt, die Meldung nennt beide Ursachen. Eigene Gegenprobe: Mutation main.ts:75 → ROT, sauber → GRUEN; Volltest 276/276.
+
+### Runde 4
+**Adversary:** Probe 1: Mutation main.ts:75 (/health zaehlt im Fenster) → Test "vor bridge und im fehlerfenster" ROT ("Fehlerfenster: Aussteller-Fehler nicht gezaehlt oder /health mitgezaehlt"), sauber GRUEN. Probe 2: Mutation main.ts:154 (res.once("finish") auskommentiert, Aussteller-Antworten nicht gezaehlt) → ROT. Quellcode danach unveraendert. Volltest: Exit 0, 276 Tests, 276 bestanden, 0 fehlgeschlagen, 0 uebersprungen (adversary-test-output.txt). F007 behoben.
+**Implementierer:** Keine weitere Aenderung.
+
 ### Findings
+Finding:
+  ID: F007
+  Severity: MEDIUM
+  Category: edge_case
+  Code reference: server/test/oauth-provider.test.ts:385
+  Description: (Runde 3, behoben in Runde 3/4) Die 30 /health-Aufrufe lagen nach der Fehlerserie; die Mutation "/health zaehlt im Fehlerfenster" ueberlebte.
+  Spec requirement: AC-6 — /health zaehlt nicht im Fehlerfenster
+  Conflict: Beweiskraft des Tests, nicht Produktcode.
+  Remediation: Aufrufe vor die Fehlerserie gelegt; Mutationen main.ts:75 und main.ts:154 werden jetzt erkannt.
+
 Finding:
   ID: F001
   Severity: LOW
@@ -93,6 +111,21 @@ Confirmation:
   Code reference: server/test/oauth-resource.test.ts:417
   Evidence: Pinnung exakt 9.13.3 und 9.13.1 in package.json, test-local.sh gruen (276/276); Altfall auf 503 begruendet durch AC-13.
   Status: CONFIRMED
+Confirmation:
+  AC: AC-4, AC-15
+  Code reference: server/test/oauth-provider.test.ts:332
+  Evidence: Runde 3: error_description per Regex geprueft; AC-15 an derselben Instanz vor und nach migrate (Datenbank erst nach den 503-Pruefungen angelegt), gruen.
+  Status: CONFIRMED
+Confirmation:
+  AC: AC-6
+  Code reference: server/src/main.ts:75
+  Evidence: Runde 4: Mutationen main.ts:75 und main.ts:154 machen den Test rot, sauber gruen.
+  Status: CONFIRMED
+Confirmation:
+  AC: AC-16
+  Code reference: server/test/oauth-provider.test.ts:605
+  Evidence: Runde 3: beforeGrant loescht das Konto vor grant.save, Pool-Mock sieht 23503; Mutation M1 (detail im Log) ROT; dateiweiter Mitschnitt laesst nur feste Ereignisnamen zu.
+  Status: CONFIRMED
 
 ## Herkunft der Vorbedingungen
 
@@ -117,4 +150,21 @@ VERDICT: VERIFIED
 - blob:083c78182ac90ec1bcf720f903a72c17c6135280  server/src/oauth-provider.ts
 - blob:1d6be876a6d569c6aae43edf4e955b3c1e78f205  server/test/main.test.ts
 - blob:a541f83882371235eae7bf9a3cf6906120c21781  server/test/oauth-provider.test.ts
+- blob:7c06297410857f6264ee717664be0ced8f887cc3  server/test/oauth-resource.test.ts
+
+## Geprüfte Dateien
+
+- sha256:bba816bc793220b0feb3a30f16c4eb7f5cd39e39e60ec796fa0eed2167d795f1  server/src/main.ts
+- sha256:496c70a6fc4842ad17a502ebc14513d8c5b61ce355109eeb110e943c41ef653f  server/src/oauth-provider.ts
+- sha256:a962172b4b1a09f9e1b51da2e3931a56ba8f2a5a21530150caecc64661a934bc  server/test/main.test.ts
+- sha256:581ca1f3ff8dca2498de56fb37c2ecdf60f0fd7890dec9818a66e5908e411abb  server/test/oauth-provider.test.ts
+- sha256:1e8fd7eb3434d11afaea349b43d7989aa8bae6312f357d07b904766022d0cd4b  server/test/oauth-resource.test.ts
+
+## Prüfbasis
+
+- base: d5b8c961eee06b98f6ac17993c4bf0f19c2417f5
+- blob:8476254667e5b3325ad4fb5e8aa4d6f2b04d1c03  server/src/main.ts
+- blob:083c78182ac90ec1bcf720f903a72c17c6135280  server/src/oauth-provider.ts
+- blob:1d6be876a6d569c6aae43edf4e955b3c1e78f205  server/test/main.test.ts
+- blob:a30b6b41a043d7ce89615459347cd05053d72c63  server/test/oauth-provider.test.ts
 - blob:7c06297410857f6264ee717664be0ced8f887cc3  server/test/oauth-resource.test.ts
