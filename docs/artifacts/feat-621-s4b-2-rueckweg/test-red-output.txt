@@ -1,0 +1,520 @@
+✔ secret: kopf, nutzlast, signatur (1.884416ms)
+✔ secret: je aufruf neu, manipulation fällt auf (0.257833ms)
+✔ fehlbedienung: wirft ohne netz (0.373458ms)
+✔ redeem: anfrage (11.634667ms)
+✖ redeem: erfolg (1.43975ms)
+✔ redeem: apple-fehler und status (Fallliste) (2.330458ms)
+✔ redeem: malformed 200 (Fallliste) (3.606625ms)
+✔ redeem: id_token geprüft (Fallliste) (7.022458ms)
+✔ redeem: unavailable und zeitlimit (Fallliste) (2.868625ms)
+✔ revoke: anfrage (0.516292ms)
+✔ revoke: erfolg (0.350666ms)
+✔ revoke: apple-fehler und status (Fallliste) (1.492792ms)
+✔ revoke: unavailable und zeitlimit (Fallliste) (0.715916ms)
+✔ revoke fehlbedienung: wirft ohne netz (0.180875ms)
+✔ reason: feste menge, keine geheimnisse (2.756125ms)
+✔ silence (13.662666ms)
+✔ revoke: silence (1.975041ms)
+✔ redeem: app-formular bytegleich ohne redirect_uri (0.423208ms)
+✖ redeem: redirect_uri nur mit option, leer wirft (1.110916ms)
+✖ redeem: id_token aud gleich web-id (0.827667ms)
+✔ client: web-id zugelassen, fremde id wirft (0.29575ms)
+✔ authorizeUrl: parameter vollständig, ohne scope (0.3035ms)
+✔ authorizeUrl: nonce passt zu verifyIdentityToken (0.717625ms)
+✔ authorizeUrl: wirft ohne web-id und bei leeren feldern (0.059417ms)
+✔ appleReturnUrl: origin plus fester pfad (0.065208ms)
+✖ silence: web-bausteine (0.573875ms)
+2026-11-06T15:43:31.165Z listening
+2026-11-06T15:43:31.180Z migrated
+✖ rueckweg: erfolg ergibt 303 auf finish mit ticket und legt konto an (47.948708ms)
+2026-11-06T15:43:31.204Z listening
+2026-11-06T15:43:31.215Z migrated
+✖ rueckweg: ticket gehasht, gebunden, 60 sekunden, einmalig (23.789334ms)
+2026-11-06T15:43:31.228Z listening
+2026-11-06T15:43:31.239Z migrated
+✖ rueckweg: replay desselben state wird abgelehnt (22.112333ms)
+2026-11-06T15:43:31.250Z listening
+2026-11-06T15:43:31.260Z migrated
+✖ rueckweg: unbekanntes fremdes oder abgelaufenes state wird abgelehnt (21.590333ms)
+2026-11-06T15:43:31.272Z listening
+2026-11-06T15:43:31.282Z migrated
+✖ rueckweg: uebergroesse wird beim lesen gezaehlt abgelehnt (21.024584ms)
+2026-11-06T15:43:31.292Z listening
+2026-11-06T15:43:31.303Z migrated
+✖ rueckweg: falsche methode und falscher inhaltstyp (20.84325ms)
+2026-11-06T15:43:31.313Z listening
+2026-11-06T15:43:31.323Z migrated
+✖ rueckweg: fehlende und doppelte felder ergeben 400 (19.993292ms)
+2026-11-06T15:43:31.333Z listening
+2026-11-06T15:43:31.346Z migrated
+✖ rueckweg: feld user wird ignoriert (23.8675ms)
+2026-11-06T15:43:31.357Z listening
+2026-11-06T15:43:31.368Z migrated
+✖ rueckweg: apple-fehler ergibt ticket access_denied (20.908292ms)
+2026-11-06T15:43:31.379Z listening
+2026-11-06T15:43:31.389Z migrated
+✖ rueckweg: abgelehnte einloesung ergibt access_denied (22.270917ms)
+2026-11-06T15:43:31.401Z listening
+2026-11-06T15:43:31.413Z migrated
+✖ rueckweg: ungueltiges identity-token ergibt access_denied (22.393666ms)
+2026-11-06T15:43:31.423Z listening
+2026-11-06T15:43:31.433Z migrated
+✖ rueckweg: apple nicht erreichbar ergibt temporarily_unavailable (19.750458ms)
+2026-11-06T15:43:31.443Z listening
+2026-11-06T15:43:31.453Z migrated
+✖ rueckweg: geloeschtes konto ergibt 400 und raeumt tickets mit ab (21.931542ms)
+2026-11-06T15:43:31.465Z listening
+2026-11-06T15:43:31.476Z migrated
+✖ rueckweg: web-token wird nicht gespeichert und nicht widerrufen (20.739833ms)
+2026-11-06T15:43:31.486Z listening
+2026-11-06T15:43:31.496Z migrated
+2026-11-06T15:43:31.501Z listening
+2026-11-06T15:43:31.512Z migrated
+2026-11-06T15:43:31.516Z listening
+2026-11-06T15:43:31.526Z migrated
+2026-11-06T15:43:31.531Z listening
+2026-11-06T15:43:31.540Z migrated
+✔ rueckweg: ohne rueckweg und bei fremden pfaden 404 des ausstellers (71.695792ms)
+2026-11-06T15:43:31.557Z listening
+2026-11-06T15:43:31.567Z migrated
+✖ rueckweg: finish ist noch nicht behandelt und verbraucht nichts (19.372417ms)
+2026-11-06T15:43:31.577Z listening
+2026-11-06T15:43:31.587Z migrated
+✖ rueckweg: fehlerfenster zaehlt 5xx und nicht die 303 (43.576417ms)
+2026-11-06T15:43:31.620Z listening
+2026-11-06T15:43:31.630Z migrated
+✖ rueckweg: eine jwks-instanz je start fuer rueckweg und app-weg (19.324708ms)
+✖ rueckweg: protokoll nur feste ereignisse ohne werte (0.499542ms)
+ℹ tests 45
+ℹ suites 0
+ℹ pass 23
+ℹ fail 22
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 791.344084
+
+✖ failing tests:
+
+test at test/apple-client.test.ts:200:1
+✖ redeem: erfolg (1.43975ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  -   idToken: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IksxIn0.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLmhlbm5pbmcubG9vc2VlbmRzIiwic3ViIjoiMDAxMjM0LmFiY2RlZjAxMjM0NTY3ODkuMDA0MiIsImlhdCI6MTgwMDAwMDAwMCwiZXhwIjoxODAwMDAwNjAwfQ.beBYk0fLe3XLHlkXi6mtpuvGRqCe9evr9Scmzr9i0OrTxZSYcNRRob4tFZy3ynbGsH0zXPdxc_WZ3Jp-y-d7ceAJ12LPIMw2CRpu0pQuHjgZHMiRT5b2KdW71qqiRKlodla6gtM0s9JRTBwXsPs7YzgiEtm5zNKoQnV4sQxjv_7Cxj6bzRxGFPHKzWPjW2RxaY4Y_UQPcgrfmHmIKebGhKBCioqeMFEobonmWxRiA6WdFA2fWTB2yTs2CBiKm21MchoI0vb9LZehz7Rz17HPkpL5eWFXE-eenYj_gVnH5wrC5eHZlIWNF2VBhZKpoa80-IWRqJYIXcQ-Ybs-hclX9w',
+      ok: true,
+      refreshToken: 'GEHEIM-TOKEN',
+      sub: '001234.abcdef0123456789.0042'
+    }
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/apple-client.test.ts:201:32)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { ok: true, refreshToken: 'GEHEIM-TOKEN', sub: '001234.abcdef0123456789.0042' },
+    expected: { ok: true, refreshToken: 'GEHEIM-TOKEN', sub: '001234.abcdef0123456789.0042', idToken: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IksxIn0.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLmhlbm5pbmcubG9vc2VlbmRzIiwic3ViIjoiMDAxMjM0LmFiY2RlZjAxMjM0NTY3ODkuMDA0MiIsImlhdCI6MTgwMDAwMDAwMCwiZXhwIjoxODAwMDAwNjAwfQ.beBYk0fLe3XLHlkXi6mtpuvGRqCe9evr9Scmzr9i0OrTxZSYcNRRob4tFZy3ynbGsH0zXPdxc_WZ3Jp-y-d7ceAJ12LPIMw2CRpu0pQuHjgZHMiRT5b2KdW71qqiRKlodla6gtM0s9JRTBwXsPs7YzgiEtm5zNKoQnV4sQxjv_7Cxj6bzRxGFPHKzWPjW2RxaY4Y_UQPcgrfmHmIKebGhKBCioqeMFEobonmWxRiA6WdFA2fWTB2yTs2CBiKm21MchoI0vb9LZehz7Rz17HPkpL5eWFXE-eenYj_gVnH5wrC5eHZlIWNF2VBhZKpoa80-IWRqJYIXcQ-Ybs-hclX9w' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple-client.test.ts:364:1
+✖ redeem: redirect_uri nur mit option, leer wirft (1.110916ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  -   idToken: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IksxIn0.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLmhlbm5pbmcubG9vc2VlbmRzLndlYiIsInN1YiI6IjAwMTIzNC5hYmNkZWYwMTIzNDU2Nzg5LjAwNDIiLCJpYXQiOjE4MDAwMDAwMDAsImV4cCI6MTgwMDAwMDYwMH0.RVXfYmLXxwnk4yIfJtzEiTZEiYCDp8jCH93jkDVV5GqBosKa5X4GrTUXW38SRQEtwqQPwVPWDbICrd7u-bcpP-upT1MG4dtEGNsor9rwN057ExyPKJJCyhc9ziSUP09IPRUNBFWLixT66C9-emkMmMsiEPS9UikXxWffRt3hzNNgZ7Xw5mwu_3XC43TDEgKsU6WpV6FJWjsSdQVhY-ADE_WSkB6Kj4PWbCGDxNBPPOpOITbTSJSLK6G4vzPlxDnk7bj1cLy2GG07uDcaWwaz8VZ4GlUmXporWD8KMVNZ54dsB84snaF0Pkja-mae_OIejH5bjMlQmETjV4df8-h1OQ',
+      ok: true,
+      refreshToken: 'GEHEIM-TOKEN',
+      sub: '001234.abcdef0123456789.0042'
+    }
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/apple-client.test.ts:366:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { ok: true, refreshToken: 'GEHEIM-TOKEN', sub: '001234.abcdef0123456789.0042' },
+    expected: { ok: true, refreshToken: 'GEHEIM-TOKEN', sub: '001234.abcdef0123456789.0042', idToken: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IksxIn0.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLmhlbm5pbmcubG9vc2VlbmRzLndlYiIsInN1YiI6IjAwMTIzNC5hYmNkZWYwMTIzNDU2Nzg5LjAwNDIiLCJpYXQiOjE4MDAwMDAwMDAsImV4cCI6MTgwMDAwMDYwMH0.RVXfYmLXxwnk4yIfJtzEiTZEiYCDp8jCH93jkDVV5GqBosKa5X4GrTUXW38SRQEtwqQPwVPWDbICrd7u-bcpP-upT1MG4dtEGNsor9rwN057ExyPKJJCyhc9ziSUP09IPRUNBFWLixT66C9-emkMmMsiEPS9UikXxWffRt3hzNNgZ7Xw5mwu_3XC43TDEgKsU6WpV6FJWjsSdQVhY-ADE_WSkB6Kj4PWbCGDxNBPPOpOITbTSJSLK6G4vzPlxDnk7bj1cLy2GG07uDcaWwaz8VZ4GlUmXporWD8KMVNZ54dsB84snaF0Pkja-mae_OIejH5bjMlQmETjV4df8-h1OQ' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple-client.test.ts:377:1
+✖ redeem: id_token aud gleich web-id (0.827667ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  -   idToken: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IksxIn0.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLmhlbm5pbmcubG9vc2VlbmRzLndlYiIsInN1YiI6IjAwMTIzNC5hYmNkZWYwMTIzNDU2Nzg5LjAwNDIiLCJpYXQiOjE4MDAwMDAwMDAsImV4cCI6MTgwMDAwMDYwMH0.RVXfYmLXxwnk4yIfJtzEiTZEiYCDp8jCH93jkDVV5GqBosKa5X4GrTUXW38SRQEtwqQPwVPWDbICrd7u-bcpP-upT1MG4dtEGNsor9rwN057ExyPKJJCyhc9ziSUP09IPRUNBFWLixT66C9-emkMmMsiEPS9UikXxWffRt3hzNNgZ7Xw5mwu_3XC43TDEgKsU6WpV6FJWjsSdQVhY-ADE_WSkB6Kj4PWbCGDxNBPPOpOITbTSJSLK6G4vzPlxDnk7bj1cLy2GG07uDcaWwaz8VZ4GlUmXporWD8KMVNZ54dsB84snaF0Pkja-mae_OIejH5bjMlQmETjV4df8-h1OQ',
+      ok: true,
+      refreshToken: 'GEHEIM-TOKEN',
+      sub: '001234.abcdef0123456789.0042'
+    }
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/apple-client.test.ts:378:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { ok: true, refreshToken: 'GEHEIM-TOKEN', sub: '001234.abcdef0123456789.0042' },
+    expected: { ok: true, refreshToken: 'GEHEIM-TOKEN', sub: '001234.abcdef0123456789.0042', idToken: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IksxIn0.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLmhlbm5pbmcubG9vc2VlbmRzLndlYiIsInN1YiI6IjAwMTIzNC5hYmNkZWYwMTIzNDU2Nzg5LjAwNDIiLCJpYXQiOjE4MDAwMDAwMDAsImV4cCI6MTgwMDAwMDYwMH0.RVXfYmLXxwnk4yIfJtzEiTZEiYCDp8jCH93jkDVV5GqBosKa5X4GrTUXW38SRQEtwqQPwVPWDbICrd7u-bcpP-upT1MG4dtEGNsor9rwN057ExyPKJJCyhc9ziSUP09IPRUNBFWLixT66C9-emkMmMsiEPS9UikXxWffRt3hzNNgZ7Xw5mwu_3XC43TDEgKsU6WpV6FJWjsSdQVhY-ADE_WSkB6Kj4PWbCGDxNBPPOpOITbTSJSLK6G4vzPlxDnk7bj1cLy2GG07uDcaWwaz8VZ4GlUmXporWD8KMVNZ54dsB84snaF0Pkja-mae_OIejH5bjMlQmETjV4df8-h1OQ' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/apple-client.test.ts:440:1
+✖ silence: web-bausteine (0.573875ms)
+  AssertionError [ERR_ASSERTION]: zu wenige Meldungen gesammelt: 12
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/apple-client.test.ts:456:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test/oauth-return.test.ts:210:1
+✖ rueckweg: erfolg ergibt 303 auf finish mit ticket und legt konto an (47.948708ms)
+  AssertionError [ERR_ASSERTION]: erfolg: 404 Not Found
+  
+  404 !== 303
+  
+      at ticketOf (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:180:10)
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:214:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 303,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/oauth-return.test.ts:225:1
+✖ rueckweg: ticket gehasht, gebunden, 60 sekunden, einmalig (23.789334ms)
+  AssertionError [ERR_ASSERTION]: ticket: 404 Not Found
+  
+  404 !== 303
+  
+      at ticketOf (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:180:10)
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:230:18)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 303,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/oauth-return.test.ts:250:1
+✖ rueckweg: replay desselben state wird abgelehnt (22.112333ms)
+  AssertionError [ERR_ASSERTION]: ticket: 404 Not Found
+  
+  404 !== 303
+  
+      at ticketOf (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:180:10)
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:254:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 303,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/oauth-return.test.ts:261:1
+✖ rueckweg: unbekanntes fremdes oder abgelaufenes state wird abgelehnt (21.590333ms)
+  AssertionError [ERR_ASSERTION]: ticket: 404 Not Found
+  
+  404 !== 303
+  
+      at ticketOf (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:180:10)
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:266:18)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 303,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/oauth-return.test.ts:280:1
+✖ rueckweg: uebergroesse wird beim lesen gezaehlt abgelehnt (21.024584ms)
+  AssertionError [ERR_ASSERTION]: mit Länge
+  
+  404 !== 413
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:288:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 413,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/oauth-return.test.ts:298:1
+✖ rueckweg: falsche methode und falscher inhaltstyp (20.84325ms)
+  AssertionError [ERR_ASSERTION]: GET
+  
+  404 !== 405
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:305:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 405,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/oauth-return.test.ts:318:1
+✖ rueckweg: fehlende und doppelte felder ergeben 400 (19.993292ms)
+  AssertionError [ERR_ASSERTION]: ohne state: 404 Not Found
+  
+  404 !== 400
+  
+      at assertFixed (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:199:10)
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:328:38)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 400,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/oauth-return.test.ts:333:1
+✖ rueckweg: feld user wird ignoriert (23.8675ms)
+  AssertionError [ERR_ASSERTION]: user 0: 404 Not Found
+  
+  404 !== 303
+  
+      at ticketOf (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:180:10)
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:339:5)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 303,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/oauth-return.test.ts:347:1
+✖ rueckweg: apple-fehler ergibt ticket access_denied (20.908292ms)
+  AssertionError [ERR_ASSERTION]: user_cancelled_authorize: 404 Not Found
+  
+  404 !== 303
+  
+      at ticketOf (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:180:10)
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:353:47)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 303,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/oauth-return.test.ts:370:1
+✖ rueckweg: abgelehnte einloesung ergibt access_denied (22.270917ms)
+  AssertionError [ERR_ASSERTION]: invalid_grant: 404 Not Found
+  
+  404 !== 303
+  
+      at ticketOf (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:180:10)
+      at denied (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:364:45)
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:384:22)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 303,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/oauth-return.test.ts:390:1
+✖ rueckweg: ungueltiges identity-token ergibt access_denied (22.393666ms)
+  AssertionError [ERR_ASSERTION]: falsche nonce: 404 Not Found
+  
+  404 !== 303
+  
+      at ticketOf (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:180:10)
+      at denied (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:364:45)
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:406:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 303,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/oauth-return.test.ts:412:1
+✖ rueckweg: apple nicht erreichbar ergibt temporarily_unavailable (19.750458ms)
+  AssertionError [ERR_ASSERTION]: netzfehler: 404 Not Found
+  
+  404 !== 303
+  
+      at ticketOf (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:180:10)
+      at denied (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:364:45)
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:423:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 303,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/oauth-return.test.ts:428:1
+✖ rueckweg: geloeschtes konto ergibt 400 und raeumt tickets mit ab (21.931542ms)
+  AssertionError [ERR_ASSERTION]: konto gelöscht: 404 Not Found
+  
+  404 !== 400
+  
+      at assertFixed (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:199:10)
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:441:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 400,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/oauth-return.test.ts:454:1
+✖ rueckweg: web-token wird nicht gespeichert und nicht widerrufen (20.739833ms)
+  AssertionError [ERR_ASSERTION]: ticket: 404 Not Found
+  
+  404 !== 303
+  
+      at ticketOf (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:180:10)
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:458:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 303,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/oauth-return.test.ts:493:1
+✖ rueckweg: finish ist noch nicht behandelt und verbraucht nichts (19.372417ms)
+  AssertionError [ERR_ASSERTION]: ticket: 404 Not Found
+  
+  404 !== 303
+  
+      at ticketOf (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:180:10)
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:497:18)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 303,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/oauth-return.test.ts:508:1
+✖ rueckweg: fehlerfenster zaehlt 5xx und nicht die 303 (43.576417ms)
+  AssertionError [ERR_ASSERTION]: ausfall: 404 Not Found
+  
+  404 !== 303
+  
+      at ticketOf (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:180:10)
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:516:25)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 303,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/oauth-return.test.ts:525:1
+✖ rueckweg: eine jwks-instanz je start fuer rueckweg und app-weg (19.324708ms)
+  AssertionError [ERR_ASSERTION]: ticket: 404 Not Found
+  
+  404 !== 303
+  
+      at ticketOf (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:180:10)
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:529:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 303,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/oauth-return.test.ts:539:1
+✖ rueckweg: protokoll nur feste ereignisse ohne werte (0.499542ms)
+  AssertionError [ERR_ASSERTION]: kein abgelehnter Rückweg protokolliert
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/server/test/oauth-return.test.ts:540:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
