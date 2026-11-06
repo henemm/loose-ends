@@ -1,0 +1,160 @@
+........<frozen codecs>:312: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 57278)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen codecs>:312: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 57285)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen codecs>:312: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 57292)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen codecs>:312: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 57298)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen codecs>:312: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 57304)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen codecs>:312: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 57317)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen codecs>:312: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 57321)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen codecs>:312: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 57327)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.FFFFFFF
+======================================================================
+FAIL: test_description_printed_on_one_line_with_umlauts (__main__.StoreTextTests.test_description_printed_on_one_line_with_umlauts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/shimmying-conjuring-trinket/scripts/test_asc_store_probe.py", line 180, in test_description_printed_on_one_line_with_umlauts
+    line = self.line(result, f"beschreibung version={LABEL} sprache=de-DE ")
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/shimmying-conjuring-trinket/scripts/test_asc_store_probe.py", line 169, in line
+    self.assertEqual(len(lines), 1, f"{prefix!r}: {result.stdout}")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 'beschreibung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE ': zugriff abfrage=appInfos http=200
+appinfo nr=1 state=READY_FOR_DISTRIBUTION appStoreState=? felder=alpha,state,zebra relationen=ageRatingDeclaration,primaryCategory
+zugriff abfrage=appInfoLocalizations http=200
+untertitel appinfo=1 sprache=de-DE name=Loose Ends untertitel=Sortiert zeichen=8
+appinfo nr=2 state=? appStoreState=IN_REVIEW felder=appStoreState relationen=appInfoLocalizations
+zugriff abfrage=appInfoLocalizations http=200
+untertitel appinfo=2 sprache=de-DE name=Loose Ends untertitel=Einfach sagen. zeichen=14
+zugriff abfrage=appStoreVersions http=200
+zugriff abfrage=appStoreVersionLocalizations http=200
+zugriff abfrage=appScreenshotSets http=200
+bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE
+zugriff abfrage=appScreenshotSets http=200
+bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US
+zusammenfassung antworten=7 von=7 befunde=0
+
+
+======================================================================
+FAIL: test_empty_en_us_localization_says_keiner (__main__.StoreTextTests.test_empty_en_us_localization_says_keiner)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/shimmying-conjuring-trinket/scripts/test_asc_store_probe.py", line 188, in test_empty_en_us_localization_says_keiner
+    text = self.line(result, f"text version={LABEL} sprache=en-US ")
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/shimmying-conjuring-trinket/scripts/test_asc_store_probe.py", line 169, in line
+    self.assertEqual(len(lines), 1, f"{prefix!r}: {result.stdout}")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 'text version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US ': zugriff abfrage=appInfos http=200
+appinfo nr=1 state=READY_FOR_DISTRIBUTION appStoreState=? felder=alpha,state,zebra relationen=ageRatingDeclaration,primaryCategory
+zugriff abfrage=appInfoLocalizations http=200
+untertitel appinfo=1 sprache=de-DE name=Loose Ends untertitel=Sortiert zeichen=8
+appinfo nr=2 state=? appStoreState=IN_REVIEW felder=appStoreState relationen=appInfoLocalizations
+zugriff abfrage=appInfoLocalizations http=200
+untertitel appinfo=2 sprache=de-DE name=Loose Ends untertitel=Einfach sagen. zeichen=14
+zugriff abfrage=appStoreVersions http=200
+zugriff abfrage=appStoreVersionLocalizations http=200
+zugriff abfrage=appScreenshotSets http=200
+bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE
+zugriff abfrage=appScreenshotSets http=200
+bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US
+zusammenfassung antworten=7 von=7 befunde=0
+
+
+======================================================================
+FAIL: test_placement_error_does_not_abort (__main__.StoreTextTests.test_placement_error_does_not_abort)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/shimmying-conjuring-trinket/scripts/test_asc_store_probe.py", line 205, in test_placement_error_does_not_abort
+    self.assertIn(f"platzierung fehler version={LABEL} sprache=de-DE", result.stdout.splitlines())
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'platzierung fehler version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE' not found in ['zugriff abfrage=appInfos http=200', 'appinfo nr=1 state=READY_FOR_DISTRIBUTION appStoreState=? felder=alpha,state,zebra relationen=ageRatingDeclaration,primaryCategory', 'zugriff abfrage=appInfoLocalizations http=200', 'untertitel appinfo=1 sprache=de-DE name=Loose Ends untertitel=Sortiert zeichen=8', 'appinfo nr=2 state=? appStoreState=IN_REVIEW felder=appStoreState relationen=appInfoLocalizations', 'zugriff abfrage=appInfoLocalizations http=200', 'untertitel appinfo=2 sprache=de-DE name=Loose Ends untertitel=Einfach sagen. zeichen=14', 'zugriff abfrage=appStoreVersions http=200', 'zugriff abfrage=appStoreVersionLocalizations http=200', 'zugriff abfrage=appScreenshotSets http=200', 'bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE', 'zugriff abfrage=appScreenshotSets http=200', 'bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US', 'zusammenfassung antworten=7 von=7 befunde=0']
+
+======================================================================
+FAIL: test_placement_lines_per_localization (__main__.StoreTextTests.test_placement_lines_per_localization)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/shimmying-conjuring-trinket/scripts/test_asc_store_probe.py", line 198, in test_placement_lines_per_localization
+    self.assertEqual(len(lines), 2, result.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : zugriff abfrage=appInfos http=200
+appinfo nr=1 state=READY_FOR_DISTRIBUTION appStoreState=? felder=alpha,state,zebra relationen=ageRatingDeclaration,primaryCategory
+zugriff abfrage=appInfoLocalizations http=200
+untertitel appinfo=1 sprache=de-DE name=Loose Ends untertitel=Sortiert zeichen=8
+appinfo nr=2 state=? appStoreState=IN_REVIEW felder=appStoreState relationen=appInfoLocalizations
+zugriff abfrage=appInfoLocalizations http=200
+untertitel appinfo=2 sprache=de-DE name=Loose Ends untertitel=Einfach sagen. zeichen=14
+zugriff abfrage=appStoreVersions http=200
+zugriff abfrage=appStoreVersionLocalizations http=200
+zugriff abfrage=appScreenshotSets http=200
+bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE
+zugriff abfrage=appScreenshotSets http=200
+bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US
+zusammenfassung antworten=7 von=7 befunde=0
+
+
+======================================================================
+FAIL: test_probe_never_writes_and_keeps_old_lines (__main__.StoreTextTests.test_probe_never_writes_and_keeps_old_lines)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/shimmying-conjuring-trinket/scripts/test_asc_store_probe.py", line 222, in test_probe_never_writes_and_keeps_old_lines
+    self.assertTrue(self.lines(result, "platzierung "), result.stdout)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : zugriff abfrage=appInfos http=200
+appinfo nr=1 state=READY_FOR_DISTRIBUTION appStoreState=? felder=alpha,state,zebra relationen=ageRatingDeclaration,primaryCategory
+zugriff abfrage=appInfoLocalizations http=200
+untertitel appinfo=1 sprache=de-DE name=Loose Ends untertitel=Sortiert zeichen=8
+appinfo nr=2 state=? appStoreState=IN_REVIEW felder=appStoreState relationen=appInfoLocalizations
+zugriff abfrage=appInfoLocalizations http=200
+untertitel appinfo=2 sprache=de-DE name=Loose Ends untertitel=Einfach sagen. zeichen=14
+zugriff abfrage=appStoreVersions http=200
+zugriff abfrage=appStoreVersionLocalizations http=200
+zugriff abfrage=appScreenshotSets http=200
+bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE
+zugriff abfrage=appScreenshotSets http=200
+bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US
+zusammenfassung antworten=7 von=7 befunde=0
+
+
+======================================================================
+FAIL: test_refdata_group_names_sorted (__main__.StoreTextTests.test_refdata_group_names_sorted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/shimmying-conjuring-trinket/scripts/test_asc_store_probe.py", line 211, in test_refdata_group_names_sorted
+    self.assertIn("refdaten gruppen=IPAD_13,IPHONE_67,WATCH_ULTRA", result.stdout.splitlines())
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'refdaten gruppen=IPAD_13,IPHONE_67,WATCH_ULTRA' not found in ['zugriff abfrage=appInfos http=200', 'appinfo nr=1 state=READY_FOR_DISTRIBUTION appStoreState=? felder=alpha,state,zebra relationen=ageRatingDeclaration,primaryCategory', 'zugriff abfrage=appInfoLocalizations http=200', 'untertitel appinfo=1 sprache=de-DE name=Loose Ends untertitel=Sortiert zeichen=8', 'appinfo nr=2 state=? appStoreState=IN_REVIEW felder=appStoreState relationen=appInfoLocalizations', 'zugriff abfrage=appInfoLocalizations http=200', 'untertitel appinfo=2 sprache=de-DE name=Loose Ends untertitel=Einfach sagen. zeichen=14', 'zugriff abfrage=appStoreVersions http=200', 'zugriff abfrage=appStoreVersionLocalizations http=200', 'zugriff abfrage=appScreenshotSets http=200', 'bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE', 'zugriff abfrage=appScreenshotSets http=200', 'bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US', 'zusammenfassung antworten=7 von=7 befunde=0']
+
+======================================================================
+FAIL: test_text_line_counts_each_field (__main__.StoreTextTests.test_text_line_counts_each_field)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/shimmying-conjuring-trinket/scripts/test_asc_store_probe.py", line 174, in test_text_line_counts_each_field
+    line = self.line(result, f"text version={LABEL} sprache=de-DE ")
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/shimmying-conjuring-trinket/scripts/test_asc_store_probe.py", line 169, in line
+    self.assertEqual(len(lines), 1, f"{prefix!r}: {result.stdout}")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 'text version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE ': zugriff abfrage=appInfos http=200
+appinfo nr=1 state=READY_FOR_DISTRIBUTION appStoreState=? felder=alpha,state,zebra relationen=ageRatingDeclaration,primaryCategory
+zugriff abfrage=appInfoLocalizations http=200
+untertitel appinfo=1 sprache=de-DE name=Loose Ends untertitel=Sortiert zeichen=8
+appinfo nr=2 state=? appStoreState=IN_REVIEW felder=appStoreState relationen=appInfoLocalizations
+zugriff abfrage=appInfoLocalizations http=200
+untertitel appinfo=2 sprache=de-DE name=Loose Ends untertitel=Einfach sagen. zeichen=14
+zugriff abfrage=appStoreVersions http=200
+zugriff abfrage=appStoreVersionLocalizations http=200
+zugriff abfrage=appScreenshotSets http=200
+bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE
+zugriff abfrage=appScreenshotSets http=200
+bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US
+zusammenfassung antworten=7 von=7 befunde=0
+
+
+----------------------------------------------------------------------
+Ran 16 tests in 10.228s
+
+FAILED (failures=7)
