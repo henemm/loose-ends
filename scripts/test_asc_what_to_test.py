@@ -28,8 +28,9 @@ TEXT = "Siri auf Deutsch: „Neue Aufgabe in Loose Ends“ sagen."
 class FakeASC:
     """Antwortet auf Apps, Builds und Sprachfassungen; merkt sich jede PATCH- und POST-Anfrage."""
 
-    def __init__(self, localizations, patch_status=200):
+    def __init__(self, localizations, patch_status=200, error_body=None):
         self.localizations, self.patch_status, self.writes = localizations, patch_status, []
+        self.error_body = error_body  # Rumpf der Fehlerantwort: dict wird JSON, bytes bleiben roh
         fake = self
 
         class Handler(BaseHTTPRequestHandler):
@@ -37,7 +38,7 @@ class FakeASC:
                 pass
 
             def reply(self, status, body=None):
-                raw = json.dumps(body or {}).encode()
+                raw = body if isinstance(body, bytes) else json.dumps(body or {}).encode()
                 self.send_response(status)
                 self.send_header("Content-Type", "application/json")
                 self.send_header("Content-Length", str(len(raw)))
@@ -58,7 +59,9 @@ class FakeASC:
             def write(self):
                 length = int(self.headers["Content-Length"])
                 fake.writes.append((self.command, self.path, json.loads(self.rfile.read(length))))
-                self.reply(fake.patch_status if self.command == "PATCH" else 201)
+                failed = self.command == "PATCH" and fake.patch_status >= 400
+                self.reply(fake.patch_status if self.command == "PATCH" else 201,
+                           fake.error_body if failed else None)
 
             do_PATCH = write
             do_POST = write
@@ -136,6 +139,39 @@ class WhatToTestTests(unittest.TestCase):
         result = self.run_script(fake)
         self.assertEqual(result.returncode, 1)
         self.assertIn("HTTP 409", result.stdout)
+
+    # AC-1
+    def test_rejected_write_names_apple_error_code(self):
+        body = {"errors": [{"code": "ENTITY_ERROR.ATTRIBUTE.INVALID.DUPLICATE", "detail": "geheim"}]}
+        fake = FakeASC([{"id": "L1", "attributes": {"locale": "de-DE"}}], patch_status=409, error_body=body)
+        self.addCleanup(fake.close)
+        result = self.run_script(fake)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("HTTP 409", result.stdout)
+        self.assertIn("ENTITY_ERROR.ATTRIBUTE.INVALID.DUPLICATE", result.stdout)
+        self.assertNotIn("geheim", result.stdout + result.stderr)
+
+    # AC-2
+    def test_error_code_filter_and_limit(self):
+        codes = ["kleinwert mit leerzeichen"] + [f"CODE_{n}" for n in range(7)]
+        body = {"errors": [{"code": code} for code in codes]}
+        fake = FakeASC([{"id": "L1", "attributes": {"locale": "de-DE"}}], patch_status=409, error_body=body)
+        self.addCleanup(fake.close)
+        result = self.run_script(fake)
+        self.assertNotIn("kleinwert", result.stdout)
+        for n in range(5):
+            self.assertIn(f"CODE_{n}", result.stdout)
+        self.assertNotIn("CODE_5", result.stdout)
+
+    # AC-3
+    def test_unreadable_error_body_keeps_old_message(self):
+        for body in (b"kein json", {"errors": 7}):
+            fake = FakeASC([{"id": "L1", "attributes": {"locale": "de-DE"}}], patch_status=409, error_body=body)
+            self.addCleanup(fake.close)
+            result = self.run_script(fake)
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("ASC answered HTTP 409 for PATCH", result.stdout)
+            self.assertNotIn("codes", result.stdout)
 
 
 class SectionTests(unittest.TestCase):

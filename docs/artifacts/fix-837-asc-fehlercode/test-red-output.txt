@@ -1,0 +1,91 @@
+.......F..F...
+======================================================================
+FAIL: test_error_code_filter_and_limit (__main__.WhatToTestTests.test_error_code_filter_and_limit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_what_to_test.py", line 163, in test_error_code_filter_and_limit
+    self.assertIn(f"CODE_{n}", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'CODE_0' not found in '::error::ASC answered HTTP 409 for PATCH /v1/betaBuildLocalizations/L1\n'
+
+======================================================================
+FAIL: test_rejected_write_names_apple_error_code (__main__.WhatToTestTests.test_rejected_write_names_apple_error_code)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_what_to_test.py", line 151, in test_rejected_write_names_apple_error_code
+    self.assertIn("ENTITY_ERROR.ATTRIBUTE.INVALID.DUPLICATE", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'ENTITY_ERROR.ATTRIBUTE.INVALID.DUPLICATE' not found in '::error::ASC answered HTTP 409 for PATCH /v1/betaBuildLocalizations/L1\n'
+
+----------------------------------------------------------------------
+Ran 14 tests in 5.769s
+
+FAILED (failures=2)
+..F....../opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/socket.py:225: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 56068)>
+  def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/socket.py:225: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 56073)>
+  def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/socket.py:225: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 56080)>
+  def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/socket.py:225: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 56088)>
+  def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/socket.py:225: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 56093)>
+  def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/socket.py:225: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 56099)>
+  def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/socket.py:225: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 56103)>
+  def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/socket.py:225: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 56110)>
+  def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/socket.py:225: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 56114)>
+  def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/socket.py:225: ResourceWarning: unclosed <socket.socket fd=13, family=2, type=1, proto=0, laddr=('127.0.0.1', 56121)>
+  def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+...../opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/re/_parser.py:450: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 56126)>
+  return list(dict.fromkeys(items))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/re/_parser.py:450: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 56127)>
+  return list(dict.fromkeys(items))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/re/_parser.py:450: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 56128)>
+  return list(dict.fromkeys(items))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/re/_parser.py:450: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 56157)>
+  return list(dict.fromkeys(items))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/re/_parser.py:450: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 56161)>
+  return list(dict.fromkeys(items))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/re/_parser.py:450: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 56162)>
+  return list(dict.fromkeys(items))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/re/_parser.py:450: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 56163)>
+  return list(dict.fromkeys(items))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/re/_parser.py:450: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 56165)>
+  return list(dict.fromkeys(items))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..
+======================================================================
+FAIL: test_409_message_keeps_code (__main__.AppInfoTests.test_409_message_keeps_code)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 254, in test_409_message_keeps_code
+    self.assertIn("ENTITY_ERROR.RELATIONSHIP.INVALID", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'ENTITY_ERROR.RELATIONSHIP.INVALID' not found in 'appinfo id=I2 state=PREPARE_FOR_SUBMISSION\nen-US untertitel unverändert\n::error::Apple meldet einen Konflikt (HTTP 409) für PATCH: Wert oder Zustand nicht zulässig\n'
+
+----------------------------------------------------------------------
+Ran 16 tests in 11.410s
+
+FAILED (failures=1)
