@@ -13,6 +13,7 @@ import { authRoutes } from "./auth.ts";
 import { ErrorWindow, healthHandler } from "./health.ts";
 import { mcpHandler } from "./mcp.ts";
 import { appleInteraction } from "./oauth-interaction.ts";
+import { appleReturn, type ReturnHandler } from "./oauth-return.ts";
 import { migrate } from "./migrate.ts";
 import type { OAuthTokenVerifier } from "@modelcontextprotocol/server";
 import { bearerGate, DEFAULT_PUBLIC_URL, METADATA_PATH, metadataRoute, publicUrlFromEnv, rejectAll } from "./oauth-resource.ts";
@@ -25,7 +26,9 @@ export type StartOptions = {
   databaseUrl: string; port: number; host?: string; migrationsDir: string; retryMs?: number; maxAttempts?: number;
   now?: () => number; applicationName?: string; extraRoutes?: Record<string, Route>;
   auth?: { config?: AppleConfig; fetch?: typeof fetch };
-  oauth?: { publicUrl?: string; verifier?: OAuthTokenVerifier; keys?: OAuthKeys; fetch?: typeof fetch; interaction?: Interaction };
+  oauth?: { publicUrl?: string; verifier?: OAuthTokenVerifier; keys?: OAuthKeys; fetch?: typeof fetch; interaction?: Interaction;
+    appleReturn?: ReturnHandler;
+  };
 };
 export type Running = { url: string; ready: Promise<void>; close: () => Promise<void> };
 
@@ -154,6 +157,16 @@ function interactionFor(options: StartOptions, pool: pg.Pool, now: () => Date, k
   return appleInteraction({ pool, config, publicUrl, now, fallback: productInteraction, keys, log: logError });
 }
 
+// Apple's way back, under exactly the conditions of appleInteraction; a handed-in one wins (tests).
+function returnFor(options: StartOptions, pool: pg.Pool, now: () => Date, keys: KeyLookup | undefined): ReturnHandler | undefined {
+  const { publicUrl = DEFAULT_PUBLIC_URL, interaction, appleReturn: handedIn } = options.oauth ?? {};
+  const config = options.auth?.config;
+  if (handedIn !== undefined) return handedIn;
+  if (interaction !== undefined || config?.webClientId === undefined || keys === undefined) return undefined;
+  const fetch = options.auth?.fetch ?? globalThis.fetch;
+  return appleReturn({ pool, config, publicUrl, now, fetch, keys, log: logError });
+}
+
 // The issuer gets the raw request (it reads the body itself); 503 without a body before migrate or without keys.
 // Its answers count in the error window, except the product interaction's deliberate 501. Library errors are logged
 // as fixed event names only: an error object can carry values (the FK detail names the account).
@@ -163,7 +176,8 @@ function mountIssuer(options: StartOptions, pool: pg.Pool, isReady: () => boolea
   const clock = options.now ?? Date.now;
   const now = () => new Date(clock());
   const interaction = interactionFor(options, pool, now, jwks);
-  const provider = createProvider({ publicUrl, pool, now, fetch, keys, interaction });
+  const returnHandler = returnFor(options, pool, now, jwks);
+  const provider = createProvider({ publicUrl, pool, now, fetch, keys, interaction, appleReturn: returnHandler });
   provider.on("server_error", () => logError("oauth server error"));
   // Koa's own "error" event (missing from the provider's types); a listener replaces Koa's default console output.
   (provider as unknown as EventEmitter).on("error", () => logError("oauth error"));

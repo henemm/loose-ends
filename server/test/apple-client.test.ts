@@ -198,7 +198,7 @@ test("redeem: anfrage", async () => {
 });
 
 test("redeem: erfolg", async () => {
-  for (const id of IDS) assert.deepEqual((await redeem(`erfolg ${id}`, ok(id), id)).result, { ok: true, refreshToken: TOKEN, sub: SUB });
+  for (const id of IDS) assert.deepEqual((await redeem(`erfolg ${id}`, ok(id), id)).result, { ok: true, refreshToken: TOKEN, sub: SUB, idToken: idToken({}, id) });
 });
 
 test("redeem: apple-fehler und status (Fallliste)", async () => {
@@ -363,7 +363,7 @@ test("redeem: app-formular bytegleich ohne redirect_uri", async () => {
 
 test("redeem: redirect_uri nur mit option, leer wirft", async () => {
   const { r, result } = await redeemWeb("web mit redirect_uri", ok(WEB));
-  assert.deepEqual(result, { ok: true, refreshToken: TOKEN, sub: SUB });
+  assert.deepEqual(result, { ok: true, refreshToken: TOKEN, sub: SUB, idToken: idToken({}, WEB) });
   assert.equal(bodyOf(r).split("redirect_uri=https%3A%2F%2Floose-ends.test%2Foauth%2Fapple%2Freturn").length, 2);
   const form = new URLSearchParams(bodyOf(r));
   assert.deepEqual([...form.keys()].sort(), ["client_id", "client_secret", "code", "grant_type", "redirect_uri"]);
@@ -375,7 +375,7 @@ test("redeem: redirect_uri nur mit option, leer wirft", async () => {
 });
 
 test("redeem: id_token aud gleich web-id", async () => {
-  assert.deepEqual((await redeemWeb("web aud web", ok(WEB))).result, { ok: true, refreshToken: TOKEN, sub: SUB });
+  assert.deepEqual((await redeemWeb("web aud web", ok(WEB))).result, { ok: true, refreshToken: TOKEN, sub: SUB, idToken: idToken({}, WEB) });
   assert.deepEqual((await redeemWeb("web aud app", ok(IDS[0]))).result, { ok: false, reason: "malformed_response" });
 });
 
