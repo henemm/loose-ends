@@ -27,6 +27,7 @@ TEXT_FILE = REPO / "docs" / "reference" / "app-store-untertitel.md"
 DE_WANTED = "Einfach sagen. Kopf frei."
 EN_WANTED = "Say it. Clear your head."
 NAME = "Loose Ends"
+EN_NAME = "Loose Ends: Voice Tasks"
 DE_OLD = "Gesagt. Sortiert."
 RAW_SECRET = "Roh-Antwort-Geheim-837"
 WANTED_TEXT = f"# Untertitel\n\nVorspann.\n\n## de-DE\n\nUntertitel: {DE_WANTED}\n\n## en-US\n\nName: {NAME}\nUntertitel: {EN_WANTED}\n"
@@ -315,7 +316,7 @@ class TextFileTests(unittest.TestCase):
         self.assertEqual(MAX_CHARS, 30)
         self.assertEqual(wanted["de-DE"]["subtitle"], DE_WANTED)
         self.assertEqual(wanted["en-US"]["subtitle"], EN_WANTED)
-        self.assertEqual(wanted["en-US"]["name"], NAME)
+        self.assertEqual(wanted["en-US"]["name"], EN_NAME)
         for values in wanted.values():
             for value in values.values():
                 self.assertLessEqual(len(value), 30, value)

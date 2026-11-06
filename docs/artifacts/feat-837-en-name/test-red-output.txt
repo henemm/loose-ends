@@ -1,0 +1,87 @@
+test_403_and_409_give_clear_message (__main__.AppInfoTests.test_403_and_409_give_clear_message) ... ok
+test_403_message_unchanged (__main__.AppInfoTests.test_403_message_unchanged) ... ok
+test_409_message_keeps_code (__main__.AppInfoTests.test_409_message_keeps_code) ... ok
+test_different_subtitle_patches_once_with_subtitle_only (__main__.AppInfoTests.test_different_subtitle_patches_once_with_subtitle_only) ... ok
+test_equal_values_write_nothing (__main__.AppInfoTests.test_equal_values_write_nothing) ... ok
+test_lesen_never_writes_and_prints_values (__main__.AppInfoTests.test_lesen_never_writes_and_prints_values) ... ok
+test_locked_appinfos_abort_with_zero_writes (__main__.AppInfoTests.test_locked_appinfos_abort_with_zero_writes) ... ok
+test_missing_en_us_posts_once_with_locale_name_subtitle_and_appinfo (__main__.AppInfoTests.test_missing_en_us_posts_once_with_locale_name_subtitle_and_appinfo) ... ok
+test_missing_section_aborts_before_any_request (__main__.AppInfoTests.test_missing_section_aborts_before_any_request) ... ok
+test_output_has_no_secrets (__main__.AppInfoTests.test_output_has_no_secrets) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:301: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 53395)>
+  self._waiters = _deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:301: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 53400)>
+  self._waiters = _deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:301: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 53405)>
+  self._waiters = _deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:301: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 53410)>
+  self._waiters = _deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:301: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 53417)>
+  self._waiters = _deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:301: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 53423)>
+  self._waiters = _deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:301: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 53427)>
+  self._waiters = _deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:301: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 53432)>
+  self._waiters = _deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:301: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 53435)>
+  self._waiters = _deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:301: ResourceWarning: unclosed <socket.socket fd=13, family=2, type=1, proto=0, laddr=('127.0.0.1', 53441)>
+  self._waiters = _deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_several_editable_appinfos_abort (__main__.AppInfoTests.test_several_editable_appinfos_abort) ... ok
+test_too_long_text_aborts_before_any_request (__main__.AppInfoTests.test_too_long_text_aborts_before_any_request) ... ok
+test_unknown_action_aborts_before_any_request (__main__.AppInfoTests.test_unknown_action_aborts_before_any_request) ... ok
+test_verification_mismatch_is_error (__main__.AppInfoTests.test_verification_mismatch_is_error) ... ok
+test_repo_text_file_parses_and_fits_limit (__main__.TextFileTests.test_repo_text_file_parses_and_fits_limit) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/re/_parser.py:113: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 53444)>
+  def __init__(self, state, data=None):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/re/_parser.py:113: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 53445)>
+  def __init__(self, state, data=None):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/re/_parser.py:113: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 53446)>
+  def __init__(self, state, data=None):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/re/_parser.py:113: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 53465)>
+  def __init__(self, state, data=None):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/re/_parser.py:113: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 53468)>
+  def __init__(self, state, data=None):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/re/_parser.py:113: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 53469)>
+  def __init__(self, state, data=None):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/re/_parser.py:113: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 53470)>
+  def __init__(self, state, data=None):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/re/_parser.py:113: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 53471)>
+  def __init__(self, state, data=None):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_workflow_has_choice_unit_tests_and_secrets (__main__.WorkflowTests.test_workflow_has_choice_unit_tests_and_secrets) ... ok
+
+======================================================================
+FAIL: test_repo_text_file_parses_and_fits_limit (__main__.TextFileTests.test_repo_text_file_parses_and_fits_limit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/837-untertitel-nachsehen/scripts/test_asc_app_info.py", line 319, in test_repo_text_file_parses_and_fits_limit
+    self.assertEqual(wanted["en-US"]["name"], EN_NAME)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'Loose Ends' != 'Loose Ends: Voice Tasks'
+- Loose Ends
++ Loose Ends: Voice Tasks
+
+
+----------------------------------------------------------------------
+Ran 16 tests in 11.492s
+
+FAILED (failures=1)
