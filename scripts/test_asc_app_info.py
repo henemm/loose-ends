@@ -44,11 +44,12 @@ def loc(loc_id, locale, subtitle, name=NAME):
 class FakeASC:
     """Nachbau mit Zustand: GET liest, PATCH/POST schreiben in den Zustand; jede Anfrage wird gemerkt."""
 
-    def __init__(self, infos, localizations=None, write_status=None, ignore_writes=False):
+    def __init__(self, infos, localizations=None, write_status=None, ignore_writes=False, error_code=None):
         self.infos = [copy.deepcopy(item) for item in infos]
         self.localizations = {key: [copy.deepcopy(item) for item in value]
                               for key, value in (localizations or {}).items()}
         self.write_status = write_status
+        self.error_code = error_code
         self.ignore_writes = ignore_writes
         self.requests = []
         fake = self
@@ -73,7 +74,8 @@ class FakeASC:
                     return self.reply(*fake.read(self.path))
                 if fake.write_status:
                     return self.reply(fake.write_status,
-                                      {"errors": [{"status": str(fake.write_status), "detail": RAW_SECRET}]})
+                                      {"errors": [{"status": str(fake.write_status), "detail": RAW_SECRET,
+                                                   **({"code": fake.error_code} if fake.error_code else {})}]})
                 return self.reply(*fake.write(self.command, self.path, body))
 
             do_GET = do_POST = do_PATCH = do_DELETE = handle_any
@@ -240,6 +242,26 @@ class AppInfoTests(unittest.TestCase):
             self.assertIn(word, result.stdout)
             self.assertNotIn(RAW_SECRET, result.stdout + result.stderr)
             self.assertNotIn("zusammenfassung geschrieben", result.stdout)
+
+    # AC-4
+    def test_409_message_keeps_code(self):
+        fake = self.fake(infos=[EDITABLE], localizations={"I2": [loc("L2", "de-DE", DE_OLD),
+                                                                   loc("L3", "en-US", EN_WANTED)]},
+                         write_status=409, error_code="ENTITY_ERROR.RELATIONSHIP.INVALID")
+        result = self.run_info(fake, "untertitel")
+        self.assert_failed(result)
+        self.assertIn("Konflikt", result.stdout)
+        self.assertIn("ENTITY_ERROR.RELATIONSHIP.INVALID", result.stdout)
+        self.assertNotIn(RAW_SECRET, result.stdout + result.stderr)
+
+    def test_403_message_unchanged(self):
+        fake = self.fake(infos=[EDITABLE], localizations={"I2": [loc("L2", "de-DE", DE_OLD),
+                                                                   loc("L3", "en-US", EN_WANTED)]},
+                         write_status=403, error_code="FORBIDDEN.REQUIRED_AGREEMENTS_MISSING_OR_EXPIRED")
+        result = self.run_info(fake, "untertitel")
+        self.assert_failed(result)
+        self.assertIn("gesperrt", result.stdout)
+        self.assertNotIn("FORBIDDEN.REQUIRED", result.stdout)
 
     def test_verification_mismatch_is_error(self):
         fake = self.fake(infos=[EDITABLE], localizations={"I2": [loc("L2", "de-DE", DE_OLD),

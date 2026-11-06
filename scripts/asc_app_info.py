@@ -92,7 +92,9 @@ def send(config, method, path, payload):
         if "HTTP 403" in str(error):
             raise Fatal(f"Apple lehnt {method} ab (HTTP 403): App-Informationen gesperrt oder Schlüssel ohne Recht")
         if "HTTP 409" in str(error):
-            raise Fatal(f"Apple meldet einen Konflikt (HTTP 409) für {method}: Wert oder Zustand nicht zulässig")
+            _, codes, rest = str(error).partition(" (codes: ")
+            raise Fatal(f"Apple meldet einen Konflikt (HTTP 409) für {method}: Wert oder Zustand nicht zulässig"
+                        + (f" (codes: {rest}" if codes else ""))
         raise
 
 
