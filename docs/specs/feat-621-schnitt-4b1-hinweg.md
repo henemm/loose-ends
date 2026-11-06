@@ -206,3 +206,4 @@ Kein Pfad der Geräteliste berührt (nur `server/`, keine App, kein `project.yml
 ## Changelog
 
 - 2026-11-06: Initial spec created (Schnitt 4b-1)
+- 2026-11-06 (/60-validate): Endstand 496 LoC (112 Code, 381 Tests); Freigabe nach RED im Kontextdokument, in der Validierung erneut angenommen. Teststärke, nachzuschärfen in S4b-2: AC-10 verdünnt die Quote durch die Anfragen von `begin()` und belegt daher nicht, dass 501/400 ungezählt bleiben; der Mitschnitt in `after` lässt jedes kleingeschriebene Ereignis zu statt nur die zwei festen; AC-13 belegt die geteilte JWKS-Instanz nur für `/auth/apple`, weil der Hinweg `keys` noch nicht benutzt. Der Code ist an allen drei Stellen korrekt (`main.ts` zählt nur 5xx außer der festen 501). Über die Spec hinaus prüft der Hinweg die Pfad-uid gegen die Cookie-uid (fremde uid → 400, auch vor `consent`).
