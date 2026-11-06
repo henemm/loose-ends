@@ -87,9 +87,9 @@ Alle in `scripts/test_asc_store_probe.py` (`unittest`, lokaler HTTP-Nachbau wie 
 
 - **AC-1:** Given eine Versions-Lokalisierung mit Textfeldern, When die Store-Probe läuft, Then steht eine `text`-Zeile mit den Zeichenzahlen und je Feld eine einzeilige Textzeile; leere Felder sind `keiner`/`keine`. Belegt durch `test_text_line_counts_each_field`, `test_description_printed_on_one_line_with_umlauts`, `test_empty_en_us_localization_says_keiner`.
 - **AC-2:** Given Versions-Lokalisierungen mit und ohne Platzierungen, When die Probe läuft, Then steht je Lokalisierung `platzierung` (mit Gruppe und Typ), `platzierung keine` oder `platzierung fehler`, und ein Fehler bricht den Lauf nicht ab. Belegt durch `test_placement_lines_per_localization`, `test_placement_error_does_not_abort`.
-- **AC-3:** Given die Referenzdaten der Asset Library, When die Probe läuft, Then steht eine `refdaten`-Zeile mit sortierten Gruppennamen, `keine` oder `fehler`. Belegt durch `test_refdata_group_names_sorted`.
+- **AC-3:** Given die Referenzdaten der Asset Library und mindestens eine App-Store-Version, When die Probe läuft, Then steht einmal pro Lauf eine `refdaten`-Zeile mit sortierten Gruppennamen, `keine` oder `fehler`. Belegt durch `test_refdata_group_names_sorted`.
 - **AC-4:** Given jeder Lauf, Then nur GET-Aufrufe, die alten Bildzeilen und die Zusammenfassung bleiben. Belegt durch `test_probe_never_writes_and_keeps_old_lines`.
-- **AC-5:** Given der Merge auf `main`, When der Handlauf `asc-store-probe` startet, Then zeigt das Protokoll für iOS 1.0.1 die Texte von de-DE (Tonvorlage) und en-US (leer oder nicht), die Platzierungen von de-DE und die Gruppennamen, oder nennt den Fehler je Abfrage mit Statuscode. Der Abschlussbericht fasst das zusammen und legt den Lauf-Link ins Ticket #842. Belegt durch den Lauf-Link.
+**Nach dem Merge (Definition of Done, kein AC):** Der Handlauf `asc-store-probe` zeigt im Protokoll für iOS 1.0.1 die Texte von de-DE (Tonvorlage) und en-US (leer oder nicht), die Platzierungen von de-DE und die Gruppennamen, oder nennt den Fehler je Abfrage mit Statuscode. Der Abschlussbericht fasst das zusammen und legt den Lauf-Link ins Ticket #842.
 
 **Abnahmeweg.** Kein Pfad der Geräteliste berührt, kein App-Code; Stufe 2 im Simulator entfällt sinngemäß. Beleg ist der echte CI-Lauf nach dem Merge. Schnitt 2 (Texte en-US schreiben, Wortlaut von Henning freigegeben), 3 (englische Bilder) und 4 (Bild-Upload) folgen als eigene Specs; #842 bleibt bis dahin offen.
 
@@ -118,3 +118,4 @@ Alle in `scripts/test_asc_store_probe.py` (`unittest`, lokaler HTTP-Nachbau wie 
 ## Changelog
 
 - 2026-11-06: Initial spec created (Schnitt 1 von 4; Schnitt 2 = Texte en-US, 3 = englische Bilder, 4 = Bild-Upload)
+- 2026-11-06: AC-5 (Handlauf nach dem Merge) aus den Acceptance Criteria in die Definition of Done verschoben, das QA-Gate in Phase 6 kann es nicht belegen; AC-3 auf „mindestens eine Version“ eingegrenzt (Adversary F002, ohne Version fragt die Probe die Referenzdaten nicht ab)

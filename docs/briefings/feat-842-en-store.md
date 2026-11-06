@@ -1,7 +1,7 @@
 ---
 spec_file: docs/specs/feat-842-schnitt-1-probe-texte.md
-spec_sha256: 9813e02d6a18aa2826d18df7b62fcd6bd37cfa167389b9649c259bf835af3141
-spec_frozen_sha256: 7063784437df12436fdcce37d5f927f4c0ec56c808165f2ef62ea6d05d119aea
+spec_sha256: 970b90b899147db87e1f88abf0620479fbac5df5c3747f33473228487c4a5e56
+spec_frozen_sha256: 0bcb7471404610370c6d1a233e36b246e156482e11309f37f7ae54d92af56d69
 ---
 
 # PO-Briefing: feat-842-en-store
