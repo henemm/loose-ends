@@ -1,0 +1,447 @@
+== typecheck
+
+> typecheck
+> tsc --noEmit
+
+test/oauth-provider.test.ts(113,33): error TS2353: Object literal may only specify known properties, and 'keys' does not exist in type '{ publicUrl?: string | undefined; verifier?: OAuthTokenVerifier | undefined; }'.
+== tests: test/oauth-provider.test.ts test/main.test.ts
+2026-11-06T06:11:43.914Z listening
+2026-11-06T06:11:43.934Z migrated
+✔ AC-1 (S1): after ready, /health answers 200 with exactly five keys (49.207667ms)
+2026-11-06T06:11:43.952Z listening
+2026-11-06T06:11:43.955Z migrate failed, retrying (1/20)
+2026-11-06T06:11:44.006Z migrate failed, retrying (2/20)
+2026-11-06T06:11:44.057Z migrate failed, retrying (3/20)
+2026-11-06T06:11:44.109Z migrate failed, retrying (4/20)
+2026-11-06T06:11:44.161Z migrate failed, retrying (5/20)
+2026-11-06T06:11:44.218Z migrate failed, retrying (6/20)
+2026-11-06T06:11:44.270Z migrate failed, retrying (7/20)
+2026-11-06T06:11:44.322Z migrate failed, retrying (8/20)
+2026-11-06T06:11:44.375Z migrate failed, retrying (9/20)
+2026-11-06T06:11:44.428Z migrate failed, retrying (10/20)
+2026-11-06T06:11:44.481Z migrate failed, retrying (11/20)
+2026-11-06T06:11:44.534Z migrate failed, retrying (12/20)
+2026-11-06T06:11:44.586Z migrate failed, retrying (13/20)
+2026-11-06T06:11:44.638Z migrate failed, retrying (14/20)
+2026-11-06T06:11:44.690Z migrate failed, retrying (15/20)
+2026-11-06T06:11:44.743Z migrate failed, retrying (16/20)
+2026-11-06T06:11:44.795Z migrate failed, retrying (17/20)
+2026-11-06T06:11:44.847Z migrate failed, retrying (18/20)
+2026-11-06T06:11:44.899Z migrate failed, retrying (19/20)
+✔ AC-2 (S1): without a database /health and /mcp answer 503, ready is refused, close does not throw (999.468334ms)
+2026-11-06T06:11:44.954Z listening
+2026-11-06T06:11:44.965Z migrated
+✔ AC-3 (S1): /mcp answers initialize with serverInfo and refuses get_now without an account (41.293625ms)
+2026-11-06T06:11:44.995Z listening
+2026-11-06T06:11:45.007Z migrated
+✔ AC-4 (S1): an unknown path answers 404 and counts in the next /health (20.791458ms)
+2026-11-06T06:11:45.015Z listening
+2026-11-06T06:11:45.027Z migrated
+✔ AC-5 (S1): terminated pool connections leave the process alive and /health recovers within 5 s, without error text (126.544417ms)
+2026-11-06T06:11:45.142Z listening
+2026-11-06T06:11:45.154Z migrated
+✔ AC-6 (S1): close ends server and pool, a second close does not throw, keep-alive does not hold it (24.345875ms)
+✔ AC-7 (S1): ErrorWindow trips only above half of at least 20 answers and forgets after five minutes (0.674833ms)
+2026-11-06T06:11:45.169Z listening
+2026-11-06T06:11:45.180Z migrated
+✔ AC-8 (S1): /health turns 503 on a high error rate and recovers when the window passes (36.888708ms)
+✔ AC-9 (S1): a database that never answers gives 503 with db down within a second, no exception (51.851708ms)
+✔ AC-10 (S1): no title, order id, database error text or URL in any answer or log line; every log line starts ISO (239.496791ms)
+2026-11-06T06:11:45.495Z listening
+2026-11-06T06:11:45.501Z migrate failed, retrying (1/40)
+2026-11-06T06:11:45.552Z migrate failed, retrying (2/40)
+2026-11-06T06:11:45.604Z migrate failed, retrying (3/40)
+2026-11-06T06:11:45.656Z migrate failed, retrying (4/40)
+2026-11-06T06:11:45.709Z migrate failed, retrying (5/40)
+2026-11-06T06:11:45.761Z migrate failed, retrying (6/40)
+2026-11-06T06:11:45.813Z migrate failed, retrying (7/40)
+2026-11-06T06:11:45.865Z migrate failed, retrying (8/40)
+2026-11-06T06:11:45.917Z migrate failed, retrying (9/40)
+2026-11-06T06:11:45.970Z migrate failed, retrying (10/40)
+2026-11-06T06:11:46.023Z migrate failed, retrying (11/40)
+2026-11-06T06:11:46.075Z migrate failed, retrying (12/40)
+2026-11-06T06:11:46.130Z migrate failed, retrying (13/40)
+2026-11-06T06:11:46.182Z migrate failed, retrying (14/40)
+2026-11-06T06:11:46.234Z migrate failed, retrying (15/40)
+2026-11-06T06:11:46.285Z migrate failed, retrying (16/40)
+2026-11-06T06:11:46.337Z migrate failed, retrying (17/40)
+2026-11-06T06:11:46.389Z migrate failed, retrying (18/40)
+2026-11-06T06:11:46.440Z migrate failed, retrying (19/40)
+2026-11-06T06:11:46.491Z migrate failed, retrying (20/40)
+2026-11-06T06:11:46.543Z migrate failed, retrying (21/40)
+2026-11-06T06:11:46.595Z migrate failed, retrying (22/40)
+2026-11-06T06:11:46.648Z migrate failed, retrying (23/40)
+2026-11-06T06:11:46.701Z migrate failed, retrying (24/40)
+2026-11-06T06:11:46.753Z migrate failed, retrying (25/40)
+2026-11-06T06:11:46.806Z migrate failed, retrying (26/40)
+2026-11-06T06:11:46.858Z migrate failed, retrying (27/40)
+2026-11-06T06:11:46.911Z migrate failed, retrying (28/40)
+2026-11-06T06:11:46.963Z migrate failed, retrying (29/40)
+2026-11-06T06:11:47.017Z migrate failed, retrying (30/40)
+2026-11-06T06:11:47.070Z migrate failed, retrying (31/40)
+2026-11-06T06:11:47.124Z migrate failed, retrying (32/40)
+2026-11-06T06:11:47.175Z migrate failed, retrying (33/40)
+2026-11-06T06:11:47.229Z migrate failed, retrying (34/40)
+2026-11-06T06:11:47.282Z migrate failed, retrying (35/40)
+2026-11-06T06:11:47.335Z migrate failed, retrying (36/40)
+2026-11-06T06:11:47.388Z migrate failed, retrying (37/40)
+2026-11-06T06:11:47.442Z migrate failed, retrying (38/40)
+2026-11-06T06:11:47.495Z migrate failed, retrying (39/40)
+2026-11-06T06:11:47.553Z listening
+2026-11-06T06:11:47.579Z migrated
+✔ einhaengen: auth vor migrate 503 (2090.988625ms)
+2026-11-06T06:11:47.587Z listening
+2026-11-06T06:11:47.598Z migrated
+2026-11-06T06:11:47.607Z apple revoke skipped
+✔ einhaengen: ohne config logout und delete laufen (26.891708ms)
+2026-11-06T06:11:47.614Z listening
+2026-11-06T06:11:47.625Z migrated
+✔ einhaengen: anmelden und abmelden mit config (24.234917ms)
+2026-11-06T06:11:47.638Z listening
+2026-11-06T06:11:47.648Z migrated
+2026-11-06T06:11:47.655Z listening
+2026-11-06T06:11:47.668Z migrated
+✔ einhaengen: jwks lazy und einmal (40.712625ms)
+✔ einhaengen: weiche apple env (0.819917ms)
+✔ einhaengen: prozess bricht bei falscher config ab (792.996417ms)
+✖ main: ungueltige oauth schluessel brechen start ab (5008.470333ms)
+2026-11-06T06:11:53.490Z listening
+2026-11-06T06:11:53.519Z migrated
+✔ einhaengen: body ueber 1 mib 413 (77.711125ms)
+2026-11-06T06:11:53.560Z listening
+2026-11-06T06:11:53.580Z migrated
+✔ einhaengen: luegende content-length (31.391333ms)
+2026-11-06T06:11:53.592Z listening
+2026-11-06T06:11:53.610Z migrated
+✔ einhaengen: 413 kippt health nicht (81.196334ms)
+2026-11-06T06:11:53.673Z listening
+2026-11-06T06:11:53.688Z migrated
+✔ einhaengen: health und mcp nicht ueberschreibbar (42.679125ms)
+2026-11-06T06:11:53.716Z listening
+2026-11-06T06:11:53.731Z migrated
+✔ einhaengen: log wirft nie (354.395709ms)
+✔ einhaengen: log ohne geheimnisse (52.000834ms)
+✔ einhaengen: grenze und doku (1.94375ms)
+✖ oauth-provider: metadaten unter beiden pfaden (1.038583ms)
+✖ oauth-provider: voller durchlauf bis get_now (0.618833ms)
+✖ oauth-provider: code nur einmal (0.166042ms)
+✖ oauth-provider: ohne pkce abgelehnt (0.220125ms)
+✖ oauth-provider: cimd und resource streng (0.209041ms)
+✖ oauth-provider: vor bridge und im fehlerfenster (0.159375ms)
+✖ oauth-provider: refresh rotiert, altes invalid_grant (0.125291ms)
+✖ oauth-provider: verifizierer streng (0.2285ms)
+✖ oauth-provider: app-sitzung an mcp weiter 401 (0.177ms)
+✖ oauth-provider: produkt-interaction meldet niemanden an (0.219209ms)
+✖ oauth-provider: dev interactions aus (0.166791ms)
+✖ oauth-provider: schluessel aus der umgebung (0.146458ms)
+✖ oauth-provider: ohne schluessel 503 und mcp bleibt zu (0.118083ms)
+✖ oauth-provider: 503 vor migrate (2.050916ms)
+✖ oauth-provider: nichts im log, auch nicht beim fk fehler (0.127542ms)
+✖ oauth-provider: abhaengigkeit exakt gepinnt (1.317875ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 23
+ℹ fail 17
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10820.140542
+
+✖ failing tests:
+
+test at test/main.test.ts:499:1
+✖ main: ungueltige oauth schluessel brechen start ab (5008.470333ms)
+  AssertionError [ERR_ASSERTION]: Cookie zu kurz: Exit-Code
+  
+  'late' !== 1
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/main.test.ts:516:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'late',
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/oauth-provider.test.ts:246:1
+✖ oauth-provider: metadaten unter beiden pfaden (1.038583ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts' imported from /Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/oauth-provider.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:241:11)
+      at moduleResolve (node:internal/modules/esm/resolve:846:10)
+      at defaultResolve (node:internal/modules/esm/resolve:973:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:708:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:728:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:766:56)
+      at #resolve (node:internal/modules/esm/loader:690:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:610:35)
+      at node:internal/modules/esm/loader:639:32
+      at TracingChannel.tracePromise (node:diagnostics_channel:582:22) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts'
+  }
+
+test at test/oauth-provider.test.ts:264:1
+✖ oauth-provider: voller durchlauf bis get_now (0.618833ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts' imported from /Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/oauth-provider.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:241:11)
+      at moduleResolve (node:internal/modules/esm/resolve:846:10)
+      at defaultResolve (node:internal/modules/esm/resolve:973:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:708:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:728:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:766:56)
+      at #resolve (node:internal/modules/esm/loader:690:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:610:35)
+      at node:internal/modules/esm/loader:639:32
+      at TracingChannel.tracePromise (node:diagnostics_channel:582:22) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts'
+  }
+
+test at test/oauth-provider.test.ts:293:1
+✖ oauth-provider: code nur einmal (0.166042ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts' imported from /Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/oauth-provider.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:241:11)
+      at moduleResolve (node:internal/modules/esm/resolve:846:10)
+      at defaultResolve (node:internal/modules/esm/resolve:973:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:708:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:728:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:766:56)
+      at #resolve (node:internal/modules/esm/loader:690:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:610:35)
+      at node:internal/modules/esm/loader:639:32
+      at TracingChannel.tracePromise (node:diagnostics_channel:582:22) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts'
+  }
+
+test at test/oauth-provider.test.ts:312:1
+✖ oauth-provider: ohne pkce abgelehnt (0.220125ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts' imported from /Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/oauth-provider.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:241:11)
+      at moduleResolve (node:internal/modules/esm/resolve:846:10)
+      at defaultResolve (node:internal/modules/esm/resolve:973:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:708:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:728:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:766:56)
+      at #resolve (node:internal/modules/esm/loader:690:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:610:35)
+      at node:internal/modules/esm/loader:639:32
+      at TracingChannel.tracePromise (node:diagnostics_channel:582:22) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts'
+  }
+
+test at test/oauth-provider.test.ts:331:1
+✖ oauth-provider: cimd und resource streng (0.209041ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts' imported from /Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/oauth-provider.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:241:11)
+      at moduleResolve (node:internal/modules/esm/resolve:846:10)
+      at defaultResolve (node:internal/modules/esm/resolve:973:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:708:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:728:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:766:56)
+      at #resolve (node:internal/modules/esm/loader:690:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:610:35)
+      at node:internal/modules/esm/loader:639:32
+      at TracingChannel.tracePromise (node:diagnostics_channel:582:22) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts'
+  }
+
+test at test/oauth-provider.test.ts:367:1
+✖ oauth-provider: vor bridge und im fehlerfenster (0.159375ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts' imported from /Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/oauth-provider.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:241:11)
+      at moduleResolve (node:internal/modules/esm/resolve:846:10)
+      at defaultResolve (node:internal/modules/esm/resolve:973:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:708:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:728:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:766:56)
+      at #resolve (node:internal/modules/esm/loader:690:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:610:35)
+      at node:internal/modules/esm/loader:639:32
+      at TracingChannel.tracePromise (node:diagnostics_channel:582:22) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts'
+  }
+
+test at test/oauth-provider.test.ts:387:1
+✖ oauth-provider: refresh rotiert, altes invalid_grant (0.125291ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts' imported from /Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/oauth-provider.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:241:11)
+      at moduleResolve (node:internal/modules/esm/resolve:846:10)
+      at defaultResolve (node:internal/modules/esm/resolve:973:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:708:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:728:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:766:56)
+      at #resolve (node:internal/modules/esm/loader:690:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:610:35)
+      at node:internal/modules/esm/loader:639:32
+      at TracingChannel.tracePromise (node:diagnostics_channel:582:22) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts'
+  }
+
+test at test/oauth-provider.test.ts:402:1
+✖ oauth-provider: verifizierer streng (0.2285ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts' imported from /Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/oauth-provider.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:241:11)
+      at moduleResolve (node:internal/modules/esm/resolve:846:10)
+      at defaultResolve (node:internal/modules/esm/resolve:973:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:708:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:728:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:766:56)
+      at #resolve (node:internal/modules/esm/loader:690:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:610:35)
+      at node:internal/modules/esm/loader:639:32
+      at TracingChannel.tracePromise (node:diagnostics_channel:582:22) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts'
+  }
+
+test at test/oauth-provider.test.ts:434:1
+✖ oauth-provider: app-sitzung an mcp weiter 401 (0.177ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts' imported from /Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/oauth-provider.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:241:11)
+      at moduleResolve (node:internal/modules/esm/resolve:846:10)
+      at defaultResolve (node:internal/modules/esm/resolve:973:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:708:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:728:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:766:56)
+      at #resolve (node:internal/modules/esm/loader:690:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:610:35)
+      at node:internal/modules/esm/loader:639:32
+      at TracingChannel.tracePromise (node:diagnostics_channel:582:22) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts'
+  }
+
+test at test/oauth-provider.test.ts:443:1
+✖ oauth-provider: produkt-interaction meldet niemanden an (0.219209ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts' imported from /Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/oauth-provider.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:241:11)
+      at moduleResolve (node:internal/modules/esm/resolve:846:10)
+      at defaultResolve (node:internal/modules/esm/resolve:973:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:708:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:728:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:766:56)
+      at #resolve (node:internal/modules/esm/loader:690:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:610:35)
+      at node:internal/modules/esm/loader:639:32
+      at TracingChannel.tracePromise (node:diagnostics_channel:582:22) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts'
+  }
+
+test at test/oauth-provider.test.ts:473:1
+✖ oauth-provider: dev interactions aus (0.166791ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts' imported from /Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/oauth-provider.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:241:11)
+      at moduleResolve (node:internal/modules/esm/resolve:846:10)
+      at defaultResolve (node:internal/modules/esm/resolve:973:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:708:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:728:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:766:56)
+      at #resolve (node:internal/modules/esm/loader:690:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:610:35)
+      at node:internal/modules/esm/loader:639:32
+      at TracingChannel.tracePromise (node:diagnostics_channel:582:22) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts'
+  }
+
+test at test/oauth-provider.test.ts:489:1
+✖ oauth-provider: schluessel aus der umgebung (0.146458ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts' imported from /Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/oauth-provider.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:241:11)
+      at moduleResolve (node:internal/modules/esm/resolve:846:10)
+      at defaultResolve (node:internal/modules/esm/resolve:973:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:708:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:728:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:766:56)
+      at #resolve (node:internal/modules/esm/loader:690:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:610:35)
+      at node:internal/modules/esm/loader:639:32
+      at TracingChannel.tracePromise (node:diagnostics_channel:582:22) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts'
+  }
+
+test at test/oauth-provider.test.ts:525:1
+✖ oauth-provider: ohne schluessel 503 und mcp bleibt zu (0.118083ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts' imported from /Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/oauth-provider.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:241:11)
+      at moduleResolve (node:internal/modules/esm/resolve:846:10)
+      at defaultResolve (node:internal/modules/esm/resolve:973:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:708:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:728:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:766:56)
+      at #resolve (node:internal/modules/esm/loader:690:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:610:35)
+      at node:internal/modules/esm/loader:639:32
+      at TracingChannel.tracePromise (node:diagnostics_channel:582:22) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts'
+  }
+
+test at test/oauth-provider.test.ts:548:1
+✖ oauth-provider: 503 vor migrate (2.050916ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts' imported from /Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/oauth-provider.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:241:11)
+      at moduleResolve (node:internal/modules/esm/resolve:846:10)
+      at defaultResolve (node:internal/modules/esm/resolve:973:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:708:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:728:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:766:56)
+      at #resolve (node:internal/modules/esm/loader:690:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:610:35)
+      at node:internal/modules/esm/loader:639:32
+      at TracingChannel.tracePromise (node:diagnostics_channel:582:22) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts'
+  }
+
+test at test/oauth-provider.test.ts:572:1
+✖ oauth-provider: nichts im log, auch nicht beim fk fehler (0.127542ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts' imported from /Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/oauth-provider.test.ts
+      at finalizeResolution (node:internal/modules/esm/resolve:241:11)
+      at moduleResolve (node:internal/modules/esm/resolve:846:10)
+      at defaultResolve (node:internal/modules/esm/resolve:973:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:708:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:728:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:766:56)
+      at #resolve (node:internal/modules/esm/loader:690:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:610:35)
+      at node:internal/modules/esm/loader:639:32
+      at TracingChannel.tracePromise (node:diagnostics_channel:582:22) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/src/oauth-provider.ts'
+  }
+
+test at test/oauth-provider.test.ts:590:1
+✖ oauth-provider: abhaengigkeit exakt gepinnt (1.317875ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - '9.13.3'
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/imperative-questing-starlight/server/test/oauth-provider.test.ts:592:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: '9.13.3',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+exit=1

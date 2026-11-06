@@ -321,6 +321,13 @@ Datenschutztext (`docs/reference/datenschutz-entwurf.md`, öffentlich auf henemm
 uns“) ist deshalb zu ändern, **bevor** ein externer Nutzer Claude verbinden kann (#625, #615); bis dahin ruft die App den
 Dienst nirgends auf. **Betrieb:** zuerst der bestehende Hetzner-Server, vor externen Nutzern ein eigener Server im selben
 Projekt (#796, #625).
+**Nachtrag 2026-11-06 (#621 S3, Freigabe Henning):** Der OAuth-Aussteller ist die Bibliothek `oidc-provider` 9.13.3 (exakt
+gepinnt) mit CIMD (claude.ai weist sich per Client-Dokument aus, keine offene Registrierung), eingebettet in den eigenen Dienst.
+Der Rückfall „Supabase Pro“ für den OAuth-Teil entfällt: Supabase Auth kann kein CIMD, und die Konten lägen doppelt (dort und als
+`apple_sub`-Modell aus #615). „Nie selbst schreiben“ bleibt erfüllt, denn PKCE, Rotation, Replay-Erkennung und CIMD kommen aus der
+zertifizierten Bibliothek. CIMD ist ein Entwurf (draft-02); ein Update der Bibliothek nur bewusst, mit dem Durchlauf-Test aus S3.
+Verworfen: Eigenbau auf dem MCP-SDK (es hat keinen Aussteller, kippt „nie selbst schreiben“), Supabase Auth (kippt die Ablage aus
+#621 S2 und Weg B aus #612).
 
 **ADR-17 Ergänzte Screens nach Lückenprüfung.** Als nächstes (manuell sortiert), Neu (Eingang),
 Feld-Picker statt Formular, Wisch- und Halten-Gesten mit Verschieben (Morgen, Wochenende, nächste Woche,
