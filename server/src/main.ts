@@ -1,4 +1,5 @@
 import http, { type IncomingMessage, type ServerResponse } from "node:http";
+import type { EventEmitter } from "node:events";
 import type { AddressInfo } from "node:net";
 import { join } from "node:path";
 import { Readable } from "node:stream";
@@ -14,13 +15,14 @@ import { mcpHandler } from "./mcp.ts";
 import { migrate } from "./migrate.ts";
 import type { OAuthTokenVerifier } from "@modelcontextprotocol/server";
 import { bearerGate, DEFAULT_PUBLIC_URL, METADATA_PATH, metadataRoute, publicUrlFromEnv, rejectAll } from "./oauth-resource.ts";
+import { createProvider, type Interaction, type OAuthKeys, oauthKeysFromEnv, providerVerifier } from "./oauth-provider.ts";
 
 export type Route = (request: Request) => Promise<Response>;
 export type StartOptions = {
   databaseUrl: string; port: number; host?: string; migrationsDir: string; retryMs?: number; maxAttempts?: number;
   now?: () => number; applicationName?: string; extraRoutes?: Record<string, Route>;
   auth?: { config?: AppleConfig; fetch?: typeof fetch };
-  oauth?: { publicUrl?: string; verifier?: OAuthTokenVerifier };
+  oauth?: { publicUrl?: string; verifier?: OAuthTokenVerifier; keys?: OAuthKeys; fetch?: typeof fetch; interaction?: Interaction };
 };
 export type Running = { url: string; ready: Promise<void>; close: () => Promise<void> };
 
@@ -125,6 +127,36 @@ function mountAuth(options: StartOptions, pool: pg.Pool, isReady: () => boolean)
   return Object.fromEntries(Object.entries(routes).map(([path, route]) => [path, gated(isReady, route)]));
 }
 
+const DISCOVERY = new Set(["/.well-known/oauth-authorization-server", "/.well-known/openid-configuration"]);
+type NodeHandler = (req: IncomingMessage, res: ServerResponse) => void;
+const unavailable: NodeHandler = (_req, res) => void res.writeHead(503).end();
+
+// The issuer's paths: everything under /oauth/ and the two discovery documents.
+function isIssuerPath(url: string | undefined): boolean {
+  const path = URL.parse(url ?? "/", "http://localhost")?.pathname ?? "/";
+  return path.startsWith("/oauth/") || DISCOVERY.has(path);
+}
+
+// The issuer gets the raw request (it reads the body itself); 503 without a body before migrate or without keys.
+// Its answers count in the error window, except the product interaction's deliberate 501. Library errors are logged
+// as fixed event names only: an error object can carry values (the FK detail names the account).
+function mountIssuer(options: StartOptions, pool: pg.Pool, isReady: () => boolean, window: ErrorWindow) {
+  const { publicUrl = DEFAULT_PUBLIC_URL, keys, fetch = globalThis.fetch, interaction } = options.oauth ?? {};
+  if (keys === undefined) return { handle: unavailable, provider: undefined };
+  const now = options.now ?? Date.now;
+  const provider = createProvider({ publicUrl, pool, now: () => new Date(now()), fetch, keys, interaction });
+  provider.on("server_error", () => logError("oauth server error"));
+  // Koa's own "error" event (missing from the provider's types); a listener replaces Koa's default console output.
+  (provider as unknown as EventEmitter).on("error", () => logError("oauth error"));
+  const callback = provider.callback();
+  const handle: NodeHandler = (req, res) => {
+    if (!isReady()) return unavailable(req, res);
+    res.once("finish", () => { if (res.statusCode !== 501) window.record(res.statusCode); });
+    void callback(req, res);
+  };
+  return { handle, provider };
+}
+
 // Listens first, so /health can answer 503 while migrate still waits for the database; ready settles with migrate.
 export async function start(options: StartOptions): Promise<Running> {
   const { databaseUrl, port, host = "127.0.0.1", migrationsDir, retryMs = 2000, maxAttempts = 60 } = options;
@@ -133,7 +165,9 @@ export async function start(options: StartOptions): Promise<Running> {
   const mcp = mcpHandler(pool);
   let migrated = false;
   const isReady = () => migrated;
-  const { publicUrl = DEFAULT_PUBLIC_URL, verifier = rejectAll } = options.oauth ?? {};
+  const { publicUrl = DEFAULT_PUBLIC_URL } = options.oauth ?? {};
+  const issuer = mountIssuer(options, pool, isReady, window);
+  const verifier = options.oauth?.verifier ?? (issuer.provider ? providerVerifier(issuer.provider, publicUrl) : rejectAll);
   const gate = bearerGate(publicUrl, verifier);
   // Metadata, /health and /mcp last: neither auth nor extraRoutes can replace them. Metadata needs no database.
   const routes: Record<string, Route> = {
@@ -146,7 +180,9 @@ export async function start(options: StartOptions): Promise<Running> {
       return checked instanceof Response ? checked : mcp.fetch(request, { authInfo: checked });
     }),
   };
-  const server = http.createServer((req, res) => void bridge(req, res, (request) => dispatch(routes, window, request)));
+  const server = http.createServer((req, res) => isIssuerPath(req.url)
+    ? issuer.handle(req, res)
+    : void bridge(req, res, (request) => dispatch(routes, window, request)));
   try {
     await new Promise<void>((done, fail) => { server.once("error", fail); server.listen(port, host, done); });
   } catch (error) {
@@ -187,6 +223,13 @@ async function main(): Promise<void> {
     logError(`apple config invalid: ${(error as Error).message}`);
     process.exit(1);
   }
+  let keys: OAuthKeys | undefined;
+  try {
+    keys = oauthKeysFromEnv(process.env);
+  } catch (error) {
+    logError(`oauth config invalid: ${(error as Error).message}`);
+    process.exit(1);
+  }
   let publicUrl: string;
   try {
     publicUrl = publicUrlFromEnv(process.env);
@@ -196,7 +239,7 @@ async function main(): Promise<void> {
   }
   const running = await start({
     databaseUrl, port: Number(process.env.PORT ?? 8080), host: process.env.HOST ?? "127.0.0.1",
-    migrationsDir: join(import.meta.dirname, "../migrations"), auth: { config }, oauth: { publicUrl },
+    migrationsDir: join(import.meta.dirname, "../migrations"), auth: { config }, oauth: { publicUrl, keys },
   });
   let stopping = false;
   const stop = async (code: number) => {
