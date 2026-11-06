@@ -439,7 +439,8 @@ test("einhaengen: weiche apple env", async () => {
 // The real process: main.ts as a child, without the test runner's context and without any APPLE_* of this shell.
 const MAIN = join(import.meta.dirname, "../src/main.ts");
 function child(env: Record<string, string>) {
-  const base = Object.fromEntries(Object.entries(process.env).filter(([k]) => !k.startsWith("APPLE_") && k !== "NODE_TEST_CONTEXT"));
+  const base = Object.fromEntries(Object.entries(process.env)
+    .filter(([k]) => !k.startsWith("APPLE_") && !k.startsWith("OAUTH_") && k !== "NODE_TEST_CONTEXT"));
   const proc = spawn(process.execPath, [MAIN], { env: { ...base, HOST: "127.0.0.1", ...env }, stdio: ["ignore", "pipe", "pipe"] });
   let output = "";
   proc.stdout.on("data", (chunk) => { output += chunk; });
@@ -492,6 +493,34 @@ test("einhaengen: prozess bricht bei falscher config ab", async (t) => {
   run.proc.kill("SIGTERM");
   assert.equal(status, 200, `ohne APPLE_* kein /health 200: ${run.output()}`);
   assert.equal(await within(run.exited, 5000, () => run.proc.kill("SIGKILL")), 0);
+});
+
+// #621 S3, AC-14: invalid issuer keys stop the process before pool and listen, naming only the variable.
+test("main: ungueltige oauth schluessel brechen start ab", async (t) => {
+  const dbHits: number[] = [];
+  const fakeDb = createServer((socket) => { dbHits.push(1); socket.destroy(); });
+  await new Promise<void>((done) => fakeDb.listen(0, "127.0.0.1", done));
+  t.after(() => new Promise<void>((done) => fakeDb.close(() => done())));
+  const dbUrl = `postgres://postgres@127.0.0.1:${(fakeDb.address() as { port: number }).port}/postgres`;
+  const cookie = `geheim-cookie-schluessel-${randomBytes(16).toString("hex")}`;
+  const jwk = JSON.stringify(generateKeyPairSync("ec", { namedCurve: "P-256" }).privateKey.export({ format: "jwk" }));
+  const cases: [string, Record<string, string>, string][] = [
+    ["Cookie zu kurz", { OAUTH_COOKIE_KEYS: "zu-kurz", OAUTH_SIGNING_JWK: jwk }, "OAUTH_COOKIE_KEYS"],
+    ["nur JWK", { OAUTH_SIGNING_JWK: jwk }, "OAUTH_COOKIE_KEYS"],
+    ["JWK ungültig", { OAUTH_COOKIE_KEYS: cookie, OAUTH_SIGNING_JWK: "geheim-kein-jwk-4711" }, "OAUTH_SIGNING_JWK"],
+  ];
+  for (const [name, env, variable] of cases) {
+    dbHits.length = 0;
+    const run = child({ ...env, DATABASE_URL: dbUrl, PORT: String(await freePort()) });
+    const code = await within(run.exited, 5000, () => run.proc.kill("SIGKILL"));
+    assert.equal(code, 1, `${name}: Exit-Code`);
+    assert.doesNotMatch(run.output(), /listening/, `${name}: hat gelauscht`);
+    assert.equal(dbHits.length, 0, `${name}: Pool geöffnet`);
+    assert.ok(run.output().includes(`oauth config invalid: ${variable}`), `${name}: ${run.output()}`);
+    for (const value of [cookie, "zu-kurz", "geheim-kein-jwk-4711", JSON.parse(jwk).d]) {
+      assert.ok(!run.output().includes(value), `${name}: Wert in der Ausgabe`);
+    }
+  }
 });
 
 test("einhaengen: body ueber 1 mib 413", async (t) => {

@@ -414,7 +414,8 @@ test("oauth-resource: nicht ueberschreibbar", async (t) => {
   assert.equal(meta.status, 200);
   assert.deepEqual(JSON.parse(meta.body), DOCUMENT);
   assertChallenge(await mcpPost(running.url), META, "/mcp");
-  assert.equal((await raw(running.url, "/.well-known/oauth-authorization-server")).status, 404, "kein Aussteller in S1");
+  // Since #621 S3 the issuer owns this path; without keys it answers 503 (AC-13), never the extra route.
+  assert.equal((await raw(running.url, "/.well-known/oauth-authorization-server")).status, 503, "Aussteller ohne Schlüssel");
 });
 
 // Rough length check: the file split at each top-level declaration, no part over 50 lines.
