@@ -5,6 +5,7 @@ import type pg from "pg";
 import type { AppleConfig, KeyLookup } from "./apple.ts";
 import { appleReturnUrl, authorizeUrl } from "./apple-client.ts";
 import { PgAdapter } from "./oauth-adapter.ts";
+import { type ConsentDeps, decideConsent, showConsent } from "./oauth-consent.ts";
 import type { Interaction } from "./oauth-provider.ts";
 import { TICKET_MODEL, type Ticket } from "./oauth-return.ts";
 
@@ -14,6 +15,8 @@ export type AppleInteractionDeps = {
   pool: pg.Pool; config: AppleConfig; publicUrl: string; now: () => Date; fallback: Interaction;
   // Shared JWKS lookup, used by the return in S4b-2.
   keys: KeyLookup; log: (event: string) => void;
+  // The consent page (S5); without it prompt consent stays with the fallback.
+  consent?: ConsentDeps;
 };
 
 const MODEL = "AppleLogin";
@@ -38,13 +41,16 @@ function refuse(deps: AppleInteractionDeps, res: ServerResponse): void {
   badRequest(res);
 }
 
-// The path behind /oauth/interaction/: "<uid>" is the way there, "<uid>/finish" the closing, anything else null.
-function pathParts(url: string | undefined): { uid: string; finish: boolean } | null {
+// The path behind /oauth/interaction/: "<uid>" is the way there (and the consent page), "<uid>/finish" the closing,
+// "<uid>/confirm" and "<uid>/abort" the consent's answers, anything else null.
+type Step = "start" | "finish" | "confirm" | "abort";
+function pathParts(url: string | undefined): { uid: string; step: Step } | null {
   const path = URL.parse(url ?? "/", "http://localhost")?.pathname ?? "";
-  if (!path.startsWith(INTERACTION_PATH)) return { uid: "", finish: false };
+  if (!path.startsWith(INTERACTION_PATH)) return { uid: "", step: "start" };
   const [uid, ...rest] = path.slice(INTERACTION_PATH.length).split("/");
-  if (rest.length === 0) return { uid, finish: false };
-  return rest.length === 1 && rest[0] === "finish" ? { uid, finish: true } : null;
+  if (rest.length === 0) return { uid, step: "start" };
+  const step = rest[0];
+  return rest.length === 1 && (step === "finish" || step === "confirm" || step === "abort") ? { uid, step } : null;
 }
 
 // The cookie's interaction, only if it is the one in the path; interactionDetails reads the cookie and never compares.
@@ -63,7 +69,8 @@ export function appleInteraction(deps: AppleInteractionDeps): Interaction {
     if (!deps.config.webClientId) return deps.fallback(provider, req, res);
     const parts = pathParts(req.url);
     if (parts === null) return refuse(deps, res);
-    if (parts.finish) return finishLogin(deps, parts.uid, provider, req, res);
+    if (parts.step === "finish") return finishLogin(deps, parts.uid, provider, req, res);
+    if (parts.step === "confirm" || parts.step === "abort") return answerConsent(deps, parts.uid, parts.step, provider, req, res);
     return startLogin(deps, parts.uid, provider, req, res);
   };
 }
@@ -74,6 +81,7 @@ async function startLogin(deps: AppleInteractionDeps, uid: string, provider: Pro
   const { pool, config, publicUrl, now, fallback, log } = deps;
   const details = await detailsFor(provider, req, res, uid);
   if (details === null) return refuse(deps, res);
+  if (details.prompt.name === "consent" && deps.consent !== undefined) return showConsent(deps.consent, provider, details, req, res);
   if (details.prompt.name !== "login") return fallback(provider, req, res);
   const ttl = Math.min(MAX_TTL, Math.floor(details.exp - now().getTime() / 1000));
   if (!(ttl > 0)) return refuse(deps, res);
@@ -87,6 +95,16 @@ async function startLogin(deps: AppleInteractionDeps, uid: string, provider: Pro
   }
   const location = authorizeUrl(config, { redirectUri: appleReturnUrl(publicUrl), state, nonce });
   res.writeHead(303, { location, "cache-control": "no-store", "referrer-policy": "no-referrer" }).end();
+}
+
+// The consent's two answers: only for the cookie's interaction, in prompt consent, and only when the page is mounted.
+async function answerConsent(
+  deps: AppleInteractionDeps, uid: string, answer: "confirm" | "abort", provider: Provider, req: IncomingMessage, res: ServerResponse,
+): Promise<void> {
+  if (deps.consent === undefined) return deps.fallback(provider, req, res);
+  const details = await detailsFor(provider, req, res, uid);
+  if (details === null || details.prompt.name !== "consent") return refuse(deps, res);
+  return decideConsent(deps.consent, provider, details, answer, req, res);
 }
 
 // Exactly one non-empty ticket in the query; every other parameter is never read.
