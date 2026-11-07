@@ -58,13 +58,13 @@ test("AC-1: the real migrations folder applies 001 once and creates the three ta
   const pool = await freshPool(t);
 
   assert.deepEqual(await migrate(pool, migrations), [
-    "001_claude_schema.sql", "002_accounts.sql", "003_apple_client_id.sql", "004_oauth.sql", "005_apple_tokens_per_client.sql", "006_transcript_views.sql",
+    "001_claude_schema.sql", "002_accounts.sql", "003_apple_client_id.sql", "004_oauth.sql", "005_apple_tokens_per_client.sql", "006_transcript_views.sql", "007_order_kinds.sql",
   ]);
   for (const table of ["transcripts", "orders", "order_results"]) {
     const result = await pool.query("SELECT to_regclass($1) AS oid", [table]);
     assert.notEqual(result.rows[0].oid, null, table);
   }
-  assert.equal((await pool.query("SELECT name FROM schema_migrations")).rowCount, 6);
+  assert.equal((await pool.query("SELECT name FROM schema_migrations")).rowCount, 7);
   assert.deepEqual(await migrate(pool, migrations), []);
 });
 

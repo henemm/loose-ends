@@ -6,12 +6,12 @@ import SwiftData
 /// expected state of the fields it changes, because a task has no `modifiedAt`: Claude works on a transcript
 /// that may be old, and an order that no longer fits is refused instead of overwriting.
 struct Order: Codable, Equatable, Sendable {
-    enum Kind: String, Codable, Sendable { case capture, complete, setDue }
+    enum Kind: String, Codable, Sendable { case capture, complete, setDue, setNext, park, addSubtask }
 
     var version: Int = 1
     var id: UUID
     var kind: Kind
-    /// `capture`: the words, saved like any capture.
+    /// `capture`: the words, saved like any capture. `addSubtask`: the line to add.
     var text: String?
     /// `complete` and `setDue`: the task and the state the transcript showed.
     var taskID: UUID?
@@ -22,6 +22,9 @@ struct Order: Codable, Equatable, Sendable {
     /// Both kinds always compare it, nil = no date expected: the transcript carries the due date but not
     /// whether a task repeats, so a repeating task that already rolled forward is never completed twice.
     var expectedDueDate: Date?
+    /// `setNext` (#622): into "Next up" (true) or out of it (false), and the rank the transcript showed (nil = none).
+    var on: Bool?
+    var expectedNextRank: Double?
 }
 
 struct OrderResult: Codable, Equatable, Sendable {
@@ -46,6 +49,9 @@ enum OrderExecutor {
         case .capture: return try capture(order, in: context)
         case .complete: return try complete(order, in: context, now: now, calendar: calendar)
         case .setDue: return try setDue(order, in: context, now: now, calendar: calendar)
+        case .setNext: return try setNext(order, in: context)
+        case .park: return try park(order, in: context, now: now)
+        case .addSubtask: return try addSubtask(order, in: context, now: now)
         }
     }
 
@@ -89,6 +95,54 @@ enum OrderExecutor {
         try commit(context)
         return OrderResult(orderID: order.id, outcome: .done, taskID: id)
     }
+
+    /// Into "Next up" at the end or out of it (#622), like the swipe. Status and rank are the expected state; a task that
+    /// is not open (parked included, "Next up" lists open tasks only) or already in the asked state is `invalid`.
+    /// Status and rank are no revised fields, so there is no revision, as with `complete`.
+    private static func setNext(_ order: Order, in context: ModelContext) throws -> OrderResult {
+        guard let id = order.taskID, let expected = order.expectedStatus, let on = order.on, Self.listable.contains(expected) else {
+            return refuse(order, .invalid)
+        }
+        guard let task = try find(id, in: context) else { return refuse(order, .missing) }
+        guard task.status == expected, task.nextRank == order.expectedNextRank else { return refuse(order, .stale, task: id) }
+        guard (task.nextRank != nil) != on else { return refuse(order, .invalid, task: id) }
+        let all = try context.fetch(FetchDescriptor<TaskItem>())
+        TaskActions.toggleNext(task, among: all)
+        try commit(context)
+        return OrderResult(orderID: order.id, outcome: .done, taskID: id)
+    }
+
+    /// Parks an open task (#622) like the swipe: out of "Next up", the Knäuel mark falls. Parking a parked task is `invalid`.
+    private static func park(_ order: Order, in context: ModelContext, now: Date) throws -> OrderResult {
+        guard let id = order.taskID, let expected = order.expectedStatus, Self.listable.contains(expected) else {
+            return refuse(order, .invalid)
+        }
+        guard let task = try find(id, in: context) else { return refuse(order, .missing) }
+        guard task.status == expected else { return refuse(order, .stale, task: id) }
+        TaskActions.park(task, now: now)
+        try commit(context)
+        return OrderResult(orderID: order.id, outcome: .done, taskID: id)
+    }
+
+    /// Adds a line under a top-level task (#622) as typed, like the detail does. An empty line, a subtask as parent or a
+    /// parent that is parked are `invalid` (a parked task takes no new work, Claude restores it in the app first).
+    private static func addSubtask(_ order: Order, in context: ModelContext, now: Date) throws -> OrderResult {
+        guard let id = order.taskID, let expected = order.expectedStatus, let text = order.text, Self.listable.contains(expected) else {
+            return refuse(order, .invalid)
+        }
+        guard let task = try find(id, in: context) else { return refuse(order, .missing) }
+        guard task.status == expected else { return refuse(order, .stale, task: id) }
+        do {
+            try Subtasks.add(text, to: task, in: context, now: now)
+        } catch {
+            return refuse(order, .invalid, task: id)
+        }
+        try commit(context)
+        return OrderResult(orderID: order.id, outcome: .done, taskID: id)
+    }
+
+    /// The statuses a task can be listed in as open: not parked, done or removed.
+    private static let listable: Set<TaskStatus> = [.unprocessed, .unverified, .active]
 
     /// A task the transcript lists can be completed; a done or removed one cannot.
     private static let completable: Set<TaskStatus> = [.unprocessed, .unverified, .active, .parked]
