@@ -36,23 +36,24 @@ export async function endSession(pool: pg.Pool, token: string): Promise<boolean>
   return result.rowCount === 1;
 }
 
-export type Deletion = { deleted: boolean; appleToken: Buffer | null; clientId: string | null };
+export type Deletion = { deleted: boolean; tokens: { blob: Buffer; clientId: string }[] };
 
-// One transaction: lock the account, read its Apple token and client id (null before 003), remove results, orders, transcript and the account;
-// sessions and the Apple token follow by their foreign keys. An unknown account changes nothing.
+// One transaction: lock the account first (a concurrent deletion waits and then finds nothing), read its Apple tokens
+// ordered by client id, remove results, orders, transcript and the account; sessions and the Apple tokens follow by
+// their foreign keys. An unknown account changes nothing.
 export async function deleteAccount(pool: pg.Pool, accountId: string): Promise<Deletion> {
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
+    const locked = await client.query("SELECT id FROM accounts WHERE id = $1 FOR UPDATE", [accountId]);
+    if (locked.rowCount !== 1) {
+      await client.query("ROLLBACK");
+      return { deleted: false, tokens: [] };
+    }
     const found = await client.query(
-      `SELECT t.refresh_token_enc, t.client_id FROM accounts a LEFT JOIN apple_tokens t ON t.account_id = a.id
-       WHERE a.id = $1 FOR UPDATE OF a`,
+      "SELECT refresh_token_enc, client_id FROM apple_tokens WHERE account_id = $1 ORDER BY client_id",
       [accountId],
     );
-    if (found.rowCount !== 1) {
-      await client.query("ROLLBACK");
-      return { deleted: false, appleToken: null, clientId: null };
-    }
     await client.query("DELETE FROM order_results WHERE order_id IN (SELECT id FROM orders WHERE account_id = $1)", [accountId]);
     await client.query("DELETE FROM orders WHERE account_id = $1", [accountId]);
     await client.query("DELETE FROM transcripts WHERE account_id = $1", [accountId]);
@@ -63,7 +64,7 @@ export async function deleteAccount(pool: pg.Pool, accountId: string): Promise<D
     );
     await client.query("DELETE FROM accounts WHERE id = $1", [accountId]);
     await client.query("COMMIT");
-    return { deleted: true, appleToken: found.rows[0].refresh_token_enc, clientId: found.rows[0].client_id };
+    return { deleted: true, tokens: found.rows.map((row) => ({ blob: row.refresh_token_enc, clientId: row.client_id })) };
   } catch (error) {
     await client.query("ROLLBACK");
     throw error;

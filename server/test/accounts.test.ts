@@ -29,8 +29,11 @@ async function migrated(t: Parameters<typeof freshPool>[0]): Promise<pg.Pool> {
   return pool;
 }
 
+const APP = "com.henning.looseends";
+const WEB = "com.henning.looseends.web";
+
 // An account with a session, an Apple token, a transcript and a claimed, answered order.
-async function filled(pool: pg.Pool, sub: string, n: number, appleToken: Buffer | null, clientId: string | null = null) {
+async function filled(pool: pg.Pool, sub: string, n: number, appleToken: Buffer | null, clientId = APP) {
   const id = await findOrCreate(pool, sub);
   const token = await createSession(pool, id);
   if (appleToken) await pool.query("INSERT INTO apple_tokens (account_id, refresh_token_enc, client_id) VALUES ($1, $2, $3)", [id, appleToken, clientId]);
@@ -58,7 +61,9 @@ const totalResults = async (pool: pg.Pool) => (await pool.query("SELECT count(*)
 test("AC-1: the migrations apply 001 and 002 once, and the three account tables exist", async (t) => {
   const pool = await freshPool(t);
 
-  assert.deepEqual(await migrate(pool, migrations), ["001_claude_schema.sql", "002_accounts.sql", "003_apple_client_id.sql", "004_oauth.sql"]);
+  assert.deepEqual(await migrate(pool, migrations), [
+    "001_claude_schema.sql", "002_accounts.sql", "003_apple_client_id.sql", "004_oauth.sql", "005_apple_tokens_per_client.sql", "006_transcript_views.sql",
+  ]);
   assert.deepEqual(await migrate(pool, migrations), []);
   for (const table of ["accounts", "sessions", "apple_tokens"]) {
     assert.notEqual((await pool.query("SELECT to_regclass($1) AS oid", [table])).rows[0].oid, null, table);
@@ -130,11 +135,11 @@ test("AC-6: createSession for an unknown account is refused by the foreign key",
 test("AC-7/AC-8/AC-10: deleteAccount removes every row of the account and leaves the other one untouched", async (t) => {
   const pool = await migrated(t);
   const apple = Buffer.from([1, 2, 3, 250]);
-  const first = await filled(pool, "sub.erstes", 1, apple, "com.henning.looseends");
+  const first = await filled(pool, "sub.erstes", 1, apple, APP);
   const second = await filled(pool, "sub.zweites", 2, Buffer.from([9]));
   const before = await counts(pool, second.id);
 
-  assert.deepEqual(await deleteAccount(pool, first.id), { deleted: true, appleToken: apple, clientId: "com.henning.looseends" });
+  assert.deepEqual(await deleteAccount(pool, first.id), { deleted: true, tokens: [{ blob: apple, clientId: APP }] });
   assert.deepEqual(await counts(pool, first.id), Object.fromEntries(TABLES.map((table) => [table, 0])));
   assert.equal(await totalResults(pool), 1, "Ergebnis des ersten Kontos bleibt nicht verwaist zurück");
   assert.equal(await resolveSession(pool, first.token), null);
@@ -142,34 +147,47 @@ test("AC-7/AC-8/AC-10: deleteAccount removes every row of the account and leaves
   assert.equal(await resolveSession(pool, second.token), second.id);
 });
 
-test("AC-9: deleteAccount without an Apple token deletes all, an unknown account changes nothing", async (t) => {
+test("deleteAccount: zwei token-zeilen kommen als sortierte liste, konto ganz weg", async (t) => {
+  const pool = await migrated(t);
+  const [web, app] = [Buffer.from([1, 1, 1]), Buffer.from([2, 2])];
+  // Web first: the list follows client_id, not the order of insertion.
+  const me = await filled(pool, "sub.zwei", 5, web, WEB);
+  await pool.query("INSERT INTO apple_tokens (account_id, refresh_token_enc, client_id) VALUES ($1, $2, $3)", [me.id, app, APP]);
+  const other = await filled(pool, "sub.anderes", 6, Buffer.from([3]));
+  const before = await counts(pool, other.id);
+
+  assert.deepEqual(await deleteAccount(pool, me.id), { deleted: true, tokens: [{ blob: app, clientId: APP }, { blob: web, clientId: WEB }] });
+  assert.deepEqual(await counts(pool, me.id), Object.fromEntries(TABLES.map((table) => [table, 0])));
+  assert.equal(await resolveSession(pool, me.token), null);
+  assert.deepEqual(await counts(pool, other.id), before);
+});
+
+test("deleteAccount: ohne token-zeile und unbekanntes konto", async (t) => {
   const pool = await migrated(t);
   const account = await filled(pool, "sub.ohne", 3, null);
-
-  assert.deepEqual(await deleteAccount(pool, account.id), { deleted: true, appleToken: null, clientId: null });
-  assert.deepEqual(await counts(pool, account.id), Object.fromEntries(TABLES.map((table) => [table, 0])));
-  assert.equal(await totalResults(pool), 0);
-
   const other = await filled(pool, "sub.bleibt", 4, Buffer.from([7]));
   const before = await counts(pool, other.id);
-  assert.deepEqual(await deleteAccount(pool, "kein-konto"), { deleted: false, appleToken: null, clientId: null });
+
+  assert.deepEqual(await deleteAccount(pool, account.id), { deleted: true, tokens: [] });
+  assert.deepEqual(await counts(pool, account.id), Object.fromEntries(TABLES.map((table) => [table, 0])));
+  assert.equal(await totalResults(pool), 1);
+  assert.deepEqual(await deleteAccount(pool, "kein-konto"), { deleted: false, tokens: [] });
   assert.deepEqual(await counts(pool, other.id), before);
 });
 
 test("delete: rundweg mit client_id", async (t) => {
   const pool = await migrated(t);
   const blob = Buffer.from([5, 6, 7]);
-  const cases: [string, Buffer | null, string | null][] = [
-    ["mit Token und client_id", blob, "com.henning.looseends.web"],
-    ["ohne Token", null, null],
-    ["Zeile aus 002-Zeit", blob, null],
+  const cases: [string, Buffer | null, string, Array<{ blob: Buffer; clientId: string }>][] = [
+    ["mit Token und client_id", blob, WEB, [{ blob, clientId: WEB }]],
+    ["ohne Token", null, APP, []],
   ];
-  for (const [i, [name, token, clientId]] of cases.entries()) {
+  for (const [i, [name, token, clientId, tokens]] of cases.entries()) {
     const account = await filled(pool, `sub.rund-${i}`, 20 + i, token, clientId);
-    assert.deepEqual(await deleteAccount(pool, account.id), { deleted: true, appleToken: token, clientId }, name);
+    assert.deepEqual(await deleteAccount(pool, account.id), { deleted: true, tokens }, name);
     assert.deepEqual(await counts(pool, account.id), Object.fromEntries(TABLES.map((table) => [table, 0])), name);
   }
-  assert.deepEqual(await deleteAccount(pool, "kein-konto"), { deleted: false, appleToken: null, clientId: null });
+  assert.deepEqual(await deleteAccount(pool, "kein-konto"), { deleted: false, tokens: [] });
 });
 
 test("accounts: delete nimmt oauth zeilen mit", async (t) => {
@@ -192,7 +210,7 @@ test("accounts: delete nimmt oauth zeilen mit", async (t) => {
   assert.equal(kept.length, 5, "vier Zeilen von B und der Client");
   const before = await counts(pool, second.id);
 
-  assert.deepEqual(await deleteAccount(pool, first.id), { deleted: true, appleToken: Buffer.from([1]), clientId: null });
+  assert.deepEqual(await deleteAccount(pool, first.id), { deleted: true, tokens: [{ blob: Buffer.from([1]), clientId: APP }] });
   for (const [model, id] of oauthRows(first.id, "a")) assert.equal(await store(model).find(id), undefined, model);
   assert.deepEqual((await pool.query("SELECT * FROM oauth_records ORDER BY model, id_hash")).rows, kept);
   assert.deepEqual(await counts(pool, first.id), Object.fromEntries(TABLES.map((table) => [table, 0])));

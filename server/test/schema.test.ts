@@ -57,12 +57,14 @@ async function refused(promise: Promise<unknown>, expected: Expect, name: string
 test("AC-1: the real migrations folder applies 001 once and creates the three tables", async (t) => {
   const pool = await freshPool(t);
 
-  assert.deepEqual(await migrate(pool, migrations), ["001_claude_schema.sql", "002_accounts.sql", "003_apple_client_id.sql", "004_oauth.sql"]);
+  assert.deepEqual(await migrate(pool, migrations), [
+    "001_claude_schema.sql", "002_accounts.sql", "003_apple_client_id.sql", "004_oauth.sql", "005_apple_tokens_per_client.sql", "006_transcript_views.sql",
+  ]);
   for (const table of ["transcripts", "orders", "order_results"]) {
     const result = await pool.query("SELECT to_regclass($1) AS oid", [table]);
     assert.notEqual(result.rows[0].oid, null, table);
   }
-  assert.equal((await pool.query("SELECT name FROM schema_migrations")).rowCount, 4);
+  assert.equal((await pool.query("SELECT name FROM schema_migrations")).rowCount, 6);
   assert.deepEqual(await migrate(pool, migrations), []);
 });
 
@@ -246,4 +248,85 @@ test("migration 004: additiv auf bestandsdaten", async (t) => {
   for (const column of ["grant_id", "uid", "account_id", "expires_at"]) {
     assert.ok(indexes.some((index: { indexdef: string }) => index.indexdef.endsWith(`(${column})`)), `Index auf ${column}`);
   }
+});
+
+const MIG_005 = "005_apple_tokens_per_client.sql";
+const APP = "com.henning.looseends";
+
+// A schema at 001 to 004 in its own folder; next() adds 005 and migrates.
+async function before005(t: Parameters<typeof freshPool>[0]) {
+  const pool = await freshPool(t);
+  const old = mkdtempSync(join(tmpdir(), "le-mig-"));
+  t.after(async () => rmSync(old, { recursive: true, force: true }));
+  for (const name of ["001_claude_schema.sql", "002_accounts.sql", "003_apple_client_id.sql", "004_oauth.sql"]) copyFileSync(join(migrations, name), join(old, name));
+  await migrate(pool, old);
+  const next = () => { copyFileSync(join(migrations, MIG_005), join(old, MIG_005)); return migrate(pool, old); };
+  return { pool, old, next };
+}
+const account = async (pool: pg.Pool, sub: string): Promise<string> =>
+  (await pool.query("INSERT INTO accounts (apple_sub) VALUES ($1) RETURNING id", [sub])).rows[0].id;
+const tokenKeys = async (pool: pg.Pool) => (await pool.query(
+  `SELECT conname, confdeltype, pg_get_constraintdef(oid) AS def FROM pg_constraint
+   WHERE conrelid = 'apple_tokens'::regclass AND contype IN ('p', 'f') ORDER BY contype`,
+)).rows;
+
+test("migration 005: zeile ohne client_id faellt weg, rest bleibt", async (t) => {
+  const { pool, old, next } = await before005(t);
+  const [a, b] = [await account(pool, "sub.a"), await account(pool, "sub.b")];
+  await pool.query("INSERT INTO sessions (token_hash, account_id) VALUES ($1, $2), ($3, $4)", [Buffer.from([1]), a, Buffer.from([2]), b]);
+  await pool.query("INSERT INTO apple_tokens (account_id, refresh_token_enc) VALUES ($1, $2)", [a, Buffer.from([1, 1])]);
+  await pool.query(
+    "INSERT INTO apple_tokens (account_id, refresh_token_enc, client_id, created_at) VALUES ($1, $2, $3, now() - interval '1 day')",
+    [b, Buffer.from([2, 2, 2]), APP],
+  );
+  const [transcript, order] = contractExamples();
+  await insertTranscript(pool, transcript, b);
+  await insertOrder(pool, order, b);
+  const tables = ["accounts", "sessions", "transcripts", "orders", "order_results", "oauth_records"];
+  const snapshot = () => Promise.all(tables.map(async (table) => (await pool.query(`SELECT * FROM ${table} ORDER BY 1`)).rows));
+  const kept = (await pool.query("SELECT * FROM apple_tokens WHERE account_id = $1", [b])).rows;
+  const others = await snapshot();
+
+  assert.deepEqual(await next(), [MIG_005]);
+  assert.deepEqual((await pool.query("SELECT * FROM apple_tokens")).rows, kept);
+  assert.deepEqual(await snapshot(), others);
+  assert.deepEqual(await migrate(pool, old), []);
+});
+
+test("migration 005: form von apple_tokens", async (t) => {
+  const { pool, next } = await before005(t);
+  // The name DROP CONSTRAINT relies on, read in the state after 004.
+  assert.deepEqual((await tokenKeys(pool)).map((k: { conname: string; def: string }) => [k.conname, k.def]), [
+    ["apple_tokens_account_id_fkey", "FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE"],
+    ["apple_tokens_pkey", "PRIMARY KEY (account_id)"],
+  ]);
+
+  await next();
+  const column = (await pool.query(
+    "SELECT is_nullable FROM information_schema.columns WHERE table_schema = current_schema() AND table_name = 'apple_tokens' AND column_name = 'client_id'",
+  )).rows;
+  assert.deepEqual(column, [{ is_nullable: "NO" }]);
+  const after = await tokenKeys(pool);
+  assert.equal(after.length, 2, "ein Fremdschlüssel, genau ein Primärschlüssel");
+  assert.equal(after[0].def, "FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE");
+  assert.equal(after[0].confdeltype, "c");
+  assert.equal(after[1].conname, "apple_tokens_pkey");
+  assert.equal(after[1].def, "PRIMARY KEY (account_id, client_id)");
+});
+
+test("migration 005: zwei clients je konto, null und doppelt abgelehnt, kaskade", async (t) => {
+  const { pool, next } = await before005(t);
+  await next();
+  const id = await account(pool, "sub.zwei");
+  const insert = (clientId: string | null) =>
+    pool.query("INSERT INTO apple_tokens (account_id, refresh_token_enc, client_id) VALUES ($1, $2, $3)", [id, Buffer.from([9]), clientId]);
+  const total = async () => (await pool.query("SELECT count(*)::int AS n FROM apple_tokens")).rows[0].n;
+
+  await refused(insert(null), "23502", "client_id NULL");
+  await insert(APP);
+  await insert(`${APP}.web`);
+  assert.equal(await total(), 2);
+  await refused(insert(APP), "23505", "gleiches Paar");
+  await pool.query("DELETE FROM accounts WHERE id = $1", [id]);
+  assert.equal(await total(), 0);
 });
