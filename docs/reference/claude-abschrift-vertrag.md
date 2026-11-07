@@ -86,7 +86,7 @@ Beispiel:
 ## Auftrag
 
 Ein Auftrag ist eine Änderung, die Claude auslöst. Die App führt ihn als Nutzeränderung aus (`OrderExecutor`): Autor Nutzer,
-Grund „Claude“, mit Revision wie jede Änderung in der App. Version 1 kennt drei Arten (`kind`):
+Grund „Claude“, mit Revision wie jede Änderung in der App, soweit das Feld ein Revisionsfeld ist (Status, Rang in „Als nächstes“ und Unteraufgaben sind es nicht; wie beim Abhaken entsteht dort keine Revision, #622). Version 1 kennt sechs Arten (`kind`); Verschieben auf einen anderen Tag ist `setDue`, Löschen und Massenänderungen gibt es nicht:
 
 - `capture`: `text` wird erfasst wie jede andere Eingabe (Kanal `claude`), samt der üblichen Anreicherung.
 - `complete`: `taskID`, `expectedStatus` (der Status aus der Abschrift, nur ein offener oder geparkter; `done` oder
@@ -94,6 +94,13 @@ Grund „Claude“, mit Revision wie jede Änderung in der App. Version 1 kennt 
   und bekommt einen Abschlussvermerk.
 - `setDue`: `taskID`, `date` (fehlt = Fälligkeit entfernen), `hasTime` (ohne Uhrzeit gilt der Tagesbeginn) und
   `expectedDueDate` (die Fälligkeit aus der Abschrift; fehlt = die Aufgabe hatte keine).
+- `setNext` (#622): `taskID`, `expectedStatus`, `on` und optional `expectedNextRank` (der Rang aus der Abschrift; fehlt = keiner).
+  Die Aufgabe kommt ans Ende von „Als nächstes“ (`on` wahr) oder heraus (falsch), wie der Wisch. Verlangt `on` den Zustand, den sie
+  schon hat, oder ist die Aufgabe geparkt, ist es `invalid`; stimmen Status oder Rang nicht mehr, `stale`.
+- `park` (#622): `taskID`, `expectedStatus`. Parkt eine offene Aufgabe wie der Wisch (raus aus „Als nächstes“, das Knäuel-Zeichen
+  fällt). Eine schon geparkte, erledigte oder gelöschte ist `invalid`.
+- `addSubtask` (#622): `taskID`, `expectedStatus`, `text`. Fügt eine Zeile unter einer Aufgabe der obersten Ebene hinzu, getippt
+  wie sie ist (die App kürzt Leerraum an den Enden). Leerer Text, eine Unteraufgabe oder eine geparkte Aufgabe als Elternteil ist `invalid`.
 
 Weil eine Aufgabe keinen Änderungszeitpunkt führt, trägt jeder Auftrag den **erwarteten Stand** der Felder, die er ändert.
 Stimmt er nicht mehr mit dem Gerät überein, wird nichts geändert. `expectedDueDate` ist bei `complete` und `setDue` Pflicht
