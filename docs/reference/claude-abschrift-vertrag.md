@@ -27,6 +27,11 @@ Der Dienst rechnet nichts nach: So zeigt Claude dieselbe Zahl wie das App-Symbol
   `id`, `title`, `status` (`unprocessed`, `unverified`, `active`, `parked`), `dueDate` (optional), `dueHasTime`,
   `contexts` (Namen der Tags, alphabetisch), `project` (Name, optional), `nextRank` (optional), `isKnaeuel`.
 
+- `views` (optional, #621): die Kennungen der Ansichten „Fällig“ (`due`: heute und überfällig, ohne Wartende), „Als nächstes“
+  (`next`, nach Rang) und „Lose Enden“ (`open`: alles Offene, Geparktes eingeschlossen) in der Reihenfolge der App
+  (`ViewRules.tasks(for:)`). Nur Kennungen, nichts Neues über eine Aufgabe. Fehlt der Schlüssel (ältere App), sagt der Dienst es
+  Claude, statt die Liste aus `tasks` nachzurechnen: Der Dienst rechnet keine Ansicht. Die Beispiele unten bleiben ohne `views`.
+
 Der Dienst nimmt eine Abschrift nur an, wenn ihre Form genau dieser entspricht, und ersetzt eine vorhandene nur durch eine mit
 neuerem `generatedAt`; eine ältere oder gleich alte bleibt ohne Wirkung.
 
