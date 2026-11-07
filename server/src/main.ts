@@ -154,7 +154,7 @@ function interactionFor(options: StartOptions, pool: pg.Pool, now: () => Date, k
   const config = options.auth?.config;
   if (interaction !== undefined) return interaction;
   if (config?.webClientId === undefined || keys === undefined) return productInteraction;
-  return appleInteraction({ pool, config, publicUrl, now, fallback: productInteraction, keys, log: logError });
+  return appleInteraction({ pool, config, publicUrl, now, fallback: productInteraction, keys, log: logError, consent: { publicUrl, log: logError } });
 }
 
 // Apple's way back, under exactly the conditions of appleInteraction; a handed-in one wins (tests).

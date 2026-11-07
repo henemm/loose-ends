@@ -50,8 +50,10 @@ export async function deleteAccount(pool: pg.Pool, accountId: string): Promise<D
       await client.query("ROLLBACK");
       return { deleted: false, tokens: [] };
     }
+    // FOR UPDATE on the token rows too: an upsert that only changes a value takes no lock on accounts, and without it a fresh
+    // token could commit between this read and the cascade and stay unrevoked.
     const found = await client.query(
-      "SELECT refresh_token_enc, client_id FROM apple_tokens WHERE account_id = $1 ORDER BY client_id",
+      "SELECT refresh_token_enc, client_id FROM apple_tokens WHERE account_id = $1 ORDER BY client_id FOR UPDATE",
       [accountId],
     );
     await client.query("DELETE FROM order_results WHERE order_id IN (SELECT id FROM orders WHERE account_id = $1)", [accountId]);
