@@ -4,9 +4,10 @@ import { createHash, generateKeyPairSync, randomBytes, randomUUID, sign } from "
 import http from "node:http";
 import { join } from "node:path";
 import pg from "pg";
-import { deleteAccount, findOrCreate } from "../src/accounts.ts";
+import { createSession, deleteAccount, findOrCreate } from "../src/accounts.ts";
 import { loadAppleConfig } from "../src/apple.ts";
 import { createJwks } from "../src/apple-jwks.ts";
+import { decryptToken, encryptToken, storeRefreshToken } from "../src/apple-vault.ts";
 import { start } from "../src/main.ts";
 import { PgAdapter } from "../src/oauth-adapter.ts";
 import { oauthKeysFromEnv, productInteraction } from "../src/oauth-provider.ts";
@@ -67,7 +68,7 @@ type Over = { nonce?: string; aud?: string; iss?: string; sub?: string | null; a
 // Fake Apple: keys, token endpoint (replaceable), revoke; counts every call. The token's nonce is the current attempt's.
 function fakeApple() {
   const a = {
-    nonce: "", sub: "apple-sub-1", forms: [] as URLSearchParams[], keyCalls: 0, revokes: 0, keysDown: false,
+    nonce: "", sub: "apple-sub-1", forms: [] as URLSearchParams[], keyCalls: 0, revokes: 0, revokeForms: [] as URLSearchParams[], keysDown: false,
     token: undefined as undefined | ((form: URLSearchParams) => Response | Promise<Response>),
     id(over: Over = {}): string {
       const now = Math.floor(Date.now() / 1000);
@@ -79,7 +80,7 @@ function fakeApple() {
     fetch: (async (input: string | URL, init?: RequestInit) => {
       const url = String(input);
       if (url === KEYS_URL) { a.keyCalls++; return a.keysDown ? new Response("down", { status: 500 }) : Response.json({ keys: [JWK] }); }
-      if (url === REVOKE_URL) { a.revokes++; return new Response("", { status: 200 }); }
+      if (url === REVOKE_URL) { a.revokes++; a.revokeForms.push(new URLSearchParams(String(init?.body))); return new Response("", { status: 200 }); }
       const form = new URLSearchParams(String(init?.body));
       a.forms.push(form);
       return a.token ? a.token(form) : Response.json({ refresh_token: REFRESH, id_token: a.id({ aud: form.get("client_id") ?? WEB }) });
@@ -147,7 +148,7 @@ before(() => {
     restore.push(() => { (stream as Doc).write = write; });
   }
 });
-const EVENT = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z (oauth return refused|oauth return store failed|oauth interaction refused|oauth interaction store failed|oauth server error|oauth error|pool error|pool end failed|mcp close failed|listening|migrated)$/;
+const EVENT = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z (oauth return refused|oauth return store failed|oauth interaction refused|oauth interaction store failed|oauth server error|oauth error|apple revoke skipped|apple revoke failed|pool error|pool end failed|mcp close failed|listening|migrated)$/;
 function assertQuiet() {
   for (const line of lines) {
     assert.match(line, EVENT, `kein festes Ereignis: ${line.slice(0, 160)}`);
@@ -363,6 +364,7 @@ test("rueckweg: apple-fehler ergibt ticket access_denied", async (t) => {
   }
   assert.equal(apple.forms.length, 0);
   assert.equal(await countOf(running.pool, "accounts"), 0);
+  assert.equal(await countOf(running.pool, "apple_tokens"), 0);
 });
 
 // Ticket content and the answer's shape without the per-attempt location.
@@ -391,6 +393,7 @@ test("rueckweg: abgelehnte einloesung ergibt access_denied", async (t) => {
   }
   assert.equal(shapes.size, 1, `unterscheidbar: ${[...shapes].join(" | ")}`);
   assert.equal(await countOf(running.pool, "accounts"), 0);
+  assert.equal(await countOf(running.pool, "apple_tokens"), 0);
 });
 
 test("rueckweg: ungueltiges identity-token ergibt access_denied", async (t) => {
@@ -429,6 +432,7 @@ test("rueckweg: apple nicht erreichbar ergibt temporarily_unavailable", async (t
     await denied(running, answer, at, "temporarily_unavailable", name);
   }
   assert.equal(await countOf(running.pool, "accounts"), 0);
+  assert.equal(await countOf(running.pool, "apple_tokens"), 0);
 });
 
 test("rueckweg: geloeschtes konto ergibt 400 und raeumt tickets mit ab", async (t) => {
@@ -457,15 +461,146 @@ test("rueckweg: geloeschtes konto ergibt 400 und raeumt tickets mit ab", async (
   assert.equal(await countOf(running.pool, "oauth_records", "model = 'AppleTicket'"), 0, "Ticket blieb nach deleteAccount");
 });
 
-test("rueckweg: web-token wird nicht gespeichert und nicht widerrufen", async (t) => {
+// Schnitt 4c-2: the way back keeps the web refresh token, encrypted, under the Services ID.
+const tokensOf = async (pool: pg.Pool) => (await pool.query("SELECT * FROM apple_tokens ORDER BY client_id")).rows;
+const REFRESH_APP = "REFRESH-APP-4711";
+const REFRESH_TWO = "REFRESH-ZWEI-4711";
+note(REFRESH_APP, REFRESH_TWO);
+// The return handler over a pool the test wraps; its log lands in logged.
+const viaPool = (t: T, apple: Apple, swap: (real: pg.Pool) => Doc, logged: string[]) => withApple(t, apple, { ret: (pool: () => pg.Pool) =>
+  async (req: any, res: any) => (await returnModule()).appleReturn({ pool: swap(pool()), config: withWeb, publicUrl: ORIGIN, now: () => new Date(),
+    fetch: apple.fetch, keys: createJwks({ fetch: apple.fetch, now: Date.now }).keys, log: (event: string) => logged.push(event) })(req, res) });
+
+test("rueckweg: web-token wird verschluesselt mit webClientId abgelegt", async (t) => {
+  const apple = fakeApple();
+  const running = await withApple(t, apple);
+  const { at, answer } = await through(running, apple);
+  const row = await ticketRow(running.pool, ticketOf(answer, at));
+  const accountId = await accountOf(running.pool);
+  assert.equal(row.account_id, accountId);
+  const tokens = await tokensOf(running.pool);
+  assert.equal(tokens.length, 1, "nicht genau eine Zeile in apple_tokens");
+  const [web] = tokens;
+  assert.equal(web.account_id, accountId);
+  assert.equal(web.client_id, WEB);
+  assert.equal(decryptToken(withWeb.tokenKey, accountId, web.refresh_token_enc), REFRESH);
+  assert.ok(!web.refresh_token_enc.includes(Buffer.from(REFRESH)), "Klartext im Blob");
+  assert.ok(!JSON.stringify({ ...web, refresh_token_enc: web.refresh_token_enc.toString("latin1") }).includes(REFRESH), "Klartext in der Zeile");
+  const dump = JSON.stringify((await running.pool.query("SELECT row_to_json(r) AS j FROM (SELECT * FROM oauth_records) r")).rows);
+  assert.ok(!dump.includes(REFRESH) && !answer.body.includes(REFRESH) && !JSON.stringify(answer.headers).includes(REFRESH));
+  assert.equal(apple.revokes, 0);
+  assertQuiet();
+});
+
+test("rueckweg: app-zeile desselben kontos bleibt neben der web-zeile", async (t) => {
+  const apple = fakeApple();
+  const running = await withApple(t, apple);
+  const accountId = await findOrCreate(running.pool, "apple-sub-1");
+  note(accountId);
+  assert.equal(await storeRefreshToken(running.pool, accountId, encryptToken(withWeb.tokenKey, accountId, REFRESH_APP), APP), true);
+  await running.pool.query("UPDATE apple_tokens SET created_at = created_at - interval '1 hour'");
+  const [app] = await tokensOf(running.pool);
+  const { at, answer } = await through(running, apple);
+  assert.equal((await ticketRow(running.pool, ticketOf(answer, at))).account_id, accountId);
+  assert.equal(await countOf(running.pool, "accounts"), 1, "zweites Konto");
+  const tokens = await tokensOf(running.pool);
+  assert.deepEqual(tokens.map((r) => r.client_id), [APP, WEB], "keine Web-Zeile neben der App-Zeile");
+  assert.deepEqual(tokens[0], app, "App-Zeile verändert");
+  assert.equal(tokens[1].account_id, accountId);
+  assert.equal(decryptToken(withWeb.tokenKey, accountId, tokens[1].refresh_token_enc), REFRESH);
+});
+
+test("rueckweg: zweite anmeldung ersetzt die web-zeile", async (t) => {
+  const apple = fakeApple();
+  const running = await withApple(t, apple);
+  const first = await through(running, apple);
+  ticketOf(first.answer, first.at);
+  await running.pool.query("UPDATE apple_tokens SET created_at = created_at - interval '1 hour'");
+  const before = (await tokensOf(running.pool))[0]?.created_at as Date | undefined;
+  assert.ok(before, "erste Anmeldung legte keine Web-Zeile ab");
+  apple.token = (f) => Response.json({ refresh_token: REFRESH_TWO, id_token: apple.id({ aud: f.get("client_id") ?? WEB }) });
+  const second = await through(running, apple);
+  ticketOf(second.answer, second.at);
+  const accountId = await accountOf(running.pool);
+  assert.equal(await countOf(running.pool, "accounts"), 1);
+  const tokens = await tokensOf(running.pool);
+  assert.deepEqual(tokens.map((r) => r.client_id), [WEB]);
+  assert.equal(decryptToken(withWeb.tokenKey, accountId, tokens[0].refresh_token_enc), REFRESH_TWO);
+  assert.ok(tokens[0].created_at.getTime() > before.getTime(), "created_at nicht vorgerückt");
+});
+
+test("rueckweg: konto beim ablegen geloescht ergibt access_denied ohne konto-id", async (t) => {
+  const apple = fakeApple();
+  const logged: string[] = [];
+  let inserts = 0;
+  let accountId = "";
+  // The token's INSERT first deletes its account, so the foreign key fails and storeRefreshToken gives false.
+  const swap = (real: pg.Pool) => ({ query: async (sql: string, params?: any[]) => {
+    if (/INSERT INTO apple_tokens/.test(sql)) { inserts++; accountId = params![0]; note(accountId); await deleteAccount(real, accountId); }
+    return real.query(sql, params);
+  } });
+  const running = await viaPool(t, apple, swap, logged);
+  const { at, answer } = await through(running, apple);
+  assert.equal(inserts, 1, "Ablage des Web-Tokens nie versucht");
+  const row = await ticketRow(running.pool, ticketOf(answer, at));
+  assert.deepEqual(row.payload, { uid: at.uid, error: "access_denied" });
+  assert.equal(row.account_id, null);
+  assert.ok(!JSON.stringify(row).includes(accountId), "Konto-ID in der Ablage");
+  assert.equal(await countOf(running.pool, "apple_tokens"), 0);
+  assert.equal(await countOf(running.pool, "accounts"), 0);
+  assert.deepEqual(logged, []);
+  for (const value of [accountId, REFRESH]) assert.ok(!answer.body.includes(value) && !JSON.stringify(answer.headers).includes(value), "Wert in der Antwort");
+});
+
+test("rueckweg: datenbankfehler beim ablegen ergibt feste 400 ohne ticket", async (t) => {
+  const apple = fakeApple();
+  const logged: string[] = [];
+  let inserts = 0;
+  let accountId = "";
+  // The token's INSERT fails with the account id and a marker word in the error text.
+  const swap = (real: pg.Pool) => ({ query: async (sql: string, params?: any[]) => {
+    if (/INSERT INTO apple_tokens/.test(sql)) { inserts++; accountId = params![0]; note(accountId); throw new Error(`ablage-kaputt-4711 ${accountId}`); }
+    return real.query(sql, params);
+  } });
+  note("ablage-kaputt-4711");
+  const running = await viaPool(t, apple, swap, logged);
+  const { at, answer } = await through(running, apple);
+  assert.equal(inserts, 1, "Ablage des Web-Tokens nie versucht");
+  assertFixed(answer, 400, BAD, "datenbankfehler");
+  assert.equal(await countOf(running.pool, "oauth_records", "model = 'AppleTicket'"), 0);
+  assert.equal(await countOf(running.pool, "apple_tokens"), 0);
+  assert.deepEqual(logged, ["oauth return store failed"]);
+  for (const value of [accountId, "ablage-kaputt-4711", REFRESH]) {
+    assert.ok(!answer.body.includes(value) && !JSON.stringify(answer.headers).includes(value), "Wert in der Antwort");
+  }
+  assertFixed(await post(running.url, form([["state", at.state], ["code", CODE]])), 400, BAD, "state verbraucht");
+  assert.deepEqual(logged, ["oauth return store failed", "oauth return refused"]);
+});
+
+test("rueckweg: loeschen widerruft das abgelegte web-token mit der web-id", async (t) => {
   const apple = fakeApple();
   const running = await withApple(t, apple);
   const { at, answer } = await through(running, apple);
   ticketOf(answer, at);
+  const accountId = await accountOf(running.pool);
+  assert.equal(await countOf(running.pool, "apple_tokens"), 1, "keine Web-Zeile abgelegt");
+  const session = await createSession(running.pool, accountId);
+  note(session);
+  const from = lines.length;
+  const deleted = await fetch(`${running.url}/auth/delete`, { method: "POST", headers: { authorization: `Bearer ${session}` } });
+  assert.equal(deleted.status, 204);
+  assert.equal(await deleted.text(), "");
+  assert.equal(await countOf(running.pool, "accounts"), 0);
   assert.equal(await countOf(running.pool, "apple_tokens"), 0);
-  assert.equal(apple.revokes, 0);
-  const dump = JSON.stringify((await running.pool.query("SELECT row_to_json(r) AS j FROM (SELECT * FROM oauth_records) r")).rows);
-  assert.ok(!dump.includes(REFRESH) && !answer.body.includes(REFRESH) && !JSON.stringify(answer.headers).includes(REFRESH));
+  assert.equal(Number((await running.pool.query("SELECT count(*) FROM oauth_records WHERE account_id = $1", [accountId])).rows[0].count), 0);
+  assert.equal(apple.revokes, 1, "nicht genau ein Widerruf");
+  const [revoked] = apple.revokeForms;
+  assert.equal(revoked.get("token"), REFRESH);
+  assert.equal(revoked.get("client_id"), WEB);
+  for (const line of lines.slice(from)) {
+    assert.doesNotMatch(line, /apple revoke/, "Widerruf übersprungen oder gescheitert");
+    assert.ok(!line.includes(REFRESH) && !line.includes(WEB), `Wert im Log: ${line.slice(0, 160)}`);
+  }
 });
 
 test("rueckweg: ohne rueckweg und bei fremden pfaden 404 des ausstellers", async (t) => {
