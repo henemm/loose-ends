@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-11-07T18:39:45+0100
+befehl: scripts/sim.sh test-proof StoreScreenshotsTests
+workflow: feat-842-s4-en-bilder
+head: 538a4c8d04844952f658182f590d439977f8c0a5
+basis: 239d7aad7e776387553e82ab72520e1629dd6912 (merge-base origin/main HEAD)
+testklasse: StoreScreenshotsTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1794072995.683  ende: 1794073185.261
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-842-s4-en-bilder/simulator-run/summary.json  sha256:37ed0f9102b144b7db7cdfedba14c1721c1e086e3c9ce4ef6600de5470b0a1df
+xcresult: docs/artifacts/feat-842-s4-en-bilder/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-842-s4-en-bilder/simulator-run/*.png (5 Stück)
+
+## Geprüfte Dateien
+- sha256:8cc86af3ab48b14f5eb9e2cc64f856037bf2043b3a01b320d376e2c836f959ca  LooseEndsUITests/LaunchLanguage.swift
+- sha256:76ce53d7542a0eab71890b376652de38757705040409938b3526137471d41eb1  LooseEndsUITests/StoreScreenshotsTests.swift

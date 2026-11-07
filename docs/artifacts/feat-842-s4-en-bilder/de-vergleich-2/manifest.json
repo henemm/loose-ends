@@ -1,0 +1,55 @@
+{
+  "sprache": "de-DE",
+  "erzeugt": "2026-11-07T17:42:33Z",
+  "commit": "538a4c8",
+  "geraete": [
+    {
+      "geraet": "iphone",
+      "anzeige": "iPhone 6.3\" (Dynamic Island)",
+      "pixel": "1206x2622",
+      "ordner": "iphone",
+      "dateien": [
+        "01-start.png",
+        "02-erfassen.png",
+        "03-neu.png",
+        "04-detail.png",
+        "05-erledigt.png"
+      ]
+    },
+    {
+      "geraet": "ipad",
+      "anzeige": "iPad 13\"",
+      "pixel": "2064x2752",
+      "ordner": "ipad",
+      "dateien": [
+        "01-start.png",
+        "02-erfassen.png",
+        "03-neu.png",
+        "04-detail.png",
+        "05-erledigt.png"
+      ]
+    },
+    {
+      "geraet": "watch",
+      "anzeige": "Apple Watch Series 12/11/10",
+      "pixel": "416x496",
+      "ordner": "watch",
+      "dateien": [
+        "01-jetzt.png",
+        "02-gespeichert.png"
+      ]
+    },
+    {
+      "geraet": "mac",
+      "anzeige": "Mac (16:10)",
+      "pixel": "1280x800",
+      "ordner": "mac",
+      "dateien": [
+        "01-start.png",
+        "03-neu.png",
+        "04-detail.png",
+        "05-erledigt.png"
+      ]
+    }
+  ]
+}

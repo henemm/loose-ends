@@ -1,0 +1,53 @@
+test_alpha_aborts_when_not_removed (scripts.test_store_screenshots.FinishDeviceTests.test_alpha_aborts_when_not_removed) ... ok
+test_alpha_removal_is_called_for_every_image (scripts.test_store_screenshots.FinishDeviceTests.test_alpha_removal_is_called_for_every_image) ... ok
+test_failed_check_keeps_previous_folder (scripts.test_store_screenshots.FinishDeviceTests.test_failed_check_keeps_previous_folder) ... ok
+test_missing_image_aborts (scripts.test_store_screenshots.FinishDeviceTests.test_missing_image_aborts) ... ok
+test_names_follow_order (scripts.test_store_screenshots.FinishDeviceTests.test_names_follow_order) ... ok
+test_old_files_removed (scripts.test_store_screenshots.FinishDeviceTests.test_old_files_removed) ... ok
+test_wrong_size_aborts (scripts.test_store_screenshots.FinishDeviceTests.test_wrong_size_aborts) ... ok
+test_grip_cleared_on_ipad_only (scripts.test_store_screenshots.GripHookTests.test_grip_cleared_on_ipad_only) ... ok
+test_en_run_leaves_de_folder_untouched (scripts.test_store_screenshots.LanguageTests.test_en_run_leaves_de_folder_untouched) ... ok
+test_manifest_language_follows_lang (scripts.test_store_screenshots.LanguageTests.test_manifest_language_follows_lang) ... ok
+test_other_devices_survive_a_new_run (scripts.test_store_screenshots.LanguageTests.test_other_devices_survive_a_new_run) ... ok
+test_readme_is_per_language_and_never_overwritten (scripts.test_store_screenshots.LanguageTests.test_readme_is_per_language_and_never_overwritten) ... ok
+test_unknown_language_is_refused (scripts.test_store_screenshots.LanguageTests.test_unknown_language_is_refused) ... ok
+test_manifest_lists_both_sizes (scripts.test_store_screenshots.ManifestTests.test_manifest_lists_both_sizes) ... ok
+test_manifest_without_ipad_is_refused (scripts.test_store_screenshots.ManifestTests.test_manifest_without_ipad_is_refused) ... ok
+test_duplicate_attachment_aborts (scripts.test_store_screenshots.ReadExportTests.test_duplicate_attachment_aborts) ... ok
+test_busy_corner_stays_identical (scripts.test_store_screenshots.WindowGripTests.test_busy_corner_stays_identical) ... ok
+test_grip_on_plain_paper_becomes_background (scripts.test_store_screenshots.WindowGripTests.test_grip_on_plain_paper_becomes_background) ... ok
+test_rest_of_image_untouched (scripts.test_store_screenshots.WindowGripTests.test_rest_of_image_untouched) ... ok
+test_size_kept_and_no_alpha (scripts.test_store_screenshots.WindowGripTests.test_size_kept_and_no_alpha) ... ok
+test_build_action_keeps_its_arguments_unchanged (scripts.test_sim_run_xcodebuild.RunXcodebuildDiagnosticsTests.test_build_action_keeps_its_arguments_unchanged) ... ok
+test_test_action_switches_off_diagnostics_collection (scripts.test_sim_run_xcodebuild.RunXcodebuildDiagnosticsTests.test_test_action_switches_off_diagnostics_collection) ... ok
+test_hang_detected_without_pipefail (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_hang_detected_without_pipefail) ... ok
+test_hang_message_names_deadline_last_line_and_simulator_service (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_hang_message_names_deadline_last_line_and_simulator_service) ... ok
+test_lock_released_after_hang (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_lock_released_after_hang) ... ok
+test_no_leftovers_after_normal_run (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_no_leftovers_after_normal_run) ... ok
+test_other_session_xcodebuild_survives (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_other_session_xcodebuild_survives) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1313: ResourceWarning: subprocess 53778 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_silent_xcodebuild_is_killed_after_deadline (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_silent_xcodebuild_is_killed_after_deadline) ... ok
+test_talkative_run_is_not_aborted (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_talkative_run_is_not_aborted) ... ok
+test_term_ignoring_xcodebuild_is_killed_after_grace (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_term_ignoring_xcodebuild_is_killed_after_grace)
+F003: ein xcodebuild, der TERM ignoriert, endet 5 s später per KILL. ... ok
+test_watcher_ends_when_script_dies (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_watcher_ends_when_script_dies)
+F001: stirbt sim.sh per KILL, löst der Wächter nicht mehr aus; der xcodebuild bleibt bewusst als Waise. ... ok
+test_build_action_ignores_variable (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_build_action_ignores_variable) ... ok
+test_de_sets_de_region (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_de_sets_de_region) ... ok
+test_en_sets_language_and_region (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_en_sets_language_and_region) ... ok
+test_invalid_values_abort_loudly (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_invalid_values_abort_loudly) ... ok
+test_ui_lang_is_passed_through (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_ui_lang_is_passed_through) ... ok
+test_unknown_valid_code_sets_language_only (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_unknown_valid_code_sets_language_only) ... ok
+test_update_golden_is_passed_through (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_update_golden_is_passed_through) ... ok
+test_without_variable_arguments_are_unchanged (scripts.test_sim_run_xcodebuild.RunXcodebuildTestLanguageTests.test_without_variable_arguments_are_unchanged) ... ok
+test_aborted_run_restores_through_exit_trap (scripts.test_sim_run_xcodebuild.StoreSimulatorLanguageTests.test_aborted_run_restores_through_exit_trap) ... ok
+test_english_run_switches_reboots_and_restores (scripts.test_sim_run_xcodebuild.StoreSimulatorLanguageTests.test_english_run_switches_reboots_and_restores) ... ok
+test_matching_language_changes_nothing (scripts.test_sim_run_xcodebuild.StoreSimulatorLanguageTests.test_matching_language_changes_nothing) ... ok
+test_unset_values_are_removed_again (scripts.test_sim_run_xcodebuild.StoreSimulatorLanguageTests.test_unset_values_are_removed_again) ... ok
+
+----------------------------------------------------------------------
+Ran 43 tests in 68.143s
+
+OK

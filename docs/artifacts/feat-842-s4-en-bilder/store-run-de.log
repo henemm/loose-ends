@@ -1,0 +1,114 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/LooseEnds.xcodeproj
+[0;32m[sim][0m Projekt erzeugt.
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (3066F2CC-A9AD-40F9-A2E7-A29B1BEA6AD1)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test mit Beleg: StoreScreenshotsTests → docs/artifacts/feat-842-s4-en-bilder/simulator-run.txt
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-whimsical-nibbling-bird/Build/Products/Debug-iphonesimulator/LooseEndsWidgets.appex/Assets.car (in target 'LooseEndsWidgets' from project 'LooseEnds')
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-whimsical-nibbling-bird/Build/Products/Debug-watchsimulator/LooseEndsWatch.app/Assets.car (in target 'LooseEndsWatch' from project 'LooseEnds')
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-whimsical-nibbling-bird/Build/Products/Debug-iphonesimulator/LooseEnds.app/Assets.car (in target 'LooseEnds' from project 'LooseEnds')
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-whimsical-nibbling-bird/Build/Products/Debug-iphonesimulator/LooseEnds.app/AppIcon60x60@2x.png (in target 'LooseEnds' from project 'LooseEnds')
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-whimsical-nibbling-bird/Build/Products/Debug-iphonesimulator/LooseEnds.app/AppIcon76x76@2x~ipad.png (in target 'LooseEnds' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWidgets.appex
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-07 08:11:00.455.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-11-07 08:11:00.456.
+Test Suite 'StoreScreenshotsTests' started at 2026-11-07 08:11:00.456.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.StoreScreenshotsTests testPhotographStoreScreens] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =     9.83s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    10.85s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testPhotographStoreScreens ([31m100.746[0m seconds)
+Executed 1 test, with 0 failures (0 unexpected) in 100.746 (100.751) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-11-07 08:12:41.216.
+Executed 1 test, with 0 failures (0 unexpected) in 100.746 (100.760) seconds
+Executed 1 test, with 0 failures (0 unexpected) in 100.746 (100.762) seconds
+[1mTest session results:[0m /Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/docs/artifacts/feat-842-s4-en-bilder/simulator-run/run.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden, Beleg: docs/artifacts/feat-842-s4-en-bilder/simulator-run.txt
+Exported 5 attachments for: StoreScreenshotsTests/testPhotographStoreScreens():
+File: 9C96089B-4144-4C4D-9F5B-32545D4B54E4.png, suggested name: "store-05-erledigt_0_919C820E-4C24-48AB-8F71-DA63AFA609DC.png"
+File: 11EB72AA-78C2-40D8-BF8C-7E71B8CA7E27.png, suggested name: "store-04-detail_0_9E264204-430B-4FE5-B654-A57898C3E97B.png"
+File: 645EB473-B9BB-4EC0-8717-567531C7F17D.png, suggested name: "store-03-neu_0_F2C47DD2-815E-41E5-AC09-2261400A939D.png"
+File: B2902EC6-0525-4543-BCF6-3D7205B0012D.png, suggested name: "store-01-start_0_A6830B9E-13CD-4024-A432-176D449888DE.png"
+File: F8944F07-758B-4944-92D5-5C025C9837DA.png, suggested name: "store-02-erfassen_0_4FAE26AA-4943-4AF9-8336-56C70E3063FA.png"
+
+Generated manifest file with attachment details: /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.M2MwBl1rLG/iphone/manifest.json
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (05983CA3-84C9-49F2-A029-344F51CAC2BE)
+[0;32m[sim][0m Simulator bereit (iPad Pro 13-inch (M5)).
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/LooseEnds.xcodeproj
+[0;32m[sim][0m Projekt erzeugt.
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (05983CA3-84C9-49F2-A029-344F51CAC2BE)
+[0;32m[sim][0m Simulator bereit (iPad Pro 13-inch (M5)).
+[0;34m[sim][0m UI-Test mit Beleg: StoreScreenshotsTests → docs/artifacts/feat-842-s4-en-bilder/simulator-run.txt
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-whimsical-nibbling-bird/Build/Products/Debug-iphonesimulator/LooseEndsWidgets.appex/Assets.car (in target 'LooseEndsWidgets' from project 'LooseEnds')
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-whimsical-nibbling-bird/Build/Products/Debug-watchsimulator/LooseEndsWatch.app/Assets.car (in target 'LooseEndsWatch' from project 'LooseEnds')
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-whimsical-nibbling-bird/Build/Products/Debug-iphonesimulator/LooseEnds.app/Assets.car (in target 'LooseEnds' from project 'LooseEnds')
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-whimsical-nibbling-bird/Build/Products/Debug-iphonesimulator/LooseEnds.app/AppIcon76x76@2x~ipad.png (in target 'LooseEnds' from project 'LooseEnds')
+[36;1mnote: [0mEmplaced /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-whimsical-nibbling-bird/Build/Products/Debug-iphonesimulator/LooseEnds.app/AppIcon60x60@2x.png (in target 'LooseEnds' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWidgets.appex
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-07 08:12:55.637.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-11-07 08:12:55.638.
+Test Suite 'StoreScreenshotsTests' started at 2026-11-07 08:12:55.638.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.StoreScreenshotsTests testPhotographStoreScreens] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    66.76s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    67.78s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testPhotographStoreScreens ([31m106.769[0m seconds)
+Executed 1 test, with 0 failures (0 unexpected) in 106.769 (106.776) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-11-07 08:14:42.428.
+Executed 1 test, with 0 failures (0 unexpected) in 106.769 (106.790) seconds
+Executed 1 test, with 0 failures (0 unexpected) in 106.769 (106.801) seconds
+[1mTest session results:[0m /Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/docs/artifacts/feat-842-s4-en-bilder/simulator-run/run.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden, Beleg: docs/artifacts/feat-842-s4-en-bilder/simulator-run.txt
+Exported 5 attachments for: StoreScreenshotsTests/testPhotographStoreScreens():
+File: 43BA203F-0C42-4269-A6B2-750F23FEDD43.png, suggested name: "store-05-erledigt_0_DAEB4BF8-692B-4066-AF65-F7D1E447A930.png"
+File: AA202338-86EF-4E33-84C9-42A168E38D7C.png, suggested name: "store-04-detail_0_C5B8CCEB-509C-43A6-BEC7-E23CCF775775.png"
+File: AE6B86E3-A7B0-46F1-82C2-23533876BA18.png, suggested name: "store-03-neu_0_5F9BD294-FB2C-4680-B745-2F751D3F33CE.png"
+File: 11970AD3-49FB-49FA-90EC-D50921C26B6A.png, suggested name: "store-02-erfassen_0_A4BD38A6-4CD2-4462-8F46-90E5E6C6B030.png"
+File: 7077475F-85F3-499B-A63C-ABBC82D2A92D.png, suggested name: "store-01-start_0_D2D4D360-213E-4E70-82D4-C501E2DA299E.png"
+
+Generated manifest file with attachment details: /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.M2MwBl1rLG/ipad/manifest.json
+[store] 10 Bilder (de) und manifest.json in docs/store/screenshots/de
+[0;32m[sim][0m Store-Bilder (de) in docs/store/screenshots/de/, Belege docs/artifacts/feat-842-s4-en-bilder/store-proof-de-{iphone,ipad}.txt

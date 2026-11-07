@@ -303,6 +303,94 @@ class RunXcodebuildSilenceGuardTests(unittest.TestCase):
         self.assertGreaterEqual(took, 7, "KILL kam vor Frist + 5 s Nachfrist")
 
 
+FAKE_SIMCTL = r'''#!/bin/bash
+# simctl-Ersatz: hält AppleLanguages/AppleLocale je Schlüssel in einer Datei, protokolliert jeden Aufruf.
+echo "$*" >> "$SIM_LOG"
+[ "$1" = spawn ] || exit 0
+op="$4" key="$6" file="$SIM_STATE/$6"
+case "$op" in
+    read) [ -f "$file" ] || exit 1; cat "$file" ;;
+    delete) rm "$file" ;;
+    write) shift 6
+        if [ "$1" = -array ]; then shift; { echo "("; for v in "$@"; do echo "    \"$v\","; done; echo ")"; } > "$file"
+        else echo "$2" > "$file"; fi ;;
+esac
+'''
+
+
+class StoreSimulatorLanguageTests(unittest.TestCase):
+    """Systemsprache des Simulators für die Store-Bilder (#842): nur bei Abweichung umstellen, immer zurück."""
+
+    FUNCTIONS = ["store_sim_read", "store_sim_write", "store_sim_reboot", "store_set_lang", "store_restore_lang"]
+
+    def setUp(self):
+        self.root = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.root)
+        self.state, self.log = self.root / "state", self.root / "log"
+        self.state.mkdir()
+        self.log.write_text("")
+        simctl = self.root / "simctl"
+        simctl.write_text(FAKE_SIMCTL)
+        simctl.chmod(0o755)
+        self.env = dict(os.environ, SIM_STATE=str(self.state), SIM_LOG=str(self.log))
+
+    def given(self, languages=None, locale=None):
+        if languages is not None:
+            (self.state / "AppleLanguages").write_text("(\n" + ",\n".join(f'    "{v}"' for v in languages) + "\n)\n")
+        if locale is not None:
+            (self.state / "AppleLocale").write_text(locale + "\n")
+
+    def run_sim(self, *lines):
+        text = (SCRIPTS / "sim.sh").read_text()
+        sources = []
+        for name in self.FUNCTIONS:
+            match = re.search(rf"(?ms)^{name}\(\) \{{.*?^\}}", text)
+            self.assertIsNotNone(match, f"{name}() fehlt in scripts/sim.sh")
+            sources.append(match.group(0))
+        script = "\n".join(["set -eo pipefail", f'SIMCTL="{self.root / "simctl"}"', 'STORE_LANG_RESTORE=""',
+                            'info() { :; }', 'warn() { echo "$1" >&2; }', *sources, *lines])
+        return subprocess.run(["bash", "-c", script], env=self.env, capture_output=True, text=True, timeout=30)
+
+    def value(self, key):
+        path = self.state / key
+        return path.read_text() if path.exists() else None
+
+    def test_matching_language_changes_nothing(self):
+        self.given(["de-DE"], "de_DE")
+        result = self.run_sim('store_set_lang SIM de', 'echo "restore=[$STORE_LANG_RESTORE]"')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("restore=[]", result.stdout)
+        self.assertNotIn("write", self.log.read_text())
+        self.assertNotIn("shutdown", self.log.read_text())
+
+    def test_english_run_switches_reboots_and_restores(self):
+        self.given(["de-DE", "en"], "de_DE")
+        before = (self.value("AppleLanguages"), self.value("AppleLocale"))
+        result = self.run_sim("store_set_lang SIM en", 'cp "$SIM_STATE/AppleLanguages" "$SIM_STATE/during"',
+                              "store_restore_lang")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('"en"', self.value("during"))
+        calls = self.log.read_text().splitlines()
+        self.assertEqual(calls.count("shutdown SIM"), 2, "je ein Neustart beim Umstellen und beim Zurücksetzen")
+        self.assertIn("bootstatus SIM -b", calls)
+        self.assertIn("spawn SIM defaults write -g AppleLocale -string en_US", calls)
+        self.assertIn("spawn SIM defaults write -g AppleLanguages -array de-DE en", calls)
+        self.assertEqual(self.value("AppleLocale"), before[1])
+
+    def test_unset_values_are_removed_again(self):
+        result = self.run_sim("store_set_lang SIM en", "store_restore_lang")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIsNone(self.value("AppleLanguages"))
+        self.assertIsNone(self.value("AppleLocale"))
+
+    def test_aborted_run_restores_through_exit_trap(self):
+        self.given(["de-DE"], "de_DE")
+        result = self.run_sim("trap store_restore_lang EXIT", "store_set_lang SIM en", "exit 3")
+        self.assertEqual(result.returncode, 3)
+        self.assertIn('"de-DE"', self.value("AppleLanguages"))
+        self.assertEqual(self.value("AppleLocale"), "de_DE\n")
+
+
 def group_alive(pgid):
     try:
         os.killpg(pgid, 0)
