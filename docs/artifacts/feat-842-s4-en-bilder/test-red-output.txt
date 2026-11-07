@@ -1,0 +1,98 @@
+test_alpha_aborts_when_not_removed (scripts.test_store_screenshots.FinishDeviceTests.test_alpha_aborts_when_not_removed) ... ok
+test_alpha_removal_is_called_for_every_image (scripts.test_store_screenshots.FinishDeviceTests.test_alpha_removal_is_called_for_every_image) ... ok
+test_failed_check_keeps_previous_folder (scripts.test_store_screenshots.FinishDeviceTests.test_failed_check_keeps_previous_folder) ... ok
+test_missing_image_aborts (scripts.test_store_screenshots.FinishDeviceTests.test_missing_image_aborts) ... ok
+test_names_follow_order (scripts.test_store_screenshots.FinishDeviceTests.test_names_follow_order) ... ok
+test_old_files_removed (scripts.test_store_screenshots.FinishDeviceTests.test_old_files_removed) ... ok
+test_wrong_size_aborts (scripts.test_store_screenshots.FinishDeviceTests.test_wrong_size_aborts) ... ok
+test_grip_cleared_on_ipad_only (scripts.test_store_screenshots.GripHookTests.test_grip_cleared_on_ipad_only) ... ok
+test_en_run_leaves_de_folder_untouched (scripts.test_store_screenshots.LanguageTests.test_en_run_leaves_de_folder_untouched) ... ok
+test_manifest_language_follows_lang (scripts.test_store_screenshots.LanguageTests.test_manifest_language_follows_lang) ... ERROR
+test_other_devices_survive_a_new_run (scripts.test_store_screenshots.LanguageTests.test_other_devices_survive_a_new_run) ... ERROR
+test_readme_is_per_language_and_never_overwritten (scripts.test_store_screenshots.LanguageTests.test_readme_is_per_language_and_never_overwritten) ... 
+  test_readme_is_per_language_and_never_overwritten (scripts.test_store_screenshots.LanguageTests.test_readme_is_per_language_and_never_overwritten) [en] ... ERROR
+  test_readme_is_per_language_and_never_overwritten (scripts.test_store_screenshots.LanguageTests.test_readme_is_per_language_and_never_overwritten) [de] ... ERROR
+test_readme_is_per_language_and_never_overwritten (scripts.test_store_screenshots.LanguageTests.test_readme_is_per_language_and_never_overwritten) ... ERROR
+test_unknown_language_is_refused (scripts.test_store_screenshots.LanguageTests.test_unknown_language_is_refused) ... ERROR
+test_manifest_lists_both_sizes (scripts.test_store_screenshots.ManifestTests.test_manifest_lists_both_sizes) ... ok
+test_manifest_without_ipad_is_refused (scripts.test_store_screenshots.ManifestTests.test_manifest_without_ipad_is_refused) ... ok
+test_duplicate_attachment_aborts (scripts.test_store_screenshots.ReadExportTests.test_duplicate_attachment_aborts) ... ok
+test_busy_corner_stays_identical (scripts.test_store_screenshots.WindowGripTests.test_busy_corner_stays_identical) ... ok
+test_grip_on_plain_paper_becomes_background (scripts.test_store_screenshots.WindowGripTests.test_grip_on_plain_paper_becomes_background) ... ok
+test_rest_of_image_untouched (scripts.test_store_screenshots.WindowGripTests.test_rest_of_image_untouched) ... ok
+test_size_kept_and_no_alpha (scripts.test_store_screenshots.WindowGripTests.test_size_kept_and_no_alpha) ... ok
+
+======================================================================
+ERROR: test_manifest_language_follows_lang (scripts.test_store_screenshots.LanguageTests.test_manifest_language_follows_lang)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_store_screenshots.py", line 134, in test_manifest_language_follows_lang
+    self.assertEqual(self.manifest(lang="en")["sprache"], "en-US")
+                     ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_store_screenshots.py", line 130, in manifest
+    return ss.build_manifest({"iphone": ORDER, "ipad": ORDER}, commit="abc1234", created="2026-11-07T12:00:00Z",
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                             **kwargs)
+                             ^^^^^^^^^
+TypeError: build_manifest() got an unexpected keyword argument 'lang'
+
+======================================================================
+ERROR: test_other_devices_survive_a_new_run (scripts.test_store_screenshots.LanguageTests.test_other_devices_survive_a_new_run)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_store_screenshots.py", line 175, in test_other_devices_survive_a_new_run
+    merged = ss.keep_other_devices(self.manifest(), {"sprache": "de-DE", "geraete": [stale, watch, mac]})
+             ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'store_screenshots' has no attribute 'keep_other_devices'
+
+======================================================================
+ERROR: test_readme_is_per_language_and_never_overwritten (scripts.test_store_screenshots.LanguageTests.test_readme_is_per_language_and_never_overwritten) [en]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_store_screenshots.py", line 156, in test_readme_is_per_language_and_never_overwritten
+    ss.write_readme(folder, lang)
+    ^^^^^^^^^^^^^^^
+AttributeError: module 'store_screenshots' has no attribute 'write_readme'
+
+======================================================================
+ERROR: test_readme_is_per_language_and_never_overwritten (scripts.test_store_screenshots.LanguageTests.test_readme_is_per_language_and_never_overwritten) [de]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_store_screenshots.py", line 156, in test_readme_is_per_language_and_never_overwritten
+    ss.write_readme(folder, lang)
+    ^^^^^^^^^^^^^^^
+AttributeError: module 'store_screenshots' has no attribute 'write_readme'
+
+======================================================================
+ERROR: test_readme_is_per_language_and_never_overwritten (scripts.test_store_screenshots.LanguageTests.test_readme_is_per_language_and_never_overwritten)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_store_screenshots.py", line 160, in test_readme_is_per_language_and_never_overwritten
+    self.assertIn("English", (self.root / "en" / "README.md").read_text())
+                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 986, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 970, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp0p60jy51/en/README.md'
+
+======================================================================
+ERROR: test_unknown_language_is_refused (scripts.test_store_screenshots.LanguageTests.test_unknown_language_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_store_screenshots.py", line 143, in test_unknown_language_is_refused
+    self.manifest(lang="fr")
+    ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_store_screenshots.py", line 130, in manifest
+    return ss.build_manifest({"iphone": ORDER, "ipad": ORDER}, commit="abc1234", created="2026-11-07T12:00:00Z",
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                             **kwargs)
+                             ^^^^^^^^^
+TypeError: build_manifest() got an unexpected keyword argument 'lang'
+
+----------------------------------------------------------------------
+Ran 20 tests in 2.047s
+
+FAILED (errors=6)

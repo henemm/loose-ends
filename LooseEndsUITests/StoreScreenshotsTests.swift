@@ -1,18 +1,18 @@
 #if os(iOS)   // orientation and UIDevice: the UI test target compiles for the Mac too
 import XCTest
 
-/// #742 Schnitt 1: the App Store pictures for iPhone and iPad, German and light, portrait. The whole
+/// #742 Schnitt 1: the App Store pictures for iPhone and iPad, German or English (`LOOSEENDS_UI_LANG`, #842) and light, portrait. The whole
 /// screen with its status bar (`XCUIScreen.main`), five attachments `store-<nn>-<name>`;
 /// `./scripts/sim.sh store-screenshots` sets the status bar, exports them and checks the sizes.
 /// The tasks are made up and live only in memory (`--ui-testing`). Helpers copied from `DesignGalleryTests`.
 final class StoreScreenshotsTests: XCTestCase {
-    private static let tasks = [
-        "Steuerbescheid heute prüfen",
-        "Anna heute wegen Sonntag anrufen",
-        "Blumen heute gießen",
-        "Rasen mähen",
-    ]
-    private static let typed = "Fahrrad zur Inspektion bringen"
+    /// German unless `LOOSEENDS_UI_LANG` says otherwise (#842): CI's `ui-smoke` runs this class without the variable,
+    /// and there it stays German; `LaunchLanguage.code` keeps English as the matrix classes' default.
+    private static let language = ProcessInfo.processInfo.environment["LOOSEENDS_UI_LANG"] ?? "de"
+    private static let tasks = ["storeTask1", "storeTask2", "storeTask3", "storeTask4"].map { phrase($0) }
+    private static let typed = phrase("storeTyped")
+
+    private static func phrase(_ key: String) -> String { LaunchLanguage.phrase(key, in: language) }
 
     override func setUp() {
         continueAfterFailure = false
@@ -24,7 +24,7 @@ final class StoreScreenshotsTests: XCTestCase {
         let app = XCUIApplication()
         app.launchArguments = [
             "--ui-testing",
-            "-AppleLanguages", "(de)", "-AppleLocale", "de_DE",
+        ] + LaunchLanguage.arguments(for: Self.language) + [
             "-contextsEmptiedByUser", "NO",
             "-startShowsProjects", "NO", "-startShowsContexts", "NO",
         ]
@@ -94,7 +94,7 @@ final class StoreScreenshotsTests: XCTestCase {
         let duration = element("field_duration", in: app)
         XCTAssertTrue(duration.waitForExistence(timeout: 5), "Detail offers no duration")
         duration.tap()
-        let thirty = app.buttons.matching(NSPredicate(format: "label == %@", "30 Min.")).firstMatch
+        let thirty = app.buttons.matching(NSPredicate(format: "label == %@", Self.phrase("storeThirty"))).firstMatch
         XCTAssertTrue(thirty.waitForExistence(timeout: 5), "Duration editor offers no 30 Min.")
         thirty.tap()   // a single choice closes the editor by itself (#482)
 
@@ -127,7 +127,8 @@ final class StoreScreenshotsTests: XCTestCase {
         _ = keyboard.waitForExistence(timeout: 1)
         let onScreen = { keyboard.exists && keyboard.frame.minY < app.frame.maxY - 1 }
         let hide = keyboard.buttons
-            .matching(NSPredicate(format: "label CONTAINS[c] 'ausblenden' OR label CONTAINS[c] 'dismiss'")).firstMatch
+            .matching(NSPredicate(format: "label CONTAINS[c] 'ausblenden' OR label CONTAINS[c] 'dismiss' "
+                + "OR label CONTAINS[c] 'hide keyboard'")).firstMatch
         for _ in 0..<3 where onScreen() && hide.exists {
             hide.tap()
             _ = keyboard.waitForNonExistence(timeout: 2)
@@ -139,7 +140,7 @@ final class StoreScreenshotsTests: XCTestCase {
     /// its system button hides it for the picture and shows it again after. The iPhone has no such button.
     @MainActor
     private func photographStart(in app: XCUIApplication) {
-        let nowRows = rows("nowRow_", in: app)
+        let nowRows = rows(nowPrefix, in: app)
         XCTAssertTrue(nowRows.firstMatch.waitForExistence(timeout: 15), "Jetzt shows no row")
         XCTAssertGreaterThanOrEqual(nowRows.count, 2, "Jetzt should show at least two rows")
         putKeyboardAway(in: app)
@@ -157,6 +158,10 @@ final class StoreScreenshotsTests: XCTestCase {
         sidebarButton(["Seitenleiste einblenden", "Show Sidebar"], in: app).tap()
         XCTAssertTrue(element("viewRow_new", in: app).waitForExistence(timeout: 5), "Sidebar did not come back")
     }
+
+    /// Since #827 the iPad's start page draws its "Jetzt" rows like the Mac (`startNowRow_`), the iPhone keeps `nowRow_`.
+    @MainActor
+    private var nowPrefix: String { UIDevice.current.userInterfaceIdiom == .pad ? "startNowRow_" : "nowRow_" }
 
     @MainActor
     private func sidebarButton(_ labels: [String], in app: XCUIApplication) -> XCUIElement {
@@ -181,11 +186,16 @@ final class StoreScreenshotsTests: XCTestCase {
     /// the three-second undo window has to run out before the row leaves.
     @MainActor
     private func complete(_ text: String, in app: XCUIApplication) {
-        let row = rows("nowRow_", containing: text, in: app).firstMatch
+        let row = rows(nowPrefix, containing: text, in: app).firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 15), "Jetzt shows no \(text)")
         let done = element("menuDone", in: app)
         // A slow runner can miss the first press (#114).
         for duration in [1.2, 2.0, 3.0] where !done.exists {
+            // A press taken as a tap opens the detail and the row is gone: back to the start first.
+            if !row.exists, element("detailRawTextMarker", in: app).exists {
+                backToStart(in: app)
+                XCTAssertTrue(row.waitForExistence(timeout: 10), "Jetzt shows no \(text) after the detail")
+            }
             row.press(forDuration: duration)
             _ = done.waitForExistence(timeout: 2)
         }
@@ -200,7 +210,7 @@ final class StoreScreenshotsTests: XCTestCase {
         for text in Self.tasks {
             capture(text, in: app)
         }
-        complete("Blumen", in: app)
+        complete(Self.phrase("storeComplete"), in: app)
         if UIDevice.current.userInterfaceIdiom == .pad {
             // The iPad's "+" opens the sheet only while a view is chosen, and its start page does not
             // come back once one is: the start is photographed first, then "Fällig" is chosen.
@@ -229,7 +239,7 @@ final class StoreScreenshotsTests: XCTestCase {
         let dueRow = element("viewRow_due", in: app)
         XCTAssertTrue(dueRow.waitForExistence(timeout: 5), "Start screen shows no Fällig")
         dueRow.tap()
-        let taxRow = rows("taskRow_", containing: "Steuerbescheid", in: app).firstMatch
+        let taxRow = rows("taskRow_", containing: Self.phrase("storeDue"), in: app).firstMatch
         XCTAssertTrue(taxRow.waitForExistence(timeout: 10), "Fällig shows no Steuerbescheid")
         taxRow.tap()
         XCTAssertTrue(element("detailRawTextMarker", in: app).waitForExistence(timeout: 5), "Detail did not open")

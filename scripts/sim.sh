@@ -1162,9 +1162,60 @@ cmd_location() {
 # Ergebnisbündel exportieren; die Statusleiste wird auch bei Fehlschlag oder Abbruch zurückgesetzt (trap).
 STORE_BARS=""
 store_clear_bars() { local id; for id in $STORE_BARS; do $SIMCTL status_bar "$id" clear 2>/dev/null || true; done; STORE_BARS=""; }
+
+# Systemsprache des Simulators (#842): Datum und Uhrzeit der Statusleiste zeichnet SpringBoard in der Sprache des
+# Simulators, nicht in der der App (Startargumente), und `status_bar override` übersetzt sie nicht. Weicht sie von der
+# Laufsprache ab, wird sie per `defaults write -g` umgestellt und der Simulator neu gestartet (dieselben Schlüssel
+# AppleLanguages/AppleLocale wie fastlane snapshot `localize_simulator`); nach dem Gerät und im EXIT-Trap kommt der
+# alte Stand zurück, die Simulatoren teilen sich alle Sitzungen.
+STORE_LANG_RESTORE=""   # je umgestelltem Simulator "<id>|<sprachen, mit Komma>|<locale>"; "-" = war nicht gesetzt
+store_sim_read() {
+    local value; value=$($SIMCTL spawn "$1" defaults read -g "$2" 2>/dev/null | tr -d ' ()"' | tr '\n' ',' | tr -s ',') || value=""
+    value="${value#,}"; value="${value%,}"
+    echo "${value:--}"
+}
+store_sim_write() {
+    local id="$1" langs="$2" locale="$3"
+    if [ "$langs" = "-" ]; then $SIMCTL spawn "$id" defaults delete -g AppleLanguages
+    else $SIMCTL spawn "$id" defaults write -g AppleLanguages -array ${langs//,/ }; fi
+    if [ "$locale" = "-" ]; then $SIMCTL spawn "$id" defaults delete -g AppleLocale
+    else $SIMCTL spawn "$id" defaults write -g AppleLocale -string "$locale"; fi
+}
+store_sim_reboot() {
+    $SIMCTL shutdown "$1" 2>/dev/null || true
+    $SIMCTL boot "$1" && $SIMCTL bootstatus "$1" -b >/dev/null
+}
+store_set_lang() {
+    local id="$1" lang="$2" locale langs now
+    case "$lang" in en) locale="en_US" ;; *) locale="de_DE" ;; esac
+    langs=$(store_sim_read "$id" AppleLanguages); now=$(store_sim_read "$id" AppleLocale)
+    local first="${langs%%,*}"
+    if [[ ( "$first" == "$lang" || "$first" == "$lang"-* ) && "$now" == "${lang}_"* ]]; then return 0; fi
+    info "Simulator $id: Systemsprache $langs/$now → $lang/$locale, Neustart"
+    STORE_LANG_RESTORE="$STORE_LANG_RESTORE $id|$langs|$now"   # vor dem Schreiben: ein Abbruch stellt trotzdem zurück
+    store_sim_write "$id" "$lang" "$locale" && store_sim_reboot "$id"
+}
+store_restore_lang() {
+    local entry id langs locale
+    for entry in $STORE_LANG_RESTORE; do
+        IFS='|' read -r id langs locale <<< "$entry"
+        { store_sim_write "$id" "$langs" "$locale" && store_sim_reboot "$id"; } \
+            || warn "Systemsprache von $id nicht zurückgesetzt ($langs/$locale)"
+    done
+    STORE_LANG_RESTORE=""
+}
+
 cmd_store_screenshots() {
+    # Sprache (#842): de (Standard) oder en; sie wird Pfadbestandteil, also vor jedem Simulatorstart geprüft.
+    local lang="${LOOSEENDS_UI_LANG:-de}"
+    case "$lang" in
+        de|en) ;;
+        *) error "Unbekannte Sprache '$lang' für store-screenshots (nur de oder en)"; return 1 ;;
+    esac
+    export LOOSEENDS_UI_LANG="$lang"   # ohne Zuweisung liefe der Test mit der Standardsprache der Matrixklassen
+    local out="docs/store/screenshots/$lang"
     cd "$PROJECT_DIR"
-    trap 'store_clear_bars; release_testlock' EXIT
+    trap 'store_clear_bars; store_restore_lang; release_testlock' EXIT
     trap 'exit 130' INT TERM
     local wf; wf=$(tr -d '[:space:]' < .claude/active_workflow 2>/dev/null || true)
     local tmp; tmp=$(mktemp -d); local exports=() entry device id
@@ -1172,18 +1223,20 @@ cmd_store_screenshots() {
         IFS=: read -r device SIM_NAME SIM_FAMILY <<< "$entry"
         acquire_testlock "store-screenshots"   # test-proof gibt die Sperre nach jedem Gerät frei
         cmd_boot; id=$(sim_id); [ -n "$id" ] || { error "Kein Simulator '$SIM_NAME'"; return 1; }
+        store_set_lang "$id" "$lang" || { error "Systemsprache von '$SIM_NAME' nicht auf $lang umgestellt"; return 1; }
         STORE_BARS="$STORE_BARS $id"
         $SIMCTL status_bar "$id" override --time 9:41 --batteryState discharging --batteryLevel 100 \
             --cellularMode active --cellularBars 4 --wifiBars 3
         cmd_test_proof StoreScreenshotsTests
         xcrun xcresulttool export attachments --path "docs/artifacts/$wf/simulator-run/run.xcresult" --output-path "$tmp/$device"
-        cp "docs/artifacts/$wf/simulator-run.txt" "docs/artifacts/$wf/store-proof-$device.txt"
+        cp "docs/artifacts/$wf/simulator-run.txt" "docs/artifacts/$wf/store-proof-$lang-$device.txt"
         store_clear_bars
+        store_restore_lang
         exports+=("$device=$tmp/$device")
     done
-    python3 scripts/store_screenshots.py docs/store/screenshots/de "${exports[@]}"
+    python3 scripts/store_screenshots.py --lang "$lang" "$out" "${exports[@]}"
     rm -rf "$tmp"
-    success "Store-Bilder in docs/store/screenshots/de/, Belege docs/artifacts/$wf/store-proof-{iphone,ipad}.txt"
+    success "Store-Bilder ($lang) in $out/, Belege docs/artifacts/$wf/store-proof-$lang-{iphone,ipad}.txt"
 }
 
 cmd_help() { sed -n '3,40p' "$0" | sed 's/^# \{0,1\}//'; }

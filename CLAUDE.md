@@ -61,7 +61,8 @@ brew install xcodegen xcbeautify
 ./scripts/sim.sh build        # iOS-App für den Simulator
 ./scripts/sim.sh test-proof <Klasse>  # UI-Test + maschineller Simulator-Beleg (#145)
 ./scripts/sim.sh watch-test-proof <Klasse>  # dasselbe im watchOS-Simulator, App vorher deinstalliert (#409)
-./scripts/sim.sh store-screenshots    # App-Store-Bilder iPhone 17 + iPad Pro 13″, de, hell, 9:41, nach docs/store/screenshots/de/ samt manifest.json (#742)
+./scripts/sim.sh store-screenshots    # App-Store-Bilder iPhone 17 + iPad Pro 13″, de, hell, 9:41, nach docs/store/screenshots/de/ samt manifest.json (#742); Watch-/Mac-Einträge und README bleiben stehen
+LOOSEENDS_UI_LANG=en ./scripts/sim.sh store-screenshots  # dasselbe englisch nach docs/store/screenshots/en/ (en-US), nur de|en, Belege store-proof-<lang>-<gerät>.txt (#842)
 ./scripts/sim.sh store-watch          # App-Store-Bilder Apple Watch 416×496 nach docs/store/screenshots/de/watch/, Beispielaufgaben nur unter --ui-testing-store-sample (#742)
 ./scripts/sim.sh watch-test <Klasse>  # Watch-UI-Test im watchOS-Simulator ohne Beleg (Bilder, Sichtprüfung)
 LOOSEENDS_LANG=en ./scripts/sim.sh sim-unit <Klasse>  # Testsprache en (-testLanguage/-testRegion), Simulator bleibt wie er ist (#670)

@@ -1,7 +1,7 @@
 """App-Store-Bilder aus dem Testexport prüfen, benennen und im Manifest verzeichnen (#742, Schnitt 1).
 
 Aufruf (nur aus sim.sh store-screenshots):
-  store_screenshots.py <ziel> iphone=<exportordner> ipad=<exportordner>
+  store_screenshots.py [--lang de|en] <ziel> iphone=<exportordner> ipad=<exportordner>
   store_screenshots.py --watch <ziel> <exportordner>   # Uhr-Bilder nachtragen, Manifest bleibt sonst unberührt
   store_screenshots.py --mac <ziel> <exportordner>     # Mac-Bilder (16:10, eine der Apple-Größen) nachtragen
 Ein Exportordner kommt von `xcresulttool export attachments` (mit manifest.json). Nur Standardbibliothek und `sips`.
@@ -25,7 +25,7 @@ DEVICES = {
 WATCH = {"anzeige": "Apple Watch Series 12/11/10", "pixel": (416, 496), "order": ["01-jetzt", "02-gespeichert"]}
 MAC = {"anzeige": "Mac (16:10)", "sizes": [(1280, 800), (1440, 900), (2560, 1600), (2880, 1800)],
        "order": ["01-start", "03-neu", "04-detail", "05-erledigt"]}
-README = """# App-Store-Bilder (Deutsch)
+README_DE = """# App-Store-Bilder (Deutsch)
 
 Für App Store Connect, Sprache Deutsch (de-DE): Die Bilder in `iphone/` gehören zur Größe „iPhone 6.3\" Display“
 (1206×2622), die in `ipad/` zu „iPad 13\" Display“ (2064×2752); `manifest.json` nennt je Größe Pixelmaß und Dateien.
@@ -33,6 +33,15 @@ Hochladen in der Reihenfolge der Dateinamen (01 zuerst), ohne Bildunterzeilen un
 
 Erzeugt mit `./scripts/sim.sh store-screenshots` (#742), nie von Hand.
 """
+README_EN = """# App Store pictures (English)
+
+For App Store Connect, language English (en-US): the pictures in `iphone/` belong to the size “iPhone 6.3\" Display”
+(1206×2622), those in `ipad/` to “iPad 13\" Display” (2064×2752); `manifest.json` names pixel size and files per size.
+Upload in the order of the file names (01 first), without captions and without frames.
+
+Made with `LOOSEENDS_UI_LANG=en ./scripts/sim.sh store-screenshots` (#842), never by hand.
+"""
+LANGUAGES = {"de": {"manifest": "de-DE", "readme": README_DE}, "en": {"manifest": "en-US", "readme": README_EN}}
 
 
 class StoreError(Exception):
@@ -87,12 +96,19 @@ def finish_device(device, attachments, out_root, info, strip_alpha, clear_grip=l
     return [folder / f"{name}.png" for name in order]
 
 
-def build_manifest(names_by_device, commit, created):
+def language(lang):
+    if lang not in LANGUAGES:
+        raise StoreError(f"Unbekannte Sprache: {lang} (nur {', '.join(LANGUAGES)})")
+    return LANGUAGES[lang]
+
+
+def build_manifest(names_by_device, commit, created, lang="de"):
+    locale = language(lang)["manifest"]
     missing = [device for device in DEVICES if device not in names_by_device]
     if missing:
         raise StoreError(f"Manifest unvollständig, es fehlt: {', '.join(missing)}")
     return {
-        "sprache": "de-DE",
+        "sprache": locale,
         "erzeugt": created,
         "commit": commit,
         "geraete": [
@@ -101,6 +117,19 @@ def build_manifest(names_by_device, commit, created):
             for device, spec in DEVICES.items()
         ],
     }
+
+
+def keep_other_devices(manifest, previous):
+    """Übernimmt aus dem bisherigen Manifest die Einträge, die dieser Lauf nicht schreibt (watch, mac)."""
+    kept = [entry for entry in (previous or {}).get("geraete", []) if entry.get("geraet") not in DEVICES]
+    return {**manifest, "geraete": manifest["geraete"] + kept}
+
+
+def write_readme(out_root, lang):
+    """Legt die README der Sprache an; eine vorhandene (etwa von Hand um Watch und Mac erweitert) bleibt stehen."""
+    path = Path(out_root) / "README.md"
+    if not path.exists():
+        path.write_text(language(lang)["readme"])
 
 
 def sips_info(path):
@@ -249,6 +278,10 @@ def main(argv):
         return main_mac(argv[1], argv[2])
     if argv[0] == "--watch":
         return main_watch(argv[1], argv[2])
+    lang = "de"
+    if argv[0] == "--lang":
+        lang, argv = argv[1], argv[2:]
+    language(lang)   # vor jeder Dateiarbeit: die Sprache wird Teil von Pfad und Manifest
     out_root, exports = Path(argv[0]), dict(arg.split("=", 1) for arg in argv[1:])
     names = {}
     for device in DEVICES:
@@ -259,10 +292,13 @@ def main(argv):
         names[device] = [path.stem for path in written]
     commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT, capture_output=True, text=True,
                             check=True).stdout.strip()
-    manifest = build_manifest(names, commit, time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()))
-    (out_root / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
-    (out_root / "README.md").write_text(README)
-    print(f"[store] {sum(len(v) for v in names.values())} Bilder und manifest.json in {out_root}")
+    manifest = build_manifest(names, commit, time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), lang)
+    manifest_path = out_root / "manifest.json"
+    if manifest_path.exists():
+        manifest = keep_other_devices(manifest, json.loads(manifest_path.read_text()))
+    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+    write_readme(out_root, lang)
+    print(f"[store] {sum(len(v) for v in names.values())} Bilder ({lang}) und manifest.json in {out_root}")
 
 
 if __name__ == "__main__":
