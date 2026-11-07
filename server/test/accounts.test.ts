@@ -62,7 +62,7 @@ test("AC-1: the migrations apply 001 and 002 once, and the three account tables 
   const pool = await freshPool(t);
 
   assert.deepEqual(await migrate(pool, migrations), [
-    "001_claude_schema.sql", "002_accounts.sql", "003_apple_client_id.sql", "004_oauth.sql", "005_apple_tokens_per_client.sql",
+    "001_claude_schema.sql", "002_accounts.sql", "003_apple_client_id.sql", "004_oauth.sql", "005_apple_tokens_per_client.sql", "006_transcript_views.sql",
   ]);
   assert.deepEqual(await migrate(pool, migrations), []);
   for (const table of ["accounts", "sessions", "apple_tokens"]) {

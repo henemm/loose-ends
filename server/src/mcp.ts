@@ -3,7 +3,7 @@ import { createMcpHandler, McpServer, type CallToolResult, type McpHttpHandler, 
 import { z } from "zod";
 import { randomUUID } from "node:crypto";
 import { checkOrder, getResult, putOrder } from "./orders.ts";
-import { getTranscript, type Transcript } from "./transcripts.ts";
+import { getTranscript, type Transcript, type TranscriptTask } from "./transcripts.ts";
 
 type Group = "knaeuel" | "today" | "lined" | "waiting";
 
@@ -30,13 +30,44 @@ function nowRows(doc: Transcript) {
   }));
 }
 
+type View = "now" | "due" | "next" | "open";
+const VIEWS: [View, ...View[]] = ["now", "due", "next", "open"];
+
+// One row of a list: what the app's row shows, never more than the transcript holds.
+function summary(task: TranscriptTask) {
+  const { id, title, dueDate, dueHasTime, status, isKnaeuel, project, contexts, nextRank } = task;
+  return {
+    id, title, status, dueHasTime, isKnaeuel, contexts, ...(dueDate === undefined ? {} : { dueDate }),
+    ...(project === undefined ? {} : { project }), ...(nextRank === undefined ? {} : { nextRank }),
+  };
+}
+
+// "Due", "Next up" and "Loose ends" are the app's own lists (ids in the transcript); "now" is nowRows. Nothing is recomputed here.
+function viewRows(doc: Transcript, view: View): unknown[] | undefined {
+  if (view === "now") return nowRows(doc);
+  if (doc.views === undefined) return undefined;
+  const tasks = new Map(doc.tasks.map((task) => [task.id, task]));
+  return doc.views[view].flatMap((id) => { const task = tasks.get(id); return task === undefined ? [] : [summary(task)]; });
+}
+
+const plain = (text: string): string => text.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+
+// Names with the number of open tasks that carry them, from the transcript's tasks (the catalog itself is not in it).
+function counted(names: string[]) {
+  const counts = new Map<string, number>();
+  for (const name of names) counts.set(name, (counts.get(name) ?? 0) + 1);
+  return [...counts].sort(([a], [b]) => a.localeCompare(b)).map(([name, open]) => ({ name, open }));
+}
+
 // A read tool: without an account it refuses before reading, without a transcript it says so without an error.
-function reading(pool: pg.Pool, render: (doc: Transcript) => unknown) {
-  return async (_args: Record<string, never>, ctx: ServerContext): Promise<CallToolResult> => {
+function reading<A = Record<string, never>>(pool: pg.Pool, render: (doc: Transcript, args: A) => unknown) {
+  return async (args: A, ctx: ServerContext): Promise<CallToolResult> => {
     const owner = account(ctx);
     if (owner === undefined) return { ...reply("kein Konto"), isError: true };
     const doc = await getTranscript(pool, owner);
-    return reply(doc === undefined ? "noch keine Abschrift" : JSON.stringify(render(doc)));
+    if (doc === undefined) return reply("noch keine Abschrift");
+    const out = render(doc, args);
+    return typeof out === "string" ? { ...reply(out), isError: true } : reply(JSON.stringify(out));
   };
 }
 
@@ -129,6 +160,51 @@ export function mcpHandler(pool: pg.Pool): McpHttpHandler {
       description: "Alle Aufgaben der letzten Abschrift samt generatedAt",
       inputSchema: z.object({}),
     }, reading(pool, (doc) => ({ generatedAt: doc.generatedAt, tasks: doc.tasks })));
+    server.registerTool("get_view", {
+      description: "Eine Ansicht der App, in der Reihenfolge der App: now („Jetzt“, mit der Zahl über „Jetzt“), due (Fällig: heute und "
+        + "überfällig), next (Als nächstes) oder open (Lose Enden: alles Offene, Geparktes am Ende). Mit generatedAt der Abschrift",
+      inputSchema: z.object({ view: z.enum(VIEWS) }),
+      annotations: { readOnlyHint: true },
+    }, reading<{ view: View }>(pool, (doc, { view }) => {
+      const rows = viewRows(doc, view);
+      if (rows === undefined) return "Die Abschrift enthält diese Ansicht noch nicht, bitte die App öffnen und aktualisieren";
+      return { view, generatedAt: doc.generatedAt, ...(view === "now" ? { nowCount: doc.nowCount } : {}), count: rows.length, rows };
+    }));
+    server.registerTool("search_tasks", {
+      description: "Sucht offene Aufgaben nach Wörtern im Titel (ohne Groß-/Kleinschreibung und Akzente, alle Wörter müssen vorkommen)",
+      inputSchema: z.object({ query: z.string() }),
+      annotations: { readOnlyHint: true },
+    }, reading<{ query: string }>(pool, (doc, { query }) => {
+      const words = plain(query).split(/\s+/).filter((word) => word !== "");
+      if (words.length === 0) return "Suchtext fehlt";
+      const found = doc.tasks.filter((task) => words.every((word) => plain(task.title).includes(word)));
+      return { generatedAt: doc.generatedAt, count: found.length, tasks: found.slice(0, 50).map(summary) };
+    }));
+    server.registerTool("get_task", {
+      description: "Eine Aufgabe mit allem, was die Abschrift von ihr kennt, und den Ansichten, in denen sie steht",
+      inputSchema: z.object({ taskID: z.string() }),
+      annotations: { readOnlyHint: true },
+    }, reading<{ taskID: string }>(pool, (doc, { taskID }) => {
+      const wanted = taskID.toUpperCase();
+      const task = doc.tasks.find((x) => x.id.toUpperCase() === wanted);
+      if (task === undefined) return "Aufgabe nicht in der Abschrift";
+      const standsIn = (ids: string[] | undefined) => ids?.some((id) => id.toUpperCase() === wanted) ?? false;
+      const now = standsIn([...(doc.now.knaeuel === undefined ? [] : [doc.now.knaeuel]), ...doc.now.today, ...doc.now.lined, ...doc.now.waiting]);
+      return {
+        generatedAt: doc.generatedAt, task,
+        views: { now, ...(doc.views === undefined ? {} : { due: standsIn(doc.views.due), next: standsIn(doc.views.next), open: standsIn(doc.views.open) }) },
+      };
+    }));
+    server.registerTool("list_projects", {
+      description: "Die Projekte, denen offene Aufgaben zugeordnet sind, mit der Zahl dieser Aufgaben",
+      inputSchema: z.object({}),
+      annotations: { readOnlyHint: true },
+    }, reading(pool, (doc) => ({ generatedAt: doc.generatedAt, projects: counted(doc.tasks.flatMap((task) => task.project === undefined ? [] : [task.project])) })));
+    server.registerTool("list_contexts", {
+      description: "Die Kontexte (Tags), die offene Aufgaben tragen, mit der Zahl dieser Aufgaben",
+      inputSchema: z.object({}),
+      annotations: { readOnlyHint: true },
+    }, reading(pool, (doc) => ({ generatedAt: doc.generatedAt, contexts: counted(doc.tasks.flatMap((task) => task.contexts)) })));
     server.registerTool("capture_task", {
       description: "Legt einen Auftrag zum Erfassen einer Aufgabe an; erfasst wird sie auf einem Gerät, sobald eines den Auftrag "
         + "abholt. Den Stand liefert get_order_result mit der zurückgegebenen orderID",

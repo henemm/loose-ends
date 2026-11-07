@@ -69,7 +69,9 @@ import Testing
         let transcript = TranscriptCodec.transcript(of: mixed.all, now: Self.now, calendar: Self.calendar)
         let json = try Self.json(transcript)
 
-        #expect(Set(json.keys) == ["version", "generatedAt", "nowCount", "now", "tasks"])
+        #expect(Set(json.keys) == ["version", "generatedAt", "nowCount", "now", "tasks", "views"])
+        let views = try #require(json["views"] as? [String: Any])
+        #expect(Set(views.keys) == ["due", "next", "open"])
         let now = try #require(json["now"] as? [String: Any])
         #expect(Set(now.keys) == ["knaeuel", "today", "lined", "waiting"])
         let tasks = try #require(json["tasks"] as? [[String: Any]])
@@ -245,6 +247,25 @@ import Testing
         #expect(try TranscriptCodec.decode(Transcript.self, from: encoded) == Self.fixtureTranscript)
         let text = try #require(String(data: encoded, encoding: .utf8))
         #expect(text.contains("\"2026-03-12T17:00:00Z\""))
+    }
+
+    @Test("Due, Next up and Loose ends are ViewRules' own lists, in their order (#621)")
+    @MainActor func viewsAreViewRules() throws {
+        let store = try TestStore()
+        let mixed = Mixed()
+        let second = Self.task("Mail an Steuerberater", rank: 1)
+        let all = mixed.all + [second]
+        all.forEach(store.context.insert)
+
+        let views = try #require(TranscriptCodec.transcript(of: all, now: Self.now, calendar: Self.calendar).views)
+
+        #expect(views.due == ViewRules.tasks(for: .due, in: all, now: Self.now, calendar: Self.calendar).map(\.id))
+        #expect(views.due == [mixed.waiting.id, mixed.today.id], "overdue first, then today")
+        #expect(views.next == ViewRules.tasks(for: .next, in: all, now: Self.now, calendar: Self.calendar).map(\.id))
+        #expect(views.next == [mixed.lined.id, second.id])
+        #expect(views.open == ViewRules.tasks(for: .open, in: all, now: Self.now, calendar: Self.calendar).map(\.id))
+        #expect(views.open.contains(mixed.parked.id), "Loose ends means all of them, parked ones included")
+        #expect(!views.open.contains(mixed.done.id))
     }
 
     @Test("A transcript built from the store survives the round trip (AC-3)")

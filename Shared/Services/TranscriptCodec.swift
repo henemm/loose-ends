@@ -9,6 +9,15 @@ struct Transcript: Codable, Equatable, Sendable {
     var nowCount: Int
     var now: Now
     var tasks: [Entry]
+    /// "Due", "Next up" and "Loose ends" as task ids in the app's order (#621): Claude shows what the app shows.
+    /// Optional in the contract; nil leaves the key out, so the fixed example of version 1 stays as it is.
+    var views: Views?
+
+    struct Views: Codable, Equatable, Sendable {
+        var due: [UUID]
+        var next: [UUID]
+        var open: [UUID]
+    }
 
     /// `ViewRules.now` as task ids, in its order; the Knäuel only while there is one.
     struct Now: Codable, Equatable, Sendable {
@@ -49,7 +58,12 @@ enum TranscriptCodec {
                 lined: rows.lined.map(\.id),
                 waiting: rows.waiting.map(\.id)
             ),
-            tasks: all.filter { $0.status != .done && $0.status != .removed }.map(entry)
+            tasks: all.filter { $0.status != .done && $0.status != .removed }.map(entry),
+            views: Transcript.Views(
+                due: ViewRules.tasks(for: .due, in: all, now: now, calendar: calendar).map(\.id),
+                next: ViewRules.tasks(for: .next, in: all, now: now, calendar: calendar).map(\.id),
+                open: ViewRules.tasks(for: .open, in: all, now: now, calendar: calendar).map(\.id)
+            )
         )
     }
 

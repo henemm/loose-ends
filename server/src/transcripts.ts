@@ -18,6 +18,8 @@ export type Transcript = {
   nowCount: number;
   now: { knaeuel?: string; today: string[]; lined: string[]; waiting: string[] };
   tasks: TranscriptTask[];
+  // The ids of "Due", "Next up" and "Loose ends" as the app lists them; older apps do not send it.
+  views?: { due: string[]; next: string[]; open: string[] };
 };
 
 type Check = (value: unknown, path: string) => void;
@@ -105,6 +107,7 @@ function privacy(value: unknown, path: string): void {
 }
 
 const now: Check = (v, p) => shape(v, p, { today: list(id), lined: list(id), waiting: list(id) }, { knaeuel: id });
+const views: Check = (v, p) => shape(v, p, { due: list(id), next: list(id), open: list(id) });
 const task: Check = (v, p) =>
   shape(v, p, { id, title: text, status, dueHasTime: flag, isKnaeuel: flag, contexts: names }, { dueDate: time, project: text, nextRank: rank });
 const version: Check = (v, p) => { if (v !== 1) fail(p, "nicht 1"); };
@@ -113,7 +116,7 @@ const version: Check = (v, p) => { if (v !== 1) fail(p, "nicht 1"); };
 export function checkTranscript(doc: unknown): asserts doc is Transcript {
   reporting("Abschrift", () => {
     privacy(doc, "");
-    shape(doc, "", { version, generatedAt: time, nowCount: rank, now, tasks: list(task) });
+    shape(doc, "", { version, generatedAt: time, nowCount: rank, now, tasks: list(task) }, { views });
   });
 }
 

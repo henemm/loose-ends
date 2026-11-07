@@ -54,10 +54,10 @@ async function call(client: Client, name: string, args: Doc = {}): Promise<{ tex
 const json = async (client: Client, name: string) => JSON.parse((await call(client, name)).text);
 const titles = (doc: Doc) => doc.tasks.map((task: Doc) => task.title as string);
 
-test("AC-1/AC-3: tools/list names the six tools, with the annotations of the write and read tools", async (t) => {
+test("AC-1/AC-3: tools/list names the tools, with the annotations of the write and read tools", async (t) => {
   const client = await connect(t, await migrated(t), "henning");
   const tools = (await client.listTools()).tools;
-  assert.deepEqual(tools.map((tool) => tool.name).sort(), ["capture_task", "complete_task", "get_now", "get_order_result", "list_tasks", "set_due"]);
+  assert.deepEqual(tools.map((tool) => tool.name).sort(), ["capture_task", "complete_task", "get_now", "get_order_result", "get_task", "get_view", "list_contexts", "list_projects", "list_tasks", "search_tasks", "set_due"]);
   const note = (name: string) => tools.find((tool) => tool.name === name)?.annotations;
   assert.equal(note("capture_task")?.readOnlyHint, false);
   assert.equal(note("capture_task")?.destructiveHint, false);
