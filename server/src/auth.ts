@@ -95,19 +95,28 @@ async function logout(deps: AuthDeps, request: Request): Promise<Response> {
   return status(204);
 }
 
-// Best effort once the account is gone: Apple's answer never changes the response.
-async function revokeAfterDelete(deps: AuthDeps, accountId: string, deletion: Deletion): Promise<void> {
+// One row, revoked with the client id it was issued for; never throws (network errors are caught in revokeToken).
+async function revokeOne(deps: AuthDeps, accountId: string, token: Deletion["tokens"][number]): Promise<void> {
   const { config } = deps;
-  const { appleToken, clientId } = deletion;
   // An unconfigured client id would make clientSecret throw after the commit.
-  const known = config !== undefined && clientId !== null && config.clientIds.includes(clientId);
-  const token = known && appleToken !== null ? decryptToken(config.tokenKey, accountId, appleToken) : null;
-  if (!known || token === null || token === "") {
+  const known = config !== undefined
+    && (config.clientIds.includes(token.clientId) || (config.webClientId !== undefined && token.clientId === config.webClientId));
+  const plain = known ? decryptToken(config.tokenKey, accountId, token.blob) : null;
+  if (!known || plain === null || plain === "") {
     deps.log?.("apple revoke skipped");
     return;
   }
-  const revoked = await revokeToken(token, clientId, { config, fetch: deps.fetch, now: deps.now });
+  const revoked = await revokeToken(plain, token.clientId, { config, fetch: deps.fetch, now: deps.now });
   if (!revoked.ok) deps.log?.("apple revoke failed");
+}
+
+// Best effort once the account is gone, one row after the other: Apple's answer never changes the response.
+async function revokeAfterDelete(deps: AuthDeps, accountId: string, deletion: Deletion): Promise<void> {
+  if (deletion.tokens.length === 0) {
+    deps.log?.("apple revoke skipped");
+    return;
+  }
+  for (const token of deletion.tokens) await revokeOne(deps, accountId, token);
 }
 
 // Session, then delete, then revoke at Apple; needs no Apple config, deleting never waits on Apple's setup.

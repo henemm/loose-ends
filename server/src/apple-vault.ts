@@ -34,15 +34,15 @@ export function decryptToken(key: Buffer, accountId: string, blob: unknown): str
   }
 }
 
-// One token per account with the client id it was issued for: a new one replaces token and client id and moves
-// created_at. An unknown account (23503) gives false. A missing client id throws before the database is touched.
+// One token per account and client: the same pair replaces the token and moves created_at, another client gets its
+// own row. An unknown account (23503) gives false. A missing client id throws before the database is touched.
 export async function storeRefreshToken(pool: pg.Pool, accountId: string, blob: Buffer, clientId: string): Promise<boolean> {
   if (typeof clientId !== "string" || clientId === "") throw new Error("client id must not be empty");
   try {
     await pool.query(
       `INSERT INTO apple_tokens (account_id, refresh_token_enc, client_id) VALUES ($1, $2, $3)
-       ON CONFLICT (account_id) DO UPDATE
-       SET refresh_token_enc = EXCLUDED.refresh_token_enc, client_id = EXCLUDED.client_id, created_at = now()`,
+       ON CONFLICT (account_id, client_id) DO UPDATE
+       SET refresh_token_enc = EXCLUDED.refresh_token_enc, created_at = now()`,
       [accountId, blob, clientId],
     );
     return true;
