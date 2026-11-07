@@ -1,12 +1,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createHash, generateKeyPairSync, randomBytes, sign } from "node:crypto";
+import { createCipheriv, createHash, generateKeyPairSync, randomBytes, sign } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type pg from "pg";
 import { createSession, deleteAccount, endSession, findOrCreate, resolveSession } from "../src/accounts.ts";
 import { type AppleConfig, loadAppleConfig } from "../src/apple.ts";
-import { decryptToken } from "../src/apple-vault.ts";
+import { decryptToken, encryptToken, storeRefreshToken } from "../src/apple-vault.ts";
 import { authRoutes, bearerToken, type AuthDeps } from "../src/auth.ts";
 import { start } from "../src/main.ts";
 import { migrate } from "../src/migrate.ts";
@@ -85,25 +85,36 @@ test("auth: rundweg anmelden", async (t) => {
     const account = await resolveSession(pool, sessionToken);
     assert.equal(account, (await pool.query("SELECT id FROM accounts WHERE apple_sub = $1", [`${SUB}.${aud}`])).rows[0].id);
     const deletion = await deleteAccount(pool, account!);
-    assert.equal(decryptToken(config.tokenKey, account!, deletion.appleToken), REFRESH);
-    assert.equal(deletion.clientId, aud);
+    assert.equal(deletion.tokens.length, 1);
+    assert.equal(decryptToken(config.tokenKey, account!, deletion.tokens[0].blob), REFRESH);
+    assert.equal(deletion.tokens[0].clientId, aud);
   }
 });
 
-test("auth: zweite anmeldung ersetzt schluessel", async (t) => {
+test("auth: zweite anmeldung ersetzt schluessel nur je client", async (t) => {
   const pool = await migrated(t);
-  const first = rig(pool).routes;
-  const a = (await (await first["/auth/apple"](login())).json()) as { sessionToken: string };
-  const before = (await pool.query("SELECT refresh_token_enc, client_id FROM apple_tokens")).rows[0];
-  const second = rig(pool, () => new Response(JSON.stringify({ refresh_token: "NEU", id_token: jwt({}, undefined, undefined, IDS[1]) }), { status: 200 })).routes;
-  const b = (await (await second["/auth/apple"](login({ identityToken: jwt({}, undefined, undefined, IDS[1]) }))).json()) as { sessionToken: string };
-  assert.notEqual(a.sessionToken, b.sessionToken);
-  assert.equal(await resolveSession(pool, a.sessionToken), await resolveSession(pool, b.sessionToken));
+  const signIn = async (aud: string, refresh: string) => {
+    const answer = () => new Response(JSON.stringify({ refresh_token: refresh, id_token: jwt({}, undefined, undefined, aud) }), { status: 200 });
+    const res = await rig(pool, answer).routes["/auth/apple"](login({ identityToken: jwt({}, undefined, undefined, aud) }));
+    return ((await res.json()) as { sessionToken: string }).sessionToken;
+  };
+  const tokens = async () => (await pool.query("SELECT * FROM apple_tokens ORDER BY client_id")).rows;
+  const a = await signIn(IDS[0], "ALT");
+  const id = (await resolveSession(pool, a))!;
+  const old = (await tokens())[0];
+  await signIn(IDS[0], "NEU");
+  const replaced = await tokens();
+  assert.equal(replaced.length, 1, "dieselbe App-ID ersetzt");
+  assert.notDeepEqual(replaced[0].refresh_token_enc, old.refresh_token_enc);
+  assert.equal(decryptToken(config.tokenKey, id, replaced[0].refresh_token_enc), "NEU");
+
+  const b = await signIn(IDS[1], "ANDERS");
+  assert.equal(await resolveSession(pool, b), id);
   assert.equal(await count(pool, "accounts"), 1);
-  assert.equal(await count(pool, "apple_tokens"), 1);
-  const after = (await pool.query("SELECT refresh_token_enc, client_id FROM apple_tokens")).rows[0];
-  assert.notDeepEqual(after.refresh_token_enc, before.refresh_token_enc);
-  assert.equal(after.client_id, IDS[1]);
+  const both = await tokens();
+  assert.deepEqual(both.map((row: { client_id: string }) => row.client_id), IDS);
+  assert.deepEqual(both[0], replaced[0], "die Zeile der ersten App-ID bleibt unberührt");
+  assert.equal(decryptToken(config.tokenKey, id, both[1].refresh_token_enc), "ANDERS");
 });
 
 const BIG = "x".repeat(16 * 1024 + 1);
@@ -357,6 +368,22 @@ function onConnect(pool: pg.Pool, before: () => Promise<void>): pg.Pool {
   });
 }
 
+// S4c-1: the web sign-in's token beside the app's, stored as the return way will store it (4c-2).
+const WEB = "com.henning.looseends.web";
+const WEB_REFRESH = "GEHEIM-WEB-REFRESH";
+const webConfig: AppleConfig = { ...config, webClientId: WEB };
+async function withWeb(pool: pg.Pool, id: string, clientId = WEB): Promise<void> {
+  assert.equal(await storeRefreshToken(pool, id, encryptToken(config.tokenKey, id, WEB_REFRESH), clientId), true);
+}
+// A blob of the agreed format holding the empty string, which encryptToken refuses to build.
+function sealedEmpty(id: string): Buffer {
+  const iv = randomBytes(12);
+  const cipher = createCipheriv("aes-256-gcm", config.tokenKey, iv, { authTagLength: 16 });
+  cipher.setAAD(Buffer.from(id));
+  const ct = Buffer.concat([cipher.update("", "utf8"), cipher.final()]);
+  return Buffer.concat([Buffer.from([0x01]), iv, cipher.getAuthTag(), ct]);
+}
+
 test("auth: rundweg loeschen", async (t) => {
   const pool = await migrated(t);
   const me = await member(pool, 1);
@@ -441,6 +468,76 @@ test("auth: zwei loeschungen gleichzeitig", async (t) => {
   assert.equal(revokes(d.r), 1);
 });
 
+test("auth: loeschen widerruft app und web token je mit eigener client_id", async (t) => {
+  const pool = await migrated(t);
+  const me = await member(pool, 1);
+  await withWeb(pool, me.id);
+  const seen: number[] = [];
+  const d = deleter(pool, async () => {
+    seen.push(await count(pool, "accounts"));
+    return new Response(null, { status: 200 });
+  }, { config: webConfig });
+  const res = await d.route(del(me.token));
+  assert.equal(res.status, 204);
+  assert.equal(await res.text(), "");
+  assert.deepEqual(await rows(pool, me.id), [0, 0, 0, 0, 0, 0]);
+  assert.deepEqual(d.r.urls, [REVOKE, REVOKE]);
+  assert.deepEqual(seen, [0, 0], "beim Widerruf ist das Konto schon weg");
+  // Sorted by client_id: the app id before the web id, each with its own token.
+  assert.deepEqual(d.r.forms.map((f) => [f.get("client_id"), f.get("token")]), [[IDS[0], REFRESH], [WEB, WEB_REFRESH]]);
+  for (const form of d.r.forms) assert.equal(form.get("token_type_hint"), "refresh_token");
+  assert.deepEqual(d.lines, []);
+});
+
+test("auth: ein widerruf scheitert, der andere laeuft, 204 und genau ein failed", async (t) => {
+  const pool = await migrated(t);
+  const failures: [string, Answer][] = [["invalid_grant", appleError("invalid_grant")], ["Netz weg", () => { throw new Error("netz"); }]];
+  let n = 0;
+  for (const [name, failure] of failures) {
+    for (const failing of [1, 2]) {
+      const me = await member(pool, ++n);
+      await withWeb(pool, me.id);
+      const d = deleter(pool, ok200, { config: webConfig });
+      d.r.answer = () => (d.r.calls === failing ? failure() : ok200());
+      const res = await d.route(del(me.token));
+      const label = `${name}, Zeile ${failing}`;
+      assert.equal(res.status, 204, label);
+      assert.equal(revokes(d.r), 2, label);
+      assert.deepEqual(d.r.forms.map((f) => f.get("client_id")), [IDS[0], WEB], label);
+      assert.deepEqual(await rows(pool, me.id), [0, 0, 0, 0, 0, 0], label);
+      assert.deepEqual(d.lines, ["apple revoke failed"], label);
+    }
+  }
+});
+
+test("auth: web token ohne webClientId wird uebersprungen ohne netz", async (t) => {
+  const pool = await migrated(t);
+  const me = await member(pool, 1);
+  await withWeb(pool, me.id);
+  const d = deleter(pool, ok200, { config });
+  const res = await d.route(del(me.token));
+  assert.equal(res.status, 204);
+  assert.equal(revokes(d.r), 1);
+  assert.equal(d.r.forms[0].get("client_id"), IDS[0]);
+  assert.equal(d.r.forms[0].get("token"), REFRESH);
+  assert.deepEqual(d.lines, ["apple revoke skipped"]);
+  assert.deepEqual(await rows(pool, me.id), [0, 0, 0, 0, 0, 0]);
+});
+
+test("auth: zwei loeschungen gleichzeitig mit zwei tokens, widerrufe nur einmal", async (t) => {
+  const pool = await migrated(t);
+  const me = await member(pool, 1);
+  await withWeb(pool, me.id);
+  const second = await createSession(pool, me.id);
+  const d = deleter(pool, ok200, { config: webConfig });
+  const answers = await Promise.all([d.route(del(me.token)), d.route(del(second))]);
+  assert.deepEqual(answers.map((a) => a.status).sort(), [204, 401]);
+  assert.equal(await count(pool, "accounts"), 0);
+  assert.equal(await count(pool, "apple_tokens"), 0);
+  assert.equal(revokes(d.r), 2);
+  assert.deepEqual(d.r.forms.map((f) => f.get("client_id")), [IDS[0], WEB]);
+});
+
 test("auth: widerruf scheitert, konto weg", async (t) => {
   const pool = await migrated(t);
   const failures: [string, (r: { signals: AbortSignal[] }) => Answer][] = [
@@ -463,43 +560,54 @@ test("auth: widerruf scheitert, konto weg", async (t) => {
   }
 });
 
-test("auth: widerruf entfaellt, konto weg", async (t) => {
+test("auth: widerruf entfaellt je zeile, keine zeile genau ein skipped", async (t) => {
   const pool = await migrated(t);
-  const cases: [string, Partial<AuthDeps>, (id: string) => Promise<unknown>][] = [
-    ["ohne config und keys", { config: undefined, keys: undefined }, async () => {}],
-    ["client_id NULL", {}, (id) => pool.query("UPDATE apple_tokens SET client_id = NULL WHERE account_id = $1", [id])],
-    ["anderer tokenKey", { config: { ...config, tokenKey: randomBytes(32) } }, async () => {}],
-    ["keine apple_tokens-Zeile", {}, (id) => pool.query("DELETE FROM apple_tokens WHERE account_id = $1", [id])],
-    ["client_id nicht mehr konfiguriert", { config: { ...config, clientIds: ["com.example.other"] } }, async () => {}],
+  const onlyRow = (id: string, blob: Buffer) => pool.query(
+    "UPDATE apple_tokens SET refresh_token_enc = $2 WHERE account_id = $1", [id, blob],
+  );
+  // Name, deps, preparation, expected revokes; the log is one "skipped" in every case.
+  const cases: [string, Partial<AuthDeps>, (id: string) => Promise<unknown>, number][] = [
+    ["client_id nicht mehr konfiguriert", { config: { ...config, clientIds: ["com.example.other"] } }, async () => {}, 0],
+    ["anderer tokenKey", { config: { ...config, tokenKey: randomBytes(32) } }, async () => {}, 0],
+    ["App-Zeile und unbekannte Zeile", {}, (id) => withWeb(pool, id, "com.example.unknown"), 1],
+    ["leerer Klartext", {}, (id) => onlyRow(id, sealedEmpty(id)), 0],
+    ["keine apple_tokens-Zeile", {}, (id) => pool.query("DELETE FROM apple_tokens WHERE account_id = $1", [id]), 0],
+    ["ohne config und keys", { config: undefined, keys: undefined }, async () => {}, 0],
   ];
-  for (const [i, [name, over, prepare]] of cases.entries()) {
+  for (const [i, [name, over, prepare, expected]] of cases.entries()) {
     const me = await member(pool, i + 1);
     await prepare(me.id);
     const d = deleter(pool, ok200, over);
     const res = await d.route(del(me.token));
     assert.equal(res.status, 204, name);
     assert.deepEqual(await rows(pool, me.id), [0, 0, 0, 0, 0, 0], name);
-    assert.equal(d.r.calls, 0, name);
+    assert.equal(d.r.calls, expected, name);
+    if (expected === 1) assert.equal(d.r.forms[0].get("client_id"), IDS[0], name);
     assert.deepEqual(d.lines, ["apple revoke skipped"], name);
   }
 });
 
 test("auth: log ohne geheimnisse", async (t) => {
   const pool = await migrated(t);
-  const secrets: string[] = [REFRESH, CODE, "invalid_grant", ...IDS];
+  const secrets: string[] = [REFRESH, WEB_REFRESH, CODE, "invalid_grant", "netz", WEB, ...IDS];
   const lines: string[] = [];
-  const runs: [Answer, Partial<AuthDeps>][] = [
-    [appleError("invalid_grant"), {}], [() => { throw new Error("netz"); }, {}], [ok200, { config: undefined }],
+  // The last three runs carry an app and a web token, each row writes its own line.
+  const runs: [Answer, Partial<AuthDeps>, boolean][] = [
+    [appleError("invalid_grant"), {}, false], [() => { throw new Error("netz"); }, {}, false], [ok200, { config: undefined }, false],
+    [appleError("invalid_grant"), { config: webConfig }, true], [() => { throw new Error("netz"); }, { config: webConfig }, true],
+    [ok200, { config: undefined }, true],
   ];
-  for (const [i, [answer, over]] of runs.entries()) {
+  for (const [i, [answer, over, web]] of runs.entries()) {
     for (const [j, log] of [undefined, (event: string) => void lines.push(event)].entries()) {
       const me = await member(pool, 10 * i + j + 1);
+      if (web) await withWeb(pool, me.id);
       secrets.push(me.id, me.token, me.sub);
       const res = await rig(pool, answer, { ...over, log } as Partial<AuthDeps>).routes["/auth/delete"](del(me.token));
       assert.equal(res.status, 204);
     }
   }
-  assert.deepEqual(lines, ["apple revoke failed", "apple revoke failed", "apple revoke skipped"]);
+  const [skipped, failed] = LOG_WORDS;
+  assert.deepEqual(lines, [failed, failed, skipped, failed, failed, failed, failed, skipped, skipped]);
   for (const line of lines) {
     assert.ok(LOG_WORDS.includes(line), line);
     for (const secret of secrets) assert.ok(!line.includes(secret), `Logzeile enthält ${secret}`);
