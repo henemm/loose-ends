@@ -123,6 +123,75 @@ class ManifestTests(NeedsModule):
             ss.build_manifest({"iphone": ORDER}, commit="abc1234", created="2026-10-30T12:00:00Z")
 
 
+class LanguageTests(NeedsModule):
+    """Sprache als Parameter des Store-Laufs: de (Standard) oder en (#842, Schnitt 4a)."""
+
+    def manifest(self, **kwargs):
+        return ss.build_manifest({"iphone": ORDER, "ipad": ORDER}, commit="abc1234", created="2026-11-07T12:00:00Z",
+                                 **kwargs)
+
+    def test_manifest_language_follows_lang(self):
+        self.assertEqual(self.manifest(lang="en")["sprache"], "en-US")
+        self.assertEqual(self.manifest(lang="de")["sprache"], "de-DE")
+        self.assertEqual(self.manifest()["sprache"], "de-DE")
+        english, german = self.manifest(lang="en"), self.manifest()
+        self.assertEqual(english["geraete"], german["geraete"])
+        self.assertEqual([e["pixel"] for e in english["geraete"]], ["1206x2622", "2064x2752"])
+
+    def test_unknown_language_is_refused(self):
+        with self.assertRaises(ss.StoreError):
+            self.manifest(lang="fr")
+        export = self.root / "export"
+        export.mkdir()
+        (export / "manifest.json").write_text("[]")
+        with self.assertRaises(ss.StoreError):
+            ss.main(["--lang", "fr", str(self.out), f"iphone={export}", f"ipad={export}"])
+        self.assertFalse(self.out.exists())
+
+    def test_readme_is_per_language_and_never_overwritten(self):
+        for lang, locale in (("en", "en-US"), ("de", "de-DE")):
+            with self.subTest(lang):
+                folder = self.root / lang
+                folder.mkdir()
+                ss.write_readme(folder, lang)
+                text = (folder / "README.md").read_text()
+                self.assertIn(locale, text)
+                self.assertIn("sim.sh store-screenshots", text)
+        self.assertIn("English", (self.root / "en" / "README.md").read_text())
+        self.assertIn("Deutsch", (self.root / "de" / "README.md").read_text())
+        kept = self.root / "kept"
+        kept.mkdir()
+        own = b"# App-Store-Bilder (Deutsch)\n\nVon Hand erweitert: Watch und Mac.\n"
+        (kept / "README.md").write_bytes(own)
+        ss.write_readme(kept, "de")
+        self.assertEqual((kept / "README.md").read_bytes(), own)
+
+    def test_other_devices_survive_a_new_run(self):
+        watch = {"geraet": "watch", "anzeige": "Apple Watch", "pixel": "416x496", "ordner": "watch",
+                 "dateien": ["01-jetzt.png", "02-gespeichert.png"]}
+        mac = {"geraet": "mac", "anzeige": "Mac (16:10)", "pixel": "2880x1800", "ordner": "mac",
+               "dateien": ["01-start.png"]}
+        stale = {"geraet": "iphone", "anzeige": "alt", "pixel": "1179x2556", "ordner": "iphone", "dateien": ["x.png"]}
+        merged = ss.keep_other_devices(self.manifest(), {"sprache": "de-DE", "geraete": [stale, watch, mac]})
+        self.assertEqual([e["geraet"] for e in merged["geraete"]], ["iphone", "ipad", "watch", "mac"])
+        self.assertEqual(merged["geraete"][2:], [watch, mac])
+        self.assertEqual(merged["geraete"][0]["pixel"], "1206x2622")
+        plain = ss.keep_other_devices(self.manifest(), {"geraete": [stale]})
+        self.assertEqual([e["geraet"] for e in plain["geraete"]], ["iphone", "ipad"])
+
+    def test_en_run_leaves_de_folder_untouched(self):
+        screens = self.root / "screenshots"
+        german = screens / "de" / "iphone"
+        german.mkdir(parents=True)
+        (german / "01-start.png").write_bytes(b"deutsch")
+        (screens / "de" / "manifest.json").write_text('{"sprache": "de-DE"}')
+        before = {p: p.read_bytes() for p in (screens / "de").rglob("*") if p.is_file()}
+        ss.finish_device("iphone", self.attachments(), screens / "en", self.info(IPHONE), self.keep)
+        after = {p: p.read_bytes() for p in (screens / "de").rglob("*") if p.is_file()}
+        self.assertEqual(before, after)
+        self.assertTrue((screens / "en" / "iphone" / "01-start.png").exists())
+
+
 PAPER = (244, 243, 238)
 GRIP = (2008, 2696, 2054, 2742)   # gemessener Griff auf den iPad-Bildern: x0, y0, x1, y1 (einschließlich)
 
