@@ -4,6 +4,7 @@ import type pg from "pg";
 import { findOrCreate } from "./accounts.ts";
 import { type AppleConfig, type KeyLookup, verifyIdentityToken } from "./apple.ts";
 import { appleReturnUrl, redeemCode } from "./apple-client.ts";
+import { encryptToken, storeRefreshToken } from "./apple-vault.ts";
 import { PgAdapter } from "./oauth-adapter.ts";
 
 // The way back from Apple (#621 S4b-2a): Apple's form_post is checked and ends in a one-time ticket and a 303 to
@@ -80,6 +81,7 @@ async function redeemState(deps: AppleReturnDeps, state: string): Promise<{ uid:
 }
 
 // Apple's error, a refused redemption or token → access_denied; Apple unreachable → temporarily_unavailable.
+// An account deleted during the sign-in → access_denied; the web token is stored under webClientId (S4c-2).
 async function outcome(deps: AppleReturnDeps, fields: Fields, uid: string, nonce: string): Promise<Ticket> {
   const { config, fetch, publicUrl } = deps;
   const webClientId = config.webClientId;
@@ -87,10 +89,13 @@ async function outcome(deps: AppleReturnDeps, fields: Fields, uid: string, nonce
   const now = () => deps.now().getTime();
   const redeemed = await redeemCode(fields.code, webClientId, { config, fetch, now, redirectUri: appleReturnUrl(publicUrl) });
   if (!redeemed.ok) return { uid, error: redeemed.reason === "unavailable" ? "temporarily_unavailable" : "access_denied" };
-  // The web refresh token is dropped: neither stored nor revoked until its own storage (migration 005, before S6).
   const verdict = await verifyIdentityToken(redeemed.idToken, nonce, { config, keys: deps.keys, now: now(), audiences: [webClientId] });
   if (!verdict.ok) return { uid, error: verdict.reason === "keys_unavailable" ? "temporarily_unavailable" : "access_denied" };
-  return { uid, accountId: await findOrCreate(deps.pool, verdict.sub) };
+  const accountId = await findOrCreate(deps.pool, verdict.sub);
+  const blob = encryptToken(config.tokenKey, accountId, redeemed.refreshToken);
+  // false: the account was deleted meanwhile; no ticket that names it.
+  if (!(await storeRefreshToken(deps.pool, accountId, blob, webClientId))) return { uid, error: "access_denied" };
+  return { uid, accountId };
 }
 
 // From the state on: the result as a ticket, then the 303; any failure a fixed 400, never a redirect without ticket.
