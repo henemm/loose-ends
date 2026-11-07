@@ -51,10 +51,11 @@ const ENV = {
 const appOnly = loadAppleConfig(ENV);
 const withWeb = loadAppleConfig({ ...ENV, APPLE_WEB_CLIENT_ID: WEB });
 
+const clientName = { value: "Claude" };
 const cimdFetch = (async (input: string | URL | Request) => {
   const url = String(input instanceof Request ? input.url : input);
   if (url !== CID) return new Response("not found", { status: 404 });
-  return Response.json({ client_id: CID, client_name: "Claude", redirect_uris: [CB], token_endpoint_auth_method: "none",
+  return Response.json({ client_id: CID, client_name: clientName.value, redirect_uris: [CB], token_endpoint_auth_method: "none",
     grant_types: ["authorization_code", "refresh_token"], response_types: ["code"] });
 }) as typeof fetch;
 
@@ -566,8 +567,139 @@ test("finish: erfolg legt sitzung des kontos an und endet bei der zustimmung", a
   assert.equal((await interactionOf(running.pool, uid))?.prompt?.name, "consent");
   const sessions = (await running.pool.query("SELECT account_id FROM oauth_records WHERE model = 'Session'")).rows;
   assert.deepEqual(sessions.map((row) => row.account_id), [accountId]);
-  assertFixed(await raw(running.url, consent, { headers: { cookie } }), 501, "sign-in not available", "zustimmung");
+  const page = await raw(running.url, consent, { headers: { cookie } });
+  assert.equal(page.status, 200, `Zustimmungsseite: ${page.status} ${page.body.slice(0, 160)}`);
   assert.equal(await countOf(running.pool, "oauth_records", "model IN ('AuthorizationCode', 'AccessToken', 'RefreshToken')"), 0);
+});
+
+// The consent page (#621 S5): from the sign-in to the page of the new interaction.
+async function atConsent(running: Running, apple: Apple) {
+  const f = await flow(running, apple);
+  const done = await finish(running, f.path, f.at.cookie);
+  const { next, cookie } = await resume(running, done, f.at.cookie);
+  const path = new URL(String(next.headers.location), ORIGIN).pathname;
+  const uid = path.split("/").at(-1)!;
+  note(uid);
+  return { path, uid, cookie };
+}
+const OWN = { origin: ORIGIN };
+const grantsOf = (pool: pg.Pool) => countOf(pool, "oauth_records", "model = 'Grant'");
+const codesOf = (pool: pg.Pool) => countOf(pool, "oauth_records", "model = 'AuthorizationCode'");
+
+test("zustimmung: die seite nennt den client, sagt was geht und was nicht, und hat die schutzkoepfe", async (t) => {
+  const apple = fakeApple();
+  const running = await withApple(t, apple);
+  const c = await atConsent(running, apple);
+  const page = await raw(running.url, c.path, { headers: { cookie: c.cookie } });
+  assert.equal(page.status, 200);
+  assert.match(String(page.headers["content-type"]), /^text\/html/);
+  assert.equal(page.headers["cache-control"], "no-store");
+  assert.equal(page.headers["x-frame-options"], "DENY");
+  // Browsers send "Origin: null" on a POST under no-referrer, which the CSRF check refuses; the page must allow its own origin.
+  assert.equal(page.headers["referrer-policy"], "same-origin");
+  assert.match(String(page.headers["content-security-policy"]), /default-src 'none'/);
+  assert.doesNotMatch(String(page.headers["content-security-policy"]), /form-action/);
+  assert.match(page.body, /Claude möchte auf Loose Ends zugreifen/);
+  assert.match(page.body, /Aufgaben löschen/);
+  assert.match(page.body, new RegExp(`action="${c.path}/confirm"`));
+  assert.match(page.body, new RegExp(`action="${c.path}/abort"`));
+  assert.ok(!/<script/i.test(page.body));
+  assert.equal(await grantsOf(running.pool), 0, "die Seite allein erteilt nichts");
+});
+
+test("zustimmung: der name des clients wird escaped und gekuerzt", async (t) => {
+  clientName.value = `<img src=x onerror=alert(1)>${"x".repeat(100)}`;
+  t.after(() => { clientName.value = "Claude"; });
+  const apple = fakeApple();
+  const running = await withApple(t, apple);
+  const c = await atConsent(running, apple);
+  const page = await raw(running.url, c.path, { headers: { cookie: c.cookie } });
+  assert.equal(page.status, 200);
+  assert.ok(!page.body.includes("<img"), "Name nicht escaped");
+  assert.ok(page.body.includes("&lt;img"));
+  assert.ok(!page.body.includes("x".repeat(70)), "Name nicht gekürzt");
+});
+
+test("zustimmung: zulassen erteilt das recht und fuehrt mit code zu claude zurueck", async (t) => {
+  const apple = fakeApple();
+  const running = await withApple(t, apple);
+  const c = await atConsent(running, apple);
+  const answer = await raw(running.url, `${c.path}/confirm`, { method: "POST", headers: { cookie: c.cookie, ...OWN } });
+  assert.equal(answer.status, 303, `${answer.status} ${answer.body.slice(0, 160)}`);
+  assert.equal(await grantsOf(running.pool), 1);
+  const grant = (await running.pool.query("SELECT payload FROM oauth_records WHERE model = 'Grant'")).rows[0].payload;
+  assert.equal(grant.resources[`${ORIGIN}/mcp`], "tasks");
+  const { next } = await resume(running, answer, c.cookie);
+  const back = new URL(String(next.headers.location));
+  assert.equal(`${back.origin}${back.pathname}`, CB);
+  assert.equal(back.searchParams.get("state"), "s1");
+  assert.ok(back.searchParams.get("code"), "kein Code");
+  assert.equal(back.searchParams.get("error"), null);
+  assert.equal(await codesOf(running.pool), 1);
+});
+
+test("zustimmung: ablehnen endet mit access_denied ohne recht und ohne code", async (t) => {
+  const apple = fakeApple();
+  const running = await withApple(t, apple);
+  const c = await atConsent(running, apple);
+  const answer = await raw(running.url, `${c.path}/abort`, { method: "POST", headers: { cookie: c.cookie, ...OWN } });
+  assert.equal(answer.status, 303);
+  const { next } = await resume(running, answer, c.cookie);
+  const back = new URL(String(next.headers.location));
+  assert.equal(`${back.origin}${back.pathname}`, CB);
+  assert.equal(back.searchParams.get("error"), "access_denied");
+  assert.equal(back.searchParams.get("error_description"), null);
+  assert.equal(back.searchParams.get("code"), null);
+  assert.equal(await grantsOf(running.pool), 0);
+  assert.equal(await codesOf(running.pool), 0);
+});
+
+test("zustimmung: fremder oder fehlender origin, get, fremder cookie und fremde uid ergeben nichts", async (t) => {
+  const apple = fakeApple();
+  const running = await withApple(t, apple);
+  const c = await atConsent(running, apple);
+  const other = await atConsent(running, apple);
+  const post = (path: string, headers: Record<string, string>, method = "POST") => raw(running.url, path, { method, headers });
+  const cases: [string, Raw][] = [
+    ["ohne Origin", await post(`${c.path}/confirm`, { cookie: c.cookie })],
+    ["fremder Origin", await post(`${c.path}/confirm`, { cookie: c.cookie, origin: "https://evil.example" })],
+    ["Origin null", await post(`${c.path}/confirm`, { cookie: c.cookie, origin: "null" })],
+    ["ohne Cookie", await post(`${c.path}/confirm`, OWN)],
+    ["Cookie einer anderen Interaktion", await post(`${c.path}/confirm`, { cookie: other.cookie, ...OWN })],
+    ["abort ohne Origin", await post(`${c.path}/abort`, { cookie: c.cookie })],
+  ];
+  for (const [name, answer] of cases) assertFixed(answer, 400, BAD, name);
+  for (const step of ["confirm", "abort"]) {
+    const got = await post(`${c.path}/${step}`, { cookie: c.cookie, ...OWN }, "GET");
+    assert.equal(got.status, 405, step);
+    assert.equal(got.headers.allow, "POST", step);
+  }
+  assert.equal(await grantsOf(running.pool), 0);
+  assert.equal(await codesOf(running.pool), 0);
+  // Still open: the right answer afterwards works.
+  const ok = await post(`${c.path}/confirm`, { cookie: c.cookie, ...OWN });
+  assert.equal(ok.status, 303);
+});
+
+test("zustimmung: confirm und abort gelten nur im prompt consent", async (t) => {
+  const apple = fakeApple();
+  const running = await withApple(t, apple);
+  const f = await flow(running, apple);
+  for (const step of ["confirm", "abort"]) {
+    const answer = await raw(running.url, `/oauth/interaction/${f.at.uid}/${step}`, { method: "POST", headers: { cookie: f.at.cookie, ...OWN } });
+    assertFixed(answer, 400, BAD, `login: ${step}`);
+  }
+  assert.equal(await grantsOf(running.pool), 0);
+});
+
+test("zustimmung: abgeschaltet sind userinfo und die abmeldeseite, jwks und token-weg bleiben", async (t) => {
+  const apple = fakeApple();
+  const running = await withApple(t, apple);
+  for (const path of ["/oauth/me", "/oauth/session/end"]) assert.equal((await raw(running.url, path, { headers: PROXY })).status, 404, path);
+  const meta = JSON.parse((await raw(running.url, "/.well-known/oauth-authorization-server", { headers: PROXY })).body);
+  assert.equal(meta.userinfo_endpoint, undefined);
+  assert.equal(meta.end_session_endpoint, undefined);
+  assert.ok(meta.jwks_uri && meta.token_endpoint && meta.authorization_endpoint);
 });
 
 test("finish: fehler-tickets enden als oauth-fehler beim client ohne beschreibung", async (t) => {

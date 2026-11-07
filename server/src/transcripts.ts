@@ -139,4 +139,4 @@ export async function getTranscript(pool: pg.Pool, account: string): Promise<Tra
   return result.rows[0]?.doc;
 }
 
-export { shape, id, text, flag, time, list, fail, type Check };
+export { shape, id, text, flag, time, list, fail, rank, type Check };

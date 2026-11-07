@@ -88,7 +88,7 @@ function capturing(pool: pg.Pool) {
   };
 }
 
-type Target = { owner: string; taskID: string; expectedStatus: string; expectedDueDate?: string };
+type Target = { owner: string; taskID: string; expectedStatus: string; expectedDueDate?: string; expectedNextRank?: number };
 
 // The expected state comes from the latest transcript, and only if Claude read that one; the id is the transcript's.
 // A string is the refusal, before anything is written.
@@ -100,8 +100,11 @@ async function expected(pool: pg.Pool, ctx: ServerContext, taskID: string, gener
   if (doc.generatedAt !== generatedAt) return "Abschrift hat sich geändert, bitte neu lesen";
   const task = doc.tasks.find((x) => x.id.toUpperCase() === taskID.toUpperCase());
   if (task === undefined) return "Aufgabe nicht in der Abschrift";
-  const { id, status, dueDate } = task;
-  return { owner, taskID: id, expectedStatus: status, ...(dueDate === undefined ? {} : { expectedDueDate: dueDate }) };
+  const { id, status, dueDate, nextRank } = task;
+  return {
+    owner, taskID: id, expectedStatus: status,
+    ...(dueDate === undefined ? {} : { expectedDueDate: dueDate }), ...(nextRank === undefined ? {} : { expectedNextRank: nextRank }),
+  };
 }
 
 // checkOrder's message goes back as it is; nothing is logged.
@@ -119,8 +122,44 @@ function completing(pool: pg.Pool) {
   return async ({ taskID, generatedAt }: { taskID: string; generatedAt: string }, ctx: ServerContext): Promise<CallToolResult> => {
     const target = await expected(pool, ctx, taskID, generatedAt);
     if (typeof target === "string") return { ...reply(target), isError: true };
-    const { owner, ...state } = target;
-    return storing(pool, owner, { version: 1, id: randomUUID().toUpperCase(), kind: "complete", ...state });
+    const { owner, taskID: id, expectedStatus, expectedDueDate } = target;
+    return storing(pool, owner, {
+      version: 1, id: randomUUID().toUpperCase(), kind: "complete", taskID: id, expectedStatus,
+      ...(expectedDueDate === undefined ? {} : { expectedDueDate }),
+    });
+  };
+}
+
+// Into "Next up" (on) or out of it; the rank the transcript showed is the expected state, so a moved list is refused by the device.
+function lining(pool: pg.Pool) {
+  return async (args: { taskID: string; generatedAt: string; on: boolean }, ctx: ServerContext): Promise<CallToolResult> => {
+    const target = await expected(pool, ctx, args.taskID, args.generatedAt);
+    if (typeof target === "string") return { ...reply(target), isError: true };
+    const { owner, taskID, expectedStatus, expectedNextRank } = target;
+    return storing(pool, owner, {
+      version: 1, id: randomUUID().toUpperCase(), kind: "setNext", taskID, expectedStatus, on: args.on,
+      ...(expectedNextRank === undefined ? {} : { expectedNextRank }),
+    });
+  };
+}
+
+function parking(pool: pg.Pool) {
+  return async ({ taskID, generatedAt }: { taskID: string; generatedAt: string }, ctx: ServerContext): Promise<CallToolResult> => {
+    const target = await expected(pool, ctx, taskID, generatedAt);
+    if (typeof target === "string") return { ...reply(target), isError: true };
+    const { owner, taskID: id, expectedStatus } = target;
+    return storing(pool, owner, { version: 1, id: randomUUID().toUpperCase(), kind: "park", taskID: id, expectedStatus });
+  };
+}
+
+// The line goes as typed; an empty one is refused here, before an order is made. The app trims it and answers invalid for a parent that cannot take one.
+function subtasking(pool: pg.Pool) {
+  return async (args: { taskID: string; generatedAt: string; text: string }, ctx: ServerContext): Promise<CallToolResult> => {
+    if (args.text.trim() === "") return { ...reply("Text fehlt"), isError: true };
+    const target = await expected(pool, ctx, args.taskID, args.generatedAt);
+    if (typeof target === "string") return { ...reply(target), isError: true };
+    const { owner, taskID, expectedStatus } = target;
+    return storing(pool, owner, { version: 1, id: randomUUID().toUpperCase(), kind: "addSubtask", taskID, expectedStatus, text: args.text });
   };
 }
 
@@ -226,10 +265,29 @@ export function mcpHandler(pool: pg.Pool): McpHttpHandler {
       description: "Legt einen Auftrag zum Setzen der Fälligkeit an; ohne date wird sie entfernt. date als Zeitpunkt in UTC, ganze "
         + "Sekunden, mit Z (z. B. 2026-03-14T08:30:00Z); hasTime sagt, ob die Uhrzeit gilt. Zuerst list_tasks oder get_now lesen "
         + "und deren generatedAt mitgeben; ausgeführt wird auf einem Gerät, den Stand liefert get_order_result. Derselbe "
-        + "Zeitpunkt, den die Aufgabe schon hat, mit nur geändertem hasTime wird vom Gerät als invalid abgelehnt",
+        + "Zeitpunkt, den die Aufgabe schon hat, mit nur geändertem hasTime wird vom Gerät als invalid abgelehnt. Das ist auch das "
+        + "Verschieben auf einen anderen Tag",
       inputSchema: z.object({ taskID: z.string(), generatedAt: z.string(), date: z.string().optional(), hasTime: z.boolean().optional() }),
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     }, setting(pool));
+    const write = { readOnlyHint: false, destructiveHint: false, idempotentHint: false };
+    const how = "Zuerst list_tasks oder get_now lesen und deren generatedAt mitgeben; ausgeführt wird auf einem Gerät, den Stand liefert get_order_result mit der zurückgegebenen orderID";
+    server.registerTool("set_next", {
+      description: `Legt einen Auftrag an, die Aufgabe ans Ende von „Als nächstes“ zu stellen (on true) oder herauszunehmen (on false). ${how}. `
+        + "Geparkte Aufgaben lehnt das Gerät als invalid ab",
+      inputSchema: z.object({ taskID: z.string(), generatedAt: z.string(), on: z.boolean() }),
+      annotations: write,
+    }, lining(pool));
+    server.registerTool("park_task", {
+      description: `Legt einen Auftrag an, eine offene Aufgabe zu parken (sie verlässt „Als nächstes“). ${how}`,
+      inputSchema: z.object({ taskID: z.string(), generatedAt: z.string() }),
+      annotations: write,
+    }, parking(pool));
+    server.registerTool("add_subtask", {
+      description: `Legt einen Auftrag an, unter einer Aufgabe eine Zeile (Unteraufgabe) hinzuzufügen; sie bleibt, wie getippt. ${how}`,
+      inputSchema: z.object({ taskID: z.string(), generatedAt: z.string(), text: z.string() }),
+      annotations: write,
+    }, subtasking(pool));
     return server;
   });
 }
