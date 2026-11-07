@@ -88,6 +88,9 @@ function configuration({ publicUrl, pool, now, fetch, keys }: ProviderOptions): 
     renderError,
     features: {
       devInteractions: { enabled: false },
+      // Nothing needs them (S3 note): no userinfo and no RP-initiated logout page; revocation and the keys stay.
+      userinfo: { enabled: false },
+      rpInitiatedLogout: { enabled: false },
       clientIdMetadataDocument: { enabled: true, ack: "draft-02", allowFetch },
       resourceIndicators: resourceIndicators(publicUrl),
     },
