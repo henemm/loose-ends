@@ -595,6 +595,8 @@ test("zustimmung: die seite nennt den client, sagt was geht und was nicht, und h
   assert.match(String(page.headers["content-type"]), /^text\/html/);
   assert.equal(page.headers["cache-control"], "no-store");
   assert.equal(page.headers["x-frame-options"], "DENY");
+  // Browsers send "Origin: null" on a POST under no-referrer, which the CSRF check refuses; the page must allow its own origin.
+  assert.equal(page.headers["referrer-policy"], "same-origin");
   assert.match(String(page.headers["content-security-policy"]), /default-src 'none'/);
   assert.doesNotMatch(String(page.headers["content-security-policy"]), /form-action/);
   assert.match(page.body, /Claude möchte auf Loose Ends zugreifen/);

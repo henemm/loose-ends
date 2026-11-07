@@ -12,7 +12,8 @@ const STORE_FAILED = "oauth interaction store failed";
 const HEADERS = {
   "content-type": "text/html; charset=utf-8",
   "cache-control": "no-store",
-  "referrer-policy": "no-referrer",
+  // same-origin, not no-referrer: with no-referrer a browser sends "Origin: null" on the page's own POST, and the CSRF check would refuse every real click.
+  "referrer-policy": "same-origin",
   "x-frame-options": "DENY",
   "x-content-type-options": "nosniff",
   // No form-action: Chrome applies it to the redirect after the form too, and the answer goes to Claude's callback.
