@@ -1,41 +1,41 @@
-test_alpha_aborts_when_not_removed (scripts.test_store_screenshots.FinishDeviceTests.test_alpha_aborts_when_not_removed) ... ok
-test_alpha_removal_is_called_for_every_image (scripts.test_store_screenshots.FinishDeviceTests.test_alpha_removal_is_called_for_every_image) ... ok
-test_failed_check_keeps_previous_folder (scripts.test_store_screenshots.FinishDeviceTests.test_failed_check_keeps_previous_folder) ... ok
-test_missing_image_aborts (scripts.test_store_screenshots.FinishDeviceTests.test_missing_image_aborts) ... ok
-test_names_follow_order (scripts.test_store_screenshots.FinishDeviceTests.test_names_follow_order) ... ok
-test_old_files_removed (scripts.test_store_screenshots.FinishDeviceTests.test_old_files_removed) ... ok
-test_wrong_size_aborts (scripts.test_store_screenshots.FinishDeviceTests.test_wrong_size_aborts) ... ok
-test_grip_cleared_on_ipad_only (scripts.test_store_screenshots.GripHookTests.test_grip_cleared_on_ipad_only) ... ok
-test_en_run_leaves_de_folder_untouched (scripts.test_store_screenshots.LanguageTests.test_en_run_leaves_de_folder_untouched) ... ok
-test_manifest_language_follows_lang (scripts.test_store_screenshots.LanguageTests.test_manifest_language_follows_lang) ... ok
-test_other_devices_survive_a_new_run (scripts.test_store_screenshots.LanguageTests.test_other_devices_survive_a_new_run) ... ok
-test_readme_is_per_language_and_never_overwritten (scripts.test_store_screenshots.LanguageTests.test_readme_is_per_language_and_never_overwritten) ... ok
-test_unknown_language_is_refused (scripts.test_store_screenshots.LanguageTests.test_unknown_language_is_refused) ... ok
-test_mac_entry_is_added_to_en_manifest (scripts.test_store_screenshots.MacLanguageTests.test_mac_entry_is_added_to_en_manifest) ... ok
-test_mac_rerun_replaces_only_the_mac_entry (scripts.test_store_screenshots.MacLanguageTests.test_mac_rerun_replaces_only_the_mac_entry) ... ok
-test_mac_run_leaves_readme_and_de_untouched (scripts.test_store_screenshots.MacLanguageTests.test_mac_run_leaves_readme_and_de_untouched) ... ok
-test_mac_wrong_size_aborts (scripts.test_store_screenshots.MacLanguageTests.test_mac_wrong_size_aborts) ... ok
-test_photo_test_takes_language_and_phrases_from_launch_language (scripts.test_store_screenshots.MacLanguageTests.test_photo_test_takes_language_and_phrases_from_launch_language) ... ok
-test_workflow_offers_language_with_german_default (scripts.test_store_screenshots.MacLanguageTests.test_workflow_offers_language_with_german_default) ... ok
-test_manifest_lists_both_sizes (scripts.test_store_screenshots.ManifestTests.test_manifest_lists_both_sizes) ... ok
-test_manifest_without_ipad_is_refused (scripts.test_store_screenshots.ManifestTests.test_manifest_without_ipad_is_refused) ... ok
-test_duplicate_attachment_aborts (scripts.test_store_screenshots.ReadExportTests.test_duplicate_attachment_aborts) ... ok
-test_watch_entry_is_added_to_en_manifest (scripts.test_store_screenshots.WatchLanguageTests.test_watch_entry_is_added_to_en_manifest) ... ok
-test_watch_rerun_replaces_only_the_watch_entry (scripts.test_store_screenshots.WatchLanguageTests.test_watch_rerun_replaces_only_the_watch_entry) ... ok
-test_watch_run_leaves_readme_and_de_untouched (scripts.test_store_screenshots.WatchLanguageTests.test_watch_run_leaves_readme_and_de_untouched) ... ok
-test_watch_wrong_size_aborts (scripts.test_store_screenshots.WatchLanguageTests.test_watch_wrong_size_aborts) ... ok
-test_busy_corner_stays_identical (scripts.test_store_screenshots.WindowGripTests.test_busy_corner_stays_identical) ... ok
-test_grip_on_plain_paper_becomes_background (scripts.test_store_screenshots.WindowGripTests.test_grip_on_plain_paper_becomes_background) ... ok
-test_rest_of_image_untouched (scripts.test_store_screenshots.WindowGripTests.test_rest_of_image_untouched) ... ok
-test_size_kept_and_no_alpha (scripts.test_store_screenshots.WindowGripTests.test_size_kept_and_no_alpha) ... ok
+test_alpha_aborts_when_not_removed (__main__.FinishDeviceTests.test_alpha_aborts_when_not_removed) ... ok
+test_alpha_removal_is_called_for_every_image (__main__.FinishDeviceTests.test_alpha_removal_is_called_for_every_image) ... ok
+test_failed_check_keeps_previous_folder (__main__.FinishDeviceTests.test_failed_check_keeps_previous_folder) ... ok
+test_missing_image_aborts (__main__.FinishDeviceTests.test_missing_image_aborts) ... ok
+test_names_follow_order (__main__.FinishDeviceTests.test_names_follow_order) ... ok
+test_old_files_removed (__main__.FinishDeviceTests.test_old_files_removed) ... ok
+test_wrong_size_aborts (__main__.FinishDeviceTests.test_wrong_size_aborts) ... ok
+test_grip_cleared_on_ipad_only (__main__.GripHookTests.test_grip_cleared_on_ipad_only) ... ok
+test_en_run_leaves_de_folder_untouched (__main__.LanguageTests.test_en_run_leaves_de_folder_untouched) ... ok
+test_manifest_language_follows_lang (__main__.LanguageTests.test_manifest_language_follows_lang) ... ok
+test_other_devices_survive_a_new_run (__main__.LanguageTests.test_other_devices_survive_a_new_run) ... ok
+test_readme_is_per_language_and_never_overwritten (__main__.LanguageTests.test_readme_is_per_language_and_never_overwritten) ... ok
+test_unknown_language_is_refused (__main__.LanguageTests.test_unknown_language_is_refused) ... ok
+test_mac_entry_is_added_to_en_manifest (__main__.MacLanguageTests.test_mac_entry_is_added_to_en_manifest) ... ok
+test_mac_rerun_replaces_only_the_mac_entry (__main__.MacLanguageTests.test_mac_rerun_replaces_only_the_mac_entry) ... ok
+test_mac_run_leaves_readme_and_de_untouched (__main__.MacLanguageTests.test_mac_run_leaves_readme_and_de_untouched) ... ok
+test_mac_wrong_size_aborts (__main__.MacLanguageTests.test_mac_wrong_size_aborts) ... ok
+test_photo_test_takes_language_and_phrases_from_launch_language (__main__.MacLanguageTests.test_photo_test_takes_language_and_phrases_from_launch_language) ... ok
+test_workflow_offers_language_with_german_default (__main__.MacLanguageTests.test_workflow_offers_language_with_german_default) ... ok
+test_manifest_lists_both_sizes (__main__.ManifestTests.test_manifest_lists_both_sizes) ... ok
+test_manifest_without_ipad_is_refused (__main__.ManifestTests.test_manifest_without_ipad_is_refused) ... ok
+test_duplicate_attachment_aborts (__main__.ReadExportTests.test_duplicate_attachment_aborts) ... ok
+test_watch_entry_is_added_to_en_manifest (__main__.WatchLanguageTests.test_watch_entry_is_added_to_en_manifest) ... ok
+test_watch_rerun_replaces_only_the_watch_entry (__main__.WatchLanguageTests.test_watch_rerun_replaces_only_the_watch_entry) ... ok
+test_watch_run_leaves_readme_and_de_untouched (__main__.WatchLanguageTests.test_watch_run_leaves_readme_and_de_untouched) ... ok
+test_watch_wrong_size_aborts (__main__.WatchLanguageTests.test_watch_wrong_size_aborts) ... ok
+test_busy_corner_stays_identical (__main__.WindowGripTests.test_busy_corner_stays_identical) ... ok
+test_grip_on_plain_paper_becomes_background (__main__.WindowGripTests.test_grip_on_plain_paper_becomes_background) ... ok
+test_rest_of_image_untouched (__main__.WindowGripTests.test_rest_of_image_untouched) ... ok
+test_size_kept_and_no_alpha (__main__.WindowGripTests.test_size_kept_and_no_alpha) ... ok
 
 ----------------------------------------------------------------------
-Ran 30 tests in 1.897s
+Ran 30 tests in 1.900s
 
 OK
-[store] 4 Mac-Bilder (1280x800) in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpkbgzsa2v/screenshots/en/mac
-[store] 4 Mac-Bilder (1280x800) in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpkq4sds0y/screenshots/en/mac
-[store] 4 Mac-Bilder (1280x800) in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmph66nhse4/screenshots/en/mac
-[store] 2 Uhr-Bilder in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpoybsrev4/screenshots/en/watch
-[store] 2 Uhr-Bilder in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpv7bycmap/screenshots/en/watch
-[store] 2 Uhr-Bilder in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp5v66stf9/screenshots/en/watch
+[store] 4 Mac-Bilder (1280x800) in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpqq5iqazv/screenshots/en/mac
+[store] 4 Mac-Bilder (1280x800) in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpxpzjfup0/screenshots/en/mac
+[store] 4 Mac-Bilder (1280x800) in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp37sj4f9i/screenshots/en/mac
+[store] 2 Uhr-Bilder in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpxpxozxzr/screenshots/en/watch
+[store] 2 Uhr-Bilder in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp31t757qc/screenshots/en/watch
+[store] 2 Uhr-Bilder in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp1kkr9wt_/screenshots/en/watch
