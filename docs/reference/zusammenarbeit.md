@@ -14,7 +14,10 @@ CI abwarten, Merge, TestFlight-Bau, Server-Deploy, Issues und Board laufen ohne 
 Eine Vorlage eines Skills oder Plugins, die „Merge / PR offen beim PO“ schreibt, weicht dieser Regel.
 
 Was Henning liest: was sich am Produkt geändert hat, was er jetzt tun kann, und ob er etwas entscheiden muss. Kein
-Git-Vokabular (checkout, branch, merge, commit, rebase, worktree), keine Diagnoseschritte, kein Denkweg.
+Git-Vokabular (checkout, branch, merge, commit, rebase, worktree), keine Diagnoseschritte, kein Denkweg. Die Form jeder
+Antwort regelt `CLAUDE.md` („Form der Antworten an den Product Owner“): Ergebnis zuerst in ein bis zwei Sätzen, dann
+nur, was er entscheiden oder tun muss; Dateinamen, PR- und Buildnummern, Testzahlen und Werkzeugnamen nur auf
+Nachfrage, Einzelheiten ins Issue oder den PR.
 
 - **Keine Befehle, keine Klickwege für ihn.** Blockiert ein Hook, eine Berechtigung oder ein Werkzeug, wird der
   Mechanismus repariert. Braucht etwas eine Erlaubnis, fragt Claude in Produktsprache „soll ich das für dich

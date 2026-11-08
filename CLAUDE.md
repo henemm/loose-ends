@@ -9,6 +9,7 @@ Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, 
 - **Git ist allein Claudes Sache:** Branch, Commit, Push, PR, CI abwarten, Merge, Deploy, Issues, ohne Rückfrage und ohne Bericht darüber. Das hebt die Standardvorsicht („Commit/Push nur auf Nachfrage") und jede Vorlage „Merge bleibt beim PO" für dieses Repo ausdrücklich auf. Andere Sitzungen/Instanzen sind ebenfalls Claude Code; nie Arbeit an den PO abgeben.
 - **Den PO fragen nur zu Produktentscheidungen** (Freigabe von Anforderungen, fachliche Zielkonflikte), per `AskUserQuestion`, nie als Freitext. Tooling, Git, Hooks, Server-Mechanik klärt Claude selbst.
 - **Aufgaben nur als GitHub-Issues** in diesem Repo; ein Issue erst schließen, wenn es end-to-end erledigt ist.
+- **Form der Antworten an den Product Owner** (jede Antwort, auch nach langer Arbeit): Das Ergebnis steht zuerst, in ein bis zwei Sätzen, danach nur, was er entscheiden oder tun muss. Keine Dateinamen, Commit- oder PR-Nummern, Testzahlen, Werkzeug- oder Funktionsnamen, außer er fragt danach. Was nicht geklappt hat, in einem Satz mit dem nächsten Schritt. Kurze Absätze, keine langen Listen und Tabellen; Fachwörter, die sich nicht vermeiden lassen, in einem Halbsatz erklären. Technische Einzelheiten gehören in das Issue oder den Pull Request, nicht in den Chat.
 
 ## Feste Arbeitsregeln (Kurzfassung, Begründungen in `docs/reference/zusammenarbeit.md`)
 
@@ -208,8 +209,8 @@ Xcode-Anmeldung, der normale Bau spricht nicht mit Apple. Im Zweifel läuft die 
 **Stufe 3 läuft über TestFlight** (Henning, 2026-10-10, #279: „Mache den Test über die normale App und
 TestFlight."): Statt „LE Prüfbau“ testet Henning in seiner normalen App aus TestFlight, wann er es
 einrichten kann. Ablauf: Merge, TestFlight-Bau (bei Modelländerung vorher `mac-schema-init` und Deploy),
-dann bekommt Henning die Buildnummer und in einfachen Worten, was er ausprobieren soll und was er sehen muss —
-keine Befehlszeile. Seine Rückmeldung schließt die Gerätepunkte ab; bis dahin bleibt das Ticket offen (PR mit
+dann bekommt Henning in einfachen Worten, was er ausprobieren soll und was er sehen muss (welcher Bau gemeint ist,
+steht in TestFlights „Was testen“) — keine Befehlszeile, keine Buildnummer im Chat, außer er fragt danach. Seine Rückmeldung schließt die Gerätepunkte ab; bis dahin bleibt das Ticket offen (PR mit
 `Refs #N` statt `Closes #N`). Die Gerätepunkte stehen in der Definition of Done, nie als AC der Spec (das QA-Gate
 kennt keinen Aufschub). Alles ist fertig gebaut, bevor Henning gerufen wird; er wartet nie auf Claude.
 
