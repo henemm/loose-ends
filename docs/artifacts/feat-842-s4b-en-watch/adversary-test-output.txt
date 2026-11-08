@@ -28,7 +28,7 @@ test_hang_detected_without_pipefail (scripts.test_sim_run_xcodebuild.RunXcodebui
 test_hang_message_names_deadline_last_line_and_simulator_service (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_hang_message_names_deadline_last_line_and_simulator_service) ... ok
 test_lock_released_after_hang (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_lock_released_after_hang) ... ok
 test_no_leftovers_after_normal_run (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_no_leftovers_after_normal_run) ... ok
-test_other_session_xcodebuild_survives (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_other_session_xcodebuild_survives) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1313: ResourceWarning: subprocess 89262 is still running
+test_other_session_xcodebuild_survives (scripts.test_sim_run_xcodebuild.RunXcodebuildSilenceGuardTests.test_other_session_xcodebuild_survives) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1313: ResourceWarning: subprocess 73141 is still running
   _warn("subprocess %s is still running" % self.pid,
 ResourceWarning: Enable tracemalloc to get the object allocation traceback
 ok
@@ -52,9 +52,9 @@ test_matching_language_changes_nothing (scripts.test_sim_run_xcodebuild.StoreSim
 test_unset_values_are_removed_again (scripts.test_sim_run_xcodebuild.StoreSimulatorLanguageTests.test_unset_values_are_removed_again) ... ok
 
 ----------------------------------------------------------------------
-Ran 47 tests in 65.110s
+Ran 47 tests in 66.393s
 
 OK
-[store] 2 Uhr-Bilder in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpuzo6xpqe/screenshots/en/watch
-[store] 2 Uhr-Bilder in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp3eayh8mf/screenshots/en/watch
-[store] 2 Uhr-Bilder in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpbcrx2ivo/screenshots/en/watch
+[store] 2 Uhr-Bilder in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpbdn_wsce/screenshots/en/watch
+[store] 2 Uhr-Bilder in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmpdi0gzt9a/screenshots/en/watch
+[store] 2 Uhr-Bilder in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmplc9osf_n/screenshots/en/watch
