@@ -75,7 +75,7 @@ async function assertEmpty(pool: pg.Pool, name: string) {
 test("auth: rundweg anmelden", async (t) => {
   const pool = await migrated(t);
   for (const aud of IDS) {
-    const { routes } = rig(pool, appleOk(`${SUB}.${aud}`, aud));
+    const { routes } = rig(pool, appleOk(`${SUB}.${aud}`, aud), { allowedSubs: new Set(IDS.map((id) => `${SUB}.${id}`)) } as Partial<AuthDeps>);
     const res = await routes["/auth/apple"](login({ identityToken: jwt({ sub: `${SUB}.${aud}` }, undefined, undefined, aud) }));
     assert.equal(res.status, 200);
     assert.equal(res.headers.get("cache-control"), "no-store");
@@ -117,7 +117,37 @@ test("auth: zweite anmeldung ersetzt schluessel nur je client", async (t) => {
   assert.equal(decryptToken(config.tokenKey, id, both[1].refresh_token_enc), "ANDERS");
 });
 
-const BIG = "x".repeat(16 * 1024 + 1);
+// #621 S6a: without a list only the first account gets in; a list admits whoever is on it.
+test("auth: fremde sub wird abgewiesen, kein konto, keine sitzung, kein token", async (t) => {
+  const pool = await migrated(t);
+  const lines: string[] = [];
+  const log = (event: string) => void lines.push(event);
+  const stranger = `${SUB}.fremd`;
+  const as = (sub: string) => login({ identityToken: jwt({ sub }) });
+
+  const first = await rig(pool, appleOk(), { log }).routes["/auth/apple"](as(SUB));
+  assert.equal(first.status, 200, "das Erstkonto");
+  const res = await rig(pool, appleOk(stranger), { log }).routes["/auth/apple"](as(stranger));
+  assert.equal(res.status, 401);
+  const body = await res.text();
+  assert.equal(body, "");
+  assert.equal(await count(pool, "accounts"), 1);
+  assert.equal((await pool.query("SELECT count(*)::int AS n FROM accounts WHERE apple_sub = $1", [stranger])).rows[0].n, 0);
+  assert.equal(await count(pool, "sessions"), 1, "keine Sitzung für die fremde sub");
+  assert.equal(await count(pool, "apple_tokens"), 1, "kein Token für die fremde sub");
+  assert.deepEqual(lines, ["account refused"]);
+  for (const text of [...lines, body, JSON.stringify([...res.headers])]) assert.ok(!text.includes(stranger), "sub in Antwort oder Protokoll");
+
+  const both = { log, allowedSubs: new Set([SUB, stranger]) } as Partial<AuthDeps>;
+  const admitted = await rig(pool, appleOk(stranger), both).routes["/auth/apple"](as(stranger));
+  assert.equal(admitted.status, 200, "mit Listeneintrag");
+  const { sessionToken } = (await admitted.json()) as { sessionToken: string };
+  assert.notEqual(await resolveSession(pool, sessionToken), null);
+  assert.equal(await count(pool, "accounts"), 2);
+  assert.deepEqual(lines, ["account refused"]);
+});
+
+const BIG ="x".repeat(16 * 1024 + 1);
 const JSON_H = { "content-type": "application/json" };
 const INPUT: [string, () => Request, number][] = [
   ["GET", () => post("", JSON_H, "GET"), 405],
@@ -318,7 +348,8 @@ const del = (token?: string, method = "POST", scheme = "Bearer") => bearer(token
 
 async function member(pool: pg.Pool, n: number, aud = IDS[0]) {
   const sub = `${SUB}.${n}`;
-  const res = await rig(pool, appleOk(sub, aud)).routes["/auth/apple"](login({ identityToken: jwt({ sub }, undefined, undefined, aud) }));
+  const res = await rig(pool, appleOk(sub, aud), { allowedSubs: new Set([sub]) } as Partial<AuthDeps>)
+    .routes["/auth/apple"](login({ identityToken: jwt({ sub }, undefined, undefined, aud) }));
   const { sessionToken } = (await res.json()) as { sessionToken: string };
   const id = (await resolveSession(pool, sessionToken))!;
   const order = `0b7d5e3c-0000-4000-8000-${String(n).padStart(12, "0")}`;

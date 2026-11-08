@@ -4,8 +4,9 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type pg from "pg";
+import * as accountsModule from "../src/accounts.ts";
 import { createSession, deleteAccount, endSession, findOrCreate, resolveSession } from "../src/accounts.ts";
-import { migrate } from "../src/migrate.ts";
+import { migrate, MIGRATE_LOCK_ID } from "../src/migrate.ts";
 import { PgAdapter } from "../src/oauth-adapter.ts";
 import { freshPool } from "./db.ts";
 
@@ -240,4 +241,77 @@ test("AC-12: the account functions write nothing to the console, and an error na
   assert.deepEqual(written, []);
   assert.ok(failure, "createSession für ein unbekanntes Konto muss scheitern");
   assert.ok(!failure.message.includes(token) && !failure.message.includes("sub.geheim"), failure.message);
+});
+
+// #621 S6a: the door. Read through the module so the file runs before admit exists.
+type Door = {
+  admit: (pool: pg.Pool, appleSub: string, allowed?: ReadonlySet<string>) => Promise<string | null>;
+  allowedSubsFromEnv: (env: NodeJS.ProcessEnv) => ReadonlySet<string> | undefined;
+  ACCOUNT_LOCK_ID: number;
+};
+const door = accountsModule as unknown as Door;
+const accountCount = async (pool: pg.Pool) => (await pool.query("SELECT count(*)::int AS n FROM accounts")).rows[0].n;
+
+test("tuer: erstes konto schliesst die tuer, vorhandenes bleibt nutzbar", async (t) => {
+  const pool = await migrated(t);
+
+  const first = await door.admit(pool, "sub-a", undefined);
+  assert.equal(typeof first, "string");
+  assert.equal(await accountCount(pool), 1);
+  assert.equal(await door.admit(pool, "sub-b", undefined), null);
+  assert.equal(await accountCount(pool), 1);
+  assert.equal(await door.admit(pool, "sub-a", undefined), first);
+  assert.equal(await door.admit(pool, "sub-a"), first, "ohne Argument wie undefined");
+  assert.equal(await accountCount(pool), 1);
+  assert.notEqual(door.ACCOUNT_LOCK_ID, MIGRATE_LOCK_ID);
+});
+
+test("tuer: gleichzeitige erstanmeldungen ergeben genau ein konto", async (t) => {
+  const pool = await migrated(t);
+  const subs = Array.from({ length: 8 }, (_, i) => `sub-${i}`);
+
+  const results = await Promise.all(subs.map((sub) => door.admit(pool, sub, undefined)));
+  assert.equal(results.filter((id) => typeof id === "string").length, 1, `Ergebnisse: ${JSON.stringify(results)}`);
+  assert.equal(results.filter((id) => id === null).length, 7);
+  assert.equal(await accountCount(pool), 1);
+
+  const fresh = await migrated(t);
+  const same = await Promise.all(subs.map(() => door.admit(fresh, "sub-gleich", undefined)));
+  assert.equal(new Set(same).size, 1);
+  assert.equal(typeof same[0], "string");
+  assert.equal(await accountCount(fresh), 1);
+});
+
+test("tuer: liste entscheidet, auch ueber vorhandene konten", async (t) => {
+  const pool = await migrated(t);
+  const list = new Set(["sub-a"]);
+
+  assert.equal(await door.admit(pool, "sub-x", list), null, "die Liste schlägt das erste Konto");
+  assert.equal(await accountCount(pool), 0);
+  const a = await door.admit(pool, "sub-a", list);
+  assert.equal(typeof a, "string");
+  assert.equal(await door.admit(pool, "sub-a", list), a);
+
+  const b = await findOrCreate(pool, "sub-b");
+  const before = (await pool.query("SELECT * FROM accounts WHERE id = $1", [b])).rows;
+  assert.equal(await door.admit(pool, "sub-b", list), null, "vorhandenes Konto ohne Listeneintrag");
+  assert.deepEqual((await pool.query("SELECT * FROM accounts WHERE id = $1", [b])).rows, before);
+  assert.equal(await door.admit(pool, "sub-b", new Set(["sub-a", "sub-b"])), b);
+  assert.equal(await accountCount(pool), 2);
+});
+
+test("tuer: allowedSubsFromEnv liest streng und nennt nie den wert", () => {
+  for (const value of [undefined, "", "   ", "\t\n"]) {
+    const env = value === undefined ? {} : { ALLOWED_APPLE_SUBS: value };
+    assert.equal(door.allowedSubsFromEnv(env), undefined, JSON.stringify(value));
+  }
+  assert.deepEqual(door.allowedSubsFromEnv({ ALLOWED_APPLE_SUBS: "a, b ,c" }), new Set(["a", "b", "c"]));
+  assert.deepEqual(door.allowedSubsFromEnv({ ALLOWED_APPLE_SUBS: "a" }), new Set(["a"]));
+  for (const value of ["sub-geheim,,b", "sub-geheim,", ",sub-geheim", " , ", ","]) {
+    assert.throws(() => door.allowedSubsFromEnv({ ALLOWED_APPLE_SUBS: value }), (error: Error) => {
+      assert.equal(error.message, "ALLOWED_APPLE_SUBS", value);
+      assert.ok(!String(error.stack).includes("sub-geheim"), `${value}: Wert im Stack`);
+      return true;
+    }, value);
+  }
 });
