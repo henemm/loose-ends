@@ -1,7 +1,14 @@
 # #742 Schnitt 2b: App-Store-Bilder des Mac in der CI (nie auf Hennings Mac). Von Hand startbar, oder beim Push auf store/mac.
+# #842 4b-2: Eingabe `language` (de|en, Standard de) wählt die Sprache der Bilder; ein Push fotografiert deutsch.
 name: Store Mac
 on:
   workflow_dispatch:
+    inputs:
+      language:
+        description: Sprache der Bilder
+        type: choice
+        options: [de, en]
+        default: de
   push:
     branches: [store/mac]
 jobs:
@@ -27,6 +34,8 @@ jobs:
           displayplacer "id:$id res:1920x1080" || true
           system_profiler SPDisplaysDataType | grep -i resolution || true
       - name: Photograph the Mac app
+        env:
+          TEST_RUNNER_LOOSEENDS_UI_LANG: ${{ inputs.language || 'de' }}
         run: |
           set -o pipefail
           xcodebuild test \
@@ -47,7 +56,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: StoreMac
+          name: StoreMac-${{ inputs.language || 'de' }}
           path: |
             StoreMac
             mac-store.log
