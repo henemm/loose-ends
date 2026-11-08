@@ -131,3 +131,9 @@ Keine ADR fällt; kein Ansatz berührt Produktcode.
 
 ### Open Questions
 - keine an den PO (rein technische Entscheidungen; die Bilder hat Henning in 4a/4b freigegeben).
+
+## Umfangsfreigabe (Henning, 2026-11-08, /60-validate)
+
+Endstand 611 LoC: Skript 171, Workflow 54 (zusammen 225, unter 250), Tests 386. Henning wählte per AskUserQuestion
+„So übernehmen“; die Alternative „Prüfungen kürzen“ wurde verworfen, weil die Tests die Grenzen „nie platzieren, nie
+einreichen, nie löschen“ und den Abbruch vor dem ersten Schreiben absichern.
