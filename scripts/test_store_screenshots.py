@@ -11,6 +11,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import unittest.mock
 import zlib
 from pathlib import Path
 
@@ -190,6 +191,83 @@ class LanguageTests(NeedsModule):
         after = {p: p.read_bytes() for p in (screens / "de").rglob("*") if p.is_file()}
         self.assertEqual(before, after)
         self.assertTrue((screens / "en" / "iphone" / "01-start.png").exists())
+
+
+class WatchLanguageTests(NeedsModule):
+    """Englische Uhr-Bilder: `main_watch` trägt sie in den Ordner `en/` ein, ohne Sprache und Rest anzutasten (#842, 4b-1)."""
+
+    WATCH_ORDER = ["01-jetzt", "02-gespeichert"]
+    IPHONE_ENTRY = {"geraet": "iphone", "anzeige": "iPhone 6.3\" Display", "pixel": "1206x2622", "ordner": "iphone",
+                    "dateien": [f"{n}.png" for n in ORDER]}
+    IPAD_ENTRY = {"geraet": "ipad", "anzeige": "iPad 13\" Display", "pixel": "2064x2752", "ordner": "ipad",
+                  "dateien": [f"{n}.png" for n in ORDER]}
+
+    def export(self, size=(416, 496)):
+        """Ein xcresulttool-Export mit den beiden Uhr-Anhängen; `sips` ersetzt durch feste Maße."""
+        folder = self.root / "export"
+        folder.mkdir(exist_ok=True)
+        items = []
+        for name in self.WATCH_ORDER:
+            (folder / f"{name}.png").write_bytes(b"watch-" + name.encode())
+            items.append({"exportedFileName": f"{name}.png", "suggestedHumanReadableName": f"store-{name}_0_ABC"})
+        (folder / "manifest.json").write_text(json.dumps([{"attachments": items}]))
+        patcher = unittest.mock.patch.multiple(ss, sips_info=self.info(size), sips_strip_alpha=self.keep)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        return folder
+
+    def english(self, geraete):
+        folder = self.root / "screenshots" / "en"
+        folder.mkdir(parents=True)
+        manifest = {"sprache": "en-US", "commit": "abc1234", "erstellt": "2026-11-07T12:00:00Z", "geraete": geraete}
+        (folder / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+        return folder
+
+    def read(self, folder):
+        return json.loads((folder / "manifest.json").read_text())
+
+    def test_watch_entry_is_added_to_en_manifest(self):
+        folder = self.english([self.IPHONE_ENTRY, self.IPAD_ENTRY])
+        ss.main_watch(folder, self.export())
+        self.assertEqual(sorted(p.name for p in (folder / "watch").iterdir()), ["01-jetzt.png", "02-gespeichert.png"])
+        manifest = self.read(folder)
+        self.assertEqual(manifest["sprache"], "en-US")
+        self.assertEqual([e["geraet"] for e in manifest["geraete"]], ["iphone", "ipad", "watch"])
+        self.assertEqual(manifest["geraete"][:2], [self.IPHONE_ENTRY, self.IPAD_ENTRY])
+        watch = manifest["geraete"][2]
+        self.assertEqual((watch["pixel"], watch["ordner"], watch["dateien"]),
+                         ("416x496", "watch", ["01-jetzt.png", "02-gespeichert.png"]))
+
+    def test_watch_rerun_replaces_only_the_watch_entry(self):
+        old = {"geraet": "watch", "anzeige": "alt", "pixel": "396x484", "ordner": "watch", "dateien": ["x.png"]}
+        mac = {"geraet": "mac", "anzeige": "Mac (16:10)", "pixel": "2880x1800", "ordner": "mac", "dateien": ["01-start.png"]}
+        folder = self.english([self.IPHONE_ENTRY, self.IPAD_ENTRY, old, mac])
+        ss.main_watch(folder, self.export())
+        geraete = self.read(folder)["geraete"]
+        self.assertEqual([e for e in geraete if e["geraet"] != "watch"], [self.IPHONE_ENTRY, self.IPAD_ENTRY, mac])
+        self.assertEqual([e["pixel"] for e in geraete if e["geraet"] == "watch"], ["416x496"])
+
+    def test_watch_run_leaves_readme_and_de_untouched(self):
+        folder = self.english([self.IPHONE_ENTRY, self.IPAD_ENTRY])
+        (folder / "README.md").write_bytes(b"# App Store screenshots (English)\n\nHand-written: Watch and Mac.\n")
+        german = self.root / "screenshots" / "de"
+        (german / "watch").mkdir(parents=True)
+        (german / "watch" / "01-jetzt.png").write_bytes(b"deutsch")
+        (german / "manifest.json").write_text('{"sprache": "de-DE"}')
+        files = lambda: {p: p.read_bytes() for p in [folder / "README.md", *german.rglob("*")] if p.is_file()}
+        before = files()
+        ss.main_watch(folder, self.export())
+        self.assertEqual(files(), before)
+
+    def test_watch_wrong_size_aborts(self):
+        folder = self.english([self.IPHONE_ENTRY, self.IPAD_ENTRY])
+        (folder / "watch").mkdir()
+        (folder / "watch" / "01-jetzt.png").write_bytes(b"vorher")
+        with self.assertRaises(ss.StoreError):
+            ss.main_watch(folder, self.export(size=(396, 484)))
+        self.assertEqual([p.name for p in (folder / "watch").iterdir()], ["01-jetzt.png"])
+        self.assertEqual((folder / "watch" / "01-jetzt.png").read_bytes(), b"vorher")
+        self.assertEqual([e["geraet"] for e in self.read(folder)["geraete"]], ["iphone", "ipad"])
 
 
 PAPER = (244, 243, 238)
