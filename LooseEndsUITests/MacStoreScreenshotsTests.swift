@@ -1,13 +1,15 @@
 #if os(macOS)
 import XCTest
 
-/// #742 Schnitt 2b: the App Store pictures for the Mac, German and light. The window opens 1280 x 800
+/// #742 Schnitt 2b: the App Store pictures for the Mac, German or English (`LOOSEENDS_UI_LANG`, default German, #842),
+/// light. The window opens 1280 x 800
 /// (`--ui-testing-store-window`, 16:10) and only the window is photographed, five attachments
 /// `store-<nn>-<name>`. Runs in the workflow `store-mac.yml`, never on Henning's Mac. The tasks are made up
 /// and live only in memory (`--ui-testing`).
 final class MacStoreScreenshotsTests: XCTestCase {
-    private static let tasks = ["Steuerbescheid heute prüfen", "Anna heute wegen Sonntag anrufen", "Blumen heute gießen",
-                                "Rasen mähen"]
+    private static let language = ProcessInfo.processInfo.environment["LOOSEENDS_UI_LANG"] ?? "de"
+    private static let tasks = ["storeTask1", "storeTask2", "storeTask3", "storeTask4"]
+        .map { LaunchLanguage.phrase($0, in: language) }
 
     override func setUp() {
         continueAfterFailure = false
@@ -15,7 +17,7 @@ final class MacStoreScreenshotsTests: XCTestCase {
 
     @MainActor
     func testPhotographStoreScreens() throws {
-        let app = macLaunch(dark: false, locale: "de_DE", extra: ["--ui-testing-store-window"])
+        let app = macLaunch(dark: false, locale: LaunchLanguage.locale(for: Self.language), extra: ["--ui-testing-store-window"])
         _ = macOpenMainWindowIfNeeded(app)
         XCTAssertTrue(macElement("startCaptureField", in: app).waitForExistence(timeout: 20), "Keine Startseite")
         for text in Self.tasks { macCapture(text, in: app) }

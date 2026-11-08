@@ -270,6 +270,98 @@ class WatchLanguageTests(NeedsModule):
         self.assertEqual([e["geraet"] for e in self.read(folder)["geraete"]], ["iphone", "ipad"])
 
 
+class MacLanguageTests(NeedsModule):
+    """Englische Mac-Bilder: `main_mac` trägt sie in `en/` ein, Workflow und Fototest wählen die Sprache (#842, 4b-2)."""
+
+    IPHONE_ENTRY, IPAD_ENTRY = WatchLanguageTests.IPHONE_ENTRY, WatchLanguageTests.IPAD_ENTRY
+    english, read = WatchLanguageTests.english, WatchLanguageTests.read
+
+    MAC_ORDER = ["01-start", "03-neu", "04-detail", "05-erledigt"]
+    WATCH_ENTRY = {"geraet": "watch", "anzeige": "Apple Watch Series 11", "pixel": "416x496", "ordner": "watch",
+                   "dateien": ["01-jetzt.png", "02-gespeichert.png"]}
+    WORKFLOW = SCRIPTS.parent / ".github" / "workflows" / "store-mac.yml"
+    PHOTO_TEST = SCRIPTS.parent / "LooseEndsUITests" / "MacStoreScreenshotsTests.swift"
+
+    def export(self, size=(1280, 800)):
+        """Ein xcresulttool-Export mit den vier Mac-Anhängen; `sips` ersetzt durch feste Maße."""
+        folder = self.root / "export"
+        folder.mkdir(exist_ok=True)
+        items = []
+        for name in self.MAC_ORDER:
+            (folder / f"{name}.png").write_bytes(b"mac-" + name.encode())
+            items.append({"exportedFileName": f"{name}.png", "suggestedHumanReadableName": f"store-{name}_0_ABC"})
+        (folder / "manifest.json").write_text(json.dumps([{"attachments": items}]))
+        patcher = unittest.mock.patch.multiple(ss, sips_info=self.info(size), png_flatten_alpha=self.keep)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        return folder
+
+    def others(self):
+        return [self.IPHONE_ENTRY, self.IPAD_ENTRY, self.WATCH_ENTRY]
+
+    def test_mac_entry_is_added_to_en_manifest(self):
+        folder = self.english(self.others())
+        ss.main_mac(folder, self.export())
+        self.assertEqual(sorted(p.name for p in (folder / "mac").iterdir()), [f"{n}.png" for n in self.MAC_ORDER])
+        manifest = self.read(folder)
+        self.assertEqual(manifest["sprache"], "en-US")
+        self.assertEqual([e["geraet"] for e in manifest["geraete"]], ["iphone", "ipad", "watch", "mac"])
+        self.assertEqual(manifest["geraete"][:3], self.others())
+        mac = manifest["geraete"][3]
+        self.assertEqual((mac["pixel"], mac["ordner"], mac["dateien"]),
+                         ("1280x800", "mac", [f"{n}.png" for n in self.MAC_ORDER]))
+
+    def test_mac_rerun_replaces_only_the_mac_entry(self):
+        old = {"geraet": "mac", "anzeige": "alt", "pixel": "2880x1800", "ordner": "mac", "dateien": ["x.png"]}
+        folder = self.english([self.IPHONE_ENTRY, old, self.IPAD_ENTRY, self.WATCH_ENTRY])
+        ss.main_mac(folder, self.export())
+        geraete = self.read(folder)["geraete"]
+        self.assertEqual([e for e in geraete if e["geraet"] != "mac"], self.others())
+        self.assertEqual([e["pixel"] for e in geraete if e["geraet"] == "mac"], ["1280x800"])
+
+    def test_mac_run_leaves_readme_and_de_untouched(self):
+        folder = self.english(self.others())
+        (folder / "README.md").write_bytes(b"# App Store screenshots (English)\n\nHand-written: Watch and Mac.\n")
+        german = self.root / "screenshots" / "de"
+        (german / "mac").mkdir(parents=True)
+        (german / "mac" / "01-start.png").write_bytes(b"deutsch")
+        (german / "manifest.json").write_text('{"sprache": "de-DE"}')
+        files = lambda: {p: p.read_bytes() for p in [folder / "README.md", *german.rglob("*")] if p.is_file()}
+        before = files()
+        ss.main_mac(folder, self.export())
+        self.assertEqual(files(), before)
+
+    def test_mac_wrong_size_aborts(self):
+        folder = self.english(self.others())
+        (folder / "mac").mkdir()
+        (folder / "mac" / "01-start.png").write_bytes(b"vorher")
+        before = (folder / "manifest.json").read_bytes()
+        with self.assertRaises(ss.StoreError):
+            ss.main_mac(folder, self.export(size=(1206, 2622)))
+        self.assertEqual([p.name for p in (folder / "mac").iterdir()], ["01-start.png"])
+        self.assertEqual((folder / "mac" / "01-start.png").read_bytes(), b"vorher")
+        self.assertEqual((folder / "manifest.json").read_bytes(), before)
+
+    def test_workflow_offers_language_with_german_default(self):
+        import yaml
+        flow = yaml.safe_load(self.WORKFLOW.read_text())
+        trigger = flow.get("on", flow.get(True))
+        choice = trigger["workflow_dispatch"]["inputs"]["language"]
+        self.assertEqual((choice["type"], choice["options"], choice["default"]), ("choice", ["de", "en"], "de"))
+        steps = flow["jobs"]["store-mac"]["steps"]
+        photo = next(s for s in steps if s.get("name") == "Photograph the Mac app")
+        self.assertEqual(photo["env"]["TEST_RUNNER_LOOSEENDS_UI_LANG"], "${{ inputs.language || 'de' }}")
+        upload = next(s for s in steps if s.get("uses", "").startswith("actions/upload-artifact"))
+        self.assertEqual(upload["with"]["name"], "StoreMac-${{ inputs.language || 'de' }}")
+
+    def test_photo_test_takes_language_and_phrases_from_launch_language(self):
+        source = self.PHOTO_TEST.read_text()
+        self.assertIn('environment["LOOSEENDS_UI_LANG"] ?? "de"', source)
+        self.assertIn("LaunchLanguage.locale(for: Self.language)", source)
+        self.assertIn("LaunchLanguage.phrase(", source)
+        self.assertNotIn("Steuerbescheid", source, "die Aufgaben kommen aus LaunchLanguage, nicht als Literal")
+
+
 PAPER = (244, 243, 238)
 GRIP = (2008, 2696, 2054, 2742)   # gemessener Griff auf den iPad-Bildern: x0, y0, x1, y1 (einschließlich)
 
