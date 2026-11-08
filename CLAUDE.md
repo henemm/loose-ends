@@ -108,6 +108,7 @@ LOOSEENDS_UI_LANG=en ./scripts/sim.sh store-screenshots  # dasselbe englisch nac
 ./scripts/sim.sh store-watch          # App-Store-Bilder Apple Watch 416×496 nach docs/store/screenshots/de/watch/, Beispielaufgaben nur unter --ui-testing-store-sample (#742)
 LOOSEENDS_UI_LANG=en ./scripts/sim.sh store-watch  # dasselbe englisch nach docs/store/screenshots/en/watch/, nur de|en, Beispieltexte per --ui-testing-store-sample-texts, Systemsprache des Watch-Simulators danach zurück (#842)
 gh workflow run store-mac.yml -f language=en  # App-Store-Bilder Mac 1280×800 nur in der CI (Artefakt StoreMac-<Sprache>, Standard de); Übernahme mit python3 scripts/store_screenshots.py --mac docs/store/screenshots/<lang> <export> (#842)
+gh workflow run asc-store-images.yml -f aktion=lesen -f sprache=en  # Store-Bilder einer Sprache in Apples Asset-Bibliothek: `lesen` (nur GET) oder `hochladen` (Namen `<sprache>-<gerät>-<datei>`, vorhandene übersprungen); nie platzieren, einreichen oder löschen, Mac nur mit bearbeitbarer Mac-Version (#842 S4c-1)
 ./scripts/sim.sh watch-test <Klasse>  # Watch-UI-Test im watchOS-Simulator ohne Beleg (Bilder, Sichtprüfung)
 LOOSEENDS_LANG=en ./scripts/sim.sh sim-unit <Klasse>  # Testsprache en (-testLanguage/-testRegion), Simulator bleibt wie er ist (#670)
 ./scripts/sim.sh launch-measure <n>   # Kaltstart-Messung, n Starts auf dem Gerät (#22)

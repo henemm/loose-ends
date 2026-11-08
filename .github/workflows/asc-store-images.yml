@@ -1,0 +1,54 @@
+# Handlauf (#842, 4c-1): Store-Bilder einer Sprache aus docs/store/screenshots/ in Apples Asset-Bibliothek. `lesen`
+# schreibt nichts bei Apple, `hochladen` legt nur Bilder in der Bibliothek an. Nie platzieren, nie einreichen, nie löschen.
+# Der Auslöser pull_request führt nur die Tests aus und registriert die Datei für den Handlauf vom Zweig (--ref).
+name: ASC Store Images
+
+on:
+  workflow_dispatch:
+    inputs:
+      aktion:
+        description: "lesen (nur Version, Gruppen und Bibliothek) oder hochladen (Bilder in die Bibliothek)"
+        required: true
+        default: lesen
+        type: choice
+        options:
+          - lesen
+          - hochladen
+      sprache:
+        description: "Sprache der Bilder (en oder de)"
+        required: true
+        default: en
+        type: choice
+        options:
+          - en
+          - de
+  pull_request:
+    paths:
+      - scripts/asc_store_images.py
+      - scripts/test_asc_store_images.py
+      - .github/workflows/asc-store-images.yml
+
+permissions:
+  contents: read
+
+jobs:
+  images:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - name: Script tests
+        run: python3 -m unittest scripts/test_asc_store_images.py
+      - name: Store images in the asset library
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_POLL_SECONDS: "5"
+          AKTION: ${{ inputs.aktion }}
+          SPRACHE: ${{ inputs.sprache }}
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT
+          umask 077
+          printf '%s\n' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"
+          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_store_images.py "$AKTION" "$SPRACHE"
