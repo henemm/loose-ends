@@ -148,7 +148,7 @@ before(() => {
     restore.push(() => { (stream as Doc).write = write; });
   }
 });
-const EVENT = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z (oauth return refused|oauth return store failed|oauth interaction refused|oauth interaction store failed|oauth server error|oauth error|apple revoke skipped|apple revoke failed|pool error|pool end failed|mcp close failed|listening|migrated)$/;
+const EVENT = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z (account refused|oauth return refused|oauth return store failed|oauth interaction refused|oauth interaction store failed|oauth server error|oauth error|apple revoke skipped|apple revoke failed|pool error|pool end failed|mcp close failed|listening|migrated)$/;
 function assertQuiet() {
   for (const line of lines) {
     assert.match(line, EVENT, `kein festes Ereignis: ${line.slice(0, 160)}`);
@@ -440,7 +440,7 @@ test("rueckweg: geloeschtes konto ergibt 400 und raeumt tickets mit ab", async (
   const logged: string[] = [];
   let deleteFirst = true;
   // The pool the handler writes through: the ticket's INSERT first deletes its account, so the foreign key fails.
-  const swap = (real: pg.Pool) => ({ query: async (sql: string, params?: any[]) => {
+  const swap = (real: pg.Pool) => ({ connect: () => real.connect(), query: async (sql: string, params?: any[]) => {
     if (deleteFirst && params?.[0] === "AppleTicket" && /INSERT/.test(sql)) await deleteAccount(real, params[5]);
     return real.query(sql, params);
   } });
@@ -529,13 +529,55 @@ test("rueckweg: zweite anmeldung ersetzt die web-zeile", async (t) => {
   assert.ok(tokens[0].created_at.getTime() > before.getTime(), "created_at nicht vorgerückt");
 });
 
+// #621 S6a: the door on the web way; without a list only the first account gets in.
+const BOTH = new Set(["apple-sub-1", "apple-sub-2"]);
+const withList = (t: T, apple: Apple, more: Doc = {}) => withApple(t, apple, { auth: { config: withWeb, fetch: apple.fetch, allowedSubs: BOTH }, ...more });
+
+test("rueckweg: fremde sub ergibt access_denied ohne konto und ohne token", async (t) => {
+  const apple = fakeApple();
+  const running = await withApple(t, apple);
+  const first = await through(running, apple);
+  ticketOf(first.answer, first.at, "erstkonto");
+  const firstId = await accountOf(running.pool);
+  note(firstId);
+
+  apple.sub = "apple-sub-2";
+  const from = lines.length;
+  const { at, answer } = await through(running, apple);
+  const row = await ticketRow(running.pool, ticketOf(answer, at, "fremd"));
+  assert.deepEqual(row.payload, { uid: at.uid, error: "access_denied" });
+  assert.equal(row.account_id, null);
+  assert.equal(await countOf(running.pool, "accounts"), 1, "zweites Konto");
+  assert.equal(await countOf(running.pool, "accounts", "apple_sub = 'apple-sub-2'"), 0);
+  assert.deepEqual((await tokensOf(running.pool)).map((r) => r.account_id), [firstId], "Web-Token der fremden sub abgelegt");
+  assert.equal(apple.revokes, 0);
+  const login = (await running.pool.query("SELECT consumed_at FROM oauth_records WHERE model = 'AppleLogin' AND id_hash = $1", [sha(at.state)])).rows[0];
+  assert.ok(login?.consumed_at, "state nicht verbraucht");
+  assert.deepEqual(lines.slice(from).map((line) => line.slice(25)), ["account refused"]);
+  assertQuiet();
+});
+
+test("rueckweg: fremde sub auf der liste kommt bis zum ticket mit konto und web-token", async (t) => {
+  const apple = fakeApple();
+  const running = await withList(t, apple);
+  const first = await through(running, apple);
+  ticketOf(first.answer, first.at, "erstkonto");
+  apple.sub = "apple-sub-2";
+  const { at, answer } = await through(running, apple);
+  const row = await ticketRow(running.pool, ticketOf(answer, at, "auf der liste"));
+  const second = await accountOf(running.pool, "apple-sub-2");
+  assert.equal(row.account_id, second);
+  assert.equal(await countOf(running.pool, "accounts"), 2);
+  assert.equal(await countOf(running.pool, "apple_tokens", `account_id = '${second}' AND client_id = '${WEB}'`), 1);
+});
+
 test("rueckweg: konto beim ablegen geloescht ergibt access_denied ohne konto-id", async (t) => {
   const apple = fakeApple();
   const logged: string[] = [];
   let inserts = 0;
   let accountId = "";
   // The token's INSERT first deletes its account, so the foreign key fails and storeRefreshToken gives false.
-  const swap = (real: pg.Pool) => ({ query: async (sql: string, params?: any[]) => {
+  const swap = (real: pg.Pool) => ({ connect: () => real.connect(), query: async (sql: string, params?: any[]) => {
     if (/INSERT INTO apple_tokens/.test(sql)) { inserts++; accountId = params![0]; note(accountId); await deleteAccount(real, accountId); }
     return real.query(sql, params);
   } });
@@ -558,7 +600,7 @@ test("rueckweg: datenbankfehler beim ablegen ergibt feste 400 ohne ticket", asyn
   let inserts = 0;
   let accountId = "";
   // The token's INSERT fails with the account id and a marker word in the error text.
-  const swap = (real: pg.Pool) => ({ query: async (sql: string, params?: any[]) => {
+  const swap = (real: pg.Pool) => ({ connect: () => real.connect(), query: async (sql: string, params?: any[]) => {
     if (/INSERT INTO apple_tokens/.test(sql)) { inserts++; accountId = params![0]; note(accountId); throw new Error(`ablage-kaputt-4711 ${accountId}`); }
     return real.query(sql, params);
   } });
@@ -878,7 +920,7 @@ test("finish: ohne cookie und mit fremdem cookie 400 und ticket bleibt", async (
 
 test("finish: ticket einer anderen interaktion 400 und ticket bleibt", async (t) => {
   const apple = fakeApple();
-  const running = await withApple(t, apple);
+  const running = await withList(t, apple);
   const a = await flow(running, apple);
   apple.sub = "apple-sub-2";
   const b = await flow(running, apple);

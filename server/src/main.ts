@@ -7,6 +7,7 @@ import { pipeline } from "node:stream/promises";
 import { setTimeout as sleep } from "node:timers/promises";
 import type { ReadableStream as NodeReadableStream } from "node:stream/web";
 import pg from "pg";
+import { allowedSubsFromEnv } from "./accounts.ts";
 import { type AppleConfig, type KeyLookup, loadAppleConfig } from "./apple.ts";
 import { createJwks } from "./apple-jwks.ts";
 import { authRoutes } from "./auth.ts";
@@ -25,7 +26,7 @@ export type Route = (request: Request) => Promise<Response>;
 export type StartOptions = {
   databaseUrl: string; port: number; host?: string; migrationsDir: string; retryMs?: number; maxAttempts?: number;
   now?: () => number; applicationName?: string; extraRoutes?: Record<string, Route>;
-  auth?: { config?: AppleConfig; fetch?: typeof fetch };
+  auth?: { config?: AppleConfig; fetch?: typeof fetch; allowedSubs?: ReadonlySet<string> };
   oauth?: { publicUrl?: string; verifier?: OAuthTokenVerifier; keys?: OAuthKeys; fetch?: typeof fetch; interaction?: Interaction;
     appleReturn?: ReturnHandler;
   };
@@ -134,7 +135,7 @@ function mountAuth(options: StartOptions, pool: pg.Pool, isReady: () => boolean,
   const { config } = options.auth;
   const fetch = options.auth.fetch ?? globalThis.fetch;
   const now = options.now ?? Date.now;
-  const routes = authRoutes({ pool, config, keys, fetch, now, log: logError });
+  const routes = authRoutes({ pool, config, keys, fetch, now, log: logError, allowedSubs: options.auth.allowedSubs });
   return Object.fromEntries(Object.entries(routes).map(([path, route]) => [path, gated(isReady, route)]));
 }
 
@@ -164,7 +165,7 @@ function returnFor(options: StartOptions, pool: pg.Pool, now: () => Date, keys: 
   if (handedIn !== undefined) return handedIn;
   if (interaction !== undefined || config?.webClientId === undefined || keys === undefined) return undefined;
   const fetch = options.auth?.fetch ?? globalThis.fetch;
-  return appleReturn({ pool, config, publicUrl, now, fetch, keys, log: logError });
+  return appleReturn({ pool, config, publicUrl, now, fetch, keys, log: logError, allowedSubs: options.auth?.allowedSubs });
 }
 
 // The issuer gets the raw request (it reads the body itself); 503 without a body before migrate or without keys.
@@ -243,6 +244,16 @@ async function shutdown(server: http.Server, pool: pg.Pool, closeMcp: () => Prom
   await closeMcp().catch(() => logError("mcp close failed"));
 }
 
+// The door's list; an invalid value stops the process before pool and port, never naming the value.
+function allowedSubsOrExit(): ReadonlySet<string> | undefined {
+  try {
+    return allowedSubsFromEnv(process.env);
+  } catch {
+    logError("allowed subs invalid: ALLOWED_APPLE_SUBS");
+    process.exit(1);
+  }
+}
+
 // The process: settings from the environment, one shutdown on SIGTERM or SIGINT, exit 1 when migrate gives up.
 async function main(): Promise<void> {
   const databaseUrl = process.env.DATABASE_URL;
@@ -257,6 +268,7 @@ async function main(): Promise<void> {
     logError(`apple config invalid: ${(error as Error).message}`);
     process.exit(1);
   }
+  const allowedSubs = allowedSubsOrExit();
   let keys: OAuthKeys | undefined;
   try {
     keys = oauthKeysFromEnv(process.env);
@@ -273,7 +285,7 @@ async function main(): Promise<void> {
   }
   const running = await start({
     databaseUrl, port: Number(process.env.PORT ?? 8080), host: process.env.HOST ?? "127.0.0.1",
-    migrationsDir: join(import.meta.dirname, "../migrations"), auth: { config }, oauth: { publicUrl, keys },
+    migrationsDir: join(import.meta.dirname, "../migrations"), auth: { config, allowedSubs }, oauth: { publicUrl, keys },
   });
   let stopping = false;
   const stop = async (code: number) => {

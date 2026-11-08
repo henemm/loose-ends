@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import http from "node:http";
 import { createServer } from "node:net";
 import { join } from "node:path";
@@ -278,22 +278,24 @@ function idToken(sub = A_SUB): string {
 }
 
 // Fake Apple: keys, token and revoke; counts every call by URL.
+// who.sub is the sub Apple's token endpoint answers with (S6a signs in two people).
 function fakeApple(revoke: "ok" | "throws" = "ok") {
   const urls: string[] = [];
+  const who = { sub: A_SUB };
   const fetch = (async (input: string | URL) => {
     const url = String(input);
     urls.push(url);
     if (url === KEYS_URL) return Response.json({ keys: [A_JWK] });
-    if (url === TOKEN_URL) return Response.json({ refresh_token: A_REFRESH, id_token: idToken() });
+    if (url === TOKEN_URL) return Response.json({ refresh_token: A_REFRESH, id_token: idToken(who.sub) });
     if (revoke === "throws") throw new Error("netz-weg-4711");
     return new Response(null, { status: 200 });
   }) as unknown as typeof globalThis.fetch;
-  return { urls, fetch, keyCalls: () => urls.filter((url) => url === KEYS_URL).length };
+  return { urls, fetch, who, keyCalls: () => urls.filter((url) => url === KEYS_URL).length };
 }
 
-const signIn = (url: string) => fetch(`${url}/auth/apple`, {
+const signIn = (url: string, sub = A_SUB) => fetch(`${url}/auth/apple`, {
   method: "POST", headers: { "content-type": "application/json" },
-  body: JSON.stringify({ identityToken: idToken(), nonce: A_NONCE, code: A_CODE }),
+  body: JSON.stringify({ identityToken: idToken(sub), nonce: A_NONCE, code: A_CODE }),
 });
 const withBearer = (url: string, path: string, token: string) =>
   fetch(`${url}${path}`, { method: "POST", headers: { authorization: `Bearer ${token}` } });
@@ -440,7 +442,7 @@ test("einhaengen: weiche apple env", async () => {
 const MAIN = join(import.meta.dirname, "../src/main.ts");
 function child(env: Record<string, string>) {
   const base = Object.fromEntries(Object.entries(process.env)
-    .filter(([k]) => !k.startsWith("APPLE_") && !k.startsWith("OAUTH_") && k !== "NODE_TEST_CONTEXT"));
+    .filter(([k]) => !k.startsWith("APPLE_") && !k.startsWith("OAUTH_") && k !== "ALLOWED_APPLE_SUBS" && k !== "NODE_TEST_CONTEXT"));
   const proc = spawn(process.execPath, [MAIN], { env: { ...base, HOST: "127.0.0.1", ...env }, stdio: ["ignore", "pipe", "pipe"] });
   let output = "";
   proc.stdout.on("data", (chunk) => { output += chunk; });
@@ -540,6 +542,52 @@ test("main: ungueltige oauth schluessel brechen start ab", async (t) => {
       assert.ok(!run.output().includes(value), `${name}: Wert in der Ausgabe`);
     }
   }
+});
+
+// #621 S6a, AC-5: an invalid list stops the process before pool and listen, naming only the variable.
+test("start: ungueltige ALLOWED_APPLE_SUBS stoppt vor pool und port, ohne den wert zu nennen", async (t) => {
+  const dbHits: number[] = [];
+  const fakeDb = createServer((socket) => { dbHits.push(1); socket.destroy(); });
+  await new Promise<void>((done) => fakeDb.listen(0, "127.0.0.1", done));
+  t.after(() => new Promise<void>((done) => fakeDb.close(() => done())));
+  const dbUrl = `postgres://postgres@127.0.0.1:${(fakeDb.address() as { port: number }).port}/postgres`;
+  const run = child({ ALLOWED_APPLE_SUBS: "sub-a,,sub-geheim-4711", DATABASE_URL: dbUrl, PORT: String(await freePort()) });
+  const code = await within(run.exited, 5000, () => run.proc.kill("SIGKILL"));
+  assert.equal(code, 1, `Exit-Code: ${run.output()}`);
+  assert.ok(run.output().includes("allowed subs invalid: ALLOWED_APPLE_SUBS"), run.output());
+  for (const value of ["sub-geheim-4711", "sub-a"]) assert.ok(!run.output().includes(value), `Wert in der Ausgabe: ${value}`);
+  assert.doesNotMatch(run.output(), /listening/);
+  assert.equal(dbHits.length, 0, "Pool geöffnet");
+});
+
+// #621 S6a, AC-8: no product file creates an account past admit, and start wires the door closed by default.
+test("tuer: kein aufrufer in src umgeht admit, start verdrahtet die liste", async (t) => {
+  const src = join(import.meta.dirname, "../src");
+  const bypass = readdirSync(src, { recursive: true }).map(String)
+    .filter((file) => file.endsWith(".ts") && file !== "accounts.ts")
+    .filter((file) => readFileSync(join(src, file), "utf8").includes("findOrCreate"));
+  assert.deepEqual(bypass, [], "findOrCreate außerhalb von accounts.ts");
+
+  const second = `${A_SUB}.zwei`;
+  const closed = fakeApple();
+  const running = await service(t, { auth: { config: aConfig, fetch: closed.fetch } });
+  await running.ready;
+  const pool = dataPool(t, running.databaseUrl);
+  assert.equal((await signIn(running.url)).status, 200, "erste sub");
+  closed.who.sub = second;
+  const refused = await signIn(running.url, second);
+  assert.equal(refused.status, 401, "zweite sub ohne Liste");
+  assert.equal(await refused.text(), "");
+  assert.equal((await pool.query("SELECT count(*)::int AS n FROM accounts")).rows[0].n, 1);
+
+  const open = fakeApple();
+  const listed = await service(t, { auth: { config: aConfig, fetch: open.fetch, allowedSubs: new Set([A_SUB, second]) } as never });
+  await listed.ready;
+  const listedPool = dataPool(t, listed.databaseUrl);
+  assert.equal((await signIn(listed.url)).status, 200, "erste sub mit Liste");
+  open.who.sub = second;
+  assert.equal((await signIn(listed.url, second)).status, 200, "zweite sub mit Liste");
+  assert.equal((await listedPool.query("SELECT count(*)::int AS n FROM accounts")).rows[0].n, 2);
 });
 
 test("einhaengen: body ueber 1 mib 413", async (t) => {
