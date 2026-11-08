@@ -1,0 +1,35 @@
+== vorher: booted
+== Devices ==
+-- iOS 27.2 --
+-- iOS 27.2 --
+    iPhone 17 (D553352F-E7E6-4A9A-B1F5-190001E01113) (Booted) 
+    iPad Pro 13-inch (M5) (3EA5D870-2F85-4279-B7CC-FC9A5C208846) (Booted) 
+-- watchOS 27.0 --
+    Apple Watch Series 12 (46mm) (F68F99F3-B339-42D5-A710-8A8A5AA2CBAA) (Booted) 
+-- watchOS 27.2 --
+== vorher: git status
+ M CLAUDE.md
+ M LooseEndsWatch/LooseEndsWatchApp.swift
+ M scripts/sim.sh
+?? .claude/
+?? docs/artifacts/feat-842-s4b-en-watch/ac3-fr.txt
+?? docs/artifacts/feat-842-s4b-en-watch/test-green-python.txt
+== Lauf: LOOSEENDS_UI_LANG=fr ./scripts/sim.sh store-watch
+[0;31m[sim][0m Unbekannte Sprache 'fr' für store-watch (nur de oder en)
+rc=1
+== nachher: booted
+== Devices ==
+-- iOS 27.2 --
+-- iOS 27.2 --
+    iPhone 17 (D553352F-E7E6-4A9A-B1F5-190001E01113) (Booted) 
+    iPad Pro 13-inch (M5) (3EA5D870-2F85-4279-B7CC-FC9A5C208846) (Booted) 
+-- watchOS 27.0 --
+    Apple Watch Series 12 (46mm) (F68F99F3-B339-42D5-A710-8A8A5AA2CBAA) (Booted) 
+-- watchOS 27.2 --
+== nachher: git status
+ M CLAUDE.md
+ M LooseEndsWatch/LooseEndsWatchApp.swift
+ M scripts/sim.sh
+?? .claude/
+?? docs/artifacts/feat-842-s4b-en-watch/ac3-fr.txt
+?? docs/artifacts/feat-842-s4b-en-watch/test-green-python.txt

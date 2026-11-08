@@ -1,0 +1,41 @@
+[0;32m[sim][0m Simulator bereit (Apple Watch Series 12 (46mm)).
+[0;34m[sim][0m Simulator F68F99F3-B339-42D5-A710-8A8A5AA2CBAA: Systemsprache de-DE/de_DE → en/en_US, Neustart
+[0;32m[sim][0m Simulator bereit (Apple Watch Series 12 (46mm)).
+[0;34m[sim][0m UI-Test: WatchCaptureUITests/testPhotographStoreScreens
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (3 targets)
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftmodule -> LooseEndsWatch.swiftmodule
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos-simulator.abi.json -> LooseEndsWatch.abi.json
+[[36mLooseEndsWatch[0m] [1mCopy[0m arm64-apple-watchos-simulator.swiftsourceinfo -> LooseEndsWatch.swiftsourceinfo
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mCompiling[0m LooseEndsWatchApp.swift
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch.debug.dylib
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEndsWatch' from project 'LooseEnds')
+[[36mLooseEndsWatch[0m] [1mLinking[0m LooseEndsWatch
+[[36mLooseEndsWatch[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatchUITests[0m] [1mProcessing[0m empty-LooseEndsWatchUITests.plist
+Test Suite 'Selected tests' started at 2026-11-08 08:33:34.401.
+Test Suite 'LooseEndsWatchUITests.xctest' started at 2026-11-08 08:33:34.403.
+Test Suite 'WatchCaptureUITests' started at 2026-11-08 08:33:34.403.
+    [32m✔[0m testPhotographStoreScreens ([31m20.535[0m seconds)
+Executed 1 test, with 0 failures (0 unexpected) in 20.535 (20.536) seconds
+Test Suite 'LooseEndsWatchUITests.xctest' passed at 2026-11-08 08:33:54.940.
+Executed 1 test, with 0 failures (0 unexpected) in 20.535 (20.536) seconds
+Executed 1 test, with 0 failures (0 unexpected) in 20.535 (20.538) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-whimsical-nibbling-bird/Logs/Test/Test-LooseEndsWatch-2026.11.08_08-33-21-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden.
+Exported 2 attachments for: WatchCaptureUITests/testPhotographStoreScreens():
+File: 1CDFCFF2-4C8B-4BD7-AD42-4103687BAFCB.png, suggested name: "store-02-gespeichert_0_0D6A1F67-7592-4015-A9FA-2C0EE7F8E925.png"
+File: D6B5CEC0-8D5F-4E26-A690-03E3961D18E0.png, suggested name: "store-01-jetzt_0_A0E69683-D63A-47F1-9454-656B2745C415.png"
+
+Generated manifest file with attachment details: /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.VApBW0vTwe/manifest.json
+[store] 2 Uhr-Bilder in docs/store/screenshots/en/watch
+[0;32m[sim][0m Watch-Store-Bilder (en) in docs/store/screenshots/en/watch/

@@ -1,0 +1,10 @@
+# GREEN feat-842-s4b-en-watch (2026-11-08)
+
+python3 -m unittest scripts/test_store_screenshots.py scripts/test_sim_run_xcodebuild.py -v  → OK, Ran 47 tests, 0 failures (test-green-python.txt)
+LOOSEENDS_UI_LANG=fr ./scripts/sim.sh store-watch → rc=1 „Unbekannte Sprache 'fr' für store-watch (nur de oder en)“, Simulatorliste und git status unverändert (ac3-fr.txt)
+LOOSEENDS_UI_LANG=en ./scripts/sim.sh store-watch → rc=0, testPhotographStoreScreens 1 Test 0 failures, 2 Uhr-Bilder in docs/store/screenshots/en/watch (test-green-watch-en.txt)
+./scripts/sim.sh store-watch (de, Vergleich) → rc=0, 1 Test 0 failures, danach docs/store/screenshots/de/ per git checkout zurückgesetzt (test-green-watch-de.txt)
+Systemsprache Watch-Simulator vorher/nachher → de-DE/de_DE in allen drei Lesungen (ac7-defaults.txt)
+./scripts/sim.sh build → Build erfolgreich, rc=0 (ac8-build.txt)
+./scripts/sim.sh sim-unit (alle Klassen) → rc=0 „Unit-Tests bestanden.“, 0 ✘, 1169 ✔-Zeilen; 3 von 6 Sprach-Messstrecken übersprungen (de_DE im Simulator nicht unterstützt, bekannt #419) (ac8-sim-unit.txt)
+./scripts/sim.sh watch-test-proof WatchCaptureUITests → TEST SUCCEEDED, 4 gesamt, 4 bestanden, 0 übersprungen, Beleg simulator-run.txt (ac8-watch-test-proof.txt)

@@ -1,0 +1,32 @@
+[0;32m[sim][0m Simulator bereit (Apple Watch Series 12 (46mm)).
+[0;32m[sim][0m Simulator bereit (Apple Watch Series 12 (46mm)).
+[0;34m[sim][0m UI-Test: WatchCaptureUITests/testPhotographStoreScreens
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (3 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatchUITests[0m] [1mProcessing[0m empty-LooseEndsWatchUITests.plist
+Test Suite 'Selected tests' started at 2026-11-08 08:34:44.386.
+Test Suite 'LooseEndsWatchUITests.xctest' started at 2026-11-08 08:34:44.387.
+Test Suite 'WatchCaptureUITests' started at 2026-11-08 08:34:44.387.
+    [32m✔[0m testPhotographStoreScreens ([31m20.128[0m seconds)
+Executed 1 test, with 0 failures (0 unexpected) in 20.128 (20.130) seconds
+Test Suite 'LooseEndsWatchUITests.xctest' passed at 2026-11-08 08:35:04.517.
+Executed 1 test, with 0 failures (0 unexpected) in 20.128 (20.131) seconds
+Executed 1 test, with 0 failures (0 unexpected) in 20.128 (20.131) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-whimsical-nibbling-bird/Logs/Test/Test-LooseEndsWatch-2026.11.08_08-34-37-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden.
+Exported 2 attachments for: WatchCaptureUITests/testPhotographStoreScreens():
+File: F948FBF7-13B3-4602-A5D8-5501352BF3E8.png, suggested name: "store-02-gespeichert_0_9B3B61AA-3D61-4AEF-BBA7-FBB2B433E80F.png"
+File: 7AD92B88-765C-48AB-8CFA-C306BD485688.png, suggested name: "store-01-jetzt_0_E0FF50C5-3AAC-4AF7-AB4D-1A7CC1B84334.png"
+
+Generated manifest file with attachment details: /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.oF3wxUul2e/manifest.json
+[store] 2 Uhr-Bilder in docs/store/screenshots/de/watch
+[0;32m[sim][0m Watch-Store-Bilder (de) in docs/store/screenshots/de/watch/
