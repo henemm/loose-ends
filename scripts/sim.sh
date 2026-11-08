@@ -20,7 +20,7 @@
 #   ./scripts/sim.sh test-proof <Class[/test]> # UI-Test + Simulator-Beleg in docs/artifacts/<workflow>/ (#145)
 #   ./scripts/sim.sh watch-test-proof <Class[/test]> # dasselbe im watchOS-Simulator (#409)
 #   ./scripts/sim.sh watch-test <Class[/test]> # UI-Test im Watch-Simulator ohne Beleg (Bilder, Sichtprüfung, #742)
-#   ./scripts/sim.sh store-watch              # App-Store-Bilder Apple Watch 416×496 nach docs/store/screenshots/de/watch/ (#742)
+#   ./scripts/sim.sh store-watch              # App-Store-Bilder Apple Watch 416×496 nach docs/store/screenshots/<de|en>/watch/ (LOOSEENDS_UI_LANG, #742, #842)
 #   ./scripts/sim.sh store-screenshots        # App-Store-Bilder iPhone 17 + iPad Pro 13″ (de, hell, 9:41) nach docs/store/screenshots/de/ (#742)
 #     LOOSEENDS_PUSH=<datei.apns> davor: spielt die Mitteilung während des Laufs alle 5 s ein (#295)
 #   ./scripts/sim.sh boot | status | launch | screenshot [pfad]
@@ -692,14 +692,30 @@ cmd_watch_test_proof() {
     cmd_test_proof "$@"
 }
 
-# Apple-Watch-Store-Bilder (#742): Foto-Test im Watch-Simulator, dann nach docs/store/screenshots/de/watch/ samt Manifest.
+# Apple-Watch-Store-Bilder (#742): Foto-Test im Watch-Simulator, dann nach docs/store/screenshots/<lang>/watch/ samt Manifest.
 cmd_store_watch() {
+    # Sprache (#842): de (Standard) oder en; sie wird Pfadbestandteil, also vor jedem Simulatorstart geprüft.
+    local lang="${LOOSEENDS_UI_LANG:-de}"
+    case "$lang" in
+        de|en) ;;
+        *) error "Unbekannte Sprache '$lang' für store-watch (nur de oder en)"; return 1 ;;
+    esac
+    export LOOSEENDS_UI_LANG="$lang"   # run_xcodebuild reicht sie nur gesetzt an den Test durch
+    local out="docs/store/screenshots/$lang"
+    cd "$PROJECT_DIR"
+    trap 'store_restore_lang; release_testlock' EXIT
+    trap 'exit 130' INT TERM
+    SIM_OS="watchOS"; SIM_FAMILY="Apple Watch"; SIM_NAME="${LOOSEENDS_WATCH_SIM:-Apple Watch Series 12 (46mm)}"
+    acquire_testlock "store-watch"   # der Simulator wird umgestellt; cmd_test holt dieselbe Sperre erneut (reentrant)
+    cmd_boot; local id; id=$(sim_id); [ -n "$id" ] || { error "Kein Simulator '$SIM_NAME'"; return 1; }
+    store_set_lang "$id" "$lang" || { error "Systemsprache von '$SIM_NAME' nicht auf $lang umgestellt"; return 1; }
     local tmp; tmp=$(mktemp -d)
     cmd_watch_test WatchCaptureUITests/testPhotographStoreScreens
     local result; result=$(ls -dt "$SESSION_DERIVED_DATA"/Logs/Test/Test-LooseEndsWatch-*.xcresult | head -1)
     xcrun xcresulttool export attachments --path "$result" --output-path "$tmp"
-    python3 scripts/store_screenshots.py --watch docs/store/screenshots/de "$tmp"
+    python3 scripts/store_screenshots.py --watch "$out" "$tmp"
     rm -rf "$tmp"
+    success "Watch-Store-Bilder ($lang) in $out/watch/"
 }
 
 # Watch-UI-Test ohne Beleg (Bilder, Sichtprüfung): derselbe Simulator wie `watch-test-proof`, kein Workflow nötig.

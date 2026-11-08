@@ -1,0 +1,83 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "F68F99F3-B339-42D5-A710-8A8A5AA2CBAA",
+        "deviceName" : "Apple Watch Series 12 (46mm)",
+        "exportedFileName" : "C825A10C-FCC8-4813-98B3-8075139FAA45.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Start Jetzt_0_3F7004E2-BC76-4507-B7F0-75DCD3A085E3.png",
+        "timestamp" : 1794123464.929
+      }
+    ],
+    "testIdentifier" : "WatchCaptureUITests/testAppOpensOnNow()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsWatchUITests/WatchCaptureUITests/testAppOpensOnNow"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "F68F99F3-B339-42D5-A710-8A8A5AA2CBAA",
+        "deviceName" : "Apple Watch Series 12 (46mm)",
+        "exportedFileName" : "A1C58766-64CD-4CD1-91E7-6AAFF8DF9314.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "store-02-gespeichert_0_39DED4A9-AE5C-4E47-83CC-EFCE0E09E956.png",
+        "timestamp" : 1794123499.237
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "F68F99F3-B339-42D5-A710-8A8A5AA2CBAA",
+        "deviceName" : "Apple Watch Series 12 (46mm)",
+        "exportedFileName" : "93E6CA24-CA20-4CCC-ABB9-A0A81CB2EBDB.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "store-01-jetzt_0_C498B0D2-3692-407A-A192-617466EC0D23.png",
+        "timestamp" : 1794123487.251
+      }
+    ],
+    "testIdentifier" : "WatchCaptureUITests/testPhotographStoreScreens()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsWatchUITests/WatchCaptureUITests/testPhotographStoreScreens"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "F68F99F3-B339-42D5-A710-8A8A5AA2CBAA",
+        "deviceName" : "Apple Watch Series 12 (46mm)",
+        "exportedFileName" : "65131874-5896-4ED5-91A1-31515C09683C.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "leeres Feld nach Brot holen_0_5240219E-7C88-4DA7-8682-AE48D2566F3A.png",
+        "timestamp" : 1794123531.206
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "F68F99F3-B339-42D5-A710-8A8A5AA2CBAA",
+        "deviceName" : "Apple Watch Series 12 (46mm)",
+        "exportedFileName" : "5569306E-B5D3-4401-9492-14A53B7C98FA.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "gespeichert Brot holen_0_C39F8E30-3E83-4E77-A576-F5789409C507.png",
+        "timestamp" : 1794123529.05
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "F68F99F3-B339-42D5-A710-8A8A5AA2CBAA",
+        "deviceName" : "Apple Watch Series 12 (46mm)",
+        "exportedFileName" : "B679F145-4867-41CF-9C87-AC208FCF11C4.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "leeres Feld nach Milch kaufen_0_BEE8E0F7-3373-42F8-8CFF-BCA0BCC01CEA.png",
+        "timestamp" : 1794123517.937
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "F68F99F3-B339-42D5-A710-8A8A5AA2CBAA",
+        "deviceName" : "Apple Watch Series 12 (46mm)",
+        "exportedFileName" : "D10A4B67-4838-4AA1-8FF1-5BEFAC6294EB.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "gespeichert Milch kaufen_0_845DC078-8AA3-4B4B-998B-D714C93004BF.png",
+        "timestamp" : 1794123515.847
+      }
+    ],
+    "testIdentifier" : "WatchCaptureUITests/testTwoCapturesInARowReturnToEmptyField()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsWatchUITests/WatchCaptureUITests/testTwoCapturesInARowReturnToEmptyField"
+  }
+]

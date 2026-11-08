@@ -68,20 +68,35 @@ final class WatchCaptureUITests: XCTestCase {
 
     /// #742 Schnitt 2: App-Store-Bilder der Uhr (Series 12, 416 × 496), ganzer Bildschirm, Namen `store-<nn>-<name>`.
     /// Sichtprüfung nach `./scripts/sim.sh watch-test WatchCaptureUITests/testPhotographStoreScreens`.
+    /// #842 Schnitt 4b-1: die Sprache aus `LOOSEENDS_UI_LANG` (Standard `de`), Beispieltexte per Startargument.
     @MainActor
     func testPhotographStoreScreens() throws {
+        let lang = ProcessInfo.processInfo.environment["LOOSEENDS_UI_LANG"] ?? "de"
+        let sample = try XCTUnwrap(Self.storeSamples[lang], "Store-Bilder der Uhr nur de oder en, nicht \(lang)")
         let app = XCUIApplication()
-        app.launchArguments = ["--ui-testing", "--ui-testing-store-sample", "-AppleLanguages", "(de)", "-AppleLocale", "de_DE"]
+        app.launchArguments = ["--ui-testing", "--ui-testing-store-sample",
+                               "--ui-testing-store-sample-texts", sample.texts.joined(separator: "|"),
+                               "-AppleLanguages", "(\(lang))", "-AppleLocale", sample.locale]
         app.launch()
         XCTAssertTrue(app.buttons["watch.now.capture"].waitForExistence(timeout: 10), "„Erfassen“ fehlt")
         XCTAssertTrue(app.buttons["watch.now.row"].firstMatch.waitForExistence(timeout: 10), "Beispielaufgaben fehlen")
-        XCTAssertGreaterThanOrEqual(app.buttons.matching(identifier: "watch.now.row").count, 2, "weniger als zwei Zeilen unter „Jetzt“")
+        let rows = app.buttons.matching(identifier: "watch.now.row").allElementsBoundByIndex
+        XCTAssertGreaterThanOrEqual(rows.count, 2, "weniger als zwei Zeilen unter „Jetzt“")
+        for row in rows {
+            XCTAssertTrue(sample.texts.contains { row.label.contains($0) }, "Zeile „\(row.label)“ ist keine Beispielaufgabe (\(lang))")
+        }
         storeShot("01-jetzt")
         app.buttons["watch.now.capture"].tap()
-        capture("Steuerbescheid heute prüfen", in: app)
+        capture(sample.captured, in: app)
         XCTAssertTrue(try sawConfirmation(in: app), "„Gespeichert“ fehlt")
         storeShot("02-gespeichert")
     }
+
+    /// Je Sprache: Locale, die drei Beispielaufgaben, der Satz für Bild 02 (Wortlaut freigegeben, Spec 4b-1).
+    private static let storeSamples: [String: (locale: String, texts: [String], captured: String)] = [
+        "de": ("de_DE", ["Steuerbescheid prüfen", "Anna wegen Geburtstag anrufen", "Blumen gießen"], "Steuerbescheid heute prüfen"),
+        "en": ("en_US", ["Check the tax notice", "Call Anna about her birthday", "Water the flowers"], "Check the tax notice today"),
+    ]
 
     @MainActor
     private func storeShot(_ name: String) {
