@@ -105,10 +105,10 @@ test("AC-4/AC-5: resolveSession finds a valid session, refreshes it, and ends on
   const id = await findOrCreate(pool, "sub.henning");
   const token = await createSession(pool, id);
   const other = await createSession(pool, id);
-  await pool.query("UPDATE sessions SET last_used_at = '2026-01-01T00:00:00Z'");
+  await pool.query("UPDATE sessions SET last_used_at = now() - interval '10 days'");
 
   assert.equal(await resolveSession(pool, token), id);
-  const used = await pool.query("SELECT last_used_at > '2026-01-01T00:00:00Z' AS later FROM sessions WHERE token_hash = $1", [
+  const used = await pool.query("SELECT last_used_at > now() - interval '1 minute' AS later FROM sessions WHERE token_hash = $1", [
     createHash("sha256").update(token).digest(),
   ]);
   assert.equal(used.rows[0].later, true);
@@ -314,4 +314,91 @@ test("tuer: allowedSubsFromEnv liest streng und nennt nie den wert", () => {
       return true;
     }, value);
   }
+});
+
+// Session expiry (#615 S4a): last_used_at is set by SQL, the database clock decides.
+const tokenHash = (token: string) => createHash("sha256").update(token).digest();
+async function aged(pool: pg.Pool, token: string, age: string): Promise<void> {
+  await pool.query(`UPDATE sessions SET last_used_at = now() - (${age}) WHERE token_hash = $1`, [tokenHash(token)]);
+}
+async function lastUsed(pool: pg.Pool, token: string): Promise<{ n: number; at: string | null }> {
+  const { rows } = await pool.query("SELECT count(*)::int AS n, max(last_used_at)::text AS at FROM sessions WHERE token_hash = $1", [tokenHash(token)]);
+  return rows[0];
+}
+async function sessionAged(pool: pg.Pool, sub: string, age: string) {
+  const id = await findOrCreate(pool, sub);
+  const token = await createSession(pool, id);
+  await aged(pool, token, age);
+  return { id, token };
+}
+
+test("sitzungsablauf: innerhalb der frist gilt", async (t) => {
+  const pool = await migrated(t);
+  for (const age of ["interval '89 days'", "interval '90 days' - interval '1 minute'"]) {
+    const { id, token } = await sessionAged(pool, `sub.${age}`, age);
+    assert.equal(await resolveSession(pool, token), id, age);
+  }
+});
+
+test("sitzungsablauf: abgelaufen ist null", async (t) => {
+  const pool = await migrated(t);
+  for (const age of ["interval '91 days'", "interval '400 days'"]) {
+    const { token } = await sessionAged(pool, `sub.${age}`, age);
+    assert.equal(await resolveSession(pool, token), null, age);
+  }
+});
+
+test("sitzungsablauf: grenze genau 90 tage", async (t) => {
+  const pool = await migrated(t);
+  const cases: [string, boolean][] = [
+    ["interval '90 days'", false],
+    ["interval '90 days' - interval '1 minute'", true],
+  ];
+  for (const [age, valid] of cases) {
+    const { id, token } = await sessionAged(pool, `sub.${age}`, age);
+    assert.equal(await resolveSession(pool, token), valid ? id : null, age);
+  }
+});
+
+test("sitzungsablauf: benutzung verlaengert", async (t) => {
+  const pool = await migrated(t);
+  const { id, token } = await sessionAged(pool, "sub.henning", "interval '89 days'");
+  assert.equal(await resolveSession(pool, token), id);
+  const fresh = await pool.query("SELECT last_used_at > now() - interval '1 minute' AS fresh FROM sessions WHERE token_hash = $1", [tokenHash(token)]);
+  assert.equal(fresh.rows[0].fresh, true);
+  await aged(pool, token, "interval '89 days'");
+  assert.equal(await resolveSession(pool, token), id, "die Frist beginnt nach jeder Benutzung neu");
+});
+
+test("sitzungsablauf: abgelaufene wird nicht belebt", async (t) => {
+  const pool = await migrated(t);
+  const { token } = await sessionAged(pool, "sub.henning", "interval '91 days'");
+  const before = await lastUsed(pool, token);
+  assert.equal(before.n, 1);
+  assert.equal(await resolveSession(pool, token), null);
+  assert.deepEqual(await lastUsed(pool, token), before, "last_used_at unverändert, Zeile steht");
+  assert.equal(await resolveSession(pool, token), null);
+});
+
+test("sitzungsablauf: je sitzung", async (t) => {
+  const pool = await migrated(t);
+  const id = await findOrCreate(pool, "sub.henning");
+  const old = await createSession(pool, id);
+  const fresh = await createSession(pool, id);
+  await aged(pool, old, "interval '91 days'");
+  assert.equal(await resolveSession(pool, old), null);
+  assert.equal(await resolveSession(pool, fresh), id);
+  assert.equal(await resolveSession(pool, old), null);
+  assert.equal(await resolveSession(pool, fresh), id, "die frische bleibt gültig");
+});
+
+test("sitzungsablauf: logout und delete mit abgelaufener sitzung", async (t) => {
+  const pool = await migrated(t);
+  const { id, token } = await sessionAged(pool, "sub.henning", "interval '91 days'");
+  assert.equal(await endSession(pool, token), true);
+  assert.equal((await lastUsed(pool, token)).n, 0, "Zeile gelöscht");
+  assert.equal(await resolveSession(pool, token), null);
+  assert.equal(await endSession(pool, token), false);
+  const account = await pool.query("SELECT count(*)::int AS n FROM accounts WHERE id = $1", [id]);
+  assert.equal(account.rows[0].n, 1, "das Konto besteht weiter");
 });

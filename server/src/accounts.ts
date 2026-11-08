@@ -72,12 +72,16 @@ export async function createSession(pool: pg.Pool, accountId: string): Promise<s
   return token;
 }
 
+// Sliding expiry (#615 S4a): a session lives while used within this many days, by the database clock.
+export const SESSION_IDLE_DAYS = 90;
+
 // One statement: the account of a valid session, last_used_at refreshed. Anything else is null, never an error.
+// Only while used within SESSION_IDLE_DAYS; an expired row is neither extended nor deleted.
 export async function resolveSession(pool: pg.Pool, token: string): Promise<string | null> {
   if (typeof token !== "string" || token === "") return null;
   const result = await pool.query(
-    "UPDATE sessions SET last_used_at = now() WHERE token_hash = $1 RETURNING account_id",
-    [hash(token)],
+    "UPDATE sessions SET last_used_at = now() WHERE token_hash = $1 AND last_used_at > now() - make_interval(days => $2) RETURNING account_id",
+    [hash(token), SESSION_IDLE_DAYS],
   );
   return result.rows[0]?.account_id ?? null;
 }
