@@ -1,0 +1,113 @@
+FFFFFFFFFFFF
+======================================================================
+FAIL: test_aborts_before_any_write (scripts.test_asc_store_images.AbortTests.test_aborts_before_any_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 148, in setUp
+    self.fail("scripts/asc_store_images.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/asc_store_images.py fehlt
+
+======================================================================
+FAIL: test_read_only_never_writes (scripts.test_asc_store_images.LesenTests.test_read_only_never_writes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 148, in setUp
+    self.fail("scripts/asc_store_images.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/asc_store_images.py fehlt
+
+======================================================================
+FAIL: test_mac_without_editable_version_is_skipped_with_warning (scripts.test_asc_store_images.MacTests.test_mac_without_editable_version_is_skipped_with_warning)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 148, in setUp
+    self.fail("scripts/asc_store_images.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/asc_store_images.py fehlt
+
+======================================================================
+FAIL: test_language_input_is_checked (scripts.test_asc_store_images.MainTests.test_language_input_is_checked)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 349, in setUp
+    self.fail("scripts/asc_store_images.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/asc_store_images.py fehlt
+
+======================================================================
+FAIL: test_plan_names_and_groups (scripts.test_asc_store_images.PlanTests.test_plan_names_and_groups)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 148, in setUp
+    self.fail("scripts/asc_store_images.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/asc_store_images.py fehlt
+
+======================================================================
+FAIL: test_failed_processing_is_an_error (scripts.test_asc_store_images.StateTests.test_failed_processing_is_an_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 148, in setUp
+    self.fail("scripts/asc_store_images.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/asc_store_images.py fehlt
+
+======================================================================
+FAIL: test_state_check_requires_ready_and_no_placement (scripts.test_asc_store_images.StateTests.test_state_check_requires_ready_and_no_placement)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 148, in setUp
+    self.fail("scripts/asc_store_images.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/asc_store_images.py fehlt
+
+======================================================================
+FAIL: test_waiting_image_from_broken_run_fails_second_run (scripts.test_asc_store_images.StateTests.test_waiting_image_from_broken_run_fails_second_run)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 148, in setUp
+    self.fail("scripts/asc_store_images.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/asc_store_images.py fehlt
+
+======================================================================
+FAIL: test_existing_names_of_other_language_are_untouched (scripts.test_asc_store_images.UploadTests.test_existing_names_of_other_language_are_untouched)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 148, in setUp
+    self.fail("scripts/asc_store_images.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/asc_store_images.py fehlt
+
+======================================================================
+FAIL: test_second_run_creates_nothing (scripts.test_asc_store_images.UploadTests.test_second_run_creates_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 148, in setUp
+    self.fail("scripts/asc_store_images.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/asc_store_images.py fehlt
+
+======================================================================
+FAIL: test_upload_creates_all_and_never_places (scripts.test_asc_store_images.UploadTests.test_upload_creates_all_and_never_places)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 148, in setUp
+    self.fail("scripts/asc_store_images.py fehlt")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: scripts/asc_store_images.py fehlt
+
+======================================================================
+FAIL: test_workflow_runs_tests_first_and_hides_the_key (scripts.test_asc_store_images.WorkflowFileTests.test_workflow_runs_tests_first_and_hides_the_key)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 369, in test_workflow_runs_tests_first_and_hides_the_key
+    self.assertTrue(path.exists(), path)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : /Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/.github/workflows/asc-store-images.yml
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.001s
+
+FAILED (failures=12)
