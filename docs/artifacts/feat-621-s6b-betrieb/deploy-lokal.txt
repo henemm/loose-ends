@@ -1,0 +1,37 @@
+# Deploy vor nginx #621 S6b (AC-6) — Lauf 2026-11-08 13:18–13:19 UTC
+
+## bash /home/hem/henemm-infra/scripts/deploy-loose-ends.sh (Build-Schritte von docker ausgelassen)
+               total        used        free      shared  buff/cache   available
+Mem:            7745        4105         407          17        3684        3640
+Swap:           2047        1547         500
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       150G  137G  7.7G  95% /
+[deploy-loose-ends] Quelle auf ae957ba4ca7c3ab9a6d6b28837bc1ed745437dda
+[deploy-loose-ends] baue loose-ends-server:ae957ba
+ Container loose-ends-db Running
+ Container loose-ends-server Recreate
+ Container loose-ends-server Recreated
+ Container loose-ends-db Waiting
+ Container loose-ends-db Healthy
+ Container loose-ends-server Starting
+ Container loose-ends-server Started
+[deploy-loose-ends] /health 200: {"status":"ok","db":"up","migrated":true,"errorRate":0,"requests":0}
+[deploy-loose-ends] fertig: loose-ends-server:ae957ba
+Exit: 0
+
+Freier Speicher vor dem Deploy laut Skript: 3640 MB verfügbar (≥ 600 MB); Platte 7.7G frei (≥ 2 GB).
+
+## Container
+$ docker inspect loose-ends-server --format "{{.Config.Image}} {{.State.StartedAt}}"
+loose-ends-server:ae957ba 2026-11-08T13:19:15.447865703Z
+Startlog: `listening`, `migrated` (keine Zeile `apple config invalid`, `oauth config invalid`, `public url invalid`)
+
+## lokal: curl -H "Host: loose-ends.henemm.com" -H "X-Forwarded-Proto: https" http://127.0.0.1:8780/.well-known/oauth-authorization-server
+status 200
+"issuer":"https://loose-ends.henemm.com"
+
+## lokal: curl http://127.0.0.1:8780/health
+status 200
+
+## zugleich von außen (nginx noch alte Datei): curl -X POST https://loose-ends.henemm.com/mcp
+status 404   (nichts vorzeitig offen)
