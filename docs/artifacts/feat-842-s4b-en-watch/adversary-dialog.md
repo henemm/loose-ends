@@ -11,7 +11,7 @@ Datum: 2026-11-08 08:40
 - [x] **AC-6:** Given die deutschen Watch-Bilder sind veröffentlicht, When `LOOSEENDS_UI_LANG=de ./scripts/sim.sh store-watch` (und ohne Variable) als Vergleich läuft, Then entsprechen die dabei entstandenen deutschen Bilder (nur zum Vergleich, danach zurückgesetzt) den bisherigen in Aufbau, Text, Zeilenzahl und Maßen; erlaubter Unterschied ist nur die Uhrzeit in der Statusleiste (echte Zeit, nicht setzbar). Vor und nach dem Lauf wurden beide Bilder nebeneinander geöffnet, der Unterschied benannt, danach sind die deutschen Dateien samt `de/manifest.json` auf den bisherigen Stand zurückgesetzt, und der Diff des Schnitts enthält nichts unter `docs/store/screenshots/de/`. Belegt durch den echten Lauf, die Gegenüberstellung im Abnahmebericht und `git status` unter `de/`.
 - [x] **AC-7:** Given ein Lauf mit Sprache `en`, When er endet (auch bei Abbruch), Then steht die Systemsprache des Watch-Simulators wieder so wie vorher (EXIT-Trap, `store_restore_lang`). Belegt durch `defaults read -g AppleLanguages` und `AppleLocale` im Watch-Simulator vor und nach dem Lauf (gleiche Werte) und die Logzeile „Systemsprache … → en/en_US“ ohne Warnung „nicht zurückgesetzt“.
 - [x] **AC-8:** Given die Änderung am Produktcode, When die Unit-Tests, die Skript-Tests und der Watch-UI-Test `testAppOpensOnNow` laufen, Then sind alle grün: `./scripts/sim.sh sim-unit` (alle Klassen), `python3 -m unittest scripts/test_store_screenshots.py` samt den übrigen Skript-Tests, `./scripts/sim.sh watch-test-proof WatchCaptureUITests`; `./scripts/sim.sh build` übersetzt Uhr-App und Watch-Testziel. Belegt durch die Laufbelege (`test-proof`-Beleg des Watch-Laufs).
-- [ ] **AC-9:** Given (Stufe 3) die Änderung berührt `LooseEndsWatch/` (Geräteliste, CLAUDE.md), When der Schnitt gemergt ist, Then entsteht ein TestFlight-Bau (Buildnummer im Bericht) und Henning bekommt die Nummer und den einen Prüfschritt: Uhr-App öffnen, sie startet wie bisher mit „Jetzt“ und „Erfassen“, seine eigenen Aufgaben statt Beispielaufgaben aus dem Fototest, kein Absturz; seine Rückmeldung schließt den Geräte-Punkt. Bis dahin bleibt #842 offen. Auf Hennings Geräten läuft vorher nichts (auch nichts Lesendes) ohne sein wörtliches „jetzt ist ein Test möglich“; der Beleg für AC-4 bis AC-8 kommt aus dem Simulator.
+- [x] **AC-9:** Given (Stufe 3) die Änderung berührt `LooseEndsWatch/` (Geräteliste, CLAUDE.md), When der Schnitt gemergt ist, Then entsteht ein TestFlight-Bau (Buildnummer im Bericht) und Henning bekommt die Nummer und den einen Prüfschritt: Uhr-App öffnen, sie startet wie bisher mit „Jetzt“ und „Erfassen“, seine eigenen Aufgaben statt Beispielaufgaben aus dem Fototest, kein Absturz; seine Rückmeldung schließt den Geräte-Punkt. Bis dahin bleibt #842 offen. Auf Hennings Geräten läuft vorher nichts (auch nichts Lesendes) ohne sein wörtliches „jetzt ist ein Test möglich“; der Beleg für AC-4 bis AC-8 kommt aus dem Simulator.
   - Nachmerge-Schritt: TestFlight-Bau und Hennings Rückmeldung sind vor dem Merge prinzipiell nicht belegbar; bewusst offen (`- [ ]`), ändert das Urteil über AC-1…8 nicht.
 
 ## Dialog
@@ -110,10 +110,13 @@ Confirmation:
 
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 
+### Nachtrag AC-9 (2026-11-08, nach dem Merge)
+PR #874 gemergt (50fbb54); TestFlight-Lauf https://github.com/henemm/loose-ends/actions/runs/42472677246 grün, Build 1.0.1 (133) von Apple als VALID gemeldet, Uhr-App im Archiv geprüft (watchos27.0, 1.0.1 (133)). „Was testen“ mit dem Prüfschritt gesetzt. Henning (AskUserQuestion, 2026-11-08): „Ja, startet normal“ — Uhr-App startet mit „Jetzt“, „Erfassen“ und seinen eigenen Aufgaben, kein Absturz. AC-9 damit belegt.
+
 ## Verdict
 **VERIFIED**
 
-AC-1 bis AC-8 belegt. Tests: Python 47 bestanden, 0 fehlgeschlagen, 0 übersprungen (eigener Lauf); Simulator-Läufe laut Belegen grün (Watch 4/4). AC-9 (TestFlight und Hennings Rückmeldung) ist ein Nachmerge-Schritt und bleibt offen; es ändert das Urteil über AC-1…8 nicht. Nur zwei LOW-Beobachtungen (F001, F002), nichts blockierend.
+AC-1 bis AC-8 belegt. Tests: Python 47 bestanden, 0 fehlgeschlagen, 0 übersprungen (eigener Lauf); Simulator-Läufe laut Belegen grün (Watch 4/4). AC-9 nach dem Merge belegt: Build 133, Hennings Rückmeldung „startet normal“. Nur zwei LOW-Beobachtungen (F001, F002), nichts blockierend.
 
 ## Geprüfte Dateien
 
@@ -128,6 +131,25 @@ AC-1 bis AC-8 belegt. Tests: Python 47 bestanden, 0 fehlgeschlagen, 0 übersprun
 
 - base: 1a7c228bff62755a0274cb37fa0522cbd17c7041
 - blob:3262d348f21869423fc287d232831d921f795d15  CLAUDE.md
+- blob:9c38fa675f1413de3b5f16da935dad24b8cb5c4b  LooseEndsUITests/Watch/WatchCaptureUITests.swift
+- blob:15d4ad2c3014b4000fa85503309797f15b555323  LooseEndsWatch/LooseEndsWatchApp.swift
+- blob:a764eaf292a017fbf14e1fe4823cecdb7b173cc4  docs/store/screenshots/en/manifest.json
+- blob:9ad7efe73f2a39436c951a66b53260d9249a613c  scripts/sim.sh
+- blob:454aff6be968d26f54b5f1bf370c00ff31b0dc3a  scripts/test_store_screenshots.py
+
+## Geprüfte Dateien
+
+- sha256:bf38fafa0ce470fb5586f264c2dc1df3d264fecd3912efc272cc34c0351e6ac6  CLAUDE.md
+- sha256:6f4832aae95645644aaab1bafe6455bd2b6ab7de499b03f2d2554d8de2a0e398  LooseEndsUITests/Watch/WatchCaptureUITests.swift
+- sha256:192dc612c634b2962e3d94c13c01f87fa04c4e1e48418d294ca237bd3f36cd5c  LooseEndsWatch/LooseEndsWatchApp.swift
+- sha256:885c97338122f71724fb6a028578fbdefd447a47a802c66608261c014810b9f5  docs/store/screenshots/en/manifest.json
+- sha256:888d529f9eaec3b70a978fefb1829a582864fc628da8e8c7dfa4497c4d131c99  scripts/sim.sh
+- sha256:4caf1b36e8b2e9ee102ac2804dc0753589570c18ce5b396fa5802e6225caf9af  scripts/test_store_screenshots.py
+
+## Prüfbasis
+
+- base: dd691327e9b9fdc69936da81b38c7ff82fae19f3
+- blob:c995a20b173d51507fb3b20a92d558c1df3764dd  CLAUDE.md
 - blob:9c38fa675f1413de3b5f16da935dad24b8cb5c4b  LooseEndsUITests/Watch/WatchCaptureUITests.swift
 - blob:15d4ad2c3014b4000fa85503309797f15b555323  LooseEndsWatch/LooseEndsWatchApp.swift
 - blob:a764eaf292a017fbf14e1fe4823cecdb7b173cc4  docs/store/screenshots/en/manifest.json

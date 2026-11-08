@@ -1,19 +1,18 @@
 # Simulator-Beleg
-erzeugt: 2026-11-08T08:38:52+0100
+erzeugt: 2026-11-08T13:56:46+0100
 befehl: scripts/sim.sh test-proof WatchCaptureUITests
 workflow: feat-842-s4b-en-watch
-head: dd4ffc0da8de5f89b91c22883185568ca9775733
-basis: 1a7c228bff62755a0274cb37fa0522cbd17c7041 (merge-base origin/main HEAD)
+head: 50563a7a43148ebd7f2df7c8a28f54087035369c
+basis: 50fbb54ebeae3ae690fc481cde6749445fe24c46 (merge-base origin/main HEAD)
 testklasse: WatchCaptureUITests
 ergebnis: Passed
 xcodebuild: ** TEST SUCCEEDED **
 tests: 4 gesamt, 4 bestanden, 0 fehlgeschlagen, 0 übersprungen
-start: 1794123449.875  ende: 1794123531.823
+start: 1794142030.961  ende: 1794142606.215
 geraet: Apple Watch Series 12, watchOS 27.0
-summary: docs/artifacts/feat-842-s4b-en-watch/simulator-run/summary.json  sha256:e95084ea5e7e9d694dba3e1440c506359add990d14391a2d0b02a9e4e90cdd6f
+summary: docs/artifacts/feat-842-s4b-en-watch/simulator-run/summary.json  sha256:4ed6f0b59ccdce4a101b27cf76091fb21182be9ef77aaeacbb3e6206739c3941
 xcresult: docs/artifacts/feat-842-s4b-en-watch/simulator-run/run.xcresult  (gitignored)
 screenshots: docs/artifacts/feat-842-s4b-en-watch/simulator-run/*.png (7 Stück)
 
 ## Geprüfte Dateien
-- sha256:6f4832aae95645644aaab1bafe6455bd2b6ab7de499b03f2d2554d8de2a0e398  LooseEndsUITests/Watch/WatchCaptureUITests.swift
-- sha256:192dc612c634b2962e3d94c13c01f87fa04c4e1e48418d294ca237bd3f36cd5c  LooseEndsWatch/LooseEndsWatchApp.swift
+(keine Code-Dateien geändert)
