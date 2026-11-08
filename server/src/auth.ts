@@ -1,13 +1,15 @@
 import type pg from "pg";
-import { createSession, type Deletion, deleteAccount, endSession, findOrCreate, resolveSession } from "./accounts.ts";
+import { admit, createSession, type Deletion, deleteAccount, endSession, resolveSession } from "./accounts.ts";
 import { type AppleConfig, type KeyLookup, verifyIdentityToken } from "./apple.ts";
 import { redeemCode, revokeToken } from "./apple-client.ts";
 import { decryptToken, encryptToken, storeRefreshToken } from "./apple-vault.ts";
 import type { Route } from "./main.ts";
 
-// log gets only the fixed events "apple revoke skipped" and "apple revoke failed"; silent without it.
+// log gets only the fixed events "account refused", "apple revoke skipped" and "apple revoke failed"; silent without it.
+// allowedSubs: the door's list (admit); without it only the first account is created.
 export type AuthDeps = {
   pool: pg.Pool; config?: AppleConfig; keys?: KeyLookup; fetch: typeof fetch; now: () => number; log?: (event: string) => void;
+  allowedSubs?: ReadonlySet<string>;
 };
 type Login = { identityToken: string; nonce: string; code: string };
 
@@ -58,14 +60,18 @@ function parseLogin(raw: string): Login | null {
   return { identityToken: doc.identityToken as string, nonce: doc.nonce as string, code: doc.code as string };
 }
 
-// Order: identity token, code (always redeemed once the token holds), same sub, store the key, createSession last.
+// Order: identity token, code (always redeemed once the token holds), same sub, the door, store the key, createSession last.
 async function signIn(deps: AuthDeps, config: AppleConfig, keys: KeyLookup, login: Login): Promise<Response> {
   const verdict = await verifyIdentityToken(login.identityToken, login.nonce, { config, keys, now: deps.now() });
   if (!verdict.ok) return status(verdict.reason === "keys_unavailable" ? 503 : 401);
   const redeemed = await redeemCode(login.code, verdict.aud, { config, fetch: deps.fetch, now: deps.now });
   if (!redeemed.ok) return status(redeemed.reason === "unavailable" ? 503 : 401);
   if (redeemed.sub !== verdict.sub) return status(401);
-  const accountId = await findOrCreate(deps.pool, verdict.sub);
+  const accountId = await admit(deps.pool, verdict.sub, deps.allowedSubs);
+  if (accountId === null) {
+    deps.log?.("account refused");
+    return status(401);
+  }
   const blob = encryptToken(config.tokenKey, accountId, redeemed.refreshToken);
   // false: the account was deleted meanwhile; no session for it.
   if (!(await storeRefreshToken(deps.pool, accountId, blob, verdict.aud))) return status(401);

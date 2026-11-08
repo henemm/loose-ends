@@ -440,7 +440,7 @@ test("rueckweg: geloeschtes konto ergibt 400 und raeumt tickets mit ab", async (
   const logged: string[] = [];
   let deleteFirst = true;
   // The pool the handler writes through: the ticket's INSERT first deletes its account, so the foreign key fails.
-  const swap = (real: pg.Pool) => ({ query: async (sql: string, params?: any[]) => {
+  const swap = (real: pg.Pool) => ({ connect: () => real.connect(), query: async (sql: string, params?: any[]) => {
     if (deleteFirst && params?.[0] === "AppleTicket" && /INSERT/.test(sql)) await deleteAccount(real, params[5]);
     return real.query(sql, params);
   } });
@@ -577,7 +577,7 @@ test("rueckweg: konto beim ablegen geloescht ergibt access_denied ohne konto-id"
   let inserts = 0;
   let accountId = "";
   // The token's INSERT first deletes its account, so the foreign key fails and storeRefreshToken gives false.
-  const swap = (real: pg.Pool) => ({ query: async (sql: string, params?: any[]) => {
+  const swap = (real: pg.Pool) => ({ connect: () => real.connect(), query: async (sql: string, params?: any[]) => {
     if (/INSERT INTO apple_tokens/.test(sql)) { inserts++; accountId = params![0]; note(accountId); await deleteAccount(real, accountId); }
     return real.query(sql, params);
   } });
@@ -600,7 +600,7 @@ test("rueckweg: datenbankfehler beim ablegen ergibt feste 400 ohne ticket", asyn
   let inserts = 0;
   let accountId = "";
   // The token's INSERT fails with the account id and a marker word in the error text.
-  const swap = (real: pg.Pool) => ({ query: async (sql: string, params?: any[]) => {
+  const swap = (real: pg.Pool) => ({ connect: () => real.connect(), query: async (sql: string, params?: any[]) => {
     if (/INSERT INTO apple_tokens/.test(sql)) { inserts++; accountId = params![0]; note(accountId); throw new Error(`ablage-kaputt-4711 ${accountId}`); }
     return real.query(sql, params);
   } });

@@ -1,7 +1,7 @@
 import { randomBytes } from "node:crypto";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type pg from "pg";
-import { findOrCreate } from "./accounts.ts";
+import { admit } from "./accounts.ts";
 import { type AppleConfig, type KeyLookup, verifyIdentityToken } from "./apple.ts";
 import { appleReturnUrl, redeemCode } from "./apple-client.ts";
 import { encryptToken, storeRefreshToken } from "./apple-vault.ts";
@@ -12,7 +12,7 @@ import { PgAdapter } from "./oauth-adapter.ts";
 export type ReturnHandler = (req: IncomingMessage, res: ServerResponse) => Promise<void>;
 export type AppleReturnDeps = {
   pool: pg.Pool; config: AppleConfig; publicUrl: string; now: () => Date; fetch: typeof fetch; keys: KeyLookup;
-  log: (event: string) => void;
+  log: (event: string) => void; allowedSubs?: ReadonlySet<string>;
 };
 export type Ticket = { uid: string; accountId: string } | { uid: string; error: "access_denied" | "temporarily_unavailable" };
 type Fields = { state: string; code?: string; error?: string };
@@ -81,7 +81,7 @@ async function redeemState(deps: AppleReturnDeps, state: string): Promise<{ uid:
 }
 
 // Apple's error, a refused redemption or token → access_denied; Apple unreachable → temporarily_unavailable.
-// An account deleted during the sign-in → access_denied; the web token is stored under webClientId (S4c-2).
+// Refused by the door (admit) or an account deleted during the sign-in → access_denied; the web token is stored under webClientId (S4c-2).
 async function outcome(deps: AppleReturnDeps, fields: Fields, uid: string, nonce: string): Promise<Ticket> {
   const { config, fetch, publicUrl } = deps;
   const webClientId = config.webClientId;
@@ -91,7 +91,11 @@ async function outcome(deps: AppleReturnDeps, fields: Fields, uid: string, nonce
   if (!redeemed.ok) return { uid, error: redeemed.reason === "unavailable" ? "temporarily_unavailable" : "access_denied" };
   const verdict = await verifyIdentityToken(redeemed.idToken, nonce, { config, keys: deps.keys, now: now(), audiences: [webClientId] });
   if (!verdict.ok) return { uid, error: verdict.reason === "keys_unavailable" ? "temporarily_unavailable" : "access_denied" };
-  const accountId = await findOrCreate(deps.pool, verdict.sub);
+  const accountId = await admit(deps.pool, verdict.sub, deps.allowedSubs);
+  if (accountId === null) {
+    deps.log("account refused");
+    return { uid, error: "access_denied" };
+  }
   const blob = encryptToken(config.tokenKey, accountId, redeemed.refreshToken);
   // false: the account was deleted meanwhile; no ticket that names it.
   if (!(await storeRefreshToken(deps.pool, accountId, blob, webClientId))) return { uid, error: "access_denied" };
