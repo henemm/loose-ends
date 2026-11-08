@@ -204,3 +204,4 @@ Kein Pfad der Geräteliste berührt. (Nur `server/` und `CLAUDE.md`, keine App, 
 ## Changelog
 
 - 2026-11-08: Initial spec created (Schnitt 6a)
+- 2026-11-08 (/60-validate): AC-9 nennt die `main.test.ts`-Löschfälle mit `member(…)` als Aufrufer, die `allowedSubs` brauchen. `member` legt Konten direkt über `findOrCreate` an und läuft nie durch `admit`; dort ist keine Liste nötig und keine eingereicht. Die übrigen genannten Tests reichen sie ein. Gesamtumfang 333 LoC (Code 105, Tests 226, Doku 2) statt geschätzt 283; als Sicherheitsschnitt angenommen (Präzedenz #615 S2a).
