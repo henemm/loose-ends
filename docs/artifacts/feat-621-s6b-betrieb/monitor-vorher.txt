@@ -1,0 +1,156 @@
+Stand: 2026-11-08T11:21:23Z
+## uptime
+ 11:21:23 up 22 days, 17:07,  3 users,  load average: 2.73, 2.95, 3.16
+## docker ps
+loose-ends-db	Up 4 days (healthy)	2026-11-03 16:57:47 +0000 UTC
+loose-ends-server	Up 4 days	2026-11-03 16:57:48 +0000 UTC
+n8n	Up 7 days	2026-11-01 09:12:36 +0000 UTC
+nightjet-monitor	Up 3 weeks	2026-10-03 09:01:21 +0000 UTC
+obsidian-mcp-obsidian-mcp-1	Up 7 days (healthy)	2026-11-01 09:14:51 +0000 UTC
+obsidian-mcp-obsidian-sync-1	Up 2 weeks	2026-10-19 16:09:14 +0000 UTC
+ops-api-1	Up 7 days (healthy)	2026-11-01 09:55:04 +0000 UTC
+stalwart-mail	Up 2 weeks (healthy)	2026-10-19 08:08:49 +0000 UTC
+watchtower	Up 3 weeks (healthy)	2026-05-03 16:06:43 +0000 UTC
+## monitor.sh --status
+
+[1mHTTP-Endpoints[0m
+  [32m✓[0m Website (200)
+  [32m✓[0m n8n (200)
+  [32m✓[0m Mailserver-Web (200)
+  [32m✓[0m Gregor20 (200)
+  [32m✓[0m Kotoba (200)
+  [32m✓[0m Loose-Ends (200)
+
+[1mSystemd-Services[0m
+  [32m✓[0m claude-mq
+  [32m✓[0m gregor-api
+  [32m✓[0m gregor-frontend
+  [32m✓[0m gregor-python
+  [32m✓[0m gregor-api-staging
+  [32m✓[0m gregor-frontend-staging
+  [32m✓[0m gregor-python-staging
+  [32m✓[0m claude-control-bot
+  [32m✓[0m watchtower-notify
+
+[1mInfra-Deploy[0m
+  [32m✓[0m auto-deploy-infra (Haupt-Checkout ist aktuell (ef8841f7))
+
+[1mDocker-Container[0m
+  [32m✓[0m stalwart-mail (seit 2026-10-21)
+  [32m✓[0m n8n (n8n)
+
+[1mDocker-Image-Updates[0m
+  [32m✓[0m Watchtower läuft
+  [33m![0m stalwart-mail: Update verfügbar
+  [33m![0m n8n: Update verfügbar
+  [32m✓[0m watchtower: aktuell
+
+[1mSystem-Updates (apt)[0m
+  [33m![0m Reboot erforderlich!
+rm: cannot remove '/var/lib/server-monitor/apt-security-pending-since': Permission denied
+/home/hem/henemm-infra/scripts/monitor.sh: line 815: /var/lib/server-monitor/apt-pending-since: Permission denied
+cat: /var/lib/server-monitor/apt-pending-since: Permission denied
+  [33m![0m 9 Paket-Update(s) verfügbar (seit 20765 Tag(en))
+  [32m✓[0m Letzter Auto-Update-Lauf: vor 0 Tagen
+
+[1mSystemressourcen[0m
+  [32m✓[0m CPU: 68% (Load: 2.73/2.95, 4 Cores)
+  [32m✓[0m RAM: 53% (4068MB / 7745MB)
+  [31m✗[0m Disk: 95% (7.7G frei)
+
+[1mSSL-Zertifikate[0m
+  [32m✓[0m henemm.com: 49 Tage
+  [32m✓[0m n8n.henemm.com: 49 Tage
+  [32m✓[0m mail.henemm.com: 51 Tage
+  [32m✓[0m mail.henemm.com:993: 51 Tage
+  [32m✓[0m gregor20.henemm.com: 51 Tage
+  [32m✓[0m staging.gregor20.henemm.com: 76 Tage
+  [32m✓[0m mta-sts.henemm.com: 71 Tage
+
+[1mn8n-Workflows[0m
+  [32m✓[0m Gmail: Auto-Reply auf Typeform-Anfragen (letzter: 2026-11-08 11:20)
+  [32m✓[0m Google Kalender Sync (henemm.gmbh → goodgrow) (letzter: 2026-11-08 11:20)
+  [32m✓[0m Wöchentliche Pre-Screening Erinnerung → Slack (letzter: 2026-11-02 07:00)
+  [32m✓[0m ⚠️ Workflow-Fehler → Telegram Alert (letzter: 2026-11-04 15:07)
+  [33m![0m New Oppts via TypeForm → Notion + Slack (keine Executions)
+  [32m✓[0m Google Sheet: Auto-Zeilenergänzung (projects) (letzter: 2026-11-08 11:20)
+  [32m✓[0m Notion → Slack: Neue Investments (letzter: 2026-11-08 11:20)
+
+[1mBetterStack-Incidents[0m
+  [32m✓[0m keine offenen Incidents
+
+[1mTelegram-Bot[0m
+  [32m✓[0m Bot erreichbar
+
+[1mWireGuard VPN[0m
+  [33m![0m wg0: Keine Konfiguration gefunden
+
+[1mDNS[0m
+  [32m✓[0m MX: 10 mail.henemm.com.
+
+[1mResend-Versand[0m
+  [32m✓[0m Heute: 6 Mails
+  [32m✓[0m Monat: 117/3000 (3%)
+
+[1mTmp-Secrets (henemm-security#199)[0m
+  [32m✓[0m gehaertet: 0, entfernt (>1 Tag): 0
+
+[1mkotoba_line: Ton-Generator (kotoba_line#183)[0m
+  [32m✓[0m letzter Erfolg vor 7 h
+
+[1mkotoba_line: Tagesbericht (kotoba_line#318)[0m
+  [32m✓[0m letzter Bericht vor 19 h
+
+[1mAußensicht-Scan (henemm-infra#281)[0m
+  [31m✗[0m letzter sauberer Lauf vor 15 Tagen
+
+[1mIntegritätswächter (henemm-infra#282)[0m
+  [33m![0m noch keine Baseline (wird beim nächsten Lauf angelegt)
+
+[1mkotoba_line: Benachrichtigungen (kotoba_line#248)[0m
+  [32m✓[0m letzter fehlerfreier Lauf vor 0 min
+
+[1mkotoba_line: Auto-Deploy[0m
+  [32m✓[0m letzter sauberer Lauf vor 1 min
+
+[1moebb-nightjet-monitor: Erfolgsstempel[0m
+  [32m✓[0m letzter Erfolg vor 6 min
+
+[1mFrieda: automatisches Veröffentlichen (henemm-infra#313)[0m
+  [32m✓[0m letzter Erfolg vor 2 min
+
+[1mFrieda: Software-Stand nachgezogen (frieda-reist#161)[0m
+  [32m✓[0m auf Stand e8f8bee
+
+[1mFrieda: Reisespeicher (frieda-reist#348)[0m
+  [32m✓[0m Sicherung 4 h alt
+  [32m✓[0m testreise-abnahme-223-erfunden-2027: gebaut mit Stand e8f8bee
+
+[1mFrieda: Schreibweg der Claude-App[0m
+  [32m✓[0m gesund
+
+[1mFrieda: Wächter und Erinnerer[0m
+  [32m✓[0m letzter Erfolg vor 4 h
+
+[1mFrieda: Reiseseiten und Rückmeldedienst[0m
+  [31m✗[0m Reiseseite gr221 (kein Pfad im Snippet)
+  [31m✗[0m Rückmeldedienst gr221 (kein Pfad im Snippet)
+  [31m✗[0m Reiseseite japan-2027 (kein Pfad im Snippet)
+  [31m✗[0m Rückmeldedienst japan-2027 (kein Pfad im Snippet)
+  [31m✗[0m Reiseseite oldenburg-daenemark-november-2026 (kein Pfad im Snippet)
+  [31m✗[0m Rückmeldedienst oldenburg-daenemark-november-2026 (kein Pfad im Snippet)
+  [31m✗[0m Reiseseite skiurlaub-zillertal-2027 (kein Pfad im Snippet)
+  [31m✗[0m Rückmeldedienst skiurlaub-zillertal-2027 (kein Pfad im Snippet)
+  [31m✗[0m Reiseseite test-135 (kein Pfad im Snippet)
+  [31m✗[0m Rückmeldedienst test-135 (kein Pfad im Snippet)
+  [31m✗[0m Reiseseite test-14 (kein Pfad im Snippet)
+  [31m✗[0m Rückmeldedienst test-14 (kein Pfad im Snippet)
+  [31m✗[0m Reiseseite testreise-abnahme-223-erfunden-2027 (kein Pfad im Snippet)
+  [31m✗[0m Rückmeldedienst testreise-abnahme-223-erfunden-2027 (kein Pfad im Snippet)
+  [31m✗[0m Reiseseite testreise-karten-225-erfunden-2027 (kein Pfad im Snippet)
+  [31m✗[0m Rückmeldedienst testreise-karten-225-erfunden-2027 (kein Pfad im Snippet)
+
+[1mHetzner-Kapazität (henemm-infra#336)[0m
+  [33m![0m cx43 in nbg1 derzeit nicht bestellbar
+  [32m✓[0m Swap: 1606/2047 MB belegt, RAM verfuegbar: 3652 MB
+

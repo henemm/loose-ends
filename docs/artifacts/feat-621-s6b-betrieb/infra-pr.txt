@@ -1,0 +1,33 @@
+# Infra-PR #621 S6b (AC-5) — 2026-11-08T13:18:34Z
+
+PR: https://github.com/henemm/henemm-infra/pull/396 (Zweig-Commit 36044c2), gemergt (squash)
+
+$ gh pr view 396 -R henemm/henemm-infra --json state,mergeCommit,files
+state: MERGED  merge: ec1aa6107cb9b6569e975428b5d912e117dc593b
+nginx/loose-ends.henemm.com.conf +64 -4
+scripts/deploy-loose-ends.sh +1 -1
+security/expected-exposure.json +6 -1
+
+Genau drei Dateien, keine weitere.
+
+CI: henemm-infra hat keine GitHub-Actions-Prüfung (`gh pr checks`: „no checks reported“). Die Prüfung des Repos
+ist laut seiner CLAUDE.md `python3 -m pytest tests -q`; gelaufen auf rennwienix (Linux) in einem Wegwerfklon des
+PR-Zweigs: `447 passed, 6 skipped`; davon gezielt `tests/test_external_scan.py` und
+`tests/test_monitor_external_exposure.py`: `20 passed`.
+
+$ git merge-base --is-ancestor ae957ba ae957ba4ca7c3ab9a6d6b28837bc1ed745437dda
+Exit: 0   (LE_COMMIT = ae957ba4ca7c3ab9a6d6b28837bc1ed745437dda, enthält ae957ba = PR #873)
+
+$ gh api repos/henemm/henemm-infra/pulls/396/files → Patch scripts/deploy-loose-ends.sh (nur die LE_COMMIT-Zeile)
+@@ -9,7 +9,7 @@
+ # Zurückrollen = Aufruf mit dem vorherigen SHA. Startet oder stoppt nichts außerhalb des Stapels.
+ set -euo pipefail
+
+-LE_COMMIT="e62f0d5025bb430ade878774122fd484815c55cd"
++LE_COMMIT="ae957ba4ca7c3ab9a6d6b28837bc1ed745437dda"
+ LE_PORT=8780
+ LE_TAG="${LE_COMMIT:0:7}"
+ LE_REPO="https://github.com/henemm/loose-ends.git"
+
+Hinweis: Commit und PR liefen mit Hennings `override` (2026-11-08, getippt), weil das Commit-Gate des Workflows
+den Infra-Commit vor dem Adversary-Verdict sperrt, der Adversary aber den geöffneten Server braucht.

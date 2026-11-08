@@ -1,0 +1,14 @@
+OK    200 GET /health (soll 200)
+FEHLT 404 GET /.well-known/oauth-authorization-server (soll 200, issuer https://loose-ends.henemm.com)
+FEHLT 404   client_id_metadata_document_supported (soll true)
+FEHLT 404   token_endpoint_auth_methods_supported (soll none enthalten)
+FEHLT 404 GET /.well-known/openid-configuration (soll 200, issuer https://loose-ends.henemm.com)
+FEHLT 404 GET /.well-known/oauth-protected-resource/mcp (soll 200, resource https://loose-ends.henemm.com/mcp)
+FEHLT 404 POST /mcp ohne Token (soll 401, WWW-Authenticate mit resource_metadata)
+FEHLT 404 GET /oauth/gibt-es-nicht (soll Dienstantwort, keine nginx-Seite, kein 502/504)
+OK    404 GET /auth/apple (soll 404)
+OK    404 POST /auth/apple (soll 404)
+OK    404 POST /auth/delete (soll 404)
+OK    404 GET / (soll 404)
+Stand: 2026-11-08T09:35:30Z gegen https://loose-ends.henemm.com
+Exit: 1
