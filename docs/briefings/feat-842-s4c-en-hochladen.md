@@ -1,7 +1,7 @@
 ---
 spec_file: docs/specs/feat-842-schnitt-4c-1-en-bibliothek.md
-spec_sha256: 182523449e58adb5da679e63016ac3501712c3fee1f16156892ddd2b7f10d16f
-spec_frozen_sha256: 6486da08af639b5466229fd5c9243064063adbb07223ccff919246951dbc9d82
+spec_sha256: 6d0de33cb78b5108468446c0fb9c74e4d8119a863a332b0d20f9f2333684aa16
+spec_frozen_sha256: 5a3889829a48e9d192ce093ba592b2004bd3e8e050ffa706f0881ac2e1b386a0
 ---
 
 # PO-Briefing: feat-842-s4c-en-hochladen
@@ -12,11 +12,11 @@ spec_frozen_sha256: 6486da08af639b5466229fd5c9243064063adbb07223ccff919246951dbc
 
 ## Was gebaut wird
 
-Ein Werkzeug lädt die elf englischen Store-Bilder bei Apple hoch, ohne sie auf der Store-Seite sichtbar zu machen.
+Ein Werkzeug lädt die zwölf englischen Store-Bilder bei Apple hoch, ohne sie auf der Store-Seite sichtbar zu machen.
 
 ## Definition of Done
 
-Alle elf englischen Bilder liegen bei Apple bereit, ein zweiter Lauf legt nichts doppelt an, Deutsch und die Store-Seite bleiben unverändert.
+Alle zwölf englischen Bilder liegen bei Apple bereit, ein zweiter Lauf legt nichts doppelt an, Deutsch und die Store-Seite bleiben unverändert.
 
 ## Wie geprüft wird
 

@@ -236,9 +236,9 @@ class UploadTests(NeedsModule):
             self.assertEqual(call[3], {"assetLibrary": {"data": {"type": "appAssetLibraries", "id": LIBRARY}}})
             self.assertEqual(call[2]["fileName"], call[2]["referenceName"].split("-", 2)[2] + ".png")
             self.assertGreater(call[2]["fileSize"], 0)
-        self.assertEqual(len([c for c in client.calls if c[0] == "PUT"]), 11)
+        self.assertEqual(len([c for c in client.calls if c[0] == "PUT"]), len(EN_NAMES))
         patches = [c for c in client.calls if c[0] == "PATCH"]
-        self.assertEqual(len(patches), 11)
+        self.assertEqual(len(patches), len(EN_NAMES))
         self.assertTrue(all(c[2] == {"uploaded": True} for c in patches))
         self.assertTrue(all(item["state"] == "PREPARE_FOR_SUBMISSION" for item in client.images.values()))
         self.assertEqual({c[0] for c in client.writes()}, {"POST", "PUT", "PATCH"})
@@ -269,7 +269,7 @@ class UploadTests(NeedsModule):
         touched = [c for c in client.writes() if c[0] == "PATCH" and c[1].rsplit("/", 1)[1] in ("D1", "D2")]
         self.assertEqual(touched, [])
         self.assertTrue(all(c[2]["referenceName"].startswith("en-") for c in client.posts()))
-        self.assertEqual(len(client.posts()), 11)
+        self.assertEqual(len(client.posts()), len(EN_NAMES))
 
 
 class AbortTests(NeedsModule):
