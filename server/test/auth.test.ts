@@ -129,6 +129,7 @@ test("auth: fremde sub wird abgewiesen, kein konto, keine sitzung, kein token", 
   assert.equal(first.status, 200, "das Erstkonto");
   const res = await rig(pool, appleOk(stranger), { log }).routes["/auth/apple"](as(stranger));
   assert.equal(res.status, 401);
+  assert.equal(res.headers.get("cache-control"), "no-store");
   const body = await res.text();
   assert.equal(body, "");
   assert.equal(await count(pool, "accounts"), 1);

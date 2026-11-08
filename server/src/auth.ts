@@ -15,9 +15,9 @@ type Login = { identityToken: string; nonce: string; code: string };
 
 const BODY_LIMIT = 16 * 1024;
 
-// Every refusal is a bare status: the answer never tells which check failed.
-const status = (code: number) => new Response(null, { status: code });
-const notAllowed = () => new Response(null, { status: 405, headers: { allow: "POST" } });
+// Every refusal is a bare status with no-store: the answer never tells which check failed.
+const status = (code: number) => new Response(null, { status: code, headers: { "cache-control": "no-store" } });
+const notAllowed = () => new Response(null, { status: 405, headers: { allow: "POST", "cache-control": "no-store" } });
 
 // The value behind "Bearer " (scheme in any case), null for a missing header, another scheme, empty or more than one token.
 export function bearerToken(request: Request): string | null {
