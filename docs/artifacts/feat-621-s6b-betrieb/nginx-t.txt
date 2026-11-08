@@ -1,0 +1,17 @@
+# nginx nur nach Test geladen, mit Rückweg (AC-7) — 2026-11-08, rennwienix
+
+Sicherung der alten Datei vor dem Kopieren:
+  Server: /home/hem/backups/nginx-loose-ends.henemm.com.20261108T132237Z.conf (Inhalt: nginx-alt.conf in diesem Ordner)
+Rückweg: diese Datei nach /etc/nginx/sites-available/loose-ends.henemm.com zurückkopieren, `nginx -t`, `systemctl reload nginx`.
+
+Ablauf (ein Aufruf, `reload` nur im Erfolgszweig von `nginx -t`, sonst Rückkopie der alten Datei):
+Sicherung: /home/hem/backups/nginx-loose-ends.henemm.com.20261108T132237Z.conf
+nginx -t: 2026-11-08T13:22:38Z
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+reload: 2026-11-08T13:22:38Z
+reload Exit: 0
+
+Die neue Datei ist byte-gleich mit henemm-infra main `ec1aa61` (PR #396), `nginx/loose-ends.henemm.com.conf`.
+Zeitpunkt des Reloads = Öffnung nach außen: 2026-11-08T13:22:38Z. Erste Prüfung von außen grün: 13:22:44Z.
+Der geladene Server-Block (`nginx -T`, Auszug) steht in grenzen.txt.

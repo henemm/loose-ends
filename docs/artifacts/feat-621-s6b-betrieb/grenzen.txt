@@ -1,0 +1,56 @@
+# Streaming, Body-Grenze und Limit-Zonen (AC-9) — 2026-11-08T13:32:18Z, von außen (Hennings Anschluss)
+
+## 413: POST mit 100 KiB Körper an /oauth/token
+status 413
+<title>413 Request Entity Too Large</title>   (Seite von nginx, der Dienst bekam die Anfrage nicht)
+
+## 429: 60 parallele GET /.well-known/oauth-authorization-server (innerhalb ~1 s)
+  21 200
+  39 429
+(burst 20 nodelay + 1 → 21 durchgelassen, Rest 429 aus Zone loose_ends_oauth, limit_req_status 429)
+
+## Einzelne Anfrage nach 10 s
+Erster Versuch: status 000 „Couldn't connect to server“ — nicht von nginx, sondern von fail2ban:
+die Jail `nginx-limit-req` (maxretry 10 in findtime 600 s, bantime 3600 s, liest /var/log/nginx/error.log) sperrte die
+Adresse des Prüfanschlusses nach den 39 Ablehnungen für alle Ports 80/443 aller Hosts. Sofort aufgehoben
+(`fail2ban-client set nginx-limit-req unbanip <Adresse>`, 13:33 UTC; die Adresse steht hier nicht), Dauer ≈ 1 min.
+Danach: GET /.well-known/oauth-authorization-server → 200 (13:33 UTC).
+Folge: Wer die Zone überschreitet, wird nicht nur gebremst, sondern eine Stunde lang ganz ausgesperrt. Für claude.ai
+(Adressbereich von Anthropic) wäre das ein stiller Ausfall des Connectors → eigenes Ticket (siehe tuer.md / #621-Kommentar).
+
+## nginx -T, Server-Block loose-ends.henemm.com (geladener Stand)
+limit_req_zone $binary_remote_addr zone=loose_ends_health:1m rate=30r/m;
+limit_req_zone $binary_remote_addr zone=loose_ends_oauth:1m rate=10r/s;
+limit_req_zone $binary_remote_addr zone=loose_ends_mcp:1m rate=10r/s;
+
+    location = /mcp {
+        limit_req zone=loose_ends_mcp burst=40 nodelay;
+        limit_req_status 429;
+        proxy_pass http://127.0.0.1:8780;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        proxy_buffering off;
+        proxy_read_timeout 3600s;
+    }
+
+    location = /.well-known/oauth-protected-resource/mcp   { limit_req zone=loose_ends_oauth burst=20 nodelay; limit_req_status 429; proxy_pass + 4 Header }
+    location = /.well-known/oauth-authorization-server     { dasselbe }
+    location = /.well-known/openid-configuration           { dasselbe }
+
+    location ^~ /oauth/ {
+        limit_req zone=loose_ends_oauth burst=20 nodelay;
+        limit_req_status 429;
+        client_max_body_size 64k;
+        proxy_pass http://127.0.0.1:8780;
+        (4 Header)
+    }
+
+    location ^~ /auth/ { return 404; }
+    location / { return 404; }
+
+Geöffnet sind genau: = /health, = /mcp, die drei = /.well-known/…, ^~ /oauth/. /auth/ und / → 404.
+(Vollständige Datei: henemm-infra ec1aa61, nginx/loose-ends.henemm.com.conf; certbot-Blöcke unverändert.)

@@ -1,0 +1,35 @@
+OK    200 GET /health (soll 200)
+OK    200 GET /.well-known/oauth-authorization-server (soll 200, issuer https://loose-ends.henemm.com)
+OK    200   client_id_metadata_document_supported (soll true)
+OK    200   token_endpoint_auth_methods_supported (soll none enthalten)
+OK    200 GET /.well-known/openid-configuration (soll 200, issuer https://loose-ends.henemm.com)
+OK    200 GET /.well-known/oauth-protected-resource/mcp (soll 200, resource https://loose-ends.henemm.com/mcp)
+OK    401 POST /mcp ohne Token (soll 401, WWW-Authenticate mit resource_metadata)
+OK    404 GET /oauth/gibt-es-nicht (soll Dienstantwort, keine nginx-Seite, kein 502/504)
+OK    404 GET /auth/apple (soll 404)
+OK    404 POST /auth/apple (soll 404)
+OK    404 POST /auth/delete (soll 404)
+OK    404 GET / (soll 404)
+Stand: 2026-11-08T14:21:30Z gegen https://loose-ends.henemm.com
+exit=0
+
+# Zusatzproben des Adversary (nur lesend), 2026-11-08 ~14:21-14:30Z
+GET /mcp ohne Token: 401, www-authenticate mit resource_metadata="https://loose-ends.henemm.com/.well-known/oauth-protected-resource/mcp"
+GET /.well-known/apple-developer-domain-association.txt: 404 (keine Verifikation verlangt, passt zu apple-portal.md)
+GET /auth/ : 404; GET /oauth/x/../../auth/apple : 404
+rennwienix: nginx -T enthaelt Server-Block loose-ends; /etc/nginx/sites-available/loose-ends.henemm.com == henemm-infra main ec1aa61 (diff -q identisch)
+rennwienix: loose-ends-server Image ae957ba, RestartCount 0, /health lokal ok; andere Container Up 7 Tage / 2-3 Wochen (kein Neustart)
+rennwienix: accounts=1 (created_at 13:29:02), "account refused"=0, "allowed subs invalid"=0, "oauth server error"=0
+rennwienix: oauth_records clientId = https://claude.ai/oauth/mcp-oauth-client-metadata (Grant, AccessToken, AuthorizationCode, RefreshToken je 1)
+nginx access.log 08/Nov: 0 mal 5xx auf /oauth/*, /.well-known/oauth*, POST /mcp
+fail2ban nginx-limit-req ignoreip: 127.0.0.0/8, ::1, eine v6-/64, eine v4 (kein Anthropic-Bereich); aktuell 0 gesperrt
+Belegordner + CLAUDE.md: kein PEM-Beginn, kein "d":-Treffer, keine Zeile des .p8-Koerpers (Treffer nur im Pruefprotokoll adversary-dialog.md, das den Mustertext der Spec zitiert)
+henemm-infra hat kein .github (keine Actions); PR #396: 3 Dateien, nur LE_COMMIT-Zeile im Deploy-Skript; LE_COMMIT == ae957ba (compare: identical)
+
+Tests: check-outside.sh 12/12 OK (0 fehlgeschlagen, 0 übersprungen); Infra-Repo-Suite unten
+$ python3 -m pytest tests -q  (henemm-infra main ec1aa61, 2026-11-08T14:25:41Z, Infra-Repo-Suite über den geprüften Stand)
+........................................................................ [ 61%]
+........................................................................ [ 77%]
+........................................................................ [ 92%]
+.........................sss..s.ss                                       [100%]
+460 passed, 6 skipped in 46.88s

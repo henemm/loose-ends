@@ -1,0 +1,20 @@
+# Externer Scan kennt den Host (AC-11)
+
+Einzelaufruf desselben Wegs, den der Wochenlauf nimmt (Messung auf dem Heimserver, Auswertung auf rennwienix gegen
+security/expected-exposure.json aus henemm-infra main ec1aa61):
+
+$ bash /home/hem/henemm-infra/scripts/check-external-exposure.sh
+2026-11-08T13:34:05Z
+Messung auf dem Heimserver gestartet
+OK: Außensicht entspricht der Soll-Liste
+Exit: 0
+Erfolgsstempel: /home/hem/backups/external-exposure.success  2026-11-08T13:50:34
+
+Die Soll-Liste enthält für loose-ends.henemm.com: tls_hosts-Eintrag und die URLs
+/health 200, /mcp 401, /.well-known/oauth-authorization-server 200, /auth/apple 404, / 404.
+Das Skript meldet bei Erfolg nur die Gesamtzeile; jede Abweichung (auch eine dieser fünf URLs oder TLS des Hosts)
+hätte es als Fehlerzeile mit Exit ≠ 0 gemeldet. Also: keine Abweichung für loose-ends.henemm.com.
+
+Nebenbefund: Der Wochenlauf per cron (Mo 05:10 UTC) startet seit mindestens 2026-10-26 nicht
+(`/bin/sh: … check-external-exposure.sh: Permission denied` in /home/hem/backups/external-exposure.log, Datei ohne
+Ausführungsrecht). Vorher bestehend, nicht Teil dieses Schnitts → henemm-infra-Ticket.
