@@ -10,9 +10,9 @@ Datum: 2026-11-08 20:51
 - [x] **AC-5:** Given eine der Voraussetzungen fehlt (keine oder mehrere bearbeitbare iOS-Versionen, keine en-US-Lokalisierung, Gruppe fehlt, mehr Bilder als `maxCount`, Datei fehlt, Pixelmaß weicht vom Manifest ab), When `hochladen` läuft, Then bricht es mit `::error::` und benennendem Grund ab, **bevor** ein Nicht-GET-Aufruf geschieht. Belegt durch `test_aborts_before_any_write` (alle sieben Fälle).
 - [x] **AC-6:** Given keine bearbeitbare Mac-Version, When `hochladen` läuft, Then steht eine `::warning::`-Zeile zum Mac in der Ausgabe, es wird kein Mac-Bild angelegt, und der Lauf endet erfolgreich. Belegt durch `test_mac_without_editable_version_is_skipped_with_warning`.
 - [x] **AC-7:** Given eine Bildverarbeitung bei Apple, die `FAILED` meldet, oder ein Bild des Plans in anderem Zustand als `PREPARE_FOR_SUBMISSION` oder mit Platzierung, When `hochladen` endet, Then meldet das Skript `Fatal` mit Bildname und Grund; „bereit“ nur bei allen Bildern bereit und unplatziert. Belegt durch `test_failed_processing_is_an_error` und `test_state_check_requires_ready_and_no_placement`; eine andere Sprache als `de`/`en` wird ohne Aufruf abgelehnt (`test_language_input_is_checked`); die Workflow-Datei führt die Python-Tests als ersten Schritt aus und gibt den Schlüssel nie aus (Lesen der Datei im Diff).
-- [ ] **AC-8:** Given der Zweig ist im Remote und die Datei `asc-store-images.yml` liegt dort, When `gh workflow run asc-store-images.yml --ref <zweig> -f aktion=lesen` läuft, Then besteht der Lauf (Python-Tests grün), das Protokoll nennt die eine bearbeitbare iOS-Version 1.0.1, die en-US-Lokalisierung, die drei Gruppen mit `maxCount` und die Mac-Warnung, und die Bibliothek enthält noch keine Bilder mit Namen `en-…` (`fehlt` für alle 12). Belegt durch die Run-ID und das Protokoll im Abnahmebericht (vor dem Merge).
-- [ ] **AC-9:** Given AC-8 ist belegt, When `gh workflow run asc-store-images.yml --ref <zweig> -f aktion=hochladen` läuft und danach `aktion=lesen` erneut, Then besteht der Lauf, und der erneute `lesen`-Lauf zeigt 12 Bibliotheksbilder `en-*` (iPhone 5, iPad 5, Watch 2) im Zustand `PREPARE_FOR_SUBMISSION` mit `platzierungen=0`; ein dritter `hochladen`-Lauf meldet für alle 12 „schon vorhanden, übersprungen“. Belegt durch die drei Run-IDs und die Protokollzeilen. Es sind 12 Bilder (5 + 5 + 2); die frühere Fassung dieser Spec hatte sich auf 11 verzählt. Die Bibliothek enthält danach zusätzlich die vorhandenen Bilder (Kopfbilder, deutsche Bilder), die unberührt bleiben.
-- [ ] **AC-10:** Given die Läufe aus AC-9, When der Workflow „ASC Store Probe“ (`asc-store-probe.yml`) danach läuft, Then zeigt er für en-US weiterhin `platzierung keine` und `bildsatz keine` und für de-DE unverändert die bisherigen Platzierungen und Bildsätze: der Schnitt ist für die Store-Seite folgenlos. Belegt durch die Run-ID und die Protokollzeilen von en-US und de-DE.
+- [x] **AC-8:** Given der Zweig ist im Remote und die Datei `asc-store-images.yml` liegt dort, When `gh workflow run asc-store-images.yml --ref <zweig> -f aktion=lesen` läuft, Then besteht der Lauf (Python-Tests grün), das Protokoll nennt die eine bearbeitbare iOS-Version 1.0.1, die en-US-Lokalisierung, die drei Gruppen mit `maxCount` und die Mac-Warnung, und die Bibliothek enthält noch keine Bilder mit Namen `en-…` (`fehlt` für alle 12). Belegt durch die Run-ID und das Protokoll im Abnahmebericht (vor dem Merge).
+- [x] **AC-9:** Given AC-8 ist belegt, When `gh workflow run asc-store-images.yml --ref <zweig> -f aktion=hochladen` läuft und danach `aktion=lesen` erneut, Then besteht der Lauf, und der erneute `lesen`-Lauf zeigt 12 Bibliotheksbilder `en-*` (iPhone 5, iPad 5, Watch 2) im Zustand `PREPARE_FOR_SUBMISSION` mit `platzierungen=0`; ein dritter `hochladen`-Lauf meldet für alle 12 „schon vorhanden, übersprungen“. Belegt durch die drei Run-IDs und die Protokollzeilen. Es sind 12 Bilder (5 + 5 + 2); die frühere Fassung dieser Spec hatte sich auf 11 verzählt. Die Bibliothek enthält danach zusätzlich die vorhandenen Bilder (Kopfbilder, deutsche Bilder), die unberührt bleiben.
+- [x] **AC-10:** Given die Läufe aus AC-9, When der Workflow „ASC Store Probe“ (`asc-store-probe.yml`) danach läuft, Then zeigt er für en-US weiterhin `platzierung keine` und `bildsatz keine` und für de-DE unverändert die bisherigen Platzierungen und Bildsätze: der Schnitt ist für die Store-Seite folgenlos. Belegt durch die Run-ID und die Protokollzeilen von en-US und de-DE.
 - [x] **AC-11:** Given die Änderung berührt nur `scripts/` und `.github/workflows/`, When der Schnitt abgenommen wird, Then endet die Abnahme nach Stufe 2 mit dem Satz „Kein Pfad der Geräteliste berührt.“; der „Benutzen“-Beleg sind die echten Handläufe der ACs 8 bis 10 gegen Apple. Auf Hennings Geräten läuft nichts. `python3 -m unittest scripts/test_asc_store_images.py` und die übrigen Skript-Tests (`scripts/test_asc_header_upload.py`, `scripts/test_asc_version_texts.py`, `scripts/test_asc_store_probe.py`) sind grün. Belegt durch Dateiliste des Diffs gegen die Geräteliste und die Testläufe.
 
 ## Dialog
@@ -28,6 +28,12 @@ Findings siehe Verdict. Keine CRITICAL/HIGH/MEDIUM.
 
 ### Runde 2
 **Adversary:**
+Belege selbst nachgeprueft (Logs im Artefaktordner, Laeufe per gh gegengeprueft: 42519008880 und 42518449813 success, Commit 503c73b).
+AC-8 (42518370162): Testschritt Ran 12 tests; Zeilen version IOS 1.0.1 ... state=PREPARE_FOR_SUBMISSION, lokalisierung en-US vorhanden, kategorie APP_SCREENSHOT=APP_SCREENSHOTS_AND_PREVIEWS, drei Gruppen maxCount=10, 12 mal plan en-... fehlt, Mac-Warnung; keine Zeile bild name=en-. 22 Bestandsbilder.
+AC-9: hochladen 42518449813: 12 Zeilen hochgeladen, zustand bereit. lesen2 42518964937: 12 mal PREPARE_FOR_SUBMISSION platzierungen=0, 12 plan vorhanden; die 22 Bestandsbilder (Name, Zustand, Platzierungen) sind zeilengleich mit Lauf 1 (diff leer). Dritter Lauf 42519008880: 12 mal schon vorhanden, uebersprungen, keine Zeile bild ... hochgeladen (der einzige Treffer von hochgeladen ist die Mac-Warnung), zustand bereit.
+AC-10: Probe 42519049719 gegen 42515431363 nach Entfernen der Zeitstempel: 58 gefilterte Zeilen, identisch; en-US: platzierung keine und bildsatz keine.
+AC-11: Dateiliste des Diffs gegen main: nur scripts/, .github/workflows/, docs/; kein Pfad der Geraeteliste.
+F001 bestaetigt unkritisch: die Versionszeile steht im echten Protokoll. F002 bis F004 unveraendert LOW, nicht blockierend.
 **Implementierer:**
 
 ## Herkunft der Vorbedingungen
@@ -124,16 +130,16 @@ Confirmation:
   Evidence: Dateiliste (scripts/, .github/workflows/) beruehrt keinen Pfad der Geraeteliste; 61 Tests gruen. Rest (Nachweis nach Stufe 2) haengt an AC-8 bis AC-10.
   Status: CONFIRMED
 
-AC-8, AC-9, AC-10: OFFEN (nur mit echtem Lauf vom gepushten Zweig).
+AC-8, AC-9, AC-10: in Runde 2 belegt.
 Gewuenscht in den Protokollen: AC-8 lesen: Zeile "version IOS 1.0.1 id=... state=PREPARE_FOR_SUBMISSION", "lokalisierung en-US vorhanden", "kategorie APP_SCREENSHOT=<Kategorie>" (nicht "-"), drei "gruppe ... vorhanden maxCount=N" mit N>=5 (iPad 5, iPhone 5, Watch 2), "plan en-... fehlt" x12, keine "bild name=en-..." Zeile, Zeile "::warning::keine bearbeitbare Mac-Version"; Tests-Schritt gruen. AC-9 hochladen: 12 Zeilen "bild en-... hochgeladen", Endzeile "zustand bereit"; danach lesen: 12 "bild name=en-... zustand=PREPARE_FOR_SUBMISSION platzierungen=0" und bestehende Bilder unveraendert; dritter Lauf: 12 mal "schon vorhanden, uebersprungen", kein "hochgeladen". Zeile mit echter Kategorie ist entscheidend (Risiko Antwortform). AC-10 Store-Probe: en-US "platzierung keine" und "bildsatz keine", de-DE unveraenderte Zeilen gegenueber dem Lauf 42515431363.
 
 ═══════════════════════════════════════
-VERDICT: AMBIGUOUS
+VERDICT: VERIFIED
 ═══════════════════════════════════════
-Vorlaeufig: AC-1 bis AC-7 und AC-11 (Tests/Dateiliste) bewiesen, keine CRITICAL/HIGH/MEDIUM; AC-8, AC-9, AC-10 sind ohne echte Laeufe gegen Apple nicht belegbar.
+AC-1 bis AC-11 bewiesen (AC-8 bis AC-10 durch echte Laeufe vom Zweig, in Runde 2 nachgeprueft); keine CRITICAL/HIGH/MEDIUM.
 Findings: F001-F004 (alle LOW).
 Tests: 61 passed, 0 failed, 0 uebersprungen
-Proven points: 8/11
+Proven points: 11/11
 
 ## Geprüfte Dateien
 

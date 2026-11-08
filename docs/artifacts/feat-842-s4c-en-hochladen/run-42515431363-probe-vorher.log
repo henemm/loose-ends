@@ -1,0 +1,284 @@
+probe	Set up job	﻿2026-11-08T19:31:06.6437870Z Current runner version: '2.338.2'
+probe	Set up job	2026-11-08T19:31:06.6472911Z ##[group]Runner Image Provisioner
+probe	Set up job	2026-11-08T19:31:06.6474174Z Hosted Compute Agent
+probe	Set up job	2026-11-08T19:31:06.6474927Z Version: 20261028.624
+probe	Set up job	2026-11-08T19:31:06.6475809Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+probe	Set up job	2026-11-08T19:31:06.6476648Z Build Date: 2026-10-28T21:51:42Z
+probe	Set up job	2026-11-08T19:31:06.6477529Z Worker ID: {ed471a77-1d57-4d54-ad13-bbaf20da7c7f}
+probe	Set up job	2026-11-08T19:31:06.6478447Z Region: westcentralus
+probe	Set up job	2026-11-08T19:31:06.6479235Z Cloud: Azure
+probe	Set up job	2026-11-08T19:31:06.6479894Z ##[endgroup]
+probe	Set up job	2026-11-08T19:31:06.6481606Z ##[group]Operating System
+probe	Set up job	2026-11-08T19:31:06.6482855Z Ubuntu
+probe	Set up job	2026-11-08T19:31:06.6483549Z 26.04.1
+probe	Set up job	2026-11-08T19:31:06.6484275Z LTS
+probe	Set up job	2026-11-08T19:31:06.6484927Z ##[endgroup]
+probe	Set up job	2026-11-08T19:31:06.6486106Z ##[group]Runner Image
+probe	Set up job	2026-11-08T19:31:06.6486890Z Image: ubuntu-26.04
+probe	Set up job	2026-11-08T19:31:06.6487648Z Version: 20261101.186.1
+probe	Set up job	2026-11-08T19:31:06.6488883Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261101.186/images/ubuntu/Ubuntu2604-Readme.md
+probe	Set up job	2026-11-08T19:31:06.6490870Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261101.186
+probe	Set up job	2026-11-08T19:31:06.6492406Z ##[endgroup]
+probe	Set up job	2026-11-08T19:31:06.6493763Z ##[group]GITHUB_TOKEN Permissions
+probe	Set up job	2026-11-08T19:31:06.6496234Z Contents: read
+probe	Set up job	2026-11-08T19:31:06.6497034Z Metadata: read
+probe	Set up job	2026-11-08T19:31:06.6497802Z ##[endgroup]
+probe	Set up job	2026-11-08T19:31:06.6500524Z Secret source: Actions
+probe	Set up job	2026-11-08T19:31:06.6502227Z Cache mode: write
+probe	Set up job	2026-11-08T19:31:06.6503464Z Prepare workflow directory
+probe	Set up job	2026-11-08T19:31:06.7058377Z Prepare all required actions
+probe	Set up job	2026-11-08T19:31:06.7111168Z Getting action download info
+probe	Set up job	2026-11-08T19:31:06.9583629Z Download action repository 'actions/checkout@v7' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+probe	Set up job	2026-11-08T19:31:07.1650943Z Complete job name: probe
+probe	Run actions/checkout@v7	﻿2026-11-08T19:31:07.2488899Z ##[group]Run actions/checkout@v7
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.2489949Z with:
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.2490505Z   repository: henemm/loose-ends
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.2494728Z   token: ***
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.2495293Z   ssh-strict: true
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.2495827Z   ssh-user: git
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.2496370Z   persist-credentials: true
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.2496960Z   clean: true
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.2497501Z   sparse-checkout-cone-mode: true
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.2498122Z   fetch-depth: 1
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.2498638Z   fetch-tags: false
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.2499172Z   show-progress: true
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.2499707Z   lfs: false
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.2500232Z   submodules: false
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.2500762Z   set-safe-directory: true
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.2501364Z   allow-unsafe-pr-checkout: false
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.2502397Z env:
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.2502968Z   ASC_KEY_ID: ***
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.2503595Z   ASC_ISSUER_ID: ***
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.2504127Z   ASC_POLL_SECONDS: 5
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.2504668Z ##[endgroup]
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.5813620Z Syncing repository: henemm/loose-ends
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.5817150Z ##[group]Getting Git version info
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.5818954Z Working directory is '/home/runner/work/loose-ends/loose-ends'
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.5821593Z [command]/usr/bin/git version
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.5831128Z git version 2.56.0
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.5854896Z ##[endgroup]
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.5867503Z Temporarily overriding HOME='/home/runner/work/_temp/c1d9f714-0334-4a66-ac49-e5aae701c31f' before making global git config changes
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.5871294Z Adding repository directory to the temporary git global config as a safe directory
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.5874872Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/loose-ends/loose-ends
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.5951623Z Deleting the contents of '/home/runner/work/loose-ends/loose-ends'
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.5955799Z ##[group]Determining repository object format
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.5957751Z ##[endgroup]
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.5959256Z ##[group]Initializing the repository
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.5962975Z [command]/usr/bin/git init /home/runner/work/loose-ends/loose-ends
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6095245Z hint: Using 'master' as the name for the initial branch. This default branch name
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6098871Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6102082Z hint: to use in all of your new repositories, which will suppress this warning,
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6103853Z hint: call:
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6105129Z hint:
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6106381Z hint: 	git config --global init.defaultBranch <name>
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6107728Z hint:
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6108937Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6110994Z hint: 'development'. The just-created branch can be renamed via this command:
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6112752Z hint:
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6113671Z hint: 	git branch -m <name>
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6115006Z hint:
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6116435Z hint: Disable this message with "git config set advice.defaultBranchName false"
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6130029Z Initialized empty Git repository in /home/runner/work/loose-ends/loose-ends/.git/
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6148348Z [command]/usr/bin/git remote add origin https://github.com/henemm/loose-ends
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6220808Z ##[endgroup]
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6223550Z ##[group]Disabling automatic garbage collection
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6225782Z [command]/usr/bin/git config --local gc.auto 0
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6266230Z ##[endgroup]
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6268757Z ##[group]Setting up auth
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6270451Z Removing SSH command configuration
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6273400Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6313786Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6854548Z Removing HTTP extra header
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6861586Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.6898921Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.7194725Z Removing includeIf entries pointing to credentials config files
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.7197992Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.7246540Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.7552380Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-2d41e431-8d7a-425e-9125-f7fa7e7c1bae.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.7592980Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path /home/runner/work/_temp/git-credentials-2d41e431-8d7a-425e-9125-f7fa7e7c1bae.config
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.7625565Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-2d41e431-8d7a-425e-9125-f7fa7e7c1bae.config
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.7663857Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-2d41e431-8d7a-425e-9125-f7fa7e7c1bae.config
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.7700094Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-2d41e431-8d7a-425e-9125-f7fa7e7c1bae.config
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.7730780Z ##[endgroup]
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.7731860Z ##[group]Fetching the repository
+probe	Run actions/checkout@v7	2026-11-08T19:31:07.7739803Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +472ac7edaffc87c5c890b59237de2b0b5a1a6568:refs/remotes/origin/main
+probe	Run actions/checkout@v7	2026-11-08T19:31:13.7483852Z From https://github.com/henemm/loose-ends
+probe	Run actions/checkout@v7	2026-11-08T19:31:13.7486935Z  * [new ref]         472ac7edaffc87c5c890b59237de2b0b5a1a6568 -> origin/main
+probe	Run actions/checkout@v7	2026-11-08T19:31:13.7495682Z [command]/usr/bin/git branch --list --remote origin/main
+probe	Run actions/checkout@v7	2026-11-08T19:31:13.7525024Z   origin/main
+probe	Run actions/checkout@v7	2026-11-08T19:31:13.7533838Z [command]/usr/bin/git rev-parse refs/remotes/origin/main
+probe	Run actions/checkout@v7	2026-11-08T19:31:13.7558750Z 472ac7edaffc87c5c890b59237de2b0b5a1a6568
+probe	Run actions/checkout@v7	2026-11-08T19:31:13.7563365Z ##[endgroup]
+probe	Run actions/checkout@v7	2026-11-08T19:31:13.7564401Z ##[group]Determining the checkout info
+probe	Run actions/checkout@v7	2026-11-08T19:31:13.7570002Z ##[endgroup]
+probe	Run actions/checkout@v7	2026-11-08T19:31:13.7570835Z [command]/usr/bin/git sparse-checkout disable
+probe	Run actions/checkout@v7	2026-11-08T19:31:13.7643769Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+probe	Run actions/checkout@v7	2026-11-08T19:31:13.7676068Z ##[group]Checking out the ref
+probe	Run actions/checkout@v7	2026-11-08T19:31:13.7680479Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+probe	Run actions/checkout@v7	2026-11-08T19:31:14.4839152Z Switched to a new branch 'main'
+probe	Run actions/checkout@v7	2026-11-08T19:31:14.4855617Z branch 'main' set up to track 'origin/main'.
+probe	Run actions/checkout@v7	2026-11-08T19:31:14.4899669Z ##[endgroup]
+probe	Run actions/checkout@v7	2026-11-08T19:31:14.4953238Z [command]/usr/bin/git log -1 --format=%H
+probe	Run actions/checkout@v7	2026-11-08T19:31:14.4982877Z 472ac7edaffc87c5c890b59237de2b0b5a1a6568
+probe	Read store versions and screenshot sets	﻿2026-11-08T19:31:14.5224492Z ##[group]Run trap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT
+probe	Read store versions and screenshot sets	2026-11-08T19:31:14.5225084Z ^[[36;1mtrap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT^[[0m
+probe	Read store versions and screenshot sets	2026-11-08T19:31:14.5225443Z ^[[36;1mumask 077^[[0m
+probe	Read store versions and screenshot sets	2026-11-08T19:31:14.5225973Z ^[[36;1mprintf '%s\n' "***^[[0m
+probe	Read store versions and screenshot sets	2026-11-08T19:31:14.5226445Z ^[[36;1m***^[[0m
+probe	Read store versions and screenshot sets	2026-11-08T19:31:14.5226854Z ^[[36;1m***^[[0m
+probe	Read store versions and screenshot sets	2026-11-08T19:31:14.5227224Z ^[[36;1m***^[[0m
+probe	Read store versions and screenshot sets	2026-11-08T19:31:14.5227453Z ^[[36;1m***^[[0m
+probe	Read store versions and screenshot sets	2026-11-08T19:31:14.5227769Z ^[[36;1m***" > "$RUNNER_TEMP/asc_key.p8"^[[0m
+probe	Read store versions and screenshot sets	2026-11-08T19:31:14.5228212Z ^[[36;1mASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_store_probe.py^[[0m
+probe	Read store versions and screenshot sets	2026-11-08T19:31:14.5283317Z shell: /usr/bin/bash -e {0}
+probe	Read store versions and screenshot sets	2026-11-08T19:31:14.5283662Z env:
+probe	Read store versions and screenshot sets	2026-11-08T19:31:14.5283974Z   ASC_KEY_ID: ***
+probe	Read store versions and screenshot sets	2026-11-08T19:31:14.5284294Z   ASC_ISSUER_ID: ***
+probe	Read store versions and screenshot sets	2026-11-08T19:31:14.5284551Z   ASC_POLL_SECONDS: 5
+probe	Read store versions and screenshot sets	2026-11-08T19:31:14.5284823Z ##[endgroup]
+probe	Read store versions and screenshot sets	2026-11-08T19:31:15.7506982Z zugriff abfrage=appInfos http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:15.7511681Z appinfo nr=1 state=READY_FOR_DISTRIBUTION appStoreState=READY_FOR_SALE felder=appStoreAgeRating,appStoreState,australiaAgeRating,brazilAgeRating,brazilAgeRatingV2,franceAgeRating,koreaAgeRating,state relationen=ageRatingDeclaration,appInfoLocalizations,primaryCategory,primarySubcategoryOne,primarySubcategoryTwo,secondaryCategory,secondarySubcategoryOne,secondarySubcategoryTwo,territoryAgeRatings
+probe	Read store versions and screenshot sets	2026-11-08T19:31:16.1008602Z zugriff abfrage=appInfoLocalizations http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:16.1009678Z untertitel appinfo=1 sprache=de-DE name=Loose Ends untertitel=Gesagt. Sortiert. zeichen=17
+probe	Read store versions and screenshot sets	2026-11-08T19:31:16.1013334Z appinfo nr=2 state=PREPARE_FOR_SUBMISSION appStoreState=PREPARE_FOR_SUBMISSION felder=appStoreAgeRating,appStoreState,australiaAgeRating,brazilAgeRating,brazilAgeRatingV2,franceAgeRating,koreaAgeRating,state relationen=ageRatingDeclaration,appInfoLocalizations,primaryCategory,primarySubcategoryOne,primarySubcategoryTwo,secondaryCategory,secondarySubcategoryOne,secondarySubcategoryTwo,territoryAgeRatings
+probe	Read store versions and screenshot sets	2026-11-08T19:31:16.4174134Z zugriff abfrage=appInfoLocalizations http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:16.4175402Z untertitel appinfo=2 sprache=en-US name=Loose Ends: Voice Tasks untertitel=Say it. Clear your head. zeichen=24
+probe	Read store versions and screenshot sets	2026-11-08T19:31:16.4176711Z untertitel appinfo=2 sprache=de-DE name=Loose Ends untertitel=Einfach sagen. Kopf frei. zeichen=25
+probe	Read store versions and screenshot sets	2026-11-08T19:31:16.6247700Z zugriff abfrage=appStoreVersions http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:16.7489706Z zugriff abfrage=appAssetLibraryRefData http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:16.7490650Z refdaten gruppen=37 felder=displayClassId,placementProfileGroupId,platform
+probe	Read store versions and screenshot sets	2026-11-08T19:31:16.9301303Z zugriff abfrage=appStoreVersionLocalizations http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:16.9303672Z text version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE beschreibung=1638 schluesselwoerter=100 supporturl=https://www.henemm.com/footer-information/contact/ werbetext=0 marketingurl=keine
+probe	Read store versions and screenshot sets	2026-11-08T19:31:16.9314960Z beschreibung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE zeichen=1638 text="Sag es in einem Satz – Loose Ends kümmert sich um den Rest.\n\nAufgaben entstehen unterwegs: beim Spaziergang, an der Kasse, beim Lesen einer Mail. Loose Ends nimmt sie in einem einzigen Satz auf, ohne dass du ein Feld ausfüllst. Danach erkennt die App selbst, was in deinem Satz steckt, und zeigt dir später genau das, was gerade zu deiner Situation passt.\n\nERFASSEN IN EINEM SATZ\n• Tippen oder diktieren – in der App, auf der Apple Watch, über Widgets, Aktionstaste und Kurzbefehle\n• Teilen-Menü: Texte, Links, Mails, Fotos und Dateien direkt als Aufgabe übernehmen\n• Dein Originalsatz bleibt immer unverändert erhalten\n\nDIE APP SORTIERT FÜR DICH\n• Fälligkeit, Dauer, Wichtigkeit und Kontext werden aus deinem Satz erkannt\n• Feste Regeln zuerst, Apple Intelligence auf deinem Gerät nur dort, wo Sprachverständnis nötig ist\n• Lernt aus deinen Zuordnungen: Was du einmal einem Kontext gibst, erkennt sie beim nächsten Mal\n\nDU BEHÄLTST DAS LETZTE WORT\n• Jede Änderung ist an der Aufgabe sichtbar\n• Jedes Feld lässt sich einzeln zurückstellen\n\nANSICHTEN, DIE ZUR SITUATION PASSEN\n• Jetzt, Neu, Fällig, Schnell, Alt, Wartet, Geparkt, Erledigt\n• Je Kontext („Garten\", „Computer\") und je Projekt\n• Wiederkehrende Aufgaben und Unteraufgaben\n\nERINNERT ZUR RICHTIGEN ZEIT – UND AM RICHTIGEN ORT\n• Mitteilung am Fälligkeitstag mit Erledigt, Als nächstes, Morgen\n• Erinnerung beim Ankommen an einem Ort (iPhone, iPad)\n• Termine optional im Kalender\n\nÜBERALL DABEI\n• iPhone, iPad, Mac und Apple Watch\n• Abgleich über deine private iCloud\n\nPRIVAT\nDie Auswertung läuft auf deinem Gerät. Deine Aufgaben liegen in deiner iCloud, nicht auf fremden Servern."
+probe	Read store versions and screenshot sets	2026-11-08T19:31:16.9323319Z schluesselwoerter version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE zeichen=100 text="Aufgaben,To-do,Todo,Erinnerungen,Diktat,Liste,GTD,Kontext,Notizen,Planer,Inbox,Watch,Projekte,Fällig"
+probe	Read store versions and screenshot sets	2026-11-08T19:31:16.9324422Z werbetext version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE zeichen=0 text=keiner
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.1578578Z zugriff abfrage=placements http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.1581070Z platzierung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE gruppe=IPAD_13_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.1584768Z platzierung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE gruppe=IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.1587800Z platzierung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE gruppe=IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.1589998Z platzierung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE gruppe=IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.1592428Z platzierung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE gruppe=WATCH_SERIES_10_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.1595562Z platzierung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE gruppe=IPAD_13_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.1597627Z platzierung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE gruppe=IPAD_13_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.1599306Z platzierung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE gruppe=IPAD_13_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.1601322Z platzierung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE gruppe=IPAD_13_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.1603396Z platzierung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE gruppe=IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.1605201Z platzierung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE gruppe=IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.1606954Z platzierung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE gruppe=WATCH_SERIES_10_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.1608920Z platzierung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE gruppe=DEFAULT_PROFILE typ=PRODUCT_PAGE_HEADER_ASSET zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.1610662Z platzierung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE gruppe=DEFAULT_PROFILE typ=APP_STORE_SEARCH_RESULTS_ASSET zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.3466187Z zugriff abfrage=appScreenshotSets http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.5117835Z zugriff abfrage=appScreenshots http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.5119216Z bildsatz version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE typ=APP_IPAD_PRO_3GEN_129 anzahl=5
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.5120600Z bild typ=APP_IPAD_PRO_3GEN_129 datei=05-erledigt.png maß=2064x2752 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.5121430Z bild typ=APP_IPAD_PRO_3GEN_129 datei=04-detail.png maß=2064x2752 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.5122538Z bild typ=APP_IPAD_PRO_3GEN_129 datei=03-neu.png maß=2064x2752 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.5123471Z bild typ=APP_IPAD_PRO_3GEN_129 datei=02-erfassen.png maß=2064x2752 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.5124538Z bild typ=APP_IPAD_PRO_3GEN_129 datei=01-start.png maß=2064x2752 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.6727149Z zugriff abfrage=appScreenshots http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.6728105Z bildsatz version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE typ=APP_IPHONE_61 anzahl=5
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.6808836Z bild typ=APP_IPHONE_61 datei=05-erledigt.png maß=1206x2622 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.6809648Z bild typ=APP_IPHONE_61 datei=04-detail.png maß=1206x2622 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.6810279Z bild typ=APP_IPHONE_61 datei=03-neu.png maß=1206x2622 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.6810839Z bild typ=APP_IPHONE_61 datei=02-erfassen.png maß=1206x2622 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.6811449Z bild typ=APP_IPHONE_61 datei=01-start.png maß=1206x2622 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.8395499Z zugriff abfrage=appScreenshots http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.8396696Z bildsatz version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=de-DE typ=APP_WATCH_SERIES_10 anzahl=2
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.8398233Z bild typ=APP_WATCH_SERIES_10 datei=02-gespeichert.png maß=416x496 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.8399302Z bild typ=APP_WATCH_SERIES_10 datei=01-jetzt.png maß=416x496 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.8400531Z text version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US beschreibung=1493 schluesselwoerter=94 supporturl=https://www.henemm.com/footer-information/contact/ werbetext=125 marketingurl=keine
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.8409464Z beschreibung version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US zeichen=1493 text="Say it in one sentence – Loose Ends takes care of the rest.\n\nTasks show up on the go: on a walk, at the checkout, while reading an email. Loose Ends captures them in a single sentence, without a form to fill in. The app then works out what is in your sentence and later shows you just what fits your situation right now.\n\nCAPTURE IN ONE SENTENCE\n• Type or dictate – in the app, on Apple Watch, with widgets, the Action button and Shortcuts\n• Share sheet: turn text, links, emails, photos and files straight into a task\n• Your original sentence is always kept unchanged\n\nTHE APP SORTS IT FOR YOU\n• Due date, duration, importance and context are recognized from your sentence\n• Fixed rules first, Apple Intelligence on your device only where language understanding is needed\n• Learns from your choices: tag a sentence once, and it knows next time\n\nYOU HAVE THE LAST WORD\n• Every change is visible on the task\n• Every field can be reset on its own\n\nVIEWS THAT FIT THE MOMENT\n• Now, New, Due, Quick, Old, Waiting, Parked, Completed\n• By tag (\"Garden\", \"Computer\") and by project\n• Repeating tasks and subtasks\n\nREMINDS YOU AT THE RIGHT TIME – AND PLACE\n• Notification on the due day with Complete, Next up, Tomorrow\n• Reminder on arriving at a place (iPhone, iPad)\n• Optionally add dates to your calendar\n\nEVERYWHERE YOU ARE\n• iPhone, iPad, Mac and Apple Watch\n• Sync through your private iCloud\n\nPRIVATE\nAnalysis runs on your device. Your tasks live in your iCloud, not on someone else's servers."
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.8417941Z schluesselwoerter version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US zeichen=94 text="to-do,todo,reminders,dictation,list,GTD,context,notes,planner,inbox,watch,projects,due,capture"
+probe	Read store versions and screenshot sets	2026-11-08T19:31:17.8419363Z werbetext version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US zeichen=125 text="Say it in one sentence. Loose Ends recognizes date, duration and tag right on your device and later shows you just what fits."
+probe	Read store versions and screenshot sets	2026-11-08T19:31:18.0242971Z zugriff abfrage=placements http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:18.0243830Z platzierung keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US
+probe	Read store versions and screenshot sets	2026-11-08T19:31:18.2071356Z zugriff abfrage=appScreenshotSets http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:18.2072658Z bildsatz keine version=1.0.1/IOS/PREPARE_FOR_SUBMISSION sprache=en-US
+probe	Read store versions and screenshot sets	2026-11-08T19:31:18.4400898Z zugriff abfrage=appStoreVersionLocalizations http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:18.4402691Z text version=1.0/MAC_OS/READY_FOR_SALE sprache=de-DE beschreibung=1638 schluesselwoerter=100 supporturl=https://www.henemm.com/footer-information/contact/ werbetext=139 marketingurl=keine
+probe	Read store versions and screenshot sets	2026-11-08T19:31:18.4417712Z beschreibung version=1.0/MAC_OS/READY_FOR_SALE sprache=de-DE zeichen=1638 text="Sag es in einem Satz – Loose Ends kümmert sich um den Rest.\n\nAufgaben entstehen unterwegs: beim Spaziergang, an der Kasse, beim Lesen einer Mail. Loose Ends nimmt sie in einem einzigen Satz auf, ohne dass du ein Feld ausfüllst. Danach erkennt die App selbst, was in deinem Satz steckt, und zeigt dir später genau das, was gerade zu deiner Situation passt.\n\nERFASSEN IN EINEM SATZ\n• Tippen oder diktieren – in der App, auf der Apple Watch, über Widgets, Aktionstaste und Kurzbefehle\n• Teilen-Menü: Texte, Links, Mails, Fotos und Dateien direkt als Aufgabe übernehmen\n• Dein Originalsatz bleibt immer unverändert erhalten\n\nDIE APP SORTIERT FÜR DICH\n• Fälligkeit, Dauer, Wichtigkeit und Kontext werden aus deinem Satz erkannt\n• Feste Regeln zuerst, Apple Intelligence auf deinem Gerät nur dort, wo Sprachverständnis nötig ist\n• Lernt aus deinen Zuordnungen: Was du einmal einem Kontext gibst, erkennt sie beim nächsten Mal\n\nDU BEHÄLTST DAS LETZTE WORT\n• Jede Änderung ist an der Aufgabe sichtbar\n• Jedes Feld lässt sich einzeln zurückstellen\n\nANSICHTEN, DIE ZUR SITUATION PASSEN\n• Jetzt, Neu, Fällig, Schnell, Alt, Wartet, Geparkt, Erledigt\n• Je Kontext („Garten\", „Computer\") und je Projekt\n• Wiederkehrende Aufgaben und Unteraufgaben\n\nERINNERT ZUR RICHTIGEN ZEIT – UND AM RICHTIGEN ORT\n• Mitteilung am Fälligkeitstag mit Erledigt, Als nächstes, Morgen\n• Erinnerung beim Ankommen an einem Ort (iPhone, iPad)\n• Termine optional im Kalender\n\nÜBERALL DABEI\n• iPhone, iPad, Mac und Apple Watch\n• Abgleich über deine private iCloud\n\nPRIVAT\nDie Auswertung läuft auf deinem Gerät. Deine Aufgaben liegen in deiner iCloud, nicht auf fremden Servern."
+probe	Read store versions and screenshot sets	2026-11-08T19:31:18.4428615Z schluesselwoerter version=1.0/MAC_OS/READY_FOR_SALE sprache=de-DE zeichen=100 text="Aufgaben,To-do,Todo,Erinnerungen,Diktat,Liste,GTD,Kontext,Notizen,Planer,Inbox,Watch,Projekte,Fällig"
+probe	Read store versions and screenshot sets	2026-11-08T19:31:18.4430228Z werbetext version=1.0/MAC_OS/READY_FOR_SALE sprache=de-DE zeichen=139 text="Sag es in einem Satz. Loose Ends erkennt Datum, Dauer und Kontext direkt auf deinem Gerät und zeigt dir später genau das, was gerade passt."
+probe	Read store versions and screenshot sets	2026-11-08T19:31:18.6576907Z zugriff abfrage=placements http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:18.6578411Z platzierung version=1.0/MAC_OS/READY_FOR_SALE sprache=de-DE gruppe=MAC_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:18.6580747Z platzierung version=1.0/MAC_OS/READY_FOR_SALE sprache=de-DE gruppe=MAC_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:18.6583350Z platzierung version=1.0/MAC_OS/READY_FOR_SALE sprache=de-DE gruppe=MAC_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:18.6585059Z platzierung version=1.0/MAC_OS/READY_FOR_SALE sprache=de-DE gruppe=MAC_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:18.8286886Z zugriff abfrage=appScreenshotSets http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.0011594Z zugriff abfrage=appScreenshots http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.0012825Z bildsatz version=1.0/MAC_OS/READY_FOR_SALE sprache=de-DE typ=APP_DESKTOP anzahl=4
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.0014369Z bild typ=APP_DESKTOP datei=05-erledigt.png maß=1280x800 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.0015712Z bild typ=APP_DESKTOP datei=04-detail.png maß=1280x800 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.0016914Z bild typ=APP_DESKTOP datei=03-neu.png maß=1280x800 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.0017973Z bild typ=APP_DESKTOP datei=01-start.png maß=1280x800 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.2384771Z zugriff abfrage=appStoreVersionLocalizations http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.2385854Z text version=1.0/IOS/READY_FOR_SALE sprache=de-DE beschreibung=1638 schluesselwoerter=100 supporturl=https://www.henemm.com/footer-information/contact/ werbetext=139 marketingurl=keine
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.2399057Z beschreibung version=1.0/IOS/READY_FOR_SALE sprache=de-DE zeichen=1638 text="Sag es in einem Satz – Loose Ends kümmert sich um den Rest.\n\nAufgaben entstehen unterwegs: beim Spaziergang, an der Kasse, beim Lesen einer Mail. Loose Ends nimmt sie in einem einzigen Satz auf, ohne dass du ein Feld ausfüllst. Danach erkennt die App selbst, was in deinem Satz steckt, und zeigt dir später genau das, was gerade zu deiner Situation passt.\n\nERFASSEN IN EINEM SATZ\n• Tippen oder diktieren – in der App, auf der Apple Watch, über Widgets, Aktionstaste und Kurzbefehle\n• Teilen-Menü: Texte, Links, Mails, Fotos und Dateien direkt als Aufgabe übernehmen\n• Dein Originalsatz bleibt immer unverändert erhalten\n\nDIE APP SORTIERT FÜR DICH\n• Fälligkeit, Dauer, Wichtigkeit und Kontext werden aus deinem Satz erkannt\n• Feste Regeln zuerst, Apple Intelligence auf deinem Gerät nur dort, wo Sprachverständnis nötig ist\n• Lernt aus deinen Zuordnungen: Was du einmal einem Kontext gibst, erkennt sie beim nächsten Mal\n\nDU BEHÄLTST DAS LETZTE WORT\n• Jede Änderung ist an der Aufgabe sichtbar\n• Jedes Feld lässt sich einzeln zurückstellen\n\nANSICHTEN, DIE ZUR SITUATION PASSEN\n• Jetzt, Neu, Fällig, Schnell, Alt, Wartet, Geparkt, Erledigt\n• Je Kontext („Garten\", „Computer\") und je Projekt\n• Wiederkehrende Aufgaben und Unteraufgaben\n\nERINNERT ZUR RICHTIGEN ZEIT – UND AM RICHTIGEN ORT\n• Mitteilung am Fälligkeitstag mit Erledigt, Als nächstes, Morgen\n• Erinnerung beim Ankommen an einem Ort (iPhone, iPad)\n• Termine optional im Kalender\n\nÜBERALL DABEI\n• iPhone, iPad, Mac und Apple Watch\n• Abgleich über deine private iCloud\n\nPRIVAT\nDie Auswertung läuft auf deinem Gerät. Deine Aufgaben liegen in deiner iCloud, nicht auf fremden Servern."
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.2412095Z schluesselwoerter version=1.0/IOS/READY_FOR_SALE sprache=de-DE zeichen=100 text="Aufgaben,To-do,Todo,Erinnerungen,Diktat,Liste,GTD,Kontext,Notizen,Planer,Inbox,Watch,Projekte,Fällig"
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.2414993Z werbetext version=1.0/IOS/READY_FOR_SALE sprache=de-DE zeichen=139 text="Sag es in einem Satz. Loose Ends erkennt Datum, Dauer und Kontext direkt auf deinem Gerät und zeigt dir später genau das, was gerade passt."
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.4597633Z zugriff abfrage=placements http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.4599373Z platzierung version=1.0/IOS/READY_FOR_SALE sprache=de-DE gruppe=IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.4602524Z platzierung version=1.0/IOS/READY_FOR_SALE sprache=de-DE gruppe=IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.4606076Z platzierung version=1.0/IOS/READY_FOR_SALE sprache=de-DE gruppe=IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.4609258Z platzierung version=1.0/IOS/READY_FOR_SALE sprache=de-DE gruppe=IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.4612809Z platzierung version=1.0/IOS/READY_FOR_SALE sprache=de-DE gruppe=IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.4616151Z platzierung version=1.0/IOS/READY_FOR_SALE sprache=de-DE gruppe=IPAD_13_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.4617869Z platzierung version=1.0/IOS/READY_FOR_SALE sprache=de-DE gruppe=IPAD_13_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.4619461Z platzierung version=1.0/IOS/READY_FOR_SALE sprache=de-DE gruppe=IPAD_13_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.4621038Z platzierung version=1.0/IOS/READY_FOR_SALE sprache=de-DE gruppe=IPAD_13_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.4622874Z platzierung version=1.0/IOS/READY_FOR_SALE sprache=de-DE gruppe=IPAD_13_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.4624458Z platzierung version=1.0/IOS/READY_FOR_SALE sprache=de-DE gruppe=WATCH_SERIES_10_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.4626189Z platzierung version=1.0/IOS/READY_FOR_SALE sprache=de-DE gruppe=WATCH_SERIES_10_PROFILE typ=APP_SCREENSHOT zustand=ACTIVE felder=createdDate,lastModifiedDate,mediaType,placementGroup,placementType,state,stateDetails
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.6227504Z zugriff abfrage=appScreenshotSets http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.7914970Z zugriff abfrage=appScreenshots http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.7915614Z bildsatz version=1.0/IOS/READY_FOR_SALE sprache=de-DE typ=APP_IPAD_PRO_3GEN_129 anzahl=5
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.7916586Z bild typ=APP_IPAD_PRO_3GEN_129 datei=05-erledigt.png maß=2064x2752 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.7917709Z bild typ=APP_IPAD_PRO_3GEN_129 datei=04-detail.png maß=2064x2752 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.7918403Z bild typ=APP_IPAD_PRO_3GEN_129 datei=03-neu.png maß=2064x2752 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.7919076Z bild typ=APP_IPAD_PRO_3GEN_129 datei=02-erfassen.png maß=2064x2752 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.7919759Z bild typ=APP_IPAD_PRO_3GEN_129 datei=01-start.png maß=2064x2752 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.9523217Z zugriff abfrage=appScreenshots http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.9523815Z bildsatz version=1.0/IOS/READY_FOR_SALE sprache=de-DE typ=APP_WATCH_SERIES_10 anzahl=2
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.9524733Z bild typ=APP_WATCH_SERIES_10 datei=02-gespeichert.png maß=416x496 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:19.9525456Z bild typ=APP_WATCH_SERIES_10 datei=01-jetzt.png maß=416x496 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:20.1109327Z zugriff abfrage=appScreenshots http=200
+probe	Read store versions and screenshot sets	2026-11-08T19:31:20.1109963Z bildsatz version=1.0/IOS/READY_FOR_SALE sprache=de-DE typ=APP_IPHONE_61 anzahl=5
+probe	Read store versions and screenshot sets	2026-11-08T19:31:20.1110899Z bild typ=APP_IPHONE_61 datei=05-erledigt.png maß=1206x2622 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:20.1112248Z bild typ=APP_IPHONE_61 datei=04-detail.png maß=1206x2622 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:20.1112919Z bild typ=APP_IPHONE_61 datei=03-neu.png maß=1206x2622 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:20.1113545Z bild typ=APP_IPHONE_61 datei=02-erfassen.png maß=1206x2622 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:20.1114177Z bild typ=APP_IPHONE_61 datei=01-start.png maß=1206x2622 zustand=COMPLETE
+probe	Read store versions and screenshot sets	2026-11-08T19:31:20.1114650Z zusammenfassung antworten=23 von=23 befunde=0
+probe	Post Run actions/checkout@v7	﻿2026-11-08T19:31:20.1366690Z Post job cleanup.
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.2275765Z [command]/usr/bin/git version
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.2326410Z git version 2.56.0
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.2367097Z Temporarily overriding HOME='/home/runner/work/_temp/bdcd58d6-ceb7-4d3c-b362-a821d045ea6a' before making global git config changes
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.2368465Z Adding repository directory to the temporary git global config as a safe directory
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.2372446Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/loose-ends/loose-ends
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.2414294Z Removing SSH command configuration
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.2422337Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.2478551Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.2836585Z Removing HTTP extra header
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.2842805Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.2887302Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.3196582Z Removing includeIf entries pointing to credentials config files
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.3204268Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.3232975Z includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.3234056Z includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.3235219Z includeif.gitdir:/github/workspace/.git.path
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.3236132Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.3245312Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.3282591Z /home/runner/work/_temp/git-credentials-2d41e431-8d7a-425e-9125-f7fa7e7c1bae.config
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.3293919Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-2d41e431\-8d7a\-425e\-9125\-f7fa7e7c1bae\.config
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.3335277Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.3367450Z /home/runner/work/_temp/git-credentials-2d41e431-8d7a-425e-9125-f7fa7e7c1bae.config
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.3380758Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-2d41e431\-8d7a\-425e\-9125\-f7fa7e7c1bae\.config
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.3418524Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.3445186Z /github/runner_temp/git-credentials-2d41e431-8d7a-425e-9125-f7fa7e7c1bae.config
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.3454746Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-2d41e431\-8d7a\-425e\-9125\-f7fa7e7c1bae\.config
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.3494978Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.3521252Z /github/runner_temp/git-credentials-2d41e431-8d7a-425e-9125-f7fa7e7c1bae.config
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.3531454Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-2d41e431\-8d7a\-425e\-9125\-f7fa7e7c1bae\.config
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.3572442Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+probe	Post Run actions/checkout@v7	2026-11-08T19:31:20.3871769Z Removing credentials config '/home/runner/work/_temp/git-credentials-2d41e431-8d7a-425e-9125-f7fa7e7c1bae.config'
+probe	Complete job	﻿2026-11-08T19:31:20.4026134Z Cleaning up orphan processes
