@@ -319,7 +319,7 @@ test("tuer: allowedSubsFromEnv liest streng und nennt nie den wert", () => {
 // Session expiry (#615 S4a): last_used_at is set by SQL, the database clock decides.
 const tokenHash = (token: string) => createHash("sha256").update(token).digest();
 async function aged(pool: pg.Pool, token: string, age: string): Promise<void> {
-  await pool.query(`UPDATE sessions SET last_used_at = now() - ${age} WHERE token_hash = $1`, [tokenHash(token)]);
+  await pool.query(`UPDATE sessions SET last_used_at = now() - (${age}) WHERE token_hash = $1`, [tokenHash(token)]);
 }
 async function lastUsed(pool: pg.Pool, token: string): Promise<{ n: number; at: string | null }> {
   const { rows } = await pool.query("SELECT count(*)::int AS n, max(last_used_at)::text AS at FROM sessions WHERE token_hash = $1", [tokenHash(token)]);
