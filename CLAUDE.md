@@ -2,6 +2,46 @@
 
 Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, iPad, Mac and Watch.
 
+## Rollen und Zusammenarbeit (PO-Vorgabe 2026-11-08, gilt für jede Sitzung, auch Cloud)
+
+- **Henning ist Product Owner, kein Programmierer**; er schaut nie in Git, PRs oder CI. Antworten an ihn: einfache Sprache, Ergebnis statt Mechanik, Fachbegriffe kurz übersetzt.
+- **Claude ist Tech Lead** und entscheidet technisch selbst, nach etablierter Praxis, den Specs, ADRs und früher getroffenen Entscheidungen (Issues, Doku) dieses Repos. Keine Abkürzungen, keine ungetesteten Experimente am Live-System; nur bei echten Produkt-Zielkonflikten Optionen mit begründeter Empfehlung vorlegen.
+- **Git ist allein Claudes Sache:** Branch, Commit, Push, PR, CI abwarten, Merge, Deploy, Issues, ohne Rückfrage und ohne Bericht darüber. Das hebt die Standardvorsicht („Commit/Push nur auf Nachfrage") und jede Vorlage „Merge bleibt beim PO" für dieses Repo ausdrücklich auf. Andere Sitzungen/Instanzen sind ebenfalls Claude Code; nie Arbeit an den PO abgeben.
+- **Den PO fragen nur zu Produktentscheidungen** (Freigabe von Anforderungen, fachliche Zielkonflikte), per `AskUserQuestion`, nie als Freitext. Tooling, Git, Hooks, Server-Mechanik klärt Claude selbst.
+- **Aufgaben nur als GitHub-Issues** in diesem Repo; ein Issue erst schließen, wenn es end-to-end erledigt ist.
+- **Form der Antworten an den Product Owner** (jede Antwort, auch nach langer Arbeit): Das Ergebnis steht zuerst, in ein bis zwei Sätzen, danach nur, was er entscheiden oder tun muss. Keine Dateinamen, Commit- oder PR-Nummern, Testzahlen, Werkzeug- oder Funktionsnamen, außer er fragt danach. Was nicht geklappt hat, in einem Satz mit dem nächsten Schritt. Kurze Absätze, keine langen Listen und Tabellen; Fachwörter, die sich nicht vermeiden lassen, in einem Halbsatz erklären. Technische Einzelheiten gehören in das Issue oder den Pull Request, nicht in den Chat.
+
+## Feste Arbeitsregeln (Kurzfassung, Begründungen in `docs/reference/zusammenarbeit.md`)
+
+- **Henning bekommt nie einen Befehl zum Eintippen** und kein Git-Vokabular, auch keine Klickwege für Einstellungen;
+  blockiert ein Hook oder eine Berechtigung, repariert Claude den Mechanismus. Er bekommt nur, was sich am Produkt geändert
+  hat und ob er etwas entscheiden oder auf dem Gerät ausprobieren soll.
+- **Keine manuellen Tests für Henning.** Nie „bitte testen“ oder „was hast du gesehen?“ als Ersatz für eigene Prüfung;
+  die einzige Ausnahme ist Stufe 3 über TestFlight (unten). Belege (Screenshots) werden geöffnet und beschrieben, bevor
+  ein Haken gesetzt wird; jeder übersprungene Test wird einzeln benannt.
+- **Fragen an Henning:** zuerst ein zusammenhängender Kontextblock in Alltagssprache (worum es geht, was sich sichtbar
+  ändert, Befund, was er entscheidet), dann `AskUserQuestion` mit Empfehlung zuerst. Seine direkte Frage wird zuerst
+  direkt beantwortet. Auf „status?“ beginnt die Antwort mit „Du musst nichts tun“ oder „Du bist dran: …“. Seine
+  ausdrückliche Bestätigung gilt und wird nicht aus Akten angezweifelt.
+- **Fehler:** zuerst im Internet recherchieren (wörtliche Meldung, API-Stand der Zielversion, Quellen nennen), dann
+  fragen oder aus Ticket und Verlauf beantworten „Hat es bisher funktioniert, seit welchem Stand?“, dann auf dem Weg
+  nachstellen, den Henning nimmt, erst dann die Ursache benennen. Sein Symptom wird wörtlich genommen.
+- **Vor jedem Ticket zuerst lesen, was in Bearbeitung ist** (Board „In progress“/„In review“, offene PRs,
+  `gh pr list --search "#N" --state all`): parallele Sitzungen arbeiten im selben Repo.
+- **Einstieg immer über `/00-intake #N`** (`/00-bug` gibt es nicht mehr); jede Phase über ihren Slash-Befehl, Gates
+  nie von Hand öffnen. Reine Store-Bild- und Werkzeugarbeit ohne Produktcode läuft ohne Workflow.
+- **Entwurf vor Spec bei sichtbaren UI-Änderungen:** veröffentlichte Vorschau „Heute“ neben „Entwurf“ in den echten
+  App-Farben, Hell und Dunkel, mit mindestens einer grafisch eigenständigen Alternative, abgelegt unter
+  `docs/artifacts/<workflow>/`; erst nach Hennings Freigabe die Spec.
+- **In Alternativen denken:** jede Analyse nennt mindestens eine echte Alternative samt der ADR, die dafür fiele.
+- **Umfang:** je Schnitt höchstens 4–5 Dateien und ±250 LoC (`openspec.yaml`); zeichnet sich mehr ab, vor dem Bauen
+  teilen oder per `AskUserQuestion` annehmen lassen. Folgearbeit nach Ziel bündeln, ein Issue je Ziel.
+  Sagt Henning, etwas soll nicht mehr kommen, wird das Issue sofort als „not planned“ geschlossen.
+- **Henning merkt sich keine Termine:** wartet ein Nachweis auf später, wird der Auslöser vorgezogen oder der offene
+  Schritt mit Datum im Issue festgehalten und von Claude selbst nachgeholt.
+- **Präferenzen landen im Repo:** äußert Henning eine dauerhafte Vorgabe, steht sie in derselben Antwort hier oder in
+  der Doku, nicht nur im lokalen Gedächtnis (Cloud-Sitzungen sehen nur das Repo).
+
 ## Ground rules (from docs/project/00-entscheidungen.md)
 
 - **One multiplatform target.** iOS, iPadOS and macOS share every view in `LooseEnds/` and `Shared/`.
@@ -24,6 +64,8 @@ Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, 
   the same on iPhone, iPad and Mac, and nobody has to add. One source (`ViewRules.now`), no place computes it again; a test
   holds the icon number equal to the rows of "Now".
 - **Color budget.** Accent = tappable (incl. AI tint), red = time pressure, grey = hierarchy, green = the completion moment.
+- **The app never proposes the Knäuel or a bead** (Henning, 2026-10-26, #648 dropped): no row, no preselected menu
+  entry, no notification suggests a task as the Knäuel or as a bead. Both are set by the user alone.
 - **SF Symbols only** (Henning, 2026-10-12, #350). Every sign in the app is an SF Symbol, outline where one exists:
   no emoji, no characters standing in for a symbol (»«, →), no own images. The one exception is the logo's thread
   (knot, loose thread, #180): it is the brand mark, not a control. Since #642 (Henning, 2026-10-23) its family holds two
@@ -126,9 +168,8 @@ leerer Wert heißt, dass Xcode nach dem nächsten Stand jeden Gerätestart verwe
 (`./scripts/sim.sh build`, `launch`, `screenshot`: the changed flow is played through and evidenced).
 Compiling is not building, building is not installing, installing is not **using**: only using is the stage, and
 `phase8_complete` demands its receipt from `./scripts/sim.sh test-proof` (#145).
-`docs/reference/abnahme-und-arbeitsweise.md` has the reasoning and the commands. TestFlight is a distribution channel,
-not a stage: it gives no debugger and no live logs, so it stays dormant until people other than
-Henning test.
+`docs/reference/abnahme-und-arbeitsweise.md` has the reasoning and the commands. TestFlight gives no debugger and no
+live logs, so it never replaces stages 1 and 2; since #279 it is the channel for stage 3 (below).
 
 **Stage 3 — Henning's iPhone 16 Pro — is mandatory exactly when the change touches something the
 Simulator cannot show** (Henning, 2026-09-29). Not a judgement call: the trigger is a file list, so
@@ -147,6 +188,7 @@ touches any of these paths:
 | `project.yml`, jede `*.entitlements`, jede `Info.plist` | Signierung, Berechtigungen, Targets — die Klasse des App-Group-Absturzes |
 
 Ausnahme (Henning, 2026-10-30, #758): Änderungen in `LooseEndsWidgets/`, die nur Katalogschlüssel oder Textliterale betreffen (kein Layout, keine Logik, keine Intents, keine `Info.plist`), enden nach Stufe 2. Beleg: Katalogwächter grün und Screenshot der Widget-Galerie im Simulator.
+Ausnahme (Henning, 2026-10-25, #680): Ändert ein Schnitt in `EnrichmentCoordinator.swift` nur den Regelzweig (Wortliste, Kalender, Kontakte, Orte) und nicht den Modellaufruf, endet die Abnahme nach Stufe 2; der Bericht sagt „Regelzweig, kein Modellaufruf, im Simulator belegt“.
 
 Berührt der Schnitt keinen dieser Pfade, endet die Abnahme nach Stufe 2, und das wird im
 Abschlussbericht mit genau diesem Satz begründet: „Kein Pfad der Geräteliste berührt." **⛔ Nichts
@@ -167,48 +209,28 @@ Xcode-Anmeldung, der normale Bau spricht nicht mit Apple. Im Zweifel läuft die 
 **Stufe 3 läuft über TestFlight** (Henning, 2026-10-10, #279: „Mache den Test über die normale App und
 TestFlight."): Statt „LE Prüfbau“ testet Henning in seiner normalen App aus TestFlight, wann er es
 einrichten kann. Ablauf: Merge, TestFlight-Bau (bei Modelländerung vorher `mac-schema-init` und Deploy),
-dann bekommt Henning die Buildnummer und die Prüfschritte, keine Befehlszeile. Seine Rückmeldung
-schließt die Gerätepunkte der Spec ab; bis dahin bleibt das Ticket offen.
+dann bekommt Henning in einfachen Worten, was er ausprobieren soll und was er sehen muss (welcher Bau gemeint ist,
+steht in TestFlights „Was testen“) — keine Befehlszeile, keine Buildnummer im Chat, außer er fragt danach. Seine Rückmeldung schließt die Gerätepunkte ab; bis dahin bleibt das Ticket offen (PR mit
+`Refs #N` statt `Closes #N`). Die Gerätepunkte stehen in der Definition of Done, nie als AC der Spec (das QA-Gate
+kennt keinen Aufschub). Alles ist fertig gebaut, bevor Henning gerufen wird; er wartet nie auf Claude.
 
-**⛔ Ausliefern ist Teil jedes Tickets.** Gearbeitet wird in einem Worktree, gebaut wird bei Henning aus
-`/Users/hem/Developer/loose-ends`. Den Checkout hält der SessionStart-Hook
-`~/.claude/scripts/loose-ends-sync-main.sh` aktuell (`main` nachziehen, Projekt neu erzeugen) — ohne ihn
-läuft bei Henning der Stand von vorher (2026-09-19: eine App ohne Erfassungs-Button, weil die erzeugte
-Projektdatei 70 neue Dateien nicht kannte).
+„LE Prüfbau“ neben seiner Installation (`./scripts/sim.sh device` fürs iPhone, `./scripts/sim.sh mac` für den Mac
+nach `~/Applications`, nie seine normale App, beim ersten Mac-Lauf mit `LOOSEENDS_REGISTER=1`, #287) startet Claude
+nur selbst, nur nach seinem „jetzt ist ein Test möglich“ und nur auf seinem Rechner. Die Labor-App
+(`./scripts/sim.sh lab`) ist nur für Messungen gegen Apple Intelligence, nicht für den Test eines Tickets; nie eine
+App auf seinem iPhone fernstarten. Eine Cloud-Session erreicht seinen Mac und sein iPhone nicht; das sagt sie, statt
+Schritte zu verteilen. Greift Stufe 3 nicht, bekommt Henning nur den Satz „Kein Pfad der Geräteliste berührt.“
 
-Henning bekommt nur dann etwas zu tun, wenn **Stufe 3** (Geräteliste oben) greift. Dann, nach dem Merge,
-genau diese eine Zeile zum Kopieren, immer dieselbe:
+**⛔ Ausliefern ist Teil jedes Tickets.** Gearbeitet wird in einem eigenen Zweig (Worktree), ausgeliefert per PR,
+grüner CI und Merge — durch Claude, ohne Rückfrage. Hennings Hauptcheckout auf seinem Mac hält ein SessionStart-Hook
+aktuell (`main` nachziehen, Projekt neu erzeugen; `docs/reference/abnahme-und-arbeitsweise.md`) — ohne ihn lief bei
+Henning der Stand von vorher (2026-09-19: eine App ohne Erfassungs-Button, weil die erzeugte Projektdatei 70 neue
+Dateien nicht kannte).
 
-```bash
-cd /Users/hem/Developer/loose-ends && bash ~/.claude/scripts/loose-ends-sync-main.sh && ./scripts/sim.sh device
-```
-
-Sie zieht `main` nach, erzeugt das Projekt neu und baut, installiert und startet „LE Prüfbau“ auf seinem
-iPhone (entsperrt, im selben WLAN) — ohne Xcode, neben seiner eigenen Installation. Dazu ein Satz, was
-er ausprobieren soll und was er sehen muss.
-
-Zeigt sich der Schnitt auf dem Mac (macOS-Verhalten, Mac-Rechte, Mac-Layout), bekommt er stattdessen oder
-zusätzlich die Mac-Zeile (#287). Sie baut „LE Prüfbau“ für den Mac (Prüfkennung, eigene Daten), legt ihn
-nach `~/Applications` und startet ihn — nie seine normale Mac-App (Henning, 2026-10-08):
-
-```bash
-cd /Users/hem/Developer/loose-ends && bash ~/.claude/scripts/loose-ends-sync-main.sh && ./scripts/sim.sh mac
-```
-
-Beim allerersten Mal (noch kein Mac-Profil der Prüfkennung) steht `LOOSEENDS_REGISTER=1` vor `./scripts/sim.sh mac`. Greift Stufe 3 nicht, endet die Abnahme nach Stufe 2 und
-Henning bekommt keine Zeile, nur den Satz „Kein Pfad der Geräteliste berührt.“
-
-**Henning ist PO, nicht Entwickler** (Henning, 2026-10-06). Claude handelt als sein Tech Lead und
-entscheidet Technisches selbst nach Best Practice: Git, Branches, Merges, Konflikte, Build. Henning
-bekommt keine Git-Befehle, keine Diagnoseschritte und keine Rückfragen zu Technik — nur Produktfragen
-und die eine Zeile oben. Befehle für ihn sind ein einziger Copy-Paste-Block ohne `#`-Kommentare (zsh
-liest sie interaktiv als Argumente). Die Labor-App (`./scripts/sim.sh lab`) ist nur für Messungen gegen
-Apple Intelligence, nicht für den Test eines Tickets. Eine Cloud-Session erreicht seinen Mac und sein
-iPhone nicht; das sagt sie, statt Schritte zu verteilen.
-
-**Fragen an Henning immer über das AskUserQuestion-Tool** (Henning, 2026-10-08): jede Produktfrage,
-jede Auswahl zwischen nächsten Schritten, jede Bitte um Freigabe — als Auswahl mit Empfehlung zuerst,
-nie als Frage im Fließtext am Ende einer Antwort.
+**Workflow-Freigaben tippt Henning** (`go`, `approved`, …, `openspec.yaml`): der Hook des Plugins sieht nur getippte
+Nachrichten, keine `AskUserQuestion`-Antwort. Claude nennt dann genau das Wort und genau einen Slash-Befehl, den
+Pflicht-Schritt des aktiven Workflows; die Entscheidung dahinter kommt zusätzlich als Auswahl, wenn sie eine echte
+Wahl ist.
 
 CI runs on GitHub's preview label `xcode-27` with Xcode 27.0 pinned: every job uses the composite action
 `.github/actions/select-xcode-27`, which selects `/Applications/Xcode_27.app` and stops the run if it
@@ -248,16 +270,17 @@ has one `## de-DE` / `## en-US` section per language, and `scripts/asc_locales.p
 `cloudkit/schema.ckdb`; a model change adds its fields there in the same PR (`scripts/test_cloudkit_schema.py` fails
 otherwise). On merge, `.github/workflows/cloudkit-schema.yml` imports the file into Development with `cktool` (secret
 `CLOUDKIT_MANAGEMENT_TOKEN`); `export-production`/`export-development` read the live schema. Apple allows the step to
-Production only in the CloudKit Console: Henning clicks „Deploy Schema Changes“ once, then the build starts. Bundle model
-changes so he clicks rarely. `mac-schema-init` below is the fallback.
+Production only in the CloudKit Console behind Henning's Apple sign-in: Claude opens the page in his browser, Henning
+only signs in (passkey), Claude checks the diff (additions only) and deploys, then the build starts. Bundle model
+changes so he is needed rarely. `mac-schema-init` below is the fallback.
 
 **CloudKit schema before every TestFlight build that changes the model (#175).** TestFlight talks to the
 CloudKit environment Production, Xcode runs to Development. Production never creates a schema by itself, and
 Development only knows fields some record wrote with a value. So after any change in `Shared/Models`, before
 the build: `./scripts/sim.sh mac-schema-init` (signed Mac debug build of the main bundle id, starts with
 `-LEInitializeCloudKitSchema`, writes the full schema into Development via `initializeCloudKitSchema`, never
-opens the app-group store; `LOOSEENDS_REGISTER=1` on the first run), then Henning deploys in the CloudKit
-Console. **Production is additive only from the first deploy:** new fields and types work, deleting or renaming
+opens the app-group store; `LOOSEENDS_REGISTER=1` on the first run), then the deploy in the CloudKit Console
+as above. **Production is additive only from the first deploy:** new fields and types work, deleting or renaming
 does not — plan model changes as additions. The TestFlight run starts with `schema-check`, which compares
 `cloudkit/schema.ckdb` with `cktool export-schema --environment production` and stops before archiving if a type or
 field is missing (own messages for a missing secret, an unreadable Production and missing names); no way around it
