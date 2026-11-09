@@ -1,12 +1,14 @@
 """Legt die Store-Bilder einer Sprache in Apples Asset-Bibliothek der App (#842, 4c-1) und platziert die englischen auf der
-en-US-Seite der bearbeitbaren iOS-Version (4c-2). Löscht nie, reicht nie ein, beschreibt de-DE nie.
+en-US-Seite der bearbeitbaren iOS-Version (4c-2), mit `mac` die Mac-Bilder auf die der bearbeitbaren Mac-Version (5b).
+Löscht nie, reicht nie ein, beschreibt de-DE nie.
 
-Aufruf: asc_store_images.py lesen|hochladen de|en, asc_store_images.py platzieren en
+Aufruf: asc_store_images.py lesen|hochladen de|en [ios|mac], asc_store_images.py platzieren en [ios|mac]
 Umgebung wie asc_wait_build.py. Quelle ist docs/store/screenshots/<sprache>/manifest.json; jedes Bild heißt
-`<sprache>-<gerät>-<datei ohne .png>`. Vor jedem Schreiben geprüft: genau eine bearbeitbare iOS-Version, deren
+`<sprache>-<gerät>-<datei ohne .png>`. Ein Lauf bedient genau eine Plattform (ohne Angabe iOS) und liest und beschreibt
+nur deren Gruppen. Vor jedem Schreiben geprüft: genau eine bearbeitbare Version der Plattform, deren
 Lokalisierung der Sprache, Datei und Pixelmaß laut Manifest, Gruppe und maxCount in den Referenzdaten. `lesen` ruft nur
 GET; `hochladen` legt fehlende Bilder an (POST, Bytes, `uploaded: true`) und wartet auf PREPARE_FOR_SUBMISSION. Ohne
-bearbeitbare Mac-Version bleibt der Mac mit ::warning:: aus. `platzieren` prüft erst nur mit GET (Bilder bereit, en-US-Bestand
+Der iOS-Lauf nennt den Mac mit ::warning::. `platzieren` prüft erst nur mit GET (Bilder bereit, en-US-Bestand
 nur aus Plan-Bildern, jedes höchstens einmal), legt fehlende Platzierungen an, wartet, ordnet nur bei Abweichung und prüft
 gegen; de-DE wird nur gelesen. Schlüssel und Token werden nie ausgegeben.
 """
@@ -30,16 +32,18 @@ FEATURE = "APP_STORE_VERSIONS"
 PLACEMENTS = "/v1/appAssetLibraryPlacements"
 ORDERING = "/v1/appAssetLibraryPlacementOrderingRequests"
 GROUPS = {"iphone": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE", "ipad": "IPAD_13_PROFILE",
-          "watch": "WATCH_SERIES_10_PROFILE"}
+          "watch": "WATCH_SERIES_10_PROFILE", "mac": "MAC_PROFILE"}
+PLATTFORMEN = {"ios": {"iphone", "ipad", "watch"}, "mac": {"mac"}}
+ASC_PLATFORM = {"ios": "IOS", "mac": "MAC_OS"}
 
 
-def plan(sprache, root=SCREENSHOTS):
-    """Je Bild des Manifests Pfad, Gruppe, Soll-Maß und Name; Geräte ohne feste Gruppe (Mac) bleiben aus."""
+def plan(sprache, root=SCREENSHOTS, plattform="ios"):
+    """Je Bild des Manifests Pfad, Gruppe, Soll-Maß und Name; nur Geräte der Plattform."""
     base = Path(root) / sprache
     manifest = json.loads((base / "manifest.json").read_text())
     entries = []
     for device in manifest["geraete"]:
-        if device["geraet"] not in GROUPS:
+        if device["geraet"] not in PLATTFORMEN[plattform]:
             continue
         width, height = (int(n) for n in device["pixel"].split("x"))
         for name in device["dateien"]:
@@ -68,22 +72,31 @@ def screenshot_rules(refdata):
     return limits, categories[0] if categories else None
 
 
-def warn_mac(versions):
+def warn_mac(versions, plattform):
+    """Nur im iOS-Lauf: nennt den Mac, der mit dem dritten Argument `mac` einen eigenen Lauf hat."""
+    if plattform != "ios":
+        return
     if editable_version(versions, "MAC_OS") is None:
         print("::warning::keine bearbeitbare Mac-Version, Mac-Bilder nicht hochgeladen", flush=True)
     else:
-        print("::warning::Mac-Version bearbeitbar, Mac-Bilder sind nicht Teil dieses Laufs", flush=True)
+        print("::warning::Mac-Version bearbeitbar, Mac-Bilder sind nicht Teil dieses Laufs (… mac)", flush=True)
 
 
-def preflight(client, sprache, versions, lookup, root):
-    """Alle Prüfungen vor dem ersten Schreiben, nur GET; gibt Plan und Kategorie zurück oder Fatal."""
-    version = editable_version(versions, "IOS")
+def platform_version(versions, plattform):
+    """Die eine bearbeitbare Version der Plattform oder Fatal."""
+    version = editable_version(versions, ASC_PLATFORM[plattform])
     if version is None:
-        raise Fatal("keine bearbeitbare Version IOS, nichts geschrieben")
-    locale = ASC_LOCALES[sprache]
-    if locale not in lookup(version["id"]):
+        raise Fatal(f"keine bearbeitbare Version {ASC_PLATFORM[plattform]}, nichts geschrieben")
+    return version
+
+
+def preflight(client, sprache, versions, lookup, root, plattform="ios"):
+    """Alle Prüfungen vor dem ersten Schreiben, nur GET; gibt Plan, Kategorie und Lokalisierungen zurück oder Fatal."""
+    version = platform_version(versions, plattform)
+    locale, locs = ASC_LOCALES[sprache], lookup(version["id"])
+    if locale not in locs:
         raise Fatal(f"Version {version['id']} hat keine Lokalisierung {locale}, nichts geschrieben")
-    entries = plan(sprache, root)
+    entries = plan(sprache, root, plattform)
     for entry in entries:
         if not Path(entry["path"]).is_file():
             raise Fatal(f"Datei {entry['path']} fehlt, nichts geschrieben")
@@ -99,13 +112,13 @@ def preflight(client, sprache, versions, lookup, root):
             raise Fatal(f"Gruppe {group}: {count} Bilder, maxCount {limits[group]}, nichts geschrieben")
     if category is None:
         raise Fatal(f"keine Kategorie für {SHOT} in den Referenzdaten, nichts geschrieben")
-    return entries, category
+    return entries, category, locs
 
 
-def upload(client, app_id, sprache, versions, lookup, sleep=time.sleep, root=SCREENSHOTS):
+def upload(client, app_id, sprache, versions, lookup, sleep=time.sleep, root=SCREENSHOTS, plattform="ios"):
     """Nur Asset-Bibliothek: Anlegen, Bytes, `uploaded: true`, warten. Gibt das Ergebnis von check_state zurück."""
-    entries, category = preflight(client, sprache, versions, lookup, root)
-    warn_mac(versions)
+    entries, category, _ = preflight(client, sprache, versions, lookup, root, plattform)
+    warn_mac(versions, plattform)
     library_id = client.get(f"/v1/apps/{app_id}/assetLibrary")["id"]
     existing = {i.get("referenceName") for i in client.get(f"/v1/appAssetLibraries/{library_id}/images")["items"]}
     relationship = {"assetLibrary": {"data": {"type": "appAssetLibraries", "id": library_id}}}
@@ -143,15 +156,15 @@ def check_ready(client, library_id, names):
     return "bereit"
 
 
-def lesen(client, app_id, sprache, versions, lookup, root=SCREENSHOTS):
+def lesen(client, app_id, sprache, versions, lookup, root=SCREENSHOTS, plattform="ios"):
     """Nur GET: Version, Lokalisierung, Gruppen mit maxCount, Bestand der Bibliothek, Plan vorhanden/fehlt, Mac."""
-    version = editable_version(versions, "IOS")
+    version = editable_version(versions, ASC_PLATFORM[plattform])
     locale, locs, found = ASC_LOCALES[sprache], {}, False
     if version is not None:
         locs = lookup(version["id"])
         found = locale in locs
         print(f"lokalisierung {locale} {'vorhanden' if found else 'fehlt'}", flush=True)
-    entries = plan(sprache, root)
+    entries = plan(sprache, root, plattform)
     limits, category = screenshot_rules(client.get(REFDATA))
     print(f"kategorie {SHOT}={category or '-'}", flush=True)
     for group in dict.fromkeys(entry["group"] for entry in entries):
@@ -170,7 +183,7 @@ def lesen(client, app_id, sprache, versions, lookup, root=SCREENSHOTS):
         print(f"plan {entry['reference']} {'vorhanden' if entry['reference'] in names else 'fehlt'}", flush=True)
     if sprache == "en" and found:
         print_placements(client, locs[locale]["id"], entries, owner)
-    warn_mac(versions)
+    warn_mac(versions, plattform)
 
 
 def owners(client, images):
@@ -205,12 +218,13 @@ def check_existing(current, want):
                 raise Fatal(f"Gruppe {group}: {name} ist {names.count(name)}x platziert, nichts geschrieben")
 
 
-def german_counts(client, locs):
+def german_counts(client, locs, groups):
+    """de-DE nur gelesen: Anzahl je Gruppe der Plattform, z. B. `5/5/2` (iOS) oder `4` (Mac)."""
     if "de-DE" not in locs:
         return None
     return "/".join(str(len(client.get(f"/v1/appStoreVersionLocalizations/{locs['de-DE']['id']}/placements"
                                        f"?filter[placementType]={SHOT}&filter[placementGroup]={group}"
-                                       f"&sort=placementGroupPosition&limit=200")["items"])) for group in GROUPS.values())
+                                       f"&sort=placementGroupPosition&limit=200")["items"])) for group in groups)
 
 
 def good(state):
@@ -274,24 +288,23 @@ def verify(client, loc_id, want, owner, german_before, locs):
         if found != names:
             raise Fatal(f"Gruppe {group}: Soll {', '.join(names)}; Ist {', '.join(found) or 'keine'}")
         print(f"gegenprobe {group} {len(found)} in Manifest-Reihenfolge", flush=True)
-    german_after = german_counts(client, locs)
+    german_after = german_counts(client, locs, want)
     if german_after != german_before:
         raise Fatal(f"de-DE vorher {german_before}, nachher {german_after}")
     print(f"de-DE {german_after or 'fehlt'} unverändert", flush=True)
 
 
-def platzieren(client, app_id, sprache, versions, lookup, sleep=time.sleep, root=SCREENSHOTS):
+def platzieren(client, app_id, sprache, versions, lookup, sleep=time.sleep, root=SCREENSHOTS, plattform="ios"):
     """Platzierungen auf en-US: Vorabprüfung nur GET, Anlegen, Warten, Ordnen, Gegenprobe. Löscht nie."""
-    entries, _ = preflight(client, sprache, versions, lookup, root)
-    warn_mac(versions)
-    locs = lookup(editable_version(versions, "IOS")["id"])
+    entries, _, locs = preflight(client, sprache, versions, lookup, root, plattform)
+    warn_mac(versions, plattform)
     loc_id, want = locs[ASC_LOCALES[sprache]]["id"], grouped(entries)
     library_id = client.get(f"/v1/apps/{app_id}/assetLibrary")["id"]
     images = ready_images(client, library_id, [entry["reference"] for entry in entries])
     owner = owners(client, images.values())
     current = {group: read_group(client, loc_id, group, owner) for group in want}
     check_existing(current, want)
-    german_before = german_counts(client, locs)
+    german_before = german_counts(client, locs, want)
     pending = create_missing(client, loc_id, images, want, current)
     wait_placements(client, pending, sleep)
     owner = owners(client, [images[name] for names in want.values() for name in names])
@@ -309,8 +322,10 @@ def print_placements(client, loc_id, entries, owner):
 
 
 def main(argv):
-    if len(argv) != 3 or argv[1] not in ACTIONS or argv[2] not in SPRACHEN:
-        print(f"usage: asc_store_images.py {'|'.join(ACTIONS)} {'|'.join(SPRACHEN)}", file=sys.stderr)
+    plattform = argv[3] if len(argv) == 4 else "ios"
+    if len(argv) not in (3, 4) or argv[1] not in ACTIONS or argv[2] not in SPRACHEN or plattform not in PLATTFORMEN:
+        print(f"usage: asc_store_images.py {'|'.join(ACTIONS)} {'|'.join(SPRACHEN)} [{'|'.join(PLATTFORMEN)}]",
+              file=sys.stderr)
         return 2
     action, sprache = argv[1], argv[2]
     if action == "platzieren" and sprache != "en":
@@ -323,12 +338,12 @@ def main(argv):
         versions = app_versions(config, app_id)
         lookup = lambda version_id: localizations(config, version_id)  # noqa: E731
         if action == "lesen":
-            lesen(client, app_id, sprache, versions, lookup)
+            lesen(client, app_id, sprache, versions, lookup, plattform=plattform)
             return 0
         if action == "platzieren":
-            platzieren(client, app_id, sprache, versions, lookup)
+            platzieren(client, app_id, sprache, versions, lookup, plattform=plattform)
             return 0
-        print(f"zustand {upload(client, app_id, sprache, versions, lookup)}", flush=True)
+        print(f"zustand {upload(client, app_id, sprache, versions, lookup, plattform=plattform)}", flush=True)
         return 0
     except Fatal as error:
         print(f"::error::{error}", flush=True)

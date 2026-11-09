@@ -21,6 +21,7 @@ import contextlib
 import copy
 import io
 import json
+import re
 import shutil
 import struct
 import sys
@@ -800,7 +801,7 @@ class MacPlaceTests(MacNeeds):
         self.assertEqual(self.asked, ["M101"])
         for call in client.calls:
             for foreign in (IPHONE, IPAD, WATCH, LOC_EN, LOC_DE):
-                self.assertNotIn(foreign, " ".join(str(part) for part in call), call)
+                self.assertNotRegex(" ".join(str(part) for part in call), rf"(?<![A-Za-z]){re.escape(foreign)}", call)
         self.assertRegex(out, r"(?m)^gegenprobe MAC_PROFILE 4 in Manifest-Reihenfolge$")
         self.assertIn("de-DE 4 unverändert", out)
 
