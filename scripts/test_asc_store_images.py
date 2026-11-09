@@ -717,5 +717,272 @@ class PlaceWorkflowTests(unittest.TestCase):
                         text.find("python3 scripts/asc_store_images.py"))
 
 
+MAC = {"id": "M101", "attributes": {"platform": "MAC_OS", "versionString": "1.0.1", "appStoreState": "PREPARE_FOR_SUBMISSION"}}
+MAC_GROUP = "MAC_PROFILE"
+MAC_NAMES = [f"en-mac-{n}" for n in ("01-start", "03-neu", "04-detail", "05-erledigt")]
+MLOC_EN, MLOC_DE = "ML-en-US", "ML-de-DE"
+MAC_VERSIONS = [IOS, IOS_OLD, MAC, MAC_OLD]
+
+
+def mac_ready(names=MAC_NAMES):
+    return [{"id": f"RM{i}", "referenceName": name, "state": "PREPARE_FOR_SUBMISSION"} for i, name in enumerate(names)]
+
+
+def mac_de_slots():
+    """Die vier von Apple übernommenen deutschen Mac-Bilder (Store-Lesen 2026-11-09), alle ACTIVE."""
+    return ([{"id": f"MD{n}", "image": f"MG{n}", "loc": MLOC_DE, "group": MAC_GROUP, "state": "ACTIVE"} for n in range(4)],
+            [{"id": f"MG{n}", "referenceName": f"de-mac-{n}", "state": "PREPARE_FOR_SUBMISSION"} for n in range(4)])
+
+
+def mac_en_slots(names, prefix="ME"):
+    return [{"id": f"{prefix}{i}", "image": f"RM{MAC_NAMES.index(name)}", "loc": MLOC_EN, "group": MAC_GROUP,
+             "state": "ACTIVE"} for i, name in enumerate(names)]
+
+
+def mac_client(library=None, en=(), **kwargs):
+    """Bibliothek mit den vier bereiten Mac-Bildern und der deutschen Mac-Seite; `en` = vorhandene Mac-en-US-Platzierungen."""
+    de_slots, de_images = mac_de_slots()
+    images = (mac_ready() if library is None else library) + de_images
+    return FakeClient(images=images, slots=de_slots + list(en), **kwargs)
+
+
+class MacNeeds(NeedsModule):
+    """Wie NeedsModule, aber Lokalisierungen der Mac-Version tragen eigene Kennungen (`ML-…`)."""
+
+    def localizations(self, locales=("de-DE", "en-US")):
+        def lookup(version_id):
+            self.asked.append(version_id)
+            prefix = "ML" if version_id.startswith("M") else "L"
+            return {locale: {"id": f"{prefix}-{locale}", "attributes": {"locale": locale}} for locale in locales}
+        self.asked = []
+        return lookup
+
+    def run_mac(self, action, client, versions=MAC_VERSIONS, locales=("de-DE", "en-US"), plattform="mac"):
+        out, sleeps = io.StringIO(), []
+        with contextlib.redirect_stdout(out):
+            if action == "lesen":
+                si.lesen(client, APP, "en", versions, self.localizations(locales), root=self.root, plattform=plattform)
+            elif action == "hochladen":
+                si.upload(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append, root=self.root,
+                          plattform=plattform)
+            else:
+                si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append,
+                              root=self.root, plattform=plattform)
+        return out.getvalue()
+
+
+class MacPlanTests(MacNeeds):
+    def test_mac_plan_is_only_mac_and_ios_plan_unchanged(self):
+        entries = si.plan("en", ROOT / "docs/store/screenshots", "mac")
+        self.assertEqual([e["reference"] for e in entries], MAC_NAMES)
+        for entry in entries:
+            self.assertEqual((entry["group"], entry["width"], entry["height"]), (MAC_GROUP, 1280, 800))
+            self.assertTrue(Path(entry["path"]).exists(), entry["path"])
+        ios = si.plan("en")
+        self.assertEqual([e["reference"] for e in ios], EN_NAMES)
+        self.assertEqual(len(ios), 12)
+        self.assertFalse([e for e in ios if "mac" in e["reference"]])
+
+
+class MacPlaceTests(MacNeeds):
+    def test_mac_place_creates_four_on_mac_localization_only(self):
+        client = mac_client()
+        out = self.run_mac("platzieren", client)
+        posts = client.placement_posts()
+        by_id = {item["id"]: item["referenceName"] for item in client.images.values()}
+        self.assertEqual([by_id[c[3]["image"]["data"]["id"]] for c in posts], MAC_NAMES)
+        for _, _, attributes, relationships in posts:
+            self.assertEqual(attributes, {"placementType": SHOT, "placementGroup": MAC_GROUP})
+            self.assertEqual(relationships["appStoreVersionLocalization"]["data"],
+                             {"type": "appStoreVersionLocalizations", "id": MLOC_EN})
+        self.assertEqual(client.names(MLOC_EN, MAC_GROUP), MAC_NAMES)
+        self.assertEqual(client.names(MLOC_DE, MAC_GROUP), [f"de-mac-{n}" for n in range(4)])
+        self.assertEqual(self.asked, ["M101"])
+        for call in client.calls:
+            for foreign in (IPHONE, IPAD, WATCH, LOC_EN, LOC_DE):
+                self.assertNotIn(foreign, " ".join(str(part) for part in call), call)
+        self.assertRegex(out, r"(?m)^gegenprobe MAC_PROFILE 4 in Manifest-Reihenfolge$")
+        self.assertIn("de-DE 4 unverändert", out)
+
+    def test_mac_second_run_places_nothing(self):
+        client = mac_client()
+        self.run_mac("platzieren", client)
+        before = len(client.writes())
+        out = self.run_mac("platzieren", client)
+        self.assertEqual(len(client.writes()), before)
+        for name in MAC_NAMES:
+            self.assertIn(f"platzierung {name} schon platziert, übersprungen", out)
+
+    def test_mac_orders_only_on_difference(self):
+        with self.subTest("Reihenfolge stimmt schon"):
+            client = mac_client()
+            self.run_mac("platzieren", client)
+            self.assertEqual(client.ordering_posts(), [])
+        with self.subTest("Apple liefert die neuen Platzierungen umgekehrt"):
+            client = mac_client(reverse_new=True)
+            self.run_mac("platzieren", client)
+            orders = client.ordering_posts()
+            self.assertEqual([call[2] for call in orders], [{"placementGroup": MAC_GROUP}])
+            self.assertEqual(orders[0][3]["appStoreVersionLocalization"]["data"]["id"], MLOC_EN)
+            image_of = {slot["id"]: client.images[slot["image"]]["referenceName"] for slot in client.slots}
+            ids = [item["id"] for item in orders[0][3]["orderedPlacements"]["data"]]
+            self.assertEqual([image_of[i] for i in ids], MAC_NAMES)
+            self.assertEqual(client.names(MLOC_EN, MAC_GROUP), MAC_NAMES)
+
+    def test_mac_foreign_or_duplicate_aborts_without_write(self):
+        foreign = [{"id": "MX", "image": "MG0", "loc": MLOC_EN, "group": MAC_GROUP, "state": "ACTIVE"}]
+        twice = mac_en_slots(MAC_NAMES[:1]) + mac_en_slots(MAC_NAMES[:1], prefix="MY")
+        for label, en, needle in (("fremd", foreign, "fremde"), ("doppelt", twice, "2x")):
+            with self.subTest(label):
+                client = mac_client(en=en)
+                with self.assertRaises(Fatal) as caught:
+                    self.run_mac("platzieren", client)
+                self.assertEqual(client.writes(), [])
+                self.assertIn(needle, str(caught.exception))
+
+    def test_mac_preflight_aborts_before_any_write(self):
+        def aborts(needle, client=None, **kwargs):
+            client = client or mac_client()
+            with self.assertRaises(Fatal) as caught:
+                self.run_mac("platzieren", client, **kwargs)
+            self.assertEqual(client.writes(), [], needle)
+            self.assertIn(needle, str(caught.exception))
+        with self.subTest("keine bearbeitbare Mac-Version"):
+            aborts("MAC_OS", versions=[IOS, IOS_OLD, MAC_OLD])
+        with self.subTest("zwei bearbeitbare Mac-Versionen"):
+            twin = {"id": "M102", "attributes": {**MAC["attributes"], "versionString": "1.0.2"}}
+            aborts("MAC_OS", versions=[IOS, MAC, twin])
+        with self.subTest("keine en-US-Lokalisierung"):
+            aborts("en-US", locales=("de-DE",))
+        with self.subTest("Mac-Bild fehlt"):
+            aborts("en-mac-05-erledigt", client=mac_client(library=mac_ready(MAC_NAMES[:3])))
+        with self.subTest("Mac-Bild nicht bereit"):
+            library = mac_ready()
+            library[3]["state"] = "AWAITING_UPLOAD"
+            aborts("AWAITING_UPLOAD", client=mac_client(library=library))
+        with self.subTest("MAC_PROFILE fehlt in den Referenzdaten"):
+            aborts(MAC_GROUP, client=mac_client(ref=refdata(groups=(IPHONE, IPAD, WATCH))))
+        with self.subTest("maxCount zu klein"):
+            aborts(MAC_GROUP, client=mac_client(ref=refdata(limits={IPHONE: 10, IPAD: 10, WATCH: 10, MAC_GROUP: 3})))
+        with self.subTest("Pixelmaß weicht ab"):
+            self.write_tree(self.manifest, sizes={"mac": (1280, 801)})
+            aborts("1280x801")
+
+    def test_never_deletes_submits_or_writes_german_on_mac(self):
+        client = mac_client(reverse_new=True)
+        self.run_mac("platzieren", client)
+        self.run_mac("platzieren", client)
+        allowed = {"/v1/appAssetLibraryImages", PLACEMENTS, ORDERING}
+        for call in client.writes():
+            self.assertEqual(call[0], "POST", call)
+            self.assertIn(call[1], allowed, call)
+            if call[1] != "/v1/appAssetLibraryImages":
+                self.assertEqual(call[3]["appStoreVersionLocalization"]["data"]["id"], MLOC_EN, call)
+        self.assertFalse([c for c in client.calls if c[0] == "DELETE" or "submission" in str(c).lower()])
+        self.assertEqual(len(client.names(MLOC_DE, MAC_GROUP)), 4)
+
+
+class MacUploadReadTests(MacNeeds):
+    def test_mac_upload_creates_only_missing_mac_images(self):
+        client = FakeClient()
+        self.run_mac("hochladen", client)
+        posts = client.posts()
+        self.assertEqual([c[2]["referenceName"] for c in posts], MAC_NAMES)
+        for call in posts:
+            self.assertEqual(call[2]["category"], CATEGORY)
+        self.assertEqual(len([c for c in client.calls if c[0] == "PUT"]), 4)
+        self.assertEqual(len([c for c in client.calls if c[0] == "PATCH" and c[2].get("uploaded")]), 4)
+        self.assertEqual({i["state"] for i in client.images.values()}, {"PREPARE_FOR_SUBMISSION"})
+        self.run_mac("hochladen", client)
+        self.assertEqual(len(client.posts()), 4)
+
+    def test_ios_run_untouched_by_mac_images(self):
+        mac_slots = mac_en_slots(MAC_NAMES)
+        client = place_client(library=ready_library() + mac_ready(), en=mac_slots)
+        out = self.run_mac("platzieren", client, plattform="ios")
+        self.assertEqual(len(client.placement_posts()), 12)
+        for _, _, _, relationships in client.placement_posts():
+            self.assertEqual(relationships["appStoreVersionLocalization"]["data"]["id"], LOC_EN)
+        self.assertEqual(self.asked, ["V101"])
+        self.assertFalse([c for c in client.calls if MAC_GROUP in str(c) or MLOC_EN in str(c)])
+        self.assertRegex(out, r"(?m)^::warning::.*Mac")
+
+    def test_mac_lesen_shows_group_and_placements_and_never_writes(self):
+        client = mac_client(en=mac_en_slots(MAC_NAMES[:2]))
+        text = self.run_mac("lesen", client)
+        self.assertTrue(all(call[0] == "GET" for call in client.calls))
+        self.assertIn("en-US vorhanden", text)
+        self.assertRegex(text, rf"{MAC_GROUP}\b.*maxCount=10")
+        self.assertRegex(text, rf"kategorie {SHOT}={CATEGORY}")
+        self.assertRegex(text, r"plan en-mac-01-start vorhanden")
+        self.assertRegex(text, r"plan en-mac-05-erledigt vorhanden")
+        self.assertRegex(text, rf"(?m)^platzierung {MAC_GROUP} 1 en-mac-01-start zustand=ACTIVE$")
+        self.assertRegex(text, rf"(?m)^platzierung {MAC_GROUP} 2 en-mac-03-neu zustand=ACTIVE$")
+        for group in (IPHONE, IPAD, WATCH):
+            self.assertNotIn(group, text)
+        empty = self.run_mac("lesen", mac_client())
+        self.assertRegex(empty, rf"(?m)^platzierung {MAC_GROUP} keine$")
+
+
+class MacMainTests(unittest.TestCase):
+    def setUp(self):
+        if si is None:
+            self.fail("scripts/asc_store_images.py fehlt")
+
+    def run_main(self, *args, action="platzieren"):
+        with mock.patch.object(si, "read_config"), mock.patch.object(si, "find_app_id"), \
+                mock.patch.object(si, "Client"), mock.patch.object(si, "app_versions"), \
+                mock.patch.object(si, "localizations"), mock.patch.object(si, action) as called:
+            out, err = io.StringIO(), io.StringIO()
+            with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+                code = si.main(["asc_store_images.py", *args])
+        return code, called, out.getvalue(), err.getvalue()
+
+    @staticmethod
+    def platform_of(called):
+        call = called.call_args
+        return call.kwargs.get("plattform") or ("mac" if "mac" in call.args else "ios")
+
+    def test_main_platform_argument(self):
+        for args, action, expected in ((("platzieren", "en", "mac"), "platzieren", "mac"),
+                                       (("lesen", "en", "ios"), "lesen", "ios"),
+                                       (("lesen", "en"), "lesen", "ios"),
+                                       (("platzieren", "en", "ios"), "platzieren", "ios")):
+            with self.subTest(args=args):
+                code, called, _, _ = self.run_main(*args, action=action)
+                self.assertEqual(code, 0)
+                called.assert_called_once()
+                self.assertEqual(self.platform_of(called), expected)
+        for args in (("lesen", "en", "tv"), ("lesen", "en", "mac", "x"), ("hochladen", "en", "")):
+            with self.subTest(args=args):
+                code, called, _, err = self.run_main(*args, action="lesen")
+                self.assertEqual(code, 2)
+                called.assert_not_called()
+                self.assertTrue(err.strip())
+        code, called, out, _ = self.run_main("platzieren", "de", "mac")
+        self.assertEqual(code, 1)
+        self.assertRegex(out, r"(?m)^::error::.*de")
+        called.assert_not_called()
+
+
+class MacWorkflowTests(unittest.TestCase):
+    def test_workflow_offers_plattform(self):
+        text = (ROOT / ".github/workflows/asc-store-images.yml").read_text()
+        start = text.find("plattform:")
+        self.assertGreater(start, -1)
+        block = text[start:text.find("pull_request:")]
+        self.assertIn("- ios", block)
+        self.assertIn("- mac", block)
+        self.assertRegex(block, r"default:\s*ios")
+        self.assertIn('scripts/asc_store_images.py "$AKTION" "$SPRACHE" "$PLATTFORM"', text)
+        self.assertIn("PLATTFORM: ${{ inputs.plattform }}", text)
+        self.assertLess(text.find("python3 -m unittest scripts/test_asc_store_images.py"),
+                        text.find("python3 scripts/asc_store_images.py"))
+        self.assertRegex(text, r"cancel-in-progress:\s*false")
+        for line in text.splitlines():
+            if "echo" in line or "cat " in line:
+                self.assertNotIn("ASC_PRIVATE_KEY", line)
+
+
 if __name__ == "__main__":
     unittest.main()

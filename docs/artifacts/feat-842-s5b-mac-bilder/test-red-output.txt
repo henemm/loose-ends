@@ -1,0 +1,329 @@
+..FFFFEEEEEEEEEEEEEEEE.EEEF.......................
+======================================================================
+ERROR: test_mac_foreign_or_duplicate_aborts_without_write (scripts.test_asc_store_images.MacPlaceTests.test_mac_foreign_or_duplicate_aborts_without_write) [fremd]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 839, in test_mac_foreign_or_duplicate_aborts_without_write
+    self.run_mac("platzieren", client)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 769, in run_mac
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  root=self.root, plattform=plattform)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: platzieren() got an unexpected keyword argument 'plattform'
+
+======================================================================
+ERROR: test_mac_foreign_or_duplicate_aborts_without_write (scripts.test_asc_store_images.MacPlaceTests.test_mac_foreign_or_duplicate_aborts_without_write) [doppelt]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 839, in test_mac_foreign_or_duplicate_aborts_without_write
+    self.run_mac("platzieren", client)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 769, in run_mac
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  root=self.root, plattform=plattform)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: platzieren() got an unexpected keyword argument 'plattform'
+
+======================================================================
+ERROR: test_mac_orders_only_on_difference (scripts.test_asc_store_images.MacPlaceTests.test_mac_orders_only_on_difference) [Reihenfolge stimmt schon]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 819, in test_mac_orders_only_on_difference
+    self.run_mac("platzieren", client)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 769, in run_mac
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  root=self.root, plattform=plattform)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: platzieren() got an unexpected keyword argument 'plattform'
+
+======================================================================
+ERROR: test_mac_orders_only_on_difference (scripts.test_asc_store_images.MacPlaceTests.test_mac_orders_only_on_difference) [Apple liefert die neuen Platzierungen umgekehrt]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 823, in test_mac_orders_only_on_difference
+    self.run_mac("platzieren", client)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 769, in run_mac
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  root=self.root, plattform=plattform)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: platzieren() got an unexpected keyword argument 'plattform'
+
+======================================================================
+ERROR: test_mac_place_creates_four_on_mac_localization_only (scripts.test_asc_store_images.MacPlaceTests.test_mac_place_creates_four_on_mac_localization_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 790, in test_mac_place_creates_four_on_mac_localization_only
+    out = self.run_mac("platzieren", client)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 769, in run_mac
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  root=self.root, plattform=plattform)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: platzieren() got an unexpected keyword argument 'plattform'
+
+======================================================================
+ERROR: test_mac_preflight_aborts_before_any_write (scripts.test_asc_store_images.MacPlaceTests.test_mac_preflight_aborts_before_any_write) [keine bearbeitbare Mac-Version]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 851, in test_mac_preflight_aborts_before_any_write
+    aborts("MAC_OS", versions=[IOS, IOS_OLD, MAC_OLD])
+    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 847, in aborts
+    self.run_mac("platzieren", client, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 769, in run_mac
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  root=self.root, plattform=plattform)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: platzieren() got an unexpected keyword argument 'plattform'
+
+======================================================================
+ERROR: test_mac_preflight_aborts_before_any_write (scripts.test_asc_store_images.MacPlaceTests.test_mac_preflight_aborts_before_any_write) [zwei bearbeitbare Mac-Versionen]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 854, in test_mac_preflight_aborts_before_any_write
+    aborts("MAC_OS", versions=[IOS, MAC, twin])
+    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 847, in aborts
+    self.run_mac("platzieren", client, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 769, in run_mac
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  root=self.root, plattform=plattform)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: platzieren() got an unexpected keyword argument 'plattform'
+
+======================================================================
+ERROR: test_mac_preflight_aborts_before_any_write (scripts.test_asc_store_images.MacPlaceTests.test_mac_preflight_aborts_before_any_write) [keine en-US-Lokalisierung]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 856, in test_mac_preflight_aborts_before_any_write
+    aborts("en-US", locales=("de-DE",))
+    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 847, in aborts
+    self.run_mac("platzieren", client, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 769, in run_mac
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  root=self.root, plattform=plattform)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: platzieren() got an unexpected keyword argument 'plattform'
+
+======================================================================
+ERROR: test_mac_preflight_aborts_before_any_write (scripts.test_asc_store_images.MacPlaceTests.test_mac_preflight_aborts_before_any_write) [Mac-Bild fehlt]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 858, in test_mac_preflight_aborts_before_any_write
+    aborts("en-mac-05-erledigt", client=mac_client(library=mac_ready(MAC_NAMES[:3])))
+    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 847, in aborts
+    self.run_mac("platzieren", client, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 769, in run_mac
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  root=self.root, plattform=plattform)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: platzieren() got an unexpected keyword argument 'plattform'
+
+======================================================================
+ERROR: test_mac_preflight_aborts_before_any_write (scripts.test_asc_store_images.MacPlaceTests.test_mac_preflight_aborts_before_any_write) [Mac-Bild nicht bereit]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 862, in test_mac_preflight_aborts_before_any_write
+    aborts("AWAITING_UPLOAD", client=mac_client(library=library))
+    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 847, in aborts
+    self.run_mac("platzieren", client, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 769, in run_mac
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  root=self.root, plattform=plattform)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: platzieren() got an unexpected keyword argument 'plattform'
+
+======================================================================
+ERROR: test_mac_preflight_aborts_before_any_write (scripts.test_asc_store_images.MacPlaceTests.test_mac_preflight_aborts_before_any_write) [MAC_PROFILE fehlt in den Referenzdaten]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 864, in test_mac_preflight_aborts_before_any_write
+    aborts(MAC_GROUP, client=mac_client(ref=refdata(groups=(IPHONE, IPAD, WATCH))))
+    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 847, in aborts
+    self.run_mac("platzieren", client, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 769, in run_mac
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  root=self.root, plattform=plattform)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: platzieren() got an unexpected keyword argument 'plattform'
+
+======================================================================
+ERROR: test_mac_preflight_aborts_before_any_write (scripts.test_asc_store_images.MacPlaceTests.test_mac_preflight_aborts_before_any_write) [maxCount zu klein]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 866, in test_mac_preflight_aborts_before_any_write
+    aborts(MAC_GROUP, client=mac_client(ref=refdata(limits={IPHONE: 10, IPAD: 10, WATCH: 10, MAC_GROUP: 3})))
+    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 847, in aborts
+    self.run_mac("platzieren", client, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 769, in run_mac
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  root=self.root, plattform=plattform)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: platzieren() got an unexpected keyword argument 'plattform'
+
+======================================================================
+ERROR: test_mac_preflight_aborts_before_any_write (scripts.test_asc_store_images.MacPlaceTests.test_mac_preflight_aborts_before_any_write) [Pixelmaß weicht ab]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 869, in test_mac_preflight_aborts_before_any_write
+    aborts("1280x801")
+    ~~~~~~^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 847, in aborts
+    self.run_mac("platzieren", client, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 769, in run_mac
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  root=self.root, plattform=plattform)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: platzieren() got an unexpected keyword argument 'plattform'
+
+======================================================================
+ERROR: test_mac_second_run_places_nothing (scripts.test_asc_store_images.MacPlaceTests.test_mac_second_run_places_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 809, in test_mac_second_run_places_nothing
+    self.run_mac("platzieren", client)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 769, in run_mac
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  root=self.root, plattform=plattform)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: platzieren() got an unexpected keyword argument 'plattform'
+
+======================================================================
+ERROR: test_never_deletes_submits_or_writes_german_on_mac (scripts.test_asc_store_images.MacPlaceTests.test_never_deletes_submits_or_writes_german_on_mac)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 873, in test_never_deletes_submits_or_writes_german_on_mac
+    self.run_mac("platzieren", client)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 769, in run_mac
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  root=self.root, plattform=plattform)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: platzieren() got an unexpected keyword argument 'plattform'
+
+======================================================================
+ERROR: test_mac_plan_is_only_mac_and_ios_plan_unchanged (scripts.test_asc_store_images.MacPlanTests.test_mac_plan_is_only_mac_and_ios_plan_unchanged)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 776, in test_mac_plan_is_only_mac_and_ios_plan_unchanged
+    entries = si.plan("en", ROOT / "docs/store/screenshots", "mac")
+TypeError: plan() takes from 1 to 2 positional arguments but 3 were given
+
+======================================================================
+ERROR: test_ios_run_untouched_by_mac_images (scripts.test_asc_store_images.MacUploadReadTests.test_ios_run_untouched_by_mac_images)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 902, in test_ios_run_untouched_by_mac_images
+    out = self.run_mac("platzieren", client, plattform="ios")
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 769, in run_mac
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  root=self.root, plattform=plattform)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: platzieren() got an unexpected keyword argument 'plattform'
+
+======================================================================
+ERROR: test_mac_lesen_shows_group_and_placements_and_never_writes (scripts.test_asc_store_images.MacUploadReadTests.test_mac_lesen_shows_group_and_placements_and_never_writes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 912, in test_mac_lesen_shows_group_and_placements_and_never_writes
+    text = self.run_mac("lesen", client)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 764, in run_mac
+    si.lesen(client, APP, "en", versions, self.localizations(locales), root=self.root, plattform=plattform)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: lesen() got an unexpected keyword argument 'plattform'
+
+======================================================================
+ERROR: test_mac_upload_creates_only_missing_mac_images (scripts.test_asc_store_images.MacUploadReadTests.test_mac_upload_creates_only_missing_mac_images)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 888, in test_mac_upload_creates_only_missing_mac_images
+    self.run_mac("hochladen", client)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 766, in run_mac
+    si.upload(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append, root=self.root,
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+              plattform=plattform)
+              ^^^^^^^^^^^^^^^^^^^^
+TypeError: upload() got an unexpected keyword argument 'plattform'
+
+======================================================================
+FAIL: test_main_platform_argument (scripts.test_asc_store_images.MacMainTests.test_main_platform_argument) (args=('platzieren', 'en', 'mac'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 953, in test_main_platform_argument
+    self.assertEqual(code, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: 2 != 0
+
+======================================================================
+FAIL: test_main_platform_argument (scripts.test_asc_store_images.MacMainTests.test_main_platform_argument) (args=('lesen', 'en', 'ios'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 953, in test_main_platform_argument
+    self.assertEqual(code, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: 2 != 0
+
+======================================================================
+FAIL: test_main_platform_argument (scripts.test_asc_store_images.MacMainTests.test_main_platform_argument) (args=('platzieren', 'en', 'ios'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 953, in test_main_platform_argument
+    self.assertEqual(code, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: 2 != 0
+
+======================================================================
+FAIL: test_main_platform_argument (scripts.test_asc_store_images.MacMainTests.test_main_platform_argument)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 963, in test_main_platform_argument
+    self.assertEqual(code, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_workflow_offers_plattform (scripts.test_asc_store_images.MacWorkflowTests.test_workflow_offers_plattform)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 972, in test_workflow_offers_plattform
+    self.assertGreater(start, -1)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+AssertionError: -1 not greater than -1
+
+----------------------------------------------------------------------
+Ran 38 tests in 0.110s
+
+FAILED (failures=5, errors=19)
