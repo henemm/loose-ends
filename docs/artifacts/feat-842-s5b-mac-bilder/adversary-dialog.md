@@ -13,7 +13,7 @@ Datum: 2026-11-09 17:41
 - [x] **AC-8:** Given `lesen en mac`, When es läuft, Then zeigt die Ausgabe Lokalisierung, Gruppe `MAC_PROFILE` mit `maxCount`, Kategorie, Plan vorhanden/fehlt und die en-US-Platzierungen der Mac-Version (ohne `keine`), und die Aufrufliste besteht nur aus GET. Belegt durch `test_mac_lesen_shows_group_and_placements_and_never_writes`.
 - [x] **AC-9:** Given der Aufruf von `main`, When ein drittes Argument `ios` oder `mac` fehlt, `ios` oder `mac` lautet, unbekannt ist, oder `platzieren de` lautet, Then läuft ohne Argument und mit `ios` der bisherige iOS-Weg, mit `mac` der Mac-Weg, eine unbekannte Plattform oder zu viele Argumente enden mit Ausgang 2 und `platzieren de` mit Ausgang 1 und `::error::`, jeweils ohne Aufruf gegen Apple. Belegt durch `test_main_platform_argument`.
 - [x] **AC-10:** Given die Workflow-Datei, When sie geprüft wird, Then bietet sie die Eingabe `plattform` (`ios`, `mac`; Standard `ios`), übergibt sie dem Skript, führt die Python-Tests als ersten Schritt aus, gibt den Schlüssel nie aus und trägt `concurrency` ohne `cancel-in-progress`. Belegt durch `test_workflow_offers_plattform`.
-- [ ] **AC-11:** Given der Zweig ist im Remote und die Läufe aus Punkt 10 gehören zu dieser Fassung, When vom Zweig `lesen en mac`, `hochladen en mac`, `platzieren en mac`, `platzieren en mac` (zweites Mal), der iOS-Lauf `platzieren en` und „ASC Store Version“ `lesen` laufen, Then besteht jeder Lauf; `hochladen` legt vier Bilder an, das erste `platzieren` vier Platzierungen, das zweite und der iOS-Lauf nichts, und „ASC Store Version“ zeigt für Mac en-US vier Bilder in Manifest-Reihenfolge und für Mac de-DE unverändert vier. Belegt durch die Run-IDs und die zitierten Protokollzeilen unter `docs/artifacts/feat-842-s5b-mac-bilder/`; erst danach der Merge.
+- [x] **AC-11:** Given der Zweig ist im Remote und die Läufe aus Punkt 10 gehören zu dieser Fassung, When vom Zweig `lesen en mac`, `hochladen en mac`, `platzieren en mac`, `platzieren en mac` (zweites Mal), der iOS-Lauf `platzieren en` und „ASC Store Version“ `lesen` laufen, Then besteht jeder Lauf; `hochladen` legt vier Bilder an, das erste `platzieren` vier Platzierungen, das zweite und der iOS-Lauf nichts, und „ASC Store Version“ zeigt für Mac en-US vier Bilder in Manifest-Reihenfolge und für Mac de-DE unverändert vier. Belegt durch die Run-IDs und die zitierten Protokollzeilen unter `docs/artifacts/feat-842-s5b-mac-bilder/`; erst danach der Merge.
 - [x] **AC-12:** Given die Änderung berührt nur `scripts/`, `.github/workflows/` und `docs/`, When der Schnitt abgenommen wird, Then endet die Abnahme nach Stufe 2 mit dem Satz „Kein Pfad der Geräteliste berührt.“; der „Benutzen“-Beleg sind die echten Handläufe aus AC-11 gegen Apple. Auf Hennings Geräten läuft nichts. `python3 -m unittest scripts/test_asc_store_images.py` und die übrigen Skript-Tests (`test_asc_header_upload.py`, `test_asc_version_texts.py`, `test_asc_store_probe.py`) sind grün. Belegt durch Dateiliste des Diffs und die Testläufe.
 
 ## Dialog
@@ -95,6 +95,26 @@ Confirmation:
 
 AC-11 ist NICHT bewiesen: Handläufe gegen Apple stehen aus (Push gesperrt), vor dem Merge noch zu belegen.
 
+### Runde 3
+**Adversary:**
+AC-11 per grep an den acht Protokollen unter docs/artifacts/feat-842-s5b-mac-bilder/ geprüft, nicht an der Zusammenfassung. Checkout: alle acht Läufe (a, b, b2, b3, c, d, e, f) holen und prüfen 6464b0f6fd8d2dc4c65cba307df3265d70a64369 aus. Die Blobs von 6464b0f sind für scripts/asc_store_images.py e104620..., scripts/test_asc_store_images.py e5361e5... und .github/workflows/asc-store-images.yml 1ca9e8b..., identisch mit den in Runde 1 gestempelten; der Diff der drei Dateien gegen 6464b0f ist leer. Gelaufen ist also der geprüfte Stand. In jedem Lauf "Ran 38 tests" (Script tests) vor dem Schritt gegen Apple.
+Fehler: ##[error] nur in lauf-b (Zeile 149/150): "en-mac-03-neu: Bild 9b800019-... nach 40 Abfragen nicht PREPARE_FOR_SUBMISSION, zuletzt UPLOAD_COMPLETE". Sonst in keinem Protokoll.
+(a) lesen en mac: lokalisierung en-US vorhanden, kategorie APP_SCREENSHOT, gruppe MAC_PROFILE vorhanden maxCount=10, vier Zeilen "plan en-mac-... fehlt". Die bis dahin offene Annahme zu MAC_PROFILE/maxCount ist am echten Konto bestätigt.
+(b)+(b3) hochladen: Lauf b legt en-mac-01-start an und lädt es hoch; 03-neu bleibt in UPLOAD_COMPLETE (Abbruch). Lauf b3: 01 und 03 "schon vorhanden, übersprungen", 04-detail und 05-erledigt "hochgeladen", "zustand bereit" (b3 wartet auf alle Plan-Bilder, 03 war danach bereit). Zusammen vier Bilder, keine Doppelanlage. Lauf b2 (lesen) zeigt den Zwischenstand.
+(c) platzieren en mac: vier Zeilen "platzierung en-mac-... angelegt" in Manifest-Reihenfolge, "gegenprobe MAC_PROFILE 4 in Manifest-Reihenfolge", "de-DE 4 unverändert". Der Preflight verlangt PREPARE_FOR_SUBMISSION und lief durch.
+(d) zweites platzieren: viermal "schon platziert, übersprungen", keine "angelegt", Gegenprobe grün, de-DE 4 unverändert.
+(e) iOS platzieren en: zwölfmal "schon platziert, übersprungen", Gegenprobe 5/5/2, "de-DE 5/5/2 unverändert", Mac nur als ::warning::-Hinweis.
+(f) ASC Store Version lesen: MAC_OS en-US bildsaetze=1 bilder=4 platzierungen=4; MAC_OS de-DE bildsaetze=1 bilder=4 platzierungen=4 (wie vor dem Schnitt); iOS en-US 12 Platzierungen. Die Reihenfolge der Mac-en-US-Bilder belegt die Gegenprobe aus (c) und (d) (Lesen mit sort=placementGroupPosition), nicht (f), das nur Zahlen zeigt.
+Befund F001 (LOW, edge_case) zum Hänger in lauf-b: Die Wartezeit für die Apple-Verarbeitung (POLLS = 40 mal sleep 15 s, ca. 10 min, scripts/asc_header_upload.py:21,62) reichte für en-mac-03-neu nicht; Apple blieb in UPLOAD_COMPLETE, später war das Bild bereit. Keine Spec-Verletzung und nicht im geänderten Code (asc_header_upload.py unverändert), aber ein ehrlicher Betriebsbefund: langsame Apple-Verarbeitung führt zum Abbruch. Der Lauf ist idempotent, die Wiederholung (b3) löste es ohne Doppelanlage und ohne Schaden. Kein Handlungsbedarf im Schnitt; ggf. Wartezeit erhöhen.
+Ergebnis: Alle Sätze von AC-11 stützen sich auf Protokollzeilen; AC-11 bewiesen, mit dem Vermerk, dass hochladen zwei Läufe brauchte.
+**Implementierer:** (nicht beteiligt, Kontextisolation)
+
+Confirmation:
+  AC: AC-11
+  Code reference: scripts/asc_store_images.py:339
+  Evidence: Acht Handläufe vom Zweig auf 6464b0f (= geprüfter Code-Stand), siehe Runde 3: hochladen über b und b3 vier Bilder, erstes platzieren vier Platzierungen, zweites und iOS-Lauf nichts, Store Version Mac en-US 4 und Mac de-DE 4. Einziger Fehler: Apple-Hänger in lauf-b (F001, LOW), durch idempotente Wiederholung gelöst.
+  Status: CONFIRMED
+
 ## Herkunft der Vorbedingungen
 
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
@@ -104,12 +124,12 @@ kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 ═══════════════════════════════════════
 VERDICT: VERIFIED
 ═══════════════════════════════════════
-VERIFIED gilt für den Code (AC-1..AC-10, AC-12), wie im Präzedenzfall 4c-2 (AC-13). AC-11 ist offen, vor dem Merge durch echte Läufe zu belegen, Checkbox bleibt leer, nicht als bewiesen markiert. Das ist nach Spec ein Abnahme-Nachweis außerhalb des Test Plans (Handläufe vom Zweig, erst nach Push möglich). Restrisiko bis dahin: Antwortformen und Referenzdaten für MAC_PROFILE (maxCount, Kategorie) nur aus Doku/Attrappe; ein Fehlschlag endet vor jedem Schreiben.
-Findings: keine.
+Die Implementierung hat dem Adversary-Test standgehalten; AC-11 durch echte Läufe vom Zweig (Code-Stand 6464b0f, geprüfter Stand) belegt.
+Findings: F001 (LOW, Apple-Verarbeitung hing in lauf-b, Wiederholung löste es), kein CRITICAL/HIGH/MEDIUM.
 Tests: 98 passed, 0 failed, 0 übersprungen
 Edge cases: All checked, none broken
 Regressions: None found
-Checklist: 11/12 points proven (AC-11 offen, vor dem Merge zu belegen)
+Checklist: 12/12 points proven
 
 ## Geprüfte Dateien
 
