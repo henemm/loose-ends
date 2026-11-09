@@ -55,5 +55,5 @@ Neu in dieser Version: Loose Ends now also speaks English: the app and this stor
 
 ## de-DE
 
-Werbetext: PLATZHALTER aus Lauf lesen
+Werbetext: Sag es in einem Satz. Loose Ends erkennt Datum, Dauer und Kontext direkt auf deinem Gerät und zeigt dir später genau das, was gerade passt.
 Neu in dieser Version: Loose Ends gibt es jetzt auch auf Englisch: die App und die Store-Seite. Dazu kleine Verbesserungen und Korrekturen.
