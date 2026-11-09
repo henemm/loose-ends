@@ -1,28 +1,34 @@
-"""Legt die Store-Bilder einer Sprache in Apples Asset-Bibliothek der App (#842, 4c-1). Platziert nie, reicht nie ein.
+"""Legt die Store-Bilder einer Sprache in Apples Asset-Bibliothek der App (#842, 4c-1) und platziert die englischen auf der
+en-US-Seite der bearbeitbaren iOS-Version (4c-2). Löscht nie, reicht nie ein, beschreibt de-DE nie.
 
-Aufruf: asc_store_images.py lesen|hochladen de|en
+Aufruf: asc_store_images.py lesen|hochladen de|en, asc_store_images.py platzieren en
 Umgebung wie asc_wait_build.py. Quelle ist docs/store/screenshots/<sprache>/manifest.json; jedes Bild heißt
 `<sprache>-<gerät>-<datei ohne .png>`. Vor jedem Schreiben geprüft: genau eine bearbeitbare iOS-Version, deren
 Lokalisierung der Sprache, Datei und Pixelmaß laut Manifest, Gruppe und maxCount in den Referenzdaten. `lesen` ruft nur
 GET; `hochladen` legt fehlende Bilder an (POST, Bytes, `uploaded: true`) und wartet auf PREPARE_FOR_SUBMISSION. Ohne
-bearbeitbare Mac-Version bleibt der Mac mit ::warning:: aus. Schlüssel und Token werden nie ausgegeben.
+bearbeitbare Mac-Version bleibt der Mac mit ::warning:: aus. `platzieren` prüft erst nur mit GET (Bilder bereit, en-US-Bestand
+nur aus Plan-Bildern, jedes höchstens einmal), legt fehlende Platzierungen an, wartet, ordnet nur bei Abweichung und prüft
+gegen; de-DE wird nur gelesen. Schlüssel und Token werden nie ausgegeben.
 """
 import json
+import os
 import struct
 import sys
 import time
 from pathlib import Path
 
-from asc_header_upload import IMAGES, REFDATA, Client, check_state, put_bytes, wait_ready
+from asc_header_upload import IMAGES, POLLS, READY, REFDATA, Client, put_bytes, wait_ready
 from asc_locales import ASC_LOCALES
 from asc_version_texts import app_versions, editable_version, localizations
 from asc_wait_build import Fatal, find_app_id, read_config
 
 SCREENSHOTS = Path(__file__).resolve().parent.parent / "docs/store/screenshots"
-ACTIONS = ("lesen", "hochladen")
+ACTIONS = ("lesen", "hochladen", "platzieren")
 SPRACHEN = ("de", "en")
 SHOT = "APP_SCREENSHOT"
 FEATURE = "APP_STORE_VERSIONS"
+PLACEMENTS = "/v1/appAssetLibraryPlacements"
+ORDERING = "/v1/appAssetLibraryPlacementOrderingRequests"
 GROUPS = {"iphone": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE", "ipad": "IPAD_13_PROFILE",
           "watch": "WATCH_SERIES_10_PROFILE"}
 
@@ -118,15 +124,32 @@ def upload(client, app_id, sprache, versions, lookup, sleep=time.sleep, root=SCR
         except Fatal as error:
             raise Fatal(f"{name}: {error}") from error
         print(f"bild {name} hochgeladen", flush=True)
-    return check_state(client, library_id, [entry["reference"] for entry in entries])
+    return check_ready(client, library_id, [entry["reference"] for entry in entries])
+
+
+def ready_images(client, library_id, names):
+    """Jedes Bild da und PREPARE_FOR_SUBMISSION, Platzierung erlaubt; gibt {Name: Bild} zurück oder Fatal."""
+    images = {i.get("referenceName"): i for i in client.get(f"/v1/appAssetLibraries/{library_id}/images")["items"]}
+    for name in names:
+        if name not in images:
+            raise Fatal(f"Bild {name} fehlt in der Bibliothek")
+        if images[name].get("state") != READY:
+            raise Fatal(f"Bild {name} ist {images[name].get('state')}, nicht {READY}")
+    return images
+
+
+def check_ready(client, library_id, names):
+    ready_images(client, library_id, names)
+    return "bereit"
 
 
 def lesen(client, app_id, sprache, versions, lookup, root=SCREENSHOTS):
     """Nur GET: Version, Lokalisierung, Gruppen mit maxCount, Bestand der Bibliothek, Plan vorhanden/fehlt, Mac."""
     version = editable_version(versions, "IOS")
-    locale = ASC_LOCALES[sprache]
+    locale, locs, found = ASC_LOCALES[sprache], {}, False
     if version is not None:
-        found = locale in lookup(version["id"])
+        locs = lookup(version["id"])
+        found = locale in locs
         print(f"lokalisierung {locale} {'vorhanden' if found else 'fehlt'}", flush=True)
     entries = plan(sprache, root)
     limits, category = screenshot_rules(client.get(REFDATA))
@@ -136,14 +159,153 @@ def lesen(client, app_id, sprache, versions, lookup, root=SCREENSHOTS):
         print(f"gruppe {group} {state}", flush=True)
     library_id = client.get(f"/v1/apps/{app_id}/assetLibrary").get("id")
     images = client.get(f"/v1/appAssetLibraries/{library_id}/images")["items"]
+    owner = {}
     for image in images:
         placements = client.get(f"{IMAGES}/{image.get('id')}/placements")["items"]
+        owner.update({placement["id"]: image.get("referenceName") for placement in placements})
         print(f"bild name={image.get('referenceName', '?')} zustand={image.get('state', '?')} "
               f"platzierungen={len(placements)}", flush=True)
     names = {image.get("referenceName") for image in images}
     for entry in entries:
         print(f"plan {entry['reference']} {'vorhanden' if entry['reference'] in names else 'fehlt'}", flush=True)
+    if sprache == "en" and found:
+        print_placements(client, locs[locale]["id"], entries, owner)
     warn_mac(versions)
+
+
+def owners(client, images):
+    """Platzierungs-ID → Bildname über die Platzierungen je Bibliotheksbild (ohne `included`)."""
+    return {placement["id"]: image.get("referenceName") for image in images
+            for placement in client.get(f"{IMAGES}/{image.get('id')}/placements")["items"]}
+
+
+def read_group(client, loc_id, group, owner):
+    """Platzierungen einer Gruppe in Anzeigereihenfolge als (ID, Bildname oder None, Datensatz)."""
+    path = (f"/v1/appStoreVersionLocalizations/{loc_id}/placements?filter[placementType]={SHOT}"
+            f"&filter[placementGroup]={group}&sort=placementGroupPosition&limit=200")
+    return [(item["id"], owner.get(item["id"]), item) for item in client.get(path)["items"]]
+
+
+def grouped(entries):
+    groups = {}
+    for entry in entries:
+        groups.setdefault(entry["group"], []).append(entry["reference"])
+    return groups
+
+
+def check_existing(current, want):
+    """Bestand je Gruppe nur aus Plan-Bildern, jedes höchstens einmal; sonst Fatal, nichts geschrieben."""
+    for group, rows in current.items():
+        names = [name for _, name, _ in rows]
+        for placement_id, name, _ in rows:
+            if name not in want[group]:
+                raise Fatal(f"Gruppe {group}: fremde Platzierung {name or placement_id}, nichts geschrieben")
+        for name in names:
+            if names.count(name) > 1:
+                raise Fatal(f"Gruppe {group}: {name} ist {names.count(name)}x platziert, nichts geschrieben")
+
+
+def german_counts(client, locs):
+    if "de-DE" not in locs:
+        return None
+    return "/".join(str(len(client.get(f"/v1/appStoreVersionLocalizations/{locs['de-DE']['id']}/placements"
+                                       f"?filter[placementType]={SHOT}&filter[placementGroup]={group}"
+                                       f"&sort=placementGroupPosition&limit=200")["items"])) for group in GROUPS.values())
+
+
+def good(state):
+    return state == "ACTIVE" or str(state).startswith("PARENT_")
+
+
+def wait_placements(client, pending, sleep):
+    """Pollt jede Platzierung bis ACTIVE oder PARENT_*; ASSET_PROCESSING wartet, alles andere ist Fatal."""
+    seconds = float(os.environ.get("ASC_POLL_SECONDS", "15"))
+    for placement_id, name in pending.items():
+        for _ in range(POLLS):
+            placement = client.get(f"{PLACEMENTS}/{placement_id}")
+            state = placement.get("state")
+            if good(state):
+                break
+            if state != "ASSET_PROCESSING":
+                raise Fatal(f"Platzierung {name} ist {state}: {placement.get('stateDetails', '-')}")
+            sleep(seconds)
+        else:
+            raise Fatal(f"Platzierung {name} nach {POLLS} Abfragen noch ASSET_PROCESSING")
+
+
+def create_missing(client, loc_id, images, want, current):
+    """Legt je Plan-Bild ohne eigene Platzierung eine an, Gruppe für Gruppe in Manifest-Reihenfolge."""
+    pending = {}
+    target = {"appStoreVersionLocalization": {"data": {"type": "appStoreVersionLocalizations", "id": loc_id}}}
+    for group, names in want.items():
+        placed = {name: (placement_id, item) for placement_id, name, item in current[group]}
+        for name in names:
+            if name in placed:
+                print(f"platzierung {name} schon platziert, übersprungen", flush=True)
+                if not good(placed[name][1].get("state")):
+                    pending[placed[name][0]] = name
+                continue
+            relation = {"image": {"data": {"type": "appAssetLibraryImages", "id": images[name]["id"]}}, **target}
+            created = client.post(PLACEMENTS, {"placementType": SHOT, "placementGroup": group}, relation)
+            pending[created["id"]] = name
+            print(f"platzierung {name} angelegt", flush=True)
+    return pending
+
+
+def order_groups(client, loc_id, want, owner):
+    """Ein Ordnungsauftrag je Gruppe, nur wenn die gelesene Reihenfolge vom Manifest abweicht."""
+    for group, names in want.items():
+        rows = read_group(client, loc_id, group, owner)
+        found = [name for _, name, _ in rows]
+        if found == names or sorted(found) != sorted(names):
+            continue
+        ids = {name: placement_id for placement_id, name, _ in rows}
+        ordered = [{"type": "appAssetLibraryPlacements", "id": ids[name]} for name in names]
+        client.post(ORDERING, {"placementGroup": group},
+                    {"orderedPlacements": {"data": ordered},
+                     "appStoreVersionLocalization": {"data": {"type": "appStoreVersionLocalizations", "id": loc_id}}})
+        print(f"gruppe {group} geordnet", flush=True)
+
+
+def verify(client, loc_id, want, owner, german_before, locs):
+    """Gegenprobe: je Gruppe Namen und Reihenfolge = Manifest; de-DE nur gelesen und unverändert."""
+    for group, names in want.items():
+        found = [name or placement_id for placement_id, name, _ in read_group(client, loc_id, group, owner)]
+        if found != names:
+            raise Fatal(f"Gruppe {group}: Soll {', '.join(names)}; Ist {', '.join(found) or 'keine'}")
+        print(f"gegenprobe {group} {len(found)} in Manifest-Reihenfolge", flush=True)
+    german_after = german_counts(client, locs)
+    if german_after != german_before:
+        raise Fatal(f"de-DE vorher {german_before}, nachher {german_after}")
+    print(f"de-DE {german_after or 'fehlt'} unverändert", flush=True)
+
+
+def platzieren(client, app_id, sprache, versions, lookup, sleep=time.sleep, root=SCREENSHOTS):
+    """Platzierungen auf en-US: Vorabprüfung nur GET, Anlegen, Warten, Ordnen, Gegenprobe. Löscht nie."""
+    entries, _ = preflight(client, sprache, versions, lookup, root)
+    warn_mac(versions)
+    locs = lookup(editable_version(versions, "IOS")["id"])
+    loc_id, want = locs[ASC_LOCALES[sprache]]["id"], grouped(entries)
+    library_id = client.get(f"/v1/apps/{app_id}/assetLibrary")["id"]
+    images = ready_images(client, library_id, [entry["reference"] for entry in entries])
+    owner = owners(client, images.values())
+    current = {group: read_group(client, loc_id, group, owner) for group in want}
+    check_existing(current, want)
+    german_before = german_counts(client, locs)
+    pending = create_missing(client, loc_id, images, want, current)
+    wait_placements(client, pending, sleep)
+    owner = owners(client, [images[name] for names in want.values() for name in names])
+    order_groups(client, loc_id, want, owner)
+    verify(client, loc_id, want, owner, german_before, locs)
+
+
+def print_placements(client, loc_id, entries, owner):
+    for group in grouped(entries):
+        rows = read_group(client, loc_id, group, owner)
+        if not rows:
+            print(f"platzierung {group} keine", flush=True)
+        for position, (_, name, item) in enumerate(rows, start=1):
+            print(f"platzierung {group} {position} {name or '?'} zustand={item.get('state', '?')}", flush=True)
 
 
 def main(argv):
@@ -151,6 +313,9 @@ def main(argv):
         print(f"usage: asc_store_images.py {'|'.join(ACTIONS)} {'|'.join(SPRACHEN)}", file=sys.stderr)
         return 2
     action, sprache = argv[1], argv[2]
+    if action == "platzieren" and sprache != "en":
+        print(f"::error::platzieren nur für en; sprache={sprache} abgewiesen, de-DE wird nie beschrieben", flush=True)
+        return 1
     try:
         config = read_config()
         app_id = find_app_id(config)
@@ -159,6 +324,9 @@ def main(argv):
         lookup = lambda version_id: localizations(config, version_id)  # noqa: E731
         if action == "lesen":
             lesen(client, app_id, sprache, versions, lookup)
+            return 0
+        if action == "platzieren":
+            platzieren(client, app_id, sprache, versions, lookup)
             return 0
         print(f"zustand {upload(client, app_id, sprache, versions, lookup)}", flush=True)
         return 0

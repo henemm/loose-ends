@@ -140,6 +140,16 @@ def flat(record):
     return {"id": record.get("id"), **(record.get("attributes") or {})} if isinstance(record, dict) else record
 
 
+def error_codes(error):
+    """`errors[].code` aus Apples Fehlerantwort (etwa STATE_ERROR.INVALID_STATE); leer, wenn die Antwort keine trägt."""
+    try:
+        body = json.loads(error.read() or b"{}")
+    except (ValueError, OSError):
+        return ""
+    errors = body.get("errors") if isinstance(body, dict) else None
+    return ", ".join(str(e["code"]) for e in errors or [] if isinstance(e, dict) and e.get("code"))
+
+
 class Client:
     """ASC-Zugang mit frischem Token je Anfrage; JSON:API-Datensätze kommen flach zurück (id + Attribute)."""
 
@@ -152,7 +162,9 @@ class Client:
             with urllib.request.urlopen(request, timeout=60) as response:
                 raw = response.read()
         except urllib.error.HTTPError as error:
-            raise Fatal(f"ASC answered HTTP {error.code} for {method} {url.split('?')[0]}") from error
+            codes = error_codes(error)
+            raise Fatal(f"ASC answered HTTP {error.code} for {method} {url.split('?')[0]}"
+                        + (f" ({codes})" if codes else "")) from error
         except (urllib.error.URLError, TimeoutError, OSError) as error:
             raise Fatal(f"No answer for {method} {url.split('?')[0]} ({type(error).__name__})") from error
         return json.loads(raw) if raw else {}

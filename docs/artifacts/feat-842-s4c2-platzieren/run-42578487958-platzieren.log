@@ -1,0 +1,198 @@
+images	Set up job	﻿2026-11-09T07:18:26.6807922Z Current runner version: '2.338.2'
+images	Set up job	2026-11-09T07:18:26.6829780Z ##[group]Runner Image Provisioner
+images	Set up job	2026-11-09T07:18:26.6830739Z Hosted Compute Agent
+images	Set up job	2026-11-09T07:18:26.6831308Z Version: 20261028.624
+images	Set up job	2026-11-09T07:18:26.6831988Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+images	Set up job	2026-11-09T07:18:26.6832762Z Build Date: 2026-10-28T21:51:42Z
+images	Set up job	2026-11-09T07:18:26.6833516Z Worker ID: {96ac7e73-0c90-4dee-87cc-31d0e73b2721}
+images	Set up job	2026-11-09T07:18:26.6834835Z Region: eastus
+images	Set up job	2026-11-09T07:18:26.6835455Z Cloud: Azure
+images	Set up job	2026-11-09T07:18:26.6836059Z ##[endgroup]
+images	Set up job	2026-11-09T07:18:26.6837369Z ##[group]Operating System
+images	Set up job	2026-11-09T07:18:26.6838008Z Ubuntu
+images	Set up job	2026-11-09T07:18:26.6838627Z 26.04.1
+images	Set up job	2026-11-09T07:18:26.6839198Z LTS
+images	Set up job	2026-11-09T07:18:26.6839706Z ##[endgroup]
+images	Set up job	2026-11-09T07:18:26.6840290Z ##[group]Runner Image
+images	Set up job	2026-11-09T07:18:26.6840936Z Image: ubuntu-26.04
+images	Set up job	2026-11-09T07:18:26.6841509Z Version: 20261101.186.1
+images	Set up job	2026-11-09T07:18:26.6842555Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261101.186/images/ubuntu/Ubuntu2604-Readme.md
+images	Set up job	2026-11-09T07:18:26.6844293Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261101.186
+images	Set up job	2026-11-09T07:18:26.6845222Z ##[endgroup]
+images	Set up job	2026-11-09T07:18:26.6846309Z ##[group]GITHUB_TOKEN Permissions
+images	Set up job	2026-11-09T07:18:26.6848240Z Contents: read
+images	Set up job	2026-11-09T07:18:26.6848831Z Metadata: read
+images	Set up job	2026-11-09T07:18:26.6849451Z ##[endgroup]
+images	Set up job	2026-11-09T07:18:26.6851218Z Secret source: Actions
+images	Set up job	2026-11-09T07:18:26.6852239Z Cache mode: write
+images	Set up job	2026-11-09T07:18:26.6853100Z Prepare workflow directory
+images	Set up job	2026-11-09T07:18:26.7110333Z Prepare all required actions
+images	Set up job	2026-11-09T07:18:26.7149537Z Getting action download info
+images	Set up job	2026-11-09T07:18:26.8575270Z Download action repository 'actions/checkout@v7' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+images	Set up job	2026-11-09T07:18:27.0464195Z Complete job name: images
+images	Run actions/checkout@v7	﻿2026-11-09T07:18:27.1269162Z ##[group]Run actions/checkout@v7
+images	Run actions/checkout@v7	2026-11-09T07:18:27.1269925Z with:
+images	Run actions/checkout@v7	2026-11-09T07:18:27.1270357Z   repository: henemm/loose-ends
+images	Run actions/checkout@v7	2026-11-09T07:18:27.1274015Z   token: ***
+images	Run actions/checkout@v7	2026-11-09T07:18:27.1274551Z   ssh-strict: true
+images	Run actions/checkout@v7	2026-11-09T07:18:27.1275076Z   ssh-user: git
+images	Run actions/checkout@v7	2026-11-09T07:18:27.1275513Z   persist-credentials: true
+images	Run actions/checkout@v7	2026-11-09T07:18:27.1275975Z   clean: true
+images	Run actions/checkout@v7	2026-11-09T07:18:27.1276402Z   sparse-checkout-cone-mode: true
+images	Run actions/checkout@v7	2026-11-09T07:18:27.1276891Z   fetch-depth: 1
+images	Run actions/checkout@v7	2026-11-09T07:18:27.1277313Z   fetch-tags: false
+images	Run actions/checkout@v7	2026-11-09T07:18:27.1277734Z   show-progress: true
+images	Run actions/checkout@v7	2026-11-09T07:18:27.1278164Z   lfs: false
+images	Run actions/checkout@v7	2026-11-09T07:18:27.1278573Z   submodules: false
+images	Run actions/checkout@v7	2026-11-09T07:18:27.1279000Z   set-safe-directory: true
+images	Run actions/checkout@v7	2026-11-09T07:18:27.1279469Z   allow-unsafe-pr-checkout: false
+images	Run actions/checkout@v7	2026-11-09T07:18:27.1280219Z ##[endgroup]
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3728510Z Syncing repository: henemm/loose-ends
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3730588Z ##[group]Getting Git version info
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3731479Z Working directory is '/home/runner/work/loose-ends/loose-ends'
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3733176Z [command]/usr/bin/git version
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3760218Z git version 2.56.0
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3776198Z ##[endgroup]
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3795242Z Temporarily overriding HOME='/home/runner/work/_temp/3b4887b9-9d4b-4262-ba53-a4a7137c2683' before making global git config changes
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3796826Z Adding repository directory to the temporary git global config as a safe directory
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3798021Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/loose-ends/loose-ends
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3850309Z Deleting the contents of '/home/runner/work/loose-ends/loose-ends'
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3853019Z ##[group]Determining repository object format
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3854900Z ##[endgroup]
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3856110Z ##[group]Initializing the repository
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3858456Z [command]/usr/bin/git init /home/runner/work/loose-ends/loose-ends
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3952571Z hint: Using 'master' as the name for the initial branch. This default branch name
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3954481Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3956023Z hint: to use in all of your new repositories, which will suppress this warning,
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3956847Z hint: call:
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3957367Z hint:
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3957988Z hint: 	git config --global init.defaultBranch <name>
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3958860Z hint:
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3959517Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3960450Z hint: 'development'. The just-created branch can be renamed via this command:
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3961321Z hint:
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3961862Z hint: 	git branch -m <name>
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3962443Z hint:
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3963138Z hint: Disable this message with "git config set advice.defaultBranchName false"
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3966687Z Initialized empty Git repository in /home/runner/work/loose-ends/loose-ends/.git/
+images	Run actions/checkout@v7	2026-11-09T07:18:27.3977514Z [command]/usr/bin/git remote add origin https://github.com/henemm/loose-ends
+images	Run actions/checkout@v7	2026-11-09T07:18:27.4029229Z ##[endgroup]
+images	Run actions/checkout@v7	2026-11-09T07:18:27.4033568Z ##[group]Disabling automatic garbage collection
+images	Run actions/checkout@v7	2026-11-09T07:18:27.4034417Z [command]/usr/bin/git config --local gc.auto 0
+images	Run actions/checkout@v7	2026-11-09T07:18:27.4065855Z ##[endgroup]
+images	Run actions/checkout@v7	2026-11-09T07:18:27.4066628Z ##[group]Setting up auth
+images	Run actions/checkout@v7	2026-11-09T07:18:27.4070284Z Removing SSH command configuration
+images	Run actions/checkout@v7	2026-11-09T07:18:27.4071349Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+images	Run actions/checkout@v7	2026-11-09T07:18:27.4104012Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+images	Run actions/checkout@v7	2026-11-09T07:18:27.4513111Z Removing HTTP extra header
+images	Run actions/checkout@v7	2026-11-09T07:18:27.4518314Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+images	Run actions/checkout@v7	2026-11-09T07:18:27.4548456Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+images	Run actions/checkout@v7	2026-11-09T07:18:27.4782825Z Removing includeIf entries pointing to credentials config files
+images	Run actions/checkout@v7	2026-11-09T07:18:27.4787617Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+images	Run actions/checkout@v7	2026-11-09T07:18:27.4818328Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+images	Run actions/checkout@v7	2026-11-09T07:18:27.5113139Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-d2ef3825-e4dd-48d1-9b96-9bec3feeb499.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+images	Run actions/checkout@v7	2026-11-09T07:18:27.5116448Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path /home/runner/work/_temp/git-credentials-d2ef3825-e4dd-48d1-9b96-9bec3feeb499.config
+images	Run actions/checkout@v7	2026-11-09T07:18:27.5141602Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-d2ef3825-e4dd-48d1-9b96-9bec3feeb499.config
+images	Run actions/checkout@v7	2026-11-09T07:18:27.5177798Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-d2ef3825-e4dd-48d1-9b96-9bec3feeb499.config
+images	Run actions/checkout@v7	2026-11-09T07:18:27.5212623Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-d2ef3825-e4dd-48d1-9b96-9bec3feeb499.config
+images	Run actions/checkout@v7	2026-11-09T07:18:27.5241002Z ##[endgroup]
+images	Run actions/checkout@v7	2026-11-09T07:18:27.5242571Z ##[group]Fetching the repository
+images	Run actions/checkout@v7	2026-11-09T07:18:27.5247486Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +6de7ffd753b3b27bcf7a42e640cf5b0bd31f796d:refs/remotes/origin/feat-842-s4c2-platzieren
+images	Run actions/checkout@v7	2026-11-09T07:18:33.2826487Z From https://github.com/henemm/loose-ends
+images	Run actions/checkout@v7	2026-11-09T07:18:33.2827665Z  * [new ref]         6de7ffd753b3b27bcf7a42e640cf5b0bd31f796d -> origin/feat-842-s4c2-platzieren
+images	Run actions/checkout@v7	2026-11-09T07:18:33.2834028Z [command]/usr/bin/git branch --list --remote origin/feat-842-s4c2-platzieren
+images	Run actions/checkout@v7	2026-11-09T07:18:33.2858439Z   origin/feat-842-s4c2-platzieren
+images	Run actions/checkout@v7	2026-11-09T07:18:33.2865137Z [command]/usr/bin/git rev-parse refs/remotes/origin/feat-842-s4c2-platzieren
+images	Run actions/checkout@v7	2026-11-09T07:18:33.2886125Z 6de7ffd753b3b27bcf7a42e640cf5b0bd31f796d
+images	Run actions/checkout@v7	2026-11-09T07:18:33.2889393Z ##[endgroup]
+images	Run actions/checkout@v7	2026-11-09T07:18:33.2889999Z ##[group]Determining the checkout info
+images	Run actions/checkout@v7	2026-11-09T07:18:33.2890525Z ##[endgroup]
+images	Run actions/checkout@v7	2026-11-09T07:18:33.2893351Z [command]/usr/bin/git sparse-checkout disable
+images	Run actions/checkout@v7	2026-11-09T07:18:33.2937772Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+images	Run actions/checkout@v7	2026-11-09T07:18:33.2965130Z ##[group]Checking out the ref
+images	Run actions/checkout@v7	2026-11-09T07:18:33.2969177Z [command]/usr/bin/git checkout --progress --force -B feat-842-s4c2-platzieren refs/remotes/origin/feat-842-s4c2-platzieren
+images	Run actions/checkout@v7	2026-11-09T07:18:33.8953186Z Switched to a new branch 'feat-842-s4c2-platzieren'
+images	Run actions/checkout@v7	2026-11-09T07:18:33.8958097Z branch 'feat-842-s4c2-platzieren' set up to track 'origin/feat-842-s4c2-platzieren'.
+images	Run actions/checkout@v7	2026-11-09T07:18:33.8987773Z ##[endgroup]
+images	Run actions/checkout@v7	2026-11-09T07:18:33.9038521Z [command]/usr/bin/git log -1 --format=%H
+images	Run actions/checkout@v7	2026-11-09T07:18:33.9065438Z 6de7ffd753b3b27bcf7a42e640cf5b0bd31f796d
+images	Script tests	﻿2026-11-09T07:18:33.9270715Z ##[group]Run python3 -m unittest scripts/test_asc_store_images.py
+images	Script tests	2026-11-09T07:18:33.9271213Z ^[[36;1mpython3 -m unittest scripts/test_asc_store_images.py^[[0m
+images	Script tests	2026-11-09T07:18:33.9319698Z shell: /usr/bin/bash -e {0}
+images	Script tests	2026-11-09T07:18:33.9319999Z ##[endgroup]
+images	Script tests	2026-11-09T07:18:34.1189402Z ..........................
+images	Script tests	2026-11-09T07:18:34.1190184Z ----------------------------------------------------------------------
+images	Script tests	2026-11-09T07:18:34.1190766Z Ran 26 tests in 0.051s
+images	Script tests	2026-11-09T07:18:34.1191016Z 
+images	Script tests	2026-11-09T07:18:34.1191324Z OK
+images	Store images in the asset library	﻿2026-11-09T07:18:34.1405127Z ##[group]Run trap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT
+images	Store images in the asset library	2026-11-09T07:18:34.1405582Z ^[[36;1mtrap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT^[[0m
+images	Store images in the asset library	2026-11-09T07:18:34.1405861Z ^[[36;1mumask 077^[[0m
+images	Store images in the asset library	2026-11-09T07:18:34.1406270Z ^[[36;1mprintf '%s\n' "***^[[0m
+images	Store images in the asset library	2026-11-09T07:18:34.1406639Z ^[[36;1m***^[[0m
+images	Store images in the asset library	2026-11-09T07:18:34.1407024Z ^[[36;1m***^[[0m
+images	Store images in the asset library	2026-11-09T07:18:34.1407335Z ^[[36;1m***^[[0m
+images	Store images in the asset library	2026-11-09T07:18:34.1407525Z ^[[36;1m***^[[0m
+images	Store images in the asset library	2026-11-09T07:18:34.1407774Z ^[[36;1m***" > "$RUNNER_TEMP/asc_key.p8"^[[0m
+images	Store images in the asset library	2026-11-09T07:18:34.1408190Z ^[[36;1mASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_store_images.py "$AKTION" "$SPRACHE"^[[0m
+images	Store images in the asset library	2026-11-09T07:18:34.1451963Z shell: /usr/bin/bash -e {0}
+images	Store images in the asset library	2026-11-09T07:18:34.1452203Z env:
+images	Store images in the asset library	2026-11-09T07:18:34.1452430Z   ASC_KEY_ID: ***
+images	Store images in the asset library	2026-11-09T07:18:34.1452678Z   ASC_ISSUER_ID: ***
+images	Store images in the asset library	2026-11-09T07:18:34.1517844Z   ASC_POLL_SECONDS: 5
+images	Store images in the asset library	2026-11-09T07:18:34.1518107Z   AKTION: platzieren
+images	Store images in the asset library	2026-11-09T07:18:34.1518330Z   SPRACHE: en
+images	Store images in the asset library	2026-11-09T07:18:34.1518545Z ##[endgroup]
+images	Store images in the asset library	2026-11-09T07:18:34.8312866Z version IOS 1.0.1 id=a8e6e70e-9a24-45e3-8cc7-1d4c9bd3e3c0 state=PREPARE_FOR_SUBMISSION
+images	Store images in the asset library	2026-11-09T07:18:35.5385000Z keine bearbeitbare Version MAC_OS (Zustände READY_FOR_SALE), nichts geschrieben
+images	Store images in the asset library	2026-11-09T07:18:35.5401601Z ##[warning]keine bearbeitbare Mac-Version, Mac-Bilder nicht hochgeladen
+images	Store images in the asset library	2026-11-09T07:18:35.5407752Z version IOS 1.0.1 id=a8e6e70e-9a24-45e3-8cc7-1d4c9bd3e3c0 state=PREPARE_FOR_SUBMISSION
+images	Store images in the asset library	2026-11-09T07:18:48.1498270Z platzierung en-iphone-01-start angelegt
+images	Store images in the asset library	2026-11-09T07:18:48.4360805Z platzierung en-iphone-02-erfassen angelegt
+images	Store images in the asset library	2026-11-09T07:18:48.7249599Z platzierung en-iphone-03-neu angelegt
+images	Store images in the asset library	2026-11-09T07:18:49.0135287Z platzierung en-iphone-04-detail angelegt
+images	Store images in the asset library	2026-11-09T07:18:49.2850419Z platzierung en-iphone-05-erledigt angelegt
+images	Store images in the asset library	2026-11-09T07:18:49.5718686Z platzierung en-ipad-01-start angelegt
+images	Store images in the asset library	2026-11-09T07:18:49.8764611Z platzierung en-ipad-02-erfassen angelegt
+images	Store images in the asset library	2026-11-09T07:18:50.1784291Z platzierung en-ipad-03-neu angelegt
+images	Store images in the asset library	2026-11-09T07:18:50.4487967Z platzierung en-ipad-04-detail angelegt
+images	Store images in the asset library	2026-11-09T07:18:50.7286772Z platzierung en-ipad-05-erledigt angelegt
+images	Store images in the asset library	2026-11-09T07:18:51.0284855Z platzierung en-watch-01-jetzt angelegt
+images	Store images in the asset library	2026-11-09T07:18:51.3071446Z platzierung en-watch-02-gespeichert angelegt
+images	Store images in the asset library	2026-11-09T07:19:00.0246390Z gegenprobe IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE 5 in Manifest-Reihenfolge
+images	Store images in the asset library	2026-11-09T07:19:00.2741088Z gegenprobe IPAD_13_PROFILE 5 in Manifest-Reihenfolge
+images	Store images in the asset library	2026-11-09T07:19:00.5483887Z gegenprobe WATCH_SERIES_10_PROFILE 2 in Manifest-Reihenfolge
+images	Store images in the asset library	2026-11-09T07:19:01.3541915Z de-DE 5/5/2 unverändert
+images	Post Run actions/checkout@v7	﻿2026-11-09T07:19:01.3760034Z Post job cleanup.
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.4481381Z [command]/usr/bin/git version
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.4520173Z git version 2.56.0
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.4550988Z Temporarily overriding HOME='/home/runner/work/_temp/59553d44-58f9-4a89-b4a7-a2c86e328801' before making global git config changes
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.4552422Z Adding repository directory to the temporary git global config as a safe directory
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.4553554Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/loose-ends/loose-ends
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.4582418Z Removing SSH command configuration
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.4587796Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.4622017Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.4889683Z Removing HTTP extra header
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.4894162Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.4928635Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.5185230Z Removing includeIf entries pointing to credentials config files
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.5191486Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.5214832Z includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.5215807Z includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.5216491Z includeif.gitdir:/github/workspace/.git.path
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.5216977Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.5221849Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.5242974Z /home/runner/work/_temp/git-credentials-d2ef3825-e4dd-48d1-9b96-9bec3feeb499.config
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.5251405Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-d2ef3825\-e4dd\-48d1\-9b96\-9bec3feeb499\.config
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.5282366Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.5304552Z /home/runner/work/_temp/git-credentials-d2ef3825-e4dd-48d1-9b96-9bec3feeb499.config
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.5311705Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-d2ef3825\-e4dd\-48d1\-9b96\-9bec3feeb499\.config
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.5339996Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.5359498Z /github/runner_temp/git-credentials-d2ef3825-e4dd-48d1-9b96-9bec3feeb499.config
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.5366079Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-d2ef3825\-e4dd\-48d1\-9b96\-9bec3feeb499\.config
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.5394703Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.5415329Z /github/runner_temp/git-credentials-d2ef3825-e4dd-48d1-9b96-9bec3feeb499.config
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.5419754Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-d2ef3825\-e4dd\-48d1\-9b96\-9bec3feeb499\.config
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.5449164Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+images	Post Run actions/checkout@v7	2026-11-09T07:19:01.5687691Z Removing credentials config '/home/runner/work/_temp/git-credentials-d2ef3825-e4dd-48d1-9b96-9bec3feeb499.config'
+images	Complete job	﻿2026-11-09T07:19:01.5835998Z Cleaning up orphan processes
