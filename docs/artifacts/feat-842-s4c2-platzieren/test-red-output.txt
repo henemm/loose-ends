@@ -1,0 +1,371 @@
+test_aborts_before_any_write (scripts.test_asc_store_images.AbortTests.test_aborts_before_any_write) ... ok
+test_read_only_never_writes (scripts.test_asc_store_images.LesenTests.test_read_only_never_writes) ... ok
+test_mac_without_editable_version_is_skipped_with_warning (scripts.test_asc_store_images.MacTests.test_mac_without_editable_version_is_skipped_with_warning) ... ok
+test_language_input_is_checked (scripts.test_asc_store_images.MainTests.test_language_input_is_checked) ... ok
+test_duplicate_placement_of_same_image_aborts (scripts.test_asc_store_images.PlaceGuardTests.test_duplicate_placement_of_same_image_aborts) ... ERROR
+test_foreign_placement_aborts_without_write (scripts.test_asc_store_images.PlaceGuardTests.test_foreign_placement_aborts_without_write) ... ERROR
+test_never_deletes_submits_or_writes_german (scripts.test_asc_store_images.PlaceGuardTests.test_never_deletes_submits_or_writes_german) ... ERROR
+test_preflight_aborts_before_any_write (scripts.test_asc_store_images.PlaceGuardTests.test_preflight_aborts_before_any_write) ... 
+  test_preflight_aborts_before_any_write (scripts.test_asc_store_images.PlaceGuardTests.test_preflight_aborts_before_any_write) [keine bearbeitbare iOS-Version] ... ERROR
+  test_preflight_aborts_before_any_write (scripts.test_asc_store_images.PlaceGuardTests.test_preflight_aborts_before_any_write) [zwei bearbeitbare iOS-Versionen] ... ERROR
+  test_preflight_aborts_before_any_write (scripts.test_asc_store_images.PlaceGuardTests.test_preflight_aborts_before_any_write) [keine en-US-Lokalisierung] ... ERROR
+  test_preflight_aborts_before_any_write (scripts.test_asc_store_images.PlaceGuardTests.test_preflight_aborts_before_any_write) [Plan-Bild fehlt in der Bibliothek] ... ERROR
+  test_preflight_aborts_before_any_write (scripts.test_asc_store_images.PlaceGuardTests.test_preflight_aborts_before_any_write) [Plan-Bild wartet noch auf den Upload] ... ERROR
+  test_preflight_aborts_before_any_write (scripts.test_asc_store_images.PlaceGuardTests.test_preflight_aborts_before_any_write) [Gruppe fehlt in den Referenzdaten] ... ERROR
+  test_preflight_aborts_before_any_write (scripts.test_asc_store_images.PlaceGuardTests.test_preflight_aborts_before_any_write) [mehr Bilder als maxCount] ... ERROR
+test_processing_waits_and_failure_is_an_error (scripts.test_asc_store_images.PlaceGuardTests.test_processing_waits_and_failure_is_an_error) ... ERROR
+test_verification_detects_wrong_order_or_count (scripts.test_asc_store_images.PlaceGuardTests.test_verification_detects_wrong_order_or_count) ... 
+  test_verification_detects_wrong_order_or_count (scripts.test_asc_store_images.PlaceGuardTests.test_verification_detects_wrong_order_or_count) [Ordnen wirkt nicht] ... ERROR
+  test_verification_detects_wrong_order_or_count (scripts.test_asc_store_images.PlaceGuardTests.test_verification_detects_wrong_order_or_count) [eine Platzierung fehlt nach dem Anlegen] ... ERROR
+  test_verification_detects_wrong_order_or_count (scripts.test_asc_store_images.PlaceGuardTests.test_verification_detects_wrong_order_or_count) [richtiger Stand] ... ERROR
+test_german_is_refused_without_any_call (scripts.test_asc_store_images.PlaceMainTests.test_german_is_refused_without_any_call) ... FAIL
+test_lesen_shows_en_placements_and_never_writes (scripts.test_asc_store_images.PlaceReadTests.test_lesen_shows_en_placements_and_never_writes) ... FAIL
+test_upload_ready_check_allows_placement (scripts.test_asc_store_images.PlaceReadTests.test_upload_ready_check_allows_placement) ... ERROR
+test_place_creates_all_in_manifest_order (scripts.test_asc_store_images.PlaceTests.test_place_creates_all_in_manifest_order) ... ERROR
+test_place_orders_only_on_difference (scripts.test_asc_store_images.PlaceTests.test_place_orders_only_on_difference) ... 
+  test_place_orders_only_on_difference (scripts.test_asc_store_images.PlaceTests.test_place_orders_only_on_difference) [Reihenfolge stimmt schon] ... ERROR
+  test_place_orders_only_on_difference (scripts.test_asc_store_images.PlaceTests.test_place_orders_only_on_difference) [Apple liefert die neuen Platzierungen umgekehrt] ... ERROR
+test_resume_after_partial_run_places_only_missing (scripts.test_asc_store_images.PlaceTests.test_resume_after_partial_run_places_only_missing) ... ERROR
+test_second_run_places_nothing (scripts.test_asc_store_images.PlaceTests.test_second_run_places_nothing) ... ERROR
+test_workflow_offers_platzieren_and_serializes (scripts.test_asc_store_images.PlaceWorkflowTests.test_workflow_offers_platzieren_and_serializes) ... FAIL
+test_plan_names_and_groups (scripts.test_asc_store_images.PlanTests.test_plan_names_and_groups) ... ok
+test_failed_processing_is_an_error (scripts.test_asc_store_images.StateTests.test_failed_processing_is_an_error) ... ok
+test_ready_check_requires_ready_and_allows_placement (scripts.test_asc_store_images.StateTests.test_ready_check_requires_ready_and_allows_placement) ... ERROR
+test_waiting_image_from_broken_run_fails_second_run (scripts.test_asc_store_images.StateTests.test_waiting_image_from_broken_run_fails_second_run) ... ok
+test_existing_names_of_other_language_are_untouched (scripts.test_asc_store_images.UploadTests.test_existing_names_of_other_language_are_untouched) ... ok
+test_second_run_creates_nothing (scripts.test_asc_store_images.UploadTests.test_second_run_creates_nothing) ... ok
+test_upload_creates_all_and_never_places (scripts.test_asc_store_images.UploadTests.test_upload_creates_all_and_never_places) ... ok
+test_workflow_runs_tests_first_and_hides_the_key (scripts.test_asc_store_images.WorkflowFileTests.test_workflow_runs_tests_first_and_hides_the_key) ... ok
+test_client_error_reports_api_code (scripts.test_asc_header_upload.ClientErrorTests.test_client_error_reports_api_code) ... FAIL
+test_lesen_prints_raw_specs_and_never_writes (scripts.test_asc_header_upload.LesenTests.test_lesen_prints_raw_specs_and_never_writes) ... ok
+test_match_by_dimension_range_and_placement (scripts.test_asc_header_upload.MatchTests.test_match_by_dimension_range_and_placement) ... ok
+test_partial_match_uploads_fitting_and_reports_rest (scripts.test_asc_header_upload.MatchTests.test_partial_match_uploads_fitting_and_reports_rest) ... ok
+test_refdata_read_as_single_record (scripts.test_asc_header_upload.MatchTests.test_refdata_read_as_single_record) ... ok
+test_stops_without_matching_spec (scripts.test_asc_header_upload.MatchTests.test_stops_without_matching_spec) ... ok
+test_state_check_reads_ready_state (scripts.test_asc_header_upload.StateTests.test_state_check_reads_ready_state) ... ok
+test_wait_reaches_ready_and_stops_on_failed (scripts.test_asc_header_upload.StateTests.test_wait_reaches_ready_and_stops_on_failed) ... ok
+test_never_places_or_submits (scripts.test_asc_header_upload.UploadTests.test_never_places_or_submits) ... ok
+test_skips_existing_reference_name (scripts.test_asc_header_upload.UploadTests.test_skips_existing_reference_name) ... ok
+test_uses_library_id_and_relationship (scripts.test_asc_header_upload.UploadTests.test_uses_library_id_and_relationship) ... ok
+
+======================================================================
+ERROR: test_duplicate_placement_of_same_image_aborts (scripts.test_asc_store_images.PlaceGuardTests.test_duplicate_placement_of_same_image_aborts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 594, in test_duplicate_placement_of_same_image_aborts
+    self.assert_aborts((EN_NAMES[1],), client=place_client(en=twice))
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 582, in assert_aborts
+    self.run_place(client, **kwargs)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 288, in run_place
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append, root=self.root)
+    ^^^^^^^^^^^^^
+AttributeError: module 'asc_store_images' has no attribute 'platzieren'
+
+======================================================================
+ERROR: test_foreign_placement_aborts_without_write (scripts.test_asc_store_images.PlaceGuardTests.test_foreign_placement_aborts_without_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 590, in test_foreign_placement_aborts_without_write
+    self.assert_aborts((IPAD, "fremd-von-hand"), client=place_client(library=ready_library() + [foreign], en=[slot]))
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 582, in assert_aborts
+    self.run_place(client, **kwargs)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 288, in run_place
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append, root=self.root)
+    ^^^^^^^^^^^^^
+AttributeError: module 'asc_store_images' has no attribute 'platzieren'
+
+======================================================================
+ERROR: test_never_deletes_submits_or_writes_german (scripts.test_asc_store_images.PlaceGuardTests.test_never_deletes_submits_or_writes_german)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 622, in test_never_deletes_submits_or_writes_german
+    self.run_place(client)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 288, in run_place
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append, root=self.root)
+    ^^^^^^^^^^^^^
+AttributeError: module 'asc_store_images' has no attribute 'platzieren'
+
+======================================================================
+ERROR: test_preflight_aborts_before_any_write (scripts.test_asc_store_images.PlaceGuardTests.test_preflight_aborts_before_any_write) [keine bearbeitbare iOS-Version]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 598, in test_preflight_aborts_before_any_write
+    self.assert_aborts(("IOS",), versions=[IOS_OLD, MAC_OLD])
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 582, in assert_aborts
+    self.run_place(client, **kwargs)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 288, in run_place
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append, root=self.root)
+    ^^^^^^^^^^^^^
+AttributeError: module 'asc_store_images' has no attribute 'platzieren'
+
+======================================================================
+ERROR: test_preflight_aborts_before_any_write (scripts.test_asc_store_images.PlaceGuardTests.test_preflight_aborts_before_any_write) [zwei bearbeitbare iOS-Versionen]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 601, in test_preflight_aborts_before_any_write
+    self.assert_aborts(("IOS",), versions=[IOS, twin, MAC_OLD])
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 582, in assert_aborts
+    self.run_place(client, **kwargs)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 288, in run_place
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append, root=self.root)
+    ^^^^^^^^^^^^^
+AttributeError: module 'asc_store_images' has no attribute 'platzieren'
+
+======================================================================
+ERROR: test_preflight_aborts_before_any_write (scripts.test_asc_store_images.PlaceGuardTests.test_preflight_aborts_before_any_write) [keine en-US-Lokalisierung]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 603, in test_preflight_aborts_before_any_write
+    self.assert_aborts(("en-US",), locales=("de-DE",))
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 582, in assert_aborts
+    self.run_place(client, **kwargs)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 288, in run_place
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append, root=self.root)
+    ^^^^^^^^^^^^^
+AttributeError: module 'asc_store_images' has no attribute 'platzieren'
+
+======================================================================
+ERROR: test_preflight_aborts_before_any_write (scripts.test_asc_store_images.PlaceGuardTests.test_preflight_aborts_before_any_write) [Plan-Bild fehlt in der Bibliothek]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 605, in test_preflight_aborts_before_any_write
+    self.assert_aborts((EN_NAMES[-1],), client=place_client(library=ready_library(EN_NAMES[:-1])))
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 582, in assert_aborts
+    self.run_place(client, **kwargs)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 288, in run_place
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append, root=self.root)
+    ^^^^^^^^^^^^^
+AttributeError: module 'asc_store_images' has no attribute 'platzieren'
+
+======================================================================
+ERROR: test_preflight_aborts_before_any_write (scripts.test_asc_store_images.PlaceGuardTests.test_preflight_aborts_before_any_write) [Plan-Bild wartet noch auf den Upload]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 609, in test_preflight_aborts_before_any_write
+    self.assert_aborts((EN_NAMES[6], "AWAITING_UPLOAD"), client=place_client(library=waiting))
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 582, in assert_aborts
+    self.run_place(client, **kwargs)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 288, in run_place
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append, root=self.root)
+    ^^^^^^^^^^^^^
+AttributeError: module 'asc_store_images' has no attribute 'platzieren'
+
+======================================================================
+ERROR: test_preflight_aborts_before_any_write (scripts.test_asc_store_images.PlaceGuardTests.test_preflight_aborts_before_any_write) [Gruppe fehlt in den Referenzdaten]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 613, in test_preflight_aborts_before_any_write
+    self.assert_aborts((WATCH,), client=client)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 582, in assert_aborts
+    self.run_place(client, **kwargs)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 288, in run_place
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append, root=self.root)
+    ^^^^^^^^^^^^^
+AttributeError: module 'asc_store_images' has no attribute 'platzieren'
+
+======================================================================
+ERROR: test_preflight_aborts_before_any_write (scripts.test_asc_store_images.PlaceGuardTests.test_preflight_aborts_before_any_write) [mehr Bilder als maxCount]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 617, in test_preflight_aborts_before_any_write
+    self.assert_aborts((IPHONE,), client=client)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 582, in assert_aborts
+    self.run_place(client, **kwargs)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 288, in run_place
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append, root=self.root)
+    ^^^^^^^^^^^^^
+AttributeError: module 'asc_store_images' has no attribute 'platzieren'
+
+======================================================================
+ERROR: test_processing_waits_and_failure_is_an_error (scripts.test_asc_store_images.PlaceGuardTests.test_processing_waits_and_failure_is_an_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 640, in test_processing_waits_and_failure_is_an_error
+    _, sleeps = self.run_place(client)
+                ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 288, in run_place
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append, root=self.root)
+    ^^^^^^^^^^^^^
+AttributeError: module 'asc_store_images' has no attribute 'platzieren'
+
+======================================================================
+ERROR: test_verification_detects_wrong_order_or_count (scripts.test_asc_store_images.PlaceGuardTests.test_verification_detects_wrong_order_or_count) [Ordnen wirkt nicht]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 653, in test_verification_detects_wrong_order_or_count
+    self.run_place(client)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 288, in run_place
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append, root=self.root)
+    ^^^^^^^^^^^^^
+AttributeError: module 'asc_store_images' has no attribute 'platzieren'
+
+======================================================================
+ERROR: test_verification_detects_wrong_order_or_count (scripts.test_asc_store_images.PlaceGuardTests.test_verification_detects_wrong_order_or_count) [eine Platzierung fehlt nach dem Anlegen]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 658, in test_verification_detects_wrong_order_or_count
+    self.run_place(client)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 288, in run_place
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append, root=self.root)
+    ^^^^^^^^^^^^^
+AttributeError: module 'asc_store_images' has no attribute 'platzieren'
+
+======================================================================
+ERROR: test_verification_detects_wrong_order_or_count (scripts.test_asc_store_images.PlaceGuardTests.test_verification_detects_wrong_order_or_count) [richtiger Stand]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 663, in test_verification_detects_wrong_order_or_count
+    out, _ = self.run_place(place_client())
+             ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 288, in run_place
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append, root=self.root)
+    ^^^^^^^^^^^^^
+AttributeError: module 'asc_store_images' has no attribute 'platzieren'
+
+======================================================================
+ERROR: test_upload_ready_check_allows_placement (scripts.test_asc_store_images.PlaceReadTests.test_upload_ready_check_allows_placement)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 680, in test_upload_ready_check_allows_placement
+    state, out = self.run_upload(client)
+                 ~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 275, in run_upload
+    state = si.upload(client, APP, "en", versions, self.localizations(locales), sleep=lambda seconds: None,
+                      root=self.root)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/asc_store_images.py", line 121, in upload
+    return check_state(client, library_id, [entry["reference"] for entry in entries])
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/asc_header_upload.py", line 117, in check_state
+    raise Fatal(f"Bild {name} hat {len(placements)} Platzierung(en); dieses Skript platziert nie")
+asc_wait_build.Fatal: Bild en-iphone-01-start hat 1 Platzierung(en); dieses Skript platziert nie
+
+======================================================================
+ERROR: test_place_creates_all_in_manifest_order (scripts.test_asc_store_images.PlaceTests.test_place_creates_all_in_manifest_order)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 524, in test_place_creates_all_in_manifest_order
+    self.run_place(client)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 288, in run_place
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append, root=self.root)
+    ^^^^^^^^^^^^^
+AttributeError: module 'asc_store_images' has no attribute 'platzieren'
+
+======================================================================
+ERROR: test_place_orders_only_on_difference (scripts.test_asc_store_images.PlaceTests.test_place_orders_only_on_difference) [Reihenfolge stimmt schon]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 541, in test_place_orders_only_on_difference
+    self.run_place(client)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 288, in run_place
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append, root=self.root)
+    ^^^^^^^^^^^^^
+AttributeError: module 'asc_store_images' has no attribute 'platzieren'
+
+======================================================================
+ERROR: test_place_orders_only_on_difference (scripts.test_asc_store_images.PlaceTests.test_place_orders_only_on_difference) [Apple liefert die neuen Platzierungen umgekehrt]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 545, in test_place_orders_only_on_difference
+    self.run_place(client)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 288, in run_place
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append, root=self.root)
+    ^^^^^^^^^^^^^
+AttributeError: module 'asc_store_images' has no attribute 'platzieren'
+
+======================================================================
+ERROR: test_resume_after_partial_run_places_only_missing (scripts.test_asc_store_images.PlaceTests.test_resume_after_partial_run_places_only_missing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 567, in test_resume_after_partial_run_places_only_missing
+    self.run_place(client)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 288, in run_place
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append, root=self.root)
+    ^^^^^^^^^^^^^
+AttributeError: module 'asc_store_images' has no attribute 'platzieren'
+
+======================================================================
+ERROR: test_second_run_places_nothing (scripts.test_asc_store_images.PlaceTests.test_second_run_places_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 557, in test_second_run_places_nothing
+    self.run_place(client)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 288, in run_place
+    si.platzieren(client, APP, "en", versions, self.localizations(locales), sleep=sleeps.append, root=self.root)
+    ^^^^^^^^^^^^^
+AttributeError: module 'asc_store_images' has no attribute 'platzieren'
+
+======================================================================
+ERROR: test_ready_check_requires_ready_and_allows_placement (scripts.test_asc_store_images.StateTests.test_ready_check_requires_ready_and_allows_placement)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 453, in test_ready_check_requires_ready_and_allows_placement
+    self.assertEqual(si.check_ready(FakeClient(images=images), LIBRARY, EN_NAMES), "bereit")
+                     ^^^^^^^^^^^^^^
+AttributeError: module 'asc_store_images' has no attribute 'check_ready'. Did you mean '.check_state' instead of '.check_ready'?
+
+======================================================================
+FAIL: test_german_is_refused_without_any_call (scripts.test_asc_store_images.PlaceMainTests.test_german_is_refused_without_any_call)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 698, in test_german_is_refused_without_any_call
+    self.assertEqual(code, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_lesen_shows_en_placements_and_never_writes (scripts.test_asc_store_images.PlaceReadTests.test_lesen_shows_en_placements_and_never_writes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 673, in test_lesen_shows_en_placements_and_never_writes
+    self.assertRegex(text, rf"(?m)^platzierung {IPHONE} {position} {name} zustand=ACTIVE$")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Regex didn't match: '(?m)^platzierung IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE 1 en-iphone-01-start zustand=ACTIVE$' not found in 'version IOS 1.0.1 id=V101 state=PREPARE_FOR_SUBMISSION\nlokalisierung en-US vorhanden\nkategorie APP_SCREENSHOT=APP_SCREENSHOTS_AND_PREVIEWS\ngruppe IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE vorhanden maxCount=10\ngruppe IPAD_13_PROFILE vorhanden maxCount=10\ngruppe WATCH_SERIES_10_PROFILE vorhanden maxCount=10\nbild name=en-iphone-01-start zustand=PREPARE_FOR_SUBMISSION platzierungen=1\nbild name=en-iphone-02-erfassen zustand=PREPARE_FOR_SUBMISSION platzierungen=1\nbild name=en-iphone-03-neu zustand=PREPARE_FOR_SUBMISSION platzierungen=1\nbild name=en-iphone-04-detail zustand=PREPARE_FOR_SUBMISSION platzierungen=1\nbild name=en-iphone-05-erledigt zustand=PREPARE_FOR_SUBMISSION platzierungen=1\nbild name=en-ipad-01-start zustand=PREPARE_FOR_SUBMISSION platzierungen=0\nbild name=en-ipad-02-erfassen zustand=PREPARE_FOR_SUBMISSION platzierungen=0\nbild name=en-ipad-03-neu zustand=PREPARE_FOR_SUBMISSION platzierungen=0\nbild name=en-ipad-04-detail zustand=PREPARE_FOR_SUBMISSION platzierungen=0\nbild name=en-ipad-05-erledigt zustand=PREPARE_FOR_SUBMISSION platzierungen=0\nbild name=en-watch-01-jetzt zustand=PREPARE_FOR_SUBMISSION platzierungen=0\nbild name=en-watch-02-gespeichert zustand=PREPARE_FOR_SUBMISSION platzierungen=0\nbild name=de-iphone_dynamic_island_medium_profile-0 zustand=PREPARE_FOR_SUBMISSION platzierungen=1\nbild name=de-iphone_dynamic_island_medium_profile-1 zustand=PREPARE_FOR_SUBMISSION platzierungen=1\nbild name=de-iphone_dynamic_island_medium_profile-2 zustand=PREPARE_FOR_SUBMISSION platzierungen=1\nbild name=de-iphone_dynamic_island_medium_profile-3 zustand=PREPARE_FOR_SUBMISSION platzierungen=1\nbild name=de-iphone_dynamic_island_medium_profile-4 zustand=PREPARE_FOR_SUBMISSION platzierungen=1\nbild name=de-ipad_13_profile-0 zustand=PREPARE_FOR_SUBMISSION platzierungen=1\nbild name=de-ipad_13_profile-1 zustand=PREPARE_FOR_SUBMISSION platzierungen=1\nbild name=de-ipad_13_profile-2 zustand=PREPARE_FOR_SUBMISSION platzierungen=1\nbild name=de-ipad_13_profile-3 zustand=PREPARE_FOR_SUBMISSION platzierungen=1\nbild name=de-ipad_13_profile-4 zustand=PREPARE_FOR_SUBMISSION platzierungen=1\nbild name=de-watch_series_10_profile-0 zustand=PREPARE_FOR_SUBMISSION platzierungen=1\nbild name=de-watch_series_10_profile-1 zustand=PREPARE_FOR_SUBMISSION platzierungen=1\nplan en-iphone-01-start vorhanden\nplan en-iphone-02-erfassen vorhanden\nplan en-iphone-03-neu vorhanden\nplan en-iphone-04-detail vorhanden\nplan en-iphone-05-erledigt vorhanden\nplan en-ipad-01-start vorhanden\nplan en-ipad-02-erfassen vorhanden\nplan en-ipad-03-neu vorhanden\nplan en-ipad-04-detail vorhanden\nplan en-ipad-05-erledigt vorhanden\nplan en-watch-01-jetzt vorhanden\nplan en-watch-02-gespeichert vorhanden\nkeine bearbeitbare Version MAC_OS (Zustände READY_FOR_SALE), nichts geschrieben\n::warning::keine bearbeitbare Mac-Version, Mac-Bilder nicht hochgeladen\n'
+
+======================================================================
+FAIL: test_workflow_offers_platzieren_and_serializes (scripts.test_asc_store_images.PlaceWorkflowTests.test_workflow_offers_platzieren_and_serializes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_images.py", line 711, in test_workflow_offers_platzieren_and_serializes
+    self.assertIn(option, options)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: '- platzieren' not found in 'aktion:\n        description: "lesen (nur Version, Gruppen und Bibliothek) oder hochladen (Bilder in die Bibliothek)"\n        required: true\n        default: lesen\n        type: choice\n        options:\n          - lesen\n          - hochladen\n      '
+
+======================================================================
+FAIL: test_client_error_reports_api_code (scripts.test_asc_header_upload.ClientErrorTests.test_client_error_reports_api_code)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_header_upload.py", line 264, in test_client_error_reports_api_code
+    self.assertIn("STATE_ERROR.INVALID_STATE", text)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'STATE_ERROR.INVALID_STATE' not found in 'ASC answered HTTP 409 for POST https://api.test/v1/appAssetLibraryPlacements'
+
+----------------------------------------------------------------------
+Ran 37 tests in 0.080s
+
+FAILED (failures=4, errors=21)
+EXIT=1

@@ -10,11 +10,15 @@ Aufruf: python3 -m unittest scripts/test_asc_header_upload.py
 import contextlib
 import copy
 import io
+import json
 import shutil
 import sys
 import tempfile
 import unittest
+import urllib.error
+import urllib.request
 from pathlib import Path
+from unittest import mock
 
 SCRIPTS = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPTS))
@@ -243,6 +247,23 @@ class LesenTests(NeedsModule):
                        "SEARCH_RESULT_ASSET", CATEGORY, "OTHER_ASSETS", "hell-21x9", "FAILED", "imageSpecs"):
             self.assertIn(needle, text, needle)
         self.assertRegex(text, r"platzierungen=2")
+
+
+class ClientErrorTests(unittest.TestCase):
+    def test_client_error_reports_api_code(self):
+        if hu is None:
+            self.fail("scripts/asc_header_upload.py fehlt")
+        body = json.dumps({"errors": [{"status": "409", "code": "STATE_ERROR.INVALID_STATE", "title": "x"}]}).encode()
+        url = "https://api.test/v1/appAssetLibraryPlacements?filter[x]=geheim-abfrage"
+        error = urllib.error.HTTPError(url, 409, "Conflict", {}, io.BytesIO(body))
+        with mock.patch.object(urllib.request, "urlopen", side_effect=error):
+            with self.assertRaises(Fatal) as caught:
+                hu.Client({}, APP).send("POST", url, b"{}", {"Authorization": "Bearer TOKEN-SECRET"})
+        text = str(caught.exception)
+        self.assertIn("409", text)
+        self.assertIn("STATE_ERROR.INVALID_STATE", text)
+        self.assertNotIn("TOKEN-SECRET", text)
+        self.assertNotIn("geheim-abfrage", text)
 
 
 if __name__ == "__main__":
