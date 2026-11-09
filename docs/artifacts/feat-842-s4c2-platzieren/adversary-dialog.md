@@ -15,7 +15,7 @@ Datum: 2026-11-09 08:07
 - [x] **AC-10:** Given en-US mit Platzierungen, When `lesen en` läuft, Then zeigt die Ausgabe je Gruppe Position, Bildname und Zustand in Anzeigereihenfolge (ohne Platzierungen `keine`), und die Aufrufliste besteht nur aus GET. Belegt durch `test_lesen_shows_en_placements_and_never_writes`.
 - [x] **AC-11:** Given die 12 Bilder sind bereit und platziert, When `hochladen en` erneut läuft, Then legt es nichts an und meldet keinen Fehler wegen der Platzierungen; ein fehlendes oder nicht bereites Bild bleibt ein Fehler, und `check_state` des Kopfbilds bleibt streng. Belegt durch `test_upload_ready_check_allows_placement` und die unveränderten Tests in `scripts/test_asc_header_upload.py`.
 - [x] **AC-12:** Given die Änderungen an Client und Workflow, When `Client.send` an einem HTTP-Fehler scheitert, Then nennt die Meldung `errors[].code` ohne Token und ohne URL-Abfrage; die Workflow-Datei bietet die Option `platzieren`, trägt `concurrency` ohne `cancel-in-progress` und führt die Python-Tests als ersten Schritt aus. Belegt durch `test_client_error_reports_api_code` und `test_workflow_offers_platzieren_and_serializes`.
-- [ ] **AC-13:** Given der Zweig ist im Remote und die Läufe aus Punkt 13 gehören zu dieser Fassung, When vom Zweig `lesen en`, `platzieren en`, `platzieren en` (zweites Mal), die Store-Probe und `hochladen en` laufen, Then besteht jeder Lauf; das erste `platzieren en` legt 12 Platzierungen an, das zweite nichts, die Store-Probe zeigt für en-US 5 iPhone, 5 iPad und 2 Watch in Manifest-Reihenfolge und für de-DE unverändert die bisherigen Platzierungen (5, 5, 2 plus Kopf- und Suchbild), und `hochladen en` meldet alle 12 „schon vorhanden, übersprungen“ ohne Fehler. Belegt durch die Run-IDs und die zitierten Protokollzeilen unter `docs/artifacts/feat-842-s4c2-platzieren/`; erst danach der Merge.
+- [x] **AC-13:** Given der Zweig ist im Remote und die Läufe aus Punkt 13 gehören zu dieser Fassung, When vom Zweig `lesen en`, `platzieren en`, `platzieren en` (zweites Mal), die Store-Probe und `hochladen en` laufen, Then besteht jeder Lauf; das erste `platzieren en` legt 12 Platzierungen an, das zweite nichts, die Store-Probe zeigt für en-US 5 iPhone, 5 iPad und 2 Watch in Manifest-Reihenfolge und für de-DE unverändert die bisherigen Platzierungen (5, 5, 2 plus Kopf- und Suchbild), und `hochladen en` meldet alle 12 „schon vorhanden, übersprungen“ ohne Fehler. Belegt durch die Run-IDs und die zitierten Protokollzeilen unter `docs/artifacts/feat-842-s4c2-platzieren/`; erst danach der Merge.
 - [x] **AC-14:** Given die Änderung berührt nur `scripts/` und `.github/workflows/`, When der Schnitt abgenommen wird, Then endet die Abnahme nach Stufe 2 mit dem Satz „Kein Pfad der Geräteliste berührt.“; der „Benutzen“-Beleg sind die echten Handläufe aus AC-13 gegen Apple. Auf Hennings Geräten läuft nichts. `python3 -m unittest scripts/test_asc_store_images.py` und die übrigen Skript-Tests (`scripts/test_asc_header_upload.py`, `scripts/test_asc_version_texts.py`, `scripts/test_asc_store_probe.py`) sind grün. Belegt durch Dateiliste des Diffs gegen die Geräteliste und die Testläufe.
 
 ## Dialog
@@ -33,6 +33,18 @@ Weitere Randfaelle: order_groups sortiert found (Namen oder None) und wirft Type
 Gegenprobe gegen Fruehuebereinstimmung: jeden AC an Test und Codepfad festgemacht (siehe Bestaetigungen). AC-1 test_place_creates_all_in_manifest_order zu create_missing. AC-2 test_place_orders_only_on_difference zu order_groups. AC-3 test_second_run_places_nothing und test_resume_after_partial_run_places_only_missing zu placed-Abgleich. AC-4 Foreign/Duplicate-Tests zu check_existing. AC-5 test_preflight_aborts_before_any_write (sieben Faelle) zu preflight/ready_images. AC-6 test_german_is_refused_without_any_call zu main. AC-7 test_never_deletes_submits_or_writes_german. AC-8 test_processing_waits_and_failure_is_an_error zu wait_placements (POLLS begrenzt). AC-9 test_verification_detects_wrong_order_or_count zu verify. AC-10 test_lesen_shows_en_placements_and_never_writes. AC-11 test_upload_ready_check_allows_placement. AC-12 test_client_error_reports_api_code und test_workflow_offers_platzieren_and_serializes.
 Lueckenpruefung: Ein Plan-Bild, von Hand in einer anderen, nicht gelesenen Gruppe von en-US platziert, wird nicht erkannt (nur die drei Plan-Gruppen werden gelesen); folgenlos. Der Abruf der Bibliothek ohne id wirft KeyError statt Fatal (wie in lesen/upload).
 AC-13 ist vor dem Commit nicht belegbar und bleibt offen. Antwortformen von POST Placements, Ordnungsauftrag, filter[placementGroup] und das Attribut state einer Platzierung sind nur aus der Doku erschlossen; nur die echten Laeufe beweisen sie.
+**Implementierer:** (nicht beteiligt, Kontextisolation)
+
+### Runde 3
+**Adversary:**
+AC-13 nachgeprueft an den sechs Protokollen unter docs/artifacts/feat-842-s4c2-platzieren/ per grep. Alle sechs Checkout-Zeilen holen 6de7ffd753b3b27bcf7a42e640cf5b0bd31f796d; der Arbeitsbaum steht auf 6de7ffd, `git diff 6de7ffd -- scripts .github` ist leer, die gestempelten Dateien sind also der gelaufene Stand. In keinem Protokoll steht ::error.
+(a) lesen en (run-42578396652): Script tests Ran 26 tests; drei Zeilen "platzierung <gruppe> keine".
+(b) platzieren en (run-42578487958): 12 Zeilen "angelegt"; gegenprobe 5/5/2 "in Manifest-Reihenfolge"; "de-DE 5/5/2 unverändert"; keine Zeile "geordnet" (kein Ordnungsauftrag noetig).
+(c) platzieren zum zweiten Mal (run-42578601898): 12 mal "schon platziert", 0 mal "angelegt", gegenprobe gruen, de-DE 5/5/2 unveraendert.
+(d) Store-Probe (run-42578684646): en-US 1.0.1 hat 12 Platzierungen ACTIVE (IPHONE 5, IPAD 5, WATCH 2) plus Bildsaetze APP_IPHONE_61 5, APP_WATCH_SERIES_10 2, APP_IPAD_PRO_3GEN_129 5; de-DE 1.0.1 weiter 5 iPhone, 5 iPad, 2 Watch ACTIVE plus PRODUCT_PAGE_HEADER_ASSET und APP_STORE_SEARCH_RESULTS_ASSET, Bildsaetze 5/5/2; de-DE 1.0 (iOS und Mac) unberuehrt.
+(e) hochladen en (run-42578688175): 12 mal "schon vorhanden, übersprungen", keine Zeile "hochgeladen" ausser der Mac-Warnung, "zustand bereit".
+Zusatz lesen2 (run-42578765781): Namen in Anzeigereihenfolge iPhone 01-start bis 05-erledigt, iPad 01 bis 05, Watch 01-jetzt, 02-gespeichert, alle ACTIVE; belegt die Manifest-Reihenfolge nach Namen.
+Damit sind die in Runde 2 offenen Antwortformen (POST Placements, filter[placementGroup], Attribut state, Zuordnung ueber Bildplatzierungen) am echten Konto bestaetigt. F003 neu bewertet: Der Ordnungspfad lief am echten Konto nicht (Apple legte schon in Manifest-Reihenfolge an), ist also nur durch die Attrappe belegt; Apples Artikel empfiehlt das sofortige Zuruecklesen mit sort=placementGroupPosition, wie verify es tut. F003 bleibt LOW. Ergebnis: AC-13 bewiesen, kein neuer Befund.
 **Implementierer:** (nicht beteiligt, Kontextisolation)
 
 ## Findings
@@ -163,7 +175,11 @@ Confirmation:
   Evidence: test_client_error_reports_api_code prueft Code vorhanden, Token und Query abwesend; gruen.
   Status: CONFIRMED
 
-Offen: AC-13 (echte Laeufe vom gepushten Zweig) ist vor dem Commit nicht belegbar und bleibt unabgehakt.
+Confirmation:
+  AC: AC-13
+  Code reference: scripts/asc_store_images.py:283
+  Evidence: Sechs Laeufe vom Zweig auf Commit 6de7ffd (gleich dem geprueften Stand), alle gruen ohne ::error: erste platzieren 12 angelegt, zweite 0 angelegt und 12 schon platziert, Probe en-US 5/5/2 ACTIVE, de-DE unveraendert 5/5/2 plus Kopf- und Suchbild, hochladen 12 schon vorhanden, lesen2 zeigt Manifest-Reihenfolge nach Namen.
+  Status: CONFIRMED
 
 ## Herkunft der Vorbedingungen
 
@@ -172,32 +188,14 @@ kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 ## Verdict
 
 ═══════════════════════════════════════
-VERDICT: AMBIGUOUS
+VERDICT: VERIFIED
 ═══════════════════════════════════════
-Ambiguous findings (require human review):
-  AC-13: echte Laeufe gegen Apple vom gepushten Zweig stehen aus (der Commit braucht ein Verdict, der Lauf braucht den Commit); Antwortformen der Platzierungs-Endpunkte nur aus der Doku erschlossen.
-
+Die Implementierung hat dem Adversary-Test standgehalten; AC-13 durch echte Laeufe vom Zweig (Commit 6de7ffd) belegt.
 Findings: F001-F004 (alle LOW), kein CRITICAL/HIGH/MEDIUM.
-Proven points: 13/14 (AC-1 bis AC-12 und AC-14 bewiesen, AC-13 offen)
+Proven points: 14/14
 Tests: 76 passed, 0 failed, 0 uebersprungen
-Recommendation: Nach dem Commit die Laeufe aus Spec Punkt 13 vom Zweig fahren und AC-13 belegen.
-
-## Geprüfte Dateien
-
-- sha256:ec529a331b5edee3153e238834bec91063956225bf57ffe89545dd2abea570f6  .github/workflows/asc-store-images.yml
-- sha256:82a2e1031fa18c3e149fb4c373525181202c1c060548b0280dfab5cca29e15aa  scripts/asc_header_upload.py
-- sha256:6b73636f986a626f5e7e217e2af66d81989f0ac3548821c329a3f8f68a88c98b  scripts/asc_store_images.py
-- sha256:9099f5ae4950d3d0b3f6b88d10f56a3f6813c62880c6bef776ef4635b63515fa  scripts/test_asc_header_upload.py
-- sha256:3f42f6f325592ce77c13cc709d9251bb470151b803b53b7724310b3f385e2649  scripts/test_asc_store_images.py
-
-## Prüfbasis
-
-- base: f034db319b4d8575977fe5099df3632ce038215a
-- blob:e108a4e1cfc11f122a469c38e8e544a8a72ce9bf  .github/workflows/asc-store-images.yml
-- blob:c9b2b27c5815f23ad3da08fc4859a6efbc33657d  scripts/asc_header_upload.py
-- blob:b9f991dab3de1af5843c3bf9301726a2720abf16  scripts/asc_store_images.py
-- blob:484a96c1340e3deb9b4f8973bf771b06c417a2f6  scripts/test_asc_header_upload.py
-- blob:8b1dffc844b2b756f7e2909a1c44b7589df17d37  scripts/test_asc_store_images.py
+Edge cases: All checked, none broken
+Regressions: None found
 
 ## Geprüfte Dateien
 
