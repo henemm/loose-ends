@@ -1,0 +1,291 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/AccountSectionTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.SwiftFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.SwiftConstValuesFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.LinkFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests-OutputFileMap.json
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftConstValuesFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.LinkFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-OutputFileMap.json
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mCompiling[0m FieldsSmokeTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m GuardrailReport.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m IPadSidebarTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m InboxDrawerSmokeTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsUITests/IPadSidebarTests.swift:13:27: [33mmain actor-isolated property 'orientation' can not be mutated from a nonisolated context[0m
+11 | 
+[32m12 |     override func tearDown() {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsUITests/IPadSidebarTests.swift:13:20: [33mmain actor-isolated class property 'shared' can not be mutated from a nonisolated context[0m
+11 | 
+[32m12 |     override func tearDown() {[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsUITests/SpeechListeningTests.swift:19:47: [33mcall to main actor-isolated instance method 'screenshot()' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+16 |     }
+[32m17 | [0m
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SettingsSmokeTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SpeechDiagnosisLineTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SpeechListeningIndicatorTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SpeechListeningTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsUITests/AccountSettingsTests.swift:36:66: [33mmain actor-isolated property 'firstMatch' can not be referenced from a nonisolated context[0m
+ 33 |     }
+[32m 34 | [0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsUITests/AccountSettingsTests.swift:36:41: [33mcall to main actor-isolated instance method 'matching(identifier:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+ 33 |     }
+[32m 34 | [0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsUITests/AccountSettingsTests.swift:36:13: [33mcall to main actor-isolated instance method 'descendants(matching:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+ 33 |     }
+[32m 34 | [0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsUITests/AccountSettingsTests.swift:41:18: [33mmain actor-isolated property 'label' can not be referenced from a nonisolated context[0m
+ 38 | 
+[32m 39 |     /// Label and value of a combined row, so a check does not depend on how the system splits them.[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsUITests/AccountSettingsTests.swift:41:33: [33mmain actor-isolated property 'value' can not be referenced from a nonisolated context[0m
+ 38 | 
+[32m 39 |     /// Label and value of a combined row, so a check does not depend on how the system splits them.[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsUITests/CalendarTargetTests.swift:263:87: [33mmain actor-isolated property 'firstMatch' can not be referenced from a nonisolated context[0m
+260 |     /// 3 s search for the prompt stays as a fallback only: under iOS 27 the interruption handler does not see
+[32m261 |     /// SpringBoard alerts reliably (https://developer.apple.com/forums/thread/737880).[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsUITests/CalendarTargetTests.swift:263:80: [33mmain actor-isolated property 'alerts' can not be referenced from a nonisolated context[0m
+260 |     /// 3 s search for the prompt stays as a fallback only: under iOS 27 the interruption handler does not see
+[32m261 |     /// SpringBoard alerts reliably (https://developer.apple.com/forums/thread/737880).[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsUITests/CalendarTargetTests.swift:263:21: [33mcall to main actor-isolated initializer 'init(bundleIdentifier:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+260 |     /// 3 s search for the prompt stays as a fallback only: under iOS 27 the interruption handler does not see
+[32m261 |     /// SpringBoard alerts reliably (https://developer.apple.com/forums/thread/737880).[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsUITests/CalendarTargetTests.swift:264:21: [33mcall to main actor-isolated instance method 'waitForExistence(timeout:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+260 |     /// 3 s search for the prompt stays as a fallback only: under iOS 27 the interruption handler does not see
+[32m261 |     /// SpringBoard alerts reliably (https://developer.apple.com/forums/thread/737880).[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsUITests/CalendarTargetTests.swift:265:98: [33mmain actor-isolated property 'exists' can not be referenced from a nonisolated context[0m
+260 |     /// 3 s search for the prompt stays as a fallback only: under iOS 27 the interruption handler does not see
+[32m261 |     /// SpringBoard alerts reliably (https://developer.apple.com/forums/thread/737880).[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsUITests/CalendarTargetTests.swift:265:90: [33mmain actor-isolated subscript 'subscript(_:)' can not be referenced from a nonisolated context[0m
+260 |     /// 3 s search for the prompt stays as a fallback only: under iOS 27 the interruption handler does not see
+[32m261 |     /// SpringBoard alerts reliably (https://developer.apple.com/forums/thread/737880).[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsUITests/CalendarTargetTests.swift:265:83: [33mmain actor-isolated property 'buttons' can not be referenced from a nonisolated context[0m
+260 |     /// 3 s search for the prompt stays as a fallback only: under iOS 27 the interruption handler does not see
+[32m261 |     /// SpringBoard alerts reliably (https://developer.apple.com/forums/thread/737880).[0m
+[[36mLooseEndsUITests[0m] [1mCompiling[0m AccountSettingsTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m CalendarTargetTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m CaptureCancelCrashTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m CaptureSmokeTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m ContextUniquenessTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsUITests/CalendarTargetTests.swift:266:34: [33mcall to main actor-isolated instance method 'tap()' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+260 |     /// 3 s search for the prompt stays as a fallback only: under iOS 27 the interruption handler does not see
+[32m261 |     /// SpringBoard alerts reliably (https://developer.apple.com/forums/thread/737880).[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsUITests/CalendarTargetTests.swift:266:26: [33mmain actor-isolated subscript 'subscript(_:)' can not be referenced from a nonisolated context[0m
+260 |     /// 3 s search for the prompt stays as a fallback only: under iOS 27 the interruption handler does not see
+[32m261 |     /// SpringBoard alerts reliably (https://developer.apple.com/forums/thread/737880).[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsUITests/CalendarTargetTests.swift:266:19: [33mmain actor-isolated property 'buttons' can not be referenced from a nonisolated context[0m
+260 |     /// 3 s search for the prompt stays as a fallback only: under iOS 27 the interruption handler does not see
+[32m261 |     /// SpringBoard alerts reliably (https://developer.apple.com/forums/thread/737880).[0m
+[[36mLooseEndsUITests[0m] [1mCompiling[0m PlaceSmokeTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m ProjectSubtasksTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RawSentenceColumn.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RawTextExport.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsUITests/StartScreenInteractionTests.swift:444:16: [33mmain actor-isolated property 'label' can not be referenced from a nonisolated context[0m
+441 | 
+[32m442 |     /// The row count as the badge shows it, read from the combined row ("All open, 2").[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsUITests/StartScreenInteractionTests.swift:444:29: [33mmain actor-isolated property 'value' can not be referenced from a nonisolated context[0m
+441 | 
+[32m442 |     /// The row count as the badge shows it, read from the combined row ("All open, 2").[0m
+[[36mLooseEndsUITests[0m] [1mCompiling[0m StartNumberTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m StartScreenInteractionTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m StoreScreenshotsTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m TextFormColumn.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m MacGalleryTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m MacKeyboardTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m MacStoreScreenshotsTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m MacUITestSupport.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m ConventionCorpus.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m Corpus.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m DesignGalleryTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m DriveSmokeTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m DueNotificationTapTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RawTextWords.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RecognitionWalkthroughTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m RuleBaseline.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m SelfConsistency.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m MeasurementRun.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m OnboardingTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m PaperGroundTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m PlaceNotificationTapTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m LaunchArgumentTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m LaunchLanguage.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m LeaveOneOut.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m MacDetailClickTests.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:24:105: [31mcannot find type 'AccountSection' in scope[0m
+ 22 |     static let fallback = URL(string: "https://loose-ends.henemm.com")!
+[36m 23 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:24:105: [31mcannot find type 'AccountSection' in scope[0m
+ 22 |     static let fallback = URL(string: "https://loose-ends.henemm.com")!
+[36m 23 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:24:81: [31mcannot find type 'AccountSection' in scope[0m
+ 22 |     static let fallback = URL(string: "https://loose-ends.henemm.com")!
+[36m 23 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:25:9: [31mcannot find 'AccountSection' in scope[0m
+ 23 | 
+[36m 24 |     private func layout(_ button: Bool, _ progress: Bool, _ rows: Bool, _ hint: AccountSection.Hint) -> AccountSection.Layout {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:30:66: [31mcannot find type 'AccountSection' in scope[0m
+ 28 |     @Test("account: layout je status")
+[36m 29 |     func layoutPerStatus() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:31:15: [31mcannot infer contextual base in reference to member 'signedOut'[0m
+ 29 |     func layoutPerStatus() {
+[36m 30 |         let table: [(AccountState.Status, AccountState.Problem?, AccountSection.Layout)] = [[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:31:26: [31m'nil' requires a contextual type[0m
+ 29 |     func layoutPerStatus() {
+[36m 30 |         let table: [(AccountState.Status, AccountState.Problem?, AccountSection.Layout)] = [[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:32:15: [31mcannot infer contextual base in reference to member 'signingIn'[0m
+ 30 |         let table: [(AccountState.Status, AccountState.Problem?, AccountSection.Layout)] = [
+[36m 31 |             (.signedOut, nil, layout(true, false, false, .intro)),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:32:26: [31m'nil' requires a contextual type[0m
+ 30 |         let table: [(AccountState.Status, AccountState.Problem?, AccountSection.Layout)] = [
+[36m 31 |             (.signedOut, nil, layout(true, false, false, .intro)),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:33:15: [31mcannot infer contextual base in reference to member 'signedIn'[0m
+ 31 |             (.signedOut, nil, layout(true, false, false, .intro)),
+[36m 32 |             (.signingIn, nil, layout(false, true, false, .intro)),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:33:25: [31m'nil' requires a contextual type[0m
+ 31 |             (.signedOut, nil, layout(true, false, false, .intro)),
+[36m 32 |             (.signingIn, nil, layout(false, true, false, .intro)),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:34:15: [31mcannot infer contextual base in reference to member 'signedIn'[0m
+ 32 |             (.signingIn, nil, layout(false, true, false, .intro)),
+[36m 33 |             (.signedIn, nil, layout(false, false, true, .signedIn)),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:34:26: [31mcannot infer contextual base in reference to member 'retryLater'[0m
+ 32 |             (.signingIn, nil, layout(false, true, false, .intro)),
+[36m 33 |             (.signedIn, nil, layout(false, false, true, .signedIn)),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:35:15: [31mcannot infer contextual base in reference to member 'deleting'[0m
+ 33 |             (.signedIn, nil, layout(false, false, true, .signedIn)),
+[36m 34 |             (.signedIn, .retryLater, layout(false, false, true, .retryLater)),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:35:25: [31m'nil' requires a contextual type[0m
+ 33 |             (.signedIn, nil, layout(false, false, true, .signedIn)),
+[36m 34 |             (.signedIn, .retryLater, layout(false, false, true, .retryLater)),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:36:15: [31mcannot infer contextual base in reference to member 'notAllowed'[0m
+ 34 |             (.signedIn, .retryLater, layout(false, false, true, .retryLater)),
+[36m 35 |             (.deleting, nil, layout(false, true, false, .signedIn)),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:36:27: [31m'nil' requires a contextual type[0m
+ 34 |             (.signedIn, .retryLater, layout(false, false, true, .retryLater)),
+[36m 35 |             (.deleting, nil, layout(false, true, false, .signedIn)),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:37:15: [31mcannot infer contextual base in reference to member 'retryLater'[0m
+ 35 |             (.deleting, nil, layout(false, true, false, .signedIn)),
+[36m 36 |             (.notAllowed, nil, layout(true, false, false, .notAllowed)),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:37:27: [31m'nil' requires a contextual type[0m
+ 35 |             (.deleting, nil, layout(false, true, false, .signedIn)),
+[36m 36 |             (.notAllowed, nil, layout(true, false, false, .notAllowed)),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:40:21: [31mcannot find 'AccountSection' in scope[0m
+ 38 |         ]
+[36m 39 |         for (status, problem, expected) in table {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:44:24: [31mcannot find 'AccountSection' in scope[0m
+ 42 |         // While a request runs nothing can be tapped a second time.
+[36m 43 |         for status in [AccountState.Status.signingIn, .deleting] {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:51:18: [31mcannot find 'AccountWiring' in scope[0m
+ 49 |     @Test("account: wiring schalter und adresse")
+[36m 50 |     func wiringSwitchAndAddress() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:52:18: [31mcannot find 'AccountWiring' in scope[0m
+ 50 |     func wiringSwitchAndAddress() {
+[36m 51 |         #expect(!AccountWiring.isEnabled(info: nil, arguments: []))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:53:18: [31mcannot find 'AccountWiring' in scope[0m
+ 51 |         #expect(!AccountWiring.isEnabled(info: nil, arguments: []))
+[36m 52 |         #expect(!AccountWiring.isEnabled(info: [:], arguments: []))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:54:18: [31mcannot find 'AccountWiring' in scope[0m
+ 52 |         #expect(!AccountWiring.isEnabled(info: [:], arguments: []))
+[36m 53 |         #expect(!AccountWiring.isEnabled(info: ["LEAccountEnabled": false], arguments: []))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:55:18: [31mcannot find 'AccountWiring' in scope[0m
+ 53 |         #expect(!AccountWiring.isEnabled(info: ["LEAccountEnabled": false], arguments: []))
+[36m 54 |         #expect(!AccountWiring.isEnabled(info: ["LEAccountEnabled": NSNumber(value: false)], arguments: []))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:56:17: [31mcannot find 'AccountWiring' in scope[0m
+ 54 |         #expect(!AccountWiring.isEnabled(info: ["LEAccountEnabled": NSNumber(value: false)], arguments: []))
+[36m 55 |         #expect(!AccountWiring.isEnabled(info: ["LEAccountEnabled": "YES"], arguments: []))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:57:17: [31mcannot find 'AccountWiring' in scope[0m
+ 55 |         #expect(!AccountWiring.isEnabled(info: ["LEAccountEnabled": "YES"], arguments: []))
+[36m 56 |         #expect(AccountWiring.isEnabled(info: ["LEAccountEnabled": true], arguments: []))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:58:17: [31mcannot find 'AccountWiring' in scope[0m
+ 56 |         #expect(AccountWiring.isEnabled(info: ["LEAccountEnabled": true], arguments: []))
+[36m 57 |         #expect(AccountWiring.isEnabled(info: ["LEAccountEnabled": NSNumber(value: true)], arguments: []))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:59:17: [31mcannot find 'AccountWiring' in scope[0m
+ 57 |         #expect(AccountWiring.isEnabled(info: ["LEAccountEnabled": NSNumber(value: true)], arguments: []))
+[36m 58 |         #expect(AccountWiring.isEnabled(info: nil, arguments: ["--ui-testing"]))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:61:17: [31mcannot find 'AccountWiring' in scope[0m
+ 59 |         #expect(AccountWiring.isEnabled(info: ["LEAccountEnabled": false], arguments: ["--ui-testing"]))
+[36m 60 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:62:17: [31mcannot find 'AccountWiring' in scope[0m
+ 60 | 
+[36m 61 |         #expect(AccountWiring.forApp(info: nil, arguments: []) == nil)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:63:17: [31mcannot find 'AccountWiring' in scope[0m
+ 61 |         #expect(AccountWiring.forApp(info: nil, arguments: []) == nil)
+[36m 62 |         #expect(AccountWiring.forApp(info: ["LEAccountEnabled": false], arguments: []) == nil)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:65:17: [31mcannot find 'AccountWiring' in scope[0m
+ 63 |         #expect(AccountWiring.forApp(info: ["LEAccountEnabled": "YES"], arguments: []) == nil)
+[36m 64 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:66:17: [31mcannot find 'AccountWiring' in scope[0m
+ 64 | 
+[36m 65 |         #expect(AccountWiring.serviceURL(info: nil) == Self.fallback)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:67:17: [31mcannot find 'AccountWiring' in scope[0m
+ 65 |         #expect(AccountWiring.serviceURL(info: nil) == Self.fallback)
+[36m 66 |         #expect(AccountWiring.serviceURL(info: ["LEServiceURL": ""]) == Self.fallback)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:68:17: [31mcannot find 'AccountWiring' in scope[0m
+ 66 |         #expect(AccountWiring.serviceURL(info: ["LEServiceURL": ""]) == Self.fallback)
+[36m 67 |         #expect(AccountWiring.serviceURL(info: ["LEServiceURL": "kein url"]) == Self.fallback)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:69:17: [31mcannot find 'AccountWiring' in scope[0m
+ 67 |         #expect(AccountWiring.serviceURL(info: ["LEServiceURL": "kein url"]) == Self.fallback)
+[36m 68 |         #expect(AccountWiring.serviceURL(info: ["LEServiceURL": 42]) == Self.fallback)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:74:31: [31mcannot find 'AccountWiring' in scope[0m
+ 72 |     @Test("account: init sendet nichts")
+[36m 73 |     func initSendsNothing() async throws {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:75:31: [31mcannot infer contextual base in reference to member 'signedOut'[0m
+ 73 |     func initSendsNothing() async throws {
+[36m 74 |         let ui = try #require(AccountWiring.forApp(info: nil, arguments: ["--ui-testing"]))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:80:17: [31mcannot find 'AccountSection' in scope[0m
+ 78 |         let state = AccountState(client: ServiceClient(baseURL: Self.base, transport: wire), store: InMemorySessionStore())
+[36m 79 |         for status in [AccountState.Status.signedOut, .signingIn, .signedIn, .deleting, .notAllowed, .retryLater] {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:81:17: [31mcannot find 'AccountSection' in scope[0m
+ 79 |         for status in [AccountState.Status.signedOut, .signingIn, .signedIn, .deleting, .notAllowed, .retryLater] {
+[36m 80 |             _ = AccountSection.layout(status: status, problem: nil)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:83:13: [31mcannot find 'AccountSection' in scope[0m
+ 81 |             _ = AccountSection.layout(status: status, problem: .retryLater)
+[36m 82 |         }[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:74:18: [33mno calls to throwing functions occur within 'try' expression [#UnnecessaryEffectMarker][0m
+ 72 |     @Test("account: init sendet nichts")
+[32m 73 |     func initSendsNothing() async throws {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:95:17: [31mcannot find 'UITestTransport' in scope[0m
+ 93 |     @Test("account: ersatz-transport ausgaenge")
+[36m 94 |     func standInOutcomes() async throws {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:96:17: [31mcannot find 'UITestTransport' in scope[0m
+ 94 |     func standInOutcomes() async throws {
+[36m 95 |         #expect(UITestTransport.Outcome(arguments: ["--ui-testing"]) == .allowed)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:97:17: [31mcannot find 'UITestTransport' in scope[0m
+ 95 |         #expect(UITestTransport.Outcome(arguments: ["--ui-testing"]) == .allowed)
+[36m 96 |         #expect(UITestTransport.Outcome(arguments: ["--ui-testing", "--ui-testing-account-not-allowed"]) == .notAllowed)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:99:68: [31mcannot find 'UITestTransport' in scope[0m
+ 97 |         #expect(UITestTransport.Outcome(arguments: ["--ui-testing", "--ui-testing-account-retry-later"]) == .retryLater)
+[36m 98 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:104:68: [31mcannot find 'UITestTransport' in scope[0m
+102 |         try await allowed.deleteAccount(sessionToken: "UITEST-SESSION")
+[36m103 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:108:65: [31mcannot find 'UITestTransport' in scope[0m
+106 |             try await refused.signIn(identityToken: "UITEST-IDENTITY", nonce: "n", code: "UITEST-CODE")
+[36m107 |         }[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:105:9: [33mno 'async' operations occur within 'await' expression [#UnnecessaryEffectMarker][0m
+103 | 
+[32m104 |         let refused = ServiceClient(baseURL: Self.base, transport: UITestTransport(outcome: .notAllowed))[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/AccountSectionTests.swift:109:9: [33mno 'async' operations occur within 'await' expression [#UnnecessaryEffectMarker][0m
+107 |         }
+[32m108 |         let away = ServiceClient(baseURL: Self.base, transport: UITestTransport(outcome: .retryLater))[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m AccountSectionTests.swift
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsUITests.swiftmodule
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEndsUITests.swiftdoc
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsUITests.abi.json
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
+[36;1mnote: [0mRemoved stale file '/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-steady-crafting-shamir/Build/Intermediates.noindex/LooseEnds.build/Debug-iphonesimulator/LooseEndsUITests.build/Objects-normal/arm64/ZZScratchSettingsShotsTests.o'
+[36;1mnote: [0mRemoved stale file '/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-steady-crafting-shamir/Build/Intermediates.noindex/LooseEnds.build/Debug-iphonesimulator/LooseEndsUITests.build/Objects-normal/arm64/ZZScratchSettingsShotsTests.stringsdata'
+[36;1mnote: [0mRemoved stale file '/Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-steady-crafting-shamir/Build/Intermediates.noindex/LooseEnds.build/Debug-iphonesimulator/LooseEndsUITests.build/Objects-normal/arm64/ZZScratchSettingsShotsTests.swiftconstvalues'
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-steady-crafting-shamir/Logs/Test/Test-LooseEnds-2026.11.09_14-57-31-+0100.xcresult
