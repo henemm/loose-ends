@@ -1,0 +1,330 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+      "deviceName" : "iPhone 17",
+      "modelName" : "iPhone 17",
+      "osBuildNumber" : "24B8117",
+      "osVersion" : "27.2",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "duration" : "0,00016s",
+                  "durationInSeconds" : 0.0001571178436279297,
+                  "name" : "account: start mit token",
+                  "nodeIdentifier" : "AccountStateTests/startWithToken()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/startWithToken()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0,0041s",
+                  "durationInSeconds" : 0.004087924957275391,
+                  "name" : "account: start ohne token und bei lesefehler",
+                  "nodeIdentifier" : "AccountStateTests/startWithoutToken()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/startWithoutToken()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0,021s",
+                  "durationInSeconds" : 0.021119117736816406,
+                  "name" : "account: beginsignin nur aus erlaubten zustaenden",
+                  "nodeIdentifier" : "AccountStateTests/beginSignInStates()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/beginSignInStates()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0,00024s",
+                  "durationInSeconds" : 0.0002410411834716797,
+                  "name" : "account: body traegt rohe nonce zum hash",
+                  "nodeIdentifier" : "AccountStateTests/bodyCarriesRawNonce()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/bodyCarriesRawNonce()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0,00036s",
+                  "durationInSeconds" : 0.00035691261291503906,
+                  "name" : "account: completesignin ohne nonce und nonce einmalig",
+                  "nodeIdentifier" : "AccountStateTests/completeNeedsNonce()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/completeNeedsNonce()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0,0001s",
+                  "durationInSeconds" : 0.00010013580322265625,
+                  "name" : "account: anmelden speichert und ist angemeldet",
+                  "nodeIdentifier" : "AccountStateTests/signInStores()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/signInStores()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0,00019s",
+                  "durationInSeconds" : 0.0001850128173828125,
+                  "name" : "account: speicherfehler ergibt abgemeldet",
+                  "nodeIdentifier" : "AccountStateTests/saveFailure()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/saveFailure()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "duration" : "0,00014s",
+                      "durationInSeconds" : 0.00013685226440429688,
+                      "name" : ".cancel, .signedOut",
+                      "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/signInFailures(reply:expected:)?args=d2e8f25be1d64a9ce98ffd93e15855165b47ef9581b597096b19274fd74ed974",
+                      "nodeType" : "Arguments",
+                      "result" : "Passed"
+                    },
+                    {
+                      "duration" : "0,004s",
+                      "durationInSeconds" : 0.00397491455078125,
+                      "name" : ".offline, .retryLater",
+                      "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/signInFailures(reply:expected:)?args=c6d388be7060c57dd0336fb036bb25b9fab655515701c2bb20ef1fa02e1d7775",
+                      "nodeType" : "Arguments",
+                      "result" : "Passed"
+                    },
+                    {
+                      "duration" : "0,0021s",
+                      "durationInSeconds" : 0.0021309852600097656,
+                      "name" : ".status(400), .signedOut",
+                      "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/signInFailures(reply:expected:)?args=78e72e003f371813fd395f77be36f423b3089845c75dfa3dddaa746975045b93",
+                      "nodeType" : "Arguments",
+                      "result" : "Passed"
+                    },
+                    {
+                      "duration" : "0,00075s",
+                      "durationInSeconds" : 0.0007531642913818359,
+                      "name" : ".status(401), .notAllowed",
+                      "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/signInFailures(reply:expected:)?args=09fa38f6894184ec5884f77f44c95befbeeb5dfda45044da02cd39d76d67a052",
+                      "nodeType" : "Arguments",
+                      "result" : "Passed"
+                    },
+                    {
+                      "duration" : "0,00022s",
+                      "durationInSeconds" : 0.00021910667419433594,
+                      "name" : ".status(500), .signedOut",
+                      "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/signInFailures(reply:expected:)?args=6a839dfd0a645a02fea699c52f539b0b8cb012a60482446c6952ab0e8609c1cf",
+                      "nodeType" : "Arguments",
+                      "result" : "Passed"
+                    },
+                    {
+                      "duration" : "0,00014s",
+                      "durationInSeconds" : 0.00014472007751464844,
+                      "name" : ".status(503), .retryLater",
+                      "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/signInFailures(reply:expected:)?args=a142666397b78e7785fd9d4627e0bd953038ad7f8cb8c450cc5c0481b5f11744",
+                      "nodeType" : "Arguments",
+                      "result" : "Passed"
+                    },
+                    {
+                      "duration" : "0,00018s",
+                      "durationInSeconds" : 0.00017690658569335938,
+                      "name" : ".token(\"\"), .signedOut",
+                      "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/signInFailures(reply:expected:)?args=169a2d18d93f8ed9dc4022495ac55e2c4024bfb7df3aaa6929954a01b128671a",
+                      "nodeType" : "Arguments",
+                      "result" : "Passed"
+                    }
+                  ],
+                  "duration" : "0,0011s",
+                  "durationInSeconds" : 0.0010766642434256418,
+                  "name" : "account: anmelden fehlerabbildung",
+                  "nodeIdentifier" : "AccountStateTests/signInFailures(reply:expected:)",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/signInFailures(reply:expected:)",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0,00022s",
+                  "durationInSeconds" : 0.0002219676971435547,
+                  "name" : "account: cancelsignin",
+                  "nodeIdentifier" : "AccountStateTests/cancelSignIn()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/cancelSignIn()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "duration" : "0,0018s",
+                      "durationInSeconds" : 0.0017621517181396484,
+                      "name" : ".cancel",
+                      "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/signOutLocalFirst(reply:)?args=2e63616e63656c",
+                      "nodeType" : "Arguments",
+                      "result" : "Passed"
+                    },
+                    {
+                      "duration" : "0,00012s",
+                      "durationInSeconds" : 0.0001220703125,
+                      "name" : ".status(204)",
+                      "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/signOutLocalFirst(reply:)?args=2e7374617475732832303429",
+                      "nodeType" : "Arguments",
+                      "result" : "Passed"
+                    },
+                    {
+                      "duration" : "0,0002s",
+                      "durationInSeconds" : 0.00020003318786621094,
+                      "name" : ".status(401)",
+                      "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/signOutLocalFirst(reply:)?args=2e7374617475732834303129",
+                      "nodeType" : "Arguments",
+                      "result" : "Passed"
+                    },
+                    {
+                      "duration" : "0,00016s",
+                      "durationInSeconds" : 0.00015878677368164062,
+                      "name" : ".status(503)",
+                      "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/signOutLocalFirst(reply:)?args=2e7374617475732835303329",
+                      "nodeType" : "Arguments",
+                      "result" : "Passed"
+                    }
+                  ],
+                  "duration" : "0,00056s",
+                  "durationInSeconds" : 0.000560760498046875,
+                  "name" : "account: signout lokal zuerst dann dienst",
+                  "nodeIdentifier" : "AccountStateTests/signOutLocalFirst(reply:)",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/signOutLocalFirst(reply:)",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0,00021s",
+                  "durationInSeconds" : 0.00021076202392578125,
+                  "name" : "account: signout ohne token und bei loeschfehler",
+                  "nodeIdentifier" : "AccountStateTests/signOutWithoutToken()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/signOutWithoutToken()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0,00041s",
+                  "durationInSeconds" : 0.0004107952117919922,
+                  "name" : "account: konto loeschen erfolg und nur aus signedin",
+                  "nodeIdentifier" : "AccountStateTests/deleteOnlyWhenSignedIn()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/deleteOnlyWhenSignedIn()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "duration" : "0,000073s",
+                      "durationInSeconds" : 7.319450378417969e-05,
+                      "name" : ".cancel, .signedIn, \"T1\", nil",
+                      "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/deleteFailures(reply:status:token:problem:)?args=4ca3f44737f07db941df2eb46706777734a02a594e5a3f5cfcc5310521081b5f",
+                      "nodeType" : "Arguments",
+                      "result" : "Passed"
+                    },
+                    {
+                      "duration" : "0,00012s",
+                      "durationInSeconds" : 0.00011610984802246094,
+                      "name" : ".invalid, .signedIn, \"T1\", .retryLater",
+                      "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/deleteFailures(reply:status:token:problem:)?args=e2cad006b50d618ec26099869ae0d6b8172f6e4ae929a8bb761bf8da9d8df3ee",
+                      "nodeType" : "Arguments",
+                      "result" : "Passed"
+                    },
+                    {
+                      "duration" : "0,00013s",
+                      "durationInSeconds" : 0.00013494491577148438,
+                      "name" : ".offline, .signedIn, \"T1\", .retryLater",
+                      "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/deleteFailures(reply:status:token:problem:)?args=f31d2a1c7a8d7f66f40b6d804c6819c4a72ba50c8b0962a43a66f67df85c6222",
+                      "nodeType" : "Arguments",
+                      "result" : "Passed"
+                    },
+                    {
+                      "duration" : "0,00035s",
+                      "durationInSeconds" : 0.00034689903259277344,
+                      "name" : ".status(401), .signedOut, nil, nil",
+                      "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/deleteFailures(reply:status:token:problem:)?args=8a4f53da2391f596e94408767c205a4b2366575819133cf962e98cfbf509d497",
+                      "nodeType" : "Arguments",
+                      "result" : "Passed"
+                    },
+                    {
+                      "duration" : "0,00013s",
+                      "durationInSeconds" : 0.00013494491577148438,
+                      "name" : ".status(500), .signedIn, \"T1\", .retryLater",
+                      "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/deleteFailures(reply:status:token:problem:)?args=c4f0227ecb61edb8d398752ddde31e52f3cfc632cca0616bcb2b15d7ff88ed27",
+                      "nodeType" : "Arguments",
+                      "result" : "Passed"
+                    },
+                    {
+                      "duration" : "0,00013s",
+                      "durationInSeconds" : 0.00012922286987304688,
+                      "name" : ".status(503), .signedIn, \"T1\", .retryLater",
+                      "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/deleteFailures(reply:status:token:problem:)?args=41e45706cfa85932fce13c0e0e1024fbe6c7a4dac12c4d6d27bc9f7a780dc183",
+                      "nodeType" : "Arguments",
+                      "result" : "Passed"
+                    }
+                  ],
+                  "duration" : "0,00016s",
+                  "durationInSeconds" : 0.00015588601430257162,
+                  "name" : "account: konto loeschen fehlerabbildung",
+                  "nodeIdentifier" : "AccountStateTests/deleteFailures(reply:status:token:problem:)",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/deleteFailures(reply:status:token:problem:)",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0,0001s",
+                  "durationInSeconds" : 0.00010323524475097656,
+                  "name" : "account: veraltete 401 loescht keine neue sitzung",
+                  "nodeIdentifier" : "AccountStateTests/staleUnauthorized()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/staleUnauthorized()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0,00031s",
+                  "durationInSeconds" : 0.0003120899200439453,
+                  "name" : "account: doppelaufrufe waehrend anfrage",
+                  "nodeIdentifier" : "AccountStateTests/doubleCalls()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/doubleCalls()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0,00031s",
+                  "durationInSeconds" : 0.0003101825714111328,
+                  "name" : "account: zustand ohne token und nonce",
+                  "nodeIdentifier" : "AccountStateTests/noSecretsInState()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests/noSecretsInState()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "AccountState (#615)",
+              "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests/AccountStateTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "LooseEndsTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "LooseEnds",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

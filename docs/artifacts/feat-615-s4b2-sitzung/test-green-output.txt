@@ -1,0 +1,104 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/AccountStateTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CarryRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueStateTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m EnergyTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m EnrichmentTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m FieldEditTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m FieldGlyphTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueTodayTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueWordsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DurationRuleCoordinatorTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DurationRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelPromptLanguagesTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelSeamTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelUnavailableTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CalendarAskTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CalendarSyncTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureComplication.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureComplicationTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m AccountStateTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m AppVersionTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m AttachmentKindTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m BackgroundRefreshTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/PlaceNotificationCenterTests.swift:65:39: [33m'#require(_:_:)' is redundant because 'TaskPlace(name: name, latitude: 51.99563, longitude: 7.71357, event: event)' never equals 'nil' (from macro 'require')[0m
+ 63 |             let task = TaskItem(rawText: raw)
+[32m 64 |             task.status = .active[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/PlaceNotificationCenterTests.swift:144:37: [33m'#require(_:_:)' is redundant because 'TaskPlace(name: "Büro", latitude: 52.0, longitude: 7.8, event: .arrive)' never equals 'nil' (from macro 'require')[0m
+142 |         #expect(fixture.recorder.removed.isEmpty)
+[32m143 | [0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceEditingTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceNotificationCenterTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceNotificationsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PeopleRetiredTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PhoneRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PlaceDeliveryTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NewDateRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NextRankTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NextUpWidgetTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NoteLinksTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NowRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m OnboardingFlowTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m OrderExecutorTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PendingCompletionsTests.swift
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsTests.swiftsourceinfo
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsTests.abi.json
+[[36mLooseEndsTests[0m] [1mLinking[0m LooseEndsTests
+[[36mLooseEndsTests[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-09 09:57:57.258.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-09 09:57:57.258.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-09 09:57:57.258.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.004) seconds
+[1mTest run started.[0m
+Suite "AccountState (#615)" started
+    [32m✔[0m "account: start mit token" (0.001 seconds)
+    [32m✔[0m "account: start ohne token und bei lesefehler" (0.003 seconds)
+    [32m✔[0m "account: beginsignin nur aus erlaubten zustaenden" (0.022 seconds)
+    [32m✔[0m "account: body traegt rohe nonce zum hash" (0.001 seconds)
+    [32m✔[0m "account: completesignin ohne nonce und nonce einmalig" (0.001 seconds)
+    [32m✔[0m "account: anmelden speichert und ist angemeldet" (0.001 seconds)
+    [32m✔[0m "account: speicherfehler ergibt abgemeldet" (0.001 seconds)
+    [32m✔[0m "account: cancelsignin" (0.001 seconds)
+    [32m✔[0m "account: signout ohne token und bei loeschfehler" (0.001 seconds)
+    [32m✔[0m "account: konto loeschen erfolg und nur aus signedin" (0.001 seconds)
+    [32m✔[0m "account: veraltete 401 loescht keine neue sitzung" (0.001 seconds)
+    [32m✔[0m "account: doppelaufrufe waehrend anfrage" (0.001 seconds)
+    [32m✔[0m "account: zustand ohne token und nonce" (0.001 seconds)
+Suite "AccountState (#615)" passed after 0.044 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-steady-crafting-shamir/Logs/Test/Test-LooseEnds-2026.11.09_09-57-23-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
+[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log
+
+# xcresult (parametrisierte Tests, xcbeautify zeigt sie nicht):
+# Passed account: anmelden fehlerabbildung (7 Argumente)
+# Passed account: signout lokal zuerst dann dienst (4 Argumente)
+# Passed account: konto loeschen fehlerabbildung (6 Argumente)
+# 16 von 16 Tests bestanden

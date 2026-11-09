@@ -45,7 +45,8 @@ import Testing
     }
 
     private func body(_ request: URLRequest) throws -> [String: String] {
-        try #require(JSONSerialization.jsonObject(with: try #require(request.httpBody)) as? [String: String])
+        let data = try #require(request.httpBody)
+        return try #require(JSONSerialization.jsonObject(with: data) as? [String: String])
     }
 
     @Test("account: start mit token")
@@ -299,7 +300,8 @@ import Testing
         look()
         await state.deleteAccount()
         look()
-        let nonce = try #require(try body(try #require(await wire.requests.first))["nonce"])
+        let first = try #require(await wire.requests.first)
+        let nonce = try #require(try body(first)["nonce"])
         #expect(seen.count == 7 && store.token == nil)
         for text in seen { #expect(!text.contains(marker) && !text.contains(nonce) && !text.contains(hashed)) }
     }
