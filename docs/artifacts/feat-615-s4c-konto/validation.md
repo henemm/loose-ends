@@ -76,6 +76,14 @@ Keine Regressionen: voller Unit-Lauf grün, `SettingsSmokeTests` grün.
   der Spec; ein Teilen nach der Implementierung brächte nichts. Festgehalten, damit 4c-2 knapper geschätzt wird.
 - Tests: +314 (Grenze 500). Katalog: +20/−1 (zählt nicht).
 
+## Nachtrag CI (PR #889)
+UI Smoke in der CI: `CalendarTargetTests.testSettingsShowDefaultCalendarRow` und
+`testDefaultCalendarIsStampedOnSwitchOn` rot („Settings should offer the default calendar“). Lokal nachgestellt
+(`./scripts/sim.sh test CalendarTargetTests`: 2 von 3 rot). Ursache: die Einstellungsliste erzeugt Zeilen erst beim
+Hineinscrollen; die neue Gruppe „Claude“ schiebt `defaultCalendarRow` unter den ersten Bildschirm, der Test wartete
+nur. Korrektur nur im Test: beide Stellen nutzen die vorhandene `scrollUntilVisible` (#305). Danach lokal 3/3 grün.
+Kein Produktcode geändert.
+
 ## Stufe 3
 Kein Pfad der Geräteliste berührt.
 

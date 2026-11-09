@@ -102,7 +102,7 @@ final class CalendarTargetTests: XCTestCase {
         XCTAssertTrue(gear.waitForExistence(timeout: 10))
         gear.tap()
         let row = app.descendants(matching: .any).matching(identifier: "defaultCalendarRow").firstMatch
-        XCTAssertTrue(row.waitForExistence(timeout: 5), "Settings should offer the default calendar")
+        scrollUntilVisible(row, named: "defaultCalendarRow", in: app, firstWait: 5)
         XCTAssertTrue(row.label.contains("Loose Ends"), "Row label was \(row.label)")
         let shot = XCTAttachment(screenshot: app.screenshot())
         shot.name = "settings-default-calendar"
@@ -232,7 +232,8 @@ final class CalendarTargetTests: XCTestCase {
     private func pickDefault(in app: XCUIApplication, choose: (XCUIElementQuery) -> XCUIElement) -> String {
         app.buttons["settingsButton"].tap()
         let row = app.descendants(matching: .any).matching(identifier: "defaultCalendarRow").firstMatch
-        XCTAssertTrue(row.waitForExistence(timeout: 5), "Settings should offer the default calendar")
+        // Since the "Claude" group (#615) the row sits below the sheet's first screen.
+        scrollUntilVisible(row, named: "defaultCalendarRow", in: app, firstWait: 5)
         row.tap()
         let picks = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH 'calendarPick_'"))
