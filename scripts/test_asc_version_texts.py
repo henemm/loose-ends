@@ -534,6 +534,27 @@ class VersionTextsTests(unittest.TestCase):
                       lines)
 
 
+    # 5a-2 AC-4, F001: fehlt die Sprache nur bei der Mac-Version, wird auch iOS nicht geschrieben
+    def test_missing_locale_on_mac_only_writes_nothing_on_ios_either(self):
+        german = loc("LDE1", "de-DE", "Deutsche Beschreibung", "de,wörter", "https://example.de", "alt")
+        mac = version("V4", "MAC_OS", "PREPARE_FOR_SUBMISSION", "1.0.1")
+        fake = self.fake(versions=[IOS_NEW, mac], localizations={"V2": [EMPTY_EN, german], "V4": [wanted_loc("L4")]})
+        result = self.run_texts(fake, "texte", text=text_file() + de_section())
+        self.assert_failed(result)
+        self.assertIn("de-DE fehlt bei Apple (MAC_OS)", result.stdout)
+        self.assertEqual([m for m, _, _ in fake.requests if m != "GET"], [])
+
+    # 5a-2 F002: ein Wert mit PLATZHALTER bricht `texte` vor jeder Anfrage ab; `lesen` bleibt unberührt
+    def test_placeholder_aborts_texte_before_any_request(self):
+        fake = self.fake(versions=[IOS_NEW], localizations={"V2": [EMPTY_EN]})
+        text = text_file() + de_section(promo="PLATZHALTER: Werbetext von 1.0")
+        result = self.run_texts(fake, "texte", text=text)
+        self.assert_failed(result)
+        self.assertIn("de-DE Werbetext enthält PLATZHALTER", result.stdout)
+        self.assertEqual(fake.requests, [])
+        self.assert_ok(self.run_texts(fake, "lesen", text=text))
+        self.assertEqual([m for m, _, _ in fake.requests if m != "GET"], [])
+
 class WorkflowTests(unittest.TestCase):
     # AC-15
     def test_workflow_has_choice_unit_tests_and_secrets(self):

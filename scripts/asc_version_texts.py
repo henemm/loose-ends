@@ -1,9 +1,11 @@
-"""Liest und setzt die Texte der App-Store-Version in App Store Connect (#842 Schnitt 3).
+"""Liest und setzt die Texte der App-Store-Version in App Store Connect (#842 Schnitt 3, 5a-2).
 
 Aufruf: asc_version_texts.py lesen|texte
 Umgebung wie asc_wait_build.py plus VERSION_TEXTS_FILE (Standard docs/reference/app-store-texte.md, je Locale ein
 Abschnitt `## <Locale>` mit `Beschreibung:` im Markerblock und den Zeilen `Schlüsselwörter:`, `Support-URL:`, optional
-`Werbetext:`). `lesen` schreibt nichts; `texte` schreibt je Plattform nur in die eine Version im Zustand
+`Werbetext:` und `Neu in dieser Version:`). Ein Abschnitt ohne `Beschreibung:` trägt nur Werbetext und/oder Neu in
+dieser Version und gilt nur für eine Sprache, die es bei Apple schon gibt (5a-2). `lesen` schreibt nichts und zeigt
+auch den Werbetext der veröffentlichten Version (READY_FOR_SALE); `texte` schreibt je Plattform nur in die eine Version im Zustand
 PREPARE_FOR_SUBMISSION, nur Locales aus der Datei, nur bei Abweichung, und prüft danach gegen. Es wird nichts
 eingereicht. Die Store-Texte sind öffentlich und dürfen in der Ausgabe stehen; Schlüssel, Token und Rohantworten nie.
 """
@@ -19,10 +21,14 @@ ACTIONS = ("lesen", "texte")
 EDITABLE = "PREPARE_FOR_SUBMISSION"
 PLATFORMS = ("IOS", "MAC_OS")
 FENCE = "```"
-LINE_FIELDS = {"Schlüsselwörter": "keywords", "Support-URL": "supportUrl", "Werbetext": "promotionalText"}
+PUBLISHED = "READY_FOR_SALE"
+LINE_FIELDS = {"Schlüsselwörter": "keywords", "Support-URL": "supportUrl", "Werbetext": "promotionalText",
+               "Neu in dieser Version": "whatsNew"}
 LABELS = {"description": "Beschreibung", "keywords": "Schlüsselwörter", "supportUrl": "Support-URL",
-          "promotionalText": "Werbetext"}
+          "promotionalText": "Werbetext", "whatsNew": "Neu in dieser Version"}
 REQUIRED = ("description", "keywords", "supportUrl")
+OPTIONAL = ("promotionalText", "whatsNew")
+PLACEHOLDER = "PLATZHALTER"
 DEFAULT_FILE = Path(__file__).resolve().parent.parent / "docs" / "reference" / "app-store-texte.md"
 
 
@@ -61,26 +67,38 @@ def parse_sections(text):
     return sections
 
 
+def check_required(locale, values):
+    """Mit Beschreibung alle drei Pflichtfelder; ohne nur Werbetext/Neu-Text, mindestens eines davon (5a-2)."""
+    if "description" in values:
+        for field in REQUIRED:
+            if not values.get(field, "").strip():
+                raise Fatal(f"{locale} {LABELS[field]} fehlt oder ist leer")
+        return
+    if "keywords" in values or "supportUrl" in values:
+        raise Fatal(f"{locale}: Schlüsselwörter/Support-URL ohne Beschreibung")
+    if not any(values.get(field, "").strip() for field in OPTIONAL):
+        raise Fatal(f"{locale}: Abschnitt ohne Beschreibung braucht Werbetext oder Neu in dieser Version")
+
+
 def check_section(locale, values):
     """Pflichtfelder und Grenzen; Verstoß nennt Locale, Feld, Ist- und Soll-Zahl."""
-    for field in REQUIRED:
-        if not values.get(field, "").strip():
-            raise Fatal(f"{locale} {LABELS[field]} fehlt oder ist leer")
-    limits = (("description", len(values["description"]), 4000, "Zeichen"),
+    check_required(locale, values)
+    limits = (("description", len(values.get("description", "")), 4000, "Zeichen"),
               ("promotionalText", len(values.get("promotionalText", "")), 170, "Zeichen"),
-              ("keywords", len(values["keywords"].encode("utf-8")), 100, "Bytes"))
+              ("whatsNew", len(values.get("whatsNew", "")), 4000, "Zeichen"),
+              ("keywords", len(values.get("keywords", "").encode("utf-8")), 100, "Bytes"))
     for field, count, limit, unit in limits:
         if count > limit:
             raise Fatal(f"{locale} {LABELS[field]} hat {count} {unit}, erlaubt höchstens {limit}")
-    spaces = values["keywords"].count(", ")
+    spaces = values.get("keywords", "").count(", ")
     if spaces:
         raise Fatal(f"{locale} Schlüsselwörter: {spaces} Leerzeichen nach Komma, erlaubt 0")
-    if not values["supportUrl"].startswith("https://"):
+    if "supportUrl" in values and not values["supportUrl"].startswith("https://"):
         raise Fatal(f"{locale} Support-URL muss mit https:// beginnen")
 
 
 def wanted_texts(text):
-    """{Locale: {description, keywords, supportUrl, promotionalText?}}; geprüft, bevor eine Anfrage läuft."""
+    """{Locale: {description?, keywords?, supportUrl?, promotionalText?, whatsNew?}}; geprüft vor jeder Anfrage."""
     sections = parse_sections(text)
     if not sections:
         raise Fatal("Die Textdatei hat keinen Abschnitt ## <Locale>")
@@ -137,7 +155,20 @@ def read_state(config, versions):
             for field, label in LABELS.items():
                 value = attributes(record).get(field) or ""
                 print(f"  {platform} {locale} {label} zeichen={len(value)}: {value or '-'}", flush=True)
+    read_published(config, versions)
     return 0
+
+
+def read_published(config, versions):
+    """Werbetext der veröffentlichten Version je Plattform und Locale (5a-2); nur GET."""
+    for item in versions:
+        values = attributes(item)
+        if values.get("appStoreState") != PUBLISHED:
+            continue
+        for locale, record in localizations(config, item["id"]).items():
+            text = attributes(record).get("promotionalText") or ""
+            print(f"veröffentlicht {values.get('platform') or '?'} {values.get('versionString') or '?'} {locale} "
+                  f"Werbetext zeichen={len(text)}: {text or '-'}", flush=True)
 
 
 def send(config, method, path, payload):
@@ -168,9 +199,29 @@ def write_locale(config, version_id, locale, values, record):
     return changed
 
 
-def write_texts(config, version_id, wanted):
+def check_no_placeholder(wanted):
+    """Kein Wert darf das Wort PLATZHALTER tragen; geprüft im Pfad `texte` vor jeder Anfrage (5a-2, F002)."""
+    for locale, values in wanted.items():
+        for field, value in values.items():
+            if PLACEHOLDER in value:
+                raise Fatal(f"{locale} {LABELS[field]} enthält {PLACEHOLDER}, nichts geschrieben")
+
+
+def check_locales_exist(config, chosen, wanted):
+    """Lokalisierungen aller gewählten Versionen; ein Abschnitt ohne Beschreibung, dessen Sprache in irgendeiner
+    davon fehlt, ist Fatal, bevor die erste Version geschrieben wird (AC-4, F001). Gibt {Versions-ID: Lokalisierungen}."""
+    present = {item["id"]: localizations(config, item["id"]) for item in chosen}
+    for item in chosen:
+        for locale, values in wanted.items():
+            if "description" not in values and locale not in present[item["id"]]:
+                raise Fatal(f"{locale} fehlt bei Apple ({attributes(item).get('platform') or '?'}), Abschnitt "
+                            "braucht Beschreibung, Schlüsselwörter, Support-URL")
+    return present
+
+
+def write_texts(config, version_id, wanted, present):
     """Schreibt die Locales aus der Datei in eine Version; gibt die Zahl der Schreibaufrufe zurück."""
-    present, checks = localizations(config, version_id), {}
+    checks = {}
     for locale, values in wanted.items():
         written = write_locale(config, version_id, locale, values, present.get(locale))
         if not written:
@@ -198,16 +249,18 @@ def main(argv):
         if len(argv) != 2 or argv[1] not in ACTIONS:
             raise Fatal(f"Aufruf: asc_version_texts.py {'|'.join(ACTIONS)}")
         wanted = read_wanted() if argv[1] == "texte" else None
+        if wanted is not None:
+            check_no_placeholder(wanted)
         config = read_config()
         versions = app_versions(config, find_app_id(config))
         written = 0
         if wanted is None:
             written = read_state(config, versions)
         else:
-            chosen = [editable_version(versions, platform) for platform in PLATFORMS]
+            chosen = [item for item in (editable_version(versions, p) for p in PLATFORMS) if item is not None]
+            present = check_locales_exist(config, chosen, wanted)
             for item in chosen:
-                if item is not None:
-                    written += write_texts(config, item["id"], wanted)
+                written += write_texts(config, item["id"], wanted, present[item["id"]])
         print(f"zusammenfassung geschrieben={written}", flush=True)
         return 0
     except Fatal as error:

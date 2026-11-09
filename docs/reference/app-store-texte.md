@@ -4,7 +4,9 @@ Texte der App-Store-Version in App Store Connect, je Sprache ein Abschnitt (#842
 texte` schreibt sie über den Handlauf `asc-version-texts`, nur in die eine Version je Plattform im Zustand
 PREPARE_FOR_SUBMISSION, nur bei Abweichung und nur für die Sprachen dieser Datei. Die Beschreibung steht zwischen zwei
 Zeilen mit drei Backticks; Grenzen: Beschreibung 4000 Zeichen, Werbetext 170 Zeichen, Schlüsselwörter 100 Bytes ohne
-Leerzeichen nach Kommas. Der deutsche Wortlaut liegt nur bei Apple und wird von diesem Werkzeug nicht angefasst.
+Leerzeichen nach Kommas, Neu in dieser Version 4000 Zeichen. Beschreibung, Schlüsselwörter und Support-URL der
+deutschen Sprache liegen nur bei Apple; im Repo steht für `de-DE` nur, was dieses Werkzeug dort setzt (Werbetext, Neu in
+dieser Version).
 
 ## en-US
 
@@ -49,3 +51,9 @@ Analysis runs on your device. Your tasks live in your iCloud, not on someone els
 Schlüsselwörter: to-do,todo,reminders,dictation,list,GTD,context,notes,planner,inbox,watch,projects,due,capture
 Support-URL: https://www.henemm.com/footer-information/contact/
 Werbetext: Say it in one sentence. Loose Ends recognizes date, duration and tag right on your device and later shows you just what fits.
+Neu in dieser Version: Loose Ends now also speaks English: the app and this store page. Plus small improvements and fixes.
+
+## de-DE
+
+Werbetext: PLATZHALTER aus Lauf lesen
+Neu in dieser Version: Loose Ends gibt es jetzt auch auf Englisch: die App und die Store-Seite. Dazu kleine Verbesserungen und Korrekturen.
