@@ -14,7 +14,7 @@ Datum: 2026-11-09 11:34
 - [x] **AC-9:** Given `lesen`, When es läuft, Then zeigt die Ausgabe je Version Zustand und Bau (oder „kein Bau“), je Lokalisierung Zeichenzahlen der Felder `description`, `keywords`, `promotionalText`, `whatsNew`, `supportUrl` (nie den Wortlaut), Zahl der Bildsätze, Bilder und Platzierungen und ob ein Review-Detail existiert, und die Anfragen bestehen nur aus GET. Belegt durch `test_lesen_reports_state_and_never_writes`.
 - [x] **AC-10:** Given jeder Lauf von `anlegen` und `lesen`, When die Anfragen geprüft werden, Then enthalten sie nie `DELETE`, nie eine Einreichung und keinen Schreibaufruf auf Texte, Bilder, Platzierungen oder das Review-Detail; die einzigen Schreibaufrufe sind `POST /v1/appStoreVersions` (nur `MAC_OS`) und `PATCH …/relationships/build`. Eine unbekannte Aufrufform endet mit Ausgang 1 ohne Anfrage. Belegt durch `test_never_deletes_submits_or_writes_texts` und `test_bad_usage_makes_no_call`.
 - [x] **AC-11:** Given die Workflow-Datei, When sie geprüft wird, Then bietet `aktion` `lesen` (Standard) und `anlegen`, es gibt `concurrency` ohne `cancel-in-progress`, die Python-Tests laufen als erster Schritt, und der Schlüssel wird nie ausgegeben. Belegt durch `test_workflow_offers_both_actions_and_hides_the_key`.
-- [ ] **AC-12:** Given der Zweig ist im Remote und die Läufe aus Punkt 6 gehören zu dieser Fassung, When vom Zweig `lesen`, `anlegen`, `anlegen` (zweites Mal), `lesen` und die Store-Probe laufen, Then besteht jeder Lauf; das erste `anlegen` legt die Mac-Version 1.0.1 an und ordnet fehlende Bauten zu, das zweite legt und ordnet nichts, das `lesen` danach zeigt beide bearbeitbaren Versionen 1.0.1 mit Bau 133 (oder dem gewählten Bau der Zielversion) samt Lokalisierungen, Bildsätzen und Review-Detail-Stand, und die Store-Probe zeigt Mac 1.0.1 `PREPARE_FOR_SUBMISSION`. Belegt durch Run-IDs und zitierte Protokollzeilen unter `docs/artifacts/feat-842-s5-mac-version/`; erst danach der Merge.
+- [x] **AC-12:** Given der Zweig ist im Remote und die Läufe aus Punkt 6 gehören zu dieser Fassung, When vom Zweig `lesen`, `anlegen`, `anlegen` (zweites Mal), `lesen` und die Store-Probe laufen, Then besteht jeder Lauf; das erste `anlegen` legt die Mac-Version 1.0.1 an und ordnet fehlende Bauten zu, das zweite legt und ordnet nichts, das `lesen` danach zeigt beide bearbeitbaren Versionen 1.0.1 mit Bau 133 (oder dem gewählten Bau der Zielversion) samt Lokalisierungen, Bildsätzen und Review-Detail-Stand, und die Store-Probe zeigt Mac 1.0.1 `PREPARE_FOR_SUBMISSION`. Belegt durch Run-IDs und zitierte Protokollzeilen unter `docs/artifacts/feat-842-s5-mac-version/`; erst danach der Merge.
 - [x] **AC-13:** Given die Änderung berührt nur `scripts/` und `.github/workflows/`, When der Schnitt abgenommen wird, Then endet die Abnahme nach Stufe 2 mit dem Satz „Kein Pfad der Geräteliste berührt.“; der „Benutzen“-Beleg sind die echten Handläufe aus AC-12 gegen Apple. Auf Hennings Geräten läuft nichts. `python3 scripts/test_asc_store_version.py` und die übrigen Skript-Tests (`scripts/test_asc_version_texts.py`, `scripts/test_asc_store_images.py`, `scripts/test_asc_store_probe.py`) sind grün. Belegt durch Dateiliste des Diffs gegen die Geräteliste und die Testläufe.
 
 ## Dialog
@@ -130,7 +130,31 @@ Code reference: .github/workflows/asc-store-version.yml:20
 
 ### Runde 2
 **Adversary:**
-**Implementierer:**
+Belege gegen Apple geprüft (`gh run view`: alle sechs Läufe conclusion=success, headSha 20402d7; Lauf 42603889995 event=pull_request, die fünf Handläufe event=workflow_dispatch; Skript identisch mit der Implementierung). Logs gelesen:
+- lesen vorher (42603992405): Mac nur `MAC_OS 1.0 READY_FOR_SALE`, "keine bearbeitbare Version MAC_OS", iOS 1.0.1 `bau IOS kein Bau`, geschrieben=0.
+- anlegen (42604117870): "version MAC_OS 1.0.1 angelegt", Bau 133 gewählt (von 3 gültigen) und beiden zugeordnet, `gegenprobe gleich=ja`, `geschrieben=3`.
+- anlegen2 (42604272844): "schon zugeordnet: 133, unverändert" (beide), "schon vorhanden, übersprungen", `gegenprobe gleich=ja`, `geschrieben=0`.
+- lesen2 (42604409575): beide Versionen 1.0.1 PREPARE_FOR_SUBMISSION mit Bau 1.0.1 (133) VALID, geschrieben=0.
+- Store-Probe (42604414929): `version=1.0.1/MAC_OS/PREPARE_FOR_SUBMISSION` mit de-DE Beschreibung 1638, Schlüsselwörter 100, Werbetext 0, Bildsatz APP_DESKTOP anzahl=4, 4 Platzierungen MAC_PROFILE.
+In allen Logs sind die Zugangsdaten maskiert (`***`).
+
+Befund (was Apple beim API-Anlegen von Mac 1.0 übernahm): de-DE Beschreibung 1638, Schlüsselwörter 100, supportUrl 50 Zeichen; Werbetext 0 und whatsNew 0 (nicht übernommen); 1 Bildsatz APP_DESKTOP mit 4 Bildern und 4 Platzierungen MAC_PROFILE (übernommen); Review-Detail vorhanden; kein en-US für Mac (muss in 5a-2 angelegt werden). Grundlage für 5a-2 und 5b.
+
+AC-11 nach Änderung (Commit 20402d7): `pull_request` mit `paths` nur auf Skript, Test und Workflow; der Job hat keine Secrets im Job-Env, alle Zugangsdaten und AKTION stehen nur im Schritt „Store version“ unter `if: github.event_name == 'workflow_dispatch'`; permissions contents: read; Tests als erster Schritt. Fork-PRs: GitHub gibt ihnen ohnehin keine Secrets, und der Schreibschritt läuft nur bei workflow_dispatch; der geänderte Test prüft Gate vor Skript vor Secret-Nutzung, genau ein Gate. Beobachtung (kein Defekt): Ein PR im selben Repo könnte die Workflow-Datei ändern; das gilt für jeden Workflow des Repos und setzt Schreibrecht voraus. PR-Läufe teilen die concurrency-Gruppe und warten nur.
+
+Tests: 16 + 19 + 26 + 20 = 81 OK, 0 übersprungen (adversary-test-output.txt neu geschrieben).
+Confirmation:
+  AC: AC-12
+  Code reference: scripts/asc_store_version.py:178
+  Evidence: Läufe 42603992405, 42604117870, 42604272844, 42604409575, 42604414929 auf 20402d7 (success); erstes anlegen geschrieben=3, zweites geschrieben=0, Probe Mac 1.0.1 PREPARE_FOR_SUBMISSION. Status: CONFIRMED
+
+Confirmation:
+  AC: AC-11
+  Code reference: .github/workflows/asc-store-version.yml:37
+  Evidence: Schreibschritt nur bei workflow_dispatch, Zugangsdaten nur dort. Status: CONFIRMED
+
+Code reference: scripts/test_asc_store_version.py:406
+**Implementierer:** Belege der Läufe angelegt, pull_request-Auslöser ergänzt.
 
 ## Herkunft der Vorbedingungen
 
@@ -139,22 +163,22 @@ kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 ## Verdict
 
 ═══════════════════════════════════════
-VERDICT: AMBIGUOUS
+VERDICT: VERIFIED
 ═══════════════════════════════════════
-AC-12 wartet auf echte Läufe (Commit+Push noch nicht möglich); alle übrigen Punkte (AC-1 bis AC-11, AC-13) bewiesen.
+Alle Punkte AC-1 bis AC-13 bewiesen, AC-12 durch echte Läufe auf 20402d7.
 Tests: 81 passed, 0 failed, 0 übersprungen
 Findings: F001 und F003 behoben, F002 LOW offen (kein Blocker).
-Proven points: 12/13
+Proven points: 13/13
 
 ## Geprüfte Dateien
 
-- sha256:8c6b31c57264956ce051edded3ddc7c9b1569aa7e98b5cf7dc73b34d1822b7da  .github/workflows/asc-store-version.yml
+- sha256:8380c961e792562e8e55c76604589ba71d0ad7a23a23f91f9c062c8708558d05  .github/workflows/asc-store-version.yml
 - sha256:e57a496ad05f629e766a944ec02660dd3084774ecd7c08ac8eec63e4c70ef3c1  scripts/asc_store_version.py
-- sha256:a02aaf76aba29582eeec6150e6aa6f2df86ae3a7499468b34994c31fa0c1c2c4  scripts/test_asc_store_version.py
+- sha256:701124022f63f45e9fb811a2105af8aea65702fba1ce6d9bdb57ba062e6f9aab  scripts/test_asc_store_version.py
 
 ## Prüfbasis
 
-- base: 97708bf7cb095cabe93911fb56fe0a50cb08ab20
-- blob:bbbff80886361dcdef6b3c6f30b060f41be3d66e  .github/workflows/asc-store-version.yml
+- base: 8967580370673d60b5633c6185a5c4c2b5cdf7a6
+- blob:8a65a63a28b0d88fb9f99811c65b16a36444bd48  .github/workflows/asc-store-version.yml
 - blob:28125a77669b87f78ee522969a8dd09817438755  scripts/asc_store_version.py
-- blob:dacc95d28134c833b1ad2b6a1913c959d61eca8f  scripts/test_asc_store_version.py
+- blob:6f5bed2eeb44c49e2a40ff3d4c36b9c41b683f48  scripts/test_asc_store_version.py
