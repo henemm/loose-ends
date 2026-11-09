@@ -1,16 +1,16 @@
 # Simulator-Beleg
-erzeugt: 2026-11-09T15:20:49+0100
+erzeugt: 2026-11-09T15:36:06+0100
 befehl: scripts/sim.sh test-proof AccountSettingsTests
 workflow: feat-615-s4c-konto
-head: 2267d7f56165127edd2020a6a0bc0d16baa2f13e
+head: bbed8ed8aec4cbad96fbdbda29b38de53f14b800
 basis: 0e8d14493931e7e29b0ea09e0d20a656012a1a85 (merge-base origin/main HEAD)
 testklasse: AccountSettingsTests
 ergebnis: Passed
 xcodebuild: ** TEST SUCCEEDED **
 tests: 7 gesamt, 7 bestanden, 0 fehlgeschlagen, 0 übersprungen
-start: 1794233834.812  ende: 1794234048.144
+start: 1794234743.666  ende: 1794234964.067
 geraet: iPhone 17, iOS 27.2
-summary: docs/artifacts/feat-615-s4c-konto/simulator-run/summary.json  sha256:1fe880086568965524e0cfab51fac657a2d4500c16e2bf6263464a41ca005069
+summary: docs/artifacts/feat-615-s4c-konto/simulator-run/summary.json  sha256:3fafc9b7424f324f25a54d0904e4fd7a2575c29ac52f7a39e6f71b64bbd68cb8
 xcresult: docs/artifacts/feat-615-s4c-konto/simulator-run/run.xcresult  (gitignored)
 screenshots: docs/artifacts/feat-615-s4c-konto/simulator-run/*.png (5 Stück)
 
