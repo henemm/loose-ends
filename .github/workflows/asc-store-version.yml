@@ -1,6 +1,7 @@
 # Handlauf (#842 Schnitt 5a-1): liest den Stand der App-Store-Versionen oder legt die Mac-Version mit der Nummer der
 # bearbeitbaren iOS-Version an und ordnet je Plattform einen gültigen Bau zu. Schreibt nur die Mac-Version und die
 # Bau-Zuordnung; reicht nie etwas ein und löscht nie etwas.
+# Der Auslöser pull_request führt nur die Tests aus und registriert die Datei für den Handlauf vom Zweig (--ref).
 name: ASC Store Version
 
 on:
@@ -13,6 +14,11 @@ on:
           - lesen
           - anlegen
         default: lesen
+  pull_request:
+    paths:
+      - scripts/asc_store_version.py
+      - scripts/test_asc_store_version.py
+      - .github/workflows/asc-store-version.yml
 
 permissions:
   contents: read
@@ -25,16 +31,17 @@ jobs:
   store-version:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    env:
-      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
-      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
-      ASC_POLL_SECONDS: "5"
-      AKTION: ${{ inputs.aktion }}
     steps:
       - uses: actions/checkout@v7
       - name: Unit tests
         run: python3 scripts/test_asc_store_version.py
       - name: Store version
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_POLL_SECONDS: "5"
+          AKTION: ${{ inputs.aktion }}
         run: |
           trap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT
           umask 077

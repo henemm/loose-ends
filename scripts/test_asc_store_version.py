@@ -406,8 +406,13 @@ class WorkflowTests(unittest.TestCase):
     def test_workflow_offers_both_actions_and_hides_the_key(self):
         workflow = WORKFLOW.read_text()
         self.assertIn("workflow_dispatch", workflow)
-        for trigger in ("push:", "schedule:", "workflow_run:", "pull_request"):
+        for trigger in ("push:", "schedule:", "workflow_run:"):
             self.assertNotIn(trigger, workflow)
+        self.assertIn("pull_request:", workflow)
+        gate = "if: github.event_name == 'workflow_dispatch'"
+        self.assertEqual(workflow.count(gate), 1)
+        self.assertLess(workflow.index(gate), workflow.index("python3 scripts/asc_store_version.py"))
+        self.assertGreater(workflow.index("secrets."), workflow.index(gate))
         for needle in ("aktion:", "type: choice", "- lesen", "- anlegen", "default: lesen", "concurrency:",
                        "group: asc-store-version", "cancel-in-progress: false", "umask 077", "trap", "rm -f",
                        "timeout-minutes:", "contents: read"):
