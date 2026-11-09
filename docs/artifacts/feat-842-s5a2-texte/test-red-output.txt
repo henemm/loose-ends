@@ -1,0 +1,168 @@
+.F.../opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1992: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 52923)>
+  def _execute_child(self, args, executable, preexec_fn, close_fds,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1992: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 52928)>
+  def _execute_child(self, args, executable, preexec_fn, close_fds,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1992: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 52933)>
+  def _execute_child(self, args, executable, preexec_fn, close_fds,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1992: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 52934)>
+  def _execute_child(self, args, executable, preexec_fn, close_fds,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1992: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 52940)>
+  def _execute_child(self, args, executable, preexec_fn, close_fds,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:1992: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 52948)>
+  def _execute_child(self, args, executable, preexec_fn, close_fds,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..FF.....<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 52958)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 52959)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 52960)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 52961)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 52962)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 52963)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=13, family=2, type=1, proto=0, laddr=('127.0.0.1', 52964)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=14, family=2, type=1, proto=0, laddr=('127.0.0.1', 52979)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=15, family=2, type=1, proto=0, laddr=('127.0.0.1', 52983)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=16, family=2, type=1, proto=0, laddr=('127.0.0.1', 52988)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=17, family=2, type=1, proto=0, laddr=('127.0.0.1', 52995)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=18, family=2, type=1, proto=0, laddr=('127.0.0.1', 53001)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=19, family=2, type=1, proto=0, laddr=('127.0.0.1', 53004)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=20, family=2, type=1, proto=0, laddr=('127.0.0.1', 53010)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 53016)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=22, family=2, type=1, proto=0, laddr=('127.0.0.1', 53017)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=23, family=2, type=1, proto=0, laddr=('127.0.0.1', 53018)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=24, family=2, type=1, proto=0, laddr=('127.0.0.1', 53019)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=25, family=2, type=1, proto=0, laddr=('127.0.0.1', 53020)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=26, family=2, type=1, proto=0, laddr=('127.0.0.1', 53046)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=27, family=2, type=1, proto=0, laddr=('127.0.0.1', 53052)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FF.FE.....E..
+======================================================================
+ERROR: test_section_without_description_may_carry_only_promo_and_whats_new (__main__.VersionTextsTests.test_section_without_description_may_carry_only_promo_and_whats_new)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_version_texts.py", line 445, in test_section_without_description_may_carry_only_promo_and_whats_new
+    self.assertIn("de-DE", wanted_texts(text_file() + de_section()))
+                           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/asc_version_texts.py", line 88, in wanted_texts
+    check_section(locale, values)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/asc_version_texts.py", line 68, in check_section
+    raise Fatal(f"{locale} {LABELS[field]} fehlt oder ist leer")
+asc_wait_build.Fatal: de-DE Beschreibung fehlt oder ist leer
+
+======================================================================
+ERROR: test_whats_new_line_is_parsed_and_limited (__main__.VersionTextsTests.test_whats_new_line_is_parsed_and_limited)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_version_texts.py", line 433, in test_whats_new_line_is_parsed_and_limited
+    self.assertEqual(wanted["en-US"]["whatsNew"], "Neu: Englisch.")
+                     ~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'whatsNew'
+
+======================================================================
+FAIL: test_de_section_patches_only_promo_and_whats_new (__main__.VersionTextsTests.test_de_section_patches_only_promo_and_whats_new)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_version_texts.py", line 484, in test_de_section_patches_only_promo_and_whats_new
+    self.assert_ok(result)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_version_texts.py", line 192, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : ::error::de-DE Beschreibung fehlt oder ist leer
+
+
+======================================================================
+FAIL: test_lesen_shows_published_promotional_text_and_never_writes (__main__.VersionTextsTests.test_lesen_shows_published_promotional_text_and_never_writes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_version_texts.py", line 531, in test_lesen_shows_published_promotional_text_and_never_writes
+    self.assertIn(f"veröffentlicht IOS 1.0 de-DE Werbetext zeichen={len('Veröffentlichter Werbetext')}: "
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  "Veröffentlichter Werbetext", lines)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'veröffentlicht IOS 1.0 de-DE Werbetext zeichen=26: Veröffentlichter Werbetext' not found in ['version IOS 1.0 state=READY_FOR_SALE', 'version IOS 1.0.1 state=PREPARE_FOR_SUBMISSION', 'version MAC_OS 1.0 state=READY_FOR_SALE', 'version IOS 1.0.1 id=V2 state=PREPARE_FOR_SUBMISSION', '  IOS en-US Beschreibung zeichen=0: -', '  IOS en-US Schlüsselwörter zeichen=0: -', '  IOS en-US Support-URL zeichen=0: -', '  IOS en-US Werbetext zeichen=0: -', 'keine bearbeitbare Version MAC_OS (Zustände READY_FOR_SALE), nichts geschrieben', 'zusammenfassung geschrieben=0']
+
+======================================================================
+FAIL: test_missing_mac_en_us_is_posted_with_all_fields_including_whats_new (__main__.VersionTextsTests.test_missing_mac_en_us_is_posted_with_all_fields_including_whats_new)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_version_texts.py", line 501, in test_missing_mac_en_us_is_posted_with_all_fields_including_whats_new
+    self.assertEqual(data["attributes"], {"locale": "en-US", "description": DESCRIPTION, "keywords": KEYWORDS,
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                          "supportUrl": SUPPORT, "promotionalText": PROMO,
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                          "whatsNew": "Now English."})
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'loc[262 chars]alText': 'Say it in one sentence.'} != {'loc[262 chars]alText': 'Say it in one sentence.', 'whatsNew': 'Now English.'}
+Diff is 647 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_repo_text_file_parses_and_fits_limits (__main__.VersionTextsTests.test_repo_text_file_parses_and_fits_limits)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_version_texts.py", line 239, in test_repo_text_file_parses_and_fits_limits
+    self.assertEqual(sorted(wanted), ["de-DE", "en-US"])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['en-US'] != ['de-DE', 'en-US']
+
+First differing element 0:
+'en-US'
+'de-DE'
+
+Second list contains 1 additional elements.
+First extra element 1:
+'en-US'
+
+- ['en-US']
++ ['de-DE', 'en-US']
+
+======================================================================
+FAIL: test_second_run_writes_nothing (__main__.VersionTextsTests.test_second_run_writes_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_version_texts.py", line 513, in test_second_run_writes_nothing
+    self.assert_ok(self.run_texts(fake, "texte", text=text))
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_version_texts.py", line 192, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : ::error::de-DE Beschreibung fehlt oder ist leer
+
+
+======================================================================
+FAIL: test_section_without_description_for_missing_locale_is_fatal_and_writes_nothing (__main__.VersionTextsTests.test_section_without_description_for_missing_locale_is_fatal_and_writes_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_version_texts.py", line 474, in test_section_without_description_for_missing_locale_is_fatal_and_writes_nothing
+    self.assertIn("fehlt bei Apple", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'fehlt bei Apple' not found in '::error::de-DE Beschreibung fehlt oder ist leer\n'
+
+----------------------------------------------------------------------
+Ran 27 tests in 22.184s
+
+FAILED (failures=6, errors=2)

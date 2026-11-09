@@ -36,7 +36,7 @@ FENCE = "```"
 
 
 def text_file(description=DESCRIPTION, keywords=KEYWORDS, support=SUPPORT, promo=PROMO, locale="en-US",
-              drop=(), close=True):
+              drop=(), close=True, whats_new=None):
     """Textdatei im Format der Spec; `drop` lässt Felder weg, `close=False` den schließenden Marker."""
     lines = ["# Store-Texte", "", "Vorspann. Schlüsselwörter: stehen hier nicht, Werbetext: auch nicht.", "",
              f"## {locale}", ""]
@@ -48,7 +48,19 @@ def text_file(description=DESCRIPTION, keywords=KEYWORDS, support=SUPPORT, promo
         lines += [f"Support-URL: {support}"]
     if promo is not None:
         lines += [f"Werbetext: {promo}"]
+    if whats_new is not None:
+        lines += [f"Neu in dieser Version: {whats_new}"]
     return "\n".join(lines) + "\n"
+
+
+def de_section(promo="Deutscher Werbetext von 1.0.", whats_new="Jetzt auch auf Englisch.", extra=()):
+    """Abschnitt `## de-DE` ohne Beschreibung; `extra` hängt weitere Zeilen an."""
+    lines = ["", "## de-DE", ""]
+    if promo is not None:
+        lines.append(f"Werbetext: {promo}")
+    if whats_new is not None:
+        lines.append(f"Neu in dieser Version: {whats_new}")
+    return "\n".join(lines + list(extra)) + "\n"
 
 
 def version(version_id, platform, state, number="1.0"):
@@ -224,7 +236,14 @@ class VersionTextsTests(unittest.TestCase):
     def test_repo_text_file_parses_and_fits_limits(self):
         from asc_version_texts import wanted_texts
         wanted = wanted_texts(TEXT_FILE.read_text(encoding="utf-8"))
-        self.assertEqual(list(wanted), ["en-US"])
+        self.assertEqual(sorted(wanted), ["de-DE", "en-US"])
+        german = wanted["de-DE"]
+        self.assertTrue(german["promotionalText"].strip())
+        self.assertLessEqual(len(german["promotionalText"]), 170)
+        self.assertNotIn("description", german)
+        for locale in wanted:
+            self.assertTrue(wanted[locale]["whatsNew"].strip(), locale)
+            self.assertLessEqual(len(wanted[locale]["whatsNew"]), 4000, locale)
         values = wanted["en-US"]
         self.assertTrue(values["description"].strip())
         self.assertLessEqual(len(values["description"]), 4000)
@@ -233,7 +252,6 @@ class VersionTextsTests(unittest.TestCase):
         self.assertNotIn(", ", values["keywords"])
         self.assertLessEqual(len(values.get("promotionalText") or ""), 170)
         self.assertTrue(values["supportUrl"].startswith("https://"))
-        self.assertNotIn("de-DE", wanted)
 
     # AC-3
     def test_selects_only_editable_version_per_platform(self):
@@ -407,6 +425,113 @@ class VersionTextsTests(unittest.TestCase):
             self.assertTrue("::error::" in result.stdout or "zusammenfassung geschrieben=" in result.stdout, output)
             for secret in secrets:
                 self.assertNotIn(secret, output, (aktion, secret))
+
+    # 5a-2 AC-1
+    def test_whats_new_line_is_parsed_and_limited(self):
+        from asc_version_texts import wanted_texts
+        wanted = wanted_texts(text_file(whats_new="Neu: Englisch."))
+        self.assertEqual(wanted["en-US"]["whatsNew"], "Neu: Englisch.")
+        self.assertEqual(len(wanted_texts(text_file(whats_new="w" * 4000))["en-US"]["whatsNew"]), 4000)
+        fake = self.ios_state(EMPTY_EN)
+        result = self.run_texts(fake, "texte", text=text_file(whats_new="w" * 4001))
+        self.assert_failed(result)
+        for needle in ("en-US", "Neu in dieser Version", "4001", "4000"):
+            self.assertIn(needle, result.stdout)
+        self.assertEqual(fake.requests, [])
+
+    # 5a-2 AC-2
+    def test_section_without_description_may_carry_only_promo_and_whats_new(self):
+        from asc_version_texts import wanted_texts
+        self.assertIn("de-DE", wanted_texts(text_file() + de_section()))
+        self.assertIn("de-DE", wanted_texts(text_file() + de_section(promo=None)))
+        self.assertIn("de-DE", wanted_texts(text_file() + de_section(whats_new=None)))
+        cases = [(de_section(extra=["Schlüsselwörter: a,b"]), "Schlüsselwörter"),
+                 (de_section(extra=[f"Support-URL: {SUPPORT}"]), "Support-URL"),
+                 (de_section(promo=None, whats_new=None), "de-DE")]
+        for section, needle in cases:
+            fake = self.ios_state(EMPTY_EN)
+            result = self.run_texts(fake, "texte", text=text_file() + section)
+            self.assert_failed(result)
+            self.assertIn("de-DE", result.stdout)
+            self.assertIn(needle, result.stdout)
+            self.assertEqual(fake.requests, [], section)
+
+    # 5a-2 AC-3
+    def test_section_with_description_still_requires_all_three(self):
+        for dropped in ("Schlüsselwörter", "Support-URL"):
+            fake = self.ios_state(EMPTY_EN)
+            result = self.run_texts(fake, "texte", text=text_file(drop=(dropped,), whats_new="Neu"))
+            self.assert_failed(result)
+            self.assertIn(dropped, result.stdout)
+            self.assertEqual(fake.requests, [])
+
+    # 5a-2 AC-4
+    def test_section_without_description_for_missing_locale_is_fatal_and_writes_nothing(self):
+        fake = self.fake(versions=[IOS_NEW], localizations={"V2": [EMPTY_EN]})
+        result = self.run_texts(fake, "texte", text=text_file() + de_section())
+        self.assert_failed(result)
+        self.assertIn("de-DE", result.stdout)
+        self.assertIn("fehlt bei Apple", result.stdout)
+        self.assertEqual(fake.writes(), [])
+
+    # 5a-2 AC-5
+    def test_de_section_patches_only_promo_and_whats_new(self):
+        german = {"IOS": loc("LDE1", "de-DE", "Deutsche Beschreibung", "de,wörter", "https://example.de", "alt"),
+                  "MAC": loc("LDE3", "de-DE", "Deutsche Beschreibung", "de,wörter", "https://example.de", "alt")}
+        fake = self.fake(versions=[IOS_NEW, version("V4", "MAC_OS", "PREPARE_FOR_SUBMISSION", "1.0.1")],
+                         localizations={"V2": [wanted_loc(), german["IOS"]], "V4": [wanted_loc("L4"), german["MAC"]]})
+        result = self.run_texts(fake, "texte", text=text_file() + de_section())
+        self.assert_ok(result)
+        self.assertEqual(len(fake.writes()), 2, fake.writes())
+        for method, path, body in fake.writes():
+            self.assertEqual(method, "PATCH")
+            self.assertIn(path.rsplit("/", 1)[1], ("LDE1", "LDE3"))
+            self.assertEqual(body["data"]["attributes"],
+                             {"promotionalText": "Deutscher Werbetext von 1.0.", "whatsNew": "Jetzt auch auf Englisch."})
+        self.assertEqual(result.stdout.count("gegenprobe gleich=ja"), 2)
+
+    # 5a-2 AC-6
+    def test_missing_mac_en_us_is_posted_with_all_fields_including_whats_new(self):
+        mac = version("V4", "MAC_OS", "PREPARE_FOR_SUBMISSION", "1.0.1")
+        fake = self.fake(versions=[mac], localizations={"V4": [loc("L9", "de-DE")]})
+        result = self.run_texts(fake, "texte", text=text_file(whats_new="Now English."))
+        self.assert_ok(result)
+        self.assertEqual([(m, p) for m, p, _ in fake.writes()], [("POST", "/v1/appStoreVersionLocalizations")])
+        data = fake.writes()[0][2]["data"]
+        self.assertEqual(data["attributes"], {"locale": "en-US", "description": DESCRIPTION, "keywords": KEYWORDS,
+                                              "supportUrl": SUPPORT, "promotionalText": PROMO,
+                                              "whatsNew": "Now English."})
+        self.assertEqual(data["relationships"]["appStoreVersion"]["data"], {"type": "appStoreVersions", "id": "V4"})
+
+    # 5a-2 AC-7
+    def test_second_run_writes_nothing(self):
+        german = loc("LDE1", "de-DE", "Deutsche Beschreibung", "de,wörter", "https://example.de", "alt")
+        english = wanted_loc()
+        english["attributes"]["whatsNew"] = "Now English."
+        fake = self.fake(versions=[IOS_NEW], localizations={"V2": [english, german]})
+        text = text_file(whats_new="Now English.") + de_section()
+        self.assert_ok(self.run_texts(fake, "texte", text=text))
+        first = len(fake.writes())
+        self.assertEqual(first, 1)
+        result = self.run_texts(fake, "texte", text=text)
+        self.assert_ok(result)
+        self.assertEqual(len(fake.writes()), first)
+        self.assertEqual(result.stdout.count("unverändert"), 2)
+
+    # 5a-2 AC-8
+    def test_lesen_shows_published_promotional_text_and_never_writes(self):
+        live_ios = loc("L1", "de-DE", OLD, OLD, OLD, "Veröffentlichter Werbetext")
+        live_mac = loc("L3", "de-DE", OLD, OLD, OLD, "Mac Werbetext")
+        fake = self.fake(versions=[IOS_LIVE, IOS_NEW, MAC_LIVE],
+                         localizations={"V1": [live_ios], "V2": [EMPTY_EN], "V3": [live_mac]})
+        result = self.run_texts(fake, "lesen")
+        self.assert_ok(result)
+        self.assertEqual([m for m, _, _ in fake.requests if m != "GET"], [])
+        lines = result.stdout.splitlines()
+        self.assertIn(f"veröffentlicht IOS 1.0 de-DE Werbetext zeichen={len('Veröffentlichter Werbetext')}: "
+                      "Veröffentlichter Werbetext", lines)
+        self.assertIn(f"veröffentlicht MAC_OS 1.0 de-DE Werbetext zeichen={len('Mac Werbetext')}: Mac Werbetext",
+                      lines)
 
 
 class WorkflowTests(unittest.TestCase):
