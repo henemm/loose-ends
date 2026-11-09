@@ -1,5 +1,7 @@
-# Handlauf (#842, 4c-1): Store-Bilder einer Sprache aus docs/store/screenshots/ in Apples Asset-Bibliothek. `lesen`
-# schreibt nichts bei Apple, `hochladen` legt nur Bilder in der Bibliothek an. Nie platzieren, nie einreichen, nie löschen.
+# Handlauf (#842, 4c-1/4c-2): Store-Bilder einer Sprache aus docs/store/screenshots/ in Apples Asset-Bibliothek. `lesen`
+# schreibt nichts bei Apple, `hochladen` legt nur Bilder in der Bibliothek an, `platzieren` (nur en) setzt die englischen
+# Bilder auf die en-US-Seite der bearbeitbaren iOS-Version und ordnet sie. Nie einreichen, nie löschen, de-DE nie schreiben.
+# concurrency hält zwei Läufe auseinander, ohne einen laufenden Schreiblauf abzubrechen.
 # Der Auslöser pull_request führt nur die Tests aus und registriert die Datei für den Handlauf vom Zweig (--ref).
 name: ASC Store Images
 
@@ -7,13 +9,14 @@ on:
   workflow_dispatch:
     inputs:
       aktion:
-        description: "lesen (nur Version, Gruppen und Bibliothek) oder hochladen (Bilder in die Bibliothek)"
+        description: "lesen (nur GET), hochladen (Bilder in die Bibliothek) oder platzieren (nur en, auf die en-US-Seite)"
         required: true
         default: lesen
         type: choice
         options:
           - lesen
           - hochladen
+          - platzieren
       sprache:
         description: "Sprache der Bilder (en oder de)"
         required: true
@@ -30,6 +33,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: asc-store-images
+  cancel-in-progress: false
 
 jobs:
   images:

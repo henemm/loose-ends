@@ -184,4 +184,5 @@ Alle in `scripts/test_asc_store_images.py` (`unittest`, ohne Netz), ausgenommen 
 
 ## Changelog
 
+- 2026-11-09: Umfang ca. 600 LoC (Skript ca. 210, Tests ca. 385) über der Meldeschwelle; Henning per AskUserQuestion „So annehmen“.
 - 2026-11-09: Initial spec created (Schnitt 4c-2 von #842: `platzieren` nur für `en`, Anlegen, Ordnen, Warten und Gegenprobe über Bibliotheksplatzierungen; Zuordnung ohne `included`; Vorabprüfung ohne Schreiben; Idempotenz; `lesen` mit Platzierungen; eigene Bereitschaftsprüfung in `upload`; Fehlercode im Client; `concurrency` im Workflow; Handläufe vom Zweig vor dem Merge)

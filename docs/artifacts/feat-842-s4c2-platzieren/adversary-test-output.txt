@@ -1,0 +1,188 @@
+test_aborts_before_any_write (scripts.test_asc_store_images.AbortTests.test_aborts_before_any_write) ... ok
+test_read_only_never_writes (scripts.test_asc_store_images.LesenTests.test_read_only_never_writes) ... ok
+test_mac_without_editable_version_is_skipped_with_warning (scripts.test_asc_store_images.MacTests.test_mac_without_editable_version_is_skipped_with_warning) ... ok
+test_language_input_is_checked (scripts.test_asc_store_images.MainTests.test_language_input_is_checked) ... ok
+test_duplicate_placement_of_same_image_aborts (scripts.test_asc_store_images.PlaceGuardTests.test_duplicate_placement_of_same_image_aborts) ... ok
+test_foreign_placement_aborts_without_write (scripts.test_asc_store_images.PlaceGuardTests.test_foreign_placement_aborts_without_write) ... ok
+test_never_deletes_submits_or_writes_german (scripts.test_asc_store_images.PlaceGuardTests.test_never_deletes_submits_or_writes_german) ... ok
+test_preflight_aborts_before_any_write (scripts.test_asc_store_images.PlaceGuardTests.test_preflight_aborts_before_any_write) ... ok
+test_processing_waits_and_failure_is_an_error (scripts.test_asc_store_images.PlaceGuardTests.test_processing_waits_and_failure_is_an_error) ... ok
+test_verification_detects_wrong_order_or_count (scripts.test_asc_store_images.PlaceGuardTests.test_verification_detects_wrong_order_or_count) ... ok
+test_german_is_refused_without_any_call (scripts.test_asc_store_images.PlaceMainTests.test_german_is_refused_without_any_call) ... ok
+test_lesen_shows_en_placements_and_never_writes (scripts.test_asc_store_images.PlaceReadTests.test_lesen_shows_en_placements_and_never_writes) ... ok
+test_upload_ready_check_allows_placement (scripts.test_asc_store_images.PlaceReadTests.test_upload_ready_check_allows_placement) ... ok
+test_place_creates_all_in_manifest_order (scripts.test_asc_store_images.PlaceTests.test_place_creates_all_in_manifest_order) ... ok
+test_place_orders_only_on_difference (scripts.test_asc_store_images.PlaceTests.test_place_orders_only_on_difference) ... ok
+test_resume_after_partial_run_places_only_missing (scripts.test_asc_store_images.PlaceTests.test_resume_after_partial_run_places_only_missing) ... ok
+test_second_run_places_nothing (scripts.test_asc_store_images.PlaceTests.test_second_run_places_nothing) ... ok
+test_workflow_offers_platzieren_and_serializes (scripts.test_asc_store_images.PlaceWorkflowTests.test_workflow_offers_platzieren_and_serializes) ... ok
+test_plan_names_and_groups (scripts.test_asc_store_images.PlanTests.test_plan_names_and_groups) ... ok
+test_failed_processing_is_an_error (scripts.test_asc_store_images.StateTests.test_failed_processing_is_an_error) ... ok
+test_ready_check_requires_ready_and_allows_placement (scripts.test_asc_store_images.StateTests.test_ready_check_requires_ready_and_allows_placement) ... ok
+test_waiting_image_from_broken_run_fails_second_run (scripts.test_asc_store_images.StateTests.test_waiting_image_from_broken_run_fails_second_run) ... ok
+test_existing_names_of_other_language_are_untouched (scripts.test_asc_store_images.UploadTests.test_existing_names_of_other_language_are_untouched) ... ok
+test_second_run_creates_nothing (scripts.test_asc_store_images.UploadTests.test_second_run_creates_nothing) ... ok
+test_upload_creates_all_and_never_places (scripts.test_asc_store_images.UploadTests.test_upload_creates_all_and_never_places) ... ok
+test_workflow_runs_tests_first_and_hides_the_key (scripts.test_asc_store_images.WorkflowFileTests.test_workflow_runs_tests_first_and_hides_the_key) ... ok
+test_client_error_reports_api_code (scripts.test_asc_header_upload.ClientErrorTests.test_client_error_reports_api_code) ... ok
+test_lesen_prints_raw_specs_and_never_writes (scripts.test_asc_header_upload.LesenTests.test_lesen_prints_raw_specs_and_never_writes) ... ok
+test_match_by_dimension_range_and_placement (scripts.test_asc_header_upload.MatchTests.test_match_by_dimension_range_and_placement) ... ok
+test_partial_match_uploads_fitting_and_reports_rest (scripts.test_asc_header_upload.MatchTests.test_partial_match_uploads_fitting_and_reports_rest) ... ok
+test_refdata_read_as_single_record (scripts.test_asc_header_upload.MatchTests.test_refdata_read_as_single_record) ... ok
+test_stops_without_matching_spec (scripts.test_asc_header_upload.MatchTests.test_stops_without_matching_spec) ... ok
+test_state_check_reads_ready_state (scripts.test_asc_header_upload.StateTests.test_state_check_reads_ready_state) ... ok
+test_wait_reaches_ready_and_stops_on_failed (scripts.test_asc_header_upload.StateTests.test_wait_reaches_ready_and_stops_on_failed) ... ok
+test_never_places_or_submits (scripts.test_asc_header_upload.UploadTests.test_never_places_or_submits) ... ok
+test_skips_existing_reference_name (scripts.test_asc_header_upload.UploadTests.test_skips_existing_reference_name) ... ok
+test_uses_library_id_and_relationship (scripts.test_asc_header_upload.UploadTests.test_uses_library_id_and_relationship) ... ok
+test_403_and_409_give_clear_message (scripts.test_asc_version_texts.VersionTextsTests.test_403_and_409_give_clear_message) ... ok
+test_different_text_patches_once_with_changed_fields_only (scripts.test_asc_version_texts.VersionTextsTests.test_different_text_patches_once_with_changed_fields_only) ... ok
+test_empty_en_us_record_gets_all_fields_by_patch (scripts.test_asc_version_texts.VersionTextsTests.test_empty_en_us_record_gets_all_fields_by_patch) ... ok
+test_equal_values_write_nothing (scripts.test_asc_version_texts.VersionTextsTests.test_equal_values_write_nothing) ... ok
+test_invalid_text_file_aborts_before_any_request (scripts.test_asc_version_texts.VersionTextsTests.test_invalid_text_file_aborts_before_any_request) ... ok
+test_lesen_never_writes_and_prints_values (scripts.test_asc_version_texts.VersionTextsTests.test_lesen_never_writes_and_prints_values) ... ok
+test_missing_record_posts_with_locale_fields_and_relationship (scripts.test_asc_version_texts.VersionTextsTests.test_missing_record_posts_with_locale_fields_and_relationship) ... ok
+test_no_editable_version_prints_message_and_exits_zero (scripts.test_asc_version_texts.VersionTextsTests.test_no_editable_version_prints_message_and_exits_zero) ... ok
+test_only_locales_from_file_are_touched (scripts.test_asc_version_texts.VersionTextsTests.test_only_locales_from_file_are_touched) ... ok
+test_output_has_no_secrets (scripts.test_asc_version_texts.VersionTextsTests.test_output_has_no_secrets) ... ok
+test_promotional_text_is_optional (scripts.test_asc_version_texts.VersionTextsTests.test_promotional_text_is_optional) ... ok
+test_repo_text_file_parses_and_fits_limits (scripts.test_asc_version_texts.VersionTextsTests.test_repo_text_file_parses_and_fits_limits) ... ok
+test_selects_only_editable_version_per_platform (scripts.test_asc_version_texts.VersionTextsTests.test_selects_only_editable_version_per_platform) ... ok
+test_several_editable_versions_of_one_platform_abort (scripts.test_asc_version_texts.VersionTextsTests.test_several_editable_versions_of_one_platform_abort) ... ok
+test_text_file_parses_description_block_and_fields (scripts.test_asc_version_texts.VersionTextsTests.test_text_file_parses_description_block_and_fields) ... ok
+test_unknown_action_aborts_before_any_request (scripts.test_asc_version_texts.VersionTextsTests.test_unknown_action_aborts_before_any_request) ... ok
+test_verification_mismatch_is_error (scripts.test_asc_version_texts.VersionTextsTests.test_verification_mismatch_is_error) ... ok
+test_writes_only_localization_paths_and_submits_nothing (scripts.test_asc_version_texts.VersionTextsTests.test_writes_only_localization_paths_and_submits_nothing) ... ok
+test_workflow_has_choice_unit_tests_and_secrets (scripts.test_asc_version_texts.WorkflowTests.test_workflow_has_choice_unit_tests_and_secrets) ... ok
+test_appinfo_line_has_both_states_separately (scripts.test_asc_store_probe.StoreProbeTests.test_appinfo_line_has_both_states_separately) ... ok
+test_appinfo_line_lists_attribute_and_relationship_names_sorted (scripts.test_asc_store_probe.StoreProbeTests.test_appinfo_line_lists_attribute_and_relationship_names_sorted) ... ok
+test_appinfo_without_localization_says_keine (scripts.test_asc_store_probe.StoreProbeTests.test_appinfo_without_localization_says_keine) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 409: 'Conflict'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 63991)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 63996)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 64001)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 64007)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 64013)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 64017)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 64018)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 64019)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 64020)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=13, family=2, type=1, proto=0, laddr=('127.0.0.1', 64021)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=14, family=2, type=1, proto=0, laddr=('127.0.0.1', 64022)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=15, family=2, type=1, proto=0, laddr=('127.0.0.1', 64023)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=16, family=2, type=1, proto=0, laddr=('127.0.0.1', 64024)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=17, family=2, type=1, proto=0, laddr=('127.0.0.1', 64025)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=18, family=2, type=1, proto=0, laddr=('127.0.0.1', 64026)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=19, family=2, type=1, proto=0, laddr=('127.0.0.1', 64040)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=20, family=2, type=1, proto=0, laddr=('127.0.0.1', 64044)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 64050)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=22, family=2, type=1, proto=0, laddr=('127.0.0.1', 64053)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=23, family=2, type=1, proto=0, laddr=('127.0.0.1', 64059)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=24, family=2, type=1, proto=0, laddr=('127.0.0.1', 64065)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=25, family=2, type=1, proto=0, laddr=('127.0.0.1', 64066)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=26, family=2, type=1, proto=0, laddr=('127.0.0.1', 64067)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=27, family=2, type=1, proto=0, laddr=('127.0.0.1', 64068)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=28, family=2, type=1, proto=0, laddr=('127.0.0.1', 64069)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=29, family=2, type=1, proto=0, laddr=('127.0.0.1', 64091)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=30, family=2, type=1, proto=0, laddr=('127.0.0.1', 64097)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=31, family=2, type=1, proto=0, laddr=('127.0.0.1', 64103)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=32, family=2, type=1, proto=0, laddr=('127.0.0.1', 64110)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=33, family=2, type=1, proto=0, laddr=('127.0.0.1', 64114)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=34, family=2, type=1, proto=0, laddr=('127.0.0.1', 64115)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=35, family=2, type=1, proto=0, laddr=('127.0.0.1', 64121)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=36, family=2, type=1, proto=0, laddr=('127.0.0.1', 64122)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=37, family=2, type=1, proto=0, laddr=('127.0.0.1', 64135)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=38, family=2, type=1, proto=0, laddr=('127.0.0.1', 64142)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_empty_subtitle_says_keiner (scripts.test_asc_store_probe.StoreProbeTests.test_empty_subtitle_says_keiner) ... ok
+test_failed_localization_query_says_fehler_not_keine (scripts.test_asc_store_probe.StoreProbeTests.test_failed_localization_query_says_fehler_not_keine) ... ok
+test_no_appinfo_says_appinfo_keine (scripts.test_asc_store_probe.StoreProbeTests.test_no_appinfo_says_appinfo_keine) ... ok
+test_probe_never_writes (scripts.test_asc_store_probe.StoreProbeTests.test_probe_never_writes) ... ok
+test_subtitle_lines_carry_appinfo_number (scripts.test_asc_store_probe.StoreProbeTests.test_subtitle_lines_carry_appinfo_number) ... ok
+test_summary_line_still_present (scripts.test_asc_store_probe.StoreProbeTests.test_summary_line_still_present) ... ok
+test_description_printed_on_one_line_with_umlauts (scripts.test_asc_store_probe.StoreTextTests.test_description_printed_on_one_line_with_umlauts) ... ok
+test_empty_en_us_localization_says_keiner (scripts.test_asc_store_probe.StoreTextTests.test_empty_en_us_localization_says_keiner) ... ok
+test_placement_error_shows_reason_and_does_not_abort (scripts.test_asc_store_probe.StoreTextTests.test_placement_error_shows_reason_and_does_not_abort) ... ok
+test_placement_line_prints_attribute_keys (scripts.test_asc_store_probe.StoreTextTests.test_placement_line_prints_attribute_keys) ... ok
+test_placement_lines_per_localization (scripts.test_asc_store_probe.StoreTextTests.test_placement_lines_per_localization) ... ok
+test_placement_path_is_placements_and_old_path_is_404 (scripts.test_asc_store_probe.StoreTextTests.test_placement_path_is_placements_and_old_path_is_404) ... ok
+test_probe_never_writes_and_keeps_old_lines (scripts.test_asc_store_probe.StoreTextTests.test_probe_never_writes_and_keeps_old_lines) ... ok
+test_refdata_group_entries_read_defensively (scripts.test_asc_store_probe.StoreTextTests.test_refdata_group_entries_read_defensively) ... ok
+test_refdata_groups_from_placement_profile_groups (scripts.test_asc_store_probe.StoreTextTests.test_refdata_groups_from_placement_profile_groups) ... ok
+test_refdata_none_and_error (scripts.test_asc_store_probe.StoreTextTests.test_refdata_none_and_error) ... ok
+test_text_line_counts_each_field (scripts.test_asc_store_probe.StoreTextTests.test_text_line_counts_each_field) ... ok
+
+----------------------------------------------------------------------
+Ran 76 tests in 32.911s
+
+OK
