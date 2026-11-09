@@ -1,0 +1,44 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "28ADCF4F-83D2-4E1D-B5E7-85C54C9463C6.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "4-aufgabe-steht-in-neu_0_75AEE754-F576-48D6-9FB8-A1A69E380D0E.png",
+        "timestamp" : 1794215400.763
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "3A308A56-AFB9-48FF-B169-324A19BF2AF7.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "3-aufgabe-eingetippt_0_6AC8AD22-AC6F-4031-A46D-EC9E17C75658.png",
+        "timestamp" : 1794215394.57
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "BDEC9696-1D0A-4B54-B94F-B61849CB324E.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "2-nach-tippen-auf-plus_0_935631D9-249A-4297-ABE0-DA405E417D97.png",
+        "timestamp" : 1794215392.736
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "D7357DE5-C1E9-49E4-891E-8002186067E9.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "1-startbildschirm-mit-plus_0_6A785009-C974-4394-8E5C-DBE5F930BA47.png",
+        "timestamp" : 1794215389.45
+      }
+    ],
+    "testIdentifier" : "CaptureSmokeTests/testPlusButtonProof()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/CaptureSmokeTests/testPlusButtonProof"
+  }
+]
