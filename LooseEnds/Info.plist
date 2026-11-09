@@ -60,6 +60,8 @@
 	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>LEAccountEnabled</key>
+	<false/>
 	<key>LEAppGroup</key>
 	<string>group.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
 	<key>LECloudContainer</key>

@@ -6,6 +6,7 @@ asc_wait_build.py. Läuft nach asc_wait_build.py, der Build ist also schon gelis
 Der Text darf je Sprache einen Abschnitt haben: Zeilen, die mit `de:` oder `en:` beginnen (Code aus `LanguagePacks.shipped`),
 eröffnen einen. Text ohne Marker ist Deutsch; eine Fassung ohne eigenen Abschnitt bekommt den deutschen Text.
 Jede vorhandene Sprachfassung des Builds bekommt ihren Text; fehlt die Fassung einer ausgelieferten Sprache, wird sie angelegt.
+Mit ACCOUNT_BUILD=true (Konto-Bau, #615 S4c-2a) trägt jeder Abschnitt zuletzt die Marke ACCOUNT_BUILD_MARK.
 Nur Standardbibliothek plus `openssl`. Schlüssel, Token und Signatur werden nie ausgegeben.
 """
 import json
@@ -24,6 +25,19 @@ from shipped_languages import ROOT
 LOCALE = GERMAN
 MAX_LENGTH = 4000
 ATTEMPTS = 5
+# Kennzeichnung eines Konto-Baus (#615 S4c-2a), die eine Quelle: asc_store_version.py ordnet so einen Bau nie zu.
+ACCOUNT_BUILD_MARK = "KONTO-BAU – nie für den App Store"
+
+
+def mark_account_build(sections):
+    """Hängt die Marke als letzte Zeile an jeden Abschnitt an, nie doppelt."""
+    return {locale: text if ACCOUNT_BUILD_MARK in text else f"{text}\n{ACCOUNT_BUILD_MARK}"
+            for locale, text in sections.items()}
+
+
+def is_account_build(texts):
+    """Wahr, wenn irgendeiner der Texte die Marke trägt."""
+    return any(isinstance(text, str) and ACCOUNT_BUILD_MARK in text for text in texts)
 
 
 def error_codes(error):
@@ -136,6 +150,8 @@ def main(argv):
         if not text:
             raise Fatal("WHAT_TO_TEST is empty: every TestFlight build says what to test (#347)")
         sections = split_sections(text)
+        if os.environ.get("ACCOUNT_BUILD") == "true":
+            sections = mark_account_build(sections)
         for locale, part in sections.items():
             if len(part) > MAX_LENGTH:
                 raise Fatal(f"WHAT_TO_TEST ({locale}) has {len(part)} characters, TestFlight takes at most {MAX_LENGTH}")

@@ -354,6 +354,20 @@ Schritt „Script tests") vergleicht `project.yml` typgenau mit allen eingecheck
 `entitled` der Archivprüfung liest die signierten Berechtigungen der Haupt-App per `codesign` und stoppt
 den Upload, wenn der Schlüssel fehlt.
 
+**Konto-Bau (#615 S4c-2a).** Die Haupt-App trägt in jedem Bau die Berechtigung `com.apple.developer.applesignin`
+(„Mit Apple anmelden“), und `LEAccountEnabled` steht in `project.yml` als echtes Bool auf `false`: die Gruppe „Claude“ in
+den Einstellungen bleibt verborgen. Nur die Eingabe `konto` (Run workflow → Haken „Konto-Bau“, Standard aus; ein `v*`-Tag-Lauf
+ist nie einer) setzt `ACCOUNT_BUILD=true`; dann schreibt der Schritt „Set the account switch“ in beiden Jobs nach „Generate
+project“ und vor dem Archiv `LEAccountEnabled` auf `true`. Beide Archivprüfungen belegen am fertigen Archiv, dass
+`LEAccountEnabled` vom Typ Bool ist und der Eingabe gleicht (auch „aus“ bei jedem gewöhnlichen Bau), und dass die signierte App
+`com.apple.developer.applesignin` trägt; jede Abweichung stoppt den Upload. `confirm` und `confirm-mac` hängen bei einem
+Konto-Bau eine feste Kennzeichnung an jede Fassung von „Was testen“ an (Wortlaut nur in `scripts/asc_what_to_test.py`).
+`scripts/asc_store_version.py` liest vor jeder Zuordnung die „Was testen“-Texte des Baus und ordnet einen gekennzeichneten
+Bau (`übersprungen: konto`) oder einen mit unlesbaren oder leeren Texten (`übersprungen: texte nicht lesbar`) nie einer
+Store-Version zu. Regel: ein Konto-Bau wird nie einem Store-Bau zugeordnet und nie eingereicht, solange der Konto-Teil des
+Datenschutztextes nicht online steht. Die Kennzeichnung ist in App Store Connect von Hand überschreibbar; der Beleg am Archiv
+bleibt deshalb die eigentliche Prüfung.
+
 Nach dem Upload läuft der Job `confirm` („Confirm Apple processed the build") auf `ubuntu-latest`.
 Er ruft `scripts/asc_wait_build.py` mit der Lauf-Nummer auf: Das Skript ermittelt über die App
 Store Connect API die App zur Bundle-Kennung, fragt alle 30 Sekunden den Build mit dieser Nummer ab

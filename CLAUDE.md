@@ -260,6 +260,7 @@ TestFlight (manual run or a `v*` tag). Setup for the account owner: `docs/refere
 Since #174 it runs on the `xcode-27` preview image with Xcode 27.0 pinned and never lowers the
 deployment targets; a step before the upload checks every target in the archive (27 SDK, minimum 27.0,
 version, dSYM, privacy strings) and stops the upload on any mismatch.
+The input `konto` (off by default, never on a tag) switches the account group on in the archive (`LEAccountEnabled`, proven as Bool with `applesignin` in both archive checks), marks the build in „Was testen“, and `scripts/asc_store_version.py` never assigns a marked or unreadable build to a store version (#615 S4c-2a).
 
 **Every TestFlight build says what to test (Henning, 2026-10-12, #347).** A manual run requires the
 input `what_to_test`; a `v*` tag uses the tagged commit's message. After Apple reports the build as
