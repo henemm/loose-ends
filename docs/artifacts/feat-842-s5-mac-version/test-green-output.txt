@@ -1,0 +1,93 @@
+test_404_on_build_lookup_is_fatal_and_never_reassigns (__main__.StoreVersionTests.test_404_on_build_lookup_is_fatal_and_never_reassigns) ... ok
+test_anlegen_creates_mac_version_with_ios_number (__main__.StoreVersionTests.test_anlegen_creates_mac_version_with_ios_number) ... ok
+test_anlegen_does_not_create_second_mac_version (__main__.StoreVersionTests.test_anlegen_does_not_create_second_mac_version) ... ok
+test_anlegen_fails_on_mac_version_mismatch (__main__.StoreVersionTests.test_anlegen_fails_on_mac_version_mismatch) ... ok
+test_anlegen_fails_without_or_with_several_ios_versions (__main__.StoreVersionTests.test_anlegen_fails_without_or_with_several_ios_versions) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 54979)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 54983)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 54988)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 55011)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 55052)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 55094)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_bad_usage_makes_no_call (__main__.StoreVersionTests.test_bad_usage_makes_no_call) ... ok
+test_build_highest_number_wins_and_is_logged (__main__.StoreVersionTests.test_build_highest_number_wins_and_is_logged) ... ok
+test_build_is_picked_by_platform_version_and_valid (__main__.StoreVersionTests.test_build_is_picked_by_platform_version_and_valid) ... ok
+test_existing_build_is_left_alone (__main__.StoreVersionTests.test_existing_build_is_left_alone) ... ok
+test_failed_count_query_is_reported_and_run_continues (__main__.StoreVersionTests.test_failed_count_query_is_reported_and_run_continues) ... ok
+test_lesen_reports_state_and_never_writes (__main__.StoreVersionTests.test_lesen_reports_state_and_never_writes) ... ok
+test_never_deletes_submits_or_writes_texts (__main__.StoreVersionTests.test_never_deletes_submits_or_writes_texts) ... ok
+test_no_matching_build_is_fatal_and_writes_nothing (__main__.StoreVersionTests.test_no_matching_build_is_fatal_and_writes_nothing) ... ok
+test_verification_fails_on_deviation (__main__.StoreVersionTests.test_verification_fails_on_deviation) ... ok
+test_write_errors_are_clear_without_raw_answer (__main__.StoreVersionTests.test_write_errors_are_clear_without_raw_answer) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 55100)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 55103)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 55104)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 55106)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 55110)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 55133)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 55159)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 55181)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=13, family=2, type=1, proto=0, laddr=('127.0.0.1', 55194)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=14, family=2, type=1, proto=0, laddr=('127.0.0.1', 55220)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=15, family=2, type=1, proto=0, laddr=('127.0.0.1', 55233)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=16, family=2, type=1, proto=0, laddr=('127.0.0.1', 55249)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=17, family=2, type=1, proto=0, laddr=('127.0.0.1', 55250)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=18, family=2, type=1, proto=0, laddr=('127.0.0.1', 55251)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=19, family=2, type=1, proto=0, laddr=('127.0.0.1', 55371)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=20, family=2, type=1, proto=0, laddr=('127.0.0.1', 55377)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 55390)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=22, family=2, type=1, proto=0, laddr=('127.0.0.1', 55398)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_workflow_offers_both_actions_and_hides_the_key (__main__.WorkflowTests.test_workflow_offers_both_actions_and_hides_the_key) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 16.753s
+
+OK

@@ -51,7 +51,7 @@ class FakeASC:
 
     def __init__(self, versions, builds=(), assigned=None, localizations=None, sets=None, placements=None,
                  review=(), fail_on=None, write_status=None, error_code=None, ignore_assign=False,
-                 duplicate_create=False, loose_filters=False):
+                 duplicate_create=False, loose_filters=False, get_fail=None):
         self.versions = [copy.deepcopy(item) for item in versions]
         self.builds = [dict(item) for item in builds]
         self.assigned = dict(assigned or {})
@@ -61,6 +61,7 @@ class FakeASC:
         self.review = set(review)
         self.fail_on, self.write_status, self.error_code = fail_on, write_status, error_code
         self.ignore_assign, self.duplicate_create, self.loose_filters = ignore_assign, duplicate_create, loose_filters
+        self.get_fail = dict(get_fail or {})  # Pfadende → HTTP-Status für GET
         self.requests = []
         fake = self
 
@@ -112,6 +113,9 @@ class FakeASC:
 
     def read(self, path):
         url, _, query = path.partition("?")
+        for suffix, status in self.get_fail.items():
+            if url.endswith(suffix):
+                return status, {"errors": [{"status": str(status), "detail": RAW_SECRET}]}
         by_build = {item["id"]: item for item in self.builds}
         if url == "/v1/apps":
             return 200, {"data": [{"id": "APP1"}]}
@@ -367,6 +371,34 @@ class StoreVersionTests(unittest.TestCase):
             fake = self.fake()
             self.assert_failed(self.run_script(fake, *args))
             self.assertEqual(fake.requests, [])
+
+    # AC-5 (F003)
+    def test_404_on_build_lookup_is_fatal_and_never_reassigns(self):
+        for suffix in ("/V2/build", "/BI130/preReleaseVersion"):
+            fake = self.fake(versions=(IOS_NEW, MAC_NEW), builds=(build("BI130", "IOS", "130"), IOS_133, MAC_133),
+                             assigned={"V2": "BI130"}, get_fail={suffix: 404})
+            result = self.run_script(fake, "anlegen")
+            self.assert_failed(result, "HTTP 404")
+            self.assertNotIn(RAW_SECRET, result.stdout + result.stderr)
+            self.assertEqual(fake.writes(), [], suffix)
+            self.assertEqual(fake.assigned["V2"], "BI130")
+
+    # AC-8/AC-9 (F001)
+    def test_failed_count_query_is_reported_and_run_continues(self):
+        for action, versions in (("lesen", (IOS_NEW, MAC_NEW)), ("anlegen", (IOS_LIVE, IOS_NEW, MAC_LIVE))):
+            fake = self.fake(versions=versions, localizations={"V2": [loc("L2", "de-DE")]}, sets={"L2": [3]},
+                             get_fail={"/placements": 400, "/L2/appScreenshotSets": 403})
+            result = self.run_script(fake, action)
+            self.assert_ok(result)
+            self.assertIn("bildsaetze=fehler HTTP 403 bilder=fehler HTTP 403 platzierungen=fehler HTTP 400",
+                          result.stdout)
+            self.assertIn("zusammenfassung geschrieben=", result.stdout)
+            self.assertNotIn(RAW_SECRET, result.stdout + result.stderr)
+        fake = self.fake(versions=(IOS_NEW, MAC_NEW), localizations={"V2": [loc("L2", "de-DE")]}, sets={"L2": [3, 2]},
+                         get_fail={"/L2-S1/appScreenshots": 400})
+        result = self.run_script(fake, "lesen")
+        self.assert_ok(result)
+        self.assertIn("bildsaetze=2 bilder=fehler HTTP 400 platzierungen=0", result.stdout)
 
 
 class WorkflowTests(unittest.TestCase):

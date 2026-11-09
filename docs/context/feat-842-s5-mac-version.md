@@ -126,3 +126,7 @@ Spec für Schnitt 5a-1 (Anlegen + Bau zuordnen + Lesen); 5a-2 und 5b als eigene 
 ## Umfangsfreigabe (Henning, 2026-11-09)
 Auswahl „Ja, so bauen (Empfohlen)“ zu Schnitt 5a-1 mit ca. 535 LoC (Skript ~150, Tests ~350, Workflow ~35); Meldeschwelle ca. 620 LoC,
 nach RED Testzeilen zählen. In /60-validate nicht erneut fragen, solange der Endstand unter der Schwelle bleibt.
+
+## Umfang (2026-11-09, Phase 6b)
+
+Endstand 693 LoC (Skript 226, Tests 425, Workflow 42) über der Meldeschwelle 620, durch die Adversary-Befunde F001/F003. Henning per Auswahl: „Ja, so annehmen“.
