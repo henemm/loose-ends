@@ -80,3 +80,7 @@ Security.framework; `SessionStoring` (4b-2); Verbraucher `AccountState` unverän
 
 ### Open Questions
 - keine (rein technisch, kein PO-Thema)
+
+## Umfangsfreigabe (2026-11-09, nach GREEN)
+
+Endstand ≈ 295 LoC (Code ≈ 108: neue Datei 99, Änderungen 9; Tests ≈ 189), Schätzung 225. Henning per AskUserQuestion: „So annehmen“. In /60-validate nicht erneut fragen, solange der Endstand nicht nennenswert darüber liegt.

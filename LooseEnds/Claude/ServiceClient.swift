@@ -80,12 +80,15 @@ struct ServiceClient: Sendable {
     }
 
     /// The route's success status gives the body, 401 and 503 their own case, every other status `rejected`;
-    /// a `URLError` means the service is out of reach, any other error passes through unchanged.
+    /// a cancelled `URLError` becomes `CancellationError`, every other `URLError` means the service is out of reach,
+    /// any other error passes through unchanged.
     private func send(_ request: URLRequest, success: Int) async throws -> Data {
         let data: Data
         let response: HTTPURLResponse
         do {
             (data, response) = try await transport.send(request)
+        } catch let error as URLError where error.code == .cancelled {
+            throw CancellationError()
         } catch is URLError {
             throw ServiceError.unavailable
         }

@@ -10,7 +10,7 @@ import Testing
     /// Records every call and answers each with the next prepared status; a read also returns the prepared data.
     final class FakeKeychain: KeychainOperations, @unchecked Sendable {
         enum Op: Equatable { case add, copy, update, delete }
-        struct Call { let op: Op; let query: [String: Any]; let attributes: [String: Any]? }
+        struct Call: @unchecked Sendable { let op: Op; let query: [String: Any]; let attributes: [String: Any]? }
         private struct State { var calls: [Call] = []; var statuses: [OSStatus]; var data: Data? }
         private let state: Mutex<State>
 

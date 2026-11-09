@@ -2,16 +2,18 @@ import Foundation
 import Synchronization
 
 /// Where the session token of the service for Claude lives (#615 S4b-2). `load` gives `nil` when nothing is stored,
-/// `clear` without a stored token is no error. The keychain store follows in S4b-3.
+/// `clear` without a stored token is no error. The keychain store is `KeychainSessionStore` (S4b-3).
 protocol SessionStoring: Sendable {
     func load() throws -> String?
     func save(_ token: String) throws
     func clear() throws
 }
 
-/// A failure a test plays into the store. Never carries a token.
+/// A failure of the store: played in by a test, a keychain status, or an entry that is no token. Never carries a token.
 enum SessionStoreError: Error, Equatable {
     case injected
+    case keychain(OSStatus)
+    case corruptData
 }
 
 /// The store in memory: for the tests now, later under `--ui-testing`. Works without failure unless one is played in.
