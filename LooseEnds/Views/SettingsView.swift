@@ -8,6 +8,8 @@ struct SettingsView: View {
     /// Nil only in previews; the app always passes its notification center.
     let notifications: DueNotificationCenter?
     @Environment(CalendarBridge.self) private var calendar: CalendarBridge?
+    /// The account for Claude (#615 S4c-1); nil while its switch is off, then the group is not shown.
+    @Environment(AccountState.self) private var account: AccountState?
     @State private var time: Date
     @State private var carryMode: CarryReminders.Mode
     @State private var eveningTime: Date
@@ -50,6 +52,7 @@ struct SettingsView: View {
             #if os(macOS)
             // On the Mac the iCloud row stands on top without a head of its own (#478).
             syncSection
+            accountSection
             #endif
             group("Notifications", hint: Text("A task without a due time is reminded on its day at this time. A task with a due time is reminded at that time.")) {
                 DatePicker("Reminder time", selection: $time, displayedComponents: .hourAndMinute)
@@ -78,6 +81,7 @@ struct SettingsView: View {
             }
             #if os(iOS)
             syncSection
+            accountSection
             #endif
             calendarSection
             // Below the calendar (#538): the rows above keep their place on the screen.
@@ -174,11 +178,13 @@ struct SettingsView: View {
     /// closing hairline, without one of its own. So a hairline stands only between rows and under the
     /// last row of a block, never under a head or a hint. Without a title the Mac shows no head.
     @ViewBuilder
-    private func group(_ title: LocalizedStringKey?, hint: Text?, @ViewBuilder rows: () -> some View) -> some View {
+    private func group(_ title: LocalizedStringKey?, hint: Text?, ids: GroupIDs? = nil,
+                       @ViewBuilder rows: () -> some View) -> some View {
         #if os(macOS)
         if let title {
             Text(title)
                 .captionHead()
+                .optionalIdentifier(ids?.head)
                 .listRowInsets(EdgeInsets(top: 24, leading: Paper.wideRowInsets.leading,
                                           bottom: 6, trailing: Paper.wideRowInsets.trailing))
                 .listRowSeparator(.hidden, edges: .bottom)
@@ -196,6 +202,7 @@ struct SettingsView: View {
                 .font(.system(size: 12))
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
+                .optionalIdentifier(ids?.hint)
                 .listRowInsets(EdgeInsets(top: 8, leading: Paper.wideRowInsets.leading,
                                           bottom: Paper.wideRowInsets.bottom, trailing: Paper.wideRowInsets.trailing))
                 .listRowSeparator(.hidden, edges: .bottom)
@@ -205,11 +212,28 @@ struct SettingsView: View {
         Section {
             rows()
         } header: {
-            if let title { Text(title) }
+            if let title { Text(title).optionalIdentifier(ids?.head) }
         } footer: {
-            if let hint { hint }
+            if let hint { hint.optionalIdentifier(ids?.hint) }
         }
         #endif
+    }
+
+    /// Accessibility identifiers for a group's head and hint, where a test reads them.
+    private struct GroupIDs {
+        let head: String
+        let hint: String
+    }
+
+    /// The group "Claude" (#615 S4c-1) right under iCloud; only when the app built an account state.
+    @ViewBuilder private var accountSection: some View {
+        if let account {
+            let layout = AccountSection.layout(status: account.status, problem: account.lastProblem)
+            group("Claude", hint: AccountSection.hintText(layout.hint),
+                  ids: GroupIDs(head: "accountSection", hint: "accountHint")) {
+                AccountSection(account: account)
+            }
+        }
     }
 
     /// Whether this device mirrors with iCloud (#377). Every decision comes from `SyncStatus.summary`.
@@ -335,6 +359,15 @@ struct SettingsView: View {
 /// iPhone and iPad the form's own row already does. `hoverRow` adds the grey under the pointer and the
 /// pointer hand, like the lists (#477).
 private extension View {
+    /// Sets the identifier only where one is given.
+    @ViewBuilder func optionalIdentifier(_ id: String?) -> some View {
+        if let id {
+            accessibilityIdentifier(id)
+        } else {
+            self
+        }
+    }
+
     func clickRow() -> some View {
         #if os(macOS)
         frame(maxWidth: .infinity).contentShape(Rectangle())

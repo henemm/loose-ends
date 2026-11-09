@@ -1,0 +1,56 @@
+===== ./scripts/sim.sh sim-unit AccountSectionTests (bestanden) =====
+170 |         let task = TaskItem(rawText: "Zahnarzt anrufen")
+[32m171 |         let wednesday = try day(2026, 9, 16, in: calendar)[0m
+Test Suite 'Selected tests' started at 2026-11-09 15:09:10.091.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-09 15:09:10.109.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-09 15:09:10.109.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.020) seconds
+[1mTest run started.[0m
+Suite "AccountSection (#615)" started
+    [32m✔[0m "account: layout je status" (0.001 seconds)
+    [32m✔[0m "account: wiring schalter und adresse" (0.001 seconds)
+    [32m✔[0m "account: init sendet nichts" (0.006 seconds)
+    [32m✔[0m "account: ersatz-transport ausgaenge" (0.004 seconds)
+Suite "AccountSection (#615)" passed after 0.014 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-steady-crafting-shamir/Logs/Test/Test-LooseEnds-2026.11.09_15-08-22-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
+[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log
+
+===== python3 scripts/test_catalog_languages.py =====
+----------------------------------------------------------------------
+Ran 8 tests in 0.087s
+
+OK
+
+===== ./scripts/sim.sh test-proof AccountSettingsTests (bestanden, 7 von 7) =====
+[32m 56 |     /// Label and value of a combined row, so a check does not depend on how the system splits them.[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsUITests/AccountSettingsTests.swift:58:33: [33mmain actor-isolated property 'value' can not be referenced from a nonisolated context[0m
+ 55 | 
+[32m 56 |     /// Label and value of a combined row, so a check does not depend on how the system splits them.[0m
+Test Suite 'Selected tests' started at 2026-11-09 15:17:27.782.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-11-09 15:17:27.784.
+Test Suite 'AccountSettingsTests' started at 2026-11-09 15:17:27.784.
+    [32m✔[0m testDeleteCancelKeepsSignedIn ([31m25.582[0m seconds)
+    [32m✔[0m testDeleteConfirmSignsOut ([31m30.673[0m seconds)
+    [32m✔[0m testNotAllowedShowsItsSentence ([31m25.120[0m seconds)
+    [32m✔[0m testRetryLaterShowsItsSentence ([31m33.991[0m seconds)
+    [32m✔[0m testSignedOutShowsGroupBelowICloud ([31m22.240[0m seconds)
+    [32m✔[0m testSignInShowsSignedInRows ([31m23.491[0m seconds)
+    [32m✔[0m testSignOutNeedsNoConfirmation ([31m38.613[0m seconds)
+Executed 7 tests, with 0 failures (0 unexpected) in 199.711 (199.738) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-11-09 15:20:47.528.
+Executed 7 tests, with 0 failures (0 unexpected) in 199.711 (199.744) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 199.711 (199.747) seconds
+[1mTest session results:[0m /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/docs/artifacts/feat-615-s4c-konto/simulator-run/run.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden, Beleg: docs/artifacts/feat-615-s4c-konto/simulator-run.txt
