@@ -1,0 +1,20 @@
+# Simulator-Beleg
+erzeugt: 2026-11-09T07:20:48+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests/testPlusButtonProof
+workflow: feat-615-s4b-app-kern
+head: c2b3bd0914439a71c23f71891af57618473aaf1b
+basis: f034db319b4d8575977fe5099df3632ce038215a (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests/testPlusButtonProof
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1794205222.785  ende: 1794205248.249
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-615-s4b-app-kern/simulator-run/summary.json  sha256:2c6d65d8c44aea68751ea000b4196e489f65750cbe93f3a819be2eb39a3f26ea
+xcresult: docs/artifacts/feat-615-s4b-app-kern/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-615-s4b-app-kern/simulator-run/*.png (4 Stück)
+
+## Geprüfte Dateien
+- sha256:764b7f50e69da8b2d54bdb3c68c50a321174fe253baf868cb60b66977f333a57  LooseEnds/Claude/Nonce.swift
+- sha256:e53b10b2da3ea550c87e6a0b7d218e377aa92fc16389d8f65c4b48cfbd7e8894  LooseEnds/Claude/ServiceClient.swift
+- sha256:14041d30cc2a7d1976b3b9fc681062e90834f57ae66cb367c0b3d8f6dc66cf84  LooseEndsTests/ServiceClientTests.swift
