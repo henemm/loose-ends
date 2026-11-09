@@ -443,6 +443,9 @@ not scope creep on the current one.
   template `NSImage` (18 pt, 1x/2x, black on transparent; the raster in `MenuBarThreadRaster` is platform-neutral and unit-tested);
   `MainWindowPlacement` (#593, pure, unit-tested): the main window's first frame via `.defaultWindowPlacement`, the wish
   1200 × 780 cut to the screen's visible area and centred there, never below 760 × 520 (then at its top left corner)
+- `LooseEnds/Claude` — the app's core for the service for Claude (#615 S4b-1): `Nonce` (raw value of 32 random bytes as
+  base64url, `hashed` = SHA-256 as lowercase hex for Apple) and `ServiceClient` (`/auth/apple`, `/auth/logout`, `/auth/delete`
+  over the replaceable `HTTPTransport`, failures as `ServiceError`, never a token or body in an error); nothing in the app calls the core yet
 - `LooseEnds/App/LaunchTimings.swift` — cold-start measuring points (#22): signposts always, `Documents/launch-timings.json`
   only in the probe build (`.probe`); launch argument `-measureLaunch` opens the capture scene
 - `LooseEnds/Speech` — `SpeechCapture` (live recognition for the capture scene, skipped under `--ui-testing`; the transcriber
