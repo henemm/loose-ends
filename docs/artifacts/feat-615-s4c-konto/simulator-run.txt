@@ -1,0 +1,23 @@
+# Simulator-Beleg
+erzeugt: 2026-11-09T15:20:49+0100
+befehl: scripts/sim.sh test-proof AccountSettingsTests
+workflow: feat-615-s4c-konto
+head: 2267d7f56165127edd2020a6a0bc0d16baa2f13e
+basis: 0e8d14493931e7e29b0ea09e0d20a656012a1a85 (merge-base origin/main HEAD)
+testklasse: AccountSettingsTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 7 gesamt, 7 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1794233834.812  ende: 1794234048.144
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-615-s4c-konto/simulator-run/summary.json  sha256:1fe880086568965524e0cfab51fac657a2d4500c16e2bf6263464a41ca005069
+xcresult: docs/artifacts/feat-615-s4c-konto/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-615-s4c-konto/simulator-run/*.png (5 Stück)
+
+## Geprüfte Dateien
+- sha256:c7695d6c4a8989a690bd265adc8df1265d8de796669afc1af6f0e1875d6c0266  LooseEnds/App/LooseEndsApp.swift
+- sha256:7f2f11b4cc15042c73c713d38e2832b70ee0841a27d25ebd74e038bf3a7144b7  LooseEnds/Claude/AccountWiring.swift
+- sha256:6cabe8ee91616a13c2adbb5e5d278007ac6c9621027e15d7a7762a7b37b4b902  LooseEnds/Views/AccountSection.swift
+- sha256:7fa2db1a44c0bc2418948c304f65d606c67866f55cbaa672ca42054aabcad84e  LooseEnds/Views/SettingsView.swift
+- sha256:4d8c27aa61f21dfbca7046e934d0661ac76356a900af2c03e3113ff817d67a22  LooseEndsTests/AccountSectionTests.swift
+- sha256:b0be6eb30fe82b5a6a208611d5b4707b1aa885b3895152c24ea50a76c7a06632  LooseEndsUITests/AccountSettingsTests.swift

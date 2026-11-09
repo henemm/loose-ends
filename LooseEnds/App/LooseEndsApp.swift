@@ -13,6 +13,8 @@ struct LooseEndsApp: App {
     let calendar: CalendarBridge
     /// Which fields a task offers (#538); one choice on every device.
     let fieldSettings: FieldSettingsStore
+    /// The account for Claude (#615 S4c-1); nil in every build whose switch `LEAccountEnabled` is off.
+    let account: AccountState?
 
     init() {
         LaunchTimings.mark(.initStart)
@@ -49,6 +51,8 @@ struct LooseEndsApp: App {
         calendar = CalendarBridge(container: container)
         fieldSettings = FieldSettingsStore.forApp()
         fieldSettings.activate()
+        // Reads only the store, sends nothing (ADR-21).
+        account = AccountWiring.forApp(info: Bundle.main.infoDictionary, arguments: ProcessInfo.processInfo.arguments)
         if ModelContainerFactory.isUITesting { MainThreadWatchdog.start() }
         LaunchTimings.mark(.initEnd)
     }
@@ -137,6 +141,7 @@ struct LooseEndsApp: App {
             ContentView(enrichment: enrichment, notifications: notifications, calendar: calendar)
                 .environment(calendar)
                 .environment(fieldSettings)
+                .environment(account)
                 .preferredColorScheme(Self.uiTestColorScheme)
                 #if os(macOS)
                 // The smallest main window (#480): sidebar 220 + a 540 pt page, the detail's 480 fit in it.
@@ -166,6 +171,7 @@ struct LooseEndsApp: App {
             SettingsView(notifications: notifications)
                 .environment(calendar)
                 .environment(fieldSettings)
+                .environment(account)
                 // 640 pt wide like the board (#478); a list has no height of its own, and 512 cut off the last
                 // rows. The board's 720 held its six blocks; with the evening and morning rows (#518) and
                 // "Fields" (#538) the list set after the board (#573) runs to about 860: 880 where the screen

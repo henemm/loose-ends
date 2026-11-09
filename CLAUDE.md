@@ -447,8 +447,15 @@ not scope creep on the current one.
 - `LooseEnds/Claude` — the app's core for the service for Claude (#615 S4b-1): `Nonce` (raw value of 32 random bytes as
   base64url, `hashed` = SHA-256 as lowercase hex for Apple) and `ServiceClient` (`/auth/apple`, `/auth/logout`, `/auth/delete`
   over the replaceable `HTTPTransport`, failures as `ServiceError`, never a token or body in an error; a cancelled `URLError` is a `CancellationError`, S4b-3);
-  `SessionStoring` with `InMemorySessionStore` and `SessionStoreError` (S4b-2, no caller yet) and `AccountState` (the account's state, S4b-2, no caller yet);
-  `KeychainSessionStore` behind `KeychainOperations` (the token in the keychain, this device only, S4b-3, no caller yet); nothing in the app calls the core yet
+  `SessionStoring` with `InMemorySessionStore` and `SessionStoreError` (S4b-2) and `AccountState` (the account's state, S4b-2);
+  `KeychainSessionStore` behind `KeychainOperations` (the token in the keychain, this device only, S4b-3).
+  `AccountWiring` (S4c-1): `forApp` builds the one `AccountState` in `LooseEndsApp` (main window and Mac settings window), only
+  when `isEnabled`: Info `LEAccountEnabled` as Bool, fallback **off** (missing or another type hides the group in every real build);
+  `serviceURL` reads Info `LEServiceURL`, fallback `https://loose-ends.henemm.com`; under `--ui-testing` always on, store in memory
+  and the stand-in `UITestTransport` (no network; `--ui-testing-account-not-allowed` 401, `--ui-testing-account-retry-later` 503).
+  The view is `LooseEnds/Views/AccountSection.swift`: the group "Claude" in the settings right under iCloud, rows from the pure
+  `AccountSection.layout(status:problem:)`, `SignInWithAppleButton` (a plain test button under `--ui-testing`), sign out without a
+  question, delete only after the `.destructive` confirmation; nothing is sent before a tap
 - `LooseEnds/App/LaunchTimings.swift` — cold-start measuring points (#22): signposts always, `Documents/launch-timings.json`
   only in the probe build (`.probe`); launch argument `-measureLaunch` opens the capture scene
 - `LooseEnds/Speech` — `SpeechCapture` (live recognition for the capture scene, skipped under `--ui-testing`; the transcriber

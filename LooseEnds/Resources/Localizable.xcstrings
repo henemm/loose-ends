@@ -487,6 +487,25 @@
     "The string is full. For the beads: %@." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Die Schnur ist voll. Für die Perlen: %@." } } } },
     "%lld of %lld beads on the string" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "%1$lld von %2$lld Perlen auf der Schnur" } } } },
     "Beads per string" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Perlen je Schnur" } } } },
-    "This many beads fill a string." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "So viele Perlen füllen eine Schnur." } } } }
+    "This many beads fill a string." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "So viele Perlen füllen eine Schnur." } } } },
+    "Claude" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Claude" } } } },
+    "Sign in with Apple so Claude can read your open tasks and add new ones. Without signing in, nothing leaves this device." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Melde dich mit Apple an, damit Claude deine offenen Aufgaben lesen und neue anlegen kann. Ohne Anmeldung verlässt nichts dieses Gerät." } } } },
+    "Sign in with Apple so Claude can read your open tasks and add new ones. Without signing in, nothing leaves this Mac." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Melde dich mit Apple an, damit Claude deine offenen Aufgaben lesen und neue anlegen kann. Ohne Anmeldung verlässt nichts diesen Mac." } } } },
+    "Claude sees your open tasks. Signing out disconnects only this device. Deleting the account removes everything the service keeps of yours for Claude." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Claude sieht deine offenen Aufgaben. Abmelden trennt nur dieses Gerät. Konto löschen entfernt alles, was der Dienst für Claude von dir aufbewahrt." } } } },
+    "Claude sees your open tasks. Signing out disconnects only this Mac. Deleting the account removes everything the service keeps of yours for Claude." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Claude sieht deine offenen Aufgaben. Abmelden trennt nur diesen Mac. Konto löschen entfernt alles, was der Dienst für Claude von dir aufbewahrt." } } } },
+    "This Apple account is not yet cleared for Claude." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Dieses Apple-Konto ist für Claude noch nicht freigegeben." } } } },
+    "The service can't be reached right now. Try again later." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Der Dienst ist gerade nicht erreichbar. Versuch es später noch einmal." } } } },
+    "Connect with Claude" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Mit Claude verbinden" } } } },
+    "Sign in with Apple" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Mit Apple anmelden" } } } },
+    "Signing in …" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Anmelden …" } } } },
+    "Deleting account …" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Konto wird gelöscht …" } } } },
+    "Signed in with Apple" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Angemeldet mit Apple" } } } },
+    "This device" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Dieses Gerät" } } } },
+    "This Mac" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Dieser Mac" } } } },
+    "Sign out" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Abmelden" } } } },
+    "Delete account …" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Konto löschen …" } } } },
+    "Delete account?" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Konto löschen?" } } } },
+    "Claude will no longer see your tasks. Your tasks in the app stay as they are." : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Claude sieht deine Aufgaben dann nicht mehr. Deine Aufgaben in der App bleiben, wie sie sind." } } } },
+    "Delete account" : { "localizations" : { "de" : { "stringUnit" : { "state" : "translated", "value" : "Konto löschen" } } } }
   }
 }
