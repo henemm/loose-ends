@@ -1,0 +1,22 @@
+# Simulator-Beleg
+erzeugt: 2026-11-09T12:25:06+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests/testPlusButtonProof
+workflow: feat-615-s4b3-schluesselbund
+head: 5c3e7a2f2665657167e40aee90da053a2371d42a
+basis: 8967580370673d60b5633c6185a5c4c2b5cdf7a6 (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests/testPlusButtonProof
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1794223468.254  ende: 1794223505.53
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-615-s4b3-schluesselbund/simulator-run/summary.json  sha256:b060023fe18c7bae813f2f11fa5df72353de84412cadb18896df3ee900457386
+xcresult: docs/artifacts/feat-615-s4b3-schluesselbund/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-615-s4b3-schluesselbund/simulator-run/*.png (4 Stück)
+
+## Geprüfte Dateien
+- sha256:4344ca5891c5694a7dc10d821ec8394ea448700d5cdc21342e65b0d7645cd921  LooseEnds/Claude/KeychainSessionStore.swift
+- sha256:684fafbdcc3c127ef2abba17f942385471a7d49cc185719f249d2f9cd9ea1a31  LooseEnds/Claude/ServiceClient.swift
+- sha256:052047d0938f6c1a6a440ff7901842a68b7803f2ec38f097b079f593440d8c5c  LooseEnds/Claude/SessionStore.swift
+- sha256:8bd62edb4cc47b64a50c64b72fbe50ebf4eb0eae52bc77065eaf854697ad7232  LooseEndsTests/KeychainSessionStoreTests.swift
+- sha256:efe5f514ec0becdd4bd536437ff7ab93f3ee703316be7660fe5ea1fc456c2f69  LooseEndsTests/ServiceClientTests.swift

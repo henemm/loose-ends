@@ -446,7 +446,9 @@ not scope creep on the current one.
   1200 × 780 cut to the screen's visible area and centred there, never below 760 × 520 (then at its top left corner)
 - `LooseEnds/Claude` — the app's core for the service for Claude (#615 S4b-1): `Nonce` (raw value of 32 random bytes as
   base64url, `hashed` = SHA-256 as lowercase hex for Apple) and `ServiceClient` (`/auth/apple`, `/auth/logout`, `/auth/delete`
-  over the replaceable `HTTPTransport`, failures as `ServiceError`, never a token or body in an error); nothing in the app calls the core yet
+  over the replaceable `HTTPTransport`, failures as `ServiceError`, never a token or body in an error; a cancelled `URLError` is a `CancellationError`, S4b-3);
+  `SessionStoring` with `InMemorySessionStore` and `SessionStoreError` (S4b-2, no caller yet) and `AccountState` (the account's state, S4b-2, no caller yet);
+  `KeychainSessionStore` behind `KeychainOperations` (the token in the keychain, this device only, S4b-3, no caller yet); nothing in the app calls the core yet
 - `LooseEnds/App/LaunchTimings.swift` — cold-start measuring points (#22): signposts always, `Documents/launch-timings.json`
   only in the probe build (`.probe`); launch argument `-measureLaunch` opens the capture scene
 - `LooseEnds/Speech` — `SpeechCapture` (live recognition for the capture scene, skipped under `--ui-testing`; the transcriber

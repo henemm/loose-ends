@@ -124,6 +124,12 @@ import Testing
         await #expect(throws: CancellationError.self) { try await call(route, client) }
     }
 
+    @Test("serviceclient: abbruch ist cancellation", arguments: Route.allCases)
+    func cancelledIsCancellation(route: Route) async {
+        let client = ServiceClient(baseURL: Self.base, transport: FakeTransport([.fail(URLError(.cancelled))]))
+        await #expect(throws: CancellationError.self) { try await call(route, client) }
+    }
+
     @Test("serviceclient: fehler ohne token und koerper", arguments: Route.allCases)
     func errorsCarryNoSecrets(route: Route) async {
         let body = Data(#"{"sessionToken":"","detail":"SECRET-BODY"}"#.utf8)

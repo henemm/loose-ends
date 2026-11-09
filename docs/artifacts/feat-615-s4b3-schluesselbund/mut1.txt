@@ -1,0 +1,59 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/KeychainSessionStoreTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mCompiling[0m KeychainSessionStore.swift
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEnds.abi.json
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds.debug.dylib
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEnds' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsTests[0m] [1mLinking[0m LooseEndsTests
+[[36mLooseEndsTests[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-09 12:16:49.790.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-09 12:16:49.794.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-09 12:16:49.794.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.005) seconds
+[1mTest run started.[0m
+Suite "KeychainSessionStore (#615)" started
+    [33m⚠️[0m  Test "keychain: abfragen" recorded an issue at KeychainSessionStoreTests.swift:27:63: Issue recorded
+    [33m⚠️[0m  Test "keychain: abfragen" recorded an issue at KeychainSessionStoreTests.swift:57:6: Caught error: .keychain(-2070)
+    [31m✖[0m [31m"keychain: abfragen" (0.009 seconds) 2 issue(s)[0m
+    [33m⚠️[0m  Test "keychain: save duplikat wird update" recorded an issue at KeychainSessionStoreTests.swift:27:63: Issue recorded
+    [33m⚠️[0m  Test "keychain: save duplikat wird update" recorded an issue at KeychainSessionStoreTests.swift:91:6: Caught error: .keychain(-2070)
+    [31m✖[0m [31m"keychain: save duplikat wird update" (0.022 seconds) 2 issue(s)[0m
+    [33m⚠️[0m  Test "keychain: update ohne treffer ist fehler ohne retry" recorded an issue with 1 argument(s)
+    [33m⚠️[0m  Test "keychain: update ohne treffer ist fehler ohne retry" recorded an issue with 1 argument(s)
+    [33m⚠️[0m  Test "keychain: update ohne treffer ist fehler ohne retry" recorded an issue with 1 argument(s)
+    [33m⚠️[0m  Test "keychain: update ohne treffer ist fehler ohne retry" recorded an issue with 1 argument(s)
+    [33m⚠️[0m  Test "keychain: update ohne treffer ist fehler ohne retry" recorded an issue with 1 argument(s)
+    [33m⚠️[0m  Test "keychain: update ohne treffer ist fehler ohne retry" recorded an issue with 1 argument(s)
+    [33m⚠️[0m  Test "keychain: update ohne treffer ist fehler ohne retry" recorded an issue with 1 argument(s)
+    [33m⚠️[0m  Test "keychain: update ohne treffer ist fehler ohne retry" recorded an issue with 1 argument(s)
+    [33m⚠️[0m  Test "keychain: update ohne treffer ist fehler ohne retry" recorded an issue with 1 argument(s)
+    [32m✔[0m "keychain: load statusabbildung" (0.001 seconds)
+    [32m✔[0m "keychain: fehlende berechtigung ist kein nil" (0.001 seconds)
+    [33m⚠️[0m  Test "keychain: fehler ohne token" recorded an issue at KeychainSessionStoreTests.swift:27:63: Issue recorded
+    [33m⚠️[0m  Test "keychain: fehler ohne token" recorded an issue at KeychainSessionStoreTests.swift:27:63: Issue recorded
+    [33m⚠️[0m  Test "keychain: fehler ohne token" recorded an issue at KeychainSessionStoreTests.swift:27:63: Issue recorded
+    [33m⚠️[0m  Test "keychain: fehler ohne token" recorded an issue at KeychainSessionStoreTests.swift:27:63: Issue recorded
+    [31m✖[0m [31m"keychain: fehler ohne token" (0.001 seconds) 4 issue(s)[0m
+Suite "KeychainSessionStore (#615)" failed after 0.077 seconds with 17 issue(s)
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-steady-crafting-shamir/Logs/Test/Test-LooseEnds-2026.11.09_12-16-27-+0100.xcresult
+[36;1mTesting started[0m

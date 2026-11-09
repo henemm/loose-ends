@@ -1,0 +1,44 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/ServiceClientTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mCompiling[0m KeychainSessionStore.swift
+[[36mLooseEnds[0m] [1mCompiling[0m ServiceClient.swift
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEnds.abi.json
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds.debug.dylib
+[36;1mnote: [0mUsing stub executor library with Swift entry point. (in target 'LooseEnds' from project 'LooseEnds')
+[[36mLooseEnds[0m] [1mLinking[0m LooseEnds
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsTests[0m] [1mLinking[0m LooseEndsTests
+[[36mLooseEndsTests[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-09 12:18:16.047.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-09 12:18:16.051.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-09 12:18:16.051.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.005) seconds
+[1mTest run started.[0m
+Suite "ServiceClient (#615)" started
+    [32m✔[0m "nonce: hash testvektoren" (0.006 seconds)
+    [32m✔[0m "nonce: roher wert 32 byte base64url und verschieden" (0.003 seconds)
+    [32m✔[0m "serviceclient: erzeugen sendet nichts" (0.001 seconds)
+    [33m⚠️[0m  Test "serviceclient: abbruch ist cancellation" recorded an issue with 1 argument(s)
+    [33m⚠️[0m  Test "serviceclient: abbruch ist cancellation" recorded an issue with 1 argument(s)
+    [33m⚠️[0m  Test "serviceclient: abbruch ist cancellation" recorded an issue with 1 argument(s)
+Suite "ServiceClient (#615)" failed after 0.077 seconds with 3 issue(s)
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-steady-crafting-shamir/Logs/Test/Test-LooseEnds-2026.11.09_12-17-47-+0100.xcresult
+[36;1mTesting started[0m
