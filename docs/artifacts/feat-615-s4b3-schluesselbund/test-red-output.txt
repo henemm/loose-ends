@@ -1,0 +1,107 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/KeychainSessionStoreTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftConstValuesFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-OutputFileMap.json
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.LinkFileList
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsTests[0m] [1mCompiling[0m ServiceClientTests.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:11:31: [31mcannot find type 'KeychainOperations' in scope[0m
+  9 | @Suite("KeychainSessionStore (#615)") struct KeychainSessionStoreTests {
+[36m 10 |     /// Records every call and answers each with the next prepared status; a read also returns the prepared data.[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:52:51: [31mcannot find 'KeychainQuery' in scope[0m
+ 50 |         #expect(string(query, kSecClass) == kSecClassGenericPassword as String, "\(label)")
+[36m 51 |         #expect(string(query, kSecAttrService) == "com.henning.looseends.session", "\(label)")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:52:77: [31mcannot find 'KeychainQuery' in scope[0m
+ 50 |         #expect(string(query, kSecClass) == kSecClassGenericPassword as String, "\(label)")
+[36m 51 |         #expect(string(query, kSecAttrService) == "com.henning.looseends.session", "\(label)")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:60:21: [31mcannot find 'KeychainSessionStore' in scope[0m
+ 58 |     func queries() throws {
+[36m 59 |         let fake = FakeKeychain([errSecDuplicateItem, errSecSuccess, errSecSuccess, errSecSuccess], data: Data("T1".utf8))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:82:21: [31mcannot find 'KeychainSessionStore' in scope[0m
+ 80 |     func saveStatus(status: OSStatus) {
+[36m 81 |         let fake = FakeKeychain([status])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:86:47: [31mtype 'SessionStoreError' has no member 'keychain'[0m
+ 84 |             #expect(throws: Never.self) { try store.save("T1") }
+[36m 85 |         } else {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:94:13: [31mcannot find 'KeychainSessionStore' in scope[0m
+ 92 |     func duplicateBecomesUpdate() throws {
+[36m 93 |         let fake = FakeKeychain([errSecDuplicateItem, errSecSuccess])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:105:67: [31mcannot find 'KeychainSessionStore' in scope[0m
+103 |     func updateFailureNoRetry(status: OSStatus) {
+[36m104 |         let fake = FakeKeychain([errSecDuplicateItem, status])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:105:43: [31mtype 'SessionStoreError' has no member 'keychain'[0m
+103 |     func updateFailureNoRetry(status: OSStatus) {
+[36m104 |         let fake = FakeKeychain([errSecDuplicateItem, status])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:111:21: [31mcannot find 'KeychainSessionStore' in scope[0m
+109 |     @Test("keychain: load statusabbildung")
+[36m110 |     func loadStatus() throws {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:113:21: [31mcannot find 'KeychainSessionStore' in scope[0m
+111 |         #expect(try KeychainSessionStore(operations: FakeKeychain([errSecItemNotFound])).load() == nil)
+[36m112 |         let found = FakeKeychain([errSecSuccess], data: Data("T1".utf8))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:117:71: [31mcannot find 'KeychainSessionStore' in scope[0m
+115 |         for status in Self.failures {
+[36m116 |             let fake = FakeKeychain([status], data: Data("T1".utf8))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:117:47: [31mtype 'SessionStoreError' has no member 'keychain'[0m
+115 |         for status in Self.failures {
+[36m116 |             let fake = FakeKeychain([status], data: Data("T1".utf8))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:124:21: [31mcannot find 'KeychainSessionStore' in scope[0m
+122 |     func clearStatus(status: OSStatus) {
+[36m123 |         let fake = FakeKeychain([status])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:128:47: [31mtype 'SessionStoreError' has no member 'keychain'[0m
+126 |             #expect(throws: Never.self) { try store.clear() }
+[36m127 |         } else {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:137:62: [31mcannot find 'KeychainSessionStore' in scope[0m
+135 |     func corruptData(data: Data?) {
+[36m136 |         let fake = FakeKeychain([errSecSuccess], data: data)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:137:43: [31mtype 'SessionStoreError' has no member 'corruptData'[0m
+135 |     func corruptData(data: Data?) {
+[36m136 |         let fake = FakeKeychain([errSecSuccess], data: data)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:145:17: [31mcannot find 'KeychainSessionStore' in scope[0m
+143 |         #expect(missing == -34018)
+[36m144 |         #expect(throws: SessionStoreError.keychain(missing)) {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:144:43: [31mtype 'SessionStoreError' has no member 'keychain'[0m
+142 |         let missing = errSecMissingEntitlement
+[36m143 |         #expect(missing == -34018)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:149:21: [31mcannot find 'KeychainSessionStore' in scope[0m
+147 |         for data in [nil, Data("T1".utf8)] {
+[36m148 |             #expect(throws: SessionStoreError.keychain(missing)) {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:148:47: [31mtype 'SessionStoreError' has no member 'keychain'[0m
+146 |         }
+[36m147 |         for data in [nil, Data("T1".utf8)] {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:153:17: [31mcannot find 'KeychainSessionStore' in scope[0m
+151 |         }
+[36m152 |         #expect(throws: SessionStoreError.keychain(missing)) {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:152:43: [31mtype 'SessionStoreError' has no member 'keychain'[0m
+150 |             }
+[36m151 |         }[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:165:27: [31mcannot find 'KeychainSessionStore' in scope[0m
+163 |         }
+[36m164 |         for status in Self.failures {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:166:27: [31mcannot find 'KeychainSessionStore' in scope[0m
+164 |         for status in Self.failures {
+[36m165 |             collect { try KeychainSessionStore(operations: FakeKeychain([status])).save(Self.token) }[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:167:31: [31mcannot find 'KeychainSessionStore' in scope[0m
+165 |             collect { try KeychainSessionStore(operations: FakeKeychain([status])).save(Self.token) }
+[36m166 |             collect { try KeychainSessionStore(operations: FakeKeychain([errSecDuplicateItem, status])).save(Self.token) }[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:168:27: [31mcannot find 'KeychainSessionStore' in scope[0m
+166 |             collect { try KeychainSessionStore(operations: FakeKeychain([errSecDuplicateItem, status])).save(Self.token) }
+[36m167 |             collect { _ = try KeychainSessionStore(operations: FakeKeychain([status], data: secret)).load() }[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/LooseEndsTests/KeychainSessionStoreTests.swift:170:27: [31mcannot find 'KeychainSessionStore' in scope[0m
+168 |             collect { try KeychainSessionStore(operations: FakeKeychain([status])).clear() }
+[36m169 |         }[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m KeychainSessionStoreTests.swift
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-steady-crafting-shamir/Logs/Test/Test-LooseEnds-2026.11.09_11-54-36-+0100.xcresult
