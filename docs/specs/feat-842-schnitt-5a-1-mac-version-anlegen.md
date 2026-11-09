@@ -180,6 +180,9 @@ Alle in `scripts/test_asc_store_version.py` (`unittest`, ohne Netz). Nachgebaute
 - **Was Apple beim API-Anlegen übernimmt, ist offen:** ob de-DE Texte, Bilder und Review-Detail von Mac 1.0 in die neue Version kommen, belegt erst `lesen` nach dem Anlegen. Die Runway-Quelle spricht dafür, dass der Werbetext fehlt; Bilder sind nicht belegt. 5a-2 und 5b richten sich nach diesem Befund.
 - Review-Detail, `whatsNew`, deutscher Werbetext der iOS-Version und alle Texte folgen in 5a-2; Mac-Bilder in 5b.
 - Eine Korrektur eines falsch zugeordneten Baus ist nur durch einen anderen Lauf oder von Hand möglich; das Skript hängt nie um.
+- Befund der Validierung (2026-11-09): Der gemeinsame Sendeweg wiederholt einen POST nach 5xx oder Zeitüberschreitung. Hätte Apple beim ersten Versuch schon angelegt, entstünde eine zweite Mac-Version; die Gegenprobe bricht dann ab, das Duplikat bliebe bei Apple. Seit dem Lauf vom 2026-11-09 existiert Mac 1.0.1, das Skript legt für diese Nummer nie wieder an.
+- Die Bau-Suche liest höchstens 50 Bauten je Plattform und Version; bei mehr könnte die höchste Nummer fehlen (heute 3).
+- Endgröße 705 Zeilen (Skript 226 statt geschätzt 150); zum Zählzeitpunkt nach RED lag die Hochrechnung bei ca. 583, unter der Meldeschwelle 620.
 
 ## Architektur-Entscheidung (ADR)
 
