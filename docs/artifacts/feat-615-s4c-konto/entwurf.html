@@ -1,0 +1,259 @@
+<title>Konto für Claude</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&display=swap">
+<style>
+/* Layout: ein Arbeitsblatt zum Vergleichen – oben die Frage, dann Heute, Entwurf A, Alternative B; jede Variante hell und dunkel nebeneinander. */
+:root {
+  --page: #f6f5f1; --ink: #1d1f1f; --muted: #626a6a; --line: #dcdcd4; --accent: #0f6e73; --panel: #ffffff;
+  --font-head: "Fraunces", Georgia, serif; --font-body: -apple-system, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  /* Farben der App, fest – unabhängig vom Thema der Seite */
+  --l-bg: #f2f2f7; --l-card: #ffffff; --l-ink: #000000; --l-sec: #8a8a8e; --l-sep: #e3e3e8; --l-acc: #0f6e73;
+  --d-bg: #000000; --d-card: #1c1c1e; --d-ink: #ffffff; --d-sec: #98989f; --d-sep: #38383a; --d-acc: #5fc4c9;
+  --pl-bg: #f4f3ee; --pl-ink: #1d1d1d; --pl-sec: #7b7b78; --pl-sep: #dddcd5;
+  --pd-bg: #171817; --pd-ink: #ececea; --pd-sec: #8f918d; --pd-sep: #2f312f;
+  --red: #ff3b30;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --page: #141615; --ink: #e9ebe8; --muted: #9aa29f; --line: #2c302e; --accent: #5fc4c9; --panel: #1d201f; color-scheme: dark } }
+:root[data-theme="dark"] { --page: #141615; --ink: #e9ebe8; --muted: #9aa29f; --line: #2c302e; --accent: #5fc4c9; --panel: #1d201f; color-scheme: dark }
+body { background: var(--page); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 64px; }
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; gap: 48px; }
+h1 { font-family: var(--font-head); font-weight: 600; font-size: clamp(28px, 4vw, 40px); line-height: 1.15; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--font-head); font-weight: 600; font-size: 24px; margin: 0; text-wrap: balance; }
+h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0; font-weight: 600; }
+p { margin: 0; max-width: 68ch; }
+.lead { display: grid; gap: 12px; }
+.lead p { color: var(--muted); font-size: 17px; }
+section { display: grid; gap: 20px; border-top: 1px solid var(--line); padding-top: 28px; }
+.tag { display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.row { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+.fig { display: grid; gap: 8px; min-width: 0; }
+.fig figcaption, .cap { font-size: 13px; color: var(--muted); }
+figure { margin: 0; }
+.shot { width: 260px; max-width: 100%; border-radius: 22px; border: 1px solid var(--line); display: block; }
+.macshot { width: 360px; max-width: 100%; border-radius: 10px; border: 1px solid var(--line); display: block; }
+.notes { display: grid; gap: 8px; max-width: 72ch; }
+.notes li { margin-left: 1.1em; }
+ul { margin: 0; padding: 0; }
+
+/* iPhone-Attrappe */
+.phone { width: 280px; max-width: 100%; border-radius: 30px; padding: 18px 14px 22px; font-size: 14px; display: grid; gap: 6px; }
+.phone .title { font-weight: 700; font-size: 26px; margin: 4px 6px 8px; }
+.phone .head { font-size: 13px; font-weight: 600; margin: 10px 14px 2px; }
+.phone .card { border-radius: 16px; overflow: hidden; }
+.phone .r { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 14px; min-height: 22px; }
+.phone .r + .r { box-shadow: inset 0 1px 0 var(--sep); }
+.phone .hint { font-size: 12px; line-height: 1.4; margin: 2px 14px 0; }
+.phone .ghost { opacity: .45; }
+.L { background: var(--l-bg); color: var(--l-ink); --sep: var(--l-sep); }
+.L .card { background: var(--l-card); } .L .head, .L .hint, .L .sec { color: var(--l-sec); } .L .acc { color: var(--l-acc); }
+.D { background: var(--d-bg); color: var(--d-ink); --sep: var(--d-sep); border: 1px solid #2a2a2a; }
+.D .card { background: var(--d-card); } .D .head, .D .hint, .D .sec { color: var(--d-sec); } .D .acc { color: var(--d-acc); }
+.apple { display: flex; align-items: center; justify-content: center; gap: 6px; border-radius: 10px; height: 40px; font-weight: 600; font-size: 15px; width: 100%; }
+.L .apple { background: #000; color: #fff; } .D .apple { background: #fff; color: #000; }
+.apple svg { width: 14px; height: 16px; fill: currentColor; }
+.chev { opacity: .5; }
+.spin { width: 14px; height: 14px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; display: inline-block; }
+.sheet { border-radius: 14px; overflow: hidden; text-align: center; margin-top: 8px; }
+.L .sheet { background: #ececf0; } .D .sheet { background: #2c2c2e; }
+.sheet .t { padding: 12px 14px 4px; font-weight: 600; font-size: 13px; }
+.sheet .m { padding: 0 16px 12px; font-size: 12px; line-height: 1.4; }
+.sheet .b { padding: 11px; box-shadow: inset 0 1px 0 var(--sep); font-size: 16px; }
+.sheet .red { color: var(--red); }
+.cancel { border-radius: 14px; text-align: center; padding: 11px; font-weight: 600; font-size: 16px; }
+.L .cancel { background: #fff; } .D .cancel { background: #2c2c2e; }
+.L .cancel { color: var(--l-acc); } .D .cancel { color: var(--d-acc); }
+.badge { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; flex: none; }
+.L .badge { background: var(--l-acc); color: #fff; } .D .badge { background: var(--d-acc); color: #000; }
+.badge svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.intro { text-align: center; display: grid; gap: 8px; justify-items: center; padding: 6px 12px 10px; }
+.intro .big { width: 56px; height: 56px; border-radius: 16px; }
+.intro .big svg { width: 30px; height: 30px; }
+.intro b { font-size: 18px; }
+.intro span { font-size: 13px; line-height: 1.4; }
+
+/* Mac-Attrappe (Papier) */
+.mac { width: 380px; max-width: 100%; border-radius: 10px; overflow: hidden; font-size: 13px; }
+.mac .bar { height: 28px; display: flex; align-items: center; gap: 6px; padding: 0 10px; font-weight: 600; }
+.mac .bar i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; display: inline-block; }
+.mac .bar i + i { background: #c8c8c4; } .mac .bar i + i + i { margin-right: 8px; }
+.mac .body { padding: 6px 22px 16px; display: grid; }
+.mac .h { font-size: 11px; letter-spacing: .1em; font-weight: 600; text-transform: uppercase; padding: 18px 0 6px; }
+.mac .r { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; box-shadow: inset 0 -1px 0 var(--sep); }
+.mac .hint { font-size: 11.5px; padding-top: 7px; line-height: 1.4; }
+.mac .apple { height: 30px; font-size: 13px; width: auto; padding: 0 14px; border-radius: 7px; }
+.PL { background: var(--pl-bg); color: var(--pl-ink); --sep: var(--pl-sep); border: 1px solid var(--line); }
+.PL .h, .PL .hint, .PL .sec { color: var(--pl-sec); } .PL .acc { color: var(--l-acc); } .PL .apple { background: #000; color: #fff; }
+.PD { background: var(--pd-bg); color: var(--pd-ink); --sep: var(--pd-sep); border: 1px solid #333; }
+.PD .h, .PD .hint, .PD .sec { color: var(--pd-sec); } .PD .acc { color: var(--d-acc); } .PD .apple { background: #fff; color: #000; }
+.PD .bar i + i { background: #4a4a48; }
+
+.ask { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; display: grid; gap: 10px; }
+.ask ol { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+</style>
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="apple" viewBox="0 0 14 17"><path d="M11.6 9c0-2 1.6-2.9 1.7-3-1-1.4-2.4-1.6-2.9-1.6-1.2-.1-2.4.7-3 .7-.6 0-1.6-.7-2.6-.7C3.5 4.4 2.2 5.2 1.5 6.5c-1.5 2.6-.4 6.4 1 8.5.7 1 1.5 2.1 2.6 2.1 1 0 1.4-.7 2.7-.7 1.2 0 1.6.7 2.7.7 1.1 0 1.8-1 2.5-2 .8-1.1 1.1-2.2 1.1-2.3 0 0-2.5-.9-2.5-3.8zM9.6 3c.6-.7 1-1.6.9-2.6-.8 0-1.8.5-2.4 1.2-.5.6-1 1.6-.9 2.5.9.1 1.8-.4 2.4-1.1z"/></symbol>
+  <symbol id="sparkle" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></symbol>
+</svg>
+
+<div class="wrap">
+  <header class="lead">
+    <span class="tag">Loose Ends · Entwurf vor der Spec · #615 Schnitt 4c</span>
+    <h1>Wo du Claude mit deinen Aufgaben verbindest</h1>
+    <p>Damit Claude deine offenen Aufgaben sehen und neue anlegen kann, meldest du die App einmal mit Apple an. Dafür bekommen die Einstellungen einen Platz zum Anmelden, Abmelden und Löschen des Kontos. Bis der Datenschutztext das Konto nennt, sieht diesen Platz nur deine TestFlight-App, nicht die App im Store.</p>
+  </header>
+
+  <section>
+    <h2>Heute</h2>
+    <p class="cap">Die Einstellungen auf dem iPhone (Deutsch) und auf dem Mac, Stand 9. November. Ein Konto gibt es noch nirgends.</p>
+    <div class="row">
+      <figure class="fig"><img class="shot" src="heute-iphone-hell.png" alt="iPhone-Einstellungen hell: Mitteilungen, Lose Enden, iCloud"><figcaption>iPhone, hell (oberer Teil)</figcaption></figure>
+      <figure class="fig"><img class="shot" src="heute-iphone-dunkel.png" alt="iPhone-Einstellungen dunkel: iCloud, Kalender, Aufgabe, Info"><figcaption>iPhone, dunkel (unterer Teil)</figcaption></figure>
+      <figure class="fig"><img class="macshot" src="heute-mac-hell.png" alt="Mac-Einstellungen hell auf Papiergrund"><figcaption>Mac, hell</figcaption></figure>
+      <figure class="fig"><img class="macshot" src="heute-mac-dunkel.png" alt="Mac-Einstellungen dunkel auf Papiergrund"><figcaption>Mac, dunkel</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <span class="tag">Empfehlung</span>
+    <h2>Entwurf A: eine Gruppe „Claude“ direkt unter iCloud</h2>
+    <p>Dort, wo du schon siehst, wohin deine Aufgaben gehen. Der Knopf ist Apples eigener „Mit Apple anmelden“-Knopf (schwarz im Hellen, weiß im Dunkeln, so verlangt es Apple). Alles andere ist ein gewöhnlicher Eintrag in der Farbe der App. Rot erscheint nur in der Rückfrage vor dem Löschen.</p>
+
+    <h3>Abgemeldet</h3>
+    <div class="row">
+      <div class="phone L">
+        <div class="head">iCloud</div>
+        <div class="card"><div class="r"><span>iCloud-Abgleich</span><span class="sec">Aktiv · gerade eben</span></div></div>
+        <div class="head">Claude</div>
+        <div class="card"><div class="r"><div class="apple"><svg><use href="#apple"/></svg>Mit Apple anmelden</div></div></div>
+        <div class="hint">Melde dich mit Apple an, damit Claude deine offenen Aufgaben lesen und neue anlegen kann. Ohne Anmeldung verlässt nichts dieses Gerät.</div>
+        <div class="head ghost">Kalender</div>
+      </div>
+      <div class="phone D">
+        <div class="head">iCloud</div>
+        <div class="card"><div class="r"><span>iCloud-Abgleich</span><span class="sec">Aktiv · gerade eben</span></div></div>
+        <div class="head">Claude</div>
+        <div class="card"><div class="r"><div class="apple"><svg><use href="#apple"/></svg>Mit Apple anmelden</div></div></div>
+        <div class="hint">Melde dich mit Apple an, damit Claude deine offenen Aufgaben lesen und neue anlegen kann. Ohne Anmeldung verlässt nichts dieses Gerät.</div>
+        <div class="head ghost">Kalender</div>
+      </div>
+    </div>
+
+    <h3>Angemeldet, und die Rückfrage vor dem Löschen</h3>
+    <div class="row">
+      <div class="phone L">
+        <div class="head">Claude</div>
+        <div class="card">
+          <div class="r"><span>Angemeldet mit Apple</span><span class="sec">Dieses Gerät</span></div>
+          <div class="r"><span class="acc">Abmelden</span></div>
+          <div class="r"><span class="acc">Konto löschen …</span></div>
+        </div>
+        <div class="hint">Claude sieht deine offenen Aufgaben. Abmelden trennt nur dieses Gerät. Konto löschen entfernt alles, was der Dienst für Claude von dir aufbewahrt.</div>
+        <div class="sheet">
+          <div class="t">Konto löschen?</div>
+          <div class="m sec">Claude sieht deine Aufgaben dann nicht mehr. Deine Aufgaben in der App bleiben, wie sie sind.</div>
+          <div class="b red">Konto löschen</div>
+        </div>
+        <div class="cancel">Abbrechen</div>
+      </div>
+      <div class="phone D">
+        <div class="head">Claude</div>
+        <div class="card">
+          <div class="r"><span>Angemeldet mit Apple</span><span class="sec">Dieses Gerät</span></div>
+          <div class="r"><span class="acc">Abmelden</span></div>
+          <div class="r"><span class="acc">Konto löschen …</span></div>
+        </div>
+        <div class="hint">Claude sieht deine offenen Aufgaben. Abmelden trennt nur dieses Gerät. Konto löschen entfernt alles, was der Dienst für Claude von dir aufbewahrt.</div>
+        <div class="sheet">
+          <div class="t">Konto löschen?</div>
+          <div class="m sec">Claude sieht deine Aufgaben dann nicht mehr. Deine Aufgaben in der App bleiben, wie sie sind.</div>
+          <div class="b red">Konto löschen</div>
+        </div>
+        <div class="cancel">Abbrechen</div>
+      </div>
+    </div>
+
+    <h3>Unterwegs und wenn es nicht klappt</h3>
+    <div class="row">
+      <div class="phone L">
+        <div class="head">Claude</div>
+        <div class="card"><div class="r"><span class="sec">Anmelden …</span><span class="spin sec"></span></div></div>
+        <div class="head">Claude</div>
+        <div class="card"><div class="r"><div class="apple"><svg><use href="#apple"/></svg>Mit Apple anmelden</div></div></div>
+        <div class="hint">Dieses Apple-Konto ist für Claude noch nicht freigegeben.</div>
+        <div class="head">Claude</div>
+        <div class="card"><div class="r"><div class="apple"><svg><use href="#apple"/></svg>Mit Apple anmelden</div></div></div>
+        <div class="hint">Der Dienst ist gerade nicht erreichbar. Versuch es später noch einmal.</div>
+      </div>
+      <div class="phone D">
+        <div class="head">Claude</div>
+        <div class="card"><div class="r"><span class="sec">Anmelden …</span><span class="spin sec"></span></div></div>
+        <div class="head">Claude</div>
+        <div class="card"><div class="r"><div class="apple"><svg><use href="#apple"/></svg>Mit Apple anmelden</div></div></div>
+        <div class="hint">Dieses Apple-Konto ist für Claude noch nicht freigegeben.</div>
+        <div class="head">Claude</div>
+        <div class="card"><div class="r"><div class="apple"><svg><use href="#apple"/></svg>Mit Apple anmelden</div></div></div>
+        <div class="hint">Der Dienst ist gerade nicht erreichbar. Versuch es später noch einmal.</div>
+      </div>
+    </div>
+
+    <h3>Mac, angemeldet und abgemeldet</h3>
+    <div class="row">
+      <div class="mac PL"><div class="bar"><i></i><i></i><i></i>Einstellungen</div><div class="body">
+        <div class="r"><span>iCloud-Abgleich</span><span class="sec">Aktiv · gerade eben</span></div>
+        <div class="h">Claude</div>
+        <div class="r"><span>Angemeldet mit Apple</span><span class="sec">Dieser Mac</span></div>
+        <div class="r"><span class="acc">Abmelden</span></div>
+        <div class="r"><span class="acc">Konto löschen …</span></div>
+        <div class="hint">Claude sieht deine offenen Aufgaben. Abmelden trennt nur diesen Mac. Konto löschen entfernt alles, was der Dienst für Claude von dir aufbewahrt.</div>
+        <div class="h">Mitteilungen</div>
+      </div></div>
+      <div class="mac PD"><div class="bar"><i></i><i></i><i></i>Einstellungen</div><div class="body">
+        <div class="r"><span>iCloud-Abgleich</span><span class="sec">Aktiv · gerade eben</span></div>
+        <div class="h">Claude</div>
+        <div class="r"><span>Mit Claude verbinden</span><span class="apple"><svg><use href="#apple"/></svg>Mit Apple anmelden</span></div>
+        <div class="hint">Melde dich mit Apple an, damit Claude deine offenen Aufgaben lesen und neue anlegen kann. Ohne Anmeldung verlässt nichts diesen Mac.</div>
+        <div class="h">Mitteilungen</div>
+      </div></div>
+    </div>
+    <p class="cap">Auf dem Mac steht die Gruppe wie dort üblich direkt nach dem iCloud-Eintrag, vor den Mitteilungen.</p>
+  </section>
+
+  <section>
+    <span class="tag">Alternative</span>
+    <h2>Alternative B: eine eigene Seite „Claude“</h2>
+    <p>In den Einstellungen steht nur eine Zeile „Claude“ mit dem Zustand daneben. Sie öffnet eine Seite, die erst erklärt, was Claude darf, und darunter anmelden, abmelden und löschen anbietet. Mehr Platz für Erklärung, aber ein Tipp mehr, und die Einstellungen verraten nur ein Wort.</p>
+    <div class="row">
+      <div class="phone L">
+        <div class="head">iCloud</div>
+        <div class="card"><div class="r"><span>iCloud-Abgleich</span><span class="sec">Aktiv · gerade eben</span></div></div>
+        <div class="head">Verbindungen</div>
+        <div class="card"><div class="r"><span style="display:flex;gap:10px;align-items:center"><span class="badge" style="width:26px;height:26px;border-radius:7px"><svg style="width:15px;height:15px"><use href="#sparkle"/></svg></span>Claude</span><span class="sec">Nicht verbunden <span class="chev">›</span></span></div></div>
+      </div>
+      <div class="phone D">
+        <div class="title" style="font-size:18px;text-align:center">Claude</div>
+        <div class="intro"><span class="badge big"><svg><use href="#sparkle"/></svg></span><b>Claude kennt deine losen Enden</b><span class="sec">Nach der Anmeldung liest Claude deine offenen Aufgaben, legt neue an, hakt ab und verschiebt Termine. Löschen kann Claude nichts.</span></div>
+        <div class="card"><div class="r"><div class="apple"><svg><use href="#apple"/></svg>Mit Apple anmelden</div></div></div>
+        <div class="hint">Ohne Anmeldung verlässt nichts dieses Gerät.</div>
+      </div>
+      <div class="phone L">
+        <div class="title" style="font-size:18px;text-align:center">Claude</div>
+        <div class="intro"><span class="badge big"><svg><use href="#sparkle"/></svg></span><b>Verbunden</b><span class="sec">Angemeldet mit Apple auf diesem Gerät.</span></div>
+        <div class="card"><div class="r"><span class="acc">Abmelden</span></div><div class="r"><span class="acc">Konto löschen …</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Was du entscheidest</h2>
+    <div class="ask">
+      <ol>
+        <li>Gruppe direkt unter iCloud (A) oder eigene Seite (B)?</li>
+        <li>Passt der Name „Claude“ für die Gruppe, und passen die Sätze darunter?</li>
+      </ol>
+      <p class="cap">Gleich bleibt in beiden Fällen: Abmelden ohne Rückfrage, Löschen nur nach Rückfrage, und im Store bleibt der Platz verborgen, bis der Datenschutztext das Konto nennt.</p>
+    </div>
+  </section>
+</div>
