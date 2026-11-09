@@ -1,0 +1,348 @@
+version-texts	Set up job	﻿2026-11-09T14:34:32.2600648Z Current runner version: '2.338.2'
+version-texts	Set up job	2026-11-09T14:34:32.2630428Z ##[group]Runner Image Provisioner
+version-texts	Set up job	2026-11-09T14:34:32.2632221Z Hosted Compute Agent
+version-texts	Set up job	2026-11-09T14:34:32.2633756Z Version: 20261028.624
+version-texts	Set up job	2026-11-09T14:34:32.2635289Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+version-texts	Set up job	2026-11-09T14:34:32.2637014Z Build Date: 2026-10-28T21:51:42Z
+version-texts	Set up job	2026-11-09T14:34:32.2638736Z Worker ID: {8123b774-4feb-4599-a7de-e3ed3591a61b}
+version-texts	Set up job	2026-11-09T14:34:32.2640413Z Region: southcentralus
+version-texts	Set up job	2026-11-09T14:34:32.2641647Z Cloud: Azure
+version-texts	Set up job	2026-11-09T14:34:32.2643122Z ##[endgroup]
+version-texts	Set up job	2026-11-09T14:34:32.2646076Z ##[group]Operating System
+version-texts	Set up job	2026-11-09T14:34:32.2647668Z Ubuntu
+version-texts	Set up job	2026-11-09T14:34:32.2648890Z 26.04.1
+version-texts	Set up job	2026-11-09T14:34:32.2650994Z LTS
+version-texts	Set up job	2026-11-09T14:34:32.2652152Z ##[endgroup]
+version-texts	Set up job	2026-11-09T14:34:32.2653737Z ##[group]Runner Image
+version-texts	Set up job	2026-11-09T14:34:32.2655124Z Image: ubuntu-26.04
+version-texts	Set up job	2026-11-09T14:34:32.2656526Z Version: 20261101.186.1
+version-texts	Set up job	2026-11-09T14:34:32.2658697Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261101.186/images/ubuntu/Ubuntu2604-Readme.md
+version-texts	Set up job	2026-11-09T14:34:32.2662188Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261101.186
+version-texts	Set up job	2026-11-09T14:34:32.2664682Z ##[endgroup]
+version-texts	Set up job	2026-11-09T14:34:32.2666965Z ##[group]GITHUB_TOKEN Permissions
+version-texts	Set up job	2026-11-09T14:34:32.2670776Z Contents: read
+version-texts	Set up job	2026-11-09T14:34:32.2672135Z Metadata: read
+version-texts	Set up job	2026-11-09T14:34:32.2673802Z ##[endgroup]
+version-texts	Set up job	2026-11-09T14:34:32.2676729Z Secret source: Actions
+version-texts	Set up job	2026-11-09T14:34:32.2678797Z Cache mode: write
+version-texts	Set up job	2026-11-09T14:34:32.2680746Z Prepare workflow directory
+version-texts	Set up job	2026-11-09T14:34:32.3300793Z Prepare all required actions
+version-texts	Set up job	2026-11-09T14:34:32.3373116Z Getting action download info
+version-texts	Set up job	2026-11-09T14:34:32.5814849Z Download action repository 'actions/checkout@v7' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+version-texts	Set up job	2026-11-09T14:34:32.7908448Z Complete job name: version-texts
+version-texts	Run actions/checkout@v7	﻿2026-11-09T14:34:32.8731904Z ##[group]Run actions/checkout@v7
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:32.8732968Z with:
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:32.8733749Z   repository: henemm/loose-ends
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:32.8738020Z   token: ***
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:32.8738655Z   ssh-strict: true
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:32.8739258Z   ssh-user: git
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:32.8739836Z   persist-credentials: true
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:32.8740519Z   clean: true
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:32.8741069Z   sparse-checkout-cone-mode: true
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:32.8741692Z   fetch-depth: 1
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:32.8742219Z   fetch-tags: false
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:32.8742767Z   show-progress: true
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:32.8743314Z   lfs: false
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:32.8743932Z   submodules: false
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:32.8744475Z   set-safe-directory: true
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:32.8745100Z   allow-unsafe-pr-checkout: false
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:32.8745960Z env:
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:32.8746517Z   ASC_KEY_ID: ***
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:32.8747155Z   ASC_ISSUER_ID: ***
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:32.8747707Z   ASC_POLL_SECONDS: 5
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:32.8748258Z   AKTION: lesen
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:32.8748827Z ##[endgroup]
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2118774Z Syncing repository: henemm/loose-ends
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2121302Z ##[group]Getting Git version info
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2122896Z Working directory is '/home/runner/work/loose-ends/loose-ends'
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2125412Z [command]/usr/bin/git version
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2126465Z git version 2.56.0
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2151339Z ##[endgroup]
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2164142Z Temporarily overriding HOME='/home/runner/work/_temp/56127b23-541c-4252-bc7f-42e49eb777e7' before making global git config changes
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2169860Z Adding repository directory to the temporary git global config as a safe directory
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2172238Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/loose-ends/loose-ends
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2259936Z Deleting the contents of '/home/runner/work/loose-ends/loose-ends'
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2262840Z ##[group]Determining repository object format
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2265701Z ##[endgroup]
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2267762Z ##[group]Initializing the repository
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2284820Z [command]/usr/bin/git init /home/runner/work/loose-ends/loose-ends
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2421234Z hint: Using 'master' as the name for the initial branch. This default branch name
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2423744Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2425840Z hint: to use in all of your new repositories, which will suppress this warning,
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2427377Z hint: call:
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2428247Z hint:
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2429427Z hint: 	git config --global init.defaultBranch <name>
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2430776Z hint:
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2432020Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2434056Z hint: 'development'. The just-created branch can be renamed via this command:
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2435735Z hint:
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2436712Z hint: 	git branch -m <name>
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2437793Z hint:
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2439191Z hint: Disable this message with "git config set advice.defaultBranchName false"
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2441493Z Initialized empty Git repository in /home/runner/work/loose-ends/loose-ends/.git/
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2451486Z [command]/usr/bin/git remote add origin https://github.com/henemm/loose-ends
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2510678Z ##[endgroup]
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2512458Z ##[group]Disabling automatic garbage collection
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2514138Z [command]/usr/bin/git config --local gc.auto 0
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2552076Z ##[endgroup]
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2554017Z ##[group]Setting up auth
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2555122Z Removing SSH command configuration
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2558128Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.2598025Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.3151845Z Removing HTTP extra header
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.3158264Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.3194695Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.3488021Z Removing includeIf entries pointing to credentials config files
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.3491782Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.3545970Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.3826017Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-99555378-2418-436b-acde-ea95063cd0cb.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.3864459Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path /home/runner/work/_temp/git-credentials-99555378-2418-436b-acde-ea95063cd0cb.config
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.3898685Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-99555378-2418-436b-acde-ea95063cd0cb.config
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.3936998Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-99555378-2418-436b-acde-ea95063cd0cb.config
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.3967885Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-99555378-2418-436b-acde-ea95063cd0cb.config
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.3997757Z ##[endgroup]
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.3999356Z ##[group]Fetching the repository
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:33.4003729Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +af7109e9af92a28b76626b9bff1ab92b2fe42f81:refs/remotes/origin/feat-842-s5a2-texte
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:40.6229306Z From https://github.com/henemm/loose-ends
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:40.6233215Z  * [new ref]         af7109e9af92a28b76626b9bff1ab92b2fe42f81 -> origin/feat-842-s5a2-texte
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:40.6241310Z [command]/usr/bin/git branch --list --remote origin/feat-842-s5a2-texte
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:40.6269842Z   origin/feat-842-s5a2-texte
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:40.6278610Z [command]/usr/bin/git rev-parse refs/remotes/origin/feat-842-s5a2-texte
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:40.6303267Z af7109e9af92a28b76626b9bff1ab92b2fe42f81
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:40.6309719Z ##[endgroup]
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:40.6312290Z ##[group]Determining the checkout info
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:40.6315018Z ##[endgroup]
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:40.6316272Z [command]/usr/bin/git sparse-checkout disable
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:40.6373111Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:40.6406886Z ##[group]Checking out the ref
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:40.6410358Z [command]/usr/bin/git checkout --progress --force -B feat-842-s5a2-texte refs/remotes/origin/feat-842-s5a2-texte
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:41.3639006Z Switched to a new branch 'feat-842-s5a2-texte'
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:41.3652643Z branch 'feat-842-s5a2-texte' set up to track 'origin/feat-842-s5a2-texte'.
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:41.3683336Z ##[endgroup]
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:41.3754445Z [command]/usr/bin/git log -1 --format=%H
+version-texts	Run actions/checkout@v7	2026-11-09T14:34:41.3772777Z af7109e9af92a28b76626b9bff1ab92b2fe42f81
+version-texts	Unit tests	﻿2026-11-09T14:34:41.3996475Z ##[group]Run python3 scripts/test_asc_version_texts.py
+version-texts	Unit tests	2026-11-09T14:34:41.3997029Z ^[[36;1mpython3 scripts/test_asc_version_texts.py^[[0m
+version-texts	Unit tests	2026-11-09T14:34:41.4052758Z shell: /usr/bin/bash -e {0}
+version-texts	Unit tests	2026-11-09T14:34:41.4053118Z env:
+version-texts	Unit tests	2026-11-09T14:34:41.4053797Z   ASC_KEY_ID: ***
+version-texts	Unit tests	2026-11-09T14:34:41.4054164Z   ASC_ISSUER_ID: ***
+version-texts	Unit tests	2026-11-09T14:34:41.4054429Z   ASC_POLL_SECONDS: 5
+version-texts	Unit tests	2026-11-09T14:34:41.4054676Z   AKTION: lesen
+version-texts	Unit tests	2026-11-09T14:34:41.4054920Z ##[endgroup]
+version-texts	Unit tests	2026-11-09T14:35:06.6253349Z .............................
+version-texts	Unit tests	2026-11-09T14:35:06.6254465Z ----------------------------------------------------------------------
+version-texts	Unit tests	2026-11-09T14:35:06.6255298Z Ran 29 tests in 25.097s
+version-texts	Unit tests	2026-11-09T14:35:06.6255798Z 
+version-texts	Unit tests	2026-11-09T14:35:06.6255989Z OK
+version-texts	Version texts	﻿2026-11-09T14:35:06.6537751Z ##[group]Run trap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT
+version-texts	Version texts	2026-11-09T14:35:06.6538619Z ^[[36;1mtrap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT^[[0m
+version-texts	Version texts	2026-11-09T14:35:06.6539238Z ^[[36;1mumask 077^[[0m
+version-texts	Version texts	2026-11-09T14:35:06.6539881Z ^[[36;1mprintf '%s\n' "***^[[0m
+version-texts	Version texts	2026-11-09T14:35:06.6540742Z ^[[36;1m***^[[0m
+version-texts	Version texts	2026-11-09T14:35:06.6541494Z ^[[36;1m***^[[0m
+version-texts	Version texts	2026-11-09T14:35:06.6542206Z ^[[36;1m***^[[0m
+version-texts	Version texts	2026-11-09T14:35:06.6542604Z ^[[36;1m***^[[0m
+version-texts	Version texts	2026-11-09T14:35:06.6543202Z ^[[36;1m***" > "$RUNNER_TEMP/asc_key.p8"^[[0m
+version-texts	Version texts	2026-11-09T14:35:06.6544289Z ^[[36;1mASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_version_texts.py "$AKTION"^[[0m
+version-texts	Version texts	2026-11-09T14:35:06.6600494Z shell: /usr/bin/bash -e {0}
+version-texts	Version texts	2026-11-09T14:35:06.6600782Z env:
+version-texts	Version texts	2026-11-09T14:35:06.6601078Z   ASC_KEY_ID: ***
+version-texts	Version texts	2026-11-09T14:35:06.6601403Z   ASC_ISSUER_ID: ***
+version-texts	Version texts	2026-11-09T14:35:06.6601657Z   ASC_POLL_SECONDS: 5
+version-texts	Version texts	2026-11-09T14:35:06.6601903Z   AKTION: lesen
+version-texts	Version texts	2026-11-09T14:35:06.6602145Z ##[endgroup]
+version-texts	Version texts	2026-11-09T14:35:07.3741862Z version MAC_OS 1.0.1 state=PREPARE_FOR_SUBMISSION
+version-texts	Version texts	2026-11-09T14:35:07.3742924Z version IOS 1.0.1 state=PREPARE_FOR_SUBMISSION
+version-texts	Version texts	2026-11-09T14:35:07.3743871Z version MAC_OS 1.0 state=READY_FOR_SALE
+version-texts	Version texts	2026-11-09T14:35:07.3745738Z version IOS 1.0 state=READY_FOR_SALE
+version-texts	Version texts	2026-11-09T14:35:07.3746382Z version IOS 1.0.1 id=a8e6e70e-9a24-45e3-8cc7-1d4c9bd3e3c0 state=PREPARE_FOR_SUBMISSION
+version-texts	Version texts	2026-11-09T14:35:07.7111002Z   IOS de-DE Beschreibung zeichen=1638: Sag es in einem Satz – Loose Ends kümmert sich um den Rest.
+version-texts	Version texts	2026-11-09T14:35:07.7112385Z 
+version-texts	Version texts	2026-11-09T14:35:07.7115203Z Aufgaben entstehen unterwegs: beim Spaziergang, an der Kasse, beim Lesen einer Mail. Loose Ends nimmt sie in einem einzigen Satz auf, ohne dass du ein Feld ausfüllst. Danach erkennt die App selbst, was in deinem Satz steckt, und zeigt dir später genau das, was gerade zu deiner Situation passt.
+version-texts	Version texts	2026-11-09T14:35:07.7117826Z 
+version-texts	Version texts	2026-11-09T14:35:07.7118309Z ERFASSEN IN EINEM SATZ
+version-texts	Version texts	2026-11-09T14:35:07.7119718Z • Tippen oder diktieren – in der App, auf der Apple Watch, über Widgets, Aktionstaste und Kurzbefehle
+version-texts	Version texts	2026-11-09T14:35:07.7120815Z • Teilen-Menü: Texte, Links, Mails, Fotos und Dateien direkt als Aufgabe übernehmen
+version-texts	Version texts	2026-11-09T14:35:07.7121907Z • Dein Originalsatz bleibt immer unverändert erhalten
+version-texts	Version texts	2026-11-09T14:35:07.7122410Z 
+version-texts	Version texts	2026-11-09T14:35:07.7122675Z DIE APP SORTIERT FÜR DICH
+version-texts	Version texts	2026-11-09T14:35:07.7123676Z • Fälligkeit, Dauer, Wichtigkeit und Kontext werden aus deinem Satz erkannt
+version-texts	Version texts	2026-11-09T14:35:07.7125065Z • Feste Regeln zuerst, Apple Intelligence auf deinem Gerät nur dort, wo Sprachverständnis nötig ist
+version-texts	Version texts	2026-11-09T14:35:07.7126563Z • Lernt aus deinen Zuordnungen: Was du einmal einem Kontext gibst, erkennt sie beim nächsten Mal
+version-texts	Version texts	2026-11-09T14:35:07.7127329Z 
+version-texts	Version texts	2026-11-09T14:35:07.7127605Z DU BEHÄLTST DAS LETZTE WORT
+version-texts	Version texts	2026-11-09T14:35:07.7128185Z • Jede Änderung ist an der Aufgabe sichtbar
+version-texts	Version texts	2026-11-09T14:35:07.7128858Z • Jedes Feld lässt sich einzeln zurückstellen
+version-texts	Version texts	2026-11-09T14:35:07.7129291Z 
+version-texts	Version texts	2026-11-09T14:35:07.7129522Z ANSICHTEN, DIE ZUR SITUATION PASSEN
+version-texts	Version texts	2026-11-09T14:35:07.7130202Z • Jetzt, Neu, Fällig, Schnell, Alt, Wartet, Geparkt, Erledigt
+version-texts	Version texts	2026-11-09T14:35:07.7130958Z • Je Kontext („Garten", „Computer") und je Projekt
+version-texts	Version texts	2026-11-09T14:35:07.7131662Z • Wiederkehrende Aufgaben und Unteraufgaben
+version-texts	Version texts	2026-11-09T14:35:07.7132078Z 
+version-texts	Version texts	2026-11-09T14:35:07.7132446Z ERINNERT ZUR RICHTIGEN ZEIT – UND AM RICHTIGEN ORT
+version-texts	Version texts	2026-11-09T14:35:07.7133242Z • Mitteilung am Fälligkeitstag mit Erledigt, Als nächstes, Morgen
+version-texts	Version texts	2026-11-09T14:35:07.7134211Z • Erinnerung beim Ankommen an einem Ort (iPhone, iPad)
+version-texts	Version texts	2026-11-09T14:35:07.7134821Z • Termine optional im Kalender
+version-texts	Version texts	2026-11-09T14:35:07.7135102Z 
+version-texts	Version texts	2026-11-09T14:35:07.7135290Z ÜBERALL DABEI
+version-texts	Version texts	2026-11-09T14:35:07.7135724Z • iPhone, iPad, Mac und Apple Watch
+version-texts	Version texts	2026-11-09T14:35:07.7136265Z • Abgleich über deine private iCloud
+version-texts	Version texts	2026-11-09T14:35:07.7136594Z 
+version-texts	Version texts	2026-11-09T14:35:07.7136744Z PRIVAT
+version-texts	Version texts	2026-11-09T14:35:07.7137642Z Die Auswertung läuft auf deinem Gerät. Deine Aufgaben liegen in deiner iCloud, nicht auf fremden Servern.
+version-texts	Version texts	2026-11-09T14:35:07.7139538Z   IOS de-DE Schlüsselwörter zeichen=100: Aufgaben,To-do,Todo,Erinnerungen,Diktat,Liste,GTD,Kontext,Notizen,Planer,Inbox,Watch,Projekte,Fällig
+version-texts	Version texts	2026-11-09T14:35:07.7141523Z   IOS de-DE Support-URL zeichen=50: https://www.henemm.com/footer-information/contact/
+version-texts	Version texts	2026-11-09T14:35:07.7143345Z   IOS de-DE Werbetext zeichen=139: Sag es in einem Satz. Loose Ends erkennt Datum, Dauer und Kontext direkt auf deinem Gerät und zeigt dir später genau das, was gerade passt.
+version-texts	Version texts	2026-11-09T14:35:07.7145720Z   IOS de-DE Neu in dieser Version zeichen=116: Loose Ends gibt es jetzt auch auf Englisch: die App und die Store-Seite. Dazu kleine Verbesserungen und Korrekturen.
+version-texts	Version texts	2026-11-09T14:35:07.7147404Z   IOS en-US Beschreibung zeichen=1493: Say it in one sentence – Loose Ends takes care of the rest.
+version-texts	Version texts	2026-11-09T14:35:07.7148088Z 
+version-texts	Version texts	2026-11-09T14:35:07.7149502Z Tasks show up on the go: on a walk, at the checkout, while reading an email. Loose Ends captures them in a single sentence, without a form to fill in. The app then works out what is in your sentence and later shows you just what fits your situation right now.
+version-texts	Version texts	2026-11-09T14:35:07.7151125Z 
+version-texts	Version texts	2026-11-09T14:35:07.7151298Z CAPTURE IN ONE SENTENCE
+version-texts	Version texts	2026-11-09T14:35:07.7152153Z • Type or dictate – in the app, on Apple Watch, with widgets, the Action button and Shortcuts
+version-texts	Version texts	2026-11-09T14:35:07.7153279Z • Share sheet: turn text, links, emails, photos and files straight into a task
+version-texts	Version texts	2026-11-09T14:35:07.7154387Z • Your original sentence is always kept unchanged
+version-texts	Version texts	2026-11-09T14:35:07.7154801Z 
+version-texts	Version texts	2026-11-09T14:35:07.7154973Z THE APP SORTS IT FOR YOU
+version-texts	Version texts	2026-11-09T14:35:07.7155739Z • Due date, duration, importance and context are recognized from your sentence
+version-texts	Version texts	2026-11-09T14:35:07.7156914Z • Fixed rules first, Apple Intelligence on your device only where language understanding is needed
+version-texts	Version texts	2026-11-09T14:35:07.7158035Z • Learns from your choices: tag a sentence once, and it knows next time
+version-texts	Version texts	2026-11-09T14:35:07.7158573Z 
+version-texts	Version texts	2026-11-09T14:35:07.7158750Z YOU HAVE THE LAST WORD
+version-texts	Version texts	2026-11-09T14:35:07.7159532Z • Every change is visible on the task
+version-texts	Version texts	2026-11-09T14:35:07.7160112Z • Every field can be reset on its own
+version-texts	Version texts	2026-11-09T14:35:07.7160461Z 
+version-texts	Version texts	2026-11-09T14:35:07.7160653Z VIEWS THAT FIT THE MOMENT
+version-texts	Version texts	2026-11-09T14:35:07.7161289Z • Now, New, Due, Quick, Old, Waiting, Parked, Completed
+version-texts	Version texts	2026-11-09T14:35:07.7162015Z • By tag ("Garden", "Computer") and by project
+version-texts	Version texts	2026-11-09T14:35:07.7162667Z • Repeating tasks and subtasks
+version-texts	Version texts	2026-11-09T14:35:07.7162986Z 
+version-texts	Version texts	2026-11-09T14:35:07.7163261Z REMINDS YOU AT THE RIGHT TIME – AND PLACE
+version-texts	Version texts	2026-11-09T14:35:07.7164442Z • Notification on the due day with Complete, Next up, Tomorrow
+version-texts	Version texts	2026-11-09T14:35:07.7165255Z • Reminder on arriving at a place (iPhone, iPad)
+version-texts	Version texts	2026-11-09T14:35:07.7165918Z • Optionally add dates to your calendar
+version-texts	Version texts	2026-11-09T14:35:07.7166274Z 
+version-texts	Version texts	2026-11-09T14:35:07.7166443Z EVERYWHERE YOU ARE
+version-texts	Version texts	2026-11-09T14:35:07.7166940Z • iPhone, iPad, Mac and Apple Watch
+version-texts	Version texts	2026-11-09T14:35:07.7167522Z • Sync through your private iCloud
+version-texts	Version texts	2026-11-09T14:35:07.7167874Z 
+version-texts	Version texts	2026-11-09T14:35:07.7168028Z PRIVATE
+version-texts	Version texts	2026-11-09T14:35:07.7168683Z Analysis runs on your device. Your tasks live in your iCloud, not on someone else's servers.
+version-texts	Version texts	2026-11-09T14:35:07.7170384Z   IOS en-US Schlüsselwörter zeichen=94: to-do,todo,reminders,dictation,list,GTD,context,notes,planner,inbox,watch,projects,due,capture
+version-texts	Version texts	2026-11-09T14:35:07.7171888Z   IOS en-US Support-URL zeichen=50: https://www.henemm.com/footer-information/contact/
+version-texts	Version texts	2026-11-09T14:35:07.7173376Z   IOS en-US Werbetext zeichen=125: Say it in one sentence. Loose Ends recognizes date, duration and tag right on your device and later shows you just what fits.
+version-texts	Version texts	2026-11-09T14:35:07.7175394Z   IOS en-US Neu in dieser Version zeichen=99: Loose Ends now also speaks English: the app and this store page. Plus small improvements and fixes.
+version-texts	Version texts	2026-11-09T14:35:07.7176807Z version MAC_OS 1.0.1 id=d790d750-3611-4db0-8fb0-fcb8f1ee6d45 state=PREPARE_FOR_SUBMISSION
+version-texts	Version texts	2026-11-09T14:35:08.0690632Z   MAC_OS de-DE Beschreibung zeichen=1638: Sag es in einem Satz – Loose Ends kümmert sich um den Rest.
+version-texts	Version texts	2026-11-09T14:35:08.0691284Z 
+version-texts	Version texts	2026-11-09T14:35:08.0692883Z Aufgaben entstehen unterwegs: beim Spaziergang, an der Kasse, beim Lesen einer Mail. Loose Ends nimmt sie in einem einzigen Satz auf, ohne dass du ein Feld ausfüllst. Danach erkennt die App selbst, was in deinem Satz steckt, und zeigt dir später genau das, was gerade zu deiner Situation passt.
+version-texts	Version texts	2026-11-09T14:35:08.0695102Z 
+version-texts	Version texts	2026-11-09T14:35:08.0695250Z ERFASSEN IN EINEM SATZ
+version-texts	Version texts	2026-11-09T14:35:08.0695957Z • Tippen oder diktieren – in der App, auf der Apple Watch, über Widgets, Aktionstaste und Kurzbefehle
+version-texts	Version texts	2026-11-09T14:35:08.0696905Z • Teilen-Menü: Texte, Links, Mails, Fotos und Dateien direkt als Aufgabe übernehmen
+version-texts	Version texts	2026-11-09T14:35:08.0697707Z • Dein Originalsatz bleibt immer unverändert erhalten
+version-texts	Version texts	2026-11-09T14:35:08.0698056Z 
+version-texts	Version texts	2026-11-09T14:35:08.0698231Z DIE APP SORTIERT FÜR DICH
+version-texts	Version texts	2026-11-09T14:35:08.0698813Z • Fälligkeit, Dauer, Wichtigkeit und Kontext werden aus deinem Satz erkannt
+version-texts	Version texts	2026-11-09T14:35:08.0699719Z • Feste Regeln zuerst, Apple Intelligence auf deinem Gerät nur dort, wo Sprachverständnis nötig ist
+version-texts	Version texts	2026-11-09T14:35:08.0700755Z • Lernt aus deinen Zuordnungen: Was du einmal einem Kontext gibst, erkennt sie beim nächsten Mal
+version-texts	Version texts	2026-11-09T14:35:08.0701274Z 
+version-texts	Version texts	2026-11-09T14:35:08.0701445Z DU BEHÄLTST DAS LETZTE WORT
+version-texts	Version texts	2026-11-09T14:35:08.0701869Z • Jede Änderung ist an der Aufgabe sichtbar
+version-texts	Version texts	2026-11-09T14:35:08.0702353Z • Jedes Feld lässt sich einzeln zurückstellen
+version-texts	Version texts	2026-11-09T14:35:08.0702642Z 
+version-texts	Version texts	2026-11-09T14:35:08.0702796Z ANSICHTEN, DIE ZUR SITUATION PASSEN
+version-texts	Version texts	2026-11-09T14:35:08.0703327Z • Jetzt, Neu, Fällig, Schnell, Alt, Wartet, Geparkt, Erledigt
+version-texts	Version texts	2026-11-09T14:35:08.0704123Z • Je Kontext („Garten", „Computer") und je Projekt
+version-texts	Version texts	2026-11-09T14:35:08.0704630Z • Wiederkehrende Aufgaben und Unteraufgaben
+version-texts	Version texts	2026-11-09T14:35:08.0704916Z 
+version-texts	Version texts	2026-11-09T14:35:08.0705147Z ERINNERT ZUR RICHTIGEN ZEIT – UND AM RICHTIGEN ORT
+version-texts	Version texts	2026-11-09T14:35:08.0705759Z • Mitteilung am Fälligkeitstag mit Erledigt, Als nächstes, Morgen
+version-texts	Version texts	2026-11-09T14:35:08.0706652Z • Erinnerung beim Ankommen an einem Ort (iPhone, iPad)
+version-texts	Version texts	2026-11-09T14:35:08.0707161Z • Termine optional im Kalender
+version-texts	Version texts	2026-11-09T14:35:08.0707400Z 
+version-texts	Version texts	2026-11-09T14:35:08.0707541Z ÜBERALL DABEI
+version-texts	Version texts	2026-11-09T14:35:08.0707898Z • iPhone, iPad, Mac und Apple Watch
+version-texts	Version texts	2026-11-09T14:35:08.0708332Z • Abgleich über deine private iCloud
+version-texts	Version texts	2026-11-09T14:35:08.0708584Z 
+version-texts	Version texts	2026-11-09T14:35:08.0708679Z PRIVAT
+version-texts	Version texts	2026-11-09T14:35:08.0709198Z Die Auswertung läuft auf deinem Gerät. Deine Aufgaben liegen in deiner iCloud, nicht auf fremden Servern.
+version-texts	Version texts	2026-11-09T14:35:08.0710278Z   MAC_OS de-DE Schlüsselwörter zeichen=100: Aufgaben,To-do,Todo,Erinnerungen,Diktat,Liste,GTD,Kontext,Notizen,Planer,Inbox,Watch,Projekte,Fällig
+version-texts	Version texts	2026-11-09T14:35:08.0711210Z   MAC_OS de-DE Support-URL zeichen=50: https://www.henemm.com/footer-information/contact/
+version-texts	Version texts	2026-11-09T14:35:08.0712252Z   MAC_OS de-DE Werbetext zeichen=139: Sag es in einem Satz. Loose Ends erkennt Datum, Dauer und Kontext direkt auf deinem Gerät und zeigt dir später genau das, was gerade passt.
+version-texts	Version texts	2026-11-09T14:35:08.0713590Z   MAC_OS de-DE Neu in dieser Version zeichen=116: Loose Ends gibt es jetzt auch auf Englisch: die App und die Store-Seite. Dazu kleine Verbesserungen und Korrekturen.
+version-texts	Version texts	2026-11-09T14:35:08.0714569Z   MAC_OS en-US Beschreibung zeichen=1493: Say it in one sentence – Loose Ends takes care of the rest.
+version-texts	Version texts	2026-11-09T14:35:08.0714967Z 
+version-texts	Version texts	2026-11-09T14:35:08.0715775Z Tasks show up on the go: on a walk, at the checkout, while reading an email. Loose Ends captures them in a single sentence, without a form to fill in. The app then works out what is in your sentence and later shows you just what fits your situation right now.
+version-texts	Version texts	2026-11-09T14:35:08.0716682Z 
+version-texts	Version texts	2026-11-09T14:35:08.0716789Z CAPTURE IN ONE SENTENCE
+version-texts	Version texts	2026-11-09T14:35:08.0717274Z • Type or dictate – in the app, on Apple Watch, with widgets, the Action button and Shortcuts
+version-texts	Version texts	2026-11-09T14:35:08.0717914Z • Share sheet: turn text, links, emails, photos and files straight into a task
+version-texts	Version texts	2026-11-09T14:35:08.0718423Z • Your original sentence is always kept unchanged
+version-texts	Version texts	2026-11-09T14:35:08.0718667Z 
+version-texts	Version texts	2026-11-09T14:35:08.0718773Z THE APP SORTS IT FOR YOU
+version-texts	Version texts	2026-11-09T14:35:08.0719444Z • Due date, duration, importance and context are recognized from your sentence
+version-texts	Version texts	2026-11-09T14:35:08.0720117Z • Fixed rules first, Apple Intelligence on your device only where language understanding is needed
+version-texts	Version texts	2026-11-09T14:35:08.0720773Z • Learns from your choices: tag a sentence once, and it knows next time
+version-texts	Version texts	2026-11-09T14:35:08.0721076Z 
+version-texts	Version texts	2026-11-09T14:35:08.0721180Z YOU HAVE THE LAST WORD
+version-texts	Version texts	2026-11-09T14:35:08.0721489Z • Every change is visible on the task
+version-texts	Version texts	2026-11-09T14:35:08.0721834Z • Every field can be reset on its own
+version-texts	Version texts	2026-11-09T14:35:08.0722017Z 
+version-texts	Version texts	2026-11-09T14:35:08.0722124Z VIEWS THAT FIT THE MOMENT
+version-texts	Version texts	2026-11-09T14:35:08.0722474Z • Now, New, Due, Quick, Old, Waiting, Parked, Completed
+version-texts	Version texts	2026-11-09T14:35:08.0722908Z • By tag ("Garden", "Computer") and by project
+version-texts	Version texts	2026-11-09T14:35:08.0723265Z • Repeating tasks and subtasks
+version-texts	Version texts	2026-11-09T14:35:08.0723675Z 
+version-texts	Version texts	2026-11-09T14:35:08.0723895Z REMINDS YOU AT THE RIGHT TIME – AND PLACE
+version-texts	Version texts	2026-11-09T14:35:08.0724347Z • Notification on the due day with Complete, Next up, Tomorrow
+version-texts	Version texts	2026-11-09T14:35:08.0724813Z • Reminder on arriving at a place (iPhone, iPad)
+version-texts	Version texts	2026-11-09T14:35:08.0725191Z • Optionally add dates to your calendar
+version-texts	Version texts	2026-11-09T14:35:08.0725392Z 
+version-texts	Version texts	2026-11-09T14:35:08.0725492Z EVERYWHERE YOU ARE
+version-texts	Version texts	2026-11-09T14:35:08.0725768Z • iPhone, iPad, Mac and Apple Watch
+version-texts	Version texts	2026-11-09T14:35:08.0726099Z • Sync through your private iCloud
+version-texts	Version texts	2026-11-09T14:35:08.0726286Z 
+version-texts	Version texts	2026-11-09T14:35:08.0726376Z PRIVATE
+version-texts	Version texts	2026-11-09T14:35:08.0726755Z Analysis runs on your device. Your tasks live in your iCloud, not on someone else's servers.
+version-texts	Version texts	2026-11-09T14:35:08.0727712Z   MAC_OS en-US Schlüsselwörter zeichen=94: to-do,todo,reminders,dictation,list,GTD,context,notes,planner,inbox,watch,projects,due,capture
+version-texts	Version texts	2026-11-09T14:35:08.0728556Z   MAC_OS en-US Support-URL zeichen=50: https://www.henemm.com/footer-information/contact/
+version-texts	Version texts	2026-11-09T14:35:08.0729490Z   MAC_OS en-US Werbetext zeichen=125: Say it in one sentence. Loose Ends recognizes date, duration and tag right on your device and later shows you just what fits.
+version-texts	Version texts	2026-11-09T14:35:08.0730707Z   MAC_OS en-US Neu in dieser Version zeichen=99: Loose Ends now also speaks English: the app and this store page. Plus small improvements and fixes.
+version-texts	Version texts	2026-11-09T14:35:08.3925942Z veröffentlicht MAC_OS 1.0 de-DE Werbetext zeichen=139: Sag es in einem Satz. Loose Ends erkennt Datum, Dauer und Kontext direkt auf deinem Gerät und zeigt dir später genau das, was gerade passt.
+version-texts	Version texts	2026-11-09T14:35:08.7662394Z veröffentlicht IOS 1.0 de-DE Werbetext zeichen=139: Sag es in einem Satz. Loose Ends erkennt Datum, Dauer und Kontext direkt auf deinem Gerät und zeigt dir später genau das, was gerade passt.
+version-texts	Version texts	2026-11-09T14:35:08.7664134Z zusammenfassung geschrieben=0
+version-texts	Post Run actions/checkout@v7	﻿2026-11-09T14:35:08.7902995Z Post job cleanup.
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.8790884Z [command]/usr/bin/git version
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.8845398Z git version 2.56.0
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.8882287Z Temporarily overriding HOME='/home/runner/work/_temp/85b72a28-13b2-499f-8174-0baae97a37a7' before making global git config changes
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.8883945Z Adding repository directory to the temporary git global config as a safe directory
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.8887478Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/loose-ends/loose-ends
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.8923783Z Removing SSH command configuration
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.8930203Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.8969442Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9306042Z Removing HTTP extra header
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9314520Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9353787Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9660068Z Removing includeIf entries pointing to credentials config files
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9666705Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9694395Z includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9695366Z includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9696199Z includeif.gitdir:/github/workspace/.git.path
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9696878Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9703256Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9727029Z /home/runner/work/_temp/git-credentials-99555378-2418-436b-acde-ea95063cd0cb.config
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9736970Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-99555378\-2418\-436b\-acde\-ea95063cd0cb\.config
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9774258Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9803801Z /home/runner/work/_temp/git-credentials-99555378-2418-436b-acde-ea95063cd0cb.config
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9812451Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-99555378\-2418\-436b\-acde\-ea95063cd0cb\.config
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9848716Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9875379Z /github/runner_temp/git-credentials-99555378-2418-436b-acde-ea95063cd0cb.config
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9885746Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-99555378\-2418\-436b\-acde\-ea95063cd0cb\.config
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9924074Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9949876Z /github/runner_temp/git-credentials-99555378-2418-436b-acde-ea95063cd0cb.config
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9959292Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-99555378\-2418\-436b\-acde\-ea95063cd0cb\.config
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:08.9998081Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:35:09.0293002Z Removing credentials config '/home/runner/work/_temp/git-credentials-99555378-2418-436b-acde-ea95063cd0cb.config'
+version-texts	Complete job	﻿2026-11-09T14:35:09.0463623Z Cleaning up orphan processes

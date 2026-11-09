@@ -1,0 +1,196 @@
+version-texts	Set up job	﻿2026-11-09T14:32:39.5232438Z Current runner version: '2.338.2'
+version-texts	Set up job	2026-11-09T14:32:39.5257517Z ##[group]Runner Image Provisioner
+version-texts	Set up job	2026-11-09T14:32:39.5258626Z Hosted Compute Agent
+version-texts	Set up job	2026-11-09T14:32:39.5259331Z Version: 20261028.624
+version-texts	Set up job	2026-11-09T14:32:39.5260052Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+version-texts	Set up job	2026-11-09T14:32:39.5260817Z Build Date: 2026-10-28T21:51:42Z
+version-texts	Set up job	2026-11-09T14:32:39.5261826Z Worker ID: {9ba96935-93d4-4777-8a8c-5cb43630a327}
+version-texts	Set up job	2026-11-09T14:32:39.5262602Z Region: eastus3
+version-texts	Set up job	2026-11-09T14:32:39.5263283Z Cloud: Azure
+version-texts	Set up job	2026-11-09T14:32:39.5263874Z ##[endgroup]
+version-texts	Set up job	2026-11-09T14:32:39.5265450Z ##[group]Operating System
+version-texts	Set up job	2026-11-09T14:32:39.5266573Z Ubuntu
+version-texts	Set up job	2026-11-09T14:32:39.5267225Z 26.04.1
+version-texts	Set up job	2026-11-09T14:32:39.5267831Z LTS
+version-texts	Set up job	2026-11-09T14:32:39.5268432Z ##[endgroup]
+version-texts	Set up job	2026-11-09T14:32:39.5269054Z ##[group]Runner Image
+version-texts	Set up job	2026-11-09T14:32:39.5269801Z Image: ubuntu-26.04
+version-texts	Set up job	2026-11-09T14:32:39.5270444Z Version: 20261101.186.1
+version-texts	Set up job	2026-11-09T14:32:39.5271721Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261101.186/images/ubuntu/Ubuntu2604-Readme.md
+version-texts	Set up job	2026-11-09T14:32:39.5273518Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261101.186
+version-texts	Set up job	2026-11-09T14:32:39.5274527Z ##[endgroup]
+version-texts	Set up job	2026-11-09T14:32:39.5275714Z ##[group]GITHUB_TOKEN Permissions
+version-texts	Set up job	2026-11-09T14:32:39.5277754Z Contents: read
+version-texts	Set up job	2026-11-09T14:32:39.5278500Z Metadata: read
+version-texts	Set up job	2026-11-09T14:32:39.5279102Z ##[endgroup]
+version-texts	Set up job	2026-11-09T14:32:39.5281482Z Secret source: Actions
+version-texts	Set up job	2026-11-09T14:32:39.5282539Z Cache mode: write
+version-texts	Set up job	2026-11-09T14:32:39.5283357Z Prepare workflow directory
+version-texts	Set up job	2026-11-09T14:32:39.6012193Z Prepare all required actions
+version-texts	Set up job	2026-11-09T14:32:39.6090060Z Getting action download info
+version-texts	Set up job	2026-11-09T14:32:39.8109349Z Download action repository 'actions/checkout@v7' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+version-texts	Set up job	2026-11-09T14:32:39.9719536Z Complete job name: version-texts
+version-texts	Run actions/checkout@v7	﻿2026-11-09T14:32:40.0485719Z ##[group]Run actions/checkout@v7
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.0486739Z with:
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.0487358Z   repository: henemm/loose-ends
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.0491102Z   token: ***
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.0491735Z   ssh-strict: true
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.0492333Z   ssh-user: git
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.0492894Z   persist-credentials: true
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.0493549Z   clean: true
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.0494144Z   sparse-checkout-cone-mode: true
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.0494789Z   fetch-depth: 1
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.0495365Z   fetch-tags: false
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.0495956Z   show-progress: true
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.0496565Z   lfs: false
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.0497131Z   submodules: false
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.0497679Z   set-safe-directory: true
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.0498337Z   allow-unsafe-pr-checkout: false
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.0499317Z env:
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.0499945Z   ASC_KEY_ID: ***
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.0500603Z   ASC_ISSUER_ID: ***
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.0501352Z   ASC_POLL_SECONDS: 5
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.0501972Z   AKTION: texte
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.0502651Z ##[endgroup]
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4580311Z Syncing repository: henemm/loose-ends
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4584642Z ##[group]Getting Git version info
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4587139Z Working directory is '/home/runner/work/loose-ends/loose-ends'
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4591286Z [command]/usr/bin/git version
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4593337Z git version 2.56.0
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4597376Z ##[endgroup]
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4606258Z Temporarily overriding HOME='/home/runner/work/_temp/dd32a85b-f0e7-49df-b561-42e6aebcacf7' before making global git config changes
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4609586Z Adding repository directory to the temporary git global config as a safe directory
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4612655Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/loose-ends/loose-ends
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4616705Z Deleting the contents of '/home/runner/work/loose-ends/loose-ends'
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4619411Z ##[group]Determining repository object format
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4621865Z ##[endgroup]
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4624079Z ##[group]Initializing the repository
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4625832Z [command]/usr/bin/git init /home/runner/work/loose-ends/loose-ends
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4724694Z hint: Using 'master' as the name for the initial branch. This default branch name
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4727663Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4732010Z hint: to use in all of your new repositories, which will suppress this warning,
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4735310Z hint: call:
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4737036Z hint:
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4739151Z hint: 	git config --global init.defaultBranch <name>
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4741937Z hint:
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4744421Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4748405Z hint: 'development'. The just-created branch can be renamed via this command:
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4751649Z hint:
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4753416Z hint: 	git branch -m <name>
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4755374Z hint:
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4758204Z hint: Disable this message with "git config set advice.defaultBranchName false"
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4763024Z Initialized empty Git repository in /home/runner/work/loose-ends/loose-ends/.git/
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4770158Z [command]/usr/bin/git remote add origin https://github.com/henemm/loose-ends
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4804339Z ##[endgroup]
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4807515Z ##[group]Disabling automatic garbage collection
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4809399Z [command]/usr/bin/git config --local gc.auto 0
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4838057Z ##[endgroup]
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4841753Z ##[group]Setting up auth
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4843844Z Removing SSH command configuration
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4846421Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.4886657Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.5325217Z Removing HTTP extra header
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.5329339Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.5378491Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.5605357Z Removing includeIf entries pointing to credentials config files
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.5609693Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.5646457Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.5872022Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-af08f232-6d0a-48ea-9e4f-c17c0302508b.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.5919250Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path /home/runner/work/_temp/git-credentials-af08f232-6d0a-48ea-9e4f-c17c0302508b.config
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.5954282Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-af08f232-6d0a-48ea-9e4f-c17c0302508b.config
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.6000411Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-af08f232-6d0a-48ea-9e4f-c17c0302508b.config
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.6019086Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-af08f232-6d0a-48ea-9e4f-c17c0302508b.config
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.6043149Z ##[endgroup]
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.6046046Z ##[group]Fetching the repository
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:40.6052142Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +af7109e9af92a28b76626b9bff1ab92b2fe42f81:refs/remotes/origin/feat-842-s5a2-texte
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:47.2237671Z From https://github.com/henemm/loose-ends
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:47.2240265Z  * [new ref]         af7109e9af92a28b76626b9bff1ab92b2fe42f81 -> origin/feat-842-s5a2-texte
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:47.2247405Z [command]/usr/bin/git branch --list --remote origin/feat-842-s5a2-texte
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:47.2269715Z   origin/feat-842-s5a2-texte
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:47.2276262Z [command]/usr/bin/git rev-parse refs/remotes/origin/feat-842-s5a2-texte
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:47.2294947Z af7109e9af92a28b76626b9bff1ab92b2fe42f81
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:47.2297335Z ##[endgroup]
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:47.2298022Z ##[group]Determining the checkout info
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:47.2299241Z ##[endgroup]
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:47.2303359Z [command]/usr/bin/git sparse-checkout disable
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:47.2346759Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:47.2372543Z ##[group]Checking out the ref
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:47.2376032Z [command]/usr/bin/git checkout --progress --force -B feat-842-s5a2-texte refs/remotes/origin/feat-842-s5a2-texte
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:47.8933690Z Switched to a new branch 'feat-842-s5a2-texte'
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:47.8937815Z branch 'feat-842-s5a2-texte' set up to track 'origin/feat-842-s5a2-texte'.
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:47.8959764Z ##[endgroup]
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:47.9012061Z [command]/usr/bin/git log -1 --format=%H
+version-texts	Run actions/checkout@v7	2026-11-09T14:32:47.9036521Z af7109e9af92a28b76626b9bff1ab92b2fe42f81
+version-texts	Unit tests	﻿2026-11-09T14:32:47.9235232Z ##[group]Run python3 scripts/test_asc_version_texts.py
+version-texts	Unit tests	2026-11-09T14:32:47.9235855Z ^[[36;1mpython3 scripts/test_asc_version_texts.py^[[0m
+version-texts	Unit tests	2026-11-09T14:32:47.9271241Z shell: /usr/bin/bash -e {0}
+version-texts	Unit tests	2026-11-09T14:32:47.9271587Z env:
+version-texts	Unit tests	2026-11-09T14:32:47.9272097Z   ASC_KEY_ID: ***
+version-texts	Unit tests	2026-11-09T14:32:47.9272441Z   ASC_ISSUER_ID: ***
+version-texts	Unit tests	2026-11-09T14:32:47.9272719Z   ASC_POLL_SECONDS: 5
+version-texts	Unit tests	2026-11-09T14:32:47.9272975Z   AKTION: texte
+version-texts	Unit tests	2026-11-09T14:32:47.9273245Z ##[endgroup]
+version-texts	Unit tests	2026-11-09T14:33:13.0954686Z .............................
+version-texts	Unit tests	2026-11-09T14:33:13.0955627Z ----------------------------------------------------------------------
+version-texts	Unit tests	2026-11-09T14:33:13.0956468Z Ran 29 tests in 25.086s
+version-texts	Unit tests	2026-11-09T14:33:13.0957199Z 
+version-texts	Unit tests	2026-11-09T14:33:13.0957397Z OK
+version-texts	Version texts	﻿2026-11-09T14:33:13.1170594Z ##[group]Run trap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT
+version-texts	Version texts	2026-11-09T14:33:13.1171371Z ^[[36;1mtrap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT^[[0m
+version-texts	Version texts	2026-11-09T14:33:13.1171708Z ^[[36;1mumask 077^[[0m
+version-texts	Version texts	2026-11-09T14:33:13.1172106Z ^[[36;1mprintf '%s\n' "***^[[0m
+version-texts	Version texts	2026-11-09T14:33:13.1172573Z ^[[36;1m***^[[0m
+version-texts	Version texts	2026-11-09T14:33:13.1172967Z ^[[36;1m***^[[0m
+version-texts	Version texts	2026-11-09T14:33:13.1173347Z ^[[36;1m***^[[0m
+version-texts	Version texts	2026-11-09T14:33:13.1173588Z ^[[36;1m***^[[0m
+version-texts	Version texts	2026-11-09T14:33:13.1173906Z ^[[36;1m***" > "$RUNNER_TEMP/asc_key.p8"^[[0m
+version-texts	Version texts	2026-11-09T14:33:13.1174367Z ^[[36;1mASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_version_texts.py "$AKTION"^[[0m
+version-texts	Version texts	2026-11-09T14:33:13.1205212Z shell: /usr/bin/bash -e {0}
+version-texts	Version texts	2026-11-09T14:33:13.1205519Z env:
+version-texts	Version texts	2026-11-09T14:33:13.1205837Z   ASC_KEY_ID: ***
+version-texts	Version texts	2026-11-09T14:33:13.1206149Z   ASC_ISSUER_ID: ***
+version-texts	Version texts	2026-11-09T14:33:13.1206410Z   ASC_POLL_SECONDS: 5
+version-texts	Version texts	2026-11-09T14:33:13.1206669Z   AKTION: texte
+version-texts	Version texts	2026-11-09T14:33:13.1206934Z ##[endgroup]
+version-texts	Version texts	2026-11-09T14:33:13.8711511Z version IOS 1.0.1 id=a8e6e70e-9a24-45e3-8cc7-1d4c9bd3e3c0 state=PREPARE_FOR_SUBMISSION
+version-texts	Version texts	2026-11-09T14:33:13.8712900Z version MAC_OS 1.0.1 id=d790d750-3611-4db0-8fb0-fcb8f1ee6d45 state=PREPARE_FOR_SUBMISSION
+version-texts	Version texts	2026-11-09T14:33:14.9713350Z en-US gesetzt: Neu in dieser Version
+version-texts	Version texts	2026-11-09T14:33:15.4468740Z de-DE gesetzt: Werbetext, Neu in dieser Version
+version-texts	Version texts	2026-11-09T14:33:15.7590785Z gegenprobe gleich=ja
+version-texts	Version texts	2026-11-09T14:33:17.4855945Z en-US gesetzt: Beschreibung, Schlüsselwörter, Support-URL, Werbetext, Neu in dieser Version
+version-texts	Version texts	2026-11-09T14:33:17.8498276Z de-DE gesetzt: Werbetext, Neu in dieser Version
+version-texts	Version texts	2026-11-09T14:33:18.1983205Z gegenprobe gleich=ja
+version-texts	Version texts	2026-11-09T14:33:18.1984428Z zusammenfassung geschrieben=4
+version-texts	Post Run actions/checkout@v7	﻿2026-11-09T14:33:18.2342377Z Post job cleanup.
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.3224446Z [command]/usr/bin/git version
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.3285031Z git version 2.56.0
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.3329171Z Temporarily overriding HOME='/home/runner/work/_temp/7128b8e0-c790-4d2f-98e4-c27cb810f35c' before making global git config changes
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.3330808Z Adding repository directory to the temporary git global config as a safe directory
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.3335997Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/loose-ends/loose-ends
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.3370366Z Removing SSH command configuration
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.3378129Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.3414498Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.3655348Z Removing HTTP extra header
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.3662747Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.3704133Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.3963858Z Removing includeIf entries pointing to credentials config files
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.3972159Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.3995411Z includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.3996675Z includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.3997839Z includeif.gitdir:/github/workspace/.git.path
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.3998761Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.4004526Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.4027116Z /home/runner/work/_temp/git-credentials-af08f232-6d0a-48ea-9e4f-c17c0302508b.config
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.4039704Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-af08f232\-6d0a\-48ea\-9e4f\-c17c0302508b\.config
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.4070333Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.4122541Z /home/runner/work/_temp/git-credentials-af08f232-6d0a-48ea-9e4f-c17c0302508b.config
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.4130521Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/loose-ends/loose-ends/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-af08f232\-6d0a\-48ea\-9e4f\-c17c0302508b\.config
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.4165740Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.4185789Z /github/runner_temp/git-credentials-af08f232-6d0a-48ea-9e4f-c17c0302508b.config
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.4198096Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-af08f232\-6d0a\-48ea\-9e4f\-c17c0302508b\.config
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.4228274Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.4247379Z /github/runner_temp/git-credentials-af08f232-6d0a-48ea-9e4f-c17c0302508b.config
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.4255428Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-af08f232\-6d0a\-48ea\-9e4f\-c17c0302508b\.config
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.4285392Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+version-texts	Post Run actions/checkout@v7	2026-11-09T14:33:18.4516232Z Removing credentials config '/home/runner/work/_temp/git-credentials-af08f232-6d0a-48ea-9e4f-c17c0302508b.config'
+version-texts	Complete job	﻿2026-11-09T14:33:18.4667688Z Cleaning up orphan processes

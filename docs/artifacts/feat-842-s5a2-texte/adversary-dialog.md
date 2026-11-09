@@ -12,7 +12,7 @@ Datum: 2026-11-09 14:53
 - [x] **AC-7:** Given die Texte stehen bei Apple wie in der Datei, When `texte` erneut läuft, Then wird nichts geschrieben. Belegt durch `test_second_run_writes_nothing`.
 - [x] **AC-8:** Given eine `READY_FOR_SALE`-Version, When `lesen` läuft, Then zeigt es ihren Werbetext je Plattform und Sprache (Zeichenzahl und Wortlaut) und schreibt nie. Belegt durch `test_lesen_shows_published_promotional_text_and_never_writes`.
 - [x] **AC-9:** Given die echte Textdatei, When sie geprüft wird, Then enthält sie `## en-US` mit Neu-Text und `## de-DE` mit dem unveränderten Werbetext von Version 1.0 und einem Neu-Text, alle innerhalb der Grenzen. Belegt durch `test_repo_text_file_parses_and_fits_limits`.
-- [ ] **AC-10 (Phase 7, Handlauf):** Given die Handläufe am echten Konto vom Zweig aus, When `texte` zweimal und danach `lesen` bzw. `asc_store_version lesen` laufen, Then schreibt der erste Lauf, der zweite nichts, und der Endstand zeigt für iOS und Mac je de-DE und en-US mit Beschreibung, Schlüsselwörtern, Support-URL, Werbetext und Neu-Text vorhanden (Zeichenzahl > 0 je Feld) und keine Einreichung. Beleg: Protokolle unter `docs/artifacts/feat-842-s5a2-texte/`: `lesen-vorher.log` (Werbetext von 1.0), `texte-1.log` (schreibt, Gegenprobe gleich), `texte-2.log` (alles unverändert), `lesen-nachher.log` und `store-version-lesen.log` (Endstand).
+- [x] **AC-10 (Phase 7, Handlauf):** Given die Handläufe am echten Konto vom Zweig aus, When `texte` zweimal und danach `lesen` bzw. `asc_store_version lesen` laufen, Then schreibt der erste Lauf, der zweite nichts, und der Endstand zeigt für iOS und Mac je de-DE und en-US mit Beschreibung, Schlüsselwörtern, Support-URL, Werbetext und Neu-Text vorhanden (Zeichenzahl > 0 je Feld) und keine Einreichung. Beleg: Protokolle unter `docs/artifacts/feat-842-s5a2-texte/`: `lesen-vorher.log` (Werbetext von 1.0), `texte-1.log` (schreibt, Gegenprobe gleich), `texte-2.log` (alles unverändert), `lesen-nachher.log` und `store-version-lesen.log` (Endstand).
 
 ## Dialog
 
@@ -141,6 +141,13 @@ Confirmation:
 Vorbehalte (kein BROKEN): AC-10 ist laut Spec ein Handlauf am echten Konto in Phase 7 und noch offen; AC-9 hat bis dahin den Platzhalter. F001 und F002 sind behoben (Status RESOLVED); F003 LOW bleibt als Phase-7-Vorbehalt.
 
 
+### Nachtrag Handläufe (AC-9, AC-10, vom Orchestrator nach dem Commit)
+Zweig-Läufe am echten Konto (Dispatch --ref feat-842-s5a2-texte), Protokolle unter docs/artifacts/feat-842-s5a2-texte/:
+- lesen-vorher.log (Run 42635418969): veröffentlichte Version 1.0, iOS und Mac de-DE Werbetext zeichen=139, gleich; unverändert in docs/reference/app-store-texte.md übernommen, Platzhalter ersetzt (AC-9 inhaltlich erfüllt; Code reference: docs/reference/app-store-texte.md:59).
+- texte-1.log (Run 42635701401): geschrieben=4 (iOS: en-US Neu-Text, de-DE Werbetext + Neu-Text; Mac: en-US komplett per POST, de-DE), Gegenprobe gleich=ja je Plattform.
+- texte-2.log (Run 42635873747): en-US/de-DE unverändert je Plattform, geschrieben=0.
+- store-version-lesen.log (Run 42636008124): IOS und MAC_OS je de-DE (1638/100/139/116/50) und en-US (1493/94/125/99/50) mit Beschreibung, Schlüsselwörtern, Werbetext, Neu-Text, Support-URL; beide 1.0.1 PREPARE_FOR_SUBMISSION, nichts eingereicht. lesen-nachher.log: Run 42636003982.
+
 ## Herkunft der Vorbedingungen
 
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
@@ -155,17 +162,17 @@ Die Umsetzung hat den Angriff ueberstanden; F001 und F002 sind behoben und beleg
 Tests: 16 Dateien OK (davon test_asc_version_texts.py 29 bestanden), 0 failed, 0 uebersprungen
 Edge cases: alle geprueft, keine gebrochen
 Regressions: None found
-Checklist: 9/10 belegt, AC-10 in Phase 7
+Checklist: 10/10 belegt (AC-10 durch Handläufe, siehe Nachtrag)
 
 ## Geprüfte Dateien
 
-- sha256:392aa34e6b728da82e2e70b728c9674862a8d929284cfb2bd9bd9d0563811fc7  docs/reference/app-store-texte.md
+- sha256:fd920cbb371ec7da3fc4e388085977709d4de29088e4b1c27b1c88db0e511ce3  docs/reference/app-store-texte.md
 - sha256:d5270106c9b10738d6bb6134950a015edb7333381128cb19050bdd351316709b  scripts/asc_version_texts.py
 - sha256:17ee28c9a3bc7f1f1fce121ecbb505b27ca3e5cef687606244c6b530e530df69  scripts/test_asc_version_texts.py
 
 ## Prüfbasis
 
 - base: 0e8d14493931e7e29b0ea09e0d20a656012a1a85
-- blob:e0379c673aa66c45eefa15085e32dbf3923b2d57  docs/reference/app-store-texte.md
+- blob:c203dabab3838045b73faa41c711f92aa7b5357d  docs/reference/app-store-texte.md
 - blob:c16bda85af0e76600b13d2c2c77f7c0d26f86455  scripts/asc_version_texts.py
 - blob:f0ebd05d17076c6e11d0903957f9f3e0867d01b0  scripts/test_asc_version_texts.py
