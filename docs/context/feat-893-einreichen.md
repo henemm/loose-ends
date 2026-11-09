@@ -70,3 +70,73 @@ Review-Detail vorhanden.
   zählen erfahrungsgemäß über das Limit (vgl. LoC-Überhang durch Sicherheitstests).
 - Alternative: eigenes Skript `asc_store_submit.py` statt Erweiterung von `asc_store_version.py` (trennt den einzigen
   nicht rücknehmbaren Weg vom Lese-/Anlegewerkzeug, eigener Workflow mit eigener Sperre).
+
+## Analysis
+
+### Type
+Feature (Werkzeug, kein App-Code; kein Pfad der Geräteliste berührt)
+
+### Entscheidung: eigenes Skript statt Erweiterung
+`asc_store_version.py` garantiert heute „nie einreichen“ (Dateikopf, Workflow-Kommentar, CLAUDE.md und der Test
+`test_never_deletes_submits_or_writes_texts` mit `assertNotIn("ubmission", path)`). Diese Garantie bleibt stehen; der
+einzige nicht rücknehmbare Weg bekommt eine eigene Datei, eigenen Workflow, eigene `concurrency`-Gruppe und eigene Sperre.
+Helfer werden importiert (`get_one`, `current_build`, `report_version` aus `asc_store_version`; `app_versions`,
+`editable_version`, `localizations`, `EDITABLE`, `PLATFORMS` aus `asc_version_texts`; `Masked`/`message` aus
+`asc_beta_invite`), der Nachbau `FakeASC` wird aus `test_asc_store_version` importiert und im neuen Test um
+reviewSubmissions/Items erweitert (Unterklasse, bestehende Testdatei unverändert).
+
+### Affected Files (with changes)
+| File | Change Type | Description |
+|------|-------------|-------------|
+| `scripts/asc_store_submit.py` | CREATE | `pruefen` (nur GET, Vorprüfung beider Plattformen) und `einreichen` (Schnitt B) |
+| `scripts/test_asc_store_submit.py` | CREATE | FakeASC-Unterklasse mit reviewSubmissions, Items, Zuständen |
+| `.github/workflows/asc-store-submit.yml` | CREATE | `pull_request` = nur Tests; `workflow_dispatch` mit `aktion` und (Schnitt B) Sperrwort |
+| `CLAUDE.md` | MODIFY | eine Zeile im Build-Abschnitt |
+
+### Schnitte (±250 LoC je Schnitt)
+- **Schnitt A `pruefen`** (~200 LoC): Vorprüfung nur lesend, Ausgabe je Plattform „bereit“ oder Grund; liest die
+  offenen Einreichungen (`GET /v1/reviewSubmissions?filter[app]=…&filter[platform]=…`) und belegt im echten Lauf die
+  Listenform von Apple, bevor ein Schreibweg gebaut wird. Nutzen für sich: Stand vor dem Einreichen ohne Risiko.
+- **Schnitt B `einreichen`** (~220 LoC): Sperrwort `EINREICHEN 1.0.1` (Eingabe `bestaetigung`, im Skript geprüft über
+  env), je Plattform: READY_FOR_REVIEW-Einreichung wiederverwenden oder genau ein POST `/v1/reviewSubmissions`
+  (eigener Aufruf mit Rumpf, nie wiederholt; ID aus Rumpf, Rückfall erneutes GET, 0 oder >1 → Abbruch), Item nur wenn
+  die Version noch nicht drin ist (`GET /v1/reviewSubmissions/{id}/items`), PATCH `submitted=true` als ein Versuch
+  (bei 5xx erst Zustand lesen, nie blind wiederholen). Reihenfolge IOS, dann MAC_OS. Gegenprobe: `appStoreState`
+  WAITING_FOR_REVIEW je Plattform. `zusammenfassung geschrieben=N` (≤ 6). Ausgabe über `Masked`, nie Apples Rohantwort.
+
+### Vorprüfung (beide Plattformen vollständig, vor dem ersten Schreiben; sonst Fatal „nichts geschrieben“)
+- genau eine Version PREPARE_FOR_SUBMISSION je Plattform, beide mit derselben `versionString`
+- Bau zugeordnet, `processingState=VALID`, nicht abgelaufen, Vorabversion = Zielversion
+- de-DE und en-US vorhanden; `description`, `keywords`, `supportUrl`, `whatsNew` (Update-Version) nicht leer;
+  `promotionalText` optional; je Locale mindestens ein Bild
+- Review-Detail vorhanden
+- keine Einreichung der Plattform in WAITING_FOR_REVIEW, IN_REVIEW, UNRESOLVED_ISSUES, CANCELING, COMPLETING;
+  READY_FOR_REVIEW (höchstens eine) wird in Schnitt B wiederverwendet; ein unbekannter Zustand gilt als belegt (Abbruch)
+
+### Scope Assessment
+- Files: 4 je Schnitt (Skript, Test, Workflow, CLAUDE.md)
+- Estimated LoC: A ~+200, B ~+220
+- Risk Level: MEDIUM (Schnitt A niedrig, nur lesen; Schnitt B nicht rücknehmbar, aber nur nach Hennings Wort und
+  Sperrwort)
+
+### Risiken / Befunde gegen den Plan
+- Apple-Formen (Filter der Liste, Items-Pfad, `platform` beim POST) nur aus Doku bekannt; der Nachbau beweist sie nicht →
+  deshalb Schnitt A zuerst mit echtem Lauf.
+- Apple kann beim PATCH mehr verlangen, als per API vorab prüfbar ist (Exportangaben, Altersfreigabe, Datenschutz);
+  dann steht eine READY_FOR_REVIEW-Einreichung mit Item, und der zweite Lauf verwendet sie wieder.
+- Plattformen nicht atomar: scheitert Mac nach iOS, ist iOS schon in Prüfung; nur durch die vollständige Vorprüfung
+  klein zu halten.
+
+### Alternativen
+- Erweiterung von `asc_store_version.py` um `einreichen` (weniger Dateien, kippt aber dessen „nie einreichen“-Zusage
+  und den Wächtertest).
+- Einreichen per Hand in App Store Connect, Werkzeug nur `pruefen` + Gegenprobe: verworfen, weil das Arbeit an den PO
+  weiterreicht (Regel: Werkzeug reparieren statt weiterreichen) und #893 das Werkzeug verlangt.
+- Ein Schnitt statt zwei: ~420 LoC, über dem Limit; außerdem fehlte der echte Lesebeleg vor dem ersten Schreiben.
+
+### Technical Approach
+Eigenes Skript + Workflow in zwei Schnitten, A `pruefen` → echter Lauf → B `einreichen` → Lauf nach Hennings
+vorliegendem Wort (Freigabe 2026-11-09 per Auswahl im Ticket) → Store-Probe als Beleg.
+
+### Open Questions
+- keine an den PO (Freigabe zum Einreichen liegt vor; alles Weitere ist technisch)
