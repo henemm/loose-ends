@@ -1,0 +1,77 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "C561B99A-93C3-4F75-8424-66C084CE44B5.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "account-delete-dialog_0_AA34D912-064C-4B0D-A910-616600A8BDCD.png",
+        "timestamp" : 1794252610.002
+      }
+    ],
+    "testIdentifier" : "AccountSettingsTests/testDeleteCancelKeepsSignedIn()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/AccountSettingsTests/testDeleteCancelKeepsSignedIn"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "9C7A729D-E001-4AFA-8EA4-797CCAF9B40B.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "account-not-allowed_0_6996BE86-DF9E-4CA8-8D3F-9540852C1B26.png",
+        "timestamp" : 1794252666.682
+      }
+    ],
+    "testIdentifier" : "AccountSettingsTests/testNotAllowedShowsItsSentence()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/AccountSettingsTests/testNotAllowedShowsItsSentence"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "6872A571-2689-4480-B7D4-38385BD69E54.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "account-retry-later_0_4C098E97-50B2-4E52-AF48-7AD9C078A95D.png",
+        "timestamp" : 1794252699.605
+      }
+    ],
+    "testIdentifier" : "AccountSettingsTests/testRetryLaterShowsItsSentence()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/AccountSettingsTests/testRetryLaterShowsItsSentence"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "F0EE7475-CB40-4855-94EA-265698919038.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "account-signed-out_0_66A53AF9-F8FB-4AA6-BAF5-B535F82F9456.png",
+        "timestamp" : 1794252736.517
+      }
+    ],
+    "testIdentifier" : "AccountSettingsTests/testSignedOutShowsGroupBelowICloud()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/AccountSettingsTests/testSignedOutShowsGroupBelowICloud"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "DC584AF1-33CF-45CF-83F0-8699A289832F.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "account-signed-in_0_A4DF39AC-D955-4DC1-BF97-ACAFC69B7999.png",
+        "timestamp" : 1794252765.007
+      }
+    ],
+    "testIdentifier" : "AccountSettingsTests/testSignInShowsSignedInRows()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/AccountSettingsTests/testSignInShowsSignedInRows"
+  }
+]
