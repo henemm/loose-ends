@@ -1,0 +1,169 @@
+test_docs_name_account_build (__main__.AccountBuildMarkTests.test_docs_name_account_build) ... FAIL
+test_mark_defined_once (__main__.AccountBuildMarkTests.test_mark_defined_once) ... FAIL
+test_mark_in_every_written_localization (__main__.AccountBuildMarkTests.test_mark_in_every_written_localization) ... FAIL
+test_mark_is_added_to_every_section (__main__.AccountBuildMarkTests.test_mark_is_added_to_every_section) ... ERROR
+test_mark_not_added_when_off (__main__.AccountBuildMarkTests.test_mark_not_added_when_off) ... FAIL
+test_mark_respects_length_limit (__main__.AccountBuildMarkTests.test_mark_respects_length_limit) ... FAIL
+test_account_switch_is_a_false_bool (__main__.AccountBuildSourceTests.test_account_switch_is_a_false_bool) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/re/_parser.py:176: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 53671)>
+  def append(self, code):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/re/_parser.py:176: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 53677)>
+  def append(self, code):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_app_target_has_applesignin (__main__.AccountBuildSourceTests.test_app_target_has_applesignin) ... FAIL
+test_archive_checks_prove_applesignin_entitlement (__main__.AccountBuildWorkflowTests.test_archive_checks_prove_applesignin_entitlement) ... FAIL
+test_archive_checks_prove_switch_type_and_value (__main__.AccountBuildWorkflowTests.test_archive_checks_prove_switch_type_and_value) ... FAIL
+test_switch_check_logic (__main__.AccountBuildWorkflowTests.test_switch_check_logic) ... FAIL
+test_switch_step_is_conditional_and_between_generate_and_archive (__main__.AccountBuildWorkflowTests.test_switch_step_is_conditional_and_between_generate_and_archive) ... FAIL
+test_workflow_has_konto_input_default_false (__main__.AccountBuildWorkflowTests.test_workflow_has_konto_input_default_false) ... FAIL
+test_missing_section_falls_back_to_german (__main__.SectionTests.test_missing_section_falls_back_to_german) ... ok
+test_sections_split_by_language_marker (__main__.SectionTests.test_sections_split_by_language_marker) ... ok
+test_text_without_marker_is_german (__main__.SectionTests.test_text_without_marker_is_german) ... ok
+test_unknown_language_code_fails (__main__.SectionTests.test_unknown_language_code_fails) ... ok
+test_creates_the_localization_of_every_shipped_language_when_missing (__main__.WhatToTestTests.test_creates_the_localization_of_every_shipped_language_when_missing) ... ok
+test_each_localization_gets_its_own_section (__main__.WhatToTestTests.test_each_localization_gets_its_own_section) ... ok
+test_empty_text_fails_before_any_request (__main__.WhatToTestTests.test_empty_text_fails_before_any_request) ... ok
+test_error_code_filter_and_limit (__main__.WhatToTestTests.test_error_code_filter_and_limit) ... ok
+test_numeric_error_code_keeps_old_message (__main__.WhatToTestTests.test_numeric_error_code_keeps_old_message) ... ok
+test_patches_every_localization_and_keeps_existing_german (__main__.WhatToTestTests.test_patches_every_localization_and_keeps_existing_german) ... ok
+test_rejected_write_fails (__main__.WhatToTestTests.test_rejected_write_fails) ... ok
+test_rejected_write_names_apple_error_code (__main__.WhatToTestTests.test_rejected_write_names_apple_error_code) ... ok
+test_too_long_text_fails (__main__.WhatToTestTests.test_too_long_text_fails) ... ok
+test_unreadable_error_body_keeps_old_message (__main__.WhatToTestTests.test_unreadable_error_body_keeps_old_message) ... ok
+test_workflow_asks_for_the_text_and_writes_it_after_processing (__main__.WorkflowTests.test_workflow_asks_for_the_text_and_writes_it_after_processing) ... ok
+
+======================================================================
+ERROR: test_mark_is_added_to_every_section (__main__.AccountBuildMarkTests.test_mark_is_added_to_every_section)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_what_to_test.py", line 381, in test_mark_is_added_to_every_section
+    marked = asc_what_to_test.mark_account_build({"de-DE": "Deutsch", "en-US": "English"})
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'asc_what_to_test' has no attribute 'mark_account_build'
+
+======================================================================
+FAIL: test_docs_name_account_build (__main__.AccountBuildMarkTests.test_docs_name_account_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_what_to_test.py", line 431, in test_docs_name_account_build
+    wording = mark()
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_what_to_test.py", line 247, in mark
+    raise AssertionError("asc_what_to_test.ACCOUNT_BUILD_MARK fehlt")
+AssertionError: asc_what_to_test.ACCOUNT_BUILD_MARK fehlt
+
+======================================================================
+FAIL: test_mark_defined_once (__main__.AccountBuildMarkTests.test_mark_defined_once)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_what_to_test.py", line 422, in test_mark_defined_once
+    wording = mark()
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_what_to_test.py", line 247, in mark
+    raise AssertionError("asc_what_to_test.ACCOUNT_BUILD_MARK fehlt")
+AssertionError: asc_what_to_test.ACCOUNT_BUILD_MARK fehlt
+
+======================================================================
+FAIL: test_mark_in_every_written_localization (__main__.AccountBuildMarkTests.test_mark_in_every_written_localization)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_what_to_test.py", line 418, in test_mark_in_every_written_localization
+    self.assertEqual(sent, {"PATCH": f"Deutsch\n{mark()}", "POST": f"English\n{mark()}"})
+                                                 ~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_what_to_test.py", line 247, in mark
+    raise AssertionError("asc_what_to_test.ACCOUNT_BUILD_MARK fehlt")
+AssertionError: asc_what_to_test.ACCOUNT_BUILD_MARK fehlt
+
+======================================================================
+FAIL: test_mark_not_added_when_off (__main__.AccountBuildMarkTests.test_mark_not_added_when_off)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_what_to_test.py", line 390, in test_mark_not_added_when_off
+    mark()
+    ~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_what_to_test.py", line 247, in mark
+    raise AssertionError("asc_what_to_test.ACCOUNT_BUILD_MARK fehlt")
+AssertionError: asc_what_to_test.ACCOUNT_BUILD_MARK fehlt
+
+======================================================================
+FAIL: test_mark_respects_length_limit (__main__.AccountBuildMarkTests.test_mark_respects_length_limit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_what_to_test.py", line 404, in test_mark_respects_length_limit
+    self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : build=42 whatToTest gesetzt für de-DE, en-US
+
+
+======================================================================
+FAIL: test_account_switch_is_a_false_bool (__main__.AccountBuildSourceTests.test_account_switch_is_a_false_bool)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_what_to_test.py", line 282, in test_account_switch_is_a_false_bool
+    self.assertIs(properties.get("LEAccountEnabled"), False)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None is not False
+
+======================================================================
+FAIL: test_app_target_has_applesignin (__main__.AccountBuildSourceTests.test_app_target_has_applesignin)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_what_to_test.py", line 276, in test_app_target_has_applesignin
+    self.assertEqual(app_target("entitlements", "LooseEnds/LooseEnds.entitlements").get(APPLESIGNIN), ["Default"])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != ['Default']
+
+======================================================================
+FAIL: test_archive_checks_prove_applesignin_entitlement (__main__.AccountBuildWorkflowTests.test_archive_checks_prove_applesignin_entitlement)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_what_to_test.py", line 355, in test_archive_checks_prove_applesignin_entitlement
+    self.assertIn(f"entitled com.henning.looseends {APPLESIGNIN}", ios)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_what_to_test.py", line 296, in assertIn
+    self.fail(f"{member!r} fehlt{f' ({msg})' if msg else ''}")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'entitled com.henning.looseends com.apple.developer.applesignin' fehlt
+
+======================================================================
+FAIL: test_archive_checks_prove_switch_type_and_value (__main__.AccountBuildWorkflowTests.test_archive_checks_prove_switch_type_and_value)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_what_to_test.py", line 326, in test_archive_checks_prove_switch_type_and_value
+    self.assertIn(needle, text, name)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_what_to_test.py", line 296, in assertIn
+    self.fail(f"{member!r} fehlt{f' ({msg})' if msg else ''}")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'LEAccountEnabled' fehlt (upload)
+
+======================================================================
+FAIL: test_switch_check_logic (__main__.AccountBuildWorkflowTests.test_switch_check_logic)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_what_to_test.py", line 332, in test_switch_check_logic
+    self.assertEqual(len(snippets), 2, "Prüfausschnitt fehlt in der iOS- oder Mac-Prüfung")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : Prüfausschnitt fehlt in der iOS- oder Mac-Prüfung
+
+======================================================================
+FAIL: test_switch_step_is_conditional_and_between_generate_and_archive (__main__.AccountBuildWorkflowTests.test_switch_step_is_conditional_and_between_generate_and_archive)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_what_to_test.py", line 311, in test_switch_step_is_conditional_and_between_generate_and_archive
+    self.assertEqual(self.workflow.count(SWITCH_LINE), 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_workflow_has_konto_input_default_false (__main__.AccountBuildWorkflowTests.test_workflow_has_konto_input_default_false)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_what_to_test.py", line 302, in test_workflow_has_konto_input_default_false
+    self.assertIsNotNone(found, "Eingabe konto fehlt")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Eingabe konto fehlt
+
+----------------------------------------------------------------------
+Ran 28 tests in 7.760s
+
+FAILED (failures=12, errors=1)

@@ -15,7 +15,7 @@ import urllib.parse
 from asc_beta_probe import attributes, records
 from asc_version_texts import EDITABLE, PLATFORMS, app_versions, editable_version, localizations
 from asc_wait_build import Fatal, find_app_id, get_json, read_config
-from asc_what_to_test import ATTEMPTS, get_data, send_json
+from asc_what_to_test import ATTEMPTS, get_data, is_account_build, send_json
 
 ACTIONS = ("lesen", "anlegen")
 FIELDS = ("description", "keywords", "promotionalText", "whatsNew", "supportUrl")
@@ -117,18 +117,40 @@ def plan_mac_version(versions):
 
 
 def pick_build(config, app_id, platform, target):
-    """Gültiger, nicht abgelaufener Bau der Zielversion mit der höchsten Buildnummer (numerisch); keiner → Fatal."""
+    """Gültiger, nicht abgelaufener, nicht gesperrter Bau der Zielversion mit der höchsten Buildnummer (numerisch);
+    keiner → Fatal. Gesperrt ist ein Konto-Bau oder ein Bau mit unlesbaren Texten (`build_lock`)."""
     query = urllib.parse.urlencode({"filter[app]": app_id, "filter[preReleaseVersion.platform]": platform,
                                     "filter[preReleaseVersion.version]": target,
                                     "filter[processingState]": "VALID", "filter[expired]": "false", "limit": "50"})
     rows = [item for item in records({"data": get_data(config, f"/v1/builds?{query}")})
             if attributes(item).get("processingState") == "VALID" and attributes(item).get("expired") is not True
             and re.fullmatch(r"\d+(\.\d+)*", str(attributes(item).get("version")))]
-    if not rows:
-        raise Fatal(f"kein gültiger Bau {target} für {platform}, nichts geschrieben")
-    chosen = max(rows, key=lambda item: [int(part) for part in attributes(item)["version"].split(".")])
-    print(f"bau {platform} gewählt: {attributes(chosen)['version']} von {len(rows)} gültigen", flush=True)
-    return chosen
+    ordered = sorted(rows, key=lambda item: [int(part) for part in attributes(item)["version"].split(".")], reverse=True)
+    skipped = 0
+    for chosen in ordered:
+        reason = build_lock(config, chosen["id"])
+        if reason is None:
+            print(f"bau {platform} gewählt: {attributes(chosen)['version']} von {len(rows)} gültigen", flush=True)
+            return chosen
+        print(f"bau {platform} {attributes(chosen)['version']} übersprungen: {reason}", flush=True)
+        skipped += 1
+    raise Fatal(f"kein gültiger Bau {target} für {platform}"
+                + (f" ({skipped} übersprungen)" if skipped else "") + ", nichts geschrieben")
+
+
+def build_lock(config, build_id):
+    """Grund, einen Bau nie zuzuordnen (#615 S4c-2a), sonst None; fail-closed: Unlesbares sperrt.
+    „konto“: ein Text „Was testen“ trägt die Marke; „texte nicht lesbar“: GET gescheitert, Liste leer, Text leer."""
+    try:
+        texts = [attributes(item).get("whatsNew")
+                 for item in records({"data": get_data(config, f"/v1/builds/{build_id}/betaBuildLocalizations")})]
+    except Fatal:
+        return "texte nicht lesbar"
+    if is_account_build(texts):
+        return "konto"
+    if not texts or any(not isinstance(text, str) or not text.strip() for text in texts):
+        return "texte nicht lesbar"
+    return None
 
 
 def send(config, method, path, payload, hint=""):

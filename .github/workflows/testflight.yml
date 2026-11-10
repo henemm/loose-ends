@@ -18,6 +18,10 @@ on:
         description: Zertifikate nur auflisten, nichts widerrufen
         type: boolean
         default: false
+      konto:
+        description: Konto-Bau – schaltet die Gruppe „Claude“ ein, nie für den App Store (#615)
+        type: boolean
+        default: false
   push:
     tags: ['v*']
 
@@ -27,8 +31,11 @@ concurrency:
 
 # Jeder Build sagt in TestFlight, was zu testen ist (#347): beim Start von Hand das Eingabefeld,
 # bei einem v*-Tag die Nachricht des getaggten Commits.
+# Konto-Bau (#615 S4c-2a): nur die Eingabe `konto` schaltet LEAccountEnabled im Archiv ein; ein v*-Tag-Lauf ist nie
+# einer. asc_what_to_test.py kennzeichnet ihn in „Was testen“, asc_store_version.py ordnet ihn nie einer Store-Version zu.
 env:
   WHAT_TO_TEST: ${{ inputs.what_to_test || github.event.head_commit.message }}
+  ACCOUNT_BUILD: ${{ inputs.konto == true && 'true' || 'false' }}
 
 jobs:
   # TestFlight talks to CloudKit Production, which never creates a schema by itself. Before anything is
@@ -105,6 +112,10 @@ jobs:
 
       - name: Generate project
         run: xcodegen generate
+
+      - name: Set the account switch
+        if: env.ACCOUNT_BUILD == 'true'
+        run: plutil -replace LEAccountEnabled -bool YES LooseEnds/Info.plist   # generate schrieb die Datei eben neu
 
       - name: Store the App Store Connect API key
         run: |
@@ -208,6 +219,29 @@ jobs:
           row "| Bundle | Berechtigung | Ergebnis |"
           row "|--------|--------------|----------|"
           entitled com.henning.looseends com.apple.developer.ubiquity-kvstore-identifier
+          entitled com.henning.looseends com.apple.developer.applesignin
+          # Schalter der Konto-Gruppe (#615 S4c-2a): Typ Bool und Wert gleich der Eingabe konto, auch bei „aus“.
+          # account-switch-check:begin
+          account_switch() { # Info.plist; LEAccountEnabled muss ein Bool sein und der Eingabe konto gleichen (#615 S4c-2a)
+            local type value want="${ACCOUNT_BUILD:-false}"
+            type=$(plutil -type LEAccountEnabled "$1" 2>/dev/null || true)
+            value=$(plutil -extract LEAccountEnabled raw "$1" 2>/dev/null || true)
+            if [ "$type" = bool ] && [ "$value" = "$want" ]; then
+              row "| LEAccountEnabled | bool $value | OK |"
+            else
+              row "| LEAccountEnabled | ${type:-fehlt} $value | FEHLER |"
+              echo "::error::LEAccountEnabled is '${type:-missing} $value', expected bool $want (#615)"; fail=1
+            fi
+          }
+          # account-switch-check:end
+          app_info=""
+          while IFS= read -r b; do
+            [ "$(get CFBundleIdentifier "$b/Info.plist")" = com.henning.looseends ] && { app_info="$b/Info.plist"; break; }
+          done < <(find "$APPS" -name '*.app')
+          row ""
+          row "| Schlüssel | Wert | Ergebnis |"
+          row "|-----------|------|----------|"
+          account_switch "$app_info"
           # Deutsche Texte in jedem iOS-Bundle mit eigenem String Catalog (#323): Widget und Kontrollzentrum
           # blieben auf einem deutschen iPhone englisch, ohne dass ein Schritt es bemerkte.
           row ""
@@ -386,6 +420,10 @@ jobs:
       - name: Generate project
         run: xcodegen generate
 
+      - name: Set the account switch
+        if: env.ACCOUNT_BUILD == 'true'
+        run: plutil -replace LEAccountEnabled -bool YES LooseEnds/Info.plist   # generate schrieb die Datei eben neu
+
       - name: Store the App Store Connect API key
         run: |
           mkdir -p "$HOME/private_keys"
@@ -455,10 +493,25 @@ jobs:
           [ -f "$APP/Contents/Resources/PrivacyInfo.xcprivacy" ] || { echo "::error::macOS app has no PrivacyInfo.xcprivacy (#177)"; fail=1; }
           [ -d "$APP/Contents/Resources/de.lproj" ] || { echo "::error::macOS app has no de.lproj: German texts are missing (#323)"; fail=1; }
           ents=$(codesign -d --entitlements - --xml "$APP" 2>/dev/null || true)
-          for key in com.apple.security.app-sandbox com.apple.developer.ubiquity-kvstore-identifier com.apple.security.device.audio-input com.apple.security.files.user-selected.read-only com.apple.security.network.client com.apple.security.personal-information.calendars; do
+          for key in com.apple.security.app-sandbox com.apple.developer.ubiquity-kvstore-identifier com.apple.developer.applesignin com.apple.security.device.audio-input com.apple.security.files.user-selected.read-only com.apple.security.network.client com.apple.security.personal-information.calendars; do
             if printf '%s' "$ents" | grep -qF "<key>$key</key>"; then row "| $key | vorhanden | OK |"
             else row "| $key | FEHLT | FEHLER |"; echo "::error::macOS app is not signed with $key"; fail=1; fi
           done
+          # Schalter der Konto-Gruppe (#615 S4c-2a), wie in der iOS-Prüfung.
+          # account-switch-check:begin
+          account_switch() { # Info.plist; LEAccountEnabled muss ein Bool sein und der Eingabe konto gleichen (#615 S4c-2a)
+            local type value want="${ACCOUNT_BUILD:-false}"
+            type=$(plutil -type LEAccountEnabled "$1" 2>/dev/null || true)
+            value=$(plutil -extract LEAccountEnabled raw "$1" 2>/dev/null || true)
+            if [ "$type" = bool ] && [ "$value" = "$want" ]; then
+              row "| LEAccountEnabled | bool $value | OK |"
+            else
+              row "| LEAccountEnabled | ${type:-fehlt} $value | FEHLER |"
+              echo "::error::LEAccountEnabled is '${type:-missing} $value', expected bool $want (#615)"; fail=1
+            fi
+          }
+          # account-switch-check:end
+          account_switch "$P"
           [ "$fail" = 0 ]
 
       - name: Write export options

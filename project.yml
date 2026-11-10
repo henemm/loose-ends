@@ -68,6 +68,9 @@ targets:
         # CloudKit mirroring pushes silently; without this the device never hears about a change
         # made elsewhere. Xcode swaps the value for "production" on an App Store export.
         aps-environment: development
+        # Sign in with Apple for the account group "Claude" (#615 S4c-2a). In every build, without effect while
+        # LEAccountEnabled is off; the App ID has had the capability since #621 S6b.
+        com.apple.developer.applesignin: [Default]
     info:
       path: LooseEnds/Info.plist
       properties:
@@ -76,6 +79,9 @@ targets:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         LEAppGroup: group.com.henning.looseends$(BUNDLE_ID_SUFFIX)
         LECloudContainer: iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)
+        # Account group "Claude" (#615 S4c-2a): off by default, a real Bool. Only a TestFlight run with the
+        # input `konto` switches it on (plutil after generate). LEServiceURL stays unset: the fallback is the one service.
+        LEAccountEnabled: false
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UILaunchScreen: {}
         # "Neue Aufgabe" in the large widget opens capture as looseends://capture (#521).

@@ -1,0 +1,193 @@
+test_anlegen_never_assigns_account_build (__main__.AccountBuildLockTests.test_anlegen_never_assigns_account_build) ... FAIL
+test_pick_build_fail_closed_on_empty (__main__.AccountBuildLockTests.test_pick_build_fail_closed_on_empty) ... FAIL
+test_pick_build_fail_closed_on_unreadable (__main__.AccountBuildLockTests.test_pick_build_fail_closed_on_unreadable) ... FAIL
+test_pick_build_nothing_left_writes_nothing (__main__.AccountBuildLockTests.test_pick_build_nothing_left_writes_nothing) ... FAIL
+test_pick_build_skips_account_builds (__main__.AccountBuildLockTests.test_pick_build_skips_account_builds) ... FAIL
+test_pick_build_unchanged_without_marks (__main__.AccountBuildLockTests.test_pick_build_unchanged_without_marks) ... FAIL
+test_404_on_build_lookup_is_fatal_and_never_reassigns (__main__.StoreVersionTests.test_404_on_build_lookup_is_fatal_and_never_reassigns) ... ok
+test_anlegen_creates_mac_version_with_ios_number (__main__.StoreVersionTests.test_anlegen_creates_mac_version_with_ios_number) ... ok
+test_anlegen_does_not_create_second_mac_version (__main__.StoreVersionTests.test_anlegen_does_not_create_second_mac_version) ... ok
+test_anlegen_fails_on_mac_version_mismatch (__main__.StoreVersionTests.test_anlegen_fails_on_mac_version_mismatch) ... ok
+test_anlegen_fails_without_or_with_several_ios_versions (__main__.StoreVersionTests.test_anlegen_fails_without_or_with_several_ios_versions) ... ok
+test_bad_usage_makes_no_call (__main__.StoreVersionTests.test_bad_usage_makes_no_call) ... ok
+test_build_highest_number_wins_and_is_logged (__main__.StoreVersionTests.test_build_highest_number_wins_and_is_logged) ... ok
+test_build_is_picked_by_platform_version_and_valid (__main__.StoreVersionTests.test_build_is_picked_by_platform_version_and_valid) ... ok
+test_existing_build_is_left_alone (__main__.StoreVersionTests.test_existing_build_is_left_alone) ... ok
+test_failed_count_query_is_reported_and_run_continues (__main__.StoreVersionTests.test_failed_count_query_is_reported_and_run_continues) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 53740)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 53761)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 53783)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 53806)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 53829)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 53833)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 53838)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 53861)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 53902)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=13, family=2, type=1, proto=0, laddr=('127.0.0.1', 53944)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=14, family=2, type=1, proto=0, laddr=('127.0.0.1', 53947)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=15, family=2, type=1, proto=0, laddr=('127.0.0.1', 53950)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=16, family=2, type=1, proto=0, laddr=('127.0.0.1', 53953)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=17, family=2, type=1, proto=0, laddr=('127.0.0.1', 53954)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=18, family=2, type=1, proto=0, laddr=('127.0.0.1', 53955)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=19, family=2, type=1, proto=0, laddr=('127.0.0.1', 53956)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=20, family=2, type=1, proto=0, laddr=('127.0.0.1', 53979)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 54004)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_lesen_reports_state_and_never_writes (__main__.StoreVersionTests.test_lesen_reports_state_and_never_writes) ... ok
+test_never_deletes_submits_or_writes_texts (__main__.StoreVersionTests.test_never_deletes_submits_or_writes_texts) ... ok
+test_no_matching_build_is_fatal_and_writes_nothing (__main__.StoreVersionTests.test_no_matching_build_is_fatal_and_writes_nothing) ... ok
+test_verification_fails_on_deviation (__main__.StoreVersionTests.test_verification_fails_on_deviation) ... ok
+test_write_errors_are_clear_without_raw_answer (__main__.StoreVersionTests.test_write_errors_are_clear_without_raw_answer) ... ok
+test_workflow_offers_both_actions_and_hides_the_key (__main__.WorkflowTests.test_workflow_offers_both_actions_and_hides_the_key) ... ok
+
+======================================================================
+FAIL: test_anlegen_never_assigns_account_build (__main__.AccountBuildLockTests.test_anlegen_never_assigns_account_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_store_version.py", line 459, in test_anlegen_never_assigns_account_build
+    fake = self.fake(builds=builds, build_texts={"BI140": [self.marked()], "BM140": [self.marked()]})
+                                                           ~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_store_version.py", line 437, in marked
+    return f"{text}\n{account_mark()}"
+                      ~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_store_version.py", line 423, in account_mark
+    raise AssertionError("asc_what_to_test.ACCOUNT_BUILD_MARK fehlt")
+AssertionError: asc_what_to_test.ACCOUNT_BUILD_MARK fehlt
+
+======================================================================
+FAIL: test_pick_build_fail_closed_on_empty (__main__.AccountBuildLockTests.test_pick_build_fail_closed_on_empty)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_store_version.py", line 484, in test_pick_build_fail_closed_on_empty
+    self.assertEqual(self.patches(fake), [("V2", "BI133")], texts)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [('V2', 'BI136')] != [('V2', 'BI133')]
+
+First differing element 0:
+('V2', 'BI136')
+('V2', 'BI133')
+
+- [('V2', 'BI136')]
+?              ^
+
++ [('V2', 'BI133')]
+?              ^
+ : []
+
+======================================================================
+FAIL: test_pick_build_fail_closed_on_unreadable (__main__.AccountBuildLockTests.test_pick_build_fail_closed_on_unreadable)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_store_version.py", line 473, in test_pick_build_fail_closed_on_unreadable
+    self.assertEqual(self.patches(fake), [("V2", "BI133")], status)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [('V2', 'BI136')] != [('V2', 'BI133')]
+
+First differing element 0:
+('V2', 'BI136')
+('V2', 'BI133')
+
+- [('V2', 'BI136')]
+?              ^
+
++ [('V2', 'BI133')]
+?              ^
+ : 404
+
+======================================================================
+FAIL: test_pick_build_nothing_left_writes_nothing (__main__.AccountBuildLockTests.test_pick_build_nothing_left_writes_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_store_version.py", line 492, in test_pick_build_nothing_left_writes_nothing
+    self.assert_failed(result, "kein gültiger Bau 1.0.1 für IOS", "2 übersprungen")
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_store_version.py", line 214, in assert_failed
+    self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : version IOS 1.0.1 id=V2 state=PREPARE_FOR_SUBMISSION
+keine bearbeitbare Version MAC_OS (Zustände READY_FOR_SALE), nichts geschrieben
+bau IOS gewählt: 136 von 2 gültigen
+bau MAC_OS gewählt: 133 von 1 gültigen
+version MAC_OS 1.0.1 angelegt
+bau IOS zugeordnet: 136
+bau MAC_OS zugeordnet: 133
+version IOS 1.0.1 id=V2 state=PREPARE_FOR_SUBMISSION
+version MAC_OS 1.0.1 id=NEW state=PREPARE_FOR_SUBMISSION
+gegenprobe gleich=ja
+version IOS 1.0 state=READY_FOR_SALE
+version IOS 1.0.1 state=PREPARE_FOR_SUBMISSION
+version MAC_OS 1.0 state=READY_FOR_SALE
+version MAC_OS 1.0.1 state=PREPARE_FOR_SUBMISSION
+version IOS 1.0.1 id=V2 state=PREPARE_FOR_SUBMISSION
+bau IOS 1.0.1 (136) processingState=VALID
+review-detail keines
+version MAC_OS 1.0.1 id=NEW state=PREPARE_FOR_SUBMISSION
+bau MAC_OS 1.0.1 (133) processingState=VALID
+review-detail keines
+zusammenfassung geschrieben=3
+
+
+======================================================================
+FAIL: test_pick_build_skips_account_builds (__main__.AccountBuildLockTests.test_pick_build_skips_account_builds)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_store_version.py", line 441, in test_pick_build_skips_account_builds
+    mark_one = {"BI134": ["frei", self.marked()], "BI135": [self.marked(), self.marked()]}
+                                  ~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_store_version.py", line 437, in marked
+    return f"{text}\n{account_mark()}"
+                      ~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_store_version.py", line 423, in account_mark
+    raise AssertionError("asc_what_to_test.ACCOUNT_BUILD_MARK fehlt")
+AssertionError: asc_what_to_test.ACCOUNT_BUILD_MARK fehlt
+
+======================================================================
+FAIL: test_pick_build_unchanged_without_marks (__main__.AccountBuildLockTests.test_pick_build_unchanged_without_marks)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/steady-crafting-shamir/scripts/test_asc_store_version.py", line 505, in test_pick_build_unchanged_without_marks
+    self.assertTrue({"/v1/builds/BI133/betaBuildLocalizations", "/v1/builds/BM133/betaBuildLocalizations"} <= read,
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    read)
+                    ^^^^^
+AssertionError: False is not true : set()
+
+----------------------------------------------------------------------
+Ran 22 tests in 19.599s
+
+FAILED (failures=6)

@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-11-09T20:33:22+0100
+befehl: scripts/sim.sh test-proof AccountSettingsTests
+workflow: feat-615-s4c2-freischalten
+head: 5a7b4b9a9029fcd0caf61ccef0acfe051024acb3
+basis: 235c6d4604aba2c32da6012e99c5cad8d760a9ae (merge-base origin/main HEAD)
+testklasse: AccountSettingsTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 7 gesamt, 7 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1794252577.908  ende: 1794252800.275
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-615-s4c2-freischalten/simulator-run/summary.json  sha256:bd5fde7a42a427a9284fc63120bb2dfa96e2949d486c3d484f00417c80f546a5
+xcresult: docs/artifacts/feat-615-s4c2-freischalten/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-615-s4c2-freischalten/simulator-run/*.png (5 Stück)
+
+## Geprüfte Dateien
+(keine Code-Dateien geändert)

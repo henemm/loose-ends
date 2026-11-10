@@ -109,7 +109,7 @@ LOOSEENDS_UI_LANG=en ./scripts/sim.sh store-screenshots  # dasselbe englisch nac
 LOOSEENDS_UI_LANG=en ./scripts/sim.sh store-watch  # dasselbe englisch nach docs/store/screenshots/en/watch/, nur de|en, Beispieltexte per --ui-testing-store-sample-texts, Systemsprache des Watch-Simulators danach zurück (#842)
 gh workflow run store-mac.yml -f language=en  # App-Store-Bilder Mac 1280×800 nur in der CI (Artefakt StoreMac-<Sprache>, Standard de); Übernahme mit python3 scripts/store_screenshots.py --mac docs/store/screenshots/<lang> <export> (#842)
 gh workflow run asc-store-images.yml -f aktion=lesen -f sprache=en [-f plattform=ios|mac]  # Store-Bilder einer Sprache in Apples Asset-Bibliothek: `lesen` (nur GET, mit den Platzierungen je Gruppe) oder `hochladen` (Namen `<sprache>-<gerät>-<datei>`, vorhandene übersprungen, auch wenn platziert), Mac nur mit bearbeitbarer Mac-Version (#842 S4c-1); `platzieren` (nur `en`) setzt sie auf die bearbeitbare iOS-Version (`plattform=mac`: die vier Mac-Bilder auf die bearbeitbare Mac-Version, en-US, Gruppe `MAC_PROFILE`-Typ, iOS-Lauf lässt sie unberührt, #842 S5b), en-US, in Manifest-Reihenfolge, Vorhandenes übersprungen, Fremdes bricht vor jedem Schreiben ab, Gegenprobe im selben Lauf, de-DE nur gelesen; nie einreichen oder löschen (#842 S4c-2)
-gh workflow run asc-store-version.yml -f aktion=lesen  # App-Store-Versionen je Plattform: `lesen` (nur GET: Zustand, Bau, Zeichenzahlen je Feld, Bildsätze, Review-Detail) oder `anlegen` (Mac-Version mit der Nummer der bearbeitbaren iOS-Version, nur wenn keine bearbeitbare Mac-Version existiert; ordnet je Plattform den gültigen Bau der Zielversion mit der höchsten Nummer zu, einen vorhandenen nie um; Gegenprobe im selben Lauf); nie einreichen, löschen oder Texte/Bilder schreiben (#842 S5a-1)
+gh workflow run asc-store-version.yml -f aktion=lesen  # App-Store-Versionen je Plattform: `lesen` (nur GET: Zustand, Bau, Zeichenzahlen je Feld, Bildsätze, Review-Detail) oder `anlegen` (Mac-Version mit der Nummer der bearbeitbaren iOS-Version, nur wenn keine bearbeitbare Mac-Version existiert; ordnet je Plattform den gültigen Bau der Zielversion mit der höchsten Nummer zu, einen vorhandenen nie um; einen mit der Konto-Marke gekennzeichneten oder unlesbaren Bau nie (#615 S4c-2a); Gegenprobe im selben Lauf); nie einreichen, löschen oder Texte/Bilder schreiben (#842 S5a-1)
 gh workflow run asc-store-submit.yml -f aktion=pruefen  # Vorprüfung vor dem Einreichen, nur GET, beide Plattformen (IOS, MAC_OS): genau eine bearbeitbare Version gleicher Nummer, Bau gültig und passend, Texte de-DE/en-US, Bilder je Locale, Review-Detail, keine belegende Einreichung; je Plattform `bereit` oder alle Gründe, Ausgang 0 nur wenn beide bereit; Schnitt B ergänzt `einreichen` (#893)
 ./scripts/sim.sh watch-test <Klasse>  # Watch-UI-Test im watchOS-Simulator ohne Beleg (Bilder, Sichtprüfung)
 LOOSEENDS_LANG=en ./scripts/sim.sh sim-unit <Klasse>  # Testsprache en (-testLanguage/-testRegion), Simulator bleibt wie er ist (#670)
@@ -261,6 +261,7 @@ TestFlight (manual run or a `v*` tag). Setup for the account owner: `docs/refere
 Since #174 it runs on the `xcode-27` preview image with Xcode 27.0 pinned and never lowers the
 deployment targets; a step before the upload checks every target in the archive (27 SDK, minimum 27.0,
 version, dSYM, privacy strings) and stops the upload on any mismatch.
+The input `konto` (off by default, never on a tag) switches the account group on in the archive (`LEAccountEnabled`, proven as Bool with `applesignin` in both archive checks), marks the build in „Was testen“, and `scripts/asc_store_version.py` never assigns a marked or unreadable build to a store version (#615 S4c-2a).
 
 **Every TestFlight build says what to test (Henning, 2026-10-12, #347).** A manual run requires the
 input `what_to_test`; a `v*` tag uses the tagged commit's message. After Apple reports the build as
@@ -451,7 +452,7 @@ not scope creep on the current one.
   `SessionStoring` with `InMemorySessionStore` and `SessionStoreError` (S4b-2) and `AccountState` (the account's state, S4b-2);
   `KeychainSessionStore` behind `KeychainOperations` (the token in the keychain, this device only, S4b-3).
   `AccountWiring` (S4c-1): `forApp` builds the one `AccountState` in `LooseEndsApp` (main window and Mac settings window), only
-  when `isEnabled`: Info `LEAccountEnabled` as Bool, fallback **off** (missing or another type hides the group in every real build);
+  when `isEnabled`: Info `LEAccountEnabled` as Bool (`project.yml` holds `false`; only the TestFlight input `konto` sets it true in the archive, #615 S4c-2a), fallback **off** (missing or another type hides the group in every real build);
   `serviceURL` reads Info `LEServiceURL`, fallback `https://loose-ends.henemm.com`; under `--ui-testing` always on, store in memory
   and the stand-in `UITestTransport` (no network; `--ui-testing-account-not-allowed` 401, `--ui-testing-account-retry-later` 503).
   The view is `LooseEnds/Views/AccountSection.swift`: the group "Claude" in the settings right under iCloud, rows from the pure

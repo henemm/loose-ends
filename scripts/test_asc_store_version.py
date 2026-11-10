@@ -51,8 +51,10 @@ class FakeASC:
 
     def __init__(self, versions, builds=(), assigned=None, localizations=None, sets=None, placements=None,
                  review=(), fail_on=None, write_status=None, error_code=None, ignore_assign=False,
-                 duplicate_create=False, loose_filters=False, get_fail=None):
+                 duplicate_create=False, loose_filters=False, get_fail=None, build_texts=None):
         self.versions = [copy.deepcopy(item) for item in versions]
+        # „Was testen“ je Bau (#615 S4c-2a): Liste der Texte, None = Eintrag ohne Text; ohne Angabe ein Text ohne Marke
+        self.build_texts = dict(build_texts or {})
         self.builds = [dict(item) for item in builds]
         self.assigned = dict(assigned or {})
         self.localizations = copy.deepcopy(localizations or {})
@@ -124,6 +126,12 @@ class FakeASC:
         if url == "/v1/builds":
             return 200, self.build_list(query)
         parts = url.strip("/").split("/")
+        if len(parts) == 4 and parts[1] == "builds" and parts[3] == "betaBuildLocalizations" and parts[2] in by_build:
+            texts = self.build_texts.get(parts[2], ["Was testen: Erfassen"])
+            return 200, {"data": [{"id": f"BL-{parts[2]}-{index}", "type": "betaBuildLocalizations",
+                                   "attributes": {"locale": ("de-DE", "en-US", "fr-FR")[index % 3],
+                                                  **({} if text is None else {"whatsNew": text})}}
+                                  for index, text in enumerate(texts)]}
         if len(parts) == 4 and parts[1] == "builds" and parts[3] == "preReleaseVersion" and parts[2] in by_build:
             item = by_build[parts[2]]
             return 200, {"data": {"id": f"PRE-{item['id']}", "type": "preReleaseVersions",
@@ -399,6 +407,103 @@ class StoreVersionTests(unittest.TestCase):
         result = self.run_script(fake, "lesen")
         self.assert_ok(result)
         self.assertIn("bildsaetze=2 bilder=fehler HTTP 400 platzierungen=0", result.stdout)
+
+
+# Schnitt 4c-2a (#615): ein Konto-Bau wird nie einer Store-Version zugeordnet, Unlesbares auch nicht (fail-closed)
+sys.path.insert(0, str(SCRIPTS))
+import asc_what_to_test  # noqa: E402
+
+IOS_ONLY = (IOS_NEW, MAC_NEW)  # Mac hängt schon, geprüft wird nur die iOS-Wahl
+MAC_ASSIGNED = {"V4": "BM133"}
+
+
+def account_mark():
+    value = getattr(asc_what_to_test, "ACCOUNT_BUILD_MARK", None)
+    if not isinstance(value, str) or not value.strip():
+        raise AssertionError("asc_what_to_test.ACCOUNT_BUILD_MARK fehlt")
+    return value
+
+
+def ios_builds(*numbers):
+    return tuple(build(f"BI{number}", "IOS", str(number)) for number in numbers) + (MAC_133,)
+
+
+class AccountBuildLockTests(unittest.TestCase):
+    # nur die Hilfen, nicht die Fälle von StoreVersionTests (sonst liefen sie doppelt)
+    setUp, fake, run_script = StoreVersionTests.setUp, StoreVersionTests.fake, StoreVersionTests.run_script
+    assert_ok, assert_failed, patches = StoreVersionTests.assert_ok, StoreVersionTests.assert_failed, StoreVersionTests.patches
+
+    def marked(self, text="Was testen: Erfassen"):
+        return f"{text}\n{account_mark()}"
+
+    # AC-9
+    def test_pick_build_skips_account_builds(self):
+        mark_one = {"BI134": ["frei", self.marked()], "BI135": [self.marked(), self.marked()]}
+        fake = self.fake(versions=IOS_ONLY, builds=ios_builds(133, 134, 135, 136), assigned=MAC_ASSIGNED,
+                         build_texts=mark_one)
+        result = self.run_script(fake, "anlegen")
+        self.assert_ok(result)
+        self.assertEqual(self.patches(fake), [("V2", "BI136")])
+        fake = self.fake(versions=IOS_ONLY, builds=ios_builds(133, 134, 135, 136), assigned=MAC_ASSIGNED,
+                         build_texts={**mark_one, "BI136": [self.marked()]})
+        result = self.run_script(fake, "anlegen")
+        self.assert_ok(result)
+        self.assertEqual(self.patches(fake), [("V2", "BI133")])
+        for number in (134, 135, 136):
+            self.assertIn(f"bau IOS {number} übersprungen: konto", result.stdout)
+        self.assertNotIn(account_mark(), result.stdout + result.stderr)
+
+    # AC-9
+    def test_anlegen_never_assigns_account_build(self):
+        builds = (IOS_133, build("BI140", "IOS", "140"), MAC_133, build("BM140", "MAC_OS", "140"))
+        fake = self.fake(builds=builds, build_texts={"BI140": [self.marked()], "BM140": [self.marked()]})
+        self.assert_ok(self.run_script(fake, "anlegen"))
+        self.assertEqual(sorted(self.patches(fake)), [("NEW", "BM133"), ("V2", "BI133")])
+        only_marked = self.fake(builds=(IOS_133, MAC_133), build_texts={"BM133": [self.marked()]})
+        self.assert_failed(self.run_script(only_marked, "anlegen"), "kein gültiger Bau 1.0.1 für MAC_OS")
+        self.assertEqual(only_marked.writes(), [])
+
+    # AC-10
+    def test_pick_build_fail_closed_on_unreadable(self):
+        for status in (404, 500):
+            fake = self.fake(versions=IOS_ONLY, builds=ios_builds(133, 136), assigned=MAC_ASSIGNED,
+                             get_fail={"/BI136/betaBuildLocalizations": status})
+            result = self.run_script(fake, "anlegen")
+            self.assert_ok(result)
+            self.assertEqual(self.patches(fake), [("V2", "BI133")], status)
+            self.assertIn("bau IOS 136 übersprungen: texte nicht lesbar", result.stdout)
+            self.assertNotIn(RAW_SECRET, result.stdout + result.stderr)
+
+    # AC-10
+    def test_pick_build_fail_closed_on_empty(self):
+        for texts in ([], [None], ["", "   "]):
+            fake = self.fake(versions=IOS_ONLY, builds=ios_builds(133, 136), assigned=MAC_ASSIGNED,
+                             build_texts={"BI136": texts})
+            result = self.run_script(fake, "anlegen")
+            self.assert_ok(result)
+            self.assertEqual(self.patches(fake), [("V2", "BI133")], texts)
+            self.assertIn("bau IOS 136 übersprungen: texte nicht lesbar", result.stdout)
+
+    # AC-10
+    def test_pick_build_nothing_left_writes_nothing(self):
+        fake = self.fake(builds=ios_builds(133, 136),
+                         get_fail={"/BI133/betaBuildLocalizations": 500}, build_texts={"BI136": []})
+        result = self.run_script(fake, "anlegen")
+        self.assert_failed(result, "kein gültiger Bau 1.0.1 für IOS", "2 übersprungen")
+        self.assertEqual(fake.writes(), [])
+        self.assertNotIn(RAW_SECRET, result.stdout + result.stderr)
+
+    # AC-11
+    def test_pick_build_unchanged_without_marks(self):
+        fake = self.fake(builds=(IOS_133, build("BM99", "MAC_OS", "99"), MAC_133))
+        result = self.run_script(fake, "anlegen")
+        self.assert_ok(result)
+        self.assertEqual(sorted(self.patches(fake)), [("NEW", "BM133"), ("V2", "BI133")])
+        self.assertIn("bau MAC_OS gewählt: 133 von 2 gültigen", result.stdout)
+        self.assertNotIn("übersprungen:", result.stdout)
+        read = {path for method, path, _ in fake.requests if method == "GET" and path.endswith("/betaBuildLocalizations")}
+        self.assertTrue({"/v1/builds/BI133/betaBuildLocalizations", "/v1/builds/BM133/betaBuildLocalizations"} <= read,
+                        read)
 
 
 class WorkflowTests(unittest.TestCase):
