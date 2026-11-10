@@ -10,6 +10,9 @@ struct AccountSection: View {
 
     struct Layout: Equatable, Sendable {
         let showsAppleButton: Bool
+        /// False wherever the button is hidden, and while a sign-in runs (#615 S4c-2b): the button stays in the
+        /// hierarchy so Apple's dialog keeps its answer, but a second tap cannot start a second sign-in.
+        let appleButtonEnabled: Bool
         let showsProgress: Bool
         let showsSignedInRows: Bool
         let hint: Hint
@@ -18,14 +21,24 @@ struct AccountSection: View {
     /// Status to rows. While a request runs (`signingIn`, `deleting`) nothing can be tapped a second time.
     static func layout(status: AccountState.Status, problem: AccountState.Problem?) -> Layout {
         switch status {
-        case .signedOut: Layout(showsAppleButton: true, showsProgress: false, showsSignedInRows: false, hint: .intro)
-        case .signingIn: Layout(showsAppleButton: false, showsProgress: true, showsSignedInRows: false, hint: .intro)
+        case .signedOut:
+            Layout(showsAppleButton: true, appleButtonEnabled: true, showsProgress: false, showsSignedInRows: false,
+                   hint: .intro)
+        case .signingIn:
+            Layout(showsAppleButton: true, appleButtonEnabled: false, showsProgress: true, showsSignedInRows: false,
+                   hint: .intro)
         case .signedIn:
-            Layout(showsAppleButton: false, showsProgress: false, showsSignedInRows: true,
+            Layout(showsAppleButton: false, appleButtonEnabled: false, showsProgress: false, showsSignedInRows: true,
                    hint: problem == .retryLater ? .retryLater : .signedIn)
-        case .deleting: Layout(showsAppleButton: false, showsProgress: true, showsSignedInRows: false, hint: .signedIn)
-        case .notAllowed: Layout(showsAppleButton: true, showsProgress: false, showsSignedInRows: false, hint: .notAllowed)
-        case .retryLater: Layout(showsAppleButton: true, showsProgress: false, showsSignedInRows: false, hint: .retryLater)
+        case .deleting:
+            Layout(showsAppleButton: false, appleButtonEnabled: false, showsProgress: true, showsSignedInRows: false,
+                   hint: .signedIn)
+        case .notAllowed:
+            Layout(showsAppleButton: true, appleButtonEnabled: true, showsProgress: false, showsSignedInRows: false,
+                   hint: .notAllowed)
+        case .retryLater:
+            Layout(showsAppleButton: true, appleButtonEnabled: true, showsProgress: false, showsSignedInRows: false,
+                   hint: .retryLater)
         }
     }
 
@@ -57,7 +70,7 @@ struct AccountSection: View {
     var body: some View {
         let layout = Self.layout(status: account.status, problem: account.lastProblem)
         if layout.showsAppleButton {
-            signInRow
+            signInRow(enabled: layout.appleButtonEnabled)
         }
         if layout.showsProgress {
             progressRow
@@ -69,15 +82,15 @@ struct AccountSection: View {
 
     // MARK: - Rows
 
-    @ViewBuilder private var signInRow: some View {
+    @ViewBuilder private func signInRow(enabled: Bool) -> some View {
         #if os(macOS)
         HStack {
             Text("Connect with Claude")
             Spacer()
-            appleButton.frame(width: 200)
+            appleButton(enabled: enabled).frame(width: 200)
         }
         #else
-        appleButton
+        appleButton(enabled: enabled)
         #endif
     }
 
@@ -131,18 +144,20 @@ struct AccountSection: View {
 
     /// Apple's own button; under `--ui-testing` a plain button against the stand-in service, because the Apple dialog
     /// does not run reliably in the Simulator.
-    @ViewBuilder private var appleButton: some View {
+    @ViewBuilder private func appleButton(enabled: Bool) -> some View {
         if ModelContainerFactory.isUITesting {
             Button {
                 Task { await signInForUITest() }
             } label: {
                 Label("Sign in with Apple", systemImage: "apple.logo")
             }
+            .disabled(!enabled)
             .accessibilityIdentifier("accountAppleButton")
         } else {
             SignInWithAppleButton(.signIn, onRequest: request, onCompletion: complete)
                 .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
                 .frame(height: 44)
+                .disabled(!enabled)
                 .accessibilityIdentifier("accountAppleButton")
         }
     }

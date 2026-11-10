@@ -224,3 +224,4 @@ RED: Die Unit-Tests schlagen zunächst fehl, weil `AccountSection`, `AccountWiri
 ## Changelog
 
 - 2026-11-09: Initial spec created (Schnitt 4c-1, Teil-Spec)
+- 2026-11-10: AC-8 für `signingIn` ersetzt durch AC-1 von `docs/specs/feat-615-schnitt-4c2b-knopf-adresse.md` (Schnitt 4c-2b, F001): der Apple-Knopf bleibt während der Anmeldung sichtbar und deaktiviert; für `deleting` und die Angemeldet-Zeilen gilt AC-8 weiter.

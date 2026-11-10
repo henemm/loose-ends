@@ -1,0 +1,69 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/AccountSectionTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsUITests[0m] [1mCompiling[0m AccountSettingsTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsUITests/AccountSettingsTests.swift:38:66: [33mmain actor-isolated property 'firstMatch' can not be referenced from a nonisolated context[0m
+ 35 |     }
+[32m 36 | [0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsUITests/AccountSettingsTests.swift:38:41: [33mcall to main actor-isolated instance method 'matching(identifier:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+ 35 |     }
+[32m 36 | [0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsUITests/AccountSettingsTests.swift:38:13: [33mcall to main actor-isolated instance method 'descendants(matching:)' in a synchronous nonisolated context [#ActorIsolatedCall][0m
+ 35 |     }
+[32m 36 | [0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsUITests/AccountSettingsTests.swift:58:21: [33mmain actor-isolated property 'identifier' can not be referenced from a nonisolated context[0m
+ 55 | 
+[32m 56 |     /// The element with `id` in a snapshot tree, depth first.[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsUITests/AccountSettingsTests.swift:59:31: [33mmain actor-isolated property 'children' can not be referenced from a nonisolated context[0m
+ 55 | 
+[32m 56 |     /// The element with `id` in a snapshot tree, depth first.[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsUITests/AccountSettingsTests.swift:67:18: [33mmain actor-isolated property 'label' can not be referenced from a nonisolated context[0m
+ 64 | 
+[32m 65 |     /// Label and value of a combined row, so a check does not depend on how the system splits them.[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsUITests/AccountSettingsTests.swift:67:33: [33mmain actor-isolated property 'value' can not be referenced from a nonisolated context[0m
+ 64 | 
+[32m 65 |     /// Label and value of a combined row, so a check does not depend on how the system splits them.[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m AccountSectionTests.swift
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsUITests.abi.json
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsTests.swiftsourceinfo
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsTests.abi.json
+[[36mLooseEndsTests[0m] [1mLinking[0m LooseEndsTests
+[[36mLooseEndsTests[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEndsUITests[0m] [1mLinking[0m LooseEndsUITests
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+[[36mLooseEndsUITests[0m] [1mExtract App Intents Metadata[0m
+Test Suite 'Selected tests' started at 2026-11-10 13:23:35.493.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-10 13:23:35.494.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-10 13:23:35.494.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+[1mTest run started.[0m
+Suite "AccountSection (#615)" started
+    [32m✔[0m "account: layout je status" (0.001 seconds)
+    [32m✔[0m "account: laufende anfrage hat keinen bedienbaren knopf" (0.001 seconds)
+    [32m✔[0m "account: dienstadresse nur https" (0.001 seconds)
+    [32m✔[0m "account: dienstadresse standard folgt debug" (0.001 seconds)
+    [33m⚠️[0m  Test "account: ersatz-transport langsam nur auf wunsch" recorded an issue at AccountSectionTests.swift:115:9: Expectation failed: slow.delay == .seconds(15)
+    [33m⚠️[0m  Test "account: ersatz-transport langsam nur auf wunsch" recorded an issue at AccountSectionTests.swift:119:9: Expectation failed: slowRefused.delay == .seconds(15)
+    [31m✖[0m [31m"account: ersatz-transport langsam nur auf wunsch" (0.313 seconds) 2 issue(s)[0m
+    [32m✔[0m "account: wiring schalter und adresse" (0.001 seconds)
+    [32m✔[0m "account: init sendet nichts" (0.004 seconds)
+    [32m✔[0m "account: ersatz-transport ausgaenge" (0.004 seconds)
+Suite "AccountSection (#615)" failed after 0.335 seconds with 2 issue(s)
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-cached-churning-yao/Logs/Test/Test-LooseEnds-2026.11.10_13-23-02-+0100.xcresult
+[36;1mTesting started[0m

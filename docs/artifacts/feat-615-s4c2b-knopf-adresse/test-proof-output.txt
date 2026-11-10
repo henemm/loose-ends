@@ -1,0 +1,41 @@
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEnds.xcodeproj
+[0;32m[sim][0m Projekt erzeugt.
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test mit Beleg: AccountSettingsTests → docs/artifacts/feat-615-s4c2b-knopf-adresse/simulator-run.txt
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-10 13:26:12.615.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-11-10 13:26:12.616.
+Test Suite 'AccountSettingsTests' started at 2026-11-10 13:26:12.616.
+    [32m✔[0m testDeleteCancelKeepsSignedIn ([31m25.773[0m seconds)
+    [32m✔[0m testDeleteConfirmSignsOut ([31m29.741[0m seconds)
+    [32m✔[0m testNotAllowedShowsItsSentence ([31m27.743[0m seconds)
+    [32m✔[0m testRetryLaterShowsItsSentence ([31m38.958[0m seconds)
+    [32m✔[0m testSignedOutShowsGroupBelowICloud ([31m21.449[0m seconds)
+    [32m✔[0m testSigningInKeepsDisabledAppleButton ([31m32.887[0m seconds)
+    [32m✔[0m testSignInShowsSignedInRows ([31m21.351[0m seconds)
+    [32m✔[0m testSignOutNeedsNoConfirmation ([31m27.755[0m seconds)
+Executed 8 tests, with 0 failures (0 unexpected) in 225.657 (225.669) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-11-10 13:29:58.285.
+Executed 8 tests, with 0 failures (0 unexpected) in 225.657 (225.670) seconds
+Executed 8 tests, with 0 failures (0 unexpected) in 225.657 (225.671) seconds
+[1mTest session results:[0m /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/docs/artifacts/feat-615-s4c2b-knopf-adresse/simulator-run/run.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden, Beleg: docs/artifacts/feat-615-s4c2b-knopf-adresse/simulator-run.txt
