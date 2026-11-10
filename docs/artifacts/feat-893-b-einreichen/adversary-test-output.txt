@@ -1,0 +1,263 @@
+..../Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_version.py:70: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 64209)>
+  class Handler(BaseHTTPRequestHandler):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_version.py:70: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 64234)>
+  class Handler(BaseHTTPRequestHandler):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_version.py:70: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 64260)>
+  class Handler(BaseHTTPRequestHandler):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_version.py:70: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 64291)>
+  class Handler(BaseHTTPRequestHandler):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_version.py:70: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 64293)>
+  class Handler(BaseHTTPRequestHandler):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_version.py:70: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 64294)>
+  class Handler(BaseHTTPRequestHandler):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_version.py:70: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 64295)>
+  class Handler(BaseHTTPRequestHandler):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_version.py:70: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 64296)>
+  class Handler(BaseHTTPRequestHandler):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_version.py:70: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 64297)>
+  class Handler(BaseHTTPRequestHandler):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_version.py:70: ResourceWarning: unclosed <socket.socket fd=13, family=2, type=1, proto=0, laddr=('127.0.0.1', 64319)>
+  class Handler(BaseHTTPRequestHandler):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_version.py:70: ResourceWarning: unclosed <socket.socket fd=14, family=2, type=1, proto=0, laddr=('127.0.0.1', 64342)>
+  class Handler(BaseHTTPRequestHandler):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_version.py:70: ResourceWarning: unclosed <socket.socket fd=15, family=2, type=1, proto=0, laddr=('127.0.0.1', 64366)>
+  class Handler(BaseHTTPRequestHandler):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_version.py:70: ResourceWarning: unclosed <socket.socket fd=16, family=2, type=1, proto=0, laddr=('127.0.0.1', 64390)>
+  class Handler(BaseHTTPRequestHandler):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+....../opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:59: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 64467)>
+  self._lines = deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:59: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 64506)>
+  self._lines = deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:59: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 64544)>
+  self._lines = deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:59: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 64578)>
+  self._lines = deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:59: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 64605)>
+  self._lines = deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:59: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 64632)>
+  self._lines = deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:59: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 64660)>
+  self._lines = deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:59: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 64686)>
+  self._lines = deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:59: ResourceWarning: unclosed <socket.socket fd=13, family=2, type=1, proto=0, laddr=('127.0.0.1', 64722)>
+  self._lines = deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:59: ResourceWarning: unclosed <socket.socket fd=14, family=2, type=1, proto=0, laddr=('127.0.0.1', 64748)>
+  self._lines = deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:59: ResourceWarning: unclosed <socket.socket fd=15, family=2, type=1, proto=0, laddr=('127.0.0.1', 64774)>
+  self._lines = deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:59: ResourceWarning: unclosed <socket.socket fd=16, family=2, type=1, proto=0, laddr=('127.0.0.1', 64796)>
+  self._lines = deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:59: ResourceWarning: unclosed <socket.socket fd=20, family=2, type=1, proto=0, laddr=('127.0.0.1', 64819)>
+  self._lines = deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:59: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 64843)>
+  self._lines = deque()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.........<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 64979)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 65006)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 65040)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 65065)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 65086)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 65087)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 65134)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 65135)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=13, family=2, type=1, proto=0, laddr=('127.0.0.1', 65178)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=14, family=2, type=1, proto=0, laddr=('127.0.0.1', 65203)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=15, family=2, type=1, proto=0, laddr=('127.0.0.1', 65228)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=16, family=2, type=1, proto=0, laddr=('127.0.0.1', 65253)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=20, family=2, type=1, proto=0, laddr=('127.0.0.1', 65279)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 65305)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=25, family=2, type=1, proto=0, laddr=('127.0.0.1', 65331)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=26, family=2, type=1, proto=0, laddr=('127.0.0.1', 65358)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=27, family=2, type=1, proto=0, laddr=('127.0.0.1', 65385)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=28, family=2, type=1, proto=0, laddr=('127.0.0.1', 65412)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=29, family=2, type=1, proto=0, laddr=('127.0.0.1', 65435)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=30, family=2, type=1, proto=0, laddr=('127.0.0.1', 65459)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=31, family=2, type=1, proto=0, laddr=('127.0.0.1', 65486)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=32, family=2, type=1, proto=0, laddr=('127.0.0.1', 65518)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=33, family=2, type=1, proto=0, laddr=('127.0.0.1', 49195)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=34, family=2, type=1, proto=0, laddr=('127.0.0.1', 49219)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=35, family=2, type=1, proto=0, laddr=('127.0.0.1', 49245)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen _collections_abc>:858: ResourceWarning: unclosed <socket.socket fd=36, family=2, type=1, proto=0, laddr=('127.0.0.1', 49269)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.......
+----------------------------------------------------------------------
+Ran 26 tests in 75.750s
+
+OK
+.........../opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 50545)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 50572)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 50581)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 50604)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 50627)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 50657)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 50704)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 50822)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 50833)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=13, family=2, type=1, proto=0, laddr=('127.0.0.1', 50855)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=14, family=2, type=1, proto=0, laddr=('127.0.0.1', 50882)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=15, family=2, type=1, proto=0, laddr=('127.0.0.1', 50907)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=16, family=2, type=1, proto=0, laddr=('127.0.0.1', 50911)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=17, family=2, type=1, proto=0, laddr=('127.0.0.1', 50916)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=18, family=2, type=1, proto=0, laddr=('127.0.0.1', 50941)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=19, family=2, type=1, proto=0, laddr=('127.0.0.1', 50985)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=20, family=2, type=1, proto=0, laddr=('127.0.0.1', 51031)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 51034)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:551: ResourceWarning: unclosed <socket.socket fd=22, family=2, type=1, proto=0, laddr=('127.0.0.1', 51037)>
+  @staticmethod
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+...........
+----------------------------------------------------------------------
+Ran 22 tests in 23.527s
+
+OK
+.....<frozen codecs>:312: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51387)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen codecs>:312: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 51392)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen codecs>:312: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 51397)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen codecs>:312: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 51406)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen codecs>:312: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 51412)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen codecs>:312: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 51418)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+...........<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51425)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 51426)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 51427)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 51428)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 51429)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 51430)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=13, family=2, type=1, proto=0, laddr=('127.0.0.1', 51431)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=14, family=2, type=1, proto=0, laddr=('127.0.0.1', 51432)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=15, family=2, type=1, proto=0, laddr=('127.0.0.1', 51438)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=16, family=2, type=1, proto=0, laddr=('127.0.0.1', 51444)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=17, family=2, type=1, proto=0, laddr=('127.0.0.1', 51449)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=18, family=2, type=1, proto=0, laddr=('127.0.0.1', 51455)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=19, family=2, type=1, proto=0, laddr=('127.0.0.1', 51461)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=20, family=2, type=1, proto=0, laddr=('127.0.0.1', 51464)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 51472)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=22, family=2, type=1, proto=0, laddr=('127.0.0.1', 51478)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=23, family=2, type=1, proto=0, laddr=('127.0.0.1', 51479)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=24, family=2, type=1, proto=0, laddr=('127.0.0.1', 51480)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=25, family=2, type=1, proto=0, laddr=('127.0.0.1', 51481)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=26, family=2, type=1, proto=0, laddr=('127.0.0.1', 51482)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=27, family=2, type=1, proto=0, laddr=('127.0.0.1', 51506)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=28, family=2, type=1, proto=0, laddr=('127.0.0.1', 51510)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=29, family=2, type=1, proto=0, laddr=('127.0.0.1', 51516)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.............
+----------------------------------------------------------------------
+Ran 29 tests in 25.744s
+
+OK
