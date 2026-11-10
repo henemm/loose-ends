@@ -1,17 +1,19 @@
-# Handlauf (#837 Schnitt 2): liest Name und Untertitel der App-Informationen oder setzt den Untertitel aus
-# docs/reference/app-store-untertitel.md. Schreibt nur in die eine App-Info im Zustand PREPARE_FOR_SUBMISSION, nur bei
-# Abweichung (en-US wird mit Name angelegt, wenn es fehlt); reicht nichts ein.
+# Handlauf (#837 Schnitt 2, #893 D): liest Name, Untertitel und Datenschutz-Adresse der App-Informationen, setzt den
+# Untertitel aus docs/reference/app-store-untertitel.md oder die Datenschutz-Adresse je Sprache. Schreibt nur in die eine
+# App-Info im Zustand PREPARE_FOR_SUBMISSION, nur bei Abweichung (en-US wird nur von untertitel mit Name angelegt, wenn es
+# fehlt); reicht nichts ein.
 name: ASC App Info
 
 on:
   workflow_dispatch:
     inputs:
       aktion:
-        description: "lesen = nur Zustand zeigen, untertitel = Untertitel setzen (nur bei Abweichung)"
+        description: "lesen = nur Zustand zeigen, untertitel = Untertitel setzen, datenschutz = Datenschutz-Adresse setzen (beides nur bei Abweichung)"
         type: choice
         options:
           - lesen
           - untertitel
+          - datenschutz
         default: lesen
 
 permissions:
@@ -26,6 +28,7 @@ jobs:
       ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
       ASC_POLL_SECONDS: "5"
       AKTION: ${{ inputs.aktion }}
+      ASC_PRIVACY_POLICY_URL: ${{ vars.ASC_PRIVACY_POLICY_URL }}
     steps:
       - uses: actions/checkout@v7
       - name: Unit tests
