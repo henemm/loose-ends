@@ -112,20 +112,22 @@ import Testing
         #expect(UITestTransport(outcome: .allowed).delay == .zero)
 
         let slow = UITestTransport(arguments: ["--ui-testing", "--ui-testing-account-slow"])
-        #expect(slow.delay == .seconds(2))
+        #expect(slow.delay == .seconds(15))
         #expect(slow.outcome == .allowed)
         let slowRefused = UITestTransport(arguments: ["--ui-testing", "--ui-testing-account-slow",
                                                       "--ui-testing-account-not-allowed"])
-        #expect(slowRefused.delay == .seconds(2))
+        #expect(slowRefused.delay == .seconds(15))
         #expect(slowRefused.outcome == .notAllowed)
         #expect(UITestTransport(arguments: ["--ui-testing", "--ui-testing-account-retry-later"]).outcome == .retryLater)
 
+        // A short explicit delay proves the wait without holding the unit run for 15 s.
+        let delayed = UITestTransport(outcome: .allowed, delay: .milliseconds(300))
         let clock = ContinuousClock()
         let start = clock.now
-        let token = try await ServiceClient(baseURL: Self.base, transport: slow)
+        let token = try await ServiceClient(baseURL: Self.base, transport: delayed)
             .signIn(identityToken: "UITEST-IDENTITY", nonce: "n", code: "UITEST-CODE")
         #expect(token == "UITEST-SESSION")
-        #expect(clock.now - start >= .seconds(2), "The slow stand-in answers only after its delay")
+        #expect(clock.now - start >= .milliseconds(300), "A stand-in with a delay answers only after it")
 
         let quickStart = clock.now
         _ = try await ServiceClient(baseURL: Self.base, transport: plain)

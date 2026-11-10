@@ -204,9 +204,9 @@ final class AccountSettingsTests: XCTestCase {
         button.tap()
 
         let progress = element(app, "accountProgressRow")
-        XCTAssertTrue(progress.waitForExistence(timeout: 2), "Signing in should show the progress row")
-        shoot(app, "account-signing-in")
-        // One query for the whole in-between state: the stand-in answers after 2 s, every further query costs time.
+        XCTAssertTrue(progress.waitForExistence(timeout: 5), "Signing in should show the progress row")
+        // One query for the whole in-between state, taken before the screenshot: the stand-in answers after 15 s,
+        // and on the CI runner some 10 s pass between the tap and the first query (2026-11-10).
         let snap = try app.snapshot()
         let shownButton = try XCTUnwrap(find(snap, "accountAppleButton"),
                                         "The sign-in button stays while Apple's answer is on its way")
@@ -215,11 +215,12 @@ final class AccountSettingsTests: XCTestCase {
         let progressText = [shownProgress.label, shownProgress.value as? String ?? ""].joined(separator: " ")
         XCTAssertTrue(progressText.contains("Signing in …"), progressText)
         XCTAssertLessThan(shownButton.frame.minY, shownProgress.frame.minY, "The progress row stands under the button")
+        shoot(app, "account-signing-in")
 
         // The second tap goes to where the button was, so it lands even if the sign-in has just ended.
         app.coordinate(withNormalizedOffset: .zero)
             .withOffset(CGVector(dx: shownButton.frame.midX, dy: shownButton.frame.midY)).tap()
-        XCTAssertTrue(element(app, "accountSignedInRow").waitForExistence(timeout: 10), "Signing in should end signed in")
+        XCTAssertTrue(element(app, "accountSignedInRow").waitForExistence(timeout: 30), "Signing in should end signed in")
         XCTAssertFalse(element(app, "accountAppleButton").exists, "The sign-in button goes once signed in")
         XCTAssertFalse(element(app, "accountHint").label == Self.retryLater, "The second tap started nothing")
         shoot(app, "account-signed-in-after-wait")

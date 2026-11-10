@@ -1,7 +1,7 @@
 ---
 spec_file: docs/specs/feat-615-schnitt-4c2b-knopf-adresse.md
-spec_sha256: 4182e3d2c0563afe979599b1b3668ae6cf1d15ec29d76dd976a0e34c6b143e2a
-spec_frozen_sha256: 8eadd8266b8e49d040d74d52a93a03775b051fcb02f6310d011a6f7db3cfb827
+spec_sha256: 6b07fcb7bf8acbfed4da37931035958db3cebb7ccd2eb3ee9167ce550a60c096
+spec_frozen_sha256: 7464ac4d67f5e320fd1406bc3c527b7b5bcfbd88ffd04af31612a950fbed79ee
 ---
 
 # PO-Briefing: feat-615-s4c2b-knopf-adresse
@@ -12,19 +12,19 @@ spec_frozen_sha256: 8eadd8266b8e49d040d74d52a93a03775b051fcb02f6310d011a6f7db3cf
 
 ## Was gebaut wird
 
-Beim Anmelden bleibt der Apple-Knopf grau sichtbar, und der Dienst wird nur noch über verschlüsselte Adresse angesprochen.
+Beim Anmelden bleibt der Apple-Knopf grau sichtbar, und die App akzeptiert als Dienst-Adresse nur verschlüsselte Adressen.
 
 ## Definition of Done
 
-Während der Anmeldung steht der Knopf grau und nicht antippbar mit Fortschrittszeile; unverschlüsselte fremde Adressen werden abgelehnt; alle bisherigen Tests bleiben grün.
+Im Simulator bleibt der Knopf während der Anmeldung grau mit Fortschrittszeile, fremde unverschlüsselte Adressen werden abgelehnt, alle Tests und Bauten sind grün.
 
 ## Wie geprüft wird
 
-Automatische Tests und ein Simulator-Lauf belegen Knopfzustand und Adressregel; ob Apples echtes Anmeldefenster damit zuverlässig antwortet, belegt erst die spätere Geräteprobe.
+Unit- und Simulator-Tests belegen Knopfzustand und Adressregel; ob Apples Anmeldefenster bei grauem Knopf zuverlässig antwortet, zeigt erst die spätere Geräteprobe.
 
 ## Kritische Anmerkungen
 
-- Apples echte Antwort bei deaktiviertem Knopf ist nur auf dem Gerät belegbar; Spec benennt das und verschiebt es auf Schnitt 4d.
+- Keine — Spec deckt die Anfrage ab, jede Anforderung hat einen Test.
 
 ## Freigabe-Frage
 
