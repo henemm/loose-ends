@@ -53,6 +53,15 @@ final class AccountSettingsTests: XCTestCase {
         return target
     }
 
+    /// The element with `id` in a snapshot tree, depth first.
+    private func find(_ snapshot: any XCUIElementSnapshot, _ id: String) -> (any XCUIElementSnapshot)? {
+        if snapshot.identifier == id { return snapshot }
+        for child in snapshot.children {
+            if let hit = find(child, id) { return hit }
+        }
+        return nil
+    }
+
     /// Label and value of a combined row, so a check does not depend on how the system splits them.
     private func spoken(_ element: XCUIElement) -> String {
         [element.label, element.value as? String ?? ""].joined(separator: " ")
@@ -189,18 +198,27 @@ final class AccountSettingsTests: XCTestCase {
     @MainActor
     func testSigningInKeepsDisabledAppleButton() throws {
         let app = try openSettings(["--ui-testing-account-slow"])
+        // Push the group up so the progress row is inserted inside the visible area.
+        reveal(app, "accountHint")
         let button = reveal(app, "accountAppleButton")
         button.tap()
 
         let progress = element(app, "accountProgressRow")
         XCTAssertTrue(progress.waitForExistence(timeout: 2), "Signing in should show the progress row")
-        XCTAssertTrue(spoken(progress).contains("Signing in …"), spoken(progress))
-        XCTAssertTrue(button.exists, "The sign-in button stays while Apple's answer is on its way")
-        XCTAssertFalse(button.isEnabled, "The sign-in button cannot be tapped while signing in")
-        XCTAssertLessThan(button.frame.minY, progress.frame.minY, "The progress row stands under the button")
         shoot(app, "account-signing-in")
+        // One query for the whole in-between state: the stand-in answers after 2 s, every further query costs time.
+        let snap = try app.snapshot()
+        let shownButton = try XCTUnwrap(find(snap, "accountAppleButton"),
+                                        "The sign-in button stays while Apple's answer is on its way")
+        let shownProgress = try XCTUnwrap(find(snap, "accountProgressRow"), "Signing in should show the progress row")
+        XCTAssertFalse(shownButton.isEnabled, "The sign-in button cannot be tapped while signing in")
+        let progressText = [shownProgress.label, shownProgress.value as? String ?? ""].joined(separator: " ")
+        XCTAssertTrue(progressText.contains("Signing in …"), progressText)
+        XCTAssertLessThan(shownButton.frame.minY, shownProgress.frame.minY, "The progress row stands under the button")
 
-        button.tap()
+        // The second tap goes to where the button was, so it lands even if the sign-in has just ended.
+        app.coordinate(withNormalizedOffset: .zero)
+            .withOffset(CGVector(dx: shownButton.frame.midX, dy: shownButton.frame.midY)).tap()
         XCTAssertTrue(element(app, "accountSignedInRow").waitForExistence(timeout: 10), "Signing in should end signed in")
         XCTAssertFalse(element(app, "accountAppleButton").exists, "The sign-in button goes once signed in")
         XCTAssertFalse(element(app, "accountHint").label == Self.retryLater, "The second tap started nothing")

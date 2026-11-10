@@ -1,0 +1,21 @@
+# Simulator-Beleg
+erzeugt: 2026-11-10T08:23:51+0100
+befehl: scripts/sim.sh test-proof AccountSettingsTests
+workflow: feat-615-s4c2b-knopf-adresse
+head: ea81403ad287bb13b456ee354eb02d5a5ea7a783
+basis: d7072d5509c049c6d7acb162b5ee0b6f64be21ec (merge-base origin/main HEAD)
+testklasse: AccountSettingsTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 8 gesamt, 8 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1794295202.07  ende: 1794295429.473
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-615-s4c2b-knopf-adresse/simulator-run/summary.json  sha256:3eded8602fc23a4ba0becb6d9c1b87917b30104fea5d53c3cdc8f6b38149189a
+xcresult: docs/artifacts/feat-615-s4c2b-knopf-adresse/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-615-s4c2b-knopf-adresse/simulator-run/*.png (7 Stück)
+
+## Geprüfte Dateien
+- sha256:088130d0ac87028600fe83ea9633ce6111dea2afee2bbd45cb5ec4de69ca13a0  LooseEnds/Claude/AccountWiring.swift
+- sha256:faf5f30a567b3a531d591fcec804151d8fb2a860925a7b31ea2779d3f765c3fd  LooseEnds/Views/AccountSection.swift
+- sha256:3a6217e03def209536af159cee191a27d85f1a3c921c579233463c83ede7d717  LooseEndsTests/AccountSectionTests.swift
+- sha256:c099bf3a0e7721a5357d335a1a09e436a081c191b5e8def1826c8490176bf3bf  LooseEndsUITests/AccountSettingsTests.swift
