@@ -184,6 +184,29 @@ final class AccountSettingsTests: XCTestCase {
         shoot(app, "account-not-allowed")
     }
 
+    /// #615 S4c-2b (F001): while signing in the Apple button stays, grey, with the progress row under it; a second tap
+    /// does nothing. The stand-in answers after 2 s (`--ui-testing-account-slow`).
+    @MainActor
+    func testSigningInKeepsDisabledAppleButton() throws {
+        let app = try openSettings(["--ui-testing-account-slow"])
+        let button = reveal(app, "accountAppleButton")
+        button.tap()
+
+        let progress = element(app, "accountProgressRow")
+        XCTAssertTrue(progress.waitForExistence(timeout: 2), "Signing in should show the progress row")
+        XCTAssertTrue(spoken(progress).contains("Signing in …"), spoken(progress))
+        XCTAssertTrue(button.exists, "The sign-in button stays while Apple's answer is on its way")
+        XCTAssertFalse(button.isEnabled, "The sign-in button cannot be tapped while signing in")
+        XCTAssertLessThan(button.frame.minY, progress.frame.minY, "The progress row stands under the button")
+        shoot(app, "account-signing-in")
+
+        button.tap()
+        XCTAssertTrue(element(app, "accountSignedInRow").waitForExistence(timeout: 10), "Signing in should end signed in")
+        XCTAssertFalse(element(app, "accountAppleButton").exists, "The sign-in button goes once signed in")
+        XCTAssertFalse(element(app, "accountHint").label == Self.retryLater, "The second tap started nothing")
+        shoot(app, "account-signed-in-after-wait")
+    }
+
     @MainActor
     func testRetryLaterShowsItsSentence() throws {
         let app = try openSettings(["--ui-testing-account-retry-later"])
