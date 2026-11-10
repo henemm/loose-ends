@@ -1,0 +1,19 @@
+test_account_without_us_is_allowed (test_datenschutz_text.CheckerTests.test_account_without_us_is_allowed) ... ok
+test_german_quotes_still_meet_anchor (test_datenschutz_text.CheckerTests.test_german_quotes_still_meet_anchor) ... ok
+test_missing_number_is_caught (test_datenschutz_text.CheckerTests.test_missing_number_is_caught) ... ok
+test_other_wording_with_typographic_quotes_is_caught (test_datenschutz_text.CheckerTests.test_other_wording_with_typographic_quotes_is_caught) ... ok
+test_stale_sentence_is_caught (test_datenschutz_text.CheckerTests.test_stale_sentence_is_caught) ... ok
+test_transcript_found_in_section (test_datenschutz_text.CheckerTests.test_transcript_found_in_section) ... ok
+test_typographic_quotes_meet_anchor (test_datenschutz_text.CheckerTests.test_typographic_quotes_meet_anchor) ... ok
+test_wrapped_stale_sentence_is_caught (test_datenschutz_text.CheckerTests.test_wrapped_stale_sentence_is_caught) ... ok
+test_account_section_exists_in_order (test_datenschutz_text.DraftTests.test_account_section_exists_in_order) ... ok
+test_core_statements_per_language (test_datenschutz_text.DraftTests.test_core_statements_per_language) ... ok
+test_no_stale_phrases (test_datenschutz_text.DraftTests.test_no_stale_phrases) ... ok
+test_no_transcript_in_account_section (test_datenschutz_text.DraftTests.test_no_transcript_in_account_section) ... ok
+test_released_sentences_per_language (test_datenschutz_text.DraftTests.test_released_sentences_per_language) ... ok
+test_live_pages (test_datenschutz_text.LiveTests.test_live_pages) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.204s
+
+OK

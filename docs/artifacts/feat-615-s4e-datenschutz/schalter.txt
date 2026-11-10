@@ -1,0 +1,20 @@
+# AC-13 Schalter unberührt, 2026-11-10T20:13:27Z
+$ git diff --name-only 62c0dbe (Basis des Workflows) + Arbeitsstand
+CLAUDE.md
+docs/artifacts/feat-615-s4e-datenschutz/red.txt
+docs/briefings/feat-615-s4e-datenschutz.md
+docs/context/feat-615-s4e-datenschutz.md
+docs/reference/datenschutz-entwurf.md
+docs/specs/feat-615-schnitt-4e-datenschutz.md
+scripts/test_datenschutz_text.py
+
+Verbotene Pfade im Diff: keine
+
+$ grep -n LEAccountEnabled project.yml
+  72:         # LEAccountEnabled is off; the App ID has had the capability since #621 S6b.
+  84:         LEAccountEnabled: false
+
+$ gh pr view 79 -R henemm/henemm-website --json files
+content/legal/loose-ends/privacy-policy-en/_index.md
+content/legal/loose-ends/privacy-policy/_index.md
+Verbotene Pfade im Website-PR: keine

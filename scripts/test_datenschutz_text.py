@@ -54,10 +54,15 @@ ANCHORS = {
 TRANSCRIPT = {"de": "Abschrift", "en": "transcript"}
 
 
+# Hugo setzt gerade Anführungszeichen typografisch; der Wortlaut zählt, nicht die Form der Anführungszeichen.
+QUOTES = str.maketrans({"„": '"', "“": '"', "”": '"', "‚": "'", "‘": "'", "’": "'"})
+
+
 def normalize(text: str) -> str:
-    """Zeilenumbrüche und Blockzitat-Zeichen zu einfachen Leerzeichen, damit umbrochene Sätze vergleichbar bleiben."""
+    """Zeilenumbrüche und Blockzitat-Zeichen zu einfachen Leerzeichen, damit umbrochene Sätze vergleichbar bleiben;
+    typografische Anführungszeichen zu geraden, damit Entwurf und gerenderte Seite gleich verglichen werden."""
     text = re.sub(r"^\s*>\s?", "", text, flags=re.MULTILINE)
-    return re.sub(r"\s+", " ", text)
+    return re.sub(r"\s+", " ", text).translate(QUOTES)
 
 
 def split_draft(text: str):
@@ -83,12 +88,12 @@ def missing_core(text: str, lang: str):
 
 def missing_anchors(text: str, lang: str):
     flat = normalize(text)
-    return [a for a in ANCHORS[lang] if a not in flat]
+    return [a for a in ANCHORS[lang] if normalize(a) not in flat]
 
 
 def stale_phrases(text: str):
     flat = normalize(text)
-    return [s for s in STALE if s in flat]
+    return [s for s in STALE if normalize(s) in flat]
 
 
 def draft_text() -> str:
@@ -156,6 +161,20 @@ class CheckerTests(unittest.TestCase):
 
     def test_missing_number_is_caught(self):
         self.assertIn(r"14 Tage", missing_core("Die Protokolle werden nach 15 Tagen gelöscht.", "de"))
+
+    def test_typographic_quotes_meet_anchor(self):
+        anchor = "an account with our service with \"Delete account\" in the app's settings."
+        text = "You delete an account with our service with “Delete account” in the app’s settings."
+        self.assertNotIn(anchor, missing_anchors(text, "en"))
+
+    def test_german_quotes_still_meet_anchor(self):
+        anchor = "ein Konto bei unserem Dienst mit „Konto löschen“ in den Einstellungen der App."
+        self.assertNotIn(anchor, missing_anchors(f"Du löschst {anchor}", "de"))
+
+    def test_other_wording_with_typographic_quotes_is_caught(self):
+        anchor = "an account with our service with \"Delete account\" in the app's settings."
+        text = "You delete an account with our service with “Remove account” in the app’s settings."
+        self.assertIn(anchor, missing_anchors(text, "en"))
 
     def test_transcript_found_in_section(self):
         text = "## Wenn du die Verbindung zu Claude nutzt\nDie Abschrift geht hoch.\n## Welche Rechte und warum\n"
