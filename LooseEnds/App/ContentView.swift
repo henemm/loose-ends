@@ -2,7 +2,6 @@ import Combine
 import OSLog
 import SwiftData
 import SwiftUI
-import WidgetKit
 
 /// Start screen on the left, one list on the right. One code path for iPhone, iPad and Mac (ADR-1).
 struct ContentView: View {
@@ -166,8 +165,6 @@ struct ContentView: View {
         .onReceive(NotificationCenter.default.publisher(for: ModelContext.didSave)) { _ in
             notifications?.rescheduleSoon()
             calendar?.syncSoon()
-            // The "Next up" widget follows what the app changed, not only every 15 minutes (#307).
-            WidgetCenter.shared.reloadTimelines(ofKind: "NextUp")
         }
     }
 
