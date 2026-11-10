@@ -1,5 +1,8 @@
-# Handlauf (#893 Schnitt A): Vorprüfung vor dem Einreichen der App-Store-Versionen beider Plattformen (IOS, MAC_OS).
-# Schnitt A liest nur (GET), schreibt nichts und reicht nichts ein; Ausgang 0 nur, wenn beide Plattformen bereit sind.
+# Handlauf (#893): Vorprüfung und Einreichen der App-Store-Versionen beider Plattformen (IOS, MAC_OS).
+# pruefen liest nur (GET), schreibt nichts und reicht nichts ein; Ausgang 0 nur, wenn beide Plattformen bereit sind.
+# einreichen reicht nach Hennings Freigabe vom 2026-11-09 je Plattform zur Prüfung bei Apple ein (iOS zuerst, jeder
+# Schreibaufruf genau einmal, Gegenprobe im selben Lauf, nie löschen oder stornieren) und braucht die Versionsnummer
+# der Zielversion als Bestätigung (Eingabe bestaetigung, z. B. 1.0.1); ohne sie bricht der Lauf vor dem Schlüssel ab.
 # Der Auslöser pull_request führt nur die Tests aus und registriert die Datei für den Handlauf vom Zweig (--ref).
 name: ASC Store Submit
 
@@ -7,11 +10,16 @@ on:
   workflow_dispatch:
     inputs:
       aktion:
-        description: "pruefen = nur lesen: Version, Bau, Texte, Bilder, Review-Detail und Einreichungen je Plattform"
+        description: "pruefen = nur lesen; einreichen = je Plattform zur Prüfung bei Apple einreichen (nicht rücknehmbar per Werkzeug)"
         type: choice
         options:
           - pruefen
+          - einreichen
         default: pruefen
+      bestaetigung:
+        description: "Versionsnummer der Zielversion, z. B. 1.0.1; nur für einreichen"
+        type: string
+        required: false
   pull_request:
     paths:
       - scripts/asc_store_submit.py
@@ -43,8 +51,17 @@ jobs:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_POLL_SECONDS: "5"
           AKTION: ${{ inputs.aktion }}
+          BESTAETIGUNG: ${{ inputs.bestaetigung }}
         run: |
+          if [ "$AKTION" = einreichen ] && [ -z "$BESTAETIGUNG" ]; then
+            echo "::error::einreichen braucht die Versionsnummer der Zielversion als bestaetigung (z. B. 1.0.1)"
+            exit 1
+          fi
           trap 'rm -f "$RUNNER_TEMP/asc_key.p8"' EXIT
           umask 077
           printf '%s\n' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"
-          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_store_submit.py "$AKTION"
+          if [ "$AKTION" = einreichen ]; then
+            ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_store_submit.py einreichen "$BESTAETIGUNG"
+          else
+            ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_store_submit.py "$AKTION"
+          fi
