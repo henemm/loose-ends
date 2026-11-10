@@ -15,9 +15,9 @@ Version: 3.2.1
 [[36mLooseEnds[0m] [1mProcessing[0m Info.plist
 [[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
 [[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
-Test Suite 'Selected tests' started at 2026-11-10 08:25:47.707.
-Test Suite 'LooseEndsTests.xctest' started at 2026-11-10 08:25:47.709.
-Test Suite 'LooseEndsTests.xctest' passed at 2026-11-10 08:25:47.709.
+Test Suite 'Selected tests' started at 2026-11-10 13:32:20.591.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-10 13:32:20.593.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-10 13:32:20.593.
 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
 [1mTest run started.[0m
@@ -26,12 +26,12 @@ Suite "AccountSection (#615)" started
     [32m✔[0m "account: laufende anfrage hat keinen bedienbaren knopf" (0.001 seconds)
     [32m✔[0m "account: dienstadresse nur https" (0.001 seconds)
     [32m✔[0m "account: dienstadresse standard folgt debug" (0.001 seconds)
-    [32m✔[0m "account: ersatz-transport langsam nur auf wunsch" ([31m2.091[0m seconds)
-    [32m✔[0m "account: wiring schalter und adresse" (0.004 seconds)
+    [32m✔[0m "account: ersatz-transport langsam nur auf wunsch" ([31m0.330[0m seconds)
+    [32m✔[0m "account: wiring schalter und adresse" (0.001 seconds)
     [32m✔[0m "account: init sendet nichts" (0.001 seconds)
-    [32m✔[0m "account: ersatz-transport ausgaenge" (0.014 seconds)
-Suite "AccountSection (#615)" passed after 2.115 seconds
-[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-cached-churning-yao/Logs/Test/Test-LooseEnds-2026.11.10_08-25-34-+0100.xcresult
+    [32m✔[0m "account: ersatz-transport ausgaenge" (0.003 seconds)
+Suite "AccountSection (#615)" passed after 0.340 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-cached-churning-yao/Logs/Test/Test-LooseEnds-2026.11.10_13-32-05-+0100.xcresult
 [32;1mTest Succeeded[0m
 [36;1mTesting started[0m
 [0;32m[sim][0m Unit-Tests bestanden.

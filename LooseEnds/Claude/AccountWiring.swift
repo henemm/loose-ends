@@ -69,7 +69,7 @@ struct UITestTransport: HTTPTransport {
     }
 
     let outcome: Outcome
-    /// How long the stand-in waits before it answers; 2 s under `--ui-testing-account-slow`, else none (#615 S4c-2b).
+    /// How long the stand-in waits before it answers; 15 s under `--ui-testing-account-slow`, else none (#615 S4c-2b).
     let delay: Duration
 
     init(outcome: Outcome, delay: Duration = .zero) {
@@ -79,7 +79,7 @@ struct UITestTransport: HTTPTransport {
 
     init(arguments: [String]) {
         self.init(outcome: Outcome(arguments: arguments),
-                  delay: arguments.contains("--ui-testing-account-slow") ? .seconds(2) : .zero)
+                  delay: arguments.contains("--ui-testing-account-slow") ? .seconds(15) : .zero)
     }
 
     func send(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
