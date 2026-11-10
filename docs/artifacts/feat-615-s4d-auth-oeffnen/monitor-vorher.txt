@@ -1,0 +1,169 @@
+Stand: 2026-11-10T15:32:51Z
+## uptime
+ 15:32:51 up 24 days, 21:18,  3 users,  load average: 13.61, 16.20, 13.18
+## docker ps
+loose-ends-db	Up 6 days (healthy)	2026-11-03 16:57:47 +0000 UTC
+loose-ends-server	Up 2 days	2026-11-08 13:29:52 +0000 UTC
+n8n	Up 9 days	2026-11-01 09:12:36 +0000 UTC
+nightjet-monitor	Up 3 weeks	2026-10-03 09:01:21 +0000 UTC
+obsidian-mcp-obsidian-mcp-1	Up 32 hours (healthy)	2026-11-09 07:45:41 +0000 UTC
+obsidian-mcp-obsidian-sync-1	Up 3 weeks	2026-10-19 16:09:14 +0000 UTC
+ops-api-1	Up 31 hours (healthy)	2026-11-09 08:42:07 +0000 UTC
+stalwart-mail	Up 13 hours (healthy)	2026-11-09 11:01:08 +0000 UTC
+## monitor.sh --status
+
+[1mHTTP-Endpoints[0m
+  [32m✓[0m Website (200)
+  [32m✓[0m n8n (200)
+  [32m✓[0m Mailserver-Web (200)
+  [32m✓[0m Gregor20 (200)
+  [32m✓[0m Kotoba (200)
+  [32m✓[0m Loose-Ends (200)
+
+[1mSystemd-Services[0m
+  [32m✓[0m claude-mq
+  [32m✓[0m gregor-api
+  [32m✓[0m gregor-frontend
+  [32m✓[0m gregor-python
+  [32m✓[0m gregor-api-staging
+  [32m✓[0m gregor-frontend-staging
+  [32m✓[0m gregor-python-staging
+  [32m✓[0m claude-control-bot
+
+[1mInfra-Deploy[0m
+  [32m✓[0m auto-deploy-infra (Haupt-Checkout ist aktuell (0adca37e))
+
+[1mDocker-Container[0m
+  [32m✓[0m stalwart-mail (seit 2026-11-10)
+  [32m✓[0m n8n (n8n)
+
+[1mDocker-Image-Updates[0m
+  [33m![0m n8n: Update verfügbar (2.45.7 → 2.47.3)
+  [32m✓[0m loose-ends-db: aktuell (18.6)
+
+[1mSystem-Updates (apt)[0m
+  [33m![0m Reboot erforderlich!
+/home/hem/henemm-infra/scripts/monitor.sh: line 815: /var/lib/server-monitor/apt-security-pending-since: Permission denied
+cat: /var/lib/server-monitor/apt-security-pending-since: Permission denied
+/home/hem/henemm-infra/scripts/monitor.sh: line 817: (now_ts - ) / 86400 : syntax error: operand expected (error token is ") / 86400 ")
+
+[1mSystemressourcen[0m
+  [31m✗[0m CPU: 343% (Load: 13.72/16.18, 4 Cores)
+  [32m✓[0m RAM: 70% (5453MB / 7745MB)
+  [32m✓[0m Disk: 69% (46G frei)
+
+[1mSSL-Zertifikate[0m
+  [32m✓[0m henemm.com: 47 Tage
+  [32m✓[0m n8n.henemm.com: 47 Tage
+  [32m✓[0m mail.henemm.com: 48 Tage
+  [32m✓[0m mail.henemm.com:993: 49 Tage
+  [32m✓[0m gregor20.henemm.com: 48 Tage
+  [32m✓[0m staging.gregor20.henemm.com: 74 Tage
+  [32m✓[0m mta-sts.henemm.com: 68 Tage
+
+[1mn8n-Workflows[0m
+  [32m✓[0m Gmail: Auto-Reply auf Typeform-Anfragen (letzter: 2026-11-10 15:30)
+  [33m![0m Google Kalender Sync (henemm.gmbh → goodgrow) (1/10 fehlgeschlagen, letzter: 2026-11-10 15:20)
+  [32m✓[0m Wöchentliche Pre-Screening Erinnerung → Slack (letzter: 2026-11-09 07:00)
+  [32m✓[0m ⚠️ Workflow-Fehler → Telegram Alert (letzter: 2026-11-10 14:50)
+  [33m![0m New Oppts via TypeForm → Notion + Slack (keine Executions)
+  [32m✓[0m Google Sheet: Auto-Zeilenergänzung (projects) (letzter: 2026-11-10 15:32)
+  [32m✓[0m Notion → Slack: Neue Investments (letzter: 2026-11-10 15:30)
+
+[1mBetterStack-Incidents[0m
+  [32m✓[0m keine offenen Incidents
+
+[1mTelegram-Bot[0m
+  [32m✓[0m Bot erreichbar
+
+[1mWireGuard VPN[0m
+  [33m![0m wg0: Keine Konfiguration gefunden
+
+[1mDNS[0m
+  [32m✓[0m MX: 10 mail.henemm.com.
+
+[1mResend-Versand[0m
+  [32m✓[0m Heute: 11 Mails
+  [32m✓[0m Monat: 157/3000 (5%)
+
+[1mTmp-Secrets (henemm-security#199)[0m
+  [32m✓[0m gehaertet: 0, entfernt (>1 Tag): 0
+
+[1mkotoba_line: Ton-Generator (kotoba_line#183)[0m
+  [32m✓[0m letzter Erfolg vor 12 h
+
+[1mkotoba_line: Tagesbericht (kotoba_line#318)[0m
+  [32m✓[0m letzter Bericht vor 0 h
+
+[1mAußensicht-Scan (henemm-infra#281)[0m
+  [32m✓[0m letzter sauberer Lauf vor 2 Tagen
+
+[1mPlatten-Aufraeumen (henemm-infra#400)[0m
+  [32m✓[0m letzter sauberer Lauf vor 10 h
+
+[1mIntegritätswächter (henemm-infra#282)[0m
+  [33m![0m noch keine Baseline (wird beim nächsten Lauf angelegt)
+
+[1mkotoba_line: Benachrichtigungen (kotoba_line#248)[0m
+  [32m✓[0m letzter fehlerfreier Lauf vor 0 min
+
+[1mkotoba_line: Auto-Deploy[0m
+  [32m✓[0m letzter sauberer Lauf vor 2 min
+
+[1moebb-nightjet-monitor: Erfolgsstempel[0m
+  [32m✓[0m letzter Erfolg vor 17 min
+
+[1mFrieda: automatisches Veröffentlichen (henemm-infra#313)[0m
+  [32m✓[0m letzter Erfolg vor 15 min
+
+[1mFrieda: Software-Stand nachgezogen (frieda-reist#161)[0m
+  [32m✓[0m auf Stand d43415f
+
+[1mFrieda: Software-Aktualisierung ohne GitHub (frieda-reist#350)[0m
+  [32m✓[0m Software-Aktualisierung läuft
+
+[1mFrieda: Reisespeicher (frieda-reist#348)[0m
+  [32m✓[0m Sicherung 8 h alt
+  [32m✓[0m gr221: gebaut mit Stand d43415f
+  [32m✓[0m japan-2027: gebaut mit Stand d43415f
+  [32m✓[0m oldenburg-daenemark-november-2026: gebaut mit Stand d43415f
+  [32m✓[0m skiurlaub-zillertal-2027: gebaut mit Stand d43415f
+  [32m✓[0m testreise-ablage-349-erfunden-2027: gebaut mit Stand d43415f
+  [32m✓[0m testreise-abnahme-223-erfunden-2027: gebaut mit Stand d43415f
+
+[1mFrieda: Schreibweg der Claude-App[0m
+  [32m✓[0m gesund
+
+[1mFrieda: Wächter und Erinnerer[0m
+  [32m✓[0m letzter Erfolg vor 8 h
+
+[1mFrieda: Reiseseiten und Rückmeldedienst[0m
+  [31m✗[0m Reiseseite gr221 (kein Pfad im Snippet)
+  [31m✗[0m Rückmeldedienst gr221 (kein Pfad im Snippet)
+  [31m✗[0m Reiseseite japan-2027 (kein Pfad im Snippet)
+  [31m✗[0m Rückmeldedienst japan-2027 (kein Pfad im Snippet)
+  [31m✗[0m Reiseseite oldenburg-daenemark-november-2026 (kein Pfad im Snippet)
+  [31m✗[0m Rückmeldedienst oldenburg-daenemark-november-2026 (kein Pfad im Snippet)
+  [31m✗[0m Reiseseite skiurlaub-zillertal-2027 (kein Pfad im Snippet)
+  [31m✗[0m Rückmeldedienst skiurlaub-zillertal-2027 (kein Pfad im Snippet)
+  [31m✗[0m Reiseseite test-135 (kein Pfad im Snippet)
+  [31m✗[0m Rückmeldedienst test-135 (kein Pfad im Snippet)
+  [31m✗[0m Reiseseite test-14 (kein Pfad im Snippet)
+  [31m✗[0m Rückmeldedienst test-14 (kein Pfad im Snippet)
+  [31m✗[0m Reiseseite testreise-ablage-349-erfunden-2027 (kein Pfad im Snippet)
+  [31m✗[0m Rückmeldedienst testreise-ablage-349-erfunden-2027 (kein Pfad im Snippet)
+  [31m✗[0m Reiseseite testreise-abnahme-223-erfunden-2027 (kein Pfad im Snippet)
+  [31m✗[0m Rückmeldedienst testreise-abnahme-223-erfunden-2027 (kein Pfad im Snippet)
+  [31m✗[0m Reiseseite testreise-karten-225-erfunden-2027 (kein Pfad im Snippet)
+  [31m✗[0m Rückmeldedienst testreise-karten-225-erfunden-2027 (kein Pfad im Snippet)
+
+[1mFrieda: Karten des eigenen Kartendienstes[0m
+  [32m✓[0m Karten 0 Tage alt
+
+[1mFrieda: Konnektor-Pfade in nginx[0m
+  [32m✓[0m alle Pfade erreichen den Konnektor
+
+[1mHetzner-Kapazität (henemm-infra#336)[0m
+  [33m![0m cx43 in nbg1 derzeit nicht bestellbar
+  [32m✓[0m Swap: 1969/2047 MB belegt, RAM verfuegbar: 2732 MB
+

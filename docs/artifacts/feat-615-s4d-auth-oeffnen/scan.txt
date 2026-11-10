@@ -1,0 +1,17 @@
+# Exposure-Prüfung ohne Abweichung (AC-9) — 2026-11-10
+
+Einzelaufruf desselben Wegs, den der Wochenlauf nimmt (Messung auf dem Heimserver, Auswertung auf rennwienix gegen
+security/expected-exposure.json aus henemm-infra main 12e857e, PR #420), nach dem nginx-Reload (15:43:01Z):
+
+$ bash /home/hem/henemm-infra/scripts/check-external-exposure.sh
+2026-11-10T15:43:42Z
+Messung auf dem Heimserver gestartet
+OK: Außensicht entspricht der Soll-Liste
+Exit: 0
+Erfolgsstempel: /home/hem/backups/external-exposure.success  2026-11-10T16:00:16
+
+Die Soll-Liste enthält für loose-ends.henemm.com: tls_hosts-Eintrag und die URLs
+/health 200, /mcp 401, /.well-known/oauth-authorization-server 200, /auth/apple 405, /auth/logout 405,
+/auth/delete 405, /auth/x 404, / 404.
+Das Skript meldet bei Erfolg nur die Gesamtzeile; jede Abweichung (eine dieser URLs oder TLS des Hosts) hätte es als
+Fehlerzeile mit Exit ≠ 0 gemeldet. Also: keine Abweichung für loose-ends.henemm.com.

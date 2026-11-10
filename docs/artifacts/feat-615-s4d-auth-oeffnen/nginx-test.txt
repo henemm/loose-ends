@@ -1,0 +1,16 @@
+# nginx nur nach Test geladen, mit Rückweg (AC-6) — 2026-11-10, rennwienix
+
+Ablauf in einem Aufruf: alte Datei sichern, neue kopieren, `nginx -t`, `systemctl reload nginx` nur im Erfolgszweig,
+sonst Rückkopie der Sicherung und kein reload.
+
+Sicherung: /home/hem/backups/nginx-loose-ends.henemm.com.20261110T154301Z.conf (Inhalt: nginx-alt.conf in diesem Ordner)
+nginx -t: 2026-11-10T15:43:01Z
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+reload: 2026-11-10T15:43:01Z
+reload Exit: 0
+
+Reihenfolge: Ausgabe von `nginx -t` vollständig vor der Zeile `reload:` (gleiche Sekunde; reload lief nur, weil der Test Exit 0 hatte).
+Die neue Datei ist byte-gleich mit henemm-infra main 12e857e (PR #420), `nginx/loose-ends.henemm.com.conf`.
+Rückweg: Sicherung nach /etc/nginx/sites-available/loose-ends.henemm.com kopieren, `nginx -t`, `systemctl reload nginx`.
+Erste Prüfung von außen grün: 15:43:08Z (green.txt).

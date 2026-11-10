@@ -1,0 +1,16 @@
+# Infra-PR B #615 S4d (AC-7) — 2026-11-10
+
+PR: https://github.com/henemm/henemm-infra/pull/420 (Zweig feat-615-s4d-auth-nginx, Commit f800df7), gemergt (squash) → main 12e857e30d7b6195204d785b04bc3d374e8a0e2a
+
+$ gh api repos/henemm/henemm-infra/compare/main...feat-615-s4d-auth-nginx (vor dem Merge)
+nginx/loose-ends.henemm.com.conf +38 -2
+security/expected-exposure.json +4 -1
+
+Genau diese zwei Dateien.
+expected-exposure.json: /auth/apple [405] (vorher [404]), neu /auth/logout [405], /auth/delete [405], /auth/x [404]; kein Eintrag /auth/apple mit 404 mehr.
+
+CI: henemm-infra hat keine GitHub-Actions-Prüfung („no checks reported“, wie PR #419).
+`python3 -m pytest tests -q` auf rennwienix im Wegwerfklon des PR-Zweigs (f800df7, 2026-11-10T15:41:22Z): `502 passed, 6 skipped in 57.58s`, Exit 0.
+Kein Test im Infra-Repo hing am alten Wert (`grep auth/apple tests scripts`: keine Treffer).
+
+Server: /home/hem/henemm-infra `git pull --ff-only` e0443b8 → 12e857e.

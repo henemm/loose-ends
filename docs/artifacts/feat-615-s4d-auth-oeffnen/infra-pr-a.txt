@@ -1,0 +1,25 @@
+# Infra-PR A #615 S4d (AC-3) — 2026-11-10
+
+PR: https://github.com/henemm/henemm-infra/pull/419 (Zweig feat-615-s4d-le-commit, Commit 545c3ea), gemergt (squash) → main e0443b878756d92191b1addda08f9ec60f0c9dda
+
+$ gh api repos/henemm/henemm-infra/compare/main...feat-615-s4d-le-commit (vor dem Merge)
+scripts/deploy-loose-ends.sh +1 -1
+@@ -9,7 +9,7 @@
+ # Zurückrollen = Aufruf mit dem vorherigen SHA. Startet oder stoppt nichts außerhalb des Stapels.
+ set -euo pipefail
+
+-LE_COMMIT="ae957ba4ca7c3ab9a6d6b28837bc1ed745437dda"
++LE_COMMIT="c62fbae4550368d97cf3132fcd9667fa5e8c75d8"
+ LE_PORT=8780
+ LE_TAG="${LE_COMMIT:0:7}"
+
+Genau eine Datei, nur die LE_COMMIT-Zeile. LE_COMMIT = origin/main von henemm/loose-ends zum Deploy-Zeitpunkt.
+
+$ git merge-base --is-ancestor fb6689a c62fbae4550368d97cf3132fcd9667fa5e8c75d8
+Exit: 0   (4a: 6e48532 und fb6689a sind Vorfahren)
+
+CI: henemm-infra hat keine GitHub-Actions-Prüfung (`gh pr checks 419`: „no checks reported on the 'feat-615-s4d-le-commit' branch“).
+Prüfung des Repos laut seiner CLAUDE.md: `python3 -m pytest tests -q`, gelaufen auf rennwienix in einem Wegwerfklon des PR-Zweigs
+(545c3ea, 2026-11-10T15:36:12Z): `502 passed, 6 skipped in 54.52s`, Exit 0.
+
+Server: /home/hem/henemm-infra `git pull --ff-only` 0adca37 → e0443b8 (nur unversionierte .claude-Dateien im Checkout, unberührt).

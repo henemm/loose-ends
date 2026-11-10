@@ -1,0 +1,57 @@
+# AC-5 (#615 S4d): Auszug aus `sudo nginx -T` auf rennwienix, 2026-11-10 16:43Z, Datei sites-enabled/loose-ends.henemm.com.
+# Neu erzeugt nach dem Einspielen (AC-6): der erste Auszug hieß nginx-T.txt und wurde auf dem Mac-Dateisystem
+# (ohne Groß-/Kleinunterscheidung) vom Beleg nginx-t.txt überschrieben. Daher heißen die beiden jetzt nginx-dump.txt
+# (AC-5, dieser) und nginx-test.txt (AC-6, `nginx -t` und reload). Zeilen 1–12 und 88–128 der Ausgabe.
+
+# configuration file /etc/nginx/sites-enabled/loose-ends.henemm.com:
+# Loose Ends: Dienst für Claude (henemm/loose-ends#796, henemm-infra#336). Container loose-ends-server auf 127.0.0.1:8780.
+# Nach außen gehen /health, /mcp, die drei /.well-known/…-Pfade (Resource- und Server-Metadaten) und /oauth/
+# (Aussteller für claude.ai, loose-ends#621 S6b) sowie die App-Anmeldung /auth/apple, /auth/logout und /auth/delete
+# (loose-ends#615 S4d). Der Rest unter /auth/ und alles andere bleiben 404.
+# Installiert als /etc/nginx/sites-available/loose-ends.henemm.com (Link in sites-enabled); 443-Blöcke von certbot.
+
+# Eigene Zonen hier statt in conf.d/limit-req.conf (Schnitt auf wenige Dateien begrenzt); monitor.sh fragt alle 5 min.
+limit_req_zone $binary_remote_addr zone=loose_ends_health:1m rate=30r/m;
+limit_req_zone $binary_remote_addr zone=loose_ends_oauth:1m rate=10r/s;
+limit_req_zone $binary_remote_addr zone=loose_ends_mcp:1m rate=10r/s;
+limit_req_zone $binary_remote_addr zone=loose_ends_auth:1m rate=5r/s;
+    [...]
+
+    # App-Anmeldung (loose-ends#615 S4d): genau drei Pfade; der Dienst begrenzt den Körper ebenfalls auf 16 KiB (413).
+    location = /auth/apple {
+        limit_req zone=loose_ends_auth burst=10 nodelay;
+        limit_req_status 429;
+        client_max_body_size 16k;
+        proxy_pass http://127.0.0.1:8780;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location = /auth/logout {
+        limit_req zone=loose_ends_auth burst=10 nodelay;
+        limit_req_status 429;
+        client_max_body_size 16k;
+        proxy_pass http://127.0.0.1:8780;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location = /auth/delete {
+        limit_req zone=loose_ends_auth burst=10 nodelay;
+        limit_req_status 429;
+        client_max_body_size 16k;
+        proxy_pass http://127.0.0.1:8780;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Alles andere unter /auth/ bleibt zu
+    location ^~ /auth/ {
+        return 404;
+    }

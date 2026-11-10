@@ -1,0 +1,6 @@
+Stand: 2026-11-10T15:33:51Z
+Datei: secrets/server.env (Rechte 600)
+APPLE_CLIENT_IDS enthält com.henning.looseends: ja
+ALLOWED_APPLE_SUBS: gesetzt, genau ein Eintrag: ja
+Leckprüfung: 9 Werte (≥ 12 Zeichen) mit ihren ersten 12 Zeichen und '-----BEGIN' gegen diese Datei gesucht: 0 Treffer bei Geheimnissen
+Öffentliche Kennungen (keine Geheimnisse, stehen auch in Repo/CLAUDE.md), deren Anfang vorkommt: APPLE_CLIENT_IDS APPLE_WEB_CLIENT_ID
