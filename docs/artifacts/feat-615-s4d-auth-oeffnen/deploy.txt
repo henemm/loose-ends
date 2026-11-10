@@ -1,0 +1,30 @@
+# Deploy #615 S4d (AC-3) — rennwienix, vor jeder nginx-Änderung
+
+Stand: 2026-11-10T15:38:08Z
+## bash /home/hem/henemm-infra/scripts/deploy-loose-ends.sh   (Docker-Build-Schritte ausgelassen)
+               total        used        free      shared  buff/cache   available
+Mem:            7745        3944        1741          18        2388        3801
+Swap:           2047        1790         257
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       150G   96G   49G  67% /
+[deploy-loose-ends] Quelle auf c62fbae4550368d97cf3132fcd9667fa5e8c75d8
+[deploy-loose-ends] baue loose-ends-server:c62fbae
+ Container loose-ends-db Running
+ Container loose-ends-server Recreate
+ Container loose-ends-server Recreated
+ Container loose-ends-db Waiting
+ Container loose-ends-db Healthy
+ Container loose-ends-server Starting
+ Container loose-ends-server Started
+[deploy-loose-ends] /health 200: {"status":"ok","db":"up","migrated":true,"errorRate":0,"requests":0}
+[deploy-loose-ends] altes Image entfernt: loose-ends-server:e62f0d5
+[deploy-loose-ends] fertig: loose-ends-server:c62fbae
+Exit: 0
+
+Freier Speicher vor dem Deploy laut Skript (Spalte available): 3801 MB ≥ 600 MB.
+Nur der Container loose-ends-server wurde neu erstellt; loose-ends-db lief durch („Running“).
+
+## danach 2026-11-10T15:38:41Z
+/health lokal: 200
+loose-ends-server	loose-ends-server:c62fbae	Up 26 seconds
+/health von außen: 200

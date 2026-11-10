@@ -1,0 +1,10 @@
+AC-12 Wertmuster-Scan über den Belegordner (#615 S4d)
+Lokal, 2026-11-10 16:40Z:
+  '-----BEGIN': 1 Datei (variablen.txt Zeile 5, nur der Beschreibungssatz der Leckprüfung, kein Schlüssel)
+  '"d":': 0 Dateien
+Auf rennwienix gegen secrets/server.env (Ordner als tar, ohne den maschinellen Simulator-Beleg simulator-run/ und
+simulator-run.txt, die nur der Testlauf schreibt; tar danach gelöscht), Skript nur mit Zählungen, nie Werten:
+  Stand: 2026-11-10T16:41:21Z
+  Wertpräfixe: 9 Werte (≥ 12 Zeichen) mit ihren ersten 12 Zeichen gesucht: 0 Treffer bei Geheimnissen
+  Öffentliche Kennungen, deren Anfang vorkommt: APPLE_CLIENT_IDS APPLE_WEB_CLIENT_ID PUBLIC_URL
+  (Bundle-ID, Services-ID und Adresse stehen auch in CLAUDE.md; keine Geheimnisse)

@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-11-10T17:38:47+0100
+befehl: scripts/sim.sh test-proof AccountSettingsTests
+workflow: feat-615-s4d-auth-oeffnen
+head: 3a385c23f210554e923fbdcebbeaeb22fc0b0416
+basis: c62fbae4550368d97cf3132fcd9667fa5e8c75d8 (merge-base origin/main HEAD)
+testklasse: AccountSettingsTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 8 gesamt, 8 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1794328435.913  ende: 1794328725.102
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-615-s4d-auth-oeffnen/simulator-run/summary.json  sha256:19efd683c2e0830ae6c734a47f8a4172516b17e8b6a1b959c78378f8e7defeb6
+xcresult: docs/artifacts/feat-615-s4d-auth-oeffnen/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-615-s4d-auth-oeffnen/simulator-run/*.png (7 Stück)
+
+## Geprüfte Dateien
+(keine Code-Dateien geändert)

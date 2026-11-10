@@ -1,0 +1,6 @@
+AC-11 live (#615 S4d): https://loose-ends.henemm.com/auth/delete wurde nie mit einer gültigen Sitzung aufgerufen.
+Im Netz gilt nur die Abweisung aus green.txt (check-auth.sh von außen, Exit 0):
+OK    405 GET /auth/delete (soll 405)
+OK    401 POST /auth/delete ohne Bearer (soll 401)
+OK    401 POST /auth/delete mit falschem Bearer (soll 401)
+Das echte Löschen ist lokal belegt: loeschen-lokal.md.
