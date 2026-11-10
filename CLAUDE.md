@@ -462,6 +462,7 @@ not scope creep on the current one.
   question, delete only after the `.destructive` confirmation; nothing is sent before a tap
 - `LooseEnds/App/LaunchTimings.swift` — cold-start measuring points (#22): signposts always, `Documents/launch-timings.json`
   only in the probe build (`.probe`); launch argument `-measureLaunch` opens the capture scene
+- `LooseEnds/App/WidgetReload.swift` (#883) — the one place that reloads the widget timelines, on app level: every `ModelContext.didSave` and every finished CloudKit import, merged to one reload per second, no window needed (Mac in the menu bar); `ContentView` no longer reloads itself
 - `LooseEnds/Speech` — `SpeechCapture` (live recognition for the capture scene, skipped under `--ui-testing`; the transcriber
   is built only in `makeTranscriber` with `.volatileResults` and `.fastResults` — without the latter the first word takes
   ~12 s instead of ~1 s, #274), `Waveform` (level in dBFS, scale −55…−25 → 0…1, mic ring grows up to 35 % from 52 pt, #279),

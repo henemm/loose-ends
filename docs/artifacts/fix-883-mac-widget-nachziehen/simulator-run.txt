@@ -1,0 +1,21 @@
+# Simulator-Beleg
+erzeugt: 2026-11-10T21:05:08+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: fix-883-mac-widget-nachziehen
+head: 4ef5c9dd696b8134fcdbf7d14b592dfb3d2fcb57
+basis: 62c0dbe1f0ece30ddd37a8461b422ecb603f5b09 (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 26 gesamt, 26 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1794340316.519  ende: 1794341104.89
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/fix-883-mac-widget-nachziehen/simulator-run/summary.json  sha256:6aeea5735a90e20f6703d4fe864f322af4e43f76ab9e94570f55734afda52b7a
+xcresult: docs/artifacts/fix-883-mac-widget-nachziehen/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-883-mac-widget-nachziehen/simulator-run/*.png (15 Stück)
+
+## Geprüfte Dateien
+- sha256:b7066638c04c08d2a04c7cfaf78310fbf8cf5decffee22a13551944d4482b538  LooseEnds/App/ContentView.swift
+- sha256:129d750ae38e1f1623a9d9c704416c02feaf98eea42821995bcd3da5e30ed66b  LooseEnds/App/LooseEndsApp.swift
+- sha256:20ce9f4f70260c84cb68837412d6e0c16e3b742164f1b261cf4a9edeae466d54  LooseEnds/App/WidgetReload.swift
+- sha256:7414d56d9a0542b60921c88933dc1bea3889ba6f958b4dfb7b577ca979242c8e  LooseEndsTests/WidgetReloadTests.swift
