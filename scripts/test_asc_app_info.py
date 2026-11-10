@@ -28,6 +28,8 @@ DE_WANTED = "Einfach sagen. Kopf frei."
 EN_WANTED = "Say it. Clear your head."
 NAME = "Loose Ends"
 EN_NAME = "Loose Ends: Voice Tasks"
+DE_PRIVACY = "https://www.henemm.com/legal/loose-ends/privacy-policy/"
+EN_PRIVACY = "https://www.henemm.com/legal/loose-ends/privacy-policy-en/"
 DE_OLD = "Gesagt. Sortiert."
 RAW_SECRET = "Roh-Antwort-Geheim-837"
 WANTED_TEXT = f"# Untertitel\n\nVorspann.\n\n## de-DE\n\nUntertitel: {DE_WANTED}\n\n## en-US\n\nName: {NAME}\nUntertitel: {EN_WANTED}\n"
@@ -37,9 +39,11 @@ def info(info_id, state):
     return {"id": info_id, "type": "appInfos", "attributes": {"state": state, "appStoreState": state}}
 
 
-def loc(loc_id, locale, subtitle, name=NAME):
-    return {"id": loc_id, "type": "appInfoLocalizations",
-            "attributes": {"locale": locale, "name": name, "subtitle": subtitle}}
+def loc(loc_id, locale, subtitle, name=NAME, privacy=None):
+    attrs = {"locale": locale, "name": name, "subtitle": subtitle}
+    if privacy is not None:
+        attrs["privacyPolicyUrl"] = privacy
+    return {"id": loc_id, "type": "appInfoLocalizations", "attributes": attrs}
 
 
 class FakeASC:
@@ -139,11 +143,13 @@ class AppInfoTests(unittest.TestCase):
         self.addCleanup(fake.close)
         return fake
 
-    def run_info(self, fake, aktion, text=WANTED_TEXT):
+    def run_info(self, fake, aktion, text=WANTED_TEXT, privacy=DE_PRIVACY):
         path = Path(self.tmp.name) / "untertitel.md"
         path.write_text(text, encoding="utf-8")
         env = dict(os.environ, ASC_KEY_ID="K", ASC_ISSUER_ID="I", ASC_KEY_FILE=str(self.key), ASC_API_BASE=fake.base,
-                   ASC_POLL_SECONDS="0", ASC_TIMEOUT_SECONDS="2", APP_INFO_FILE=str(path))
+                   ASC_POLL_SECONDS="0", ASC_TIMEOUT_SECONDS="2", APP_INFO_FILE=str(path),
+                   ASC_PRIVACY_POLICY_URL=privacy)
+        env.pop("ASC_PRIVACY_POLICY_URL_EN", None)
         return subprocess.run([sys.executable, str(SCRIPT), aktion], env=env, capture_output=True, text=True,
                               timeout=120)
 
@@ -301,6 +307,94 @@ class AppInfoTests(unittest.TestCase):
             for secret in secrets:
                 self.assertNotIn(secret, output, (aktion, secret))
 
+    # Schnitt D (#893): Datenschutz-Adresse je Sprache
+    def privacy_locs(self, de=DE_PRIVACY, en=None):
+        return {"I1": [loc("L1", "de-DE", DE_OLD)],
+                "I2": [loc("L2", "de-DE", DE_WANTED, privacy=de), loc("L3", "en-US", EN_WANTED, privacy=en)]}
+
+    # AC-1
+    def test_read_shows_privacy_url_per_locale(self):
+        fake = self.fake(infos=[LIVE, EDITABLE], localizations=self.privacy_locs())
+        result = self.run_info(fake, "lesen", text="wird für lesen nicht gebraucht")
+        self.assert_ok(result)
+        self.assertEqual(fake.writes(), [])
+        self.assertRegex(result.stdout, r"en-US .*datenschutz=-")
+        self.assertRegex(result.stdout, rf"de-DE .*datenschutz={DE_PRIVACY}")
+
+    # AC-2
+    def test_privacy_patches_only_differing_locales(self):
+        fake = self.fake(infos=[LIVE, EDITABLE], localizations=self.privacy_locs())
+        result = self.run_info(fake, "datenschutz")
+        self.assert_ok(result)
+        self.assertEqual([(m, p) for m, p, _ in fake.writes()], [("PATCH", "/v1/appInfoLocalizations/L3")])
+        self.assertEqual(fake.writes()[0][2]["data"]["attributes"], {"privacyPolicyUrl": EN_PRIVACY})
+        self.assertIn("de-DE datenschutz unverändert", result.stdout)
+        self.assertIn("gegenprobe gleich=ja", result.stdout)
+        self.assertIn("zusammenfassung geschrieben=1", result.stdout)
+
+    # AC-3
+    def test_privacy_second_run_writes_nothing(self):
+        fake = self.fake(infos=[LIVE, EDITABLE], localizations=self.privacy_locs(en=EN_PRIVACY))
+        result = self.run_info(fake, "datenschutz")
+        self.assert_ok(result)
+        self.assertEqual(fake.writes(), [])
+        self.assertTrue(result.stdout.rstrip().endswith("zusammenfassung geschrieben=0"), result.stdout)
+
+    # AC-4
+    def test_privacy_refuses_locked_or_ambiguous_info(self):
+        for infos, word in (([LIVE, info("I2", "IN_REVIEW")], "gesperrt"),
+                            ([info("I1", "PREPARE_FOR_SUBMISSION"), EDITABLE], "mehrdeutig")):
+            fake = self.fake(infos=infos, localizations={"I1": [loc("L1", "de-DE", DE_OLD)],
+                                                         "I2": [loc("L2", "de-DE", DE_OLD)]})
+            result = self.run_info(fake, "datenschutz")
+            self.assert_failed(result)
+            self.assertIn(word, result.stdout)
+            self.assertEqual(fake.writes(), [])
+
+    # AC-5
+    def test_privacy_missing_or_bad_address_stops_before_any_request(self):
+        for address in ("", "   ", "http://www.henemm.com/privacy", "www.henemm.com/privacy"):
+            fake = self.fake(infos=[LIVE, EDITABLE], localizations=self.privacy_locs())
+            result = self.run_info(fake, "datenschutz", privacy=address)
+            self.assert_failed(result)
+            self.assertIn("Datenschutz-Adresse", result.stdout)
+            self.assertEqual(fake.requests, [], address)
+
+    # AC-6
+    def test_privacy_missing_localization_not_created(self):
+        fake = self.fake(infos=[LIVE, EDITABLE],
+                         localizations={"I1": [loc("L1", "de-DE", DE_OLD)],
+                                        "I2": [loc("L2", "de-DE", DE_WANTED, privacy=DE_PRIVACY)]})
+        result = self.run_info(fake, "datenschutz")
+        self.assert_failed(result)
+        self.assertIn("en-US", result.stdout)
+        self.assertEqual([m for m, _, _ in fake.writes()], [])
+
+    # AC-7
+    def test_privacy_verify_detects_mismatch(self):
+        fake = self.fake(infos=[LIVE, EDITABLE], localizations=self.privacy_locs(), ignore_writes=True)
+        result = self.run_info(fake, "datenschutz")
+        self.assert_failed(result)
+        self.assertIn("Gegenprobe", result.stdout)
+        self.assertEqual(len(fake.writes()), 1, fake.writes())
+
+    # AC-8
+    def test_privacy_writes_only_privacy_field_and_leaks_nothing(self):
+        key_body = "".join(self.key.read_text().splitlines()[1:-1])
+        secrets = (key_body, "BEGIN", "PRIVATE KEY", "Bearer", "eyJ", RAW_SECRET)
+        fake = self.fake(infos=[LIVE, EDITABLE], localizations=self.privacy_locs())
+        result = self.run_info(fake, "datenschutz")
+        self.assert_ok(result)
+        for _, _, body in fake.writes():
+            self.assertEqual(set(body["data"]["attributes"]), {"privacyPolicyUrl"})
+        failing = self.fake(infos=[LIVE, EDITABLE], localizations=self.privacy_locs(), write_status=409)
+        result_failed = self.run_info(failing, "datenschutz")
+        self.assert_failed(result_failed)
+        for output in (result.stdout + result.stderr, result_failed.stdout + result_failed.stderr):
+            for secret in secrets:
+                self.assertNotIn(secret, output, secret)
+
+
     def test_unknown_action_aborts_before_any_request(self):
         fake = self.fake(infos=[EDITABLE])
         result = self.run_info(fake, "einreichen")
@@ -328,7 +422,8 @@ class WorkflowTests(unittest.TestCase):
         self.assertIn("workflow_dispatch", workflow)
         for trigger in ("push:", "schedule:", "workflow_run:", "pull_request"):
             self.assertNotIn(trigger, workflow)
-        for needle in ("aktion:", "type: choice", "- lesen", "- untertitel", "umask 077", "trap", "rm -f",
+        for needle in ("aktion:", "type: choice", "- lesen", "- untertitel", "- datenschutz",
+                       "vars.ASC_PRIVACY_POLICY_URL", "umask 077", "trap", "rm -f",
                        "timeout-minutes:", "contents: read"):
             self.assertIn(needle, workflow)
         for name in ("ASC_KEY_ID", "ASC_ISSUER_ID", "ASC_PRIVATE_KEY"):
