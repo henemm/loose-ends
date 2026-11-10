@@ -1,3 +1,5 @@
+> Veraltet: Arbeitsnotiz vom Stand Phase 6, 15:50Z. Maßgeblich sind die Belege im Ordner und der Abschluss in der Validierung.
+
 # Arbeitsstand Phase 6 (#615 S4d) — 2026-11-10 15:50Z
 
 ## Erledigt (Belege im Ordner)
