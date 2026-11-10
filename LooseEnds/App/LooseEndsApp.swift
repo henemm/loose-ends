@@ -10,6 +10,8 @@ struct LooseEndsApp: App {
     let container: ModelContainer
     let enrichment: EnrichmentCoordinator
     let notifications: DueNotificationCenter
+    /// The "Next up" widget follows every save and import, window or not (#883).
+    let widgetReload: WidgetReload
     let calendar: CalendarBridge
     /// Which fields a task offers (#538); one choice on every device.
     let fieldSettings: FieldSettingsStore
@@ -44,6 +46,8 @@ struct LooseEndsApp: App {
         #endif
         notifications = DueNotificationCenter(container: container, places: places)
         notifications.activate()
+        widgetReload = WidgetReload()
+        widgetReload.start()
         #if os(iOS)
         // The plan holds without an app start (#553): registered before launch ends, as the system requires.
         BackgroundRefresh.register(notifications)
