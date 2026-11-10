@@ -1,0 +1,161 @@
+......../opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 58954)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 58959)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 58964)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 58969)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 58974)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 58980)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 58984)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 58989)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:630: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 58992)>
+  def __exit__(self, *exc_details):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..FFFFFFFF....<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 59002)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 59003)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 59004)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 59005)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 59006)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 59026)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 59027)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 59028)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 59029)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=14, family=2, type=1, proto=0, laddr=('127.0.0.1', 59030)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=15, family=2, type=1, proto=0, laddr=('127.0.0.1', 59031)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=16, family=2, type=1, proto=0, laddr=('127.0.0.1', 59032)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=17, family=2, type=1, proto=0, laddr=('127.0.0.1', 59033)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=18, family=2, type=1, proto=0, laddr=('127.0.0.1', 59038)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=19, family=2, type=1, proto=0, laddr=('127.0.0.1', 59041)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=20, family=2, type=1, proto=0, laddr=('127.0.0.1', 59042)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 59043)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+<frozen importlib._bootstrap_external>:500: ResourceWarning: unclosed <socket.socket fd=22, family=2, type=1, proto=0, laddr=('127.0.0.1', 59044)>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.F
+======================================================================
+FAIL: test_privacy_missing_localization_not_created (__main__.AppInfoTests.test_privacy_missing_localization_not_created)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_app_info.py", line 370, in test_privacy_missing_localization_not_created
+    self.assertIn("en-US", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'en-US' not found in '::error::Aufruf: asc_app_info.py lesen|untertitel\n'
+
+======================================================================
+FAIL: test_privacy_missing_or_bad_address_stops_before_any_request (__main__.AppInfoTests.test_privacy_missing_or_bad_address_stops_before_any_request)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_app_info.py", line 360, in test_privacy_missing_or_bad_address_stops_before_any_request
+    self.assertIn("Datenschutz-Adresse", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'Datenschutz-Adresse' not found in '::error::Aufruf: asc_app_info.py lesen|untertitel\n'
+
+======================================================================
+FAIL: test_privacy_patches_only_differing_locales (__main__.AppInfoTests.test_privacy_patches_only_differing_locales)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_app_info.py", line 328, in test_privacy_patches_only_differing_locales
+    self.assert_ok(result)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_app_info.py", line 157, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : ::error::Aufruf: asc_app_info.py lesen|untertitel
+
+
+======================================================================
+FAIL: test_privacy_refuses_locked_or_ambiguous_info (__main__.AppInfoTests.test_privacy_refuses_locked_or_ambiguous_info)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_app_info.py", line 351, in test_privacy_refuses_locked_or_ambiguous_info
+    self.assertIn(word, result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'gesperrt' not found in '::error::Aufruf: asc_app_info.py lesen|untertitel\n'
+
+======================================================================
+FAIL: test_privacy_second_run_writes_nothing (__main__.AppInfoTests.test_privacy_second_run_writes_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_app_info.py", line 339, in test_privacy_second_run_writes_nothing
+    self.assert_ok(result)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_app_info.py", line 157, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : ::error::Aufruf: asc_app_info.py lesen|untertitel
+
+
+======================================================================
+FAIL: test_privacy_verify_detects_mismatch (__main__.AppInfoTests.test_privacy_verify_detects_mismatch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_app_info.py", line 378, in test_privacy_verify_detects_mismatch
+    self.assertIn("Gegenprobe", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'Gegenprobe' not found in '::error::Aufruf: asc_app_info.py lesen|untertitel\n'
+
+======================================================================
+FAIL: test_privacy_writes_only_privacy_field_and_leaks_nothing (__main__.AppInfoTests.test_privacy_writes_only_privacy_field_and_leaks_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_app_info.py", line 387, in test_privacy_writes_only_privacy_field_and_leaks_nothing
+    self.assert_ok(result)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_app_info.py", line 157, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : ::error::Aufruf: asc_app_info.py lesen|untertitel
+
+
+======================================================================
+FAIL: test_read_shows_privacy_url_per_locale (__main__.AppInfoTests.test_read_shows_privacy_url_per_locale)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_app_info.py", line 321, in test_read_shows_privacy_url_per_locale
+    self.assertRegex(result.stdout, r"en-US .*datenschutz=-")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Regex didn't match: 'en-US .*datenschutz=-' not found in 'appinfo id=I1 state=READY_FOR_DISTRIBUTION\n  de-DE name=Loose Ends untertitel=Gesagt. Sortiert.\nappinfo id=I2 state=PREPARE_FOR_SUBMISSION\n  de-DE name=Loose Ends untertitel=Einfach sagen. Kopf frei.\n  en-US name=Loose Ends untertitel=Say it. Clear your head.\nzusammenfassung geschrieben=0\n'
+
+======================================================================
+FAIL: test_workflow_has_choice_unit_tests_and_secrets (__main__.WorkflowTests.test_workflow_has_choice_unit_tests_and_secrets)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_app_info.py", line 428, in test_workflow_has_choice_unit_tests_and_secrets
+    self.assertIn(needle, workflow)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+AssertionError: '- datenschutz' not found in '# Handlauf (#837 Schnitt 2): liest Name und Untertitel der App-Informationen oder setzt den Untertitel aus\n# docs/reference/app-store-untertitel.md. Schreibt nur in die eine App-Info im Zustand PREPARE_FOR_SUBMISSION, nur bei\n# Abweichung (en-US wird mit Name angelegt, wenn es fehlt); reicht nichts ein.\nname: ASC App Info\n\non:\n  workflow_dispatch:\n    inputs:\n      aktion:\n        description: "lesen = nur Zustand zeigen, untertitel = Untertitel setzen (nur bei Abweichung)"\n        type: choice\n        options:\n          - lesen\n          - untertitel\n        default: lesen\n\npermissions:\n  contents: read\n\njobs:\n  app-info:\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    env:\n      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}\n      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}\n      ASC_POLL_SECONDS: "5"\n      AKTION: ${{ inputs.aktion }}\n    steps:\n      - uses: actions/checkout@v7\n      - name: Unit tests\n        run: python3 scripts/test_asc_app_info.py\n      - name: App info\n        run: |\n          trap \'rm -f "$RUNNER_TEMP/asc_key.p8"\' EXIT\n          umask 077\n          printf \'%s\\n\' "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/asc_key.p8"\n          ASC_KEY_FILE="$RUNNER_TEMP/asc_key.p8" python3 scripts/asc_app_info.py "$AKTION"\n'
+
+----------------------------------------------------------------------
+Ran 24 tests in 16.535s
+
+FAILED (failures=9)
