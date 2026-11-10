@@ -1,0 +1,13 @@
+OK    405 GET /auth/apple (soll 405)
+OK    405 GET /auth/logout (soll 405)
+OK    405 GET /auth/delete (soll 405)
+OK    415 POST /auth/apple ohne JSON-Kopf (soll 415)
+OK    401 POST /auth/delete ohne Bearer (soll 401)
+OK    401 POST /auth/delete mit falschem Bearer (soll 401)
+OK    404 GET /auth/x (soll 404)
+OK    413 POST /auth/apple mit 17-KiB-Körper (soll 413)
+Anfragen gesendet: 8 (höchstens 8), 429 gesehen: nein
+Stand: 2026-11-10T15:30:53Z gegen http://127.0.0.1:59661
+Exit: 0
+
+Gegenprobe: Wegwerf-Postgres 18 und Dienst aus server/ (main-Stand dieses Zweigs) auf 127.0.0.1, Apple-Konfiguration nur Fantasiewerte mit frisch erzeugtem Schlüssel (nichts Echtes); belegt, dass check-auth.sh die Statuscodes des echten Dienstcodes erwartet.
