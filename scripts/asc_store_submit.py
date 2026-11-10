@@ -21,12 +21,12 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-from asc_beta_invite import Masked, message
+from asc_beta_invite import Masked
 from asc_beta_probe import attributes, records
 from asc_store_version import count, current_build, get_one
 from asc_version_texts import EDITABLE, PLATFORMS, app_versions, localizations
 from asc_wait_build import Fatal, find_app_id, make_token, read_config
-from asc_what_to_test import error_codes, get_data
+from asc_what_to_test import get_data
 
 LOCALES = ("de-DE", "en-US")
 REQUIRED = ("description", "keywords", "supportUrl", "whatsNew")
@@ -39,6 +39,13 @@ SUBMITTED = ("WAITING_FOR_REVIEW", "IN_REVIEW")
 VERIFY_ATTEMPTS = 6
 
 
+def mask(text):
+    """Regel von asc_beta_invite.message (Pfadstück nach /v1/<art>/ und Abfragewert werden zu …), nur der schon
+    bereinigte Platzhalter <id> aus den Gründen bleibt stehen; er ist keine Kennung."""
+    masked = re.sub(r"(/v1/\w+/)(?!<id>(?:[/\s=,;]|$))[^/\s?]+", r"\1…", str(text))
+    return re.sub(r"([?&][^=\s&]+=)[^&\s]+", r"\1…", masked)
+
+
 class Watched(Masked):
     """Masked-Ausgabe, die den Status der letzten Wiederholungszeile der geteilten Helfer merkt: nach 5xx nennt
     deren Fatal keinen Status mehr, der Grund `nicht lesbar HTTP <status>` braucht ihn trotzdem."""
@@ -48,7 +55,7 @@ class Watched(Masked):
         found = re.search(r"ASC answered HTTP (\d+)", text)
         if found:
             Watched.last = found.group(1)
-        return super().write(text)
+        return self.stream.write(mask(text))
 
 
 def unreadable(error):
@@ -298,6 +305,86 @@ def report_plan(plans):
     return [SHORT[p] for p, plan in plans.items() if plan["state"] not in ("eingereicht", "bereit")]
 
 
+CODE = re.compile(r"[A-Z0-9_.]+")
+ID = re.compile(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|[A-Za-z0-9]*[0-9]{4,}[A-Za-z0-9]*")
+PATH = re.compile(r"[A-Za-z0-9/_.<>-]{1,60}")
+KEY = re.compile(r"[A-Za-z0-9_<>]+")
+REASON_CODE = re.compile(r"[A-Za-z0-9_.<>]{1,80}")
+
+
+def error_body(error):
+    """Den Rumpf einer Fehlerantwort genau einmal lesen; jede Störung ergibt ein leeres Dict."""
+    try:
+        body = json.loads(error.read(8192))
+    except (ValueError, TypeError, OSError, AttributeError):
+        return {}
+    return body if isinstance(body, dict) else {}
+
+
+def error_entries(body):
+    errors = body.get("errors")
+    return [entry for entry in errors if isinstance(entry, dict)] if isinstance(errors, list) else []
+
+
+def main_codes(body):
+    """Apples Hauptcodes (Regel wie error_codes: Whitelist, höchstens 5), nie title/detail."""
+    return [entry["code"] for entry in error_entries(body)
+            if isinstance(entry.get("code"), str) and CODE.fullmatch(entry["code"])][:5]
+
+
+def reason_code(item):
+    code = item.get("code")
+    if not isinstance(code, str):
+        return "?"
+    cleaned = ID.sub("<id>", code)
+    return cleaned if REASON_CODE.fullmatch(cleaned) else "?"
+
+
+def reason_path(path):
+    if not isinstance(path, str):
+        return "?"
+    cleaned = ID.sub("<id>", path)
+    return cleaned if PATH.fullmatch(cleaned) else "?"
+
+
+def reason_pairs(associated):
+    """(Pfad, Code) aus meta.associatedErrors, Form Objekt (Pfad -> Liste) oder Liste; anderes ergibt nichts."""
+    if isinstance(associated, dict):
+        return [(reason_path(path), reason_code(item)) for path, items in associated.items()
+                if isinstance(items, list) for item in items if isinstance(item, dict)]
+    if isinstance(associated, list):
+        pairs = []
+        for item in associated:
+            if isinstance(item, dict):
+                source = item.get("source") if isinstance(item.get("source"), dict) else {}
+                pairs.append((reason_path(source.get("pointer") or source.get("parameter")), reason_code(item)))
+        return pairs
+    return []
+
+
+def associated_reasons(body):
+    """Zusatz zur Fehlermeldung: `; gründe: <pfad>=<code>, …` (höchstens 8, ohne Dubletten) oder bei unbekannter
+    Form `; meta: <schlüsselnamen>`. Liest nie title, detail oder Werte; jede Störung ergibt ``."""
+    try:
+        pairs, keys = [], []
+        for entry in error_entries(body):
+            meta = entry.get("meta")
+            if not isinstance(meta, dict):
+                continue
+            for pair in reason_pairs(meta.get("associatedErrors")):
+                if pair not in pairs:
+                    pairs.append(pair)
+            cleaned = [ID.sub("<id>", key) for key in meta if isinstance(key, str)]
+            keys += [key for key in dict.fromkeys(cleaned) if KEY.fullmatch(key) and key not in keys]
+        if pairs:
+            return "; gründe: " + ", ".join(f"{path}={code}" for path, code in pairs[:8])
+        if keys:
+            return "; meta: " + ", ".join(keys[:8])
+    except (AttributeError, TypeError, ValueError):
+        pass
+    return ""
+
+
 def send_once(config, method, path, payload):
     """Genau ein Schreibaufruf, nie wiederholt (Muster post_submission): auch 5xx, 408, 429 und Netzfehler enden mit
     Fatal, damit nie eine zweite Einreichung entsteht. Rückgabe: der Rumpf; 4xx nennt nur Apples Fehlercodes."""
@@ -308,9 +395,11 @@ def send_once(config, method, path, payload):
         with urllib.request.urlopen(request, timeout=30) as response:
             raw = response.read()
     except urllib.error.HTTPError as error:
-        codes = error_codes(error)
+        body = error_body(error)
+        codes = main_codes(body)
         suffix = f" (codes: {', '.join(codes)})" if codes else ""
-        raise Fatal(f"ASC antwortet HTTP {error.code} für {method} {path}{suffix}, nicht wiederholt")
+        raise Fatal(f"ASC antwortet HTTP {error.code} für {method} {path}{suffix}{associated_reasons(body)}, "
+                    "nicht wiederholt")
     except (urllib.error.URLError, http.client.HTTPException, TimeoutError, OSError) as error:
         raise Fatal(f"Keine Antwort von ASC für {method} {path} ({type(error).__name__}), nicht wiederholt")
     try:
@@ -403,12 +492,12 @@ def main(argv):
         config = read_config()
         app_id = find_app_id(config)
     except Fatal as error:
-        print(f"::error::{message(error)}", flush=True)
+        print(f"::error::{mask(error)}", flush=True)
         return 1
     try:
         return ACTIONS[argv[1]][0](config, app_id, *argv[2:])
     except Fatal as error:
-        print(f"::error::{message(error)}", flush=True)
+        print(f"::error::{mask(error)}", flush=True)
         return 1
 
 

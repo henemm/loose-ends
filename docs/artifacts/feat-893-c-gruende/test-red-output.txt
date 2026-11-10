@@ -1,0 +1,325 @@
+test_409_and_422_clear_message_without_raw_answer (__main__.StoreSubmitTests.test_409_and_422_clear_message_without_raw_answer) ... ok
+test_bad_usage_makes_no_call (__main__.StoreSubmitTests.test_bad_usage_makes_no_call) ... ok
+test_both_platforms_fully_evaluated (__main__.StoreSubmitTests.test_both_platforms_fully_evaluated) ... ok
+test_broken_or_missing_meta_changes_nothing (__main__.StoreSubmitTests.test_broken_or_missing_meta_changes_nothing) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:2088: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 54079)>
+  close_fds, tuple(sorted(map(int, fds_to_keep))),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:2088: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 54104)>
+  close_fds, tuple(sorted(map(int, fds_to_keep))),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:2088: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 54130)>
+  close_fds, tuple(sorted(map(int, fds_to_keep))),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:2088: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 54157)>
+  close_fds, tuple(sorted(map(int, fds_to_keep))),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:2088: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 54158)>
+  close_fds, tuple(sorted(map(int, fds_to_keep))),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:2088: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 54159)>
+  close_fds, tuple(sorted(map(int, fds_to_keep))),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:2088: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 54160)>
+  close_fds, tuple(sorted(map(int, fds_to_keep))),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:2088: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 54161)>
+  close_fds, tuple(sorted(map(int, fds_to_keep))),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py:2088: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 54162)>
+  close_fds, tuple(sorted(map(int, fds_to_keep))),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_build_rules (__main__.StoreSubmitTests.test_build_rules) ... ok
+test_confirmation_must_equal_version_number (__main__.StoreSubmitTests.test_confirmation_must_equal_version_number) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:656: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 54315)>
+  is_sync, cb = self._exit_callbacks.pop()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:656: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 54341)>
+  is_sync, cb = self._exit_callbacks.pop()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:656: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 54367)>
+  is_sync, cb = self._exit_callbacks.pop()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:656: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 54393)>
+  is_sync, cb = self._exit_callbacks.pop()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:656: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 54419)>
+  is_sync, cb = self._exit_callbacks.pop()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:656: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 54445)>
+  is_sync, cb = self._exit_callbacks.pop()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:656: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 54471)>
+  is_sync, cb = self._exit_callbacks.pop()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:656: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 54497)>
+  is_sync, cb = self._exit_callbacks.pop()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:656: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 54523)>
+  is_sync, cb = self._exit_callbacks.pop()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:656: ResourceWarning: unclosed <socket.socket fd=18, family=2, type=1, proto=0, laddr=('127.0.0.1', 54549)>
+  is_sync, cb = self._exit_callbacks.pop()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:656: ResourceWarning: unclosed <socket.socket fd=19, family=2, type=1, proto=0, laddr=('127.0.0.1', 54575)>
+  is_sync, cb = self._exit_callbacks.pop()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:656: ResourceWarning: unclosed <socket.socket fd=20, family=2, type=1, proto=0, laddr=('127.0.0.1', 54601)>
+  is_sync, cb = self._exit_callbacks.pop()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:656: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 54624)>
+  is_sync, cb = self._exit_callbacks.pop()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:656: ResourceWarning: unclosed <socket.socket fd=22, family=2, type=1, proto=0, laddr=('127.0.0.1', 54648)>
+  is_sync, cb = self._exit_callbacks.pop()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/contextlib.py:656: ResourceWarning: unclosed <socket.socket fd=23, family=2, type=1, proto=0, laddr=('127.0.0.1', 54672)>
+  is_sync, cb = self._exit_callbacks.pop()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_counter_check_failure_exit_one (__main__.StoreSubmitTests.test_counter_check_failure_exit_one) ... ok
+test_einreichen_output_has_no_ids_raw_answers_or_wording (__main__.StoreSubmitTests.test_einreichen_output_has_no_ids_raw_answers_or_wording) ... ok
+test_einreichen_success_both_platforms_ios_first (__main__.StoreSubmitTests.test_einreichen_success_both_platforms_ios_first) ... ok
+test_foreign_item_aborts_without_delete (__main__.StoreSubmitTests.test_foreign_item_aborts_without_delete) ... ok
+test_image_and_review_detail_rules (__main__.StoreSubmitTests.test_image_and_review_detail_rules) ... ok
+test_never_deletes_or_touches_other_resources (__main__.StoreSubmitTests.test_never_deletes_or_touches_other_resources) ... ok
+test_never_sends_non_get (__main__.StoreSubmitTests.test_never_sends_non_get) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 54722)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 54724)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 54748)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 54787)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 54825)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 54859)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 54886)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 54913)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 54940)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=18, family=2, type=1, proto=0, laddr=('127.0.0.1', 54965)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=19, family=2, type=1, proto=0, laddr=('127.0.0.1', 54999)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=20, family=2, type=1, proto=0, laddr=('127.0.0.1', 55024)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 55049)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=22, family=2, type=1, proto=0, laddr=('127.0.0.1', 55071)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=23, family=2, type=1, proto=0, laddr=('127.0.0.1', 55094)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=26, family=2, type=1, proto=0, laddr=('127.0.0.1', 55118)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=27, family=2, type=1, proto=0, laddr=('127.0.0.1', 55142)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=28, family=2, type=1, proto=0, laddr=('127.0.0.1', 55176)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=29, family=2, type=1, proto=0, laddr=('127.0.0.1', 55215)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=30, family=2, type=1, proto=0, laddr=('127.0.0.1', 55255)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=31, family=2, type=1, proto=0, laddr=('127.0.0.1', 55282)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=32, family=2, type=1, proto=0, laddr=('127.0.0.1', 55316)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/threading.py:1444: ResourceWarning: unclosed <socket.socket fd=33, family=2, type=1, proto=0, laddr=('127.0.0.1', 55342)>
+  def _make_invoke_excepthook():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_no_retry_on_5xx_or_network_error (__main__.StoreSubmitTests.test_no_retry_on_5xx_or_network_error) ... ok
+test_one_platform_not_ready_writes_nothing_on_both (__main__.StoreSubmitTests.test_one_platform_not_ready_writes_nothing_on_both) ... ok
+test_output_has_no_ids_raw_answers_or_wording (__main__.StoreSubmitTests.test_output_has_no_ids_raw_answers_or_wording) ... ok
+test_pruefen_unchanged (__main__.StoreSubmitTests.test_pruefen_unchanged) ... ok
+test_ready_for_review_is_reusable_but_two_are_not (__main__.StoreSubmitTests.test_ready_for_review_is_reusable_but_two_are_not) ... ok
+test_ready_on_both_platforms_exit_zero (__main__.StoreSubmitTests.test_ready_on_both_platforms_exit_zero) ... ok
+test_reasons_from_associated_errors_list_form (__main__.StoreSubmitTests.test_reasons_from_associated_errors_list_form) ... FAIL
+test_reasons_from_associated_errors_object_form (__main__.StoreSubmitTests.test_reasons_from_associated_errors_object_form) ... FAIL
+test_reasons_keep_single_write_and_exit_one (__main__.StoreSubmitTests.test_reasons_keep_single_write_and_exit_one) ... 
+  test_reasons_keep_single_write_and_exit_one (__main__.StoreSubmitTests.test_reasons_keep_single_write_and_exit_one) (step='POST reviewSubmissions') ... FAIL
+  test_reasons_keep_single_write_and_exit_one (__main__.StoreSubmitTests.test_reasons_keep_single_write_and_exit_one) (step='POST reviewSubmissionItems') ... FAIL
+  test_reasons_keep_single_write_and_exit_one (__main__.StoreSubmitTests.test_reasons_keep_single_write_and_exit_one) (step='PATCH reviewSubmissions') ... FAIL
+test_reasons_sanitize_ids_wording_and_limit (__main__.StoreSubmitTests.test_reasons_sanitize_ids_wording_and_limit) ... FAIL
+test_resume_ios_already_submitted_only_mac (__main__.StoreSubmitTests.test_resume_ios_already_submitted_only_mac) ... ok
+test_reuses_single_ready_for_review_submission (__main__.StoreSubmitTests.test_reuses_single_ready_for_review_submission) ... ok
+test_second_run_writes_nothing (__main__.StoreSubmitTests.test_second_run_writes_nothing) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 55412)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 55456)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=6, family=2, type=1, proto=0, laddr=('127.0.0.1', 55481)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=7, family=2, type=1, proto=0, laddr=('127.0.0.1', 55506)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=8, family=2, type=1, proto=0, laddr=('127.0.0.1', 55532)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 55559)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 55585)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 55611)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 55638)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=18, family=2, type=1, proto=0, laddr=('127.0.0.1', 55665)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=19, family=2, type=1, proto=0, laddr=('127.0.0.1', 55693)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=20, family=2, type=1, proto=0, laddr=('127.0.0.1', 55716)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 55740)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=22, family=2, type=1, proto=0, laddr=('127.0.0.1', 55766)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=23, family=2, type=1, proto=0, laddr=('127.0.0.1', 55798)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=26, family=2, type=1, proto=0, laddr=('127.0.0.1', 55859)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=27, family=2, type=1, proto=0, laddr=('127.0.0.1', 55883)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=28, family=2, type=1, proto=0, laddr=('127.0.0.1', 55907)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=29, family=2, type=1, proto=0, laddr=('127.0.0.1', 55931)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=30, family=2, type=1, proto=0, laddr=('127.0.0.1', 55957)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=31, family=2, type=1, proto=0, laddr=('127.0.0.1', 55983)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=32, family=2, type=1, proto=0, laddr=('127.0.0.1', 56009)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=33, family=2, type=1, proto=0, laddr=('127.0.0.1', 56035)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=37, family=2, type=1, proto=0, laddr=('127.0.0.1', 56062)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=38, family=2, type=1, proto=0, laddr=('127.0.0.1', 56088)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=39, family=2, type=1, proto=0, laddr=('127.0.0.1', 56109)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/feedparser.py:90: ResourceWarning: unclosed <socket.socket fd=40, family=2, type=1, proto=0, laddr=('127.0.0.1', 56143)>
+  for ateof in reversed(self._eofstack):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_store_version_script_untouched (__main__.StoreSubmitTests.test_store_version_script_untouched) ... ok
+test_submission_states (__main__.StoreSubmitTests.test_submission_states) ... ok
+test_text_rules (__main__.StoreSubmitTests.test_text_rules) ... ok
+test_unknown_form_shows_meta_key_names_only (__main__.StoreSubmitTests.test_unknown_form_shows_meta_key_names_only) ... FAIL
+test_version_rules (__main__.StoreSubmitTests.test_version_rules) ... ok
+test_workflow_offers_einreichen_with_confirmation_and_hides_the_key (__main__.WorkflowTests.test_workflow_offers_einreichen_with_confirmation_and_hides_the_key) ... ok
+
+======================================================================
+FAIL: test_reasons_from_associated_errors_list_form (__main__.StoreSubmitTests.test_reasons_from_associated_errors_list_form)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_submit.py", line 612, in test_reasons_from_associated_errors_list_form
+    self.assertIn("gründe: ", line)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+AssertionError: 'gründe: ' not found in '::error::ASC antwortet HTTP 409 für POST /v1/reviewSubmissionItems (codes: STATE_ERROR.ENTITY_STATE_INVALID), nicht wiederholt'
+
+======================================================================
+FAIL: test_reasons_from_associated_errors_object_form (__main__.StoreSubmitTests.test_reasons_from_associated_errors_object_form)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_submit.py", line 599, in test_reasons_from_associated_errors_object_form
+    self.assertIn("gründe: ", line)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+AssertionError: 'gründe: ' not found in '::error::ASC antwortet HTTP 409 für POST /v1/reviewSubmissionItems (codes: STATE_ERROR.ENTITY_STATE_INVALID), nicht wiederholt'
+
+======================================================================
+FAIL: test_reasons_keep_single_write_and_exit_one (__main__.StoreSubmitTests.test_reasons_keep_single_write_and_exit_one) (step='POST reviewSubmissions')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_submit.py", line 678, in test_reasons_keep_single_write_and_exit_one
+    self.assertIn("gründe:", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'gründe:' not found in 'version IOS 1.0.1 state=PREPARE_FOR_SUBMISSION\nbau IOS 1.0.1 (133) processingState=VALID\n  IOS de-DE description zeichen=23 keywords zeichen=23 supportUrl zeichen=41 whatsNew zeichen=23 promotionalText zeichen=23\n  IOS en-US description zeichen=23 keywords zeichen=23 supportUrl zeichen=41 whatsNew zeichen=23 promotionalText zeichen=23\n  IOS de-DE bilder=3 platzierungen=0\n  IOS en-US bilder=3 platzierungen=0\nreview-detail IOS vorhanden\neinreichungen IOS keine\nversion MAC_OS 1.0.1 state=PREPARE_FOR_SUBMISSION\nbau MAC_OS 1.0.1 (133) processingState=VALID\n  MAC_OS de-DE description zeichen=23 keywords zeichen=23 supportUrl zeichen=41 whatsNew zeichen=23 promotionalText zeichen=23\n  MAC_OS en-US description zeichen=23 keywords zeichen=23 supportUrl zeichen=41 whatsNew zeichen=23 promotionalText zeichen=23\n  MAC_OS de-DE bilder=0 platzierungen=4\n  MAC_OS en-US bilder=0 platzierungen=4\nreview-detail MAC_OS vorhanden\neinreichungen MAC_OS keine\nIOS bereit\nIOS freigabeart AFTER_APPROVAL\nMAC_OS bereit\nMAC_OS freigabeart AFTER_APPROVAL\nzusammenfassung eingereicht=keine\n::error::ASC antwortet HTTP 409 für POST /v1/reviewSubmissions (codes: STATE_ERROR.ENTITY_STATE_INVALID), nicht wiederholt\n'
+
+======================================================================
+FAIL: test_reasons_keep_single_write_and_exit_one (__main__.StoreSubmitTests.test_reasons_keep_single_write_and_exit_one) (step='POST reviewSubmissionItems')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_submit.py", line 678, in test_reasons_keep_single_write_and_exit_one
+    self.assertIn("gründe:", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'gründe:' not found in 'version IOS 1.0.1 state=PREPARE_FOR_SUBMISSION\nbau IOS 1.0.1 (133) processingState=VALID\n  IOS de-DE description zeichen=23 keywords zeichen=23 supportUrl zeichen=41 whatsNew zeichen=23 promotionalText zeichen=23\n  IOS en-US description zeichen=23 keywords zeichen=23 supportUrl zeichen=41 whatsNew zeichen=23 promotionalText zeichen=23\n  IOS de-DE bilder=3 platzierungen=0\n  IOS en-US bilder=3 platzierungen=0\nreview-detail IOS vorhanden\neinreichungen IOS keine\nversion MAC_OS 1.0.1 state=PREPARE_FOR_SUBMISSION\nbau MAC_OS 1.0.1 (133) processingState=VALID\n  MAC_OS de-DE description zeichen=23 keywords zeichen=23 supportUrl zeichen=41 whatsNew zeichen=23 promotionalText zeichen=23\n  MAC_OS en-US description zeichen=23 keywords zeichen=23 supportUrl zeichen=41 whatsNew zeichen=23 promotionalText zeichen=23\n  MAC_OS de-DE bilder=0 platzierungen=4\n  MAC_OS en-US bilder=0 platzierungen=4\nreview-detail MAC_OS vorhanden\neinreichungen MAC_OS keine\nIOS bereit\nIOS freigabeart AFTER_APPROVAL\nMAC_OS bereit\nMAC_OS freigabeart AFTER_APPROVAL\nIOS schritt einreichung angelegt\nzusammenfassung eingereicht=keine\n::error::ASC antwortet HTTP 409 für POST /v1/reviewSubmissionItems (codes: STATE_ERROR.ENTITY_STATE_INVALID), nicht wiederholt\n'
+
+======================================================================
+FAIL: test_reasons_keep_single_write_and_exit_one (__main__.StoreSubmitTests.test_reasons_keep_single_write_and_exit_one) (step='PATCH reviewSubmissions')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_submit.py", line 678, in test_reasons_keep_single_write_and_exit_one
+    self.assertIn("gründe:", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'gründe:' not found in 'version IOS 1.0.1 state=PREPARE_FOR_SUBMISSION\nbau IOS 1.0.1 (133) processingState=VALID\n  IOS de-DE description zeichen=23 keywords zeichen=23 supportUrl zeichen=41 whatsNew zeichen=23 promotionalText zeichen=23\n  IOS en-US description zeichen=23 keywords zeichen=23 supportUrl zeichen=41 whatsNew zeichen=23 promotionalText zeichen=23\n  IOS de-DE bilder=3 platzierungen=0\n  IOS en-US bilder=3 platzierungen=0\nreview-detail IOS vorhanden\neinreichungen IOS keine\nversion MAC_OS 1.0.1 state=PREPARE_FOR_SUBMISSION\nbau MAC_OS 1.0.1 (133) processingState=VALID\n  MAC_OS de-DE description zeichen=23 keywords zeichen=23 supportUrl zeichen=41 whatsNew zeichen=23 promotionalText zeichen=23\n  MAC_OS en-US description zeichen=23 keywords zeichen=23 supportUrl zeichen=41 whatsNew zeichen=23 promotionalText zeichen=23\n  MAC_OS de-DE bilder=0 platzierungen=4\n  MAC_OS en-US bilder=0 platzierungen=4\nreview-detail MAC_OS vorhanden\neinreichungen MAC_OS keine\nIOS bereit\nIOS freigabeart AFTER_APPROVAL\nMAC_OS bereit\nMAC_OS freigabeart AFTER_APPROVAL\nIOS schritt einreichung angelegt\nIOS schritt item hinzugefügt\nzusammenfassung eingereicht=keine\n::error::ASC antwortet HTTP 409 für PATCH /v1/reviewSubmissions/… (codes: STATE_ERROR.ENTITY_STATE_INVALID), nicht wiederholt\n'
+
+======================================================================
+FAIL: test_reasons_sanitize_ids_wording_and_limit (__main__.StoreSubmitTests.test_reasons_sanitize_ids_wording_and_limit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_submit.py", line 658, in test_reasons_sanitize_ids_wording_and_limit
+    self.assertIn("/v1/a/<id>/<id>=?", line)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '/v1/a/<id>/<id>=?' not found in '::error::ASC antwortet HTTP 409 für POST /v1/reviewSubmissionItems (codes: STATE_ERROR.ENTITY_STATE_INVALID), nicht wiederholt'
+
+======================================================================
+FAIL: test_unknown_form_shows_meta_key_names_only (__main__.StoreSubmitTests.test_unknown_form_shows_meta_key_names_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/whimsical-nibbling-bird/scripts/test_asc_store_submit.py", line 622, in test_unknown_form_shows_meta_key_names_only
+    self.assertIn("meta: anderes, noch_eins", line)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'meta: anderes, noch_eins' not found in '::error::ASC antwortet HTTP 409 für POST /v1/reviewSubmissionItems (codes: STATE_ERROR.ENTITY_STATE_INVALID), nicht wiederholt'
+
+----------------------------------------------------------------------
+Ran 32 tests in 83.694s
+
+FAILED (failures=7)
